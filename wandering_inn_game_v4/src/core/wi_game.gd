@@ -101,6 +101,15 @@ var social_talked: Dictionary = {}
 ## exact same helper with its own verb prefix. Cleared every `sleep()`.
 ## Additive save field (tolerant default {}, see save.gd).
 var entity_first_use: Dictionary = {}
+## Playtest feature 3 ([Light] glow): true while the PC carries the conjured
+## [Light] orb -- set by the field-ambient cast of [Light] (see use_skill_field),
+## cleared at every `sleep()` (canon: the orb winks out when you rest), and
+## round-tripped through save.gd (additive-optional, default false) so a load
+## restores the glow. The presentation (world.gd) reads THIS flag on every field
+## rebuild to re-attach the PC-following PointLight2D -- the sim is authoritative,
+## the light node is derived. Diegetically constant across day/dusk/night (it is
+## magic), so it deliberately bypasses atmosphere.gd's phase multiplier.
+var light_active := false
 var rng := RandomNumberGenerator.new()
 
 var _event_sink: Callable
@@ -535,6 +544,16 @@ func use_skill_field(skill_id: String) -> Dictionary:
 		return {"befriended": String(target["id"])}
 	var field_ambient := String(skills.get(skill_id, {}).get("field_ambient", ""))
 	if field_ambient != "":
+		# Playtest feature 3: the ambient (no-qualifying-prop) cast of [Light]
+		# conjures a steady orb that FOLLOWS the PC until sleep -- flip the sim
+		# flag BEFORE the synchronous SKILL_USED emit so world.gd's handler (which
+		# reconciles the PC glow against this flag) sees the up-to-date value on a
+		# live cast. Idempotent: a re-cast while already lit re-fires the ambient
+		# toast (below) but leaves the flag true, so the world attaches no second
+		# light. Prop-targeted [Light] (the lantern/cellar seam above) never
+		# reaches here, so that path is UNCHANGED.
+		if skill_id == "light":
+			light_active = true
 		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
 		_mark_skill_used(skill_id)
 		_emit(WIEvents.TOAST, {"text": field_ambient})
@@ -1243,6 +1262,12 @@ func sleep() -> void:
 	# unchanged.
 	social_talked.clear()
 	entity_first_use.clear()
+	# Playtest feature 3: the conjured [Light] orb winks out when the PC rests.
+	# Cleared BEFORE the unconditional PHASE_CHANGED emit below so world.gd's
+	# reconcile (which also fires on PHASE_CHANGED -- sleep's guaranteed signal)
+	# reads false and detaches the PC glow in the same beat. Runs before the
+	# _combat_config early-return so a config-less sim (unit tests) clears too.
+	light_active = false
 	# M7 M-BEAUTY FOLD: the day/night clock resets UNCONDITIONALLY at every
 	# sleep, and phase_changed fires every time too (even a "day"->"day"
 	# no-op reset) -- distinct from _tick_action's crossing-only emits during
@@ -1480,6 +1505,7 @@ func snapshot() -> Dictionary:
 		"equipped": equipped.duplicate(true),
 		"container_state": container_state.duplicate(true),
 		"actions_since_sleep": actions_since_sleep,
+		"light_active": light_active,
 		"phase": phase(),
 	}
 

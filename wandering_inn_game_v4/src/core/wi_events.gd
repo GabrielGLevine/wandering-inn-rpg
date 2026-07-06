@@ -157,6 +157,14 @@ const UI_LIGHTS_RENDERED := &"ui_lights_rendered"
 ## confirmation — {map, emitters} once GPUParticles2D presets are spawned
 ## from map `ambience` data.
 const UI_AMBIENCE_RENDERED := &"ui_ambience_rendered"
+## Playtest feature 3 ([Light] glow on the PC): world.gd's confirmation that the
+## PC-following arcane glow (an UNREGISTERED constant PointLight2D on the player
+## visual, bypassing the phase multiplier so it stays lit at day too) actually
+## attached or detached. Payload `{active: bool}` -- true when the glow is drawn
+## (the field-ambient [Light] cast, or a rebuild re-attach while `light_active`),
+## false when it is removed (the sleep clear). Emitted ONLY on a real state
+## change, never on an idempotent re-cast/phase-crossing reconcile.
+const UI_PC_LIGHT_RENDERED := &"ui_pc_light_rendered"
 ## M-JUICE Track P2 (GDI sleep sequence): emitted by src/ui/sleep_veil.gd once
 ## the black veil is fully drawn and the night's GDI proclamation lines are laid
 ## out (before the read-hold), carrying {lines:int} = how many announcement lines

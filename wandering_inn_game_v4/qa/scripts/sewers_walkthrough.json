@@ -1,5 +1,5 @@
 {
- "_comment": "Content Wave C1: the Liscor sewers canonical walkthrough. Loads the near_sewers FIXTURE (post_tutorial_street shape + heard_about_cisterns pre-banked, so the grate-gate is open -- C3 banks that accomplishment from Olesm for real) via title Continue, positioned two steps north of the grate approach. Enters via the REAL sewer_grate interact (door_when seam), walks the sewers, reads two flavor props, clears the sewer_vermin trash pack (autoplay), then climbs the exit ladder back to the street. Proves: the grate-gate transition, the sewers dark mood + map render + always-on ambience, prop toasts, the new sewer_vermin encounter/arena, and the exit door. Fixture rng_state (9) governs -- no --seed search. NOTE: the shield_spider nest is placed but NOT fought here (that is Quest 1 / Task C3's job; interact-only, off this path).",
+ "_comment": "Content Wave C1: the Liscor sewers canonical walkthrough. Loads the near_sewers FIXTURE (post_tutorial_street shape + heard_about_cisterns pre-banked, so the grate-gate is open -- C3 banks that accomplishment from Olesm for real) via title Continue, positioned two steps north of the grate approach. Enters via the REAL sewer_grate interact (door_when seam), walks the sewers, reads two flavor props, clears the sewer_vermin trash pack (autoplay), then climbs the exit ladder back to the street. Proves: the grate-gate transition, the sewers dark mood + map render + always-on ambience, prop toasts, the new sewer_vermin encounter/arena, and the exit door. Fixture rng_state (9) governs -- no --seed search. NOTE: the shield_spider nest is placed but NOT fought here (that is Quest 1 / Task C3's job; interact-only, off this path). PLAYTEST FEATURE 3 EXTENSION: after landing, casts [Light] on the ambient path (hotbar_2) to conjure the PC-following arcane glow that makes the dark sewers navigable -- proving the new light_active sim flag, the ui_pc_light_rendered{active:true} UI confirmation, the follows-you toast copy, and a LIT vs UNLIT screenshot pair (00_sewers_landing = unlit, 00b_sewers_lit = lit). The near_sewers fixture was given `light` in player_skills for this (see its comment); the cast is exploration-only and fight-determinism-neutral, so the vermin autoplay is unchanged.",
  "fixture_save": "near_sewers",
  "starts_at_title": true,
  "steps": [
@@ -141,8 +141,75 @@
    }
   },
   {
+   "_comment": "UNLIT read: the sewers landing at (2,2) before any [Light] cast -- pair with 00b_sewers_lit below (dark cave grade, no PC glow).",
    "action": "screenshot",
    "name": "00_sewers_landing"
+  },
+  {
+   "_comment": "== PLAYTEST FEATURE 3: cast [Light] on the PC (ambient path) mid-sewers. The near_sewers fixture carries `light` in player_skills, so the field hotbar renders it at slot 2 (slot 1 = innate [Basic Cleaning]). Pressing hotbar_2 while facing a non-light-prop cell takes use_skill_field's field_ambient path (no sewers prop carries requires_skill==light), which sets light_active and conjures the PC-following glow. Proves: the ambient skill_used stream (target empty), the new follows-you toast copy, ui_pc_light_rendered{active:true}, and the round-trippable sim flag. ==",
+   "action": "assert_event_logged",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 2
+   }
+  },
+  {
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "light",
+    "context": "exploration",
+    "target": ""
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Light] — A steady white orb rises to follow you, throwing back the dark."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "ui_pc_light_rendered{active:true} fires synchronously BEFORE the toast (inside the same skill_used emit), so scan the whole log rather than wait past the toast cursor.",
+   "action": "assert_event_logged",
+   "type": "ui_pc_light_rendered",
+   "payload_contains": {
+    "active": true
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "light_active",
+   "equals": true
+  },
+  {
+   "_comment": "LIT read: same landing cell, now with the warm PC glow attached -- the LIT half of the pair against 00_sewers_landing.",
+   "action": "screenshot",
+   "name": "00b_sewers_lit"
+  },
+  {
+   "_comment": "Re-cast while already lit: the ambient toast fires again but NO second light attaches (world reconcile is idempotent) and the flag stays true.",
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Light] — A steady white orb rises to follow you, throwing back the dark."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "light_active",
+   "equals": true
   },
   {
    "_comment": "== Phosphor moss (5,1): right 3 to (5,2), up 1 bumps the moss so we face it. ==",

@@ -1249,6 +1249,34 @@ func _init() -> void:
 	assert(_count("accomplishment_recorded") == 0, "ambient banks no accomplishment")
 	assert(g_amb.used_skills.has("basic_cleaning"), "ambient use reveals the skill in the journal")
 
+	# --- Playtest feature 3: [Light] ambient cast sets the light_active glow flag ---
+	# The ambient (no-qualifying-prop) cast of [Light] flips light_active true so
+	# the presentation can conjure a PC-following glow; sleep() clears it (the orb
+	# winks out on rest). basic_cleaning's ambient cast must NOT touch the flag.
+	var g_glow := WIGame.new(scene_p1, skills_p1, _sink, 12345)
+	g_glow.player_skills.append("light")
+	assert(g_glow.known_skills().has("light"), "light is known for the glow case")
+	g_glow.player_cell = Vector2i(2, 3)
+	g_glow.player_facing = Vector2i.DOWN  # proven-empty faced cell (the ambient case above)
+	assert(not g_glow.light_active, "light_active defaults false")
+	_events.clear()
+	var glow_res := g_glow.use_skill_field("light")
+	assert(glow_res.get("ambient", "") == "light", "ambient [Light] cast returns {ambient:light}")
+	assert(g_glow.light_active, "ambient [Light] cast flips light_active true")
+	assert(_count("ui_pc_light_rendered") == 0, "the SIM emits no ui_pc_light_rendered (that is the presentation's confirmation)")
+	# Re-cast while lit: still true (idempotent), the ambient stream fires again.
+	g_glow.use_skill_field("light")
+	assert(g_glow.light_active, "re-casting [Light] while lit leaves light_active true")
+	# A non-light ambient cast never sets the flag.
+	var g_noglow := WIGame.new(scene_p1, skills_p1, _sink, 12345)
+	g_noglow.player_cell = Vector2i(2, 3)
+	g_noglow.player_facing = Vector2i.DOWN
+	g_noglow.use_skill_field("basic_cleaning")
+	assert(not g_noglow.light_active, "a non-[Light] ambient cast leaves light_active false")
+	# sleep() clears the glow (winks out on rest).
+	g_glow.sleep()
+	assert(not g_glow.light_active, "sleep() clears light_active (the orb winks out)")
+
 	# Unknown-to-PC skill: refusal path preserved (SKILL_UNKNOWN + generic toast).
 	_events.clear()
 	var unk := g_amb.use_skill_field("frost_bolt")  # not known by a classless PC

@@ -53,6 +53,9 @@ func _init() -> void:
 	original.equip("leather_jerkin")
 	original.container_state["inn_chest"] = true
 	original.actions_since_sleep = 7
+	# Playtest feature 3: the [Light] PC-glow flag round-trips (additive-optional,
+	# default false) so a load restores the conjured orb.
+	original.light_active = true
 
 	var data := WISave.serialize(original)
 	assert(data["version"] == WISave.VERSION, "save version matches the current constant")
@@ -85,6 +88,14 @@ func _init() -> void:
 	assert(restored.inventory.has("rusty_sword") and restored.inventory.has("leather_jerkin"), "inventory carries both the starter sword and the picked-up armor")
 	assert(restored.container_state == original.container_state, "container_state restored")
 	assert(int(restored.actions_since_sleep) == 7, "actions_since_sleep restored")
+	assert(restored.light_active == original.light_active, "light_active restored")
+	assert(restored.light_active == true, "light_active round-trips as true")
+	# Additive-optional default: a save with no light_active key restores false.
+	var no_glow: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	no_glow.erase("light_active")
+	var glow_target := _new_game()
+	assert(WISave.apply(glow_target, {"version": WISave.VERSION, "state": no_glow}), "save without light_active still applies")
+	assert(glow_target.light_active == false, "absent light_active defaults false")
 	assert(restored.find_entity("goblin_encounter_2").is_empty(), "removed entity stays removed")
 	assert(restored.rng.state == original.rng.state, "rng state restored")
 	assert(restored.rng.randi() == original.rng.randi(), "rng stream remains deterministic")

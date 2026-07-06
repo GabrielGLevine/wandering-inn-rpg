@@ -68,6 +68,10 @@ extends RefCounted
 ## A save missing the key (any save written before Economy v1) restores 0,
 ## which is exactly correct (currency did not exist yet, so nothing was
 ## earned); a present-but-wrong-typed value (not int/float) is still rejected.
+## (Playtest feature 3): `light_active` (bool, the conjured [Light] orb glow) is
+## added the SAME additive-optional way -- NOT in `required`, NO version bump.
+## A save missing the key restores false (no orb was lit before the feature
+## existed); a present-but-non-bool value is rejected.
 const VERSION := 5
 
 
@@ -93,6 +97,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"social_talked": game.social_talked.duplicate(true),
 		"entity_first_use": game.entity_first_use.duplicate(true),
 		"gold": game.gold,
+		"light_active": game.light_active,
 		"rng_state": str(game.rng.state),
 	}}
 
@@ -197,6 +202,12 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# actions_since_sleep check).
 	if s.has("gold") and not (s["gold"] is int or s["gold"] is float):
 		return false
+	# light_active (Playtest feature 3, the [Light] PC glow) follows the SAME
+	# additive-optional pattern -- default false when absent (any save written
+	# before this feature had no orb lit), rejected if present-but-non-bool. No
+	# version bump.
+	if s.has("light_active") and not (s["light_active"] is bool):
+		return false
 	# inventory/equipped/container_state/actions_since_sleep (M7 Task E2) ARE
 	# in `required` above (this is a version-bumped addition, not the
 	# additive-optional pattern) -- still type-checked here like every other
@@ -255,6 +266,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.social_talked = social_talked.duplicate(true)
 	game.entity_first_use = entity_first_use.duplicate(true)
 	game.gold = int(s.get("gold", 0))
+	game.light_active = bool(s.get("light_active", false))
 	game.rng.state = int(String(s["rng_state"]))
 	game.reprime_quests()
 	return true

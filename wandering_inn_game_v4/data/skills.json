@@ -105,7 +105,7 @@
 			"icon": "icon_light",
 			"contexts": ["exploration"],
 			"field": true,
-			"field_ambient": "[Light] — A small orb of steady white light kindles at your fingertips, then gently winks out.",
+			"field_ambient": "[Light] — A steady white orb rises to follow you, throwing back the dark.",
 			"description": "A mage's first, faithful spell: a small orb of steady white light."
 		},
 		{

@@ -39,6 +39,18 @@ const LIGHT_TEXTURE_PX := 64.0
 ## `_rebuild_field` pass, after every decor/entity light has been counted.
 const LIGHT_BUDGET := 8
 
+## Playtest feature 3 ([Light] glow on the PC): the conjured arcane orb the PC
+## carries while `Game.sim.light_active`. A warm-white, campfire-CLASS radius,
+## STEADY (no flicker -- it reads as arcane, not fire) PointLight2D attached to
+## the player visual. Deliberately NOT registered with `_atmosphere` (never
+## routed through `_spawn_light`/`register_light`), so the phase multiplier
+## never touches it: it stays lit at day too (day's 0.0 multiplier would make a
+## registered light invisible). Diegetically constant -- it is magic. Excluded
+## from LIGHT_BUDGET for the same reason (it is not map content).
+const PC_LIGHT_COLOR := Color(1.0, 0.95, 0.8)
+const PC_LIGHT_RADIUS := 32.0
+const PC_LIGHT_ENERGY := 1.0
+
 ## M-BEAUTY Task B3: ambience presets (fireflies/dust_motes/leaves/
 ## pond_glints/embers -- see ambience.gd) spawned from map `ambience` data.
 ## Spec §5 budget: ≤6 emitters/map, asserted the same way as LIGHT_BUDGET.
@@ -85,6 +97,11 @@ var _camera: Camera2D
 var _player_visual: Node2D
 var _player_sprite: AnimatedSprite2D
 var _player_anim_token := 0
+## Playtest feature 3: the PC-following [Light] glow node (a child of
+## `_player_visual`, so it tweens with the PC for free). Null when unlit.
+## Freed with its holder on every `_rebuild_field` (see the null-out there);
+## re-attached from `Game.sim.light_active` by `_reconcile_pc_light`.
+var _pc_light: PointLight2D
 ## One slot, not two -- a move and a bump landing on the player in quick
 ## succession (M5 R5 review Low #2) must kill whichever tween is already
 ## running before starting the other, or both fight over `.position` for up
@@ -268,6 +285,11 @@ func _rebuild_field() -> void:
 		child.queue_free()
 	_entity_visuals.clear()
 	_player_sprite = null
+	# Playtest feature 3: the PC glow is a child of the old _player_visual, which
+	# the queue_free() above will free -- drop our dangling reference so
+	# _reconcile_pc_light re-attaches a fresh node to the NEW holder below if
+	# Game.sim.light_active is still set (map change / load while lit).
+	_pc_light = null
 	# M-BEAUTY Task B2: drop every light registered for the OLD map before
 	# any new one is spawned below -- the old map's holders (and their light
 	# children) are only queue_free()d above, not freed synchronously, so
@@ -298,6 +320,10 @@ func _rebuild_field() -> void:
 	_player_sprite = _first_sprite_child(_player_visual)
 	_play_player_anim("idle")
 	_count_visual(_player_visual, render_counts)
+	# Playtest feature 3: re-attach the PC [Light] glow if the sim says it is lit
+	# (a map change or a load restored `light_active`). Done here, after the new
+	# _player_visual exists, so the glow survives every rebuild.
+	_reconcile_pc_light()
 	ObservableBus.emit_domain_event(WIEvents.UI_ENTITIES_RENDERED, render_counts)
 	assert(_light_count <= LIGHT_BUDGET,
 		"map %s exceeds the %d-light budget (%d) -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
@@ -783,6 +809,52 @@ func _spawn_light(holder: Node2D, light: Dictionary) -> void:
 	_light_count += 1
 
 
+## Playtest feature 3: brings the PC-following [Light] glow into agreement with
+## the sim's authoritative `light_active` flag. Attaches a fresh glow if lit and
+## missing; removes it if unlit and present; no-ops (and emits nothing) when the
+## visual already matches the flag -- so a re-cast while already lit, or a
+## dusk/night phase crossing, does not double the light or re-fire the event.
+## Called from three places: `_rebuild_field` (map change / load re-attach), the
+## SKILL_USED{light} hook (live cast), and the PHASE_CHANGED hook (sleep clear).
+func _reconcile_pc_light() -> void:
+	var want := Game.sim.light_active
+	var have := is_instance_valid(_pc_light)
+	if want == have:
+		return
+	if want:
+		_attach_pc_light()
+	else:
+		_detach_pc_light()
+	ObservableBus.emit_domain_event(WIEvents.UI_PC_LIGHT_RENDERED, {"active": want})
+
+
+## Playtest feature 3: builds the PC glow PointLight2D as a child of
+## `_player_visual`, centered on the PC's cell (so it tweens with the PC for
+## free), reusing the same soft radial texture the map lights use. Steady (no
+## flicker), warm-white, campfire-class radius. NOT registered with
+## `_atmosphere` -- that is the whole point (see PC_LIGHT_* consts): the phase
+## multiplier never touches it, so it stays lit at day too.
+func _attach_pc_light() -> void:
+	if _player_visual == null:
+		return
+	var pl := PointLight2D.new()
+	pl.texture = LIGHT_TEXTURE
+	pl.color = PC_LIGHT_COLOR
+	pl.energy = PC_LIGHT_ENERGY
+	pl.texture_scale = (PC_LIGHT_RADIUS * 2.0) / LIGHT_TEXTURE_PX
+	pl.position = Vector2(CELL, CELL) * 0.5
+	_player_visual.add_child(pl)
+	_pc_light = pl
+
+
+## Playtest feature 3: removes the PC glow node (sleep clear). No atmosphere
+## unregister needed -- the glow was never registered.
+func _detach_pc_light() -> void:
+	if is_instance_valid(_pc_light):
+		_pc_light.queue_free()
+	_pc_light = null
+
+
 ## M-BEAUTY Task B3: reads the current map's `ambience` list (M5 R4-style
 ## passthrough field, same idiom as `decor`/`scatter`) and spawns one
 ## GPUParticles2D per entry via `WIAmbience.make`, registering each with
@@ -906,6 +978,19 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		var source_id := String(payload.get("source", ""))
 		if source_id != "":
 			call_deferred("_refresh_entity_visual", source_id)
+	elif type == WIEvents.SKILL_USED:
+		# Playtest feature 3: a live [Light] cast (prop OR ambient path both emit
+		# skill_used{skill:"light"}). Reconcile against Game.sim.light_active --
+		# the ambient cast set it true (attach the PC glow); the prop-targeted
+		# lantern/cellar cast leaves it false (no-op here, prop light unchanged).
+		if String(payload.get("skill", "")) == "light":
+			_reconcile_pc_light()
+	elif type == WIEvents.PHASE_CHANGED:
+		# Playtest feature 3: sleep() clears light_active and fires PHASE_CHANGED
+		# unconditionally -- reconcile detaches the PC glow on that beat. Harmless
+		# on a dusk/night crossing while lit (the flag is still true, reconcile is
+		# a no-op then), so this single hook covers the sleep-clear cleanly.
+		_reconcile_pc_light()
 
 
 func _move_player_visual(target: Vector2) -> void:
