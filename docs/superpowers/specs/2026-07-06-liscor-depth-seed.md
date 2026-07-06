@@ -52,9 +52,10 @@ with: map + card + dressed entities + at least one mechanical surface
 (board / bed / shop / cell), never empty rooms. QA: one walkthrough
 canonical per interior (gate_district precedent).
 
-## Open user calls (at spec ratification)
+## RATIFIED (user 2026-07-06)
 
-Which third interior ships v1; whether the request board's bounties
-are handwritten v1 or pool-rotated; whether "your room" affects sleep
-mechanically (just flavor v1 — recommended) or later ties to
-[Garden of Sanctuary].
+Third interior = the WATCH BARRACKS (Zevara venue + cell room). THE
+REQUEST BOARD LIVES IN THE ADVENTURER'S GUILD (canon — bounties post
+at the Guild; the barracks is a setting, not a bounty source; watch-
+flavored bounties still POST at the Guild board). Bounties rotate
+(pool-re-arm idiom). Your room = flavor v1.
