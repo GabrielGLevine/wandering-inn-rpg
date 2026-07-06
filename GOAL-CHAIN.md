@@ -68,26 +68,36 @@ pools — relationship arcs? re-armable persuasion? social quests?);
 QUEUE the open design calls in HANDOFF for the user, execute only
 after their ratification.
 
-**7. THE EXPANSIONS (user-seeded, canon-anchored — each a content-wave-
+**7. M-DEPTH — LISCOR INTERIORS (user 2026-07-06; the scope rule
+"depth-in-Liscor beats map sprawl" applied):** seed spec
+`docs/superpowers/specs/2026-07-06-liscor-depth-seed.md` — the
+Adventurer's Guild interior (Selys relocates behind the desk; Olesm's
+haunt; THE REQUEST BOARD = the repeatable-bounty surface), the inn
+upstairs (your room; the inn-as-home grammar the Garden hook needs),
++ one more interior (user picks: Krshia's shop / Watch barracks / the
+Dark Cellar). Spec-ratify the open calls with the user → plan →
+execute. Every interior ships a mechanical surface, never an empty room.
+
+**8. THE EXPANSIONS (user-seeded, canon-anchored — each a content-wave-
 class milestone; [Door of Portals] is the shared front door):**
-- **7a. [Door of Portals] + [Garden of Sanctuary]** (the unlock
+- **8a. [Door of Portals] + [Garden of Sanctuary]** (the unlock
   mechanism first): the inn's magic door as the earned access gate to
   expansion maps + Liscor fast travel (door_when/act machinery scales);
   the Garden as an earned sanctuary space in the inn. Spec-brainstorm
   the earn conditions with the user (taste-gated), then plan + execute.
-- **7b. Riverfarm — the Witch quest** (smaller scope than Invrisil:
+- **8b. Riverfarm — the Witch quest** (smaller scope than Invrisil:
   village map family, witches' canon, one multi-path quest chain).
-- **7c. Invrisil — Brothers of Serendipitous Meetings** (big-city map
+- **8c. Invrisil — Brothers of Serendipitous Meetings** (big-city map
   family, hideouts, rogues, HUMAN enemies — the stealth/movement Skills
   from step 5 are load-bearing here; sequence after the Skills wave
   delivers them).
-- **7d. Liscor Dungeon — with the Horns of Hammerad** (the M-ARC
+- **8d. Liscor Dungeon — with the Horns of Hammerad** (the M-ARC
   Raskghar seal-beat hook pays off; party context machinery fields the
   Horns; the demo's endgame content).
 Each expansion: spec (canon-heavy, user-gated) → plan → execute →
 review → playtest, per the content-wave precedent (profiles for every
 new character FIRST, three-path quest parity, direction cards per map).
-Order 7a→7b→7c→7d unless the user reorders at a boundary.
+Order 8a→8b→8c→8d unless the user reorders at a boundary.
 
 ## The machine (unchanged, no exceptions)
 - superpowers:subagent-driven-development: fresh implementer per task
