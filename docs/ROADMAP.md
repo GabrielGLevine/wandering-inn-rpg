@@ -156,6 +156,13 @@ packaging/launch. Open-source track runs in parallel (license audit first).
    RIVERFARM; (c) Liscor DUNGEON quest with the Horns of Hammerad.
    Each is a content-wave-class milestone (new map family + characters
    + quests); order at brainstorm.
+3. **Progression-gated unlocks** (user 2026-07-06, canon inn features):
+   (a) **[Door of Portals]** — the inn's magic door as the ACCESS
+   MECHANISM for the expansion maps (Riverfarm, Invrisil) + fast travel
+   back to Liscor; gates the whole expansion family behind an earned
+   unlock (mechanism: door_when precedent from C1 scales to this).
+   (b) **[Garden of Sanctuary]** in the inn — earned sanctuary space.
+   Both slot naturally as M-ARC-adjacent or the expansions' front door.
 
 ## AMENDMENT (2026-07-05 night): Onboarding + Three Pillars BOTH CLOSED SHIP; M-RELEASE build-out complete
 
