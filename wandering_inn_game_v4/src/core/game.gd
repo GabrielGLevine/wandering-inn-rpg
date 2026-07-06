@@ -87,9 +87,6 @@ func _make_sim() -> WIGame:
 		"arenas": _load_json("res://data/arenas.json"),
 	}
 	combat_config["quests"] = _load_json("res://data/quests.json")
-	# M-ARC Task A1: acts.json is the counter-derived act-line catalog consumed
-	# by WIActs (via WIGame.act_summary()) -- same injection lane as quests.
-	combat_config["acts"] = _load_json("res://data/acts.json")
 	# M7 Task E2: items.json feeds WIGame.item()/the combat-build weapon gate.
 	# Without this the real game's `equipped.weapon` (default "rusty_sword")
 	# would resolve to {} at every combat build, defaulting weapon_family to

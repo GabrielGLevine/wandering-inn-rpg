@@ -82,3 +82,27 @@ trace at the final review.
 Multiple endings; Raskghar language/culture content (tease only); the
 actual Liscor Dungeon (expansion milestone); Mrsha/Toren; New Game+;
 free party selection (future milestone, banked).
+
+## 5. Character creation at New Game (user directive 2026-07-06, rides Act I)
+
+Title → NEW GAME → **creation screen** (race, gender, name) → the GDI
+cold open → inn. Controller calls (flag to change):
+- **Races v1: Human / Drake / Gnoll** (Liscor's demographics). The GDI
+  opener copy BRANCHES by race: Human keeps the otherworlder arrival;
+  Drake/Gnoll get a "starting over in Liscor" variant (canon-safe —
+  only humans are Earth otherworlders).
+- **Gender: cosmetic** (sprite variant + nothing mechanical). **Race:
+  cosmetic + flavor lines v1** (a few NPC dialogue variants may key on
+  race later; no racial mechanics without a brainstorm).
+- **Name** replaces "Traveler" on every surface (combat turn strip,
+  readout, dialogue references, journal). Default placeholder stays
+  "Traveler". Text input via the title screen's native-res UI.
+- **Sprites: 6 variants** (3 races × 2 genders) through the v2
+  character pipeline (create-character-with-8-directions +
+  animate-character), each per the character-profiles contract (PC
+  entry: simple earth-tone traveler clothes). F2's output = the Human
+  base; Drake/Gnoll bodies generated to the same animation set.
+- **QA: TestDriver auto-skips creation with defaults** (Human/male/
+  "Traveler") — every existing canonical script byte-unchanged; ONE new
+  canonical (`char_creation`) drives the real UI path. Save: 3 additive
+  fields.

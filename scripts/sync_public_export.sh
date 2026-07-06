@@ -51,7 +51,13 @@ __pycache__
 .DS_Store
 EOF
 
-rsync -a --delete --exclude-from="$EXCLUDES" "$ROOT/" "$DEST/"
+# Sync from COMMITTED HEAD, never the live working tree: a running
+# implementer lane's uncommitted files must never ship (this exact leak
+# put half-finished PC sprites into a release build, 2026-07-06).
+STAGE="$(mktemp -d)"
+trap 'rm -rf "$STAGE"' EXIT
+git -C "$ROOT" archive HEAD | tar -x -C "$STAGE"
+rsync -a --delete --exclude-from="$EXCLUDES" "$STAGE/" "$DEST/"
 
 # Leak check (same as the initial export).
 LEAKS=0

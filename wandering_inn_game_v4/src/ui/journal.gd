@@ -135,10 +135,9 @@ func _can_open() -> bool:
 
 func _open() -> void:
 	open = true
-	var act: Dictionary = Game.sim.act_summary()
 	var quest_lines: Array = Game.sim.quest_summary()
 	var skill_groups: Array = Game.sim.skills_journal()
-	_body_label.text = _build_body_text(act, quest_lines, skill_groups)
+	_body_label.text = _build_body_text(quest_lines, skill_groups)
 	_root.show()
 	# The RichTextLabel's scrollbar geometry is only valid after a layout pass,
 	# so evaluate the overflow cue on the next idle frame (reset scroll to top
@@ -161,21 +160,11 @@ func _open() -> void:
 	# Payload extended for the UI wave (item 19): QA can assert the panel
 	# actually rendered the grouped-by-class structure and the first-use
 	## reveal state, not just that the (opaque, empty) event fired.
-	# M-ARC Task A1 extends it again with the act-line data (current act id +
-	# achieved-beat count) so arc_flow/journal QA can gate act progression.
-	var act_beats: Array = act.get("beats", [])
-	var act_beats_achieved := 0
-	for raw_beat: Variant in act_beats:
-		if bool((raw_beat as Dictionary).get("achieved", false)):
-			act_beats_achieved += 1
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_SHOWN, {
 		"quest_lines": quest_lines.size(),
 		"skill_groups": headings,
 		"skill_count": skill_count,
 		"revealed_skills": revealed_skills,
-		"act_id": String(act.get("id", "")),
-		"act_beats": act_beats.size(),
-		"act_beats_achieved": act_beats_achieved,
 	})
 
 
@@ -212,19 +201,8 @@ func _update_scroll_hint() -> void:
 ## skill's `text` verbatim (name-only pre-first-use, name + description
 ## after — the opacity split lives entirely in WIGame.skills_journal/
 ## _skill_entries; this file only renders the string it's handed).
-func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array) -> String:
-	var parts: Array = []
-	# M-ARC Task A1: the act-line section leads the journal -- the current act
-	# header + its milestone beats (results-only copy), achieved beats marked.
-	# Absent only if no acts catalog loaded (degrades to Quests-first as before).
-	if not act.is_empty():
-		parts.append("[b]%s[/b]" % _bb_escape(String(act.get("header", ""))))
-		for raw_beat: Variant in act.get("beats", []):
-			var beat := raw_beat as Dictionary
-			var marker := "✓ " if bool(beat.get("achieved", false)) else "· "
-			parts.append("%s%s" % [marker, _bb_escape(String(beat.get("text", "")))])
-		parts.append("")
-	parts.append("[b]Quests[/b]")
+func _build_body_text(quest_lines: Array, skill_groups: Array) -> String:
+	var parts: Array = ["[b]Quests[/b]"]
 	if quest_lines.is_empty():
 		parts.append("No quests yet.")
 	else:

@@ -399,13 +399,6 @@ func interact() -> Dictionary:
 			return {}
 		"door":
 			transition(String(target["to_map"]), Vector2i(int(target["to_cell"][0]), int(target["to_cell"][1])))
-			# M-ARC Task A1: a door may bank an arrival flavor counter on travel
-			# (data seam -- liscor_gate banks `reached_liscor`, the Act I gate's
-			# street-arrival counter). Fires only here, on real door interaction:
-			# QA teleport and save/load restore go through bind_map_silent and
-			# never reach this branch, so a load can't spuriously advance the act.
-			if target.has("on_enter_accomplishment"):
-				record_accomplishment(String(target["on_enter_accomplishment"]))
 			return {"map": current_map}
 		_:
 			_emit(WIEvents.INTERACT_UNHANDLED, {"kind": String(target["kind"]), "id": String(target["id"])})
@@ -851,37 +844,6 @@ func quest_summary() -> Array:
 		var title := _quest_title(id)
 		out.append("%s — %s" % [title, "Complete" if bool(ev[id]["completed"]) else String(ev[id]["beat_description"])])
 	return out
-
-
-## Count of COMPLETED started quests (pure read via WIQuests) -- the Act II
-## gate's "3 of the 4 quests" breadth bar.
-func _quests_completed_count() -> int:
-	var catalog: Dictionary = _combat_config.get("quests", {})
-	if catalog.is_empty() or started_quests.is_empty():
-		return 0
-	var ev := WIQuests.evaluate(catalog, started_quests, accomplishments)
-	var n := 0
-	for id: String in ev:
-		if bool(ev[id]["completed"]):
-			n += 1
-	return n
-
-
-## M-ARC Task A1: the journal act-line data (current act header + milestone
-## beats), the same "sim builds the render-ready structure, UI only renders it"
-## convention as quest_summary/skills_journal. Counter-derived (WIActs), never
-## stored -- old saves land in the correct act by construction. Empty catalog
-## -> {} (journal shows no act section).
-func act_summary() -> Dictionary:
-	var catalog: Dictionary = _combat_config.get("acts", {})
-	if catalog.is_empty():
-		return {}
-	var ctx := {
-		"classes_count": classes.size(),
-		"quests_completed": _quests_completed_count(),
-		"accomplishments": accomplishments,
-	}
-	return WIActs.evaluate(catalog, ctx)
 
 
 func _quest_title(id: String) -> String:
