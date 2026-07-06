@@ -121,6 +121,13 @@
   { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "skill_groups": ["Innate", "Warrior"], "skill_count": 5 }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "06_journal_knowledge_not_fieldability" },
   { "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 }
+  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
+
+  { "_comment": "M-JUICE E1 audio-coverage assertions. This loop already traverses every juice beat -- chest pickup (item_gained), spar+ambush hits (attack_resolved{hit}) & won ambush (combat_finished{victory}), the Warrior sleep (class_gained = THE ding), the spear equip (item_equipped), and door transitions (map_changed) -- so it doubles as the audio_played coverage-map proof (chosen over a bespoke audio_feedback script per E1's judgment clause: same coverage, no new seed to derive, assert-only so the pinned seed-9 run is untouched). Every assert is payload-qualified by id, keeping the FIFO/qualified-wait discipline. audio_played fires in headless as 'mapping validated + would have played' (WIAudio silent no-op, no device), which is exactly the coverage surface.", "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "item_pickup" } },
+  { "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "item_equip" } },
+  { "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "door_transition" } },
+  { "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "attack_hit" } },
+  { "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "victory" } },
+  { "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "class_gained" } }
  ]
 }

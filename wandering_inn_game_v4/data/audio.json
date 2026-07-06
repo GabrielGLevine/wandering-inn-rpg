@@ -213,6 +213,46 @@
    "bus": "UI",
    "volume_db": -13.0,
    "cooldown_ms": 150
+  },
+  {
+   "id": "door_transition",
+   "event": "map_changed",
+   "stream": "res://assets/audio/sfx/door_transition.wav",
+   "bus": "SFX",
+   "volume_db": -16.0,
+   "cooldown_ms": 200
+  },
+  {
+   "id": "item_pickup",
+   "event": "item_gained",
+   "stream": "res://assets/audio/sfx/item_pickup.wav",
+   "bus": "SFX",
+   "volume_db": -13.0,
+   "cooldown_ms": 80
+  },
+  {
+   "id": "item_equip",
+   "event": "item_equipped",
+   "stream": "res://assets/audio/sfx/item_equip.wav",
+   "bus": "SFX",
+   "volume_db": -14.0,
+   "cooldown_ms": 80
+  },
+  {
+   "id": "ui_open",
+   "event": "ui_inventory_shown",
+   "stream": "res://assets/audio/sfx/ui_open.wav",
+   "bus": "UI",
+   "volume_db": -15.0,
+   "cooldown_ms": 60
+  },
+  {
+   "id": "ui_close",
+   "event": "ui_inventory_hidden",
+   "stream": "res://assets/audio/sfx/ui_close.wav",
+   "bus": "UI",
+   "volume_db": -15.0,
+   "cooldown_ms": 60
   }
  ],
  "music": [

@@ -25,8 +25,12 @@ const KNOWN_EVENTS: Dictionary = {
 	"dialogue_started": true,
 	"game_loaded": true,
 	"game_reset": true,
+	"item_equipped": true,
+	"item_gained": true,
 	"map_changed": true,
 	"player_moved": true,
+	"ui_inventory_hidden": true,
+	"ui_inventory_shown": true,
 	"quest_beat_completed": true,
 	"quest_completed": true,
 	"quest_started": true,
@@ -64,6 +68,11 @@ const REQUIRED_IDS: Array[String] = [
 	"class_gained",
 	"quest_chime",
 	"save_chime",
+	"door_transition",
+	"item_pickup",
+	"item_equip",
+	"ui_open",
+	"ui_close",
 ]
 
 ## `context` is a human label (title / map id / combat / victory); `kind`
