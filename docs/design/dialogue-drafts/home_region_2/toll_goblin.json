@@ -1,0 +1,89 @@
+{
+	"_comment": "DRAFT (dialogue-drafts lane 2026-07-06, NOT wired). 'The Bridge Toll' — the game's first joke quest; voice-lint hard per spec. Spec: docs/superpowers/specs/2026-07-06-home-region-content-2-design.md §2/§4. Voice contract: character-profiles-staging.md 'The toll-goblin' (broken-Common with dignity, price-anchoring bits, total sincerity once hired). Speaker 'Toll' = self-named goblin (canon-resonant: goblins earn/take their own names) — ORIGINAL+flag. The [Diplomat] class gate on the hire chain is an in-fiction exception per the goblin_parley precedent. Wiring + opens: toll_goblin.md.",
+	"_hired_talk_pool_note": "Draft of the hired-lookout rotating pool — belongs in skeleton_scene.json entity data as talk_pool_post {requires_accomplishment:{hired_toll_goblin:1}}, per Lyonette's C4 pool-growth precedent. NOT part of the graph.",
+	"_hired_talk_pool": [
+		"Wagon at dawn. Ox angry, man angrier, cabbages. Paid no toll — wagon too fast. Remembered forever.",
+		"Big deer on north field. Antlers ORANGE. Not on fire. Checked twice.",
+		"Boulder by east rocks MOVED. Boulders not move. This one moves. Watching it. Not blinking much.",
+		"More goblins on gate road. Not my goblins. My goblins is me."
+	],
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Toll",
+			"text": "Bridge MINE. Toll two gold. Is official. Sash says.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "fought_toll_goblin": 1 } }, "text": "You. Hitting one. ...Toll one gold. Special price. No hitting." },
+				{ "requires": { "accomplishment": { "hired_toll_goblin": 1 } }, "text": "Boss! Bridge safe, road talky. Toll one gold — boss discount is zero. Toll is PRINCIPLE." }
+			],
+			"options": [
+				{ "text": "(Pay the toll.) Two gold, then.", "requires": { "gold": 2 }, "effects": [ { "gold": -2 }, { "accomplishment": "paid_bridge_toll" } ], "goto": "paid" },
+				{ "text": "Two gold? For planks?", "goto": "haggle" },
+				{ "text": "The bridge isn't yours. Move.", "goto": "standoff" },
+				{ "text": "A goblin who can hold a bridge could hold something better. (Persuade)", "requires": { "class": { "diplomat": 1 } }, "hide_when": { "accomplishment": { "hired_toll_goblin": 1 } }, "goto": "hire_pitch" },
+				{ "text": "What did the road say today?", "requires": { "accomplishment": { "hired_toll_goblin": 1 } }, "goto": "gossip_nudge" },
+				{ "text": "Not today.", "end": true }
+			]
+		},
+		"paid": {
+			"speaker": "Toll",
+			"text": "Good traveler. BEST traveler. Bridge very safe now. Toll covers both ways. Today only. Is promotion.",
+			"options": [
+				{ "text": "You run a tight bridge.", "end": true }
+			]
+		},
+		"haggle": {
+			"speaker": "Toll",
+			"text": "Planks GOOD planks. Counted twice. ...Fine. One gold. One gold and shiny rock. Deal-deal.",
+			"options": [
+				{ "text": "(Pay 1 gold. Hand over a river pebble.)", "requires": { "gold": 1 }, "effects": [ { "gold": -1 }, { "accomplishment": "paid_bridge_toll" } ], "goto": "paid_haggle" },
+				{ "text": "No deal.", "goto": "hub" }
+			]
+		},
+		"paid_haggle": {
+			"speaker": "Toll",
+			"text": "Hm. Shiny-ish. ...Deal stands. Toll paid. Rock goes in rock pile. Is BIG pile. Go, go.",
+			"options": [
+				{ "text": "Enjoy the pile.", "end": true }
+			]
+		},
+		"standoff": {
+			"speaker": "Toll",
+			"text": "Rude! Bridge law says— says NO. Sash outranks you. Toll or teeth.",
+			"options": [
+				{ "text": "(Draw steel.) Teeth, then.", "effects": [ { "start_combat": "toll_goblin_scrap" } ], "end": true },
+				{ "text": "Fine. Forget it.", "goto": "hub" }
+			]
+		},
+		"hire_pitch": {
+			"speaker": "Toll",
+			"text": "...Better how. Bridge is mine. Mine is GOOD. Had worse. Had nothing. Nothing is worse.",
+			"options": [
+				{ "text": "Keep the bridge. Watch the road. I pay for what you see — that makes you a lookout, and a lookout outranks a toll-goblin.", "goto": "hire_deal" },
+				{ "text": "Never mind. Carry on.", "goto": "hub" }
+			]
+		},
+		"hire_deal": {
+			"speaker": "Toll",
+			"text": "Look-out. LOOK-out. ...Outranks sash? Hm. Hm hm hm. Toll stays. Small toll. Lookout with toll. Both jobs. Double official.",
+			"options": [
+				{ "text": "Done. The toll stays — and the road's news comes to me first.", "effects": [ { "accomplishment": "hired_toll_goblin" }, { "accomplishment": "persuaded_someone" } ], "goto": "hired" },
+				{ "text": "That's not how ranks work. Forget it.", "goto": "hub" }
+			]
+		},
+		"hired": {
+			"speaker": "Toll",
+			"text": "DEAL. You boss now. Toll watches EVERYTHING. Wagons, deer, rocks, sneaky rocks. Report is free. Toll is not free. Toll is never free.",
+			"options": [
+				{ "text": "Welcome to the payroll, Toll.", "end": true }
+			]
+		},
+		"gossip_nudge": {
+			"speaker": "Toll",
+			"text": "Road talks all day. Toll listens all day. Ask again when Toll is standing at post — post is THERE. Two steps. Professional distance.",
+			"options": [
+				{ "text": "Two steps it is.", "end": true }
+			]
+		}
+	}
+}

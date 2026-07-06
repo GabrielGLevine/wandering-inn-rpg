@@ -1,0 +1,104 @@
+{
+	"_comment": "DRAFT (dialogue-drafts lane 2026-07-06, NOT wired). 'The Price of a Favor' — the Witch: tea-first meet, the debt truth, TALK renegotiation, post-quest vendor mode. Spec: docs/superpowers/specs/2026-07-06-riverfarm-design.md §3/§4. Voice contract: character-profiles-staging.md 'The Witch' (barter-speak, tea-first manners, prices in favors never coin, never asks twice). Speaker kept UNNAMED ('The Witch') — see witch.md for the naming question (Eloise is the canon-nearest fit, deliberately not committed). Vendor item ids are M-GEAR placeholders, flagged. The [Diplomat] gate on the renegotiation win is spec-directed ('[Diplomat]-line mediation').",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "The Witch",
+			"text": "Lost, or looking. Both drink tea here. Sit.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "heard_of_the_blight": 1 } }, "text": "You want the blight gone. I want what I'm owed. One of these is easy. ...Sit. Tea first. The craft has MANNERS." },
+				{ "requires": { "accomplishment": { "learned_debt_truth": 1 } }, "text": "The kettle remembers you. The debt stands — unless you've brought something better than blame." },
+				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "The green is back in the village's cheeks. Accounts settle; kettles boil. Sit — or shop. I take coin now. Under protest." }
+			],
+			"options": [
+				{ "text": "(Sit. Take the tea.)", "hide_when": { "accomplishment": { "took_witchs_tea": 1 } }, "effects": [ { "accomplishment": "took_witchs_tea" } ], "goto": "tea" },
+				{ "text": "The village says you cursed their fields.", "requires": { "accomplishment": { "took_witchs_tea": 1 } }, "hide_when": { "accomplishment": { "learned_debt_truth": 1 } }, "effects": [ { "accomplishment": "learned_debt_truth" } ], "goto": "truth" },
+				{ "text": "Then renegotiate. A debt collecting dust earns you nothing.", "requires": { "accomplishment": { "learned_debt_truth": 1 } }, "hide_when": { "accomplishment": { "blight_lifted": 1 } }, "goto": "renegotiate" },
+				{ "text": "Your collectors are mulch. The debt's done collecting.", "requires": { "accomplishment": { "drove_off_collectors": 1 } }, "hide_when": { "accomplishment": { "blight_lifted": 1 } }, "effects": [ { "accomplishment": "blight_lifted" }, { "accomplishment": "witch_debt_beaten" } ], "goto": "resolution_fight" },
+				{ "text": "The offering's cooked, the candles are lit, the knot's read true. The price is paid.", "requires": { "accomplishment": { "paid_price_yourself": 1 } }, "hide_when": { "accomplishment": { "blight_lifted": 1 } }, "effects": [ { "accomplishment": "blight_lifted" }, { "accomplishment": "witch_debt_paid_for" } ], "goto": "resolution_skill" },
+				{ "text": "What's on your shelf?", "requires": { "accomplishment": { "blight_lifted": 1 } }, "goto": "shop" },
+				{ "text": "Another time.", "end": true }
+			]
+		},
+		"tea": {
+			"speaker": "The Witch",
+			"text": "Nettle, and second-spring honey. Drink. ...There. Now we're people, not positions. Whatever you came to shout, it will come out smaller now. They always do.",
+			"options": [
+				{ "text": "One more thing.", "goto": "hub" },
+				{ "text": "Good tea. That's all for now.", "end": true }
+			]
+		},
+		"truth": {
+			"speaker": "The Witch",
+			"text": "Cursed. Mm. I sold a favor — fair-priced, eyes open, hands shaken. The buyer took the favor and shut their eyes come paying-time. The craft doesn't curse, traveler. It COLLECTS. That grey in the barley is interest, walking. Simple as a ledger, and older than one.",
+			"options": [
+				{ "text": "Who bought the favor?", "goto": "collateral" },
+				{ "text": "I'll see what can be done.", "end": true }
+			]
+		},
+		"collateral": {
+			"speaker": "The Witch",
+			"text": "Names are prices too, and you haven't earned that one. ...But you sat, and you drank, so here's a taste for free: look for the villager whose words aren't their own. The craft holds collateral. It's considerate that way.",
+			"options": [
+				{ "text": "One more thing.", "goto": "hub" },
+				{ "text": "I'll find them.", "end": true }
+			]
+		},
+		"renegotiate": {
+			"speaker": "The Witch",
+			"text": "Earns me nothing? It earns me a reputation. A witch owed is a witch feared. ...A witch PAID, mind, is a witch fed, and fear makes thin soup. Go on, then. Your offer. I'll hear it once.",
+			"options": [
+				{ "text": "A year of hearth-tending. Wood split, fire fed, kettle minded — their own hands, every day, where the village can watch the debt be honored. (Mediate)", "requires": { "class": { "diplomat": 1 } }, "effects": [ { "accomplishment": "witch_debt_renegotiated" }, { "accomplishment": "persuaded_someone" }, { "accomplishment": "blight_lifted" } ], "goto": "resolution_talk" },
+				{ "text": "I'll pay it in coin. Name the sum.", "goto": "coin_refused" },
+				{ "text": "Let me think on my offer.", "goto": "hub" }
+			]
+		},
+		"coin_refused": {
+			"speaker": "The Witch",
+			"text": "Coin. The favor wasn't coin-priced, so coin can't close it. You cannot pay a fire debt with a fish, traveler — the ledger knows what it's owed. Offer something that costs the DEBTOR, or sit down and finish your tea.",
+			"options": [
+				{ "text": "Then hear a better offer.", "goto": "renegotiate" },
+				{ "text": "I'll come back with one.", "end": true }
+			]
+		},
+		"resolution_talk": {
+			"speaker": "The Witch",
+			"text": "...A year of hands at my hearth. Warmth, labor, and the whole village watching a debt get HONORED instead of dodged. That's worth more than the old price, and you knew it when you said it. Done. Tell them the fields will remember faster than they were forgot — barley's forgiving. More than me, less than most.",
+			"options": [
+				{ "text": "I'll tell the village.", "end": true }
+			]
+		},
+		"resolution_fight": {
+			"speaker": "The Witch",
+			"text": "Briar grows back. Cheaply. ...But no. A debt defended is a debt ARGUED, and you argued it in a language the craft respects. The claim is spent; the blight lifts with the morning fog. We are not friends, you and I. We are square. Square lasts longer.",
+			"options": [
+				{ "text": "Square suits me.", "end": true }
+			]
+		},
+		"resolution_skill": {
+			"speaker": "The Witch",
+			"text": "Cooked without scorching. Lit without fuss. And you READ the knot instead of cutting it — do you know how few blades manage that? The price is paid. Wrong hands, right coin; the ledger won't quibble and neither will I. There's a stool by this hearth with your shape in it now. That is not a favor. Favors get priced.",
+			"options": [
+				{ "text": "I'll take the stool sometime.", "end": true }
+			]
+		},
+		"shop": {
+			"speaker": "The Witch",
+			"text": "Under protest, mind. Coin is the one favor the whole world agrees on, so the world wins this round. Herb-craft, honest brews, nothing that bites unless you ask it to. Prices as marked, and I don't haggle — haggling is asking twice.",
+			"options": [
+				{ "text": "The bitterroot draught. (6 gold)", "requires": { "gold": 6 }, "effects": [ { "gold": -6 }, { "item": "witch_bitterroot_draught" } ], "goto": "bought" },
+				{ "text": "A hearthwax candle. (4 gold)", "requires": { "gold": 4 }, "effects": [ { "gold": -4 }, { "item": "witch_hearthwax_candle" } ], "goto": "bought" },
+				{ "text": "The clearveil salve. (9 gold)", "requires": { "gold": 9 }, "effects": [ { "gold": -9 }, { "item": "witch_clearveil_salve" } ], "goto": "bought" },
+				{ "text": "Nothing today.", "goto": "hub" }
+			]
+		},
+		"bought": {
+			"speaker": "The Witch",
+			"text": "Sold. Mind the instructions — they're short because they matter, not because there's little to say. Anything else?",
+			"options": [
+				{ "text": "Show me the shelf again.", "goto": "shop" },
+				{ "text": "That's all. Thank you.", "end": true }
+			]
+		}
+	}
+}

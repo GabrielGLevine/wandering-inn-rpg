@@ -1,0 +1,60 @@
+{
+	"_comment": "DRAFT (dialogue-drafts lane 2026-07-06, NOT wired). 'Cellar Rights' — Krshia's side of the dispute. Spec: docs/superpowers/specs/2026-07-06-home-region-content-2-design.md §2/§4. Voice contract: character-profiles.md Krshia (measured, proud of her stock, Silverfang pragmatism, 'Hrr.' SPARINGLY). At wiring time these nodes MERGE INTO data/dialogue/krshia_crate.json's hub (new options + variants), they do not ship as a second Krshia graph — drafted standalone for readability. Sibling file: cellar_rights_sergeant.json. Wiring + opens: cellar_rights.md (shared companion).",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Krshia",
+			"text": "Hrr. You cleared that cellar under the row, so you have a stake in this. The Watch wants it sealed as 'evidence.' I want shelves in it by market day. Guess which of us has customers.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "cellar_rights_krshia": 1 } }, "text": "Hrr. Shelves by market day, as said. Dry goods below, cool and dark, and the rent is one long argument I already won. Come admire MY cellar sometime. The words sit well." },
+				{ "requires": { "accomplishment": { "cellar_rights_watch": 1 } }, "text": "Hrr. An 'evidence room.' A cellar with a Watch lock and no barrels in it. Waste. But settled is settled — I said I would abide, and Silverfangs abide loudly." },
+				{ "requires": { "accomplishment": { "cellar_rights_shared": 1 } }, "text": "Hrr. Half shelves, half Watch locker, my name on the keeper's ledger. The sergeant nods at me now. I nod back. This is diplomacy, yes? Exhausting. Profitable." }
+			],
+			"options": [
+				{ "text": "What's this cellar dispute about?", "hide_when": { "accomplishment": { "heard_cellar_rights": 1 } }, "effects": [ { "quest": "cellar_rights" }, { "accomplishment": "heard_cellar_rights" }, { "accomplishment": "heard_krshia_side" } ], "goto": "case" },
+				{ "text": "Make your case for the cellar.", "requires": { "accomplishment": { "heard_cellar_rights": 1 } }, "hide_when": { "accomplishment": { "heard_krshia_side": 1 } }, "effects": [ { "accomplishment": "heard_krshia_side" } ], "goto": "case" },
+				{ "text": "I've heard the sergeant out. There's a middle in this.", "requires": { "accomplishment": { "heard_sergeant_side": 1 } }, "hide_when": { "accomplishment": { "cellar_rights_settled": 1 } }, "goto": "mediate" },
+				{ "text": "The vermin are cleared out of it. I say the cellar's yours.", "requires": { "accomplishment": { "cleared_cellar_squatters": 1 } }, "hide_when": { "accomplishment": { "cellar_rights_settled": 1 } }, "effects": [ { "accomplishment": "cellar_rights_settled" }, { "accomplishment": "cellar_rights_krshia" } ], "goto": "settled_muscle" },
+				{ "text": "I read the old marks under the dust. Gnollish trade-signs — older than the Watch seal painted over them.", "requires": { "accomplishment": { "surveyed_smuggler_marks": 1 } }, "hide_when": { "accomplishment": { "cellar_rights_settled": 1 } }, "effects": [ { "accomplishment": "cellar_rights_settled" }, { "accomplishment": "cellar_rights_krshia" } ], "goto": "settled_survey" },
+				{ "text": "Another time.", "end": true }
+			]
+		},
+		"case": {
+			"speaker": "Krshia",
+			"text": "Evidence, she says. Hrr. Evidence of what — that a cellar is USEFUL? Silverfangs knew that a war ago. Goods spoil in the wet up here; down there it is cool, dark, dry. Storage is not sentiment. It is flour that keeps and prices that hold. Let the Watch write that in their little book.",
+			"options": [
+				{ "text": "One more thing.", "goto": "hub" },
+				{ "text": "I'll hear the sergeant too.", "end": true }
+			]
+		},
+		"mediate": {
+			"speaker": "Krshia",
+			"text": "Hrr. A middle. Middles are where goods get lost and blame gets found. ...Speak it anyway. I am listening with one ear.",
+			"options": [
+				{ "text": "Shelves for trade below, one locked Watch corner — and your name on the ledger as keeper. The Watch pays a keeping fee. (Mediate)", "requires": { "class": { "diplomat": 1 } }, "effects": [ { "accomplishment": "cellar_rights_settled" }, { "accomplishment": "cellar_rights_shared" }, { "accomplishment": "persuaded_someone" } ], "goto": "settled_shared" },
+				{ "text": "Let me think on the terms.", "goto": "hub" }
+			]
+		},
+		"settled_shared": {
+			"speaker": "Krshia",
+			"text": "...Keeper. Hrr. The Watch pays a fee, the goods stay dry, the sergeant gets his corner, and the ledger has MY name on it. Yes. Yes! You bargain like a Gnoll. I say that to few, and I never say it twice, so keep it.",
+			"options": [
+				{ "text": "I'll tell the sergeant it's settled.", "end": true }
+			]
+		},
+		"settled_muscle": {
+			"speaker": "Krshia",
+			"text": "Hrr! Cleared and CLAIMED. The Watch can guard what I store — a full cellar is also evidence. Evidence of commerce. Come by the stall; there is a discount with your name on it, and you will take it without arguing.",
+			"options": [
+				{ "text": "I never argue with discounts.", "end": true }
+			]
+		},
+		"settled_survey": {
+			"speaker": "Krshia",
+			"text": "Hrr. Silverfang signs. My aunt's paw drew that kind before the last war — a dry-goods drop, marked proper, rent paid in salt. The cellar was OURS before it was anyone's evidence. Let the sergeant read the wall himself. Precedent has teeth, and ours are older.",
+			"options": [
+				{ "text": "The wall says what it says.", "end": true }
+			]
+		}
+	}
+}

@@ -1,0 +1,64 @@
+{
+	"_comment": "DRAFT (dialogue-drafts lane 2026-07-06, NOT wired). 'A Gentleman's Disagreement' — the Brothers lieutenant: commission give-beat, path guidance, marker reward. Spec: docs/superpowers/specs/2026-07-06-invrisil-design.md §2/§3/§4. Voice contract: character-profiles-staging.md 'Brothers lieutenant' (courtesy-as-menace, sir/miss every sentence, apologizes BEFORE the threat, 'recover' never 'steal') + canon Brothers register (wiki: 'perfect gentlemen. Until the hats come off'). Speaker 'Mister Sable' = ORIGINAL+flag — canon members verified (Wilovan, Ratici, Crimshaw, Normen, Alcaz) but Wilovan is a GNOLL and the staging profile pins a HUMAN in a bowler; see brothers_lieutenant.md. PC address drafted as 'sir' throughout — gender-conditional text flagged OPEN.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Mister Sable",
+			"text": "Begging your pardon, sir — a moment of your evening. We don't steal, whatever you've heard. We RECOVER. Occasionally we recover things that were never lost. Tonight we'd like to recover a man's good name — his, and by unfortunate arithmetic, ours.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "took_brothers_job": 1 } }, "text": "Evening, sir. The city's ears are long and the night is short — how goes our small disagreement?" },
+				{ "requires": { "accomplishment": { "brothers_job_done": 1 } }, "text": "Sir. The parlor door is never shut to you, the alleys are safe as churches — safer, we keep better hours — and a man remembers. All of us remember." }
+			],
+			"options": [
+				{ "text": "Recover a name. Go on.", "hide_when": { "accomplishment": { "took_brothers_job": 1 } }, "goto": "commission" },
+				{ "text": "Remind me of the three doors.", "requires": { "accomplishment": { "took_brothers_job": 1 } }, "hide_when": { "accomplishment": { "brothers_job_done": 1 } }, "goto": "ways" },
+				{ "text": "Coyle's answered for it. Farley's name is clear.", "requires": { "accomplishment": { "merchant_fate_decided": 1 } }, "hide_when": { "accomplishment": { "brothers_job_done": 1 } }, "effects": [ { "accomplishment": "brothers_job_done" }, { "accomplishment": "cleared_brothers_name" }, { "item": "brothers_marker" } ], "goto": "marker" },
+				{ "text": "Evening.", "end": true }
+			]
+		},
+		"commission": {
+			"speaker": "Mister Sable",
+			"text": "A merchant of standing, sir — Master Coyle, of Coyle and Sons, though the sons are decorative. He commissioned a quiet removal of certain goods. The removal went exactly as paid for. The ARREST afterward did not: our Mister Farley sits in a Watch cell for a theft he was hired to perform by the man now weeping loudest about it. We apologize in advance for imposing, sir. The Brothers cannot abide a frame. It's untidy.",
+			"options": [
+				{ "text": "I'll take it.", "effects": [ { "quest": "a_gentlemans_disagreement" }, { "accomplishment": "took_brothers_job" } ], "goto": "ways" },
+				{ "text": "Why bring it to me?", "goto": "why_you" },
+				{ "text": "Not my fight.", "end": true }
+			]
+		},
+		"why_you": {
+			"speaker": "Mister Sable",
+			"text": "Because you're not us, sir — that's the whole of your qualification, and we mean it as flattery. Every hand in this brotherhood is known to the Watch by its glove size. A stranger's word lands where ours bounces. Also, and we say this with affection: you look like a person things HAPPEN to. We'd like to point you at Master Coyle and observe.",
+			"options": [
+				{ "text": "Fair. I'll take it.", "effects": [ { "quest": "a_gentlemans_disagreement" }, { "accomplishment": "took_brothers_job" } ], "goto": "ways" },
+				{ "text": "I'll sleep on it.", "end": true }
+			]
+		},
+		"ways": {
+			"speaker": "Mister Sable",
+			"text": "Three doors, sir, as a man might put it. PAPER: Coyle keeps his true ledger at the counting-house off Wister's Alley, and paper doesn't lie — his says he paid for the theft himself. TONGUES: the fixer called Cups pours rumor by the alley gate, and Coyle has soured more partners than tea has leaves; testimony can be arranged. Politely arranged. Or FISTS — his warehouse crew — and we apologize for even setting that on the table, though should you open that particular door, sir, a man would be honored to attend.",
+			"options": [
+				{ "text": "One more thing.", "goto": "hub" },
+				{ "text": "I'll pick my door.", "end": true }
+			]
+		},
+		"marker": {
+			"speaker": "Mister Sable",
+			"text": "So we heard, sir. Mister Farley walked out this morning, hat restored to him at the gate — a small ceremony, but ours.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "exposed_merchant_prince": 1 } }, "text": "So we heard, sir — the criers had it by breakfast and the Merchant's Guild by lunch. Coyle's name is now worth precisely what he paid for ours: nothing. Tidy. Mister Farley walked at dawn, and every hat on the street came off as he passed. Not for violence, sir. For respect. It confuses newcomers." },
+				{ "requires": { "accomplishment": { "extorted_merchant_prince": 1 } }, "text": "Quietly withdrawn, sir, charges and all — and a man notices your purse rides heavier than it did. We don't judge. We ADMIRE, on occasion, and this is one of those occasions. Do mind he stays bought; gentlemen of Coyle's sort un-buy themselves the moment it's cheap to." }
+			],
+			"options": [
+				{ "text": "And this marker?", "goto": "marker_terms" },
+				{ "text": "Glad Farley's out.", "end": true }
+			]
+		},
+		"marker_terms": {
+			"speaker": "Mister Sable",
+			"text": "A Brother's marker, sir. Wood and tin, and worth rather more than its materials. Shown in the alleys, trouble will beg your pardon and step around you. Shown at the parlor, a man can find you things the shops pretend not to stock — recovered things, sir, of impeccable provenance. Which is to say: don't ask, and we shan't tell.",
+			"options": [
+				{ "text": "A pleasure doing business, Mister Sable.", "end": true }
+			]
+		}
+	}
+}

@@ -1,0 +1,111 @@
+{
+	"_comment": "DRAFT (dialogue-drafts lane 2026-07-06, NOT wired). Rotating talk_pool line sets for every STAGED character with a voice contract (character-profiles-staging.md). Shape matches skeleton_scene.json entity data: talk_pool = array of strings (rotation = chatted_with_<id> % size, zero rng); talk_pool_post = {requires_accomplishment, lines} per Lyonette C4 growth precedent. Entity ids are SUGGESTIONS — the map lane owns real ids. Canon cites + per-character notes: talk_pools.md.",
+	"hermit_sorven": {
+		"talk_pool": [
+			"The garden grows what the field won't. Root talk. You'd find it dull. The roots don't.",
+			"Guild runners get lost twice finding this place. You got lost once. Improvement.",
+			"Antler, willowbark, patience. Two of those I can stock."
+		]
+	},
+	"toll_goblin": {
+		"talk_pool": [
+			"Bridge holding good today. Planks counted. All there.",
+			"Toll is not robbing. Robbing has no bridge. Big difference.",
+			"River loud today. Fish rude. No toll for fish. Yet."
+		],
+		"talk_pool_post": {
+			"requires_accomplishment": { "hired_toll_goblin": 1 },
+			"lines": [
+				"Wagon at dawn. Ox angry, man angrier, cabbages. Paid no toll — wagon too fast. Remembered forever.",
+				"Big deer on north field. Antlers ORANGE. Not on fire. Checked twice.",
+				"Boulder by east rocks MOVED. Boulders not move. This one moves. Watching it. Not blinking much.",
+				"More goblins on gate road. Not my goblins. My goblins is me."
+			]
+		}
+	},
+	"riverfarm_witch": {
+		"talk_pool": [
+			"Tea first. Then troubles. The kettle has heard worse than yours.",
+			"Prices are only cruel to people who wanted the thing for free.",
+			"The bent trees? They asked to grow that way. Everything here pays or is paid."
+		]
+	},
+	"riverfarm_headman": {
+		"talk_pool": [
+			"Barley's up where the rot was. I check it mornings. Twice. It's habit now, and I'm keeping it.",
+			"A village runs on weather, tempers, and the ledger. I can only argue with two of those.",
+			"If you need feeding, the longhouse feeds. That's not hospitality, that's policy. ...It's a bit hospitality."
+		]
+	},
+	"charmed_villager": {
+		"_comment": "CHARMED state: pool lines are BYTE-IDENTICAL copies of riverfarm_witch's pool — the tell (spec: 'their pool line REPEATS the witch's line verbatim'). Spec-ideal is a dynamic mirror of her CURRENT line (small sim seam, OPEN); static copies ship without it. Keep in sync with her pool or the tell breaks silently — canon-consistency sweep item.",
+		"talk_pool": [
+			"Tea first. Then troubles. The kettle has heard worse than yours.",
+			"Prices are only cruel to people who wanted the thing for free."
+		],
+		"talk_pool_post": {
+			"requires_accomplishment": { "blight_lifted": 1 },
+			"lines": [
+				"Split wood all morning at the hollow. My words, my blisters. Good trade.",
+				"Mother asked who the stranger was. I said: the one who made me pay my own bills. She laughed. I'd forgotten her laugh wasn't borrowed too.",
+				"The barley doesn't hold grudges. People take longer. I'm on the mend with both."
+			]
+		}
+	},
+	"brothers_lieutenant": {
+		"talk_pool": [
+			"Fine evening, sir. Somewhere in this city a man's having a far worse one. We do try to be selective about which man.",
+			"The hat stays on, sir. You'd know about it if it didn't — begging your pardon for the hypothetical.",
+			"Mind the alleys past the fish racks, sir. Or don't. You're getting known there, which is the better umbrella."
+		]
+	},
+	"merchant_prince": {
+		"talk_pool": [
+			"Everything on this street has two prices — the asked and the agreed. The city runs on the gap.",
+			"Flattery? No, no. Appraisal. You're worth more than you were last week. Do keep it up.",
+			"I never raise my voice. Raised voices are for men whose money can't speak for them."
+		]
+	},
+	"street_fixer": {
+		"talk_pool": [
+			"Fresh pot, fresh rumors. One's about a fish the size of a rowboat, and in fairness — that one may just be a fish.",
+			"I'd call gossip a vice, but it's fed me eleven years. So I call it an economy.",
+			"Sit at anyone's elbow long enough and you become furniture. Talking furniture. Listening furniture."
+		]
+	},
+	"grimalkin": {
+		"talk_pool": [
+			"Three observations. One: you walk more than you ride — good. Two: your left boot wears faster — correct it. Three: there was no three. Rewarding attention is a training principle.",
+			"Magic is muscle. Muscle is repetition. The rest is excuses wearing robes.",
+			"I respect effort in every species. I have yet to meet an excuse I respect."
+		]
+	},
+	"pallass_tier_clerk": {
+		"talk_pool": [
+			"State your business and your sponsor. If you have neither, the forms for acquiring both are on the wall behind you.",
+			"The stamp is not a formality. The stamp is the difference between a guest and an incident.",
+			"Pallass welcomes you. Warmly. In writing."
+		]
+	},
+	"ceria": {
+		"talk_pool": [
+			"Don't step where the floor's clean. Clean means something eats the dust.",
+			"Half-Elf patience is real. Ksmvr is a real test of it. We're both still here, so it holds.",
+			"The circlet's not decorative. The gloves are. Don't ask about the gloves."
+		]
+	},
+	"yvlon": {
+		"talk_pool": [
+			"Byres silver. It's for the armor, not vanity. ...Mostly the armor.",
+			"Don't shake my hand too hard. Old story. The short version is also long.",
+			"I hit things, and I stand in front of other things. Every party needs somebody simple."
+		]
+	},
+	"ksmvr": {
+		"talk_pool": [
+			"I am waving. This is the correct number of arms for waving. I have confirmed this with Captain Ceria.",
+			"I am told I should 'break the ice.' There is no ice present. I remain prepared regardless.",
+			"Please rate my greeting. Comrade Yvlon says I should not ask that. I am asking quietly."
+		]
+	}
+}

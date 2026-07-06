@@ -1,0 +1,60 @@
+{
+	"_comment": "DRAFT (dialogue-drafts lane 2026-07-06, NOT wired). 'The Price of a Favor' — headman give-beat + suspicion arc. Spec: docs/superpowers/specs/2026-07-06-riverfarm-design.md §2/§3/§4. Voice contract: character-profiles-staging.md 'The headman' (suspicious-then-warmer, farm metaphors, swallows apologies halfway). Speaker 'Aldern' = ORIGINAL+flag (canon Riverfarm has Prost — deliberately NOT used, see headman.md). Reward gold flagged OPEN.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Aldern",
+			"text": "You came through the door-magic, from the Drake city. Good — strangers see straight. Look at the fields on your way in? Grey at the roots. Wet-rot in a dry week. That's not weather. That's the hollow.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "learned_debt_truth": 1 } }, "text": "A debt. One of OURS bought witch-work and let the bill sour. ...Chickens come home. I hate when they do that." },
+				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "Fields turned green as first hay, overnight. I said hard words about the hollow this spring. I— hm. Well. The words are lying where I dropped them, and I won't be picking them up in front of you." },
+				{ "requires": { "accomplishment": { "reported_blight_lifted": 1 } }, "text": "Barley's up, ledger's happy, and the village owes a stranger. That last one I don't mind writing down." }
+			],
+			"options": [
+				{ "text": "Tell me about this blight.", "hide_when": { "accomplishment": { "heard_of_the_blight": 1 } }, "effects": [ { "quest": "the_price_of_a_favor" }, { "accomplishment": "heard_of_the_blight" } ], "goto": "give" },
+				{ "text": "It's not a curse. It's a debt — one of your own bought a favor and won't pay it.", "requires": { "accomplishment": { "learned_debt_truth": 1 } }, "hide_when": { "accomplishment": { "blight_lifted": 1 } }, "goto": "suspicion" },
+				{ "text": "The blight's done. The debt's settled.", "requires": { "accomplishment": { "blight_lifted": 1 } }, "hide_when": { "accomplishment": { "reported_blight_lifted": 1 } }, "effects": [ { "accomplishment": "reported_blight_lifted" }, { "gold": 8 } ], "goto": "report" },
+				{ "text": "Just passing through.", "end": true }
+			]
+		},
+		"give": {
+			"speaker": "Aldern",
+			"text": "We don't truck with witches. ...We didn't USE to. Everyone's something these days — the smith's boy has a [Class] for whistling, near enough. Go up to the hollow. Ask her price to leave off, or find what's truly eating the fields. I'll trust a stranger's eyes over my own temper. Barely. It's close.",
+			"options": [
+				{ "text": "I'll go up and hear her out.", "goto": "give_coda" },
+				{ "text": "Why not send your own people?", "goto": "own_people" }
+			]
+		},
+		"own_people": {
+			"speaker": "Aldern",
+			"text": "Sent two. One came back talking about tea. The other came back ENGAGED to be married — no, I don't know either, and I've stopped asking. A village argues like family. A stranger gets to just argue.",
+			"options": [
+				{ "text": "Fair enough. I'll go.", "goto": "give_coda" },
+				{ "text": "I'll think on it.", "end": true }
+			]
+		},
+		"give_coda": {
+			"speaker": "Aldern",
+			"text": "Take the cart track past the fences and mind the bent trees — the hollow starts where they start leaning in to listen. And traveler: drink what she pours you. Whatever I think of the craft, bad guesting is bad guesting.",
+			"options": [
+				{ "text": "I'll mind my manners.", "end": true }
+			]
+		},
+		"suspicion": {
+			"speaker": "Aldern",
+			"text": "Bought. BOUGHT. Off the backs of everyone's barley— ...Which one? No. Don't tell me. If I know a name before the fields are green, I'll say something a headman can't unsay, and then I'm patching fences between families till frost. Settle it however it settles. I'll do my forgiving after harvest, when there's beer in it.",
+			"options": [
+				{ "text": "One more thing.", "goto": "hub" },
+				{ "text": "I'll settle it.", "end": true }
+			]
+		},
+		"report": {
+			"speaker": "Aldern",
+			"text": "Settled. Aye — the fields knew before you did. Rot's drying off the barley like dew off a... like dew. Eight gold: it's the village's, gathered fair, and you'll not wave it off. And about the witch — if she takes bread, we'll send bread. Quietly. A village remembers who lifted it. Even when it's embarrassed about the how.",
+			"options": [
+				{ "text": "Send the bread. She'll price it kindly.", "end": true },
+				{ "text": "Glad the barley's back.", "end": true }
+			]
+		}
+	}
+}

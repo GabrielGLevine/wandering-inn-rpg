@@ -1,0 +1,60 @@
+{
+	"_comment": "DRAFT (dialogue-drafts lane 2026-07-06, NOT wired). 'Cellar Rights' — the watch-sergeant's side. Spec: docs/superpowers/specs/2026-07-06-home-region-content-2-design.md §2. Voice: the shipped watch_crate.json sergeant (clipped lists, dry, zero ceremony — 'Sewers, scavengers, paperwork. Pick one.'). At wiring time these nodes MERGE INTO data/dialogue/watch_crate.json's hub; drafted standalone for readability. Sibling: cellar_rights_krshia.json. Wiring + opens: cellar_rights.md (shared companion).",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Watch Sergeant",
+			"text": "The cellar under the row. Cleared, empty, suddenly popular. Krshia wants shelves. I want a seal on it — smuggler holes don't stop being smuggler holes because a Gnoll airs one out.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "cellar_rights_watch": 1 } }, "text": "Cellar's sealed, lock's Watch-issue, paperwork's filed. Quietest that hole has been in a generation. Good outcome." },
+				{ "requires": { "accomplishment": { "cellar_rights_krshia": 1 } }, "text": "Krshia got her cellar. I got a sketch of the wall and a headache that's technically resolved. It keeps flour dry. Fine. FINE." },
+				{ "requires": { "accomplishment": { "cellar_rights_shared": 1 } }, "text": "Shelves below, Watch corner locked, keeper's ledger signed. First dispute this year that ended with both parties still greeting me. Noted for training purposes." }
+			],
+			"options": [
+				{ "text": "What's this cellar dispute about?", "hide_when": { "accomplishment": { "heard_cellar_rights": 1 } }, "effects": [ { "quest": "cellar_rights" }, { "accomplishment": "heard_cellar_rights" }, { "accomplishment": "heard_sergeant_side" } ], "goto": "case" },
+				{ "text": "Make the Watch's case.", "requires": { "accomplishment": { "heard_cellar_rights": 1 } }, "hide_when": { "accomplishment": { "heard_sergeant_side": 1 } }, "effects": [ { "accomplishment": "heard_sergeant_side" } ], "goto": "case" },
+				{ "text": "I've heard Krshia out. There's a middle in this.", "requires": { "accomplishment": { "heard_krshia_side": 1 } }, "hide_when": { "accomplishment": { "cellar_rights_settled": 1 } }, "goto": "mediate" },
+				{ "text": "The vermin are cleared. I say the Watch takes it.", "requires": { "accomplishment": { "cleared_cellar_squatters": 1 } }, "hide_when": { "accomplishment": { "cellar_rights_settled": 1 } }, "effects": [ { "accomplishment": "cellar_rights_settled" }, { "accomplishment": "cellar_rights_watch" } ], "goto": "settled_muscle" },
+				{ "text": "I read the marks under the dust. Gnollish trade-signs — older than your seal, painted right over them.", "requires": { "accomplishment": { "surveyed_smuggler_marks": 1 } }, "hide_when": { "accomplishment": { "cellar_rights_settled": 1 } }, "effects": [ { "accomplishment": "cellar_rights_settled" }, { "accomplishment": "cellar_rights_krshia" } ], "goto": "settled_survey" },
+				{ "text": "Just passing through.", "end": true }
+			]
+		},
+		"case": {
+			"speaker": "Watch Sergeant",
+			"text": "Short version: that hole moved contraband before either of us was posted here. Seal it, log it, done — nobody smuggles through an evidence room. Long version involves forms. Nobody wants the long version.",
+			"options": [
+				{ "text": "One more thing.", "goto": "hub" },
+				{ "text": "I'll hear Krshia too.", "end": true }
+			]
+		},
+		"mediate": {
+			"speaker": "Watch Sergeant",
+			"text": "A middle. In my experience the middle is where I stand when two parties start throwing things. Go on. Surprise me.",
+			"options": [
+				{ "text": "Shelves for trade, one locked Watch corner, Krshia signed on as keeper — a keeper is accountable, and accountable beats empty. (Mediate)", "requires": { "class": { "diplomat": 1 } }, "effects": [ { "accomplishment": "cellar_rights_settled" }, { "accomplishment": "cellar_rights_shared" }, { "accomplishment": "persuaded_someone" } ], "goto": "settled_shared" },
+				{ "text": "Let me think on the terms.", "goto": "hub" }
+			]
+		},
+		"settled_shared": {
+			"speaker": "Watch Sergeant",
+			"text": "A named keeper, a signed ledger, and a lock I hold the key to. That's not a compromise, that's better paperwork than my first plan. Done. Tell Krshia — she'll want it in writing, and for once, so do I.",
+			"options": [
+				{ "text": "I'll bring her the terms.", "end": true }
+			]
+		},
+		"settled_muscle": {
+			"speaker": "Watch Sergeant",
+			"text": "Vermin out, Watch lock on, and someone else did the sweeping. If every dispute ended like this I'd die a happy sergeant. I won't. But noted.",
+			"options": [
+				{ "text": "Glad to help.", "end": true }
+			]
+		},
+		"settled_survey": {
+			"speaker": "Watch Sergeant",
+			"text": "Trade-signs under our seal. Older claim, fair claim. ...Paperwork hates me. Fine — the Gnoll gets her cellar, the Watch gets a full sketch of that wall before a single shelf goes in. Precedent cuts both ways next time, and there is ALWAYS a next time.",
+			"options": [
+				{ "text": "I'll let her know.", "end": true }
+			]
+		}
+	}
+}

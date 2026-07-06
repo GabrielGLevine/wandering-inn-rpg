@@ -1,0 +1,73 @@
+{
+	"_comment": "DRAFT (dialogue-drafts lane 2026-07-06, NOT wired). 'The Price of a Favor' — the charmed villager: the verbatim-echo tell + the freed confession. Spec: docs/superpowers/specs/2026-07-06-riverfarm-design.md §2/§4 ('their pool line REPEATS the witch's line verbatim, the tell'). Voice contract: character-profiles-staging.md 'The charmed villager' (echoes the witch's current pool line verbatim, wrong register). Speaker 'Tam' = ORIGINAL+flag. THE ECHO IS STATIC IN THIS DRAFT — echo node texts are pinned copies of the witch's pool lines from pools/talk_pools.json; the spec's ideal is a DYNAMIC mirror of her current pool line (small sim seam, flagged OPEN in charmed_villager.md).",
+	"start": "meet",
+	"nodes": {
+		"meet": {
+			"speaker": "Tam",
+			"text": "Tea first. Then troubles. The kettle has heard worse than yours.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "...I keep starting sentences and finding they're MINE. You'd think that would feel ordinary by now. It doesn't. Not yet." }
+			],
+			"options": [
+				{ "text": "You're standing in a turnip row. There's no kettle, Tam.", "hide_when": { "accomplishment": { "blight_lifted": 1 } }, "goto": "echo_two" },
+				{ "text": "(Study them. Something is off.)", "requires": { "skill": "observe" }, "hide_when": { "accomplishment": { "noticed_red_thread": 1 } }, "effects": [ { "accomplishment": "noticed_red_thread" } ], "goto": "tell" },
+				{ "text": "Welcome back to your own tongue.", "requires": { "accomplishment": { "blight_lifted": 1 } }, "hide_when": { "accomplishment": { "freed_villager_confessed": 1 } }, "goto": "freed" },
+				{ "text": "How's the year treating you?", "requires": { "accomplishment": { "freed_villager_confessed": 1 } }, "goto": "mornings" },
+				{ "text": "(Leave them be.)", "end": true }
+			]
+		},
+		"echo_two": {
+			"speaker": "Tam",
+			"text": "Prices are only cruel to people who wanted the thing for free.",
+			"options": [
+				{ "text": "...Right. Good talk, Tam.", "end": true },
+				{ "text": "(Study them. Something is off.)", "requires": { "skill": "observe" }, "hide_when": { "accomplishment": { "noticed_red_thread": 1 } }, "effects": [ { "accomplishment": "noticed_red_thread" } ], "goto": "tell" }
+			]
+		},
+		"tell": {
+			"speaker": "Tam",
+			"text": "The bent trees? They asked to grow that way. Everything here pays or is paid.",
+			"_comment": "The [Observe] beat: the option's own result text should render as an observe-style toast at wiring time; the node text is Tam echoing ANOTHER witch line while you look — the wrongness compounds. Suggested observe toast (entity `observe` field, not dialogue): 'A red thread at the wrist, wound three times, ends tucked in. Farmhand hands, potter's-wheel stillness. The mouth is serving someone else's tea.'",
+			"options": [
+				{ "text": "Whose words are those, Tam?", "goto": "echo_hold" },
+				{ "text": "(Leave them be.)", "end": true }
+			]
+		},
+		"echo_hold": {
+			"speaker": "Tam",
+			"text": "Tea first. Then troubles. The kettle has heard worse than yours.",
+			"options": [
+				{ "text": "(There's no getting past the thread. The debt first.)", "end": true }
+			]
+		},
+		"freed": {
+			"speaker": "Tam",
+			"text": "It was me. The favor. Mother's lungs went to water last winter, and the herb-woman's herbs weren't reaching. The witch named a fair price and I SAID yes — saying is easy in winter. ...Mother saw spring. I'd buy it twice over. I just thought the price would feel smaller by paying-time.",
+			"options": [
+				{ "text": "Prices feel like that. Pay it anyway.", "effects": [ { "accomplishment": "freed_villager_confessed" } ], "goto": "resolve" },
+				{ "text": "You let the whole village's barley carry your bill.", "effects": [ { "accomplishment": "freed_villager_confessed" } ], "goto": "resolve_hard" }
+			]
+		},
+		"resolve": {
+			"speaker": "Tam",
+			"text": "Aye. I started this morning — wood split and stacked at the hollow before the fog burned off. A year of mornings. Cheap, held against spring. Don't tell Mother the arithmetic; she'd try to pay half.",
+			"options": [
+				{ "text": "Your secret's safe. Mind the mornings.", "end": true }
+			]
+		},
+		"resolve_hard": {
+			"speaker": "Tam",
+			"text": "...I know. I watched it grey from my own window and told myself it was weather. You want me ashamed — I got there first, weeks ago, with the door locked. What's left is the paying. I started this morning. Wood split, stacked, at the hollow. A year of mornings, and every one of them owed.",
+			"options": [
+				{ "text": "Then we're done here. Pay it well.", "end": true }
+			]
+		},
+		"mornings": {
+			"speaker": "Tam",
+			"text": "Up before the birds, back before the dew's off. Split, stack, sweep, kettle. She doesn't thank me — that'd muddy the ledger, she says. But there's bread warming on the sill when I finish, most days. Warm bread's not thanks. It's just... adjacent.",
+			"options": [
+				{ "text": "Adjacent will do.", "end": true }
+			]
+		}
+	}
+}

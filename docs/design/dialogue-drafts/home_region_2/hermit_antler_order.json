@@ -1,0 +1,94 @@
+{
+	"_comment": "DRAFT (dialogue-drafts lane 2026-07-06, NOT wired). 'The Antler Order' — hermit-alchemist give-beat + three-path resolutions. Spec: docs/superpowers/specs/2026-07-06-home-region-content-2-design.md §2/§4. Voice contract: character-profiles-staging.md 'The hermit-alchemist' (short declaratives, barter-ethics, never asks questions twice). Speaker name 'Sorven' = ORIGINAL+flag. Wiring notes + canon cites: hermit_antler_order.md.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Sorven",
+			"text": "You found the garden. Most give up at the third wrong hill. If you carry the Guild package, set it on the stump. Not the roots.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "delivered_hermit_package": 1 } }, "text": "The glassware holds. So does the offer, if you want work." },
+				{ "requires": { "accomplishment": { "heard_antler_order": 1 } }, "text": "The order stands. Shed antler, freely dropped. The herd walks the north field." },
+				{ "requires": { "accomplishment": { "antler_order_done": 1 } }, "text": "The still runs hot this week. Your doing. Good doing." }
+			],
+			"options": [
+				{ "text": "Delivery from the Runner's Guild. One package, marked for the hermit.", "hide_when": { "accomplishment": { "delivered_hermit_package": 1 } }, "effects": [ { "accomplishment": "delivered_hermit_package" }, { "gold": 2 } ], "goto": "delivery" },
+				{ "text": "You mentioned antler work.", "requires": { "accomplishment": { "delivered_hermit_package": 1 } }, "hide_when": { "accomplishment": { "heard_antler_order": 1 } }, "goto": "offer" },
+				{ "text": "About Krshia's trade — I'd need that remedy of yours.", "requires": { "accomplishment": { "heard_antler_order": 1 } }, "hide_when": { "accomplishment": { "took_hermits_remedy": 1 } }, "effects": [ { "item": "hermits_remedy" }, { "accomplishment": "took_hermits_remedy" } ], "goto": "remedy" },
+				{ "text": "Shed antler. Gathered off the ground at first light.", "requires": { "accomplishment": { "gathered_shed_antlers": 1 } }, "hide_when": { "accomplishment": { "antler_order_done": 1 } }, "effects": [ { "accomplishment": "antler_order_done" }, { "accomplishment": "antler_order_shed" }, { "gold": 12 } ], "goto": "resolution_shed" },
+				{ "text": "Krshia's stock. She took the remedy — says her knees are a war older than her pride.", "requires": { "accomplishment": { "traded_for_shed_antlers": 1 } }, "hide_when": { "accomplishment": { "antler_order_done": 1 } }, "effects": [ { "accomplishment": "antler_order_done" }, { "accomplishment": "antler_order_traded" }, { "gold": 10 } ], "goto": "resolution_traded" },
+				{ "text": "Antler. Fresh.", "requires": { "accomplishment": { "culled_corusdeer": 1 } }, "hide_when": { "accomplishment": { "antler_order_done": 1 } }, "effects": [ { "accomplishment": "antler_order_done" }, { "accomplishment": "antler_order_taken" }, { "gold": 4 } ], "goto": "resolution_taken" },
+				{ "text": "Just passing.", "end": true }
+			]
+		},
+		"delivery": {
+			"speaker": "Sorven",
+			"text": "Glassware. Whole, for once. The fee went to the Guild; the thanks goes to you — two gold for careful hands. There is other work here, if you want it. Antler work.",
+			"options": [
+				{ "text": "Tell me.", "goto": "offer" },
+				{ "text": "Not my trade.", "end": true }
+			]
+		},
+		"offer": {
+			"speaker": "Sorven",
+			"text": "Corusdeer. The herd walks the north floodplain — you'll know them at dusk, the antlers hold their ember. I need antler for the winter stills, and the kind matters. Antler freely shed carries the year in it. Antler taken carries the taking. I pay for the FIRST kind.",
+			"options": [
+				{ "text": "I'll bring you shed antler.", "effects": [ { "quest": "the_antler_order" }, { "accomplishment": "heard_antler_order" } ], "goto": "accepted" },
+				{ "text": "What does it pay?", "goto": "pay_terms" },
+				{ "text": "Not my trade.", "end": true }
+			]
+		},
+		"pay_terms": {
+			"speaker": "Sorven",
+			"text": "Twelve gold for shed. Four for taken — Guild rate, no better. My nose knows the difference. Friction wakes a corusdeer antler; a shed one wakes warm, a taken one wakes angry.",
+			"options": [
+				{ "text": "Fair terms. I'm in.", "effects": [ { "quest": "the_antler_order" }, { "accomplishment": "heard_antler_order" } ], "goto": "accepted" },
+				{ "text": "I'll think on it.", "end": true }
+			]
+		},
+		"accepted": {
+			"speaker": "Sorven",
+			"text": "Three roads to it. The herd sheds at a ground past the east rise — go at dawn, the drops show pale against the frost-kill. Krshia Silverfang stocks shed antler some seasons; she wants my joint-remedy more than my coin. Or you kill one. I said I pay less for that. I meant it.",
+			"options": [
+				{ "text": "One more thing.", "goto": "hub" },
+				{ "text": "I'll manage.", "end": true }
+			]
+		},
+		"remedy": {
+			"speaker": "Sorven",
+			"text": "Willowbark, shed velvet, three winters of practice. Her knees will know the difference by morning. Trade fair — she will.",
+			"options": [
+				{ "text": "One more thing.", "goto": "hub" },
+				{ "text": "I'll see it done.", "end": true }
+			]
+		},
+		"resolution_shed": {
+			"speaker": "Sorven",
+			"text": "Warm at the tips still. That's the year in it. Pack them apart when you carry — friction wakes them, and a pack fire teaches that lesson once. Twelve gold. The stills thank you. So do I.",
+			"options": [
+				{ "text": "Glad it's the right kind.", "end": true }
+			]
+		},
+		"resolution_traded": {
+			"speaker": "Sorven",
+			"text": "Silverfang-kept. Dry, clean, no taking in them. Ten gold — two went to the trade, in a manner of counting. Fair both ways. That's the best kind of deal: the kind nobody brags about.",
+			"options": [
+				{ "text": "Fair both ways.", "end": true }
+			]
+		},
+		"resolution_taken": {
+			"speaker": "Sorven",
+			"text": "Taken. ...Four gold. Guild rate. I said I pay for the first kind — I also said I pay. A thing can be worth less and still be worth something. The herd runs thinner at dusk now. You'll notice. That isn't me talking. That's the field.",
+			"options": [
+				{ "text": "It got the job done.", "end": true },
+				{ "text": "I'd do it differently next time.", "goto": "taken_coda" }
+			]
+		},
+		"taken_coda": {
+			"speaker": "Sorven",
+			"text": "Then you learned the year's lesson at autumn prices. Cheap enough. The stills don't care. I do, a little. It passes.",
+			"options": [
+				{ "text": "Take care, Sorven.", "end": true }
+			]
+		}
+	}
+}
