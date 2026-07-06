@@ -32,6 +32,16 @@
     ],
     "fps": 10
    },
+   "cast": {
+    "sheet_down": "res://assets/sprites/body_a/Cast_Side-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Cast_Side-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 10
+   },
    "hit": {
     "sheet_down": "res://assets/sprites/body_a/Hit_Down-Sheet.png",
     "sheet_side": "res://assets/sprites/body_a/Hit_Side-Sheet.png",
@@ -1544,6 +1554,56 @@
   "anchor": [
    0.5,
    0.75
+  ]
+ },
+ "relc": {
+  "render_scale": 0.7,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/relc/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 4
+   },
+   "walk": {
+    "sheet": "res://assets/sprites/relc/Walk-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 6
+   }
+  },
+  "anchor": [
+   0.5,
+   0.97
+  ]
+ },
+ "pisces": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pisces/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 4
+   },
+   "walk": {
+    "sheet": "res://assets/sprites/pisces/Walk-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 6
+   }
+  },
+  "anchor": [
+   0.5,
+   0.97
   ]
  },
  "training_dummy": {

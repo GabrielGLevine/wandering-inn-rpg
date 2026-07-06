@@ -91,6 +91,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["body_a/idle"] = 4      ## 256 / 64
 	counts["body_a/walk"] = 6      ## 384 / 64
 	counts["body_a/slice"] = 8     ## 512 / 64
+	counts["body_a/cast"] = 4      ## Track B1 PixelLab cast/gesture strip, 256 / 64 (side sheet reused for down/up; combat renders side only)
 	counts["body_a/hit"] = 4       ## 256 / 64
 	counts["body_a/death"] = 8     ## 512 / 64
 
@@ -137,6 +138,16 @@ func _build_expected_counts() -> Dictionary:
 	counts["royal_soldier/idle"] = 4
 	counts["a_hunter/idle"] = 4
 	counts["a_hunter/walk"] = 6
+
+	## Track B1 PixelLab Relc (non-directional): idle single 64x64 frame,
+	## walk 256/64 = 4 frames (AI-generated, PC16-adjacent Drake guardsman).
+	counts["relc/idle"] = 1
+	counts["relc/walk"] = 4
+
+	## Track B1 PixelLab Pisces (non-directional): hooded human necromancer
+	## in white robes. idle single 64x64 frame, walk 256/64 = 4 frames.
+	counts["pisces/idle"] = 1
+	counts["pisces/walk"] = 4
 
 	## M5 E3 dressing sprites (single-region statics; grill is a 4-frame strip)
 	for e3_static: String in [

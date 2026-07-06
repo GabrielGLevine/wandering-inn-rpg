@@ -368,7 +368,12 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 		WIEvents.ATTACK_RESOLVED:
 			var attacker_id := String(payload["attacker"])
 			var target_id := String(payload["target"])
-			_play_combatant_anim(attacker_id, "slice", ui.get("attacker_flip_h", null))
+			# Track B1: spell_damage/line_damage casts route through the sim's
+			# _resolve_hit with melee=false and reuse ATTACK_RESOLVED, so a
+			# ranged cast (frost_bolt/flame_jet) must play the cast/gesture
+			# animation, NOT the sword swing (VISUAL-LOG common-sense fix).
+			var attack_anim := "slice" if bool(payload.get("melee", true)) else "cast"
+			_play_combatant_anim(attacker_id, attack_anim, ui.get("attacker_flip_h", null))
 			if bool(payload.get("hit", false)):
 				if _board_renderer.has_sprite(target_id):
 					_play_combatant_anim(target_id, "hit", ui.get("target_flip_h", null))

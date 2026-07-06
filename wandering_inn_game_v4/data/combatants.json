@@ -20,7 +20,7 @@
   {
    "id": "relc",
    "display_name": "Relc",
-   "sprite": "a_hunter",
+   "sprite": "relc",
    "side": "player",
    "stats": {
     "str": 14,

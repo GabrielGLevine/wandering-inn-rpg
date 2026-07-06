@@ -37,12 +37,39 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   acceptable now; M6.5's feed extraction should give the panel a real
   Container with art-safe padding.
 
-- [ ] COMBAT/ANIM — casting a spell triggers the SWORD swing animation —
-  user report 2026-07-04 — common-sense failure; needs a cast/gesture
-  animation or at minimum a non-melee generic. May not be immediately
-  fixable (no cast frames in Body_A pack) — pick best candidate.
-- [ ] SPRITE — `a_hunter` (Relc stand-in) green tint darker than ideal —
-  A2 report 2026-07-04 — tint value tweak, windowed-read to confirm.
+- [x] COMBAT/ANIM — casting a spell triggers the SWORD swing animation —
+  user report 2026-07-04 — FIXED by Track B1 (2026-07-06). ROOT CAUSE:
+  `spell_damage`/`line_damage` (frost_bolt/flame_jet) route through the
+  sim's `_resolve_hit(melee=false)` which reuses the `ATTACK_RESOLVED`
+  event, and `combat_screen._play_event_visual` played `"slice"`
+  unconditionally on that event. FIX: (1) generated a Body_A cast/gesture
+  strip via PixelLab `/animate-with-text` (Body_A idle_side frame fed as
+  the reference — 4 frames, raised hand + magic-glow arcs, already aligned
+  to Body_A's y48 feet plane); added a `cast` animation to `body_a` in
+  `sprites.json` (side sheet reused for down/up — combat renders side only,
+  field never casts). (2) `_play_event_visual` now picks `"cast"` vs
+  `"slice"` off the payload's `melee` flag (~2-line presentation change,
+  under the 20-line threshold). AI-gen provenance: PixelLab, redistributable
+  per ToS. Verified: `test_combat_visuals` + `test_sprite_registry` green,
+  `mage_unlock_loop` (casts frost_bolt through the new path) green +
+  windowed (`04_mage_kit_combat.png`). NOTE: the 0.35s cast frame is
+  timing-fragile to catch in a scripted screenshot; the generated frames
+  are archived in the Track B1 report / candidate park.
+- [x] SPRITE — `a_hunter` (Relc stand-in) green tint darker than ideal —
+  A2 report 2026-07-04 — SUPERSEDED/FIXED by Track B1 (2026-07-06): the
+  green-tinted human hunter was a semantic mismatch for a Drake anyway.
+  Generated a bespoke PixelLab Relc sprite (teal-green Drake guardsman with
+  spear, PC16-adjacent, `no_background:true` transparent, non-directional
+  idle+walk at `assets/sprites/relc/`), repointed both consumers
+  (`skeleton_scene.json` npc + `combatants.json` chip) from `a_hunter` to
+  `relc`, and REMOVED the `[0.6,1.0,0.6]` tint (sprite is already teal).
+  AI-gen provenance: PixelLab `/generate-image-pixflux` + `/animate-with-text`,
+  outputs user-owned/redistributable per PixelLab ToS. Windowed-verified:
+  field (`04_gift_node.png` — Relc as Drake in floodplains) + combat
+  (`02_second_fight.png` — Relc ally chip in chieftains_raid), both READ.
+  NOTE for a future pass: sprite is NON-DIRECTIONAL (single facing all 4
+  dirs) — `/rotate` drifted at 64px (doubled the spear), so a clean 4-dir
+  set was parked; a directional upgrade is a nice-to-have, not a defect.
 - [ ] SPRITE — `sewer_grate` + `training_dummy` are semantic fallback
   placeholders (boulder/crate art) — A2 2026-07-04 — no grate/armor-stand
   art in-tree; content-pass to source or restyle labels to match visuals.
