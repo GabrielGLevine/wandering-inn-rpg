@@ -1409,6 +1409,15 @@ func sleep() -> void:
 				text += " — unlocked %s" % ", ".join(names)
 			_emit(WIEvents.TOAST, {"text": text})
 
+	# M-ARC AF I1: bank the monotonic "ever reached two classes" flag the moment
+	# the PC first holds two classes -- BEFORE the consolidation offer's early
+	# return below, so a Warrior/Mage who consolidates (2 classes -> 1) at the
+	# Act II threshold has already banked it and can never lose the Act III gate
+	# nor walk the journal act-line backward. Silent bookkeeping (no toast); the
+	# just-gained class already flagged anything_happened, so this never masks
+	# the "You sleep soundly." fallback on its own.
+	_bank_reached_two_classes_if_earned()
+
 	# --- M6 T5: consolidation OFFER, before evolutions resolve (spec §2.5
 	# REV 2) — a player who could consolidate this sleep must be offered the
 	# choice before an evolution outcome locks a class's identity. Firing an
@@ -1450,11 +1459,45 @@ func _maybe_fire_tremor_pointer() -> bool:
 		return false
 	if accomplishment_count("heard_the_deep_tremor") >= 1:
 		return false
-	if classes.size() < 2 or _quests_completed_count() < 3:
+	# M-ARC AF I1: read the MONOTONIC reached_two_classes flag, never the live
+	# classes.size() -- a Spellsword consolidation drops the count to 1 but must
+	# not un-fire the tremor pointer (the Act III entry). The flag is banked at
+	# the sleep beat two classes were first held, at consolidation-accept, and
+	# derived on load for old saves (see _bank_reached_two_classes_if_earned).
+	if accomplishment_count("reached_two_classes") < 1 or _quests_completed_count() < 3:
 		return false
 	record_accomplishment("watch_runner_pointed")
 	_emit(WIEvents.TOAST, {"text": "A Watch runner is looking for you."})
 	return true
+
+
+## M-ARC AF I1: banks the MONOTONIC `reached_two_classes` accomplishment ONCE,
+## the first time the PC holds two classes -- or holds an already-merged
+## consolidated class, which is itself proof two lines existed. The Act II->III
+## advance gate + the tremor pointer read THIS instead of the live
+## `classes.size()`, so a Spellsword consolidation (2 classes -> 1) can never
+## silently lock Act III or walk the journal act-line backward. Idempotent
+## (guards on the count) and SILENT (no toast) -- pure bookkeeping folded into
+## sleep() and accept_consolidation(); the load path derives it separately and
+## silently (save.gd apply). Uses record_accomplishment so its emission is
+## honest at the live sleep/accept beat (an already-derived save no-ops here).
+func _bank_reached_two_classes_if_earned() -> void:
+	if accomplishment_count("reached_two_classes") >= 1:
+		return
+	if classes.size() >= 2 or _holds_consolidated_class():
+		record_accomplishment("reached_two_classes")
+
+
+## True iff any held class is a consolidation TARGET (e.g. [Spellsword]). A save
+## already merged before the reached_two_classes flag existed still proves two
+## lines once existed, so it earns the flag on load. Pure read of classes.json's
+## `consolidations`; empty/config-less -> false (safe for bare unit games).
+func _holds_consolidated_class() -> bool:
+	var cfg: Dictionary = _combat_config.get("classes", {})
+	for cons: Dictionary in cfg.get("consolidations", []):
+		if classes.has(String((cons as Dictionary).get("target", ""))):
+			return true
+	return false
 
 
 ## Adds display names to a consolidation offer so the UI prompt can render class
@@ -1554,6 +1597,13 @@ func accept_consolidation() -> void:
 	_emit(WIEvents.CONSOLIDATION_ACCEPTED, offer.duplicate(true))
 	var target_name := String(_class_display_name(target))
 	_emit(WIEvents.TOAST, {"text": "[%s] and [%s] merge into [%s]!" % [parent_names[0], parent_names[1], target_name]})
+	# M-ARC AF I1: the merge itself proves two class lines existed -- bank the
+	# monotonic flag now so a consolidation that happens BEFORE the reached_two
+	# _classes sleep-banking ever ran (or on a save that predates the flag)
+	# still holds the Act III gate. No-op if already banked (the usual case:
+	# the qualifying sleep banked it first). Placed after the emits above so the
+	# accepted->merge-toast event order QA asserts on is undisturbed.
+	_bank_reached_two_classes_if_earned()
 
 
 ## Answers a pending consolidation offer by declining it: the parents are

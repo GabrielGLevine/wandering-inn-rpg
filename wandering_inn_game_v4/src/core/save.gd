@@ -260,6 +260,17 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.player_facing = Vector2i(int(player_facing[0]), int(player_facing[1]))
 	game.classes = (s["classes"] as Dictionary).duplicate(true)
 	game.accomplishments = (s["accomplishments"] as Dictionary).duplicate(true)
+	# M-ARC AF I1: derive the monotonic `reached_two_classes` flag for saves
+	# written before it existed. A save holding two classes (or an already-merged
+	# consolidated class, itself proof two lines existed) has completed the Act II
+	# milestone; without the flag its Act II->III gate + tremor pointer would
+	# regress on load now that both read the flag instead of the live class count.
+	# Set DIRECTLY (not via record_accomplishment) -- the load path must emit no
+	# gameplay events. Additive, idempotent, NO version bump (a save already
+	# carrying the flag keeps it; a genuine <2-class save gets nothing).
+	if int(game.accomplishments.get("reached_two_classes", 0)) < 1 \
+			and (game.classes.size() >= 2 or game._holds_consolidated_class()):
+		game.accomplishments["reached_two_classes"] = 1
 	game.player_skills.clear()
 	game.player_skills.assign(player_skills)
 	game.removed_entities.clear()

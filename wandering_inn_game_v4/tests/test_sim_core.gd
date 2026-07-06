@@ -769,6 +769,59 @@ func _init() -> void:
 	g23.decline_consolidation()
 	assert(_events.is_empty(), "accept/decline on a game with no offer ever emits nothing")
 
+	# --- M-ARC AF I1: consolidation must NOT regress the Act III gate ---
+	# The exact review scenario: a Warrior/Mage who reaches the consolidation
+	# threshold AT the Act II boundary and ACCEPTS the [Spellsword] merge (2
+	# classes -> 1) must still (a) keep the journal act-line at Act III and (b)
+	# fire the tremor pointer -- both now read the MONOTONIC reached_two_classes
+	# flag, never the live class count. Needs acts + quests config so
+	# act_summary()/_quests_completed_count() are live (base combat_config omits
+	# both). A minimal 3-quest catalog (each completing on one accomplishment)
+	# stands in for the shipped quests -- WIActs only counts COMPLETED quests.
+	var cc_arc := combat_config.duplicate(true)
+	cc_arc["acts"] = _load_json("res://data/acts.json")
+	cc_arc["quests"] = {"quests": [
+		{"id": "q_a", "beats": [{"id": "b", "description": "", "complete_when": {"qa_done": 1}}]},
+		{"id": "q_b", "beats": [{"id": "b", "description": "", "complete_when": {"qb_done": 1}}]},
+		{"id": "q_c", "beats": [{"id": "b", "description": "", "complete_when": {"qc_done": 1}}]},
+	]}
+	var arc := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_arc)
+	# Act II complete: warrior+mage at the consolidation threshold (6/7, sum 13),
+	# 3 quests done, reached_liscor -- but reached_two_classes NOT yet banked
+	# (this game never loaded a save), no Act III keys.
+	arc.classes = {"warrior": 6, "mage": 7}
+	arc.started_quests.assign(["q_a", "q_b", "q_c"])
+	arc.accomplishments = {"reached_liscor": 1, "qa_done": 1, "qb_done": 1, "qc_done": 1}
+	arc.reprime_quests()
+	# Baseline: the act line reads Act II until the monotonic flag is banked,
+	# even though two classes are already held (the gate no longer reads size).
+	assert(arc.act_summary()["id"] == "act_ii", "AF I1 baseline: pre-flag act line sits at Act II (gate reads reached_two_classes, not classes.size())")
+
+	# Sleep 1: banks reached_two_classes (two classes held) BEFORE the
+	# consolidation offer defers the rest of the beat. The tremor is deferred to
+	# a later sleep (the offer returns early) -- the honest one-sleep delay.
+	_events.clear()
+	arc.sleep()
+	assert(arc.accomplishment_count("reached_two_classes") == 1, "AF I1: the qualifying sleep banks reached_two_classes")
+	assert(arc.pending_consolidation.get("target", "") == "spellsword", "AF I1: that sleep defers with a [Spellsword] offer")
+	assert(arc.accomplishment_count("watch_runner_pointed") == 0, "AF I1: the offer sleep defers the tremor pointer (one-sleep delay)")
+	assert(arc.act_summary()["id"] == "act_iii", "AF I1: flag banked -> act line advances to Act III")
+
+	# ACCEPT the merge: 2 classes -> 1 [Spellsword]; the live count drops to 1.
+	arc.accept_consolidation()
+	assert(arc.classes.size() == 1 and arc.classes.has("spellsword"), "AF I1: accepted merge leaves a single [Spellsword] class")
+	assert(arc.accomplishment_count("reached_two_classes") == 1, "AF I1: reached_two_classes survives the merge (monotonic, never un-banked)")
+	# TOOTH (a): the act line does NOT regress -- still Act III at classes.size()==1.
+	assert(arc.act_summary()["id"] == "act_iii", "AF I1: post-consolidation act line stays Act III, never walks back to Act II")
+
+	# TOOTH (b): the tremor pointer STILL fires on the next sleep despite
+	# classes.size()==1 -- pre-fix the gate read `classes.size() < 2` and would
+	# have returned false forever, silently locking Act III.
+	_events.clear()
+	arc.sleep()
+	assert(arc.accomplishment_count("watch_runner_pointed") == 1, "AF I1: post-consolidation sleep fires the tremor pointer (gate reads the flag, not the live count)")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you."), "AF I1: the Watch-runner pointer toast renders after consolidation")
+
 	# --- M7 Task E2: equipment state, API, combat-build injection ---
 	# Default start state (skeleton_scene.json player block, same idiom as
 	# player.skills): the starter sword is BOTH equipped AND possessed.

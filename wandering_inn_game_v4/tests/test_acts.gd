@@ -52,13 +52,26 @@ func _init() -> void:
 	assert(achieved_ids.has("errands_around") and achieved_ids.has("krshia_trust"), "mid Act II beats reflect counters")
 	assert(not achieved_ids.has("known_face"), "Act II capstone pending until the gate")
 
-	# Act II gate met (2 classes + 3 quests) -> Act III.
-	var into_iii := WIActs.evaluate(catalog, _ctx(2, 3, {"reached_liscor": 1}))
-	assert(into_iii["id"] == "act_iii" and into_iii["index"] == 2, "2 classes + 3 quests => Act III")
+	# M-ARC AF I1: act_ii advances on the MONOTONIC `reached_two_classes`
+	# accomplishment, NOT the live class count -- so a big raw classes_count with
+	# the flag absent does NOT advance (proves the gate no longer reads size, the
+	# property that stops a Spellsword consolidation from regressing the act line).
+	var two_classes_no_flag := WIActs.evaluate(catalog, _ctx(2, 3, {"reached_liscor": 1}))
+	assert(two_classes_no_flag["index"] == 1, "2 raw classes + 3 quests but no reached_two_classes flag stays Act II")
+	# A post-consolidation save mid-Act-II (flag banked, only 2 quests done, so
+	# act_ii's own gate not yet met) reads Act II at classes_count 1 -- the flag
+	# holds act_i's advance without the live class count, so it never drops to Act I.
+	var post_consolidation := WIActs.evaluate(catalog, _ctx(1, 2, {"reached_liscor": 1, "reached_two_classes": 1}))
+	assert(post_consolidation["index"] == 1, "a post-consolidation save (classes_count 1, 2 quests) still reads Act II, not regressed to Act I")
+
+	# Act II gate met (reached_two_classes + 3 quests) -> Act III. classes_count 1
+	# here mirrors a consolidated [Spellsword] save: the flag alone advances it.
+	var into_iii := WIActs.evaluate(catalog, _ctx(1, 3, {"reached_liscor": 1, "reached_two_classes": 1}))
+	assert(into_iii["id"] == "act_iii" and into_iii["index"] == 2, "reached_two_classes + 3 quests => Act III (even at classes_count 1)")
 
 	# A save with EVERYTHING (incl. the not-yet-reachable raskghar_sealed) caps
 	# at the last act -- there is no Act IV to advance into.
-	var maxed := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "raskghar_sealed": 1}))
+	var maxed := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1}))
 	assert(maxed["id"] == "act_iii" and maxed["index"] == 2, "maxed save caps at the last act")
 
 	# TOLERANT of a sparse/old save shape: ctx with only accomplishments (no
