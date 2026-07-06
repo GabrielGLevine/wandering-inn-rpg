@@ -3226,6 +3226,223 @@
       "toast": "[Observe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper — that's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
      },
      "locked_toast": "The ledge overlooks the nest — a perfect vantage, if you had the eye to read one. You don't, quite. Not yet."
+    },
+    {
+     "_comment": "M-ARC A2 (A3-gated) descent seam. A `door_when` prop on the SAME idiom as the street sewer_grate: its gate is `heard_the_deep_tremor` -- the NEW accomplishment A3's tremor beat (Zevara's post-Act-II summons) banks; A3 is its SOLE producer (documented in CLAUDE.md + the A2 report). Until banked, door_when is UNMET and interact falls through to on_interact_accomplishment + toast (found_the_fissure) -- pre-gate behavior is byte-identical, so sewers_walkthrough/cisterns_* stay green. Once banked, the same interact emits open_toast and descends to deep_tunnels (2,2). Placed at (8,12), the untouched bottom-middle band -- no sewers/cisterns route asserts or treads a bottom-band cell (all sewers-map cells they visit are top-band y2, the nest right-side y10, and (2,7)); disclosure verified in the A2 report. Sprite `boulder` is a rubble stand-in for a collapsed fissure (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
+     "id": "deep_fissure",
+     "kind": "prop",
+     "cell": [
+      8,
+      12
+     ],
+     "display_name": "Collapsed Fissure",
+     "sprite": "boulder",
+     "observe": "The floor gave way here, not long ago — a raw crack breathing air colder and older than the sewers ever hold. The claw-scores on its lip all point one way: down. Something climbed up through this, and means to again.",
+     "on_interact_accomplishment": "found_the_fissure",
+     "toast": "A fresh fissure splits the sewer floor, exhaling a dry, breathing cold from far below. Deep gouges rake the stone lip — something big has been using this as a door.",
+     "door_when": {
+      "requires": {
+       "heard_the_deep_tremor": 1
+      },
+      "to_map": "deep_tunnels",
+      "to_cell": [
+       2,
+       2
+      ],
+      "open_toast": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
+     }
+    }
+   ]
+  },
+  "deep_tunnels": {
+   "_comment": "M-ARC A2: the Raskghar descent -- a small (14x10) cave-biome map BELOW the sewers, entered from the sewers `deep_fissure` prop once A3 banks `heard_the_deep_tremor` (see the fissure's door_when seam). DARKEST pin in the game (data/moods.json deep_tunnels, vignette 0.55). A single interact-only scout route-fight (`raskghar_scouts`) blocks the way; two flavor props (cold_hearth = old fires, gnaw_pile = bones) + the `warren_mouth` widened-gallery marker (the 'warren door' deep_descent reaches) dress the escalation. The BOSS encounter (Awakened Raskghar in the deep_warren arena) is A3's climax chain -- A2 ships the map, the scouts, the threshold, and the deep_warren arena/harness band; A3 wires the boss entity at/beyond warren_mouth + the Relc party/veto. Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable.",
+   "biome": "cave",
+   "grid": {
+    "width": 14,
+    "height": 10
+   },
+   "blocked": [],
+   "floor_layers": [
+    {
+     "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood (same picks as sewers/cave_mouth).",
+     "variants": [
+      [
+       8,
+       13
+      ],
+      [
+       9,
+       13
+      ],
+      [
+       10,
+       13
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "walls": {
+    "sheet": "res://assets/tiles/cave/Tiles.png",
+    "tile_px": 16,
+    "segments": [
+     {
+      "_comment": "A stalactite rubble column hanging from the ceiling (top), x7 y0-2 -- narrows the gallery without touching the open mid-band.",
+      "from": [
+       7,
+       0
+      ],
+      "to": [
+       7,
+       2
+      ]
+     },
+     {
+      "_comment": "A fallen column rising from the floor (bottom), x4 y7-9.",
+      "from": [
+       4,
+       7
+      ],
+      "to": [
+       4,
+       9
+      ]
+     }
+    ]
+   },
+   "decor": [
+    {
+     "sprite": "boulder",
+     "cell": [
+      10,
+      2
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_m",
+     "cell": [
+      3,
+      3
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_s",
+     "cell": [
+      11,
+      7
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      6,
+      8
+     ]
+    }
+   ],
+   "ambience": [
+    {
+     "preset": "dust_motes",
+     "rect": "all"
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "The way back up to the sewers, beside where the fissure drops you (lands at 2,2).",
+     "id": "tunnel_up",
+     "kind": "door",
+     "cell": [
+      2,
+      1
+     ],
+     "display_name": "Fissure Up",
+     "sprite": "door",
+     "to_map": "sewers",
+     "to_cell": [
+      8,
+      12
+     ],
+     "light": {
+      "color": [
+       0.7,
+       0.8,
+       0.95
+      ],
+      "energy": 0.4,
+      "radius": 20,
+      "flicker": false
+     }
+    },
+    {
+     "id": "cold_hearth",
+     "kind": "prop",
+     "cell": [
+      5,
+      4
+     ],
+     "display_name": "Cold Hearth",
+     "sprite": "boulder",
+     "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Something sat here in the dark and knew how to keep a fire — or learned how, the way they say these things learn, when the moon is full and their minds come clear.",
+     "on_interact_accomplishment": "found_cold_hearth",
+     "toast": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark — and left gnawed bones banked around the edge, cracked for their marrow.",
+     "light": {
+      "color": [
+       0.9,
+       0.45,
+       0.25
+      ],
+      "energy": 0.3,
+      "radius": 12,
+      "flicker": true
+     }
+    },
+    {
+     "id": "gnaw_pile",
+     "kind": "prop",
+     "cell": [
+      9,
+      6
+     ],
+     "display_name": "Gnawed Bones",
+     "sprite": "boulder",
+     "observe": "A midden of cracked bones, marrow sucked clean. Gnoll, most of them. A few too large to name. They have been sorted — almost stacked — as though something down here counts its meals and keeps the score.",
+     "on_interact_accomplishment": "found_gnaw_pile",
+     "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered — and somehow that is worse than if they had been."
+    },
+    {
+     "_comment": "M-ARC A2: the deep_tunnels route-fight -- a Raskghar scout PAIR barring the way to the warren. Interact-only (no trigger_radius) so QA/A3 control the start; deep_descent clears it via combat_autoplay. Fought in cave_mouth (the generic cave arena); the deep_warren arena is reserved for A3's boss. on_victory banks cleared_raskghar_scouts.",
+     "id": "raskghar_scouts",
+     "kind": "encounter",
+     "cell": [
+      8,
+      4
+     ],
+     "display_name": "Raskghar Scouts",
+     "sprite": "raskghar_scout",
+     "observe": "Two of them crouch where the tunnel narrows, moon-grey and mountain-shouldered, knuckles to the stone. Their small eyes track you without blinking. Between you and the deeper dark, they are the door — and the lock.",
+     "arena": "cave_mouth",
+     "enemies": [
+      "raskghar_scout",
+      "raskghar_scout"
+     ],
+     "allies": [],
+     "on_victory": [
+      "cleared_raskghar_scouts"
+     ]
+    },
+    {
+     "_comment": "M-ARC A2: the widened-gallery marker -- the 'warren door' deep_descent reaches (its terminal beat). A flavor threshold prop in A2; A3 wires the Awakened Raskghar boss encounter (deep_warren arena) here / just beyond it, plus the Relc party/veto beat. Placed at (12,5), past the scout route-fight.",
+     "id": "warren_mouth",
+     "kind": "prop",
+     "cell": [
+      12,
+      5
+     ],
+     "display_name": "Warren Mouth",
+     "sprite": "boulder",
+     "observe": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den — and where the big one waits, breathing slow in the black.",
+     "on_interact_accomplishment": "reached_the_warren",
+     "toast": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren."
     }
    ]
   }

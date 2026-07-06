@@ -82,6 +82,27 @@ const ENCOUNTER_CELLS := [
 	{"name": "shield_spiders_w2_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior2", "solo": true},
 	{"name": "shield_spiders_w1_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "sewer_vermin_w2_solo", "arena": "sewers_nest", "enemies": ["sewer_vermin", "sewer_vermin"], "build": "warrior2", "solo": true},
+	## M-ARC A2: the deep_tunnels Raskghar scout route-fight (bruiser pair,
+	## fought in cave_mouth). MEASURED-only -- the scouts are content, not a
+	## win-rate contract; deep_descent proves the fight clears via a pinned
+	## fixture rng. Recorded with + without Relc so the report shows the
+	## solo-difficulty frontier (the deep_descent fixture fields no ally).
+	{"name": "raskghar_scouts_w2_relc", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": false},
+	{"name": "raskghar_scouts_w2_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": true},
+	{"name": "raskghar_scouts_w5_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior5_mage5", "solo": true},
+]
+
+## M-ARC A2: the Awakened Raskghar BOSS band (spec §2 / plan A2 item 4). Unlike
+## every other new-content cell (all measured), the Relc-fielded boss cell is
+## GATED to an EXPLICIT 0.6-0.75 win band (per-cell `win_lo`/`win_hi`, NOT the
+## generic 0.55-0.95) -- the design contract "beatable-but-threatening with
+## Relc". The solo (decline-veto) cell is measured-only (the hard-mode frontier,
+## reported honestly, never gated). Boss + 2 scout adds in the deep_warren
+## positioning arena. Tune DATA (combatants.json con/die, skills.json maul die/
+## ap_cost) to hold the band; escalate if unreachable, never silently re-gate.
+const BOSS_CELLS := [
+	{"name": "awakened_boss_w2_relc", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": false, "win_lo": 0.6, "win_hi": 0.75},
+	{"name": "awakened_boss_w2_solo", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": true},
 ]
 
 const BUILDS := [
@@ -360,10 +381,68 @@ func _init() -> void:
 		if has_relc:
 			print("  relc_downed_rate=%.2f (%d/%d)" % [float(relc_downed) / float(RUNS_PER_CELL), relc_downed, RUNS_PER_CELL])
 
+	## M-ARC A2: the Awakened Raskghar boss axis. Same construction as the
+	## ENCOUNTER loop (build pc from the named BUILDS entry, optional Relc, the
+	## boss + scout adds) but with a PER-CELL win band: a cell carrying
+	## `win_lo`/`win_hi` is GATED to THAT band (the 0.6-0.75 Relc contract);
+	## a cell without them is measured-only (the solo veto frontier). This is the
+	## only gate in the file with a non-default band, by design.
+	for cell: Dictionary in BOSS_CELLS:
+		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
+		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
+		var wins := 0
+		var rounds: Array[int] = []
+		var relc_downed := 0
+		var has_relc := not bool(cell.get("solo", false))
+		for seed_v in range(1, RUNS_PER_CELL + 1):
+			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
+			pc["ai"] = String(build.get("ai", "melee"))
+			pc["stats"] = WIProgression.apply_stat_bonuses(pc["stats"], build["classes"], classes)
+			pc["skills"] = WIProgression.granted_skills(build["classes"], classes)
+			var cfgs: Array = [pc]
+			if has_relc:
+				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
+			for enemy_id: String in cell["enemies"]:
+				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
+			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			combat.begin()
+			var guard := 0
+			while not combat.finished and guard < 2000:
+				guard += 1
+				WICombatAI.take_turn(combat)
+			assert(combat.finished, "boss %s fight %d did not terminate" % [cell["name"], seed_v])
+			if combat.outcome["victory"]:
+				wins += 1
+			rounds.append(int(combat.outcome["rounds"]))
+			if has_relc and not bool(combat.combatants.get("relc", {}).get("alive", true)):
+				relc_downed += 1
+
+		rounds.sort()
+		var win_rate := float(wins) / float(RUNS_PER_CELL)
+		var median: int = rounds[RUNS_PER_CELL / 2]
+		var hist := {}
+		for r: int in rounds:
+			hist[r] = int(hist.get(r, 0)) + 1
+		var gated := cell.has("win_lo")
+		print("[boss / %s] arena=%s build=%s%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+			cell["name"], String(cell["arena"]), String(cell["build"]),
+			"" if has_relc else " solo", "" if gated else " (measured)",
+			win_rate, median, rounds[0], rounds[-1],
+		])
+		print("  rounds histogram: ", hist)
+		if has_relc:
+			print("  relc_downed_rate=%.2f (%d/%d)" % [float(relc_downed) / float(RUNS_PER_CELL), relc_downed, RUNS_PER_CELL])
+		if gated:
+			var lo := float(cell["win_lo"])
+			var hi := float(cell["win_hi"])
+			if win_rate < lo or win_rate > hi:
+				any_failed = true
+				printerr("FAIL [boss / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:
 		# Asserts are stripped in release templates; keep the exit code honest there too.
 		quit(1)
 		return
-	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size(), RUNS_PER_CELL])
+	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size(), RUNS_PER_CELL])
 	quit(0)

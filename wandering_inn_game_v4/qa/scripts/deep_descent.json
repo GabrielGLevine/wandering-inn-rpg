@@ -1,0 +1,349 @@
+{
+ "_comment": "M-ARC A2: the Raskghar descent canonical. Loads the deep_descent_start FIXTURE (sewers, facing the deep_fissure at (8,12), `heard_the_deep_tremor` pre-banked so the fissure's door_when gate is MET) via title Continue. Flow: interact the fissure -> DESCEND to deep_tunnels (open_toast + map_changed) -> read the Cold Hearth flavor prop -> clear the raskghar_scouts route-fight (combat_autoplay, no ally -- the party/veto is A3) -> read the Gnawed Bones flavor prop -> reach the Warren Mouth (the 'warren door', terminal beat). Proves: the new descent seam, the deep_tunnels dark map + mood + ambience, the two Raskghar scout combatants + their sprites in a real fight, and the three flavor toasts. FIXTURE-NOTE FOR A3: the Awakened BOSS fight (deep_warren arena) rides A3's chain -- A3 wires the boss encounter at/beyond warren_mouth + the Relc party/veto; this script STOPS at the warren door. Fixture rng_state (9) governs the scout autoplay (overrides --seed).",
+ "fixture_save": "deep_descent_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down 1 selects Continue, confirm loads the deep_descent_start fixture.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "sewers"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.heard_the_deep_tremor",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "00_sewers_fissure"
+  },
+  {
+   "_comment": "== DESCEND ==. Already facing DOWN onto the fissure (8,12); the door_when gate is MET -> open_toast, then transition to deep_tunnels (2,2).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "deep_tunnels"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "01_deep_tunnels_landing"
+  },
+  {
+   "_comment": "== COLD HEARTH (5,4) flavor ==. Down 2 to (2,4), right 2 to (4,4), then right 1 bumps the hearth (5,4, blocked prop) -> face it, interact.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "found_cold_hearth"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark — and left gnawed bones banked around the edge, cracked for their marrow."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== RASKGHAR SCOUTS (8,4) route-fight ==. The hearth blocks y4, so route over the top: up 1 to (4,3), right 4 to (8,3), then down 1 bumps the scouts (8,4) -> face them, interact.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "_comment": "Field READ: the raskghar_scout encounter sprite in the deep_tunnels dark mood, one cell above it, before the fight starts.",
+   "action": "screenshot",
+   "name": "01b_scout_field"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_raskghar_scouts"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "_comment": "Dismiss the victory banner (non-tutorial arena, no tutor line -- confirm-then-hide, sewer_vermin precedent).",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cleared_raskghar_scouts",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "_comment": "== GNAWED BONES (9,6) flavor ==. The scout cell (8,4) still blocks, so route right: right 1 to (9,3), then down 3 bumps the bones (9,6) -> face them, interact.",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "found_gnaw_pile"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered — and somehow that is worse than if they had been."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== WARREN MOUTH (12,5): the 'warren door', terminal beat ==. Right 2 to (11,5), then right 1 bumps the warren_mouth (12,5) -> face it, interact. A3 wires the boss here.",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "reached_the_warren"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_warren_mouth"
+  }
+ ]
+}

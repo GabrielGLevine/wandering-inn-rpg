@@ -2164,5 +2164,87 @@
    0.5,
    0.7593
   ]
+ },
+ "raskghar_scout": {
+  "_comment": "M-ARC A2 (2026-07-06): Raskghar via PixelLab v2 create-character-pro (mannequin, low top-down, 8 facings) -> animate-character idle/walk/slice -> directional down/side/up (side mirrors west). Canon bear-lion, moon-grey. render_scale = field figure 44.0px (towers over Gnolls); anchor feet-plane 94/124. combat_scale contains it at ~26.5px (Relc lesson).",
+  "directional": true,
+  "render_scale": 0.7458,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/raskghar_scout/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/raskghar_scout/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/raskghar_scout/Idle_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/raskghar_scout/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/raskghar_scout/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/raskghar_scout/Walk_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/raskghar_scout/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/raskghar_scout/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/raskghar_scout/Slice_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.7581
+  ]
+ },
+ "raskghar_awakened": {
+  "_comment": "M-ARC A2 (2026-07-06): Raskghar via PixelLab v2 create-character-pro (mannequin, low top-down, 8 facings) -> animate-character idle/walk/slice -> directional down/side/up (side mirrors west). Canon bear-lion, moon-grey. render_scale = field figure 50.0px (towers over Gnolls); anchor feet-plane 97/124. combat_scale contains it at ~30.0px (Relc lesson).",
+  "directional": true,
+  "render_scale": 0.8065,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/raskghar_awakened/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/raskghar_awakened/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/raskghar_awakened/Idle_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/raskghar_awakened/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/raskghar_awakened/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/raskghar_awakened/Walk_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/raskghar_awakened/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/raskghar_awakened/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/raskghar_awakened/Slice_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.7823
+  ]
  }
 }

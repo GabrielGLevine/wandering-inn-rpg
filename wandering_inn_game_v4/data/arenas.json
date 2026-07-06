@@ -751,6 +751,135 @@
      ]
     }
    ]
+  },
+  {
+   "_comment": "M-ARC A2: the deep warren -- the Awakened Raskghar's boss arena (12x8 per the M1 arena contract test_combat_data enforces; cave biome, darkest pin lives in data/moods.json arena_moods.deep_warren). Interior `blocked` cells are twin broken pillars (x3/x8) + a central rubble block (x6) that make the fight about POSITIONING: they break the boss's range-2 maul line-of-sight and give the player + Relc lanes to corner the kiting boss against, rather than an open trade. All six blocked cells are kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). The boss ENCOUNTER entity that fields raskghar_awakened + 2 raskghar_scout adds here is A3's climax chain; A2 ships the arena + the gated balance band (sim_combat_batch.gd BOSS_CELLS).",
+   "id": "deep_warren",
+   "biome": "cave",
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     8,
+     5
+    ]
+   ],
+   "player_spawns": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "_comment_dressing": "Decor sits just outside the 12x8 grid, same standing rule as goblin_ambush/cave_mouth/sewers_nest.",
+   "floor_layers": [
+    {
+     "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood (same picks as cave_mouth/sewers_nest).",
+     "variants": [
+      [
+       8,
+       13
+      ],
+      [
+       9,
+       13
+      ],
+      [
+       10,
+       13
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "boulder",
+     "cell": [
+      -1,
+      2
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      12,
+      5
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_m",
+     "cell": [
+      -2,
+      5
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_s",
+     "cell": [
+      12,
+      1
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_s",
+     "cell": [
+      6,
+      -2
+     ]
+    }
+   ]
   }
  ]
 }

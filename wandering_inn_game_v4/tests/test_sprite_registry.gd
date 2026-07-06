@@ -182,6 +182,15 @@ func _build_expected_counts() -> Dictionary:
 	counts["zevara/idle"] = 4
 	counts["zevara/walk"] = 6
 
+	## M-ARC A2: the two Raskghar (scout + awakened boss) are DIRECTIONAL +
+	## animated via the same F2/upgrade PixelLab v2 mannequin templates (124x124
+	## frames, down/side/up). idle=breathing-idle(4), walk=walking(6),
+	## slice=lead-jab(3) -- the reaching claw swipe reads.
+	for raskghar_id: String in ["raskghar_scout", "raskghar_awakened"]:
+		counts["%s/idle" % raskghar_id] = 4
+		counts["%s/walk" % raskghar_id] = 6
+		counts["%s/slice" % raskghar_id] = 3
+
 	## M5 E3 dressing sprites (single-region statics; grill is a 4-frame strip)
 	for e3_static: String in [
 		"hearth", "counter_left", "counter_mid", "counter_right",

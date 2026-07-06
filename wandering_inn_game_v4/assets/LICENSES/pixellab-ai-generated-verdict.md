@@ -63,3 +63,16 @@ registry alias reusing F2's body_a sheets verbatim (no new art).
 Character ids + driver (`pc_variants.py`) + originals in
 `potential_assets/pixellab_2026-07-06/pc_variants_work/` (gitignored).
 Same PixelLab-ToS ownership / redistributability as everything above.
+
+## M-ARC A2 — Raskghar (2026-07-06)
+
+`raskghar_scout` + `raskghar_awakened` (the Awakened boss) — two bespoke
+directional+animated monster sprites (idle/walk/slice, 124×124, down/side/up
+strips, south/east/north only, registry mirrors side→west) via the SAME proven
+v2 pipeline (`create-character-pro` mannequin / low top-down / no_background
+64×64 → `animate-character` templates `breathing-idle`/`walking`/`lead-jab`).
+Canon bear-lion silhouette, moon-grey; the awakened carries a pale mane to read
+as the smarter alpha. Character ids + driver (`raskghar.py`, `integrate_raskghar.py`)
++ originals/rotations in `potential_assets/pixellab_2026-07-06/raskghar_work/`
+(gitignored). Same PixelLab-ToS ownership / redistributability as everything
+above.

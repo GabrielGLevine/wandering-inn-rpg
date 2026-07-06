@@ -178,6 +178,46 @@
    "weapon_die": 3,
    "ai": "melee",
    "skills": []
+  },
+  {
+   "_comment": "M-ARC A2: Raskghar scout -- canon nocturnal cave predator (wiki.wanderinginn.com/Raskghar): a cross between an upright bear and a lion, towers over Gnolls, ~Level-15-warrior strength, tracks and ambushes prey. A bruiser-class melee pair: high con/str, low int/cha. Serves DOUBLE duty -- the deep_tunnels route-fight pair AND the 2 scout adds in the Awakened's boss roster. combat_scale 0.4492 contains the hulking 124px frame at the feet (the Relc containment lesson); sprite is a real directional PixelLab v2 idle/walk/slice set. Balance MEASURED-only in sim_combat_batch.gd SCOUT_CELLS/BOSS_CELLS.",
+   "id": "raskghar_scout",
+   "display_name": "Raskghar Scout",
+   "sprite": "raskghar_scout",
+   "combat_scale": 0.4492,
+   "side": "enemy",
+   "stats": {
+    "str": 15,
+    "dex": 10,
+    "con": 20,
+    "int": 4,
+    "wis": 8,
+    "cha": 4
+   },
+   "weapon_die": 7,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "M-ARC A2: the Awakened Raskghar BOSS -- canon (a Raskghar that ate a Gnoll's heart, permanently smarter, matches a Level-20 warrior). High-HP bruiser (con 30 -> 50 max_hp). Its signature [Raskghar Maul] is a reaching slowed-rider swing on the EXISTING spell_damage+applies machinery (NO new effect type). `ai: caster` is REQUIRED, not decorative: the melee AI only fires attack/power_strike by name, so a `caster` boss (leads with the range-2 maul, falls through to claws) is the only shipped profile that actually LANDS the slow without a combat_ai.gd change (report AI-fit analysis). combat_scale 0.4839 lets it loom ~2 cells while HP bars stay readable. Balance: sim_combat_batch.gd BOSS_CELLS -- GATED 0.6-0.75 vs warrior2+Relc, measured solo. The boss ENCOUNTER entity + party/veto is A3; A2 ships the combatant + arena + harness band.",
+   "id": "raskghar_awakened",
+   "display_name": "Awakened Raskghar",
+   "sprite": "raskghar_awakened",
+   "combat_scale": 0.4839,
+   "side": "enemy",
+   "stats": {
+    "str": 18,
+    "dex": 11,
+    "con": 44,
+    "int": 12,
+    "wis": 10,
+    "cha": 8
+   },
+   "weapon_die": 9,
+   "ai": "caster",
+   "skills": [
+    "raskghar_maul"
+   ]
   }
  ]
 }

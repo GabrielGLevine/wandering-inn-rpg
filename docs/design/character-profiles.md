@@ -72,9 +72,16 @@ canon cites · current sprite state.
 - Sprite: stand-in tint (upgrade queued).
 
 ## The PC ("Traveler")
-- Human otherworlder, deliberately everyman; clothing = simple
-  earth-tone traveler's tunic/trousers/belt (a nobody-yet — NOT armor).
-- Sprite: F2 in flight (v2 8-dir animated directive).
+- Player-named at creation (M-ARC §5); race Human/Drake/Gnoll + gender
+  cosmetic. Deliberately everyman; clothing = simple earth-tone
+  traveler's tunic/trousers/belt (a nobody-yet — NOT armor) ACROSS ALL
+  SIX VARIANTS — the outfit is the identity constant, the body varies.
+- Canon guard: only Humans are Earth otherworlders — the GDI opener
+  branches (Drake/Gnoll get a "starting over in Liscor" arrival).
+- Sprite: 6 bespoke PixelLab v2 DIRECTIONAL + full-anim variants
+  (idle/walk/slice/hit/death/cast ×3 facings): pc_human_m (= F2 body_a,
+  104px), pc_human_f (104px), pc_drake_m/pc_drake_f (124px),
+  pc_gnoll_m/pc_gnoll_f (108px). Integrated 2026-07-06.
 
 ## Antinium (ratified picks, awaiting a character)
 - Worker = candidate s21; Soldier = s33
@@ -82,7 +89,26 @@ canon cites · current sprite state.
   integration target: Klbkch (Worker-origin Senior Guardsman,
   canonical [Diplomat]).
 
-## Raskghar (M-ARC A2, to generate)
-- Hulking nocturnal dungeon-dwellers; bear-wolf silhouette, moon-grey
-  fur, knuckle-walking bulk; awakened variant = larger, upright, aware
-  eyes. Wiki-verify details at generation time.
+## Raskghar (M-ARC A2, GENERATED + INTEGRATED 2026-07-06)
+- Canon (wiki.wanderinginn.com/Raskghar): "a cross between an upright
+  bear and a lion", tower over Gnolls, hunched with long claws + sharp
+  teeth, nocturnal subterranean ambush predators; normal ~Level-15
+  warrior, an **Awakened** Raskghar (ate a Gnoll's heart) is permanently
+  smarter + matches a Level-20 warrior; full-moon lucidity.
+- **raskghar_scout** — hulking moon-grey bear-lion, shaggy, hunched
+  knuckle-gait, fanged. Directional idle/walk/slice (PixelLab v2
+  create-character-pro mannequin + animate templates, 124px frames).
+  render_scale 0.7458 (field figure ~44px, towers over the PC/Gnolls);
+  anchor [0.5, 0.7581]; combat_scale **0.4492** (~26.5px / ~1.66 cells,
+  contained per the Relc lesson — windowed-verified in combat + field).
+- **raskghar_awakened** (the BOSS) — larger, upright, moon-grey with a
+  pale MANE + cold intelligent eyes (visibly the smarter alpha).
+  Directional idle/walk/slice, 124px. render_scale 0.8065 (field ~50px);
+  anchor [0.5, 0.7823]; combat_scale **0.4839** (~30px / ~1.9 cells, it
+  looms while HP bars stay readable — windowed-verified in deep_warren).
+- Combat: raskghar_scout = bruiser melee pair (str15/con20/die7);
+  raskghar_awakened = high-HP bruiser (con44 → 64 HP) whose signature
+  [Raskghar Maul] is a range-2 slowed-rider swing on the existing
+  spell_damage+applies machinery (no new effect type), `caster` AI.
+  Balance: sim_combat_batch.gd BOSS_CELLS, 0.72 win vs warrior2+Relc
+  (gated 0.6-0.75), 0.04 solo (measured veto).

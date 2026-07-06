@@ -348,6 +348,15 @@
 			"ap_cost": 2,
 			"effect": { "type": "spell_damage", "die": 3, "range": 1, "applies": { "slowed": { "pool_penalty": 2 } } },
 			"description": "A steadying word and a calming hand; the fight drains out of a foe, and their guard turns slow and uncertain."
+		},
+		{
+			"_comment": "M-ARC A2: the Awakened Raskghar's signature (enemy-only; no class grants it). A REACHING heavy swing realized on the EXISTING frost_bolt/[Calming Touch] applies-rider machinery -- spell_damage + the same `slowed` pool_penalty rider, NO new effect type. range 2 (a hulking bear-lion's reach) is deliberate: it is the only value that lets the boss's `caster` AI actually FIRE the slow under the shipped combat_ai.gd -- a range-1 swing makes the ranged AI kite-then-never-cast, a range-2 swing makes it maintain reach and land the maul every turn (task-a2 report AI-fit analysis). die/ap_cost balance-tuned via sim_combat_batch.gd BOSS_CELLS to hold the 0.6-0.75 Relc band; slowed pool_penalty is the shared status (WICombat._start_turn expiry, identical to frost_bolt).",
+			"id": "raskghar_maul",
+			"display_name": "[Raskghar Maul]",
+			"contexts": ["combat"],
+			"ap_cost": 3,
+			"effect": { "type": "spell_damage", "die": 11, "range": 2, "applies": { "slowed": { "pool_penalty": 2 } } },
+			"description": "A sweeping, reaching swipe of claw and forearm that batters the legs out from under you and leaves them slow to answer."
 		}
 	]
 }

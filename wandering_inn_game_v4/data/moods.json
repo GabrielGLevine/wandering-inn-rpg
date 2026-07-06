@@ -84,6 +84,25 @@
     0.4
    ],
    "vignette": 0.45
+  },
+  "deep_tunnels": {
+   "_comment": "M-ARC A2: the Raskghar descent -- the DARKEST pin in the game, time-invariant (below the sewers, no daylight ever reaches it). Meaningfully darker + colder than the sewers' [0.3,0.32,0.45] so the descent visibly escalates; a stronger vignette (0.55) squeezes the readable space to a lantern's reach. Any prop lights glow at every phase intent (light_energy day=0.0 still keeps day flat, so the tunnels lean on their own cold ambience).",
+   "day": [
+    0.2,
+    0.22,
+    0.33
+   ],
+   "dusk": [
+    0.2,
+    0.22,
+    0.33
+   ],
+   "night": [
+    0.18,
+    0.2,
+    0.3
+   ],
+   "vignette": 0.55
   }
  },
  "arena_moods": {
@@ -123,6 +142,25 @@
     0.45
    ],
    "vignette": 0.45
+  },
+  "deep_warren": {
+   "_comment": "M-ARC A2: the boss arena inherits the deep_tunnels darkest pin so the Awakened Raskghar fight reads as the lowest, coldest point of the descent (matches the map grade the player crosses to reach it).",
+   "day": [
+    0.2,
+    0.22,
+    0.33
+   ],
+   "dusk": [
+    0.2,
+    0.22,
+    0.33
+   ],
+   "night": [
+    0.2,
+    0.22,
+    0.33
+   ],
+   "vignette": 0.55
   }
  }
 }
