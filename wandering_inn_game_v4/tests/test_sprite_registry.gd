@@ -82,18 +82,20 @@ func _load_json(path: String) -> Dictionary:
 
 
 ## Builds a map of expected frame counts: "sprite_id/anim_name" -> count.
-## Counts derived from PNG widths in asset-index.md divided by frame_size (64px).
-## body_a: idle=4, walk=6, slice=8, hit=4, death=8; citizen_f: idle=4, walk=6.
+## Counts derived from PNG widths in asset-index.md divided by frame_size.
+## body_a (F2 outfit rebuild, 104px frames): idle=4, walk=6, slice=3, hit=6,
+## death=7, cast=6; citizen_f: idle=4, walk=6.
 func _build_expected_counts() -> Dictionary:
 	var counts: Dictionary = {}
 
-	## body_a frame counts (all 64x64 frame size)
-	counts["body_a/idle"] = 4      ## 256 / 64
-	counts["body_a/walk"] = 6      ## 384 / 64
-	counts["body_a/slice"] = 8     ## 512 / 64
-	counts["body_a/cast"] = 4      ## Track B1 PixelLab cast/gesture strip, 256 / 64 (side sheet reused for down/up; combat renders side only)
-	counts["body_a/hit"] = 4       ## 256 / 64
-	counts["body_a/death"] = 8     ## 512 / 64
+	## body_a frame counts (F2: PixelLab v2 clothed-traveler character,
+	## 104x104 frame size, per-anim counts from the mannequin templates)
+	counts["body_a/idle"] = 4      ## 416 / 104 (breathing-idle)
+	counts["body_a/walk"] = 6      ## 624 / 104 (walking)
+	counts["body_a/slice"] = 3     ## 312 / 104 (lead-jab)
+	counts["body_a/cast"] = 6      ## 624 / 104 (fireball; now real down/side/up sheets)
+	counts["body_a/hit"] = 6       ## 624 / 104 (taking-punch)
+	counts["body_a/death"] = 7     ## 728 / 104 (falling-back-death)
 
 	## citizen_f frame counts (all 64x64 frame size)
 	counts["citizen_f/idle"] = 4   ## 256 / 64

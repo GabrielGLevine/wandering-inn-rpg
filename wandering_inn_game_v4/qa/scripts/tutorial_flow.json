@@ -467,8 +467,7 @@
    "payload_contains": {
     "text": "[Warrior] class gained! \u2014 [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
    },
-   "timeout_sec": 5,
-   "timeout": 10.0
+   "timeout_sec": 10.0
   },
   {
    "action": "assert_state",

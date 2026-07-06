@@ -1,14 +1,15 @@
 {
  "body_a": {
   "directional": true,
+  "render_scale": 0.62,
   "animations": {
    "idle": {
     "sheet_down": "res://assets/sprites/body_a/Idle_Down-Sheet.png",
     "sheet_side": "res://assets/sprites/body_a/Idle_Side-Sheet.png",
     "sheet_up": "res://assets/sprites/body_a/Idle_Up-Sheet.png",
     "frame_size": [
-     64,
-     64
+     104,
+     104
     ],
     "fps": 6
    },
@@ -17,8 +18,8 @@
     "sheet_side": "res://assets/sprites/body_a/Walk_Side-Sheet.png",
     "sheet_up": "res://assets/sprites/body_a/Walk_Up-Sheet.png",
     "frame_size": [
-     64,
-     64
+     104,
+     104
     ],
     "fps": 8
    },
@@ -27,18 +28,18 @@
     "sheet_side": "res://assets/sprites/body_a/Slice_Side-Sheet.png",
     "sheet_up": "res://assets/sprites/body_a/Slice_Up-Sheet.png",
     "frame_size": [
-     64,
-     64
+     104,
+     104
     ],
-    "fps": 10
+    "fps": 8
    },
    "cast": {
-    "sheet_down": "res://assets/sprites/body_a/Cast_Side-Sheet.png",
+    "sheet_down": "res://assets/sprites/body_a/Cast_Down-Sheet.png",
     "sheet_side": "res://assets/sprites/body_a/Cast_Side-Sheet.png",
-    "sheet_up": "res://assets/sprites/body_a/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Cast_Up-Sheet.png",
     "frame_size": [
-     64,
-     64
+     104,
+     104
     ],
     "fps": 10
    },
@@ -47,18 +48,18 @@
     "sheet_side": "res://assets/sprites/body_a/Hit_Side-Sheet.png",
     "sheet_up": "res://assets/sprites/body_a/Hit_Up-Sheet.png",
     "frame_size": [
-     64,
-     64
+     104,
+     104
     ],
-    "fps": 8
+    "fps": 10
    },
    "death": {
     "sheet_down": "res://assets/sprites/body_a/Death_Down-Sheet.png",
     "sheet_side": "res://assets/sprites/body_a/Death_Side-Sheet.png",
     "sheet_up": "res://assets/sprites/body_a/Death_Up-Sheet.png",
     "frame_size": [
-     64,
-     64
+     104,
+     104
     ],
     "fps": 8
    }
