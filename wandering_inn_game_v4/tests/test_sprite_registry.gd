@@ -156,6 +156,11 @@ func _build_expected_counts() -> Dictionary:
 	counts["pisces/idle"] = 1
 	counts["pisces/walk"] = 4
 
+	## Content Wave C2 PixelLab characters (non-directional, single 64x64 idle
+	## frame each): Olesm (slim blue Drake clerk) + Zevara (blue Drake Watch captain).
+	counts["olesm/idle"] = 1
+	counts["zevara/idle"] = 1
+
 	## M5 E3 dressing sprites (single-region statics; grill is a 4-frame strip)
 	for e3_static: String in [
 		"hearth", "counter_left", "counter_mid", "counter_right",

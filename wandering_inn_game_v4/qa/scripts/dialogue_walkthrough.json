@@ -26,6 +26,20 @@
    "name": "interact"
   },
   {
+   "_comment": "Content Wave C2: Lyonette now carries a talk_pool, so the FIRST talk this waking plays her rotating pool line (idx 0) before the graph; a second interact then opens lyonette_tip.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Lyonette",
+    "text": "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
    "action": "wait_for_event",
    "type": "dialogue_started",
    "payload_contains": {
@@ -672,6 +686,20 @@
    "action": "move",
    "direction": "right",
    "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "Content Wave C2: this is the SECOND Lyonette talk, in waking 3 (two sleeps have re-armed her pool). chatted_with_lyonette is 1 from the first talk, so the pool index is 1 % 3 = 1; absorb that line, then a second interact opens lyonette_tip.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Lyonette",
+    "text": "The floors are clean because I cleaned them. Twice. Mind where you set your boots."
+   },
+   "timeout_sec": 5
   },
   {
    "action": "press",

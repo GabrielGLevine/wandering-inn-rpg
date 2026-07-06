@@ -1642,6 +1642,42 @@
    0.97
   ]
  },
+ "olesm": {
+  "_comment": "Content Wave C2 PixelLab (pixflux, no_background, 'side' view, 64x64, olesm_s2). Slim sky-blue Drake scholar holding a rolled map -- reads unmistakably as a blue lizardman clerk. Single static idle frame (relc/pisces non-directional precedent); render_scale 0.5 = PC-height.",
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/olesm/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 4
+   }
+  },
+  "anchor": [
+   0.5,
+   0.97
+  ]
+ },
+ "zevara": {
+  "_comment": "Content Wave C2 PixelLab (pixflux, no_background, 'low top-down' view, 64x64, zevara_s1). Armored light-blue Drake Watch officer -- reads as a stern uniformed lizardman captain. Single static idle frame; render_scale 0.55 (canon 'notably tall').",
+  "render_scale": 0.55,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/zevara/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 4
+   }
+  },
+  "anchor": [
+   0.5,
+   0.97
+  ]
+ },
  "training_dummy": {
   "render_scale": 0.5,
   "anchor": [

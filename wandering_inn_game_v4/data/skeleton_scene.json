@@ -423,6 +423,13 @@
       1.0
      ],
      "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
+     "friendly_line": "Lyonette's chin lifts, then — despite itself — softens. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot.",
+     "_comment_pool": "Content Wave C2: Lyonette's base talk_pool (wounded-pride-thawing, warmth-arc SEED; C4/Q2 grows it post-quest -- spec 2.2/3.Q2). She is the game's ONLY pre-existing QA-covered NPC to gain a pool, so dialogue_walkthrough (the sole script that interacts with her -- twice, once per waking across its two sleeps) was re-pathed to ABSORB the first-talk pool DIALOGUE_LINE at idx 0 (waking 1) and idx 1 (waking 3, chatted_with_lyonette then =1) before opening lyonette_tip, mirroring the S4 pooled-NPC re-path pattern. Zero rng, so seed 9 holds.",
+     "talk_pool": [
+      "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
+      "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
+      "...You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
+     ],
      "conversation": "lyonette_tip",
      "dialogue": [
       {
@@ -1530,6 +1537,58 @@
       {
        "speaker": "Watch Guard",
        "text": "Keep the gate clear. And if you're headed out — the road's got goblins on it lately. Watch knows. Watch is dealing with it."
+      }
+     ]
+    },
+    {
+     "_comment": "Content Wave C2: Zevara Sunderscale, Drake Watch Captain, just inside the gate below the guard. Cell (2,6) sits BELOW the three gate corridors every street-route walks -- y3 (entry/forecourt), y4 (transit lane), and crate_light's y5 PHASE-D return (left-28 to (2,5)) -- verified against the passing event logs of gate_district_walkthrough/crate_talk/crate_fight/social_loop and crate_light's intended path; she blocks no walked cell. NPCs are NOT in the sim blocked set (WIGame builds blocked_cells from static `blocked`+wall segments only), so she does NOT shift gate_district_walkthrough's blocked_cells:106 assert. sprite `zevara` is a Content Wave C2 PixelLab pixflux gen (armored light-blue Drake Watch officer) -- see sprites.json + VISUAL-LOG.",
+     "id": "zevara",
+     "kind": "npc",
+     "cell": [
+      2,
+      6
+     ],
+     "display_name": "Zevara",
+     "sprite": "zevara",
+     "observe": "Oldblood Drake, light scales, a scar down the left of her jaw she's long past explaining. She reads the gate the way a clerk reads a ledger — every figure accounted for, and every one of them a suspect.",
+     "friendly_line": "Zevara's shoulders come down a fraction. Huh. Civil, and no bribe. You would not believe how short that list is. Go on through. And — thank you. Genuinely.",
+     "facing": "left",
+     "talk_pool": [
+      "If you're here to report a crime, the form's on the left. If you're here to commit one, don't. I've had a day.",
+      "Ten years running this Watch. Six weeks of leave, total. That's the whole personality, if you were wondering.",
+      "Relc's off being enormous at someone. Klbkch is... Klbkch. Somehow the gate still stands. Don't jinx it."
+     ],
+     "conversation": "zevara_intro",
+     "dialogue": [
+      {
+       "speaker": "Zevara",
+       "text": "The gate's my problem, so keep it dull and we'll get along fine."
+      }
+     ]
+    },
+    {
+     "_comment": "Content Wave C2: Olesm Swifttail, Drake [Tactician]/council clerk, at the Guild frontage. Cell (29,3) is tucked by the Guild building, clear of gate_district_walkthrough's forecourt cells (25,4)/(25,5)/(26,5)/(27,5)/(27,4)/(27,3) and of crate_light's y5 pisces approach -- verified off every street-route path, and NPCs are excluded from the blocked_cells count. sprite `olesm` is a Content Wave C2 PixelLab pixflux gen (slim sky-blue Drake holding a rolled map) -- see sprites.json + VISUAL-LOG.",
+     "id": "olesm",
+     "kind": "npc",
+     "cell": [
+      29,
+      3
+     ],
+     "display_name": "Olesm",
+     "sprite": "olesm",
+     "observe": "Thin, sky-blue scales, ink drying on three of his claws. A chess board waits at his elbow mid-game — played against himself, to feel how the other side thinks. His eyes are a wild, lovely blue, patterned like rain caught falling.",
+     "friendly_line": "Olesm brightens like a lamp. Oh — a friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you — that is — care to see the board sometime? No pressure. A little pressure.",
+     "facing": "down",
+     "talk_pool": [
+      "Do you play chess? No? A pity. I've a board set and no worthy opponent since — well. That's a long story involving a human and a great deal of humbling.",
+      "Three reports due by dusk and two clerks who can't count past a company. I'll manage. I always manage.",
+      "Supply lines, sightlines, morale — a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak."
+     ],
+     "conversation": "olesm_intro",
+     "dialogue": [
+      {
+       "speaker": "Olesm",
+       "text": "One moment — three columns into a tally. Say hello properly and I'll lose my place gladly."
       }
      ]
     },

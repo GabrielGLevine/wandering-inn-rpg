@@ -1,0 +1,48 @@
+{
+	"_comment": "Content Wave C2: Zevara Sunderscale, Oldblood Drake Watch Captain of Liscor, posted at the gate. Canon (wiki.wanderinginn.com/Zevara): light-blue scales, a scar down the left of her jaw, tall; dry, perpetually overworked, rigidly procedural, refuses bribes, no personal life (six weeks' leave in ten years); her Senior Guardsmen are Relc (a [Spearmaster]) and Klbkch (an Antinium). The 'persuade' branch banks persuaded_someone -- the SAME [Diplomat] identity feed watch_crate already produces (classes.json diplomat.gained_by {persuaded_someone:1, heard_gossip:3}); it is one-time via hide_when so it can't re-bank, and its entry sits behind that hide_when so the persuade node is unreachable once banked. The spec's 'gate_guard defers to her' beat is carried on ZEVARA'S side ('authority' node references the guard) rather than by editing gate_guard's dialogue[0]/talk_pool, both of which gate_district_walkthrough + social_loop assert VERBATIM. Opacity rule: class NAME only, no stats.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Zevara",
+			"text": "Watch Captain Zevara. If this is a report, keep it short; if it's a complaint, keep it shorter. I've been on since before the gate opened and I'll be on after it shuts.",
+			"options": [
+				{ "text": "Long shift?", "goto": "shift" },
+				{ "text": "Actually — the Watch could help me with something.", "hide_when": { "accomplishment": { "persuaded_someone": 1 } }, "goto": "persuade" },
+				{ "text": "Just getting my bearings.", "end": true }
+			]
+		},
+		"shift": {
+			"speaker": "Zevara",
+			"text": "Ten years of long shifts. Six weeks of leave across all of them — do the arithmetic and then don't ask why I look like this. My Senior Guardsmen are a spearmaster who won't stop talking and an Antinium who won't start, and somehow the wall still stands. Don't tell either of them the streak's holding. They'll take the credit.",
+			"options": [
+				{ "text": "The guard on the gate speaks well of you.", "goto": "authority" },
+				{ "text": "Back a step.", "goto": "hub" },
+				{ "text": "I'll let you get back to it.", "end": true }
+			]
+		},
+		"authority": {
+			"speaker": "Zevara",
+			"text": "He should. I signed his posting and I read his reports — both of them, the real one and the one where nothing happened. Liscor's Watch runs on people who'd rather stand a boring gate than let an interesting one through. Long may it bore us.",
+			"options": [
+				{ "text": "Back a step.", "goto": "hub" },
+				{ "text": "Understood, Captain.", "end": true }
+			]
+		},
+		"persuade": {
+			"speaker": "Zevara",
+			"text": "Help. From the Watch. That isn't a favour, it's a requisition, and requisitions come with forms. Convince me it's worth the ink.",
+			"options": [
+				{ "text": "If it's under the city and it's moving, it's already Watch business — I'm just the one telling you first.", "effects": [ { "accomplishment": "persuaded_someone" } ], "goto": "persuaded" },
+				{ "text": "Never mind — forget I asked.", "end": true }
+			]
+		},
+		"persuaded": {
+			"speaker": "Zevara",
+			"text": "...Hm. First sentence anyone's given me today that didn't waste a word. Fine — you've made your case; I'll put eyes on it. And I'll remember you argue clean. That's rarer than you'd think on my side of the gate.",
+			"options": [
+				{ "text": "That's all I ask.", "goto": "hub" },
+				{ "text": "Appreciated, Captain.", "end": true }
+			]
+		}
+	}
+}

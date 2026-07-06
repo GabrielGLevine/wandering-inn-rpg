@@ -40,6 +40,25 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   recipes) so the nest fight reads as spiders, not a second bat swarm.
   Overworld tokens are tinted apart (spider cold blue-grey, vermin warm
   grey) but combat sprites are identical. First-seen: C1 build 2026-07-06.
+- [x] CONTENT/SPRITE — Content Wave C2 characters **Olesm** + **Zevara**
+  shipped WITH real PixelLab pixflux Drake sprites (2026-07-06, uncommitted):
+  `olesm` = a slim sky-blue Drake holding a rolled map (guild frontage);
+  `zevara` = an armored light-blue Drake Watch officer (the gate). Each is a
+  single static 64×64 idle frame (relc/pisces non-directional precedent;
+  `no_background`, `side`/`low top-down` views), render_scale 0.5/0.55, anchor
+  [0.5,0.97]. Windowed-read in-world at the gate + guild frontage
+  (`.superpowers/sdd/fp-handoff/c2-shots/01_zevara_pool.png`,
+  `04_olesm_pool.png`) — both read clearly as blue Drakes. Minor follow-up
+  (not a defect): idle-only (no walk cycle) and no directional facings —
+  acceptable for stationary NPCs, matches relc/pisces fallback behaviour.
+- [ ] SPRITE/CANON — **Lyonette** (inn barmaid, pre-existing entity) still
+  uses the `citizen_f` sprite with a pink tint — a human-woman stand-in.
+  CANON FLAG: the wiki gives Lyonette **bright RED hair** + blue eyes; the C2
+  task/spec both said "blonde", which is a canon miss (do NOT ship blonde).
+  A red-haired, worn-fine-dress human sprite (PixelLab) would sharpen her; the
+  current stand-in reads as a proud young human woman, which passes the "reads
+  as Lyonette" bar but carries the wrong hair. Deferred (C2 kept her existing
+  sprite to avoid churn; C4/a future art pass owns the upgrade).
 - [ ] FIELD/TILES — world maps render BLOCKED cells as flat tiles while
   arenas render them as biome prop sprites (M6.5 structure map,
   2026-07-04) — props-over-tiles is a repo-wide mandate; field blocked

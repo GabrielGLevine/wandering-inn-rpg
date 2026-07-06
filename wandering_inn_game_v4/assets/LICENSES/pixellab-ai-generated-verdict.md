@@ -18,6 +18,8 @@ original generations, not pack extracts.
 | `assets/sprites/cauldron/Idle-Sheet.png` | `stew_pot` prop (B3) | black iron cauldron on a small log fire, hard black outline, 16-bit; `low top-down` |
 | `assets/sprites/training_dummy/Idle-Sheet.png` | `training_dummy` prop (B3) | straw practice-dummy pell, burlap head, wooden post, hard outline; `low top-down` |
 | `assets/sprites/dirty_table/Idle-Sheet.png` | `dirty_table` pre-clean prop (B3) | wooden tavern table from above cluttered with dirty plates/mugs/scraps; `high top-down` |
+| `assets/sprites/olesm/Idle-Sheet.png` | Olesm (Drake clerk, C2) | slim sky-blue Drake lizardman scholar, brown leather vest, holding a rolled map; `side` |
+| `assets/sprites/zevara/Idle-Sheet.png` | Zevara (Drake Watch captain, C2) | armored light-blue Drake lizardman watch officer, steel armor, stern; `low top-down` |
 
 Track B3 (2026-07-06) props are STATIC 1-frame sheets
 (`/generate-image-pixflux`, `no_background: true`, 64×64) — no animation,
