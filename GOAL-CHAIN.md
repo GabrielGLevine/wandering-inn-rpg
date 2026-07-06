@@ -107,6 +107,14 @@ data edits, user spot-reads the diffs. Guards at every delivery
 (writer self-check + reviewer hunt) run from now on — the pass
 catches what guards miss.
 
+**9. M-STEAM (user-seeded; unscheduled tail):** seed at
+docs/superpowers/specs/2026-07-06-m-steam-seed.md — THE GATE is the
+non-commercial promise (free-on-Steam recommended; any paid path needs
+pirateaba's explicit permission FIRST — ⚑ user). Engineering center =
+controller support (pad bindings + glyph hints + panel focus-nav);
+then desktop presets, SteamPipe jobs, store assets. v1 ships no-SDK;
+achievements later (accomplishment counters map 1:1).
+
 Each expansion: spec (canon-heavy, user-gated) → plan → execute →
 review → playtest, per the content-wave precedent (profiles for every
 new character FIRST, three-path quest parity, direction cards per map).

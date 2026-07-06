@@ -39,7 +39,7 @@ out of roadmap scope for now.
 | Social Pillar II | Deeper repeatable social play (post-pools: relationship arcs? — brainstorm) | TARGETED (user 2026-07-06; slots after the systems-depth trio) |
 | Deprioritized | Racial mechanics · party free-picker (context+veto is the standing model) | PARKED (user 2026-07-06) |
 
-Post-launch direction: episodic arcs tracking TWI volumes, Steam evaluation.
+Post-launch direction: episodic arcs tracking TWI volumes; M-STEAM seeded (`2026-07-06-m-steam-seed.md` — free-on-Steam gate ⚑, controller support = the real milestone).
 
 ## Long-lead decisions that influence CURRENT work
 
