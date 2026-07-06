@@ -14,14 +14,20 @@
 #
 # --- CANONICAL LIST ---------------------------------------------------------
 # No qa/ manifest exists, so this list is HARDCODED and MIRRORS the
-# "Canonical QA seed table" in wandering_inn_game_v4/CLAUDE.md (43 headless
-# scripts as of M-ARC A2 — C1 added sewers_walkthrough [34]; C3 adds
+# "Canonical QA seed table" in wandering_inn_game_v4/CLAUDE.md (45 headless
+# scripts as of M-ARC A3 — C1 added sewers_walkthrough [34]; C3 adds
 # cisterns_fight / cisterns_talk / cisterns_scout [35-37]; C4 adds
 # wrong_order_loop / wrong_order_talk / wrong_order_fight [38-40]; Economy v1 D4
 # adds economy_loop [41]; M-ARC §5 adds char_creation [42] (no seed — drives the
 # real character-creation UI path, no combat/rng); M-ARC A2 adds deep_descent
 # [43] (the Raskghar descent — fixture-based via deep_descent_start, its rng
-# governs the scout autoplay) — tutorial_flow is
+# governs both fights, EXTENDED A3 through the JOIN boss victory); M-ARC A3 adds
+# climax_chain [44] (the tremor beat: sleep pointer + Zevara summons + Olesm
+# briefing, fixture climax_surface_start) and climax_seal [45] (the seal beat +
+# journal Act III + Olesm resolution, fixture climax_sealed_start) — both
+# fixture-based, no seed search. The party-VETO/solo path is a unit-level roster
+# proof (test_combat_data._check_boss_veto_roster) per the user descope, not a
+# canonical script — tutorial_flow is
 # canonical; level_up_loop / defeat_ally_alive / combat_move_input / crate_fight /
 # crate_talk / field_skills_loop / social_loop / sewers_walkthrough / cisterns_*
 # are fixture-based, their fixture rng overrides the CLI seed, the listed seed is
@@ -81,6 +87,8 @@ CANON=(
 	"economy_loop:9"
 	"char_creation:none"
 	"deep_descent:9"
+	"climax_chain:9"
+	"climax_seal:9"
 )
 
 ONLY=""

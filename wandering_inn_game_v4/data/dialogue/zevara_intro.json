@@ -6,12 +6,40 @@
 			"speaker": "Zevara",
 			"text": "Watch Captain Zevara. If this is a report, keep it short; if it's a complaint, keep it shorter. I've been on since before the gate opened and I'll be on after it shuts.",
 			"text_variants": [
-				{ "requires": { "accomplishment": { "resolved_the_cisterns": 1 } }, "text": "The thing under the market — I hear it's handled. Good. I sleep worse than you'd think over not knowing what's beneath my own streets. However you settled it, the Watch owes you a quiet night. Don't tell the others I said so." }
+				{ "requires": { "accomplishment": { "resolved_the_cisterns": 1 } }, "text": "The thing under the market — I hear it's handled. Good. I sleep worse than you'd think over not knowing what's beneath my own streets. However you settled it, the Watch owes you a quiet night. Don't tell the others I said so." },
+				{ "requires": { "accomplishment": { "heard_the_deep_tremor": 1 } }, "text": "Still here? The hole in the ground isn't getting shallower. Take Olesm's map and take the spearmaster, and go find out what dug tunnels under my city." },
+				{ "requires": { "accomplishment": { "raskghar_sealed": 1 } }, "text": "The one who went down the tunnels and climbed back out. The gallery's bricked and the streets are quiet. I've a report with your name on it that I'll deny writing. Rest — you've earned a boring week. Take it before the next one." }
 			],
 			"options": [
 				{ "text": "Long shift?", "goto": "shift" },
 				{ "text": "The cisterns under the market — I need the Watch to sweep them.", "requires": { "accomplishment": { "heard_about_cisterns": 1 } }, "hide_when": { "accomplishment": { "watch_swept_cisterns": 1 } }, "goto": "sweep_pitch" },
+				{ "text": "You sent a runner for me?", "requires": { "accomplishment": { "watch_runner_pointed": 1 } }, "hide_when": { "accomplishment": { "heard_the_deep_tremor": 1 } }, "goto": "summons" },
+				{ "text": "It's done. The thing under the city won't be climbing up.", "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "hide_when": { "accomplishment": { "raskghar_sealed": 1 } }, "effects": [ { "accomplishment": "raskghar_sealed" } ], "goto": "seal" },
 				{ "text": "Just getting my bearings.", "end": true }
+			]
+		},
+		"summons": {
+			"speaker": "Zevara",
+			"text": "There you are. The cisterns crew found something under the new grates — tunnels nobody dug, going DOWN. Olesm's maps say they shouldn't exist. You've been down there; you're going again. This time for the Watch.",
+			"options": [
+				{ "text": "Then I'll go down.", "effects": [ { "accomplishment": "heard_the_deep_tremor" } ], "goto": "summons_send" },
+				{ "text": "Give me a day to ready myself.", "goto": "hub" }
+			]
+		},
+		"summons_send": {
+			"speaker": "Zevara",
+			"text": "Good. See Olesm before you climb down — he's been up since the second bell drawing what shouldn't be there, and he'll want you carrying it. And take Relc. That's not the suggestion it sounds like.",
+			"options": [
+				{ "text": "Understood, Captain.", "goto": "hub" },
+				{ "text": "On it.", "end": true }
+			]
+		},
+		"seal": {
+			"speaker": "Zevara",
+			"text": "Gone? Good. Dead? Better. The Watch is bricking that gallery before sundown — 'for now,' before you say it. Things under Liscor have a way of minding being sealed. …Good work. I mean it. Don't make me say it twice.",
+			"options": [
+				{ "text": "For now.", "goto": "hub" },
+				{ "text": "Captain.", "end": true }
 			]
 		},
 		"shift": {

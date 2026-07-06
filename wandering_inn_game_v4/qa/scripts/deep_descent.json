@@ -1,5 +1,5 @@
 {
- "_comment": "M-ARC A2: the Raskghar descent canonical. Loads the deep_descent_start FIXTURE (sewers, facing the deep_fissure at (8,12), `heard_the_deep_tremor` pre-banked so the fissure's door_when gate is MET) via title Continue. Flow: interact the fissure -> DESCEND to deep_tunnels (open_toast + map_changed) -> read the Cold Hearth flavor prop -> clear the raskghar_scouts route-fight (combat_autoplay, no ally -- the party/veto is A3) -> read the Gnawed Bones flavor prop -> reach the Warren Mouth (the 'warren door', terminal beat). Proves: the new descent seam, the deep_tunnels dark map + mood + ambience, the two Raskghar scout combatants + their sprites in a real fight, and the three flavor toasts. FIXTURE-NOTE FOR A3: the Awakened BOSS fight (deep_warren arena) rides A3's chain -- A3 wires the boss encounter at/beyond warren_mouth + the Relc party/veto; this script STOPS at the warren door. Fixture rng_state (9) governs the scout autoplay (overrides --seed).",
+ "_comment": "M-ARC A2+A3: the Raskghar descent canonical (JOIN path, full chain). Loads the deep_descent_start FIXTURE (sewers, facing the deep_fissure at (8,12), `heard_the_deep_tremor` pre-banked so the fissure's door_when gate is MET -- the tremor beat's Zevara summons banks that key for real, proven by climax_chain; this fixture stands in) via title Continue. Flow: interact the fissure -> DESCEND to deep_tunnels -> read the Cold Hearth prop -> clear the raskghar_scouts route-fight (solo) -> read the Gnawed Bones prop -> reach the Warren Mouth threshold -> A3: interact the awakened_boss encounter -> the Relc join/veto dialogue (relc_descent) -> [Go together.] banks relc_joined_descent + fields Relc -> WIN the Awakened Raskghar + 2 scout adds in the deep_warren arena (combat_autoplay) -> on_victory banks cleared_the_warren. Proves the descent seam, the dark map/mood, the Raskghar sprites in real fights, the flavor toasts, the party-JOIN roster (Relc fielded), and the boss victory. The DECLINE/solo stream (post-JOIN-victory the boss is removed, and solo is a measured ~0.04 near-certain loss) is DESCOPED to a unit roster proof per the user directive -- test_combat_data._check_boss_veto_roster asserts declining fields no Relc. The surface dialogue arc (sleep pointer + Zevara summons + Olesm briefing + seal beats) is climax_chain/climax_seal. Fixture rng_state (9) governs BOTH fights (overrides --seed).",
  "fixture_save": "deep_descent_start",
  "starts_at_title": true,
  "steps": [
@@ -344,6 +344,140 @@
   {
    "action": "screenshot",
    "name": "03_warren_mouth"
+  },
+  {
+   "_comment": "== M-ARC A3: THE BOSS (JOIN path) ==. Past the threshold to the awakened_boss encounter (12,7). From (11,5) facing right: down 1 to (11,6), right 1 to (12,6), down 1 bumps the boss (12,7, blocked) -> face it without moving.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "_comment": "Field READ: the Awakened Raskghar looming at the warren mouth in the darkest mood, before the veto.",
+   "action": "screenshot",
+   "name": "04_awakened_field"
+  },
+  {
+   "_comment": "Interact the boss encounter -> its `conversation` (relc_descent, the Relc join/veto) opens BEFORE combat.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_descent"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE VETO MOMENT: join node, cursor 0 = [Go together.], 1 = [I go alone.].",
+   "action": "screenshot",
+   "name": "05_relc_veto"
+  },
+  {
+   "_comment": "JOIN: confirm on cursor 0 -> banks relc_joined_descent (satisfies awakened_boss ally_requires) + start_combat awakened_boss with Relc fielded.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Roster proof: Relc IS fielded (join path) -- his combatant is present player-side.",
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "screenshot",
+   "name": "06_boss_fight"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "_comment": "Dismiss the victory banner (non-tutorial arena, confirm-then-hide).",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "_comment": "on_victory banks cleared_the_warren (the seal-beat resolutions consume it; raskghar_sealed is banked LATER, by Zevara's seal dialogue on the surface -- victory != sealed).",
+   "action": "assert_state",
+   "path": "accomplishments.cleared_the_warren",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "screenshot",
+   "name": "07_warren_cleared"
   }
  ]
 }

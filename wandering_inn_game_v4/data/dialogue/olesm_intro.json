@@ -6,13 +6,33 @@
 			"speaker": "Olesm",
 			"text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?",
 			"text_variants": [
-				{ "requires": { "class": { "tactician": 1 } }, "text": "Oh — hello. You have the look of someone who counts the exits on the way into a room. A [Tactician]? Truly? I so rarely get to talk shop — sit, sit. Well. Stand. How can I help?" }
+				{ "requires": { "class": { "tactician": 1 } }, "text": "Oh — hello. You have the look of someone who counts the exits on the way into a room. A [Tactician]? Truly? I so rarely get to talk shop — sit, sit. Well. Stand. How can I help?" },
+				{ "requires": { "accomplishment": { "heard_olesm_briefing": 1 } }, "text": "Still up here? The gallery won't map itself, and I'd rather you were down there with a plan than up here with second thoughts. You have the map. Go." },
+				{ "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "text": "You climbed back out. I confess I ran the odds while you were down there and did not care for them. Tell me it's over — I have a column that badly wants a number in it." }
 			],
 			"options": [
 				{ "text": "That board — you're playing yourself?", "goto": "chess" },
 				{ "text": "[Tactician] What's the city's real weak point?", "requires": { "class": { "tactician": 1 } }, "goto": "resonance" },
 				{ "text": "You look worried about something.", "goto": "cisterns" },
+				{ "text": "Zevara sent me. The tunnels under the cisterns — what do you have?", "requires": { "accomplishment": { "heard_the_deep_tremor": 1 } }, "hide_when": { "accomplishment": { "heard_olesm_briefing": 1 } }, "effects": [ { "accomplishment": "heard_olesm_briefing" } ], "goto": "briefing" },
+				{ "text": "It's dead. Zevara's sealing the gallery.", "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "hide_when": { "accomplishment": { "heard_olesm_resolution": 1 } }, "effects": [ { "accomplishment": "heard_olesm_resolution" } ], "goto": "resolution" },
 				{ "text": "I'll leave you to your tally.", "end": true }
+			]
+		},
+		"briefing": {
+			"speaker": "Olesm",
+			"text": "I mapped your ledge sketches against the city plans. There's a gallery below the cisterns older than Liscor's walls — and something has been widening it. Kill it, chase it off, or map it — but do NOT let it follow you up. …Take Relc. Please.",
+			"options": [
+				{ "text": "I'll take him.", "goto": "hub" },
+				{ "text": "Understood.", "end": true }
+			]
+		},
+		"resolution": {
+			"speaker": "Olesm",
+			"text": "A Raskghar. AWAKE. Under my streets. I'm filing this under 'problems the Council pays adventurers for' — which, as of today, includes you. The seal will hold. Probably. Play chess with me sometime; you've earned the good board.",
+			"options": [
+				{ "text": "Set the board, Olesm.", "goto": "hub" },
+				{ "text": "Anytime.", "end": true }
 			]
 		},
 		"chess": {

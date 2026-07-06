@@ -104,5 +104,39 @@ func _init() -> void:
 			for ally_id: Variant in entity["allies"]:
 				assert(combatant_ids.has(String(ally_id)), "encounter %s references unknown ally %s" % [eid, ally_id])
 
+	_check_boss_veto_roster(scene, skills, combatants, classes, arenas)
+
 	print("PASS: combat data is well-formed and cross-referenced")
+
+
+## M-ARC A3 (user descope): the party-veto's ROSTER proof at unit level -- the
+## dedicated canonical script was cut; the 0.04 solo cell (sim_combat_batch.gd
+## BOSS_CELLS) already documents the difficulty, so all that remains to prove is
+## the WIRING: declining fields NO ally. Builds a real WIGame twice against the
+## `awakened_boss` encounter (find_entity searches all maps, so no player
+## position is needed) and checks the live combat roster: DECLINE (went_alone
+## banked, relc_joined_descent NOT) -> ally_requires unmet -> no Relc; JOIN
+## (relc_joined_descent banked) -> Relc fielded. This exercises the SAME generic
+## ally_requires gate start_combat runs for every allied encounter, bound to the
+## A3-specific keys the relc_descent dialogue banks.
+func _check_boss_veto_roster(scene: Dictionary, skills: Dictionary, combatants: Dictionary, classes: Dictionary, arenas: Dictionary) -> void:
+	var sink := func(_t: String, _p: Dictionary) -> void: pass
+	var cfg := {
+		"combatants": combatants, "classes": classes, "arenas": arenas,
+		"items": _load("res://data/items.json"), "quests": _load("res://data/quests.json"),
+		"acts": _load("res://data/acts.json"), "dialogue": {},
+	}
+	# DECLINE / solo: went_alone banked, relc_joined_descent absent.
+	var g_solo := WIGame.new(scene, skills, sink, 1, cfg)
+	g_solo.record_accomplishment("went_alone")
+	assert(g_solo.start_combat("awakened_boss"), "solo start_combat(awakened_boss) failed")
+	var solo: Dictionary = g_solo.combat.snapshot()["combatants"]
+	assert(solo.has("pc") and solo.has("raskghar_awakened"), "solo roster missing pc/boss")
+	assert(not solo.has("relc"), "VETO path must field NO ally, but Relc is in the roster")
+	# JOIN: relc_joined_descent banked -> Relc fielded (ally_requires met).
+	var g_join := WIGame.new(scene, skills, sink, 1, cfg)
+	g_join.record_accomplishment("relc_joined_descent")
+	assert(g_join.start_combat("awakened_boss"), "join start_combat(awakened_boss) failed")
+	var join: Dictionary = g_join.combat.snapshot()["combatants"]
+	assert(join.has("relc"), "JOIN path must field Relc as an ally, but he is absent")
 	quit(0)

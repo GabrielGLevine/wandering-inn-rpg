@@ -1,0 +1,247 @@
+{
+ "_comment": "M-ARC A3: the seal beat (the climax chain's POST-victory arc). Loads climax_sealed_start (street, Act II done + cleared_the_warren banked, raskghar_sealed NOT). Proves: (1) ZEVARA'S SEAL beat (gated on cleared_the_warren) banks raskghar_sealed -- the Act III advance key (acts.json); victory != sealed, the seal is a separate surface beat AFTER the return, per the acts-data trace; (2) the journal act-line advances to ACT III once sealed; (3) OLESM'S RESOLUTION (gated on cleared_the_warren) banks heard_olesm_resolution. This is a separate stream from deep_descent because it is a distinct game-time state (post-victory return). No combat -- fixture rng_state governs.",
+ "fixture_save": "climax_sealed_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    7
+   ]
+  },
+  {
+   "_comment": "== THE SEAL BEAT (Zevara) ==. Bump up into Zevara (2,6); pool line then zevara_intro.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Zevara"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub visible: 0 'Long shift?', 1 'It's done...' (requires cleared_the_warren, banked; summons hidden by heard_the_deep_tremor, sweep hidden), 2 'Just getting my bearings.'. down 1 -> seal, banks raskghar_sealed.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "raskghar_sealed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "01_seal"
+  },
+  {
+   "_comment": "seal: cursor 0 'For now.' (goto hub), 1 'Captain.' (end). down 1 -> end.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== JOURNAL: Act III ==. raskghar_sealed advances WIActs past Act II's gate to Act III (the fixture already satisfies Act I+II gates). The journal act-line header reads Act III.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "act_id": "act_iii"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_journal_act3"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "_comment": "== OLESM RESOLUTION ==. Teleport to the Guild frontage; pool line then olesm_intro.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    29,
+    4
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Olesm"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub cursor positions: 0 chess, 1 [Tactician] locked, 2 worried, 3 'It's dead. Zevara's sealing...' (requires cleared_the_warren; briefing hidden by heard_olesm_briefing), 4 leave. down 3 -> resolution, banks heard_olesm_resolution.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_olesm_resolution"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "03_resolution"
+  },
+  {
+   "_comment": "resolution: cursor 0 'Set the board, Olesm.' (goto hub), 1 'Anytime.' (end). down 1 -> end.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  }
+ ]
+}

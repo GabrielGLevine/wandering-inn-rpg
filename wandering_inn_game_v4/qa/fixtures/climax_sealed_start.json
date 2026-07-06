@@ -1,0 +1,56 @@
+{
+ "_comment": "M-ARC A3 (climax_seal): POST-victory surface state. Act II complete + reached_liscor (so WIActs sits at Act II) with cleared_the_warren banked but raskghar_sealed NOT yet -- the seal dialogue banks it live, advancing the journal to Act III. Standing on the street (2,7 facing UP toward Zevara at 2,6). Pre-banks watch_runner_pointed/heard_the_deep_tremor/heard_olesm_briefing so Zevara's summons + Olesm's briefing options are hidden (already done) and only the seal/resolution options show. rng_state 9 (no combat in the path).",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [
+   2,
+   7
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2,
+   "diplomat": 1
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "met_relc": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}

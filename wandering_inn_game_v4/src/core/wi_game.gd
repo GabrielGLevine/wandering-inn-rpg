@@ -1424,8 +1424,37 @@ func sleep() -> void:
 	if _resolve_evolutions():
 		anything_happened = true
 
+	# M-ARC Task A3: the tremor beat. Once Act II is complete (Act III's entry
+	# gate -- a second class + 3 landmark quests, exactly acts.json act_ii's
+	# advance_when), the FIRST sleep points the player at the Watch. One-shot,
+	# guarded by `watch_runner_pointed`; firing it flags anything_happened so the
+	# "You sleep soundly." fallback doesn't double-fire. Talking to Zevara then
+	# opens her `summons` node, which banks `heard_the_deep_tremor` (opens the
+	# sewers deep_fissure). A consolidation offer this sleep returns early above,
+	# deferring the pointer to the next sleep (the flag stays 0) -- an honest
+	# one-sleep delay, never a loss.
+	if _maybe_fire_tremor_pointer():
+		anything_happened = true
+
 	if not anything_happened:
 		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
+
+
+## M-ARC Task A3: fires the "A Watch runner is looking for you." pointer toast
+## ONCE, at the first sleep after Act II completes and before the tremor summons
+## has been heard. Returns true iff it fired (so sleep() can mark the beat as
+## "something happened"). Pure counter reads -- no rng, no world state beyond
+## accomplishments/classes/started_quests.
+func _maybe_fire_tremor_pointer() -> bool:
+	if accomplishment_count("watch_runner_pointed") >= 1:
+		return false
+	if accomplishment_count("heard_the_deep_tremor") >= 1:
+		return false
+	if classes.size() < 2 or _quests_completed_count() < 3:
+		return false
+	record_accomplishment("watch_runner_pointed")
+	_emit(WIEvents.TOAST, {"text": "A Watch runner is looking for you."})
+	return true
 
 
 ## Adds display names to a consolidation offer so the UI prompt can render class

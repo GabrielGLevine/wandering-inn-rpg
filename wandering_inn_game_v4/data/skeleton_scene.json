@@ -3443,6 +3443,34 @@
      "observe": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den — and where the big one waits, breathing slow in the black.",
      "on_interact_accomplishment": "reached_the_warren",
      "toast": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren."
+    },
+    {
+     "_comment": "M-ARC A3: THE BOSS encounter -- the Awakened Raskghar + 2 scout adds, fought in the deep_warren arena. Interact-triggered (no trigger_radius, so QA/the player choose to engage; it sits just past the warren_mouth threshold at (12,7), reachable by standing at (12,6) facing down). Carries a `conversation` (relc_descent = the Relc join/veto beat, the interact.encounter branch runs it before combat): the [Go together.] branch banks `relc_joined_descent`, satisfying THIS entity's `ally_requires` so Relc fields as an ally; the [I go alone.] branch banks `went_alone` and NEVER banks relc_joined_descent, so the roster fields no ally (the honest, measured 0.04 solo cell -- the player chose it). Both branches end on a `start_combat: awakened_boss` effect (self-reference). on_victory banks `cleared_the_warren`; the seal-beat resolutions (Zevara/Olesm) consume that and bank the Act III advance key `raskghar_sealed` after the player returns to the surface (NOT here -- victory != sealed, per the acts data trace). respawns:false + no persistent flag => the boss is removed for good on victory (no re-fight). Balance: sim_combat_batch.gd BOSS_CELLS (gated 0.6-0.75 vs warrior2+Relc, measured solo).",
+     "id": "awakened_boss",
+     "kind": "encounter",
+     "cell": [
+      12,
+      7
+     ],
+     "display_name": "Awakened Raskghar",
+     "sprite": "raskghar_awakened",
+     "observe": "It fills the gallery mouth like a landslide that learned to breathe — upright, moon-grey, a pale mane over shoulders wider than a doorway. Old scars cross its hide, and a Gnoll's picked bones lie stacked at its feet. Its eyes hold on you with something worse than hunger: thought.",
+     "conversation": "relc_descent",
+     "arena": "deep_warren",
+     "enemies": [
+      "raskghar_awakened",
+      "raskghar_scout",
+      "raskghar_scout"
+     ],
+     "allies": [
+      "relc"
+     ],
+     "ally_requires": {
+      "relc_joined_descent": 1
+     },
+     "on_victory": [
+      "cleared_the_warren"
+     ]
     }
    ]
   }

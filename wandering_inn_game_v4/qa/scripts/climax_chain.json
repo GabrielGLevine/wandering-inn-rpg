@@ -1,0 +1,283 @@
+{
+ "_comment": "M-ARC A3: the tremor beat + surface briefings (the climax chain's PRE-descent arc). Loads climax_surface_start (inn bed, Act II complete). Proves: (1) THE TREMOR BEAT -- sleeping with Act II complete fires the one-shot pointer toast 'A Watch runner is looking for you.' + banks watch_runner_pointed; (2) ZEVARA'S SUMMONS -- her new summons option (gated on watch_runner_pointed) banks heard_the_deep_tremor, which is what opens the sewers deep_fissure (deep_descent's fixture pre-banks this key; here it is banked FOR REAL); (3) OLESM'S BRIEFING -- gated on the tremor, banks heard_olesm_briefing. The boss + JOIN path is deep_descent (the veto/solo roster is proven at unit level, test_combat_data._check_boss_veto_roster); the seal beats are climax_seal. Teleport-driven between NPCs (surface geography is proven by gate_district_walkthrough). No combat -- fixture rng_state governs, seed held straightaway.",
+ "fixture_save": "climax_surface_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5,
+   "_comment": ""
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "_comment": "== THE TREMOR BEAT ==. Interact the bed (2,7) -> sleep(). Act II is complete (fixture), heard_the_deep_tremor/watch_runner_pointed unbanked, so _maybe_fire_tremor_pointer fires the pointer toast ONCE.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "watch_runner_pointed"
+   },
+   "timeout_sec": 5,
+   "_comment": "Emission order inside sleep(): record_accomplishment fires accomplishment_recorded BEFORE the pointer toast -- wait for it FIRST (the wait cursor advances in emission order)."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "A Watch runner is looking for you."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_pointer"
+  },
+  {
+   "_comment": "== ZEVARA SUMMONS ==. Teleport to the gate; bump up into Zevara (2,6). First interact = her pool line, second opens zevara_intro.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    2,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Zevara"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub visible: 0 'Long shift?', 1 'You sent a runner for me?' (requires watch_runner_pointed, now banked; cisterns-sweep+seal both hidden), 2 'Just getting my bearings.'. down 1 -> summons.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "02_summons"
+  },
+  {
+   "_comment": "summons node: cursor 0 'Then I'll go down.' banks heard_the_deep_tremor (opens the sewers deep_fissure) -> summons_send.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_the_deep_tremor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "_comment": "summons_send: cursor 0 'Understood, Captain.' (goto hub), 1 'On it.' (end). down 1 -> end.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== OLESM BRIEFING ==. Teleport to the Guild frontage; bump up into Olesm (29,3). First interact = pool line, second opens olesm_intro.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    29,
+    4
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Olesm"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub visible cursor positions: 0 chess, 1 [Tactician] (class gate -> visible-LOCKED, occupies a position), 2 'You look worried', 3 'Zevara sent me...' (requires heard_the_deep_tremor, now banked; resolution hidden), 4 leave. down 3 -> briefing.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_olesm_briefing"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "03_briefing"
+  },
+  {
+   "_comment": "briefing: cursor 0 'I'll take him.' (goto hub), 1 'Understood.' (end). down 1 -> end.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  }
+ ]
+}

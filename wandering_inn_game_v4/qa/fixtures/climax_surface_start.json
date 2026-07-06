@@ -1,0 +1,52 @@
+{
+ "_comment": "M-ARC A3 (climax_chain): Act II COMPLETE (2 classes + 3 completed quests: the_errand/missing_crate/cisterns), standing at the inn bed (2,6 facing DOWN onto the bed at 2,7). heard_the_deep_tremor/watch_runner_pointed both UNBANKED, so the first sleep fires the tremor pointer ('A Watch runner is looking for you.') exactly once. Progression-inert: no won_combat/persuaded_someone/etc. volume counters, classes already declared, evolutions are at_level 10 -- so the sleep does no gains/level-ups/consolidation and the pointer is the only beat. heard_about_cisterns is deliberately NOT banked (keeps Zevara's cisterns-sweep option hidden, so her summons option indexes cleanly). rng_state 9.",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   2,
+   6
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 2,
+   "diplomat": 1
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "met_relc": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}
