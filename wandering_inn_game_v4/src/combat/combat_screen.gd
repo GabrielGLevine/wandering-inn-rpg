@@ -381,18 +381,26 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 			var attack_anim := "slice" if bool(payload.get("melee", true)) else "cast"
 			_play_combatant_anim(attacker_id, attack_anim, ui.get("attacker_flip_h", null))
 			if bool(payload.get("hit", false)):
+				# M-JUICE E2 combat feel (all no-ops under QA/headless via the
+				# renderer's `_juice_enabled` gate). The struck-combatant reaction
+				# differs by kind: a sprited combatant plays its "hit" frame AND
+				# takes a white impact pulse on the sprite itself (`impact_flash`
+				# needs a sprite child, so it stays in this branch); a chip
+				# combatant gets the brightness flash. The spark burst + board
+				# screenshake are HOISTED out of the branch so they fire for EVERY
+				# hit regardless of sprite/chip -- every shipped combatant is
+				# sprited, so nesting these in the chip-only `else` made them dead
+				# code (EF review I1). `spawn_hit_sparks` reads the enqueue-captured
+				# `target_cell` and `shake_board` the captured `damage`/`target_id`,
+				# so both stay dequeue-safe under paced AI playback (no live read).
 				if _board_renderer.has_sprite(target_id):
 					_play_combatant_anim(target_id, "hit", ui.get("target_flip_h", null))
+					_board_renderer.impact_flash(target_id)
 				else:
 					_board_renderer.flash_chip(target_id)
-					# M-JUICE E2 combat feel (all no-ops under QA/headless via the
-					# renderer's `_juice_enabled` gate): white pulse on the struck
-					# sprite + a one-shot spark burst at its captured cell, and a
-					# board screenshake on a PC hit taken or a heavy blow landed.
-					_board_renderer.impact_flash(target_id)
-					_board_renderer.spawn_hit_sparks(ui.get("target_cell", []))
-					if target_id == "pc" or int(payload.get("damage", 0)) >= HEAVY_HIT_DAMAGE:
-						_board_renderer.shake_board(3.0 if target_id == "pc" else 4.0)
+				_board_renderer.spawn_hit_sparks(ui.get("target_cell", []))
+				if target_id == "pc" or int(payload.get("damage", 0)) >= HEAVY_HIT_DAMAGE:
+					_board_renderer.shake_board(3.0 if target_id == "pc" else 4.0)
 		WIEvents.COMBATANT_DOWNED:
 			var downed_id := String(payload["id"])
 			_board_renderer.mark_death_visible(downed_id)
