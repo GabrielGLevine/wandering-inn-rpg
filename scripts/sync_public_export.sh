@@ -45,7 +45,9 @@ docs/butler_api_key.txt
 MORNING_SUMMARY.md
 NIGHT-GOAL.md
 HANDOFF.md
-.claude
+.claude/settings*
+.claude/agents
+.claude/commands
 __pycache__
 *.pyc
 .DS_Store

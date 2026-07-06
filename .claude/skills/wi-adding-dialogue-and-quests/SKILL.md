@@ -1,0 +1,129 @@
+---
+name: wi-adding-dialogue-and-quests
+description: Use when adding or editing an NPC conversation graph in `data/dialogue/*.json`, a quest in `data/quests.json`, or any dialogue option gating/effects in the Wandering Inn RPG.
+---
+
+# Adding Dialogue and Quests
+
+## Core principle
+`WIDialogue` (`src/core/dialogue.gd`) is a pure conversation-graph walker —
+it returns effects, never applies them. `WIGame.dialogue_choose` applies
+effects, calls `set_ctx` with a fresh context, THEN advances — **ctx
+refreshes on every node advance**, not once at conversation start. Quests
+(`WIQuests`, `src/core/quests.gd`) are a pure FUNCTION of accomplishment
+counters, stored nowhere — never add a "quest progress" field to save data.
+
+## Conversation graph anatomy (one file per NPC/scene under `data/dialogue/`)
+```
+{ "start": "hub", "nodes": { "<id>": {
+    "speaker": "Erin", "text": "...",
+    "text_variants": [ { "requires": {...}, "text": "..." } ],   // optional
+    "options": [ { "text": "...", "requires": {...}, "hide_when": {...},
+                   "effects": [...], "goto": "<node_id>" | "end": true } ]
+} } }
+```
+`text_variants` (list, later match wins) lets a hub's greeting change once
+an accomplishment lands (`erin_errand.json`'s hub reads differently
+before/after `has_package`/`errand_decided`).
+
+## `requires` / `hide_when` — exactly ONE gate key, ever
+`{"skill":"<id>"}` | `{"class":{"<id>":<level>}}` | `{"accomplishment":{"<id>":<count>}}`.
+`_meets` checks skill, then class, then accomplishment, returning on the
+first key present — **never combine two gate types in one dict**;
+`test_content.gd`'s `_validate_requires` asserts exactly one gate key.
+
+## THE GATING SPLIT (playtest policy, M4)
+- `requires.accomplishment` options are **HIDDEN** until met — progress
+  must never leak (no greyed-out "3/12" hints).
+- `requires.skill`/`requires.class` stay **visible-locked** — a deliberate
+  tease (`current_options()` returns `locked: true` + flavor text).
+- **User policy (HANDOFF):** gate options off actions taken *inside the
+  conversation itself*, not unrelated class/quest progression — an
+  unrelated class gate reads as arbitrary. `goblin_parley.json`'s
+  `{"class":{"warrior":1}}` intimidate line is an accepted in-fiction
+  exception.
+
+## Option lists are VISIBLE lists — index shifts
+`current_options()`/`choose(index)` both iterate `_visible_options()`, so a
+hidden option is invisible to indexing too — drive QA by the **currently
+rendered** index, never the authored JSON index. Effects apply → `set_ctx`
+refreshes → `advance()` — a mid-conversation effect (e.g.
+`{"accomplishment":"asked_lyonette_guild"}`) can re-gate the very next
+node, which is how hubs "unlock" a follow-up without leaving the
+conversation.
+
+## Effects (returned from `choose()`, applied by `WIGame`)
+`{"accomplishment":"<id>"}` increments a counter (must be reachable or
+`test_content` flags it unproduced); `{"quest":"<id>"}` starts a quest;
+`{"remove_entity":"<id>"}` removes a map entity; `{"start_combat":"<id>"}`
+starts a fight — **only legal on a conversation-ending option**
+(`"end": true`).
+
+## Hubs and always-available exits (softlock guard)
+Any node with a `hide_when` option OR an accomplishment-`requires` option
+must keep at least one option with NEITHER key — a fully ungated exit.
+`_validate_hide_when_nodes_have_always_available_exit` enforces this across
+every graph (`WIDialogue._enter` also has a runtime fail-safe, not to be
+relied on). Hubs loop back via `"goto":"hub"` (e.g. "Actually - one more
+thing.") rather than `end: true`, so the player can re-enter after an
+effect fires.
+
+## Quests (`data/quests.json`)
+```
+{ "id":"the_errand", "title":"The Errand",
+  "beats":[ {"id":"deliver","description":"...","complete_when":{"package_delivered":1}} ] }
+```
+`WIQuests.beat_index` walks beats in order; the first unmet beat is active
+(no skipping). `evaluate()` returns `{beat_index, completed,
+beat_description}` per started quest, recomputed every read, never
+persisted.
+
+## Example
+Gating a follow-up on an in-conversation choice: add
+`{"accomplishment":"asked_x"}` to the choice that unlocks it, gate the
+follow-up with `"requires":{"accomplishment":{"asked_x":1}}`, and
+`"hide_when"` the asking option (so it stops re-offering) — exactly
+`lyonette_tip.json`'s `hub`→`barmaid_retort`→`tip` shape.
+
+## Verification
+`tests/test_content.gd` (cross-references every graph: gate ids, goto
+targets, effect targets, softlock guard, every `gained_by`/quest
+`complete_when` accomplishment is produced somewhere); `tests/test_dialogue.gd`
+(pure unit behavior); canonical QA scripts `dialogue_walkthrough`,
+`dialogue_hub_loop` (seed 9) — extend/add one asserting both the
+domain event and `ui_dialogue_rendered`/`ui_dialogue_shown`. Canon voice
+(names, register) comes from the Wandering Inn Wiki, never invented.
+
+## Common mistakes
+Combining `{"skill":...}` with `{"class":...}`/`{"accomplishment":...}` in
+one dict (only the first-checked key is ever evaluated); letting an
+accomplishment-gated option leak progress text instead of hiding it;
+adding a vanishing option without a fully ungated exit; putting
+`start_combat` on a non-ending option; forgetting a `goto` back-reference
+on a hub follow-up, stranding the player.
+
+## Cross-references
+`wi-adding-a-class-or-skill` (class-keyed `requires` reads the same
+`classes` dict), `wi-verifying-changes` (gates to run), `wi-art-and-sprites`
+(dialogue panel rendering, if visuals are touched).
+
+## Character profiles are the writing contract (2026-07-06)
+`docs/design/character-profiles.md` = single source of truth per
+character (species/palette/silhouette + the 3 voice notes + canon
+cites). Every dialogue/pool/observe/friendly line derives from the
+profile; contradicting it is a defect (the Lyonette blonde-miss class).
+New character → wiki-verify → ADD THE PROFILE FIRST, then write.
+
+## Content-task brief header (adapted from Claude-Code-Game-Studios)
+Every content brief states up front: (1) NARRATIVE PURPOSE — what beat
+this serves; (2) emotional tone target; (3) lore dependencies (what
+canon it touches) + new-canon flags. Cheap to write, keeps quest/
+dialogue waves coherent at scale.
+
+## Canon-consistency sweep (run at each content milestone's F-task)
+Cross-surface drift check: for each character, grep ALL their surfaces
+(dialogue files, talk_pool, observe/friendly_line strings, quest text)
+and read against the profile — same voice notes, same facts, no
+contradiction between surfaces (a pool line claiming X while a quest
+line claims not-X). The registry-diff idea from
+github.com/Donchitos/Claude-Code-Game-Studios, sized to our data files.

@@ -56,3 +56,15 @@ here is official. Code is MIT ([LICENSE](LICENSE)); media licensing is
 per-asset ([ATTRIBUTION.md](ATTRIBUTION.md)). The Wandering Inn, its
 world, and its characters belong to pirateaba. Read the serial at
 [wanderinginn.com](https://wanderinginn.com).
+
+## AI disclosure
+
+This game is built with substantial AI assistance, openly: development
+is coordinated and largely implemented by Claude (Anthropic) working
+with a human director; a portion of the pixel art (several character
+sprites and props) is AI-generated via PixelLab and disclosed per-asset
+in [ATTRIBUTION.md](ATTRIBUTION.md); writing is drafted by AI under
+human canon review against the source serial. The Claude Code skills
+used to build it ship in this repo (`.claude/skills/`) — contributors
+using AI tooling are welcome, and AI-assisted contributions must be
+disclosed in PRs per [CONTRIBUTING.md](CONTRIBUTING.md).
