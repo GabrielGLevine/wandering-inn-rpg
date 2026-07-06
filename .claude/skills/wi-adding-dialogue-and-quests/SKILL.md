@@ -127,3 +127,22 @@ and read against the profile — same voice notes, same facts, no
 contradiction between surfaces (a pool line claiming X while a quest
 line claims not-X). The registry-diff idea from
 github.com/Donchitos/Claude-Code-Game-Studios, sized to our data files.
+
+## Voice lint — the anti-AI-tell guard (user directive 2026-07-06)
+Run on EVERY dialogue/lore/toast delivery (writer self-check + the
+task reviewer's standing hunt), against the character's profile voice:
+- BANNED TELLS: "a testament to", "cannot help but", "little did",
+  "palpable", "unwavering", "the air was thick with", "a mix of X
+  and Y", "eyes gleaming/glinting with", triadic flourishes ("X, Y,
+  and Z" cadence stacking), rhetorical-question openers, over-named
+  emotions ("she felt a surge of"), symmetrical sentence rhythm three
+  lines running, em-dash chains, "somehow", needless "very own".
+- POSITIVE BAR: lines survive being read ALOUD in the character's
+  register; contractions where the voice has them; people interrupt
+  themselves, use wrong-size words, reference concrete objects; humor
+  is SPECIFIC (Relc jokes about spears and paperwork, not "jokes").
+- Lore text: state facts a resident would know, in resident diction —
+  never travel-brochure omniscience.
+- The FULL VOICE PASS (chain step: after all content delivers) audits
+  every player-facing string against this + profiles; guards reduce
+  its findings, they don't replace it.

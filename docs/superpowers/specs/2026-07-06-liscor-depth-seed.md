@@ -59,3 +59,12 @@ REQUEST BOARD LIVES IN THE ADVENTURER'S GUILD (canon — bounties post
 at the Guild; the barracks is a setting, not a bounty source; watch-
 flavored bounties still POST at the Guild board). Bounties rotate
 (pool-re-arm idiom). Your room = flavor v1.
+
+## ADDITION (user 2026-07-06): the Runner's Guild
+
+Fourth interior (small, ~10x8): the canon Runner's Guild as the
+ROTATING DELIVERY source — the Adventurer's Guild board keeps
+bounties; the Runners' board issues delivery requests (carry a parcel
+to a map/cell within the waking; gold by distance; sleep fails the
+run honestly). Rides the same bounty data machinery (`type:
+delivery`). Movement-skill synergy with the Skills wave. Plan task DP5.

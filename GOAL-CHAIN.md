@@ -94,6 +94,15 @@ class milestone; [Door of Portals] is the shared front door):**
 - **8d. Liscor Dungeon — with the Horns of Hammerad** (the M-ARC
   Raskghar seal-beat hook pays off; party context machinery fields the
   Horns; the demo's endgame content).
+**8e. THE VOICE PASS (after 8d — the content chain's closer):** a
+full audit of every player-facing string (dialogue, pools, observe/
+friendly lines, lore, toasts, bounties, quest text) against the
+character profiles + the voice-lint in wi-adding-dialogue-and-quests
+(the anti-AI-tell list): opus-driven, per-character sweeps, fixes as
+data edits, user spot-reads the diffs. Guards at every delivery
+(writer self-check + reviewer hunt) run from now on — the pass
+catches what guards miss.
+
 Each expansion: spec (canon-heavy, user-gated) → plan → execute →
 review → playtest, per the content-wave precedent (profiles for every
 new character FIRST, three-path quest parity, direction cards per map).
