@@ -912,6 +912,30 @@
    }
   }
  },
+ "icon_charming_smile": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_charming_smile.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_calming_touch": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_calming_touch.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
  "hearth": {
   "render_scale": 0.5,
   "animations": {

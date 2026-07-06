@@ -892,6 +892,15 @@ PLACEHOLDER_ICONS: list[tuple[str, str, tuple[int, int, int], tuple[int, int, in
 	("sparkle", "assets/ui/icons/icon_sweep_the_tables.png", (150, 205, 150), (50, 110, 60)),
 	# servers_prescience: an hourglass (foresight/timing), violet.
 	("hourglass", "assets/ui/icons/icon_servers_prescience.png", (195, 165, 225), (95, 60, 135)),
+	# --- Social Pillar S3 ([Diplomat] kit): same code-drawn glyph policy. Canon
+	# names carried into the game's [Diplomat] kit -- [Charming Smile] (Lyonette's,
+	# advances to [Enthralling Glance]) and [Calming Touch] (a low-level [Carer]
+	# skill "that calms the target"); [Friendly Face]/[Calming Words] failed the
+	# wiki canon-check, these are the flagged closest-canon substitutions.
+	# charming_smile (field): a warm smile-arc + two eyes, golden-amber.
+	("smile", "assets/ui/icons/icon_charming_smile.png", (245, 205, 120), (170, 110, 40)),
+	# calming_touch (combat): concentric calm ripples, soft desaturated teal.
+	("ripple", "assets/ui/icons/icon_calming_touch.png", (150, 195, 205), (55, 95, 110)),
 ]
 
 
@@ -988,6 +997,17 @@ def _draw_placeholder(shape: str, dst_rel: str, fill: tuple[int, int, int], outl
 		draw.polygon([(8, 8), (3, 14), (13, 14)], fill=fill, outline=outline)
 		draw.rectangle([2, 1, 13, 2], fill=fill, outline=outline)
 		draw.rectangle([2, 14, 13, 15], fill=fill, outline=outline)
+	elif shape == "smile":
+		# two eyes + an upward smile arc (a warm, disarming face).
+		draw.ellipse([4, 5, 6, 7], fill=outline, outline=outline)
+		draw.ellipse([9, 5, 11, 7], fill=outline, outline=outline)
+		draw.arc([3, 4, 12, 13], start=25, end=155, fill=outline, width=2)
+		draw.arc([4, 5, 11, 12], start=30, end=150, fill=fill, width=1)
+	elif shape == "ripple":
+		# concentric calm ripples spreading from a still centre.
+		draw.ellipse([1, 1, 14, 14], fill=None, outline=outline, width=1)
+		draw.ellipse([4, 4, 11, 11], fill=None, outline=fill, width=1)
+		draw.ellipse([6, 6, 9, 9], fill=fill, outline=outline)
 	else:
 		raise ValueError(f"unknown placeholder shape: {shape}")
 	dst = PROJECT_ROOT / dst_rel

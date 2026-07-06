@@ -3,7 +3,7 @@
 	"nodes": {
 		"hub": { "speaker": "Goblin Warband", "text": "The goblins fan out across the road, blades low. One eyes your gear, weighing something.", "options": [
 			{ "text": "Draw steel.", "effects": [ { "start_combat": "goblin_encounter_2" } ], "end": true },
-			{ "text": "Stand aside. I've killed things bigger than your whole warband. (Warrior)", "requires": { "class": { "warrior": 1 } }, "effects": [ { "accomplishment": "street_cleared" }, { "remove_entity": "goblin_encounter_2" } ], "goto": "backdown" },
+			{ "text": "Stand aside. I've killed things bigger than your whole warband. (Warrior)", "requires": { "class": { "warrior": 1 } }, "effects": [ { "accomplishment": "street_cleared" }, { "accomplishment": "persuaded_someone" }, { "remove_entity": "goblin_encounter_2" } ], "goto": "backdown" },
 			{ "text": "Back away slowly.", "end": true }
 		] },
 		"backdown": { "speaker": "Goblin Warband", "text": "A long pause. The lead goblin sniffs, spits, and waves the others off the road. They keep their eyes on you until the corner.", "options": [ { "text": "Move on.", "end": true } ] }

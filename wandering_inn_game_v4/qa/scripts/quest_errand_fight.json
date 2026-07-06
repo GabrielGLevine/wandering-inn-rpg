@@ -487,6 +487,19 @@
    "name": "interact"
   },
   {
+   "_comment": "SOCIAL S4: first talk to Selys this (post-sleep) waking plays her rotating pool line (dialogue_line + chatted_with_selys + heard_gossip banks); a second interact opens the real graph.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
    "action": "wait_for_event",
    "type": "dialogue_started",
    "payload_contains": {

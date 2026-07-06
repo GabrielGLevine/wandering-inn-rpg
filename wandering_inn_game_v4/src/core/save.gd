@@ -55,6 +55,13 @@ extends RefCounted
 ## v4-and-earlier PC's actual in-fiction state) with a freshly reset action
 ## clock. _migrated composes this as the fourth step on top of v2->v3->v4,
 ## so a v2 save chains through all three hops in one call.
+## (Social Pillar S1): `social_talked` and `entity_first_use` (both
+## Dictionaries, the per-waking talk-pool + first-use dedup state) are added
+## the SAME additive-optional way as generalist_classes/pending_consolidation/
+## used_skills above -- NOT in `required`, NO version bump. A save missing
+## either key (any save written before this task) restores an empty Dictionary,
+## which is exactly correct (a fresh waking has done no small-talk and no
+## first-use bank yet); a present-but-wrong-typed value is still rejected.
 const VERSION := 5
 
 
@@ -77,6 +84,8 @@ static func serialize(game: WIGame) -> Dictionary:
 		"equipped": game.equipped.duplicate(true),
 		"container_state": game.container_state.duplicate(true),
 		"actions_since_sleep": game.actions_since_sleep,
+		"social_talked": game.social_talked.duplicate(true),
+		"entity_first_use": game.entity_first_use.duplicate(true),
 		"rng_state": str(game.rng.state),
 	}}
 
@@ -169,6 +178,12 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# used_skills (UI wave item 19) follows the SAME additive-optional pattern.
 	if s.has("used_skills") and not (s["used_skills"] is Array):
 		return false
+	# social_talked / entity_first_use (Social Pillar S1) follow the SAME
+	# additive-optional pattern -- default {} when absent, rejected if mistyped.
+	if s.has("social_talked") and not (s["social_talked"] is Dictionary):
+		return false
+	if s.has("entity_first_use") and not (s["entity_first_use"] is Dictionary):
+		return false
 	# inventory/equipped/container_state/actions_since_sleep (M7 Task E2) ARE
 	# in `required` above (this is a version-bumped addition, not the
 	# additive-optional pattern) -- still type-checked here like every other
@@ -196,6 +211,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	var inventory: Array = s["inventory"]
 	var equipped: Dictionary = s["equipped"]
 	var container_state: Dictionary = s["container_state"]
+	var social_talked: Dictionary = s.get("social_talked", {})
+	var entity_first_use: Dictionary = s.get("entity_first_use", {})
 
 	game.bind_map_silent(String(s["current_map"]), Vector2i(int(player_cell[0]), int(player_cell[1])))
 	game.player_facing = Vector2i(int(player_facing[0]), int(player_facing[1]))
@@ -222,6 +239,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.equipped = equipped.duplicate(true)
 	game.container_state = container_state.duplicate(true)
 	game.actions_since_sleep = int(s["actions_since_sleep"])
+	game.social_talked = social_talked.duplicate(true)
+	game.entity_first_use = entity_first_use.duplicate(true)
 	game.rng.state = int(String(s["rng_state"]))
 	game.reprime_quests()
 	return true

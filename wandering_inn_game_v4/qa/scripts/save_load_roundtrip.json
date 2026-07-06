@@ -487,6 +487,19 @@
    "name": "interact"
   },
   {
+   "_comment": "SOCIAL S4: FIRST talk to Selys this waking plays her rotating pool line (dialogue_line + chatted_with_selys + heard_gossip banks); a second interact opens the real graph. The manual save taken AFTER this conversation captures social_talked[selys]=true, so the later same-waking re-talk AND the post-load re-talk both skip the pool (no further fixes needed below).",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
    "action": "wait_for_event",
    "type": "dialogue_started",
    "payload_contains": {

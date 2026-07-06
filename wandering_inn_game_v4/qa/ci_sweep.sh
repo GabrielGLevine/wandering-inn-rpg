@@ -14,12 +14,12 @@
 #
 # --- CANONICAL LIST ---------------------------------------------------------
 # No qa/ manifest exists, so this list is HARDCODED and MIRRORS the
-# "Canonical QA seed table" in wandering_inn_game_v4/CLAUDE.md (32 headless
-# scripts as of THREE PILLARS P5 — tutorial_flow is canonical; level_up_loop /
+# "Canonical QA seed table" in wandering_inn_game_v4/CLAUDE.md (33 headless
+# scripts as of SOCIAL PILLAR S4 — tutorial_flow is canonical; level_up_loop /
 # defeat_ally_alive / combat_move_input / crate_fight / crate_talk /
-# field_skills_loop are fixture-based, their fixture rng overrides the CLI
-# seed, the listed seed is convention). Keep the two in sync when scripts/seeds
-# change. Peek-only
+# field_skills_loop / social_loop are fixture-based, their fixture rng overrides
+# the CLI seed, the listed seed is convention). Keep the two in sync when
+# scripts/seeds change. Peek-only
 # utilities (title_peek, street_peek) are intentionally excluded. A seed of
 # "none" means the script takes no --seed.
 set -u
@@ -64,6 +64,7 @@ CANON=(
 	"inventory_loop:9"
 	"atmosphere_check:9"
 	"field_skills_loop:9"
+	"social_loop:9"
 )
 
 ONLY=""

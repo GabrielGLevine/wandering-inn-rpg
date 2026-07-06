@@ -65,7 +65,7 @@ forbidden. Lore canon comes from the Wandering Inn Wiki, not invention.
 
 	# QA playtest scripts (THE verification tool — prefer this over manual reasoning)
 	# Full canonical sweep in one command (what CI runs — .github/workflows/ci.yml):
-	wandering_inn_game_v4/qa/ci_sweep.sh                           # all 32 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
+	wandering_inn_game_v4/qa/ci_sweep.sh                           # all 33 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
 	wandering_inn_game_v4/qa/run_qa.sh load_gate headless          # loads every .gd/.tscn/.tres; catches parse/compile errors. NATIVE-ONLY (see below)
 	wandering_inn_game_v4/qa/run_qa.sh inn_walkthrough headless   # full inn journey, no screenshots
 	wandering_inn_game_v4/qa/run_qa.sh inn_walkthrough windowed   # same + screenshots (a window opens briefly)
@@ -288,6 +288,9 @@ Parse Error, or WARNING in any run is a regression.
 	# THREE PILLARS P5: the field-skill LOOP proof (loads the near_tactician fixture via title Continue)
 	wandering_inn_game_v4/qa/run_qa.sh field_skills_loop headless --seed=9  # boot: ui_field_hotbar_rendered{slots:1} (innate [Basic Cleaning]) -> number key on faced dirty_table fires P1 byte-parity stream (skill_used{basic_cleaning,dirty_table}+cleaned_the_inn+same toast) -> number key on empty floor = field_ambient fallback -> sleep grants [Tactician] (pre-banked studied_the_cellar) AND [Helper] (the fresh cleaned_the_inn:1) in ONE sleep -> hotbar re-renders slots:1->3 ([Basic Cleaning],[Basic Cooking],[Observe]) -> [Observe] slot(3) on Erin = her exact observe toast + used_skills journal reveal. Fixture rng overrides --seed; no combat in the path.
 
+	# SOCIAL PILLAR S4: the Social Pillar v1 end-to-end proof (loads post_tutorial_street fixture via title Continue)
+	wandering_inn_game_v4/qa/run_qa.sh social_loop headless --seed=9  # PHASE A rotating talk pools + per-waking dedup: gate_guard/Selys/Krshia each play ONE pool dialogue_line on first-talk-per-waking (banking chatted_with_<id> + heard_gossip -> 3), and a SECOND Krshia talk opens her real crate graph with NO re-pool (chatted_with_krshia never reaches 2, assert absent). PHASE B persuade watch_sergeant -> persuaded_someone (identity gate); walk home FIGHTS the fixture-active floodplains ambush (Warrior+Relc); sleep at the inn bed (ONLY bed -> return leg mandatory) resolves diplomat.gained_by{persuaded_someone:1, heard_gossip:3} -> class_gained{diplomat} + grants toast "[Diplomat] class gained! — [Charming Smile], [Calming Touch]". PHASE C field hotbar re-renders slots:1->2 ([Charming Smile] is field-tagged, slot 2); hotbar_2 on faced Erin fires [Charming Smile] -> her friendly_line toast + befriended_moments + used_skills journal reveal. Fixture rng governs --seed.
+
 **Canonical QA seed table (M5 F1 close gate; +3 M6 T7 scripts; +1 lantern_check;
 M-FP Q1 floodplains re-path — all 18 held their pre-existing seed; M-FP Q2 adds 2 new
 re-derivation; playtest-content slice T2 +1 (`work_loop`); T3 +3 (`crate_fight`/
@@ -299,13 +302,47 @@ M7 Task E5 +1 (`inventory_loop`, seed 9 held straightaway); M-BEAUTY Task B1 +1
 consumes no rng and needs no search); **ONBOARDING O5 +1 (`tutorial_flow`, the
 onboarding's own proof, seed 9)**; **THREE PILLARS P5 +1 (`field_skills_loop`,
 fixture-based via `near_tactician`, no combat in the path so the fixture rng
-governs and seed 9 held straightaway)**),
-pinned straightaway (no seed search needed unless noted): run these 32 headless
+governs and seed 9 held straightaway)**; **SOCIAL PILLAR S4 +1 (`social_loop`,
+fixture-based via `post_tutorial_street`, so the fixture rng governs — its one
+combat, the fixture-active floodplains ambush, was won at fixture-rng straightaway,
+no search)**),
+pinned straightaway (no seed search needed unless noted): run these 33 headless
 scripts with `qa/run_qa.sh <script> headless --seed=<seed>` unless noted. The peek-only scripts (`title_peek`,
 `street_peek`) are screenshot utilities, not canonical gate members;
 `floodplains_peek` was retired by Q1 (floodplains is now walkably reachable
 via `inn_door`, so a teleport-only peek is redundant — `street_peek` picked up
 its teleport-to-region idiom for the new 32×20 gate district instead).
+
+**Social Pillar S1–S4 note (rotating talk pools + [Diplomat]):** an NPC with a
+non-empty `talk_pool` (data) plays ONE rotating small-talk `dialogue_line` on the
+FIRST talk of a waking — index `chatted_with_<id> % pool.size()` (zero rng) — and
+banks `chatted_with_<id>` + `heard_gossip` (both opaque social counters), setting
+`social_talked[id]`. Every LATER talk that waking falls through to the NPC's exact
+prior behavior (conversation graph, or plain `dialogue[0]`); `sleep()` clears
+`social_talked` + `entity_first_use` (the shared per-waking first-use dedup dict
+that also gates [Observe]'s `observed_things` and [Charming Smile]'s
+`befriended_moments`), re-arming the pool next waking. Both dicts are save-persisted
+(additive-optional, **no version bump** — VERSION stays 5), so a mid-waking
+save/reload does NOT re-arm a spent pool. **Shipped on a 4-NPC subset:** Krshia,
+Selys, Pisces, gate_guard (all street). **Erin + Relc pools are DEFERRED to the
+morning queue** (S2 measured them as ~28-of-32-script reds — Erin touches 12, Relc
+22 — "unacceptably wide"; the 4-NPC subset proves the pillar while keeping the
+onboarding+combat spine byte-clean). Their authored-then-reverted canon copy is
+preserved verbatim in `.superpowers/sdd/fp-handoff/task-s2-social-report.md` §"Dropped-but-authored"
+for whoever closes them. **The 10 scripts that open a pooled NPC as a first-talk-of-waking
+were re-pathed (S4):** `dialogue_hub_loop`, `quest_errand_parley`, `quest_errand_fight`,
+`save_load_roundtrip`, `gate_district_walkthrough`, `crate_talk`, `crate_fight`,
+`crate_light`, `lantern_check`, `mage_unlock_loop` — each first-talk now absorbs the
+pool `dialogue_line` (speaker = the NPC's `display_name`: "Krshia"/"Selys"/"Pisces"/"Watch
+Guard") via an added `wait_for_event dialogue_line` + a SECOND `interact` for the real
+graph. gate_guard is the tricky one: its pool line AND its `dialogue[0]` both carry
+display name "Watch Guard", so the pool absorb pins the exact idx-0 pool text
+("Gate's clear...") to disambiguate. `crate_light` sleeps TWICE (re-arming pools), so
+it re-paths BOTH its Pisces talk (waking 2) and its Krshia talk (waking 3). **[Diplomat]**
+(canon class) is a TWO-gate AND earn: `gained_by {persuaded_someone: 1, heard_gossip: 3}`
+— persuasion identity + gossip volume; L1 grants `[charming_smile]` (field, warmer-NPC
+reaction, `friendly_line` per NPC) + `[calming_touch]` (combat, re-flavored `slowed`).
+`social_loop` is the whole-pillar proof.
 
 **M-FP Q1 topology note:** `inn_door` (inn `[15,3]`) now targets `floodplains`
 `(7,6)` (was `street`); `floodplains_inn_door` `(7,5)` returns to inn `[14,3]`;

@@ -330,6 +330,24 @@
 			"field": true,
 			"field_ambient": "[Server's Prescience] — You listen for what the room needs next. All quiet, for now.",
 			"description": "You know what a guest wants before they raise a hand — the empty cup, the missing fork, the order about to be called."
+		},
+		{
+			"id": "charming_smile",
+			"display_name": "[Charming Smile]",
+			"icon": "icon_charming_smile",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Charming Smile] — You flash a warm, easy smile at no one in particular. A passing sparrow seems charmed, at least.",
+			"description": "A warm, disarming smile that puts people at ease and turns a cold first meeting friendly."
+		},
+		{
+			"id": "calming_touch",
+			"display_name": "[Calming Touch]",
+			"icon": "icon_calming_touch",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"effect": { "type": "spell_damage", "die": 3, "range": 1, "applies": { "slowed": { "pool_penalty": 2 } } },
+			"description": "A steadying word and a calming hand; the fight drains out of a foe, and their guard turns slow and uncertain."
 		}
 	]
 }

@@ -75,6 +75,24 @@ var container_state: Dictionary = {}
 ## how a combat turn reaches this counter without touching wi_combat.gd's
 ## runtime code. Additive save field (v5).
 var actions_since_sleep: int = 0
+## Social Pillar S1: per-waking "already did small talk with this NPC this
+## waking" flags, keyed by entity id -> true. Set by `_talk_pool_line` the
+## first time an NPC carrying a `talk_pool` is talked to in a waking, so a
+## SECOND talk that same waking falls through to the NPC's real conversation
+## (or its plain gate_guard dialogue line) EXACTLY as today. Cleared every
+## `sleep()`, which re-arms the rotating pool line. Additive save field
+## (tolerant default {}, see save.gd) -- a save/reload mid-waking must not
+## re-arm an already-spent pool line.
+var social_talked: Dictionary = {}
+## Social Pillar S1: the SHARED per-waking first-use dedup dict, keyed by a
+## "<verb>:<entity_id>" string -> true. Any opaque social/exploration bank
+## that must fire AT MOST ONCE per entity per waking routes through
+## `_bank_first_use(verb, id)`: [Observe]'s `observed_things` today (resolving
+## the TP-review "Observe farm" -- repeat-observing one entity to grind
+## [Tactician]); S3's [Friendly Face] `befriended_moments` next, mirroring the
+## exact same helper with its own verb prefix. Cleared every `sleep()`.
+## Additive save field (tolerant default {}, see save.gd).
+var entity_first_use: Dictionary = {}
 var rng := RandomNumberGenerator.new()
 
 var _event_sink: Callable
@@ -292,6 +310,14 @@ func interact() -> Dictionary:
 		return {}
 	match String(target["kind"]):
 		"npc":
+			# Social Pillar S1: an NPC carrying a non-empty `talk_pool` plays a
+			# rotating small-talk line on the FIRST talk of a waking (before its
+			# conversation graph); `social_talked` then routes every later talk
+			# this waking to the real conversation below. An empty pool is
+			# treated as no pool (never reached today -- S2 authors 2-4 lines).
+			var npc_id := String(target["id"])
+			if target.has("talk_pool") and not (target["talk_pool"] as Array).is_empty() and not bool(social_talked.get(npc_id, false)):
+				return _talk_pool_line(target)
 			if target.has("conversation"):
 				if start_dialogue(String(target["conversation"]), String(target["id"])):
 					return {"dialogue": true}
@@ -445,9 +471,32 @@ func use_skill_field(skill_id: String) -> Dictionary:
 		var observe_line := String(target.get("observe", "You watch. Details surface."))
 		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": String(target["id"])})
 		_mark_skill_used(skill_id)
-		record_accomplishment("observed_things")
+		# Social Pillar S1: bank observed_things only on the FIRST observe of
+		# this entity this waking (through the shared per-waking dedup dict), so
+		# repeat-observing one NPC can no longer farm [Tactician]. The flavor
+		# line, skill_used, and journal reveal still fire every time -- only the
+		# opaque counter is deduped.
+		if _bank_first_use("observe", String(target["id"])):
+			record_accomplishment("observed_things")
 		_emit(WIEvents.TOAST, {"text": observe_line})
 		return {"observed": String(target["id"])}
+	# Social Pillar S3: [Charming Smile] (the [Diplomat] kit's field skill) MIRRORS
+	# the [Observe] seam above -- ANY faced entity responds with its own
+	# `friendly_line` (a warmer per-NPC reaction; generic fallback when it carries
+	# none), banking `befriended_moments` (opaque; feeds [Diplomat]'s levels) only
+	# on the FIRST charm of this entity this waking, through the SHARED per-waking
+	# dedup dict under a DISTINCT verb ("friendly") so charm and observe dedup
+	# INDEPENDENTLY on the same entity in the same waking (composite key by design).
+	# The flavor line, skill_used, and journal reveal fire every call; only the
+	# opaque counter is deduped. Empty faced cell falls through to field_ambient.
+	if skill_id == "charming_smile" and not target.is_empty():
+		var friendly_line := String(target.get("friendly_line", "You offer a warm, disarming smile. It costs nothing, and it is not unwelcome."))
+		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": String(target["id"])})
+		_mark_skill_used(skill_id)
+		if _bank_first_use("friendly", String(target["id"])):
+			record_accomplishment("befriended_moments")
+		_emit(WIEvents.TOAST, {"text": friendly_line})
+		return {"befriended": String(target["id"])}
 	var field_ambient := String(skills.get(skill_id, {}).get("field_ambient", ""))
 	if field_ambient != "":
 		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
@@ -457,6 +506,45 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
 	_emit(WIEvents.TOAST, {"text": "Nothing here calls for that."})
 	return {}
+
+
+## Social Pillar S1: the rotating "small talk" interact path. Plays ONE pooled
+## line from the faced NPC's `talk_pool` (an array of canon-voiced strings),
+## chosen by `chatted_with_<id> % pool_size` so the line ROTATES deterministically
+## across wakings with ZERO rng (no canonical-seed risk). The line rides the SAME
+## plain DIALOGUE_LINE surface a graph-less NPC uses -- the gate_guard idiom:
+## `_emit(DIALOGUE_LINE, {"speaker", "text"})`, which message_layer renders. Banks
+## `chatted_with_<id>` (the rotation counter, also a [Diplomat] feed) + `heard_gossip`
+## (both opaque social counters), and sets `social_talked[<id>]` so a SECOND talk this
+## waking falls through to the NPC's real conversation. `sleep()` clears
+## `social_talked`, re-arming the pool next waking. The index is read BEFORE the
+## counter bank, so the FIRST talk is index 0, the next index 1, ... wrapping at
+## `pool_size`.
+func _talk_pool_line(target: Dictionary) -> Dictionary:
+	var id := String(target["id"])
+	var pool: Array = target["talk_pool"]
+	var counter_key := "chatted_with_%s" % id
+	var idx := accomplishment_count(counter_key) % pool.size()
+	var speaker := String(target.get("display_name", id))
+	_emit(WIEvents.DIALOGUE_LINE, {"speaker": speaker, "text": String(pool[idx])})
+	record_accomplishment(counter_key)
+	record_accomplishment("heard_gossip")
+	social_talked[id] = true
+	return {"talked": id, "index": idx}
+
+
+## Social Pillar S1: the SHARED per-waking first-use gate. Returns true the FIRST
+## time `(verb, entity_id)` is seen since the last `sleep()` (and records it), false
+## on every later call this waking. One dict (`entity_first_use`), one clear site
+## (sleep), keyed by a `"<verb>:<entity_id>"` string so each verb dedups its own
+## bank per entity independently -- [Observe] uses verb "observe" today; S3's
+## [Friendly Face] mirrors this with its own verb prefix.
+func _bank_first_use(verb: String, entity_id: String) -> bool:
+	var key := "%s:%s" % [verb, entity_id]
+	if entity_first_use.has(key):
+		return false
+	entity_first_use[key] = true
+	return true
 
 
 ## Records `skill_id` into the `used_skills` SET once, ever — a no-op on a
@@ -995,6 +1083,15 @@ const _EVOLUTION_WAITING_TOASTS := {
 ## The sleep beat also re-arms dormant respawning encounters.
 func sleep() -> void:
 	dormant_encounters.clear()
+	# Social Pillar S1: the per-waking social dedup dicts reset every sleep,
+	# re-arming each NPC's rotating talk-pool line (social_talked) and the
+	# shared first-use-per-entity bank guard (entity_first_use -- [Observe]
+	# today, S3's [Friendly Face] next). Cleared here alongside
+	# dormant_encounters; neither clear emits, so the existing sleep-beat
+	# emission order (phase_changed first, then the progression toasts) is
+	# unchanged.
+	social_talked.clear()
+	entity_first_use.clear()
 	# M7 M-BEAUTY FOLD: the day/night clock resets UNCONDITIONALLY at every
 	# sleep, and phase_changed fires every time too (even a "day"->"day"
 	# no-op reset) -- distinct from _tick_action's crossing-only emits during

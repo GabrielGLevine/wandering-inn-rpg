@@ -57,6 +57,27 @@ func _init() -> void:
 	assert(tac_l2.size() == 1 and tac_l2[0]["class"] == "tactician" and tac_l2[0]["level"] == 2, "tactician L2 pending on observed_things")
 	assert(WIProgression.check_level_ups({"tactician": 1}, {"observed_things": 2}, catalog).is_empty(), "below observed_things threshold = no tactician level")
 
+	# --- Social Pillar S3: [Diplomat] EARNED via a MULTI-KEY gained_by ---
+	# gained_by = {persuaded_someone:1, heard_gossip:3} — check_class_gains
+	# composes multi-key thresholds with AND semantics (every key must clear its
+	# threshold), so BOTH the persuasion identity gate AND the gossip volume gate
+	# must be met. persuaded_someone is banked by the persuade dialogue options
+	# (goblin_parley/watch_crate); heard_gossip by any talk_pool's first-talk bank.
+	assert(WIProgression.check_class_gains({}, {"persuaded_someone": 1}, catalog).is_empty(), "persuasion alone (no gossip volume) does not grant diplomat")
+	assert(WIProgression.check_class_gains({}, {"heard_gossip": 5}, catalog).is_empty(), "gossip alone (never persuaded) does not grant diplomat")
+	assert(WIProgression.check_class_gains({}, {"persuaded_someone": 1, "heard_gossip": 2}, catalog).is_empty(), "persuaded but below the gossip-3 volume gate = no diplomat")
+	assert(WIProgression.check_class_gains({}, {"persuaded_someone": 1, "heard_gossip": 3}, catalog) == ["diplomat"], "both gates met (persuaded>=1 AND gossip>=3) grants diplomat")
+	assert(WIProgression.check_class_gains({"diplomat": 1}, {"persuaded_someone": 2, "heard_gossip": 9}, catalog).is_empty(), "already-held diplomat is not re-gained")
+	var dip_l1 := WIProgression.granted_skills({"diplomat": 1}, catalog)
+	assert(dip_l1 == ["charming_smile", "calming_touch"], "diplomat L1 kit is the 2-skill social kit (field + combat)")
+	# Levels climb on EITHER social counter (requires_any over heard_gossip /
+	# befriended_moments), modest and opaque.
+	var dip_l2_gossip := WIProgression.check_level_ups({"diplomat": 1}, {"heard_gossip": 5}, catalog)
+	assert(dip_l2_gossip.size() == 1 and dip_l2_gossip[0]["level"] == 2, "diplomat L2 pending on heard_gossip>=5")
+	var dip_l2_befriend := WIProgression.check_level_ups({"diplomat": 1}, {"befriended_moments": 2}, catalog)
+	assert(dip_l2_befriend.size() == 1 and dip_l2_befriend[0]["level"] == 2, "diplomat L2 ALSO pending on befriended_moments>=2 (requires_any)")
+	assert(WIProgression.check_level_ups({"diplomat": 1}, {"heard_gossip": 4, "befriended_moments": 1}, catalog).is_empty(), "below BOTH L2 thresholds = no diplomat level")
+
 	# --- M6 T2: counter-driven leveling (spec §2.2 REV 2) ---
 	# Warrior levels from cumulative melee counters; one call returns EVERY
 	# earned level in ascending order (multi-level sleeps).

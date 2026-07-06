@@ -385,5 +385,38 @@ func _init() -> void:
 	assert(int(v2_full_target.actions_since_sleep) == 0, "v2 save composes all the way through to the v5 actions_since_sleep default")
 	assert(v2_full_target.dormant_encounters.is_empty(), "v2 save still gets the v2->v3 dormant_encounters migration too")
 
+	# --- Social Pillar S1: social_talked + entity_first_use persist WITHOUT a
+	# version bump (the T3/T5/UI-wave additive-optional precedent). A mid-waking
+	# save/reload must NOT re-arm an already-spent talk-pool line or first-use bank.
+	var social_original := _new_game()
+	social_original.social_talked["krshia"] = true
+	social_original.entity_first_use["observe:krshia"] = true
+	var social_data := WISave.serialize(social_original)
+	assert(int(social_data["version"]) == WISave.VERSION, "S1 does not bump the save version (still tags the current VERSION constant)")
+	var social_restored := _new_game()
+	assert(WISave.apply(social_restored, social_data), "save with social_talked/entity_first_use applies")
+	assert(social_restored.social_talked == social_original.social_talked, "social_talked round-trips")
+	assert(social_restored.entity_first_use == social_original.entity_first_use, "entity_first_use round-trips")
+
+	# A save WITHOUT either key (any save written before this task) is absent-safe
+	# and restores empty Dictionaries (a fresh waking has done no small-talk / bank).
+	var pre_s1_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	(pre_s1_data["state"] as Dictionary).erase("social_talked")
+	(pre_s1_data["state"] as Dictionary).erase("entity_first_use")
+	var pre_s1_target := _new_game()
+	pre_s1_target.social_talked["stale"] = true
+	pre_s1_target.entity_first_use["stale:x"] = true
+	assert(WISave.apply(pre_s1_target, pre_s1_data), "save missing the S1 keys still applies")
+	assert(pre_s1_target.social_talked.is_empty(), "absent social_talked restores empty, not stale data")
+	assert(pre_s1_target.entity_first_use.is_empty(), "absent entity_first_use restores empty, not stale data")
+
+	# Present-but-wrong-typed values for each new field are rejected as malformed.
+	var bad_social_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_social_data["state"] as Dictionary)["social_talked"] = "krshia"
+	assert(not WISave.apply(_new_game(), bad_social_data), "wrong-typed social_talked rejected")
+	var bad_efu_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_efu_data["state"] as Dictionary)["entity_first_use"] = ["observe:krshia"]
+	assert(not WISave.apply(_new_game(), bad_efu_data), "wrong-typed entity_first_use rejected")
+
 	print("PASS: save round-trips the full sim including rng state")
 	quit(0)

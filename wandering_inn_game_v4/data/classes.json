@@ -258,6 +258,20 @@
 				{ "level": 11, "requires": { "observed_things": 66 }, "grants": [] },
 				{ "level": 12, "requires": { "observed_things": 78 }, "grants": [] }
 			]
+		},
+		{
+			"id": "diplomat",
+			"display_name": "Diplomat",
+			"stat_growth": { "int": 1 },
+			"gained_by": { "accomplishment": { "persuaded_someone": 1, "heard_gossip": 3 } },
+			"levels": [
+				{ "level": 1, "requires": {}, "grants": ["charming_smile", "calming_touch"] },
+				{ "level": 2, "requires_any": { "heard_gossip": 5, "befriended_moments": 2 }, "grants": [] },
+				{ "level": 3, "requires_any": { "heard_gossip": 8, "befriended_moments": 4 }, "grants": [] },
+				{ "level": 4, "requires_any": { "heard_gossip": 12, "befriended_moments": 7 }, "grants": [] },
+				{ "level": 5, "requires_any": { "heard_gossip": 17, "befriended_moments": 10 }, "grants": [] },
+				{ "level": 6, "requires_any": { "heard_gossip": 23, "befriended_moments": 14 }, "grants": [] }
+			]
 		}
 	]
 }

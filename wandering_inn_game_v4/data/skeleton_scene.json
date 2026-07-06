@@ -398,6 +398,7 @@
      "display_name": "Erin",
      "sprite": "citizen_f",
      "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
+     "friendly_line": "Oh - hi! You've got a good face, you know that? Come in, sit down. I'll find you something warm - on the house, probably. Don't tell Lyonette I said that.",
      "conversation": "erin_errand",
      "dialogue": [
       {
@@ -1526,7 +1527,14 @@
      "display_name": "Watch Guard",
      "sprite": "royal_soldier",
      "observe": "Watch armor, kept. He stands the post properly — weight even, eyes on the gap in the wall. Bored, but the boredom is a discipline, not a lapse.",
+     "friendly_line": "The guard's mouth twitches toward a smile despite himself. Hah. You seem decent enough. Go on through easy - I'll remember the friendly one.",
      "facing": "up",
+     "talk_pool": [
+      "Gate's clear. Keep it that way and we'll get on fine.",
+      "Move along or stand aside. The post is not a meeting spot.",
+      "Watch business is Watch business. Yours is likely somewhere else.",
+      "Long shift, nothing's happened. That's the shift going well - for the record."
+     ],
      "dialogue": [
       {
        "speaker": "Watch Guard",
@@ -1592,7 +1600,14 @@
       0.55
      ],
      "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger — she has sized up a hundred adventurers today and found most of them wanting.",
+     "friendly_line": "...Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
      "facing": "up",
+     "talk_pool": [
+      "Guild's the usual mess. Bounties on the board, arguments over the board, somebody bleeding near the board.",
+      "Need something stamped, filed, or explained slowly? That is the job. Mostly the slow part.",
+      "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
+      "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
+     ],
      "conversation": "selys_delivery",
      "dialogue": [
       {
@@ -1617,7 +1632,14 @@
       0.96
      ],
      "observe": "Thin, immaculate, hungry in a way food will not fix. He holds himself like a duelist and watches hands, not faces. Whatever he studies, it is not small.",
+     "friendly_line": "A sniff - though a fractionally warmer one. You are... tolerable company. Rarer praise than you comprehend. I shall permit you to remain within conversational range.",
      "facing": "left",
+     "talk_pool": [
+      "You linger. Either you have a question of substance or you are another gawker. I shall assume the former. Generously.",
+      "Magic is not the wand-waving the market storytellers sell. It is discipline. Precision. Neither, I observe, is common here.",
+      "Yes, a [Necromancer]. No, I will not apologize for a competence others lack the wit to appreciate.",
+      "A thin sniff. Do continue standing there. I find the silence rather more edifying than most conversation."
+     ],
      "conversation": "pisces_magic",
      "dialogue": [
       {
@@ -1664,7 +1686,14 @@
       0.45
      ],
      "observe": "A Gnoll with a merchant's smile and a soldier's eyes. She prices you the moment you approach, and remembers the number.",
+     "friendly_line": "Hrr. You have a warm way about you, and warmth I can trade with. Come - for you, I will call it a fair price, and I will mean it. This is not nothing, from me.",
      "facing": "right",
+     "talk_pool": [
+      "Hrr. You look, you do not buy. This is fine. Looking is its own kind of respect.",
+      "Silverfang goods - fair weight, fair price. I do not haggle down, and I do not forget a face.",
+      "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
+      "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
+     ],
      "conversation": "krshia_crate",
      "dialogue": [
       {
@@ -2724,6 +2753,7 @@
       0.6
      ],
      "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it — including you, now.",
+     "friendly_line": "Heh. Alright, alright - I like you. You've got the look of someone who buys a guy a drink after. We're good, you and me. Best guardsman in Liscor says so.",
      "facing": "left",
      "conversation": "relc_intro",
      "dialogue": [

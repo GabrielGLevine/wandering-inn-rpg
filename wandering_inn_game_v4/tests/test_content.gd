@@ -80,6 +80,15 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 					produced[String(skill_use["accomplishment"])] = true
 			if entity.has("on_interact_accomplishment"):
 				produced[String(entity["on_interact_accomplishment"])] = true
+			# Social Pillar S1/S3: a non-empty talk_pool makes the sim's
+			# _talk_pool_line bank heard_gossip (+1) and chatted_with_<id> (+1) on
+			# the first talk of each waking. The bank happens in the sim, not a
+			# scanned data field, so record it here as genuinely content-produced
+			# -- this is what lets a [Diplomat]-style gained_by / threshold keyed on
+			# heard_gossip cross-reference cleanly (see _validate_class_gains).
+			if entity.has("talk_pool") and not (entity["talk_pool"] as Array).is_empty():
+				produced["heard_gossip"] = true
+				produced["chatted_with_%s" % String(entity["id"])] = true
 
 
 func _validate_conversations(scene: Dictionary, graphs: Dictionary) -> void:

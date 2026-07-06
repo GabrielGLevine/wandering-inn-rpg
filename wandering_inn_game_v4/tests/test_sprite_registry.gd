@@ -122,6 +122,11 @@ func _build_expected_counts() -> Dictionary:
 	for icon_id: String in ["icon_basic_cleaning", "icon_light", "icon_basic_cooking", "icon_observe", "icon_soothe_clientele", "icon_unerring_aim", "icon_sweep_the_tables", "icon_servers_prescience"]:
 		counts[icon_id + "/idle"] = 1
 
+	## Social Pillar S3 ([Diplomat] kit): 2 code-drawn skill icons (single-frame)
+	## -- charming_smile (field) + calming_touch (combat).
+	for icon_id: String in ["icon_charming_smile", "icon_calming_touch"]:
+		counts[icon_id + "/idle"] = 1
+
 	## M-FP A1 additions: library/sewer/dummy statics (1-frame regions);
 	## royal_soldier single-facing battler idle 256/64 = 4;
 	## a_hunter directional idle 256/64 = 4, walk maps the Run sheets 384/64 = 6.

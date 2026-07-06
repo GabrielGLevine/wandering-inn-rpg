@@ -1317,5 +1317,203 @@ func _init() -> void:
 	assert(_count("accomplishment_recorded") == 0, "empty-cell observe banks no accomplishment")
 	assert(g_obs.accomplishment_count("observed_things") == 2, "observed_things unchanged by an ambient (empty-cell) observe")
 
+	# --- Social Pillar S1: rotating talk pools + per-waking social dedup ---
+	# Synthetic scene: one NPC carrying BOTH a talk_pool (3 rotating lines) and
+	# a real conversation graph, so we can prove (a) the pool line plays on the
+	# first talk of a waking, (b) a SECOND talk this waking falls through to the
+	# real conversation EXACTLY, (c) sleep() re-arms the pool, (d) the line index
+	# rotates deterministically (chatted_with_<id> % pool_size) incl. wraparound.
+	var social_scene := {
+		"start_map": "plaza",
+		"player": {"cell": [1, 1], "classes": {}, "skills": ["observe"]},
+		"maps": {"plaza": {
+			"grid": {"width": 6, "height": 6},
+			"blocked": [],
+			"entities": [
+				{"id": "gossip_npc", "kind": "npc", "cell": [2, 1], "display_name": "Krshia",
+				 "talk_pool": ["Gossip one.", "Gossip two.", "Gossip three."],
+				 "conversation": "krshia_convo",
+				 "observe": "She weighs you like a sack of produce.",
+				 "friendly_line": "Hrr. For you, a fair price - and I mean it."},
+			],
+		}},
+	}
+	# Full combat_config (classes/combatants/arenas/items) + the test dialogue,
+	# so sleep()'s progression machinery has the config it reads when non-empty.
+	var social_cc: Dictionary = combat_config.duplicate(true)
+	social_cc["dialogue"] = {"krshia_convo": {
+		"start": "n1",
+		"nodes": {"n1": {"speaker": "Krshia", "text": "Real conversation.", "options": [{"text": "Bye.", "end": true}]}},
+	}}
+	var gS := WIGame.new(social_scene, skill_config, _sink, 7, social_cc)
+	# Player at (1,1) faces RIGHT by default -> faces gossip_npc at (2,1).
+	assert(gS.player_facing == Vector2i.RIGHT and gS.entity_at(Vector2i(2, 1)).get("id", "") == "gossip_npc", "fixture: player faces the gossip NPC")
+
+	# First talk of the waking: pool line index 0, banks both counters, sets flag.
+	_events.clear()
+	var t0 := gS.interact()
+	assert(t0.get("talked", "") == "gossip_npc" and int(t0.get("index", -1)) == 0, "first talk plays pool line index 0")
+	assert(gS.dialogue == null, "the pool line does NOT open the real conversation")
+	assert(_count("dialogue_line") == 1 and _count("dialogue_started") == 0, "pool line rides the plain DIALOGUE_LINE surface (gate_guard idiom), not a graph")
+	var pool_line0: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "dialogue_line":
+			pool_line0 = e["payload"]
+	assert(pool_line0.get("speaker", "") == "Krshia" and pool_line0.get("text", "") == "Gossip one.", "pool line carries {speaker=display_name, text=pool[0]}")
+	assert(gS.accomplishment_count("chatted_with_gossip_npc") == 1, "first talk banks chatted_with_<id>")
+	assert(gS.accomplishment_count("heard_gossip") == 1, "first talk banks heard_gossip")
+	assert(bool(gS.social_talked.get("gossip_npc", false)), "first talk sets the social_talked flag")
+
+	# Second talk THIS waking: falls through to the real conversation EXACTLY.
+	_events.clear()
+	var t1 := gS.interact()
+	assert(t1.get("dialogue", false) == true, "second talk this waking starts the real conversation")
+	assert(gS.dialogue != null and _count("dialogue_started") == 1, "the flagged path is today's exact conversation behavior")
+	assert(_count("dialogue_line") == 0, "no pool line on the fallthrough talk")
+	assert(gS.accomplishment_count("chatted_with_gossip_npc") == 1, "fallthrough talk does not re-bank the counter")
+	assert(gS.dialogue_choose(0), "close the real conversation")
+	assert(gS.dialogue == null, "conversation closed")
+
+	# sleep() re-arms the pool; the NEXT talk plays index 1 (counter is now 1).
+	gS.sleep()
+	assert(not bool(gS.social_talked.get("gossip_npc", false)), "sleep clears social_talked (re-arms the pool)")
+	_events.clear()
+	var t2 := gS.interact()
+	assert(int(t2.get("index", -1)) == 1, "next waking rotates to pool line index 1")
+	var pool_line1 := ""
+	for e: Dictionary in _events:
+		if e["type"] == "dialogue_line":
+			pool_line1 = String(e["payload"]["text"])
+	assert(pool_line1 == "Gossip two.", "index 1 is the second pool line")
+	assert(gS.accomplishment_count("chatted_with_gossip_npc") == 2, "second waking's talk banks the counter to 2")
+
+	# Rotate through index 2, then WRAP back to index 0 (counter 3 % 3 == 0).
+	gS.sleep()
+	var t3 := gS.interact()
+	assert(int(t3.get("index", -1)) == 2, "third waking rotates to pool line index 2")
+	gS.sleep()
+	_events.clear()
+	var t4 := gS.interact()
+	assert(int(t4.get("index", -1)) == 0, "fourth waking WRAPS the rotation back to index 0 (3 %% 3)")
+	var pool_line_wrap := ""
+	for e: Dictionary in _events:
+		if e["type"] == "dialogue_line":
+			pool_line_wrap = String(e["payload"]["text"])
+	assert(pool_line_wrap == "Gossip one.", "wraparound replays the first pool line")
+
+	# An NPC with NO talk_pool is byte-unchanged: the plain gate_guard dialogue
+	# line still fires exactly as today (proves the talk_pool gate is opt-in).
+	var plain_scene := {
+		"start_map": "plaza",
+		"player": {"cell": [1, 1], "classes": {}, "skills": []},
+		"maps": {"plaza": {
+			"grid": {"width": 6, "height": 6}, "blocked": [],
+			"entities": [{"id": "guard", "kind": "npc", "cell": [2, 1], "display_name": "Guard",
+				"dialogue": [{"speaker": "Guard", "text": "Move along."}]}],
+		}},
+	}
+	var gPlain := WIGame.new(plain_scene, skill_config, _sink, 7)
+	_events.clear()
+	var pl := gPlain.interact()
+	assert(pl.get("speaker", "") == "Guard" and pl.get("text", "") == "Move along.", "a no-talk_pool NPC returns its plain dialogue line unchanged")
+	assert(_count("dialogue_line") == 1, "plain NPC still emits exactly one dialogue_line")
+	assert(gPlain.accomplishment_count("heard_gossip") == 0, "a no-talk_pool NPC banks no social counters")
+
+	# Observe dedup (resolves the TP-review Observe-farm): observing the SAME
+	# entity twice in one waking banks observed_things ONCE; sleep re-arms it.
+	var gObs := WIGame.new(social_scene, skill_config, _sink, 7, social_cc)
+	assert(gObs.known_skills().has("observe"), "observe is known for the dedup case")
+	# Faces gossip_npc at (2,1).
+	_events.clear()
+	var ob_a := gObs.use_skill_field("observe")
+	assert(ob_a.get("observed", "") == "gossip_npc", "first observe resolves on the faced entity")
+	assert(gObs.accomplishment_count("observed_things") == 1, "first observe banks observed_things")
+	assert(_count("skill_used") == 1, "first observe emits skill_used")
+	# Second observe of the SAME entity this waking: line + skill_used still fire,
+	# but the counter is NOT re-banked.
+	_events.clear()
+	var ob_b := gObs.use_skill_field("observe")
+	assert(ob_b.get("observed", "") == "gossip_npc", "repeat observe still resolves (flavor + reveal fire)")
+	assert(_count("skill_used") == 1, "repeat observe still emits skill_used (only the bank is deduped)")
+	assert(_count("toast") == 1, "repeat observe still shows the flavor toast")
+	assert(gObs.accomplishment_count("observed_things") == 1, "repeat observe of the same entity banks NOTHING (farm resolved)")
+	assert(_count("accomplishment_recorded") == 0, "no accomplishment_recorded on the deduped repeat observe")
+	# sleep() re-arms the first-use dict: observing again next waking banks again.
+	gObs.sleep()
+	assert(gObs.entity_first_use.is_empty(), "sleep clears entity_first_use (re-arms first-use banks)")
+	var ob_c := gObs.use_skill_field("observe")
+	assert(ob_c.get("observed", "") == "gossip_npc", "post-sleep observe resolves again")
+	assert(gObs.accomplishment_count("observed_things") == 2, "post-sleep observe of the same entity banks again (re-armed)")
+
+	# --- Social Pillar S3: [Charming Smile] field skill (friendly_line + befriended_moments dedup) ---
+	# Mirrors the [Observe] seam: reads a faced entity's friendly_line, banks
+	# befriended_moments once per entity per waking through the SHARED dedup dict
+	# under the DISTINCT verb "friendly", and falls through to field_ambient on an
+	# empty cell. The dedup key is independent of observe's, so charm and observe
+	# on the SAME entity in the SAME waking each bank exactly once (composite key).
+	var gCharm := WIGame.new(social_scene, skill_config, _sink, 7, social_cc)
+	gCharm.player_skills.append("charming_smile")
+	assert(gCharm.known_skills().has("charming_smile"), "charming_smile is known for this case")
+	# Faces gossip_npc at (2,1) which carries a friendly_line.
+	_events.clear()
+	var ch_a := gCharm.use_skill_field("charming_smile")
+	assert(ch_a.get("befriended", "") == "gossip_npc", "charm on a faced entity returns {befriended:id}")
+	assert(gCharm.accomplishment_count("befriended_moments") == 1, "first charm banks befriended_moments +1 (opaque diplomat feed)")
+	assert(_count("skill_used") == 1, "charm emits skill_used")
+	assert(gCharm.used_skills.has("charming_smile"), "charm reveals itself in the journal on first use")
+	var ch_toast: Dictionary = _events[_events.size() - 1]
+	assert(ch_toast["type"] == "toast" and ch_toast["payload"]["text"] == "Hrr. For you, a fair price - and I mean it.", "charm emits the entity's own friendly_line as the toast")
+	# Repeat charm of the SAME entity this waking: line + skill_used fire, no re-bank.
+	_events.clear()
+	var ch_b := gCharm.use_skill_field("charming_smile")
+	assert(ch_b.get("befriended", "") == "gossip_npc", "repeat charm still resolves (flavor + reveal fire)")
+	assert(_count("skill_used") == 1, "repeat charm still emits skill_used (only the bank is deduped)")
+	assert(_count("toast") == 1, "repeat charm still shows the friendly toast")
+	assert(gCharm.accomplishment_count("befriended_moments") == 1, "repeat charm of the same entity banks NOTHING (farm resolved, mirrors observe)")
+	# observe on the same entity this waking banks INDEPENDENTLY (distinct verb key).
+	gCharm.player_skills.append("observe")
+	var ch_ob := gCharm.use_skill_field("observe")
+	assert(ch_ob.get("observed", "") == "gossip_npc", "observe on the already-charmed entity resolves")
+	assert(gCharm.accomplishment_count("observed_things") == 1, "observe banks independently of charm on the SAME entity (composite dedup key)")
+	assert(gCharm.accomplishment_count("befriended_moments") == 1, "the independent observe did NOT touch befriended_moments")
+	# sleep() re-arms the friendly bank via the shared entity_first_use clear.
+	gCharm.sleep()
+	assert(gCharm.entity_first_use.is_empty(), "sleep clears the shared first-use dict (re-arms the friendly bank too)")
+	var ch_c := gCharm.use_skill_field("charming_smile")
+	assert(ch_c.get("befriended", "") == "gossip_npc", "post-sleep charm resolves again")
+	assert(gCharm.accomplishment_count("befriended_moments") == 2, "post-sleep charm of the same entity banks again (re-armed)")
+	# Faced entity with NO friendly_line -> the generic fallback line, still banks.
+	var charm_scene2: Dictionary = social_scene.duplicate(true)
+	(charm_scene2["maps"]["plaza"]["entities"] as Array)[0].erase("friendly_line")
+	var gCharm2 := WIGame.new(charm_scene2, skill_config, _sink, 7, social_cc)
+	gCharm2.player_skills.append("charming_smile")
+	_events.clear()
+	var ch2 := gCharm2.use_skill_field("charming_smile")
+	assert(not ch2.is_empty() and ch2.has("befriended"), "charm on a friendly_line-less entity still resolves")
+	var ch2_toast: Dictionary = _events[_events.size() - 1]
+	assert(String(ch2_toast["payload"]["text"]).begins_with("You offer a warm"), "generic friendly fallback string")
+	assert(gCharm2.accomplishment_count("befriended_moments") == 1, "generic-fallback charm still banks befriended_moments")
+	# Empty faced cell -> charm's own field_ambient flavor, banks NOTHING.
+	gCharm2.player_cell = Vector2i(4, 4)
+	gCharm2.player_facing = Vector2i.DOWN
+	assert(gCharm2.entity_at(gCharm2.player_cell + gCharm2.player_facing).is_empty(), "faced cell empty for charm ambient")
+	_events.clear()
+	var chamb := gCharm2.use_skill_field("charming_smile")
+	assert(chamb.get("ambient", "") == "charming_smile", "empty-cell charm -> ambient result")
+	assert(_count("accomplishment_recorded") == 0, "empty-cell charm banks no accomplishment")
+
+	# Save round-trip of the two new per-waking dicts (the sim-core half of the
+	# S1 save contract; test_save.gd owns the tolerant-default/migration cases).
+	var gSaveA := WIGame.new(social_scene, skill_config, _sink, 7, social_cc)
+	gSaveA.interact()  # bank a talk-pool line -> populates social_talked + counters
+	gSaveA.use_skill_field("observe")  # populate entity_first_use
+	assert(bool(gSaveA.social_talked.get("gossip_npc", false)), "round-trip fixture: social_talked populated")
+	assert(not gSaveA.entity_first_use.is_empty(), "round-trip fixture: entity_first_use populated")
+	var s1_data := WISave.serialize(gSaveA)
+	var gSaveB := WIGame.new(social_scene, skill_config, _sink, 7, social_cc)
+	assert(WISave.apply(gSaveB, s1_data), "S1 save applies")
+	assert(gSaveB.social_talked == gSaveA.social_talked, "social_talked round-trips")
+	assert(gSaveB.entity_first_use == gSaveA.entity_first_use, "entity_first_use round-trips")
+
 	print("PASS: sim core behaves correctly")
 	quit(0)

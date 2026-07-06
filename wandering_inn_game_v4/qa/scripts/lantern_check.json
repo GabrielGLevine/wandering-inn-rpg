@@ -73,6 +73,8 @@
   { "action": "assert_state", "path": "player_cell", "equals": [30, 5] },
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
+  { "_comment": "SOCIAL S4: first talk to Pisces this waking plays his pool line (dialogue_line + chatted_with_pisces + heard_gossip banks); a second interact opens the magic lesson.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Pisces" }, "timeout_sec": 5 },
+  { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pisces_magic" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
