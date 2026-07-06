@@ -127,6 +127,49 @@ func test_node_text_variants_last_match_wins() -> void:
 	assert(String(_events[0]["payload"]["text"]) == "last variant", "last matching text_variant wins")
 
 
+## Economy v1 Task D1: the `gold: +/-N` effect verb applied through a REAL
+## dialogue_choose (not a direct earn/spend call) -- the earn beat, then a shop
+## buy that spends AND grants a sibling item in one option, proving the verb
+## lives beside item/accomplishment in the applier.
+func test_gold_effect_verb_applies_through_dialogue_choose() -> void:
+	_events.clear()
+	var graph := {"start": "hub", "nodes": {
+		"hub": {"speaker": "Krshia", "text": "t", "options": [
+			{"text": "take coin", "effects": [{"gold": 10}], "goto": "shop"},
+		]},
+		"shop": {"speaker": "Krshia", "text": "buy?", "options": [
+			{"text": "buy", "requires": {"gold": 6}, "effects": [{"gold": -6}, {"item": "leather_jerkin"}], "end": true},
+			{"text": "leave", "end": true},
+		]},
+	}}
+	var game := _make_game_with_dialogue(graph)
+	game.start_dialogue("test_conv", "krshia")
+	game.dialogue_choose(0)  # earn 10 via the gold verb, advance to shop
+	assert(game.gold == 10, "gold effect verb earns through dialogue_choose")
+	# ctx rebuilt after the earn -> the requires:{gold:6} buy now reads affordable.
+	var opts: Array = game.dialogue.current_options()
+	assert(not bool(opts[0]["locked"]), "buy option unlocked once affordable (ctx refreshed mid-conversation)")
+	game.dialogue_choose(0)  # spend 6 AND grant the sibling item
+	assert(game.gold == 4, "gold effect verb spends through dialogue_choose")
+	assert(game.inventory.has("leather_jerkin"), "sibling item effect still grants alongside the gold spend")
+
+
+## Economy v1 Task D1: an unaffordable buy stays VISIBLE-locked (greyed), never
+## hidden -- window-shopping is content (spec §3). Uses the SHIPPED M4 greying
+## mechanism, now reading the numeric gold ctx key.
+func test_gold_affordability_greys_when_broke() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Krshia", "text": "t", "options": [
+		{"text": "buy", "requires": {"gold": 50}, "effects": [{"gold": -50}], "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)  # fresh purse: 0 gold
+	game.start_dialogue("test_conv", "krshia")
+	var opts: Array = game.dialogue.current_options()
+	assert(opts.size() == 2, "unaffordable buy stays VISIBLE (greyed, never hidden)")
+	assert(bool(opts[0]["locked"]), "unaffordable buy is locked/greyed")
+	assert(String(opts[0]["requirement"]) == "costs 50 gold", "greyed buy shows its cost requirement text")
+
+
 func _last_line_text() -> String:
 	for i in range(_events.size() - 1, -1, -1):
 		if String(_events[i]["type"]) == "dialogue_line":
@@ -267,6 +310,8 @@ func _init() -> void:
 	test_node_text_variants_use_met_requires()
 	test_node_text_variants_last_match_wins()
 	test_talk_pool_post_grows_pool_after_gate()
+	test_gold_effect_verb_applies_through_dialogue_choose()
+	test_gold_affordability_greys_when_broke()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)

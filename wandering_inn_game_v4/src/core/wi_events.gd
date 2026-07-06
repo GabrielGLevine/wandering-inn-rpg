@@ -61,6 +61,15 @@ const ITEM_GAINED := &"item_gained"
 const ITEM_EQUIPPED := &"item_equipped"
 const ITEM_UNEQUIPPED := &"item_unequipped"
 const LOOT_DROPPED := &"loot_dropped"
+## Economy v1 Task D1: emitted by `WIGame.earn_gold`/`spend_gold` on every
+## successful gold change (a refused spend at insufficient gold emits NOTHING
+## here -- only the refusal TOAST). Payload `{delta:int, total:int,
+## source:String}` -- `delta` is signed (+earn, -spend), `total` is the new
+## balance, `source` is the free-form earn source / spend sink id (a
+## conversation id for a shop buy, an encounter id for loot gold, a prop id
+## for a chore). Diegetic-money direction: no always-on HUD reads this; the
+## inventory-panel coin line (D3) and the earn/spend toasts are the display.
+const GOLD_CHANGED := &"gold_changed"
 ## M7 Task E2, M-BEAUTY FOLD amendment: emitted whenever `WIGame.phase()`'s
 ## classification of `actions_since_sleep` crosses a threshold (day->dusk->
 ## night), AND unconditionally on every `sleep()` reset (even a same-phase

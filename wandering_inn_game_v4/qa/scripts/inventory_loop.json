@@ -109,7 +109,8 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "won_combat" }, "timeout_sec": 5 },
 
-  { "_comment": "Loot: goblin_encounter_1's loot [{crude_blade, 0.25}] rolls from a run-seed(=CLI --seed=9)+encounter-id RNG, independent of the live stream. At seed 9 it does NOT drop (verified via events.jsonl); assert absence. Flip this (and re-derive) if items.json/loot changes.", "action": "assert_event_absent", "type": "loot_dropped" },
+  { "_comment": "Loot (Economy v1 D2 re-derivation): goblin_encounter_1's loot is now [{crude_blade,0.25},{gold:2,0.5}], rolled off the ISOLATED run-seed(=CLI --seed=9)+encounter-id RNG (never the live stream, so the pinned combat seed is untouched). At seed 9 the item still does NOT drop (crude_blade r=0.312 > 0.25 -- byte-identical to the pre-D2 first draw) but the appended gold entry FIRES (r=0.341 < 0.5): loot_dropped now carries {gold:2} (no items key) and an 'Earned 2 gold.' toast follows. Assert the coin drop positively. Re-derive via qa/loot_probe.gd if items.json/loot changes.", "action": "assert_event_logged", "type": "loot_dropped", "payload_contains": { "gold": 2 } },
+  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "Earned 2 gold." } },
   { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 5 },
 

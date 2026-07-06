@@ -70,6 +70,7 @@
 			"damage_reduction": 0,
 			"tier": "mundane",
 			"abilities": [],
+			"price": 24,
 			"description": "Boiled leather stitched over a linen underlayer. Common wear for anyone who expects to be hit."
 		},
 		{
@@ -94,7 +95,34 @@
 			"damage_reduction": 0,
 			"tier": "mundane",
 			"abilities": [],
+			"price": 5,
 			"description": "A weathered trinket found among old stones outside the city, strung on a cord gone soft with age. Something about it settles the nerves."
+		},
+		{
+			"id": "gnollish_hunting_knife",
+			"name": "Gnollish Hunting Knife",
+			"kind": "weapon",
+			"weapon_family": "sword",
+			"damage_mod": 1,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 15,
+			"description": "A short, wickedly balanced skinning blade from the Silverfang stalls, its bone grip worn smooth by a hunter's hand. Krshia swears by the steel."
+		},
+		{
+			"id": "wool_lined_cloak",
+			"name": "Wool-Lined Cloak",
+			"kind": "armor",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 3,
+			"damage_reduction": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 18,
+			"description": "Heavy travel-weave lined with carded wool, cut for the Floodplains' wet cold. Market goods, honestly priced -- Krshia will remind you of that."
 		}
 	]
 }

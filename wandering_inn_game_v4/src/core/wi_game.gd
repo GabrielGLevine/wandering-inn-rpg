@@ -75,6 +75,14 @@ var container_state: Dictionary = {}
 ## how a combat turn reaches this counter without touching wi_combat.gd's
 ## runtime code. Additive save field (v5).
 var actions_since_sleep: int = 0
+## Economy v1 Task D1: the PC's coin purse. DIEGETIC money (user call), not a
+## hidden stat -- the opaque-until-sleep rule does NOT apply (coins are
+## countable in-world objects); earn/spend TOASTS + the inventory coin line
+## (D3) display it, never an always-on HUD counter. Mutated ONLY through
+## `earn_gold`/`spend_gold` (both emit `gold_changed` + a toast); `spend_gold`
+## REFUSES when short (no debt). Additive save field (tolerant default 0, NO
+## version bump -- see save.gd, the used_skills/generalist_classes precedent).
+var gold: int = 0
 ## Social Pillar S1: per-waking "already did small talk with this NPC this
 ## waking" flags, keyed by entity id -> true. Set by `_talk_pool_line` the
 ## first time an NPC carrying a `talk_pool` is talked to in a waking, so a
@@ -362,6 +370,12 @@ func interact() -> Dictionary:
 				var toast_text := String(target.get("toast", ""))
 				if toast_text != "":
 					_emit(WIEvents.TOAST, {"text": toast_text})
+				# Economy v1 Task D1: an on_interact_accomplishment prop (e.g.
+				# serving_tray / patron serve) may carry a sibling optional
+				# `gold: N` wage (D2 content). Absent in all D1 data -> streams
+				# byte-identical; present in D2 it pays via the shared router.
+				if target.has("gold"):
+					_apply_gold_effect(int(target["gold"]), String(target["id"]))
 				return {"accomplishment": accomplishment_id}
 			return use_skill(String(target.get("requires_skill", "")), String(target["id"]))
 		"encounter":
@@ -431,6 +445,12 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	_mark_skill_used(skill_id)
 	record_accomplishment(String(effect["accomplishment"]))
 	_emit(WIEvents.TOAST, {"text": String(effect["toast"])})
+	# Economy v1 Task D1: a chore/serve `on_skill_use` effect may carry an
+	# optional `gold: N` wage (D2 content, e.g. dirty_table clean). Absent in
+	# all D1 data, so every current stream stays byte-identical; present in D2
+	# it pays through the same earn/spend router the dialogue verb uses.
+	if effect.has("gold"):
+		_apply_gold_effect(int(effect["gold"]), target_id)
 	return effect
 
 
@@ -594,6 +614,57 @@ func accomplishment_count(id: String) -> int:
 	return int(accomplishments.get(id, 0))
 
 
+## Economy v1 Task D1: adds `amount` coins to the purse and emits
+## `gold_changed {delta, total, source}` + the diegetic "Earned N gold." toast.
+## A non-positive amount is a silent no-op (returns without emitting) -- the
+## loot roll and effect verb both guard the sign before calling, but this keeps
+## a stray 0/negative earn from firing a bogus toast. `source` is free-form
+## provenance (encounter id / conversation id / chore prop id), carried in the
+## event for QA, never branched on.
+func earn_gold(amount: int, source: String) -> void:
+	if amount <= 0:
+		return
+	gold += amount
+	_emit(WIEvents.GOLD_CHANGED, {"delta": amount, "total": gold, "source": source})
+	_emit(WIEvents.TOAST, {"text": "Earned %d gold." % amount})
+
+
+## Economy v1 Task D1: removes `amount` coins IF the purse can cover it and
+## emits `gold_changed {delta:-amount, total, source}` + the "Paid N gold."
+## toast, returning true. REFUSES when short (spec §4, no debt): emits the
+## "Not enough gold." refusal toast, no `gold_changed`, and returns false so a
+## caller (a dialogue shop buy) can branch on affordability. A non-positive
+## amount is a silent refusal (returns false, emits nothing). `source` here is
+## the spend SINK (the shop conversation id), same free-form provenance shape.
+func spend_gold(amount: int, source: String) -> bool:
+	if amount <= 0:
+		return false
+	if gold < amount:
+		_emit(WIEvents.TOAST, {"text": "Not enough gold."})
+		return false
+	gold -= amount
+	_emit(WIEvents.GOLD_CHANGED, {"delta": -amount, "total": gold, "source": source})
+	_emit(WIEvents.TOAST, {"text": "Paid %d gold." % amount})
+	return true
+
+
+## Economy v1 Task D1: the single `gold: +/-N` effect-verb router shared by the
+## dialogue effect applier (`dialogue_choose`), the chore/serve prop effects
+## (`use_skill`'s `on_skill_use`, an `on_interact_accomplishment` prop's sibling
+## `gold`), and any future effect site -- a positive value earns, a negative
+## value spends (refusal-safe via `spend_gold`), zero is a no-op. One spelling
+## for the verb so D2's content (wages/prices) never re-implements the sign
+## split. NOTE: a `gold: -N` spend inside an effect list applies
+## UNCONDITIONALLY of any sibling `item:` grant, so a shop buy option MUST carry
+## a `requires: {gold: price}` affordability gate (D2 contract) -- the gate is
+## what guarantees the spend can't refuse while the item is still granted.
+func _apply_gold_effect(amount: int, source: String) -> void:
+	if amount > 0:
+		earn_gold(amount, source)
+	elif amount < 0:
+		spend_gold(-amount, source)
+
+
 ## Content Wave C1: true when every accomplishment threshold in a `door_when`
 ## gate's `requires` dict is met (same >= semantics as ally_requires). An
 ## empty/absent `requires` reads as "always open". Pure reader -- no state
@@ -632,7 +703,13 @@ func _build_dialogue_ctx() -> Dictionary:
 	if not _combat_config.is_empty() and _combat_config.has("classes"):
 		for cls: Dictionary in _combat_config["classes"]["classes"]:
 			names[String(cls["id"])] = String(cls["display_name"])
-	return {"skills": known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names}
+	# Economy v1 Task D1: `gold` rides the ctx so a shop option's affordability
+	# `requires: {gold: price}` greys through the SHIPPED M4 mechanism
+	# (WIDialogue._meets) -- the ONE sanctioned extension of that ctx (it was
+	# skill/class/accomplishment-only; a numeric gold compare is new). Rebuilt
+	# per node advance like everything else, so a mid-conversation gold spend
+	# re-greys the same node's remaining buy options.
+	return {"skills": known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold}
 
 
 ## Starts a conversation graph if no other modal sim is active.
@@ -678,6 +755,13 @@ func dialogue_choose(index: int) -> bool:
 			# E3 wires this into the real relc_intro graph as an
 			# effects-array addition; this task only implements the mechanism.
 			pickup(String(effect["item"]), _dialogue_conversation_id)
+		elif effect.has("gold"):
+			# Economy v1 Task D1: the `gold: +/-N` dialogue effect verb, beside
+			# item/accomplishment. Source/sink = the conversation id (Krshia's
+			# shop), same provenance shape pickup uses. A shop buy pairs this
+			# `gold: -price` with an `item:` grant AND a `requires: {gold: price}`
+			# gate (see _apply_gold_effect's contract note).
+			_apply_gold_effect(int(effect["gold"]), _dialogue_conversation_id)
 		elif effect.has("start_combat"):
 			pending_combat = String(effect["start_combat"])
 	if not bool(result["ended"]):
@@ -1063,16 +1147,39 @@ func _roll_loot(entity: Dictionary) -> void:
 	var loot_rng := RandomNumberGenerator.new()
 	loot_rng.seed = hash("%d:%s" % [_run_seed, String(entity.get("id", ""))])
 	var dropped: Array[String] = []
+	# Economy v1 Task D1: a loot table entry is EITHER an item drop
+	# (`{item, chance}`, the M7 shape) OR a coin drop (`{gold: N, chance}`).
+	# Both roll off the SAME isolated per-encounter `loot_rng` (hash(run_seed,
+	# encounter_id) -- NEVER the live sim stream), so adding gold entries can
+	# never shift a canonical combat seed. Gold entries are summed across the
+	# table (an encounter can list several) into `gold_dropped`.
+	var gold_dropped := 0
 	for drop: Dictionary in loot_table:
-		var item_id := String(drop["item"])
 		var chance := float(drop.get("chance", 0.0))
+		if drop.has("gold"):
+			if loot_rng.randf() < chance:
+				gold_dropped += int(drop["gold"])
+			continue
+		var item_id := String(drop["item"])
 		if loot_rng.randf() < chance:
 			dropped.append(item_id)
-	if dropped.is_empty():
+	if dropped.is_empty() and gold_dropped <= 0:
 		return
-	_emit(WIEvents.LOOT_DROPPED, {"items": dropped.duplicate()})
+	# Emit ONE loot_dropped for the whole table. `items` is kept for an
+	# item-only drop (byte-identical to M7 -- no `gold` key appears when no coin
+	# dropped); `gold` is added only when coin dropped, so a pure-item table's
+	# payload is unchanged. Order: announce the drop, grant items (their own
+	# "Got: <name>" toasts), then earn the coin (its "Earned N gold." toast).
+	var payload: Dictionary = {}
+	if not dropped.is_empty():
+		payload["items"] = dropped.duplicate()
+	if gold_dropped > 0:
+		payload["gold"] = gold_dropped
+	_emit(WIEvents.LOOT_DROPPED, payload)
 	for item_id: String in dropped:
 		pickup(item_id, String(entity.get("id", "")))
+	if gold_dropped > 0:
+		earn_gold(gold_dropped, String(entity.get("id", "")))
 
 
 ## Removes an entity from its owning map and records the removal.

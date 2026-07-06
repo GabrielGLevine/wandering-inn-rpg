@@ -79,7 +79,12 @@ func _init() -> void:
 	assert(effect.get("accomplishment", "") == "cleaned_the_inn", "prop interact returns effect")
 	assert(_count("skill_used") == 1, "skill_used emitted")
 	assert(_count("accomplishment_recorded") == 1, "accomplishment_recorded emitted")
-	assert(_count("toast") == 1, "toast emitted")
+	# Economy v1 D2: dirty_table's on_skill_use now carries a `gold: 1` wage, so
+	# cleaning emits TWO toasts (the "[Basic Cleaning]..." accomplishment toast +
+	# the "Earned 1 gold." wage toast) and one gold_changed, and the purse gains 1.
+	assert(_count("toast") == 2, "cleaning toast + D2 wage toast both emitted")
+	assert(_count("gold_changed") == 1, "cleaning wage emits one gold_changed")
+	assert(game.gold == 1, "cleaning the table pays the D2 wage of 1 gold")
 	assert(game.accomplishment_count("cleaned_the_inn") == 1, "accomplishment stored")
 	# UI wave item 19: the exploration skill_used path records into the
 	# used_skills SET (journal first-use reveal gate).
@@ -1550,6 +1555,58 @@ func _init() -> void:
 	gGrate.player_facing = Vector2i.UP
 	gGrate.interact()
 	assert(gGrate.current_map == "street" and gGrate.player_cell == Vector2i(15, 11), "ladder returns to the street grate")
+
+	# --- Economy v1 Task D1: gold seam (earn/spend/refusal + loot-gold) ---
+	var gGold := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	assert(gGold.gold == 0, "fresh purse starts at 0")
+	# earn round-trip: purse grows, gold_changed {delta,total,source} + toast.
+	_events.clear()
+	gGold.earn_gold(5, "test_chore")
+	assert(gGold.gold == 5, "earn_gold adds to the purse")
+	assert(String(_events[0]["type"]) == "gold_changed" and int(_events[0]["payload"]["delta"]) == 5 and int(_events[0]["payload"]["total"]) == 5 and String(_events[0]["payload"]["source"]) == "test_chore", "earn emits gold_changed {delta,total,source}")
+	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "Earned 5 gold.", "earn emits the diegetic toast")
+	# spend within budget round-trips (signed delta).
+	_events.clear()
+	assert(gGold.spend_gold(3, "krshia_shop"), "spend within budget succeeds")
+	assert(gGold.gold == 2, "spend deducts from the purse")
+	assert(String(_events[0]["type"]) == "gold_changed" and int(_events[0]["payload"]["delta"]) == -3 and int(_events[0]["payload"]["total"]) == 2 and String(_events[0]["payload"]["source"]) == "krshia_shop", "spend emits signed gold_changed with the sink as source")
+	assert(String(_events[-1]["payload"]["text"]) == "Paid 3 gold.", "spend emits the diegetic toast")
+	# spend refusal at insufficient gold: no debt, refusal toast, no gold_changed.
+	_events.clear()
+	assert(not gGold.spend_gold(99, "krshia_shop"), "spend refuses when short (no debt)")
+	assert(gGold.gold == 2, "refused spend leaves the purse untouched")
+	assert(_count("gold_changed") == 0, "refused spend emits no gold_changed")
+	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "Not enough gold.", "refused spend emits the refusal toast idiom")
+	# non-positive earn/spend are silent no-ops (no event, no mutation).
+	_events.clear()
+	gGold.earn_gold(0, "x")
+	assert(not gGold.spend_gold(0, "x"), "zero spend refuses")
+	assert(gGold.gold == 2 and _events.is_empty(), "non-positive gold ops are silent no-ops")
+
+	# loot-gold determinism per run_seed (SYNTHETIC entity -- no data file gains
+	# gold in D1). Same run seed + encounter id -> identical coin roll across two
+	# fully independent instances, off the ISOLATED per-encounter loot_rng.
+	var loot_entity := {"id": "econ_test_encounter", "loot": [{"gold": 7, "chance": 0.5}, {"gold": 3, "chance": 0.5}]}
+	var GldA := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
+	GldA._roll_loot(loot_entity)
+	var GldB := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
+	GldB._roll_loot(loot_entity)
+	assert(GldA.gold == GldB.gold, "same run_seed + encounter id -> identical loot-gold roll across independent instances")
+	# A guaranteed coin drop (chance 1.0) routes through earn_gold: loot_dropped
+	# {gold} matches the earned total, one gold_changed, no items key.
+	var sure_loot := {"id": "econ_sure_encounter", "loot": [{"gold": 7, "chance": 1.0}]}
+	var GldC := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
+	_events.clear()
+	GldC._roll_loot(sure_loot)
+	assert(GldC.gold == 7, "guaranteed coin drop earns exactly the listed gold")
+	assert(_count("loot_dropped") == 1, "coin drop emits one loot_dropped")
+	assert(_count("gold_changed") == 1, "loot-gold routes through earn_gold (one gold_changed)")
+	var econ_ld: Dictionary = {}
+	for e: Dictionary in _events:
+		if String(e["type"]) == "loot_dropped":
+			econ_ld = e["payload"]
+	assert(int(econ_ld.get("gold", 0)) == 7, "loot_dropped carries {gold}")
+	assert(not econ_ld.has("items"), "pure-coin loot payload omits the items key (item-only stream stays byte-identical)")
 
 	print("PASS: sim core behaves correctly")
 	quit(0)

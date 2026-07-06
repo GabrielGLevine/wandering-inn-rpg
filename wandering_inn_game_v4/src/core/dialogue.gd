@@ -135,6 +135,15 @@ func _meets(req: Dictionary) -> bool:
 			if int((_ctx["classes"] as Dictionary).get(id, 0)) < int(req["class"][id]):
 				return false
 		return true
+	if req.has("gold"):
+		# Economy v1 Task D1: numeric affordability gate (a shop buy option's
+		# `requires: {gold: price}`). The ONE sanctioned extension of the M4
+		# greying ctx (it was skill/class/accomplishment-only). Reads the `gold`
+		# key WIGame._build_dialogue_ctx now supplies (tolerant default 0). Gold
+		# is NOT progress-gated (see _progress_gated -- no `accomplishment` key),
+		# so an unaffordable buy stays VISIBLE-locked/greyed, never hidden:
+		# window-shopping is content (spec §3).
+		return int(_ctx.get("gold", 0)) >= int(req["gold"])
 	if req.has("accomplishment"):
 		for id: String in req["accomplishment"]:
 			if int((_ctx["accomplishments"] as Dictionary).get(id, 0)) < int(req["accomplishment"][id]):
@@ -150,6 +159,8 @@ func _requirement_text(req: Dictionary) -> String:
 	if req.has("class"):
 		for id: String in req["class"]:
 			return "requires %s %d" % [String(names.get(id, id)), int(req["class"][id])]
+	if req.has("gold"):
+		return "costs %d gold" % int(req["gold"])
 	return "requires more progress"
 
 

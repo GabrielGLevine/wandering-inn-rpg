@@ -418,5 +418,25 @@ func _init() -> void:
 	(bad_efu_data["state"] as Dictionary)["entity_first_use"] = ["observe:krshia"]
 	assert(not WISave.apply(_new_game(), bad_efu_data), "wrong-typed entity_first_use rejected")
 
+	# --- Economy v1 Task D1: gold (additive-optional, tolerant default 0) ---
+	var gold_original := _new_game()
+	gold_original.gold = 42
+	var gold_data := WISave.serialize(gold_original)
+	assert(int(gold_data["version"]) == WISave.VERSION, "gold does not bump the save version")
+	var gold_restored := _new_game()
+	assert(WISave.apply(gold_restored, gold_data), "save with gold applies")
+	assert(gold_restored.gold == 42, "gold round-trips")
+	# A save WITHOUT the key (any save written before Economy v1) restores 0.
+	var pre_gold_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	(pre_gold_data["state"] as Dictionary).erase("gold")
+	var pre_gold_target := _new_game()
+	pre_gold_target.gold = 999
+	assert(WISave.apply(pre_gold_target, pre_gold_data), "save missing the gold key still applies")
+	assert(pre_gold_target.gold == 0, "absent gold restores 0, not stale data")
+	# A present-but-wrong-typed gold value is rejected as malformed.
+	var bad_gold_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_gold_data["state"] as Dictionary)["gold"] = "lots"
+	assert(not WISave.apply(_new_game(), bad_gold_data), "wrong-typed gold rejected")
+
 	print("PASS: save round-trips the full sim including rng state")
 	quit(0)

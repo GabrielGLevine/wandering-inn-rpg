@@ -76,7 +76,7 @@
   { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "wrong_order", "beat": 1 }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "quest_completed", "payload_contains": { "id": "wrong_order" }, "timeout_sec": 5 },
   { "action": "assert_event_absent", "type": "combat_started" },
-  { "action": "assert_event_logged", "type": "dialogue_node", "payload_contains": { "speaker": "Lyonette", "text": "It's... done. Truly done. I keep waiting for you to name a price, and you don't. Do you know how strange that is, to me? Where I'm from, no one lifts a finger without a ledger open. — Thank you. And not the court kind of thank-you. The real one. Now go sit down before I say something I'll regret." } },
+  { "action": "assert_event_logged", "type": "dialogue_node", "payload_contains": { "speaker": "Lyonette", "text": "It's... done. Truly done. I keep waiting for you to name a price, and you don't. Do you know how strange that is, to me? Where I'm from, no one lifts a finger without a ledger open. — Here. It's what I could scrape together, and no, I'll not hear a word against taking it. Thank you. And not the court kind of thank-you. The real one. Now go sit down before I say something I'll regret." } },
   { "action": "screenshot", "name": "04_gratitude" },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },

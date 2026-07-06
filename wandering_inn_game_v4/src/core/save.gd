@@ -62,6 +62,12 @@ extends RefCounted
 ## either key (any save written before this task) restores an empty Dictionary,
 ## which is exactly correct (a fresh waking has done no small-talk and no
 ## first-use bank yet); a present-but-wrong-typed value is still rejected.
+## (Economy v1 Task D1): `gold` (int, the coin purse) is added the SAME
+## additive-optional way as generalist_classes/pending_consolidation/
+## used_skills/social_talked above -- NOT in `required`, NO version bump.
+## A save missing the key (any save written before Economy v1) restores 0,
+## which is exactly correct (currency did not exist yet, so nothing was
+## earned); a present-but-wrong-typed value (not int/float) is still rejected.
 const VERSION := 5
 
 
@@ -86,6 +92,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"actions_since_sleep": game.actions_since_sleep,
 		"social_talked": game.social_talked.duplicate(true),
 		"entity_first_use": game.entity_first_use.duplicate(true),
+		"gold": game.gold,
 		"rng_state": str(game.rng.state),
 	}}
 
@@ -184,6 +191,12 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 		return false
 	if s.has("entity_first_use") and not (s["entity_first_use"] is Dictionary):
 		return false
+	# gold (Economy v1 Task D1) follows the SAME additive-optional pattern --
+	# default 0 when absent, rejected if present-but-non-numeric (JSON restores
+	# whole numbers as float, so int OR float is accepted, mirroring the
+	# actions_since_sleep check).
+	if s.has("gold") and not (s["gold"] is int or s["gold"] is float):
+		return false
 	# inventory/equipped/container_state/actions_since_sleep (M7 Task E2) ARE
 	# in `required` above (this is a version-bumped addition, not the
 	# additive-optional pattern) -- still type-checked here like every other
@@ -241,6 +254,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.actions_since_sleep = int(s["actions_since_sleep"])
 	game.social_talked = social_talked.duplicate(true)
 	game.entity_first_use = entity_first_use.duplicate(true)
+	game.gold = int(s.get("gold", 0))
 	game.rng.state = int(String(s["rng_state"]))
 	game.reprime_quests()
 	return true

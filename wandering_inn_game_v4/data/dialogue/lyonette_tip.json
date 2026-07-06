@@ -11,9 +11,9 @@
 			{ "text": "Go on.", "requires": { "accomplishment": { "asked_lyonette_guild": 1 } }, "hide_when": { "accomplishment": { "lyonette_tip": 1 } }, "effects": [ { "accomplishment": "lyonette_tip" } ], "goto": "tip" },
 			{ "text": "Maybe later.", "end": true },
 			{ "text": "Something's got you rattled. What is it?", "hide_when": { "accomplishment": { "heard_wrong_order": 1 } }, "effects": [ { "quest": "wrong_order" }, { "accomplishment": "heard_wrong_order" } ], "goto": "order_brief" },
-			{ "text": "The supplier's scavenger trouble is dealt with - your order's on its way.", "requires": { "accomplishment": { "strongarmed_the_supplier": 1, "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "wrong_order_reported": 1 } }, "effects": [ { "accomplishment": "wrong_order_reported" } ], "goto": "gratitude" },
-			{ "text": "I smoothed it over with Krshia. The shortfall's covered.", "requires": { "accomplishment": { "smoothed_with_krshia": 1, "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "wrong_order_reported": 1 } }, "effects": [ { "accomplishment": "wrong_order_reported" } ], "goto": "gratitude" },
-			{ "text": "I stretched the order in the kitchen. No one will know it ran short.", "requires": { "accomplishment": { "stretched_the_order": 1, "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "wrong_order_reported": 1 } }, "effects": [ { "accomplishment": "resolved_wrong_order" }, { "accomplishment": "wrong_order_reported" } ], "goto": "gratitude" }
+			{ "text": "The supplier's scavenger trouble is dealt with - your order's on its way.", "requires": { "accomplishment": { "strongarmed_the_supplier": 1, "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "wrong_order_reported": 1 } }, "effects": [ { "accomplishment": "wrong_order_reported" }, { "gold": 3 } ], "goto": "gratitude" },
+			{ "text": "I smoothed it over with Krshia. The shortfall's covered.", "requires": { "accomplishment": { "smoothed_with_krshia": 1, "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "wrong_order_reported": 1 } }, "effects": [ { "accomplishment": "wrong_order_reported" }, { "gold": 3 } ], "goto": "gratitude" },
+			{ "text": "I stretched the order in the kitchen. No one will know it ran short.", "requires": { "accomplishment": { "stretched_the_order": 1, "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "wrong_order_reported": 1 } }, "effects": [ { "accomplishment": "resolved_wrong_order" }, { "accomplishment": "wrong_order_reported" }, { "gold": 3 } ], "goto": "gratitude" }
 		] },
 		"barmaid_retort": { "speaker": "Lyonette", "text": "A barmaid hears everything worth hearing in this city. But fine - go in blind if you prefer.", "options": [
 			{ "text": "Fair enough. Go on.", "goto": "hub" },
@@ -27,7 +27,7 @@
 			{ "text": "How bad is it, really?", "goto": "hub" },
 			{ "text": "I'll see it done.", "end": true }
 		] },
-		"gratitude": { "speaker": "Lyonette", "text": "It's... done. Truly done. I keep waiting for you to name a price, and you don't. Do you know how strange that is, to me? Where I'm from, no one lifts a finger without a ledger open. — Thank you. And not the court kind of thank-you. The real one. Now go sit down before I say something I'll regret.", "options": [
+		"gratitude": { "speaker": "Lyonette", "text": "It's... done. Truly done. I keep waiting for you to name a price, and you don't. Do you know how strange that is, to me? Where I'm from, no one lifts a finger without a ledger open. — Here. It's what I could scrape together, and no, I'll not hear a word against taking it. Thank you. And not the court kind of thank-you. The real one. Now go sit down before I say something I'll regret.", "options": [
 			{ "text": "Anytime, Lyonette.", "end": true }
 		] }
 	}

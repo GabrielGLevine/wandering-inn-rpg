@@ -8,14 +8,14 @@
 			{ "text": "Just looking around.", "end": true }
 		] },
 		"delivered": { "speaker": "Selys", "text": "Finally. Here - she overpaid the courier fee, as always. Take it back or keep it, I honestly don't care which.", "options": [
-			{ "text": "I'll keep it. Courier's fee.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "kept_reward" }, { "accomplishment": "errand_decided" } ], "goto": "delivered" },
-			{ "text": "Send it back to Erin.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "gave_reward" }, { "accomplishment": "errand_decided" } ], "goto": "delivered" },
+			{ "text": "I'll keep it. Courier's fee.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "kept_reward" }, { "accomplishment": "errand_decided" }, { "gold": 4 } ], "goto": "delivered" },
+			{ "text": "Send it back to Erin.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "gave_reward" }, { "accomplishment": "errand_decided" }, { "gold": 3 } ], "goto": "delivered" },
 			{ "text": "Actually - one more thing.", "goto": "hub" },
 			{ "text": "I'll think about it.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "end": true }
 		] },
 		"delivered_smooth": { "speaker": "Selys", "text": "Hm. Someone's been talking to Lyonette. Fine - here's the fee Erin overpaid, and tell that barmaid she's wasted on pouring drinks.", "options": [
-			{ "text": "I'll keep it. Courier's fee.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "kept_reward" }, { "accomplishment": "errand_decided" } ], "goto": "delivered_smooth" },
-			{ "text": "Send it back to Erin.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "gave_reward" }, { "accomplishment": "errand_decided" } ], "goto": "delivered_smooth" },
+			{ "text": "I'll keep it. Courier's fee.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "kept_reward" }, { "accomplishment": "errand_decided" }, { "gold": 4 } ], "goto": "delivered_smooth" },
+			{ "text": "Send it back to Erin.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "gave_reward" }, { "accomplishment": "errand_decided" }, { "gold": 3 } ], "goto": "delivered_smooth" },
 			{ "text": "Actually - one more thing.", "goto": "hub" },
 			{ "text": "I'll think about it.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "end": true }
 		] }

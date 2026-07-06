@@ -460,6 +460,7 @@
      "requires_skill": "basic_cleaning",
      "on_skill_use": {
       "accomplishment": "cleaned_the_inn",
+      "gold": 1,
       "toast": "[Basic Cleaning] — The table is spotless."
      },
      "visual_states": [
@@ -588,6 +589,7 @@
      "sprite": "table_brown",
      "render_scale": 0.5,
      "on_interact_accomplishment": "delivered_item",
+     "gold": 1,
      "toast": "You carry the laden tray out to the tables."
     },
     {
@@ -1803,6 +1805,12 @@
      "on_victory": [
       "recovered_crate_force",
       "found_the_crate"
+     ],
+     "loot": [
+      {
+       "gold": 2,
+       "chance": 0.5
+      }
      ]
     },
     {
@@ -1824,6 +1832,12 @@
      "on_victory": [
       "strongarmed_the_supplier",
       "resolved_wrong_order"
+     ],
+     "loot": [
+      {
+       "gold": 2,
+       "chance": 0.5
+      }
      ]
     },
     {
@@ -2776,6 +2790,10 @@
       {
        "item": "crude_blade",
        "chance": 0.25
+      },
+      {
+       "gold": 2,
+       "chance": 0.5
       }
      ],
      "visual_states": [
@@ -2820,6 +2838,10 @@
       {
        "item": "chipped_spear",
        "chance": 0.25
+      },
+      {
+       "gold": 2,
+       "chance": 0.5
       }
      ]
     },
@@ -2851,6 +2873,10 @@
       {
        "item": "chipped_spear",
        "chance": 0.5
+      },
+      {
+       "gold": 5,
+       "chance": 0.75
       }
      ]
     },

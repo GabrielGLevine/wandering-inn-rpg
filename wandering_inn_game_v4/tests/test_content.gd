@@ -181,6 +181,14 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 			assert(class_ids.has(class_id), label + " requires unknown class: " + class_id)
 	if requires.has("accomplishment"):
 		gate_keys += 1
+	if requires.has("gold"):
+		# Economy v1 D2: the affordability gate (Krshia's shop buy options).
+		# `requires: {gold: price}` is the D1-sanctioned numeric extension of the
+		# M4 greying ctx (skill/class/accomplishment were the only prior gate
+		# types). It greys a buy option VISIBLE when broke (never hidden --
+		# gold is not progress-gated), so it is a valid single gate type here.
+		gate_keys += 1
+		assert(int(requires["gold"]) > 0, label + " gold requirement must be a positive price")
 	assert(gate_keys == 1, label + " requires must use exactly one gate type")
 
 
