@@ -8,8 +8,8 @@ description: Use when starting any session on the Wandering Inn RPG repo, when u
 ## Read order (every fresh session)
 1. `HANDOFF.md` — live state, playtest results, open decisions. **Trust its
    "next step" over your own guess.**
-2. `wandering_inn_game_v4/CLAUDE.md` — architecture, commands, the canonical
-   QA seed table, gotchas. The active project is `wandering_inn_game_v4/` only.
+2. `wandering_inn_game/CLAUDE.md` — architecture, commands, the canonical
+   QA seed table, gotchas. The active project is `wandering_inn_game/` only.
 3. `.superpowers/sdd/progress.md` (ledger, gitignored) — tail = exact position.
 4. `docs/ROADMAP.md` — milestone ladder. `docs/HANDOVER-FABLE-TO-OPUS.md` §1/§8
    — operating model + hard-won lessons.

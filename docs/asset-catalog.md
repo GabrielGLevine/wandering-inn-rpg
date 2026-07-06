@@ -22,14 +22,14 @@ new ones); sec. 3a records that check plus a prop-gap filename hunt.
   (every PNG path, dimensions, frame counts). Use it to get exact file paths
   and sheet geometry after this catalog tells you *which* pack/entity to use.
   It covers PNGs only; audio packs appear only here.
-- `wandering_inn_game_v4/data/sprites.json` + `tools/sync_assets.py` — what is
+- `wandering_inn_game/data/sprites.json` + `tools/sync_assets.py` — what is
   *already wired into the game*. Anything marked **IN USE** below is already
   in the sync manifest; extend that manifest rather than re-copying by hand.
 - `docs/superpowers/specs/2026-07-02-wandering-inn-asset-design.md` — the
   original art-direction spec. Still correct about conventions, but its
   inventory is stale (written when only 3 packs existed; there are now ~24).
 
-**Standing rule (from `wandering_inn_game_v4/CLAUDE.md`):** any tile/sprite
+**Standing rule (from `wandering_inn_game/CLAUDE.md`):** any tile/sprite
 region pick must be verified by a windowed QA screenshot — this catalog gets
 you to the right sheet, not the right pixel coordinates.
 

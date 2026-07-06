@@ -50,7 +50,7 @@ The world renders at a 16px grid with 4× zoom (320×180 logical viewport).
 
 ## Submitting
 
-Open a PR adding files under `wandering_inn_game_v4/assets/` **or** attach
+Open a PR adding files under `wandering_inn_game/assets/` **or** attach
 work to a "Map Suggestion"/idea issue if you'd rather not wire it in
 yourself. If you do wire it: add the `data/sprites.json` entry and include
 a windowed screenshot showing it in place (see `CONTRIBUTING.md`). We

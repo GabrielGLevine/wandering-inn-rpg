@@ -24,18 +24,18 @@ run is a regression (the project has no known-harmless warnings).
 ## Commands
 ```bash
 # Parse/compile gate + smoke (always cheap, always first)
-wandering_inn_game_v4/qa/run_qa.sh load_gate headless
-/usr/local/bin/godot --headless --path wandering_inn_game_v4 --quit   # grep WARNING
+wandering_inn_game/qa/run_qa.sh load_gate headless
+/usr/local/bin/godot --headless --path wandering_inn_game --quit   # grep WARNING
 
-# One QA script (seed table: wandering_inn_game_v4/CLAUDE.md — seeds are PER SCRIPT)
-wandering_inn_game_v4/qa/run_qa.sh <script> headless --seed=<seed>
-wandering_inn_game_v4/qa/run_qa.sh <script> windowed --seed=<seed>   # + screenshots
+# One QA script (seed table: wandering_inn_game/CLAUDE.md — seeds are PER SCRIPT)
+wandering_inn_game/qa/run_qa.sh <script> headless --seed=<seed>
+wandering_inn_game/qa/run_qa.sh <script> windowed --seed=<seed>   # + screenshots
 
 # Unit suite (run individually; see CLAUDE.md list)
-/usr/local/bin/godot --headless --path wandering_inn_game_v4 --script res://tests/test_sim_core.gd
+/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_sim_core.gd
 
 # Balance harness (data-tuning authority; gated cells 0.55–0.95 win, medians 3–12)
-/usr/local/bin/godot --headless --path wandering_inn_game_v4 --script res://tests/sim_combat_batch.gd
+/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
 ```
 Read `qa_output/<script>/result.json` for pass/failures; `events.jsonl` for
 the event log; `*.png` (windowed) for what a player sees.
@@ -74,11 +74,9 @@ the event log; `*.png` (windowed) for what a player sees.
   hit → fix now or log in `docs/VISUAL-LOG.md`; never silently ship it.
 - **QA passing ≠ playable.** If a human report contradicts a green run,
   believe the human → wi-debugging-playtest-reports.
-- **Verification runs are headless CLI, not MCP.** The godot-ai MCP is for
-  editor-visual design iteration (policy in wi-running-the-machine); the
-  gates in this skill are always the commands above. Its autoload prints one
-  `[godot_ai game_helper] registered mcp capture` line per run — expected,
-  exempt from the zero-warning rule.
+- **Verification runs are headless CLI.** (The godot-ai MCP was removed
+  2026-07-06 — barely used; the windowed-QA loop covers visual work. The
+  zero-warning grep now has NO exempt lines.)
 - New `.gd` files: run `--headless --import` once, commit the `*.uid` sidecar.
 
 ## Full-gate one-liner (before any commit claiming "all green")

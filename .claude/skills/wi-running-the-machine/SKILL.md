@@ -19,7 +19,7 @@ description: Use when executing any Wandering Inn RPG task end-to-end — implem
    verified, lessons, what's next); keep HANDOFF live mid-session.
 
 ## Dispatching reviewers (they earn their cost only with method hints)
-Prompt must include: the commit/range, "read wandering_inn_game_v4/CLAUDE.md
+Prompt must include: the commit/range, "read wandering_inn_game/CLAUDE.md
 first", the specific risk areas to TRACE (not read), and **method hints** —
 "re-run script X at seed Y", "pixel-crop the region", "diff the actual
 commit", "prove the assertion can fail". Ask for findings by severity with
@@ -66,29 +66,14 @@ task lands (e.g. dialogue referencing a not-yet-existing entity), PARK them
 outside the tree (scratchpad) and land them with the dependency, or they
 break parallel lanes' gates.
 
-## Godot MCP (godot-ai) policy — user directive 2026-07-04
-The godot-ai MCP connector is SANCTIONED and its editor addon lives in-tree
-(`addons/godot_ai/` + `project.godot` autoload `_mcp_game_helper` + plugin
-entry + `godot-ai-LICENSE.txt`, MIT) — its presence is no longer an incident.
-Division of labor:
-- **Headless CLI stays the default** for smoke, QA scripts, unit suites, and
-  all routine verification (MCP tool output stays resident in context —
-  token-expensive over a session; CLI output doesn't).
-- **MCP is for editor-visual work that merits it:** level/scene design
-  iteration, in-editor placement + screenshot loops, visual-quality passes
-  headless development can't judge. Controller-level use; implementer
-  subagents get it only when their brief says so.
-- MCP never substitutes for the QA gates — evidence is still `run_qa.sh` per
-  wi-verifying-changes. The addon autoload prints one
-  `[godot_ai game_helper] registered mcp capture` line per run; expected, not
-  a warning.
-- HOW to use it (verified loop, hard limits, subagent brief template):
-  **wi-godot-mcp**. One editor session = one driver — never two agents on
-  the MCP concurrently.
+## Godot MCP — RETIRED (2026-07-06)
+The godot-ai addon + MCP were removed from the repo (barely used; the
+windowed-QA screenshot loop covered every visual need). wi-godot-mcp is
+deleted. All verification + visual reads = headless/windowed CLI per
+wi-verifying-changes. If editor-driven look-dev is ever wanted again,
+re-evaluate fresh — do not resurrect the old setup from history.
 
 ## Red flags — stop and re-read this skill
-- Reaching for MCP tools for routine verification (smoke/QA/units) — that's
-  headless CLI's job (policy above).
 - **A SUBAGENT backgrounding its own verification sweep and pausing to
   "wait for the notification"** — subagent-of-subagent notifications
   strand the task (two O-task stalls, 2026-07-05). Implementer briefs:

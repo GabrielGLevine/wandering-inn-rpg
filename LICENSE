@@ -24,7 +24,7 @@ SOFTWARE.
 
 This license covers the game's code and original data files. Art, audio, and
 other media assets in this repository are covered by their own licenses — see
-wandering_inn_game_v4/assets/LICENSES/ and ATTRIBUTION.md. Some assets used
+wandering_inn_game/assets/LICENSES/ and ATTRIBUTION.md. Some assets used
 in official builds are not redistributable and are NOT included in this
 repository; the game builds and runs fully with the included fallback art.
 

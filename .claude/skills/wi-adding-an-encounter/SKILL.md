@@ -44,7 +44,7 @@ table and blocking/reachability rules: `wi-adding-a-scene`.
 ## Balance workflow — the harness is the only authority
 Run after ANY roster/stat/skill/arena change:
 ```
-/usr/local/bin/godot --headless --path wandering_inn_game_v4 --script res://tests/sim_combat_batch.gd
+/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
 ```
 16 cells (2 compositions × 8 builds, 100 seeds each). GATED cells must land
 win-rate 0.55–0.95, median rounds 3–12; some are `gated: false`

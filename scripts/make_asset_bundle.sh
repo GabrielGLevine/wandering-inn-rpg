@@ -2,7 +2,7 @@
 # make_asset_bundle.sh — pack the protected (non-redistributable) assets into a
 # tarball for the private assets repo (M-RELEASE Task R3).
 #
-# The tarball preserves the wandering_inn_game_v4/assets/** layout RELATIVE TO
+# The tarball preserves the wandering_inn_game/assets/** layout RELATIVE TO
 # THE REPO ROOT, so release.yml's overlay step (`tar -xzf … -C .`) drops every
 # file straight back into place over the committed fallback art.
 #
@@ -12,7 +12,7 @@
 # the latest such release with PRIVATE_ASSETS_TOKEN.
 #
 # The set of protected paths is authored by M-RELEASE Task R2 in
-#   wandering_inn_game_v4/assets_manifest.json
+#   wandering_inn_game/assets_manifest.json
 # (built from the audit report's FORBIDDEN/NEEDS-ATTESTATION rows). This script
 # READS that manifest; it does not invent the list.
 #
@@ -23,7 +23,7 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/.." && pwd)"
-MANIFEST="$ROOT/wandering_inn_game_v4/assets_manifest.json"
+MANIFEST="$ROOT/wandering_inn_game/assets_manifest.json"
 OUT="${1:-$ROOT/dist/wi-assets-bundle-$(date +%Y%m%d).tar.gz}"
 
 if [ ! -f "$MANIFEST" ]; then
@@ -38,8 +38,8 @@ authoritative source→dest map is tools/sync_assets.py.
 
 Expected JSON shape (either form is accepted):
   { "protected_paths": [
-      "wandering_inn_game_v4/assets/audio/music/track.ogg",
-      "wandering_inn_game_v4/assets/audio/sfx/hit.wav"
+      "wandering_inn_game/assets/audio/music/track.ogg",
+      "wandering_inn_game/assets/audio/sfx/hit.wav"
   ] }
 or an array of objects each with a "path" key:
   { "protected_paths": [ { "path": "…", "bundle": "…", "fallback": "…" } ] }
@@ -59,7 +59,7 @@ import json, sys
 data = json.load(open(sys.argv[1]))
 if isinstance(data, dict):
     # R2's shipped schema: {"assets": [{"path": ..., "bundle": true, ...}]}
-    # (paths relative to wandering_inn_game_v4/). Older draft shapes kept
+    # (paths relative to wandering_inn_game/). Older draft shapes kept
     # as fallbacks.
     items = data.get("assets", data.get("protected_paths", data.get("entries", [])))
 elif isinstance(data, list):
@@ -73,8 +73,8 @@ for it in items:
     elif isinstance(it, dict) and "path" in it:
         if it.get("bundle", True):
             p = it["path"]
-            if not p.startswith("wandering_inn_game_v4/"):
-                p = "wandering_inn_game_v4/" + p
+            if not p.startswith("wandering_inn_game/"):
+                p = "wandering_inn_game/" + p
             out.append(p)
             # the .import sidecar rides along when present
             out.append(p + ".import")

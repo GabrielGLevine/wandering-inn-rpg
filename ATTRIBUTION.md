@@ -17,7 +17,7 @@ project; setting, characters, and lore belong to pirateaba.
 ## Repository media
 
 Per-pack license notes and verdicts live in
-`wandering_inn_game_v4/assets/LICENSES/`. Assets whose licenses do not
+`wandering_inn_game/assets/LICENSES/`. Assets whose licenses do not
 permit redistribution are not present in this repository; official builds
 add them from a private bundle, and the public build uses fallback art in
 their place.
@@ -27,7 +27,7 @@ their place.
 Several character sprites and props are AI-generated via
 [PixelLab](https://pixellab.ai) (outputs user-owned and redistributable
 per its terms; per-asset provenance in
-`wandering_inn_game_v4/assets/LICENSES/pixellab-ai-generated-verdict.md`).
+`wandering_inn_game/assets/LICENSES/pixellab-ai-generated-verdict.md`).
 
 ## Community contributions
 

@@ -15,7 +15,7 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/.." && pwd)"
 DEST="$ROOT/../wandering-inn-rpg-public"
-MANIFEST="$ROOT/wandering_inn_game_v4/assets_manifest.json"
+MANIFEST="$ROOT/wandering_inn_game/assets_manifest.json"
 
 [ -d "$DEST/.git" ] || { echo "FATAL: $DEST is not the pushed public repo (no .git)" >&2; exit 1; }
 [ -f "$MANIFEST" ] || { echo "FATAL: $MANIFEST missing" >&2; exit 1; }
@@ -25,8 +25,8 @@ python3 - "$MANIFEST" >>"$EXCLUDES" <<'PY'
 import json, sys
 m = json.load(open(sys.argv[1]))
 for e in m["assets"]:
-    print("wandering_inn_game_v4/" + e["path"])
-    print("wandering_inn_game_v4/" + e["path"] + ".import")
+    print("wandering_inn_game/" + e["path"])
+    print("wandering_inn_game/" + e["path"] + ".import")
 PY
 cat >>"$EXCLUDES" <<'EOF'
 .git
@@ -65,7 +65,7 @@ rsync -a --delete --exclude-from="$EXCLUDES" "$STAGE/" "$DEST/"
 LEAKS=0
 while IFS= read -r p; do
 	[ -e "$DEST/$p" ] && { echo "LEAK: $p"; LEAKS=1; }
-done < <(python3 -c "import json;[print('wandering_inn_game_v4/'+e['path']) for e in json.load(open('$MANIFEST'))['assets']]")
+done < <(python3 -c "import json;[print('wandering_inn_game/'+e['path']) for e in json.load(open('$MANIFEST'))['assets']]")
 [ "$LEAKS" -eq 0 ] || { echo "FATAL: manifest paths leaked" >&2; exit 1; }
 
 cd "$DEST"

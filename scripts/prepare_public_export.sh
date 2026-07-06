@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # prepare_public_export.sh — build the curated, fresh-history public tree
 # (M-RELEASE Task R6). Exports the repo MINUS: every asset path in
-# wandering_inn_game_v4/assets_manifest.json (FORBIDDEN + NEEDS-ATTESTATION),
+# wandering_inn_game/assets_manifest.json (FORBIDDEN + NEEDS-ATTESTATION),
 # potential_assets/, all gitignored scratch, credentials, and internal-only
 # files — then git-inits it as commit one of the public repo.
 #
@@ -16,19 +16,19 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/.." && pwd)"
 DEST="${1:-$ROOT/../wandering-inn-rpg-public}"
-MANIFEST="$ROOT/wandering_inn_game_v4/assets_manifest.json"
+MANIFEST="$ROOT/wandering_inn_game/assets_manifest.json"
 
 [ -f "$MANIFEST" ] || { echo "FATAL: $MANIFEST missing" >&2; exit 1; }
 
 # --- exclusion list -----------------------------------------------------------
 EXCLUDES="$(mktemp)"
-# Manifest asset paths (repo-relative under wandering_inn_game_v4/).
+# Manifest asset paths (repo-relative under wandering_inn_game/).
 python3 - "$MANIFEST" >>"$EXCLUDES" <<'PY'
 import json, sys
 m = json.load(open(sys.argv[1]))
 for e in m["assets"]:
-    print("wandering_inn_game_v4/" + e["path"])
-    print("wandering_inn_game_v4/" + e["path"] + ".import")
+    print("wandering_inn_game/" + e["path"])
+    print("wandering_inn_game/" + e["path"] + ".import")
 PY
 # Non-public infrastructure + scratch + credentials + internal docs.
 cat >>"$EXCLUDES" <<'EOF'
@@ -61,8 +61,8 @@ rsync -a --exclude-from="$EXCLUDES" "$ROOT/" "$DEST/"
 echo "== Verifying no manifest path leaked"
 LEAKS=0
 while IFS= read -r p; do
-	case "$p" in wandering_inn_game_v4/*) [ -e "$DEST/$p" ] && { echo "LEAK: $p"; LEAKS=1; } ;; esac
-done < <(python3 -c "import json;[print('wandering_inn_game_v4/'+e['path']) for e in json.load(open('$MANIFEST'))['assets']]")
+	case "$p" in wandering_inn_game/*) [ -e "$DEST/$p" ] && { echo "LEAK: $p"; LEAKS=1; } ;; esac
+done < <(python3 -c "import json;[print('wandering_inn_game/'+e['path']) for e in json.load(open('$MANIFEST'))['assets']]")
 [ "$LEAKS" -eq 0 ] || { echo "FATAL: manifest paths leaked into the export" >&2; exit 1; }
 
 echo "== Secrets scan"

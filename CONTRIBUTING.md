@@ -11,17 +11,17 @@ broken the game.
    not supported).
 2. Run the game:
    ```bash
-   godot --path wandering_inn_game_v4
+   godot --path wandering_inn_game
    ```
 3. Run the QA gate (the same thing CI runs):
    ```bash
    # One scripted playtest, headless:
-   wandering_inn_game_v4/qa/run_qa.sh combat_walkthrough headless --seed=9
+   wandering_inn_game/qa/run_qa.sh combat_walkthrough headless --seed=9
    # The full sweep (what your PR must pass):
-   wandering_inn_game_v4/qa/ci_sweep.sh
+   wandering_inn_game/qa/ci_sweep.sh
    ```
    Seeds matter: each script runs at its pinned seed (see
-   `wandering_inn_game_v4/CLAUDE.md` for the table).
+   `wandering_inn_game/CLAUDE.md` for the table).
 
 Don't see the real art? The repository ships **fallback art** for a subset
 of assets whose licenses don't allow redistribution. The game is fully
@@ -31,7 +31,7 @@ want to help replace them with original work.
 ## How changes work here
 
 - **Content is data.** Maps, dialogue, classes, skills, encounters, and
-  balance live in `wandering_inn_game_v4/data/*.json`. Most contributions
+  balance live in `wandering_inn_game/data/*.json`. Most contributions
   never touch engine code.
 - **Tune data, never sim.** Balance changes go in data files; the simulation
   core (`src/core/`) changes only for genuinely new mechanics.

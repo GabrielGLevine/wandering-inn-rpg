@@ -115,14 +115,14 @@ jobs:
           set -euo pipefail
           tarball="$(ls -1 bundle/*.tar.gz | head -n1)"
           echo "Overlaying: $tarball"
-          # The bundle preserves the wandering_inn_game_v4/assets/** layout
+          # The bundle preserves the wandering_inn_game/assets/** layout
           # relative to the repo root (see scripts/make_asset_bundle.sh), so a
           # plain extract at the root drops each file into place over the
           # committed fallback tree.
           tar -xzf "$tarball" -C .
           # Sanity: the overlay must have landed at least one real asset file.
-          if [ -z "$(find wandering_inn_game_v4/assets -type f 2>/dev/null | head -n1)" ]; then
-            echo "::error::assets/ is empty after overlay — the bundle did not extract into wandering_inn_game_v4/assets/. Check make_asset_bundle.sh's layout."
+          if [ -z "$(find wandering_inn_game/assets -type f 2>/dev/null | head -n1)" ]; then
+            echo "::error::assets/ is empty after overlay — the bundle did not extract into wandering_inn_game/assets/. Check make_asset_bundle.sh's layout."
             exit 1
           fi
           echo "Overlay complete."
@@ -135,16 +135,16 @@ jobs:
         run: |
           set -euo pipefail
           perl -e 'alarm 300; exec @ARGV' \
-            godot --headless --path wandering_inn_game_v4 --import
+            godot --headless --path wandering_inn_game --import
 
       - name: (b) Headless smoke (--quit)
         run: |
           set -euo pipefail
           log=smoke.log
           perl -e 'alarm 120; exec @ARGV' \
-            godot --headless --path wandering_inn_game_v4 --quit >"$log" 2>&1 || rc=$?
+            godot --headless --path wandering_inn_game --quit >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
             echo "::error::smoke boot produced a SCRIPT ERROR / Parse Error / WARNING"
             exit 1
           fi
@@ -153,7 +153,7 @@ jobs:
       - name: (b) Unit test suites (tests/test_*.gd)
         run: |
           set -uo pipefail
-          cd wandering_inn_game_v4
+          cd wandering_inn_game
           fail=0
           for t in tests/test_*.gd; do
             name="$(basename "$t")"
@@ -162,7 +162,7 @@ jobs:
             perl -e 'alarm 240; exec @ARGV' \
               godot --headless --path . --script "res://$t" >"$log" 2>&1 || fail=1
             cat "$log"
-            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
               echo "::error::$name tripped the error/warning grep"; fail=1
             fi
             if ! grep -q '^PASS' "$log"; then
@@ -174,12 +174,12 @@ jobs:
       - name: (b) Balance harness (sim_combat_batch)
         run: |
           set -uo pipefail
-          cd wandering_inn_game_v4
+          cd wandering_inn_game
           log="/tmp/sim_combat_batch.log"
           perl -e 'alarm 600; exec @ARGV' \
             godot --headless --path . --script res://tests/sim_combat_batch.gd >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
             echo "::error::sim_combat_batch tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
@@ -187,13 +187,13 @@ jobs:
       - name: (b) Full canonical sweep (qa/ci_sweep.sh)
         run: |
           set -euo pipefail
-          bash wandering_inn_game_v4/qa/ci_sweep.sh
+          bash wandering_inn_game/qa/ci_sweep.sh
 
       # ------------------------------------------------------------------ (c) wasm
       - name: (c) Guard — Web export preset must exist
         run: |
           set -euo pipefail
-          cfg=wandering_inn_game_v4/export_presets.cfg
+          cfg=wandering_inn_game/export_presets.cfg
           if [ ! -f "$cfg" ] || ! grep -q 'name="Web"' "$cfg"; then
             echo "::error::export_presets.cfg is missing a \"Web\" preset."
             exit 1
@@ -204,14 +204,14 @@ jobs:
           set -euo pipefail
           # qa/web/export_web.sh is the project's canonical web export command
           # (godot --headless --export-release "Web" build/web/index.html). It
-          # writes to wandering_inn_game_v4/build/web/.
+          # writes to wandering_inn_game/build/web/.
           perl -e 'alarm 600; exec @ARGV' \
-            bash wandering_inn_game_v4/qa/web/export_web.sh
-          if [ ! -f wandering_inn_game_v4/build/web/index.html ]; then
+            bash wandering_inn_game/qa/web/export_web.sh
+          if [ ! -f wandering_inn_game/build/web/index.html ]; then
             echo "::error::wasm export did not produce build/web/index.html"
             exit 1
           fi
-          ls -la wandering_inn_game_v4/build/web
+          ls -la wandering_inn_game/build/web
 
       # ---------------------------------------------------------------- (d) butler
       - name: (d) Install pinned butler (itch.io broth)
@@ -243,5 +243,5 @@ jobs:
             exit 1
           fi
           # butler push is atomic per channel; re-runnable from the same tag.
-          ./butler-bin/butler push wandering_inn_game_v4/build/web \
+          ./butler-bin/butler push wandering_inn_game/build/web \
             "${ITCH_TARGET}:html5" --userversion "${GITHUB_REF_NAME}"

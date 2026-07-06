@@ -3865,8 +3865,8 @@ Bandit/enemy soldier idle animation, 4 frames. Frame size ~64x64px. Green-skinne
 ### M5 E3 committed extracts (not generated)
 
 `tools/asset_index.py` indexes `potential_assets/` only. These are the M5 E3
-curated sheets copied into `wandering_inn_game_v4/assets/` by
-`wandering_inn_game_v4/tools/sync_assets.py` for current inn/street rendering.
+curated sheets copied into `wandering_inn_game/assets/` by
+`wandering_inn_game/tools/sync_assets.py` for current inn/street rendering.
 
 | committed path | source pack path | size | current use |
 |---|---|---|---|

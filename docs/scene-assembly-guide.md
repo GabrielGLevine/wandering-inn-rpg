@@ -1,7 +1,7 @@
 # Scene Assembly Guide — benchmark-quality maps from potential_assets
 
 **What this is:** instructions for an AI session building world/arena scenes
-in `wandering_inn_game_v4` to the quality bar of the Pixel Crawler showcase
+in `wandering_inn_game` to the quality bar of the Pixel Crawler showcase
 mockups (the user-designated benchmarks). The benchmark images themselves
 live in `potential_assets/_benchmarks/` (gitignored, local-only):
 `benchmark-farmstead-river-dock`, `benchmark-tavern-interior-multiroom`,

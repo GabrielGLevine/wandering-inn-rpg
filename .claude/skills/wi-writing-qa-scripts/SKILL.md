@@ -7,7 +7,7 @@ description: Use when writing a new declarative QA playtest script, extending an
 
 Scripts are JSON in `qa/scripts/<name>.json`, run by `qa/test_driver.gd`
 (`_execute`) via `qa/run_qa.sh <name> headless --seed=N` (seed table:
-`wandering_inn_game_v4/CLAUDE.md`).
+`wandering_inn_game/CLAUDE.md`).
 
 ## Top-level fields
 | Field | Shape | Meaning |
@@ -84,7 +84,7 @@ it as a silent no-op.
 Combat is deterministic per seed; every script reaching combat needs a
 pinned, PER-SCRIPT seed row (`level_up_loop` needs 11, not 9, because its
 fight composition differs). A failing first-picked seed is a seed-search
-task. Register in `wandering_inn_game_v4/CLAUDE.md` in BOTH places: the
+task. Register in `wandering_inn_game/CLAUDE.md` in BOTH places: the
 canonical seed table AND the Commands script-list block (two lists exist;
 keep them consistent) so `wi-verifying-changes`'s full sweep picks it up.
 Assert both the domain event AND its `ui_*_rendered` confirmation for any

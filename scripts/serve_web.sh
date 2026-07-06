@@ -12,7 +12,7 @@
 # thing on the hosted page). Use it to smoke the export in a real browser.
 #
 # Usage:
-#   scripts/serve_web.sh                 # serves wandering_inn_game_v4/build/web on :8000
+#   scripts/serve_web.sh                 # serves wandering_inn_game/build/web on :8000
 #   scripts/serve_web.sh 8080            # custom port
 #   scripts/serve_web.sh 8080 path/to/web
 set -euo pipefail
@@ -20,11 +20,11 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/.." && pwd)"
 PORT="${1:-8000}"
-DIR="${2:-$ROOT/wandering_inn_game_v4/build/web}"
+DIR="${2:-$ROOT/wandering_inn_game/build/web}"
 
 if [ ! -d "$DIR" ]; then
   echo "serve_web.sh: build dir not found: $DIR" >&2
-  echo "  Export it first, e.g.: wandering_inn_game_v4/qa/web/export_web.sh" >&2
+  echo "  Export it first, e.g.: wandering_inn_game/qa/web/export_web.sh" >&2
   exit 1
 fi
 if [ ! -f "$DIR/index.html" ]; then

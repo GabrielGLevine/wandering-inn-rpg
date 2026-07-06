@@ -25,7 +25,7 @@ merge, and evolve while you sleep.
 Requires **Godot 4.7**.
 
 ```bash
-godot --path wandering_inn_game_v4
+godot --path wandering_inn_game
 ```
 
 Some art and music in official builds comes from licensed packs that can't

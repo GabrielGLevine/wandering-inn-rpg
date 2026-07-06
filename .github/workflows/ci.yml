@@ -65,17 +65,16 @@ jobs:
         run: |
           set -euo pipefail
           perl -e 'alarm 300; exec @ARGV' \
-            godot --headless --path wandering_inn_game_v4 --import
+            godot --headless --path wandering_inn_game --import
 
       - name: Headless smoke (--quit)
         run: |
           set -euo pipefail
           log=smoke.log
           perl -e 'alarm 120; exec @ARGV' \
-            godot --headless --path wandering_inn_game_v4 --quit >"$log" 2>&1 || rc=$?
+            godot --headless --path wandering_inn_game --quit >"$log" 2>&1 || rc=$?
           cat "$log"
-          # game_helper mcp-capture line is the one exempt line (dev addon only).
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
             echo "::error::smoke boot produced a SCRIPT ERROR / Parse Error / WARNING"
             exit 1
           fi
@@ -103,12 +102,12 @@ jobs:
         run: |
           set -euo pipefail
           perl -e 'alarm 300; exec @ARGV' \
-            godot --headless --path wandering_inn_game_v4 --import
+            godot --headless --path wandering_inn_game --import
 
       - name: Unit test suites (tests/test_*.gd)
         run: |
           set -uo pipefail
-          cd wandering_inn_game_v4
+          cd wandering_inn_game
           fail=0
           for t in tests/test_*.gd; do
             name="$(basename "$t")"
@@ -119,7 +118,7 @@ jobs:
             cat "$log"
             # T9 lesson: a SCRIPT ERROR can print WITHOUT a nonzero exit — never
             # trust ^PASS alone. Require BOTH: a PASS line AND no error/warning.
-            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
               echo "::error::$name tripped the error/warning grep"; fail=1
             fi
             if ! grep -q '^PASS' "$log"; then
@@ -131,12 +130,12 @@ jobs:
       - name: Balance harness (sim_combat_batch — combat-data authority)
         run: |
           set -uo pipefail
-          cd wandering_inn_game_v4
+          cd wandering_inn_game
           log="/tmp/sim_combat_batch.log"
           perl -e 'alarm 600; exec @ARGV' \
             godot --headless --path . --script res://tests/sim_combat_batch.gd >"$log" 2>&1 || rc=$?
           cat "$log"
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
             echo "::error::sim_combat_batch tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
@@ -163,12 +162,12 @@ jobs:
         run: |
           set -euo pipefail
           perl -e 'alarm 300; exec @ARGV' \
-            godot --headless --path wandering_inn_game_v4 --import
+            godot --headless --path wandering_inn_game --import
 
       - name: Full canonical sweep (qa/ci_sweep.sh)
         run: |
           set -euo pipefail
-          bash wandering_inn_game_v4/qa/ci_sweep.sh
+          bash wandering_inn_game/qa/ci_sweep.sh
 
   # -------------------------------------------------------------- web-parity
   web-parity:
@@ -202,7 +201,7 @@ jobs:
       - name: Guard — Web export preset must exist (delivered by Task R3)
         run: |
           set -euo pipefail
-          cfg=wandering_inn_game_v4/export_presets.cfg
+          cfg=wandering_inn_game/export_presets.cfg
           if [ ! -f "$cfg" ] || ! grep -q 'name="Web"' "$cfg"; then
             echo "::error::export_presets.cfg is missing a \"Web\" preset — this is delivered by M-RELEASE Task R3. web-parity cannot run until R3 lands."
             exit 1
@@ -216,7 +215,7 @@ jobs:
       - name: Install web QA deps (playwright)
         run: |
           set -euo pipefail
-          cd wandering_inn_game_v4/qa/web
+          cd wandering_inn_game/qa/web
           npm ci
           npx playwright install --with-deps chromium
 
@@ -225,13 +224,13 @@ jobs:
           set -euo pipefail
           log=web_parity.log
           perl -e 'alarm 600; exec @ARGV' \
-            bash wandering_inn_game_v4/qa/web/run_web_qa.sh combat_walkthrough 9 >"$log" 2>&1 || rc=$?
+            bash wandering_inn_game/qa/web/run_web_qa.sh combat_walkthrough 9 >"$log" 2>&1 || rc=$?
           cat "$log"
           # Known-harmless runner-only line (first public CI run, 2026-07-06):
           # the wasm boot emits "ImageLoaderSVG: Target canvas dimensions
           # 51500x51500 ... scaled down" on ubuntu runners only (never locally).
           # Precisely exempted; root-causing the oversized SVG is queued work.
-          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper' | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'ImageLoaderSVG: Target canvas dimensions 51500'; then
             echo "::error::web-parity run tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"

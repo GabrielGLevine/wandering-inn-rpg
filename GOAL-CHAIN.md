@@ -22,7 +22,7 @@ via the HANDOFF queue.**
   playtest checklist.
 
 **2. CLEANUP (structural, no lanes live during it):**
-- Rename `wandering_inn_game_v4/` → `wandering_inn_game/`: full path
+- Rename `wandering_inn_game/` → `wandering_inn_game/`: full path
   ripple (run_qa/ci_sweep/web scripts, workflows, CLAUDE.md files,
   manifest + bundle LAYOUT — rebuild + re-release the bundle on the
   assets repo after, since release.yml's overlay extracts by path),

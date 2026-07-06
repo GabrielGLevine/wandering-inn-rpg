@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repo Layout
 
-- **`wandering_inn_game_v4/`** — **the active project; all current work happens here.** A fresh Godot 4.7 build designed QA-first for agent-driven development: pure sim core, ObservableBus event log, declarative QA playtest scripts (`qa/run_qa.sh`). Has its own `CLAUDE.md` — read it when working here.
+- **`wandering_inn_game/`** — **the active project; all current work happens here.** A fresh Godot 4.7 build designed QA-first for agent-driven development: pure sim core, ObservableBus event log, declarative QA playtest scripts (`qa/run_qa.sh`). Has its own `CLAUDE.md` — read it when working here.
 - **Predecessors are out of the working tree** (v1 and v2 both removed 2026-07-02, user-approved scope-down; recover either from git history if needed — v2 was the GDQuest-based frozen reference, Godot 4.6.2-only via `/Applications/Godot4.6.app`, handoff history in `docs/archive/HANDOFF-v2-v3-archive.md`; `godot-open-rpg/` is v2's gitignored upstream clone, a separate repo, never commit into it).
 - **`docs/superpowers/specs/`** and **`docs/superpowers/plans/`** — design specs and implementation plans per milestone, written via the `superpowers:brainstorming` → `superpowers:writing-plans` → `superpowers:subagent-driven-development` skill chain. Read the relevant spec/plan before significant changes.
 - **`HANDOFF.md`** — the living cross-session state doc: current state, playtest checklists, next steps. **Keep it updated as work progresses** (not just at session end) — it's the primary handoff between sessions/agents (including Codex). Milestone execution detail lives in the ledger `.superpowers/sdd/progress.md` (gitignored).
@@ -23,19 +23,19 @@ Each Godot project is run independently — there is no repo-wide build step or 
 
 ```bash
 # Run the active game (from repo root)
-/usr/local/bin/godot --path wandering_inn_game_v4
+/usr/local/bin/godot --path wandering_inn_game
 
 # PRIMARY verification tool — declarative agent playtests
-# (per-script canonical seeds + full script table: wandering_inn_game_v4/CLAUDE.md)
-wandering_inn_game_v4/qa/run_qa.sh load_gate headless
-wandering_inn_game_v4/qa/run_qa.sh combat_walkthrough headless --seed=9   # or `windowed` for screenshots
+# (per-script canonical seeds + full script table: wandering_inn_game/CLAUDE.md)
+wandering_inn_game/qa/run_qa.sh load_gate headless
+wandering_inn_game/qa/run_qa.sh combat_walkthrough headless --seed=9   # or `windowed` for screenshots
 
 # Headless parse/smoke check
-/usr/local/bin/godot --headless --path wandering_inn_game_v4 --quit
+/usr/local/bin/godot --headless --path wandering_inn_game --quit
 
 ```
 
-See `wandering_inn_game_v4/CLAUDE.md` for the QA-loop conventions.
+See `wandering_inn_game/CLAUDE.md` for the QA-loop conventions.
 
 ## Cross-Cutting Gotchas (apply across projects in this repo)
 
