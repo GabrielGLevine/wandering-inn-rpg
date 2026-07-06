@@ -35,7 +35,8 @@ out of roadmap scope for now.
 | Cleanup | Drop `_v4` dir suffix · remove godot-ai addon · (skills already ship publicly; AI disclosure done) | QUEUED (post-lane) |
 | Expansions | [Door of Portals]-gated: Invrisil (Brothers of Serendipitous Meetings) · Riverfarm witches · Liscor Dungeon (Horns) · [Garden of Sanctuary] | SEEDED (user 2026-07-06) |
 | **Systems depth (user priorities 2026-07-06, SUPERSEDE "future systems")** | M-LEGIBILITY (visible-currency item/skill cards + status glossary — no raw stats) → M-GEAR (resonance-limited slots + item lore) → overworld-impact Skills wave + gap-based Skill sourcing | SPEC'D (`2026-07-06-systems-depth-priorities.md`, §2 verdict awaiting user) |
-| Future systems | Party free-picker · social-pillar depth II · racial mechanics | BANKED (behind the above) |
+| Social Pillar II | Deeper repeatable social play (post-pools: relationship arcs? — brainstorm) | TARGETED (user 2026-07-06; slots after the systems-depth trio) |
+| Deprioritized | Racial mechanics · party free-picker (context+veto is the standing model) | PARKED (user 2026-07-06) |
 
 Post-launch direction: episodic arcs tracking TWI volumes, Steam evaluation.
 
