@@ -72,6 +72,13 @@ var _skip_requested := false
 var _ai_turn_active := false
 
 
+## M-JUICE E2 hit-stop: a melee connect beat holds this long before the next
+## beat plays -- a 60ms freeze inside the 40-80ms design band. Only ever added
+## on top of a non-zero `beat_delay()` (see `drain()`), so it is QA-collapsed
+## to zero under TestDriver/headless exactly like the AI pacing it rides on.
+const HIT_STOP_SECONDS := 0.06
+
+
 func _init(renderer: Node, screen: Node) -> void:
 	_renderer = renderer
 	_screen = screen
@@ -243,6 +250,22 @@ func run_ai_turn() -> void:
 	await drain()
 
 
+## Returns the extra hold a just-applied beat earns (spec item 1): a melee
+## ATTACK_RESOLVED that CONNECTED (hit) gets HIT_STOP_SECONDS; everything else
+## (misses, ranged casts, moves, downs) zero. Reads only the beat's own
+## captured payload, never live combat state. WIEvents is a plain class_name
+## const table (autoload-safe), so this keeps combat_playback.gd free of bare
+## autoload identifiers -- the load()-under-`--script`-mode contract this file
+## documents at the top.
+func _hit_stop_hold(event: Dictionary) -> float:
+	if String(event.get("type", "")) != WIEvents.ATTACK_RESOLVED:
+		return 0.0
+	var p: Dictionary = event.get("payload", {})
+	if bool(p.get("hit", false)) and bool(p.get("melee", true)):
+		return HIT_STOP_SECONDS
+	return 0.0
+
+
 func beat_delay() -> float:
 	if _screen._test_driver_active() or DisplayServer.get_name() == "headless":
 		return 0.0
@@ -268,6 +291,8 @@ func drain() -> void:
 		_apply_playback_event(event, true)
 		beats += 1
 		var delay := beat_delay()
+		if delay > 0.0:
+			delay += _hit_stop_hold(event)
 		if delay > 0.0 and not _playback.is_empty():
 			await _wait_for_skip(delay)
 			if _skip_requested:
