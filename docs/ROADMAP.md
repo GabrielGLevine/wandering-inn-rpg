@@ -15,21 +15,28 @@ demo** (the wasm export pipeline already works and is QA'd every milestone), rou
 minutes of play, spanning an intro arc in Liscor. Steam/paid comes after demo reception,
 out of roadmap scope for now.
 
-## Milestone ladder
+## Milestone ladder (TABLE REFRESHED 2026-07-06 — v0.1.0 IS LIVE)
 
-| # | Theme | Status / confidence |
+**Shipped and deployed:** `sibianthegreybird.itch.io/the-wandering-inn-rpg`
+(v0.1.0, tag-driven CI deploy proven; public repo live w/ green CI).
+
+| # | Theme | Status |
 |---|---|---|
-| M0–M3 | Agent-QA loop, tactical combat, story spine, combat depth | SHIPPED |
-| **M4** | Playtest fixes + asset integration (tiles/sprites/paced combat) | **IN FLIGHT** (T1–T6 approved, T7 executing) |
-| **M5** | Demo feel: audio, game shell (title/continue), UI theme+font, motion juice | Seeded (`2026-07-02-m5-demo-feel-seed.md`); 4 open user questions; HIGH confidence |
-| **M6** | Action-driven classes (the identity system): counters, evolution, non-linear multiclass, consolidation | Vision captured (`2026-07-02-progression-vision-action-driven-classes.md`); needs interactive brainstorm; HIGH confidence it's M6 unless user pulls a slice into M5 |
-| M7 | Liscor content arc I: 3–5 new maps (Guild interior, market street, inn upstairs), 2–3 quest chains with fight/talk/skill paths, 4–6 canon NPCs, exploration-skill breadth (generalize the prop-interaction pattern) | Direction, MEDIUM confidence |
-| M8 | Combat variety: enemy roster expansion (REQUIRES sprite sourcing resolved), 1–2 new class kits, terrain/status depth, encounter-design data tooling, difficulty options | Direction, MEDIUM confidence |
-| M9 | Inventory & economy (IF confirmed — see open questions): gear slots, coin, Krshia's shop, loot from encounters | Direction, LOW confidence — genre expectation vs scope risk, needs a real design discussion |
-| M10 | Demo packaging & launch: onboarding/tutorialization, web-build performance + polish, save-version migration discipline, external playtest rounds, itch page + trailer GIFs | Direction, HIGH confidence it's needed whatever the middle looks like |
+| M0–M7 | Agent-QA loop → combat → story → depth → art pipeline → feel → action-classes → weapons/equipment | SHIPPED |
+| M-FP / slice / M6.5 / M-BEAUTY | Floodplains overworld · content slice · presentation decomposition · atmosphere/lighting | SHIPPED |
+| Onboarding rev | Classless start, Relc teaches, proximity tutorial, Pisces, GDI-adjacent toasts | SHIPPED (opus 0C) |
+| Three Pillars | Field skills + overworld hotbar + [Tactician]/[Observe] | SHIPPED (opus 0C) |
+| Social Pillar | Rotating talk pools, sleep re-arm, [Diplomat] | SHIPPED (opus 0C) |
+| Content Wave | Liscor Sewers, Olesm/Zevara/Lyonette, 2 three-path quests | SHIPPED (opus 0C) |
+| Economy v1 | Diegetic gold across pillars, Krshia's shop, loot | SHIPPED (opus 0 must-fix) |
+| M-RELEASE | Public repo, CI, fallback-art contract, itch deploy, community lanes | SHIPPED + DEPLOYED |
+| M-JUICE (E) | CC0 audio layer + the [ding!] + hit-stop/shake/sparks/death-fade (+[Light] PC glow) | CORE SHIPPED (EF review closed; feel = playtest-gated) |
+| **M-ARC (F)** | GDI cold open ✅ · acts layer ✅ · char creation (race/gender/name) IN FLIGHT · A2 Raskghar descent → A3 climax → A4 epilogue → AF | **EXECUTING** (spec+plan ratified 2026-07-06) |
+| Cleanup | Drop `_v4` dir suffix · remove godot-ai addon · (skills already ship publicly; AI disclosure done) | QUEUED (post-lane) |
+| Expansions | [Door of Portals]-gated: Invrisil (Brothers of Serendipitous Meetings) · Riverfarm witches · Liscor Dungeon (Horns) · [Garden of Sanctuary] | SEEDED (user 2026-07-06) |
+| Future systems | Party selection (context+veto shipped for M-ARC; free picker = own milestone) · social-pillar depth II · racial mechanics | BANKED |
 
-Post-launch direction (not planned): episodic arcs tracking TWI volumes, more classes,
-Steam evaluation.
+Post-launch direction: episodic arcs tracking TWI volumes, Steam evaluation.
 
 ## Long-lead decisions that influence CURRENT work
 
