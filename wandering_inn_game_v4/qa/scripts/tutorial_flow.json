@@ -453,7 +453,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Playtest fix (veil first-class-gain grants): the GDI sleep veil now voices the level-1 kit as [Skill \u2013 X Obtained!] lines under the [Warrior Class Obtained!] proclamation, matching the toast's 4 grants. lines == 5 (1 class line + 4 skill lines) is the automated proof the FIRST class gain lists its grants; later level-ups already list theirs via skill_unlocked. The veil's deferred emit lands BEFORE ui_toast_rendered, so this wait sits ahead of that one to stay on the live side of the cursor. Under QA the veil collapses but still emits this count.",
+   "_comment": "Playtest fix (veil first-class-gain grants): the GDI sleep veil now voices the level-1 kit as [Skill \u2013 X Obtained!] lines under the [Warrior Class Obtained!] proclamation, matching the toast's 4 grants. lines == 5 (1 class line + 4 skill lines) is the automated proof the FIRST class gain lists its grants; later level-ups already list theirs via skill_unlocked. Under QA the veil collapses but still emits this count.",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "payload_contains": {
@@ -462,11 +462,13 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "RACE-SAFE (task-veiltoast-fix): ui_sleep_veil_rendered (veil, call_deferred) and ui_toast_rendered (message_layer's async toast drain) are TWO independent async streams whose relative emission order is NOT guaranteed -- it depends on whether the toast queue was empty when the class toast was enqueued (a wall-clock condition). When the prior 'Autosaved' toast is still mid-hold the veil emit lands first (the old local behavior); when the queue has drained the class toast renders immediately, before the veil (the slow-CI-runner behavior that stalled this to a 10s timeout). from_start:true scans from index 0 so this wait matches the (unique) class-toast render regardless of where the veil wait above left the cursor -- immune to either order. Paired with message_layer's headless frame-bounded drain (QA_TOAST_HOLD_HEADLESS_SECONDS).",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
     "text": "[Warrior] class gained! \u2014 [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
    },
+   "from_start": true,
    "timeout_sec": 10.0
   },
   {

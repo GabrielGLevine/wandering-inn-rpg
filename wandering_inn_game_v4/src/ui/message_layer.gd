@@ -7,18 +7,32 @@ extends CanvasLayer
 ## property. Fade/tint the child Control panels, never `self`.
 
 const TOAST_SECONDS := 2.5
-## Toast hold under QA (TestDriver active or headless) -- a 0.4s FLOOR, not
-## zero (controller decision on the toast-queue fix): toast legibility in
-## windowed screenshots is load-bearing for the controller-read discipline
-## (Q2/T2 verified toast text by reading PNGs; wi-verifying-changes mandates
-## it), so the toast a script just waited on must still be on screen when
-## test_driver's screenshot fires (0.15s SCREENSHOT_SETTLE_SECONDS < 0.4s).
-## Still fast enough that a queued burst drains at 0.4s/toast -- the deepest
-## live queue is the 2-toast sleep beat (nested autosave + class toast), well
-## inside every ui_toast_rendered wait's 5s timeout. No script waits on a
-## toast's DISAPPEARANCE (no such event exists -- only ui_toast_rendered at
-## display start), so the floor only delays subsequent queued renders.
+## Toast hold under WINDOWED QA (TestDriver active, real DisplayServer) -- a
+## 0.4s FLOOR, not zero (controller decision on the toast-queue fix): toast
+## legibility in windowed screenshots is load-bearing for the controller-read
+## discipline (Q2/T2 verified toast text by reading PNGs; wi-verifying-changes
+## mandates it), so the toast a script just waited on must still be on screen
+## when test_driver's screenshot fires (0.15s SCREENSHOT_SETTLE_SECONDS < 0.4s).
+## No script waits on a toast's DISAPPEARANCE (no such event exists -- only
+## ui_toast_rendered at display start), so the floor only delays subsequent
+## queued renders.
 const QA_TOAST_HOLD_SECONDS := 0.4
+## Toast hold under HEADLESS QA -- near-zero (frame-bounded), NOT the windowed
+## 0.4s floor. Rationale (task-veiltoast-fix): headless QA SKIPS screenshots
+## entirely (test_driver._screenshot early-returns for DisplayServer "headless"),
+## so the windowed legibility floor above buys nothing here -- it is pure dead
+## wall-clock that serializes the drain at 0.4s/toast and makes render TIMING
+## machine-speed-dependent. That timing dependency is what made tutorial_flow's
+## warrior-class-gain render pass locally (fast run: the prior "Autosaved" toast
+## was still mid-hold, so the class toast queued behind it and rendered AFTER the
+## sleep-veil's deferred emit) but stall on slow CI runners (the "Autosaved"
+## toast had long since drained, so the class toast rendered IMMEDIATELY --
+## before the veil emit -- flipping the event order the QA cursor assumed).
+## Collapsing headless to a single-frame-ish hold restores the M4 T10 rule
+## (TestDriver/headless = zero delays) and makes the drain frame-bounded. The
+## companion tutorial_flow.json fix (from_start on the class-toast render wait)
+## makes that script robust to EITHER emission order regardless.
+const QA_TOAST_HOLD_HEADLESS_SECONDS := 0.05
 const DIALOGUE_SECONDS := 3.0
 ## Dialogue panel interior text box -- 700x56 panel minus the MarginContainer's
 ## 22/12px margins (see `_dialogue_panel`/`dialogue_margin` below). M-FP F fix
@@ -248,18 +262,22 @@ func _drain_toasts() -> void:
 	_toast_draining = false
 
 
-## Collapses a presentation hold under QA/headless (M4 T10 paced-AI-playback
-## precedent -- same TestDriver.active()/headless detection as
-## combat_screen.gd's `_beat_delay`/`_presentation_delay` and world.gd's
-## `_presentation_delay`) so a queue of several toasts drains fast instead of
-## piling up 2.5s of real wall-clock per toast and stalling a QA script.
-## DELIBERATELY floors at QA_TOAST_HOLD_SECONDS rather than 0 -- see that
-## constant's doc comment (windowed-screenshot legibility is load-bearing).
-## Scoped to the toast queue only (`collapse_under_qa` in `_show`) -- the
-## dialogue panel keeps its original always-real hold; it was never
-## queued/batched and nothing about this fix needs its timing to change.
+## Collapses a presentation hold under QA (M4 T10 paced-AI-playback precedent --
+## same TestDriver.active()/headless detection as combat_screen.gd's
+## `_beat_delay`/`_presentation_delay` and world.gd's `_presentation_delay`) so a
+## queue of several toasts drains fast instead of piling up 2.5s of real
+## wall-clock per toast and stalling a QA script. HEADLESS collapses to a
+## near-zero, frame-bounded hold (screenshots are skipped -- see
+## QA_TOAST_HOLD_HEADLESS_SECONDS); WINDOWED QA keeps the 0.4s floor so a toast a
+## script just waited on is still on screen when the (windowed-only) screenshot
+## fires (see QA_TOAST_HOLD_SECONDS). Scoped to the toast queue only
+## (`collapse_under_qa` in `_show`) -- the dialogue panel keeps its original
+## always-real hold; it was never queued/batched and nothing needs its timing
+## changed.
 func _hold_seconds(seconds: float) -> float:
-	if (TestDriver != null and TestDriver.active()) or DisplayServer.get_name() == "headless":
+	if DisplayServer.get_name() == "headless":
+		return minf(seconds, QA_TOAST_HOLD_HEADLESS_SECONDS)
+	if TestDriver != null and TestDriver.active():
 		return minf(seconds, QA_TOAST_HOLD_SECONDS)
 	return seconds
 
