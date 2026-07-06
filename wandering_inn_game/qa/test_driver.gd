@@ -23,6 +23,16 @@ const ACTION_KEYS := {
 	"hotbar_1": KEY_1,
 	"hotbar_2": KEY_2,
 	"hotbar_3": KEY_3,
+	## Skills Wave Task K1: the field hotbar can carry more than three slots
+	## (a PC that knows [Basic Cleaning]/[Light]/[Frost Touch]/[Kindle] fills
+	## four), so map the full 1..9 digit row the hotbar_N input actions already
+	## define -- sewers_walkthrough presses hotbar_4 for [Kindle].
+	"hotbar_4": KEY_4,
+	"hotbar_5": KEY_5,
+	"hotbar_6": KEY_6,
+	"hotbar_7": KEY_7,
+	"hotbar_8": KEY_8,
+	"hotbar_9": KEY_9,
 	"end_turn": KEY_E,
 }
 const SCREENSHOT_SETTLE_SECONDS := 0.15

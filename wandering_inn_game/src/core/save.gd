@@ -81,6 +81,14 @@ extends RefCounted
 ## load each value is re-sanitized through WIGame's own tolerant sanitizers, so
 ## a corrupt string can never poison the sprite-variant key or the opener
 ## branch; a present-but-non-String value is rejected.
+## (Skills Wave Task K1): `frozen_cells` (the frost-cast ice set, JSON form
+## `{map_id: [[x,y], ...]}`) is added the SAME additive-optional way as
+## light_active/gold above -- NOT in `required`, NO version bump. A save missing
+## the key (any save written before the traversal seams) restores an empty set,
+## exactly correct (no cell was frozen before the feature existed, and ice thaws
+## every sleep anyway); a present-but-non-Dictionary value is rejected. Restored
+## through WIGame.set_frozen_cells_json, which tolerantly skips malformed inner
+## pairs, so a garbled cell list can never crash the load.
 const VERSION := 5
 
 
@@ -107,6 +115,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"entity_first_use": game.entity_first_use.duplicate(true),
 		"gold": game.gold,
 		"light_active": game.light_active,
+		"frozen_cells": game.frozen_cells_json(),
 		"pc_name": game.pc_name,
 		"pc_race": game.pc_race,
 		"pc_gender": game.pc_gender,
@@ -220,6 +229,12 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# version bump.
 	if s.has("light_active") and not (s["light_active"] is bool):
 		return false
+	# frozen_cells (Skills Wave Task K1) follows the SAME additive-optional
+	# pattern -- default {} when absent (no ice before the feature), rejected if
+	# present-but-non-Dictionary; malformed inner cell lists are skipped on
+	# restore (set_frozen_cells_json), never rejected.
+	if s.has("frozen_cells") and not (s["frozen_cells"] is Dictionary):
+		return false
 	# pc_name/pc_race/pc_gender (M-ARC §5) follow the SAME additive-optional
 	# pattern -- default to the everyman identity when absent, rejected if
 	# present-but-non-String; the values themselves are re-sanitized on restore.
@@ -296,6 +311,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.entity_first_use = entity_first_use.duplicate(true)
 	game.gold = int(s.get("gold", 0))
 	game.light_active = bool(s.get("light_active", false))
+	game.set_frozen_cells_json(s.get("frozen_cells", {}))
 	# M-ARC §5: restore cosmetic identity through WIGame's tolerant sanitizers
 	# (absent -> everyman default; garbage -> default), so the sprite-variant key
 	# and opener branch are always well-formed regardless of the save's contents.

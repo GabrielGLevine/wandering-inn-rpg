@@ -44,7 +44,7 @@
 		},
 		"shift": {
 			"speaker": "Zevara",
-			"text": "Ten years of long shifts. Six weeks of leave across all of them — do the arithmetic and then don't ask why I look like this. My Senior Guardsmen are a spearmaster who won't stop talking and an Antinium who won't start, and somehow the wall still stands. Don't tell either of them the streak's holding. They'll take the credit.",
+			"text": "Ten years of long shifts. Six weeks of leave across all of them — do the arithmetic and then don't ask why I look like this. My Senior Guardsmen are a spearmaster who won't stop talking and an Antinium who won't start, and the wall stands in spite of both of them. Don't tell either of them the streak's holding. They'll take the credit.",
 			"options": [
 				{ "text": "The guard on the gate speaks well of you.", "goto": "authority" },
 				{ "text": "Back a step.", "goto": "hub" },

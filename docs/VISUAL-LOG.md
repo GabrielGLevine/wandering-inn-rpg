@@ -16,6 +16,15 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] UI/SHOP — Krshia's greyed buy options read a doubled price: the
+  authored option copy already carries "(5 gold)" and the affordability
+  lock appends "(costs 5 gold)" (M-LEGIBILITY L2 windowed read,
+  `.superpowers/sdd/fp-handoff/l2-shots/shop_broke_effect_lines_greyed.png`).
+  Pre-existing since Economy v1 (not an L2 regression). Candidate fixes:
+  suppress the suffix when the option text already names the price, or
+  strip prices from authored copy and let the suffix be the one surface
+  (but the suffix only renders when LOCKED — affordable options would
+  lose their price). Owned by L5's copy audit.
 - [ ] FIELD/DEEP_TUNNELS — the four M-ARC A2 flavor/threshold props
   (`deep_fissure` sewers `(8,12)`, `cold_hearth`/`gnaw_pile`/`warren_mouth`
   in deep_tunnels) all use the `boulder` sprite as a stand-in (a collapsed

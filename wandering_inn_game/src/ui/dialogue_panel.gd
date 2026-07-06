@@ -29,6 +29,7 @@ const LOCKED_COLOR := Color(0.45, 0.45, 0.45)
 const PAGE_CHAR_BUDGET := 200
 
 var _root: Control
+var _stack: VBoxContainer
 var _options_box: VBoxContainer
 var _speaker_label: Label
 var _text_label: Label
@@ -62,9 +63,10 @@ func _ready() -> void:
 	UIChrome.add_margins(content, 28, 28, 28, 24)
 	_root.add_child(content)
 
-	var stack := VBoxContainer.new()
-	stack.add_theme_constant_override("separation", 6)
-	content.add_child(stack)
+	_stack = VBoxContainer.new()
+	_stack.add_theme_constant_override("separation", 6)
+	content.add_child(_stack)
+	var stack := _stack
 
 	var ribbon := Control.new()
 	ribbon.custom_minimum_size = Vector2(210.0, 42.0)
@@ -154,13 +156,38 @@ func _render_page() -> void:
 	if on_last:
 		_rebuild_options()
 	else:
-		for l: Label in _option_labels:
-			l.queue_free()
+		# Clear every box child (rows + L2 sub-rows) on a non-final page.
+		for child: Node in _options_box.get_children():
+			_options_box.remove_child(child)
+			child.queue_free()
 		_option_labels.clear()
+	# M-LEGIBILITY L2: the option list can now carry per-option effect sub-rows
+	# (shop buys / gifts), which can push a many-option node (Krshia's 5-option
+	# stall) past the fixed panel height and clip options off the bottom. Rather
+	# than branch the QA vs human render path (option paging would, and can't be
+	# screenshot-verified), the panel GROWS to fit its content — width stays
+	# fixed (repo "never widen" discipline preserved), only the height flexes
+	# upward from the bottom anchor. Deferred so the Labels have computed their
+	# wrapped minimum sizes for this page's content first.
+	_fit_panel_height.call_deferred()
 
 
 func _on_last_page() -> bool:
 	return _page_idx >= _pages.size() - 1
+
+
+## Sizes the panel to its current content: PANEL_SIZE.y is the floor (short
+## nodes are unchanged), taller content (a many-option stall + effect sub-rows)
+## grows the panel upward from its bottom anchor. Width is never touched. The
+## 52 = 28 top + 24 bottom content margins (add_margins above).
+func _fit_panel_height() -> void:
+	if not is_instance_valid(_stack):
+		return
+	var needed := _stack.get_combined_minimum_size().y + 52.0
+	var h := maxf(PANEL_SIZE.y, needed)
+	_root.custom_minimum_size = Vector2(PANEL_SIZE.x, h)
+	_root.size = Vector2(PANEL_SIZE.x, h)
+	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -h - 18.0, PANEL_SIZE.x * 0.5, -18.0)
 
 
 func _is_qa() -> bool:
@@ -168,8 +195,11 @@ func _is_qa() -> bool:
 
 
 func _rebuild_options() -> void:
-	for l: Label in _option_labels:
-		l.queue_free()
+	# Free EVERY child (option rows AND their L2 effect sub-rows, which are box
+	# children not tracked in `_option_labels`) so nothing accumulates on rebuild.
+	for child: Node in _options_box.get_children():
+		_options_box.remove_child(child)
+		child.queue_free()
 	_option_labels.clear()
 	for i in _options.size():
 		var opt: Dictionary = _options[i]
@@ -188,6 +218,20 @@ func _rebuild_options() -> void:
 			l.add_theme_color_override("font_color", LOCKED_COLOR)
 		_options_box.add_child(l)
 		_option_labels.append(l)
+		# M-LEGIBILITY L2: an item-granting option (shop buy / gift) carries
+		# generated effect line(s) -- render each as an indented "Small" sub-row
+		# beneath the option so "what am I buying/getting" is answered in-panel.
+		# Sub-rows are extra children of the options box only; they are NOT tracked
+		# in `_option_labels`, so the cursor/selection index model (one entry per
+		# option) is untouched. Small font + word-wrap keeps a long effect line
+		# WRAPPING inside the fixed panel width rather than widening it (repo panel
+		# discipline). Follows the locked greying so a greyed buy reads uniformly.
+		for effect_line: String in opt.get("effect_lines", []):
+			var sub := UIChrome.make_label("      %s" % effect_line, "Small")
+			sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			if locked:
+				sub.add_theme_color_override("font_color", LOCKED_COLOR)
+			_options_box.add_child(sub)
 
 
 ## Authored option text sometimes already spells out the requirement inline

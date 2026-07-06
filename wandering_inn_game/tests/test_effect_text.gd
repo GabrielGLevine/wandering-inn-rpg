@@ -36,6 +36,8 @@ const EXPECTED_SKILLS := {
 	"mana_shield": ["Spend MP to absorb incoming damage."],
 	"quick_cast": ["Your first spell each turn costs 1 less AP."],
 	"light": [],
+	"frost_touch": [],
+	"kindle": [],
 	"quick_movement": ["+1 move cell"],
 	"second_wind": ["2 AP — restore 8 HP"],
 	"dangersense": [],

@@ -32,7 +32,39 @@ func current_options() -> Array:
 		var opt: Dictionary = entry["option"]
 		var req: Dictionary = opt.get("requires", {})
 		var locked := not _meets(req)
-		out.append({"text": String(opt["text"]), "locked": locked, "requirement": _requirement_text(req) if locked else ""})
+		var row: Dictionary = {"text": String(opt["text"]), "locked": locked, "requirement": _requirement_text(req) if locked else ""}
+		# M-LEGIBILITY L2: an option that grants an item (a shop buy, or Relc's
+		# spear gift) carries the item's mechanical effect line(s) so the panel
+		# answers "what am I buying/getting" in-place. GENERATED from the item
+		# data via the shared WIEffectText formatter (never hand-composed), and
+		# the "Worth N gold" value is dropped because a buy option already spells
+		# the price in its text and a gift has no price to name -- only the
+		# combat-relevant "what it does" lines belong on the option row. The key
+		# is added ONLY for item-granting options, so a plain navigation option's
+		# payload is byte-unchanged.
+		var effect_lines := _item_effect_lines(opt)
+		if not effect_lines.is_empty():
+			row["effect_lines"] = effect_lines
+		out.append(row)
+	return out
+
+
+## The generated, price-stripped effect line(s) for an option's granted item,
+## or an empty array when the option grants no item (or the item is uncatalogued
+## in the injected ctx). Pure: reads the ctx `items` catalog and the shared
+## WIEffectText formatter only.
+func _item_effect_lines(opt: Dictionary) -> Array:
+	var items: Dictionary = _ctx.get("items", {})
+	var out: Array = []
+	for effect: Dictionary in opt.get("effects", []):
+		if not effect.has("item"):
+			continue
+		var rec: Dictionary = items.get(String(effect["item"]), {})
+		if rec.is_empty():
+			continue
+		for line: String in WIEffectText.item_effect_lines(rec):
+			if not line.begins_with("Worth "):
+				out.append(line)
 	return out
 
 

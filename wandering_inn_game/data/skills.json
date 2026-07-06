@@ -357,6 +357,29 @@
 			"ap_cost": 3,
 			"effect": { "type": "spell_damage", "die": 11, "range": 2, "applies": { "slowed": { "pool_penalty": 2 } } },
 			"description": "A sweeping, reaching swipe of claw and forearm that batters the legs out from under you and leaves them slow to answer."
+		},
+		{
+			"_comment": "Skills Wave Task K1: the frost field seam's caster skill. `freezes: true` is the ONLY tag the seam keys on (use_skill_field): faced at a freezable water cell -> walkable ice until sleep. Exploration-only (no combat/mp_cost), so it is fight-determinism-neutral exactly like [Light] -- safe to grant a QA fixture without perturbing any fight. NAME is provisional (K3 owns canon Skill naming + class grants; wiki-verify + wire a real gained_by there). `freeze_toast` overrides the seam's default cast line.",
+			"id": "frost_touch",
+			"display_name": "[Frost Touch]",
+			"icon": "icon_frost_bolt",
+			"contexts": ["exploration"],
+			"field": true,
+			"freezes": true,
+			"freeze_toast": "[Frost Touch] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest.",
+			"field_ambient": "[Frost Touch] — Frost blooms from your fingers and hangs glittering in the air. There is nothing here for it to grip.",
+			"description": "A breath of deep cold that skins still water in load-bearing ice."
+		},
+		{
+			"_comment": "Skills Wave Task K1: the burnable-prop field seam's caster skill. `burns: true` is the ONLY tag the seam keys on: faced at a prop tagged `burnable: true` -> the prop is removed permanently (removed_entities, saved) + a burn poof. Exploration-only, fight-determinism-neutral like frost_touch/[Light]. NAME provisional (K3 canon-verify + class grant).",
+			"id": "kindle",
+			"display_name": "[Kindle]",
+			"icon": "icon_flame_jet",
+			"contexts": ["exploration"],
+			"field": true,
+			"burns": true,
+			"field_ambient": "[Kindle] — A curl of flame dances up over your knuckles and gutters out. Nothing here will take the fire.",
+			"description": "A conjured flame, hot enough to take dry debris and old timber in moments."
 		}
 	]
 }

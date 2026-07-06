@@ -126,6 +126,19 @@ var entity_first_use: Dictionary = {}
 ## the light node is derived. Diegetically constant across day/dusk/night (it is
 ## magic), so it deliberately bypasses atmosphere.gd's phase multiplier.
 var light_active := false
+## Skills Wave Task K1 (freezable-water seam): the set of freezable water cells
+## the PC has frost-cast into walkable ice this waking, keyed by map id ->
+## Dictionary of Vector2i -> true. A freezable cell (declared per-map in
+## `_maps[map_id]["freezable"]`, forced blocked by default at construction) is
+## normally impassable water; freezing it flips `is_cell_blocked` to walkable
+## until the next `sleep()` clears the whole set (canon: the ice thaws when you
+## rest). MIRRORS `light_active`'s lifecycle exactly -- an additive-optional save
+## field (default {}, see save.gd) so a load restores mid-waking ice; the
+## presentation (world.gd) re-derives the ice overlay from THIS set on every
+## field rebuild, the sim staying authoritative. Keyed by map because ice on the
+## sewers channels must survive a walk up to the street and back down within a
+## waking, exactly as removed_entities is cross-map.
+var frozen_cells: Dictionary = {}
 var rng := RandomNumberGenerator.new()
 
 var _event_sink: Callable
@@ -204,10 +217,23 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 			if raw_seg is Dictionary:
 				for seg_cell: Vector2i in segment_cells(raw_seg as Dictionary):
 					blocked[seg_cell] = true
+		# Skills Wave Task K1: `freezable` (a top-level list of [x,y] water cells
+		# the frost seam can turn to ice) is recorded as its own per-map set AND
+		# forced into the blocked set here -- a freezable cell is impassable water
+		# by default (idempotent if it also sits under a water walls.segment, which
+		# is the authored case: the freeze crossings are cells of the existing
+		# channel/pond segments). `is_cell_blocked` consults `frozen_cells` to lift
+		# the block once frost-cast.
+		var freezable := {}
+		for cell: Array in m.get("freezable", []):
+			var fc := Vector2i(int(cell[0]), int(cell[1]))
+			freezable[fc] = true
+			blocked[fc] = true
 		_maps[map_id] = {
 			"grid": Vector2i(int(m["grid"]["width"]), int(m["grid"]["height"])),
 			"entities": ents,
 			"blocked": blocked,
+			"freezable": freezable,
 		}
 	_bind_map(String(scene_config["start_map"]))
 	_emit(WIEvents.SIM_INITIALIZED, {"seed": rng_seed})
@@ -299,12 +325,58 @@ static func segment_cells(seg: Dictionary) -> Array[Vector2i]:
 func is_cell_blocked(cell: Vector2i) -> bool:
 	if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y:
 		return true
-	if _map_blocked.has(cell):
+	# Skills Wave Task K1: a freezable water cell that has been frost-cast into
+	# ice this waking is walkable despite being in the blocked set (water). The
+	# entity-occupancy check below still runs -- nothing stands on water, but a
+	# frozen cell is treated exactly like any other open floor otherwise.
+	if _map_blocked.has(cell) and not _is_frozen(cell):
 		return true
 	for ent: Dictionary in entities.values():
 		if ent["cell"] == cell:
 			return true
 	return false
+
+
+## Skills Wave Task K1: true if `cell` is declared freezable on the current map
+## (a water cell the frost seam can turn to ice). Pure per-map data lookup.
+func _is_freezable(cell: Vector2i) -> bool:
+	return (_maps.get(current_map, {}).get("freezable", {}) as Dictionary).has(cell)
+
+
+## Skills Wave Task K1: true if `cell` on the current map is currently frozen
+## (frost-cast into walkable ice, not yet thawed by a sleep).
+func _is_frozen(cell: Vector2i) -> bool:
+	return (frozen_cells.get(current_map, {}) as Dictionary).has(cell)
+
+
+## Skills Wave Task K1: JSON-safe view of `frozen_cells` -- `{map_id: [[x,y], ...]}`
+## -- shared by save.gd's serializer and `snapshot()` so both encode the ice set
+## identically. Empty maps are omitted.
+func frozen_cells_json() -> Dictionary:
+	var out: Dictionary = {}
+	for map_id: String in frozen_cells:
+		var cells: Array = []
+		for cell: Vector2i in (frozen_cells[map_id] as Dictionary):
+			cells.append([cell.x, cell.y])
+		if not cells.is_empty():
+			out[map_id] = cells
+	return out
+
+
+## Skills Wave Task K1: rebuild `frozen_cells` from the JSON `{map_id: [[x,y],...]}`
+## form (save restore). Tolerant of a malformed inner value (skips non-arrays).
+func set_frozen_cells_json(data: Dictionary) -> void:
+	frozen_cells.clear()
+	for map_id: Variant in data:
+		var raw: Variant = data[map_id]
+		if not (raw is Array):
+			continue
+		var inner: Dictionary = {}
+		for pair: Variant in (raw as Array):
+			if pair is Array and (pair as Array).size() == 2:
+				inner[Vector2i(int(pair[0]), int(pair[1]))] = true
+		if not inner.is_empty():
+			frozen_cells[String(map_id)] = inner
 
 
 func entity_at(cell: Vector2i) -> Dictionary:
@@ -599,6 +671,43 @@ func use_skill_field(skill_id: String) -> Dictionary:
 			record_accomplishment("befriended_moments")
 		_emit(WIEvents.TOAST, {"text": friendly_line})
 		return {"befriended": String(target["id"])}
+	# Skills Wave Task K1 (burnable-prop seam): a fire field skill (skills.json
+	# `burns: true`) faced at a blocking prop tagged `burnable: true` removes the
+	# prop PERMANENTLY via the existing remove_entity machinery (removed_entities
+	# is a saved set, so the clearing survives reload -- the permanence the plan
+	# asks for), banks an opaque `burned_the_debris` counter, and emits
+	# TERRAIN_CHANGED{to:"scorched"} carrying the vacated cell so presentation can
+	# drop the burn poof (hit_sparks reuse). Only props that OPT IN via
+	# `burnable: true` can be burned -- a quest-required prop simply omits the tag
+	# (the opus-hint gate), so this can never destroy required content.
+	if not target.is_empty() and bool(target.get("burnable", false)) and bool(skills.get(skill_id, {}).get("burns", false)):
+		var burned_id := String(target["id"])
+		var burned_cell: Vector2i = target["cell"]
+		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": burned_id})
+		_mark_skill_used(skill_id)
+		record_accomplishment("burned_the_debris")
+		var burn_toast := String(target.get("burn_toast", "Flame takes the debris. It crackles, collapses to ash, and the way is clear."))
+		remove_entity(burned_id)
+		_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [burned_cell.x, burned_cell.y], "to": "scorched"})
+		_emit(WIEvents.TOAST, {"text": burn_toast})
+		return {"burned": burned_id}
+	# Skills Wave Task K1 (freezable-water seam): a frost field skill (skills.json
+	# `freezes: true`) faced at a freezable water CELL (no entity there --
+	# entity_at returned empty) turns it into walkable ice until the next sleep.
+	# The frozen set is additive (never a second-freeze re-emit), keyed by map.
+	# Emits TERRAIN_CHANGED{to:"ice"} + a toast; is_cell_blocked already reads the
+	# set, so the crossing is walkable the instant this returns.
+	var faced_cell := player_cell + player_facing
+	if bool(skills.get(skill_id, {}).get("freezes", false)) and _is_freezable(faced_cell) and not _is_frozen(faced_cell):
+		if not frozen_cells.has(current_map):
+			frozen_cells[current_map] = {}
+		(frozen_cells[current_map] as Dictionary)[faced_cell] = true
+		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
+		_mark_skill_used(skill_id)
+		_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [faced_cell.x, faced_cell.y], "to": "ice"})
+		var freeze_toast := String(skills.get(skill_id, {}).get("freeze_toast", "Frost races across the water and locks it solid. You can cross now — until it thaws."))
+		_emit(WIEvents.TOAST, {"text": freeze_toast})
+		return {"frozen": [faced_cell.x, faced_cell.y]}
 	var field_ambient := String(skills.get(skill_id, {}).get("field_ambient", ""))
 	if field_ambient != "":
 		# Playtest feature 3: the ambient (no-qualifying-prop) cast of [Light]
@@ -785,7 +894,11 @@ func _build_dialogue_ctx() -> Dictionary:
 	# skill/class/accomplishment-only; a numeric gold compare is new). Rebuilt
 	# per node advance like everything else, so a mid-conversation gold spend
 	# re-greys the same node's remaining buy options.
-	return {"skills": known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold}
+	# M-LEGIBILITY L2: the immutable item catalog rides the ctx (shared by
+	# reference, read-only) so the pure WIDialogue walker can format an
+	# item-granting option's effect_lines via WIEffectText without an autoload
+	# or file read.
+	return {"skills": known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items}
 
 
 ## Starts a conversation graph if no other modal sim is active.
@@ -1362,6 +1475,12 @@ func sleep() -> void:
 	# reads false and detaches the PC glow in the same beat. Runs before the
 	# _combat_config early-return so a config-less sim (unit tests) clears too.
 	light_active = false
+	# Skills Wave Task K1: all frost-cast ice thaws when the PC rests (mirrors the
+	# light_active clear above -- an opaque-until-sleep traversal aid, not a
+	# permanent map change). Cleared before the unconditional PHASE_CHANGED emit so
+	# world.gd's field reconcile drops the ice overlay on the same beat, and before
+	# the _combat_config early-return so a config-less sim (unit tests) thaws too.
+	frozen_cells.clear()
 	# M7 M-BEAUTY FOLD: the day/night clock resets UNCONDITIONALLY at every
 	# sleep, and phase_changed fires every time too (even a "day"->"day"
 	# no-op reset) -- distinct from _tick_action's crossing-only emits during
@@ -1683,6 +1802,7 @@ func snapshot() -> Dictionary:
 		"container_state": container_state.duplicate(true),
 		"actions_since_sleep": actions_since_sleep,
 		"light_active": light_active,
+		"frozen_cells": frozen_cells_json(),
 		"phase": phase(),
 	}
 

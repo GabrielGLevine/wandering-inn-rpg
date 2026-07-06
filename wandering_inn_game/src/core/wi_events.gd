@@ -29,6 +29,17 @@ const PLAYER_BLOCKED := &"player_blocked"
 const INTERACT_NOTHING := &"interact_nothing"
 const INTERACT_UNHANDLED := &"interact_unhandled"
 const ENTITY_REMOVED := &"entity_removed"
+## Skills Wave Task K1 (traversal seams): a map CELL changed its traversable
+## look. Payload `{map:String, cell:[x,y], to:String}` where `to` is:
+##   "ice"      -- a freezable water cell was frost-cast into walkable ice
+##                 (frozen until the next sleep). Presentation paints the ice
+##                 tile overlay (the water-shimmer overlay precedent) at the cell.
+##   "scorched" -- a burnable blocking prop was fire-cast away (the prop itself
+##                 is removed via ENTITY_REMOVED; this carries the vacated cell so
+##                 presentation can drop a burn poof there, the hit_sparks reuse).
+## Purely additive: the sim's walkability (is_cell_blocked) already reflects the
+## change before this fires; nothing existing consumes or depends on it.
+const TERRAIN_CHANGED := &"terrain_changed"
 
 # --- Skills / progression (wi_game.gd) ---
 const SKILL_USED := &"skill_used"

@@ -15,8 +15,8 @@
   { "_comment": "Qualified wait (repo pattern for this toast-race class): clears the Got toast off the since-marker. The one-time first-pickup 'Press I -- your pack.' hint queues right behind it but is harmless -- every later toast wait in this script is qualified or a different event type, so nothing unqualified can match the hint.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "Got: Leather Jerkin" }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_chest_pickup_toast" },
 
-  { "_comment": "I opens the panel -- carried count pinned to 2 (rusty_sword starter + leather_jerkin).", "action": "press", "name": "inventory" },
-  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 2 }, "timeout_sec": 5 },
+  { "_comment": "I opens the panel -- carried count pinned to 2 (rusty_sword starter + leather_jerkin). M-LEGIBILITY L2: ui_inventory_shown now carries item_effect_lines (one generated line-array per carried item, WIEffectText source, parallel to the rendered cards) -- rusty_sword's mods are all 0 so its card shows NO effect lines ([]); the leather_jerkin card shows its generated hp + gold-value lines. This pins the exact strings the inventory detail card draws.", "action": "press", "name": "inventory" },
+  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 2, "item_effect_lines": [ [], [ "+4 HP", "Worth 24 gold" ] ] }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "02_inventory_first_open" },
   { "action": "press", "name": "inventory" },
   { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 },
@@ -76,7 +76,7 @@
   { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
 
   { "_comment": "== equip the spear ==. Inventory is now [rusty_sword, leather_jerkin, relcs_spare_spear] (gift appended last, index 2); cursor resets to 0 on open -> two move_down presses select the spear.", "action": "press", "name": "inventory" },
-  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 3 }, "timeout_sec": 5 },
+  { "_comment": "M-LEGIBILITY L2: item_effect_lines parallel to [rusty_sword, leather_jerkin, relcs_spare_spear] -- the gift spear's generated +1 damage line now shows on its card.", "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 3, "item_effect_lines": [ [], [ "+4 HP", "Worth 24 gold" ], [ "+1 damage on melee hits" ] ] }, "timeout_sec": 5 },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "screenshot", "name": "03_spear_selected" },

@@ -2,30 +2,30 @@
 	"start": "hub",
 	"nodes": {
 		"hub": { "speaker": "Krshia", "text": "Hrr. My crate — gone from the storeroom three nights past. Sewers, I think. Scavengers do not knock first.", "text_variants": [
-			{ "requires": { "accomplishment": { "asked_about_crate": 1 } }, "text": "Hrr. Any word on my crate?" },
-			{ "requires": { "accomplishment": { "crate_returned": 1 } }, "text": "Hrr. Crate is home. You, I will remember. Yes." },
-			{ "requires": { "accomplishment": { "heard_wrong_order": 1 } }, "text": "Hrr. You have the look of someone come to ask a favor. Speak plainly — I have no patience for the other kind." },
-			{ "requires": { "accomplishment": { "smoothed_with_krshia": 1 } }, "text": "Hrr. The inn's order, extended. For the barmaid's sake, and yours. Do not make a habit of it." }
+			{ "requires": { "accomplishment": { "asked_about_crate": 1 } }, "text": "You come back. Any word on my crate?" },
+			{ "requires": { "accomplishment": { "crate_returned": 1 } }, "text": "Crate is home. You, I will remember. Yes." },
+			{ "requires": { "accomplishment": { "heard_wrong_order": 1 } }, "text": "You have the look of someone come to ask a favor. Speak plainly — I have no patience for the other kind." },
+			{ "requires": { "accomplishment": { "smoothed_with_krshia": 1 } }, "text": "The inn's order, extended. For the barmaid's sake, and yours. Do not make a habit of it." }
 		], "options": [
 			{ "text": "I'll look into it.", "hide_when": { "accomplishment": { "asked_about_crate": 1 } }, "effects": [ { "quest": "missing_crate" }, { "accomplishment": "asked_about_crate" } ], "goto": "accepted" },
 			{ "text": "The scavengers dragged it into a cellar — I've seen it myself. (Light)", "requires": { "accomplishment": { "studied_the_cellar": 1 } }, "hide_when": { "accomplishment": { "crate_returned": 1 } }, "effects": [ { "accomplishment": "recovered_crate_guile" }, { "accomplishment": "found_the_crate" }, { "accomplishment": "crate_returned" } ], "goto": "thanks" },
 			{ "text": "Your crate's accounted for.", "requires": { "accomplishment": { "found_the_crate": 1 } }, "hide_when": { "accomplishment": { "crate_returned": 1 } }, "effects": [ { "accomplishment": "crate_returned" } ], "goto": "thanks" },
 			{ "_comment": "Content Wave C4 (Q2 TALK path): the smooth-over. Progress-gated on heard_wrong_order (HIDDEN until Lyonette gives the quest), hidden once resolved -- so it never appears to crate_talk/social_loop/gate_district (which never bank heard_wrong_order). Banks the shared resolved_wrong_order (beat 1) + smoothed_with_krshia (Lyonette's TALK report gate) + persuaded_someone (the [Diplomat] identity feed, now a THIRD producer alongside watch_crate + zevara).", "text": "The inn's order ran short. Extend it on a good word — for Lyonette's sake. (Persuade)", "requires": { "accomplishment": { "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "resolved_wrong_order": 1 } }, "effects": [ { "accomplishment": "smoothed_with_krshia" }, { "accomplishment": "persuaded_someone" }, { "accomplishment": "resolved_wrong_order" } ], "goto": "smoothed" },
-			{ "_comment": "Economy v1 D2: Krshia's shop entry. ALWAYS-visible, ALWAYS-unlocked navigation option (window-shopping is content); no gold requires, so it never greys. Placed at array index 4 -- AFTER the pitch/guile/report/smooth options so the first-visible option (pitch fresh / report post-fight / smooth for wrong_order) stays at visible position 0 for every confirm-at-0 script. The buy options with their gold gate live in the 'shop' node.", "text": "Hrr — what's on the stall today?", "goto": "shop" },
+			{ "_comment": "Economy v1 D2: Krshia's shop entry. ALWAYS-visible, ALWAYS-unlocked navigation option (window-shopping is content); no gold requires, so it never greys. Placed at array index 4 -- AFTER the pitch/guile/report/smooth options so the first-visible option (pitch fresh / report post-fight / smooth for wrong_order) stays at visible position 0 for every confirm-at-0 script. The buy options with their gold gate live in the 'shop' node.", "text": "What's on the stall today?", "goto": "shop" },
 			{ "text": "Just visiting.", "end": true }
 		] },
-		"shop": { "speaker": "Krshia", "text": "Hrr. Silverfang goods — best in Liscor, and I will hear no argument on it. Cheapest at the front, the good stock where a browsing hand drifts. Coin on the counter and it is yours. No discounts, no haggling. I remember faces.", "_comment": "Economy v1 D2 shop node. Each buy option pairs requires:{gold:price} (greys VISIBLE when broke -- D1's numeric M4 gate, never hidden) WITH effects:[{gold:-price},{item:id}] (the buy contract: the requires gate is what guarantees the unconditional effect-list spend can never refuse while still granting the item). Gear/tool items only -- no consumable machinery. Prices in items.json; price bar (design 2026-07-05 s2/s5): a day's honest inn work (~4 gold) buys the entry charm in a day or two; the jerkin takes several. Price numerals in option text are diegetic (gold is a countable object per the ratified design, NOT a hidden stat -- opacity forbids STR/DEX, not coin).", "options": [
+		"shop": { "speaker": "Krshia", "text": "Silverfang goods — best in Liscor, and I will hear no argument on it. Cheapest at the front, the good stock where a browsing hand drifts. Coin on the counter and it is yours. No discounts, no haggling. I remember faces.", "_comment": "Economy v1 D2 shop node. Each buy option pairs requires:{gold:price} (greys VISIBLE when broke -- D1's numeric M4 gate, never hidden) WITH effects:[{gold:-price},{item:id}] (the buy contract: the requires gate is what guarantees the unconditional effect-list spend can never refuse while still granting the item). Gear/tool items only -- no consumable machinery. Prices in items.json; price bar (design 2026-07-05 s2/s5): a day's honest inn work (~4 gold) buys the entry charm in a day or two; the jerkin takes several. Price numerals in option text are diegetic (gold is a countable object per the ratified design, NOT a hidden stat -- opacity forbids STR/DEX, not coin).", "options": [
 			{ "text": "The old charm-cord, then. (5 gold)", "requires": { "gold": 5 }, "effects": [ { "gold": -5 }, { "item": "traveler_charm" } ], "goto": "bought" },
 			{ "text": "That Silverfang hunting knife — good steel. (15 gold)", "requires": { "gold": 15 }, "effects": [ { "gold": -15 }, { "item": "gnollish_hunting_knife" } ], "goto": "bought" },
 			{ "text": "The wool-lined cloak. The wet gets in, out on the road. (18 gold)", "requires": { "gold": 18 }, "effects": [ { "gold": -18 }, { "item": "wool_lined_cloak" } ], "goto": "bought" },
 			{ "text": "The boiled-leather jerkin. (24 gold)", "requires": { "gold": 24 }, "effects": [ { "gold": -24 }, { "item": "leather_jerkin" } ], "goto": "bought" },
 			{ "text": "Nothing today.", "goto": "hub" }
 		] },
-		"bought": { "speaker": "Krshia", "text": "Hrr. Sold. Wear it, use it — and do not bring it back to me broken expecting sympathy. Anything else catch your eye?", "options": [
+		"bought": { "speaker": "Krshia", "text": "Sold. Wear it, use it — and do not bring it back to me broken expecting sympathy. Anything else catch your eye?", "options": [
 			{ "text": "Show me the stall again.", "goto": "shop" },
 			{ "text": "That's all. My thanks, Krshia.", "end": true }
 		] },
-		"accepted": { "speaker": "Krshia", "text": "Hrr. Good. Sewer grates, south of here — start there. Careful of teeth.", "options": [
+		"accepted": { "speaker": "Krshia", "text": "Good. Sewer grates, south of here — start there. Careful of teeth.", "options": [
 			{ "text": "Actually - one more thing.", "goto": "hub" },
 			{ "text": "I'll find it.", "end": true }
 		] },

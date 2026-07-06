@@ -11,7 +11,7 @@
   { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
   { "action": "press", "name": "inventory" },
-  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 2, "gold": 5 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 2, "gold": 5, "item_effect_lines": [ [], [ "+1 damage on melee hits" ] ] }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_inventory_coin_line" },
   { "action": "press", "name": "inventory" },
   { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 }

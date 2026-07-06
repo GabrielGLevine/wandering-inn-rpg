@@ -126,7 +126,7 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.GOLD_CHANGED and open:
 		_refresh_gold()
 		# Re-confirm the drawn state (bus convention), carrying the live total.
-		ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {"items": _item_ids.size(), "gold": Game.sim.gold})
+		ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {"items": _item_ids.size(), "gold": Game.sim.gold, "item_effect_lines": _rendered_effect_lines()})
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -169,7 +169,7 @@ func _open() -> void:
 	_cursor = 0
 	_refresh()
 	_root.show()
-	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {"items": _item_ids.size(), "gold": Game.sim.gold})
+	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {"items": _item_ids.size(), "gold": Game.sim.gold, "item_effect_lines": _rendered_effect_lines()})
 
 
 func _close() -> void:
@@ -205,6 +205,18 @@ func _refresh() -> void:
 	_refresh_gold()
 	_refresh_slots()
 	_rebuild_items()
+
+
+## M-LEGIBILITY L2: the effect lines drawn on each carried item's card, one
+## entry per item in `_item_ids` order (parallel to the list the panel renders),
+## carried on the `ui_inventory_shown` payload so QA can pin the exact generated
+## strings the player sees. Same WIEffectText source the card rendering uses, so
+## the payload can never drift from the drawn card.
+func _rendered_effect_lines() -> Array:
+	var out: Array = []
+	for item_id: String in _item_ids:
+		out.append(WIEffectText.item_effect_lines(Game.sim.item(String(item_id))))
+	return out
 
 
 func _refresh_gold() -> void:
@@ -252,6 +264,24 @@ func _rebuild_items() -> void:
 		# "> " cursor mark stays legible as dark text on the light parchment.
 		var name_label := UIChrome.make_label("%s%s%s" % [mark, name, tag])
 		_items_box.add_child(name_label)
+		# M-LEGIBILITY L2: the mechanical effect lines, GENERATED from the item's
+		# data via the shared WIEffectText formatter (never hand-composed here --
+		# that drift is the defect this milestone kills). item_effect_lines already
+		# ends with the "Worth N gold" value where the item is priced, so this one
+		# call covers both "effect lines" and "gold value where priced" in the plan
+		# card spec. A plain item (no mods, no price) yields an empty array -> no
+		# effect rows, exactly as before this task. Rendered default dark-on-
+		# parchment (senior to the Small flavor prose) with a two-space indent so
+		# the lines read as sub-info under the name row.
+		for effect_line: String in WIEffectText.item_effect_lines(rec):
+			_items_box.add_child(UIChrome.make_label("  %s" % effect_line))
+		# --- Reserved lore slot (M-GEAR §1) ------------------------------------
+		# M-GEAR fills a dedicated flavor-lore line HERE, between the mechanical
+		# effect lines above and the existing description prose below. Kept a
+		# documented insertion hook only -- renders NOTHING now (an empty Label
+		# would add a blank gap), and lore stays SEPARATE from the effect fields
+		# per the milestone's Global Constraints.
+		# -----------------------------------------------------------------------
 		# "Small" (12px, default dark color -- proven on parchment by the
 		# footer hint strip) keeps the name row visually senior to its prose.
 		var desc_label := UIChrome.make_label(String(rec.get("description", "")), "Small")

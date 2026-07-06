@@ -69,6 +69,13 @@ const SWAY_SHADER := preload("res://src/world/shaders/foliage_sway.gdshader")
 ## overlay, not a material on the original layer).
 const WATER_SHEET := "res://assets/tiles/free_pack/Water_tiles.png"
 const WATER_SHIMMER_SHADER := preload("res://src/world/shaders/water_shimmer.gdshader")
+## Skills Wave Task K1: the frost-cast ice overlay reuses the water sheet's
+## still-water cap tile (same [1,7] pick the shimmer overlay paints) tinted a
+## pale, frosted blue and drawn ON TOP of the shimmer layer, so a frozen channel
+## cell reads as grey-white ice over the water it replaced. Cool, near-white,
+## slightly translucent so a hint of the water below still shows.
+const ICE_CAP_COORD := Vector2i(1, 7)
+const ICE_TINT := Color(0.74, 0.86, 1.0, 0.92)
 const VIGNETTE_SHADER := preload("res://src/world/shaders/vignette.gdshader")
 ## VIEW_SIZE is declared further down this file; the vignette ColorRect is
 ## sized/positioned from it in `_ready()`, both declared as consts in this
@@ -102,6 +109,12 @@ var _player_anim_token := 0
 ## Freed with its holder on every `_rebuild_field` (see the null-out there);
 ## re-attached from `Game.sim.light_active` by `_reconcile_pc_light`.
 var _pc_light: PointLight2D
+## Skills Wave Task K1: the frost-cast ice overlay TileMapLayer for the current
+## map (null when no cell is frozen). Rebuilt from `Game.sim.frozen_cells` on
+## every `_rebuild_field` (so ice survives a map re-entry / load while frozen)
+## and appended to live by the TERRAIN_CHANGED{to:"ice"} handler. Freed with its
+## siblings on rebuild -- the reference is nulled there like `_pc_light`.
+var _ice_overlay: TileMapLayer
 ## One slot, not two -- a move and a bump landing on the player in quick
 ## succession (M5 R5 review Low #2) must kill whichever tween is already
 ## running before starting the other, or both fight over `.position` for up
@@ -290,6 +303,10 @@ func _rebuild_field() -> void:
 	# _reconcile_pc_light re-attaches a fresh node to the NEW holder below if
 	# Game.sim.light_active is still set (map change / load while lit).
 	_pc_light = null
+	# Skills Wave Task K1: the ice overlay is a child of _field_root (freed by the
+	# loop above) -- drop the dangling reference so _build_ice_overlay re-derives a
+	# fresh layer from Game.sim.frozen_cells for the new/reloaded map.
+	_ice_overlay = null
 	# M-BEAUTY Task B2: drop every light registered for the OLD map before
 	# any new one is spawned below -- the old map's holders (and their light
 	# children) are only queue_free()d above, not freed synchronously, so
@@ -303,6 +320,7 @@ func _rebuild_field() -> void:
 	_ambience_count = 0
 	_build_floor()
 	_build_water_shimmer()
+	_build_ice_overlay()
 	_entities_root = Node2D.new()
 	_entities_root.y_sort_enabled = true
 	_field_root.add_child(_entities_root)
@@ -426,6 +444,62 @@ func _build_water_shimmer() -> void:
 		_field_root.add_child(overlay)
 	else:
 		overlay.queue_free()
+
+
+## Skills Wave Task K1: rebuild the frost-cast ice overlay for the current map
+## from the sim's authoritative `frozen_cells` set (the water-shimmer overlay
+## precedent -- a fresh TileMapLayer of the SAME water sheet's cap tile, tinted
+## frost, drawn on top of the shimmer so a frozen cell reads as ice). A no-op
+## (no layer created) when nothing on this map is frozen -- the common case, and
+## every map before the seam ever fires. Called after `_build_water_shimmer` on
+## every field rebuild so ice survives a map change / a load while frozen.
+func _build_ice_overlay() -> void:
+	var frozen: Array = Game.sim.frozen_cells_json().get(Game.sim.current_map, [])
+	for pair: Variant in frozen:
+		if pair is Array and (pair as Array).size() == 2:
+			_paint_ice_cell(Vector2i(int(pair[0]), int(pair[1])))
+
+
+## Skills Wave Task K1: paint one frozen cell into the ice overlay, creating the
+## overlay TileMapLayer on first use (lazily, so an unfrozen map spawns nothing).
+## Shared by the rebuild path (`_build_ice_overlay`) and the live freeze handler
+## (TERRAIN_CHANGED{to:"ice"}), so a fresh freeze and a reload paint identically.
+func _paint_ice_cell(cell: Vector2i) -> void:
+	if _ice_overlay == null:
+		_ice_overlay = WITileBoardBuilder.make_tile_layer(_field_root, WATER_SHEET, 16, WISpriteRegistry)
+		_ice_overlay.modulate = ICE_TINT
+		# Above the shimmer overlay (added just before), below the Y-sorted
+		# entities/player, so the PC visual walks over the ice, not under it.
+		_ice_overlay.z_index = 1
+		_field_root.add_child(_ice_overlay)
+	_ice_overlay.set_cell(cell, 0, ICE_CAP_COORD)
+
+
+## Skills Wave Task K1: a one-shot burn poof at a scorched (burned-away) cell,
+## reusing combat's `hit_sparks` WIAmbience preset (board_renderer.spawn_hit_sparks
+## precedent). Self-frees past its lifetime; QA/headless-collapsed (no particle
+## node spawned when presentation is disabled) exactly like every other juice.
+## Skills Wave Task K1: free any existing ice overlay and repaint it from the
+## sim's current `frozen_cells` -- used on PHASE_CHANGED (the sleep-thaw beat has
+## no field rebuild of its own). Frees to nothing when the set is empty (thaw).
+func _reconcile_ice_overlay() -> void:
+	if _ice_overlay != null:
+		_ice_overlay.queue_free()
+		_ice_overlay = null
+	_build_ice_overlay()
+
+
+func _spawn_burn_poof(cell: Vector2i) -> void:
+	if _presentation_delay(1.0) <= 0.0 or _field_root == null:
+		return
+	var rect := Rect2(Vector2(cell) * CELL, Vector2(CELL, CELL))
+	var poof := WIAmbience.make("hit_sparks", rect)
+	if poof == null:
+		return
+	poof.z_index = 30
+	poof.emitting = true
+	_field_root.add_child(poof)
+	get_tree().create_timer(0.7).timeout.connect(poof.queue_free)
 
 
 ## Renders `decor` entries (M5 R4 schema): unlabeled, non-blocking set-
@@ -1004,6 +1078,28 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# on a dusk/night crossing while lit (the flag is still true, reconcile is
 		# a no-op then), so this single hook covers the sleep-clear cleanly.
 		_reconcile_pc_light()
+		# Skills Wave Task K1: sleep() thaws all ice (clears frozen_cells) and fires
+		# PHASE_CHANGED unconditionally, but PHASE_CHANGED does NOT rebuild the field
+		# -- so reconcile the ice overlay against the sim here too. On the sleep beat
+		# the set is empty, so this frees the lingering overlay; on a mid-waking
+		# dusk/night crossing (ice still frozen) it repaints the same cells (cheap).
+		_reconcile_ice_overlay()
+	elif type == WIEvents.TERRAIN_CHANGED:
+		# Skills Wave Task K1: a cell changed its traversable look. Only act on the
+		# CURRENT map (a stale cross-map event can't happen today -- both seams emit
+		# for the map the PC stands on -- but guard anyway). "ice" paints the frost
+		# overlay tile; "scorched" drops the burn poof (the burnable prop's own
+		# visual is already gone via ENTITY_REMOVED). sleep()'s thaw does NOT emit
+		# this -- the ice overlay clears on the PHASE_CHANGED-driven rebuild path
+		# instead (frozen_cells is empty by then, so _build_ice_overlay repaints
+		# nothing); no per-cell thaw event is needed.
+		if String(payload.get("map", "")) == Game.sim.current_map:
+			var tc_cell := Vector2i(int(payload["cell"][0]), int(payload["cell"][1]))
+			match String(payload.get("to", "")):
+				"ice":
+					_paint_ice_cell(tc_cell)
+				"scorched":
+					_spawn_burn_poof(tc_cell)
 
 
 func _move_player_visual(target: Vector2) -> void:

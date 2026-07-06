@@ -1604,11 +1604,11 @@
      ],
      "display_name": "Olesm",
      "sprite": "olesm",
-     "observe": "Thin, sky-blue scales, ink drying on three of his claws. A chess board waits at his elbow mid-game — played against himself, to feel how the other side thinks. His eyes are a wild, lovely blue, patterned like rain caught falling.",
+     "observe": "Thin, sky-blue scales, ink drying on three of his claws. A chess board waits at his elbow mid-game — played against himself, to feel how the other side thinks. His eyes are a wild, patterned blue \u2014 the one soft thing about a man who counts exits.",
      "friendly_line": "Olesm brightens like a lamp. Oh — a friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you — that is — care to see the board sometime? No pressure. A little pressure.",
      "facing": "down",
      "talk_pool": [
-      "Do you play chess? No? A pity. I've a board set and no worthy opponent since — well. That's a long story involving a human and a great deal of humbling.",
+      "Three reports due by dawn and the ink is winning. If anyone asks, the [Tactician] of Liscor is 'strategizing'.",
       "Three reports due by dusk and two clerks who can't count past a company. I'll manage. I always manage.",
       "Supply lines, sightlines, morale — a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak."
      ],
@@ -1711,7 +1711,7 @@
       "You linger. Either you have a question of substance or you are another gawker. I shall assume the former. Generously.",
       "Magic is not the wand-waving the market storytellers sell. It is discipline. Precision. Neither, I observe, is common here.",
       "Yes, a [Necromancer]. No, I will not apologize for a competence others lack the wit to appreciate.",
-      "A thin sniff. Do continue standing there. I find the silence rather more edifying than most conversation."
+      "Do continue standing there. I find the silence rather more edifying than most conversation."
      ],
      "conversation": "pisces_magic",
      "dialogue": [
@@ -1774,7 +1774,7 @@
      "friendly_line": "Hrr. You have a warm way about you, and warmth I can trade with. Come - for you, I will call it a fair price, and I will mean it. This is not nothing, from me.",
      "facing": "right",
      "talk_pool": [
-      "Hrr. You look, you do not buy. This is fine. Looking is its own kind of respect.",
+      "You look, you do not buy. This is fine. Looking is its own kind of respect.",
       "Silverfang goods - fair weight, fair price. I do not haggle down, and I do not forget a face.",
       "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
       "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
@@ -1889,6 +1889,13 @@
     "width": 40,
     "height": 26
    },
+   "_comment_freezable": "Skills Wave Task K1 (freezable-water seam, the pond-secret crossing): (10,17) is the north edge of the fishing-pond blocking rect (x7-13, y17-21 walls.segments). It is already impassable water, so unfrozen it changes NOTHING for any floodplains route (every ambush/Relc/gate lane is unchanged -- confirmed off the pond). Approaching from the open floor at (10,16) and casting [Frost Touch] freezes it into walkable ice; stepping onto it and facing down reaches the `frozen_cache` prop at (10,18) (pond interior, otherwise unreachable). The 'secret' is that only a cold-caster can cross the water to it. Ice thaws at sleep. No QA drives this (the seam is proven by sewers_walkthrough); it ships as reachable content.",
+   "freezable": [
+    [
+     10,
+     17
+    ]
+   ],
    "_comment": "World environment (consultant design 2026-07-03 + controller integration). Reachable via the walkable inn_door route (M-FP Q1 door-retarget: inn_door -> floodplains (7,6); floodplains_peek was retired once this route landed, see CLAUDE.md). POI anchors: fishing-pond (13,18) [consultant's (12,18) was inside the pond blocking row], ruin-stones interact (31,7). Onboarding rev Task O2 (spec §3): `goblin_encounter_1` relocated from (21,12) to (30,23) with `trigger_radius: 2` -- the wall `segments` at y=25 block every column except x=31 (`liscor_gate`'s own cell), so (31,24) is the UNIQUE open cell from which the gate can be reached/interacted -- and (31,24) sits inside the 5x5 Chebyshev-2 square around (30,23) (x:[28,32], y:[21,25]). Any 4-directional path from outside that square to (31,24) (which lies inside it) must enter the square before arriving, so no route to `liscor_gate` avoids the ambush -- see the O2 report's BFS proof. `goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
    "blocked": [
     [
@@ -2747,6 +2754,25 @@
      ]
     },
     {
+     "_comment": "Skills Wave Task K1 (the pond-secret payoff): a lost cache on the pond floor at (10,18), inside the fishing-pond blocking rect and thus unreachable UNLESS the player frost-freezes the pond edge (10,17) and steps onto the ice to interact it (see the floodplains `freezable` list). Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast. Sits on an already-blocked pond cell, so it alters no route and no script reaches or asserts it. Sprite `crate` stands in for a silt-buried strongbox (VISUAL-LOG flag). A future economy pass can hang gold/an item off this discovery.",
+     "id": "frozen_cache",
+     "kind": "prop",
+     "cell": [
+      10,
+      18
+     ],
+     "display_name": "Sunken Cache",
+     "sprite": "crate",
+     "tint": [
+      0.62,
+      0.78,
+      0.9
+     ],
+     "observe": "Something square and man-made rests on the pond floor a stride out from the bank, furred with silt. Too far to reach across open water — but water can be made to bear weight, if you know the trick of cold.",
+     "on_interact_accomplishment": "found_the_frozen_cache",
+     "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through — and inside, dry against all odds, a few keepsakes someone drowned here meant never to be found."
+    },
+    {
      "_comment": "M-ARC Task A1: `on_enter_accomplishment` banks `reached_liscor` on door travel INTO the street (the Act I gate's street-arrival counter -- nothing banked first-liscor-entry before). Fires ONLY on real door interaction (the `door` branch of interact()), never on QA teleport or save/load restore (those use bind_map_silent/transition without the entity), so a load can never spuriously advance the act. record_accomplishment is idempotent for gate purposes (>= 1). DISCLOSURE: every canonical script that walks floodplains -> liscor_gate -> street now carries reached_liscor:1 in its snapshot (additive counter; no script asserts an exact accomplishments dict).",
      "id": "liscor_gate",
      "kind": "door",
@@ -2948,6 +2974,17 @@
     "height": 14
    },
    "blocked": [],
+   "_comment_freezable": "Skills Wave Task K1 (freezable-water seam): the channel-A/B cells at column x=3 the frost skill can turn to walkable ice, making a vertical SHORTCUT down the left side from the top band straight through both channels to the mid/lower bands (otherwise you must go around via the y11 row). Both are already blocked water (they sit under the channel walls.segments), so unfrozen they are byte-identical to today -- no route changes for any script that never casts frost here. Frozen ice thaws at the next sleep. sewers_walkthrough demos freezing (3,5).",
+   "freezable": [
+    [
+     3,
+     5
+    ],
+    [
+     3,
+     9
+    ]
+   ],
    "floor_layers": [
     {
      "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood.",
@@ -3095,6 +3132,26 @@
       "radius": 22,
       "flicker": false
      }
+    },
+    {
+     "_comment": "Skills Wave Task K1 (burnable-prop seam): a collapsed pile of rotten timber and tar-soaked rope blocking the dead-end side-nook WEST of the ladder (x0-1, off every canonical route -- cisterns/deep_descent only tread the x2 column and the y11 row, never x0-1, so this prop changes no other script's pathing or entity assertions). `burnable: true` is the ONLY tag the fire field seam keys on; facing it and casting [Kindle] removes it permanently (removed_entities, saved) and clears the nook. NOT a quest prop -- burning it costs nothing but the passage. Sprite `crate` is a debris stand-in (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
+     "id": "sewer_debris",
+     "kind": "prop",
+     "cell": [
+      1,
+      2
+     ],
+     "display_name": "Rotten Debris",
+     "sprite": "crate",
+     "tint": [
+      0.5,
+      0.42,
+      0.34
+     ],
+     "burnable": true,
+     "observe": "A slumped heap of waterlogged timber and old rope, tarred black and long dead. It chokes the little side-nook past the ladder. Dry enough on top to take a flame, if you had one.",
+     "burn_toast": "[Kindle] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air.",
+     "locked_toast": "Sodden timber and tarred rope, jammed wall to wall. You could haul at it for an hour, or you could burn it — if you had the means to make fire."
     },
     {
      "id": "phosphor_moss",
@@ -3407,7 +3464,7 @@
      "sprite": "boulder",
      "observe": "A midden of cracked bones, marrow sucked clean. Gnoll, most of them. A few too large to name. They have been sorted — almost stacked — as though something down here counts its meals and keeps the score.",
      "on_interact_accomplishment": "found_gnaw_pile",
-     "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered — and somehow that is worse than if they had been."
+     "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered — and that is worse than if they had been."
     },
     {
      "_comment": "M-ARC A2: the deep_tunnels route-fight -- a Raskghar scout PAIR barring the way to the warren. Interact-only (no trigger_radius) so QA/A3 control the start; deep_descent clears it via combat_autoplay. Fought in cave_mouth (the generic cave arena); the deep_warren arena is reserved for A3's boss. on_victory banks cleared_raskghar_scouts.",

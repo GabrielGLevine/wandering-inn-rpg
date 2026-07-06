@@ -495,7 +495,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered \u2014 and somehow that is worse than if they had been."
+    "text": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered \u2014 and that is worse than if they had been."
    },
    "timeout_sec": 5
   },

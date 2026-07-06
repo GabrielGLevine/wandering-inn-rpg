@@ -102,3 +102,12 @@ re-evaluate fresh — do not resurrect the old setup from history.
   unrelated commit (happened 2026-07-06: A1's in-progress act layer rode
   an itch-deploy commit). While lanes run, controllers stage EXPLICIT
   paths from the lane's own report; `-A` only when no lane is live.
+- **Merging a worktree lane by file-copy while a main-tree lane holds
+  UNCOMMITTED work** — intersect the worktree's file map against `git
+  status` AND the live lane's reported file list BEFORE copying; any
+  overlap = commit/park the main-tree hunk first. Happened 2026-07-06:
+  K1's wi_game.gd copy silently destroyed L2's uncommitted
+  `_build_dialogue_ctx` hunk; the lane's green report was already stale
+  the moment the copy landed. Corollary: a lane's "full sweep green"
+  claim attaches to ITS tree state — the controller re-runs the gate on
+  the MERGED tree (the K1×L1 tripwire red was only visible there).

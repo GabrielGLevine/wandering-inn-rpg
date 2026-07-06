@@ -22,7 +22,7 @@
   { "_comment": "Second interact this waking opens the real krshia_crate graph. Its hub greeting is the heard_wrong_order text_variant (last-match precedence over the crate lines, which are un-banked here).", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_crate" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "assert_event_logged", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "Hrr. You have the look of someone come to ask a favor. Speak plainly — I have no patience for the other kind." } },
+  { "action": "assert_event_logged", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "You have the look of someone come to ask a favor. Speak plainly — I have no patience for the other kind." } },
   { "action": "screenshot", "name": "01_krshia_favor" },
 
   { "_comment": "Visible hub options are [I'll look into it (crate, un-banked so visible), the smooth-over (Persuade, heard_wrong_order-gated visible), Just visiting]. The smooth-over is visible index 1: move down 1 then confirm.", "action": "move", "direction": "down", "steps": 1 },
