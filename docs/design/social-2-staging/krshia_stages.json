@@ -1,0 +1,83 @@
+{
+	"npc": "krshia",
+	"staging_note": "STAGED DESIGN COPY, not wired. Krshia's pool is shipped (4 lines), so chatted_with_krshia accrues today — her stages are live the moment the stage seam lands.",
+	"talk_pool_stages": [
+		{
+			"id": "krshia_fair_weight",
+			"requires_accomplishment": { "crate_returned": 1 },
+			"lines": [
+				"Hrr. The crate-finder. Sit, look, touch even — you have earned handling privileges.",
+				"You did a thing for me and did not name a price after. I remember this the way I remember debts. Better, even.",
+				"The stall does well today. When the stall does well, the tribe does well. That is all the economics you need."
+			]
+		},
+		{
+			"id": "krshia_friend_of_the_silverfangs",
+			"requires_accomplishment": { "crate_returned": 1, "chatted_with_krshia": 4 },
+			"lines": [
+				"Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
+				"I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
+				"You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week."
+			]
+		}
+	],
+	"dialogue_unlocks": {
+		"file": "data/dialogue/krshia_crate.json",
+		"hub_options": [
+			{
+				"text": "Silverfang — that's your tribe?",
+				"requires": { "accomplishment": { "crate_returned": 1 } },
+				"goto": "krshia_tribe"
+			},
+			{
+				"text": "You said the necklace was a promise.",
+				"requires": { "accomplishment": { "crate_returned": 1, "chatted_with_krshia": 4 } },
+				"hide_when": { "accomplishment": { "heard_krshia_plans": 1 } },
+				"effects": [ { "accomplishment": "heard_krshia_plans" } ],
+				"goto": "krshia_plans",
+				"_flag": "CANON ⚑ — the spellbook plan (wiki/Krshia_Silverfang: 10 years collecting for the Meeting of Tribes). Copy stays OBLIQUE, never says 'spellbook'. User gates naming it. heard_krshia_plans is a NEW counter, banked on THIS option (effects live on options, never nodes — house shape)."
+			}
+		],
+		"nodes": {
+			"krshia_tribe": {
+				"speaker": "Krshia",
+				"text": "My tribe, yes. Plains east and south of here — many hearths, one name. A Gnoll in a city is still her tribe's Gnoll; the distance changes nothing that matters. The necklace is not decoration. It is a promise I carry.",
+				"options": [
+					{ "text": "What's the promise?", "goto": "krshia_tribe_two" },
+					{ "text": "Back to business.", "goto": "hub" },
+					{ "text": "It suits you.", "end": true }
+				]
+			},
+			"krshia_tribe_two": {
+				"speaker": "Krshia",
+				"text": "Hrr. Ask me when you have known me longer than one crate. A promise spoken cheap gets spent cheap — this is true of coin and truer of words.",
+				"options": [
+					{ "text": "Back to business.", "goto": "hub" },
+					{ "text": "Then I'll keep coming back.", "end": true }
+				]
+			},
+			"krshia_plans": {
+				"speaker": "Krshia",
+				"text": "So you remembered. Hrr. Then hear a little of it. Every coin this stall clears past its keep goes toward something for the tribes — something Gnolls have been told we cannot have, and are done being told. There is a gathering, some years off. I mean to stand up at it with full hands. That stays between you, me, and the wool.",
+				"options": [
+					{ "text": "Full hands. I'd like to see that.", "goto": "krshia_plans_two" },
+					{ "text": "Back to business.", "goto": "hub" },
+					{ "text": "Between us and the wool.", "end": true }
+				]
+			},
+			"krshia_plans_two": {
+				"speaker": "Krshia",
+				"text": "You will, if the city behaves and the thieves stay bored. And since you are now a keeper of Silverfang business — for you, the front-of-stall price is the back-of-stall price. Do not announce it.",
+				"options": [
+					{ "text": "Back to business.", "goto": "hub" },
+					{ "text": "Not a word, Krshia.", "end": true }
+				]
+			}
+		}
+	},
+	"perk": {
+		"id": "krshia_discount",
+		"stage": "krshia_friend_of_the_silverfangs",
+		"summary": "Shop −1..2g (spec default) — authorable TODAY: duplicate buy options at the lower price gated requires{chatted_with_krshia:4, crate_returned:1} (or on heard_krshia_plans:1 so the diegetic grant line and the mechanics land together — RECOMMENDED), with hide_when the same gate on the full-price rows. Proposed prices: charm 5→4, knife 15→13, cloak 18→16, jerkin 24→22. ⚑ prices; NOTE: visible-option index shift in the shop node — economy_loop asserts shop indices, disclosure wave required."
+	}
+}

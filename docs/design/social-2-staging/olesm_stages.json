@@ -1,0 +1,81 @@
+{
+	"npc": "olesm",
+	"staging_note": "STAGED DESIGN COPY, not wired. Olesm's pool is shipped; chatted_with_olesm accrues today.",
+	"talk_pool_stages": [
+		{
+			"id": "olesm_worth_interrupting_a_tally",
+			"requires_accomplishment": { "cisterns_reported": 1 },
+			"lines": [
+				"Oh — you! No no, the tally can wait. The tally is wrong anyway; it will still be wrong in an hour.",
+				"I put your cistern business in my report. With your name spelled correctly and everything. In this office that is practically a parade.",
+				"I've started leaving the second chair out. Statistically you keep existing near my desk, so — efficiency."
+			]
+		},
+		{
+			"id": "olesm_board_partner",
+			"requires_accomplishment": { "cisterns_reported": 1, "chatted_with_olesm": 3 },
+			"lines": [
+				"I set the board up when the bells go quiet now, on the chance you wander past. That isn't pathetic, that's PREPARED.",
+				"Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
+				"You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
+			]
+		}
+	],
+	"dialogue_unlocks": {
+		"file": "data/dialogue/olesm_intro.json",
+		"hub_options": [
+			{
+				"text": "You run half this city from that desk. You know that, right?",
+				"requires": { "accomplishment": { "cisterns_reported": 1 } },
+				"goto": "olesm_doubt"
+			},
+			{
+				"text": "What's next for you, Olesm?",
+				"requires": { "accomplishment": { "cisterns_reported": 1, "chatted_with_olesm": 3 } },
+				"goto": "olesm_ambition",
+				"_flag": "CANON ⚑ mild — [Strategist] ambition is safe early canon; the letters beat is a proto-newsletter nod kept oblique (never says 'newsletter')."
+			}
+		],
+		"nodes": {
+			"olesm_doubt": {
+				"speaker": "Olesm",
+				"text": "Ha. HA. No. I run the paperwork the Council ignores, and I'm a [Tactician] whose largest engagement to date was a supply-cart dispute. ...Which I won. Decisively. I keep a list of what I'd do if Liscor were ever truly tested. It's a good list. I would just rather die of old age never having to show anyone.",
+				"options": [
+					{ "text": "I hope the list stays theoretical.", "goto": "olesm_doubt_two" },
+					{ "text": "Back to the top.", "goto": "hub" },
+					{ "text": "The cart never stood a chance.", "end": true }
+				]
+			},
+			"olesm_doubt_two": {
+				"speaker": "Olesm",
+				"text": "So do I. That's the strange arithmetic of the job — you train your whole life for a day you pray never comes, and the better you are, the more boring the city stays. Liscor is very boring. I'm quietly proud of that.",
+				"options": [
+					{ "text": "Back to the top.", "goto": "hub" },
+					{ "text": "Stay bored, Olesm.", "end": true }
+				]
+			},
+			"olesm_ambition": {
+				"speaker": "Olesm",
+				"text": "Honestly? There's a class above mine. [Strategist]. Cities write to theirs. Armies wait on them. Some nights I can almost see the shape of the level — like a move you know is on the board and cannot find yet. ...I've started writing to other [Tacticians]. Comparing games, doctrine, mistakes. Perhaps it becomes nothing. Perhaps it becomes something every city wants a copy of.",
+				"options": [
+					{ "text": "I'd read it.", "goto": "olesm_ambition_two" },
+					{ "text": "Back to the top.", "goto": "hub" },
+					{ "text": "You'll find the move.", "end": true }
+				]
+			},
+			"olesm_ambition_two": {
+				"speaker": "Olesm",
+				"text": "You'd be the second subscriber. The first is me, checking for errors. ...Thank you. People ask what I do; you asked what I'm FOR. There's a difference, and it's most of why the second chair stays out.",
+				"options": [
+					{ "text": "Back to the top.", "goto": "hub" },
+					{ "text": "Keep the chair out.", "end": true }
+				]
+			}
+		}
+	},
+	"perk": {
+		"id": "olesm_chess_beat",
+		"stage": "olesm_board_partner",
+		"summary": "⚑ The chess counter-beat (spec default): an authored match scene — he replays Erin's eleven-move win against you and makes you find the counter. Suggested backing: a stage-gated hub option ('Set the board.') → a short authored match node chain banking chess_with_olesm (NEW counter) + a 2g friendly wager either way (dialogue gold effects exist). The match copy itself is a follow-up writing task — option + frame staged here, not the moves."
+	}
+}

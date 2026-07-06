@@ -1,0 +1,49 @@
+{
+	"npc": "selys",
+	"staging_note": "STAGED DESIGN COPY, not wired. Selys's pool is shipped; chatted_with_selys accrues today. Two stages only — she goes from professional to person, and that is the whole arc v1 needs.",
+	"talk_pool_stages": [
+		{
+			"id": "selys_past_the_counter",
+			"requires_accomplishment": { "errand_decided": 1, "chatted_with_selys": 2 },
+			"lines": [
+				"Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
+				"Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
+				"Rough week on the board. If you're taking work, take the sane jobs — I flag the sane ones. It's not a service everyone gets."
+			]
+		}
+	],
+	"dialogue_unlocks": {
+		"file": "data/dialogue/selys_delivery.json",
+		"hub_options": [
+			{
+				"text": "Shivertail — any relation to the Guildmistress?",
+				"requires": { "accomplishment": { "errand_decided": 1, "chatted_with_selys": 2 } },
+				"goto": "selys_gran"
+			}
+		],
+		"nodes": {
+			"selys_gran": {
+				"speaker": "Selys",
+				"text": "Grandmother. Yes, THE Tekshia Shivertail. Yes, she still throws a spear better than half the Silver-ranks. No, I will not introduce you when she's in a mood, which is always. I wanted to be her when I was small. Then I noticed the paperwork ran in the family and picked the desk with better hours.",
+				"options": [
+					{ "text": "You wanted to be a hero?", "goto": "selys_gran_two" },
+					{ "text": "Actually - one more thing.", "goto": "hub" },
+					{ "text": "The desk suits you.", "end": true }
+				]
+			},
+			"selys_gran_two": {
+				"speaker": "Selys",
+				"text": "Everyone behind this counter did, once. Then you log your first casualty report. The desk keeps more people alive than a sword does — that took me years to believe, so you don't have to believe it today. Now stop making me sincere during business hours.",
+				"options": [
+					{ "text": "Actually - one more thing.", "goto": "hub" },
+					{ "text": "Wouldn't dream of it.", "end": true }
+				]
+			}
+		}
+	},
+	"perk": {
+		"id": "selys_board_pick",
+		"stage": "selys_past_the_counter",
+		"summary": "⚑ First pick at the board (spec default). The stage-2 pool announces it in fiction ('I flag the sane ones'). Mechanical backing, cleanest v1: ONE stage-gated hub option — 'Anything on the board worth my time?' — pointing at a vetted job with gold on completion (a small authored bounty, hide_when claimed). A REPEATABLE rotating board is new machinery; flagged as out of v1 scope. User picks shape."
+	}
+}

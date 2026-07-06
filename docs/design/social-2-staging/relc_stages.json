@@ -1,0 +1,72 @@
+{
+	"npc": "relc",
+	"staging_note": "STAGED DESIGN COPY, not wired. Stage 1 pool = the S2 deferred 4-line pool — same landing dependency as Erin (~22 canonical-script reds measured for Relc in S2); chatted_with_relc does not accrue until it lands.",
+	"talk_pool_stages": [
+		{
+			"id": "relc_sparring_partner",
+			"requires_accomplishment": { "sparred_with_relc": 1, "chatted_with_relc": 2 },
+			"lines": [
+				"Hah! There's my favorite punching bag. Kidding — the dummies are my favorite. You're a close third after lunch.",
+				"You're standing straighter. See that? That's me. I'm basically a [Teacher]. Don't tell the Watch, they'll dock my pay for moonlighting.",
+				"Quiet shift. If anything with teeth shows up, you'll hear me laughing before you hear the bell."
+			]
+		},
+		{
+			"id": "relc_brother_in_arms",
+			"requires_accomplishment": { "cleared_the_warren": 1, "chatted_with_relc": 3 },
+			"lines": [
+				"There they are. You know what I like about you? You went DOWN the creepy hole. Most people file a report about the hole. From upstairs.",
+				"Zevara smiled this week. Actual smile. The warren's sealed and the city's still standing — I'm taking full credit and handing you most of it.",
+				"Next time something ugly crawls out of the ground, I'm not even worried. That's new for me. Don't make it weird."
+			]
+		}
+	],
+	"dialogue_unlocks": {
+		"file": "data/dialogue/relc_intro.json",
+		"hub_options": [
+			{
+				"text": "Were you always a guardsman?",
+				"requires": { "accomplishment": { "sparred_with_relc": 1, "chatted_with_relc": 2 } },
+				"goto": "relc_army"
+			},
+			{
+				"text": "You ever miss the army?",
+				"requires": { "accomplishment": { "cleared_the_warren": 1, "chatted_with_relc": 3 } },
+				"goto": "relc_after",
+				"_flag": "CANON ⚑ — Embria is a Volume 5 reveal (wiki/Embria): NO daughter, no family named in the staged copy. A warmer 'family thing' variant exists in the .md companion, default OUT."
+			}
+		],
+		"nodes": {
+			"relc_army": {
+				"speaker": "Relc",
+				"text": "Ha! No. Army, before. Liscor's got one — it just never comes home. I did. Walls pay worse, but nobody makes you march in the rain, and I am DONE with marching. Best decision I ever made, after the spear.",
+				"options": [
+					{ "text": "Why'd you leave?", "goto": "relc_army_two" },
+					{ "text": "Back a step.", "goto": "meet" },
+					{ "text": "Fair trade.", "end": true }
+				]
+			},
+			"relc_army_two": {
+				"speaker": "Relc",
+				"text": "Long version costs a drink. Short version: I got tired of holes in the ground and people I liked going into them. Watch work, the worst thing I dig is paperwork. ...What? I can be deep. It's the tail, nobody expects it.",
+				"options": [
+					{ "text": "Back a step.", "goto": "meet" },
+					{ "text": "First drink's on me sometime.", "end": true }
+				]
+			},
+			"relc_after": {
+				"speaker": "Relc",
+				"text": "Miss it? I left people in it. Some I'd still take a spear for, even now. That's all the answer you're getting sober. ...Hey. You did good, down there. I don't say that to walls, so stand still while it lands.",
+				"options": [
+					{ "text": "Back a step.", "goto": "meet" },
+					{ "text": "It landed.", "end": true }
+				]
+			}
+		}
+	},
+	"perk": {
+		"id": "relc_spar_wager",
+		"stage": "relc_brother_in_arms",
+		"summary": "⚑ Spec default is 'a repeatable spar' — relc_spar already re-offers, so that perk is already true as specced. Refinement proposal: at stage 3, winning the spar once per waking flips you 1 gold ('wager', with a complaint about Watch pay). Visible currency, tiny, very Relc; needs the per-waking dedup seam (entity_first_use verb-prefix) on the spar reward. User picks: status quo, wager, or another shape."
+	}
+}

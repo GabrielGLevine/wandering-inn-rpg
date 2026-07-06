@@ -1,0 +1,87 @@
+{
+	"npc": "zevara",
+	"staging_note": "STAGED DESIGN COPY, not wired. Zevara's pool is shipped; chatted_with_zevara accrues today. Two stages — she does not do three degrees of warmth on duty.",
+	"talk_pool_stages": [
+		{
+			"id": "zevara_trusted_irregular",
+			"requires_accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 },
+			"lines": [
+				"You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
+				"The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
+				"If you're between jobs, see me about bounty work. The Watch pays slow, but it pays — and I sign faster for people who don't invoice me for heroics."
+			]
+		}
+	],
+	"dialogue_unlocks": {
+		"file": "data/dialogue/zevara_intro.json",
+		"hub_options": [
+			{
+				"text": "I heard you can breathe fire.",
+				"requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } },
+				"goto": "zevara_oldblood"
+			},
+			{
+				"text": "Why'd you take this job? It's eating you.",
+				"requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } },
+				"goto": "zevara_oath",
+				"_flag": "CANON ⚑ mild — the Eresc story obliqued: no predecessor named, no Antinium named ('the kind the city didn't mourn'). User gates naming."
+			},
+			{
+				"text": "About that bounty work.",
+				"requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } },
+				"goto": "zevara_bounties",
+				"_flag": "PERK surface — see perk block; claim options below are the wiring sketch."
+			}
+		],
+		"nodes": {
+			"zevara_oldblood": {
+				"speaker": "Zevara",
+				"text": "Oldblood, yes. Fire, technically. Ten seconds of it, no air in my lungs the whole time, and a day of sounding like a gravel cart after. It's a weapon you pay for using, so I file it where I file all last resorts. You want fire that works, requisition a mage.",
+				"options": [
+					{ "text": "Back a step.", "goto": "hub" },
+					{ "text": "Noted, Captain.", "end": true }
+				]
+			},
+			"zevara_oath": {
+				"speaker": "Zevara",
+				"text": "Somebody before me let things slide. Reports that went nowhere, as long as the dead were the kind the city didn't mourn. I wrote it up. Command found the paperwork inconvenient and the facts worse — and then the chair was mine. So no, I don't sleep much. I know exactly what this office looks like when its captain does.",
+				"options": [
+					{ "text": "The city's lucky it was you.", "goto": "zevara_oath_two" },
+					{ "text": "Back a step.", "goto": "hub" },
+					{ "text": "Understood, Captain.", "end": true }
+				]
+			},
+			"zevara_oath_two": {
+				"speaker": "Zevara",
+				"text": "Luck is what people call other people's overtime. But — thank you. File that under 'said once'. Now get out of my gatehouse before I find you a shift.",
+				"options": [
+					{ "text": "Back a step.", "goto": "hub" },
+					{ "text": "Yes, Captain.", "end": true }
+				]
+			},
+			"zevara_bounties": {
+				"speaker": "Zevara",
+				"text": "Good. The Watch posts standing bounties on anything that made a file cross my desk. You clear it, you claim it here, I sign it. Keep the receipts honest and this arrangement outlives both our patience.",
+				"options": [
+					{ "text": "The scavengers off Market Street are dealt with.", "requires": { "accomplishment": { "found_the_crate": 1 } }, "hide_when": { "accomplishment": { "claimed_bounty_crate": 1 } }, "effects": [ { "accomplishment": "claimed_bounty_crate" }, { "gold": 3 } ], "goto": "zevara_bounty_paid" },
+				{ "text": "The cistern nest is gone — you know that one firsthand.", "requires": { "accomplishment": { "resolved_the_cisterns": 1 } }, "hide_when": { "accomplishment": { "claimed_bounty_cisterns": 1 } }, "effects": [ { "accomplishment": "claimed_bounty_cisterns" }, { "gold": 4 } ], "goto": "zevara_bounty_paid" },
+					{ "text": "The thing under the city. The big one.", "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "hide_when": { "accomplishment": { "claimed_bounty_warren": 1 } }, "effects": [ { "accomplishment": "claimed_bounty_warren" }, { "gold": 10 } ], "goto": "zevara_bounty_paid" },
+					{ "text": "Nothing to claim yet.", "goto": "hub" }
+				]
+			},
+			"zevara_bounty_paid": {
+				"speaker": "Zevara",
+				"text": "Signed. Spend it somewhere that doesn't generate paperwork.",
+				"options": [
+					{ "text": "Anything else on the books?", "goto": "zevara_bounties" },
+					{ "text": "Captain.", "end": true }
+				]
+			}
+		}
+	},
+	"perk": {
+		"id": "zevara_watch_bounties",
+		"stage": "zevara_trusted_irregular",
+		"summary": "Watch-bounty access (spec default) — fully authorable TODAY, wiring sketched above: per-incident claim options requires{the incident counter} + hide_when{claimed_* NEW banks}, gold effects on the option (selys_delivery's kept_reward pattern). ⚑ amounts (3/4/10g vs the D-wave economy — Krshia's charm is 5g, jerkin 24g; total 17g is deliberate, meaningful-not-distorting). Bounty list grows one option per future incident quest — the perk scales with content for free."
+	}
+}

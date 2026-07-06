@@ -1,0 +1,50 @@
+{
+	"npc": "pisces",
+	"staging_note": "STAGED DESIGN COPY, not wired. Pisces's pool is shipped; chatted_with_pisces accrues today. Two stages — he only ever thaws to 'tolerable', and that is the joke and the tragedy both.",
+	"talk_pool_stages": [
+		{
+			"id": "pisces_tolerable_company",
+			"requires_accomplishment": { "learned_magic_from_pisces": 1, "chatted_with_pisces": 3 },
+			"lines": [
+				"Ah. You. Acceptable timing — I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
+				"Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
+				"The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
+			]
+		}
+	],
+	"dialogue_unlocks": {
+		"file": "data/dialogue/pisces_magic.json",
+		"greet_options": [
+			{
+				"text": "You hold yourself like a swordsman, not a scholar.",
+				"requires": { "accomplishment": { "learned_magic_from_pisces": 1, "chatted_with_pisces": 3 } },
+				"goto": "pisces_fence",
+				"_flag": "CANON ⚑ tread-light — father a [Fencer] is staged (mild); the sold-rapier line is an OBLIQUE Wistram-era nod. HARD RAILS in the .md: no expulsion cause, no deaths, no Az'kerash, no Ceria specifics."
+			}
+		],
+		"nodes": {
+			"pisces_fence": {
+				"speaker": "Pisces",
+				"text": "...Observant. A rapier, in fact, before any of this. My father's trade — his grip, his footwork, his opinions on both. I set it down for magic, and he has yet to forgive either of us. The footwork stayed. It wins me arguments the diction loses.",
+				"options": [
+					{ "text": "Do you miss it?", "goto": "pisces_fence_two" },
+					{ "text": "Back to magic, then.", "goto": "greet" },
+					{ "text": "That explains the posture.", "end": true }
+				]
+			},
+			"pisces_fence_two": {
+				"speaker": "Pisces",
+				"text": "I sold the blade years ago, when circumstances were... instructive. One does not miss a thing so much as the hands remember it. A sniff. Next question — preferably about magic, which unlike the past improves under examination.",
+				"options": [
+					{ "text": "Back to magic, then.", "goto": "greet" },
+					{ "text": "Fair enough, Pisces.", "end": true }
+				]
+			}
+		}
+	},
+	"perk": {
+		"id": "pisces_duelist_drill",
+		"stage": "pisces_tolerable_company",
+		"summary": "⚑ NO SPEC DEFAULT — proposal (user picks or strikes): (a) 'a duelist's drill' — once per waking, ask Pisces to drill your casting: full MP restore in the field, diegetic 'second breath' callback to his own lesson_mana copy; needs the per-waking dedup seam (entity_first_use verb-prefix) + an MP-restore-outside-sleep hook. (b) one-time gift: his practice focus, a trinket item (items.json shape exists; effect fields for MP would be new). (a) reads more like him — he'd never give an object away, he WOULD show off pedagogy."
+	}
+}
