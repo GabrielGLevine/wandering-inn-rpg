@@ -40,11 +40,20 @@ var _screenshots: PackedStringArray = []
 ## (scans from index 0) for the rare case a script needs to re-check an
 ## earlier-window event.
 var _wait_cursor := 0
+## M-ARC §5: set from the script's top-level `creation_ui` field in _run(). When
+## true, title_screen's New Game drives the REAL character-creation screen
+## instead of the default straight-to-reset skip (see title_screen._skip_creation).
+var _wants_creation_ui := false
 
 
 ## True when a QA script is driving this run (native --qa-script or web bridge).
 func active() -> bool:
 	return not _script_path.is_empty()
+
+
+## M-ARC §5: whether this run opts into the real character-creation UI path.
+func wants_creation_ui() -> bool:
+	return _wants_creation_ui
 
 
 func _ready() -> void:
@@ -72,6 +81,7 @@ func _run() -> void:
 		_fail("could not parse qa script: " + _script_path)
 		_finish()
 		return
+	_wants_creation_ui = bool(parsed.get("creation_ui", false))
 	_install_fixture_saves(parsed.get("fixture_save"))
 	if not bool(parsed.get("starts_at_title", false)):
 		await _skip_title()
@@ -169,6 +179,15 @@ func _execute(step: Dictionary) -> void:
 				_inject_action("move_" + String(step["direction"]))
 				await get_tree().process_frame
 				await get_tree().process_frame
+		"type_text":
+			# M-ARC §5: type a name into the char-creation field one real unicode
+			# keystroke at a time (char_creation captures these in _unhandled_input,
+			# exactly like a player keystroke -- LineEdit GUI focus is not relied on).
+			var text := String(step["text"])
+			for i in text.length():
+				_inject_unicode(text[i])
+				await get_tree().process_frame
+				await get_tree().process_frame
 		"wait_for_event":
 			await _wait_for_event(String(step["type"]), float(step.get("timeout_sec", 5.0)), step.get("payload_contains", {}), bool(step.get("from_start", false)))
 		"screenshot":
@@ -228,6 +247,23 @@ func _inject_action(action_name: String) -> void:
 	var release := InputEventKey.new()
 	release.physical_keycode = key
 	release.keycode = key
+	release.pressed = false
+	Input.parse_input_event(release)
+
+
+## M-ARC §5: inject a single printable character as a real key event (unicode
+## set), for the char-creation name field. keycode is left 0 so it can never
+## coincide with a mapped action (confirm/cancel/etc.); the creation screen reads
+## `event.unicode` for the character.
+func _inject_unicode(ch: String) -> void:
+	if ch.is_empty():
+		return
+	var press := InputEventKey.new()
+	press.unicode = ch.unicode_at(0)
+	press.pressed = true
+	Input.parse_input_event(press)
+	var release := InputEventKey.new()
+	release.unicode = ch.unicode_at(0)
 	release.pressed = false
 	Input.parse_input_event(release)
 

@@ -74,16 +74,38 @@ const LINE_FONT_SIZE := 24
 ## opener swallows ONLY confirm/cancel while it holds; the sleep path above still
 ## intercepts no input at all.
 ##
-## COPY — flagged for user taste-review (revisable via this one constant / a
+## COPY — flagged for user taste-review (revisable via these constants / a
 ## future string table). A vast, neutral, faintly wondering System voice; the
 ## last line is a bracketed proclamation in the sleep-veil cadence. Opaque-safe:
 ## no numbers, no lore claim beyond what the game itself shows (classes/levels).
-const OPENER_LINES: Array[String] = [
+##
+## M-ARC §5: the opener BRANCHES by PC race (canon-safe — only Humans are Earth
+## otherworlders). Human keeps the "far from where you began" arrival; Drake and
+## Gnoll get a "starting over in Liscor" variant (they are native to Izril, not
+## displaced from another world). All three are 4 lines and share the identity-
+## neutral bracket close, so the QA opener-line count is invariant across races.
+## ⚑ USER TASTE-REVIEW: the Drake/Gnoll copy is a first draft — revise freely.
+const OPENER_LINES_HUMAN: Array[String] = [
 	"You are far from where you began.",
 	"This world watches what you do,",
 	"and answers by making you someone.",
 	"[Class: none. Level: none. — Begin.]",
 ]
+const OPENER_LINES_DRAKE: Array[String] = [
+	"You have come to Liscor to begin again.",
+	"This world watches what you do,",
+	"and answers by making you someone.",
+	"[Class: none. Level: none. — Begin.]",
+]
+const OPENER_LINES_GNOLL: Array[String] = [
+	"The road behind you is long; Liscor is where it ends.",
+	"This world watches what you do,",
+	"and answers by making you someone.",
+	"[Class: none. Level: none. — Begin.]",
+]
+## Human is the default fallback (an unknown/absent race lands here, matching the
+## sim's tolerant "human" default).
+const OPENER_LINES: Array[String] = OPENER_LINES_HUMAN
 const OPENER_HOLD_BEFORE_TEXT := 0.6
 const OPENER_LINE_HOLD := 1.7
 const OPENER_READ_HOLD := 2.2
@@ -181,7 +203,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 ## deferred call runs at the next idle, AFTER sleep()'s whole synchronous emit
 ## burst has unwound, so `_lines`/`_consolidation` are fully populated by then.
 func _begin_sleep() -> void:
-	if _running:
+	# EF review I2: guard against a sleep beat racing the F1/M-ARC cold open. A
+	# player who reaches the inn bed during the ~8s opener would otherwise start a
+	# SECOND veil coroutine over the shared _black/_line_box (a cosmetic un-black
+	# glitch); _opener_running blocks that until the opener has faded out and
+	# cleared. (play_opener has the mirror guard against a sleep already running.)
+	if _running or _opener_running:
 		return
 	_running = true
 	_lines = []
@@ -202,10 +229,19 @@ func play_opener() -> void:
 	if _is_qa():
 		# Collapsed: no visible hold — record coverage the same beat, right after
 		# world_ready, so title_flow's assert is deterministic.
-		_emit_opener_rendered(OPENER_LINES.size())
+		_emit_opener_rendered(_opener_lines().size())
 		return
 	_opener_running = true
 	_run_opener.call_deferred()
+
+
+## M-ARC §5: the race-branched opener copy (presentation reads the sim's cosmetic
+## pc_race; an unknown/absent race falls back to Human, matching the sim default).
+func _opener_lines() -> Array:
+	match Game.sim.pc_race:
+		"drake": return OPENER_LINES_DRAKE
+		"gnoll": return OPENER_LINES_GNOLL
+		_: return OPENER_LINES_HUMAN
 
 
 func _run_opener() -> void:
@@ -213,11 +249,12 @@ func _run_opener() -> void:
 	_black.modulate.a = 1.0
 	_black.show()
 	await _wait(OPENER_HOLD_BEFORE_TEXT)
-	for i in OPENER_LINES.size():
-		_add_line(OPENER_LINES[i])
-		var last := i == OPENER_LINES.size() - 1
+	var lines := _opener_lines()
+	for i in lines.size():
+		_add_line(String(lines[i]))
+		var last := i == lines.size() - 1
 		await _wait_or_advance(OPENER_READ_HOLD if last else OPENER_LINE_HOLD)
-	_emit_opener_rendered(OPENER_LINES.size())
+	_emit_opener_rendered(lines.size())
 	await _fade(_black, 0.0)
 	_opener_running = false
 	_finish()
@@ -245,7 +282,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _emit_opener_rendered(count: int) -> void:
-	ObservableBus.emit_domain_event(WIEvents.UI_GDI_OPENER_RENDERED, {"lines": count})
+	# M-ARC §5: carry the PC race so a QA script can assert the branch fired for
+	# the chosen race (line count is 4 for every race, so it can't distinguish).
+	ObservableBus.emit_domain_event(WIEvents.UI_GDI_OPENER_RENDERED, {"lines": count, "race": Game.sim.pc_race})
 
 
 func _run_sequence() -> void:

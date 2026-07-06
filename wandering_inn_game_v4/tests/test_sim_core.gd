@@ -47,6 +47,23 @@ func _init() -> void:
 	assert(game.player_cell == Vector2i(2, 3), "player start cell from config")
 	assert(_count("sim_initialized") == 1, "sim_initialized emitted once")
 
+	# M-ARC §5: character-creation cosmetic identity (defaults + creation_config
+	# + tolerant sanitize + pure sprite-variant key + snapshot exposure). All
+	# cosmetic -- none of these touch a mechanical field.
+	assert(game.pc_name == "Traveler" and game.pc_race == "human" and game.pc_gender == "m", "default identity is Human/male/Traveler")
+	assert(game.pc_sprite_variant() == "pc_human_m", "default variant key")
+	var id_snap := game.snapshot()
+	assert(id_snap["pc_name"] == "Traveler" and id_snap["pc_race"] == "human" and id_snap["pc_gender"] == "m", "identity exposed in snapshot")
+	assert(id_snap["pc_sprite"] == "pc_human_m", "variant key exposed in snapshot")
+	var made := WIGame.new(scene_config, skill_config, _sink, 1, {}, {}, {"pc_name": "Sella", "pc_race": "drake", "pc_gender": "f"})
+	assert(made.pc_name == "Sella" and made.pc_race == "drake" and made.pc_gender == "f", "creation_config sets identity")
+	assert(made.pc_sprite_variant() == "pc_drake_f", "chosen variant key")
+	var dirty := WIGame.new(scene_config, skill_config, _sink, 1, {}, {}, {"pc_name": "  Trimmed  Overlong Name Here  ", "pc_race": "elf", "pc_gender": "x"})
+	assert(dirty.pc_race == "human" and dirty.pc_gender == "m", "unknown race/gender sanitized to defaults")
+	assert(dirty.pc_name.length() <= WIGame.PC_NAME_MAX and dirty.pc_name.strip_edges() == dirty.pc_name, "name trimmed + length-capped")
+	var blank := WIGame.new(scene_config, skill_config, _sink, 1, {}, {}, {"pc_name": "   "})
+	assert(blank.pc_name == "Traveler", "blank name falls back to Traveler")
+
 	# Movement + perimeter blocking (west wall segment occupies column x=0)
 	assert(game.move_player(Vector2i.UP), "open-cell move succeeds")
 	assert(game.player_cell == Vector2i(2, 2), "player moved up")

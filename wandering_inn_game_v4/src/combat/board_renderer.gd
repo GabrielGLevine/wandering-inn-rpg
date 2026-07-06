@@ -362,6 +362,14 @@ func _biome_for_combat(view: WICombatView) -> Dictionary:
 
 
 func _combatant_sprite_id(id: String) -> String:
+	# M-ARC §5 variant-key indirection (presentation-only): the PC's combat chip
+	# uses the sim's chosen race/gender sprite variant ("pc_<race>_<gender>"),
+	# degrading to the combatants.json default ("body_a") when that variant art
+	# is not registered. Every other combatant reads its static sprite unchanged.
+	if id == "pc":
+		var key := Game.sim.pc_sprite_variant()
+		if WISpriteRegistry.has_sprite(key):
+			return key
 	return String(WIDataRegistry.combatant_config(id).get("sprite", ""))
 
 

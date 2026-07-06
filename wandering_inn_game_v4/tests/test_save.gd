@@ -56,6 +56,11 @@ func _init() -> void:
 	# Playtest feature 3: the [Light] PC-glow flag round-trips (additive-optional,
 	# default false) so a load restores the conjured orb.
 	original.light_active = true
+	# M-ARC §5: cosmetic identity round-trips (additive-optional; default
+	# Human/male/"Traveler"). A non-default trio here proves persistence.
+	original.pc_name = "Sella"
+	original.pc_race = "drake"
+	original.pc_gender = "f"
 
 	var data := WISave.serialize(original)
 	assert(data["version"] == WISave.VERSION, "save version matches the current constant")
@@ -96,6 +101,29 @@ func _init() -> void:
 	var glow_target := _new_game()
 	assert(WISave.apply(glow_target, {"version": WISave.VERSION, "state": no_glow}), "save without light_active still applies")
 	assert(glow_target.light_active == false, "absent light_active defaults false")
+	# M-ARC §5: cosmetic identity restores.
+	assert(restored.pc_name == "Sella", "pc_name restored")
+	assert(restored.pc_race == "drake", "pc_race restored")
+	assert(restored.pc_gender == "f", "pc_gender restored")
+	# Additive-optional default: a save with no identity keys restores the everyman.
+	var no_identity: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	for k in ["pc_name", "pc_race", "pc_gender"]:
+		no_identity.erase(k)
+	var id_target := _new_game()
+	assert(WISave.apply(id_target, {"version": WISave.VERSION, "state": no_identity}), "save without pc identity still applies")
+	assert(id_target.pc_name == "Traveler" and id_target.pc_race == "human" and id_target.pc_gender == "m", "absent pc identity defaults to Human/male/Traveler")
+	# Tolerant sanitize on load: blank name / unknown race+gender collapse to defaults.
+	var garbage: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	garbage["pc_name"] = "   "
+	garbage["pc_race"] = "elf"
+	garbage["pc_gender"] = "x"
+	var g_target := _new_game()
+	assert(WISave.apply(g_target, {"version": WISave.VERSION, "state": garbage}), "garbage pc identity still applies")
+	assert(g_target.pc_name == "Traveler" and g_target.pc_race == "human" and g_target.pc_gender == "m", "garbage pc identity sanitized to defaults")
+	# A present-but-wrong-typed pc field is rejected (mirrors the light_active guard).
+	var bad_type: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	bad_type["pc_name"] = 5
+	assert(not WISave.apply(_new_game(), {"version": WISave.VERSION, "state": bad_type}), "non-String pc_name rejected")
 	assert(restored.find_entity("goblin_encounter_2").is_empty(), "removed entity stays removed")
 	assert(restored.rng.state == original.rng.state, "rng state restored")
 	assert(restored.rng.randi() == original.rng.randi(), "rng stream remains deterministic")

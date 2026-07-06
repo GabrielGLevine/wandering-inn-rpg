@@ -183,3 +183,11 @@ const UI_SLEEP_VEIL_RENDERED := &"ui_sleep_veil_rendered"
 ## opener collapses to instant and this fires synchronously right after
 ## world_ready, so title_flow can assert it deterministically.
 const UI_GDI_OPENER_RENDERED := &"ui_gdi_opener_rendered"
+## M-ARC §5 character creation: emitted by src/ui/char_creation.gd each time the
+## creation screen (re)renders a step, carrying {step:String} where step is
+## "race"/"gender"/"name" -- lets the char_creation QA script wait on the real
+## UI advancing without frame-count guessing (the title_gate/title_rendered
+## idiom). A separate {race,gender,name} payload rides UI_CHAR_CREATION_CONFIRMED
+## when the player confirms and the New Game (with creation) fires.
+const UI_CHAR_CREATION_RENDERED := &"ui_char_creation_rendered"
+const UI_CHAR_CREATION_CONFIRMED := &"ui_char_creation_confirmed"

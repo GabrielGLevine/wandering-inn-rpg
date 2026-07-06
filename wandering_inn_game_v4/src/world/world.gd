@@ -311,9 +311,13 @@ func _rebuild_field() -> void:
 	var render_counts := {"sprites": 0, "fallbacks": 0}
 	_count_visual(_build_entities(), render_counts)
 	var player_cfg: Dictionary = WIDataRegistry.scene_config()["player"]
+	# M-ARC §5 variant-key indirection (presentation-only): the PC visual uses
+	# the sim's chosen race/gender sprite variant ("pc_<race>_<gender>"), falling
+	# back to the data default ("body_a") when that variant art is not registered.
+	var pc_sprite := _pc_variant_sprite(String(player_cfg.get("sprite", "")))
 	_player_visual = _make_entity_visual(
 		Game.sim.player_cell,
-		String(player_cfg.get("sprite", "")),
+		pc_sprite,
 		player_cfg.get("tint", []),
 		PLAYER_COLOR
 	)
@@ -324,6 +328,7 @@ func _rebuild_field() -> void:
 	# (a map change or a load restored `light_active`). Done here, after the new
 	# _player_visual exists, so the glow survives every rebuild.
 	_reconcile_pc_light()
+	render_counts["pc_sprite"] = pc_sprite
 	ObservableBus.emit_domain_event(WIEvents.UI_ENTITIES_RENDERED, render_counts)
 	assert(_light_count <= LIGHT_BUDGET,
 		"map %s exceeds the %d-light budget (%d) -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
@@ -720,6 +725,14 @@ func _refresh_entities_watching_dormant() -> void:
 			if raw_state is Dictionary and (raw_state as Dictionary).get("when", {}).has("dormant"):
 				_refresh_entity_visual(id)
 				break
+
+
+## M-ARC §5: resolve the PC's chosen race/gender sprite variant, degrading to
+## the data default when that variant art is not registered (so a partially
+## generated variant set, or the classic body_a base, still renders the PC).
+func _pc_variant_sprite(default_id: String) -> String:
+	var key := Game.sim.pc_sprite_variant()
+	return key if WISpriteRegistry.has_sprite(key) else default_id
 
 
 func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallback_color: Color = PROP_COLOR, facing: String = "", light: Dictionary = {}, sway: bool = false) -> Node2D:

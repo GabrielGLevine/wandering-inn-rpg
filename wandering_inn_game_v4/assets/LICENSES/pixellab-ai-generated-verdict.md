@@ -49,3 +49,17 @@ before integration. Non-directional (single facing) — `/rotate` drifted at
 
 Provenance and the full candidate set (including parked/rejected ones) live
 in `potential_assets/pixellab_2026-07-06/` (gitignored).
+
+M-ARC §5 character-creation PC variants (2026-07-06): 5 new full
+directional+animated PC bodies — `pc_human_f` (104px), `pc_drake_m`/
+`pc_drake_f` (124px), `pc_gnoll_m`/`pc_gnoll_f` (108px) — via the SAME
+proven v2 pipeline as F2/the upgrade wave (`create-character-pro`
+mannequin/low top-down/no_background 64×64 → `animate-character` template
+×6: `breathing-idle`/`walking`/`lead-jab`/`taking-punch`/
+`falling-back-death`/`fireball` → down/side/up strips, south/east/north
+only, registry mirrors side). All wear the SAME earth-tone traveler
+outfit per the character-profiles PC contract. `pc_human_m` is a
+registry alias reusing F2's body_a sheets verbatim (no new art).
+Character ids + driver (`pc_variants.py`) + originals in
+`potential_assets/pixellab_2026-07-06/pc_variants_work/` (gitignored).
+Same PixelLab-ToS ownership / redistributability as everything above.

@@ -13,8 +13,14 @@ func _ready() -> void:
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
-func reset() -> void:
-	_build_sim()
+## `creation` (M-ARC §5) carries the character-creation choices
+## ({pc_name, pc_race, pc_gender}) from the creation screen; empty on any other
+## New Game path (title default-skip, code-driven reset), which lands the
+## everyman defaults. Threaded to the fresh sim only -- a load never sees it
+## (load_slot builds its trial sim with no creation dict and restores identity
+## from the save).
+func reset(creation: Dictionary = {}) -> void:
+	_build_sim(creation)
 	ObservableBus.emit_domain_event(WIEvents.GAME_RESET, {})
 
 
@@ -71,14 +77,16 @@ func load_slot(slot: String) -> bool:
 	return true
 
 
-func _build_sim() -> void:
-	sim = _make_sim()
+func _build_sim(creation: Dictionary = {}) -> void:
+	sim = _make_sim(creation)
 
 
 ## Constructs a fresh WIGame from the data files + current seed WITHOUT
 ## assigning it to `sim`, so load_slot can trial-apply a save before committing
-## the swap (see load_slot).
-func _make_sim() -> WIGame:
+## the swap (see load_slot). `creation` (M-ARC §5) is the character-creation
+## dict for a New Game; empty ({}) for a load trial and every cold boot, which
+## lands WIGame's tolerant identity defaults.
+func _make_sim(creation: Dictionary = {}) -> WIGame:
 	var scene_config: Dictionary = _load_json("res://data/skeleton_scene.json")
 	var skill_config: Dictionary = _load_json("res://data/skills.json")
 	var combat_config := {
@@ -125,7 +133,7 @@ func _make_sim() -> WIGame:
 		"dusk_at": int(phase_thresholds.get("dusk", 40)),
 		"night_at": int(phase_thresholds.get("night", 90)),
 	}
-	return WIGame.new(scene_config, skill_config, ObservableBus.emit_domain_event, rng_seed, combat_config, phase_config)
+	return WIGame.new(scene_config, skill_config, ObservableBus.emit_domain_event, rng_seed, combat_config, phase_config, creation)
 
 
 func _write_slot(slot: String) -> void:

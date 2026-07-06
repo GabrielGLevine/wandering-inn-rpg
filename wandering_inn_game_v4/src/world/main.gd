@@ -20,6 +20,7 @@ const FIELD_HOTBAR_SCRIPT := preload("res://src/ui/field_hotbar.gd")
 const CONSOLIDATION_PROMPT_SCRIPT := preload("res://src/ui/consolidation_prompt.gd")
 const SLEEP_VEIL_SCRIPT := preload("res://src/ui/sleep_veil.gd")
 const TITLE_SCREEN_SCRIPT := preload("res://src/ui/title_screen.gd")
+const CHAR_CREATION_SCRIPT := preload("res://src/ui/char_creation.gd")
 
 var _container: SubViewportContainer
 var _sub_viewport: SubViewport
@@ -73,6 +74,20 @@ func swap_to_title() -> void:
 	_clear_world_viewport()
 	_clear_ui_layers()
 	_spawn_title()
+
+
+## M-ARC §5: title NEW GAME (real play, or a QA script that opts in with
+## `creation_ui: true`) swaps here for race/gender/name selection. The screen
+## itself fires Game.reset(creation) on confirm, whose GAME_RESET takes over the
+## swap-to-world (with the race-branched opener); Esc on its first step calls
+## swap_to_title back. No world/UI layers exist yet at this point (same clean
+## slate as the title), so this only clears + spawns the one screen.
+func swap_to_char_creation() -> void:
+	_clear_world_viewport()
+	_clear_ui_layers()
+	var creation := CHAR_CREATION_SCRIPT.new()
+	creation.name = "CharCreation"
+	add_child(creation)
 
 
 ## `new_game` is true ONLY on the GAME_RESET (fresh-world) path — it drives the
@@ -140,6 +155,9 @@ func _clear_ui_layers() -> void:
 func _spawn_title() -> void:
 	_title_screen = TITLE_SCREEN_SCRIPT.new()
 	_title_screen.name = "TitleScreen"
+	# M-ARC §5: the title reaches back here to open character creation on New Game
+	# (injection idiom, matching combat_screen.main_ref) rather than scanning.
+	_title_screen.main_ref = self
 	add_child(_title_screen)
 
 

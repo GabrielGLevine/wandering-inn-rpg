@@ -14,11 +14,12 @@
 #
 # --- CANONICAL LIST ---------------------------------------------------------
 # No qa/ manifest exists, so this list is HARDCODED and MIRRORS the
-# "Canonical QA seed table" in wandering_inn_game_v4/CLAUDE.md (41 headless
-# scripts as of Economy v1 D4 — C1 added sewers_walkthrough [34]; C3 adds
+# "Canonical QA seed table" in wandering_inn_game_v4/CLAUDE.md (42 headless
+# scripts as of M-ARC §5 — C1 added sewers_walkthrough [34]; C3 adds
 # cisterns_fight / cisterns_talk / cisterns_scout [35-37]; C4 adds
 # wrong_order_loop / wrong_order_talk / wrong_order_fight [38-40]; Economy v1 D4
-# adds economy_loop [41] — tutorial_flow is
+# adds economy_loop [41]; M-ARC §5 adds char_creation [42] (no seed — drives the
+# real character-creation UI path, no combat/rng) — tutorial_flow is
 # canonical; level_up_loop / defeat_ally_alive / combat_move_input / crate_fight /
 # crate_talk / field_skills_loop / social_loop / sewers_walkthrough / cisterns_*
 # are fixture-based, their fixture rng overrides the CLI seed, the listed seed is
@@ -76,6 +77,7 @@ CANON=(
 	"wrong_order_talk:9"
 	"wrong_order_fight:9"
 	"economy_loop:9"
+	"char_creation:none"
 )
 
 ONLY=""

@@ -12,6 +12,22 @@ var grid_size: Vector2i
 var current_map: String = ""
 var player_cell: Vector2i
 var player_facing := Vector2i.RIGHT
+## M-ARC §5 character creation (COSMETIC identity, zero mechanical effect).
+## Set ONCE at New Game from the creation screen (via the ctor's
+## `creation_config`), never mutated after; additive save fields with tolerant
+## defaults (see save.gd). NO sim rule ever branches on these.
+##   pc_name   -- replaces "Traveler" on every player-facing surface (combat
+##                turn strip/readout, dialogue speaker, field label). Default
+##                "Traveler" (the skeleton_scene player display_name).
+##   pc_race   -- "human"/"drake"/"gnoll"; branches the GDI opener copy and
+##                (with pc_gender) resolves the PC sprite-variant registry key.
+##   pc_gender -- "m"/"f"; sprite variant only.
+const PC_RACES: Array[String] = ["human", "drake", "gnoll"]
+const PC_GENDERS: Array[String] = ["m", "f"]
+const PC_NAME_MAX := 16
+var pc_name: String = "Traveler"
+var pc_race: String = "human"
+var pc_gender: String = "m"
 var player_skills: Array[String] = []
 var accomplishments: Dictionary = {}
 var entities: Dictionary = {}
@@ -144,7 +160,7 @@ var _dialogue_conversation_id := ""
 var _run_seed: int = 0
 
 
-func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Callable, rng_seed: int = 0, combat_config: Dictionary = {}, phase_config: Dictionary = {}) -> void:
+func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Callable, rng_seed: int = 0, combat_config: Dictionary = {}, phase_config: Dictionary = {}, creation_config: Dictionary = {}) -> void:
 	_event_sink = event_sink
 	_run_seed = rng_seed
 	rng.seed = rng_seed
@@ -152,6 +168,13 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 		skills[String(s["id"])] = s
 	var p: Dictionary = scene_config["player"]
 	player_cell = Vector2i(int(p["cell"][0]), int(p["cell"][1]))
+	# M-ARC §5: cosmetic identity from the creation screen, sanitized on the way
+	# in (tolerant defaults, so a QA default-skip / an old load / a garbled dict
+	# all fall back to Human/male/"Traveler"). The scene player's display_name is
+	# the pc_name fallback so an untouched New Game reads "Traveler" as before.
+	pc_name = _sanitize_pc_name(String(creation_config.get("pc_name", p.get("display_name", "Traveler"))))
+	pc_race = _sanitize_pc_race(String(creation_config.get("pc_race", "human")))
+	pc_gender = _sanitize_pc_gender(String(creation_config.get("pc_gender", "m")))
 	_combat_config = combat_config
 	_phase_config = phase_config
 	for it: Dictionary in (combat_config.get("items", {}) as Dictionary).get("items", []):
@@ -188,6 +211,33 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 		}
 	_bind_map(String(scene_config["start_map"]))
 	_emit(WIEvents.SIM_INITIALIZED, {"seed": rng_seed})
+
+
+## M-ARC §5 tolerant sanitizers for creation input. A blank/over-long/garbage
+## value always resolves to the everyman default rather than erroring, so a QA
+## default-skip, an old save missing the field, and a fat-fingered LineEdit all
+## land on Human/male/"Traveler".
+static func _sanitize_pc_name(raw: String) -> String:
+	var s := raw.strip_edges()
+	if s.length() > PC_NAME_MAX:
+		s = s.substr(0, PC_NAME_MAX).strip_edges()
+	return s if s != "" else "Traveler"
+
+
+static func _sanitize_pc_race(raw: String) -> String:
+	return raw if raw in PC_RACES else "human"
+
+
+static func _sanitize_pc_gender(raw: String) -> String:
+	return raw if raw in PC_GENDERS else "m"
+
+
+## The PC sprite-variant registry key from cosmetic identity ("pc_<race>_<gender>",
+## e.g. "pc_drake_f"). PURE string build -- the sim never touches WISpriteRegistry
+## (purity rule); presentation resolves the key, falling back to the data sprite
+## if the variant art is not registered.
+func pc_sprite_variant() -> String:
+	return "pc_%s_%s" % [pc_race, pc_gender]
 
 
 func _bind_map(map_id: String) -> void:
@@ -1012,6 +1062,12 @@ func start_combat(entity_id: String) -> bool:
 
 func _build_player_combatant(template: Dictionary) -> Dictionary:
 	var pc: Dictionary = template.duplicate(true)
+	# M-ARC §5: the PC's combat turn-strip/readout name follows the chosen
+	# identity (cosmetic; stats/skills below untouched). The combat sprite chip
+	# is resolved presentation-side in board_renderer (`_combatant_sprite_id`),
+	# not here -- board_renderer re-reads the static combatant config, so this
+	# runtime dict's `sprite` would never reach the renderer anyway.
+	pc["display_name"] = pc_name
 	# Additive per-class stat growth, scaled by split-efficiency (spec §2.4
 	# REVISION 2026-07-03): leveling a class grows THAT class's relevant
 	# combat stats (magnitude), scaled by the split-efficiency multiplier
@@ -1530,6 +1586,10 @@ func snapshot() -> Dictionary:
 		"current_map": current_map,
 		"player_cell": [player_cell.x, player_cell.y],
 		"player_facing": [player_facing.x, player_facing.y],
+		"pc_name": pc_name,
+		"pc_race": pc_race,
+		"pc_gender": pc_gender,
+		"pc_sprite": pc_sprite_variant(),
 		"player_skills": player_skills.duplicate(),
 		"accomplishments": accomplishments.duplicate(true),
 		"classes": classes.duplicate(true),

@@ -1,0 +1,29 @@
+{
+ "_comment": "M-ARC §5: drives the REAL character-creation UI path. starts_at_title gives raw title control; creation_ui:true makes New Game open the creation screen (the default TestDriver skip goes straight to Game.reset with defaults, so every OTHER canonical is byte-unchanged). Picks Drake / Female / \"Sella\", then asserts the snapshot identity fields, the sim variant sprite key, the Drake-branched opener event, and the RENDERED variant binding on both the field (ui_entities_rendered pc_sprite) and combat is proven by the sim key (combat chip resolves the same pc_drake_f via board_renderer).",
+ "starts_at_title": true,
+ "creation_ui": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"_comment": "New Game -> creation screen (creation_ui opt-in).", "action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "race"}, "timeout_sec": 5},
+  {"_comment": "cursor 0(Human) -> 1(Drake).", "action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "gender"}, "timeout_sec": 5},
+  {"_comment": "cursor 0(Male) -> 1(Female).", "action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "name"}, "timeout_sec": 5},
+  {"action": "type_text", "text": "Sella"},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_char_creation_confirmed", "payload_contains": {"pc_name": "Sella", "pc_race": "drake", "pc_gender": "f"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"_comment": "Drake-branched GDI opener (canon-safe 'starting over in Liscor' copy) -- race in the payload proves the branch, lines still 4.", "action": "wait_for_event", "type": "ui_gdi_opener_rendered", "payload_contains": {"lines": 4, "race": "drake"}, "timeout_sec": 5},
+  {"_comment": "Sim identity fields in the snapshot (art-independent).", "action": "assert_state", "path": "pc_name", "equals": "Sella"},
+  {"action": "assert_state", "path": "pc_race", "equals": "drake"},
+  {"action": "assert_state", "path": "pc_gender", "equals": "f"},
+  {"_comment": "The sim's variant key (presentation resolves this to the pc_drake_f sprite at both bind sites).", "action": "assert_state", "path": "pc_sprite", "equals": "pc_drake_f"},
+  {"_comment": "The RENDERED field binding: world.gd resolved the PC visual to the drake/f variant art.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": {"pc_sprite": "pc_drake_f"}, "from_start": true, "timeout_sec": 5},
+  {"action": "screenshot", "name": "char_creation_drake_f_inn"}
+ ]
+}

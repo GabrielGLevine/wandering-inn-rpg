@@ -97,6 +97,18 @@ func _build_expected_counts() -> Dictionary:
 	counts["body_a/hit"] = 6       ## 624 / 104 (taking-punch)
 	counts["body_a/death"] = 7     ## 728 / 104 (falling-back-death)
 
+	## M-ARC §5 PC creation variants (6 = 3 races x 2 genders, all the SAME F2
+	## mannequin-template anim set, so counts match body_a exactly; per-variant
+	## frame_size/render_scale/anchor differ, but frame COUNTS are template-fixed).
+	## pc_human_m reuses body_a's sheets verbatim (the Human base).
+	for variant in ["pc_human_m", "pc_human_f", "pc_drake_m", "pc_drake_f", "pc_gnoll_m", "pc_gnoll_f"]:
+		counts["%s/idle" % variant] = 4
+		counts["%s/walk" % variant] = 6
+		counts["%s/slice" % variant] = 3
+		counts["%s/cast" % variant] = 6
+		counts["%s/hit" % variant] = 6
+		counts["%s/death" % variant] = 7
+
 	## citizen_f frame counts (all 64x64 frame size)
 	counts["citizen_f/idle"] = 4   ## 256 / 64
 	counts["citizen_f/walk"] = 6   ## 384 / 64

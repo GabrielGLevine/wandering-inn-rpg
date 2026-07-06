@@ -65,7 +65,7 @@ forbidden. Lore canon comes from the Wandering Inn Wiki, not invention.
 
 	# QA playtest scripts (THE verification tool — prefer this over manual reasoning)
 	# Full canonical sweep in one command (what CI runs — .github/workflows/ci.yml):
-	wandering_inn_game_v4/qa/ci_sweep.sh                           # all 41 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
+	wandering_inn_game_v4/qa/ci_sweep.sh                           # all 42 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
 	wandering_inn_game_v4/qa/run_qa.sh load_gate headless          # loads every .gd/.tscn/.tres; catches parse/compile errors. NATIVE-ONLY (see below)
 	wandering_inn_game_v4/qa/run_qa.sh inn_walkthrough headless   # full inn journey, no screenshots
 	wandering_inn_game_v4/qa/run_qa.sh inn_walkthrough windowed   # same + screenshots (a window opens briefly)
@@ -180,6 +180,34 @@ Parse Error, or WARNING in any run is a regression.
   time). Maps are data (`maps` in
   skeleton_scene.json, `door` entities transition). UI: dialogue panel / journal (J) /
   pause menu (Esc: save/load).
+
+- **Character creation (M-ARC §5):** New Game → `char_creation.gd` (native-res,
+  title-family UIChrome): race (Human/Drake/Gnoll) → gender (m/f, cosmetic) →
+  name (default "Traveler"). Three COSMETIC sim fields — `pc_name`/`pc_race`/
+  `pc_gender` (WIGame, additive save, NO version bump, tolerant sanitizers; NO
+  mechanical effect, no sim rule branches on them). Flow: title New Game →
+  `WIMain.swap_to_char_creation` (deferred) → confirm fires
+  `Game.reset({pc_name,pc_race,pc_gender})`, threaded ctor→sim; a load restores
+  identity from the save (never sees the creation dict). **QA:** `TestDriver`
+  auto-skips creation with the everyman defaults (Human/m/"Traveler") — the
+  creation screen is only ever SPAWNED when actually wanted (real play, or a QA
+  script that opts in via top-level `creation_ui: true` → `TestDriver.wants_creation_ui()`);
+  the default skip is byte-identical to the pre-feature New Game. `char_creation`
+  is the one canonical driving the real UI (name typed via TestDriver's new
+  `type_text` unicode step). **`pc_name` everywhere:** the combat turn-strip/
+  readout name comes from the runtime combatant dict (`_build_player_combatant`
+  overrides `display_name` = `pc_name`); field name tags were retired (R3) so
+  there is no other player-name render surface. **Sprite variant-key
+  indirection (presentation-only, sim purity preserved):** the sim builds a pure
+  key `pc_sprite_variant()` = `"pc_<race>_<gender>"`; the TWO bind sites resolve
+  it against `WISpriteRegistry` — world.gd `_pc_variant_sprite` (field visual)
+  and board_renderer `_combatant_sprite_id` (combat chip) — each degrading to the
+  data default `body_a` when a variant's art is unregistered. 6 variants
+  (human/drake/gnoll × m/f, all in the same earth-tone traveler outfit) via the
+  F2 PixelLab v2 pipeline. **Opener branches by race** (`sleep_veil._opener_lines`):
+  Human keeps the otherworlder arrival; Drake/Gnoll get a canon-safe "starting
+  over in Liscor" variant (⚑ user taste-review); all 4 lines so the opener-line
+  count is race-invariant.
 
 - **Combat depth (M3):** movement economy — `move_pool` (3 free steps/turn) spends
   before AP; `dash()` costs 1 AP for +3 pool, repeatable. Statuses live in a
@@ -538,6 +566,7 @@ smoke are green, zero SCRIPT ERROR/Parse Error/WARNING. Routing model:
 | `cisterns_fight` | 9 (fixture) | **Content Wave C3 Quest 1 FIGHT path (new canonical, +1 → 35).** Loads `cisterns_fight_start` (warrior L1 beside Olesm at the Guild frontage `(29,4)`) via title Continue. Full three-path-parity loop: GIVE (Olesm `olesm_intro` cisterns node banks `heard_about_cisterns` → opens the C1 grate `door_when` + starts the `cisterns` quest; `cisterns_brief` is the what/where/how explaining beat) → descend the now-open `sewer_grate` → clear the `shield_spiders` nest (`on_victory` banks `cleared_the_nest` + `resolved_the_cisterns`, firing quest beat 1) → ascend the ladder → REPORT (Olesm banks `cisterns_reported` → beat 2 + `quest_completed`). Fixture rng governs the warrior-L1-solo fight (~0.74 harness win; rng 9 won straightaway). Shot `01_olesm_give`. |
 | `cisterns_talk` | 9 (fixture) | **Content Wave C3 Quest 1 TALK path (new canonical, +1 → 36).** Loads `cisterns_talk_start` (warrior L1 at `(29,4)`). NO combat anywhere (its whole point; `assert_event_absent combat_started`). GIVE (Olesm) → cross to Watch Captain Zevara at the gate `(2,6)` and PERSUADE her via the `zevara_intro` sweep chain (`sweep_pitch`→`sweep_argue`, banks `persuaded_someone` + `watch_swept_cisterns` + `resolved_the_cisterns` [beat 1] + `remove_entity shield_spiders`) → REPORT to Olesm via the Watch option (`cisterns_reported` → beat 2 + completion). FIRST canonical coverage of `zevara_intro` (C2's probe was deleted; no prior asserts). Shot `02_zevara_persuade`. |
 | `cisterns_scout` | 9 (fixture) | **Content Wave C3 Quest 1 SKILL path (new canonical, +1 → 37).** Loads `cisterns_scout_start` (warrior L1 + `[Tactician]`/`[Observe]` at `(29,4)`). NO combat. GIVE (Olesm) → descend the grate → `[Observe]` the new `nest_ledge` prop `(17,10)` overlooking the nest — banks `scouted_the_nest` via the `requires_skill:observe`+`on_skill_use` seam (interact E routes through the SAME `use_skill('observe',…)` the field `[Observe]` hotbar uses — crate_light/cellar_door precedent) → ascend → REPORT the INTELLIGENCE to Olesm (`cisterns_intel`: his "a map is as good as a corpse" `[Tactician]` beat banks `resolved_the_cisterns` THEN `cisterns_reported`, firing BOTH beats + completion at once — crate guile precedent). **Third script by judgment (34→37, not the planner's estimate of 36):** the SKILL stream descends the sewers while the TALK stream never does, so they cannot share a run (a quest resolves exactly once). Shot `03_nest_observe`. |
+| `char_creation` | none | **M-ARC §5 (new canonical, +1 → 42).** THE character-creation proof — the ONLY script that drives the real creation UI (`starts_at_title` + top-level `creation_ui: true`; every OTHER New Game is the default TestDriver skip → `Game.reset()` straight through, byte-identical to before this feature, so the whole suite is untouched). Title gate → New Game → `swap_to_char_creation` → picks **Drake / Female / "Sella"** (arrows + `type_text` unicode into the name field, captured by `char_creation.gd::_unhandled_input`, NOT LineEdit GUI focus — headless-safe) → confirm fires `Game.reset({pc_name,pc_race,pc_gender})`. Asserts: `ui_char_creation_confirmed`{Sella,drake,f}; the **Drake-branched** GDI opener (`ui_gdi_opener_rendered`{lines:4, race:drake} — the "starting over in Liscor" copy, canon-safe: only Humans are Earth otherworlders); the snapshot identity fields + the pure variant key `pc_sprite == "pc_drake_f"` (art-independent); and the RENDERED field binding `ui_entities_rendered`{pc_sprite:"pc_drake_f"} (world.gd + board_renderer resolve the variant at the two presentation bind sites, degrading to `body_a` if a variant's art is missing). No combat/rng → no seed. |
 
 - **Playtest fixes + art (M4):** Dialogue gating SPLIT — options with
   accomplishment-keyed `requires` are HIDDEN until met (progress must not leak);

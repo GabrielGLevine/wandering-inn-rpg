@@ -28,6 +28,10 @@ const BACKDROP_COLOR := Color(0.08, 0.06, 0.05)
 ## so it uses the real window's own pixel space, not the world's).
 const NATIVE_SIZE := Vector2(1280.0, 720.0)
 
+## Injected by WIMain._spawn_title so New Game can open character creation
+## (M-ARC §5). The injection idiom (not a tree scan) matches combat_screen.
+var main_ref: WIMain
+
 var _state: int = State.GESTURE
 var _cursor := 0
 var _continue_enabled := false
@@ -234,7 +238,20 @@ func _confirm() -> void:
 		return
 	match ROWS[_cursor]:
 		"New Game":
-			Game.reset()
+			# M-ARC §5: real play (and a QA script opting in via `creation_ui`)
+			# routes through the character-creation screen; every OTHER New Game
+			# path -- the default TestDriver skip -- calls Game.reset() straight
+			# through, byte-identical to before this feature (the creation screen
+			# is never even spawned), so every existing canonical is untouched.
+			if _skip_creation():
+				Game.reset()
+			elif main_ref != null:
+				# Deferred so this input handler (and its trailing
+				# set_input_as_handled) finishes before the swap frees this title
+				# out of the tree -- same reason Game.reset()'s swap is deferred.
+				main_ref.swap_to_char_creation.call_deferred()
+			else:
+				Game.reset()
 		"Continue":
 			# M5 final review: load_slot returns false on a corrupt or
 			# older-version save (WISave.apply rejects mismatched VERSION).
@@ -246,6 +263,14 @@ func _confirm() -> void:
 				_show_notice("Save is from an older version — start a New Game")
 		"Quit":
 			get_tree().quit()
+
+
+## True when a QA run is driving and has NOT opted into the real creation UI --
+## the default TestDriver New Game skips creation and resets with the everyman
+## defaults, keeping every existing canonical byte-unchanged. A char_creation QA
+## script sets top-level `creation_ui: true` to take the real path instead.
+func _skip_creation() -> bool:
+	return TestDriver != null and TestDriver.active() and not TestDriver.wants_creation_ui()
 
 
 func _refresh_continue_state() -> void:

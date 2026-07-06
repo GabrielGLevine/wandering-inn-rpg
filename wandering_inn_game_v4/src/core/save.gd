@@ -72,6 +72,15 @@ extends RefCounted
 ## added the SAME additive-optional way -- NOT in `required`, NO version bump.
 ## A save missing the key restores false (no orb was lit before the feature
 ## existed); a present-but-non-bool value is rejected.
+## (M-ARC §5 character creation): `pc_name` (String), `pc_race` (String), and
+## `pc_gender` (String) -- the PC's cosmetic identity -- are added the SAME
+## additive-optional way as light_active/gold/used_skills above (NOT in
+## `required`, NO version bump). A save missing any of them restores the
+## everyman default (Human / male / "Traveler"), which is exactly correct (a
+## pre-creation save was always the "Traveler" the game used to hardcode). On
+## load each value is re-sanitized through WIGame's own tolerant sanitizers, so
+## a corrupt string can never poison the sprite-variant key or the opener
+## branch; a present-but-non-String value is rejected.
 const VERSION := 5
 
 
@@ -98,6 +107,9 @@ static func serialize(game: WIGame) -> Dictionary:
 		"entity_first_use": game.entity_first_use.duplicate(true),
 		"gold": game.gold,
 		"light_active": game.light_active,
+		"pc_name": game.pc_name,
+		"pc_race": game.pc_race,
+		"pc_gender": game.pc_gender,
 		"rng_state": str(game.rng.state),
 	}}
 
@@ -208,6 +220,12 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# version bump.
 	if s.has("light_active") and not (s["light_active"] is bool):
 		return false
+	# pc_name/pc_race/pc_gender (M-ARC §5) follow the SAME additive-optional
+	# pattern -- default to the everyman identity when absent, rejected if
+	# present-but-non-String; the values themselves are re-sanitized on restore.
+	for pc_key: String in ["pc_name", "pc_race", "pc_gender"]:
+		if s.has(pc_key) and not (s[pc_key] is String):
+			return false
 	# inventory/equipped/container_state/actions_since_sleep (M7 Task E2) ARE
 	# in `required` above (this is a version-bumped addition, not the
 	# additive-optional pattern) -- still type-checked here like every other
@@ -267,6 +285,12 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.entity_first_use = entity_first_use.duplicate(true)
 	game.gold = int(s.get("gold", 0))
 	game.light_active = bool(s.get("light_active", false))
+	# M-ARC §5: restore cosmetic identity through WIGame's tolerant sanitizers
+	# (absent -> everyman default; garbage -> default), so the sprite-variant key
+	# and opener branch are always well-formed regardless of the save's contents.
+	game.pc_name = WIGame._sanitize_pc_name(String(s.get("pc_name", "Traveler")))
+	game.pc_race = WIGame._sanitize_pc_race(String(s.get("pc_race", "human")))
+	game.pc_gender = WIGame._sanitize_pc_gender(String(s.get("pc_gender", "m")))
 	game.rng.state = int(String(s["rng_state"]))
 	game.reprime_quests()
 	return true

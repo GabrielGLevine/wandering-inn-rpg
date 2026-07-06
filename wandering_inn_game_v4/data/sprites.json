@@ -1744,5 +1744,425 @@
    }
   },
   "shadow": true
+ },
+ "pc_human_m": {
+  "directional": true,
+  "render_scale": 0.62,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/body_a/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Idle_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/body_a/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Walk_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/body_a/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Slice_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 8
+   },
+   "cast": {
+    "sheet_down": "res://assets/sprites/body_a/Cast_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Cast_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 10
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/body_a/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Hit_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/body_a/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Death_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.75
+  ]
+ },
+ "pc_human_f": {
+  "directional": true,
+  "render_scale": 0.6154,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/pc_human_f/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_human_f/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_human_f/Idle_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/pc_human_f/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_human_f/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_human_f/Walk_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/pc_human_f/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_human_f/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_human_f/Slice_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/pc_human_f/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_human_f/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_human_f/Hit_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/pc_human_f/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_human_f/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_human_f/Death_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 8
+   },
+   "cast": {
+    "sheet_down": "res://assets/sprites/pc_human_f/Cast_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_human_f/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_human_f/Cast_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 10
+   }
+  },
+  "anchor": [
+   0.5,
+   0.7596
+  ]
+ },
+ "pc_drake_m": {
+  "directional": true,
+  "render_scale": 0.5161,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/pc_drake_m/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_m/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_m/Idle_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/pc_drake_m/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_m/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_m/Walk_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/pc_drake_m/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_m/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_m/Slice_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/pc_drake_m/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_m/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_m/Hit_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/pc_drake_m/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_m/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_m/Death_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   },
+   "cast": {
+    "sheet_down": "res://assets/sprites/pc_drake_m/Cast_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_m/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_m/Cast_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 10
+   }
+  },
+  "anchor": [
+   0.5,
+   0.7339
+  ]
+ },
+ "pc_drake_f": {
+  "directional": true,
+  "render_scale": 0.5161,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/pc_drake_f/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_f/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_f/Idle_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/pc_drake_f/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_f/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_f/Walk_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/pc_drake_f/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_f/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_f/Slice_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/pc_drake_f/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_f/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_f/Hit_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/pc_drake_f/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_f/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_f/Death_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   },
+   "cast": {
+    "sheet_down": "res://assets/sprites/pc_drake_f/Cast_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_drake_f/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_drake_f/Cast_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 10
+   }
+  },
+  "anchor": [
+   0.5,
+   0.7258
+  ]
+ },
+ "pc_gnoll_m": {
+  "directional": true,
+  "render_scale": 0.5926,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_m/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_m/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_m/Idle_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_m/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_m/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_m/Walk_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_m/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_m/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_m/Slice_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_m/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_m/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_m/Hit_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_m/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_m/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_m/Death_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 8
+   },
+   "cast": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_m/Cast_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_m/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_m/Cast_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 10
+   }
+  },
+  "anchor": [
+   0.5,
+   0.7685
+  ]
+ },
+ "pc_gnoll_f": {
+  "directional": true,
+  "render_scale": 0.5926,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_f/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_f/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_f/Idle_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_f/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_f/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_f/Walk_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_f/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_f/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_f/Slice_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_f/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_f/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_f/Hit_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_f/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_f/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_f/Death_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 8
+   },
+   "cast": {
+    "sheet_down": "res://assets/sprites/pc_gnoll_f/Cast_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/pc_gnoll_f/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/pc_gnoll_f/Cast_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 10
+   }
+  },
+  "anchor": [
+   0.5,
+   0.7593
+  ]
  }
 }
