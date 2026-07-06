@@ -144,9 +144,28 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   bleed / empty space) but controller's combat-cover read showed crates
   fine — discrepancy UNRESOLVED — verify in a windowed pass before
   touching.
-- [ ] PC — field/combat PC is the unclothed Body_A base — outfit layer
-  queued since M4 — max-fidelity rule says pick best candidate outfit
-  composite now rather than waiting for a bespoke one.
+- [x] PC — field/combat PC was the unclothed Body_A base — outfit layer
+  queued since M4 — FIXED by Track F2 (2026-07-06, uncommitted): the naked
+  Body_A skin-tone base is REPLACED by a fully clothed, directional, animated
+  PC built via the **PixelLab v2 character pipeline** (Tier-1 subscription).
+  `create-character-pro` (template `mannequin`, `low top-down`, 8 consistent
+  facings — solves the v1 `/rotate` identity drift) generated an earth-tone
+  traveler (olive-tan tunic, brown trousers, leather belt, short brown hair —
+  a nobody-yet arrival, NOT armor); `animate-character` (template mode) built
+  all six anims from the closest mannequin templates: idle=`breathing-idle`(4),
+  walk=`walking`(6), slice=`lead-jab`(3), hit=`taking-punch`(6),
+  death=`falling-back-death`(7), cast=`fireball`(6, glowing-flame-in-hand — a
+  bonus VFX that reads as spellcasting). Frames export at 104×104 (PixelLab's
+  animation canvas), so `sprites.json` body_a gained `render_scale: 0.62`
+  (64/104 ≈ old on-screen footprint) + `frame_size:[104,104]`; feet plane is a
+  rock-solid y≈78 across every standing anim/frame/direction, so `anchor`
+  stays `[0.5,0.75]` (78/104) UNCHANGED. `cast` now ships real down/side/up
+  sheets (was side-reused). `test_sprite_registry` counts updated to the new
+  per-anim frame counts. Originals parked in
+  `potential_assets/pixellab_2026-07-06/body_a_original/`. Verified: import
+  clean; 14 units green; full ci_sweep (41) green; windowed field + combat
+  READ (`.superpowers/sdd/fp-handoff/f2-shots/f2_field_pc_clothed.png`,
+  `f2_combat_pc_clothed.png`, `f2_base_8dir.png`, `f2_all_anims_side.png`).
 - [x] PROP — `inn_chest`'s `visual_states` "opened" signal was a TINT only
   (no open-lid frame on the PC16 `Interior_Props_01.png` chest region) —
   M-BEAUTY R3 2026-07-05 — FIXED by Track B2 item 4 (2026-07-06, uncommitted):

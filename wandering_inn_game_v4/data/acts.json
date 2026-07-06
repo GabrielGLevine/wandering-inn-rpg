@@ -1,0 +1,36 @@
+{
+	"_comment": "M-ARC Task A1 -- the act layer. Acts are a COUNTER-DERIVED quest-machinery layer (progress = pure function of counters, the WIQuests idiom), evaluated by WIActs (src/core/acts.gd), NOT stored. The CURRENT act is the highest act whose predecessors' `advance_when` gates are all met (fresh boot = Act I; capped at the last act -- Act III is open-ended until the A3 climax banks `raskghar_sealed`, so its gate stays defined-but-unreachable for now). Conditions share one predicate shape used by both `advance_when` (advance to the next act) and per-beat `when` (journal milestone achieved): `min_classes` (int, classes.size()), `quests_completed` (int, count of COMPLETED started quests via WIQuests), `accomplishments` ({id: min_count}). Empty condition = trivially met. All copy is RESULTS-ONLY and opaque (no stats, canon-warm) per the M-ARC design + repo constraint.",
+	"acts": [
+		{
+			"id": "act_i",
+			"title": "Arrival",
+			"header": "Act I -- Arrival",
+			"advance_when": { "min_classes": 1, "accomplishments": { "reached_liscor": 1 } },
+			"beats": [
+				{ "id": "first_class", "text": "You've grown into a class of your own.", "when": { "min_classes": 1 } },
+				{ "id": "reached_city", "text": "Liscor's gates opened for you at last.", "when": { "accomplishments": { "reached_liscor": 1 } } }
+			]
+		},
+		{
+			"id": "act_ii",
+			"title": "Make a Place for Yourself",
+			"header": "Act II -- Make a Place for Yourself",
+			"advance_when": { "min_classes": 2, "quests_completed": 3 },
+			"beats": [
+				{ "id": "errands_around", "text": "Word of your errands is getting around town.", "when": { "accomplishments": { "package_delivered": 1 } } },
+				{ "id": "krshia_trust", "text": "Krshia trusts you with more than gossip now.", "when": { "accomplishments": { "crate_returned": 1 } } },
+				{ "id": "watch_calls", "text": "The Watch knows to call on you when something's wrong.", "when": { "accomplishments": { "cisterns_reported": 1 } } },
+				{ "id": "known_face", "text": "Liscor is starting to know your face.", "when": { "min_classes": 2, "quests_completed": 3 } }
+			]
+		},
+		{
+			"id": "act_iii",
+			"title": "What Stirs Beneath",
+			"header": "Act III -- What Stirs Beneath",
+			"advance_when": { "accomplishments": { "raskghar_sealed": 1 } },
+			"beats": [
+				{ "id": "the_stirring", "text": "Something is moving in the dark beneath the city.", "when": { "accomplishments": { "raskghar_sealed": 1 } } }
+			]
+		}
+	]
+}
