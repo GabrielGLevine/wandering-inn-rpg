@@ -58,7 +58,10 @@ paths_from_manifest() {
 import json, sys
 data = json.load(open(sys.argv[1]))
 if isinstance(data, dict):
-    items = data.get("protected_paths", data.get("entries", []))
+    # R2's shipped schema: {"assets": [{"path": ..., "bundle": true, ...}]}
+    # (paths relative to wandering_inn_game_v4/). Older draft shapes kept
+    # as fallbacks.
+    items = data.get("assets", data.get("protected_paths", data.get("entries", [])))
 elif isinstance(data, list):
     items = data
 else:
@@ -68,7 +71,13 @@ for it in items:
     if isinstance(it, str):
         out.append(it)
     elif isinstance(it, dict) and "path" in it:
-        out.append(it["path"])
+        if it.get("bundle", True):
+            p = it["path"]
+            if not p.startswith("wandering_inn_game_v4/"):
+                p = "wandering_inn_game_v4/" + p
+            out.append(p)
+            # the .import sidecar rides along when present
+            out.append(p + ".import")
 if not out:
     sys.stderr.write(
         "make_asset_bundle.sh: manifest parsed but no protected paths found — "
@@ -79,12 +88,16 @@ for p in out:
 PY
 }
 
-mapfile -t PATHS < <(paths_from_manifest)
+# macOS ships bash 3.2 (no mapfile) — portable read loop instead.
+PATHS=()
+while IFS= read -r line; do
+  [ -n "$line" ] && PATHS+=("$line")
+done < <(paths_from_manifest)
 
 # Verify every listed path exists; a missing protected file is a manifest bug.
 missing=0
 declare -a REAL=()
-for p in "${PATHS[@]}"; do
+for p in ${PATHS[@]+"${PATHS[@]}"}; do
   if [ -e "$ROOT/$p" ]; then
     REAL+=("$p")
   else

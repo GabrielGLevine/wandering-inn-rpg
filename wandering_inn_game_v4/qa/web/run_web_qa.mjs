@@ -54,7 +54,11 @@ await rm(outDir, { recursive: true, force: true });
 await mkdir(outDir, { recursive: true });
 
 const browser = await chromium.launch({ args: ["--single-process"] });
-const page = await browser.newPage({ viewport: { width: 640, height: 400 } });
+// deviceScaleFactor pinned to 1: without it, headless Chromium on some CI
+// runners reports an absurd devicePixelRatio, and Godot's ImageLoaderSVG then
+// rasterizes engine-theme SVGs at gigantic canvases (the runner-only
+// "51500x51500" WARNING caught by the public repo's first CI run).
+const page = await browser.newPage({ viewport: { width: 640, height: 400 }, deviceScaleFactor: 1 });
 await page.route(`${BASE_URL}**/*`, fulfillFromBuild);
 page.on("console", (msg) => {
 	const text = msg.text();
