@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0qfesmp1qsny"
-path="res://.godot/imported/Walk-Sheet.png-0ea1b5cbf90f106cc20a5de6fc2d7a52.ctex"
+uid="uid://dp5w8yntd7670"
+path="res://.godot/imported/Idle_Down-Sheet.png-d2f3796be4c8e1d6ba4dc05b567384b0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/relc/Walk-Sheet.png"
-dest_files=["res://.godot/imported/Walk-Sheet.png-0ea1b5cbf90f106cc20a5de6fc2d7a52.ctex"]
+source_file="res://assets/sprites/zevara/Idle_Down-Sheet.png"
+dest_files=["res://.godot/imported/Idle_Down-Sheet.png-d2f3796be4c8e1d6ba4dc05b567384b0.ctex"]
 
 [params]
 

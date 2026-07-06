@@ -148,20 +148,27 @@ func _build_expected_counts() -> Dictionary:
 	counts["a_hunter/idle"] = 4
 	counts["a_hunter/walk"] = 6
 
-	## Track B1 PixelLab Relc (non-directional): idle single 64x64 frame,
-	## walk 256/64 = 4 frames (AI-generated, PC16-adjacent Drake guardsman).
-	counts["relc/idle"] = 1
-	counts["relc/walk"] = 4
+	## Sprite-upgrade wave 2026-07-06: Relc is now DIRECTIONAL + animated
+	## (PixelLab v2 create-character-pro -> animate-character; 124x124 frames,
+	## down/side/up sheets). idle=breathing-idle(4), walk=walking(6),
+	## slice=lead-jab(3) -- the spear thrust reads cleanly.
+	counts["relc/idle"] = 4
+	counts["relc/walk"] = 6
+	counts["relc/slice"] = 3
 
-	## Track B1 PixelLab Pisces (non-directional): hooded human necromancer
-	## in white robes. idle single 64x64 frame, walk 256/64 = 4 frames.
-	counts["pisces/idle"] = 1
-	counts["pisces/walk"] = 4
+	## Sprite-upgrade wave 2026-07-06: Pisces now DIRECTIONAL + animated
+	## (hooded white-robe necromancer; 108x108 frames, down/side/up).
+	## idle=breathing-idle(4), walk=walking(6).
+	counts["pisces/idle"] = 4
+	counts["pisces/walk"] = 6
 
-	## Content Wave C2 PixelLab characters (non-directional, single 64x64 idle
-	## frame each): Olesm (slim blue Drake clerk) + Zevara (blue Drake Watch captain).
-	counts["olesm/idle"] = 1
-	counts["zevara/idle"] = 1
+	## Sprite-upgrade wave 2026-07-06: Olesm (sky-blue Drake clerk w/ rolled map)
+	## + Zevara (light-blue Drake Watch officer, armor) are now DIRECTIONAL +
+	## animated (112x112 frames, down/side/up). idle(4) + walk(6).
+	counts["olesm/idle"] = 4
+	counts["olesm/walk"] = 6
+	counts["zevara/idle"] = 4
+	counts["zevara/walk"] = 6
 
 	## M5 E3 dressing sprites (single-region statics; grill is a 4-frame strip)
 	for e3_static: String in [

@@ -1,0 +1,20 @@
+{
+ "_comment": "Sprite-upgrade wave 2026-07-06: windowed field reads of the four upgraded directional/animated characters -- Relc (floodplains 12,13), Zevara (street 2,6), Olesm (street 29,3), Pisces (street 30,4). Peek-only, not a canonical gate member.",
+ "steps": [
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 10},
+  {"action": "teleport", "map": "floodplains", "cell": [12, 15]},
+  {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "floodplains"}, "timeout_sec": 5},
+  {"action": "wait_frames", "frames": 12},
+  {"action": "screenshot", "name": "01_relc_field"},
+  {"action": "teleport", "map": "street", "cell": [3, 6]},
+  {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "street"}, "timeout_sec": 5},
+  {"action": "wait_frames", "frames": 12},
+  {"action": "screenshot", "name": "02_zevara_field"},
+  {"action": "teleport", "map": "street", "cell": [28, 4]},
+  {"action": "wait_frames", "frames": 12},
+  {"action": "screenshot", "name": "03_olesm_pisces_field"},
+  {"action": "teleport", "map": "street", "cell": [29, 5]},
+  {"action": "wait_frames", "frames": 12},
+  {"action": "screenshot", "name": "04_pisces_field"}
+ ]
+}

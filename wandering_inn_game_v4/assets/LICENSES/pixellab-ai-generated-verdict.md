@@ -12,15 +12,16 @@ original generations, not pack extracts.
 
 | Path | Subject | Prompt gist |
 |---|---|---|
-| `assets/sprites/relc/Idle-Sheet.png`, `Walk-Sheet.png` | Relc (Drake guardsman) | teal-green Drake city guardsman with spear, PC16-adjacent, transparent bg |
-| `assets/sprites/pisces/Idle-Sheet.png`, `Walk-Sheet.png` | Pisces (Human necromancer) | hooded young human in immaculate white robes with faded trim |
+| ~~`assets/sprites/relc/Idle-Sheet.png`, `Walk-Sheet.png`~~ SUPERSEDED by the upgrade wave row below | Relc (Drake guardsman) | teal-green Drake city guardsman with spear, PC16-adjacent, transparent bg |
+| ~~`assets/sprites/pisces/Idle-Sheet.png`, `Walk-Sheet.png`~~ SUPERSEDED by the upgrade wave row below | Pisces (Human necromancer) | hooded young human in immaculate white robes with faded trim |
 | `assets/sprites/body_a/Cast_Side-Sheet.png` | PC cast/gesture strip | Body_A idle frame reference; raised-hand casting gesture + magic glow |
 | `assets/sprites/cauldron/Idle-Sheet.png` | `stew_pot` prop (B3) | black iron cauldron on a small log fire, hard black outline, 16-bit; `low top-down` |
 | `assets/sprites/training_dummy/Idle-Sheet.png` | `training_dummy` prop (B3) | straw practice-dummy pell, burlap head, wooden post, hard outline; `low top-down` |
 | `assets/sprites/dirty_table/Idle-Sheet.png` | `dirty_table` pre-clean prop (B3) | wooden tavern table from above cluttered with dirty plates/mugs/scraps; `high top-down` |
-| `assets/sprites/olesm/Idle-Sheet.png` | Olesm (Drake clerk, C2) | slim sky-blue Drake lizardman scholar, brown leather vest, holding a rolled map; `side` |
-| `assets/sprites/zevara/Idle-Sheet.png` | Zevara (Drake Watch captain, C2) | armored light-blue Drake lizardman watch officer, steel armor, stern; `low top-down` |
+| ~~`assets/sprites/olesm/Idle-Sheet.png`~~ SUPERSEDED by the upgrade wave row below | Olesm (Drake clerk, C2) | slim sky-blue Drake lizardman scholar, brown leather vest, holding a rolled map; `side` |
+| ~~`assets/sprites/zevara/Idle-Sheet.png`~~ SUPERSEDED by the upgrade wave row below | Zevara (Drake Watch captain, C2) | armored light-blue Drake lizardman watch officer, steel armor, stern; `low top-down` |
 | `assets/sprites/body_a/{Idle,Walk,Slice,Hit,Death,Cast}_{Down,Side,Up}-Sheet.png` | PC clothed base (F2, supersedes the row-17 Cast strip) | earth-tone traveler (olive-tan tunic, brown trousers, leather belt, brown hair); v2 8-dir `create-character-pro` (`mannequin`, `low top-down`) + `animate-character` template anims; 104×104 |
+| `assets/sprites/{relc,pisces,olesm,zevara}/{Idle,Walk[,Slice]}_{Down,Side,Up}-Sheet.png` | Sprite-upgrade wave (2026-07-06): Relc/Pisces/Olesm/Zevara static/idle-only → DIRECTIONAL + animated | per-profile prompts (teal spear-Drake / hooded white-robe necromancer / sky-blue clerk-with-map / light-blue armored officer); v2 `create-character-pro` (`mannequin`, `low top-down`, 8 facings) + `animate-character` templates (`breathing-idle`/`walking`/`lead-jab`); down/side/up (side mirrors west; diagonals parked); 124/108/112/112px frames |
 
 **Track F2 (2026-07-06)** replaced the naked Body_A PC via the **v2 character
 pipeline** (`api.pixellab.ai/v2`; Tier-1 "Pixel Apprentice" subscription — the

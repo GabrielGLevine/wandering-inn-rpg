@@ -18,7 +18,8 @@ canon cites · current sprite state.
   (combat_scale 0.4).
 - Voice: loud, cocky, friendly-menacing; bored by paperwork; genuinely
   kind under it. Wiki: Relc Grasstongue.
-- Sprite: bespoke PixelLab idle+walk, NON-directional (upgrade queued).
+- Sprite: bespoke PixelLab v2 DIRECTIONAL + animated (idle/walk/slice;
+  124px frames; combat_scale 0.3875 containment). Upgraded 2026-07-06.
 
 ## Erin Solstice
 - Human [Innkeeper], early 20s, athletic-average.
@@ -31,7 +32,8 @@ canon cites · current sprite state.
 - Shabby-genteel WHITE robes w/ faded trim, hood, smug posture.
 - Voice: haughty, precise, defensive about necromancy, brilliant
   teacher despite himself.
-- Sprite: bespoke PixelLab hooded robe, non-directional (upgrade queued).
+- Sprite: bespoke PixelLab v2 DIRECTIONAL + animated hooded white robe
+  (idle/walk; 108px frames). Upgraded 2026-07-06.
 
 ## Lyonette du Marquin
 - Human [Barmaid] (fallen [Princess] of Calanfer — NOT public), late teens.
@@ -45,14 +47,16 @@ canon cites · current sprite state.
 - Drake [Tactician], slight/slim, smaller than Relc.
 - Sky-blue scales, clerk's vest, carries a rolled map/ledger.
 - Voice: earnest, chess-obsessed, self-deprecating, quietly proud.
-- Sprite: bespoke PixelLab, non-directional (upgrade queued).
+- Sprite: bespoke PixelLab v2 DIRECTIONAL + animated (idle/walk; sky-blue
+  Drake clerk holding a rolled map; 112px frames). Upgraded 2026-07-06.
 
 ## Zevara Sunderscale
 - Drake [Watch Captain], athletic, upright bearing.
 - LIGHT-blue scales, Watch officer armor, stern set.
 - Voice: dry, overworked, duty-first; persuaded by risk/duty arguments,
   never flattery.
-- Sprite: bespoke PixelLab officer, non-directional (upgrade queued).
+- Sprite: bespoke PixelLab v2 DIRECTIONAL + animated (idle/walk; light-blue
+  Drake in Watch officer armor; 112px frames). Upgraded 2026-07-06.
 
 ## Krshia Silverfang
 - Gnoll [Shopkeeper], tall, broad, dignified.

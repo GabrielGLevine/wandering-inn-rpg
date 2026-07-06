@@ -58,6 +58,11 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   `04_olesm_pool.png`) — both read clearly as blue Drakes. Minor follow-up
   (not a defect): idle-only (no walk cycle) and no directional facings —
   acceptable for stationary NPCs, matches relc/pisces fallback behaviour.
+  **RESOLVED by the sprite-upgrade wave (2026-07-06):** Olesm + Zevara are
+  now DIRECTIONAL + animated (idle+walk, down/side/up) via the v2 character
+  pipeline; windowed field reads at
+  `.superpowers/sdd/fp-handoff/upgrade-shots/` (`03_olesm_pisces_field.png`,
+  `02_zevara_field.png`, `zoom_olesm_pisces.png`, `zoom_zevara.png`).
 - [ ] SPRITE/CANON — **Lyonette** (inn barmaid, pre-existing entity) still
   uses the `citizen_f` sprite with a pink tint — a human-woman stand-in.
   CANON FLAG: the wiki gives Lyonette **bright RED hair** + blue eyes; the C2
@@ -122,6 +127,14 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   NOTE for a future pass: sprite is NON-DIRECTIONAL (single facing all 4
   dirs) — `/rotate` drifted at 64px (doubled the spear), so a clean 4-dir
   set was parked; a directional upgrade is a nice-to-have, not a defect.
+  **RESOLVED by the sprite-upgrade wave (2026-07-06):** Relc is now
+  DIRECTIONAL + animated (idle/walk/slice, down/side/up) via the v2
+  character pipeline (`create-character-pro` 8-facing base kills the
+  `/rotate` drift; `lead-jab` slice reads as a clean spear thrust); the
+  canon-tall field presence + `combat_scale` containment are preserved
+  (re-tuned 0.4→0.3875 for the 124px frame). Windowed reads:
+  `.superpowers/sdd/fp-handoff/upgrade-shots/01_relc_field.png`,
+  `zoom_relc.png`, `01_relc_combat_containment.png`.
 - [x] SPRITE — `sewer_grate` was a semantic fallback placeholder (boulder art)
   — A2 2026-07-04 — FIXED by Track B2 item 1 (2026-07-06, uncommitted):
   repointed to the round copper-rimmed barred manhole grate in the (already

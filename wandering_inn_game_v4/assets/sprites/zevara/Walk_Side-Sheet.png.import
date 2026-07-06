@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://sjkh8p52fl67"
-path="res://.godot/imported/Idle-Sheet.png-69343aeeea88d05267a693d8ef584294.ctex"
+uid="uid://j5obfedpxoec"
+path="res://.godot/imported/Walk_Side-Sheet.png-97eee18a041cb911bd8684d93c757396.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/zevara/Idle-Sheet.png"
-dest_files=["res://.godot/imported/Idle-Sheet.png-69343aeeea88d05267a693d8ef584294.ctex"]
+source_file="res://assets/sprites/zevara/Walk_Side-Sheet.png"
+dest_files=["res://.godot/imported/Walk_Side-Sheet.png-97eee18a041cb911bd8684d93c757396.ctex"]
 
 [params]
 

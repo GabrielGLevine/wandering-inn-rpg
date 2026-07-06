@@ -21,7 +21,7 @@
    "id": "relc",
    "display_name": "Relc",
    "sprite": "relc",
-   "combat_scale": 0.4,
+   "combat_scale": 0.3875,
    "side": "player",
    "stats": {
     "str": 14,
