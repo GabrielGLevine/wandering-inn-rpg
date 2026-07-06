@@ -110,6 +110,9 @@ func _build_expected_counts() -> Dictionary:
 	counts["rug_tan/idle"] = 1
 	counts["table_brown/idle"] = 1
 	counts["chest/idle"] = 1
+	## Track B2 item 4: Admurin open-lid chest, single-region static (inn_chest
+	## visual_states "opened" swap).
+	counts["chest_open/idle"] = 1
 	counts["plant_pot/idle"] = 1
 	counts["bar_counter/idle"] = 1
 	counts["barrel/idle"] = 1

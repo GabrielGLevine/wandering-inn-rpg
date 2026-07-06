@@ -177,6 +177,13 @@
    "fallback": "silent"
   },
   {
+   "path": "assets/props/admurin/Chests.png",
+   "source_pack": "Admurin's Freebies",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
    "path": "assets/props/cave/Props.png",
    "source_pack": "Pixel Crawler - Cave",
    "verdict": "FORBIDDEN",

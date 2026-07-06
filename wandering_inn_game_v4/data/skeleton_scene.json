@@ -612,11 +612,7 @@
        "when": {
         "container_opened": true
        },
-       "tint": [
-        0.5,
-        0.52,
-        0.58
-       ]
+       "sprite": "chest_open"
       }
      ]
     }
@@ -2667,6 +2663,18 @@
       {
        "item": "crude_blade",
        "chance": 0.25
+      }
+     ],
+     "visual_states": [
+      {
+       "when": {
+        "dormant": true
+       },
+       "tint": [
+        0.42,
+        0.5,
+        0.55
+       ]
       }
      ]
     },

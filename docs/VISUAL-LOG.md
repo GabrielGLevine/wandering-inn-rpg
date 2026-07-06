@@ -16,9 +16,22 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
-- [ ] FIELD — dormant (respawns:true) encounters look identical to live
+- [x] FIELD — dormant (respawns:true) encounters look identical to live
   ones after defeat — a "resting/cleared" visual state would stop them
-  reading as bugs — user playtest 2026-07-04.
+  reading as bugs — user playtest 2026-07-04 — FIXED by Track B2 item 6
+  (2026-07-06, uncommitted). Presentation-only seam: added a third
+  `visual_states` `when` shape `{"dormant": true}` to `world.gd`'s
+  `_visual_state_active` (reads `Game.sim.dormant_encounters.has(id)` — no sim
+  change), plus a `_refresh_entities_watching_dormant()` scan fired on
+  `UI_COMBAT_HIDDEN` (post-combat the field re-shows WITHOUT a rebuild, so the
+  just-defeated encounter needs an in-place re-render; the sleep-beat re-arm
+  needs no hook — it clears the set on a different map and the encounter's map
+  rebuilds on the next MAP_CHANGED). Wired `goblin_encounter_1` (the only
+  respawns:true encounter) with a cool blue-grey resting tint
+  `[0.42,0.5,0.55]`. Windowed-verified via throwaway probe (deleted): defeated
+  goblin_encounter_1 reads clearly dimmed/cleared while the adjacent live
+  goblin_encounter_2 stays vivid (`.superpowers/sdd/fp-handoff/b2-shots/
+  b2_dormant_00_live.png` vs `b2_dormant_01_resting.png`).
 - [ ] FIELD/TILES — world maps render BLOCKED cells as flat tiles while
   arenas render them as biome prop sprites (M6.5 structure map,
   2026-07-04) — props-over-tiles is a repo-wide mandate; field blocked
@@ -30,7 +43,14 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   beside the kitchen's existing grill/hearth decor — reads as "more
   kitchen equipment", not a distinct interactive prop — slice T2
   2026-07-04 — needs a distinct pot/cauldron region pick (Interior_Props
-  candidates) at next art pass.
+  candidates) at next art pass. **PARKED by Track B2 item 2 (2026-07-06):
+  no round cauldron/stew-pot sprite exists in ANY in-tree pack** — verified
+  by PIL crop-measure + windowed reads: Cooking Station/Estructure.png are
+  modern gray stoves + wooden frames + draped tables (no pot); Furnace.png is
+  brick forges/kilns; Pixel_16 interiors is furniture; Sewer Props.png has
+  buckets/chests. Honesty rule (placeholder beats mismatch): grill-reuse held
+  rather than swap to a semantically-wrong oven/forge. Real fix = a PixelLab
+  cauldron gen (Track B item-1 lane) or a new pack with a literal pot.
 
 - [ ] UI/TEXT — tutor feed 4th line sits TIGHT against the parchment fold
   (descenders graze it; legible) — F fix-wave residual 2026-07-04 —
@@ -70,9 +90,21 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   NOTE for a future pass: sprite is NON-DIRECTIONAL (single facing all 4
   dirs) — `/rotate` drifted at 64px (doubled the spear), so a clean 4-dir
   set was parked; a directional upgrade is a nice-to-have, not a defect.
-- [ ] SPRITE — `sewer_grate` + `training_dummy` are semantic fallback
-  placeholders (boulder/crate art) — A2 2026-07-04 — no grate/armor-stand
-  art in-tree; content-pass to source or restyle labels to match visuals.
+- [x] SPRITE — `sewer_grate` was a semantic fallback placeholder (boulder art)
+  — A2 2026-07-04 — FIXED by Track B2 item 1 (2026-07-06, uncommitted):
+  repointed to the round copper-rimmed barred manhole grate in the (already
+  shipped) `assets/props/sewer/Props.png` region `[112,39,16,18]`,
+  render_scale 0.9, shadow dropped (a flat floor grate). Keeps the green
+  glow light wiring. Windowed-verified reading as an iron drain/grate,
+  distinct from the nearby campfire stone-rings
+  (`.superpowers/sdd/fp-handoff/b2-shots/b2_sewer_grate_03_south_square.png`).
+- [ ] SPRITE — `training_dummy` is a semantic fallback placeholder (crate art)
+  — A2 2026-07-04 — **PARKED by Track B2 item 3 (2026-07-06): no straw-dummy
+  or armor-stand sprite exists in the packs.** The catalog's "armor stands"
+  in Furniture.png cols 6-10 are, on windowed crop-read, rounded wooden
+  wardrobes + a mirror + shields — none reads as a practice target/pell. Real
+  fix = a PixelLab straw-dummy gen (Track B item-1 lane). Crate placeholder
+  held per the honesty rule.
 - [ ] SPRITE — A2 reported shipped boulder/crate regions wrong (watermark
   bleed / empty space) but controller's combat-cover read showed crates
   fine — discrepancy UNRESOLVED — verify in a windowed pass before
@@ -80,14 +112,19 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 - [ ] PC — field/combat PC is the unclothed Body_A base — outfit layer
   queued since M4 — max-fidelity rule says pick best candidate outfit
   composite now rather than waiting for a bespoke one.
-- [ ] PROP — `inn_chest`'s `visual_states` "opened" signal is a TINT only
-  (no open-lid frame exists on the wired `Interior_Props_01.png` region or
-  its neighbors, checked by crop — M-BEAUTY R3 2026-07-05); a genuine
-  open-lid sprite (sourced or authored) would read far more clearly than a
-  cool-grey tint shift. Current tint (`[0.5,0.52,0.58]`, deliberately
-  strong-contrast per R3's windowed iteration) is a legible "something
-  changed" signal but not literally "the chest is open" — content-pass
-  candidate.
+- [x] PROP — `inn_chest`'s `visual_states` "opened" signal was a TINT only
+  (no open-lid frame on the PC16 `Interior_Props_01.png` chest region) —
+  M-BEAUTY R3 2026-07-05 — FIXED by Track B2 item 4 (2026-07-06, uncommitted):
+  added a `chest_open` sprite (Admurin Animated Chests, `assets/props/admurin/
+  Chests.png` region `[50,41,30,23]`, the wide-open-lid frame) and swapped the
+  `container_opened` visual_state from the grey tint to `sprite: chest_open`.
+  Admurin is TIER-PRIVATE/no-standalone-redistribution, so Chests.png ships in
+  assets/ but is listed in `assets_manifest.json` as NEEDS-ATTESTATION /
+  bundle:true (public checkout falls back to the placeholder chip). Mild style
+  mix (Admurin open vs PC16 closed) is confined to the transient post-open
+  reveal and reads unmistakably as an open chest. Windowed-verified after the
+  leather_jerkin pickup (`.superpowers/sdd/fp-handoff/b2-shots/
+  b2_chest_open_01.png`).
 - [ ] PROP — `dirty_table`'s pre-clean tint (`[0.62,0.56,0.46]` vs
   `table_brown`'s untinted look) reads as dirty at 3x zoom (verified,
   M-BEAUTY R3 2026-07-05, `.superpowers/sdd/fp-handoff/r3-shots/
@@ -97,6 +134,11 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   different "cluttered/grimy" region (plates, stains) would read faster
   than a tint alone. Cheap fix shipped now per spec §8's "tint is a valid
   distinct-at-a-glance method" allowance; this is the stronger follow-up.
+  **PARKED by Track B2 item 5 (2026-07-06): no "table set with plates/clutter"
+  region exists** — Furniture.png's tables and the Pixel_16 interiors tables
+  are all clean surfaces (windowed crop-read); the current tint already meets
+  the distinct-at-a-glance contract, so it holds. Real fix = a composited or
+  authored cluttered-table sprite.
 ## Fixed
 
 - [x] UI/FIELD-HOTBAR — field skills had no `icon` ids so the overworld

@@ -759,6 +759,20 @@ MANIFEST: list[tuple[str, str]] = [
 		"potential_assets/Pixel Crawler - Sewer/Pixel Crawler - Sewer/Assets/Props.png",
 		"assets/props/sewer/Props.png",
 	),
+	# --- Admurin Animated Chests (Track B2 item 4: inn_chest open-lid swap) ---
+	# ADMURIN is TIER-PRIVATE / no-standalone-redistribution (no-AI-training
+	# clause; ship rendered OK per attestation). Chests.png therefore ships in
+	# assets/ but is listed in assets_manifest.json as NEEDS-ATTESTATION /
+	# bundle: true so a public checkout excludes it and falls back to the
+	# placeholder chip.
+	(
+		"potential_assets/Admurins_Freebies-2/License.txt",
+		"assets/LICENSES/admurins-freebies-License.txt",
+	),
+	(
+		"potential_assets/Admurins_Freebies-2/Admurin's Freebies/Animated Chests/Chests.png",
+		"assets/props/admurin/Chests.png",
+	),
 	(
 		"potential_assets/Pixel Crawler - Cemetery 0.4/Pixel Crawler - Cemetery/Terms.txt",
 		"assets/LICENSES/pixel-crawler-cemetery-0.4-Terms.txt",

@@ -597,18 +597,26 @@ func _resolve_entity_render(ent: Dictionary) -> Dictionary:
 	return result
 
 
-## Two `when` shapes (spec §8 pt.2's two shipped cases):
+## Three `when` shapes:
 ## `{"counter": id, "at": n}` -- true once `Game.sim.accomplishment_count(id)
 ## >= n` (the dirty_table/unlit_lantern case, driven by ACCOMPLISHMENT_RECORDED
 ## below); `{"container_opened": true}` -- true once `Game.sim.container_state`
 ## marks `entity_id` emptied (the inn_chest case, driven by ITEM_GAINED's
 ## `source` field below -- see that handler's doc comment for the deferral
-## this needs).
+## this needs); `{"dormant": true}` -- true while this encounter id sits in
+## `Game.sim.dormant_encounters` (Track B2 item 6: a `respawns: true` encounter
+## defeated this waking should read "cleared/resting", not identical to a live
+## one -- VISUAL-LOG). Presentation-only: it merely READS the sim's existing
+## dormant set (set on victory, cleared at the sleep beat); driven by the
+## UI_COMBAT_HIDDEN refresh below (post-combat, no map change) and by the
+## MAP_CHANGED rebuild (re-arm shows on the next visit after sleep).
 func _visual_state_active(when: Dictionary, entity_id: String) -> bool:
 	if when.has("counter"):
 		return Game.sim.accomplishment_count(String(when["counter"])) >= int(when.get("at", 1))
 	if when.has("container_opened"):
 		return bool(Game.sim.container_state.get(entity_id, false))
+	if when.has("dormant"):
+		return Game.sim.dormant_encounters.has(entity_id) == bool(when["dormant"])
 	return false
 
 
@@ -665,6 +673,25 @@ func _refresh_entities_watching_counter(counter_name: String) -> void:
 		var ent := raw_ent as Dictionary
 		for raw_state: Variant in ent.get("visual_states", []):
 			if raw_state is Dictionary and String((raw_state as Dictionary).get("when", {}).get("counter", "")) == counter_name:
+				_refresh_entity_visual(id)
+				break
+
+
+## Track B2 item 6: after combat ends and the field re-shows (UI_COMBAT_HIDDEN,
+## which does NOT rebuild the map), re-render any on-map entity whose
+## `visual_states` watch the `dormant` flag -- a just-defeated `respawns: true`
+## encounter must switch to its "resting/cleared" look without waiting for a
+## map change. The re-arm at the sleep beat needs no hook here: sleep clears
+## `dormant_encounters` on a different map (the inn bed), and the encounter's
+## map is rebuilt by `_rebuild_field` on the next MAP_CHANGED, which re-resolves
+## the (now live) look.
+func _refresh_entities_watching_dormant() -> void:
+	for id: String in _entity_visuals.keys():
+		var raw_ent: Variant = Game.sim.entities.get(id, null)
+		if raw_ent == null:
+			continue
+		for raw_state: Variant in (raw_ent as Dictionary).get("visual_states", []):
+			if raw_state is Dictionary and (raw_state as Dictionary).get("when", {}).has("dormant"):
 				_refresh_entity_visual(id)
 				break
 
@@ -858,6 +885,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_field_root.visible = false
 	elif type == WIEvents.UI_COMBAT_HIDDEN:
 		_field_root.visible = true
+		# Track B2 item 6: a just-defeated respawns:true encounter is now dormant
+		# -- swap it to its "resting/cleared" look (field re-shows without a rebuild).
+		_refresh_entities_watching_dormant()
 	elif type == WIEvents.ACCOMPLISHMENT_RECORDED:
 		# M-BEAUTY R3 (spec §8 pt.2): the dirty_table/unlit_lantern visual_states
 		# seam. accomplishments update synchronously before this fires (see

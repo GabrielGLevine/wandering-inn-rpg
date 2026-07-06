@@ -195,6 +195,26 @@
   },
   "shadow": true
  },
+ "chest_open": {
+  "render_scale": 0.85,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/admurin/Chests.png",
+    "region": [
+     50,
+     41,
+     30,
+     23
+    ],
+    "frame_size": [
+     30,
+     23
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
  "plant_pot": {
   "render_scale": 0.6,
   "animations": {
@@ -1508,24 +1528,23 @@
   }
  },
  "sewer_grate": {
-  "render_scale": 0.5,
+  "render_scale": 0.9,
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/free_pack/Rocks.png",
+    "sheet": "res://assets/props/sewer/Props.png",
     "region": [
-     2,
-     19,
-     28,
-     43
+     112,
+     39,
+     16,
+     18
     ],
     "frame_size": [
-     28,
-     43
+     16,
+     18
     ],
     "fps": 1
    }
-  },
-  "shadow": true
+  }
  },
  "a_hunter": {
   "directional": true,
