@@ -1,0 +1,109 @@
+class_name WISkillEffects
+extends RefCounted
+## Registry of active combat skill-effect resolvers, keyed by effect type.
+## Pure: operates only on the passed-in WICombat. Passives (hp_bonus,
+## hit_bonus) are applied at combatant build inside WICombat; reactions
+## (riposte, ap_on_kill, mana_shield) live at WICombat's resolution hooks and
+## quick_cast at its cost hooks — their effect types deliberately have no
+## resolver here, so resolve_active returns false for them (they cannot be
+## actively cast). This registry covers effects a combatant actively spends
+## AP/MP on; all spends go through WICombat.spend_skill_costs.
+
+## Cardinal direction tokens accepted by line_damage's target_id (line skills
+## target a direction, not a combatant [D]).
+const _DIR_TOKENS := {
+	"up": Vector2i.UP, "down": Vector2i.DOWN, "left": Vector2i.LEFT, "right": Vector2i.RIGHT,
+}
+
+
+static func resolve_active(combat: WICombat, actor_id: String, target_id: String, skill: Dictionary) -> bool:
+	var effect: Dictionary = skill.get("effect", {})
+	var a: Dictionary = combat.combatants[actor_id]
+	var effect_type := String(effect.get("type", ""))
+	if effect_type == "line_damage":
+		return _resolve_line_damage(combat, actor_id, a, target_id, skill, effect)
+	var t: Dictionary = combat.combatants.get(target_id, {})
+	if t.is_empty() or not t.get("alive", false) or String(t["side"]) == String(a["side"]):
+		return false
+	match effect_type:
+		"damage_mult":
+			if not combat.is_adjacent(actor_id, target_id):
+				return false
+			combat.spend_skill_costs(a, skill)
+			combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill["id"]), "target": target_id})
+			combat._resolve_hit(actor_id, target_id, float(effect["mult"]), true, true)
+			return true
+		"spell_damage":
+			if combat.chebyshev(actor_id, target_id) > int(effect["range"]):
+				return false
+			if not combat.has_los(actor_id, target_id):
+				combat._emit(WIEvents.ACTION_REFUSED, {"actor": actor_id, "reason": "no_los", "target": target_id})
+				return false
+			combat.spend_skill_costs(a, skill)
+			combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill["id"]), "target": target_id})
+			var hp_before := int(combat.combatants[target_id]["hp"])
+			combat._resolve_hit(actor_id, target_id, 1.0, false, false)
+			if int(combat.combatants.get(target_id, {}).get("hp", hp_before)) < hp_before:
+				_apply_status_from_effect(combat, target_id, effect)
+			return true
+	return false
+
+
+## Flame Jet et al.: target_id is a cardinal direction TOKEN ("up"/"down"/
+## "left"/"right" [D]), not a combatant id. LoS gates the CAST — caster's
+## cell to the line's first cell must be clear of walls — then the line
+## walks all `length` cells regardless of occupancy [per spec: the jet burns
+## down the corridor]; walls still clip the walked line itself via
+## `line_cells`. Every occupant of the walked cells gets hit regardless of
+## side [D: friendly fire is real] with no riposte eligibility (melee=false,
+## allow_riposte=false, matching spell_damage's no-riposte contract).
+static func _resolve_line_damage(combat: WICombat, actor_id: String, a: Dictionary, target_id: String, skill: Dictionary, effect: Dictionary) -> bool:
+	if not _DIR_TOKENS.has(target_id):
+		return false
+	var dir: Vector2i = _DIR_TOKENS[target_id]
+	var cast_cell: Vector2i = a["cell"]
+	var first_cell := cast_cell + dir
+	if first_cell.x < 0 or first_cell.y < 0 or first_cell.x >= combat.grid_size.x or first_cell.y >= combat.grid_size.y or combat.blocked.has(first_cell):
+		combat._emit(WIEvents.ACTION_REFUSED, {"actor": actor_id, "reason": "no_los", "target": target_id})
+		return false
+	var cells: Array[Vector2i] = combat.line_cells(cast_cell, dir, int(effect.get("length", 1)))
+	combat.spend_skill_costs(a, skill)
+	var hit_ids: Array = []
+	for id: String in combat.combatants:
+		if not bool(combat.combatants[id]["alive"]):
+			continue
+		if (combat.combatants[id]["cell"] as Vector2i) in cells:
+			hit_ids.append(id)
+	hit_ids.sort()
+	var cells_payload: Array = []
+	for cell: Vector2i in cells:
+		cells_payload.append([cell.x, cell.y])
+	combat._emit(WIEvents.SKILL_RESOLVED, {
+		"actor": actor_id, "skill": String(skill["id"]), "target": target_id,
+		"cells": cells_payload, "hit_ids": hit_ids,
+	})
+	for id: String in hit_ids:
+		if not bool(combat.combatants[id]["alive"]):
+			continue  # an earlier hit in this same line may have already downed them
+		combat._resolve_hit(actor_id, id, 1.0, false, false)
+		if combat.finished:
+			return true
+	return true
+
+
+## Applies a post-hit status from a skill's "applies" dict (e.g. frost_bolt's
+## slowed) onto the victim's statuses. Only fires when the hit actually
+## landed and the victim is still alive; emits status_applied per status.
+static func _apply_status_from_effect(combat: WICombat, target_id: String, effect: Dictionary) -> void:
+	var applies: Dictionary = effect.get("applies", {})
+	if applies.is_empty():
+		return
+	var t: Dictionary = combat.combatants.get(target_id, {})
+	if t.is_empty() or not bool(t.get("alive", false)):
+		return
+	for status_id: String in applies:
+		# Flat refresh, not a stack: a second application of the same status_id
+		# overwrites the dict entry in place, so re-slowing an already-slowed
+		# victim still yields exactly one status entry/penalty/expiry.
+		(t["statuses"] as Dictionary)[status_id] = (applies[status_id] as Dictionary).duplicate(true)
+		combat._emit(WIEvents.STATUS_APPLIED, {"id": target_id, "status": status_id})

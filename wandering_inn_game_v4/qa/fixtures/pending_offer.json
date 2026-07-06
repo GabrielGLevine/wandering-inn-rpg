@@ -1,0 +1,40 @@
+{
+	"state": {
+		"accomplishments": {
+			"melee_hit": 25,
+			"spell_cast": 18,
+			"won_combat": 3
+		},
+		"classes": {
+			"mage": 7,
+			"warrior": 6
+		},
+		"current_map": "inn",
+		"dormant_encounters": [],
+		"generalist_classes": [],
+		"pending_consolidation": {
+			"parents": [
+				"warrior",
+				"mage"
+			],
+			"target": "spellsword",
+			"level": 9
+		},
+		"player_cell": [
+			2,
+			3
+		],
+		"player_facing": [
+			1,
+			0
+		],
+		"player_skills": [
+			"basic_cleaning",
+			"frost_bolt"
+		],
+		"removed_entities": [],
+		"rng_state": "-7124151667447473881",
+		"started_quests": []
+	},
+	"version": 3
+}

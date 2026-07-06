@@ -1,0 +1,90 @@
+{
+ "_comment": "M-BEAUTY Task B1 (2026-07-05): ship-neutral-first -- every map carries IDENTITY grade values ([1,1,1], vignette 0) so atmosphere.gd is live end-to-end with ZERO visible change this task; later rollout tasks (R1/R2) tuned inn/street/floodplains/cave_mouth for real -- see the entries below and CLAUDE.md's rollout blocks. `meta.phase_thresholds` is LIVE as of the M-BEAUTY final-review fix wave (2026-07-05, Fix 3): game.gd's `_build_sim` now reads this dict and passes {dusk_at, night_at} into WIGame's `phase_config` ctor arg (previously it passed none, so WIGame._phase_config silently fell back to its own hardcoded 40/90 defaults -- see wi_game.gd's phase() doc comment). The values here still EQUAL those defaults, so wiring it was behavior-neutral (zero seed shift -- verified: atmosphere_check + 2 pinned-seed combat QA scripts unchanged) -- but this field is no longer decorative: changing dusk/night here now genuinely moves phase_changed in every event stream, same full-canonical-seed-reverify rule as combat data (CLAUDE.md's Equipment/M-BEAUTY block), now actually reachable instead of theoretical. `meta.light_energy_by_phase` is read by atmosphere.gd's `light_multiplier` (day 0.0 keeps every light invisible by day, preserving today's look; live since Task B2).",
+ "meta": {
+  "phase_thresholds": {
+   "dusk": 40,
+   "night": 90
+  },
+  "light_energy_by_phase": {
+   "day": 0.0,
+   "dusk": 1.0,
+   "night": 1.0
+  }
+ },
+ "moods": {
+  "inn": {
+   "day": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "dusk": [
+    0.85,
+    0.72,
+    0.55
+   ],
+   "night": [
+    0.55,
+    0.5,
+    0.62
+   ],
+   "vignette": 0.4
+  },
+  "street": {
+   "day": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "dusk": [
+    0.35,
+    0.4,
+    0.65
+   ],
+   "night": [
+    0.24,
+    0.28,
+    0.48
+   ],
+   "vignette": 0.44
+  },
+  "floodplains": {
+   "day": [
+    1,
+    1,
+    1
+   ],
+   "dusk": [
+    0.45,
+    0.5,
+    0.92
+   ],
+   "night": [
+    0.3,
+    0.36,
+    0.72
+   ],
+   "vignette": 0.4
+  }
+ },
+ "arena_moods": {
+  "cave_mouth": {
+   "day": [
+    0.3,
+    0.32,
+    0.45
+   ],
+   "dusk": [
+    0.3,
+    0.32,
+    0.45
+   ],
+   "night": [
+    0.3,
+    0.32,
+    0.45
+   ],
+   "vignette": 0.45
+  }
+ }
+}

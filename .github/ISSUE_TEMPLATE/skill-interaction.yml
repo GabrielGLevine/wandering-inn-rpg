@@ -1,0 +1,82 @@
+name: Skill interaction
+description: Propose a way a [Skill] acts in the world — on a prop, an NPC, or the environment.
+title: "[Skill] "
+labels: ["community-skill"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! This game's whole premise is that **[Skills] act in the world, not just in fights or dialogue gates** — so these are valuable. Before you fill this in:
+
+        - **[Skills] are canon.** Use a [Skill] that exists in the [Wandering Inn Wiki](https://thewanderinginn.fandom.com/) (or make the case for a close canon substitute) — link it. Don't invent a [Skill]; flag it if you're unsure it's canon.
+        - **Skill effects are opaque flavor, never stat readouts.** A [Skill] can light a room, reveal a clue, calm a crowd, reposition in a fight — but its result is described in prose and world-change, never as numbers on screen.
+        - **Three pillars.** Say which pillar the interaction serves — **Combat** (a positioning/effect verb), **Puzzles/Exploration** (using a [Skill] on a prop to unlock a path), or **Social** (a [Skill] that changes an NPC exchange). Cross-pillar [Skills] are especially welcome.
+        - **Demo-sized wins.** One [Skill] × one clear interaction is ideal.
+        - **How review works:** a maintainer applies the `triage` label to run an automated Opus draft-pass (drafts a spec or asks for missing info as a comment). A human decides everything; no lore is auto-approved.
+  - type: input
+    id: one-liner
+    attributes:
+      label: One-line pitch
+      description: Which [Skill], used on what, does what.
+      placeholder: "[Light] used on the cellar door reveals the missing crate inside."
+    validations:
+      required: true
+  - type: dropdown
+    id: pillar
+    attributes:
+      label: Which pillar does this serve?
+      description: The main one. Say more in the description if it spans several.
+      options:
+        - Puzzles / Exploration — using the [Skill] on a prop or place unlocks something
+        - Combat — a positioning or effect verb during a fight
+        - Social — the [Skill] changes an NPC interaction
+        - Spans multiple pillars
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope guess
+      description: Demo-sized lands fastest.
+      options:
+        - Demo-sized — one [Skill], one interaction target
+        - Small — one [Skill] across a few targets, or a small new prop
+        - Large — a whole new [Skill] system (expect it to be sliced down)
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: canon-refs
+    attributes:
+      label: Canon references (wiki links)
+      description: >-
+        Link the wiki page for the [Skill] (and any character/creature/place involved).
+        If the exact [Skill] isn't canon, name the closest canon [Skill] and flag the gap.
+      placeholder: |
+        - [Light]: https://thewanderinginn.fandom.com/wiki/Light
+    validations:
+      required: false
+  - type: textarea
+    id: description
+    attributes:
+      label: Full description
+      description: >-
+        Describe the interaction. What does the player face and press? What in the world changes, and what prose describes the result? What (if anything) does it unlock or bank? Remember the result is described, never shown as numbers.
+      placeholder: |
+        Target (prop / NPC / environment): ...
+        Trigger: player faces it and uses [Skill] ...
+        What happens in the world: ...
+        Prose the player reads: ...
+        What it unlocks or leads to: ...
+    validations:
+      required: true
+  - type: checkboxes
+    id: conventions
+    attributes:
+      label: House rules
+      description: Two conventions that bind every piece of content in this game.
+      options:
+        - label: The effect is described in prose and world-change — it never shows the player a raw stat number (STR/DEX/CON/etc.).
+          required: true
+        - label: The interaction doesn't tell the player how close they are to a class/level/skill. Advancement is opaque until it happens at the sleep beat.
+          required: true

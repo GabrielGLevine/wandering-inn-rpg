@@ -1,0 +1,21 @@
+{
+	"start": "hub",
+	"nodes": {
+		"hub": { "speaker": "Krshia", "text": "Hrr. My crate — gone from the storeroom three nights past. Sewers, I think. Scavengers do not knock first.", "text_variants": [
+			{ "requires": { "accomplishment": { "asked_about_crate": 1 } }, "text": "Hrr. Any word on my crate?" },
+			{ "requires": { "accomplishment": { "crate_returned": 1 } }, "text": "Hrr. Crate is home. You, I will remember. Yes." }
+		], "options": [
+			{ "text": "I'll look into it.", "hide_when": { "accomplishment": { "asked_about_crate": 1 } }, "effects": [ { "quest": "missing_crate" }, { "accomplishment": "asked_about_crate" } ], "goto": "accepted" },
+			{ "text": "The scavengers dragged it into a cellar — I've seen it myself. (Light)", "requires": { "accomplishment": { "studied_the_cellar": 1 } }, "hide_when": { "accomplishment": { "crate_returned": 1 } }, "effects": [ { "accomplishment": "recovered_crate_guile" }, { "accomplishment": "found_the_crate" }, { "accomplishment": "crate_returned" } ], "goto": "thanks" },
+			{ "text": "Your crate's accounted for.", "requires": { "accomplishment": { "found_the_crate": 1 } }, "hide_when": { "accomplishment": { "crate_returned": 1 } }, "effects": [ { "accomplishment": "crate_returned" } ], "goto": "thanks" },
+			{ "text": "Just visiting.", "end": true }
+		] },
+		"accepted": { "speaker": "Krshia", "text": "Hrr. Good. Sewer grates, south of here — start there. Careful of teeth.", "options": [
+			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "I'll find it.", "end": true }
+		] },
+		"thanks": { "speaker": "Krshia", "text": "Hrr. Yes. This is mine. My thanks — do not expect a discount, but my thanks.", "options": [
+			{ "text": "Glad to help.", "end": true }
+		] }
+	}
+}

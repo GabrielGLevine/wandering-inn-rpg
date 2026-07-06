@@ -1,0 +1,335 @@
+{
+	"skills": [
+		{
+			"id": "basic_cleaning",
+			"display_name": "[Basic Cleaning]",
+			"icon": "icon_basic_cleaning",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Basic Cleaning] — You wipe down the nearest surface out of old habit. It gleams.",
+			"description": "Cleans mundane messes with supernatural ease."
+		},
+		{
+			"id": "basic_swordwork",
+			"display_name": "[Basic Swordwork]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "hit_bonus", "amount": 5 },
+			"description": "Steadier hands with any blade."
+		},
+		{
+			"id": "tough_body",
+			"display_name": "[Tough Body]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "hp_bonus", "amount": 10 },
+			"description": "A frame hardened by work and worse."
+		},
+		{
+			"id": "power_strike",
+			"display_name": "[Power Strike]",
+			"contexts": ["combat"],
+			"ap_cost": 3,
+			"weapon": "sword",
+			"icon": "icon_power_strike",
+			"effect": { "type": "damage_mult", "mult": 2.0 },
+			"description": "Everything behind one blow."
+		},
+		{
+			"id": "counter_strike",
+			"display_name": "[Counter Strike]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "riposte", "mult": 0.8 },
+			"description": "The next blade that finds you meets an answer."
+		},
+		{
+			"id": "battle_momentum",
+			"display_name": "[Battle Momentum]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "ap_on_kill", "amount": 1 },
+			"description": "A felled foe quickens the blood."
+		},
+		{
+			"id": "flame_bolt",
+			"display_name": "[Flame Bolt]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"element": "fire",
+			"icon": "icon_flame_bolt",
+			"effect": { "type": "spell_damage", "die": 6, "range": 4 },
+			"description": "A hissing dart of goblin fire."
+		},
+		{
+			"id": "flame_jet",
+			"display_name": "[Flame Jet]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"mp_cost": 4,
+			"element": "fire",
+			"icon": "icon_flame_jet",
+			"effect": { "type": "line_damage", "length": 4 },
+			"description": "A roaring lance of goblin-fire down the line."
+		},
+		{
+			"id": "frost_bolt",
+			"display_name": "[Frost Bolt]",
+			"contexts": ["combat"],
+			"ap_cost": 1,
+			"mp_cost": 2,
+			"element": "ice",
+			"icon": "icon_frost_bolt",
+			"effect": { "type": "spell_damage", "die": 6, "range": 4, "applies": { "slowed": { "pool_penalty": 2 } } },
+			"description": "A dart of biting cold that clings to the legs."
+		},
+		{
+			"id": "mana_shield",
+			"display_name": "[Mana Shield]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "mana_shield" },
+			"description": "Woven mana drinks the blow before flesh does."
+		},
+		{
+			"id": "quick_cast",
+			"display_name": "[Quick Cast]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "quick_cast" },
+			"description": "The first spell leaves the fingers before the thought finishes."
+		},
+		{
+			"id": "light",
+			"display_name": "[Light]",
+			"icon": "icon_light",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Light] — A small orb of steady white light kindles at your fingertips, then gently winks out.",
+			"description": "A mage's first, faithful spell: a small orb of steady white light."
+		},
+		{
+			"id": "quick_movement",
+			"display_name": "[Quick Movement]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "move_pool_bonus", "amount": 1 },
+			"description": "The feet decide before the mind does."
+		},
+		{
+			"id": "second_wind",
+			"display_name": "[Second Wind]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"icon": "icon_second_wind",
+			"effect": { "type": "heal", "amount": 8 },
+			"description": "Breath returns, and the body remembers it can go on."
+		},
+		{
+			"id": "dangersense",
+			"display_name": "[Dangersense]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "dangersense" },
+			"description": "A cold prickle at the neck, a heartbeat before harm."
+		},
+		{
+			"id": "piercing_strikes",
+			"display_name": "[Piercing Strikes]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"weapon": "spear",
+			"icon": "icon_piercing_strikes",
+			"effect": { "type": "damage_mult", "mult": 1.4 },
+			"description": "Thrusts that seek the seams in any guard."
+		},
+		{
+			"id": "quick_slash",
+			"display_name": "[Quick Slash]",
+			"contexts": ["combat"],
+			"ap_cost": 1,
+			"weapon": "sword",
+			"icon": "icon_quick_slash",
+			"effect": { "type": "damage_mult", "mult": 0.7 },
+			"description": "A cut loosed before the guard can rise."
+		},
+		{
+			"id": "flash_cut",
+			"display_name": "[Flash Cut]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"weapon": "sword",
+			"icon": "icon_flash_cut",
+			"effect": { "type": "damage_mult", "mult": 1.4 },
+			"description": "One bright line. The eye catches up too late."
+		},
+		{
+			"id": "devastating_slash",
+			"display_name": "[Devastating Slash]",
+			"contexts": ["combat"],
+			"ap_cost": 4,
+			"weapon": "sword",
+			"icon": "icon_devastating_slash",
+			"effect": { "type": "damage_mult", "mult": 2.6 },
+			"description": "Mid-swing, the blade bends its path toward whatever is unguarded."
+		},
+		{
+			"id": "triple_thrust",
+			"display_name": "[Triple Thrust]",
+			"contexts": ["combat"],
+			"ap_cost": 3,
+			"weapon": "spear",
+			"icon": "icon_triple_thrust",
+			"effect": { "type": "damage_mult", "mult": 2.0 },
+			"description": "Three points of pain in a single breath."
+		},
+		{
+			"id": "extended_sweep",
+			"display_name": "[Extended Sweep]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"weapon": "spear",
+			"icon": "icon_extended_sweep",
+			"effect": { "type": "damage_mult", "mult": 1.3 },
+			"description": "The spear's reach stretches a hand further than it has any right to."
+		},
+		{
+			"id": "spear_flurry",
+			"display_name": "[Spear Flurry]",
+			"contexts": ["combat"],
+			"ap_cost": 4,
+			"weapon": "spear",
+			"icon": "icon_spear_flurry",
+			"effect": { "type": "damage_mult", "mult": 2.6 },
+			"description": "For one moment the air is stitched with spearpoints."
+		},
+		{
+			"id": "ice_shard",
+			"display_name": "[Ice Shard]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"mp_cost": 3,
+			"element": "ice",
+			"icon": "icon_ice_shard",
+			"effect": { "type": "spell_damage", "die": 8, "range": 4 },
+			"description": "A fist-sized spike of ice, hurled hard enough to crack shields."
+		},
+		{
+			"id": "icy_floor",
+			"display_name": "[Icy Floor]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"mp_cost": 4,
+			"element": "ice",
+			"icon": "icon_icy_floor",
+			"effect": { "type": "icy_floor", "range": 3, "radius": 1, "duration_rounds": 2, "applies": { "slowed": { "pool_penalty": 2 } } },
+			"description": "The stones glaze over, and footing becomes a rumor."
+		},
+		{
+			"id": "flame_scythe",
+			"display_name": "[Flame Scythe]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"mp_cost": 4,
+			"element": "fire",
+			"icon": "icon_flame_scythe",
+			"effect": { "type": "spell_damage", "die": 10, "range": 1 },
+			"description": "An arm's-length arc of fire, reaped close."
+		},
+		{
+			"id": "flare_burst",
+			"display_name": "[Flare Burst]",
+			"contexts": ["combat"],
+			"ap_cost": 1,
+			"mp_cost": 2,
+			"element": "fire",
+			"icon": "icon_flare_burst",
+			"effect": { "type": "spell_damage", "die": 6, "range": 3 },
+			"description": "A snap of light and heat that leaves spots dancing in the eyes."
+		},
+		{
+			"id": "keener_edge",
+			"display_name": "[Keener Edge]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"weapon": "sword",
+			"icon": "icon_keener_edge",
+			"effect": { "type": "damage_mult", "mult": 1.6 },
+			"description": "Mana runs down the blade until the edge sings."
+		},
+		{
+			"id": "lesser_stamina",
+			"display_name": "[Lesser Stamina]",
+			"contexts": ["exploration"],
+			"description": "Chores that would tire another barely slow you."
+		},
+		{
+			"id": "basic_cooking",
+			"display_name": "[Basic Cooking]",
+			"icon": "icon_basic_cooking",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Basic Cooking] — You picture the dish this place is missing. Your hands twitch toward a ladle that isn't there.",
+			"description": "Simple meals come out right, every time."
+		},
+		{
+			"id": "lesser_strength",
+			"display_name": "[Lesser Strength]",
+			"contexts": ["exploration"],
+			"description": "Trays, kegs, and crates feel lighter than they should."
+		},
+		{
+			"id": "observe",
+			"display_name": "[Observe]",
+			"icon": "icon_observe",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Observe] — You take in the empty space around you. Nothing here rewards a closer look.",
+			"description": "A measuring look that reads a room, a person, a problem — and files it away for later."
+		},
+		{
+			"id": "battlefield_awareness",
+			"display_name": "[Battlefield Awareness]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "move_pool_bonus", "amount": 1 },
+			"description": "The whole field resolves into a map. You always know the one step that matters."
+		},
+		{
+			"id": "soothe_clientele",
+			"display_name": "[Soothe Clientele]",
+			"icon": "icon_soothe_clientele",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Soothe Clientele] — You offer the empty room a calming word. Only the dust settles.",
+			"description": "A word and a refilled glass, and the room's troubles ease — patrons forget whatever was gnawing at them."
+		},
+		{
+			"id": "unerring_aim",
+			"display_name": "[Unerring Aim]",
+			"icon": "icon_unerring_aim",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Unerring Aim] — You size up a throw out of habit. Nothing here is worth the toss.",
+			"description": "Whatever you throw finds its mark — a mug slid down the bar, a rag, or a troublemaker's head."
+		},
+		{
+			"id": "sweep_the_tables",
+			"display_name": "[Sweep the Tables]",
+			"icon": "icon_sweep_the_tables",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Sweep the Tables] — You reach to clear the dishes. The tables here are already bare.",
+			"description": "A cluttered table comes clean in a single pass, the dishes spirited back to the kitchen."
+		},
+		{
+			"id": "servers_prescience",
+			"display_name": "[Server's Prescience]",
+			"icon": "icon_servers_prescience",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Server's Prescience] — You listen for what the room needs next. All quiet, for now.",
+			"description": "You know what a guest wants before they raise a hand — the empty cup, the missing fork, the order about to be called."
+		}
+	]
+}

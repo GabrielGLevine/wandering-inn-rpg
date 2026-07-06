@@ -1,0 +1,233 @@
+# CI — the PR gate for the Wandering Inn RPG (M-RELEASE Task R1).
+#
+# Runs on every pull request and every push to main. ZERO SECRETS: this
+# workflow only ever READS the repo and downloads a pinned public engine
+# build, so it is safe to run on fork PRs. All deploy/secret work lives in
+# release.yml (M-RELEASE Task R3), which is tag-triggered only.
+#
+# The QA suite IS the CI: a smoke boot, the unit suites, the full canonical
+# QA sweep (qa/ci_sweep.sh), and a web-parity run.
+#
+# Engine integrity: pinned by exact release URL + verified at run time
+# against the official SHA512-SUMS.txt from the SAME release tag — no
+# hand-maintained hashes. Do NOT float a third-party action tag for the
+# engine.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# No write scopes — read-only, fork-PR safe.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Pinned engine — Godot 4.7 stable (commit 5b4e0cb0f). The standard linux
+  # binary runs headless via --headless (there is no separate headless build
+  # since 4.0). run_qa.sh / export_web.sh / the unit-test commands all hardcode
+  # /usr/local/bin/godot, so every job installs the binary there.
+  GODOT_VERSION: "4.7-stable"
+  GODOT_BIN: "Godot_v4.7-stable_linux.x86_64"
+  GODOT_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
+  # Integrity: verified at run time against the OFFICIAL release SHA512-SUMS
+  # file from the same pinned release tag (no hand-maintained hashes to rot).
+  GODOT_SUMS_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/SHA512-SUMS.txt"
+  GODOT_TEMPLATES_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz"
+
+jobs:
+  # ------------------------------------------------------------------ smoke
+  smoke:
+    name: Smoke (headless boot)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Import pass (class_name registration + import cache)
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 300; exec @ARGV' \
+            godot --headless --path wandering_inn_game_v4 --import
+
+      - name: Headless smoke (--quit)
+        run: |
+          set -euo pipefail
+          log=smoke.log
+          perl -e 'alarm 120; exec @ARGV' \
+            godot --headless --path wandering_inn_game_v4 --quit >"$log" 2>&1 || rc=$?
+          cat "$log"
+          # game_helper mcp-capture line is the one exempt line (dev addon only).
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+            echo "::error::smoke boot produced a SCRIPT ERROR / Parse Error / WARNING"
+            exit 1
+          fi
+          exit "${rc:-0}"
+
+  # ------------------------------------------------------------------ unit
+  unit:
+    name: Unit suites
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Import pass
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 300; exec @ARGV' \
+            godot --headless --path wandering_inn_game_v4 --import
+
+      - name: Unit test suites (tests/test_*.gd)
+        run: |
+          set -uo pipefail
+          cd wandering_inn_game_v4
+          fail=0
+          for t in tests/test_*.gd; do
+            name="$(basename "$t")"
+            log="/tmp/unit_${name}.log"
+            echo "==> $name"
+            perl -e 'alarm 240; exec @ARGV' \
+              godot --headless --path . --script "res://$t" >"$log" 2>&1 || fail=1
+            cat "$log"
+            # T9 lesson: a SCRIPT ERROR can print WITHOUT a nonzero exit — never
+            # trust ^PASS alone. Require BOTH: a PASS line AND no error/warning.
+            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+              echo "::error::$name tripped the error/warning grep"; fail=1
+            fi
+            if ! grep -q '^PASS' "$log"; then
+              echo "::error::$name did not print a PASS line"; fail=1
+            fi
+          done
+          exit $fail
+
+      - name: Balance harness (sim_combat_batch — combat-data authority)
+        run: |
+          set -uo pipefail
+          cd wandering_inn_game_v4
+          log="/tmp/sim_combat_batch.log"
+          perl -e 'alarm 600; exec @ARGV' \
+            godot --headless --path . --script res://tests/sim_combat_batch.gd >"$log" 2>&1 || rc=$?
+          cat "$log"
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+            echo "::error::sim_combat_batch tripped the error/warning grep"; exit 1
+          fi
+          exit "${rc:-0}"
+
+  # ------------------------------------------------------------------ sweep
+  sweep:
+    name: Canonical QA sweep
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Import pass
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 300; exec @ARGV' \
+            godot --headless --path wandering_inn_game_v4 --import
+
+      - name: Full canonical sweep (qa/ci_sweep.sh)
+        run: |
+          set -euo pipefail
+          bash wandering_inn_game_v4/qa/ci_sweep.sh
+
+  # -------------------------------------------------------------- web-parity
+  web-parity:
+    name: Web parity (headless Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Install pinned web export templates
+        run: |
+          set -euo pipefail
+          curl -fsSL -o templates.tpz "$GODOT_TEMPLATES_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  Godot_v4.7-stable_export_templates.tpz$" SHA512-SUMS.txt | sed "s#  Godot_v4.7-stable_export_templates.tpz#  templates.tpz#" | sha512sum -c -
+          unzip -q templates.tpz
+          dest="$HOME/.local/share/godot/export_templates/4.7.stable"
+          mkdir -p "$dest"
+          mv templates/* "$dest/"
+
+      - name: Guard — Web export preset must exist (delivered by Task R3)
+        run: |
+          set -euo pipefail
+          cfg=wandering_inn_game_v4/export_presets.cfg
+          if [ ! -f "$cfg" ] || ! grep -q 'name="Web"' "$cfg"; then
+            echo "::error::export_presets.cfg is missing a \"Web\" preset — this is delivered by M-RELEASE Task R3. web-parity cannot run until R3 lands."
+            exit 1
+          fi
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install web QA deps (playwright)
+        run: |
+          set -euo pipefail
+          cd wandering_inn_game_v4/qa/web
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Web-parity run (combat_walkthrough, seed 9)
+        run: |
+          set -euo pipefail
+          log=web_parity.log
+          perl -e 'alarm 600; exec @ARGV' \
+            bash wandering_inn_game_v4/qa/web/run_web_qa.sh combat_walkthrough 9 >"$log" 2>&1 || rc=$?
+          cat "$log"
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+            echo "::error::web-parity run tripped the error/warning grep"; exit 1
+          fi
+          exit "${rc:-0}"

@@ -1,0 +1,68 @@
+name: Map suggestion
+description: Suggest a new place — a room, a street, a district, or a wilderness area to explore.
+title: "[Map] "
+labels: ["community-map"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a place! Before you fill this in:
+
+        - **Places are canon.** Liscor, the Floodplains, the Wandering Inn, the Bloodfields — locations come from the [Wandering Inn Wiki](https://thewanderinginn.fandom.com/) and the books. Link the wiki page; flag anything you're inventing.
+        - **A map is a stage, not just scenery.** The best suggestions say what the player *does* there — who they meet (**Social**), what they might fight (**Combat**), what they explore or solve (**Puzzles/Exploration**). A room with nothing to do in it is hard to justify.
+        - **Demo-sized wins.** One connected area with a couple of hooks beats a whole new region.
+        - **How review works:** a maintainer applies the `triage` label to run an automated Opus draft-pass (drafts a spec or asks for missing info as a comment). A human decides everything; no lore is auto-approved.
+  - type: input
+    id: one-liner
+    attributes:
+      label: One-line pitch
+      description: The place in a sentence, and why the player would go there.
+      placeholder: A goblin warren in the hills where the player can meet the Rags tribe.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope guess
+      description: Demo-sized lands fastest.
+      options:
+        - Demo-sized — one room / one small area, reached from an existing map
+        - Small — a few connected cells or a compact district
+        - Large — a whole new region or town (expect it to be sliced down)
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: canon-refs
+    attributes:
+      label: Canon references (wiki links)
+      description: >-
+        Link the wiki page for the location and for any character or creature that lives there.
+        Flag anything invented rather than sourced from the books.
+      placeholder: |
+        - Liscor: https://thewanderinginn.fandom.com/wiki/Liscor
+    validations:
+      required: false
+  - type: textarea
+    id: description
+    attributes:
+      label: Full description
+      description: >-
+        Describe the place and — most importantly — what the player does there. Which existing map connects to it? Who or what is present? What hooks span the three pillars (someone to talk to, something to fight, something to explore/solve)?
+      placeholder: |
+        What the place is / how it looks: ...
+        Connects from: <existing map / door>
+        Who / what is here: ...
+        Things to do (social / combat / exploration): ...
+    validations:
+      required: true
+  - type: checkboxes
+    id: conventions
+    attributes:
+      label: House rules
+      description: Two conventions that bind every piece of content in this game.
+      options:
+        - label: Nothing in this map surfaces a raw stat number (STR/DEX/CON/etc.) to the player.
+          required: true
+        - label: Nothing here tells the player how close they are to a class/level/skill. Advancement is opaque until it happens at the sleep beat.
+          required: true

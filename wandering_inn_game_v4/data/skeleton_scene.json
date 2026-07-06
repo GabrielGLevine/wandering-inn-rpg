@@ -1,0 +1,2775 @@
+{
+ "start_map": "inn",
+ "player": {
+  "cell": [
+   2,
+   3
+  ],
+  "display_name": "Traveler",
+  "sprite": "body_a",
+  "skills": [
+   "basic_cleaning"
+  ],
+  "classes": {},
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  }
+ },
+ "maps": {
+  "inn": {
+   "biome": "inn",
+   "grid": {
+    "width": 16,
+    "height": 10
+   },
+   "blocked": [
+    [
+     7,
+     6
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "_comment_dressing": "M5 R4 immersion pass (docs/superpowers/specs/2026-07-02-environment-ui-immersion-design.md sec.2). floor_layers/walls/decor are sim-passthrough only (WIGame never reads them; world.gd renders them). ALL coords below are UNVERIFIED screenshot-pending picks -- see .superpowers/sdd/m5-r4-report.md pick table.",
+   "floor_layers": [
+    {
+     "_pick": "E3 L1 hall planks: position-hashed variants from the light plank swatch",
+     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       1,
+       21
+      ],
+      [
+       2,
+       21
+      ],
+      [
+       1,
+       22
+      ],
+      [
+       2,
+       22
+      ]
+     ],
+     "cells": "all"
+    },
+    {
+     "_pick": "E3 L1 kitchen zone: grey cobble swatch",
+     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       9,
+       22
+      ],
+      [
+       9,
+       23
+      ]
+     ],
+     "cells": {
+      "rect": [
+       1,
+       1,
+       4,
+       2
+      ]
+     }
+    },
+    {
+     "_pick": "E3 L1 bedroom corner: herringbone swatch",
+     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       16,
+       21
+      ],
+      [
+       17,
+       21
+      ]
+     ],
+     "cells": {
+      "rect": [
+       1,
+       6,
+       3,
+       3
+      ]
+     }
+    }
+   ],
+   "_comment_walls": "M5 E3 L0: full 4-side perimeter via walls-v2 segments; north face+cap, sides/south cap-only; east gap at [15,3] for the door. Same Interior_Walls_01 tiles the M5 R4 band used (screenshot-verified then).",
+   "walls": {
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "segments": [
+     {
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       15,
+       0
+      ],
+      "cap": [
+       14,
+       6
+      ],
+      "face": [
+       14,
+       7
+      ]
+     },
+     {
+      "from": [
+       0,
+       1
+      ],
+      "to": [
+       0,
+       9
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "from": [
+       15,
+       1
+      ],
+      "to": [
+       15,
+       2
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "from": [
+       15,
+       4
+      ],
+      "to": [
+       15,
+       9
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "from": [
+       1,
+       9
+      ],
+      "to": [
+       14,
+       9
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     }
+    ]
+   },
+   "decor": [
+    {
+     "sprite": "hearth",
+     "cell": [
+      2,
+      1
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.62,
+       0.32
+      ],
+      "energy": 1.1,
+      "radius": 40,
+      "flicker": true
+     }
+    },
+    {
+     "sprite": "grill",
+     "cell": [
+      3,
+      2
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.58,
+       0.28
+      ],
+      "energy": 0.75,
+      "radius": 26,
+      "flicker": true
+     }
+    },
+    {
+     "sprite": "counter_left",
+     "cell": [
+      5,
+      2
+     ]
+    },
+    {
+     "sprite": "counter_mid",
+     "cell": [
+      6,
+      2
+     ]
+    },
+    {
+     "sprite": "counter_mid",
+     "cell": [
+      8,
+      2
+     ]
+    },
+    {
+     "sprite": "counter_right",
+     "cell": [
+      9,
+      2
+     ]
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      5,
+      1
+     ]
+    },
+    {
+     "sprite": "shelf_bottles",
+     "cell": [
+      6,
+      1
+     ]
+    },
+    {
+     "sprite": "shelf_bottles",
+     "cell": [
+      8,
+      1
+     ]
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      9,
+      1
+     ]
+    },
+    {
+     "sprite": "stool",
+     "cell": [
+      6,
+      3
+     ]
+    },
+    {
+     "sprite": "stool",
+     "cell": [
+      8,
+      3
+     ]
+    },
+    {
+     "sprite": "food_basket",
+     "cell": [
+      6,
+      2
+     ]
+    },
+    {
+     "sprite": "table_brown",
+     "cell": [
+      7,
+      6
+     ]
+    },
+    {
+     "sprite": "food_bread",
+     "cell": [
+      7,
+      6
+     ]
+    },
+    {
+     "sprite": "food_ham",
+     "cell": [
+      5,
+      4
+     ]
+    },
+    {
+     "sprite": "plant_pot",
+     "cell": [
+      14,
+      4
+     ]
+    },
+    {
+     "sprite": "window_blue",
+     "cell": [
+      5,
+      9
+     ]
+    },
+    {
+     "sprite": "window_blue",
+     "cell": [
+      10,
+      9
+     ]
+    },
+    {
+     "sprite": "table_brown",
+     "cell": [
+      12,
+      7
+     ]
+    }
+   ],
+   "_comment_ambience": "M-BEAUTY Task B3: dust motes ship dusk/night-only for now (plan B3 judgment call -- day is the one ambience case explicitly deferred; a future pilot/rollout task decides whether they should also show at day).",
+   "ambience": [
+    {
+     "preset": "dust_motes",
+     "rect": "all",
+     "phase": [
+      "dusk",
+      "night"
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "id": "erin",
+     "kind": "npc",
+     "cell": [
+      7,
+      2
+     ],
+     "display_name": "Erin",
+     "sprite": "citizen_f",
+     "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
+     "conversation": "erin_errand",
+     "dialogue": [
+      {
+       "speaker": "Erin",
+       "text": "Welcome to The Wandering Inn! Mind giving that table a wipe?"
+      }
+     ],
+     "facing": "down"
+    },
+    {
+     "id": "lyonette",
+     "kind": "npc",
+     "cell": [
+      9,
+      5
+     ],
+     "display_name": "Lyonette",
+     "sprite": "citizen_f",
+     "tint": [
+      1.0,
+      0.55,
+      1.0
+     ],
+     "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
+     "conversation": "lyonette_tip",
+     "dialogue": [
+      {
+       "speaker": "Lyonette",
+       "text": "Mind the floors, they're just done."
+      }
+     ],
+     "facing": "left"
+    },
+    {
+     "id": "dirty_table",
+     "kind": "prop",
+     "cell": [
+      5,
+      4
+     ],
+     "display_name": "Dirty Table",
+     "sprite": "dirty_table",
+     "tint": [
+      0.62,
+      0.56,
+      0.46
+     ],
+     "requires_skill": "basic_cleaning",
+     "on_skill_use": {
+      "accomplishment": "cleaned_the_inn",
+      "toast": "[Basic Cleaning] — The table is spotless."
+     },
+     "visual_states": [
+      {
+       "when": {
+        "counter": "cleaned_the_inn",
+        "at": 1
+       },
+       "sprite": "table_brown",
+       "tint": [
+        1.0,
+        1.0,
+        1.0
+       ]
+      }
+     ]
+    },
+    {
+     "id": "bed",
+     "kind": "prop",
+     "sleep": true,
+     "cell": [
+      2,
+      7
+     ],
+     "display_name": "Bed",
+     "sprite": "bed"
+    },
+    {
+     "id": "inn_door",
+     "kind": "door",
+     "cell": [
+      15,
+      3
+     ],
+     "display_name": "To the Floodplains",
+     "sprite": "door",
+     "to_map": "floodplains",
+     "to_cell": [
+      7,
+      6
+     ]
+    },
+    {
+     "id": "dusty_scroll",
+     "kind": "prop",
+     "cell": [
+      12,
+      7
+     ],
+     "display_name": "Dusty Scroll",
+     "sprite": "dusty_scroll",
+     "_comment": "Onboarding rev O4: RETIRED as the mage trigger. It no longer banks used_magic and grants no class -- [Mage] is now earned from Pisces (learned_magic_from_pisces). Kept as pure flavor: banks read_dusty_scroll (referenced nowhere as a gate) and toasts a hint that magic exists and is learnable from someone who knows it.",
+     "on_interact_accomplishment": "read_dusty_scroll",
+     "toast": "Faded arcane script — you can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must."
+    },
+    {
+     "id": "unlit_lantern",
+     "kind": "prop",
+     "cell": [
+      13,
+      1
+     ],
+     "display_name": "Unlit Lantern",
+     "sprite": "unlit_lantern",
+     "requires_skill": "light",
+     "on_skill_use": {
+      "accomplishment": "lit_the_common_room",
+      "toast": "[Light] — A steady white orb settles into the lantern's glass."
+     },
+     "visual_states": [
+      {
+       "when": {
+        "counter": "lit_the_common_room",
+        "at": 1
+       },
+       "tint": [
+        1.4,
+        1.25,
+        0.75
+       ],
+       "light": {
+        "color": [
+         1.0,
+         0.85,
+         0.5
+        ],
+        "energy": 0.55,
+        "radius": 14,
+        "flicker": true
+       }
+      }
+     ]
+    },
+    {
+     "id": "hungry_patron",
+     "kind": "npc",
+     "cell": [
+      5,
+      6
+     ],
+     "display_name": "Hungry Patron",
+     "sprite": "citizen_f",
+     "tint": [
+      1.0,
+      0.85,
+      0.6
+     ],
+     "facing": "left",
+     "conversation": "patron_serving",
+     "dialogue": [
+      {
+       "speaker": "Hungry Patron",
+       "text": "Innkeeper! Anyone?"
+      }
+     ]
+    },
+    {
+     "id": "serving_tray",
+     "kind": "prop",
+     "cell": [
+      10,
+      2
+     ],
+     "display_name": "Laden Tray",
+     "sprite": "table_brown",
+     "render_scale": 0.5,
+     "on_interact_accomplishment": "delivered_item",
+     "toast": "You carry the laden tray out to the tables."
+    },
+    {
+     "id": "stew_pot",
+     "kind": "prop",
+     "cell": [
+      4,
+      1
+     ],
+     "display_name": "Stew Pot",
+     "sprite": "grill",
+     "requires_skill": "basic_cooking",
+     "locked_toast": "You don't know your way around a stew pot. Yet.",
+     "on_skill_use": {
+      "accomplishment": "cooked_meal",
+      "toast": "[Basic Cooking] — The stew comes out rich and hot."
+     }
+    },
+    {
+     "id": "inn_chest",
+     "kind": "prop",
+     "cell": [
+      1,
+      8
+     ],
+     "display_name": "Old Chest",
+     "sprite": "chest",
+     "contains": [
+      "leather_jerkin"
+     ],
+     "visual_states": [
+      {
+       "when": {
+        "container_opened": true
+       },
+       "tint": [
+        0.5,
+        0.52,
+        0.58
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "street": {
+   "biome": "street",
+   "grid": {
+    "width": 32,
+    "height": 20
+   },
+   "blocked": [
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     1
+    ],
+    [
+     12,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     14,
+     1
+    ],
+    [
+     15,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     21,
+     1
+    ],
+    [
+     22,
+     1
+    ],
+    [
+     23,
+     1
+    ],
+    [
+     24,
+     1
+    ],
+    [
+     21,
+     2
+    ],
+    [
+     22,
+     2
+    ],
+    [
+     23,
+     2
+    ],
+    [
+     24,
+     2
+    ],
+    [
+     26,
+     1
+    ],
+    [
+     27,
+     1
+    ],
+    [
+     28,
+     1
+    ],
+    [
+     29,
+     1
+    ],
+    [
+     30,
+     1
+    ],
+    [
+     26,
+     2
+    ],
+    [
+     27,
+     2
+    ],
+    [
+     28,
+     2
+    ],
+    [
+     29,
+     2
+    ],
+    [
+     30,
+     2
+    ],
+    [
+     26,
+     3
+    ],
+    [
+     9,
+     8
+    ],
+    [
+     10,
+     8
+    ],
+    [
+     11,
+     8
+    ],
+    [
+     12,
+     8
+    ],
+    [
+     9,
+     9
+    ],
+    [
+     10,
+     9
+    ],
+    [
+     11,
+     9
+    ],
+    [
+     12,
+     9
+    ],
+    [
+     18,
+     8
+    ],
+    [
+     19,
+     8
+    ],
+    [
+     20,
+     8
+    ],
+    [
+     18,
+     9
+    ],
+    [
+     19,
+     9
+    ],
+    [
+     20,
+     9
+    ],
+    [
+     11,
+     14
+    ],
+    [
+     12,
+     14
+    ],
+    [
+     13,
+     14
+    ],
+    [
+     11,
+     15
+    ],
+    [
+     12,
+     15
+    ],
+    [
+     13,
+     15
+    ],
+    [
+     18,
+     15
+    ],
+    [
+     19,
+     15
+    ],
+    [
+     20,
+     15
+    ],
+    [
+     21,
+     15
+    ],
+    [
+     18,
+     16
+    ],
+    [
+     19,
+     16
+    ],
+    [
+     20,
+     16
+    ],
+    [
+     21,
+     16
+    ]
+   ],
+   "_comment": "Liscor gate district (consultant design 2026-07-03, grown from the 10x6 street per accepted Floodplains sec.5). Zones: gate plaza W, main street y2-4, market row y1 x10-19, Watch post x21-24, Adventurer's Guild x26-30 (XL anchor), dirt side street x14-15 south, sewer-grate POI (16,11). All goblin encounters migrated to floodplains POI anchors. Row y4 is the clear transit lane.",
+   "floor_layers": [
+    {
+     "_pick": "Main street cobble band, full width (existing street pick, extended)",
+     "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       17,
+       1
+      ],
+      [
+       18,
+       1
+      ]
+     ],
+     "cells": {
+      "rect": [
+       0,
+       2,
+       32,
+       3
+      ]
+     }
+    },
+    {
+     "_pick": "Gate plaza slab: the goblin_ambush arena's VERIFIED cobble neighborhood, distinct tone from the street band",
+     "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       16,
+       2
+      ],
+      [
+       17,
+       2
+      ],
+      [
+       18,
+       2
+      ]
+     ],
+     "cells": {
+      "rect": [
+       1,
+       1,
+       8,
+       5
+      ]
+     }
+    },
+    {
+     "_pick": "Guild forecourt slab, same verified neighborhood",
+     "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       16,
+       2
+      ],
+      [
+       17,
+       2
+      ],
+      [
+       18,
+       2
+      ]
+     ],
+     "cells": {
+      "rect": [
+       24,
+       1,
+       8,
+       5
+      ]
+     }
+    },
+    {
+     "_pick": "P4 wear-edge jitter: broken cobble cells along the band's south lip",
+     "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       17,
+       1
+      ]
+     ],
+     "cells": {
+      "list": [
+       [
+        9,
+        5
+       ],
+       [
+        11,
+        5
+       ],
+       [
+        12,
+        5
+       ],
+       [
+        16,
+        5
+       ],
+       [
+        19,
+        5
+       ],
+       [
+        21,
+        5
+       ],
+       [
+        23,
+        5
+       ],
+       [
+        10,
+        1
+       ],
+       [
+        19,
+        1
+       ]
+      ]
+     }
+    },
+    {
+     "_pick": "South-district square where the side street widens",
+     "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       16,
+       2
+      ],
+      [
+       17,
+       2
+      ]
+     ],
+     "cells": {
+      "rect": [
+       12,
+       10,
+       5,
+       3
+      ]
+     }
+    }
+   ],
+   "_comment_walls": "City wall interior-side: full north run (cap+face, same castle picks as the floodplains south wall -- it IS that wall's inside face) + west runs with the gate gap at y=3. Cap-only on verticals, matching the inn's side-wall precedent. East/south edges open: Liscor continues off-map.",
+   "walls": {
+    "sheet": "res://assets/tiles/castle/Tiles.png",
+    "tile_px": 16,
+    "segments": [
+     {
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       31,
+       0
+      ],
+      "cap": [
+       2,
+       11
+      ],
+      "face": [
+       2,
+       13
+      ]
+     },
+     {
+      "from": [
+       0,
+       1
+      ],
+      "to": [
+       0,
+       2
+      ],
+      "cap": [
+       2,
+       11
+      ]
+     },
+     {
+      "from": [
+       0,
+       4
+      ],
+      "to": [
+       0,
+       19
+      ],
+      "cap": [
+       2,
+       11
+      ]
+     }
+    ]
+   },
+   "decor": [
+    {
+     "_comment": "M-BEAUTY R2 art fix 3 + torchlit-stone card: same fix as the (13,10) campfire below -- was unlit, read as a second fake sewer_grate near the gate plaza.",
+     "sprite": "campfire",
+     "cell": [
+      3,
+      5
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.55,
+       0.25
+      ],
+      "energy": 1.0,
+      "radius": 34,
+      "flicker": true
+     }
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      1,
+      5
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      2,
+      1
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      7,
+      1
+     ]
+    },
+    {
+     "sprite": "library_desk",
+     "cell": [
+      10,
+      1
+     ]
+    },
+    {
+     "sprite": "library_desk",
+     "cell": [
+      11,
+      1
+     ]
+    },
+    {
+     "sprite": "library_shelf",
+     "cell": [
+      12,
+      1
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      13,
+      1
+     ]
+    },
+    {
+     "sprite": "library_desk",
+     "cell": [
+      14,
+      1
+     ]
+    },
+    {
+     "sprite": "library_desk",
+     "cell": [
+      15,
+      1
+     ]
+    },
+    {
+     "sprite": "library_shelf",
+     "cell": [
+      16,
+      1
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      17,
+      1
+     ]
+    },
+    {
+     "sprite": "library_desk",
+     "cell": [
+      18,
+      1
+     ]
+    },
+    {
+     "sprite": "food_basket",
+     "cell": [
+      10,
+      1
+     ]
+    },
+    {
+     "sprite": "food_bread",
+     "cell": [
+      14,
+      1
+     ]
+    },
+    {
+     "sprite": "food_ham",
+     "cell": [
+      15,
+      1
+     ]
+    },
+    {
+     "sprite": "food_basket",
+     "cell": [
+      18,
+      1
+     ]
+    },
+    {
+     "sprite": "inn_roof",
+     "cell": [
+      22,
+      1
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      22,
+      2
+     ]
+    },
+    {
+     "sprite": "inn_roof",
+     "cell": [
+      27,
+      1
+     ]
+    },
+    {
+     "sprite": "inn_roof",
+     "cell": [
+      29,
+      1
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      27,
+      2
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      29,
+      2
+     ]
+    },
+    {
+     "sprite": "library_desk",
+     "cell": [
+      26,
+      3
+     ]
+    },
+    {
+     "sprite": "inn_roof",
+     "cell": [
+      10,
+      8
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      10,
+      9
+     ]
+    },
+    {
+     "sprite": "inn_roof",
+     "cell": [
+      19,
+      8
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      19,
+      9
+     ]
+    },
+    {
+     "sprite": "inn_roof",
+     "cell": [
+      12,
+      14
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      12,
+      15
+     ]
+    },
+    {
+     "sprite": "inn_roof",
+     "cell": [
+      19,
+      15
+     ]
+    },
+    {
+     "sprite": "inn_roof",
+     "cell": [
+      21,
+      15
+     ]
+    },
+    {
+     "_comment": "M-BEAUTY R2 art fix 1: this building's block is 4 wide (18-21,15-16) with TWO inn_roof pieces (19,15)/(21,15) but the facade below was a single tile at an unaligned x=20 -- neither roof lined up with a wall beneath it (VISUAL-LOG 'roofs misaligned'). Realigned to the guild building's own precedent (26-30,1-3: two roof/facade pairs at matching x, spaced 2 apart) -- one facade directly under each roof.",
+     "sprite": "facade_plaster",
+     "cell": [
+      19,
+      16
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      21,
+      16
+     ]
+    },
+    {
+     "sprite": "campfire",
+     "cell": [
+      13,
+      10
+     ],
+     "_comment": "M-BEAUTY R2 art fix 3 + torchlit-stone card: was unlit street dressing -- the same stone-ring-with-red-center art as sewer_grate's placeholder rock art, so dark/unlit it read as a second fake sewer grate in the south square (VISUAL-LOG). Lighting it (matching the other street/inn campfire anchors' warm palette) both fixes the lookalike confusion (a flickering warm glow reads unmistakably as fire, not a cold iron grate) and gives the gate district a second torch-pool anchor per the mood card brief.",
+     "light": {
+      "color": [
+       1.0,
+       0.55,
+       0.25
+      ],
+      "energy": 1.0,
+      "radius": 34,
+      "flicker": true
+     }
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      14,
+      7
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.68,
+       0.35
+      ],
+      "energy": 0.9,
+      "radius": 30,
+      "flicker": true
+     }
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      15,
+      12
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.68,
+       0.35
+      ],
+      "energy": 0.9,
+      "radius": 30,
+      "flicker": true
+     }
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      14,
+      17
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.68,
+       0.35
+      ],
+      "energy": 0.9,
+      "radius": 30,
+      "flicker": true
+     }
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      23,
+      12
+     ]
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      6,
+      13
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      5,
+      10
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      6,
+      10
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      25,
+      8
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      8,
+      17
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      24,
+      18
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      3,
+      16
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      6,
+      20
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      15,
+      20
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      24,
+      20
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      32,
+      7
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      32,
+      14
+     ]
+    },
+    {
+     "_comment": "M-BEAUTY R2 art fix 2: cellar_door (entity, street 10,17) rendered freestanding with nothing behind it (VISUAL-LOG). crate_light.json's route walks down column x=13 then x=10 and stops at (10,16) facing down into the door -- moving the door's own cell would desync that script's hardcoded step counts, so per the brief this dresses AROUND the existing cell instead: one facade_plaster tile immediately east of the door, same row (11,17), never a cell the approach path crosses (path only touches x=10 southbound and x=10..13 at y=13), so it reads as the building wall the cellar is set into without the player ever visually overlapping it.",
+     "sprite": "facade_plaster",
+     "cell": [
+      11,
+      17
+     ]
+    }
+   ],
+   "scatter": [
+    {
+     "pool": [
+      "grass_tuft",
+      "pebble",
+      "flower_tiny"
+     ],
+     "density": 0.06,
+     "cluster": 0.7,
+     "seed": 5
+    },
+    {
+     "pool": [
+      "flower_purple"
+     ],
+     "density": 0.012,
+     "cluster": 0.9,
+     "seed": 11
+    }
+   ],
+   "entities": [
+    {
+     "id": "street_door",
+     "kind": "door",
+     "cell": [
+      0,
+      3
+     ],
+     "display_name": "To the Floodplains",
+     "sprite": "door",
+     "to_map": "floodplains",
+     "to_cell": [
+      31,
+      24
+     ]
+    },
+    {
+     "id": "gate_guard",
+     "kind": "npc",
+     "cell": [
+      1,
+      5
+     ],
+     "display_name": "Watch Guard",
+     "sprite": "royal_soldier",
+     "observe": "Watch armor, kept. He stands the post properly — weight even, eyes on the gap in the wall. Bored, but the boredom is a discipline, not a lapse.",
+     "facing": "up",
+     "dialogue": [
+      {
+       "speaker": "Watch Guard",
+       "text": "Keep the gate clear. And if you're headed out — the road's got goblins on it lately. Watch knows. Watch is dealing with it."
+      }
+     ]
+    },
+    {
+     "id": "watch_guard",
+     "kind": "npc",
+     "cell": [
+      22,
+      3
+     ],
+     "display_name": "Watch Guard",
+     "sprite": "royal_soldier",
+     "observe": "A Watchman making the paperwork look like the hard part on purpose. Still — his stance says he would rather a fight than the forms, and could win one.",
+     "facing": "down",
+     "dialogue": [
+      {
+       "speaker": "Watch Guard",
+       "text": "Watch post. Lost property, complaints, goblin sightings. In that order of how much I care."
+      }
+     ]
+    },
+    {
+     "id": "krshia_stall",
+     "kind": "prop",
+     "cell": [
+      14,
+      2
+     ],
+     "display_name": "Krshia's Stall",
+     "sprite": "food_basket",
+     "observe": "Silverfang goods laid out with a trap's care: cheapest at the front, the good stock where a browsing hand drifts. A note warns that the seller remembers faces.",
+     "on_interact_accomplishment": "browsed_market",
+     "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere — a sign says she remembers faces, and debts."
+    },
+    {
+     "id": "guild_door",
+     "kind": "prop",
+     "cell": [
+      28,
+      3
+     ],
+     "display_name": "Adventurer's Guild",
+     "sprite": "door",
+     "on_interact_accomplishment": "visited_guild",
+     "toast": "The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today."
+    },
+    {
+     "id": "selys",
+     "kind": "npc",
+     "cell": [
+      26,
+      4
+     ],
+     "display_name": "Selys",
+     "sprite": "citizen_f",
+     "tint": [
+      0.45,
+      1.0,
+      0.55
+     ],
+     "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger — she has sized up a hundred adventurers today and found most of them wanting.",
+     "facing": "up",
+     "conversation": "selys_delivery",
+     "dialogue": [
+      {
+       "speaker": "Selys",
+       "text": "Adventurers. Always tracking mud in."
+      }
+     ]
+    },
+    {
+     "_comment": "Onboarding rev O4: Pisces Jealnv (Human [Necromancer], canon -- Horns of Hammerad). Guild frontage (30,4), east of guild_door (28,3), clear of gate_district_walkthrough's forecourt approach cells (27,3/27,4/27,5/26,5/25,5). VISUAL-LOG: citizen_f stand-in with a pale, cool bone-white tint to read as a necromancer distinct from Selys's warm green. Teaches magic via the pisces_magic graph; mage.gained_by keys to its learned_magic_from_pisces bank.",
+     "id": "pisces",
+     "kind": "npc",
+     "cell": [
+      30,
+      4
+     ],
+     "display_name": "Pisces",
+     "sprite": "citizen_f",
+     "tint": [
+      0.74,
+      0.82,
+      0.96
+     ],
+     "observe": "Thin, immaculate, hungry in a way food will not fix. He holds himself like a duelist and watches hands, not faces. Whatever he studies, it is not small.",
+     "facing": "left",
+     "conversation": "pisces_magic",
+     "dialogue": [
+      {
+       "speaker": "Pisces",
+       "text": "Yes, I am a [Necromancer]. No, I did not raise anything in this square. Move along, or ask me something worth my time."
+      }
+     ]
+    },
+    {
+     "id": "sewer_grate",
+     "kind": "prop",
+     "cell": [
+      16,
+      11
+     ],
+     "display_name": "Sewer Grate",
+     "sprite": "sewer_grate",
+     "observe": "Rust holds the bars, not a lock. The draft is steady — a tunnel, not a pit — and the skittering keeps its distance. Something down there has learned to avoid shadows.",
+     "on_interact_accomplishment": "heard_the_sewers",
+     "toast": "A heavy iron grate, rusted shut. Cold air rises from below, and something in the dark skitters away from your shadow.",
+     "light": {
+      "color": [
+       0.35,
+       0.85,
+       0.5
+      ],
+      "energy": 0.35,
+      "radius": 18,
+      "flicker": false
+     }
+    },
+    {
+     "id": "krshia",
+     "kind": "npc",
+     "cell": [
+      13,
+      2
+     ],
+     "display_name": "Krshia",
+     "sprite": "citizen_f",
+     "tint": [
+      0.75,
+      0.6,
+      0.45
+     ],
+     "observe": "A Gnoll with a merchant's smile and a soldier's eyes. She prices you the moment you approach, and remembers the number.",
+     "facing": "right",
+     "conversation": "krshia_crate",
+     "dialogue": [
+      {
+       "speaker": "Krshia",
+       "text": "Hrr. Busy, yes? Come back when you can talk."
+      }
+     ]
+    },
+    {
+     "id": "crate_scavengers",
+     "kind": "encounter",
+     "cell": [
+      12,
+      16
+     ],
+     "display_name": "Crate Scavengers",
+     "sprite": "goblin_base",
+     "arena": "goblin_ambush",
+     "enemies": [
+      "goblin_raider",
+      "goblin_raider"
+     ],
+     "allies": [],
+     "on_victory": [
+      "recovered_crate_force",
+      "found_the_crate"
+     ]
+    },
+    {
+     "id": "cellar_door",
+     "kind": "prop",
+     "cell": [
+      10,
+      17
+     ],
+     "display_name": "Dark Cellar",
+     "sprite": "door",
+     "observe": "A plain door with dark behind it. The dust on the sill is scuffed one way — something was dragged in, and not dragged out.",
+     "requires_skill": "light",
+     "locked_toast": "Too dark to see anything.",
+     "on_skill_use": {
+      "accomplishment": "studied_the_cellar",
+      "toast": "[Light] — The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf."
+     }
+    },
+    {
+     "id": "watch_sergeant",
+     "kind": "npc",
+     "cell": [
+      17,
+      12
+     ],
+     "display_name": "Watch Sergeant",
+     "sprite": "citizen_f",
+     "tint": [
+      0.6,
+      0.7,
+      1.0
+     ],
+     "observe": "Stripes on the sleeve, ink on the fingers. He would send the crate problem down the chain if the chain had not already sent it back up to him.",
+     "facing": "down",
+     "conversation": "watch_crate",
+     "dialogue": [
+      {
+       "speaker": "Watch Sergeant",
+       "text": "Sewers, scavengers, paperwork. Pick one."
+      }
+     ]
+    }
+   ]
+  },
+  "floodplains": {
+   "biome": "floodplains",
+   "grid": {
+    "width": 40,
+    "height": 26
+   },
+   "_comment": "World environment (consultant design 2026-07-03 + controller integration). Reachable via the walkable inn_door route (M-FP Q1 door-retarget: inn_door -> floodplains (7,6); floodplains_peek was retired once this route landed, see CLAUDE.md). POI anchors: fishing-pond (13,18) [consultant's (12,18) was inside the pond blocking row], ruin-stones interact (31,7). Onboarding rev Task O2 (spec §3): `goblin_encounter_1` relocated from (21,12) to (30,23) with `trigger_radius: 2` -- the wall `segments` at y=25 block every column except x=31 (`liscor_gate`'s own cell), so (31,24) is the UNIQUE open cell from which the gate can be reached/interacted -- and (31,24) sits inside the 5x5 Chebyshev-2 square around (30,23) (x:[28,32], y:[21,25]). Any 4-directional path from outside that square to (31,24) (which lies inside it) must enter the square before arriving, so no route to `liscor_gate` avoids the ambush -- see the O2 report's BFS proof. `goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
+   "blocked": [
+    [
+     5,
+     4
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     8,
+     4
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     6,
+     5
+    ],
+    [
+     8,
+     5
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     30,
+     4
+    ],
+    [
+     31,
+     4
+    ],
+    [
+     32,
+     4
+    ],
+    [
+     30,
+     5
+    ],
+    [
+     31,
+     5
+    ],
+    [
+     32,
+     5
+    ],
+    [
+     31,
+     6
+    ],
+    [
+     17,
+     7
+    ],
+    [
+     24,
+     19
+    ]
+   ],
+   "floor_layers": [
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       3,
+       2,
+       9,
+       7
+      ]
+     },
+     "_pick": "hill plateau tone"
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       17,
+       2,
+       9,
+       6
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       21,
+       17,
+       7,
+       5
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/grass_03.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       2,
+       11,
+       5,
+       4
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/grass_03.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       33,
+       9,
+       6,
+       6
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       5,
+       15,
+       11,
+       9
+      ]
+     },
+     "_pick": "wet lowland mud sheet"
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "list": [
+       [
+        16,
+        16
+       ],
+       [
+        16,
+        17
+       ],
+       [
+        17,
+        17
+       ],
+       [
+        15,
+        14
+       ],
+       [
+        14,
+        14
+       ],
+       [
+        6,
+        14
+       ],
+       [
+        7,
+        14
+       ],
+       [
+        4,
+        17
+       ],
+       [
+        4,
+        18
+       ],
+       [
+        3,
+        19
+       ]
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       16,
+       19,
+       4,
+       3
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       2,
+       21,
+       3,
+       3
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       6,
+       6,
+       3,
+       2
+      ]
+     },
+     "_pick": "road: inn apron"
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       6,
+       7,
+       2,
+       6
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       7,
+       13,
+       10,
+       2
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       16,
+       14,
+       8,
+       2
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       23,
+       15,
+       6,
+       2
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       28,
+       16,
+       2,
+       5
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       29,
+       20,
+       2,
+       3
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       30,
+       22,
+       2,
+       4
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "list": [
+       [
+        21,
+        12
+       ],
+       [
+        22,
+        12
+       ],
+       [
+        20,
+        12
+       ],
+       [
+        22,
+        13
+       ]
+      ]
+     },
+     "_pick": "POI-A shoulder"
+    }
+   ],
+   "_comment_walls": "Liscor wall SE margin (castle picks, iterate) + flood pond as water segments (cap [1,7] = still-water pick from controller grid of Water_tiles; consultant guess [3,3] was island rim).",
+   "walls": {
+    "sheet": "res://assets/tiles/castle/Tiles.png",
+    "tile_px": 16,
+    "segments": [
+     {
+      "from": [
+       20,
+       25
+      ],
+      "to": [
+       30,
+       25
+      ],
+      "cap": [
+       2,
+       11
+      ],
+      "face": [
+       2,
+       13
+      ]
+     },
+     {
+      "from": [
+       32,
+       25
+      ],
+      "to": [
+       39,
+       25
+      ],
+      "cap": [
+       2,
+       11
+      ],
+      "face": [
+       2,
+       13
+      ]
+     },
+     {
+      "from": [
+       9,
+       17
+      ],
+      "to": [
+       11,
+       17
+      ],
+      "cap": [
+       1,
+       7
+      ],
+      "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+      "tile_px": 16
+     },
+     {
+      "from": [
+       8,
+       18
+      ],
+      "to": [
+       12,
+       18
+      ],
+      "cap": [
+       1,
+       7
+      ],
+      "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+      "tile_px": 16
+     },
+     {
+      "from": [
+       7,
+       19
+      ],
+      "to": [
+       13,
+       19
+      ],
+      "cap": [
+       1,
+       7
+      ],
+      "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+      "tile_px": 16
+     },
+     {
+      "from": [
+       8,
+       20
+      ],
+      "to": [
+       12,
+       20
+      ],
+      "cap": [
+       1,
+       7
+      ],
+      "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+      "tile_px": 16
+     },
+     {
+      "from": [
+       9,
+       21
+      ],
+      "to": [
+       11,
+       21
+      ],
+      "cap": [
+       1,
+       7
+      ],
+      "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+      "tile_px": 16
+     }
+    ]
+   },
+   "decor": [
+    {
+     "sprite": "inn_roof",
+     "cell": [
+      7,
+      4
+     ]
+    },
+    {
+     "sprite": "facade_plaster",
+     "cell": [
+      7,
+      5
+     ]
+    },
+    {
+     "sprite": "campfire",
+     "cell": [
+      11,
+      14
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.5,
+       0.2
+      ],
+      "energy": 1.4,
+      "radius": 48,
+      "flicker": true
+     },
+     "_comment": "Relc's fire — moved beside him (12,13) per pilot verdict: it must READ as his."
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      1,
+      10
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      16,
+      4
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      25,
+      3
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      36,
+      10
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      3,
+      15
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      12,
+      10
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      22,
+      18
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      35,
+      15
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      -2,
+      5
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      18,
+      -2
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      41,
+      7
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      30,
+      4
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      32,
+      5
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      31,
+      5
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      17,
+      7
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      24,
+      19
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      20,
+      12
+     ]
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      8,
+      15
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      9,
+      16
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      6,
+      18
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      13,
+      17
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      14,
+      20
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      27,
+      8
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      28,
+      7
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      34,
+      21
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      29,
+      24
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      33,
+      24
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      34,
+      23
+     ]
+    }
+   ],
+   "scatter": [
+    {
+     "_comment": "M-BEAUTY Task B3: sway tagged on the whole spec (not split by sprite id) to avoid re-seeding the scatter presence hash, which would move WHICH cells host which prop and break the day-shot 'all else identical' contract -- the pebble instances in this mixed pool also get the shader at the shared subtle default amplitude, imperceptible in practice (see world.gd's _build_scatter comment / task-b3-report.md).",
+     "pool": [
+      "grass_tuft",
+      "pebble",
+      "flower_tiny"
+     ],
+     "density": 0.06,
+     "cluster": 0.7,
+     "seed": 21,
+     "sway": true
+    },
+    {
+     "pool": [
+      "flower_purple"
+     ],
+     "density": 0.015,
+     "cluster": 0.9,
+     "seed": 22,
+     "sway": true
+    }
+   ],
+   "_comment_ambience": "M-BEAUTY Task B3: fireflies + pond_glints share the same rect -- a bounding box over the pond's water-segment cells (walls.segments rows y=17-21, x=7-13, see the walls block above) plus one cell of margin so fireflies read as hovering around/above the water, not clipped to exactly the water tiles.",
+   "ambience": [
+    {
+     "preset": "fireflies",
+     "rect": [
+      6,
+      16,
+      8,
+      6
+     ],
+     "phase": [
+      "dusk",
+      "night"
+     ]
+    },
+    {
+     "preset": "pond_glints",
+     "rect": [
+      6,
+      16,
+      8,
+      6
+     ],
+     "phase": [
+      "dusk",
+      "night"
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "id": "floodplains_inn_door",
+     "kind": "door",
+     "cell": [
+      7,
+      5
+     ],
+     "display_name": "The Wandering Inn",
+     "sprite": "door",
+     "to_map": "inn",
+     "to_cell": [
+      14,
+      3
+     ]
+    },
+    {
+     "id": "liscor_gate",
+     "kind": "door",
+     "cell": [
+      31,
+      25
+     ],
+     "display_name": "To Liscor",
+     "sprite": "door",
+     "to_map": "street",
+     "to_cell": [
+      1,
+      3
+     ]
+    },
+    {
+     "id": "goblin_encounter_1",
+     "kind": "encounter",
+     "respawns": true,
+     "cell": [
+      30,
+      23
+     ],
+     "trigger_radius": 2,
+     "display_name": "Goblin Ambush",
+     "sprite": "goblin_base",
+     "arena": "goblin_ambush_tutorial",
+     "enemies": [
+      "goblin_raider",
+      "goblin_shaman"
+     ],
+     "allies": [
+      "relc"
+     ],
+     "ally_requires": {
+      "met_relc": 1
+     },
+     "on_victory": [
+      "won_combat"
+     ],
+     "loot": [
+      {
+       "item": "crude_blade",
+       "chance": 0.25
+      }
+     ]
+    },
+    {
+     "id": "goblin_encounter_2",
+     "kind": "encounter",
+     "cell": [
+      28,
+      18
+     ],
+     "display_name": "Goblin Warband",
+     "sprite": "goblin_base",
+     "arena": "goblin_ambush",
+     "enemies": [
+      "goblin_raider",
+      "goblin_shaman"
+     ],
+     "allies": [
+      "relc"
+     ],
+     "ally_requires": {
+      "met_relc": 1
+     },
+     "conversation": "goblin_parley",
+     "on_victory": [
+      "won_combat",
+      "street_cleared"
+     ],
+     "loot": [
+      {
+       "item": "chipped_spear",
+       "chance": 0.25
+      }
+     ]
+    },
+    {
+     "id": "chieftains_raid",
+     "kind": "encounter",
+     "cell": [
+      31,
+      7
+     ],
+     "display_name": "Chieftain's Raid",
+     "sprite": "goblin_sword",
+     "arena": "cave_mouth",
+     "enemies": [
+      "goblin_chieftain",
+      "goblin_raider",
+      "cave_spider"
+     ],
+     "allies": [
+      "relc"
+     ],
+     "ally_requires": {
+      "met_relc": 1
+     },
+     "on_victory": [
+      "won_combat"
+     ],
+     "loot": [
+      {
+       "item": "chipped_spear",
+       "chance": 0.5
+      }
+     ]
+    },
+    {
+     "id": "relc",
+     "kind": "npc",
+     "cell": [
+      12,
+      13
+     ],
+     "display_name": "Relc",
+     "sprite": "a_hunter",
+     "tint": [
+      0.6,
+      1.0,
+      0.6
+     ],
+     "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it — including you, now.",
+     "facing": "left",
+     "conversation": "relc_intro",
+     "dialogue": [
+      {
+       "speaker": "Relc",
+       "text": "Road's watched. You're welcome."
+      }
+     ]
+    },
+    {
+     "id": "relc_spar",
+     "kind": "encounter",
+     "cell": [
+      13,
+      12
+     ],
+     "display_name": "Training Dummies",
+     "sprite": "training_dummy",
+     "observe": "Straw and burlap lashed to posts, hacked half to ribbons. Someone drills here often, and hard. The stitching tells you where a real guard would break.",
+     "arena": "training_yard",
+     "enemies": [
+      "training_dummy_a",
+      "training_dummy_b"
+     ],
+     "allies": [],
+     "trivial": true,
+     "persistent": true,
+     "on_victory": [
+      "sparred_with_relc"
+     ],
+     "conversation": "dummies_note"
+    },
+    {
+     "id": "ruin_stones",
+     "kind": "prop",
+     "cell": [
+      3,
+      8
+     ],
+     "display_name": "Ruin Stones",
+     "sprite": "boulder",
+     "contains": [
+      "traveler_charm"
+     ]
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,23 @@
+{
+	"start": "hub",
+	"nodes": {
+		"hub": { "speaker": "Selys", "text": "Guild's closed for lunch. Unless you're here about the thing Erin won't stop signing her letters about?", "options": [
+			{ "text": "Package for you, from Erin.", "requires": { "accomplishment": { "has_package": 1 } }, "hide_when": { "accomplishment": { "package_delivered": 1 } }, "effects": [ { "accomplishment": "package_delivered" } ], "goto": "delivered" },
+			{ "text": "Erin's package. I'll spare you the small talk. (Lyonette's advice)", "requires": { "accomplishment": { "lyonette_tip": 1 } }, "hide_when": { "accomplishment": { "package_delivered": 1 } }, "effects": [ { "accomplishment": "package_delivered" }, { "accomplishment": "selys_impressed" } ], "goto": "delivered_smooth" },
+			{ "text": "About that reward...", "requires": { "accomplishment": { "package_delivered": 1 } }, "hide_when": { "accomplishment": { "errand_decided": 1 } }, "goto": "delivered" },
+			{ "text": "Just looking around.", "end": true }
+		] },
+		"delivered": { "speaker": "Selys", "text": "Finally. Here - she overpaid the courier fee, as always. Take it back or keep it, I honestly don't care which.", "options": [
+			{ "text": "I'll keep it. Courier's fee.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "kept_reward" }, { "accomplishment": "errand_decided" } ], "goto": "delivered" },
+			{ "text": "Send it back to Erin.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "gave_reward" }, { "accomplishment": "errand_decided" } ], "goto": "delivered" },
+			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "I'll think about it.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "end": true }
+		] },
+		"delivered_smooth": { "speaker": "Selys", "text": "Hm. Someone's been talking to Lyonette. Fine - here's the fee Erin overpaid, and tell that barmaid she's wasted on pouring drinks.", "options": [
+			{ "text": "I'll keep it. Courier's fee.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "kept_reward" }, { "accomplishment": "errand_decided" } ], "goto": "delivered_smooth" },
+			{ "text": "Send it back to Erin.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "gave_reward" }, { "accomplishment": "errand_decided" } ], "goto": "delivered_smooth" },
+			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "I'll think about it.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "end": true }
+		] }
+	}
+}

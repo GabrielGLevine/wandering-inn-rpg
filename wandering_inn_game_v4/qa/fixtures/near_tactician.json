@@ -1,0 +1,44 @@
+{
+ "_comment": "Three Pillars P5: the near-Tactician fixture. post_tutorial shape (warrior L1, met/sparred/given_spear, both weapons carried) PLUS studied_the_cellar:1 banked (the [Tactician] gate the Missing-Crate guile path banks), standing at the inn (2,3) facing right. field_skills_loop LOADS this so its NEXT sleep grants [Tactician] with the honest 'past cleverness pays off' bank -- and because that sleep follows the loop's basic_cleaning use (cleaned_the_inn:1), the SAME sleep ALSO grants [Helper] (gained_by cleaned_the_inn:1): the overworld bar grows 1 -> 3 field slots ([Basic Cleaning], [Basic Cooking], [Observe]). No combat in the path, so rng_state is cosmetic; kept 9 for convention. equipped weapon (rusty_sword) is a subset of inventory (save.gd contract).",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   2,
+   3
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "studied_the_cellar": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}

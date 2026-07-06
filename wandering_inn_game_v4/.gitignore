@@ -1,0 +1,6 @@
+.godot/
+build/
+qa_output/
+node_modules/
+*.tmp
+.DS_Store

@@ -1,0 +1,293 @@
+{
+ "events": [
+  {
+   "id": "menu_move",
+   "event": "ui_pause_shown",
+   "stream": "res://assets/audio/sfx/ui_tick.wav",
+   "bus": "UI",
+   "volume_db": -15.0,
+   "cooldown_ms": 60
+  },
+  {
+   "id": "menu_confirm",
+   "event": "ui_pause_hidden",
+   "stream": "res://assets/audio/sfx/ui_confirm.wav",
+   "bus": "UI",
+   "volume_db": -13.0,
+   "cooldown_ms": 60
+  },
+  {
+   "id": "dialogue_open",
+   "event": "ui_dialogue_shown",
+   "stream": "res://assets/audio/sfx/dialogue_open.wav",
+   "bus": "UI",
+   "volume_db": -15.0,
+   "cooldown_ms": 100
+  },
+  {
+   "id": "dialogue_choice",
+   "event": "dialogue_choice",
+   "stream": "res://assets/audio/sfx/dialogue_choice.wav",
+   "bus": "UI",
+   "volume_db": -14.0,
+   "cooldown_ms": 80
+  },
+  {
+   "id": "toast",
+   "event": "ui_toast_rendered",
+   "stream": "res://assets/audio/sfx/toast.wav",
+   "bus": "UI",
+   "volume_db": -15.0,
+   "cooldown_ms": 100
+  },
+  {
+   "id": "footstep",
+   "event": "player_moved",
+   "stream": "res://assets/audio/sfx/footstep.wav",
+   "bus": "SFX",
+   "volume_db": -24.0,
+   "cooldown_ms": 120
+  },
+  {
+   "id": "attack_hit",
+   "event": "attack_resolved",
+   "payload": {
+    "hit": true
+   },
+   "stream": "res://assets/audio/sfx/attack_hit.wav",
+   "bus": "SFX",
+   "volume_db": -14.0,
+   "cooldown_ms": 40
+  },
+  {
+   "id": "attack_miss",
+   "event": "attack_resolved",
+   "payload": {
+    "hit": false
+   },
+   "stream": "res://assets/audio/sfx/attack_miss.wav",
+   "bus": "SFX",
+   "volume_db": -16.0,
+   "cooldown_ms": 40
+  },
+  {
+   "id": "skill_cast_physical",
+   "event": "skill_resolved",
+   "payload": {
+    "skill": "power_strike"
+   },
+   "stream": "res://assets/audio/sfx/skill_physical.wav",
+   "bus": "SFX",
+   "volume_db": -15.0,
+   "cooldown_ms": 80
+  },
+  {
+   "id": "skill_cast_fire",
+   "event": "skill_resolved",
+   "payload": {
+    "skill": "flame_bolt"
+   },
+   "stream": "res://assets/audio/sfx/skill_fire.wav",
+   "bus": "SFX",
+   "volume_db": -15.0,
+   "cooldown_ms": 80
+  },
+  {
+   "id": "skill_cast_fire_line",
+   "event": "skill_resolved",
+   "payload": {
+    "skill": "flame_jet"
+   },
+   "stream": "res://assets/audio/sfx/skill_fire.wav",
+   "bus": "SFX",
+   "volume_db": -15.0,
+   "cooldown_ms": 80
+  },
+  {
+   "id": "skill_cast_frost",
+   "event": "skill_resolved",
+   "payload": {
+    "skill": "frost_bolt"
+   },
+   "stream": "res://assets/audio/sfx/skill_frost.wav",
+   "bus": "SFX",
+   "volume_db": -15.0,
+   "cooldown_ms": 80
+  },
+  {
+   "id": "skill_cast_arcane",
+   "event": "reaction_triggered",
+   "payload": {
+    "skill": "mana_shield"
+   },
+   "stream": "res://assets/audio/sfx/skill_arcane.wav",
+   "bus": "SFX",
+   "volume_db": -15.0,
+   "cooldown_ms": 80
+  },
+  {
+   "id": "dash",
+   "event": "dashed",
+   "stream": "res://assets/audio/sfx/dash.wav",
+   "bus": "SFX",
+   "volume_db": -17.0,
+   "cooldown_ms": 80
+  },
+  {
+   "id": "downed",
+   "event": "combatant_downed",
+   "stream": "res://assets/audio/sfx/downed.wav",
+   "bus": "SFX",
+   "volume_db": -14.0,
+   "cooldown_ms": 80
+  },
+  {
+   "id": "victory",
+   "event": "combat_finished",
+   "payload": {
+    "victory": true
+   },
+   "stream": "res://assets/audio/sfx/victory.wav",
+   "bus": "SFX",
+   "volume_db": -11.0,
+   "cooldown_ms": 300
+  },
+  {
+   "id": "defeat",
+   "event": "combat_finished",
+   "payload": {
+    "victory": false
+   },
+   "stream": "res://assets/audio/sfx/defeat.wav",
+   "bus": "SFX",
+   "volume_db": -12.0,
+   "cooldown_ms": 300
+  },
+  {
+   "id": "level_up",
+   "event": "class_level_up",
+   "stream": "res://assets/audio/sfx/level_up.wav",
+   "bus": "SFX",
+   "volume_db": -11.0,
+   "cooldown_ms": 200
+  },
+  {
+   "id": "class_gained",
+   "event": "class_gained",
+   "stream": "res://assets/audio/sfx/level_up.wav",
+   "bus": "SFX",
+   "volume_db": -11.0,
+   "cooldown_ms": 200
+  },
+  {
+   "id": "quest_chime",
+   "event": "quest_started",
+   "stream": "res://assets/audio/sfx/quest_chime.wav",
+   "bus": "UI",
+   "volume_db": -12.0,
+   "cooldown_ms": 150
+  },
+  {
+   "id": "quest_chime_beat",
+   "event": "quest_beat_completed",
+   "stream": "res://assets/audio/sfx/quest_chime.wav",
+   "bus": "UI",
+   "volume_db": -12.0,
+   "cooldown_ms": 150
+  },
+  {
+   "id": "quest_chime_complete",
+   "event": "quest_completed",
+   "stream": "res://assets/audio/sfx/quest_chime.wav",
+   "bus": "UI",
+   "volume_db": -12.0,
+   "cooldown_ms": 150
+  },
+  {
+   "id": "save_chime",
+   "event": "toast",
+   "payload": {
+    "text": "Game saved."
+   },
+   "stream": "res://assets/audio/sfx/save_chime.wav",
+   "bus": "UI",
+   "volume_db": -13.0,
+   "cooldown_ms": 150
+  }
+ ],
+ "music": [
+  {
+   "id": "music_title",
+   "kind": "title",
+   "context": "title",
+   "event": "ui_title_rendered",
+   "stream": "res://assets/audio/music/title_theme.ogg",
+   "bus": "Music",
+   "volume_db": -6.0,
+   "loop": true
+  },
+  {
+   "id": "music_inn",
+   "kind": "field",
+   "context": "inn",
+   "event": "map_changed",
+   "payload": {
+    "map": "inn"
+   },
+   "stream": "res://assets/audio/music/definitely_our_town.ogg",
+   "bus": "Music",
+   "volume_db": -6.0,
+   "loop": true
+  },
+  {
+   "id": "music_street",
+   "kind": "field",
+   "context": "street",
+   "event": "map_changed",
+   "payload": {
+    "map": "street"
+   },
+   "stream": "res://assets/audio/music/port_town.ogg",
+   "bus": "Music",
+   "volume_db": -6.0,
+   "loop": true
+  },
+  {
+   "id": "music_floodplains",
+   "kind": "field",
+   "context": "floodplains",
+   "event": "map_changed",
+   "payload": {
+    "map": "floodplains"
+   },
+   "stream": "res://assets/audio/music/silent_forest.ogg",
+   "bus": "Music",
+   "volume_db": -6.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "stream": "res://assets/audio/music/battle_1.ogg",
+   "bus": "Music",
+   "volume_db": -6.0,
+   "loop": true
+  },
+  {
+   "id": "music_victory",
+   "kind": "sting",
+   "context": "victory",
+   "event": "combat_resolved",
+   "payload": {
+    "victory": true
+   },
+   "stream": "res://assets/audio/music/victory.ogg",
+   "bus": "Music",
+   "volume_db": -5.0,
+   "loop": false,
+   "return_to_field": true
+  }
+ ]
+}

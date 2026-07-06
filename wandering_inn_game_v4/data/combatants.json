@@ -1,0 +1,146 @@
+{
+ "combatants": [
+  {
+   "id": "pc",
+   "display_name": "Traveler",
+   "sprite": "body_a",
+   "side": "player",
+   "stats": {
+    "str": 12,
+    "dex": 10,
+    "con": 12,
+    "int": 8,
+    "wis": 8,
+    "cha": 10
+   },
+   "weapon_die": 6,
+   "ai": "",
+   "skills": []
+  },
+  {
+   "id": "relc",
+   "display_name": "Relc",
+   "sprite": "a_hunter",
+   "side": "player",
+   "stats": {
+    "str": 14,
+    "dex": 12,
+    "con": 20,
+    "int": 8,
+    "wis": 8,
+    "cha": 8
+   },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": [
+    "basic_swordwork"
+   ]
+  },
+  {
+   "id": "goblin_raider",
+   "display_name": "Goblin Raider",
+   "sprite": "goblin_base",
+   "side": "enemy",
+   "stats": {
+    "str": 10,
+    "dex": 9,
+    "con": 9,
+    "int": 6,
+    "wis": 6,
+    "cha": 6
+   },
+   "weapon_die": 4,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "id": "goblin_shaman",
+   "display_name": "Goblin Shaman",
+   "sprite": "goblin_female",
+   "side": "enemy",
+   "stats": {
+    "str": 2,
+    "dex": 9,
+    "con": 9,
+    "int": 10,
+    "wis": 10,
+    "cha": 6
+   },
+   "weapon_die": 4,
+   "ai": "ranged",
+   "skills": [
+    "flame_bolt"
+   ]
+  },
+  {
+   "id": "cave_spider",
+   "display_name": "Cave Bat",
+   "sprite": "bat",
+   "side": "enemy",
+   "stats": {
+    "str": 9,
+    "dex": 17,
+    "con": 6,
+    "int": 4,
+    "wis": 6,
+    "cha": 4
+   },
+   "weapon_die": 5,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "id": "goblin_chieftain",
+   "display_name": "Goblin Chieftain",
+   "sprite": "goblin_sword",
+   "side": "enemy",
+   "stats": {
+    "str": 15,
+    "dex": 9,
+    "con": 13,
+    "int": 7,
+    "wis": 8,
+    "cha": 9
+   },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": [
+    "power_strike"
+   ]
+  },
+  {
+   "id": "training_dummy_a",
+   "display_name": "Training Dummy",
+   "sprite": "training_dummy",
+   "side": "enemy",
+   "stats": {
+    "str": 2,
+    "dex": 2,
+    "con": 1,
+    "int": 1,
+    "wis": 1,
+    "cha": 1
+   },
+   "weapon_die": 0,
+   "ai": "inert",
+   "skills": []
+  },
+  {
+   "id": "training_dummy_b",
+   "display_name": "Training Dummy",
+   "sprite": "training_dummy",
+   "side": "enemy",
+   "stats": {
+    "str": 2,
+    "dex": 2,
+    "con": 1,
+    "int": 1,
+    "wis": 1,
+    "cha": 1
+   },
+   "weapon_die": 0,
+   "ai": "inert",
+   "skills": []
+  }
+ ]
+}

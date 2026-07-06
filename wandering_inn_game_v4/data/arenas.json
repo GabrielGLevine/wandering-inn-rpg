@@ -1,0 +1,638 @@
+{
+ "arenas": [
+  {
+   "id": "goblin_ambush",
+   "biome": "street",
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     8,
+     2
+    ]
+   ],
+   "player_spawns": [
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ]
+   ],
+   "_comment_dressing": "M5 R4 (design doc sec.4). Same passthrough contract as skeleton_scene.json maps -- combat_screen.gd renders these, WICombat never reads them (arena_config.duplicate(true) just carries the extra keys inertly). Decor cells are deliberately OUTSIDE the 12x8 playable grid (x<0 or x>=12) so dressing never competes with tactical readability, per design doc sec.4's binding rule.",
+   "floor_layers": [
+    {
+     "_pick": "cobble variation reusing the street biome's verified floor-tile neighborhood.",
+     "variants": [
+      [
+       16,
+       2
+      ],
+      [
+       17,
+       2
+      ],
+      [
+       18,
+       2
+      ]
+     ],
+     "cells": "all"
+    },
+    {
+     "_pick": "dirt-transition edge strips at the north/south grid edges (rows 0 and 7) -- whole-image tile.",
+     "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       0,
+       0,
+       12,
+       1
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       0,
+       7,
+       12,
+       1
+      ]
+     }
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "crate",
+     "cell": [
+      -1,
+      3
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      12,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cave_mouth",
+   "biome": "cave",
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     6
+    ],
+    [
+     9,
+     1
+    ],
+    [
+     9,
+     2
+    ]
+   ],
+   "player_spawns": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "_comment_dressing": "M5 R4 (design doc sec.4). Decor sits just outside the 12x8 grid, same rule as goblin_ambush.",
+   "floor_layers": [
+    {
+     "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood.",
+     "variants": [
+      [
+       8,
+       13
+      ],
+      [
+       9,
+       13
+      ],
+      [
+       10,
+       13
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "mushroom",
+     "cell": [
+      -1,
+      3
+     ]
+    },
+    {
+     "sprite": "mushroom",
+     "cell": [
+      12,
+      4
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_l",
+     "cell": [
+      -2,
+      2
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_m",
+     "cell": [
+      13,
+      5
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_s",
+     "cell": [
+      12,
+      0
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_m",
+     "cell": [
+      -2,
+      6
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_s",
+     "cell": [
+      4,
+      -2
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      8,
+      -2
+     ]
+    }
+   ]
+  },
+  {
+   "id": "training_yard",
+   "biome": "floodplains",
+   "trivial": true,
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [],
+   "player_spawns": [
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     7,
+     3
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     8,
+     3
+    ],
+    [
+     8,
+     4
+    ]
+   ],
+   "_comment_dressing": "Roadside practice ground: open grass, dressing outside the 12x8 grid per the standing rule. Enemy spawns are Chebyshev 5 from the player spawn ON PURPOSE: 3 free steps exhaust the pool short of contact (beat 3), Dash covers the rest with AP to spare for one attack -- the full teaching arc fits in turn 1.",
+   "floor_layers": [
+    {
+     "_pick": "trampled practice-ground patch, whole-image tile",
+     "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       5,
+       2,
+       4,
+       4
+      ]
+     }
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "crate",
+     "cell": [
+      -1,
+      3
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      -1,
+      5
+     ]
+    },
+    {
+     "sprite": "training_dummy",
+     "cell": [
+      12,
+      2
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      12,
+      6
+     ]
+    }
+   ],
+   "tutor_lines": [
+    {
+     "id": "opening",
+     "on": {
+      "event": "combat_started"
+     },
+     "line": "Relc: Loose grip, dead stance — we'll fix both. Arrows move you. Three easy steps a turn, so use your legs before anything fancy."
+    },
+    {
+     "id": "first_step",
+     "on": {
+      "event": "combatant_moved",
+      "payload_contains": {
+       "id": "pc"
+      }
+     },
+     "line": "Relc: That's walking. Now get next to one and press 1 — that's your arm. Numbers are your moves, remember them."
+    },
+    {
+     "id": "pool_empty",
+     "on": {
+      "event": "combatant_moved",
+      "payload_contains": {
+       "id": "pc"
+      },
+      "nth": 3
+     },
+     "line": "Relc: Steps run out, see? Slot 2 — [Dash]. Costs you wind, buys you stride."
+    },
+    {
+     "id": "dash",
+     "on": {
+      "event": "dashed",
+      "payload_contains": {
+       "id": "pc"
+      }
+     },
+     "line": "Relc: And the legs are back. Wind for stride — that trade wins fights."
+    },
+    {
+     "id": "aim",
+     "on": {
+      "event": "ui_targeting_shown"
+     },
+     "line": "Relc: Tab swaps targets, Enter commits. A spear only argues with one thing at a time."
+    },
+    {
+     "id": "first_blood",
+     "on": {
+      "event": "attack_resolved",
+      "payload_contains": {
+       "attacker": "pc"
+      }
+     },
+     "line": "Relc: Ha! Straw everywhere. When you're spent, press E — end your turn on YOUR terms."
+    },
+    {
+     "id": "watch",
+     "on": {
+      "event": "turn_ended",
+      "payload_contains": {
+       "id": "pc"
+      }
+     },
+     "line": "Relc: Turn's done. Now stand there and watch what comes back at you. That's half of fighting."
+    },
+    {
+     "id": "wrap",
+     "on": {
+      "event": "combat_finished",
+      "payload_contains": {
+       "victory": true
+      }
+     },
+     "line": "Relc: Not bad for someone who smells of dish soap. Sleep is where a fight settles into your bones — do that. Then come see me; I owe you something."
+    }
+   ]
+  },
+  {
+   "id": "goblin_ambush_tutorial",
+   "biome": "street",
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     8,
+     2
+    ]
+   ],
+   "player_spawns": [
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ]
+   ],
+   "_comment_dressing": "M5 R4 (design doc sec.4). Same passthrough contract as skeleton_scene.json maps -- combat_screen.gd renders these, WICombat never reads them (arena_config.duplicate(true) just carries the extra keys inertly). Decor cells are deliberately OUTSIDE the 12x8 playable grid (x<0 or x>=12) so dressing never competes with tactical readability, per design doc sec.4's binding rule.",
+   "floor_layers": [
+    {
+     "_pick": "cobble variation reusing the street biome's verified floor-tile neighborhood.",
+     "variants": [
+      [
+       16,
+       2
+      ],
+      [
+       17,
+       2
+      ],
+      [
+       18,
+       2
+      ]
+     ],
+     "cells": "all"
+    },
+    {
+     "_pick": "dirt-transition edge strips at the north/south grid edges (rows 0 and 7) -- whole-image tile.",
+     "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       0,
+       0,
+       12,
+       1
+      ]
+     }
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       0,
+       7,
+       12,
+       1
+      ]
+     }
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "crate",
+     "cell": [
+      -1,
+      3
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      12,
+      4
+     ]
+    }
+   ],
+   "_comment": "Onboarding O3: layout-identical clone of goblin_ambush carrying the PART-2 tutor beats (arenas own tutor_lines and goblin_ambush is shared with goblin_encounter_2, which must stay beat-free). goblin_encounter_1 points here.",
+   "tutor_lines": [
+    {
+     "id": "real_ones",
+     "on": {
+      "event": "combat_started"
+     },
+     "line": "Relc: Real ones this time — stay behind me if you have to. You slept, so check your numbers: 3 and up are your [Skills] now. Earned, not given."
+    },
+    {
+     "id": "skill_aim",
+     "on": {
+      "event": "ui_targeting_shown",
+      "payload_contains": {
+       "mode": "skill"
+      }
+     },
+     "line": "Relc: That one puts everything behind one blow. What your slots hold follows the weapon you carry — sword skills for a sword arm, spear skills for mine."
+    },
+    {
+     "id": "skill_hit",
+     "on": {
+      "event": "skill_resolved",
+      "payload_contains": {
+       "actor": "pc"
+      }
+     },
+     "line": "Relc: THAT'S the stuff. Attacks keep you alive — [Skills] win the fight. Sleep grows both."
+    },
+    {
+     "id": "road_clear",
+     "on": {
+      "event": "combat_finished",
+      "payload_contains": {
+       "victory": true
+      }
+     },
+     "line": "Relc: Road's clear. Liscor's through the gate — tell the Watch that Relc let you pass. It won't help."
+    }
+   ]
+  }
+ ]
+}

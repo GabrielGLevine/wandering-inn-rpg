@@ -1,0 +1,249 @@
+# Release — tag-driven itch.io wasm deploy for the Wandering Inn RPG
+# (M-RELEASE Task R3).
+#
+# Fires ONLY on a version tag push (v*). Unlike ci.yml (which is secret-free and
+# fork-PR-safe), THIS workflow is the ONLY place repo secrets are used:
+#   - PRIVATE_ASSETS_TOKEN : a PAT with read access to the private assets repo,
+#                            used to download the real (non-redistributable)
+#                            asset bundle that overlays the fallback art.
+#   - BUTLER_API_KEY        : itch.io butler credential for the wasm push.
+# Tag pushes are user-only by tag protection (a USER ACTION — see the task
+# report), so secrets are never reachable from a fork PR.
+#
+# Pipeline (spec §4): checkout → fetch private bundle → overlay assets → full QA
+# gate re-run WITH real assets → wasm export (pinned 4.7 templates) → butler push.
+# Implemented as ONE sequential job: every stage after the overlay needs the
+# overlaid working tree, so splitting into separate GitHub jobs would mean
+# shuttling the whole tree + build as artifacts for no benefit. Each stage below
+# is a clearly delimited step group (a)–(d) mirroring the plan.
+#
+# ┌───────────────────────────────────────────────────────────────────────┐
+# │ ⚠️  PLACEHOLDERS TO FILL BEFORE FIRST TAG (see task-r3-report.md):     │
+# │   PRIVATE_ASSETS_REPO  →  OWNER/PRIVATE-REPO  (the private assets repo)│
+# │   ITCH_TARGET          →  ITCH_USER/ITCH_GAME (the itch.io project)    │
+# │   GODOT_SHA256 / GODOT_TEMPLATES_SHA256  →  real sha256 (as in ci.yml) │
+# │   BUTLER_VERSION       →  an exact broth version (do NOT float LATEST) │
+# └───────────────────────────────────────────────────────────────────────┘
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+# Read-only for the workflow's own GITHUB_TOKEN. The private-repo fetch uses the
+# separate PRIVATE_ASSETS_TOKEN PAT, not this token; the itch push uses
+# BUTLER_API_KEY. Nothing here needs write scope on THIS repo.
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  # Pinned engine — copied verbatim from ci.yml so the two workflows can never
+  # drift onto different 4.7 builds. Integrity via the official release
+  # SHA512-SUMS.txt at run time (same mechanism as ci.yml).
+  GODOT_VERSION: "4.7-stable"
+  GODOT_BIN: "Godot_v4.7-stable_linux.x86_64"
+  GODOT_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
+  GODOT_SUMS_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/SHA512-SUMS.txt"
+  GODOT_TEMPLATES_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz"
+  # Butler pinned to an exact broth version — do NOT float LATEST (engine/tool
+  # drift has bitten this project before; same discipline as the Godot pin).
+  BUTLER_VERSION: "15.27.0"
+
+jobs:
+  release:
+    name: Build + deploy tagged release
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Install pinned web export templates
+        run: |
+          set -euo pipefail
+          curl -fsSL -o templates.tpz "$GODOT_TEMPLATES_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  Godot_v4.7-stable_export_templates.tpz$" SHA512-SUMS.txt | sed "s#  Godot_v4.7-stable_export_templates.tpz#  templates.tpz#" | sha512sum -c -
+          unzip -q templates.tpz
+          dest="$HOME/.local/share/godot/export_templates/4.7.stable"
+          mkdir -p "$dest"
+          mv templates/* "$dest/"
+
+      # ---------------------------------------------------------------- (a) bundle
+      - name: (a) Fetch private asset bundle
+        env:
+          GH_TOKEN: ${{ secrets.PRIVATE_ASSETS_TOKEN }}
+          # ⚠️ PLACEHOLDER — replace with the real private assets repo (owner/name).
+          PRIVATE_ASSETS_REPO: "OWNER/PRIVATE-REPO"
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::PRIVATE_ASSETS_TOKEN secret is not set. A tagged release MUST build with the real (non-redistributable) assets — the fallback-art path is the contributor/CI experience, not a shippable demo. Add the secret in repo Settings → Secrets and variables → Actions, then re-push the tag."
+            exit 1
+          fi
+          if [ "$PRIVATE_ASSETS_REPO" = "OWNER/PRIVATE-REPO" ]; then
+            echo "::error::PRIVATE_ASSETS_REPO is still the placeholder 'OWNER/PRIVATE-REPO'. Edit .github/workflows/release.yml and set it to the real private assets repo before tagging."
+            exit 1
+          fi
+          mkdir -p bundle
+          # Grab the latest release's bundle tarball from the private repo.
+          gh release download --repo "$PRIVATE_ASSETS_REPO" \
+            --pattern '*.tar.gz' --dir bundle
+          count=$(ls -1 bundle/*.tar.gz 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$count" -eq 0 ]; then
+            echo "::error::No *.tar.gz asset bundle found in the latest release of $PRIVATE_ASSETS_REPO. Build one with scripts/make_asset_bundle.sh and attach it to a release there."
+            exit 1
+          fi
+          echo "Downloaded $count bundle tarball(s):"
+          ls -la bundle/
+
+      - name: (a) Overlay real assets onto the working tree
+        run: |
+          set -euo pipefail
+          tarball="$(ls -1 bundle/*.tar.gz | head -n1)"
+          echo "Overlaying: $tarball"
+          # The bundle preserves the wandering_inn_game_v4/assets/** layout
+          # relative to the repo root (see scripts/make_asset_bundle.sh), so a
+          # plain extract at the root drops each file into place over the
+          # committed fallback tree.
+          tar -xzf "$tarball" -C .
+          # Sanity: the overlay must have landed at least one real asset file.
+          if [ -z "$(find wandering_inn_game_v4/assets -type f 2>/dev/null | head -n1)" ]; then
+            echo "::error::assets/ is empty after overlay — the bundle did not extract into wandering_inn_game_v4/assets/. Check make_asset_bundle.sh's layout."
+            exit 1
+          fi
+          echo "Overlay complete."
+
+      # ------------------------------------------------------------------ (b) gate
+      # Full QA gate re-run WITH the real assets — mirrors ci.yml's smoke + unit +
+      # sweep jobs (release must be green with real art too, spec §4). Grep
+      # discipline + alarm wraps identical to ci.yml.
+      - name: (b) Import pass
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 300; exec @ARGV' \
+            godot --headless --path wandering_inn_game_v4 --import
+
+      - name: (b) Headless smoke (--quit)
+        run: |
+          set -euo pipefail
+          log=smoke.log
+          perl -e 'alarm 120; exec @ARGV' \
+            godot --headless --path wandering_inn_game_v4 --quit >"$log" 2>&1 || rc=$?
+          cat "$log"
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+            echo "::error::smoke boot produced a SCRIPT ERROR / Parse Error / WARNING"
+            exit 1
+          fi
+          exit "${rc:-0}"
+
+      - name: (b) Unit test suites (tests/test_*.gd)
+        run: |
+          set -uo pipefail
+          cd wandering_inn_game_v4
+          fail=0
+          for t in tests/test_*.gd; do
+            name="$(basename "$t")"
+            log="/tmp/unit_${name}.log"
+            echo "==> $name"
+            perl -e 'alarm 240; exec @ARGV' \
+              godot --headless --path . --script "res://$t" >"$log" 2>&1 || fail=1
+            cat "$log"
+            if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+              echo "::error::$name tripped the error/warning grep"; fail=1
+            fi
+            if ! grep -q '^PASS' "$log"; then
+              echo "::error::$name did not print a PASS line"; fail=1
+            fi
+          done
+          exit $fail
+
+      - name: (b) Balance harness (sim_combat_batch)
+        run: |
+          set -uo pipefail
+          cd wandering_inn_game_v4
+          log="/tmp/sim_combat_batch.log"
+          perl -e 'alarm 600; exec @ARGV' \
+            godot --headless --path . --script res://tests/sim_combat_batch.gd >"$log" 2>&1 || rc=$?
+          cat "$log"
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log" | grep -v 'godot_ai game_helper'; then
+            echo "::error::sim_combat_batch tripped the error/warning grep"; exit 1
+          fi
+          exit "${rc:-0}"
+
+      - name: (b) Full canonical sweep (qa/ci_sweep.sh)
+        run: |
+          set -euo pipefail
+          bash wandering_inn_game_v4/qa/ci_sweep.sh
+
+      # ------------------------------------------------------------------ (c) wasm
+      - name: (c) Guard — Web export preset must exist
+        run: |
+          set -euo pipefail
+          cfg=wandering_inn_game_v4/export_presets.cfg
+          if [ ! -f "$cfg" ] || ! grep -q 'name="Web"' "$cfg"; then
+            echo "::error::export_presets.cfg is missing a \"Web\" preset."
+            exit 1
+          fi
+
+      - name: (c) Export wasm build (reuses the existing web export path)
+        run: |
+          set -euo pipefail
+          # qa/web/export_web.sh is the project's canonical web export command
+          # (godot --headless --export-release "Web" build/web/index.html). It
+          # writes to wandering_inn_game_v4/build/web/.
+          perl -e 'alarm 600; exec @ARGV' \
+            bash wandering_inn_game_v4/qa/web/export_web.sh
+          if [ ! -f wandering_inn_game_v4/build/web/index.html ]; then
+            echo "::error::wasm export did not produce build/web/index.html"
+            exit 1
+          fi
+          ls -la wandering_inn_game_v4/build/web
+
+      # ---------------------------------------------------------------- (d) butler
+      - name: (d) Install pinned butler (itch.io broth)
+        run: |
+          set -euo pipefail
+          if [ "$BUTLER_VERSION" = "PIN-ME-butler-version" ]; then
+            echo "::error::BUTLER_VERSION is still the placeholder. Pin an exact broth version (e.g. 15.21.0) in release.yml before tagging."
+            exit 1
+          fi
+          curl -fsSL -o butler.zip \
+            "https://broth.itch.ovh/butler/linux-amd64/${BUTLER_VERSION}/archive/default"
+          unzip -q butler.zip -d butler-bin
+          chmod +x butler-bin/butler
+          ./butler-bin/butler -V
+
+      - name: (d) Push wasm build to itch.io
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          # ⚠️ PLACEHOLDER — replace with the real itch project (user/game).
+          ITCH_TARGET: "ITCH_USER/ITCH_GAME"
+        run: |
+          set -euo pipefail
+          if [ -z "${BUTLER_API_KEY:-}" ]; then
+            echo "::error::BUTLER_API_KEY secret is not set — cannot push to itch.io. Add it in repo Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          if [ "$ITCH_TARGET" = "ITCH_USER/ITCH_GAME" ]; then
+            echo "::error::ITCH_TARGET is still the placeholder 'ITCH_USER/ITCH_GAME'. Edit release.yml and set it to the real itch project before tagging."
+            exit 1
+          fi
+          # butler push is atomic per channel; re-runnable from the same tag.
+          ./butler-bin/butler push wandering_inn_game_v4/build/web \
+            "${ITCH_TARGET}:html5" --userversion "${GITHUB_REF_NAME}"

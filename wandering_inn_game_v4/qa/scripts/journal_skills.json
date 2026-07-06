@@ -1,0 +1,92 @@
+{
+ "_comment": "UI wave item 19: journal skills-by-class panel. No combat in the path -- seed held for convention consistency (title_flow/lantern_check precedent). ONBOARDING O5: classless start (data/skeleton_scene.json player.classes {}) means fresh boot shows ONLY the 'Innate' group (basic_cleaning), skill_count 1 -- the old ['Innate','Warrior']/5 payload was the pre-classless baseline. 'revealed_skills' empty proves the pre-first-use NAME-ONLY state. Closes, uses the Innate [Basic Cleaning] skill via the dirty_table prop (the same interact path test_sim_core.gd's unit test drives -- innate, unaffected by classlessness), then re-opens the journal and asserts 'basic_cleaning' now appears in 'revealed_skills' -- the first-use reveal, end-to-end through the real UI. Canonical seed: 9.",
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "skill_groups": ["Innate"],
+    "skill_count": 1,
+    "revealed_skills": []
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_journal_before_use"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Walk from spawn (2,3) to face the dirty_table prop at (5,4): right x3 lands at (5,3), then a blocked down-step faces the table without moving (same cells test_sim_core.gd's unit test uses).",
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "context": "exploration"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleaned_the_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "used_skills",
+   "contains": "basic_cleaning"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "skill_groups": ["Innate"],
+    "skill_count": 1,
+    "revealed_skills": ["basic_cleaning"]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_journal_after_use"
+  }
+ ]
+}

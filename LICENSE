@@ -1,0 +1,32 @@
+MIT License
+
+Copyright (c) 2026 Gabriel Levine
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+This license covers the game's code and original data files. Art, audio, and
+other media assets in this repository are covered by their own licenses — see
+wandering_inn_game_v4/assets/LICENSES/ and ATTRIBUTION.md. Some assets used
+in official builds are not redistributable and are NOT included in this
+repository; the game builds and runs fully with the included fallback art.
+
+The Wandering Inn is a web serial by pirateaba (wanderinginn.com). This is an
+unofficial fan project; setting, characters, and lore belong to pirateaba.

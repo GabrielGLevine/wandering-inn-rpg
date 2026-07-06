@@ -1,0 +1,31 @@
+{
+	"state": {
+		"accomplishments": {
+			"melee_hit": 57,
+			"sword_skill_used": 11,
+			"won_combat": 3
+		},
+		"classes": {
+			"warrior": 10
+		},
+		"current_map": "inn",
+		"dormant_encounters": [],
+		"generalist_classes": [],
+		"pending_consolidation": {},
+		"player_cell": [
+			2,
+			3
+		],
+		"player_facing": [
+			1,
+			0
+		],
+		"player_skills": [
+			"basic_cleaning"
+		],
+		"removed_entities": [],
+		"rng_state": "-7124151667447473881",
+		"started_quests": []
+	},
+	"version": 3
+}

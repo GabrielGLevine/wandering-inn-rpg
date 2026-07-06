@@ -1,0 +1,158 @@
+{
+ "start": "meet",
+ "nodes": {
+  "meet": {
+   "speaker": "Relc",
+   "text": "Oi. Hold up. Big spear, bored Drake, official business — that's me covered. You came off the inn hill. Name and errand.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "met_relc": 1
+      }
+     },
+     "text": "Hah — the inn's errand-runner. Road's been quiet since you passed. Mostly."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "sparred_with_relc": 1
+      }
+     },
+     "text": "There's the dummy-slayer. Straw fears you. Come here — I owe you something for the show."
+    }
+   ],
+   "options": [
+    {
+     "text": "Just a traveler. Staying at the inn, heading for Liscor.",
+     "hide_when": {
+      "accomplishment": {
+       "met_relc": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "met_relc"
+      }
+     ],
+     "goto": "banter"
+    },
+    {
+     "text": "What's out here worth guarding?",
+     "requires": {
+      "accomplishment": {
+       "met_relc": 1
+      }
+     },
+     "goto": "warns"
+    },
+    {
+     "text": "You said you had something for me?",
+     "requires": {
+      "accomplishment": {
+       "sparred_with_relc": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "given_spear_by_relc": 1
+      }
+     },
+     "effects": [
+      {
+       "item": "relcs_spare_spear"
+      },
+      {
+       "accomplishment": "given_spear_by_relc"
+      }
+     ],
+     "goto": "gift"
+    },
+    {
+     "text": "Got time to show me how to fight? (Spar)",
+     "requires": {
+      "accomplishment": {
+       "met_relc": 1
+      }
+     },
+     "goto": "spar_offer"
+    },
+    {
+     "text": "Keep walking.",
+     "end": true
+    }
+   ]
+  },
+  "banter": {
+   "speaker": "Relc",
+   "text": "Relc. Senior Guardsman, best spear in Liscor, currently guarding grass. The inn feeds you, the city taxes you — everything between is my road, so behave on it. There's goblins about, if the walk gets boring.",
+   "options": [
+    {
+     "text": "You any good with that spear? (Spar)",
+     "goto": "spar_offer"
+    },
+    {
+     "text": "I'll behave.",
+     "end": true
+    }
+   ]
+  },
+  "warns": {
+   "speaker": "Relc",
+   "text": "Goblins on the road since the thaw — a warband near the gate with a chief who's got actual teeth. Old stones to the north-east? Stay off them. And if the pond looks deep, that's because it is.",
+   "options": [
+    {
+     "text": "Good to know.",
+     "goto": "meet"
+    },
+    {
+     "text": "I'll manage.",
+     "end": true
+    }
+   ]
+  },
+  "spar_offer": {
+   "speaker": "Relc",
+   "text": "Ha! Good instinct — everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "sparred_with_relc": 1
+      }
+     },
+     "text": "Again? Fine. The dummies heal fast — perk of being straw. Same rules: move, hit, no crying."
+    }
+   ],
+   "options": [
+    {
+     "text": "Ready when you are.",
+     "effects": [
+      {
+       "start_combat": "relc_spar"
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "Another time.",
+     "end": true
+    }
+   ]
+  },
+  "gift": {
+   "speaker": "Relc",
+   "text": "My spare spear. Held gates wider than that one. Now listen — owning a weapon and HOLDING it are different things: press I, that's your pack. Put the spear in your hand before the road checks your grip. Sword arm, spear arm — the weapon you carry decides which of your moves come with you.",
+   "options": [
+    {
+     "text": "I’ll try it on. (Press I after this.)",
+     "end": true
+    },
+    {
+     "text": "Thanks, Relc.",
+     "end": true
+    }
+   ]
+  }
+ }
+}

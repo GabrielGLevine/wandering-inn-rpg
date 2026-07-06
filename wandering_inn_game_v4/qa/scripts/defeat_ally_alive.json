@@ -1,0 +1,390 @@
+{
+ "_comment": "WAVE A2 + ONBOARDING O5: THE canonical proof of the PC-death defeat rule (PC drops while Relc ALIVE => instant DEFEAT + auto-slot reload, no game_reset) through the real input/AI/UI path. Route mirrors level_up_loop (near_defeat fixture -> Warrior L1 -> fight1 goblin_encounter_2 -> sleep -> Warrior L2 -> fight2 chieftains_raid), but near_defeat's rng_state is tuned so fight2 is LOST with the PC dropping while Relc survives (the fight1+sleep advance the rng, so fight2 varies with the fixture rng -- unlike a straight-to-chieftains fixture, which the ally structurally protects). Asserts combat_finished{victory:false,draw:false}, pc.alive false + relc.alive true, then the defeat-reload idiom: confirm -> ui_combat_hidden -> game_loaded (auto slot, saved at the pre-fight floodplains map_changed) -> current_map floodplains -> game_reset ABSENT. Fixture rng overrides --seed. If combat data shifts this, re-derive the fixture rng (a fight-2 loss with the PC down and Relc up).",
+ "fixture_save": "near_defeat",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "_comment": "== FIGHT 1: goblin_encounter_2 (28,18) via goblin_parley draw-steel ==. (7,6) right21->(28,6), down11->(28,17).",
+   "action": "move",
+   "direction": "right",
+   "steps": 21
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    28,
+    17
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "goblin_parley"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_hotbar_rendered",
+   "payload_contains": {
+    "slots": 4
+   }
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "_comment": "== return to inn, sleep -> Warrior L2 ==. (28,17) up11->(28,6), left21->(7,6), up+interact -> inn (14,3), left12->(2,3), down3->(2,6), down blocks on the bed, interact -> sleep.",
+   "action": "move",
+   "direction": "up",
+   "steps": 11
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 21
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unlocked",
+   "payload_contains": {
+    "skill": "counter_strike"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_level_up_toast"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 2
+  },
+  {
+   "_comment": "== FIGHT 2: chieftains_raid (31,7) with the L2 kit ==. (2,6) up3->(2,3), right12->(14,3), right1->(15,3) inn_door -> floodplains (7,6), right23->(30,6), down1->(30,7), right1 blocks on the chieftains cell (31,7) & faces it, interact.",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_second_fight"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_hotbar_rendered",
+   "payload_contains": {
+    "slots": 4
+   }
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false,
+    "draw": false
+   },
+   "timeout_sec": 20
+  },
+  {
+   "_comment": "PC-death defeat rule: the weak-for-this-fight PC drops while Relc survives.",
+   "action": "assert_state",
+   "path": "combat.combatants.pc.alive",
+   "equals": false
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.alive",
+   "equals": true
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.relc.hp",
+   "equals": 40,
+   "_comment": "relc.hp pin (re-derived O5): Relc is at full 40 HP when the PC drops -- the tooth is hp>0 at defeat, definitively proving the ally is ALIVE."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "game_reset"
+  }
+ ]
+}

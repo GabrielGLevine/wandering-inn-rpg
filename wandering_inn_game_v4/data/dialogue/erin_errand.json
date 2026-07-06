@@ -1,0 +1,30 @@
+{
+	"start": "hub",
+	"nodes": {
+		"hub": { "speaker": "Erin", "text": "Oh good, someone with working legs! I've got a package for Selys at the Guild - mind running it over? Also the common room is a disaster, don't look at it.", "text_variants": [
+			{ "requires": { "accomplishment": { "has_package": 1 } }, "text": "Selys is still waiting on that package, you know." },
+			{ "requires": { "accomplishment": { "errand_decided": 1 } }, "text": "Back already? The inn feels almost manageable since you sorted that delivery. Almost." }
+		], "options": [
+			{ "text": "I'll take the package.", "hide_when": { "accomplishment": { "has_package": 1 } }, "effects": [ { "quest": "the_errand" }, { "accomplishment": "has_package" } ], "goto": "package" },
+			{ "text": "Let me deal with that table. ([Basic Cleaning])", "requires": { "skill": "basic_cleaning" }, "hide_when": { "accomplishment": { "cleaned_the_inn": 1 } }, "goto": "cleaning_directions" },
+			{ "text": "The table situation is handled.", "requires": { "accomplishment": { "cleaned_the_inn": 1 } }, "hide_when": { "accomplishment": { "reported_cleaning": 1 } }, "effects": [ { "accomplishment": "reported_cleaning" } ], "goto": "cleaned" },
+			{ "text": "You sent it back!", "requires": { "accomplishment": { "gave_reward": 1 } }, "goto": "epilogue_gave" },
+			{ "text": "Delivery's done. I kept the tip.", "requires": { "accomplishment": { "kept_reward": 1 } }, "goto": "epilogue_kept" },
+			{ "text": "Just passing through.", "end": true }
+		] },
+		"package": { "speaker": "Erin", "text": "You're a lifesaver! Selys is out the door, past the... goblin situation. She's the Drake who looks like she's already done with your nonsense.", "options": [
+			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "On my way.", "end": true }
+		] },
+		"cleaning_directions": { "speaker": "Erin", "text": "Really? It's the horror show by the south wall. I owe you one - or the table does.", "options": [
+			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "On it.", "end": true }
+		] },
+		"cleaned": { "speaker": "Erin", "text": "Whoa. That was - the table's actually reflective now. Skills are so unfair.", "options": [
+			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "All part of the service.", "end": true }
+		] },
+		"epilogue_gave": { "speaker": "Erin", "text": "Selys sent the whole reward back with you? That Drake pretends she's all scales. Free breakfast for a week, I mean it.", "options": [ { "text": "Happy to help.", "end": true } ] },
+		"epilogue_kept": { "speaker": "Erin", "text": "Good! You earned it - goblins and Drake bureaucracy in one afternoon. Just don't spend it all on Krshia's stall.", "options": [ { "text": "No promises.", "end": true } ] }
+	}
+}

@@ -1,0 +1,227 @@
+class_name WISave
+extends RefCounted
+## Pure save serialization. NO file I/O here: the Game autoload owns disk.
+## rng_state travels as a String because u64 states exceed JSON double precision.
+
+## 2 (M5 final review): the E3 inn re-layout (10x6 -> 16x10, new blocked
+## cells) makes v1 player_cell coordinates unsafe -- apply() rejects older
+## versions rather than loading a position that may sit inside furniture or
+## a wall segment (three v1-reachable cells are full softlocks).
+## 3 (M6 T2): adds `dormant_encounters` (respawning encounters beaten since
+## the last sleep). v2 saves migrate transparently in _migrated() -- nothing
+## could be dormant when a v2 save was written; v1 stays rejected.
+## (M6 T3): `generalist_classes` (classes that took the balanced-mage
+## evolution path) is added WITHOUT a version bump -- it is optional and
+## NOT in `required`; a save missing the key (any v3 save written before
+## this task) restores an empty set, which is exactly correct (no class
+## had gone generalist yet). T5 owns any future coordinated version bump.
+## (M6 T5): `pending_consolidation` (an offer awaiting accept/decline at the
+## next sleep) is added the SAME way -- additive, optional, NOT in
+## `required`, NO version bump. A save missing the key (any save written
+## before this task, or simply a save with no offer pending) restores an
+## empty Dictionary, which is exactly correct (no offer was pending).
+## (M6 T9): the base class id `fighter` was renamed to `warrior`; loaded saves
+## are remapped in _migrated() with NO version bump (idempotent), so v3 stays
+## the current VERSION.
+## (UI wave item 19): `used_skills` (the journal panel's first-use reveal SET)
+## is added the SAME additive-optional way as `generalist_classes`/
+## `pending_consolidation` above — NOT in `required`, NO version bump. A save
+## missing the key (any save written before this task) restores an empty
+## Array, which is exactly correct (nothing had been revealed yet).
+## 4 (M-FP final review fix, W1 fallout): the W1 street relayout (10x6 ->
+## 32x20, new gate district + blocked cells) makes v3 `street` player_cell
+## coordinates unsafe -- same class of bug as the v1->v2 bump above (13
+## old-street walkable cells are now blocked; (0,0)/(0,5) are full
+## softlocks). UNLIKE v1, this is migrated rather than rejected: only the
+## geometry is stale, not the state (v2->v3 precedent). A v3 save whose
+## `current_map` is "street" gets `player_cell` relocated to `[1, 3]` (the
+## `liscor_gate` arrival cell -- in-bounds, unblocked, unoccupied in the new
+## street layout, confirmed by M-FP Q2's gate_district_walkthrough). Every
+## other v3 save (any other current_map) passes through unchanged. _migrated
+## composes this on top of the v2->v3 step, so a v2 `street` save chains
+## through BOTH migrations in one call.
+## 5 (M7 Task E2, weapons+equipment + the M-BEAUTY FOLD amendment): adds
+## `inventory` (Array[String]), `equipped` ({"weapon","armor"}),
+## `container_state` (Dictionary), and `actions_since_sleep` (int) to
+## `required` -- these are new REQUIRED fields (not the additive-optional
+## pattern used for generalist_classes/pending_consolidation/used_skills,
+## which shipped WITHOUT a version bump). A v4 (or v3, or v2) save is
+## migrated forward with the plan's tolerant defaults, preserving the
+## "equipped items are also in inventory" invariant `equip()` maintains
+## going forward: `inventory: ["rusty_sword"]`, `equipped: {"weapon":
+## "rusty_sword", "armor": ""}`, `container_state: {}`,
+## `actions_since_sleep: 0` -- i.e. an old save wakes up exactly as if it
+## had always been carrying and wielding the starter sword (matching the
+## v4-and-earlier PC's actual in-fiction state) with a freshly reset action
+## clock. _migrated composes this as the fourth step on top of v2->v3->v4,
+## so a v2 save chains through all three hops in one call.
+const VERSION := 5
+
+
+## Serializes the full persistent WIGame state into a JSON-safe Dictionary.
+static func serialize(game: WIGame) -> Dictionary:
+	return {"version": VERSION, "state": {
+		"current_map": game.current_map,
+		"player_cell": [game.player_cell.x, game.player_cell.y],
+		"player_facing": [game.player_facing.x, game.player_facing.y],
+		"classes": game.classes.duplicate(true),
+		"accomplishments": game.accomplishments.duplicate(true),
+		"player_skills": game.player_skills.duplicate(),
+		"removed_entities": game.removed_entities.duplicate(),
+		"dormant_encounters": game.dormant_encounters.duplicate(),
+		"generalist_classes": game.generalist_classes.duplicate(),
+		"started_quests": game.started_quests.duplicate(),
+		"pending_consolidation": game.pending_consolidation.duplicate(true),
+		"used_skills": game.used_skills.duplicate(),
+		"inventory": game.inventory.duplicate(),
+		"equipped": game.equipped.duplicate(true),
+		"container_state": game.container_state.duplicate(true),
+		"actions_since_sleep": game.actions_since_sleep,
+		"rng_state": str(game.rng.state),
+	}}
+
+
+## Migrates a loaded save forward, COMPOSING each version step in turn (not a
+## switch-case of single hops) so a v2 save chains through BOTH v2->v3 AND
+## v3->v4 in one call:
+##   v2 -> v3: adds the dormant_encounters list (always empty: a v2 save
+##             predates respawning encounters).
+##   v3 -> v4: relocates player_cell to the liscor_gate arrival cell [1, 3]
+##             IF AND ONLY IF current_map is "street" (W1 relayout fallout --
+##             see the VERSION 4 note above); every other v3 save passes
+##             through unchanged.
+## ON TOP of the version chain, the M6 T9 fighter->warrior class rename is
+## applied to any v2/v3/v4 save WITHOUT a version bump -- the base class id
+## changed from `fighter` to `warrior`, so a save written before the rename
+## carries `fighter` in its classes dict and is remapped here; the remap is
+## idempotent (a `warrior`-only save is untouched).
+## Returns a migrated COPY for v2/v3/v4 input and the input untouched
+## otherwise (v1 and unknown versions still fail apply's version gate).
+static func _migrated(data: Dictionary) -> Dictionary:
+	if not (data.get("state") is Dictionary):
+		return data
+	var version := int(data.get("version", -1))
+	if version != 2 and version != 3 and version != 4 and version != VERSION:
+		return data
+	var out: Dictionary = data.duplicate(true)
+	var state: Dictionary = out["state"]
+	if version == 2:
+		state["dormant_encounters"] = []
+		version = 3
+	if version == 3:
+		if String(state.get("current_map", "")) == "street":
+			state["player_cell"] = [1, 3]
+		version = 4
+	if version == 4:
+		# M7 Task E2: an old save wakes up carrying and wielding the starter
+		# sword exactly as if it always had (the invariant equip() maintains
+		# going forward: equipped items are always also in inventory), with
+		# an empty container_state and a freshly reset action clock.
+		state["inventory"] = ["rusty_sword"]
+		state["equipped"] = {"weapon": "rusty_sword", "armor": ""}
+		state["container_state"] = {}
+		state["actions_since_sleep"] = 0
+		version = VERSION
+	out["version"] = version
+	# Typed-assignment guard: a malformed save can carry a non-Dictionary
+	# "classes" (apply() rejects it later) -- fetching it into a typed var
+	# here threw a SCRIPT ERROR before rejection (caught in M-FP S1's sweep).
+	var cls_raw: Variant = state.get("classes", {})
+	if cls_raw is Dictionary:
+		var cls: Dictionary = cls_raw
+		if cls.has("fighter"):
+			cls["warrior"] = maxi(int(cls.get("warrior", 0)), int(cls["fighter"]))
+			cls.erase("fighter")
+	return out
+
+
+## Applies a save Dictionary onto a freshly constructed WIGame. Returns false without mutation on invalid version or malformed state.
+static func apply(game: WIGame, data: Dictionary) -> bool:
+	data = _migrated(data)
+	if int(data.get("version", -1)) != VERSION:
+		return false
+	var raw_state: Variant = data.get("state")
+	if not (raw_state is Dictionary):
+		return false
+	var s: Dictionary = raw_state
+	var required := ["current_map", "player_cell", "player_facing", "classes", "accomplishments", "player_skills", "removed_entities", "dormant_encounters", "started_quests", "rng_state", "inventory", "equipped", "container_state", "actions_since_sleep"]
+	for key: String in required:
+		if not s.has(key):
+			return false
+	if not (s["player_cell"] is Array) or (s["player_cell"] as Array).size() != 2:
+		return false
+	if not (s["player_facing"] is Array) or (s["player_facing"] as Array).size() != 2:
+		return false
+	if not (s["classes"] is Dictionary) or not (s["accomplishments"] is Dictionary):
+		return false
+	if not (s["player_skills"] is Array) or not (s["removed_entities"] is Array) or not (s["started_quests"] is Array):
+		return false
+	if not (s["dormant_encounters"] is Array):
+		return false
+	# generalist_classes (M6 T3) is intentionally NOT in `required`: it is an
+	# additive optional field with a safe default. A present-but-wrong-typed
+	# value is still malformed and rejected.
+	if s.has("generalist_classes") and not (s["generalist_classes"] is Array):
+		return false
+	# pending_consolidation (M6 T5) follows the SAME additive-optional pattern.
+	if s.has("pending_consolidation") and not (s["pending_consolidation"] is Dictionary):
+		return false
+	# used_skills (UI wave item 19) follows the SAME additive-optional pattern.
+	if s.has("used_skills") and not (s["used_skills"] is Array):
+		return false
+	# inventory/equipped/container_state/actions_since_sleep (M7 Task E2) ARE
+	# in `required` above (this is a version-bumped addition, not the
+	# additive-optional pattern) -- still type-checked here like every other
+	# required field.
+	if not (s["inventory"] is Array):
+		return false
+	if not (s["equipped"] is Dictionary):
+		return false
+	if not (s["container_state"] is Dictionary):
+		return false
+	if not (s["actions_since_sleep"] is int or s["actions_since_sleep"] is float):
+		return false
+	if not game.has_map(String(s["current_map"])):
+		return false
+
+	var player_cell: Array = s["player_cell"]
+	var player_facing: Array = s["player_facing"]
+	var removed_entities: Array = s["removed_entities"]
+	var player_skills: Array = s["player_skills"]
+	var started_quests: Array = s["started_quests"]
+	var dormant_encounters: Array = s["dormant_encounters"]
+	var generalist_classes: Array = s.get("generalist_classes", [])
+	var pending_consolidation: Dictionary = s.get("pending_consolidation", {})
+	var used_skills: Array = s.get("used_skills", [])
+	var inventory: Array = s["inventory"]
+	var equipped: Dictionary = s["equipped"]
+	var container_state: Dictionary = s["container_state"]
+
+	game.bind_map_silent(String(s["current_map"]), Vector2i(int(player_cell[0]), int(player_cell[1])))
+	game.player_facing = Vector2i(int(player_facing[0]), int(player_facing[1]))
+	game.classes = (s["classes"] as Dictionary).duplicate(true)
+	game.accomplishments = (s["accomplishments"] as Dictionary).duplicate(true)
+	game.player_skills.clear()
+	game.player_skills.assign(player_skills)
+	game.removed_entities.clear()
+	for id: Variant in removed_entities:
+		var entity_id := String(id)
+		game.erase_entity_silent(entity_id)
+		game.removed_entities.append(entity_id)
+	game.started_quests.clear()
+	game.started_quests.assign(started_quests)
+	game.dormant_encounters.clear()
+	game.dormant_encounters.assign(dormant_encounters)
+	game.generalist_classes.clear()
+	game.generalist_classes.assign(generalist_classes)
+	game.pending_consolidation = pending_consolidation.duplicate(true)
+	game.used_skills.clear()
+	game.used_skills.assign(used_skills)
+	game.inventory.clear()
+	game.inventory.assign(inventory)
+	game.equipped = equipped.duplicate(true)
+	game.container_state = container_state.duplicate(true)
+	game.actions_since_sleep = int(s["actions_since_sleep"])
+	game.rng.state = int(String(s["rng_state"]))
+	game.reprime_quests()
+	return true

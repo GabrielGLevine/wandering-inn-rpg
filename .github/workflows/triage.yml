@@ -1,0 +1,51 @@
+name: Community Submission Triage
+
+# Fires only when a label is ADDED to an issue, and only acts when that label
+# is `triage`. Applying a label requires triage/write permission on the repo,
+# so the maintainer is the gate: no unsolicited runs, no cost from drive-by
+# submissions. A bad draft is just a comment the maintainer can delete.
+on:
+  issues:
+    types: [labeled]
+
+# MINIMAL permissions. The action only needs to read the repo (for the triage
+# prompt + canon/convention docs) and write ONE comment on the issue.
+# Deliberately NO `contents: write` and NO `pull-requests: write` — the triage
+# pass drafts a comment and nothing else (enforced again by the prompt's hard
+# bounds).
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  triage:
+    # Guard: only the user-applied `triage` label triggers a run.
+    if: github.event.label.name == 'triage'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (triage prompt + canon/convention docs)
+        uses: actions/checkout@v4
+
+      - name: Load triage prompt
+        id: prompt
+        run: |
+          {
+            echo 'text<<TRIAGE_PROMPT_EOF'
+            cat .github/triage-prompt.md
+            echo 'TRIAGE_PROMPT_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Opus triage
+        uses: anthropics/claude-code-action@v1
+        with:
+          # Direct-API auth. Set the ANTHROPIC_API_KEY repo secret.
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Workflow-scoped token carrying only the minimal permissions above.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # The triage contract. The action injects the triggering issue's
+          # context automatically for `issues` events, so the prompt evaluates
+          # the labeled submission.
+          prompt: ${{ steps.prompt.outputs.text }}
+          # No top-level `model` input exists on claude-code-action@v1 — the
+          # model is passed through to the Claude CLI via claude_args.
+          claude_args: "--model claude-opus-4-8"

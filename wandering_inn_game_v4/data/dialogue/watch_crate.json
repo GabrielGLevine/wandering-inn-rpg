@@ -1,0 +1,14 @@
+{
+	"start": "hub",
+	"nodes": {
+		"hub": { "speaker": "Watch Sergeant", "text": "Sewers, scavengers, paperwork. Pick one.", "text_variants": [
+			{ "requires": { "accomplishment": { "found_the_crate": 1 } }, "text": "Grates are quiet now. Good — one less thing." }
+		], "options": [
+			{ "text": "Point them at the scavengers. (Persuade)", "requires": { "accomplishment": { "asked_about_crate": 1 } }, "hide_when": { "accomplishment": { "found_the_crate": 1 } }, "effects": [ { "accomplishment": "recovered_crate_watch" }, { "accomplishment": "found_the_crate" }, { "remove_entity": "crate_scavengers" } ], "goto": "cleared" },
+			{ "text": "Just passing through.", "end": true }
+		] },
+		"cleared": { "speaker": "Watch Sergeant", "text": "Good. Say the word if there's trouble again.", "options": [
+			{ "text": "Will do.", "end": true }
+		] }
+	}
+}

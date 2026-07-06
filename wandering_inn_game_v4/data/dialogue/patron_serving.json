@@ -1,0 +1,12 @@
+{
+	"start": "greet",
+	"nodes": {
+		"greet": { "speaker": "Hungry Patron", "text": "There you are! Stew, bread, anything - I've been sitting here an age.", "options": [
+			{ "text": "Bring her a bowl from the kitchen. (Serve)", "effects": [ { "accomplishment": "served_customer" } ], "goto": "served" },
+			{ "text": "\"Someone will be right with you.\"", "end": true }
+		] },
+		"served": { "speaker": "Hungry Patron", "text": "Ahh. Now THAT'S service. I'll want another before long, mind.", "options": [
+			{ "text": "\"Wave me down when you do.\"", "end": true }
+		] }
+	}
+}

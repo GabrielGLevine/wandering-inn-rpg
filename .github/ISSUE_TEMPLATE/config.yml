@@ -1,0 +1,16 @@
+# Blank issues are OFF: every submission must come through a structured form
+# so the Opus triage action has the fields it needs (one-liner, scope, canon
+# refs, full description). This keeps triage cheap and the queue signal-rich.
+blank_issues_enabled: false
+contact_links:
+  - name: Technical bug or code contribution
+    url: https://github.com/OWNER/REPO/blob/main/CONTRIBUTING.md
+    about: >-
+      Found a bug, or want to open a code PR? Read CONTRIBUTING.md first — code
+      changes go through pull requests (which must pass the QA gate), not these
+      content forms.
+  - name: Art or music contribution
+    url: https://github.com/OWNER/REPO/blob/main/CONTRIBUTING-ASSETS.md
+    about: >-
+      Sprites, tiles, music, or SFX have their own pipeline and license-in
+      rules. See CONTRIBUTING-ASSETS.md.

@@ -1,0 +1,118 @@
+{
+ "start": "greet",
+ "nodes": {
+  "greet": {
+   "speaker": "Pisces",
+   "text": "A [Necromancer], yes — and before your hand drifts to that sword, no, nothing in this square has been raised. I merely occupy the cheapest air the Guild permits. Pisces Jealnv. You reek of a body that has never once held mana. Curious. You want something.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "learned_magic_from_pisces": 1
+      }
+     },
+     "text": "The pupil returns. Your channels are... adequate now. Do try not to embarrass the discipline in public."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "met_pisces": 1
+      }
+     },
+     "text": "Back again. Either you are braver than the Watch or you have reconsidered your ignorance. Which is it?"
+    }
+   ],
+   "options": [
+    {
+     "text": "You're a mage. Teach me to cast.",
+     "hide_when": {
+      "accomplishment": {
+       "met_pisces": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "met_pisces"
+      }
+     ],
+     "goto": "lesson_mana"
+    },
+    {
+     "text": "Walk me through it again.",
+     "requires": {
+      "accomplishment": {
+       "met_pisces": 1
+      }
+     },
+     "goto": "lesson_mana"
+    },
+    {
+     "text": "Never mind.",
+     "end": true
+    }
+   ]
+  },
+  "lesson_mana": {
+   "speaker": "Pisces",
+   "text": "Then attend. Every living thing carries a reserve — mana. You will feel it as a second breath: a well that empties as you work a spell and refills when you sleep. A warrior spends stamina; you now spend this. Waste it and you are left waving your hands at the air.",
+   "options": [
+    {
+     "text": "How is casting different from swinging a blade?",
+     "goto": "lesson_casting"
+    },
+    {
+     "text": "Enough for today.",
+     "end": true
+    }
+   ]
+  },
+  "lesson_casting": {
+   "speaker": "Pisces",
+   "text": "A sword asks only your arm. A spell asks your mind and your mana in the same instant — intent, shape, and cost, released together or not at all. Fumble any one of the three and you have merely gestured. Precision, traveler. Whatever the Watch mutters about my craft, it taught me precision.",
+   "options": [
+    {
+     "text": "So what do I cast first?",
+     "goto": "lesson_light"
+    },
+    {
+     "text": "Enough for today.",
+     "end": true
+    }
+   ]
+  },
+  "lesson_light": {
+   "speaker": "Pisces",
+   "text": "[Light]. Always [Light]. It is cheap, it is obedient, and it fails without a corpse, a fire, or an inquest. Kindle one steady orb and you have proven the channel holds. Master that, and only then do we discuss the interesting spells.",
+   "options": [
+    {
+     "text": "I'm ready. Show me the words.",
+     "hide_when": {
+      "accomplishment": {
+       "learned_magic_from_pisces": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "learned_magic_from_pisces"
+      }
+     ],
+     "goto": "sealed"
+    },
+    {
+     "text": "Let me think on it.",
+     "end": true
+    }
+   ]
+  },
+  "sealed": {
+   "speaker": "Pisces",
+   "text": "There. The channel is opened — crudely, but opened. Sleep on it; the shape settles by morning, as these things do. And traveler — when your first orb kindles, you will understand why I do not apologize for what I am.",
+   "options": [
+    {
+     "text": "Thank you, Pisces.",
+     "end": true
+    }
+   ]
+  }
+ }
+}

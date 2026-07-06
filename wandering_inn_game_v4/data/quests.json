@@ -1,0 +1,20 @@
+{
+	"quests": [
+		{
+			"id": "the_errand",
+			"title": "The Errand",
+			"beats": [
+				{ "id": "deliver", "description": "Deliver Erin's package to Selys at the Adventurer's Guild.", "complete_when": { "package_delivered": 1 } },
+				{ "id": "decide", "description": "Decide what to do with Selys's reward.", "complete_when": { "errand_decided": 1 } }
+			]
+		},
+		{
+			"id": "missing_crate",
+			"title": "The Missing Crate",
+			"beats": [
+				{ "id": "find", "description": "Find out what happened to Krshia's missing crate near the south-square sewers.", "complete_when": { "found_the_crate": 1 } },
+				{ "id": "report", "description": "Tell Krshia what became of her crate.", "complete_when": { "crate_returned": 1 } }
+			]
+		}
+	]
+}

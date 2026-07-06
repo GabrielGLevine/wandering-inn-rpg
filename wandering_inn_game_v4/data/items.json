@@ -1,0 +1,100 @@
+{
+	"items": [
+		{
+			"id": "rusty_sword",
+			"name": "Rusty Sword",
+			"kind": "weapon",
+			"weapon_family": "sword",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A plain soldier's blade, its edge dulled by years and neglect. Still swings true enough."
+		},
+		{
+			"id": "relcs_spare_spear",
+			"name": "Relc's Spare Spear",
+			"kind": "weapon",
+			"weapon_family": "spear",
+			"damage_mod": 1,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A castoff from the Watch armory, spear-length and Gnoll-sized in the grip. Relc calls it 'barely used' -- for a given value of barely."
+		},
+		{
+			"id": "crude_blade",
+			"name": "Crude Blade",
+			"kind": "weapon",
+			"weapon_family": "sword",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "Hammered out in a hurry by goblin hands, more wedge than sword. It still cuts."
+		},
+		{
+			"id": "chipped_spear",
+			"name": "Chipped Spear",
+			"kind": "weapon",
+			"weapon_family": "spear",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A goblin spear, its haft wrapped in scavenged cord and its head notched from hard use."
+		},
+		{
+			"id": "solid_oak_spear",
+			"name": "Solid Oak Spear",
+			"kind": "weapon",
+			"weapon_family": "spear",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A well-balanced practice spear, fire-hardened oak from butt to point. No frills, no rust."
+		},
+		{
+			"id": "leather_jerkin",
+			"name": "Leather Jerkin",
+			"kind": "armor",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 4,
+			"damage_reduction": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "Boiled leather stitched over a linen underlayer. Common wear for anyone who expects to be hit."
+		},
+		{
+			"id": "watch_issue_gambeson",
+			"name": "Watch-Issue Gambeson",
+			"kind": "armor",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 1,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "Quilted padding stamped with the Liscor Watch's seal. Standard issue for anyone patrolling the walls."
+		},
+		{
+			"id": "traveler_charm",
+			"name": "Traveler's Charm",
+			"kind": "armor",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 2,
+			"damage_reduction": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A weathered trinket found among old stones outside the city, strung on a cord gone soft with age. Something about it settles the nerves."
+		}
+	]
+}

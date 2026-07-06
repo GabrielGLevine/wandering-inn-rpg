@@ -1,0 +1,84 @@
+{
+ "inn": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "floor": [
+   1,
+   21
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   2,
+   2
+  ],
+  "_comment_skirt": "M5 R4 iter-2: grey-stone fill from Interior_Walls_01 [7,21] so the warm inn floor pops as a lit room against dark surround (controller screenshot-verified).",
+  "skirt_sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   7,
+   21
+  ],
+  "_comment_floor": "M5 E3 L1: warm plank swatch from Interior_Walls_01 bottom-left (tavern hall floor); variants via floor_layers."
+ },
+ "street": {
+  "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+  "tile_px": 540,
+  "floor": [
+   0,
+   0
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   14,
+   4
+  ],
+  "_comment_skirt": "M5 R4: dirt shoulder outside the cobble street, per design doc sec.3 ('dirt transition edges'). Whole-image single-tile pick from topdown_floor_tiles_12 (extracted this task) -- zero coordinate-guessing risk, but the tile's exact look is UNVERIFIED (never screenshotted).",
+  "skirt_sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+  "skirt_tile_px": 540,
+  "skirt": [
+   0,
+   0
+  ],
+  "blocked_tile_px": 16
+ },
+ "cave": {
+  "sheet": "res://assets/tiles/cave/Tiles.png",
+  "tile_px": 16,
+  "floor": [
+   8,
+   13
+  ],
+  "blocked": [
+   2,
+   3
+  ],
+  "_comment_skirt": "M5 R4: reuses the already-verified 'blocked' rock/wall tile as the skirt fill so the cave_mouth arena reads as a rock band bordering the playable floor, per design doc sec.4.",
+  "skirt_sheet": "res://assets/tiles/cave/Tiles.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   2,
+   3
+  ]
+ },
+ "floodplains": {
+  "sheet": "res://assets/tiles/floor_tiles_12/grass_01.png",
+  "tile_px": 540,
+  "floor": [
+   0,
+   0
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   14,
+   4
+  ],
+  "blocked_tile_px": 16,
+  "_comment_skirt": "Open grassland continues past every edge (world environment; camera clamp-follows).",
+  "skirt_sheet": "res://assets/tiles/floor_tiles_12/grass_01.png",
+  "skirt_tile_px": 540,
+  "skirt": [
+   0,
+   0
+  ]
+ }
+}

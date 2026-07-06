@@ -1,0 +1,71 @@
+name: Quest idea
+description: Pitch a quest — a goal the player pursues, with one or more ways to resolve it.
+title: "[Quest] "
+labels: ["community-quest"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for pitching a quest! A few things worth knowing before you fill this in:
+
+        - **Canon is the [Wandering Inn Wiki](https://thewanderinginn.fandom.com/), not invention.** Characters, races, [Skills], and places should come from the books. Link the wiki pages you're leaning on.
+        - **Three pillars.** The game deliberately balances **Social**, **Combat**, and **Puzzles/Exploration**. A quest that can *only* be solved by fighting is harder to accept — the strongest pitches offer more than one path (fight / talk / use a [Skill]).
+        - **Demo-sized wins.** Small, self-contained quests get built. Sprawling multi-chapter arcs get sent back to be sliced down. Aim for something a player could finish in one sitting.
+        - **How review works:** a maintainer applies the `triage` label, which runs an automated Opus pass that drafts a spec (or asks for what's missing) as a comment. It's a *draft* — a human decides everything, and no lore is ever approved automatically.
+  - type: input
+    id: one-liner
+    attributes:
+      label: One-line pitch
+      description: The quest in a single sentence. (Example — "The player goes with the Rags tribe to eliminate a mothbear infestation.")
+      placeholder: The player does X for/with Y in order to Z.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope guess
+      description: Your honest read on how big this is. Demo-sized lands fastest.
+      options:
+        - Demo-sized — one scene / one encounter or conversation, finishable in a sitting
+        - Small — a couple of connected scenes
+        - Large — a multi-beat arc (expect it to be sliced down before anything is built)
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: canon-refs
+    attributes:
+      label: Canon references (wiki links)
+      description: >-
+        Link the wiki pages for every character, race, [Skill], creature, and place your pitch uses.
+        If a piece is your own invention rather than book canon, say so plainly — it will be flagged for a maintainer, not auto-accepted.
+      placeholder: |
+        - Rags: https://thewanderinginn.fandom.com/wiki/Rags
+        - Mothbear: https://thewanderinginn.fandom.com/wiki/Mothbear
+    validations:
+      required: false
+  - type: textarea
+    id: description
+    attributes:
+      label: Full description
+      description: >-
+        Walk through it. Who is involved, where it happens, what the player does, and — importantly — the different ways it can be resolved (fight / talk / skill-use). Note which pillars each path leans on.
+      placeholder: |
+        Setup: ...
+        Where it takes place: ...
+        Path A (combat): ...
+        Path B (social): ...
+        Path C (skill / exploration): ...
+        How it ends / the payoff: ...
+    validations:
+      required: true
+  - type: checkboxes
+    id: conventions
+    attributes:
+      label: House rules
+      description: Two conventions that bind every piece of content in this game.
+      options:
+        - label: My pitch never asks to show the player a raw stat number (STR/DEX/CON/etc.). Race, class, level, [Skills], HP/MP, and gear are fine; numeric attributes are never surfaced.
+          required: true
+        - label: My pitch doesn't rely on the game showing "progress toward" a class/level/skill. Advancement is opaque to the player until it happens at the sleep beat.
+          required: true

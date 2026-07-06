@@ -1,0 +1,21 @@
+# godot-open-rpg is its own separate git repo (upstream: gdquest-demos/godot-open-rpg),
+# used here only as a clone source for wandering_inn_game_v2 — not tracked by this repo.
+/godot-open-rpg/
+
+# macOS
+.DS_Store
+
+# Godot editor cache/import artifacts (regenerated automatically)
+.godot/
+.godot_home/
+*.translation
+
+# Local Codex session state
+.codex/
+potential_assets/
+
+# Python bytecode cache
+__pycache__/
+*.pyc
+docs/siliconflow_api_key.txt
+docs/*_api_key.txt

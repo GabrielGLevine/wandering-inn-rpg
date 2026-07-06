@@ -1,0 +1,33 @@
+[gd_resource type="Theme" format=3]
+
+[resource]
+default_font_size = 14
+Label/colors/font_color = Color(0.18, 0.105, 0.045, 1)
+Label/colors/font_outline_color = Color(0.98, 0.86, 0.56, 0.8)
+Label/constants/outline_size = 0
+Label/font_sizes/font_size = 14
+RichTextLabel/colors/default_color = Color(0.18, 0.105, 0.045, 1)
+RichTextLabel/colors/font_outline_color = Color(0.98, 0.86, 0.56, 0.8)
+RichTextLabel/constants/outline_size = 0
+Button/colors/font_color = Color(0.95, 0.88, 0.66, 1)
+Button/colors/font_pressed_color = Color(1, 0.94, 0.72, 1)
+Button/colors/font_hover_color = Color(1, 0.94, 0.72, 1)
+Button/colors/font_disabled_color = Color(0.5, 0.47, 0.4, 1)
+Header/base_type = &"Label"
+Header/colors/font_color = Color(0.96, 0.86, 0.58, 1)
+Header/colors/font_outline_color = Color(0.16, 0.07, 0.035, 1)
+Header/constants/outline_size = 2
+Header/font_sizes/font_size = 18
+Title/base_type = &"Label"
+Title/colors/font_color = Color(0.98, 0.9, 0.62, 1)
+Title/colors/font_outline_color = Color(0.12, 0.045, 0.025, 1)
+Title/constants/outline_size = 3
+Title/font_sizes/font_size = 36
+Menu/base_type = &"Label"
+Menu/colors/font_color = Color(0.95, 0.88, 0.66, 1)
+Menu/colors/font_outline_color = Color(0.08, 0.05, 0.04, 1)
+Menu/constants/outline_size = 2
+Menu/font_sizes/font_size = 18
+Small/base_type = &"Label"
+Small/font_sizes/font_size = 12
+CombatReadout/base_type = &"RichTextLabel"

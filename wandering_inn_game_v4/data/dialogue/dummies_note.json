@@ -1,0 +1,10 @@
+{
+	"start": "note",
+	"nodes": {
+		"note": {
+			"speaker": "Training Dummies",
+			"text": "Two battered Watch training dummies on little wheels. One has a face painted on. It has seen things. Relc runs the drills — talk to him.",
+			"options": [ { "text": "Leave them be.", "end": true } ]
+		}
+	}
+}

@@ -1,0 +1,373 @@
+class_name WICombatPlayback
+extends RefCounted
+## M6.5 D3 extraction: the paced AI-turn playback queue (M4 T10) MOVED out of
+## combat_screen.gd -- enqueue-time event capture, the beat-paced drain loop,
+## dequeue-time apply/highlight, and the confirm/cancel skip gate. Constructed
+## once by `combat_screen.gd._ready()` (alongside `_board_renderer`):
+## `_ai_playback = load("res://src/combat/combat_playback.gd").new(_board_renderer, self)`.
+##
+## T10 INVARIANTS (LOAD-BEARING, must survive verbatim -- see the D3 task
+## report's hand-trace): every render input a beat needs is captured at
+## ENQUEUE time (`capture_playback_event`, called from the screen's
+## `_on_domain_event` while `is_ai_turn_active()` is true) by reading combat
+## state THEN, never at dequeue; `drain()`'s dequeue path (`_apply_playback_
+## event`/`_apply_captured_stats`/`_apply_combatant_moved`) only ever reads
+## the captured `_ui` block already stashed on the event, never live combat
+## state; `combat_screen.gd._refresh()` gates its live per-combatant refresh
+## on `is_playing()` (was the bare `_playing` var, now owned here); and
+## `beat_delay()` returns 0.0 whenever `TestDriver.active()` or headless, so
+## QA (windowed included) can never observe real pacing.
+##
+## `renderer`/`screen` are both LOOSELY typed (`Node`, not `WICombatBoardRenderer`/
+## the screen's own class) -- same reason `combat_screen.gd`'s own `_board_
+## renderer`/`_view` vars are loosely typed (see that file's doc comments):
+## `tests/test_combat_visuals.gd` (out of this task's edit scope) recompiles a
+## stubbed in-memory copy of combat_screen.gd under bare `--script` mode,
+## where autoload identifiers (ObservableBus/Game/TestDriver) don't resolve.
+## A hard `WICombatBoardRenderer` type reference here would force that
+## script's compile to also resolve board_renderer.gd's body (which DOES
+## reference those autoloads directly) -- confirmed empirically the same way
+## D2 confirmed it (a bare `load()` of an autoload-referencing script fails
+## to compile under `--script` mode with "Identifier not found", per the
+## Godot 4.7 gotcha in CLAUDE.md: `load()` returns a non-null but
+## `can_instantiate() == false` script resource on a compile error).
+##
+## This file itself carries ZERO bare autoload identifiers (no `ObservableBus`/
+## `Game`/`TestDriver` anywhere below) for the same reason: the two spots the
+## original code touched an autoload directly (`_drain_playback`'s
+## `ObservableBus.emit_domain_event(UI_AI_PLAYBACK_DONE, ...)` and
+## `_beat_delay`'s `TestDriver.active()` check) now call back through tiny
+## `screen` wrapper methods (`_emit_ai_playback_done`/`_test_driver_active`,
+## both added on combat_screen.gd, which already shadows those two names
+## under the test's autoload-stubbed patch) instead of touching the
+## singletons here. This is what lets `tests/test_combat_visuals.gd`'s direct
+## call to `screen._capture_playback_event(...)` (see that file's compat shim)
+## lazily `load()`+`.new()` THIS file even inside that hostile --script-mode
+## context and have it actually compile -- verified by running the test after
+## this file was written (see the D3 task report).
+##
+## Every other autoload-safe reference (`WICombatAI`, `WIEvents`, `WICombat`)
+## is a plain `class_name` script, not an autoload singleton -- those resolve
+## fine under `--script` mode (same reasoning `combat_screen.gd`'s own
+## top-level `AI_PLAYBACK_TYPES` const array, built from bare `WIEvents.*`
+## references, already proves by compiling clean in that same stubbed test).
+
+var _renderer: Node
+var _screen: Node
+
+## Queued AI-turn events, captured at enqueue (see `capture_playback_event`),
+## drained beat-by-beat by `drain()`.
+var _playback: Array = []
+## True for the whole `drain()` call (paced or fast-forwarded) -- what
+## `combat_screen.gd._refresh()` checks via `is_playing()` to skip the live
+## per-combatant board refresh while beats are still pending.
+var _playing := false
+## Set by `request_skip()` (screen's `_unhandled_input`, confirm/cancel while
+## `is_playing()`) to fast-forward the rest of the queue without animations.
+var _skip_requested := false
+## True only for the synchronous span inside `run_ai_turn()` where
+## `WICombatAI.take_turn(combat)` is running -- the gate `combat_screen.gd.
+## _on_domain_event` checks (via `is_ai_turn_active()`) to route an arriving
+## domain event into capture instead of the live render path.
+var _ai_turn_active := false
+
+
+func _init(renderer: Node, screen: Node) -> void:
+	_renderer = renderer
+	_screen = screen
+
+
+func is_playing() -> bool:
+	return _playing
+
+
+func is_ai_turn_active() -> bool:
+	return _ai_turn_active
+
+
+func request_skip() -> void:
+	_skip_requested = true
+
+
+func enqueue(event: Dictionary) -> void:
+	_playback.append(event)
+
+
+## Enqueue-time snapshot builder (verbatim move of the old `combat_screen.gd.
+## _capture_playback_event`) -- called from the screen's `_on_domain_event`
+## while `is_ai_turn_active()` is true. Returns the captured event; the caller
+## stashes any already-decided tutor-line match onto `payload["_ui"]["tutor"]`
+## BEFORE calling `enqueue()` (tutor matching itself stays screen-side --
+## `_match_tutor_line` is called once per arriving event regardless of
+## capture-vs-live routing, per its own doc comment).
+func capture_playback_event(type: String, payload: Dictionary) -> Dictionary:
+	var captured_payload := payload.duplicate(true)
+	captured_payload["_ui"] = _capture_event_ui(type, payload)
+	return {"type": type, "payload": captured_payload}
+
+
+## Builds the `_ui` block stashed onto a queued playback event at ENQUEUE
+## time -- every render input a dequeue-time `_apply_playback_event` needs,
+## read from live combat state NOW rather than recomputed later once the live
+## sim has moved on to the turn's end state. `_feed_line_for_event`/
+## `_skill_flash_color`/`_skill_flash_cells` stay screen-side (HUD/feed
+## territory, not this task's move list -- see the D3 task report), called
+## back through `_screen`.
+func _capture_event_ui(type: String, payload: Dictionary) -> Dictionary:
+	var combat := _screen._combat_or_null() as WICombat
+	var ui := {
+		"actor_id": _actor_id_for_event(type, payload),
+		"feed_line": _screen._feed_line_for_event(type, payload),
+	}
+	match type:
+		WIEvents.ATTACK_RESOLVED:
+			var attacker_id := String(payload["attacker"])
+			var target_id := String(payload["target"])
+			var attacker_cell: Variant = _combatant_cell(combat, attacker_id)
+			var target_cell: Variant = _combatant_cell(combat, target_id)
+			ui["attacker_cell"] = _cell_payload(attacker_cell)
+			ui["target_cell"] = _cell_payload(target_cell)
+			ui["attacker_flip_h"] = _flip_toward(attacker_cell, target_cell)
+			ui["target_flip_h"] = _flip_toward(target_cell, attacker_cell)
+			ui["stats"] = _capture_combatant_stats(combat, [attacker_id, target_id])
+		WIEvents.SKILL_RESOLVED:
+			ui["flash_color"] = _screen._skill_flash_color(String(payload["skill"]))
+			ui["flash_cells"] = _cells_payload(_screen._skill_flash_cells(payload, true))
+			ui["stats"] = _capture_combatant_stats(combat, [String(payload.get("actor", ""))])
+		WIEvents.REACTION_TRIGGERED:
+			ui["stats"] = _capture_combatant_stats(combat, [String(payload.get("id", ""))])
+			if String(payload.get("skill", "")) == "mana_shield":
+				var reactor_cell: Variant = _combatant_cell(combat, String(payload["id"]))
+				ui["flash_cells"] = _cells_payload([reactor_cell] if reactor_cell is Vector2i else [])
+				ui["flash_color"] = _screen.SHIELD_FLASH
+		WIEvents.COMBATANT_DOWNED:
+			ui["stats"] = _capture_combatant_stats(combat, [String(payload.get("id", ""))])
+	return ui
+
+
+## Snapshots hp/max_hp/mp/max_mp for each given combatant id, read from live
+## `combat` state — the enqueue-time capture that `_apply_captured_stats`
+## later applies at dequeue. Skips ids that are blank or no longer known to
+## combat.
+func _capture_combatant_stats(combat: WICombat, ids: Array) -> Dictionary:
+	var out := {}
+	for id: String in ids:
+		if id != "" and combat != null and combat.combatants.has(id):
+			var c: Dictionary = combat.combatants[id]
+			out[id] = {
+				"hp": int(c["hp"]), "max_hp": int(c["max_hp"]),
+				"mp": int(c.get("mp", 0)), "max_mp": int(c.get("max_mp", 0)),
+			}
+	return out
+
+
+func _actor_id_for_event(type: String, payload: Dictionary) -> String:
+	match type:
+		WIEvents.ATTACK_RESOLVED:
+			return String(payload.get("attacker", ""))
+		WIEvents.SKILL_RESOLVED, WIEvents.ACTION_REFUSED:
+			return String(payload.get("actor", ""))
+		_:
+			return String(payload.get("id", ""))
+
+
+func _combatant_cell(combat: WICombat, id: String) -> Variant:
+	if combat != null and combat.combatants.has(id):
+		return combat.combatants[id]["cell"]
+	return null
+
+
+func _cell_payload(cell: Variant) -> Array:
+	if cell is Vector2i:
+		var v := cell as Vector2i
+		return [v.x, v.y]
+	return []
+
+
+func _cells_payload(cells: Array) -> Array:
+	var out: Array = []
+	for cell: Variant in cells:
+		if cell is Vector2i:
+			out.append(_cell_payload(cell))
+	return out
+
+
+## Called cross-object by `combat_screen.gd._play_event_visual` (which stays
+## screen-side -- not this task's move list) for its two flash-cell sites; not
+## underscore-shy about that the way the internal-only helpers above are --
+## kept the original name since it reads the same either way.
+func _cells_from_payload(cells: Variant) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	if not (cells is Array):
+		return out
+	for raw_cell: Variant in cells:
+		if raw_cell is Vector2i:
+			out.append(raw_cell)
+		elif raw_cell is Array and (raw_cell as Array).size() >= 2:
+			var raw_array := raw_cell as Array
+			out.append(Vector2i(int(raw_array[0]), int(raw_array[1])))
+	return out
+
+
+func _flip_toward(from_cell: Variant, to_cell: Variant) -> Variant:
+	if from_cell is Vector2i and to_cell is Vector2i:
+		var from_v := from_cell as Vector2i
+		var to_v := to_cell as Vector2i
+		if to_v.x != from_v.x:
+			return to_v.x < from_v.x
+	return null
+
+
+## Deferred-called from `combat_screen.gd._apply_turn_started` for an
+## AI-controlled active combatant (`_ai_playback.run_ai_turn.call_deferred()`).
+## Runs the WHOLE AI turn synchronously via `WICombatAI.take_turn` (a plain
+## `class_name`, not an autoload -- safe to reference directly), then awaits
+## `drain()` to pace the queued beats it generated via capture.
+func run_ai_turn() -> void:
+	var combat := _screen._combat() as WICombat
+	if combat == null or combat.finished:
+		return
+	# Guard against a stale deferred call from a superseded turn: only act if
+	# the CURRENTLY active combatant is actually AI-controlled.
+	var active: Dictionary = combat.combatants[combat.get_active()]
+	if String(active["side"]) != "enemy" and String(active["ai"]) == "":
+		return
+	_ai_turn_active = true
+	WICombatAI.take_turn(combat)
+	_ai_turn_active = false
+	# No screen._refresh() here: the sim already ran the WHOLE turn
+	# synchronously above, so the live snapshot is already at the turn's
+	# final state. Refreshing now (before a single paced beat has played)
+	# would be the exact "teleport to the end" bug drain() exists to avoid --
+	# it does its own final refresh once the queued beats are fully applied.
+	await drain()
+
+
+func beat_delay() -> float:
+	if _screen._test_driver_active() or DisplayServer.get_name() == "headless":
+		return 0.0
+	return _screen.AI_BEAT_SECONDS
+
+
+## Pops and applies one queued AI-turn event per beat, pacing by beat_delay()
+## between them (zero in QA/headless, so the whole queue drains synchronously
+## in one go). Confirm/cancel during the wait sets `_skip_requested` (via
+## `request_skip()`), which fast-forwards the rest of the queue without
+## animations. Either way, `_playing` is what `combat_screen.gd._refresh()`
+## checks (via `is_playing()`) to skip the live per-combatant block while
+## beats are still pending -- set for the full drain and cleared before the
+## guaranteed final refresh below, so both the paced and the skipped path
+## always end with the board showing the exact live end state.
+func drain() -> void:
+	if _playing:
+		return
+	_playing = true
+	var beats := 0
+	while not _playback.is_empty():
+		var event: Dictionary = _playback.pop_front()
+		_apply_playback_event(event, true)
+		beats += 1
+		var delay := beat_delay()
+		if delay > 0.0 and not _playback.is_empty():
+			await _wait_for_skip(delay)
+			if _skip_requested:
+				_skip_requested = false
+				while not _playback.is_empty():
+					var rest: Dictionary = _playback.pop_front()
+					_apply_playback_event(rest, false)
+					beats += 1
+	_playing = false
+	_screen._refresh()
+	_screen._emit_ai_playback_done(beats)
+
+
+## Renders one dequeued playback event. `with_visuals` gates only the cosmetic
+## flourishes (actor highlight tween, hit/cast animations) — feed text and the
+## affected combatant's position/HP/MP bars always apply, paced or
+## fast-forwarded, so state stays consistent beat-to-beat regardless of skip.
+## `combatant_moved` moves only that one combatant's holder to its captured
+## cell; attack/skill/reaction/downed events apply that beat's
+## enqueue-time-captured hp/mp (`_capture_event_ui`) to the affected
+## combatant(s) instead of the blanket, already-turn-final screen refresh.
+## `_apply_turn_started`/`_apply_combat_finished`/`_play_event_visual`/
+## `_push_feed`/`_render_tutor_line`/`_refresh` all stay screen-side (mode FSM
+## + HUD/feed territory) -- called back through `_screen`.
+func _apply_playback_event(event: Dictionary, with_visuals: bool) -> void:
+	var type := String(event["type"])
+	var payload: Dictionary = event["payload"]
+	# Renders the match `_on_domain_event` already decided at enqueue time --
+	# dequeue never re-matches against live state, only replays the stashed
+	# `{}`-or-`{id,line}` verdict.
+	var tutor: Dictionary = (payload.get("_ui", {}) as Dictionary).get("tutor", {})
+	match type:
+		WIEvents.TURN_STARTED:
+			_screen._render_tutor_line(tutor)
+			_screen._apply_turn_started(String(payload["id"]))
+		WIEvents.COMBAT_FINISHED:
+			_screen._render_tutor_line(tutor)
+			_screen._apply_combat_finished(payload)
+		WIEvents.COMBATANT_MOVED:
+			_apply_combatant_moved(payload)
+			if with_visuals:
+				_highlight_actor(event)
+			_screen._push_feed(payload)
+			_screen._render_tutor_line(tutor)
+			_screen._refresh()
+		_:
+			var ui: Dictionary = payload.get("_ui", {})
+			_apply_captured_stats(ui)
+			if with_visuals:
+				_highlight_actor(event)
+				_screen._play_event_visual(type, payload)
+			_screen._push_feed(payload)
+			_screen._render_tutor_line(tutor)
+			_screen._refresh()
+
+
+## Applies each id's captured stats (see `_capture_combatant_stats`) from a
+## playback event's `_ui.stats` block — the dequeue-time counterpart that
+## keeps HP/MP bars paced to their own beat instead of the live end state.
+func _apply_captured_stats(ui: Dictionary) -> void:
+	var stats: Dictionary = ui.get("stats", {})
+	for id: String in stats:
+		_renderer.apply_stats(id, stats[id])
+
+
+## Moves one combatant's holder to a captured historical cell (used by paced
+## AI playback's combatant_moved case). Bypasses `combat_screen.gd._refresh_
+## combatants` entirely so a single queued move beat renders exactly the cell
+## that event recorded, not wherever the sim has since moved on to.
+func _apply_combatant_moved(payload: Dictionary) -> void:
+	var cell: Array = payload.get("cell", [])
+	if cell.size() < 2:
+		return
+	_renderer.move_visual(String(payload.get("id", "")), Vector2i(int(cell[0]), int(cell[1])), true)
+
+
+## Polls once per frame (rather than a single `await get_tree().create_timer`)
+## specifically so `_skip_requested` — set by `request_skip()` while
+## `is_playing()` — can cut the wait short mid-beat instead of only being
+## checked at the next beat boundary. `_screen.get_tree()` since this is a
+## RefCounted, not a Node (`_screen` is the CanvasLayer that has one).
+func _wait_for_skip(seconds: float) -> void:
+	var deadline := Time.get_ticks_msec() + int(seconds * 1000.0)
+	while Time.get_ticks_msec() < deadline and not _skip_requested:
+		await _screen.get_tree().process_frame
+
+
+## Brief modulate flash on the acting combatant's holder — actor id comes from
+## the event's captured `_ui.actor_id` (`_capture_event_ui`), not recomputed,
+## so it still names the right combatant if the sim has moved on by dequeue.
+## `_screen.create_tween()` since this is a RefCounted, not a Node.
+func _highlight_actor(event: Dictionary) -> void:
+	var payload: Dictionary = event["payload"]
+	var ui: Dictionary = payload.get("_ui", {})
+	var actor_id := String(ui.get("actor_id", ""))
+	if actor_id == "":
+		return
+	var visual: Node2D = _renderer.visual_for(actor_id)
+	if visual == null:
+		return
+	visual.modulate = Color(1.25, 1.25, 1.25, 1.0)
+	var tw: Tween = _screen.create_tween()
+	tw.tween_property(visual, "modulate", Color.WHITE, 0.18)

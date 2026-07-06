@@ -1,0 +1,6 @@
+{
+	"steps": [
+		{ "action": "wait_frames", "frames": 5 },
+		{ "action": "load_all_resources" }
+	]
+}

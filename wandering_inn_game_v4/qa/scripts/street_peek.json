@@ -1,0 +1,86 @@
+{
+ "_comment": "M-FP Q1: reframed for the 32x20 Liscor gate district (W1). inn_door no longer reaches street directly (it now targets floodplains per W2's door retarget), so this peek teleports straight to street the same way floodplains_peek did for floodplains -- four D1-4 regions: plaza (gate_guard), market row (Krshia's stall), Guild frontage (Selys/watch), south square (sewer grate).",
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_inn_dressed"
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    4,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02_plaza"
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_market_row"
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    27,
+    4
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "04_guild_frontage"
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    14,
+    11
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "05_south_square"
+  }
+ ]
+}

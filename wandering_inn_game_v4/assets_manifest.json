@@ -1,0 +1,1251 @@
+{
+ "_comment": "M-RELEASE R2 asset bundle manifest. Every committed asset payload path whose license verdict is FORBIDDEN or NEEDS-ATTESTATION per the audit report (.superpowers/sdd/fp-handoff/release-asset-audit.md sections 1/2/4/5). These paths ship ONLY in the private asset bundle (bundle: true); a public checkout without the bundle falls back to a runtime placeholder ('placeholder' = WISpriteRegistry synthesized chip; 'silent' = WIAudio silent no-op). SHIP-OK paths (code-generated fx/*, the 17 code-generated skill icons, and the project-authored wi_ui_theme.tres) are intentionally NOT listed -- they stay in the public repo. .import sidecars are not listed but travel with their payload (qa/check_fallback_boot.sh strips both).",
+ "assets": [
+  {
+   "path": "assets/audio/music/battle_1.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy & Adventure (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/definitely_our_town.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy & Adventure (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/port_town.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy & Adventure (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/silent_forest.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy & Adventure (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/title_theme.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy & Adventure (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/victory.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy & Adventure (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/attack_hit.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/attack_miss.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/dash.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/defeat.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/dialogue_choice.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/dialogue_open.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/downed.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/footstep.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/level_up.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/quest_chime.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/save_chime.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/skill_arcane.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/skill_fire.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/skill_frost.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/skill_physical.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/toast.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/ui_confirm.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/ui_tick.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/sfx/victory.wav",
+   "source_pack": "Minifantasy_Dungeon_SFX",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/props/cave/Props.png",
+   "source_pack": "Pixel Crawler - Cave",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Bonfire_01-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Building_Roofs.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Building_Shadows.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Building_Walls.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Cooking_Estructure.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Esoteric.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Furnace.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Furniture.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Grill_01-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Interior_Props_01.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Interior_Walls_01.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Meat.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Rocks.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M1_S4.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Tree_M2_S4.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Vegetation.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/sewer/Props.png",
+   "source_pack": "Pixel Crawler - Sewer",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/a_hunter/Idle_Down-Sheet.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/a_hunter/Idle_Side-Sheet.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/a_hunter/Idle_Up-Sheet.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/a_hunter/Run_Down-Sheet.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/a_hunter/Run_Side-Sheet.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/a_hunter/Run_Up-Sheet.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Death/Death_Down-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Death/Death_Side-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Death/Death_Up-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Hit/Hit_Down-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Hit/Hit_Side-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Hit/Hit_Up-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Idle/Idle_Down-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Idle/Idle_Side-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Idle/Idle_Up-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Move/Move_Down-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Move/Move_Side-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/bat/Move/Move_Up-Sheet.png",
+   "source_pack": "Bat_Fur",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Death_Down-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Death_Side-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Death_Up-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Hit_Down-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Hit_Side-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Hit_Up-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Idle_Down-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Idle_Side-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Idle_Up-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Slice_Down-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Slice_Side-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Slice_Up-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Walk_Down-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Walk_Side-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/body_a/Walk_Up-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/citizen_f/Idle_Down-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/citizen_f/Idle_Side-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/citizen_f/Idle_Up-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/citizen_f/Walk_Down-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/citizen_f/Walk_Side-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/citizen_f/Walk_Up-Sheet.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/down/down_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/down/down_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/down/down_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/down/down_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/down/down_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/down/down_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/left/left_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/left/left_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/left/left_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/left/left_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/left/left_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/left/left_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/right/right_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/right/right_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/right/right_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/right/right_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/right/right_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/right/right_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/up/up_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/up/up_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/up/up_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/up/up_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/up/up_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/frames/up/up_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_base/goblin-spritesheet.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/down/down_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/down/down_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/down/down_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/down/down_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/down/down_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/down/down_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/left/left_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/left/left_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/left/left_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/left/left_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/left/left_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/left/left_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/right/right_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/right/right_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/right/right_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/right/right_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/right/right_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/right/right_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/up/up_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/up/up_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/up/up_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/up/up_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/up/up_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/frames/up/up_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_female/goblin-female-spritesheet.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/down/down_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/down/down_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/down/down_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/down/down_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/down/down_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/down/down_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/left/left_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/left/left_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/left/left_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/left/left_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/left/left_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/left/left_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/right/right_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/right/right_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/right/right_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/right/right_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/right/right_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/right/right_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/up/up_00.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/up/up_01.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/up/up_02.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/up/up_03.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/up/up_04.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/frames/up/up_05.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+   "source_pack": "goblin-pack (goblin/goblin-female/goblin-sword)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/sprites/royal_soldier/Idle-Sheet.png",
+   "source_pack": "Pixel Crawler - Castle Environment 0.3",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/castle/Tiles.png",
+   "source_pack": "Pixel Crawler - Castle Environment 0.3",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/cave/Tiles.png",
+   "source_pack": "Pixel Crawler - Cave",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/floor_tiles_12/dirt_01.png",
+   "source_pack": "topdown_floor_tiles_12",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/floor_tiles_12/grass_01.png",
+   "source_pack": "topdown_floor_tiles_12",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/floor_tiles_12/grass_02.png",
+   "source_pack": "topdown_floor_tiles_12",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/floor_tiles_12/grass_03.png",
+   "source_pack": "topdown_floor_tiles_12",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/floor_tiles_12/transition_01.png",
+   "source_pack": "topdown_floor_tiles_12",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/free_pack/Floors_Tiles.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/free_pack/Wall_Tiles.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/free_pack/Wall_Variations.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/free_pack/Water_tiles.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/library/Tiles.png",
+   "source_pack": "Pixel Crawler - Library",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/ui/chrome/Banner_Horizontal.png",
+   "source_pack": "Tiny Swords (Update 010)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/ui/chrome/Banner_Vertical.png",
+   "source_pack": "Tiny Swords (Update 010)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/ui/chrome/Button_Blue_9Slides.png",
+   "source_pack": "Tiny Swords (Update 010)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/ui/chrome/Button_Blue_9Slides_Pressed.png",
+   "source_pack": "Tiny Swords (Update 010)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/ui/chrome/Carved_9Slides.png",
+   "source_pack": "Tiny Swords (Update 010)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/ui/chrome/Ribbon_Blue_3Slides.png",
+   "source_pack": "Tiny Swords (Update 010)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/ui/icons/icon_attack.png",
+   "source_pack": "Tiny Swords (Free Pack)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/ui/icons/icon_dash.png",
+   "source_pack": "Tiny Swords (Free Pack)",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder"
+  }
+ ]
+}

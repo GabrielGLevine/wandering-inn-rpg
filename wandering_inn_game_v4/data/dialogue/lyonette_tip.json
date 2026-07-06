@@ -1,0 +1,20 @@
+{
+	"start": "hub",
+	"nodes": {
+		"hub": { "speaker": "Lyonette", "text": "If you're headed to the Guild, a word of advice would cost you nothing to hear.", "text_variants": [
+				{ "requires": { "accomplishment": { "lyonette_tip": 1 } }, "text": "You'll do fine at the Guild - just remember what I told you." }
+			], "options": [
+			{ "text": "Advice about the Guild? From a barmaid?", "hide_when": { "accomplishment": { "asked_lyonette_guild": 1 } }, "effects": [ { "accomplishment": "asked_lyonette_guild" } ], "goto": "barmaid_retort" },
+			{ "text": "Go on.", "requires": { "accomplishment": { "asked_lyonette_guild": 1 } }, "hide_when": { "accomplishment": { "lyonette_tip": 1 } }, "effects": [ { "accomplishment": "lyonette_tip" } ], "goto": "tip" },
+			{ "text": "Maybe later.", "end": true }
+		] },
+		"barmaid_retort": { "speaker": "Lyonette", "text": "A barmaid hears everything worth hearing in this city. But fine - go in blind if you prefer.", "options": [
+			{ "text": "Fair enough. Go on.", "goto": "hub" },
+			{ "text": "Maybe later.", "end": true }
+		] },
+		"tip": { "speaker": "Lyonette", "text": "Selys respects competence, not chatter. Stand like you've held a line before - which, evidently, you have - and skip the small talk.", "options": [
+			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Noted.", "end": true }
+		] }
+	}
+}

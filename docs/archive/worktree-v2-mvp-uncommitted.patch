@@ -1,0 +1,20 @@
+diff --git a/wandering_inn_game_v2/src/rpg/ui/character_creation.tscn b/wandering_inn_game_v2/src/rpg/ui/character_creation.tscn
+index e636b90..c24456b 100644
+--- a/wandering_inn_game_v2/src/rpg/ui/character_creation.tscn
++++ b/wandering_inn_game_v2/src/rpg/ui/character_creation.tscn
+@@ -1,10 +1,12 @@
+-[gd_scene load_steps=2 format=3]
++[gd_scene format=3 uid="uid://43nmbqyxkudd"]
+ 
+-[ext_resource type="Script" path="res://src/rpg/ui/character_creation.gd" id="1"]
++[ext_resource type="Script" uid="uid://bq0nv0i40irrj" path="res://src/rpg/ui/character_creation.gd" id="1"]
+ 
+-[node name="CharacterCreation" type="Control"]
++[node name="CharacterCreation" type="Control" unique_id=508590471]
+ layout_mode = 3
+ anchors_preset = 15
+ anchor_right = 1.0
+ anchor_bottom = 1.0
++grow_horizontal = 2
++grow_vertical = 2
+ script = ExtResource("1")

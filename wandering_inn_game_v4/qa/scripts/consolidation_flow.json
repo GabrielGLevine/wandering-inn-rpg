@@ -1,0 +1,364 @@
+{
+ "_comment": "M6 T7 + T8: fixture start (near_consolidation: warrior 6 + mage 7, sum 13 -- meets both min_parent_level 6 and min_combined_level 13). Exercises the FULL offer round trip: decline -> evolutions stage still runs (both parents are below their at_level 10 evolution gate, so the fallback is the plain 'sleep soundly' toast) -> re-offered next qualifying sleep -> accept -> merged [Spellsword] at level 9 (max(ceil(2*13/3), max(6,7))=9, the spec's pinned (6,7)->9 case) with the merged kit fielded in a subsequent fight. T8: accept/decline are now driven through the REAL UI consolidation prompt (src/ui/consolidation_prompt.gd) -- the prompt renders on consolidation_offered (ui_consolidation_prompt_rendered), cancel = decline (keep them apart), confirm on the default 'Consolidate' row = accept, and it hides (ui_consolidation_prompt_hidden) before the sim resolves the deferred sleep beat.",
+ "fixture_save": "near_consolidation",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {"warrior": 6, "mage": 7}
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "consolidation_offered",
+   "payload_contains": {
+    "target": "spellsword",
+    "level": 9
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "pending_consolidation.target",
+   "equals": "spellsword"
+  },
+  {
+   "action": "assert_state",
+   "path": "pending_consolidation.level",
+   "equals": 9
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {"warrior": 6, "mage": 7}
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_consolidation_prompt_rendered",
+   "payload_contains": {
+    "target": "spellsword"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_offer_prompt"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_consolidation_prompt_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "consolidation_declined",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You sleep soundly."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "pending_consolidation",
+   "equals": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {"warrior": 6, "mage": 7}
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "consolidation_offered",
+   "payload_contains": {
+    "target": "spellsword",
+    "level": 9
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "pending_consolidation.target",
+   "equals": "spellsword"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_consolidation_prompt_rendered",
+   "payload_contains": {
+    "target": "spellsword"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_reoffered_prompt"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_consolidation_prompt_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "consolidation_accepted",
+   "payload_contains": {
+    "target": "spellsword",
+    "level": 9
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {"spellsword": 9}
+  },
+  {
+   "action": "assert_state",
+   "path": "pending_consolidation",
+   "equals": {}
+  },
+  {
+   "action": "screenshot",
+   "name": "03_merged_spellsword"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "M-FP Q1: meet Relc (12,13) before the ally_requires-gated goblin_encounter_2 fight.",
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "met_relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 11
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "goblin_parley"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.max_mp",
+   "equals": 16
+  },
+  {
+   "action": "screenshot",
+   "name": "04_spellsword_kit_combat"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  }
+ ]
+}

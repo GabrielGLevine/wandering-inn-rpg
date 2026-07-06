@@ -1,0 +1,24 @@
+{
+	"state": {
+		"accomplishments": {},
+		"classes": {
+			"fighter": 1
+		},
+		"current_map": "inn",
+		"player_cell": [
+			2,
+			3
+		],
+		"player_facing": [
+			1,
+			0
+		],
+		"player_skills": [
+			"basic_cleaning"
+		],
+		"removed_entities": [],
+		"rng_state": "12345",
+		"started_quests": []
+	},
+	"version": 1
+}

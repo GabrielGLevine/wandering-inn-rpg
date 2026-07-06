@@ -1,0 +1,1545 @@
+{
+ "body_a": {
+  "directional": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/body_a/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Idle_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/body_a/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Walk_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/body_a/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Slice_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 10
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/body_a/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Hit_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 8
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/body_a/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/body_a/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/body_a/Death_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.75
+  ]
+ },
+ "citizen_f": {
+  "directional": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/citizen_f/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/citizen_f/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/citizen_f/Idle_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/citizen_f/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/citizen_f/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/citizen_f/Walk_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.75
+  ]
+ },
+ "dusty_scroll": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Esoteric.png",
+    "frame_size": [
+     20,
+     28
+    ],
+    "region": [
+     16,
+     164,
+     20,
+     28
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "dirty_table": {
+  "render_scale": 0.35,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     72,
+     64
+    ],
+    "region": [
+     0,
+     544,
+     72,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "bed": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "frame_size": [
+     34,
+     44
+    ],
+    "region": [
+     0,
+     296,
+     34,
+     44
+    ],
+    "fps": 1
+   }
+  },
+  "render_scale": 0.375,
+  "shadow": true
+ },
+ "door": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     34,
+     44
+    ],
+    "region": [
+     222,
+     279,
+     34,
+     44
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "chest": {
+  "render_scale": 0.75,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "region": [
+     138,
+     62,
+     34,
+     30
+    ],
+    "frame_size": [
+     34,
+     30
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "plant_pot": {
+  "render_scale": 0.6,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "region": [
+     0,
+     352,
+     16,
+     32
+    ],
+    "frame_size": [
+     16,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "bar_counter": {
+  "render_scale": 0.25,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     68,
+     44
+    ],
+    "region": [
+     256,
+     279,
+     68,
+     44
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "barrel": {
+  "render_scale": 0.7,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     19,
+     22
+    ],
+    "region": [
+     730,
+     14,
+     19,
+     22
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "crate": {
+  "render_scale": 0.45,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     38,
+     26
+    ],
+    "region": [
+     690,
+     71,
+     38,
+     26
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "stool": {
+  "render_scale": 0.6,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "frame_size": [
+     20,
+     20
+    ],
+    "region": [
+     222,
+     323,
+     20,
+     20
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "mushroom": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/cave/Props.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "region": [
+     32,
+     32,
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "sconce": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Bonfire_01-Sheet.png",
+    "region": [
+     0,
+     0,
+     128,
+     32
+    ],
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 6
+   }
+  }
+ },
+ "rug_tan": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "region": [
+     432,
+     312,
+     80,
+     72
+    ],
+    "frame_size": [
+     80,
+     72
+    ],
+    "fps": 1
+   }
+  },
+  "render_scale": 0.4
+ },
+ "table_brown": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "region": [
+     0,
+     544,
+     72,
+     64
+    ],
+    "frame_size": [
+     72,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "render_scale": 0.35,
+  "shadow": true
+ },
+ "goblin_base": {
+  "directional": true,
+  "render_scale": 0.09,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "sheet_side": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "sheet_up": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "frame_size": [
+     256,
+     256
+    ],
+    "region_down": [
+     0,
+     0,
+     1536,
+     256
+    ],
+    "region_side": [
+     0,
+     768,
+     1536,
+     256
+    ],
+    "region_up": [
+     0,
+     256,
+     1536,
+     256
+    ],
+    "fps": 3
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "sheet_side": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "sheet_up": "res://assets/sprites/goblin_base/goblin-spritesheet.png",
+    "frame_size": [
+     256,
+     256
+    ],
+    "region_down": [
+     0,
+     0,
+     1536,
+     256
+    ],
+    "region_side": [
+     0,
+     768,
+     1536,
+     256
+    ],
+    "region_up": [
+     0,
+     256,
+     1536,
+     256
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "goblin_female": {
+  "directional": true,
+  "render_scale": 0.09,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/goblin_female/goblin-female-spritesheet.png",
+    "sheet_side": "res://assets/sprites/goblin_female/goblin-female-spritesheet.png",
+    "sheet_up": "res://assets/sprites/goblin_female/goblin-female-spritesheet.png",
+    "frame_size": [
+     256,
+     256
+    ],
+    "region_down": [
+     0,
+     0,
+     1536,
+     256
+    ],
+    "region_side": [
+     0,
+     768,
+     1536,
+     256
+    ],
+    "region_up": [
+     0,
+     256,
+     1536,
+     256
+    ],
+    "fps": 3
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/goblin_female/goblin-female-spritesheet.png",
+    "sheet_side": "res://assets/sprites/goblin_female/goblin-female-spritesheet.png",
+    "sheet_up": "res://assets/sprites/goblin_female/goblin-female-spritesheet.png",
+    "frame_size": [
+     256,
+     256
+    ],
+    "region_down": [
+     0,
+     0,
+     1536,
+     256
+    ],
+    "region_side": [
+     0,
+     768,
+     1536,
+     256
+    ],
+    "region_up": [
+     0,
+     256,
+     1536,
+     256
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "goblin_sword": {
+  "directional": true,
+  "render_scale": 0.1,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "sheet_side": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "sheet_up": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "frame_size": [
+     256,
+     256
+    ],
+    "region_down": [
+     0,
+     0,
+     1536,
+     256
+    ],
+    "region_side": [
+     0,
+     768,
+     1536,
+     256
+    ],
+    "region_up": [
+     0,
+     256,
+     1536,
+     256
+    ],
+    "fps": 3
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "sheet_side": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "sheet_up": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "frame_size": [
+     256,
+     256
+    ],
+    "region_down": [
+     0,
+     0,
+     1536,
+     256
+    ],
+    "region_side": [
+     0,
+     768,
+     1536,
+     256
+    ],
+    "region_up": [
+     0,
+     256,
+     1536,
+     256
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "bat": {
+  "directional": true,
+  "render_scale": 0.17,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/bat/Idle/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/bat/Idle/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/bat/Idle/Idle_Up-Sheet.png",
+    "frame_size": [
+     96,
+     96
+    ],
+    "fps": 6
+   },
+   "move": {
+    "sheet_down": "res://assets/sprites/bat/Move/Move_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/bat/Move/Move_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/bat/Move/Move_Up-Sheet.png",
+    "frame_size": [
+     96,
+     96
+    ],
+    "fps": 10
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/bat/Hit/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/bat/Hit/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/bat/Hit/Hit_Up-Sheet.png",
+    "frame_size": [
+     96,
+     96
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/bat/Death/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/bat/Death/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/bat/Death/Death_Up-Sheet.png",
+    "frame_size": [
+     96,
+     96
+    ],
+    "fps": 8
+   }
+  }
+ },
+ "icon_attack": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_attack.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_dash": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_dash.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_power_strike": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_power_strike.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_flame_bolt": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_flame_bolt.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_flame_jet": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_flame_jet.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_frost_bolt": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_frost_bolt.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_second_wind": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_second_wind.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_piercing_strikes": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_piercing_strikes.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_quick_slash": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_quick_slash.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_flash_cut": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_flash_cut.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_devastating_slash": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_devastating_slash.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_triple_thrust": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_triple_thrust.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_extended_sweep": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_extended_sweep.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_spear_flurry": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_spear_flurry.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_ice_shard": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_ice_shard.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_icy_floor": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_icy_floor.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_flame_scythe": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_flame_scythe.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_flare_burst": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_flare_burst.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_keener_edge": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_keener_edge.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_basic_cleaning": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_basic_cleaning.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_light": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_light.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_basic_cooking": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_basic_cooking.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_observe": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_observe.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_soothe_clientele": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_soothe_clientele.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_unerring_aim": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_unerring_aim.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_sweep_the_tables": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_sweep_the_tables.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_servers_prescience": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_servers_prescience.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "hearth": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "region": [
+     272,
+     56,
+     64,
+     104
+    ],
+    "frame_size": [
+     64,
+     104
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "grill": {
+  "render_scale": 0.4,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Grill_01-Sheet.png",
+    "region": [
+     0,
+     0,
+     256,
+     64
+    ],
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 5
+   }
+  }
+ },
+ "counter_left": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "region": [
+     0,
+     32,
+     32,
+     32
+    ],
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "counter_mid": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "region": [
+     32,
+     32,
+     32,
+     32
+    ],
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "counter_right": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "region": [
+     64,
+     32,
+     32,
+     32
+    ],
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "shelf_bottles": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "region": [
+     176,
+     136,
+     48,
+     32
+    ],
+    "frame_size": [
+     48,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "window_blue": {
+  "render_scale": 0.75,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "region": [
+     224,
+     4,
+     16,
+     28
+    ],
+    "frame_size": [
+     16,
+     28
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "food_bread": {
+  "render_scale": 0.75,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Meat.png",
+    "region": [
+     64,
+     0,
+     16,
+     16
+    ],
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  },
+  "anchor": [
+   0.5,
+   1.5
+  ]
+ },
+ "food_ham": {
+  "render_scale": 0.75,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Meat.png",
+    "region": [
+     32,
+     64,
+     16,
+     16
+    ],
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  },
+  "anchor": [
+   0.5,
+   1.5
+  ]
+ },
+ "food_basket": {
+  "render_scale": 0.75,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Meat.png",
+    "region": [
+     64,
+     32,
+     16,
+     16
+    ],
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "rug_green": {
+  "render_scale": 0.4,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "region": [
+     336,
+     338,
+     46,
+     42
+    ],
+    "frame_size": [
+     46,
+     42
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "facade_plaster": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Building_Walls.png",
+    "region": [
+     288,
+     192,
+     96,
+     48
+    ],
+    "frame_size": [
+     96,
+     48
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "bush_green": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Vegetation.png",
+    "region": [
+     0,
+     0,
+     32,
+     32
+    ],
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "grass_tuft": {
+  "render_scale": 0.75,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Vegetation.png",
+    "region": [
+     64,
+     144,
+     16,
+     16
+    ],
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "flower_purple": {
+  "render_scale": 0.6,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Vegetation.png",
+    "region": [
+     192,
+     152,
+     16,
+     32
+    ],
+    "frame_size": [
+     16,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "flower_tiny": {
+  "render_scale": 0.75,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Vegetation.png",
+    "region": [
+     32,
+     352,
+     16,
+     16
+    ],
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pebble": {
+  "render_scale": 0.6,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Rocks.png",
+    "region": [
+     48,
+     80,
+     16,
+     16
+    ],
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "boulder": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Rocks.png",
+    "region": [
+     0,
+     0,
+     32,
+     40
+    ],
+    "frame_size": [
+     32,
+     40
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "tree_big": {
+  "render_scale": 0.3,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Tree_M2_S4.png",
+    "region": [
+     0,
+     0,
+     192,
+     224
+    ],
+    "frame_size": [
+     192,
+     224
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "mushroom_purple_l": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/cave/Props.png",
+    "region": [
+     0,
+     0,
+     64,
+     88
+    ],
+    "frame_size": [
+     64,
+     88
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "mushroom_purple_m": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/cave/Props.png",
+    "region": [
+     196,
+     0,
+     44,
+     56
+    ],
+    "frame_size": [
+     44,
+     56
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "mushroom_purple_s": {
+  "render_scale": 0.75,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/cave/Props.png",
+    "region": [
+     256,
+     64,
+     20,
+     24
+    ],
+    "frame_size": [
+     20,
+     24
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "inn_roof": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Building_Roofs.png",
+    "region": [
+     128,
+     24,
+     128,
+     72
+    ],
+    "frame_size": [
+     128,
+     72
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "tree_round": {
+  "render_scale": 0.2,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Tree_M1_S4.png",
+    "region": [
+     0,
+     0,
+     368,
+     256
+    ],
+    "frame_size": [
+     368,
+     256
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "campfire": {
+  "render_scale": 0.75,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Bonfire_01-Sheet.png",
+    "region": [
+     0,
+     0,
+     128,
+     32
+    ],
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 6
+   }
+  }
+ },
+ "unlit_lantern": {
+  "render_scale": 1.0,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "region": [
+     179,
+     482,
+     9,
+     14
+    ],
+    "frame_size": [
+     9,
+     14
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "library_desk": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/tiles/library/Tiles.png",
+    "region": [
+     160,
+     272,
+     48,
+     32
+    ],
+    "frame_size": [
+     48,
+     32
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "library_shelf": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/tiles/library/Tiles.png",
+    "region": [
+     208,
+     272,
+     32,
+     64
+    ],
+    "frame_size": [
+     32,
+     64
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "royal_soldier": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/royal_soldier/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 4
+   }
+  }
+ },
+ "sewer_grate": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Rocks.png",
+    "region": [
+     2,
+     19,
+     28,
+     43
+    ],
+    "frame_size": [
+     28,
+     43
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ },
+ "a_hunter": {
+  "directional": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/a_hunter/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/a_hunter/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/a_hunter/Idle_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/a_hunter/Run_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/a_hunter/Run_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/a_hunter/Run_Up-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.75
+  ]
+ },
+ "training_dummy": {
+  "render_scale": 1.0,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "region": [
+     736,
+     73,
+     16,
+     23
+    ],
+    "frame_size": [
+     16,
+     23
+    ],
+    "fps": 1
+   }
+  },
+  "shadow": true
+ }
+}
