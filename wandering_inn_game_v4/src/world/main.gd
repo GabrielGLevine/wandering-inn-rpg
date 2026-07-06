@@ -30,6 +30,7 @@ var _pause_menu: Node
 var _inventory: Node
 var _field_hotbar: Node
 var _title_screen: Node
+var _sleep_veil: Node
 
 
 func _ready() -> void:
@@ -74,11 +75,19 @@ func swap_to_title() -> void:
 	_spawn_title()
 
 
-func swap_to_world() -> void:
+## `new_game` is true ONLY on the GAME_RESET (fresh-world) path — it drives the
+## M-ARC F1 GDI cold open. Continue/load (GAME_LOADED) passes false, so a loaded
+## save never replays the arrival sequence.
+func swap_to_world(new_game: bool = false) -> void:
 	_clear_world_viewport()
 	_clear_ui_layers()
 	_spawn_ui_layers()
 	_spawn_world()
+	# After the fresh world exists (world_ready has fired), open on black. Setting
+	# the veil opaque here — synchronous with the world spawn — means the inn is
+	# never drawn uncovered before the cold open takes the screen.
+	if new_game and _sleep_veil != null:
+		_sleep_veil.play_opener()
 
 
 func _ensure_viewport_nodes() -> void:
@@ -124,6 +133,7 @@ func _clear_ui_layers() -> void:
 	_inventory = null
 	_field_hotbar = null
 	_title_screen = null
+	_sleep_veil = null
 	_world_labels = null
 
 
@@ -180,9 +190,9 @@ func _spawn_ui_layers() -> void:
 	# announcements). Layer 30, above every other UI so the darkness covers the
 	# screen; a pure renderer keyed on the sleep phase_changed. Torn down with
 	# the other UI layers on world/title swap (_clear_ui_layers).
-	var sleep_veil := SLEEP_VEIL_SCRIPT.new()
-	sleep_veil.name = "SleepVeil"
-	add_child(sleep_veil)
+	_sleep_veil = SLEEP_VEIL_SCRIPT.new()
+	_sleep_veil.name = "SleepVeil"
+	add_child(_sleep_veil)
 
 
 func _spawn_world() -> void:
@@ -196,4 +206,6 @@ func _spawn_world() -> void:
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:
 		WIDataRegistry.reset()
-		swap_to_world.call_deferred()
+		# Only a New Game (GAME_RESET) plays the GDI cold open; a load restores
+		# straight into the world.
+		swap_to_world.bind(type == WIEvents.GAME_RESET).call_deferred()

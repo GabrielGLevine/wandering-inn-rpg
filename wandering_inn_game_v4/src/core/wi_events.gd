@@ -175,3 +175,11 @@ const UI_PC_LIGHT_RENDERED := &"ui_pc_light_rendered"
 ## headless the veil's fades/holds collapse to ~0 (the M4 T10 pacing precedent),
 ## so this event fires effectively synchronously right after the sleep beat.
 const UI_SLEEP_VEIL_RENDERED := &"ui_sleep_veil_rendered"
+## M-ARC Task F1 (GDI new-game opener): emitted by src/ui/sleep_veil.gd once the
+## black cold-open's Grand Design arrival lines are laid out, carrying
+## {lines:int} = how many opener lines were rendered. Fired ONLY on a New Game
+## (GAME_RESET -> fresh world; WIMain drives it), never on Continue/load. Same
+## additive ui_*_rendered idiom as UI_SLEEP_VEIL_RENDERED; under QA/headless the
+## opener collapses to instant and this fires synchronously right after
+## world_ready, so title_flow can assert it deterministically.
+const UI_GDI_OPENER_RENDERED := &"ui_gdi_opener_rendered"

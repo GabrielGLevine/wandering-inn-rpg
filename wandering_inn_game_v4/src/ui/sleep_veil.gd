@@ -61,6 +61,33 @@ const READ_HOLD := 1.5
 const EMPTY_HOLD := 0.4
 const LINE_FONT_SIZE := 24
 
+## M-ARC Task F1 — the GDI new-game opener. A New Game opens on BLACK: the Grand
+## Design's voice speaks a few arrival lines in this SAME gold-on-black device
+## (reusing _black + _add_line + the layer-30 discipline above — one renderer,
+## not a second), then fades into the inn. WIMain calls play_opener() ONLY on the
+## GAME_RESET (fresh-world) path — never on Continue/load (see main.gd
+## swap_to_world(new_game)). Under QA/headless it collapses to instant and emits
+## UI_GDI_OPENER_RENDERED{lines} for coverage (title_flow asserts it); in real
+## play it is SKIPPABLE — confirm/cancel advances line-by-line and, past the last
+## line, fades to the inn, so a replaying player is never held hostage. This is
+## the ONE interactive exception to the veil's "consumes nothing" invariant: the
+## opener swallows ONLY confirm/cancel while it holds; the sleep path above still
+## intercepts no input at all.
+##
+## COPY — flagged for user taste-review (revisable via this one constant / a
+## future string table). A vast, neutral, faintly wondering System voice; the
+## last line is a bracketed proclamation in the sleep-veil cadence. Opaque-safe:
+## no numbers, no lore claim beyond what the game itself shows (classes/levels).
+const OPENER_LINES: Array[String] = [
+	"You are far from where you began.",
+	"This world watches what you do,",
+	"and answers by making you someone.",
+	"[Class: none. Level: none. — Begin.]",
+]
+const OPENER_HOLD_BEFORE_TEXT := 0.6
+const OPENER_LINE_HOLD := 1.7
+const OPENER_READ_HOLD := 2.2
+
 ## Display-name maps loaded from data (presentation-only, exactly how content=
 ## data UI resolves labels): class ids -> raw names ("Warrior"), skill ids ->
 ## bracketed names ("[Basic Cleaning]"). Loaded once in _ready; independent of
@@ -86,6 +113,11 @@ var _running := false
 var _reveal_queued := false
 var _lines: Array[String] = []
 var _consolidation := false
+
+## F1 opener state. _opener_running gates its own input/sequence; _opener_advance
+## is set by a confirm/cancel press to cut the current line's hold short.
+var _opener_running := false
+var _opener_advance := false
 
 
 func _ready() -> void:
@@ -157,6 +189,63 @@ func _begin_sleep() -> void:
 	if not _reveal_queued:
 		_reveal_queued = true
 		_run_sequence.call_deferred()
+
+
+## M-ARC Task F1 — the GDI new-game cold open. Called by WIMain right after the
+## fresh world is spawned, ONLY on GAME_RESET. Opens opaque-black immediately (no
+## fade-in — a cold open, not a dip), speaks the arrival lines, then fades to the
+## inn. QA/headless collapses to an instant coverage event; real play is paced +
+## skippable via _unhandled_input below.
+func play_opener() -> void:
+	if _running or _opener_running:
+		return
+	if _is_qa():
+		# Collapsed: no visible hold — record coverage the same beat, right after
+		# world_ready, so title_flow's assert is deterministic.
+		_emit_opener_rendered(OPENER_LINES.size())
+		return
+	_opener_running = true
+	_run_opener.call_deferred()
+
+
+func _run_opener() -> void:
+	# Opaque immediately so the just-spawned inn never flashes before the dark.
+	_black.modulate.a = 1.0
+	_black.show()
+	await _wait(OPENER_HOLD_BEFORE_TEXT)
+	for i in OPENER_LINES.size():
+		_add_line(OPENER_LINES[i])
+		var last := i == OPENER_LINES.size() - 1
+		await _wait_or_advance(OPENER_READ_HOLD if last else OPENER_LINE_HOLD)
+	_emit_opener_rendered(OPENER_LINES.size())
+	await _fade(_black, 0.0)
+	_opener_running = false
+	_finish()
+
+
+## Waits up to `seconds`, but returns early the moment a confirm/cancel press
+## sets _opener_advance (see _unhandled_input) — line-by-line advance / skip.
+func _wait_or_advance(seconds: float) -> void:
+	_opener_advance = false
+	var deadline := Time.get_ticks_msec() + int(seconds * 1000.0)
+	while Time.get_ticks_msec() < deadline and not _opener_advance:
+		await get_tree().process_frame
+
+
+## The opener's ONE interactive touch (the sleep path never intercepts input):
+## while the cold open holds, confirm/cancel advances the current line and,
+## past the last, skips straight to the inn fade. Swallows only those two
+## actions so a replaying player is never held hostage.
+func _unhandled_input(event: InputEvent) -> void:
+	if not _opener_running:
+		return
+	if event.is_action_pressed("confirm") or event.is_action_pressed("cancel"):
+		_opener_advance = true
+		get_viewport().set_input_as_handled()
+
+
+func _emit_opener_rendered(count: int) -> void:
+	ObservableBus.emit_domain_event(WIEvents.UI_GDI_OPENER_RENDERED, {"lines": count})
 
 
 func _run_sequence() -> void:

@@ -26,6 +26,15 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "M-ARC F1: New Game opens on the GDI black cold-open (4 arrival lines). QA-collapsed to an instant coverage event fired right after world_ready. Never fires on the Continue path below (GAME_LOADED, not GAME_RESET).",
+   "action": "wait_for_event",
+   "type": "ui_gdi_opener_rendered",
+   "payload_contains": {
+    "lines": 4
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 12

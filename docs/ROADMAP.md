@@ -142,6 +142,21 @@ packaging/launch. Open-source track runs in parallel (license audit first).
 > shipped, M7 is weapons+equipment). The dated amendment sections are authoritative until a
 > table refresh.
 
+## SEEDS BANKED (2026-07-06, user): party selection + post-M-ARC expansions
+
+1. **Combat party selection** (+ balancing): player choice vs
+   quest-context-driven — NEEDS A BRAINSTORM before any milestone.
+   Controller's early lean for that session: context-driven with player
+   veto (canon: companions join for reasons — the met_relc ally gate
+   already IS this pattern; balance stays tractable because the harness
+   tests fixed rosters, not combinatorial parties). Not decided.
+2. **Post-M-ARC location expansions** (user-named, canon-anchored):
+   (a) Brothers of Serendipitous Meetings quest in INVRISIL — big-city
+   setting, hideouts, rogues, human enemies; (b) Witch quest in
+   RIVERFARM; (c) Liscor DUNGEON quest with the Horns of Hammerad.
+   Each is a content-wave-class milestone (new map family + characters
+   + quests); order at brainstorm.
+
 ## AMENDMENT (2026-07-05 night): Onboarding + Three Pillars BOTH CLOSED SHIP; M-RELEASE build-out complete
 
 One session: Onboarding rev closed (opus 0C/0I/3M; 31-script suite,
