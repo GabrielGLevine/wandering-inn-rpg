@@ -35,7 +35,23 @@ jobs:
             echo 'TRIAGE_PROMPT_EOF'
           } >> "$GITHUB_OUTPUT"
 
+      # The maintainer has NO Anthropic API key (Claude Max subscription only)
+      # — this step self-skips when the secret is absent, and the real triage
+      # path is a LOCAL session running .github/triage-prompt.md against the
+      # labeled issue (see docs/TRIAGE.md). The workflow stays wired so adding
+      # the secret later lights it up with zero changes.
+      - name: Check for API key
+        id: keycheck
+        run: |
+          if [ -n "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "ANTHROPIC_API_KEY not configured — triage runs locally (docs/TRIAGE.md). Skipping."
+          fi
+
       - name: Opus triage
+        if: steps.keycheck.outputs.present == 'true'
         uses: anthropics/claude-code-action@v1
         with:
           # Direct-API auth. Set the ANTHROPIC_API_KEY repo secret.
