@@ -1,0 +1,930 @@
+{
+ "_comment": "M-ARC A4 (arc_flow) -- THE WHOLE-ARC PROOF, fixture-accelerated. Loads near_act3 (inn bed, Act II complete: Warrior 5 + Diplomat 1, 3 quests; no Act III keys) via title Continue and drives the ENTIRE Act III arc live: (1) tremor sleep pointer; (2) Zevara summons (banks heard_the_deep_tremor); (3) Olesm briefing; (4) THE DESCENT -- teleport to the deep_tunnels landing (the surface arc consumes ZERO rng, so the fights sit at the SAME deterministic rng deep_descent wins at; deep_descent still PASSES with warrior5+diplomat1, so this splice of its winning nav wins here too) -> Cold Hearth -> raskghar_scouts route-fight -> Gnawed Bones -> Warren Mouth -> the Relc JOIN veto -> boss VICTORY (Relc fielded) -> cleared_the_warren; (5) Zevara seal -> raskghar_sealed; (6) THE GDI EPILOGUE EVENT (ui_gdi_epilogue_rendered{lines:7}) fired by the seal dialogue_ended -> post_game banked; (7) journal Act III completed beat; (8) post-game Zevara greeting variant (also proves no epilogue re-fire on re-entry); (9) free-play sanity (move + plain sleep + the epilogue rendered EXACTLY once). This is the arc's END-TO-END seam; the piecewise beats stay covered by climax_chain/deep_descent/climax_seal.",
+ "fixture_save": "near_act3",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "Continue -> load near_act3."
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "== TREMOR ==. Bed (2,7) -> sleep(); Act II complete, tremor unbanked -> pointer fires once."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "watch_runner_pointed"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "A Watch runner is looking for you."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_tremor_pointer"
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    2,
+    7
+   ],
+   "_comment": "== ZEVARA SUMMONS =="
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "hub 0 shift,1 summons,2 bearings -> summons"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "02_zevara_summons"
+  },
+  {
+   "action": "press",
+   "name": "confirm",
+   "_comment": "summons 0 'Then I'll go down.' banks heard_the_deep_tremor"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_the_deep_tremor"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "summons_send 1 'On it.' end"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    29,
+    4
+   ],
+   "_comment": "== OLESM BRIEFING =="
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Olesm"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3,
+   "_comment": "hub 3 'Zevara sent me...' -> briefing"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_olesm_briefing"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "briefing 1 'Understood.' end"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "deep_tunnels",
+   "cell": [
+    2,
+    2
+   ],
+   "_comment": "== THE DESCENT (deep_descent's winning nav, teleported to the landing) =="
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "dd_01_deep_tunnels_landing"
+  },
+  {
+   "_comment": "== COLD HEARTH (5,4) flavor ==. Down 2 to (2,4), right 2 to (4,4), then right 1 bumps the hearth (5,4, blocked prop) -> face it, interact.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "found_cold_hearth"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark \u2014 and left gnawed bones banked around the edge, cracked for their marrow."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== RASKGHAR SCOUTS (8,4) route-fight ==. The hearth blocks y4, so route over the top: up 1 to (4,3), right 4 to (8,3), then down 1 bumps the scouts (8,4) -> face them, interact.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "_comment": "Field READ: the raskghar_scout encounter sprite in the deep_tunnels dark mood, one cell above it, before the fight starts.",
+   "action": "screenshot",
+   "name": "dd_01b_scout_field"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "dd_02_raskghar_scouts"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "_comment": "Dismiss the victory banner (non-tutorial arena, no tutor line -- confirm-then-hide, sewer_vermin precedent).",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cleared_raskghar_scouts",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "_comment": "== GNAWED BONES (9,6) flavor ==. The scout cell (8,4) still blocks, so route right: right 1 to (9,3), then down 3 bumps the bones (9,6) -> face them, interact.",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "found_gnaw_pile"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered \u2014 and somehow that is worse than if they had been."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== WARREN MOUTH (12,5): the 'warren door', terminal beat ==. Right 2 to (11,5), then right 1 bumps the warren_mouth (12,5) -> face it, interact. A3 wires the boss here.",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "reached_the_warren"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "dd_03_warren_mouth"
+  },
+  {
+   "_comment": "== M-ARC A3: THE BOSS (JOIN path) ==. Past the threshold to the awakened_boss encounter (12,7). From (11,5) facing right: down 1 to (11,6), right 1 to (12,6), down 1 bumps the boss (12,7, blocked) -> face it without moving.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    6
+   ]
+  },
+  {
+   "_comment": "Field READ: the Awakened Raskghar looming at the warren mouth in the darkest mood, before the veto.",
+   "action": "screenshot",
+   "name": "dd_04_awakened_field"
+  },
+  {
+   "_comment": "Interact the boss encounter -> its `conversation` (relc_descent, the Relc join/veto) opens BEFORE combat.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_descent"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE VETO MOMENT: join node, cursor 0 = [Go together.], 1 = [I go alone.].",
+   "action": "screenshot",
+   "name": "dd_05_relc_veto"
+  },
+  {
+   "_comment": "JOIN: confirm on cursor 0 -> banks relc_joined_descent (satisfies awakened_boss ally_requires) + start_combat awakened_boss with Relc fielded.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Roster proof: Relc IS fielded (join path) -- his combatant is present player-side.",
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "screenshot",
+   "name": "dd_06_boss_fight"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "_comment": "Dismiss the victory banner (non-tutorial arena, confirm-then-hide).",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "_comment": "on_victory banks cleared_the_warren (the seal-beat resolutions consume it; raskghar_sealed is banked LATER, by Zevara's seal dialogue on the surface -- victory != sealed).",
+   "action": "assert_state",
+   "path": "accomplishments.cleared_the_warren",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "screenshot",
+   "name": "dd_07_warren_cleared"
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    2,
+    7
+   ],
+   "_comment": "== THE SEAL BEAT == (same waking as summons -> Zevara pool spent -> one interact)"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "hub 1 'It's done...' -> seal, banks raskghar_sealed"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "raskghar_sealed"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "03_zevara_seal"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "seal 1 'Captain.' end -> dialogue_ended ARMS+FIRES the epilogue"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_gdi_epilogue_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lines": 7
+   },
+   "_comment": "== THE GDI EPILOGUE ==. 7 lines = 2 open + 2 recount (Warrior L5, Diplomat L1) + 2 close + 1 wanderinginn.com line."
+  },
+  {
+   "action": "screenshot",
+   "name": "04_epilogue"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.post_game",
+   "equals": 1,
+   "_comment": "the epilogue banked post_game"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.raskghar_sealed",
+   "equals": 1
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "act_id": "act_iii"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "05_journal_sealed"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Re-open Zevara (same waking) -> raskghar_sealed hub greeting; ALSO proves no epilogue re-fire."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "The one who went down the tunnels and climbed back out. The gallery's bricked and the streets are quiet. I've a report with your name on it that I'll deny writing. Rest \u2014 you've earned a boring week. Take it before the next one."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "06_postgame_greeting"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1,
+   "_comment": "hub now 0 shift,1 bearings (seal hidden by raskghar_sealed) -> ends"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    2,
+    6
+   ],
+   "_comment": "== FREE PLAY == nothing reset."
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ],
+   "_comment": "a plain move still works post-game"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "Free-play sleep -> ORDINARY sleep veil (mode 1), not the epilogue."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "timeout_sec": 5,
+   "_comment": "plain sleep veil, NOT the epilogue"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.post_game",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_gdi_epilogue_rendered",
+   "count": 1,
+   "_comment": "NO-RE-FIRE PROOF: the epilogue rendered EXACTLY once across the whole run."
+  }
+ ]
+}

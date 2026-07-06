@@ -110,6 +110,48 @@ const OPENER_HOLD_BEFORE_TEXT := 0.6
 const OPENER_LINE_HOLD := 1.7
 const OPENER_READ_HOLD := 2.2
 
+## M-ARC Task A4 — the GDI epilogue (the veil's THIRD mode). The cinematic beat
+## after the Raskghar is SEALED: ARMED by accomplishment_recorded{raskghar_sealed}
+## (banked mid Zevara's seal dialogue) and PLAYED on the following dialogue_ended,
+## so her line lands and the conversation clears BEFORE the black. Renders the GDI
+## open lines, a GENERATED results-only recount (each EARNED class + its level from
+## the sim snapshot — the visible-tier rule: a class NAME + its level, never a
+## stat), the "for now"/"world keeps counting" close, and the wanderinginn.com
+## line, then fades back to the SAME world beneath (FREE PLAY — nothing resets, the
+## sleep machinery re-arms encounters as before). At completion it banks `post_game`
+## — the ONE sim write the epilogue mode makes ("the ending was witnessed" is
+## genuine game state, not presentation): the journal's Act III completed beat
+## reads it and it GUARDS the epilogue from ever re-firing. QA/headless collapses to
+## an instant UI_GDI_EPILOGUE_RENDERED{lines} (arc_flow asserts the count) and banks
+## post_game the same beat. Skippable in real play via the SAME confirm/cancel
+## advance the opener uses (_unhandled_input below now covers both modes).
+##
+## TRIGGER CHOICE (A4 judgment): dialogue-end, NOT the next sleep. It is the more
+## cinematic beat (Zevara's seal line → fade to black, no walk-home gap) AND it
+## structurally SIDESTEPS the epilogue×consolidation collision the AF review
+## flagged: a consolidation OFFER only ever fires at a SLEEP, never at a
+## dialogue-end, so the epilogue reveal and the consolidation modal can NEVER
+## contend for the same frame. The first free-play sleep after the epilogue still
+## routes through the ordinary sleep path above, which already defers to a
+## consolidation modal — so the two mechanisms stay fully independent by
+## construction (no shared trigger moment to arbitrate).
+##
+## ⚑ USER TASTE-REVIEW: the epilogue copy is the Fable draft (climax-copy §"The GDI
+## epilogue"), revisable via these constants. Opaque-safe: class names + levels
+## only, no stats; the bracketed GDI cadence matches the sleep/opener proclamations.
+const EPILOGUE_LINES_OPEN: Array[String] = [
+	"[You came to Liscor with nothing.]",
+	"[Now Liscor knows your name.]",
+]
+const EPILOGUE_LINES_CLOSE: Array[String] = [
+	"[The seal will hold. For now.]",
+	"[The world keeps counting.]",
+]
+const EPILOGUE_LINK_LINE := "— The story continues at wanderinginn.com —"
+const EPILOGUE_HOLD_BEFORE_TEXT := 0.8
+const EPILOGUE_LINE_HOLD := 1.6
+const EPILOGUE_READ_HOLD := 2.6
+
 ## Display-name maps loaded from data (presentation-only, exactly how content=
 ## data UI resolves labels): class ids -> raw names ("Warrior"), skill ids ->
 ## bracketed names ("[Basic Cleaning]"). Loaded once in _ready; independent of
@@ -140,6 +182,13 @@ var _consolidation := false
 ## is set by a confirm/cancel press to cut the current line's hold short.
 var _opener_running := false
 var _opener_advance := false
+
+## M-ARC Task A4 epilogue state. _epilogue_armed is set true by
+## accomplishment_recorded{raskghar_sealed} and consumed by the next
+## dialogue_ended (which plays the epilogue); _epilogue_running gates its
+## sequence. The skip flag is shared with the opener (_opener_advance).
+var _epilogue_running := false
+var _epilogue_armed := false
 
 
 func _ready() -> void:
@@ -197,6 +246,19 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIEvents.CONSOLIDATION_OFFERED:
 			if _running:
 				_consolidation = true
+		WIEvents.ACCOMPLISHMENT_RECORDED:
+			# A4: ARM the epilogue the instant the Raskghar is sealed (banked mid
+			# Zevara's seal dialogue). The reveal waits for the dialogue to END so
+			# her line lands first. raskghar_sealed banks exactly once (the seal
+			# option is hide_when-guarded), and accomplishment_recorded never
+			# re-emits on load, so this arms at most once per playthrough.
+			if String(payload.get("id", "")) == "raskghar_sealed":
+				_epilogue_armed = true
+		WIEvents.DIALOGUE_ENDED:
+			# A4: the armed epilogue plays as the seal conversation clears.
+			if _epilogue_armed:
+				_epilogue_armed = false
+				play_epilogue()
 
 
 ## Opens the collection window and queues the (single) deferred reveal. The
@@ -208,7 +270,7 @@ func _begin_sleep() -> void:
 	# SECOND veil coroutine over the shared _black/_line_box (a cosmetic un-black
 	# glitch); _opener_running blocks that until the opener has faded out and
 	# cleared. (play_opener has the mirror guard against a sleep already running.)
-	if _running or _opener_running:
+	if _running or _opener_running or _epilogue_running:
 		return
 	_running = true
 	_lines = []
@@ -224,7 +286,7 @@ func _begin_sleep() -> void:
 ## inn. QA/headless collapses to an instant coverage event; real play is paced +
 ## skippable via _unhandled_input below.
 func play_opener() -> void:
-	if _running or _opener_running:
+	if _running or _opener_running or _epilogue_running:
 		return
 	if _is_qa():
 		# Collapsed: no visible hold — record coverage the same beat, right after
@@ -269,12 +331,12 @@ func _wait_or_advance(seconds: float) -> void:
 		await get_tree().process_frame
 
 
-## The opener's ONE interactive touch (the sleep path never intercepts input):
-## while the cold open holds, confirm/cancel advances the current line and,
-## past the last, skips straight to the inn fade. Swallows only those two
-## actions so a replaying player is never held hostage.
+## The veil's ONLY interactive touch (the plain sleep path never intercepts
+## input): while the cold-open OR the epilogue holds, confirm/cancel advances the
+## current line and, past the last, skips straight to the fade. Swallows only
+## those two actions so a replaying/finishing player is never held hostage.
 func _unhandled_input(event: InputEvent) -> void:
-	if not _opener_running:
+	if not (_opener_running or _epilogue_running):
 		return
 	if event.is_action_pressed("confirm") or event.is_action_pressed("cancel"):
 		_opener_advance = true
@@ -285,6 +347,75 @@ func _emit_opener_rendered(count: int) -> void:
 	# M-ARC §5: carry the PC race so a QA script can assert the branch fired for
 	# the chosen race (line count is 4 for every race, so it can't distinguish).
 	ObservableBus.emit_domain_event(WIEvents.UI_GDI_OPENER_RENDERED, {"lines": count, "race": Game.sim.pc_race})
+
+
+## M-ARC Task A4 — the GDI epilogue. Called from the DIALOGUE_ENDED handler once
+## the seal beat has closed. Fades to black over the SAME world beneath, speaks
+## the arrival-mirroring close + the generated recount, then fades back to free
+## play and banks post_game. QA/headless collapses to an instant coverage event.
+func play_epilogue() -> void:
+	if _running or _opener_running or _epilogue_running:
+		return
+	# Hard once-only: if the ending was already witnessed, never re-fire (guards a
+	# stray dialogue_ended after a post-game load, though the arm is already
+	# once-only by raskghar_sealed's hide_when).
+	if Game.sim.accomplishment_count("post_game") > 0:
+		return
+	if _is_qa():
+		# Collapsed: record coverage + bank post_game the same beat, no visible hold.
+		_emit_epilogue_rendered(_epilogue_lines().size())
+		_bank_post_game()
+		return
+	_epilogue_running = true
+	_run_epilogue.call_deferred()
+
+
+## The full epilogue line list: the GDI open copy, the GENERATED per-class recount
+## (results-only — a class name + its level, the visible-tier rule), the close
+## copy, and the wanderinginn.com line. Read once; the QA-collapse and the paced
+## reveal share it so the emitted `lines` count always matches what rendered.
+func _epilogue_lines() -> Array[String]:
+	var lines: Array[String] = []
+	lines.append_array(EPILOGUE_LINES_OPEN)
+	# Recount straight from the sim snapshot: {class_id: level}, in the order the
+	# classes were earned (Dictionary insertion order). Names resolve through the
+	# same data-loaded map the sleep/opener lines use, so no raw id ever leaks.
+	var classes: Dictionary = Game.sim.snapshot().get("classes", {})
+	for cid: Variant in classes:
+		lines.append("[%s Level %d.]" % [_class_name(String(cid)), int(classes[cid])])
+	lines.append_array(EPILOGUE_LINES_CLOSE)
+	lines.append(EPILOGUE_LINK_LINE)
+	return lines
+
+
+func _run_epilogue() -> void:
+	_black.show()
+	await _fade(_black, 1.0)
+	await _wait(EPILOGUE_HOLD_BEFORE_TEXT)
+	var lines := _epilogue_lines()
+	for i in lines.size():
+		_add_line(String(lines[i]))
+		var last := i == lines.size() - 1
+		# Reuses the opener's confirm/cancel advance (_opener_advance) so the
+		# ending is skippable line-by-line, never a hostage hold.
+		await _wait_or_advance(EPILOGUE_READ_HOLD if last else EPILOGUE_LINE_HOLD)
+	_emit_epilogue_rendered(lines.size())
+	_bank_post_game()
+	await _fade(_black, 0.0)
+	_epilogue_running = false
+	_finish()
+
+
+## The one sim write the epilogue mode makes: "the ending was witnessed" is
+## genuine game state (the journal's Act III completed beat reads it; it guards
+## re-fire). Idempotent — banks post_game at most once.
+func _bank_post_game() -> void:
+	if Game.sim.accomplishment_count("post_game") == 0:
+		Game.sim.record_accomplishment("post_game")
+
+
+func _emit_epilogue_rendered(count: int) -> void:
+	ObservableBus.emit_domain_event(WIEvents.UI_GDI_EPILOGUE_RENDERED, {"lines": count})
 
 
 func _run_sequence() -> void:

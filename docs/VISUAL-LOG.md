@@ -16,6 +16,17 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] FIELD/DEEP_TUNNELS — the four M-ARC A2 flavor/threshold props
+  (`deep_fissure` sewers `(8,12)`, `cold_hearth`/`gnaw_pile`/`warren_mouth`
+  in deep_tunnels) all use the `boulder` sprite as a stand-in (a collapsed
+  fissure, a fire-pit, a bone midden, a gallery mouth). Reads acceptably as
+  rubble in the darkest cave grade and is consistent with the sewers'
+  `drainage_marker`/`nest_ledge` (also `boulder`), but bespoke sprites
+  (Track B / PixelLab) would read far better — the warren_mouth especially
+  wants a real widened-gallery/pillar-mouth tile. First-seen 2026-07-06
+  (A2, uncommitted). Off the combat spine; low priority. The two Raskghar
+  COMBATANTS themselves are real bespoke PixelLab sprites (not stand-ins).
+
 - [ ] FIELD/SEWERS — `nest_ledge` (Content Wave C3 Q1 SKILL-path [Observe]
   prop, sewers `(17,10)`) uses the `boulder` sprite as a stand-in for "a
   broken brick overlook lip" — consistent with the sewers' `drainage_marker`

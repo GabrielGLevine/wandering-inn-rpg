@@ -200,6 +200,14 @@ func _execute(step: Dictionary) -> void:
 		"assert_event_absent":
 			if _has_event(String(step["type"]), step.get("payload_contains", {})):
 				_fail("expected event to be absent but it was emitted: " + String(step["type"]))
+		"assert_event_count":
+			# M-ARC A4: assert an event fired EXACTLY N times over the whole run
+			# (arc_flow proves the epilogue rendered once and never re-fired --
+			# absence will not do, since it DID fire once). Scans the full log like
+			# _has_event, counting matches.
+			var got := _count_events(String(step["type"]), step.get("payload_contains", {}))
+			if got != int(step["count"]):
+				_fail("event count mismatch for %s: expected %d, got %d" % [String(step["type"]), int(step["count"]), got])
 		"assert_save_exists":
 			var slot := String(step["slot"])
 			if not FileAccess.file_exists("user://saves/%s.json" % slot):
@@ -283,6 +291,15 @@ func _has_event(type: String, subset: Dictionary = {}) -> bool:
 		if _event_matches(e, type, subset):
 			return true
 	return false
+
+
+## M-ARC A4: how many logged events match type/subset (assert_event_count).
+func _count_events(type: String, subset: Dictionary = {}) -> int:
+	var n := 0
+	for e: Dictionary in _events_seen:
+		if _event_matches(e, type, subset):
+			n += 1
+	return n
 
 
 ## Returns the index of the first event at or after `from_index` matching

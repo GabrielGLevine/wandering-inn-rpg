@@ -183,6 +183,17 @@ const UI_SLEEP_VEIL_RENDERED := &"ui_sleep_veil_rendered"
 ## opener collapses to instant and this fires synchronously right after
 ## world_ready, so title_flow can assert it deterministically.
 const UI_GDI_OPENER_RENDERED := &"ui_gdi_opener_rendered"
+## M-ARC Task A4 (the GDI epilogue -- the veil's THIRD mode): emitted by
+## src/ui/sleep_veil.gd once the post-victory epilogue's Grand Design lines are
+## laid out, carrying {lines:int} = how many epilogue lines rendered (the GDI
+## open/close copy + the GENERATED per-class recount + the wanderinginn.com
+## line). Fires ONCE, the beat after `raskghar_sealed` banks (armed by that
+## accomplishment_recorded, played on the following dialogue_ended). Same
+## additive ui_*_rendered idiom as the opener; under QA/headless the epilogue
+## collapses to instant and this fires synchronously so arc_flow can assert the
+## line count. The epilogue's completion banks `post_game` (its re-fire guard +
+## the journal Act III completed beat), so this event never re-emits.
+const UI_GDI_EPILOGUE_RENDERED := &"ui_gdi_epilogue_rendered"
 ## M-ARC §5 character creation: emitted by src/ui/char_creation.gd each time the
 ## creation screen (re)renders a step, carrying {step:String} where step is
 ## "race"/"gender"/"name" -- lets the char_creation QA script wait on the real

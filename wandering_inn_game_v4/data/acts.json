@@ -29,7 +29,8 @@
 			"header": "Act III -- What Stirs Beneath",
 			"advance_when": { "accomplishments": { "raskghar_sealed": 1 } },
 			"beats": [
-				{ "id": "the_stirring", "text": "Something is moving in the dark beneath the city.", "when": { "accomplishments": { "raskghar_sealed": 1 } } }
+				{ "id": "the_stirring", "text": "Something is moving in the dark beneath the city.", "when": { "accomplishments": { "raskghar_sealed": 1 } } },
+				{ "id": "seal_holds", "text": "The seal holds. Liscor counts you among its own.", "when": { "accomplishments": { "post_game": 1 } } }
 			]
 		}
 	]

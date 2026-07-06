@@ -14,8 +14,8 @@
 #
 # --- CANONICAL LIST ---------------------------------------------------------
 # No qa/ manifest exists, so this list is HARDCODED and MIRRORS the
-# "Canonical QA seed table" in wandering_inn_game_v4/CLAUDE.md (45 headless
-# scripts as of M-ARC A3 — C1 added sewers_walkthrough [34]; C3 adds
+# "Canonical QA seed table" in wandering_inn_game_v4/CLAUDE.md (46 headless
+# scripts as of M-ARC A4 — C1 added sewers_walkthrough [34]; C3 adds
 # cisterns_fight / cisterns_talk / cisterns_scout [35-37]; C4 adds
 # wrong_order_loop / wrong_order_talk / wrong_order_fight [38-40]; Economy v1 D4
 # adds economy_loop [41]; M-ARC §5 adds char_creation [42] (no seed — drives the
@@ -24,8 +24,12 @@
 # governs both fights, EXTENDED A3 through the JOIN boss victory); M-ARC A3 adds
 # climax_chain [44] (the tremor beat: sleep pointer + Zevara summons + Olesm
 # briefing, fixture climax_surface_start) and climax_seal [45] (the seal beat +
-# journal Act III + Olesm resolution, fixture climax_sealed_start) — both
-# fixture-based, no seed search. The party-VETO/solo path is a unit-level roster
+# journal Act III + Olesm resolution, fixture climax_sealed_start); M-ARC A4 adds
+# arc_flow [46] (THE WHOLE-ARC PROOF — fixture near_act3 drives tremor→summons→
+# briefing→descent→JOIN boss victory→seal→the GDI EPILOGUE EVENT→post_game→
+# post-game greeting→free-play; the surface arc consumes zero rng so the boss
+# sits at deep_descent's winning determinism). All fixture-based, no seed search.
+# The party-VETO/solo path is a unit-level roster
 # proof (test_combat_data._check_boss_veto_roster) per the user descope, not a
 # canonical script — tutorial_flow is
 # canonical; level_up_loop / defeat_ally_alive / combat_move_input / crate_fight /
@@ -89,6 +93,7 @@ CANON=(
 	"deep_descent:9"
 	"climax_chain:9"
 	"climax_seal:9"
+	"arc_flow:9"
 )
 
 ONLY=""
