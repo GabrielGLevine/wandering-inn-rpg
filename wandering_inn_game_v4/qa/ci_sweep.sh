@@ -141,6 +141,17 @@ for pair in "${RUNLIST[@]}"; do
 	if [ "$RC" -ne 0 ]; then
 		echo "FAIL  $NAME — run_qa.sh exit $RC (124=alarm/timeout)"
 		SCRIPT_FAIL=1
+		# Evidence dump: on CI the qa_output dir dies with the runner — print
+		# the failing assertions + the run log tail so the workflow log alone
+		# is diagnosable (added after two undiagnosable release-run reds).
+		RESULT="$HERE/../qa_output/$NAME/result.json"
+		if [ -f "$RESULT" ]; then
+			echo "----- $NAME result.json failures -----"
+			python3 -c "import json;d=json.load(open('$RESULT'));[print('  ' + str(f)) for f in d.get('failures', [])[:10]]" 2>/dev/null || true
+		fi
+		echo "----- $NAME run log tail -----"
+		tail -n 25 "$LOG" | sed 's/^/    /'
+		echo "----- end $NAME evidence -----"
 	fi
 
 	# Grep discipline: any SCRIPT ERROR / Parse Error / WARNING is a failure.

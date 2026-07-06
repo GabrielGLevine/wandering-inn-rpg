@@ -1,5 +1,5 @@
 {
- "_comment": "UI wave item 19: journal skills-by-class panel. No combat in the path -- seed held for convention consistency (title_flow/lantern_check precedent). ONBOARDING O5: classless start (data/skeleton_scene.json player.classes {}) means fresh boot shows ONLY the 'Innate' group (basic_cleaning), skill_count 1 -- the old ['Innate','Warrior']/5 payload was the pre-classless baseline. 'revealed_skills' empty proves the pre-first-use NAME-ONLY state. Closes, uses the Innate [Basic Cleaning] skill via the dirty_table prop (the same interact path test_sim_core.gd's unit test drives -- innate, unaffected by classlessness), then re-opens the journal and asserts 'basic_cleaning' now appears in 'revealed_skills' -- the first-use reveal, end-to-end through the real UI. Canonical seed: 9.",
+ "_comment": "UI wave item 19: journal skills-by-class panel. No combat in the path -- seed held for convention consistency (title_flow/lantern_check precedent). ONBOARDING O5: classless start (data/skeleton_scene.json player.classes {}) means fresh boot shows ONLY the 'Innate' group (basic_cleaning), skill_count 1 -- the old ['Innate','Warrior']/5 payload was the pre-classless baseline. 'revealed_skills' empty proves the pre-first-use NAME-ONLY state. Closes, uses the Innate [Basic Cleaning] skill via the dirty_table prop (the same interact path test_sim_core.gd's unit test drives -- innate, unaffected by classlessness), then re-opens the journal and asserts 'basic_cleaning' now appears in 'revealed_skills' -- the first-use reveal, end-to-end through the real UI. M-ARC Task A1: both journal opens also assert the new act-line payload fields -- fresh classless pre-street boot is Act I (`act_id`:'act_i', `act_beats`:2, `act_beats_achieved`:0, since no class + not reached_liscor). Canonical seed: 9.",
  "steps": [
   {
    "action": "wait_for_event",
@@ -16,7 +16,10 @@
    "payload_contains": {
     "skill_groups": ["Innate"],
     "skill_count": 1,
-    "revealed_skills": []
+    "revealed_skills": [],
+    "act_id": "act_i",
+    "act_beats": 2,
+    "act_beats_achieved": 0
    },
    "timeout_sec": 5
   },
@@ -80,7 +83,10 @@
    "payload_contains": {
     "skill_groups": ["Innate"],
     "skill_count": 1,
-    "revealed_skills": ["basic_cleaning"]
+    "revealed_skills": ["basic_cleaning"],
+    "act_id": "act_i",
+    "act_beats": 2,
+    "act_beats_achieved": 0
    },
    "timeout_sec": 5
   },

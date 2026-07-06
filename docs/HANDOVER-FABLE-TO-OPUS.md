@@ -197,3 +197,52 @@ The failures are the instructive part:
    DISTINCT classes and left one self-contradictory QA comment (caught in
    polish). For id renames: grep for files using BOTH ids first; those need
    hand-rework, not sed.
+
+## 9. Learnings from the final Fable sprint (2026-07-05/06 — two milestone-dense days)
+
+The densest stretch of the project: Onboarding, Three Pillars,
+M-RELEASE build-out, Social Pillar, Content Wave, Economy v1, M-JUICE
+core, and the M-ARC cold open all closed with clean opus verdicts; the
+public repo + CI + itch deploy pipeline went live. What made it work,
+for whoever coordinates next:
+
+1. **The per-track rhythm is the unit of safety**: implement (Opus
+   subagent, NO-COMMIT, foreground-only verification in the brief
+   verbatim) → controller reads the windowed evidence WITH OWN EYES →
+   commit → sync public → next task. Whole-track opus review before the
+   track closes. Never two implementers on overlapping files; parallel
+   lanes only with explicitly disjoint surfaces (and a transient-red
+   re-run rule in both briefs).
+2. **Expected-red windows scale**: S2 measured a 28-script red set,
+   invoked the plan's subset valve, disclosed 10, and S4 closed them.
+   The pattern (disclose → don't fix mid-window → a dedicated Q-task
+   closes) has now worked at every size. The valve (ship a SUBSET of
+   content to cap the window) is as important as the window itself.
+3. **Design-time state corrections beat perfect specs**: every plan
+   carries a "plan-time corrections" header; every brief carries
+   "the plan text may be stale, these corrections override." Specs
+   written days ago are ALWAYS somewhat wrong by execution time.
+4. **User-taste gates are cheap to honor**: ship the mechanism, flag
+   the copy/pick (veil evolution-form, opener lines, ding choice,
+   Erin/Relc pools) — one-line revisable, never blocking, never silent.
+5. **The user's directives compound**: max-fidelity, content-never-
+   gates-playtests, diegetic-gold, nothing-cut-for-licensing (private
+   bundle carries restricted assets; flag downgrades FIRST). Read the
+   ROADMAP amendments + HANDOFF queue at session start; they are the
+   real spec.
+6. **Fable-tier judgment lived in**: plan authorship, canon adjudication
+   (three wiki-miss substitutions shipped canon-true), review-verdict
+   triage, and reading screenshots skeptically (the sweep-clobber,
+   the glyph-artifact, the flat channels). Opus subagents executed
+   everything else excellently — including catching MY brief errors
+   (classless-hotbar assumption, Lyonette's hair). Trust the
+   implementers' corrections; verify their claims.
+7. **Infrastructure pays same-day**: the public repo's first CI run
+   caught two real defects; the deploy rehearsal caught two script
+   bugs; the first tag caught a dead host. Rehearse pipelines BEFORE
+   they matter; every failure became a one-line fix + a skill entry.
+8. **Skills are the durable memory**: wi-shipping now holds the deploy
+   playbook; wi-art-and-sprites holds the PixelLab v1+v2 recipes;
+   wi-running-the-machine holds the misfire + integration-rehearsal
+   patterns. Post-Fable sessions: propose skill edits via HANDOFF,
+   never edit directly (library governance stands).
