@@ -1,5 +1,5 @@
 {
-	"_comment": "Content Wave C2: Olesm Swifttail, Drake [Tactician] / council clerk at the Liscor Guild frontage. Canon (wiki.wanderinginn.com/Olesm_Swifttail): thin, sky-blue-scaled Drake with wildly-patterned blue eyes; earnest, slightly awkward, chess-obsessed, free of the usual Drake prejudices, meticulous with maps and counts; a human once surpassed him at chess and it delighted rather than angered him. The 'resonance' branch is the game's FIRST class-recognition beat -- its entry OPTION and the hub greeting text_variant both gate on classes.tactician (WIDialogue._meets reads _ctx['classes'], id->level; a class gate is visible-but-locked, so a non-Tactician sees the option greyed as a deliberate tease). The 'cisterns' node is a FORESHADOW STUB ONLY -- it does NOT bank heard_about_cisterns. Task C3 extends it into the Q1 'Something in the Cisterns' quest-giver beat (add the effect that banks heard_about_cisterns, which opens the C1 sewer-grate door_when and starts the quest). Opacity rule: no stats shown; class NAME only.",
+	"_comment": "Content Wave C2+C3: Olesm Swifttail, Drake [Tactician] / council clerk at the Liscor Guild frontage. Canon (wiki.wanderinginn.com/Olesm_Swifttail): thin, sky-blue-scaled Drake with wildly-patterned blue eyes; earnest, slightly awkward, chess-obsessed, free of the usual Drake prejudices, meticulous with maps and counts; a human once surpassed him at chess and it delighted rather than angered him. The 'resonance' branch is the game's FIRST class-recognition beat -- its entry OPTION and the hub greeting text_variant both gate on classes.tactician (WIDialogue._meets reads _ctx['classes'], id->level; a class gate is visible-but-locked, so a non-Tactician sees the option greyed as a deliberate tease). C3: the 'cisterns' node is now the Q1 'Something in the Cisterns' GIVER + three-path REPORT hub. The accept option banks heard_about_cisterns (opens the C1 sewer-grate door_when) + starts the `cisterns` quest; cisterns_brief is the explaining beat (what/where/how per onboarding S9). Three report options gate on the path counters (cleared_the_nest / watch_swept_cisterns / scouted_the_nest); the SKILL report ALSO banks resolved_the_cisterns (the other two banked it at resolution time). All bank cisterns_reported + commended_by_olesm (a flavor/standing reward -- Track D gold hasn't landed and a physical loot-drop from a clerk's survey reads oddly; the dialogue {item} effect exists but is deliberately unused here). Opacity rule: no stats shown; class NAME only; report/quest text carries no counter numerals.",
 	"start": "hub",
 	"nodes": {
 		"hub": {
@@ -51,10 +51,43 @@
 		},
 		"cisterns": {
 			"speaker": "Olesm",
-			"text": "Worried is the professional term, yes. The market's had reports — things moving under the grates, a cistern gone foul, a fishmonger who swears something looked back at him from the dark. Probably nothing. I do not care for probably-nothings under a walled city. I'm... still deciding what to do about it.",
+			"text": "Worried is the professional term, yes. The market's had reports — things moving under the grates, a cistern gone foul, a fishmonger who swears something looked back at him from the dark. Probably nothing. I do not care for probably-nothings under a walled city. ...Actually. You have the look of someone who finishes things. Would you go down and settle it?",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "heard_about_cisterns": 1 } }, "text": "You're back. The cisterns — any word? The grate's open now, and whatever's nesting down there will not count itself." },
+				{ "requires": { "accomplishment": { "cleared_the_nest": 1 } }, "text": "You've the look of someone who's swung a blade recently. The nest under the market — is it settled? Tell me straight." },
+				{ "requires": { "accomplishment": { "watch_swept_cisterns": 1 } }, "text": "Word from the gate says the Watch moved on the cisterns. Was that your doing? I want to hear how it fell out." },
+				{ "requires": { "accomplishment": { "scouted_the_nest": 1 } }, "text": "You came back with your skin — and, unless I misread you, with a picture in your head. You mapped it, didn't you. Show me." },
+				{ "requires": { "accomplishment": { "cisterns_reported": 1 } }, "text": "The cisterns are off my ledger and onto the Council's, thanks to you. Quiet streets. I could get used to it." }
+			],
 			"options": [
+				{ "text": "I'll look into it. Where do I start?", "hide_when": { "accomplishment": { "heard_about_cisterns": 1 } }, "effects": [ { "quest": "cisterns" }, { "accomplishment": "heard_about_cisterns" } ], "goto": "cisterns_brief" },
+				{ "text": "It's dealt with — I cleared the nest myself.", "requires": { "accomplishment": { "cleared_the_nest": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "effects": [ { "accomplishment": "cisterns_reported" }, { "accomplishment": "commended_by_olesm" } ], "goto": "cisterns_done" },
+				{ "text": "The Watch swept it — Captain Zevara's people handled it.", "requires": { "accomplishment": { "watch_swept_cisterns": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "effects": [ { "accomplishment": "cisterns_reported" }, { "accomplishment": "commended_by_olesm" } ], "goto": "cisterns_done" },
+				{ "text": "I didn't fight it. I mapped it — the nest, the count, the exits. [Observe]", "requires": { "accomplishment": { "scouted_the_nest": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "effects": [ { "accomplishment": "resolved_the_cisterns" }, { "accomplishment": "cisterns_reported" }, { "accomplishment": "commended_by_olesm" } ], "goto": "cisterns_intel" },
 				{ "text": "Let me know if it turns into a something.", "goto": "hub" },
 				{ "text": "I'll keep an ear out.", "end": true }
+			]
+		},
+		"cisterns_brief": {
+			"speaker": "Olesm",
+			"text": "Thank you. Here's what I have. What: something's nested in the old cisterns under the market — the reports say spiders, big ones, silver-backed, the kind that climb up from the Dungeon when a wall cracks. Where: down the green sewer-grate off the south square. It's rusted, but it'll open now that someone official wants it open. How: I genuinely don't mind. Put a blade through it, get the Watch to sweep it, or just bring me a proper picture of what's down there — count, size, exits. A map is as good as a corpse to me, and cheaper in bandages. Settle it however suits you, then come tell me it's done.",
+			"options": [
+				{ "text": "Understood. I'll head down.", "goto": "hub" },
+				{ "text": "On it.", "end": true }
+			]
+		},
+		"cisterns_done": {
+			"speaker": "Olesm",
+			"text": "Then it's over, and the city's quieter for it. That's real work — the kind nobody thanks you for, so let me be the exception. You've the Council's gratitude, and mine, which comes with more paperwork but rather more warmth. If you ever want a game, or a job that needs a clear head, you know where the board is.",
+			"options": [
+				{ "text": "Anytime, Olesm.", "end": true }
+			]
+		},
+		"cisterns_intel": {
+			"speaker": "Olesm",
+			"text": "...Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away — the whole shape of the problem on one page. Now the Watch goes in knowing the ground instead of bleeding to learn it. A map IS as good as a corpse, and I have never once gotten to say that to someone who agreed. Take the Council's thanks — and mine, doubled, because you did it the clever way.",
+			"options": [
+				{ "text": "Glad it's useful.", "end": true }
 			]
 		}
 	}

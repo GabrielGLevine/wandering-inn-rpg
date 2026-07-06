@@ -16,6 +16,13 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] FIELD/SEWERS — `nest_ledge` (Content Wave C3 Q1 SKILL-path [Observe]
+  prop, sewers `(17,10)`) uses the `boulder` sprite as a stand-in for "a
+  broken brick overlook lip" — consistent with the sewers' `drainage_marker`
+  (also `boulder`), reads acceptably in the dark cave grade, but a bespoke
+  ledge/broken-wall sprite (Track B / PixelLab) would read better. First-seen
+  2026-07-06 (C3, uncommitted). Off the combat spine; low priority.
+
 - [x] FIELD — dormant (respawns:true) encounters look identical to live
   ones after defeat — a "resting/cleared" visual state would stop them
   reading as bugs — user playtest 2026-07-04 — FIXED by Track B2 item 6

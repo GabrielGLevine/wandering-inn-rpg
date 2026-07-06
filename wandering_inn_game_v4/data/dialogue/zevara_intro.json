@@ -1,13 +1,16 @@
 {
-	"_comment": "Content Wave C2: Zevara Sunderscale, Oldblood Drake Watch Captain of Liscor, posted at the gate. Canon (wiki.wanderinginn.com/Zevara): light-blue scales, a scar down the left of her jaw, tall; dry, perpetually overworked, rigidly procedural, refuses bribes, no personal life (six weeks' leave in ten years); her Senior Guardsmen are Relc (a [Spearmaster]) and Klbkch (an Antinium). The 'persuade' branch banks persuaded_someone -- the SAME [Diplomat] identity feed watch_crate already produces (classes.json diplomat.gained_by {persuaded_someone:1, heard_gossip:3}); it is one-time via hide_when so it can't re-bank, and its entry sits behind that hide_when so the persuade node is unreachable once banked. The spec's 'gate_guard defers to her' beat is carried on ZEVARA'S side ('authority' node references the guard) rather than by editing gate_guard's dialogue[0]/talk_pool, both of which gate_district_walkthrough + social_loop assert VERBATIM. Opacity rule: class NAME only, no stats.",
+	"_comment": "Content Wave C2+C3: Zevara Sunderscale, Oldblood Drake Watch Captain of Liscor, posted at the gate. Canon (wiki.wanderinginn.com/Zevara): light-blue scales, a scar down the left of her jaw, tall; dry, perpetually overworked, rigidly procedural, refuses bribes, no personal life (six weeks' leave in ten years); her Senior Guardsmen are Relc (a [Spearmaster]) and Klbkch (an Antinium). C3: the old generic persuade branch is now the Q1 'Something in the Cisterns' TALK path -- a Watch-sweep persuade CHAIN (sweep_pitch -> sweep_argue -> swept), gated VISIBLE once heard_about_cisterns is banked (the quest is open) and HIDDEN once watch_swept_cisterns is banked (per the sergeant precedent). The winning option banks persuaded_someone ([Diplomat] identity feed, same as watch_crate) + watch_swept_cisterns + resolved_the_cisterns (Q1 beat-1 convergence) and remove_entity shield_spiders (the Watch clears the nest -- remove_entity precedent). The hub gains a post-completion WITNESS text_variant gated on resolved_the_cisterns (any path). The spec's 'gate_guard defers to her' beat stays on ZEVARA'S side (the 'authority' node) rather than editing gate_guard, which gate_district_walkthrough + social_loop assert VERBATIM. NO canonical script asserted this graph before C3 (C2's probe was deleted); cisterns_talk is its first canonical coverage. Opacity rule: class NAME only, no stats, no counter numerals.",
 	"start": "hub",
 	"nodes": {
 		"hub": {
 			"speaker": "Zevara",
 			"text": "Watch Captain Zevara. If this is a report, keep it short; if it's a complaint, keep it shorter. I've been on since before the gate opened and I'll be on after it shuts.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "resolved_the_cisterns": 1 } }, "text": "The thing under the market — I hear it's handled. Good. I sleep worse than you'd think over not knowing what's beneath my own streets. However you settled it, the Watch owes you a quiet night. Don't tell the others I said so." }
+			],
 			"options": [
 				{ "text": "Long shift?", "goto": "shift" },
-				{ "text": "Actually — the Watch could help me with something.", "hide_when": { "accomplishment": { "persuaded_someone": 1 } }, "goto": "persuade" },
+				{ "text": "The cisterns under the market — I need the Watch to sweep them.", "requires": { "accomplishment": { "heard_about_cisterns": 1 } }, "hide_when": { "accomplishment": { "watch_swept_cisterns": 1 } }, "goto": "sweep_pitch" },
 				{ "text": "Just getting my bearings.", "end": true }
 			]
 		},
@@ -28,20 +31,28 @@
 				{ "text": "Understood, Captain.", "end": true }
 			]
 		},
-		"persuade": {
+		"sweep_pitch": {
 			"speaker": "Zevara",
-			"text": "Help. From the Watch. That isn't a favour, it's a requisition, and requisitions come with forms. Convince me it's worth the ink.",
+			"text": "Sweep the cisterns. You know what a sweep costs? Six Watchmen off the wall, lanterns, a healer on standby, and a form in triplicate explaining to the Council why the wall was six thin. Give me one reason worth the ink.",
 			"options": [
-				{ "text": "If it's under the city and it's moving, it's already Watch business — I'm just the one telling you first.", "effects": [ { "accomplishment": "persuaded_someone" } ], "goto": "persuaded" },
-				{ "text": "Never mind — forget I asked.", "end": true }
+				{ "text": "If it's under the city and it's moving, it's already Watch business — I'm just the one telling you before it's an emergency instead of a form.", "goto": "sweep_argue" },
+				{ "text": "Forget I asked.", "end": true }
 			]
 		},
-		"persuaded": {
+		"sweep_argue": {
 			"speaker": "Zevara",
-			"text": "...Hm. First sentence anyone's given me today that didn't waste a word. Fine — you've made your case; I'll put eyes on it. And I'll remember you argue clean. That's rarer than you'd think on my side of the gate.",
+			"text": "...Before it's an emergency. Hm. You argue like someone who's read a casualty report. Fine — make it plain. What am I actually sending them into?",
 			"options": [
-				{ "text": "That's all I ask.", "goto": "hub" },
-				{ "text": "Appreciated, Captain.", "end": true }
+				{ "text": "A nest. Silver-backed spiders, crept up from the Dungeon. Small now. It won't be small next month.", "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "watch_swept_cisterns" }, { "accomplishment": "resolved_the_cisterns" }, { "remove_entity": "shield_spiders" } ], "goto": "swept" },
+				{ "text": "Actually — never mind.", "end": true }
+			]
+		},
+		"swept": {
+			"speaker": "Zevara",
+			"text": "Spiders from the Dungeon. Wonderful. That's exactly the small-now-large-later I'd rather pay for in overtime than in funerals. Consider it swept — I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing it to me clean, before it had teeth. Go tell whoever set you on this that the Watch has it. And — good work. That's rarer from my side of the gate than you'd think.",
+			"options": [
+				{ "text": "That's all I ask, Captain.", "goto": "hub" },
+				{ "text": "Appreciated.", "end": true }
 			]
 		}
 	}

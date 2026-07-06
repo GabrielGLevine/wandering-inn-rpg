@@ -3131,8 +3131,26 @@
      ],
      "allies": [],
      "on_victory": [
-      "cleared_the_nest"
+      "cleared_the_nest",
+      "resolved_the_cisterns"
      ]
+    },
+    {
+     "_comment": "Content Wave C3 Quest 1 SKILL path: the walkway ledge overlooking the Shield Spider nest. Mirrors the crate quest's cellar_door [Light] shape -- `requires_skill: observe` + `on_skill_use` banks `scouted_the_nest` deterministically (single accomplishment, zero rng). Both interact (E, facing it -> interact()'s prop branch use_skill('observe', id) fallback) and the field [Observe] hotbar (use_skill_field -> the requires_skill==observe && on_skill_use branch) route through the SAME use_skill seam, so the bank + toast are identical either way; the generic observe-string path never fires for this prop (the requires_skill+on_skill_use branch is checked first). `locked_toast` gates gracefully when [Observe] is unknown (no skill-name leak). Placed at (17,10) on the right walkway, one cell east of the open nest floor -- reachable WITHOUT interacting the interact-only shield_spiders at (15,10), so scouting never trips the fight. Sprite `boulder` is a stand-in (a broken brick lip) consistent with the drainage_marker; VISUAL-LOG flag.",
+     "id": "nest_ledge",
+     "kind": "prop",
+     "cell": [
+      17,
+      10
+     ],
+     "display_name": "Overlook Ledge",
+     "sprite": "boulder",
+     "requires_skill": "observe",
+     "on_skill_use": {
+      "accomplishment": "scouted_the_nest",
+      "toast": "[Observe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper — that's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
+     },
+     "locked_toast": "The ledge overlooks the nest — a perfect vantage, if you had the eye to read one. You don't, quite. Not yet."
     }
    ]
   }

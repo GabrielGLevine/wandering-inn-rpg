@@ -15,6 +15,15 @@
 				{ "id": "find", "description": "Find out what happened to Krshia's missing crate near the south-square sewers.", "complete_when": { "found_the_crate": 1 } },
 				{ "id": "report", "description": "Tell Krshia what became of her crate.", "complete_when": { "crate_returned": 1 } }
 			]
+		},
+		{
+			"_comment": "Content Wave C3 Quest 1, three-path parity (crate precedent). Beat 1 `resolve` is the SHARED convergence counter `resolved_the_cisterns`, banked by ANY path: FIGHT (shield_spiders on_victory), TALK (Zevara sweep option), or SKILL (banked at Olesm's intel-report, since [Observe] alone only banks scouted_the_nest). Beat 2 `report` (`cisterns_reported`) is Olesm's completion, banked at report time on all three paths (the SKILL report banks resolve+report together, firing both beats at once -- crate guile precedent). heard_about_cisterns (the grate-gate + quest-start) is NOT a beat; it only opens the door.",
+			"id": "cisterns",
+			"title": "Something in the Cisterns",
+			"beats": [
+				{ "id": "resolve", "description": "Settle whatever has nested in the cisterns beneath the market -- however you see fit.", "complete_when": { "resolved_the_cisterns": 1 } },
+				{ "id": "report", "description": "Report the outcome to Olesm at the Guild.", "complete_when": { "cisterns_reported": 1 } }
+			]
 		}
 	]
 }

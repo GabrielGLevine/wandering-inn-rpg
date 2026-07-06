@@ -1,0 +1,27 @@
+{
+ "_comment": "Content Wave C3 Quest 1 TALK path start. post_tutorial shape (warrior L1) standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). The TALK path resolves the quest by persuading Watch Captain Zevara (gate, 2,6) to sweep the nest -- NO combat anywhere in the run (its whole point). heard_about_cisterns is NOT banked and the quest NOT started; the script proves give (Olesm) -> persuade (Zevara) -> report (Olesm) -> completion. No rng consumer, so rng_state is cosmetic; kept 9 for convention.",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [29, 4],
+  "player_facing": [0, -1],
+  "classes": { "warrior": 1 },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1
+  },
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword", "relcs_spare_spear"],
+  "equipped": { "weapon": "rusty_sword", "armor": "" },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}
