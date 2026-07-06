@@ -151,6 +151,11 @@ for pair in "${RUNLIST[@]}"; do
 		fi
 		echo "----- $NAME run log tail -----"
 		tail -n 25 "$LOG" | sed 's/^/    /'
+		EVENTS="$HERE/../qa_output/$NAME/events.jsonl"
+		if [ -f "$EVENTS" ]; then
+			echo "----- $NAME last 15 events (what happened before the stall) -----"
+			tail -n 15 "$EVENTS" | sed 's/^/    /'
+		fi
 		echo "----- end $NAME evidence -----"
 	fi
 
