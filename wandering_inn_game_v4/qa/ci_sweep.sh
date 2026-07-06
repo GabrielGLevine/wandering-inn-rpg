@@ -65,6 +65,7 @@ CANON=(
 	"atmosphere_check:9"
 	"field_skills_loop:9"
 	"social_loop:9"
+	"sewers_walkthrough:9"
 )
 
 ONLY=""

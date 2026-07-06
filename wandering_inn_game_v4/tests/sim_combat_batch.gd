@@ -69,6 +69,21 @@ const LOADOUT_CELLS := [
 	{"name": "warrior2_mage2_gambeson", "comp": "chieftains_raid", "build": "warrior2_mage2", "weapon": "rusty_sword", "armor": "watch_issue_gambeson"},
 ]
 
+## Content Wave C1: MEASURED-only cells for the two new sewers encounters
+## (shield_spider nest + sewer_vermin trash). Self-contained -- each carries
+## its own arena/enemies/build (never touching COMPOSITIONS/BUILDS or the
+## gated matrix above), so a new content encounter can never redden a balance
+## gate. `build` names a BUILDS entry (resolved for its `classes`); `solo`
+## drops Relc. warrior2 is the representative level a player enters the sewers
+## at. Numbers are recorded to the report, not bounded (a nest fight's
+## difficulty is content, not a win-rate contract).
+const ENCOUNTER_CELLS := [
+	{"name": "shield_spiders_w2_relc", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior2", "solo": false},
+	{"name": "shield_spiders_w2_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior2", "solo": true},
+	{"name": "shield_spiders_w1_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior1_tutorial", "solo": true},
+	{"name": "sewer_vermin_w2_solo", "arena": "sewers_nest", "enemies": ["sewer_vermin", "sewer_vermin"], "build": "warrior2", "solo": true},
+]
+
 const BUILDS := [
 	## The TUTORIAL profile: the player's actual first fight (street
 	## goblin_encounter_2 -> arena goblin_ambush) is fought at warrior 1 --
@@ -298,10 +313,57 @@ func _init() -> void:
 		if has_relc:
 			print("  relc_downed_rate=%.2f (%d/%d)" % [float(relc_downed) / float(RUNS_PER_CELL), relc_downed, RUNS_PER_CELL])
 
+	## Content Wave C1: sewers encounter axis. Measured-only -- mirrors the main
+	## loop's construction (build pc from the named BUILDS entry's classes,
+	## optional Relc, enemies) with the cell's own inline arena/enemies.
+	for cell: Dictionary in ENCOUNTER_CELLS:
+		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
+		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
+		var wins := 0
+		var rounds: Array[int] = []
+		var relc_downed := 0
+		var has_relc := not bool(cell.get("solo", false))
+		for seed_v in range(1, RUNS_PER_CELL + 1):
+			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
+			pc["ai"] = String(build.get("ai", "melee"))
+			pc["stats"] = WIProgression.apply_stat_bonuses(pc["stats"], build["classes"], classes)
+			pc["skills"] = WIProgression.granted_skills(build["classes"], classes)
+			var cfgs: Array = [pc]
+			if has_relc:
+				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
+			for enemy_id: String in cell["enemies"]:
+				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
+			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			combat.begin()
+			var guard := 0
+			while not combat.finished and guard < 2000:
+				guard += 1
+				WICombatAI.take_turn(combat)
+			assert(combat.finished, "encounter %s fight %d did not terminate" % [cell["name"], seed_v])
+			if combat.outcome["victory"]:
+				wins += 1
+			rounds.append(int(combat.outcome["rounds"]))
+			if has_relc and not bool(combat.combatants.get("relc", {}).get("alive", true)):
+				relc_downed += 1
+
+		rounds.sort()
+		var win_rate := float(wins) / float(RUNS_PER_CELL)
+		var median: int = rounds[RUNS_PER_CELL / 2]
+		var hist := {}
+		for r: int in rounds:
+			hist[r] = int(hist.get(r, 0)) + 1
+		print("[encounter / %s] arena=%s build=%s%s (measured) win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+			cell["name"], String(cell["arena"]), String(cell["build"]),
+			"" if has_relc else " solo", win_rate, median, rounds[0], rounds[-1],
+		])
+		print("  rounds histogram: ", hist)
+		if has_relc:
+			print("  relc_downed_rate=%.2f (%d/%d)" % [float(relc_downed) / float(RUNS_PER_CELL), relc_downed, RUNS_PER_CELL])
+
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:
 		# Asserts are stripped in release templates; keep the exit code honest there too.
 		quit(1)
 		return
-	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size(), RUNS_PER_CELL])
+	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size(), RUNS_PER_CELL])
 	quit(0)

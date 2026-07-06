@@ -32,6 +32,14 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   goblin_encounter_1 reads clearly dimmed/cleared while the adjacent live
   goblin_encounter_2 stays vivid (`.superpowers/sdd/fp-handoff/b2-shots/
   b2_dormant_00_live.png` vs `b2_dormant_01_resting.png`).
+- [ ] COMBATANT/SPRITE — the new `shield_spider` (Content Wave C1, Liscor
+  sewers) uses the `bat` sheet as a STAND-IN — there is no arachnid sprite
+  in-tree — so a Shield Spider currently renders as a bat, and shares that
+  sheet with `sewer_vermin` ("Sewer Bat", which IS sprite-honest). Needs a
+  dedicated banded-carapace spider sprite (Track B / PixelLab per the B
+  recipes) so the nest fight reads as spiders, not a second bat swarm.
+  Overworld tokens are tinted apart (spider cold blue-grey, vermin warm
+  grey) but combat sprites are identical. First-seen: C1 build 2026-07-06.
 - [ ] FIELD/TILES — world maps render BLOCKED cells as flat tiles while
   arenas render them as biome prop sprites (M6.5 structure map,
   2026-07-04) — props-over-tiles is a repo-wide mandate; field blocked
@@ -141,6 +149,17 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   verified distinct-at-a-glance from the inn's clean tables, and the swap
   verified non-jarring: `.superpowers/sdd/fp-handoff/b3-shots/
   b3_inn_start_dirty.png` (dirty) vs `b3_dirty_table_cleaned.png` (clean).
+- [ ] SEWERS — water channels read as FLAT solid-blue stripes under the
+  dark mood pin (tile texture invisible) — C1 controller read 2026-07-06,
+  `fp-handoff/c1-shots/00_sewers_landing.png` — shimmer overlay exists;
+  candidate fixes: channel-adjacent light anchor or a lighter pin B channel.
+- [ ] SEWERS — small text-like artifact renders above the two encounter
+  mounds in the same shot (mangled glyphs) — labels were removed
+  repo-wide, so WHAT renders there? CF review hint; windowed zoom needed.
+  POSSIBLE label-removal regression on new-map encounter entities.
+- [ ] SPRITE — `shield_spider` ships on the `bat` sprite (flagged
+  stand-in, C1) — needs a real arachnid via the next PixelLab batch.
+
 ## Fixed
 
 - [x] UI/FIELD-HOTBAR — field skills had no `icon` ids so the overworld

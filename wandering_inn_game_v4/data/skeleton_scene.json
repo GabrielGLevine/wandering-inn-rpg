@@ -1646,6 +1646,18 @@
      "observe": "Rust holds the bars, not a lock. The draft is steady — a tunnel, not a pit — and the skittering keeps its distance. Something down there has learned to avoid shadows.",
      "on_interact_accomplishment": "heard_the_sewers",
      "toast": "A heavy iron grate, rusted shut. Cold air rises from below, and something in the dark skitters away from your shadow.",
+     "_comment_door_when": "Content Wave C1 grate-gate seam. Until `heard_about_cisterns` is banked (C3 banks it from Olesm), door_when's gate is UNMET and interact falls through to the on_interact_accomplishment branch above -- BYTE-IDENTICAL to the pre-quest behavior asserted by gate_district_walkthrough (heard_the_sewers + the exact toast). Once banked, the same interact hauls the grate open and descends: emits the `open_toast`, then transitions to the sewers landing. See wi_game.gd interact()'s prop branch + `_door_gate_met`.",
+     "door_when": {
+      "requires": {
+       "heard_about_cisterns": 1
+      },
+      "to_map": "sewers",
+      "to_cell": [
+       2,
+       2
+      ],
+      "open_toast": "You set your shoulder to the grate. The rust gives with a shriek, and cold air breathes up out of the dark. Down you go."
+     },
      "light": {
       "color": [
        0.35,
@@ -2790,6 +2802,277 @@
      "sprite": "boulder",
      "contains": [
       "traveler_charm"
+     ]
+    }
+   ]
+  },
+  "sewers": {
+   "_comment": "Content Wave C1: the Liscor sewers (~20x14, cave biome). Entered from the street `sewer_grate` prop once `heard_about_cisterns` is banked (C3 banks it from Olesm) -- see the door_when seam on that prop + wi_game.gd's prop-interact branch. Water channels are walls.segments on the free_pack Water_tiles sheet, so world.gd's `_build_water_shimmer` paints the shimmer overlay automatically (sheet-match) AND they block movement (segment_cells joins the sim blocked set). Left (x0-2) and right (x17-19) walkways cross the two channels. Dark mood pin lives in data/moods.json; lights glow at dusk/night (light_energy_by_phase day=0.0), while the always-on pond_glints/dust ambience carries the day-phase atmosphere.",
+   "biome": "cave",
+   "grid": {
+    "width": 20,
+    "height": 14
+   },
+   "blocked": [],
+   "floor_layers": [
+    {
+     "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood.",
+     "variants": [
+      [
+       8,
+       13
+      ],
+      [
+       9,
+       13
+      ],
+      [
+       10,
+       13
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "walls": {
+    "sheet": "res://assets/tiles/cave/Tiles.png",
+    "tile_px": 16,
+    "segments": [
+     {
+      "_comment": "Water channel A (upper). Water_tiles sheet -> auto shimmer overlay + blocking.",
+      "from": [
+       3,
+       5
+      ],
+      "to": [
+       16,
+       5
+      ],
+      "cap": [
+       1,
+       7
+      ],
+      "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+      "tile_px": 16
+     },
+     {
+      "_comment": "Water channel B (lower).",
+      "from": [
+       3,
+       9
+      ],
+      "to": [
+       16,
+       9
+      ],
+      "cap": [
+       1,
+       7
+      ],
+      "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+      "tile_px": 16
+     }
+    ]
+   },
+   "decor": [
+    {
+     "sprite": "mushroom_purple_s",
+     "cell": [
+      9,
+      11
+     ]
+    },
+    {
+     "sprite": "mushroom_purple_m",
+     "cell": [
+      12,
+      2
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      17,
+      3
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      1,
+      12
+     ]
+    },
+    {
+     "sprite": "mushroom",
+     "cell": [
+      18,
+      11
+     ]
+    }
+   ],
+   "ambience": [
+    {
+     "preset": "pond_glints",
+     "rect": [
+      3,
+      5,
+      14,
+      1
+     ]
+    },
+    {
+     "preset": "pond_glints",
+     "rect": [
+      3,
+      9,
+      14,
+      1
+     ]
+    },
+    {
+     "preset": "dust_motes",
+     "rect": "all"
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "The way back up. Returns to the street beside the sewer_grate (15,11); the grate is the sole street<->sewers link, so exit lands at the grate regardless.",
+     "id": "sewer_exit",
+     "kind": "door",
+     "cell": [
+      2,
+      1
+     ],
+     "display_name": "Ladder Up",
+     "sprite": "door",
+     "to_map": "street",
+     "to_cell": [
+      15,
+      11
+     ],
+     "light": {
+      "color": [
+       0.7,
+       0.8,
+       0.95
+      ],
+      "energy": 0.5,
+      "radius": 22,
+      "flicker": false
+     }
+    },
+    {
+     "id": "phosphor_moss",
+     "kind": "prop",
+     "cell": [
+      5,
+      1
+     ],
+     "display_name": "Phosphor Moss",
+     "sprite": "mushroom_purple_m",
+     "observe": "Pale green moss crusts the old brick in patches, breathing a cold light that never quite reaches the water. Drakes farmed it once, they say, to see down here without lanterns.",
+     "on_interact_accomplishment": "found_phosphor_moss",
+     "toast": "Phosphor moss clings to the brick, glowing a sick, cold green. Cool to the touch, and it hisses faintly when your shadow crosses it.",
+     "light": {
+      "color": [
+       0.35,
+       0.85,
+       0.5
+      ],
+      "energy": 0.6,
+      "radius": 20,
+      "flicker": false
+     }
+    },
+    {
+     "id": "drainage_marker",
+     "kind": "prop",
+     "cell": [
+      5,
+      3
+     ],
+     "display_name": "Drainage Marker",
+     "sprite": "boulder",
+     "observe": "A carved stone boundary marker, Drake glyphs worn shallow. It counts cisterns and sluice-gates in a hand two centuries dead. Someone scratched a newer mark beside it: a spider, hastily.",
+     "on_interact_accomplishment": "read_drainage_marker",
+     "toast": "An old Drake drainage marker, its glyphs half-swallowed by grime. You can just make out a map of channels — and a fresh scratch, shaped like a spider, gouged over the third cistern."
+    },
+    {
+     "id": "sunken_crate",
+     "kind": "prop",
+     "cell": [
+      16,
+      12
+     ],
+     "display_name": "Sunken Crate",
+     "sprite": "crate",
+     "observe": "A market crate, swollen and burst, washed down through a grate above. Whatever was in it fed something down here long ago.",
+     "on_interact_accomplishment": "searched_sunken_crate",
+     "toast": "A ruined crate, half-sunk in silt. Merchant stamps still show under the rot — lost cargo, swallowed by the sewers and picked clean."
+    },
+    {
+     "id": "spider_silk",
+     "kind": "prop",
+     "cell": [
+      14,
+      10
+     ],
+     "display_name": "Webbed Passage",
+     "sprite": "mushroom",
+     "observe": "Cable-thick silk, black-and-silver banded, stretched wall to wall. Not a house spider's work. Something with a shield on its back spun this, and recently.",
+     "on_interact_accomplishment": "found_spider_silk",
+     "toast": "Ropes of banded silk choke the side passage, strong as wire. Wrapped in it, drained pale: a rat, a boot, something that used to be a Watchman's lantern."
+    },
+    {
+     "_comment": "The sewers' easy trash fight -- the sewers_walkthrough clears it (autoplay). Interact-only (no trigger_radius) so QA controls when it starts.",
+     "id": "sewer_vermin",
+     "kind": "encounter",
+     "cell": [
+      7,
+      2
+     ],
+     "display_name": "Sewer Bats",
+     "sprite": "bat",
+     "tint": [
+      0.7,
+      0.72,
+      0.6
+     ],
+     "arena": "sewers_nest",
+     "enemies": [
+      "sewer_vermin",
+      "sewer_vermin"
+     ],
+     "allies": [],
+     "on_victory": [
+      "cleared_sewer_vermin"
+     ]
+    },
+    {
+     "_comment": "The Shield Spider nest -- Quest 1 'Something in the Cisterns' FIGHT path (C3 wires the quest; on_victory banks cleared_the_nest for C3 to read). Interact-only (no trigger_radius) so C3's SKILL path can [Observe] the nest without triggering combat.",
+     "id": "shield_spiders",
+     "kind": "encounter",
+     "cell": [
+      15,
+      10
+     ],
+     "display_name": "Shield Spider Nest",
+     "sprite": "bat",
+     "tint": [
+      0.4,
+      0.44,
+      0.52
+     ],
+     "observe": "Two of them, banded carapaces catching the moss-light, waiting where the silk is thickest. Their legs test the air toward you. Behind them the tunnel drops away — and more eyes catch the light down there than you want to count.",
+     "arena": "sewers_nest",
+     "enemies": [
+      "shield_spider",
+      "shield_spider"
+     ],
+     "allies": [],
+     "on_victory": [
+      "cleared_the_nest"
      ]
     }
    ]

@@ -1515,5 +1515,41 @@ func _init() -> void:
 	assert(gSaveB.social_talked == gSaveA.social_talked, "social_talked round-trips")
 	assert(gSaveB.entity_first_use == gSaveA.entity_first_use, "entity_first_use round-trips")
 
+	# --- Content Wave C1: the grate-gate seam (door_when on a prop) ---
+	# Pre-quest (gate UNMET) the street sewer_grate interact must be
+	# byte-identical to a plain on_interact_accomplishment prop; once the gate
+	# accomplishment is banked it transitions to the sewers instead.
+	var gGrate := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gGrate.transition("street", Vector2i(15, 11))
+	gGrate.player_facing = Vector2i.RIGHT  # faces the sewer_grate at (16,11)
+	assert(gGrate.entity_at(Vector2i(16, 11)).get("id", "") == "sewer_grate", "grate is at (16,11) facing cell")
+	# Gate UNMET: falls through to on_interact_accomplishment -> byte-identical.
+	_events.clear()
+	var pre := gGrate.interact()
+	assert(pre.get("accomplishment", "") == "heard_the_sewers", "unmet grate banks heard_the_sewers (unchanged pre-quest behavior)")
+	assert(gGrate.current_map == "street", "unmet grate does NOT transition")
+	assert(_count("map_changed") == 0, "unmet grate emits no map_changed")
+	assert(_count("toast") == 1 and String(_events[-1]["payload"].get("text", "")).begins_with("A heavy iron grate"), "unmet grate fires the exact pre-quest toast")
+	assert(gGrate.accomplishment_count("heard_the_sewers") == 1, "heard_the_sewers banked once")
+	# Bank the gate accomplishment (C3 will bank this from Olesm). Re-facing the
+	# grate and interacting now descends to the sewers.
+	gGrate.record_accomplishment("heard_about_cisterns")
+	gGrate.player_cell = Vector2i(15, 11)
+	gGrate.player_facing = Vector2i.RIGHT
+	_events.clear()
+	var opened := gGrate.interact()
+	assert(opened.get("map", "") == "sewers", "met grate transitions to sewers")
+	assert(gGrate.current_map == "sewers", "now on the sewers map")
+	assert(gGrate.player_cell == Vector2i(2, 2), "descends to the sewers landing (2,2)")
+	assert(_count("map_changed") == 1, "met grate emits map_changed")
+	assert(gGrate.accomplishment_count("heard_the_sewers") == 1, "met grate does NOT re-bank heard_the_sewers")
+	# The sewers map loaded its own entities (nest + exit).
+	assert(gGrate.entities.has("shield_spiders") and gGrate.entities.has("sewer_exit"), "sewers entities bound")
+	# The sewer_exit ladder returns to the street beside the grate.
+	gGrate.player_cell = Vector2i(2, 2)
+	gGrate.player_facing = Vector2i.UP
+	gGrate.interact()
+	assert(gGrate.current_map == "street" and gGrate.player_cell == Vector2i(15, 11), "ladder returns to the street grate")
+
 	print("PASS: sim core behaves correctly")
 	quit(0)

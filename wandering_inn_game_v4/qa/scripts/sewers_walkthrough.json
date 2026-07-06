@@ -1,0 +1,352 @@
+{
+ "_comment": "Content Wave C1: the Liscor sewers canonical walkthrough. Loads the near_sewers FIXTURE (post_tutorial_street shape + heard_about_cisterns pre-banked, so the grate-gate is open -- C3 banks that accomplishment from Olesm for real) via title Continue, positioned two steps north of the grate approach. Enters via the REAL sewer_grate interact (door_when seam), walks the sewers, reads two flavor props, clears the sewer_vermin trash pack (autoplay), then climbs the exit ladder back to the street. Proves: the grate-gate transition, the sewers dark mood + map render + always-on ambience, prop toasts, the new sewer_vermin encounter/arena, and the exit door. Fixture rng_state (9) governs -- no --seed search. NOTE: the shield_spider nest is placed but NOT fought here (that is Quest 1 / Task C3's job; interact-only, off this path).",
+ "fixture_save": "near_sewers",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down 1 selects Continue, confirm loads the near_sewers fixture.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    9
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.heard_about_cisterns",
+   "equals": 1
+  },
+  {
+   "_comment": "== ENTER via the real grate ==. Down 2 to (15,11), then right 1 bumps the sewer_grate (16,11, blocked by the prop) so we end at (15,11) facing right, ready to interact.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "door_when gate is MET (heard_about_cisterns banked) -> the grate opens: open_toast, then transition to the sewers landing.",
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You set your shoulder to the grate. The rust gives with a shriek, and cold air breathes up out of the dark. Down you go."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "sewers"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "sewers"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "_comment": "Sewers atmosphere: dark mood pin, cave map render, and the 3 always-on ambience emitters (2 pond_glints on the channels + dust_motes). Whole-run scans (atmosphere_check idiom) -- these fire from the map-change rebuild.",
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "sewers",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "sewers"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "sewers",
+    "emitters": 3
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_lights_rendered",
+   "payload_contains": {
+    "map": "sewers",
+    "count": 2
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_sewers_landing"
+  },
+  {
+   "_comment": "== Phosphor moss (5,1): right 3 to (5,2), up 1 bumps the moss so we face it. ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "found_phosphor_moss"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Phosphor moss clings to the brick, glowing a sick, cold green. Cool to the touch, and it hisses faintly when your shadow crosses it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== Sewer vermin (7,2): right 2 from (5,2) bumps the encounter at (7,2), ending at (6,2) facing right. Interact starts the fight. ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_vermin_encounter"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "_comment": "Dismiss the victory banner (non-tutorial arena, so no tutor line to confirm through -- same confirm-then-hide as crate_fight).",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cleared_sewer_vermin",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "sewers"
+  },
+  {
+   "_comment": "== Drainage marker (5,3): left 1 to (5,2), down 1 bumps the marker so we face it. ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "read_drainage_marker"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "An old Drake drainage marker, its glyphs half-swallowed by grime. You can just make out a map of channels — and a fresh scratch, shaped like a spider, gouged over the third cistern."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== EXIT: back to (2,2), up 1 bumps the sewer_exit ladder (2,1). Interact climbs back to the street beside the grate (15,11). ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    11
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "02_back_on_street"
+  }
+ ]
+}

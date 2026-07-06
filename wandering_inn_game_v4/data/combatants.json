@@ -141,6 +141,42 @@
    "weapon_die": 0,
    "ai": "inert",
    "skills": []
+  },
+  {
+   "_comment": "Content Wave C1: canon Liscor-area ambush predator (wiki.wanderinginn.com/Shield_Spiders -- black-and-silver armored carapace, Silver-rank individually, nest under Liscor's Dungeon). A goblin_raider-class melee reskin nudged toward the carapace fantasy: +con (armored back), +dex (ambusher), lower int/cha. SPRITE STAND-IN: uses `bat` (the only dark cave-creature sheet in-tree) -- flagged in docs/VISUAL-LOG.md for a real arachnid sprite (Track B / PixelLab). Balance is MEASURED-only in sim_combat_batch.gd's ENCOUNTER_CELLS (see report).",
+   "id": "shield_spider",
+   "display_name": "Shield Spider",
+   "sprite": "bat",
+   "side": "enemy",
+   "stats": {
+    "str": 12,
+    "dex": 11,
+    "con": 17,
+    "int": 3,
+    "wis": 8,
+    "cha": 2
+   },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "Content Wave C1: the sewers' weak trash pack. Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, same as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, flagged generic-diegetic per the spec. Deliberately fragile (low con/weapon_die) so the sewers_walkthrough autoplay clears it fast.",
+   "id": "sewer_vermin",
+   "display_name": "Sewer Bat",
+   "sprite": "bat",
+   "side": "enemy",
+   "stats": {
+    "str": 5,
+    "dex": 12,
+    "con": 4,
+    "int": 2,
+    "wis": 5,
+    "cha": 2
+   },
+   "weapon_die": 3,
+   "ai": "melee",
+   "skills": []
   }
  ]
 }

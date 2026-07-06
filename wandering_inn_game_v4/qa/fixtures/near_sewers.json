@@ -1,0 +1,45 @@
+{
+ "_comment": "Content Wave C1: post_tutorial_street shape (warrior L1, met/sparred/given_spear, rusty_sword equipped) PLUS the grate-gate accomplishment `heard_about_cisterns` pre-banked -- so the street sewer_grate's door_when gate is MET and interacting it descends to the sewers (the C3 quest-open state, simulated by fixture). Positioned on the south-square side street at (15,9) facing down, two steps north of the grate's approach cell (15,11), so sewers_walkthrough reaches the real grate in a couple moves. NOTE for C3: `heard_about_cisterns` is the key C3 must bank (from Olesm) to open the grate for real; this fixture stands in for that until C3 lands.",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [
+   15,
+   9
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "heard_the_sewers": 1,
+   "heard_about_cisterns": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}

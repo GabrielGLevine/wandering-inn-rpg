@@ -65,9 +65,47 @@
     0.72
    ],
    "vignette": 0.4
+  },
+  "sewers": {
+   "_comment": "Content Wave C1: a DARK, time-invariant pin (cave_mouth precedent values) -- the sewers read the same at any phase. Phosphor/shaft lights glow only at dusk/night (light_energy_by_phase day=0.0); the always-on pond_glints/dust ambience carries the day-phase atmosphere against this grade.",
+   "day": [
+    0.3,
+    0.32,
+    0.45
+   ],
+   "dusk": [
+    0.3,
+    0.32,
+    0.45
+   ],
+   "night": [
+    0.26,
+    0.28,
+    0.4
+   ],
+   "vignette": 0.45
   }
  },
  "arena_moods": {
+  "sewers_nest": {
+   "_comment": "Content Wave C1: sewers combat inherits the same dark cave pin as the map (cave_mouth values), so the vermin/nest fights read as underground.",
+   "day": [
+    0.3,
+    0.32,
+    0.45
+   ],
+   "dusk": [
+    0.3,
+    0.32,
+    0.45
+   ],
+   "night": [
+    0.3,
+    0.32,
+    0.45
+   ],
+   "vignette": 0.45
+  },
   "cave_mouth": {
    "day": [
     0.3,

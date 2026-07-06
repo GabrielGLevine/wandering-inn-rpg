@@ -340,6 +340,22 @@ func interact() -> Dictionary:
 			# other early-return prop shapes above it.
 			if target.has("contains"):
 				return _interact_container(target)
+			# Content Wave C1: a prop carrying `door_when` becomes a gated door
+			# once its accomplishment gate is met -- the ONE sanctioned sim seam
+			# for the sewer-grate entrance (spec §4). Checked BEFORE
+			# on_interact_accomplishment so a met gate transitions instead of
+			# re-banking; an UNMET gate falls straight through to the existing
+			# on_interact_accomplishment branch below, keeping the pre-quest
+			# stream byte-identical (gate_district_walkthrough asserts it). Only
+			# `prop` carries this today (a `door` entity is always open); no
+			# shipped prop combines `door_when` with `contains`/`sleep`.
+			if target.has("door_when") and _door_gate_met(target["door_when"] as Dictionary):
+				var dw: Dictionary = target["door_when"]
+				var open_toast := String(dw.get("open_toast", ""))
+				if open_toast != "":
+					_emit(WIEvents.TOAST, {"text": open_toast})
+				transition(String(dw["to_map"]), Vector2i(int(dw["to_cell"][0]), int(dw["to_cell"][1])))
+				return {"map": current_map}
 			if target.has("on_interact_accomplishment"):
 				var accomplishment_id := String(target["on_interact_accomplishment"])
 				record_accomplishment(accomplishment_id)
@@ -567,6 +583,18 @@ func record_accomplishment(id: String, amount: int = 1) -> void:
 
 func accomplishment_count(id: String) -> int:
 	return int(accomplishments.get(id, 0))
+
+
+## Content Wave C1: true when every accomplishment threshold in a `door_when`
+## gate's `requires` dict is met (same >= semantics as ally_requires). An
+## empty/absent `requires` reads as "always open". Pure reader -- no state
+## change, no events.
+func _door_gate_met(door_when: Dictionary) -> bool:
+	var req: Dictionary = door_when.get("requires", {})
+	for key: String in req:
+		if accomplishment_count(key) < int(req[key]):
+			return false
+	return true
 
 
 ## Returns innate exploration skills plus class-granted skills, deduplicated.
