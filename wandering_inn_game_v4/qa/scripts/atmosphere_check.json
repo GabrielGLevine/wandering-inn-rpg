@@ -1,5 +1,5 @@
 {
- "_comment": "M-BEAUTY Task B1 canonical script (seed 9). Proves the phase clock + mood-grade wiring end-to-end: world_ready -> ui_mood_applied{inn,day} -> exactly 40 real actions (the dusk threshold, matching moods.json meta.phase_thresholds / wi_game.gd's injected defaults) -> phase_changed{dusk} + ui_mood_applied{*,dusk} -> sleep at the bed -> phase_changed{day} + ui_mood_applied{inn,day}. No combat anywhere in the path (phase's PC-turn tick is proven by M7's own fold, not this script). Also proves the UI-ungraded claim: the journal opens/closes at the identity day grade with no visible interference (windowed screenshot is the real evidence -- see task-b1-report.md).",
+ "_comment": "M-BEAUTY Task B1 canonical script (seed 9). Proves the phase clock + mood-grade wiring end-to-end: world_ready -> ui_mood_applied{inn,day} -> exactly 100 real actions (the dusk threshold, matching moods.json meta.phase_thresholds -- Track P1 retune 40->100) -> phase_changed{dusk} + ui_mood_applied{*,dusk} -> sleep at the bed -> phase_changed{day} + ui_mood_applied{inn,day}. No combat anywhere in the path (phase's PC-turn tick is proven by M7's own fold, not this script). Also proves the UI-ungraded claim: the journal opens/closes at the identity day grade with no visible interference (windowed screenshot is the real evidence -- see task-b1-report.md).",
 
  "steps": [
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
@@ -16,12 +16,18 @@
   { "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
 
-  { "_comment": "40 real actions via paced back-and-forth moves along inn row y=3, which is clear of every entity/blocked cell from x=1 to x=14 (only inn_door sits at [15,3], well outside this range) -- see CLAUDE.md's inn layout lock + skeleton_scene.json. (2,3)->right10->(12,3)->left10->(2,3), twice over = 40 successful move_player calls, zero blocked attempts, net displacement zero. Math: dusk_at is 40 (moods.json meta.phase_thresholds / wi_game.gd defaults), so the 40th successful move crosses day->dusk exactly (before=39<40 day, after=40>=40 dusk).", "action": "move", "direction": "right", "steps": 10 },
+  { "_comment": "100 real actions via paced back-and-forth moves along inn row y=3, which is clear of every entity/blocked cell from x=1 to x=14 (only inn_door sits at [15,3], well outside this range) -- see CLAUDE.md's inn layout lock + skeleton_scene.json. (2,3)->right10->(12,3)->left10->(2,3), FIVE round trips = 100 successful move_player calls, zero blocked attempts, net displacement zero. Math: dusk_at is 100 (moods.json meta.phase_thresholds, Track P1 retune 40->100), so the 100th successful move crosses day->dusk exactly (before=99<100 day, after=100>=100 dusk). This route is SIZED to dusk_at and re-sizes with it -- see CLAUDE.md's phase-threshold change rule.", "action": "move", "direction": "right", "steps": 10 },
+  { "action": "move", "direction": "left", "steps": 10 },
+  { "action": "move", "direction": "right", "steps": 10 },
+  { "action": "move", "direction": "left", "steps": 10 },
+  { "action": "move", "direction": "right", "steps": 10 },
+  { "action": "move", "direction": "left", "steps": 10 },
+  { "action": "move", "direction": "right", "steps": 10 },
   { "action": "move", "direction": "left", "steps": 10 },
   { "action": "move", "direction": "right", "steps": 10 },
   { "action": "move", "direction": "left", "steps": 10 },
   { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
-  { "action": "assert_state", "path": "actions_since_sleep", "equals": 40 },
+  { "action": "assert_state", "path": "actions_since_sleep", "equals": 100 },
   { "action": "assert_state", "path": "phase", "equals": "dusk" },
 
   { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "dusk" }, "timeout_sec": 5 },
