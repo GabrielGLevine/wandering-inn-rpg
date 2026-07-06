@@ -41,6 +41,7 @@ var journal_ref: Node = null
 
 var _root: Control
 var _title_label: Label
+var _gold_label: Label
 var _weapon_label: Label
 var _armor_label: Label
 var _items_box: VBoxContainer
@@ -84,6 +85,13 @@ func _ready() -> void:
 	UIChrome.full_rect(_title_label)
 	ribbon.add_child(_title_label)
 
+	# Diegetic coin line (Economy v1 D3): the panel header, NOT an always-on
+	# HUD (Global Constraint: gold shows in toasts + this panel only). Default
+	# dark-on-parchment Label, same styling reasoning as the slot rows below.
+	# "Gold: N" is literal text (no BBCode), so no `_bb_escape` is needed.
+	_gold_label = UIChrome.make_label("")
+	stack.add_child(_gold_label)
+
 	# Two slot rows, pinned top (spec §3). Default Label styling (dark brown
 	# on parchment -- journal.gd's proven body convention), NOT the "Menu"
 	# variation: Menu's light-tan/outlined styling is designed for
@@ -107,6 +115,18 @@ func _ready() -> void:
 	_items_box.add_theme_constant_override("separation", 4)
 	_items_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(_items_box)
+
+	# Live coin-line refresh (Economy v1 D3): the same domain_event idiom
+	# field_hotbar/dialogue_panel use -- if the panel is open when gold
+	# changes, re-render the line (and re-confirm) rather than only on open.
+	ObservableBus.domain_event.connect(_on_domain_event)
+
+
+func _on_domain_event(type: String, _payload: Dictionary) -> void:
+	if type == WIEvents.GOLD_CHANGED and open:
+		_refresh_gold()
+		# Re-confirm the drawn state (bus convention), carrying the live total.
+		ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {"items": _item_ids.size(), "gold": Game.sim.gold})
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -149,7 +169,7 @@ func _open() -> void:
 	_cursor = 0
 	_refresh()
 	_root.show()
-	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {"items": _item_ids.size()})
+	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {"items": _item_ids.size(), "gold": Game.sim.gold})
 
 
 func _close() -> void:
@@ -182,8 +202,13 @@ func _confirm() -> void:
 
 
 func _refresh() -> void:
+	_refresh_gold()
 	_refresh_slots()
 	_rebuild_items()
+
+
+func _refresh_gold() -> void:
+	_gold_label.text = "Gold: %d" % Game.sim.gold
 
 
 func _refresh_slots() -> void:

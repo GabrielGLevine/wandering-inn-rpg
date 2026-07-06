@@ -1,0 +1,19 @@
+{
+ "_comment": "Economy v1 D3 windowed shot (NOT a canonical sweep member -- peek-style, excluded from ci_sweep). Loads the d2_shop fixture (Warrior L1 on the street, purse = 5 gold, carrying rusty_sword + relcs_spare_spear) via title Continue, opens the I panel, and screenshots the coin line so the D3 'Gold: N' header is visually inspectable. Windowed so the parchment coin line renders.",
+ "fixture_save": "d2_shop",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "press", "name": "inventory" },
+  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 2, "gold": 5 }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "01_inventory_coin_line" },
+  { "action": "press", "name": "inventory" },
+  { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 }
+ ]
+}

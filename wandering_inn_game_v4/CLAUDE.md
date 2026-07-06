@@ -65,7 +65,7 @@ forbidden. Lore canon comes from the Wandering Inn Wiki, not invention.
 
 	# QA playtest scripts (THE verification tool — prefer this over manual reasoning)
 	# Full canonical sweep in one command (what CI runs — .github/workflows/ci.yml):
-	wandering_inn_game_v4/qa/ci_sweep.sh                           # all 40 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
+	wandering_inn_game_v4/qa/ci_sweep.sh                           # all 41 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
 	wandering_inn_game_v4/qa/run_qa.sh load_gate headless          # loads every .gd/.tscn/.tres; catches parse/compile errors. NATIVE-ONLY (see below)
 	wandering_inn_game_v4/qa/run_qa.sh inn_walkthrough headless   # full inn journey, no screenshots
 	wandering_inn_game_v4/qa/run_qa.sh inn_walkthrough windowed   # same + screenshots (a window opens briefly)
@@ -293,6 +293,8 @@ Parse Error, or WARNING in any run is a regression.
 	wandering_inn_game_v4/qa/run_qa.sh wrong_order_loop headless --seed=9   # PRIMARY inn-local: give -> skill-gate NEGATIVE (short_order pre-Helper) -> earn [Helper] -> cook (stretched_the_order, the cauldron skill-save) -> Lyonette SKILL report (resolved+reported, both beats) -> gratitude -> POOL-GROWTH (talk_pool_post active after resolved_wrong_order). No combat; fixture rng.
 	wandering_inn_game_v4/qa/run_qa.sh wrong_order_talk headless --seed=9   # TALK path (street): Krshia smooth-over (heard_wrong_order-gated) -> smoothed_with_krshia + persuaded_someone + resolved_wrong_order, NO combat. give/report pre-proven by the loop.
 	wandering_inn_game_v4/qa/run_qa.sh wrong_order_fight headless --seed=9  # FIGHT path (street): clear supplier_scavengers (2x goblin_raider, goblin_ambush) via combat_autoplay -> strongarmed_the_supplier + resolved_wrong_order (beat 1 in combat).
+	# ECONOMY v1 D4: the coin arc end-to-end (loads economy_loop_start fixture via title Continue). Gold is inn-only earn while Krshia + loot fights are street-only, so the run walks the mandatory floodplains ambush.
+	wandering_inn_game_v4/qa/run_qa.sh economy_loop headless --seed=9  # (1) chore earn: clean dirty_table -> "Earned 1 gold" + gold_changed{total:1}; open I -> ui_inventory_shown{gold:1} (D3 coin-line payload). (2) cross the ambush (Relc-allied) = LOOT FIGHT #1 goblin_encounter_1 -> gold 2 @ seed 9 -> total 3. (3) Krshia stall at 3 gold: EVERY buy greys (charm's own "costs 5 gold" lock = affordability-negative surface). (4) LOOT FIGHT #2 crate_scavengers -> gold 2 @ seed 9 -> total 5 (the earn-to-price; its found_the_crate on_victory adds a hub report option, so the 2nd-visit shop-entry is at index 2 not 1). (5) buy the charm: gold_changed{delta:-5,total:0} (fires BEFORE the "Paid 5 gold" toast) + item_gained{traveler_charm}. (6) open I -> ui_inventory_shown{items:3, gold:0} (spend reached the coin line). Loot isolated by --seed=9; fight outcomes by fixture rng_state=9 (both won straightaway).
 	wandering_inn_game_v4/qa/run_qa.sh social_loop headless --seed=9  # PHASE A rotating talk pools + per-waking dedup: gate_guard/Selys/Krshia each play ONE pool dialogue_line on first-talk-per-waking (banking chatted_with_<id> + heard_gossip -> 3), and a SECOND Krshia talk opens her real crate graph with NO re-pool (chatted_with_krshia never reaches 2, assert absent). PHASE B persuade watch_sergeant -> persuaded_someone (identity gate); walk home FIGHTS the fixture-active floodplains ambush (Warrior+Relc); sleep at the inn bed (ONLY bed -> return leg mandatory) resolves diplomat.gained_by{persuaded_someone:1, heard_gossip:3} -> class_gained{diplomat} + grants toast "[Diplomat] class gained! — [Charming Smile], [Calming Touch]". PHASE C field hotbar re-renders slots:1->2 ([Charming Smile] is field-tagged, slot 2); hotbar_2 on faced Erin fires [Charming Smile] -> her friendly_line toast + befriended_moments + used_skills journal reveal. Fixture rng governs --seed.
 
 **Canonical QA seed table (M5 F1 close gate; +3 M6 T7 scripts; +1 lantern_check;
@@ -324,8 +326,15 @@ inn-local (the SKILL path + the first talk_pool_post growth); the cross-map TALK
 (Krshia, street) and FIGHT-adjacent (supplier_scavengers, street) resolutions get
 their own street-start fixtures with the give+report pre-proven by the loop — so
 three scripts, like cisterns, not a shared run. All fixture-based, seed 9 held
-straightaway including `wrong_order_fight`'s warrior-L1-solo goblin_raider pair)**),
-pinned straightaway (no seed search needed unless noted): run these 40 headless
+straightaway including `wrong_order_fight`'s warrior-L1-solo goblin_raider pair)**;
+**Economy v1 D4 +1 (`economy_loop` — the coin arc: chore earn → ambush loot →
+Krshia broke → crate loot → buy → I-panel coin line. Fixture-based via
+`economy_loop_start` (inn, Warrior L1, 0 gold); its rng_state=9 governs the two
+fights and both were won straightaway, while the CLI `--seed=9` governs the
+isolated loot gold [both encounters drop gold 2, D2's loot_probe verdict]. Two
+peek-only shot scripts excluded from the sweep: `d3_inventory_shot` [coin line]
+and `d2_shop_shot`)**),
+pinned straightaway (no seed search needed unless noted): run these 41 headless
 scripts with `qa/run_qa.sh <script> headless --seed=<seed>` unless noted. The peek-only scripts (`title_peek`,
 `street_peek`) are screenshot utilities, not canonical gate members;
 `floodplains_peek` was retired by Q1 (floodplains is now walkably reachable
