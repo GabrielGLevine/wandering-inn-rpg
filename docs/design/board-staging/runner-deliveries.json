@@ -1,0 +1,70 @@
+{
+	"_comment_staging": "M-DEPTH DP5 STAGED CONTENT (writer lane, 2026-07-06). NOT live data — rides DP2's bounty machinery with type:delivery per the plan. Each record: parcel item (a real inventory item the sim grants at issue and removes at the mark), destination map/cell FROM THE SHIPPED WORLD (cells cross-checked against data/skeleton_scene.json entity placements — DP5 must still verify each destination cell is WALKABLE against the blocked set + walls.segments, and decide the reach semantics: exact cell vs Chebyshev-1 adjacency to the named entity; adjacency recommended since several anchors are blocked prop cells), within-the-waking stakes (sleep FAILS the run and returns the parcel — honest stakes, no timer UI, opaque-safe), gold by distance band.",
+	"_comment_distance_bands": "Gold bands (1-4g, under the bounty band's ceiling, way under quest gold): 1g = same-map short leg (runner's guild is off the street per DP5; short = eastern/central street). 2g = same-map long leg (the 32-wide street's far end) or a leg with a descent. 3g = cross-map via the floodplains (the ambush corridor is REAL risk — O2's proximity zone is corridor-free). 4g = cross-map long/hostile (reserved; the hermit run). Wage sanity: a 3g inn run ~= one waking of inn chores (D2 anchor ~4g/day) but costs the round trip — Runners earn by moving, not by out-paying quests.",
+	"_comment_within_the_waking": "Copy convention: every slip states the same-waking term diegetically ('before the lamps', 'same waking', 'by the evening bell') — the STAKES live in the copy, the ENFORCEMENT lives in the sim (sleep with an undelivered parcel = run failed, parcel returns to the counter, no pay). Never render a countdown.",
+	"deliveries": [
+		{
+			"id": "delivery_krshia_wool",
+			"type": "delivery",
+			"parcel": { "item_id": "parcel_plains_wool", "display_name": "Plains-Wool Bolt", "flavor": "A bolt of plains-wool, paper-wrapped, smelling of lanolin and a long walk." },
+			"destination": { "map": "street", "cell": [14, 3], "anchor_entity": "krshia_stall", "_note": "Cell south of the stall prop (14,2); Krshia herself stands at (13,2). Adjacency-to-anchor is the cleaner contract." },
+			"gold": 1,
+			"band": "same-map short",
+			"slip_copy": "TO: Silverfang stall, market row. One wool bolt. Same waking. The Gnoll pays for dry, not for fast — it rains here, keep the paper on it.",
+			"_notes": "The starter run — visible from the counter, teaches the loop in under a minute."
+		},
+		{
+			"id": "delivery_pisces_parcel",
+			"type": "delivery",
+			"parcel": { "item_id": "parcel_that_ticks", "display_name": "A Parcel That Ticks", "flavor": "A parcel that ticks. Do not shake. The sender says it is a metronome. The sender laughed." },
+			"destination": { "map": "street", "cell": [30, 5], "anchor_entity": "pisces", "_note": "Pisces stands at (30,4), Guild frontage east; cell below him. Keep clear of gate_district_walkthrough's forecourt approach lane (disclosure: that script interacts Selys at (26,4) and approaches along y4)." },
+			"gold": 1,
+			"band": "same-map short",
+			"slip_copy": "TO: the [Necromancer] by the Guild steps. Yes, that one. It ticks. It is SUPPOSED to tick. Do not shake it, do not ask him what it is, do not linger. Same waking.",
+			"_notes": "Pisces's haughty-precise register does the comedy at the handoff; the slip only sets it up."
+		},
+		{
+			"id": "delivery_gate_dispatch",
+			"type": "delivery",
+			"parcel": { "item_id": "parcel_watch_dispatch", "display_name": "Watch Dispatches", "flavor": "Watch dispatches, string-tied, sealed thrice. The third seal is the Captain's habit, not protocol." },
+			"destination": { "map": "street", "cell": [1, 6], "anchor_entity": "zevara", "_note": "Zevara at (2,6), gate_guard at (1,5) — the far WEST end of the 32-wide street, the longest same-map leg from the Guild-frontage side." },
+			"gold": 2,
+			"band": "same-map long",
+			"slip_copy": "TO: Watch Captain Sunderscale, the gate. Dispatches. Priority. If a guardsman stops you, show the seals and keep walking — that is what the seals are FOR. Before the shift bell.",
+			"_notes": "DP4 relocates Zevara's DESK to the barracks but keeps HER at the gate — destination anchored on the npc, not the desk, so this record survives DP4 either way."
+		},
+		{
+			"id": "delivery_grate_phials",
+			"type": "delivery",
+			"fragile": true,
+			"parcel": { "item_id": "parcel_lamp_phials", "display_name": "Crate of Lamp-Spirit Phials", "flavor": "Six glass phials of lamp-spirit for the grate crew, cotton-chocked. If it clinks when you set it down, it is already broken." },
+			"destination": { "map": "street", "cell": [16, 12], "anchor_entity": "sewer_grate", "_note": "Grate at (16,11); cell below it. The delivery ends AT the entrance — no descent required (the sewers grate-gate stays quest-gated; a runner leaves it with the crew topside)." },
+			"gold": 2,
+			"band": "same-map + care",
+			"slip_copy": "TO: drainage crew, Market Street grate. GLASS. Walk like it's your grandmother's teeth. Same waking, and the crew counts the phials in front of you, so arrive with six.",
+			"_notes": "THE FRAGILE VARIANT. v1 = flavor-only (the fragile flag rides the data, the copy carries the stakes); the natural future hook is 'a combat en route breaks it' — flagged for the Skills/HR waves, NOT wired now. Pays band-2 despite the short leg: care is distance."
+		},
+		{
+			"id": "delivery_inn_hamper",
+			"type": "delivery",
+			"parcel": { "item_id": "parcel_bluefruit_hamper", "display_name": "Amentus Fruit Hamper", "flavor": "A hamper of Amentus blue fruit, straw-packed, the poison cores already cut out. You were told twice." },
+			"destination": { "map": "inn", "cell": [7, 3], "anchor_entity": "erin", "_note": "Erin holds the bar line at (7,2); cell in front of it. Route: street -> liscor_gate -> floodplains -> inn_door — the leg crosses the O2 proximity-ambush corridor, which is exactly why it pays band 3." },
+			"gold": 3,
+			"band": "cross-map",
+			"slip_copy": "TO: The Wandering Inn, the hill past the gate. One fruit hamper for the [Innkeeper]. Juice is on tonight's menu, so: tonight. The road has goblins. The hamper has a poison core policy. Read the label.",
+			"_notes": "Canon: Amentus trees grow in the Floodplains and Erin serves the juice (wiki: Blue Fruits — verified 2026-07-06). Diegetic wrinkle embraced: yes, the inn is where blue fruit GROWS — the slip is Erin ordering the picked-and-cored prep work done in town, which is very Erin. The ambush leg makes this the run where 'Runners move FAST' copy earns its keep ([Quick Movement] synergy, ships fine without)."
+		},
+		{
+			"id": "delivery_hermit_antlers",
+			"type": "delivery",
+			"_FORWARD_REF": "HR-II — the hermit-alchemist does not exist in the shipped world yet (staging profile only). Destination cell is null until HR-II places him on the floodplains. Keep OUT of the live pool until then.",
+			"parcel": { "item_id": "parcel_antler_order", "display_name": "Antler-Charm Order", "flavor": "An antler-charm order, paper-wrapped, addressed in a hand that presses too hard." },
+			"destination": { "map": "floodplains", "cell": null, "anchor_entity": "hermit_alchemist (HR-II)", "_note": "Placement lands with HR-II." },
+			"gold": 4,
+			"band": "cross-map long/hostile",
+			"slip_copy": "TO: the hermit past the east hills. He will not come to the door until you say who sent you. Say the Guild. Longest run on the board and it pays like it. Back before dark or don't bother — he bars the door at dusk.",
+			"_notes": "ALIGNMENT FLAG: docs/design/dialogue-drafts/home_region_2/hermit_antler_order.json already stages this delivery as a DIALOGUE beat paying 2g at the hermit's door. Controller must reconcile at HR-II wiring time: either the hermit conversation IS the turn-in surface (his 2g + a 2g balance at the counter = the 4g band), or the board pays the full 4 and the dialogue's gold effect is dropped. Do not ship both untouched — double-pay."
+		}
+	],
+	"_comment_new_items": "All six parcel item_ids are NEW items.json entries (kind: parcel, no price, no combat fields — inert carried flavor). FLAG for DP5: parcels must be excluded from shop/equip surfaces and removed at the mark or on run-fail return; 'parcel in pack' is the whole mechanical footprint."
+}

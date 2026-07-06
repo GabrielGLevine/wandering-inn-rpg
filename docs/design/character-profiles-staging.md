@@ -76,3 +76,10 @@ Wiki-verify canon entries at generation/writing time.
   challenge: two prominent + two folded), guild badge worn
   prominently-wrong. Voice: earnest-literal · reports intentions
   before acting · misapplies idioms with confidence.
+
+## Liscor — M-DEPTH additions
+- **Vess, Street Runner** (ORIGINAL+flag; proposed by the board-staging
+  lane, controller-merged): teenage Drake, wiry, satchel-harness,
+  perpetually mid-catch-of-breath. Voice: out-of-breath-professional ·
+  clipped delivery jargon ("signed-for", "second attempt") · lights up
+  at speed talk. Counter context: the Runner's Guild desk.

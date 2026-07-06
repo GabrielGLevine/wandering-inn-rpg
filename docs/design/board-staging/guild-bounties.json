@@ -1,0 +1,97 @@
+{
+	"_comment_staging": "M-DEPTH DP2 STAGED CONTENT (writer lane, 2026-07-06). NOT live data — the execution lane copies this into wandering_inn_game/data/bounties.json and wires the sim. Shapes mirror the ratified plan (docs/superpowers/plans/2026-07-06-m-depth.md Task DP2): id, giver-flavor, condition (existing counter shapes — the quests.json complete_when dict idiom), gold reward (2-5g band, deliberately under the 3-6g quest band; D2 economy anchor: one waking of inn work ~4g), canon-voiced posting copy. Copy passed the voice lint (wi-adding-dialogue-and-quests SKILL.md) — every posting is written by a DIFFERENT hand.",
+	"_comment_condition_semantics": "DESIGN NOTE FOR THE DP2 IMPLEMENTER (binding recommendation): conditions on REPEATABLE counters (won_combat, heard_gossip, observed_things, served_customer, cooked_meal) must evaluate as DELTA-SINCE-ACCEPT — snapshot the counter at accept (accepted_<id> bank time) and complete when (now - baseline) >= n. Absolute thresholds would auto-complete every counter bounty the instant a mid-game player accepts it (a Warrior with won_combat 5 completes the road cull for free). One-shot counters (cleared_sewer_vermin, found_spider_silk, found_phosphor_moss, read_drainage_marker, persuaded_someone) work either way but delta keeps ONE semantics for the whole pool. Conditions below use the quests.json complete_when dict shape verbatim; multi-key dicts are AND.",
+	"_comment_rotation": "Pool order is load-bearing (rotation index = sleep counter % pool size, zero rng per the plan). The two forward-ref entries (bounty_crab_cull, and bounty_vermin_grate's repeatability caveat) are ordered LAST / flagged so a v1 slice can ship a shorter pool without renumbering the live ones.",
+	"bounties": [
+		{
+			"id": "bounty_road_cull",
+			"pillar": "fight",
+			"giver": "The Watch (duty-sergeant's hand — terse, no wasted ink)",
+			"condition": { "won_combat": 2 },
+			"gold": 4,
+			"copy": "WATCH NOTICE. Goblin raiders, Floodplains road, east approach. Cull two bands. Proof by Guild attestation. 4 gold on turn-in. No spoils claims against the Watch. Second Shift.",
+			"_notes": "Real repeatable source: goblin_encounter_1 (respawns:true, re-armed each sleep, on_victory banks won_combat) — the honest grind loop. won_combat is GENERIC (goblin_encounter_2/chieftains_raid also bank it), which reads fine diegetically: the Watch pays for cleared fights on the road, whoever they were."
+		},
+		{
+			"id": "bounty_settle_dispute",
+			"pillar": "social",
+			"giver": "Watch Captain Zevara Sunderscale (dry, overworked, duty-first — longer hand than the sergeant's, and tired)",
+			"condition": { "persuaded_someone": 1 },
+			"gold": 3,
+			"copy": "Posted by order of the Watch Captain. The Watch is not a wall between every two fools in this city who disagree. End a quarrel with words, both parties still standing, and the Watch pays 3 gold on a guardsman's confirmation. This is cheaper than a cell and I am not above saying so. Z. Sunderscale.",
+			"_notes": "persuaded_someone is REAL but its current banks are quest options (zevara_intro sweep_argue, watch_crate persuade) — effectively completable once per save today. Acceptable v1 (the counter is the [Diplomat] gate, more sources land with every social wave); flag for the DP2 reviewer, no new bank needed."
+		},
+		{
+			"id": "bounty_gossip_tea",
+			"pillar": "social",
+			"giver": "Krshia Silverfang (measured, proud, Silverfang pragmatism; 'Hrr' used once, sparingly)",
+			"condition": { "heard_gossip": 3 },
+			"gold": 2,
+			"copy": "A request, for one with ears. Talk to people. The gate, the Guild, the stalls. What they say freely, you remember, and you tell me over tea. Not spying. Listening. Hrr. The difference matters to Gnolls. 2 gold, and the tea is mine to pour. Krshia Silverfang.",
+			"_notes": "heard_gossip banks on every first-talk-of-waking pool line (Krshia/Selys/Pisces/gate_guard shipped) — genuinely repeatable across sleeps, the talk-pool pillar's own loop. Delta-since-accept = 3 fresh pool talks."
+		},
+		{
+			"id": "bounty_observe_survey",
+			"pillar": "explore",
+			"giver": "Olesm Swifttail (earnest clerk-precise; the tactics budget is real to him)",
+			"condition": { "observed_things": 3 },
+			"gold": 3,
+			"copy": "Request, Guild-posted, standing. The Guild's map of the district is older than my vest. Persons holding [Observe] or a comparable Skill: three fresh observations logged this rotation, any subject of note, reported to the desk. 3 gold from the tactics budget. Neat handwriting appreciated. Not required. Olesm Swifttail, [Tactician].",
+			"_notes": "observed_things banks per [Observe] use with per-waking per-entity dedup (entity_first_use) — repeatable, honest volume. Diegetically skill-gated (needs [Observe]); the posting says so on its face, which is the tease convention (skill gates stay visible-locked)."
+		},
+		{
+			"id": "bounty_sewer_survey",
+			"pillar": "explore",
+			"giver": "Lism Swifttail (canon — Olesm's uncle, [Shopkeeper]; WIKI-VERIFY at wiring time. Fussy merchant hand: itemized, suspicious of vagueness)",
+			"condition": { "found_phosphor_moss": 1, "read_drainage_marker": 1 },
+			"gold": 3,
+			"copy": "NOTICE, itemized. Wanted: written confirmation, both items, no substitutions. Item one, that the old drainage marker in the east gallery is still legible. Item two, whether the glow-moss has spread past the first junction. My stockroom shares a wall with that gallery and my insurance man wants ANSWERS, not feelings. Payment 3 gold, exact. I do not pay for 'probably.' L. Swifttail, purveyor.",
+			"_notes": "THE SEWERS-FLAVORED ONE, on fully REAL counters: phosphor_moss (5,1) and drainage_marker (5,3) are shipped C1 sewers props banking these exact one-shot accomplishments on interact. One-shot = completes once per save; fine for a rotating slate (a completed posting just never re-completes — DP2's accepted/complete machinery should tolerate that). Lism himself is not yet an in-game NPC — he exists only as this posting's signature, which needs no sprite/profile; if DP1+ ever places him, profile first."
+		},
+		{
+			"id": "bounty_silk_line",
+			"pillar": "explore",
+			"giver": "Redscar Vell, Bronze-rank adventurer (ORIGINAL+flag walk-on signature — misspelled-confident; no NPC placement needed, the hand IS the character)",
+			"condition": { "found_spider_silk": 1 },
+			"gold": 2,
+			"copy": "SILK!! i know were the spiders keep there silk in the sewers. i mean i know ROUGHLY. first one to find the silk-line and mark it on the gild map gets 2 gold of my own coin. its good silk. dont fight the nest. thats MY nest. i called it. REDSCAR VELL, bronze rank (almost silver)",
+			"_notes": "found_spider_silk is the shipped spider_silk prop (sewers 14,10), one-shot interact. The 'dont fight the nest' line is honest foreshadow-safe copy: shield_spiders is the C3 quest fight and this bounty deliberately does NOT require it. Misspellings are DELIBERATE (per the staging brief: an adventurer's posting, misspelled-confident) — a copyedit pass must NOT fix them; keep 'were/there/gild' verbatim."
+		},
+		{
+			"id": "bounty_inn_hands",
+			"pillar": "work",
+			"giver": "Erin Solstice (warm runaway babble, self-interrupting; the exclamation points are load-bearing)",
+			"condition": { "served_customer": 3 },
+			"gold": 2,
+			"copy": "HI! The Wandering Inn (the one on the hill, across the Floodplains, you literally cannot miss it) needs an extra pair of hands! Serve three guests. That's it! That's the whole job! Dinner included, and Lyonette says I can't keep adding exclamation points to these, so: two gold at the Guild. Promise! Erin Solstice, [Innkeeper].",
+			"_notes": "served_customer banks per patron_serving serve (repeatable across visits/wakings). NOTE: Erin has no shipped talk_pool (deferred, S2) but a POSTING is not a pool line — no script reds. Cross-map chore: the player walks inn-side to fulfill, board-side to turn in; that round trip is the design (the board pulls you across the map, per the DPF playtest question)."
+		},
+		{
+			"id": "bounty_evening_stew",
+			"pillar": "work",
+			"giver": "Lyonette du Marquin (formal diction slipping into sincerity; signs a bare initial)",
+			"condition": { "cooked_meal": 2 },
+			"gold": 2,
+			"copy": "The Wandering Inn requires a competent hand at the stew pot for the evening service. Two proper meals, cooked, not burnt, not 'stretched.' Payment of 2 gold, lodged with the Guild, which I am assured is the respectable way these things are done. The kitchen is cleaner than the last notice implied. L.",
+			"_notes": "cooked_meal banks on the stew_pot on_skill_use (requires [Basic Cooking] — visible-locked tease for a classless reader, consistent with the Olesm posting's convention). 'not stretched' is a dry callback to wrong_order's stretched_the_order without requiring it. Anti-clash check: wrong_order's cauldron beat banks stretched_the_order, NOT cooked_meal, so this bounty never double-pays that quest."
+		},
+		{
+			"id": "bounty_vermin_grate",
+			"pillar": "fight",
+			"giver": "Essram, cellarman of the Tailless Cask (ORIGINAL+flag signature — aggrieved run-on complaint hand)",
+			"condition": { "cleared_sewer_vermin": 1 },
+			"gold": 3,
+			"copy": "To whoever clears out the wet-vermin under Market Street: my cellar shares a wall with the drainage gallery and I can HEAR them at night, scratching, always at the same brick, the third one down, I have counted. The Guild holds my three gold. Bring me quiet. Essram, cellarman, the Tailless Cask.",
+			"_notes": "FORWARD-REF FLAG (repeatability): cleared_sewer_vermin is REAL today (sewer_vermin on_victory) but the encounter is respawns:false — this bounty completes exactly once per save. To make it a true rotating cull, either flip sewer_vermin to respawns:true (cheapest; the sewers precedent already tolerates re-fights) or add a vermin_culled tally bank. Ships fine v1 as a one-shot; flagging so DP2 decides deliberately."
+		},
+		{
+			"id": "bounty_crab_cull",
+			"pillar": "fight",
+			"giver": "Beshta of the hunt camp (ORIGINAL+flag signature — Gnoll hunter hand: short lines, hunt-family plural, one warning)",
+			"condition": { "_NEEDS_NEW_BANK_rock_crabs_culled": 2 },
+			"gold": 5,
+			"copy": "Hunt notice. Rock Crabs wake with the rains, and a shell the size of a cart does not care that your leg was in the way. Two culled from the east hills, shown by shell-plate. 5 gold, pooled by the hunt families. Do not trouble the Corusdeer herd. Antlers freely shed only. Beshta, for the camp.",
+			"_notes": "FORWARD-REF FLAG (HR-II): Rock Crab and Corusdeer are canon (staging profiles, wiki-verified there) but NO encounter/counter exists yet — condition names a PROPOSED bank rock_crabs_culled (an on_victory accomplishment on the HR-II Rock Crab encounter, ideally respawns:true). Keep this entry OUT of the live pool until HR-II lands, or ship it as a visible-but-unacceptable 'the ink is fresh' teaser. 'Antlers freely shed only' deliberately echoes the HR-II hermit's barter-ethics line ('freely shed carries the year') — one ecology, two mouths. 5g is the pool ceiling and still under the cisterns quest's 6g."
+		}
+	]
+}
