@@ -34,7 +34,7 @@ out of roadmap scope for now.
 | **M-ARC (F)** | GDI cold open ✅ · acts layer ✅ · char creation (race/gender/name) IN FLIGHT · A2 Raskghar descent → A3 climax → A4 epilogue → AF | **EXECUTING** (spec+plan ratified 2026-07-06) |
 | Cleanup | Drop `_v4` dir suffix · remove godot-ai addon · (skills already ship publicly; AI disclosure done) | QUEUED (post-lane) |
 | M-DEPTH (Liscor interiors) | Guild interior + request board · inn upstairs · +1 interior (seed `2026-07-06-liscor-depth-seed.md`) | SEEDED (user 2026-07-06; chain step 7, before expansions) |
-| Expansions | [Door of Portals]-gated: Invrisil (Brothers of Serendipitous Meetings) · Riverfarm witches · Liscor Dungeon (Horns) · [Garden of Sanctuary] | SEEDED (user 2026-07-06) |
+| Expansions | ALL SPEC'D 2026-07-06 (+city-identity bible: Liscor BELONG / Invrisil DEAL / Pallass QUALIFY) — [Door of Portals]-gated: Invrisil (Brothers of Serendipitous Meetings) · Riverfarm witches · Liscor Dungeon (Horns) · [Garden of Sanctuary] | SEEDED (user 2026-07-06) |
 | **Systems depth (user priorities 2026-07-06, SUPERSEDE "future systems")** | M-LEGIBILITY (visible-currency item/skill cards + status glossary — no raw stats) → M-GEAR (resonance-limited slots + item lore) → overworld-impact Skills wave + gap-based Skill sourcing | SPEC'D (`2026-07-06-systems-depth-priorities.md`, §2 verdict awaiting user) |
 | Social Pillar II | Deeper repeatable social play (post-pools: relationship arcs? — brainstorm) | TARGETED (user 2026-07-06; slots after the systems-depth trio) |
 | Deprioritized | Racial mechanics · party free-picker (context+veto is the standing model) | PARKED (user 2026-07-06) |

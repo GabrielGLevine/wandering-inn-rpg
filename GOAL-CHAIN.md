@@ -94,7 +94,11 @@ class milestone; [Door of Portals] is the shared front door):**
 - **8d. Liscor Dungeon — with the Horns of Hammerad** (the M-ARC
   Raskghar seal-beat hook pays off; party context machinery fields the
   Horns; the demo's endgame content).
-**8e. THE VOICE PASS (after 8d — the content chain's closer):** a
+**8e. PALLASS (user-raised 2026-07-06; seed in
+docs/design/city-identity-bible.md §Pallass):** the vertical machine
+city — two tiers v1 via the Door; QUALIFY verb; scope call at boundary.
+
+**8f. THE VOICE PASS (after 8d — the content chain's closer):** a
 full audit of every player-facing string (dialogue, pools, observe/
 friendly lines, lore, toasts, bounties, quest text) against the
 character profiles + the voice-lint in wi-adding-dialogue-and-quests
@@ -106,7 +110,7 @@ catches what guards miss.
 Each expansion: spec (canon-heavy, user-gated) → plan → execute →
 review → playtest, per the content-wave precedent (profiles for every
 new character FIRST, three-path quest parity, direction cards per map).
-Order 8a→8b→8c→8d unless the user reorders at a boundary.
+Order 8a→8b→8c→8d→8e unless the user reorders at a boundary.
 
 ## The machine (unchanged, no exceptions)
 - superpowers:subagent-driven-development: fresh implementer per task
