@@ -1,0 +1,25 @@
+{
+ "_comment": "Content Wave C4 Quest 2 SKILL/loop path start (INN-LOCAL). The whole give->skill-gate-negative->earn-Helper->cook->report->pool-growth loop happens in the inn (Lyonette is the giver, the short_order pot the SKILL station, and the report/gratitude/pool-growth all at Lyonette) -- so no floodplains/street traversal is needed, unlike the cross-map TALK/FIGHT paths (separate street-start fixtures). CLASSLESS on purpose so the first stew_pot/short_order use is the graceful skill-gate NEGATIVE (basic_cooking unknown); cleaned_the_inn:1 is pre-banked so the FIRST sleep grants [Helper] (its gained_by), unlocking basic_cooking for the positive cook. heard_wrong_order is NOT banked and the quest NOT started -- the run proves the full give->resolve->report loop honestly. No rng consumer (no combat), so rng_state is cosmetic; kept 9.",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [8, 5],
+  "player_facing": [1, 0],
+  "classes": {},
+  "accomplishments": {
+   "cleaned_the_inn": 1
+  },
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": { "weapon": "", "armor": "" },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}

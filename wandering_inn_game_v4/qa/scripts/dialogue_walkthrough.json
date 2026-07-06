@@ -53,6 +53,7 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "Content Wave C4: Lyonette's hub now carries the always-visible Q2 give-option ('Something's got you rattled...', hide_when heard_wrong_order -- 0 here), so it appears alongside the guild-advice options. The three Q2 REPORT options are progress-gated (requires.accomplishment) and stay HIDDEN. Only the give-option is added to this assert.",
    "action": "assert_event_logged",
    "type": "dialogue_node",
    "payload_contains": {
@@ -64,6 +65,11 @@
      },
      {
       "text": "Maybe later.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Something's got you rattled. What is it?",
       "locked": false,
       "requirement": ""
      }
@@ -723,6 +729,11 @@
       "text": "Maybe later.",
       "locked": false,
       "requirement": ""
+     },
+     {
+      "text": "Something's got you rattled. What is it?",
+      "locked": false,
+      "requirement": ""
      }
     ]
    }
@@ -762,12 +773,18 @@
       "text": "Maybe later.",
       "locked": false,
       "requirement": ""
+     },
+     {
+      "text": "Something's got you rattled. What is it?",
+      "locked": false,
+      "requirement": ""
      }
     ]
    },
    "timeout_sec": 5
   },
   {
+   "_comment": "Content Wave C4: confirm still selects visible index 0 ('Go on.') -- the Q2 give-option is appended at the end of the visible list, so it does not shift the guild-advice navigation.",
    "action": "press",
    "name": "confirm"
   },

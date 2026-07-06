@@ -65,7 +65,7 @@ forbidden. Lore canon comes from the Wandering Inn Wiki, not invention.
 
 	# QA playtest scripts (THE verification tool — prefer this over manual reasoning)
 	# Full canonical sweep in one command (what CI runs — .github/workflows/ci.yml):
-	wandering_inn_game_v4/qa/ci_sweep.sh                           # all 34 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
+	wandering_inn_game_v4/qa/ci_sweep.sh                           # all 40 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
 	wandering_inn_game_v4/qa/run_qa.sh load_gate headless          # loads every .gd/.tscn/.tres; catches parse/compile errors. NATIVE-ONLY (see below)
 	wandering_inn_game_v4/qa/run_qa.sh inn_walkthrough headless   # full inn journey, no screenshots
 	wandering_inn_game_v4/qa/run_qa.sh inn_walkthrough windowed   # same + screenshots (a window opens briefly)
@@ -289,6 +289,10 @@ Parse Error, or WARNING in any run is a regression.
 	wandering_inn_game_v4/qa/run_qa.sh field_skills_loop headless --seed=9  # boot: ui_field_hotbar_rendered{slots:1} (innate [Basic Cleaning]) -> number key on faced dirty_table fires P1 byte-parity stream (skill_used{basic_cleaning,dirty_table}+cleaned_the_inn+same toast) -> number key on empty floor = field_ambient fallback -> sleep grants [Tactician] (pre-banked studied_the_cellar) AND [Helper] (the fresh cleaned_the_inn:1) in ONE sleep -> hotbar re-renders slots:1->3 ([Basic Cleaning],[Basic Cooking],[Observe]) -> [Observe] slot(3) on Erin = her exact observe toast + used_skills journal reveal. Fixture rng overrides --seed; no combat in the path.
 
 	# SOCIAL PILLAR S4: the Social Pillar v1 end-to-end proof (loads post_tutorial_street fixture via title Continue)
+	# Content Wave C4: "The Wrong Order" (Lyonette Q2, 3 paths). Split by MAP: the loop is inn-local (Lyonette gives AND reports); TALK/FIGHT resolve on the street.
+	wandering_inn_game_v4/qa/run_qa.sh wrong_order_loop headless --seed=9   # PRIMARY inn-local: give -> skill-gate NEGATIVE (short_order pre-Helper) -> earn [Helper] -> cook (stretched_the_order, the cauldron skill-save) -> Lyonette SKILL report (resolved+reported, both beats) -> gratitude -> POOL-GROWTH (talk_pool_post active after resolved_wrong_order). No combat; fixture rng.
+	wandering_inn_game_v4/qa/run_qa.sh wrong_order_talk headless --seed=9   # TALK path (street): Krshia smooth-over (heard_wrong_order-gated) -> smoothed_with_krshia + persuaded_someone + resolved_wrong_order, NO combat. give/report pre-proven by the loop.
+	wandering_inn_game_v4/qa/run_qa.sh wrong_order_fight headless --seed=9  # FIGHT path (street): clear supplier_scavengers (2x goblin_raider, goblin_ambush) via combat_autoplay -> strongarmed_the_supplier + resolved_wrong_order (beat 1 in combat).
 	wandering_inn_game_v4/qa/run_qa.sh social_loop headless --seed=9  # PHASE A rotating talk pools + per-waking dedup: gate_guard/Selys/Krshia each play ONE pool dialogue_line on first-talk-per-waking (banking chatted_with_<id> + heard_gossip -> 3), and a SECOND Krshia talk opens her real crate graph with NO re-pool (chatted_with_krshia never reaches 2, assert absent). PHASE B persuade watch_sergeant -> persuaded_someone (identity gate); walk home FIGHTS the fixture-active floodplains ambush (Warrior+Relc); sleep at the inn bed (ONLY bed -> return leg mandatory) resolves diplomat.gained_by{persuaded_someone:1, heard_gossip:3} -> class_gained{diplomat} + grants toast "[Diplomat] class gained! — [Charming Smile], [Calming Touch]". PHASE C field hotbar re-renders slots:1->2 ([Charming Smile] is field-tagged, slot 2); hotbar_2 on faced Erin fires [Charming Smile] -> her friendly_line toast + befriended_moments + used_skills journal reveal. Fixture rng governs --seed.
 
 **Canonical QA seed table (M5 F1 close gate; +3 M6 T7 scripts; +1 lantern_check;
@@ -311,8 +315,17 @@ C3 +3 (`cisterns_fight`/`cisterns_talk`/`cisterns_scout` — Quest 1 three-path
 parity, one script per path per the crate precedent since the SKILL stream
 descends the sewers and the TALK stream never does, so they cannot share a run;
 all fixture-based, seed 9 held straightaway including `cisterns_fight`'s
-warrior-L1-solo nest fight)**),
-pinned straightaway (no seed search needed unless noted): run these 37 headless
+warrior-L1-solo nest fight)**; **Content Wave C4 +3
+(`wrong_order_loop`/`wrong_order_talk`/`wrong_order_fight` — Quest 2 'The Wrong
+Order' three-path parity. The paths split by MAP not just by stream: Lyonette is
+BOTH giver and report NPC in the INN, so `wrong_order_loop` runs the whole
+give→skill-gate-negative→earn-Helper→cook→report→gratitude→**pool-growth** loop
+inn-local (the SKILL path + the first talk_pool_post growth); the cross-map TALK
+(Krshia, street) and FIGHT-adjacent (supplier_scavengers, street) resolutions get
+their own street-start fixtures with the give+report pre-proven by the loop — so
+three scripts, like cisterns, not a shared run. All fixture-based, seed 9 held
+straightaway including `wrong_order_fight`'s warrior-L1-solo goblin_raider pair)**),
+pinned straightaway (no seed search needed unless noted): run these 40 headless
 scripts with `qa/run_qa.sh <script> headless --seed=<seed>` unless noted. The peek-only scripts (`title_peek`,
 `street_peek`) are screenshot utilities, not canonical gate members;
 `floodplains_peek` was retired by Q1 (floodplains is now walkably reachable

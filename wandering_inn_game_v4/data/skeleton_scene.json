@@ -430,6 +430,15 @@
       "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
       "...You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
      ],
+     "_comment_pool_post": "Content Wave C4 (Q2 pool-growth): the game's FIRST pool-GROWTH. Once `resolved_wrong_order` is banked (The Wrong Order settled by any path), Lyonette's rotating small-talk REPLACES `talk_pool` with these warmer lines -- the wounded-pride arc from her base pool completing into open warmth. Read by the S1 seam in wi_game.gd `_talk_pool_line` (content-only data + one narrow gated read; no per-line machinery). Rotation still keys on chatted_with_lyonette % lines.size(), zero rng.",
+     "talk_pool_post": {
+      "requires_accomplishment": { "resolved_wrong_order": 1 },
+      "lines": [
+       "You covered for me. With the order, I mean. You didn't have to — and you didn't make it a story to tell later. That is... rare. Thank you.",
+       "Sit anywhere you like. The good chair by the fire, even. No, I insist — I'm allowed to insist, it's practically my inn too.",
+       "I used to think kindness was something people spent on you to get something back. You keep not doing that. It's unsettling. In a good way. Mostly."
+      ]
+     },
      "conversation": "lyonette_tip",
      "dialogue": [
       {
@@ -595,6 +604,23 @@
      "on_skill_use": {
       "accomplishment": "cooked_meal",
       "toast": "[Basic Cooking] — The stew comes out rich and hot."
+     }
+    },
+    {
+     "_comment": "Content Wave C4 (Q2 SKILL path): the short-order prep pot -- a bespoke quest cooking station (cellar_door/nest_ledge precedent) so cooking here banks `stretched_the_order` WITHOUT mutating the shared stew_pot (which work_loop asserts banks `cooked_meal`). requires_skill basic_cooking gates it gracefully behind Helper: pre-Helper the field/interact use refuses with locked_toast + skill_unknown and banks nothing (no skill-name leak). Placed at the far kitchen corner (1,1), approached from (1,2), off every canonical inn route (the [1,1]/[1,2] refs in scripts are combat-GRID cells, not this overworld). Reuses the registered `cauldron` sprite (no test_sprite_registry row; ui_entities_rendered inn count 12->13, disclosed in inn_walkthrough + work_loop).",
+     "id": "short_order",
+     "kind": "prop",
+     "cell": [
+      1,
+      1
+     ],
+     "display_name": "Short-Order Pot",
+     "sprite": "cauldron",
+     "requires_skill": "basic_cooking",
+     "locked_toast": "The order's a mess and you haven't the first idea how to stretch it. Not yet.",
+     "on_skill_use": {
+      "accomplishment": "stretched_the_order",
+      "toast": "[Basic Cooking] — You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
      }
     },
     {
@@ -1777,6 +1803,27 @@
      "on_victory": [
       "recovered_crate_force",
       "found_the_crate"
+     ]
+    },
+    {
+     "_comment": "Content Wave C4 (Q2 FIGHT-adjacent path): the supplier's scavenger problem -- a NEW street encounter reusing the goblin_raider pair + goblin_ambush arena EXACTLY like crate_scavengers (crate precedent), so no new balance-harness cells are needed (identical, already-measured composition). Interact-only (no trigger_radius), placed at the far south-west market corner (5,16) clear of the crate cluster (crate_scavengers 12,16 / cellar_door 10,17 / watch_sergeant 17,12) and off gate_district's y2-5 lanes. Clearing it banks `strongarmed_the_supplier` + the shared `resolved_wrong_order` (beat 1 fires in combat). Encounters are excluded from blocked_cells (static+segments only) and no street script asserts a street entity count, so this is a silent street add.",
+     "id": "supplier_scavengers",
+     "kind": "encounter",
+     "cell": [
+      5,
+      16
+     ],
+     "display_name": "Supplier's Scavengers",
+     "sprite": "goblin_base",
+     "arena": "goblin_ambush",
+     "enemies": [
+      "goblin_raider",
+      "goblin_raider"
+     ],
+     "allies": [],
+     "on_victory": [
+      "strongarmed_the_supplier",
+      "resolved_wrong_order"
      ]
     },
     {

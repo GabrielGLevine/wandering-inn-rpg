@@ -24,6 +24,15 @@
 				{ "id": "resolve", "description": "Settle whatever has nested in the cisterns beneath the market -- however you see fit.", "complete_when": { "resolved_the_cisterns": 1 } },
 				{ "id": "report", "description": "Report the outcome to Olesm at the Guild.", "complete_when": { "cisterns_reported": 1 } }
 			]
+		},
+		{
+			"_comment": "Content Wave C4 Quest 2 'The Wrong Order' (Lyonette, social). Three-path parity mirroring the cisterns two-beat shape. Beat 1 `resolve` is the SHARED convergence counter `resolved_wrong_order`, banked by ANY path: FIGHT-adjacent (supplier_scavengers on_victory), TALK (Krshia smooth-over option), or SKILL (banked at Lyonette's report, since cooking alone only banks stretched_the_order -- cisterns_scout precedent). Beat 2 `report` (`wrong_order_reported`) is Lyonette's gratitude beat, banked at report time on all three paths (the SKILL report banks resolve+report together, firing both beats at once). heard_wrong_order (the quest-start) is NOT a beat; it only opens the give-beat and starts the quest.",
+			"id": "wrong_order",
+			"title": "The Wrong Order",
+			"beats": [
+				{ "id": "resolve", "description": "Set Lyonette's botched supply order right -- strong-arm, sweet-talk, or stretch it in the kitchen.", "complete_when": { "resolved_wrong_order": 1 } },
+				{ "id": "report", "description": "Tell Lyonette it's handled, before Erin hears of it.", "complete_when": { "wrong_order_reported": 1 } }
+			]
 		}
 	]
 }

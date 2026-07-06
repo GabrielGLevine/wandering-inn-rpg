@@ -127,6 +127,51 @@ func test_node_text_variants_last_match_wins() -> void:
 	assert(String(_events[0]["payload"]["text"]) == "last variant", "last matching text_variant wins")
 
 
+func _last_line_text() -> String:
+	for i in range(_events.size() - 1, -1, -1):
+		if String(_events[i]["type"]) == "dialogue_line":
+			return String(_events[i]["payload"]["text"])
+	return ""
+
+
+func _find_entity(scene: Dictionary, map_id: String, id: String) -> Dictionary:
+	for e: Dictionary in scene["maps"][map_id]["entities"]:
+		if String(e["id"]) == id:
+			return e
+	return {}
+
+
+## Content Wave C4 (Q2): the talk_pool_post GROWTH seam. Before the gate
+## (resolved_wrong_order) is banked, Lyonette's rotating small-talk draws from
+## her BASE talk_pool; after it, the same first-talk-of-waking path draws from
+## the GROWN talk_pool_post (a replacement, not a merge). Drives the real
+## WIGame interact path against the shipped Lyonette entity.
+func test_talk_pool_post_grows_pool_after_gate() -> void:
+	_events.clear()
+	var game := _make_game_with_dialogue({})
+	var scene := _load_json("res://data/skeleton_scene.json")
+	var lyo := _find_entity(scene, "inn", "lyonette")
+	var base_pool: Array = lyo["talk_pool"]
+	var post_lines: Array = (lyo["talk_pool_post"] as Dictionary)["lines"]
+	# Gate UNMET: first talk of the waking plays a BASE pool line.
+	game.player_cell = Vector2i(8, 5)
+	game.player_facing = Vector2i(1, 0)
+	game.interact()
+	var before := _last_line_text()
+	assert(base_pool.has(before), "pre-resolution talk draws from the BASE talk_pool")
+	assert(not post_lines.has(before), "pre-resolution talk is NOT a grown line")
+	# Bank the gate + sleep to re-arm the pool (sleep clears social_talked).
+	game.record_accomplishment("resolved_wrong_order")
+	game.sleep()
+	_events.clear()
+	game.player_cell = Vector2i(8, 5)
+	game.player_facing = Vector2i(1, 0)
+	game.interact()
+	var after := _last_line_text()
+	assert(post_lines.has(after), "post-resolution talk draws from the GROWN talk_pool_post")
+	assert(not base_pool.has(after), "post-resolution talk REPLACED the base pool, not merged it")
+
+
 const GRAPH := {
 	"start": "hub",
 	"nodes": {
@@ -221,6 +266,7 @@ func _init() -> void:
 	test_node_text_variants_fall_back_to_base_text_when_unmet()
 	test_node_text_variants_use_met_requires()
 	test_node_text_variants_last_match_wins()
+	test_talk_pool_post_grows_pool_after_gate()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)

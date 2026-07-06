@@ -539,6 +539,15 @@ func use_skill_field(skill_id: String) -> Dictionary:
 func _talk_pool_line(target: Dictionary) -> Dictionary:
 	var id := String(target["id"])
 	var pool: Array = target["talk_pool"]
+	# Content Wave C4 (Q2 pool-GROWTH -- the first documented one): an NPC may
+	# carry `talk_pool_post`, a SECOND pool that REPLACES `talk_pool` once its
+	# `requires_accomplishment` gate is met (Lyonette's warmer small-talk after
+	# "The Wrong Order" resolves). Content-only data + this one narrow gated
+	# read -- no per-line gating machinery. Rotation below still keys on
+	# chatted_with_<id> % pool.size() (zero rng), now over the grown pool.
+	var post: Dictionary = target.get("talk_pool_post", {})
+	if not post.is_empty() and _accomplishment_gate_met(post.get("requires_accomplishment", {})):
+		pool = post["lines"]
 	var counter_key := "chatted_with_%s" % id
 	var idx := accomplishment_count(counter_key) % pool.size()
 	var speaker := String(target.get("display_name", id))
@@ -590,7 +599,14 @@ func accomplishment_count(id: String) -> int:
 ## empty/absent `requires` reads as "always open". Pure reader -- no state
 ## change, no events.
 func _door_gate_met(door_when: Dictionary) -> bool:
-	var req: Dictionary = door_when.get("requires", {})
+	return _accomplishment_gate_met(door_when.get("requires", {}))
+
+
+## True when every accomplishment threshold in `req` (id -> min count) is met
+## (>= semantics, same as ally_requires / door_when). An empty/absent dict reads
+## as "always met". Pure reader -- no state change, no events. Shared by the
+## sewer-grate door gate (C1) and the talk_pool_post growth gate (C4).
+func _accomplishment_gate_met(req: Dictionary) -> bool:
 	for key: String in req:
 		if accomplishment_count(key) < int(req[key]):
 			return false

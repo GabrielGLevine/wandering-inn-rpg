@@ -1,12 +1,19 @@
 {
 	"start": "hub",
+	"_comment_c4": "Content Wave C4: Lyonette's hub now ALSO gives + resolves Quest 2 'The Wrong Order'. The give-option ('Something's got you rattled...') is hide_when heard_wrong_order (visible until the quest is heard); the three convergence REPORT options are progress-gated on requires.accomplishment (HIDDEN until the matching path counter is banked -- so they never appear to a player who hasn't done a path, and never touch scripts that don't bank those counters). Only the give-option is always-visible pre-quest, so dialogue_walkthrough's two hub option-asserts were updated to include it (heard_wrong_order is 0 there). The existing guild-advice flow (barmaid_retort/tip) is untouched; 'Maybe later.' remains the always-available softlock exit.",
 	"nodes": {
 		"hub": { "speaker": "Lyonette", "text": "If you're headed to the Guild, a word of advice would cost you nothing to hear.", "text_variants": [
-				{ "requires": { "accomplishment": { "lyonette_tip": 1 } }, "text": "You'll do fine at the Guild - just remember what I told you." }
+				{ "requires": { "accomplishment": { "lyonette_tip": 1 } }, "text": "You'll do fine at the Guild - just remember what I told you." },
+				{ "requires": { "accomplishment": { "heard_wrong_order": 1 } }, "text": "...Don't. Don't say the word 'order' too loudly. If Erin hears of it before it's fixed I will simply die on the spot. Tell me you've sorted it." },
+				{ "requires": { "accomplishment": { "resolved_wrong_order": 1 } }, "text": "There you are. The... supply matter. It's handled, and quietly. I won't forget that you did that." }
 			], "options": [
 			{ "text": "Advice about the Guild? From a barmaid?", "hide_when": { "accomplishment": { "asked_lyonette_guild": 1 } }, "effects": [ { "accomplishment": "asked_lyonette_guild" } ], "goto": "barmaid_retort" },
 			{ "text": "Go on.", "requires": { "accomplishment": { "asked_lyonette_guild": 1 } }, "hide_when": { "accomplishment": { "lyonette_tip": 1 } }, "effects": [ { "accomplishment": "lyonette_tip" } ], "goto": "tip" },
-			{ "text": "Maybe later.", "end": true }
+			{ "text": "Maybe later.", "end": true },
+			{ "text": "Something's got you rattled. What is it?", "hide_when": { "accomplishment": { "heard_wrong_order": 1 } }, "effects": [ { "quest": "wrong_order" }, { "accomplishment": "heard_wrong_order" } ], "goto": "order_brief" },
+			{ "text": "The supplier's scavenger trouble is dealt with - your order's on its way.", "requires": { "accomplishment": { "strongarmed_the_supplier": 1, "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "wrong_order_reported": 1 } }, "effects": [ { "accomplishment": "wrong_order_reported" } ], "goto": "gratitude" },
+			{ "text": "I smoothed it over with Krshia. The shortfall's covered.", "requires": { "accomplishment": { "smoothed_with_krshia": 1, "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "wrong_order_reported": 1 } }, "effects": [ { "accomplishment": "wrong_order_reported" } ], "goto": "gratitude" },
+			{ "text": "I stretched the order in the kitchen. No one will know it ran short.", "requires": { "accomplishment": { "stretched_the_order": 1, "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "wrong_order_reported": 1 } }, "effects": [ { "accomplishment": "resolved_wrong_order" }, { "accomplishment": "wrong_order_reported" } ], "goto": "gratitude" }
 		] },
 		"barmaid_retort": { "speaker": "Lyonette", "text": "A barmaid hears everything worth hearing in this city. But fine - go in blind if you prefer.", "options": [
 			{ "text": "Fair enough. Go on.", "goto": "hub" },
@@ -15,6 +22,13 @@
 		"tip": { "speaker": "Lyonette", "text": "Selys respects competence, not chatter. Stand like you've held a line before - which, evidently, you have - and skip the small talk.", "options": [
 			{ "text": "Actually - one more thing.", "goto": "hub" },
 			{ "text": "Noted.", "end": true }
+		] },
+		"order_brief": { "speaker": "Lyonette", "text": "I under-counted the week's supply order. A princess who cannot count a grocery list - spare me. It's short, and Erin trusts me to run this without her checking. There are three ways to make it right before she notices. The supplier - Krshia's people - has scavengers picking at their stores in the south market; clear that trouble by force and the delivery comes free and full. Or you could smooth it over with Krshia herself; she'll extend the order on a good word. Or - if you can cook - stretch what we have in the kitchen until the shortfall simply... isn't one. Pick whichever suits you. Only be quick.", "options": [
+			{ "text": "How bad is it, really?", "goto": "hub" },
+			{ "text": "I'll see it done.", "end": true }
+		] },
+		"gratitude": { "speaker": "Lyonette", "text": "It's... done. Truly done. I keep waiting for you to name a price, and you don't. Do you know how strange that is, to me? Where I'm from, no one lifts a finger without a ledger open. — Thank you. And not the court kind of thank-you. The real one. Now go sit down before I say something I'll regret.", "options": [
+			{ "text": "Anytime, Lyonette.", "end": true }
 		] }
 	}
 }

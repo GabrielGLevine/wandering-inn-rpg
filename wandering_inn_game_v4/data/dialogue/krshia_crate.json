@@ -3,11 +3,14 @@
 	"nodes": {
 		"hub": { "speaker": "Krshia", "text": "Hrr. My crate — gone from the storeroom three nights past. Sewers, I think. Scavengers do not knock first.", "text_variants": [
 			{ "requires": { "accomplishment": { "asked_about_crate": 1 } }, "text": "Hrr. Any word on my crate?" },
-			{ "requires": { "accomplishment": { "crate_returned": 1 } }, "text": "Hrr. Crate is home. You, I will remember. Yes." }
+			{ "requires": { "accomplishment": { "crate_returned": 1 } }, "text": "Hrr. Crate is home. You, I will remember. Yes." },
+			{ "requires": { "accomplishment": { "heard_wrong_order": 1 } }, "text": "Hrr. You have the look of someone come to ask a favor. Speak plainly — I have no patience for the other kind." },
+			{ "requires": { "accomplishment": { "smoothed_with_krshia": 1 } }, "text": "Hrr. The inn's order, extended. For the barmaid's sake, and yours. Do not make a habit of it." }
 		], "options": [
 			{ "text": "I'll look into it.", "hide_when": { "accomplishment": { "asked_about_crate": 1 } }, "effects": [ { "quest": "missing_crate" }, { "accomplishment": "asked_about_crate" } ], "goto": "accepted" },
 			{ "text": "The scavengers dragged it into a cellar — I've seen it myself. (Light)", "requires": { "accomplishment": { "studied_the_cellar": 1 } }, "hide_when": { "accomplishment": { "crate_returned": 1 } }, "effects": [ { "accomplishment": "recovered_crate_guile" }, { "accomplishment": "found_the_crate" }, { "accomplishment": "crate_returned" } ], "goto": "thanks" },
 			{ "text": "Your crate's accounted for.", "requires": { "accomplishment": { "found_the_crate": 1 } }, "hide_when": { "accomplishment": { "crate_returned": 1 } }, "effects": [ { "accomplishment": "crate_returned" } ], "goto": "thanks" },
+			{ "_comment": "Content Wave C4 (Q2 TALK path): the smooth-over. Progress-gated on heard_wrong_order (HIDDEN until Lyonette gives the quest), hidden once resolved -- so it never appears to crate_talk/social_loop/gate_district (which never bank heard_wrong_order). Banks the shared resolved_wrong_order (beat 1) + smoothed_with_krshia (Lyonette's TALK report gate) + persuaded_someone (the [Diplomat] identity feed, now a THIRD producer alongside watch_crate + zevara).", "text": "The inn's order ran short. Extend it on a good word — for Lyonette's sake. (Persuade)", "requires": { "accomplishment": { "heard_wrong_order": 1 } }, "hide_when": { "accomplishment": { "resolved_wrong_order": 1 } }, "effects": [ { "accomplishment": "smoothed_with_krshia" }, { "accomplishment": "persuaded_someone" }, { "accomplishment": "resolved_wrong_order" } ], "goto": "smoothed" },
 			{ "text": "Just visiting.", "end": true }
 		] },
 		"accepted": { "speaker": "Krshia", "text": "Hrr. Good. Sewer grates, south of here — start there. Careful of teeth.", "options": [
@@ -16,6 +19,9 @@
 		] },
 		"thanks": { "speaker": "Krshia", "text": "Hrr. Yes. This is mine. My thanks — do not expect a discount, but my thanks.", "options": [
 			{ "text": "Glad to help.", "end": true }
+		] },
+		"smoothed": { "speaker": "Krshia", "text": "Hrr. For the barmaid, then. She is prickly, that one, but she works — I have watched her learn it. The order goes out full, and no word of the shortfall reaches Erin from my stall. You speak plainly and you speak for a friend. That, I respect.", "options": [
+			{ "text": "Thank you, Krshia.", "end": true }
 		] }
 	}
 }
