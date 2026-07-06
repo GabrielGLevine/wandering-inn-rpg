@@ -26,9 +26,37 @@ func _init() -> void:
 	_validate_hide_when_nodes_have_always_available_exit(graphs)
 	_validate_class_gains(classes, produced_accomplishments)
 	_validate_props(scene)
+	_validate_effect_text_opacity()
 
 	print("PASS: errand content is fully cross-referenced")
 	quit(0)
+
+
+## M-LEGIBILITY L1: the FORBIDDEN-vocabulary grep over WIEffectText's output
+## across the FULL item + Skill + status catalogs. No generated player line may
+## carry a raw attribute (STR/DEX/CON/INT/WIS/CHA as a whole word) or a
+## percentage-toward ('%'). This runs the real formatter over the shipped data,
+## so it also catches a new item/skill whose fields would render a forbidden
+## token. (Exact-string coverage + drift tripwires live in test_effect_text.gd.)
+func _validate_effect_text_opacity() -> void:
+	var attr := RegEx.new()
+	attr.compile("(?i)\\b(str|dex|con|int|wis|cha)\\b")
+	var lines: Array[String] = []
+	for item: Dictionary in _load_json("res://data/items.json").get("items", []):
+		lines.append_array(WIEffectText.item_effect_lines(item))
+	for skill: Dictionary in _load_json("res://data/skills.json").get("skills", []):
+		lines.append_array(WIEffectText.skill_effect_lines(skill))
+	# Every status a shipped Skill can apply, glossary-rendered.
+	var status_ids: Dictionary = {}
+	for skill: Dictionary in _load_json("res://data/skills.json").get("skills", []):
+		var applies: Dictionary = (skill.get("effect", {}) as Dictionary).get("applies", {})
+		for status_id: String in applies:
+			status_ids[status_id] = true
+	for status_id: String in status_ids:
+		lines.append(WIEffectText.status_line(status_id))
+	for line: String in lines:
+		assert(attr.search(line) == null, "effect_text emits a forbidden attribute token: " + line)
+		assert(not line.contains("%"), "effect_text emits a forbidden percent-toward token: " + line)
 
 
 func _load_json(path: String) -> Dictionary:

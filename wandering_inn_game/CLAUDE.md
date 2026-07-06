@@ -39,6 +39,7 @@ forbidden. Lore canon comes from the Wandering Inn Wiki, not invention.
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_sprite_registry.gd
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_combat_visuals.gd
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_audio_data.gd
+	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_effect_text.gd  # M-LEGIBILITY L1: WIEffectText exact lines + drift tripwires + forbidden-vocab
 
 	# Balance harness — 200 seeded AI-vs-AI fights; THE authority on combat data tuning
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd

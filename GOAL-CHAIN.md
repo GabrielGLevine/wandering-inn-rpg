@@ -126,6 +126,12 @@ Order 8a→8b→8c→8d→8e unless the user reorders at a boundary.
   EXPLICIT lane-reported paths (never `git add -A` while a lane lives),
   per-task verification per wi-verifying-changes, whole-branch opus
   review per milestone.
+- WORKTREES ALLOWED (user 2026-07-06, supersedes the old main-only
+  rule): parallel EXECUTION lanes may run in isolated worktrees
+  (Agent isolation:"worktree") when their surfaces are disjoint; the
+  controller merges + re-gates on main. Content milestones sharing
+  skeleton_scene.json still effectively serialize (merge conflicts);
+  systems milestones with disjoint files genuinely pair.
 - Briefs carry the FOREGROUND-ONLY verification mandate verbatim; a
   lane "standing by" for a notification is STALLED — resume it bluntly.
 - Every commit leaves HEAD green; `scripts/sync_public_export.sh -m`
