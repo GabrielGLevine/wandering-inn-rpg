@@ -36,6 +36,11 @@ var inventory_ref: Node = null
 var _root: Control
 var _title_label: Label
 var _body_label: RichTextLabel
+## CF-review affordance: a "▼" cue shown at the panel foot only when the body
+## has more content below the fold (4-quest+ states can overflow the fixed
+## 560px panel). The RichTextLabel already scroll_active-scrolls, but silently
+## — this arrow signals there's more, and up/down scroll it into view.
+var _scroll_hint: Label
 
 
 func _ready() -> void:
@@ -86,17 +91,34 @@ func _ready() -> void:
 	_body_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	stack.add_child(_body_label)
 
+	# Bottom-foot "more below" cue, over the parchment (added after content so
+	# it draws on top). Hidden until _update_scroll_hint proves overflow.
+	_scroll_hint = UIChrome.make_label("▼")
+	_scroll_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_scroll_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_scroll_hint.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM, Control.PRESET_MODE_MINSIZE, 10)
+	_scroll_hint.hide()
+	_root.add_child(_scroll_hint)
+
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not event.is_action_pressed("journal"):
+	if event.is_action_pressed("journal"):
+		if not open and not _can_open():
+			return
+		if open:
+			_close()
+		else:
+			_open()
+		get_viewport().set_input_as_handled()
 		return
-	if not open and not _can_open():
-		return
-	if open:
-		_close()
-	else:
-		_open()
-	get_viewport().set_input_as_handled()
+	# While open, up/down scroll the body (world movement is already gated on
+	# `open`, so these keys are free to claim here) and re-evaluate the cue.
+	if open and event.is_action_pressed("move_down"):
+		_scroll_body(1)
+		get_viewport().set_input_as_handled()
+	elif open and event.is_action_pressed("move_up"):
+		_scroll_body(-1)
+		get_viewport().set_input_as_handled()
 
 
 func _can_open() -> bool:
@@ -117,6 +139,13 @@ func _open() -> void:
 	var skill_groups: Array = Game.sim.skills_journal()
 	_body_label.text = _build_body_text(quest_lines, skill_groups)
 	_root.show()
+	# The RichTextLabel's scrollbar geometry is only valid after a layout pass,
+	# so evaluate the overflow cue on the next idle frame (reset scroll to top
+	# first so a re-open always starts at the top with the cue if there's more).
+	var vbar := _body_label.get_v_scroll_bar()
+	if vbar != null:
+		vbar.value = 0.0
+	_update_scroll_hint.call_deferred()
 	var headings: Array = []
 	var revealed_skills: Array = []
 	var skill_count := 0
@@ -142,7 +171,28 @@ func _open() -> void:
 func _close() -> void:
 	open = false
 	_root.hide()
+	if _scroll_hint != null:
+		_scroll_hint.hide()
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_HIDDEN, {})
+
+
+## Nudges the body scroll by one step and re-tests the "more below" cue.
+func _scroll_body(dir: int) -> void:
+	var vbar := _body_label.get_v_scroll_bar()
+	if vbar == null:
+		return
+	vbar.value += float(dir) * 48.0
+	_update_scroll_hint()
+
+
+## Shows the "▼" cue only when the body has content scrolled below the fold
+## (value can still increase). Safe pre-layout: a zero page/max just hides it.
+func _update_scroll_hint() -> void:
+	if _scroll_hint == null:
+		return
+	var vbar := _body_label.get_v_scroll_bar()
+	var more_below := vbar != null and vbar.value < (vbar.max_value - vbar.page - 1.0)
+	_scroll_hint.visible = open and more_below
 
 
 ## Builds the BBCode body text: a "Quests" section (unchanged content, from

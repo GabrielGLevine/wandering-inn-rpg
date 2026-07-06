@@ -67,6 +67,13 @@ const LINE_FONT_SIZE := 24
 ## the sim so the GDI cadence never leaks a raw id.
 var _class_names: Dictionary = {}
 var _skill_names: Dictionary = {}
+## class id -> its level-1 grant skill ids (same source classes.json the
+## class_gained toast lists). A CLASS_GAINED event carries ONLY the class id;
+## the sim fires NO skill_unlocked for the level-1 kit (check_level_ups starts
+## at level+1), so the veil must expand the kit itself to voice the opening
+## grants — matching the toast — the way later level-ups already read from
+## their own skill_unlocked stream. Loaded once in _ready.
+var _class_level1_grants: Dictionary = {}
 
 var _black: ColorRect
 var _line_box: VBoxContainer
@@ -117,7 +124,13 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_begin_sleep()
 		WIEvents.CLASS_GAINED:
 			if _running:
-				_lines.append("[%s Class Obtained!]" % _class_name(String(payload.get("class", ""))))
+				var gained_id := String(payload.get("class", ""))
+				_lines.append("[%s Class Obtained!]" % _class_name(gained_id))
+				# The level-1 kit fires no skill_unlocked event of its own, so
+				# expand it here — one [Skill – X Obtained!] line per level-1
+				# grant, exactly the kit the class_gained toast lists.
+				for sk: Variant in _class_level1_grants.get(gained_id, []):
+					_lines.append("[Skill – %s Obtained!]" % _skill_name(String(sk)))
 		WIEvents.CLASS_LEVEL_UP:
 			if _running:
 				_lines.append("[%s Level %d!]" % [_class_name(String(payload.get("class", ""))), int(payload.get("level", 0))])
@@ -230,7 +243,11 @@ func _load_display_names() -> void:
 	if classes is Dictionary:
 		for cls: Variant in (classes as Dictionary).get("classes", []):
 			if cls is Dictionary and (cls as Dictionary).has("id"):
-				_class_names[String(cls["id"])] = String((cls as Dictionary).get("display_name", cls["id"]))
+				var cid := String(cls["id"])
+				_class_names[cid] = String((cls as Dictionary).get("display_name", cid))
+				for lv: Variant in (cls as Dictionary).get("levels", []):
+					if lv is Dictionary and int((lv as Dictionary).get("level", 0)) == 1:
+						_class_level1_grants[cid] = ((lv as Dictionary).get("grants", []) as Array).duplicate()
 	var skills: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills.json"))
 	if skills is Dictionary:
 		for sk: Variant in (skills as Dictionary).get("skills", []):

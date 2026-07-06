@@ -17,15 +17,31 @@ extends CanvasLayer
 ## margins without clipping (controller windowed pass at E3/H3 merge).
 const PANEL_SIZE := Vector2(720.0, 232.0)
 const LOCKED_COLOR := Color(0.45, 0.45, 0.45)
+## Playtest fix (long-body clipping): body text longer than the fixed panel can
+## show is PAGED — split into chunks of at most this many characters at word
+## boundaries — instead of overflowing the parchment bottom and pushing the
+## numbered options off-screen (the original bug: a first-time player saw the
+## body run off the panel and no options at all). ~200 chars ≈ 2-3 wrapped
+## lines at this width, which leaves headroom for up to 3 option rows + ribbon
+## inside the 232px panel WITHOUT widening/growing it (repo panel discipline:
+## "cut words never widen"). Non-final pages advance on the same `confirm`
+## used to pick an option; the option list only appears on the LAST page.
+const PAGE_CHAR_BUDGET := 200
 
 var _root: Control
 var _options_box: VBoxContainer
 var _speaker_label: Label
 var _text_label: Label
+var _more_hint: Label
 var _option_labels: Array[Label] = []
 var _options: Array = []
 var _cursor := 0
 var _shown := false
+## Paged body text for the current node + the page currently shown. A single-
+## page node behaves exactly as before (page 0 IS the last page). See
+## _render_node / _confirm for the QA-safe paging contract.
+var _pages: Array[String] = []
+var _page_idx := 0
 
 
 func _ready() -> void:
@@ -65,6 +81,14 @@ func _ready() -> void:
 	_text_label.custom_minimum_size = Vector2(PANEL_SIZE.x - 56.0, 46.0)
 	stack.add_child(_text_label)
 
+	# Continuation affordance shown only on a non-final page of a paged node —
+	# it occupies the option row's space (options are hidden until the last
+	# page), so it never adds a row to the last-page layout that must fit.
+	_more_hint = UIChrome.make_label("▼  more — press Enter")
+	_more_hint.add_theme_color_override("font_color", LOCKED_COLOR)
+	_more_hint.hide()
+	stack.add_child(_more_hint)
+
 	_options_box = VBoxContainer.new()
 	_options_box.add_theme_constant_override("separation", 1)
 	stack.add_child(_options_box)
@@ -87,10 +111,60 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 
 func _render_node(payload: Dictionary) -> void:
 	_speaker_label.text = String(payload["speaker"])
-	_text_label.text = String(payload["text"])
 	_options = payload.get("options", [])
 	_cursor = 0
-	_rebuild_options()
+	_pages = _paginate(String(payload["text"]))
+	# QA (headless/TestDriver) jumps straight to the last page so a single
+	# `confirm` still selects an option exactly as before this fix — the paged
+	# flow is a windowed human-play affordance and must not change the injected
+	# key count the 41-script sweep drives dialogue with (same _is_qa collapse
+	# idiom sleep_veil/combat pacing use).
+	_page_idx = (_pages.size() - 1) if _is_qa() else 0
+	_render_page()
+
+
+## Splits body text into word-boundary pages of at most PAGE_CHAR_BUDGET chars
+## so no single page can overflow the fixed panel. A short body yields one page
+## (identical to the pre-fix single-render behaviour).
+func _paginate(text: String) -> Array[String]:
+	var pages: Array[String] = []
+	var cur := ""
+	for word: String in text.split(" ", false):
+		var candidate := word if cur == "" else cur + " " + word
+		if candidate.length() > PAGE_CHAR_BUDGET and cur != "":
+			pages.append(cur)
+			cur = word
+		else:
+			cur = candidate
+	if cur != "":
+		pages.append(cur)
+	if pages.is_empty():
+		pages.append("")
+	return pages
+
+
+## Renders the current page's body text; the option list (and its input) is
+## live only on the LAST page, with the "▼ more" hint standing in its place on
+## earlier pages.
+func _render_page() -> void:
+	_text_label.text = _pages[_page_idx]
+	var on_last := _on_last_page()
+	_more_hint.visible = not on_last
+	_options_box.visible = on_last
+	if on_last:
+		_rebuild_options()
+	else:
+		for l: Label in _option_labels:
+			l.queue_free()
+		_option_labels.clear()
+
+
+func _on_last_page() -> bool:
+	return _page_idx >= _pages.size() - 1
+
+
+func _is_qa() -> bool:
+	return (TestDriver != null and TestDriver.active()) or DisplayServer.get_name() == "headless"
 
 
 func _rebuild_options() -> void:
@@ -151,14 +225,16 @@ func _hide() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if Game.sim.dialogue == null:
 		return
-	if event.is_action_pressed("move_up"):
+	if event.is_action_pressed("confirm"):
+		_confirm()
+		get_viewport().set_input_as_handled()
+	elif _on_last_page() and event.is_action_pressed("move_up"):
+		# Option cursor is meaningful only on the last page (where the list is
+		# shown); earlier pages swallow nothing but confirm (page advance).
 		_move_cursor(-1)
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("move_down"):
+	elif _on_last_page() and event.is_action_pressed("move_down"):
 		_move_cursor(1)
-		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("confirm"):
-		_confirm()
 		get_viewport().set_input_as_handled()
 
 
@@ -170,6 +246,11 @@ func _move_cursor(delta: int) -> void:
 
 
 func _confirm() -> void:
+	# On an earlier page, confirm turns the page instead of selecting.
+	if not _on_last_page():
+		_page_idx += 1
+		_render_page()
+		return
 	if _options.is_empty():
 		return
 	if bool((_options[_cursor] as Dictionary).get("locked", false)):

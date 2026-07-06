@@ -282,8 +282,21 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 		if anim != "":
 			spr.play(anim)
 		var catalog_entry: Dictionary = WISpriteRegistry.entry_for(sprite_id)
+		var scale_value := 1.0
 		if catalog_entry.has("render_scale"):
-			var scale_value := float(catalog_entry["render_scale"])
+			scale_value = float(catalog_entry["render_scale"])
+		# Combat-specific scale override (combatants.json `combat_scale`): a
+		# sprite sized canon-tall on the FIELD (Relc's bespoke full-frame Drake
+		# spearmaster renders ~2.8 cells at his field render_scale) overhangs
+		# multiple cells in the tight tactical grid and covers neighbours'
+		# HP/MP bars + sprites. A per-combatant combat_scale contains him
+		# (feet-anchored, so the trimmed height comes off the TOP into empty
+		# air) WITHOUT touching the field render_scale. Only combatants that
+		# declare it are affected; everyone else keeps the sprite catalog scale.
+		var combat_scale: Variant = WIDataRegistry.combatant_config(id).get("combat_scale")
+		if combat_scale != null:
+			scale_value = float(combat_scale)
+		if scale_value != 1.0:
 			spr.scale = Vector2(scale_value, scale_value)
 		# Anchor feet/base to the cell's bottom-center (M5 R3), matching
 		# world.gd's field entities so a shared combatant sprite looks

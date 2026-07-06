@@ -74,6 +74,7 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "warrior" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Warrior] class gained! — [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]" }, "timeout_sec": 5 },
+  { "_comment": "Playtest fix (veil first-class-gain grants): the GDI sleep veil now voices the level-1 kit as [Skill – X Obtained!] lines under the [Warrior Class Obtained!] proclamation, matching the toast's 4 grants. lines == 5 (1 class line + 4 skill lines) is the automated proof the FIRST class gain lists its grants; later level-ups already list theirs via skill_unlocked. The veil's deferred emit lands BEFORE ui_toast_rendered, so this wait sits ahead of that one to stay on the live side of the cursor. Under QA the veil collapses but still emits this count.", "action": "wait_for_event", "type": "ui_sleep_veil_rendered", "payload_contains": { "lines": 5 }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "[Warrior] class gained! — [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]" }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
   { "action": "screenshot", "name": "01_warrior_gained" },
