@@ -441,11 +441,6 @@
      ],
      "display_name": "Dirty Table",
      "sprite": "dirty_table",
-     "tint": [
-      0.62,
-      0.56,
-      0.46
-     ],
      "requires_skill": "basic_cleaning",
      "on_skill_use": {
       "accomplishment": "cleaned_the_inn",
@@ -587,7 +582,7 @@
       1
      ],
      "display_name": "Stew Pot",
-     "sprite": "grill",
+     "sprite": "cauldron",
      "requires_skill": "basic_cooking",
      "locked_toast": "You don't know your way around a stew pot. Yet.",
      "on_skill_use": {

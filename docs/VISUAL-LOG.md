@@ -39,18 +39,16 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   decision (changes field look) — NOT part of the M6.5 behavior-
   preserving refactor; the shared TileBoardBuilder makes the swap cheap
   afterward.
-- [ ] PROP — `stew_pot` reuses the `grill` sprite at same scale directly
+- [x] PROP — `stew_pot` reuses the `grill` sprite at same scale directly
   beside the kitchen's existing grill/hearth decor — reads as "more
   kitchen equipment", not a distinct interactive prop — slice T2
-  2026-07-04 — needs a distinct pot/cauldron region pick (Interior_Props
-  candidates) at next art pass. **PARKED by Track B2 item 2 (2026-07-06):
-  no round cauldron/stew-pot sprite exists in ANY in-tree pack** — verified
-  by PIL crop-measure + windowed reads: Cooking Station/Estructure.png are
-  modern gray stoves + wooden frames + draped tables (no pot); Furnace.png is
-  brick forges/kilns; Pixel_16 interiors is furniture; Sewer Props.png has
-  buckets/chests. Honesty rule (placeholder beats mismatch): grill-reuse held
-  rather than swap to a semantically-wrong oven/forge. Real fix = a PixelLab
-  cauldron gen (Track B item-1 lane) or a new pack with a literal pot.
+  2026-07-04. (B2 parked for lack of pack art.) **FIXED by Track B3
+  (2026-07-06): new `cauldron` PixelLab sprite** (`assets/sprites/cauldron/
+  Idle-Sheet.png`, render_scale 0.4, anchor [0.5,0.94], shadow) — a black
+  iron cauldron with a rising flame on a log fire; `stew_pot` entity
+  repointed `grill`→`cauldron`. Windowed-verified reading distinct from the
+  adjacent grill at a glance: `.superpowers/sdd/fp-handoff/b3-shots/
+  b3_cauldron_stewpot.png` (+ `b3_inn_start_dirty.png`).
 
 - [ ] UI/TEXT — tutor feed 4th line sits TIGHT against the parchment fold
   (descenders graze it; legible) — F fix-wave residual 2026-07-04 —
@@ -98,13 +96,16 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   glow light wiring. Windowed-verified reading as an iron drain/grate,
   distinct from the nearby campfire stone-rings
   (`.superpowers/sdd/fp-handoff/b2-shots/b2_sewer_grate_03_south_square.png`).
-- [ ] SPRITE — `training_dummy` is a semantic fallback placeholder (crate art)
-  — A2 2026-07-04 — **PARKED by Track B2 item 3 (2026-07-06): no straw-dummy
-  or armor-stand sprite exists in the packs.** The catalog's "armor stands"
-  in Furniture.png cols 6-10 are, on windowed crop-read, rounded wooden
-  wardrobes + a mirror + shields — none reads as a practice target/pell. Real
-  fix = a PixelLab straw-dummy gen (Track B item-1 lane). Crate placeholder
-  held per the honesty rule.
+- [x] SPRITE — `training_dummy` is a semantic fallback placeholder (crate art)
+  — A2 2026-07-04. (B2 parked for lack of pack art.) **FIXED by Track B3
+  (2026-07-06): new `training_dummy` PixelLab sprite** (`assets/sprites/
+  training_dummy/Idle-Sheet.png`, render_scale 0.5, anchor [0.5,0.92], shadow)
+  — a straw pell with a burlap head, outstretched straw arms, on a wooden
+  post. Applies to BOTH consumers of the `training_dummy` sprite id (the
+  `training_yard` arena/combatant dummies in `combatants.json`/`arenas.json`
+  and the `skeleton_scene` decor). Windowed-verified reading unmistakably as
+  a straw dummy at combat scale AND as decor: `.superpowers/sdd/fp-handoff/
+  b3-shots/b3_training_dummy_spar.png` + `b3_training_dummy_targeting.png`.
 - [ ] SPRITE — A2 reported shipped boulder/crate regions wrong (watermark
   bleed / empty space) but controller's combat-cover read showed crates
   fine — discrepancy UNRESOLVED — verify in a windowed pass before
@@ -125,20 +126,21 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   reveal and reads unmistakably as an open chest. Windowed-verified after the
   leather_jerkin pickup (`.superpowers/sdd/fp-handoff/b2-shots/
   b2_chest_open_01.png`).
-- [ ] PROP — `dirty_table`'s pre-clean tint (`[0.62,0.56,0.46]` vs
-  `table_brown`'s untinted look) reads as dirty at 3x zoom (verified,
-  M-BEAUTY R3 2026-07-05, `.superpowers/sdd/fp-handoff/r3-shots/
-  inn_00_start_no_labels.png` vs `inn_01_dirty_table_just_cleaned.png`)
-  but is SUBTLE at normal 1x viewing scale in a screenshot — meets the
-  distinct-at-a-glance contract but a future pass sourcing a genuinely
-  different "cluttered/grimy" region (plates, stains) would read faster
-  than a tint alone. Cheap fix shipped now per spec §8's "tint is a valid
-  distinct-at-a-glance method" allowance; this is the stronger follow-up.
-  **PARKED by Track B2 item 5 (2026-07-06): no "table set with plates/clutter"
-  region exists** — Furniture.png's tables and the Pixel_16 interiors tables
-  are all clean surfaces (windowed crop-read); the current tint already meets
-  the distinct-at-a-glance contract, so it holds. Real fix = a composited or
-  authored cluttered-table sprite.
+- [x] PROP — `dirty_table`'s pre-clean look was a TINT only
+  (`[0.62,0.56,0.46]` vs `table_brown`'s untinted look) — subtle at 1x —
+  M-BEAUTY R3 2026-07-05. (B2 parked for lack of pack art.) **FIXED by
+  Track B3 (2026-07-06): new `dirty_table` PixelLab sprite** (`assets/
+  sprites/dirty_table/Idle-Sheet.png`, render_scale 0.46, anchor [0.5,0.81],
+  shadow) — a flat top-down wooden table cluttered with dirty plates, mugs,
+  and food scraps, now the visual_states BASE (pre-clean); the existing
+  `cleaned_the_inn>=1` swap to `table_brown` (clean) is UNCHANGED. Sprite
+  render_scale + anchor were tuned so the on-screen footprint matches
+  `table_brown` (both ~24px wide, base-anchored to the cell bottom, centered
+  — heights 19px vs 22px), so the clean-swap does not jump. The base tint
+  on the entity was dropped (the sprite now carries the dirt). Windowed-
+  verified distinct-at-a-glance from the inn's clean tables, and the swap
+  verified non-jarring: `.superpowers/sdd/fp-handoff/b3-shots/
+  b3_inn_start_dirty.png` (dirty) vs `b3_dirty_table_cleaned.png` (clean).
 ## Fixed
 
 - [x] UI/FIELD-HOTBAR — field skills had no `icon` ids so the overworld

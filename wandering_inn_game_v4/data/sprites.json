@@ -117,18 +117,35 @@
   }
  },
  "dirty_table": {
-  "render_scale": 0.35,
+  "render_scale": 0.46,
+  "anchor": [
+   0.5,
+   0.81
+  ],
+  "shadow": true,
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/free_pack/Furniture.png",
+    "sheet": "res://assets/sprites/dirty_table/Idle-Sheet.png",
     "frame_size": [
-     72,
+     64,
      64
     ],
-    "region": [
-     0,
-     544,
-     72,
+    "fps": 1
+   }
+  }
+ },
+ "cauldron": {
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.94
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/cauldron/Idle-Sheet.png",
+    "frame_size": [
+     64,
      64
     ],
     "fps": 1
@@ -1626,19 +1643,17 @@
   ]
  },
  "training_dummy": {
-  "render_scale": 1.0,
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.92
+  ],
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/free_pack/Furniture.png",
-    "region": [
-     736,
-     73,
-     16,
-     23
-    ],
+    "sheet": "res://assets/sprites/training_dummy/Idle-Sheet.png",
     "frame_size": [
-     16,
-     23
+     64,
+     64
     ],
     "fps": 1
    }

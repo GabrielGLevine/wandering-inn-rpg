@@ -101,7 +101,11 @@ func _build_expected_counts() -> Dictionary:
 
 	## static field prop entries (single 64x64 region)
 	counts["dusty_scroll/idle"] = 1
+	## Track B3: PixelLab prop batch -- dirty_table (cluttered pre-clean look),
+	## cauldron (stew_pot), training_dummy (straw pell) are all single 64x64
+	## PixelLab sheets, 1 frame each.
 	counts["dirty_table/idle"] = 1
+	counts["cauldron/idle"] = 1
 	counts["bed/idle"] = 1
 	counts["door/idle"] = 1
 
