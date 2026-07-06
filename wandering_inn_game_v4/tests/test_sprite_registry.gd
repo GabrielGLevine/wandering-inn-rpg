@@ -24,7 +24,16 @@ func _init() -> void:
 				var expected: int = expected_counts.get("%s/%s" % [sprite_id, anim_name], -1)
 				assert(expected >= 0, "no expected frame count for %s/%s" % [sprite_id, anim_name])
 				var actual: int = frames.get_frame_count(full_name)
-				assert(actual == expected, "%s animation %s: expected %d frames, got %d" % [sprite_id, full_name, expected, actual])
+				## Public-checkout (fallback-art) runs: a missing sheet's
+				## placeholder can't know the real sheet's frame count (the
+				## PNG width carried it) -- relax to >=1 for exactly those
+				## sheets; asset-present runs keep the exact pin.
+				var anim_rec: Dictionary = entry["animations"][anim_name]
+				var sheet_key: String = "sheet_%s" % facing if facing != "" else "sheet"
+				if WISpriteRegistry.is_fallback_sheet(String(anim_rec[sheet_key])):
+					assert(actual >= 1, "%s animation %s: fallback placeholder needs >= 1 frame" % [sprite_id, full_name])
+				else:
+					assert(actual == expected, "%s animation %s: expected %d frames, got %d" % [sprite_id, full_name, expected, actual])
 				_assert_expected_region(sprite_id, full_name, frames.get_frame_texture(full_name, 0))
 	assert(not WISpriteRegistry.has_sprite("missing_sprite"), "registry should reject unknown sprite ids")
 	_assert_biome_tiles_build()
@@ -108,6 +117,10 @@ func _build_expected_counts() -> Dictionary:
 	counts["mushroom/idle"] = 1
 	## M5 R4 sconce: Bonfire_01-Sheet.png strip, 128px / 32px frame = 4 frames
 	counts["sconce/idle"] = 4
+
+	## Three Pillars PF wave: 8 code-drawn field-skill icons (single-frame)
+	for icon_id: String in ["icon_basic_cleaning", "icon_light", "icon_basic_cooking", "icon_observe", "icon_soothe_clientele", "icon_unerring_aim", "icon_sweep_the_tables", "icon_servers_prescience"]:
+		counts[icon_id + "/idle"] = 1
 
 	## M-FP A1 additions: library/sewer/dummy statics (1-frame regions);
 	## royal_soldier single-facing battler idle 256/64 = 4;

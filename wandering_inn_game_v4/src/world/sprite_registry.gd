@@ -184,6 +184,16 @@ static func _add_strip(frames: SpriteFrames, anim_name: String, sheet_path: Stri
 		frames.add_frame(anim_name, at)
 
 
+## True when `path` was substituted with a fallback placeholder this run
+## (missing file on a public checkout). Frame-count geometry for such a
+## sheet is unknowable (the real sheet's width carried it), so
+## catalog-vs-sheet assertions must relax to >=1 for these -- see
+## tests/test_sprite_registry.gd (the first public-repo CI run caught
+## exactly this: body_a expected 4 idle frames, placeholder had 1).
+static func is_fallback_sheet(path: String) -> bool:
+	return _missing_sheet_logged.has(path)
+
+
 ## --- R2 fallback-art placeholder synthesis -----------------------------------
 
 ## Placeholder for a missing sprite SHEET. Sized to contain the requested
