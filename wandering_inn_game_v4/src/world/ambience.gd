@@ -29,7 +29,7 @@ class_name WIAmbience
 const DOT_TEXTURE := preload("res://assets/fx/particle_dot.png")
 const LEAF_TEXTURE := preload("res://assets/fx/particle_leaf.png")
 
-const PRESETS := ["fireflies", "dust_motes", "leaves", "pond_glints", "embers"]
+const PRESETS := ["fireflies", "dust_motes", "leaves", "pond_glints", "embers", "hit_sparks"]
 
 
 ## Builds one configured (but not yet parented) GPUParticles2D for `preset`,
@@ -51,6 +51,8 @@ static func make(preset: String, rect: Rect2) -> GPUParticles2D:
 			return _pond_glints(rect)
 		"embers":
 			return _embers(rect)
+		"hit_sparks":
+			return _hit_sparks(rect)
 	return null # unreachable -- assert above covers every non-PRESETS value
 
 
@@ -190,6 +192,35 @@ static func _embers(rect: Rect2) -> GPUParticles2D:
 	mat.scale_min = 0.3
 	mat.scale_max = 0.6
 	mat.color = Color(1.0, 0.45, 0.15, 1.0)
+	mat.color_ramp = _fade_ramp()
+	_additive(node)
+	return node
+
+
+## M-JUICE E2: one-shot combat impact spark burst (<=8 particles) fired at a
+## struck combatant's cell. Unlike the always-on ambience presets above, the
+## CALLER sets `one_shot`/`emitting` and frees it after `lifetime` (see
+## board_renderer.gd's `spawn_hit_sparks`) -- so `preprocess` is forced back to
+## 0 here (a one-shot burst must start EMPTY and pop, not read as already
+## mid-life the way `_base`'s steady-state ambience emitters do). Warm-white
+## radial sparks, short life, additive -- reads as a bright hit flare, wasm-safe
+## constructs only (BOX emission + velocity/gravity/scale/color_ramp), same
+## constraint list as every preset above.
+static func _hit_sparks(rect: Rect2) -> GPUParticles2D:
+	var b := _base(rect, DOT_TEXTURE, 8, 0.4)
+	var node: GPUParticles2D = b["node"]
+	var mat: ParticleProcessMaterial = b["mat"]
+	node.preprocess = 0.0
+	node.one_shot = true
+	node.explosiveness = 1.0
+	mat.direction = Vector3.ZERO
+	mat.spread = 180.0
+	mat.initial_velocity_min = 18.0
+	mat.initial_velocity_max = 42.0
+	mat.gravity = Vector3(0, 30.0, 0)
+	mat.scale_min = 0.25
+	mat.scale_max = 0.5
+	mat.color = Color(1.0, 0.95, 0.6, 1.0)
 	mat.color_ramp = _fade_ramp()
 	_additive(node)
 	return node

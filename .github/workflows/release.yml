@@ -19,8 +19,6 @@
 #
 # ┌───────────────────────────────────────────────────────────────────────┐
 # │ ⚠️  PLACEHOLDERS TO FILL BEFORE FIRST TAG (see task-r3-report.md):     │
-# │   PRIVATE_ASSETS_REPO  →  OWNER/PRIVATE-REPO  (the private assets repo)│
-# │   ITCH_TARGET          →  ITCH_USER/ITCH_GAME (the itch.io project)    │
 # │   GODOT_SHA256 / GODOT_TEMPLATES_SHA256  →  real sha256 (as in ci.yml) │
 # │   BUTLER_VERSION       →  an exact broth version (do NOT float LATEST) │
 # └───────────────────────────────────────────────────────────────────────┘
@@ -89,7 +87,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PRIVATE_ASSETS_TOKEN }}
           # ⚠️ PLACEHOLDER — replace with the real private assets repo (owner/name).
-          PRIVATE_ASSETS_REPO: "OWNER/PRIVATE-REPO"
+          PRIVATE_ASSETS_REPO: "GabrielGLevine/wandering-inn-rpg-assets"
         run: |
           set -euo pipefail
           if [ -z "${GH_TOKEN:-}" ]; then
@@ -233,7 +231,7 @@ jobs:
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
           # ⚠️ PLACEHOLDER — replace with the real itch project (user/game).
-          ITCH_TARGET: "ITCH_USER/ITCH_GAME"
+          ITCH_TARGET: "sibianthegreybird/the-wandering-inn-rpg"
         run: |
           set -euo pipefail
           if [ -z "${BUTLER_API_KEY:-}" ]; then

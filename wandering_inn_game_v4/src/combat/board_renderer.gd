@@ -31,6 +31,13 @@ const MP_COLOR := Color(0.25, 0.4, 0.85)
 const MOVE_TWEEN_SECONDS := 0.12
 const BUMP_PIXELS := 3.0
 const BUMP_TWEEN_SECONDS := 0.06
+## M-JUICE E2 combat-feel tuning (presentation-only, all QA-collapsed via
+## `_juice_enabled` -> `_presentation_delay`, zero under TestDriver/headless).
+const HIT_FLASH_COLOR := Color(2.4, 2.4, 2.4, 1.0)  # white-hot pulse on the struck sprite
+const HIT_FLASH_SECONDS := 0.12
+const SHAKE_SECONDS := 0.12
+const SHAKE_SEGMENTS := 4
+const SPARKS_TTL := 0.7  # frees the one-shot GPUParticles2D safely past its 0.4 lifetime
 ## Playtest fix (props-over-tiles, repo-wide user mandate — see
 ## wi-art-and-sprites SKILL.md): arena cover/blocked cells render as biome-
 ## appropriate PROP SPRITES instead of a flat recolored tile. Existing
@@ -70,6 +77,9 @@ var _mp_bars: Dictionary = {}
 ## `_kill_combat_tween`.
 var _combat_tweens: Dictionary = {}
 var _combat_anim_tokens: Dictionary = {}
+## M-JUICE E2: the single active screenshake tween on `_board.position` (killed
+## + restarted so overlapping heavy hits never stack an ever-growing offset).
+var _shake_tween: Tween
 ## The WIMain host, stashed from `build()`'s `main_ref` param so `clear()` and
 ## the labels helpers below can resolve `World`/`WIWorldLabels` without the
 ## caller having to pass it again on every call.
@@ -104,6 +114,10 @@ func build(view: WICombatView, main_ref: Node) -> void:
 		return
 	for child in _board.get_children():
 		child.queue_free()
+	# M-JUICE E2: a screenshake left mid-tween by a previous encounter (defeat
+	# reload, rapid re-entry) must never leave the reused board root offset --
+	# reset it and drop any live shake tween before building the new arena.
+	_stop_shake()
 	_squares.clear()
 	_hp_bars.clear()
 	_mp_bars.clear()
@@ -142,6 +156,7 @@ func build(view: WICombatView, main_ref: Node) -> void:
 ## by is_instance_valid since a defeat may already have torn the whole World
 ## down via Game.reset()/load_slot before this runs on some paths.
 func clear() -> void:
+	_stop_shake()
 	if _board != null and is_instance_valid(_board):
 		_board.visible = false
 	var world := _world_node()
@@ -546,12 +561,20 @@ func flash_chip(id: String) -> void:
 	tw.tween_property(chip, "modulate", Color.WHITE, 0.15)
 
 
+## Death beat (spec item 5): a brief slow-fade of the whole combatant holder
+## to a dim ghost instead of an instant pop-out -- the sprite stays VISIBLE
+## (death_visible contract: earlier queued beats still animate against its
+## cell). Reads only the passed id + its own holder, never live combat state,
+## so it is dequeue-safe under paced AI playback. Used for chip combatants and
+## for sprite sheets with no death animation (play_anim's death fallback), while
+## sheets that DO have a `death_*` clip play that instead (body_a/PC).
 func fade_chip(id: String) -> void:
 	var holder := visual_for(id)
 	if holder == null:
 		return
 	var tw := create_tween()
-	tw.tween_property(holder, "modulate:a", 0.3, 0.2)
+	tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(holder, "modulate:a", 0.28, 0.3)
 
 
 func mark_death_visible(id: String) -> void:
@@ -574,6 +597,84 @@ func flash_cells(cells: Array, color: Color) -> void:
 		var tw := create_tween()
 		tw.tween_property(f, "modulate:a", 0.0, 0.35)
 		tw.tween_callback(f.queue_free)
+
+
+## M-JUICE E2 gate: true only in real play (windowed non-QA / native). Reuses
+## `_presentation_delay`'s exact TestDriver/headless collapse so every combat-
+## feel effect is a strict no-op under QA -- byte-identical event streams, no
+## board offset left mid-screenshot, no wasted particle nodes headless. Same
+## discipline as the M4 T10 pacing / cast-flash precedents.
+func _juice_enabled() -> bool:
+	return _presentation_delay(1.0) > 0.0
+
+
+## M-JUICE E2: white modulate pulse on the STRUCK combatant's sprite (cast-flash
+## precedent). Pulses the AnimatedSprite2D child only -- the holder's own
+## modulate is reserved for death fade / actor highlight, so a struck-then-
+## downed combatant never gets two tweens fighting over the same property.
+## Chip-only combatants keep their existing `flash_chip` pulse; this is additive
+## on top of the "hit" frame animation for sprite combatants.
+func impact_flash(id: String) -> void:
+	if not _juice_enabled():
+		return
+	var spr := _sprite_for(id)
+	if spr == null:
+		return
+	spr.modulate = HIT_FLASH_COLOR
+	var tw := create_tween()
+	tw.tween_property(spr, "modulate", Color.WHITE, HIT_FLASH_SECONDS)
+
+
+## M-JUICE E2: brief screenshake on the combat BOARD ROOT (`_board.position`) --
+## the world-space Node2D that holds every combatant/tile, NOT the UI
+## CanvasLayer (which must never jitter). `intensity` is 2-4px; a decaying
+## multi-step tween that always lands back on Vector2.ZERO. QA-collapsed
+## (no-op) so a headless/TestDriver screenshot can never catch a shifted board.
+func shake_board(intensity: float) -> void:
+	if not _juice_enabled() or _board == null:
+		return
+	_stop_shake()
+	var tw := create_tween()
+	var seg := SHAKE_SECONDS / float(SHAKE_SEGMENTS + 1)
+	for i in SHAKE_SEGMENTS:
+		var decay := 1.0 - float(i) / float(SHAKE_SEGMENTS)
+		var dir := Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0))
+		if dir == Vector2.ZERO:
+			dir = Vector2.RIGHT
+		var offset := dir.normalized() * intensity * decay
+		tw.tween_property(_board, "position", offset, seg)
+	tw.tween_property(_board, "position", Vector2.ZERO, seg)
+	_shake_tween = tw
+
+
+## Kills any live shake tween and snaps the board root back to origin -- called
+## on build()/clear() (encounter boundaries) and before starting a fresh shake.
+func _stop_shake() -> void:
+	if _shake_tween != null and _shake_tween.is_valid():
+		_shake_tween.kill()
+	_shake_tween = null
+	if _board != null and is_instance_valid(_board):
+		_board.position = Vector2.ZERO
+
+
+## M-JUICE E2: one-shot `hit_sparks` WIAmbience burst (<=8 particles, wasm-safe)
+## at a struck combatant's cell. `cell_xy` is the enqueue-time-captured
+## `_ui.target_cell` ([x,y] or []) -- never a live combat read, so paced AI
+## playback sparks land on the historical cell of the beat, not wherever the sim
+## has since moved. Self-frees past its lifetime; QA-collapsed (no particle node
+## spawned headless).
+func spawn_hit_sparks(cell_xy: Array) -> void:
+	if not _juice_enabled() or _board == null or cell_xy.size() < 2:
+		return
+	var origin := Vector2(int(cell_xy[0]), int(cell_xy[1])) * CELL
+	var rect := Rect2(origin, Vector2(CELL, CELL))
+	var sparks := WIAmbience.make("hit_sparks", rect)
+	if sparks == null:
+		return
+	sparks.z_index = 30
+	sparks.emitting = true
+	_board.add_child(sparks)
+	get_tree().create_timer(SPARKS_TTL).timeout.connect(sparks.queue_free)
 
 
 ## Applies an hp/max_hp/mp/max_mp dict to one combatant's bars/labels. Shared

@@ -42,6 +42,12 @@ const FROST_FLASH := Color(0.5, 0.8, 1.0)
 const FLAME_FLASH := Color(1.0, 0.45, 0.15)
 const SHIELD_FLASH := Color(0.4, 0.6, 1.0)
 const AI_BEAT_SECONDS := 0.5
+## M-JUICE E2: a hit dealing at least this much damage screenshakes even when
+## the PC is the attacker (a "heavy hit landed"); every hit the PC TAKES shakes
+## regardless of size. Calibrated above a normal swing (pc/relc basic ~7-13) so
+## only power_strike-class blows and the chieftain's big rolls trigger the
+## dealt-damage shake -- routine trades stay calm. Presentation-only threshold.
+const HEAVY_HIT_DAMAGE := 14
 ## TRAP (M6.5 final review): an event that fires during an AI turn but is
 ## MISSING from this list falls through to the live _on_domain_event arm and
 ## renders IMMEDIATELY against end-of-turn state (the T10 "teleport" desync),
@@ -379,6 +385,14 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 					_play_combatant_anim(target_id, "hit", ui.get("target_flip_h", null))
 				else:
 					_board_renderer.flash_chip(target_id)
+					# M-JUICE E2 combat feel (all no-ops under QA/headless via the
+					# renderer's `_juice_enabled` gate): white pulse on the struck
+					# sprite + a one-shot spark burst at its captured cell, and a
+					# board screenshake on a PC hit taken or a heavy blow landed.
+					_board_renderer.impact_flash(target_id)
+					_board_renderer.spawn_hit_sparks(ui.get("target_cell", []))
+					if target_id == "pc" or int(payload.get("damage", 0)) >= HEAVY_HIT_DAMAGE:
+						_board_renderer.shake_board(3.0 if target_id == "pc" else 4.0)
 		WIEvents.COMBATANT_DOWNED:
 			var downed_id := String(payload["id"])
 			_board_renderer.mark_death_visible(downed_id)
