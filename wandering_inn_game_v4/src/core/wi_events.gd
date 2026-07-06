@@ -148,3 +148,13 @@ const UI_LIGHTS_RENDERED := &"ui_lights_rendered"
 ## confirmation — {map, emitters} once GPUParticles2D presets are spawned
 ## from map `ambience` data.
 const UI_AMBIENCE_RENDERED := &"ui_ambience_rendered"
+## M-JUICE Track P2 (GDI sleep sequence): emitted by src/ui/sleep_veil.gd once
+## the black veil is fully drawn and the night's GDI proclamation lines are laid
+## out (before the read-hold), carrying {lines:int} = how many announcement lines
+## the veil rendered (0 = a plain "slept soundly" black dip). PURELY ADDITIVE UI
+## confirmation (the message_layer ui_*_rendered idiom): the veil consumes and
+## alters NO existing event — the same phase_changed/class_*/toast stream still
+## fires beneath it — so every prior QA assertion holds unchanged. Under QA/
+## headless the veil's fades/holds collapse to ~0 (the M4 T10 pacing precedent),
+## so this event fires effectively synchronously right after the sleep beat.
+const UI_SLEEP_VEIL_RENDERED := &"ui_sleep_veil_rendered"

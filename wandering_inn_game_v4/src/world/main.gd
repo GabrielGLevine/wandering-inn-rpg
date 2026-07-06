@@ -18,6 +18,7 @@ const PAUSE_MENU_SCRIPT := preload("res://src/ui/pause_menu.gd")
 const INVENTORY_SCRIPT := preload("res://src/ui/inventory.gd")
 const FIELD_HOTBAR_SCRIPT := preload("res://src/ui/field_hotbar.gd")
 const CONSOLIDATION_PROMPT_SCRIPT := preload("res://src/ui/consolidation_prompt.gd")
+const SLEEP_VEIL_SCRIPT := preload("res://src/ui/sleep_veil.gd")
 const TITLE_SCREEN_SCRIPT := preload("res://src/ui/title_screen.gd")
 
 var _container: SubViewportContainer
@@ -175,6 +176,13 @@ func _spawn_ui_layers() -> void:
 	_field_hotbar = FIELD_HOTBAR_SCRIPT.new()
 	_field_hotbar.name = "FieldHotbar"
 	add_child(_field_hotbar)
+	# M-JUICE Track P2: the GDI sleep veil (fade-to-black + centered night
+	# announcements). Layer 30, above every other UI so the darkness covers the
+	# screen; a pure renderer keyed on the sleep phase_changed. Torn down with
+	# the other UI layers on world/title swap (_clear_ui_layers).
+	var sleep_veil := SLEEP_VEIL_SCRIPT.new()
+	sleep_veil.name = "SleepVeil"
+	add_child(sleep_veil)
 
 
 func _spawn_world() -> void:
