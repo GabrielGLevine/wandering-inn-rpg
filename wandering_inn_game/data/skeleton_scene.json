@@ -699,16 +699,34 @@
      ]
     },
     {
-     "_comment": "Magical Door plan Task D1: the beat-2 FIGHT-path dormant encounter PLACEMENT (issue #8 spec §1 beat 2 -- 'clear the disturbance that's leaking through', one leg of the 3-path Pisces mage-consult parity with TALK/SKILL). Placed at (9,7), cellar-adjacent to pantry_door (10,6) under the same untouched-cell audit (see that entity's _comment); 'cellar' is narrative framing for the pantry's below-floor draft, not a second literal inn map. DEVIATION FROM THE LOCKED INTERFACE TEXT (flagged for reviewer/controller sign-off, see the D1 report): the plan's Interfaces block names this as a `kind: \"encounter\"` placement, but `tests/test_combat_data.gd` (one of the REQUIRED 16 unit suites) hard-asserts every `kind: \"encounter\"` entity in skeleton_scene.json resolves its `arena`/`enemies`/`allies`/`on_victory` against combatants.json/arenas.json RIGHT NOW, in THIS worktree, with D2's data absent (a parallel lane, not yet merged) -- shipping it as a real encounter would make D1's own required unit sweep permanently red. So it ships `kind: \"prop\"` instead (a plain flavor-only placeholder, inert-adjacent, no gate, no toast beyond flavor) -- test_combat_data's encounter loop skips non-encounter kinds entirely (its own `if kind != \"encounter\": continue`), so this is a clean, zero-risk placeholder. The LOCKED ids for the eventual real encounter are recorded here as plain text for whichever task promotes this prop once D2's data exists: arena `inn_cellar` (a NEW arena D2 should create -- 'reuse a vermin rig' per D2's own brief means `enemies: [\"sewer_vermin\", \"sewer_vermin\"]`, the ALREADY-REGISTERED vermin rig, so D2 needs ZERO new combatant entries here), `on_victory: cleared_the_leak` (D2's own locked id). D2's Files list says it never touches skeleton_scene.json -- since this entity now needs a skeleton_scene edit to become a real encounter, that promotion falls to D3 (which already touches this file for the pedestal/flicker amendments) or the controller's merge step. NO trigger_radius either way (interact-only; D3's Pisces FIGHT dialogue branch would route here once promoted).",
+     "_comment": "Magical Door plan Task D3 (issue #8 spec §1 beat 2 FIGHT leg): PROMOTED from D1's kind:\"prop\" placeholder (test_combat_data would have hard-failed against D2's absent combat data at D1's merge time; D2 has since landed rift_vermin_a/b/c in data/combatants.json + the inn_cellar arena in data/arenas.json, both confirmed present in this worktree) to the real `kind: \"encounter\"` shape. Locked ids per the plan's interface: arena `inn_cellar`, enemies EXACTLY [\"rift_vermin_a\",\"rift_vermin_b\",\"rift_vermin_c\"], on_victory banks `cleared_the_leak` (D2's own locked id) alongside the door-chain's shared `door_understood` (identity-locked convergence counter, banked identically by all 3 mage-consult legs -- pisces_magic.json's TALK/SKILL legs) and `pedestal_unsealed` (a D3-internal convergence counter gating anchor_stone_pedestal's `contains_when`, banked by this fight, `ruin_guardian`'s own on_victory below, AND both of Pisces's TALK/SKILL legs -- their consult knowledge doubles as safe-passage insight past the ruin guardian, same as fighting through him directly). `allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. Interact-only, NO trigger_radius (unchanged from D1's placement) -- Pisces's FIGHT branch (pisces_magic.json's `door_consult`) sends the player here by flavor text alone, no dialogue-side start_combat wiring (the crate/cisterns FIGHT-leg precedent: the fight lives on its own map, reached by the player's own feet). `on_interact_accomplishment`/`toast` DROPPED (dead fields on an encounter -- interact()'s \"encounter\" match arm never reads them); `observe` KEPT (the generic ANY-entity [Appraise Foe] fallback read works regardless of kind, inn_sign/shield_spiders precedent). `found_the_leak` (D1's now-orphaned flavor counter) was never referenced by any dialogue/quest gate or QA script (grepped clean) -- dropping its sole producer is harmless.",
      "id": "rift_vermin_leak",
-     "kind": "prop",
+     "kind": "encounter",
      "cell": [9, 7],
      "display_name": "A Leak in the Wall",
      "sprite": "bat",
      "tint": [0.55, 0.5, 0.42],
      "observe": "A hairline crack seams the plaster here, and the draft through it is colder than a pantry has any right to be. Something small moves on the other side of it, and doesn't like being watched back.",
-     "on_interact_accomplishment": "found_the_leak",
-     "toast": "The crack widens if you press it, just slightly -- not yet enough to reach through. Whatever's on the other side isn't getting out on its own. Yet."
+     "arena": "inn_cellar",
+     "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"],
+     "allies": ["relc"],
+     "ally_requires": { "met_relc": 1 },
+     "on_victory": ["cleared_the_leak", "door_understood", "pedestal_unsealed"]
+    },
+    {
+     "_comment": "Magical Door plan Task D3 (issue #8 spec §1 beat 2 SKILL leg): the doorframe's own worked stone, north of pantry_door (10,6) at (10,5) -- the field-skill first-use idiom (cellar_door/nest_ledge precedent), `requires_skill: observe` (the Tactician L1 grant, matching nest_ledge/cisterns_scout) + `on_skill_use` banks `read_the_door_runes` (an intermediate counter, zero rng) deterministically. Reporting the finding to Pisces (pisces_magic.json's hub report option, gated on this counter) banks the shared `door_understood` + `pedestal_unsealed` together -- the cisterns_scout/wrong_order 'SKILL alone only banks the intermediate counter, reporting to the consult NPC banks the convergence counters' precedent (Olesm/Lyonette's role there is Pisces's role here -- no olesm_intro.json touch needed, out of this task's file charter). Reuses the registered `dusty_scroll` sprite (the retired [Light]-study prop, thematically apt for 'something to read with a skill') tinted, no test_sprite_registry row needed (reused sprite id). Placed at (10,5), one of the confirmed-untouched inn interior cells from pantry_door's own blast-radius audit (see that entity's _comment) -- (9,5) is lyonette's cell, ruled out. Approach from (10,4) facing down. Inn ui_entities_rendered sprite count bumps 16->17 (inn_walkthrough/work_loop/upstairs_walkthrough updated).",
+     "id": "pantry_door_runes",
+     "kind": "prop",
+     "cell": [10, 5],
+     "display_name": "The Doorframe's Grain",
+     "sprite": "dusty_scroll",
+     "tint": [0.8, 0.8, 0.9],
+     "requires_skill": "observe",
+     "on_skill_use": {
+      "accomplishment": "read_the_door_runes",
+      "toast": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
+     },
+     "locked_toast": "The doorframe's old wood is carved with something under the paint, faint and worn. Whatever it says isn't for an untrained eye."
     }
    ]
   },
@@ -4370,6 +4388,15 @@
    "biome": "cave",
    "grid": { "width": 20, "height": 14 },
    "blocked": [[5, 4], [13, 9]],
+   "walls": {
+    "_comment": "Magical Door plan Task D3 (D1 review Medium 2): ruin_surface shipped Task D1 with NO walls field at all. Every other cave-biome map (sewers/deep_tunnels) carries interior obstacle dressing via walls.segments even with NO perimeter enclosure (grid-bound clipping alone stops movement at the map edge; segments here are INTERIOR texture/blocking, matching deep_tunnels' stalactite-rubble/fallen-column precedent -- from/to only, no cap/face, same minimal shape). Both segments sit in the untouched middle of the room (x6-11, y8-11), clear of ruin_walkthrough's own leg-by-leg cell audit (top row y=2 x2-17; column x=17 y2-5; row y=5 x2-17; column x=2 y5-13; bottom row y=13 x2-19; column x=19 y1-13; row y=1 x3-19) and both existing `blocked` singletons (5,4)/(13,9) -- no re-derivation of that script's route needed; re-verified live (ruin_walkthrough passes unchanged).",
+    "sheet": "res://assets/tiles/cave/Tiles.png",
+    "tile_px": 16,
+    "segments": [
+     { "_comment": "A fallen ceiling rubble column, Albez-ruin dressing.", "from": [7, 9], "to": [7, 11] },
+     { "_comment": "A broken lintel span.", "from": [10, 8], "to": [11, 8] }
+    ]
+   },
    "floor_layers": [
     { "_pick": "ruin floor, reusing the verified cave-floor tile neighborhood (Albez-flavored rubble/stone read).", "variants": [[8, 13], [9, 13], [10, 13]], "cells": "all" }
    ],
@@ -4389,7 +4416,7 @@
      "to_cell": [37, 11]
     },
     {
-     "_comment": "Magical Door plan Task D1 (issue #8 spec §5.2/§5.5, the anchor-stone-per-region idiom's FIRST instance): the beat-3 recovery target, LOCKED interface `contains: [\"anchor_stone\"]` per the plan text -- D1 does NOT ship that shape yet. WIGame.interact()'s container branch (`_interact_container`, src/core/wi_game.gd) is checked UNCONDITIONALLY ahead of on_interact_accomplishment/door_when and grants every listed item on the very first interact with no gate of any kind -- there is no `contains_when`-style seam in the sim today, and D1's file list does not include src/core/wi_game.gd (that's D4's file, for the unrelated portal-menu/sleep-hook work). Shipping `contains` now would let any player walk up and take the anchor stone with zero combat, the opposite of 'FIGHT-gated'. So D1 ships the sewer_grate/deep_fissure PRE-GATE idiom instead: on_interact_accomplishment (a harmless flavor counter) + a toast that reads as locked/guarded. `ruin_guardian` (17,7) already blocks the south approach in the fiction and physically (see that entity's own _comment -- it ships `kind: \"prop\"` too, a second deviation flagged there, but `is_cell_blocked` still treats its cell as occupied). Once D2 lands real combat data and it is promoted to a real `kind: \"encounter\"`, a victory there removes it permanently by default (no `respawns` flag -> WIGame.resolve_combat's `remove_entity` branch), freeing that cell. D3 -- which owns 'pedestal alternate gates' per this plan's own Task D3 Files list -- should swap this prop to the real `contains: [\"anchor_stone\"]` shape once it also decides how the TALK/SKILL alternate clears route to the same unlock (the plan's own 'D3 wires the alternates' framing). Flagged for reviewer sign-off in the D1 report.",
+     "_comment": "Magical Door plan Task D3 (issue #8 spec §5.2/§5.5, the anchor-stone-per-region idiom's FIRST instance): the beat-3 recovery target. D1 shipped this locked-flavor only (no `contains_when` seam existed in the sim); D3 adds one -- see src/core/wi_game.gd's interact()/_interact_container (the door_when-style `contains_when: {requires: {...}}` gate, reusing `_door_gate_met` verbatim, no new gate logic). Gated on `pedestal_unsealed` (D3-internal convergence counter): banked by EITHER `cleared_ruin_guardian` (fight him right here) OR any of Pisces's TALK/SKILL mage-consult legs (their examination doubles as safe-passage insight -- the FIGHT-at-beat-2 leg, having sent the player to clear `rift_vermin_leak` in the inn instead, does NOT bank it, so THOSE players still have to clear the guardian in person; see that entity's own _comment below). `on_interact_accomplishment`/`toast` KEPT verbatim as the unmet-gate fallback (interact()'s new contains_when check falls through to this exact branch when unmet -- ruin_walkthrough's fixture has door_chain_started but neither pedestal_unsealed producer, so its locked-toast assertion is untouched, byte-identical). `on_open_accomplishment: recovered_anchor_stone` (the chain's locked id) fires once, on the SAME interact that grants the item, the first time the gate is met.",
      "id": "anchor_stone_pedestal",
      "kind": "prop",
      "cell": [17, 6],
@@ -4397,20 +4424,26 @@
      "sprite": "pedestal",
      "tint": [0.7, 0.7, 0.75],
      "observe": "A stone rests in a shallow cradle atop the plinth, held there by nothing you can see. Something older than the dust stands close enough to notice you noticing.",
+     "contains": ["anchor_stone"],
+     "contains_when": { "requires": { "pedestal_unsealed": 1 } },
+     "on_open_accomplishment": "recovered_anchor_stone",
      "on_interact_accomplishment": "found_the_pedestal",
      "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea."
     },
     {
-     "_comment": "Magical Door plan Task D2's own locked interface, reproduced verbatim as a forward reference for whichever task promotes this placeholder: encounter id `ruin_guardian`, arena id `ruin_court`, on_victory accomplishment `cleared_ruin_guardian`. DEVIATION FROM THE LOCKED INTERFACE TEXT (flagged for reviewer/controller sign-off, see the D1 report): the plan names this a `kind: \"encounter\"` placement, but `tests/test_combat_data.gd` (one of the REQUIRED 16 unit suites) hard-asserts every `kind: \"encounter\"` entity resolves its `arena`/`enemies`/`allies`/`on_victory` against combatants.json/arenas.json RIGHT NOW, in THIS worktree, with D2's data absent (a parallel lane, not yet merged) -- shipping it as a real encounter would make D1's own required unit sweep permanently red. So it ships `kind: \"prop\"` instead -- test_combat_data's encounter loop skips non-encounter kinds entirely. Crucially, this does NOT break the physical-blocking design `anchor_stone_pedestal`'s own _comment describes: `is_cell_blocked` treats EVERY entity's cell as occupied regardless of `kind` (src/core/wi_game.gd), so this prop still blocks (17,7), the pedestal's south approach, exactly as a live encounter would. `enemies` would name NEW combatant ids (`ruin_construct`, `ruin_wisp`) D2 must create in data/combatants.json when promoting this to a real encounter (Albez canon: an animated guardian construct + a lesser wisp escort, left at Warmage Thresk's door -- 'mid-weight construct/undead-class guardian + escorts' per D2's own brief); D1 chose these ids so D2 has an unambiguous target. No allies intended (the sewers/deep_tunnels precedent for an isolated dungeon fight). D2's Files list says it never touches skeleton_scene.json -- since promoting this prop to a real encounter now requires a skeleton_scene edit, that falls to D3 (which already touches this file for the pedestal/flicker amendments) or the controller's merge step. `ruin_walkthrough` (this task's own canonical) never interacts this entity -- the route approaches only as close as (17,5), one cell north of the pedestal, never facing (17,7).",
+     "_comment": "Magical Door plan Task D3 (issue #8): PROMOTED from D1's kind:\"prop\" placeholder to the real `kind: \"encounter\"` shape now that D2's combat data has landed (ruin_guardian/ruin_ward_a/ruin_ward_b in data/combatants.json, the `ruin_court` arena in data/arenas.json, both confirmed present in this worktree). Locked ids per the plan: arena `ruin_court`, enemies EXACTLY [\"ruin_guardian\",\"ruin_ward_a\",\"ruin_ward_b\"] (the entity id and the first enemy combatant id are both `ruin_guardian` by design -- separate registries, entities vs. combatants, no collision), on_victory banks `cleared_ruin_guardian` (D2's locked id) + the shared `pedestal_unsealed` convergence counter (see `anchor_stone_pedestal`'s own _comment for the full OR-gate rationale). `allies:[\"relc\"]`/`ally_requires:{met_relc:1}` matches D2's own harness gated cell (`ruin_guardian_w8_relc`, the tuned 0.55-0.8 band) over the harder ungated `_solo` variant -- a deviation from D1's 'no allies intended' placeholder note, made once D2's actual harness data showed a relc-eligible tuned band exists. Physical blocking is UNCHANGED: `is_cell_blocked` treats every entity's cell as occupied regardless of kind, so this still blocks (17,7), the pedestal's south approach, exactly as before. `on_interact_accomplishment`/`toast` DROPPED (dead fields on an encounter, same rationale as `rift_vermin_leak`'s own promotion); `observe` KEPT. `found_the_ruin_guardian` (D1's now-orphaned flavor counter) was never referenced by any dialogue/quest gate or QA script (grepped clean). `ruin_walkthrough`'s route still never interacts this entity (approaches only to (17,5), never facing (17,7)) -- interact-only, NO trigger_radius, so the promotion is silent for that script.",
      "id": "ruin_guardian",
-     "kind": "prop",
+     "kind": "encounter",
      "cell": [17, 7],
      "display_name": "The Ruin Guardian",
      "sprite": "raskghar_awakened",
      "tint": [0.55, 0.55, 0.6],
      "observe": "Stone shaped like a soldier, or close enough that the difference doesn't help you. It hasn't moved since you stepped into this room. That is not the same as harmless.",
-     "on_interact_accomplishment": "found_the_ruin_guardian",
-     "toast": "It doesn't move, and doesn't need to. Whatever wakes it isn't a conversation you're ready to have."
+     "arena": "ruin_court",
+     "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"],
+     "allies": ["relc"],
+     "ally_requires": { "met_relc": 1 },
+     "on_victory": ["cleared_ruin_guardian", "pedestal_unsealed"]
     }
    ]
   }

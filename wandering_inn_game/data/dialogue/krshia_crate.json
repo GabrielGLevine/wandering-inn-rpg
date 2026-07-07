@@ -53,7 +53,12 @@
 			{ "text": "The wax-sealed ward, then. (9 gold)", "requires": { "gold": 9 }, "effects": [ { "gold": -9 }, { "item": "hedge_ward_charm" } ], "goto": "bought" },
 			{ "text": "The silver-capped fang. (14 gold)", "requires": { "gold": 14 }, "effects": [ { "gold": -14 }, { "item": "hunters_fang_talisman" } ], "goto": "bought" },
 			{ "text": "The stone-scale, the one under the counter. (35 gold)", "requires": { "gold": 35 }, "effects": [ { "gold": -35 }, { "item": "stonescale_talisman" } ], "goto": "bought" },
+			{ "_comment": "Magical Door plan Task D3 (issue #8 spec §5.3): the attunement catalyst, 35g -- inside the ratified 30-40g band, do not tune elsewhere. Same buy-contract shape as every other charm (requires:{gold:price} + effects:[{gold:-price},{item:id}]) plus one extra effect banking bought_catalyst (the chain's locked id) on purchase. No door_chain_started gate -- Krshia sells it to anyone asking; harmless if bought before the chain even starts, the recover beat just waits on it. Own reaction node (catalyst_sold) rather than the generic 'bought' text, since 'wear it, use it' reads wrong for a carried macguffin.", "text": "That piece under the far cloth. What is it? (35 gold)", "requires": { "gold": 35 }, "effects": [ { "gold": -35 }, { "item": "resonant_catalyst" }, { "accomplishment": "bought_catalyst" } ], "goto": "catalyst_sold" },
 			{ "text": "Back to the regular stall.", "goto": "shop" }
+		] },
+		"catalyst_sold": { "speaker": "Krshia", "text": "Hrr. That one, I do not ask questions about. Silverfang trade brings stranger things than that through Liscor, and it always finds the buyer who was already looking for it. Yours now. Spend the rest of your coin on something that talks less.", "options": [
+			{ "text": "Show me the stall again.", "goto": "shop" },
+			{ "text": "My thanks, Krshia.", "end": true }
 		] },
 		"bought": { "speaker": "Krshia", "text": "Sold. Wear it, use it, and do not bring it back to me broken expecting sympathy. Anything else catch your eye?", "options": [
 			{ "text": "Show me the stall again.", "goto": "shop" },

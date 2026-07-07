@@ -180,6 +180,11 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 					produced[String(skill_use["accomplishment"])] = true
 			if entity.has("on_interact_accomplishment"):
 				produced[String(entity["on_interact_accomplishment"])] = true
+			# Magical Door plan Task D3: a container's optional
+			# `on_open_accomplishment` (src/core/wi_game.gd's _interact_container)
+			# is a producer too, same shape as on_interact_accomplishment above.
+			if entity.has("on_open_accomplishment"):
+				produced[String(entity["on_open_accomplishment"])] = true
 			# Social Pillar S1/S3: a non-empty talk_pool makes the sim's
 			# _talk_pool_line bank heard_gossip (+1) and chatted_with_<id> (+1) on
 			# the first talk of each waking. The bank happens in the sim, not a

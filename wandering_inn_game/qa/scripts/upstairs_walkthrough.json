@@ -3,7 +3,7 @@
  "steps": [
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "inn", "floor_cells": 160, "blocked_cells": 55 } },
-  { "_comment": "M-DEPTH DP3: the new stairs_up door bumps the inn's rendered entity count 13 -> 14 (blocked_cells unchanged -- entity cells were never counted, static blocked UNION wall segments only). Magical Door plan Task D1 (issue #8): pantry_door + rift_vermin_leak bump it again, 14 -> 16.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 16, "fallbacks": 0 } },
+  { "_comment": "M-DEPTH DP3: the new stairs_up door bumps the inn's rendered entity count 13 -> 14 (blocked_cells unchanged -- entity cells were never counted, static blocked UNION wall segments only). Magical Door plan Task D1 (issue #8): pantry_door + rift_vermin_leak bump it again, 14 -> 16. Task D3: pantry_door_runes bumps it once more, 16 -> 17.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 17, "fallbacks": 0 } },
   { "action": "screenshot", "name": "00_start" },
 
   { "_comment": "== BASELINE: sleep at the EXISTING ground-floor bed (2,7), unchanged behavior -- (2,3) down3 -> (2,6), down1 blocks on the bed & faces it (field_skills_loop/atmosphere_check precedent cell).", "action": "move", "direction": "down", "steps": 3 },
