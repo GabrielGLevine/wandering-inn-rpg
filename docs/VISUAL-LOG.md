@@ -16,6 +16,27 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] SPRITE — **the `bed` prop (both the ground-floor inn bed and the new
+  M-DEPTH DP3 `your_bed` upstairs) is fully occluded by the player's own
+  sprite when approached the way every sleep interaction is scripted**
+  (stand one cell south, face up/north, interact) — windowed-verified in
+  `.superpowers/sdd/fp-handoff/dp3-shots/03_your_bed_sleep.png`: zoomed in,
+  zero pixels of the bed sprite are visible behind the player's head/torso.
+  Root cause: `bed`'s `render_scale` (0.375, frame 34x44 -> ~13x16px) is
+  small relative to the player character rig, which visually extends
+  upward past its own cell into the tile directly north when facing that
+  way (the SAME approach geometry every sleep site uses) -- `lyonette_door`
+  (DP3, `render_scale` 0.5, ~17x22px) shows a comparable but smaller
+  occlusion (a visible sliver survives above the player's head, see
+  `02_lyonette_door.png`), suggesting scale is the deciding factor, not a
+  z-order/y-sort bug. PRE-EXISTING for the ground-floor bed (same sprite,
+  same interaction convention, unchanged by this task) -- newly OBSERVED
+  during DP3's windowed read, not introduced by it. Non-blocking: the sleep
+  toast/mood card are both fully legible regardless, and no canonical QA
+  script asserts on the bed's on-screen visibility. A fix would mean either
+  a bigger bed crop, an anchor/y-sort adjustment for small props approached
+  from the south, or accepting it as "the player is standing right where
+  they'd sleep" — a design call for a future visual-fix pass, not this task.
 - [ ] SPRITE — **THE REQUEST BOARD (`guild_board`, M-DEPTH DP1, Adventurer's
   Guild interior) reuses the `inn_sign` hanging-plank crop and reads
   small/low-contrast against the wood-plank wall** — windowed-verified

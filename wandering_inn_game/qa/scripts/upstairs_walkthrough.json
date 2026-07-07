@@ -1,0 +1,58 @@
+{
+ "_comment": "M-DEPTH DP3 canonical: the inn's upstairs (private quarters). FIXTURE-FIRST: no fixture needed -- every beat here (the stairs door pair, Lyonette's locked door, the PC's own bed) is reachable from a bare fresh start with zero prior accomplishments/classes, unlike DP1's guild script which needed pre-banked hub-gating state. Sleep-beat PARITY is proven LIVE, not just claimed: this script sleeps at the EXISTING ground-floor `bed` first (baseline: phase_changed + the plain 'You sleep soundly.' fallback, no other toast), then climbs upstairs and sleeps at the NEW `your_bed` (same two events, PLUS one extra flavor toast, 'Your own bed.', fired before them) -- the exact same-events-different-toast contract the brief asked for, demonstrated back to back rather than asserted in a comment. Seed 9 for convention (no rng consumed by anything in this walk -- no combat, no skill checks).",
+ "steps": [
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "inn", "floor_cells": 160, "blocked_cells": 55 } },
+  { "_comment": "M-DEPTH DP3: the new stairs_up door bumps the inn's rendered entity count 13 -> 14 (blocked_cells unchanged -- entity cells were never counted, static blocked UNION wall segments only).", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 14, "fallbacks": 0 } },
+  { "action": "screenshot", "name": "00_start" },
+
+  { "_comment": "== BASELINE: sleep at the EXISTING ground-floor bed (2,7), unchanged behavior -- (2,3) down3 -> (2,6), down1 blocks on the bed & faces it (field_skills_loop/atmosphere_check precedent cell).", "action": "move", "direction": "down", "steps": 3 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You sleep soundly." }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "times_slept", "equals": 1 },
+
+  { "_comment": "== UP THE STAIRS: (2,6) up3 -> (2,3), right11 -> (13,3) along the shared y3 hallway (lantern_check/mage_unlock_loop's own thoroughfare, untouched by this task), down3 -> (13,6), interact bumps stairs_up (13,7) facing down.", "action": "move", "direction": "up", "steps": 3 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
+  { "action": "move", "direction": "right", "steps": 11 },
+  { "action": "assert_state", "path": "player_cell", "equals": [13, 3] },
+  { "action": "move", "direction": "down", "steps": 3 },
+  { "action": "assert_state", "path": "player_cell", "equals": [13, 6] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn_upstairs", "cell": [1, 2] }, "timeout_sec": 5 },
+  { "_comment": "Chronology mirrors guild_door: transition() fires map_changed synchronously, world.gd rebuilds the field (mood/map/entities) BEFORE wi_game.gd's interact() records on_enter_accomplishment -- visited_own_room asserted AFTER the render events.", "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "inn_upstairs" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": { "map": "inn_upstairs", "floor_cells": 96, "blocked_cells": 38 }, "timeout_sec": 5 },
+  { "_comment": "3 entities (stairs_down, your_bed, lyonette_door) + the PC's own sprite (render_counts counts the PC too, world.gd's _count_visual(_player_visual, ...) call) = 4.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 4, "fallbacks": 0 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "visited_own_room" }, "timeout_sec": 5 },
+  { "_comment": "MOOD CARD SHOT: the warm-dim inn_upstairs grade against the hallway + your-room floor variant.", "action": "screenshot", "name": "01_upstairs_hallway" },
+
+  { "_comment": "== LYONETTE'S DOOR: (1,2) right6 -> (7,2), up1 blocks on lyonette_door (7,1) & faces it. Plain interact (no requires_skill set) falls through interact()'s use_skill('', id) branch -- the same skill-less-locked-prop seam sewers' sewer_debris already uses -- straight to the bespoke locked_toast.", "action": "move", "direction": "right", "steps": 6 },
+  { "action": "assert_state", "path": "player_cell", "equals": [7, 2] },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "skill_unknown", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Locked. Lyonette keeps exactly one door in this inn that isn't anyone's business but hers." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "02_lyonette_door" },
+
+  { "_comment": "== YOUR BED: (7,2) right2 -> (9,2) (the rug, walkable decor), up1 blocks on your_bed (9,1) & faces it. sleep_toast fires FIRST, then sleep()'s own stream -- SAME two events as the baseline sleep above (phase_changed, then the fallback toast), proving sleep-beat parity live.", "action": "move", "direction": "right", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [9, 2] },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Your own bed." }, "timeout_sec": 5 },
+  { "_comment": "YOUR-BED TOAST SHOT.", "action": "screenshot", "name": "03_your_bed_sleep" },
+  { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You sleep soundly." }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "times_slept", "equals": 2 },
+
+  { "_comment": "== BACK DOWNSTAIRS: (9,2) left8 -> (1,2), down1 blocks on stairs_down (1,3) & faces it, interact -> lands back at (13,6) in the inn (one cell north of stairs_up), round-trip integrity.", "action": "move", "direction": "left", "steps": 8 },
+  { "action": "assert_state", "path": "player_cell", "equals": [1, 2] },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [13, 6] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "inn" }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "04_back_downstairs" }
+ ]
+}

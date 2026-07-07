@@ -104,6 +104,25 @@
    ],
    "vignette": 0.3
   },
+  "inn_upstairs": {
+   "_comment": "M-DEPTH DP3: the inn's second floor -- \"warm dim\" per the plan's direction-card convention. TIME-INVARIANT (same sewers/deep_tunnels precedent for a room that doesn't see the outside clock directly) rather than day/dusk/night-graded like the guild's windowed hall: a small private upstairs room reads the same at 2pm or midnight. Reuses the inn's OWN dusk grade verbatim ([0.85,0.72,0.55]) as the permanent pin -- literally 'always looks like the warm end of the day downstairs', a direct, defensible reuse rather than inventing a new palette. Same vignette as the inn (0.4) -- enclosed but not oppressive, matching a lived-in room rather than a dungeon.",
+   "day": [
+    0.85,
+    0.72,
+    0.55
+   ],
+   "dusk": [
+    0.85,
+    0.72,
+    0.55
+   ],
+   "night": [
+    0.85,
+    0.72,
+    0.55
+   ],
+   "vignette": 0.4
+  },
   "deep_tunnels": {
    "_comment": "M-ARC A2: the Raskghar descent -- the DARKEST pin in the game, time-invariant (below the sewers, no daylight ever reaches it). Meaningfully darker + colder than the sewers' [0.3,0.32,0.45] so the descent visibly escalates; a stronger vignette (0.55) squeezes the readable space to a lantern's reach. Any prop lights glow at every phase intent (light_energy day=0.0 still keeps day flat, so the tunnels lean on their own cold ambience).",
    "day": [

@@ -636,6 +636,19 @@ func interact() -> Dictionary:
 			return line
 		"prop":
 			if bool(target.get("sleep", false)):
+				# M-DEPTH DP3: a sleep prop may carry a flavor-distinct `sleep_toast`
+				# (e.g. the PC's own bed upstairs, "Your own bed.") -- emitted as an
+				# ADDITIONAL toast BEFORE sleep()'s own emission stream, never
+				# replacing it. sleep() itself stays a single global beat with no
+				# per-bed identity (classes/level-ups/consolidation/evolutions are
+				# per-PLAYER state, not per-bed) -- this is the ONE sanctioned seam
+				# where two beds can differ: identical sleep() call, identical
+				# downstream events, one optional extra flavor toast first. Absent
+				# (the original ground-floor `bed`), this is a no-op and the stream
+				# stays byte-identical to before this task.
+				var sleep_toast := String(target.get("sleep_toast", ""))
+				if sleep_toast != "":
+					_emit(WIEvents.TOAST, {"text": sleep_toast})
 				sleep()
 				return {"slept": true}
 			# M-DEPTH DP2: THE REQUEST BOARD -- checked before every other
