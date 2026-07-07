@@ -119,6 +119,14 @@ lamplight amber. PASS.
   two topiary cypresses, wooden bench, small round basin (birdbath),
   lily-pad + water-rock pond accent, pack "Old" statue as a garden
   dressing statue.
+- **Decor, conditional (licensed, Fairy Forest 1.7 — user-suggested,
+  evaluated picks.md §Fairy-Forest):** "the Old Tree" — ONE giant tree
+  in the pack's own olive daylight variant, anchoring a wilder corner
+  (canon 7.07 "plants from every part of the world") IF the wired map
+  is meaningfully larger than one screen. Everything else in that pack
+  is rejected for the Garden (night-lit register vs the no-darkness
+  card; "the only grey is memory"; no licensed recolors — reasons per
+  item in picks.md).
 - **Memorial props (owned, PixelLab + stone-ify):** gnoll / drake /
   goblin / human statues + the waiting plinth (pixellab-batch.md).
 - **Ambience/light:** drifting petals = the existing leaf ambience

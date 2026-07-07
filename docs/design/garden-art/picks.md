@@ -103,3 +103,83 @@ confusable with a remembrance).
 | `assets/props/garden/Feminine-Idle-Sheet.png` | `Enemies/Feminine/Idle-Sheet.png` | NEW (fountain centerpiece) |
 | `assets/props/garden/Old-Idle-Sheet.png` | `Enemies/Old/Idle-Sheet.png` | NEW (dressing statue) |
 | `assets/props/garden/Masculine-Idle-Sheet.png` | `Enemies/Masculine/Idle-Sheet.png` | NEW (dressing statue, mirrored pond) |
+
+## Fairy Forest evaluation (user suggestion, 2026-07-07)
+
+Pack: **Pixel Crawler — Fairy Forest 1.7** (licensed, non-redistributable;
+`potential_assets/Pixel Crawler - Fairy Forest 1.7/Pixel Crawler - Fairy
+Forest 1.7/`). PIL component/cell scans only (Tiles/Props/Tree/Light/
+Shadown + small-component sweep); no PNG viewed. Catalog register:
+dense NIGHT-LIT enchanted forest. The Garden's binding constraints —
+no-darkness card, palette quarantine, "the only grey in the map is
+memory" — drive most verdicts below.
+
+**Structural finding that frames everything:** the pack ships palette
+variants NATIVELY — `Assets/Tree.png` (1248×1664) is a 6-row × 2-col
+grid of the same tree at ~12 palettes (fresh green, olive, dusk teals,
+purple-pink night reads), and every `Props.png` bush has a green +
+autumn-brown twin. So the honest-craft question answers itself: **where
+the pack already drew a daylight variant, adopt it as-is; where it
+didn't, a ramp remap of licensed art would mean committing derivatives
+(unlike the owned stoneify outputs) — that is fighting the pack.
+Runtime modulate can't re-hue a night palette honestly. No licensed
+recolors.**
+
+### ADOPT (conditional — one item)
+
+"The Old Tree": a single giant tree as the anchor of one wilder corner
+(canon warrant: "plants from every part of the world," Ch. 7.07),
+ONLY if the wired map is meaningfully larger than one screen — at
+320×180 a 186×215 tree out-scales the fountain and breaks the formal
+grammar. **Not decisive for the mockup's composition; mockup not
+rebuilt.** Both candidates are the pack's own daylight variants:
+
+| Candidate | Source | region `[x,y,w,h]` | Measured | Notes |
+|---|---|---|---|---|
+| Old Tree, olive-warm (primary) | `Assets/Tree.png` | `[626,9,186,215]` | `rgb(45,55,25)` dens 0.54 | hue-adjacent to the Garden's olive grass family — best day-bright fit |
+| Old Tree, fresh-green (alt) | `Assets/Tree.png` | `[2,9,186,215]` | `rgb(31,63,37)` | cooler; check against cypress `(35,58,12)` in the same shot |
+| Medium sibling (olive) | `Assets/Tree.png` | `[822,30,133,194]` | `rgb(44,53,25)` | if the giant is too big even on the real map |
+| Small sibling (olive) | `Assets/Tree.png` | `[960,78,111,146]` | `rgb(47,54,24)` | ditto |
+
+`render_scale` 0.5-ish (giant → ~6×7 cells), `shadow: true`, anchor
+windowed-verified (canopy sheets often pad below the trunk — ANCHOR
+RULE applies). Manifest entry `assets/props/fairy_forest/Tree.png` —
+**only when a wiring task actually takes this option**; not listed in
+the required-entries table above.
+
+### REJECT (one line each)
+
+- **Ground tileset** (`Assets/Tiles.png`, mean `rgb(40,67,43)`): a
+  second, darker/cooler green floor muddies the single day-bright olive
+  field — the Garden's ground identity is already cast.
+- **Purple-blue rune crystals** (`Props.png` x≥289 family, e.g.
+  `[293,0,38,46]` `rgb(97,62,125)`): dungeon-magic register; glow only
+  MEANS anything against dark, and the Garden has none — its magic is
+  understated (mist, statues, sky), not luminous hardware.
+- **Blue-grey rocks** (`[212,232,42,40]` family, `rgb(81,85,102)`):
+  violates the card's own rule — the only grey in the map is memory;
+  a second neutral-stone family dilutes the memorial's claim on stone.
+- **Orange glow-flowers** (small-component cluster `[275,20]`…
+  `[213,151]`, `rgb(~135,75,25)`): orange sits quarantine-adjacent to
+  Liscor's amber, and night-glow flora fights the no-darkness card.
+- **Pale glow-mushrooms** (`[196,182]`…`[228,214]`, beige-grey
+  `rgb(~150,150,120)`): same two objections (grey-adjacent + glow).
+- **`Assets/Light.png`** (cyan additive light cookies, 148²+46²):
+  the Garden ships ZERO lights by design — note for OTHER regions'
+  light machinery, out of this card's scope.
+- **`Assets/Shadown.png`** (blue-grey canopy-shadow overlays): darkness
+  vocabulary; the Garden's card has no shadows beyond contact shadows.
+- **Autumn/brown bush+bush-column variants** (every `Props.png` twin at
+  `rgb(~65,50,20)`): wrong season register for a place of perpetual
+  bloom.
+- **Green bushes/foliage columns** (`[1,0,63,144]` etc., `rgb(36,54,26)`):
+  cooler/darker light temperature than the Garden pack's own greens
+  side-by-side, and the topiary/hedge roles are already cast from the
+  Garden pack — adding near-duplicates from a second pack risks the
+  style-family mixing the skill warns about.
+- **Stumps w/ fungus** (`Tree.png` bottom rows `[682,1552,175,108]`
+  etc.): decay register — the one thing the sanctuary must never read
+  as.
+- **Elf enemy sheets + `Weapon/Elf_Weapon.png`**: standing catalog
+  ruling — Elves are non-canon for WI (lore collision); nothing in the
+  Garden wants combatants anyway.

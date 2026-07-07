@@ -24,13 +24,27 @@ Steam-account/secrets actions; trailer flagged undelivered). **#20
 ratified: FREE on Steam.** M-STEAM remaining: your checklist actions +
 the pad pass + trailer (needs new capture tooling).
 
-## 4 FABLE ART DIRECTORS IN FLIGHT (2026-07-07): Riverfarm / Invrisil / Pallass / Garden
+## ART PRE-PRODUCTION COMPLETE (2026-07-07): all 4 regions delivered + merged
 
-Map-art pre-production decoupled from wiring (user directive): direction
-cards + PIL pick tables + PixelLab batches (≤35 gens each of 761) +
-320×180 mockups for user taste review + wiring handoffs. Charter rails:
-palette quarantine, no licensed extracts committed, mockups from licensed
-tiles stay gitignored. Deliverables land in docs/design/<map>-art/.
+Four Fable art-director lanes (user directive: map art decoupled from
+wiring) — ALL MERGED, mockups delivered to the user, leak_check clean
+throughout. `docs/design/<map>-art/{direction,picks,pixellab-batch,
+handoff}.md` per region; owned PixelLab outputs + licensed-mixed mockups
+in `potential_assets/pixellab_2026-07-07_<map>/` (gitignored). ~53 of 761
+generations spent total. Highlights: **Pallass** two-tier shelf grammar,
+three-city HSV quarantine rows, 17 gens (⚑ slab-vs-slate tint call).
+**Invrisil** floors + gold accents fully OWNED (public repo ships its
+signature bundle-free), numeric quarantine 43°/25°/31°. **Garden** built
+on the user's benchmark (dusk grade rejected under no-darkness),
+`stoneify.py` mints memorial statues for 0 gens, memorial-on-the-hill
+per canon Ch 7.11 (⚑ overruled controller's statue-in-water riff — user
+may re-open); Fairy Forest user suggestion evaluated: 1 conditional
+adopt (the natively-daylight Old Tree, if the wired map out-sizes one
+screen), 11 reasoned rejects, ramp-remapping licensed art ruled OUT
+(derivative-committing). **Riverfarm** full owned village set incl. the
+8b witch cottage; user's farmstead benchmark verified achievable, drove
+the river-dock frontage. Wiring tasks (#9, #10, #12, #16) consume the
+per-region handoff.md files.
 
 ## M-STEAM OPENED CONCURRENTLY (2026-07-07): #20 RATIFIED, #19 + #18-prep running
 
