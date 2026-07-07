@@ -783,7 +783,20 @@ func interact() -> Dictionary:
 			# among the three never matters in practice, but the container
 			# check comes first here to keep it visually adjacent to the
 			# other early-return prop shapes above it.
-			if target.has("contains"):
+			# Magical Door plan Task D3 (issue #8): a container may carry an
+			# optional sibling `contains_when: {requires: {...}}` gate --
+			# the door_when-style accomplishment gate, reusing `_door_gate_met`/
+			# `_accomplishment_gate_met` verbatim (same >= semantics, same
+			# pure reader, zero new gate logic). Absent `contains_when` reads
+			# as "always open" (`_door_gate_met({})` on an empty dict is
+			# `true`), so the two pre-existing containers (inn_chest,
+			# ruin_stones) are byte-identical. A gate that's UNMET falls
+			# through to on_interact_accomplishment/use_skill below, exactly
+			# like an unmet door_when -- `anchor_stone_pedestal` (the ruin's
+			# guarded stone) ships both: `contains_when` gated on the
+			# door-chain's convergence counter, and its pre-existing
+			# locked-flavor `on_interact_accomplishment` as the unmet fallback.
+			if target.has("contains") and (not target.has("contains_when") or _door_gate_met(target["contains_when"] as Dictionary)):
 				return _interact_container(target)
 			# Content Wave C1: a prop carrying `door_when` becomes a gated door
 			# once its accomplishment gate is met -- the ONE sanctioned sim seam
@@ -849,6 +862,11 @@ func interact() -> Dictionary:
 ## re-grants. Items already carried (e.g. a container holding an item the
 ## player separately already has) are silently skipped by `pickup`'s own
 ## idempotency -- the container still marks itself emptied either way.
+## Magical Door plan Task D3: an optional sibling `on_open_accomplishment`
+## (same shape as `on_interact_accomplishment`/`door`'s `on_enter_accomplishment`)
+## banks once, on the SAME first-open interact that grants the items --
+## never re-banked on a later "Empty." re-interact. Absent on the two
+## pre-existing containers, so their stream is unchanged.
 func _interact_container(target: Dictionary) -> Dictionary:
 	var id := String(target[WIKeys.ID])
 	if bool(container_state.get(id, false)):
@@ -860,6 +878,8 @@ func _interact_container(target: Dictionary) -> Dictionary:
 		if pickup(item_id, id):
 			granted.append(item_id)
 	container_state[id] = true
+	if target.has("on_open_accomplishment"):
+		record_accomplishment(String(target["on_open_accomplishment"]))
 	return {"container": id, "items": granted}
 
 

@@ -362,6 +362,21 @@
 			"abilities": [],
 			"description": "A fist-sized stone, warm despite the ruin's cold air, its surface veined with a pattern that never quite resolves into a shape.",
 			"lore": "Warmage Thresk built more than doors, in the end. This one remembers being elsewhere, the same crude trick that woke somewhere it shouldn't have, once, in an inn far from here. Magical Door plan Task D1 (issue #8 spec §5.3): carried, never worn or sold; the beat-3 recovery target D3's chain consumes at the pedestal."
+		},
+		{
+			"id": "resonant_catalyst",
+			"name": "Resonant Catalyst",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 35,
+			"description": "A sliver of worked amber-glass, humming faintly against the palm, wrapped in oiled cloth from under Krshia's counter.",
+			"lore": "Magical Door plan Task D3 (issue #8 spec §5.3, 'ruin + Krshia ONLY' attunement components): a Silverfang trade-route find, sold to the rare customer who asks the right way and pays the whole price without haggling. Krshia doesn't know what it's for. She knows it's worth what she charges for it. Carried, never worn or sold onward; the beat-3 recovery target D3's chain consumes alongside the anchor stone."
 		}
 	]
 }
