@@ -286,6 +286,13 @@ func _validate_option(
 	if option.has("requires"):
 		_validate_requires(label, option["requires"], skill_ids, class_ids)
 	if option.has("hide_when"):
+		# Issue #23 fix wave (review finding 1): once_per_waking is a
+		# REQUIRES-ONLY gate -- its "met" polarity ("not yet used this
+		# waking") is inverted relative to every shipped hide_when key's
+		# ("the tracked state is now true"), so a hide_when carrying it is a
+		# content ERROR rejected loudly here, not just a runtime refusal
+		# (WIDialogue._meets_hide_when is the belt-and-suspenders half).
+		assert(_hide_when_gate_keys_allowed(option["hide_when"]), label + " hide_when must not carry once_per_waking (requires-only gate, Issue #23)")
 		_validate_requires(label + " hide_when", option["hide_when"], skill_ids, class_ids)
 	for effect: Dictionary in option.get("effects", []):
 		_validate_effect(label, effect, quest_ids, class_ids, entity_ids, produced_accomplishments)
@@ -295,7 +302,10 @@ func _validate_option(
 ## forms ({skill}|{class: {id: min}}|{accomplishment: {id: min}}), so both are
 ## validated against the same known-id catalogs. Accomplishment ids are not
 ## checked against a catalog here (they're free-form, cross-referenced instead
-## via produced_accomplishments in _validate_quests).
+## via produced_accomplishments in _validate_quests). EXCEPTION (Issue #23 fix
+## wave): `once_per_waking` is requires-only -- _validate_option rejects it in
+## a hide_when dict BEFORE this shared body runs (see
+## _hide_when_gate_keys_allowed).
 func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictionary, class_ids: Dictionary) -> void:
 	var gate_keys := 0
 	if requires.has("skill"):
@@ -367,8 +377,9 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 
 
 ## Issue #23: the shared "<verb>:<entity>" shape check for BOTH the
-## `once_per_waking` requires/hide_when gate value and the `bank_first_use`
-## effect value (same contract on both sides of the seam, see dialogue.gd's
+## `once_per_waking` requires gate value (requires-ONLY -- see
+## _hide_when_gate_keys_allowed below) and the `bank_first_use` effect value
+## (same contract on both sides of the seam, see dialogue.gd's
 ## _meets/_progress_gated and WIGame.dialogue_choose's effect router). Pure
 ## (no assert) so it is unit-testable for acceptance AND rejection without
 ## crashing this SceneTree script on the rejection case -- see
@@ -378,6 +389,17 @@ func _is_valid_verb_entity_key(value: Variant) -> bool:
 		return false
 	var parts: PackedStringArray = String(value).split(":", true, 1)
 	return parts.size() == 2 and not parts[0].is_empty() and not parts[1].is_empty()
+
+
+## Issue #23 fix wave (review finding 1): true iff this hide_when dict is
+## free of requires-only gate keys. `once_per_waking` may never appear in a
+## hide_when: its "met" polarity ("not yet used this waking") is the inverse
+## of every shipped hide_when key's, so the retire idiom an author would
+## expect ("hide once used") is exactly what a shared-_meets evaluation would
+## NOT deliver. Pure (no assert), so the rejection case is unit-testable --
+## see _validate_once_per_waking_shape_cases.
+func _hide_when_gate_keys_allowed(hide_when: Dictionary) -> bool:
+	return not hide_when.has("once_per_waking")
 
 
 ## Issue #23: acceptance + rejection coverage for _is_valid_verb_entity_key,
@@ -398,6 +420,14 @@ func _validate_once_per_waking_shape_cases() -> void:
 	# never carry colons in this codebase, but the shape check must not choke
 	# on one) -- "meal:erin:extra" is still two non-empty segments post-split.
 	assert(_is_valid_verb_entity_key("meal:erin:extra"), "extra colon still splits into two non-empty segments")
+	# Issue #23 fix wave (review finding 1): once_per_waking is requires-only
+	# -- a hide_when dict carrying it is a content ERROR (rejection case), any
+	# other hide_when key set stays valid (acceptance cases).
+	assert(not _hide_when_gate_keys_allowed({"once_per_waking": "meal:erin"}), "hide_when carrying once_per_waking rejected (requires-only gate)")
+	assert(not _hide_when_gate_keys_allowed({"accomplishment": {"x": 1}, "once_per_waking": "meal:erin"}), "hide_when carrying once_per_waking alongside another key still rejected")
+	assert(_hide_when_gate_keys_allowed({"accomplishment": {"has_package": 1}}), "accomplishment hide_when still accepted")
+	assert(_hide_when_gate_keys_allowed({"board_accepted": true}), "board_accepted hide_when still accepted")
+	assert(_hide_when_gate_keys_allowed({}), "empty hide_when accepted (never authored, but not this rule's business)")
 
 
 func _validate_effect(

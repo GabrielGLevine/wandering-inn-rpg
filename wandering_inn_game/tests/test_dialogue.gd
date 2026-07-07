@@ -229,6 +229,43 @@ func test_once_per_waking_requires_hides_until_used() -> void:
 	assert(String(d2.current_options()[0]["text"]) == "always", "only the unused/ungated option shows")
 
 
+## Issue #23 fix wave (review finding 1): once_per_waking is REQUIRES-ONLY.
+## A hide_when carrying it is malformed content (test_content.gd rejects it
+## at validation time); this covers the runtime belt-and-suspenders half
+## (WIDialogue._meets_hide_when): the key is refused and IGNORED -- the
+## option stays visible in BOTH bank states (never the inverted hide a naive
+## shared-_meets evaluation would produce), and a hide_when combining it with
+## a real key still honors the real key alone. NOTE: this test deliberately
+## exercises the refusal, so each _meets_hide_when hit prints its push_error
+## line -- expected output, same precedent as test_audio_data's negative
+## cases (grep discipline watches SCRIPT ERROR|Parse Error|WARNING, and
+## push_error is none of those).
+func test_once_per_waking_refused_in_hide_when() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "follow_up", "hide_when": {"once_per_waking": "meal:erin"}, "end": true},
+		{"text": "always", "end": true},
+	]}}}
+	# Unused this waking: a naive shared _meets would call the hide_when MET
+	# ("not yet used" == true) and HIDE the option -- the inverted landmine.
+	# The refusal ignores the key: option visible.
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {}}, Callable())
+	d.begin()
+	assert(d.current_options().size() == 2, "hide_when once_per_waking refused: option visible while UNUSED (no inverted hide)")
+	# Used this waking: still visible -- the key is ignored entirely, not
+	# re-interpreted with some other polarity.
+	var d2b := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {"meal:erin": true}}, Callable())
+	d2b.begin()
+	assert(d2b.current_options().size() == 2, "hide_when once_per_waking refused: option visible while USED too (key ignored entirely)")
+	# Combined with a real hide_when key: the real key alone decides.
+	var combo := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "retired", "hide_when": {"accomplishment": {"done": 1}, "once_per_waking": "meal:erin"}, "end": true},
+		{"text": "always", "end": true},
+	]}}}
+	var d3 := WIDialogue.new(combo, {"skills": [], "classes": {}, "accomplishments": {"done": 1}, "names": {}, "entity_first_use": {}}, Callable())
+	d3.begin()
+	assert(d3.current_options().size() == 1, "combined hide_when: the REAL key (accomplishment, met) still hides -- only once_per_waking is stripped")
+
+
 ## Issue #23: the full per-waking dialogue gate lifecycle through the REAL
 ## WIGame path (start_dialogue/dialogue_choose/sleep), the issue's named
 ## unmet -> used -> gone-this-waking -> back-after-sleep sequence. Uses the
@@ -439,6 +476,7 @@ func _init() -> void:
 	test_gold_affordability_greys_when_broke()
 	test_compound_gold_accomplishment_gate()
 	test_once_per_waking_requires_hides_until_used()
+	test_once_per_waking_refused_in_hide_when()
 	test_once_per_waking_gate_lifecycle_through_bank_first_use()
 	test_compound_accomplishment_once_per_waking_gate()
 
