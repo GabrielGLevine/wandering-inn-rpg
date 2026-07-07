@@ -24,10 +24,26 @@ The first volley of all four `/map-objects` jobs included a
 `color_image` forced-palette PNG (my own 14-swatch coin-gold strip).
 **Every job with `color_image` failed server-side** ("Generation
 failed. Please try again.", usage $0.00); identical payloads without
-`color_image` succeeded first try. Verdict: avoid `color_image` on
+`color_image` succeeded. Primary verdict: avoid `color_image` on
 `/map-objects` for now — palette words in the prompt were sufficient.
-Failed job ids: 46d59e91, 52662803, 26727ca0, a33fcb9a (records in
-`job_fountain.json` etc.).
+Confound to note honestly: the failed four were submitted as a
+SIMULTANEOUS volley alongside the tileset job (see ops rule below),
+so account-wide concurrency pressure can't be fully excluded — if
+`color_image` is ever wanted again, test it with ONE sequential job
+before concluding. Failed job ids: 46d59e91, 52662803, 26727ca0,
+a33fcb9a (records in `job_fountain.json` etc.).
+
+## Ops rules for firing the queued specs (coordinator directive 2026-07-07)
+
+- **Submit generation jobs SEQUENTIALLY** — one job, poll
+  `/background-jobs/{id}` to completion, then the next. PixelLab
+  Tier 1 caps 8 concurrent background jobs ACCOUNT-WIDE and parallel
+  region lanes share the account; parallel volleys risk 429s/queue
+  rejections. (This lane's parallel volleys predate the directive and
+  happened to clear.)
+- **Count generations by your own jobs' `usage` fields**, never by
+  balance deltas — siblings spend from the same pool concurrently
+  (already the method used in the accounting below).
 
 ## Queued — deliberately NOT spent (specs ready to fire)
 
