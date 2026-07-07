@@ -208,10 +208,14 @@ current-state-only, one short paragraph per live system.
   line (item cards, skill/hotbar cards, the status glossary). Pure/static,
   VISIBLE-CURRENCY only (HP/MP/AP/dice/cells/gold/rounds; raw stats and
   percent-toward are forbidden in anything it emits) so a rendered line can
-  never drift from the data it describes. A handful of effect types with no
-  sim consumer (`heal`/`icy_floor`/`move_pool_bonus` at 0 AP cost) have their
-  cards suppressed to a bare "Name — description" rather than promising an
-  unwired mechanic. Full detail: "M-LEGIBILITY (L1-L5)" block in
+  never drift from the data it describes. Skills Wave Task K4 wired real sim
+  consumers for `heal` (second_wind's self-only heal, capped at max_hp) and
+  `move_pool_bonus` at 0 AP cost (quick_movement/battlefield_awareness, a
+  real turn-start passive) — both cards are un-suppressed now. `icy_floor`
+  remains suppressed to a bare "Name — description": K4 assessed its area-
+  terrain machinery (a new cell-targeting mode plus round-persistent
+  terrain-effect state) as not a clean fit and skipped it rather than
+  half-ship it. Full detail: "M-LEGIBILITY (L1-L5)" block in
   `docs/ARCHITECTURE-HISTORY.md`.
 - **Art pipeline (`WISpriteRegistry`, `src/world/`, M4)** — builds
   SpriteFrames/TileSets from `data/sprites.json`/`data/biomes.json`.

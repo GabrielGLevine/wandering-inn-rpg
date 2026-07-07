@@ -593,7 +593,7 @@
      ]
     }
    ],
-   "_comment": "Onboarding O3: layout-identical clone of goblin_ambush carrying the PART-2 tutor beats (arenas own tutor_lines and goblin_ambush is shared with goblin_encounter_2, which must stay beat-free). goblin_encounter_1 points here.",
+   "_comment": "Onboarding O3: layout-identical clone of goblin_ambush carrying the PART-2 tutor beats (arenas own tutor_lines and goblin_ambush is shared with goblin_encounter_2, which must stay beat-free). goblin_encounter_1 points here. Task 7c (No Killing Goblins seed, Part 2): road_clear's line grew a second sentence (Relc's sign acknowledgment, verbatim seed copy 3) -- placement trace: no shipped QA script pins `road_clear`'s exact `line` text (every reference is `payload_contains: {beat: \"road_clear\"}`, grepped across every qa/scripts/*.json), and `combat_hud.gd`'s `match_tutor_line` fires at most ONE tutor entry per incoming event (`ready[0]`), so a second tutor_lines entry on the SAME combat_finished/victory trigger could never fire -- appending to this existing line is the only way to land the beat here at all, and it moves ZERO pins. Thematically it is the natural close of the road-fight (\"teeth are teeth out here\" pairs directly with the ambush that just ended), unlike the harmless training-yard spar. The feed panel auto-grows for tutor lines (`_grow_feed_panel_for_tutor`, capped/evicts oldest -- see CLAUDE.md's wrapped-line-budget gotcha) and this fires as the LAST beat of the fight, so evicting older combat-log lines here is harmless. Windowed-verified via a throwaway probe (not committed) reading the grown feed panel in full.",
    "tutor_lines": [
     {
      "id": "real_ones",
@@ -630,7 +630,7 @@
        "victory": true
       }
      },
-     "line": "Relc: Road's clear. Liscor's through the gate — tell the Watch that Relc let you pass. It won't help."
+     "line": "Relc: Road's clear. Liscor's through the gate — tell the Watch that Relc let you pass. See the sign? Her inn, her rule — but under her roof? Don't."
     }
    ]
   },

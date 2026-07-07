@@ -683,7 +683,7 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "text": "Back already? The inn feels almost manageable since you sorted that delivery. Almost."
+    "text": "I know what the road is like. I'm not asking you to un-fight anything. I'm asking you to knock first at the idea that they're all the same. Sign stays up."
    },
    "timeout_sec": 5
   },

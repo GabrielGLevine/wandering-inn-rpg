@@ -3,7 +3,8 @@
 	"nodes": {
 		"hub": { "speaker": "Erin", "text": "Oh good, someone with working legs! I've got a package for Selys at the Guild - mind running it over? Also the common room is a disaster, don't look at it.", "text_variants": [
 			{ "requires": { "accomplishment": { "has_package": 1 } }, "text": "Selys is still waiting on that package, you know." },
-			{ "requires": { "accomplishment": { "errand_decided": 1 } }, "text": "Back already? The inn feels almost manageable since you sorted that delivery. Almost." }
+			{ "requires": { "accomplishment": { "errand_decided": 1 } }, "text": "Back already? The inn feels almost manageable since you sorted that delivery. Almost." },
+			{ "requires": { "accomplishment": { "won_combat": 1 } }, "text": "I know what the road is like. I'm not asking you to un-fight anything. I'm asking you to knock first at the idea that they're all the same. Sign stays up." }
 		], "options": [
 			{ "text": "I'll take the package.", "hide_when": { "accomplishment": { "has_package": 1 } }, "effects": [ { "quest": "the_errand" }, { "accomplishment": "has_package" } ], "goto": "package" },
 			{ "text": "Let me deal with that table. ([Basic Cleaning])", "requires": { "skill": "basic_cleaning" }, "hide_when": { "accomplishment": { "cleaned_the_inn": 1 } }, "goto": "cleaning_directions" },

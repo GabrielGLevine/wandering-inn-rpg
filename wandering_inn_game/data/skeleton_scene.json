@@ -2754,6 +2754,20 @@
      ]
     },
     {
+     "_comment": "Task 7c (No Killing Goblins seed, Parts 1+2): the inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: NO dedicated signpost/wooden-sign asset exists in any in-hand pack (exhausted docs/asset-catalog.md + docs/asset-index.md by grep, plus a PIL alpha-channel connected-component sweep of Buildings/Props.png, Furniture.png, Tools.png, Esoteric.png, Resources.png, Walls.png, Cute_Fantasy's Outdoor_Decor_Free.png, and Fairy Forest's Props.png -- see the VISUAL-LOG entry). Closest semantic match: a hanging wood-plank-on-chains crop from the ALREADY-COMMITTED Furniture.png (same sheet as door/crate/unlit_lantern -- no new asset extraction), which reads as a board suspended in front of the inn. Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Observe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
+     "id": "inn_sign",
+     "kind": "prop",
+     "cell": [
+      6,
+      6
+     ],
+     "display_name": "Inn Sign",
+     "sprite": "inn_sign",
+     "on_interact_accomplishment": "read_the_inn_sign",
+     "toast": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN — NO KILLING GOBLINS.",
+     "observe": "The paint is newer than the post it hangs on. Somebody meant it, and means it still."
+    },
+    {
      "_comment": "Skills Wave Task K1 (the pond-secret payoff): a lost cache on the pond floor at (10,18), inside the fishing-pond blocking rect and thus unreachable UNLESS the player frost-freezes the pond edge (10,17) and steps onto the ice to interact it (see the floodplains `freezable` list). Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast. Sits on an already-blocked pond cell, so it alters no route and no script reaches or asserts it. Sprite `crate` stands in for a silt-buried strongbox (VISUAL-LOG flag). A future economy pass can hang gold/an item off this discovery.",
      "id": "frozen_cache",
      "kind": "prop",

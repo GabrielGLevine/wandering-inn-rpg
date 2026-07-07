@@ -28,7 +28,7 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 	# self/no-target cast outright). Gated on `ap_cost > 0` so this ONLY
 	# fires for an actively-cast skill (today, only [Sneak]): the two
 	# PRE-EXISTING 0-cost move_pool_bonus skills (quick_movement,
-	# battlefield_awareness) are labeled passives with no resolver anywhere
+	# battlefield_awareness) are labeled passives with no resolver in THIS dispatch table (K4: wi_combat.gd's _start_turn now grants their bonus as a real turn-start passive -- see _move_pool_bonus_total)
 	# (M-LEGIBILITY L5 disclosed finding) -- generalizing this dispatch to
 	# EVERY move_pool_bonus skill regardless of cost would silently turn
 	# those two into a free, repeatable-every-turn pool exploit (0 AP, no
@@ -39,9 +39,25 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 	if effect_type == "move_pool_bonus" and int(skill.get(WIKeys.AP_COST, 0)) > 0:
 		return _resolve_move_pool_bonus(combat, actor_id, a, skill, effect)
 	var t: Dictionary = combat.combatants.get(target_id, {})
-	if t.is_empty() or not t.get(WIKeys.ALIVE, false) or String(t[WIKeys.SIDE]) == String(a[WIKeys.SIDE]):
+	if t.is_empty() or not t.get(WIKeys.ALIVE, false):
+		return false
+	# Skills Wave Task K4 (the second_wind fix): the same-side gate below is
+	# now TYPE-keyed, never skill-name-keyed (the exact drift-seam class
+	# effect_text.gd's own DRIFT SEAM comment warns about, applied here to the
+	# dispatch gate instead of the card text). Every effect type reaching this
+	# point requires a DIFFERENT side (an enemy) except "heal", which requires
+	# the SAME side (an ally/self) BY DESIGN -- a future skill that reuses the
+	# "heal" type inherits this exemption for free; a future skill reusing any
+	# other type stays enemy-gated for free.
+	var same_side := String(t[WIKeys.SIDE]) == String(a[WIKeys.SIDE])
+	if effect_type == "heal":
+		if not same_side:
+			return false
+	elif same_side:
 		return false
 	match effect_type:
+		"heal":
+			return _resolve_heal(combat, actor_id, a, target_id, skill, effect)
 		"damage_mult":
 			if not combat.is_adjacent(actor_id, target_id):
 				return false
@@ -79,6 +95,31 @@ static func _resolve_move_pool_bonus(combat: WICombat, actor_id: String, a: Dict
 	combat.spend_skill_costs(a, skill)
 	a[WIKeys.MOVE_POOL] = int(a[WIKeys.MOVE_POOL]) + int(effect.get(WIKeys.AMOUNT, 0))
 	combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": actor_id})
+	return true
+
+
+## Skills Wave Task K4 (the L5 ghost-skill escalation's second_wind fix):
+## second_wind's real heal resolver. `target_id` has already cleared
+## resolve_active's type-keyed same-side gate above (heal requires the SAME
+## side), but this is SELF-ONLY tonight -- ally-targeting would need
+## targeting_controller.gd to grow an ally-cycling filter arm beyond the
+## small self-target addition this task shipped (see that file's `enter()`
+## doc comment), so the shipped card is honestly "restore N HP to yourself"
+## (effect_text.gd) and the sim enforces exactly that here: a same-side
+## target that ISN'T the actor itself (a living ally) still refuses. Widen
+## this gate and the card together when ally-targeting lands -- never one
+## without the other. Restores `effect.amount` HP capped at max_hp (a
+## fully-topped-off actor can still spend the cost for zero net healing,
+## same as dash() never refusing for "already fast enough" -- no existing
+## skill in this sim gates an active cast on "would this even help").
+static func _resolve_heal(combat: WICombat, actor_id: String, a: Dictionary, target_id: String, skill: Dictionary, effect: Dictionary) -> bool:
+	if target_id != actor_id:
+		return false
+	combat.spend_skill_costs(a, skill)
+	var missing := int(a[WIKeys.MAX_HP]) - int(a[WIKeys.HP])
+	var healed := clampi(int(effect.get(WIKeys.AMOUNT, 0)), 0, missing)
+	a[WIKeys.HP] = int(a[WIKeys.HP]) + healed
+	combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": actor_id, "healed": healed})
 	return true
 
 

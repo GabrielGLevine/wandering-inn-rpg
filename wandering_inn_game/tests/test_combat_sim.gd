@@ -1173,7 +1173,96 @@ func _init() -> void:
 	c59._start_turn()
 	var pool59_before := int(c59.combatants["pc"][WIKeys.MOVE_POOL])
 	assert(not c59.use_skill("quick_movement", "pc"), "the pre-existing 0-cost move_pool_bonus skill still refuses self-target")
-	assert(int(c59.combatants["pc"][WIKeys.MOVE_POOL]) == pool59_before, "quick_movement grants nothing -- still no consumer")
+	assert(int(c59.combatants["pc"][WIKeys.MOVE_POOL]) == pool59_before, "quick_movement grants nothing as an ACTIVE cast -- still no resolve_active consumer")
+
+	# --- Skills Wave Task K4: quick_movement/battlefield_awareness are real
+	# TURN-START PASSIVES now (wi_combat.gd's `_move_pool_bonus_total`,
+	# applied inside `_start_turn`) -- c59 above proves the ACTIVE-cast path
+	# is untouched; this proves the PASSIVE path is real. ---
+	var c60 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["quick_movement"]}})
+	c60.active_index = c60.turn_order.find("pc")
+	_events.clear()
+	c60._start_turn()
+	assert(int(c60.combatants["pc"][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL + 1, "quick_movement grants +1 move_pool at turn start, unconditionally")
+	var turn_started_payload: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "turn_started":
+			turn_started_payload = e["payload"]
+	assert(int(turn_started_payload.get("move_pool", -1)) == WICombat.MOVE_POOL + 1, "turn_started reports the post-passive pool, not the bare base")
+	# Stacks with a second 0-cost move_pool_bonus holder (battlefield_awareness).
+	var c61 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["quick_movement", "battlefield_awareness"]}})
+	c61.active_index = c61.turn_order.find("pc")
+	c61._start_turn()
+	assert(int(c61.combatants["pc"][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL + 2, "two 0-cost move_pool_bonus skills stack (+1 each)")
+	# Applied AFTER the slowed penalty -- a slowed holder still gets the
+	# passive bonus on top of the reduced base (wi_combat.gd's `_start_turn`
+	# doc comment).
+	var c62 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["quick_movement"]}})
+	c62.active_index = c62.turn_order.find("pc")
+	c62.combatants["pc"]["statuses"]["slowed"] = {"pool_penalty": 2}
+	c62._start_turn()
+	assert(int(c62.combatants["pc"][WIKeys.MOVE_POOL]) == maxi(1, WICombat.MOVE_POOL - 2) + 1, "quick_movement's passive still applies on top of a slowed turn")
+	# [Sneak]'s ACTIVE cast (ap_cost 1) is a totally separate mechanism --
+	# holding it must never ALSO grant a turn-start passive (the ap_cost>0
+	# gate lives entirely in skill_effects.gd's resolve_active, never in
+	# `_move_pool_bonus_total`, which explicitly skips any ap_cost>0 skill).
+	var c63 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["sneak"]}})
+	c63.active_index = c63.turn_order.find("pc")
+	c63._start_turn()
+	assert(int(c63.combatants["pc"][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL, "[Sneak]'s ACTIVE move_pool_bonus grants no turn-start passive")
+
+	# --- Skills Wave Task K4: second_wind's self-heal resolver (the L5
+	# ghost-skill escalation's other fix; `_resolve_heal` in skill_effects.gd) ---
+	var c64 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["second_wind"]}})
+	c64.active_index = c64.turn_order.find("pc")
+	c64._start_turn()
+	var pc64: Dictionary = c64.combatants["pc"]
+	pc64[WIKeys.HP] = int(pc64[WIKeys.MAX_HP]) - 10
+	var hp64_before := int(pc64[WIKeys.HP])
+	var ap64_before := int(pc64[WIKeys.AP])
+	_events.clear()
+	assert(c64.use_skill("second_wind", "pc"), "second_wind resolves as a self-cast (target_id == the actor's own id, same plumbing as sneak)")
+	assert(int(pc64[WIKeys.HP]) == hp64_before + 8, "second_wind restores exactly effect.amount (8) HP when under the cap")
+	assert(int(pc64[WIKeys.AP]) == ap64_before - 2, "second_wind costs exactly 2 AP")
+	assert(_count("mp_changed") == 0, "second_wind has no mp_cost -- no mp_changed emitted")
+	var heal_payload: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			heal_payload = e["payload"]
+	assert(heal_payload.get("actor", "") == "pc" and heal_payload.get("target", "") == "pc", "skill_resolved reports the actor as its own target, same convention as sneak")
+	assert(int(heal_payload.get("healed", -1)) == 8, "skill_resolved reports the actual amount healed")
+
+	# Capped at max_hp: healing above the ceiling only restores the missing amount.
+	var c65 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["second_wind"]}})
+	c65.active_index = c65.turn_order.find("pc")
+	c65._start_turn()
+	var pc65: Dictionary = c65.combatants["pc"]
+	pc65[WIKeys.HP] = int(pc65[WIKeys.MAX_HP]) - 3
+	_events.clear()
+	assert(c65.use_skill("second_wind", "pc"), "second_wind resolves even when the heal would overshoot max_hp")
+	assert(int(pc65[WIKeys.HP]) == int(pc65[WIKeys.MAX_HP]), "HP caps at max_hp, never overshoots")
+	var heal_payload_capped: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			heal_payload_capped = e["payload"]
+	assert(int(heal_payload_capped.get("healed", -1)) == 3, "the reported healed amount is the CAPPED delta (3), not the raw effect.amount (8)")
+
+	# SELF-ONLY tonight: a living ally (same side, NOT the actor) still refuses
+	# -- the type-keyed same-side gate lets it PAST the enemy check, but
+	# `_resolve_heal`'s own target_id == actor_id gate stops it there.
+	var c66 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["second_wind"]}})
+	c66.active_index = c66.turn_order.find("pc")
+	c66._start_turn()
+	var ap66_before := int(c66.combatants["pc"][WIKeys.AP])
+	_events.clear()
+	assert(not c66.use_skill("second_wind", "relc"), "second_wind refuses an ally target -- SELF-ONLY tonight (ally-targeting is a follow-up)")
+	assert(int(c66.combatants["pc"][WIKeys.AP]) == ap66_before, "refused ally-target heal spends nothing")
+	assert(_count("skill_resolved") == 0, "refused ally-target heal never resolves")
+	# An enemy target refuses too -- heal requires the SAME side (the
+	# type-keyed exemption inverted from every other active effect's
+	# different-side requirement), so a DIFFERENT side never even reaches
+	# `_resolve_heal`'s self-only gate.
+	assert(not c66.use_skill("second_wind", "goblin_raider"), "second_wind refuses an enemy target (fails the type-keyed same-side gate)")
 
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

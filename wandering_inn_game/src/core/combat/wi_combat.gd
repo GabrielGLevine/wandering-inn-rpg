@@ -547,8 +547,33 @@ func _start_turn() -> void:
 		pool = maxi(1, MOVE_POOL - penalty)
 		statuses.erase("slowed")
 		_emit(WIEvents.STATUS_EXPIRED, {"id": c[WIKeys.ID], "status": "slowed"})
+	pool += _move_pool_bonus_total(c)
 	c[WIKeys.MOVE_POOL] = pool
 	_emit(WIEvents.TURN_STARTED, {"id": c[WIKeys.ID], "ap": MAX_AP, "move_pool": pool})
+
+
+## Skills Wave Task K4: the two PRE-EXISTING 0-cost move_pool_bonus skills
+## (quick_movement, battlefield_awareness) are genuine PASSIVES -- a holder
+## gets +amount move_pool at the START of every turn, unconditionally: no
+## cast, no cost, no refusal path. This is deliberately separate from
+## [Sneak]'s ACTIVE cast (ap_cost 1, gated in skill_effects.gd's
+## resolve_active on ap_cost > 0), which this function never touches.
+## Applied AFTER the slowed penalty above -- same "per-turn pool math lives
+## here" site the penalty already established -- so a slowed holder of one
+## of these still gets its passive bonus on top of the reduced base (a
+## flat add, same as dash() stacking on top of whatever pool state already
+## exists; there is no design reason the passive would selectively skip a
+## slowed turn).
+func _move_pool_bonus_total(c: Dictionary) -> int:
+	var total := 0
+	for sk: String in (c[WIKeys.SKILLS] as Array):
+		var s: Dictionary = skills.get(sk, {})
+		if int(s.get(WIKeys.AP_COST, 0)) > 0:
+			continue
+		var effect: Dictionary = s.get(WIKeys.EFFECT, {})
+		if String(effect.get(WIKeys.TYPE, "")) == "move_pool_bonus":
+			total += int(effect.get(WIKeys.AMOUNT, 0))
+	return total
 
 
 ## PC death is an immediate defeat, regardless of living allies (post-D4

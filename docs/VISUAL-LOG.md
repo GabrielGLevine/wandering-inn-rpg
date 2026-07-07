@@ -16,6 +16,22 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] SPRITE — `inn_sign` (Task 7c, "No Killing Goblins" sign, floodplains
+  `(6,6)`) is a semantic-match STAND-IN, not a dedicated signpost asset: NO
+  wooden-sign/signpost sprite exists in any in-hand pack (exhausted
+  docs/asset-catalog.md + docs/asset-index.md by grep, plus a PIL alpha-
+  channel connected-component sweep of Buildings/Props.png, Furniture.png,
+  Tools.png, Esoteric.png, Resources.png, Walls.png, Cute_Fantasy's
+  Outdoor_Decor_Free.png, and Fairy Forest's Props.png — all doors/windows/
+  benches/shutters/fences/rocks/mushrooms, zero signposts). Closest match:
+  a hanging-plank-on-chains crop from the ALREADY-COMMITTED Furniture.png
+  (`region [98,539,44,21]`, the same sheet as `door`/`crate`/
+  `unlit_lantern` — no new asset extraction), reads at a glance as a board
+  mounted on twin posts beside the door but carries no visible text (no
+  prop in this game renders in-world micro-text — the toast/observe
+  strings carry the words). Windowed-verified in-frame:
+  `.superpowers/sdd/fp-handoff/7c-shots/01_sign_approach_toast.png`. A
+  bespoke PixelLab signpost (Track B/PixelLab recipe) would read better.
 - [ ] SPRITE/REGION — **"PALETTE :" sheet label baked into every boulder**
   (machine playtest 2026-07-07): Rocks.png carries palette text at its
   top-left; the `boulder` region [0,0,32,40] includes it — renders as

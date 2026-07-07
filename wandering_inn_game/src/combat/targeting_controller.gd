@@ -90,7 +90,8 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 		_targeting_skill_id = skill_id
 		var skill: Dictionary = _view.skill(_targeting_skill_id)
 		var skill_effect: Dictionary = skill.get("effect", {}) as Dictionary
-		_line_mode = String(skill_effect.get("type", "")) == "line_damage"
+		var effect_type := String(skill_effect.get("type", ""))
+		_line_mode = effect_type == "line_damage"
 		# Skills Wave Task K2 (the sneak combat read): a self-targeted active
 		# move_pool_bonus cast (today only [Sneak]; MUST stay in lockstep with
 		# skill_effects.gd's `resolve_active` -- same effect.type + ap_cost>0
@@ -102,7 +103,16 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 		# `{"kind":"skill","target_id":me}` exactly like a real enemy pick --
 		# `combat.use_skill(skill_id, me)` then dispatches into the self-buff
 		# resolver, never the enemy-gated match.
-		if not _line_mode and String(skill_effect.get("type", "")) == "move_pool_bonus" and int(skill.get("ap_cost", 0)) > 0:
+		#
+		# Skills Wave Task K4 (second_wind's self-heal): SAME plumbing, same
+		# reasoning -- a heal cast needs no enemy either. SELF-ONLY tonight
+		# (skill_effects.gd's `_resolve_heal` refuses any target_id other
+		# than the actor's own; see its doc comment for the ally-targeting
+		# follow-up this narrower gate defers) -- widen both together when
+		# ally-targeting lands.
+		var is_self_cast := (effect_type == "move_pool_bonus" and int(skill.get("ap_cost", 0)) > 0) \
+				or effect_type == "heal"
+		if not _line_mode and is_self_cast:
 			_targets = [me]
 			_target_index = 0
 			_emit_targeting_shown(mode)

@@ -717,23 +717,35 @@ func _init() -> void:
 	assert(ga2.start_combat("goblin_encounter_2"), "combat starts with the ally requirement met")
 	assert(ga2.combat.combatants.has("relc"), "ally fielded once the requirement is met")
 
-	# --- M6 T2: unknown effect types fail gracefully (T3+ stubs, no crash) ---
-	# Warrior 5's kit fields heal/move_pool_bonus/dangersense skills whose
-	# effect types have no resolver yet: builds fine, casts refuse cleanly.
+	# --- M6 T2 + Skills Wave K4: a mixed wired/unresolved-effect kit builds
+	# fine either way; the WIRED ones now actually resolve ---
+	# Warrior 5's kit fields second_wind/quick_movement/dangersense. K4 wired
+	# second_wind (self-heal) and quick_movement (turn-start move_pool
+	# passive) for real; dangersense remains a confirmed, intentional no-op
+	# (no clean currency read -- see effect_text.gd's `_effect_phrase` doc
+	# comment) -- it was never one of K4's four wiring items, unchanged.
 	var g18 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g18.classes["warrior"] = 5
 	g18.transition("street", Vector2i(4, 3))
-	assert(g18.start_combat("goblin_encounter_2"), "combat builds with unresolved-effect skills in kit")
+	assert(g18.start_combat("goblin_encounter_2"), "combat builds with a mixed wired/unresolved-effect kit")
 	var cb18 := g18.combat
 	var pc18: Dictionary = cb18.combatants["pc"]
 	assert((pc18[WIKeys.SKILLS] as Array).has("second_wind") and (pc18[WIKeys.SKILLS] as Array).has("quick_movement") and (pc18[WIKeys.SKILLS] as Array).has("dangersense"), "new-type skills fielded")
 	cb18.active_index = cb18.turn_order.find("pc")
 	cb18._start_turn()
+	# Skills Wave Task K4: quick_movement's 0-cost passive fires at THIS
+	# _start_turn, unconditionally -- base MOVE_POOL (3) + its amount (1).
+	assert(int(pc18[WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL + 1, "quick_movement's passive grants +1 move_pool every turn start")
+	pc18[WIKeys.HP] = int(pc18[WIKeys.MAX_HP]) - 5
+	var hp_before := int(pc18[WIKeys.HP])
 	var ap_before := int(pc18[WIKeys.AP])
-	assert(not cb18.use_skill("second_wind", "pc"), "unresolved effect type refuses (self target)")
-	assert(not cb18.use_skill("second_wind", "goblin_raider"), "unresolved effect type refuses (enemy target)")
-	assert(not cb18.use_skill("dangersense", "goblin_raider"), "unresolved passive-shaped active refuses")
-	assert(int(pc18[WIKeys.AP]) == ap_before, "refused unknown-type casts spend nothing")
+	assert(cb18.use_skill("second_wind", "pc"), "second_wind now resolves as a self-heal")
+	assert(int(pc18[WIKeys.HP]) == mini(hp_before + 8, int(pc18[WIKeys.MAX_HP])), "second_wind restores effect.amount HP, capped at max_hp")
+	assert(int(pc18[WIKeys.AP]) == ap_before - 2, "second_wind costs 2 AP")
+	var ap_before2 := int(pc18[WIKeys.AP])
+	assert(not cb18.use_skill("second_wind", "goblin_raider"), "second_wind still refuses an enemy target (the type-keyed same-side gate)")
+	assert(not cb18.use_skill("dangersense", "goblin_raider"), "unresolved passive-shaped active still refuses")
+	assert(int(pc18[WIKeys.AP]) == ap_before2, "refused casts spend nothing")
 	_land_pc_hit(g18)
 
 	# --- M6 T5: consolidation offer defers the sleep beat's evolution stage ---

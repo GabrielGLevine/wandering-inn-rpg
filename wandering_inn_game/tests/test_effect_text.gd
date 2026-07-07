@@ -60,16 +60,18 @@ const EXPECTED_SKILLS := {
 	# 0, still no resolver, still SUPPRESSED) -- see effect_text.gd's own
 	# comment on the ap_cost gate for why the two don't get un-suppressed too.
 	"sneak": ["1 AP — +2 move cells this turn"],
-	# M-LEGIBILITY L5 fix wave, Item 1: SUPPRESSED-UNTIL-WIRED, not "no
-	# mechanics by design" -- move_pool_bonus/heal/icy_floor have ZERO sim
-	# consumer (WISkillEffects.resolve_active only matches damage_mult/
-	# spell_damage/line_damage; wi_combat.gd's _apply_passives only matches
-	# hp_bonus/hit_bonus), so the generated line would promise a mechanic
-	# that never fires. `_effect_phrase` now returns "" for these effect
-	# types until the sim grows a real consumer -- see effect_text.gd's doc
-	# comment for the exact re-enable sites.
-	"quick_movement": [],
-	"second_wind": [],
+	# Skills Wave Task K4: WIRED -- wi_combat.gd's `_start_turn` gained a real
+	# `_move_pool_bonus_total` passive consumer for the two PRE-EXISTING
+	# 0-cost move_pool_bonus skills (quick_movement, battlefield_awareness
+	# below); the standing-bonus phrasing is distinct from [Sneak]'s
+	# single-turn cast line above (see effect_text.gd's own comment).
+	"quick_movement": ["+1 move cell every turn"],
+	# Skills Wave Task K4: WIRED -- skill_effects.gd's `resolve_active` gained
+	# a real heal resolver (self-only; see its doc comment). dangersense
+	# stays a confirmed, intentional no-op (M6 T2; no clean currency read --
+	# see effect_text.gd's `_effect_phrase` doc comment) -- NOT part of this
+	# task's four wiring items, unchanged.
+	"second_wind": ["2 AP — restore 8 HP to yourself"],
 	"dangersense": [],
 	"piercing_strikes": ["2 AP — ×1.4 damage"],
 	"quick_slash": ["1 AP — ×0.7 damage"],
@@ -79,9 +81,10 @@ const EXPECTED_SKILLS := {
 	"extended_sweep": ["2 AP — ×1.3 damage"],
 	"spear_flurry": ["4 AP — ×2.6 damage"],
 	"ice_shard": ["2 AP, 3 MP — damage 1d6 at range 4"],
-	# M-LEGIBILITY L5 fix wave, Item 1: SUPPRESSED-UNTIL-WIRED (see the
-	# quick_movement/second_wind comment above) -- icy_floor has no
-	# `resolve_active` consumer either.
+	# Skills Wave Task K4 assessed and SKIPPED wiring icy_floor (new
+	# cell-targeting + round-persistent terrain-effect machinery, not a clean
+	# fit -- see the K4 report). Still no `resolve_active` consumer, so the
+	# line stays SUPPRESSED exactly as the original M-LEGIBILITY L5 finding.
 	"icy_floor": [],
 	"flame_scythe": ["2 AP, 4 MP — damage 1d6 at range 1"],
 	"flare_burst": ["1 AP, 2 MP — damage 1d6 at range 3"],
@@ -90,9 +93,8 @@ const EXPECTED_SKILLS := {
 	"basic_cooking": [],
 	"lesser_strength": [],
 	"observe": [],
-	# M-LEGIBILITY L5 fix wave, Item 1: SUPPRESSED-UNTIL-WIRED (same
-	# move_pool_bonus gap as quick_movement above).
-	"battlefield_awareness": [],
+	# Skills Wave Task K4: WIRED (same passive as quick_movement above).
+	"battlefield_awareness": ["+1 move cell every turn"],
 	"soothe_clientele": [],
 	"unerring_aim": [],
 	"sweep_the_tables": [],

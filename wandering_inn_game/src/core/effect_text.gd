@@ -139,37 +139,48 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			return "damage everything in a line %d cells long" % int(effect.get(WIKeys.LENGTH, 0))
 		"damage_mult":
 			return "×%s damage" % _fmt_mult(float(effect.get(WIKeys.MULT, 1.0)))
-		"heal", "icy_floor":
-			# M-LEGIBILITY L5 fix wave, Item 1: these two effect types have
-			# ZERO sim consumer today -- `WISkillEffects.resolve_active`
-			# (src/core/combat/skill_effects.gd) has no heal/icy_floor match
-			# arm. Generating "2 AP — restore 8 HP" for second_wind/icy_floor
-			# would promise a mechanic that never fires, so the line is
-			# SUPPRESSED (return "") until the sim grows a real consumer.
-			# Re-enable by adding a `resolve_active` match arm for the type
-			# FIRST, then restoring the phrase here -- see CLAUDE.md's
-			# M-LEGIBILITY disclosed-finding paragraph. Known/accepted cost:
-			# this also blanks the whole `skill_effect_lines` line (cost
-			# prefix included, per that function's early-return-on-""
-			# contract) -- advertising a cost for a non-effect would be the
-			# worse lie.
+		"heal":
+			# Skills Wave Task K4: WIRED -- `WISkillEffects.resolve_active`
+			# (src/core/combat/skill_effects.gd) gained a real heal resolver,
+			# so the line is no longer a promise-only lie. SELF-ONLY tonight
+			# (the sim resolver refuses any target other than the actor's
+			# own id -- see its doc comment for the ally-targeting follow-up),
+			# so the card says exactly what the sim does: "yourself", not
+			# "an ally". Widen this phrase the same task ally-targeting lands.
+			return "restore %d HP to yourself" % int(effect.get(WIKeys.AMOUNT, 0))
+		"icy_floor":
+			# M-LEGIBILITY L5 fix wave, Item 1 / Skills Wave Task K4: STILL
+			# suppressed -- `WISkillEffects.resolve_active` has no icy_floor
+			# match arm. K4 assessed the area-terrain machinery this type
+			# needs (a NEW cell-targeting mode -- no existing UI can aim at a
+			# bare cell, only a combatant id or a line direction token -- plus
+			# round-persistent terrain-effect state and a move-time status
+			# check, none of which have a clean existing precedent to lean
+			# on) and SKIPPED it rather than half-ship it (see the K4 report,
+			# `.superpowers/sdd/fp-handoff/task-k4-wiring-report.md`).
+			# Generating "2 AP, 4 MP — ..." would still promise a mechanic
+			# that never fires, so the line stays SUPPRESSED (return "") until
+			# a future task wires it. Re-enable by adding a `resolve_active`
+			# match arm for the type FIRST, then restoring the phrase here.
 			return ""
 		"move_pool_bonus":
-			# Skills Wave Task K2: UN-SUPPRESSED, but ONLY for an actively-cast
-			# skill (ap_cost > 0) -- skill_effects.gd's `resolve_active` now
-			# wires a real self-buff resolver for exactly that shape (today,
-			# only [Sneak]; see its doc comment for why the gate is ap_cost>0
-			# specifically). The two PRE-EXISTING 0-cost move_pool_bonus
-			# skills (quick_movement, battlefield_awareness) are UNCHANGED --
-			# they hit this same case with ap_cost==0 and stay SUPPRESSED,
-			# because they still have no resolver (disclosed above): showing
-			# "+1 move cell" for a cast that would still silently do nothing
-			# would be the exact lie this milestone exists to kill. Re-enable
-			# THEIR line the same way heal/icy_floor's comment describes --
-			# a resolve_active/`_apply_passives` consumer FIRST, then drop
-			# this ap_cost guard.
+			# Skills Wave Task K2: UN-SUPPRESSED for an actively-cast skill
+			# (ap_cost > 0) -- skill_effects.gd's `resolve_active` wires a
+			# real self-buff resolver for exactly that shape (today, only
+			# [Sneak]; see its doc comment for why the gate is ap_cost>0
+			# specifically).
+			#
+			# Skills Wave Task K4: the two PRE-EXISTING 0-cost move_pool_bonus
+			# skills (quick_movement, battlefield_awareness) are ALSO now
+			# UN-SUPPRESSED -- wi_combat.gd's `_start_turn` gained a real
+			# `_move_pool_bonus_total` passive consumer for exactly the
+			# ap_cost==0 shape, so this is no longer a promise-only lie. The
+			# phrasing is deliberately distinct from the ap_cost>0 branch
+			# below: this is a STANDING per-turn bonus (fires every turn,
+			# unconditionally, no cast), not a single cast's one-turn buff.
 			if ap_cost <= 0:
-				return ""
+				var amt := int(effect.get(WIKeys.AMOUNT, 0))
+				return "+%d move cell%s every turn" % [amt, "" if amt == 1 else "s"]
 			return "+%d move cells this turn" % int(effect.get(WIKeys.AMOUNT, 0))
 		"hp_bonus":
 			return "+%d max HP" % int(effect.get(WIKeys.AMOUNT, 0))

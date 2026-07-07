@@ -220,6 +220,11 @@ func _build_expected_counts() -> Dictionary:
 		counts["%s/idle" % icon_id] = 1
 	## M6 T6 [Light] prop (Furniture.png lantern crop, single frame).
 	counts["unlit_lantern/idle"] = 1
+	## Task 7c (No Killing Goblins seed): inn_sign, a Furniture.png crop
+	## (hanging plank on chains, closest in-hand semantic match for a signboard
+	## -- no dedicated sign asset exists in any pack, see VISUAL-LOG), single
+	## 44x21 region, 1 frame.
+	counts["inn_sign/idle"] = 1
 
 	## M5 E2 enemy sprites.
 	## Goblin sheets are 1536x1024, 256x256 frames: 6 columns per facing row.
