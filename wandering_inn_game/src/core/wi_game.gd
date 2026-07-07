@@ -61,6 +61,22 @@ var generalist_classes: Array[String] = []
 ## set, so the merge deliberately does not share that gate. Additive save
 ## field (tolerant default [], see save.gd).
 var used_skills: Array[String] = []
+## M-LEGIBILITY L4: a SET of every combat status id the player has ever
+## WATCHED apply (any combatant's application counts — the PC watched it
+## happen even when an enemy was the target, e.g. frost_bolt slowing a
+## goblin), gating the journal's Effects glossary AND the first-encounter
+## surface (see `_combat_event_relay`'s STATUS_APPLIED arm, which is the
+## SINGLE site that both checks and banks this — no separate per-combat
+## tally is needed: the check-and-bank happens synchronously with the
+## sim-side application, in real time, so it is naturally correct both
+## across separate fights AND for a second application of the same status
+## within ONE fight, unlike a tally that only merges at `resolve_combat`
+## (see that function's own doc comment for why a deferred merge would be
+## wrong here: a script can end before a fight resolves, e.g. the
+## `combat_move_input`/`relc_tutorial` mid-fight-by-design precedent, and
+## `seen_statuses` must already be correct for QA to assert by then).
+## Additive save field (tolerant default [], see save.gd).
+var seen_statuses: Array[String] = []
 ## The consolidation offer awaiting a player answer (M6 T5, spec §2.5 REV 2),
 ## or an empty Dictionary when nothing is pending. Set by `sleep()` when
 ## `WIProgression.check_consolidation` fires; cleared by whichever of
@@ -1307,6 +1323,13 @@ func resolve_combat() -> void:
 	# still reveal a skill's description after its first real use).
 	for skill_id: String in (combat.used_skills_tally.get("pc", {}) as Dictionary):
 		_mark_skill_used(skill_id)
+	# M-LEGIBILITY L4: `seen_statuses` deliberately has NO merge step here,
+	# unlike `used_skills` just above — it is banked in real time by
+	# `_combat_event_relay` as each STATUS_APPLIED passes through mid-fight
+	# (see that function's doc comment), not deferred to a per-fight tally.
+	# A deferred merge would be wrong here: this function only ever runs on
+	# a FINISHED combat, but the first-encounter surface must already be
+	# correct for a script that ends mid-fight by design.
 	var entity: Dictionary = find_entity(_pending_encounter)
 	if combat.outcome["victory"]:
 		var victories: Variant = entity.get("on_victory", "won_combat")
@@ -1797,6 +1820,7 @@ func snapshot() -> Dictionary:
 		"started_quests": started_quests.duplicate(),
 		"pending_consolidation": pending_consolidation.duplicate(true),
 		"used_skills": used_skills.duplicate(),
+		"seen_statuses": seen_statuses.duplicate(),
 		"inventory": inventory.duplicate(),
 		"equipped": equipped.duplicate(true),
 		"container_state": container_state.duplicate(true),
@@ -1840,13 +1864,41 @@ func _tick_action() -> void:
 ## Relays every WICombat-emitted event straight to the real sink unchanged
 ## -- combat behaves identically whether or not this milestone's clock
 ## exists -- and additionally ticks actions_since_sleep once per the PC's
-## own turn_started (M7 M-BEAUTY FOLD). wi_combat.gd's own runtime code is
-## untouched: this is purely a WIGame-side choice of which Callable gets
-## passed to WICombat's constructor (see start_combat).
+## own turn_started (M7 M-BEAUTY FOLD), and (M-LEGIBILITY L4) enriches a
+## STATUS_APPLIED event with `first_seen`/`status_text` the moment it passes
+## through, banking the id into `seen_statuses` in the SAME breath. This is
+## a WIGame-side wiring choice only, same idiom as the phase-clock tick:
+## wi_combat.gd's own runtime code (skill_effects.gd's `_apply_status_from_
+## effect`) is untouched and keeps emitting the bare `{id, status}` payload
+## it always has; every existing consumer (test_combat_sim.gd's unit tests,
+## combat_hud.gd's short "X is slowed!" feed line) reads it exactly as
+## before via `.get()`, unaffected by the two new keys.
 func _combat_event_relay(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.TURN_STARTED and String(payload.get("id", "")) == "pc":
 		_tick_action()
+	if type == WIEvents.STATUS_APPLIED:
+		payload = _enrich_status_applied(payload)
 	_emit(type, payload)
+
+
+## Checks+banks `payload["status"]` into `seen_statuses` (first time ever,
+## across every past and current fight) and returns a COPY of `payload` with
+## `first_seen` (bool) always set, plus `status_text` (the L1-generated
+## `WIEffectText.status_line` glossary sentence) when first_seen is true —
+## "" otherwise, so a repeat application never pays the formatting cost.
+## Duplicating the payload is safe/necessary: skill_effects.gd's `_apply_
+## status_from_effect` constructs a fresh Dictionary literal per call (no
+## other holder), but mutating a Dictionary passed in by reference would be
+## a foot-gun for any future caller that DOES keep a reference.
+func _enrich_status_applied(payload: Dictionary) -> Dictionary:
+	var out := payload.duplicate()
+	var status_id := String(out.get("status", ""))
+	var first_seen := status_id != "" and not seen_statuses.has(status_id)
+	if first_seen:
+		seen_statuses.append(status_id)
+	out["first_seen"] = first_seen
+	out["status_text"] = WIEffectText.status_line(status_id, skills.values()) if first_seen else ""
+	return out
 
 
 func _emit(type: String, payload: Dictionary) -> void:

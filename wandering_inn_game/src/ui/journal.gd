@@ -138,7 +138,21 @@ func _open() -> void:
 	var act: Dictionary = Game.sim.act_summary()
 	var quest_lines: Array = Game.sim.quest_summary()
 	var skill_groups: Array = Game.sim.skills_journal()
-	_body_label.text = _build_body_text(act, quest_lines, skill_groups)
+	## M-LEGIBILITY L4: every status id the player has ever watched apply
+	## (Game.sim.seen_statuses -- any combatant's application counts, not
+	## just the PC's). Duplicated so `_build_body_text` never holds a live
+	## reference into the sim.
+	var seen_statuses: Array = Game.sim.seen_statuses.duplicate()
+	# M-LEGIBILITY L5 fix wave, Item 2: load the combatants catalog ONCE per
+	# journal open -- each spell_damage skill's `skill_effect_lines` call
+	# otherwise triggers its own uncached FileAccess+JSON.parse of
+	# combatants.json (WIEffectText._load_combatants), one per revealed spell
+	# per render. Threaded through both call sites that need it below: the
+	# render loop (`_build_body_text` -> `_revealed_skill_line`) and the
+	# event-payload loop further down, via the formatter's existing
+	# `combatants_catalog` override param.
+	var combatants_catalog := _load_combatants_catalog()
+	_body_label.text = _build_body_text(act, quest_lines, skill_groups, seen_statuses, combatants_catalog)
 	_root.show()
 	# The RichTextLabel's scrollbar geometry is only valid after a layout pass,
 	# so evaluate the overflow cue on the next idle frame (reset scroll to top
@@ -149,6 +163,13 @@ func _open() -> void:
 	_update_scroll_hint.call_deferred()
 	var headings: Array = []
 	var revealed_skills: Array = []
+	## M-LEGIBILITY L3: parallel to `revealed_skills` (same index order) --
+	## each entry is that skill's `WIEffectText.skill_effect_lines` output (0
+	## or 1 strings), so QA can assert the mechanical content STRUCTURALLY
+	## (the exact generated line) rather than by screenshot/OCR. An
+	## exploration-only revealed skill (e.g. basic_cleaning) carries `[]` here
+	## -- no formatter phrase, same as its card showing no effect row below.
+	var revealed_effect_lines: Array = []
 	var skill_count := 0
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary
@@ -157,7 +178,9 @@ func _open() -> void:
 			var skill := raw_skill as Dictionary
 			skill_count += 1
 			if bool(skill["revealed"]):
-				revealed_skills.append(String(skill["id"]))
+				var skill_id := String(skill["id"])
+				revealed_skills.append(skill_id)
+				revealed_effect_lines.append(WIEffectText.skill_effect_lines(Game.sim.skills.get(skill_id, {}), combatants_catalog))
 	# Payload extended for the UI wave (item 19): QA can assert the panel
 	# actually rendered the grouped-by-class structure and the first-use
 	## reveal state, not just that the (opaque, empty) event fired.
@@ -173,9 +196,11 @@ func _open() -> void:
 		"skill_groups": headings,
 		"skill_count": skill_count,
 		"revealed_skills": revealed_skills,
+		"revealed_effect_lines": revealed_effect_lines,
 		"act_id": String(act.get("id", "")),
 		"act_beats": act_beats.size(),
 		"act_beats_achieved": act_beats_achieved,
+		"seen_statuses": seen_statuses,
 	})
 
 
@@ -208,11 +233,19 @@ func _update_scroll_hint() -> void:
 
 ## Builds the BBCode body text: a "Quests" section (unchanged content, from
 ## `quest_summary()`) then a "Skills" section, one sub-heading per
-## `skills_journal()` group ("Innate" first, then held classes) listing each
-## skill's `text` verbatim (name-only pre-first-use, name + description
-## after — the opacity split lives entirely in WIGame.skills_journal/
-## _skill_entries; this file only renders the string it's handed).
-func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array) -> String:
+## `skills_journal()` group ("Innate" first, then held classes). Pre-reveal a
+## skill row is `text` verbatim (name-only — the opacity/reveal split lives
+## entirely in WIGame.skills_journal/_skill_entries and is UNCHANGED by
+## M-LEGIBILITY L3). Post-reveal the row is now built HERE by
+## `_revealed_skill_line` instead of using `text` (which only ever carried
+## "Name — description") -- name + the L1-GENERATED effect line +
+## description, the same "revealed CONTENT gets mechanical" treatment L2 gave
+## item cards. M-LEGIBILITY L4 adds a trailing "Effects" section, one line
+## per status id in `seen_statuses` (any combatant's application counts --
+## the player watched it happen). OMITTED ENTIRELY when empty (no "None yet"
+## filler, per plan) -- a fresh game with no status ever seen shows the same
+## journal as before this task.
+func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, seen_statuses: Array, combatants_catalog: Array = []) -> String:
 	var parts: Array = []
 	# M-ARC Task A1: the act-line section leads the journal -- the current act
 	# header + its milestone beats (results-only copy), achieved beats marked.
@@ -238,8 +271,62 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array) 
 		parts.append("[b]%s[/b]" % _bb_escape(String(group["heading"])))
 		for raw_skill: Variant in (group["skills"] as Array):
 			var skill := raw_skill as Dictionary
-			parts.append(_bb_escape(String(skill["text"])))
+			if bool(skill["revealed"]):
+				parts.append(_bb_escape(_revealed_skill_line(String(skill["id"]), String(skill["display_name"]), combatants_catalog)))
+			else:
+				parts.append(_bb_escape(String(skill["text"])))
+	if not seen_statuses.is_empty():
+		parts.append("")
+		parts.append("[b]Effects[/b]")
+		for status_id: Variant in seen_statuses:
+			parts.append(_bb_escape(WIEffectText.status_line(String(status_id), Game.sim.skills.values())))
 	return "\n".join(parts)
+
+
+## M-LEGIBILITY L3: the post-reveal skill row -- "Name — <L1 effect line> —
+## description", the same grammar `combat_hud.gd`'s slot-info line uses (L3
+## unifies both surfaces on the one WIEffectText formatter; never hand-
+## composed). Reads the full record straight off `Game.sim.skills` (same
+## direct-dictionary-read idiom `field_hotbar.gd` already established) rather
+## than through WIGame.skills_journal's `text` field, which only ever carried
+## "Name — description". Exploration-only skills (light/frost_touch/kindle/
+## basic_cleaning/dangersense) have no mapped effect phrase, so
+## `skill_effect_lines` returns `[]` and the row degrades to "Name —
+## description" (the item-card idiom: no effect line, no dangling dash) --
+## exactly the pre-L3 text, so a skill with no mechanics to disclose looks
+## unchanged.
+func _revealed_skill_line(id: String, display_name: String, combatants_catalog: Array = []) -> String:
+	var record: Dictionary = Game.sim.skills.get(id, {})
+	var desc := String(record.get("description", ""))
+	var effect_lines := WIEffectText.skill_effect_lines(record, combatants_catalog)
+	if effect_lines.is_empty():
+		return "%s — %s" % [display_name, desc] if desc != "" else display_name
+	# M-LEGIBILITY L5 fix wave, Item 4: guard the trailing-dash case (desc
+	# empty but effect_lines non-empty) the same way the branch above already
+	# does -- unreachable today (every shipped description is non-empty) but
+	# a future skill with no description shouldn't render "Name — effect — ".
+	if desc == "":
+		return "%s — %s" % [display_name, effect_lines[0]]
+	return "%s — %s — %s" % [display_name, effect_lines[0], desc]
+
+
+## M-LEGIBILITY L5 fix wave, Item 2: the combatants catalog (the array under
+## combatants.json's "combatants" key), loaded ONCE per journal open and
+## threaded through every `WIEffectText.skill_effect_lines` call site in this
+## file via its `combatants_catalog` override param -- mirrors
+## `WIEffectText._load_combatants`'s own FileAccess+JSON.parse idiom (kept as
+## a per-file copy, same M6.5 zero-cross-dependency reasoning as `_bb_escape`,
+## rather than exposing a new formatter-side public loader). A missing/
+## unparseable file degrades to `[]`, which every caller already treats the
+## same as "no override" (falls back to the formatter's own default load).
+func _load_combatants_catalog() -> Array:
+	const COMBATANTS_PATH := "res://data/combatants.json"
+	if not FileAccess.file_exists(COMBATANTS_PATH):
+		return []
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(COMBATANTS_PATH))
+	if parsed is Dictionary and (parsed as Dictionary).has("combatants"):
+		return (parsed as Dictionary)["combatants"]
+	return []
 
 
 ## Skill display names/descriptions carry literal `[`/`]` (e.g.

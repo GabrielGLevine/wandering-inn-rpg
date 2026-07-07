@@ -6,7 +6,8 @@ extends RefCounted
 ## ONLY: HP / MP / AP / damage dice+mods / move cells / gold / rounds. Every
 ## line is GENERATED from the mechanical data fields (items.json
 ## damage_mod/hp_mod/damage_reduction/price/resonance; skills.json
-## ap_cost/mp_cost/effect.{die,range,length,mult,amount}/applies) — NEVER a
+## ap_cost/mp_cost/effect.{range,length,mult,amount}/applies; combatants.json
+## "pc" weapon_die for a spell's damage die, see `_caster_weapon_die`) — NEVER a
 ## hand-written twin that can drift from the data it claims to describe. That
 ## drift is the exact defect class this milestone exists to kill, so callers
 ## (L2 item cards, L3 skill cards, L4 status glossary) MUST route through here
@@ -19,10 +20,15 @@ extends RefCounted
 ##
 ## PURITY: no autoload, Node, or scene-tree reference. `status_line`'s single-
 ## arg form loads res://data/skills.json (deterministic, side-effect-free data
-## read) to source the `slowed` penalty from where it is DEFINED; the
-## catalog-injecting overload keeps the derivation unit-testable / tripwire-able.
+## read) to source the `slowed` penalty from where it is DEFINED; `_caster_
+## weapon_die` likewise loads res://data/combatants.json to source a spell's
+## damage die from where the SIM actually rolls it (M-LEGIBILITY L5: skills.json's
+## old `effect.die` field was vestigial, never read by wi_combat.gd — see that
+## function's doc comment). Both catalog-injecting overloads keep the
+## derivation unit-testable / tripwire-able.
 
 const SKILLS_PATH := "res://data/skills.json"
+const COMBATANTS_PATH := "res://data/combatants.json"
 
 ## Short present-tense verb appended to a Skill's effect line when it applies a
 ## status on hit (e.g. frost_bolt -> "... . Slows."). The FULL glossary sentence
@@ -59,9 +65,13 @@ static func item_effect_lines(item: Dictionary) -> Array[String]:
 ## skills read "N AP[, N MP] — <effect>[. <Status>.]"; cost-free passives and
 ## reactions read as a bare fragment/sentence; field/exploration Skills with no
 ## combat effect yield an empty array (their card carries name + description).
-static func skill_effect_lines(skill: Dictionary) -> Array[String]:
+## `combatants_catalog` overrides the caster-die derivation (see
+## `_caster_weapon_die`) for drift-tripwire testing; every real render call
+## site (combat_hud/journal/field_hotbar) uses the default, which resolves
+## against the shipped combatants.json.
+static func skill_effect_lines(skill: Dictionary, combatants_catalog: Array = []) -> Array[String]:
 	var effect: Dictionary = skill.get("effect", {})
-	var phrase := _effect_phrase(effect)
+	var phrase := _effect_phrase(effect, combatants_catalog)
 	if phrase == "":
 		return []
 	var prefix := _cost_prefix(skill)
@@ -107,22 +117,47 @@ static func _cost_prefix(skill: Dictionary) -> String:
 ## Maps an effect dict to its visible-currency phrase. Returns "" for effects
 ## with no clean currency read (e.g. dangersense) and for absent effects, which
 ## suppresses the whole line.
-static func _effect_phrase(effect: Dictionary) -> String:
+static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = []) -> String:
 	match String(effect.get("type", "")):
 		"spell_damage":
-			return "damage 1d%d at range %d" % [int(effect.get("die", 0)), int(effect.get("range", 0))]
+			# M-LEGIBILITY L5: skills.json's `effect.die` was VESTIGIAL --
+			# wi_combat.gd's _resolve_hit rolls the CASTER's own `weapon_die`
+			# for every hit, melee or spell alike, and never reads this field
+			# (L1 finding, resolved here). The die is real data, not a
+			# free-floating literal: read it from the caster's own combatant
+			# record. Every real render call site (combat_hud's hotbar,
+			# journal, field_hotbar) only ever shows the PLAYER's own known/
+			# fielded skills, so the default (no override) resolves the "pc"
+			# entry from the shipped combatants.json.
+			return "damage 1d%d at range %d" % [_caster_weapon_die(combatants_catalog), int(effect.get("range", 0))]
 		"line_damage":
 			return "damage everything in a line %d cells long" % int(effect.get("length", 0))
 		"damage_mult":
 			return "×%s damage" % _fmt_mult(float(effect.get("mult", 1.0)))
-		"heal":
-			return "restore %d HP" % int(effect.get("amount", 0))
+		"heal", "icy_floor", "move_pool_bonus":
+			# M-LEGIBILITY L5 fix wave, Item 1: these three effect types have
+			# ZERO sim consumer today -- `WISkillEffects.resolve_active`
+			# (src/core/combat/skill_effects.gd) only matches damage_mult/
+			# spell_damage/line_damage, and `_apply_passives` only implements
+			# hp_bonus/hit_bonus. Generating "2 AP — restore 8 HP" or "+1 move
+			# cell" for second_wind/icy_floor/quick_movement/
+			# battlefield_awareness would promise a mechanic that never fires,
+			# so the line is SUPPRESSED (return "") until the sim grows a real
+			# consumer. Re-enable by adding a `resolve_active` match arm (heal,
+			# icy_floor) or an `_apply_passives` key (move_pool_bonus) in
+			# skill_effects.gd FIRST, then restoring the phrase here -- see
+			# the Skills-wave wiring task and CLAUDE.md's M-LEGIBILITY
+			# disclosed-finding paragraph. Known/accepted cost: this also
+			# blanks the whole `skill_effect_lines` line (cost prefix
+			# included, per that function's early-return-on-"" contract), so
+			# second_wind/icy_floor lose their AP/MP cost display on the
+			# combat slot-info line too -- advertising a cost for a
+			# non-effect would be the worse lie.
+			return ""
 		"hp_bonus":
 			return "+%d max HP" % int(effect.get("amount", 0))
 		"hit_bonus":
 			return "+%d to hit" % int(effect.get("amount", 0))
-		"move_pool_bonus":
-			return "+%d move cell" % int(effect.get("amount", 0))
 		"ap_on_kill":
 			return "+%d AP when you down a foe" % int(effect.get("amount", 0))
 		"riposte":
@@ -131,10 +166,6 @@ static func _effect_phrase(effect: Dictionary) -> String:
 			return "Spend MP to absorb incoming damage."
 		"quick_cast":
 			return "Your first spell each turn costs 1 less AP."
-		"icy_floor":
-			return "freeze the floor (range %d, radius %d) for %d rounds" % [
-				int(effect.get("range", 0)), int(effect.get("radius", 0)), int(effect.get("duration_rounds", 0)),
-			]
 	return ""
 
 
@@ -170,6 +201,37 @@ static func _load_skills() -> Array:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SKILLS_PATH))
 	if parsed is Dictionary and (parsed as Dictionary).has("skills"):
 		return (parsed as Dictionary)["skills"]
+	return []
+
+
+## The literal die a spell_damage cast actually rolls, per wi_combat.gd's
+## _resolve_hit (base_damage reads `a["weapon_die"]` unconditionally, melee or
+## spell alike — never a per-skill field). `weapon_die` is a FIXED per-
+## combatant base stat: `wi_game.gd._build_player_combatant` threads a weapon's
+## damage_mod/hp_mod/damage_reduction onto the runtime combatant dict but never
+## touches weapon_die, so the PC's is constant regardless of what's equipped.
+## Reads the "pc" entry from the combatants catalog (the only caster any
+## shipped UI ever renders a Skill card for); falls back to 6 (the shipped
+## value) if absent, matching `_slowed_penalty`'s "never a nonsense fallback"
+## contract. Pass `combatants_catalog` (the array under combatants.json's
+## "combatants" key) to derive from an in-memory catalog for drift-tripwire
+## testing; the default empty loads the shipped file.
+static func _caster_weapon_die(combatants_catalog: Array = []) -> int:
+	var catalog := combatants_catalog
+	if catalog.is_empty():
+		catalog = _load_combatants()
+	for c: Dictionary in catalog:
+		if String(c.get("id", "")) == "pc":
+			return int(c.get("weapon_die", 6))
+	return 6
+
+
+static func _load_combatants() -> Array:
+	if not FileAccess.file_exists(COMBATANTS_PATH):
+		return []
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(COMBATANTS_PATH))
+	if parsed is Dictionary and (parsed as Dictionary).has("combatants"):
+		return (parsed as Dictionary)["combatants"]
 	return []
 
 

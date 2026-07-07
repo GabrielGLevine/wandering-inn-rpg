@@ -58,7 +58,7 @@
 			"ap_cost": 2,
 			"element": "fire",
 			"icon": "icon_flame_bolt",
-			"effect": { "type": "spell_damage", "die": 6, "range": 4 },
+			"effect": { "type": "spell_damage", "range": 4 },
 			"description": "A hissing dart of goblin fire."
 		},
 		{
@@ -80,7 +80,7 @@
 			"mp_cost": 2,
 			"element": "ice",
 			"icon": "icon_frost_bolt",
-			"effect": { "type": "spell_damage", "die": 6, "range": 4, "applies": { "slowed": { "pool_penalty": 2 } } },
+			"effect": { "type": "spell_damage", "range": 4, "applies": { "slowed": { "pool_penalty": 2 } } },
 			"description": "A dart of biting cold that clings to the legs."
 		},
 		{
@@ -191,7 +191,7 @@
 			"weapon": "spear",
 			"icon": "icon_extended_sweep",
 			"effect": { "type": "damage_mult", "mult": 1.3 },
-			"description": "The spear's reach stretches a hand further than it has any right to."
+			"description": "A wide, raking arc that finds an opening no straight thrust could."
 		},
 		{
 			"id": "spear_flurry",
@@ -211,7 +211,7 @@
 			"mp_cost": 3,
 			"element": "ice",
 			"icon": "icon_ice_shard",
-			"effect": { "type": "spell_damage", "die": 8, "range": 4 },
+			"effect": { "type": "spell_damage", "range": 4 },
 			"description": "A fist-sized spike of ice, hurled hard enough to crack shields."
 		},
 		{
@@ -233,7 +233,7 @@
 			"mp_cost": 4,
 			"element": "fire",
 			"icon": "icon_flame_scythe",
-			"effect": { "type": "spell_damage", "die": 10, "range": 1 },
+			"effect": { "type": "spell_damage", "range": 1 },
 			"description": "An arm's-length arc of fire, reaped close."
 		},
 		{
@@ -244,7 +244,7 @@
 			"mp_cost": 2,
 			"element": "fire",
 			"icon": "icon_flare_burst",
-			"effect": { "type": "spell_damage", "die": 6, "range": 3 },
+			"effect": { "type": "spell_damage", "range": 3 },
 			"description": "A snap of light and heat that leaves spots dancing in the eyes."
 		},
 		{
@@ -346,7 +346,7 @@
 			"icon": "icon_calming_touch",
 			"contexts": ["combat"],
 			"ap_cost": 2,
-			"effect": { "type": "spell_damage", "die": 3, "range": 1, "applies": { "slowed": { "pool_penalty": 2 } } },
+			"effect": { "type": "spell_damage", "range": 1, "applies": { "slowed": { "pool_penalty": 2 } } },
 			"description": "A steadying word and a calming hand; the fight drains out of a foe, and their guard turns slow and uncertain."
 		},
 		{
@@ -355,7 +355,7 @@
 			"display_name": "[Raskghar Maul]",
 			"contexts": ["combat"],
 			"ap_cost": 3,
-			"effect": { "type": "spell_damage", "die": 11, "range": 2, "applies": { "slowed": { "pool_penalty": 2 } } },
+			"effect": { "type": "spell_damage", "range": 2, "applies": { "slowed": { "pool_penalty": 2 } } },
 			"description": "A sweeping, reaching swipe of claw and forearm that batters the legs out from under you and leaves them slow to answer."
 		},
 		{

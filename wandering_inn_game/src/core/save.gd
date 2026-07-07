@@ -89,6 +89,11 @@ extends RefCounted
 ## every sleep anyway); a present-but-non-Dictionary value is rejected. Restored
 ## through WIGame.set_frozen_cells_json, which tolerantly skips malformed inner
 ## pairs, so a garbled cell list can never crash the load.
+## (M-LEGIBILITY L4): `seen_statuses` (the status glossary's seen-set, Array[String])
+## is added the SAME additive-optional way as `used_skills` above -- NOT in
+## `required`, NO version bump. A save missing the key (any save written before
+## this task) restores an empty Array, which is exactly correct (nothing had
+## been encountered yet).
 const VERSION := 5
 
 
@@ -107,6 +112,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"started_quests": game.started_quests.duplicate(),
 		"pending_consolidation": game.pending_consolidation.duplicate(true),
 		"used_skills": game.used_skills.duplicate(),
+		"seen_statuses": game.seen_statuses.duplicate(),
 		"inventory": game.inventory.duplicate(),
 		"equipped": game.equipped.duplicate(true),
 		"container_state": game.container_state.duplicate(true),
@@ -211,6 +217,9 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# used_skills (UI wave item 19) follows the SAME additive-optional pattern.
 	if s.has("used_skills") and not (s["used_skills"] is Array):
 		return false
+	# seen_statuses (M-LEGIBILITY L4) follows the SAME additive-optional pattern.
+	if s.has("seen_statuses") and not (s["seen_statuses"] is Array):
+		return false
 	# social_talked / entity_first_use (Social Pillar S1) follow the SAME
 	# additive-optional pattern -- default {} when absent, rejected if mistyped.
 	if s.has("social_talked") and not (s["social_talked"] is Dictionary):
@@ -265,6 +274,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	var generalist_classes: Array = s.get("generalist_classes", [])
 	var pending_consolidation: Dictionary = s.get("pending_consolidation", {})
 	var used_skills: Array = s.get("used_skills", [])
+	var seen_statuses: Array = s.get("seen_statuses", [])
 	var inventory: Array = s["inventory"]
 	var equipped: Dictionary = s["equipped"]
 	var container_state: Dictionary = s["container_state"]
@@ -302,6 +312,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.pending_consolidation = pending_consolidation.duplicate(true)
 	game.used_skills.clear()
 	game.used_skills.assign(used_skills)
+	game.seen_statuses.clear()
+	game.seen_statuses.assign(seen_statuses)
 	game.inventory.clear()
 	game.inventory.assign(inventory)
 	game.equipped = equipped.duplicate(true)

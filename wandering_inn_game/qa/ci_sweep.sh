@@ -28,7 +28,10 @@
 # arc_flow [46] (THE WHOLE-ARC PROOF — fixture near_act3 drives tremor→summons→
 # briefing→descent→JOIN boss victory→seal→the GDI EPILOGUE EVENT→post_game→
 # post-game greeting→free-play; the surface arc consumes zero rng so the boss
-# sits at deep_descent's winning determinism). All fixture-based, no seed search.
+# sits at deep_descent's winning determinism); M-LEGIBILITY L4 adds
+# status_first_encounter [47] (the status glossary + first-encounter-surface
+# proof — fixture near_mage_cast, a REAL hotbar frost_bolt cast since
+# combat_autoplay never casts for the pc). All fixture-based, no seed search.
 # The party-VETO/solo path is a unit-level roster
 # proof (test_combat_data._check_boss_veto_roster) per the user descope, not a
 # canonical script — tutorial_flow is
@@ -94,6 +97,7 @@ CANON=(
 	"climax_chain:9"
 	"climax_seal:9"
 	"arc_flow:9"
+	"status_first_encounter:9"
 )
 
 ONLY=""

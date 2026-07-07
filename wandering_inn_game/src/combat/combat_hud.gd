@@ -47,6 +47,29 @@ extends RefCounted
 ## comment (moved verbatim) for the full FEED_TEXT_HEIGHT derivation history.
 const FEED_TEXT_WIDTH := 248.0
 const FEED_TEXT_HEIGHT := 90.0
+
+## Readout panel interior text box (M-LEGIBILITY L5 fix -- panel-class fix
+## flagged after L4's windowed shot: `.superpowers/sdd/fp-handoff/l4-shots/
+## 01_first_encounter_feed.png` showed frost_bolt's full 3-segment slot-info
+## line ("[Frost Bolt] — 1 AP, 2 MP — damage 1d6 at range 4. Slows. — A dart
+## of biting cold that clings to the legs.") wrap to a 2nd line, pushing the
+## readout's total to 4 wrapped lines (head + hint + 2 info lines); the 4th
+## rode the parchment's bottom fold, same repo-wide "Control rect > art-safe
+## band" class the feed panel was already fixed for (M-FP F; see the Gotchas
+## entry "Message panels budget WRAPPED LINES, not entries"). WIDTH mirrors
+## the readout MarginContainer's interior (panel width 620 minus its 22px
+## left+right margins, see build()). This panel has no separately-measured
+## print-safe pixel height the way the feed does; rather than guess one,
+## HEIGHT is picked to yield a LINE CAPACITY of exactly 3 (head + hint/target
+## + slot-info) at the CombatReadout RichTextLabel's real font pitch --
+## confirmed via a headless theme probe: font height 20px, `line_separation`
+## 0px for this unstyled variation, so pitch=20 and capacity=3 needs a height
+## in [60,79]; 64 leaves a little headroom. 3 lines is the empirically
+## observed safe boundary (every OTHER shipped slot-info line, one line long,
+## already renders fine inside this panel) -- windowed-reverified after this
+## fix (see the L5 report).
+const READOUT_TEXT_WIDTH := 576.0
+const READOUT_TEXT_HEIGHT := 64.0
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
 ## Fix-wave (review of d5dfbf3, finding 2): every `on.event` a `tutor_lines`
 ## entry is allowed to target, because a render call site actually exists for
@@ -240,6 +263,11 @@ func rebuild_slots(view: RefCounted, actor_id: String) -> Array:
 				"type": "skill", "id": sk_id, "label": String(sk.get("display_name", sk_id)),
 				"icon": String(sk.get("icon", "")), "key_hint": str(number),
 				"description": String(sk.get("description", "")),
+				# M-LEGIBILITY L3: carried through untouched by render_bar_slots'
+				# duplicate() so `_slot_info_line` can hand it to
+				# `WIEffectText.skill_effect_lines` -- the generated mechanical
+				# line, never hand-composed here.
+				"effect": sk.get("effect", {}),
 			})
 			number += 1
 	slots.append({"type": "end_turn", "label": "End\nTurn", "icon": "", "key_hint": "E", "end_turn_gap": true})
@@ -318,6 +346,10 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 	var head := "%s  AP %s  Move %s%s" % [
 		_bb_escape(String(c["display_name"])), "●".repeat(int(c["ap"])), "○".repeat(int(c["move_pool"])), mp_bit,
 	]
+	# RAW (un-escaped) -- `_compose_readout` measures/fits this against the
+	# panel's true wrap width, then escapes only the FITTED result. The event
+	# `_render_slot_info_line` fires (ui_slot_info_rendered) still carries the
+	# FULL escaped line regardless of what's rendered here (M-LEGIBILITY L5).
 	var info_line := _render_slot_info_line(rendered_slots, info_slot_index)
 	if dash_confirm:
 		# Dedupe (UI wave review): the confirm hint REPLACES the plain
@@ -325,15 +357,15 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 		# armed, `info_slot_index` always points at the Dash slot, so both
 		# lines would start "Dash — 1 AP: ...". `_render_slot_info_line` is
 		# still called above so `ui_slot_info_rendered` (QA-asserted) fires.
-		return head + "\n" + info_line + " (Enter confirms, Esc cancels)"
+		return _compose_readout(head, "", info_line + " (Enter confirms, Esc cancels)")
 	if not in_targeting:
 		if int(c["move_pool"]) <= 0 and bar_action_affordable("Dash", c):
-			return head + "\nOut of steps — Dash (2) spends 1 AP for +3" + "\n" + info_line
+			return _compose_readout(head, "Out of steps — Dash (2) spends 1 AP for +3", info_line)
 		if int(c["move_pool"]) <= 0:
-			return head + "\nOut of steps — end turn or choose another action" + "\n" + info_line
-		return head + "\nArrows move, number keys act, E ends turn" + "\n" + info_line
+			return _compose_readout(head, "Out of steps — end turn or choose another action", info_line)
+		return _compose_readout(head, "Arrows move, number keys act, E ends turn", info_line)
 	if bool(targeting_state.get("line_mode", false)):
-		return head + "\n" + String(targeting_state.get("line_text", "")) + "\n" + info_line
+		return _compose_readout(head, String(targeting_state.get("line_text", "")), info_line)
 	var targets: Array = targeting_state.get("targets", [])
 	if targets.is_empty():
 		var note := ""
@@ -341,14 +373,48 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 			note = "  (no line of sight)"
 		elif bool(targeting_state.get("out_of_range", false)):
 			note = "  (out of range)"
-		return head + "\nNo target in reach (Esc)" + note + "\n" + info_line
+		return _compose_readout(head, "No target in reach (Esc)" + note, info_line)
 	var t: Dictionary = view.combatant(String(targets[int(targeting_state.get("index", 0))]))
-	return head + "\nTarget: %s (%d/%d) (Tab cycles, Enter confirms)" % [_bb_escape(String(t["display_name"])), int(t["hp"]), int(t["max_hp"])] + "\n" + info_line
+	return _compose_readout(
+		head,
+		"Target: %s (%d/%d) (Tab cycles, Enter confirms)" % [_bb_escape(String(t["display_name"])), int(t["hp"]), int(t["max_hp"])],
+		info_line
+	)
+
+
+## Assembles the readout's on-screen text -- head / hint-or-target / slot-info
+## -- fitting ONLY the variable-length `info` segment to whatever WRAPPED-LINE
+## budget remains in the panel's art-safe capacity after `head` and `hint`
+## (design D2-7 #6: cut words, never widen; same discipline `feed_push`
+## already applies, generalized to this panel -- M-LEGIBILITY L5 panel fix,
+## see READOUT_TEXT_WIDTH/HEIGHT's doc comment above for the reproduction and
+## the capacity derivation). `head`/`hint` are always render-ready (already
+## bb-escaped by their callers above); `info` is the RAW slot-info line --
+## escaped here, AFTER fitting, so the fit measures true visible width rather
+## than the "[lb]"/"[rb]" escape placeholders' inflated one. `hint` is "" only
+## for the dash_confirm caller (whose whole hint lives in `info`'s suffix).
+func _compose_readout(head: String, hint: String, info: String) -> String:
+	var used := _rtl_wrapped_line_count(_readout_label, head, READOUT_TEXT_WIDTH)
+	if hint != "":
+		used += _rtl_wrapped_line_count(_readout_label, hint, READOUT_TEXT_WIDTH)
+	var budget := maxi(_rtl_line_capacity(_readout_label, READOUT_TEXT_HEIGHT) - used, 1)
+	var fitted := _bb_escape(_rtl_fit_to_lines(_readout_label, info, READOUT_TEXT_WIDTH, budget))
+	var lines: Array[String] = [head]
+	if hint != "":
+		lines.append(hint)
+	lines.append(fitted)
+	return "\n".join(lines)
 
 
 ## Builds the "what does this button do" line for `info_slot_index` from
 ## `rendered_slots` (live cost data) and emits `ui_slot_info_rendered` the
-## first time this exact (index, text) pair renders (dedup-guard).
+## first time this exact (index, text) pair renders (dedup-guard). Returns
+## the RAW (un-bb-escaped) line -- `ui_slot_info_rendered` gets the escaped
+## form at the emit site (M-LEGIBILITY L5: `_readout_text`'s wrap-fit needs
+## the true visible width, which the "[lb]"/"[rb]" escape placeholders would
+## inflate; QA's exact pin on the ESCAPED text, e.g.
+## combat_move_input.json's "[lb]Power Strike[rb] — 3 AP — …", is unchanged
+## since the emitted string is still escaped, just later).
 func _render_slot_info_line(rendered_slots: Array, info_slot_index: int) -> String:
 	var index := info_slot_index
 	if index < 0 or index >= rendered_slots.size():
@@ -357,12 +423,28 @@ func _render_slot_info_line(rendered_slots: Array, info_slot_index: int) -> Stri
 	if index != _last_slot_info_index or line != _last_slot_info_text:
 		_last_slot_info_index = index
 		_last_slot_info_text = line
-		_screen._emit_slot_info(index, line)
+		_screen._emit_slot_info(index, _bb_escape(line))
 	return line
 
 
 ## Name + costs + one-line canon-voiced description for a single rendered bar
-## slot (`d` is one entry of `render_bar_slots()`'s output).
+## slot (`d` is one entry of `render_bar_slots()`'s output). M-LEGIBILITY L3:
+## the skill arm's cost/effect segment is now GENERATED by
+## `WIEffectText.skill_effect_lines` from `d`'s own `ap_cost`/`mp_cost`/
+## `effect` fields (`ap_cost` is the LIVE effective cost, quick_cast discount
+## already applied by `render_bar_slots`) -- never hand-composed here. This
+## is the exact defect the milestone kills: the old "%d AP" cost line never
+## surfaced the skill's actual mechanical effect (e.g. Power Strike's ×2
+## damage multiplier was invisible on this line pre-L3). Every shipped
+## active combat skill (ap_cost>0, contexts:combat -- the only skills this
+## bar ever lists) has a mapped `_effect_phrase` case, so `effect_lines` is
+## never empty in practice; the empty-array branch (name + description only,
+## no dangling dash) mirrors the item-card degrade for a Skill the formatter
+## can't yet phrase -- report that gap, don't hand-compose around it.
+## RAW (un-bb-escaped) return value -- M-LEGIBILITY L5: escaping moved to
+## each caller (`_render_slot_info_line`'s emit site, `_compose_readout`'s
+## post-fit render site) so the wrap-fit measurement below sees the true
+## visible width, not the "[lb]"/"[rb]" placeholder-inflated one.
 func _slot_info_line(d: Dictionary) -> String:
 	match String(d.get("type", "")):
 		"attack":
@@ -372,13 +454,24 @@ func _slot_info_line(d: Dictionary) -> String:
 		"end_turn":
 			return "End Turn"
 		"skill":
-			var cost := "%d AP" % int(d.get("ap_cost", 0))
-			var mp_cost := int(d.get("mp_cost", 0))
-			if mp_cost > 0:
-				cost += " + %d MP" % mp_cost
-			var skill_name := _bb_escape(String(d.get("label", "")))
-			var desc := _bb_escape(String(d.get("description", "")))
-			return "%s — %s — %s" % [skill_name, cost, desc]
+			var skill_name := String(d.get("label", ""))
+			var desc := String(d.get("description", ""))
+			var record := {
+				"ap_cost": d.get("ap_cost", 0),
+				"mp_cost": d.get("mp_cost", 0),
+				"effect": d.get("effect", {}),
+			}
+			var effect_lines := WIEffectText.skill_effect_lines(record)
+			# M-LEGIBILITY L5 fix wave, Item 4: guard the trailing-dash case
+			# in BOTH branches (desc empty) -- unreachable today (every
+			# shipped active combat skill has a non-empty description) but
+			# matching journal.gd's/field_hotbar.gd's identical guard so a
+			# future no-description combat skill can't regress this either.
+			if desc == "":
+				return skill_name if effect_lines.is_empty() else "%s — %s" % [skill_name, effect_lines[0]]
+			if effect_lines.is_empty():
+				return "%s — %s" % [skill_name, desc]
+			return "%s — %s — %s" % [skill_name, effect_lines[0], desc]
 		_:
 			return ""
 
@@ -483,6 +576,26 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat) ->
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
 			line = "%s is %s!" % [String(combat.combatants[payload["id"]]["display_name"]), String(payload["status"])]
+			# M-LEGIBILITY L4: the first-encounter surface. TRACED before
+			# choosing this surface over a TOAST: combat_hud's own "disjoint
+			# opaque bands" doc comment (build(), above) places the readout
+			# panel at x[330,950] y[530,642]; message_layer's toast panel is
+			# PRESET_BOTTOM_RIGHT with TOAST_OFFSETS_DEFAULT (-472,-130,-24,-34)
+			# on a 1280x720 viewport, i.e. x[808,1256] y[590,686] — the two
+			# rects genuinely intersect (x[808,950] × y[590,642]), and
+			# both parchment panels are opaque, and combat_screen's CanvasLayer
+			# is added to the tree AFTER message_layer's (main.gd
+			# `_spawn_ui_layers`), so a TOAST fired mid-combat would render
+			# behind the readout panel, invisible to the player. The combat
+			# feed is the honest surface: WIGame's `_combat_event_relay`
+			# enriches this exact event with `first_seen`/`status_text`
+			# (generated by L1's `WIEffectText.status_line`, never hand-
+			# composed) the moment a status is banked into `seen_statuses`
+			# for the first time ever — appended here as a second sentence,
+			# once, on top of the terse repeat-application line every future
+			# application still gets.
+			if bool(payload.get("first_seen", false)):
+				line += " " + String(payload.get("status_text", ""))
 		WIEvents.STATUS_EXPIRED:
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
@@ -538,6 +651,51 @@ func _fit_to_lines(label: Label, text: String, width: float, max_lines: int) -> 
 		words.remove_at(words.size() - 1)
 		var candidate := " ".join(words) + "…"
 		if _wrapped_line_count(label, candidate, width) <= max_lines:
+			return candidate
+	return (words[0] + "…") if words.size() > 0 else text
+
+
+## RichTextLabel counterparts of `_wrapped_line_count`/`_line_capacity`/
+## `_fit_to_lines` above, for `_readout_label` (M-LEGIBILITY L5). Distinct
+## functions, not a shared Label/RichTextLabel-typed one: RichTextLabel's
+## real theme properties are "normal_font"/"normal_font_size"/
+## "line_separation", not Label's "font"/"font_size"/"line_spacing" --
+## reusing the Label helpers on a RichTextLabel would silently read those
+## WRONG names (this theme happens to fall back to the same engine default
+## either way today, since CombatReadout overrides none of them -- confirmed
+## via a headless probe -- but that is a coincidence of this theme file, not
+## a contract worth relying on).
+func _rtl_wrapped_line_count(label: RichTextLabel, text: String, width: float) -> int:
+	if text == "":
+		return 0
+	var font := label.get_theme_font("normal_font")
+	var font_size := label.get_theme_font_size("normal_font_size")
+	var size := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)
+	var line_height := font.get_height(font_size)
+	if line_height <= 0.0:
+		return 1
+	return max(int(round(size.y / line_height)), 1)
+
+
+func _rtl_line_capacity(label: RichTextLabel, height: float) -> int:
+	var font := label.get_theme_font("normal_font")
+	var font_size := label.get_theme_font_size("normal_font_size")
+	var line_height := font.get_height(font_size)
+	if line_height <= 0.0:
+		return 1
+	var line_sep := float(label.get_theme_constant("line_separation"))
+	var pitch := line_height + line_sep
+	return max(int((height + line_sep) / pitch), 1)
+
+
+func _rtl_fit_to_lines(label: RichTextLabel, text: String, width: float, max_lines: int) -> String:
+	if _rtl_wrapped_line_count(label, text, width) <= max_lines:
+		return text
+	var words := text.split(" ")
+	while words.size() > 1:
+		words.remove_at(words.size() - 1)
+		var candidate := " ".join(words) + "…"
+		if _rtl_wrapped_line_count(label, candidate, width) <= max_lines:
 			return candidate
 	return (words[0] + "…") if words.size() > 0 else text
 

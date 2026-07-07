@@ -14,7 +14,7 @@
   { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
 
-  { "_comment": "== PHASE A: hotbar renders 1 innate slot; field dispatch (parity) + ambient fallback ==", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1 } },
+  { "_comment": "== PHASE A: hotbar renders 1 innate slot; field dispatch (parity) + ambient fallback ==. M-LEGIBILITY L3: readout_lines carries the new cost/effect summary row -- basic_cleaning is exploration-only (no `effect` key) so WIEffectText.skill_effect_lines([]) degrades it to 'Name — description', proven exactly here (structural, no OCR).", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "readout_lines": ["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease."] } },
   { "action": "screenshot", "name": "00_hotbar_boot_1slot" },
 
   { "_comment": "Face dirty_table (5,4): right3 -> (5,3), down1 blocks on the table & faces it.", "action": "move", "direction": "right", "steps": 3 },

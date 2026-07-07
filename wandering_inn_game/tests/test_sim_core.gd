@@ -401,7 +401,19 @@ func _init() -> void:
 	_land_pc_hit(g11)
 	(cb11.combatants["pc"]["skills"] as Array).append("frost_bolt")
 	cb11.combatants["pc"]["mp"] = 10
+	_events.clear()
 	assert(cb11.use_skill("frost_bolt", "goblin_raider"), "pc casts an ice spell")
+	# M-LEGIBILITY L4: the enrichment lives in _combat_event_relay, which is
+	# wired as this combat's event sink at start_combat time -- so it fires
+	# on this direct WICombat.use_skill call exactly as it would through the
+	# real UI, no different setup needed.
+	assert(g11.seen_statuses.has("slowed"), "first-ever slowed application banks into seen_statuses")
+	var status_applied_11: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "status_applied":
+			status_applied_11 = e["payload"]
+	assert(bool(status_applied_11.get("first_seen", false)), "first application of a status carries first_seen:true")
+	assert(String(status_applied_11.get("status_text", "")) == WIEffectText.status_line("slowed"), "status_applied carries the L1-generated glossary sentence on first encounter")
 	cb11.end_turn()
 	var guard11 := 0
 	while cb11.get_active() != "pc" and guard11 < 8:
@@ -429,6 +441,68 @@ func _init() -> void:
 			melee_events += 1
 			assert(int(e["payload"]["count"]) == 2, "banked counter lands in one increment")
 	assert(melee_events == 1, "one accomplishment_recorded per banked counter")
+
+	# --- M-LEGIBILITY L4: seen_statuses once-only + cross-fight persistence ---
+	var gStatus := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 777, combat_config)
+	gStatus.record_accomplishment("met_relc")
+	gStatus.transition("floodplains", Vector2i(27, 18))
+	assert(gStatus.start_combat("goblin_encounter_2"), "status test: fight 1 starts")
+	var cbS := gStatus.combat
+	_land_pc_hit(gStatus)
+	(cbS.combatants["pc"]["skills"] as Array).append("frost_bolt")
+	cbS.combatants["pc"]["mp"] = 20
+	_events.clear()
+	assert(cbS.use_skill("frost_bolt", "goblin_raider"), "status test: cast 1 lands")
+	assert(gStatus.seen_statuses == (["slowed"] as Array[String]), "seen_statuses banks exactly one entry after the first-ever application")
+	var applied1: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "status_applied":
+			applied1 = e["payload"]
+	assert(bool(applied1.get("first_seen", false)) and String(applied1.get("status_text", "")) != "", "cast 1's status_applied is first_seen with glossary text")
+	# Cycle back to the pc's own turn (dummies-precedent guard loop; goblin_raider/
+	# shaman never get a real AI turn here -- end_turn alone just advances the
+	# index, matching g11's technique above) and cast again, SAME fight: the
+	# once-only property must hold even for a second application within one
+	# combat instance (the exact edge case a deferred resolve_combat-time merge
+	# would get wrong -- see seen_statuses' own doc comment).
+	var guardS := 0
+	while cbS.get_active() != "pc" and guardS < 8:
+		cbS.end_turn()
+		guardS += 1
+	assert(cbS.get_active() == "pc", "status test: cycled back to pc for cast 2")
+	_events.clear()
+	assert(cbS.use_skill("frost_bolt", "goblin_raider"), "status test: cast 2 lands (same target, still alive at 999 hp)")
+	assert(gStatus.seen_statuses == (["slowed"] as Array[String]), "a second application of an already-seen status does not duplicate the entry")
+	var applied2: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "status_applied":
+			applied2 = e["payload"]
+	assert(not bool(applied2.get("first_seen", false)), "cast 2's status_applied is NOT first_seen (once-only property: no second toast)")
+	assert(String(applied2.get("status_text", "")) == "", "a repeat application carries no glossary text (nothing new to formatting-cost)")
+	# Finish and resolve fight 1: seen_statuses is untouched by resolve_combat
+	# (proves the real-time relay bank, not a deferred tally, is what's live).
+	cbS.apply_damage("goblin_raider", 9999, "pc", true)
+	cbS.apply_damage("goblin_shaman", 9999, "pc", true)
+	assert(cbS.finished and cbS.outcome["victory"], "status test: fight 1 forced victory")
+	gStatus.resolve_combat()
+	assert(gStatus.seen_statuses == (["slowed"] as Array[String]), "resolve_combat does not re-merge or duplicate seen_statuses")
+	# Fight 2 (a SEPARATE WICombat instance, same WIGame): a status already
+	# seen in a PRIOR fight must not re-fire first_seen either -- the
+	# cross-fight half of "once ever", not just "once per fight".
+	assert(gStatus.start_combat("goblin_encounter_1"), "status test: fight 2 starts")
+	var cbS2 := gStatus.combat
+	_land_pc_hit(gStatus)
+	cbS2.combatants["goblin_raider"]["hp"] = 999
+	(cbS2.combatants["pc"]["skills"] as Array).append("frost_bolt")
+	cbS2.combatants["pc"]["mp"] = 20
+	_events.clear()
+	assert(cbS2.use_skill("frost_bolt", "goblin_raider"), "status test: fight 2 cast lands")
+	var applied3: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "status_applied":
+			applied3 = e["payload"]
+	assert(not bool(applied3.get("first_seen", false)), "a status seen in a PRIOR fight is not first_seen in a later one")
+	assert(gStatus.seen_statuses == (["slowed"] as Array[String]), "cross-fight: still exactly one seen_statuses entry")
 
 	# `trivial: true` on the ENCOUNTER banks nothing, silently; the fight
 	# still resolves normally (on_victory records, entity removed).

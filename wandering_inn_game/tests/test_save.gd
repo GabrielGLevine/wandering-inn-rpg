@@ -41,6 +41,8 @@ func _init() -> void:
 	original.classes["warrior"] = 2
 	original.player_skills.append("flame_bolt")
 	original.used_skills.append("basic_cleaning")
+	# M-LEGIBILITY L4: the status glossary's seen-set round-trips too.
+	original.seen_statuses.append("slowed")
 	original.record_accomplishment("package_delivered")
 	original.record_accomplishment("won_combat")
 	original.remove_entity("goblin_encounter_2")
@@ -86,6 +88,7 @@ func _init() -> void:
 	assert(restored.started_quests == original.started_quests, "started_quests restored")
 	assert(restored.dormant_encounters == original.dormant_encounters, "dormant_encounters restored")
 	assert(restored.used_skills == original.used_skills, "used_skills restored")
+	assert(restored.seen_statuses == original.seen_statuses, "seen_statuses restored")
 	# M7 Task E2: inventory/equipped/container_state/actions_since_sleep restore.
 	assert(restored.inventory == original.inventory, "inventory restored")
 	assert(restored.equipped == original.equipped, "equipped restored")
@@ -293,6 +296,31 @@ func _init() -> void:
 	var bad_used_data := WISave.serialize(_new_game()).duplicate(true)
 	(bad_used_data["state"] as Dictionary)["used_skills"] = "power_strike"
 	assert(not WISave.apply(_new_game(), bad_used_data), "wrong-typed used_skills rejected")
+
+	# --- M-LEGIBILITY L4: seen_statuses persists WITHOUT a version bump ---
+	# (the used_skills precedent: no bump, absent-safe default []).
+	var status_original := _new_game()
+	status_original.seen_statuses.append("slowed")
+	var status_data := WISave.serialize(status_original)
+	assert(int(status_data["version"]) == WISave.VERSION, "seen_statuses does not bump the save version")
+	var status_restored := _new_game()
+	assert(WISave.apply(status_restored, status_data), "save with seen_statuses applies")
+	assert(status_restored.seen_statuses == status_original.seen_statuses, "seen_statuses round-trips")
+
+	# A save WITHOUT the seen_statuses key (any save written before this task)
+	# is not malformed -- it is absent-safe and restores empty (nothing had
+	# been encountered yet, which is exactly correct).
+	var pre_l4_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	(pre_l4_data["state"] as Dictionary).erase("seen_statuses")
+	var pre_l4_target := _new_game()
+	pre_l4_target.seen_statuses.append("stale_entry")
+	assert(WISave.apply(pre_l4_target, pre_l4_data), "save missing seen_statuses still applies")
+	assert(pre_l4_target.seen_statuses.is_empty(), "absent seen_statuses restores empty, not stale data")
+
+	# A present-but-wrong-typed seen_statuses IS rejected as malformed.
+	var bad_status_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_status_data["state"] as Dictionary)["seen_statuses"] = "slowed"
+	assert(not WISave.apply(_new_game(), bad_status_data), "wrong-typed seen_statuses rejected")
 
 	# --- M-FP final review fix: VERSION 4 street relayout migration ---
 	# W1 re-laid out street 10x6 -> 32x20 without a save version bump; a v3

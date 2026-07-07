@@ -16,15 +16,38 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
-- [ ] UI/SHOP — Krshia's greyed buy options read a doubled price: the
+- [x] UI/SHOP — Krshia's greyed buy options read a doubled price: the
   authored option copy already carries "(5 gold)" and the affordability
   lock appends "(costs 5 gold)" (M-LEGIBILITY L2 windowed read,
   `.superpowers/sdd/fp-handoff/l2-shots/shop_broke_effect_lines_greyed.png`).
-  Pre-existing since Economy v1 (not an L2 regression). Candidate fixes:
-  suppress the suffix when the option text already names the price, or
-  strip prices from authored copy and let the suffix be the one surface
-  (but the suffix only renders when LOCKED — affordable options would
-  lose their price). Owned by L5's copy audit.
+  Pre-existing since Economy v1 (not an L2 regression). **FIXED by
+  M-LEGIBILITY L5 (2026-07-06, uncommitted):** `dialogue_panel.gd`'s
+  `_requirement_suffix` already had a dedup mechanism (skip the suffix
+  when the option text already names the requirement) but only trimmed a
+  "requires " lead-in from the requirement string before checking — gold's
+  requirement text is "costs N gold" (`WIDialogue._requirement_text`), so
+  the "costs " word never matched and the suffix rendered anyway. Fixed by
+  also trimming "costs " (`requirement.trim_prefix("requires
+  ").trim_prefix("costs ")`) — a strict fix, not a regression risk: every
+  shipped `requires: {gold: ...}` option (the 4 Krshia buys, the only
+  sites in the game) already authors its price inline, so no option loses
+  its only price surface. Kept the authored-copy-carries-the-price design
+  (did not strip prices from copy + always-render the suffix) since it's
+  the smaller, lower-risk footprint and the existing dedup idiom already
+  existed for exactly this class of double-up (skill/class options already
+  relied on it). The domain event's `requirement` field is UNCHANGED
+  ("costs N gold" still emitted exactly, QA's `economy_loop`/`d2_shop_shot`
+  pins on it untouched) — only the ON-SCREEN Label text lost the
+  duplicate. Windowed-verified:
+  `.superpowers/sdd/fp-handoff/l5-shots/shop_price_dedup_03_shop_all_greyed_broke.png`
+  shows every option reading its price exactly once.
+- [ ] UI/FIELD-HOTBAR — the slot bar (bottom-center) draws OVER an open
+  dialogue panel's bottom parchment edge (z-order: hotbar CanvasLayer above
+  message_layer). Nothing is obscured (verified by pixel crop — the "1"
+  reading as hidden text is the slot's own key-hint label), purely cosmetic.
+  Candidate: hide the whole bar during modals the way the L5 fix wave hides
+  the readout panel (number keys are inert then anyway). First-seen L2
+  windowed read 2026-07-06. Low priority.
 - [ ] FIELD/DEEP_TUNNELS — the four M-ARC A2 flavor/threshold props
   (`deep_fissure` sewers `(8,12)`, `cold_hearth`/`gnaw_pile`/`warren_mouth`
   in deep_tunnels) all use the `boulder` sprite as a stand-in (a collapsed
@@ -113,6 +136,23 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   (descenders graze it; legible) — F fix-wave residual 2026-07-04 —
   acceptable now; M6.5's feed extraction should give the panel a real
   Container with art-safe padding.
+
+- [x] UI/COMBAT — the readout panel's slot-info line, when it wraps to 2
+  lines (a long skill's full "cost — effect — description", e.g. frost_bolt),
+  rides the parchment's bottom fold — first-seen in L4's windowed shot
+  (`.superpowers/sdd/fp-handoff/l4-shots/01_first_encounter_feed.png`), the
+  same "Control rect > art-safe band" panel class the feed/dialogue panels
+  were already fixed for (M-FP F) but the readout never got. **FIXED by
+  M-LEGIBILITY L5 (2026-07-06, uncommitted):** `combat_hud.gd`'s
+  `_compose_readout` now fits the slot-info segment to whatever wrapped-line
+  budget remains after the head/hint lines (capacity 3 total), cutting words
+  + an ellipsis rather than widening (design D2-7 #6) — see the CLAUDE.md
+  Gotchas entry (Message panels budget WRAPPED LINES) for the full
+  derivation. `ui_slot_info_rendered` still carries the FULL untruncated
+  line (`combat_move_input.json`'s exact pin for `[Power Strike]` is
+  unaffected). Windowed-reverified via `status_first_encounter`:
+  `.superpowers/sdd/fp-handoff/l5-shots/readout_panel_fix_01_first_encounter_feed.png`
+  shows frost_bolt's line now truncating cleanly inside the parchment.
 
 - [x] COMBAT/ANIM — casting a spell triggers the SWORD swing animation —
   user report 2026-07-04 — FIXED by Track B1 (2026-07-06). ROOT CAUSE:

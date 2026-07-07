@@ -38,8 +38,16 @@ const EXPECTED_SKILLS := {
 	"light": [],
 	"frost_touch": [],
 	"kindle": [],
-	"quick_movement": ["+1 move cell"],
-	"second_wind": ["2 AP — restore 8 HP"],
+	# M-LEGIBILITY L5 fix wave, Item 1: SUPPRESSED-UNTIL-WIRED, not "no
+	# mechanics by design" -- move_pool_bonus/heal/icy_floor have ZERO sim
+	# consumer (WISkillEffects.resolve_active only matches damage_mult/
+	# spell_damage/line_damage; wi_combat.gd's _apply_passives only matches
+	# hp_bonus/hit_bonus), so the generated line would promise a mechanic
+	# that never fires. `_effect_phrase` now returns "" for these effect
+	# types until the sim grows a real consumer -- see effect_text.gd's doc
+	# comment for the exact re-enable sites.
+	"quick_movement": [],
+	"second_wind": [],
 	"dangersense": [],
 	"piercing_strikes": ["2 AP — ×1.4 damage"],
 	"quick_slash": ["1 AP — ×0.7 damage"],
@@ -48,23 +56,37 @@ const EXPECTED_SKILLS := {
 	"triple_thrust": ["3 AP — ×2 damage"],
 	"extended_sweep": ["2 AP — ×1.3 damage"],
 	"spear_flurry": ["4 AP — ×2.6 damage"],
-	"ice_shard": ["2 AP, 3 MP — damage 1d8 at range 4"],
-	"icy_floor": ["2 AP, 4 MP — freeze the floor (range 3, radius 1) for 2 rounds. Slows."],
-	"flame_scythe": ["2 AP, 4 MP — damage 1d10 at range 1"],
+	"ice_shard": ["2 AP, 3 MP — damage 1d6 at range 4"],
+	# M-LEGIBILITY L5 fix wave, Item 1: SUPPRESSED-UNTIL-WIRED (see the
+	# quick_movement/second_wind comment above) -- icy_floor has no
+	# `resolve_active` consumer either.
+	"icy_floor": [],
+	"flame_scythe": ["2 AP, 4 MP — damage 1d6 at range 1"],
 	"flare_burst": ["1 AP, 2 MP — damage 1d6 at range 3"],
 	"keener_edge": ["2 AP — ×1.6 damage"],
 	"lesser_stamina": [],
 	"basic_cooking": [],
 	"lesser_strength": [],
 	"observe": [],
-	"battlefield_awareness": ["+1 move cell"],
+	# M-LEGIBILITY L5 fix wave, Item 1: SUPPRESSED-UNTIL-WIRED (same
+	# move_pool_bonus gap as quick_movement above).
+	"battlefield_awareness": [],
 	"soothe_clientele": [],
 	"unerring_aim": [],
 	"sweep_the_tables": [],
 	"servers_prescience": [],
 	"charming_smile": [],
-	"calming_touch": ["2 AP — damage 1d3 at range 1. Slows."],
-	"raskghar_maul": ["3 AP — damage 1d11 at range 2. Slows."],
+	# M-LEGIBILITY L5: the die is now the CASTER's weapon_die (honest source,
+	# see effect_text.gd's _caster_weapon_die), not the deleted vestigial
+	# effect.die -- every one of these reads the "pc" default (weapon_die 6 in
+	# the shipped combatants.json), including raskghar_maul: it's cast by
+	# raskghar_awakened (weapon_die 9) in the sim, never the PC, but this
+	# formatter has no per-caster attribution and the record is never rendered
+	# in any UI (enemy-only skill) -- disclosed in the L5 report, not fixed
+	# further (would need real caster-threading, out of this task's data-only
+	# scope).
+	"calming_touch": ["2 AP — damage 1d6 at range 1. Slows."],
+	"raskghar_maul": ["3 AP — damage 1d6 at range 2. Slows."],
 }
 
 
@@ -136,12 +158,22 @@ func _test_tripwires() -> void:
 	_check(WIEffectText.item_effect_lines({"hp_mod": 7}) == ["+7 HP"], "item hp tripwire moved")
 	_check(WIEffectText.item_effect_lines({"damage_mod": 9}) == ["+9 damage on melee hits"], "item damage tripwire")
 
-	# Skills: mutating the effect dict moves the die/range in the line.
-	var spell := {"ap_cost": 1, "mp_cost": 2, "effect": {"type": "spell_damage", "die": 6, "range": 4}}
-	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — damage 1d6 at range 4"], "skill spell tripwire base")
-	spell["effect"]["die"] = 9
+	# Skills: mutating effect.range moves the range in the line. effect.die is
+	# VESTIGIAL (M-LEGIBILITY L5: wi_combat.gd never reads it -- it rolls the
+	# CASTER's own weapon_die for every hit, melee or spell alike) and is
+	# IGNORED even if present; the die instead follows the caster catalog.
+	var spell := {"ap_cost": 1, "mp_cost": 2, "effect": {"type": "spell_damage", "range": 4}}
+	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — damage 1d6 at range 4"], "skill spell tripwire base (default pc weapon_die 6)")
+	spell["effect"]["die"] = 99
+	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — damage 1d6 at range 4"], "skill spell tripwire: effect.die is vestigial, ignored")
+	spell["effect"].erase("die")
 	spell["effect"]["range"] = 2
-	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — damage 1d9 at range 2"], "skill spell tripwire moved")
+	_check(WIEffectText.skill_effect_lines(spell) == ["1 AP, 2 MP — damage 1d6 at range 2"], "skill spell tripwire: range still moves")
+	var combatants_catalog := [{"id": "pc", "weapon_die": 9}]
+	_check(
+		WIEffectText.skill_effect_lines(spell, combatants_catalog) == ["1 AP, 2 MP — damage 1d9 at range 2"],
+		"skill spell tripwire: die follows the injected pc catalog, not effect.die"
+	)
 
 	# Status: the penalty is derived from the injected catalog, not hardcoded.
 	var catalog := [{"id": "x", "effect": {"type": "spell_damage", "applies": {"slowed": {"pool_penalty": 5}}}}]

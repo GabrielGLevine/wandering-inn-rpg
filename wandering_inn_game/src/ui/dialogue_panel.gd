@@ -235,14 +235,22 @@ func _rebuild_options() -> void:
 
 
 ## Authored option text sometimes already spells out the requirement inline
-## (e.g. "Go on. (Warrior 2)" or "...([Basic Cleaning])"), which would double
-## up with the auto-generated "(requires X)" suffix. Strip the "requires "
-## lead-in and skip the suffix entirely when what's left is already present
-## in the option text.
+## (e.g. "Go on. (Warrior 2)", "...([Basic Cleaning])", or a shop buy's
+## "(5 gold)"), which would double up with the auto-generated suffix. Strip
+## the "requires "/"costs " lead-in (WIDialogue._requirement_text's only two
+## forms) and skip the suffix entirely when what's left is already present in
+## the option text. M-LEGIBILITY L5 fix: the gold case previously only tried
+## the "requires " prefix, so a locked buy's authored "(5 gold)" never matched
+## `_requirement_text`'s "costs 5 gold" core (missing the word "costs") and
+## the suffix rendered anyway -- a doubled price ("(5 gold)  (costs 5 gold)"),
+## VISUAL-LOG'd since Economy v1. Every shipped gold-gated option already
+## authors its price inline (data/dialogue/krshia_crate.json's 4 buy options,
+## the only `requires: {gold: ...}` sites in the game), so this is a strict
+## fix, never a regression that would hide a price with nowhere else to show.
 func _requirement_suffix(option_text: String, requirement: String) -> String:
 	if requirement.is_empty():
 		return ""
-	var core := requirement.trim_prefix("requires ")
+	var core := requirement.trim_prefix("requires ").trim_prefix("costs ")
 	if option_text.contains(core):
 		return ""
 	return "  (%s)" % requirement

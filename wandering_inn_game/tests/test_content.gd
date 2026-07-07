@@ -4,6 +4,23 @@ extends SceneTree
 
 const DIALOGUE_DIR := "res://data/dialogue"
 
+## M-LEGIBILITY L5: every data file that carries player-facing strings, for
+## `_validate_player_string_vocab`'s recursive sweep (dialogue/*.json is
+## walked separately below, via the same DIALOGUE_DIR enumeration
+## `_load_dialogue_graphs` uses). Deliberately excludes files with NO player
+## text (biomes/moods/audio/sprites.json -- asset paths + dev `_comment`s
+## only, confirmed by hand before this list was written).
+const PLAYER_STRING_FILES := [
+	"res://data/items.json",
+	"res://data/skills.json",
+	"res://data/quests.json",
+	"res://data/acts.json",
+	"res://data/classes.json",
+	"res://data/skeleton_scene.json",
+	"res://data/combatants.json",
+	"res://data/arenas.json",
+]
+
 
 func _init() -> void:
 	WITestWatchdog.arm(self)
@@ -27,6 +44,7 @@ func _init() -> void:
 	_validate_class_gains(classes, produced_accomplishments)
 	_validate_props(scene)
 	_validate_effect_text_opacity()
+	_validate_player_string_vocab()
 
 	print("PASS: errand content is fully cross-referenced")
 	quit(0)
@@ -57,6 +75,56 @@ func _validate_effect_text_opacity() -> void:
 	for line: String in lines:
 		assert(attr.search(line) == null, "effect_text emits a forbidden attribute token: " + line)
 		assert(not line.contains("%"), "effect_text emits a forbidden percent-toward token: " + line)
+
+
+## M-LEGIBILITY L5: forbidden-vocab sweep over every player-string FIELD in
+## content data, not just WIEffectText's GENERATED lines (that narrower sweep
+## is `_validate_effect_text_opacity`, above, which exercises the formatter
+## itself and stays separate). BEFORE this task the grep only ever reached
+## effect_text's output; AFTER, it recurses through every raw string value in
+## PLAYER_STRING_FILES (item/skill names+descriptions+field_ambient+
+## freeze_toast, quest/act titles+beat text, class aspiration text,
+## skeleton_scene toasts/talk_pools/talk_pool_post/dialogue/friendly_line/
+## observed_line, combatant display_names, arena tutor_lines) plus every
+## dialogue graph (node/option text, text_variants) in DIALOGUE_DIR -- the
+## full candidate list the task brief named. Recursion (not a hand-enumerated
+## field list) means a NEW field added anywhere in these files is covered
+## automatically, with no second place to keep in sync. Dict keys prefixed
+## "_" (the "_comment"/"_comment_pool" dev-annotation convention used
+## throughout data/*.json) are skipped -- they are never rendered to a
+## player. Verified empirically before wiring this in: a dry-run scan (skip
+## "_"-prefixed keys) over every listed file found zero forbidden tokens
+## today, so this sweep starts green, not red.
+func _validate_player_string_vocab() -> void:
+	var attr := RegEx.new()
+	attr.compile("(?i)\\b(str|dex|con|int|wis|cha)\\b")
+	for path: String in PLAYER_STRING_FILES:
+		_scan_player_strings(_load_json(path), path, attr)
+	var dir: DirAccess = DirAccess.open(DIALOGUE_DIR)
+	for file_name: String in dir.get_files():
+		if file_name.ends_with(".json"):
+			var full_path := DIALOGUE_DIR.path_join(file_name)
+			_scan_player_strings(_load_json(full_path), full_path, attr)
+
+
+## Recurses through an arbitrary parsed-JSON value, applying the forbidden-
+## attribute regex + a literal-percent check to every String leaf. Dictionary
+## keys starting with "_" are skipped entirely (dev comments, never player-
+## facing) -- their VALUES are never visited, so a `_comment` field can freely
+## discuss STR/DEX/percentages as design notes without tripping the sweep.
+func _scan_player_strings(node: Variant, path: String, attr: RegEx) -> void:
+	if node is Dictionary:
+		for key: String in (node as Dictionary):
+			if key.begins_with("_"):
+				continue
+			_scan_player_strings((node as Dictionary)[key], "%s.%s" % [path, key], attr)
+	elif node is Array:
+		for i: int in (node as Array).size():
+			_scan_player_strings((node as Array)[i], "%s[%d]" % [path, i], attr)
+	elif node is String:
+		var s := node as String
+		assert(attr.search(s) == null, "%s carries a forbidden attribute token: %s" % [path, s])
+		assert(not s.contains("%"), "%s carries a forbidden percent-toward token: %s" % [path, s])
 
 
 func _load_json(path: String) -> Dictionary:

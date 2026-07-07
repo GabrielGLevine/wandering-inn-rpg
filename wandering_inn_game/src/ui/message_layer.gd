@@ -282,14 +282,38 @@ func _hold_seconds(seconds: float) -> float:
 	return seconds
 
 
+## M-LEGIBILITY L5 fix wave, Item 5: teardown-race guard. `await get_tree().
+## process_frame`/`await get_tree().create_timer(...).timeout` can resume
+## AFTER this node has left the tree (a world/combat swap or GAME_RESET
+## freeing MessageLayer mid-toast) -- `get_tree()` returns null once outside
+## the tree, so a naive resume crashes with "Invalid access to property or
+## key 'process_frame'/'create_timer' on a base object of type 'null
+## instance'" (hit once, not reproducible, by L5's first sweep). Fix: capture
+## the tree ref BEFORE each await (never call `get_tree()` again after
+## resuming without re-checking), and after EVERY await bail early if
+## `not is_inside_tree()` -- before touching `get_tree()` again or doing any
+## further UI access (`ObservableBus.emit_domain_event`, `panel.hide()`).
+## Guards only: the live (still-in-tree) path's timing/behavior is unchanged.
+## Distinct from the veiltoast ORDER race (task-veiltoast-fix-report.md) --
+## does not touch that fix's logic.
 func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false) -> void:
 	label.text = display_text if display_text != "" else text
 	panel.show()
-	await get_tree().process_frame
+	var tree := get_tree()
+	if tree == null:
+		return
+	await tree.process_frame
+	if not is_inside_tree():
+		return
 	ObservableBus.emit_domain_event(rendered_event, {"text": text})
 	var hold := _hold_seconds(seconds) if collapse_under_qa else seconds
 	if hold > 0.0:
-		await get_tree().create_timer(hold).timeout
+		tree = get_tree()
+		if tree == null:
+			return
+		await tree.create_timer(hold).timeout
+		if not is_inside_tree():
+			return
 	panel.hide()
 
 
