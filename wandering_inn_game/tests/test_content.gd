@@ -19,6 +19,7 @@ const PLAYER_STRING_FILES := [
 	"res://data/skeleton_scene.json",
 	"res://data/combatants.json",
 	"res://data/arenas.json",
+	"res://data/bounties.json",
 ]
 
 
@@ -306,6 +307,14 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 			assert(class_ids.has(class_id), label + " requires unknown class: " + class_id)
 	if requires.has("accomplishment"):
 		gate_keys += 1
+	if requires.has("board_accepted"):
+		# M-DEPTH DP2: the THIRD sanctioned single-key gate (after
+		# accomplishment/gold) -- WIDialogue._meets/_progress_gated's
+		# board_accepted ctx-flag check (Selys's "Take on a posting."/"Turn in
+		# my posting." hub options, selys_delivery.json). Bool value only; it
+		# is never combined with another gate type in authored content.
+		gate_keys += 1
+		assert(requires["board_accepted"] is bool, label + " board_accepted must be a bool")
 	if requires.has("gold"):
 		# Economy v1 D2: the affordability gate (Krshia's shop buy options).
 		# `requires: {gold: price}` is the D1-sanctioned numeric extension of the
@@ -374,7 +383,12 @@ func _validate_hide_when_nodes_have_always_available_exit(graphs: Dictionary) ->
 			var options: Array = node.get("options", [])
 			var has_vanishing_option := false
 			for option: Dictionary in options:
-				if option.has("hide_when") or (option.get("requires", {}) as Dictionary).has("accomplishment"):
+				# M-DEPTH DP2: board_accepted is the SECOND recognized progress-gate
+				# key (see WIDialogue._progress_gated) -- included here so a future
+				# board_accepted-only node (none ship today; the hub already has an
+				# always-available exit regardless) gets the same softlock check.
+				var opt_requires: Dictionary = option.get("requires", {})
+				if option.has("hide_when") or opt_requires.has("accomplishment") or opt_requires.has("board_accepted"):
 					has_vanishing_option = true
 					break
 			if not has_vanishing_option:

@@ -33,7 +33,18 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   real mechanical payoff) is the natural point to also generate/assign a
   bespoke board sprite; flag for a PixelLab pass then, or fold into the
   next NIGHT polish wave.
-- [ ] UI/HOTBAR — **[Stealth] slot renders literal text, no icon glyph**
+  **DP2 update (2026-07-07):** the real posting mechanics landed on this
+  SAME stand-in sprite per the task brief ("dressed stand-ins from DP1 are
+  acceptable this task; a dedicated art pass is already VISUAL-LOG'd") —
+  art/sprites.json ownership sits with a parallel lane this task, so this
+  item stays OPEN, unchanged, now carrying more weight (the board is a
+  live mechanical hub, not dressing). Windowed-reverified
+  (`.superpowers/sdd/fp-handoff/dp2-shots/01_board_browse.png`/
+  `02_selys_picker.png`): the DIALOGUE TEXT itself now reads cleanly (a
+  real bug caught and fixed this task — see the DP2 report's picker-option
+  wrap finding — was never this sprite), so the open defect here is
+  strictly the corkboard art, not legibility of the mechanic's copy.
+- [x] UI/HOTBAR — FIXED 783a733 (code-drawn boot glyph, isolation-verified) — **[Stealth] slot renders literal text, no icon glyph**
   (S2-close rotation 2026-07-07, systemic across 4 shots / 2 scripts:
   s2close-playtest-shots/rogue_earn_loop/01-03 + social_loop/01). The
   first thing a player sees after earning [Rogue]. Check skills.json's
@@ -41,7 +52,7 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   orphaned it) or pick/generate a semantically-right stealth glyph (the
   K3 brief's glyph pattern). NIGHT fix wave after DP1 releases
   sprites.json.
-- [ ] UI/INVENTORY — item card's last lore line rides the panel's bottom
+- [x] UI/INVENTORY — FIXED 783a733 (30px scroll inset inside the measured band) — item card's last lore line rides the panel's bottom
   fold AND collides with the "Press I" toast in tutorial_flow/03 (frame
   illegible at that line). The scroll area's bottom margin vs the
   art-safe band class + the toast's new layer-12 position over that

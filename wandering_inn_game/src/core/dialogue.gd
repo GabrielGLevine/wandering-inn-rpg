@@ -101,11 +101,15 @@ func advance(next_id: String) -> void:
 	_enter(next_id)
 
 
-## True when this requires-dict gates on player PROGRESS (accomplishments):
-## progress-gated options are HIDDEN until met (playtest policy, M4), while
-## skill/class gates stay visible-locked as a deliberate tease.
+## True when this requires-dict gates on player PROGRESS (accomplishments), OR
+## on M-DEPTH DP2's `board_accepted` ctx flag (whether a bounty posting is
+## currently accepted) -- both are "vanishing" gates (HIDDEN until met, not
+## greyed), unlike skill/class/gold which stay visible-locked as a deliberate
+## tease. `board_accepted` reads the SAME hide-until-met contract: Selys's
+## "Take on a posting."/"Turn in my posting." hub options must not clutter the
+## hub with an unusable choice before/after a posting is on hand.
 func _progress_gated(req: Dictionary) -> bool:
-	return req.has("accomplishment")
+	return req.has("accomplishment") or req.has("board_accepted")
 
 
 ## Progress-only gate check used SOLELY to decide hide-until-met VISIBILITY
@@ -117,6 +121,14 @@ func _progress_gated(req: Dictionary) -> bool:
 ## vanish -- window-shopping is content, Economy v1 D1. _meets() below is the
 ## full compound AND used for the actual locked/choosable decision.)
 func _meets_progress(req: Dictionary) -> bool:
+	# M-DEPTH DP2: the board_accepted leg is checked FIRST and independently --
+	# a requires/hide_when dict combining it with accomplishment never ships in
+	# authored content (each of Selys's two new hub options uses exactly one
+	# gate type), but ANDing here rather than branching keeps the contract
+	# honest if that ever changes.
+	if req.has("board_accepted"):
+		if bool(_ctx.get("board_accepted", false)) != bool(req["board_accepted"]):
+			return false
 	if not req.has("accomplishment"):
 		return true
 	for id: String in req["accomplishment"]:
@@ -214,6 +226,14 @@ func _meets(req: Dictionary) -> bool:
 		for id: String in req["accomplishment"]:
 			if int((_ctx["accomplishments"] as Dictionary).get(id, 0)) < int(req["accomplishment"][id]):
 				return false
+	if req.has("board_accepted"):
+		# M-DEPTH DP2: the THIRD sanctioned non-accomplishment gate type (after
+		# gold, Economy v1 D1) -- a plain bool ctx flag (WIGame._build_dialogue_ctx's
+		# `board_accepted`, true iff a bounty posting is currently accepted).
+		# Equality, not >=/<= (this is a state flag, not a threshold).
+		recognized = true
+		if bool(_ctx.get("board_accepted", false)) != bool(req["board_accepted"]):
+			return false
 	return recognized
 
 

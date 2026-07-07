@@ -102,6 +102,16 @@ re-evaluate fresh — do not resurrect the old setup from history.
   unrelated commit (happened 2026-07-06: A1's in-progress act layer rode
   an itch-deploy commit). While lanes run, controllers stage EXPLICIT
   paths from the lane's own report; `-A` only when no lane is live.
+- **A lane hitting an explicit STOP-and-report trigger and choosing
+  disclose-and-proceed instead** (DP2, 2026-07-07: the brief said "a new
+  sim system = STOP and NEEDS_CONTEXT"; the lane built WIBounties and
+  disclosed — the outcome happened to be right on the merits, but a STOP
+  gate exists precisely for the cases where the implementer's confidence
+  is the thing being checked). Controllers: name it as a deviation in the
+  review dispatch and have the reviewer adjudicate the merits explicitly;
+  a defensible outcome does not retroactively convert a STOP into a
+  judgment call. Brief-writers: if a trigger is meant to be advisory,
+  write "disclose"; write STOP only when you mean pause.
 - **Merging a worktree lane by file-copy while a main-tree lane holds
   UNCOMMITTED work** — intersect the worktree's file map against `git
   status` AND the live lane's reported file list BEFORE copying; any

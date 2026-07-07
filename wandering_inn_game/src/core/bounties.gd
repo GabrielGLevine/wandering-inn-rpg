@@ -1,0 +1,157 @@
+class_name WIBounties
+extends RefCounted
+## M-DEPTH DP2: THE REQUEST BOARD's pure derivation + code-built conversation
+## graphs. PURITY RULE: no autoload/Node/scene-tree references -- every method
+## takes the current pool/state as parameters (or an injected Callable for the
+## one read that needs live accomplishment counters) and returns a value; it
+## never mutates WIGame fields directly (accept_bounty/turn_in_bounty in
+## wi_game.gd own the actual state writes + gold payout + events).
+##
+## Two concerns live here:
+##   1. Rotation + condition math (active_slate/condition_met) -- the
+##      talk-pool rotation idiom (social.gd's chatted_with_<id> % pool.size(),
+##      zero rng) applied at POOL-WINDOW granularity, plus the plan's binding
+##      delta-since-accept semantics (docs/design/board-staging/
+##      guild-bounties.json's design note): a bounty's condition is evaluated
+##      as (current counter - counter AT ACCEPT) >= threshold, never an
+##      absolute read, so a mid-game player can't insta-complete a rotating
+##      cull off counters banked before they took the posting.
+##   2. Graph construction (build_picker_graph/build_turnin_graph) -- these
+##      return plain WIDialogue-shaped {start,nodes} Dictionaries, IDENTICAL in
+##      shape to a data/dialogue/*.json graph, but built fresh from the CURRENT
+##      active slate/accepted state instead of loaded from a static file. This
+##      is "a conversation graph FED from bounty data" (the plan's own words):
+##      WIDialogue itself never knows or cares whether its graph came from JSON
+##      or from here, so the existing dialogue-panel UI renders it unchanged
+##      (zero new UI) -- and because these graphs are never registered under
+##      data/dialogue/, test_content.gd's static cross-reference sweep never
+##      sees them (there is no goto-target/quest-id/produced-accomplishment
+##      drift risk to check, since nothing here is hand-authored content).
+
+
+## Derives the ACTIVE slate (2-3 postings) from the full pool: a window of
+## size min(3, pool.size()) starting at `times_slept % pool.size()`, wrapping.
+## Zero rng -- deterministic per times_slept, exactly the talk-pool rotation
+## idiom (social.gd's chatted_with_<id> % pool.size()) applied to a pool of
+## RECORDS instead of a pool of STRINGS. Empty pool -> empty slate (never
+## divides by zero).
+static func active_slate(pool: Array, times_slept: int) -> Array:
+	if pool.is_empty():
+		return []
+	var size := mini(3, pool.size())
+	var start := times_slept % pool.size()
+	var out: Array = []
+	for i: int in size:
+		out.append(pool[(start + i) % pool.size()])
+	return out
+
+
+## True when every key in `condition` (an {accomplishment_id: min_delta} dict,
+## the quests.json complete_when shape) clears its threshold (multi-key =
+## AND, same convention as WIQuests.beat_index/quests.json). Two modes,
+## selected per-bounty by `data/bounties.json`'s optional `condition_mode`
+## field (default "delta" when the bounty carries none):
+##   "delta" (the original DP2 semantics, still the default): current count
+##     must have advanced by AT LEAST the threshold SINCE the baseline
+##     snapshot taken at accept time (current - baseline >= threshold) -- the
+##     right shape for a ROTATING/repeatable condition, so a mid-game player
+##     can't insta-complete a bounty off counters banked before accepting.
+##   "absolute" (FIX WAVE, DP2 review HIGH finding): current count alone must
+##     clear the threshold, baseline ignored entirely -- the right shape for a
+##     condition keyed on a ONE-SHOT accomplishment (bounty_sewer_survey/
+##     bounty_silk_line/bounty_vermin_grate), where delta semantics would
+##     permanently soft-lock the posting for any player who did the
+##     underlying thing before ever seeing the board (work already done is
+##     honest board pay; one-shot accomplishments can't be gamed into a
+##     repeat payout by this).
+## `accomplishment_count_cb` is `Callable(id: String) -> int`, forwarding to
+## WIGame.accomplishment_count -- injected rather than read directly to keep
+## this class pure.
+static func condition_met(condition: Dictionary, baseline: Dictionary, accomplishment_count_cb: Callable, mode: String = "delta") -> bool:
+	for key: String in condition:
+		var current := int(accomplishment_count_cb.call(key))
+		var threshold := int(condition[key])
+		if mode == "absolute":
+			if current < threshold:
+				return false
+		else:
+			var base := int(baseline.get(key, 0))
+			if current - base < threshold:
+				return false
+	return true
+
+
+## Selys's accept line (board-copy.md sec.2), road-cull steer as the ONE
+## authored special case (a soft, specific nudge from the staging copy);
+## every other bounty gets the generic accept line.
+static func _accept_line(bounty_id: String) -> String:
+	if bounty_id == "bounty_road_cull":
+		return "Good pick, actually. The road's been bad and the Watch pays on time. Take the south path back. I didn't say that."
+	return "That one? Fine. Logged. Don't die over a handful of gold — it's paperwork for me and embarrassing for you."
+
+
+## Builds the "Take on a posting." conversation. WINDOWED-SCREENSHOT FINDING
+## (this task): an early version put each bounty's full copy paragraph
+## directly on an OPTION row -- `dialogue_panel.gd`'s option Labels have NO
+## `autowrap_mode` set (only the paged BODY label does), so a paragraph-long
+## option ran off the panel's right edge, unwrapped, stretching the speaker
+## ribbon with it. Fixed by moving the full copy into the HUB NODE's own body
+## text instead (numbered "1./2./3.", the SAME paginate-safe surface
+## `_interact_board`'s browse view already uses) and keeping every OPTION a
+## short "Take posting N. (G gold)" label + a final "Never mind." -- options
+## never need to wrap. Selecting a posting accepts it via the `accept_bounty`
+## dialogue effect and lands on a per-bounty confirmation node reading Selys's
+## accept line (short, single-line, safe as an option/body either way).
+static func build_picker_graph(slate: Array) -> Dictionary:
+	var nodes: Dictionary = {}
+	var options: Array = []
+	var body_lines: Array[String] = ["Which one looks worth doing?", ""]
+	for i: int in slate.size():
+		var bounty: Dictionary = slate[i]
+		var id := String(bounty["id"])
+		var n := i + 1
+		body_lines.append("%d. %s" % [n, String(bounty["copy"])])
+		body_lines.append("")
+		options.append({
+			"text": "Take posting %d. (%d gold)" % [n, int(bounty["gold"])],
+			"effects": [{"accept_bounty": id}],
+			"goto": "confirm_%s" % id,
+		})
+		nodes["confirm_%s" % id] = {
+			"speaker": "Selys",
+			"text": _accept_line(id),
+			"options": [{"text": "Continue.", "end": true}],
+		}
+	options.append({"text": "Never mind.", "end": true})
+	body_lines.remove_at(body_lines.size() - 1)
+	nodes["hub"] = {"speaker": "Selys", "text": "\n".join(body_lines), "options": options}
+	return {"start": "hub", "nodes": nodes}
+
+
+## Builds the "Turn in my posting." result conversation. The RESOLUTION
+## (condition check + gold payout + clearing the accepted slip) already
+## happened in WIGame.turn_in_bounty() before this is called -- `met` just
+## picks which of Selys's two board-copy.md lines to show (opaque-safe: the
+## unmet line names no numbers, per the staging doc's own contract).
+static func build_turnin_graph(met: bool) -> Dictionary:
+	var text := "The notice says proof. Bring the proof, not the story. The story's free and so is my time apparently."
+	if met:
+		text = "Done? …So it is. Here — counted twice, because the last adventurer counted once, loudly, and was wrong. The Guild thanks you. I'm the Guild. So: thanks."
+	return {"start": "hub", "nodes": {"hub": {"speaker": "Selys", "text": text, "options": [{"text": "Continue.", "end": true}]}}}
+
+
+## Builds the "Hand the posting back." result conversation (FIX WAVE, DP2
+## review HIGH finding, second half). The RESOLUTION (clearing
+## accepted_bounty_id/accepted_bounty_baseline, no gold, no accomplishment)
+## already happened in WIGame.abandon_bounty() before this is called -- this
+## just shows Selys's one line, same shape as build_turnin_graph's single
+## fixed node (no condition to branch on, so no `met`-style parameter).
+## Matches the "accept" surface's own home for its line (bounties.gd's
+## _accept_line, shown inside a code-built graph) rather than the data
+## graph -- the abandon HUB OPTION itself still lives in
+## data/dialogue/selys_delivery.json (selys_delivery.json's "Take on a
+## posting."/"Turn in my posting." precedent: the entry point is data, the
+## deferred code-built graph is where Selys's reaction line lives).
+static func build_abandon_graph() -> Dictionary:
+	var text := "Hand it back? Fine. I'll cross it off — no pay, no mark against you. It goes back on the board for someone with follow-through."
+	return {"start": "hub", "nodes": {"hub": {"speaker": "Selys", "text": text, "options": [{"text": "Continue.", "end": true}]}}}

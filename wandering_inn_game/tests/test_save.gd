@@ -591,5 +591,54 @@ func _init() -> void:
 	assert(old_shape_acc_target.equip("test_g1_charm"), "accessory equip succeeds from a tolerant-loaded 2-key equipped shape")
 	assert(String(old_shape_acc_target.equipped.get("accessory_1", "?")) == "test_g1_charm", "the accessory lands in accessory_1 even though the loaded dict never declared that key")
 
+	# --- M-DEPTH DP2 fix wave (MEDIUM finding, save round-trip coverage):
+	# times_slept / accepted_bounty_id / accepted_bounty_baseline /
+	# board_last_seen_times_slept (additive-optional, no version bump) ---
+	var board_original := _new_game()
+	board_original.times_slept = 3
+	board_original.accepted_bounty_id = "bounty_gossip_tea"
+	board_original.accepted_bounty_baseline = {"heard_gossip": 1}
+	board_original.board_last_seen_times_slept = 2
+	var board_data := WISave.serialize(board_original)
+	assert(int(board_data["version"]) == WISave.VERSION, "DP2 board fields do not bump the save version")
+	var board_restored := _new_game()
+	assert(WISave.apply(board_restored, board_data), "save with DP2 board fields applies")
+	assert(board_restored.times_slept == 3, "times_slept round-trips")
+	assert(board_restored.accepted_bounty_id == "bounty_gossip_tea", "accepted_bounty_id round-trips")
+	assert(board_restored.accepted_bounty_baseline == {"heard_gossip": 1}, "accepted_bounty_baseline round-trips")
+	assert(board_restored.board_last_seen_times_slept == 2, "board_last_seen_times_slept round-trips")
+
+	# A save WITHOUT any of the 4 keys (any save written before M-DEPTH DP2)
+	# restores each field's tolerant default -- 0/""/{}/0.
+	var pre_dp2_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	(pre_dp2_data["state"] as Dictionary).erase("times_slept")
+	(pre_dp2_data["state"] as Dictionary).erase("accepted_bounty_id")
+	(pre_dp2_data["state"] as Dictionary).erase("accepted_bounty_baseline")
+	(pre_dp2_data["state"] as Dictionary).erase("board_last_seen_times_slept")
+	var pre_dp2_target := _new_game()
+	pre_dp2_target.times_slept = 999
+	pre_dp2_target.accepted_bounty_id = "stale"
+	pre_dp2_target.accepted_bounty_baseline = {"stale": 999}
+	pre_dp2_target.board_last_seen_times_slept = 999
+	assert(WISave.apply(pre_dp2_target, pre_dp2_data), "save missing all 4 DP2 board keys still applies")
+	assert(pre_dp2_target.times_slept == 0, "absent times_slept restores 0, not stale data")
+	assert(pre_dp2_target.accepted_bounty_id == "", "absent accepted_bounty_id restores \"\", not stale data")
+	assert(pre_dp2_target.accepted_bounty_baseline.is_empty(), "absent accepted_bounty_baseline restores {}, not stale data")
+	assert(pre_dp2_target.board_last_seen_times_slept == 0, "absent board_last_seen_times_slept restores 0, not stale data")
+
+	# Present-but-wrong-typed values for each of the 4 fields are rejected as malformed.
+	var bad_ts_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_ts_data["state"] as Dictionary)["times_slept"] = "three"
+	assert(not WISave.apply(_new_game(), bad_ts_data), "wrong-typed times_slept rejected")
+	var bad_abid_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_abid_data["state"] as Dictionary)["accepted_bounty_id"] = 42
+	assert(not WISave.apply(_new_game(), bad_abid_data), "wrong-typed accepted_bounty_id rejected")
+	var bad_abbl_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_abbl_data["state"] as Dictionary)["accepted_bounty_baseline"] = "nope"
+	assert(not WISave.apply(_new_game(), bad_abbl_data), "wrong-typed accepted_bounty_baseline rejected")
+	var bad_blsts_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_blsts_data["state"] as Dictionary)["board_last_seen_times_slept"] = "two"
+	assert(not WISave.apply(_new_game(), bad_blsts_data), "wrong-typed board_last_seen_times_slept rejected")
+
 	print("PASS: save round-trips the full sim including rng state")
 	quit(0)

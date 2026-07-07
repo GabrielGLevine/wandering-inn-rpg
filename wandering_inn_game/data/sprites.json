@@ -984,6 +984,18 @@
    }
   }
  },
+ "icon_sneak": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_sneak.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
  "hearth": {
   "render_scale": 0.5,
   "animations": {

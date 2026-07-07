@@ -915,6 +915,19 @@ PLACEHOLDER_ICONS: list[tuple[str, str, tuple[int, int, int], tuple[int, int, in
 	("smile", "assets/ui/icons/icon_charming_smile.png", (245, 205, 120), (170, 110, 40)),
 	# calming_touch (combat): concentric calm ripples, soft desaturated teal.
 	("ripple", "assets/ui/icons/icon_calming_touch.png", (150, 195, 205), (55, 95, 110)),
+	# --- Fix wave 2 (VISUAL-LOG drain): [Stealth] (`sneak`) never carried an
+	# `icon` id (checked skills.json -- no icon key was ever set, so the
+	# hotbar's text-label fallback renders the raw bracketed name; see
+	# hotbar.gd's `_make_slot`). No plain boot/footstep/cloak/shadow glyph
+	# exists un-framed in any in-hand pack (docs/asset-index.md grep): the one
+	# candidate, Ninja Adventure's `Ui/Skill Icon/Items & Weapon/Boot.png`,
+	# bakes its own amber diamond slot-frame into the 24x24 image, which would
+	# double up against WIHotbar's own Carved_9Slides frame -- same
+	# code-drawn-glyph policy as every icon above instead.
+	# sneak: a side-profile boot mid-step (toe pointing right), muted
+	# slate/shadow-grey -- deliberately desaturated vs. every other field icon's
+	# bright hue, reads as "quiet/shadow" at a glance.
+	("boot", "assets/ui/icons/icon_sneak.png", (95, 100, 120), (40, 40, 55)),
 ]
 
 
@@ -1022,6 +1035,16 @@ def _draw_placeholder(shape: str, dst_rel: str, fill: tuple[int, int, int], outl
 		draw.ellipse([1, 1, 14, 14], fill=None, outline=outline, width=1)
 		draw.ellipse([4, 4, 11, 11], fill=None, outline=fill, width=1)
 		draw.ellipse([6, 6, 9, 9], fill=fill, outline=outline)
+	elif shape == "boot":
+		# side-profile boot, toe pointing right: shaft on the LEFT, foot/toe
+		# extending RIGHT only (a first, centered-shaft draft read as a
+		# plunger/"T" in the slot -- the asymmetry is what makes it read as a
+		# boot), plus a darker sole strip.
+		draw.polygon(
+			[(3, 1), (8, 1), (8, 8), (11, 8), (14, 10), (14, 13), (1, 13), (1, 9), (3, 9)],
+			fill=fill, outline=outline,
+		)
+		draw.rectangle([1, 12, 14, 13], fill=outline)
 	else:
 		raise ValueError(f"unknown placeholder shape: {shape}")
 	dst = PROJECT_ROOT / dst_rel

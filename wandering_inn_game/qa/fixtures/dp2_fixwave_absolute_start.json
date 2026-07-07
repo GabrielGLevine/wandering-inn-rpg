@@ -1,0 +1,50 @@
+{
+ "_comment": "DP2 FIX WAVE, non-canonical verification fixture (NOT registered in qa/manifest.json -- does not count toward the 53 canonicals). Reproduces the EXACT one-shot soft-lock scenario the HIGH finding fixed: found_spider_silk is banked BEFORE the posting is ever accepted (a player who found the silk on their own, then later took bounty_silk_line at the board). accepted_bounty_id is already 'bounty_silk_line' with an EMPTY accepted_bounty_baseline -- exactly what WIGame.accept_bounty now writes for an absolute-mode bounty (no baseline snapshotted, since condition_met never reads it in that mode). Positioned at the same desk-approach cell (8,3) facing up board_loop_start uses, so 'Turn in my posting.' is reachable with zero traversal -- the point of this fixture is the turn-in resolution itself, not the walk.",
+ "version": 5,
+ "state": {
+  "current_map": "guild",
+  "player_cell": [
+   8,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "found_spider_silk": 1,
+   "accepted_bounty_bounty_silk_line": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9",
+  "times_slept": 0,
+  "accepted_bounty_id": "bounty_silk_line",
+  "accepted_bounty_baseline": {},
+  "board_last_seen_times_slept": 0
+ }
+}

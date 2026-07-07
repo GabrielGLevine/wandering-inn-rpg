@@ -774,6 +774,7 @@
    "frames": 3
   },
   {
+   "_comment": "M-DEPTH DP2: 'Take on a posting.' is visible whenever no bounty is accepted (board_accepted false in this fixture -- nothing in this script ever calls accept_bounty), appended at array end so no earlier option's visible index shifts. 'Turn in my posting.' stays hidden (requires board_accepted:true, unmet) and does not appear in this exact-size array.",
    "action": "assert_event_logged",
    "type": "dialogue_node",
    "payload_contains": {
@@ -791,6 +792,11 @@
      },
      {
       "text": "How does the board work?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Take on a posting.",
       "locked": false,
       "requirement": ""
      }

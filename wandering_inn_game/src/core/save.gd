@@ -134,6 +134,20 @@ extends RefCounted
 ## here -- `WIGame.apply_loadout`'s candidate-set intersection is what
 ## silently drops an id that no longer resolves to a known/fielded skill (a
 ## future K3 rename), not this load path.
+## (M-DEPTH Task DP2, THE REQUEST BOARD): FOUR additive fields follow the SAME
+## additive-optional pattern as gold/generalist_classes/hotbar_loadout above --
+## NOT in `required`, NO version bump:
+##   `times_slept` (int, default 0) -- the board's rotation clock; a save
+##   written before this feature had taken 0 "board-aware" sleeps by
+##   definition, so 0 is exactly correct (board_bounties() derives the SAME
+##   slate a fresh run would show).
+##   `accepted_bounty_id` (String, default "") -- no posting could have been
+##   accepted before this feature existed.
+##   `accepted_bounty_baseline` (Dictionary, default {}) -- empty is exactly
+##   correct alongside an empty accepted_bounty_id.
+##   `board_last_seen_times_slept` (int, default 0) -- matches times_slept's
+##   own default, so a restored old save never false-positives Selys's "slate
+##   rotated overnight" line on its very first post-load board visit.
 const VERSION := 5
 
 
@@ -168,6 +182,10 @@ static func serialize(game: WIGame) -> Dictionary:
 		"pc_race": game.pc_race,
 		"pc_gender": game.pc_gender,
 		"rng_state": str(game.rng.state),
+		"times_slept": game.times_slept,
+		"accepted_bounty_id": game.accepted_bounty_id,
+		"accepted_bounty_baseline": game.accepted_bounty_baseline.duplicate(true),
+		"board_last_seen_times_slept": game.board_last_seen_times_slept,
 	}}
 
 
@@ -301,6 +319,21 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	for pc_key: String in ["pc_name", "pc_race", "pc_gender"]:
 		if s.has(pc_key) and not (s[pc_key] is String):
 			return false
+	# times_slept/board_last_seen_times_slept (M-DEPTH DP2) follow the SAME
+	# additive-optional pattern as actions_since_sleep's numeric check above --
+	# default 0 when absent, rejected if present-but-non-numeric.
+	if s.has("times_slept") and not (s["times_slept"] is int or s["times_slept"] is float):
+		return false
+	if s.has("board_last_seen_times_slept") and not (s["board_last_seen_times_slept"] is int or s["board_last_seen_times_slept"] is float):
+		return false
+	# accepted_bounty_id (M-DEPTH DP2) follows the SAME additive-optional
+	# pattern -- default "" when absent, rejected if present-but-non-String.
+	if s.has("accepted_bounty_id") and not (s["accepted_bounty_id"] is String):
+		return false
+	# accepted_bounty_baseline (M-DEPTH DP2) follows the SAME additive-optional
+	# pattern -- default {} when absent, rejected if present-but-non-Dictionary.
+	if s.has("accepted_bounty_baseline") and not (s["accepted_bounty_baseline"] is Dictionary):
+		return false
 	# inventory/equipped/container_state/actions_since_sleep (M7 Task E2) ARE
 	# in `required` above (this is a version-bumped addition, not the
 	# additive-optional pattern) -- still type-checked here like every other
@@ -385,5 +418,9 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.pc_race = WIGame._sanitize_pc_race(String(s.get("pc_race", "human")))
 	game.pc_gender = WIGame._sanitize_pc_gender(String(s.get("pc_gender", "m")))
 	game.rng.state = int(String(s["rng_state"]))
+	game.times_slept = int(s.get("times_slept", 0))
+	game.accepted_bounty_id = String(s.get("accepted_bounty_id", ""))
+	game.accepted_bounty_baseline = (s.get("accepted_bounty_baseline", {}) as Dictionary).duplicate(true)
+	game.board_last_seen_times_slept = int(s.get("board_last_seen_times_slept", 0))
 	game.reprime_quests()
 	return true

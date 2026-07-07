@@ -35,6 +35,28 @@ extends CanvasLayer
 
 const PANEL_SIZE := Vector2(640.0, 560.0)
 
+## Fix wave 2 (VISUAL-LOG "item card's last lore line rides the panel's
+## bottom fold"): extra bottom clearance reserved for `_scroll` alone (via a
+## fixed-height spacer sibling, see `_ready()`), on top of the panel's
+## uniform 34px MarginContainer margin. MEASURED (evidence:
+## .superpowers/sdd/fp-handoff/s2close-playtest-shots/tutorial_flow/
+## 03_spear_equipped.png, `Relc's Spare Spear` card's last lore line, panel
+## at y80..640 in the 720p shot): a per-column scan for the fold's tan curl
+## color across the panel's text width (this panel's PARCHMENT_PANEL art,
+## Banner_Vertical.png, 9-sliced via UIChrome.PARCHMENT_REGION) puts the
+## decorative bottom curl's onset between LOCAL y508 and y536 of the
+## 560px-tall panel -- the curl is WAVY art, so the EARLIEST column (y508)
+## is the binding edge; the dark border line below it (local y538) is NOT
+## where the danger starts. The previous clip edge (560 - 34 margin =
+## local y526) sat BELOW the curl onset in several columns, so a card line
+## rendering at the clip edge drew straight onto the fold (the illegible
+## line in the evidence shot). 30px of spacer moves the clip edge to local
+## y496, 12px clear of the earliest curl pixel. Same class of fix as
+## message_layer.gd's `TOAST_FOLD_DANGER_PX`/combat_hud.gd's readout
+## budget: reserve real pixels measured off the art, not a guessed round
+## number.
+const SCROLL_BOTTOM_INSET := 30.0
+
 ## True while the inventory panel is visible; world.gd/journal.gd/
 ## pause_menu.gd gate on this.
 var open := false
@@ -169,6 +191,18 @@ func _ready() -> void:
 	_items_box.add_theme_constant_override("separation", 4)
 	_items_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_scroll.add_child(_items_box)
+
+	# See SCROLL_BOTTOM_INSET's doc comment above: a fixed-height spacer
+	# AFTER the scroll, same "shrink the EXPAND_FILL sibling" trick
+	# `_reserve_status_label_height` uses above it in this same VBox --
+	# shrinks `_scroll`'s own rect without touching the MarginContainer's
+	# uniform margin (which also positions the title/gold/slot rows --
+	# those read fine; only the scroll's OWN clip edge sat inside the
+	# parchment's art-safe band).
+	var scroll_bottom_spacer := Control.new()
+	scroll_bottom_spacer.custom_minimum_size = Vector2(0.0, SCROLL_BOTTOM_INSET)
+	scroll_bottom_spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stack.add_child(scroll_bottom_spacer)
 
 	# Live coin-line refresh (Economy v1 D3): the same domain_event idiom
 	# field_hotbar/dialogue_panel use -- if the panel is open when gold

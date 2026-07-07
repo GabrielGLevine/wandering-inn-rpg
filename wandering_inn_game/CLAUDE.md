@@ -168,6 +168,29 @@ current-state-only, one short paragraph per live system.
   `VERSION := 5`; `_migrated` composes each version step); file I/O lives
   only in the Game autoload. Maps/doors are data (`skeleton_scene.json`).
   Full detail: "Story spine (M2)" block in `docs/ARCHITECTURE-HISTORY.md`.
+- **THE REQUEST BOARD (`WIBounties`, `src/core/bounties.gd`, M-DEPTH DP2)** —
+  a rotating bounty pool (`data/bounties.json`), deliberately NOT a
+  `WIQuests` quest (no journal entry, no beat text): `board_bounties()`
+  derives the active 2-3 postings from `times_slept % pool.size()` (zero
+  rng, the talk-pool rotation idiom at pool-window granularity).
+  `accept_bounty`/`turn_in_bounty` (`wi_game.gd`) ride existing machinery
+  only — a plain accomplishment counter (`accepted_bounty_<id>`/
+  `completed_bounty_<id>`) and the shared `earn_gold` router; a bounty's
+  condition (the `quests.json` complete_when dict shape) evaluates
+  DELTA-SINCE-ACCEPT (current counter minus a baseline snapshotted at
+  accept), never an absolute read. The board prop (`guild_board`,
+  `board: true`) is browse-only; accept/turn-in live at Selys's desk
+  (`selys_delivery.json`'s "Take on a posting."/"Turn in my posting." hub
+  options) via TWO code-built `WIDialogue` graphs (`WIBounties.
+  build_picker_graph`/`build_turnin_graph`) — real conversations, just
+  constructed at runtime from the current slate instead of loaded from a
+  static file, so the existing dialogue-panel UI and QA `wait_for_event`
+  idiom need no new code path. `WIGame._build_dialogue_ctx`'s
+  `board_accepted` bool is the SECOND sanctioned non-accomplishment
+  `requires`/`hide_when` gate (after `gold`, Economy v1 D1) —
+  `WIDialogue._meets`/`_progress_gated` recognize it explicitly. Full
+  detail: "THE REQUEST BOARD (M-DEPTH DP2)" block in
+  `docs/ARCHITECTURE-HISTORY.md`.
 - **Character creation (`char_creation.gd`, M-ARC §5)** — New Game → race
   (Human/Drake/Gnoll) → gender (cosmetic) → name. Three cosmetic sim fields
   (`pc_name`/`pc_race`/`pc_gender`), additive save, no mechanical effect.
@@ -282,6 +305,7 @@ current-state-only, one short paragraph per live system.
 | `rogue_earn_loop` | 9 (fixture `near_rogue`) | K3 [Rogue] earn: `recovered_crate_watch` -> sleep -> `class_gained` -> [Stealth] fielded |
 | `stages_loop` | 9 (fixture `krshia_stage3_pre`) | Social Pillar II: `talk_pool_stages` base->final (Krshia), unlocked hub topic + shop discount perk surface |
 | `guild_interior_walkthrough` | 9 (fixture `near_guild`) | M-DEPTH DP1: guild_door real-door round-trip, Selys-behind-the-desk (pool + graph incl. desk-context node), board/notice-wall dressed props, Renn/Ilvo/Yelra walk-on pool lines |
+| `board_loop` | 9 (fixture `board_loop_start`) | M-DEPTH DP2: THE REQUEST BOARD goes live -- browse/accept/fulfill/turn-in at Selys's desk (delta-since-accept, gold payout), slate rotation across a sleep + the "slate rotated overnight" line |
 
 ## Working conventions
 

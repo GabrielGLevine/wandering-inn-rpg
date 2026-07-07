@@ -149,6 +149,10 @@ func _build_expected_counts() -> Dictionary:
 	for icon_id: String in ["icon_charming_smile", "icon_calming_touch"]:
 		counts[icon_id + "/idle"] = 1
 
+	## Fix wave 2 (VISUAL-LOG drain): [Stealth] (`sneak`) code-drawn boot glyph
+	## (single-frame), same policy as every icon above.
+	counts["icon_sneak/idle"] = 1
+
 	## M-FP A1 additions: library/sewer/dummy statics (1-frame regions);
 	## royal_soldier single-facing battler idle 256/64 = 4;
 	## a_hunter directional idle 256/64 = 4, walk maps the Run sheets 384/64 = 6.

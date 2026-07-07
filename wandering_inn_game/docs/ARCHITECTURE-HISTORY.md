@@ -1130,3 +1130,79 @@ task names, and self-references to "this task"/"this block".
   ap_cost-based rather than a skill-id special case (generalizing to every
   0-cost `move_pool_bonus` skill would have silently turned two previously-
   inert passives into a free, repeatable-every-turn pool exploit).
+
+### THE REQUEST BOARD (M-DEPTH DP2, 2026-07-07)
+
+DP1 shipped the Adventurer's Guild interior with the board/notice-wall
+dressed-only (a static toast); DP2 wires the real repeatable-posting
+mechanics per the plan's own scope note ("a new data seam... zero new UI").
+
+- **Data**: `data/bounties.json` — a pool of postings (`id`, `pillar`,
+  `giver`, `condition`, `gold`, `copy`), assembled verbatim from the writer
+  lane's staging doc (`docs/design/board-staging/guild-bounties.json`),
+  annotations stripped. 9 of the staging doc's 10 entries shipped live;
+  `bounty_crab_cull` stays parked (its condition names a bank,
+  `rock_crabs_culled`, that doesn't exist until a future Rock Crab
+  encounter lands — the staging doc's own recommendation).
+- **Sim (`WIBounties`, `src/core/bounties.gd`)** — pure, no autoload/Node
+  refs, following the social.gd/economy.gd extraction pattern:
+  - `active_slate(pool, times_slept)` derives the CURRENT 2-3 active
+    postings, a window of `min(3, pool.size())` starting at
+    `times_slept % pool.size()` — zero rng, the exact talk-pool rotation
+    idiom (`chatted_with_<id> % pool.size()`) applied to a pool of RECORDS
+    instead of a pool of strings.
+  - `condition_met(condition, baseline, accomplishment_count_cb)` — every
+    key in a bounty's `condition` dict (the `quests.json` complete_when
+    shape) must have advanced by at least its threshold SINCE a baseline
+    snapshotted at accept time (DELTA-SINCE-ACCEPT, the staging doc's
+    binding semantics call — an absolute read would let a mid-game player
+    insta-complete a rotating cull off counters banked before they took the
+    posting).
+  - `build_picker_graph`/`build_turnin_graph` — construct plain
+    `{start, nodes}` `WIDialogue`-shaped Dictionaries FRESH from the
+    current slate/accepted state, at runtime, in code (never loaded from
+    `data/dialogue/*.json`). `WIDialogue` doesn't know or care where its
+    graph came from, so the existing dialogue-panel UI and every QA
+    `wait_for_event`(`dialogue_started`/`dialogue_node`/`dialogue_choice`/
+    `dialogue_ended`) idiom need no new code path — and because these
+    graphs are never registered under `data/dialogue/`, `test_content.gd`'s
+    static cross-reference sweep never needs to know they exist.
+- **`WIGame` state (all additive save fields, no version bump)**:
+  `times_slept` (the rotation clock, incremented unconditionally every
+  `sleep()`), `accepted_bounty_id` (one job at a time, v1 simplification),
+  `accepted_bounty_baseline` (the delta-since-accept snapshot),
+  `board_last_seen_times_slept` (drives the "slate rotated overnight" line,
+  shown at most once per rotation). `accept_bounty`/`turn_in_bounty` ride
+  EXISTING machinery only, per the plan's scope discipline: a plain
+  accomplishment counter (`accepted_bounty_<id>`/`completed_bounty_<id>`)
+  and the shared `earn_gold` router (gold_changed + the "Earned N gold."
+  toast) — no new event types were added.
+- **The two surfaces**:
+  - `guild_board` (`board: true`, a `prop`) is BROWSE-ONLY:
+    `WIGame._interact_board` assembles the entity's own `toast` (or
+    `second_visit_toast` when a posting is outstanding) + the active
+    slate's copy + the entity's `observe` footer into a one-option
+    (`Step back from the board.`) code-built dialogue. It never mutates
+    state.
+  - Selys's desk (`selys_delivery.json`) is the transactional surface, per
+    board-copy.md sec.2's own framing ("taking a posting means telling
+    me"): her hub gained "Take on a posting." (hidden once a posting is
+    accepted) and "Turn in my posting." (hidden until one is) — both fire
+    a `pending_board_action` signal effect (`open_board_picker`/
+    `open_board_turnin`, mirroring `dialogue_choose`'s existing
+    `pending_combat` deferred-effect shape) that swaps `dialogue` to a
+    fresh `WIBounties`-built graph once the hub conversation ends.
+    `accept_bounty` is a THIRD dialogue effect verb, fired from inside the
+    picker's own options.
+- **`WIDialogue` extension**: `board_accepted` is the SECOND sanctioned
+  non-accomplishment `requires`/`hide_when` gate (after `gold`, Economy v1
+  D1) — a plain bool read from `WIGame._build_dialogue_ctx`'s ctx (true iff
+  `accepted_bounty_id` is non-empty). `_meets`/`_progress_gated` recognize
+  it explicitly (hide-until-met, like `accomplishment`, not
+  visible-locked like `skill`/`class`); `test_content.gd`'s
+  `_validate_requires` recognizes it as a THIRD single-gate-key type so
+  authored content using it still passes the "exactly one gate type"
+  check.
+- **Deliberately NOT a `WIQuests` quest**: no journal entry, no beat text,
+  no `quests.json` row — the board is its own data seam, exactly as the
+  plan specified, so it never collides with the story-quest machinery.

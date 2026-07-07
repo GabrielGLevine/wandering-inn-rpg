@@ -1,0 +1,34 @@
+{
+ "_comment": "DP2 FIX WAVE, non-canonical verification script (NOT registered in qa/manifest.json/CLAUDE.md's seed table -- does not count toward the 53 canonicals, ci_sweep.sh will never run it). Purpose: windowed-screenshot proof of the HIGH finding's FIRST half (condition_mode: absolute for the three one-shot-keyed bounties). Fixture dp2_fixwave_absolute_start already holds bounty_silk_line accepted with an EMPTY baseline and found_spider_silk already banked BEFORE acceptance (the exact soft-lock scenario) -- this script just walks to Selys and turns it in, proving the absolute-mode condition resolves MET immediately (no delta math, no re-doing the one-shot thing). Seed 9 for convention; fixture rng_state governs (no combat in this script).",
+ "fixture_save": "dp2_fixwave_absolute_start",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "guild" },
+  { "action": "assert_state", "path": "player_cell", "equals": [8, 3] },
+  { "action": "assert_state", "path": "accepted_bounty_id", "equals": "bounty_silk_line" },
+
+  { "_comment": "Fresh waking (social_talked[selys] absent) -- first interact plays Selys's rotating talk-pool bark (unrelated to the board; board_last_seen_times_slept == times_slept here so the 'slate rotated' line does NOT also fire), second interact opens the real hub.", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Selys" }, "timeout_sec": 5 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "selys_delivery" }, "timeout_sec": 5 },
+  { "_comment": "board_accepted true, no social-stage extras banked (chatted_with_selys/errand_decided both absent): idx0 'Just looking around.', idx1 'How does the board work?', idx2 'Turn in my posting.', idx3 'Hand the posting back.'.", "action": "move", "direction": "down", "steps": 2 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "gold_changed", "payload_contains": { "delta": 2, "total": 2, "source": "bounty_bounty_silk_line" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Earned 2 gold." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "completed_bounty_bounty_silk_line", "count": 1 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "board_turnin", "entity": "selys" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Selys", "text": "Done? …So it is. Here — counted twice, because the last adventurer counted once, loudly, and was wrong. The Guild thanks you. I'm the Guild. So: thanks." }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "absolute_mode_turn_in" },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "accepted_bounty_id", "equals": "" }
+ ]
+}

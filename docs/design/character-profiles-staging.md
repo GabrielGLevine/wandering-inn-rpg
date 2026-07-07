@@ -99,3 +99,20 @@ Wiki-verify canon entries at generation/writing time.
   perpetually mid-catch-of-breath. Voice: out-of-breath-professional ·
   clipped delivery jargon ("signed-for", "second attempt") · lights up
   at speed talk. Counter context: the Runner's Guild desk.
+- **Yelra** (ORIGINAL+flag; DP1 Adventurer's Guild interior walk-on):
+  lean Gnoll, tan-brown fur, quiver worn even seated (the silhouette
+  tell — never fully off-duty). Bronze-rank per the canon rank ladder
+  (wiki-verified: Bronze is the newly-registered tier). Voice:
+  terse economy-of-words · counts in draws and daylight, not coin ·
+  quietly proud of Bronze-rank, no swagger about it. Sprite: reused
+  `pc_gnoll_f` rig (tan-brown tint), not a new generation.
+- **Renn Coldscale** (ORIGINAL+flag; DP1 walk-on, half of a bickering
+  Bronze-rank duo): wiry Drake, ash-grey scales, arms perpetually
+  crossed. Voice: contrarian by default · rates every posting "too
+  cheap" · needles Ilvo mid-sentence. Sprite: reused `pc_drake_m` rig
+  (ash-grey tint).
+- **Ilvo Brackenhide** (ORIGINAL+flag; DP1 walk-on, the other half of
+  the duo): broader Drake, moss-green scales, patient stance. Voice:
+  the reasonable one · answers Renn with plain facts · rereads the
+  board a second time anyway. Sprite: reused `pc_drake_f` rig
+  (moss-green tint).

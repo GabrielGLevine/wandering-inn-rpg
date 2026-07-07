@@ -133,6 +133,38 @@ var actions_since_sleep: int = 0
 ## REFUSES when short (no debt). Additive save field (tolerant default 0, NO
 ## version bump -- see save.gd, the used_skills/generalist_classes precedent).
 var gold: int = 0
+## M-DEPTH DP2 (THE REQUEST BOARD): a monotonic count of sleeps taken this
+## run, incremented unconditionally in `sleep()` -- the rotation clock for
+## `board_bounties()` (WIBounties.active_slate: `times_slept % pool.size()`,
+## zero rng, the talk-pool rotation idiom applied to a pool of postings
+## instead of a pool of strings) and the "slate rotated overnight" line's
+## seen/unseen tracking (`board_last_seen_times_slept` below). Additive save
+## field (tolerant default 0, NO version bump -- the gold/generalist_classes
+## precedent).
+var times_slept: int = 0
+## M-DEPTH DP2: the id of the ONE bounty currently accepted, or "" when the
+## player holds no posting (v1 simplification, disclosed in the DP2 report:
+## Selys won't log a second job while one's outstanding -- "Take on a
+## posting." hides once this is non-empty). Additive save field (tolerant
+## default "", NO version bump).
+var accepted_bounty_id: String = ""
+## M-DEPTH DP2: the DELTA-SINCE-ACCEPT baseline for the currently accepted
+## bounty's condition, `{accomplishment_id: count_at_accept}` -- snapshotted
+## in `accept_bounty()`, read by `WIBounties.condition_met` (current count
+## MINUS this baseline, never an absolute read; the staging doc's binding
+## semantics call, guarding against a mid-game player insta-completing a
+## rotating cull off counters banked before they took the posting). Empty
+## when no bounty is accepted. Additive save field (tolerant default {}, NO
+## version bump).
+var accepted_bounty_baseline: Dictionary = {}
+## M-DEPTH DP2: the `times_slept` value the player last opened the board's
+## accept picker at -- lets `_open_board_picker_dialogue` show Selys's "New
+## paper went up this morning" line exactly once per rotation the player
+## hasn't seen yet (compares against the LIVE `times_slept`, updated to match
+## every time the picker opens). Additive save field (tolerant default 0,
+## matching `times_slept`'s own default so a fresh save never false-positives
+## a rotation that hasn't happened yet).
+var board_last_seen_times_slept: int = 0
 ## Social Pillar S1: per-waking "already did small talk with this NPC this
 ## waking" flags, keyed by entity id -> true. Set by `_talk_pool_line` the
 ## first time an NPC carrying a `talk_pool` is talked to in a waking, so a
@@ -606,6 +638,14 @@ func interact() -> Dictionary:
 			if bool(target.get("sleep", false)):
 				sleep()
 				return {"slept": true}
+			# M-DEPTH DP2: THE REQUEST BOARD -- checked before every other
+			# prop shape (mirrors `sleep`'s early-return position): a board
+			# prop is a browse-only surface (current active slate + header/
+			# footer, no accept/turn-in -- those live at Selys's desk per
+			# board-copy.md sec.2's own framing), built fresh every interact
+			# so rotation always reads live.
+			if bool(target.get("board", false)):
+				return _interact_board(target)
 			# M7 Task E3: a container prop (`contains: [item_ids]`) is checked
 			# BEFORE `on_interact_accomplishment`/the `use_skill` fallback --
 			# no data-driven prop combines `contains` with either of those
@@ -966,7 +1006,12 @@ func _build_dialogue_ctx() -> Dictionary:
 	# reference, read-only) so the pure WIDialogue walker can format an
 	# item-granting option's effect_lines via WIEffectText without an autoload
 	# or file read.
-	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items}
+	# M-DEPTH DP2: `board_accepted` is the SECOND sanctioned non-accomplishment
+	# ctx extension (after `gold` above) -- a plain bool a `requires`/
+	# `hide_when` dict can gate on (WIDialogue._meets/_progress_gated), so
+	# Selys's "Take on a posting."/"Turn in my posting." hub options can hide/
+	# show without a new dialogue.gd concept per feature.
+	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "board_accepted": accepted_bounty_id != ""}
 
 
 ## Starts a conversation graph if no other modal sim is active.
@@ -985,6 +1030,25 @@ func start_dialogue(conversation_id: String, source_entity_id: String) -> bool:
 	return true
 
 
+## M-DEPTH DP2: starts a dialogue from a freshly-BUILT (not file-loaded) graph
+## Dictionary -- the mechanism behind THE REQUEST BOARD's browse view and
+## Selys's bounty accept-picker/turn-in result (see bounties.gd's doc comment
+## for the full rationale). Same guard/emit/begin shape as `start_dialogue`
+## above, so the dialogue panel UI and every QA wait_for_event idiom
+## (dialogue_started/dialogue_node/dialogue_choice/dialogue_ended) need no new
+## code path -- only the graph's PROVENANCE differs (code, not
+## `_combat_config["dialogue"]`), which is exactly why test_content.gd's
+## static-file cross-reference sweep never needs to know these graphs exist.
+func _begin_code_dialogue(graph: Dictionary, conversation_label: String, source_entity_id: String) -> bool:
+	if dialogue != null or combat != null:
+		return false
+	_dialogue_conversation_id = conversation_label
+	_emit(WIEvents.DIALOGUE_STARTED, {"conversation": conversation_label, "entity": source_entity_id})
+	dialogue = WIDialogue.new(graph, _build_dialogue_ctx(), _event_sink)
+	dialogue.begin()
+	return true
+
+
 ## Applies the selected option's effects, refreshes the dialogue ctx, then
 ## advances -- so the next node's gating sees this choice's effects (M4).
 ## start_combat effects still only fire on conversation-ending options.
@@ -999,6 +1063,7 @@ func dialogue_choose(index: int) -> bool:
 	if bool(result["ended"]):
 		dialogue = null
 	var pending_combat := ""
+	var pending_board_action := ""
 	for effect: Dictionary in result["effects"]:
 		if effect.has("accomplishment"):
 			record_accomplishment(String(effect["accomplishment"]))
@@ -1021,13 +1086,220 @@ func dialogue_choose(index: int) -> bool:
 			_apply_gold_effect(int(effect["gold"]), _dialogue_conversation_id)
 		elif effect.has("start_combat"):
 			pending_combat = String(effect["start_combat"])
+		elif effect.has("accept_bounty"):
+			# M-DEPTH DP2: fired from WITHIN the board picker's own options
+			# (see bounties.gd's build_picker_graph) -- a SECOND
+			# dialogue_choose call, distinct from the one that opened the
+			# picker via open_board_picker below.
+			accept_bounty(String(effect["accept_bounty"]))
+		elif effect.has("open_board_picker"):
+			# M-DEPTH DP2: fired from Selys's static hub option "Take on a
+			# posting." (selys_delivery.json). Deferred like start_combat's
+			# pending_combat above -- applied AFTER the effects loop, once
+			# dialogue is already null (this option always ends the hub
+			# conversation), so the swap to the code-built picker graph
+			# never collides with walker.advance below.
+			pending_board_action = "picker"
+		elif effect.has("open_board_turnin"):
+			# M-DEPTH DP2: fired from Selys's static hub option "Turn in my
+			# posting." (only visible once board_accepted is true). Same
+			# deferred-swap shape as open_board_picker above.
+			pending_board_action = "turnin"
+		elif effect.has("open_board_abandon"):
+			# FIX WAVE (DP2 review HIGH finding, second half): fired from
+			# Selys's "Hand the posting back." hub option (only visible once
+			# board_accepted is true, same requires gate as open_board_turnin
+			# above). Same deferred-swap shape -- the hub option ends this
+			# conversation first, then _open_board_abandon_dialogue below
+			# clears the accepted slip and shows Selys's one line.
+			pending_board_action = "abandon"
 	if not bool(result["ended"]):
 		walker.set_ctx(_build_dialogue_ctx())
 		walker.advance(String(result["next"]))
 	if pending_combat != "":
 		if not start_combat(pending_combat):
 			_emit(WIEvents.DIALOGUE_EFFECT_FAILED, {"effect": "start_combat", "id": pending_combat})
+	if pending_board_action == "picker":
+		_open_board_picker_dialogue()
+	elif pending_board_action == "turnin":
+		_open_board_turnin_dialogue()
+	elif pending_board_action == "abandon":
+		_open_board_abandon_dialogue()
 	return true
+
+
+## M-DEPTH DP2 (THE REQUEST BOARD): the full posting pool, injected the same
+## way as every other catalog (`_combat_config`). Empty when unconfigured
+## (bare `--script` unit tests) -- every caller below already tolerates an
+## empty pool/slate.
+func _bounty_pool() -> Array:
+	return (_combat_config.get("bounties", {}) as Dictionary).get("bounties", [])
+
+
+func _bounty_by_id(id: String) -> Dictionary:
+	for bounty: Dictionary in _bounty_pool():
+		if String(bounty["id"]) == id:
+			return bounty
+	return {}
+
+
+## The board's CURRENT active slate (2-3 postings), derived fresh every call
+## from `times_slept` -- never stored, exactly the WIQuests/progression
+## "derived, not stored" convention (see quests.gd's own doc comment).
+func board_bounties() -> Array:
+	return WIBounties.active_slate(_bounty_pool(), times_slept)
+
+
+## Accepts a posting from the CURRENT active slate. A no-op if the player
+## already holds one (v1 simplification: one job at a time, matching Selys's
+## hub option being hidden whenever `accepted_bounty_id` is non-empty -- this
+## guard is a defensive second line, not the primary gate) or if `id` doesn't
+## resolve (can't happen from the real picker, which only ever offers ids
+## straight from `_bounty_pool()`). Snapshots a DELTA-SINCE-ACCEPT baseline
+## for every counter the condition reads (the staging doc's binding
+## semantics) and banks `accepted_bounty_<id>` (a real accomplishment counter,
+## per the plan's "ride existing machinery" scope) for QA/future-content
+## visibility. FIX WAVE (DP2 review HIGH finding): a bounty carrying
+## `condition_mode: "absolute"` (the three one-shot-keyed postings --
+## bounty_sewer_survey/bounty_silk_line/bounty_vermin_grate) needs NO
+## baseline at all (condition_met reads the counter directly) -- skip the
+## snapshot entirely rather than compute one nothing will ever read, so an
+## absolute bounty's `accepted_bounty_baseline` stays the empty-dict default.
+func accept_bounty(id: String) -> void:
+	if accepted_bounty_id != "":
+		return
+	var bounty := _bounty_by_id(id)
+	if bounty.is_empty():
+		return
+	accepted_bounty_id = id
+	if String(bounty.get("condition_mode", "delta")) == "absolute":
+		accepted_bounty_baseline = {}
+	else:
+		var baseline: Dictionary = {}
+		for key: String in (bounty.get("condition", {}) as Dictionary):
+			baseline[key] = accomplishment_count(key)
+		accepted_bounty_baseline = baseline
+	record_accomplishment("accepted_bounty_%s" % id)
+
+
+## Pure condition check for the currently accepted bounty (false when none is
+## accepted). Forwards `accomplishment_count` as a Callable so
+## WIBounties.condition_met stays a pure reader, and forwards the bounty's
+## own `condition_mode` (default "delta") so FIX-WAVE absolute-mode bounties
+## read the counter directly instead of against the (deliberately unsnapshotted)
+## baseline.
+func _bounty_condition_met() -> bool:
+	if accepted_bounty_id == "":
+		return false
+	var bounty := _bounty_by_id(accepted_bounty_id)
+	if bounty.is_empty():
+		return false
+	return WIBounties.condition_met(bounty.get("condition", {}), accepted_bounty_baseline, Callable(self, "accomplishment_count"), String(bounty.get("condition_mode", "delta")))
+
+
+## Abandons the currently accepted bounty (FIX WAVE, DP2 review HIGH finding,
+## second half): clears `accepted_bounty_id`/`accepted_bounty_baseline` with
+## NO gold and NO accomplishment banked either way -- Selys's own line
+## (WIBounties.build_abandon_graph) is explicit that this is a clean no-fault
+## hand-back, not a partial credit or a penalty. A no-op if nothing is
+## accepted (defensive second line, mirrors accept_bounty's own guard shape --
+## can't happen from the real hub option, which is `requires`-gated on
+## `board_accepted`). Fixes the one-shot soft-lock's SECOND half: without
+## this, a bounty a player can never complete (see condition_mode above, pre-
+## fix) left `accepted_bounty_id` permanently non-empty with no way to clear
+## it -- the board itself never soft-locks again even for a future bounty
+## that turns out unfulfillable, because the player always has an exit.
+func abandon_bounty() -> void:
+	if accepted_bounty_id == "":
+		return
+	accepted_bounty_id = ""
+	accepted_bounty_baseline = {}
+
+
+## Resolves a turn-in attempt against the currently accepted bounty: pays
+## gold + banks `completed_bounty_<id>` + clears the slip on a MET condition
+## (through the shared `earn_gold` router -- the same gold_changed/toast
+## machinery every other reward uses), leaves all state untouched on an unmet
+## condition (opaque-safe: no partial credit, no progress readout). Returns
+## whether it paid out, so the caller (`_open_board_turnin_dialogue`) knows
+## which of Selys's two board-copy.md lines to show.
+func turn_in_bounty() -> bool:
+	if accepted_bounty_id == "" or not _bounty_condition_met():
+		return false
+	var bounty := _bounty_by_id(accepted_bounty_id)
+	var id := accepted_bounty_id
+	earn_gold(int(bounty.get("gold", 0)), "bounty_%s" % id)
+	record_accomplishment("completed_bounty_%s" % id)
+	accepted_bounty_id = ""
+	accepted_bounty_baseline = {}
+	return true
+
+
+## THE REQUEST BOARD's browse surface (a `prop` carrying `board: true`, e.g.
+## `guild_board`): assembles the header (the entity's own `toast` when no
+## bounty is accepted, or its `second_visit_toast` variant when one is
+## outstanding -- board-copy.md sec.1's two header lines), the CURRENT active
+## slate's copy, and the footer (the entity's `observe` text, reused verbatim
+## -- no duplication needed), then opens it as a one-option (`Step back from
+## the board.`) code-built dialogue. Read-only: no effects, no accept/turn-in
+## (those are Selys's, per the copy's own framing). Banks `read_the_board`
+## every time, same accomplishment id DP1 shipped.
+func _interact_board(target: Dictionary) -> Dictionary:
+	record_accomplishment("read_the_board")
+	var header := String(target["toast"])
+	if accepted_bounty_id != "" and target.has("second_visit_toast"):
+		header = String(target["second_visit_toast"])
+	var lines: Array[String] = [header, ""]
+	for bounty: Dictionary in board_bounties():
+		lines.append(String(bounty["copy"]))
+		lines.append("")
+	lines.append(String(target.get("observe", "")))
+	var graph := {
+		"start": "hub",
+		"nodes": {
+			"hub": {
+				"speaker": String(target.get(WIKeys.DISPLAY_NAME, "The Request Board")),
+				"text": "\n".join(lines),
+				"options": [{"text": "Step back from the board.", "end": true}],
+			},
+		},
+	}
+	_begin_code_dialogue(graph, "the_request_board", String(target[WIKeys.ID]))
+	return {"dialogue": true}
+
+
+## Opens Selys's bounty accept-picker (fired by her hub's "Take on a
+## posting." option). Fires board-copy.md's "slate rotated overnight" line as
+## a plain one-shot DIALOGUE_LINE (the SAME bark surface Renn/Ilvo/Yelra's
+## talk_pool lines use) the FIRST time the picker opens after `times_slept`
+## advanced past what it last opened at -- shown at most once per rotation, as
+## its own short exact bark rather than a prefix folded into the picker's
+## (already paginated, longer) body text.
+func _open_board_picker_dialogue() -> void:
+	var slate := board_bounties()
+	if times_slept != board_last_seen_times_slept:
+		_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Selys", "text": "New paper went up this morning. Old postings come down whether they're done or not — ink's cheap, wall space isn't."})
+	board_last_seen_times_slept = times_slept
+	_begin_code_dialogue(WIBounties.build_picker_graph(slate), "board_picker", "selys")
+
+
+## Opens Selys's turn-in result (fired by her hub's "Turn in my posting."
+## option). The resolution (gold payout + clearing the slip on a met
+## condition) already happened in `turn_in_bounty()` -- this only picks which
+## of her two lines to show.
+func _open_board_turnin_dialogue() -> void:
+	var met := turn_in_bounty()
+	_begin_code_dialogue(WIBounties.build_turnin_graph(met), "board_turnin", "selys")
+
+
+## FIX WAVE (DP2 review HIGH finding, second half): opens Selys's abandon
+## result (fired by her hub's "Hand the posting back." option). Same shape
+## as _open_board_turnin_dialogue above -- the resolution (clearing the
+## accepted slip, no gold, no accomplishment) happens in abandon_bounty()
+## first, then the fixed one-node result graph shows Selys's line.
+func _open_board_abandon_dialogue() -> void:
+	abandon_bounty()
+	_begin_code_dialogue(WIBounties.build_abandon_graph(), "board_abandon", "selys")
 
 
 ## Starts a quest idempotently and emits a quest_started domain event.
@@ -1601,6 +1873,11 @@ func sleep() -> void:
 	# unconditionally. Runs before the early-return below: the clock is
 	# orthogonal to whether progression config exists.
 	actions_since_sleep = 0
+	# M-DEPTH DP2: the board's rotation clock. Unconditional (runs even in the
+	# config-less unit-test early-return path below, matching light_active/
+	# frozen_cells/sneaking just above) -- board_bounties() must advance on
+	# every real sleep, combat-config or not.
+	times_slept += 1
 	_emit(WIEvents.PHASE_CHANGED, {"phase": phase()})
 	if _combat_config.is_empty():
 		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
@@ -1920,6 +2197,10 @@ func snapshot() -> Dictionary:
 		"phase": phase(),
 		"sneaking": sneaking,
 		"hotbar_loadout": hotbar_loadout.duplicate(),
+		"gold": gold,
+		"times_slept": times_slept,
+		"accepted_bounty_id": accepted_bounty_id,
+		"board_active_bounties": board_bounties().map(func(b: Dictionary) -> String: return String(b["id"])),
 	}
 
 

@@ -3750,7 +3750,7 @@
      ]
     },
     {
-     "_comment": "M-DEPTH DP1: THE REQUEST BOARD -- dressed-only (DP2 wires the real repeatable postings). Toast lifted verbatim from docs/design/board-staging/board-copy.md sec.1's header line; observe carries the footer/standing-notice line verbatim (the S.S. signature -- Selys Shivertail; Tekshia the Guildmistress stays OFFSTAGE, a signature only, per the staged canon note). Sprite: no dedicated corkboard/bulletin-board asset exists in any in-hand pack (same exhausted search as the 7c inn-sign precedent, docs/skeleton_scene.json's `_comment` at that entity) -- reuses the `inn_sign` hanging-plank crop (Furniture.png), the established closest semantic match for a board surface; VISUAL-LOG flagged pending a real asset.",
+     "_comment": "M-DEPTH DP2: THE REQUEST BOARD goes live -- `board: true` routes interact() to WIGame._interact_board (a browse-only, code-built dialogue: header + the CURRENT active slate's copy from data/bounties.json + footer). Toast is the DEFAULT header (board-copy.md sec.1's header line, unchanged from DP1); second_visit_toast is the NEW variant shown whenever a posting is outstanding (sec.1's second header line). observe still carries the footer/standing-notice line verbatim (the S.S. signature -- Selys Shivertail; Tekshia the Guildmistress stays OFFSTAGE, a signature only, per the staged canon note) -- reused directly by _interact_board, not duplicated. Accept/turn-in live at Selys's desk (selys_delivery.json), per the copy's own framing (\"taking a posting means telling me\"); the board itself never mutates state. Sprite unchanged from DP1 (inn_sign reuse, VISUAL-LOG flagged pending a real corkboard asset).",
      "id": "guild_board",
      "kind": "prop",
      "cell": [2, 3],
@@ -3758,8 +3758,9 @@
      "sprite": "inn_sign",
      "tint": [0.85, 0.78, 0.6],
      "facing": "right",
-     "on_interact_accomplishment": "read_the_board",
+     "board": true,
      "toast": "The Request Board. Paper three layers deep in places — new notices pinned straight over the dead ones. Two or three have fresh ink.",
+     "second_visit_toast": "The Request Board. Your slip is still logged at the desk. The board does not care how it's going.",
      "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. — S.S."
     },
     {

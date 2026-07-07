@@ -105,6 +105,10 @@ func _make_sim(creation: Dictionary = {}) -> WIGame:
 	# sword-tagged power_strike) -- a real regression, not just an untested
 	# path, so this line is required for the feature to work at all in play.
 	combat_config["items"] = _load_json("res://data/items.json")
+	# M-DEPTH DP2: THE REQUEST BOARD's posting pool -- same injection lane as
+	# quests/items. WIGame.board_bounties()/accept_bounty()/turn_in_bounty()
+	# read it via `_combat_config.get("bounties", {})`.
+	combat_config["bounties"] = _load_json("res://data/bounties.json")
 	var dialogue_graphs: Dictionary = {}
 	var dir: DirAccess = DirAccess.open("res://data/dialogue")
 	if dir != null:
