@@ -18,10 +18,15 @@ extends CanvasLayer
 ## cursor/rebuild-rows pattern -- "> " mark, wrapi wraparound), Enter
 ## equips the selected item into its own kind's slot, or unequips it if it
 ## IS the item already equipped there. Game.sim.equip/unequip do the kind/
-## possession validation; a false return (defensive only -- unreachable in
-## normal play since the listed item/kind pairing is always valid and combat
-## can never be active while this panel is open) surfaces a toast, the same
-## pattern as pause_menu.gd's "Could not load save." notice.
+## possession validation. **M-GEAR Task G3 update:** a plain carryable item
+## of an unequippable kind (tools: field_whetstone/fishers_handline) gets its
+## own neutral toast here (Game.sim.equip() would silently refuse with no
+## message of its own); every other equip()/unequip() false return is either
+## a real, already-self-toasting refusal from WIGame (G1's two accessory
+## refusals: slot-full, over-capacity -- mirrored into this panel's own
+## `_status_label` too, since the toast layer draws BEHIND this panel, see
+## below) or prevented entirely by `_equipped_slot_for` routing an
+## already-equipped item to unequip() instead of a duplicate equip() call.
 ##
 ## Layer 10 -- same reasoning as journal.gd's file doc comment: WIWorldLabels
 ## is created lazily by world.gd AFTER Main._spawn_ui_layers() adds this
@@ -44,6 +49,23 @@ var _title_label: Label
 var _gold_label: Label
 var _weapon_label: Label
 var _armor_label: Label
+## M-GEAR Task G3: one row per accessory slot (index 0/1/2 -> accessory_1/2/3),
+## same styling/precedent as the weapon/armor rows above.
+var _accessory_labels: Array[Label] = []
+## M-GEAR Task G3 refusal surfacing: mirrors the most recent TOAST while this
+## panel is open (see `_on_domain_event`). Needed because the toast layer
+## (message_layer.gd, default CanvasLayer `layer` 1) draws BEHIND this panel's
+## `layer = 10` -- a toast fired while the panel is open partially or fully
+## renders under the opaque parchment (traced empirically, see the G3 report),
+## so a capacity/slot-full equip refusal needs its own in-panel copy to be
+## reliably legible to the player.
+var _status_label: Label
+## M-GEAR Task G3: stored so `_rebuild_items` can scroll the cursor row into
+## view -- the ScrollContainer's own `mouse_filter` is IGNORE (no wheel input
+## wired) and there is no keyboard-scroll binding either, so without this the
+## tail of a long carried list (up to 19 items today) is logically selectable
+## (the cursor still moves) but never actually visible.
+var _scroll: ScrollContainer
 var _items_box: VBoxContainer
 var _item_ids: Array[String] = []
 var _cursor := 0
@@ -101,20 +123,37 @@ func _ready() -> void:
 	stack.add_child(_weapon_label)
 	_armor_label = UIChrome.make_label("")
 	stack.add_child(_armor_label)
+	# M-GEAR Task G3: three accessory rows, same default dark-on-parchment
+	# styling as weapon/armor above (E4 review finding still applies -- "Menu"
+	# reads background-flat on this panel).
+	for i in 3:
+		var accessory_label := UIChrome.make_label("")
+		stack.add_child(accessory_label)
+		_accessory_labels.append(accessory_label)
+
+	# M-GEAR Task G3: in-panel refusal echo (see the var's doc comment above).
+	# Empty by default -- an empty Label adds no visible gap, same convention
+	# as the lore-slot reasoning below.
+	_status_label = UIChrome.make_label("")
+	_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	stack.add_child(_status_label)
 
 	# Carried list below, in a ScrollContainer as the overflow safety net --
 	# same idiom as journal.gd's RichTextLabel (scroll_active=true) rather
 	# than the combat-feed/dialogue-panel wrapped-line eviction: item count
-	# is small (spec's 8-item catalog, no stacking) and each row's prose
-	# still wraps via AUTOWRAP_WORD_SMART, never truncates.
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	stack.add_child(scroll)
+	# started at the spec's 8-item catalog (no stacking) and has since grown
+	# to a 19-item full catalog (M-GEAR G2) -- each row's prose still wraps
+	# via AUTOWRAP_WORD_SMART, never truncates, and `_rebuild_items` below
+	# scrolls the cursor row into view every rebuild so the safety net stays
+	# genuinely reachable by keyboard, not just non-clipping.
+	_scroll = ScrollContainer.new()
+	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stack.add_child(_scroll)
 	_items_box = VBoxContainer.new()
 	_items_box.add_theme_constant_override("separation", 4)
 	_items_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(_items_box)
+	_scroll.add_child(_items_box)
 
 	# Live coin-line refresh (Economy v1 D3): the same domain_event idiom
 	# field_hotbar/dialogue_panel use -- if the panel is open when gold
@@ -122,11 +161,39 @@ func _ready() -> void:
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
-func _on_domain_event(type: String, _payload: Dictionary) -> void:
-	if type == WIEvents.GOLD_CHANGED and open:
+func _on_domain_event(type: String, payload: Dictionary) -> void:
+	if not open:
+		return
+	if type == WIEvents.GOLD_CHANGED:
 		_refresh_gold()
 		# Re-confirm the drawn state (bus convention), carrying the live total.
-		ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {"items": _item_ids.size(), "gold": Game.sim.gold, "item_effect_lines": _rendered_effect_lines()})
+		_emit_shown()
+	elif type == WIEvents.ITEM_EQUIPPED or type == WIEvents.ITEM_UNEQUIPPED:
+		# M-GEAR Task G3: equip/unequip changes the slot rows AND the
+		# Resonance header (neither rides on GOLD_CHANGED) -- same
+		# re-confirm-on-relevant-domain-event idiom as the gold case above,
+		# so a QA script can assert the post-equip resonance total without
+		# having to close/reopen the panel.
+		_refresh_slots()
+		_emit_shown()
+	elif type == WIEvents.TOAST:
+		# M-GEAR Task G3 refusal surfacing: see `_status_label`'s doc comment
+		# above -- this panel draws OVER the toast layer, so a refusal toast
+		# fired while the panel is open (the only toast source reachable
+		# while it is, since world input is gated shut) needs its own visible
+		# copy in here.
+		_status_label.text = String(payload.get("text", ""))
+
+
+## M-GEAR Task G3: the `ui_inventory_shown` re-confirm payload, shared by
+## `_open()` and the domain-event re-renders above so the two never drift.
+func _emit_shown() -> void:
+	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {
+		"items": _item_ids.size(),
+		"gold": Game.sim.gold,
+		"item_effect_lines": _rendered_effect_lines(),
+		"resonance": {"used": Game.sim.resonance_used(), "capacity": Game.sim.resonance_capacity},
+	})
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -169,7 +236,7 @@ func _open() -> void:
 	_cursor = 0
 	_refresh()
 	_root.show()
-	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {"items": _item_ids.size(), "gold": Game.sim.gold, "item_effect_lines": _rendered_effect_lines()})
+	_emit_shown()
 
 
 func _close() -> void:
@@ -182,7 +249,32 @@ func _move_cursor(delta: int) -> void:
 	if _item_ids.is_empty():
 		return
 	_cursor = wrapi(_cursor + delta, 0, _item_ids.size())
+	# GF Minor 1: a refusal echo belongs to the selection it refused --
+	# clear it on navigation so it never lingers over a different item.
+	_status_label.text = ""
 	_rebuild_items()
+
+
+## M-GEAR Task G3: returns the slot name `item_id` currently occupies
+## ("weapon", "armor", or one of the three accessory slots), or "" if it
+## isn't equipped anywhere. `Game.sim.equipped` keys accessories by their
+## REAL slot name (`accessory_1`/`_2`/`_3`), never the generic "accessory"
+## kind -- a plain `equipped.get(kind, "")` lookup (fine for weapon/armor,
+## where kind IS the slot name) silently misses every equipped accessory.
+## This was a real pre-G3 bug: re-confirming an already-equipped accessory
+## called `equip()` again instead of `unequip()`, which G1's own duplicate-
+## slot guard then silently refused (no toast) -- so the panel's "toggle
+## equip/unequip on confirm" grammar (spec §3) never actually worked for
+## accessories until this fix.
+func _equipped_slot_for(item_id: String, kind: String) -> String:
+	if kind == "accessory":
+		for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
+			if String(Game.sim.equipped.get(slot_name, "")) == item_id:
+				return slot_name
+		return ""
+	if String(Game.sim.equipped.get(kind, "")) == item_id:
+		return kind
+	return ""
 
 
 ## Equips the selected item into its own kind's slot, or unequips it if it
@@ -193,15 +285,35 @@ func _confirm() -> void:
 	var item_id := String(_item_ids[_cursor])
 	var rec: Dictionary = Game.sim.item(item_id)
 	var kind := String(rec.get("kind", ""))
-	var currently_equipped := String(Game.sim.equipped.get(kind, "")) == item_id
-	var ok: bool = Game.sim.unequip(kind) if currently_equipped else Game.sim.equip(item_id)
+	if kind != "weapon" and kind != "armor" and kind != "accessory":
+		# Carryable non-equippable kinds (M-GEAR G2's tools: field_whetstone,
+		# fishers_handline) reach here -- Game.sim.equip() would silently
+		# refuse (invalid kind, no toast of its own) with no player feedback
+		# at all, so the panel owns this one neutral message. Every OTHER
+		# equip()/unequip() false return below already carries its own
+		# diegetic toast from WIGame (G1's two accessory refusals), or is
+		# prevented entirely by routing an already-equipped item to unequip()
+		# instead of a duplicate equip() attempt (the helper above) -- this is
+		# the only reachable "no toast yet" case left.
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "That isn't something you can equip."})
+		return
+	var equipped_slot := _equipped_slot_for(item_id, kind)
+	var ok: bool = Game.sim.unequip(equipped_slot) if equipped_slot != "" else Game.sim.equip(item_id)
 	if not ok:
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Could not equip that."})
+		# Defensive only (see above) -- a real refusal already emitted its own
+		# diegetic toast (mirrored into `_status_label` by `_on_domain_event`,
+		# since the toast layer draws behind this panel); nothing left to
+		# surface here, and emitting a second generic toast on top would
+		# double up on the sim's own message.
 		return
 	_refresh()
 
 
 func _refresh() -> void:
+	# M-GEAR Task G3: clear any lingering refusal echo -- a fresh open or a
+	# just-succeeded equip/unequip both mean whatever the message was about
+	# is no longer the live state.
+	_status_label.text = ""
 	_refresh_gold()
 	_refresh_slots()
 	_rebuild_items()
@@ -219,13 +331,21 @@ func _rendered_effect_lines() -> Array:
 	return out
 
 
+## M-GEAR Task G3: the header now carries BOTH visible currencies on one
+## line -- "Gold: N" (Economy v1 D3, unchanged) plus "Resonance N/M" (spec's
+## visible-currency tier for the accessory budget). Same diegetic-panel-only
+## surface as gold (Global Constraint: no always-on HUD); plain text, no
+## BBCode, so no `_bb_escape` is needed here either.
 func _refresh_gold() -> void:
-	_gold_label.text = "Gold: %d" % Game.sim.gold
+	_gold_label.text = "Gold: %d     Resonance: %d/%d" % [Game.sim.gold, Game.sim.resonance_used(), Game.sim.resonance_capacity]
 
 
 func _refresh_slots() -> void:
 	_weapon_label.text = "Weapon: %s" % _slot_display("weapon")
 	_armor_label.text = "Armor: %s" % _slot_display("armor")
+	for i in 3:
+		var slot_name := "accessory_%d" % (i + 1)
+		_accessory_labels[i].text = "Accessory %d: %s" % [i + 1, _slot_display(slot_name)]
 
 
 func _slot_display(slot: String) -> String:
@@ -236,11 +356,11 @@ func _slot_display(slot: String) -> String:
 
 
 ## Rebuilds the carried-item rows from `Game.sim.inventory` fresh every call
-## (cheap; the catalog is 8 items, no stacking) -- two Labels per item: a
-## cursor/name/equipped-tag line ("Menu" variation, matches pause_menu.gd's
-## row style) and a wrapped prose line (no stat words; HP/damage numbers are
-## fine per the repo-wide rule -- items.json's `description` field never
-## carries any).
+## (cheap; the catalog has grown to 19 items (M-GEAR G2), no stacking) --
+## per item: a cursor/name/equipped-tag line ("Menu" variation, matches
+## pause_menu.gd's row style), the mechanical effect lines, a lore line
+## (M-GEAR G3), and a wrapped description prose line. After rebuilding,
+## scrolls the cursor's row into view (see `_scroll`'s doc comment).
 func _rebuild_items() -> void:
 	for child: Node in _items_box.get_children():
 		_items_box.remove_child(child)
@@ -251,12 +371,18 @@ func _rebuild_items() -> void:
 	if _item_ids.is_empty():
 		_items_box.add_child(UIChrome.make_label("Nothing carried."))
 		return
+	var cursor_row: Control = null
 	for i in _item_ids.size():
 		var item_id := String(_item_ids[i])
 		var rec: Dictionary = Game.sim.item(item_id)
 		var name := String(rec.get("name", item_id))
 		var kind := String(rec.get("kind", ""))
-		var equipped_here := String(Game.sim.equipped.get(kind, "")) == item_id
+		# M-GEAR Task G3: was `String(Game.sim.equipped.get(kind, "")) ==
+		# item_id`, which only ever matched weapon/armor (kind IS the slot
+		# name for those two) -- an equipped ACCESSORY never tagged
+		# "[Equipped]" since `equipped` has no "accessory" key at all, only
+		# accessory_1/_2/_3. `_equipped_slot_for` checks the real slot set.
+		var equipped_here := _equipped_slot_for(item_id, kind) != ""
 		var mark := "> " if i == _cursor else "  "
 		var tag := "  [Equipped]" if equipped_here else ""
 		# Default dark-on-parchment Label, same reasoning as the slot rows
@@ -264,6 +390,8 @@ func _rebuild_items() -> void:
 		# "> " cursor mark stays legible as dark text on the light parchment.
 		var name_label := UIChrome.make_label("%s%s%s" % [mark, name, tag])
 		_items_box.add_child(name_label)
+		if i == _cursor:
+			cursor_row = name_label
 		# M-LEGIBILITY L2: the mechanical effect lines, GENERATED from the item's
 		# data via the shared WIEffectText formatter (never hand-composed here --
 		# that drift is the defect this milestone kills). item_effect_lines already
@@ -275,15 +403,32 @@ func _rebuild_items() -> void:
 		# the lines read as sub-info under the name row.
 		for effect_line: String in WIEffectText.item_effect_lines(rec):
 			_items_box.add_child(UIChrome.make_label("  %s" % effect_line))
-		# --- Reserved lore slot (M-GEAR §1) ------------------------------------
-		# M-GEAR fills a dedicated flavor-lore line HERE, between the mechanical
-		# effect lines above and the existing description prose below. Kept a
-		# documented insertion hook only -- renders NOTHING now (an empty Label
-		# would add a blank gap), and lore stays SEPARATE from the effect fields
-		# per the milestone's Global Constraints.
-		# -----------------------------------------------------------------------
+		# M-GEAR Task G3: the lore line, between the mechanical effect lines
+		# above and the description prose below (the reserved hook this
+		# milestone's §1 left here). "Small" (same style as the description
+		# right below it) keeps this cheap -- no new Theme type variation for
+		# one milestone -- while the "Lore — " prefix is what actually reads
+		# as a distinct register from the plain description line, and it can
+		# never be mistaken for a mechanical effect line (those never carry
+		# a text prefix). Never mixed into `item_effect_lines`'s own array
+		# (Global Constraint) -- this is a separate Label, not appended there.
+		var lore := String(rec.get("lore", ""))
+		if lore != "":
+			var lore_label := UIChrome.make_label("  Lore — %s" % lore, "Small")
+			lore_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			_items_box.add_child(lore_label)
 		# "Small" (12px, default dark color -- proven on parchment by the
 		# footer hint strip) keeps the name row visually senior to its prose.
 		var desc_label := UIChrome.make_label(String(rec.get("description", "")), "Small")
 		desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_items_box.add_child(desc_label)
+	if cursor_row != null:
+		# A FRESH rebuild (every child freed and recreated above) needs the
+		# VBoxContainer's own queued sort to actually run before its rows'
+		# rects are trustworthy -- a single `call_deferred` hop can still race
+		# that queued sort (confirmed empirically: after a full rebuild, one
+		# hop left the view scrolled to wherever it was BEFORE the rebuild,
+		# not at the cursor's fresh row). Deferring the deferred call gives it
+		# a second idle-time hop, past the container's own layout pass.
+		var row := cursor_row
+		(func() -> void: _scroll.ensure_control_visible.call_deferred(row)).call_deferred()

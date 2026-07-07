@@ -1325,6 +1325,15 @@ func _equipped_resonance_total() -> int:
 	return total
 
 
+## M-GEAR Task G3: public read-only mirror of the private sum above, for the
+## inventory panel's "Resonance N/M" header. `_equipped_resonance_total()`
+## stays private/internal to `equip()`'s own capacity math (G1) -- this is a
+## pure one-liner so the UI never re-derives the sum itself (the exact
+## duplication risk the brief flagged). No rng, no emit, no state change.
+func resonance_used() -> int:
+	return _equipped_resonance_total()
+
+
 ## Refusal copy (M-GEAR Task G1, PLACEHOLDER -- user picks final copy from
 ## docs/design/gear-staging/item-lore-and-accessory-roster.md §C; both are
 ## voice-lint clean and diegetic, no "capacity"/"slot" vocabulary, no raw
@@ -1352,6 +1361,10 @@ const _ACCESSORY_SLOTS_FULL_TOAST := "No room left for another charm — somethi
 ## would exceed `resonance_capacity` ("magical interference" --
 ## `_CAPACITY_REFUSAL_TOAST`). Unequipping frees the departing item's
 ## resonance back into the budget (see `unequip`).
+## G3 CONTRACT: `inventory.gd`'s equip UI has NO generic fallback toast --
+## it relies on every player-reachable refusal branch in equip()/unequip()
+## emitting its OWN toast. Any NEW refusal added here must self-toast (or
+## the panel silently dead-presses, the exact pre-G3 bug).
 func equip(item_id: String) -> bool:
 	if combat != null:
 		return false

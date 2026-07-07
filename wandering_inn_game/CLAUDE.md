@@ -64,10 +64,11 @@ forbidden. Lore canon comes from the Wandering Inn Wiki, not invention.
 	# seed 9 held on first try, no search needed.
 	wandering_inn_game/qa/run_qa.sh relc_tutorial headless --seed=9           # negative decline (no combat_started) -> real spar, real-key beat-by-beat tutor_lines, then opacity/persistence teeth + re-talk second combat_started; ends mid-fight by design (combat_move_input precedent)
 	wandering_inn_game/qa/run_qa.sh status_first_encounter headless --seed=9  # M-LEGIBILITY L4: near_mage_cast FIXTURE (rng 9 overrides --seed) — a REAL hotbar frost_bolt cast (combat_autoplay never casts for the pc, see Gotchas) proves the status glossary + first-encounter combat-feed surface + the once-only property, then journal seen_statuses/Effects section pre- and post-fight
+	wandering_inn_game/qa/run_qa.sh gear_loop headless --seed=9               # M-GEAR G3: gear_loop_start FIXTURE (the full 19-item catalog pre-carried — a genuine over-capacity accessory refusal needs ~44 gold via the shop, impractical to grind; also doubles as the full-pack scroll/clip proof) — accessory equip positive (copper_luck_band -> accessory_1) -> resonance header climbs 0/2 -> 1/2 on a second equip (hedge_ward_charm -> accessory_2) -> CAPACITY REFUSAL negative (stonescale_talisman would push 1+2=3 over cap 2, toast + equipped.accessory_3 stays "") -> unequip toggle proof -> tool-kind item confirm (neutral toast, not silently inert)
 
 	# QA playtest scripts (THE verification tool — prefer this over manual reasoning)
 	# Full canonical sweep in one command (what CI runs — .github/workflows/ci.yml):
-	wandering_inn_game/qa/ci_sweep.sh                           # all 47 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
+	wandering_inn_game/qa/ci_sweep.sh                           # all 48 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
 	wandering_inn_game/qa/run_qa.sh load_gate headless          # loads every .gd/.tscn/.tres; catches parse/compile errors. NATIVE-ONLY (see below)
 	wandering_inn_game/qa/run_qa.sh inn_walkthrough headless   # full inn journey, no screenshots
 	wandering_inn_game/qa/run_qa.sh inn_walkthrough windowed   # same + screenshots (a window opens briefly)
@@ -364,10 +365,14 @@ fights and both were won straightaway, while the CLI `--seed=9` governs the
 isolated loot gold [both encounters drop gold 2, D2's loot_probe verdict]. Two
 peek-only shot scripts excluded from the sweep: `d3_inventory_shot` [coin line]
 and `d2_shop_shot`)**),
-pinned straightaway (no seed search needed unless noted): run these 46 headless
+pinned straightaway (no seed search needed unless noted): run these 48 headless
 scripts (M-ARC A3 +2: `climax_chain`/`climax_seal`, the climax chain's
 summons/seal streams, fixture-based; the party-veto is a unit roster proof, not
-a script; **M-ARC A4 +1: `arc_flow`, THE WHOLE-ARC PROOF, fixture `near_act3`**)
+a script; **M-ARC A4 +1: `arc_flow`, THE WHOLE-ARC PROOF, fixture `near_act3`**;
+**M-LEGIBILITY L4 +1: `status_first_encounter`, fixture `near_mage_cast`**;
+**M-GEAR G3 +1: `gear_loop`, fixture `gear_loop_start` — the resonance-gear UI
+proof (accessory rows, "Resonance N/M" header, lore render, capacity refusal),
+seed 9 held straightaway since it's fully fixture-based, no combat, no rng**)
 with `qa/run_qa.sh <script> headless --seed=<seed>` unless noted. The peek-only scripts (`title_peek`,
 `street_peek`) are screenshot utilities, not canonical gate members;
 `floodplains_peek` was retired by Q1 (floodplains is now walkably reachable
@@ -577,6 +582,7 @@ smoke are green, zero SCRIPT ERROR/Parse Error/WARNING. Routing model:
 | `climax_seal` | 9 (fixture) | **M-ARC A3 (new canonical, +1 → 45) — the seal beat (POST-victory arc).** Loads `climax_sealed_start` (street, Act II done + `cleared_the_warren` banked, `raskghar_sealed` NOT). Proves: **(1) ZEVARA SEAL** (gated on `cleared_the_warren`) banks `raskghar_sealed` — the **Act III advance key** (acts.json); victory != sealed, the seal is a separate surface beat AFTER the return (acts-data trace); **(2) journal advances to ACT III** (`ui_journal_shown{act_id:act_iii}`); **(3) OLESM RESOLUTION** (gated on `cleared_the_warren`) banks `heard_olesm_resolution`. Separate stream (distinct post-victory game state). No combat. |
 | `arc_flow` | 9 (fixture) | **M-ARC A4 (new canonical, +1 → 46) — THE WHOLE-ARC PROOF.** Loads `near_act3` (inn bed, Act II complete: Warrior 5 + Diplomat 1, 3 quests, no Act III keys). Drives the ENTIRE Act III arc live: **(1)** tremor sleep pointer; **(2)** Zevara summons → `heard_the_deep_tremor`; **(3)** Olesm briefing; **(4)** THE DESCENT — teleports to the `deep_tunnels` landing and replays `deep_descent`'s winning nav (Cold Hearth → `raskghar_scouts` fight → Gnawed Bones → Warren Mouth → the Relc JOIN veto → boss VICTORY, Relc fielded) → `cleared_the_warren`. **The surface arc (sleep + dialogues + teleports) consumes ZERO rng, so the fights sit at the SAME deterministic rng `deep_descent` wins at** — no seed search (proven: `deep_descent` still passes with warrior5+diplomat1); **(5)** Zevara seal → `raskghar_sealed`; **(6) THE GDI EPILOGUE EVENT** — `ui_gdi_epilogue_rendered{lines:7}` fired by the seal `dialogue_ended` (armed by `raskghar_sealed`, played on dialogue-end — NOT a sleep) → banks `post_game`; **(7)** journal Act III completed beat (`seal_holds`, gated on `post_game`); **(8)** the post-game Zevara greeting variant (`dialogue_node`, last-match `raskghar_sealed` text_variant; also proves no epilogue re-fire on re-entry); **(9)** free-play sanity (move + plain sleep `ui_sleep_veil_rendered{lines:0}` + `assert_event_count ui_gdi_epilogue_rendered == 1`). Fixture-based, no seed search. |
 | `status_first_encounter` | 9 (fixture) | **M-LEGIBILITY L4 (new canonical, +1 → 47) — the status glossary + first-encounter surface.** QA reality: `combat_autoplay` NEVER casts a spell for the pc (melee-profile default, see Gotchas) and no canonical fight's autoplay path applies a status, so this is a dedicated new fixture (`near_mage_cast`: mage L1 PC standing beside Relc, `met_relc` pre-banked, floodplains (12,12)) driving a REAL hotbar cast, same idiom as `combat_move_input`/`relc_tutorial`. Route: fresh-boot journal proves the Effects section is OMITTED (`ui_journal_shown{seen_statuses:[]}`) → talks Relc straight into the spar (`relc_spar`/`training_yard`, zero blocked cells, inert-AI dummies — unlimited safe turns) → moves into frost_bolt's range-4 lane → casts it on `training_dummy_a`: `status_applied{first_seen:true, status_text:"Slowed — moves 2 fewer cells next turn (min 1)."}` — the TRACED surface is the COMBAT FEED, not a toast (combat_hud's readout panel x[330,950] y[530,642] genuinely overlaps message_layer's toast panel x[808,1256] y[590,686], and combat_screen's CanvasLayer draws AFTER message_layer's, so a toast fired mid-combat would render invisibly behind the opaque readout parchment) → ends turn, cycles through the two inert dummies' auto-ended turns, casts frost_bolt again on the same target: `status_applied` fires again but `first_seen:false`/`status_text:""` (once-only, `assert_event_count` proof: `status_applied{status:slowed}`==2, `status_applied{status:slowed,first_seen:true}`==1) → `combat_autoplay` finishes the fight with plain melee (the cast proof is already banked) → post-victory journal: `ui_journal_shown{seen_statuses:["slowed"]}` + the Effects section renders the exact glossary sentence. Seed 9 (fixture rng) brute-force-verified: every candidate rng_state 1–59 lands BOTH casts against a dex-2 dummy, so 9 was kept for convention consistency. |
+| `gear_loop` | 9 (fixture) | **M-GEAR G3 (new canonical, +1 → 48) — the resonance-gear UI proof (accessory rows, "Resonance N/M" header, lore render, capacity refusal).** `gear_loop_start` seeds the FULL 19-item catalog directly into inventory rather than a natural gold grind: the cheapest 2-item shop combination whose combined resonance exceeds the fixed `resonance_capacity` (2) is `hedge_ward_charm` (9g, resonance 1) + `stonescale_talisman` (35g, resonance 2) = 44 gold, far beyond `inventory_loop`'s 2-gold arc or `economy_loop`'s fully-spent 5-gold arc — impractical to grind via repeated dirty_table chores in a hand-authored script, so this fixture applies the same near_mage_cast/near_tactician "skip the irrelevant grind" convention. Also doubles as the "19 items possible" full-pack scroll/clip check the plan called for. Route: open with 19 items carried (`ui_inventory_shown` payload gains `resonance:{used,capacity}`) → cursor to the LAST item (index 18) and screenshot, proving `_scroll.ensure_control_visible` (new fix) keeps the selection reachable — the ScrollContainer's `mouse_filter` is IGNORE (no wheel wired) and there is no keyboard-scroll binding, so without this fix the tail of a long list is logically selectable but never actually visible → equip `copper_luck_band` (resonance 0) into `accessory_1` (POSITIVE proof the new accessory rows + equip flow work) → equip `hedge_ward_charm` (resonance 1) into `accessory_2`, resonance_used 0→1 (screenshot: accessory rows + header + this card's own "Resonance 1" line + its Lore line, all at once) → attempt `stonescale_talisman` (resonance 2): 1+2=3 > capacity 2 → **CAPACITY REFUSAL** (G1's exact placeholder toast, `equipped.accessory_3` stays `""`, no `item_equipped`); screenshot proves the toast IS genuinely, empirically clipped by the panel (message_layer's default `layer` 1 draws behind inventory.gd's `layer` 10 — same overlap class `status_first_encounter` already documented for combat_hud/message_layer) — the new in-panel `_status_label` echo is what makes the refusal actually legible → re-confirm on the equipped `copper_luck_band` proves the equip/unequip TOGGLE now genuinely works for accessories (**real pre-G3 bug found+fixed:** `Game.sim.equipped` keys accessories by their real slot name, `accessory_1`/`_2`/`_3`, never the generic `"accessory"` kind, so the old `equipped.get(kind, "")` lookup silently never matched an equipped accessory — re-confirming one called `equip()` again instead of `unequip()`, which G1's own duplicate-slot guard then silently refused with no toast at all) → confirm on `field_whetstone` (kind `"tool"`, not equippable) gets the panel's own neutral toast instead of a silent no-op. No combat, no rng consumed — fully deterministic. |
 
 - **Playtest fixes + art (M4):** Dialogue gating SPLIT — options with
   accomplishment-keyed `requires` are HIDDEN until met (progress must not leak);
@@ -737,6 +743,51 @@ smoke are green, zero SCRIPT ERROR/Parse Error/WARNING. Routing model:
   proof; the melee AI cannot use spear-tagged skills (literal
   power_strike check) so spear tallies never accrue under autoplay —
   kit asserts carry that proof instead.
+
+- **M-GEAR (resonance gear, 2026-07-06):** G1 added three accessory slots
+  (`equipped.accessory_1/_2/_3`, sim-only) and `resonance_capacity` (int,
+  default 2, additive-optional save field, no growth mechanism yet) —
+  `equip()` refuses a 4th accessory (no free slot) or any equip whose
+  resulting total equipped `resonance` (summed across all 5 slots) would
+  exceed capacity, each with its own diegetic placeholder toast (grep
+  `_CAPACITY_REFUSAL_TOAST`/`_ACCESSORY_SLOTS_FULL_TOAST` in `wi_game.gd` to
+  swap final copy). G2 shipped `lore` + real `resonance` values on the full
+  19-item catalog (`data/items.json`) plus the Krshia `charms` shop sub-node.
+  **G3 (player-facing UI, `src/ui/inventory.gd`):** three accessory slot rows
+  alongside Weapon/Armor; the header gained a second visible-currency line
+  ("Resonance N/M" beside "Gold: N"); a lore render line per card (between
+  the mechanical effect lines and the description, "Lore — " prefix, never
+  mixed into `item_effect_lines`); `ui_inventory_shown` gained a
+  `resonance:{used,capacity}` sub-dict (byte-compatible add, existing pins
+  unaffected — `Game.sim.resonance_used()` is the new public one-liner over
+  G1's private `_equipped_resonance_total()`). **Two real pre-G3 bugs found
+  and fixed along the way:** (1) the equip/unequip TOGGLE never worked for
+  an already-equipped accessory (`equipped.get(kind, "")` only ever matches
+  weapon/armor, where kind IS the slot name — an equipped accessory has no
+  `equipped["accessory"]` key at all, only `accessory_1/_2/_3` — silently
+  refused with no toast; fixed via `_equipped_slot_for(item_id, kind)`);
+  (2) the panel's own "Could not equip that." fallback would have DOUBLE-
+  toasted on top of G1's own capacity/slot-full refusal toasts the moment an
+  accessory-capacity QA path existed — now only fires for a genuinely
+  unreachable case (a carryable non-equippable kind, e.g. G2's `tool` items).
+  **Refusal surfacing:** traced and confirmed EMPIRICALLY (screenshot) that
+  message_layer's toast layer (default `layer` 1) draws BEHIND this panel's
+  `layer` 10 — the same overlap class `status_first_encounter` already
+  documented for combat_hud/message_layer — so a refusal toast fired while
+  the panel is open is genuinely, partially clipped; a new `_status_label`
+  mirrors any TOAST into the panel itself while open (safe: no other toast
+  source is reachable while the panel intercepts all input). **Full-pack
+  scroll fix:** the carried list's `ScrollContainer` has `mouse_filter`
+  IGNORE (no wheel wired) and no keyboard-scroll binding, so with the
+  catalog now at 19 items the tail was logically selectable (cursor still
+  moved) but never actually visible; `_rebuild_items` now calls
+  `_scroll.ensure_control_visible` on the cursor's row after every rebuild
+  (a double-deferred call — a single `call_deferred` hop can race the
+  VBoxContainer's own queued sort after a full rebuild, confirmed
+  empirically). QA: `gear_loop` (seed 9, fixture `gear_loop_start`) is the
+  canonical proof — see the seed table below for why it's fixture-based
+  (a genuine over-capacity refusal needs ~44 gold via the shop, impractical
+  to grind naturally in a script).
 
 - **Atmosphere / mood grade (M-BEAUTY Task B1, 2026-07-05):** presentation-only,
   ship-neutral-first. `data/moods.json` (`meta.phase_thresholds` {dusk:100,

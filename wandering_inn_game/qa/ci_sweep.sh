@@ -31,7 +31,11 @@
 # sits at deep_descent's winning determinism); M-LEGIBILITY L4 adds
 # status_first_encounter [47] (the status glossary + first-encounter-surface
 # proof — fixture near_mage_cast, a REAL hotbar frost_bolt cast since
-# combat_autoplay never casts for the pc). All fixture-based, no seed search.
+# combat_autoplay never casts for the pc); M-GEAR G3 adds gear_loop [48]
+# (the resonance-gear UI proof — fixture gear_loop_start carries the full
+# 19-item catalog so a genuine over-capacity accessory refusal is reachable
+# without an impractical ~44-gold grind; also doubles as the full-pack
+# scroll/clip proof). All fixture-based, no seed search.
 # The party-VETO/solo path is a unit-level roster
 # proof (test_combat_data._check_boss_veto_roster) per the user descope, not a
 # canonical script — tutorial_flow is
@@ -98,6 +102,7 @@ CANON=(
 	"climax_seal:9"
 	"arc_flow:9"
 	"status_first_encounter:9"
+	"gear_loop:9"
 )
 
 ONLY=""

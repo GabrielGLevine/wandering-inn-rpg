@@ -1,0 +1,64 @@
+{
+ "_comment": "M-GEAR Task G3 canonical fixture. The natural post-onboarding economy (inventory_loop tops out at 2 gold; economy_loop spends its whole 5-gold arc on the traveler_charm armor buy) cannot cheaply reach a genuine over-capacity accessory refusal: the cheapest 2-item shop combination whose combined resonance (1+2=3) exceeds the fixed resonance_capacity (2) is hedge_ward_charm (9g) + stonescale_talisman (35g) = 44 gold, far beyond what a hand-authored script can plausibly grind via repeated dirty_table chores. This fixture instead seeds the FULL 19-item catalog directly into inventory (same convention as near_mage_cast/near_tactician -- skip an irrelevant grind, test the exact mechanic), which doubles as the 'full pack' (19 items possible) scroll/clip proof the plan also calls for. Warrior L1, standing at the inn spawn (2,3), rusty_sword/leather_jerkin pre-equipped (both resonance 0, so resonance_used starts at 0/2). gold 0 -- this script never needs currency.",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   2,
+   3
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear",
+   "crude_blade",
+   "chipped_spear",
+   "solid_oak_spear",
+   "leather_jerkin",
+   "watch_issue_gambeson",
+   "traveler_charm",
+   "gnollish_hunting_knife",
+   "wool_lined_cloak",
+   "copper_luck_band",
+   "hedge_ward_charm",
+   "hunters_fang_talisman",
+   "phosphor_pendant",
+   "stonescale_talisman",
+   "moon_bone_amulet",
+   "watch_token",
+   "field_whetstone",
+   "fishers_handline"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": "leather_jerkin",
+   "accessory_1": "",
+   "accessory_2": "",
+   "accessory_3": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 0,
+  "rng_state": "9"
+ }
+}

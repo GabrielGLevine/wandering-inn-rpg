@@ -67,6 +67,46 @@ const LOADOUT_CELLS := [
 	{"name": "warrior2_sword_armored", "comp": "goblin_ambush", "build": "warrior2", "weapon": "rusty_sword", "armor": "leather_jerkin"},
 	{"name": "warrior1_tutorial_solo_armored", "comp": "goblin_ambush", "build": "warrior1_tutorial_solo", "weapon": "rusty_sword", "armor": "leather_jerkin"},
 	{"name": "warrior2_mage2_gambeson", "comp": "chieftains_raid", "build": "warrior2_mage2", "weapon": "rusty_sword", "armor": "watch_issue_gambeson"},
+	## M-GEAR Task G4: accessory cells (measured-only, same convention as the
+	## 5 weapon/armor cells above). Each cell's optional `accessories` key is
+	## a list of `data/items.json` accessory ids whose damage_mod/hp_mod/
+	## damage_reduction are SUMMED onto the same three fields alongside the
+	## weapon/armor contribution -- a harness-local mirror of `wi_game.gd`'s
+	## `_build_player_combatant` loop over `["accessory_1","accessory_2",
+	## "accessory_3"]` (M-GEAR G1). A cell omitting `accessories` behaves
+	## exactly as before (empty list, zero contribution) -- the 5 cells above
+	## are UNTOUCHED in both data and construction.
+	## (1) `warrior2_max_legal_kit` / (2) its SOLO tutorial twin: the
+	## realistic "chased every accessory legally obtainable at capacity 2"
+	## kit -- copper_luck_band (res 0) + hedge_ward_charm (res 1) +
+	## hunters_fang_talisman (res 1) = resonance 2, exactly at the shipped
+	## capacity, so this is the actual best-case early loadout a real player
+	## could equip today.
+	## (3) `warrior2_mage2_stonescale_dr2`: stonescale_talisman (dr 1, res 2)
+	## stacked with watch_issue_gambeson (dr 1) = dr 2 total, on the
+	## chieftains_raid/warrior2_mage2 pairing the `warrior2_mage2_gambeson`
+	## cell above already established -- the first dr-2 read in the M7
+	## floor>=1 chain.
+	## (4) `chieftains_hp_stack`: phosphor_pendant (hp+3) + hedge_ward_charm
+	## (hp+2) = hp+5, resonance 1+1=2, on chieftains_raid/warrior2. Carries
+	## rusty_sword (0 mods) so `_weapon_gated_kit` still fields power_strike --
+	## an empty weapon string would filter the kit down to untagged-only
+	## skills (weapon_family "" only matches untagged), conflating "no
+	## weapon equipped" with the accessory hp-stack read this cell wants
+	## isolated. No armor, so hp+5 is entirely the accessories' contribution.
+	## (5) `moon_bone_capacity_unreachable`: moon_bone_amulet alone is
+	## resonance 3 > the shipped capacity 2 -- CANNOT be equipped in real
+	## play today (G1's `equip()` capacity refusal would block it). Still
+	## given a measured cell per the brief (the harness bypasses equip()
+	## entirely) so its numbers exist for whenever capacity grows -- LABELED
+	## here and in its print line as capacity-unreachable so nobody mistakes
+	## it for a live balance read.
+	{"name": "warrior2_max_legal_kit", "comp": "goblin_ambush", "build": "warrior2", "weapon": "rusty_sword", "armor": "leather_jerkin", "accessories": ["copper_luck_band", "hedge_ward_charm", "hunters_fang_talisman"]},
+	{"name": "warrior1_tutorial_solo_max_legal_kit", "comp": "goblin_ambush", "build": "warrior1_tutorial_solo", "weapon": "rusty_sword", "armor": "leather_jerkin", "accessories": ["copper_luck_band", "hedge_ward_charm", "hunters_fang_talisman"]},
+	{"name": "warrior2_mage2_stonescale_dr2", "comp": "chieftains_raid", "build": "warrior2_mage2", "weapon": "rusty_sword", "armor": "watch_issue_gambeson", "accessories": ["stonescale_talisman"]},
+	{"name": "chieftains_hp_stack", "comp": "chieftains_raid", "build": "warrior2", "weapon": "rusty_sword", "armor": "", "accessories": ["phosphor_pendant", "hedge_ward_charm"]},
+	# capacity-unreachable-today: moon_bone_amulet resonance 3 > capacity 2 -- measured-only, not a live kit.
+	{"name": "moon_bone_capacity_unreachable", "comp": "goblin_ambush", "build": "warrior2", "weapon": "rusty_sword", "armor": "", "accessories": ["moon_bone_amulet"], "capacity_unreachable": true},
 ]
 
 ## Content Wave C1: MEASURED-only cells for the two new sewers encounters
@@ -287,6 +327,13 @@ func _init() -> void:
 		var arena: Dictionary = arenas_by_id[String(comp["arena"])]
 		var weapon: Dictionary = items_by_id.get(String(cell["weapon"]), {})
 		var armor: Dictionary = items_by_id.get(String(cell["armor"]), {})
+		# M-GEAR Task G4: resolve the cell's optional accessory ids ONCE (same
+		# lifetime as weapon/armor above) -- a cell with no "accessories" key
+		# gets an empty list, matching the pre-G4 5 cells exactly.
+		var acc_ids: Array = cell.get("accessories", [])
+		var accessories: Array = []
+		for acc_id_v: Variant in acc_ids:
+			accessories.append(items_by_id.get(String(acc_id_v), {}))
 		var wins := 0
 		var rounds: Array[int] = []
 		var relc_downed := 0
@@ -297,9 +344,20 @@ func _init() -> void:
 			pc["stats"] = WIProgression.apply_stat_bonuses(pc["stats"], build["classes"], classes)
 			var kit: Array = WIProgression.granted_skills(build["classes"], classes)
 			pc["skills"] = _weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
-			pc["damage_mod"] = int(weapon.get("damage_mod", 0))
-			pc["hp_mod"] = int(armor.get("hp_mod", 0))
-			pc["damage_reduction"] = int(armor.get("damage_reduction", 0))
+			# M-GEAR Task G4: mirrors wi_game.gd's `_build_player_combatant` --
+			# weapon/armor contribute first, then each equipped accessory's
+			# own damage_mod/hp_mod/damage_reduction is SUMMED onto the same
+			# three running totals (default 0 each, same tolerant .get reads).
+			var dmg_mod := int(weapon.get("damage_mod", 0))
+			var hp_mod := int(armor.get("hp_mod", 0))
+			var dmg_reduction := int(armor.get("damage_reduction", 0))
+			for acc: Dictionary in accessories:
+				dmg_mod += int(acc.get("damage_mod", 0))
+				hp_mod += int(acc.get("hp_mod", 0))
+				dmg_reduction += int(acc.get("damage_reduction", 0))
+			pc["damage_mod"] = dmg_mod
+			pc["hp_mod"] = hp_mod
+			pc["damage_reduction"] = dmg_reduction
 			var cfgs: Array = [pc]
 			if has_relc:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
@@ -324,10 +382,13 @@ func _init() -> void:
 		var hist := {}
 		for r: int in rounds:
 			hist[r] = int(hist.get(r, 0)) + 1
-		print("[loadout / %s] comp=%s build=%s weapon=%s armor=%s (measured) win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+		var acc_str := "(none)" if acc_ids.is_empty() else ", ".join(acc_ids)
+		var unreachable_tag := " CAPACITY-UNREACHABLE-TODAY (resonance > shipped capacity, harness bypasses equip())" if bool(cell.get("capacity_unreachable", false)) else ""
+		print("[loadout / %s] comp=%s build=%s weapon=%s armor=%s accessories=%s (measured)%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
 			cell["name"], comp["name"], build["name"],
 			String(cell["weapon"]) if String(cell["weapon"]) != "" else "(none)",
 			String(cell["armor"]) if String(cell["armor"]) != "" else "(none)",
+			acc_str, unreachable_tag,
 			win_rate, median, rounds[0], rounds[-1],
 		])
 		print("  rounds histogram: ", hist)
