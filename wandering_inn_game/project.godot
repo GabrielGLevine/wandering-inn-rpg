@@ -20,6 +20,7 @@ ObservableBus="*res://src/core/observable_bus.gd"
 Game="*res://src/core/game.gd"
 TestDriver="*res://qa/test_driver.gd"
 WIAudio="*res://src/audio/wi_audio.gd"
+WIInputHints="*res://src/ui/input_hints.gd"
 
 [display]
 

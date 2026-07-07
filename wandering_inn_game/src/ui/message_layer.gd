@@ -186,7 +186,25 @@ var _toast_draining := false
 ##     run would silently lose its hint. A Callable bound to the script
 ##     resource itself stays connected across every instance teardown.
 ##   - Fresh process boot: statics initialize false -- first run always hints.
-const FIRST_PICKUP_HINT_TEXT := "Press I — your pack."
+## Controller support (S3, issue #18): was a `const` string; a `func` now
+## since it composes through `WIInputHints.label()` (a const can't call an
+## autoload method). kb-mode output is byte-identical to the old literal
+## ("Press I — your pack."), so `work_loop`'s exact-text pin on this toast
+## needs no re-pin.
+func _first_pickup_hint_text() -> String:
+	return "Press %s — your pack." % WIInputHints.label("inventory")
+
+
+## Controller support (S3): the field hint strip's text, composed through
+## WIInputHints so it re-renders correctly on a device swap (`_on_domain_event`'s
+## INPUT_DEVICE_CHANGED arm calls this again). kb-mode output is byte-identical
+## to the old hardcoded literal.
+func _hint_text() -> String:
+	return "%s — menu (save/load)   %s — journal   %s — inventory" % [
+		WIInputHints.label("cancel"), WIInputHints.label("journal"), WIInputHints.label("inventory"),
+	]
+
+
 var _first_pickup_hint_pending := false
 static var _first_pickup_hint_shown := false
 static var _hint_reset_hooked := false
@@ -286,7 +304,7 @@ func _ready() -> void:
 	UIChrome.add_margins(hint_margin, 14, 5, 14, 5)
 	_hint_panel.add_child(hint_margin)
 	_hint_label = UIChrome.make_label("", "Small")
-	_hint_label.text = "Esc — menu (save/load)   J — journal   I — inventory"
+	_hint_label.text = _hint_text()
 	hint_margin.add_child(_hint_label)
 	root.add_child(_hint_panel)
 	ObservableBus.emit_domain_event.call_deferred(WIEvents.UI_HINT_RENDERED, {"text": _hint_label.text})
@@ -303,6 +321,13 @@ func _ready() -> void:
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	match type:
+		WIEvents.INPUT_DEVICE_CHANGED:
+			# Controller support (S3): re-render the hint strip's glyphs on a
+			# device swap. Re-emits UI_HINT_RENDERED (the same confirmation the
+			# initial build fires) so QA could assert the swap if a future
+			# script wanted to; none does today (manual-pass-only per the plan).
+			_hint_label.text = _hint_text()
+			ObservableBus.emit_domain_event(WIEvents.UI_HINT_RENDERED, {"text": _hint_label.text})
 		WIEvents.ITEM_GAINED:
 			if not _first_pickup_hint_shown:
 				_first_pickup_hint_pending = true
@@ -311,7 +336,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if _first_pickup_hint_pending:
 				_first_pickup_hint_pending = false
 				_first_pickup_hint_shown = true
-				_queue_toast(FIRST_PICKUP_HINT_TEXT)
+				_queue_toast(_first_pickup_hint_text())
 		WIEvents.INTERACT_NOTHING:
 			# An empty interact used to be completely SILENT -- during the M6
 			# playtest the user pressed interact near (but not exactly facing)

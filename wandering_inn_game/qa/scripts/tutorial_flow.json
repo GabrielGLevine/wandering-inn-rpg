@@ -645,7 +645,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "My spare spear. Held gates wider than that one. Now listen. Owning a weapon and HOLDING it are different things: press I, that's your pack. Put the spear in your hand before the road checks your grip. Sword arm, spear arm. The weapon you carry decides which of your moves come with you."
+    "text": "My spare spear. Held gates wider than that one. Now listen. Owning a weapon and HOLDING it are different things: check your pack, put the spear in your hand before the road checks your grip. Sword arm, spear arm. The weapon you carry decides which of your moves come with you."
    },
    "timeout_sec": 5
   },

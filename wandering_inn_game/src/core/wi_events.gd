@@ -276,3 +276,10 @@ const UI_GDI_EPILOGUE_RENDERED := &"ui_gdi_epilogue_rendered"
 ## when the player confirms and the New Game (with creation) fires.
 const UI_CHAR_CREATION_RENDERED := &"ui_char_creation_rendered"
 const UI_CHAR_CREATION_CONFIRMED := &"ui_char_creation_confirmed"
+
+## Controller support (S3, issue #18): emitted by `src/ui/input_hints.gd`
+## (`WIInputHints` autoload) the moment the last-seen input device class
+## actually CHANGES (never on every event -- see that file's doc comment).
+## Payload `{device: "kb"|"pad"}`. Presentation panels that render a keycap
+## hint listen for this to re-render with the new device's glyphs.
+const INPUT_DEVICE_CHANGED := &"input_device_changed"

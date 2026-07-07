@@ -71,6 +71,18 @@ const FEED_TEXT_HEIGHT := 90.0
 const READOUT_TEXT_WIDTH := 576.0
 const READOUT_TEXT_HEIGHT := 64.0
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
+## Controller support (S3, issue #18): default keycap glyphs for the readout
+## hint strip, byte-identical to the pre-S3 hardcoded literals. This file
+## carries ZERO bare autoload identifiers by contract (`tests/
+## test_combat_visuals.gd` asserts it compiles standalone) -- the REAL
+## device-correct glyphs come from `WIInputHints.label()` at the composition
+## root (combat_screen.gd), which passes them into `refresh()`'s `hints`
+## param. These defaults are the fallback when a caller doesn't pass one
+## (keeps this file callable/testable with zero autoload wiring).
+const DEFAULT_HINTS := {
+	"confirm": "Enter", "cancel": "Esc", "cycle": "Tab", "move": "Arrows",
+	"hotbar": "number keys", "end_turn": "E",
+}
 ## Fix-wave (review of d5dfbf3, finding 2): every `on.event` a `tutor_lines`
 ## entry is allowed to target, because a render call site actually exists for
 ## it. `reset_tutor_lines` cross-checks fresh data against this list and
@@ -263,7 +275,7 @@ func _make_panel_label(
 ## original `_refresh()`'s split exactly.
 func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: bool,
 		targeting_state: Dictionary, bar_slots: Array, bar_index: int, info_slot_index: int,
-		dash_confirm: bool = false) -> void:
+		dash_confirm: bool = false, hints: Dictionary = DEFAULT_HINTS) -> void:
 	var order_bits: Array = []
 	for id: String in view.order():
 		var mark := "> " if id == view.active_id() else ""
@@ -280,7 +292,7 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 	_hotbar.visible = bar_active
 	if bar_active:
 		var rendered_slots := render_bar_slots(view, bar_slots)
-		_readout_label.text = _readout_text(view, in_targeting, targeting_state, rendered_slots, info_slot_index, dash_confirm)
+		_readout_label.text = _readout_text(view, in_targeting, targeting_state, rendered_slots, info_slot_index, dash_confirm, hints)
 		_hotbar.render(rendered_slots, bar_index)
 
 
@@ -395,7 +407,14 @@ func skill_affordable(c: Dictionary, skill_id: String, view: RefCounted) -> bool
 ## so it is NOT folded into `in_targeting`. `rendered_slots` is this same
 ## call's already-computed `render_bar_slots()` array.
 func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictionary,
-		rendered_slots: Array, info_slot_index: int, dash_confirm: bool = false) -> String:
+		rendered_slots: Array, info_slot_index: int, dash_confirm: bool = false,
+		hints: Dictionary = DEFAULT_HINTS) -> String:
+	var confirm_glyph := String(hints.get("confirm", DEFAULT_HINTS["confirm"]))
+	var cancel_glyph := String(hints.get("cancel", DEFAULT_HINTS["cancel"]))
+	var cycle_glyph := String(hints.get("cycle", DEFAULT_HINTS["cycle"]))
+	var move_glyph := String(hints.get("move", DEFAULT_HINTS["move"]))
+	var hotbar_glyph := String(hints.get("hotbar", DEFAULT_HINTS["hotbar"]))
+	var end_turn_glyph := String(hints.get("end_turn", DEFAULT_HINTS["end_turn"]))
 	var c: Dictionary = view.combatant(view.active_id())
 	var mp_bit := ""
 	if int(c.get("max_mp", 0)) > 0:
@@ -414,13 +433,13 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 		# armed, `info_slot_index` always points at the Dash slot, so both
 		# lines would start "Dash — 1 AP: ...". `_render_slot_info_line` is
 		# still called above so `ui_slot_info_rendered` (QA-asserted) fires.
-		return _compose_readout(head, "", info_line + " (Enter confirms, Esc cancels)")
+		return _compose_readout(head, "", info_line + " (%s confirms, %s cancels)" % [confirm_glyph, cancel_glyph])
 	if not in_targeting:
 		if int(c["move_pool"]) <= 0 and bar_action_affordable("Dash", c):
 			return _compose_readout(head, "Out of steps — Dash (2) spends 1 AP for +3", info_line)
 		if int(c["move_pool"]) <= 0:
 			return _compose_readout(head, "Out of steps — end turn or choose another action", info_line)
-		return _compose_readout(head, "Arrows move, number keys act, E ends turn", info_line)
+		return _compose_readout(head, "%s move, %s act, %s ends turn" % [move_glyph, hotbar_glyph, end_turn_glyph], info_line)
 	if bool(targeting_state.get("line_mode", false)):
 		return _compose_readout(head, String(targeting_state.get("line_text", "")), info_line)
 	var targets: Array = targeting_state.get("targets", [])
@@ -430,11 +449,11 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 			note = "  (no line of sight)"
 		elif bool(targeting_state.get("out_of_range", false)):
 			note = "  (out of range)"
-		return _compose_readout(head, "No target in reach (Esc)" + note, info_line)
+		return _compose_readout(head, "No target in reach (%s)" % cancel_glyph + note, info_line)
 	var t: Dictionary = view.combatant(String(targets[int(targeting_state.get("index", 0))]))
 	return _compose_readout(
 		head,
-		"Target: %s (%d/%d) (Tab cycles, Enter confirms)" % [UIChrome.bb_escape(String(t["display_name"])), int(t["hp"]), int(t["max_hp"])],
+		"Target: %s (%d/%d) (%s cycles, %s confirms)" % [UIChrome.bb_escape(String(t["display_name"])), int(t["hp"]), int(t["max_hp"]), cycle_glyph, confirm_glyph],
 		info_line
 	)
 

@@ -365,7 +365,10 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, 
 	# Skills Wave Task K2b: the assignment surface's one-line disclosure,
 	# matching the established hint-copy grammar (char_creation.gd's
 	# "Up/Down to choose  •  Enter to confirm  •  Esc to go back").
-	parts.append("Slotted skills appear on your bars.  •  Up/Down to move  •  Enter to toggle")
+	# Controller support (S3, issue #18): composed through WIInputHints
+	# (kb-mode byte-identical to the old literal -- no QA pin exists on this
+	# line, but the discipline still applies).
+	parts.append("Slotted skills appear on your bars.  •  Up/Down to move  •  %s to toggle" % WIInputHints.label("confirm"))
 	var flat_i := 0
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary

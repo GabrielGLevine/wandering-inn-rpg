@@ -177,7 +177,11 @@ func _render_step() -> void:
 		# _name`, never appends to the displayed string), so nothing needs to
 		# be cleared first.
 		_name_edit.text = _name if not _name.is_empty() else "Traveler"
-		_hint_label.text = "Type a name  •  Enter to begin  •  Esc to go back"
+		# Controller support (S3, issue #18): composed through WIInputHints so
+		# a pad-only player sees A/B instead of Enter/Esc; kb-mode glyphs are
+		# byte-identical to the old hardcoded strings (WIInputHints.label's
+		# own doc comment), so no QA re-pin is needed here.
+		_hint_label.text = "Type a name  •  %s to begin  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
 	else:
 		var options := _current_options()
 		for i in _row_labels.size():
@@ -187,7 +191,7 @@ func _render_step() -> void:
 				continue
 			panel.show()
 			_refresh_row(i, options)
-		_hint_label.text = "Up/Down to choose  •  Enter to confirm  •  Esc to go back"
+		_hint_label.text = "Up/Down to choose  •  %s to confirm  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
 	ObservableBus.emit_domain_event(WIEvents.UI_CHAR_CREATION_RENDERED, {"step": _step_name()})
 
 

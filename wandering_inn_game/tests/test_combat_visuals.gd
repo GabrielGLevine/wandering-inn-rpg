@@ -78,9 +78,12 @@ func _init() -> void:
 	# ui_hotbar_rendered still fires from combat_screen.gd's own
 	# _apply_turn_started (M6.5 D4 did not move turn-start lifecycle).
 	assert(raw_source.find("WIEvents.UI_HOTBAR_RENDERED") != -1, "combat screen must emit ui_hotbar_rendered for QA")
+	# Controller support (S3, issue #18): combat_screen.gd is the composition
+	# root for keycap hints too now (WIInputHints.label() calls in _refresh()/
+	# _apply_combat_finished()) -- stub it alongside the other three autoloads.
 	var patched_source := raw_source.replace(
 		"extends CanvasLayer",
-		"extends CanvasLayer\n\nvar ObservableBus: Variant = null\nvar Game: Variant = null\nvar TestDriver: Variant = null",
+		"extends CanvasLayer\n\nvar ObservableBus: Variant = null\nvar Game: Variant = null\nvar TestDriver: Variant = null\nvar WIInputHints: Variant = null",
 	)
 	var patched_script := GDScript.new()
 	patched_script.source_code = patched_source

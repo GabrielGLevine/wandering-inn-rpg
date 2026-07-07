@@ -198,6 +198,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_board_renderer.mark_death_visible(String(payload["id"]))
 		return
 	match type:
+		WIEvents.INPUT_DEVICE_CHANGED:
+			# Controller support (S3): re-render the readout/hint strip on a
+			# device swap mid-combat -- `_refresh()` recomputes `hints` fresh
+			# from WIInputHints every call, so this just re-triggers it.
+			if _mode != Mode.INACTIVE:
+				_refresh()
 		WIEvents.COMBAT_STARTED:
 			_show_combat()
 			_render_tutor_line(tutor)
@@ -244,7 +250,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 ## (_apply_playback_event) so the two can't drift out of sync with each other.
 func _apply_combat_finished(payload: Dictionary) -> void:
 	_mode = Mode.BANNER
-	_hud.show_banner("Victory! — Enter" if bool(payload["victory"]) else "Defeat… — Enter")
+	# Controller support (S3, issue #18): composed through WIInputHints
+	# directly (combat_screen.gd IS the composition root, unlike combat_hud.gd/
+	# targeting_controller.gd, which stay autoload-free by contract); kb-mode
+	# output is byte-identical to the old literal.
+	var confirm_glyph: String = WIInputHints.label("confirm")
+	_hud.show_banner(("Victory! — %s" % confirm_glyph) if bool(payload["victory"]) else ("Defeat… — %s" % confirm_glyph))
 	_refresh()
 
 
@@ -279,11 +290,22 @@ func _refresh() -> void:
 	var bar_active := _mode in [Mode.HOTBAR, Mode.ATTACK, Mode.SKILL_TARGET, Mode.DASH_CONFIRM]
 	var in_targeting := _mode in [Mode.ATTACK, Mode.SKILL_TARGET]
 	var targeting_state := {}
+	# Controller support (S3, issue #18): the composition root is the ONLY
+	# place `targeting_controller.gd`/`combat_hud.gd` may be hinted with real
+	# device glyphs -- both files carry ZERO bare autoload identifiers by
+	# contract (test_combat_visuals.gd asserts standalone compile), so
+	# WIInputHints.label() is only ever called HERE and threaded down as
+	# plain strings.
+	var hints := {
+		"confirm": WIInputHints.label("confirm"), "cancel": WIInputHints.label("cancel"),
+		"cycle": WIInputHints.label("cycle"), "move": WIInputHints.label("move"),
+		"hotbar": WIInputHints.label("hotbar"), "end_turn": WIInputHints.label("end_turn"),
+	}
 	if in_targeting and _targeting != null:
 		targeting_state = _targeting.state()
 		if bool(targeting_state.get("line_mode", false)):
-			targeting_state["line_text"] = _targeting.line_target_text()
-	_hud.refresh(_view, bar_active, in_targeting, _mode == Mode.BANNER, targeting_state, _bar_slots, _bar_index, _info_slot_index, _mode == Mode.DASH_CONFIRM)
+			targeting_state["line_text"] = _targeting.line_target_text(hints["cycle"], hints["confirm"])
+	_hud.refresh(_view, bar_active, in_targeting, _mode == Mode.BANNER, targeting_state, _bar_slots, _bar_index, _info_slot_index, _mode == Mode.DASH_CONFIRM, hints)
 
 
 ## Per-combatant board position, visibility, and HP/MP bars/labels, sourced
