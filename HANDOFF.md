@@ -6,7 +6,7 @@ Last updated: 2026-07-07 (**UNIFIED REPO — this public repo is now THE working
 ## SOCIAL-2 — the 18 open copy/design flags (LINEAR stages, Phases A-D LANDED 2026-07-07)
 
 Build narrative (Phase A/B/C/D landed detail) archived verbatim:
-`docs/archive/HANDOFF-archive-2026-07.md` §SOCIAL-2. Tracked as GitHub
+`the frozen-archive repo (GabrielGLevine/wandering_inn_rpg) at docs/archive/HANDOFF-archive-2026-07.md` §SOCIAL-2. Tracked as GitHub
 issue #32 (the ruling-gathering session for these 18 flags).
 
 **The 18 ⚑ flags — SHIP OPEN per the brief (defaults implemented above;
@@ -341,7 +341,7 @@ Sync procedure: copy changed files into ../wandering-inn-rpg-public,
 commit, push (export script is init-only now).
 
 
-*(R6 push-day state — repo-created/secrets/tag-protection instructions — archived: superseded, the repo has been live+public since. `docs/archive/HANDOFF-archive-2026-07.md` §R6-STATE.)*
+*(R6 push-day state — repo-created/secrets/tag-protection instructions — archived: superseded, the repo has been live+public since. `the frozen-archive repo (GabrielGLevine/wandering_inn_rpg) at docs/archive/HANDOFF-archive-2026-07.md` §R6-STATE.)*
 
 
 **USER QUEUE (M-RELEASE additions):**
@@ -423,4 +423,4 @@ wandering_inn_game/qa/run_qa.sh <script> headless --seed=<N>   # seed table in v
 
 *(Older closed-milestone narrative — M0 through M6.5, M-FP, Onboarding O1-O5
 build logs, M-BEAUTY, M7 weapons, and playtest triage predating 2026-07-05 —
-archived verbatim: `docs/archive/HANDOFF-archive-2026-07.md`.)*
+archived verbatim: `the frozen-archive repo (GabrielGLevine/wandering_inn_rpg) at docs/archive/HANDOFF-archive-2026-07.md`.)*

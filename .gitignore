@@ -349,3 +349,8 @@ docs/*_api_key.txt
 # Session-local scratch (unified-repo transition 2026-07-07)
 .superpowers/
 .codex/
+
+# Generated session docs (never commit; see docs/README.md)
+/MORNING_SUMMARY*.md
+/NIGHT-GOAL*.md
+docs/reports/

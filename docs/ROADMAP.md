@@ -19,5 +19,5 @@
 >
 > The pre-transition historical record (the full living roadmap as of
 > 2026-07-07 morning, no longer maintained) has been archived verbatim to
-> `docs/archive/ROADMAP-archive-2026-07.md`.
+> `the frozen-archive repo at docs/archive/ROADMAP-archive-2026-07.md`.
 
