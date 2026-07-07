@@ -11,7 +11,10 @@ description: Use when starting any session on the Wandering Inn RPG repo, when u
 2. `wandering_inn_game/CLAUDE.md` — architecture, commands, the canonical
    QA seed table, gotchas. The active project is `wandering_inn_game/` only.
 3. `.superpowers/sdd/progress.md` (ledger, gitignored) — tail = exact position.
-4. `docs/ROADMAP.md` — milestone ladder. `docs/HANDOVER-FABLE-TO-OPUS.md` §1/§8
+4. **GitHub Issues/Milestones = the plan** (transitioned 2026-07-07):
+   `gh issue list -R GabrielGLevine/wandering-inn-rpg --milestone <name>`
+   — each issue body is a dispatch-grade brief (goal/sources/scope/danger
+   list/verification/exit). `docs/ROADMAP.md` is a pointer + history. `docs/HANDOVER-FABLE-TO-OPUS.md` §1/§8
    — operating model + hard-won lessons.
 
 ## Project identity (non-negotiable)

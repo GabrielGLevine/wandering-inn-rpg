@@ -6,9 +6,38 @@ checklist) before the next opens. Never trade a clean close for
 starting the next. The user gates every taste/canon/irreversible call
 via the HANDOFF queue.**
 
+## POSITION (updated 2026-07-07 morning — re-armed post-NIGHT-GOAL)
+
+Steps 1-6 are **CLOSED** (each opus-gated: M-ARC, cleanup, M-LEGIBILITY,
+M-GEAR, Skills wave, Social Pillar II). Step 7 (M-DEPTH) is content-
+complete (DP1-DP5 committed, 56 canonicals) — **DPF is the live rung**:
+opus whole-milestone review + machine-playtest rotation + close, WHICH
+WAITS for the in-flight playtest-UI wave to land first (the rotation
+must judge the fixed HUD). Then step 7.5 below, then step 8.
+
+**7.5 INTERLUDE — the playtest-response ladder (user rulings
+2026-07-07, execute before 8a):**
+- (a) The UI wave (IN FLIGHT): field legend removed, vertical centering,
+  inventory side-panel redesign (lore unlabeled), working scroll, 2-line
+  bark budget.
+- (b) Relc combat-shrink: repro lane in flight → fix dispatch from its
+  root cause.
+- (c) Em-dash reduction: corpus pass staged (Fable) → apply wave with
+  pin moves; the lint budget already binds new copy.
+- (d) PixelLab art wave: bespoke red-HAIR Lyonette (canon), inn cast
+  variety, + the standing sprite stand-in queue (sign, boards, bench,
+  boulder-prop props) — park-only generation then a wiring task.
+- (e) Queued honest debts when their surfaces open: icy_floor +
+  [Mage] [Invisibility] (cited), Erin's meal perk + Relc's spar wager
+  (per-waking dialogue seam), bounty_crab_cull (encounter bank),
+  chess-match follow-up (the Social II tease), goblins_spared counter
+  + the Rags arc runway (specs/2026-07-07-no-killing-goblins-seed.md).
+- v0.3.0 tag: after DPF + (a)-(b) land clean (user deferred the
+  auto-tag).
+
 ## The chain, in order
 
-**1. M-ARC (in flight — finish it):**
+**1. M-ARC — ✅ CLOSED (opus SHIP, 2026-07-06):**
 - Char creation (M-ARC §5): lane may already be complete — check the
   ledger; controller reads shots, commits, syncs.
 - A2 Raskghar descent (plan `docs/superpowers/plans/2026-07-06-m-arc.md`
@@ -21,7 +50,7 @@ via the HANDOFF queue.**
 - AF: full gate + VISUAL-LOG drain + opus whole-branch review + HANDOFF
   playtest checklist.
 
-**2. CLEANUP (structural, no lanes live during it):**
+**2. CLEANUP — ✅ CLOSED (2026-07-06):**
 - Rename `wandering_inn_game/` → `wandering_inn_game/`: full path
   ripple (run_qa/ci_sweep/web scripts, workflows, CLAUDE.md files,
   manifest + bundle LAYOUT — rebuild + re-release the bundle on the
@@ -37,7 +66,7 @@ via the HANDOFF queue.**
   skills — library governance).
 - Full sweep + smoke + public sync + one tag deploy = the exit gate.
 
-**3. M-LEGIBILITY** (spec §2 of
+**3. M-LEGIBILITY — ✅ CLOSED (opus READY TO SHIP, 2026-07-07)** (spec §2 of
 `docs/superpowers/specs/2026-07-06-systems-depth-priorities.md`,
 user-ratified): the coordinator AUTHORS the implementation plan first
 (plans are design — top-model work, plan-time corrections header,
@@ -48,13 +77,13 @@ identity rules are absolute. Exit: gate + review + playtest checklist
 ("can you tell which armor is better WITHOUT feeling like a
 spreadsheet?").
 
-**4. M-GEAR** (spec §1): plan-author then execute — resonance costs +
+**4. M-GEAR — ✅ CLOSED (opus READY TO SHIP, 2026-07-07)** (spec §1): plan-author then execute — resonance costs +
 capacity (opaque growth), 2-3 accessory slots, item lore lines,
 new items through shop/loot/rewards, harness loadout cells for every
 new equippable. Canon resonance framing wiki-verified. Depends on
 LEGIBILITY's item cards.
 
-**5. SKILLS WAVE** (spec §3+§4): plan-author then execute — the
+**5. SKILLS WAVE — ✅ CLOSED (opus READY TO SHIP, 2026-07-07; incl. K2b loadout + [Rogue])** (spec §3+§4): plan-author then execute — the
 overworld-impact pass on existing kits (freeze-to-cross water, burn
 debris, threat-range reveal — each [Light]-bar: sim seam + presentation
 + windowed proof + canonical coverage) + gap-based new Skills (verbs →
@@ -62,13 +91,13 @@ wiki-verified canon Skills → class kits; every new Skill ships a
 combat AND overworld read where sensible). Movement + stealth are the
 priority verbs (user).
 
-**6. SOCIAL PILLAR II**: needs a BRAINSTORM-level spec first (the
+**6. SOCIAL PILLAR II — ✅ CLOSED (opus READY, 0 blockers, 2026-07-07; Erin+Relc in; 18 ⚑ copy flags open)**: originally needed a brainstorm-level spec first (the
 coordinator drafts a seed: what deepens repeatable social play beyond
 pools — relationship arcs? re-armable persuasion? social quests?);
 QUEUE the open design calls in HANDOFF for the user, execute only
 after their ratification.
 
-**7. M-DEPTH — LISCOR INTERIORS (user 2026-07-06; the scope rule
+**7. M-DEPTH — 🔶 DPF REMAINS (DP1-DP5 committed 2026-07-07: Guild interior, REQUEST BOARD live, inn upstairs, barracks, Runner's Guild + deliveries) (user 2026-07-06; the scope rule
 "depth-in-Liscor beats map sprawl" applied):** seed spec
 `docs/superpowers/specs/2026-07-06-liscor-depth-seed.md` — the
 Adventurer's Guild interior (Selys relocates behind the desk; Olesm's

@@ -149,6 +149,12 @@ task reviewer's standing hunt), against the character's profile voice:
   watches what you do — and answers by making you someone" → cut at
   the dash; the bare statement is stronger. A dash continuation must
   add a NEW fact, never amplify/restate the clause before it).
+- EM-DASH BUDGET (user playtest ruling 2026-07-07: "serially overused
+  across dialogue"): at most ONE em-dash per line, and most lines need
+  ZERO — reach for a period or comma first; a dash must earn its
+  interruption (a real self-interruption or turn, not rhythm
+  decoration). A corpus-wide reduction pass is queued; hold every NEW
+  line to this bar now.
 - POSITIVE BAR: lines survive being read ALOUD in the character's
   register; contractions where the voice has them; people interrupt
   themselves, use wrong-size words, reference concrete objects; humor

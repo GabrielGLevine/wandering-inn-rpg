@@ -1,4 +1,26 @@
-# Wandering Inn RPG — Living Roadmap (here → launch)
+# Wandering Inn RPG — Roadmap
+
+> **PLANNING MOVED TO GITHUB (2026-07-07, user directive for open-sourcing).**
+> The living plan is now native GitHub:
+> - **Milestones** = the chain rungs (M-DEPTH close → Playtest Interlude →
+>   v0.3.0 → expansions 8a-8f → M-STEAM):
+>   https://github.com/GabrielGLevine/wandering-inn-rpg/milestones
+> - **Issues** = strongly-scoped work items (each body carries goal,
+>   sources, scope, danger list, verification, exit criteria — dispatch
+>   directly from the issue):
+>   https://github.com/GabrielGLevine/wandering-inn-rpg/issues
+> - **Labels**: `task`/`art`/`copy`/`qa-suite`/`architecture`/`polish` for
+>   type; `taste-gate` (user ruling needed), `canon-check` (wiki
+>   verification), `honest-debt` (known gap, surface named),
+>   `successor-ready` (dispatchable as-is); `size:S/M/L`.
+> - Session-level state stays in-repo: `HANDOFF.md` (live handoff),
+>   `.superpowers/sdd/progress.md` (gitignored ledger), `GOAL-CHAIN.md`
+>   (the execution charter — its ladder mirrors the GitHub milestones).
+>
+> Everything below this line is the PRE-TRANSITION historical record —
+> accurate as of 2026-07-07 morning, no longer maintained.
+
+# (Historical) Living Roadmap (here → launch)
 
 > Owned by the project-lead agent per user directive (2026-07-02): think several milestones
 > ahead during subagent downtime; milestone boundaries still get user feedback, playtests,
@@ -15,31 +37,35 @@ demo** (the wasm export pipeline already works and is QA'd every milestone), rou
 minutes of play, spanning an intro arc in Liscor. Steam/paid comes after demo reception,
 out of roadmap scope for now.
 
-## Milestone ladder (TABLE REFRESHED 2026-07-06 — v0.1.0 IS LIVE)
+## Milestone ladder (TABLE REFRESHED 2026-07-07 morning — v0.2.0 LIVE)
 
 **Shipped and deployed:** `sibianthegreybird.itch.io/the-wandering-inn-rpg`
-(v0.1.0, tag-driven CI deploy proven; public repo live w/ green CI).
+(v0.2.0; tag-driven CI deploy proven; public repo green throughout the
+night run). **v0.3.0 tag: queued** — after M-DEPTH's DPF close + the
+playtest-UI wave land (user deferred the night's auto-tag).
 
 | # | Theme | Status |
 |---|---|---|
-| M0–M7 | Agent-QA loop → combat → story → depth → art pipeline → feel → action-classes → weapons/equipment | SHIPPED |
-| M-FP / slice / M6.5 / M-BEAUTY | Floodplains overworld · content slice · presentation decomposition · atmosphere/lighting | SHIPPED |
-| Onboarding rev | Classless start, Relc teaches, proximity tutorial, Pisces, GDI-adjacent toasts | SHIPPED (opus 0C) |
-| Three Pillars | Field skills + overworld hotbar + [Tactician]/[Observe] | SHIPPED (opus 0C) |
-| Social Pillar | Rotating talk pools, sleep re-arm, [Diplomat] | SHIPPED (opus 0C) |
-| Content Wave | Liscor Sewers, Olesm/Zevara/Lyonette, 2 three-path quests | SHIPPED (opus 0C) |
-| Economy v1 | Diegetic gold across pillars, Krshia's shop, loot | SHIPPED (opus 0 must-fix) |
-| M-RELEASE | Public repo, CI, fallback-art contract, itch deploy, community lanes | SHIPPED + DEPLOYED |
-| M-JUICE (E) | CC0 audio layer + the [ding!] + hit-stop/shake/sparks/death-fade (+[Light] PC glow) | CORE SHIPPED (EF review closed; feel = playtest-gated) |
-| **M-ARC (F)** | GDI cold open ✅ · acts layer ✅ · char creation (race/gender/name) IN FLIGHT · A2 Raskghar descent → A3 climax → A4 epilogue → AF | **EXECUTING** (spec+plan ratified 2026-07-06) |
-| Cleanup | Drop `_v4` dir suffix · remove godot-ai addon · (skills already ship publicly; AI disclosure done) | QUEUED (post-lane) |
-| M-DEPTH (Liscor interiors) | Guild interior + request board · inn upstairs · +1 interior (seed `2026-07-06-liscor-depth-seed.md`) | SEEDED (user 2026-07-06; chain step 7, before expansions) |
-| Expansions | ALL SPEC'D 2026-07-06 (+city-identity bible: Liscor BELONG / Invrisil DEAL / Pallass QUALIFY) — [Door of Portals]-gated: Invrisil (Brothers of Serendipitous Meetings) · Riverfarm witches · Liscor Dungeon (Horns) · [Garden of Sanctuary] | SEEDED (user 2026-07-06) |
-| **Systems depth (user priorities 2026-07-06, SUPERSEDE "future systems")** | M-LEGIBILITY (visible-currency item/skill cards + status glossary — no raw stats) → M-GEAR (resonance-limited slots + item lore) → overworld-impact Skills wave + gap-based Skill sourcing | SPEC'D (`2026-07-06-systems-depth-priorities.md`, §2 verdict awaiting user) |
-| Social Pillar II | Deeper repeatable social play (post-pools: relationship arcs? — brainstorm) | TARGETED (user 2026-07-06; slots after the systems-depth trio) |
-| Deprioritized | Racial mechanics · party free-picker (context+veto is the standing model) | PARKED (user 2026-07-06) |
+| M0–M7 + all 2026-07-04/05 waves | Foundation → combat → story → depth → art/feel → classes → equipment → floodplains → onboarding → pillars → economy → release → juice | SHIPPED |
+| M-ARC | GDI cold open · acts · char creation · Raskghar descent · climax · epilogue | SHIPPED (opus SHIP; climax copy user-APPROVED 2026-07-07) |
+| Cleanup | `_v4` rename · godot-ai removal · zero-exemption grep | SHIPPED |
+| M-LEGIBILITY | WIEffectText generated cards (items/skills/status glossary) — no raw stats, no hand-composed mechanics | SHIPPED (opus READY TO SHIP) |
+| M-GEAR | Resonance capacity (canon Magical Dissonance) · 3 accessory slots · 19-item lore pool · charms stall | SHIPPED (opus READY TO SHIP) |
+| Skills wave | K1 freeze/burn seams · K2 sneak · K2b slotted loadout · K3 canon names + [Rogue] · K4 wiring ([Second Wind] real) | SHIPPED (opus READY TO SHIP) |
+| Social Pillar II | LINEAR stages on all 7 pooled NPCs (Erin+Relc in) · stage-gated topics · earned perks | SHIPPED (opus READY, 0 blockers; 18 ⚑ copy flags open) |
+| **ARCH track (consultant adoption)** | CLAUDE.md −75% + referenced docs · qa/manifest single-source · WICombatBuild (harness measures the shipped game) · WIKeys · wi_game extraction (WIEconomy/WISocial/WIFieldSkills) | SHIPPED (extraction opus-gated) |
+| **M-DEPTH (chain step 7)** | DP1 Guild interior · DP2 REQUEST BOARD (bounty lifecycle) · DP3 inn upstairs/your bed · DP4 barracks + stalls · DP5 Runner's Guild + deliveries | **DP1-DP5 COMMITTED — DPF (opus + rotation + close) is the live rung** |
+| **Playtest-response interlude (user rulings 2026-07-07)** | UI wave (legend removal, centering, inventory side-panel, scroll, bark budget) · Relc-shrink fix · em-dash reduction · PixelLab art wave (red-hair Lyonette, inn variety) | IN FLIGHT (three lanes live; GOAL-CHAIN §7.5) |
+| Expansions (chain step 8) | 8a [Door of Portals]+[Garden] → 8b Riverfarm witches → 8c Invrisil Brothers → 8d Liscor Dungeon (Horns) → 8e Pallass → 8f VOICE PASS | SPEC'D + staged (profiles/canon pre-verified 2026-07-07); next after the interlude |
+| M-STEAM (chain step 9) | Controller support first; free-on-Steam gate ⚑ | SEEDED |
+| Honest-debt queue | icy_floor + [Invisibility] (cited) · Erin meal/Relc wager (per-waking seam) · crab_cull (encounter bank) · chess follow-up · goblins_spared/Rags runway | QUEUED (surfaces named per item) |
+| Deprioritized | Racial mechanics · party free-picker (context+veto stands) | PARKED |
 
-Post-launch direction: episodic arcs tracking TWI volumes; M-STEAM seeded (`2026-07-06-m-steam-seed.md` — free-on-Steam gate ⚑, controller support = the real milestone).
+The suite: **56 canonical scripts** via `qa/manifest.json` (single source,
+drift-checked every sweep) + 16 unit suites; machine-playtest rotations
+binding at every close (protocol: `wandering_inn_game/qa/MACHINE-PLAYTEST.md`).
+
+Post-launch direction: episodic arcs tracking TWI volumes.
 
 ## Long-lead decisions that influence CURRENT work
 

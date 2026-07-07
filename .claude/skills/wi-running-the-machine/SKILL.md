@@ -7,8 +7,13 @@ description: Use when executing any Wandering Inn RPG task end-to-end — implem
 
 ## The cycle (every task, no exceptions)
 1. **Position:** read the ledger tail (`.superpowers/sdd/progress.md`) +
-   HANDOFF. The plan/spec in `docs/superpowers/` is the authority; execution
-   briefs may correct stale plan text — briefs win.
+   HANDOFF, then the GITHUB ISSUE for the work item (planning transitioned
+   2026-07-07: `gh issue view <n> -R GabrielGLevine/wandering-inn-rpg` —
+   the issue body is the dispatch brief; the spec/plan it links is the
+   design authority; execution briefs may correct stale plan text — briefs
+   win). Work not on the board yet gets an issue FIRST (the issue-body
+   format lives in any existing issue); close the issue in the landing
+   commit's message (`Closes #n`) or via gh at the close.
 2. **Implement** on `main`. Content = data (`data/*.json`); behavior = sim
    (`src/core/**`, PURE: no autoload/Node refs); presentation only renders.
 3. **Verify green** — wi-verifying-changes. No claim without evidence.
