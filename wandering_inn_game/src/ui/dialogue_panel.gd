@@ -27,6 +27,23 @@ const LOCKED_COLOR := Color(0.45, 0.45, 0.45)
 ## "cut words never widen"). Non-final pages advance on the same `confirm`
 ## used to pick an option; the option list only appears on the LAST page.
 const PAGE_CHAR_BUDGET := 200
+## NIGHT polish wave item 4 (docs/VISUAL-LOG.md "page break splits mid-
+## sentence with no cue"): a page break landing anywhere in `PAGE_CHAR_BUDGET`
+## reads fine mechanically but can visually open a page mid-sentence with no
+## signal it's a continuation (e.g. relc_intro's "grip. Sword arm, spear arm
+## —" opening a page after "...checks your" was cut off the prior page). Fix:
+## `_paginate` prefers a sentence-ending break (`.`/`!`/`?`) when one falls in
+## the last SENTENCE_BOUNDARY_WINDOW_FRACTION of the budget (close enough to
+## the cap that taking it doesn't waste much page space) -- see
+## `_sentence_boundary_cut`. When no such boundary exists, the original word-
+## boundary cut still applies, but now appends "…" to the outgoing page and
+## prepends "…" to the incoming one, so a mid-sentence break always reads as
+## a continuation rather than a period-less non-sequitur. The DIALOGUE_NODE
+## event payload is untouched either way (event carries truth, pixels carry
+## the budget) -- only `_text_label`'s rendered page text changes, and QA
+## (`_is_qa()`) jumps straight to the last page regardless of how many pages
+## result, so no script's injected-key count depends on the split point.
+const SENTENCE_BOUNDARY_WINDOW_FRACTION := 0.2
 
 var _root: Control
 var _stack: VBoxContainer
@@ -125,17 +142,24 @@ func _render_node(payload: Dictionary) -> void:
 	_render_page()
 
 
-## Splits body text into word-boundary pages of at most PAGE_CHAR_BUDGET chars
-## so no single page can overflow the fixed panel. A short body yields one page
-## (identical to the pre-fix single-render behaviour).
+## Splits body text into pages of at most PAGE_CHAR_BUDGET chars, preferring a
+## sentence-boundary cut near the budget edge over a raw word-boundary one
+## (see SENTENCE_BOUNDARY_WINDOW_FRACTION's doc comment). A short body yields
+## one page (identical to the pre-fix single-render behaviour).
 func _paginate(text: String) -> Array[String]:
 	var pages: Array[String] = []
 	var cur := ""
 	for word: String in text.split(" ", false):
 		var candidate := word if cur == "" else cur + " " + word
 		if candidate.length() > PAGE_CHAR_BUDGET and cur != "":
-			pages.append(cur)
-			cur = word
+			var cut := _sentence_boundary_cut(cur)
+			if cut != -1:
+				var remainder := cur.substr(cut + 1).strip_edges()
+				pages.append(cur.substr(0, cut + 1))
+				cur = ("%s %s" % [remainder, word]) if remainder != "" else word
+			else:
+				pages.append(cur + "…")
+				cur = "…" + word
 		else:
 			cur = candidate
 	if cur != "":
@@ -143,6 +167,22 @@ func _paginate(text: String) -> Array[String]:
 	if pages.is_empty():
 		pages.append("")
 	return pages
+
+
+## Finds a clean sentence-ending break inside `cur` -- the LAST `.`/`!`/`?`
+## that lands in the top SENTENCE_BOUNDARY_WINDOW_FRACTION of PAGE_CHAR_BUDGET
+## (e.g. char 160-200 of a 200-char budget). Preferring the boundary closest
+## to the budget edge (not just any earlier sentence end) keeps pages as full
+## as the budget allows. Returns -1 when no sentence end falls in that
+## window, so the caller falls back to the word-boundary + ellipsis-cue path.
+func _sentence_boundary_cut(cur: String) -> int:
+	var window_start := int(PAGE_CHAR_BUDGET * (1.0 - SENTENCE_BOUNDARY_WINDOW_FRACTION))
+	var best := -1
+	for i in cur.length():
+		var c := cur[i]
+		if (c == "." or c == "!" or c == "?") and i >= window_start:
+			best = i
+	return best
 
 
 ## Renders the current page's body text; the option list (and its input) is

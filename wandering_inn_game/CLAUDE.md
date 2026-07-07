@@ -222,7 +222,7 @@ current-state-only, one short paragraph per live system.
   superseded on layout specifics by the M5 render pipeline above, mechanics
   still apply) in `docs/ARCHITECTURE-HISTORY.md`.
 
-**Canonical QA seed table.** Run any script with `qa/run_qa.sh <script> headless --seed=<seed>` (fixture-based scripts load a save via title Continue whose own `rng_state` OVERRIDES `--seed`; the seed shown below is what's pinned/held either way). Full sweep: `qa/ci_sweep.sh` (mirrors this table — keep both in sync when adding a script). Two screenshot-only utilities (`title_peek`, `street_peek`) are excluded, not canonical. Full per-script rationale (why this route, why this seed, the assertions and gotchas each one guards): `docs/QA-SCRIPT-NOTES.md`.
+**Canonical QA seed table** (source of truth: `qa/manifest.json` — `ci_sweep.sh` verifies this table against it). Run any script with `qa/run_qa.sh <script> headless --seed=<seed>` (fixture-based scripts load a save via title Continue whose own `rng_state` OVERRIDES `--seed`; the seed shown below is what's pinned/held either way). Full sweep: `qa/ci_sweep.sh` (parses `qa/manifest.json`; hard-fails if this table drifts from it — keep both in sync when adding a script). Two screenshot-only utilities (`title_peek`, `street_peek`) are excluded, not canonical. Full per-script rationale (why this route, why this seed, the assertions and gotchas each one guards): `docs/QA-SCRIPT-NOTES.md`.
 
 | script | seed | purpose |
 |---|---|---|

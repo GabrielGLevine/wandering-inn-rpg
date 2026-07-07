@@ -197,7 +197,7 @@ static func _migrated(data: Dictionary) -> Dictionary:
 		# going forward: equipped items are always also in inventory), with
 		# an empty container_state and a freshly reset action clock.
 		state["inventory"] = ["rusty_sword"]
-		state["equipped"] = {"weapon": "rusty_sword", "armor": ""}
+		state["equipped"] = {WIKeys.WEAPON: "rusty_sword", "armor": ""}
 		state["container_state"] = {}
 		state["actions_since_sleep"] = 0
 		version = VERSION

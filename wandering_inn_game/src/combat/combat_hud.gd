@@ -84,6 +84,43 @@ const TUTOR_SUPPORTED_EVENTS := [
 	WIEvents.STATUS_EXPIRED, WIEvents.ACTION_REFUSED, WIEvents.UI_TARGETING_SHOWN,
 ]
 
+## NIGHT polish wave item 3 (docs/VISUAL-LOG.md "tutor panel clips Relc's
+## 'Earned, not given' line ... at panel bottom in the ambush fight"):
+## `feed_push`'s FEED_TEXT_HEIGHT=90 budget (M-FP F) turned out to be
+## calibrated slightly too generous for a full 4-wrapped-line entry -- a
+## pixel measurement of the ACTUAL clip (`qa_output/tutorial_flow/
+## 04_ambush_warrior_spear.png`, the "real_ones" tutor line, and
+## `qa_output/relc_tutorial/01_opening.png`, the "opening" tutor line -- both
+## 4-line beats) found the parchment's decorative fold sits at ~70% of the
+## panel's total height from the top (measured: fold at absolute y~597 on a
+## panel spanning y[514,636], i.e. (597-514)/(636-514) = 0.70 -- consistent
+## with the toast panel's own independently-measured fold position at ~68/96
+## = 0.71, see message_layer.gd's TOAST_FOLD_DANGER_PX derivation), NOT the
+## naive full interior the original 90px figure assumed.
+## SCOPE: this only touches the TUTOR render path (`render_tutor_line` /
+## `_grow_feed_panel_for_tutor`), never `feed_push`/FEED_TEXT_HEIGHT
+## themselves -- ordinary combat-log entries (attack/damage/status lines)
+## keep their exact pre-existing evict/truncate behavior. Tutor beats are
+## rare, scripted, story-critical lines (not spammy combat log noise), so
+## GROWING the panel to clear the fold (never truncating the arc's own
+## thesis line) is the right call here, matching the toast fix's "grow,
+## never cut" precedent -- falls back to the existing feed_push
+## cut-with-ellipsis discipline only if a beat is so long that even the
+## grown panel can't clear it (see `_grow_feed_panel_for_tutor`'s cap).
+const FEED_PANEL_BASE_SIZE := Vector2(292.0, 122.0)
+const FEED_OFFSET_LEFT := 28.0
+const FEED_OFFSET_RIGHT := 320.0
+const FEED_OFFSET_BOTTOM := -84.0
+const TUTOR_FOLD_SAFE_FRACTION := 0.70
+const TUTOR_CONTENT_MARGIN_TOP := 8.0
+const TUTOR_SAFETY_BUFFER_PX := 12.0
+## Hard cap so a pathological future tutor-lines edit can't grow the panel
+## into the order strip/board above -- board headroom is generous (see
+## build()'s band comment), but a bound keeps this fix from ever becoming
+## unbounded. Comfortably fits the longest wrapped-line count seen in
+## data/arenas.json today (4 lines) with room to spare for a 5th.
+const FEED_PANEL_MAX_HEIGHT := 220.0
+
 var _root: Control
 var _main_ref: Node
 var _screen: Node
@@ -96,6 +133,11 @@ var _readout_panel: Control
 var _banner_panel: Control
 var _hotbar: WIHotbar
 var _feed: Array = []
+## NIGHT polish wave item 3: current feed panel height, grown (never
+## shrunk mid-encounter) by `_grow_feed_panel_for_tutor` when a tutor beat
+## needs more room than FEED_PANEL_BASE_SIZE.y safely provides. Reset to
+## base on every fresh `reset_tutor_lines` call (combat_started).
+var _feed_panel_height := FEED_PANEL_BASE_SIZE.y
 ## Dedup guard so `ui_slot_info_rendered` fires only when the rendered slot
 ## index or its text actually changes -- see `_render_slot_info_line`.
 var _last_slot_info_index := -999
@@ -709,6 +751,10 @@ func reset_tutor_lines(arena_config: Dictionary) -> void:
 		var event_type := String(on.get("event", ""))
 		if not TUTOR_SUPPORTED_EVENTS.has(event_type):
 			push_warning("tutor_lines entry '%s' targets unsupported event '%s' -- combat HUD has no render call site for it and the line will never reach the feed" % [String(entry.get("id", "")), event_type])
+	# NIGHT polish wave item 3: a fresh combat starts every panel back at its
+	# base size -- a prior encounter's grown-for-a-long-beat feed panel must
+	# not carry over.
+	_resize_feed_panel(FEED_PANEL_BASE_SIZE.y)
 
 
 ## Fix-wave (review of d5dfbf3, finding 1): counting and rendering are
@@ -772,9 +818,49 @@ func _tutor_loosely_equal(a: Variant, b: Variant) -> bool:
 ## Renders an already-decided tutor-line match (see `match_tutor_line`):
 ## pushes `tutor.line` into the feed and emits `ui_tutor_line_rendered
 ## {beat: id}` via the screen wrapper. `tutor` is `{}` for "no match this
-## event" (no-op).
+## event" (no-op). NIGHT polish wave item 3: grows the feed panel FIRST (see
+## `_grow_feed_panel_for_tutor`) so a long beat never has to fall back to
+## feed_push's ordinary cut-with-ellipsis discipline.
 func render_tutor_line(tutor: Dictionary) -> void:
 	if tutor.is_empty():
 		return
+	_grow_feed_panel_for_tutor(String(tutor.get("line", "")))
 	feed_push(String(tutor.get("line", "")))
 	_screen._emit_tutor_rendered(String(tutor.get("id", "")))
+
+
+## Grows the feed panel (never shrinks -- see `_feed_panel_height`'s doc
+## comment) so `text`'s own wrapped-line count clears the parchment fold with
+## TUTOR_SAFETY_BUFFER_PX to spare (see the const block above `reset_tutor_
+## lines` for the 0.70 fold-position derivation). No-op if `_feed_label` is
+## null (hud built via `hud_script.new(null,null,null)` with no `build()`
+## call -- test_combat_visuals.gd's direct `reset_tutor_lines`/matcher check
+## exercises exactly that path) or if the computed need already fits the
+## panel's current height.
+func _grow_feed_panel_for_tutor(text: String) -> void:
+	if _feed_label == null:
+		return
+	var lines := _wrapped_line_count(_feed_label, text, FEED_TEXT_WIDTH)
+	var font := _feed_label.get_theme_font("font")
+	var font_size := _feed_label.get_theme_font_size("font_size")
+	var line_spacing := float(_feed_label.get_theme_constant("line_spacing"))
+	var pitch := font.get_height(font_size) + line_spacing
+	var text_block := float(lines) * pitch - line_spacing
+	var needed := (text_block + TUTOR_CONTENT_MARGIN_TOP + TUTOR_SAFETY_BUFFER_PX) / TUTOR_FOLD_SAFE_FRACTION
+	needed = minf(needed, FEED_PANEL_MAX_HEIGHT)
+	if needed > _feed_panel_height:
+		_resize_feed_panel(needed)
+
+
+## Applies a feed panel height: LEFT/RIGHT/BOTTOM stay fixed (FEED_OFFSET_*),
+## TOP is derived so growth always reads upward (same idiom as message_
+## layer.gd's toast panel and dialogue_panel.gd's `_fit_panel_height`). No-op
+## if `_feed_label` is null (see `_grow_feed_panel_for_tutor`'s doc comment).
+func _resize_feed_panel(height: float) -> void:
+	if _feed_label == null:
+		return
+	_feed_panel_height = height
+	var panel: Control = _feed_label.get_parent().get_parent()
+	panel.custom_minimum_size = Vector2(FEED_PANEL_BASE_SIZE.x, height)
+	panel.size = Vector2(FEED_PANEL_BASE_SIZE.x, height)
+	UIChrome.set_offsets(panel, FEED_OFFSET_LEFT, FEED_OFFSET_BOTTOM - height, FEED_OFFSET_RIGHT, FEED_OFFSET_BOTTOM)

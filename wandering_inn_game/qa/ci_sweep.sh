@@ -12,44 +12,16 @@
 # Exit: 0 iff every selected script ran green AND no log tripped the grep;
 #       nonzero (count of failures) otherwise.
 #
-# --- CANONICAL LIST ---------------------------------------------------------
-# No qa/ manifest exists, so this list is HARDCODED and MIRRORS the
-# "Canonical QA seed table" in wandering_inn_game/CLAUDE.md (46 headless
-# scripts as of M-ARC A4 — C1 added sewers_walkthrough [34]; C3 adds
-# cisterns_fight / cisterns_talk / cisterns_scout [35-37]; C4 adds
-# wrong_order_loop / wrong_order_talk / wrong_order_fight [38-40]; Economy v1 D4
-# adds economy_loop [41]; M-ARC §5 adds char_creation [42] (no seed — drives the
-# real character-creation UI path, no combat/rng); M-ARC A2 adds deep_descent
-# [43] (the Raskghar descent — fixture-based via deep_descent_start, its rng
-# governs both fights, EXTENDED A3 through the JOIN boss victory); M-ARC A3 adds
-# climax_chain [44] (the tremor beat: sleep pointer + Zevara summons + Olesm
-# briefing, fixture climax_surface_start) and climax_seal [45] (the seal beat +
-# journal Act III + Olesm resolution, fixture climax_sealed_start); M-ARC A4 adds
-# arc_flow [46] (THE WHOLE-ARC PROOF — fixture near_act3 drives tremor→summons→
-# briefing→descent→JOIN boss victory→seal→the GDI EPILOGUE EVENT→post_game→
-# post-game greeting→free-play; the surface arc consumes zero rng so the boss
-# sits at deep_descent's winning determinism); M-LEGIBILITY L4 adds
-# status_first_encounter [47] (the status glossary + first-encounter-surface
-# proof — fixture near_mage_cast, a REAL hotbar frost_bolt cast since
-# combat_autoplay never casts for the pc); M-GEAR G3 adds gear_loop [48]
-# (the resonance-gear UI proof — fixture gear_loop_start carries the full
-# 19-item catalog so a genuine over-capacity accessory refusal is reachable
-# without an impractical ~44-gold grind; also doubles as the full-pack
-# scroll/clip proof); Skills Wave K2 adds stealth_loop [49] (the sneak-past-
-# the-ambush proof — fixture near_ambush_sneak, floodplains pre-ambush: walks
-# INTO goblin_encounter_1's Chebyshev-2 zone sneaking with zero combat_started,
-# breaks sneak via a real [Observe] use on the ambush entity, then the SAME
-# zone fires the ambush for real on the not-sneaking re-entry -- the positive
-# control in one run). All fixture-based, no seed search.
-# The party-VETO/solo path is a unit-level roster
-# proof (test_combat_data._check_boss_veto_roster) per the user descope, not a
-# canonical script — tutorial_flow is
-# canonical; level_up_loop / defeat_ally_alive / combat_move_input / crate_fight /
-# crate_talk / field_skills_loop / social_loop / sewers_walkthrough / cisterns_*
-# are fixture-based, their fixture rng overrides the CLI seed, the listed seed is
-# convention). Keep the two in sync when scripts/seeds change. Peek-only
-# utilities (title_peek, street_peek) are intentionally excluded. A seed of
-# "none" means the script takes no --seed.
+# --- CANONICAL LIST (ARCH-1) -------------------------------------------------
+# qa/manifest.json is the ONE source of truth (script/seed/fixture/note per
+# entry). This script parses it (python3) instead of carrying a hardcoded
+# array. wandering_inn_game/CLAUDE.md's "Canonical QA seed table" is generated
+# FROM the manifest for human reading — the drift check below (startup, every
+# invocation) parses that table back out of CLAUDE.md and hard-fails the sweep
+# if its script/seed set disagrees with the manifest, so the two can never
+# silently drift apart again (consultant finding 4). Peek-only utilities
+# (title_peek, street_peek) are intentionally excluded from both. A seed of
+# "none"/null means the script takes no --seed.
 set -u
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -57,59 +29,138 @@ RUN_QA="$HERE/run_qa.sh"
 SCRIPTS_DIR="$HERE/scripts"
 LOGDIR="$HERE/../qa_output/ci_sweep_logs"
 PER_SCRIPT_TIMEOUT="${CI_SWEEP_TIMEOUT:-240}"
+MANIFEST="$HERE/manifest.json"
+CLAUDE_MD="$HERE/../CLAUDE.md"
 
-# script:seed pairs — mirrors the CLAUDE.md canonical table.
-CANON=(
-	"load_gate:none"
-	"inn_walkthrough:9"
-	"dialogue_walkthrough:9"
-	"dialogue_hub_loop:9"
-	"quest_errand_fight:9"
-	"quest_errand_parley:9"
-	"save_load_roundtrip:9"
-	"combat_walkthrough:9"
-	"tutorial_flow:9"
-	"level_up_loop:9"
-	"mage_unlock_loop:9"
-	"line_of_sight_denial:9"
-	"defeat_reload:1"
-	"defeat_ally_alive:3"
-	"title_flow:9"
-	"combat_move_input:9"
-	"class_evolution_loop:9"
-	"consolidation_flow:9"
-	"save_migration:1"
-	"consolidation_reload:9"
-	"generalist_loop:9"
-	"lantern_check:9"
-	"gate_district_walkthrough:9"
-	"relc_tutorial:9"
-	"work_loop:9"
-	"crate_fight:9"
-	"crate_talk:9"
-	"crate_light:9"
-	"journal_skills:9"
-	"inventory_loop:9"
-	"atmosphere_check:9"
-	"field_skills_loop:9"
-	"social_loop:9"
-	"sewers_walkthrough:9"
-	"cisterns_fight:9"
-	"cisterns_talk:9"
-	"cisterns_scout:9"
-	"wrong_order_loop:9"
-	"wrong_order_talk:9"
-	"wrong_order_fight:9"
-	"economy_loop:9"
-	"char_creation:none"
-	"deep_descent:9"
-	"climax_chain:9"
-	"climax_seal:9"
-	"arc_flow:9"
-	"status_first_encounter:9"
-	"gear_loop:9"
-	"stealth_loop:9"
-)
+# --- Load LOUD: manifest missing/unparseable is an immediate exit 1, never a
+# silent zero-script run (the load_gate "scanned zero resources" precedent). --
+if [ ! -f "$MANIFEST" ]; then
+	echo "ci_sweep: FATAL — manifest not found at $MANIFEST" >&2
+	echo "ci_sweep: refusing to run zero scripts silently; exiting." >&2
+	exit 1
+fi
+
+MANIFEST_PAIRS="$(MANIFEST_PATH="$MANIFEST" python3 - <<'PY'
+import json, os, sys
+
+path = os.environ["MANIFEST_PATH"]
+try:
+	with open(path) as f:
+		data = json.load(f)
+except Exception as e:
+	print(f"ci_sweep: FATAL — could not parse {path}: {e}", file=sys.stderr)
+	sys.exit(1)
+
+scripts = data.get("scripts")
+if not isinstance(scripts, list) or not scripts:
+	print(f"ci_sweep: FATAL — {path} has no non-empty 'scripts' array", file=sys.stderr)
+	sys.exit(1)
+
+out = []
+for i, entry in enumerate(scripts):
+	name = entry.get("script")
+	if not name:
+		print(f"ci_sweep: FATAL — {path} entry {i} missing 'script'", file=sys.stderr)
+		sys.exit(1)
+	if "seed" not in entry:
+		print(f"ci_sweep: FATAL — {path} entry '{name}' missing 'seed'", file=sys.stderr)
+		sys.exit(1)
+	seed = entry["seed"]
+	seed_str = "none" if seed is None else str(seed)
+	out.append(f"{name}:{seed_str}")
+
+print("\n".join(out))
+PY
+)"
+MANIFEST_RC=$?
+if [ "$MANIFEST_RC" -ne 0 ] || [ -z "$MANIFEST_PAIRS" ]; then
+	echo "ci_sweep: FATAL — manifest parse failed (see above); exiting." >&2
+	exit 1
+fi
+
+declare -a CANON=()
+while IFS= read -r line; do
+	[ -n "$line" ] && CANON+=("$line")
+done <<< "$MANIFEST_PAIRS"
+
+if [ "${#CANON[@]}" -eq 0 ]; then
+	echo "ci_sweep: FATAL — manifest parsed to zero entries; refusing to run zero scripts." >&2
+	exit 1
+fi
+
+# --- Drift check: CLAUDE.md's canonical seed table must agree with the
+# manifest (script + seed set) or the sweep hard-fails with the diff printed.
+# This is the "two hand-synced sources of truth" gap (consultant finding 4) —
+# the manifest is authoritative; CLAUDE.md's table is documentation generated
+# from it, and this check is what keeps it honest going forward.
+DRIFT_OUTPUT="$(MANIFEST_PATH="$MANIFEST" CLAUDE_MD_PATH="$CLAUDE_MD" python3 - <<'PY'
+import json, os, re, sys
+
+manifest_path = os.environ["MANIFEST_PATH"]
+claude_md_path = os.environ["CLAUDE_MD_PATH"]
+
+with open(manifest_path) as f:
+	manifest = json.load(f)
+manifest_pairs = set()
+for entry in manifest["scripts"]:
+	seed = entry["seed"]
+	manifest_pairs.add((entry["script"], "none" if seed is None else str(seed)))
+
+if not os.path.isfile(claude_md_path):
+	print(f"ci_sweep: FATAL — CLAUDE.md not found at {claude_md_path}", file=sys.stderr)
+	sys.exit(1)
+
+with open(claude_md_path) as f:
+	lines = f.readlines()
+
+table_pairs = set()
+in_table = False
+row_re = re.compile(r"^\|\s*`([a-zA-Z0-9_]+)`\s*\|\s*([^|]+?)\s*\|")
+for line in lines:
+	stripped = line.strip()
+	if stripped == "| script | seed | purpose |":
+		in_table = True
+		continue
+	if not in_table:
+		continue
+	if stripped.startswith("|---"):
+		continue
+	if not stripped.startswith("|"):
+		break
+	m = row_re.match(stripped)
+	if not m:
+		break
+	name = m.group(1)
+	seed_cell = m.group(2)
+	seed_token = seed_cell.split()[0].strip(chr(96))
+	table_pairs.add((name, seed_token))
+
+if not table_pairs:
+	print("ci_sweep: FATAL — could not locate/parse CLAUDE.md's canonical seed table", file=sys.stderr)
+	sys.exit(1)
+
+only_manifest = sorted(manifest_pairs - table_pairs)
+only_table = sorted(table_pairs - manifest_pairs)
+if only_manifest or only_table:
+	print("ci_sweep: FATAL — qa/manifest.json and CLAUDE.md's canonical seed table have DRIFTED:", file=sys.stderr)
+	if only_manifest:
+		print("  in manifest.json but not (or mismatched seed in) CLAUDE.md table:", file=sys.stderr)
+		for name, seed in only_manifest:
+			print(f"    {name}:{seed}", file=sys.stderr)
+	if only_table:
+		print("  in CLAUDE.md table but not (or mismatched seed in) manifest.json:", file=sys.stderr)
+		for name, seed in only_table:
+			print(f"    {name}:{seed}", file=sys.stderr)
+	sys.exit(1)
+
+sys.exit(0)
+PY
+)"
+DRIFT_RC=$?
+if [ "$DRIFT_RC" -ne 0 ]; then
+	echo "$DRIFT_OUTPUT" >&2
+	exit 1
+fi
 
 ONLY=""
 while [ "$#" -gt 0 ]; do

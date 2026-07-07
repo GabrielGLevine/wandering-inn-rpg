@@ -67,11 +67,11 @@ const COMPOSITIONS := [
 ## cells above stay gated AND UNCHANGED in construction (no equipment), which
 ## is what pins the pre-M7 canonical seeds.
 const LOADOUT_CELLS := [
-	{"name": "warrior2_sword", "comp": "goblin_ambush", "build": "warrior2", "weapon": "rusty_sword", "armor": ""},
-	{"name": "warrior2_spear", "comp": "goblin_ambush", "build": "warrior2", "weapon": "relcs_spare_spear", "armor": ""},
-	{"name": "warrior2_sword_armored", "comp": "goblin_ambush", "build": "warrior2", "weapon": "rusty_sword", "armor": "leather_jerkin"},
-	{"name": "warrior1_tutorial_solo_armored", "comp": "goblin_ambush", "build": "warrior1_tutorial_solo", "weapon": "rusty_sword", "armor": "leather_jerkin"},
-	{"name": "warrior2_mage2_gambeson", "comp": "chieftains_raid", "build": "warrior2_mage2", "weapon": "rusty_sword", "armor": "watch_issue_gambeson"},
+	{"name": "warrior2_sword", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": ""},
+	{"name": "warrior2_spear", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "relcs_spare_spear", "armor": ""},
+	{"name": "warrior2_sword_armored", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin"},
+	{"name": "warrior1_tutorial_solo_armored", "comp": "goblin_ambush", "build": "warrior1_tutorial_solo", WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin"},
+	{"name": "warrior2_mage2_gambeson", "comp": "chieftains_raid", "build": "warrior2_mage2", WIKeys.WEAPON: "rusty_sword", "armor": "watch_issue_gambeson"},
 	## M-GEAR Task G4: accessory cells (measured-only, same convention as the
 	## 5 weapon/armor cells above). Each cell's optional `accessories` key is
 	## a list of `data/items.json` accessory ids whose damage_mod/hp_mod/
@@ -106,12 +106,12 @@ const LOADOUT_CELLS := [
 	## entirely) so its numbers exist for whenever capacity grows -- LABELED
 	## here and in its print line as capacity-unreachable so nobody mistakes
 	## it for a live balance read.
-	{"name": "warrior2_max_legal_kit", "comp": "goblin_ambush", "build": "warrior2", "weapon": "rusty_sword", "armor": "leather_jerkin", "accessories": ["copper_luck_band", "hedge_ward_charm", "hunters_fang_talisman"]},
-	{"name": "warrior1_tutorial_solo_max_legal_kit", "comp": "goblin_ambush", "build": "warrior1_tutorial_solo", "weapon": "rusty_sword", "armor": "leather_jerkin", "accessories": ["copper_luck_band", "hedge_ward_charm", "hunters_fang_talisman"]},
-	{"name": "warrior2_mage2_stonescale_dr2", "comp": "chieftains_raid", "build": "warrior2_mage2", "weapon": "rusty_sword", "armor": "watch_issue_gambeson", "accessories": ["stonescale_talisman"]},
-	{"name": "chieftains_hp_stack", "comp": "chieftains_raid", "build": "warrior2", "weapon": "rusty_sword", "armor": "", "accessories": ["phosphor_pendant", "hedge_ward_charm"]},
+	{"name": "warrior2_max_legal_kit", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin", "accessories": ["copper_luck_band", "hedge_ward_charm", "hunters_fang_talisman"]},
+	{"name": "warrior1_tutorial_solo_max_legal_kit", "comp": "goblin_ambush", "build": "warrior1_tutorial_solo", WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin", "accessories": ["copper_luck_band", "hedge_ward_charm", "hunters_fang_talisman"]},
+	{"name": "warrior2_mage2_stonescale_dr2", "comp": "chieftains_raid", "build": "warrior2_mage2", WIKeys.WEAPON: "rusty_sword", "armor": "watch_issue_gambeson", "accessories": ["stonescale_talisman"]},
+	{"name": "chieftains_hp_stack", "comp": "chieftains_raid", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["phosphor_pendant", "hedge_ward_charm"]},
 	# capacity-unreachable-today: moon_bone_amulet resonance 3 > capacity 2 -- measured-only, not a live kit.
-	{"name": "moon_bone_capacity_unreachable", "comp": "goblin_ambush", "build": "warrior2", "weapon": "rusty_sword", "armor": "", "accessories": ["moon_bone_amulet"], "capacity_unreachable": true},
+	{"name": "moon_bone_capacity_unreachable", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["moon_bone_amulet"], "capacity_unreachable": true},
 ]
 
 ## Content Wave C1: MEASURED-only cells for the two new sewers encounters
@@ -185,11 +185,11 @@ const BUILDS := [
 	## and a hair above bare `warrior2` on chieftains_raid from the extra con.
 	{"name": "warrior2_helper2", "classes": {"warrior": 2, "helper": 2}, "gated": false},
 	{"name": "warrior2_mage2", "classes": {"warrior": 2, "mage": 2}, "gated": false},
-	{"name": "warrior2_mage2_caster", "classes": {"warrior": 2, "mage": 2}, "ai": "caster", "gated": false},
+	{"name": "warrior2_mage2_caster", "classes": {"warrior": 2, "mage": 2}, WIKeys.AI: "caster", "gated": false},
 	{"name": "pure_warrior10", "classes": {"warrior": 10}, "gated": false},
-	{"name": "pure_mage10_caster", "classes": {"mage": 10}, "ai": "caster", "gated": false},
+	{"name": "pure_mage10_caster", "classes": {"mage": 10}, WIKeys.AI: "caster", "gated": false},
 	{"name": "warrior5_mage5", "classes": {"warrior": 5, "mage": 5}, "gated": false},
-	{"name": "warrior5_mage5_caster", "classes": {"warrior": 5, "mage": 5}, "ai": "caster", "gated": false},
+	{"name": "warrior5_mage5_caster", "classes": {"warrior": 5, "mage": 5}, WIKeys.AI: "caster", "gated": false},
 ]
 
 
@@ -212,23 +212,23 @@ func _init() -> void:
 	WITestWatchdog.arm(self)
 	var arenas_by_id := {}
 	for a: Dictionary in _load("res://data/arenas.json")["arenas"]:
-		arenas_by_id[String(a["id"])] = a
+		arenas_by_id[String(a[WIKeys.ID])] = a
 	var skills := _load("res://data/skills.json")
 	var classes := _load("res://data/classes.json")
 	var catalog := _load("res://data/combatants.json")
 	var by_id := {}
 	for c: Dictionary in catalog["combatants"]:
-		by_id[String(c["id"])] = c
+		by_id[String(c[WIKeys.ID])] = c
 	# M7 Task E6: id-keyed mirrors for the loadout axis only -- the id-keyed
 	# form matches wi_game.gd's `skills`/`_items` instance dicts (WICombat's
 	# own constructor keys its internal `skills` the same way from the raw
 	# array form the main loop below already passes it).
 	var skills_by_id := {}
-	for s: Dictionary in skills["skills"]:
-		skills_by_id[String(s["id"])] = s
+	for s: Dictionary in skills[WIKeys.SKILLS]:
+		skills_by_id[String(s[WIKeys.ID])] = s
 	var items_by_id := {}
 	for it: Dictionary in _load("res://data/items.json")["items"]:
-		items_by_id[String(it["id"])] = it
+		items_by_id[String(it[WIKeys.ID])] = it
 
 	var sink := func(_t: String, _p: Dictionary) -> void: pass
 	var any_failed := false
@@ -242,13 +242,13 @@ func _init() -> void:
 			var has_relc := not bool(build.get("solo", false))
 			for seed_v in range(1, RUNS_PER_CELL + 1):
 				var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
-				pc["ai"] = String(build.get("ai", "melee"))
+				pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
 				# Calls the SAME shared application path as
 				# WIGame._build_player_combatant (M6 T4b: WIProgression.
 				# apply_stat_bonuses) so the harness measures the exact stats a
 				# real PC combatant would carry for this class distribution.
-				pc["stats"] = WIProgression.apply_stat_bonuses(pc["stats"], build["classes"], classes)
-				pc["skills"] = WIProgression.granted_skills(build["classes"], classes)
+				pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
+				pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
 				var cfgs: Array = [pc]
 				if not bool(build.get("solo", false)):
 					cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
@@ -264,7 +264,7 @@ func _init() -> void:
 				if combat.outcome["victory"]:
 					wins += 1
 				rounds.append(int(combat.outcome["rounds"]))
-				if has_relc and not bool(combat.combatants.get("relc", {}).get("alive", true)):
+				if has_relc and not bool(combat.combatants.get("relc", {}).get(WIKeys.ALIVE, true)):
 					relc_downed += 1
 
 			rounds.sort()
@@ -311,7 +311,7 @@ func _init() -> void:
 		var comp: Dictionary = _find_by_name(COMPOSITIONS, String(cell["comp"]))
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(comp["arena"])]
-		var weapon: Dictionary = items_by_id.get(String(cell["weapon"]), {})
+		var weapon: Dictionary = items_by_id.get(String(cell[WIKeys.WEAPON]), {})
 		var armor: Dictionary = items_by_id.get(String(cell["armor"]), {})
 		# M-GEAR Task G4: resolve the cell's optional accessory ids ONCE (same
 		# lifetime as weapon/armor above) -- a cell with no "accessories" key
@@ -326,19 +326,19 @@ func _init() -> void:
 		var has_relc := not bool(build.get("solo", false))
 		for seed_v in range(1, RUNS_PER_CELL + 1):
 			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
-			pc["ai"] = String(build.get("ai", "melee"))
-			pc["stats"] = WIProgression.apply_stat_bonuses(pc["stats"], build["classes"], classes)
+			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
+			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
 			var kit: Array = WIProgression.granted_skills(build["classes"], classes)
-			pc["skills"] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
+			pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
 			# M-ARCH Task ARCH-2: calls the SAME shared function wi_game.gd's
 			# `_build_player_combatant` calls -- weapon/armor contribute first,
 			# then each equipped accessory's own damage_mod/hp_mod/
 			# damage_reduction is SUMMED onto the same three fields (default 0
 			# each, same tolerant .get reads); no more hand-mirrored math here.
 			var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
-			pc["damage_mod"] = mods["damage_mod"]
-			pc["hp_mod"] = mods["hp_mod"]
-			pc["damage_reduction"] = mods["damage_reduction"]
+			pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
+			pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD]
+			pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION]
 			var cfgs: Array = [pc]
 			if has_relc:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
@@ -354,7 +354,7 @@ func _init() -> void:
 			if combat.outcome["victory"]:
 				wins += 1
 			rounds.append(int(combat.outcome["rounds"]))
-			if has_relc and not bool(combat.combatants.get("relc", {}).get("alive", true)):
+			if has_relc and not bool(combat.combatants.get("relc", {}).get(WIKeys.ALIVE, true)):
 				relc_downed += 1
 
 		rounds.sort()
@@ -367,7 +367,7 @@ func _init() -> void:
 		var unreachable_tag := " CAPACITY-UNREACHABLE-TODAY (resonance > shipped capacity, harness bypasses equip())" if bool(cell.get("capacity_unreachable", false)) else ""
 		print("[loadout / %s] comp=%s build=%s weapon=%s armor=%s accessories=%s (measured)%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
 			cell["name"], comp["name"], build["name"],
-			String(cell["weapon"]) if String(cell["weapon"]) != "" else "(none)",
+			String(cell[WIKeys.WEAPON]) if String(cell[WIKeys.WEAPON]) != "" else "(none)",
 			String(cell["armor"]) if String(cell["armor"]) != "" else "(none)",
 			acc_str, unreachable_tag,
 			win_rate, median, rounds[0], rounds[-1],
@@ -388,9 +388,9 @@ func _init() -> void:
 		var has_relc := not bool(cell.get("solo", false))
 		for seed_v in range(1, RUNS_PER_CELL + 1):
 			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
-			pc["ai"] = String(build.get("ai", "melee"))
-			pc["stats"] = WIProgression.apply_stat_bonuses(pc["stats"], build["classes"], classes)
-			pc["skills"] = WIProgression.granted_skills(build["classes"], classes)
+			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
+			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
+			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
 			var cfgs: Array = [pc]
 			if has_relc:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
@@ -406,7 +406,7 @@ func _init() -> void:
 			if combat.outcome["victory"]:
 				wins += 1
 			rounds.append(int(combat.outcome["rounds"]))
-			if has_relc and not bool(combat.combatants.get("relc", {}).get("alive", true)):
+			if has_relc and not bool(combat.combatants.get("relc", {}).get(WIKeys.ALIVE, true)):
 				relc_downed += 1
 
 		rounds.sort()
@@ -438,9 +438,9 @@ func _init() -> void:
 		var has_relc := not bool(cell.get("solo", false))
 		for seed_v in range(1, RUNS_PER_CELL + 1):
 			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
-			pc["ai"] = String(build.get("ai", "melee"))
-			pc["stats"] = WIProgression.apply_stat_bonuses(pc["stats"], build["classes"], classes)
-			pc["skills"] = WIProgression.granted_skills(build["classes"], classes)
+			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
+			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
+			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
 			var cfgs: Array = [pc]
 			if has_relc:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
@@ -456,7 +456,7 @@ func _init() -> void:
 			if combat.outcome["victory"]:
 				wins += 1
 			rounds.append(int(combat.outcome["rounds"]))
-			if has_relc and not bool(combat.combatants.get("relc", {}).get("alive", true)):
+			if has_relc and not bool(combat.combatants.get("relc", {}).get(WIKeys.ALIVE, true)):
 				relc_downed += 1
 
 		rounds.sort()

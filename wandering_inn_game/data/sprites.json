@@ -1324,13 +1324,13 @@
     "sheet": "res://assets/props/free_pack/Rocks.png",
     "region": [
      0,
-     0,
+     19,
      32,
-     40
+     43
     ],
     "frame_size": [
      32,
-     40
+     43
     ],
     "fps": 1
    }

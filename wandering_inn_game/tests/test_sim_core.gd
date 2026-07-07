@@ -39,8 +39,8 @@ func _toast_texts() -> Array:
 ## search is needed. Leaves the raider alive on 999 HP.
 func _land_pc_hit(g: WIGame) -> void:
 	var cb: WICombat = g.combat
-	cb.combatants["pc"]["cell"] = (cb.combatants["goblin_raider"]["cell"] as Vector2i) + Vector2i.RIGHT
-	cb.combatants["goblin_raider"]["hp"] = 999
+	cb.combatants["pc"][WIKeys.CELL] = (cb.combatants["goblin_raider"][WIKeys.CELL] as Vector2i) + Vector2i.RIGHT
+	cb.combatants["goblin_raider"][WIKeys.HP] = 999
 	cb.combatants["pc"]["hit_bonus"] = 1000
 	cb.active_index = cb.turn_order.find("pc")
 	cb._start_turn()
@@ -174,8 +174,8 @@ func _init() -> void:
 	g.transition("floodplains", Vector2i(27, 18))
 	assert(g.start_combat("goblin_encounter_2"), "combat starts")
 	assert(g.combat != null and g.combat.combatants.has("pc") and g.combat.combatants.has("relc"), "pc + relc fielded")
-	assert((g.combat.combatants["pc"]["skills"] as Array).has("power_strike"), "pc skills from class grants")
-	assert(not (g.combat.combatants["pc"]["skills"] as Array).has("counter_strike"), "no L2 skills at L1")
+	assert((g.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("power_strike"), "pc skills from class grants")
+	assert(not (g.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("counter_strike"), "no L2 skills at L1")
 
 	# Force a victory and resolve
 	g.combat.apply_damage("goblin_raider", 999, "pc", true)
@@ -197,7 +197,7 @@ func _init() -> void:
 
 	# Second combat: counter_strike present
 	assert(g.start_combat("goblin_encounter_1"), "second combat starts")
-	assert((g.combat.combatants["pc"]["skills"] as Array).has("counter_strike"), "L2 grant fielded")
+	assert((g.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("counter_strike"), "L2 grant fielded")
 
 	# Defeat path: game_over emitted, encounter stays
 	g.combat.apply_damage("pc", 999, "goblin_raider", true)
@@ -276,9 +276,9 @@ func _init() -> void:
 	assert(_count("combat_resolved") == 1, "combat_resolved emitted on victory")
 
 	# --- M2 Task 5: quest progress events derive from accomplishments ---
-	var quest_catalog := {"quests": [{"id": "the_errand", "title": "The Errand", "beats": [
-		{"id": "deliver", "description": "Deliver the package.", "complete_when": {"package_delivered": 1}},
-		{"id": "decide", "description": "Decide about the reward.", "complete_when": {"errand_decided": 1}},
+	var quest_catalog := {"quests": [{WIKeys.ID: "the_errand", "title": "The Errand", "beats": [
+		{WIKeys.ID: "deliver", "description": "Deliver the package.", "complete_when": {"package_delivered": 1}},
+		{WIKeys.ID: "decide", "description": "Decide about the reward.", "complete_when": {"errand_decided": 1}},
 	]}]}
 	var cc4: Dictionary = cc2.duplicate(true)
 	cc4["quests"] = quest_catalog
@@ -372,9 +372,9 @@ func _init() -> void:
 	# PC combat build carries the mage kit once gained
 	g9.transition("street", Vector2i(4, 3))
 	assert(g9.start_combat("goblin_encounter_2"), "combat starts with mage-build pc")
-	var pc_skills: Array = g9.combat.combatants["pc"]["skills"]
+	var pc_skills: Array = g9.combat.combatants["pc"][WIKeys.SKILLS]
 	assert(pc_skills.has("frost_bolt") and pc_skills.has("quick_cast") and pc_skills.has("flame_jet") and pc_skills.has("mana_shield"), "pc fields full mage kit")
-	assert(int(g9.combat.combatants["pc"]["max_mp"]) > 0, "pc has an mp pool once a caster")
+	assert(int(g9.combat.combatants["pc"][WIKeys.MAX_MP]) > 0, "pc has an mp pool once a caster")
 
 	# walls.segments (M5 E3): covered cells resolve as an inclusive rect and
 	# merge into blocked_cells at map parse (single-authoring — the renderer
@@ -388,7 +388,7 @@ func _init() -> void:
 	assert(WIGame.segment_cells({}).is_empty(), "malformed segment resolves to no cells")
 	var seg_config := {
 		"start_map": "room",
-		"player": {"cell": [0, 0], "classes": {}, "skills": []},
+		"player": {WIKeys.CELL: [0, 0], "classes": {}, WIKeys.SKILLS: []},
 		"maps": {"room": {
 			"grid": {"width": 6, "height": 6},
 			"blocked": [[4, 4]],
@@ -410,8 +410,8 @@ func _init() -> void:
 	assert(g11.start_combat("goblin_encounter_2"), "tally-bank combat starts")
 	var cb11 := g11.combat
 	_land_pc_hit(g11)
-	(cb11.combatants["pc"]["skills"] as Array).append("frost_bolt")
-	cb11.combatants["pc"]["mp"] = 10
+	(cb11.combatants["pc"][WIKeys.SKILLS] as Array).append("frost_bolt")
+	cb11.combatants["pc"][WIKeys.MP] = 10
 	_events.clear()
 	assert(cb11.use_skill("frost_bolt", "goblin_raider"), "pc casts an ice spell")
 	# M-LEGIBILITY L4: the enrichment lives in _combat_event_relay, which is
@@ -448,7 +448,7 @@ func _init() -> void:
 	# amount — not N unit increments (event volume stays sane).
 	var melee_events := 0
 	for e: Dictionary in _events:
-		if e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "melee_hit":
+		if e["type"] == "accomplishment_recorded" and String(e["payload"][WIKeys.ID]) == "melee_hit":
 			melee_events += 1
 			assert(int(e["payload"]["count"]) == 2, "banked counter lands in one increment")
 	assert(melee_events == 1, "one accomplishment_recorded per banked counter")
@@ -460,8 +460,8 @@ func _init() -> void:
 	assert(gStatus.start_combat("goblin_encounter_2"), "status test: fight 1 starts")
 	var cbS := gStatus.combat
 	_land_pc_hit(gStatus)
-	(cbS.combatants["pc"]["skills"] as Array).append("frost_bolt")
-	cbS.combatants["pc"]["mp"] = 20
+	(cbS.combatants["pc"][WIKeys.SKILLS] as Array).append("frost_bolt")
+	cbS.combatants["pc"][WIKeys.MP] = 20
 	_events.clear()
 	assert(cbS.use_skill("frost_bolt", "goblin_raider"), "status test: cast 1 lands")
 	assert(gStatus.seen_statuses == (["slowed"] as Array[String]), "seen_statuses banks exactly one entry after the first-ever application")
@@ -503,9 +503,9 @@ func _init() -> void:
 	assert(gStatus.start_combat("goblin_encounter_1"), "status test: fight 2 starts")
 	var cbS2 := gStatus.combat
 	_land_pc_hit(gStatus)
-	cbS2.combatants["goblin_raider"]["hp"] = 999
-	(cbS2.combatants["pc"]["skills"] as Array).append("frost_bolt")
-	cbS2.combatants["pc"]["mp"] = 20
+	cbS2.combatants["goblin_raider"][WIKeys.HP] = 999
+	(cbS2.combatants["pc"][WIKeys.SKILLS] as Array).append("frost_bolt")
+	cbS2.combatants["pc"][WIKeys.MP] = 20
 	_events.clear()
 	assert(cbS2.use_skill("frost_bolt", "goblin_raider"), "status test: fight 2 cast lands")
 	var applied3: Dictionary = {}
@@ -529,8 +529,8 @@ func _init() -> void:
 	# confirm used_skills still records it — the hook point (WICombat.
 	# spend_skill_costs -> resolve_combat's unconditional merge) sits OUTSIDE
 	# _bank_action_tally's `trivial` gate, unlike spell_cast/ice_cast.
-	(g12.combat.combatants["pc"]["skills"] as Array).append("frost_bolt")
-	g12.combat.combatants["pc"]["mp"] = 10
+	(g12.combat.combatants["pc"][WIKeys.SKILLS] as Array).append("frost_bolt")
+	g12.combat.combatants["pc"][WIKeys.MP] = 10
 	assert(g12.combat.use_skill("frost_bolt", "goblin_raider"), "pc casts an ice spell in the trivial fight")
 	g12.combat.apply_damage("goblin_raider", 9999, "pc", true)
 	g12.combat.apply_damage("goblin_shaman", 9999, "pc", true)
@@ -726,14 +726,14 @@ func _init() -> void:
 	assert(g18.start_combat("goblin_encounter_2"), "combat builds with unresolved-effect skills in kit")
 	var cb18 := g18.combat
 	var pc18: Dictionary = cb18.combatants["pc"]
-	assert((pc18["skills"] as Array).has("second_wind") and (pc18["skills"] as Array).has("quick_movement") and (pc18["skills"] as Array).has("dangersense"), "new-type skills fielded")
+	assert((pc18[WIKeys.SKILLS] as Array).has("second_wind") and (pc18[WIKeys.SKILLS] as Array).has("quick_movement") and (pc18[WIKeys.SKILLS] as Array).has("dangersense"), "new-type skills fielded")
 	cb18.active_index = cb18.turn_order.find("pc")
 	cb18._start_turn()
-	var ap_before := int(pc18["ap"])
+	var ap_before := int(pc18[WIKeys.AP])
 	assert(not cb18.use_skill("second_wind", "pc"), "unresolved effect type refuses (self target)")
 	assert(not cb18.use_skill("second_wind", "goblin_raider"), "unresolved effect type refuses (enemy target)")
 	assert(not cb18.use_skill("dangersense", "goblin_raider"), "unresolved passive-shaped active refuses")
-	assert(int(pc18["ap"]) == ap_before, "refused unknown-type casts spend nothing")
+	assert(int(pc18[WIKeys.AP]) == ap_before, "refused unknown-type casts spend nothing")
 	_land_pc_hit(g18)
 
 	# --- M6 T5: consolidation offer defers the sleep beat's evolution stage ---
@@ -866,9 +866,9 @@ func _init() -> void:
 	var cc_arc := combat_config.duplicate(true)
 	cc_arc["acts"] = _load_json("res://data/acts.json")
 	cc_arc["quests"] = {"quests": [
-		{"id": "q_a", "beats": [{"id": "b", "description": "", "complete_when": {"qa_done": 1}}]},
-		{"id": "q_b", "beats": [{"id": "b", "description": "", "complete_when": {"qb_done": 1}}]},
-		{"id": "q_c", "beats": [{"id": "b", "description": "", "complete_when": {"qc_done": 1}}]},
+		{WIKeys.ID: "q_a", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qa_done": 1}}]},
+		{WIKeys.ID: "q_b", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qb_done": 1}}]},
+		{WIKeys.ID: "q_c", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qc_done": 1}}]},
 	]}
 	var arc := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_arc)
 	# Act II complete: warrior+mage at the consolidation threshold (6/7, sum 13),
@@ -880,7 +880,7 @@ func _init() -> void:
 	arc.reprime_quests()
 	# Baseline: the act line reads Act II until the monotonic flag is banked,
 	# even though two classes are already held (the gate no longer reads size).
-	assert(arc.act_summary()["id"] == "act_ii", "AF I1 baseline: pre-flag act line sits at Act II (gate reads reached_two_classes, not classes.size())")
+	assert(arc.act_summary()[WIKeys.ID] == "act_ii", "AF I1 baseline: pre-flag act line sits at Act II (gate reads reached_two_classes, not classes.size())")
 
 	# Sleep 1: banks reached_two_classes (two classes held) BEFORE the
 	# consolidation offer defers the rest of the beat. The tremor is deferred to
@@ -890,14 +890,14 @@ func _init() -> void:
 	assert(arc.accomplishment_count("reached_two_classes") == 1, "AF I1: the qualifying sleep banks reached_two_classes")
 	assert(arc.pending_consolidation.get("target", "") == "spellsword", "AF I1: that sleep defers with a [Spellsword] offer")
 	assert(arc.accomplishment_count("watch_runner_pointed") == 0, "AF I1: the offer sleep defers the tremor pointer (one-sleep delay)")
-	assert(arc.act_summary()["id"] == "act_iii", "AF I1: flag banked -> act line advances to Act III")
+	assert(arc.act_summary()[WIKeys.ID] == "act_iii", "AF I1: flag banked -> act line advances to Act III")
 
 	# ACCEPT the merge: 2 classes -> 1 [Spellsword]; the live count drops to 1.
 	arc.accept_consolidation()
 	assert(arc.classes.size() == 1 and arc.classes.has("spellsword"), "AF I1: accepted merge leaves a single [Spellsword] class")
 	assert(arc.accomplishment_count("reached_two_classes") == 1, "AF I1: reached_two_classes survives the merge (monotonic, never un-banked)")
 	# TOOTH (a): the act line does NOT regress -- still Act III at classes.size()==1.
-	assert(arc.act_summary()["id"] == "act_iii", "AF I1: post-consolidation act line stays Act III, never walks back to Act II")
+	assert(arc.act_summary()[WIKeys.ID] == "act_iii", "AF I1: post-consolidation act line stays Act III, never walks back to Act II")
 
 	# TOOTH (b): the tremor pointer STILL fires on the next sleep despite
 	# classes.size()==1 -- pre-fix the gate read `classes.size() < 2` and would
@@ -912,14 +912,14 @@ func _init() -> void:
 	# player.skills): the starter sword is BOTH equipped AND possessed.
 	var e1 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(e1.inventory.has("rusty_sword"), "PC starts carrying the starter sword")
-	assert(String(e1.equipped.get("weapon", "")) == "rusty_sword", "PC starts with the starter sword equipped")
+	assert(String(e1.equipped.get(WIKeys.WEAPON, "")) == "rusty_sword", "PC starts with the starter sword equipped")
 	assert(String(e1.equipped.get("armor", "")) == "", "PC starts with no armor equipped")
 	# M-GEAR Task G1: three accessory slots + the resonance budget, both fresh.
 	assert(String(e1.equipped.get("accessory_1", "?")) == "", "PC starts with no accessory_1 equipped")
 	assert(String(e1.equipped.get("accessory_2", "?")) == "", "PC starts with no accessory_2 equipped")
 	assert(String(e1.equipped.get("accessory_3", "?")) == "", "PC starts with no accessory_3 equipped")
 	assert(e1.resonance_capacity == 2, "PC starts with the default resonance_capacity of 2")
-	assert(e1.item("rusty_sword").get("kind", "") == "weapon", "item() resolves the starter sword's catalog record")
+	assert(e1.item("rusty_sword").get(WIKeys.KIND, "") == "weapon", "item() resolves the starter sword's catalog record")
 	assert(e1.item("nonexistent_item").is_empty(), "item() returns {} for an unknown id")
 
 	# pickup(): idempotent, emits ITEM_GAINED with source provenance.
@@ -980,14 +980,14 @@ func _init() -> void:
 	var cc_g1: Dictionary = combat_config.duplicate(true)
 	var g1_items: Array = ((cc_g1["items"] as Dictionary)["items"] as Array).duplicate(true)
 	g1_items.append_array([
-		{"id": "test_charm_hp", "kind": "accessory", "hp_mod": 3, "resonance": 0},
-		{"id": "test_charm_dmg", "kind": "accessory", "damage_mod": 2, "resonance": 0},
-		{"id": "test_charm_reduc", "kind": "accessory", "damage_reduction": 4, "resonance": 0},
-		{"id": "test_charm_over", "kind": "accessory", "resonance": 3},
-		{"id": "test_charm_extra", "kind": "accessory", "resonance": 0},
-		{"id": "test_ring_res1", "kind": "accessory", "resonance": 1},
-		{"id": "test_blade_res1", "kind": "weapon", "weapon_family": "sword", "resonance": 1},
-		{"id": "test_blade_res1b", "kind": "weapon", "weapon_family": "sword", "resonance": 1},
+		{WIKeys.ID: "test_charm_hp", WIKeys.KIND: "accessory", WIKeys.HP_MOD: 3, WIKeys.RESONANCE: 0},
+		{WIKeys.ID: "test_charm_dmg", WIKeys.KIND: "accessory", WIKeys.DAMAGE_MOD: 2, WIKeys.RESONANCE: 0},
+		{WIKeys.ID: "test_charm_reduc", WIKeys.KIND: "accessory", WIKeys.DAMAGE_REDUCTION: 4, WIKeys.RESONANCE: 0},
+		{WIKeys.ID: "test_charm_over", WIKeys.KIND: "accessory", WIKeys.RESONANCE: 3},
+		{WIKeys.ID: "test_charm_extra", WIKeys.KIND: "accessory", WIKeys.RESONANCE: 0},
+		{WIKeys.ID: "test_ring_res1", WIKeys.KIND: "accessory", WIKeys.RESONANCE: 1},
+		{WIKeys.ID: "test_blade_res1", WIKeys.KIND: "weapon", "weapon_family": "sword", WIKeys.RESONANCE: 1},
+		{WIKeys.ID: "test_blade_res1b", WIKeys.KIND: "weapon", "weapon_family": "sword", WIKeys.RESONANCE: 1},
 	])
 	cc_g1["items"] = {"items": g1_items}
 	var gAcc := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_g1)
@@ -1067,7 +1067,7 @@ func _init() -> void:
 	assert(gAcc.equip("test_blade_res1"), "resonance-1 weapon swap onto rusty_sword (0->1) fits: total exactly 2")
 	_events.clear()
 	assert(gAcc.equip("test_blade_res1b"), "swap-at-capacity succeeds: displaced resonance-1 weapon is subtracted before the incoming resonance-1 weapon is added")
-	assert(String(gAcc.equipped.get("weapon", "")) == "test_blade_res1b", "the swap actually landed")
+	assert(String(gAcc.equipped.get(WIKeys.WEAPON, "")) == "test_blade_res1b", "the swap actually landed")
 	assert(not gAcc.equip("test_charm_over"), "and a resonance-3 item at the same full state still refuses")
 	# Restore the pre-swap state so the fold-through block below (which
 	# re-equips all three zero-resonance charms and attributes each combat
@@ -1088,15 +1088,15 @@ func _init() -> void:
 	gAccBase.transition("floodplains", Vector2i(27, 18))
 	gAccBase.record_accomplishment("met_relc")
 	assert(gAccBase.start_combat("goblin_encounter_2"), "baseline (no accessories) combat starts")
-	var acc_base_max_hp := int(gAccBase.combat.combatants["pc"]["max_hp"])
+	var acc_base_max_hp := int(gAccBase.combat.combatants["pc"][WIKeys.MAX_HP])
 
 	assert(gAcc.equip("test_charm_hp") and gAcc.equip("test_charm_dmg") and gAcc.equip("test_charm_reduc"), "re-equip all three (zero-resonance) accessories")
 	gAcc.transition("floodplains", Vector2i(27, 18))
 	gAcc.record_accomplishment("met_relc")
 	assert(gAcc.start_combat("goblin_encounter_2"), "accessory-equipped combat starts")
-	assert(int(gAcc.combat.combatants["pc"]["max_hp"]) == acc_base_max_hp + 3, "accessory hp_mod (3) folds into max_hp at build time, exactly like armor's hp_mod (weapon/armor both contribute 0 here)")
-	assert(int(gAcc.combat.combatants["pc"]["damage_mod"]) == 2, "accessory damage_mod (2) folds into the combat build (rusty_sword contributes 0)")
-	assert(int(gAcc.combat.combatants["pc"]["damage_reduction"]) == 4, "accessory damage_reduction (4) folds into the combat build (no armor equipped)")
+	assert(int(gAcc.combat.combatants["pc"][WIKeys.MAX_HP]) == acc_base_max_hp + 3, "accessory hp_mod (3) folds into max_hp at build time, exactly like armor's hp_mod (weapon/armor both contribute 0 here)")
+	assert(int(gAcc.combat.combatants["pc"][WIKeys.DAMAGE_MOD]) == 2, "accessory damage_mod (2) folds into the combat build (rusty_sword contributes 0)")
+	assert(int(gAcc.combat.combatants["pc"][WIKeys.DAMAGE_REDUCTION]) == 4, "accessory damage_reduction (4) folds into the combat build (no armor equipped)")
 
 	# --- Kit-intersection: weapon-family gate on the combat build ---
 	# Each sub-case uses a FRESH instance fighting goblin_encounter_2 once:
@@ -1116,12 +1116,12 @@ func _init() -> void:
 	e2.transition("floodplains", Vector2i(27, 18))
 	e2.record_accomplishment("met_relc")
 	assert(e2.start_combat("goblin_encounter_2"), "sword-build combat starts")
-	var sword_kit: Array = e2.combat.combatants["pc"]["skills"]
+	var sword_kit: Array = e2.combat.combatants["pc"][WIKeys.SKILLS]
 	assert(sword_kit.has("power_strike"), "sword-equipped warrior fields the sword-tagged grant")
 	assert(not sword_kit.has("piercing_strikes"), "sword-equipped warrior does NOT field the spear-tagged grant")
 	assert(sword_kit.has("basic_swordwork") and sword_kit.has("tough_body"), "untagged passives always field regardless of weapon")
-	assert(int(e2.combat.combatants["pc"]["damage_mod"]) == 0, "rusty_sword's damage_mod (0) rides the combat build")
-	assert(int(e2.combat.combatants["pc"]["damage_reduction"]) == 0, "no armor equipped -> damage_reduction 0")
+	assert(int(e2.combat.combatants["pc"][WIKeys.DAMAGE_MOD]) == 0, "rusty_sword's damage_mod (0) rides the combat build")
+	assert(int(e2.combat.combatants["pc"][WIKeys.DAMAGE_REDUCTION]) == 0, "no armor equipped -> damage_reduction 0")
 
 	# Spear-equipped warrior loses the sword-tagged grant, gains the spear one.
 	var e2b := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
@@ -1132,7 +1132,7 @@ func _init() -> void:
 	e2b.pickup("chipped_spear", "test")
 	assert(e2b.equip("chipped_spear"), "equip the spear")
 	assert(e2b.start_combat("goblin_encounter_2"), "spear-build combat starts")
-	var spear_kit: Array = e2b.combat.combatants["pc"]["skills"]
+	var spear_kit: Array = e2b.combat.combatants["pc"][WIKeys.SKILLS]
 	assert(spear_kit.has("piercing_strikes"), "spear-equipped warrior fields the spear-tagged grant")
 	assert(not spear_kit.has("power_strike"), "spear-equipped warrior does NOT field the sword-tagged grant")
 
@@ -1145,10 +1145,10 @@ func _init() -> void:
 	e2c.record_accomplishment("met_relc")
 	assert(e2c.unequip("weapon"), "deliberately go unarmed")
 	assert(e2c.start_combat("goblin_encounter_2"), "unarmed combat starts")
-	var unarmed_kit: Array = e2c.combat.combatants["pc"]["skills"]
+	var unarmed_kit: Array = e2c.combat.combatants["pc"][WIKeys.SKILLS]
 	assert(not unarmed_kit.has("power_strike") and not unarmed_kit.has("piercing_strikes"), "unarmed fields neither weapon-tagged grant")
 	assert(unarmed_kit.has("basic_swordwork") and unarmed_kit.has("tough_body"), "unarmed still fields untagged skills (base attack + untagged)")
-	assert(int(e2c.combat.combatants["pc"]["damage_mod"]) == 0, "unarmed carries no weapon damage_mod")
+	assert(int(e2c.combat.combatants["pc"][WIKeys.DAMAGE_MOD]) == 0, "unarmed carries no weapon damage_mod")
 
 	# Mage spells are always fieldable regardless of the equipped weapon
 	# (E1's cross-ref: no spell carries a weapon tag) -- reuses g9's earned
@@ -1169,7 +1169,7 @@ func _init() -> void:
 	assert(e3.equip("chipped_spear"), "equip a spear on the mage/warrior split build")
 	e3.transition("street", Vector2i(4, 3))
 	assert(e3.start_combat("goblin_encounter_2"), "spear-equipped mage-build combat starts")
-	var mage_spear_kit: Array = e3.combat.combatants["pc"]["skills"]
+	var mage_spear_kit: Array = e3.combat.combatants["pc"][WIKeys.SKILLS]
 	assert(mage_spear_kit.has("frost_bolt") and mage_spear_kit.has("quick_cast") and mage_spear_kit.has("flame_jet") and mage_spear_kit.has("mana_shield"), "mage spells field regardless of the equipped weapon (untagged)")
 	assert(mage_spear_kit.has("piercing_strikes") and not mage_spear_kit.has("power_strike"), "the warrior half of the kit still gates on the equipped weapon")
 
@@ -1178,24 +1178,24 @@ func _init() -> void:
 	var e4 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	e4.transition("street", Vector2i(4, 3))
 	assert(e4.start_combat("goblin_encounter_2"), "baseline (no armor) combat starts")
-	var base_max_hp := int(e4.combat.combatants["pc"]["max_hp"])
+	var base_max_hp := int(e4.combat.combatants["pc"][WIKeys.MAX_HP])
 
 	var e4b := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	e4b.transition("street", Vector2i(4, 3))
 	e4b.pickup("leather_jerkin", "test")
 	assert(e4b.equip("leather_jerkin"), "equip the jerkin")
 	assert(e4b.start_combat("goblin_encounter_2"), "armored combat starts")
-	assert(int(e4b.combat.combatants["pc"]["max_hp"]) == base_max_hp + 4, "leather_jerkin's hp_mod (+4) rides the combat build")
-	assert(int(e4b.combat.combatants["pc"]["hp"]) == int(e4b.combat.combatants["pc"]["max_hp"]), "starting hp is the boosted max_hp")
-	assert(int(e4b.combat.combatants["pc"]["damage_reduction"]) == 0, "leather_jerkin carries no damage_reduction")
+	assert(int(e4b.combat.combatants["pc"][WIKeys.MAX_HP]) == base_max_hp + 4, "leather_jerkin's hp_mod (+4) rides the combat build")
+	assert(int(e4b.combat.combatants["pc"][WIKeys.HP]) == int(e4b.combat.combatants["pc"][WIKeys.MAX_HP]), "starting hp is the boosted max_hp")
+	assert(int(e4b.combat.combatants["pc"][WIKeys.DAMAGE_REDUCTION]) == 0, "leather_jerkin carries no damage_reduction")
 
 	var e4c := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	e4c.transition("street", Vector2i(4, 3))
 	e4c.pickup("watch_issue_gambeson", "test")
 	assert(e4c.equip("watch_issue_gambeson"), "equip the gambeson")
 	assert(e4c.start_combat("goblin_encounter_2"), "damage_reduction armor combat starts")
-	assert(int(e4c.combat.combatants["pc"]["damage_reduction"]) == 1, "watch_issue_gambeson's damage_reduction (1) rides the combat build")
-	assert(int(e4c.combat.combatants["pc"]["max_hp"]) == base_max_hp, "watch_issue_gambeson carries no hp_mod")
+	assert(int(e4c.combat.combatants["pc"][WIKeys.DAMAGE_REDUCTION]) == 1, "watch_issue_gambeson's damage_reduction (1) rides the combat build")
+	assert(int(e4c.combat.combatants["pc"][WIKeys.MAX_HP]) == base_max_hp, "watch_issue_gambeson carries no hp_mod")
 
 	# Weapon damage_mod injection: relcs_spare_spear (+1) rides the build.
 	var e5 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
@@ -1203,7 +1203,7 @@ func _init() -> void:
 	assert(e5.equip("relcs_spare_spear"), "equip Relc's spare spear")
 	e5.transition("street", Vector2i(4, 3))
 	assert(e5.start_combat("goblin_encounter_2"), "spear-with-damage-mod combat starts")
-	assert(int(e5.combat.combatants["pc"]["damage_mod"]) == 1, "relcs_spare_spear's damage_mod (+1) rides the combat build")
+	assert(int(e5.combat.combatants["pc"][WIKeys.DAMAGE_MOD]) == 1, "relcs_spare_spear's damage_mod (+1) rides the combat build")
 
 	# --- Dialogue effect {"item": id}: pickup with source = conversation id ---
 	var item_graph := {
@@ -1506,9 +1506,9 @@ func _init() -> void:
 	# `skill_id == "sneak"`) would fail this even though the shipped skill
 	# would still pass.
 	var tag_skills_raw: Dictionary = _load_json("res://data/skills.json")
-	var tagged_skill_list: Array = (tag_skills_raw["skills"] as Array).duplicate(true)
-	tagged_skill_list.append({"id": "stealth_ritual", "display_name": "[Stealth Ritual]", "contexts": ["exploration"], "field": true, "sneaks": true})
-	var gTagK2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), {"skills": tagged_skill_list}, _sink, 12345, combat_config)
+	var tagged_skill_list: Array = (tag_skills_raw[WIKeys.SKILLS] as Array).duplicate(true)
+	tagged_skill_list.append({WIKeys.ID: "stealth_ritual", WIKeys.DISPLAY_NAME: "[Stealth Ritual]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "sneaks": true})
+	var gTagK2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), {WIKeys.SKILLS: tagged_skill_list}, _sink, 12345, combat_config)
 	gTagK2.player_skills.append("stealth_ritual")
 	assert(not gTagK2.sneaking, "fixture: not sneaking at start")
 	_events.clear()
@@ -1737,7 +1737,7 @@ func _init() -> void:
 	# Field-tagged skill with NO field_ambient authored -> the established
 	# refusal toast (no target, no ambient). Inject a synthetic field skill.
 	var g_na := WIGame.new(scene_p1, skills_p1, _sink, 12345)
-	g_na.skills["synthetic_field"] = {"id": "synthetic_field", "display_name": "[Synthetic]", "contexts": ["exploration"], "field": true}
+	g_na.skills["synthetic_field"] = {WIKeys.ID: "synthetic_field", WIKeys.DISPLAY_NAME: "[Synthetic]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true}
 	g_na.player_skills.append("synthetic_field")
 	g_na.player_cell = Vector2i(2, 3)
 	g_na.player_facing = Vector2i.DOWN
@@ -1796,14 +1796,14 @@ func _init() -> void:
 	# rotates deterministically (chatted_with_<id> % pool_size) incl. wraparound.
 	var social_scene := {
 		"start_map": "plaza",
-		"player": {"cell": [1, 1], "classes": {}, "skills": ["observe"]},
+		"player": {WIKeys.CELL: [1, 1], "classes": {}, WIKeys.SKILLS: ["observe"]},
 		"maps": {"plaza": {
 			"grid": {"width": 6, "height": 6},
 			"blocked": [],
 			"entities": [
-				{"id": "gossip_npc", "kind": "npc", "cell": [2, 1], "display_name": "Krshia",
+				{WIKeys.ID: "gossip_npc", WIKeys.KIND: "npc", WIKeys.CELL: [2, 1], WIKeys.DISPLAY_NAME: "Krshia",
 				 "talk_pool": ["Gossip one.", "Gossip two.", "Gossip three."],
-				 "conversation": "krshia_convo",
+				 WIKeys.CONVERSATION: "krshia_convo",
 				 "observe": "She weighs you like a sack of produce.",
 				 "friendly_line": "Hrr. For you, a fair price - and I mean it."},
 			],
@@ -1818,7 +1818,7 @@ func _init() -> void:
 	}}
 	var gS := WIGame.new(social_scene, skill_config, _sink, 7, social_cc)
 	# Player at (1,1) faces RIGHT by default -> faces gossip_npc at (2,1).
-	assert(gS.player_facing == Vector2i.RIGHT and gS.entity_at(Vector2i(2, 1)).get("id", "") == "gossip_npc", "fixture: player faces the gossip NPC")
+	assert(gS.player_facing == Vector2i.RIGHT and gS.entity_at(Vector2i(2, 1)).get(WIKeys.ID, "") == "gossip_npc", "fixture: player faces the gossip NPC")
 
 	# First talk of the waking: pool line index 0, banks both counters, sets flag.
 	_events.clear()
@@ -1876,10 +1876,10 @@ func _init() -> void:
 	# line still fires exactly as today (proves the talk_pool gate is opt-in).
 	var plain_scene := {
 		"start_map": "plaza",
-		"player": {"cell": [1, 1], "classes": {}, "skills": []},
+		"player": {WIKeys.CELL: [1, 1], "classes": {}, WIKeys.SKILLS: []},
 		"maps": {"plaza": {
 			"grid": {"width": 6, "height": 6}, "blocked": [],
-			"entities": [{"id": "guard", "kind": "npc", "cell": [2, 1], "display_name": "Guard",
+			"entities": [{WIKeys.ID: "guard", WIKeys.KIND: "npc", WIKeys.CELL: [2, 1], WIKeys.DISPLAY_NAME: "Guard",
 				"dialogue": [{"speaker": "Guard", "text": "Move along."}]}],
 		}},
 	}
@@ -1993,7 +1993,7 @@ func _init() -> void:
 	var gGrate := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gGrate.transition("street", Vector2i(15, 11))
 	gGrate.player_facing = Vector2i.RIGHT  # faces the sewer_grate at (16,11)
-	assert(gGrate.entity_at(Vector2i(16, 11)).get("id", "") == "sewer_grate", "grate is at (16,11) facing cell")
+	assert(gGrate.entity_at(Vector2i(16, 11)).get(WIKeys.ID, "") == "sewer_grate", "grate is at (16,11) facing cell")
 	# Gate UNMET: falls through to on_interact_accomplishment -> byte-identical.
 	_events.clear()
 	var pre := gGrate.interact()
@@ -2052,7 +2052,7 @@ func _init() -> void:
 	# loot-gold determinism per run_seed (SYNTHETIC entity -- no data file gains
 	# gold in D1). Same run seed + encounter id -> identical coin roll across two
 	# fully independent instances, off the ISOLATED per-encounter loot_rng.
-	var loot_entity := {"id": "econ_test_encounter", "loot": [{"gold": 7, "chance": 0.5}, {"gold": 3, "chance": 0.5}]}
+	var loot_entity := {WIKeys.ID: "econ_test_encounter", "loot": [{"gold": 7, "chance": 0.5}, {"gold": 3, "chance": 0.5}]}
 	var GldA := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
 	GldA._roll_loot(loot_entity)
 	var GldB := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
@@ -2060,7 +2060,7 @@ func _init() -> void:
 	assert(GldA.gold == GldB.gold, "same run_seed + encounter id -> identical loot-gold roll across independent instances")
 	# A guaranteed coin drop (chance 1.0) routes through earn_gold: loot_dropped
 	# {gold} matches the earned total, one gold_changed, no items key.
-	var sure_loot := {"id": "econ_sure_encounter", "loot": [{"gold": 7, "chance": 1.0}]}
+	var sure_loot := {WIKeys.ID: "econ_sure_encounter", "loot": [{"gold": 7, "chance": 1.0}]}
 	var GldC := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
 	_events.clear()
 	GldC._roll_loot(sure_loot)

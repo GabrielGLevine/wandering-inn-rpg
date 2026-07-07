@@ -43,19 +43,47 @@ const DIALOGUE_SECONDS := 3.0
 const DIALOGUE_TEXT_WIDTH := 656.0
 const DIALOGUE_TEXT_HEIGHT := 32.0
 
-## Toast panel offsets (BOTTOM_RIGHT anchor; L,T,R,B). PF VISUAL-LOG drain (the
+## Toast panel offsets (BOTTOM_RIGHT anchor). PF VISUAL-LOG drain (the
 ## "gift toast right-edge clip" item -- mis-diagnosed as an off-screen clip; the
-## panel is a fixed 448x96 always fully on-screen). The REAL defect: the
+## panel is a fixed-WIDTH 448 always fully on-screen). The REAL defect: the
 ## conversation panel (dialogue_panel.gd, 720x232 CENTER_BOTTOM => x[280,1000]
 ## y[470,684]) is a later sibling CanvasLayer at the same layer, so it draws
 ## OVER the toast's left half (x[808,1000]) and hides the "Got: " prefix. Fix:
 ## while a conversation is open, RAISE the toast to the upper-right (bottom at
 ## y456, a 14px gap above the conversation panel's y470 top) so it clears the
 ## panel entirely and reads in full; drop back to the resting bottom-right spot
-## when the conversation ends. Width/height unchanged in both states, so the
-## wrapped-line budget is identical -- this is a pure y-shift, never a widen.
-const TOAST_OFFSETS_DEFAULT := Vector4(-472.0, -130.0, -24.0, -34.0)
-const TOAST_OFFSETS_RAISED := Vector4(-472.0, -360.0, -24.0, -264.0)
+## when the conversation ends. LEFT/RIGHT/BOTTOM stay fixed in both states;
+## TOP is now DERIVED from `_toast_panel_height` (see NIGHT polish wave item 2
+## below) instead of a fixed constant, since the panel's height itself can grow.
+const TOAST_LEFT := -472.0
+const TOAST_RIGHT := -24.0
+const TOAST_BOTTOM_DEFAULT := -34.0
+const TOAST_BOTTOM_RAISED := -264.0
+const TOAST_PANEL_BASE_SIZE := Vector2(448.0, 96.0)
+## Toast label interior text box width -- 448 panel minus the toast
+## MarginContainer's 18px left+right content margins (see `_ready()`).
+const TOAST_TEXT_WIDTH := 412.0
+## NIGHT polish wave item 2 (docs/VISUAL-LOG.md "3-line toasts clip their
+## last line at the parchment fold, everywhere"): the toast panel never got
+## the M-FP F wrapped-line budget the feed/dialogue/readout panels did, so a
+## long lore/effect toast wrapping to 3+ lines had its bottom line sliced by
+## the PARCHMENT_STRIP art's decorative fold. Measured 2026-07-07 (machine
+## playtest, `qa_output/gate_district_walkthrough/02_market_row.png`, the
+## krshia_stall lore toast): a pixel scan at the panel's horizontal CENTER
+## (x=900/1000/1100, where centered toast text actually sits) found clean
+## parchment through y658 and fold interference from y659 on, while the
+## panel's true bottom border sits at y686 -- the curled ENDS near the panel
+## corners (x~1240) stay clean all the way down, so the fold only eats into
+## the center column where text renders. Danger zone = 686-658 = 28px,
+## measured from the panel's OWN bottom edge (a 9-slice-art property,
+## independent of the MarginContainer's content margins).
+## Unlike the feed (M-FP F, top-aligned text, single measured deficit), the
+## toast label is VERTICALLY CENTERED (`_ready()`), so growing the panel
+## pushes only HALF of any added headroom above the text block -- the other
+## half lands below it, meaning the danger zone must be budgeted TWICE
+## (`_toast_panel_height`'s derivation) to actually clear the fold rather
+## than just approach it.
+const TOAST_FOLD_DANGER_PX := 28.0
 
 var _toast_panel: Control
 var _toast_label: Label
@@ -118,6 +146,13 @@ static var _hint_reset_hooked := false
 ## gates the toast's raised position so it never sits behind the conversation.
 var _conversation_open := false
 
+## Current toast panel height (grows from TOAST_PANEL_BASE_SIZE.y -- see
+## `_toast_panel_height`). Tracked separately from the panel's own `.size` so
+## `_apply_toast_position` (called on conversation open/close, independent of
+## any in-flight toast) can re-derive TOP from whatever height the last-shown
+## toast needed, rather than snapping back to the base size mid-display.
+var _toast_panel_height := TOAST_PANEL_BASE_SIZE.y
+
 
 static func _reset_first_pickup_hint(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.GAME_RESET:
@@ -133,14 +168,13 @@ func _ready() -> void:
 
 	_toast_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_toast_panel.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	# 448 wide x 96 tall (up to 3 wrapped lines). M6 added the longest live
-	# toasts -- the generalist "[Mage] settles into a balanced mastery --
-	# unlocked [Ice Shard], [Flare Burst]" and the consolidation merge line --
-	# which wrapped past 2 lines and clipped at the old 64px height (caught in
-	# the M6 F1 polish pass, windowed-verified). Grows UPWARD (top offset), so
+	# 448 wide x 96 tall base size (M6 F1: fits up to ~2 wrapped lines cleanly).
+	# NIGHT polish wave item 2: a 3+-line toast now grows the panel taller
+	# per-display (`_resize_toast_panel`/`_toast_panel_height`) instead of
+	# clipping at this fixed height -- always grows UPWARD (top offset), so
 	# it never reaches into the centre hotbar.
-	_toast_panel.custom_minimum_size = Vector2(448, 96)
-	_toast_panel.size = Vector2(448, 96)
+	_toast_panel.custom_minimum_size = TOAST_PANEL_BASE_SIZE
+	_toast_panel.size = TOAST_PANEL_BASE_SIZE
 	_apply_toast_position()
 	_toast_panel.hide()
 	var toast_margin := MarginContainer.new()
@@ -236,10 +270,38 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 
 ## Positions the toast panel: raised upper-right while a conversation is open
 ## (so the wide center-bottom conversation panel can't occlude it), resting
-## bottom-right otherwise. See TOAST_OFFSETS_* for the full rationale.
+## bottom-right otherwise. See TOAST_LEFT/TOAST_BOTTOM_*'s doc comment for the
+## raise rationale. TOP is derived from `_toast_panel_height` (never a fixed
+## constant) so a grown panel (NIGHT polish wave item 2) still raises/rests
+## correctly -- growth always reads upward from whichever BOTTOM applies.
 func _apply_toast_position() -> void:
-	var o := TOAST_OFFSETS_RAISED if _conversation_open else TOAST_OFFSETS_DEFAULT
-	UIChrome.set_offsets(_toast_panel, o.x, o.y, o.z, o.w)
+	var bottom := TOAST_BOTTOM_RAISED if _conversation_open else TOAST_BOTTOM_DEFAULT
+	UIChrome.set_offsets(_toast_panel, TOAST_LEFT, bottom - _toast_panel_height, TOAST_RIGHT, bottom)
+
+
+## Computes the toast panel height needed to clear the fold for a `lines`-
+## wrapped-line block (see TOAST_FOLD_DANGER_PX's doc comment for the
+## measurement and the x2 rationale), floored at TOAST_PANEL_BASE_SIZE.y so a
+## short 1-2 line toast is pixel-identical to before this fix.
+func _toast_panel_height_for(lines: int) -> float:
+	var font := _toast_label.get_theme_font("font")
+	var font_size := _toast_label.get_theme_font_size("font_size")
+	var line_spacing := float(_toast_label.get_theme_constant("line_spacing"))
+	var pitch := font.get_height(font_size) + line_spacing
+	var text_block := float(lines) * pitch - line_spacing
+	return maxf(TOAST_PANEL_BASE_SIZE.y, text_block + 2.0 * TOAST_FOLD_DANGER_PX)
+
+
+## Grows (never shrinks below the base size) the toast panel to fit `text`'s
+## own wrapped-line count, then repositions it (height feeds directly into
+## `_apply_toast_position`'s TOP derivation). Called once per toast, right
+## before it's shown -- see `_show`.
+func _resize_toast_panel(text: String) -> void:
+	var lines := _wrapped_line_count(_toast_label, text, TOAST_TEXT_WIDTH)
+	_toast_panel_height = _toast_panel_height_for(lines)
+	_toast_panel.custom_minimum_size = Vector2(TOAST_PANEL_BASE_SIZE.x, _toast_panel_height)
+	_toast_panel.size = Vector2(TOAST_PANEL_BASE_SIZE.x, _toast_panel_height)
+	_apply_toast_position()
 
 
 ## Appends to the toast queue and (if no drain is already in flight) starts
@@ -297,6 +359,11 @@ func _hold_seconds(seconds: float) -> float:
 ## Distinct from the veiltoast ORDER race (task-veiltoast-fix-report.md) --
 ## does not touch that fix's logic.
 func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false) -> void:
+	# NIGHT polish wave item 2: only the toast panel grows -- feed/dialogue/
+	# readout already have their own fixed-panel wrapped-line budgets (M-FP F
+	# / M-LEGIBILITY L5), so this is scoped to `panel == _toast_panel` only.
+	if panel == _toast_panel:
+		_resize_toast_panel(text)
 	label.text = display_text if display_text != "" else text
 	panel.show()
 	var tree := get_tree()

@@ -161,7 +161,7 @@ func _meets(req: Dictionary) -> bool:
 	if req.is_empty():
 		return true
 	if req.has("skill"):
-		return (_ctx["skills"] as Array).has(String(req["skill"]))
+		return (_ctx[WIKeys.SKILLS] as Array).has(String(req["skill"]))
 	if req.has("class"):
 		for id: String in req["class"]:
 			if int((_ctx["classes"] as Dictionary).get(id, 0)) < int(req["class"][id]):

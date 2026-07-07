@@ -55,27 +55,27 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 	_event_sink = event_sink
 	rng.seed = rng_seed
 	arena_config = arena_cfg.duplicate(true)
-	arena_id = String(arena_cfg.get("id", ""))
+	arena_id = String(arena_cfg.get(WIKeys.ID, ""))
 	grid_size = Vector2i(int(arena_cfg["grid"]["width"]), int(arena_cfg["grid"]["height"]))
 	for cell: Array in arena_cfg.get("blocked", []):
 		blocked[Vector2i(int(cell[0]), int(cell[1]))] = true
-	for s: Dictionary in skills_cfg.get("skills", []):
-		skills[String(s["id"])] = s
+	for s: Dictionary in skills_cfg.get(WIKeys.SKILLS, []):
+		skills[String(s[WIKeys.ID])] = s
 	var spawn_i := {"player": 0, "enemy": 0}
 	for cfg: Dictionary in combatant_cfgs:
-		var side := String(cfg["side"])
+		var side := String(cfg[WIKeys.SIDE])
 		var spawns: Array = arena_cfg["player_spawns"] if side == "player" else arena_cfg["enemy_spawns"]
 		var spawn: Array = spawns[spawn_i[side]]
 		spawn_i[side] += 1
 		var c := {
-			"id": String(cfg["id"]),
-			"display_name": String(cfg["display_name"]),
-			"side": side,
-			"cell": Vector2i(int(spawn[0]), int(spawn[1])),
-			"stats": (cfg["stats"] as Dictionary).duplicate(true),
-			"weapon_die": int(cfg["weapon_die"]),
-			"ai": String(cfg.get("ai", "")),
-			"skills": [],
+			WIKeys.ID: String(cfg[WIKeys.ID]),
+			WIKeys.DISPLAY_NAME: String(cfg[WIKeys.DISPLAY_NAME]),
+			WIKeys.SIDE: side,
+			WIKeys.CELL: Vector2i(int(spawn[0]), int(spawn[1])),
+			WIKeys.STATS: (cfg[WIKeys.STATS] as Dictionary).duplicate(true),
+			WIKeys.WEAPON_DIE: int(cfg[WIKeys.WEAPON_DIE]),
+			WIKeys.AI: String(cfg.get(WIKeys.AI, "")),
+			WIKeys.SKILLS: [],
 			"hit_bonus": 0,
 			# M7 §2 combat build injection (WIGame._build_player_combatant is
 			# the only caller that ever sets these on a real cfg today; every
@@ -84,27 +84,27 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 			# along on the combatant dict for the two runtime sites that use
 			# them (_resolve_hit's melee damage, _deduct_hp's incoming-damage
 			# floor) -- see those functions' own doc comments.
-			"max_hp": 20 + int(cfg["stats"]["con"]) + int(cfg.get("hp_mod", 0)),
-			"damage_mod": int(cfg.get("damage_mod", 0)),
-			"damage_reduction": int(cfg.get("damage_reduction", 0)),
-			"ap": 0,
-			"move_pool": 0,
+			WIKeys.MAX_HP: 20 + int(cfg[WIKeys.STATS]["con"]) + int(cfg.get(WIKeys.HP_MOD, 0)),
+			WIKeys.DAMAGE_MOD: int(cfg.get(WIKeys.DAMAGE_MOD, 0)),
+			WIKeys.DAMAGE_REDUCTION: int(cfg.get(WIKeys.DAMAGE_REDUCTION, 0)),
+			WIKeys.AP: 0,
+			WIKeys.MOVE_POOL: 0,
 			"statuses": {},
-			"alive": true,
+			WIKeys.ALIVE: true,
 		}
-		for sk: Variant in cfg.get("skills", []):
-			c["skills"].append(String(sk))
+		for sk: Variant in cfg.get(WIKeys.SKILLS, []):
+			c[WIKeys.SKILLS].append(String(sk))
 		_apply_passives(c)
-		c["hp"] = c["max_hp"]
+		c[WIKeys.HP] = c[WIKeys.MAX_HP]
 		# MP pool exists only for casters: any known skill carrying an mp_cost.
 		# Non-casters get max_mp 0 (no MP bar player-side).
-		c["max_mp"] = 0
-		for sk: String in c["skills"]:
-			if (skills.get(sk, {}) as Dictionary).has("mp_cost"):
-				c["max_mp"] = 8 + int(int(c["stats"]["int"]) / 2)
+		c[WIKeys.MAX_MP] = 0
+		for sk: String in c[WIKeys.SKILLS]:
+			if (skills.get(sk, {}) as Dictionary).has(WIKeys.MP_COST):
+				c[WIKeys.MAX_MP] = 8 + int(int(c[WIKeys.STATS]["int"]) / 2)
 				break
-		c["mp"] = c["max_mp"]
-		combatants[c["id"]] = c
+		c[WIKeys.MP] = c[WIKeys.MAX_MP]
+		combatants[c[WIKeys.ID]] = c
 	_roll_initiative()
 
 
@@ -118,13 +118,13 @@ func begin() -> void:
 
 
 func _apply_passives(c: Dictionary) -> void:
-	for sk: String in c["skills"]:
-		var effect: Dictionary = skills.get(sk, {}).get("effect", {})
-		match String(effect.get("type", "")):
+	for sk: String in c[WIKeys.SKILLS]:
+		var effect: Dictionary = skills.get(sk, {}).get(WIKeys.EFFECT, {})
+		match String(effect.get(WIKeys.TYPE, "")):
 			"hp_bonus":
-				c["max_hp"] += int(effect["amount"])
+				c[WIKeys.MAX_HP] += int(effect[WIKeys.AMOUNT])
 			"hit_bonus":
-				c["hit_bonus"] += int(effect["amount"])
+				c["hit_bonus"] += int(effect[WIKeys.AMOUNT])
 
 
 func _roll_initiative() -> void:
@@ -132,12 +132,12 @@ func _roll_initiative() -> void:
 	var ids := combatants.keys()
 	ids.sort()
 	for id: String in ids:
-		entries.append({"id": id, "init": int(combatants[id]["stats"]["dex"]) + rng.randi_range(1, 6)})
+		entries.append({"id": id, "init": int(combatants[id][WIKeys.STATS]["dex"]) + rng.randi_range(1, 6)})
 	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		if a["init"] != b["init"]:
 			return a["init"] > b["init"]
-		return String(a["id"]) < String(b["id"]))
-	turn_order = entries.map(func(e: Dictionary) -> String: return String(e["id"]))
+		return String(a[WIKeys.ID]) < String(b[WIKeys.ID]))
+	turn_order = entries.map(func(e: Dictionary) -> String: return String(e[WIKeys.ID]))
 
 
 func get_active() -> String:
@@ -145,12 +145,12 @@ func get_active() -> String:
 
 
 func is_adjacent(a_id: String, b_id: String) -> bool:
-	var d: Vector2i = (combatants[a_id]["cell"] as Vector2i) - (combatants[b_id]["cell"] as Vector2i)
+	var d: Vector2i = (combatants[a_id][WIKeys.CELL] as Vector2i) - (combatants[b_id][WIKeys.CELL] as Vector2i)
 	return maxi(absi(d.x), absi(d.y)) <= 1
 
 
 func chebyshev(a_id: String, b_id: String) -> int:
-	var d: Vector2i = (combatants[a_id]["cell"] as Vector2i) - (combatants[b_id]["cell"] as Vector2i)
+	var d: Vector2i = (combatants[a_id][WIKeys.CELL] as Vector2i) - (combatants[b_id][WIKeys.CELL] as Vector2i)
 	return maxi(absi(d.x), absi(d.y))
 
 
@@ -169,8 +169,8 @@ func chebyshev(a_id: String, b_id: String) -> int:
 ## the M3 T3 review bug this replaces has_los((0,0),(3,6)) vs the reverse
 ## disagreeing on the blocked set {(5,3),(6,4),(3,5),(8,2)}.
 func has_los(a_id: String, b_id: String) -> bool:
-	var from: Vector2i = combatants[a_id]["cell"]
-	var to: Vector2i = combatants[b_id]["cell"]
+	var from: Vector2i = combatants[a_id][WIKeys.CELL]
+	var to: Vector2i = combatants[b_id][WIKeys.CELL]
 	for cell: Vector2i in _supercover(from, to):
 		if cell == from or cell == to:
 			continue
@@ -267,15 +267,15 @@ func line_cells(from: Vector2i, toward_dir: Vector2i, length: int) -> Array[Vect
 
 
 func alive_enemies_of(id: String) -> Array:
-	var side := String(combatants[id]["side"])
+	var side := String(combatants[id][WIKeys.SIDE])
 	var out: Array = []
 	for other_id: String in combatants:
 		var o: Dictionary = combatants[other_id]
-		if o["alive"] and String(o["side"]) != side:
+		if o[WIKeys.ALIVE] and String(o[WIKeys.SIDE]) != side:
 			out.append(other_id)
 	out.sort_custom(func(a: String, b: String) -> bool:
-		if combatants[a]["hp"] != combatants[b]["hp"]:
-			return int(combatants[a]["hp"]) < int(combatants[b]["hp"])
+		if combatants[a][WIKeys.HP] != combatants[b][WIKeys.HP]:
+			return int(combatants[a][WIKeys.HP]) < int(combatants[b][WIKeys.HP])
 		return a < b)
 	return out
 
@@ -286,7 +286,7 @@ func is_cell_free(cell: Vector2i) -> bool:
 	if blocked.has(cell):
 		return false
 	for c: Dictionary in combatants.values():
-		if c["alive"] and c["cell"] == cell:
+		if c[WIKeys.ALIVE] and c[WIKeys.CELL] == cell:
 			return false
 	return true
 
@@ -294,17 +294,17 @@ func is_cell_free(cell: Vector2i) -> bool:
 func move_active(dir: Vector2i) -> bool:
 	if finished:
 		return false
-	if not bool(combatants[get_active()]["alive"]):
+	if not bool(combatants[get_active()][WIKeys.ALIVE]):
 		return false
 	var c: Dictionary = combatants[get_active()]
-	if int(c["move_pool"]) < MOVE_COST:
+	if int(c[WIKeys.MOVE_POOL]) < MOVE_COST:
 		return false
-	var target: Vector2i = (c["cell"] as Vector2i) + dir
+	var target: Vector2i = (c[WIKeys.CELL] as Vector2i) + dir
 	if absi(dir.x) + absi(dir.y) != 1 or not is_cell_free(target):
 		return false
-	c["cell"] = target
-	c["move_pool"] = int(c["move_pool"]) - MOVE_COST
-	_emit(WIEvents.COMBATANT_MOVED, {"id": c["id"], "cell": [target.x, target.y]})
+	c[WIKeys.CELL] = target
+	c[WIKeys.MOVE_POOL] = int(c[WIKeys.MOVE_POOL]) - MOVE_COST
+	_emit(WIEvents.COMBATANT_MOVED, {"id": c[WIKeys.ID], "cell": [target.x, target.y]})
 	return true
 
 
@@ -312,32 +312,32 @@ func move_active(dir: Vector2i) -> bool:
 func dash() -> bool:
 	if finished:
 		return false
-	if not bool(combatants[get_active()]["alive"]):
+	if not bool(combatants[get_active()][WIKeys.ALIVE]):
 		return false
 	var c: Dictionary = combatants[get_active()]
-	if int(c["ap"]) < DASH_COST:
+	if int(c[WIKeys.AP]) < DASH_COST:
 		return false
-	c["ap"] = int(c["ap"]) - DASH_COST
-	c["move_pool"] = int(c["move_pool"]) + DASH_GAIN
-	_emit(WIEvents.DASHED, {"id": c["id"], "move_pool": c["move_pool"]})
-	_emit(WIEvents.AP_CHANGED, {"id": c["id"], "ap": c["ap"]})
+	c[WIKeys.AP] = int(c[WIKeys.AP]) - DASH_COST
+	c[WIKeys.MOVE_POOL] = int(c[WIKeys.MOVE_POOL]) + DASH_GAIN
+	_emit(WIEvents.DASHED, {"id": c[WIKeys.ID], "move_pool": c[WIKeys.MOVE_POOL]})
+	_emit(WIEvents.AP_CHANGED, {"id": c[WIKeys.ID], "ap": c[WIKeys.AP]})
 	return true
 
 
 func attack(target_id: String) -> bool:
 	if finished:
 		return false
-	if not bool(combatants[get_active()]["alive"]):
+	if not bool(combatants[get_active()][WIKeys.ALIVE]):
 		return false
 	var attacker_id := get_active()
 	var a: Dictionary = combatants[attacker_id]
 	var t: Dictionary = combatants.get(target_id, {})
-	if t.is_empty() or not t["alive"] or String(t["side"]) == String(a["side"]):
+	if t.is_empty() or not t[WIKeys.ALIVE] or String(t[WIKeys.SIDE]) == String(a[WIKeys.SIDE]):
 		return false
-	if int(a["ap"]) < ATTACK_COST or not is_adjacent(attacker_id, target_id):
+	if int(a[WIKeys.AP]) < ATTACK_COST or not is_adjacent(attacker_id, target_id):
 		return false
-	a["ap"] = int(a["ap"]) - ATTACK_COST
-	_emit(WIEvents.AP_CHANGED, {"id": attacker_id, "ap": a["ap"]})
+	a[WIKeys.AP] = int(a[WIKeys.AP]) - ATTACK_COST
+	_emit(WIEvents.AP_CHANGED, {"id": attacker_id, "ap": a[WIKeys.AP]})
 	_resolve_hit(attacker_id, target_id, 1.0, true, true)
 	return true
 
@@ -345,19 +345,19 @@ func attack(target_id: String) -> bool:
 func use_skill(skill_id: String, target_id: String) -> bool:
 	if finished:
 		return false
-	if not bool(combatants[get_active()]["alive"]):
+	if not bool(combatants[get_active()][WIKeys.ALIVE]):
 		return false
 	var actor_id := get_active()
 	var a: Dictionary = combatants[actor_id]
-	if not (a["skills"] as Array).has(skill_id):
+	if not (a[WIKeys.SKILLS] as Array).has(skill_id):
 		return false
 	var skill: Dictionary = skills.get(skill_id, {})
-	if not (skill.get("contexts", []) as Array).has("combat"):
+	if not (skill.get(WIKeys.CONTEXTS, []) as Array).has("combat"):
 		return false
 	# Both gates run BEFORE any spend: a refused cast costs neither MP nor AP.
-	if int(a.get("mp", 0)) < int(skill.get("mp_cost", 0)):
+	if int(a.get(WIKeys.MP, 0)) < int(skill.get(WIKeys.MP_COST, 0)):
 		return false
-	if int(a["ap"]) < effective_ap_cost(a, skill):
+	if int(a[WIKeys.AP]) < effective_ap_cost(a, skill):
 		return false
 	return WISkillEffects.resolve_active(self, actor_id, target_id, skill)
 
@@ -365,32 +365,32 @@ func use_skill(skill_id: String, target_id: String) -> bool:
 ## The AP a cast will actually cost `c`: quick_cast discounts the first
 ## successful spell (a skill carrying an mp_cost) each turn by 1 (min 0).
 func effective_ap_cost(c: Dictionary, skill: Dictionary) -> int:
-	var cost := int(skill.get("ap_cost", 0))
+	var cost := int(skill.get(WIKeys.AP_COST, 0))
 	if _quick_cast_applies(c, skill):
 		cost = maxi(0, cost - 1)
 	return cost
 
 
 func _quick_cast_applies(c: Dictionary, skill: Dictionary) -> bool:
-	return skill.has("mp_cost") and (c["skills"] as Array).has("quick_cast") \
-			and not _quick_cast_spent.get(String(c["id"]), false)
+	return skill.has(WIKeys.MP_COST) and (c[WIKeys.SKILLS] as Array).has("quick_cast") \
+			and not _quick_cast_spent.get(String(c[WIKeys.ID]), false)
 
 
 ## Charges a successful cast's AP + MP. The single spend site for skill
 ## resolvers — refusal paths must return before reaching this. Consumes the
 ## quick_cast first-spell-of-the-turn discount when it applied.
 func spend_skill_costs(c: Dictionary, skill: Dictionary) -> void:
-	_tally_skill_use(String(c["id"]), skill)
-	_mark_skill_used(String(c["id"]), String(skill.get("id", "")))
+	_tally_skill_use(String(c[WIKeys.ID]), skill)
+	_mark_skill_used(String(c[WIKeys.ID]), String(skill.get(WIKeys.ID, "")))
 	var ap_cost := effective_ap_cost(c, skill)
 	if _quick_cast_applies(c, skill):
-		_quick_cast_spent[String(c["id"])] = true
-	c["ap"] = int(c["ap"]) - ap_cost
-	_emit(WIEvents.AP_CHANGED, {"id": String(c["id"]), "ap": c["ap"]})
-	var mp_cost := int(skill.get("mp_cost", 0))
+		_quick_cast_spent[String(c[WIKeys.ID])] = true
+	c[WIKeys.AP] = int(c[WIKeys.AP]) - ap_cost
+	_emit(WIEvents.AP_CHANGED, {"id": String(c[WIKeys.ID]), "ap": c[WIKeys.AP]})
+	var mp_cost := int(skill.get(WIKeys.MP_COST, 0))
 	if mp_cost > 0:
-		c["mp"] = int(c["mp"]) - mp_cost
-		_emit(WIEvents.MP_CHANGED, {"id": String(c["id"]), "mp": c["mp"]})
+		c[WIKeys.MP] = int(c[WIKeys.MP]) - mp_cost
+		_emit(WIEvents.MP_CHANGED, {"id": String(c[WIKeys.ID]), "mp": c[WIKeys.MP]})
 
 
 ## Applies damage directly (used by hit resolution and tests).
@@ -404,12 +404,12 @@ func apply_damage(target_id: String, amount: int, source_id: String, melee: bool
 ## so it always precedes the down-check regardless of the damage source.
 func _deduct_hp(target_id: String, amount: int) -> int:
 	var t: Dictionary = combatants[target_id]
-	if not t["alive"]:
-		return int(t["hp"])
+	if not t[WIKeys.ALIVE]:
+		return int(t[WIKeys.HP])
 	amount = _apply_damage_reduction(t, amount)
 	amount = _absorb_with_mana_shield(t, amount)
-	t["hp"] = maxi(0, int(t["hp"]) - amount)
-	return int(t["hp"])
+	t[WIKeys.HP] = maxi(0, int(t[WIKeys.HP]) - amount)
+	return int(t[WIKeys.HP])
 
 
 ## Armor's flat damage_reduction (M7 §2), applied BEFORE mana_shield so the
@@ -420,7 +420,7 @@ func _deduct_hp(target_id: String, amount: int) -> int:
 ## amount caller stays unfloored rather than being pushed up to 1 out of
 ## nowhere).
 func _apply_damage_reduction(t: Dictionary, amount: int) -> int:
-	var reduction := int(t.get("damage_reduction", 0))
+	var reduction := int(t.get(WIKeys.DAMAGE_REDUCTION, 0))
 	if reduction <= 0 or amount <= 0:
 		return amount
 	return maxi(1, amount - reduction)
@@ -430,22 +430,22 @@ func _apply_damage_reduction(t: Dictionary, amount: int) -> int:
 ## drains MP 1:1 before touching HP. Partial absorbs split (the shield takes
 ## what MP remains; the rest lands on HP). Returns the unabsorbed remainder.
 func _absorb_with_mana_shield(t: Dictionary, amount: int) -> int:
-	if amount <= 0 or not (t["skills"] as Array).has("mana_shield"):
+	if amount <= 0 or not (t[WIKeys.SKILLS] as Array).has("mana_shield"):
 		return amount
-	var absorbed := mini(int(t.get("mp", 0)), amount)
+	var absorbed := mini(int(t.get(WIKeys.MP, 0)), amount)
 	if absorbed <= 0:
 		return amount
-	t["mp"] = int(t["mp"]) - absorbed
-	_emit(WIEvents.REACTION_TRIGGERED, {"id": String(t["id"]), "skill": "mana_shield", "absorbed": absorbed})
-	_emit(WIEvents.MP_CHANGED, {"id": String(t["id"]), "mp": t["mp"]})
+	t[WIKeys.MP] = int(t[WIKeys.MP]) - absorbed
+	_emit(WIEvents.REACTION_TRIGGERED, {"id": String(t[WIKeys.ID]), "skill": "mana_shield", "absorbed": absorbed})
+	_emit(WIEvents.MP_CHANGED, {"id": String(t[WIKeys.ID]), "mp": t[WIKeys.MP]})
 	return amount - absorbed
 
 
 ## Post-damage bookkeeping: down/kill/end checks. Emits combatant_downed.
 func _post_damage(target_id: String, source_id: String) -> void:
 	var t: Dictionary = combatants[target_id]
-	if t["alive"] and int(t["hp"]) == 0:
-		t["alive"] = false
+	if t[WIKeys.ALIVE] and int(t[WIKeys.HP]) == 0:
+		t[WIKeys.ALIVE] = false
 		_emit(WIEvents.COMBATANT_DOWNED, {"id": target_id})
 		_on_kill(source_id)
 		_check_end()
@@ -457,13 +457,13 @@ func _post_damage(target_id: String, source_id: String) -> void:
 func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bool, allow_riposte: bool) -> void:
 	var a: Dictionary = combatants[attacker_id]
 	var t: Dictionary = combatants[target_id]
-	var hit_chance: int = BASE_HIT + int(a["hit_bonus"]) - int(t["stats"]["dex"]) / 4
+	var hit_chance: int = BASE_HIT + int(a["hit_bonus"]) - int(t[WIKeys.STATS]["dex"]) / 4
 	var hit := rng.randi_range(1, 100) <= hit_chance
 	var damage := 0
-	var target_hp := int(t["hp"])
+	var target_hp := int(t[WIKeys.HP])
 	if hit:
-		var stat: int = int(a["stats"]["str"]) if melee else int(a["stats"]["int"])
-		var base_damage := int((stat / 2 + rng.randi_range(1, int(a["weapon_die"]))) * mult)
+		var stat: int = int(a[WIKeys.STATS]["str"]) if melee else int(a[WIKeys.STATS]["int"])
+		var base_damage := int((stat / 2 + rng.randi_range(1, int(a[WIKeys.WEAPON_DIE]))) * mult)
 		# M7 §2: the weapon's flat damage_mod adds to melee damage only
 		# (basic Attack AND weapon-family skills like power_strike/
 		# piercing_strikes, since both route through this same melee=true
@@ -472,7 +472,7 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 		# injection, so this is byte-identical to the pre-M7 formula
 		# whenever damage_mod is 0 (rusty_sword's provisional value).
 		if melee:
-			base_damage += int(a.get("damage_mod", 0))
+			base_damage += int(a.get(WIKeys.DAMAGE_MOD, 0))
 		damage = maxi(1, base_damage)
 		target_hp = _deduct_hp(target_id, damage)
 		if melee:
@@ -487,23 +487,23 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 	if finished:
 		return
 	var target_now: Dictionary = combatants[target_id]
-	if allow_riposte and melee and target_now["alive"] \
-			and (target_now["skills"] as Array).has("counter_strike") \
+	if allow_riposte and melee and target_now[WIKeys.ALIVE] \
+			and (target_now[WIKeys.SKILLS] as Array).has("counter_strike") \
 			and is_adjacent(target_id, attacker_id):
-		var riposte_mult := float(skills["counter_strike"]["effect"]["mult"])
+		var riposte_mult := float(skills["counter_strike"][WIKeys.EFFECT][WIKeys.MULT])
 		_emit(WIEvents.REACTION_TRIGGERED, {"id": target_id, "skill": "counter_strike"})
 		_resolve_hit(target_id, attacker_id, riposte_mult, true, false)
 
 
 func _on_kill(killer_id: String) -> void:
 	var k: Dictionary = combatants.get(killer_id, {})
-	if k.is_empty() or not k.get("alive", false):
+	if k.is_empty() or not k.get(WIKeys.ALIVE, false):
 		return
-	if (k["skills"] as Array).has("battle_momentum") and not _momentum_used.get(killer_id, false):
+	if (k[WIKeys.SKILLS] as Array).has("battle_momentum") and not _momentum_used.get(killer_id, false):
 		_momentum_used[killer_id] = true
-		k["ap"] = int(k["ap"]) + int(skills["battle_momentum"]["effect"]["amount"])
+		k[WIKeys.AP] = int(k[WIKeys.AP]) + int(skills["battle_momentum"][WIKeys.EFFECT][WIKeys.AMOUNT])
 		_emit(WIEvents.REACTION_TRIGGERED, {"id": killer_id, "skill": "battle_momentum"})
-		_emit(WIEvents.AP_CHANGED, {"id": killer_id, "ap": k["ap"]})
+		_emit(WIEvents.AP_CHANGED, {"id": killer_id, "ap": k[WIKeys.AP]})
 
 
 func end_turn() -> void:
@@ -525,7 +525,7 @@ func _advance_turn() -> void:
 				_finish(false, true)
 				return
 			_emit(WIEvents.ROUND_STARTED, {"round": round_number})
-		if combatants[get_active()]["alive"]:
+		if combatants[get_active()][WIKeys.ALIVE]:
 			_start_turn()
 			return
 
@@ -537,18 +537,18 @@ func _start_round() -> void:
 
 func _start_turn() -> void:
 	var c: Dictionary = combatants[get_active()]
-	c["ap"] = MAX_AP
-	_momentum_used.erase(c["id"])
-	_quick_cast_spent.erase(c["id"])
+	c[WIKeys.AP] = MAX_AP
+	_momentum_used.erase(c[WIKeys.ID])
+	_quick_cast_spent.erase(c[WIKeys.ID])
 	var pool := MOVE_POOL
 	var statuses: Dictionary = c["statuses"]
 	if statuses.has("slowed"):
 		var penalty := int((statuses["slowed"] as Dictionary).get("pool_penalty", 0))
 		pool = maxi(1, MOVE_POOL - penalty)
 		statuses.erase("slowed")
-		_emit(WIEvents.STATUS_EXPIRED, {"id": c["id"], "status": "slowed"})
-	c["move_pool"] = pool
-	_emit(WIEvents.TURN_STARTED, {"id": c["id"], "ap": MAX_AP, "move_pool": pool})
+		_emit(WIEvents.STATUS_EXPIRED, {"id": c[WIKeys.ID], "status": "slowed"})
+	c[WIKeys.MOVE_POOL] = pool
+	_emit(WIEvents.TURN_STARTED, {"id": c[WIKeys.ID], "ap": MAX_AP, "move_pool": pool})
 
 
 ## PC death is an immediate defeat, regardless of living allies (post-D4
@@ -558,13 +558,13 @@ func _start_turn() -> void:
 ## happens to coincide with the last enemy dying (e.g. a friendly-fire line
 ## skill) resolves as DEFEAT, never a simultaneous victory.
 func _check_end() -> void:
-	if combatants.has("pc") and not bool(combatants["pc"]["alive"]):
+	if combatants.has("pc") and not bool(combatants["pc"][WIKeys.ALIVE]):
 		_finish(false, false)
 		return
 	var sides_alive := {"player": false, "enemy": false}
 	for c: Dictionary in combatants.values():
-		if c["alive"]:
-			sides_alive[String(c["side"])] = true
+		if c[WIKeys.ALIVE]:
+			sides_alive[String(c[WIKeys.SIDE])] = true
 	if not sides_alive["enemy"]:
 		_finish(true, false)
 	elif not sides_alive["player"]:
@@ -577,7 +577,7 @@ func _finish(victory: bool, draw: bool) -> void:
 	finished = true
 	var survivors: Array = []
 	for id: String in combatants:
-		if combatants[id]["alive"]:
+		if combatants[id][WIKeys.ALIVE]:
 			survivors.append(id)
 	survivors.sort()
 	outcome = {"victory": victory, "rounds": round_number, "survivors": survivors, "draw": draw}
@@ -589,12 +589,12 @@ func snapshot() -> Dictionary:
 	for id: String in combatants:
 		var c: Dictionary = combatants[id]
 		cs[id] = {
-			"cell": [(c["cell"] as Vector2i).x, (c["cell"] as Vector2i).y],
-			"hp": c["hp"], "max_hp": c["max_hp"], "ap": c["ap"],
-			"mp": c["mp"], "max_mp": c["max_mp"],
-			"move_pool": c["move_pool"],
-			"alive": c["alive"], "side": c["side"],
-			"skills": (c["skills"] as Array).duplicate(),
+			"cell": [(c[WIKeys.CELL] as Vector2i).x, (c[WIKeys.CELL] as Vector2i).y],
+			"hp": c[WIKeys.HP], "max_hp": c[WIKeys.MAX_HP], "ap": c[WIKeys.AP],
+			"mp": c[WIKeys.MP], "max_mp": c[WIKeys.MAX_MP],
+			"move_pool": c[WIKeys.MOVE_POOL],
+			"alive": c[WIKeys.ALIVE], "side": c[WIKeys.SIDE],
+			"skills": (c[WIKeys.SKILLS] as Array).duplicate(),
 		}
 	return {
 		"round": round_number, "active": get_active() if not turn_order.is_empty() else "",
@@ -614,8 +614,8 @@ func _tally(actor_id: String, counter: String) -> void:
 ## counts <weapon>_skill_used; an `element` tag counts spell_cast plus
 ## <element>_cast. Untagged skills tally nothing here.
 func _tally_skill_use(actor_id: String, skill: Dictionary) -> void:
-	if skill.has("weapon"):
-		_tally(actor_id, "%s_skill_used" % String(skill["weapon"]))
+	if skill.has(WIKeys.WEAPON):
+		_tally(actor_id, "%s_skill_used" % String(skill[WIKeys.WEAPON]))
 	if skill.has("element"):
 		_tally(actor_id, "spell_cast")
 		_tally(actor_id, "%s_cast" % String(skill["element"]))

@@ -98,14 +98,14 @@ var inventory: Array[String] = []
 ## TOLERANTLY (`.get(key, "")`), so a pre-G1 save/scene-config carrying only
 ## the original 2-key shape restores exactly as if it always had three empty
 ## accessory slots (no migration, no version bump; see save.gd).
-var equipped: Dictionary = {"weapon": "", "armor": "", "accessory_1": "", "accessory_2": "", "accessory_3": ""}
+var equipped: Dictionary = {WIKeys.WEAPON: "", "armor": "", "accessory_1": "", "accessory_2": "", "accessory_3": ""}
 ## M-GEAR Task G1: the PC's resonance budget -- a VISIBLE currency (like gold/
 ## HP: fine in toasts/events/copy, never a raw hidden stat) that caps how much
 ## combined `data/items.json` "resonance" an equipped loadout may carry across
 ## ALL 5 slots (weapon/armor/accessory_1-3 alike -- data decides whether a
 ## weapon or armor entry carries a nonzero resonance too, the sim just sums
 ## whatever `item()` reports). Every M7-era item is uncatalogued for
-## `resonance` and counts 0 (`item(id).get("resonance", 0)`), so this budget
+## `resonance` and counts 0 (`item(id).get(WIKeys.RESONANCE, 0)`), so this budget
 ## is inert today; G2 is the first task that ships items with a real nonzero
 ## value. Default 2. Capacity GROWTH is a later beat -- this field exists and
 ## round-trips (additive-optional save field, tolerant default 2, NO version
@@ -145,11 +145,14 @@ var social_talked: Dictionary = {}
 ## Social Pillar S1: the SHARED per-waking first-use dedup dict, keyed by a
 ## "<verb>:<entity_id>" string -> true. Any opaque social/exploration bank
 ## that must fire AT MOST ONCE per entity per waking routes through
-## `_bank_first_use(verb, id)`: [Observe]'s `observed_things` today (resolving
-## the TP-review "Observe farm" -- repeat-observing one entity to grind
-## [Tactician]); S3's [Friendly Face] `befriended_moments` next, mirroring the
-## exact same helper with its own verb prefix. Cleared every `sleep()`.
-## Additive save field (tolerant default {}, see save.gd).
+## `_bank_first_use(verb, id)` (ARCH-4: now `field_skills.gd`'s helper, since
+## its only two call sites, [Observe]/[Charming Smile], both live in that
+## file's dispatch ladder -- the dict itself stays here, threaded in per
+## call): [Observe]'s `observed_things` (resolving the TP-review "Observe
+## farm" -- repeat-observing one entity to grind [Tactician]); S3's
+## [Friendly Face] `befriended_moments`, mirroring the exact same helper
+## with its own verb prefix. Cleared every `sleep()`. Additive save field
+## (tolerant default {}, see save.gd).
 var entity_first_use: Dictionary = {}
 ## Playtest feature 3 ([Light] glow): true while the PC carries the conjured
 ## [Light] orb -- set by the field-ambient cast of [Light] (see use_skill_field),
@@ -218,35 +221,53 @@ var _dialogue_conversation_id := ""
 ## every subsequent fight's trajectory and invalidate multi-fight canonical
 ## seeds, per the correction). Never mutated after construction.
 var _run_seed: int = 0
+## ARCH-4: the injected pure sub-sim owning gold-transition/loot-roll logic
+## (see economy.gd). `gold` itself stays a WIGame field (save.gd reads/writes
+## it directly and is out of this task's scope) -- every call threads the
+## current value in and gets the new value back.
+var _economy: WIEconomy
+## ARCH-4: the injected pure sub-sim owning talk-pool rotation (see
+## social.gd). `social_talked`/`entity_first_use` stay WIGame fields (see
+## social.gd's own doc comment for why) -- every call threads them in.
+var _social: WISocial
+## ARCH-4: the injected pure sub-sim owning the `use_skill_field` dispatch
+## ladder (see field_skills.gd). `sneaking`/`light_active`/`frozen_cells`/
+## `entity_first_use` stay WIGame fields (see field_skills.gd's own doc
+## comment for why) -- every call threads them in or a callback mutates
+## them at the precise point the original code did.
+var _field_skills: WIFieldSkills
 
 
 func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Callable, rng_seed: int = 0, combat_config: Dictionary = {}, phase_config: Dictionary = {}, creation_config: Dictionary = {}) -> void:
 	_event_sink = event_sink
 	_run_seed = rng_seed
+	_economy = WIEconomy.new(event_sink, pickup, _set_gold)
+	_social = WISocial.new(event_sink, accomplishment_count, record_accomplishment)
+	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active)
 	rng.seed = rng_seed
-	for s: Dictionary in skill_config.get("skills", []):
-		skills[String(s["id"])] = s
+	for s: Dictionary in skill_config.get(WIKeys.SKILLS, []):
+		skills[String(s[WIKeys.ID])] = s
 	var p: Dictionary = scene_config["player"]
-	player_cell = Vector2i(int(p["cell"][0]), int(p["cell"][1]))
+	player_cell = Vector2i(int(p[WIKeys.CELL][0]), int(p[WIKeys.CELL][1]))
 	# M-ARC §5: cosmetic identity from the creation screen, sanitized on the way
 	# in (tolerant defaults, so a QA default-skip / an old load / a garbled dict
 	# all fall back to Human/male/"Traveler"). The scene player's display_name is
 	# the pc_name fallback so an untouched New Game reads "Traveler" as before.
-	pc_name = _sanitize_pc_name(String(creation_config.get("pc_name", p.get("display_name", "Traveler"))))
+	pc_name = _sanitize_pc_name(String(creation_config.get("pc_name", p.get(WIKeys.DISPLAY_NAME, "Traveler"))))
 	pc_race = _sanitize_pc_race(String(creation_config.get("pc_race", "human")))
 	pc_gender = _sanitize_pc_gender(String(creation_config.get("pc_gender", "m")))
 	_combat_config = combat_config
 	_phase_config = phase_config
 	for it: Dictionary in (combat_config.get("items", {}) as Dictionary).get("items", []):
-		_items[String(it["id"])] = it
+		_items[String(it[WIKeys.ID])] = it
 	classes = (scene_config["player"].get("classes", {}) as Dictionary).duplicate(true)
-	for sk: Variant in p.get("skills", []):
+	for sk: Variant in p.get(WIKeys.SKILLS, []):
 		player_skills.append(String(sk))
 	for it: Variant in p.get("inventory", []):
 		inventory.append(String(it))
 	var eq_raw: Dictionary = p.get("equipped", {})
 	equipped = {
-		"weapon": String(eq_raw.get("weapon", "")),
+		WIKeys.WEAPON: String(eq_raw.get(WIKeys.WEAPON, "")),
 		"armor": String(eq_raw.get("armor", "")),
 		"accessory_1": String(eq_raw.get("accessory_1", "")),
 		"accessory_2": String(eq_raw.get("accessory_2", "")),
@@ -257,8 +278,8 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 		var ents := {}
 		for e: Dictionary in m.get("entities", []):
 			var ent: Dictionary = e.duplicate(true)
-			ent["cell"] = Vector2i(int(e["cell"][0]), int(e["cell"][1]))
-			ents[String(e["id"])] = ent
+			ent[WIKeys.CELL] = Vector2i(int(e[WIKeys.CELL][0]), int(e[WIKeys.CELL][1]))
+			ents[String(e[WIKeys.ID])] = ent
 		var blocked := {}
 		for cell: Array in m.get("blocked", []):
 			blocked[Vector2i(int(cell[0]), int(cell[1]))] = true
@@ -385,7 +406,7 @@ func is_cell_blocked(cell: Vector2i) -> bool:
 	if _map_blocked.has(cell) and not _is_frozen(cell):
 		return true
 	for ent: Dictionary in entities.values():
-		if ent["cell"] == cell:
+		if ent[WIKeys.CELL] == cell:
 			return true
 	return false
 
@@ -434,7 +455,7 @@ func set_frozen_cells_json(data: Dictionary) -> void:
 
 func entity_at(cell: Vector2i) -> Dictionary:
 	for ent: Dictionary in entities.values():
-		if ent["cell"] == cell:
+		if ent[WIKeys.CELL] == cell:
 			return ent
 	return {}
 
@@ -464,7 +485,7 @@ func move_player(dir: Vector2i) -> bool:
 ## itself, so "no trigger while dormant" and "ally fields per met_relc"
 ## fall out for free, unchanged. A trigger fires start_combat DIRECTLY,
 ## skipping any `conversation` the entity might carry (the trigger never
-## reads `entity["conversation"]`) -- today only `goblin_encounter_1` (no
+## reads `entity[WIKeys.CONVERSATION]`) -- today only `goblin_encounter_1` (no
 ## conversation) carries `trigger_radius`; `goblin_encounter_2` keeps its
 ## `goblin_parley` interact-only (no trigger_radius), so no shipped
 ## encounter actually loses its parley to this precedence today, but a
@@ -487,14 +508,14 @@ func _check_trigger_radius() -> void:
 	if sneaking:
 		return
 	for ent: Dictionary in entities.values():
-		if String(ent.get("kind", "")) != "encounter":
+		if String(ent.get(WIKeys.KIND, "")) != "encounter":
 			continue
 		if not ent.has("trigger_radius"):
 			continue
-		var ent_cell: Vector2i = ent["cell"]
+		var ent_cell: Vector2i = ent[WIKeys.CELL]
 		var dist := maxi(absi(player_cell.x - ent_cell.x), absi(player_cell.y - ent_cell.y))
 		if dist <= int(ent["trigger_radius"]):
-			start_combat(String(ent["id"]))
+			start_combat(String(ent[WIKeys.ID]))
 			return
 
 
@@ -518,22 +539,22 @@ func interact() -> Dictionary:
 	# whose gate is UNMET falls through to the on_interact_accomplishment/
 	# use_skill branches below, which DO break -- consistent with "the same
 	# entity, not yet a door" reading as a real response.
-	var is_door_transition := String(target["kind"]) == "door" \
+	var is_door_transition := String(target[WIKeys.KIND]) == "door" \
 			or (target.has("door_when") and _door_gate_met(target["door_when"] as Dictionary))
 	if not is_door_transition:
 		_break_sneak()
-	match String(target["kind"]):
+	match String(target[WIKeys.KIND]):
 		"npc":
 			# Social Pillar S1: an NPC carrying a non-empty `talk_pool` plays a
 			# rotating small-talk line on the FIRST talk of a waking (before its
 			# conversation graph); `social_talked` then routes every later talk
 			# this waking to the real conversation below. An empty pool is
 			# treated as no pool (never reached today -- S2 authors 2-4 lines).
-			var npc_id := String(target["id"])
+			var npc_id := String(target[WIKeys.ID])
 			if target.has("talk_pool") and not (target["talk_pool"] as Array).is_empty() and not bool(social_talked.get(npc_id, false)):
 				return _talk_pool_line(target)
-			if target.has("conversation"):
-				if start_dialogue(String(target["conversation"]), String(target["id"])):
+			if target.has(WIKeys.CONVERSATION):
+				if start_dialogue(String(target[WIKeys.CONVERSATION]), String(target[WIKeys.ID])):
 					return {"dialogue": true}
 				var line: Dictionary = target["dialogue"][0]
 				_emit(WIEvents.DIALOGUE_LINE, line)
@@ -581,17 +602,17 @@ func interact() -> Dictionary:
 				# `gold: N` wage (D2 content). Absent in all D1 data -> streams
 				# byte-identical; present in D2 it pays via the shared router.
 				if target.has("gold"):
-					_apply_gold_effect(int(target["gold"]), String(target["id"]))
+					_apply_gold_effect(int(target["gold"]), String(target[WIKeys.ID]))
 				return {"accomplishment": accomplishment_id}
-			return use_skill(String(target.get("requires_skill", "")), String(target["id"]))
+			return use_skill(String(target.get("requires_skill", "")), String(target[WIKeys.ID]))
 		"encounter":
-			if target.has("conversation"):
-				if start_dialogue(String(target["conversation"]), String(target["id"])):
+			if target.has(WIKeys.CONVERSATION):
+				if start_dialogue(String(target[WIKeys.CONVERSATION]), String(target[WIKeys.ID])):
 					return {"dialogue": true}
-				if start_combat(String(target["id"])):
+				if start_combat(String(target[WIKeys.ID])):
 					return {"combat": true}
 				return {}
-			if start_combat(String(target["id"])):
+			if start_combat(String(target[WIKeys.ID])):
 				return {"combat": true}
 			return {}
 		"door":
@@ -605,7 +626,7 @@ func interact() -> Dictionary:
 				record_accomplishment(String(target["on_enter_accomplishment"]))
 			return {"map": current_map}
 		_:
-			_emit(WIEvents.INTERACT_UNHANDLED, {"kind": String(target["kind"]), "id": String(target["id"])})
+			_emit(WIEvents.INTERACT_UNHANDLED, {"kind": String(target[WIKeys.KIND]), "id": String(target[WIKeys.ID])})
 			return {}
 
 
@@ -619,7 +640,7 @@ func interact() -> Dictionary:
 ## player separately already has) are silently skipped by `pickup`'s own
 ## idempotency -- the container still marks itself emptied either way.
 func _interact_container(target: Dictionary) -> Dictionary:
-	var id := String(target["id"])
+	var id := String(target[WIKeys.ID])
 	if bool(container_state.get(id, false)):
 		_emit(WIEvents.TOAST, {"text": "Empty."})
 		return {"container": id, "empty": true}
@@ -667,174 +688,34 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	return effect
 
 
-## Three Pillars P1: the ONE new engine surface for overworld ("field") skills.
-## No target arg -- the FACED cell IS the target, resolved exactly as interact()
-## resolves its own (`entity_at(player_cell + player_facing)`). Dispatch order:
-##   1. A faced entity whose `requires_skill` == this skill AND that carries an
-##      `on_skill_use` responds via `use_skill(skill_id, prop_id)` -- the SAME
-##      seam interact() uses, a new trigger. CONTRACT (plan P1, core promise):
-##      the emitted event stream is BYTE-IDENTICAL to today's
-##      interact-with-requires_skill on that prop -- both tick one action then
-##      call `use_skill(skill_id, id)` (interact passes the prop's
-##      `requires_skill`, which we have just proven equals `skill_id`).
-##   2. No qualifying faced entity -> the skill's own `field_ambient` flavor
-##      toast from skills.json (a no-target "you did the thing" line; marks the
-##      skill used so the journal reveals it, same as any exploration use).
-##   3. No `field_ambient` authored -> the established refusal toast idiom.
-## Guards run BEFORE dispatch:
-##   - A skill the PC doesn't know (innate + class-granted) is refused exactly
-##     as `use_skill()` refuses it: SKILL_UNKNOWN + the generic locked line (no
-##     faced prop here, so there is no bespoke `locked_toast` to honor).
-##   - A known but non-`field` skill (a combat/table skill with no overworld
-##     verb) is refused BEFORE the faced-cell lookup, so it can never trip a
-##     prop it happens to be standing in front of.
-## Precedence note vs interact()'s prop branch: interact() checks
-## sleep/contains/on_interact_accomplishment BEFORE its `use_skill` fallback;
-## this surface keys purely on `requires_skill` + `on_skill_use`, so a prop
-## (none ships today) that combined `requires_skill` with one of those other
-## shapes would diverge here -- a documented field-skill precedence, not a live
-## regression.
+## Three Pillars P1: the ONE engine surface for overworld ("field") skills
+## (ARCH-4: the dispatch ladder lives in `field_skills.gd`; see that file's
+## doc comment for the full contract). A field-skill press is a deliberate
+## action -- tick the FOLD clock once, exactly as interact() does regardless
+## of how it resolves.
 func use_skill_field(skill_id: String) -> Dictionary:
-	# A field-skill press is a deliberate action -- tick the FOLD clock once,
-	# exactly as interact() does regardless of how it resolves (so the matched
-	# path stays byte-same with interact, and a refused press still costs a beat
-	# just as a refused/inert interact does).
 	_tick_action()
-	if not known_skills().has(skill_id):
-		_emit(WIEvents.SKILL_UNKNOWN, {"skill": skill_id})
-		_emit(WIEvents.TOAST, {"text": "You don't know how to do that yet."})
-		return {}
-	if not bool(skills.get(skill_id, {}).get("field", false)):
-		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
-		_emit(WIEvents.TOAST, {"text": "That's not something you can do out here."})
-		return {}
-	# Skills Wave Task K2 (the sneak seam): the field toggle keys on a
-	# `sneaks: true` data TAG (K1's tag-not-id convention), not this skill's
-	# id -- whatever skill carries the tag flips `sneaking` on/off. Checked
-	# BEFORE the faced-cell lookup below: the toggle doesn't care what the PC
-	# is facing (unlike every other field seam here). Does its OWN
-	# SKILL_USED/toast emit and returns -- never falls through to the
-	# requires_skill/observe/charm/burn/freeze/field_ambient dispatch below.
-	if bool(skills.get(skill_id, {}).get("sneaks", false)):
-		return _toggle_sneak(skill_id)
+	var known := known_skills().has(skill_id)
 	var target := entity_at(player_cell + player_facing)
-	if not target.is_empty() and String(target.get("requires_skill", "")) == skill_id and target.has("on_skill_use"):
-		# Skills Wave Task K2 (break condition): a successful field-skill use ON
-		# A TARGET breaks sneaking -- broken BEFORE the skill's own use_skill()
-		# emits, so the off-toast reads first, exactly as interact()'s pre-
-		# dispatch break does below.
-		_break_sneak()
-		return use_skill(skill_id, String(target["id"]))
-	# Three Pillars P3: [Observe] reads a DIFFERENT field than the requires_skill/
-	# on_skill_use seam above -- ANY faced entity responds with its own `observe`
-	# flavor string (generic fallback when it carries none), banking observed_things
-	# (opaque; feeds [Tactician]'s levels). An empty faced cell falls through to the
-	# skill's field_ambient below. Flavor only -- never numbers/stats/progress.
-	if skill_id == "observe" and not target.is_empty():
-		# Skills Wave Task K2 (break condition): see the requires_skill branch's
-		# comment above -- broken before this branch's own emits.
-		_break_sneak()
-		var observe_line := String(target.get("observe", "You watch. Details surface."))
-		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": String(target["id"])})
-		_mark_skill_used(skill_id)
-		# Social Pillar S1: bank observed_things only on the FIRST observe of
-		# this entity this waking (through the shared per-waking dedup dict), so
-		# repeat-observing one NPC can no longer farm [Tactician]. The flavor
-		# line, skill_used, and journal reveal still fire every time -- only the
-		# opaque counter is deduped.
-		if _bank_first_use("observe", String(target["id"])):
-			record_accomplishment("observed_things")
-		_emit(WIEvents.TOAST, {"text": observe_line})
-		return {"observed": String(target["id"])}
-	# Social Pillar S3: [Charming Smile] (the [Diplomat] kit's field skill) MIRRORS
-	# the [Observe] seam above -- ANY faced entity responds with its own
-	# `friendly_line` (a warmer per-NPC reaction; generic fallback when it carries
-	# none), banking `befriended_moments` (opaque; feeds [Diplomat]'s levels) only
-	# on the FIRST charm of this entity this waking, through the SHARED per-waking
-	# dedup dict under a DISTINCT verb ("friendly") so charm and observe dedup
-	# INDEPENDENTLY on the same entity in the same waking (composite key by design).
-	# The flavor line, skill_used, and journal reveal fire every call; only the
-	# opaque counter is deduped. Empty faced cell falls through to field_ambient.
-	if skill_id == "charming_smile" and not target.is_empty():
-		# Skills Wave Task K2 (break condition): see the requires_skill branch's
-		# comment above -- broken before this branch's own emits.
-		_break_sneak()
-		var friendly_line := String(target.get("friendly_line", "You offer a warm, disarming smile. It costs nothing, and it is not unwelcome."))
-		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": String(target["id"])})
-		_mark_skill_used(skill_id)
-		if _bank_first_use("friendly", String(target["id"])):
-			record_accomplishment("befriended_moments")
-		_emit(WIEvents.TOAST, {"text": friendly_line})
-		return {"befriended": String(target["id"])}
-	# Skills Wave Task K1 (burnable-prop seam): a fire field skill (skills.json
-	# `burns: true`) faced at a blocking prop tagged `burnable: true` removes the
-	# prop PERMANENTLY via the existing remove_entity machinery (removed_entities
-	# is a saved set, so the clearing survives reload -- the permanence the plan
-	# asks for), banks an opaque `burned_the_debris` counter, and emits
-	# TERRAIN_CHANGED{to:"scorched"} carrying the vacated cell so presentation can
-	# drop the burn poof (hit_sparks reuse). Only props that OPT IN via
-	# `burnable: true` can be burned -- a quest-required prop simply omits the tag
-	# (the opus-hint gate), so this can never destroy required content.
-	if not target.is_empty() and bool(target.get("burnable", false)) and bool(skills.get(skill_id, {}).get("burns", false)):
-		# Skills Wave Task K2 (break condition): see the requires_skill branch's
-		# comment above -- broken before this branch's own emits.
-		_break_sneak()
-		var burned_id := String(target["id"])
-		var burned_cell: Vector2i = target["cell"]
-		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": burned_id})
-		_mark_skill_used(skill_id)
-		record_accomplishment("burned_the_debris")
-		var burn_toast := String(target.get("burn_toast", "Flame takes the debris. It crackles, collapses to ash, and the way is clear."))
-		remove_entity(burned_id)
-		_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [burned_cell.x, burned_cell.y], "to": "scorched"})
-		_emit(WIEvents.TOAST, {"text": burn_toast})
-		return {"burned": burned_id}
-	# Skills Wave Task K1 (freezable-water seam): a frost field skill (skills.json
-	# `freezes: true`) faced at a freezable water CELL (no entity there --
-	# entity_at returned empty) turns it into walkable ice until the next sleep.
-	# The frozen set is additive (never a second-freeze re-emit), keyed by map.
-	# Emits TERRAIN_CHANGED{to:"ice"} + a toast; is_cell_blocked already reads the
-	# set, so the crossing is walkable the instant this returns.
-	# MAP-AUTHORING EDGES (opus final-review M5 — safe in all shipped data,
-	# keep them true): (1) freezing doesn't check entity occupancy — an entity
-	# ON a freezable cell still blocks crossing via is_cell_blocked's occupancy
-	# check, so the freeze would read as dead; never author an entity onto a
-	# freezable cell. (2) sleep() thaws frozen_cells unconditionally — a bed
-	# reachable ONLY across ice would strand the PC on a re-blocked cell at
-	# wake; never author one.
 	var faced_cell := player_cell + player_facing
-	if bool(skills.get(skill_id, {}).get("freezes", false)) and _is_freezable(faced_cell) and not _is_frozen(faced_cell):
-		# Skills Wave Task K2 (break condition): see the requires_skill branch's
-		# comment above -- broken before this branch's own emits.
-		_break_sneak()
-		if not frozen_cells.has(current_map):
-			frozen_cells[current_map] = {}
-		(frozen_cells[current_map] as Dictionary)[faced_cell] = true
-		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
-		_mark_skill_used(skill_id)
-		_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [faced_cell.x, faced_cell.y], "to": "ice"})
-		var freeze_toast := String(skills.get(skill_id, {}).get("freeze_toast", "Frost races across the water and locks it solid. You can cross now — until it thaws."))
-		_emit(WIEvents.TOAST, {"text": freeze_toast})
-		return {"frozen": [faced_cell.x, faced_cell.y]}
-	var field_ambient := String(skills.get(skill_id, {}).get("field_ambient", ""))
-	if field_ambient != "":
-		# Playtest feature 3: the ambient (no-qualifying-prop) cast of [Light]
-		# conjures a steady orb that FOLLOWS the PC until sleep -- flip the sim
-		# flag BEFORE the synchronous SKILL_USED emit so world.gd's handler (which
-		# reconciles the PC glow against this flag) sees the up-to-date value on a
-		# live cast. Idempotent: a re-cast while already lit re-fires the ambient
-		# toast (below) but leaves the flag true, so the world attaches no second
-		# light. Prop-targeted [Light] (the lantern/cellar seam above) never
-		# reaches here, so that path is UNCHANGED.
-		if skill_id == "light":
-			light_active = true
-		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
-		_mark_skill_used(skill_id)
-		_emit(WIEvents.TOAST, {"text": field_ambient})
-		return {"ambient": skill_id}
-	_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
-	_emit(WIEvents.TOAST, {"text": "Nothing here calls for that."})
-	return {}
+	var is_freezable := _is_freezable(faced_cell)
+	return _field_skills.dispatch(skill_id, known, target, faced_cell, current_map, frozen_cells, entity_first_use, is_freezable)
+
+
+## ARCH-4: `light_active` mutator, so field_skills.gd's dispatch can flip
+## the flag via an injected Callable at the exact point (BEFORE the
+## synchronous SKILL_USED emit) world.gd's reconcile handler needs it set.
+func _set_light_active(active: bool) -> void:
+	light_active = active
+
+
+## ARCH-4 opus review fix-first: WIEconomy sets the field through this BEFORE
+## its synchronous GOLD_CHANGED emit, preserving the pre-extraction invariant
+## "when GOLD_CHANGED fires, Game.sim.gold already equals total" (inventory's
+## same-frame _refresh_gold depends on it). The wrappers' post-return
+## reassignment is then a harmless same-value write.
+func _set_gold(new_gold: int) -> void:
+	gold = new_gold
 
 
 ## Skills Wave Task K2: the sneak field toggle (see `use_skill_field`'s
@@ -875,52 +756,11 @@ func _break_sneak() -> void:
 	_emit(WIEvents.TOAST, {"text": "You straighten up."})
 
 
-## Social Pillar S1: the rotating "small talk" interact path. Plays ONE pooled
-## line from the faced NPC's `talk_pool` (an array of canon-voiced strings),
-## chosen by `chatted_with_<id> % pool_size` so the line ROTATES deterministically
-## across wakings with ZERO rng (no canonical-seed risk). The line rides the SAME
-## plain DIALOGUE_LINE surface a graph-less NPC uses -- the gate_guard idiom:
-## `_emit(DIALOGUE_LINE, {"speaker", "text"})`, which message_layer renders. Banks
-## `chatted_with_<id>` (the rotation counter, also a [Diplomat] feed) + `heard_gossip`
-## (both opaque social counters), and sets `social_talked[<id>]` so a SECOND talk this
-## waking falls through to the NPC's real conversation. `sleep()` clears
-## `social_talked`, re-arming the pool next waking. The index is read BEFORE the
-## counter bank, so the FIRST talk is index 0, the next index 1, ... wrapping at
-## `pool_size`.
+## Social Pillar S1: the rotating "small talk" interact path (ARCH-4: logic
+## lives in `social.gd`; `social_talked` stays a WIGame field so save.gd's
+## direct reads/writes are untouched).
 func _talk_pool_line(target: Dictionary) -> Dictionary:
-	var id := String(target["id"])
-	var pool: Array = target["talk_pool"]
-	# Content Wave C4 (Q2 pool-GROWTH -- the first documented one): an NPC may
-	# carry `talk_pool_post`, a SECOND pool that REPLACES `talk_pool` once its
-	# `requires_accomplishment` gate is met (Lyonette's warmer small-talk after
-	# "The Wrong Order" resolves). Content-only data + this one narrow gated
-	# read -- no per-line gating machinery. Rotation below still keys on
-	# chatted_with_<id> % pool.size() (zero rng), now over the grown pool.
-	var post: Dictionary = target.get("talk_pool_post", {})
-	if not post.is_empty() and _accomplishment_gate_met(post.get("requires_accomplishment", {})):
-		pool = post["lines"]
-	var counter_key := "chatted_with_%s" % id
-	var idx := accomplishment_count(counter_key) % pool.size()
-	var speaker := String(target.get("display_name", id))
-	_emit(WIEvents.DIALOGUE_LINE, {"speaker": speaker, "text": String(pool[idx])})
-	record_accomplishment(counter_key)
-	record_accomplishment("heard_gossip")
-	social_talked[id] = true
-	return {"talked": id, "index": idx}
-
-
-## Social Pillar S1: the SHARED per-waking first-use gate. Returns true the FIRST
-## time `(verb, entity_id)` is seen since the last `sleep()` (and records it), false
-## on every later call this waking. One dict (`entity_first_use`), one clear site
-## (sleep), keyed by a `"<verb>:<entity_id>"` string so each verb dedups its own
-## bank per entity independently -- [Observe] uses verb "observe" today; S3's
-## [Friendly Face] mirrors this with its own verb prefix.
-func _bank_first_use(verb: String, entity_id: String) -> bool:
-	var key := "%s:%s" % [verb, entity_id]
-	if entity_first_use.has(key):
-		return false
-	entity_first_use[key] = true
-	return true
+	return _social.talk_pool_line(target, social_talked)
 
 
 ## Records `skill_id` into the `used_skills` SET once, ever — a no-op on a
@@ -945,55 +785,30 @@ func accomplishment_count(id: String) -> int:
 	return int(accomplishments.get(id, 0))
 
 
-## Economy v1 Task D1: adds `amount` coins to the purse and emits
-## `gold_changed {delta, total, source}` + the diegetic "Earned N gold." toast.
-## A non-positive amount is a silent no-op (returns without emitting) -- the
-## loot roll and effect verb both guard the sign before calling, but this keeps
-## a stray 0/negative earn from firing a bogus toast. `source` is free-form
-## provenance (encounter id / conversation id / chore prop id), carried in the
-## event for QA, never branched on.
+## Adds `amount` coins to the purse (ARCH-4: logic lives in `economy.gd`,
+## `gold` stays a WIGame field so save.gd's direct reads/writes are
+## untouched). `source` is free-form provenance, carried in the event for QA.
 func earn_gold(amount: int, source: String) -> void:
-	if amount <= 0:
-		return
-	gold += amount
-	_emit(WIEvents.GOLD_CHANGED, {"delta": amount, "total": gold, "source": source})
-	_emit(WIEvents.TOAST, {"text": "Earned %d gold." % amount})
+	gold = _economy.earn(gold, amount, source)
 
 
-## Economy v1 Task D1: removes `amount` coins IF the purse can cover it and
-## emits `gold_changed {delta:-amount, total, source}` + the "Paid N gold."
-## toast, returning true. REFUSES when short (spec §4, no debt): emits the
-## "Not enough gold." refusal toast, no `gold_changed`, and returns false so a
-## caller (a dialogue shop buy) can branch on affordability. A non-positive
-## amount is a silent refusal (returns false, emits nothing). `source` here is
-## the spend SINK (the shop conversation id), same free-form provenance shape.
+## Removes `amount` coins IF the purse can cover it (ARCH-4: see economy.gd).
+## REFUSES when short (spec §4, no debt), returning false so a caller (a
+## dialogue shop buy) can branch on affordability.
 func spend_gold(amount: int, source: String) -> bool:
-	if amount <= 0:
-		return false
-	if gold < amount:
-		_emit(WIEvents.TOAST, {"text": "Not enough gold."})
-		return false
-	gold -= amount
-	_emit(WIEvents.GOLD_CHANGED, {"delta": -amount, "total": gold, "source": source})
-	_emit(WIEvents.TOAST, {"text": "Paid %d gold." % amount})
-	return true
+	var result := _economy.spend(gold, amount, source)
+	gold = int(result["gold"])
+	return bool(result["ok"])
 
 
-## Economy v1 Task D1: the single `gold: +/-N` effect-verb router shared by the
-## dialogue effect applier (`dialogue_choose`), the chore/serve prop effects
-## (`use_skill`'s `on_skill_use`, an `on_interact_accomplishment` prop's sibling
-## `gold`), and any future effect site -- a positive value earns, a negative
-## value spends (refusal-safe via `spend_gold`), zero is a no-op. One spelling
-## for the verb so D2's content (wages/prices) never re-implements the sign
-## split. NOTE: a `gold: -N` spend inside an effect list applies
-## UNCONDITIONALLY of any sibling `item:` grant, so a shop buy option MUST carry
-## a `requires: {gold: price}` affordability gate (D2 contract) -- the gate is
-## what guarantees the spend can't refuse while the item is still granted.
+## The single `gold: +/-N` effect-verb router shared by the dialogue effect
+## applier (`dialogue_choose`) and chore/serve prop effects (ARCH-4: see
+## economy.gd). NOTE: a `gold: -N` spend inside an effect list applies
+## UNCONDITIONALLY of any sibling `item:` grant, so a shop buy option MUST
+## carry a `requires: {gold: price}` affordability gate -- the gate is what
+## guarantees the spend can't refuse while the item is still granted.
 func _apply_gold_effect(amount: int, source: String) -> void:
-	if amount > 0:
-		earn_gold(amount, source)
-	elif amount < 0:
-		spend_gold(-amount, source)
+	gold = _economy.apply_gold_effect(gold, amount, source)
 
 
 ## Content Wave C1: true when every accomplishment threshold in a `door_when`
@@ -1030,10 +845,10 @@ func known_skills() -> Array:
 func _build_dialogue_ctx() -> Dictionary:
 	var names: Dictionary = {}
 	for sk_id: String in skills:
-		names[sk_id] = String(skills[sk_id].get("display_name", sk_id))
+		names[sk_id] = String(skills[sk_id].get(WIKeys.DISPLAY_NAME, sk_id))
 	if not _combat_config.is_empty() and _combat_config.has("classes"):
 		for cls: Dictionary in _combat_config["classes"]["classes"]:
-			names[String(cls["id"])] = String(cls["display_name"])
+			names[String(cls[WIKeys.ID])] = String(cls[WIKeys.DISPLAY_NAME])
 	# Economy v1 Task D1: `gold` rides the ctx so a shop option's affordability
 	# `requires: {gold: price}` greys through the SHIPPED M4 mechanism
 	# (WIDialogue._meets) -- the ONE sanctioned extension of that ctx (it was
@@ -1044,7 +859,7 @@ func _build_dialogue_ctx() -> Dictionary:
 	# reference, read-only) so the pure WIDialogue walker can format an
 	# item-granting option's effect_lines via WIEffectText without an autoload
 	# or file read.
-	return {"skills": known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items}
+	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items}
 
 
 ## Starts a conversation graph if no other modal sim is active.
@@ -1196,7 +1011,7 @@ func act_summary() -> Dictionary:
 func _quest_title(id: String) -> String:
 	var catalog: Dictionary = _combat_config.get("quests", {})
 	for quest: Dictionary in catalog.get("quests", []):
-		if String(quest["id"]) == id:
+		if String(quest[WIKeys.ID]) == id:
 			return String(quest.get("title", id))
 	return id
 
@@ -1225,16 +1040,16 @@ func skills_journal() -> Array:
 		var catalog: Array = _combat_config["classes"]["classes"]
 		var catalog_by_id: Dictionary = {}
 		for cls: Dictionary in catalog:
-			catalog_by_id[String(cls["id"])] = cls
+			catalog_by_id[String(cls[WIKeys.ID])] = cls
 		for cls: Dictionary in catalog:
-			var id := String(cls["id"])
+			var id := String(cls[WIKeys.ID])
 			if not classes.has(id):
 				continue
 			var grants: Array = []
 			_collect_class_grants(cls, int(classes[id]), catalog_by_id, grants, {id: true})
 			if grants.is_empty():
 				continue
-			groups.append({"heading": String(cls.get("display_name", id)), "skills": _skill_entries(grants)})
+			groups.append({"heading": String(cls.get(WIKeys.DISPLAY_NAME, id)), "skills": _skill_entries(grants)})
 	return groups
 
 
@@ -1267,14 +1082,14 @@ func _skill_entries(ids: Array) -> Array:
 	for raw: Variant in ids:
 		var id := String(raw)
 		var sk: Dictionary = skills.get(id, {})
-		var display := String(sk.get("display_name", id))
+		var display := String(sk.get(WIKeys.DISPLAY_NAME, id))
 		var revealed := used_skills.has(id)
 		var text := display
 		if revealed:
 			var desc := String(sk.get("description", ""))
 			if desc != "":
 				text = "%s — %s" % [display, desc]
-		out.append({"id": id, "display_name": display, "revealed": revealed, "text": text})
+		out.append({WIKeys.ID: id, WIKeys.DISPLAY_NAME: display, "revealed": revealed, "text": text})
 	return out
 
 
@@ -1283,13 +1098,13 @@ func start_combat(entity_id: String) -> bool:
 	if dialogue != null or combat != null or _combat_config.is_empty():
 		return false
 	var entity: Dictionary = find_entity(entity_id)
-	if entity.is_empty() or String(entity["kind"]) != "encounter":
+	if entity.is_empty() or String(entity[WIKeys.KIND]) != "encounter":
 		return false
 	if dormant_encounters.has(entity_id):
 		return false
 	var by_id := {}
 	for c: Dictionary in _combat_config["combatants"]["combatants"]:
-		by_id[String(c["id"])] = c
+		by_id[String(c[WIKeys.ID])] = c
 	var cfgs: Array = [_build_player_combatant(by_id["pc"])]
 	var allies: Array = entity.get("allies", [])
 	var ally_req: Dictionary = entity.get("ally_requires", {})
@@ -1303,7 +1118,7 @@ func start_combat(entity_id: String) -> bool:
 		cfgs.append((by_id[String(enemy)] as Dictionary).duplicate(true))
 	var arena: Dictionary = {}
 	for a: Dictionary in _combat_config["arenas"]["arenas"]:
-		if String(a["id"]) == String(entity["arena"]):
+		if String(a[WIKeys.ID]) == String(entity["arena"]):
 			arena = a
 	if arena.is_empty():
 		return false
@@ -1335,7 +1150,7 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	# is resolved presentation-side in board_renderer (`_combatant_sprite_id`),
 	# not here -- board_renderer re-reads the static combatant config, so this
 	# runtime dict's `sprite` would never reach the renderer anyway.
-	pc["display_name"] = pc_name
+	pc[WIKeys.DISPLAY_NAME] = pc_name
 	# Additive per-class stat growth, scaled by split-efficiency (spec §2.4
 	# REVISION 2026-07-03): leveling a class grows THAT class's relevant
 	# combat stats (magnitude), scaled by the split-efficiency multiplier
@@ -1343,7 +1158,7 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	# multiplied. Focused/single-class builds hit efficiency exactly 1.0, so
 	# they get the full undiminished bonus; split builds get a fraction of
 	# each class's bonus, spread across more stat domains.
-	pc["stats"] = WIProgression.apply_stat_bonuses(pc["stats"], classes, _combat_config["classes"])
+	pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], classes, _combat_config["classes"])
 	# M7 §2 combat build injection, read ONCE here (never live during a fight):
 	# the class kit is filtered down to what the equipped weapon fields
 	# (WICombatBuild.weapon_gated_kit); the weapon's flat damage_mod and the
@@ -1364,16 +1179,16 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	# functions instead of hand-mirroring them (consultant-flagged drift
 	# class). No behavior change: same reads, same math, same fields.
 	var kit: Array = WIProgression.granted_skills(classes, _combat_config["classes"], generalist_classes)
-	var weapon := item(String(equipped.get("weapon", "")))
-	pc["skills"] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills)
+	var weapon := item(String(equipped.get(WIKeys.WEAPON, "")))
+	pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills)
 	var armor := item(String(equipped.get("armor", "")))
 	var accessories: Array = []
 	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
 		accessories.append(item(String(equipped.get(slot_name, ""))))
 	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
-	pc["damage_mod"] = mods["damage_mod"]
-	pc["hp_mod"] = mods["hp_mod"]
-	pc["damage_reduction"] = mods["damage_reduction"]
+	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
+	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD]
+	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION]
 	return pc
 
 
@@ -1412,7 +1227,7 @@ func pickup(item_id: String, source_id: String) -> bool:
 func _equipped_resonance_total() -> int:
 	var total := 0
 	for slot_name: String in equipped:
-		total += int(item(String(equipped[slot_name])).get("resonance", 0))
+		total += int(item(String(equipped[slot_name])).get(WIKeys.RESONANCE, 0))
 	return total
 
 
@@ -1464,7 +1279,7 @@ func equip(item_id: String) -> bool:
 	var rec := item(item_id)
 	if rec.is_empty():
 		return false
-	var kind := String(rec.get("kind", ""))
+	var kind := String(rec.get(WIKeys.KIND, ""))
 	if kind != "weapon" and kind != "armor" and kind != "accessory":
 		return false
 	var target_slot := kind
@@ -1485,8 +1300,8 @@ func equip(item_id: String) -> bool:
 		if target_slot == "":
 			_emit(WIEvents.TOAST, {"text": _ACCESSORY_SLOTS_FULL_TOAST})
 			return false
-	var displaced_resonance := int(item(String(equipped.get(target_slot, ""))).get("resonance", 0))
-	var would_be_total := _equipped_resonance_total() - displaced_resonance + int(rec.get("resonance", 0))
+	var displaced_resonance := int(item(String(equipped.get(target_slot, ""))).get(WIKeys.RESONANCE, 0))
+	var would_be_total := _equipped_resonance_total() - displaced_resonance + int(rec.get(WIKeys.RESONANCE, 0))
 	if would_be_total > resonance_capacity:
 		_emit(WIEvents.TOAST, {"text": _CAPACITY_REFUSAL_TOAST})
 		return false
@@ -1576,66 +1391,14 @@ func _bank_action_tally(entity: Dictionary) -> void:
 		record_accomplishment(counter, int(tally[counter]))
 
 
-## Rolls an encounter's `loot: [{item, chance}]` table on victory (M7 Task
-## E3, Plan-time correction 3 -- LOOT RNG ISOLATION). Uses a BRAND NEW
-## `RandomNumberGenerator` seeded from a deterministic derivation of
-## `_run_seed` + the encounter's own id -- NEVER `self.rng` (the live sim/
-## combat stream) -- so a post-victory loot draw can never shift any other
-## fight's trajectory, and a canonical multi-fight seed stays byte-identical
-## whether or not a drop rolls. Deterministic per (run seed, encounter id)
-## pair: the same run seed always rolls the same drops for a given encounter,
-## and two different encounter ids draw from independent streams (each seeds
-## its own fresh generator, so encounter A's rolls never consume encounter
-## B's numbers or vice versa). A no-op (no event) for an entity with no
-## `loot` field or an empty table -- the common case for most encounters.
-## Emits `LOOT_DROPPED {items}` once for the whole table (not per item) if
-## anything actually dropped, then `pickup()`s each dropped item with the
-## encounter id as provenance -- `pickup`'s own "Got: <name>" toast (see its
-## doc comment) is what the player sees, timed by `combat_screen.gd`'s
-## `_close_banner`: `resolve_combat` (and therefore this roll) runs AFTER
-## the victory banner's confirm press, in the same synchronous call that
-## then hides the combat screen, so any loot toast is queued to render only
-## once the banner is already gone -- no redesign needed, see the E3 report.
+## Rolls an encounter's loot table on victory (ARCH-4: the isolated
+## hash-derived RNG and drop math live in `economy.gd`, moved INTACT --
+## its determinism pins every loot assert). `combat_screen.gd`'s
+## `_close_banner` times `resolve_combat` (and therefore this roll) AFTER the
+## victory banner's confirm press, so any loot toast queues to render only
+## once the banner is already gone.
 func _roll_loot(entity: Dictionary) -> void:
-	var loot_table: Array = entity.get("loot", [])
-	if loot_table.is_empty():
-		return
-	var loot_rng := RandomNumberGenerator.new()
-	loot_rng.seed = hash("%d:%s" % [_run_seed, String(entity.get("id", ""))])
-	var dropped: Array[String] = []
-	# Economy v1 Task D1: a loot table entry is EITHER an item drop
-	# (`{item, chance}`, the M7 shape) OR a coin drop (`{gold: N, chance}`).
-	# Both roll off the SAME isolated per-encounter `loot_rng` (hash(run_seed,
-	# encounter_id) -- NEVER the live sim stream), so adding gold entries can
-	# never shift a canonical combat seed. Gold entries are summed across the
-	# table (an encounter can list several) into `gold_dropped`.
-	var gold_dropped := 0
-	for drop: Dictionary in loot_table:
-		var chance := float(drop.get("chance", 0.0))
-		if drop.has("gold"):
-			if loot_rng.randf() < chance:
-				gold_dropped += int(drop["gold"])
-			continue
-		var item_id := String(drop["item"])
-		if loot_rng.randf() < chance:
-			dropped.append(item_id)
-	if dropped.is_empty() and gold_dropped <= 0:
-		return
-	# Emit ONE loot_dropped for the whole table. `items` is kept for an
-	# item-only drop (byte-identical to M7 -- no `gold` key appears when no coin
-	# dropped); `gold` is added only when coin dropped, so a pure-item table's
-	# payload is unchanged. Order: announce the drop, grant items (their own
-	# "Got: <name>" toasts), then earn the coin (its "Earned N gold." toast).
-	var payload: Dictionary = {}
-	if not dropped.is_empty():
-		payload["items"] = dropped.duplicate()
-	if gold_dropped > 0:
-		payload["gold"] = gold_dropped
-	_emit(WIEvents.LOOT_DROPPED, payload)
-	for item_id: String in dropped:
-		pickup(item_id, String(entity.get("id", "")))
-	if gold_dropped > 0:
-		earn_gold(gold_dropped, String(entity.get("id", "")))
+	gold = _economy.roll_loot(gold, _run_seed, entity)
 
 
 ## Removes an entity from its owning map and records the removal.
@@ -1754,7 +1517,7 @@ func sleep() -> void:
 			_emit(WIEvents.CLASS_LEVEL_UP, {"class": class_id, "level": gain["level"]})
 			for sk: Variant in gain["grants"]:
 				_emit(WIEvents.SKILL_UNLOCKED, {"skill": String(sk)})
-				((summaries[class_id] as Dictionary)["names"] as Array).append(String(skills.get(String(sk), {}).get("display_name", String(sk))))
+				((summaries[class_id] as Dictionary)["names"] as Array).append(String(skills.get(String(sk), {}).get(WIKeys.DISPLAY_NAME, String(sk))))
 		for class_id: String in order:
 			var summary: Dictionary = summaries[class_id]
 			var cls_name := String(_class_display_name(class_id))
@@ -1913,7 +1676,7 @@ func _resolve_evolutions() -> bool:
 				# single kit source; no player_skills append (combat spells, and the
 				# combat kit never reads player_skills; generalist_classes routes them).
 				_emit(WIEvents.SKILL_UNLOCKED, {"skill": sk_id})
-				grant_names.append(String(skills.get(sk_id, {}).get("display_name", sk_id)))
+				grant_names.append(String(skills.get(sk_id, {}).get(WIKeys.DISPLAY_NAME, sk_id)))
 			if not generalist_classes.has(class_id):
 				generalist_classes.append(class_id)
 			anything_happened = true
@@ -1982,8 +1745,8 @@ func decline_consolidation() -> void:
 
 func _class_display_name(id: String) -> String:
 	for cls: Dictionary in _combat_config["classes"]["classes"]:
-		if String(cls["id"]) == id:
-			return String(cls["display_name"])
+		if String(cls[WIKeys.ID]) == id:
+			return String(cls[WIKeys.DISPLAY_NAME])
 	return id
 
 
@@ -2001,11 +1764,11 @@ func _class_gained_toast(class_id: String) -> String:
 	var base := "[%s] class gained!" % _class_display_name(class_id)
 	var names: Array[String] = []
 	for cls: Dictionary in _combat_config["classes"]["classes"]:
-		if String(cls["id"]) == class_id:
+		if String(cls[WIKeys.ID]) == class_id:
 			for lv: Dictionary in cls.get("levels", []):
 				if int(lv.get("level", 0)) == 1:
 					for sk: Variant in lv.get("grants", []):
-						names.append(String(skills.get(String(sk), {}).get("display_name", String(sk))))
+						names.append(String(skills.get(String(sk), {}).get(WIKeys.DISPLAY_NAME, String(sk))))
 			break
 	if names.is_empty():
 		return base
@@ -2014,7 +1777,7 @@ func _class_gained_toast(class_id: String) -> String:
 
 ## Returns the raw skill config shape consumed by WICombat.
 func skills_config_raw() -> Dictionary:
-	return {"skills": skills.values()}
+	return {WIKeys.SKILLS: skills.values()}
 
 
 func snapshot() -> Dictionary:
@@ -2090,7 +1853,7 @@ func _tick_action() -> void:
 ## combat_hud.gd's short "X is slowed!" feed line) reads it exactly as
 ## before via `.get()`, unaffected by the two new keys.
 func _combat_event_relay(type: String, payload: Dictionary) -> void:
-	if type == WIEvents.TURN_STARTED and String(payload.get("id", "")) == "pc":
+	if type == WIEvents.TURN_STARTED and String(payload.get(WIKeys.ID, "")) == "pc":
 		_tick_action()
 	if type == WIEvents.STATUS_APPLIED:
 		payload = _enrich_status_applied(payload)

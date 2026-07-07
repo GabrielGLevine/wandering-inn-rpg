@@ -27,7 +27,7 @@ static func weapon_gated_kit(kit: Array, weapon_family: String, skills_by_id: Di
 	for raw: Variant in kit:
 		var sk_id := String(raw)
 		var rec: Dictionary = skills_by_id.get(sk_id, {})
-		if not rec.has("weapon") or String(rec["weapon"]) == weapon_family:
+		if not rec.has(WIKeys.WEAPON) or String(rec[WIKeys.WEAPON]) == weapon_family:
 			out.append(sk_id)
 	return out
 
@@ -44,11 +44,11 @@ static func weapon_gated_kit(kit: Array, weapon_family: String, skills_by_id: Di
 ## may be an empty Array (no accessories equipped, or a caller that predates
 ## the accessory axis).
 static func equipment_mods(weapon: Dictionary, armor: Dictionary, accessories: Array) -> Dictionary:
-	var dmg_mod := int(weapon.get("damage_mod", 0))
-	var hp_mod := int(armor.get("hp_mod", 0))
-	var dmg_reduction := int(armor.get("damage_reduction", 0))
+	var dmg_mod := int(weapon.get(WIKeys.DAMAGE_MOD, 0))
+	var hp_mod := int(armor.get(WIKeys.HP_MOD, 0))
+	var dmg_reduction := int(armor.get(WIKeys.DAMAGE_REDUCTION, 0))
 	for acc: Dictionary in accessories:
-		dmg_mod += int(acc.get("damage_mod", 0))
-		hp_mod += int(acc.get("hp_mod", 0))
-		dmg_reduction += int(acc.get("damage_reduction", 0))
-	return {"damage_mod": dmg_mod, "hp_mod": hp_mod, "damage_reduction": dmg_reduction}
+		dmg_mod += int(acc.get(WIKeys.DAMAGE_MOD, 0))
+		hp_mod += int(acc.get(WIKeys.HP_MOD, 0))
+		dmg_reduction += int(acc.get(WIKeys.DAMAGE_REDUCTION, 0))
+	return {WIKeys.DAMAGE_MOD: dmg_mod, WIKeys.HP_MOD: hp_mod, WIKeys.DAMAGE_REDUCTION: dmg_reduction}

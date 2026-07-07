@@ -49,20 +49,20 @@ const _STATUS_VERB := {
 ## its card is name + description only.
 static func item_effect_lines(item: Dictionary) -> Array[String]:
 	var lines: Array[String] = []
-	var damage_mod := int(item.get("damage_mod", 0))
+	var damage_mod := int(item.get(WIKeys.DAMAGE_MOD, 0))
 	if damage_mod > 0:
 		lines.append("+%d damage on melee hits" % damage_mod)
-	var hp_mod := int(item.get("hp_mod", 0))
+	var hp_mod := int(item.get(WIKeys.HP_MOD, 0))
 	if hp_mod > 0:
 		lines.append("+%d HP" % hp_mod)
-	var reduction := int(item.get("damage_reduction", 0))
+	var reduction := int(item.get(WIKeys.DAMAGE_REDUCTION, 0))
 	if reduction > 0:
 		lines.append("Reduces every hit taken by %d" % reduction)
 	# M-GEAR ships resonance; formatted here now so the card is ready for it.
-	if item.has("resonance") and int(item["resonance"]) > 0:
-		lines.append("Resonance %d" % int(item["resonance"]))
-	if item.has("price") and int(item["price"]) > 0:
-		lines.append(PRICE_LINE_PREFIX + "%d gold" % int(item["price"]))
+	if item.has(WIKeys.RESONANCE) and int(item[WIKeys.RESONANCE]) > 0:
+		lines.append("Resonance %d" % int(item[WIKeys.RESONANCE]))
+	if item.has(WIKeys.PRICE) and int(item[WIKeys.PRICE]) > 0:
+		lines.append(PRICE_LINE_PREFIX + "%d gold" % int(item[WIKeys.PRICE]))
 	return lines
 
 
@@ -75,8 +75,8 @@ static func item_effect_lines(item: Dictionary) -> Array[String]:
 ## site (combat_hud/journal/field_hotbar) uses the default, which resolves
 ## against the shipped combatants.json.
 static func skill_effect_lines(skill: Dictionary, combatants_catalog: Array = []) -> Array[String]:
-	var effect: Dictionary = skill.get("effect", {})
-	var phrase := _effect_phrase(effect, combatants_catalog, int(skill.get("ap_cost", 0)))
+	var effect: Dictionary = skill.get(WIKeys.EFFECT, {})
+	var phrase := _effect_phrase(effect, combatants_catalog, int(skill.get(WIKeys.AP_COST, 0)))
 	if phrase == "":
 		return []
 	var prefix := _cost_prefix(skill)
@@ -112,10 +112,10 @@ static func status_line(status_id: String, skills_catalog: Array = []) -> String
 ## as "0 AP".
 static func _cost_prefix(skill: Dictionary) -> String:
 	var parts: Array[String] = []
-	if int(skill.get("ap_cost", 0)) > 0:
-		parts.append("%d AP" % int(skill["ap_cost"]))
-	if int(skill.get("mp_cost", 0)) > 0:
-		parts.append("%d MP" % int(skill["mp_cost"]))
+	if int(skill.get(WIKeys.AP_COST, 0)) > 0:
+		parts.append("%d AP" % int(skill[WIKeys.AP_COST]))
+	if int(skill.get(WIKeys.MP_COST, 0)) > 0:
+		parts.append("%d MP" % int(skill[WIKeys.MP_COST]))
 	return ", ".join(parts)
 
 
@@ -123,7 +123,7 @@ static func _cost_prefix(skill: Dictionary) -> String:
 ## with no clean currency read (e.g. dangersense) and for absent effects, which
 ## suppresses the whole line.
 static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], ap_cost: int = 0) -> String:
-	match String(effect.get("type", "")):
+	match String(effect.get(WIKeys.TYPE, "")):
 		"spell_damage":
 			# M-LEGIBILITY L5: skills.json's `effect.die` was VESTIGIAL --
 			# wi_combat.gd's _resolve_hit rolls the CASTER's own `weapon_die`
@@ -134,11 +134,11 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			# journal, field_hotbar) only ever shows the PLAYER's own known/
 			# fielded skills, so the default (no override) resolves the "pc"
 			# entry from the shipped combatants.json.
-			return "damage 1d%d at range %d" % [_caster_weapon_die(combatants_catalog), int(effect.get("range", 0))]
+			return "damage 1d%d at range %d" % [_caster_weapon_die(combatants_catalog), int(effect.get(WIKeys.RANGE, 0))]
 		"line_damage":
-			return "damage everything in a line %d cells long" % int(effect.get("length", 0))
+			return "damage everything in a line %d cells long" % int(effect.get(WIKeys.LENGTH, 0))
 		"damage_mult":
-			return "×%s damage" % _fmt_mult(float(effect.get("mult", 1.0)))
+			return "×%s damage" % _fmt_mult(float(effect.get(WIKeys.MULT, 1.0)))
 		"heal", "icy_floor":
 			# M-LEGIBILITY L5 fix wave, Item 1: these two effect types have
 			# ZERO sim consumer today -- `WISkillEffects.resolve_active`
@@ -170,11 +170,11 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			# this ap_cost guard.
 			if ap_cost <= 0:
 				return ""
-			return "+%d move cells this turn" % int(effect.get("amount", 0))
+			return "+%d move cells this turn" % int(effect.get(WIKeys.AMOUNT, 0))
 		"hp_bonus":
-			return "+%d max HP" % int(effect.get("amount", 0))
+			return "+%d max HP" % int(effect.get(WIKeys.AMOUNT, 0))
 		"hit_bonus":
-			return "+%d to hit" % int(effect.get("amount", 0))
+			return "+%d to hit" % int(effect.get(WIKeys.AMOUNT, 0))
 		# DRIFT SEAM (opus final-review M1): the three arms below emit truthful
 		# lines for any skill carrying these effect TYPES, but the sim wires
 		# each mechanic by literal skill NAME (wi_combat.gd: counter_strike,
@@ -183,9 +183,9 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 		# honors — generalize the sim lookup to the effect type (or add the
 		# new name at the trigger site) BEFORE shipping such a skill.
 		"ap_on_kill":
-			return "+%d AP when you down a foe" % int(effect.get("amount", 0))
+			return "+%d AP when you down a foe" % int(effect.get(WIKeys.AMOUNT, 0))
 		"riposte":
-			return "Strike back for ×%s damage when hit in melee." % _fmt_mult(float(effect.get("mult", 1.0)))
+			return "Strike back for ×%s damage when hit in melee." % _fmt_mult(float(effect.get(WIKeys.MULT, 1.0)))
 		"mana_shield":
 			return "Spend MP to absorb incoming damage."
 		"quick_cast":
@@ -196,7 +196,7 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 ## The trailing status shorthand ("Slows.") for a Skill that applies a status on
 ## hit, or "" for one that applies none.
 static func _status_suffix(effect: Dictionary) -> String:
-	var applies: Dictionary = effect.get("applies", {})
+	var applies: Dictionary = effect.get(WIKeys.APPLIES, {})
 	var verbs: Array[String] = []
 	for status_id: String in applies:
 		if _STATUS_VERB.has(status_id):
@@ -213,7 +213,7 @@ static func _slowed_penalty(skills_catalog: Array) -> int:
 	if catalog.is_empty():
 		catalog = _load_skills()
 	for skill: Dictionary in catalog:
-		var applies: Dictionary = (skill.get("effect", {}) as Dictionary).get("applies", {})
+		var applies: Dictionary = (skill.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.APPLIES, {})
 		if applies.has("slowed"):
 			return int((applies["slowed"] as Dictionary).get("pool_penalty", 2))
 	return 2
@@ -223,8 +223,8 @@ static func _load_skills() -> Array:
 	if not FileAccess.file_exists(SKILLS_PATH):
 		return []
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SKILLS_PATH))
-	if parsed is Dictionary and (parsed as Dictionary).has("skills"):
-		return (parsed as Dictionary)["skills"]
+	if parsed is Dictionary and (parsed as Dictionary).has(WIKeys.SKILLS):
+		return (parsed as Dictionary)[WIKeys.SKILLS]
 	return []
 
 
@@ -245,8 +245,8 @@ static func _caster_weapon_die(combatants_catalog: Array = []) -> int:
 	if catalog.is_empty():
 		catalog = _load_combatants()
 	for c: Dictionary in catalog:
-		if String(c.get("id", "")) == "pc":
-			return int(c.get("weapon_die", 6))
+		if String(c.get(WIKeys.ID, "")) == "pc":
+			return int(c.get(WIKeys.WEAPON_DIE, 6))
 	return 6
 
 

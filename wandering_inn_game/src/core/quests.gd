@@ -16,7 +16,7 @@ static func beat_index(quest: Dictionary, accomplishments: Dictionary) -> int:
 static func evaluate(quest_catalog: Dictionary, started: Array, accomplishments: Dictionary) -> Dictionary:
 	var out := {}
 	for quest: Dictionary in quest_catalog.get("quests", []):
-		var id := String(quest["id"])
+		var id := String(quest[WIKeys.ID])
 		if not started.has(id):
 			continue
 		var idx := beat_index(quest, accomplishments)

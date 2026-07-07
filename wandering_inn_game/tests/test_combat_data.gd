@@ -39,21 +39,21 @@ func _init() -> void:
 	var scene := _load("res://data/skeleton_scene.json")
 
 	var skill_ids := {}
-	for s: Dictionary in skills["skills"]:
-		skill_ids[String(s["id"])] = true
-		assert(s.has("contexts") and s.has("display_name"), "skill missing fields: " + String(s["id"]))
-		if (s["contexts"] as Array).has("combat"):
-			assert(s.has("ap_cost") and s.has("effect"), "combat skill missing ap_cost/effect: " + String(s["id"]))
+	for s: Dictionary in skills[WIKeys.SKILLS]:
+		skill_ids[String(s[WIKeys.ID])] = true
+		assert(s.has(WIKeys.CONTEXTS) and s.has(WIKeys.DISPLAY_NAME), "skill missing fields: " + String(s[WIKeys.ID]))
+		if (s[WIKeys.CONTEXTS] as Array).has("combat"):
+			assert(s.has(WIKeys.AP_COST) and s.has(WIKeys.EFFECT), "combat skill missing ap_cost/effect: " + String(s[WIKeys.ID]))
 
 	var combatant_ids := {}
 	for c: Dictionary in combatants["combatants"]:
-		combatant_ids[String(c["id"])] = true
+		combatant_ids[String(c[WIKeys.ID])] = true
 		for key: String in ["id", "display_name", "side", "stats", "weapon_die", "ai", "skills"]:
-			assert(c.has(key), "combatant %s missing %s" % [c.get("id", "?"), key])
+			assert(c.has(key), "combatant %s missing %s" % [c.get(WIKeys.ID, "?"), key])
 		for stat: String in ["str", "dex", "con", "int", "wis", "cha"]:
-			assert(c["stats"].has(stat), "combatant %s missing stat %s" % [c["id"], stat])
-		for sk: Variant in c["skills"]:
-			assert(skill_ids.has(String(sk)), "combatant %s references unknown skill %s" % [c["id"], sk])
+			assert(c[WIKeys.STATS].has(stat), "combatant %s missing stat %s" % [c[WIKeys.ID], stat])
+		for sk: Variant in c[WIKeys.SKILLS]:
+			assert(skill_ids.has(String(sk)), "combatant %s references unknown skill %s" % [c[WIKeys.ID], sk])
 
 	for cls: Dictionary in classes["classes"]:
 		var prev_level := 0
@@ -65,7 +65,7 @@ func _init() -> void:
 
 	var arena_ids := {}
 	for a: Dictionary in arenas["arenas"]:
-		var id := String(a["id"])
+		var id := String(a[WIKeys.ID])
 		arena_ids[id] = true
 		var w := int(a["grid"]["width"])
 		var h := int(a["grid"]["height"])
@@ -93,9 +93,9 @@ func _init() -> void:
 	for map_id: String in (scene["maps"] as Dictionary):
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in (map.get("entities", []) as Array):
-			if String(entity.get("kind", "")) != "encounter":
+			if String(entity.get(WIKeys.KIND, "")) != "encounter":
 				continue
-			var eid := String(entity["id"])
+			var eid := String(entity[WIKeys.ID])
 			for key: String in ["arena", "enemies", "allies", "on_victory"]:
 				assert(entity.has(key), "encounter %s missing %s" % [eid, key])
 			assert(arena_ids.has(String(entity["arena"])), "encounter %s references unknown arena %s" % [eid, entity["arena"]])

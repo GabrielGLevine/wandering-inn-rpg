@@ -95,11 +95,10 @@ Combat is deterministic per seed; every script reaching combat needs a
 pinned, PER-SCRIPT seed row (fixture-based scripts: the fixture rng_state
 governs instead — see FIXTURE-FIRST above; e.g. `level_up_loop` is a
 fixture loop whose rng 9 overrides --seed). A failing first-picked seed is
-a seed-search task. Register a new canonical in BOTH
-`wandering_inn_game/qa/ci_sweep.sh`'s CANON array AND the compact seed
-table in `wandering_inn_game/CLAUDE.md` (kept in mechanical sync — a
-cross-check runs at doc reviews; if `qa/manifest.json` exists by the time
-you read this, THAT is the single source and the others derive from it).
+a seed-search task. Register a new canonical in `wandering_inn_game/qa/manifest.json` (THE
+single source of truth — ci_sweep.sh parses it and hard-fails at startup
+if CLAUDE.md's compact seed table drifts from it) AND add the matching
+row to CLAUDE.md's compact table (the drift check enforces the pair).
 Per-script routing history: `wandering_inn_game/docs/QA-SCRIPT-NOTES.md`.
 Assert both the domain event AND its `ui_*_rendered` confirmation for any
 player-visible feature.

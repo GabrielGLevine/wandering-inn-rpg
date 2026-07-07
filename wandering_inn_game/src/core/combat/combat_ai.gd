@@ -28,7 +28,7 @@ static func take_turn(combat: WICombat) -> void:
 ## false (those still try, then give up); "inert" never tries.
 static func _act_once(combat: WICombat, id: String) -> bool:
 	var c: Dictionary = combat.combatants[id]
-	var profile := String(c.get("ai", ""))
+	var profile := String(c.get(WIKeys.AI, ""))
 	if profile == "":
 		profile = "melee"
 	var foes: Array = combat.alive_enemies_of(id)
@@ -62,14 +62,14 @@ static func _act_caster(combat: WICombat, id: String, c: Dictionary, foes: Array
 static func _act_melee(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
 	for foe: String in foes:
 		if combat.is_adjacent(id, foe):
-			if (c["skills"] as Array).has("power_strike") and int(c["ap"]) >= 3:
+			if (c[WIKeys.SKILLS] as Array).has("power_strike") and int(c[WIKeys.AP]) >= 3:
 				return combat.use_skill("power_strike", foe)
-			if int(c["ap"]) >= WICombat.ATTACK_COST:
+			if int(c[WIKeys.AP]) >= WICombat.ATTACK_COST:
 				return combat.attack(foe)
 			return false
-	var goal: Vector2i = combat.combatants[String(foes[0])]["cell"]
-	if int(c["move_pool"]) >= WICombat.MOVE_COST:
-		var dir := _path_step(combat, c["cell"], goal, 1)
+	var goal: Vector2i = combat.combatants[String(foes[0])][WIKeys.CELL]
+	if int(c[WIKeys.MOVE_POOL]) >= WICombat.MOVE_COST:
+		var dir := _path_step(combat, c[WIKeys.CELL], goal, 1)
 		if dir == Vector2i.ZERO:
 			return false
 		return combat.move_active(dir)
@@ -84,11 +84,11 @@ static func _act_ranged(combat: WICombat, id: String, c: Dictionary, foes: Array
 	# instead of stalling on a cast that use_skill would refuse.
 	var line_id := ""
 	var spell_id := ""
-	for sk: String in c["skills"]:
+	for sk: String in c[WIKeys.SKILLS]:
 		var s: Dictionary = combat.skills.get(sk, {})
 		if not _can_afford(combat, c, s):
 			continue
-		var effect_type := String((s.get("effect", {}) as Dictionary).get("type", ""))
+		var effect_type := String((s.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.TYPE, ""))
 		if effect_type == "line_damage" and line_id == "":
 			line_id = sk
 		elif effect_type == "spell_damage" and spell_id == "":
@@ -105,17 +105,17 @@ static func _act_ranged(combat: WICombat, id: String, c: Dictionary, foes: Array
 	var target := String(los_foes[0])
 	if spell_id != "":
 		var s: Dictionary = combat.skills[spell_id]
-		var spell_range := int(s["effect"]["range"])
+		var spell_range := int(s[WIKeys.EFFECT][WIKeys.RANGE])
 		var in_range := combat.chebyshev(id, target) <= spell_range
 		if in_range and _can_afford(combat, c, s):
-			if combat.is_adjacent(id, target) and int(c["move_pool"]) >= WICombat.MOVE_COST:
+			if combat.is_adjacent(id, target) and int(c[WIKeys.MOVE_POOL]) >= WICombat.MOVE_COST:
 				if _step(combat, id, target, false):
 					return true
 			return combat.use_skill(spell_id, target)
 		if not in_range:
-			var goal: Vector2i = combat.combatants[target]["cell"]
-			if int(c["move_pool"]) >= WICombat.MOVE_COST:
-				var dir := _path_step(combat, c["cell"], goal, spell_range)
+			var goal: Vector2i = combat.combatants[target][WIKeys.CELL]
+			if int(c[WIKeys.MOVE_POOL]) >= WICombat.MOVE_COST:
+				var dir := _path_step(combat, c[WIKeys.CELL], goal, spell_range)
 				if dir == Vector2i.ZERO:
 					return false
 				return combat.move_active(dir)
@@ -126,9 +126,9 @@ static func _act_ranged(combat: WICombat, id: String, c: Dictionary, foes: Array
 
 ## Affordability for AI skill selection: AP (quick_cast-discounted) and MP.
 static func _can_afford(combat: WICombat, c: Dictionary, s: Dictionary) -> bool:
-	if int(c["ap"]) < combat.effective_ap_cost(c, s):
+	if int(c[WIKeys.AP]) < combat.effective_ap_cost(c, s):
 		return false
-	return int(c.get("mp", 0)) >= int(s.get("mp_cost", 0))
+	return int(c.get(WIKeys.MP, 0)) >= int(s.get(WIKeys.MP_COST, 0))
 
 
 ## Line-caster variant: only casts a line direction whose walked cells contain
@@ -141,24 +141,24 @@ static func _act_line(combat: WICombat, id: String, c: Dictionary, line_id: Stri
 	var s: Dictionary = combat.skills[line_id]
 	if not _can_afford(combat, c, s):
 		return false
-	var length := int(s["effect"]["length"])
-	var side := String(c["side"])
+	var length := int(s[WIKeys.EFFECT][WIKeys.LENGTH])
+	var side := String(c[WIKeys.SIDE])
 	var token_by_dir := {
 		Vector2i.UP: "up", Vector2i.DOWN: "down", Vector2i.LEFT: "left", Vector2i.RIGHT: "right",
 	}
 	for dir: Vector2i in DIRS:
-		var cells: Array[Vector2i] = combat.line_cells(c["cell"], dir, length)
+		var cells: Array[Vector2i] = combat.line_cells(c[WIKeys.CELL], dir, length)
 		if cells.is_empty():
 			continue
 		var enemies_hit := 0
 		var hits_ally := false
 		for other_id: String in combat.combatants:
 			var other: Dictionary = combat.combatants[other_id]
-			if not bool(other["alive"]) or other_id == id:
+			if not bool(other[WIKeys.ALIVE]) or other_id == id:
 				continue
-			if not ((other["cell"] as Vector2i) in cells):
+			if not ((other[WIKeys.CELL] as Vector2i) in cells):
 				continue
-			if String(other["side"]) == side:
+			if String(other[WIKeys.SIDE]) == side:
 				hits_ally = true
 			else:
 				enemies_hit += 1
@@ -171,11 +171,11 @@ static func _act_line(combat: WICombat, id: String, c: Dictionary, line_id: Stri
 ## (adjacency for melee, stop_range for ranged) AND the remaining AP still
 ## covers the intended action cost. Purely a lookahead — spends nothing.
 static func _should_dash(combat: WICombat, c: Dictionary, goal: Vector2i, stop_range: int, action_cost: int) -> bool:
-	if int(c["ap"]) < WICombat.DASH_COST + action_cost:
+	if int(c[WIKeys.AP]) < WICombat.DASH_COST + action_cost:
 		return false
-	var projected_pool := int(c["move_pool"]) + WICombat.DASH_GAIN
-	var dist := maxi(absi((c["cell"] as Vector2i - goal).x), absi((c["cell"] as Vector2i - goal).y))
-	var reachable := _path_len(combat, c["cell"], goal, stop_range)
+	var projected_pool := int(c[WIKeys.MOVE_POOL]) + WICombat.DASH_GAIN
+	var dist := maxi(absi((c[WIKeys.CELL] as Vector2i - goal).x), absi((c[WIKeys.CELL] as Vector2i - goal).y))
+	var reachable := _path_len(combat, c[WIKeys.CELL], goal, stop_range)
 	if reachable < 0:
 		return false
 	return reachable <= projected_pool
@@ -184,8 +184,8 @@ static func _should_dash(combat: WICombat, c: Dictionary, goal: Vector2i, stop_r
 ## Steps one cell toward (or away from) the target; returns false if no step improves.
 ## Only ever called with toward=false (kiting) now that approach uses _path_step.
 static func _step(combat: WICombat, id: String, target_id: String, toward: bool) -> bool:
-	var from: Vector2i = combat.combatants[id]["cell"]
-	var goal: Vector2i = combat.combatants[target_id]["cell"]
+	var from: Vector2i = combat.combatants[id][WIKeys.CELL]
+	var goal: Vector2i = combat.combatants[target_id][WIKeys.CELL]
 	var current := maxi(absi((from - goal).x), absi((from - goal).y))
 	var best_dir := Vector2i.ZERO
 	var best := current

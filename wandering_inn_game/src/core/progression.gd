@@ -94,7 +94,7 @@ static func power_multiplier(classes: Dictionary, class_catalog: Dictionary) -> 
 static func derived_stat_bonuses(classes: Dictionary, class_catalog: Dictionary) -> Dictionary:
 	var raw: Dictionary = {"str": 0.0, "dex": 0.0, "con": 0.0, "int": 0.0}
 	for cls: Dictionary in class_catalog.get("classes", []):
-		var id := String(cls["id"])
+		var id := String(cls[WIKeys.ID])
 		var held := int(classes.get(id, 0))
 		if held <= 0:
 			continue
@@ -125,9 +125,9 @@ static func granted_skills(classes: Dictionary, class_catalog: Dictionary, gener
 	var out: Array = []
 	var catalog_by_id: Dictionary = {}
 	for cls: Dictionary in class_catalog.get("classes", []):
-		catalog_by_id[String(cls["id"])] = cls
+		catalog_by_id[String(cls[WIKeys.ID])] = cls
 	for cls: Dictionary in class_catalog.get("classes", []):
-		var id := String(cls["id"])
+		var id := String(cls[WIKeys.ID])
 		var held := int(classes.get(id, 0))
 		_own_grants_at_level(cls, held, out)
 		if held > 0:
@@ -151,7 +151,7 @@ static func granted_skills(classes: Dictionary, class_catalog: Dictionary, gener
 static func check_class_gains(classes: Dictionary, accomplishments: Dictionary, class_catalog: Dictionary) -> Array:
 	var gains: Array = []
 	for cls: Dictionary in class_catalog.get("classes", []):
-		var id := String(cls["id"])
+		var id := String(cls[WIKeys.ID])
 		if classes.has(id) or not cls.has("gained_by"):
 			continue
 		# A gained_by with no accomplishment requirements would otherwise be
@@ -178,7 +178,7 @@ static func check_class_gains(classes: Dictionary, accomplishments: Dictionary, 
 static func check_level_ups(classes: Dictionary, accomplishments: Dictionary, class_catalog: Dictionary) -> Array:
 	var gains: Array = []
 	for cls: Dictionary in class_catalog.get("classes", []):
-		var id := String(cls["id"])
+		var id := String(cls[WIKeys.ID])
 		if not classes.has(id):
 			continue
 		var by_level: Dictionary = {}
@@ -228,7 +228,7 @@ static func _level_met(lv: Dictionary, accomplishments: Dictionary) -> bool:
 static func check_evolutions(classes: Dictionary, accomplishments: Dictionary, class_catalog: Dictionary, generalist_classes: Array) -> Array:
 	var out: Array = []
 	for cls: Dictionary in class_catalog.get("classes", []):
-		var id := String(cls["id"])
+		var id := String(cls[WIKeys.ID])
 		if not classes.has(id) or not cls.has("evolution"):
 			continue
 		if generalist_classes.has(id):
