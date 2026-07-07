@@ -150,6 +150,34 @@ const BOSS_CELLS := [
 	{"name": "awakened_boss_w2_solo", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": true},
 ]
 
+## Magical Door 8a Task D2 (lane β): the ruin encounter axis -- rift_vermin_leak
+## (beat-2 inn-cellar leak fight) and ruin_guardian (beat-3 Albez-flavored
+## construct guarding the anchor-stone pedestal; D1/D3 wire the real encounter
+## entities into skeleton_scene.json separately -- this file only proves the
+## combat DATA these locked ids/arena resolve to is in-band). Same per-cell
+## win_lo/win_hi gating shape as BOSS_CELLS (a cell without them is
+## measured-only, printed with the "(measured)" tag). Every cell uses
+## `warrior5_mage5` (10 total levels, split-efficiency ~0.78) as the
+## representative "~L8-12 kit" build the plan brief calls out.
+## rift_vermin_leak is GATED to the GENERIC 0.55-0.95 band per the plan's
+## explicit directive ("gated band 0.55-0.95 at the expected player level
+## ~L8-12 kit") -- a trash-swarm leak fight, not a boss, so the generic bound
+## applies directly; distinct enemy ids (rift_vermin_a/b/c) avoid the
+## same-id WICombat collision documented on those combatants (see
+## data/combatants.json). ruin_guardian is adjudicated like deep_descent's
+## raskghar_awakened / this file's own BOSS_CELLS: the Relc-escorted cell
+## gets an EXPLICIT win_lo/win_hi ("beatable-but-threatening", the recovery
+## run is meant to matter, mirrors BOSS_CELLS' 0.6-0.75 shape at a slightly
+## easier band since the guardian is "mid-weight", not a capstone boss); the
+## solo cell (no ally assumed on the pedestal approach) is measured-only, the
+## hard-mode frontier, same convention as awakened_boss_w2_solo.
+const RUIN_CELLS := [
+	{"name": "rift_vermin_leak_w8_relc", "arena": "inn_cellar", "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.95},
+	{"name": "rift_vermin_leak_w8_solo", "arena": "inn_cellar", "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"], "build": "warrior5_mage5", "solo": true},
+	{"name": "ruin_guardian_w8_relc", "arena": "ruin_court", "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.8},
+	{"name": "ruin_guardian_w8_solo", "arena": "ruin_court", "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"], "build": "warrior5_mage5", "solo": true},
+]
+
 const BUILDS := [
 	## The TUTORIAL profile: the player's actual first fight (street
 	## goblin_encounter_2 -> arena goblin_ambush) is fought at warrior 1 --
@@ -481,10 +509,66 @@ func _init() -> void:
 				any_failed = true
 				printerr("FAIL [boss / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
 
+	## Magical Door 8a Task D2: the ruin axis. Same construction/gating shape as
+	## the BOSS_CELLS loop directly above (per-cell win_lo/win_hi, absent means
+	## measured-only) -- see RUIN_CELLS' own doc comment for the per-cell band
+	## rationale.
+	for cell: Dictionary in RUIN_CELLS:
+		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
+		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
+		var wins := 0
+		var rounds: Array[int] = []
+		var relc_downed := 0
+		var has_relc := not bool(cell.get("solo", false))
+		for seed_v in range(1, RUNS_PER_CELL + 1):
+			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
+			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
+			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
+			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
+			var cfgs: Array = [pc]
+			if has_relc:
+				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
+			for enemy_id: String in cell["enemies"]:
+				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
+			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			combat.begin()
+			var guard := 0
+			while not combat.finished and guard < 2000:
+				guard += 1
+				WICombatAI.take_turn(combat)
+			assert(combat.finished, "ruin %s fight %d did not terminate" % [cell["name"], seed_v])
+			if combat.outcome["victory"]:
+				wins += 1
+			rounds.append(int(combat.outcome["rounds"]))
+			if has_relc and not bool(combat.combatants.get("relc", {}).get(WIKeys.ALIVE, true)):
+				relc_downed += 1
+
+		rounds.sort()
+		var win_rate := float(wins) / float(RUNS_PER_CELL)
+		var median: int = rounds[RUNS_PER_CELL / 2]
+		var hist := {}
+		for r: int in rounds:
+			hist[r] = int(hist.get(r, 0)) + 1
+		var gated := cell.has("win_lo")
+		print("[ruin / %s] arena=%s build=%s%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+			cell["name"], String(cell["arena"]), String(cell["build"]),
+			"" if has_relc else " solo", "" if gated else " (measured)",
+			win_rate, median, rounds[0], rounds[-1],
+		])
+		print("  rounds histogram: ", hist)
+		if has_relc:
+			print("  relc_downed_rate=%.2f (%d/%d)" % [float(relc_downed) / float(RUNS_PER_CELL), relc_downed, RUNS_PER_CELL])
+		if gated:
+			var lo := float(cell["win_lo"])
+			var hi := float(cell["win_hi"])
+			if win_rate < lo or win_rate > hi:
+				any_failed = true
+				printerr("FAIL [ruin / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:
 		# Asserts are stripped in release templates; keep the exit code honest there too.
 		quit(1)
 		return
-	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size(), RUNS_PER_CELL])
+	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size(), RUNS_PER_CELL])
 	quit(0)
