@@ -165,7 +165,18 @@ func _render_step() -> void:
 	if is_name:
 		for row in _row_labels:
 			row.get_parent().get_parent().hide()
-		_name_edit.text = _name
+		# Controller support (S2, issue #18): `_name` (the source of truth for
+		# typing/backspace/`_begin_game`'s fallback) stays untouched at "" --
+		# only the DISPLAYED text gets the everyman default ("Traveler", the
+		# same fallback `_begin_game` already substitutes for an empty name)
+		# so a pad-only player -- who cannot type at all, no on-screen keyboard
+		# in v1 -- sees a real name already in the field and can confidently
+		# press confirm having accepted the default. Keyboard typing is
+		# unaffected: the first keystroke sets `_name` and overwrites this
+		# text wholesale (`_handle_name_input` always does `_name_edit.text =
+		# _name`, never appends to the displayed string), so nothing needs to
+		# be cleared first.
+		_name_edit.text = _name if not _name.is_empty() else "Traveler"
 		_hint_label.text = "Type a name  •  Enter to begin  •  Esc to go back"
 	else:
 		var options := _current_options()
