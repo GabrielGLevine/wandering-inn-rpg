@@ -21,7 +21,7 @@
    "id": "relc",
    "display_name": "Relc",
    "sprite": "relc",
-   "combat_scale": 0.3875,
+   "combat_scale": 0.61,
    "side": "player",
    "stats": {
     "str": 14,
@@ -184,7 +184,7 @@
    "id": "raskghar_scout",
    "display_name": "Raskghar Scout",
    "sprite": "raskghar_scout",
-   "combat_scale": 0.4492,
+   "combat_scale": 0.64,
    "side": "enemy",
    "stats": {
     "str": 15,
@@ -203,7 +203,7 @@
    "id": "raskghar_awakened",
    "display_name": "Awakened Raskghar",
    "sprite": "raskghar_awakened",
-   "combat_scale": 0.4839,
+   "combat_scale": 0.81,
    "side": "enemy",
    "stats": {
     "str": 18,
