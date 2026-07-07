@@ -22,6 +22,22 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 	var effect_type := String(effect.get("type", ""))
 	if effect_type == "line_damage":
 		return _resolve_line_damage(combat, actor_id, a, target_id, skill, effect)
+	# Skills Wave Task K2 (the sneak combat read): move_pool_bonus is a
+	# SELF-targeted grant, dispatched early exactly like line_damage above --
+	# neither needs the enemy-side gate just below (which would reject a
+	# self/no-target cast outright). Gated on `ap_cost > 0` so this ONLY
+	# fires for an actively-cast skill (today, only [Sneak]): the two
+	# PRE-EXISTING 0-cost move_pool_bonus skills (quick_movement,
+	# battlefield_awareness) are labeled passives with no resolver anywhere
+	# (M-LEGIBILITY L5 disclosed finding) -- generalizing this dispatch to
+	# EVERY move_pool_bonus skill regardless of cost would silently turn
+	# those two into a free, repeatable-every-turn pool exploit (0 AP, no
+	# gate stops a re-press), which nothing asked for. This narrower gate
+	# wires only the genuine active cast; the two passives fall through
+	# unchanged to the enemy-gated match below, find no case, and keep
+	# refusing exactly as `test_sim_core.gd`'s g18 block already pins.
+	if effect_type == "move_pool_bonus" and int(skill.get("ap_cost", 0)) > 0:
+		return _resolve_move_pool_bonus(combat, actor_id, a, skill, effect)
 	var t: Dictionary = combat.combatants.get(target_id, {})
 	if t.is_empty() or not t.get("alive", false) or String(t["side"]) == String(a["side"]):
 		return false
@@ -47,6 +63,23 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 				_apply_status_from_effect(combat, target_id, effect)
 			return true
 	return false
+
+
+## Skills Wave Task K2: the sneak combat read. Spends the skill's cost (1 AP,
+## no MP), then adds `effect.amount` (2) straight to the ACTOR's own
+## `move_pool` -- the exact field `dash()` mutates, so the pool is spent via
+## the same `move_active`/MOVE_COST path afterward, no separate currency. No
+## enemy, no adjacency, no LoS -- a self-buff has none of those concepts.
+## Emits SKILL_RESOLVED with `target` = the actor's own id (there is no other
+## target to report; combat_hud/QA read this the same way a no-target field
+## skill's `target: ""` reads elsewhere, just non-empty here since the
+## targeting_controller self-target reuse -- see that file's `enter()` --
+## always resolves `target_id` to the actor).
+static func _resolve_move_pool_bonus(combat: WICombat, actor_id: String, a: Dictionary, skill: Dictionary, effect: Dictionary) -> bool:
+	combat.spend_skill_costs(a, skill)
+	a["move_pool"] = int(a["move_pool"]) + int(effect.get("amount", 0))
+	combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill["id"]), "target": actor_id})
+	return true
 
 
 ## Flame Jet et al.: target_id is a cardinal direction TOKEN ("up"/"down"/

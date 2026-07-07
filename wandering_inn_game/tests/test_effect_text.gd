@@ -52,6 +52,14 @@ const EXPECTED_SKILLS := {
 	"light": [],
 	"frost_touch": [],
 	"kindle": [],
+	# Skills Wave Task K2: [Sneak]'s combat read is a genuine ACTIVE cast
+	# (ap_cost 1) -- effect_text.gd's `_effect_phrase` now un-suppresses
+	# `move_pool_bonus` specifically for ap_cost > 0 (WISkillEffects.
+	# resolve_active wires a real self-buff resolver for exactly that shape).
+	# quick_movement/battlefield_awareness below are UNCHANGED (still ap_cost
+	# 0, still no resolver, still SUPPRESSED) -- see effect_text.gd's own
+	# comment on the ap_cost gate for why the two don't get un-suppressed too.
+	"sneak": ["1 AP — +2 move cells this turn"],
 	# M-LEGIBILITY L5 fix wave, Item 1: SUPPRESSED-UNTIL-WIRED, not "no
 	# mechanics by design" -- move_pool_bonus/heal/icy_floor have ZERO sim
 	# consumer (WISkillEffects.resolve_active only matches damage_mult/

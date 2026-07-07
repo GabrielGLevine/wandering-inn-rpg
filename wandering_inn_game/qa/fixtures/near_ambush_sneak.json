@@ -1,0 +1,45 @@
+{
+ "_comment": "Skills Wave Task K2: the stealth_loop fixture. post_tutorial shape (warrior L1, met/sparred/given_spear, both weapons carried) positioned on floodplains at (30,16) facing down, six open steps north of goblin_encounter_1 (30,23) -- safely outside its Chebyshev-2 trigger zone (O2). PLAYTEST-AFFORDANCE skills (K1's frost_touch/kindle disclosure precedent -- no shipped class grants either, QA-fixture-only): `sneak` (PROVISIONAL, K3 owns canon naming + the real post-onboarding class grant) and `observe` (Three Pillars [Tactician] kit), both exploration-fine grants that never touch this run's own path (no combat resolves in stealth_loop, so neither perturbs fight determinism). Field-hotbar slots (known_skills order): 1 [Basic Cleaning], 2 [Sneak], 3 [Observe]. rng_state is cosmetic -- stealth_loop never finishes a fight (ends right after the positive-control combat_started, matching the combat_move_input/relc_tutorial mid-fight-by-design precedent), so no seed search was needed.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   30,
+   16
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1
+  },
+  "player_skills": [
+   "basic_cleaning",
+   "sneak",
+   "observe"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}

@@ -58,6 +58,11 @@ func _init() -> void:
 	# Playtest feature 3: the [Light] PC-glow flag round-trips (additive-optional,
 	# default false) so a load restores the conjured orb.
 	original.light_active = true
+	# Skills Wave Task K2: `sneaking` is DELIBERATELY excluded from the
+	# round-trip (see save.gd's own comment + wi_game.gd's doc comment on the
+	# field) -- set it true here specifically so the assertion below proves
+	# the drop, not merely that a default-false value stayed false.
+	original.sneaking = true
 	# M-ARC §5: cosmetic identity round-trips (additive-optional; default
 	# Human/male/"Traveler"). A non-default trio here proves persistence.
 	original.pc_name = "Sella"
@@ -98,6 +103,12 @@ func _init() -> void:
 	assert(int(restored.actions_since_sleep) == 7, "actions_since_sleep restored")
 	assert(restored.light_active == original.light_active, "light_active restored")
 	assert(restored.light_active == true, "light_active round-trips as true")
+	# Skills Wave Task K2: sneaking does NOT round-trip -- a save taken while
+	# sneaking (original.sneaking == true, set above) always restores to a
+	# NOT-sneaking game (the plan's explicit "drops on save/load honestly"
+	# requirement; see save.gd's comment for why there is no key at all).
+	assert(not data["state"].has("sneaking"), "sneaking is not even present in the serialized state")
+	assert(restored.sneaking == false, "a save taken while sneaking round-trips to NOT sneaking")
 	# Additive-optional default: a save with no light_active key restores false.
 	var no_glow: Dictionary = (data["state"] as Dictionary).duplicate(true)
 	no_glow.erase("light_active")

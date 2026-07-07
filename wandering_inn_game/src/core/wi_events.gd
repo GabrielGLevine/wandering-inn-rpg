@@ -40,6 +40,18 @@ const ENTITY_REMOVED := &"entity_removed"
 ## Purely additive: the sim's walkability (is_cell_blocked) already reflects the
 ## change before this fires; nothing existing consumes or depends on it.
 const TERRAIN_CHANGED := &"terrain_changed"
+## Skills Wave Task K2 (the sneak seam): `sneaking` toggled true/false. Fired by
+## the deliberate field-hotbar toggle (`_toggle_sneak`, a `sneaks: true`-tagged
+## skill's number key) AND by every automatic break (`_break_sneak` -- interact()
+## reaching a non-door response, a successful field-skill use on a target,
+## start_combat from any cause). Payload `{}` -- presentation reads the
+## authoritative `Game.sim.sneaking` bool, not the event, matching the
+## light_active/UI_PC_LIGHT_RENDERED reconcile idiom. The toast (the player-
+## visible "You soften your step."/"You straighten up." line) is a separate
+## TOAST emit alongside these, same as every other state-change pair in this
+## file.
+const SNEAK_STARTED := &"sneak_started"
+const SNEAK_ENDED := &"sneak_ended"
 
 # --- Skills / progression (wi_game.gd) ---
 const SKILL_USED := &"skill_used"
@@ -176,6 +188,14 @@ const UI_AMBIENCE_RENDERED := &"ui_ambience_rendered"
 ## false when it is removed (the sleep clear). Emitted ONLY on a real state
 ## change, never on an idempotent re-cast/phase-crossing reconcile.
 const UI_PC_LIGHT_RENDERED := &"ui_pc_light_rendered"
+## Skills Wave Task K2: world.gd's confirmation that the PC sprite's
+## translucency (modulate.a ~0.6, the tint-machinery precedent) actually
+## matches `Game.sim.sneaking`. Payload `{active: bool}` -- mirrors
+## UI_PC_LIGHT_RENDERED's shape exactly. Emitted from `_reconcile_sneak_visual`,
+## called on SNEAK_STARTED/SNEAK_ENDED and from `_rebuild_field` (a door
+## crossing keeps `sneaking` true, so the translucency must survive the field
+## rebuild the new map triggers).
+const UI_SNEAK_RENDERED := &"ui_sneak_rendered"
 ## M-JUICE Track P2 (GDI sleep sequence): emitted by src/ui/sleep_veil.gd once
 ## the black veil is fully drawn and the night's GDI proclamation lines are laid
 ## out (before the read-hold), carrying {lines:int} = how many announcement lines

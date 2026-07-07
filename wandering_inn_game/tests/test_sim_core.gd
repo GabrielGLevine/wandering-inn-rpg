@@ -23,6 +23,17 @@ func _load_json(path: String) -> Dictionary:
 	return parsed
 
 
+## Skills Wave Task K2: every `toast` payload's text seen so far, in order --
+## a small helper so the sneak toggle/break blocks below don't hand-roll the
+## same scan-for-a-type loop repeatedly.
+func _toast_texts() -> Array:
+	var out: Array = []
+	for e: Dictionary in _events:
+		if e["type"] == "toast":
+			out.append(String(e["payload"].get("text", "")))
+	return out
+
+
 ## Forces the pc active and lands one guaranteed melee hit on goblin_raider:
 ## hit_bonus 1000 makes hit_chance certain (85 + 1000 - dex/4), so no seed
 ## search is needed. Leaves the raider alive on 999 HP.
@@ -1483,6 +1494,158 @@ func _init() -> void:
 	gT4.transition("floodplains", Vector2i(30, 22))  # dist 1, well inside the zone
 	assert(gT4.combat == null, "transition (teleport/door/load-restore) never triggers the ambush")
 	assert(_count("combat_started") == 0, "no combat_started from a bare transition")
+
+	# --- Skills Wave Task K2: the sneak seam (stealth state) ---
+	# The PROVISIONAL [Sneak] skill is QA-fixture-only (no shipped class grants
+	# it -- K1's frost_touch/kindle disclosure precedent), so every case below
+	# grants it directly via player_skills, exactly like those two.
+
+	# Toggle: keyed on the `sneaks: true` DATA TAG, NOT this skill's id (plan
+	# decision) -- prove it with a SYNTHETIC skill carrying the tag under a
+	# DIFFERENT id, so a tag-vs-id regression (accidentally keying on
+	# `skill_id == "sneak"`) would fail this even though the shipped skill
+	# would still pass.
+	var tag_skills_raw: Dictionary = _load_json("res://data/skills.json")
+	var tagged_skill_list: Array = (tag_skills_raw["skills"] as Array).duplicate(true)
+	tagged_skill_list.append({"id": "stealth_ritual", "display_name": "[Stealth Ritual]", "contexts": ["exploration"], "field": true, "sneaks": true})
+	var gTagK2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), {"skills": tagged_skill_list}, _sink, 12345, combat_config)
+	gTagK2.player_skills.append("stealth_ritual")
+	assert(not gTagK2.sneaking, "fixture: not sneaking at start")
+	_events.clear()
+	gTagK2.use_skill_field("stealth_ritual")
+	assert(gTagK2.sneaking, "a DIFFERENT skill id carrying sneaks:true still toggles sneaking on (tag-keyed, not id-keyed)")
+	assert(_count("sneak_started") == 1, "sneak_started fires on a tag toggle")
+	assert(_toast_texts() == ["You soften your step."], "the on-toast fires exactly once, tag-toggle case")
+	_events.clear()
+	gTagK2.use_skill_field("stealth_ritual")
+	assert(not gTagK2.sneaking, "the SAME tagged skill toggles back off")
+	assert(_count("sneak_ended") == 1, "sneak_ended fires on the off-toggle")
+	assert(_toast_texts() == ["You straighten up."], "the off-toast fires exactly once")
+
+	# Toggle via the REAL shipped [Sneak] skill: on/off, skill_used + journal
+	# reveal, sneaking reflected in snapshot().
+	var gSneak := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gSneak.player_skills.append("sneak")
+	_events.clear()
+	var sneak_on := gSneak.use_skill_field("sneak")
+	assert(sneak_on.get("sneaking", false) == true, "use_skill_field returns the new sneaking state")
+	assert(gSneak.sneaking, "sneaking flips true")
+	assert(gSneak.snapshot()["sneaking"] == true, "snapshot carries sneaking")
+	assert(gSneak.used_skills.has("sneak"), "sneak is marked used (journal reveal)")
+	assert(_count("skill_used") == 1, "the toggle emits exactly one skill_used")
+
+	# --- Trigger-skip while sneaking (the whole point): walk the REAL
+	# goblin_encounter_1 zone sneaking -> no combat_started at all; then
+	# straighten up and re-enter -> the positive control fires. Mirrors the O2
+	# block above exactly, sneaking added.
+	gSneak.transition("floodplains", Vector2i(30, 20))
+	_events.clear()
+	assert(gSneak.move_player(Vector2i.DOWN), "step to dist 2 succeeds")
+	assert(gSneak.combat == null, "sneaking skips the trigger entirely at dist 2")
+	assert(gSneak.move_player(Vector2i.DOWN), "step to dist 1 succeeds")
+	assert(gSneak.combat == null, "sneaking skips the trigger entirely at dist 1 too")
+	assert(_count("combat_started") == 0, "no combat_started anywhere in the sneaking approach")
+	# The positive control, same instance, same standing cell (still dist 1,
+	# deep inside the zone): straighten up (re-press the same toggle) -- the
+	# VERY NEXT move (still inside the radius) fires the ambush for real, since
+	# _check_trigger_radius no longer skips. Proves the skip is `sneaking`
+	# itself, not merely "already inside the zone once".
+	gSneak.use_skill_field("sneak")
+	assert(not gSneak.sneaking, "the re-press straightens up")
+	_events.clear()
+	assert(gSneak.move_player(Vector2i.RIGHT), "step succeeds (open cell), still dist 1")
+	assert(gSneak.combat != null, "NOT sneaking: the same zone now fires the ambush for real")
+	assert(_count("combat_started") == 1, "one combat_started on the not-sneaking step")
+
+	# --- Break conditions ---
+	# 1. interact() reaching a real prop response breaks it (dirty_table,
+	# the same requires_skill/on_skill_use prop the P1 byte-parity test below
+	# uses) -- BEFORE the prop's own emits (off-toast reads first).
+	var gBreakProp := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gBreakProp.player_skills.append("sneak")
+	gBreakProp.use_skill_field("sneak")
+	assert(gBreakProp.sneaking, "fixture: sneaking before the interact")
+	gBreakProp.player_cell = Vector2i(6, 4)
+	gBreakProp.player_facing = Vector2i.LEFT  # faces dirty_table at (5,4)
+	_events.clear()
+	gBreakProp.interact()
+	assert(not gBreakProp.sneaking, "interact() reaching a prop response breaks sneaking")
+	assert(_toast_texts()[0] == "You straighten up.", "the off-toast is emitted BEFORE the prop's own toast")
+	assert(_count("sneak_ended") == 1, "sneak_ended fires from the interact break")
+
+	# 2. A door does NOT break it ("crossing a door quietly is the point") --
+	# inn_door (inn [15,3]) is a real `door` entity.
+	var gBreakDoor := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gBreakDoor.player_skills.append("sneak")
+	gBreakDoor.use_skill_field("sneak")
+	gBreakDoor.player_cell = Vector2i(14, 3)
+	gBreakDoor.player_facing = Vector2i.RIGHT  # faces inn_door at (15,3)
+	_events.clear()
+	gBreakDoor.interact()
+	assert(gBreakDoor.sneaking, "a door transition KEEPS sneaking")
+	assert(_count("sneak_ended") == 0, "no sneak_ended from a door crossing")
+	assert(gBreakDoor.current_map == "floodplains", "fixture: the door actually transitioned")
+
+	# 3. interact() with NOTHING faced does not break it either (no response
+	# reached at all -- distinct from the door case, which IS a response).
+	var gBreakNothing := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gBreakNothing.player_skills.append("sneak")
+	gBreakNothing.use_skill_field("sneak")
+	gBreakNothing.player_cell = Vector2i(2, 3)
+	gBreakNothing.player_facing = Vector2i.DOWN  # open floor, nothing faced
+	gBreakNothing.interact()
+	assert(gBreakNothing.sneaking, "interact() reaching nothing does not break sneaking")
+
+	# 4. A successful field-skill use ON A TARGET breaks it (basic_cleaning on
+	# dirty_table); the SAME skill's field_ambient no-op (no qualifying faced
+	# entity) does NOT ("a whiffed flourish isn't a commitment").
+	var gBreakFieldTarget := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gBreakFieldTarget.player_skills.append("sneak")
+	gBreakFieldTarget.use_skill_field("sneak")
+	gBreakFieldTarget.player_cell = Vector2i(6, 4)
+	gBreakFieldTarget.player_facing = Vector2i.LEFT  # faces dirty_table
+	gBreakFieldTarget.use_skill_field("basic_cleaning")
+	assert(not gBreakFieldTarget.sneaking, "a field-skill use that resolves on a real target breaks sneaking")
+
+	var gBreakAmbient := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gBreakAmbient.player_skills.append("sneak")
+	gBreakAmbient.use_skill_field("sneak")
+	gBreakAmbient.player_cell = Vector2i(2, 3)
+	gBreakAmbient.player_facing = Vector2i.DOWN  # open floor, no entity faced
+	gBreakAmbient.use_skill_field("basic_cleaning")  # falls through to field_ambient
+	assert(gBreakAmbient.sneaking, "a field_ambient no-op flourish does NOT break sneaking")
+
+	# 5. start_combat firing for ANY cause breaks it -- prove at the
+	# start_combat call site directly (a dialogue-effect start_combat is the
+	# other real caller besides interact()'s encounter branch, already
+	# covered above by the trigger-radius block's own combat_started proof).
+	# A REFUSED start_combat (dormant encounter) must NOT break it.
+	var gBreakCombat := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gBreakCombat.player_skills.append("sneak")
+	gBreakCombat.record_accomplishment("met_relc")
+	# goblin_encounter_2 lives on floodplains (W1 relocation, see the combat-
+	# handoff fixture above) -- find_entity/start_combat are map-agnostic, but
+	# transition anyway to match that fixture's own convention.
+	gBreakCombat.transition("floodplains", Vector2i(27, 18))
+	gBreakCombat.use_skill_field("sneak")
+	gBreakCombat.dormant_encounters.append("goblin_encounter_2")
+	assert(not gBreakCombat.start_combat("goblin_encounter_2"), "fixture: the dormant encounter refuses to start")
+	assert(gBreakCombat.sneaking, "a REFUSED start_combat does not break sneaking")
+	gBreakCombat.dormant_encounters.clear()
+	assert(gBreakCombat.start_combat("goblin_encounter_2"), "a real start_combat succeeds once un-dormant")
+	assert(not gBreakCombat.sneaking, "start_combat succeeding breaks sneaking for ANY cause")
+
+	# --- NOT SAVED (round-trip honesty; the dedicated test_save.gd assertion
+	# is the canonical proof -- this is the sim-level companion): sleep also
+	# clears it silently, "with everything else". ---
+	var gSleepClear := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gSleepClear.player_skills.append("sneak")
+	gSleepClear.use_skill_field("sneak")
+	assert(gSleepClear.sneaking, "fixture: sneaking before sleep")
+	_events.clear()
+	gSleepClear.sleep()
+	assert(not gSleepClear.sneaking, "sleep clears sneaking")
+	assert(_count("sneak_ended") == 0, "sleep's clear is silent -- no sneak_ended (matches light_active/frozen_cells)")
 
 	# --- Three Pillars P1: use_skill_field (overworld field-skill dispatch) ---
 	# The core promise: pressing a field skill while FACING a qualifying prop

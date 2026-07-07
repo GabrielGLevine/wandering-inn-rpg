@@ -1109,5 +1109,71 @@ func _init() -> void:
 			reduce_then_shield_payload = e["payload"]
 	assert(int(reduce_then_shield_payload.get("absorbed", -1)) == 7, "mana_shield's own reaction payload also reports the post-reduction amount")
 
+	# --- Skills Wave Task K2: the sneak combat read ---
+	# [Sneak] in combat: 1 AP for +2 move_pool, a genuine self-buff -- no
+	# enemy, no adjacency, no LoS. `use_skill("sneak", "pc")` mirrors exactly
+	# how the real UI resolves it now (targeting_controller.gd's self-target
+	# reuse always resolves target_id to the actor -- see that file's `enter()`
+	# doc comment), so this is not a synthetic bypass of the real dispatch.
+	var c57 := _make_custom(11, _sink, {"pc": {"skills": ["sneak"]}})
+	c57.active_index = c57.turn_order.find("pc")
+	c57._start_turn()
+	var pool57_before := int(c57.combatants["pc"]["move_pool"])
+	var ap57_before := int(c57.combatants["pc"]["ap"])
+	_events.clear()
+	assert(c57.use_skill("sneak", "pc"), "sneak resolves as a self-cast (target_id == the actor's own id)")
+	assert(int(c57.combatants["pc"]["ap"]) == ap57_before - 1, "sneak costs exactly 1 AP")
+	assert(int(c57.combatants["pc"]["move_pool"]) == pool57_before + 2, "sneak grants exactly +2 move_pool")
+	assert(_count("ap_changed") == 1, "spend_skill_costs emits ap_changed (no mp_cost, so no mp_changed)")
+	assert(_count("mp_changed") == 0, "sneak has no mp_cost -- no mp_changed emitted")
+	var sneak_resolved_payload: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			sneak_resolved_payload = e["payload"]
+	assert(sneak_resolved_payload.get("actor", "") == "pc" and sneak_resolved_payload.get("target", "") == "pc", "skill_resolved reports the actor as its own target (no other target exists)")
+	# The spent pool is real currency afterward -- move_active can spend it via
+	# the SAME MOVE_COST path dash()'s grant already uses (no separate ledger).
+	# Try all 4 directions per step (the pool-exhaustion test's own idiom
+	# above) rather than assuming a hardcoded direction stays on the board.
+	var sneak_pool_dirs: Array[Vector2i] = [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]
+	var moved_after_sneak := 0
+	for i in (pool57_before + 2):
+		for dir: Vector2i in sneak_pool_dirs:
+			if c57.move_active(dir):
+				moved_after_sneak += 1
+				break
+	assert(moved_after_sneak == pool57_before + 2, "every pool cell sneak granted is actually spendable via move_active")
+
+	# Repeatable while AP lasts, same convention as dash().
+	var c58 := _make_custom(11, _sink, {"pc": {"skills": ["sneak"]}})
+	c58.active_index = c58.turn_order.find("pc")
+	c58._start_turn()
+	var ap58_before := int(c58.combatants["pc"]["ap"])
+	assert(ap58_before >= 2, "fixture: at least 2 AP available at turn start")
+	assert(c58.use_skill("sneak", "pc"), "first sneak this turn succeeds")
+	assert(c58.use_skill("sneak", "pc"), "sneak is repeatable while AP lasts, same as dash")
+	assert(int(c58.combatants["pc"]["move_pool"]) == WICombat.MOVE_POOL + 4, "two casts stack (+2 each)")
+	# Refused at 0 AP, and a refused cast spends nothing (same contract as
+	# frost_bolt's MP-refusal test above and dash's AP-refusal test).
+	c58.combatants["pc"]["ap"] = 0
+	var pool58_before_refusal := int(c58.combatants["pc"]["move_pool"])
+	_events.clear()
+	assert(not c58.use_skill("sneak", "pc"), "sneak refused at 0 AP")
+	assert(int(c58.combatants["pc"]["move_pool"]) == pool58_before_refusal, "refused sneak spends no pool")
+	assert(_count("skill_resolved") == 0, "refused sneak never resolves")
+
+	# The two PRE-EXISTING 0-cost move_pool_bonus skills (quick_movement,
+	# battlefield_awareness) are UNCHANGED by this wiring -- they still refuse
+	# via any target, self or enemy, exactly as test_sim_core.gd's g18 block
+	# already pins (this is the OTHER half of that same drift-seam contract,
+	# re-pinned here at the combat-sim level too since this file is where the
+	# actual resolver dispatch lives).
+	var c59 := _make_custom(11, _sink, {"pc": {"skills": ["quick_movement"]}})
+	c59.active_index = c59.turn_order.find("pc")
+	c59._start_turn()
+	var pool59_before := int(c59.combatants["pc"]["move_pool"])
+	assert(not c59.use_skill("quick_movement", "pc"), "the pre-existing 0-cost move_pool_bonus skill still refuses self-target")
+	assert(int(c59.combatants["pc"]["move_pool"]) == pool59_before, "quick_movement grants nothing -- still no consumer")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

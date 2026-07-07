@@ -118,6 +118,12 @@ extends RefCounted
 ##      before this task could have changed it). A present-but-wrong-typed
 ##      value (not int/float) is rejected, mirroring the gold/
 ##      actions_since_sleep numeric checks.
+## (Skills Wave Task K2, the sneak seam): `WIGame.sneaking` is DELIBERATELY
+## NOT PERSISTED -- no key in `serialize()`/`apply()` at all, unlike every
+## additive-optional flag above. A save/reload always restores false; sneaking
+## honestly drops (see wi_game.gd's own doc comment on the field for the full
+## break-condition list). No version bump (nothing to migrate: there was never
+## a saved value to be missing).
 const VERSION := 5
 
 

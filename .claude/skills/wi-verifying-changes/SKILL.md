@@ -14,7 +14,7 @@ run is a regression (the project has no known-harmless warnings).
 | You changed… | Run (all from repo root) |
 |---|---|
 | Any `.gd` / any code | `load_gate` + smoke + the QA scripts touching that surface |
-| `src/core/**` (sim) | 12 unit suites + FULL canonical QA sweep |
+| `src/core/**` (sim) | ALL unit suites (16 as of M-GEAR close -- count `tests/test_*.gd`, never trust a hardcoded number) + FULL canonical QA sweep |
 | `data/combatants.json` / `skills.json` / `classes.json` / arenas | balance harness + full sweep + **seed check** (below) |
 | `data/skeleton_scene.json` (maps) | full sweep + re-derive any path-walking scripts you broke |
 | `data/sprites.json` / new sprite assets / icon gen | **`test_sprite_registry` MINIMUM** (it pins per-animation frame counts — new entries need expected-count rows) + windowed read. `ci_sweep.sh` runs QA scripts, NOT units — a sprites.json add can leave this suite silently red for days (PF-wave incident 2026-07-06, caught by the public repo's first CI run, not locally) |
@@ -80,5 +80,5 @@ the event log; `*.png` (windowed) for what a player sees.
 - New `.gd` files: run `--headless --import` once, commit the `*.uid` sidecar.
 
 ## Full-gate one-liner (before any commit claiming "all green")
-Run: load_gate → all canonical scripts at pinned seeds → 12 units → smoke.
+Run: load_gate → all canonical scripts at pinned seeds (ci_sweep.sh) → every tests/test_*.gd suite → smoke.
 Report results per script, not "everything passed".

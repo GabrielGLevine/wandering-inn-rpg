@@ -380,6 +380,17 @@
 			"burns": true,
 			"field_ambient": "[Kindle] — A curl of flame dances up over your knuckles and gutters out. Nothing here will take the fire.",
 			"description": "A conjured flame, hot enough to take dry debris and old timber in moments."
+		},
+		{
+			"_comment": "Skills Wave Task K2 (the sneak seam, user-ratified stealth model): PROVISIONAL id/display name -- K3 owns canon naming AND the real class grant, and MUST place that grant's gained_by POST-onboarding (no shipped class grants this today, so the mandatory tutorial ambush stays mandatory for every fresh player; onboarding integrity holds trivially this task for exactly that reason -- K3, do not skip re-checking it once a class actually grants this). Granted only by a QA fixture, the SAME disclosed affordance as K1's frost_touch/kindle. `sneaks: true` is the ONLY tag the field-hotbar toggle keys on (use_skill_field's `_toggle_sneak`), NOT this skill id -- pressing its number key flips `sneaking` on/off; `field_ambient`/`freezes`/`burns`/etc. are irrelevant to it (the toggle branch returns before any of those checks run). Combat read: `ap_cost: 1` + `effect: {type: move_pool_bonus, amount: 2}` -- a genuine self-targeted move-pool grant, ACTIVELY wired through WISkillEffects.resolve_active (see that file's doc comment for the ap_cost>0 gate that deliberately leaves the two PRE-EXISTING 0-cost move_pool_bonus skills, quick_movement/battlefield_awareness, exactly as unresolved/refused as before -- this task does not touch their behavior). Unlike frost_touch/kindle this IS combat-context, so it is only fight-determinism-neutral for scripts that never press it in a fight -- true of every canonical script today (stealth_loop, the one QA proof, ends the run before any combat begins).",
+			"id": "sneak",
+			"display_name": "[Sneak]",
+			"contexts": ["exploration", "combat"],
+			"field": true,
+			"sneaks": true,
+			"ap_cost": 1,
+			"effect": { "type": "move_pool_bonus", "amount": 2 },
+			"description": "A soft step that slips past watching eyes and clears ground when blades are drawn."
 		}
 	]
 }

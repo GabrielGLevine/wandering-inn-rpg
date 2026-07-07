@@ -328,6 +328,9 @@ Parse Error, or WARNING in any run is a regression.
 	wandering_inn_game/qa/run_qa.sh economy_loop headless --seed=9  # (1) chore earn: clean dirty_table -> "Earned 1 gold" + gold_changed{total:1}; open I -> ui_inventory_shown{gold:1} (D3 coin-line payload). (2) cross the ambush (Relc-allied) = LOOT FIGHT #1 goblin_encounter_1 -> gold 2 @ seed 9 -> total 3. (3) Krshia stall at 3 gold: EVERY buy greys (charm's own "costs 5 gold" lock = affordability-negative surface). (4) LOOT FIGHT #2 crate_scavengers -> gold 2 @ seed 9 -> total 5 (the earn-to-price; its found_the_crate on_victory adds a hub report option, so the 2nd-visit shop-entry is at index 2 not 1). (5) buy the charm: gold_changed{delta:-5,total:0} (fires BEFORE the "Paid 5 gold" toast) + item_gained{traveler_charm}. (6) open I -> ui_inventory_shown{items:3, gold:0} (spend reached the coin line). Loot isolated by --seed=9; fight outcomes by fixture rng_state=9 (both won straightaway).
 	wandering_inn_game/qa/run_qa.sh social_loop headless --seed=9  # PHASE A rotating talk pools + per-waking dedup: gate_guard/Selys/Krshia each play ONE pool dialogue_line on first-talk-per-waking (banking chatted_with_<id> + heard_gossip -> 3), and a SECOND Krshia talk opens her real crate graph with NO re-pool (chatted_with_krshia never reaches 2, assert absent). PHASE B persuade watch_sergeant -> persuaded_someone (identity gate); walk home FIGHTS the fixture-active floodplains ambush (Warrior+Relc); sleep at the inn bed (ONLY bed -> return leg mandatory) resolves diplomat.gained_by{persuaded_someone:1, heard_gossip:3} -> class_gained{diplomat} + grants toast "[Diplomat] class gained! — [Charming Smile], [Calming Touch]". PHASE C field hotbar re-renders slots:1->2 ([Charming Smile] is field-tagged, slot 2); hotbar_2 on faced Erin fires [Charming Smile] -> her friendly_line toast + befriended_moments + used_skills journal reveal. Fixture rng governs --seed.
 
+	# SKILLS WAVE K2: the sneak seam (loads near_ambush_sneak fixture via title Continue)
+	wandering_inn_game/qa/run_qa.sh stealth_loop headless --seed=9  # toggle [Sneak] on (hotbar_2) -> walk the REAL goblin_encounter_1 Chebyshev-2 zone (30,16)->(30,22), zero combat_started anywhere -> break sneak via a genuine [Observe] use (hotbar_3) ON the ambush entity itself (sneak_ended + off-toast fire BEFORE observe's own skill_used/toast) -> POSITIVE CONTROL same run: one more step still inside the same zone, now not-sneaking, fires the ambush for real. Ends right after combat_started (mid-combat by design). Fixture rng cosmetic (no fight resolves); seed 9 for convention.
+
 **Canonical QA seed table (M5 F1 close gate; +3 M6 T7 scripts; +1 lantern_check;
 M-FP Q1 floodplains re-path — all 18 held their pre-existing seed; M-FP Q2 adds 2 new
 re-derivation; playtest-content slice T2 +1 (`work_loop`); T3 +3 (`crate_fight`/
@@ -365,14 +368,18 @@ fights and both were won straightaway, while the CLI `--seed=9` governs the
 isolated loot gold [both encounters drop gold 2, D2's loot_probe verdict]. Two
 peek-only shot scripts excluded from the sweep: `d3_inventory_shot` [coin line]
 and `d2_shop_shot`)**),
-pinned straightaway (no seed search needed unless noted): run these 48 headless
+pinned straightaway (no seed search needed unless noted): run these 49 headless
 scripts (M-ARC A3 +2: `climax_chain`/`climax_seal`, the climax chain's
 summons/seal streams, fixture-based; the party-veto is a unit roster proof, not
 a script; **M-ARC A4 +1: `arc_flow`, THE WHOLE-ARC PROOF, fixture `near_act3`**;
 **M-LEGIBILITY L4 +1: `status_first_encounter`, fixture `near_mage_cast`**;
 **M-GEAR G3 +1: `gear_loop`, fixture `gear_loop_start` — the resonance-gear UI
 proof (accessory rows, "Resonance N/M" header, lore render, capacity refusal),
-seed 9 held straightaway since it's fully fixture-based, no combat, no rng**)
+seed 9 held straightaway since it's fully fixture-based, no combat, no rng**;
+**Skills Wave K2 +1: `stealth_loop`, fixture `near_ambush_sneak` — the sneak
+seam's own proof (trigger-skip + break + positive control in one run), seed 9
+held straightaway since no fight ever resolves in the path (the script ends
+right after `combat_started`)**)
 with `qa/run_qa.sh <script> headless --seed=<seed>` unless noted. The peek-only scripts (`title_peek`,
 `street_peek`) are screenshot utilities, not canonical gate members;
 `floodplains_peek` was retired by Q1 (floodplains is now walkably reachable
@@ -458,6 +465,46 @@ the ambush (conclusion unchanged; full proof + BFS-derived return lanes:
 was re-pathed through the real cold-start arc (spar → Warrior → cross the
 ambush); the disclosure red set is now fully green (see the O5 block below the
 seed table).
+
+**Skills Wave Task K2 (the sneak seam, stealth state):** `WIGame.sneaking`
+(a bool, NOT saved -- see `save.gd`'s comment) makes `_check_trigger_radius`
+(just above) skip ENTIRELY while true -- the whole point, walking PAST a
+proximity ambush like `goblin_encounter_1`'s. Toggled by a `sneaks: true`-
+tagged field skill's number key (`use_skill_field`'s `_toggle_sneak`, K1's
+tag-not-id convention -- keyed on the DATA TAG, not the skill's id), NOT
+class-gated today: the shipped `[Sneak]` skill (provisional id/name, K3 owns
+canon naming + the real class grant) is QA-fixture-only, the SAME disclosed
+affordance as K1's `frost_touch`/`kindle`. **Break conditions** (all clear it
+via `_break_sneak`, a single choke point, idempotent/no-op when already not
+sneaking): `interact()` reaching ANY entity/prop response EXCEPT a map
+transition (a real `door` or a met `door_when` gate -- "crossing a door
+quietly is the point"); any successful field-skill use ON A TARGET (a
+`field_ambient` no-op flourish does NOT break it -- "a whiffed flourish isn't
+a commitment"); `start_combat` firing for ANY cause (the one choke point past
+every early-return, so only a fight that actually begins counts); `sleep()`
+clears it too, SILENTLY (no toast/event, same convention as `light_active`/
+`frozen_cells`). **Combat read:** using `[Sneak]` in a fight costs 1 AP for
++2 `move_pool` -- a genuine self-buff, no enemy/adjacency/LoS, wired through
+`WISkillEffects.resolve_active` (`src/core/combat/skill_effects.gd`) via an
+`ap_cost > 0` gate on the PRE-EXISTING `move_pool_bonus` effect type
+(deliberately narrow: the two 0-cost `move_pool_bonus` skills, `quick_movement`/
+`battlefield_awareness`, stay exactly as unresolved/refused as before --
+see that file's doc comment for why generalizing the gate would have been a
+silent free-pool exploit). `targeting_controller.gd`'s `enter()` reuses the
+EXISTING `_targets`/`confirm()` plumbing for the self-target case (a
+single-element list containing the actor's own id) rather than a new
+targeting mode. **Presentation:** the PC sprite tints translucent
+(`modulate.a` ~0.6, world.gd's `_reconcile_sneak_visual`, the tint-machinery/
+`_reconcile_pc_light` precedent) while sneaking, restored on any break/off/
+sleep-clear; `SNEAK_STARTED`/`SNEAK_ENDED` + `UI_SNEAK_RENDERED` are the new
+events (`wi_events.gd`). QA: `stealth_loop` (fixture `near_ambush_sneak`) is
+the canonical proof -- see its own seed-table entry above. **Fix-wave
+disclosure:** `equip()`/`unequip()` are DELIBERATELY outside the break scope
+(neither calls `_break_sneak`, and the inventory panel isn't sneaking-gated
+at all -- unaddressed this task, flagged for K3 to rule on); shop-buy is
+transitively safe without any direct call (a shop is only reachable through
+an npc conversation, and `interact()` reaching ANY npc response is already
+break condition #1, so sneak is broken before a buy option can ever fire).
 
 **Onboarding rev Task O4 (Pisces + grants-listing toasts, spec §4/§9):**
 [Mage] is now EARNED FROM PISCES, not the retired Dusty Scroll.
@@ -1428,6 +1475,19 @@ smoke are green, zero SCRIPT ERROR/Parse Error/WARNING. Routing model:
   the mechanics themselves are STILL not wired — that follow-up (a
   `resolve_active` match arm for `heal`/`icy_floor`, an `_apply_passives` key
   for `move_pool_bonus`) remains queued for the Skills-wave wiring task.
+  **Skills Wave Task K2 partially closed the `move_pool_bonus` half of that
+  queue — for an ACTIVELY-CAST use only:** `resolve_active` now wires a real
+  self-buff resolver for `move_pool_bonus` gated on `ap_cost > 0` (the new
+  `[Sneak]` skill's combat read is the first and only consumer), and
+  `_effect_phrase`'s `move_pool_bonus` case is un-suppressed for exactly that
+  ap_cost>0 shape. `quick_movement`/`battlefield_awareness` are BOTH `ap_cost:
+  0` (passive-shaped) and therefore UNCHANGED by this — they still hit
+  `resolve_active`'s enemy-gate, find no case, and refuse; their cards stay
+  SUPPRESSED. `heal`/`icy_floor` are entirely untouched. See
+  `src/core/combat/skill_effects.gd`'s own doc comment for why the gate is
+  ap_cost-based rather than a skill-id special case (generalizing to every
+  0-cost `move_pool_bonus` skill would have silently turned two previously-
+  inert passives into a free, repeatable-every-turn pool exploit).
 
 ## Working conventions
 

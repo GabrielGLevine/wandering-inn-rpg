@@ -35,7 +35,12 @@
 # (the resonance-gear UI proof — fixture gear_loop_start carries the full
 # 19-item catalog so a genuine over-capacity accessory refusal is reachable
 # without an impractical ~44-gold grind; also doubles as the full-pack
-# scroll/clip proof). All fixture-based, no seed search.
+# scroll/clip proof); Skills Wave K2 adds stealth_loop [49] (the sneak-past-
+# the-ambush proof — fixture near_ambush_sneak, floodplains pre-ambush: walks
+# INTO goblin_encounter_1's Chebyshev-2 zone sneaking with zero combat_started,
+# breaks sneak via a real [Observe] use on the ambush entity, then the SAME
+# zone fires the ambush for real on the not-sneaking re-entry -- the positive
+# control in one run). All fixture-based, no seed search.
 # The party-VETO/solo path is a unit-level roster
 # proof (test_combat_data._check_boss_veto_roster) per the user descope, not a
 # canonical script — tutorial_flow is
@@ -103,6 +108,7 @@ CANON=(
 	"arc_flow:9"
 	"status_first_encounter:9"
 	"gear_loop:9"
+	"stealth_loop:9"
 )
 
 ONLY=""

@@ -89,7 +89,24 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 	if skill_id != "":
 		_targeting_skill_id = skill_id
 		var skill: Dictionary = _view.skill(_targeting_skill_id)
-		_line_mode = String((skill.get("effect", {}) as Dictionary).get("type", "")) == "line_damage"
+		var skill_effect: Dictionary = skill.get("effect", {}) as Dictionary
+		_line_mode = String(skill_effect.get("type", "")) == "line_damage"
+		# Skills Wave Task K2 (the sneak combat read): a self-targeted active
+		# move_pool_bonus cast (today only [Sneak]; MUST stay in lockstep with
+		# skill_effects.gd's `resolve_active` -- same effect.type + ap_cost>0
+		# pair gates its self-buff resolver there) needs no enemy at all.
+		# Reuses the EXISTING `_targets`/`confirm()` plumbing verbatim (a
+		# single-element list containing the actor's OWN id) instead of a new
+		# targeting mode: Tab/cycle is a no-op on a 1-element list,
+		# has_valid_target() reads true, and confirm() returns
+		# `{"kind":"skill","target_id":me}` exactly like a real enemy pick --
+		# `combat.use_skill(skill_id, me)` then dispatches into the self-buff
+		# resolver, never the enemy-gated match.
+		if not _line_mode and String(skill_effect.get("type", "")) == "move_pool_bonus" and int(skill.get("ap_cost", 0)) > 0:
+			_targets = [me]
+			_target_index = 0
+			_emit_targeting_shown(mode)
+			return state()
 	if _line_mode:
 		_line_dir_index = 0
 		_emit_targeting_shown(mode)

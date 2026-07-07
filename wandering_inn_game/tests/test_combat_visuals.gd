@@ -143,6 +143,59 @@ func _init() -> void:
 	assert((targeting_state.get("targets", []) as Array).is_empty(), "targeting state starts with no targets")
 	assert(targeting_state.has("line_mode") and targeting_state.has("skill_id"), "targeting state must expose line_mode/skill_id for the HUD readout")
 
+	# Skills Wave K2 fix wave (reviewer finding): test_combat_sim.gd's c57/c58/
+	# c59 blocks already prove `WICombat.use_skill("sneak", "pc")` resolves the
+	# self-cast directly -- but that calls `use_skill` with a hand-picked
+	# target_id, bypassing `WICombatTargeting.enter()` entirely. Nothing
+	# proved `enter()` ITSELF ever produces the self-target list through the
+	# real UI dispatch path (`enter()` -> `state().targets` -> `confirm()` ->
+	# `combat.use_skill(...)`). Proven here with a REAL `WICombat`/
+	# `WICombatView` (both plain `class_name` scripts, zero bare autoloads,
+	# constructible directly in --script mode -- same idiom test_combat_sim.gd
+	# already uses) plus a minimal stub `_screen` (a bare `Node` with only the
+	# one method `enter()` calls, `_emit_targeting_shown_event` -- a no-op, so
+	# it never touches ObservableBus and needs none of combat_screen.gd's own
+	# autoload-stub patching above).
+	var stub_screen_script := GDScript.new()
+	stub_screen_script.source_code = "extends Node\nfunc _emit_targeting_shown_event(_mode_text: String, _skill_id: String, _target_count: int) -> void:\n\tpass\n"
+	var stub_screen_compile_err := stub_screen_script.reload()
+	assert(stub_screen_compile_err == OK, "stub targeting screen failed to compile: %d" % stub_screen_compile_err)
+	var stub_screen: Node = stub_screen_script.new()
+
+	var tc_combatants: Dictionary = _load_json("res://data/combatants.json")
+	var tc_arena: Dictionary = _load_json("res://data/arenas.json")["arenas"][0]
+	var tc_skills: Dictionary = _load_json("res://data/skills.json")
+	var tc_pc_cfg: Dictionary = (_combatant_config(tc_combatants, "pc") as Dictionary).duplicate(true)
+	tc_pc_cfg["skills"] = ["sneak", "quick_movement"]
+	var tc_goblin_cfg: Dictionary = (_combatant_config(tc_combatants, "goblin_raider") as Dictionary).duplicate(true)
+	var tc_combat := WICombat.new(tc_arena, [tc_pc_cfg, tc_goblin_cfg], tc_skills, func(_t: String, _p: Dictionary) -> void: pass, 9)
+	tc_combat.begin()
+	tc_combat.active_index = tc_combat.turn_order.find("pc")
+	tc_combat._start_turn()
+	var tc_view := WICombatView.new(tc_combat)
+
+	# (1) [Sneak] (ap_cost 1 > 0): enter() must take the self-target shortcut.
+	var sneak_targeting: RefCounted = targeting_script.new(tc_view, stub_screen)
+	sneak_targeting.enter(0, "sneak")
+	assert((sneak_targeting.state()["targets"] as Array) == ["pc"], "enter() must yield the self-target list [pc] for sneak's ap_cost>0 move_pool_bonus cast")
+	assert(sneak_targeting.has_valid_target(), "the self-target list must read as a valid confirmable target (Tab/Enter gate)")
+	var sneak_action: Dictionary = sneak_targeting.confirm()
+	assert(sneak_action == {"kind": "skill", "skill_id": "sneak", "target_id": "pc"}, "confirm() must return the self-cast action dict exactly like a real enemy pick")
+	var tc_pool_before := int(tc_combat.combatants["pc"]["move_pool"])
+	assert(tc_combat.use_skill(String(sneak_action["skill_id"]), String(sneak_action["target_id"])), "the action confirm() returns must actually resolve through the real combat")
+	assert(int(tc_combat.combatants["pc"]["move_pool"]) == tc_pool_before + 2, "the targeting-controller-driven cast must grant sneak's +2 move_pool through resolve_active")
+
+	# (2) [Quick Movement] (ap_cost 0): enter() must NOT self-target -- the
+	# ap_cost>0 gate (kept in lockstep with skill_effects.gd's resolve_active
+	# gate, per both files' cross-referencing doc comments) must leave this
+	# PRE-EXISTING 0-cost move_pool_bonus skill falling through to the normal
+	# enemy-gated filter, exactly as before K2 -- never the self-buff shortcut.
+	var quick_targeting: RefCounted = targeting_script.new(tc_view, stub_screen)
+	quick_targeting.enter(0, "quick_movement")
+	var quick_targets: Array = quick_targeting.state()["targets"]
+	assert(not quick_targets.has("pc"), "enter() must NOT self-target for quick_movement (ap_cost 0) -- a self-target here would silently reopen the free-pool exploit the ap_cost>0 gate exists to close")
+	stub_screen.free()
+
 	var hud_script := load("res://src/combat/combat_hud.gd") as Script
 	assert(hud_script != null and hud_script.can_instantiate(), "combat_hud.gd must compile standalone (zero bare autoload identifiers)")
 	for method_name: String in ["build", "refresh", "rebuild_slots", "render_bar_slots", "feed_push", "feed_line_for_event", "reset_tutor_lines", "match_tutor_line", "render_tutor_line", "show_banner", "clear_feed"]:

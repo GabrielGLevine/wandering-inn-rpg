@@ -76,7 +76,7 @@ static func item_effect_lines(item: Dictionary) -> Array[String]:
 ## against the shipped combatants.json.
 static func skill_effect_lines(skill: Dictionary, combatants_catalog: Array = []) -> Array[String]:
 	var effect: Dictionary = skill.get("effect", {})
-	var phrase := _effect_phrase(effect, combatants_catalog)
+	var phrase := _effect_phrase(effect, combatants_catalog, int(skill.get("ap_cost", 0)))
 	if phrase == "":
 		return []
 	var prefix := _cost_prefix(skill)
@@ -122,7 +122,7 @@ static func _cost_prefix(skill: Dictionary) -> String:
 ## Maps an effect dict to its visible-currency phrase. Returns "" for effects
 ## with no clean currency read (e.g. dangersense) and for absent effects, which
 ## suppresses the whole line.
-static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = []) -> String:
+static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], ap_cost: int = 0) -> String:
 	match String(effect.get("type", "")):
 		"spell_damage":
 			# M-LEGIBILITY L5: skills.json's `effect.die` was VESTIGIAL --
@@ -139,26 +139,38 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = []) -
 			return "damage everything in a line %d cells long" % int(effect.get("length", 0))
 		"damage_mult":
 			return "×%s damage" % _fmt_mult(float(effect.get("mult", 1.0)))
-		"heal", "icy_floor", "move_pool_bonus":
-			# M-LEGIBILITY L5 fix wave, Item 1: these three effect types have
+		"heal", "icy_floor":
+			# M-LEGIBILITY L5 fix wave, Item 1: these two effect types have
 			# ZERO sim consumer today -- `WISkillEffects.resolve_active`
-			# (src/core/combat/skill_effects.gd) only matches damage_mult/
-			# spell_damage/line_damage, and `_apply_passives` only implements
-			# hp_bonus/hit_bonus. Generating "2 AP — restore 8 HP" or "+1 move
-			# cell" for second_wind/icy_floor/quick_movement/
-			# battlefield_awareness would promise a mechanic that never fires,
-			# so the line is SUPPRESSED (return "") until the sim grows a real
-			# consumer. Re-enable by adding a `resolve_active` match arm (heal,
-			# icy_floor) or an `_apply_passives` key (move_pool_bonus) in
-			# skill_effects.gd FIRST, then restoring the phrase here -- see
-			# the Skills-wave wiring task and CLAUDE.md's M-LEGIBILITY
-			# disclosed-finding paragraph. Known/accepted cost: this also
-			# blanks the whole `skill_effect_lines` line (cost prefix
-			# included, per that function's early-return-on-"" contract), so
-			# second_wind/icy_floor lose their AP/MP cost display on the
-			# combat slot-info line too -- advertising a cost for a
-			# non-effect would be the worse lie.
+			# (src/core/combat/skill_effects.gd) has no heal/icy_floor match
+			# arm. Generating "2 AP — restore 8 HP" for second_wind/icy_floor
+			# would promise a mechanic that never fires, so the line is
+			# SUPPRESSED (return "") until the sim grows a real consumer.
+			# Re-enable by adding a `resolve_active` match arm for the type
+			# FIRST, then restoring the phrase here -- see CLAUDE.md's
+			# M-LEGIBILITY disclosed-finding paragraph. Known/accepted cost:
+			# this also blanks the whole `skill_effect_lines` line (cost
+			# prefix included, per that function's early-return-on-""
+			# contract) -- advertising a cost for a non-effect would be the
+			# worse lie.
 			return ""
+		"move_pool_bonus":
+			# Skills Wave Task K2: UN-SUPPRESSED, but ONLY for an actively-cast
+			# skill (ap_cost > 0) -- skill_effects.gd's `resolve_active` now
+			# wires a real self-buff resolver for exactly that shape (today,
+			# only [Sneak]; see its doc comment for why the gate is ap_cost>0
+			# specifically). The two PRE-EXISTING 0-cost move_pool_bonus
+			# skills (quick_movement, battlefield_awareness) are UNCHANGED --
+			# they hit this same case with ap_cost==0 and stay SUPPRESSED,
+			# because they still have no resolver (disclosed above): showing
+			# "+1 move cell" for a cast that would still silently do nothing
+			# would be the exact lie this milestone exists to kill. Re-enable
+			# THEIR line the same way heal/icy_floor's comment describes --
+			# a resolve_active/`_apply_passives` consumer FIRST, then drop
+			# this ap_cost guard.
+			if ap_cost <= 0:
+				return ""
+			return "+%d move cells this turn" % int(effect.get("amount", 0))
 		"hp_bonus":
 			return "+%d max HP" % int(effect.get("amount", 0))
 		"hit_bonus":

@@ -136,7 +136,12 @@ task reviewer's standing hunt), against the character's profile voice:
   and Y", "eyes gleaming/glinting with", triadic flourishes ("X, Y,
   and Z" cadence stacking), rhetorical-question openers, over-named
   emotions ("she felt a surge of"), symmetrical sentence rhythm three
-  lines running, em-dash chains, "somehow", needless "very own".
+  lines running, em-dash chains, "somehow", needless "very own",
+  and the ELABORATING em-dash continuation ("X — and Y that explains
+  what X means", user-named 2026-07-07 on GDI copy: "This world
+  watches what you do — and answers by making you someone" → cut at
+  the dash; the bare statement is stronger. A dash continuation must
+  add a NEW fact, never amplify/restate the clause before it).
 - POSITIVE BAR: lines survive being read ALOUD in the character's
   register; contractions where the voice has them; people interrupt
   themselves, use wrong-size words, reference concrete objects; humor

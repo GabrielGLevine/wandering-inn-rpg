@@ -51,6 +51,13 @@ const PC_LIGHT_COLOR := Color(1.0, 0.95, 0.8)
 const PC_LIGHT_RADIUS := 32.0
 const PC_LIGHT_ENERGY := 1.0
 
+## Skills Wave Task K2 (the sneak seam): the PC sprite's alpha while
+## `Game.sim.sneaking` -- the plan's "PC translucency" presentation, the SAME
+## tint machinery (`modulate`) `_make_entity_visual`'s tint arg already uses,
+## just touching alpha only (RGB untouched, so a future PC tint variant would
+## still compose correctly -- no shipped variant carries one today).
+const SNEAK_ALPHA := 0.6
+
 ## M-BEAUTY Task B3: ambience presets (fireflies/dust_motes/leaves/
 ## pond_glints/embers -- see ambience.gd) spawned from map `ambience` data.
 ## Spec §5 budget: ≤6 emitters/map, asserted the same way as LIGHT_BUDGET.
@@ -109,6 +116,15 @@ var _player_anim_token := 0
 ## Freed with its holder on every `_rebuild_field` (see the null-out there);
 ## re-attached from `Game.sim.light_active` by `_reconcile_pc_light`.
 var _pc_light: PointLight2D
+## Skills Wave Task K2: the "have" half of `_reconcile_sneak_visual`'s
+## want/have guard -- unlike `_pc_light`'s node-presence check, translucency
+## has no child node to test `is_instance_valid` against, so this bool tracks
+## whether the CURRENT `_player_sprite` is actually tinted. Reset to false on
+## every `_rebuild_field` (alongside `_pc_light = null` below) because that
+## function always builds a FRESH, untinted `_player_sprite` -- without the
+## reset, a sneaking PC crossing a door (which KEEPS `sneaking` true) would
+## read want==have as already-satisfied and skip re-tinting the new sprite.
+var _sneak_tinted := false
 ## Skills Wave Task K1: the frost-cast ice overlay TileMapLayer for the current
 ## map (null when no cell is frozen). Rebuilt from `Game.sim.frozen_cells` on
 ## every `_rebuild_field` (so ice survives a map re-entry / load while frozen)
@@ -303,6 +319,10 @@ func _rebuild_field() -> void:
 	# _reconcile_pc_light re-attaches a fresh node to the NEW holder below if
 	# Game.sim.light_active is still set (map change / load while lit).
 	_pc_light = null
+	# Skills Wave Task K2: see `_sneak_tinted`'s own doc comment -- the fresh
+	# `_player_sprite` built below is always untinted, so the tracker must
+	# forget the old sprite's state too.
+	_sneak_tinted = false
 	# Skills Wave Task K1: the ice overlay is a child of _field_root (freed by the
 	# loop above) -- drop the dangling reference so _build_ice_overlay re-derives a
 	# fresh layer from Game.sim.frozen_cells for the new/reloaded map.
@@ -346,6 +366,10 @@ func _rebuild_field() -> void:
 	# (a map change or a load restored `light_active`). Done here, after the new
 	# _player_visual exists, so the glow survives every rebuild.
 	_reconcile_pc_light()
+	# Skills Wave Task K2: same reasoning as the light re-attach just above --
+	# a map change (door crossing, which KEEPS `sneaking` per the plan) or a
+	# load restored a fresh `_player_sprite` with no memory of the old alpha.
+	_reconcile_sneak_visual()
 	render_counts["pc_sprite"] = pc_sprite
 	ObservableBus.emit_domain_event(WIEvents.UI_ENTITIES_RENDERED, render_counts)
 	assert(_light_count <= LIGHT_BUDGET,
@@ -915,6 +939,31 @@ func _reconcile_pc_light() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_PC_LIGHT_RENDERED, {"active": want})
 
 
+## Skills Wave Task K2: brings the PC sprite's alpha into agreement with the
+## sim's authoritative `sneaking` flag -- the SAME want/have reconcile idiom
+## as `_reconcile_pc_light` just above (`_sneak_tinted` standing in for
+## `is_instance_valid(_pc_light)`, since translucency has no child node to
+## test). No-ops (no re-tint, no re-emit) once they already match, so a
+## dusk/night PHASE_CHANGED crossing while not sneaking is silent. Called
+## from three places, mirroring `_reconcile_pc_light`'s three call sites:
+## `_rebuild_field` (a door crossing KEEPS `sneaking` true per the plan, so
+## the translucency must survive the new map's fresh `_player_sprite` --
+## `_sneak_tinted` is reset false there for exactly this reason), the
+## SNEAK_STARTED/SNEAK_ENDED hook (every toggle and every automatic break),
+## and PHASE_CHANGED (sleep silently clears `sneaking`, same as light_active/
+## frozen_cells -- no dedicated toast/event, just the flag drop -- so this is
+## the only hook that catches the sleep-clear).
+func _reconcile_sneak_visual() -> void:
+	if _player_sprite == null:
+		return
+	var want := Game.sim.sneaking
+	if want == _sneak_tinted:
+		return
+	_player_sprite.modulate.a = SNEAK_ALPHA if want else 1.0
+	_sneak_tinted = want
+	ObservableBus.emit_domain_event(WIEvents.UI_SNEAK_RENDERED, {"active": want})
+
+
 ## Playtest feature 3: builds the PC glow PointLight2D as a child of
 ## `_player_visual`, centered on the PC's cell (so it tweens with the PC for
 ## free), reusing the same soft radial texture the map lights use. Steady (no
@@ -1072,12 +1121,21 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# lantern/cellar cast leaves it false (no-op here, prop light unchanged).
 		if String(payload.get("skill", "")) == "light":
 			_reconcile_pc_light()
+	elif type == WIEvents.SNEAK_STARTED or type == WIEvents.SNEAK_ENDED:
+		# Skills Wave Task K2: every deliberate toggle and every automatic
+		# break fires one of these -- reconcile the PC's translucency to match.
+		_reconcile_sneak_visual()
 	elif type == WIEvents.PHASE_CHANGED:
 		# Playtest feature 3: sleep() clears light_active and fires PHASE_CHANGED
 		# unconditionally -- reconcile detaches the PC glow on that beat. Harmless
 		# on a dusk/night crossing while lit (the flag is still true, reconcile is
 		# a no-op then), so this single hook covers the sleep-clear cleanly.
 		_reconcile_pc_light()
+		# Skills Wave Task K2: sleep() ALSO silently clears `sneaking` (no
+		# SNEAK_ENDED event -- see that clear's own comment), so this is the
+		# only hook that catches a sneaking-into-sleep PC's opacity reset.
+		# Harmless no-op on a dusk/night crossing while not sneaking.
+		_reconcile_sneak_visual()
 		# Skills Wave Task K1: sleep() thaws all ice (clears frozen_cells) and fires
 		# PHASE_CHANGED unconditionally, but PHASE_CHANGED does NOT rebuild the field
 		# -- so reconcile the ice overlay against the sim here too. On the sleep beat

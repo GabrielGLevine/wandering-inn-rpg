@@ -173,6 +173,19 @@ var light_active := false
 ## sewers channels must survive a walk up to the street and back down within a
 ## waking, exactly as removed_entities is cross-map.
 var frozen_cells: Dictionary = {}
+## Skills Wave Task K2 (the sneak seam, user-ratified stealth model): true
+## while the PC is deliberately sneaking. Toggled by `_toggle_sneak` (a
+## `sneaks: true`-tagged field skill's number key, K1's tag-not-id convention)
+## and cleared by `_break_sneak` on ANY of: interact() reaching a non-door
+## entity/prop response, a successful field-skill use on a target
+## (field_ambient no-op flourishes do NOT break it), or start_combat firing
+## for any reason. While true, `_check_trigger_radius` skips entirely (the
+## whole point -- walk PAST a proximity ambush). DELIBERATELY NOT SAVED: no
+## entry in save.gd's `serialize`/`apply` at all (see that file's comment) --
+## a save/reload always restores false, honestly documented rather than
+## persisted, mirroring the plan's explicit "drops on save/load" requirement.
+## Presentation (world.gd) reads this flag to tint the PC translucent.
+var sneaking := false
 var rng := RandomNumberGenerator.new()
 
 var _event_sink: Callable
@@ -465,6 +478,14 @@ func move_player(dir: Vector2i) -> bool:
 func _check_trigger_radius() -> void:
 	if combat != null or dialogue != null:
 		return
+	# Skills Wave Task K2 (the sneak seam): the whole point of sneaking is
+	# walking PAST a proximity danger, so this check skips ENTIRELY while
+	# sneaking -- no roll, no near-miss event, nothing. An interact-started
+	# encounter (the entity branch of interact()) is unaffected: sneaking
+	# past ≠ immunity to walking up and poking it (see interact()'s own
+	# break-on-response rule, which still fires start_combat there).
+	if sneaking:
+		return
 	for ent: Dictionary in entities.values():
 		if String(ent.get("kind", "")) != "encounter":
 			continue
@@ -487,6 +508,20 @@ func interact() -> Dictionary:
 	if target.is_empty():
 		_emit(WIEvents.INTERACT_NOTHING, {})
 		return {}
+	# Skills Wave Task K2 (break condition): interact() reaching ANY
+	# entity/prop response breaks sneaking -- EXCEPT a map transition
+	# ("crossing a door quietly is the point"), which covers both a real
+	# `door` entity and a `prop` whose `door_when` gate is currently met (the
+	# same transition, just gated). Computed BEFORE the match/dispatch below
+	# so the off-toast (if any) reads before whatever the interact resolves
+	# to, matching `_break_sneak`'s callers in `use_skill_field`. A door
+	# whose gate is UNMET falls through to the on_interact_accomplishment/
+	# use_skill branches below, which DO break -- consistent with "the same
+	# entity, not yet a door" reading as a real response.
+	var is_door_transition := String(target["kind"]) == "door" \
+			or (target.has("door_when") and _door_gate_met(target["door_when"] as Dictionary))
+	if not is_door_transition:
+		_break_sneak()
 	match String(target["kind"]):
 		"npc":
 			# Social Pillar S1: an NPC carrying a non-empty `talk_pool` plays a
@@ -673,8 +708,22 @@ func use_skill_field(skill_id: String) -> Dictionary:
 		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
 		_emit(WIEvents.TOAST, {"text": "That's not something you can do out here."})
 		return {}
+	# Skills Wave Task K2 (the sneak seam): the field toggle keys on a
+	# `sneaks: true` data TAG (K1's tag-not-id convention), not this skill's
+	# id -- whatever skill carries the tag flips `sneaking` on/off. Checked
+	# BEFORE the faced-cell lookup below: the toggle doesn't care what the PC
+	# is facing (unlike every other field seam here). Does its OWN
+	# SKILL_USED/toast emit and returns -- never falls through to the
+	# requires_skill/observe/charm/burn/freeze/field_ambient dispatch below.
+	if bool(skills.get(skill_id, {}).get("sneaks", false)):
+		return _toggle_sneak(skill_id)
 	var target := entity_at(player_cell + player_facing)
 	if not target.is_empty() and String(target.get("requires_skill", "")) == skill_id and target.has("on_skill_use"):
+		# Skills Wave Task K2 (break condition): a successful field-skill use ON
+		# A TARGET breaks sneaking -- broken BEFORE the skill's own use_skill()
+		# emits, so the off-toast reads first, exactly as interact()'s pre-
+		# dispatch break does below.
+		_break_sneak()
 		return use_skill(skill_id, String(target["id"]))
 	# Three Pillars P3: [Observe] reads a DIFFERENT field than the requires_skill/
 	# on_skill_use seam above -- ANY faced entity responds with its own `observe`
@@ -682,6 +731,9 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	# (opaque; feeds [Tactician]'s levels). An empty faced cell falls through to the
 	# skill's field_ambient below. Flavor only -- never numbers/stats/progress.
 	if skill_id == "observe" and not target.is_empty():
+		# Skills Wave Task K2 (break condition): see the requires_skill branch's
+		# comment above -- broken before this branch's own emits.
+		_break_sneak()
 		var observe_line := String(target.get("observe", "You watch. Details surface."))
 		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": String(target["id"])})
 		_mark_skill_used(skill_id)
@@ -704,6 +756,9 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	# The flavor line, skill_used, and journal reveal fire every call; only the
 	# opaque counter is deduped. Empty faced cell falls through to field_ambient.
 	if skill_id == "charming_smile" and not target.is_empty():
+		# Skills Wave Task K2 (break condition): see the requires_skill branch's
+		# comment above -- broken before this branch's own emits.
+		_break_sneak()
 		var friendly_line := String(target.get("friendly_line", "You offer a warm, disarming smile. It costs nothing, and it is not unwelcome."))
 		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": String(target["id"])})
 		_mark_skill_used(skill_id)
@@ -721,6 +776,9 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	# `burnable: true` can be burned -- a quest-required prop simply omits the tag
 	# (the opus-hint gate), so this can never destroy required content.
 	if not target.is_empty() and bool(target.get("burnable", false)) and bool(skills.get(skill_id, {}).get("burns", false)):
+		# Skills Wave Task K2 (break condition): see the requires_skill branch's
+		# comment above -- broken before this branch's own emits.
+		_break_sneak()
 		var burned_id := String(target["id"])
 		var burned_cell: Vector2i = target["cell"]
 		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": burned_id})
@@ -746,6 +804,9 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	# wake; never author one.
 	var faced_cell := player_cell + player_facing
 	if bool(skills.get(skill_id, {}).get("freezes", false)) and _is_freezable(faced_cell) and not _is_frozen(faced_cell):
+		# Skills Wave Task K2 (break condition): see the requires_skill branch's
+		# comment above -- broken before this branch's own emits.
+		_break_sneak()
 		if not frozen_cells.has(current_map):
 			frozen_cells[current_map] = {}
 		(frozen_cells[current_map] as Dictionary)[faced_cell] = true
@@ -774,6 +835,44 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
 	_emit(WIEvents.TOAST, {"text": "Nothing here calls for that."})
 	return {}
+
+
+## Skills Wave Task K2: the sneak field toggle (see `use_skill_field`'s
+## `sneaks: true` tag dispatch). Flips `sneaking`, marks the skill used, and
+## emits the matching state event + the on/off toast -- both voice-lint
+## clean per the plan ("You soften your step." / "You straighten up.", the
+## SAME off-toast `_break_sneak` uses, so an automatic break and a deliberate
+## re-press read identically to the player). Never refuses (both guards
+## already passed in the caller) and never touches a faced target -- the
+## toggle is unconditional on the PC's own state alone.
+func _toggle_sneak(skill_id: String) -> Dictionary:
+	sneaking = not sneaking
+	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
+	_mark_skill_used(skill_id)
+	if sneaking:
+		_emit(WIEvents.SNEAK_STARTED, {})
+		_emit(WIEvents.TOAST, {"text": "You soften your step."})
+	else:
+		_emit(WIEvents.SNEAK_ENDED, {})
+		_emit(WIEvents.TOAST, {"text": "You straighten up."})
+	return {"sneaking": sneaking}
+
+
+## Skills Wave Task K2: the ONE choke point that clears `sneaking` on any of
+## the plan's break conditions (interact()'s non-door dispatch, a successful
+## field-skill use on a target, start_combat firing for any cause). A no-op
+## (no emit) when not currently sneaking, so every call site can call this
+## UNCONDITIONALLY without checking `sneaking` first -- idempotent exactly
+## like `_reconcile_pc_light`'s want==have guard, just on the sim side. Fires
+## the SAME off-toast `_toggle_sneak` uses on a deliberate re-press, so the
+## player sees one consistent line regardless of whether they chose to stop
+## or the world chose for them.
+func _break_sneak() -> void:
+	if not sneaking:
+		return
+	sneaking = false
+	_emit(WIEvents.SNEAK_ENDED, {})
+	_emit(WIEvents.TOAST, {"text": "You straighten up."})
 
 
 ## Social Pillar S1: the rotating "small talk" interact path. Plays ONE pooled
@@ -1208,6 +1307,15 @@ func start_combat(entity_id: String) -> bool:
 			arena = a
 	if arena.is_empty():
 		return false
+	# Skills Wave Task K2 (break condition): start_combat firing for ANY
+	# cause clears sneaking -- placed here, the single choke point past every
+	# early-return above, so only a fight that is ACTUALLY about to begin
+	# breaks it (a refused start_combat attempt costs nothing, matching every
+	# other break condition's "only a genuine success counts" rule).
+	# _check_trigger_radius already skips entirely while sneaking (so it can
+	# never reach here sneaking), but a dialogue-effect or an interact-started
+	# encounter's own start_combat call both route through this one site too.
+	_break_sneak()
 	_pending_encounter = entity_id
 	# M7 Task E2 (M-BEAUTY FOLD): route combat's events through
 	# _combat_event_relay instead of _event_sink directly -- it forwards
@@ -1620,6 +1728,14 @@ func sleep() -> void:
 	# world.gd's field reconcile drops the ice overlay on the same beat, and before
 	# the _combat_config early-return so a config-less sim (unit tests) thaws too.
 	frozen_cells.clear()
+	# Skills Wave Task K2: sleep clears sneaking too, "with everything else"
+	# per the plan -- a SILENT clear (no SNEAK_ENDED, no off-toast), the SAME
+	# convention as light_active/frozen_cells just above (sleep already has
+	# its own presentation for this beat; a second toast would be noise).
+	# world.gd's PHASE_CHANGED hook (fired unconditionally below) is the one
+	# that catches this and restores the PC's opacity, exactly like it
+	# catches the light/ice clears.
+	sneaking = false
 	# M7 M-BEAUTY FOLD: the day/night clock resets UNCONDITIONALLY at every
 	# sleep, and phase_changed fires every time too (even a "day"->"day"
 	# no-op reset) -- distinct from _tick_action's crossing-only emits during
@@ -1944,6 +2060,7 @@ func snapshot() -> Dictionary:
 		"light_active": light_active,
 		"frozen_cells": frozen_cells_json(),
 		"phase": phase(),
+		"sneaking": sneaking,
 	}
 
 
