@@ -27,6 +27,21 @@ func _last_dialogue_text() -> String:
 	return text
 
 
+## The most recent dialogue_line event's speaker, or "" if none fired since
+## the last _events.clear() (Social Pillar II Phase C: landing Erin/Relc's
+## talk_pool changed game.interact()'s OWN return shape on their FIRST talk
+## of a waking from {speaker,text} to the pool-absorb {talked,index} --
+## the emitted dialogue_line event still carries speaker/text either way,
+## so a test that cares about the rendered line asserts on the event, not
+## on interact()'s raw return value).
+func _last_dialogue_speaker() -> String:
+	var speaker := ""
+	for e: Dictionary in _events:
+		if e["type"] == "dialogue_line":
+			speaker = String(e["payload"]["speaker"])
+	return speaker
+
+
 func _load_json(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	assert(parsed is Dictionary, "invalid JSON at " + path)
@@ -101,9 +116,15 @@ func _init() -> void:
 	assert(not game.move_player(Vector2i.UP), "npc cell blocks movement")
 	assert(game.player_facing == Vector2i.UP, "blocked move still sets facing")
 
-	# Interact with npc -> dialogue_line
+	# Interact with npc -> dialogue_line. Social Pillar II Phase C: Erin now
+	# carries a talk_pool, so her FIRST interact this waking is intercepted by
+	# the pool-absorb branch (returns {talked,index}, not {speaker,text}
+	# directly) before ever reaching her (here-unloaded) conversation graph or
+	# plain dialogue[0] line -- the emitted dialogue_line event still carries
+	# speaker/text either way, which is what this now asserts on.
 	var line := game.interact()
-	assert(line.get("speaker", "") == "Erin", "npc interact returns dialogue line")
+	assert(line.get("talked", "") == "erin", "npc interact returns the pool-talked shape (Phase C)")
+	assert(_last_dialogue_speaker() == "Erin", "dialogue_line emitted with Erin's speaker")
 	assert(_count("dialogue_line") == 1, "dialogue_line emitted")
 
 	# Walk to face the table (prop at [5,4]) from [6,4]
@@ -116,7 +137,11 @@ func _init() -> void:
 	var effect := game.interact()
 	assert(effect.get("accomplishment", "") == "cleaned_the_inn", "prop interact returns effect")
 	assert(_count("skill_used") == 1, "skill_used emitted")
-	assert(_count("accomplishment_recorded") == 1, "accomplishment_recorded emitted")
+	# Social Pillar II Phase C: Erin's earlier talk_pool interact (above) already
+	# banked TWO accomplishment_recorded events (chatted_with_erin + heard_gossip,
+	# both fired by WISocial.talk_pool_line) before this section ever clears
+	# _events, so the running total is 3 here, not 1: those 2 + this cleaning's 1.
+	assert(_count("accomplishment_recorded") == 3, "accomplishment_recorded emitted")
 	# Economy v1 D2: dirty_table's on_skill_use now carries a `gold: 1` wage, so
 	# cleaning emits TWO toasts (the "[Basic Cleaning]..." accomplishment toast +
 	# the "Earned 1 gold." wage toast) and one gold_changed, and the purse gains 1.
@@ -131,7 +156,7 @@ func _init() -> void:
 	# Counter semantics: re-use increments the count, event fires each time
 	game.interact()
 	assert(_count("skill_used") == 2, "second use still emits skill_used")
-	assert(_count("accomplishment_recorded") == 2, "counter records each increment")
+	assert(_count("accomplishment_recorded") == 4, "counter records each increment")
 	assert(game.accomplishment_count("cleaned_the_inn") == 2, "count is 2 after two uses")
 	assert(game.accomplishment_count("never_done") == 0, "absent id counts 0")
 

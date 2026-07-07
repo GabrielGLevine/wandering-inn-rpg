@@ -21,6 +21,8 @@
   { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
 
   { "_comment": "Relc is right below, already met -- 'meet' node's visible options are ['What's out here worth guarding?', 'Got time to show me how to fight? (Spar)', 'Keep walking.'] (index 1 is the spar option).", "action": "press", "name": "interact" },
+  {"_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Relc"}, "timeout_sec": 5},
+  {"action": "press", "name": "interact"},
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "relc_intro" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "action": "move", "direction": "down", "steps": 1 },

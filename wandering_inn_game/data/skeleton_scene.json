@@ -399,6 +399,33 @@
      "sprite": "citizen_f",
      "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
      "friendly_line": "Oh - hi! You've got a good face, you know that? Come in, sit down. I'll find you something warm - on the house, probably. Don't tell Lyonette I said that.",
+     "_comment_stages": "Social Pillar II Phase C: talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the erin_errand.json hub-topic unlocks (erin_chess/erin_home) lifted verbatim from docs/design/social-2-staging/erin_stages.json after the re-path wave went green. Stage 3's erin_daily_meal perk stays UNBUILT/flagged (needs the entity_first_use per-waking dialogue seam, not built this task).",
+     "talk_pool": [
+      "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
+      "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
+      "Everything okay? You've got a look. I know that look - I make that look in mirrors.",
+      "If you hear yelling about a door later, that's just the inn being the inn. Don't worry about it."
+     ],
+     "talk_pool_stages": [
+      {
+       "id": "erin_regular",
+       "requires_accomplishment": { "errand_decided": 1, "chatted_with_erin": 2 },
+       "lines": [
+        "Hey, you! Good timing. I just invented a new way to burn soup. Kidding. Mostly. Sit, sit.",
+        "You know you don't have to hover by the door anymore, right? You're basically furniture now. Nice furniture.",
+        "Selys asked about you the other day. I said nice things. You owe me one truthful compliment about my pasta."
+       ]
+      },
+      {
+       "id": "erin_friend_of_the_inn",
+       "requires_accomplishment": { "resolved_wrong_order": 1, "chatted_with_erin": 4 },
+       "lines": [
+        "There you are! Sit down, I'm testing a recipe on you. That came out wrong. WITH you. Testing it with you.",
+        "Lyonette hums when she scrubs now. She'd deny it under oath, so don't tell her I said anything. That was you, by the way.",
+        "Some days this place is a lot. Then somebody walks in and it's less a lot. You're one of the less-a-lot ones."
+       ]
+      }
+     ],
      "conversation": "erin_errand",
      "dialogue": [
       {
@@ -3015,6 +3042,33 @@
      "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it — including you, now.",
      "friendly_line": "Heh. Alright, alright - I like you. You've got the look of someone who buys a guy a drink after. We're good, you and me. Best guardsman in Liscor says so.",
      "facing": "left",
+     "_comment_stages": "Social Pillar II Phase C: talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the relc_intro.json meet-topic unlocks (relc_army/relc_after) lifted verbatim from docs/design/social-2-staging/relc_stages.json after the re-path wave went green. relc_after's daughter/Embria reveal stays OUT (V5 canon, hard rail -- the staged oblique 'people I left in it' copy is what ships). Stage 3's spar-wager perk refinement stays UNBUILT/flagged (status quo: relc_spar already re-offers).",
+     "talk_pool": [
+      "Heh. You walk like nobody's ever hit you properly. We should fix that sometime - for fun.",
+      "Road's boring today. I keep hoping something stupid charges the gate so I can try out [Relc Headbutt].",
+      "You gonna eat that? ...No? Shame. Guarding's hungry work, and I'm the best there is at it.",
+      "Stand up straight, kid. Best guardsman in Liscor is watching this road. That's me. Obviously."
+     ],
+     "talk_pool_stages": [
+      {
+       "id": "relc_sparring_partner",
+       "requires_accomplishment": { "sparred_with_relc": 1, "chatted_with_relc": 2 },
+       "lines": [
+        "Hah! There's my favorite punching bag. Kidding — the dummies are my favorite. You're a close third after lunch.",
+        "You're standing straighter. See that? That's me. I'm basically a [Teacher]. Don't tell the Watch, they'll dock my pay for moonlighting.",
+        "Quiet shift. If anything with teeth shows up, you'll hear me laughing before you hear the bell."
+       ]
+      },
+      {
+       "id": "relc_brother_in_arms",
+       "requires_accomplishment": { "cleared_the_warren": 1, "chatted_with_relc": 3 },
+       "lines": [
+        "There they are. You know what I like about you? You went DOWN the creepy hole. Most people file a report about the hole. From upstairs.",
+        "Zevara smiled this week. Actual smile. The warren's sealed and the city's still standing — I'm taking full credit and handing you most of it.",
+        "Next time something ugly crawls out of the ground, I'm not even worried. That's new for me. Don't make it weird."
+       ]
+      }
+     ],
      "conversation": "relc_intro",
      "dialogue": [
       {

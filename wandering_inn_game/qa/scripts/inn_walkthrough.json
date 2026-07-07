@@ -56,6 +56,19 @@
    "name": "interact"
   },
   {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Erin this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Erin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
    "action": "wait_for_event",
    "type": "dialogue_started",
    "payload_contains": {

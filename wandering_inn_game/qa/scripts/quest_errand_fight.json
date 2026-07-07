@@ -21,6 +21,19 @@
    "name": "interact"
   },
   {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Erin this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Erin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
    "action": "wait_for_event",
    "type": "dialogue_started",
    "payload_contains": {
@@ -102,6 +115,19 @@
     12,
     12
    ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
   },
   {
    "action": "press",
@@ -647,6 +673,19 @@
    "action": "move",
    "direction": "up",
    "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL PILLAR II PHASE C: the sleep beat earlier in this script re-armed Erin's pool (social_talked cleared) -- this report-back is a fresh first-talk-of-a-new-waking, so it absorbs the rotating pool line before a second interact reaches her real hub.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Erin"
+   },
+   "timeout_sec": 5
   },
   {
    "action": "press",

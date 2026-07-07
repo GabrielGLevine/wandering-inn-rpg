@@ -33,6 +33,8 @@
   { "action": "move", "direction": "down", "steps": 6 },
   { "action": "assert_state", "path": "player_cell", "equals": [12, 12] },
   { "action": "press", "name": "interact" },
+  { "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Relc" }, "timeout_sec": 5 },
+  { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "relc_intro" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "_comment": "meet option 0 'Just a traveler...' banks met_relc -> banter.", "action": "press", "name": "confirm" },

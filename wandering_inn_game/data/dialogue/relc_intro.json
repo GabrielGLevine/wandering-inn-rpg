@@ -80,6 +80,26 @@
     {
      "text": "Keep walking.",
      "end": true
+    },
+    {
+     "text": "Were you always a guardsman?",
+     "requires": {
+      "accomplishment": {
+       "sparred_with_relc": 1,
+       "chatted_with_relc": 2
+      }
+     },
+     "goto": "relc_army"
+    },
+    {
+     "text": "You ever miss the army?",
+     "requires": {
+      "accomplishment": {
+       "cleared_the_warren": 1,
+       "chatted_with_relc": 3
+      }
+     },
+     "goto": "relc_after"
     }
    ]
   },
@@ -150,6 +170,52 @@
     },
     {
      "text": "Thanks, Relc.",
+     "end": true
+    }
+   ]
+  },
+  "relc_army": {
+   "speaker": "Relc",
+   "text": "Ha! No. Army, before. Liscor's got one — it just never comes home. I did. Walls pay worse, but nobody makes you march in the rain, and I am DONE with marching. Best decision I ever made, after the spear.",
+   "options": [
+    {
+     "text": "Why'd you leave?",
+     "goto": "relc_army_two"
+    },
+    {
+     "text": "Back a step.",
+     "goto": "meet"
+    },
+    {
+     "text": "Fair trade.",
+     "end": true
+    }
+   ]
+  },
+  "relc_army_two": {
+   "speaker": "Relc",
+   "text": "Long version costs a drink. Short version: I got tired of holes in the ground and people I liked going into them. Watch work, the worst thing I dig is paperwork. ...What? I can be deep. It's the tail, nobody expects it.",
+   "options": [
+    {
+     "text": "Back a step.",
+     "goto": "meet"
+    },
+    {
+     "text": "First drink's on me sometime.",
+     "end": true
+    }
+   ]
+  },
+  "relc_after": {
+   "speaker": "Relc",
+   "text": "Miss it? I left people in it. Some I'd still take a spear for, even now. That's all the answer you're getting sober. ...Hey. You did good, down there. I don't say that to walls, so stand still while it lands.",
+   "options": [
+    {
+     "text": "Back a step.",
+     "goto": "meet"
+    },
+    {
+     "text": "It landed.",
      "end": true
     }
    ]
