@@ -225,7 +225,13 @@ func state() -> Dictionary:
 ## --script-mode compile safety this file otherwise guards -- verified by
 ## running test_combat_visuals.gd, which load()s+instantiates this file
 ## directly).
-func line_target_text() -> String:
+## `cycle_glyph`/`confirm_glyph` (Controller support, S3, issue #18): the
+## device-correct keycap text, byte-identical defaults to the old hardcoded
+## literals ("Tab"/"Enter") -- this file carries ZERO bare autoload
+## identifiers by contract (`tests/test_combat_visuals.gd` asserts it
+## compiles standalone), so the REAL glyphs come from `WIInputHints.label()`
+## at the composition root (combat_screen.gd), passed in as plain strings.
+func line_target_text(cycle_glyph: String = "Tab", confirm_glyph: String = "Enter") -> String:
 	var me: String = _view.active_id()
 	var dir_token := String(LINE_DIRS[_line_dir_index])
 	var dir_vec: Vector2i = LINE_DIR_VECTORS[dir_token]
@@ -246,7 +252,7 @@ func line_target_text() -> String:
 					nm = _grey(nm)
 				names.append(nm)
 	var hits_text := ", ".join(names) if not names.is_empty() else "(none)"
-	return "Direction: %s (Tab cycles, Enter confirms)\nHits: %s" % [dir_token.capitalize(), hits_text]
+	return "Direction: %s (%s cycles, %s confirms)\nHits: %s" % [dir_token.capitalize(), cycle_glyph, confirm_glyph, hits_text]
 
 
 func _grey(text: String) -> String:

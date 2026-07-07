@@ -70,6 +70,17 @@ func world_to_screen(world_pos: Vector2) -> Vector2:
 	return _container.get_global_transform() * canvas_pos
 
 
+## Controller support fix-wave (issue #18 review Finding B): whether the GDI
+## cold-open/epilogue veil currently holds the screen. world.gd's
+## `_movement_gated()` reaches this through its injected `_main` ref (the
+## same injected-ref-not-tree-scan idiom the other modal gates use); the
+## veil itself lives HERE (a sibling UI layer, not injected into world), so
+## Main brokers the query. Null-safe: false during the title (no veil
+## spawned) and across `_clear_ui_layers` teardown windows.
+func veil_modal_active() -> bool:
+	return _sleep_veil != null and _sleep_veil.modal_active()
+
+
 func swap_to_title() -> void:
 	_clear_world_viewport()
 	_clear_ui_layers()

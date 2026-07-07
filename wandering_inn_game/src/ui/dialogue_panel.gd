@@ -103,7 +103,10 @@ func _ready() -> void:
 	# Continuation affordance shown only on a non-final page of a paged node —
 	# it occupies the option row's space (options are hidden until the last
 	# page), so it never adds a row to the last-page layout that must fit.
-	_more_hint = UIChrome.make_label("▼  more — press Enter")
+	# Controller support (S3, issue #18): text is set per-render in
+	# `_render_page()` (composed through WIInputHints), not fixed here --
+	# this initial value is just a placeholder before the first render.
+	_more_hint = UIChrome.make_label("")
 	_more_hint.add_theme_color_override("font_color", LOCKED_COLOR)
 	_more_hint.hide()
 	stack.add_child(_more_hint)
@@ -116,6 +119,12 @@ func _ready() -> void:
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	match type:
+		WIEvents.INPUT_DEVICE_CHANGED:
+			# Controller support (S3): re-render the CURRENT page on a device
+			# swap so the "more" hint's glyph updates live, not just on the
+			# next page turn. No-op while no conversation is on screen.
+			if _shown:
+				_render_page()
 		WIEvents.DIALOGUE_STARTED:
 			_shown = false
 		WIEvents.DIALOGUE_NODE:
@@ -191,6 +200,12 @@ func _sentence_boundary_cut(cur: String) -> int:
 func _render_page() -> void:
 	_text_label.text = _pages[_page_idx]
 	var on_last := _on_last_page()
+	# Controller support (S3): composed through WIInputHints every render so
+	# a device swap mid-conversation shows the right glyph on the NEXT page
+	# turn; kb-mode output is byte-identical to the old hardcoded literal
+	# ("▼  more — press Enter"), so no QA re-pin is needed (no canonical
+	# asserts this text anyway).
+	_more_hint.text = "▼  more — press %s" % WIInputHints.label("confirm")
 	_more_hint.visible = not on_last
 	_options_box.visible = on_last
 	if on_last:

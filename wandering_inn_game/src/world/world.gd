@@ -145,6 +145,13 @@ var _inventory: Node
 ## which field skill occupies a pressed slot -- the hotbar owns the slot list,
 ## keeping the key->skill mapping single-sourced with what the bar renders.
 var _field_hotbar: Node
+## Controller support (S1, issue #18): the field hotbar's pad-cursor index,
+## mirroring combat's `_bar_index` idiom (combat_screen.gd) -- `-1` = nothing
+## highlighted (v1's direct-fire resting state), `>= 0` = a slot the player
+## is hovering via `slot_prev`/`slot_next`, activated by `confirm`. Owned
+## here (not on `_field_hotbar`) for the same "screen owns selection, hotbar
+## only renders" split combat's `_bar_index` already follows.
+var _field_slot_index := -1
 ## The WIMain host, injected downward at spawn (M5 arch finding 3). M-BEAUTY
 ## R3: world.gd no longer calls `world_labels()` itself (field labels
 ## retired) -- kept for architectural symmetry with the other injected UI
@@ -260,13 +267,56 @@ func _movement_gated() -> bool:
 			or (_journal != null and bool(_journal.get("open"))) \
 			or (_inventory != null and bool(_inventory.get("open"))):
 		return true
+	# Controller support fix-wave (issue #18 review Finding B): the GDI
+	# cold-open/epilogue veil is modal too. sleep_veil.gd's own
+	# `_unhandled_input` treats confirm/cancel as "advance the line" while
+	# either runs -- and on pad, `interact` shares button A with `confirm`, so
+	# without this gate a pad player advancing the opener text would ALSO fire
+	# world `interact()`s at whatever the PC faces under the black. Never true
+	# under QA (the veil collapses to an instant coverage emit before ever
+	# setting its running flags -- see sleep_veil.gd's `modal_active()` doc
+	# comment), so no canonical's input timing changes.
+	if _main != null and _main.veil_modal_active():
+		return true
 	return false
 
 
+## INPUT-DISPATCH-ORDER TRAP (issue #18 review Finding A -- read before
+## reordering ANY branch below): on pad, `interact` and `confirm` BOTH bind
+## to button A (S1's locked table), so one A-press satisfies BOTH
+## `is_action_pressed` checks on the same event and whichever branch is
+## checked first in this if/elif chain wins. The slot-armed
+## `confirm`/`cancel` branches must therefore run BEFORE the interact check
+## -- with interact first, the pad slot-select+confirm idiom is silently
+## dead code (A always interacts, the armed slot never fires). Safe for
+## keyboard: `confirm` (Enter) and `cancel` (Esc) previously did nothing in
+## the world context, both new branches are `_field_slot_index >= 0`-gated,
+## and keyboard players only arm that index via the additive `[`/`]` keys.
 func _unhandled_input(event: InputEvent) -> void:
 	if _movement_gated():
 		return
-	if event.is_action_pressed("interact"):
+	if event.is_action_pressed("confirm") and _field_slot_index >= 0:
+		# Controller support (S1, reordered by the Finding A fix): activates
+		# the pad-hovered slot exactly as pressing its number key would --
+		# same `use_skill_field` call, same "no field skill in that slot"
+		# no-op guard. Activation DISARMS the selection (one-shot): if it
+		# stayed armed, every later A-press would keep re-firing the skill
+		# instead of interacting -- the exact interact/confirm-share-A trap
+		# this ordering exists to manage. Re-arm is one LB/RB press away.
+		if _field_hotbar != null:
+			var skill_id := String(_field_hotbar.skill_for_slot(_field_slot_index + 1))
+			if skill_id != "":
+				Game.sim.use_skill_field(skill_id)
+		_disarm_field_slot()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("cancel") and _field_slot_index >= 0:
+		# Controller support fix-wave: B/Esc disarms an armed slot selection
+		# without firing anything -- the mirror of combat's cancel-back-to-
+		# resting idiom. Gated on an armed index, so an unarmed cancel still
+		# falls through to whoever owns Esc next (the pause menu).
+		_disarm_field_slot()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("interact"):
 		Game.sim.interact()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_up"):
@@ -280,6 +330,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_right"):
 		Game.sim.move_player(Vector2i.RIGHT)
+		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("slot_prev") and event.is_action_pressed("slot_prev"):
+		_move_field_slot_cursor(-1)
+		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("slot_next") and event.is_action_pressed("slot_next"):
+		_move_field_slot_cursor(1)
 		get_viewport().set_input_as_handled()
 	else:
 		# Three Pillars P2: field-skill hotbar direct-fire. Reuses combat's
@@ -296,6 +352,35 @@ func _unhandled_input(event: InputEvent) -> void:
 			if skill_id != "":
 				Game.sim.use_skill_field(skill_id)
 				get_viewport().set_input_as_handled()
+
+
+## Controller support (S1): moves the field hotbar's pad cursor by `delta`
+## slots, wrapping (mirrors combat's `_move_bar_cursor`). A first press from
+## the resting `-1` state lands on slot 0. No-ops when the bar is empty
+## (classless cold start -- `_field_hotbar.slot_count() == 0`) or the hotbar
+## ref hasn't been injected yet.
+func _move_field_slot_cursor(delta: int) -> void:
+	if _field_hotbar == null:
+		return
+	var count: int = _field_hotbar.slot_count()
+	if count <= 0:
+		return
+	if _field_slot_index < 0:
+		_field_slot_index = 0
+	else:
+		_field_slot_index = (_field_slot_index + delta + count) % count
+	_field_hotbar.set_selected(_field_slot_index)
+
+
+## Controller support fix-wave: clears the armed slot selection (index AND
+## the rendered highlight). Called after a confirm-activation (one-shot
+## semantics -- see `_unhandled_input`'s confirm branch), on a cancel press,
+## and shared with the event-driven reset in `_on_domain_event` (the slot
+## LIST changed, so the cursor must not point at a stale entry).
+func _disarm_field_slot() -> void:
+	_field_slot_index = -1
+	if _field_hotbar != null:
+		_field_hotbar.set_selected(-1)
 
 
 ## Which `hotbar_N` action (1..9) this event pressed, or -1 for none -- the same
@@ -1158,6 +1243,14 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 					_paint_ice_cell(tc_cell)
 				"scorched":
 					_spawn_burn_poof(tc_cell)
+	elif type in [WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED]:
+		# Controller support (S1): these are exactly the events
+		# `field_hotbar.gd`'s `_render()` re-derives the slot LIST on -- the
+		# pad cursor here must reset alongside it (a stale index could point
+		# past a shrunk list, or at a now-different skill on a same-size one).
+		# (The hotbar's own `_render()` already drew with -1, so the helper's
+		# `set_selected(-1)` is an idempotent no-op redraw here.)
+		_disarm_field_slot()
 
 
 func _move_player_visual(target: Vector2) -> void:

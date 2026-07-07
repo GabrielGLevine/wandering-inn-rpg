@@ -70,6 +70,15 @@ func _is_gesture_event(event: InputEvent) -> bool:
 		return event.pressed and not event.echo
 	if event is InputEventMouseButton:
 		return event.pressed
+	# Controller support (S2, issue #18): a pad-only player never touches a
+	# key/mouse, so without this the GESTURE beat is an unbeatable wall for
+	# them. InputEventJoypadButton only -- InputEventJoypadMotion is
+	# deliberately EXCLUDED, or stick drift past the deadzone (a pad resting
+	# in a player's lap, no deliberate press) would silently skip the beat,
+	# defeating its whole purpose (the web AudioContext-unlock / iframe-focus
+	# gesture, per the file header doc).
+	if event is InputEventJoypadButton:
+		return event.pressed
 	return false
 
 

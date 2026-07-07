@@ -198,6 +198,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_board_renderer.mark_death_visible(String(payload["id"]))
 		return
 	match type:
+		WIEvents.INPUT_DEVICE_CHANGED:
+			# Controller support (S3): re-render the readout/hint strip on a
+			# device swap mid-combat -- `_refresh()` recomputes `hints` fresh
+			# from WIInputHints every call, so this just re-triggers it.
+			if _mode != Mode.INACTIVE:
+				_refresh()
 		WIEvents.COMBAT_STARTED:
 			_show_combat()
 			_render_tutor_line(tutor)
@@ -244,7 +250,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 ## (_apply_playback_event) so the two can't drift out of sync with each other.
 func _apply_combat_finished(payload: Dictionary) -> void:
 	_mode = Mode.BANNER
-	_hud.show_banner("Victory! — Enter" if bool(payload["victory"]) else "Defeat… — Enter")
+	# Controller support (S3, issue #18): composed through WIInputHints
+	# directly (combat_screen.gd IS the composition root, unlike combat_hud.gd/
+	# targeting_controller.gd, which stay autoload-free by contract); kb-mode
+	# output is byte-identical to the old literal.
+	var confirm_glyph: String = WIInputHints.label("confirm")
+	_hud.show_banner(("Victory! — %s" % confirm_glyph) if bool(payload["victory"]) else ("Defeat… — %s" % confirm_glyph))
 	_refresh()
 
 
@@ -279,11 +290,22 @@ func _refresh() -> void:
 	var bar_active := _mode in [Mode.HOTBAR, Mode.ATTACK, Mode.SKILL_TARGET, Mode.DASH_CONFIRM]
 	var in_targeting := _mode in [Mode.ATTACK, Mode.SKILL_TARGET]
 	var targeting_state := {}
+	# Controller support (S3, issue #18): the composition root is the ONLY
+	# place `targeting_controller.gd`/`combat_hud.gd` may be hinted with real
+	# device glyphs -- both files carry ZERO bare autoload identifiers by
+	# contract (test_combat_visuals.gd asserts standalone compile), so
+	# WIInputHints.label() is only ever called HERE and threaded down as
+	# plain strings.
+	var hints := {
+		"confirm": WIInputHints.label("confirm"), "cancel": WIInputHints.label("cancel"),
+		"cycle": WIInputHints.label("cycle"), "move": WIInputHints.label("move"),
+		"hotbar": WIInputHints.label("hotbar"), "end_turn": WIInputHints.label("end_turn"),
+	}
 	if in_targeting and _targeting != null:
 		targeting_state = _targeting.state()
 		if bool(targeting_state.get("line_mode", false)):
-			targeting_state["line_text"] = _targeting.line_target_text()
-	_hud.refresh(_view, bar_active, in_targeting, _mode == Mode.BANNER, targeting_state, _bar_slots, _bar_index, _info_slot_index, _mode == Mode.DASH_CONFIRM)
+			targeting_state["line_text"] = _targeting.line_target_text(hints["cycle"], hints["confirm"])
+	_hud.refresh(_view, bar_active, in_targeting, _mode == Mode.BANNER, targeting_state, _bar_slots, _bar_index, _info_slot_index, _mode == Mode.DASH_CONFIRM, hints)
 
 
 ## Per-combatant board position, visibility, and HP/MP bars/labels, sourced
@@ -658,6 +680,17 @@ func _close_banner() -> void:
 ## there is no Enter-confirms-a-highlight flow anymore. InputMap.has_action
 ## guards kept for the slot actions so a stripped-down input map degrades to
 ## inert instead of erroring.
+##
+## Controller support (S1, issue #18): number keys have no pad equivalent, so
+## `slot_prev`/`slot_next` (LB/RB) move a visible cursor over `_bar_index`
+## (reusing the same field the ATTACK/SKILL_TARGET aim-highlight already
+## drives -- HOTBAR's resting `_bar_index == -1` just means "nothing
+## highlighted yet", so parking the cursor there while still in HOTBAR mode
+## is a safe, additive use of the same var) and `confirm` (A on pad, Enter on
+## keyboard) activates whatever slot is currently highlighted, exactly as a
+## numbered press would. Keyboard-only play never presses slot_prev/next/
+## confirm from this mode (Enter has no prior HOTBAR-mode meaning), so this
+## is purely additive.
 func _input_hotbar(event: InputEvent) -> void:
 	if event.is_action_pressed("move_up"):
 		_move_active_or_bump(Vector2i.UP)
@@ -674,12 +707,37 @@ func _input_hotbar(event: InputEvent) -> void:
 	elif InputMap.has_action("end_turn") and event.is_action_pressed("end_turn"):
 		_activate_bar_slot(_bar_slot_index_of("end_turn"))
 		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("slot_prev") and event.is_action_pressed("slot_prev"):
+		_move_bar_cursor(-1)
+		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("slot_next") and event.is_action_pressed("slot_next"):
+		_move_bar_cursor(1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("confirm") and _bar_index >= 0:
+		_activate_bar_slot(_bar_index)
+		get_viewport().set_input_as_handled()
 	else:
 		var numbered := _numbered_slot_pressed(event)
 		if numbered >= 0:
 			_activate_bar_slot(numbered)
 			get_viewport().set_input_as_handled()
 	_refresh()
+
+
+## Controller support (S1): moves the HOTBAR-resting cursor by `delta` slots,
+## wrapping. A first press from the resting `-1` state lands on slot 0
+## (Attack) rather than wrapping past the end, matching how a fresh look at
+## the bar would start left-to-right. Mirrors `_activate_bar_slot`'s own
+## convention of keeping `_info_slot_index` in lockstep so the readout strip
+## explains whatever slot the cursor currently sits on.
+func _move_bar_cursor(delta: int) -> void:
+	if _bar_slots.is_empty():
+		return
+	if _bar_index < 0:
+		_bar_index = 0
+	else:
+		_bar_index = (_bar_index + delta + _bar_slots.size()) % _bar_slots.size()
+	_info_slot_index = _bar_index
 
 
 func _move_active_or_bump(dir: Vector2i) -> void:

@@ -123,6 +123,21 @@ func _ready() -> void:
 	_scroll_hint.hide()
 	_root.add_child(_scroll_hint)
 
+	ObservableBus.domain_event.connect(_on_domain_event)
+
+
+## Controller support fix-wave (issue #18 review, LOW): rebuild the open
+## panel's body on a device swap so the skills-section toggle hint (composed
+## through WIInputHints in `_build_body_text`) can't go stale while the
+## journal is open. `_rebuild_body_follow_cursor` re-renders from the cached
+## `_open_*` state (same call the loadout toggle uses), so no fresh sim
+## queries happen. No-op while closed (the next `_open()` composes fresh
+## anyway). QA-invisible: the harness only injects keys, so the device
+## never changes during a canonical run.
+func _on_domain_event(type: String, _payload: Dictionary) -> void:
+	if type == WIEvents.INPUT_DEVICE_CHANGED and open:
+		_rebuild_body_follow_cursor()
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("journal"):
@@ -365,7 +380,10 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, 
 	# Skills Wave Task K2b: the assignment surface's one-line disclosure,
 	# matching the established hint-copy grammar (char_creation.gd's
 	# "Up/Down to choose  •  Enter to confirm  •  Esc to go back").
-	parts.append("Slotted skills appear on your bars.  •  Up/Down to move  •  Enter to toggle")
+	# Controller support (S3, issue #18): composed through WIInputHints
+	# (kb-mode byte-identical to the old literal -- no QA pin exists on this
+	# line, but the discipline still applies).
+	parts.append("Slotted skills appear on your bars.  •  Up/Down to move  •  %s to toggle" % WIInputHints.label("confirm"))
 	var flat_i := 0
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary

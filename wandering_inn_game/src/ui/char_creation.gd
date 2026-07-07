@@ -66,6 +66,18 @@ var _name_edit: LineEdit
 func _ready() -> void:
 	_build_ui()
 	_render_step()
+	ObservableBus.domain_event.connect(_on_domain_event)
+
+
+## Controller support fix-wave (issue #18 review, LOW): re-render the current
+## step on a device swap so the hint strip's glyphs (composed through
+## WIInputHints in `_render_step`) can't go stale mid-screen -- e.g. a player
+## who picked up the pad on the NAME step. Re-emits UI_CHAR_CREATION_RENDERED
+## (a `_render_step` side effect), which is QA-invisible: the harness only
+## injects keys, so the device never changes during a canonical run.
+func _on_domain_event(type: String, _payload: Dictionary) -> void:
+	if type == WIEvents.INPUT_DEVICE_CHANGED:
+		_render_step()
 
 
 func _build_ui() -> void:
@@ -165,8 +177,23 @@ func _render_step() -> void:
 	if is_name:
 		for row in _row_labels:
 			row.get_parent().get_parent().hide()
-		_name_edit.text = _name
-		_hint_label.text = "Type a name  •  Enter to begin  •  Esc to go back"
+		# Controller support (S2, issue #18): `_name` (the source of truth for
+		# typing/backspace/`_begin_game`'s fallback) stays untouched at "" --
+		# only the DISPLAYED text gets the everyman default ("Traveler", the
+		# same fallback `_begin_game` already substitutes for an empty name)
+		# so a pad-only player -- who cannot type at all, no on-screen keyboard
+		# in v1 -- sees a real name already in the field and can confidently
+		# press confirm having accepted the default. Keyboard typing is
+		# unaffected: the first keystroke sets `_name` and overwrites this
+		# text wholesale (`_handle_name_input` always does `_name_edit.text =
+		# _name`, never appends to the displayed string), so nothing needs to
+		# be cleared first.
+		_name_edit.text = _name if not _name.is_empty() else "Traveler"
+		# Controller support (S3, issue #18): composed through WIInputHints so
+		# a pad-only player sees A/B instead of Enter/Esc; kb-mode glyphs are
+		# byte-identical to the old hardcoded strings (WIInputHints.label's
+		# own doc comment), so no QA re-pin is needed here.
+		_hint_label.text = "Type a name  •  %s to begin  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
 	else:
 		var options := _current_options()
 		for i in _row_labels.size():
@@ -176,7 +203,7 @@ func _render_step() -> void:
 				continue
 			panel.show()
 			_refresh_row(i, options)
-		_hint_label.text = "Up/Down to choose  •  Enter to confirm  •  Esc to go back"
+		_hint_label.text = "Up/Down to choose  •  %s to confirm  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
 	ObservableBus.emit_domain_event(WIEvents.UI_CHAR_CREATION_RENDERED, {"step": _step_name()})
 
 

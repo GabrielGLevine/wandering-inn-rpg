@@ -38,7 +38,10 @@ func save_auto() -> void:
 	_write_slot("auto")
 	if not _autosave_announced:
 		_autosave_announced = true
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Autosaved. (Esc — save/load anytime)"})
+		# Controller support (S3, issue #18): composed through WIInputHints;
+		# kb-mode output is byte-identical to the old literal, so work_loop's
+		# exact-text pin on this toast needs no re-pin.
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Autosaved. (%s — save/load anytime)" % WIInputHints.label("cancel")})
 
 
 ## Writes the manual save slot unless a modal simulation is active.

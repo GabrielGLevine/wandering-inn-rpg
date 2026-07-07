@@ -314,6 +314,19 @@ func _wait_or_advance(seconds: float) -> void:
 		await get_tree().process_frame
 
 
+## Controller support fix-wave (issue #18 review Finding B): true while the
+## cold-open or the epilogue holds the screen. world.gd's `_movement_gated()`
+## treats this as a modal (via WIMain.veil_modal_active()) -- on pad,
+## `interact` and this veil's confirm-advance share button A, so without the
+## gate a pad player advancing the opener text would simultaneously fire
+## world interact()s at whatever the PC happens to face under the black.
+## Never true under QA/TestDriver: `play_opener()`/`play_epilogue()` collapse
+## to an instant coverage emit before ever setting these flags, so every
+## canonical's input timing is untouched by the new gate.
+func modal_active() -> bool:
+	return _opener_running or _epilogue_running
+
+
 ## The veil's ONLY interactive touch (the plain sleep path never intercepts
 ## input): while the cold-open OR the epilogue holds, confirm/cancel advances the
 ## current line and, past the last, skips straight to the fade. Swallows only

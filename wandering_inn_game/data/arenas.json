@@ -390,7 +390,7 @@
      "on": {
       "event": "combat_started"
      },
-     "line": "Relc: Loose grip, dead stance. We'll fix both. Arrows move you. Three easy steps a turn, so use your legs before anything fancy."
+     "line": "Relc: Loose grip, dead stance. We'll fix both. Step where you're looking. Three easy steps a turn, so use your legs before anything fancy."
     },
     {
      "id": "first_step",
@@ -400,7 +400,7 @@
        "id": "pc"
       }
      },
-     "line": "Relc: That's walking. Now get next to one and press 1. That's your arm. Numbers are your moves, remember them."
+     "line": "Relc: That's walking. Now get next to one and attack. That's your arm. Numbers are your moves, remember them."
     },
     {
      "id": "pool_empty",
@@ -428,7 +428,7 @@
      "on": {
       "event": "ui_targeting_shown"
      },
-     "line": "Relc: Tab swaps targets, Enter commits. A spear only argues with one thing at a time."
+     "line": "Relc: Pick your target, then commit. A spear only argues with one thing at a time."
     },
     {
      "id": "first_blood",
@@ -438,7 +438,7 @@
        "attacker": "pc"
       }
      },
-     "line": "Relc: Ha! Straw everywhere. When you're spent, press E. End your turn on YOUR terms."
+     "line": "Relc: Ha! Straw everywhere. When you're spent, call it. End your turn on YOUR terms."
     },
     {
      "id": "watch",
