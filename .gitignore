@@ -344,3 +344,7 @@ docs/*_api_key.txt
 /wandering_inn_game/assets/ui/icons/icon_dash.png
 /wandering_inn_game/assets/ui/icons/icon_dash.png.import
 # === END GENERATED ===
+
+# Session-local scratch (unified-repo transition 2026-07-07)
+.superpowers/
+.codex/
