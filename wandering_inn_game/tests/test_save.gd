@@ -58,6 +58,9 @@ func _init() -> void:
 	# Playtest feature 3: the [Light] PC-glow flag round-trips (additive-optional,
 	# default false) so a load restores the conjured orb.
 	original.light_active = true
+	# Issue #23: well_fed round-trips the SAME additive-optional way (default
+	# false) so a load restores Erin's meal perk mid-waking.
+	original.well_fed = true
 	# Skills Wave Task K2: `sneaking` is DELIBERATELY excluded from the
 	# round-trip (see save.gd's own comment + wi_game.gd's doc comment on the
 	# field) -- set it true here specifically so the assertion below proves
@@ -105,6 +108,8 @@ func _init() -> void:
 	assert(int(restored.actions_since_sleep) == 7, "actions_since_sleep restored")
 	assert(restored.light_active == original.light_active, "light_active restored")
 	assert(restored.light_active == true, "light_active round-trips as true")
+	assert(restored.well_fed == original.well_fed, "well_fed restored")
+	assert(restored.well_fed == true, "well_fed round-trips as true")
 	# Skills Wave Task K2b: a customized loadout round-trips verbatim (order
 	# preserved), and an ABSENT key (any save written before this task)
 	# restores AUTO (empty), never a crash.
@@ -130,6 +135,16 @@ func _init() -> void:
 	var glow_target := _new_game()
 	assert(WISave.apply(glow_target, {"version": WISave.VERSION, "state": no_glow}), "save without light_active still applies")
 	assert(glow_target.light_active == false, "absent light_active defaults false")
+	# Additive-optional default: a save with no well_fed key restores false.
+	var no_meal: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	no_meal.erase("well_fed")
+	var meal_target := _new_game()
+	assert(WISave.apply(meal_target, {"version": WISave.VERSION, "state": no_meal}), "save without well_fed still applies")
+	assert(meal_target.well_fed == false, "absent well_fed defaults false")
+	# A present-but-wrong-typed well_fed is rejected (mirrors the light_active guard).
+	var bad_well_fed: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	bad_well_fed["well_fed"] = "not_a_bool"
+	assert(not WISave.apply(_new_game(), {"version": WISave.VERSION, "state": bad_well_fed}), "non-bool well_fed rejected")
 	# M-ARC §5: cosmetic identity restores.
 	assert(restored.pc_name == "Sella", "pc_name restored")
 	assert(restored.pc_race == "drake", "pc_race restored")

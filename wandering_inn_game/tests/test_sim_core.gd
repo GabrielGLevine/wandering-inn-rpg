@@ -1252,6 +1252,25 @@ func _init() -> void:
 	assert(e5.start_combat("goblin_encounter_2"), "spear-with-damage-mod combat starts")
 	assert(int(e5.combat.combatants["pc"][WIKeys.DAMAGE_MOD]) == 1, "relcs_spare_spear's damage_mod (+1) rides the combat build")
 
+	# Issue #23 (Erin's daily meal): well_fed folds +2 into hp_mod at the SAME
+	# build-injection seam armor's hp_mod rides (e4b above) -- field HP has no
+	# standalone concept, so the perk rides the next combat build instead.
+	# Additive alongside armor's own hp_mod (no interaction/override).
+	var wf6 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	wf6.transition("street", Vector2i(4, 3))
+	wf6.well_fed = true
+	assert(wf6.start_combat("goblin_encounter_2"), "well_fed combat starts")
+	assert(int(wf6.combat.combatants["pc"][WIKeys.MAX_HP]) == base_max_hp + 2, "well_fed's +2 hp_mod rides the combat build")
+	assert(int(wf6.combat.combatants["pc"][WIKeys.HP]) == int(wf6.combat.combatants["pc"][WIKeys.MAX_HP]), "starting hp is the boosted max_hp")
+
+	var wf6b := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	wf6b.transition("street", Vector2i(4, 3))
+	wf6b.well_fed = true
+	wf6b.pickup("leather_jerkin", "test")
+	assert(wf6b.equip("leather_jerkin"), "equip the jerkin alongside well_fed")
+	assert(wf6b.start_combat("goblin_encounter_2"), "well_fed + armored combat starts")
+	assert(int(wf6b.combat.combatants["pc"][WIKeys.MAX_HP]) == base_max_hp + 4 + 2, "well_fed's +2 SUMS with leather_jerkin's +4 hp_mod, not overrides it")
+
 	# --- Dialogue effect {"item": id}: pickup with source = conversation id ---
 	var item_graph := {
 		"start": "n1",
@@ -1761,6 +1780,15 @@ func _init() -> void:
 	# sleep() clears the glow (winks out on rest).
 	g_glow.sleep()
 	assert(not g_glow.light_active, "sleep() clears light_active (the orb winks out)")
+
+	# Issue #23 (Erin's daily meal): well_fed MIRRORS light_active's lifecycle
+	# exactly -- set directly (dialogue effect in real play, see test_dialogue.gd),
+	# cleared at sleep().
+	var g_fed := WIGame.new(scene_p1, skills_p1, _sink, 12345)
+	assert(not g_fed.well_fed, "well_fed defaults false")
+	g_fed.well_fed = true
+	g_fed.sleep()
+	assert(not g_fed.well_fed, "sleep() clears well_fed (the meal doesn't carry past a rest)")
 
 	# Unknown-to-PC skill: refusal path preserved (SKILL_UNKNOWN + generic toast).
 	_events.clear()
