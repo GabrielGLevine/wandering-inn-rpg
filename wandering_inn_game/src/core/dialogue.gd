@@ -104,13 +104,19 @@ func advance(next_id: String) -> void:
 ## True when this requires-dict gates on player PROGRESS (accomplishments), OR
 ## on M-DEPTH DP2's `board_accepted` ctx flag (whether a bounty posting is
 ## currently accepted), OR on DP5's `delivery_accepted` twin (whether a
-## Runner's Guild slip is currently held) -- all "vanishing" gates (HIDDEN
-## until met, not greyed), unlike skill/class/gold which stay visible-locked
-## as a deliberate tease. `board_accepted`/`delivery_accepted` read the SAME
+## Runner's Guild slip is currently held), OR on Issue #23's `once_per_waking`
+## twin (whether the "<verb>:<entity>" key is already banked in
+## `entity_first_use` this waking) -- all "vanishing" gates (HIDDEN until met,
+## not greyed), unlike skill/class/gold which stay visible-locked as a
+## deliberate tease. `board_accepted`/`delivery_accepted` read the SAME
 ## hide-until-met contract: Selys's board pair and Vess's slip pair must not
 ## clutter their hubs with an unusable choice before/after a job is on hand.
+## `once_per_waking` follows suit: Erin's meal option (and Relc's wager
+## option) must not clutter their hubs with an already-spent-this-waking
+## choice -- it comes BACK, silently, once sleep() clears entity_first_use,
+## exactly like a fresh talk_pool line.
 func _progress_gated(req: Dictionary) -> bool:
-	return req.has("accomplishment") or req.has("board_accepted") or req.has("delivery_accepted")
+	return req.has("accomplishment") or req.has("board_accepted") or req.has("delivery_accepted") or req.has("once_per_waking")
 
 
 ## Progress-only gate check used SOLELY to decide hide-until-met VISIBILITY
@@ -133,6 +139,13 @@ func _meets_progress(req: Dictionary) -> bool:
 	# M-DEPTH DP5: delivery_accepted, board_accepted's exact twin.
 	if req.has("delivery_accepted"):
 		if bool(_ctx.get("delivery_accepted", false)) != bool(req["delivery_accepted"]):
+			return false
+	# Issue #23: once_per_waking's own leg, checked independently like the
+	# two above -- met iff `entity_first_use` does NOT yet carry the
+	# "<verb>:<entity>" key this waking (Erin's meal / Relc's wager both
+	# combine this with an accomplishment stage-gate; each leg is ANDed).
+	if req.has("once_per_waking"):
+		if (_ctx.get("entity_first_use", {}) as Dictionary).has(String(req["once_per_waking"])):
 			return false
 	if not req.has("accomplishment"):
 		return true
@@ -245,6 +258,16 @@ func _meets(req: Dictionary) -> bool:
 		# `delivery_accepted`, true iff a delivery slip is currently held).
 		recognized = true
 		if bool(_ctx.get("delivery_accepted", false)) != bool(req["delivery_accepted"]):
+			return false
+	if req.has("once_per_waking"):
+		# Issue #23: the FIFTH sanctioned non-accomplishment gate type --
+		# board_accepted/delivery_accepted's twin, checked against the shared
+		# `entity_first_use` per-waking dedup dict (WIGame ctx) the SAME way
+		# _meets_progress checks it above; recognized here too so a full
+		# choose()/current_options() lock/unlock decision (not just
+		# hide-until-met visibility) sees this key.
+		recognized = true
+		if (_ctx.get("entity_first_use", {}) as Dictionary).has(String(req["once_per_waking"])):
 			return false
 	return recognized
 

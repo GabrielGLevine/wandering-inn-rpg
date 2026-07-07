@@ -163,6 +163,11 @@ extends RefCounted
 ##   `delivery_last_seen_times_slept` (int, default 0) -- matches
 ##   `times_slept`'s own default, so a restored old save never false-positives
 ##   Vess's rotation bark on its very first post-load picker open.
+## Issue #23 (Erin's daily meal, Social Pillar II): `well_fed` (bool) is added
+## the SAME additive-optional way as `light_active` above -- NOT in `required`,
+## NO version bump. A save missing the key restores false (no meal was eaten
+## before the feature existed, and the perk doesn't carry past a rest anyway);
+## a present-but-non-bool value is rejected.
 const VERSION := 5
 
 
@@ -191,6 +196,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"gold": game.gold,
 		"resonance_capacity": game.resonance_capacity,
 		"light_active": game.light_active,
+		"well_fed": game.well_fed,
 		"frozen_cells": game.frozen_cells_json(),
 		"hotbar_loadout": game.hotbar_loadout.duplicate(),
 		"pc_name": game.pc_name,
@@ -322,6 +328,11 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# version bump.
 	if s.has("light_active") and not (s["light_active"] is bool):
 		return false
+	# well_fed (Issue #23, Erin's daily meal) follows the SAME additive-optional
+	# pattern as light_active above -- default false when absent, rejected if
+	# present-but-non-bool. No version bump.
+	if s.has("well_fed") and not (s["well_fed"] is bool):
+		return false
 	# frozen_cells (Skills Wave Task K1) follows the SAME additive-optional
 	# pattern -- default {} when absent (no ice before the feature), rejected if
 	# present-but-non-Dictionary; malformed inner cell lists are skipped on
@@ -441,6 +452,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.gold = int(s.get("gold", 0))
 	game.resonance_capacity = int(s.get("resonance_capacity", 2))
 	game.light_active = bool(s.get("light_active", false))
+	game.well_fed = bool(s.get("well_fed", false))
 	game.set_frozen_cells_json(s.get("frozen_cells", {}))
 	game.hotbar_loadout.clear()
 	game.hotbar_loadout.assign(s.get("hotbar_loadout", []))

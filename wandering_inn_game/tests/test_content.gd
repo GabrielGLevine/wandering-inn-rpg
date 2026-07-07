@@ -48,6 +48,7 @@ func _init() -> void:
 	_validate_talk_pool_stages_ascending(scene)
 	_validate_effect_text_opacity()
 	_validate_player_string_vocab()
+	_validate_once_per_waking_shape_cases()
 
 	print("PASS: errand content is fully cross-referenced")
 	quit(0)
@@ -330,19 +331,73 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# gold is not progress-gated), so it is a valid single gate type here.
 		gate_keys += 1
 		assert(int(requires["gold"]) > 0, label + " gold requirement must be a positive price")
-	# Social Pillar II Phase B: the ONE sanctioned COMPOUND exception --
+	if requires.has("once_per_waking"):
+		# Issue #23: the FIFTH sanctioned single-key gate -- its OWN validator
+		# arm, not a silent reuse of any other key's shape.
+		# WIDialogue._meets/_progress_gated's once_per_waking check against
+		# the shared `entity_first_use` dict (Erin's meal / Relc's wager hub
+		# options). Value must be a "<verb>:<entity>" string with both
+		# segments non-empty -- see _is_valid_verb_entity_key (shared with
+		# the `bank_first_use` effect shape below, same string contract).
+		gate_keys += 1
+		assert(_is_valid_verb_entity_key(requires["once_per_waking"]), label + " once_per_waking must be a \"<verb>:<entity>\" string with both segments non-empty")
+	# Social Pillar II Phase B: the FIRST sanctioned COMPOUND exception --
 	# {gold, accomplishment} together (a stage-gated discount buy option,
 	# Krshia's `krshia_friend_of_the_silverfangs` perk). dialogue.gd's _meets()
 	# ANDs both legs; _meets_progress() reads ONLY the accomplishment leg for
 	# hide-until-met visibility, so a met stage-gate with insufficient gold
-	# shows GREYED, never vanished (window-shopping is content). Every OTHER
-	# combination (skill+class, class+gold, three-or-more keys, etc.) is still
-	# rejected -- this is a narrow, disclosed carve-out, not a general
-	# compound-gate license.
+	# shows GREYED, never vanished (window-shopping is content).
 	if gate_keys == 2:
-		assert(requires.has("gold") and requires.has("accomplishment"), label + " the only sanctioned compound requires is {gold, accomplishment}")
+		# Issue #23 adds a SECOND sanctioned compound -- {accomplishment,
+		# once_per_waking} together (Erin's meal / Relc's wager, both
+		# stage-gated AND per-waking-gated in the same requires dict). Its own
+		# check, not a silent fold into the {gold, accomplishment} case above:
+		# dialogue.gd's _meets() ANDs both legs here too; _meets_progress()
+		# reads BOTH legs (accomplishment AND once_per_waking) for
+		# hide-until-met visibility -- unlike the gold compound, once_per_waking
+		# is itself a vanishing gate, so there is no "greyed" state to preserve.
+		# Every OTHER combination (skill+class, class+gold, gold+once_per_waking,
+		# three-or-more keys, etc.) is still rejected -- these are narrow,
+		# disclosed carve-outs, not a general compound-gate license.
+		var sanctioned_gold_accomplishment := requires.has("gold") and requires.has("accomplishment")
+		var sanctioned_stage_once := requires.has("accomplishment") and requires.has("once_per_waking")
+		assert(sanctioned_gold_accomplishment or sanctioned_stage_once, label + " the only sanctioned compound requires are {gold, accomplishment} and {accomplishment, once_per_waking}")
 		return
 	assert(gate_keys == 1, label + " requires must use exactly one gate type")
+
+
+## Issue #23: the shared "<verb>:<entity>" shape check for BOTH the
+## `once_per_waking` requires/hide_when gate value and the `bank_first_use`
+## effect value (same contract on both sides of the seam, see dialogue.gd's
+## _meets/_progress_gated and WIGame.dialogue_choose's effect router). Pure
+## (no assert) so it is unit-testable for acceptance AND rejection without
+## crashing this SceneTree script on the rejection case -- see
+## _validate_once_per_waking_shape_cases below.
+func _is_valid_verb_entity_key(value: Variant) -> bool:
+	if not (value is String):
+		return false
+	var parts: PackedStringArray = String(value).split(":", true, 1)
+	return parts.size() == 2 and not parts[0].is_empty() and not parts[1].is_empty()
+
+
+## Issue #23: acceptance + rejection coverage for _is_valid_verb_entity_key,
+## called directly (not through the assert-based validators above, which
+## would abort this SceneTree script on a deliberately-malformed shape).
+func _validate_once_per_waking_shape_cases() -> void:
+	assert(_is_valid_verb_entity_key("meal:erin"), "verb:entity accepted (Erin's meal)")
+	assert(_is_valid_verb_entity_key("wager:relc"), "verb:entity accepted (Relc's wager)")
+	assert(_is_valid_verb_entity_key("observe:gossip_npc"), "verb:entity accepted (existing entity_first_use shape)")
+	assert(not _is_valid_verb_entity_key("meal"), "missing colon rejected")
+	assert(not _is_valid_verb_entity_key(":erin"), "empty verb segment rejected")
+	assert(not _is_valid_verb_entity_key("meal:"), "empty entity segment rejected")
+	assert(not _is_valid_verb_entity_key(""), "empty string rejected")
+	assert(not _is_valid_verb_entity_key(true), "non-string bool value rejected")
+	assert(not _is_valid_verb_entity_key(5), "non-string numeric value rejected")
+	assert(not _is_valid_verb_entity_key(["meal", "erin"]), "non-string array value rejected")
+	# A value with more than one colon keeps only the FIRST split (entity ids
+	# never carry colons in this codebase, but the shape check must not choke
+	# on one) -- "meal:erin:extra" is still two non-empty segments post-split.
+	assert(_is_valid_verb_entity_key("meal:erin:extra"), "extra colon still splits into two non-empty segments")
 
 
 func _validate_effect(
@@ -367,6 +422,11 @@ func _validate_effect(
 	if effect.has("class"):
 		var class_id: String = String(effect["class"])
 		assert(class_ids.has(class_id), label + " references unknown class: " + class_id)
+	if effect.has("bank_first_use"):
+		# Issue #23: the effect-side twin of the once_per_waking requires
+		# shape check above -- same "<verb>:<entity>" contract, its OWN
+		# validator arm (not a silent fall-through), shared helper.
+		assert(_is_valid_verb_entity_key(effect["bank_first_use"]), label + " bank_first_use must be a \"<verb>:<entity>\" string with both segments non-empty")
 
 
 ## Reachability sanity check for this bug class: a node whose every option
@@ -396,8 +456,12 @@ func _validate_hide_when_nodes_have_always_available_exit(graphs: Dictionary) ->
 				# always-available exit regardless) gets the same softlock check.
 				# M-DEPTH DP5: delivery_accepted, its twin (vess_counter.json's hub
 				# -- which does carry an ungated "Just passing through." exit).
+				# Issue #23: once_per_waking, the FIFTH -- Erin's "Sit, eat.
+				# Cook's orders." and Relc's wager option both already sit in
+				# hubs with an ungated exit, but this check must catch a future
+				# once_per_waking-only node the same way.
 				var opt_requires: Dictionary = option.get("requires", {})
-				if option.has("hide_when") or opt_requires.has("accomplishment") or opt_requires.has("board_accepted") or opt_requires.has("delivery_accepted"):
+				if option.has("hide_when") or opt_requires.has("accomplishment") or opt_requires.has("board_accepted") or opt_requires.has("delivery_accepted") or opt_requires.has("once_per_waking"):
 					has_vanishing_option = true
 					break
 			if not has_vanishing_option:
