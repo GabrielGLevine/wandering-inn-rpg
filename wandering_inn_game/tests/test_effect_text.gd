@@ -175,6 +175,21 @@ func _test_tripwires() -> void:
 		"skill spell tripwire: die follows the injected pc catalog, not effect.die"
 	)
 
+	# Opus final-review M3: dedicated moves-when-data-moves proofs for the four
+	# sources previously covered only by EXPECTED_SKILLS' pin diversity.
+	var mult_skill := {"ap_cost": 3, "effect": {"type": "damage_mult", "mult": 2.0}}
+	_check(WIEffectText.skill_effect_lines(mult_skill) == ["3 AP — ×2 damage"], "damage_mult tripwire base")
+	mult_skill["effect"]["mult"] = 3.5
+	_check(WIEffectText.skill_effect_lines(mult_skill) == ["3 AP — ×3.5 damage"], "damage_mult tripwire: mult moves")
+	mult_skill["ap_cost"] = 5
+	_check(WIEffectText.skill_effect_lines(mult_skill) == ["5 AP — ×3.5 damage"], "cost tripwire: ap_cost moves")
+	_check(WIEffectText.skill_effect_lines({"effect": {"type": "hp_bonus", "amount": 10}}) == ["+10 max HP"], "hp_bonus tripwire base")
+	_check(WIEffectText.skill_effect_lines({"effect": {"type": "hp_bonus", "amount": 25}}) == ["+25 max HP"], "hp_bonus tripwire: amount moves")
+	var line_skill := {"ap_cost": 2, "mp_cost": 4, "effect": {"type": "line_damage", "length": 4}}
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — damage everything in a line 4 cells long"], "line_damage tripwire base")
+	line_skill["effect"]["length"] = 7
+	_check(WIEffectText.skill_effect_lines(line_skill) == ["2 AP, 4 MP — damage everything in a line 7 cells long"], "line_damage tripwire: length moves")
+
 	# Status: the penalty is derived from the injected catalog, not hardcoded.
 	var catalog := [{"id": "x", "effect": {"type": "spell_damage", "applies": {"slowed": {"pool_penalty": 5}}}}]
 	_check(

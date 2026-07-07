@@ -63,7 +63,7 @@ func _item_effect_lines(opt: Dictionary) -> Array:
 		if rec.is_empty():
 			continue
 		for line: String in WIEffectText.item_effect_lines(rec):
-			if not line.begins_with("Worth "):
+			if not line.begins_with(WIEffectText.PRICE_LINE_PREFIX):
 				out.append(line)
 	return out
 

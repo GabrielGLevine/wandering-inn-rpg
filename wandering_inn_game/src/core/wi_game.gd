@@ -713,6 +713,13 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	# The frozen set is additive (never a second-freeze re-emit), keyed by map.
 	# Emits TERRAIN_CHANGED{to:"ice"} + a toast; is_cell_blocked already reads the
 	# set, so the crossing is walkable the instant this returns.
+	# MAP-AUTHORING EDGES (opus final-review M5 — safe in all shipped data,
+	# keep them true): (1) freezing doesn't check entity occupancy — an entity
+	# ON a freezable cell still blocks crossing via is_cell_blocked's occupancy
+	# check, so the freeze would read as dead; never author an entity onto a
+	# freezable cell. (2) sleep() thaws frozen_cells unconditionally — a bed
+	# reachable ONLY across ice would strand the PC on a re-blocked cell at
+	# wake; never author one.
 	var faced_cell := player_cell + player_facing
 	if bool(skills.get(skill_id, {}).get("freezes", false)) and _is_freezable(faced_cell) and not _is_frozen(faced_cell):
 		if not frozen_cells.has(current_map):

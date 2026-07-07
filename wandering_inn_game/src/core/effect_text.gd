@@ -29,6 +29,11 @@ extends RefCounted
 
 const SKILLS_PATH := "res://data/skills.json"
 const COMBATANTS_PATH := "res://data/combatants.json"
+## The price line's prefix — WIDialogue drops the price line from shop-option
+## effect_lines by matching THIS const (a buy option's text already names its
+## price), so rephrasing the price line here can never silently un-filter it
+## (opus final-review M4).
+const PRICE_LINE_PREFIX := "Worth "
 
 ## Short present-tense verb appended to a Skill's effect line when it applies a
 ## status on hit (e.g. frost_bolt -> "... . Slows."). The FULL glossary sentence
@@ -57,7 +62,7 @@ static func item_effect_lines(item: Dictionary) -> Array[String]:
 	if item.has("resonance") and int(item["resonance"]) > 0:
 		lines.append("Resonance %d" % int(item["resonance"]))
 	if item.has("price") and int(item["price"]) > 0:
-		lines.append("Worth %d gold" % int(item["price"]))
+		lines.append(PRICE_LINE_PREFIX + "%d gold" % int(item["price"]))
 	return lines
 
 
@@ -158,6 +163,13 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = []) -
 			return "+%d max HP" % int(effect.get("amount", 0))
 		"hit_bonus":
 			return "+%d to hit" % int(effect.get("amount", 0))
+		# DRIFT SEAM (opus final-review M1): the three arms below emit truthful
+		# lines for any skill carrying these effect TYPES, but the sim wires
+		# each mechanic by literal skill NAME (wi_combat.gd: counter_strike,
+		# battle_momentum, mana_shield). 1:1 today. A future skill REUSING one
+		# of these types would get a truthful-looking card the sim never
+		# honors — generalize the sim lookup to the effect type (or add the
+		# new name at the trigger site) BEFORE shipping such a skill.
 		"ap_on_kill":
 			return "+%d AP when you down a foe" % int(effect.get("amount", 0))
 		"riposte":
