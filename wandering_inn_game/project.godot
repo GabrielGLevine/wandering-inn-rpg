@@ -134,3 +134,11 @@ end_turn={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":69,"key_label":0,"unicode":101,"location":0,"echo":false,"script":null)
 ]
 }
+
+[rendering]
+
+; ETC2 ASTC import required for the macOS "universal" (x86_64+arm64)
+; export architecture — Godot refuses that export target otherwise
+; (issue #19, desktop presets). Import-only toggle; does not change the
+; runtime texture format used elsewhere (BPTC/S3TC stay the desktop path).
+textures/vram_compression/import_etc2_astc=true

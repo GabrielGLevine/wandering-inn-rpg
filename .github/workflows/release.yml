@@ -245,3 +245,233 @@ jobs:
           # butler push is atomic per channel; re-runnable from the same tag.
           ./butler-bin/butler push wandering_inn_game/build/web \
             "${ITCH_TARGET}:html5" --userversion "${GITHUB_REF_NAME}"
+
+  # ------------------------------------------------------------------------
+  # desktop-exports — issue #19 (Steam seed, M-STEAM item 1/4). Tag-triggered
+  # like `release` above, but its own job: builds Win+Linux native artifacts
+  # and uploads them as WORKFLOW artifacts (no store push here — SteamPipe
+  # upload is the separate, gated job below). Deliberately does NOT fetch the
+  # private asset bundle: this proves the export pipeline on the committed
+  # placeholder-art fallback tree, same as every non-tag CI run builds on.
+  # macOS is a local-only proof for this pass (notarization is explicitly
+  # deferred per the M-STEAM seed spec §3) — no macOS CI export job yet.
+  desktop-exports:
+    name: Desktop exports (Windows + Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Install pinned export templates (bundle covers every platform)
+        run: |
+          set -euo pipefail
+          # The official templates .tpz is platform-independent — it contains
+          # the windows/linux/macos/web/android/ios template binaries in one
+          # archive (same file release.yml's web job already downloads for
+          # its wasm export), so no separate desktop-specific URL is needed.
+          curl -fsSL -o templates.tpz "$GODOT_TEMPLATES_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  Godot_v4.7-stable_export_templates.tpz$" SHA512-SUMS.txt | sed "s#  Godot_v4.7-stable_export_templates.tpz#  templates.tpz#" | sha512sum -c -
+          unzip -q templates.tpz
+          dest="$HOME/.local/share/godot/export_templates/4.7.stable"
+          mkdir -p "$dest"
+          mv templates/* "$dest/"
+
+      - name: Import pass
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 300; exec @ARGV' \
+            godot --headless --path wandering_inn_game --import
+
+      - name: Guard — desktop export presets must exist
+        run: |
+          set -euo pipefail
+          cfg=wandering_inn_game/export_presets.cfg
+          if [ ! -f "$cfg" ] || ! grep -q 'name="windows_desktop"' "$cfg" || ! grep -q 'name="linux_x86_64"' "$cfg"; then
+            echo "::error::export_presets.cfg is missing the windows_desktop/linux_x86_64 presets."
+            exit 1
+          fi
+
+      - name: Export Windows desktop build
+        run: |
+          set -euo pipefail
+          mkdir -p wandering_inn_game/build/windows
+          perl -e 'alarm 600; exec @ARGV' \
+            godot --headless --path wandering_inn_game \
+            --export-release "windows_desktop" build/windows/WanderingInnRPG.exe
+          if [ ! -f wandering_inn_game/build/windows/WanderingInnRPG.exe ]; then
+            echo "::error::Windows export did not produce WanderingInnRPG.exe"
+            exit 1
+          fi
+          ls -la wandering_inn_game/build/windows
+
+      - name: Export Linux x86_64 build
+        run: |
+          set -euo pipefail
+          mkdir -p wandering_inn_game/build/linux
+          perl -e 'alarm 600; exec @ARGV' \
+            godot --headless --path wandering_inn_game \
+            --export-release "linux_x86_64" build/linux/WanderingInnRPG.x86_64
+          if [ ! -f wandering_inn_game/build/linux/WanderingInnRPG.x86_64 ]; then
+            echo "::error::Linux export did not produce WanderingInnRPG.x86_64"
+            exit 1
+          fi
+          chmod +x wandering_inn_game/build/linux/WanderingInnRPG.x86_64
+          ls -la wandering_inn_game/build/linux
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-desktop-${{ github.ref_name }}
+          path: wandering_inn_game/build/windows/
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-x86_64-${{ github.ref_name }}
+          path: wandering_inn_game/build/linux/
+          retention-days: 14
+          if-no-files-found: error
+
+  # ------------------------------------------------------------------------
+  # steampipe-upload — SKELETON (issue #19). Stays green-but-inert until the
+  # user provisions Steam credentials (docs/steam/CHECKLIST.md): the `if:`
+  # gate below short-circuits the whole job to "skipped" while
+  # vars.STEAM_APP_ID is unset, so this workflow never regresses CI green
+  # just by existing. Follows the SAME secrets idiom as the butler push
+  # above (a build-account credential secret + a target-channel value), NOT
+  # a new convention — see wi-shipping skill. Uploads ONLY to a
+  # private/unlisted Steam branch (vars.STEAM_BRANCH, refused if it resolves
+  # to "default") — this is a pipeline proof, never a public release path,
+  # and per issue #20's binding ruling the game ships FREE with zero
+  # payment plumbing, so nothing here touches pricing/purchase config.
+  steampipe-upload:
+    name: SteamPipe upload (private branch) [SKELETON]
+    needs: desktop-exports
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: vars.STEAM_APP_ID != ''
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-desktop-${{ github.ref_name }}
+          path: steam_build/windows
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-x86_64-${{ github.ref_name }}
+          path: steam_build/linux
+
+      - name: Install steamcmd
+        run: |
+          set -euo pipefail
+          mkdir -p steamcmd
+          curl -fsSL -o steamcmd.tar.gz https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+          tar -xzf steamcmd.tar.gz -C steamcmd
+          chmod +x steamcmd/steamcmd.sh
+          # First run bootstraps/self-updates the tool; a bare +quit is the
+          # standard no-op invocation for that.
+          ./steamcmd/steamcmd.sh +quit || true
+
+      - name: Write Steam build-account login config
+        env:
+          STEAM_CONFIG_VDF: ${{ secrets.STEAM_CONFIG_VDF }}
+        run: |
+          set -euo pipefail
+          if [ -z "${STEAM_CONFIG_VDF:-}" ]; then
+            echo "::error::STEAM_CONFIG_VDF secret is not set — cannot log in to steamcmd non-interactively. This is a base64-encoded config.vdf from a ONE-TIME interactive 'steamcmd +login <user>' on a trusted machine (captures the Steam Guard-authorized session so CI never sees a 2FA prompt). Provision per docs/steam/CHECKLIST.md."
+            exit 1
+          fi
+          mkdir -p steamcmd/config
+          echo "$STEAM_CONFIG_VDF" | base64 -d > steamcmd/config/config.vdf
+
+      - name: Write SteamPipe app_build/depot_build configs
+        env:
+          STEAM_APP_ID: ${{ vars.STEAM_APP_ID }}
+          STEAM_BRANCH: ${{ vars.STEAM_BRANCH }}
+          STEAM_DEPOT_ID_WINDOWS: ${{ vars.STEAM_DEPOT_ID_WINDOWS }}
+          STEAM_DEPOT_ID_LINUX: ${{ vars.STEAM_DEPOT_ID_LINUX }}
+        run: |
+          set -euo pipefail
+          branch="${STEAM_BRANCH:-unlisted-ci}"
+          if [ "$branch" = "default" ]; then
+            echo "::error::STEAM_BRANCH resolved to 'default' — a CI SteamPipe upload must target a private/unlisted branch, never the public depot. Set the STEAM_BRANCH repo variable to something like 'unlisted-ci'."
+            exit 1
+          fi
+          if [ -z "${STEAM_DEPOT_ID_WINDOWS:-}" ] || [ -z "${STEAM_DEPOT_ID_LINUX:-}" ]; then
+            echo "::error::STEAM_DEPOT_ID_WINDOWS / STEAM_DEPOT_ID_LINUX repo variables are not set. Depot IDs are assigned per-app in the Steamworks partner site (App Admin > SteamPipe > Depots) — they are NOT derived from the app id. Provision per docs/steam/CHECKLIST.md."
+            exit 1
+          fi
+          mkdir -p steam_scripts
+          # Heredoc bodies are indented to stay inside this YAML block scalar
+          # (a de-dented line would terminate it early) — Valve's KeyValues
+          # format ignores leading whitespace, so this is cosmetic-only.
+          cat > steam_scripts/depot_windows.vdf <<EOF
+          "DepotBuildConfig"
+          {
+            "DepotID" "${STEAM_DEPOT_ID_WINDOWS}"
+            "ContentRoot" "$(pwd)/steam_build/windows"
+            "FileMapping"
+            {
+              "LocalPath" "*"
+              "DepotPath" "."
+              "recursive" "1"
+            }
+          }
+          EOF
+          cat > steam_scripts/depot_linux.vdf <<EOF
+          "DepotBuildConfig"
+          {
+            "DepotID" "${STEAM_DEPOT_ID_LINUX}"
+            "ContentRoot" "$(pwd)/steam_build/linux"
+            "FileMapping"
+            {
+              "LocalPath" "*"
+              "DepotPath" "."
+              "recursive" "1"
+            }
+          }
+          EOF
+          cat > steam_scripts/app_build.vdf <<EOF
+          "AppBuild"
+          {
+            "AppID" "${STEAM_APP_ID}"
+            "Desc" "CI build ${GITHUB_REF_NAME}"
+            "Preview" "0"
+            "Local" ""
+            "SetLive" "${branch}"
+            "Depots"
+            {
+              "${STEAM_DEPOT_ID_WINDOWS}" "steam_scripts/depot_windows.vdf"
+              "${STEAM_DEPOT_ID_LINUX}" "steam_scripts/depot_linux.vdf"
+            }
+          }
+          EOF
+
+      - name: SteamPipe upload (private/unlisted branch only)
+        env:
+          STEAM_BUILD_ACCOUNT: ${{ secrets.STEAM_BUILD_ACCOUNT }}
+        run: |
+          set -euo pipefail
+          if [ -z "${STEAM_BUILD_ACCOUNT:-}" ]; then
+            echo "::error::STEAM_BUILD_ACCOUNT secret is not set. Provision per docs/steam/CHECKLIST.md."
+            exit 1
+          fi
+          ./steamcmd/steamcmd.sh +login "$STEAM_BUILD_ACCOUNT" \
+            +run_app_build "$(pwd)/steam_scripts/app_build.vdf" +quit
