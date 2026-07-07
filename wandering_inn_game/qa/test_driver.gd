@@ -24,9 +24,9 @@ const ACTION_KEYS := {
 	"hotbar_2": KEY_2,
 	"hotbar_3": KEY_3,
 	## Skills Wave Task K1: the field hotbar can carry more than three slots
-	## (a PC that knows [Basic Cleaning]/[Light]/[Frost Touch]/[Kindle] fills
+	## (a PC that knows [Basic Cleaning]/[Light]/[Snap Freeze]/[Firefly] fills
 	## four), so map the full 1..9 digit row the hotbar_N input actions already
-	## define -- sewers_walkthrough presses hotbar_4 for [Kindle].
+	## define -- sewers_walkthrough presses hotbar_4 for [Firefly].
 	"hotbar_4": KEY_4,
 	"hotbar_5": KEY_5,
 	"hotbar_6": KEY_6,

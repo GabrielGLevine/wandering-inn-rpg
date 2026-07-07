@@ -32,12 +32,12 @@
     { "script": "journal_skills", "seed": 9, "note": "journal skills-by-class panel; pre/post-first-use reveal" },
     { "script": "inventory_loop", "seed": 9, "note": "THE inventory/equipment loop; weapon-gated kit proof" },
     { "script": "atmosphere_check", "seed": 9, "note": "mood-grade/phase-clock proof; day->dusk->day cycle" },
-    { "script": "field_skills_loop", "seed": 9, "fixture": "near_tactician", "note": "field-skill hotbar loop (Basic Cleaning -> Observe)" },
+    { "script": "field_skills_loop", "seed": 9, "fixture": "near_tactician", "note": "field-skill hotbar loop (Basic Cleaning -> Observe); K2b loadout assign/unassign + remapped-slot proof" },
     { "script": "social_loop", "seed": 9, "fixture": "post_tutorial_street", "note": "Social Pillar v1 proof; rotating talk pools -> [Diplomat]" },
     { "script": "sewers_walkthrough", "seed": 9, "fixture": "near_sewers", "note": "Liscor sewers proof; grate-gate seam + vermin fight" },
     { "script": "cisterns_fight", "seed": 9, "fixture": "cisterns_fight_start", "note": "Quest 1 FIGHT path (clear shield_spiders nest)" },
     { "script": "cisterns_talk", "seed": 9, "fixture": "cisterns_talk_start", "note": "Quest 1 TALK path (persuade Zevara, no combat)" },
-    { "script": "cisterns_scout", "seed": 9, "fixture": "cisterns_scout_start", "note": "Quest 1 SKILL path ([Observe] the nest_ledge)" },
+    { "script": "cisterns_scout", "seed": 9, "fixture": "cisterns_scout_start", "note": "Quest 1 SKILL path ([Appraise Foe] the nest_ledge)" },
     { "script": "wrong_order_loop", "seed": 9, "fixture": "wrong_order_loop_start", "note": "The Wrong Order inn-local give->cook->report loop" },
     { "script": "wrong_order_talk", "seed": 9, "fixture": "wrong_order_talk_start", "note": "The Wrong Order TALK path (Krshia smooth-over, no combat)" },
     { "script": "wrong_order_fight", "seed": 9, "fixture": "wrong_order_fight_start", "note": "The Wrong Order FIGHT path (clear supplier_scavengers)" },
@@ -49,6 +49,7 @@
     { "script": "arc_flow", "seed": 9, "fixture": "near_act3", "note": "THE WHOLE ACT III ARC PROOF, tremor through epilogue" },
     { "script": "status_first_encounter", "seed": 9, "fixture": "near_mage_cast", "note": "status glossary + first-encounter combat-feed surface" },
     { "script": "gear_loop", "seed": 9, "fixture": "gear_loop_start", "note": "resonance-gear UI proof (accessory rows, capacity refusal)" },
-    { "script": "stealth_loop", "seed": 9, "fixture": "near_ambush_sneak", "note": "the [Sneak] seam: skip an ambush, break it, positive control" }
+    { "script": "stealth_loop", "seed": 9, "fixture": "near_ambush_sneak", "note": "the [Stealth] seam: skip an ambush, break it, positive control" },
+    { "script": "rogue_earn_loop", "seed": 9, "fixture": "near_rogue", "note": "K3 [Rogue] earn: recovered_crate_watch -> sleep -> class_gained -> [Stealth] fielded" }
   ]
 }

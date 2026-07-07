@@ -52,7 +52,7 @@ const EXPECTED_SKILLS := {
 	"light": [],
 	"frost_touch": [],
 	"kindle": [],
-	# Skills Wave Task K2: [Sneak]'s combat read is a genuine ACTIVE cast
+	# Skills Wave Task K2: [Stealth]'s combat read is a genuine ACTIVE cast
 	# (ap_cost 1) -- effect_text.gd's `_effect_phrase` now un-suppresses
 	# `move_pool_bonus` specifically for ap_cost > 0 (WISkillEffects.
 	# resolve_active wires a real self-buff resolver for exactly that shape).
@@ -63,7 +63,7 @@ const EXPECTED_SKILLS := {
 	# Skills Wave Task K4: WIRED -- wi_combat.gd's `_start_turn` gained a real
 	# `_move_pool_bonus_total` passive consumer for the two PRE-EXISTING
 	# 0-cost move_pool_bonus skills (quick_movement, battlefield_awareness
-	# below); the standing-bonus phrasing is distinct from [Sneak]'s
+	# below); the standing-bonus phrasing is distinct from [Stealth]'s
 	# single-turn cast line above (see effect_text.gd's own comment).
 	"quick_movement": ["+1 move cell every turn"],
 	# Skills Wave Task K4: WIRED -- skill_effects.gd's `resolve_active` gained

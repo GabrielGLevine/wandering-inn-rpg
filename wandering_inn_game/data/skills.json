@@ -215,8 +215,9 @@
 			"description": "A fist-sized spike of ice, hurled hard enough to crack shields."
 		},
 		{
+			"_comment": "Skills Wave Task K3 canon pass: renamed [Icy Floor] -> [Ice Floor] (id `icy_floor` UNCHANGED -- save-compat). CANON-VERDICT 2026-07-07: ATTESTED, Ceria Springwalker's spell list names [Ice Floor] directly (bonus catch alongside frost_touch/kindle's renames). Display-copy-only change: this skill remains SUPPRESSED (K4 assessed its area-terrain machinery as not a clean effect_text fit and skipped wiring it) -- effect_text.gd still degrades it to a bare 'Name — description' line, so only the name changed here, no new machinery.",
 			"id": "icy_floor",
-			"display_name": "[Icy Floor]",
+			"display_name": "[Ice Floor]",
 			"contexts": ["combat"],
 			"ap_cost": 2,
 			"mp_cost": 4,
@@ -279,12 +280,13 @@
 			"description": "Trays, kegs, and crates feel lighter than they should."
 		},
 		{
+			"_comment": "Skills Wave Task K3 canon pass: renamed [Observe] -> [Appraise Foe] (id `observe` UNCHANGED -- save-compat; ids are never player-visible). CANON-VERDICT 2026-07-07: ATTESTED, Skills Effect/A -- 'Provides limited information about another person', near-verbatim our mechanic. [Owl's Vision] was checked and REJECTED (attested -- Ridine's [Owl's Vision: Location] -- but its canon function is enhanced/night VISION, not a person-read; renaming to it would misuse an attested Skill). NOTE the quirk this Skill also reads friendly NPCs/props, not just foes -- off-label Skill use is in-register for TWI, and the Tactician-kit framing fits.",
 			"id": "observe",
-			"display_name": "[Observe]",
+			"display_name": "[Appraise Foe]",
 			"icon": "icon_observe",
 			"contexts": ["exploration"],
 			"field": true,
-			"field_ambient": "[Observe] — You take in the empty space around you. Nothing here rewards a closer look.",
+			"field_ambient": "[Appraise Foe] — You take in the empty space around you. Nothing here rewards a closer look.",
 			"description": "A measuring look that reads a room, a person, a problem — and files it away for later."
 		},
 		{
@@ -359,32 +361,32 @@
 			"description": "A sweeping, reaching swipe of claw and forearm that batters the legs out from under you and leaves them slow to answer."
 		},
 		{
-			"_comment": "Skills Wave Task K1: the frost field seam's caster skill. `freezes: true` is the ONLY tag the seam keys on (use_skill_field): faced at a freezable water cell -> walkable ice until sleep. Exploration-only (no combat/mp_cost), so it is fight-determinism-neutral exactly like [Light] -- safe to grant a QA fixture without perturbing any fight. NAME is provisional (K3 owns canon Skill naming + class grants; wiki-verify + wire a real gained_by there). `freeze_toast` overrides the seam's default cast line.",
+			"_comment": "Skills Wave Task K1: the frost field seam's caster skill. `freezes: true` is the ONLY tag the seam keys on (use_skill_field): faced at a freezable water cell -> walkable ice until sleep. Exploration-only (no combat/mp_cost), so it is fight-determinism-neutral exactly like [Light]. Skills Wave Task K3 canon pass: renamed [Frost Touch] -> [Snap Freeze] (id `frost_touch` UNCHANGED -- save-compat). CANON-VERDICT 2026-07-07: ATTESTED, Ceria Springwalker + Az'kerash spell lists -- Ceria is our ice-mage adjacency exactly, and the utility-shaped freeze fits. `freeze_toast` overrides the seam's default cast line.",
 			"id": "frost_touch",
-			"display_name": "[Frost Touch]",
+			"display_name": "[Snap Freeze]",
 			"icon": "icon_frost_bolt",
 			"contexts": ["exploration"],
 			"field": true,
 			"freezes": true,
-			"freeze_toast": "[Frost Touch] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest.",
-			"field_ambient": "[Frost Touch] — Frost blooms from your fingers and hangs glittering in the air. There is nothing here for it to grip.",
+			"freeze_toast": "[Snap Freeze] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest.",
+			"field_ambient": "[Snap Freeze] — Frost blooms from your fingers and hangs glittering in the air. There is nothing here for it to grip.",
 			"description": "A breath of deep cold that skins still water in load-bearing ice."
 		},
 		{
-			"_comment": "Skills Wave Task K1: the burnable-prop field seam's caster skill. `burns: true` is the ONLY tag the seam keys on: faced at a prop tagged `burnable: true` -> the prop is removed permanently (removed_entities, saved) + a burn poof. Exploration-only, fight-determinism-neutral like frost_touch/[Light]. NAME provisional (K3 canon-verify + class grant).",
+			"_comment": "Skills Wave Task K1: the burnable-prop field seam's caster skill. `burns: true` is the ONLY tag the seam keys on: faced at a prop tagged `burnable: true` -> the prop is removed permanently (removed_entities, saved) + a burn poof. Exploration-only, fight-determinism-neutral like frost_touch/[Light]. Skills Wave Task K3 canon pass: renamed [Kindle] -> [Firefly] (id `kindle` UNCHANGED -- save-compat). CANON-VERDICT 2026-07-07: ATTESTED, Spells/F + ch. 8.43 -- '[Firefly] conjures a single mote of light that detonates'; a conjured fire mote fits igniting dry debris. No [Kindle]/[Ignite] Skill is attested ([Firestarter] is a CLASS -- Maviola El -- not a Skill, so it was rejected as a rename target).",
 			"id": "kindle",
-			"display_name": "[Kindle]",
+			"display_name": "[Firefly]",
 			"icon": "icon_flame_jet",
 			"contexts": ["exploration"],
 			"field": true,
 			"burns": true,
-			"field_ambient": "[Kindle] — A curl of flame dances up over your knuckles and gutters out. Nothing here will take the fire.",
+			"field_ambient": "[Firefly] — A curl of flame dances up over your knuckles and gutters out. Nothing here will take the fire.",
 			"description": "A conjured flame, hot enough to take dry debris and old timber in moments."
 		},
 		{
-			"_comment": "Skills Wave Task K2 (the sneak seam, user-ratified stealth model): PROVISIONAL id/display name -- K3 owns canon naming AND the real class grant, and MUST place that grant's gained_by POST-onboarding (no shipped class grants this today, so the mandatory tutorial ambush stays mandatory for every fresh player; onboarding integrity holds trivially this task for exactly that reason -- K3, do not skip re-checking it once a class actually grants this). Granted only by a QA fixture, the SAME disclosed affordance as K1's frost_touch/kindle. `sneaks: true` is the ONLY tag the field-hotbar toggle keys on (use_skill_field's `_toggle_sneak`), NOT this skill id -- pressing its number key flips `sneaking` on/off; `field_ambient`/`freezes`/`burns`/etc. are irrelevant to it (the toggle branch returns before any of those checks run). Combat read: `ap_cost: 1` + `effect: {type: move_pool_bonus, amount: 2}` -- a genuine self-targeted move-pool grant, ACTIVELY wired through WISkillEffects.resolve_active (see that file's doc comment for the ap_cost>0 gate that deliberately leaves the two PRE-EXISTING 0-cost move_pool_bonus skills, quick_movement/battlefield_awareness, exactly as unresolved/refused as before -- this task does not touch their behavior). Unlike frost_touch/kindle this IS combat-context, so it is only fight-determinism-neutral for scripts that never press it in a fight -- true of every canonical script today (stealth_loop, the one QA proof, ends the run before any combat begins).",
+			"_comment": "Skills Wave Task K2 (the sneak seam, user-ratified stealth model). Skills Wave Task K3 canon pass CLOSES the provisional naming AND the real class grant: renamed [Sneak] -> [Stealth] (id `sneak` UNCHANGED -- save-compat; ids are never player-visible, verified by grep -- no UI surface renders a raw id). CANON-VERDICT 2026-07-07: ORIGINAL, canon-plausible flag -- no bare stealth-walk Skill is attested, but the attested family [Stealth Arrow]/[Stealth Pause]/[Stealth Roll]/[Stealth Wing] (Skills Effect/S) establishes the [Stealth ...] grammar, and a bare noun passes the no-action-verb naming principle where '[Sneak]' (a plain verb) failed it. Now GRANTED by the earned [Rogue] class (gained_by `recovered_crate_watch`, POST-onboarding: that accomplishment is street-quest content, unreachable without already surviving the floodplains `goblin_encounter_1` ambush -- see classes.json's rogue `_comment` for the full trace). `sneaks: true` is the ONLY tag the field-hotbar toggle keys on (use_skill_field's `_toggle_sneak`), NOT this skill id -- pressing its number key flips `sneaking` on/off; `field_ambient`/`freezes`/`burns`/etc. are irrelevant to it (the toggle branch returns before any of those checks run). Combat read: `ap_cost: 1` + `effect: {type: move_pool_bonus, amount: 2}` -- a genuine self-targeted move-pool grant, ACTIVELY wired through WISkillEffects.resolve_active (see that file's doc comment for the ap_cost>0 gate that deliberately leaves the two PRE-EXISTING 0-cost move_pool_bonus skills, quick_movement/battlefield_awareness, exactly as unresolved/refused as before). Unlike frost_touch/kindle this IS combat-context, so it is only fight-determinism-neutral for scripts that never press it in a fight -- true of every canonical script today (stealth_loop and rogue_earn_loop both end before any combat begins).",
 			"id": "sneak",
-			"display_name": "[Sneak]",
+			"display_name": "[Stealth]",
 			"contexts": ["exploration", "combat"],
 			"field": true,
 			"sneaks": true,

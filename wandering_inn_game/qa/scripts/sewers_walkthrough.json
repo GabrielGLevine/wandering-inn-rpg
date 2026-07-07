@@ -146,7 +146,7 @@
    "name": "00_sewers_landing"
   },
   {
-   "_comment": "== PLAYTEST FEATURE 3: cast [Light] on the PC (ambient path) mid-sewers. The near_sewers fixture carries light/frost_touch/kindle in player_skills, so the field hotbar renders 4 slots: 1 [Basic Cleaning] (innate), 2 [Light], 3 [Frost Touch], 4 [Kindle] (K1 seam skills). Pressing hotbar_2 while facing a non-light-prop cell takes use_skill_field's field_ambient path (no sewers prop carries requires_skill==light), which sets light_active and conjures the PC-following glow. Proves: the ambient skill_used stream (target empty), the new follows-you toast copy, ui_pc_light_rendered{active:true}, and the round-trippable sim flag. ==",
+   "_comment": "== PLAYTEST FEATURE 3: cast [Light] on the PC (ambient path) mid-sewers. The near_sewers fixture carries light/frost_touch/kindle in player_skills, so the field hotbar renders 4 slots: 1 [Basic Cleaning] (innate), 2 [Light], 3 [Snap Freeze], 4 [Firefly] (K1 seam skills). Pressing hotbar_2 while facing a non-light-prop cell takes use_skill_field's field_ambient path (no sewers prop carries requires_skill==light), which sets light_active and conjures the PC-following glow. Proves: the ambient skill_used stream (target empty), the new follows-you toast copy, ui_pc_light_rendered{active:true}, and the round-trippable sim flag. ==",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
@@ -212,7 +212,7 @@
    "equals": true
   },
   {
-   "_comment": "== SKILLS WAVE TASK K1 -- BURNABLE-PROP SEAM. The near_sewers PC knows [Kindle] (fire field skill, slot 4). Rotten debris (sewer_debris, burnable) blocks the dead-end nook at (1,2), one cell WEST of the landing. Face it and burn it -> the prop is removed PERMANENTLY (removed_entities, saved) and the nook opens. Nothing else treads x0-1, so this seam is invisible to every other sewers script. DISCLOSURE: this run now banks burned_the_debris:1 + marks [Kindle] used; no script asserts an exact accomplishments/used_skills dict. ==",
+   "_comment": "== SKILLS WAVE TASK K1 -- BURNABLE-PROP SEAM. The near_sewers PC knows [Firefly] (fire field skill, slot 4). Rotten debris (sewer_debris, burnable) blocks the dead-end nook at (1,2), one cell WEST of the landing. Face it and burn it -> the prop is removed PERMANENTLY (removed_entities, saved) and the nook opens. Nothing else treads x0-1, so this seam is invisible to every other sewers script. DISCLOSURE: this run now banks burned_the_debris:1 + marks [Firefly] used; no script asserts an exact accomplishments/used_skills dict. ==",
    "action": "move",
    "direction": "left",
    "steps": 1
@@ -275,7 +275,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Kindle] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air."
+    "text": "[Firefly] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air."
    },
    "timeout_sec": 5
   },
@@ -309,7 +309,7 @@
    "steps": 1
   },
   {
-   "_comment": "== SKILLS WAVE TASK K1 -- FREEZABLE-WATER SEAM. The PC knows [Frost Touch] (slot 3). Channel-A cell (3,5) is a freezable crossing. Walk to (3,4) on the top band, face down at the water, prove it BLOCKS, frost-cast it into walkable ice, then step across -- the walkability flip. Ice thaws at the next sleep (not exercised here; the exit ladder ends the run). ==",
+   "_comment": "== SKILLS WAVE TASK K1 -- FREEZABLE-WATER SEAM. The PC knows [Snap Freeze] (slot 3). Channel-A cell (3,5) is a freezable crossing. Walk to (3,4) on the top band, face down at the water, prove it BLOCKS, frost-cast it into walkable ice, then step across -- the walkability flip. Ice thaws at the next sleep (not exercised here; the exit ladder ends the run). ==",
    "action": "move",
    "direction": "right",
    "steps": 1
@@ -382,7 +382,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Frost Touch] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest."
+    "text": "[Snap Freeze] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest."
    },
    "timeout_sec": 5
   },

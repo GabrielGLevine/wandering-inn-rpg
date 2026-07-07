@@ -1110,7 +1110,7 @@ func _init() -> void:
 	assert(int(reduce_then_shield_payload.get("absorbed", -1)) == 7, "mana_shield's own reaction payload also reports the post-reduction amount")
 
 	# --- Skills Wave Task K2: the sneak combat read ---
-	# [Sneak] in combat: 1 AP for +2 move_pool, a genuine self-buff -- no
+	# [Stealth] in combat: 1 AP for +2 move_pool, a genuine self-buff -- no
 	# enemy, no adjacency, no LoS. `use_skill("sneak", "pc")` mirrors exactly
 	# how the real UI resolves it now (targeting_controller.gd's self-target
 	# reuse always resolves target_id to the actor -- see that file's `enter()`
@@ -1202,14 +1202,14 @@ func _init() -> void:
 	c62.combatants["pc"]["statuses"]["slowed"] = {"pool_penalty": 2}
 	c62._start_turn()
 	assert(int(c62.combatants["pc"][WIKeys.MOVE_POOL]) == maxi(1, WICombat.MOVE_POOL - 2) + 1, "quick_movement's passive still applies on top of a slowed turn")
-	# [Sneak]'s ACTIVE cast (ap_cost 1) is a totally separate mechanism --
+	# [Stealth]'s ACTIVE cast (ap_cost 1) is a totally separate mechanism --
 	# holding it must never ALSO grant a turn-start passive (the ap_cost>0
 	# gate lives entirely in skill_effects.gd's resolve_active, never in
 	# `_move_pool_bonus_total`, which explicitly skips any ap_cost>0 skill).
 	var c63 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["sneak"]}})
 	c63.active_index = c63.turn_order.find("pc")
 	c63._start_turn()
-	assert(int(c63.combatants["pc"][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL, "[Sneak]'s ACTIVE move_pool_bonus grants no turn-start passive")
+	assert(int(c63.combatants["pc"][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL, "[Stealth]'s ACTIVE move_pool_bonus grants no turn-start passive")
 
 	# --- Skills Wave Task K4: second_wind's self-heal resolver (the L5
 	# ghost-skill escalation's other fix; `_resolve_heal` in skill_effects.gd) ---

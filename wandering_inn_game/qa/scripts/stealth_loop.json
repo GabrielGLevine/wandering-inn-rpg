@@ -1,5 +1,5 @@
 {
- "_comment": "Skills Wave Task K2: the sneak-past-the-ambush proof. Loads near_ambush_sneak (warrior L1, [Sneak]+[Observe] QA-fixture-granted, floodplains at (30,16) facing down) via title Continue. Toggles [Sneak] ON (hotbar_2), walks the REAL goblin_encounter_1 Chebyshev-2 zone (O2) all the way to standing adjacent to it -- assert_event_absent proves combat_started never fires anywhere in that approach, the whole point of the seam. Breaks sneak with a genuine field-skill use ON A TARGET ([Observe], hotbar_3, faced at the ambush entity itself -- a harmless flavor read, not an attack): sneak_ended + the off-toast fire BEFORE observe's own skill_used/toast, matching the break-condition ordering. The POSITIVE CONTROL is the very next step: still standing inside the same Chebyshev-2 zone but no longer sneaking, one more move fires the ambush for real (_check_trigger_radius no longer skips) -- proving the skip was `sneaking` itself, not merely having already been inside the zone once. Ends right after combat_started (mid-combat by design, the combat_move_input/relc_tutorial precedent) -- no fight is resolved here. Fixture rng_state is cosmetic (no fight completes), seed 9 for convention; no seed search needed.",
+ "_comment": "Skills Wave Task K2: the sneak-past-the-ambush proof. Loads near_ambush_sneak (warrior L1, [Stealth]+[Appraise Foe] QA-fixture-granted, floodplains at (30,16) facing down) via title Continue. Toggles [Stealth] ON (hotbar_2), walks the REAL goblin_encounter_1 Chebyshev-2 zone (O2) all the way to standing adjacent to it -- assert_event_absent proves combat_started never fires anywhere in that approach, the whole point of the seam. Breaks sneak with a genuine field-skill use ON A TARGET ([Appraise Foe], hotbar_3, faced at the ambush entity itself -- a harmless flavor read, not an attack): sneak_ended + the off-toast fire BEFORE observe's own skill_used/toast, matching the break-condition ordering. The POSITIVE CONTROL is the very next step: still standing inside the same Chebyshev-2 zone but no longer sneaking, one more move fires the ambush for real (_check_trigger_radius no longer skips) -- proving the skip was `sneaking` itself, not merely having already been inside the zone once. Ends right after combat_started (mid-combat by design, the combat_move_input/relc_tutorial precedent) -- no fight is resolved here. Fixture rng_state is cosmetic (no fight completes), seed 9 for convention; no seed search needed.",
  "fixture_save": "near_ambush_sneak",
  "starts_at_title": true,
  "steps": [
@@ -16,7 +16,7 @@
   { "action": "assert_state", "path": "sneaking", "equals": false },
   { "action": "screenshot", "name": "00_pre_sneak" },
 
-  { "_comment": "Toggle [Sneak] ON (slot 2: known_skills order is basic_cleaning, sneak, observe). Break-condition ordering proof lives in test_sim_core.gd; here we prove the REAL player-visible surface: toast, sneak_started, and the translucency render confirmation.", "action": "press", "name": "hotbar_2" },
+  { "_comment": "Toggle [Stealth] ON (slot 2: known_skills order is basic_cleaning, sneak, observe). Break-condition ordering proof lives in test_sim_core.gd; here we prove the REAL player-visible surface: toast, sneak_started, and the translucency render confirmation.", "action": "press", "name": "hotbar_2" },
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "sneak", "context": "exploration", "target": "" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "sneak_started", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You soften your step." }, "timeout_sec": 5 },
@@ -29,7 +29,7 @@
   { "action": "assert_event_absent", "type": "combat_started" },
   { "action": "screenshot", "name": "01_sneaking_in_zone" },
 
-  { "_comment": "Break sneak with a genuine field-skill use ON A TARGET: [Observe] (slot 3) faced at the ambush entity itself. sneak_ended + the off-toast fire BEFORE observe's own skill_used/accomplishment/toast (the break happens at the TOP of the observe branch, per wi_game.gd).", "action": "press", "name": "hotbar_3" },
+  { "_comment": "Break sneak with a genuine field-skill use ON A TARGET: [Appraise Foe] (slot 3) faced at the ambush entity itself. sneak_ended + the off-toast fire BEFORE observe's own skill_used/accomplishment/toast (the break happens at the TOP of the observe branch, per wi_game.gd).", "action": "press", "name": "hotbar_3" },
   { "action": "wait_for_event", "type": "sneak_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You straighten up." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "observe", "context": "exploration", "target": "goblin_encounter_1" }, "timeout_sec": 5 },

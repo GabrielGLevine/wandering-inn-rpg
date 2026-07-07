@@ -567,7 +567,10 @@ func _apply_turn_started(id: String) -> void:
 		# calls WICombatAI.take_turn directly, bypassing this UI entirely), so
 		# the bar's order is free to pick for readability rather than being
 		# pinned by test coupling.
-		_bar_slots = _hud.rebuild_slots(_view, id)
+		# Skills Wave Task K2b: threads the PC's shared loadout in (AUTO/[] for
+		# every save before this task, so every existing canonical's bar order
+		# is byte-identical -- see rebuild_slots' own doc comment).
+		_bar_slots = _hud.rebuild_slots(_view, id, Game.sim.hotbar_loadout)
 		_bar_index = -1
 		_info_slot_index = 0  # Attack, per the "slot 1's info at turn start" playtest fix
 		ObservableBus.emit_domain_event(WIEvents.UI_HOTBAR_RENDERED, {"slots": _bar_slots.size()})

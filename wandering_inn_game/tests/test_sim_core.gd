@@ -1508,7 +1508,7 @@ func _init() -> void:
 	assert(_count("combat_started") == 0, "no combat_started from a bare transition")
 
 	# --- Skills Wave Task K2: the sneak seam (stealth state) ---
-	# The PROVISIONAL [Sneak] skill is QA-fixture-only (no shipped class grants
+	# The PROVISIONAL [Stealth] skill is QA-fixture-only (no shipped class grants
 	# it -- K1's frost_touch/kindle disclosure precedent), so every case below
 	# grants it directly via player_skills, exactly like those two.
 
@@ -1534,7 +1534,7 @@ func _init() -> void:
 	assert(_count("sneak_ended") == 1, "sneak_ended fires on the off-toggle")
 	assert(_toast_texts() == ["You straighten up."], "the off-toast fires exactly once")
 
-	# Toggle via the REAL shipped [Sneak] skill: on/off, skill_used + journal
+	# Toggle via the REAL shipped [Stealth] skill: on/off, skill_used + journal
 	# reveal, sneaking reflected in snapshot().
 	var gSneak := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gSneak.player_skills.append("sneak")
@@ -1760,8 +1760,8 @@ func _init() -> void:
 	assert(_count("toast") == 1, "no-ambient field-use toasts the established refusal")
 	assert(_count("skill_used") == 0, "no-ambient field-use fires nothing")
 
-	# --- Three Pillars P3: [Observe] field skill (faced-entity flavor + observed_things) ---
-	# [Observe] reads a faced entity's `observe` flavor string (a DIFFERENT field
+	# --- Three Pillars P3: [Appraise Foe] field skill (faced-entity flavor + observed_things) ---
+	# [Appraise Foe] reads a faced entity's `observe` flavor string (a DIFFERENT field
 	# than the requires_skill/on_skill_use seam above) and banks observed_things
 	# (opaque; feeds [Tactician]'s levels). Flavor only -- never numbers/stats.
 	var g_obs := WIGame.new(scene_p1, skills_p1, _sink, 12345)
@@ -1929,7 +1929,7 @@ func _init() -> void:
 	assert(gObs.accomplishment_count("observed_things") == 2, "post-sleep observe of the same entity banks again (re-armed)")
 
 	# --- Social Pillar S3: [Charming Smile] field skill (friendly_line + befriended_moments dedup) ---
-	# Mirrors the [Observe] seam: reads a faced entity's friendly_line, banks
+	# Mirrors the [Appraise Foe] seam: reads a faced entity's friendly_line, banks
 	# befriended_moments once per entity per waking through the SHARED dedup dict
 	# under the DISTINCT verb "friendly", and falls through to field_ambient on an
 	# empty cell. The dedup key is independent of observe's, so charm and observe
@@ -2085,6 +2085,61 @@ func _init() -> void:
 			econ_ld = e["payload"]
 	assert(int(econ_ld.get("gold", 0)) == 7, "loot_dropped carries {gold}")
 	assert(not econ_ld.has("items"), "pure-coin loot payload omits the items key (item-only stream stays byte-identical)")
+
+	# --- Skills Wave Task K2b: hotbar loadout (AUTO parity + apply_loadout + toggle) ---
+	var gLoad := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gLoad.classes = {"warrior": 1, "tactician": 1, "helper": 1}
+	assert(gLoad.hotbar_loadout.is_empty(), "fresh game starts in AUTO mode (empty loadout)")
+	# AUTO-default byte-parity: field_hotbar_loadout() must equal the manual
+	# known_skills()-filtered-by-field derivation, in the SAME order -- this
+	# derive-both-ways-and-compare IS the parity proof the plan requires.
+	var manual_field: Array = []
+	for raw: Variant in gLoad.known_skills():
+		var id := String(raw)
+		if bool((gLoad.skills.get(id, {}) as Dictionary).get("field", false)):
+			manual_field.append(id)
+	assert(gLoad.field_hotbar_loadout() == manual_field, "AUTO field_hotbar_loadout() matches the manual known_skills()-filtered-by-field derivation exactly (byte-parity proof)")
+	assert(gLoad.field_hotbar_loadout() == ["basic_cleaning", "basic_cooking", "observe"], "AUTO field order: innate first, then catalog-order class grants (warrior contributes no field skills; helper's basic_cooking, then tactician's observe)")
+
+	# apply_loadout: the pure static filter -- AUTO passthrough, reorder-by-
+	# loadout-order, and the silent-drop-of-an-unresolvable-id proof (the
+	# "invalid ids filtered on read" contract, e.g. a K3-renamed skill).
+	assert(WIGame.apply_loadout(["a", "b", "c"], []) == ["a", "b", "c"], "empty loadout is a pure passthrough (AUTO)")
+	assert(WIGame.apply_loadout(["a", "b", "c"], ["c", "a"]) == ["c", "a"], "non-empty loadout reorders to LOADOUT order and drops unlisted candidates")
+	assert(WIGame.apply_loadout(["a", "b"], ["nonexistent_skill", "b"]) == ["b"], "a loadout id absent from candidates (unknown/renamed) is silently dropped, never an error")
+
+	# loadout_toggle: assign appends to the end (v1-minimal reorder), emits
+	# LOADOUT_CHANGED {skill, assigned, loadout}; unassign erases (not
+	# re-appends) and emits assigned:false.
+	_events.clear()
+	gLoad.loadout_toggle("observe")
+	assert(gLoad.hotbar_loadout == ["observe"], "toggle on an unslotted skill assigns it (appends)")
+	assert(_count("loadout_changed") == 1, "assign emits exactly one loadout_changed")
+	assert(bool(_events[-1]["payload"]["assigned"]) == true and String(_events[-1]["payload"]["skill"]) == "observe" and (_events[-1]["payload"]["loadout"] as Array) == ["observe"], "loadout_changed payload carries {skill, assigned, loadout} exactly")
+	# Non-empty loadout now filters the field bar down to the intersection, in
+	# LOADOUT order -- observe was AUTO slot 3, now the ONLY slot (the
+	# "remapped slot" the plan's QA note calls out).
+	assert(gLoad.field_hotbar_loadout() == ["observe"], "a non-empty loadout intersects+reorders the field bar (basic_cleaning/basic_cooking drop out, unslotted this walk)")
+	gLoad.loadout_toggle("basic_cleaning")
+	assert(gLoad.hotbar_loadout == ["observe", "basic_cleaning"], "a second assign appends after the first (v1-minimal reorder: assignment order IS the order)")
+	assert(gLoad.field_hotbar_loadout() == ["observe", "basic_cleaning"], "field bar order follows LOADOUT order, not known_skills() order")
+	_events.clear()
+	gLoad.loadout_toggle("observe")
+	assert(gLoad.hotbar_loadout == ["basic_cleaning"], "toggling an already-slotted skill unassigns it (erase, not re-append)")
+	assert(bool(_events[-1]["payload"]["assigned"]) == false, "unassign emits loadout_changed with assigned:false")
+	gLoad.loadout_toggle("basic_cleaning")
+	assert(gLoad.hotbar_loadout.is_empty(), "unassigning the last entry returns to AUTO (empty loadout)")
+	assert(gLoad.field_hotbar_loadout() == manual_field, "back to AUTO once the loadout empties out again -- exact parity with the original derivation")
+
+	# Invalid-id filter (a save carrying a renamed/removed skill id): the write
+	# side doesn't gate on known-ness (loadout_toggle has no such guard -- see
+	# its own doc comment), but the READ side (field_hotbar_loadout/
+	# apply_loadout) silently drops it -- never a phantom slot, never a crash.
+	gLoad.loadout_toggle("not_a_real_skill_id")
+	assert(gLoad.hotbar_loadout.has("not_a_real_skill_id"), "loadout_toggle doesn't gate on known-ness at write time")
+	assert(not gLoad.field_hotbar_loadout().has("not_a_real_skill_id"), "an unknown id in the loadout is silently filtered out at READ time")
+	gLoad.loadout_toggle("not_a_real_skill_id")
+	assert(gLoad.hotbar_loadout.is_empty(), "cleanup: unassigned back to AUTO")
 
 	print("PASS: sim core behaves correctly")
 	quit(0)

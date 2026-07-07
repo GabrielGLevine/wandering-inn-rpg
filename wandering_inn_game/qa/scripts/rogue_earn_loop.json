@@ -1,0 +1,43 @@
+{
+ "_comment": "Skills Wave Task K3: THE [Rogue] EARN CANONICAL -- fixture-first proof of earn -> sleep -> class_gained -> [Stealth] fielded (the project's ratified fixture-first policy for new canonicals, named explicitly for this class in the K3 canon-verdicts packet). Loads near_rogue (warrior L1 at the inn (2,3), the Missing Crate WATCH path's resolution pre-banked: recovered_crate_watch/found_the_crate/crate_returned/asked_about_crate/persuaded_someone -- [Rogue]'s gained_by gate, the cleanest EXISTING classless guile counter; see classes.json's rogue _comment for the full circularity + onboarding-integrity trace: `sneaked_past_danger` [the OTHER candidate, banked only while already sneaking] cannot gate Rogue's OWN grant without circularity, since no class grants `sneak` before Rogue does -- it is Rogue's LEVEL-UP counter instead, past L1). One sleep resolves the gate -> [Rogue] class_gained, granting `sneak` (canon-renamed [Stealth]) at level 1 -- POST-onboarding trivially, since recovered_crate_watch is street-quest content unreachable without already surviving the floodplains goblin_encounter_1 ambush (street sits behind liscor_gate, 2 cells from the ambush's own Chebyshev-2 zone). Hotbar re-renders 1->2 field slots ([Basic Cleaning], [Stealth]); pressing [Stealth]'s slot toggles real sneaking through the SAME shipped mechanism stealth_loop's QA-fixture-granted copy already exercises (skill_used + sneak_started + toast + ui_sneak_rendered) -- proving the class grant is the genuine article, not a parallel path. Journal opened at the end for the windowed [Stealth] card shot. No combat anywhere; fixture rng_state is cosmetic, seed 9 for convention.",
+ "fixture_save": "near_rogue",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "inn" },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
+  { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
+  { "action": "assert_state", "path": "accomplishments.recovered_crate_watch", "equals": 1 },
+
+  { "_comment": "Boot: 1 innate field slot, [Rogue] not yet held.", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "readout_lines": ["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease."] } },
+  { "action": "screenshot", "name": "00_pre_rogue_1slot" },
+
+  { "_comment": "To the bed (near_tactician/field_skills_loop precedent): down3 -> (2,6), down1 blocks on the bed (2,7) & faces it, interact -> sleep.", "action": "move", "direction": "down", "steps": 3 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "rogue" }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "classes.rogue", "equals": 1 },
+  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 2 }, "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Rogue] class gained! — [Stealth]" } },
+  { "action": "screenshot", "name": "01_rogue_gained_toast" },
+
+  { "_comment": "Slot 2 is [Stealth] (catalog order: innate basic_cleaning, then rogue's sneak, the last skills.json entry). Press it -- the toggle ignores the faced target entirely (see skills.json's sneak _comment), so facing the bed is harmless.", "action": "press", "name": "hotbar_2" },
+  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "sneak", "context": "exploration", "target": "" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "sneak_started", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You soften your step." }, "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "ui_sneak_rendered", "payload_contains": { "active": true } },
+  { "action": "assert_state", "path": "sneaking", "equals": true },
+  { "action": "screenshot", "name": "02_stealth_fielded" },
+
+  { "_comment": "Journal for the windowed [Stealth] card shot (the renamed-Skill-card proof).", "action": "press", "name": "journal" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "03_journal_stealth_card" }
+ ]
+}

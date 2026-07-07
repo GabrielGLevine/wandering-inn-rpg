@@ -174,7 +174,7 @@ func _init() -> void:
 	tc_combat._start_turn()
 	var tc_view := WICombatView.new(tc_combat)
 
-	# (1) [Sneak] (ap_cost 1 > 0): enter() must take the self-target shortcut.
+	# (1) [Stealth] (ap_cost 1 > 0): enter() must take the self-target shortcut.
 	var sneak_targeting: RefCounted = targeting_script.new(tc_view, stub_screen)
 	sneak_targeting.enter(0, "sneak")
 	assert((sneak_targeting.state()["targets"] as Array) == ["pc"], "enter() must yield the self-target list [pc] for sneak's ap_cost>0 move_pool_bonus cast")
@@ -221,6 +221,38 @@ func _init() -> void:
 			found_hotbar = true
 	assert(found_hotbar, "combat HUD build() must instantiate the hotbar under its root")
 	fake_root.free()
+
+	# Skills Wave Task K2b: rebuild_slots' new 3rd `loadout` arg. AUTO (the
+	# default `[]`, exactly the pre-K2b 2-arg call every OTHER call site in
+	# this repo still uses) must be byte-identical to the old order; a
+	# non-empty loadout reorders/filters ONLY the kit-skill run (slots 3+) --
+	# Attack/Dash stay hard-pinned at 1/2 regardless.
+	var k2b_combatants: Dictionary = _load_json("res://data/combatants.json")
+	var k2b_arena: Dictionary = _load_json("res://data/arenas.json")["arenas"][0]
+	var k2b_skills: Dictionary = _load_json("res://data/skills.json")
+	var k2b_pc_cfg: Dictionary = (_combatant_config(k2b_combatants, "pc") as Dictionary).duplicate(true)
+	k2b_pc_cfg["skills"] = ["power_strike", "frost_bolt", "second_wind"]
+	var k2b_goblin_cfg: Dictionary = (_combatant_config(k2b_combatants, "goblin_raider") as Dictionary).duplicate(true)
+	var k2b_combat := WICombat.new(k2b_arena, [k2b_pc_cfg, k2b_goblin_cfg], k2b_skills, func(_t: String, _p: Dictionary) -> void: pass, 9)
+	k2b_combat.begin()
+	k2b_combat.active_index = k2b_combat.turn_order.find("pc")
+	k2b_combat._start_turn()
+	var k2b_view := WICombatView.new(k2b_combat)
+	var k2b_hud: RefCounted = hud_script.new(null, null, null)
+
+	var auto_slots: Array = k2b_hud.rebuild_slots(k2b_view, "pc")
+	var auto_ids: Array = []
+	for s: Dictionary in auto_slots:
+		auto_ids.append(String(s.get("id", s["type"])))
+	assert(auto_ids == ["attack", "dash", "power_strike", "frost_bolt", "second_wind", "end_turn"], "AUTO (no 3rd arg) rebuild_slots is byte-identical to the pre-K2b order")
+
+	var loaded_slots: Array = k2b_hud.rebuild_slots(k2b_view, "pc", ["second_wind", "power_strike"])
+	var loaded_ids: Array = []
+	for s: Dictionary in loaded_slots:
+		loaded_ids.append(String(s.get("id", s["type"])))
+	assert(loaded_ids == ["attack", "dash", "second_wind", "power_strike", "end_turn"], "a non-empty loadout reorders the kit run to LOADOUT order and drops frost_bolt (unslotted) -- Attack/Dash stay pinned at 1/2")
+	assert(String(loaded_slots[0]["key_hint"]) == "1" and String(loaded_slots[1]["key_hint"]) == "2", "Attack/Dash key hints stay 1/2 regardless of the loadout")
+	assert(String(loaded_slots[2]["key_hint"]) == "3" and String(loaded_slots[3]["key_hint"]) == "4", "kit slots renumber from 3 in the FILTERED order")
 
 	var world_labels_source := FileAccess.get_file_as_string("res://src/ui/world_labels.gd")
 	assert(not world_labels_source.is_empty(), "world_labels.gd must exist")

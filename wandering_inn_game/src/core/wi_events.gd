@@ -52,6 +52,20 @@ const TERRAIN_CHANGED := &"terrain_changed"
 ## file.
 const SNEAK_STARTED := &"sneak_started"
 const SNEAK_ENDED := &"sneak_ended"
+## Skills Wave Task K2b: `WIGame.hotbar_loadout` changed (a journal
+## assign/unassign toggle). Payload `{skill:String, assigned:bool,
+## loadout:Array[String]}` -- `assigned` is true on an assign, false on an
+## unassign; `loadout` is the FULL updated ordered array so QA can assert
+## exact contents/order without a separate snapshot read. Mirrors
+## GOLD_CHANGED/SNEAK_STARTED's "plain sim-state event, not ui_-prefixed"
+## naming (the plan text's placeholder name was `ui_loadout_changed`; this is
+## a SIM mutation like those, not a presentation confirmation, so it follows
+## their naming convention instead -- disclosed in the K2b report).
+## `field_hotbar.gd` listens for this to re-render (same trigger-list idiom
+## as CLASS_GAINED/CLASS_LEVEL_UP/CLASS_EVOLVED); combat's bar re-derives
+## fresh from `Game.sim.hotbar_loadout` at the next `TURN_STARTED` (the
+## journal can never be open mid-combat, so no listener is needed there).
+const LOADOUT_CHANGED := &"loadout_changed"
 
 # --- Skills / progression (wi_game.gd) ---
 const SKILL_USED := &"skill_used"
@@ -149,6 +163,12 @@ const UI_TOAST_RENDERED := &"ui_toast_rendered"
 const UI_HINT_RENDERED := &"ui_hint_rendered"
 const UI_JOURNAL_SHOWN := &"ui_journal_shown"
 const UI_JOURNAL_HIDDEN := &"ui_journal_hidden"
+## Skills Wave Task K2b: journal.gd's confirmation that its own skills-panel
+## body redrew after a loadout toggle (the cursor highlight + the ✓/blank
+## assign marker) -- separate from UI_JOURNAL_SHOWN (which only fires on
+## open) so QA can assert the LIVE in-panel update without closing/reopening.
+## Payload `{skill:String, assigned:bool, cursor_index:int}`.
+const UI_JOURNAL_LOADOUT_RENDERED := &"ui_journal_loadout_rendered"
 const UI_INVENTORY_SHOWN := &"ui_inventory_shown"
 const UI_INVENTORY_HIDDEN := &"ui_inventory_hidden"
 const UI_PAUSE_SHOWN := &"ui_pause_shown"

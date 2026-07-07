@@ -68,15 +68,27 @@ extends CanvasLayer
 ## at every viewport width this repo assumes (1280 reference, same as every
 ## other hardcoded panel geometry).
 ##
-## OVERFLOW: budgeted in WRAPPED lines exactly like `combat_hud.gd`'s feed
-## panel (D2-7 #6: cut words, never widen the UI) -- `_wrapped_line_count`/
-## `_line_capacity`/`_fit_to_lines` are the same font-metric-driven helpers,
-## duplicated per-file by the same M6.5 zero-cross-dependency idiom (see
-## `_bb_escape`'s doc comments elsewhere). Rows that don't fit the panel's
-## real capacity are cut (words trimmed, "…" appended) or dropped entirely
-## rather than spilling past the parchment -- the pre-fix behavior verified
-## empirically at 3 slots (the 3rd row's wrapped 2nd line rendered BELOW the
-## panel's opaque art).
+## OVERFLOW (Skills Wave K2b RESTRUCTURE): budgeted in WRAPPED lines exactly
+## like `combat_hud.gd`'s feed panel (D2-7 #6: cut words, never widen the UI)
+## -- `_wrapped_line_count`/`_line_capacity`/`_fit_to_lines` are the same
+## font-metric-driven helpers, duplicated per-file by the same M6.5
+## zero-cross-dependency idiom (see `_bb_escape`'s doc comments elsewhere).
+## `_fit_readout` tries the FULL detailed per-row rendering first (name +
+## effect + description, one row per slot) -- unchanged from pre-K2b, and
+## still what's drawn for every fixture where it already fit. The K2 fix wave
+## previously SILENTLY DROPPED trailing rows once the budget ran out (a
+## 3-skill readout with one long multi-line row, e.g. [Sneak]'s cast
+## description, could drop a WHOLE skill -- [Observe] -- with zero on-screen
+## trace). K2b's machine-playtest recommendation ("collapse to icons" for
+## this trade) is applied here as: if the detailed pass would drop even ONE
+## row, ALL rows collapse instead to a compact "N [Name]" strip (numbered
+## bracketed display names only, no effect/description text -- the real
+## icons already sit on the HOTBAR itself; this panel only ever supplemented
+## them) that packs far more entries per physical line. If even the compact
+## strip can't fit everyone, its LAST line is word-cut with an ellipsis --
+## the "…" is itself the "there's more" signal, never a silent vanish.
+## `readout_lines` in the emitted event is UNCHANGED either way (always the
+## full untrimmed per-row text) -- only the DRAWN label text differs.
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
 # Sized wide (652) so every currently-shipped field skill's readout row fits
 # on ONE wrapped line at "Small" (font_size 12) metrics -- measured directly
@@ -173,7 +185,10 @@ func skill_for_slot(n: int) -> String:
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	match type:
-		WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED:
+		# Skills Wave Task K2b: LOADOUT_CHANGED (a journal assign/unassign
+		# toggle) re-renders the bar with the newly chosen subset, the same
+		# trigger-list idiom as a class gain/level-up/evolution.
+		WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED:
 			_render()
 		WIEvents.COMBAT_STARTED:
 			visible = false
@@ -273,16 +288,26 @@ func _load_combatants_catalog() -> Array:
 	return []
 
 
-## Budgets `lines` (the full, untrimmed per-slot readout rows) into the
-## panel's real WRAPPED-line capacity (D2-7 #6: cut words, never widen the
-## UI) -- a row that doesn't fit is word-cut with an ellipsis (`_fit_to_lines`)
-## down to whatever budget remains; once the budget is exhausted, remaining
-## rows are simply dropped rather than spilling past the parchment (verified
-## empirically at 3 slots pre-fix: the 3rd row's wrapped 2nd line rendered
-## outside the panel art). Returns the RENDERED (possibly cut/dropped) line
-## list; `readout_lines` in the emitted event always stays the full text.
+## Skills Wave K2b RESTRUCTURE: tries the detailed per-row fit first (see
+## `_fit_readout_detailed`'s own doc comment); if that would drop even one
+## row, falls back to the compact "collapse to icons" strip instead of ever
+## silently dropping a whole skill with no on-screen trace (see the file doc
+## comment's OVERFLOW section for the full rationale). Returns the RENDERED
+## (possibly cut, never silently-vanished) line list; `readout_lines` in the
+## emitted event always stays the full untrimmed text either way.
 func _fit_readout(lines: Array) -> Array:
 	var capacity := _line_capacity(_readout_label, READOUT_TEXT_HEIGHT)
+	var detailed := _fit_readout_detailed(lines, capacity)
+	if detailed.size() == lines.size():
+		return detailed
+	return _fit_readout_compact(capacity)
+
+
+## The pre-K2b per-row behavior (word-cuts each row to fit, DROPS trailing
+## rows once the budget is exhausted) -- still the preferred rendering when
+## it manages to keep every row; `_fit_readout` falls back to the compact
+## strip only when this WOULD drop something (checked by comparing sizes).
+func _fit_readout_detailed(lines: Array, capacity: int) -> Array:
 	var out: Array = []
 	var used := 0
 	for line: String in lines:
@@ -293,6 +318,30 @@ func _fit_readout(lines: Array) -> Array:
 		out.append(fitted)
 		used += _wrapped_line_count(_readout_label, fitted, READOUT_TEXT_WIDTH)
 	return out
+
+
+## Skills Wave K2b RESTRUCTURE: the "collapse to icons" fallback -- one
+## "N [Name]" token per rendered slot (numbered bracketed display name only,
+## no effect/description text), joined into a single packed string and
+## word-cut to the panel's capacity exactly like a detailed row would be.
+## Reads `_field_skills` directly (the SAME list `_render` just built) rather
+## than re-deriving names from the detailed `lines` array, since those already
+## carry the full "Name — effect — description" text that isn't safe to
+## re-split back into just the name. Always returns exactly ONE array
+## element (it may itself wrap across up to `capacity` physical lines via the
+## label's autowrap, same as any single detailed row already could) -- if
+## even this can't fit every skill, `_fit_to_lines` word-cuts it with an
+## ellipsis, which is itself the "there's more" signal (never a silent
+## vanish, unlike the pre-K2b drop).
+func _fit_readout_compact(capacity: int) -> Array:
+	var tokens: Array = []
+	var number := 1
+	for id: String in _field_skills:
+		var sk: Dictionary = Game.sim.skills.get(id, {})
+		tokens.append("%d %s" % [number, String(sk.get("display_name", id))])
+		number += 1
+	var joined := "   ".join(tokens)
+	return [_fit_to_lines(_readout_label, joined, READOUT_TEXT_WIDTH, capacity)]
 
 
 ## Duplicated from `combat_hud.gd`'s `_wrapped_line_count` (M6.5
@@ -339,14 +388,11 @@ func _fit_to_lines(label: Label, text: String, width: float, max_lines: int) -> 
 	return (words[0] + "…") if words.size() > 0 else text
 
 
-## The PC's KNOWN skills (innate + class-granted, via the sim's own
-## `known_skills()` -- the same derivation the journal reads) filtered to those
-## skills.json tags `field: true`. Preserves known_skills()'s order (innate
-## first, then kit order) so slot numbering is stable across renders.
+## Skills Wave Task K2b: the field hotbar's slot list now comes straight from
+## the sim's own `field_hotbar_loadout()` (moved there so the FILTER lives on
+## the sim, per the plan's "sim owns state + filters" rule -- this file used
+## to duplicate the known_skills()-filtered-by-field derivation inline; it now
+## only asks for the already-filtered result). AUTO (loadout empty) is
+## byte-identical to the pre-K2b order: innate skills first, then kit order.
 func _collect_field_skills() -> Array:
-	var out: Array = []
-	for raw: Variant in Game.sim.known_skills():
-		var id := String(raw)
-		if bool((Game.sim.skills.get(id, {}) as Dictionary).get("field", false)):
-			out.append(id)
-	return out
+	return Game.sim.field_hotbar_loadout()

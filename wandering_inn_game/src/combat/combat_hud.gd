@@ -291,27 +291,42 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 ## Static display data only (icon id, label, key hint) -- affordability and
 ## live AP-cost numbers are computed fresh every `refresh()` by
 ## `render_bar_slots`, not baked in here.
-func rebuild_slots(view: RefCounted, actor_id: String) -> Array:
+## Skills Wave Task K2b: `loadout` (default `[]` -- every pre-K2b call site,
+## including this file's own unit test, stays byte-identical) is
+## `Game.sim.hotbar_loadout`, threaded in by `combat_screen.gd` (the actual
+## screen, which already references `Game.sim` freely -- this file itself
+## stays at ZERO bare autoload identifiers, see the file doc comment).
+## Attack/Dash stay HARD-PINNED at slots 1/2 regardless of the loadout -- the
+## loadout only ever governs the kit-skill run from slot 3 on, filtered
+## through `WIGame.apply_loadout` (a plain `class_name`, not an autoload, so
+## calling it here is safe under the zero-bare-autoload-identifier contract
+## the same way `WICombat`/`WIHotbar` already are). AUTO (loadout empty)
+## returns the kit run in its original skills.json-derived order, unchanged.
+func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = []) -> Array:
 	var c: Dictionary = view.combatant(actor_id)
 	var slots: Array = [
 		{"type": "attack", "label": "Attack", "icon": "icon_attack", "key_hint": "1"},
 		{"type": "dash", "label": "Dash", "icon": "icon_dash", "key_hint": "2"},
 	]
-	var number := 3
+	var kit_ids: Array = []
 	for sk_id: String in c["skills"]:
 		var sk: Dictionary = view.skill(sk_id)
 		if (sk.get("contexts", []) as Array).has("combat") and int(sk.get("ap_cost", 0)) > 0:
-			slots.append({
-				"type": "skill", "id": sk_id, "label": String(sk.get("display_name", sk_id)),
-				"icon": String(sk.get("icon", "")), "key_hint": str(number),
-				"description": String(sk.get("description", "")),
-				# M-LEGIBILITY L3: carried through untouched by render_bar_slots'
-				# duplicate() so `_slot_info_line` can hand it to
-				# `WIEffectText.skill_effect_lines` -- the generated mechanical
-				# line, never hand-composed here.
-				"effect": sk.get("effect", {}),
-			})
-			number += 1
+			kit_ids.append(sk_id)
+	var number := 3
+	for sk_id: String in WIGame.apply_loadout(kit_ids, loadout):
+		var sk: Dictionary = view.skill(sk_id)
+		slots.append({
+			"type": "skill", "id": sk_id, "label": String(sk.get("display_name", sk_id)),
+			"icon": String(sk.get("icon", "")), "key_hint": str(number),
+			"description": String(sk.get("description", "")),
+			# M-LEGIBILITY L3: carried through untouched by render_bar_slots'
+			# duplicate() so `_slot_info_line` can hand it to
+			# `WIEffectText.skill_effect_lines` -- the generated mechanical
+			# line, never hand-composed here.
+			"effect": sk.get("effect", {}),
+		})
+		number += 1
 	slots.append({"type": "end_turn", "label": "End\nTurn", "icon": "", "key_hint": "E", "end_turn_gap": true})
 	return slots
 

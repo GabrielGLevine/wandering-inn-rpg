@@ -261,12 +261,12 @@ current-state-only, one short paragraph per live system.
 | `journal_skills` | 9 | journal skills-by-class panel; pre/post-first-use reveal |
 | `inventory_loop` | 9 | THE inventory/equipment loop; weapon-gated kit proof |
 | `atmosphere_check` | 9 | mood-grade/phase-clock proof; day→dusk→day cycle |
-| `field_skills_loop` | 9 (fixture `near_tactician`) | field-skill hotbar loop (Basic Cleaning → Observe) |
+| `field_skills_loop` | 9 (fixture `near_tactician`) | field-skill hotbar loop (Basic Cleaning → Observe); K2b loadout assign/unassign + remapped-slot proof |
 | `social_loop` | 9 (fixture `post_tutorial_street`) | Social Pillar v1 proof; rotating talk pools → [Diplomat] |
 | `sewers_walkthrough` | 9 (fixture `near_sewers`) | Liscor sewers proof; grate-gate seam + vermin fight |
 | `cisterns_fight` | 9 (fixture `cisterns_fight_start`) | Quest 1 FIGHT path (clear `shield_spiders` nest) |
 | `cisterns_talk` | 9 (fixture `cisterns_talk_start`) | Quest 1 TALK path (persuade Zevara, no combat) |
-| `cisterns_scout` | 9 (fixture `cisterns_scout_start`) | Quest 1 SKILL path ([Observe] the `nest_ledge`) |
+| `cisterns_scout` | 9 (fixture `cisterns_scout_start`) | Quest 1 SKILL path ([Appraise Foe] the `nest_ledge`) |
 | `wrong_order_loop` | 9 (fixture) | "The Wrong Order" inn-local give→cook→report loop |
 | `wrong_order_talk` | 9 (fixture) | "The Wrong Order" TALK path (Krshia smooth-over, no combat) |
 | `wrong_order_fight` | 9 (fixture) | "The Wrong Order" FIGHT path (clear `supplier_scavengers`) |
@@ -278,7 +278,8 @@ current-state-only, one short paragraph per live system.
 | `arc_flow` | 9 (fixture `near_act3`) | THE WHOLE ACT III ARC PROOF, tremor through epilogue |
 | `status_first_encounter` | 9 (fixture `near_mage_cast`) | status glossary + first-encounter combat-feed surface |
 | `gear_loop` | 9 (fixture `gear_loop_start`) | resonance-gear UI proof (accessory rows, capacity refusal) |
-| `stealth_loop` | 9 (fixture `near_ambush_sneak`) | the [Sneak] seam: skip an ambush, break it, positive control |
+| `stealth_loop` | 9 (fixture `near_ambush_sneak`) | the [Stealth] seam: skip an ambush, break it, positive control |
+| `rogue_earn_loop` | 9 (fixture `near_rogue`) | K3 [Rogue] earn: `recovered_crate_watch` -> sleep -> `class_gained` -> [Stealth] fielded |
 
 ## Working conventions
 

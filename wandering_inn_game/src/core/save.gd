@@ -124,6 +124,16 @@ extends RefCounted
 ## honestly drops (see wi_game.gd's own doc comment on the field for the full
 ## break-condition list). No version bump (nothing to migrate: there was never
 ## a saved value to be missing).
+## (Skills Wave Task K2b): `hotbar_loadout` (Array[String], the player's
+## ordered shared-bar assignment) follows the SAME additive-optional pattern
+## as `frozen_cells`/`seen_statuses` above -- NOT in `required`, NO version
+## bump. A save missing the key (any save written before this task) restores
+## an empty Array (AUTO mode -- exactly today's derivation, since no one
+## could have customized a loadout before this field existed); a present-but-
+## non-Array value is rejected. The array is restored VERBATIM, never pruned
+## here -- `WIGame.apply_loadout`'s candidate-set intersection is what
+## silently drops an id that no longer resolves to a known/fielded skill (a
+## future K3 rename), not this load path.
 const VERSION := 5
 
 
@@ -153,6 +163,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"resonance_capacity": game.resonance_capacity,
 		"light_active": game.light_active,
 		"frozen_cells": game.frozen_cells_json(),
+		"hotbar_loadout": game.hotbar_loadout.duplicate(),
 		"pc_name": game.pc_name,
 		"pc_race": game.pc_race,
 		"pc_gender": game.pc_gender,
@@ -280,6 +291,10 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# restore (set_frozen_cells_json), never rejected.
 	if s.has("frozen_cells") and not (s["frozen_cells"] is Dictionary):
 		return false
+	# hotbar_loadout (Skills Wave Task K2b) follows the SAME additive-optional
+	# pattern -- default [] (AUTO) when absent, rejected if present-but-non-Array.
+	if s.has("hotbar_loadout") and not (s["hotbar_loadout"] is Array):
+		return false
 	# pc_name/pc_race/pc_gender (M-ARC §5) follow the SAME additive-optional
 	# pattern -- default to the everyman identity when absent, rejected if
 	# present-but-non-String; the values themselves are re-sanitized on restore.
@@ -361,6 +376,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.resonance_capacity = int(s.get("resonance_capacity", 2))
 	game.light_active = bool(s.get("light_active", false))
 	game.set_frozen_cells_json(s.get("frozen_cells", {}))
+	game.hotbar_loadout.clear()
+	game.hotbar_loadout.assign(s.get("hotbar_loadout", []))
 	# M-ARC §5: restore cosmetic identity through WIGame's tolerant sanitizers
 	# (absent -> everyman default; garbage -> default), so the sprite-variant key
 	# and opener branch are always well-formed regardless of the save's contents.

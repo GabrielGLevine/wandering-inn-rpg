@@ -1,0 +1,50 @@
+{
+ "_comment": "Skills Wave Task K3: the rogue_earn_loop fixture. near_tactician shape (warrior L1, met/sparred/given_spear, standing at the inn (2,3) facing right) PLUS the Missing Crate WATCH path's own resolution pre-banked -- asked_about_crate/recovered_crate_watch/found_the_crate/crate_returned/persuaded_someone (data/dialogue/watch_crate.json's exact effects-array bank) and removed_entities:[crate_scavengers] (that option's remove_entity effect) -- an honest snapshot of a save that actually played crate_talk to completion. recovered_crate_watch is [Rogue]'s gained_by gate (classes.json's rogue _comment has the full earn trace + circularity/onboarding-integrity analysis); rogue_earn_loop's next sleep grants [Rogue] (sneak, canon-renamed [Stealth]) fresh -- player_skills carries only basic_cleaning, deliberately NOT sneak, so the loop proves the REAL class-granted skill, not a QA-fixture shortcut (distinct from stealth_loop's near_ambush_sneak, which grants sneak directly as a K1/K2-era disclosed test affordance). No combat in this path; rng_state cosmetic, kept 9 for convention.",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   2,
+   3
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "asked_about_crate": 1,
+   "recovered_crate_watch": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "persuaded_someone": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [
+   "crate_scavengers"
+  ],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}

@@ -1889,7 +1889,7 @@
     "width": 40,
     "height": 26
    },
-   "_comment_freezable": "Skills Wave Task K1 (freezable-water seam, the pond-secret crossing): (10,17) is the north edge of the fishing-pond blocking rect (x7-13, y17-21 walls.segments). It is already impassable water, so unfrozen it changes NOTHING for any floodplains route (every ambush/Relc/gate lane is unchanged -- confirmed off the pond). Approaching from the open floor at (10,16) and casting [Frost Touch] freezes it into walkable ice; stepping onto it and facing down reaches the `frozen_cache` prop at (10,18) (pond interior, otherwise unreachable). The 'secret' is that only a cold-caster can cross the water to it. Ice thaws at sleep. No QA drives this (the seam is proven by sewers_walkthrough); it ships as reachable content.",
+   "_comment_freezable": "Skills Wave Task K1 (freezable-water seam, the pond-secret crossing): (10,17) is the north edge of the fishing-pond blocking rect (x7-13, y17-21 walls.segments). It is already impassable water, so unfrozen it changes NOTHING for any floodplains route (every ambush/Relc/gate lane is unchanged -- confirmed off the pond). Approaching from the open floor at (10,16) and casting [Snap Freeze] freezes it into walkable ice; stepping onto it and facing down reaches the `frozen_cache` prop at (10,18) (pond interior, otherwise unreachable). The 'secret' is that only a cold-caster can cross the water to it. Ice thaws at sleep. No QA drives this (the seam is proven by sewers_walkthrough); it ships as reachable content.",
    "freezable": [
     [
      10,
@@ -2754,7 +2754,7 @@
      ]
     },
     {
-     "_comment": "Task 7c (No Killing Goblins seed, Parts 1+2): the inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: NO dedicated signpost/wooden-sign asset exists in any in-hand pack (exhausted docs/asset-catalog.md + docs/asset-index.md by grep, plus a PIL alpha-channel connected-component sweep of Buildings/Props.png, Furniture.png, Tools.png, Esoteric.png, Resources.png, Walls.png, Cute_Fantasy's Outdoor_Decor_Free.png, and Fairy Forest's Props.png -- see the VISUAL-LOG entry). Closest semantic match: a hanging wood-plank-on-chains crop from the ALREADY-COMMITTED Furniture.png (same sheet as door/crate/unlit_lantern -- no new asset extraction), which reads as a board suspended in front of the inn. Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Observe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
+     "_comment": "Task 7c (No Killing Goblins seed, Parts 1+2): the inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: NO dedicated signpost/wooden-sign asset exists in any in-hand pack (exhausted docs/asset-catalog.md + docs/asset-index.md by grep, plus a PIL alpha-channel connected-component sweep of Buildings/Props.png, Furniture.png, Tools.png, Esoteric.png, Resources.png, Walls.png, Cute_Fantasy's Outdoor_Decor_Free.png, and Fairy Forest's Props.png -- see the VISUAL-LOG entry). Closest semantic match: a hanging wood-plank-on-chains crop from the ALREADY-COMMITTED Furniture.png (same sheet as door/crate/unlit_lantern -- no new asset extraction), which reads as a board suspended in front of the inn. Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
      "id": "inn_sign",
      "kind": "prop",
      "cell": [
@@ -3148,7 +3148,7 @@
      }
     },
     {
-     "_comment": "Skills Wave Task K1 (burnable-prop seam): a collapsed pile of rotten timber and tar-soaked rope blocking the dead-end side-nook WEST of the ladder (x0-1, off every canonical route -- cisterns/deep_descent only tread the x2 column and the y11 row, never x0-1, so this prop changes no other script's pathing or entity assertions). `burnable: true` is the ONLY tag the fire field seam keys on; facing it and casting [Kindle] removes it permanently (removed_entities, saved) and clears the nook. NOT a quest prop -- burning it costs nothing but the passage. Sprite `crate` is a debris stand-in (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
+     "_comment": "Skills Wave Task K1 (burnable-prop seam): a collapsed pile of rotten timber and tar-soaked rope blocking the dead-end side-nook WEST of the ladder (x0-1, off every canonical route -- cisterns/deep_descent only tread the x2 column and the y11 row, never x0-1, so this prop changes no other script's pathing or entity assertions). `burnable: true` is the ONLY tag the fire field seam keys on; facing it and casting [Firefly] removes it permanently (removed_entities, saved) and clears the nook. NOT a quest prop -- burning it costs nothing but the passage. Sprite `crate` is a debris stand-in (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
      "id": "sewer_debris",
      "kind": "prop",
      "cell": [
@@ -3164,7 +3164,7 @@
      ],
      "burnable": true,
      "observe": "A slumped heap of waterlogged timber and old rope, tarred black and long dead. It chokes the little side-nook past the ladder. Dry enough on top to take a flame, if you had one.",
-     "burn_toast": "[Kindle] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air.",
+     "burn_toast": "[Firefly] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air.",
      "locked_toast": "Sodden timber and tarred rope, jammed wall to wall. You could haul at it for an hour, or you could burn it — if you had the means to make fire."
     },
     {
@@ -3255,7 +3255,7 @@
      ]
     },
     {
-     "_comment": "The Shield Spider nest -- Quest 1 'Something in the Cisterns' FIGHT path (C3 wires the quest; on_victory banks cleared_the_nest for C3 to read). Interact-only (no trigger_radius) so C3's SKILL path can [Observe] the nest without triggering combat. M-GEAR Task G2 (HAZARD 2): phosphor_pendant loot rides the sewers-phosphor prop fiction. This encounter carried NO loot table before G2 (confirmed by grep), so the new table is purely additive -- no prior loot draw exists at any pinned seed for this entity to disturb. Loot RNG is isolated (hash(run_seed, encounter_id), M7), so this can never shift the main event stream or any OTHER encounter's draw. Chance 0.3 is a G2 pick (the staging doc names the source but not a chance value) -- mid-range between the shipped 0.25/0.5 precedents.",
+     "_comment": "The Shield Spider nest -- Quest 1 'Something in the Cisterns' FIGHT path (C3 wires the quest; on_victory banks cleared_the_nest for C3 to read). Interact-only (no trigger_radius) so C3's SKILL path can [Appraise Foe] the nest without triggering combat. M-GEAR Task G2 (HAZARD 2): phosphor_pendant loot rides the sewers-phosphor prop fiction. This encounter carried NO loot table before G2 (confirmed by grep), so the new table is purely additive -- no prior loot draw exists at any pinned seed for this entity to disturb. Loot RNG is isolated (hash(run_seed, encounter_id), M7), so this can never shift the main event stream or any OTHER encounter's draw. Chance 0.3 is a G2 pick (the staging doc names the source but not a chance value) -- mid-range between the shipped 0.25/0.5 precedents.",
      "id": "shield_spiders",
      "kind": "encounter",
      "cell": [
@@ -3288,7 +3288,7 @@
      ]
     },
     {
-     "_comment": "Content Wave C3 Quest 1 SKILL path: the walkway ledge overlooking the Shield Spider nest. Mirrors the crate quest's cellar_door [Light] shape -- `requires_skill: observe` + `on_skill_use` banks `scouted_the_nest` deterministically (single accomplishment, zero rng). Both interact (E, facing it -> interact()'s prop branch use_skill('observe', id) fallback) and the field [Observe] hotbar (use_skill_field -> the requires_skill==observe && on_skill_use branch) route through the SAME use_skill seam, so the bank + toast are identical either way; the generic observe-string path never fires for this prop (the requires_skill+on_skill_use branch is checked first). `locked_toast` gates gracefully when [Observe] is unknown (no skill-name leak). Placed at (17,10) on the right walkway, one cell east of the open nest floor -- reachable WITHOUT interacting the interact-only shield_spiders at (15,10), so scouting never trips the fight. Sprite `boulder` is a stand-in (a broken brick lip) consistent with the drainage_marker; VISUAL-LOG flag.",
+     "_comment": "Content Wave C3 Quest 1 SKILL path: the walkway ledge overlooking the Shield Spider nest. Mirrors the crate quest's cellar_door [Light] shape -- `requires_skill: observe` + `on_skill_use` banks `scouted_the_nest` deterministically (single accomplishment, zero rng). Both interact (E, facing it -> interact()'s prop branch use_skill('observe', id) fallback) and the field [Appraise Foe] hotbar (use_skill_field -> the requires_skill==observe && on_skill_use branch) route through the SAME use_skill seam, so the bank + toast are identical either way; the generic observe-string path never fires for this prop (the requires_skill+on_skill_use branch is checked first). `locked_toast` gates gracefully when [Appraise Foe] is unknown (no skill-name leak). Placed at (17,10) on the right walkway, one cell east of the open nest floor -- reachable WITHOUT interacting the interact-only shield_spiders at (15,10), so scouting never trips the fight. Sprite `boulder` is a stand-in (a broken brick lip) consistent with the drainage_marker; VISUAL-LOG flag.",
      "id": "nest_ledge",
      "kind": "prop",
      "cell": [
@@ -3300,7 +3300,7 @@
      "requires_skill": "observe",
      "on_skill_use": {
       "accomplishment": "scouted_the_nest",
-      "toast": "[Observe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper — that's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
+      "toast": "[Appraise Foe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper — that's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
      },
      "locked_toast": "The ledge overlooks the nest — a perfect vantage, if you had the eye to read one. You don't, quite. Not yet."
     },

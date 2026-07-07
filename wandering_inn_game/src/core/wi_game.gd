@@ -146,9 +146,9 @@ var social_talked: Dictionary = {}
 ## "<verb>:<entity_id>" string -> true. Any opaque social/exploration bank
 ## that must fire AT MOST ONCE per entity per waking routes through
 ## `_bank_first_use(verb, id)` (ARCH-4: now `field_skills.gd`'s helper, since
-## its only two call sites, [Observe]/[Charming Smile], both live in that
+## its only two call sites, [Appraise Foe]/[Charming Smile], both live in that
 ## file's dispatch ladder -- the dict itself stays here, threaded in per
-## call): [Observe]'s `observed_things` (resolving the TP-review "Observe
+## call): [Appraise Foe]'s `observed_things` (resolving the TP-review "Observe
 ## farm" -- repeat-observing one entity to grind [Tactician]); S3's
 ## [Friendly Face] `befriended_moments`, mirroring the exact same helper
 ## with its own verb prefix. Cleared every `sleep()`. Additive save field
@@ -182,13 +182,39 @@ var frozen_cells: Dictionary = {}
 ## and cleared by `_break_sneak` on ANY of: interact() reaching a non-door
 ## entity/prop response, a successful field-skill use on a target
 ## (field_ambient no-op flourishes do NOT break it), or start_combat firing
-## for any reason. While true, `_check_trigger_radius` skips entirely (the
-## whole point -- walk PAST a proximity ambush). DELIBERATELY NOT SAVED: no
+## for any reason. While true, `_check_trigger_radius` never starts combat
+## for a proximity danger (the whole point -- walk PAST a proximity ambush);
+## Skills Wave Task K3 added a silent `sneaked_past_danger` bank on that same
+## skip, once per entity per waking (see that function's doc comment).
+## DELIBERATELY NOT SAVED: no
 ## entry in save.gd's `serialize`/`apply` at all (see that file's comment) --
 ## a save/reload always restores false, honestly documented rather than
 ## persisted, mirroring the plan's explicit "drops on save/load" requirement.
 ## Presentation (world.gd) reads this flag to tint the PC translucent.
 var sneaking := false
+## Skills Wave Task K2b: the player's ordered hotbar loadout -- a shared list
+## of KNOWN skill ids across BOTH bars (field's `field_hotbar_loadout()` and
+## combat's `WICombatHud.rebuild_slots`'s 3rd param), a VIEW never a grant.
+## Empty (the default) is AUTO mode: both bars derive their slot list exactly
+## as they did before this task (byte-identical -- the whole existing QA
+## suite passing untouched IS this parity's proof). The instant the player
+## assigns/unassigns a skill via the journal (`loadout_toggle`), this becomes
+## non-empty and BOTH bars switch to "loadout ∩ known/fielded, in LOADOUT
+## order" (see `apply_loadout`) -- a skill known but not in this list is
+## simply not shown on either bar this fight/this walk (still known, still
+## grantable, just unslotted -- the plan's explicit "slots are the verb
+## surface" ruling). Reorder is v1-minimal: assigning appends to the END
+## (never inserts), so "assignment order IS the order" -- a dedicated reorder
+## key was assessed as not cheap enough to add this task, disclosed in the
+## report. Additive-optional save field (v5), NO version bump, same pattern
+## as `frozen_cells`/`seen_statuses` above -- an old save missing the key
+## restores `[]` (AUTO), which is exactly correct (no one could have
+## customized a loadout before this field existed). Filtered against
+## known/fielded skills ONLY AT READ TIME (`apply_loadout`'s candidate-set
+## intersection) -- the stored array itself is never pruned, so a renamed/
+## removed skill id (a future K3 rename) just silently stops contributing a
+## slot rather than crashing or toasting.
+var hotbar_loadout: Array[String] = []
 var rng := RandomNumberGenerator.new()
 
 var _event_sink: Callable
@@ -500,13 +526,20 @@ func _check_trigger_radius() -> void:
 	if combat != null or dialogue != null:
 		return
 	# Skills Wave Task K2 (the sneak seam): the whole point of sneaking is
-	# walking PAST a proximity danger, so this check skips ENTIRELY while
-	# sneaking -- no roll, no near-miss event, nothing. An interact-started
-	# encounter (the entity branch of interact()) is unaffected: sneaking
-	# past ≠ immunity to walking up and poking it (see interact()'s own
-	# break-on-response rule, which still fires start_combat there).
-	if sneaking:
-		return
+	# walking PAST a proximity danger -- no roll, no near-miss combat,
+	# nothing. An interact-started encounter (the entity branch of
+	# interact()) is unaffected: sneaking past ≠ immunity to walking up and
+	# poking it (see interact()'s own break-on-response rule, which still
+	# fires start_combat there).
+	# Skills Wave Task K3 ([Rogue]'s LEVEL-UP counter, not its gained_by
+	# gate -- see classes.json's rogue _comment for the circularity trace):
+	# while sneaking, a danger that WOULD have triggered instead banks
+	# `sneaked_past_danger` once per entity per waking (entity_first_use,
+	# the [Appraise Foe]/[Friendly Face] dedup precedent -- cleared every
+	# sleep()), silently (no toast -- OPACITY: sneak stays binary, no
+	# detection numbers surface to the player). This is why the loop below
+	# no longer short-circuits at the top on `sneaking` alone: it must still
+	# inspect distance to know whether THIS danger qualifies.
 	for ent: Dictionary in entities.values():
 		if String(ent.get(WIKeys.KIND, "")) != "encounter":
 			continue
@@ -514,9 +547,16 @@ func _check_trigger_radius() -> void:
 			continue
 		var ent_cell: Vector2i = ent[WIKeys.CELL]
 		var dist := maxi(absi(player_cell.x - ent_cell.x), absi(player_cell.y - ent_cell.y))
-		if dist <= int(ent["trigger_radius"]):
-			start_combat(String(ent[WIKeys.ID]))
-			return
+		if dist > int(ent["trigger_radius"]):
+			continue
+		if sneaking:
+			var danger_key := "danger:%s" % String(ent[WIKeys.ID])
+			if not entity_first_use.has(danger_key):
+				entity_first_use[danger_key] = true
+				record_accomplishment("sneaked_past_danger")
+			continue
+		start_combat(String(ent[WIKeys.ID]))
+		return
 
 
 func interact() -> Dictionary:
@@ -840,6 +880,67 @@ func known_skills() -> Array:
 	return out
 
 
+## Skills Wave Task K2b: the ONE pure filter shared by BOTH hotbars (field
+## calls this via `field_hotbar_loadout()` below; combat's
+## `WICombatHud.rebuild_slots` calls it directly as a static, since it's a
+## plain `class_name` -- not an autoload -- so it resolves fine from that
+## zero-bare-autoload-identifier file). AUTO mode (`loadout.is_empty()`)
+## returns `candidates` UNCHANGED -- the exact byte-parity contract. A
+## non-empty loadout returns the ordered subset of `loadout` that also
+## appears in `candidates` -- LOADOUT order wins (that's the player's chosen
+## order), never `candidates`' own order; a loadout id no longer present in
+## `candidates` (unslotted-by-being-unfielded, or a K3 rename) is silently
+## dropped, not an error. Pure: no autoload/Node references, safe from sim
+## code, UI code, and bare --script tests alike.
+static func apply_loadout(candidates: Array, loadout: Array) -> Array:
+	if loadout.is_empty():
+		return candidates.duplicate()
+	var candidate_set: Dictionary = {}
+	for raw: Variant in candidates:
+		candidate_set[String(raw)] = true
+	var out: Array = []
+	for raw: Variant in loadout:
+		var id := String(raw)
+		if candidate_set.has(id):
+			out.append(id)
+	return out
+
+
+## Skills Wave Task K2b: the field hotbar's loadout-aware slot list -- the
+## SAME `known_skills()`-filtered-by-`field:true` candidate order
+## `field_hotbar.gd` used to compute inline (moved here so the sim, not the
+## UI, owns the filter, per the plan's "sim owns state + filters" rule),
+## passed through `apply_loadout` against the shared `hotbar_loadout`. AUTO
+## when the loadout is empty -- byte-identical to the pre-K2b order.
+func field_hotbar_loadout() -> Array:
+	var candidates: Array = []
+	for raw: Variant in known_skills():
+		var id := String(raw)
+		if bool((skills.get(id, {}) as Dictionary).get("field", false)):
+			candidates.append(id)
+	return WIGame.apply_loadout(candidates, hotbar_loadout)
+
+
+## Skills Wave Task K2b: assigns `skill_id` onto the shared loadout if it
+## isn't already there, or unassigns it if it is -- the journal's toggle key
+## calls this directly (the only real call site; the id it passes is always
+## a currently-known skill from `skills_journal()`'s own rows, but this
+## method itself does NOT gate on `known_skills()` -- an id that later drops
+## out of "known" just stops contributing a slot via `apply_loadout`'s
+## candidate-set intersection, never crashes here). Reorder is v1-minimal:
+## assigning always APPENDS to the end (never re-inserts at an old
+## position), so "assignment order IS the order." Emits `LOADOUT_CHANGED`
+## `{skill, assigned, loadout}` on every real mutation (this method is never
+## a no-op -- toggle always either appends or erases exactly one entry).
+func loadout_toggle(skill_id: String) -> void:
+	var already := hotbar_loadout.has(skill_id)
+	if already:
+		hotbar_loadout.erase(skill_id)
+	else:
+		hotbar_loadout.append(skill_id)
+	_emit(WIEvents.LOADOUT_CHANGED, {"skill": skill_id, "assigned": not already, "loadout": hotbar_loadout.duplicate()})
+
+
 ## Snapshot of everything dialogue gating can see. Rebuilt per node advance
 ## (M4): effects applied mid-conversation re-gate the same conversation.
 func _build_dialogue_ctx() -> Dictionary:
@@ -1127,9 +1228,10 @@ func start_combat(entity_id: String) -> bool:
 	# early-return above, so only a fight that is ACTUALLY about to begin
 	# breaks it (a refused start_combat attempt costs nothing, matching every
 	# other break condition's "only a genuine success counts" rule).
-	# _check_trigger_radius already skips entirely while sneaking (so it can
-	# never reach here sneaking), but a dialogue-effect or an interact-started
-	# encounter's own start_combat call both route through this one site too.
+	# _check_trigger_radius never calls start_combat for a proximity danger
+	# while sneaking (so it can never reach here sneaking), but a
+	# dialogue-effect or an interact-started encounter's own start_combat
+	# call both route through this one site too.
 	_break_sneak()
 	_pending_encounter = entity_id
 	# M7 Task E2 (M-BEAUTY FOLD): route combat's events through
@@ -1459,7 +1561,7 @@ func sleep() -> void:
 	dormant_encounters.clear()
 	# Social Pillar S1: the per-waking social dedup dicts reset every sleep,
 	# re-arming each NPC's rotating talk-pool line (social_talked) and the
-	# shared first-use-per-entity bank guard (entity_first_use -- [Observe]
+	# shared first-use-per-entity bank guard (entity_first_use -- [Appraise Foe]
 	# today, S3's [Friendly Face] next). Cleared here alongside
 	# dormant_encounters; neither clear emits, so the existing sleep-beat
 	# emission order (phase_changed first, then the progression toasts) is
@@ -1811,6 +1913,7 @@ func snapshot() -> Dictionary:
 		"frozen_cells": frozen_cells_json(),
 		"phase": phase(),
 		"sneaking": sneaking,
+		"hotbar_loadout": hotbar_loadout.duplicate(),
 	}
 
 

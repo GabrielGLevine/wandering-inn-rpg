@@ -39,8 +39,31 @@ var _body_label: RichTextLabel
 ## CF-review affordance: a "▼" cue shown at the panel foot only when the body
 ## has more content below the fold (4-quest+ states can overflow the fixed
 ## 560px panel). The RichTextLabel already scroll_active-scrolls, but silently
-## — this arrow signals there's more, and up/down scroll it into view.
+## — this arrow signals there's more, and the cursor auto-scrolls it into view.
 var _scroll_hint: Label
+
+## Skills Wave Task K2b: the assignment surface. `_flat_skill_ids` is every
+## known skill id in the SAME order `_build_body_text` renders its rows
+## (Innate group first, then one entry per held class in catalog order,
+## mirroring `skills_journal()`'s own grouping) -- rebuilt once per `_open()`
+## (the group/skill SET can't change while the journal is open: movement/
+## interact/sleep are all gated shut by `_can_open`'s modal-exclusivity check,
+## so nothing can grant/level a class mid-session). `_cursor_index` indexes
+## into it (-1 when the PC knows zero skills, an edge case not reachable in
+## shipped content but guarded anyway). Up/Down move the cursor (repurposed
+## from the old manual-scroll idiom -- nothing QA-asserts the pre-K2b scroll
+## behavior, see the K2b report); Enter toggles the cursored skill on/off the
+## shared `hotbar_loadout`.
+var _flat_skill_ids: Array[String] = []
+var _cursor_index := -1
+## Cached at `_open()` so a later toggle/cursor-move rebuilds the body from
+## the SAME inputs without re-querying Game.sim (none of these change while
+## the journal is open -- see `_flat_skill_ids`' doc comment above).
+var _open_act: Dictionary = {}
+var _open_quest_lines: Array = []
+var _open_skill_groups: Array = []
+var _open_seen_statuses: Array = []
+var _open_combatants_catalog: Array = []
 
 
 func _ready() -> void:
@@ -111,13 +134,18 @@ func _unhandled_input(event: InputEvent) -> void:
 			_open()
 		get_viewport().set_input_as_handled()
 		return
-	# While open, up/down scroll the body (world movement is already gated on
-	# `open`, so these keys are free to claim here) and re-evaluate the cue.
+	# Skills Wave Task K2b: while open, Up/Down move the skill-row cursor
+	# (world movement is already gated on `open`, so these keys are free to
+	# claim here) and Enter toggles the cursored skill on/off the shared
+	# hotbar loadout.
 	if open and event.is_action_pressed("move_down"):
-		_scroll_body(1)
+		_move_cursor(1)
 		get_viewport().set_input_as_handled()
 	elif open and event.is_action_pressed("move_up"):
-		_scroll_body(-1)
+		_move_cursor(-1)
+		get_viewport().set_input_as_handled()
+	elif open and event.is_action_pressed("confirm"):
+		_toggle_cursor_skill()
 		get_viewport().set_input_as_handled()
 
 
@@ -152,11 +180,25 @@ func _open() -> void:
 	# event-payload loop further down, via the formatter's existing
 	# `combatants_catalog` override param.
 	var combatants_catalog := _load_combatants_catalog()
-	_body_label.text = _build_body_text(act, quest_lines, skill_groups, seen_statuses, combatants_catalog)
+	# Skills Wave Task K2b: cache this open's inputs so a later cursor move or
+	# assign/unassign toggle can rebuild the body without re-querying Game.sim
+	# (see these fields' own doc comment -- nothing can change the known-skill
+	# set while the journal is open).
+	_open_act = act
+	_open_quest_lines = quest_lines
+	_open_skill_groups = skill_groups
+	_open_seen_statuses = seen_statuses
+	_open_combatants_catalog = combatants_catalog
+	_flat_skill_ids = _flatten_skill_ids(skill_groups)
+	_cursor_index = 0 if not _flat_skill_ids.is_empty() else -1
+	var built := _build_body_text(act, quest_lines, skill_groups, seen_statuses, combatants_catalog, _cursor_index)
+	_body_label.text = String(built["text"])
 	_root.show()
 	# The RichTextLabel's scrollbar geometry is only valid after a layout pass,
 	# so evaluate the overflow cue on the next idle frame (reset scroll to top
-	# first so a re-open always starts at the top with the cue if there's more).
+	# first so a re-open always starts at the top with the cue if there's more,
+	# same as before K2b -- the journal opens showing the TOP of the panel,
+	# not jumping straight to the cursor's first-skill-row position).
 	var vbar := _body_label.get_v_scroll_bar()
 	if vbar != null:
 		vbar.value = 0.0
@@ -212,13 +254,58 @@ func _close() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_HIDDEN, {})
 
 
-## Nudges the body scroll by one step and re-tests the "more below" cue.
-func _scroll_body(dir: int) -> void:
-	var vbar := _body_label.get_v_scroll_bar()
-	if vbar == null:
+## Skills Wave Task K2b: every known skill id, in the SAME order
+## `_build_body_text` renders its rows (Innate group first, then one group per
+## held class in catalog order) -- see `_flat_skill_ids`' own doc comment.
+func _flatten_skill_ids(skill_groups: Array) -> Array[String]:
+	var out: Array[String] = []
+	for raw_group: Variant in skill_groups:
+		for raw_skill: Variant in (raw_group as Dictionary)["skills"]:
+			out.append(String((raw_skill as Dictionary)["id"]))
+	return out
+
+
+## Moves the cursor by `delta` rows, clamped to the flattened list's bounds
+## (no wrap), then rebuilds the body so the new cursor row highlights and
+## scrolls into view. A no-op when the PC knows zero skills.
+func _move_cursor(delta: int) -> void:
+	if _flat_skill_ids.is_empty():
 		return
-	vbar.value += float(dir) * 48.0
-	_update_scroll_hint()
+	_cursor_index = clampi(_cursor_index + delta, 0, _flat_skill_ids.size() - 1)
+	_rebuild_body_follow_cursor()
+
+
+## Toggles the cursored skill on/off the shared `hotbar_loadout` via
+## `Game.sim.loadout_toggle` (the sim mutation + LOADOUT_CHANGED emit, which
+## re-renders both bars through their own existing render triggers), then
+## rebuilds THIS panel's body (the ✓/blank marker) and emits
+## UI_JOURNAL_LOADOUT_RENDERED so QA can assert the live in-panel update.
+func _toggle_cursor_skill() -> void:
+	if _cursor_index < 0 or _cursor_index >= _flat_skill_ids.size():
+		return
+	var skill_id := _flat_skill_ids[_cursor_index]
+	Game.sim.loadout_toggle(skill_id)
+	_rebuild_body_follow_cursor()
+	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_LOADOUT_RENDERED, {
+		"skill": skill_id,
+		"assigned": Game.sim.hotbar_loadout.has(skill_id),
+		"cursor_index": _cursor_index,
+	})
+
+
+## Rebuilds the body from this open session's cached inputs (see
+## `_open_act`/etc.'s doc comment) at the CURRENT cursor position, and scrolls
+## the cursor's row into view -- used by both cursor movement and the toggle
+## (unlike `_open()`, which deliberately resets to the panel's top instead).
+func _rebuild_body_follow_cursor() -> void:
+	var built := _build_body_text(_open_act, _open_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index)
+	_body_label.text = String(built["text"])
+	var cursor_line := int(built["cursor_line"])
+	if cursor_line >= 0:
+		# Deferred for the same reason `_open()`'s scroll reset is: the
+		# RichTextLabel's line/scroll geometry is only valid after a layout pass.
+		_body_label.scroll_to_line.call_deferred(cursor_line)
+	_update_scroll_hint.call_deferred()
 
 
 ## Shows the "▼" cue only when the body has content scrolled below the fold
@@ -245,8 +332,18 @@ func _update_scroll_hint() -> void:
 ## the player watched it happen). OMITTED ENTIRELY when empty (no "None yet"
 ## filler, per plan) -- a fresh game with no status ever seen shows the same
 ## journal as before this task.
-func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, seen_statuses: Array, combatants_catalog: Array = []) -> String:
+## Skills Wave Task K2b: every skill row now leads with a "✓ "/"  " assign
+## marker (reading `Game.sim.hotbar_loadout` directly — journal.gd already
+## references Game.sim freely, it isn't purity-constrained) and the
+## `cursor_index`'th row (in the SAME flattened order `_flatten_skill_ids`
+## produces) is wrapped in `[b]...[/b]` with a "▶ " lead glyph. Returns a
+## Dictionary `{text: String, cursor_line: int}` instead of a bare String --
+## `cursor_line` is the 0-based BBCode line the cursor row landed on (-1 if
+## `cursor_index` didn't match any row), so the caller can `scroll_to_line`
+## it into view without a second, drift-prone line-counting pass.
+func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, seen_statuses: Array, combatants_catalog: Array = [], cursor_index: int = -1) -> Dictionary:
 	var parts: Array = []
+	var cursor_line := -1
 	# M-ARC Task A1: the act-line section leads the journal -- the current act
 	# header + its milestone beats (results-only copy), achieved beats marked.
 	# Absent only if no acts catalog loaded (degrades to Quests-first as before).
@@ -265,22 +362,35 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, 
 			parts.append(UIChrome.bb_escape(String(line)))
 	parts.append("")
 	parts.append("[b]Skills[/b]")
+	# Skills Wave Task K2b: the assignment surface's one-line disclosure,
+	# matching the established hint-copy grammar (char_creation.gd's
+	# "Up/Down to choose  •  Enter to confirm  •  Esc to go back").
+	parts.append("Slotted skills appear on your bars.  •  Up/Down to move  •  Enter to toggle")
+	var flat_i := 0
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary
 		parts.append("")
 		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(group["heading"])))
 		for raw_skill: Variant in (group["skills"] as Array):
 			var skill := raw_skill as Dictionary
+			var row_text: String
 			if bool(skill["revealed"]):
-				parts.append(UIChrome.bb_escape(_revealed_skill_line(String(skill["id"]), String(skill["display_name"]), combatants_catalog)))
+				row_text = _revealed_skill_line(String(skill["id"]), String(skill["display_name"]), combatants_catalog)
 			else:
-				parts.append(UIChrome.bb_escape(String(skill["text"])))
+				row_text = String(skill["text"])
+			var marker := "✓ " if Game.sim.hotbar_loadout.has(String(skill["id"])) else "  "
+			var line := marker + UIChrome.bb_escape(row_text)
+			if flat_i == cursor_index:
+				cursor_line = parts.size()
+				line = "[b]▶ %s[/b]" % line
+			parts.append(line)
+			flat_i += 1
 	if not seen_statuses.is_empty():
 		parts.append("")
 		parts.append("[b]Effects[/b]")
 		for status_id: Variant in seen_statuses:
 			parts.append(UIChrome.bb_escape(WIEffectText.status_line(String(status_id), Game.sim.skills.values())))
-	return "\n".join(parts)
+	return {"text": "\n".join(parts), "cursor_line": cursor_line}
 
 
 ## M-LEGIBILITY L3: the post-reveal skill row -- "Name — <L1 effect line> —

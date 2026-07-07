@@ -272,6 +272,21 @@
 				{ "level": 5, "requires_any": { "heard_gossip": 17, "befriended_moments": 10 }, "grants": [] },
 				{ "level": 6, "requires_any": { "heard_gossip": 23, "befriended_moments": 14 }, "grants": [] }
 			]
+		},
+		{
+			"_comment": "Skills Wave Task K3: [Rogue] -- CANON-VERDICT 2026-07-07 ATTESTED (List_of_Classes/R: base class, holders Foliana/Quietstab; variants [Rogue Leader]/[Rogue Mage]/[Rogue Marksman]/[Ravager Rogue]). USER RULING 4: stealth's home. EARN TRACE (action-driven model, no invented counter for the gate): gained_by is `recovered_crate_watch` (the Missing-Crate WATCH path's own accomplishment -- pointing the Watch sergeant at the scavengers via a classless persuade option, `data/dialogue/watch_crate.json`). Two other existing 'guile' counters were traced and REJECTED for the GATE: `recovered_crate_guile` requires already holding [Light] (a Mage L1 grant) to study `cellar_door` first -- coupling Rogue's earn to Mage is the wrong dependency for an independent action-driven class, unlike every other earned class (warrior/mage/diplomat/helper/tactician all gate on ONE classless action); `scouted_the_nest` requires already holding [Appraise Foe] (a Tactician grant) for the same reason. `recovered_crate_watch` needs only the classless `asked_about_crate` accomplishment -- reachable by any PC, no prerequisite class or skill. CIRCULARITY TRAP (a) AVOIDED: the obvious 'sneak past N dangers' counter was NOT used as the gate because it requires the `sneak` skill's `sneaking` flag to already be true (`_check_trigger_radius` only skips -- and could only bank a counter -- while `sneaking`), and NO class grants `sneak` before Rogue does; gating Rogue's own grant on it would be circular. That counter (`sneaked_past_danger`, added this task as the sanctioned small field-seam touch in `wi_game.gd`'s `_check_trigger_radius`, entity_first_use-deduped per waking, the [Appraise Foe]/[Friendly Face] precedent) is used ONLY for LEVEL-UP past L1, where circularity does not apply (the PC already holds `sneak` by then). ONBOARDING INTEGRITY (b) TRACED: `recovered_crate_watch` is street-quest content (Krshia's Missing Crate, `data/dialogue/watch_crate.json`) reachable only on the `street` map; `street` is reachable only via `floodplains`' `liscor_gate` door (skeleton_scene.json map graph: inn<->floodplains<->street, no direct inn->street door), and `liscor_gate` sits at (31,25), 2 cells from `goblin_encounter_1` (30,23, trigger_radius 2 Chebyshev) -- structurally impossible to reach the gate without first passing through the mandatory ambush's trigger zone. Since class grants resolve only at `sleep()` (never mid-waking), and `recovered_crate_watch` cannot be banked before the street is reached, [Rogue] cannot be granted before `goblin_encounter_1` has already fired for every fresh player -- onboarding integrity holds by map topology, not merely by convention. `sneak`'s grant level is L1 (the same convention every other earned class uses for its signature grant -- mage/warrior/diplomat/tactician all grant at L1), which is POST-onboarding for exactly the reason above. stat_growth dex:1 is the first earned class to grow dex alone (finesse/agility fits the archetype; stats stay hidden from the player regardless). FIXTURE-FIRST canonical: `rogue_earn_loop` (fixture `near_rogue`) proves earn(fixture-preloaded) -> sleep -> class_gained -> [Stealth] fielded end-to-end.",
+			"id": "rogue",
+			"display_name": "Rogue",
+			"stat_growth": { "dex": 1 },
+			"gained_by": { "accomplishment": { "recovered_crate_watch": 1 } },
+			"levels": [
+				{ "level": 1, "requires": {}, "grants": ["sneak"] },
+				{ "level": 2, "requires": { "sneaked_past_danger": 2 }, "grants": [] },
+				{ "level": 3, "requires": { "sneaked_past_danger": 4 }, "grants": [] },
+				{ "level": 4, "requires": { "sneaked_past_danger": 7 }, "grants": [] },
+				{ "level": 5, "requires": { "sneaked_past_danger": 10 }, "grants": [] },
+				{ "level": 6, "requires": { "sneaked_past_danger": 14 }, "grants": [] }
+			]
 		}
 	]
 }

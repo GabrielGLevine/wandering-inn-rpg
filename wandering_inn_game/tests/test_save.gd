@@ -68,6 +68,8 @@ func _init() -> void:
 	original.pc_name = "Sella"
 	original.pc_race = "drake"
 	original.pc_gender = "f"
+	# Skills Wave Task K2b: a customized (non-empty) loadout round-trips too.
+	original.hotbar_loadout.assign(["flame_bolt", "basic_cleaning"])
 
 	var data := WISave.serialize(original)
 	assert(data["version"] == WISave.VERSION, "save version matches the current constant")
@@ -103,6 +105,19 @@ func _init() -> void:
 	assert(int(restored.actions_since_sleep) == 7, "actions_since_sleep restored")
 	assert(restored.light_active == original.light_active, "light_active restored")
 	assert(restored.light_active == true, "light_active round-trips as true")
+	# Skills Wave Task K2b: a customized loadout round-trips verbatim (order
+	# preserved), and an ABSENT key (any save written before this task)
+	# restores AUTO (empty), never a crash.
+	assert(restored.hotbar_loadout == original.hotbar_loadout, "hotbar_loadout restored")
+	assert(restored.hotbar_loadout == ["flame_bolt", "basic_cleaning"], "hotbar_loadout round-trips in order")
+	var no_loadout: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	no_loadout.erase("hotbar_loadout")
+	var loadout_target := _new_game()
+	assert(WISave.apply(loadout_target, {"version": WISave.VERSION, "state": no_loadout}), "save without hotbar_loadout still applies")
+	assert(loadout_target.hotbar_loadout.is_empty(), "absent hotbar_loadout defaults to AUTO (empty)")
+	var bad_loadout: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	bad_loadout["hotbar_loadout"] = "not_an_array"
+	assert(not WISave.apply(_new_game(), {"version": WISave.VERSION, "state": bad_loadout}), "non-Array hotbar_loadout rejected")
 	# Skills Wave Task K2: sneaking does NOT round-trip -- a save taken while
 	# sneaking (original.sneaking == true, set above) always restores to a
 	# NOT-sneaking game (the plan's explicit "drops on save/load honestly"
