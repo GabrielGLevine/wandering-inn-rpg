@@ -109,6 +109,10 @@ func _make_sim(creation: Dictionary = {}) -> WIGame:
 	# quests/items. WIGame.board_bounties()/accept_bounty()/turn_in_bounty()
 	# read it via `_combat_config.get("bounties", {})`.
 	combat_config["bounties"] = _load_json("res://data/bounties.json")
+	# M-DEPTH DP5: THE DELIVERY BOARD's pool (the Runner's Guild) -- same
+	# injection lane. WIGame.delivery_board_deliveries()/accept_delivery()/
+	# turn_in_delivery() read it via `_combat_config.get("deliveries", {})`.
+	combat_config["deliveries"] = _load_json("res://data/deliveries.json")
 	var dialogue_graphs: Dictionary = {}
 	var dir: DirAccess = DirAccess.open("res://data/dialogue")
 	if dir != null:

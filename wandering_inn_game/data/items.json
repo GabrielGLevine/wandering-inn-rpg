@@ -277,6 +277,77 @@
 			"price": 4,
 			"description": "Waxed line and bone hooks wound on a stick, with a cork float. The Floodplains pond is deeper than it looks.",
 			"lore": "Drakes fish the pond in fair weather and swear off it every winter, when the water starts moving wrong. The line-sellers do their best business in spring, replacing gear that was 'lost.'"
+		},
+		{
+			"_comment": "M-DEPTH DP5 (the Runner's Guild): 5 parcel items, one per LIVE delivery (docs/design/board-staging/runner-deliveries.json's 6th entry, delivery_hermit_antlers, is a FORWARD-REF -- kept out of data/deliveries.json until HR-II places its destination, so no parcel item ships for it either). kind:\"parcel\" is INERT carried flavor per the staging doc's own note: no price (never sold -- no sell surface exists in this game), no combat fields, and no weapon/armor/accessory kind means WIGame.equip() structurally refuses it (falls to inventory.gd's generic 'not equippable' toast) with zero new code. Granted by WIGame.accept_delivery via the existing pickup() seam and removed by the new remove_item() seam (on handoff or a sleep-fail return) -- never stacked, matching every other item in this catalog.",
+			"id": "parcel_plains_wool",
+			"name": "Plains-Wool Bolt",
+			"kind": "parcel",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A bolt of plains-wool, paper-wrapped, smelling of lanolin and a long walk.",
+			"lore": "Runner's Guild delivery parcel (delivery_krshia_wool) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+		},
+		{
+			"id": "parcel_that_ticks",
+			"name": "A Parcel That Ticks",
+			"kind": "parcel",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A parcel that ticks. Do not shake. The sender says it is a metronome. The sender laughed.",
+			"lore": "Runner's Guild delivery parcel (delivery_pisces_parcel) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+		},
+		{
+			"id": "parcel_watch_dispatch",
+			"name": "Watch Dispatches",
+			"kind": "parcel",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "Watch dispatches, string-tied, sealed thrice. The third seal is the Captain's habit, not protocol.",
+			"lore": "Runner's Guild delivery parcel (delivery_gate_dispatch) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+		},
+		{
+			"id": "parcel_lamp_phials",
+			"name": "Crate of Lamp-Spirit Phials",
+			"kind": "parcel",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "Six glass phials of lamp-spirit for the grate crew, cotton-chocked. If it clinks when you set it down, it is already broken.",
+			"lore": "Runner's Guild delivery parcel (delivery_grate_phials, the FRAGILE variant) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+		},
+		{
+			"id": "parcel_bluefruit_hamper",
+			"name": "Amentus Fruit Hamper",
+			"kind": "parcel",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A hamper of Amentus blue fruit, straw-packed, the poison cores already cut out. You were told twice.",
+			"lore": "Runner's Guild delivery parcel (delivery_inn_hamper) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		}
 	]
 }

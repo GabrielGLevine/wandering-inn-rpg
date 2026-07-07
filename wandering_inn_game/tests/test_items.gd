@@ -7,6 +7,13 @@ const VALID_KINDS: Dictionary = {
 	"armor": true,
 	"accessory": true,
 	"tool": true,
+	# M-DEPTH DP5: a Runner's Guild delivery parcel -- inert carried flavor
+	# (no price, no combat fields, resonance 0). Not equippable: WIGame.equip
+	# only accepts weapon/armor/accessory, and inventory.gd's confirm shows
+	# its neutral "isn't something you can equip" toast for this kind exactly
+	# as for tools. Granted by accept_delivery, removed by remove_item on the
+	# arrival handoff or a sleep-fail return.
+	"parcel": true,
 }
 
 ## M-GEAR Task G2: tier is now tied to resonance, not a mundane-only schema

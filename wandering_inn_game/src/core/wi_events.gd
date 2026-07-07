@@ -98,6 +98,12 @@ const ITEM_GAINED := &"item_gained"
 const ITEM_EQUIPPED := &"item_equipped"
 const ITEM_UNEQUIPPED := &"item_unequipped"
 const LOOT_DROPPED := &"loot_dropped"
+## M-DEPTH DP5: emitted by `WIGame.remove_item` -- the first inventory-REMOVAL
+## seam this codebase has needed (every prior item flow only ever ADDS via
+## `pickup`). Payload `{item:String, source:String}`, the same shape as
+## ITEM_GAINED -- `source` is free-form provenance (a delivery id on a
+## handoff or a sleep-fail return), never branched on here.
+const ITEM_LOST := &"item_lost"
 ## Economy v1 Task D1: emitted by `WIGame.earn_gold`/`spend_gold` on every
 ## successful gold change (a refused spend at insufficient gold emits NOTHING
 ## here -- only the refusal TOAST). Payload `{delta:int, total:int,

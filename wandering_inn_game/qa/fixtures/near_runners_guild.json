@@ -1,0 +1,44 @@
+{
+ "_comment": "M-DEPTH DP5 canonical fixture: post_tutorial_street's exact state (warrior L1, met/sparred/given_spear) standing at street (18,17) facing right, two cells west of the new runners_guild_door (20,17) -- FIXTURE-FIRST per the near_guild/near_barracks precedent: delivery_loop's subject is the Runner's Guild delivery machinery, not the gate->market walk (proven by gate_district_walkthrough). gold 0 (the turn-in payout is asserted as an exact total, and a zero start makes a wrong delta unmaskable). rng_state \"9\" carried over -- no combat in this script.",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [
+   18,
+   17
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 0,
+  "rng_state": "9"
+ }
+}

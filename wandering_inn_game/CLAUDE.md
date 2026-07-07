@@ -191,6 +191,20 @@ current-state-only, one short paragraph per live system.
   `WIDialogue._meets`/`_progress_gated` recognize it explicitly. Full
   detail: "THE REQUEST BOARD (M-DEPTH DP2)" block in
   `docs/ARCHITECTURE-HISTORY.md`.
+  **THE DELIVERY BOARD (M-DEPTH DP5)** rides the same machinery over a
+  second pool (`data/deliveries.json`, the Runner's Guild): same
+  `active_slate` rotation, same `condition_met` (all-delta; a
+  `delivered_<id>` counter is produced ONLY by
+  `WIGame._check_delivery_arrival` — Chebyshev-1 adjacency to the
+  destination anchor from a real `move_player`, parcel-in-pack as guard;
+  arrival removes the parcel via `remove_item`/`item_lost`, the sim's one
+  inventory-removal seam). Sleeping on an undelivered parcel FAILS the
+  run (parcel returns, no pay — this IS the abandon; no hand-back option
+  exists by design). Vess's counter (`vess_counter.json` +
+  `delivery_accepted`, the FOURTH sanctioned gate) transacts;
+  `runner_board` (`delivery_board: true`) browses. Full detail: "The
+  Runner's Guild delivery loop (M-DEPTH DP5)" block in
+  `docs/ARCHITECTURE-HISTORY.md`.
 - **Character creation (`char_creation.gd`, M-ARC §5)** — New Game → race
   (Human/Drake/Gnoll) → gender (cosmetic) → name. Three cosmetic sim fields
   (`pc_name`/`pc_race`/`pc_gender`), additive save, no mechanical effect.
@@ -308,6 +322,7 @@ current-state-only, one short paragraph per live system.
 | `board_loop` | 9 (fixture `board_loop_start`) | M-DEPTH DP2: THE REQUEST BOARD goes live -- browse/accept/fulfill/turn-in at Selys's desk (delta-since-accept, gold payout), slate rotation across a sleep + the "slate rotated overnight" line |
 | `upstairs_walkthrough` | 9 | M-DEPTH DP3: the inn's upstairs -- stairs door pair, Lyonette's locked door (observe+locked_toast), sleep-beat parity proven live at the PC's own bed (same events, one extra flavor toast) |
 | `barracks_walkthrough` | 9 (fixture `near_barracks`) | M-DEPTH DP4: the Watch barracks + market-depth stalls -- `bread_stall` (flavor/observe) + the `peddler`'s mini-buy (`watch_issue_gambeson`, 20g), `barracks_door` real-door round-trip (the relocated `watch_guard`, zero prior QA touches), Duty Sergeant Dresk Ashgrave's talk_pool, Zevara's desk (she stays at the gate), THE CELL (locked_toast, empty-v1 dressed) |
+| `delivery_loop` | 9 (fixture `near_runners_guild`) | M-DEPTH DP5: the Runner's Guild delivery loop -- `runners_guild_door` round-trip, Vess's counter (talk_pool bark + `vess_counter` graph), THE DELIVERY BOARD browse, take a slip -> a real walked carry -> Chebyshev-1 arrival handoff at `krshia_stall` -> turn-in pay (1g exact total), the sleep-fail negative (parcel returns on the night ledger, no pay, `delivery_failed` armed) + slate rotation across the sleep + the one-shot failed-run bark |
 
 ## Working conventions
 

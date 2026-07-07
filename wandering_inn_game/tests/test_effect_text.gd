@@ -37,6 +37,14 @@ const EXPECTED_ITEMS := {
 	"watch_token": [],
 	"field_whetstone": ["Worth 5 gold"],
 	"fishers_handline": ["Worth 4 gold"],
+	# M-DEPTH DP5: the 5 Runner's Guild delivery parcels -- inert carried
+	# flavor by design (no combat fields, no price), so their cards carry
+	# name + description only, zero generated effect lines.
+	"parcel_plains_wool": [],
+	"parcel_that_ticks": [],
+	"parcel_watch_dispatch": [],
+	"parcel_lamp_phials": [],
+	"parcel_bluefruit_hamper": [],
 }
 
 const EXPECTED_SKILLS := {

@@ -23,7 +23,7 @@
 			{ "text": "Actually - one more thing.", "goto": "hub" },
 			{ "text": "Noted.", "end": true }
 		] },
-		"order_brief": { "speaker": "Lyonette", "text": "I under-counted the week's supply order. A princess who cannot count a grocery list - spare me. It's short, and Erin trusts me to run this without her checking. There are three ways to make it right before she notices. The supplier - Krshia's people - has scavengers picking at their stores in the south market; clear that trouble by force and the delivery comes free and full. Or you could smooth it over with Krshia herself; she'll extend the order on a good word. Or - if you can cook - stretch what we have in the kitchen until the shortfall simply... isn't one. Pick whichever suits you. Only be quick.", "options": [
+		"order_brief": { "speaker": "Lyonette", "text": "I under-counted the week's supply order. I was raised to run a household larger than this inn, and I cannot count a grocery list. Spare me. It's short, and Erin trusts me to run this without her checking. There are three ways to make it right before she notices. The supplier - Krshia's people - has scavengers picking at their stores in the south market; clear that trouble by force and the delivery comes free and full. Or you could smooth it over with Krshia herself; she'll extend the order on a good word. Or - if you can cook - stretch what we have in the kitchen until the shortfall simply... isn't one. Pick whichever suits you. Only be quick.", "options": [
 			{ "text": "How bad is it, really?", "goto": "hub" },
 			{ "text": "I'll see it done.", "end": true }
 		] },

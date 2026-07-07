@@ -20,6 +20,7 @@ const PLAYER_STRING_FILES := [
 	"res://data/combatants.json",
 	"res://data/arenas.json",
 	"res://data/bounties.json",
+	"res://data/deliveries.json",
 ]
 
 
@@ -315,6 +316,12 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# is never combined with another gate type in authored content.
 		gate_keys += 1
 		assert(requires["board_accepted"] is bool, label + " board_accepted must be a bool")
+	if requires.has("delivery_accepted"):
+		# M-DEPTH DP5: the FOURTH sanctioned single-key gate --
+		# board_accepted's exact twin for the Runner's Guild slip (Vess's
+		# "Take a slip."/"Turn in a slip." hub options, vess_counter.json).
+		gate_keys += 1
+		assert(requires["delivery_accepted"] is bool, label + " delivery_accepted must be a bool")
 	if requires.has("gold"):
 		# Economy v1 D2: the affordability gate (Krshia's shop buy options).
 		# `requires: {gold: price}` is the D1-sanctioned numeric extension of the
@@ -387,8 +394,10 @@ func _validate_hide_when_nodes_have_always_available_exit(graphs: Dictionary) ->
 				# key (see WIDialogue._progress_gated) -- included here so a future
 				# board_accepted-only node (none ship today; the hub already has an
 				# always-available exit regardless) gets the same softlock check.
+				# M-DEPTH DP5: delivery_accepted, its twin (vess_counter.json's hub
+				# -- which does carry an ungated "Just passing through." exit).
 				var opt_requires: Dictionary = option.get("requires", {})
-				if option.has("hide_when") or opt_requires.has("accomplishment") or opt_requires.has("board_accepted"):
+				if option.has("hide_when") or opt_requires.has("accomplishment") or opt_requires.has("board_accepted") or opt_requires.has("delivery_accepted"):
 					has_vanishing_option = true
 					break
 			if not has_vanishing_option:

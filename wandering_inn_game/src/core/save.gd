@@ -148,6 +148,15 @@ extends RefCounted
 ##   `board_last_seen_times_slept` (int, default 0) -- matches times_slept's
 ##   own default, so a restored old save never false-positives Selys's "slate
 ##   rotated overnight" line on its very first post-load board visit.
+## (M-DEPTH Task DP5, the Runner's Guild): THREE additive fields, the SAME
+## additive-optional pattern -- NOT in `required`, NO version bump:
+##   `accepted_delivery_id` (String, default "") -- no slip could have been
+##   held before this feature existed (accepted_bounty_id's exact twin).
+##   `accepted_delivery_baseline` (Dictionary, default {}) -- empty is exactly
+##   correct alongside an empty accepted_delivery_id.
+##   `delivery_failed` (bool, default false) -- no run could have failed
+##   before the feature existed; false means Vess's one-shot night-ledger
+##   bark never false-fires on a restored old save.
 const VERSION := 5
 
 
@@ -186,6 +195,9 @@ static func serialize(game: WIGame) -> Dictionary:
 		"accepted_bounty_id": game.accepted_bounty_id,
 		"accepted_bounty_baseline": game.accepted_bounty_baseline.duplicate(true),
 		"board_last_seen_times_slept": game.board_last_seen_times_slept,
+		"accepted_delivery_id": game.accepted_delivery_id,
+		"accepted_delivery_baseline": game.accepted_delivery_baseline.duplicate(true),
+		"delivery_failed": game.delivery_failed,
 	}}
 
 
@@ -334,6 +346,15 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# pattern -- default {} when absent, rejected if present-but-non-Dictionary.
 	if s.has("accepted_bounty_baseline") and not (s["accepted_bounty_baseline"] is Dictionary):
 		return false
+	# accepted_delivery_id/accepted_delivery_baseline/delivery_failed (M-DEPTH
+	# DP5) follow the SAME additive-optional pattern -- the DP2 bounty trio's
+	# exact twins plus a bool (light_active's check shape).
+	if s.has("accepted_delivery_id") and not (s["accepted_delivery_id"] is String):
+		return false
+	if s.has("accepted_delivery_baseline") and not (s["accepted_delivery_baseline"] is Dictionary):
+		return false
+	if s.has("delivery_failed") and not (s["delivery_failed"] is bool):
+		return false
 	# inventory/equipped/container_state/actions_since_sleep (M7 Task E2) ARE
 	# in `required` above (this is a version-bumped addition, not the
 	# additive-optional pattern) -- still type-checked here like every other
@@ -422,5 +443,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.accepted_bounty_id = String(s.get("accepted_bounty_id", ""))
 	game.accepted_bounty_baseline = (s.get("accepted_bounty_baseline", {}) as Dictionary).duplicate(true)
 	game.board_last_seen_times_slept = int(s.get("board_last_seen_times_slept", 0))
+	game.accepted_delivery_id = String(s.get("accepted_delivery_id", ""))
+	game.accepted_delivery_baseline = (s.get("accepted_delivery_baseline", {}) as Dictionary).duplicate(true)
+	game.delivery_failed = bool(s.get("delivery_failed", false))
 	game.reprime_quests()
 	return true

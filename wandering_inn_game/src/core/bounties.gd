@@ -155,3 +155,63 @@ static func build_turnin_graph(met: bool) -> Dictionary:
 static func build_abandon_graph() -> Dictionary:
 	var text := "Hand it back? Fine. I'll cross it off — no pay, no mark against you. It goes back on the board for someone with follow-through."
 	return {"start": "hub", "nodes": {"hub": {"speaker": "Selys", "text": text, "options": [{"text": "Continue.", "end": true}]}}}
+
+
+## M-DEPTH DP5 (the Runner's Guild): Vess's issue line for a just-accepted
+## slip -- board-copy.md sec.3's three "Issue" variants, keyed the way the
+## staged copy itself keys them: the cross-map run (the inn hamper) and the
+## fragile run (the phials crate, `fragile: true` in data) each get their
+## authored specific line; every other slip gets the standard one. The
+## fragile check reads the DATA FLAG, not the id, so a future second
+## fragile delivery inherits its line for free (v1 flavor-only, per the
+## staging doc: the flag rides the data, the copy carries the stakes).
+static func _delivery_issue_line(delivery: Dictionary) -> String:
+	if String(delivery["id"]) == "delivery_inn_hamper":
+		return "Gate, floodplains, the hill. Two legs and the road's got goblins, which is why it pays three. Runners move FAST — that's the whole trade. Fast things don't get grabbed."
+	if bool(delivery.get("fragile", false)):
+		return "That one's glass. GLASS. Walk like it's your grandmother's teeth. The crew counts the phials in front of you, so arrive with six."
+	return "Signed, stamped, yours. That's a one-leg run, easy pace. Don't walk it TOO easy, the term's same-waking."
+
+
+## Builds Vess's "Take a slip." conversation -- build_picker_graph's exact
+## twin (and its hard-won layout lesson applies verbatim: full slip copy
+## lives in the HUB NODE's paginated body, numbered; every OPTION stays a
+## short unwrapped "Take slip N. (G gold)" label -- dialogue_panel option
+## Labels have no autowrap). Selecting a slip accepts it via the
+## `accept_delivery` dialogue effect (which also grants the parcel item)
+## and lands on a per-slip confirmation node reading Vess's issue line.
+static func build_delivery_picker_graph(slate: Array) -> Dictionary:
+	var nodes: Dictionary = {}
+	var options: Array = []
+	var body_lines: Array[String] = ["Slips on the board right now. Pick your leg:", ""]
+	for i: int in slate.size():
+		var delivery: Dictionary = slate[i]
+		var id := String(delivery["id"])
+		var n := i + 1
+		body_lines.append("%d. %s" % [n, String(delivery["slip_copy"])])
+		body_lines.append("")
+		options.append({
+			"text": "Take slip %d. (%d gold)" % [n, int(delivery["gold"])],
+			"effects": [{"accept_delivery": id}],
+			"goto": "confirm_%s" % id,
+		})
+		nodes["confirm_%s" % id] = {
+			"speaker": "Vess",
+			"text": _delivery_issue_line(delivery),
+			"options": [{"text": "Continue.", "end": true}],
+		}
+	options.append({"text": "Never mind.", "end": true})
+	body_lines.remove_at(body_lines.size() - 1)
+	nodes["hub"] = {"speaker": "Vess", "text": "\n".join(body_lines), "options": options}
+	return {"start": "hub", "nodes": nodes}
+
+
+## Builds Vess's "Turn in a slip." result -- build_turnin_graph's exact
+## twin. The RESOLUTION already happened in WIGame.turn_in_delivery();
+## `met` picks between board-copy.md sec.3's two lines (mark confirmed vs.
+## slip-says-the-mark refusal -- opaque-safe, no numbers either way).
+static func build_delivery_turnin_graph(met: bool) -> Dictionary:
+	var text := "Slip says the mark, not the counter. I can't pay you for carrying it AROUND, that's just… walking. Go on — daylight's a budget."
+	if met:
+		text = "Mark confirmed — hah — sorry, came in at a sprint myself. Coin's counted. Nice legs on that run. Hawk started on a board like this one, you know. Well. A board LIKE it."
+	return {"start": "hub", "nodes": {"hub": {"speaker": "Vess", "text": text, "options": [{"text": "Continue.", "end": true}]}}}

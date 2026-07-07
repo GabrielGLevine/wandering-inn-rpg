@@ -2218,5 +2218,75 @@ func _init() -> void:
 	gLoad.loadout_toggle("not_a_real_skill_id")
 	assert(gLoad.hotbar_loadout.is_empty(), "cleanup: unassigned back to AUTO")
 
+	# --- M-DEPTH DP5: the Runner's Guild delivery loop (pure sim) ---
+	# Take -> carry -> arrival handoff -> turn-in pay, the sleep-fail
+	# negative, and the re-accept honesty property the delta baseline exists
+	# for (data/deliveries.json's MODE TRACE). Real shipped data throughout.
+	var del_cc := {
+		"combatants": _load_json("res://data/combatants.json"),
+		"classes": _load_json("res://data/classes.json"),
+		"arenas": _load_json("res://data/arenas.json"),
+		"items": _load_json("res://data/items.json"),
+		"deliveries": _load_json("res://data/deliveries.json"),
+	}
+	var gDel := WIGame.new(scene_config, skill_config, _sink, 7, del_cc)
+	var del_slate_ids: Array = gDel.delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"]))
+	assert(del_slate_ids == ["delivery_krshia_wool", "delivery_pisces_parcel", "delivery_gate_dispatch"], "times_slept 0 slate = pool window [0..2] (the DP2 rotation function, shared)")
+	_events.clear()
+	gDel.accept_delivery("delivery_krshia_wool")
+	assert(gDel.accepted_delivery_id == "delivery_krshia_wool", "accept banks the slip")
+	assert(gDel.inventory.has("parcel_plains_wool"), "accept grants the parcel via pickup")
+	assert(gDel.accomplishment_count("accepted_delivery_delivery_krshia_wool") == 1, "accept banks accepted_delivery_<id>")
+	assert(gDel.accepted_delivery_baseline == {"delivered_delivery_krshia_wool": 0}, "delta baseline snapshotted at accept")
+	assert(_count("item_gained") == 1, "parcel grant emits item_gained")
+	gDel.accept_delivery("delivery_pisces_parcel")
+	assert(gDel.accepted_delivery_id == "delivery_krshia_wool", "one slip at a time -- second accept is a no-op")
+	assert(not gDel.inventory.has("parcel_that_ticks"), "no second parcel granted")
+	assert(not gDel.turn_in_delivery(), "turn-in refuses before the mark is reached")
+	assert(gDel.accepted_delivery_id == "delivery_krshia_wool" and gDel.gold == 0, "refused turn-in leaves all state untouched")
+	# The carry: land two cells south of krshia_stall (14,2) and walk up --
+	# arrival is Chebyshev<=1 to the anchor, from a REAL move only.
+	gDel.transition("street", Vector2i(14, 5))
+	assert(gDel.inventory.has("parcel_plains_wool"), "a transition/teleport never triggers arrival (move_player-only, the trigger_radius convention)")
+	assert(gDel.move_player(Vector2i.UP), "step to (14,4)")
+	assert(gDel.inventory.has("parcel_plains_wool"), "distance 2 is not arrival")
+	_events.clear()
+	assert(gDel.move_player(Vector2i.UP), "step to (14,3), adjacent to the stall")
+	assert(gDel.accomplishment_count("delivered_delivery_krshia_wool") == 1, "arrival banks delivered_<id>")
+	assert(not gDel.inventory.has("parcel_plains_wool"), "arrival IS the handoff -- parcel leaves the pack")
+	assert(_count("item_lost") == 1, "handoff emits item_lost")
+	assert(_toast_texts().has("Delivered: Plains-Wool Bolt."), "handoff toast names the parcel")
+	_events.clear()
+	assert(gDel.turn_in_delivery(), "turn-in pays once the mark is made")
+	assert(gDel.gold == 1, "band-1 leg pays 1 gold through earn_gold")
+	assert(gDel.accomplishment_count("completed_delivery_delivery_krshia_wool") == 1, "turn-in banks completed_delivery_<id>")
+	assert(gDel.accepted_delivery_id == "" and gDel.accepted_delivery_baseline.is_empty(), "turn-in clears the slip")
+	# Sleep-fail negative: an undelivered parcel returns on the night ledger.
+	gDel.accept_delivery("delivery_gate_dispatch")
+	assert(gDel.inventory.has("parcel_watch_dispatch"), "second slip's parcel granted")
+	_events.clear()
+	gDel.sleep()
+	assert(not gDel.inventory.has("parcel_watch_dispatch"), "sleep with an undelivered parcel returns it")
+	assert(gDel.accepted_delivery_id == "" and gDel.delivery_failed, "run failed: slip cleared, delivery_failed armed for Vess's one-shot bark")
+	assert(_count("item_lost") == 1, "the return emits item_lost")
+	assert(_toast_texts().has("The undelivered parcel goes back on the night ledger."), "the return is toasted at the sleep beat")
+	assert(gDel.accomplishment_count("completed_delivery_delivery_gate_dispatch") == 0 and gDel.gold == 1, "no pay, no completion on a failed run")
+	var del_slate_after: Array = gDel.delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"]))
+	assert(del_slate_after == ["delivery_pisces_parcel", "delivery_gate_dispatch", "delivery_grate_phials"], "the sleep rotates the slate (times_slept 1 window)")
+	# Re-accept honesty (WHY the mode is delta, not absolute): taking the
+	# already-completed krshia run again must NOT insta-complete off the
+	# previous run's delivered counter -- a fresh arrival is required.
+	gDel.accept_delivery("delivery_krshia_wool")
+	assert(gDel.accepted_delivery_baseline == {"delivered_delivery_krshia_wool": 1}, "re-accept baselines at the previous run's counter")
+	assert(not gDel.turn_in_delivery(), "a re-accepted delivery does not insta-complete (delta-since-accept)")
+	assert(gDel.inventory.has("parcel_plains_wool"), "fresh parcel granted for the repeat run")
+	assert(gDel.move_player(Vector2i.DOWN) and gDel.move_player(Vector2i.UP), "step away and back to the mark")
+	assert(gDel.accomplishment_count("delivered_delivery_krshia_wool") == 2, "the repeat arrival banks a second delivered count")
+	# A delivered-but-not-yet-paid slip SURVIVES a sleep (the mark was made
+	# same-waking; the parcel is already out of the pack, so no fail fires).
+	gDel.sleep()
+	assert(gDel.accepted_delivery_id == "delivery_krshia_wool", "a delivered-but-unpaid slip survives sleep")
+	assert(gDel.turn_in_delivery() and gDel.gold == 2, "pay collects fine on a later waking")
+
 	print("PASS: sim core behaves correctly")
 	quit(0)

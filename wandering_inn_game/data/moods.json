@@ -142,6 +142,25 @@
    ],
    "vignette": 0.36
   },
+  "runners_guild": {
+   "_comment": "M-DEPTH DP5: the Runner's Guild -- \"brisk practical\" per the plan's direction-card convention. Neutral-warm parchment/ledger tone, brighter and less saturated than the Guild's own amber (guild's [1.0,0.94,0.82]) and warmer than the barracks' cool blue-grey ([0.68,0.74,0.82]) -- a working counter-and-ledgers room, busy rather than bureaucratic or stern. TIME-INVARIANT (barracks/inn_upstairs/sewers precedent): couriers keep counter hours day and night (deliveries complete within any waking), so the room reads the same at any phase.",
+   "day": [
+    0.88,
+    0.86,
+    0.78
+   ],
+   "dusk": [
+    0.88,
+    0.86,
+    0.78
+   ],
+   "night": [
+    0.88,
+    0.86,
+    0.78
+   ],
+   "vignette": 0.28
+  },
   "deep_tunnels": {
    "_comment": "M-ARC A2: the Raskghar descent -- the DARKEST pin in the game, time-invariant (below the sewers, no daylight ever reaches it). Meaningfully darker + colder than the sewers' [0.3,0.32,0.45] so the descent visibly escalates; a stronger vignette (0.55) squeezes the readable space to a lantern's reach. Any prop lights glow at every phase intent (light_energy day=0.0 still keeps day flat, so the tunnels lean on their own cold ambience).",
    "day": [

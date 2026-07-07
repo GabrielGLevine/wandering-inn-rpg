@@ -94,11 +94,21 @@ Wiki-verify canon entries at generation/writing time.
   before acting · misapplies idioms with confidence.
 
 ## Liscor — M-DEPTH additions
-- **Vess, Street Runner** (ORIGINAL+flag; proposed by the board-staging
-  lane, controller-merged): teenage Drake, wiry, satchel-harness,
-  perpetually mid-catch-of-breath. Voice: out-of-breath-professional ·
-  clipped delivery jargon ("signed-for", "second attempt") · lights up
-  at speed talk. Counter context: the Runner's Guild desk.
+- **Vess, Street Runner** — SHIPPED at M-DEPTH DP5: entry moved/adapted
+  into `character-profiles.md` (the shipped single source of truth) when
+  the Runner's Guild interior landed. She's live data now; edit the
+  shipped profile, not this file.
+- **Resting runner walk-on** (ORIGINAL, title only — no proper name,
+  matching The Peddler's precedent below; DP5's second body in the
+  Runner's Guild): a Gnoll runner flat by the wall near a stool, legs
+  out, boots still laced — off-shift, not off-duty. One talk_pool line
+  ("Floodplains double, both legs mud. Wake me for a fire or a
+  Courier.") + a static fallback; inert-adjacent, no conversation graph.
+  Sprite: reused `pc_gnoll_m` rig (mud-brown tint [0.5,0.46,0.4]), not a
+  new generation. NOTE: the staged copy proposed "flat on a bench, legs
+  up the wall" — no bench sprite exists in the catalog, so the shipped
+  pose is bench-less (a stool + wall lean); VISUAL-LOG'd for a real
+  bench asset.
 - **Yelra** (ORIGINAL+flag; DP1 Adventurer's Guild interior walk-on):
   lean Gnoll, tan-brown fur, quiver worn even seated (the silhouette
   tell — never fully off-duty). Bronze-rank per the canon rank ladder

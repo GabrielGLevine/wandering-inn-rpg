@@ -94,6 +94,26 @@ canon cites · current sprite state.
   NPC, relocated into the new `barracks` interior and given a name/voice
   for M-DEPTH DP4), rust-brown tint. Not a new generation.
 
+## Vess
+- Drake, Street Runner clerk (the Runner's Guild counter, M-DEPTH DP5),
+  teenage, wiry.
+- Slate-grey scales, a strap-scarred satchel worn even behind the counter
+  (the silhouette tell: a runner parked at a desk, not a clerk), a
+  sweat-band she does not need indoors and wears anyway; perpetually
+  mid-catch-of-breath.
+- Voice: (1) clipped out-of-breath bursts, even standing still; (2)
+  measures everything in legs and distances ("that's a two-leg run") and
+  delivery jargon ("signed-for", "same-waking"); (3) borrowed Courier
+  pride — Hawk-references, aspirational, never boastful about herself;
+  lights up at speed talk.
+- Canon check: ORIGINAL+flag (name canon-plausible, not canon; proposed by
+  the board-staging lane 2026-07-06, promoted from
+  character-profiles-staging.md at DP5 wiring). Hawk (Rabbit Beastkin
+  Courier, Liscor, one of the fastest on Izril) is wiki-verified
+  2026-07-06 and stays OFFSTAGE — a name she drops, never an NPC.
+- Sprite: `pc_drake_f` rig reused (slate-grey tint [0.5,0.55,0.58]), not a
+  new generation — the Renn/Ilvo/Yelra walk-on convention.
+
 ## The PC ("Traveler")
 - Player-named at creation (M-ARC §5); race Human/Drake/Gnoll + gender
   cosmetic. Deliberately everyman; clothing = simple earth-tone

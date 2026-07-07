@@ -16,6 +16,33 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] SPRITE — **THE DELIVERY BOARD (`runner_board`, M-DEPTH DP5, Runner's
+  Guild interior) is the SECOND board shipped on the `inn_sign`
+  hanging-plank stand-in** (cool blue-grey tint [0.65,0.72,0.8] vs the
+  request board's warm parchment tint — tint is the only differentiator).
+  Exact same asset-gap class as the `guild_board` entry below (no
+  corkboard/bulletin asset in any in-hand pack); when a bespoke board
+  sprite is generated, do BOTH boards in one pass — the delivery board
+  wants a visibly different silhouette (slips-and-strings vs paper-layers),
+  not just a retint. First seen: DP5 windowed read (dp5-shots/).
+- [ ] FIELD/RUNNERS_GUILD — the staged resting-runner copy proposed "flat
+  on a bench, legs up the wall"; NO bench sprite exists in any in-hand
+  catalog, so DP5 ships a `stool` + a standing `pc_gnoll_m` lean-in-place
+  (disclosed in character-profiles-staging.md's walk-on entry). Reads
+  fine but loses the staged pose's comedy; queue a bench asset (or a
+  lying-down runner frame) with the board-sprite pass above. First seen:
+  DP5 windowed read.
+- [ ] UI/DIALOGUE — the dialogue panel's PAGE INDICATOR (bottom-center
+  "N/M" counter) sits directly behind the field hotbar's slot-1 icon and
+  is partially occluded on every paginated conversation — PRE-EXISTING
+  (visible identically in DP2's `dp2-shots/01_board_browse.png` and
+  DP5's `dp5-shots/02_delivery_board_browse.png`; first LOGGED at DP5's
+  windowed read, systemic, not board-specific: any long dialogue).
+  Related observation, disclosed not judged: the paginated board-browse
+  panel opens showing the TAIL page (options visible), not page 1 — DP2
+  parity, may be intentional (options-first), but a first-time reader
+  meets the middle of a sentence; worth a taste pass together with the
+  indicator occlusion.
 - [ ] SPRITE — **a THIRD reproduction of the player-occludes-small-prop
   finding below (`bed`/`lyonette_door`), this time on a market-stall PROP**:
   M-DEPTH DP4's `bread_stall` (street, food_basket sprite, render_scale

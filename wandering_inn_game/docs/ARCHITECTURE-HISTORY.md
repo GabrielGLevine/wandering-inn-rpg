@@ -1206,3 +1206,63 @@ mechanics per the plan's own scope note ("a new data seam... zero new UI").
 - **Deliberately NOT a `WIQuests` quest**: no journal entry, no beat text,
   no `quests.json` row — the board is its own data seam, exactly as the
   plan specified, so it never collides with the story-quest machinery.
+
+### The Runner's Guild delivery loop (M-DEPTH DP5, 2026-07-07)
+
+The fourth interior (`runners_guild`, 10x8 off the street's south-east
+block — a previously-decorative roof/facade building at x18-21/y15-16
+became a real door, `runners_guild_door` (20,17)) and the delivery seam.
+The seam RIDES DP2's bounty machinery — extended, never forked:
+
+- **Data**: `data/deliveries.json` — same record family as bounties
+  (`id`, `gold`, `condition`, copy) plus the delivery-specific fields
+  (`type: "delivery"`, `parcel` {item_id, display_name, flavor},
+  `destination` {map, cell, anchor_entity}, `band`, optional `fragile`),
+  assembled verbatim from `docs/design/board-staging/runner-deliveries.json`
+  (5 of 6 entries; `delivery_hermit_antlers` stays parked until HR-II —
+  its staged double-pay hazard vs `hermit_antler_order.json` is resolved
+  by shipping NEITHER surface; the reconciliation note travels in the
+  data file's own `_comment`). The 5 parcel items are `kind: "parcel"`
+  in `items.json`: inert carried flavor, structurally un-equippable
+  (equip() only accepts weapon/armor/accessory), no price.
+- **The reach condition** (the one genuinely new trace): "reach map/cell
+  X with the parcel" can't be an accomplishment threshold directly, so
+  `WIGame._check_delivery_arrival` — the smallest honest seam, the
+  `_check_trigger_radius` shape reused (Chebyshev distance from a REAL
+  `move_player` only; teleport/load can never spuriously complete a
+  run) — is the ONE producer of a `delivered_<id>` accomplishment:
+  adjacency (Chebyshev ≤ 1) to the destination's anchor entity's LIVE
+  cell, parcel-in-pack as the guard. Arrival IS the handoff: the parcel
+  leaves the pack (`remove_item`, the sim's first inventory-REMOVAL seam,
+  `pickup`'s inverse, emitting the new `item_lost` event) and the
+  delivery's `condition: {delivered_<id>: 1}` then rides
+  `WIBounties.condition_met` completely unchanged.
+- **Mode trace (the DP2 delta/absolute split applied deliberately)**: all
+  5 deliveries are DEFAULT-DELTA. Absolute exists for pre-accept-bankable
+  one-shots; `delivered_<id>` is structurally un-bankable pre-accept, and
+  delta is REQUIRED for re-acceptance honesty (the counter persists after
+  a completed run — an absolute read would insta-complete the same
+  posting taken again after a rotation; unit-proven in test_sim_core.gd).
+- **Within-the-waking stakes / abandon semantics**: `sleep()` with the
+  parcel still in the pack FAILS the run — parcel removed (`item_lost` +
+  a night-ledger toast, emitted BEFORE the sleep beat's own stream), slip
+  cleared, no pay, `delivery_failed` armed (surfaced exactly once as
+  Vess's counter bark at the next picker open, then cleared — the Selys
+  slate-rotated-line convention). This sleep-fail IS the abandon: no
+  "hand it back" option exists by design (contrast the bounty abandon fix
+  wave — a bounty could be unfulfillable; every delivery destination is a
+  reachable shipped anchor and sleep is always available). A
+  delivered-but-unpaid slip SURVIVES sleep (the mark was made
+  same-waking; collecting later is just pay).
+- **Surfaces**: `runner_board` (`delivery_board: true`, a distinct flag
+  from DP2's `board` so the prop dispatch routes correctly) is
+  browse-only via `_interact_delivery_board`; Vess's counter
+  (`vess_counter.json` + `WIBounties.build_delivery_picker_graph`/
+  `build_delivery_turnin_graph`, code-built exactly like Selys's) is the
+  transactional surface. Rotation is literally the SAME function
+  (`WIBounties.active_slate` on `times_slept`) over the second pool.
+  `delivery_accepted` is the FOURTH sanctioned `requires`/`hide_when`
+  gate (`board_accepted`'s exact twin) in `WIDialogue` +
+  `test_content.gd`. Save: `accepted_delivery_id`/
+  `accepted_delivery_baseline`/`delivery_failed`, additive-optional, no
+  version bump.

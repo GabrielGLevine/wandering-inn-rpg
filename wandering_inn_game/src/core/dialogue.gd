@@ -103,13 +103,14 @@ func advance(next_id: String) -> void:
 
 ## True when this requires-dict gates on player PROGRESS (accomplishments), OR
 ## on M-DEPTH DP2's `board_accepted` ctx flag (whether a bounty posting is
-## currently accepted) -- both are "vanishing" gates (HIDDEN until met, not
-## greyed), unlike skill/class/gold which stay visible-locked as a deliberate
-## tease. `board_accepted` reads the SAME hide-until-met contract: Selys's
-## "Take on a posting."/"Turn in my posting." hub options must not clutter the
-## hub with an unusable choice before/after a posting is on hand.
+## currently accepted), OR on DP5's `delivery_accepted` twin (whether a
+## Runner's Guild slip is currently held) -- all "vanishing" gates (HIDDEN
+## until met, not greyed), unlike skill/class/gold which stay visible-locked
+## as a deliberate tease. `board_accepted`/`delivery_accepted` read the SAME
+## hide-until-met contract: Selys's board pair and Vess's slip pair must not
+## clutter their hubs with an unusable choice before/after a job is on hand.
 func _progress_gated(req: Dictionary) -> bool:
-	return req.has("accomplishment") or req.has("board_accepted")
+	return req.has("accomplishment") or req.has("board_accepted") or req.has("delivery_accepted")
 
 
 ## Progress-only gate check used SOLELY to decide hide-until-met VISIBILITY
@@ -128,6 +129,10 @@ func _meets_progress(req: Dictionary) -> bool:
 	# honest if that ever changes.
 	if req.has("board_accepted"):
 		if bool(_ctx.get("board_accepted", false)) != bool(req["board_accepted"]):
+			return false
+	# M-DEPTH DP5: delivery_accepted, board_accepted's exact twin.
+	if req.has("delivery_accepted"):
+		if bool(_ctx.get("delivery_accepted", false)) != bool(req["delivery_accepted"]):
 			return false
 	if not req.has("accomplishment"):
 		return true
@@ -233,6 +238,13 @@ func _meets(req: Dictionary) -> bool:
 		# Equality, not >=/<= (this is a state flag, not a threshold).
 		recognized = true
 		if bool(_ctx.get("board_accepted", false)) != bool(req["board_accepted"]):
+			return false
+	if req.has("delivery_accepted"):
+		# M-DEPTH DP5: the FOURTH sanctioned gate type -- board_accepted's
+		# exact twin for the Runner's Guild slip (WIGame._build_dialogue_ctx's
+		# `delivery_accepted`, true iff a delivery slip is currently held).
+		recognized = true
+		if bool(_ctx.get("delivery_accepted", false)) != bool(req["delivery_accepted"]):
 			return false
 	return recognized
 

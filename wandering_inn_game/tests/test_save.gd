@@ -640,5 +640,47 @@ func _init() -> void:
 	(bad_blsts_data["state"] as Dictionary)["board_last_seen_times_slept"] = "two"
 	assert(not WISave.apply(_new_game(), bad_blsts_data), "wrong-typed board_last_seen_times_slept rejected")
 
+	# --- M-DEPTH DP5 (the Runner's Guild): accepted_delivery_id /
+	# accepted_delivery_baseline / delivery_failed -- the DP2 board trio's
+	# exact additive-optional twins (round-trip, absent-key defaults,
+	# wrong-type rejection), the same coverage bar the DP2 fix wave set. ---
+	var delivery_original := _new_game()
+	delivery_original.accepted_delivery_id = "delivery_krshia_wool"
+	delivery_original.accepted_delivery_baseline = {"delivered_delivery_krshia_wool": 0}
+	delivery_original.delivery_failed = true
+	var delivery_data := WISave.serialize(delivery_original)
+	assert(int(delivery_data["version"]) == WISave.VERSION, "DP5 delivery fields do not bump the save version")
+	var delivery_restored := _new_game()
+	assert(WISave.apply(delivery_restored, delivery_data), "save with DP5 delivery fields applies")
+	assert(delivery_restored.accepted_delivery_id == "delivery_krshia_wool", "accepted_delivery_id round-trips")
+	assert(delivery_restored.accepted_delivery_baseline == {"delivered_delivery_krshia_wool": 0}, "accepted_delivery_baseline round-trips")
+	assert(delivery_restored.delivery_failed == true, "delivery_failed round-trips")
+
+	# A save WITHOUT any of the 3 keys (any save written before M-DEPTH DP5)
+	# restores each field's tolerant default -- ""/{}/false.
+	var pre_dp5_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	(pre_dp5_data["state"] as Dictionary).erase("accepted_delivery_id")
+	(pre_dp5_data["state"] as Dictionary).erase("accepted_delivery_baseline")
+	(pre_dp5_data["state"] as Dictionary).erase("delivery_failed")
+	var pre_dp5_target := _new_game()
+	pre_dp5_target.accepted_delivery_id = "stale"
+	pre_dp5_target.accepted_delivery_baseline = {"stale": 999}
+	pre_dp5_target.delivery_failed = true
+	assert(WISave.apply(pre_dp5_target, pre_dp5_data), "save missing all 3 DP5 delivery keys still applies")
+	assert(pre_dp5_target.accepted_delivery_id == "", "absent accepted_delivery_id restores \"\", not stale data")
+	assert(pre_dp5_target.accepted_delivery_baseline.is_empty(), "absent accepted_delivery_baseline restores {}, not stale data")
+	assert(pre_dp5_target.delivery_failed == false, "absent delivery_failed restores false, not stale data")
+
+	# Present-but-wrong-typed values for each of the 3 fields are rejected as malformed.
+	var bad_adid_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_adid_data["state"] as Dictionary)["accepted_delivery_id"] = 42
+	assert(not WISave.apply(_new_game(), bad_adid_data), "wrong-typed accepted_delivery_id rejected")
+	var bad_adbl_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_adbl_data["state"] as Dictionary)["accepted_delivery_baseline"] = "nope"
+	assert(not WISave.apply(_new_game(), bad_adbl_data), "wrong-typed accepted_delivery_baseline rejected")
+	var bad_df_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_df_data["state"] as Dictionary)["delivery_failed"] = "yes"
+	assert(not WISave.apply(_new_game(), bad_df_data), "wrong-typed delivery_failed rejected")
+
 	print("PASS: save round-trips the full sim including rng state")
 	quit(0)

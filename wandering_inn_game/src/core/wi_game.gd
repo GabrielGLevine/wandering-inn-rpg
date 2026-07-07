@@ -165,6 +165,37 @@ var accepted_bounty_baseline: Dictionary = {}
 ## matching `times_slept`'s own default so a fresh save never false-positives
 ## a rotation that hasn't happened yet).
 var board_last_seen_times_slept: int = 0
+## M-DEPTH DP5 (the Runner's Guild): the id of the ONE delivery currently
+## accepted, or "" when none -- same one-job-at-a-time simplification as
+## `accepted_bounty_id` (Vess's "Take a slip." hides while this is
+## non-empty), and a SEPARATE slot from it (a bounty and a delivery are
+## independent systems; holding one of each is legal, disclosed in the DP5
+## report). UNLIKE a bounty, this is cleared by `sleep()` itself on a run
+## failure (see `delivery_failed` below) as well as by a normal turn-in --
+## deliveries have a built-in exit valve a bounty never had pre-fix-wave
+## (the sleep-fail IS the abandon: no pay, no penalty, parcel returned), so
+## no dedicated "hand it back" option was needed (traced explicitly; see
+## `sleep()`'s delivery block). Additive save field (tolerant default "",
+## NO version bump).
+var accepted_delivery_id: String = ""
+## M-DEPTH DP5: the DELTA-SINCE-ACCEPT baseline for the currently accepted
+## delivery's condition -- the exact `accepted_bounty_baseline` shape and
+## contract (snapshotted in `accept_delivery()`, read by
+## `WIBounties.condition_met`, cleared with the slip). Every shipped
+## delivery is default-delta (data/deliveries.json's MODE TRACE): delta is
+## what keeps a RE-ACCEPTED delivery honest, since its `delivered_<id>`
+## counter persists from a previous completed run and an absolute read
+## would insta-complete the second acceptance. Additive save field
+## (tolerant default {}, NO version bump).
+var accepted_delivery_baseline: Dictionary = {}
+## M-DEPTH DP5: true the moment a delivery run fails at `sleep()` (accepted
+## but not yet delivered), surfaced exactly once at Vess's counter
+## (`_open_delivery_picker_dialogue`'s "Parcel came back on the night
+## ledger" bark) then cleared -- the delivery-loop's own one-shot bark,
+## parallel to `board_last_seen_times_slept`'s "slate rotated overnight"
+## line but boolean (a discrete failure event) rather than a rotation-clock
+## comparison. Additive save field (tolerant default false, NO version bump).
+var delivery_failed: bool = false
 ## Social Pillar S1: per-waking "already did small talk with this NPC this
 ## waking" flags, keyed by entity id -> true. Set by `_talk_pool_line` the
 ## first time an NPC carrying a `talk_pool` is talked to in a waking, so a
@@ -530,6 +561,7 @@ func move_player(dir: Vector2i) -> bool:
 	_emit(WIEvents.PLAYER_MOVED, {"cell": [target.x, target.y]})
 	_tick_action()
 	_check_trigger_radius()
+	_check_delivery_arrival()
 	return true
 
 
@@ -589,6 +621,60 @@ func _check_trigger_radius() -> void:
 			continue
 		start_combat(String(ent[WIKeys.ID]))
 		return
+
+
+## M-DEPTH DP5 (the Runner's Guild): the delivery-arrival check -- the
+## smallest honest seam for the plan's "reach map/cell X with the parcel"
+## condition, traced against the two existing arrival seams before building:
+## door `on_enter_accomplishment` fires only on a door's own cell (none of
+## the five destinations is a door), and `trigger_radius` is the
+## walk-into-proximity precedent this reuses the SHAPE of (Chebyshev
+## distance from a real move) without touching encounters. Fires when a
+## successful `move_player` lands the player within Chebyshev distance 1 of
+## the accepted delivery's destination anchor (adjacency, not exact-cell --
+## the staging doc's own recommendation, since several anchors are blocked
+## prop/npc cells the player can never stand ON) while the parcel is still
+## in the pack. The parcel check is both guard and semantics: arrival IS
+## the handoff ("the parcel's yours until it's theirs"), so the parcel
+## leaves the pack here (`remove_item`) and `delivered_<id>` banks -- the
+## counter WIBounties.condition_met reads at Vess's turn-in. Deliberately
+## runs ONLY from `move_player`, exactly like `_check_trigger_radius`
+## (same rationale: a QA `teleport` or a load-restore can never spuriously
+## complete a run; every real player reaches a destination by walking).
+## Anchor cell is read LIVE from the current map's entities (so a future
+## NPC relocation moves the mark with it), falling back to the authored
+## destination cell only if the anchor id doesn't resolve.
+func _check_delivery_arrival() -> void:
+	# DP5 review minors: mirror _check_trigger_radius's modal guards (inert
+	# today -- move_player already gates -- but consistent defensive posture),
+	# and NO sneaking guard ON PURPOSE (arrival is a handoff, not an ambush).
+	if combat != null or dialogue != null:
+		return
+	if accepted_delivery_id == "":
+		return
+	var delivery := _delivery_by_id(accepted_delivery_id)
+	if delivery.is_empty():
+		return
+	var parcel: Dictionary = delivery.get("parcel", {})
+	var parcel_id := String(parcel.get("item_id", ""))
+	if parcel_id == "" or not inventory.has(parcel_id):
+		return
+	var dest: Dictionary = delivery.get("destination", {})
+	if current_map != String(dest.get("map", "")):
+		return
+	# Null-safe cell read (a parked delivery convention uses cell: null with
+	# an anchor -- the anchor override below is then the only source).
+	var raw_cell: Variant = dest.get("cell")
+	var target_cell := Vector2i(int(raw_cell[0]), int(raw_cell[1])) if raw_cell is Array and raw_cell.size() == 2 else Vector2i(-9999, -9999)
+	var anchor := String(dest.get("anchor_entity", ""))
+	if anchor != "" and entities.has(anchor):
+		target_cell = entities[anchor][WIKeys.CELL]
+	var dist := maxi(absi(player_cell.x - target_cell.x), absi(player_cell.y - target_cell.y))
+	if dist > 1:
+		return
+	record_accomplishment("delivered_%s" % accepted_delivery_id)
+	remove_item(parcel_id, accepted_delivery_id)
+	_emit(WIEvents.TOAST, {"text": "Delivered: %s." % String(parcel.get("display_name", parcel_id))})
 
 
 func interact() -> Dictionary:
@@ -659,6 +745,12 @@ func interact() -> Dictionary:
 			# so rotation always reads live.
 			if bool(target.get("board", false)):
 				return _interact_board(target)
+			# M-DEPTH DP5: THE DELIVERY BOARD (the Runner's Guild) -- a distinct
+			# flag from `board` so the prop dispatch routes to the right browse
+			# surface; same browse-only contract (accept/turn-in live at Vess's
+			# counter, vess_counter.json, per board-copy.md sec.3's framing).
+			if bool(target.get("delivery_board", false)):
+				return _interact_delivery_board(target)
 			# M7 Task E3: a container prop (`contains: [item_ids]`) is checked
 			# BEFORE `on_interact_accomplishment`/the `use_skill` fallback --
 			# no data-driven prop combines `contains` with either of those
@@ -1024,7 +1116,12 @@ func _build_dialogue_ctx() -> Dictionary:
 	# `hide_when` dict can gate on (WIDialogue._meets/_progress_gated), so
 	# Selys's "Take on a posting."/"Turn in my posting." hub options can hide/
 	# show without a new dialogue.gd concept per feature.
-	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "board_accepted": accepted_bounty_id != ""}
+	# M-DEPTH DP5: `delivery_accepted` is the THIRD sanctioned
+	# non-accomplishment ctx extension (gold [D1], board_accepted [DP2]) --
+	# the same plain-bool gate shape, recognized explicitly by
+	# WIDialogue._meets/_meets_progress/_progress_gated, so Vess's "Take a
+	# slip."/"Turn in a slip." hub options hide/show like Selys's board pair.
+	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "board_accepted": accepted_bounty_id != "", "delivery_accepted": accepted_delivery_id != ""}
 
 
 ## Starts a conversation graph if no other modal sim is active.
@@ -1105,6 +1202,12 @@ func dialogue_choose(index: int) -> bool:
 			# dialogue_choose call, distinct from the one that opened the
 			# picker via open_board_picker below.
 			accept_bounty(String(effect["accept_bounty"]))
+		elif effect.has("accept_delivery"):
+			# M-DEPTH DP5: the delivery twin of accept_bounty above -- fired
+			# from WITHIN the delivery picker's own options (bounties.gd's
+			# build_delivery_picker_graph). Grants the parcel item too (see
+			# accept_delivery's own doc comment).
+			accept_delivery(String(effect["accept_delivery"]))
 		elif effect.has("open_board_picker"):
 			# M-DEPTH DP2: fired from Selys's static hub option "Take on a
 			# posting." (selys_delivery.json). Deferred like start_combat's
@@ -1126,6 +1229,17 @@ func dialogue_choose(index: int) -> bool:
 			# conversation first, then _open_board_abandon_dialogue below
 			# clears the accepted slip and shows Selys's one line.
 			pending_board_action = "abandon"
+		elif effect.has("open_delivery_picker"):
+			# M-DEPTH DP5: fired from Vess's static hub option "Take a slip."
+			# (vess_counter.json). Same deferred-swap shape as
+			# open_board_picker above -- the hub option always ends its own
+			# conversation first.
+			pending_board_action = "delivery_picker"
+		elif effect.has("open_delivery_turnin"):
+			# M-DEPTH DP5: fired from Vess's "Turn in a slip." hub option
+			# (only visible once delivery_accepted is true). Same deferred-
+			# swap shape as open_board_turnin above.
+			pending_board_action = "delivery_turnin"
 	if not bool(result["ended"]):
 		walker.set_ctx(_build_dialogue_ctx())
 		walker.advance(String(result["next"]))
@@ -1138,6 +1252,10 @@ func dialogue_choose(index: int) -> bool:
 		_open_board_turnin_dialogue()
 	elif pending_board_action == "abandon":
 		_open_board_abandon_dialogue()
+	elif pending_board_action == "delivery_picker":
+		_open_delivery_picker_dialogue()
+	elif pending_board_action == "delivery_turnin":
+		_open_delivery_turnin_dialogue()
 	return true
 
 
@@ -1313,6 +1431,141 @@ func _open_board_turnin_dialogue() -> void:
 func _open_board_abandon_dialogue() -> void:
 	abandon_bounty()
 	_begin_code_dialogue(WIBounties.build_abandon_graph(), "board_abandon", "selys")
+
+
+## M-DEPTH DP5 (the Runner's Guild): the delivery pool, injected the same
+## `_combat_config` lane as bounties/quests/items (game.gd loads
+## data/deliveries.json). Empty when unconfigured -- every caller below
+## tolerates an empty pool/slate, exactly like `_bounty_pool`.
+func _delivery_pool() -> Array:
+	return (_combat_config.get("deliveries", {}) as Dictionary).get("deliveries", [])
+
+
+func _delivery_by_id(id: String) -> Dictionary:
+	for delivery: Dictionary in _delivery_pool():
+		if String(delivery["id"]) == id:
+			return delivery
+	return {}
+
+
+## THE DELIVERY BOARD's current active slate (2-3 slips), derived fresh from
+## `times_slept` via the SAME rotation function the request board uses
+## (WIBounties.active_slate -- the whole point of riding DP2's machinery:
+## one rotation idiom, two pools, zero new derivation code).
+func delivery_board_deliveries() -> Array:
+	return WIBounties.active_slate(_delivery_pool(), times_slept)
+
+
+## Accepts a slip from the CURRENT active slate: banks
+## `accepted_delivery_<id>`, snapshots the delta-since-accept baseline
+## (accept_bounty's exact contract -- every shipped delivery is
+## default-delta, see data/deliveries.json's MODE TRACE), and grants the
+## parcel item via the existing `pickup()` seam (source = the delivery id;
+## pickup's own ITEM_GAINED + "Got: <name>" toast are the player-visible
+## confirmation the parcel is now in the pack). Guards mirror
+## accept_bounty: no-op if a slip is already held (Vess's "Take a slip."
+## hub option is the primary gate, hidden while delivery_accepted) or if
+## the id doesn't resolve.
+func accept_delivery(id: String) -> void:
+	if accepted_delivery_id != "":
+		return
+	var delivery := _delivery_by_id(id)
+	if delivery.is_empty():
+		return
+	accepted_delivery_id = id
+	var baseline: Dictionary = {}
+	for key: String in (delivery.get("condition", {}) as Dictionary):
+		baseline[key] = accomplishment_count(key)
+	accepted_delivery_baseline = baseline
+	record_accomplishment("accepted_delivery_%s" % id)
+	pickup(String((delivery.get("parcel", {}) as Dictionary).get("item_id", "")), id)
+
+
+## Pure condition check for the currently accepted delivery --
+## `_bounty_condition_met`'s exact twin, forwarding the SAME
+## WIBounties.condition_met reader (the machinery ride: a delivery's
+## condition is `{delivered_<id>: 1}`, produced by _check_delivery_arrival,
+## evaluated delta-since-accept against the baseline snapshotted at accept).
+func _delivery_condition_met() -> bool:
+	if accepted_delivery_id == "":
+		return false
+	var delivery := _delivery_by_id(accepted_delivery_id)
+	if delivery.is_empty():
+		return false
+	return WIBounties.condition_met(delivery.get("condition", {}), accepted_delivery_baseline, Callable(self, "accomplishment_count"), String(delivery.get("condition_mode", "delta")))
+
+
+## Resolves a turn-in attempt against the currently accepted delivery --
+## turn_in_bounty's exact twin: pays gold through the shared `earn_gold`
+## router + banks `completed_delivery_<id>` + clears the slip on a MET
+## condition (i.e. the mark was reached this acceptance); leaves all state
+## untouched on an unmet one (opaque-safe, no partial credit). Returns
+## whether it paid, so `_open_delivery_turnin_dialogue` picks which of
+## Vess's two board-copy.md sec.3 lines to show.
+func turn_in_delivery() -> bool:
+	if accepted_delivery_id == "" or not _delivery_condition_met():
+		return false
+	var delivery := _delivery_by_id(accepted_delivery_id)
+	var id := accepted_delivery_id
+	earn_gold(int(delivery.get("gold", 0)), "delivery_%s" % id)
+	record_accomplishment("completed_delivery_%s" % id)
+	accepted_delivery_id = ""
+	accepted_delivery_baseline = {}
+	return true
+
+
+## THE DELIVERY BOARD's browse surface -- `_interact_board`'s exact twin for
+## a `delivery_board: true` prop (`runner_board`): header (the entity's
+## `toast`, or `second_visit_toast` while a slip is outstanding), the
+## current slate's slip copy, footer (`observe`, the standing notice), one
+## "Step back from the board." option, read-only (accept/turn-in are
+## Vess's, per board-copy.md sec.3's framing). Banks `read_the_delivery_board`
+## every time (the read_the_board convention).
+func _interact_delivery_board(target: Dictionary) -> Dictionary:
+	record_accomplishment("read_the_delivery_board")
+	var header := String(target["toast"])
+	if accepted_delivery_id != "" and target.has("second_visit_toast"):
+		header = String(target["second_visit_toast"])
+	var lines: Array[String] = [header, ""]
+	for delivery: Dictionary in delivery_board_deliveries():
+		lines.append(String(delivery["slip_copy"]))
+		lines.append("")
+	lines.append(String(target.get("observe", "")))
+	var graph := {
+		"start": "hub",
+		"nodes": {
+			"hub": {
+				"speaker": String(target.get(WIKeys.DISPLAY_NAME, "The Delivery Board")),
+				"text": "\n".join(lines),
+				"options": [{"text": "Step back from the board.", "end": true}],
+			},
+		},
+	}
+	_begin_code_dialogue(graph, "the_delivery_board", String(target[WIKeys.ID]))
+	return {"dialogue": true}
+
+
+## Opens Vess's slip picker (fired by her hub's "Take a slip." option,
+## vess_counter.json). The one-shot "Parcel came back on the night ledger"
+## bark (board-copy.md sec.3's run-failed line) fires here, BEFORE the
+## picker -- the same bark surface and position as Selys's "slate rotated
+## overnight" line in _open_board_picker_dialogue, keyed on the
+## `delivery_failed` flag (set by sleep()'s fail path, cleared by showing
+## the line once).
+func _open_delivery_picker_dialogue() -> void:
+	if delivery_failed:
+		_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Vess", "text": "Parcel came back on the night ledger. Happens. Happens ONCE, usually. Board's still live — take another slip and run it like you mean it."})
+		delivery_failed = false
+	_begin_code_dialogue(WIBounties.build_delivery_picker_graph(delivery_board_deliveries()), "delivery_picker", "vess")
+
+
+## Opens Vess's turn-in result (fired by her hub's "Turn in a slip."
+## option) -- _open_board_turnin_dialogue's exact twin: the resolution
+## (gold + clearing the slip on a met condition) already happened in
+## turn_in_delivery(); `met` only picks which of her two lines to show.
+func _open_delivery_turnin_dialogue() -> void:
+	var met := turn_in_delivery()
+	_begin_code_dialogue(WIBounties.build_delivery_turnin_graph(met), "delivery_turnin", "vess")
 
 
 ## Starts a quest idempotently and emits a quest_started domain event.
@@ -1614,6 +1867,27 @@ func pickup(item_id: String, source_id: String) -> bool:
 	return true
 
 
+## M-DEPTH DP5: removes `item_id` from the inventory and emits ITEM_LOST --
+## pickup's inverse, the FIRST removal seam this sim has needed (every
+## prior item flow only ever adds). Refuses (silent false) when the item
+## isn't carried or is currently EQUIPPED in any slot -- the equipped guard
+## is defensive layering for future callers (both shipped call sites move
+## parcels, which equip() structurally refuses by kind), preserving the
+## "equipped ⊆ inventory" invariant no matter who calls this next. NO toast
+## here: each call site owns its own player-facing line (the arrival
+## handoff's "Delivered: X." vs sleep()'s night-ledger return), unlike
+## pickup's one-size "Got: X".
+func remove_item(item_id: String, source_id: String) -> bool:
+	if not inventory.has(item_id):
+		return false
+	for slot_name: String in equipped:
+		if String(equipped[slot_name]) == item_id:
+			return false
+	inventory.erase(item_id)
+	_emit(WIEvents.ITEM_LOST, {"item": item_id, "source": source_id})
+	return true
+
+
 ## Sums `item(id).resonance` (default 0 -- every M7-era item, uncatalogued
 ## until G2) across all 5 currently equipped slots (M-GEAR Task G1). Pure
 ## reader, no rng, no emit -- `equip()`'s capacity gate is the only caller.
@@ -1879,6 +2153,30 @@ func sleep() -> void:
 	# that catches this and restores the PC's opacity, exactly like it
 	# catches the light/ice clears.
 	sneaking = false
+	# M-DEPTH DP5: the delivery run's WITHIN-THE-WAKING stakes (the staging
+	# doc's binding term: "sleep with an undelivered parcel = run failed,
+	# parcel returns to the counter, no pay" -- honest stakes, no timer UI,
+	# opaque-safe). Fires only while the parcel is STILL IN THE PACK: a
+	# delivered-but-not-yet-paid slip survives a sleep untouched (the mark
+	# was made same-waking; collecting at the counter later is just pay).
+	# This sleep-fail IS the delivery system's abandon semantics -- no
+	# "hand it back" option exists or is needed (contrast the bounty
+	# abandon fix wave: a bounty could be genuinely unfulfillable, while
+	# every delivery destination is a reachable shipped anchor and sleep is
+	# always available). Emits its ITEM_LOST + return toast BEFORE the
+	# PHASE_CHANGED/progression stream below; every canonical that sleeps
+	# holds no delivery, so their sleep streams stay byte-identical (the
+	# DP3 sleep-parity precedent). The one-shot counter bark at Vess's desk
+	# rides `delivery_failed` (see _open_delivery_picker_dialogue).
+	if accepted_delivery_id != "":
+		var failed_delivery := _delivery_by_id(accepted_delivery_id)
+		var failed_parcel_id := String((failed_delivery.get("parcel", {}) as Dictionary).get("item_id", ""))
+		if failed_parcel_id != "" and inventory.has(failed_parcel_id):
+			remove_item(failed_parcel_id, accepted_delivery_id)
+			_emit(WIEvents.TOAST, {"text": "The undelivered parcel goes back on the night ledger."})
+			accepted_delivery_id = ""
+			accepted_delivery_baseline = {}
+			delivery_failed = true
 	# M7 M-BEAUTY FOLD: the day/night clock resets UNCONDITIONALLY at every
 	# sleep, and phase_changed fires every time too (even a "day"->"day"
 	# no-op reset) -- distinct from _tick_action's crossing-only emits during
@@ -2214,6 +2512,9 @@ func snapshot() -> Dictionary:
 		"times_slept": times_slept,
 		"accepted_bounty_id": accepted_bounty_id,
 		"board_active_bounties": board_bounties().map(func(b: Dictionary) -> String: return String(b["id"])),
+		"accepted_delivery_id": accepted_delivery_id,
+		"delivery_failed": delivery_failed,
+		"board_active_deliveries": delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"])),
 	}
 
 
