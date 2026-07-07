@@ -58,6 +58,22 @@
    "fallback": "placeholder"
   },
   {
+   "path": "assets/props/cemetery/Graves.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "8a A1: alt pedestal/monument candidate (tall standing-slab blob at native px 132,114,24,78 -- see docs/design/8a-asset-assembly.md)."
+  },
+  {
+   "path": "assets/props/cemetery/Props.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "8a A1: anchor_stone_pedestal + rubble-scatter candidates (region table in docs/design/8a-asset-assembly.md)."
+  },
+  {
    "path": "assets/props/free_pack/Bonfire_01-Sheet.png",
    "source_pack": "Pixel Crawler - Free Pack 2.1",
    "verdict": "FORBIDDEN",
@@ -996,6 +1012,22 @@
    "fallback": "placeholder"
   },
   {
+   "path": "assets/tiles/cemetery/Floor.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "8a A1: ruin floor-tile candidate (region table in docs/design/8a-asset-assembly.md)."
+  },
+  {
+   "path": "assets/tiles/cemetery/Walls.png",
+   "source_pack": "Pixel Crawler - Cemetery 0.4",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "8a A1: ruin wall-tile candidate (region table in docs/design/8a-asset-assembly.md)."
+  },
+  {
    "path": "assets/tiles/floor_tiles_12/dirt_01.png",
    "source_pack": "topdown_floor_tiles_12",
    "verdict": "NEEDS-ATTESTATION",
@@ -1057,6 +1089,14 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/tiles/garden/Tiles.png",
+   "source_pack": "Pixel Crawler - Garden Environment",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "8a A1 (issue #9 pre-work): garden hedge/fountain/petal-swatch candidates (region table in docs/design/8a-asset-assembly.md)."
   },
   {
    "path": "assets/tiles/library/Tiles.png",
