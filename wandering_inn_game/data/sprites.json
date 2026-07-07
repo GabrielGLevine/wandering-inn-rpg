@@ -2432,5 +2432,47 @@
     "fps": 1
    }
   }
+ },
+ "pedestal": {
+  "_comment": "Magical Door plan Task D1 (issue #8 spec §5.2): placeholder-fallback region for `anchor_stone_pedestal` (ruin_surface) -- no matching real crop exists in any in-hand pack yet (VISUAL-LOG flag), so this is a bookkeeping region against the Interior_Props_01 sheet (the same family `chest` crops from) for lane γ to replace with a real plinth/altar pick.",
+  "render_scale": 0.6,
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "region": [
+     90,
+     60,
+     28,
+     30
+    ],
+    "frame_size": [
+     28,
+     30
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pantry_door_glow": {
+  "_comment": "Magical Door plan Task D1 (issue #8 spec §2): shared placeholder region for `pantry_door`'s flicker/awakened visual_states (data/skeleton_scene.json's `inn` map) -- tint-differentiated per state (see that entity's visual_states). A DISTINCT sheet path from the base `door` sprite so the fallback-art placeholder color reads visibly different in a windowed screenshot even before lane γ's real rune-glow art lands (PixelLab balance $0.00 as of this task, per the plan's Global Constraints -- generation deferred, VISUAL-LOG).",
+  "render_scale": 0.5,
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Furniture_Rift.png",
+    "region": [
+     222,
+     279,
+     34,
+     44
+    ],
+    "frame_size": [
+     34,
+     44
+    ],
+    "fps": 1
+   }
+  }
  }
 }

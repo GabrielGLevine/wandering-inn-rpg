@@ -1,0 +1,64 @@
+{
+ "_comment": "Magical Door plan Task D1 (issue #8, milestone 8a). Loads the near_ruin FIXTURE (warrior L1 baseline + door_chain_started pre-banked, simulating D3's not-yet-wired beat-1 Erin dialogue) via title Continue, positioned two steps west of `ruin_door` on floodplains. Enters via the REAL door_when interact (the sewer_grate/deep_fissure precedent), walks the new ruin_surface map's bounds (top edge, down into the guardian alcove, back across mid, down to the south edge, across, up the east edge, back across the top), reads the anchor_stone_pedestal's locked-flavor toast (D1 ships this LOCKED-FLAVOR rather than the final `contains` shape -- see that entity's own _comment in skeleton_scene.json for the full rationale), and exits back to floodplains via ruin_exit. Proves: the ruin_door gate transition + its open_toast, the ruin_surface mood/map/entity render, the pedestal's locked toast + flavor accomplishment, and the round-trip exit -- all while NEVER interacting `ruin_guardian` (the route approaches only to (17,5), one cell north of the pedestal, and never faces (17,7) -- D2 hasn't landed combat data yet, so triggering that fight would crash start_combat on the missing arena/combatant lookup). Fixture rng_state (9) governs; no combat happens in this script at all, so no seed search was needed.",
+ "fixture_save": "near_ruin",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "_comment": "move down to the 'Continue' row, confirm loads the near_ruin manual slot.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "floodplains" },
+  { "action": "assert_state", "path": "player_cell", "equals": [36, 11] },
+  { "action": "assert_state", "path": "accomplishments.door_chain_started", "equals": 1 },
+
+  { "_comment": "== ENTER via the real ruin_door ==. Right 2 from (36,11): step1 -> (37,11), step2 blocked by ruin_door's own cell (38,11) -- ends at (37,11) facing right, ready to interact.", "action": "move", "direction": "right", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [37, 11] },
+  { "action": "press", "name": "interact" },
+  { "_comment": "door_when gate is MET (door_chain_started banked) -> the seam opens: open_toast, then transition to the ruin landing.", "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The seam splits wider at your touch, cold air breathing out of the dark beneath. You step through, into somewhere else." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "ruin_surface" }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "ruin_surface" },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 2] },
+
+  { "_comment": "Ruin atmosphere: the cold-daylight mood pin + map render fire from the map-change rebuild (atmosphere_check idiom).", "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "ruin_surface", "phase": "day" } },
+  { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "ruin_surface" } },
+  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 4, "fallbacks": 0 } },
+  { "action": "screenshot", "name": "00_ruin_landing" },
+
+  { "_comment": "== WALK THE BOUNDS, leg 1: top edge east, (2,2) -> (17,2). Row y=2 is clear of every blocked/entity cell.", "action": "move", "direction": "right", "steps": 15 },
+  { "action": "assert_state", "path": "player_cell", "equals": [17, 2] },
+
+  { "_comment": "== leg 2: down into the guardian alcove, (17,2) -> (17,5) -- one cell north of anchor_stone_pedestal (17,6), never touching ruin_guardian (17,7).", "action": "move", "direction": "down", "steps": 3 },
+  { "action": "assert_state", "path": "player_cell", "equals": [17, 5] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "found_the_pedestal" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "01_pedestal_locked" },
+
+  { "_comment": "== leg 3: back across mid, (17,5) -> (2,5). Row y=5 is clear.", "action": "move", "direction": "left", "steps": 15 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 5] },
+
+  { "_comment": "== leg 4: south to the bottom edge, (2,5) -> (2,13). Column x=2 is clear below the ruin_exit door at (2,1).", "action": "move", "direction": "down", "steps": 8 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 13] },
+
+  { "_comment": "== leg 5: across the bottom edge, (2,13) -> (19,13), the SE corner.", "action": "move", "direction": "right", "steps": 17 },
+  { "action": "assert_state", "path": "player_cell", "equals": [19, 13] },
+
+  { "_comment": "== leg 6: up the east edge, (19,13) -> (19,1).", "action": "move", "direction": "up", "steps": 12 },
+  { "action": "assert_state", "path": "player_cell", "equals": [19, 1] },
+
+  { "_comment": "== leg 7: back across the top, (19,1) -> stops at (3,1), one cell short of ruin_exit's own (2,1) cell (blocked, an entity) -- facing left, ready to interact the exit directly.", "action": "move", "direction": "left", "steps": 16 },
+  { "action": "assert_state", "path": "player_cell", "equals": [3, 1] },
+
+  { "_comment": "== EXIT via ruin_exit back to floodplains, landing beside ruin_door (37,11) -- one cell west of its own (38,11) cell, never on it.", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "floodplains" },
+  { "action": "assert_state", "path": "player_cell", "equals": [37, 11] },
+  { "action": "screenshot", "name": "02_back_on_floodplains" },
+
+  { "_comment": "O2/scope guard: this whole run never fights (both new encounters are D2's dormant placements) and never triggers a trigger_radius arrival -- whole-run negative proof.", "action": "assert_event_absent", "type": "combat_started" }
+ ]
+}

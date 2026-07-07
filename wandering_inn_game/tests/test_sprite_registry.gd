@@ -238,6 +238,12 @@ func _build_expected_counts() -> Dictionary:
 	## sprite existed in any in-hand pack). Single 64x64 PixelLab sheet, 1 frame.
 	counts["bench/idle"] = 1
 
+	## Magical Door plan Task D1 (issue #8 spec §5.2): the ruin pedestal + the
+	## shared pantry_door flicker/awakened placeholder, both single-region
+	## statics (1 frame each), same convention as chest/sewer_grate/boulder.
+	counts["pedestal/idle"] = 1
+	counts["pantry_door_glow/idle"] = 1
+
 	## Art-wiring task (2026-07-07): Lyonette's canon-correct bright-red-hair
 	## sprite (replacing the citizen_f pink-tint stand-in, VISUAL-LOG closed) +
 	## three inn-cast-variety NPC sprites (human_laborer, gnoll_traveler,

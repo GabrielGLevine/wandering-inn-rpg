@@ -161,6 +161,13 @@
    ],
    "vignette": 0.28
   },
+  "ruin_surface": {
+   "_comment": "Magical Door plan Task D1 (issue #8 spec §5.2): the ruin card -- \"cold daylight, dusty\" per the plan's Files list. A SURFACE ruin sees real weather (unlike sewers/deep_tunnels' time-invariant underground pins), so it is day/dusk/night graded like inn/street/floodplains, just cooler and flatter than any of their [1,1,1]-identity day grades -- an overcast, slightly desaturated read rather than the warm/bright outdoor look. Vignette between floodplains (0.4) and sewers (0.45) -- exposed but ruined, not oppressive. The 'dusty' half of the brief is a texture/ambience call (floor tile choice + a future dust-mote emitter), not a color-grade one -- left to a later art/ambience task, ship-neutral here.",
+   "day": [0.86, 0.88, 0.95],
+   "dusk": [0.5, 0.5, 0.62],
+   "night": [0.26, 0.27, 0.38],
+   "vignette": 0.42
+  },
   "deep_tunnels": {
    "_comment": "M-ARC A2: the Raskghar descent -- the DARKEST pin in the game, time-invariant (below the sewers, no daylight ever reaches it). Meaningfully darker + colder than the sewers' [0.3,0.32,0.45] so the descent visibly escalates; a stronger vignette (0.55) squeezes the readable space to a lantern's reach. Any prop lights glow at every phase intent (light_energy day=0.0 still keeps day flat, so the tunnels lean on their own cold ambience).",
    "day": [

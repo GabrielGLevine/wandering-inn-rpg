@@ -45,6 +45,11 @@ const EXPECTED_ITEMS := {
 	"parcel_watch_dispatch": [],
 	"parcel_lamp_phials": [],
 	"parcel_bluefruit_hamper": [],
+	# Magical Door plan Task D1 (issue #8): the beat-3 recovery item -- inert
+	# carried flavor by design (no combat fields, no price, kind "tool" per
+	# the parcel/field_whetstone precedent), so its card carries name +
+	# description only, zero generated effect lines.
+	"anchor_stone": [],
 }
 
 const EXPECTED_SKILLS := {
