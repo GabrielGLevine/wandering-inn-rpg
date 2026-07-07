@@ -1266,3 +1266,27 @@ The seam RIDES DP2's bounty machinery — extended, never forked:
   `test_content.gd`. Save: `accepted_delivery_id`/
   `accepted_delivery_baseline`/`delivery_failed`, additive-optional, no
   version bump.
+
+  **GH#27 fix (2026-07-07): the plain rotation signpost was missing.**
+  Ship-day DP5 only ever surfaced a rotation to the player as a SIDE
+  EFFECT of the one-shot `delivery_failed` bark — a player who turned in
+  cleanly, or who simply slept once holding no slip, got a silently
+  rotated slate with no bark at all, unlike Selys's board (which
+  signposts EVERY rotation via `board_last_seen_times_slept`,
+  independent of any failure concept the board doesn't even have).
+  Fixed by riding that exact idiom rather than inventing a new one:
+  `delivery_last_seen_times_slept` (int, additive-optional save field,
+  default 0, `board_last_seen_times_slept`'s twin) tracks the
+  `times_slept` value Vess's picker was last opened at.
+  `_open_delivery_picker_dialogue` now checks it in an `elif` AFTER the
+  `delivery_failed` branch — a sleep that both rotates the slate AND
+  fails a run shows only the more specific failure line, never both
+  barks back to back — and stamps it to the live `times_slept`
+  unconditionally afterward, exactly like the board. Vess's own line
+  ("Board turned over while you slept. Grab a slip before somebody
+  faster does.") is distinct copy from both Selys's "New paper went up
+  this morning..." and Vess's own failure bark, zero em-dashes per the
+  em-dash staging doc's barrel-voice call for Vess. `delivery_loop`'s
+  step (9) proves it: a second, failure-free sleep, positive (fires once)
+  + negative (does not re-fire on a second same-waking talk) pair,
+  mirroring step (8)'s convention for the failure bark.

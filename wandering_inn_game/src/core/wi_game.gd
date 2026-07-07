@@ -196,6 +196,19 @@ var accepted_delivery_baseline: Dictionary = {}
 ## line but boolean (a discrete failure event) rather than a rotation-clock
 ## comparison. Additive save field (tolerant default false, NO version bump).
 var delivery_failed: bool = false
+## GH#27 (delivery-slate rotation signpost): `board_last_seen_times_slept`'s
+## MISSING twin -- before this field, a slate rotation was only ever
+## signposted to the player when it ALSO happened to coincide with a failed
+## run (`delivery_failed` above); a player who turned in cleanly (or who
+## simply slept once with no slip held) got a silently-rotated slate with
+## no bark at all, unlike Selys's board. Tracks the `times_slept` value the
+## player last opened Vess's picker at -- `_open_delivery_picker_dialogue`
+## compares against the LIVE `times_slept` exactly like the board does, and
+## fires Vess's own rotation line (distinct copy/voice from Selys's) at most
+## once per rotation. Additive save field (tolerant default 0, matching
+## `times_slept`'s own default so a fresh/restored save never false-positives
+## a rotation that hasn't happened yet), NO version bump.
+var delivery_last_seen_times_slept: int = 0
 ## Social Pillar S1: per-waking "already did small talk with this NPC this
 ## waking" flags, keyed by entity id -> true. Set by `_talk_pool_line` the
 ## first time an NPC carrying a `talk_pool` is talked to in a waking, so a
@@ -1546,16 +1559,28 @@ func _interact_delivery_board(target: Dictionary) -> Dictionary:
 
 
 ## Opens Vess's slip picker (fired by her hub's "Take a slip." option,
-## vess_counter.json). The one-shot "Parcel came back on the night ledger"
-## bark (board-copy.md sec.3's run-failed line) fires here, BEFORE the
-## picker -- the same bark surface and position as Selys's "slate rotated
-## overnight" line in _open_board_picker_dialogue, keyed on the
-## `delivery_failed` flag (set by sleep()'s fail path, cleared by showing
-## the line once).
+## vess_counter.json). Two one-shot barks compete for this same surface,
+## fired BEFORE the picker, in priority order:
+##   1. The "Parcel came back on the night ledger" run-failed bark
+##      (board-copy.md sec.3), keyed on the `delivery_failed` flag (set by
+##      sleep()'s fail path, cleared by showing the line once) -- unchanged
+##      from before GH#27.
+##   2. GH#27's plain rotation signpost (Vess's own voice, distinct copy
+##      from Selys's "slate rotated overnight" line), keyed on
+##      `delivery_last_seen_times_slept` -- `_open_board_picker_dialogue`'s
+##      exact mechanism, ridden rather than re-invented. Only checked when
+##      the run-failed bark did NOT fire this open, so a sleep that both
+##      rotated the slate AND failed a run shows just the one (more
+##      specific) failure line rather than stacking two barks back to back.
+## `delivery_last_seen_times_slept` updates to the live `times_slept`
+## unconditionally at the end, exactly like the board's own seen-tracking.
 func _open_delivery_picker_dialogue() -> void:
 	if delivery_failed:
 		_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Vess", "text": "Parcel came back on the night ledger. Happens. Happens ONCE, usually. Board's still live. Take another slip and run it like you mean it."})
 		delivery_failed = false
+	elif times_slept != delivery_last_seen_times_slept:
+		_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Vess", "text": "Board turned over while you slept. Grab a slip before somebody faster does."})
+	delivery_last_seen_times_slept = times_slept
 	_begin_code_dialogue(WIBounties.build_delivery_picker_graph(delivery_board_deliveries()), "delivery_picker", "vess")
 
 

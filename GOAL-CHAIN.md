@@ -6,34 +6,19 @@ checklist) before the next opens. Never trade a clean close for
 starting the next. The user gates every taste/canon/irreversible call
 via the HANDOFF queue.**
 
-## POSITION (updated 2026-07-07 morning — re-armed post-NIGHT-GOAL)
+## POSITION (updated 2026-07-07 — INTERLUDE COMPLETE, tagging v0.3.0)
 
-Steps 1-6 are **CLOSED** (each opus-gated: M-ARC, cleanup, M-LEGIBILITY,
-M-GEAR, Skills wave, Social Pillar II). Step 7 (M-DEPTH) is content-
-complete (DP1-DP5 committed, 56 canonicals) — **DPF is the live rung**:
-opus whole-milestone review + machine-playtest rotation + close, WHICH
-WAITS for the in-flight playtest-UI wave to land first (the rotation
-must judge the fixed HUD). Then step 7.5 below, then step 8.
-
-**7.5 INTERLUDE — the playtest-response ladder (user rulings
-2026-07-07, execute before 8a):**
-- (a) The UI wave (IN FLIGHT): field legend removed, vertical centering,
-  inventory side-panel redesign (lore unlabeled), working scroll, 2-line
-  bark budget.
-- (b) Relc combat-shrink: repro lane in flight → fix dispatch from its
-  root cause.
-- (c) Em-dash reduction: corpus pass staged (Fable) → apply wave with
-  pin moves; the lint budget already binds new copy.
-- (d) PixelLab art wave: bespoke red-HAIR Lyonette (canon), inn cast
-  variety, + the standing sprite stand-in queue (sign, boards, bench,
-  boulder-prop props) — park-only generation then a wiring task.
-- (e) Queued honest debts when their surfaces open: icy_floor +
-  [Mage] [Invisibility] (cited), Erin's meal perk + Relc's spar wager
-  (per-waking dialogue seam), bounty_crab_cull (encounter bank),
-  chess-match follow-up (the Social II tease), goblins_spared counter
-  + the Rags arc runway (specs/2026-07-07-no-killing-goblins-seed.md).
-- v0.3.0 tag: after DPF + (a)-(b) land clean (user deferred the
-  auto-tag).
+Steps 1-7 are **CLOSED** (each opus-gated: M-ARC, cleanup, M-LEGIBILITY,
+M-GEAR, Skills wave, Social Pillar II, M-DEPTH — DPF closed with a
+zero-fix-first opus verdict). **§7.5 interlude COMPLETE**: GitHub issues
+#2 (UI wave), #3 (Relc figure-height retune), #4 (em-dash corpus pass),
+#5 (PixelLab art wiring) all closed 2026-07-07 via landing-commit syncs.
+Honest debts (e) live as GitHub issues #21-#27. **Planning is
+GITHUB-NATIVE** — the board (issues/milestones/labels) is the work
+queue; this file is chain-level strategy only. v0.3.0 (#6): criteria met,
+tag in flight. **NEXT RUNG: step 8a**, which OPENS with issue #7 —
+a USER-SESSION spec-brainstorm (Door/Garden earn conditions; canon-
+grounded options prepped in the issue's comments).
 
 ## The chain, in order
 

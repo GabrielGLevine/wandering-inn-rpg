@@ -157,6 +157,12 @@ extends RefCounted
 ##   `delivery_failed` (bool, default false) -- no run could have failed
 ##   before the feature existed; false means Vess's one-shot night-ledger
 ##   bark never false-fires on a restored old save.
+## (GH#27, the delivery-slate rotation signpost): ONE additive field, the
+## SAME pattern as `board_last_seen_times_slept` above -- NOT in `required`,
+## NO version bump:
+##   `delivery_last_seen_times_slept` (int, default 0) -- matches
+##   `times_slept`'s own default, so a restored old save never false-positives
+##   Vess's rotation bark on its very first post-load picker open.
 const VERSION := 5
 
 
@@ -198,6 +204,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"accepted_delivery_id": game.accepted_delivery_id,
 		"accepted_delivery_baseline": game.accepted_delivery_baseline.duplicate(true),
 		"delivery_failed": game.delivery_failed,
+		"delivery_last_seen_times_slept": game.delivery_last_seen_times_slept,
 	}}
 
 
@@ -355,6 +362,11 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 		return false
 	if s.has("delivery_failed") and not (s["delivery_failed"] is bool):
 		return false
+	# delivery_last_seen_times_slept (GH#27) follows the SAME additive-optional
+	# pattern as board_last_seen_times_slept above -- default 0 when absent,
+	# rejected if present-but-non-numeric.
+	if s.has("delivery_last_seen_times_slept") and not (s["delivery_last_seen_times_slept"] is int or s["delivery_last_seen_times_slept"] is float):
+		return false
 	# inventory/equipped/container_state/actions_since_sleep (M7 Task E2) ARE
 	# in `required` above (this is a version-bumped addition, not the
 	# additive-optional pattern) -- still type-checked here like every other
@@ -446,5 +458,6 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.accepted_delivery_id = String(s.get("accepted_delivery_id", ""))
 	game.accepted_delivery_baseline = (s.get("accepted_delivery_baseline", {}) as Dictionary).duplicate(true)
 	game.delivery_failed = bool(s.get("delivery_failed", false))
+	game.delivery_last_seen_times_slept = int(s.get("delivery_last_seen_times_slept", 0))
 	game.reprime_quests()
 	return true
