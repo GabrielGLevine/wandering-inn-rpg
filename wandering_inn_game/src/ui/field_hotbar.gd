@@ -37,103 +37,25 @@ extends CanvasLayer
 ## a classless cold start (an empty bar renders zero-width/invisible chrome; the
 ## event still fires, which is the least-noisy option that stays QA-observable).
 ##
-## M-LEGIBILITY L3: a small readout panel lists every rendered slot's
-## cost/effect summary -- v1's direct-fire design has no aim/selection step
-## (unlike combat's single highlighted-slot info line), so ALL known field
-## skills get one stacked row each rather than one line for "the current
-## slot". Each row is `_readout_line`'s "Name — <L1 effect line> —
-## description" (WIEffectText.skill_effect_lines, never hand-composed -- same
-## formatter combat_hud.gd's slot-info line and journal.gd's revealed-skill
-## row now use). Every currently-shipped field skill is exploration-only (no
-## `effect` key), so `skill_effect_lines` returns `[]` for all of them today
-## and every row degrades to "Name — description" -- the readout is still
-## real infrastructure (a future field skill with a combat-shaped effect, or
-## a status a field skill applies, sizes onto this seam with zero code
-## changes here). No `_bb_escape` needed: `_readout_label` is a plain Label
-## (same reasoning as the slot text-fallback above -- bracketed names render
-## as literal text, not BBCode). UI_FIELD_HOTBAR_RENDERED's payload carries
-## `readout_lines` (parallel to the rendered slots, in the same key order,
-## the FULL untrimmed generated text) so QA can assert the exact generated
-## content structurally, no OCR -- independent of whatever the panel visually
-## fits.
-##
-## PLACEMENT (windowed-verified): anchored BOTTOM_LEFT, stacked directly
-## above message_layer.gd's hint strip (y[-36,-8]) rather than centered above
-## the hotbar -- a first pass centered above the bar (like combat's readout)
-## put its right edge inside the toast panel's BOTTOM_RIGHT corner
-## (TOAST_OFFSETS_DEFAULT x[width-472,width-24]) at 3 slots, a real overlap
-## caught by this task's own windowed screenshot. BOTTOM_LEFT at this width
-## (528px right edge) stays clear of that corner regardless of toast state
-## (default or raised-for-dialogue) and of the dialogue panel (y[-220,-164])
-## at every viewport width this repo assumes (1280 reference, same as every
-## other hardcoded panel geometry).
-##
-## OVERFLOW (Skills Wave K2b RESTRUCTURE): budgeted in WRAPPED lines exactly
-## like `combat_hud.gd`'s feed panel (D2-7 #6: cut words, never widen the UI)
-## -- `_wrapped_line_count`/`_line_capacity`/`_fit_to_lines` are the same
-## font-metric-driven helpers, duplicated per-file by the same M6.5
-## zero-cross-dependency idiom (see `_bb_escape`'s doc comments elsewhere).
-## `_fit_readout` tries the FULL detailed per-row rendering first (name +
-## effect + description, one row per slot) -- unchanged from pre-K2b, and
-## still what's drawn for every fixture where it already fit. The K2 fix wave
-## previously SILENTLY DROPPED trailing rows once the budget ran out (a
-## 3-skill readout with one long multi-line row, e.g. [Stealth]'s cast
-## description, could drop a WHOLE skill -- [Appraise Foe] -- with zero on-screen
-## trace). K2b's machine-playtest recommendation ("collapse to icons" for
-## this trade) is applied here as: if the detailed pass would drop even ONE
-## row, ALL rows collapse instead to a compact "N [Name]" strip (numbered
-## bracketed display names only, no effect/description text -- the real
-## icons already sit on the HOTBAR itself; this panel only ever supplemented
-## them) that packs far more entries per physical line. If even the compact
-## strip can't fit everyone, its LAST line is word-cut with an ellipsis --
-## the "…" is itself the "there's more" signal, never a silent vanish.
-## `readout_lines` in the emitted event is UNCHANGED either way (always the
-## full untrimmed per-row text) -- only the DRAWN label text differs.
+## PLAYTEST WAVE (uiwave2, item 1): the ALWAYS-ON bottom-left legend/readout
+## panel (M-LEGIBILITY L3, previously rendered here) is REMOVED per user
+## ruling -- the journal's loadout UI already surfaces per-skill cost/effect
+## info, and the hotbar slots keep their key-hint numerals, so the panel was
+## pure redundancy competing for screen space. `_readout_line`/
+## `_load_combatants_catalog` (the pure TEXT GENERATORS, not the panel widget)
+## are KEPT and still feed `readout_lines` on the emitted
+## UI_FIELD_HOTBAR_RENDERED payload -- disclosed choice: `field_skills_loop`
+## and `rogue_earn_loop` pin `readout_lines`' exact generated strings
+## structurally (grepped before this change), so the smaller, honest diff is
+## "keep generating the data, stop drawing it" rather than breaking those
+## QA scripts' pins. A future consumer (or a re-pin wave) can drop the key
+## outright once nothing asserts on it. All PANEL/FIT machinery (the panel
+## Control, its Label, the wrapped-line budget/collapse-to-compact-strip
+## fallback, and the per-modal show/hide gating) is deleted outright -- there
+## is no more on-screen surface for any of it to fit or hide.
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
-# Sized wide (652) so every currently-shipped field skill's readout row fits
-# on ONE wrapped line at "Small" (font_size 12) metrics -- measured directly
-# (godot --script, font.get_multiline_string_size): the longest row
-# ([Appraise Foe]'s) needs 620px to avoid a 2-line wrap; a first pass at 488px
-# wrapped it to 2 lines and the wrapped 2nd line rendered outside the
-# parchment's visible art (caught windowed, see the file doc comment's
-# OVERFLOW note) even though the raw font-metric capacity math said it
-# should fit -- the STRIP art's real safe text band is smaller than its
-# nominal Control rect. Widening to avoid the wrap in the first place sidesteps
-# that art-bbox uncertainty entirely, with `_fit_readout`'s cut-based budget
-# as the fallback for any future longer description.
-const READOUT_SIZE := Vector2(652.0, 110.0)
-const READOUT_TEXT_WIDTH := 620.0
-# K2 fix wave: RETUNED 90 -> 70. [Stealth]'s row is the first shipped field-skill
-# readout row with a real effect segment (an active-cast Skill, not a plain
-# flavor description) -- at 90 the nominal font-metric capacity (4 wrapped
-# lines: 90px + 3px line_spacing over a 20px line pitch) exactly matched the
-# 3-fixture-skill readout's total wrapped-line usage (1 + 2 + 1 = 4), so
-# `_fit_readout` never engaged its cut/drop fallback at all -- it judged
-# everything "fit" and rendered all 3 rows verbatim. A windowed
-# `stealth_loop` screenshot (qa_output/stealth_loop/00_pre_sneak.png) caught
-# the real result: the 3rd row ([Appraise Foe]) rendered with its text struck
-# through the parchment's decorative bottom border/fold, genuinely illegible
-# there -- a pixel scan of that screenshot found the STRIP art's actual
-# legible cream band ends around y-offset ~77px into the 110px panel, not 90.
-# 70 yields a 3-wrapped-line capacity (int((70+3)/20) == 3), comfortably under
-# the measured ~77px edge; re-verified windowed with the same fixture: rows 1
-# ([Basic Cleaning], 1 line) + 2 ([Stealth], 2 lines) now consume the full
-# budget and row 3 ([Appraise Foe]) is dropped by `_fit_readout`'s existing
-# budget-exhausted path (no partial word-cut needed, remaining reaches 0
-# exactly). NOTE (KF): this describes the DETAILED pass's internal
-# budgeting only -- since K2b, a pass that would drop any row falls back
-# to the compact name strip instead, so no row is ever silently dropped
-# on screen. `readout_lines` in `UI_FIELD_HOTBAR_RENDERED`'s payload is
-# UNCHANGED (always the full untrimmed set) so no QA structural assertion
-# is affected -- this only changes what's drawn on screen.
-const READOUT_TEXT_HEIGHT := 70.0
 
 var _hotbar: WIHotbar
-var _readout_panel: Control
-## True while a modal panel (dialogue/journal/inventory/pause) is open -- the
-## readout hides for the modal's lifetime (L5 fix wave; see _on_domain_event).
-var _modal_open := false
-var _readout_label: Label
 ## The ordered field-skill ids currently shown (slot i == this[i]). The SINGLE
 ## source of truth for the number-key -> skill mapping: world.gd's input routing
 ## queries `skill_for_slot(n)` against this same list, so a pressed number can
@@ -150,24 +72,6 @@ func _ready() -> void:
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
-	# M-LEGIBILITY L3 readout: BOTTOM_LEFT, stacked above the hint strip --
-	# see the file doc comment's PLACEMENT note for why this replaced an
-	# initial centered-above-the-hotbar placement (toast-corner overlap at
-	# 3 slots, caught windowed).
-	_readout_panel = UIChrome.make_texture_panel(UIChrome.PARCHMENT_STRIP)
-	_readout_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	_readout_panel.custom_minimum_size = READOUT_SIZE
-	_readout_panel.size = READOUT_SIZE
-	UIChrome.set_offsets(_readout_panel, 8.0, -40.0 - READOUT_SIZE.y, 8.0 + READOUT_SIZE.x, -40.0)
-	_readout_panel.hide()
-	var readout_margin := MarginContainer.new()
-	UIChrome.full_rect(readout_margin)
-	UIChrome.add_margins(readout_margin, 16, 6, 16, 6)
-	_readout_panel.add_child(readout_margin)
-	_readout_label = UIChrome.make_label("", "Small")
-	_readout_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	readout_margin.add_child(_readout_label)
-	root.add_child(_readout_panel)
 	_hotbar = HOTBAR_SCRIPT.new()
 	_hotbar.name = "FieldHotbarBar"
 	root.add_child(_hotbar)
@@ -196,28 +100,15 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 			visible = false
 		WIEvents.UI_COMBAT_HIDDEN:
 			visible = true
-		# M-LEGIBILITY L5 fix wave: the readout panel (BOTTOM_LEFT) overlaps the
-		# grown dialogue stall panel (L2) and the journal/inventory parchment --
-		# caught by L5's windowed shop shot, where it hid three of Krshia's buy
-		# options. While ANY modal panel is open the number keys are inert
-		# (world.gd's _movement_gated), so the readout is dead info anyway: hide
-		# it for the modal's lifetime. The slot bar itself stays (small, bottom-
-		# center, never collided).
-		WIEvents.UI_DIALOGUE_SHOWN, WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_INVENTORY_SHOWN, WIEvents.UI_PAUSE_SHOWN:
-			_modal_open = true
-			_readout_panel.hide()
-		WIEvents.UI_DIALOGUE_HIDDEN, WIEvents.UI_JOURNAL_HIDDEN, WIEvents.UI_INVENTORY_HIDDEN, WIEvents.UI_PAUSE_HIDDEN:
-			_modal_open = false
-			_readout_panel.visible = not _field_skills.is_empty()
 
 
 ## Rebuilds the bar from the PC's current known field-tagged skills and hands the
 ## slot list to WIHotbar. `-1` selected index == the direct-fire resting state
 ## (no slot highlighted). Emits UI_FIELD_HOTBAR_RENDERED after actually
 ## rendering, per the bus's "UI confirms it drew something" convention.
-## M-LEGIBILITY L3: also rebuilds the readout panel (see the file doc comment)
-## from the SAME `_field_skills` list this method just built, so the readout
-## can never list a skill the rendered slots don't also show.
+## `readout_lines` is still generated (see the file doc comment's PLAYTEST WAVE
+## note) even though nothing draws it on screen any more -- QA pins its exact
+## text.
 func _render() -> void:
 	_field_skills = _collect_field_skills()
 	var slots: Array = []
@@ -243,11 +134,6 @@ func _render() -> void:
 		readout_lines.append("%d  %s" % [number, _readout_line(sk, id, combatants_catalog)])
 		number += 1
 	_hotbar.render(slots, -1)
-	_readout_label.text = "\n".join(_fit_readout(readout_lines))
-	_readout_panel.visible = not readout_lines.is_empty() and not _modal_open
-	# `readout_lines` here is the FULL, untrimmed generated text -- the payload
-	# is the structural QA-assertable proof, independent of the visual budget
-	# `_fit_readout` applies to the drawn label.
 	ObservableBus.emit_domain_event(WIEvents.UI_FIELD_HOTBAR_RENDERED, {"slots": _field_skills.size(), "readout_lines": readout_lines})
 
 
@@ -256,7 +142,9 @@ func _render() -> void:
 ## is the ONLY source of the mechanical segment (never hand-composed); every
 ## currently-shipped field skill is exploration-only (no `effect` key), so it
 ## returns `[]` and this degrades to "Name — description" (the item-card
-## idiom: no effect line, no dangling dash).
+## idiom: no effect line, no dangling dash). Text generator only (the file
+## doc comment's PLAYTEST WAVE note) -- feeds `readout_lines` on the emitted
+## event; no longer drawn anywhere.
 func _readout_line(sk: Dictionary, id: String, combatants_catalog: Array = []) -> String:
 	var display := String(sk.get("display_name", id))
 	var desc := String(sk.get("description", ""))
@@ -288,106 +176,6 @@ func _load_combatants_catalog() -> Array:
 	if parsed is Dictionary and (parsed as Dictionary).has("combatants"):
 		return (parsed as Dictionary)["combatants"]
 	return []
-
-
-## Skills Wave K2b RESTRUCTURE: tries the detailed per-row fit first (see
-## `_fit_readout_detailed`'s own doc comment); if that would drop even one
-## row, falls back to the compact "collapse to icons" strip instead of ever
-## silently dropping a whole skill with no on-screen trace (see the file doc
-## comment's OVERFLOW section for the full rationale). Returns the RENDERED
-## (possibly cut, never silently-vanished) line list; `readout_lines` in the
-## emitted event always stays the full untrimmed text either way.
-func _fit_readout(lines: Array) -> Array:
-	var capacity := _line_capacity(_readout_label, READOUT_TEXT_HEIGHT)
-	var detailed := _fit_readout_detailed(lines, capacity)
-	if detailed.size() == lines.size():
-		return detailed
-	return _fit_readout_compact(capacity)
-
-
-## The pre-K2b per-row behavior (word-cuts each row to fit, DROPS trailing
-## rows once the budget is exhausted) -- still the preferred rendering when
-## it manages to keep every row; `_fit_readout` falls back to the compact
-## strip only when this WOULD drop something (checked by comparing sizes).
-func _fit_readout_detailed(lines: Array, capacity: int) -> Array:
-	var out: Array = []
-	var used := 0
-	for line: String in lines:
-		var remaining := capacity - used
-		if remaining <= 0:
-			break
-		var fitted := _fit_to_lines(_readout_label, String(line), READOUT_TEXT_WIDTH, remaining)
-		out.append(fitted)
-		used += _wrapped_line_count(_readout_label, fitted, READOUT_TEXT_WIDTH)
-	return out
-
-
-## Skills Wave K2b RESTRUCTURE: the "collapse to icons" fallback -- one
-## "N [Name]" token per rendered slot (numbered bracketed display name only,
-## no effect/description text), joined into a single packed string and
-## word-cut to the panel's capacity exactly like a detailed row would be.
-## Reads `_field_skills` directly (the SAME list `_render` just built) rather
-## than re-deriving names from the detailed `lines` array, since those already
-## carry the full "Name — effect — description" text that isn't safe to
-## re-split back into just the name. Always returns exactly ONE array
-## element (it may itself wrap across up to `capacity` physical lines via the
-## label's autowrap, same as any single detailed row already could) -- if
-## even this can't fit every skill, `_fit_to_lines` word-cuts it with an
-## ellipsis, which is itself the "there's more" signal (never a silent
-## vanish, unlike the pre-K2b drop).
-func _fit_readout_compact(capacity: int) -> Array:
-	var tokens: Array = []
-	var number := 1
-	for id: String in _field_skills:
-		var sk: Dictionary = Game.sim.skills.get(id, {})
-		tokens.append("%d %s" % [number, String(sk.get("display_name", id))])
-		number += 1
-	var joined := "   ".join(tokens)
-	return [_fit_to_lines(_readout_label, joined, READOUT_TEXT_WIDTH, capacity)]
-
-
-## Duplicated from `combat_hud.gd`'s `_wrapped_line_count` (M6.5
-## zero-cross-dependency idiom: tiny pure helpers stay per-file rather than
-## sharing a home). Wrapped-line count for `text` at `width` using `label`'s
-## resolved theme font/size.
-func _wrapped_line_count(label: Label, text: String, width: float) -> int:
-	if text == "":
-		return 0
-	var font := label.get_theme_font("font")
-	var font_size := label.get_theme_font_size("font_size")
-	var size := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)
-	var line_height := font.get_height(font_size)
-	if line_height <= 0.0:
-		return 1
-	return max(int(round(size.y / line_height)), 1)
-
-
-## Duplicated from `combat_hud.gd`'s `_line_capacity`. How many wrapped lines
-## `label` actually fits at `height`, from real font metrics.
-func _line_capacity(label: Label, height: float) -> int:
-	var font := label.get_theme_font("font")
-	var font_size := label.get_theme_font_size("font_size")
-	var line_height := font.get_height(font_size)
-	if line_height <= 0.0:
-		return 1
-	var line_spacing := float(label.get_theme_constant("line_spacing"))
-	var pitch := line_height + line_spacing
-	return max(int((height + line_spacing) / pitch), 1)
-
-
-## Duplicated from `combat_hud.gd`'s `_fit_to_lines`. Cuts whole words and
-## appends an ellipsis until `text` fits within `max_lines` wrapped lines at
-## `width`. Returns `text` unchanged if it already fits.
-func _fit_to_lines(label: Label, text: String, width: float, max_lines: int) -> String:
-	if _wrapped_line_count(label, text, width) <= max_lines:
-		return text
-	var words := text.split(" ")
-	while words.size() > 1:
-		words.remove_at(words.size() - 1)
-		var candidate := " ".join(words) + "…"
-		if _wrapped_line_count(label, candidate, width) <= max_lines:
-			return candidate
-	return (words[0] + "…") if words.size() > 0 else text
 
 
 ## Skills Wave Task K2b: the field hotbar's slot list now comes straight from

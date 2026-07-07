@@ -83,6 +83,25 @@ const RIBBON_PATCH_MARGIN_Y := 16
 ## Art-bbox regions for the floating-art chrome textures (measured via PIL).
 const PARCHMENT_REGION := Rect2(36, 31, 120, 131)
 const BANNER_H_REGION := Rect2(33, 47, 126, 123)
+## UIWAVE2 title-centering fix (controller finding on the wave's first
+## pass): the blue button pills ALSO float in their 192x192 canvas -- the
+## UNPRESSED art occupies rows 0..183 / cols 7..184 (8 empty canvas rows at
+## the BOTTOM), the PRESSED art rows 4..183 / cols 5..186 (4 empty top + 8
+## empty bottom). Measured via PIL alpha scan 2026-07-07; every bbox edge
+## row is solid alpha-255 pill border, so the crop loses zero visible art.
+## Without the crop, PATCH_MARGIN's 24px corner bands rendered those empty
+## rows 1:1 into the control rect (~8px dead space at a 44px row's bottom),
+## so a rect-centered label sat ~4px LOW against the VISIBLE pill band on
+## unpressed rows -- while the pressed art's split 4-top/8-bottom emptiness
+## roughly halved the error and masked it on the selected row (exactly the
+## user-reported title-menu read: "New Game" centered, "Continue"/"Quit"
+## riding the pill's bottom edge). With the region crop the pill fills the
+## whole control rect, so label centering is honest in BOTH states wherever
+## these buttons are used (title_screen.gd, char_creation.gd). Texture
+## SWAPS on cursor move must go through `set_patch_texture` (below) so the
+## region follows the texture -- the two bboxes differ.
+const BLUE_BUTTON_REGION := Rect2(7, 0, 178, 184)
+const BLUE_BUTTON_PRESSED_REGION := Rect2(5, 4, 182, 180)
 
 
 static func apply_theme(control: Control) -> void:
@@ -186,6 +205,19 @@ static func make_label(text: String = "", type_variation: String = "") -> Label:
 	var label := Label.new()
 	label.text = text
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# UIWAVE2 vertical-centering audit (item 2): defaults to
+	# VERTICAL_ALIGNMENT_CENTER -- Label's own engine default is TOP, which
+	# reads as bottom-heavy clipping/crowding whenever a label sits inside a
+	# taller fixed-height chrome rect (the title screen's New Game/Continue
+	# rows were the playtest-reported exemplar). Sites that already set
+	# CENTER explicitly (title_screen.gd's rows/title, the toast label,
+	# inventory's ribbon title) are unaffected; this makes it the shared
+	# default so a site that forgot to set it (message_layer.gd's
+	# dialogue_line bark + hint strip, before this fix) can't silently
+	# regress back to TOP. A caller with a genuine reason to top-align (none
+	# exist today) can still override `label.vertical_alignment` after
+	# construction.
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	if type_variation != "":
 		label.theme_type_variation = type_variation
 	return label
@@ -223,7 +255,24 @@ static func _auto_region(texture: Texture2D) -> Rect2:
 		return PARCHMENT_REGION
 	if _is_same_art(texture, PARCHMENT_STRIP):
 		return BANNER_H_REGION
+	if _is_same_art(texture, BLUE_BUTTON):
+		return BLUE_BUTTON_REGION
+	if _is_same_art(texture, BLUE_BUTTON_PRESSED):
+		return BLUE_BUTTON_PRESSED_REGION
 	return Rect2()
+
+
+## UIWAVE2 title-centering fix: swap a NinePatchRect's texture AND re-derive
+## its art-bbox region together. The title/creation menus swap between
+## BLUE_BUTTON and BLUE_BUTTON_PRESSED on cursor move by assigning
+## `.texture` directly -- but those two textures have DIFFERENT measured
+## bboxes (see BLUE_BUTTON_REGION's doc comment), so a bare texture swap
+## would leave the OTHER texture's region in place (rendering 4px of the
+## pressed art's empty top canvas, or cutting 4px off the unpressed pill).
+## Every texture swap on a chrome patch must route through here.
+static func set_patch_texture(patch: NinePatchRect, texture: Texture2D) -> void:
+	patch.texture = texture
+	patch.region_rect = _auto_region(texture)
 
 
 ## BBCode-escapes literal `[`/`]` (e.g. skill/combatant display names like

@@ -230,7 +230,11 @@ func _refresh_rows() -> void:
 		var panel := label.get_parent().get_parent() as Control
 		for child: Node in panel.get_children():
 			if child is NinePatchRect:
-				(child as NinePatchRect).texture = UIChrome.BLUE_BUTTON_PRESSED if i == _cursor else UIChrome.BLUE_BUTTON
+				# UIWAVE2 title-centering fix: swap through set_patch_texture
+				# so the measured art-bbox region follows the texture (the two
+				# button arts have different bboxes -- see UIChrome's
+				# BLUE_BUTTON_REGION doc comment).
+				UIChrome.set_patch_texture(child as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if i == _cursor else UIChrome.BLUE_BUTTON)
 
 
 func _confirm() -> void:

@@ -34,14 +34,30 @@ const QA_TOAST_HOLD_SECONDS := 0.4
 ## makes that script robust to EITHER emission order regardless.
 const QA_TOAST_HOLD_HEADLESS_SECONDS := 0.05
 const DIALOGUE_SECONDS := 3.0
-## Dialogue panel interior text box -- 700x56 panel minus the MarginContainer's
-## 22/12px margins (see `_dialogue_panel`/`dialogue_margin` below). M-FP F fix
-## (docs/VISUAL-LOG.md "message panels clip the last wrapped line"): a long
-## one-liner (the Liscor gate guard's) wraps past this panel's fixed height
-## and its 2nd line got half-cut under the panel chrome. D2-7 #6 is binding:
-## never widen the panel -- truncate with an ellipsis instead (_fit_dialogue_line).
+## Dialogue panel interior text box width -- 700 panel minus the
+## MarginContainer's 22px left+right margins (see `_dialogue_panel`/
+## `dialogue_margin` below). M-FP F fix (docs/VISUAL-LOG.md "message panels
+## clip the last wrapped line"): a long one-liner (the Liscor gate guard's)
+## wraps past this panel's fixed height and its 2nd line got half-cut under
+## the panel chrome. D2-7 #6 is binding: never widen the panel -- truncate
+## with an ellipsis instead (_fit_dialogue_line).
 const DIALOGUE_TEXT_WIDTH := 656.0
-const DIALOGUE_TEXT_HEIGHT := 32.0
+## UIWAVE2 item 5 (bark 2-line budget): the panel used to fit only ONE
+## wrapped line (32px content height minus the margins gave `_line_capacity`
+## exactly 1 at this label's real font metrics), so a real bark that wraps to
+## 2 lines -- e.g. Lyonette's talk_pool line ("Yes, I work here. No, I did
+## not always. That is the whole story, and you may have it for the price of
+## a nod.") -- truncated mid-sentence well before its punchline. Extends the
+## same "reserve real pixels measured off the font metrics" treatment
+## `_reserve_status_label_height` (inventory.gd) and `_toast_panel_height_for`
+## (this file, NIGHT polish wave item 2) already use elsewhere: capacity is a
+## budget in WRAPPED LINES (2), not a guessed pixel height.
+## `_dialogue_text_height`/`_resize_dialogue_panel` (computed once in
+## `_ready()`, from `_dialogue_label`'s real resolved font) derive the actual
+## content height and grow `_dialogue_panel` upward (BOTTOM offset held
+## fixed) to fit it -- this const now only names the WRAPPED-LINE budget, not
+## a pixel height.
+const DIALOGUE_LINE_CAPACITY := 2
 
 ## Toast panel offsets (BOTTOM_RIGHT anchor). PF VISUAL-LOG drain (the
 ## "gift toast right-edge clip" item -- mis-diagnosed as an off-screen clip; the
@@ -117,6 +133,11 @@ var _toast_panel: Control
 var _toast_label: Label
 var _dialogue_panel: Control
 var _dialogue_label: Label
+## UIWAVE2 item 5: the real content-height budget for `DIALOGUE_LINE_CAPACITY`
+## wrapped lines, derived once in `_ready()` from `_dialogue_label`'s resolved
+## font metrics (see `DIALOGUE_LINE_CAPACITY`'s doc comment). Replaces the old
+## hardcoded `DIALOGUE_TEXT_HEIGHT` const.
+var _dialogue_text_height := 0.0
 var _hint_panel: Control
 var _hint_label: Label
 
@@ -234,9 +255,6 @@ func _ready() -> void:
 
 	_dialogue_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_dialogue_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	_dialogue_panel.custom_minimum_size = Vector2(700, 56)
-	_dialogue_panel.size = Vector2(700, 56)
-	UIChrome.set_offsets(_dialogue_panel, 36.0, -220.0, 736.0, -164.0)
 	_dialogue_panel.hide()
 	var dialogue_margin := MarginContainer.new()
 	UIChrome.full_rect(dialogue_margin)
@@ -246,6 +264,13 @@ func _ready() -> void:
 	_dialogue_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialogue_margin.add_child(_dialogue_label)
 	root.add_child(_dialogue_panel)
+	# UIWAVE2 item 5: must run AFTER add_child (theme lookups need
+	# `_dialogue_label` already inside the themed tree, same ordering
+	# requirement as inventory.gd's `_reserve_status_label_height`) --
+	# derives the panel's real size from `DIALOGUE_LINE_CAPACITY` wrapped
+	# lines of `_dialogue_label`'s actual font metrics, replacing the old
+	# hardcoded 700x56/DIALOGUE_TEXT_HEIGHT=32 (1-line) constants.
+	_resize_dialogue_panel()
 
 	_hint_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_hint_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
@@ -383,6 +408,29 @@ func _resize_toast_panel(text: String) -> void:
 	_apply_toast_position()
 
 
+## UIWAVE2 item 5: sizes `_dialogue_panel` ONCE (at `_ready()` time, not
+## per-message like the toast panel above -- the bark budget is a FIXED
+## 2-line cap, not a per-text grow) to fit `DIALOGUE_LINE_CAPACITY` wrapped
+## lines of `_dialogue_label`'s real font metrics, then repositions the panel
+## so its BOTTOM edge stays exactly where it always was (-164.0, same as the
+## pre-fix hardcoded offset) -- the panel grows UPWARD only, identical to how
+## the toast panel grows (see `_apply_toast_position`'s doc comment), so nothing
+## below it (the hint strip, the field hotbar) is encroached on.
+func _resize_dialogue_panel() -> void:
+	var font := _dialogue_label.get_theme_font("font")
+	var font_size := _dialogue_label.get_theme_font_size("font_size")
+	var line_spacing := float(_dialogue_label.get_theme_constant("line_spacing"))
+	var pitch := font.get_height(font_size) + line_spacing
+	_dialogue_text_height = DIALOGUE_LINE_CAPACITY * pitch - line_spacing
+	# 12 + 12 = the dialogue_margin's own top+bottom content margins (see
+	# `_ready()`'s `UIChrome.add_margins(dialogue_margin, 22, 12, 22, 12)`).
+	var panel_height := _dialogue_text_height + 24.0
+	_dialogue_panel.custom_minimum_size = Vector2(700.0, panel_height)
+	_dialogue_panel.size = Vector2(700.0, panel_height)
+	const DIALOGUE_BOTTOM := -164.0
+	UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
+
+
 ## Appends to the toast queue and (if no drain is already in flight) starts
 ## one. Safe to call re-entrantly -- see `_toast_queue`'s doc comment above.
 func _queue_toast(text: String) -> void:
@@ -501,7 +549,7 @@ func _line_capacity(label: Label, height: float) -> int:
 ## appends an ellipsis until `text` fits the dialogue panel's real wrapped-
 ## line capacity. Returns `text` unchanged if it already fits.
 func _fit_dialogue_line(text: String) -> String:
-	var capacity := _line_capacity(_dialogue_label, DIALOGUE_TEXT_HEIGHT)
+	var capacity := _line_capacity(_dialogue_label, _dialogue_text_height)
 	if _wrapped_line_count(_dialogue_label, text, DIALOGUE_TEXT_WIDTH) <= capacity:
 		return text
 	var words := text.split(" ")

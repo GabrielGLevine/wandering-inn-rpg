@@ -32,8 +32,42 @@ extends CanvasLayer
 ## is created lazily by world.gd AFTER Main._spawn_ui_layers() adds this
 ## panel, so an explicit higher layer is required to paint over world-space
 ## name labels regardless of add order.
+##
+## UIWAVE2 item 3 (user-ratified side-panel redesign): the carried list is now
+## NAME-ONLY per row (plus the "[Equipped]" marker) -- every mechanical detail
+## (effect lines, lore, description) moved to a SELECTION-DRIVEN detail column
+## beside the list (`_detail_box`, built in `_ready()`'s HBox `body`), refreshed
+## by `_render_detail()` on every cursor move / rebuild. The literal "Lore — "
+## text prefix is gone; lore now reads as flavor purely through PLACEMENT
+## (its own row, between the effect lines and the description) and STYLING
+## (the new `"Lore"` theme type variation, wi_ui_theme.tres -- dimmer/
+## desaturated brown at Small's font size, distinct from both the solid dark
+## body color and Small's description-prose look). `_rendered_effect_lines()`
+## (the `ui_inventory_shown` payload's `item_effect_lines`, one array per
+## CARRIED item in list order) is UNCHANGED -- it was already independent of
+## how/where the effect lines are drawn on screen, so no QA re-pin was needed
+## for it.
+##
+## UIWAVE2 item 4 (overflow scroll fix): `_scroll`'s `mouse_filter` used to be
+## `IGNORE` (inherited from the old full-rect Control convention this file's
+## other panels use for non-interactive chrome) -- but that also silently
+## swallowed real mouse-wheel scroll input aimed at the ScrollContainer,
+## which is exactly what the user reported ("couldn't scroll"). Left at its
+## Control default (`STOP`) so wheel/drag scrolling actually reaches the
+## container; `ensure_control_visible` on cursor move is UNCHANGED (still the
+## primary keyboard-driven navigation path) and both scroll containers
+## (`_scroll` for the list, `_detail_scroll` for the detail column) now run
+## `vertical_scroll_mode = SCROLL_MODE_SHOW_ALWAYS` so a visible scrollbar
+## affordance is always on screen whenever there's more to see, not just
+## discoverable by accident.
 
-const PANEL_SIZE := Vector2(640.0, 560.0)
+## UIWAVE2 item 3 (side-panel redesign): widened 640 -> 860 so the carried
+## list (name-only rows now) and the new selection-driven detail column both
+## get comfortable width side by side -- see the HBox body built in `_ready()`.
+const PANEL_SIZE := Vector2(860.0, 560.0)
+## Fixed width of the LEFT (carried-list) column; the detail column on the
+## right takes whatever's left of the content area.
+const LIST_WIDTH := 240.0
 
 ## Fix wave 2 (VISUAL-LOG "item card's last lore line rides the panel's
 ## bottom fold"): extra bottom clearance reserved for `_scroll` alone (via a
@@ -98,6 +132,10 @@ const STATUS_LABEL_RESERVED_LINES := 2
 ## (the cursor still moves) but never actually visible.
 var _scroll: ScrollContainer
 var _items_box: VBoxContainer
+## UIWAVE2 item 3: the selection-driven detail column beside the list --
+## see `_render_detail()`.
+var _detail_scroll: ScrollContainer
+var _detail_box: VBoxContainer
 var _item_ids: Array[String] = []
 var _cursor := 0
 
@@ -175,29 +213,61 @@ func _ready() -> void:
 	# theme instead of `wi_ui_theme.tres` and reserve the wrong height.
 	_reserve_status_label_height()
 
-	# Carried list below, in a ScrollContainer as the overflow safety net --
-	# same idiom as journal.gd's RichTextLabel (scroll_active=true) rather
-	# than the combat-feed/dialogue-panel wrapped-line eviction: item count
-	# started at the spec's 8-item catalog (no stacking) and has since grown
-	# to a 19-item full catalog (M-GEAR G2) -- each row's prose still wraps
-	# via AUTOWRAP_WORD_SMART, never truncates, and `_rebuild_items` below
-	# scrolls the cursor row into view every rebuild so the safety net stays
-	# genuinely reachable by keyboard, not just non-clipping.
+	# UIWAVE2 item 3: carried list (LEFT) + selection-driven detail column
+	# (RIGHT), side by side -- see the file doc comment's redesign note.
+	var body := HBoxContainer.new()
+	body.add_theme_constant_override("separation", 16)
+	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	stack.add_child(body)
+
+	# LEFT: the carried list, in a ScrollContainer as the overflow safety net
+	# -- item count started at the spec's 8-item catalog (no stacking) and
+	# has since grown to a 19-item full catalog (M-GEAR G2). Rows are now
+	# NAME-ONLY (+ "[Equipped]" marker) -- the mechanical/lore/description
+	# detail moved to `_detail_box` on the right (UIWAVE2 item 3), and
+	# `_rebuild_items` still scrolls the cursor row into view every rebuild
+	# so the safety net stays genuinely reachable by keyboard, not just
+	# non-clipping. UIWAVE2 item 4: mouse_filter left at Control's own
+	# default (STOP, not IGNORE) so real mouse-wheel/drag scroll input
+	# actually reaches the container (see the file doc comment), and
+	# `vertical_scroll_mode` forced SHOW_ALWAYS for a persistent visible
+	# scroll affordance.
 	_scroll = ScrollContainer.new()
+	_scroll.custom_minimum_size = Vector2(LIST_WIDTH, 0.0)
+	# No horizontal size flag override -- Control's own default (SIZE_FILL,
+	# not EXPAND) means the HBox gives this column exactly its
+	# custom_minimum_size width and hands all the EXTRA width to the detail
+	# column's SIZE_EXPAND_FILL sibling instead.
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	stack.add_child(_scroll)
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
+	body.add_child(_scroll)
 	_items_box = VBoxContainer.new()
 	_items_box.add_theme_constant_override("separation", 4)
 	_items_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_scroll.add_child(_items_box)
 
+	# RIGHT: the detail column for whatever item the cursor is currently on
+	# (UIWAVE2 item 3) -- also scrollable (same mouse_filter/scroll-mode fix
+	# as the list) as a safety net for a long description/lore combination
+	# at this column's narrower width.
+	_detail_scroll = ScrollContainer.new()
+	_detail_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_detail_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_detail_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_detail_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
+	body.add_child(_detail_scroll)
+	_detail_box = VBoxContainer.new()
+	_detail_box.add_theme_constant_override("separation", 6)
+	_detail_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_detail_scroll.add_child(_detail_box)
+
 	# See SCROLL_BOTTOM_INSET's doc comment above: a fixed-height spacer
-	# AFTER the scroll, same "shrink the EXPAND_FILL sibling" trick
+	# AFTER the body row, same "shrink the EXPAND_FILL sibling" trick
 	# `_reserve_status_label_height` uses above it in this same VBox --
-	# shrinks `_scroll`'s own rect without touching the MarginContainer's
+	# shrinks the body's own rect without touching the MarginContainer's
 	# uniform margin (which also positions the title/gold/slot rows --
-	# those read fine; only the scroll's OWN clip edge sat inside the
+	# those read fine; only the scroll columns' OWN clip edge sat inside the
 	# parchment's art-safe band).
 	var scroll_bottom_spacer := Control.new()
 	scroll_bottom_spacer.custom_minimum_size = Vector2(0.0, SCROLL_BOTTOM_INSET)
@@ -224,9 +294,11 @@ func _ready() -> void:
 ## for minimum size) -- so VBoxContainer reserved exactly ONE line for this
 ## row no matter how long the text got. `_CAPACITY_REFUSAL_TOAST` ("It
 ## buzzes once against the others, like a wasp against glass, and will not
-## settle.") wraps to 2 lines at this panel's real content width (measured:
-## 572px = PANEL_SIZE.x 640 minus the content MarginContainer's 34px+34px
-## margins) -- its 2nd line rendered OUTSIDE the reserved row, overlapping
+## settle.") wraps to 2 lines at this panel's real content width (measured
+## when this fix landed: 572px = the then-640 PANEL_SIZE.x minus the content
+## MarginContainer's 34px+34px margins; PANEL_SIZE later widened to 860 for
+## UIWAVE2 item 3's side panel, which only gives this row MORE width to work
+## with) -- its 2nd line rendered OUTSIDE the reserved row, overlapping
 ## the scrolled item list's first row directly beneath (the visible
 ## "double-exposure" in the evidence shot). Fix: reserve
 ## STATUS_LABEL_RESERVED_LINES (2 -- covers every refusal copy WIGame emits
@@ -447,11 +519,13 @@ func _slot_display(slot: String) -> String:
 
 
 ## Rebuilds the carried-item rows from `Game.sim.inventory` fresh every call
-## (cheap; the catalog has grown to 19 items (M-GEAR G2), no stacking) --
-## per item: a cursor/name/equipped-tag line ("Menu" variation, matches
-## pause_menu.gd's row style), the mechanical effect lines, a lore line
-## (M-GEAR G3), and a wrapped description prose line. After rebuilding,
-## scrolls the cursor's row into view (see `_scroll`'s doc comment).
+## (cheap; the catalog has grown to 19 items (M-GEAR G2), no stacking).
+## UIWAVE2 item 3: each row is now NAME-ONLY (+ "[Equipped]" marker) -- the
+## mechanical effect lines / lore / description that used to render inline
+## under every row now live in the selection-driven `_detail_box` (see
+## `_render_detail`, called at the end of this function so the two columns
+## can never drift out of sync). After rebuilding, scrolls the cursor's row
+## into view (see `_scroll`'s doc comment).
 func _rebuild_items() -> void:
 	for child: Node in _items_box.get_children():
 		_items_box.remove_child(child)
@@ -461,6 +535,7 @@ func _rebuild_items() -> void:
 		_cursor = max(_item_ids.size() - 1, 0)
 	if _item_ids.is_empty():
 		_items_box.add_child(UIChrome.make_label("Nothing carried."))
+		_render_detail()
 		return
 	var cursor_row: Control = null
 	for i in _item_ids.size():
@@ -483,36 +558,7 @@ func _rebuild_items() -> void:
 		_items_box.add_child(name_label)
 		if i == _cursor:
 			cursor_row = name_label
-		# M-LEGIBILITY L2: the mechanical effect lines, GENERATED from the item's
-		# data via the shared WIEffectText formatter (never hand-composed here --
-		# that drift is the defect this milestone kills). item_effect_lines already
-		# ends with the "Worth N gold" value where the item is priced, so this one
-		# call covers both "effect lines" and "gold value where priced" in the plan
-		# card spec. A plain item (no mods, no price) yields an empty array -> no
-		# effect rows, exactly as before this task. Rendered default dark-on-
-		# parchment (senior to the Small flavor prose) with a two-space indent so
-		# the lines read as sub-info under the name row.
-		for effect_line: String in WIEffectText.item_effect_lines(rec):
-			_items_box.add_child(UIChrome.make_label("  %s" % effect_line))
-		# M-GEAR Task G3: the lore line, between the mechanical effect lines
-		# above and the description prose below (the reserved hook this
-		# milestone's §1 left here). "Small" (same style as the description
-		# right below it) keeps this cheap -- no new Theme type variation for
-		# one milestone -- while the "Lore — " prefix is what actually reads
-		# as a distinct register from the plain description line, and it can
-		# never be mistaken for a mechanical effect line (those never carry
-		# a text prefix). Never mixed into `item_effect_lines`'s own array
-		# (Global Constraint) -- this is a separate Label, not appended there.
-		var lore := String(rec.get("lore", ""))
-		if lore != "":
-			var lore_label := UIChrome.make_label("  Lore — %s" % lore, "Small")
-			lore_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			_items_box.add_child(lore_label)
-		# "Small" (12px, default dark color -- proven on parchment by the
-		# footer hint strip) keeps the name row visually senior to its prose.
-		var desc_label := UIChrome.make_label(String(rec.get("description", "")), "Small")
-		desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_items_box.add_child(desc_label)
+	_render_detail()
 	if cursor_row != null:
 		# A FRESH rebuild (every child freed and recreated above) needs the
 		# VBoxContainer's own queued sort to actually run before its rows'
@@ -523,3 +569,54 @@ func _rebuild_items() -> void:
 		# a second idle-time hop, past the container's own layout pass.
 		var row := cursor_row
 		(func() -> void: _scroll.ensure_control_visible.call_deferred(row)).call_deferred()
+
+
+## UIWAVE2 item 3: renders the RIGHT-column detail card for whatever item the
+## cursor is currently on -- name (+ "[Equipped]" marker, "Header" variation,
+## same on-parchment precedent as dialogue_panel.gd's speaker label), the
+## mechanical effect lines (GENERATED via WIEffectText.item_effect_lines,
+## never hand-composed -- same source `_rendered_effect_lines` uses for the
+## QA payload, so the two can never drift), the lore line (UNLABELED -- no
+## "Lore — " prefix; it reads as flavor purely through placement below the
+## effect lines and the new "Lore" theme type variation's dimmer styling),
+## and the wrapped description prose. Called at the end of every
+## `_rebuild_items` (cursor move, open, or a post-equip/unequip refresh) so
+## the detail column can never show a different item than the highlighted
+## list row.
+func _render_detail() -> void:
+	for child: Node in _detail_box.get_children():
+		_detail_box.remove_child(child)
+		child.queue_free()
+	if _item_ids.is_empty():
+		return
+	var item_id := String(_item_ids[_cursor])
+	var rec: Dictionary = Game.sim.item(item_id)
+	var name := String(rec.get("name", item_id))
+	var kind := String(rec.get("kind", ""))
+	var equipped_here := _equipped_slot_for(item_id, kind) != ""
+	var tag := "  [Equipped]" if equipped_here else ""
+	var name_label := UIChrome.make_label("%s%s" % [name, tag], "Header")
+	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_detail_box.add_child(name_label)
+	# M-LEGIBILITY L2: the mechanical effect lines, GENERATED from the item's
+	# data via the shared WIEffectText formatter (never hand-composed here --
+	# that drift is the defect this milestone kills). item_effect_lines already
+	# ends with the "Worth N gold" value where the item is priced. A plain
+	# item (no mods, no price) yields an empty array -> no effect rows.
+	for effect_line: String in WIEffectText.item_effect_lines(rec):
+		_detail_box.add_child(UIChrome.make_label(effect_line))
+	# UIWAVE2 item 3: the lore line, UNLABELED (no "Lore — " prefix) -- the
+	# "Lore" theme type variation (wi_ui_theme.tres) is dimmer/desaturated
+	# relative to both the solid dark effect-line text above and "Small"'s
+	# description-prose look below, so it reads as flavor through styling +
+	# placement alone.
+	var lore := String(rec.get("lore", ""))
+	if lore != "":
+		var lore_label := UIChrome.make_label(lore, "Lore")
+		lore_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_detail_box.add_child(lore_label)
+	# "Small" (12px, default dark color -- proven on parchment by the footer
+	# hint strip) keeps the name row visually senior to its prose.
+	var desc_label := UIChrome.make_label(String(rec.get("description", "")), "Small")
+	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_detail_box.add_child(desc_label)

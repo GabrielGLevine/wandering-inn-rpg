@@ -30,4 +30,7 @@ Menu/constants/outline_size = 2
 Menu/font_sizes/font_size = 18
 Small/base_type = &"Label"
 Small/font_sizes/font_size = 12
+Lore/base_type = &"Label"
+Lore/colors/font_color = Color(0.4, 0.3, 0.18, 0.72)
+Lore/font_sizes/font_size = 12
 CombatReadout/base_type = &"RichTextLabel"
