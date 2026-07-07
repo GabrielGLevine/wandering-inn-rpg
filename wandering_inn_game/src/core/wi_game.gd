@@ -1240,12 +1240,16 @@ func resonance_used() -> int:
 	return _equipped_resonance_total()
 
 
-## Refusal copy (M-GEAR Task G1, PLACEHOLDER -- user picks final copy from
-## docs/design/gear-staging/item-lore-and-accessory-roster.md §C; both are
-## voice-lint clean and diegetic, no "capacity"/"slot" vocabulary, no raw
-## stats -- resonance itself is a visible currency like gold/HP, fine to
-## reference, but the arithmetic stays off-screen).
-const _CAPACITY_REFUSAL_TOAST := "The charm's hum turns to static. You cannot bear another enchantment."
+## Refusal copy. `_ACCESSORY_SLOTS_FULL_TOAST` is G1's plain-practical
+## placeholder, kept per the RESOLVED ruling (2026-07-07 HANDOFF item 1) unless
+## a better line falls out naturally. `_CAPACITY_REFUSAL_TOAST` is the
+## RATIFIED line (same ruling, candidate 4 from docs/design/gear-staging/
+## item-lore-and-accessory-roster.md §C) -- canon-truest: Dissonance's warning
+## sign is artifacts SHAKING, so the refusal moment itself is a vibration line.
+## Both stay voice-lint clean and diegetic, no "capacity"/"slot" vocabulary, no
+## raw stats -- resonance itself is a visible currency like gold/HP, fine to
+## reference, but the arithmetic stays off-screen.
+const _CAPACITY_REFUSAL_TOAST := "It buzzes once against the others, like a wasp against glass, and will not settle."
 const _ACCESSORY_SLOTS_FULL_TOAST := "No room left for another charm — something has to come off first."
 
 
@@ -1264,7 +1268,7 @@ const _ACCESSORY_SLOTS_FULL_TOAST := "No room left for another charm — somethi
 ## resonance is even considered), and equipping into a free/replaceable slot
 ## whose resulting total resonance (every equipped item's `resonance`, summed
 ## across all 5 slots, replacing whatever currently occupies the target slot)
-## would exceed `resonance_capacity` ("magical interference" --
+## would exceed `resonance_capacity` (the vibration-refusal line --
 ## `_CAPACITY_REFUSAL_TOAST`). Unequipping frees the departing item's
 ## resonance back into the budget (see `unequip`).
 ## G3 CONTRACT: `inventory.gd`'s equip UI has NO generic fallback toast --

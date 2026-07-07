@@ -1036,7 +1036,7 @@ func _init() -> void:
 	assert(not gAcc.equip("test_charm_over"), "over-capacity equip is refused")
 	assert(String(gAcc.equipped.get("accessory_3", "?")) == "", "refused equip leaves accessory_3 empty")
 	assert(_count("item_equipped") == 0, "refused equip emits no item_equipped")
-	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "The charm's hum turns to static. You cannot bear another enchantment.", "over-capacity equip emits the capacity refusal toast idiom")
+	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle.", "over-capacity equip emits the capacity refusal toast idiom")
 	assert(gAcc.inventory.has("test_charm_over"), "the refused item is still carried (never equipped, never dropped)")
 
 	# Fill the last accessory slot with a zero-resonance item so capacity
@@ -1067,7 +1067,7 @@ func _init() -> void:
 	assert(gAcc.unequip("accessory_1") and gAcc.unequip("accessory_2") and gAcc.unequip("accessory_3"), "unequip clears all three accessory slots")
 	_events.clear()
 	assert(not gAcc.equip("test_charm_over"), "test_charm_over (resonance 3) alone still exceeds capacity 2 even with every slot free")
-	assert(String(_events[-1]["payload"]["text"]) == "The charm's hum turns to static. You cannot bear another enchantment.", "same capacity refusal, now with all slots free -- proves it's a resonance gate, not a slot-count gate")
+	assert(String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle.", "same capacity refusal, now with all slots free -- proves it's a resonance gate, not a slot-count gate")
 
 	# G1 review fix (Finding 2): swap-at-capacity SUCCEEDS -- the capacity
 	# arithmetic subtracts the target slot's current occupant before adding

@@ -1,5 +1,5 @@
 {
- "_comment": "M-ARC §5: drives the REAL character-creation UI path. starts_at_title gives raw title control; creation_ui:true makes New Game open the creation screen (the default TestDriver skip goes straight to Game.reset with defaults, so every OTHER canonical is byte-unchanged). Picks Drake / Female / \"Sella\", then asserts the snapshot identity fields, the sim variant sprite key, the Drake-branched opener event, and the RENDERED variant binding on both the field (ui_entities_rendered pc_sprite) and combat is proven by the sim key (combat chip resolves the same pc_drake_f via board_renderer).",
+ "_comment": "M-ARC §5: drives the REAL character-creation UI path. starts_at_title gives raw title control; creation_ui:true makes New Game open the creation screen (the default TestDriver skip goes straight to Game.reset with defaults, so every OTHER canonical is byte-unchanged). Picks Drake / Female / \"Sella\", then asserts the snapshot identity fields, the sim variant sprite key, the GDI opener event (de-race-ified 2026-07-07 -- one opener for all races; `race` stays in the payload harmlessly, cosmetic only now), and the RENDERED variant binding on both the field (ui_entities_rendered pc_sprite) and combat is proven by the sim key (combat chip resolves the same pc_drake_f via board_renderer).",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
@@ -18,7 +18,7 @@
   {"action": "press", "name": "confirm"},
   {"action": "wait_for_event", "type": "ui_char_creation_confirmed", "payload_contains": {"pc_name": "Sella", "pc_race": "drake", "pc_gender": "f"}, "timeout_sec": 5},
   {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
-  {"_comment": "Drake-branched GDI opener (canon-safe 'starting over in Liscor' copy) -- race in the payload proves the branch, lines still 4.", "action": "wait_for_event", "type": "ui_gdi_opener_rendered", "payload_contains": {"lines": 4, "race": "drake"}, "timeout_sec": 5},
+  {"_comment": "GDI opener (2026-07-07 rewrite: one race-neutral system-readout opener, no more Drake/Human/Gnoll branch) -- lines still 4; race stays in the payload cosmetically (Game.sim.pc_race is unchanged, so this pin still holds).", "action": "wait_for_event", "type": "ui_gdi_opener_rendered", "payload_contains": {"lines": 4, "race": "drake"}, "timeout_sec": 5},
   {"_comment": "Sim identity fields in the snapshot (art-independent).", "action": "assert_state", "path": "pc_name", "equals": "Sella"},
   {"action": "assert_state", "path": "pc_race", "equals": "drake"},
   {"action": "assert_state", "path": "pc_gender", "equals": "f"},

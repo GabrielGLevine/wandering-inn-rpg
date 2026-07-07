@@ -74,38 +74,19 @@ const LINE_FONT_SIZE := 24
 ## opener swallows ONLY confirm/cancel while it holds; the sleep path above still
 ## intercepts no input at all.
 ##
-## COPY — flagged for user taste-review (revisable via these constants / a
-## future string table). A vast, neutral, faintly wondering System voice; the
-## last line is a bracketed proclamation in the sleep-veil cadence. Opaque-safe:
-## no numbers, no lore claim beyond what the game itself shows (classes/levels).
-##
-## M-ARC §5: the opener BRANCHES by PC race (canon-safe — only Humans are Earth
-## otherworlders). Human keeps the "far from where you began" arrival; Drake and
-## Gnoll get a "starting over in Liscor" variant (they are native to Izril, not
-## displaced from another world). All three are 4 lines and share the identity-
-## neutral bracket close, so the QA opener-line count is invariant across races.
-## ⚑ USER TASTE-REVIEW: the Drake/Gnoll copy is a first draft — revise freely.
-const OPENER_LINES_HUMAN: Array[String] = [
-	"You are far from where you began.",
-	"This world watches what you do,",
-	"and answers by making you someone.",
-	"[Class: none. Level: none. — Begin.]",
+## COPY — USER-APPROVED verbatim (2026-07-07, docs/design/gdi-copy-staging.md),
+## no open taste flag remains. A cold system-readout opener, ONE version for
+## every race (the former Human/Drake/Gnoll branch read as an unearned canon
+## distinction — dropped per user ruling; race-neutral by construction). 4
+## lines, ending on the same bracketed proclamation cadence as the rest of the
+## veil. Opaque-safe: no numbers, no lore claim beyond what the game itself
+## shows (the epilogue's class recount pays off the "none/none" open).
+const OPENER_LINES: Array[String] = [
+	"[Class: none.]",
+	"[Skills: none.]",
+	"This world watches what you do.",
+	"[Begin.]",
 ]
-const OPENER_LINES_DRAKE: Array[String] = [
-	"You have come to Liscor to begin again.",
-	"This world watches what you do,",
-	"and answers by making you someone.",
-	"[Class: none. Level: none. — Begin.]",
-]
-const OPENER_LINES_GNOLL: Array[String] = [
-	"The road behind you is long; Liscor is where it ends.",
-	"This world watches what you do,",
-	"and answers by making you someone.",
-	"[Class: none. Level: none. — Begin.]",
-]
-## Human is the default fallback (an unknown/absent race lands here, matching the
-## sim's tolerant "human" default).
-const OPENER_LINES: Array[String] = OPENER_LINES_HUMAN
 const OPENER_HOLD_BEFORE_TEXT := 0.6
 const OPENER_LINE_HOLD := 1.7
 const OPENER_READ_HOLD := 2.2
@@ -116,7 +97,7 @@ const OPENER_READ_HOLD := 2.2
 ## so her line lands and the conversation clears BEFORE the black. Renders the GDI
 ## open lines, a GENERATED results-only recount (each EARNED class + its level from
 ## the sim snapshot — the visible-tier rule: a class NAME + its level, never a
-## stat), the "for now"/"world keeps counting" close, and the wanderinginn.com
+## stat), the "warren is sealed"/"record remains open" close, and the wanderinginn.com
 ## line, then fades back to the SAME world beneath (FREE PLAY — nothing resets, the
 ## sleep machinery re-arms encounters as before). At completion it banks `post_game`
 ## — the ONE sim write the epilogue mode makes ("the ending was witnessed" is
@@ -136,16 +117,20 @@ const OPENER_READ_HOLD := 2.2
 ## consolidation modal — so the two mechanisms stay fully independent by
 ## construction (no shared trigger moment to arbitrate).
 ##
-## ⚑ USER TASTE-REVIEW: the epilogue copy is the Fable draft (climax-copy §"The GDI
-## epilogue"), revisable via these constants. Opaque-safe: class names + levels
-## only, no stats; the bracketed GDI cadence matches the sleep/opener proclamations.
+## COPY — USER-APPROVED verbatim (2026-07-07, docs/design/gdi-copy-staging.md),
+## no open taste flag remains. Ledger-voiced understatement replacing the old
+## framing's announced sentiment ("Now Liscor knows your name", "The world
+## keeps counting" read as aphorism/cheese) — the System states facts and lets
+## the class recount between OPEN and CLOSE carry the weight. Opaque-safe:
+## class names + levels only, no stats; the bracketed GDI cadence matches the
+## sleep/opener proclamations. The class-recount mechanism itself is UNCHANGED.
 const EPILOGUE_LINES_OPEN: Array[String] = [
-	"[You came to Liscor with nothing.]",
-	"[Now Liscor knows your name.]",
+	"[When you came to Liscor, there was nothing to record.]",
+	"[This is no longer true.]",
 ]
 const EPILOGUE_LINES_CLOSE: Array[String] = [
-	"[The seal will hold. For now.]",
-	"[The world keeps counting.]",
+	"[The warren is sealed.]",
+	"[The record remains open.]",
 ]
 const EPILOGUE_LINK_LINE := "— The story continues at wanderinginn.com —"
 const EPILOGUE_HOLD_BEFORE_TEXT := 0.8
@@ -297,13 +282,11 @@ func play_opener() -> void:
 	_run_opener.call_deferred()
 
 
-## M-ARC §5: the race-branched opener copy (presentation reads the sim's cosmetic
-## pc_race; an unknown/absent race falls back to Human, matching the sim default).
+## De-race-ified (2026-07-07): ONE opener for every race now, so this just
+## returns the single const. Kept as a function (not inlined at call sites)
+## so a future string-table swap stays a one-line change here.
 func _opener_lines() -> Array:
-	match Game.sim.pc_race:
-		"drake": return OPENER_LINES_DRAKE
-		"gnoll": return OPENER_LINES_GNOLL
-		_: return OPENER_LINES_HUMAN
+	return OPENER_LINES
 
 
 func _run_opener() -> void:
@@ -344,8 +327,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _emit_opener_rendered(count: int) -> void:
-	# M-ARC §5: carry the PC race so a QA script can assert the branch fired for
-	# the chosen race (line count is 4 for every race, so it can't distinguish).
+	# `race` predates the 2026-07-07 de-race-ification (the opener no longer
+	# branches on it) but stays in the payload harmlessly per the copy-staging
+	# doc's call — char_creation's payload_contains still pins it, no re-pin
+	# needed since Game.sim.pc_race itself is unchanged.
 	ObservableBus.emit_domain_event(WIEvents.UI_GDI_OPENER_RENDERED, {"lines": count, "race": Game.sim.pc_race})
 
 

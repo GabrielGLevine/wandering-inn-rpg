@@ -6,12 +6,20 @@ Same contract as the main file: palette/silhouette (the 3 features a
 Wiki-verify canon entries at generation/writing time.
 
 ## Home-Region II
-- **Rock Crab** (canon): boulder-mimic crustacean — shell EXACTLY
-  palette-matched to the boulder prop (the mimicry is the mechanic);
-  revealed = legs + eye-stalks under the lifted shell. No voice.
-- **Corusdeer** (canon): proud stag silhouette, ember-ORANGE glowing
-  antlers (their signature — reads at dusk from across the map),
-  tawny coat. Herd of 3-4 sprites (stag/doe variants). No voice.
+- **Rock Crab** (canon; WIKI-VERIFIED 2026-07-07): boulder-mimic
+  crustacean — shell EXACTLY palette-matched to the boulder prop (the
+  mimicry is the mechanic); revealed = TWO pincers + two dark antennae
+  (its eyes) + countless legs; loud CLICKING when running. Canon scale:
+  the shell is ~two persons stacked tall — sprite should read BIG, not
+  boulder-prop-sized (the mimicry can use an oversized boulder variant).
+  Canon threat: goblin hunting packs kill them WITH casualties. No voice.
+- **Corusdeer** (canon; WIKI-VERIFIED 2026-07-07 — corrections): antlers
+  are oaken-brown at the base shading to CHERRY-RED tips (not orange),
+  and the signature is HEAT — canon "hot enough to vaporise bone",
+  mana-fueled (depletes to a plain animal); ~2x deer size; SNOWY-climate
+  animal (frame any Home-Region II appearance as winter/foothills).
+  Herds are canon Gold-rank stampede danger; a lone stray male is the
+  Silver-rank encounter shape. Herd of 3-4 sprites. No voice.
 - **The hermit-alchemist** (ORIGINAL+flag): human, wiry, patched
   layered robes, antler-charm necklace, root-garden context. Voice:
   short declaratives · barter-ethics ("freely shed carries the year") ·
@@ -37,10 +45,15 @@ Wiki-verify canon entries at generation/writing time.
   echoes the witch's current pool line verbatim, wrong register.
 
 ## Invrisil (8c)
-- **Brothers lieutenant** (canon-check named Brothers; else
-  ORIGINAL+flag): human, immaculate-but-worn suit, bowler-class hat,
-  cudgel like an umbrella. Voice: courtesy-as-menace ("sir/miss" every
-  sentence) · apologizes BEFORE the threat · "recover", never "steal".
+- **Brothers lieutenant** (canon-frame VERIFIED 2026-07-07: the gang is
+  canon, Invrisil-based, hat-defined — "perfect gentlemen. Until the
+  hats come off." — honor code confirmed; named members exist [Normen,
+  Alcaz] if a canon name is wanted, else ORIGINAL+flag for ours): human,
+  immaculate-but-worn suit, hat CENTRAL to the read (type unspecified in
+  canon — bowler-class passes), cudgel like an umbrella. Voice:
+  courtesy-as-menace ("sir/miss" every sentence) · apologizes BEFORE the
+  threat · "recover", never "steal". The hats-off moment is the canon
+  violence tell — stage it.
 - **The merchant-prince** (ORIGINAL+flag): soft-jawed human in
   coin-gold trim (the city's accent hue ON a person — the tell that
   he IS Invrisil's vice), signet rings. Voice: prices everything
@@ -54,10 +67,13 @@ Wiki-verify canon entries at generation/writing time.
   pool-less. The crowd IS the message.
 
 ## Pallass (8e — generate LAST, needs the new tile family context)
-- **Grimalkin-or-equivalent** (canon-check [Sinew Magus] Grimalkin):
-  MASSIVE Drake, slate scales, sleeveless scholar-robe over muscle,
-  ink-and-dumbbell props. Voice: fitness-empiricism · lectures in
-  numbered points · respects effort, despises excuses.
+- **Grimalkin** (canon; WIKI-VERIFIED 2026-07-07 — corrections):
+  [Sinew Magus] L40+, Magic-Captain of Pallass + runs his own academy.
+  MASSIVE Drake, GREEN scales (not slate); canon attire is TIGHT-FITTING
+  clothing he bursts by flexing (not a sleeveless robe — keep the
+  ink-and-dumbbell props, they match his note-taking empiricism). Voice:
+  fitness-empiricism · drill-sergeant-on-steroids who genuinely cares ·
+  lectures in numbered points · respects effort, despises excuses.
 - **Tier clerk** (ORIGINAL+flag): trim Drake, guild sash, stamp-desk.
   Voice: titles-and-precision · "state your business and your
   sponsor" · warmth exists behind exact paperwork.
