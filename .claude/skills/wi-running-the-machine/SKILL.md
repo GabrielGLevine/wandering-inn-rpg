@@ -64,6 +64,14 @@ The session has a fixed usage budget. Default the top model to orchestration
 burning fast → throttle top-model work, delegate more; budget to spare near
 session end → upshift to higher-tier models and spend it. Same-file work is
 still single-implementer: never run two agents on one file concurrently.
+**Lane worktrees get the REAL asset overlay at dispatch (user directive
+2026-07-07: placeholders are for the public repo only — local dev uses real
+assets).** A fresh worktree has zero overlay files; the controller copies
+every present `assets_manifest.json` path (+ `.import` sidecars) from the
+main tree into each lane worktree right after spawn (gitignored — no commit
+contamination). A lane producing SCREENSHOTS or visual deliverables on
+placeholder art is producing WRONG deliverables (the #19 Steam-capsule lane
+hit exactly this — its store shots needed regeneration).
 Parallel lanes share ONE worktree: implementers must NOT commit (controller
 stages per lane), and an implementer's uncommitted files are visible to every
 other lane's test runs — if a task's artifacts can't validate until a later
