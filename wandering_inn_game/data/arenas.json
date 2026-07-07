@@ -880,6 +880,212 @@
      ]
     }
    ]
+  },
+  {
+   "_comment": "Magical Door 8a Task D2 (lane β): the inn's cellar -- rift_vermin_leak's arena (beat 2, D1 places the encounter entity as `rift_vermin_leak` inn-cellar-adjacent; this arena id is D2's own choice, not part of the plan's locked interface -- only the encounter id/on_victory accomplishments and the `ruin_court` arena id below are locked). `inn` biome (12x8 per the M1 arena contract test_combat_data enforces). Interior `blocked` cells are stacked crates/barrels cellar clutter, kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). floor_layers reuses the INN map's own already-verified 'kitchen zone: grey cobble swatch' variant picks (data/skeleton_scene.json maps.inn.floor_layers) rather than guessing new coordinates -- a stone-floor read fits a cellar better than the hall planks anyway.",
+   "id": "inn_cellar",
+   "biome": "inn",
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [
+    [
+     4,
+     2
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     8,
+     5
+    ]
+   ],
+   "player_spawns": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "_comment_dressing": "M5 R4 convention: decor sits just outside the 12x8 grid.",
+   "floor_layers": [
+    {
+     "_pick": "reuses maps.inn's own verified 'kitchen zone: grey cobble swatch' variant picks -- stone floor for the cellar, zero new coordinate guessing.",
+     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       9,
+       22
+      ],
+      [
+       9,
+       23
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "crate",
+     "cell": [
+      -1,
+      3
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      12,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "_comment": "Magical Door 8a Task D2 (lane β): `ruin_court` -- the LOCKED arena id from the plan's interface contract, ruin_guardian's pedestal-guard arena (D1 places the `ruin_guardian` entity in `ruin_surface`, guarding `anchor_stone_pedestal`; D2 ships only this combat arena). `cave` biome (12x8 per the M1 arena contract) -- no dedicated 'ruin' biome exists in data/biomes.json today (D2's charter is combatants/arenas/harness only, not biomes.json/sprites.json), so this reuses the closest existing stone-ruin-plausible biome; a future ruin-biome art pass (A1/DF) can retarget this arena's `biome` string alone without touching any balance-relevant field. Interior `blocked` cells are twin broken pillars + a rubble line flanking the pedestal, the same positioning-arena idiom as deep_warren (break the guardian's reach, give the player+Relc lanes to corner it), kept clear of every spawn (test_combat_data asserts reachability). floor_layers reuses the cave biome's already-verified floor-tile neighborhood (same picks as cave_mouth/sewers_nest/deep_warren).",
+   "id": "ruin_court",
+   "biome": "cave",
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     8,
+     5
+    ],
+    [
+     6,
+     4
+    ]
+   ],
+   "player_spawns": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "_comment_dressing": "Decor sits just outside the 12x8 grid, same standing rule as cave_mouth/sewers_nest/deep_warren.",
+   "floor_layers": [
+    {
+     "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood (same picks as cave_mouth/sewers_nest/deep_warren).",
+     "variants": [
+      [
+       8,
+       13
+      ],
+      [
+       9,
+       13
+      ],
+      [
+       10,
+       13
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "boulder",
+     "cell": [
+      -1,
+      2
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      12,
+      5
+     ]
+    }
+   ]
   }
  ]
 }
