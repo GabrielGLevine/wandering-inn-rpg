@@ -78,6 +78,8 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 			if int(combat.combatants.get(target_id, {}).get(WIKeys.HP, hp_before)) < hp_before:
 				_apply_status_from_effect(combat, target_id, effect)
 			return true
+		"icy_floor":
+			return _resolve_icy_floor(combat, actor_id, a, target_id, skill, effect)
 	return false
 
 
@@ -163,6 +165,68 @@ static func _resolve_line_damage(combat: WICombat, actor_id: String, a: Dictiona
 		if combat.finished:
 			return true
 	return true
+
+
+## GH#21 ([Ice Floor]): area terrain resolver. Gates BEFORE spend, mirroring
+## spell_damage exactly (range then LoS -- a refused cast costs neither AP
+## nor MP): `target_id` must already be a living ENEMY (the same-side gate
+## in `resolve_active`, above, enforces that before this is ever reached).
+## No damage, no rng consumption anywhere in this path (seed safety) -- the
+## area is pure Chebyshev-radius geometry around the TARGET's cell (not the
+## caster's), clipped to grid bounds and excluding `blocked` cells (walls
+## don't glaze); occupied cells are included, and the caster's OWN cell can
+## land in the area when targeting an adjacent foe [D: friendly fire is
+## real, deliberate]. Registers every area cell into `combat.terrain`
+## (flat refresh on re-cast -- overwriting the same Vector2i key, matching
+## `_apply_status_from_effect`'s status idiom), emits SKILL_RESOLVED then
+## TERRAIN_ADDED, then applies the effect's `applies` statuses to every
+## LIVING occupant of the area regardless of side (reusing
+## `_apply_status_from_effect` per occupant, iterated in the same sorted-
+## cell order as the emitted payloads for determinism).
+static func _resolve_icy_floor(combat: WICombat, actor_id: String, a: Dictionary, target_id: String, skill: Dictionary, effect: Dictionary) -> bool:
+	if combat.chebyshev(actor_id, target_id) > int(effect[WIKeys.RANGE]):
+		return false
+	if not combat.has_los(actor_id, target_id):
+		combat._emit(WIEvents.ACTION_REFUSED, {"actor": actor_id, "reason": "no_los", "target": target_id})
+		return false
+	combat.spend_skill_costs(a, skill)
+	var center: Vector2i = combat.combatants[target_id][WIKeys.CELL]
+	var cells := _icy_floor_area(combat, center, int(effect.get(WIKeys.RADIUS, 0)))
+	var applies: Dictionary = effect.get(WIKeys.APPLIES, {})
+	var expires_after := combat.round_number + int(effect.get(WIKeys.DURATION_ROUNDS, 0)) - 1
+	var occupant_by_cell: Dictionary = {}
+	for id: String in combat.combatants:
+		var occ: Dictionary = combat.combatants[id]
+		if bool(occ.get(WIKeys.ALIVE, false)):
+			occupant_by_cell[occ[WIKeys.CELL]] = id
+	var cells_payload: Array = []
+	for cell: Vector2i in cells:
+		combat.terrain[cell] = {"kind": "icy_floor", "expires_after_round": expires_after, "applies": applies.duplicate(true)}
+		cells_payload.append([cell.x, cell.y])
+	combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": target_id, "cells": cells_payload})
+	combat._emit(WIEvents.TERRAIN_ADDED, {"kind": "icy_floor", "cells": cells_payload, "rounds": int(effect.get(WIKeys.DURATION_ROUNDS, 0))})
+	for cell: Vector2i in cells:
+		if occupant_by_cell.has(cell):
+			_apply_status_from_effect(combat, String(occupant_by_cell[cell]), effect)
+	return true
+
+
+## The icy_floor blast area: every cell within Chebyshev `radius` of `center`
+## (the TARGET's cell), clipped to grid bounds, excluding `blocked` cells.
+## Sorted x-then-y for determinism (SKILL_RESOLVED's cells, TERRAIN_ADDED's
+## cells, and the terrain dict's iteration order all trace back to this).
+static func _icy_floor_area(combat: WICombat, center: Vector2i, radius: int) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	for dx in range(-radius, radius + 1):
+		for dy in range(-radius, radius + 1):
+			var cell := center + Vector2i(dx, dy)
+			if cell.x < 0 or cell.y < 0 or cell.x >= combat.grid_size.x or cell.y >= combat.grid_size.y:
+				continue
+			if combat.blocked.has(cell):
+				continue
+			cells.append(cell)
+	cells.sort_custom(WICombat._cell_less_than)
+	return cells
 
 
 ## Applies a post-hit status from a skill's "applies" dict (e.g. frost_bolt's

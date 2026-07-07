@@ -1264,5 +1264,171 @@ func _init() -> void:
 	# `_resolve_heal`'s self-only gate.
 	assert(not c66.use_skill("second_wind", "goblin_raider"), "second_wind refuses an enemy target (fails the type-keyed same-side gate)")
 
+	# --- GH#21 [Ice Floor]: area terrain effect. Gates BEFORE spend, mirroring
+	# spell_damage exactly (range then LoS -- a refused cast costs neither AP
+	# nor MP). Arena fixture: goblin_ambush blocks (5,3),(6,4),(3,5),(8,2). ---
+	var c67 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["icy_floor"]}})
+	_events.clear()
+	c67.active_index = c67.turn_order.find("pc")
+	c67._start_turn()
+	var ap67_before := int(c67.combatants["pc"][WIKeys.AP])
+	var mp67_before := int(c67.combatants["pc"][WIKeys.MP])
+	assert(not c67.use_skill("icy_floor", "goblin_raider"), "icy_floor refused out of range (default spawn distance 7 > range 3)")
+	assert(int(c67.combatants["pc"][WIKeys.AP]) == ap67_before and int(c67.combatants["pc"][WIKeys.MP]) == mp67_before, "refused out-of-range cast spends neither AP nor MP")
+	assert(_count("skill_resolved") == 0 and _count("terrain_added") == 0, "refused out-of-range cast never resolves or registers terrain")
+
+	var c68 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["icy_floor"]}})
+	_events.clear()
+	c68.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)
+	c68.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)  # wall (5,3) sits directly between, in range (2)
+	c68.active_index = c68.turn_order.find("pc")
+	c68._start_turn()
+	var ap68_before := int(c68.combatants["pc"][WIKeys.AP])
+	var mp68_before := int(c68.combatants["pc"][WIKeys.MP])
+	assert(not c68.use_skill("icy_floor", "goblin_raider"), "icy_floor refused without LoS despite being in range")
+	var refusal68: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "action_refused":
+			refusal68 = e["payload"]
+	assert(refusal68.get("reason", "") == "no_los", "no_los action_refused emitted")
+	assert(int(c68.combatants["pc"][WIKeys.AP]) == ap68_before and int(c68.combatants["pc"][WIKeys.MP]) == mp68_before, "refused no-LoS cast spends neither AP nor MP")
+	assert(_count("skill_resolved") == 0 and _count("terrain_added") == 0, "refused no-LoS cast never resolves or registers terrain")
+
+	# Successful cast: area = Chebyshev radius around the TARGET's cell,
+	# clipped to bounds, walls excluded; occupants of every side get slowed
+	# (friendly fire); terrain registers exactly through snapshot().
+	var c69 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["icy_floor"]}})
+	_events.clear()
+	c69.combatants["pc"][WIKeys.CELL] = Vector2i(2, 4)
+	c69.combatants["relc"][WIKeys.CELL] = Vector2i(4, 4)          # inside the blast -- ally
+	c69.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(5, 4)  # cast target, inside the blast
+	c69.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(11, 7)  # far outside the blast -- control
+	c69.active_index = c69.turn_order.find("pc")
+	c69._start_turn()
+	var ap69_before := int(c69.combatants["pc"][WIKeys.AP])
+	var mp69_before := int(c69.combatants["pc"][WIKeys.MP])
+	assert(c69.use_skill("icy_floor", "goblin_raider"), "icy_floor cast succeeds in range with clear LoS")
+	assert(int(c69.combatants["pc"][WIKeys.AP]) == ap69_before - 2, "icy_floor costs exactly 2 AP")
+	assert(int(c69.combatants["pc"][WIKeys.MP]) == mp69_before - 4, "icy_floor costs exactly 4 MP")
+	# Radius-1 blast around (5,4): (4..6, 3..5) minus blocked (5,3) and (6,4).
+	var expected_cells69 := [[4, 3], [4, 4], [4, 5], [5, 4], [5, 5], [6, 3], [6, 5]]
+	var resolved69: Dictionary = {}
+	var terrain_added69: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			resolved69 = e["payload"]
+		if e["type"] == "terrain_added":
+			terrain_added69 = e["payload"]
+	assert(resolved69.get("actor", "") == "pc" and resolved69.get("skill", "") == "icy_floor" and resolved69.get("target", "") == "goblin_raider", "skill_resolved reports actor/skill/target")
+	assert((resolved69.get("cells", []) as Array) == expected_cells69, "skill_resolved reports the sorted blast-area cells, walls excluded")
+	assert(terrain_added69.get("kind", "") == "icy_floor" and int(terrain_added69.get("rounds", -1)) == 2, "terrain_added reports kind + duration_rounds")
+	assert((terrain_added69.get("cells", []) as Array) == expected_cells69, "terrain_added reports the same sorted cell list")
+	assert(_count("terrain_added") == 1, "terrain_added fires exactly once per cast, not once per cell")
+	assert(c69.terrain.size() == 7, "combat.terrain registers exactly the 7 valid area cells")
+	assert(not c69.terrain.has(Vector2i(5, 3)) and not c69.terrain.has(Vector2i(6, 4)), "blocked wall cells never enter the terrain area")
+	var snap69 := c69.snapshot()
+	assert((snap69["terrain"] as Dictionary).get("icy_floor", []) == expected_cells69, "snapshot().terrain.icy_floor matches the exact sorted cell list")
+	assert((c69.combatants["goblin_raider"]["statuses"] as Dictionary).has("slowed"), "the cast target is slowed")
+	assert((c69.combatants["relc"]["statuses"] as Dictionary).has("slowed"), "an ALLY standing in the blast is slowed too -- friendly fire is real")
+	assert(not (c69.combatants["goblin_shaman"]["statuses"] as Dictionary).has("slowed"), "a combatant outside the blast is untouched (control)")
+
+	# Persistence: icy through the cast round (1) and the next (2, since
+	# expires_after_round = round_number(1) + duration_rounds(2) - 1 = 2),
+	# purged the next time round_number advances past it (round 3).
+	assert(c69.round_number == 1, "cast happened in round 1")
+	var members69 := c69.turn_order.size()
+	for i in members69:
+		c69.end_turn()
+	assert(c69.round_number == 2, "one full cycle through turn_order advances exactly one round")
+	assert(c69.terrain.size() == 7, "icy_floor persists through round 2")
+	assert(_count("terrain_expired") == 0, "not yet purged mid-lifetime")
+	for i in members69:
+		c69.end_turn()
+	assert(c69.round_number == 3, "a second full cycle advances to round 3")
+	assert(c69.terrain.is_empty(), "icy_floor is purged once round_number passes its expiry")
+	assert(_count("terrain_expired") == 1, "terrain_expired fires exactly once")
+	var expired69: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "terrain_expired":
+			expired69 = e["payload"]
+	assert(expired69.get("kind", "") == "icy_floor" and (expired69.get("cells", []) as Array) == expected_cells69, "terrain_expired reports kind + the exact sorted cell list purged")
+	assert((c69.snapshot()["terrain"] as Dictionary).is_empty(), "snapshot().terrain is an empty dict once everything has expired")
+
+	# Turn-start on ice: a combatant STARTING its turn already standing on an
+	# icy cell gets the penalty THIS turn via the SAME _start_turn
+	# consume-block the slowed status already uses (applied then immediately
+	# consumed -- both events fire the same turn).
+	var c70 := _make(11, _sink)
+	_events.clear()
+	var ice_cell70: Vector2i = c70.combatants["pc"][WIKeys.CELL]
+	c70.terrain[ice_cell70] = {"kind": "icy_floor", "expires_after_round": c70.round_number + 10, "applies": {"slowed": {"pool_penalty": 2}}}
+	c70.active_index = c70.turn_order.find("pc")
+	c70._start_turn()
+	assert(int(c70.combatants["pc"][WIKeys.MOVE_POOL]) == maxi(1, WICombat.MOVE_POOL - 2), "turn-start already standing on ice applies THIS turn's pool penalty")
+	var applied70 := false
+	var expired70 := false
+	for e: Dictionary in _events:
+		if e["type"] == "status_applied" and e["payload"].get("id", "") == "pc" and e["payload"].get("status", "") == "slowed":
+			applied70 = true
+		if e["type"] == "status_expired" and e["payload"].get("id", "") == "pc" and e["payload"].get("status", "") == "slowed":
+			expired70 = true
+	assert(applied70 and expired70, "status_applied then status_expired both fire the same turn (applied then immediately consumed)")
+
+	# Move onto ice: stepping onto a terrain cell mid-turn applies the status
+	# immediately, but the pool penalty only bites at the combatant's NEXT
+	# turn start (this turn's pool is untouched by the step).
+	var c71 := _make(11, _sink)
+	_events.clear()
+	var start_cell71: Vector2i = c71.combatants["pc"][WIKeys.CELL]
+	var ice_cell71 := start_cell71 + Vector2i.RIGHT
+	c71.terrain[ice_cell71] = {"kind": "icy_floor", "expires_after_round": c71.round_number + 10, "applies": {"slowed": {"pool_penalty": 2}}}
+	c71.active_index = c71.turn_order.find("pc")
+	c71._start_turn()
+	assert(not (c71.combatants["pc"]["statuses"] as Dictionary).has("slowed"), "not slowed before stepping onto the icy cell")
+	assert(c71.move_active(Vector2i.RIGHT), "pc moves onto the icy cell")
+	assert(c71.combatants["pc"][WIKeys.CELL] == ice_cell71, "pc now stands on the icy cell")
+	assert((c71.combatants["pc"]["statuses"] as Dictionary).has("slowed"), "stepping onto ice applies slowed immediately")
+	var members71 := c71.turn_order.size()
+	for i in members71:
+		c71.end_turn()
+	assert(c71.get_active() == "pc", "cycled back to pc's own turn")
+	assert(int(c71.combatants["pc"][WIKeys.MOVE_POOL]) == maxi(1, WICombat.MOVE_POOL - 2), "the NEXT turn's move_pool reflects the ice penalty from stepping on it last turn")
+
+	# Flat refresh: re-casting the same area registers no duplicate cells and
+	# re-applying the status yields exactly one entry, never a stack.
+	var c72 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["icy_floor"]}})
+	_events.clear()
+	c72.combatants["pc"][WIKeys.CELL] = Vector2i(2, 4)
+	c72.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(3, 4)
+	c72.active_index = c72.turn_order.find("pc")
+	c72._start_turn()
+	assert(c72.use_skill("icy_floor", "goblin_raider"), "first icy_floor cast succeeds")
+	var terrain_size_after_first := c72.terrain.size()
+	var raider_statuses72: Dictionary = c72.combatants["goblin_raider"]["statuses"]
+	assert(raider_statuses72.has("slowed") and raider_statuses72.size() == 1, "exactly one status entry after the first cast")
+	var members72 := c72.turn_order.size()
+	for i in members72:
+		c72.end_turn()
+	assert(c72.get_active() == "pc", "cycled back to pc for the re-cast")
+	assert(c72.use_skill("icy_floor", "goblin_raider"), "re-casting the same area succeeds")
+	assert(c72.terrain.size() == terrain_size_after_first, "re-casting the same area registers no duplicate cells (flat refresh, keyed by cell)")
+	var raider_statuses72b: Dictionary = c72.combatants["goblin_raider"]["statuses"]
+	assert(raider_statuses72b.has("slowed") and raider_statuses72b.size() == 1, "re-application still yields exactly one status entry, never a stack")
+	assert(int((c72.terrain[Vector2i(3, 4)] as Dictionary).get("expires_after_round", -1)) == c72.round_number + 1, "re-casting refreshes expiry to the NEW cast's value, not stacking onto the old one")
+
+	# Empty-terrain no-op: a fight that never casts icy_floor emits zero
+	# terrain events at all -- the "zero behavior change for every
+	# pre-existing combat-data payload" proof (also exercises the purge's
+	# own early-return across several round rollovers).
+	var c73 := _make(11, _sink)
+	_events.clear()
+	var guard73 := 0
+	while not c73.finished and guard73 < c73.turn_order.size() * 3:
+		c73.end_turn()
+		guard73 += 1
+	assert(c73.terrain.is_empty(), "terrain stays empty when icy_floor is never cast")
+	assert(_count("terrain_added") == 0 and _count("terrain_expired") == 0, "zero terrain events fire in a fight that never casts icy_floor")
+	assert((c73.snapshot()["terrain"] as Dictionary).is_empty(), "snapshot terrain key is an empty dict when unused")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

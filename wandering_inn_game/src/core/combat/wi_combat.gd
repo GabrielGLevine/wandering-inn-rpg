@@ -45,6 +45,18 @@ var action_tally: Dictionary = {}
 ## ever been cast" for the journal's first-use reveal, which
 ## `WIGame.resolve_combat` merges in unconditionally.
 var used_skills_tally: Dictionary = {}
+## GH#21 ([Ice Floor] area terrain effect): `Vector2i` cell -> `{"kind":
+## "icy_floor", "expires_after_round": int, "applies": Dictionary}`. NOT
+## save-persisted (combat state never is, per data/skills.json/wi_combat.gd
+## convention -- a combat is always mid-encounter, never resumed across a
+## save load). Populated only by WISkillEffects.resolve_active's icy_floor
+## arm; purged by `_advance_turn`'s round-rollover branch
+## (`_purge_expired_terrain`). Every existing fight leaves this empty for
+## its whole duration -- the two consumers (`_apply_terrain_status`'s call
+## sites in `move_active`/`_start_turn`, and the purge above) are no-ops on
+## an empty dict, which is the zero-behavior-change proof for every
+## pre-existing combat-data payload.
+var terrain: Dictionary = {}
 
 var _event_sink: Callable
 var _momentum_used: Dictionary = {}
@@ -305,6 +317,7 @@ func move_active(dir: Vector2i) -> bool:
 	c[WIKeys.CELL] = target
 	c[WIKeys.MOVE_POOL] = int(c[WIKeys.MOVE_POOL]) - MOVE_COST
 	_emit(WIEvents.COMBATANT_MOVED, {"id": c[WIKeys.ID], "cell": [target.x, target.y]})
+	_apply_terrain_status(c)
 	return true
 
 
@@ -525,6 +538,7 @@ func _advance_turn() -> void:
 				_finish(false, true)
 				return
 			_emit(WIEvents.ROUND_STARTED, {"round": round_number})
+			_purge_expired_terrain()
 		if combatants[get_active()][WIKeys.ALIVE]:
 			_start_turn()
 			return
@@ -542,6 +556,12 @@ func _start_turn() -> void:
 	_quick_cast_spent.erase(c[WIKeys.ID])
 	var pool := MOVE_POOL
 	var statuses: Dictionary = c["statuses"]
+	# GH#21: a combatant STARTING its turn already standing on icy_floor gets
+	# the penalty THIS turn, through the SAME consume-block below (applied
+	# here -> immediately consumed a few lines down) -- applied before the
+	# `slowed` check so this turn's TURN_STARTED move_pool reflects the
+	# reduced pool, not a stale one that only kicks in next turn.
+	_apply_terrain_status(c)
 	if statuses.has("slowed"):
 		var penalty := int((statuses["slowed"] as Dictionary).get("pool_penalty", 0))
 		pool = maxi(1, MOVE_POOL - penalty)
@@ -574,6 +594,69 @@ func _move_pool_bonus_total(c: Dictionary) -> int:
 		if String(effect.get(WIKeys.TYPE, "")) == "move_pool_bonus":
 			total += int(effect.get(WIKeys.AMOUNT, 0))
 	return total
+
+
+## GH#21 ([Ice Floor] area terrain effect): applies the terrain entry (if
+## any) registered at `c`'s CURRENT cell onto `c` -- the STANDING-terrain
+## counterpart of `WISkillEffects._apply_status_from_effect` (that one fires
+## on a HIT; this one fires on OCCUPYING a terrain cell). No-op when
+## `terrain` holds no entry for the cell -- every existing fight never
+## populates `terrain` at all, so this is a guaranteed no-op there (the
+## "zero behavior change for every pre-existing fight" proof). Two call
+## sites, per the design: `move_active` (stepping onto a terrain cell mid-
+## turn) and `_start_turn` (starting a turn already standing on one, applied
+## before the `slowed` consume-block so the SAME machinery handles both —
+## applied then immediately consumed the same turn, both events firing).
+func _apply_terrain_status(c: Dictionary) -> void:
+	var cell: Vector2i = c[WIKeys.CELL]
+	if not terrain.has(cell):
+		return
+	var entry: Dictionary = terrain[cell]
+	var applies: Dictionary = entry.get(WIKeys.APPLIES, {})
+	for status_id: String in applies:
+		(c["statuses"] as Dictionary)[status_id] = (applies[status_id] as Dictionary).duplicate(true)
+		_emit(WIEvents.STATUS_APPLIED, {"id": String(c[WIKeys.ID]), "status": status_id})
+
+
+## GH#21: called from `_advance_turn`'s round-rollover branch, after
+## `round_number` has already advanced and ROUND_STARTED has already
+## emitted. Removes every terrain cell whose `expires_after_round` has
+## passed (a cell cast at round N with `duration_rounds` D carries
+## `expires_after_round = N+D-1`, so it survives the rollover check through
+## round N+D-1 and is purged the next time round_number moves past it --
+## "icy through end of round N+duration-1"). Batches every purged cell into
+## ONE terrain_expired emit PER KIND (today only "icy_floor" ever exists in
+## `terrain`, so this is always at most one emit per rollover) rather than
+## one per cell, mirroring TERRAIN_ADDED's batched-cells-per-cast shape.
+func _purge_expired_terrain() -> void:
+	if terrain.is_empty():
+		return
+	var purged_by_kind: Dictionary = {}
+	for cell: Vector2i in terrain.keys():
+		var entry: Dictionary = terrain[cell]
+		if int(entry.get("expires_after_round", -1)) < round_number:
+			var kind := String(entry.get("kind", ""))
+			var cells: Array = purged_by_kind.get(kind, [])
+			cells.append(cell)
+			purged_by_kind[kind] = cells
+			terrain.erase(cell)
+	for kind: String in purged_by_kind:
+		var cells: Array = purged_by_kind[kind]
+		cells.sort_custom(_cell_less_than)
+		var cells_payload: Array = []
+		for cell: Vector2i in cells:
+			cells_payload.append([cell.x, cell.y])
+		_emit(WIEvents.TERRAIN_EXPIRED, {"kind": kind, "cells": cells_payload})
+
+
+## Deterministic cell ordering (x then y) shared by every terrain payload
+## that must sort for determinism (TERRAIN_ADDED's cells, TERRAIN_EXPIRED's
+## cells, snapshot()'s terrain lists) -- one canonical comparator so the
+## sort order can never drift arm-to-arm.
+static func _cell_less_than(a: Vector2i, b: Vector2i) -> bool:
+	if a.x != b.x:
+		return a.x < b.x
+	return a.y < b.y
 
 
 ## PC death is an immediate defeat, regardless of living allies (post-D4
@@ -625,7 +708,28 @@ func snapshot() -> Dictionary:
 		"round": round_number, "active": get_active() if not turn_order.is_empty() else "",
 		"finished": finished, "victory": outcome.get("victory", false),
 		"order": turn_order.duplicate(), "combatants": cs,
+		"terrain": _terrain_snapshot(),
 	}
+
+
+## GH#21: `{kind: [[x,y],...] sorted}` -- empty dict when `terrain` is empty
+## (every pre-existing fight). QA asserts through this exact shape
+## (`assert_state combat.terrain.icy_floor`).
+func _terrain_snapshot() -> Dictionary:
+	var out := {}
+	for cell: Vector2i in terrain:
+		var kind := String((terrain[cell] as Dictionary).get("kind", ""))
+		var list: Array = out.get(kind, [])
+		list.append(cell)
+		out[kind] = list
+	for kind: String in out:
+		var cells: Array = out[kind]
+		cells.sort_custom(_cell_less_than)
+		var cells_payload: Array = []
+		for cell: Vector2i in cells:
+			cells_payload.append([cell.x, cell.y])
+		out[kind] = cells_payload
+	return out
 
 
 ## Increments one deed counter for one actor in the per-fight tally.

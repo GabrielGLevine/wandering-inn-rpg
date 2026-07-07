@@ -67,6 +67,10 @@ const MULT := "mult"
 const RANGE := "range"
 const LENGTH := "length"
 const APPLIES := "applies"
+## GH#21 (icy_floor area terrain): the effect's blast radius (Chebyshev cells
+## around the target) and how many rounds a cast cell stays icy.
+const RADIUS := "radius"
+const DURATION_ROUNDS := "duration_rounds"
 
 # --- Item record ---
 # ID, DAMAGE_MOD, DAMAGE_REDUCTION shared with combatant record above.

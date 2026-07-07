@@ -138,6 +138,18 @@ const AP_CHANGED := &"ap_changed"
 const MP_CHANGED := &"mp_changed"
 const STATUS_APPLIED := &"status_applied"
 const STATUS_EXPIRED := &"status_expired"
+## GH#21 ([Ice Floor] area terrain effect): emitted by WISkillEffects.
+## resolve_active's icy_floor resolver the moment cells are registered into
+## WICombat.terrain. Payload `{kind:"icy_floor", cells:[[x,y],...] sorted,
+## rounds:int}` -- `cells` is the FULL blast area (walls/out-of-bounds
+## already clipped), `rounds` is the skill's `duration_rounds` (informational;
+## the authoritative expiry lives on each terrain entry's
+## `expires_after_round`, not recomputed from this payload).
+const TERRAIN_ADDED := &"terrain_added"
+## GH#21: emitted by WICombat._advance_turn's round-rollover branch, once per
+## kind, whenever purging stale terrain removes at least one cell. Payload
+## `{kind:String, cells:[[x,y],...] sorted}`.
+const TERRAIN_EXPIRED := &"terrain_expired"
 
 # --- Presentation confirmations (ui_* back onto the bus) + audio ---
 # M-BEAUTY R3 (spec §8 addendum): `ui_world_labels_rendered` RETIRED -- field
@@ -161,6 +173,11 @@ const UI_HOTBAR_RENDERED := &"ui_hotbar_rendered"
 const UI_FIELD_HOTBAR_RENDERED := &"ui_field_hotbar_rendered"
 const UI_TARGETING_SHOWN := &"ui_targeting_shown"
 const UI_SLOT_INFO_RENDERED := &"ui_slot_info_rendered"
+## GH#21 ([Ice Floor] area terrain effect): board_renderer.gd's confirmation
+## that a TERRAIN_ADDED cast actually drew its persistent cell overlay.
+## Payload `{kind:String, cells:[[x,y],...]}`, same shape as the domain
+## event it confirms -- the ui_*_rendered idiom (UI_ARENA_RENDERED et al.).
+const UI_TERRAIN_RENDERED := &"ui_terrain_rendered"
 const UI_AI_PLAYBACK_DONE := &"ui_ai_playback_done"
 const UI_DIALOGUE_SHOWN := &"ui_dialogue_shown"
 const UI_DIALOGUE_HIDDEN := &"ui_dialogue_hidden"
