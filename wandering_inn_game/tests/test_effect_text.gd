@@ -17,7 +17,9 @@ const EXPECTED_ITEMS := {
 	"chipped_spear": [],
 	"solid_oak_spear": [],
 	"leather_jerkin": ["+4 HP", "Worth 24 gold"],
-	"watch_issue_gambeson": ["Reduces every hit taken by 1"],
+	# M-DEPTH DP4: now priced (previously fixture/harness-only, no live buy
+	# path) -- sold at the new street `peddler_stall`.
+	"watch_issue_gambeson": ["Reduces every hit taken by 1", "Worth 20 gold"],
 	# M-GEAR Task G2: traveler_charm is the plan's entry enchanted item,
 	# resonance 1 -- the formatter's "Resonance N" line (effect_text.gd,
 	# already wired pre-G2 by M-LEGIBILITY) now joins its card between the

@@ -123,6 +123,25 @@
    ],
    "vignette": 0.4
   },
+  "barracks": {
+   "_comment": "M-DEPTH DP4: the Watch barracks -- \"stern\"/cool institutional per the plan's direction-card convention (liscor-depth-seed spec: 'barracks = stern'). Cool blue-grey, desaturated against the guild's warm amber (0.3 vignette) and the street's night-dark blue (0.44) -- reads as a spare, dutiful room rather than a welcoming or oppressive one. TIME-INVARIANT (inn_upstairs/sewers precedent): a barracks is staffed day and night, so it reads the same at any phase rather than tracking the outside clock.",
+   "day": [
+    0.68,
+    0.74,
+    0.82
+   ],
+   "dusk": [
+    0.68,
+    0.74,
+    0.82
+   ],
+   "night": [
+    0.68,
+    0.74,
+    0.82
+   ],
+   "vignette": 0.36
+  },
   "deep_tunnels": {
    "_comment": "M-ARC A2: the Raskghar descent -- the DARKEST pin in the game, time-invariant (below the sewers, no daylight ever reaches it). Meaningfully darker + colder than the sewers' [0.3,0.32,0.45] so the descent visibly escalates; a stronger vignette (0.55) squeezes the readable space to a lantern's reach. Any prop lights glow at every phase intent (light_energy day=0.0 still keeps day flat, so the tunnels lean on their own cold ambience).",
    "day": [

@@ -1920,20 +1920,59 @@
      ]
     },
     {
-     "id": "watch_guard",
-     "kind": "npc",
+     "_comment": "M-DEPTH DP4: the Watch post facade (roof/facade decor already at (22,1)/(22,2)) becomes a REAL door -- the barracks interior is now enterable. The old flavor NPC that stood here (`watch_guard`, display_name 'Watch Guard', a static single-line dialogue with ZERO canonical QA touches -- confirmed by grep before this change) is RELOCATED into the barracks interior as the profiled Duty Sergeant (`duty_sergeant`, docs/design/character-profiles.md), same as this task's precedent for a zero-risk silent move (no re-pathing needed anywhere, unlike Selys's DP1 relocation). Zevara Sunderscale herself stays at the gate (2,6) -- zevara_intro's own framing is unchanged; only her DESK lives in the barracks now. to_cell (2,6) lands one cell north of barracks_exit (2,7), same offset convention as guild_door/guild_exit.",
+     "id": "barracks_door",
+     "kind": "door",
      "cell": [
       22,
       3
      ],
-     "display_name": "Watch Guard",
-     "sprite": "royal_soldier",
-     "observe": "A Watchman making the paperwork look like the hard part on purpose. Still — his stance says he would rather a fight than the forms, and could win one.",
+     "display_name": "Watch Barracks",
+     "sprite": "door",
+     "to_map": "barracks",
+     "to_cell": [
+      2,
+      6
+     ],
+     "on_enter_accomplishment": "visited_barracks"
+    },
+    {
+     "_comment": "M-DEPTH DP4: market-depth stall 1 of 2, flavor/observe only (no buy) -- pays off Pisces's existing street line ('The bread stall raises its prices after the fourth bell. Buy before.') with an actual entity, rather than leaving that a dangling reference to nothing on the map. Placed in the market row (x10-19,y1-2 per the street's own zone comment), west of krshia_stall/krshia so the row reads as a continuous market rather than one shopkeeper's island. Sprite is `food_basket` (the SAME base sprite krshia_stall already uses -- confirmed by a windowed read that `food_bread`'s own anchor ([0.5,1.5] in sprites.json) is authored for TABLETOP dressing paired with a table_brown decor cell, e.g. the inn's (7,6), never a lone floor-standing entity; using it directly here rendered wrong), differentiated by a warm wheat-gold `tint` -- the exact frozen_cache/sewer_debris precedent (both reuse `crate`, told apart by tint alone).",
+     "id": "bread_stall",
+     "kind": "prop",
+     "cell": [
+      11,
+      2
+     ],
+     "display_name": "Bread Stall",
+     "sprite": "food_basket",
+     "tint": [0.9, 0.75, 0.4],
+     "observe": "Loaves stacked in a pyramid that will not survive the lunch rush. A chalked board promises today's price, then a second, higher price scratched in for after the fourth bell.",
+     "on_interact_accomplishment": "browsed_bread_stall",
+     "toast": "Warm bread smell over the whole row. No one's minding the stall this exact moment — the loaves aren't going anywhere without a fight."
+    },
+    {
+     "_comment": "M-DEPTH DP4: market-depth stall 2 of 2, the mini-buy surface -- an unnamed Peddler (title only, matching the gate_guard/watch_guard convention, profile in docs/design/character-profiles-staging.md) selling ONE item, watch_issue_gambeson (now priced 20g -- see items.json _comment_price), via conversation graph data/dialogue/peddler_stall.json (krshia_crate.json's exact buy contract). Placed at the east end of the market row, close to the Watch post/barracks -- thematically apt for Watch-surplus gear.",
+     "id": "peddler",
+     "kind": "npc",
+     "cell": [
+      18,
+      2
+     ],
+     "display_name": "Peddler",
+     "sprite": "citizen_f",
+     "tint": [
+      0.6,
+      0.55,
+      0.45
+     ],
+     "observe": "A cart of odds and ends, half of it Watch-stamped. He's not saying how he came by that, and you're not asking.",
      "facing": "down",
+     "conversation": "peddler_stall",
      "dialogue": [
       {
-       "speaker": "Watch Guard",
-       "text": "Watch post. Lost property, complaints, goblin sightings. In that order of how much I care."
+       "speaker": "Peddler",
+       "text": "Watch gear, mostly honest."
       }
      ]
     },
@@ -4070,6 +4109,104 @@
        "text": "Board's behind you, same as it was a minute ago."
       }
      ]
+    }
+   ]
+  },
+  "barracks": {
+   "_comment": "M-DEPTH DP4: the Watch barracks (14x8), reached via barracks_door on the street (22,3 -- the former watch_guard flavor NPC's spot, now a real door; the Watch post facade decor at (22,1)/(22,2) already implied a doorway here). Duty Sergeant Dresk Ashgrave (profile in docs/design/character-profiles.md) is that RELOCATED watch_guard, given a name/voice/tint -- zero canonical QA touches on watch_guard were found (grepped before the move), so this is a silent relocation, unlike Selys's heavily-repathed DP1 move. Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched) -- the barracks holds only her DESK (zevara_desk, flavor/observe, she is rarely at it). THE CELL (cell_door) is empty-v1, dressed, a quest-outcome surface for later -- same locked-prop idiom as inn_upstairs's lyonette_door (flush against a wall, no interior room modeled behind it, no requires_skill so a plain interact reads the locked_toast). Reuses the 'inn' biome (Interior_Walls_01.png) like guild/inn_upstairs -- every interior in this game differentiates via moods.json's grade + dressing, not new tile assets; moods.json's 'barracks' card supplies the 'stern'/cool-institutional grade per the plan's direction-card convention. Kit racks (shelf_bottles) + a briefing table (table_brown) + a kit crate (all ADDED to `blocked`, THE BLOCKING CONTRACT) + a stool (intentionally walkable, matching the guild/inn precedent) dress the room duty-mundane, per the canon note that the barracks is a SETTING, not a bounty source (watch-flavored bounties still post at the Guild board, per the ratified spec).",
+   "biome": "inn",
+   "grid": {
+    "width": 14,
+    "height": 8
+   },
+   "blocked": [
+    [6, 2],
+    [9, 2],
+    [3, 2]
+   ],
+   "floor_layers": [
+    {
+     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+     "tile_px": 16,
+     "variants": [
+      [1, 21],
+      [2, 21],
+      [1, 22],
+      [2, 22]
+     ],
+     "cells": "all"
+    }
+   ],
+   "walls": {
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "segments": [
+     { "from": [0, 0], "to": [13, 0], "cap": [14, 6], "face": [14, 7] },
+     { "from": [0, 1], "to": [0, 7], "cap": [14, 6] },
+     { "from": [13, 1], "to": [13, 7], "cap": [14, 6] },
+     { "_comment": "South wall, gapped at x=2 for barracks_exit.", "from": [1, 7], "to": [1, 7], "cap": [14, 6] },
+     { "from": [3, 7], "to": [12, 7], "cap": [14, 6] }
+    ]
+   },
+   "decor": [
+    { "sprite": "table_brown", "cell": [6, 2] },
+    { "sprite": "shelf_bottles", "cell": [9, 2] },
+    { "sprite": "crate", "cell": [3, 2] },
+    { "sprite": "stool", "cell": [7, 2] }
+   ],
+   "ambience": [
+    { "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
+   ],
+   "entities": [
+    {
+     "id": "barracks_exit",
+     "kind": "door",
+     "cell": [2, 7],
+     "display_name": "Liscor Street",
+     "sprite": "door",
+     "to_map": "street",
+     "to_cell": [21, 3]
+    },
+    {
+     "_comment": "M-DEPTH DP4: Duty Sergeant Dresk Ashgrave -- the relocated watch_guard (see map comment above). talk_pool only (no conversation graph), inert-adjacent per the DP1 Yelra/Renn/Ilvo precedent -- duty-mundane background presence, not a quest-giver v1.",
+     "id": "duty_sergeant",
+     "kind": "npc",
+     "cell": [6, 4],
+     "display_name": "Dresk",
+     "sprite": "royal_soldier",
+     "tint": [0.55, 0.35, 0.3],
+     "observe": "Stripes on the sleeve, chalk dust on the fingers. He would rather stand a wall post than a briefing room, and it shows in how he stands even here.",
+     "facing": "down",
+     "talk_pool": [
+      "Sergeant Ashgrave. If you're here to report something, the slate's on the wall — write it plain.",
+      "Quiet shift. Kit's counted, slates are current, and the cell's empty. Write that down as a good day.",
+      "Watch business stays in the barracks. Yours is likely the street."
+     ],
+     "dialogue": [
+      { "speaker": "Dresk", "text": "Barracks is Watch business only. State yours." }
+     ]
+    },
+    {
+     "_comment": "M-DEPTH DP4: Zevara's desk -- she stays at the gate (zevara_intro unchanged); this is flavor/observe only, the barracks holding her paperwork rather than her person.",
+     "id": "zevara_desk",
+     "kind": "prop",
+     "cell": [10, 5],
+     "display_name": "Zevara's Desk",
+     "sprite": "library_desk",
+     "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it — the gate keeps her busier than her own office does.",
+     "on_interact_accomplishment": "saw_zevaras_desk",
+     "toast": "Watch Captain's desk. Empty, same as every other time you've walked past it."
+    },
+    {
+     "_comment": "M-DEPTH DP4: THE CELL, empty v1 and dressed -- a quest-outcome surface for later. Flush against the east wall, same idiom as inn_upstairs's lyonette_door (a locked prop, not a real door -- no room modeled behind it). No requires_skill, so a plain interact reads the locked_toast (the sewer_debris/lyonette_door seam).",
+     "id": "cell_door",
+     "kind": "prop",
+     "cell": [12, 3],
+     "display_name": "The Cell",
+     "sprite": "door",
+     "tint": [0.5, 0.5, 0.55],
+     "locked_toast": "Barred, and empty behind the bars — you can tell by the quiet. Whatever ends up in here hasn't happened yet.",
+     "observe": "A single holding cell, iron-barred, straw swept into one corner. Duty-mundane, like everything else in this building — until it isn't."
     }
    ]
   }

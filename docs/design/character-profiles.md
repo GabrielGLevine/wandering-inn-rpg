@@ -71,6 +71,29 @@ canon cites · current sprite state.
 - Voice: dry, competent, secretly soft-hearted.
 - Sprite: stand-in tint (upgrade queued).
 
+## Dresk Ashgrave
+- Drake, Duty Sergeant (Liscor Watch barracks), stocky, deskbound-but-capable
+  build.
+- Rust-brown scales (distinct from Zevara's light-blue and Relc's
+  teal-green), plain Watch duty tunic (no plate — a desk posting, not a
+  gate post), a belt-slate and chalk stub always in hand.
+- Voice: (1) clipped checklist cadence, talks in short procedural bursts;
+  (2) dry, put-upon humor buried under duty-first bluntness (Zevara's
+  register, junior — busy, not haunted); (3) unimpressed by heroics,
+  visibly pleased by paperwork filed correctly.
+- Canon check: ORIGINAL+flag — wiki-verified 2026-07-07
+  (wiki.wanderinginn.com + fandom search): no minor named Liscor Watch
+  duty-desk sergeant is attested. Two candidates surfaced and were both
+  ruled OUT OF SCOPE by the same bar as Klbkch: **Sergeant Gna** is a 4th
+  Company Liscorian ARMY captain (not Watch) and a recurring
+  Fellowship-of-the-Inn character; **Jeiss Sielmark** is a named Senior
+  Guardsman and Liscor Councilmember (3rd-best bladesman in the Watch,
+  partnered with Beilmark) — too major to reduce to static barracks
+  dressing, same reasoning as Klbkch's exclusion.
+- Sprite: `royal_soldier` reused (the former street `watch_guard` flavor
+  NPC, relocated into the new `barracks` interior and given a name/voice
+  for M-DEPTH DP4), rust-brown tint. Not a new generation.
+
 ## The PC ("Traveler")
 - Player-named at creation (M-ARC §5); race Human/Drake/Gnoll + gender
   cosmetic. Deliberately everyman; clothing = simple earth-tone

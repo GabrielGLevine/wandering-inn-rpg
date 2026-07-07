@@ -307,6 +307,7 @@ current-state-only, one short paragraph per live system.
 | `guild_interior_walkthrough` | 9 (fixture `near_guild`) | M-DEPTH DP1: guild_door real-door round-trip, Selys-behind-the-desk (pool + graph incl. desk-context node), board/notice-wall dressed props, Renn/Ilvo/Yelra walk-on pool lines |
 | `board_loop` | 9 (fixture `board_loop_start`) | M-DEPTH DP2: THE REQUEST BOARD goes live -- browse/accept/fulfill/turn-in at Selys's desk (delta-since-accept, gold payout), slate rotation across a sleep + the "slate rotated overnight" line |
 | `upstairs_walkthrough` | 9 | M-DEPTH DP3: the inn's upstairs -- stairs door pair, Lyonette's locked door (observe+locked_toast), sleep-beat parity proven live at the PC's own bed (same events, one extra flavor toast) |
+| `barracks_walkthrough` | 9 (fixture `near_barracks`) | M-DEPTH DP4: the Watch barracks + market-depth stalls -- `bread_stall` (flavor/observe) + the `peddler`'s mini-buy (`watch_issue_gambeson`, 20g), `barracks_door` real-door round-trip (the relocated `watch_guard`, zero prior QA touches), Duty Sergeant Dresk Ashgrave's talk_pool, Zevara's desk (she stays at the gate), THE CELL (locked_toast, empty-v1 dressed) |
 
 ## Working conventions
 

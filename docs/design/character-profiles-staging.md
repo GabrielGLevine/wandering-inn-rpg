@@ -116,3 +116,15 @@ Wiki-verify canon entries at generation/writing time.
   the reasonable one · answers Renn with plain facts · rereads the
   board a second time anyway. Sprite: reused `pc_drake_f` rig
   (moss-green tint).
+- **The Peddler** (ORIGINAL, title only — no proper name, matching the
+  existing `gate_guard`/`watch_guard` precedent of unnamed Watch-adjacent
+  flavor NPCs; DP4 market-stall walk-on): human, patched coat over
+  mismatched gear, a cart of surplus odds and ends. Voice: transactional
+  patter · half-honest about provenance ("some of it's even been
+  laundered") · no small talk once the coin's counted. Sells one item
+  (Watch-Issue Gambeson, surplus Watch armor) — the market's mini-buy
+  surface, `krshia_crate.json`'s exact buy contract
+  (`requires:{gold}`/`effects:[{gold:-N},{item}]`, price in the option
+  text). Sprite: reused `citizen_f` stand-in (the same generic-townsperson
+  convention `watch_sergeant`/`selys` originally shipped with), neutral
+  tint.

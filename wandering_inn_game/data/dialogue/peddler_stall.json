@@ -1,0 +1,22 @@
+{
+	"_comment": "M-DEPTH DP4: the second new market stall's mini-buy surface. Rides krshia_crate.json's EXACT shop-option contract (requires:{gold:price} paired with effects:[{gold:-price},{item:id}], price named in the option's own text -- WIDialogue strips the generated 'Worth N gold' effect_line from a shop option by matching that literal prefix, so the price only ever appears once, authored here). Sells exactly ONE item (watch_issue_gambeson, now priced at 20g -- previously fixture/harness-only, no live acquisition path) -- deliberately smaller than Krshia's multi-option shop, per the task's 'one mini-buy' scope. The Peddler is a title, not a proper name (matches the existing gate_guard/watch_guard precedent for unnamed Watch-adjacent flavor NPCs) -- profile in docs/design/character-profiles-staging.md.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Peddler",
+			"text": "Watch gear, mostly honest. Some of it's even been laundered.",
+			"options": [
+				{ "text": "That gambeson — Watch-issue? (20 gold)", "requires": { "gold": 20 }, "effects": [ { "gold": -20 }, { "item": "watch_issue_gambeson" } ], "goto": "bought" },
+				{ "text": "Just looking.", "end": true }
+			]
+		},
+		"bought": {
+			"speaker": "Peddler",
+			"text": "Deposit's already paid, so don't ask where it came from. Wear it in good health.",
+			"options": [
+				{ "text": "Anything else?", "goto": "hub" },
+				{ "text": "That's all.", "end": true }
+			]
+		}
+	}
+}

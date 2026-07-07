@@ -96,6 +96,8 @@
 			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
+			"price": 20,
+			"_comment_price": "M-DEPTH DP4: previously unpriced (no live acquisition path -- fixture/harness-only). Sold at the new street `peddler_stall` (surplus gear, one mini-buy per the market-depth task). Priced against the existing mundane-armor band: leather_jerkin (dr0/+4hp) is 24g, wool_lined_cloak (+3hp) is 18g -- this item trades hp_mod for a full damage_reduction point (a stat the M-GEAR harness treats as meaningfully strong, e.g. the dr-2 stack cell), so 20g sits between them rather than under-pricing a defensive stat nothing else in the shop band grants alone.",
 			"description": "Quilted padding stamped with the Liscor Watch's seal. Standard issue for anyone patrolling the walls.",
 			"lore": "Signed out against a deposit, and Watch Captain Zevara knows exactly how many never came back. The padding is older than some of the guards inside it; the budget for replacements has died in council three years running."
 		},

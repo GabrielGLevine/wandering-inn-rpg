@@ -16,6 +16,41 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] SPRITE — **a THIRD reproduction of the player-occludes-small-prop
+  finding below (`bed`/`lyonette_door`), this time on a market-stall PROP**:
+  M-DEPTH DP4's `bread_stall` (street, food_basket sprite, render_scale
+  0.75) is fully hidden behind the player's own head/torso when approached
+  the way `barracks_walkthrough` scripts it (stand one cell south at
+  (11,3), face up, interact) — windowed-verified: cropping
+  `qa_output/barracks_walkthrough/01_bread_stall.png` around the expected
+  cell (computed from `world.gd`'s camera math, screen ≈(640,160)) shows
+  only the player's own sprite; zero bread_stall pixels visible. Confirms
+  the DP3 finding's root cause generalizes beyond beds/doors to ANY small
+  floor prop approached from the south, not scale/sprite-specific. Non-
+  blocking (the toast/accomplishment fire correctly and are asserted via
+  the event log; no canonical asserts on-screen prop visibility) — same
+  disclosed fix options as the bed entry (bigger crop / anchor-adjust
+  small-south-approached props / accept it).
+- [ ] UI/TOAST — **stale toast still on-screen at screenshot time, 2
+  shots in a row** (`barracks_walkthrough`'s `06_zevaras_desk.png` and
+  `07_the_cell.png` both show the EARLIER "Autosaved. (Esc — save/load
+  anytime)" line, not that step's own toast — `Watch Captain's desk...`/
+  `Barred, and empty...`). Root cause (read from `src/core/game.gd`):
+  `barracks_door`'s `map_changed` event is this script's FIRST-EVER map
+  transition, which triggers `Game._on_domain_event`'s `save_auto()` →
+  the ONE-TIME "Autosaved" toast (`_autosave_announced` gate) — it fires
+  a few actions before the desk/cell interacts, and the toast PANEL's
+  display/rotation appears to lag behind the script's action rate, so the
+  screenshot (taken immediately after each toast's own `wait_for_event`
+  confirms it fired on the bus) still shows the older toast on screen.
+  NOT a data/event bug — `barracks_walkthrough`'s assertions all pass
+  (the exact right toast text is proven in the event log, in the right
+  order); this is a presentation-timing artifact of running several
+  toast-firing actions back-to-back faster than the panel visually
+  rotates. Same class of consideration already flagged in
+  `message_layer.gd`'s own doc comments (the class_gained/autosave-toast
+  race) — disclosed here as its 3rd-hand consequence, not investigated
+  further this task.
 - [ ] SPRITE — **the `bed` prop (both the ground-floor inn bed and the new
   M-DEPTH DP3 `your_bed` upstairs) is fully occluded by the player's own
   sprite when approached the way every sleep interaction is scripted**
