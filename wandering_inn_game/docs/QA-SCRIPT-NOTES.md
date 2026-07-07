@@ -1,0 +1,404 @@
+# QA Script Notes
+
+This is the detailed, verbatim per-script routing/rationale record for the
+canonical QA playtest sweep (`wandering_inn_game/qa/scripts/`). `../CLAUDE.md`
+keeps only a compact table (script | seed | one-line purpose); this file
+holds the full "why this route, why this seed, why this assertion" novella
+for each script, plus the cross-milestone routing notes (Onboarding rev
+O2/O4/O5, the Skills Wave K2 sneak seam, the Social Pillar rotating-pool
+note, the M-FP Q1 topology note) that explain the shared conventions those
+per-script notes rely on.
+
+A `[AUDIT-CORRECTED, 2026-07-07]` or `[RESOLVED ...]` bracketed note means
+the 2026-07-07 CLAUDE.md accuracy audit found and fixed a stale claim;
+the surrounding text is otherwise preserved as originally written.
+
+Cross-check discipline: this file's script list must stay a superset of
+`qa/ci_sweep.sh`'s `CANON` array and `../CLAUDE.md`'s compact seed table.
+When adding a new canonical script, add it in all three places.
+
+---
+
+## Per-script routing notes embedded in the old Commands section
+
+(These were originally interleaved with `run_qa.sh` invocations; the
+invocations themselves are just `qa/run_qa.sh <script> headless --seed=<seed>`
+per the compact table in `../CLAUDE.md` now, so only the explanatory
+comments are preserved here.)
+
+
+	# Story-spine QA scripts (per-script canonical seeds!)
+	# [AUDIT-CORRECTED, 2026-07-07] M-FP Q1 originally routed quest_errand_fight to meet Relc
+	# before its fight while dialogue_walkthrough/quest_errand_parley/save_load_roundtrip/
+	# dialogue_hub_loop bypassed him. ONBOARDING O5 (2026-07-05) then re-routed ALL FIVE through
+	# the real cold-start arc (spar -> sleep Warrior -> cross the mandatory floodplains ambush) --
+	# every one of them meets Relc first now (see the O5 ROUTE-W block above); this comment
+	# previously still described the pre-O5 shape after the re-path landed.
+	wandering_inn_game/qa/run_qa.sh dialogue_walkthrough headless --seed=9
+	wandering_inn_game/qa/run_qa.sh dialogue_hub_loop headless --seed=9
+	wandering_inn_game/qa/run_qa.sh quest_errand_fight headless --seed=9
+	wandering_inn_game/qa/run_qa.sh quest_errand_parley headless --seed=9
+	wandering_inn_game/qa/run_qa.sh save_load_roundtrip headless --seed=9
+	wandering_inn_game/qa/run_qa.sh combat_walkthrough headless --seed=9
+	wandering_inn_game/qa/run_qa.sh level_up_loop headless   # ONBOARDING O5: now a post_tutorial FIXTURE loop (title Continue); fixture rng 9 overrides --seed
+	wandering_inn_game/qa/run_qa.sh mage_unlock_loop headless --seed=9
+	wandering_inn_game/qa/run_qa.sh line_of_sight_denial headless --seed=9
+	# [AUDIT-CORRECTED, 2026-07-07] M-FP Q2 originally shipped gate_district_walkthrough with a
+	# parley bypass and no combat in its path. ONBOARDING O5 re-routed it through the real
+	# cold-start arc like the rest of the story-spine scripts, so it now carries TWO real
+	# combat_started/combat_finished pairs (the classless spar + the mandatory O2 proximity
+	# ambush) -- seed held for convention consistency regardless.
+	wandering_inn_game/qa/run_qa.sh gate_district_walkthrough headless --seed=9   # enters street for real from the floodplains liscor_gate; y4 transit lane + krshia_stall/guild_door/sewer_grate (exact toasts) + gate Watch guard (dialogue_line) + Selys (26,4); owns the map_changed{street}->audio_played{music_street} assertion combat_walkthrough dropped
+	# Playtest-content slice T3: "The Missing Crate" (street, 3 solution paths -- fight/talk/skill)
+	wandering_inn_game/qa/run_qa.sh crate_fight headless --seed=9    # FORCE path: fights the new crate_scavengers encounter (2x goblin_raider, goblin_ambush arena, no ally) via combat_autoplay
+	wandering_inn_game/qa/run_qa.sh crate_talk headless --seed=9     # WATCH path: persuades the new watch_sergeant to clear crate_scavengers, no combat_started anywhere
+	wandering_inn_game/qa/run_qa.sh crate_light headless --seed=9    # SKILL path: [Light]-studies the new cellar_door prop; proves the hidden-until-met report option is absent before studying
+	wandering_inn_game/qa/run_qa.sh journal_skills headless --seed=9  # UI wave item 19: journal skills-by-class panel -- pre-first-use NAME ONLY, post-first-use full description, grouped-by-class payload structure
+
+	# M7 Task E5: inventory/equipment loop
+	wandering_inn_game/qa/run_qa.sh inventory_loop headless --seed=9  # ONBOARDING O5: chest pickup -> spar -> re-talk Relc for the GIFT node (spear, O3 moved it off the spar-accept) -> sleep Warrior L1 -> equip the spear via the real UI -> cross the goblin_encounter_1 ambush (30,23) proving the weapon-gated kit (piercing_strikes IN, power_strike OUT) -> journal lists both (knowledge != fieldability)
+
+	# M-BEAUTY Task B1: mood grade + phase-clock consumer
+	wandering_inn_game/qa/run_qa.sh atmosphere_check headless --seed=9  # world_ready -> ui_mood_applied{inn,day} -> journal open/close under identity grade (UI-ungraded proof) -> 100 real actions (paced back-and-forth moves; Track P1 dusk_at 40->100) -> phase_changed{dusk} + ui_mood_applied{dusk} -> sleep at bed -> phase_changed{day} + ui_mood_applied{inn,day}
+
+	# ONBOARDING rev O5: the onboarding's own end-to-end proof (classless spar -> sleep Warrior L1 -> gift + I-equip the spear -> proximity ambush -> street)
+	wandering_inn_game/qa/run_qa.sh tutorial_flow headless --seed=9
+
+	# THREE PILLARS P5: the field-skill LOOP proof (loads the near_tactician fixture via title Continue)
+	wandering_inn_game/qa/run_qa.sh field_skills_loop headless --seed=9  # boot: ui_field_hotbar_rendered{slots:1} (innate [Basic Cleaning]) -> number key on faced dirty_table fires P1 byte-parity stream (skill_used{basic_cleaning,dirty_table}+cleaned_the_inn+same toast) -> number key on empty floor = field_ambient fallback -> sleep grants [Tactician] (pre-banked studied_the_cellar) AND [Helper] (the fresh cleaned_the_inn:1) in ONE sleep -> hotbar re-renders slots:1->3 ([Basic Cleaning],[Basic Cooking],[Observe]) -> [Observe] slot(3) on Erin = her exact observe toast + used_skills journal reveal. Fixture rng overrides --seed; no combat in the path.
+
+	# SOCIAL PILLAR S4: the Social Pillar v1 end-to-end proof (loads post_tutorial_street fixture via title Continue)
+	# Content Wave C4: "The Wrong Order" (Lyonette Q2, 3 paths). Split by MAP: the loop is inn-local (Lyonette gives AND reports); TALK/FIGHT resolve on the street.
+	wandering_inn_game/qa/run_qa.sh wrong_order_loop headless --seed=9   # PRIMARY inn-local: give -> skill-gate NEGATIVE (short_order pre-Helper) -> earn [Helper] -> cook (stretched_the_order, the cauldron skill-save) -> Lyonette SKILL report (resolved+reported, both beats) -> gratitude -> POOL-GROWTH (talk_pool_post active after resolved_wrong_order). No combat; fixture rng.
+	wandering_inn_game/qa/run_qa.sh wrong_order_talk headless --seed=9   # TALK path (street): Krshia smooth-over (heard_wrong_order-gated) -> smoothed_with_krshia + persuaded_someone + resolved_wrong_order, NO combat. give/report pre-proven by the loop.
+	wandering_inn_game/qa/run_qa.sh wrong_order_fight headless --seed=9  # FIGHT path (street): clear supplier_scavengers (2x goblin_raider, goblin_ambush) via combat_autoplay -> strongarmed_the_supplier + resolved_wrong_order (beat 1 in combat).
+
+---
+
+## Cross-milestone routing notes + the canonical seed table (full per-script rationale)
+
+**Canonical QA seed table (M5 F1 close gate; +3 M6 T7 scripts; +1 lantern_check;
+M-FP Q1 floodplains re-path — all 18 held their pre-existing seed; M-FP Q2 adds 2 new
+re-derivation; playtest-content slice T2 +1 (`work_loop`); T3 +3 (`crate_fight`/
+`crate_talk`/`crate_light`, all held seed 9 straightaway); WAVE A2 +1
+(`defeat_ally_alive`, seed 11 pinned from the proven level_up_loop casualty scenario);
+UI wave +1 (`journal_skills`, seed 9 held straightaway, no combat in the path);
+M7 Task E5 +1 (`inventory_loop`, seed 9 held straightaway); M-BEAUTY Task B1 +1
+(`atmosphere_check`, seed 9 held straightaway — phase determinism means it
+consumes no rng and needs no search); **ONBOARDING O5 +1 (`tutorial_flow`, the
+onboarding's own proof, seed 9)**; **THREE PILLARS P5 +1 (`field_skills_loop`,
+fixture-based via `near_tactician`, no combat in the path so the fixture rng
+governs and seed 9 held straightaway)**; **SOCIAL PILLAR S4 +1 (`social_loop`,
+fixture-based via `post_tutorial_street`, so the fixture rng governs — its one
+combat, the fixture-active floodplains ambush, was won at fixture-rng straightaway,
+no search)**; **Content Wave C1 +1 (`sewers_walkthrough`, fixture-based via
+`near_sewers`, fixture rng 9 won its vermin fight straightaway)**; **Content Wave
+C3 +3 (`cisterns_fight`/`cisterns_talk`/`cisterns_scout` — Quest 1 three-path
+parity, one script per path per the crate precedent since the SKILL stream
+descends the sewers and the TALK stream never does, so they cannot share a run;
+all fixture-based, seed 9 held straightaway including `cisterns_fight`'s
+warrior-L1-solo nest fight)**; **Content Wave C4 +3
+(`wrong_order_loop`/`wrong_order_talk`/`wrong_order_fight` — Quest 2 'The Wrong
+Order' three-path parity. The paths split by MAP not just by stream: Lyonette is
+BOTH giver and report NPC in the INN, so `wrong_order_loop` runs the whole
+give→skill-gate-negative→earn-Helper→cook→report→gratitude→**pool-growth** loop
+inn-local (the SKILL path + the first talk_pool_post growth); the cross-map TALK
+(Krshia, street) and FIGHT-adjacent (supplier_scavengers, street) resolutions get
+their own street-start fixtures with the give+report pre-proven by the loop — so
+three scripts, like cisterns, not a shared run. All fixture-based, seed 9 held
+straightaway including `wrong_order_fight`'s warrior-L1-solo goblin_raider pair)**;
+**Economy v1 D4 +1 (`economy_loop` — the coin arc: chore earn → ambush loot →
+Krshia broke → crate loot → buy → I-panel coin line. Fixture-based via
+`economy_loop_start` (inn, Warrior L1, 0 gold); its rng_state=9 governs the two
+fights and both were won straightaway, while the CLI `--seed=9` governs the
+isolated loot gold [both encounters drop gold 2, D2's loot_probe verdict]. Two
+peek-only shot scripts excluded from the sweep: `d3_inventory_shot` [coin line]
+and `d2_shop_shot`)**),
+pinned straightaway (no seed search needed unless noted): run these 49 headless
+scripts (M-ARC A3 +2: `climax_chain`/`climax_seal`, the climax chain's
+summons/seal streams, fixture-based; the party-veto is a unit roster proof, not
+a script; **M-ARC A4 +1: `arc_flow`, THE WHOLE-ARC PROOF, fixture `near_act3`**;
+**M-LEGIBILITY L4 +1: `status_first_encounter`, fixture `near_mage_cast`**;
+**M-GEAR G3 +1: `gear_loop`, fixture `gear_loop_start` — the resonance-gear UI
+proof (accessory rows, "Resonance N/M" header, lore render, capacity refusal),
+seed 9 held straightaway since it's fully fixture-based, no combat, no rng**;
+**Skills Wave K2 +1: `stealth_loop`, fixture `near_ambush_sneak` — the sneak
+seam's own proof (trigger-skip + break + positive control in one run), seed 9
+held straightaway since no fight ever resolves in the path (the script ends
+right after `combat_started`)**)
+with `qa/run_qa.sh <script> headless --seed=<seed>` unless noted. The peek-only scripts (`title_peek`,
+`street_peek`) are screenshot utilities, not canonical gate members;
+`floodplains_peek` was retired by Q1 (floodplains is now walkably reachable
+via `inn_door`, so a teleport-only peek is redundant — `street_peek` picked up
+its teleport-to-region idiom for the new 32×20 gate district instead).
+
+**Social Pillar S1–S4 note (rotating talk pools + [Diplomat]):** an NPC with a
+non-empty `talk_pool` (data) plays ONE rotating small-talk `dialogue_line` on the
+FIRST talk of a waking — index `chatted_with_<id> % pool.size()` (zero rng) — and
+banks `chatted_with_<id>` + `heard_gossip` (both opaque social counters), setting
+`social_talked[id]`. Every LATER talk that waking falls through to the NPC's exact
+prior behavior (conversation graph, or plain `dialogue[0]`); `sleep()` clears
+`social_talked` + `entity_first_use` (the shared per-waking first-use dedup dict
+that also gates [Observe]'s `observed_things` and [Charming Smile]'s
+`befriended_moments`), re-arming the pool next waking. Both dicts are save-persisted
+(additive-optional, **no version bump** — VERSION stays 5), so a mid-waking
+save/reload does NOT re-arm a spent pool. **Shipped on a 4-NPC subset:** Krshia,
+Selys, Pisces, gate_guard (all street). **Erin + Relc pools are DEFERRED to the
+morning queue** (S2 measured them as ~28-of-32-script reds — Erin touches 12, Relc
+22 — "unacceptably wide"; the 4-NPC subset proves the pillar while keeping the
+onboarding+combat spine byte-clean). Their authored-then-reverted canon copy is
+preserved verbatim in `.superpowers/sdd/fp-handoff/task-s2-social-report.md` §"Dropped-but-authored"
+for whoever closes them. **The 10 scripts that open a pooled NPC as a first-talk-of-waking
+were re-pathed (S4):** `dialogue_hub_loop`, `quest_errand_parley`, `quest_errand_fight`,
+`save_load_roundtrip`, `gate_district_walkthrough`, `crate_talk`, `crate_fight`,
+`crate_light`, `lantern_check`, `mage_unlock_loop` — each first-talk now absorbs the
+pool `dialogue_line` (speaker = the NPC's `display_name`: "Krshia"/"Selys"/"Pisces"/"Watch
+Guard") via an added `wait_for_event dialogue_line` + a SECOND `interact` for the real
+graph. gate_guard is the tricky one: its pool line AND its `dialogue[0]` both carry
+display name "Watch Guard", so the pool absorb pins the exact idx-0 pool text
+("Gate's clear...") to disambiguate. `crate_light` sleeps TWICE (re-arming pools), so
+it re-paths BOTH its Pisces talk (waking 2) and its Krshia talk (waking 3). **[Diplomat]**
+(canon class) is a TWO-gate AND earn: `gained_by {persuaded_someone: 1, heard_gossip: 3}`
+— persuasion identity + gossip volume; L1 grants `[charming_smile]` (field, warmer-NPC
+reaction, `friendly_line` per NPC) + `[calming_touch]` (combat, re-flavored `slowed`).
+`social_loop` is the whole-pillar proof.
+
+**M-FP Q1 topology note:** `inn_door` (inn `[15,3]`) now targets `floodplains`
+`(7,6)` (was `street`); `floodplains_inn_door` `(7,5)` returns to inn `[14,3]`;
+`street_door` (now the 32×20 Liscor gate district) targets `floodplains`
+`(31,24)`; `liscor_gate` `(31,25)` on floodplains targets `street` `[1,3]`.
+`goblin_encounter_1` `(21,12)`, `goblin_encounter_2` `(28,18)`, and
+`chieftains_raid` `(31,7)` all migrated from `street` onto `floodplains` and
+all three now carry `ally_requires: {met_relc: 1}` — Relc (npc, floodplains
+`(12,13)`, `relc_intro` conversation) fields as an ally in that fight ONLY
+after the player has talked to him and banked the `met_relc` accomplishment;
+an unmet fight still starts, just short one ally. Scripts whose fight is
+sensitive to that ally slot (reaction triggers, riposte timing, a losing
+seed, a LoS-specific arena, or asserted arena/turn-order state) add a
+meet-Relc prologue before traveling to the fight; scripts whose fight only
+asserts a generic `victory: true` do not (see the two lists above for exactly
+which). `relc_spar` `(13,12)` and its `dummies_note` conversation are shipped
+(C1); Q2 landed the two new QA scripts that cover the gate district and the
+spar (see the table below) — `gate_district_walkthrough` and `relc_tutorial`.
+
+**Onboarding rev Task O2 (proximity trigger, spec §3):** `move_player`
+(`wi_game.gd`) gained `_check_trigger_radius()` — after a successful move, any
+`encounter` entity on the current map carrying `trigger_radius: N` fires
+`start_combat` the instant the player lands within N cells (Chebyshev). It is
+a pure alternate call site into `start_combat` (dormant-respawner refusal and
+`ally_requires` roster gating are unchanged, both live inside `start_combat`
+itself); it fires start_combat DIRECTLY, skipping any `conversation` the
+entity might carry — no shipped encounter combines the two, so this is a
+documented precedence, not an active regression. Only `door` transitions
+(`transition()`/`bind_map_silent()`, i.e. door travel, QA `teleport`, and
+save/load restore) never call this — a QA teleport or a load can never
+ambush the player. `goblin_encounter_1` RELOCATED from `(21,12)` to
+`(30,23)` and gained `trigger_radius: 2`. **The corridor-free property comes
+from the MERGED `walls.segments` blocked set, not a lone "y=25 wall" (O5 doc
+correction, per O4's BFS over the true blocked geometry):** the floodplains
+blocking is `walls.segments` — the SE wall row (which leaves x=31,
+`liscor_gate`'s cell, as the only column through the bottom) PLUS the
+fishing-pond rect (x7-13, y17-21) — plus the `chieftains_raid`-occupied col 31
+above y8; together these make `(31,24)` the sole open cell from which the gate
+can be reached, and that cell sits inside the new Chebyshev-2 zone: a BFS over
+the true merged blocked set with the zone's cells removed proves `(31,24)`
+becomes unreachable from the `(7,6)` entry — no path to `liscor_gate` avoids
+the ambush (conclusion unchanged; full proof + BFS-derived return lanes:
+`.superpowers/sdd/fp-handoff/task-o2-report.md` and `task-o4-report.md`).
+`goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected
+(interact-only, no `trigger_radius`). **CLOSED by Task O5's re-path window
+(2026-07-05):** every canonical script that crossed floodplains → `liscor_gate`
+was re-pathed through the real cold-start arc (spar → Warrior → cross the
+ambush); the disclosure red set is now fully green (see the O5 block below the
+seed table).
+
+**Skills Wave Task K2 (the sneak seam, stealth state):** `WIGame.sneaking`
+(a bool, NOT saved -- see `save.gd`'s comment) makes `_check_trigger_radius`
+(just above) skip ENTIRELY while true -- the whole point, walking PAST a
+proximity ambush like `goblin_encounter_1`'s. Toggled by a `sneaks: true`-
+tagged field skill's number key (`use_skill_field`'s `_toggle_sneak`, K1's
+tag-not-id convention -- keyed on the DATA TAG, not the skill's id), NOT
+class-gated today: the shipped `[Sneak]` skill (provisional id/name, K3 owns
+canon naming + the real class grant) is QA-fixture-only, the SAME disclosed
+affordance as K1's `frost_touch`/`kindle`. **Break conditions** (all clear it
+via `_break_sneak`, a single choke point, idempotent/no-op when already not
+sneaking): `interact()` reaching ANY entity/prop response EXCEPT a map
+transition (a real `door` or a met `door_when` gate -- "crossing a door
+quietly is the point"); any successful field-skill use ON A TARGET (a
+`field_ambient` no-op flourish does NOT break it -- "a whiffed flourish isn't
+a commitment"); `start_combat` firing for ANY cause (the one choke point past
+every early-return, so only a fight that actually begins counts); `sleep()`
+clears it too, SILENTLY (no toast/event, same convention as `light_active`/
+`frozen_cells`). **Combat read:** using `[Sneak]` in a fight costs 1 AP for
++2 `move_pool` -- a genuine self-buff, no enemy/adjacency/LoS, wired through
+`WISkillEffects.resolve_active` (`src/core/combat/skill_effects.gd`) via an
+`ap_cost > 0` gate on the PRE-EXISTING `move_pool_bonus` effect type
+(deliberately narrow: the two 0-cost `move_pool_bonus` skills, `quick_movement`/
+`battlefield_awareness`, stay exactly as unresolved/refused as before --
+see that file's doc comment for why generalizing the gate would have been a
+silent free-pool exploit). `targeting_controller.gd`'s `enter()` reuses the
+EXISTING `_targets`/`confirm()` plumbing for the self-target case (a
+single-element list containing the actor's own id) rather than a new
+targeting mode. **Presentation:** the PC sprite tints translucent
+(`modulate.a` ~0.6, world.gd's `_reconcile_sneak_visual`, the tint-machinery/
+`_reconcile_pc_light` precedent) while sneaking, restored on any break/off/
+sleep-clear; `SNEAK_STARTED`/`SNEAK_ENDED` + `UI_SNEAK_RENDERED` are the new
+events (`wi_events.gd`). QA: `stealth_loop` (fixture `near_ambush_sneak`) is
+the canonical proof -- see its own seed-table entry above. **Fix-wave
+disclosure:** `equip()`/`unequip()` are DELIBERATELY outside the break scope
+(neither calls `_break_sneak`, and the inventory panel isn't sneaking-gated
+at all -- unaddressed this task, flagged for K3 to rule on); shop-buy is
+transitively safe without any direct call (a shop is only reachable through
+an npc conversation, and `interact()` reaching ANY npc response is already
+break condition #1, so sneak is broken before a buy option can ever fire).
+
+**Onboarding rev Task O4 (Pisces + grants-listing toasts, spec §4/§9):**
+[Mage] is now EARNED FROM PISCES, not the retired Dusty Scroll.
+- **Pisces Jealnv** (Human [Necromancer], canon) is a new npc at the street
+  Guild frontage `(30,4)` (east of `guild_door` (28,3), clear of
+  `gate_district_walkthrough`'s forecourt approach cells). Sprite: `citizen_f`
+  stand-in with a pale cool tint `[0.74,0.82,0.96]` to read as a necromancer
+  distinct from Selys's warm green (VISUAL-LOG — a future art pass should give
+  him a real portrait/sprite). Conversation `data/dialogue/pisces_magic.json`:
+  a short magic tutorial (mana/MP → casting vs swinging → why [Light] is
+  first) banking `learned_magic_from_pisces` at the closing option; re-talk
+  variants gate on `met_pisces` (banked on first lesson) and
+  `learned_magic_from_pisces`. `mage.gained_by` → `{accomplishment:
+  {learned_magic_from_pisces: 1}}`.
+- **Dusty Scroll RETIRED to flavor:** `dusty_scroll` (inn `(12,7)`) now banks
+  `read_dusty_scroll` (a gate-referenced-nowhere flavor accomplishment) and a
+  new hint toast; it no longer banks `used_magic` and grants no class.
+  `used_magic` is now a dead symbol (its test/fixture uses were repointed to
+  `learned_magic_from_pisces` or `read_dusty_scroll`).
+- **Grants-listing class_gained toast (spec §4/§9):** `wi_game.gd`'s
+  `_class_gained_toast(class_id)` lists the class's level-1 grants —
+  `"[Mage] class gained! — [Frost Bolt], [Quick Cast], [Light]"` (display
+  names from skills.json, already bracketed; no numbers). Applies to EVERY
+  class_gained (Warrior/Helper/Mage). **This is a global toast-format change:**
+  every exact-text assertion of the old `"[X] class gained!"` moved to the new
+  form — `test_sim_core.gd` (mage), `work_loop.json` (`"[Helper] class gained!
+  — [Basic Cooking]"`), and the three O4 scripts. `class_level_up` toasts
+  already list grants via `— unlocked …` (unchanged; consistent bracketing
+  because display names carry the brackets).
+- **The three O4-owned scripts (`mage_unlock_loop`/`lantern_check`/
+  `crate_light`) are GREEN again at seed 9** under the current tree (classless
+  start + live ambush): they encode the honest new-game flow (meet Relc → spar
+  → sleep Warrior → cross the ambush FIGHTING it → Pisces → sleep [Mage]). The
+  ambush cross is DELIBERATE and unavoidable (O2's corridor-free gate); all
+  ambush/goblin_encounter_2 fights survive+win at seed 9. `crate_light` crosses
+  the ambush twice (the mage sleep re-arms it) — both won. Floodplains lanes
+  route around the `walls.segments` fishing-pond (x7-13, y17-21) and the
+  `chieftains_raid`-occupied col 31; full cell derivation in
+  `.superpowers/sdd/fp-handoff/task-o4-report.md`.
+
+**Onboarding rev Task O5 — THE RE-PATH WINDOW (closed 2026-07-05).** The
+classless start (O1) + relocated proximity ambush (O2) + gift-node move (O3) +
+Pisces/grants toast (O4) reddened 19 canonical scripts; O5 re-pathed all of
+them and added `tutorial_flow`. Full sweep (31 scripts) + 13 units + load_gate +
+smoke are green, zero SCRIPT ERROR/Parse Error/WARNING. Routing model:
+- **ROUTE-W (walk the real cold-start arc)** — most scripts: classless spar vs
+  the inert dummies → sleep → Warrior L1 → cross the mandatory floodplains
+  proximity ambush (warrior kit + Relc ally) → street. The reusable prologue is
+  authored in `combat_walkthrough.json` (part-1 + part-2, seed 9) and reused
+  verbatim by the street-crossing scripts (the story/quest/gate scripts prepend
+  it; the old `goblin_parley` "Stand aside" bypass is DEAD — the ambush is
+  corridor-free). `tutorial_flow` additionally proves the gift node + `I`-equip
+  the spear + the part-2 beats.
+- **ROUTE-F (fixture start)** — deep-loop / determinism-sensitive combat
+  scripts LOAD a fixture via title Continue (fixture `apply()` sets
+  `rng.state = int(rng_state)`, OVERRIDING `--seed` for all post-load draws, so
+  their combat determinism flows from the fixture rng_state, not the CLI seed —
+  same contract as `near_*`). **New fixtures:** `post_tutorial` (v5; warrior L1,
+  met/sparred/given_spear, rusty_sword equipped + spear in pack, floodplains
+  (7,6), rng 9) — consumed by `level_up_loop` (its outcome-defining consumer,
+  rng tuned for the fight-2 riposte) and `combat_move_input` (rng-agnostic after
+  its re-route); `post_tutorial_street` (same, at street (1,3), rng 9) —
+  consumed by `crate_talk`/`crate_fight` (skips the ambush so `crate_talk` stays
+  genuinely combat-free); `near_defeat` (warrior L1, floodplains, rng **3**) —
+  `defeat_ally_alive`, tuned so the level_up_loop-style route's fight-2 drops
+  the PC while Relc survives. **KEY determinism fact:** a straight-to-fight
+  fixture is rng-INSENSITIVE (no pre-fight combat advances the rng, and the
+  chieftains fight structurally protects the back-line PC — Relc tanks and
+  dies); the fight only varies with the fixture rng once a *prior* combat has
+  advanced the stream (why `defeat_ally_alive` keeps fight1+sleep before
+  fight2).
+- **Pin-only fixes** (classless-safe, no re-path): `journal_skills` (boot
+  payload `["Innate"]`/1, was `["Innate","Warrior"]`/5), `save_migration` +
+  `consolidation_reload` (fresh-boot `classes == {}`), `line_of_sight_denial` +
+  `defeat_reload` (hotbar `slots: 3`, was 4 — their subject is orthogonal to the
+  PC kit; the classless PC + Relc still wins/loses those fights).
+- `relc_tutorial` REWRITE: O3's new meet-node gift option shifted the post-spar
+  indices, so its old "second spar" re-talk now walks the **gift node** instead
+  (spear + `given_spear_by_relc` + the "press I" teaching); the skippable
+  negative + full part-1 beats + opacity teeth are unchanged.
+
+| script | seed | notes |
+|---|---|---|
+| `load_gate` | none | native-only resource compile/load gate; no seed needed |
+| `tutorial_flow` | 9 | **ONBOARDING O5 (new canonical, the onboarding's own proof).** Boot CLASSLESS (hotbar 3 slots at the spar) → meet Relc → accept spar → part-1 beats by real keys against the shipped `training_yard` tutor_lines (opening/first_step/pool_empty/dash/aim/first_blood/watch/wrap — wrap's NEW O3 line) → `item_gained` ABSENT until the gift → sleep → `class_gained{warrior}` + the O4 grants toast → re-talk Relc for the GIFT node (spear + given_spear_by_relc + "press I" teaching) → press I + equip the spear (`item_equipped`) → walk the road, the O2 proximity ambush fires with NO interact (`real_ones` beat) → warrior+spear kit (4 slots) + Relc win it (`road_clear`) → gate onto the street. Part-2 skill beats (skill_aim/skill_hit) are UI-manual-only (autoplay with a spear never fires a skill, per `inventory_loop`'s finding) — the identical part-1 `aim` beat covers the targeting UI. Seed 9, held straightaway. |
+| `inn_walkthrough` | 9 | full inn journey, no screenshots in headless. M-FP Q1: unaffected — never exits the inn, verified green as-is. **M-BEAUTY R3:** the `ui_world_labels_rendered` count assert (retired event) removed; `ui_entities_rendered` count assert is `sprites:13` (12 map entities + player; Content Wave C4's `short_order` entity brought the map entity count to 12, bumping the assert from the earlier `sprites:12`) |
+| `dialogue_walkthrough` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** Erin/Selys story path. M-FP Q1: re-paths inn→floodplains→liscor_gate→street; ONBOARDING O5 re-path means it now meets Relc (12,13, `relc_intro`, banked before both `combat_autoplay` calls at steps 63/99) BEFORE fighting `goblin_encounter_2` (asserts only generic `victory: true`, roster-neutral either way) |
+| `dialogue_hub_loop` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** conversation hub loop-backs and decision-invalidation hide_when sweep. M-FP Q1: re-paths inn→floodplains→liscor_gate→street; the old `goblin_parley` bypass is dead — ONBOARDING O5 re-path means it now walks meet-Relc→spar→sleep(Warrior L1)→cross the mandatory goblin_encounter_1 proximity ambush before continuing to street |
+| `quest_errand_fight` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** errand path with goblin fight. M-FP Q1: re-paths inn→floodplains (meet Relc at (12,13) before `goblin_encounter_2`)→liscor_gate→street→Selys, then back via the same doors to the inn epilogue |
+| `quest_errand_parley` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** errand path through parley. M-FP Q1: re-paths inn→floodplains→liscor_gate→street→Selys and back; the old `goblin_parley` "Stand aside" bypass is dead — ONBOARDING O5 re-path means it now walks meet-Relc→spar→sleep(Warrior L1)→cross the mandatory floodplains ambush before reaching street |
+| `save_load_roundtrip` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** save/load persistence path. M-FP Q1: re-paths inn→floodplains→liscor_gate→street→Selys; the old parley bypass is dead — ONBOARDING O5 re-path means it now walks meet-Relc→spar→sleep(Warrior L1)→cross the mandatory floodplains ambush, then stays on street through the save/load beats |
+| `combat_walkthrough` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** unchanged from M2 — still holds post-rebalance. M-FP Q1: now ALSO exercises the `ally_requires` roster gate end-to-end — opens with a roster NEGATIVE fight (fresh boot straight to `goblin_encounter_1` (21,12), `met_relc` unset, asserts 3 combatants/no `relc` `turn_started`), then meets Relc (12,13, `relc_intro`), then the original `goblin_encounter_2` fight as a roster POSITIVE (asserts `combat.combatants.relc.side == "player"` + a `relc` `turn_started`); `accomplishments.won_combat` is now 2 (both fights), not 1. Dropped the `music_street` audio assertion — the walkthrough no longer visits `street` (fight is on floodplains); Q2's `gate_district_walkthrough` picked that assertion up (see its row below) when it visits street for real. **M-BEAUTY R3:** both `ui_world_labels_rendered` count asserts (retired event) removed; the `assert_world_labels_in_view`{context:combat} geometry probe KEPT (still valid — the surviving HP/MP stats panel still needs to project on-screen correctly, unrelated mechanism from the retired count event) |
+| `level_up_loop` | 9 (fixture) | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** **Now a `post_tutorial` FIXTURE loop** (title Continue). Fixture rng (9) overrides --seed. fight 2 swapped from `goblin_encounter_1` to `chieftains_raid` — see Gotchas. M-FP Q1: re-paths inn→floodplains, meets Relc (12,13) before fight 1 (`goblin_encounter_2`) since fight 2 (`chieftains_raid`) also gates on him; returns to inn to sleep/level, then back to floodplains for fight 2 — met_relc persists, no second meet needed. WAVE A2 §7: re-derived from seed 11 to 12 — the post-D4 "pc death = immediate defeat" change turned seed 11's fight 2 from a win (pc goes down mid-fight, relc alive, relc mops up the last enemy under the old team-wipe rule) into a defeat under the new pc-death rule; seed 12 wins fight 2 outright (pc survives) and still fires `reaction_triggered{counter_strike}` (step 67's assert), so it holds both roles the seed needs |
+| `mage_unlock_loop` | 9 | **Onboarding rev O4 (full rewrite):** [Mage] now comes from PISCES, not the retired Dusty Scroll — so this walks the real cold-start arc: meet Relc→spar→sleep (Warrior L1)→cross the floodplains proximity ambush (`goblin_encounter_1`, warrior kit + Relc ally, fight 1)→Liscor gate→street→Pisces (`pisces_magic`, banks `learned_magic_from_pisces`)→back to the inn→sleep ([Mage] gained, O4 grants-listing toast `"[Mage] class gained! — [Frost Bolt], [Quick Cast], [Light]"`)→`goblin_encounter_2` with the mage kit fielded (asserts `combat.combatants.pc.skills` **contains** `[frost_bolt, quick_cast, light]` — replaces the old mage-only `slots==5`/`max_mp==12` pins, which no longer hold now the honest route also carries Warrior). Also pins the O4 Warrior gain toast. Seed 9 survives+wins BOTH fights. Pond (`walls.segments` x7-13 y17-21), SE wall (y=25) and `chieftains_raid`-occupied col 31 shape the floodplains return lane — see task-o4-report.md for the BFS-derived cells |
+| `line_of_sight_denial` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** see Gotchas for the arena substitution. M-FP Q1: re-paths inn→floodplains, meets Relc (12,13) before `goblin_encounter_2` (the `flame_bolt`/no-`no_los` assertions are arena-internal and unaffected by the extra ally) |
+| `defeat_reload` | 1 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** M4 T4 losing `chieftains_raid` seed; verifies defeat loads `auto` and does not emit `game_reset`. M-FP Q1: re-paths inn→floodplains, meets Relc (12,13) before the fight (chieftains_raid moved street→floodplains); final `current_map` assertion is now `floodplains`, not `street`. Note: in this seed Relc dies BEFORE the PC, so it proves the reload flow, not the pc-death-with-living-ally rule — that's `defeat_ally_alive`'s job |
+| `defeat_ally_alive` | 3 (fixture) | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** **Now the `near_defeat` FIXTURE** (warrior L1 -> fight1 gob2 -> sleep -> W2 -> fight2 chieftains LOST with the PC dropping while Relc survives at full 40 HP; fixture rng 3 overrides --seed; relc's fixture HP is 40 max — the asserted post-defeat snapshot pins relc.hp == 24). WAVE A2 (directive 7) — **THE canonical proof of the PC-death defeat rule** through the real input/AI/UI path. Route is `level_up_loop.json` verbatim through fight 2's `combat_autoplay` (seed 11 = level_up_loop's OLD seed, whose fight 2 is the proven scenario: chieftains_raid downs the PC at round 3 while Relc stands at 24/40 HP and the chieftain at 4 HP — a WIN under the pre-A2 team-wipe rule, Relc's turn was next). Asserts `combat_finished`{victory:false, draw:false}, snapshot `combat.combatants.pc.alive == false` + `relc.alive == true` + `relc.hp == 24` (exact pin — deterministic per seed; the tooth is hp > 0 at defeat) BEFORE confirming the banner, then the defeat_reload idiom: confirm → `ui_combat_hidden` → `game_loaded` → `current_map == floodplains` → `assert_event_absent game_reset`. If a combat-data change moves this seed, re-derive by searching for a fight-2 seed where the PC drops while Relc lives (the WAVE A2 report documents the method) |
+| `title_flow` | 9 | M5 S3; no combat in the path, seed held for convention consistency. M-FP Q1: `inn_door` now targets `floodplains` — the mid-script `map_changed` wait and the final `current_map` assertion both changed from `street` to `floodplains` (this one WAS affected by the door retarget, despite reading as topology-agnostic; confirmed red-then-green, not assumed) |
+| `combat_move_input` | 9 (fixture) | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** **Now a `post_tutorial` FIXTURE** (warrior+sword so the [Power Strike] slot-info fires); rng-agnostic manual moves re-routed NW around Relc's (2,4) spawn. M5 H2; drives movement-first arrows + Dash refill with real key injection, then ENDS MID-COMBAT (injected moves diverge from the canonical autoplay trajectory, so it never asserts an outcome). M-FP Q1: route is now inn→floodplains only (meets Relc at (12,13) first, then `goblin_encounter_2`, no separate street leg); in-arena cells/assertions are unchanged. UI wave item 15 (Dash confirm gate): pressing `hotbar_2` now only ARMS the gate — added an explicit confirm-gate proof (`assert_event_absent dashed` + AP/pool unchanged + a `01b_dash_confirm_gate` screenshot) between the press and the pre-existing `dashed` wait, which now follows a `confirm` press instead of the `hotbar_2` press directly |
+| `class_evolution_loop` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** M6 T7; `near_evolution` fixture → organic respawn-encounter grind → sleep → `class_evolved` + evolved kit fielded. M-FP Q1: fight1 (`goblin_encounter_2`)/fight2+fight3 (`goblin_encounter_1`, repeatable) are all on floodplains now; meets Relc (12,13) once before fight1, banked for all three fights across the sleep/evolve beat |
+| `consolidation_flow` | 9 | M6 T7/T8; `near_consolidation` fixture → offer → decline → re-offer → accept → `consolidation_accepted`, [Spellsword] at merged level, merged kit fielded. Accept/decline driven through the real UI prompt (T8): cancel = decline, confirm on the default row = accept; asserts `ui_consolidation_prompt_rendered`/`_hidden`. M-FP Q1: post-accept kit-check fight (`goblin_encounter_2`) is on floodplains; meets Relc (12,13) first |
+| `save_migration` | 1 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** M6 T7; v2→v3 `_migrated` proof + v1 pause-load rejection (safe no-op + "Could not load save." notice) + ⟦I12⟧ defeat-reload with a stale v1 `auto` slot → `Game.reset()`. Seed 1 is defeat_reload's proven losing chieftains_raid seed (navigation mirrored); `install_fixture` re-seeds v1 into `auto` after the pre-fight autosave. M-FP Q1: the `install_fixture` still lands right after the floodplains-arrival autosave; meeting Relc (12,13) in between fires no autosave of its own, so the v1 overwrite survives intact to defeat time |
+| `consolidation_reload` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** M6 T8; pause-Loads the `pending_offer` fixture (a save taken mid-offer) and asserts the consolidation prompt RECONSTRUCTS on load (`ui_consolidation_prompt_rendered`) then answers it → [Spellsword]. Guards the persisted `pending_consolidation` field against a future autosave-while-pending change (softlock otherwise). M-FP Q1: unaffected — never leaves the inn, verified green as-is |
+| `generalist_loop` | 9 | M6 F1 (whole-branch-review fix); `near_generalist` fixture (mage 10, 7/7 ice/fire split) → sleep fires the Generalist path (`skill_unlocked` ice_shard/flare_burst + balanced-mastery toast, `generalist_classes` gains mage) → a chieftains_raid fight asserts the PC combat kit CONTAINS both balanced grants (granted_skills folds a generalist class's `evolution.balanced_grants`; combat snapshot exposes `skills`). M-FP Q1: fight is on floodplains now; meets Relc (12,13) first |
+| `lantern_check` | 9 | **Onboarding rev O4 (full rewrite):** was a two-move scroll→sleep prologue; NOW inherits mage_unlock_loop's honest Pisces arc verbatim (meet Relc→spar→sleep Warrior→cross ambush fight 1→Pisces→sleep [Mage]/[Light]) because [Light] is folded into the mage L1 grant and mage is Pisces-earned. THEN the ORIGINAL payoff, unchanged: `unlit_lantern` interact asserts `skill_used`{skill:light,target:unlit_lantern} + `accomplishment_recorded`{id:lit_the_common_room} + exact `toast` "[Light] — A steady white orb…" + `ui_toast_rendered`. Ends in the inn (no floodplains re-cross). One combat now (the ambush), seed 9 |
+| `gate_district_walkthrough` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** M-FP Q2 (D1-4, new script). ONBOARDING O5 re-path: the old `goblin_parley` "Stand aside" bypass is dead (neither script uses it anymore) — the floodplains-crossing leg now walks the real cold-start arc (classless spar → sleep Warrior L1 → cross the mandatory O2 proximity ambush), so the path carries TWO real `combat_started`/`combat_finished` pairs; seed held for convention consistency. Enters `street` for real via `liscor_gate` (not a teleport); asserts `ui_map_rendered`{map:street, floor_cells:640, blocked_cells:106} — `blocked_cells` is the SIM's runtime blocked set, the static 32×20 `blocked` list (56) UNION the wall `segments` expansion (32+2+16=50), not just the static list; asserts `map_changed`{street}→`audio_played`{music_street} (the carried-minor `combat_walkthrough` dropped when its route left street for the floodplains — this script now owns that evidence). Walks the y4 transit lane (with the north/south detours the market stalls and the Guild forecourt force) and interacts `krshia_stall`/`sewer_grate`/`guild_door` (each: `accomplishment_recorded` + exact `toast` text + `ui_toast_rendered`), the gate `gate_guard` (a plain npc with no conversation graph — interact fires `dialogue_line` + `ui_dialogue_rendered` directly, no `dialogue_started`/`ui_dialogue_shown`), and Selys at (26,4) (`dialogue_started`{selys_delivery} + `ui_dialogue_shown`) |
+| `relc_tutorial` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** M-FP Q2 (D2-8, new script). No seed search needed: PC dex 10 (+d6, floor 11) always outranks both training-dummy dex 2 (+d6, ceiling 8), so "PC acts first" is seed-independent, and 21 HP dummies vs the PC's real kit make the win itself seed-robust too. Covers all nine D2-8 elements: the skippable NEGATIVE first (`meet`→`banter`→`spar_offer`, decline via "Another time." — asserts `combat_started` absent + `met_relc` banked), then a real re-talk into the actual spar; drives the beat-id `ui_tutor_line_rendered` sequence with real keys against the SHIPPED `training_yard` `tutor_lines` (order: opening→first_step→pool_empty→dash→aim→first_blood→watch→wrap, confirmed by trace); **the opacity + persistence teeth**: `accomplishments.sparred_with_relc == 1`, `accomplishment_recorded`{won_combat}/{melee_hit} both absent (belt-and-braces `trivial:true` on the entity AND the arena skips `_bank_action_tally` entirely), no `class_level_up`/`class_gained`, no `entity_removed`{relc_spar} (persistent:true); re-talk after victory fires a SECOND `combat_started` — ends mid-fight there by design (`combat_move_input` precedent: manual/injected beats diverge from a canonical autoplay trajectory). Windowed pass flagged a real issue — see the Gotchas entry below (D2-7 #6). UI wave item 15: the `hotbar_2` press (dash beat) needed one added `confirm` press before the `dashed` wait, same confirm-gate change as `combat_move_input` |
+| `work_loop` | 9 | Playtest-content slice T2 (new script). Inn work-loop, Helper leg: dirty_table clean ×2 (`cleaned_the_inn` 1,2) → new `serving_tray` prop interact ×1 (`delivered_item` 1) → new `hungry_patron` npc (`patron_serving` conversation, hub+loop-back) serve ×2 across two conversation visits (`served_customer` 1,2) → sleep at `bed` → `class_gained`{helper} (fires at `cleaned_the_inn`≥1) + exact toast `"[Helper] class gained! — [Basic Cooking]"` (the O4 grants-listing form — see the O4 note above; the bare `"[Helper] class gained!"` form this row previously quoted was stale, superseded before this row was last touched) → snapshot `classes.helper==1` → new `stew_pot` prop interact BEFORE `basic_cooking` is known → `skill_unknown` negative → second chore burst (clean ×2 more, serve ×1 more — `cleaned_the_inn` reaches 4, crossing the L2 `requires_any` threshold of 3) → sleep → `class_level_up`{helper,2} batched toast `"[Helper Level 2]"`. **Harness gotcha (new this script):** the very FIRST autosave's `"Autosaved. (Esc — save/load anytime)"` toast is a NESTED emission (`Game`'s `class_gained` listener calls `save_auto()` synchronously, which re-enters `emit_domain_event` for its own toast) that lands in `test_driver`'s `_events_seen` BEFORE the outer `class_gained` event that triggered it — a cursor-gated `wait_for_event` for that exact text will never match forward of the `class_gained` match and hangs to timeout; use `assert_event_logged` (whole-run scan) for that one assertion instead, same as any other autosave-adjacent toast text check. Inn carried 10 entities (11 sprites incl. player) at T2 close — **`inn_walkthrough`'s `ui_entities_rendered`/`ui_world_labels_rendered` count assertions (sprites/count: 8) were a known, unavoidable regression from this addition** (entity COUNT, not cell placement — no path broke). [RESOLVED, past this task's scope: the controller-side count-only edit landed later; `inn_walkthrough`'s current assert is `sprites:13`, see its own row above.] **M7 Task E5 addition:** an `inn_chest` pickup beat (`item_gained`/toast/`ui_toast_rendered` for `leather_jerkin`) is inserted at the very start, before Beat 0 — the detour ([2,3]→down3→left1→down1→[1,7]→interact) round-trips back to the exact spawn cell (2,3) via the reverse moves, so every existing beat below is untouched; seed 9 re-verified green, no re-derivation needed (pickup doesn't autosave, so no toast-queue race like `inventory_loop`'s Relc-gift beat). **M-BEAUTY R3 fix (new toast-queue race, this script's first pickup is also the game's FIRST-EVER `item_gained`):** `message_layer.gd`'s new one-time "Press I — your pack." hint (onboarding spec §9 interim) queues right behind this script's `inn_chest` pickup toast — an UNQUALIFIED `wait_for_event ui_toast_rendered` right after (previously used for the `00b_chest_pickup` screenshot's wait) would consume the WRONG toast for every later unqualified wait in the script (confirmed: `00b_stew_pot_locked_toast`/`01_clean_toast` screenshots showed the hint/stew-pot text respectively, one slot late, before the fix). Fixed by qualifying that first wait (`payload_contains` "Got: Leather Jerkin") and adding one more qualified wait (`payload_contains` the hint's exact text) right after it, so the since-marker cursor clears both toasts before any later unqualified wait runs — every downstream screenshot verified correct after the fix. |
+| `crate_fight` | 9 (fixture) | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** **Now the `post_tutorial_street` FIXTURE** (starts past the ambush at street (1,3), so crate_talk stays combat-free). Playtest-content slice T3 (new script). "The Missing Crate" FORCE path: copies the proven inn→floodplains→liscor_gate leg from `gate_district_walkthrough.json` verbatim, accepts `missing_crate` from the new `krshia` npc (street `(13,2)`, beside her shipped `krshia_stall`), fights the new `crate_scavengers` encounter (street `(12,16)`, 2×`goblin_raider` in the shipped `goblin_ambush` arena, no ally — a fresh roster/arena pairing not covered by any existing script) via `combat_autoplay`, then reports back for the win. Seed 9 held on the first try — no search needed (see the task report's search log). Asserts `entity_removed`{crate_scavengers}, `accomplishment_recorded`{recovered_crate_force}/{found_the_crate}, both `quest_beat_completed` beats (1 then 2) + `quest_completed`{missing_crate}, and a `ui_journal_shown`/`_hidden` confirmation. **Since-marker gotcha (new this script):** the fight's `on_victory` array banks `found_the_crate` (firing `quest_beat_completed`{beat:1}) BEFORE `remove_entity` fires `entity_removed` for the encounter — a `wait_for_event` sequence that waits for `entity_removed` before `quest_beat_completed` hangs, because the since-marker cursor has already passed the (earlier-in-log) quest event. Order waits to match true emission order, not narrative order; the same trap applies to `crate_talk`'s persuade option below. |
+| `crate_talk` | 9 (fixture) | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** **Now the `post_tutorial_street` FIXTURE** (starts past the ambush at street (1,3), so crate_talk stays combat-free). Playtest-content slice T3 (new script). "The Missing Crate" WATCH (talk) path: no `combat_started` anywhere in the path. Pitching Krshia banks `asked_about_crate` alongside starting `missing_crate`; the new `watch_sergeant` npc (street `(17,12)`) then offers a persuade option (visible only once `asked_about_crate` is banked, hidden again once `found_the_crate` lands) that removes `crate_scavengers` directly (`remove_entity`, the `goblin_parley` warrior-bypass pattern) and banks `recovered_crate_watch`/`found_the_crate` — asserts `entity_removed`{crate_scavengers} + `assert_event_absent combat_started`. Same since-marker ordering gotcha as `crate_fight`: the persuade option's accomplishment effects (and the `quest_beat_completed` they fire) land BEFORE its `remove_entity` effect in the log. |
+| `crate_light` | 9 | Playtest-content slice T3. "The Missing Crate" SKILL (guile) path. **Onboarding rev O4 (prologue rewrite):** now inherits mage_unlock_loop's Pisces arc for [Light], THEN does the street crate quest. Because the mage-granting sleep RE-ARMS `goblin_encounter_1` and the cellar is on the street, this path crosses the floodplains ambush **TWICE** (fight 1 pre-mage as Warrior; fight 2 post-mage as Warrior/Mage) — both won at seed 9. Crate-quest tail UNCHANGED from the pre-O4 script: accepts from Krshia, proves the hidden-until-met discipline (`dialogue_node` `options` exact-length array = only "Just visiting." before studying — the guile report line is genuinely absent), studies `cellar_door` (street `(10,17)`, `requires_skill: light`) to bank `studied_the_cellar`, reports via the now-visible guile option (`recovered_crate_guile`/`found_the_crate`/`crate_returned` in one `dialogue_choose`, so the two `quest_beat_completed` waits fire back-to-back). |
+| `journal_skills` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** UI wave (item 19, new script). No combat in the path — seed held for convention consistency. Opens the journal at fresh boot: asserts `ui_journal_shown`'s extended payload (`skill_groups: ["Innate", "Warrior"]`, `skill_count: 5`, `revealed_skills: []` — the pre-first-use NAME-ONLY state, proven structurally rather than by screenshot/OCR). Closes, uses the Innate `[Basic Cleaning]` skill via the `dirty_table` prop (same cells `test_sim_core.gd`'s unit test drives: right×3 to (5,3), a blocked down-step faces the table without moving), asserts `used_skills` (now in `Game.sim.snapshot()`) contains `basic_cleaning`, then re-opens the journal and asserts `revealed_skills` now contains it — the first-use reveal, end-to-end through the real UI, not just the sim. `combat_move_input`/`relc_tutorial` (existing scripts) both needed a one-line edit for the SAME wave's Dash confirm-gate change (item 15) — see their own rows/notes below for what changed. |
+| `inventory_loop` | 9 | **⟦ONBOARDING O5 re-pathed — see the O5 block above.⟧** M7 Task E5 (new script), THE canonical inventory/equipment loop. Route: `inn_chest` pickup (`leather_jerkin`, `items:2` pinned on the first `I` open) → floodplains → meets Relc fresh (first-ever talk, no decline detour — `relc_tutorial` already covers that) → wins the trivial spar (accept no longer grants the spear — O3 moved it) → re-talks Relc for the GIFT node (`You said you had something for me?` → `relcs_spare_spear` + `given_spear_by_relc`) → sleeps for Warrior L1 → equips the spear via the real UI (`items:3`, gift at index 2) → crosses the `goblin_encounter_1` PROXIMITY ambush at `(30,23)` with `met_relc` banked (Relc allied) → victory. **The kit proof:** `combat.combatants.pc.skills` exact-array-asserted to `["basic_swordwork", "tough_body", "piercing_strikes"]` — `power_strike` (weapon:sword) is gated OUT, `piercing_strikes` (weapon:spear) stays IN; `ui_hotbar_rendered`'s payload is `{slots: N}` ONLY (no slot ids/composition — checked `combat_hud.gd`), and the count (4) is IDENTICAL to the sword-equipped baseline (exactly one weapon-tagged skill has `ap_cost>0` in either family at level 1), so the count alone does NOT distinguish the kits — the exact-array assert is the real proof. **The autoplay-tagged-skill finding (d):** `WICombatAI._act_melee` (`src/core/combat/combat_ai.gd`) checks `(c["skills"] as Array).has("power_strike")` BY LITERAL NAME and never inspects any other weapon-tagged skill generically; `_tally_skill_use` only fires from `use_skill()`, never from a plain `attack()`. Net effect: `sword_skill_used` CAN accrue under autoplay (power_strike is the one skill the AI ever calls by name) but `spear_skill_used` structurally CANNOT — with a spear equipped the AI just falls through to plain `attack()` every adjacent turn, never once calling `use_skill("piercing_strikes", ...)`. This script asserts BOTH counters absent (whole-run `assert_event_absent`) as the true, code-confirmed outcome, not a limitation papered over. **The loot-roll determination (e):** `goblin_encounter_1`'s `loot: [{item: crude_blade, chance: 0.25}]` rolls from a run-seed+encounter-id-derived RNG (never the live sim stream); at seed 9 this roll does NOT drop — verified empirically via `events.jsonl` (no `loot_dropped` anywhere after `combat_resolved`) — so the script asserts `assert_event_absent loot_dropped` and documents it; a future items.json/loot-table change that flips the roll needs this assert (and comment) flipped together. **Toast-queue race gotcha (new this script, distinct from work_loop's nested-autosave one):** `message_layer.gd`'s toast queue drains ONE AT A TIME with a real (QA-collapsed to 0.4s) wall-clock hold per toast (`_drain_toasts`/`_hold_seconds`); the Relc-gift toast is queued right behind the floodplains-entry autosave's toast, so its RENDER lags the domain event by a real-time amount that varies run-to-run (observed anywhere from immediately to ~1.2s later) — an unqualified `wait_for_event ui_toast_rendered` matched the WRONG (Autosaved) render and desynced the since-marker past `combat_started` (timed it out); a qualified `assert_event_logged` (instant, no poll) was ALSO flaky when a fast run hadn't drained the queue yet. Fixed: a qualified (`payload_contains` the exact text) `wait_for_event` with a generous timeout (10s), placed right after `ui_combat_shown` — nothing else needs to run for the queue's own timer to tick, so it just polls until the specific render appears regardless of how fast the surrounding fight resolves. Also proves the reveal-interplay (plan E5 bullet 2): the journal (`ui_journal_shown`) lists BOTH `[Power Strike]` and `[Piercing Strikes]` under Warrior regardless of which weapon is currently equipped, with NEITHER revealed (`revealed_skills: []` — the spar is fought classless per O1, so it has no skills to reveal, and autoplay never fires a spear skill either, per the finding above) — knowledge ≠ fieldability is still the point even at zero reveals, confirmed by a windowed screenshot read (`.superpowers/sdd/fp-handoff/e5-shots/07_journal_knowledge_not_fieldability.png`). |
+| `atmosphere_check` | 9 | M-BEAUTY Task B1 (new script), THE canonical mood-grade/phase-clock proof. No combat, no rng — phase is a pure function of `actions_since_sleep` counters, so seed 9 held straightaway. Route: `world_ready` → `ui_mood_applied`{inn,day} → opens/closes the journal under the identity day grade (UI-ungraded proof; screenshot `00b_journal_open_identity_grade` — the parchment panel and its border are exactly as bright as the field behind it, confirming the journal's native-res CanvasLayer sits outside the world SubViewport's CanvasModulate) → 100 real actions via pure back-and-forth moves along inn row y=3 (`(2,3)`→right10→`(12,3)`→left10→`(2,3)`, FIVE round trips — Track P1 re-sized 40→100 in lockstep with the dusk_at retune; the row is clear of every entity/blocked cell from x=1–14, only `inn_door` at x=15 is excluded; all 100 succeed, net displacement zero, exactly crossing `dusk_at`=100) → `phase_changed`{dusk} + `ui_mood_applied`{dusk} → walks to the bed (`(2,3)`→down3→`(2,6)`, bed itself at `(2,7)` blocks the last step same as `work_loop`/`inventory_loop`'s chest routes) → sleep → `phase_changed`{day} + `ui_mood_applied`{inn,day}. Windowed day/dusk shots were visually IDENTICAL at B1 (ship-neutral-first: every `moods.json` entry is `[1,1,1]`/vignette 0) — see `task-b1-report.md` for that side-by-side. **M-BEAUTY Task B2 update:** now also `assert_event_logged`s `ui_lights_rendered`{map:inn, count:2} (whole-run scan, not `wait_for_event` — see the light-layer architecture block's QA note for why) right after the day `ui_mood_applied` wait. The day/dusk visual-identity claim is DAY-ONLY as of B2: the inn's hearth+grill lights are invisible at day (unchanged) but genuinely glow at dusk now — `01_dusk.png` legitimately differs from `00_start_day.png` from this task onward; see `task-b2-report.md`. **M-BEAUTY Task B3 update:** now also `assert_event_logged`s `ui_ambience_rendered`{map:inn, emitters:1} (same whole-run-scan idiom, right below the B2 lights tooth) — the inn's one `dust_motes` entry is always spawned regardless of phase (emitter existence vs `.emitting`/`.visible` on/off is the phase-gated part, same design as lights' energy). The inn route itself never crosses the sway/water-shimmer/vignette surfaces (no floodplains foliage or pond on this script's path, vignette strength is still identity 0.0 everywhere) — those are proven by a separate THROWAWAY floodplains script instead (day sway + dusk pond fireflies/glints + dusk campfire, three shots; see `task-b3-report.md`), same idiom as B2's THROWAWAY campfire proof. |
+| `sewers_walkthrough` | 9 (fixture) | **Content Wave C1 (new canonical, +1 → 34).** THE Liscor sewers proof. Loads the `near_sewers` FIXTURE (post_tutorial_street shape + `heard_about_cisterns` pre-banked — C3 banks that from Olesm for real) via title Continue, positioned two north of the grate approach (street `(15,9)`). ENTERS via the REAL `sewer_grate` interact — the **grate-gate seam** (`door_when` on the street grate prop; gate MET → `open_toast` + transition to sewers `(2,2)`, gate UNMET → byte-identical to the pre-quest `heard_the_sewers`+toast, so `gate_district_walkthrough`/`crate_*`/`social_loop` stay green; unit-covered in `test_sim_core.gd`). Then the sewers atmosphere teeth (`assert_event_logged`, whole-run scan): `ui_mood_applied`{sewers,day} (dark pin), `ui_map_rendered`{sewers}, `ui_ambience_rendered`{sewers, emitters:3} (2 always-on `pond_glints` on the water channels + `dust_motes`), `ui_lights_rendered`{sewers, count:2} (phosphor + grate-shaft — day-gated OFF at day, but registered). Reads two flavor props (`phosphor_moss`/`drainage_marker`, exact toasts), clears the new `sewer_vermin` trash pack (2×`sewer_vermin`, arena `sewers_nest`, no ally — `combat_autoplay`, fixture rng 9 wins straightaway), then climbs the `sewer_exit` ladder back to street `(15,11)`. Shots: `00_sewers_landing` (mood), `01_vermin_encounter` (dark combat), `02_back_on_street`. The `shield_spiders` nest is placed but NOT fought here (Quest 1 / C3; interact-only, off-path). Grate-gate verdict: **thin sim seam** (`door_when` on props + `_door_gate_met` in `interact()`), not data-only — doors transition unconditionally, so a gated transition needed the smallest presentation/sim seam per spec §4. |
+| `cisterns_fight` | 9 (fixture) | **Content Wave C3 Quest 1 FIGHT path (new canonical, +1 → 35).** Loads `cisterns_fight_start` (warrior L1 beside Olesm at the Guild frontage `(29,4)`) via title Continue. Full three-path-parity loop: GIVE (Olesm `olesm_intro` cisterns node banks `heard_about_cisterns` → opens the C1 grate `door_when` + starts the `cisterns` quest; `cisterns_brief` is the what/where/how explaining beat) → descend the now-open `sewer_grate` → clear the `shield_spiders` nest (`on_victory` banks `cleared_the_nest` + `resolved_the_cisterns`, firing quest beat 1) → ascend the ladder → REPORT (Olesm banks `cisterns_reported` → beat 2 + `quest_completed`). Fixture rng governs the warrior-L1-solo fight (~0.74 harness win; rng 9 won straightaway). Shot `01_olesm_give`. |
+| `cisterns_talk` | 9 (fixture) | **Content Wave C3 Quest 1 TALK path (new canonical, +1 → 36).** Loads `cisterns_talk_start` (warrior L1 at `(29,4)`). NO combat anywhere (its whole point; `assert_event_absent combat_started`). GIVE (Olesm) → cross to Watch Captain Zevara at the gate `(2,6)` and PERSUADE her via the `zevara_intro` sweep chain (`sweep_pitch`→`sweep_argue`, banks `persuaded_someone` + `watch_swept_cisterns` + `resolved_the_cisterns` [beat 1] + `remove_entity shield_spiders`) → REPORT to Olesm via the Watch option (`cisterns_reported` → beat 2 + completion). FIRST canonical coverage of `zevara_intro` (C2's probe was deleted; no prior asserts). Shot `02_zevara_persuade`. |
+| `cisterns_scout` | 9 (fixture) | **Content Wave C3 Quest 1 SKILL path (new canonical, +1 → 37).** Loads `cisterns_scout_start` (warrior L1 + `[Tactician]`/`[Observe]` at `(29,4)`). NO combat. GIVE (Olesm) → descend the grate → `[Observe]` the new `nest_ledge` prop `(17,10)` overlooking the nest — banks `scouted_the_nest` via the `requires_skill:observe`+`on_skill_use` seam (interact E routes through the SAME `use_skill('observe',…)` the field `[Observe]` hotbar uses — crate_light/cellar_door precedent) → ascend → REPORT the INTELLIGENCE to Olesm (`cisterns_intel`: his "a map is as good as a corpse" `[Tactician]` beat banks `resolved_the_cisterns` THEN `cisterns_reported`, firing BOTH beats + completion at once — crate guile precedent). **Third script by judgment (34→37, not the planner's estimate of 36):** the SKILL stream descends the sewers while the TALK stream never does, so they cannot share a run (a quest resolves exactly once). Shot `03_nest_observe`. |
+| `char_creation` | none | **M-ARC §5 (new canonical, +1 → 42).** THE character-creation proof — the ONLY script that drives the real creation UI (`starts_at_title` + top-level `creation_ui: true`; every OTHER New Game is the default TestDriver skip → `Game.reset()` straight through, byte-identical to before this feature, so the whole suite is untouched). Title gate → New Game → `swap_to_char_creation` → picks **Drake / Female / "Sella"** (arrows + `type_text` unicode into the name field, captured by `char_creation.gd::_unhandled_input`, NOT LineEdit GUI focus — headless-safe) → confirm fires `Game.reset({pc_name,pc_race,pc_gender})`. Asserts: `ui_char_creation_confirmed`{Sella,drake,f}; the **Drake-branched** GDI opener (`ui_gdi_opener_rendered`{lines:4, race:drake} — the "starting over in Liscor" copy, canon-safe: only Humans are Earth otherworlders); the snapshot identity fields + the pure variant key `pc_sprite == "pc_drake_f"` (art-independent); and the RENDERED field binding `ui_entities_rendered`{pc_sprite:"pc_drake_f"} (world.gd + board_renderer resolve the variant at the two presentation bind sites, degrading to `body_a` if a variant's art is missing). No combat/rng → no seed. |
+| `deep_descent` | 9 | **M-ARC A2, EXTENDED A3 (JOIN path, +0 — same canonical).** THE Raskghar descent proof — fixture-based via `deep_descent_start` (sewers, warrior L5, `heard_the_deep_tremor` pre-banked, facing the `deep_fissure` at (8,12); fixture `rng_state` governs BOTH fights, overrides `--seed`). Interact the fissure → **descend** to `deep_tunnels` → read Cold Hearth → clear the interact-only `raskghar_scouts` route-fight (solo) → read Gnawed Bones → reach `warren_mouth` (threshold toast + `reached_the_warren`, UNCHANGED) → **A3: interact the `awakened_boss` encounter (12,7) → the `relc_descent` join/veto dialogue → [Go together.] banks `relc_joined_descent` (satisfies `awakened_boss.ally_requires`) → WIN the Awakened + 2 scout adds in the `deep_warren` arena with Relc fielded (roster proof `combat.combatants.relc.side==player`) → on_victory banks `cleared_the_warren`**. `heard_the_deep_tremor` gate key: A3's tremor beat (Zevara summons) is its real producer (climax_chain), the fixture stands in. Boss WON at fixture `rng_state=9` straightaway (warrior L5 + Relc; no seed search). **The party VETO/solo path is DESCOPED to a unit roster proof** (user directive) — `test_combat_data._check_boss_veto_roster` builds a real WIGame and asserts DECLINE (`went_alone`, no `relc_joined_descent`) fields NO Relc while JOIN fields him; the 0.04 solo cell (sim_combat_batch BOSS_CELLS) documents the difficulty. No dedicated veto script. |
+| `climax_chain` | 9 (fixture) | **M-ARC A3 (new canonical, +1 → 44) — the tremor beat + surface briefings (PRE-descent arc).** Loads `climax_surface_start` (inn bed, Act II COMPLETE: 2 classes + 3 quests). Proves: **(1) THE TREMOR BEAT** — sleeping with Act II complete fires the one-shot pointer toast "A Watch runner is looking for you." + banks `watch_runner_pointed` (`_maybe_fire_tremor_pointer` in `sleep()`); **(2) ZEVARA SUMMONS** — her summons option (gated on `watch_runner_pointed`) banks `heard_the_deep_tremor` (opens the deep_fissure FOR REAL); **(3) OLESM BRIEFING** — gated on the tremor, banks `heard_olesm_briefing`. Teleport-driven between NPCs. No combat. NOTE: inside `sleep()`, `accomplishment_recorded{watch_runner_pointed}` fires BEFORE the pointer toast — wait for the accomplishment first (the wait cursor advances in emission order). |
+| `climax_seal` | 9 (fixture) | **M-ARC A3 (new canonical, +1 → 45) — the seal beat (POST-victory arc).** Loads `climax_sealed_start` (street, Act II done + `cleared_the_warren` banked, `raskghar_sealed` NOT). Proves: **(1) ZEVARA SEAL** (gated on `cleared_the_warren`) banks `raskghar_sealed` — the **Act III advance key** (acts.json); victory != sealed, the seal is a separate surface beat AFTER the return (acts-data trace); **(2) journal advances to ACT III** (`ui_journal_shown{act_id:act_iii}`); **(3) OLESM RESOLUTION** (gated on `cleared_the_warren`) banks `heard_olesm_resolution`. Separate stream (distinct post-victory game state). No combat. |
+| `arc_flow` | 9 (fixture) | **M-ARC A4 (new canonical, +1 → 46) — THE WHOLE-ARC PROOF.** Loads `near_act3` (inn bed, Act II complete: Warrior 5 + Diplomat 1, 3 quests, no Act III keys). Drives the ENTIRE Act III arc live: **(1)** tremor sleep pointer; **(2)** Zevara summons → `heard_the_deep_tremor`; **(3)** Olesm briefing; **(4)** THE DESCENT — teleports to the `deep_tunnels` landing and replays `deep_descent`'s winning nav (Cold Hearth → `raskghar_scouts` fight → Gnawed Bones → Warren Mouth → the Relc JOIN veto → boss VICTORY, Relc fielded) → `cleared_the_warren`. **The surface arc (sleep + dialogues + teleports) consumes ZERO rng, so the fights sit at the SAME deterministic rng `deep_descent` wins at** — no seed search (proven: `deep_descent` still passes with warrior5+diplomat1); **(5)** Zevara seal → `raskghar_sealed`; **(6) THE GDI EPILOGUE EVENT** — `ui_gdi_epilogue_rendered{lines:7}` fired by the seal `dialogue_ended` (armed by `raskghar_sealed`, played on dialogue-end — NOT a sleep) → banks `post_game`; **(7)** journal Act III completed beat (`seal_holds`, gated on `post_game`); **(8)** the post-game Zevara greeting variant (`dialogue_node`, last-match `raskghar_sealed` text_variant; also proves no epilogue re-fire on re-entry); **(9)** free-play sanity (move + plain sleep `ui_sleep_veil_rendered{lines:0}` + `assert_event_count ui_gdi_epilogue_rendered == 1`). Fixture-based, no seed search. |
+| `status_first_encounter` | 9 (fixture) | **M-LEGIBILITY L4 (new canonical, +1 → 47) — the status glossary + first-encounter surface.** QA reality: `combat_autoplay` NEVER casts a spell for the pc (melee-profile default, see Gotchas) and no canonical fight's autoplay path applies a status, so this is a dedicated new fixture (`near_mage_cast`: mage L1 PC standing beside Relc, `met_relc` pre-banked, floodplains (12,12)) driving a REAL hotbar cast, same idiom as `combat_move_input`/`relc_tutorial`. Route: fresh-boot journal proves the Effects section is OMITTED (`ui_journal_shown{seen_statuses:[]}`) → talks Relc straight into the spar (`relc_spar`/`training_yard`, zero blocked cells, inert-AI dummies — unlimited safe turns) → moves into frost_bolt's range-4 lane → casts it on `training_dummy_a`: `status_applied{first_seen:true, status_text:"Slowed — moves 2 fewer cells next turn (min 1)."}` — the TRACED surface is the COMBAT FEED, not a toast (combat_hud's readout panel x[330,950] y[530,642] genuinely overlaps message_layer's toast panel x[808,1256] y[590,686], and combat_screen's CanvasLayer draws AFTER message_layer's, so a toast fired mid-combat would render invisibly behind the opaque readout parchment) → ends turn, cycles through the two inert dummies' auto-ended turns, casts frost_bolt again on the same target: `status_applied` fires again but `first_seen:false`/`status_text:""` (once-only, `assert_event_count` proof: `status_applied{status:slowed}`==2, `status_applied{status:slowed,first_seen:true}`==1) → `combat_autoplay` finishes the fight with plain melee (the cast proof is already banked) → post-victory journal: `ui_journal_shown{seen_statuses:["slowed"]}` + the Effects section renders the exact glossary sentence. Seed 9 (fixture rng) brute-force-verified: every candidate rng_state 1–59 lands BOTH casts against a dex-2 dummy, so 9 was kept for convention consistency. |
+| `gear_loop` | 9 (fixture) | **M-GEAR G3 (new canonical, +1 → 48) — the resonance-gear UI proof (accessory rows, "Resonance N/M" header, lore render, capacity refusal).** `gear_loop_start` seeds the FULL 19-item catalog directly into inventory rather than a natural gold grind: the cheapest 2-item shop combination whose combined resonance exceeds the fixed `resonance_capacity` (2) is `hedge_ward_charm` (9g, resonance 1) + `stonescale_talisman` (35g, resonance 2) = 44 gold, far beyond `inventory_loop`'s 2-gold arc or `economy_loop`'s fully-spent 5-gold arc — impractical to grind via repeated dirty_table chores in a hand-authored script, so this fixture applies the same near_mage_cast/near_tactician "skip the irrelevant grind" convention. Also doubles as the "19 items possible" full-pack scroll/clip check the plan called for. Route: open with 19 items carried (`ui_inventory_shown` payload gains `resonance:{used,capacity}`) → cursor to the LAST item (index 18) and screenshot, proving `_scroll.ensure_control_visible` (new fix) keeps the selection reachable — the ScrollContainer's `mouse_filter` is IGNORE (no wheel wired) and there is no keyboard-scroll binding, so without this fix the tail of a long list is logically selectable but never actually visible → equip `copper_luck_band` (resonance 0) into `accessory_1` (POSITIVE proof the new accessory rows + equip flow work) → equip `hedge_ward_charm` (resonance 1) into `accessory_2`, resonance_used 0→1 (screenshot: accessory rows + header + this card's own "Resonance 1" line + its Lore line, all at once) → attempt `stonescale_talisman` (resonance 2): 1+2=3 > capacity 2 → **CAPACITY REFUSAL** (G1's exact placeholder toast, `equipped.accessory_3` stays `""`, no `item_equipped`); screenshot proves the toast IS genuinely, empirically clipped by the panel (message_layer's default `layer` 1 draws behind inventory.gd's `layer` 10 — same overlap class `status_first_encounter` already documented for combat_hud/message_layer) — the new in-panel `_status_label` echo is what makes the refusal actually legible → re-confirm on the equipped `copper_luck_band` proves the equip/unequip TOGGLE now genuinely works for accessories (**real pre-G3 bug found+fixed:** `Game.sim.equipped` keys accessories by their real slot name, `accessory_1`/`_2`/`_3`, never the generic `"accessory"` kind, so the old `equipped.get(kind, "")` lookup silently never matched an equipped accessory — re-confirming one called `equip()` again instead of `unequip()`, which G1's own duplicate-slot guard then silently refused with no toast at all) → confirm on `field_whetstone` (kind `"tool"`, not equippable) gets the panel's own neutral toast instead of a silent no-op. No combat, no rng consumed — fully deterministic. |
+
+---
+
+## Per-script command-line notes (originally the Commands section's inline QA-script comments)
+
+	# QA scripts isolate user:// by default via HOME=.godot_home/qa-<script>-<pid>.
+	# Use --user-dir DIR after the mode to choose a stable isolated HOME explicitly.
+	# Combat QA scripts REQUIRE a fixed seed (fights are deterministic per seed; canonical seed: 9)
+	# M-FP Q1 (floodplains re-path): combat_walkthrough/level_up_loop/defeat_reload/line_of_sight_denial/
+	# combat_move_input now walk inn->floodplains and meet Relc (12,13, relc_intro) BEFORE their
+	# ally_requires-gated fight (goblin_encounter_2 or chieftains_raid) so his combat participation
+	# matches the pinned seed below — all five held their PRE-EXISTING seed unchanged after the re-path.
+	wandering_inn_game/qa/run_qa.sh combat_walkthrough headless --seed=9
+	wandering_inn_game/qa/run_qa.sh level_up_loop headless     # ONBOARDING O5: post_tutorial FIXTURE loop — fixture rng 9 overrides --seed (see the seed table row)
+	wandering_inn_game/qa/run_qa.sh mage_unlock_loop headless --seed=9        # scroll -> sleep -> [Mage] gained -> fight with mage kit fielded
+	wandering_inn_game/qa/run_qa.sh line_of_sight_denial headless --seed=9    # wall-aware ranged AI (goblin_ambush walls); asserts the positive has_los gate -- no "denial" event fires (see Gotchas; archived note: .superpowers/sdd/archive-m2-m3-task-docs/task-8-report.md)
+	wandering_inn_game/qa/run_qa.sh lantern_check headless --seed=9           # scroll -> sleep -> [Mage]/light gained -> unlit_lantern skill_used + lit_the_common_room + toast
+	wandering_inn_game/qa/run_qa.sh defeat_reload headless --seed=1           # losing chieftains_raid seed; asserts defeat reloads auto slot instead of reset
+	wandering_inn_game/qa/run_qa.sh defeat_ally_alive headless      # ONBOARDING O5: near_defeat FIXTURE (rng 3 overrides --seed) — THE canonical proof of the PC-death defeat rule: PC drops while Relc is ALIVE (hp==40 pinned) => instant defeat + auto-slot reload, no game_reset
+	wandering_inn_game/qa/run_qa.sh combat_move_input headless --seed=9       # M5 H2 movement-first: arrows step the unit directly, Dash refills pool; ends mid-combat by design
+	# M-FP Q2: relc_spar (training_yard) is PC-vs-dummy-dex-2 -- PC's initiative floor (11) always
+	# beats the dummies' ceiling (8), so "PC acts first" and the win itself are seed-independent;
+	# seed 9 held on first try, no search needed.
+	wandering_inn_game/qa/run_qa.sh relc_tutorial headless --seed=9           # negative decline (no combat_started) -> real spar, real-key beat-by-beat tutor_lines, then opacity/persistence teeth + re-talk second combat_started; ends mid-fight by design (combat_move_input precedent)
+	wandering_inn_game/qa/run_qa.sh status_first_encounter headless --seed=9  # M-LEGIBILITY L4: near_mage_cast FIXTURE (rng 9 overrides --seed) — a REAL hotbar frost_bolt cast (combat_autoplay never casts for the pc, see Gotchas) proves the status glossary + first-encounter combat-feed surface + the once-only property, then journal seen_statuses/Effects section pre- and post-fight
+	wandering_inn_game/qa/run_qa.sh gear_loop headless --seed=9               # M-GEAR G3: gear_loop_start FIXTURE (the full 19-item catalog pre-carried — a genuine over-capacity accessory refusal needs ~44 gold via the shop, impractical to grind; also doubles as the full-pack scroll/clip proof) — accessory equip positive (copper_luck_band -> accessory_1) -> resonance header climbs 0/2 -> 1/2 on a second equip (hedge_ward_charm -> accessory_2) -> CAPACITY REFUSAL negative (stonescale_talisman would push 1+2=3 over cap 2, toast + equipped.accessory_3 stays "") -> unequip toggle proof -> tool-kind item confirm (neutral toast, not silently inert)

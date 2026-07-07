@@ -16,6 +16,43 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] SPRITE/REGION — **"PALETTE :" sheet label baked into every boulder**
+  (machine playtest 2026-07-07): Rocks.png carries palette text at its
+  top-left; the `boulder` region [0,0,32,40] includes it — renders as
+  garbled floating text on 23 usages (17 map decor + 6 arena; visible in
+  sewers, training yard, deep tunnels shots). Fix: shift the region below
+  the label row (rock body starts ~y8) + windowed re-verify all three
+  maps. NIGHT polish wave item 1. The mis-crop class the docs mandate
+  windowed-verifying — slipped because boulders never sat in a canonical
+  framed shot.
+- [ ] UI/TOAST — **3-line toasts clip their last line at the parchment
+  fold, everywhere** (machine playtest 2026-07-07): the M-FP F wrapped-
+  line budget reached feed/dialogue/readout panels but never
+  message_layer's TOAST panel. Best copy lines die at the fold ("…she
+  remembers faces, and debts.", the burn toast). Fix: same budget
+  discipline (measure wrapped lines vs art-safe height, grow-height like
+  L2's dialogue panel or cut). NIGHT polish wave item 2.
+- [ ] UI/TUTOR — tutor panel clips Relc's "Earned, not given" line (the
+  arc's thesis) at panel bottom in the ambush fight. Same budget class.
+  NIGHT polish wave item 3.
+- [ ] UI/DIALOGUE — page break splits mid-sentence with no continuation
+  cue ("grip. Sword arm, spear arm —" as a page TOP). Fix: break at
+  sentence boundary where possible + a continuation marker. NIGHT polish
+  wave item 4.
+- [ ] MAP/STREET — the gate district reads worst of all maps (grey brick
+  floor-vs-wall ambiguity, saturated teal awnings vs muted palette, open
+  dead space). It's the hub players crisscross most. Design-level —
+  M-DEPTH-adjacent map polish task.
+- [ ] COMBAT/DARK-ARENAS — enemy HP numerals + small dark sprites hard to
+  pick out in sewers/deep-tunnel fights. Mood pin is right; add rim/
+  outline on combatant chips or brighten HP labels under dark grades.
+- [ ] COMBAT/ARENAS — arenas read sparse (empty dirt + scattered buckets)
+  vs the strong field maps; floodplains ambush arena especially.
+  Evocative-dressing pass candidate.
+- [ ] UI/FIELD-READOUT — (supersedes the K2 drop-row note) permanent
+  legend furniture grows with progression; playtest recommends collapse
+  to icons-only after first waking, expand on hold. K2b owns.
+
 - [x] UI/SHOP — Krshia's greyed buy options read a doubled price: the
   authored option copy already carries "(5 gold)" and the affordability
   lock appends "(costs 5 gold)" (M-LEGIBILITY L2 windowed read,

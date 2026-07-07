@@ -224,3 +224,25 @@ static func _auto_region(texture: Texture2D) -> Rect2:
 	if _is_same_art(texture, PARCHMENT_STRIP):
 		return BANNER_H_REGION
 	return Rect2()
+
+
+## BBCode-escapes literal `[`/`]` (e.g. skill/combatant display names like
+## "[Power Strike]") so they render as literal text instead of parsing as
+## BBCode tags. MUST route through placeholder chars: the naive two-step
+## `.replace("[", "[lb]").replace("]", "[rb]")` chain is self-colliding — the
+## first replace's own output ("[lb]") contains a "]" the second replace then
+## re-matches, garbling every bracketed name ("[Power Strike]" ->
+## "[lb[rb]Power Strike[rb]"; UI wave review fix, was user-visible on the
+## combat slot-info line). M-ARCH Task ARCH-2: promoted from three per-file
+## copies (journal.gd/combat_hud.gd/targeting_controller.gd -- the M6.5
+## zero-cross-dependency idiom, amended for this one case: all three already
+## reference UIChrome, a plain class_name script, not an autoload, so routing
+## through here adds no new dependency for any of them) to this ONE shared
+## home. Keep the PLACEHOLDER form byte-identical if this is ever touched
+## again -- `combat_move_input` pins the escaped `[Power Strike]` slot-info
+## text as the regression tooth.
+static func bb_escape(s: String) -> String:
+	var placeholder_open := char(1)
+	var placeholder_close := char(2)
+	return s.replace("[", placeholder_open).replace("]", placeholder_close) \
+			.replace(placeholder_open, "[lb]").replace(placeholder_close, "[rb]")

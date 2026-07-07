@@ -1346,52 +1346,35 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	pc["stats"] = WIProgression.apply_stat_bonuses(pc["stats"], classes, _combat_config["classes"])
 	# M7 §2 combat build injection, read ONCE here (never live during a fight):
 	# the class kit is filtered down to what the equipped weapon fields
-	# (_weapon_gated_kit); the weapon's flat damage_mod and the armor's
-	# hp_mod/damage_reduction ride along on the combatant dict as build-time
-	# fields wi_combat.gd's constructor/hit-resolution reads (see that file's
-	# _init/_resolve_hit/_deduct_hp). `known_skills()`/`skills_journal()`
-	# deliberately do NOT apply this filter -- knowledge is not fieldability.
+	# (WICombatBuild.weapon_gated_kit); the weapon's flat damage_mod and the
+	# armor's hp_mod/damage_reduction ride along on the combatant dict as
+	# build-time fields wi_combat.gd's constructor/hit-resolution reads (see
+	# that file's _init/_resolve_hit/_deduct_hp). `known_skills()`/
+	# `skills_journal()` deliberately do NOT apply this filter -- knowledge is
+	# not fieldability.
 	# M-GEAR Task G1: the three equipped accessories fold their own
 	# hp_mod/damage_mod/damage_reduction into these SAME three fields (summed
 	# alongside the weapon/armor contribution) -- NO new combat field, no
 	# change to wi_combat.gd's read side; an item without one of these keys
 	# (every M7-era item, and every accessory until G2 ships real values)
 	# contributes 0, so this is behaviorally inert until G2 lands.
+	# M-ARCH Task ARCH-2: both the weapon-gate filter and the mod summation
+	# moved to the shared pure home `src/core/combat_build.gd` (`WICombatBuild`)
+	# -- `tests/sim_combat_batch.gd`'s balance harness calls the SAME two
+	# functions instead of hand-mirroring them (consultant-flagged drift
+	# class). No behavior change: same reads, same math, same fields.
 	var kit: Array = WIProgression.granted_skills(classes, _combat_config["classes"], generalist_classes)
 	var weapon := item(String(equipped.get("weapon", "")))
-	pc["skills"] = _weapon_gated_kit(kit, String(weapon.get("weapon_family", "")))
+	pc["skills"] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills)
 	var armor := item(String(equipped.get("armor", "")))
-	var dmg_mod := int(weapon.get("damage_mod", 0))
-	var hp_mod := int(armor.get("hp_mod", 0))
-	var dmg_reduction := int(armor.get("damage_reduction", 0))
+	var accessories: Array = []
 	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
-		var acc := item(String(equipped.get(slot_name, "")))
-		dmg_mod += int(acc.get("damage_mod", 0))
-		hp_mod += int(acc.get("hp_mod", 0))
-		dmg_reduction += int(acc.get("damage_reduction", 0))
-	pc["damage_mod"] = dmg_mod
-	pc["hp_mod"] = hp_mod
-	pc["damage_reduction"] = dmg_reduction
+		accessories.append(item(String(equipped.get(slot_name, ""))))
+	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
+	pc["damage_mod"] = mods["damage_mod"]
+	pc["hp_mod"] = mods["hp_mod"]
+	pc["damage_reduction"] = mods["damage_reduction"]
 	return pc
-
-
-## Filters a class kit down to what's fieldable with `weapon_family` equipped
-## (M7 §2 weapon gate, reusing the M6 T1 `weapon` tag): a skill carrying
-## skills.json's `weapon` key (today: `sword`/`spear`) requires an EXACT
-## family match against the currently equipped weapon; a skill with no
-## `weapon` key (every spell, every passive) always passes, equipped or
-## unarmed alike. `weapon_family` is `""` both when nothing is equipped
-## (deliberate unequip) and when an unknown/uncatalogued item id is
-## equipped -- either way, no tagged skill can match an empty family, so
-## unarmed correctly fields base attack + untagged skills only.
-func _weapon_gated_kit(kit: Array, weapon_family: String) -> Array:
-	var out: Array = []
-	for raw: Variant in kit:
-		var sk_id := String(raw)
-		var rec: Dictionary = skills.get(sk_id, {})
-		if not rec.has("weapon") or String(rec["weapon"]) == weapon_family:
-			out.append(sk_id)
-	return out
 
 
 ## Returns the data/items.json record for `item_id`, or {} if unknown/

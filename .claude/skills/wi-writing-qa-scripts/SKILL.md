@@ -72,6 +72,16 @@ the body (body stays put). Options are the VISIBLE list only — a hidden
 confirm`.
 
 ## Fixtures
+**FIXTURE-FIRST POLICY (consultant review, ratified 2026-07-07):** a NEW
+canonical script defaults to a FIXTURE start (`near_*` precedent) — long
+organic routes are reserved for scripts whose ROUTE is the subject
+(walkthroughs, onboarding proofs). Rationale: the pinned-seed suite's
+blast radius — every combat-data edit risks invalidating hand-derived
+organic routes (O5 re-pathed 19 scripts in one wave); fixture starts cut
+the re-derivation surface to the fight under test. When extending an OLD
+organic script, consider whether the extension belongs in a new
+fixture-based script instead.
+
 `qa/fixtures/*.json`, authored against `WISave` (`src/core/save.gd`):
 `{"version": 3, "state": {current_map, player_cell, player_facing, classes,
 accomplishments, player_skills, removed_entities, dormant_encounters,
@@ -82,11 +92,15 @@ it as a silent no-op.
 
 ## Seeds and registering
 Combat is deterministic per seed; every script reaching combat needs a
-pinned, PER-SCRIPT seed row (`level_up_loop` needs 11, not 9, because its
-fight composition differs). A failing first-picked seed is a seed-search
-task. Register in `wandering_inn_game/CLAUDE.md` in BOTH places: the
-canonical seed table AND the Commands script-list block (two lists exist;
-keep them consistent) so `wi-verifying-changes`'s full sweep picks it up.
+pinned, PER-SCRIPT seed row (fixture-based scripts: the fixture rng_state
+governs instead — see FIXTURE-FIRST above; e.g. `level_up_loop` is a
+fixture loop whose rng 9 overrides --seed). A failing first-picked seed is
+a seed-search task. Register a new canonical in BOTH
+`wandering_inn_game/qa/ci_sweep.sh`'s CANON array AND the compact seed
+table in `wandering_inn_game/CLAUDE.md` (kept in mechanical sync — a
+cross-check runs at doc reviews; if `qa/manifest.json` exists by the time
+you read this, THAT is the single source and the others derive from it).
+Per-script routing history: `wandering_inn_game/docs/QA-SCRIPT-NOTES.md`.
 Assert both the domain event AND its `ui_*_rendered` confirmation for any
 player-visible feature.
 

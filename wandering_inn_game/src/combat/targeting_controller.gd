@@ -206,8 +206,15 @@ func state() -> Dictionary:
 
 
 ## Verbatim move of `_line_target_text`, reading through `_view` instead of a
-## raw `WICombat` param; `_bb_escape`/`_grey` are duplicated locally (see the
-## file doc comment) rather than reaching into `WICombatHud` for them.
+## raw `WICombat` param; `_grey` stays duplicated locally (see the file doc
+## comment) but the BBCode escape now calls `UIChrome.bb_escape` (M-ARCH Task
+## ARCH-2: promoted off a per-file copy here/journal.gd/combat_hud.gd -- the
+## M6.5 zero-cross-dependency idiom, amended for this one case: `UIChrome` is
+## a plain `class_name` script, not one of this file's forbidden bare
+## autoload identifiers, so this is not a new dependency risk for the
+## --script-mode compile safety this file otherwise guards -- verified by
+## running test_combat_visuals.gd, which load()s+instantiates this file
+## directly).
 func line_target_text() -> String:
 	var me: String = _view.active_id()
 	var dir_token := String(LINE_DIRS[_line_dir_index])
@@ -224,28 +231,12 @@ func line_target_text() -> String:
 		for id: String in ids:
 			var occ: Dictionary = _view.combatant(id)
 			if bool(occ["alive"]) and (occ["cell"] as Vector2i) == cell:
-				var nm := _bb_escape(String(occ["display_name"]))
+				var nm := UIChrome.bb_escape(String(occ["display_name"]))
 				if String(occ["side"]) == my_side:
 					nm = _grey(nm)
 				names.append(nm)
 	var hits_text := ", ".join(names) if not names.is_empty() else "(none)"
 	return "Direction: %s (Tab cycles, Enter confirms)\nHits: %s" % [dir_token.capitalize(), hits_text]
-
-
-## BBCode-escapes literal `[`/`]`. MUST route through placeholder chars: the
-## naive two-step `.replace("[", "[lb]").replace("]", "[rb]")` chain is
-## self-colliding — the first replace's own output ("[lb]") contains a "]"
-## the second replace then re-matches, garbling any bracketed name (UI wave
-## review fix; latent here today — no combatant display_name carries
-## brackets — but real the moment one does). Identical fixed copy in
-## journal.gd / combat_hud.gd — tiny pure helper, deliberately duplicated
-## per file (M6.5 idiom: keeps each component's zero-cross-dependency
-## load() story); keep all three in sync.
-func _bb_escape(s: String) -> String:
-	var placeholder_open := char(1)
-	var placeholder_close := char(2)
-	return s.replace("[", placeholder_open).replace("]", placeholder_close) \
-			.replace(placeholder_open, "[lb]").replace(placeholder_close, "[rb]")
 
 
 func _grey(text: String) -> String:

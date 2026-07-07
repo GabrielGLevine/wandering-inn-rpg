@@ -12,6 +12,11 @@ extends SceneTree
 ## `_build_player_combatant` does) layered onto existing composition+build
 ## pairings — 5 cells x 100 seeds (500 more fights), never touching the
 ## gated matrix's construction above.
+## M-ARCH Task ARCH-2: the LOADOUT_CELLS loop's weapon-gate filter and
+## accessory-mod summation now call `WICombatBuild.weapon_gated_kit`/
+## `equipment_mods` (`src/core/combat_build.gd`) -- the SAME functions
+## `wi_game.gd`'s `_build_player_combatant` calls -- instead of hand-mirrored
+## copies (consultant-flagged manual-sync drift, closed by this task).
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
 
 const RUNS_PER_CELL := 100
@@ -89,7 +94,7 @@ const LOADOUT_CELLS := [
 	## floor>=1 chain.
 	## (4) `chieftains_hp_stack`: phosphor_pendant (hp+3) + hedge_ward_charm
 	## (hp+2) = hp+5, resonance 1+1=2, on chieftains_raid/warrior2. Carries
-	## rusty_sword (0 mods) so `_weapon_gated_kit` still fields power_strike --
+	## rusty_sword (0 mods) so `WICombatBuild.weapon_gated_kit` still fields power_strike --
 	## an empty weapon string would filter the kit down to untagged-only
 	## skills (weapon_family "" only matches untagged), conflating "no
 	## weapon equipped" with the accessory hp-stack read this cell wants
@@ -203,26 +208,6 @@ func _find_by_name(list: Array, value: String) -> Dictionary:
 	return {}
 
 
-## Harness-local MIRROR of `wi_game.gd`'s `_weapon_gated_kit` (M7 Task E6).
-## The harness builds combatants directly from combatants.json and never
-## touches WIGame, so it cannot call the real (private, instance-method,
-## `self.skills`-reading) function -- this file's task scope also excludes
-## wi_game.gd. Semantics kept byte-for-byte identical: a skill carrying
-## skills.json's `weapon` key requires an exact family match against the
-## equipped weapon; a skill with no `weapon` key (every spell, every
-## passive) always passes. `weapon_family` "" (no weapon item, or an
-## uncatalogued id) correctly fields untagged skills only. If the shipped
-## function's semantics ever change, this copy must be updated by hand.
-func _weapon_gated_kit(kit: Array, weapon_family: String, skills_by_id: Dictionary) -> Array:
-	var out: Array = []
-	for raw: Variant in kit:
-		var sk_id := String(raw)
-		var rec: Dictionary = skills_by_id.get(sk_id, {})
-		if not rec.has("weapon") or String(rec["weapon"]) == weapon_family:
-			out.append(sk_id)
-	return out
-
-
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var arenas_by_id := {}
@@ -317,10 +302,11 @@ func _init() -> void:
 	## same convention WAVE A2 established for the mentor-carried tutorial
 	## cell) -- resolves each cell's named composition/build back to the
 	## tables above so classes/ai/solo never drift from the cell they
-	## reference, then injects equipment exactly like wi_game.gd's
-	## `_build_player_combatant` (weapon-gated kit + damage_mod, armor's
-	## hp_mod/damage_reduction) before constructing the SAME WICombat class
-	## the main loop above uses.
+	## reference, then injects equipment via the SAME shared pure functions
+	## `wi_game.gd`'s `_build_player_combatant` calls (`WICombatBuild.
+	## weapon_gated_kit`/`equipment_mods`, `src/core/combat_build.gd` --
+	## M-ARCH Task ARCH-2 promoted these off two hand-mirrored copies) before
+	## constructing the SAME WICombat class the main loop above uses.
 	for cell: Dictionary in LOADOUT_CELLS:
 		var comp: Dictionary = _find_by_name(COMPOSITIONS, String(cell["comp"]))
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
@@ -343,21 +329,16 @@ func _init() -> void:
 			pc["ai"] = String(build.get("ai", "melee"))
 			pc["stats"] = WIProgression.apply_stat_bonuses(pc["stats"], build["classes"], classes)
 			var kit: Array = WIProgression.granted_skills(build["classes"], classes)
-			pc["skills"] = _weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
-			# M-GEAR Task G4: mirrors wi_game.gd's `_build_player_combatant` --
-			# weapon/armor contribute first, then each equipped accessory's
-			# own damage_mod/hp_mod/damage_reduction is SUMMED onto the same
-			# three running totals (default 0 each, same tolerant .get reads).
-			var dmg_mod := int(weapon.get("damage_mod", 0))
-			var hp_mod := int(armor.get("hp_mod", 0))
-			var dmg_reduction := int(armor.get("damage_reduction", 0))
-			for acc: Dictionary in accessories:
-				dmg_mod += int(acc.get("damage_mod", 0))
-				hp_mod += int(acc.get("hp_mod", 0))
-				dmg_reduction += int(acc.get("damage_reduction", 0))
-			pc["damage_mod"] = dmg_mod
-			pc["hp_mod"] = hp_mod
-			pc["damage_reduction"] = dmg_reduction
+			pc["skills"] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
+			# M-ARCH Task ARCH-2: calls the SAME shared function wi_game.gd's
+			# `_build_player_combatant` calls -- weapon/armor contribute first,
+			# then each equipped accessory's own damage_mod/hp_mod/
+			# damage_reduction is SUMMED onto the same three fields (default 0
+			# each, same tolerant .get reads); no more hand-mirrored math here.
+			var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
+			pc["damage_mod"] = mods["damage_mod"]
+			pc["hp_mod"] = mods["hp_mod"]
+			pc["damage_reduction"] = mods["damage_reduction"]
 			var cfgs: Array = [pc]
 			if has_relc:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))

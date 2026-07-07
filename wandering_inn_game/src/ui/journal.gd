@@ -251,35 +251,35 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, 
 	# header + its milestone beats (results-only copy), achieved beats marked.
 	# Absent only if no acts catalog loaded (degrades to Quests-first as before).
 	if not act.is_empty():
-		parts.append("[b]%s[/b]" % _bb_escape(String(act.get("header", ""))))
+		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(act.get("header", ""))))
 		for raw_beat: Variant in act.get("beats", []):
 			var beat := raw_beat as Dictionary
 			var marker := "✓ " if bool(beat.get("achieved", false)) else "· "
-			parts.append("%s%s" % [marker, _bb_escape(String(beat.get("text", "")))])
+			parts.append("%s%s" % [marker, UIChrome.bb_escape(String(beat.get("text", "")))])
 		parts.append("")
 	parts.append("[b]Quests[/b]")
 	if quest_lines.is_empty():
 		parts.append("No quests yet.")
 	else:
 		for line: Variant in quest_lines:
-			parts.append(_bb_escape(String(line)))
+			parts.append(UIChrome.bb_escape(String(line)))
 	parts.append("")
 	parts.append("[b]Skills[/b]")
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary
 		parts.append("")
-		parts.append("[b]%s[/b]" % _bb_escape(String(group["heading"])))
+		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(group["heading"])))
 		for raw_skill: Variant in (group["skills"] as Array):
 			var skill := raw_skill as Dictionary
 			if bool(skill["revealed"]):
-				parts.append(_bb_escape(_revealed_skill_line(String(skill["id"]), String(skill["display_name"]), combatants_catalog)))
+				parts.append(UIChrome.bb_escape(_revealed_skill_line(String(skill["id"]), String(skill["display_name"]), combatants_catalog)))
 			else:
-				parts.append(_bb_escape(String(skill["text"])))
+				parts.append(UIChrome.bb_escape(String(skill["text"])))
 	if not seen_statuses.is_empty():
 		parts.append("")
 		parts.append("[b]Effects[/b]")
 		for status_id: Variant in seen_statuses:
-			parts.append(_bb_escape(WIEffectText.status_line(String(status_id), Game.sim.skills.values())))
+			parts.append(UIChrome.bb_escape(WIEffectText.status_line(String(status_id), Game.sim.skills.values())))
 	return "\n".join(parts)
 
 
@@ -315,8 +315,11 @@ func _revealed_skill_line(id: String, display_name: String, combatants_catalog: 
 ## threaded through every `WIEffectText.skill_effect_lines` call site in this
 ## file via its `combatants_catalog` override param -- mirrors
 ## `WIEffectText._load_combatants`'s own FileAccess+JSON.parse idiom (kept as
-## a per-file copy, same M6.5 zero-cross-dependency reasoning as `_bb_escape`,
-## rather than exposing a new formatter-side public loader). A missing/
+## a per-file copy, the M6.5 zero-cross-dependency reasoning -- NOTE:
+## `_bb_escape` (formerly this file's own per-file example of that idiom) was
+## promoted to `UIChrome.bb_escape` by M-ARCH Task ARCH-2; this loader is
+## NOT part of that promotion, it stays a deliberate per-file copy) rather
+## than exposing a new formatter-side public loader. A missing/
 ## unparseable file degrades to `[]`, which every caller already treats the
 ## same as "no override" (falls back to the formatter's own default load).
 func _load_combatants_catalog() -> Array:
@@ -330,17 +333,10 @@ func _load_combatants_catalog() -> Array:
 
 
 ## Skill display names/descriptions carry literal `[`/`]` (e.g.
-## "[Basic Cleaning]") that BBCode would otherwise parse as tags. MUST route
-## through placeholder chars: the naive two-line
-## `.replace("[", "[lb]").replace("]", "[rb]")` chain is self-colliding —
-## the FIRST replace's own output ("[lb]") contains a "]" that the SECOND
-## replace then re-matches and mangles too (verified empirically:
-## "[Basic Cleaning]" would escape to the corrupted
-## "[lb[rb]Basic Cleaning[rb]"). Identical fixed copy in combat_hud.gd /
-## targeting_controller.gd (UI wave review closed all three) — tiny pure
-## helper, deliberately duplicated per file (M6.5 idiom); keep in sync.
-func _bb_escape(s: String) -> String:
-	var placeholder_open := char(1)
-	var placeholder_close := char(2)
-	return s.replace("[", placeholder_open).replace("]", placeholder_close) \
-			.replace(placeholder_open, "[lb]").replace(placeholder_close, "[rb]")
+## "[Basic Cleaning]") that BBCode would otherwise parse as tags -- escaped
+## via `UIChrome.bb_escape` (M-ARCH Task ARCH-2: promoted off a per-file copy
+## here/combat_hud.gd/targeting_controller.gd -- the M6.5 zero-cross-
+## dependency idiom, amended for this one case since this file already
+## references UIChrome for its panel chrome, so calling `bb_escape` too adds
+## no new dependency). See `UIChrome.bb_escape`'s own doc comment for the
+## self-collision bug the placeholder-char technique fixes.

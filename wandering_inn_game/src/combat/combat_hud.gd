@@ -344,7 +344,7 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 	if int(c.get("max_mp", 0)) > 0:
 		mp_bit = "  MP %d/%d" % [int(c["mp"]), int(c["max_mp"])]
 	var head := "%s  AP %s  Move %s%s" % [
-		_bb_escape(String(c["display_name"])), "●".repeat(int(c["ap"])), "○".repeat(int(c["move_pool"])), mp_bit,
+		UIChrome.bb_escape(String(c["display_name"])), "●".repeat(int(c["ap"])), "○".repeat(int(c["move_pool"])), mp_bit,
 	]
 	# RAW (un-escaped) -- `_compose_readout` measures/fits this against the
 	# panel's true wrap width, then escapes only the FITTED result. The event
@@ -377,7 +377,7 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 	var t: Dictionary = view.combatant(String(targets[int(targeting_state.get("index", 0))]))
 	return _compose_readout(
 		head,
-		"Target: %s (%d/%d) (Tab cycles, Enter confirms)" % [_bb_escape(String(t["display_name"])), int(t["hp"]), int(t["max_hp"])],
+		"Target: %s (%d/%d) (Tab cycles, Enter confirms)" % [UIChrome.bb_escape(String(t["display_name"])), int(t["hp"]), int(t["max_hp"])],
 		info_line
 	)
 
@@ -398,7 +398,7 @@ func _compose_readout(head: String, hint: String, info: String) -> String:
 	if hint != "":
 		used += _rtl_wrapped_line_count(_readout_label, hint, READOUT_TEXT_WIDTH)
 	var budget := maxi(_rtl_line_capacity(_readout_label, READOUT_TEXT_HEIGHT) - used, 1)
-	var fitted := _bb_escape(_rtl_fit_to_lines(_readout_label, info, READOUT_TEXT_WIDTH, budget))
+	var fitted := UIChrome.bb_escape(_rtl_fit_to_lines(_readout_label, info, READOUT_TEXT_WIDTH, budget))
 	var lines: Array[String] = [head]
 	if hint != "":
 		lines.append(hint)
@@ -423,7 +423,7 @@ func _render_slot_info_line(rendered_slots: Array, info_slot_index: int) -> Stri
 	if index != _last_slot_info_index or line != _last_slot_info_text:
 		_last_slot_info_index = index
 		_last_slot_info_text = line
-		_screen._emit_slot_info(index, _bb_escape(line))
+		_screen._emit_slot_info(index, UIChrome.bb_escape(line))
 	return line
 
 
@@ -476,21 +476,13 @@ func _slot_info_line(d: Dictionary) -> String:
 			return ""
 
 
-## BBCode-escapes literal `[`/`]` (skill display_names like "[Power Strike]").
-## MUST route through placeholder chars: the naive two-step
-## `.replace("[", "[lb]").replace("]", "[rb]")` chain is self-colliding — the
-## first replace's own output ("[lb]") contains a "]" that the second replace
-## then re-matches, garbling every bracketed name ("[Power Strike]" →
-## "[lb[rb]Power Strike[rb]"; UI wave review fix, was user-visible on the
-## slot-info line). Identical fixed copy in journal.gd /
-## targeting_controller.gd — tiny pure helper, deliberately duplicated
-## per file (M6.5 idiom: keeps each component's zero-cross-dependency
-## load() story); keep all three in sync.
-func _bb_escape(s: String) -> String:
-	var placeholder_open := char(1)
-	var placeholder_close := char(2)
-	return s.replace("[", placeholder_open).replace("]", placeholder_close) \
-			.replace(placeholder_open, "[lb]").replace(placeholder_close, "[rb]")
+## BBCode-escaping (skill display_names like "[Power Strike]") is now
+## `UIChrome.bb_escape` (M-ARCH Task ARCH-2: promoted off a per-file copy
+## here/journal.gd/targeting_controller.gd -- the M6.5 zero-cross-dependency
+## idiom, amended for this one case since this file already references
+## UIChrome for its panel chrome, so calling `bb_escape` too adds no new
+## dependency). `UIChrome.bb_escape`'s own doc comment covers the
+## self-collision bug the placeholder-char technique fixes.
 
 
 func show_banner(text: String) -> void:
