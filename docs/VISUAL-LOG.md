@@ -454,6 +454,19 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   POSSIBLE label-removal regression on new-map encounter entities.
 - [ ] SPRITE — `shield_spider` ships on the `bat` sprite (flagged
   stand-in, C1) — needs a real arachnid via the next PixelLab batch.
+- [ ] COMBAT/TEXT — terrain-sourced slow expiry reuses the generic
+  STATUS_EXPIRED feed line "shakes it off", which reads odd while the
+  combatant is STILL standing on [Ice Floor] ice (slowed again next
+  turn) — GH#21 controller windowed read 2026-07-07,
+  `qa_output/ice_floor_loop/01_standing_slow.png`. Candidate: a
+  terrain-aware expiry line ("the ice still grips") keyed off the
+  status's source.
+- [ ] COMBAT/TEXT — [Ice Floor]'s readout slot-info line truncates at
+  "...for 2 rounds...." — the fitted 3-line budget eats the trailing
+  "Slows." verb (full line rides `ui_slot_info_rendered` untruncated,
+  the L5 contract) — GH#21 controller read,
+  `qa_output/ice_floor_loop/00_icy_floor_cast.png`. Cosmetic; the feed
+  shows the slow anyway on first application.
 
 ## Fixed
 

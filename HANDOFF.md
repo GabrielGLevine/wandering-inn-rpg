@@ -1,5 +1,57 @@
 # Wandering Inn RPG Handoff
 
+## #21 + #23 CLOSED — SHIP (2026-07-07, Fable; parallel worktree lanes, both reviewed + fix-waved)
+
+**#21 [Ice Floor] LIVE** — the last ghost skill wired. Enemy-targeted cast
+(reuses the existing spell-target UI — the feared "new cell-targeting mode"
+proved unnecessary), 3×3 glaze around the target, walls excluded, friendly
+fire real (the caster can ice their own feet on an adjacent cast); persists
+2 rounds via new `WICombat.terrain` state; standing on/stepping onto ice
+applies the existing `slowed` status (turn-start apply lands the penalty
+THAT turn). Board overlay + `terrain_added/expired` + `ui_terrain_rendered`;
+AI deliberately unaware (no enemy holds it; PC autoplay never casts — harness
+A/B byte-identical). Card un-suppressed: "2 AP, 4 MP — glaze a 3×3 patch of
+ground at range 3 for 2 rounds. Slows." Review caught 1 Critical (terrain
+visuals dropped on AI-playback skip-forward — the zero-delay desync class,
+invisible to QA by construction) — fixed + unit-pinned. 57th canonical
+`ice_floor_loop`; overlay + standing-slow windowed-read by controller.
+2 cosmetic VISUAL-LOG items added ("shakes it off" wording on terrain
+expiry; readout truncation eats the trailing "Slows.").
+
+**#23 per-waking dialogue seam LIVE** — `once_per_waking` (requires-ONLY
+after the review fix — hide_when polarity was a latent landmine, now refused
+at runtime + rejected by the content validator) + `bank_first_use` effect,
+riding the existing `entity_first_use` dict. Erin's stage-3 meal ("Sit, eat.
+Cook's orders.") grants NEW `well_fed` (+2 max HP folded into hp_mod until
+sleep; mirrors light_active's lifecycle, additive save). Relc's stage-3 spar
+wager pays 1g once per waking via the shipped next-talk idiom (no new
+combat→dialogue bridge). 58th canonical `stage3_perks_loop` (both perks,
+gone-same-waking, back-after-sleep). Review: 0C/1I/2M — Important fixed;
+Minors logged (ledger): wager pins final gold not the gold_changed event;
+save test round-trips the two new fields separately, not in one save.
+Lane B's implementer died to an API kill mid-fix-report — fix commit was
+already landed; controller re-ran the covering gates directly (the DP5
+transcript-resume precedent, resolved cheaper).
+
+**Merged-tree re-gate: 16/16 unit suites + 58/58 ci_sweep green, zero grep
+hits; windowed reads clean (both new dialogue lines render full, no fold
+bleed; "Earned 1 gold." toast lands beside Relc's line).**
+
+**⚑ TASTE QUEUE (new, user):**
+1. `well_fed` design call: staged spec said "small HP restore" but field HP
+   doesn't exist (combat starts full) — shipped +2 max HP until sleep as the
+   nearest honest mechanic. Bless or reshape.
+2. Erin's meal line names "+2 HP" out loud ("Call it +2 HP. Don't ask me to
+   explain the math.") — visible currency, permitted, deliberately
+   meta-flavored; read it in play (shot:
+   `qa_output/stage3_perks_loop/00_erin_meal_line.png`).
+3. Relc's wager line (fresh copy, no staged verbatim existed): "Ugh — fine,
+   you win. Here's your cut. Watch doesn't pay enough for me to keep losing
+   bets to my own students, but don't tell the paymaster I said that."
+   (shot: `01_relc_wager_line.png`).
+4. [Ice Floor] feel: cast it in the spar (ice_mage L10 kit) — does the 3×3
+   glaze + slow read as terrain magic?
+
 Last updated: 2026-07-07 (**UNIFIED REPO — this public repo is now THE working repo** (local: ~/wandering-inn-rpg); commits are public on push; licensed assets overlay via scripts/fetch_private_assets.sh; leak_check is CI job 1; the old private repo is a frozen archive. Full gate 56/56 green post-transition with the overlay. v0.3.0 LIVE on itch. Board state: interlude #2-#5 + honest debts #27/#28 + cleanup #36 all closed; 8a gates on issue #7 (USER SESSION); spoiler cutoff ratified (Book 17 bar / Vol 7 advertised, docs/design/spoiler-cutoff.md). External PRs: wi-handling-prs skill. User queue: #7 session, taste #32-#35, itch page spoiler line.)
 
 
