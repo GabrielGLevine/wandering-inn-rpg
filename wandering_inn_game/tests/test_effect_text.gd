@@ -91,11 +91,11 @@ const EXPECTED_SKILLS := {
 	"extended_sweep": ["2 AP — ×1.3 damage"],
 	"spear_flurry": ["4 AP — ×2.6 damage"],
 	"ice_shard": ["2 AP, 3 MP — damage 1d6 at range 4"],
-	# Skills Wave Task K4 assessed and SKIPPED wiring icy_floor (new
-	# cell-targeting + round-persistent terrain-effect machinery, not a clean
-	# fit -- see the K4 report). Still no `resolve_active` consumer, so the
-	# line stays SUPPRESSED exactly as the original M-LEGIBILITY L5 finding.
-	"icy_floor": [],
+	# GH#21: WIRED -- WISkillEffects.resolve_active gained a real icy_floor
+	# resolver, so effect_text.gd generates the real card line (radius=1 ->
+	# 3x3 patch, range 3, duration_rounds 2, `applies.slowed` -> the "Slows."
+	# suffix).
+	"icy_floor": ["2 AP, 4 MP — glaze a 3×3 patch of ground at range 3 for 2 rounds. Slows."],
 	"flame_scythe": ["2 AP, 4 MP — damage 1d6 at range 1"],
 	"flare_burst": ["1 AP, 2 MP — damage 1d6 at range 3"],
 	"keener_edge": ["2 AP — ×1.6 damage"],

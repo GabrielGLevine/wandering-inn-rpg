@@ -149,20 +149,20 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			# "an ally". Widen this phrase the same task ally-targeting lands.
 			return "restore %d HP to yourself" % int(effect.get(WIKeys.AMOUNT, 0))
 		"icy_floor":
-			# M-LEGIBILITY L5 fix wave, Item 1 / Skills Wave Task K4: STILL
-			# suppressed -- `WISkillEffects.resolve_active` has no icy_floor
-			# match arm. K4 assessed the area-terrain machinery this type
-			# needs (a NEW cell-targeting mode -- no existing UI can aim at a
-			# bare cell, only a combatant id or a line direction token -- plus
-			# round-persistent terrain-effect state and a move-time status
-			# check, none of which have a clean existing precedent to lean
-			# on) and SKIPPED it rather than half-ship it (see the K4 report,
-			# `.superpowers/sdd/fp-handoff/task-k4-wiring-report.md`).
-			# Generating "2 AP, 4 MP — ..." would still promise a mechanic
-			# that never fires, so the line stays SUPPRESSED (return "") until
-			# a future task wires it. Re-enable by adding a `resolve_active`
-			# match arm for the type FIRST, then restoring the phrase here.
-			return ""
+			# GH#21: WIRED -- `WISkillEffects.resolve_active` (skill_effects.gd)
+			# gained a real icy_floor resolver (an area-terrain cast: the target
+			# id picks the blast CENTER via the existing combatant-targeting
+			# mode -- no new cell-targeting UI needed after all -- and
+			# WICombat.terrain carries the round-persistent state). Every
+			# number here is READ from the effect dict (drift rule): `radius`
+			# derives the patch's side length (a radius-R square spans
+			# 2R+1 cells), `range`/`duration_rounds` are literal. The trailing
+			# "Slows." comes from `_status_suffix` automatically, same as
+			# frost_bolt/calming_touch (icy_floor's `applies.slowed` rider).
+			var side := int(effect.get(WIKeys.RADIUS, 0)) * 2 + 1
+			return "glaze a %d×%d patch of ground at range %d for %d rounds" % [
+				side, side, int(effect.get(WIKeys.RANGE, 0)), int(effect.get(WIKeys.DURATION_ROUNDS, 0)),
+			]
 		"move_pool_bonus":
 			# Skills Wave Task K2: UN-SUPPRESSED for an actively-cast skill
 			# (ap_cost > 0) -- skill_effects.gd's `resolve_active` wires a

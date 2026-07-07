@@ -215,7 +215,7 @@
 			"description": "A fist-sized spike of ice, hurled hard enough to crack shields."
 		},
 		{
-			"_comment": "Skills Wave Task K3 canon pass: renamed [Icy Floor] -> [Ice Floor] (id `icy_floor` UNCHANGED -- save-compat). CANON-VERDICT 2026-07-07: ATTESTED, Ceria Springwalker's spell list names [Ice Floor] directly (bonus catch alongside frost_touch/kindle's renames). Display-copy-only change: this skill remains SUPPRESSED (K4 assessed its area-terrain machinery as not a clean effect_text fit and skipped wiring it) -- effect_text.gd still degrades it to a bare 'Name — description' line, so only the name changed here, no new machinery.",
+			"_comment": "Skills Wave Task K3 canon pass: renamed [Icy Floor] -> [Ice Floor] (id `icy_floor` UNCHANGED -- save-compat). CANON-VERDICT 2026-07-07: ATTESTED, Ceria Springwalker's spell list names [Ice Floor] directly. GH#21 (2026-07-07): WIRED for real -- WISkillEffects.resolve_active gained an icy_floor resolver (area terrain state on WICombat.terrain, keyed by cell; applies `effect.applies` to every living occupant of the blast regardless of side, both on cast and on standing on/stepping onto an icy cell; purges at round rollover). effect_text.gd generates the real card line from `range`/`radius`/`duration_rounds` instead of suppressing it. See wi_combat.gd/skill_effects.gd doc comments for the mechanism.",
 			"id": "icy_floor",
 			"display_name": "[Ice Floor]",
 			"contexts": ["combat"],
