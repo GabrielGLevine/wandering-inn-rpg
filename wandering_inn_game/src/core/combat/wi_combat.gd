@@ -556,7 +556,7 @@ func _start_turn() -> void:
 ## (quick_movement, battlefield_awareness) are genuine PASSIVES -- a holder
 ## gets +amount move_pool at the START of every turn, unconditionally: no
 ## cast, no cost, no refusal path. This is deliberately separate from
-## [Sneak]'s ACTIVE cast (ap_cost 1, gated in skill_effects.gd's
+## [Stealth]'s ACTIVE cast (ap_cost 1, gated in skill_effects.gd's
 ## resolve_active on ap_cost > 0), which this function never touches.
 ## Applied AFTER the slowed penalty above -- same "per-turn pool math lives
 ## here" site the penalty already established -- so a slowed holder of one

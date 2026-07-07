@@ -16,7 +16,51 @@
 				{ "text": "You look worried about something.", "goto": "cisterns" },
 				{ "text": "Zevara sent me. The tunnels under the cisterns — what do you have?", "requires": { "accomplishment": { "heard_the_deep_tremor": 1 } }, "hide_when": { "accomplishment": { "heard_olesm_briefing": 1 } }, "effects": [ { "accomplishment": "heard_olesm_briefing" } ], "goto": "briefing" },
 				{ "text": "It's dead. Zevara's sealing the gallery.", "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "hide_when": { "accomplishment": { "heard_olesm_resolution": 1 } }, "effects": [ { "accomplishment": "heard_olesm_resolution" } ], "goto": "resolution" },
-				{ "text": "I'll leave you to your tally.", "end": true }
+				{ "text": "I'll leave you to your tally.", "end": true },
+				{ "_comment": "Social Pillar II Phase B: stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/olesm_stages.json. Appended AFTER 'I'll leave you to your tally.' (array end) so it can never shift an earlier option's visible index.", "text": "You run half this city from that desk. You know that, right?", "requires": { "accomplishment": { "cisterns_reported": 1 } }, "goto": "olesm_doubt" },
+				{ "_comment": "Social Pillar II Phase B: stage-3 hub topic (⚑ mild canon -- [Strategist] ambition is safe early canon; the letters beat is a proto-newsletter nod kept oblique, never says 'newsletter'). Same array-end index safety.", "text": "What's next for you, Olesm?", "requires": { "accomplishment": { "cisterns_reported": 1, "chatted_with_olesm": 3 } }, "goto": "olesm_ambition" },
+				{ "_comment": "Social Pillar II Phase D: the chess perk's OPTION + FRAME NODE ONLY (per the brief -- the match copy itself is a follow-up writing task; do not improvise the scene). No counter, no wager -- this beat ends on the invitation, not a resolution.", "text": "Set the board, Olesm.", "requires": { "accomplishment": { "cisterns_reported": 1, "chatted_with_olesm": 3 } }, "goto": "olesm_chess_invite" }
+			]
+		},
+		"olesm_chess_invite": {
+			"speaker": "Olesm",
+			"text": "The board's been out since Tuesday, if you want the honest count. I'm not going to pretend otherwise. Whenever you're ready — I'll even let you have white, which should tell you how confident I am.",
+			"options": [
+				{ "text": "Some other time, Olesm.", "end": true }
+			]
+		},
+		"olesm_doubt": {
+			"speaker": "Olesm",
+			"text": "Ha. HA. No. I run the paperwork the Council ignores, and I'm a [Tactician] whose largest engagement to date was a supply-cart dispute. ...Which I won. Decisively. I keep a list of what I'd do if Liscor were ever truly tested. It's a good list. I would just rather die of old age never having to show anyone.",
+			"options": [
+				{ "text": "I hope the list stays theoretical.", "goto": "olesm_doubt_two" },
+				{ "text": "Back to the top.", "goto": "hub" },
+				{ "text": "The cart never stood a chance.", "end": true }
+			]
+		},
+		"olesm_doubt_two": {
+			"speaker": "Olesm",
+			"text": "So do I. That's the strange arithmetic of the job — you train your whole life for a day you pray never comes, and the better you are, the more boring the city stays. Liscor is very boring. I'm quietly proud of that.",
+			"options": [
+				{ "text": "Back to the top.", "goto": "hub" },
+				{ "text": "Stay bored, Olesm.", "end": true }
+			]
+		},
+		"olesm_ambition": {
+			"speaker": "Olesm",
+			"text": "Honestly? There's a class above mine. [Strategist]. Cities write to theirs. Armies wait on them. Some nights I can almost see the shape of the level — like a move you know is on the board and cannot find yet. ...I've started writing to other [Tacticians]. Comparing games, doctrine, mistakes. Perhaps it becomes nothing. Perhaps it becomes something every city wants a copy of.",
+			"options": [
+				{ "text": "I'd read it.", "goto": "olesm_ambition_two" },
+				{ "text": "Back to the top.", "goto": "hub" },
+				{ "text": "You'll find the move.", "end": true }
+			]
+		},
+		"olesm_ambition_two": {
+			"speaker": "Olesm",
+			"text": "You'd be the second subscriber. The first is me, checking for errors. ...Thank you. People ask what I do; you asked what I'm FOR. There's a difference, and it's most of why the second chair stays out.",
+			"options": [
+				{ "text": "Back to the top.", "goto": "hub" },
+				{ "text": "Keep the chair out.", "end": true }
 			]
 		},
 		"briefing": {

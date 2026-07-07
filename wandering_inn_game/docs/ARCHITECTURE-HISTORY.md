@@ -1120,7 +1120,7 @@ task names, and self-references to "this task"/"this block".
   **Skills Wave Task K2 partially closed the `move_pool_bonus` half of that
   queue — for an ACTIVELY-CAST use only:** `resolve_active` now wires a real
   self-buff resolver for `move_pool_bonus` gated on `ap_cost > 0` (the new
-  `[Sneak]` skill's combat read is the first and only consumer), and
+  `[Stealth]` skill's combat read is the first and only consumer), and
   `_effect_phrase`'s `move_pool_bonus` case is un-suppressed for exactly that
   ap_cost>0 shape. `quick_movement`/`battlefield_awareness` are BOTH `ap_cost:
   0` (passive-shaped) and therefore UNCHANGED by this — they still hit

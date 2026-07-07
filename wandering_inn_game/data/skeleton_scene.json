@@ -430,15 +430,18 @@
       "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
       "...You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
      ],
-     "_comment_pool_post": "Content Wave C4 (Q2 pool-growth): the game's FIRST pool-GROWTH. Once `resolved_wrong_order` is banked (The Wrong Order settled by any path), Lyonette's rotating small-talk REPLACES `talk_pool` with these warmer lines -- the wounded-pride arc from her base pool completing into open warmth. Read by the S1 seam in wi_game.gd `_talk_pool_line` (content-only data + one narrow gated read; no per-line machinery). Rotation still keys on chatted_with_lyonette % lines.size(), zero rng.",
-     "talk_pool_post": {
-      "requires_accomplishment": { "resolved_wrong_order": 1 },
-      "lines": [
-       "You covered for me. With the order, I mean. You didn't have to — and you didn't make it a story to tell later. That is... rare. Thank you.",
-       "Sit anywhere you like. The good chair by the fire, even. No, I insist — I'm allowed to insist, it's practically my inn too.",
-       "I used to think kindness was something people spent on you to get something back. You keep not doing that. It's unsettling. In a good way. Mostly."
-      ]
-     },
+     "_comment_stages": "Social Pillar II Phase A retrofit (reference implementation): Content Wave C4's one-shot `talk_pool_post` migrated verbatim into the new `talk_pool_stages` seam (social.gd's talk_pool_line, ORDERED array, last-met-wins) -- a RENAME, not a rewrite; ZERO copy changes. One-entry array = stage 2 (`lyonette_thawed`), the shipped thaw: once `resolved_wrong_order` is banked (The Wrong Order settled by any path), her rotating small-talk REPLACES `talk_pool` with these warmer lines. Rotation still keys on chatted_with_lyonette % lines.size(), zero rng. Ships PERK-LESS (stage-tables.md's optional home-topic unlock + optional short-rest perk are both ⚑ user-gated, default OUT -- see HANDOFF).",
+     "talk_pool_stages": [
+      {
+       "id": "lyonette_thawed",
+       "requires_accomplishment": { "resolved_wrong_order": 1 },
+       "lines": [
+        "You covered for me. With the order, I mean. You didn't have to — and you didn't make it a story to tell later. That is... rare. Thank you.",
+        "Sit anywhere you like. The good chair by the fire, even. No, I insist — I'm allowed to insist, it's practically my inn too.",
+        "I used to think kindness was something people spent on you to get something back. You keep not doing that. It's unsettling. In a good way. Mostly."
+       ]
+      }
+     ],
      "conversation": "lyonette_tip",
      "dialogue": [
       {
@@ -1586,6 +1589,18 @@
       "Ten years running this Watch. Six weeks of leave, total. That's the whole personality, if you were wondering.",
       "Relc's off being enormous at someone. Klbkch is... Klbkch. Somehow the gate still stands. Don't jinx it."
      ],
+     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag annotations stripped). Two stages -- she does not do three degrees of warmth on duty. Perk (watch-bounty access) is the dialogue_unlocks wired into zevara_intro.json's hub + new claimed_bounty_{crate,cisterns,warren} counters, each banked on the CLAIM option (effects live on options, never nodes).",
+     "talk_pool_stages": [
+      {
+       "id": "zevara_trusted_irregular",
+       "requires_accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 },
+       "lines": [
+        "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
+        "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
+        "If you're between jobs, see me about bounty work. The Watch pays slow, but it pays — and I sign faster for people who don't invoice me for heroics."
+       ]
+      }
+     ],
      "conversation": "zevara_intro",
      "dialogue": [
       {
@@ -1611,6 +1626,27 @@
       "Three reports due by dawn and the ink is winning. If anyone asks, the [Tactician] of Liscor is 'strategizing'.",
       "Three reports due by dusk and two clerks who can't count past a company. I'll manage. I always manage.",
       "Supply lines, sightlines, morale — a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak."
+     ],
+     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/olesm_stages.json (staging_note/_flag annotations stripped). Three stages. The chess-beat perk (stage 3, olesm_board_partner) is FLAGGED unbuilt this wave (the match copy itself is a follow-up writing task per the staging doc) -- only the stage rows + hub topic unlocks ship.",
+     "talk_pool_stages": [
+      {
+       "id": "olesm_worth_interrupting_a_tally",
+       "requires_accomplishment": { "cisterns_reported": 1 },
+       "lines": [
+        "Oh — you! No no, the tally can wait. The tally is wrong anyway; it will still be wrong in an hour.",
+        "I put your cistern business in my report. With your name spelled correctly and everything. In this office that is practically a parade.",
+        "I've started leaving the second chair out. Statistically you keep existing near my desk, so — efficiency."
+       ]
+      },
+      {
+       "id": "olesm_board_partner",
+       "requires_accomplishment": { "cisterns_reported": 1, "chatted_with_olesm": 3 },
+       "lines": [
+        "I set the board up when the bells go quiet now, on the chance you wander past. That isn't pathetic, that's PREPARED.",
+        "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
+        "You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
+       ]
+      }
      ],
      "conversation": "olesm_intro",
      "dialogue": [
@@ -1686,6 +1722,18 @@
       "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
       "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
      ],
+     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/selys_stages.json (staging_note annotation stripped). Two stages only. Board perk (⚑ first pick at the board) is FLAGGED unbuilt this wave (a repeatable board is new machinery, out of v1 scope per the staging doc) -- only the stage row + hub topic unlock ship.",
+     "talk_pool_stages": [
+      {
+       "id": "selys_past_the_counter",
+       "requires_accomplishment": { "errand_decided": 1, "chatted_with_selys": 2 },
+       "lines": [
+        "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
+        "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
+        "Rough week on the board. If you're taking work, take the sane jobs — I flag the sane ones. It's not a service everyone gets."
+       ]
+      }
+     ],
      "conversation": "selys_delivery",
      "dialogue": [
       {
@@ -1712,6 +1760,18 @@
       "Magic is not the wand-waving the market storytellers sell. It is discipline. Precision. Neither, I observe, is common here.",
       "Yes, a [Necromancer]. No, I will not apologize for a competence others lack the wit to appreciate.",
       "Do continue standing there. I find the silence rather more edifying than most conversation."
+     ],
+     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/pisces_stages.json (staging_note/_flag annotations stripped). Two stages -- he only ever thaws to 'tolerable'. NO spec-default perk (the staging doc explicitly says build nothing -- the duelist's-drill/gift proposal ships as an open flag, not code) -- only the stage row + the hard-railed hub topic unlock ship.",
+     "talk_pool_stages": [
+      {
+       "id": "pisces_tolerable_company",
+       "requires_accomplishment": { "learned_magic_from_pisces": 1, "chatted_with_pisces": 3 },
+       "lines": [
+        "Ah. You. Acceptable timing — I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
+        "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
+        "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
+       ]
+      }
      ],
      "conversation": "pisces_magic",
      "dialogue": [
@@ -1778,6 +1838,27 @@
       "Silverfang goods - fair weight, fair price. I do not haggle down, and I do not forget a face.",
       "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
       "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
+     ],
+     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/krshia_stages.json (staging_note/_flag annotations stripped). Three stages -- crate_returned accrues TODAY (pool shipped), so stage 2 goes live the moment the seam lands. Stage 3's shop-discount perk is wired into krshia_crate.json's 'shop' node (4 stage-gated duplicate buy options + hide_when-retired full-price rows); the necklace-reveal hub topic (krshia_plans) is the OBLIQUE canon version -- never says 'spellbook' (user gate, see HANDOFF).",
+     "talk_pool_stages": [
+      {
+       "id": "krshia_fair_weight",
+       "requires_accomplishment": { "crate_returned": 1 },
+       "lines": [
+        "Hrr. The crate-finder. Sit, look, touch even — you have earned handling privileges.",
+        "You did a thing for me and did not name a price after. I remember this the way I remember debts. Better, even.",
+        "The stall does well today. When the stall does well, the tribe does well. That is all the economics you need."
+       ]
+      },
+      {
+       "id": "krshia_friend_of_the_silverfangs",
+       "requires_accomplishment": { "crate_returned": 1, "chatted_with_krshia": 4 },
+       "lines": [
+        "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
+        "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
+        "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week."
+       ]
+      }
      ],
      "conversation": "krshia_crate",
      "dialogue": [

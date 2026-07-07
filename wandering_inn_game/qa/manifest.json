@@ -50,6 +50,7 @@
     { "script": "status_first_encounter", "seed": 9, "fixture": "near_mage_cast", "note": "status glossary + first-encounter combat-feed surface" },
     { "script": "gear_loop", "seed": 9, "fixture": "gear_loop_start", "note": "resonance-gear UI proof (accessory rows, capacity refusal)" },
     { "script": "stealth_loop", "seed": 9, "fixture": "near_ambush_sneak", "note": "the [Stealth] seam: skip an ambush, break it, positive control" },
-    { "script": "rogue_earn_loop", "seed": 9, "fixture": "near_rogue", "note": "K3 [Rogue] earn: recovered_crate_watch -> sleep -> class_gained -> [Stealth] fielded" }
+    { "script": "rogue_earn_loop", "seed": 9, "fixture": "near_rogue", "note": "K3 [Rogue] earn: recovered_crate_watch -> sleep -> class_gained -> [Stealth] fielded" },
+    { "script": "stages_loop", "seed": 9, "fixture": "krshia_stage3_pre", "note": "Social Pillar II: talk_pool_stages base->final (Krshia), unlocked hub topic + shop discount perk surface" }
   ]
 }

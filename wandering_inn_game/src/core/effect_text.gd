@@ -167,7 +167,7 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			# Skills Wave Task K2: UN-SUPPRESSED for an actively-cast skill
 			# (ap_cost > 0) -- skill_effects.gd's `resolve_active` wires a
 			# real self-buff resolver for exactly that shape (today, only
-			# [Sneak]; see its doc comment for why the gate is ap_cost>0
+			# [Stealth]; see its doc comment for why the gate is ap_cost>0
 			# specifically).
 			#
 			# Skills Wave Task K4: the two PRE-EXISTING 0-cost move_pool_bonus

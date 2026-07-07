@@ -15,7 +15,53 @@
 				{ "text": "The cisterns under the market — I need the Watch to sweep them.", "requires": { "accomplishment": { "heard_about_cisterns": 1 } }, "hide_when": { "accomplishment": { "watch_swept_cisterns": 1 } }, "goto": "sweep_pitch" },
 				{ "text": "You sent a runner for me?", "requires": { "accomplishment": { "watch_runner_pointed": 1 } }, "hide_when": { "accomplishment": { "heard_the_deep_tremor": 1 } }, "goto": "summons" },
 				{ "text": "It's done. The thing under the city won't be climbing up.", "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "hide_when": { "accomplishment": { "raskghar_sealed": 1 } }, "effects": [ { "accomplishment": "raskghar_sealed" }, { "item": "moon_bone_amulet" } ], "goto": "seal" },
-				{ "text": "Just getting my bearings.", "end": true }
+				{ "text": "Just getting my bearings.", "end": true },
+				{ "_comment": "Social Pillar II Phase B: stage-2 hub topics, lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag stripped). Appended AFTER 'Just getting my bearings.' (array end) so they can never shift an earlier option's visible index.", "text": "I heard you can breathe fire.", "requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } }, "goto": "zevara_oldblood" },
+				{ "_comment": "CANON ⚑ mild -- the Eresc story obliqued: no predecessor named, no Antinium named ('the kind the city didn't mourn'). User gates naming.", "text": "Why'd you take this job? It's eating you.", "requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } }, "goto": "zevara_oath" },
+				{ "_comment": "PERK surface (watch-bounty access, spec default, authorable now -- see zevara_bounties below).", "text": "About that bounty work.", "requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } }, "goto": "zevara_bounties" }
+			]
+		},
+		"zevara_oldblood": {
+			"speaker": "Zevara",
+			"text": "Oldblood, yes. Fire, technically. Ten seconds of it, no air in my lungs the whole time, and a day of sounding like a gravel cart after. It's a weapon you pay for using, so I file it where I file all last resorts. You want fire that works, requisition a mage.",
+			"options": [
+				{ "text": "Back a step.", "goto": "hub" },
+				{ "text": "Noted, Captain.", "end": true }
+			]
+		},
+		"zevara_oath": {
+			"speaker": "Zevara",
+			"text": "Somebody before me let things slide. Reports that went nowhere, as long as the dead were the kind the city didn't mourn. I wrote it up. Command found the paperwork inconvenient and the facts worse — and then the chair was mine. So no, I don't sleep much. I know exactly what this office looks like when its captain does.",
+			"options": [
+				{ "text": "The city's lucky it was you.", "goto": "zevara_oath_two" },
+				{ "text": "Back a step.", "goto": "hub" },
+				{ "text": "Understood, Captain.", "end": true }
+			]
+		},
+		"zevara_oath_two": {
+			"speaker": "Zevara",
+			"text": "Luck is what people call other people's overtime. But — thank you. File that under 'said once'. Now get out of my gatehouse before I find you a shift.",
+			"options": [
+				{ "text": "Back a step.", "goto": "hub" },
+				{ "text": "Yes, Captain.", "end": true }
+			]
+		},
+		"zevara_bounties": {
+			"speaker": "Zevara",
+			"text": "Good. The Watch posts standing bounties on anything that made a file cross my desk. You clear it, you claim it here, I sign it. Keep the receipts honest and this arrangement outlives both our patience.",
+			"options": [
+				{ "text": "The scavengers off Market Street are dealt with.", "requires": { "accomplishment": { "found_the_crate": 1 } }, "hide_when": { "accomplishment": { "claimed_bounty_crate": 1 } }, "effects": [ { "accomplishment": "claimed_bounty_crate" }, { "gold": 3 } ], "goto": "zevara_bounty_paid" },
+				{ "text": "The cistern nest is gone — you know that one firsthand.", "requires": { "accomplishment": { "resolved_the_cisterns": 1 } }, "hide_when": { "accomplishment": { "claimed_bounty_cisterns": 1 } }, "effects": [ { "accomplishment": "claimed_bounty_cisterns" }, { "gold": 4 } ], "goto": "zevara_bounty_paid" },
+				{ "text": "The thing under the city. The big one.", "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "hide_when": { "accomplishment": { "claimed_bounty_warren": 1 } }, "effects": [ { "accomplishment": "claimed_bounty_warren" }, { "gold": 10 } ], "goto": "zevara_bounty_paid" },
+				{ "text": "Nothing to claim yet.", "goto": "hub" }
+			]
+		},
+		"zevara_bounty_paid": {
+			"speaker": "Zevara",
+			"text": "Signed. Spend it somewhere that doesn't generate paperwork.",
+			"options": [
+				{ "text": "Anything else on the books?", "goto": "zevara_bounties" },
+				{ "text": "Captain.", "end": true }
 			]
 		},
 		"summons": {

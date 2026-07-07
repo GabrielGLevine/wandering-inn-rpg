@@ -93,7 +93,7 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 		# use_skill() emits, so the off-toast reads first.
 		_break_sneak.call()
 		return _use_skill.call(skill_id, String(target[WIKeys.ID]))
-	# Three Pillars P3: [Observe] reads a DIFFERENT field than the
+	# Three Pillars P3: [Appraise Foe] reads a DIFFERENT field than the
 	# requires_skill/on_skill_use seam above -- ANY faced entity responds
 	# with its own `observe` flavor string (generic fallback), banking
 	# observed_things (opaque; feeds [Tactician]'s levels). Empty faced cell
@@ -110,7 +110,7 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 			_record_accomplishment.call("observed_things", 1)
 		_emit(WIEvents.TOAST, {"text": observe_line})
 		return {"observed": String(target[WIKeys.ID])}
-	# Social Pillar S3: [Charming Smile] MIRRORS the [Observe] seam above --
+	# Social Pillar S3: [Charming Smile] MIRRORS the [Appraise Foe] seam above --
 	# ANY faced entity responds with its own `friendly_line` (generic
 	# fallback), banking `befriended_moments` only on the FIRST charm of
 	# this entity this waking, under a DISTINCT verb ("friendly") so charm
@@ -188,7 +188,7 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 
 
 ## Social Pillar S1: the SHARED per-waking first-use gate (moved here
-## because its only two call sites, [Observe]/[Charming Smile], both live
+## because its only two call sites, [Appraise Foe]/[Charming Smile], both live
 ## in this dispatch ladder -- `entity_first_use` itself stays on WIGame,
 ## see this file's own doc comment). Returns true the FIRST time
 ## `(verb, entity_id)` is seen since the last `sleep()` (and records it),

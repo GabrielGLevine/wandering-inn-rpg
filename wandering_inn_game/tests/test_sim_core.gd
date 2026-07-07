@@ -17,6 +17,16 @@ func _count(type: String) -> int:
 	return n
 
 
+## The most recent dialogue_line event's text, or "" if none fired since the
+## last _events.clear() (Social Pillar II stage-derivation unit).
+func _last_dialogue_text() -> String:
+	var text := ""
+	for e: Dictionary in _events:
+		if e["type"] == "dialogue_line":
+			text = String(e["payload"]["text"])
+	return text
+
+
 func _load_json(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	assert(parsed is Dictionary, "invalid JSON at " + path)
@@ -1901,6 +1911,48 @@ func _init() -> void:
 	assert(pl.get("speaker", "") == "Guard" and pl.get("text", "") == "Move along.", "a no-talk_pool NPC returns its plain dialogue line unchanged")
 	assert(_count("dialogue_line") == 1, "plain NPC still emits exactly one dialogue_line")
 	assert(gPlain.accomplishment_count("heard_gossip") == 0, "a no-talk_pool NPC banks no social counters")
+
+	# --- Social Pillar II Phase A: talk_pool_stages derivation is pure ---
+	# ORDERED array {id, requires_accomplishment, lines}; the LAST entry whose
+	# gate is met wins (ascending authoring, the visual_states/classes.json
+	# level-table convention). A synthetic 2-stage NPC proves: unmet -> base
+	# talk_pool; first leg met -> stage 2; BOTH legs met -> stage 3 (last
+	# wins, not "hardest" or "most legs").
+	var staged_scene := {
+		"start_map": "plaza",
+		"player": {WIKeys.CELL: [1, 1], "classes": {}, WIKeys.SKILLS: []},
+		"maps": {"plaza": {
+			"grid": {"width": 6, "height": 6},
+			"blocked": [],
+			"entities": [
+				{WIKeys.ID: "staged_npc", WIKeys.KIND: "npc", WIKeys.CELL: [2, 1], WIKeys.DISPLAY_NAME: "Staged",
+				 "talk_pool": ["Base one.", "Base two."],
+				 "talk_pool_stages": [
+					{"id": "stage_two", "requires_accomplishment": {"leg_a": 1}, "lines": ["Stage two one.", "Stage two two."]},
+					{"id": "stage_three", "requires_accomplishment": {"leg_a": 1, "leg_b": 1}, "lines": ["Stage three one.", "Stage three two."]},
+				 ]},
+			],
+		}},
+	}
+	var base_pool: Array = ["Base one.", "Base two."]
+	var stage2_pool: Array = ["Stage two one.", "Stage two two."]
+	var stage3_pool: Array = ["Stage three one.", "Stage three two."]
+	var gStg := WIGame.new(staged_scene, skill_config, _sink, 7)
+	_events.clear()
+	gStg.interact()
+	assert(base_pool.has(_last_dialogue_text()), "unmet stage gates: first talk plays the BASE pool")
+	gStg.sleep()
+	gStg.record_accomplishment("leg_a")
+	_events.clear()
+	gStg.interact()
+	var at_stage2 := _last_dialogue_text()
+	assert(stage2_pool.has(at_stage2) and not base_pool.has(at_stage2), "leg_a alone met: stage 2's pool wins")
+	gStg.sleep()
+	gStg.record_accomplishment("leg_b")
+	_events.clear()
+	gStg.interact()
+	var at_stage3 := _last_dialogue_text()
+	assert(stage3_pool.has(at_stage3) and not stage2_pool.has(at_stage3), "both legs met: stage 3 (the LAST met entry) wins, not stage 2")
 
 	# Observe dedup (resolves the TP-review Observe-farm): observing the SAME
 	# entity twice in one waking banks observed_things ONCE; sleep re-arms it.

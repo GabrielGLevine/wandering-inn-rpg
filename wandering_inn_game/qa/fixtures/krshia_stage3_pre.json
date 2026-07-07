@@ -1,0 +1,55 @@
+{
+ "_comment": "Social Pillar II QA (stages_loop, FIXTURE-FIRST per the ratified policy): pre-banks ALL BUT ONE leg of Krshia's stage-3 gate (crate_returned:1 + chatted_with_krshia:4) -- crate_returned is already true, chatted_with_krshia sits at 3 (one waking short). social_talked already carries {krshia:true} so the FIRST interact this waking falls straight through to her REAL hub conversation (proving the BEFORE state: the stage-3 hub topic is genuinely absent from the visible options at count 3) rather than consuming a pool line first. Positioned at the street, adjacent to Krshia (13,2), facing up, honest post-onboarding state (warrior L1, met/sparred/given_spear) so the run never re-fights the floodplains ambush. gold:10 covers the discounted charm-cord (4g) for the perk-surface proof without touching the full-price row.",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [
+   13,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "asked_about_crate": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "chatted_with_krshia": 3,
+   "heard_gossip": 3
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "missing_crate"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "social_talked": {
+   "krshia": true
+  },
+  "entity_first_use": {},
+  "gold": 10,
+  "rng_state": "9"
+ }
+}

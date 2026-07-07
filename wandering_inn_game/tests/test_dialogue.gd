@@ -170,6 +170,33 @@ func test_gold_affordability_greys_when_broke() -> void:
 	assert(String(opts[0]["requirement"]) == "costs 50 gold", "greyed buy shows its cost requirement text")
 
 
+## Social Pillar II review finding 2: the ONE sanctioned compound gate
+## ({gold, accomplishment}) unit-covered at the pure-walker level: the
+## accomplishment leg HIDES until met; once met, the gold leg greys-visible;
+## with both met the option unlocks. Mirrors the single-key tests above.
+func test_compound_gold_accomplishment_gate() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Krshia", "text": "t", "options": [
+		{"text": "discount buy", "requires": {"gold": 10, "accomplishment": {"stage3": 1}}, "effects": [{"gold": -10}], "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)  # fresh: 0 gold, no accomplishments
+	game.start_dialogue("test_conv", "krshia")
+	var opts: Array = game.dialogue.current_options()
+	assert(opts.size() == 1, "compound gate: accomplishment leg unmet -> option HIDDEN (progress never leaks)")
+	game.dialogue_choose(0)  # leave
+	game.record_accomplishment("stage3")
+	game.start_dialogue("test_conv", "krshia")
+	opts = game.dialogue.current_options()
+	assert(opts.size() == 2, "accomplishment met -> option visible")
+	assert(bool(opts[0]["locked"]), "gold leg unmet -> greyed, not hidden")
+	assert(String(opts[0]["requirement"]) == "costs 10 gold", "compound lock shows ONLY the gold reason")
+	game.dialogue_choose(1)  # leave
+	game.earn_gold(10, "test")
+	game.start_dialogue("test_conv", "krshia")
+	opts = game.dialogue.current_options()
+	assert(not bool(opts[0]["locked"]), "both legs met -> unlocked")
+
+
 func _last_line_text() -> String:
 	for i in range(_events.size() - 1, -1, -1):
 		if String(_events[i]["type"]) == "dialogue_line":
@@ -184,18 +211,21 @@ func _find_entity(scene: Dictionary, map_id: String, id: String) -> Dictionary:
 	return {}
 
 
-## Content Wave C4 (Q2): the talk_pool_post GROWTH seam. Before the gate
-## (resolved_wrong_order) is banked, Lyonette's rotating small-talk draws from
-## her BASE talk_pool; after it, the same first-talk-of-waking path draws from
-## the GROWN talk_pool_post (a replacement, not a merge). Drives the real
-## WIGame interact path against the shipped Lyonette entity.
+## Social Pillar II Phase A: the talk_pool_stages GROWTH seam (generalizes
+## Content Wave C4's one-shot talk_pool_post -- Lyonette's shipped
+## talk_pool_post migrated to a one-entry talk_pool_stages array, RENAME not
+## rewrite). Before the gate (resolved_wrong_order) is banked, Lyonette's
+## rotating small-talk draws from her BASE talk_pool; after it, the same
+## first-talk-of-waking path draws from the GROWN stage-2 pool (a
+## replacement, not a merge). Drives the real WIGame interact path against
+## the shipped Lyonette entity.
 func test_talk_pool_post_grows_pool_after_gate() -> void:
 	_events.clear()
 	var game := _make_game_with_dialogue({})
 	var scene := _load_json("res://data/skeleton_scene.json")
 	var lyo := _find_entity(scene, "inn", "lyonette")
 	var base_pool: Array = lyo["talk_pool"]
-	var post_lines: Array = (lyo["talk_pool_post"] as Dictionary)["lines"]
+	var post_lines: Array = ((lyo["talk_pool_stages"] as Array)[0] as Dictionary)["lines"]
 	# Gate UNMET: first talk of the waking plays a BASE pool line.
 	game.player_cell = Vector2i(8, 5)
 	game.player_facing = Vector2i(1, 0)
@@ -312,6 +342,7 @@ func _init() -> void:
 	test_talk_pool_post_grows_pool_after_gate()
 	test_gold_effect_verb_applies_through_dialogue_choose()
 	test_gold_affordability_greys_when_broke()
+	test_compound_gold_accomplishment_gate()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)

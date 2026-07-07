@@ -43,6 +43,7 @@ func _init() -> void:
 	_validate_hide_when_nodes_have_always_available_exit(graphs)
 	_validate_class_gains(classes, produced_accomplishments)
 	_validate_props(scene)
+	_validate_talk_pool_stages_ascending(scene)
 	_validate_effect_text_opacity()
 	_validate_player_string_vocab()
 
@@ -187,6 +188,34 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 				produced["chatted_with_%s" % String(entity["id"])] = true
 
 
+## Social Pillar II Phase A: `talk_pool_stages` authoring must be ASCENDING
+## (the visual_states/classes.json level-table convention social.gd's
+## talk_pool_line relies on -- it walks the array in AUTHORED order and lets
+## the LAST entry whose gate is met win; it does NOT sort by difficulty).
+## Misordered content would silently behave as "whichever stage is authored
+## LAST", not "whichever stage's condition is hardest" -- REJECTED here at
+## content-validation time rather than tolerated at runtime, per the design's
+## "rejected or normalized (disclose which)" unit requirement. Ascending is
+## checked per shared accomplishment key: for every key that appears in more
+## than one stage's requires_accomplishment, its threshold must never
+## DECREASE from one stage to the next.
+func _validate_talk_pool_stages_ascending(scene: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			var stages: Array = entity.get("talk_pool_stages", [])
+			if stages.size() < 2:
+				continue
+			var seen: Dictionary = {}
+			for stage: Dictionary in stages:
+				var req: Dictionary = stage.get("requires_accomplishment", {})
+				for key: String in req:
+					var threshold := int(req[key])
+					if seen.has(key):
+						assert(threshold >= int(seen[key]), "entity %s talk_pool_stages authored OUT OF ORDER: stage %s's %s threshold (%d) is lower than an earlier stage's (%d)" % [String(entity["id"]), String(stage.get("id", "?")), key, threshold, int(seen[key])])
+					seen[key] = threshold
+
+
 func _validate_conversations(scene: Dictionary, graphs: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
@@ -285,6 +314,18 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# gold is not progress-gated), so it is a valid single gate type here.
 		gate_keys += 1
 		assert(int(requires["gold"]) > 0, label + " gold requirement must be a positive price")
+	# Social Pillar II Phase B: the ONE sanctioned COMPOUND exception --
+	# {gold, accomplishment} together (a stage-gated discount buy option,
+	# Krshia's `krshia_friend_of_the_silverfangs` perk). dialogue.gd's _meets()
+	# ANDs both legs; _meets_progress() reads ONLY the accomplishment leg for
+	# hide-until-met visibility, so a met stage-gate with insufficient gold
+	# shows GREYED, never vanished (window-shopping is content). Every OTHER
+	# combination (skill+class, class+gold, three-or-more keys, etc.) is still
+	# rejected -- this is a narrow, disclosed carve-out, not a general
+	# compound-gate license.
+	if gate_keys == 2:
+		assert(requires.has("gold") and requires.has("accomplishment"), label + " the only sanctioned compound requires is {gold, accomplishment}")
+		return
 	assert(gate_keys == 1, label + " requires must use exactly one gate type")
 
 

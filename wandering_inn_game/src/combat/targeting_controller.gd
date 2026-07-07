@@ -93,7 +93,7 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 		var effect_type := String(skill_effect.get("type", ""))
 		_line_mode = effect_type == "line_damage"
 		# Skills Wave Task K2 (the sneak combat read): a self-targeted active
-		# move_pool_bonus cast (today only [Sneak]; MUST stay in lockstep with
+		# move_pool_bonus cast (today only [Stealth]; MUST stay in lockstep with
 		# skill_effects.gd's `resolve_active` -- same effect.type + ap_cost>0
 		# pair gates its self-buff resolver there) needs no enemy at all.
 		# Reuses the EXISTING `_targets`/`confirm()` plumbing verbatim (a

@@ -9,7 +9,7 @@ extends RefCounted
 ## the caller's own field sees the mutation with no reassignment needed).
 ## `entity_first_use` stays on WIGame too, deliberately NOT moved here (see
 ## wi_game.gd's field_skills-owned `_bank_first_use`) -- it is shared with
-## the [Observe]/[Charming Smile] field-skill dedup, which is WIFieldSkills'
+## the [Appraise Foe]/[Charming Smile] field-skill dedup, which is WIFieldSkills'
 ## territory, not this file's; a clean boundary beats a complete one.
 
 var _event_sink: Callable
@@ -40,13 +40,17 @@ func _init(event_sink: Callable, accomplishment_count_cb: Callable, record_accom
 func talk_pool_line(target: Dictionary, social_talked: Dictionary) -> Dictionary:
 	var id := String(target[WIKeys.ID])
 	var pool: Array = target["talk_pool"]
-	# Content Wave C4 (Q2 pool-GROWTH): an NPC may carry `talk_pool_post`, a
-	# SECOND pool that REPLACES `talk_pool` once its `requires_accomplishment`
-	# gate is met. Rotation below still keys on chatted_with_<id> %
-	# pool.size() (zero rng), now over the grown pool.
-	var post: Dictionary = target.get("talk_pool_post", {})
-	if not post.is_empty() and _accomplishment_gate_met(post.get("requires_accomplishment", {})):
-		pool = post["lines"]
+	# Social Pillar II (generalizes Content Wave C4's one-shot talk_pool_post
+	# growth): an NPC may carry `talk_pool_stages`, an ORDERED array of
+	# {id, requires_accomplishment, lines}. Walk it in AUTHORED order and let
+	# the LAST entry whose gate is met win (ascending authoring -- the same
+	# convention as visual_states/classes.json level tables); an empty/absent
+	# array leaves `pool` at the base talk_pool, unchanged. Rotation below
+	# still keys on chatted_with_<id> % pool.size() (zero rng), now over
+	# whichever stage's pool won.
+	for stage: Dictionary in target.get("talk_pool_stages", []):
+		if _accomplishment_gate_met(stage.get("requires_accomplishment", {})):
+			pool = stage["lines"]
 	var counter_key := "chatted_with_%s" % id
 	var idx := int(_accomplishment_count.call(counter_key)) % pool.size()
 	var speaker := String(target.get(WIKeys.DISPLAY_NAME, id))

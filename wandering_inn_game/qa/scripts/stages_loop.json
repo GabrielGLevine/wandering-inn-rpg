@@ -1,0 +1,87 @@
+{
+ "_comment": "Social Pillar II's own end-to-end proof (spec 2026-07-06, QA §2): drives ONE NPC (Krshia -- cheapest live choice, pool+perk both shipped) base->final through the new talk_pool_stages seam. FIXTURE-FIRST (krshia_stage3_pre: crate_returned:1, chatted_with_krshia:3, social_talked:{krshia:true} -- one leg short of stage 3, mid-waking so the FIRST interact opens her REAL hub instead of a pool line). Proves, in order: (1) BEFORE -- the stage-3 hub topic is genuinely absent at count 3 (exact-length visible-options array); (2) the run banks the LAST leg for real via one first-talk-of-a-NEW-waking pool line (exact staged stage-1 line, since the gate is read BEFORE this call's own counter bump) -- sleep is driven via a debug teleport to the inn bed (short-circuits the long street->inn walk any organic route would need, in the spirit of FIXTURE-FIRST); (3) AFTER -- the stage-3 hub topic is now present (same exact-length-array idiom) and choosing it fires the OBLIQUE necklace reveal + banks heard_krshia_plans; (4) the perk surface -- the shop node's full-price rows are gone and the friend's-price duplicates stand in their place (affordability greying still independent of the stage gate, per gold:10 in the fixture: the charm ungreys, the pricier three stay locked).",
+ "fixture_save": "krshia_stage3_pre",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "street" },
+  { "action": "assert_state", "path": "player_cell", "equals": [13, 3] },
+  { "action": "assert_state", "path": "accomplishments.crate_returned", "equals": 1 },
+  { "action": "assert_state", "path": "accomplishments.chatted_with_krshia", "equals": 3 },
+
+  { "_comment": "== BEFORE: social_talked[krshia] is already true (fixture), so this FIRST interact falls straight through to the REAL hub -- no pool line consumed. At count 3 the stage-3 topic is genuinely absent: exact-length 3-entry visible array (shop-nav/just-visiting/tribe-topic only).", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_crate" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "Crate is home. You, I will remember. Yes.", "options": [
+   { "text": "What's on the stall today?", "locked": false, "requirement": "" },
+   { "text": "Just visiting.", "locked": false, "requirement": "" },
+   { "text": "Silverfang — that's your tribe?", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+  { "action": "assert_event_absent", "type": "dialogue_node", "payload_contains": { "options": [
+   { "text": "What's on the stall today?", "locked": false, "requirement": "" },
+   { "text": "Just visiting.", "locked": false, "requirement": "" },
+   { "text": "Silverfang — that's your tribe?", "locked": false, "requirement": "" },
+   { "text": "You said the necklace was a promise.", "locked": false, "requirement": "" }
+  ] } },
+  { "_comment": "Close out via 'Just visiting.' (visible index 1).", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
+
+  { "_comment": "== BANK THE LAST LEG FOR REAL, via a debug teleport to the inn bed (FIXTURE-FIRST short-circuit of the organic street<->inn walk) rather than re-deriving a full route. Bump the bed (2,7) from (2,6) facing down, interact -> sleep().", "action": "teleport", "map": "inn", "cell": [2, 6] },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
+
+  { "_comment": "Teleport back to Krshia's column and re-approach exactly as the fixture originally placed the player.", "action": "teleport", "map": "street", "cell": [13, 3] },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "_comment": "sleep() cleared social_talked, so this NEW waking's first talk plays the pool. The stage gate reads BEFORE this call's own counter bump: chatted_with_krshia is STILL 3 at gate-check time, so stage 1 (krshia_fair_weight) wins, idx 3%%3=0 -- the exact staged line. This same call then bumps the counter to 4.", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Krshia", "text": "Hrr. The crate-finder. Sit, look, touch even — you have earned handling privileges." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": { "text": "Krshia: Hrr. The crate-finder. Sit, look, touch even — you have earned handling privileges." }, "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_krshia", "count": 4 } },
+  { "action": "screenshot", "name": "01_stage_swap_pool_line" },
+
+  { "_comment": "== AFTER: SECOND interact this same (new) waking falls through to the real hub -- chatted_with_krshia is now 4, so the stage-3 topic is present (4-entry visible array, exact length).", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_crate" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "Crate is home. You, I will remember. Yes.", "options": [
+   { "text": "What's on the stall today?", "locked": false, "requirement": "" },
+   { "text": "Just visiting.", "locked": false, "requirement": "" },
+   { "text": "Silverfang — that's your tribe?", "locked": false, "requirement": "" },
+   { "text": "You said the necklace was a promise.", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+  { "_comment": "Choose the newly-unlocked topic (visible index 3) -- the OBLIQUE necklace reveal, banks heard_krshia_plans.", "action": "move", "direction": "down", "steps": 3 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "So you remembered. Hrr. Then hear a little of it. Every coin this stall clears past its keep goes toward something for the tribes — something Gnolls have been told we cannot have, and are done being told. There is a gathering, some years off. I mean to stand up at it with full hands. That stays between you, me, and the wool." }, "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "heard_krshia_plans" } },
+  { "action": "screenshot", "name": "02_unlocked_topic" },
+  { "_comment": "'Back to business.' (visible index 1) returns to hub.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia" }, "timeout_sec": 5 },
+
+  { "_comment": "== PERK SURFACE: 'What's on the stall today?' (visible index 0 -- heard_krshia_plans now banked, so the necklace topic itself is hide_when-retired; the hub's visible array is back to 3 entries with the tribe topic still showing) opens the shop. Full-price rows are hide_when-hidden (stage gate met); the 4 friend's-price duplicates stand in their place. gold:10 ungreys only the charm.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "options": [
+   { "text": "Show me the charms.", "locked": false, "requirement": "" },
+   { "text": "Nothing today.", "locked": false, "requirement": "" },
+   { "text": "The old charm-cord — friend's price. (4 gold)", "locked": false, "requirement": "", "effect_lines": ["+2 HP", "Resonance 1"] },
+   { "text": "That Silverfang hunting knife — friend's price. (13 gold)", "locked": true, "requirement": "costs 13 gold", "effect_lines": ["+1 damage on melee hits"] },
+   { "text": "The wool-lined cloak — friend's price. (16 gold)", "locked": true, "requirement": "costs 16 gold", "effect_lines": ["+3 HP"] },
+   { "text": "The boiled-leather jerkin — friend's price. (22 gold)", "locked": true, "requirement": "costs 22 gold", "effect_lines": ["+4 HP"] }
+  ] }, "timeout_sec": 5 },
+  { "action": "assert_event_absent", "type": "dialogue_node", "payload_contains": { "options": [
+   { "text": "The old charm-cord, then. (5 gold)" }
+  ] } },
+
+  { "_comment": "Close out ('Nothing today.', visible index 1) back to the hub, then farewell.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia" }, "timeout_sec": 5 },
+  { "_comment": "'Just visiting.' is visible index 1 in the reverted 3-entry hub list.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 }
+ ]
+}

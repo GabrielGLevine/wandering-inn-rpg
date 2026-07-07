@@ -49,6 +49,49 @@
     {
      "text": "Never mind.",
      "end": true
+    },
+    {
+     "_comment": "Social Pillar II Phase B: stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/pisces_stages.json (staging_note/_flag stripped). CANON tread-light: father a [Fencer] is staged (mild); the sold-rapier line is an OBLIQUE Wistram-era nod. HARD RAILS (absolute, per the companion doc): no expulsion cause, no deaths, no Az'kerash, no Ceria specifics. Appended AFTER 'Never mind.' (array end) so it can never shift an earlier option's visible index.",
+     "text": "You hold yourself like a swordsman, not a scholar.",
+     "requires": {
+      "accomplishment": {
+       "learned_magic_from_pisces": 1,
+       "chatted_with_pisces": 3
+      }
+     },
+     "goto": "pisces_fence"
+    }
+   ]
+  },
+  "pisces_fence": {
+   "speaker": "Pisces",
+   "text": "...Observant. A rapier, in fact, before any of this. My father's trade — his grip, his footwork, his opinions on both. I set it down for magic, and he has yet to forgive either of us. The footwork stayed. It wins me arguments the diction loses.",
+   "options": [
+    {
+     "text": "Do you miss it?",
+     "goto": "pisces_fence_two"
+    },
+    {
+     "text": "Back to magic, then.",
+     "goto": "greet"
+    },
+    {
+     "text": "That explains the posture.",
+     "end": true
+    }
+   ]
+  },
+  "pisces_fence_two": {
+   "speaker": "Pisces",
+   "text": "I sold the blade years ago, when circumstances were... instructive. One does not miss a thing so much as the hands remember it. A sniff. Next question — preferably about magic, which unlike the past improves under examination.",
+   "options": [
+    {
+     "text": "Back to magic, then.",
+     "goto": "greet"
+    },
+    {
+     "text": "Fair enough, Pisces.",
+     "end": true
     }
    ]
   },

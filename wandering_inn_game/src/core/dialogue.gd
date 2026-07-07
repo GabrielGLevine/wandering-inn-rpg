@@ -108,6 +108,23 @@ func _progress_gated(req: Dictionary) -> bool:
 	return req.has("accomplishment")
 
 
+## Progress-only gate check used SOLELY to decide hide-until-met VISIBILITY
+## (Social Pillar II: a requires dict may now combine an accomplishment
+## stage-gate with a gold affordability gate in one option -- e.g. Krshia's
+## discount buy options, requires{accomplishment:{...}, gold:N}. The
+## accomplishment leg ALONE controls whether the option is hidden or shown;
+## a met stage-gate with insufficient gold must show GREYED/locked, never
+## vanish -- window-shopping is content, Economy v1 D1. _meets() below is the
+## full compound AND used for the actual locked/choosable decision.)
+func _meets_progress(req: Dictionary) -> bool:
+	if not req.has("accomplishment"):
+		return true
+	for id: String in req["accomplishment"]:
+		if int((_ctx["accomplishments"] as Dictionary).get(id, 0)) < int(req["accomplishment"][id]):
+			return false
+	return true
+
+
 ## Returns the authored options for the current node filtered down to the
 ## visible ones, as {authored_index, option} pairs. This is the single source
 ## of truth for the visible->authored index mapping: current_options() and
@@ -122,7 +139,7 @@ func _visible_options() -> Array:
 		if not hide_when.is_empty() and _meets(hide_when):
 			continue
 		var req: Dictionary = opt.get("requires", {})
-		if _progress_gated(req) and not _meets(req):
+		if _progress_gated(req) and not _meets_progress(req):
 			continue
 		out.append({"authored_index": authored_index, "option": opt})
 	return out
@@ -157,31 +174,47 @@ func _resolved_text(node: Dictionary) -> String:
 	return text
 
 
+## Social Pillar II: generalized from a first-match-wins chain (each key
+## checked in isolation, only one recognized per call) to a full COMPOUND AND
+## across every recognized key present -- needed for Krshia's discount buy
+## options, whose requires combines an accomplishment stage-gate with a gold
+## affordability check (requires{accomplishment:{...}, gold:N}). Every key
+## already worked exactly this way in isolation, so single-key requires
+## dicts (100% of pre-existing content) are BYTE-IDENTICAL in behavior; only
+## a NEW multi-key dict changes meaning (now AND, where before only the
+## first-checked key's branch ever ran). `recognized` preserves the old
+## fallback: a requires dict carrying none of the four known keys still
+## refuses (same as the old trailing `return false`).
 func _meets(req: Dictionary) -> bool:
 	if req.is_empty():
 		return true
+	var recognized := false
 	if req.has("skill"):
-		return (_ctx[WIKeys.SKILLS] as Array).has(String(req["skill"]))
+		recognized = true
+		if not (_ctx[WIKeys.SKILLS] as Array).has(String(req["skill"])):
+			return false
 	if req.has("class"):
+		recognized = true
 		for id: String in req["class"]:
 			if int((_ctx["classes"] as Dictionary).get(id, 0)) < int(req["class"][id]):
 				return false
-		return true
 	if req.has("gold"):
 		# Economy v1 Task D1: numeric affordability gate (a shop buy option's
 		# `requires: {gold: price}`). The ONE sanctioned extension of the M4
 		# greying ctx (it was skill/class/accomplishment-only). Reads the `gold`
 		# key WIGame._build_dialogue_ctx now supplies (tolerant default 0). Gold
-		# is NOT progress-gated (see _progress_gated -- no `accomplishment` key),
-		# so an unaffordable buy stays VISIBLE-locked/greyed, never hidden:
-		# window-shopping is content (spec §3).
-		return int(_ctx.get("gold", 0)) >= int(req["gold"])
+		# is NOT progress-gated on its own (see _progress_gated -- no
+		# `accomplishment` key), so an unaffordable buy stays VISIBLE-locked/
+		# greyed, never hidden: window-shopping is content (spec §3).
+		recognized = true
+		if int(_ctx.get("gold", 0)) < int(req["gold"]):
+			return false
 	if req.has("accomplishment"):
+		recognized = true
 		for id: String in req["accomplishment"]:
 			if int((_ctx["accomplishments"] as Dictionary).get(id, 0)) < int(req["accomplishment"][id]):
 				return false
-		return true
-	return false
+	return recognized
 
 
 func _requirement_text(req: Dictionary) -> String:

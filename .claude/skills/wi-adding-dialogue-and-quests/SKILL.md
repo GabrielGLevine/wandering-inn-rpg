@@ -26,11 +26,18 @@ counters, stored nowhere — never add a "quest progress" field to save data.
 an accomplishment lands (`erin_errand.json`'s hub reads differently
 before/after `has_package`/`errand_decided`).
 
-## `requires` / `hide_when` — exactly ONE gate key, ever
+## `requires` / `hide_when` — ONE gate key (one sanctioned exception)
 `{"skill":"<id>"}` | `{"class":{"<id>":<level>}}` | `{"accomplishment":{"<id>":<count>}}`.
 `_meets` checks skill, then class, then accomplishment, returning on the
-first key present — **never combine two gate types in one dict**;
-`test_content.gd`'s `_validate_requires` asserts exactly one gate key.
+first key present — **never combine two gate types in one dict** — EXCEPT the ONE sanctioned
+compound (Social II, 2026-07-07): `{gold, accomplishment}` on a shop-perk
+buy option, where the accomplishment leg HIDES until met and the gold leg
+greys-visible after (a broke player must never buy on credit; a pre-stage
+player must never see the perk). `_meets` evaluates a compound as AND;
+`_requirement_text` shows only the gold reason (correct: the
+accomplishment case is hidden, never locked). `test_content.gd`'s
+`_validate_requires` asserts one gate key OR exactly this pair — any
+other combination fails content validation.
 
 ## THE GATING SPLIT (playtest policy, M4)
 - `requires.accomplishment` options are **HIDDEN** until met — progress

@@ -26,7 +26,7 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 	# SELF-targeted grant, dispatched early exactly like line_damage above --
 	# neither needs the enemy-side gate just below (which would reject a
 	# self/no-target cast outright). Gated on `ap_cost > 0` so this ONLY
-	# fires for an actively-cast skill (today, only [Sneak]): the two
+	# fires for an actively-cast skill (today, only [Stealth]): the two
 	# PRE-EXISTING 0-cost move_pool_bonus skills (quick_movement,
 	# battlefield_awareness) are labeled passives with no resolver in THIS dispatch table (K4: wi_combat.gd's _start_turn now grants their bonus as a real turn-start passive -- see _move_pool_bonus_total)
 	# (M-LEGIBILITY L5 disclosed finding) -- generalizing this dispatch to
