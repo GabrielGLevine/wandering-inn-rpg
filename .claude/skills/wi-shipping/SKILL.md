@@ -52,9 +52,9 @@ order, BEFORE the sprite/data commit that references it.
 ## External PRs (simplified by unification, 2026-07-07)
 PRs merge NORMALLY on GitHub now — the old port-privately flow is dead.
 CI (leak check + full sweep, fork-safe, zero secrets) gates every PR.
-Maintainer flow: review → confirm CI green → if it touches player-visible
-surfaces, pull the branch and do a windowed read → merge. A PR that
-adds tracked files matching the leak classes will fail CI by design.
+**The full end-to-end flow (triage → review bars → local test →
+verdict → security posture) lives in the wi-handling-prs skill — use
+it for every external PR.**
 
 ## Gotchas (each cost a real failure)
 - Butler broth host is **broth.itch.zone** (`.ovh` is dead — first-tag

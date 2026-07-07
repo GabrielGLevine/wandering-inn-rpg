@@ -47,6 +47,7 @@ name) is a frozen read-only archive.
 | New class, class skill, evolution, consolidation | wi-adding-a-class-or-skill |
 | New NPC dialogue / quest / choice gating | wi-adding-dialogue-and-quests |
 | Sprites, icons, tiles, asset packs | wi-art-and-sprites |
+| An external PR arrives (triage/review/test/merge) | wi-handling-prs |
 | Drive the editor/live game via godot-ai MCP | wi-godot-mcp |
 
 ## Library governance (user-mandated 2026-07-04)
