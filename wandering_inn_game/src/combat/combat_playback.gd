@@ -338,6 +338,31 @@ func _apply_playback_event(event: Dictionary, with_visuals: bool) -> void:
 			_screen._push_feed(payload)
 			_screen._render_tutor_line(tutor)
 			_screen._refresh()
+		WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED:
+			# GH#21 review fix (Critical #1): terrain overlays are BOARD STATE,
+			# not transient juice -- `_play_event_visual`'s TERRAIN arms are the
+			# ONLY code that mutates board_renderer's persistent overlay tree,
+			# and unlike combatant position/HP/MP there is no post-drain resync
+			# to recover a skipped mutation (`_refresh_combatants` re-syncs
+			# combatants from the live snapshot after every drain; nothing does
+			# that for terrain). So these route to the renderer UNCONDITIONALLY,
+			# outside the `with_visuals` gate -- the exact COMBATANT_MOVED idiom
+			# above (state applies whether paced or skip-fast-forwarded; only
+			# the highlight tween is gated). Without this arm, a player pressing
+			# skip mid-AI-turn at the beat the ice expires kept a permanently
+			# stale icy overlay for the rest of the fight -- invisible to every
+			# QA layer by construction (beat_delay() is 0 under TestDriver, so
+			# the skip path never executes under QA). FUTURE terrain-like events
+			# (anything whose _play_event_visual arm mutates persistent renderer
+			# state rather than firing a self-freeing effect) MUST be matched
+			# here too, not left to the `_:` default -- this is the same trap
+			# class as combat_screen.gd's AI_PLAYBACK_TYPES TRAP comment.
+			_screen._play_event_visual(type, payload)
+			if with_visuals:
+				_highlight_actor(event)
+			_screen._push_feed(payload)
+			_screen._render_tutor_line(tutor)
+			_screen._refresh()
 		_:
 			var ui: Dictionary = payload.get("_ui", {})
 			_apply_captured_stats(ui)

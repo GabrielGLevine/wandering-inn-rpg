@@ -291,6 +291,36 @@ func _init() -> void:
 	var combat_label_body := board_renderer_source_r3.get_slice("func _rebuild_combat_labels", 1).get_slice("func _label_id", 0)
 	assert(combat_label_body.find("\"name\"") == -1, "combat labels must not publish a name field -- combat name tags are retired (M-BEAUTY R3), only the HP/MP stats readout survives")
 
+	# GH#21 review fix (Critical #1): TERRAIN_ADDED/TERRAIN_EXPIRED are BOARD
+	# STATE, not transient juice -- combat_playback.gd's `_apply_playback_event`
+	# must route them to `_screen._play_event_visual` even on the SKIP-forward
+	# path (`with_visuals == false`), the COMBATANT_MOVED idiom, because the
+	# renderer's persistent terrain overlays have no post-drain resync to
+	# recover a skipped mutation (unlike combatant position/HP/MP). Proven
+	# behaviorally: combat_playback.gd carries zero bare autoload identifiers
+	# (its own doc-comment contract), so it loads+instantiates directly here
+	# with a RECORDING stub screen; the skip path is unreachable under QA
+	# (beat_delay()==0 under TestDriver), so this unit check is the only
+	# automated coverage the skip branch can ever get.
+	var playback_script := load("res://src/combat/combat_playback.gd") as Script
+	assert(playback_script != null and playback_script.can_instantiate(), "combat_playback.gd must compile standalone (zero bare autoload identifiers)")
+	var recorder_script := GDScript.new()
+	recorder_script.source_code = "extends Node\nvar visual_calls: Array = []\nfunc _play_event_visual(type: String, _payload: Dictionary) -> void:\n\tvisual_calls.append(type)\nfunc _push_feed(_payload: Dictionary) -> void:\n\tpass\nfunc _render_tutor_line(_tutor: Dictionary) -> void:\n\tpass\nfunc _refresh() -> void:\n\tpass\n"
+	assert(recorder_script.reload() == OK, "recording stub screen failed to compile")
+	var recorder: Node = recorder_script.new()
+	var playback: RefCounted = playback_script.new(null, recorder)
+	var terrain_cells := [[6, 2], [6, 3]]
+	# with_visuals == false IS the skip-fast-forward path (drain()'s
+	# `_apply_playback_event(rest, false)` loop after request_skip()).
+	playback._apply_playback_event({"type": "terrain_expired", "payload": {"kind": "icy_floor", "cells": terrain_cells, "_ui": {}}}, false)
+	playback._apply_playback_event({"type": "terrain_added", "payload": {"kind": "icy_floor", "cells": terrain_cells, "rounds": 2, "_ui": {}}}, false)
+	assert(recorder.visual_calls == ["terrain_expired", "terrain_added"], "TERRAIN_ADDED/TERRAIN_EXPIRED must reach _play_event_visual even when skip-fast-forwarded (with_visuals=false) -- they mutate persistent renderer state, the COMBATANT_MOVED class, not VFX")
+	# Control: a VFX-class event (skill_resolved) must still be visual-gated
+	# on the skip path -- the fix must not have widened the gate wholesale.
+	playback._apply_playback_event({"type": "skill_resolved", "payload": {"actor": "pc", "skill": "frost_bolt", "target": "goblin_raider", "_ui": {}}}, false)
+	assert(recorder.visual_calls == ["terrain_expired", "terrain_added"], "VFX-class events (skill_resolved) stay gated behind with_visuals on the skip path -- the terrain fix is surgical, not a wholesale gate removal")
+	recorder.free()
+
 	var driver_source := FileAccess.get_file_as_string("res://qa/test_driver.gd").replace(
 		"extends Node",
 		"extends Node\n\nvar ObservableBus: Variant = null\nvar QAPaths: Variant = null\nvar Game: Variant = null\nvar WICombatAI: Variant = null",
