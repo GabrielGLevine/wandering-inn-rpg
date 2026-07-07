@@ -1,0 +1,43 @@
+{
+ "_comment": "Magical Door plan Task D1 (issue #8): `door_chain_started` pre-banked (simulates D3's beat-1 Erin dialogue, not yet wired) so `ruin_door`'s door_when gate is MET and interacting it descends into the new `ruin_surface` map. Positioned on floodplains at (36,11), two steps west of the door's own (38,11) cell, so ruin_walkthrough reaches it in a couple moves. Warrior L1 (met/sparred/given_spear) purely so the fixture matches the established post-tutorial baseline shape -- this script never fights (both new encounters in this task are dormant PLACEMENTS with no combat data yet, D2's job).",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   36,
+   11
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "door_chain_started": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}

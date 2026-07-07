@@ -348,6 +348,20 @@
 			"abilities": [],
 			"description": "A hamper of Amentus blue fruit, straw-packed, the poison cores already cut out. You were told twice.",
 			"lore": "Runner's Guild delivery parcel (delivery_inn_hamper) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+		},
+		{
+			"id": "anchor_stone",
+			"name": "Anchor Stone",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A fist-sized stone, warm despite the ruin's cold air, its surface veined with a pattern that never quite resolves into a shape.",
+			"lore": "Warmage Thresk built more than doors, in the end. This one remembers being elsewhere, the same crude trick that woke somewhere it shouldn't have, once, in an inn far from here. Magical Door plan Task D1 (issue #8 spec §5.3): carried, never worn or sold; the beat-3 recovery target D3's chain consumes at the pedestal."
 		}
 	]
 }
