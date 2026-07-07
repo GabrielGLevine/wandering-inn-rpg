@@ -58,6 +58,16 @@ rule). #18 (controller support): input-surface investigation running;
 controller plan = Fable-authored next, then its own lane. #18/#19 files
 are disjoint from every 8a lane by construction.
 
+## #8 STATUS: D1-D3 MERGED (62/62), D4 IN FLIGHT
+
+Chain beats 1-3 LIVE on main: Erin's flicker beat, Pisces 3-path consult
+(one door_understood), the ruin recovery run vs D2's real rosters, the
+pedestal anchor stone, Krshia's 35g catalyst. 62 canonicals.
+⚑ **USER SIGN-OFF: the Olesm assist beat** (spec §1's SKILL-leg flavor)
+shipped as Pisces-side flavor only — no Olesm-visible trace. Rec: bless;
+if you want it visible, a one-line Olesm pool nod rides DF. D4 (portals
+module + awakening + fast travel) dispatching now; DF closes #8.
+
 ## #8 IN FLIGHT (2026-07-07): plan committed, 3 lanes running
 
 Plan: `docs/superpowers/plans/2026-07-07-magical-door-8a.md` (lane-mapped).
