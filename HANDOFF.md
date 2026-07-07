@@ -1,5 +1,38 @@
 # Wandering Inn RPG Handoff
 
+## NEW USER DIRECTIVE (2026-07-07) → issue #37
+
+The inn's floodplains exterior needs a DISTINCT visual identity (reads as
+generic Liscor building today). Filed as #37 (art/polish, size:M) with the
+canon levers (hilltop read, facade, sign placement, warm night window
+light) + the licensing rails. SERIALIZES behind the 8a D-lanes
+(sprites/skeleton contention); natural slot = right after DF, riding A1's
+pick tables. PixelLab top-up would unlock a bespoke facade gen.
+
+## M-STEAM OPENED CONCURRENTLY (2026-07-07): #20 RATIFIED, #19 + #18-prep running
+
+**#20 CLOSED — RATIFIED: FREE on Steam, no monetization** (fan-work
+posture; one-time $100 app fee = user). #19 lane running (worktree,
+disjoint surfaces: export_presets + release.yml desktop/SteamPipe-skeleton
+jobs gated on repo vars + docs/steam/ capsule set at exact sizes +
+screenshots + USER-ACTION CHECKLIST incl. partner account/secrets; trailer
+= flagged undelivered new capability, per the brief's no-silent-scope-down
+rule). #18 (controller support): input-surface investigation running;
+controller plan = Fable-authored next, then its own lane. #18/#19 files
+are disjoint from every 8a lane by construction.
+
+## #8 IN FLIGHT (2026-07-07): plan committed, 3 lanes running
+
+Plan: `docs/superpowers/plans/2026-07-07-magical-door-8a.md` (lane-mapped).
+Running now: D1 ruin map + flicker surface (α) ∥ D2 combat data (β) ∥
+A1 asset prep incl. #9 garden pre-picks (γ). Then D3 chain → D4 portals →
+DF close, serialized on shared files. potential_assets RESTORED locally
+(63 packs, copied from the frozen archive — no download needed).
+⚑ **PixelLab balance is $0.00** — API+key verified working, generation
+blocked; rune-glow gen specs queue in the assembly doc until top-up
+(user action if wanted this milestone). If session dies: lane branches
+carry commits; merge D1-first, re-gate merged tree.
+
 ## #7 RATIFIED + CLOSED (2026-07-07 user session) — 8a UNBLOCKED
 
 Door = Pisces recovery chain in a NEW small Albez-flavored ruin map;
