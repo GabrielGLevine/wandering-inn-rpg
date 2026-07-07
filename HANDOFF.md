@@ -9,6 +9,29 @@ light) + the licensing rails. SERIALIZES behind the 8a D-lanes
 (sprites/skeleton contention); natural slot = right after DF, riding A1's
 pick tables. PixelLab generations available (user-corrected) — bespoke facade gen is runnable when #37 dispatches.
 
+## M-STEAM: #18 + #19 + #20 ALL CLOSED (2026-07-07) — one user gate left
+
+**#18 controller support SHIPPED** (merge 3a708f6, 59/59 re-gate): pad
+bindings on the action-driven nav, LB/RB+A slot idiom both hotbars, title
+gesture + name entry pad paths, device-aware hint layer (14 code strings
++ 6 data strings re-pinned device-neutral). Review fix wave killed the
+interact/confirm-share-A dispatch-order trap + GDI-veil overlap.
+⚑ **USER GATE: the physical pad / Steam Deck pass** —
+`docs/design/pad-playtest-checklist.md` (harness can't inject pad events).
+**#19 shipped** (presets, gated SteamPipe CI, store assets — regenerated
+on REAL art after the placeholder catch; `docs/steam/CHECKLIST.md` = your
+Steam-account/secrets actions; trailer flagged undelivered). **#20
+ratified: FREE on Steam.** M-STEAM remaining: your checklist actions +
+the pad pass + trailer (needs new capture tooling).
+
+## 4 FABLE ART DIRECTORS IN FLIGHT (2026-07-07): Riverfarm / Invrisil / Pallass / Garden
+
+Map-art pre-production decoupled from wiring (user directive): direction
+cards + PIL pick tables + PixelLab batches (≤35 gens each of 761) +
+320×180 mockups for user taste review + wiring handoffs. Charter rails:
+palette quarantine, no licensed extracts committed, mockups from licensed
+tiles stay gitignored. Deliverables land in docs/design/<map>-art/.
+
 ## M-STEAM OPENED CONCURRENTLY (2026-07-07): #20 RATIFIED, #19 + #18-prep running
 
 **#20 CLOSED — RATIFIED: FREE on Steam, no monetization** (fan-work
