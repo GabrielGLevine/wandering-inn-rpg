@@ -196,6 +196,6 @@ to regen the block for this task's 5 new manifest entries; verified with
 - Rubble scatter: wire 2-3 of sec. 3's pieces into `ruin_surface`'s
   `scatter` array.
 - `pantry_door` awakened state: **no art dependency** — tint + light only
-  (sec. 4). PixelLab spec is ready to fire now (generations available, user-corrected);
+  (sec. 4). PixelLab spec is ready to fire now — v2 API (base api.pixellab.ai/v2, docs /v2/llms.txt; GET /v2/balance -> subscription.generations = 761/2000 left 2026-07-07; async jobs via /background-jobs/{id}); best-fit endpoints: /create-tileset (ruin+garden floors), /map-objects and /create-1-direction-object (pedestal/door/facade props), /inpaint (rune-glow);
   no action needed for 8a to ship.
 - Garden picks (sec. 5) are issue #9's to consume — not blocking 8a.
