@@ -165,9 +165,35 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   floor-vs-wall ambiguity, saturated teal awnings vs muted palette, open
   dead space). It's the hub players crisscross most. Design-level —
   M-DEPTH-adjacent map polish task.
-- [ ] COMBAT/DARK-ARENAS — enemy HP numerals + small dark sprites hard to
+- [x] COMBAT/DARK-ARENAS — enemy HP numerals + small dark sprites hard to
   pick out in sewers/deep-tunnel fights. Mood pin is right; add rim/
   outline on combatant chips or brighten HP labels under dark grades.
+  **FIXED (GH #28, 2026-07-07):** traced how the mood grade actually reaches
+  combat first — `combat_board_root()` is a bare Node2D with no CanvasLayer
+  of its own inside the world SubViewport, so WIAtmosphere's single
+  CanvasModulate (per its own B1 EMPIRICAL FINDING) darkens combatant
+  sprites/chips/HP-bars right along with the arena tiles; the HP/MP
+  NUMERAL readout (`WIWorldLabels`) is a separate CanvasLayer added
+  directly under `WIMain`, native-res and outside the SubViewport, so it
+  was NEVER touched by the grade (already had a black-fill/white-outline
+  treatment) — the numerals read weak mainly because the sprites around
+  them melted into the background, not because of their own contrast.
+  Fixed with a uniform self_modulate brightness floor on every combatant's
+  sprite/chip + HP/MP bars (`board_renderer.gd`'s `_legibility_modulate`/
+  `_resolved_mood_rgb`), computed once per `build()` from the arena's
+  resolved mood color (own read of `data/moods.json`, never touches
+  `atmosphere.gd`'s actual grading): identity (no change) whenever the
+  arena's average brightness already clears 0.85, otherwise scaled up
+  toward that target, clamped at 3x boost for the darkest pins
+  (deep_tunnels/deep_warren, avg ~0.25). Bright-arena pixel-diff
+  (`combat_move_input` windowed, before vs. after) is byte-identical —
+  zero regression. Windowed before/after:
+  `.superpowers/sdd/fp-handoff/dark-arena-shots/01_sewers_vermin_BEFORE.png`
+  vs. `01_sewers_vermin_AFTER.png` (sewers vermin fight, PC/enemy sprites
+  now read as distinct figures instead of a near-black blob) and
+  `06_deep_warren_boss_AFTER.png` (the darkest pin — Relc/Raskghar/boss all
+  clearly legible against the still-dark board). Bright control:
+  `combat_move_input_BRIGHT_AFTER.png` (goblin_ambush, day) unaffected.
 - [ ] COMBAT/ARENAS — arenas read sparse (empty dirt + scattered buckets)
   vs the strong field maps; floodplains ambush arena especially.
   Evocative-dressing pass candidate.

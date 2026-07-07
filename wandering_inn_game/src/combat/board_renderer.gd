@@ -63,6 +63,39 @@ const BLOCKED_PROPS_BY_BIOME := {
 	"cave": ["boulder", "mushroom_purple_s"],
 }
 
+## GH #28 DARK-ARENAS legibility fix. combat_board_root() is a bare Node2D
+## living inside the world SubViewport with no CanvasLayer of its own (see
+## atmosphere.gd's B1 EMPIRICAL FINDING doc comment) -- WIAtmosphere's single
+## CanvasModulate grades the ENTIRE default canvas of that viewport, so it
+## darkens combatant sprites/chips/HP-bars right along with the arena tiles.
+## That's CORRECT for the tiles (the dark mood pin, e.g. sewers/deep_tunnels,
+## is right per docs/VISUAL-LOG.md), but it also crushes small enemy/PC
+## sprites toward the same near-black floor as the background -- the "small
+## dark sprites hard to pick out" defect. Fixed with a uniform self_modulate
+## brightness floor (`_legibility_boost`, computed once per build() from the
+## resolved arena mood color via `_resolved_mood_rgb`/`_legibility_modulate`
+## below) applied to every combatant's sprite/chip + HP/MP bars -- `self_
+## modulate` deliberately, not `modulate`: flash_chip/impact_flash already
+## own `.modulate` for hit-flash tweens (both tween back to Color.WHITE), so
+## self_modulate composes independently on top without touching that code.
+## Never touches moods.json or atmosphere.gd's own apply()/apply_arena() --
+## this is a read-only presentation-side compensation, not a grading change.
+const MOODS_PATH := "res://data/moods.json"
+## Target average brightness combatant art should read at, regardless of how
+## dark the arena's own mood grade is. Bright arenas (avg already >= this)
+## get boost 1.0 -- byte-identical rendering to before this fix. 0.6 was
+## tried first (windowed sewers_walkthrough before/after) and read as only a
+## marginal, hard-to-notice nudge at natural viewing scale -- raised to 0.85
+## (near-full compensation for the sewers/cave_mouth pin, ~0.36 avg) so
+## combatant art reads close to its true un-graded color, a real pop against
+## the still-dark board/tiles rather than a subtle shift.
+const LEGIBILITY_TARGET := 0.85
+## Clamp on the computed boost so the very darkest pins (deep_tunnels/
+## deep_warren, avg ~0.25) don't get blown out toward flat white.
+const LEGIBILITY_MAX_BOOST := 3.0
+
+static var _moods_cache: Dictionary = {}
+
 ## M5 R6: the arena board itself -- a Node2D living in `World.combat_board_
 ## root()` (inside the SubViewport). Re-resolved (not just cached) at the top
 ## of every `build()` — see that function's doc comment for why a cached
@@ -84,6 +117,12 @@ var _shake_tween: Tween
 ## the labels helpers below can resolve `World`/`WIWorldLabels` without the
 ## caller having to pass it again on every call.
 var _main_ref: Node
+
+## GH #28 DARK-ARENAS: this build()'s combatant-legibility self_modulate
+## floor (see the const block above) -- (1,1,1,1) identity for any arena
+## whose resolved mood already clears LEGIBILITY_TARGET (every bright arena,
+## unchanged from pre-fix rendering).
+var _legibility_boost: Color = Color(1.0, 1.0, 1.0, 1.0)
 
 
 ## M5 R4 arena floor stack z-order -- same convention as world.gd's field
@@ -125,6 +164,7 @@ func build(view: WICombatView, main_ref: Node) -> void:
 	_combat_tweens.clear()
 	world.enter_combat_camera(view.grid_size())
 	_board.visible = true
+	_legibility_boost = _legibility_modulate(view)
 	var biome: Dictionary = _biome_for_combat(view)
 	WITileBoardBuilder.build_skirt(_board, view.grid_size(), 20, biome, WISpriteRegistry)  # 20 == world.gd SKIRT_MARGIN_CELLS (single-source someday)
 	var tile_px := int(biome["tile_px"])
@@ -325,12 +365,19 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 				CELL - anchor.y * frame_size.y * spr.scale.y
 			)
 			label_top = spr.position.y - 18.0
+		# GH #28 DARK-ARENAS: self_modulate (not modulate -- flash_chip/
+		# impact_flash already own `.modulate` for hit-flash tweens and both
+		# tween back to Color.WHITE) so the legibility floor composes
+		# independently underneath any juice effect. Identity in every bright
+		# arena; see `_legibility_modulate`'s doc comment.
+		spr.self_modulate = _legibility_boost
 		holder.add_child(spr)
 	else:
 		var rect := ColorRect.new()
 		rect.color = PLAYER_COLOR if String(c["side"]) == "player" else ENEMY_COLOR
 		rect.position = Vector2(3, 3)
 		rect.size = Vector2(CELL - 6, CELL - 6)
+		rect.self_modulate = _legibility_boost
 		holder.add_child(rect)
 	holder.set_meta("label_offset", Vector2(CELL * 0.5, maxf(label_top - 12.0, 0.0)))
 	# HP/MP bars are 1-2px-tall in-viewport pixel bars hugging the cell's
@@ -340,6 +387,7 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 	bar.color = Color(0.2, 0.8, 0.2)
 	bar.position = Vector2(1, CELL - 3)
 	bar.size = Vector2(CELL - 2, 2)
+	bar.self_modulate = _legibility_boost
 	holder.add_child(bar)
 	_hp_bars[id] = bar
 	# MP bar sits directly above the HP bar, only for combatants with a
@@ -349,6 +397,7 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 		mp_bar.color = MP_COLOR
 		mp_bar.position = Vector2(1, CELL - 5)
 		mp_bar.size = Vector2(CELL - 2, 1)
+		mp_bar.self_modulate = _legibility_boost
 		holder.add_child(mp_bar)
 		_mp_bars[id] = mp_bar
 	return holder
@@ -359,6 +408,47 @@ func _biome_for_combat(view: WICombatView) -> Dictionary:
 	var biome_id := String(view.arena_config().get("biome", "street"))
 	assert(biomes.has(biome_id), "unknown arena biome: " + biome_id)
 	return biomes[biome_id]
+
+
+## GH #28 DARK-ARENAS: the CURRENTLY-EFFECTIVE mood color for this combat's
+## arena, mirroring atmosphere.gd's own arena-vs-map fallback (an
+## `arena_moods` pin if this arena has one, e.g. sewers_nest/deep_warren/
+## cave_mouth; otherwise the field map's own mood at the same phase, e.g.
+## goblin_ambush/training_yard/chieftains_raid inheriting whatever the
+## overworld is currently showing) -- read directly from moods.json (own
+## tiny cache, same load-once idiom as atmosphere.gd's `_moods_data`)
+## rather than calling into WIAtmosphere: this task must not touch that
+## file's grading, and a read-only duplicate lookup here can never affect
+## what apply()/apply_arena() actually do. Falls back to identity [1,1,1]
+## for any arena/map/phase this data doesn't cover, same fallback
+## philosophy as atmosphere.gd's own apply().
+static func _resolved_mood_rgb(arena_id: String, map_id: String, phase: String) -> Color:
+	if _moods_cache.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(MOODS_PATH))
+		_moods_cache = parsed if parsed is Dictionary else {}
+	var arena_moods: Dictionary = _moods_cache.get("arena_moods", {})
+	var mood: Dictionary = arena_moods.get(arena_id, {})
+	if mood.is_empty():
+		mood = (_moods_cache.get("moods", {}) as Dictionary).get(map_id, {})
+	var rgb: Array = mood.get(phase, [1.0, 1.0, 1.0])
+	if not (rgb is Array) or rgb.size() != 3:
+		return Color(1.0, 1.0, 1.0)
+	return Color(float(rgb[0]), float(rgb[1]), float(rgb[2]))
+
+
+## GH #28 DARK-ARENAS: the self_modulate boost `make_combatant_visual`/
+## `apply_stats` apply to every combatant sprite/chip/HP-bar this build() --
+## identity whenever the arena's resolved mood already clears
+## LEGIBILITY_TARGET (every bright arena renders byte-identical to before
+## this fix), otherwise scaled up to hit the target average brightness,
+## clamped so the darkest pins don't blow out toward flat white.
+func _legibility_modulate(view: WICombatView) -> Color:
+	var mood := _resolved_mood_rgb(view.arena_id(), String(Game.sim.current_map), Game.sim.phase())
+	var avg := (mood.r + mood.g + mood.b) / 3.0
+	if avg >= LEGIBILITY_TARGET:
+		return Color(1.0, 1.0, 1.0, 1.0)
+	var boost := clampf(LEGIBILITY_TARGET / maxf(avg, 0.05), 1.0, LEGIBILITY_MAX_BOOST)
+	return Color(boost, boost, boost, 1.0)
 
 
 func _combatant_sprite_id(id: String) -> String:

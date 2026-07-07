@@ -58,6 +58,24 @@ re-run it against the pushed repo.
 - The triage Action self-skips without `ANTHROPIC_API_KEY` (user has
   none — Claude Max): community triage is LOCAL, see docs/TRIAGE.md.
 
+## External PRs against the public repo (maintainer flow, 2026-07-07)
+Public history is GENERATED (`git archive HEAD` + `rsync --delete`) —
+**a PR merged on GitHub that never landed privately is silently
+REVERTED by the next sync.** Therefore: never use GitHub's merge
+button on the public repo. The flow:
+1. CI already gates PRs (full sweep, fork-safe, secret-free) — triage
+   red PRs on GitHub without local work.
+2. Test locally by applying the diff to the PRIVATE repo (the public
+   checkout lacks the protected-asset overlay):
+   `gh pr diff <N> -R GabrielGLevine/wandering-inn-rpg --patch | git apply`
+   (discard with `git apply -R`).
+3. Accept = run the full private gates, then commit HERE with
+   `Co-authored-by: Name <email-from-their-PR-commits>` and
+   "Land PR #N from @user" in the message.
+4. Sync public, then CLOSE the PR with a comment linking the landed
+   public commit — the Co-authored-by trailer carries their
+   contribution credit.
+
 ## Licensing frame (user policy 2026-07-06)
 Public repo = redistributable only (CC0/CC-BY/MIT/PixelLab outputs).
 Redistribution-limited packs ship in the GAME via the private bundle —
