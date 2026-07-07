@@ -32,21 +32,22 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   standing dark-arena item, GH issue #28).
 
 - [ ] SPRITE — **THE DELIVERY BOARD (`runner_board`, M-DEPTH DP5, Runner's
-  Guild interior) is the SECOND board shipped on the `inn_sign`
-  hanging-plank stand-in** (cool blue-grey tint [0.65,0.72,0.8] vs the
-  request board's warm parchment tint — tint is the only differentiator).
-  Exact same asset-gap class as the `guild_board` entry below (no
-  corkboard/bulletin asset in any in-hand pack); when a bespoke board
-  sprite is generated, do BOTH boards in one pass — the delivery board
-  wants a visibly different silhouette (slips-and-strings vs paper-layers),
-  not just a retint. First seen: DP5 windowed read (dp5-shots/).
-- [ ] FIELD/RUNNERS_GUILD — the staged resting-runner copy proposed "flat
-  on a bench, legs up the wall"; NO bench sprite exists in any in-hand
-  catalog, so DP5 ships a `stool` + a standing `pc_gnoll_m` lean-in-place
-  (disclosed in character-profiles-staging.md's walk-on entry). Reads
-  fine but loses the staged pose's comedy; queue a bench asset (or a
-  lying-down runner frame) with the board-sprite pass above. First seen:
-  DP5 windowed read.
+  Guild interior) still rides the `inn_sign` art + a cool blue-grey tint
+  [0.65,0.72,0.8]** — the art-wiring task (2026-07-07) gave `guild_board`
+  ("THE REQUEST BOARD") bespoke `request_board` art (item closed below),
+  but no bespoke delivery-board asset was generated/parked this pass, so
+  `runner_board` is now the ONLY board still on the old plank-crop stand-in
+  (previously "the second board on the same stand-in" — now the last one).
+  Wants a visibly different silhouette from the request board
+  (slips-and-strings vs paper-layers), not just a retint, when a bespoke
+  asset is generated. First seen: DP5 windowed read (dp5-shots/).
+  CONTROLLER READ 2026-07-07 (art-wiring-shots/05): since `inn_sign`'s
+  entry was repointed to the new bespoke signpost, `runner_board` now
+  renders that art INDOORS — including the **grass tuft baked into the
+  post's base**, a green patch sitting on the guild's wooden floor. Reads
+  as a paste-in to a first-time player. Raises this item's priority: the
+  bespoke delivery-board asset should also be the fix for the indoor-grass
+  read (or an interim indoor variant/crop if the asset waits).
 - [ ] UI/DIALOGUE — the dialogue panel's PAGE INDICATOR (bottom-center
   "N/M" counter) sits directly behind the field hotbar's slot-1 icon and
   is partially occluded on every paginated conversation — PRE-EXISTING
@@ -114,34 +115,15 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   a bigger bed crop, an anchor/y-sort adjustment for small props approached
   from the south, or accepting it as "the player is standing right where
   they'd sleep" — a design call for a future visual-fix pass, not this task.
-- [ ] SPRITE — **THE REQUEST BOARD (`guild_board`, M-DEPTH DP1, Adventurer's
-  Guild interior) reuses the `inn_sign` hanging-plank crop and reads
-  small/low-contrast against the wood-plank wall** — windowed-verified
-  in-frame (`.superpowers/sdd/fp-handoff/dp1-shots/03_the_board.png`): the
-  board is legible only because the toast fired on interact, not because a
-  stranger would spot it unprompted from a few cells away. No dedicated
-  corkboard/bulletin-board asset exists in any in-hand pack (same exhausted
-  search as the `inn_sign` 7c precedent — see that log entry below).
-  `guild_notice_wall` reuses `library_shelf` similarly (reads as a
-  wardrobe/bookshelf, not a wall of papers) and sits close enough to the
-  board + the Renn/Ilvo walk-on pair that the cluster reads a little dense
-  at a glance (Renn/Ilvo also share a silhouette, tint-only differentiated
-  — tint-only pairing, but
-  worth a look together with the board/notice-wall crop). DP2 (the board's
-  real mechanical payoff) is the natural point to also generate/assign a
-  bespoke board sprite; flag for a PixelLab pass then, or fold into the
-  next NIGHT polish wave.
-  **DP2 update (2026-07-07):** the real posting mechanics landed on this
-  SAME stand-in sprite per the task brief ("dressed stand-ins from DP1 are
-  acceptable this task; a dedicated art pass is already VISUAL-LOG'd") —
-  art/sprites.json ownership sits with a parallel lane this task, so this
-  item stays OPEN, unchanged, now carrying more weight (the board is a
-  live mechanical hub, not dressing). Windowed-reverified
-  (`.superpowers/sdd/fp-handoff/dp2-shots/01_board_browse.png`/
-  `02_selys_picker.png`): the DIALOGUE TEXT itself now reads cleanly (a
-  real bug caught and fixed this task — see the DP2 report's picker-option
-  wrap finding — was never this sprite), so the open defect here is
-  strictly the corkboard art, not legibility of the mechanic's copy.
+- [ ] SPRITE — **`guild_notice_wall` (Adventurer's Guild interior) reuses
+  `library_shelf`** (reads as a wardrobe/bookshelf, not a wall of papers)
+  and sits close enough to `guild_board` + the Renn/Ilvo walk-on pair that
+  the cluster reads a little dense at a glance (Renn/Ilvo also share a
+  silhouette, tint-only differentiated). `guild_board` itself was closed
+  by the art-wiring task (2026-07-07, bespoke `request_board` art) — this
+  item survives unchanged, scoped to the notice-wall prop only, which that
+  task did not touch. Worth a look together with the Renn/Ilvo tint-only
+  pairing.
 - [x] UI/HOTBAR — FIXED 783a733 (code-drawn boot glyph, isolation-verified) — **[Stealth] slot renders literal text, no icon glyph**
   (S2-close rotation 2026-07-07, systemic across 4 shots / 2 scripts:
   s2close-playtest-shots/rogue_earn_loop/01-03 + social_loop/01). The
@@ -156,22 +138,6 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   art-safe band class + the toast's new layer-12 position over that
   corner. Same fix wave.
 
-- [ ] SPRITE — `inn_sign` (Task 7c, "No Killing Goblins" sign, floodplains
-  `(6,6)`) is a semantic-match STAND-IN, not a dedicated signpost asset: NO
-  wooden-sign/signpost sprite exists in any in-hand pack (exhausted
-  docs/asset-catalog.md + docs/asset-index.md by grep, plus a PIL alpha-
-  channel connected-component sweep of Buildings/Props.png, Furniture.png,
-  Tools.png, Esoteric.png, Resources.png, Walls.png, Cute_Fantasy's
-  Outdoor_Decor_Free.png, and Fairy Forest's Props.png — all doors/windows/
-  benches/shutters/fences/rocks/mushrooms, zero signposts). Closest match:
-  a hanging-plank-on-chains crop from the ALREADY-COMMITTED Furniture.png
-  (`region [98,539,44,21]`, the same sheet as `door`/`crate`/
-  `unlit_lantern` — no new asset extraction), reads at a glance as a board
-  mounted on twin posts beside the door but carries no visible text (no
-  prop in this game renders in-world micro-text — the toast/observe
-  strings carry the words). Windowed-verified in-frame:
-  `.superpowers/sdd/fp-handoff/7c-shots/01_sign_approach_toast.png`. A
-  bespoke PixelLab signpost (Track B/PixelLab recipe) would read better.
 - [ ] SPRITE/REGION — **"PALETTE :" sheet label baked into every boulder**
   (machine playtest 2026-07-07): Rocks.png carries palette text at its
   top-left; the `boulder` region [0,0,32,40] includes it — renders as
@@ -299,14 +265,6 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   pipeline; windowed field reads at
   `.superpowers/sdd/fp-handoff/upgrade-shots/` (`03_olesm_pisces_field.png`,
   `02_zevara_field.png`, `zoom_olesm_pisces.png`, `zoom_zevara.png`).
-- [ ] SPRITE/CANON — **Lyonette** (inn barmaid, pre-existing entity) still
-  uses the `citizen_f` sprite with a pink tint — a human-woman stand-in.
-  CANON FLAG: the wiki gives Lyonette **bright RED hair** + blue eyes; the C2
-  task/spec both said "blonde", which is a canon miss (do NOT ship blonde).
-  A red-haired, worn-fine-dress human sprite (PixelLab) would sharpen her; the
-  current stand-in reads as a proud young human woman, which passes the "reads
-  as Lyonette" bar but carries the wrong hair. Deferred (C2 kept her existing
-  sprite to avoid churn; C4/a future art pass owns the upgrade).
 - [ ] FIELD/TILES — world maps render BLOCKED cells as flat tiles while
   arenas render them as biome prop sprites (M6.5 structure map,
   2026-07-04) — props-over-tiles is a repo-wide mandate; field blocked
@@ -473,6 +431,54 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Fixed
 
+- [x] SPRITE/CANON — FIXED (art-wiring task, 2026-07-07, commit pending,
+  uncommitted) — **Lyonette** used the `citizen_f` sprite with a pink tint,
+  a human-woman stand-in with the wrong hair (wiki canon: bright RED hair
+  + blue eyes; the C2 task/spec's "blonde" was a canon miss). Replaced with
+  a bespoke PixelLab directional+animated sprite (`lyonette_c1`, the winning
+  candidate of 3 generated; `_c2`/`_c3` rejected) matching canon exactly —
+  bright red hair, blue eyes, worn-but-fine green dress. The pink tint hack
+  is gone entirely (no `tint` field on the entity anymore). Windowed-
+  verified adjacency read: `.superpowers/sdd/fp-handoff/art-wiring-shots/
+  01_lyonette_adjacency.png` (dialogue_walkthrough, `01_lyonette_intro`) —
+  red hair clearly visible, PC standing directly adjacent (feet-plane
+  anchor measured, no one-cell-off gap), plus the same shot in
+  `02_inn_common_room_cast_variety.png` (inn_walkthrough, `01_start`).
+- [x] SPRITE — FIXED (art-wiring task, 2026-07-07, commit pending,
+  uncommitted) — **THE REQUEST BOARD (`guild_board`)** reused the `inn_sign`
+  hanging-plank crop and read small/low-contrast against the wood-plank
+  wall. Replaced with bespoke `request_board` art (a proper wood-framed
+  corkboard with visible pinned parchment sheets), the old `tint` hack
+  removed (no longer needed once the board had its own distinct
+  silhouette/colors). Windowed-verified:
+  `.superpowers/sdd/fp-handoff/art-wiring-shots/04_the_request_board.png`
+  (guild_interior_walkthrough, `03_the_board`) — the board now reads as a
+  real bulletin board with distinct parchment layers, clearly bigger/more
+  legible than the old plank-crop stand-in. (The Runner's Guild delivery
+  board, `runner_board`, still rides the old `inn_sign` art — no bespoke
+  delivery-board asset was generated this pass — see the Open item above.)
+- [x] SPRITE — FIXED (art-wiring task, 2026-07-07, commit pending,
+  uncommitted) — **`inn_sign`** (the "No Killing Goblins" sign, floodplains
+  `(6,6)`) was a Furniture.png hanging-plank-on-chains crop, the closest
+  semantic match available since no dedicated signpost asset existed in
+  any in-hand pack. Replaced with a bespoke PixelLab signpost (text-free
+  tankard/mug plank on a planted post — the sign's wording still lives
+  entirely in toast/observe copy, unchanged, by design). Windowed-verified:
+  `.superpowers/sdd/fp-handoff/art-wiring-shots/03_inn_sign_out_front.png`
+  (tutorial_flow, `00b_inn_sign`) — a real standing signpost next to the
+  inn's door, legible at a glance.
+- [x] FIELD/RUNNERS_GUILD — FIXED (art-wiring task, 2026-07-07, commit
+  pending, uncommitted) — the staged resting-runner copy proposed "flat on
+  a bench, legs up the wall"; no bench sprite existed in any in-hand
+  catalog, so the Runner's Guild shipped a `stool` stand-in next to the
+  resting `pc_gnoll_m` walk-on. Replaced the `stool` decor entry (cell
+  `[1,5]`) with a bespoke `bench` prop (a real wooden bench, wider/more
+  legible than the stool). The resting-runner's STANDING pose is unchanged
+  (a lying-down runner frame would need a bespoke animation, out of scope)
+  — this closes the "no bench asset exists" half of the item only.
+  Windowed-verified: `.superpowers/sdd/fp-handoff/art-wiring-shots/
+  05_bonus_bench_and_runner_board.png` (delivery_loop, `01_runners_guild_
+  interior`) — a proper bench, clearly legible, beside the resting runner.
 - [x] UI/FIELD-HOTBAR — field skills had no `icon` ids so the overworld
   hotbar's 52px slots fell back to text labels, and "[Basic Cleaning]"
   overflowed the slot illegibly — P2 windowed read 2026-07-05,

@@ -224,11 +224,36 @@ func _build_expected_counts() -> Dictionary:
 		counts["%s/idle" % icon_id] = 1
 	## M6 T6 [Light] prop (Furniture.png lantern crop, single frame).
 	counts["unlit_lantern/idle"] = 1
-	## Task 7c (No Killing Goblins seed): inn_sign, a Furniture.png crop
-	## (hanging plank on chains, closest in-hand semantic match for a signboard
-	## -- no dedicated sign asset exists in any pack, see VISUAL-LOG), single
-	## 44x21 region, 1 frame.
+	## Art-wiring task (2026-07-07): inn_sign is now a bespoke PixelLab
+	## signpost (text-free plank; the sign's wording lives in toast/observe
+	## copy only), single 64x64 sheet, 1 frame. Previously a Furniture.png
+	## hanging-plank crop (44x21) -- see VISUAL-LOG, now closed.
 	counts["inn_sign/idle"] = 1
+	## Art-wiring task (2026-07-07): THE REQUEST BOARD's bespoke corkboard art
+	## (guild_board), replacing the inn_sign-crop reuse VISUAL-LOG flagged as
+	## reading small/dense. Single 64x64 PixelLab sheet, 1 frame.
+	counts["request_board/idle"] = 1
+	## Art-wiring task (2026-07-07): bench prop (Runner's Guild resting-runner
+	## walk-on), replacing the `stool` stand-in VISUAL-LOG flagged (no bench
+	## sprite existed in any in-hand pack). Single 64x64 PixelLab sheet, 1 frame.
+	counts["bench/idle"] = 1
+
+	## Art-wiring task (2026-07-07): Lyonette's canon-correct bright-red-hair
+	## sprite (replacing the citizen_f pink-tint stand-in, VISUAL-LOG closed) +
+	## three inn-cast-variety NPC sprites (human_laborer, gnoll_traveler,
+	## drake_patron), all PixelLab v2 create-character-pro/animate-character
+	## directional sets (down/side/up, side sheet faces right/east, registry
+	## mirrors west) -- idle=breathing-idle(4), walk=walking(6), same template
+	## family as relc/pisces/olesm/zevara/pc_*/raskghar_*. lyonette/human_laborer
+	## 104x104; gnoll_traveler 108x108; drake_patron 124x124.
+	counts["lyonette/idle"] = 4
+	counts["lyonette/walk"] = 6
+	counts["human_laborer/idle"] = 4
+	counts["human_laborer/walk"] = 6
+	counts["gnoll_traveler/idle"] = 4
+	counts["gnoll_traveler/walk"] = 6
+	counts["drake_patron/idle"] = 4
+	counts["drake_patron/walk"] = 6
 
 	## M5 E2 enemy sprites.
 	## Goblin sheets are 1536x1024, 256x256 frames: 6 columns per facing row.

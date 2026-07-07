@@ -153,8 +153,17 @@ task reviewer's standing hunt), against the character's profile voice:
   across dialogue"): at most ONE em-dash per line, and most lines need
   ZERO — reach for a period or comma first; a dash must earn its
   interruption (a real self-interruption or turn, not rhythm
-  decoration). A corpus-wide reduction pass is queued; hold every NEW
-  line to this bar now.
+  decoration). The corpus-wide reduction pass LANDED 2026-07-07 (155
+  pairs + 28 earned keeps, staged in
+  docs/design/emdash-reduction-staging.md); hold every NEW line to this
+  bar. Label-separator dashes (keybind hints, `[Skill] — body` builders)
+  are convention, EXEMPT from the budget.
+- **Em-dashes hide as `—` escapes** (skeleton_scene.json + some QA
+  scripts mix literal and escaped in the SAME file): any corpus grep for
+  dash abuse — or for a pinned string containing one — must sweep BOTH
+  forms, or it silently misses sites (7 pin sites survived the staging
+  sweep this way; they surfaced as wait-for-event TIMEOUTS, not string
+  asserts, when the rendered text changed under them).
 - POSITIVE BAR: lines survive being read ALOUD in the character's
   register; contractions where the voice has them; people interrupt
   themselves, use wrong-size words, reference concrete objects; humor

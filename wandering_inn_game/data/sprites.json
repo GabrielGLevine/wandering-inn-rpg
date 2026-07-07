@@ -98,6 +98,126 @@
    0.75
   ]
  },
+ "lyonette": {
+  "directional": true,
+  "render_scale": 0.6154,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/lyonette/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/lyonette/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/lyonette/Idle_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/lyonette/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/lyonette/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/lyonette/Walk_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5048,
+   0.7404
+  ]
+ },
+ "human_laborer": {
+  "directional": true,
+  "render_scale": 0.6154,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/human_laborer/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/human_laborer/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/human_laborer/Idle_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/human_laborer/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/human_laborer/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/human_laborer/Walk_Up-Sheet.png",
+    "frame_size": [
+     104,
+     104
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.7404
+  ]
+ },
+ "gnoll_traveler": {
+  "directional": true,
+  "render_scale": 0.5926,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/gnoll_traveler/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/gnoll_traveler/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/gnoll_traveler/Idle_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/gnoll_traveler/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/gnoll_traveler/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/gnoll_traveler/Walk_Up-Sheet.png",
+    "frame_size": [
+     108,
+     108
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5046,
+   0.7315
+  ]
+ },
+ "drake_patron": {
+  "directional": true,
+  "render_scale": 0.5161,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/drake_patron/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/drake_patron/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/drake_patron/Idle_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/drake_patron/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/drake_patron/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/drake_patron/Walk_Up-Sheet.png",
+    "frame_size": [
+     124,
+     124
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.4879,
+   0.7177
+  ]
+ },
  "dusty_scroll": {
   "render_scale": 0.5,
   "animations": {
@@ -2260,19 +2380,54 @@
   ]
  },
  "inn_sign": {
-  "render_scale": 0.5,
+  "render_scale": 0.55,
+  "anchor": [
+   0.4922,
+   0.9531
+  ],
+  "shadow": true,
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/free_pack/Furniture.png",
-    "region": [
-     98,
-     539,
-     44,
-     21
-    ],
+    "sheet": "res://assets/sprites/inn_sign/Idle-Sheet.png",
     "frame_size": [
-     44,
-     21
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "request_board": {
+  "render_scale": 0.6,
+  "anchor": [
+   0.5078,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/request_board/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "bench": {
+  "render_scale": 0.5,
+  "anchor": [
+   0.4922,
+   0.6875
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/bench/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
     ],
     "fps": 1
    }

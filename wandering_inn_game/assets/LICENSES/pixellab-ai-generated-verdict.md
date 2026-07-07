@@ -76,3 +76,34 @@ as the smarter alpha. Character ids + driver (`raskghar.py`, `integrate_raskghar
 + originals/rotations in `potential_assets/pixellab_2026-07-06/raskghar_work/`
 (gitignored). Same PixelLab-ToS ownership / redistributability as everything
 above.
+
+## GH issue #5 — art-wiring wave (2026-07-07)
+
+Four directional+animated NPC bodies and three static props, generated and
+parked in `potential_assets/pixellab_2026-07-07/` (gitignored) ahead of this
+wiring task, via the SAME proven v2 pipeline (`create-character-pro`
+mannequin/low top-down/no_background 64×64 → `animate-character` template
+`breathing-idle`/`walking`; down/side/up strips, south/east/north only, side
+sheet faces east/right, registry mirrors west — verified per-character by a
+6× nearest-neighbor zoom before shipping).
+
+| Path | Subject | Source folder / notes |
+|---|---|---|
+| `assets/sprites/lyonette/{Idle,Walk}_{Down,Side,Up}-Sheet.png` | Lyonette du Marquin (canon fix) | `lyonette_c1` (the winning candidate; `lyonette_c2`/`_c3` are rejected variants, NOT used) — bright red hair, blue eyes, worn-but-fine green dress, per `docs/design/character-profiles.md`. Replaces the `citizen_f` + pink-tint stand-in (VISUAL-LOG, closed). 104×104 frames. |
+| `assets/sprites/human_laborer/{Idle,Walk}_{Down,Side,Up}-Sheet.png` | inn cast variety (human) | `human_laborer`. 104×104 frames. Registered; not yet assigned to a live entity this pass (only one generic inn-patron entity exists — see task report). |
+| `assets/sprites/gnoll_traveler/{Idle,Walk}_{Down,Side,Up}-Sheet.png` | inn cast variety (gnoll) | `gnoll_traveler`. 108×108 frames. Registered; not yet assigned to a live entity this pass. |
+| `assets/sprites/drake_patron/{Idle,Walk}_{Down,Side,Up}-Sheet.png` | inn cast variety (drake) — wired to `hungry_patron` | `drake_patron_v2` (the winning candidate; plain `drake_patron` is a rejected earlier generation, NOT used). 124×124 frames. Replaces the `citizen_f` + orange-tint stand-in on the `hungry_patron` entity. |
+| `assets/sprites/inn_sign/Idle-Sheet.png` | `inn_sign` prop (floodplains "No Killing Goblins" sign) | `inn_sign_s0.png`, a hanging tankard/mug plank (the generic-tavern-signage variant) — of 3 generated poses, `_s1` bakes literal "INN" lettering into the plank (rejected — the design directive keeps all sign wording in toast/observe copy, never baked art) and `_s2` is a text-free food/egg-icon plank (also text-free but reads dish-specific, not tavern-generic; not used). Static, 64×64, 1 frame. Replaces the `Furniture.png` hanging-plank-crop stand-in (VISUAL-LOG, closed). |
+| `assets/sprites/request_board/Idle-Sheet.png` | `guild_board` ("THE REQUEST BOARD") prop | `request_board_s0.png`. Static, 64×64, 1 frame. Replaces the `inn_sign`-crop reuse VISUAL-LOG flagged as reading small/dense against the wall (closed). The Runner's Guild delivery board (`runner_board`) still rides the old `inn_sign` art + its own blue-grey tint — no bespoke delivery-board asset exists yet, out of scope for this pass. |
+| `assets/sprites/bench/Idle-Sheet.png` | `bench` prop (Runner's Guild resting-runner walk-on) | `bench_s0.png`. Static, 64×64, 1 frame. Replaces the `stool` stand-in VISUAL-LOG flagged (no bench sprite existed in any in-hand pack; closed). |
+
+Anchors measured per-family via a PIL alpha-channel bbox scan of every frame
+(the Body_A/Citizen_F feet-plane incident precedent, `wandering_inn_game/
+CLAUDE.md` Gotchas) — feet-plane bottom / frame height for characters,
+content bbox bottom / 64 for the static props; `render_scale` for the four
+character sprites reuses the SAME per-race normalization already established
+by the `pc_drake_*`/`pc_gnoll_*`/`pc_human_f` variants (target ~64px on-screen
+height: human 0.6154, gnoll 0.5926, drake 0.5161) since these are the same
+race body proportions. Full measured anchor table in the task report
+(`.superpowers/sdd/fp-handoff/task-art-wiring-report.md`). Same PixelLab-ToS
+ownership / redistributability as everything above.

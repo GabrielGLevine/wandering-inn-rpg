@@ -443,12 +443,7 @@
       5
      ],
      "display_name": "Lyonette",
-     "sprite": "citizen_f",
-     "tint": [
-      1.0,
-      0.55,
-      1.0
-     ],
+     "sprite": "lyonette",
      "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
      "friendly_line": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot.",
      "_comment_pool": "Content Wave C2: Lyonette's base talk_pool (wounded-pride-thawing, warmth-arc SEED; C4/Q2 grows it post-quest -- spec 2.2/3.Q2). She is the game's ONLY pre-existing QA-covered NPC to gain a pool, so dialogue_walkthrough (the sole script that interacts with her -- twice, once per waking across its two sleeps) was re-pathed to ABSORB the first-talk pool DIALOGUE_LINE at idx 0 (waking 1) and idx 1 (waking 3, chatted_with_lyonette then =1) before opening lyonette_tip, mirroring the S4 pooled-NPC re-path pattern. Zero rng, so seed 9 holds.",
@@ -593,12 +588,7 @@
       6
      ],
      "display_name": "Hungry Patron",
-     "sprite": "citizen_f",
-     "tint": [
-      1.0,
-      0.85,
-      0.6
-     ],
+     "sprite": "drake_patron",
      "facing": "left",
      "conversation": "patron_serving",
      "dialogue": [
@@ -3116,7 +3106,7 @@
      ]
     },
     {
-     "_comment": "Task 7c (No Killing Goblins seed, Parts 1+2): the inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: NO dedicated signpost/wooden-sign asset exists in any in-hand pack (exhausted docs/asset-catalog.md + docs/asset-index.md by grep, plus a PIL alpha-channel connected-component sweep of Buildings/Props.png, Furniture.png, Tools.png, Esoteric.png, Resources.png, Walls.png, Cute_Fantasy's Outdoor_Decor_Free.png, and Fairy Forest's Props.png -- see the VISUAL-LOG entry). Closest semantic match: a hanging wood-plank-on-chains crop from the ALREADY-COMMITTED Furniture.png (same sheet as door/crate/unlit_lantern -- no new asset extraction), which reads as a board suspended in front of the inn. Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
+     "_comment": "Task 7c (No Killing Goblins seed, Parts 1+2): the inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: art-wiring task (2026-07-07) closed the VISUAL-LOG stand-in flag with a bespoke PixelLab signpost (a text-free wooden post + hanging plank, `assets/sprites/inn_sign/Idle-Sheet.png`) -- the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text). Previously a hanging wood-plank-on-chains crop from Furniture.png (same sheet as door/crate/unlit_lantern), now retired. Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
      "id": "inn_sign",
      "kind": "prop",
      "cell": [
@@ -4041,13 +4031,12 @@
      ]
     },
     {
-     "_comment": "M-DEPTH DP2: THE REQUEST BOARD goes live -- `board: true` routes interact() to WIGame._interact_board (a browse-only, code-built dialogue: header + the CURRENT active slate's copy from data/bounties.json + footer). Toast is the DEFAULT header (board-copy.md sec.1's header line, unchanged from DP1); second_visit_toast is the NEW variant shown whenever a posting is outstanding (sec.1's second header line). observe still carries the footer/standing-notice line verbatim (the S.S. signature -- Selys Shivertail; Tekshia the Guildmistress stays OFFSTAGE, a signature only, per the staged canon note) -- reused directly by _interact_board, not duplicated. Accept/turn-in live at Selys's desk (selys_delivery.json), per the copy's own framing (\"taking a posting means telling me\"); the board itself never mutates state. Sprite unchanged from DP1 (inn_sign reuse, VISUAL-LOG flagged pending a real corkboard asset).",
+     "_comment": "M-DEPTH DP2: THE REQUEST BOARD goes live -- `board: true` routes interact() to WIGame._interact_board (a browse-only, code-built dialogue: header + the CURRENT active slate's copy from data/bounties.json + footer). Toast is the DEFAULT header (board-copy.md sec.1's header line, unchanged from DP1); second_visit_toast is the NEW variant shown whenever a posting is outstanding (sec.1's second header line). observe still carries the footer/standing-notice line verbatim (the S.S. signature -- Selys Shivertail; Tekshia the Guildmistress stays OFFSTAGE, a signature only, per the staged canon note) -- reused directly by _interact_board, not duplicated. Accept/turn-in live at Selys's desk (selys_delivery.json), per the copy's own framing (\"taking a posting means telling me\"); the board itself never mutates state. Sprite: bespoke `request_board` art (art-wiring task, 2026-07-07) -- DP1/DP2 shipped on an `inn_sign` reuse, VISUAL-LOG flagged pending a real corkboard asset; now closed.",
      "id": "guild_board",
      "kind": "prop",
      "cell": [2, 3],
      "display_name": "The Request Board",
-     "sprite": "inn_sign",
-     "tint": [0.85, 0.78, 0.6],
+     "sprite": "request_board",
      "facing": "right",
      "board": true,
      "toast": "The Request Board. Paper three layers deep in places. New notices pinned straight over the dead ones. Two or three have fresh ink.",
@@ -4228,7 +4217,7 @@
    ]
   },
   "runners_guild": {
-   "_comment": "M-DEPTH DP5: the Runner's Guild (10x8), reached via runners_guild_door on the street (20,17). Reuses the 'inn' biome (every interior in this game differentiates via moods.json's grade + dressing, not new tile assets). Counter dressed via the Guild's OWN counter_left/counter_right precedent (Selys's exact convention -- Vess stands in the gap, no separate desk entity needed since she IS the counter-person, unlike Zevara's DP4 desk which needed its own prop because Zevara herself stays elsewhere). THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one. Vess (npc, conversation vess_counter) owns accept/turn-in, mirroring Selys's desk. The resting runner walk-on rests near a `stool` (no bench sprite exists in the catalog -- the substitution is disclosed, VISUAL-LOG'd).",
+   "_comment": "M-DEPTH DP5: the Runner's Guild (10x8), reached via runners_guild_door on the street (20,17). Reuses the 'inn' biome (every interior in this game differentiates via moods.json's grade + dressing, not new tile assets). Counter dressed via the Guild's OWN counter_left/counter_right precedent (Selys's exact convention -- Vess stands in the gap, no separate desk entity needed since she IS the counter-person, unlike Zevara's DP4 desk which needed its own prop because Zevara herself stays elsewhere). THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one. Vess (npc, conversation vess_counter) owns accept/turn-in, mirroring Selys's desk. The resting runner walk-on rests near a real `bench` prop (art-wiring task, 2026-07-07 -- was a `stool` stand-in, VISUAL-LOG'd; the delivery board itself stays on the `inn_sign` art, out of scope for this pass -- no bespoke delivery-board asset exists yet).",
    "biome": "inn",
    "grid": {
     "width": 10,
@@ -4265,7 +4254,7 @@
    "decor": [
     { "sprite": "counter_left", "cell": [4, 2] },
     { "sprite": "counter_right", "cell": [6, 2] },
-    { "sprite": "stool", "cell": [1, 5] }
+    { "sprite": "bench", "cell": [1, 5] }
    ],
    "ambience": [
     { "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
