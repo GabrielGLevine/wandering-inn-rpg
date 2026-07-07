@@ -28,6 +28,21 @@ const CELL := 16
 const PLAYER_COLOR := Color(0.25, 0.45, 0.9)
 const ENEMY_COLOR := Color(0.75, 0.25, 0.2)
 const MP_COLOR := Color(0.25, 0.4, 0.85)
+## GH#21 ([Ice Floor] area terrain effect): persistent frost tint for icy_floor
+## overlays -- combat_screen.gd's FROST_FLASH RGB (0.5, 0.8, 1.0) at a lower
+## persistent alpha (0.35 vs the transient cast-flash's 0.55, since this rect
+## sits on the board every round rather than pulsing once). board_renderer.gd
+## doesn't reference combat_screen.gd's consts (the screen stays the VFX-
+## dispatch owner; this file owns rendering primitives), so the RGB is
+## restated here verbatim -- keep in sync if FROST_FLASH ever changes.
+const ICY_FLOOR_COLOR := Color(0.5, 0.8, 1.0, 0.35)
+## z-index split (GH#21): terrain overlays render at COMBATANT_Z - 1 so they
+## always sit ABOVE the floor/decor (both default z_index 0) but BELOW every
+## combatant visual, regardless of scene-tree add order -- `add_terrain` is
+## called dynamically mid-combat (after `build()`'s own children are already
+## in place), so relying on tree order alone would put a freshly-added
+## overlay on TOP of everything.
+const COMBATANT_Z := 1
 const MOVE_TWEEN_SECONDS := 0.12
 const BUMP_PIXELS := 3.0
 const BUMP_TWEEN_SECONDS := 0.06
@@ -117,6 +132,14 @@ var _shake_tween: Tween
 ## the labels helpers below can resolve `World`/`WIWorldLabels` without the
 ## caller having to pass it again on every call.
 var _main_ref: Node
+## GH#21 ([Ice Floor] area terrain effect): persistent per-cell overlays,
+## kind -> {Vector2i: ColorRect}. Unlike `flash_cells` (a transient tween
+## that self-frees), these stay on the board until `expire_terrain` removes
+## them or the whole board tears down (`build()`'s wholesale queue_free of
+## every `_board` child already covers that -- see `add_terrain`'s doc
+## comment for the z-order contract that keeps them under combatant
+## visuals).
+var _terrain_overlays: Dictionary = {}
 
 ## GH #28 DARK-ARENAS: this build()'s combatant-legibility self_modulate
 ## floor (see the const block above) -- (1,1,1,1) identity for any arena
@@ -162,6 +185,10 @@ func build(view: WICombatView, main_ref: Node) -> void:
 	_mp_bars.clear()
 	_combat_anim_tokens.clear()
 	_combat_tweens.clear()
+	# GH#21: the wholesale queue_free loop above already frees every previous
+	# encounter's terrain overlay nodes (they're `_board` children); this just
+	# drops the now-stale tracking dict so a fresh combat starts with none.
+	_terrain_overlays.clear()
 	world.enter_combat_camera(view.grid_size())
 	_board.visible = true
 	_legibility_boost = _legibility_modulate(view)
@@ -203,6 +230,9 @@ func clear() -> void:
 	if world != null:
 		world.exit_combat_camera()
 	_clear_combat_labels()
+	# GH#21: drop the tracking dict defensively (see build()'s matching
+	# comment) -- the next build() frees the actual overlay nodes wholesale.
+	_terrain_overlays.clear()
 
 
 ## Playtest fix (props-over-tiles): renders `combat.blocked` cells as biome-
@@ -313,6 +343,10 @@ func _make_decor_visual(cell: Vector2i, sprite_id: String) -> Node2D:
 func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 	var holder := Node2D.new()
 	holder.set_meta("death_visible", false)
+	# GH#21: explicit z_index (see the COMBATANT_Z const doc comment) so a
+	# terrain overlay added later at z_index 0 can never render on top of a
+	# combatant, regardless of tree add order.
+	holder.z_index = COMBATANT_Z
 	var sprite_id := _combatant_sprite_id(id)
 	# Labels stack above the cell; the sprite branch below moves this up
 	# further once the sprite's actual (possibly overhanging) top edge is
@@ -695,6 +729,57 @@ func flash_cells(cells: Array, color: Color) -> void:
 		var tw := create_tween()
 		tw.tween_property(f, "modulate:a", 0.0, 0.35)
 		tw.tween_callback(f.queue_free)
+
+
+## GH#21 ([Ice Floor] area terrain effect): persistent per-cell overlay --
+## one semi-transparent ColorRect per cell, unlike `flash_cells`' one-shot
+## tween. `z_index` defaults to 0 (the const block's COMBATANT_Z split keeps
+## it under every combatant regardless of add order); it renders over the
+## floor/decor simply because it's added to `_board` AFTER `build()`'s floor
+## construction (both at z_index 0, so tree order alone settles floor vs.
+## overlay). Re-adding at an already-registered cell (a re-cast) frees the
+## stale rect first (`combat.terrain`'s own flat-refresh idiom mirrored
+## here, so the visual never doubles up). No-op before `build()` has run
+## (`_board == null`).
+func add_terrain(kind: String, cells: Array) -> void:
+	if _board == null:
+		return
+	var by_kind: Dictionary = _terrain_overlays.get(kind, {})
+	var color := ICY_FLOOR_COLOR if kind == "icy_floor" else Color(1.0, 1.0, 1.0, 0.35)
+	var cells_payload: Array = []
+	for cell: Vector2i in cells:
+		if by_kind.has(cell):
+			var stale: ColorRect = by_kind[cell]
+			if is_instance_valid(stale):
+				stale.queue_free()
+		var rect := ColorRect.new()
+		rect.name = "Terrain_%s_%d_%d" % [kind, cell.x, cell.y]
+		rect.color = color
+		rect.position = Vector2(cell) * CELL
+		rect.size = Vector2(CELL, CELL)
+		rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_board.add_child(rect)
+		by_kind[cell] = rect
+		cells_payload.append([cell.x, cell.y])
+	_terrain_overlays[kind] = by_kind
+	ObservableBus.emit_domain_event(WIEvents.UI_TERRAIN_RENDERED, {"kind": kind, "cells": cells_payload})
+
+
+## Inverse of `add_terrain` -- frees and untracks the overlay at each given
+## cell for `kind`. No UI confirmation event on expiry (only the add side
+## rides the ui_*_rendered idiom, per GH#21's design); the domain-level
+## TERRAIN_EXPIRED is the QA-visible signal for this half.
+func expire_terrain(kind: String, cells: Array) -> void:
+	var by_kind: Dictionary = _terrain_overlays.get(kind, {})
+	if by_kind.is_empty():
+		return
+	for cell: Vector2i in cells:
+		if by_kind.has(cell):
+			var rect: ColorRect = by_kind[cell]
+			if is_instance_valid(rect):
+				rect.queue_free()
+			by_kind.erase(cell)
+	_terrain_overlays[kind] = by_kind
 
 
 ## M-JUICE E2 gate: true only in real play (windowed non-QA / native). Reuses

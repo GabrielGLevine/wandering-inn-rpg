@@ -59,6 +59,13 @@ const AI_PLAYBACK_TYPES := [
 	WIEvents.DASHED, WIEvents.STATUS_APPLIED, WIEvents.STATUS_EXPIRED,
 	WIEvents.ACTION_REFUSED, WIEvents.TURN_STARTED, WIEvents.COMBAT_FINISHED,
 	WIEvents.TURN_ENDED,
+	# GH#21: TERRAIN_EXPIRED fires at round rollover, which happens MID an
+	# AI turn (inside _advance_turn) -- exactly the desync class this const's
+	# TRAP comment warns about. TERRAIN_ADDED is only ever player-cast today
+	# (AI never selects icy_floor -- see skill_effects.gd/wi_combat_ai.gd
+	# doc comments) but is listed alongside it for symmetry and so a future
+	# enemy-cast icy_floor doesn't silently reopen the same desync.
+	WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED,
 ]
 
 ## M5 H1: SKILL_PICK is gone -- the hotbar puts combat skills directly on
@@ -204,7 +211,8 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_apply_combat_finished(payload)
 		WIEvents.COMBATANT_MOVED, WIEvents.AP_CHANGED, WIEvents.COMBATANT_DOWNED, \
 		WIEvents.ATTACK_RESOLVED, WIEvents.SKILL_RESOLVED, WIEvents.REACTION_TRIGGERED, \
-		WIEvents.DASHED, WIEvents.STATUS_APPLIED, WIEvents.STATUS_EXPIRED, WIEvents.ACTION_REFUSED:
+		WIEvents.DASHED, WIEvents.STATUS_APPLIED, WIEvents.STATUS_EXPIRED, WIEvents.ACTION_REFUSED, \
+		WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED:
 			if _mode != Mode.INACTIVE:
 				var event := _capture_playback_event(type, payload)
 				_play_event_visual(type, event["payload"])
@@ -417,6 +425,13 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 		WIEvents.REACTION_TRIGGERED:
 			if String(payload.get("skill", "")) == "mana_shield":
 				_flash_cells(_ai_playback._cells_from_payload(ui.get("flash_cells", [])), SHIELD_FLASH)
+		WIEvents.TERRAIN_ADDED:
+			# GH#21: no enqueue-time `_ui` capture needed -- `cells`/`kind` are
+			# already the full render input straight off the domain payload
+			# (same reasoning line_damage's SKILL_RESOLVED cells need none).
+			_board_renderer.add_terrain(String(payload.get("kind", "")), _ai_playback._cells_from_payload(payload.get("cells", [])))
+		WIEvents.TERRAIN_EXPIRED:
+			_board_renderer.expire_terrain(String(payload.get("kind", "")), _ai_playback._cells_from_payload(payload.get("cells", [])))
 
 
 ## M6.5 D2 compatibility shim: the real implementation MOVED to
@@ -433,12 +448,18 @@ func _skill_flash_color(skill_id: String) -> Color:
 		return Color.TRANSPARENT
 	var skill: Dictionary = combat.skills[skill_id]
 	var effect_type := String((skill.get("effect", {}) as Dictionary).get("type", ""))
-	if not (effect_type in ["spell_damage", "line_damage"]):
+	# GH#21: icy_floor's SKILL_RESOLVED carries the same "cells" payload shape
+	# as line_damage (the line-skill precedent this task's brief calls out),
+	# so it rides the exact same _skill_flash_cells payload.has("cells")
+	# branch below with zero changes there -- only the eligible-type gate and
+	# color pick need to widen.
+	if not (effect_type in ["spell_damage", "line_damage", "icy_floor"]):
 		return Color.TRANSPARENT
 	# Only two elements exist today (frost/flame); anything not frost-prefixed
 	# defaults to the flame flash. Revisit this binary split when a third
-	# element is added.
-	if skill_id.begins_with("frost"):
+	# element is added. icy_floor is ice-element but doesn't share the
+	# "frost_*" id prefix (frost_bolt/frost_touch), so it's checked explicitly.
+	if skill_id.begins_with("frost") or effect_type == "icy_floor":
 		return FROST_FLASH
 	return FLAME_FLASH
 
