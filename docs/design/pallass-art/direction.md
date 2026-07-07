@@ -92,6 +92,32 @@ this card.
   old bronze — no other city owns a green-teal accent. Used sparingly
   (aged lift machinery), not required v1.
 
+**The lava-glow call (benchmark ruling, coordinator input 2026-07-07):**
+`potential_assets/_benchmarks/benchmark-forge-lava-interior.png` was
+PIL-scanned (never rendered — provenance was unstated, and the scan
+settled it: 25% of its 16px cells are EXACT pixel matches to the
+Pixel Crawler Forge `Tiles.png`, 0% to Cave — it is Forge-pack-
+composed, licensed vocabulary). Ruling in two halves:
+- **Lava glow STAYS in the Pallass card** — forges are canon Pallass
+  identity (Blacksmith's Quarter, floor 9) and the benchmark's lava
+  `#f04800` (18°) is the same hue register as the ratified furnace
+  glow `#F65510`. The scoping rule above already contains it: forge
+  tier only, always a LIGHT.
+- **The benchmark's FIELD is rejected for Pallass.** Its darks are
+  warm maroon (`#180000` 30%, `#483030` 14% — red-led darkness: a
+  "fire dungeon interior" register). A Pallass tier keeps a COOL
+  charcoal/slate field under the glow (the generated brick family
+  already does) — the warm-field version reads as a different place
+  (a smithy interior / dungeon heat, the Forge pack's own catalog
+  casting), and would let tier three drift toward Liscor-warmth.
+- **Composition ceiling adopted (numeric):** the benchmark holds
+  bright molten to ~5% of scene area over ~45% near-dark — ONE
+  dominant lava mass, sparse glints elsewhere. The two-tier mockup's
+  forge band runs 23% warm (a deliberate postcard exaggeration in a
+  narrow cross-section band); **in-game forge-tier maps budget bright
+  molten ≤8% of walkable-view area, one dominant channel, darkness
+  carrying the rest** — the windowed check for the wiring pass.
+
 Measured from the accepted PixelLab outputs (dominant-color scan):
 elevator bronze `#C09048`/`#786048` on dark navy `#303048`; lamp post
 bronze `#906030` with `#F0F0F0` crystal; tileset upper slabs

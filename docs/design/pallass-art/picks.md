@@ -74,7 +74,19 @@ Note: the Cave dark leans warm-olive; the PixelLab void
 (`#000018`–`#181860`, cool navy with faint glints) is the better
 palette fit — Cave is the fallback only.
 
-## 4. Explicitly rejected
+## 4. Forge-lava benchmark (provenance settled by scan)
+
+`potential_assets/_benchmarks/benchmark-forge-lava-interior.png`
+(1600×1600, provenance unstated at dispatch): 16px-cell md5 cross-
+match found **2511/10000 cells (25%) exactly identical to Forge
+`Tiles.png` cells; 0% Cave** — it is a Forge-pack composition
+(non-matching cells = off-grid placements/overlaps). Treated as
+LICENSED: never rendered into context, never committable, lives only
+in the gitignored `_benchmarks/`. Consumed numerically as a
+composition ceiling — see direction.md "lava-glow call" (molten ≤8%
+budget, cool-field ruling).
+
+## 5. Explicitly rejected
 
 - **Forge pack as market-tier source** — warm palette collides with
   the slate field; rejected on quarantine grounds.
