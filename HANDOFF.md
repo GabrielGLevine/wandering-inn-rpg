@@ -1,5 +1,17 @@
 # Wandering Inn RPG Handoff
 
+## #7 RATIFIED + CLOSED (2026-07-07 user session) — 8a UNBLOCKED
+
+Door = Pisces recovery chain in a NEW small Albez-flavored ruin map;
+attunement = ruin anchor stone + Krshia catalyst (~30-40g); no Erin
+gate; **anchor-stone-per-region is the ratified expansion-scaling
+idiom** (8b/8c/8e each ship an attunement beat). Garden = Erin's
+milestone: act >= III AND K-of-N of {inn work, goblins_spared, sign
+defended, resolved_wrong_order} (K tuned at planning; spared never
+solely gates); no-violence sim guard on the garden map. Binding text:
+portals-garden spec SS5. **Issues #8/#9 are unblocked** — #8 planning
+can start next session.
+
 ## #21 + #23 CLOSED — SHIP (2026-07-07, Fable; parallel worktree lanes, both reviewed + fix-waved)
 
 **#21 [Ice Floor] LIVE** — the last ghost skill wired. Enemy-targeted cast

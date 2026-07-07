@@ -66,3 +66,41 @@ trigger leaks — teleport-class transition, the O2 rule: portals never
 fire trigger_radius). Garden ships with its unlock beat only when its
 expansion lands. Non-goals: inter-continental canon destinations;
 door mana-capacity simulation; moving the door.
+
+## 5. EARN CONDITIONS — RATIFIED (user session, issue #7, 2026-07-07)
+
+Binding for issues #8/#9; supersedes any conflicting earlier text above.
+
+**The Door (earn shape: the Pisces recovery chain, canon-closest):**
+1. Beat structure confirmed: flicker → mage-consult (Pisces, 3-path
+   FIGHT/TALK/SKILL) → recovery run → Pisces studies at the inn over
+   N sleeps (opaque-until-sleep: his talk-pool stages shift, zero
+   progress text) → awakening + portal menu.
+2. **The recovery run lives in a small DEDICATED ruin map family**
+   (Albez-flavored surface ruin, sewers-sized, one map) — 8a owns its
+   whole arc; 8d's dungeon untouched; no M-ARC ripple.
+3. **Attunement components: ruin + Krshia ONLY** — the anchor stone
+   from the ruin run + a purchased Krshia catalyst (~30–40g, her
+   charms counter). The old draft's sewers deep-gallery item is OUT
+   (the sealed passage stays sealed).
+4. **No Erin gate on the chain** — she reacts via existing pool lines,
+   gates nothing.
+5. **ANCHOR-STONE-PER-REGION RATIFIED as the expansion-scaling idiom:**
+   every future region milestone (8b Riverfarm, 8c Invrisil, 8e
+   Pallass) ships an "attune a new mana stone" beat as its Door hook —
+   the Door grows per region, never a one-shot unlock. Issues
+   #10/#12/#16 inherit this.
+
+**The Garden (earn shape: Erin's milestone, player-witnessed):**
+1. Unlock condition: `act ≥ III` AND **K of N qualifying inn
+   accomplishments** (K tuned at planning so no single playstyle is
+   mandatory — explicitly: goblins_spared counts toward K but never
+   solely gates).
+2. **Qualifying set ratified (all four):** inn work (meals/chores
+   counters), `goblins_spared`, the sign-defended beat, and
+   `resolved_wrong_order` (double-reads as Erin's own arc advancing).
+3. It is ERIN'S Skill — the PC witnesses/participates via the counters.
+   No-violence rule = sim guard: combat can never start on the garden
+   map.
+4. Spoiler cutoff holds: "the Magical Door" everywhere player-facing
+   (never the Vol-9 Skill name); all content within Vol 1–7 material.
