@@ -7,7 +7,7 @@ generic Liscor building today). Filed as #37 (art/polish, size:M) with the
 canon levers (hilltop read, facade, sign placement, warm night window
 light) + the licensing rails. SERIALIZES behind the 8a D-lanes
 (sprites/skeleton contention); natural slot = right after DF, riding A1's
-pick tables. PixelLab top-up would unlock a bespoke facade gen.
+pick tables. PixelLab generations available (user-corrected) — bespoke facade gen is runnable when #37 dispatches.
 
 ## M-STEAM OPENED CONCURRENTLY (2026-07-07): #20 RATIFIED, #19 + #18-prep running
 
@@ -28,9 +28,7 @@ Running now: D1 ruin map + flicker surface (α) ∥ D2 combat data (β) ∥
 A1 asset prep incl. #9 garden pre-picks (γ). Then D3 chain → D4 portals →
 DF close, serialized on shared files. potential_assets RESTORED locally
 (63 packs, copied from the frozen archive — no download needed).
-⚑ **PixelLab balance is $0.00** — API+key verified working, generation
-blocked; rune-glow gen specs queue in the assembly doc until top-up
-(user action if wanted this milestone). If session dies: lane branches
+PixelLab: key+API verified; billing is GENERATION-count (subscription), not USD — the $0.00 usd-balance read was the wrong metric (user-corrected 2026-07-07). Generation is AVAILABLE: rune-glow inpaint + #37 inn facade are runnable now (specs in docs/design/8a-asset-assembly.md). If session dies: lane branches
 carry commits; merge D1-first, re-gate merged tree.
 
 ## #7 RATIFIED + CLOSED (2026-07-07 user session) — 8a UNBLOCKED

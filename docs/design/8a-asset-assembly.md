@@ -93,8 +93,9 @@ on `lit_the_common_room`). No Castle/Cemetery/Cave/Garden sheet in this
 task's pack roster has an arcane-doorway motif worth swapping in over the
 door prop already wired.
 
-**Deferred PixelLab generation spec** (balance $0.00 as of 2026-07-07 —
-**nothing generated this pass**; queue for when balance is topped up, per
+**PixelLab generation spec — READY TO FIRE** (correction 2026-07-07: billing
+is generation-count, generations available; the $0.00 usd read was the wrong
+metric. Nothing generated THIS pass by scope, not by blockage; fire at DF or #37, per
 the milestone plan's VISUAL-LOG deferral and the wi-art-and-sprites
 PixelLab recipe conventions):
 
@@ -195,6 +196,6 @@ to regen the block for this task's 5 new manifest entries; verified with
 - Rubble scatter: wire 2-3 of sec. 3's pieces into `ruin_surface`'s
   `scatter` array.
 - `pantry_door` awakened state: **no art dependency** — tint + light only
-  (sec. 4). PixelLab spec is ready to fire whenever balance is topped up;
+  (sec. 4). PixelLab spec is ready to fire now (generations available, user-corrected);
   no action needed for 8a to ship.
 - Garden picks (sec. 5) are issue #9's to consume — not blocking 8a.

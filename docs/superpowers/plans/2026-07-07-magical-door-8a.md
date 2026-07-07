@@ -39,9 +39,11 @@ catalyst).
   (gated 0.55–0.95 win band unless adjudicated measured-only).
 - Art: licensed Pixel Crawler extracts go through the overlay pipeline
   (manifest + ignore regen + private-bundle release FIRST — wi-shipping);
-  committed placeholders keep the public tree green. PixelLab balance is
-  $0.00 (2026-07-07) — rune-glow sprite GEN is deferred (VISUAL-LOG);
-  v1 glow ships via tint `visual_states` + a phase-gated PointLight2D.
+  committed placeholders keep the public tree green. PixelLab billing is generation-count, generations AVAILABLE
+  (user-corrected 2026-07-07; the usd-balance probe was the wrong metric).
+  v1 glow still ships via tint `visual_states` + a phase-gated PointLight2D
+  (A1 verified zero new art needed); the rune-glow inpaint spec in
+  docs/design/8a-asset-assembly.md MAY be generated at DF if wanted.
 - Canon from the wiki; Albez flavor for the ruin (Warmage Thresk's door).
 
 ## Lane map (parallelism, file-ownership-disjoint)
