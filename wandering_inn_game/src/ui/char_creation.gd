@@ -9,7 +9,7 @@ extends CanvasLayer
 ##             Enter confirms; empty -> "Traveler")
 ## Esc backs up one step; Esc on the first step returns to the title. Confirming
 ## the name fires Game.reset(creation), whose GAME_RESET drives WIMain into the
-## world + the race-branched opener.
+## world + the GDI opener (race-neutral since the 2026-07-07 copy wave).
 ##
 ## QA: this screen is spawned ONLY when it is actually wanted -- real play, or a
 ## QA script that opts in via top-level `creation_ui: true`. Every OTHER New Game
@@ -314,7 +314,7 @@ func _begin_game() -> void:
 		final_name = "Traveler"
 	var creation := {"pc_name": final_name, "pc_race": _race, "pc_gender": _gender}
 	ObservableBus.emit_domain_event(WIEvents.UI_CHAR_CREATION_CONFIRMED, creation)
-	# GAME_RESET drives WIMain into the world + the race-branched GDI opener; this
+	# GAME_RESET drives WIMain into the world + the GDI opener (race-neutral); this
 	# screen is torn down with the other UI layers on that swap.
 	Game.reset(creation)
 

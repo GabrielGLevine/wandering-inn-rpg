@@ -85,6 +85,34 @@ const TOAST_TEXT_WIDTH := 412.0
 ## than just approach it.
 const TOAST_FOLD_DANGER_PX := 28.0
 
+## KF fix wave (2026-07-07): the toast panel's own CanvasLayer, above every
+## other UI surface in the project. FULL LAYER MAP as of this fix (traced
+## across every `extends CanvasLayer` script in `src/`): this file's OWN
+## outer CanvasLayer (dialogue_line bark panel + the hint strip, below),
+## `dialogue_panel.gd` (conversation choices), `combat_screen.gd`,
+## `consolidation_prompt.gd`, `char_creation.gd`, `title_screen.gd`,
+## `field_hotbar.gd`, `pause_menu.gd` -- ALL the untouched default layer 1.
+## `journal.gd`/`inventory.gd` are layer 10 (must paint over `WIWorldLabels`,
+## spawned lazily by world.gd AFTER `Main._spawn_ui_layers` -- see their own
+## file doc comments). `sleep_veil.gd` is layer 30, above literally
+## everything (must win even over a live consolidation modal).
+## KF PLAYTEST FINDING: the toast panel sat at this file's outer layer-1
+## CanvasLayer, so it drew BENEATH the layer-10 modals -- a toast firing
+## while inventory/journal was open had its opening words hidden under the
+## modal's own parchment border (`gear_loop/03_capacity_refusal_in_panel_
+## echo.png`; inventory's `_status_label` echo was the pre-existing
+## workaround for exactly this gap -- it stays, belt-and-braces, but the
+## root cause is fixed here too). Toasts are transient, top-priority player
+## feedback -- drawing OVER an open modal is correct UX, never the reverse.
+## Fix: ONLY the toast panel (never `_dialogue_panel`/`_hint_panel` -- neither
+## one ever competes with a layer-10 modal in real play) moves to its own
+## child CanvasLayer at layer 12: above every layer-10 modal, below the
+## layer-30 sleep veil (which must still win over a mid-display toast).
+## `ui_toast_rendered` timing/payload are UNCHANGED -- this is a pure
+## draw-order fix, QA-safe by construction.
+const TOAST_CANVAS_LAYER := 12
+
+var _toast_layer: CanvasLayer
 var _toast_panel: Control
 var _toast_label: Label
 var _dialogue_panel: Control
@@ -166,6 +194,22 @@ func _ready() -> void:
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
 
+	# KF fix wave (2026-07-07): the toast panel lives on its OWN child
+	# CanvasLayer (layer 12) -- see TOAST_CANVAS_LAYER's doc comment above
+	# for the full layer map and rationale. A CanvasLayer's `layer` applies
+	# independently of its Node parent chain, so nesting this one under the
+	# outer MessageLayer CanvasLayer (rather than adding it as a sibling
+	# under Main) is just scene-tree bookkeeping -- draw order is still
+	# purely a function of `layer`, not tree depth.
+	_toast_layer = CanvasLayer.new()
+	_toast_layer.layer = TOAST_CANVAS_LAYER
+	add_child(_toast_layer)
+	var toast_root := Control.new()
+	UIChrome.apply_theme(toast_root)
+	toast_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	toast_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_toast_layer.add_child(toast_root)
+
 	_toast_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_toast_panel.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	# 448 wide x 96 tall base size (M6 F1: fits up to ~2 wrapped lines cleanly).
@@ -186,7 +230,7 @@ func _ready() -> void:
 	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_toast_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	toast_margin.add_child(_toast_label)
-	root.add_child(_toast_panel)
+	toast_root.add_child(_toast_panel)
 
 	_dialogue_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_dialogue_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
@@ -258,14 +302,49 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_show(_dialogue_panel, _dialogue_label, text, DIALOGUE_SECONDS, WIEvents.UI_DIALOGUE_RENDERED, _fit_dialogue_line(text))
 		WIEvents.COMBAT_STARTED:
 			_hint_panel.hide()
+			_clear_dialogue_line()
 		WIEvents.UI_COMBAT_HIDDEN:
 			_hint_panel.show()
 		WIEvents.DIALOGUE_STARTED:
 			_conversation_open = true
 			_apply_toast_position()
+			_clear_dialogue_line()
 		WIEvents.DIALOGUE_ENDED:
 			_conversation_open = false
 			_apply_toast_position()
+		WIEvents.MAP_CHANGED:
+			_clear_dialogue_line()
+
+
+## KF fix wave (2026-07-07): unconditionally hides the `dialogue_line` bark
+## panel (`_dialogue_panel`/`_dialogue_label` -- ambient NPC one-liners from
+## `social.gd`'s talk-pool rotation and `wi_game.gd`'s narrative lines, NOT
+## `dialogue_panel.gd`'s separate conversation-choice UI). ROOT CAUSE (arc_flow
+## evidence, `dd_02/05/06_*stale_ambient_panel*.png`): `_show()`'s own 3s
+## auto-hide is a coroutine awaiting `tree.create_timer(DIALOGUE_SECONDS)`;
+## the L5 teardown-race guard (`if not is_inside_tree(): return`, see that
+## fix's doc comment above `_show`) can resume from that await into a moment
+## where the coroutine bails WITHOUT ever reaching its own `panel.hide()` --
+## e.g. a map/world rebuild or a combat scene swap mid-hold -- so a bark
+## shown once could linger, increasingly clipped by every later panel drawn
+## over it, through the rest of the run. Fix: an unconditional, synchronous
+## clear on the three events a stale bark could plausibly survive into --
+## DIALOGUE_STARTED (a real conversation about to own the screen),
+## COMBAT_STARTED (the combat HUD about to own it), MAP_CHANGED (a fresh
+## scene, no bark from the old one belongs on it) -- independent of whether
+## the in-flight `_show()` coroutine ever completes its own hold/hide. None
+## of the three previously cleared it (traced: COMBAT_STARTED only hid the
+## hint strip, DIALOGUE_STARTED only repositioned the toast, MAP_CHANGED had
+## no message_layer handler at all). Safe for QA waits: every script waits on
+## `ui_dialogue_rendered` (the bark's own render confirmation, fired at
+## display start) before advancing to whatever next triggers one of these
+## three events -- that confirmation already fired by the time this clear
+## can run, and this clear itself emits nothing, so no wait is starved.
+## The hold-TIMER behavior (3.0s real, uncollapsed under QA -- see
+## DIALOGUE_SECONDS) is otherwise unchanged; this is an independent, belt-
+## and-braces clear, not a replacement for it.
+func _clear_dialogue_line() -> void:
+	_dialogue_panel.hide()
 
 
 ## Positions the toast panel: raised upper-right while a conversation is open

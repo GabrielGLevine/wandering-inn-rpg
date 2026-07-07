@@ -936,6 +936,12 @@ func loadout_toggle(skill_id: String) -> void:
 	var already := hotbar_loadout.has(skill_id)
 	if already:
 		hotbar_loadout.erase(skill_id)
+		# KF hardening (opus wave-review seam a): unslotting the skill whose
+		# tag currently holds sneak active removes the player's only obvious
+		# off-switch (the number key) -- the re-slot recovery is non-obvious,
+		# so break sneak honestly at the moment the verb leaves the bar.
+		if sneaking and bool(skills.get(skill_id, {}).get("sneaks", false)):
+			_break_sneak()
 	else:
 		hotbar_loadout.append(skill_id)
 	_emit(WIEvents.LOADOUT_CHANGED, {"skill": skill_id, "assigned": not already, "loadout": hotbar_loadout.duplicate()})

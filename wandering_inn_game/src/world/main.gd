@@ -79,7 +79,7 @@ func swap_to_title() -> void:
 ## M-ARC §5: title NEW GAME (real play, or a QA script that opts in with
 ## `creation_ui: true`) swaps here for race/gender/name selection. The screen
 ## itself fires Game.reset(creation) on confirm, whose GAME_RESET takes over the
-## swap-to-world (with the race-branched opener); Esc on its first step calls
+## swap-to-world (with the GDI opener -- race-neutral since 2026-07-07); Esc on its first step calls
 ## swap_to_title back. No world/UI layers exist yet at this point (same clean
 ## slate as the title), so this only clears + spawns the one screen.
 func swap_to_char_creation() -> void:

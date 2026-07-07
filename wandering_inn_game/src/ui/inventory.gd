@@ -24,8 +24,8 @@ extends CanvasLayer
 ## message of its own); every other equip()/unequip() false return is either
 ## a real, already-self-toasting refusal from WIGame (G1's two accessory
 ## refusals: slot-full, over-capacity -- mirrored into this panel's own
-## `_status_label` too, since the toast layer draws BEHIND this panel, see
-## below) or prevented entirely by `_equipped_slot_for` routing an
+## `_status_label` too, originally because the toast layer drew BEHIND this
+## panel, see below) or prevented entirely by `_equipped_slot_for` routing an
 ## already-equipped item to unequip() instead of a duplicate equip() call.
 ##
 ## Layer 10 -- same reasoning as journal.gd's file doc comment: WIWorldLabels
@@ -53,13 +53,22 @@ var _armor_label: Label
 ## same styling/precedent as the weapon/armor rows above.
 var _accessory_labels: Array[Label] = []
 ## M-GEAR Task G3 refusal surfacing: mirrors the most recent TOAST while this
-## panel is open (see `_on_domain_event`). Needed because the toast layer
-## (message_layer.gd, default CanvasLayer `layer` 1) draws BEHIND this panel's
-## `layer = 10` -- a toast fired while the panel is open partially or fully
-## renders under the opaque parchment (traced empirically, see the G3 report),
-## so a capacity/slot-full equip refusal needs its own in-panel copy to be
-## reliably legible to the player.
+## panel is open (see `_on_domain_event`). Originally needed because the
+## toast layer (message_layer.gd, then a default CanvasLayer `layer` 1) drew
+## BEHIND this panel's `layer = 10` -- a toast fired while the panel was open
+## rendered under the opaque parchment (traced empirically, see the G3
+## report). KF fix wave (2026-07-07): message_layer's toast panel now lives
+## on its own CanvasLayer at layer 12 (above this panel's 10 -- see
+## message_layer.gd's TOAST_CANVAS_LAYER doc comment), so the toast itself is
+## fully visible again even while this panel is open. This echo STAYS
+## anyway (belt-and-braces, single-sourced from the same TOAST payload --
+## controller decision) rather than being removed.
 var _status_label: Label
+## KF fix wave (2026-07-07): fixed number of wrapped lines reserved for
+## `_status_label`'s row -- see `_reserve_status_label_height()` below for
+## the bug this fixes and why a FIXED reservation (not a per-message resize)
+## is the right shape.
+const STATUS_LABEL_RESERVED_LINES := 2
 ## M-GEAR Task G3: stored so `_rebuild_items` can scroll the cursor row into
 ## view -- the ScrollContainer's own `mouse_filter` is IGNORE (no wheel input
 ## wired) and there is no keyboard-scroll binding either, so without this the
@@ -132,11 +141,17 @@ func _ready() -> void:
 		_accessory_labels.append(accessory_label)
 
 	# M-GEAR Task G3: in-panel refusal echo (see the var's doc comment above).
-	# Empty by default -- an empty Label adds no visible gap, same convention
-	# as the lore-slot reasoning below.
+	# KF fix wave (2026-07-07): NO LONGER "empty by default -- adds no visible
+	# gap" -- see `_reserve_status_label_height()`'s doc comment; the row now
+	# always reserves a fixed height regardless of text.
 	_status_label = UIChrome.make_label("")
 	_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	stack.add_child(_status_label)
+	# Must run AFTER add_child: theme lookups below need the label already
+	# inside the themed tree (this panel's `_root` carries `UIChrome.
+	# apply_theme`), or they'd silently resolve against the engine default
+	# theme instead of `wi_ui_theme.tres` and reserve the wrong height.
+	_reserve_status_label_height()
 
 	# Carried list below, in a ScrollContainer as the overflow safety net --
 	# same idiom as journal.gd's RichTextLabel (scroll_active=true) rather
@@ -161,6 +176,47 @@ func _ready() -> void:
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
+## KF fix wave (2026-07-07): reserves a FIXED row height for `_status_label`
+## up front, from real font metrics -- never derived from whatever text
+## happens to be showing. PLAYTEST FINDING (gear_loop
+## `03_capacity_refusal_in_panel_echo.png`): the L3-era review believed this
+## was a proper VBox row (it IS a `stack.add_child` sibling, positioned
+## correctly above `_scroll`) but never accounted for a real Godot gotcha,
+## the SAME class of bug this repo's CLAUDE.md already documents for the
+## toast/dialogue/feed/readout panels ("message panels budget WRAPPED
+## LINES, not entries"): a `Label` with `AUTOWRAP_WORD_SMART` reports only
+## its SINGLE-LINE height from `get_minimum_size()` (word-wrap depends on
+## the final rect width, which isn't resolved yet when the container asks
+## for minimum size) -- so VBoxContainer reserved exactly ONE line for this
+## row no matter how long the text got. `_CAPACITY_REFUSAL_TOAST` ("It
+## buzzes once against the others, like a wasp against glass, and will not
+## settle.") wraps to 2 lines at this panel's real content width (measured:
+## 572px = PANEL_SIZE.x 640 minus the content MarginContainer's 34px+34px
+## margins) -- its 2nd line rendered OUTSIDE the reserved row, overlapping
+## the scrolled item list's first row directly beneath (the visible
+## "double-exposure" in the evidence shot). Fix: reserve
+## STATUS_LABEL_RESERVED_LINES (2 -- covers every refusal copy WIGame emits
+## today, `_CAPACITY_REFUSAL_TOAST` included, with zero slack left over) of
+## REAL line-pitch height (font height + theme `line_spacing` between lines
+## -- `Font.get_multiline_string_size` alone does NOT include the spacing,
+## the same trap `_toast_panel_height_for` in message_layer.gd already
+## works around) via `custom_minimum_size`, fixed at `_ready()` time and
+## NEVER recomputed per message. A fixed reservation -- not a dynamic
+## resize keyed to the current text -- means the scroll area's start
+## position is IDENTICAL whether the echo is empty, one line, or its max,
+## "in every scroll position" per the fix decision, with no resize/layout-
+## timing race to guard (the panel's own `_rebuild_items` doc comment
+## already flags a real one-hop container-sort race elsewhere in this
+## file -- a fixed reservation sidesteps that class of bug entirely here).
+func _reserve_status_label_height() -> void:
+	var font := _status_label.get_theme_font("font")
+	var font_size := _status_label.get_theme_font_size("font_size")
+	var line_spacing := float(_status_label.get_theme_constant("line_spacing"))
+	var pitch := font.get_height(font_size) + line_spacing
+	var height := STATUS_LABEL_RESERVED_LINES * pitch - line_spacing
+	_status_label.custom_minimum_size = Vector2(0.0, height)
+
+
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if not open:
 		return
@@ -178,10 +234,11 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_emit_shown()
 	elif type == WIEvents.TOAST:
 		# M-GEAR Task G3 refusal surfacing: see `_status_label`'s doc comment
-		# above -- this panel draws OVER the toast layer, so a refusal toast
-		# fired while the panel is open (the only toast source reachable
-		# while it is, since world input is gated shut) needs its own visible
-		# copy in here.
+		# above -- kept belt-and-braces even after the KF fix wave made the
+		# toast layer itself fully visible again over this panel. A refusal
+		# toast fired while the panel is open (the only toast source
+		# reachable while it is, since world input is gated shut) still gets
+		# its own visible copy in here, single-sourced from this same payload.
 		_status_label.text = String(payload.get("text", ""))
 
 
@@ -302,7 +359,7 @@ func _confirm() -> void:
 	if not ok:
 		# Defensive only (see above) -- a real refusal already emitted its own
 		# diegetic toast (mirrored into `_status_label` by `_on_domain_event`,
-		# since the toast layer draws behind this panel); nothing left to
+		# kept belt-and-braces per that var's doc comment); nothing left to
 		# surface here, and emitting a second generic toast on top would
 		# double up on the sim's own message.
 		return

@@ -77,8 +77,8 @@ extends CanvasLayer
 ## effect + description, one row per slot) -- unchanged from pre-K2b, and
 ## still what's drawn for every fixture where it already fit. The K2 fix wave
 ## previously SILENTLY DROPPED trailing rows once the budget ran out (a
-## 3-skill readout with one long multi-line row, e.g. [Sneak]'s cast
-## description, could drop a WHOLE skill -- [Observe] -- with zero on-screen
+## 3-skill readout with one long multi-line row, e.g. [Stealth]'s cast
+## description, could drop a WHOLE skill -- [Appraise Foe] -- with zero on-screen
 ## trace). K2b's machine-playtest recommendation ("collapse to icons" for
 ## this trade) is applied here as: if the detailed pass would drop even ONE
 ## row, ALL rows collapse instead to a compact "N [Name]" strip (numbered
@@ -93,7 +93,7 @@ const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
 # Sized wide (652) so every currently-shipped field skill's readout row fits
 # on ONE wrapped line at "Small" (font_size 12) metrics -- measured directly
 # (godot --script, font.get_multiline_string_size): the longest row
-# ([Observe]'s) needs 620px to avoid a 2-line wrap; a first pass at 488px
+# ([Appraise Foe]'s) needs 620px to avoid a 2-line wrap; a first pass at 488px
 # wrapped it to 2 lines and the wrapped 2nd line rendered outside the
 # parchment's visible art (caught windowed, see the file doc comment's
 # OVERFLOW note) even though the raw font-metric capacity math said it
@@ -103,7 +103,7 @@ const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
 # as the fallback for any future longer description.
 const READOUT_SIZE := Vector2(652.0, 110.0)
 const READOUT_TEXT_WIDTH := 620.0
-# K2 fix wave: RETUNED 90 -> 70. [Sneak]'s row is the first shipped field-skill
+# K2 fix wave: RETUNED 90 -> 70. [Stealth]'s row is the first shipped field-skill
 # readout row with a real effect segment (an active-cast Skill, not a plain
 # flavor description) -- at 90 the nominal font-metric capacity (4 wrapped
 # lines: 90px + 3px line_spacing over a 20px line pitch) exactly matched the
@@ -111,17 +111,19 @@ const READOUT_TEXT_WIDTH := 620.0
 # `_fit_readout` never engaged its cut/drop fallback at all -- it judged
 # everything "fit" and rendered all 3 rows verbatim. A windowed
 # `stealth_loop` screenshot (qa_output/stealth_loop/00_pre_sneak.png) caught
-# the real result: the 3rd row ([Observe]) rendered with its text struck
+# the real result: the 3rd row ([Appraise Foe]) rendered with its text struck
 # through the parchment's decorative bottom border/fold, genuinely illegible
 # there -- a pixel scan of that screenshot found the STRIP art's actual
 # legible cream band ends around y-offset ~77px into the 110px panel, not 90.
 # 70 yields a 3-wrapped-line capacity (int((70+3)/20) == 3), comfortably under
 # the measured ~77px edge; re-verified windowed with the same fixture: rows 1
-# ([Basic Cleaning], 1 line) + 2 ([Sneak], 2 lines) now consume the full
-# budget and row 3 ([Observe]) is dropped by `_fit_readout`'s existing
+# ([Basic Cleaning], 1 line) + 2 ([Stealth], 2 lines) now consume the full
+# budget and row 3 ([Appraise Foe]) is dropped by `_fit_readout`'s existing
 # budget-exhausted path (no partial word-cut needed, remaining reaches 0
-# exactly) -- the two VISIBLE rows sit entirely inside the safe band, no
-# fold bleed. `readout_lines` in `UI_FIELD_HOTBAR_RENDERED`'s payload is
+# exactly). NOTE (KF): this describes the DETAILED pass's internal
+# budgeting only -- since K2b, a pass that would drop any row falls back
+# to the compact name strip instead, so no row is ever silently dropped
+# on screen. `readout_lines` in `UI_FIELD_HOTBAR_RENDERED`'s payload is
 # UNCHANGED (always the full untrimmed set) so no QA structural assertion
 # is affected -- this only changes what's drawn on screen.
 const READOUT_TEXT_HEIGHT := 70.0
