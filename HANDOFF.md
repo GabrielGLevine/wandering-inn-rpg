@@ -89,12 +89,12 @@ now. Olesm stage 3 (`cisterns_reported` + 3 wakings) — BUILT, live now.
 Do these read as story beats or chores? All 7 NPCs' stages are now live —
 this is fully observable in actual play.
 
-*Perks (8, shape check):* Erin's daily meal — still UNBUILT (needs the
-`entity_first_use` per-waking dialogue seam; Phase C landed her stages
-but not this seam — no consumer besides Erin ever justified building it
-in isolation, matching Phase A/D's original call). Relc's spar
-refinement (wager beat vs. status quo) — still UNBUILT, status quo
-shipped already exists (his spar re-offers). Krshia's discount — BUILT
+*Perks (8, shape check):* Erin's daily meal — **BUILT 2026-07-07 (issue
+#23)**: the per-waking seam landed; the meal grants `well_fed` (+2 max
+HP until sleep — ⚑ see the #21/#23 taste queue above, the staged "HP
+restore" had no field-HP target). Relc's spar refinement — **BUILT
+2026-07-07 (issue #23)**: the WAGER beat shipped (stage 3, 1g once per
+waking; status-quo re-offer untouched). Krshia's discount — BUILT
 (prices above). Selys' board pick — BUILT as the ONE-TIME pointer variant
 (staged rec: "cleanest v1"); the repeatable-board alternative is still
 open if you want it instead. Pisces' proposal (drill vs. gift vs. strike)
