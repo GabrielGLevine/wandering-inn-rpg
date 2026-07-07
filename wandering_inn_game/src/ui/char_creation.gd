@@ -66,6 +66,18 @@ var _name_edit: LineEdit
 func _ready() -> void:
 	_build_ui()
 	_render_step()
+	ObservableBus.domain_event.connect(_on_domain_event)
+
+
+## Controller support fix-wave (issue #18 review, LOW): re-render the current
+## step on a device swap so the hint strip's glyphs (composed through
+## WIInputHints in `_render_step`) can't go stale mid-screen -- e.g. a player
+## who picked up the pad on the NAME step. Re-emits UI_CHAR_CREATION_RENDERED
+## (a `_render_step` side effect), which is QA-invisible: the harness only
+## injects keys, so the device never changes during a canonical run.
+func _on_domain_event(type: String, _payload: Dictionary) -> void:
+	if type == WIEvents.INPUT_DEVICE_CHANGED:
+		_render_step()
 
 
 func _build_ui() -> void:
