@@ -154,6 +154,20 @@ func test_gold_effect_verb_applies_through_dialogue_choose() -> void:
 	assert(game.inventory.has("leather_jerkin"), "sibling item effect still grants alongside the gold spend")
 
 
+## Issue #23: the well_fed effect verb (Erin's meal perk), the dialogue-side
+## twin of the gold effect verb test above -- applied through the real
+## WIGame.dialogue_choose effect router, not set directly on the field.
+func test_well_fed_effect_verb_applies_through_dialogue_choose() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Erin", "text": "t", "options": [
+		{"text": "eat", "effects": [{"well_fed": true}], "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)
+	assert(not game.well_fed, "well_fed defaults false")
+	game.start_dialogue("test_conv", "erin")
+	game.dialogue_choose(0)
+	assert(game.well_fed, "well_fed effect verb applies through dialogue_choose")
+
+
 ## Economy v1 Task D1: an unaffordable buy stays VISIBLE-locked (greyed), never
 ## hidden -- window-shopping is content (spec §3). Uses the SHIPPED M4 greying
 ## mechanism, now reading the numeric gold ctx key.
@@ -195,6 +209,123 @@ func test_compound_gold_accomplishment_gate() -> void:
 	game.start_dialogue("test_conv", "krshia")
 	opts = game.dialogue.current_options()
 	assert(not bool(opts[0]["locked"]), "both legs met -> unlocked")
+
+
+## Issue #23: the once_per_waking gate at the pure-walker level, mirroring
+## test_accomplishment_requires_hides_until_met above -- HIDDEN (vanishing),
+## not greyed, keyed off the ctx's `entity_first_use` dict rather than
+## `accomplishments`.
+func test_once_per_waking_requires_hides_until_used() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "meal", "requires": {"once_per_waking": "meal:erin"}, "end": true},
+		{"text": "always", "end": true},
+	]}}}
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {}}, Callable())
+	d.begin()
+	assert(d.current_options().size() == 2, "once_per_waking gate visible when not yet used this waking")
+	var d2 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {"meal:erin": true}}, Callable())
+	d2.begin()
+	assert(d2.current_options().size() == 1, "once_per_waking gate hidden once used this waking")
+	assert(String(d2.current_options()[0]["text"]) == "always", "only the unused/ungated option shows")
+
+
+## Issue #23 fix wave (review finding 1): once_per_waking is REQUIRES-ONLY.
+## A hide_when carrying it is malformed content (test_content.gd rejects it
+## at validation time); this covers the runtime belt-and-suspenders half
+## (WIDialogue._meets_hide_when): the key is refused and IGNORED -- the
+## option stays visible in BOTH bank states (never the inverted hide a naive
+## shared-_meets evaluation would produce), and a hide_when combining it with
+## a real key still honors the real key alone. NOTE: this test deliberately
+## exercises the refusal, so each _meets_hide_when hit prints its push_error
+## line -- expected output, same precedent as test_audio_data's negative
+## cases (grep discipline watches SCRIPT ERROR|Parse Error|WARNING, and
+## push_error is none of those).
+func test_once_per_waking_refused_in_hide_when() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "follow_up", "hide_when": {"once_per_waking": "meal:erin"}, "end": true},
+		{"text": "always", "end": true},
+	]}}}
+	# Unused this waking: a naive shared _meets would call the hide_when MET
+	# ("not yet used" == true) and HIDE the option -- the inverted landmine.
+	# The refusal ignores the key: option visible.
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {}}, Callable())
+	d.begin()
+	assert(d.current_options().size() == 2, "hide_when once_per_waking refused: option visible while UNUSED (no inverted hide)")
+	# Used this waking: still visible -- the key is ignored entirely, not
+	# re-interpreted with some other polarity.
+	var d2b := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {"meal:erin": true}}, Callable())
+	d2b.begin()
+	assert(d2b.current_options().size() == 2, "hide_when once_per_waking refused: option visible while USED too (key ignored entirely)")
+	# Combined with a real hide_when key: the real key alone decides.
+	var combo := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "retired", "hide_when": {"accomplishment": {"done": 1}, "once_per_waking": "meal:erin"}, "end": true},
+		{"text": "always", "end": true},
+	]}}}
+	var d3 := WIDialogue.new(combo, {"skills": [], "classes": {}, "accomplishments": {"done": 1}, "names": {}, "entity_first_use": {}}, Callable())
+	d3.begin()
+	assert(d3.current_options().size() == 1, "combined hide_when: the REAL key (accomplishment, met) still hides -- only once_per_waking is stripped")
+
+
+## Issue #23: the full per-waking dialogue gate lifecycle through the REAL
+## WIGame path (start_dialogue/dialogue_choose/sleep), the issue's named
+## unmet -> used -> gone-this-waking -> back-after-sleep sequence. Uses the
+## SAME synthetic-graph harness as the gold-effect tests above (a real
+## WIGame, not a bare WIDialogue) because bank_first_use is applied by
+## WIGame.dialogue_choose's effect router, and "back after sleep" requires
+## WIGame.sleep() to clear entity_first_use -- neither is reachable at the
+## pure-walker level test_once_per_waking_requires_hides_until_used covers.
+func test_once_per_waking_gate_lifecycle_through_bank_first_use() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Erin", "text": "t", "options": [
+		{"text": "meal", "requires": {"once_per_waking": "meal:erin"}, "effects": [{"bank_first_use": "meal:erin"}], "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)
+	game.start_dialogue("test_conv", "erin")
+	var opts: Array = game.dialogue.current_options()
+	assert(opts.size() == 2, "unused this waking: both options visible")
+	assert(not game.entity_first_use.has("meal:erin"), "not yet banked")
+	game.dialogue_choose(0)  # eat the meal
+	assert(game.entity_first_use.has("meal:erin"), "bank_first_use effect wrote the key")
+	game.start_dialogue("test_conv", "erin")
+	opts = game.dialogue.current_options()
+	assert(opts.size() == 1, "used this waking: the gated option vanishes")
+	assert(String(opts[0]["text"]) == "leave", "only the ungated option remains")
+	game.dialogue_choose(0)  # leave
+	game.sleep()
+	assert(not game.entity_first_use.has("meal:erin"), "sleep() clears the per-waking bank")
+	game.start_dialogue("test_conv", "erin")
+	opts = game.dialogue.current_options()
+	assert(opts.size() == 2, "after sleep: the option is back")
+
+
+## Issue #23: the SECOND sanctioned compound gate ({accomplishment,
+## once_per_waking}) at the real-WIGame level, mirroring
+## test_compound_gold_accomplishment_gate above. Unlike the gold compound,
+## once_per_waking is itself a vanishing gate -- once BOTH legs are met, using
+## the option hides it again (no greyed "come back later" state to preserve).
+func test_compound_accomplishment_once_per_waking_gate() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Erin", "text": "t", "options": [
+		{"text": "meal", "requires": {"accomplishment": {"stage3": 1}, "once_per_waking": "meal:erin"}, "effects": [{"bank_first_use": "meal:erin"}], "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)
+	game.start_dialogue("test_conv", "erin")
+	var opts: Array = game.dialogue.current_options()
+	assert(opts.size() == 1, "compound gate: accomplishment leg unmet -> option HIDDEN (progress never leaks)")
+	game.dialogue_choose(0)  # leave
+	game.record_accomplishment("stage3")
+	game.start_dialogue("test_conv", "erin")
+	opts = game.dialogue.current_options()
+	assert(opts.size() == 2, "accomplishment met, not yet used this waking -> option visible")
+	game.dialogue_choose(0)  # eat
+	game.start_dialogue("test_conv", "erin")
+	opts = game.dialogue.current_options()
+	assert(opts.size() == 1, "accomplishment met but used this waking -> once_per_waking leg hides it too")
+	game.dialogue_choose(0)  # leave
+	game.sleep()
+	game.start_dialogue("test_conv", "erin")
+	opts = game.dialogue.current_options()
+	assert(opts.size() == 2, "after sleep, with the accomplishment still held: the option is back")
 
 
 func _last_line_text() -> String:
@@ -341,8 +472,13 @@ func _init() -> void:
 	test_node_text_variants_last_match_wins()
 	test_talk_pool_post_grows_pool_after_gate()
 	test_gold_effect_verb_applies_through_dialogue_choose()
+	test_well_fed_effect_verb_applies_through_dialogue_choose()
 	test_gold_affordability_greys_when_broke()
 	test_compound_gold_accomplishment_gate()
+	test_once_per_waking_requires_hides_until_used()
+	test_once_per_waking_refused_in_hide_when()
+	test_once_per_waking_gate_lifecycle_through_bank_first_use()
+	test_compound_accomplishment_once_per_waking_gate()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)

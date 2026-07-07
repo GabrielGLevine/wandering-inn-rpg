@@ -104,13 +104,28 @@ func advance(next_id: String) -> void:
 ## True when this requires-dict gates on player PROGRESS (accomplishments), OR
 ## on M-DEPTH DP2's `board_accepted` ctx flag (whether a bounty posting is
 ## currently accepted), OR on DP5's `delivery_accepted` twin (whether a
-## Runner's Guild slip is currently held) -- all "vanishing" gates (HIDDEN
-## until met, not greyed), unlike skill/class/gold which stay visible-locked
-## as a deliberate tease. `board_accepted`/`delivery_accepted` read the SAME
+## Runner's Guild slip is currently held), OR on Issue #23's `once_per_waking`
+## twin (whether the "<verb>:<entity>" key is already banked in
+## `entity_first_use` this waking) -- all "vanishing" gates (HIDDEN until met,
+## not greyed), unlike skill/class/gold which stay visible-locked as a
+## deliberate tease. `board_accepted`/`delivery_accepted` read the SAME
 ## hide-until-met contract: Selys's board pair and Vess's slip pair must not
 ## clutter their hubs with an unusable choice before/after a job is on hand.
+## `once_per_waking` follows suit: Erin's meal option (and Relc's wager
+## option) must not clutter their hubs with an already-spent-this-waking
+## choice -- it comes BACK, silently, once sleep() clears entity_first_use,
+## exactly like a fresh talk_pool line.
+## REQUIRES-ONLY (Issue #23 fix wave, review finding 1): `once_per_waking`
+## is deliberately NOT a hide_when gate -- its "met" polarity ("not yet used
+## this waking") is the INVERSE of every shipped hide_when key's ("the
+## tracked state is now true"), so a hide_when carrying it would hide while
+## UNUSED and reveal once USED, the exact opposite of the retire idiom an
+## author would expect. Retire-style hide_when semantics are deferred until
+## a real consumer defines the intended contract (deliberate, not
+## forgotten); `_meets_hide_when` below refuses the key at runtime and
+## test_content.gd rejects it at content-validation time.
 func _progress_gated(req: Dictionary) -> bool:
-	return req.has("accomplishment") or req.has("board_accepted") or req.has("delivery_accepted")
+	return req.has("accomplishment") or req.has("board_accepted") or req.has("delivery_accepted") or req.has("once_per_waking")
 
 
 ## Progress-only gate check used SOLELY to decide hide-until-met VISIBILITY
@@ -134,6 +149,13 @@ func _meets_progress(req: Dictionary) -> bool:
 	if req.has("delivery_accepted"):
 		if bool(_ctx.get("delivery_accepted", false)) != bool(req["delivery_accepted"]):
 			return false
+	# Issue #23: once_per_waking's own leg, checked independently like the
+	# two above -- met iff `entity_first_use` does NOT yet carry the
+	# "<verb>:<entity>" key this waking (Erin's meal / Relc's wager both
+	# combine this with an accomplishment stage-gate; each leg is ANDed).
+	if req.has("once_per_waking"):
+		if (_ctx.get("entity_first_use", {}) as Dictionary).has(String(req["once_per_waking"])):
+			return false
 	if not req.has("accomplishment"):
 		return true
 	for id: String in req["accomplishment"]:
@@ -153,13 +175,33 @@ func _visible_options() -> Array:
 	for authored_index: int in options.size():
 		var opt: Dictionary = options[authored_index]
 		var hide_when: Dictionary = opt.get("hide_when", {})
-		if not hide_when.is_empty() and _meets(hide_when):
+		if not hide_when.is_empty() and _meets_hide_when(hide_when):
 			continue
 		var req: Dictionary = opt.get("requires", {})
 		if _progress_gated(req) and not _meets_progress(req):
 			continue
 		out.append({"authored_index": authored_index, "option": opt})
 	return out
+
+
+## Issue #23 fix wave (review finding 1): the hide_when-side gate check.
+## `once_per_waking` is a REQUIRES-ONLY gate (see _progress_gated's doc
+## comment for the polarity-inversion rationale); a hide_when carrying it is
+## malformed content that test_content.gd's validator rejects at content
+## time, and this runtime guard makes sure it can never SILENTLY half-work
+## if it slips through anyway: the key is refused loudly (push_error) and
+## ignored entirely, failing OPEN (the option stays visible unless the
+## REMAINING recognized keys hide it) -- never the inverted hide a naive
+## shared-_meets evaluation would produce. Fail-open matches _meets's own
+## treatment of an unrecognized-keys-only dict (recognized == false -> not
+## met -> visible): a malformed gate must never hide content.
+func _meets_hide_when(hide_when: Dictionary) -> bool:
+	if not hide_when.has("once_per_waking"):
+		return _meets(hide_when)
+	push_error("WIDialogue: hide_when must not carry once_per_waking (requires-only gate, Issue #23) -- key ignored: %s" % str(hide_when))
+	var cleaned := hide_when.duplicate()
+	cleaned.erase("once_per_waking")
+	return not cleaned.is_empty() and _meets(cleaned)
 
 
 func _node() -> Dictionary:
@@ -245,6 +287,18 @@ func _meets(req: Dictionary) -> bool:
 		# `delivery_accepted`, true iff a delivery slip is currently held).
 		recognized = true
 		if bool(_ctx.get("delivery_accepted", false)) != bool(req["delivery_accepted"]):
+			return false
+	if req.has("once_per_waking"):
+		# Issue #23: the FIFTH sanctioned non-accomplishment gate type --
+		# board_accepted/delivery_accepted's twin, checked against the shared
+		# `entity_first_use` per-waking dedup dict (WIGame ctx) the SAME way
+		# _meets_progress checks it above; recognized here too so a full
+		# choose()/current_options() lock/unlock decision (not just
+		# hide-until-met visibility) sees this key. REQUIRES-ONLY: the
+		# hide_when path never reaches this arm (_meets_hide_when refuses the
+		# key before delegating here -- see _progress_gated's doc comment).
+		recognized = true
+		if (_ctx.get("entity_first_use", {}) as Dictionary).has(String(req["once_per_waking"])):
 			return false
 	return recognized
 

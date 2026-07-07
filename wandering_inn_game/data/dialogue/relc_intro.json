@@ -100,6 +100,27 @@
       }
      },
      "goto": "relc_after"
+    },
+    {
+     "_comment": "Issue #23 (Social Pillar II, relc_spar_wager): stage-3 refinement, once per waking. Status quo (relc_spar already re-offers) is unaffected -- this is a SEPARATE payoff option, gated on the SAME stage-3 accomplishment leg as relc_after plus the new once_per_waking seam (the second sanctioned {accomplishment, once_per_waking} compound). No combat-victory-to-dialogue bridge: resolve_combat's victory branch has no dialogue hook to ride (traced -- it banks on_victory accomplishments/loot and returns straight to the field), so the payoff rides the EXISTING next-talk-with-Relc idiom instead, the same shape the gift option above already uses to react to sparred_with_relc.",
+     "text": "Wasn't that spar worth something?",
+     "requires": {
+      "accomplishment": {
+       "sparred_with_relc": 1,
+       "cleared_the_warren": 1,
+       "chatted_with_relc": 3
+      },
+      "once_per_waking": "wager:relc"
+     },
+     "effects": [
+      {
+       "bank_first_use": "wager:relc"
+      },
+      {
+       "gold": 1
+      }
+     ],
+     "goto": "relc_wager"
     }
    ]
   },
@@ -216,6 +237,20 @@
     },
     {
      "text": "It landed.",
+     "end": true
+    }
+   ]
+  },
+  "relc_wager": {
+   "speaker": "Relc",
+   "text": "Ugh — fine, you win. Here's your cut. Watch doesn't pay enough for me to keep losing bets to my own students, but don't tell the paymaster I said that.",
+   "options": [
+    {
+     "text": "Back a step.",
+     "goto": "meet"
+    },
+    {
+     "text": "Pleasure doing business.",
      "end": true
     }
    ]

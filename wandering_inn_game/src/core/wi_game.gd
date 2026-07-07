@@ -239,6 +239,18 @@ var entity_first_use: Dictionary = {}
 ## the light node is derived. Diegetically constant across day/dusk/night (it is
 ## magic), so it deliberately bypasses atmosphere.gd's phase multiplier.
 var light_active := false
+## Issue #23 (Social Pillar II, Erin's daily meal): true after Erin's
+## once-per-waking meal perk is eaten (erin_errand.json's stage-3 "Sit, eat.
+## Cook's orders." hub option). MIRRORS `light_active`'s lifecycle exactly:
+## set by a dialogue effect (`{"well_fed": true}`, dialogue_choose's effect
+## router), cleared at every `sleep()` (the meal doesn't carry past a rest --
+## diegetically, a fresh waking needs a fresh meal), additive-optional save
+## field (default false, see save.gd, NO version bump). Field HP does not
+## exist as a standalone concept (HP is per-combat only), so "a small HP
+## restore" has no direct field target -- `_build_player_combatant` instead
+## folds this flag into `hp_mod` (+2) at the NEXT combat build, the same M7
+## build-injection seam armor's hp_mod already rides.
+var well_fed := false
 ## Skills Wave Task K1 (freezable-water seam): the set of freezable water cells
 ## the PC has frost-cast into walkable ice this waking, keyed by map id ->
 ## Dictionary of Vector2i -> true. A freezable cell (declared per-map in
@@ -1134,7 +1146,18 @@ func _build_dialogue_ctx() -> Dictionary:
 	# the same plain-bool gate shape, recognized explicitly by
 	# WIDialogue._meets/_meets_progress/_progress_gated, so Vess's "Take a
 	# slip."/"Turn in a slip." hub options hide/show like Selys's board pair.
-	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "board_accepted": accepted_bounty_id != "", "delivery_accepted": accepted_delivery_id != ""}
+	# Issue #23: `entity_first_use` (the shared per-waking dedup dict, already
+	# threaded into field_skills.gd's dispatch ladder) is the FIFTH sanctioned
+	# non-accomplishment ctx extension -- WIDialogue._meets/_meets_progress/
+	# _progress_gated recognize a `once_per_waking: "<verb>:<entity>"` gate
+	# key that's met iff this dict does NOT already carry that key (i.e. not
+	# yet used this waking), letting a dialogue option gate itself the same
+	# way [Appraise Foe]/[Charming Smile] already gate a field-skill use.
+	# Read-only by reference from the dialogue walker's point of view (only
+	# `dialogue_choose`'s `bank_first_use` effect ever writes it); duplicated
+	# here like every other ctx dict so a stale walker never sees a live
+	# mutation out of order with set_ctx's per-node refresh.
+	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "board_accepted": accepted_bounty_id != "", "delivery_accepted": accepted_delivery_id != "", "entity_first_use": entity_first_use.duplicate(true)}
 
 
 ## Starts a conversation graph if no other modal sim is active.
@@ -1207,6 +1230,29 @@ func dialogue_choose(index: int) -> bool:
 			# `gold: -price` with an `item:` grant AND a `requires: {gold: price}`
 			# gate (see _apply_gold_effect's contract note).
 			_apply_gold_effect(int(effect["gold"]), _dialogue_conversation_id)
+		elif effect.has("bank_first_use"):
+			# Issue #23: the per-waking dialogue-side twin of field_skills.gd's
+			# `_bank_first_use` -- same "<verb>:<entity_id>" -> true write into
+			# the SAME shared `entity_first_use` dict (WIGame-owned, see that
+			# field's doc comment), so a dialogue option can gate itself once
+			# per waking exactly like [Appraise Foe]/[Charming Smile] already
+			# do. Deliberately a direct one-line dict write here rather than a
+			# call into field_skills.gd's helper: that helper's signature takes
+			# a split (verb, entity_id) pair and returns a bool a field-skill
+			# caller branches on, while this effect's value already arrives as
+			# the composed "verb:entity_id" string and dialogue_choose has no
+			# use for the return value -- splitting it back apart just to
+			# re-join it inside the call would add a step without changing
+			# behavior. The write itself is identical: `entity_first_use[key]
+			# = true`, single-writer discipline preserved (the SAME dict,
+			# cleared in the SAME place -- sleep()).
+			entity_first_use[String(effect["bank_first_use"])] = true
+		elif effect.has("well_fed"):
+			# Issue #23 (Erin's daily meal): sets the well_fed flag (see that
+			# field's doc comment for the full lifecycle) -- the dialogue-side
+			# twin of the gold/item effect verbs above, applying a perk that
+			# isn't an item/gold/accomplishment.
+			well_fed = bool(effect["well_fed"])
 		elif effect.has("start_combat"):
 			pending_combat = String(effect["start_combat"])
 		elif effect.has("accept_bounty"):
@@ -1858,7 +1904,13 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 		accessories.append(item(String(equipped.get(slot_name, ""))))
 	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
 	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
-	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD]
+	# Issue #23 (Erin's daily meal): field HP does not exist as a standalone
+	# concept (HP is per-combat only, see this file's `well_fed` doc comment),
+	# so the staged "small HP restore" rides this SAME build-injection seam
+	# armor/accessories use just above -- +2 folded into hp_mod while the
+	# flag is true, summed alongside the equipment contribution, no new
+	# combat field, no change to wi_combat.gd's read side.
+	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD] + (2 if well_fed else 0)
 	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION]
 	return pc
 
@@ -2164,6 +2216,9 @@ func sleep() -> void:
 	# reads false and detaches the PC glow in the same beat. Runs before the
 	# _combat_config early-return so a config-less sim (unit tests) clears too.
 	light_active = false
+	# Issue #23: Erin's meal perk doesn't carry past a rest -- mirrors
+	# light_active's clear immediately above (same reasoning, same lifecycle).
+	well_fed = false
 	# Skills Wave Task K1: all frost-cast ice thaws when the PC rests (mirrors the
 	# light_active clear above -- an opaque-until-sleep traversal aid, not a
 	# permanent map change). Cleared before the unconditional PHASE_CHANGED emit so
@@ -2529,6 +2584,7 @@ func snapshot() -> Dictionary:
 		"container_state": container_state.duplicate(true),
 		"actions_since_sleep": actions_since_sleep,
 		"light_active": light_active,
+		"well_fed": well_fed,
 		"frozen_cells": frozen_cells_json(),
 		"phase": phase(),
 		"sneaking": sneaking,
