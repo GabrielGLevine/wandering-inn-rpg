@@ -658,6 +658,17 @@ func _close_banner() -> void:
 ## there is no Enter-confirms-a-highlight flow anymore. InputMap.has_action
 ## guards kept for the slot actions so a stripped-down input map degrades to
 ## inert instead of erroring.
+##
+## Controller support (S1, issue #18): number keys have no pad equivalent, so
+## `slot_prev`/`slot_next` (LB/RB) move a visible cursor over `_bar_index`
+## (reusing the same field the ATTACK/SKILL_TARGET aim-highlight already
+## drives -- HOTBAR's resting `_bar_index == -1` just means "nothing
+## highlighted yet", so parking the cursor there while still in HOTBAR mode
+## is a safe, additive use of the same var) and `confirm` (A on pad, Enter on
+## keyboard) activates whatever slot is currently highlighted, exactly as a
+## numbered press would. Keyboard-only play never presses slot_prev/next/
+## confirm from this mode (Enter has no prior HOTBAR-mode meaning), so this
+## is purely additive.
 func _input_hotbar(event: InputEvent) -> void:
 	if event.is_action_pressed("move_up"):
 		_move_active_or_bump(Vector2i.UP)
@@ -674,12 +685,37 @@ func _input_hotbar(event: InputEvent) -> void:
 	elif InputMap.has_action("end_turn") and event.is_action_pressed("end_turn"):
 		_activate_bar_slot(_bar_slot_index_of("end_turn"))
 		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("slot_prev") and event.is_action_pressed("slot_prev"):
+		_move_bar_cursor(-1)
+		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("slot_next") and event.is_action_pressed("slot_next"):
+		_move_bar_cursor(1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("confirm") and _bar_index >= 0:
+		_activate_bar_slot(_bar_index)
+		get_viewport().set_input_as_handled()
 	else:
 		var numbered := _numbered_slot_pressed(event)
 		if numbered >= 0:
 			_activate_bar_slot(numbered)
 			get_viewport().set_input_as_handled()
 	_refresh()
+
+
+## Controller support (S1): moves the HOTBAR-resting cursor by `delta` slots,
+## wrapping. A first press from the resting `-1` state lands on slot 0
+## (Attack) rather than wrapping past the end, matching how a fresh look at
+## the bar would start left-to-right. Mirrors `_activate_bar_slot`'s own
+## convention of keeping `_info_slot_index` in lockstep so the readout strip
+## explains whatever slot the cursor currently sits on.
+func _move_bar_cursor(delta: int) -> void:
+	if _bar_slots.is_empty():
+		return
+	if _bar_index < 0:
+		_bar_index = 0
+	else:
+		_bar_index = (_bar_index + delta + _bar_slots.size()) % _bar_slots.size()
+	_info_slot_index = _bar_index
 
 
 func _move_active_or_bump(dir: Vector2i) -> void:

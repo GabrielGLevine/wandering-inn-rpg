@@ -145,6 +145,13 @@ var _inventory: Node
 ## which field skill occupies a pressed slot -- the hotbar owns the slot list,
 ## keeping the key->skill mapping single-sourced with what the bar renders.
 var _field_hotbar: Node
+## Controller support (S1, issue #18): the field hotbar's pad-cursor index,
+## mirroring combat's `_bar_index` idiom (combat_screen.gd) -- `-1` = nothing
+## highlighted (v1's direct-fire resting state), `>= 0` = a slot the player
+## is hovering via `slot_prev`/`slot_next`, activated by `confirm`. Owned
+## here (not on `_field_hotbar`) for the same "screen owns selection, hotbar
+## only renders" split combat's `_bar_index` already follows.
+var _field_slot_index := -1
 ## The WIMain host, injected downward at spawn (M5 arch finding 3). M-BEAUTY
 ## R3: world.gd no longer calls `world_labels()` itself (field labels
 ## retired) -- kept for architectural symmetry with the other injected UI
@@ -281,6 +288,21 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("move_right"):
 		Game.sim.move_player(Vector2i.RIGHT)
 		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("slot_prev") and event.is_action_pressed("slot_prev"):
+		_move_field_slot_cursor(-1)
+		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("slot_next") and event.is_action_pressed("slot_next"):
+		_move_field_slot_cursor(1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("confirm") and _field_slot_index >= 0:
+		# Controller support (S1): activates the pad-hovered slot exactly as
+		# pressing its number key would -- same `use_skill_field` call, same
+		# "no field skill in that slot" no-op guard just below.
+		if _field_hotbar != null:
+			var skill_id := String(_field_hotbar.skill_for_slot(_field_slot_index + 1))
+			if skill_id != "":
+				Game.sim.use_skill_field(skill_id)
+		get_viewport().set_input_as_handled()
 	else:
 		# Three Pillars P2: field-skill hotbar direct-fire. Reuses combat's
 		# `hotbar_1..9` input actions; the pressed number maps through the field
@@ -296,6 +318,24 @@ func _unhandled_input(event: InputEvent) -> void:
 			if skill_id != "":
 				Game.sim.use_skill_field(skill_id)
 				get_viewport().set_input_as_handled()
+
+
+## Controller support (S1): moves the field hotbar's pad cursor by `delta`
+## slots, wrapping (mirrors combat's `_move_bar_cursor`). A first press from
+## the resting `-1` state lands on slot 0. No-ops when the bar is empty
+## (classless cold start -- `_field_hotbar.slot_count() == 0`) or the hotbar
+## ref hasn't been injected yet.
+func _move_field_slot_cursor(delta: int) -> void:
+	if _field_hotbar == null:
+		return
+	var count: int = _field_hotbar.slot_count()
+	if count <= 0:
+		return
+	if _field_slot_index < 0:
+		_field_slot_index = 0
+	else:
+		_field_slot_index = (_field_slot_index + delta + count) % count
+	_field_hotbar.set_selected(_field_slot_index)
 
 
 ## Which `hotbar_N` action (1..9) this event pressed, or -1 for none -- the same
@@ -1158,6 +1198,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 					_paint_ice_cell(tc_cell)
 				"scorched":
 					_spawn_burn_poof(tc_cell)
+	elif type in [WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED]:
+		# Controller support (S1): these are exactly the events
+		# `field_hotbar.gd`'s `_render()` re-derives the slot LIST on -- the
+		# pad cursor here must reset alongside it (a stale index could point
+		# past a shrunk list, or at a now-different skill on a same-size one).
+		_field_slot_index = -1
 
 
 func _move_player_visual(target: Vector2) -> void:

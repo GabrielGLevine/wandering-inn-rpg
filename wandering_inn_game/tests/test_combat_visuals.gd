@@ -64,7 +64,15 @@ func _init() -> void:
 	assert(raw_source.find("\"type\": \"move\"") == -1, "the interim unnumbered Move bar slot must be removed")
 	var hotbar_input_body := raw_source.get_slice("func _input_hotbar", 1).get_slice("func ", 0)
 	assert(hotbar_input_body.find("_move_active_or_bump") != -1, "hotbar-mode arrows must move the active unit directly")
-	assert(hotbar_input_body.find("confirm") == -1, "hotbar mode must not have an Enter-confirms-highlight branch (slots are number-key activated)")
+	# Controller support (S1, issue #18) deliberately reopened this: a pad has
+	# no number keys, so `slot_prev`/`slot_next` move a cursor into `_bar_index`
+	# and `confirm` activates whatever it points at. The M5 H2 contract this
+	# used to assert outright ("no Enter-confirms-highlight branch") still
+	# holds for KEYBOARD play -- `_bar_index` stays -1 unless a pad cursor
+	# press set it, so Enter alone (no prior slot_prev/next) remains inert,
+	# exactly as before. Assert the guard exists instead of banning "confirm"
+	# outright.
+	assert(hotbar_input_body.find("event.is_action_pressed(\"confirm\") and _bar_index >= 0") != -1, "hotbar mode's confirm branch must stay pad-cursor-gated -- unconditional Enter-confirms-highlight would break M5 H2's number-key-only keyboard contract")
 	# M5 arch: emit sites use WIEvents StringName consts (the bus string is
 	# unchanged -- WIEvents.UI_HOTBAR_RENDERED is &"ui_hotbar_rendered").
 	# ui_hotbar_rendered still fires from combat_screen.gd's own

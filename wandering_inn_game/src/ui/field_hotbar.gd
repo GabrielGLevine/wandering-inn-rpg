@@ -61,6 +61,13 @@ var _hotbar: WIHotbar
 ## queries `skill_for_slot(n)` against this same list, so a pressed number can
 ## never diverge from what the rendered slot shows.
 var _field_skills: Array = []
+## Controller support (S1, issue #18): the last slot-dict list `_render` built,
+## cached so `set_selected` can redraw with a different highlight WITHOUT
+## rebuilding the list or re-emitting UI_FIELD_HOTBAR_RENDERED (world.gd owns
+## the pad-cursor index, mirroring combat's `_bar_index` idiom -- this file
+## stays a pure renderer, same division of labor `_render`'s doc comment
+## already establishes for slot data vs. drawing).
+var _last_slots: Array = []
 
 
 func _ready() -> void:
@@ -87,6 +94,24 @@ func skill_for_slot(n: int) -> String:
 	if idx < 0 or idx >= _field_skills.size():
 		return ""
 	return String(_field_skills[idx])
+
+
+## Controller support (S1): count of slots currently shown -- world.gd bounds
+## its pad-cursor index against this before moving/confirming.
+func slot_count() -> int:
+	return _field_skills.size()
+
+
+## Controller support (S1): redraws the SAME slot list (`_last_slots`, built
+## by the last `_render()`) with a different highlighted index, for the
+## `slot_prev`/`slot_next` pad idiom. `-1` clears the highlight (the v1
+## direct-fire resting state `_render` itself uses). Deliberately does NOT
+## re-emit UI_FIELD_HOTBAR_RENDERED -- that event means "the slot LIST
+## changed", not "the highlight moved", so QA's pinned counts/payloads for it
+## are unaffected by pad navigation (no canonical script uses slot_prev/next
+## today; this is manual-pass-only per the plan).
+func set_selected(index: int) -> void:
+	_hotbar.render(_last_slots, index)
 
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
@@ -133,6 +158,7 @@ func _render() -> void:
 		})
 		readout_lines.append("%d  %s" % [number, _readout_line(sk, id, combatants_catalog)])
 		number += 1
+	_last_slots = slots
 	_hotbar.render(slots, -1)
 	ObservableBus.emit_domain_event(WIEvents.UI_FIELD_HOTBAR_RENDERED, {"slots": _field_skills.size(), "readout_lines": readout_lines})
 
