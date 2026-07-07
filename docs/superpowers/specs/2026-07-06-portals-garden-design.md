@@ -1,4 +1,4 @@
-# 8a — [Door of Portals] + [Garden of Sanctuary] (DESIGN)
+# 8a — The Magical Door + [Garden of Sanctuary] (DESIGN)
 
 Status: earn-shape user-ratified 2026-07-06 (story-earned at arcs).
 Fable-authored with art/quest/dialogue direction. Task plan at boundary.

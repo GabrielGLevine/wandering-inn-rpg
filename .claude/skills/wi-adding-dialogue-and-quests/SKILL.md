@@ -114,6 +114,18 @@ on a hub follow-up, stranding the player.
 `classes` dict), `wi-verifying-changes` (gates to run), `wi-art-and-sprites`
 (dialogue panel rendering, if visuals are touched).
 
+## SPOILER CUTOFF: Book 17 bar, Volume 7 advertised (user, 2026-07-07)
+`docs/design/spoiler-cutoff.md` is BINDING on all content. TWO TIERS:
+NEW content must not introduce anything entering the story after
+**Book 17** (*Garden of Sanctuary*, Vol 7 Part 1); existing/planned
+content as of 2026-07-07 (incl. Wilovan/Ratici in 8c) is grandfathered,
+and the ADVERTISED cutoff is through Volume 7 to cover it. Every wiki
+canon-check must also check WHEN the item enters the story (past the
+Book-17 slice = fails for new content; ambiguous timing = treat as
+past the cutoff or re-flag). Known trap already caught: the
+portal-Skill name is Vol 9 — the game says "the Magical Door", never
+that name.
+
 ## Character profiles are the writing contract (2026-07-06)
 `docs/design/character-profiles.md` = single source of truth per
 character (species/palette/silhouette + the 3 voice notes + canon
@@ -155,7 +167,7 @@ task reviewer's standing hunt), against the character's profile voice:
   interruption (a real self-interruption or turn, not rhythm
   decoration). The corpus-wide reduction pass LANDED 2026-07-07 (155
   pairs + 28 earned keeps, staged in
-  docs/design/emdash-reduction-staging.md); hold every NEW line to this
+  docs/archive/staging/emdash-reduction-staging.md); hold every NEW line to this
   bar. Label-separator dashes (keybind hints, `[Skill] — body` builders)
   are convention, EXEMPT from the budget.
 - **Em-dashes hide as `—` escapes** (skeleton_scene.json + some QA

@@ -9,6 +9,11 @@ merge, and evolve while you sleep.
 **[▶ Play the demo](#)** *(itch.io link lands with the first public release)*
 — runs in your browser; saves live in your browser on this device.
 
+**Spoilers:** safe for readers caught up through **Volume 7** of the web
+serial (ebooks: through the Volume 7 books). The game isn't set at any
+single moment in the story — it draws characters, places, and Skills
+from across Volumes 1–7, and never references anything past that line.
+
 ## The pitch
 
 - **Classes find you.** No class-select screen. Spar with a guardsman and

@@ -93,8 +93,8 @@ Dark Cellar). Spec-ratify the open calls with the user → plan →
 execute. Every interior ships a mechanical surface, never an empty room.
 
 **8. THE EXPANSIONS (user-seeded, canon-anchored — each a content-wave-
-class milestone; [Door of Portals] is the shared front door):**
-- **8a. [Door of Portals] + [Garden of Sanctuary]** (the unlock
+class milestone; the Magical Door is the shared front door):**
+- **8a. The Magical Door + [Garden of Sanctuary]** (the unlock
   mechanism first): the inn's magic door as the earned access gate to
   expansion maps + Liscor fast travel (door_when/act machinery scales);
   the Garden as an earned sanctuary space in the inn. Spec-brainstorm
