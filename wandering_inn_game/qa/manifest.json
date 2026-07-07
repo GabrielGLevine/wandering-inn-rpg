@@ -48,6 +48,7 @@
     { "script": "climax_seal", "seed": 9, "fixture": "climax_sealed_start", "note": "the seal beat + journal Act III advance" },
     { "script": "arc_flow", "seed": 9, "fixture": "near_act3", "note": "THE WHOLE ACT III ARC PROOF, tremor through epilogue" },
     { "script": "status_first_encounter", "seed": 9, "fixture": "near_mage_cast", "note": "status glossary + first-encounter combat-feed surface" },
+    { "script": "ice_floor_loop", "seed": 9, "fixture": "near_ice_floor", "note": "GH#21: [Ice Floor] area terrain effect -- cast/friendly-fire/standing-slow/expiry, live" },
     { "script": "gear_loop", "seed": 9, "fixture": "gear_loop_start", "note": "resonance-gear UI proof (accessory rows, capacity refusal)" },
     { "script": "stealth_loop", "seed": 9, "fixture": "near_ambush_sneak", "note": "the [Stealth] seam: skip an ambush, break it, positive control" },
     { "script": "rogue_earn_loop", "seed": 9, "fixture": "near_rogue", "note": "K3 [Rogue] earn: recovered_crate_watch -> sleep -> class_gained -> [Stealth] fielded" },

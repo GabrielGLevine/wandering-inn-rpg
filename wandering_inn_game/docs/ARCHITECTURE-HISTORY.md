@@ -1290,3 +1290,117 @@ The seam RIDES DP2's bounty machinery — extended, never forked:
   step (9) proves it: a second, failure-free sleep, positive (fires once)
   + negative (does not re-fire on a second same-waking talk) pair,
   mirroring step (8)'s convention for the failure bark.
+
+### GH#21: [Ice Floor] area terrain effect (2026-07-07)
+
+`icy_floor` (ice_mage L10 grant) had been a ghost skill since the
+M-LEGIBILITY fix wave: castable in data, no `resolve_active` resolver, its
+card suppressed to a bare "Name — description" (see the M-LEGIBILITY
+section above). GH#21 wires it for real, closing the last item in that
+disclosure.
+
+- **Sim state (`WICombat.terrain`, `src/core/combat/wi_combat.gd`)**: a
+  `Vector2i cell -> {"kind":"icy_floor", "expires_after_round":int,
+  "applies":Dictionary}` map. NOT save-persisted (combat state never is —
+  a combat is always mid-encounter). Populated only by the resolver below;
+  purged by `_advance_turn`'s round-rollover branch
+  (`_purge_expired_terrain`, called right after `round_number` advances
+  and `ROUND_STARTED` emits): a cell cast at round N with
+  `duration_rounds` D carries `expires_after_round = N+D-1` ("icy through
+  end of round N+duration-1"), purged the next time `round_number` moves
+  past it. Purged cells are batched into ONE `TERRAIN_EXPIRED` emit per
+  kind (today only `icy_floor` exists, so always at most one per
+  rollover), mirroring `TERRAIN_ADDED`'s batched-cells-per-cast shape.
+  `snapshot()` exposes it as `{"terrain": {kind: [[x,y],...] sorted}}`
+  (empty dict when unused).
+- **Resolver (`WISkillEffects._resolve_icy_floor`,
+  `src/core/combat/skill_effects.gd`)**: reached via a new `"icy_floor"`
+  arm in `resolve_active`'s enemy-gated `match` — the target must already
+  be a living ENEMY (the existing same-side gate enforces this, exactly
+  like `spell_damage`/`damage_mult`), so no NEW cell-targeting UI mode was
+  actually needed — the K4 finding that flagged this as "not a clean fit"
+  assumed the cast would aim at a bare cell; instead it aims at a
+  combatant id, same as every other active skill, and the blast area is
+  DERIVED from that target's cell. Gates BEFORE spend, mirroring
+  `spell_damage` exactly: Chebyshev range check refuses silently, then a
+  LoS check emits `ACTION_REFUSED{reason:"no_los"}` and refuses — a
+  refused cast spends neither AP nor MP. On success: the area is every
+  cell within Chebyshev `effect.radius` of the TARGET's cell (not the
+  caster's), clipped to grid bounds, excluding `blocked` cells (walls
+  don't glaze); occupied cells are included, and the CASTER's own cell
+  can land in the area when targeting an adjacent foe [D: friendly fire
+  is real, deliberate — proven by `test_combat_sim.gd`'s ally-in-the-blast
+  case]. Every area cell is registered into `terrain` (a re-cast at the
+  same cells flat-refreshes the dict entry in place — the same idiom
+  `_apply_status_from_effect` already uses for statuses, not a stack).
+  Emits `SKILL_RESOLVED{actor,skill,target,cells}` then
+  `TERRAIN_ADDED{kind,cells,rounds}` (cells sorted x-then-y for
+  determinism via a shared `WICombat._cell_less_than` comparator), then
+  applies `effect.applies` (icy_floor's `slowed`) to every LIVING occupant
+  of the area regardless of side, reusing
+  `WISkillEffects._apply_status_from_effect` per occupant. No damage, no
+  rng consumption anywhere in this path — seed-safe, so
+  `sim_combat_batch.gd`'s balance harness is byte-identical before/after
+  (no cell fields touch its fixed rosters).
+- **Standing/stepping penalty, two call sites**: a new helper,
+  `WICombat._apply_terrain_status(c)`, applies the terrain entry's
+  `applies` statuses (if any) at `c`'s CURRENT cell — a no-op when the
+  cell carries no entry, which is EVERY existing fight's entire duration
+  (the zero-behavior-change proof: the full unit suite and canonical QA
+  sweep are unchanged byte-for-byte). Called from `move_active` right
+  after the cell update (stepping onto ice mid-turn applies the status
+  immediately, biting at the NEXT turn start via the existing `slowed`
+  machinery) and from `_start_turn`, right after `c["statuses"]` is
+  fetched but BEFORE the pre-existing `statuses.has("slowed")`
+  consume-block — so a combatant STARTING its turn already standing on
+  ice gets the penalty THIS turn: applied then immediately consumed by
+  the same machinery, `STATUS_APPLIED` and `STATUS_EXPIRED` both firing
+  in the same turn (an accepted design call — the event trail stays
+  truthful about what actually happened rather than hiding the
+  turn-start reapplication).
+- **Presentation**: `board_renderer.gd` gained a persistent per-cell
+  overlay (`add_terrain`/`expire_terrain`, one semi-transparent
+  `ColorRect` per cell, `ICY_FLOOR_COLOR` — combat_screen's `FROST_FLASH`
+  RGB at a lower persistent alpha) — unlike `flash_cells`' one-shot tween,
+  these stay on the board until expired. A `COMBATANT_Z` z-index split
+  (combatant holders now explicit z_index 1, terrain overlays default 0)
+  guarantees terrain renders above the floor/decor but below every
+  combatant regardless of scene-tree add order (overlays are added
+  dynamically mid-combat, after `build()`'s own children already exist).
+  `add_terrain` emits `UI_TERRAIN_RENDERED` (the ui_*_rendered
+  confirmation idiom); `expire_terrain` does not (only the add side rides
+  it — `TERRAIN_EXPIRED` is the QA-visible signal for the other half).
+  `combat_screen.gd`: `TERRAIN_ADDED`/`TERRAIN_EXPIRED` joined
+  `AI_PLAYBACK_TYPES` (the TRAP this const's own doc comment warns about —
+  `TERRAIN_EXPIRED` fires at round rollover, which can happen MID an AI
+  turn) and the live-path dispatch match; `_play_event_visual` routes both
+  to the renderer methods. `icy_floor`'s `SKILL_RESOLVED` also flashes its
+  `cells` payload in `FROST_FLASH` (`_skill_flash_color` widened to
+  recognize the `icy_floor` effect type; `_skill_flash_cells` needed no
+  change — the payload already carries `cells`, the exact shape
+  `line_damage` already established).
+- **Legibility**: `effect_text.gd`'s `icy_floor` arm now generates
+  `"glaze a %d×%d patch of ground at range %d for %d rounds"` from
+  `effect.{radius,range,duration_rounds}` (patch side = `radius*2+1`) —
+  the exact card `"2 AP, 4 MP — glaze a 3×3 patch of ground at range 3
+  for 2 rounds. Slows."` The trailing "Slows." rides the existing
+  `_status_suffix` machinery unchanged.
+- **AI unchanged, deliberately**: `WICombatAI` only ever selects
+  `line_damage`/`spell_damage` types, so it never casts `icy_floor`; no
+  shipped enemy holds it; the PC's own autoplay profile is melee. The
+  feature is player-only today.
+- **QA**: `ice_floor_loop` (fixture `near_ice_floor`, classes
+  `{ice_mage:10}` — VERIFIED via the `inherits` chain to auto-grant
+  `frost_bolt`/`quick_cast`/`light`/`ice_shard`/`icy_floor` with zero
+  hand-stuffed `player_skills`) walks the same fixture→Relc→spar→
+  training_yard route `status_first_encounter` established: casts
+  `icy_floor` on a training dummy (asserting `skill_resolved`,
+  `terrain_added`, `status_applied`, `ui_terrain_rendered`, and the exact
+  `combat.terrain.icy_floor` cell list), steps the PC onto the blast the
+  same turn, ends turn, and pins the NEXT `turn_started{move_pool:1}` (the
+  standing-slow proof, live); then idles past expiry to pin
+  `terrain_expired` + a subsequent full-pool `turn_started`; then
+  `combat_autoplay`s to victory. `tests/test_combat_sim.gd` covers the
+  sim rules directly (range/LoS refusal spend nothing, walls/bounds
+  exclusion, friendly fire both sides, persistence across the exact
+  round window, flat refresh on re-cast, and the empty-terrain no-op).

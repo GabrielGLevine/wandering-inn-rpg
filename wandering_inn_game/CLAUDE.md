@@ -148,6 +148,18 @@ current-state-only, one short paragraph per live system.
   than firing instantly. Full detail: "Combat (M1)" / "Combat depth (M3)" /
   "Combat controls" / "Combat presentation components (M6.5)" blocks in
   `docs/ARCHITECTURE-HISTORY.md`.
+  **Area terrain (GH#21, [Ice Floor]):** `WICombat.terrain` is a
+  `Vector2i cell -> {kind, expires_after_round, applies}` map, populated
+  only by `WISkillEffects.resolve_active`'s `icy_floor` arm (a
+  Chebyshev-radius blast around the TARGET's cell, walls/out-of-bounds
+  excluded) and purged in `_advance_turn`'s round-rollover branch. Standing
+  on or stepping onto a terrain cell applies its `applies` statuses via
+  `_apply_terrain_status` (two call sites: `move_active`, `_start_turn`) —
+  every existing fight leaves `terrain` empty for its whole duration, so
+  this is a guaranteed no-op elsewhere (`sim_combat_batch.gd` is
+  byte-identical before/after). AI never selects it (`WICombatAI` only
+  ever picks `line_damage`/`spell_damage`), so it is player-only today.
+  `ice_floor_loop` is the canonical proof.
 - **Progression (`src/core/progression.gd`)** — ACCOMPLISHMENT-COUNTER
   driven (doing `[X]` things levels `[X]`, never chosen), resolved only at
   the sleep beat in order: class gains → level-ups → consolidation offer →
@@ -248,12 +260,15 @@ current-state-only, one short paragraph per live system.
   never drift from the data it describes. Skills Wave Task K4 wired real sim
   consumers for `heal` (second_wind's self-only heal, capped at max_hp) and
   `move_pool_bonus` at 0 AP cost (quick_movement/battlefield_awareness, a
-  real turn-start passive) — both cards are un-suppressed now. `icy_floor`
-  remains suppressed to a bare "Name — description": K4 assessed its area-
-  terrain machinery (a new cell-targeting mode plus round-persistent
-  terrain-effect state) as not a clean fit and skipped it rather than
-  half-ship it. Full detail: "M-LEGIBILITY (L1-L5)" block in
-  `docs/ARCHITECTURE-HISTORY.md`.
+  real turn-start passive) — both cards are un-suppressed now. GH#21 wired
+  the last ghost skill, `icy_floor`: the "new cell-targeting mode" K4
+  worried about turned out unnecessary (the cast still targets a
+  combatant id, same as every other active skill — the area is derived
+  FROM that target's cell, not aimed at a bare cell), so the card now
+  generates "N AP, N MP — glaze an RxR patch of ground at range R for N
+  rounds. Slows." from `effect.{range,radius,duration_rounds,applies}`.
+  Full detail: "M-LEGIBILITY (L1-L5)" and "GH#21 [Ice Floor] area terrain
+  effect" blocks in `docs/ARCHITECTURE-HISTORY.md`.
 - **Art pipeline (`WISpriteRegistry`, `src/world/`, M4)** — builds
   SpriteFrames/TileSets from `data/sprites.json`/`data/biomes.json`.
   Committed curated extracts live in `assets/` (licenses in
@@ -314,6 +329,7 @@ current-state-only, one short paragraph per live system.
 | `climax_seal` | 9 (fixture `climax_sealed_start`) | the seal beat + journal Act III advance |
 | `arc_flow` | 9 (fixture `near_act3`) | THE WHOLE ACT III ARC PROOF, tremor through epilogue |
 | `status_first_encounter` | 9 (fixture `near_mage_cast`) | status glossary + first-encounter combat-feed surface |
+| `ice_floor_loop` | 9 (fixture `near_ice_floor`) | GH#21: [Ice Floor] area terrain effect -- cast/friendly-fire/standing-slow/expiry, live |
 | `gear_loop` | 9 (fixture `gear_loop_start`) | resonance-gear UI proof (accessory rows, capacity refusal) |
 | `stealth_loop` | 9 (fixture `near_ambush_sneak`) | the [Stealth] seam: skip an ambush, break it, positive control |
 | `rogue_earn_loop` | 9 (fixture `near_rogue`) | K3 [Rogue] earn: `recovered_crate_watch` -> sleep -> `class_gained` -> [Stealth] fielded |
