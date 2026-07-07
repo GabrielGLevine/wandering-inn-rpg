@@ -740,6 +740,23 @@
    }
   },
   {
+   "_comment": "M-GEAR Task G2 (HAZARD 2): the hub's seal option now also grants moon_bone_amulet.",
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "item": "moon_bone_amulet"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Got: Moon-Bone Amulet"
+   }
+  },
+  {
    "action": "wait_frames",
    "frames": 3
   },

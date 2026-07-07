@@ -3241,7 +3241,7 @@
      ]
     },
     {
-     "_comment": "The Shield Spider nest -- Quest 1 'Something in the Cisterns' FIGHT path (C3 wires the quest; on_victory banks cleared_the_nest for C3 to read). Interact-only (no trigger_radius) so C3's SKILL path can [Observe] the nest without triggering combat.",
+     "_comment": "The Shield Spider nest -- Quest 1 'Something in the Cisterns' FIGHT path (C3 wires the quest; on_victory banks cleared_the_nest for C3 to read). Interact-only (no trigger_radius) so C3's SKILL path can [Observe] the nest without triggering combat. M-GEAR Task G2 (HAZARD 2): phosphor_pendant loot rides the sewers-phosphor prop fiction. This encounter carried NO loot table before G2 (confirmed by grep), so the new table is purely additive -- no prior loot draw exists at any pinned seed for this entity to disturb. Loot RNG is isolated (hash(run_seed, encounter_id), M7), so this can never shift the main event stream or any OTHER encounter's draw. Chance 0.3 is a G2 pick (the staging doc names the source but not a chance value) -- mid-range between the shipped 0.25/0.5 precedents.",
      "id": "shield_spiders",
      "kind": "encounter",
      "cell": [
@@ -3265,6 +3265,12 @@
      "on_victory": [
       "cleared_the_nest",
       "resolved_the_cisterns"
+     ],
+     "loot": [
+      {
+       "item": "phosphor_pendant",
+       "chance": 0.3
+      }
      ]
     },
     {

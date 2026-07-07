@@ -87,13 +87,31 @@ var pending_consolidation: Dictionary = {}
 ## -- an id appears at most once; `pickup` is idempotent on a repeat pickup
 ## of an already-carried item. Additive save field (v5, see save.gd).
 var inventory: Array[String] = []
-## Currently equipped items by slot, `{"weapon": id, "armor": id}` -- `""`
-## means the slot is empty (M7 §2). INVARIANT: every non-empty value here is
-## also present in `inventory` -- `equip()` enforces this by requiring
-## possession before equipping, and nothing in this milestone ever removes
-## an item from `inventory` while it is equipped, so the invariant can never
-## be broken by the sim's own API surface. Additive save field (v5).
-var equipped: Dictionary = {"weapon": "", "armor": ""}
+## Currently equipped items by slot, `{"weapon": id, "armor": id,
+## "accessory_1": id, "accessory_2": id, "accessory_3": id}` -- `""` means the
+## slot is empty (M7 §2; M-GEAR Task G1 added the three accessory slots).
+## INVARIANT: every non-empty value here is also present in `inventory` --
+## `equip()` enforces this by requiring possession before equipping, and
+## nothing in this milestone ever removes an item from `inventory` while it
+## is equipped, so the invariant can never be broken by the sim's own API
+## surface. Additive save field (v5) -- the three accessory keys are read
+## TOLERANTLY (`.get(key, "")`), so a pre-G1 save/scene-config carrying only
+## the original 2-key shape restores exactly as if it always had three empty
+## accessory slots (no migration, no version bump; see save.gd).
+var equipped: Dictionary = {"weapon": "", "armor": "", "accessory_1": "", "accessory_2": "", "accessory_3": ""}
+## M-GEAR Task G1: the PC's resonance budget -- a VISIBLE currency (like gold/
+## HP: fine in toasts/events/copy, never a raw hidden stat) that caps how much
+## combined `data/items.json` "resonance" an equipped loadout may carry across
+## ALL 5 slots (weapon/armor/accessory_1-3 alike -- data decides whether a
+## weapon or armor entry carries a nonzero resonance too, the sim just sums
+## whatever `item()` reports). Every M7-era item is uncatalogued for
+## `resonance` and counts 0 (`item(id).get("resonance", 0)`), so this budget
+## is inert today; G2 is the first task that ships items with a real nonzero
+## value. Default 2. Capacity GROWTH is a later beat -- this field exists and
+## round-trips (additive-optional save field, tolerant default 2, NO version
+## bump -- the generalist_classes/gold precedent) but nothing in this
+## milestone ever mutates it.
+var resonance_capacity: int = 2
 ## Container entity id -> true once its `contains` list has been emptied by
 ## an interact. M7 Task E2 declares and persists this shape only -- the
 ## interact-side logic that populates it is Task E3's. Additive save field (v5).
@@ -214,7 +232,13 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	for it: Variant in p.get("inventory", []):
 		inventory.append(String(it))
 	var eq_raw: Dictionary = p.get("equipped", {})
-	equipped = {"weapon": String(eq_raw.get("weapon", "")), "armor": String(eq_raw.get("armor", ""))}
+	equipped = {
+		"weapon": String(eq_raw.get("weapon", "")),
+		"armor": String(eq_raw.get("armor", "")),
+		"accessory_1": String(eq_raw.get("accessory_1", "")),
+		"accessory_2": String(eq_raw.get("accessory_2", "")),
+		"accessory_3": String(eq_raw.get("accessory_3", "")),
+	}
 	for map_id: String in scene_config["maps"]:
 		var m: Dictionary = scene_config["maps"][map_id]
 		var ents := {}
@@ -1219,13 +1243,27 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	# fields wi_combat.gd's constructor/hit-resolution reads (see that file's
 	# _init/_resolve_hit/_deduct_hp). `known_skills()`/`skills_journal()`
 	# deliberately do NOT apply this filter -- knowledge is not fieldability.
+	# M-GEAR Task G1: the three equipped accessories fold their own
+	# hp_mod/damage_mod/damage_reduction into these SAME three fields (summed
+	# alongside the weapon/armor contribution) -- NO new combat field, no
+	# change to wi_combat.gd's read side; an item without one of these keys
+	# (every M7-era item, and every accessory until G2 ships real values)
+	# contributes 0, so this is behaviorally inert until G2 lands.
 	var kit: Array = WIProgression.granted_skills(classes, _combat_config["classes"], generalist_classes)
 	var weapon := item(String(equipped.get("weapon", "")))
 	pc["skills"] = _weapon_gated_kit(kit, String(weapon.get("weapon_family", "")))
-	pc["damage_mod"] = int(weapon.get("damage_mod", 0))
 	var armor := item(String(equipped.get("armor", "")))
-	pc["hp_mod"] = int(armor.get("hp_mod", 0))
-	pc["damage_reduction"] = int(armor.get("damage_reduction", 0))
+	var dmg_mod := int(weapon.get("damage_mod", 0))
+	var hp_mod := int(armor.get("hp_mod", 0))
+	var dmg_reduction := int(armor.get("damage_reduction", 0))
+	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
+		var acc := item(String(equipped.get(slot_name, "")))
+		dmg_mod += int(acc.get("damage_mod", 0))
+		hp_mod += int(acc.get("hp_mod", 0))
+		dmg_reduction += int(acc.get("damage_reduction", 0))
+	pc["damage_mod"] = dmg_mod
+	pc["hp_mod"] = hp_mod
+	pc["damage_reduction"] = dmg_reduction
 	return pc
 
 
@@ -1277,13 +1315,43 @@ func pickup(item_id: String, source_id: String) -> bool:
 	return true
 
 
-## Equips a carried item into its own kind's slot ("weapon" or "armor"),
+## Sums `item(id).resonance` (default 0 -- every M7-era item, uncatalogued
+## until G2) across all 5 currently equipped slots (M-GEAR Task G1). Pure
+## reader, no rng, no emit -- `equip()`'s capacity gate is the only caller.
+func _equipped_resonance_total() -> int:
+	var total := 0
+	for slot_name: String in equipped:
+		total += int(item(String(equipped[slot_name])).get("resonance", 0))
+	return total
+
+
+## Refusal copy (M-GEAR Task G1, PLACEHOLDER -- user picks final copy from
+## docs/design/gear-staging/item-lore-and-accessory-roster.md §C; both are
+## voice-lint clean and diegetic, no "capacity"/"slot" vocabulary, no raw
+## stats -- resonance itself is a visible currency like gold/HP, fine to
+## reference, but the arithmetic stays off-screen).
+const _CAPACITY_REFUSAL_TOAST := "The charm's hum turns to static. You cannot bear another enchantment."
+const _ACCESSORY_SLOTS_FULL_TOAST := "No room left for another charm — something has to come off first."
+
+
+## Equips a carried item into its own kind's slot ("weapon", "armor", or --
+## M-GEAR Task G1 -- the first EMPTY "accessory_1"/"accessory_2"/"accessory_3"),
 ## validating kind and possession. Field-only (spec §2: "no mid-combat
 ## swaps") -- refuses while a fight is active; the combat build reads
 ## equipment once at start_combat, so a live fight is never retroactively
 ## affected either way, but refusing keeps the sim from silently accepting
 ## an action the spec declares unavailable. Maintains the `equipped` ⊆
 ## `inventory` invariant by construction (possession is required first).
+## G1 adds two NEW diegetic refusals (each a distinct toast, both leave
+## `equipped`/`inventory` untouched and emit no `item_equipped`): equipping a
+## 4th accessory when all three slots are full ("no free slot" --
+## `_ACCESSORY_SLOTS_FULL_TOAST`, checked FIRST for accessory kind, before
+## resonance is even considered), and equipping into a free/replaceable slot
+## whose resulting total resonance (every equipped item's `resonance`, summed
+## across all 5 slots, replacing whatever currently occupies the target slot)
+## would exceed `resonance_capacity` ("magical interference" --
+## `_CAPACITY_REFUSAL_TOAST`). Unequipping frees the departing item's
+## resonance back into the budget (see `unequip`).
 func equip(item_id: String) -> bool:
 	if combat != null:
 		return false
@@ -1293,22 +1361,50 @@ func equip(item_id: String) -> bool:
 	if rec.is_empty():
 		return false
 	var kind := String(rec.get("kind", ""))
-	if kind != "weapon" and kind != "armor":
+	if kind != "weapon" and kind != "armor" and kind != "accessory":
 		return false
-	equipped[kind] = item_id
-	_emit(WIEvents.ITEM_EQUIPPED, {"item": item_id, "slot": kind})
+	var target_slot := kind
+	if kind == "accessory":
+		# G1 review fix: an item already worn in ANY accessory slot must not
+		# equip AGAIN into a second empty one -- the resonance sum and the
+		# combat-build fold both iterate all three slots, so a duplicate id
+		# would double that item's contribution. Silent false, same idiom as
+		# the possession/kind guards above (G3's UI greys equipped entries).
+		for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
+			if String(equipped.get(slot_name, "")) == item_id:
+				return false
+		target_slot = ""
+		for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
+			if String(equipped.get(slot_name, "")) == "":
+				target_slot = slot_name
+				break
+		if target_slot == "":
+			_emit(WIEvents.TOAST, {"text": _ACCESSORY_SLOTS_FULL_TOAST})
+			return false
+	var displaced_resonance := int(item(String(equipped.get(target_slot, ""))).get("resonance", 0))
+	var would_be_total := _equipped_resonance_total() - displaced_resonance + int(rec.get("resonance", 0))
+	if would_be_total > resonance_capacity:
+		_emit(WIEvents.TOAST, {"text": _CAPACITY_REFUSAL_TOAST})
+		return false
+	equipped[target_slot] = item_id
+	_emit(WIEvents.ITEM_EQUIPPED, {"item": item_id, "slot": target_slot})
 	return true
 
 
-## Clears a slot ("weapon" or "armor") back to "" -- unequipping the weapon
-## is the deliberate-unarmed path (spec §2: base attack + untagged skills
-## only at the next combat build). Field-only, same guard as equip(). A safe
-## no-op (returns false, emits nothing) on an unknown slot name or a slot
-## that's already empty.
+## Clears a slot ("weapon", "armor", or one of the three M-GEAR Task G1
+## accessory slots) back to "" -- unequipping the weapon is the deliberate-
+## unarmed path (spec §2: base attack + untagged skills only at the next
+## combat build); unequipping an accessory frees its resonance back into the
+## budget for the NEXT equip() call (the sum is always recomputed live from
+## whatever `equipped` currently holds, so freeing needs no bookkeeping of
+## its own). Field-only, same guard as equip(). A safe no-op (returns false,
+## emits nothing) on an unknown slot name or a slot that's already empty --
+## `equipped.has(slot)` is the validity check since `equipped`'s key set IS
+## exactly the five valid slot names, always.
 func unequip(slot: String) -> bool:
 	if combat != null:
 		return false
-	if slot != "weapon" and slot != "armor":
+	if not equipped.has(slot):
 		return false
 	if String(equipped.get(slot, "")) == "":
 		return false

@@ -50,6 +50,8 @@
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "watch_swept_cisterns" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "cisterns", "beat": 1 }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "entity_removed", "payload_contains": { "id": "shield_spiders" }, "timeout_sec": 5 },
+  { "_comment": "M-GEAR Task G2 (HAZARD 2): the sweep_argue winning option now also grants watch_token (item effects append after remove_entity in the effects array, so this fires last, in emission order).", "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "watch_token" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Got: Watch Token" }, "timeout_sec": 5 },
   { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "resolved_the_cisterns" } },
   { "_comment": "swept node: cursor 0 back to hub, cursor 1 'Appreciated.' ends. Take 'Appreciated.'", "action": "wait_frames", "frames": 3 },
   { "action": "move", "direction": "down", "steps": 1 },

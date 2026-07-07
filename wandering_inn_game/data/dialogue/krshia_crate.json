@@ -19,7 +19,17 @@
 			{ "text": "That Silverfang hunting knife — good steel. (15 gold)", "requires": { "gold": 15 }, "effects": [ { "gold": -15 }, { "item": "gnollish_hunting_knife" } ], "goto": "bought" },
 			{ "text": "The wool-lined cloak. The wet gets in, out on the road. (18 gold)", "requires": { "gold": 18 }, "effects": [ { "gold": -18 }, { "item": "wool_lined_cloak" } ], "goto": "bought" },
 			{ "text": "The boiled-leather jerkin. (24 gold)", "requires": { "gold": 24 }, "effects": [ { "gold": -24 }, { "item": "leather_jerkin" } ], "goto": "bought" },
+			{ "text": "Show me the charms.", "goto": "charms" },
 			{ "text": "Nothing today.", "goto": "hub" }
+		] },
+		"charms": { "speaker": "Krshia", "text": "Hrr. The charmed stock — costs more because it does more. Wear too much of it at once and it starts to argue with itself, so choose with sense. Coin on the counter, same as the rest.", "_comment": "M-GEAR Task G2 (HAZARD 1): the 6 new accessories/tools that would have overflowed 'shop' past its grown-panel bound. Same buy contract as 'shop' (requires:{gold:price} + effects:[{gold:-price},{item:id}]), cheapest-first ordering matching the shop's own convention, price named in each option's own text (the L5 dedup in dialogue.gd's _item_effect_lines strips WIEffectText's 'Worth N gold' line from the rendered effect_lines because the price is already spelled here). 'Back to the regular stall.' is the required fully-ungated exit (no requires/hide_when) back to 'shop'.", "options": [
+			{ "text": "That copper ring — can't hurt. (4 gold)", "requires": { "gold": 4 }, "effects": [ { "gold": -4 }, { "item": "copper_luck_band" } ], "goto": "bought" },
+			{ "text": "The handline, for the pond. (4 gold)", "requires": { "gold": 4 }, "effects": [ { "gold": -4 }, { "item": "fishers_handline" } ], "goto": "bought" },
+			{ "text": "The whetstone. (5 gold)", "requires": { "gold": 5 }, "effects": [ { "gold": -5 }, { "item": "field_whetstone" } ], "goto": "bought" },
+			{ "text": "The wax-sealed ward, then. (9 gold)", "requires": { "gold": 9 }, "effects": [ { "gold": -9 }, { "item": "hedge_ward_charm" } ], "goto": "bought" },
+			{ "text": "The silver-capped fang. (14 gold)", "requires": { "gold": 14 }, "effects": [ { "gold": -14 }, { "item": "hunters_fang_talisman" } ], "goto": "bought" },
+			{ "text": "The stone-scale — the one under the counter. (35 gold)", "requires": { "gold": 35 }, "effects": [ { "gold": -35 }, { "item": "stonescale_talisman" } ], "goto": "bought" },
+			{ "text": "Back to the regular stall.", "goto": "shop" }
 		] },
 		"bought": { "speaker": "Krshia", "text": "Sold. Wear it, use it — and do not bring it back to me broken expecting sympathy. Anything else catch your eye?", "options": [
 			{ "text": "Show me the stall again.", "goto": "shop" },

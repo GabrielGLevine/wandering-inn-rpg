@@ -28,6 +28,37 @@
 **Tests:** trigger-skip while sneaking; break conditions; combat read.
 **QA:** new canonical `stealth_loop` (sneak past the ambush zone — the tutorial ambush is corridor-free BY DESIGN for onboarding: verify the skill arrives POST-onboarding [class-gated] so the mandatory tutorial fight stays mandatory for fresh players — trace the gained_by class level; this is the wave's one design-tension, resolve toward onboarding integrity).
 
+### Task K2b: hotbar loadout management (overflow — user-raised 2026-07-06)
+
+**Why now:** known field skills already hit 8/9 slots on a maxed multiclass
+(Three Pillars watch item); K3's new Skills overflow both bars. Number keys
+top out at 9 (`hotbar_1..9`). Must land BEFORE K3 widens the kits.
+
+**Model (recommended, ⚑ user may override — see HANDOFF queue):**
+player-managed SLOTTED LIST, shared shape across both bars:
+- New sim field `hotbar_loadout: Array[String]` (ordered skill ids, additive
+  save, tolerant default `[]` = AUTO mode: fill in the current derivation
+  order, exactly today's behavior — zero change until the player first
+  customizes; a loadout never grants anything, it's a VIEW onto known/kit
+  skills, invalid ids filtered on read).
+- Field bar renders `loadout ∩ known field skills` (AUTO when empty);
+  combat bar keeps slots 1/2 fixed (Attack/Dash) and renders
+  `loadout ∩ fielded kit` into 3..9 (AUTO when empty).
+- Assignment UI lives in the JOURNAL skills panel (the only place all known
+  skills are already listed): a assign/unassign toggle per skill row +
+  reorder; keyboard-driven; emits `ui_loadout_changed` + re-renders both
+  bars via the existing render triggers.
+- A skill KNOWN but unslotted is still usable in combat targeting? NO —
+  slots are the verb surface; unslotted = not fielded that fight (combat
+  build unchanged, only the bar view filters). Disclose this clearly on the
+  journal UI ("Slotted skills appear on your bars").
+- Sim purity: the loadout is pure state + pure filters; UI renders.
+**Tests:** loadout round-trip; AUTO default byte-parity with today's order;
+invalid-id filter; combat bar 1/2 pinned.
+**QA:** extend `field_skills_loop` (assign/unassign through the real journal
+UI, bar re-renders with the chosen subset, number key fires the REMAPPED
+slot); combat canonical re-pin only if slot text moves (disclose).
+
 ### Task K3: the new Skills (capability table → kits)
 
 **Files:** data/skills.json + classes.json — wiki-verify + ship: movement ([Quick Movement]-class: field = brief speed state [move-repeat rate], combat = +move pool), stealth ([Stealth] per K2 — which class? rogue-line doesn't exist: TACTICIAN fits canon-adjacent scouting or a new earned [Scout] class via exploration counters — wiki-check, escalate the class call if ambiguous), perception ([Keen Eye]-class: field = reveal hidden interactables glow + threat-range overlay [the Battlefield Awareness overworld read from spec §3], combat = accuracy-adjacent via existing fields), plus 1-2 utility from the table. Icons via glyph pattern; effect lines generated (L1).

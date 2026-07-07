@@ -94,6 +94,30 @@ extends RefCounted
 ## `required`, NO version bump. A save missing the key (any save written before
 ## this task) restores an empty Array, which is exactly correct (nothing had
 ## been encountered yet).
+## (M-GEAR Task G1, resonance-limited accessory slots): TWO additive changes,
+## neither bumps VERSION (still 5):
+##   1. `equipped` (already REQUIRED since v5) gains three new keys inside the
+##      SAME Dictionary shape -- `accessory_1`/`accessory_2`/`accessory_3`.
+##      This is NOT a new required key -- `equipped` itself is still just
+##      type-checked as a Dictionary (see `required` below, unchanged). A
+##      pre-G1 save's `equipped` carries only `{"weapon", "armor"}`; restore
+##      reads the three accessory keys TOLERANTLY (`.get(key, "")` inside
+##      WIGame, never here) so the old 2-key shape loads as if it always had
+##      three empty accessory slots -- MIGRATION-FREE by tolerant read, not a
+##      `_migrated()` step, because every old value the shape already carried
+##      (weapon/armor) is untouched and the new keys have a safe absent
+##      default. `game.equipped = equipped.duplicate(true)` (unchanged below)
+##      restores whatever dict the save carries verbatim; WIGame's own
+##      `equip()`/`unequip()`/`_build_player_combatant()` are what tolerate
+##      the missing keys (via `.get(slot, "")`), not a save-time backfill.
+##   2. `resonance_capacity` (int, the PC's magical-interference budget) is
+##      added the SAME additive-optional way as `gold`/`generalist_classes`
+##      above -- NOT in `required`, NO version bump. A save missing the key
+##      (any save written before this task) restores 2 (the design default),
+##      which is exactly correct (every PC has always had budget 2; nothing
+##      before this task could have changed it). A present-but-wrong-typed
+##      value (not int/float) is rejected, mirroring the gold/
+##      actions_since_sleep numeric checks.
 const VERSION := 5
 
 
@@ -120,6 +144,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"social_talked": game.social_talked.duplicate(true),
 		"entity_first_use": game.entity_first_use.duplicate(true),
 		"gold": game.gold,
+		"resonance_capacity": game.resonance_capacity,
 		"light_active": game.light_active,
 		"frozen_cells": game.frozen_cells_json(),
 		"pc_name": game.pc_name,
@@ -232,6 +257,11 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# actions_since_sleep check).
 	if s.has("gold") and not (s["gold"] is int or s["gold"] is float):
 		return false
+	# resonance_capacity (M-GEAR Task G1) follows the SAME additive-optional
+	# pattern as gold -- default 2 when absent, rejected if present-but-non-
+	# numeric (JSON restores whole numbers as float, so int OR float accepted).
+	if s.has("resonance_capacity") and not (s["resonance_capacity"] is int or s["resonance_capacity"] is float):
+		return false
 	# light_active (Playtest feature 3, the [Light] PC glow) follows the SAME
 	# additive-optional pattern -- default false when absent (any save written
 	# before this feature had no orb lit), rejected if present-but-non-bool. No
@@ -322,6 +352,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.social_talked = social_talked.duplicate(true)
 	game.entity_first_use = entity_first_use.duplicate(true)
 	game.gold = int(s.get("gold", 0))
+	game.resonance_capacity = int(s.get("resonance_capacity", 2))
 	game.light_active = bool(s.get("light_active", false))
 	game.set_frozen_cells_json(s.get("frozen_cells", {}))
 	# M-ARC §5: restore cosmetic identity through WIGame's tolerant sanitizers

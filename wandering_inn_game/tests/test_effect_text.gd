@@ -18,9 +18,23 @@ const EXPECTED_ITEMS := {
 	"solid_oak_spear": [],
 	"leather_jerkin": ["+4 HP", "Worth 24 gold"],
 	"watch_issue_gambeson": ["Reduces every hit taken by 1"],
-	"traveler_charm": ["+2 HP", "Worth 5 gold"],
+	# M-GEAR Task G2: traveler_charm is the plan's entry enchanted item,
+	# resonance 1 -- the formatter's "Resonance N" line (effect_text.gd,
+	# already wired pre-G2 by M-LEGIBILITY) now joins its card between the
+	# hp line and the price line.
+	"traveler_charm": ["+2 HP", "Resonance 1", "Worth 5 gold"],
 	"gnollish_hunting_knife": ["+1 damage on melee hits", "Worth 15 gold"],
 	"wool_lined_cloak": ["+3 HP", "Worth 18 gold"],
+	# M-GEAR Task G2: the 9 new items (7 accessories, 2 tools).
+	"copper_luck_band": ["+1 HP", "Worth 4 gold"],
+	"hedge_ward_charm": ["+2 HP", "Resonance 1", "Worth 9 gold"],
+	"hunters_fang_talisman": ["+1 damage on melee hits", "Resonance 1", "Worth 14 gold"],
+	"phosphor_pendant": ["+3 HP", "Resonance 1"],
+	"stonescale_talisman": ["Reduces every hit taken by 1", "Resonance 2", "Worth 35 gold"],
+	"moon_bone_amulet": ["+1 damage on melee hits", "+3 HP", "Resonance 3"],
+	"watch_token": [],
+	"field_whetstone": ["Worth 5 gold"],
+	"fishers_handline": ["Worth 4 gold"],
 }
 
 const EXPECTED_SKILLS := {

@@ -92,7 +92,7 @@ func _init() -> void:
 	# M7 Task E2: inventory/equipped/container_state/actions_since_sleep restore.
 	assert(restored.inventory == original.inventory, "inventory restored")
 	assert(restored.equipped == original.equipped, "equipped restored")
-	assert(restored.equipped == {"weapon": "rusty_sword", "armor": "leather_jerkin"}, "equip() landed in the equipped dict as expected")
+	assert(restored.equipped == {"weapon": "rusty_sword", "armor": "leather_jerkin", "accessory_1": "", "accessory_2": "", "accessory_3": ""}, "equip() landed in the equipped dict as expected (M-GEAR Task G1: now the wider 5-key shape)")
 	assert(restored.inventory.has("rusty_sword") and restored.inventory.has("leather_jerkin"), "inventory carries both the starter sword and the picked-up armor")
 	assert(restored.container_state == original.container_state, "container_state restored")
 	assert(int(restored.actions_since_sleep) == 7, "actions_since_sleep restored")
@@ -504,6 +504,66 @@ func _init() -> void:
 	var bad_gold_data := WISave.serialize(_new_game()).duplicate(true)
 	(bad_gold_data["state"] as Dictionary)["gold"] = "lots"
 	assert(not WISave.apply(_new_game(), bad_gold_data), "wrong-typed gold rejected")
+
+	# --- M-GEAR Task G1: resonance_capacity (additive-optional, tolerant
+	# default 2) + the wider (5-key) equipped dict, tolerant of an old save's
+	# 2-key shape -- MIGRATION-FREE by tolerant read, no version bump. ---
+	var res_original := _new_game()
+	res_original.resonance_capacity = 5
+	var res_data := WISave.serialize(res_original)
+	assert(int(res_data["version"]) == WISave.VERSION, "resonance_capacity does not bump the save version")
+	var res_restored := _new_game()
+	assert(WISave.apply(res_restored, res_data), "save with resonance_capacity applies")
+	assert(res_restored.resonance_capacity == 5, "resonance_capacity round-trips")
+
+	# A save WITHOUT the key (any save written before this task) restores the
+	# design default of 2.
+	var pre_g1_cap_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	(pre_g1_cap_data["state"] as Dictionary).erase("resonance_capacity")
+	var pre_g1_cap_target := _new_game()
+	pre_g1_cap_target.resonance_capacity = 999
+	assert(WISave.apply(pre_g1_cap_target, pre_g1_cap_data), "save missing resonance_capacity still applies")
+	assert(pre_g1_cap_target.resonance_capacity == 2, "absent resonance_capacity restores the default 2, not stale data")
+
+	# A present-but-wrong-typed resonance_capacity is rejected as malformed.
+	var bad_cap_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_cap_data["state"] as Dictionary)["resonance_capacity"] = "two"
+	assert(not WISave.apply(_new_game(), bad_cap_data), "wrong-typed resonance_capacity rejected")
+
+	# Old-save tolerant load: a save whose `equipped` dict still carries only
+	# the pre-G1 2-key shape (`weapon`/`armor`, no accessory keys at all --
+	# exactly what every save written before this task looks like; `equipped`
+	# itself is REQUIRED but only Dictionary-typed, so this is not rejected)
+	# applies cleanly, and every accessory slot reads back empty via WIGame's
+	# own tolerant `.get(slot, "")` -- no `_migrated()` step involved.
+	var old_shape_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	(old_shape_data["state"] as Dictionary)["equipped"] = {"weapon": "rusty_sword", "armor": ""}
+	var old_shape_target := _new_game()
+	assert(WISave.apply(old_shape_target, old_shape_data), "a save with the pre-G1 2-key equipped shape still applies")
+	assert(String(old_shape_target.equipped.get("weapon", "?")) == "rusty_sword", "old 2-key shape's weapon key reads through unchanged")
+	assert(not old_shape_target.equipped.has("accessory_1"), "sanity: the loaded dict genuinely lacks the accessory keys (this is the pre-G1 shape, not a padded one)")
+	assert(String(old_shape_target.equipped.get("accessory_1", "")) == "", "old 2-key shape's absent accessory_1 reads back empty via the SAME tolerant .get(slot, \"\") every consumer uses, not malformed")
+	assert(String(old_shape_target.equipped.get("accessory_2", "")) == "", "old 2-key shape's absent accessory_2 reads back empty")
+	assert(String(old_shape_target.equipped.get("accessory_3", "")) == "", "old 2-key shape's absent accessory_3 reads back empty")
+	# equip() still works correctly from the tolerant-loaded 2-key shape --
+	# a normal (weapon/armor) equip first (proves the loaded dict is a live,
+	# mutable Dictionary, not just cosmetically read-through).
+	old_shape_target.pickup("leather_jerkin", "test")
+	assert(old_shape_target.equip("leather_jerkin"), "equip still succeeds (armor slot) from the tolerant-loaded 2-key shape")
+	# ...and an ACCESSORY equip, specifically, lands in accessory_1 even
+	# though the loaded dict never declared that key at all (proves the
+	# tolerance isn't read-only cosmetic -- equip()'s slot-finding loop reads
+	# the missing key as empty via `.get(slot_name, "")`, same as a fresh
+	# 5-key start).
+	var acc_cc := _combat_config()
+	var acc_items: Array = ((acc_cc["items"] as Dictionary)["items"] as Array).duplicate(true)
+	acc_items.append({"id": "test_g1_charm", "kind": "accessory", "resonance": 0})
+	acc_cc["items"] = {"items": acc_items}
+	var old_shape_acc_target := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, acc_cc)
+	assert(WISave.apply(old_shape_acc_target, old_shape_data), "2-key equipped shape applies onto an instance with an accessory-catalogued item too")
+	old_shape_acc_target.pickup("test_g1_charm", "test")
+	assert(old_shape_acc_target.equip("test_g1_charm"), "accessory equip succeeds from a tolerant-loaded 2-key equipped shape")
+	assert(String(old_shape_acc_target.equipped.get("accessory_1", "?")) == "test_g1_charm", "the accessory lands in accessory_1 even though the loaded dict never declared that key")
 
 	print("PASS: save round-trips the full sim including rng state")
 	quit(0)

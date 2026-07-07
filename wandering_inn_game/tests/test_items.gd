@@ -5,6 +5,19 @@ extends SceneTree
 const VALID_KINDS: Dictionary = {
 	"weapon": true,
 	"armor": true,
+	"accessory": true,
+	"tool": true,
+}
+
+## M-GEAR Task G2: tier is now tied to resonance, not a mundane-only schema
+## hook -- an item with resonance >= 1 is "enchanted" (the card's rarity
+## vocabulary), everything else stays "mundane". Retiring the hard-pinned
+## "mundane always" check from M7 in favor of this rule (G1/G2 call, per
+## the staging doc's §D open question -- resonance stays the single source
+## of truth for the arithmetic; tier is just its display bucket).
+const VALID_TIERS: Dictionary = {
+	"mundane": true,
+	"enchanted": true,
 }
 
 const VALID_WEAPON_FAMILIES: Dictionary = {
@@ -42,7 +55,7 @@ func _init() -> void:
 	var weapon_families_present: Dictionary = {}
 
 	for entry: Dictionary in items_config["items"]:
-		for key: String in ["id", "name", "kind", "weapon_family", "tier", "abilities", "description"]:
+		for key: String in ["id", "name", "kind", "weapon_family", "tier", "abilities", "description", "lore", "resonance"]:
 			if not entry.has(key):
 				_fail("item entry missing %s: %s" % [key, JSON.stringify(entry)])
 
@@ -59,11 +72,13 @@ func _init() -> void:
 		if not VALID_WEAPON_FAMILIES.has(weapon_family):
 			_fail("unknown weapon_family: %s for %s" % [weapon_family, id])
 
-		# weapons must carry a real family (never "none"); armor is always "none".
+		# weapons must carry a real family (never "none"); every other kind
+		# (armor/accessory/tool) is always "none" -- M-GEAR G2 generalizes the
+		# old armor-only check to the two new kinds, same rule.
 		if kind == "weapon" and weapon_family == "none":
 			_fail("weapon %s must have a real weapon_family, not none" % id)
-		if kind == "armor" and weapon_family != "none":
-			_fail("armor %s must have weapon_family none, got %s" % [id, weapon_family])
+		if kind != "weapon" and weapon_family != "none":
+			_fail("%s %s must have weapon_family none, got %s" % [kind, id, weapon_family])
 
 		if weapon_family != "none":
 			weapon_families_present[weapon_family] = true
@@ -80,8 +95,8 @@ func _init() -> void:
 				_fail("item %s field %s must be >= 0, got %d" % [id, field, int(value)])
 
 		var tier: String = String(entry["tier"])
-		if tier != "mundane":
-			_fail("item %s tier must be mundane (schema hook only, M7 ships mundane-only): got %s" % [id, tier])
+		if not VALID_TIERS.has(tier):
+			_fail("item %s has unknown tier: %s" % [id, tier])
 
 		if not entry["abilities"] is Array:
 			_fail("item %s abilities must be an array" % id)
@@ -92,6 +107,25 @@ func _init() -> void:
 			_fail("item %s has empty name" % id)
 		if String(entry["description"]).is_empty():
 			_fail("item %s has empty description" % id)
+		if String(entry["lore"]).is_empty():
+			_fail("item %s has empty lore" % id)
+
+		# M-GEAR Task G2: resonance is the single source of truth for the
+		# capacity arithmetic (WIGame._equipped_resonance_total sums it across
+		# all 5 equipped slots); tier above is only its display bucket.
+		var resonance_value: Variant = entry["resonance"]
+		if typeof(resonance_value) != TYPE_INT and typeof(resonance_value) != TYPE_FLOAT:
+			_fail("item %s resonance must be numeric" % id)
+		if int(resonance_value) != resonance_value:
+			_fail("item %s resonance must be an int, got %s" % [id, str(resonance_value)])
+		var resonance := int(resonance_value)
+		if resonance < 0 or resonance > 3:
+			_fail("item %s resonance must be 0 <= r <= 3, got %d" % [id, resonance])
+		var expect_enchanted := resonance >= 1
+		if expect_enchanted and tier != "enchanted":
+			_fail("item %s has resonance %d but tier %s (resonance >= 1 must be tier enchanted)" % [id, resonance, tier])
+		if not expect_enchanted and tier != "mundane":
+			_fail("item %s has resonance 0 but tier %s (resonance 0 must be tier mundane)" % [id, tier])
 
 	# Cross-reference: every weapon tag actually used by a skill (skills.json's
 	# "weapon" field, the M6 T1 seam -- see wi_combat.gd's sword_skill_used/

@@ -8,9 +8,11 @@
 			"damage_mod": 0,
 			"hp_mod": 0,
 			"damage_reduction": 0,
+			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
-			"description": "A plain soldier's blade, its edge dulled by years and neglect. Still swings true enough."
+			"description": "A plain soldier's blade, its edge dulled by years and neglect. Still swings true enough.",
+			"lore": "Watch surplus goes by the crate when the armory clears its racks, and half the cellars in Liscor hold one of these. Somebody drilled with it every morning for a year, once, and then stopped."
 		},
 		{
 			"id": "relcs_spare_spear",
@@ -20,9 +22,11 @@
 			"damage_mod": 1,
 			"hp_mod": 0,
 			"damage_reduction": 0,
+			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
-			"description": "A castoff from the Watch armory, spear-length and Gnoll-sized in the grip. Relc calls it 'barely used' -- for a given value of barely."
+			"description": "A castoff from the Watch armory, spear-length and Gnoll-sized in the grip. Relc calls it 'barely used' -- for a given value of barely.",
+			"lore": "The Watch quartermaster budgets for Relc the way innkeepers budget for breakage. This one survived him, which means the haft is good and the week was quiet."
 		},
 		{
 			"id": "crude_blade",
@@ -32,9 +36,11 @@
 			"damage_mod": 0,
 			"hp_mod": 0,
 			"damage_reduction": 0,
+			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
-			"description": "Hammered out in a hurry by goblin hands, more wedge than sword. It still cuts."
+			"description": "Hammered out in a hurry by goblin hands, more wedge than sword. It still cuts.",
+			"lore": "Goblin forges run on scavenge — plow edges, cartwheel rims. Whoever hammered this understood one thing about swords, and it was the edge."
 		},
 		{
 			"id": "chipped_spear",
@@ -44,9 +50,11 @@
 			"damage_mod": 0,
 			"hp_mod": 0,
 			"damage_reduction": 0,
+			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
-			"description": "A goblin spear, its haft wrapped in scavenged cord and its head notched from hard use."
+			"description": "A goblin spear, its haft wrapped in scavenged cord and its head notched from hard use.",
+			"lore": "The cord on the haft has been rewrapped by three different hands. Goblin gear outlives goblins; it gets passed forward, not down."
 		},
 		{
 			"id": "solid_oak_spear",
@@ -56,9 +64,11 @@
 			"damage_mod": 0,
 			"hp_mod": 0,
 			"damage_reduction": 0,
+			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
-			"description": "A well-balanced practice spear, fire-hardened oak from butt to point. No frills, no rust."
+			"description": "A well-balanced practice spear, fire-hardened oak from butt to point. No frills, no rust.",
+			"lore": "Turned out by the dozen for the yard behind the Watch barracks, where recruits learn which end matters. The oak usually outlasts the recruit's pride."
 		},
 		{
 			"id": "leather_jerkin",
@@ -68,10 +78,12 @@
 			"damage_mod": 0,
 			"hp_mod": 4,
 			"damage_reduction": 0,
+			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
 			"price": 24,
-			"description": "Boiled leather stitched over a linen underlayer. Common wear for anyone who expects to be hit."
+			"description": "Boiled leather stitched over a linen underlayer. Common wear for anyone who expects to be hit.",
+			"lore": "A tannery south of the market cures these forty at a time, and the smell reaches the gate when the wind turns. New ones go to adventurers; secondhand ones come back from the Floodplains with the stitching checked."
 		},
 		{
 			"id": "watch_issue_gambeson",
@@ -81,9 +93,11 @@
 			"damage_mod": 0,
 			"hp_mod": 0,
 			"damage_reduction": 1,
+			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
-			"description": "Quilted padding stamped with the Liscor Watch's seal. Standard issue for anyone patrolling the walls."
+			"description": "Quilted padding stamped with the Liscor Watch's seal. Standard issue for anyone patrolling the walls.",
+			"lore": "Signed out against a deposit, and Watch Captain Zevara knows exactly how many never came back. The padding is older than some of the guards inside it; the budget for replacements has died in council three years running."
 		},
 		{
 			"id": "traveler_charm",
@@ -93,10 +107,12 @@
 			"damage_mod": 0,
 			"hp_mod": 2,
 			"damage_reduction": 0,
-			"tier": "mundane",
+			"resonance": 1,
+			"tier": "enchanted",
 			"abilities": [],
 			"price": 5,
-			"description": "A weathered trinket found among old stones outside the city, strung on a cord gone soft with age. Something about it settles the nerves."
+			"description": "A weathered trinket found among old stones outside the city, strung on a cord gone soft with age. Something about it settles the nerves.",
+			"lore": "The old stones outside the city give up trinkets like this after a hard rain, and nobody living remembers who strung them. Hold it to your ear and it hums, faintly — most owners decide not to ask a second question."
 		},
 		{
 			"id": "gnollish_hunting_knife",
@@ -106,10 +122,12 @@
 			"damage_mod": 1,
 			"hp_mod": 0,
 			"damage_reduction": 0,
+			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
 			"price": 15,
-			"description": "A short, wickedly balanced skinning blade from the Silverfang stalls, its bone grip worn smooth by a hunter's hand. Krshia swears by the steel."
+			"description": "A short, wickedly balanced skinning blade from the Silverfang stalls, its bone grip worn smooth by a hunter's hand. Krshia swears by the steel.",
+			"lore": "Silverfang steel comes south with the tribe's caravans and gets worked plains-side, the old way, before it ever sees a city stall. Krshia could sell three times what her kin send her — she says so to anyone who buys one."
 		},
 		{
 			"id": "wool_lined_cloak",
@@ -119,10 +137,144 @@
 			"damage_mod": 0,
 			"hp_mod": 3,
 			"damage_reduction": 0,
+			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
 			"price": 18,
-			"description": "Heavy travel-weave lined with carded wool, cut for the Floodplains' wet cold. Market goods, honestly priced -- Krshia will remind you of that."
+			"description": "Heavy travel-weave lined with carded wool, cut for the Floodplains' wet cold. Market goods, honestly priced -- Krshia will remind you of that.",
+			"lore": "Plains wool, city loom — Gnoll caravans sell the fleece and Drake weavers argue the price, and the cloak comes out warmer than the bargaining. The Floodplains rain finds every cheaper seam."
+		},
+		{
+			"id": "copper_luck_band",
+			"name": "Copper Luck-Band",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 1,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 4,
+			"description": "A thin copper ring, polished bright by worried thumbs. Drakes swear copper turns bad luck aside; copper-sellers agree loudly.",
+			"lore": "Every stall in the gate market moves a tray of these. The luck is arguable; the copper is real, and that is the Silverfang position on the matter."
+		},
+		{
+			"id": "hedge_ward_charm",
+			"name": "Hedge-Ward Charm",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 2,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"abilities": [],
+			"price": 9,
+			"description": "Dried herbs and a knot of red thread sealed in a wax bead, warm to the touch. Roadside work, from up north.",
+			"lore": "Hedge-charmers work the wagon stops between Celum and Liscor, selling wards to travelers who want the odds nudged. Most beads are wax and hope; this one was made by somebody with a real Skill, and it knows it."
+		},
+		{
+			"id": "hunters_fang_talisman",
+			"name": "Hunter's Fang Talisman",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 1,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"abilities": [],
+			"price": 14,
+			"description": "A beast's fang on a braided cord, capped in silver. The point still looks like it has opinions.",
+			"lore": "The silver fang is the Silverfang mark, and the stall caps a good trophy in it for a hunter who asks. Krshia will tell you whose kill this was if you ask, and the story runs longer than the cord."
+		},
+		{
+			"id": "phosphor_pendant",
+			"name": "Phosphor Pendant",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 3,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"abilities": [],
+			"description": "A glass bead of sewer phosphor that never quite goes out. Brighter than it has any right to be, and it smells faintly of where it came from.",
+			"lore": "Somebody down in the drains learned to seal the glowing moss in glass, and somebody else paid them for it. Neither name made it back up to the street."
+		},
+		{
+			"id": "stonescale_talisman",
+			"name": "Stonescale Talisman",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 1,
+			"resonance": 2,
+			"tier": "enchanted",
+			"abilities": [],
+			"price": 35,
+			"description": "A grey Drake scale, shed and gone stone-hard, set in an iron clasp. Heavier on the mind than on the neck.",
+			"lore": "Shed scales with stone in them turn up in the southern hills, and enchanters pay well for the rare one that takes a binding. Drakes find wearing another Drake's scale distasteful — the stall keeps this one under the counter."
+		},
+		{
+			"id": "moon_bone_amulet",
+			"name": "Moon-Bone Amulet",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 1,
+			"hp_mod": 3,
+			"damage_reduction": 0,
+			"resonance": 3,
+			"tier": "enchanted",
+			"abilities": [],
+			"description": "Carved bone on a sinew cord, worn smooth wherever a thumb would rest. Under moonlight the carving is a moon; under anything else it is just circles.",
+			"lore": "Raskghar work, cut in the deep warrens by hands that are only clever some nights. Whatever the amulet waits for, it waits patiently."
+		},
+		{
+			"id": "watch_token",
+			"name": "Watch Token",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A brass token stamped with Liscor's gate, the kind the Watch hands to runners and irregulars. It opens no doors by itself, but it slows down the questions.",
+			"lore": "Zevara signs maybe ten of these a year, and she remembers every one. Losing it is a worse conversation than never having earned it."
+		},
+		{
+			"id": "field_whetstone",
+			"name": "Field Whetstone",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 5,
+			"description": "A palm-sized whetstone in a leather sleeve, dished from use. Steel forgets its edge; this reminds it.",
+			"lore": "Watch-issue kit includes one, and half the Watch loses theirs by spring. The tanner who sews the sleeves has stopped putting names on them."
+		},
+		{
+			"id": "fishers_handline",
+			"name": "Fisher's Handline",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 4,
+			"description": "Waxed line and bone hooks wound on a stick, with a cork float. The Floodplains pond is deeper than it looks.",
+			"lore": "Drakes fish the pond in fair weather and swear off it every winter, when the water starts moving wrong. The line-sellers do their best business in spring, replacing gear that was 'lost.'"
 		}
 	]
 }

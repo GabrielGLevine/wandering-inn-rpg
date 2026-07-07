@@ -903,6 +903,11 @@ func _init() -> void:
 	assert(e1.inventory.has("rusty_sword"), "PC starts carrying the starter sword")
 	assert(String(e1.equipped.get("weapon", "")) == "rusty_sword", "PC starts with the starter sword equipped")
 	assert(String(e1.equipped.get("armor", "")) == "", "PC starts with no armor equipped")
+	# M-GEAR Task G1: three accessory slots + the resonance budget, both fresh.
+	assert(String(e1.equipped.get("accessory_1", "?")) == "", "PC starts with no accessory_1 equipped")
+	assert(String(e1.equipped.get("accessory_2", "?")) == "", "PC starts with no accessory_2 equipped")
+	assert(String(e1.equipped.get("accessory_3", "?")) == "", "PC starts with no accessory_3 equipped")
+	assert(e1.resonance_capacity == 2, "PC starts with the default resonance_capacity of 2")
 	assert(e1.item("rusty_sword").get("kind", "") == "weapon", "item() resolves the starter sword's catalog record")
 	assert(e1.item("nonexistent_item").is_empty(), "item() returns {} for an unknown id")
 
@@ -955,6 +960,132 @@ func _init() -> void:
 	e1.combat.apply_damage("goblin_raider", 999, "pc", true)
 	e1.combat.apply_damage("goblin_shaman", 999, "pc", true)
 	e1.resolve_combat()
+
+	# --- M-GEAR Task G1: resonance-limited accessory slots ---
+	# Test-fixture accessory items (temporary, in-test only -- data/items.json
+	# stays G2's, per the plan). Each isolates one combat-build field so the
+	# fold-through assertion below can attribute a nonzero result to a single
+	# accessory unambiguously.
+	var cc_g1: Dictionary = combat_config.duplicate(true)
+	var g1_items: Array = ((cc_g1["items"] as Dictionary)["items"] as Array).duplicate(true)
+	g1_items.append_array([
+		{"id": "test_charm_hp", "kind": "accessory", "hp_mod": 3, "resonance": 0},
+		{"id": "test_charm_dmg", "kind": "accessory", "damage_mod": 2, "resonance": 0},
+		{"id": "test_charm_reduc", "kind": "accessory", "damage_reduction": 4, "resonance": 0},
+		{"id": "test_charm_over", "kind": "accessory", "resonance": 3},
+		{"id": "test_charm_extra", "kind": "accessory", "resonance": 0},
+		{"id": "test_ring_res1", "kind": "accessory", "resonance": 1},
+		{"id": "test_blade_res1", "kind": "weapon", "weapon_family": "sword", "resonance": 1},
+		{"id": "test_blade_res1b", "kind": "weapon", "weapon_family": "sword", "resonance": 1},
+	])
+	cc_g1["items"] = {"items": g1_items}
+	var gAcc := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_g1)
+	for fixture_id: String in ["test_charm_hp", "test_charm_dmg", "test_charm_reduc", "test_charm_over", "test_charm_extra", "test_ring_res1", "test_blade_res1", "test_blade_res1b"]:
+		gAcc.pickup(fixture_id, "test_fixture")
+
+	# equip() routes an "accessory" kind item into the first EMPTY accessory
+	# slot (kind routing "exactly the way weapon/armor routing works today").
+	_events.clear()
+	assert(gAcc.equip("test_charm_hp"), "equip an accessory into the first empty slot")
+	assert(String(gAcc.equipped.get("accessory_1", "")) == "test_charm_hp", "first accessory equip lands in accessory_1")
+	var acc_payload: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "item_equipped":
+			acc_payload = e["payload"]
+	assert(acc_payload.get("item", "") == "test_charm_hp" and acc_payload.get("slot", "") == "accessory_1", "item_equipped payload carries item + the actual accessory slot")
+	assert(gAcc.equip("test_charm_dmg"), "equip a second accessory")
+	assert(String(gAcc.equipped.get("accessory_2", "")) == "test_charm_dmg", "second accessory equip lands in accessory_2 (first still occupied)")
+
+	# G1 review fix (Finding 1): an accessory ALREADY WORN in one slot must
+	# not equip again into another empty slot -- a duplicate id would double
+	# its contribution in both the resonance sum and the combat-build fold.
+	_events.clear()
+	assert(not gAcc.equip("test_charm_hp"), "re-equipping an already-worn accessory is refused")
+	assert(String(gAcc.equipped.get("accessory_3", "?")) == "", "the duplicate never lands in accessory_3")
+	assert(_count("item_equipped") == 0 and _count("toast") == 0, "duplicate-equip refusal is silent (guard idiom), no event")
+
+	# Capacity refusal: resonance_capacity is 2; the sum so far is 0 (weapon
+	# rusty_sword + both charms above all carry resonance 0). Equipping
+	# test_charm_over (resonance 3) would push the total to 3 > 2 -- refused
+	# via the diegetic capacity toast, DESPITE accessory_3 still being free
+	# (proves capacity and slot-fullness are independent checks).
+	_events.clear()
+	assert(not gAcc.equip("test_charm_over"), "over-capacity equip is refused")
+	assert(String(gAcc.equipped.get("accessory_3", "?")) == "", "refused equip leaves accessory_3 empty")
+	assert(_count("item_equipped") == 0, "refused equip emits no item_equipped")
+	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "The charm's hum turns to static. You cannot bear another enchantment.", "over-capacity equip emits the capacity refusal toast idiom")
+	assert(gAcc.inventory.has("test_charm_over"), "the refused item is still carried (never equipped, never dropped)")
+
+	# Fill the last accessory slot with a zero-resonance item so capacity
+	# stays satisfied, then prove the slot-full refusal is a DIFFERENT toast
+	# from the capacity one, even though this equip would be well within budget.
+	assert(gAcc.equip("test_charm_reduc"), "equip the third (zero-resonance) accessory, filling all three slots")
+	_events.clear()
+	assert(not gAcc.equip("test_charm_extra"), "a 4th accessory is refused: no free slot")
+	assert(_count("item_equipped") == 0, "refused equip emits no item_equipped")
+	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "No room left for another charm — something has to come off first.", "slot-full equip emits the DISTINCT slot-full refusal toast, not the capacity one")
+
+	# equipped ⊆ inventory holds across the wider (5-key) dict.
+	for slot: String in gAcc.equipped:
+		var eq_id := String(gAcc.equipped[slot])
+		assert(eq_id == "" or gAcc.inventory.has(eq_id), "invariant holds across all 5 slots: every non-empty equipped slot is also in inventory")
+
+	# Unequipping frees the departing item's resonance back into the budget:
+	# with accessory_3 (test_charm_reduc, resonance 0) freed, the over-capacity
+	# item still refuses (freeing a 0-resonance item doesn't change the sum);
+	# freeing accessory_2 (test_charm_dmg, also resonance 0) then equipping
+	# test_charm_over (resonance 3) still exceeds 2 alone (weapon 0 + hp 0 +
+	# over 3 = 3), so free accessory_1 (test_charm_hp) too -- total then is
+	# exactly 3 (just test_charm_over), still over capacity 2, confirming the
+	# gate checks the RESULTING total, not just "is there room" — go one step
+	# further and also unequip the weapon (frees its own 0 contribution, no
+	# change) to keep the assertion honest: the fixture's over-capacity item
+	# alone (resonance 3) can never fit under capacity 2, by construction.
+	assert(gAcc.unequip("accessory_1") and gAcc.unequip("accessory_2") and gAcc.unequip("accessory_3"), "unequip clears all three accessory slots")
+	_events.clear()
+	assert(not gAcc.equip("test_charm_over"), "test_charm_over (resonance 3) alone still exceeds capacity 2 even with every slot free")
+	assert(String(_events[-1]["payload"]["text"]) == "The charm's hum turns to static. You cannot bear another enchantment.", "same capacity refusal, now with all slots free -- proves it's a resonance gate, not a slot-count gate")
+
+	# G1 review fix (Finding 2): swap-at-capacity SUCCEEDS -- the capacity
+	# arithmetic subtracts the target slot's current occupant before adding
+	# the incoming item. Build the exact-full state (ring 1 + blade 1 =
+	# capacity 2), then swap the weapon for another resonance-1 weapon: the
+	# subtract-then-add nets 2 <= 2 and must pass, while a resonance-3 item
+	# at the same full state still refuses.
+	assert(gAcc.equip("test_ring_res1"), "resonance-1 ring equips into the freed accessory slot")
+	assert(gAcc.equip("test_blade_res1"), "resonance-1 weapon swap onto rusty_sword (0->1) fits: total exactly 2")
+	_events.clear()
+	assert(gAcc.equip("test_blade_res1b"), "swap-at-capacity succeeds: displaced resonance-1 weapon is subtracted before the incoming resonance-1 weapon is added")
+	assert(String(gAcc.equipped.get("weapon", "")) == "test_blade_res1b", "the swap actually landed")
+	assert(not gAcc.equip("test_charm_over"), "and a resonance-3 item at the same full state still refuses")
+	# Restore the pre-swap state so the fold-through block below (which
+	# re-equips all three zero-resonance charms and attributes each combat
+	# field to exactly one of them) sees the same slots/mods it always did.
+	assert(gAcc.unequip("accessory_1"), "swap-test cleanup: free the ring's slot")
+	assert(gAcc.equip("rusty_sword"), "swap-test cleanup: swap the weapon back (resonance 1 -> 0)")
+
+	# Combat-build fold-through: a fresh, unequipped baseline (same fixture
+	# catalog, same seed/map/encounter) establishes base_max_hp, THEN
+	# gAcc re-equips all three charms and starts a fight -- confirming each
+	# accessory's own field rides the SAME three combatant keys weapons/armor
+	# use (no new combat field): hp_mod folds into max_hp exactly like an
+	# armor's hp_mod does (wi_combat.gd consumes it at build time, does not
+	# keep a bare "hp_mod" key on the combatant dict -- the e4/e4b precedent
+	# below asserts the same way), damage_mod/damage_reduction each
+	# attributable to exactly one charm (isolated above).
+	var gAccBase := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_g1)
+	gAccBase.transition("floodplains", Vector2i(27, 18))
+	gAccBase.record_accomplishment("met_relc")
+	assert(gAccBase.start_combat("goblin_encounter_2"), "baseline (no accessories) combat starts")
+	var acc_base_max_hp := int(gAccBase.combat.combatants["pc"]["max_hp"])
+
+	assert(gAcc.equip("test_charm_hp") and gAcc.equip("test_charm_dmg") and gAcc.equip("test_charm_reduc"), "re-equip all three (zero-resonance) accessories")
+	gAcc.transition("floodplains", Vector2i(27, 18))
+	gAcc.record_accomplishment("met_relc")
+	assert(gAcc.start_combat("goblin_encounter_2"), "accessory-equipped combat starts")
+	assert(int(gAcc.combat.combatants["pc"]["max_hp"]) == acc_base_max_hp + 3, "accessory hp_mod (3) folds into max_hp at build time, exactly like armor's hp_mod (weapon/armor both contribute 0 here)")
+	assert(int(gAcc.combat.combatants["pc"]["damage_mod"]) == 2, "accessory damage_mod (2) folds into the combat build (rusty_sword contributes 0)")
+	assert(int(gAcc.combat.combatants["pc"]["damage_reduction"]) == 4, "accessory damage_reduction (4) folds into the combat build (no armor equipped)")
 
 	# --- Kit-intersection: weapon-family gate on the combat build ---
 	# Each sub-case uses a FRESH instance fighting goblin_encounter_2 once:
