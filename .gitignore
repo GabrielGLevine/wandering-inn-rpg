@@ -8,6 +8,7 @@
 # Godot editor cache/import artifacts (regenerated automatically)
 .godot/
 .godot_home/
+qa_output/
 *.translation
 
 # Local Codex session state
