@@ -16,6 +16,21 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] UI/BARK — trailing period on a short wrapped 2nd line clips under the
+  bark panel's bottom-left decorative fold (DPF rotation: Yelra +
+  Dresk shots, payload always carries it). The 2-line budget landed; the
+  FOLD inset needs the same measured-band treatment on line 2. DPF close
+  fix-wave candidate.
+- [ ] UI/PICKER — the board/delivery picker paginates from the TOP,
+  losing the header question + 2 of 3 postings' flavor (board_loop +
+  delivery_loop shots). Board-centric milestone — severity with opus.
+- [ ] MAP/UPSTAIRS — Lyonette's locked door reads as the same
+  private-room zone as the PC's own bed (zone ambiguity; a rug/color
+  cue would separate "yours" from "hers").
+- [ ] ARENA/SEWERS — decorative cave props resemble the live Sewer Bat
+  enemy silhouette in the dark arena (target-legibility compounding the
+  standing dark-arena item, GH issue #28).
+
 - [ ] SPRITE — **THE DELIVERY BOARD (`runner_board`, M-DEPTH DP5, Runner's
   Guild interior) is the SECOND board shipped on the `inn_sign`
   hanging-plank stand-in** (cool blue-grey tint [0.65,0.72,0.8] vs the
