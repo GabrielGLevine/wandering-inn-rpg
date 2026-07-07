@@ -1,42 +1,60 @@
 ---
 name: wi-shipping
-description: Use when deploying the Wandering Inn RPG to itch.io, syncing the public GitHub repo, building the private asset bundle, cutting a release tag, or debugging the CI/release workflows.
+description: Use when deploying the Wandering Inn RPG to itch.io, cutting a release tag, managing the private asset overlay, handling external PRs, or debugging the CI/release workflows.
 ---
 
-# Shipping (public repo, CI, itch deploy)
+# Shipping (unified repo, CI, itch deploy)
 
-## The three repos
-- **Private working repo** (this one): all development, full history,
-  all assets.
-- **Public repo** `github.com/GabrielGLevine/wandering-inn-rpg`
-  (fresh history; working copy at `../wandering-inn-rpg-public`):
-  everything MINUS assets_manifest.json's paths, keys, scratch,
-  HANDOFF/NIGHT-GOAL internals. CI (ci.yml) runs the full QA gate on
-  every push — secret-free, fork-safe.
+## The repo model (UNIFIED as of 2026-07-07)
+- **`github.com/GabrielGLevine/wandering-inn-rpg` is THE working repo** —
+  development happens here, commits are PUBLIC the moment they push.
+  There is no private working repo and no sync step anymore.
 - **Private assets repo** `GabrielGLevine/wandering-inn-rpg-assets`:
-  bundle tarballs as releases; fetched by release.yml via the
-  `PRIVATE_ASSETS_TOKEN` secret (fine-grained PAT, user-minted — agents
-  CANNOT create PATs).
+  (1) `bundle-vN` releases = the licensed-asset overlay (fetched by
+  release.yml via `PRIVATE_ASSETS_TOKEN`, and locally via
+  `scripts/fetch_private_assets.sh`); (2) `potential-assets-vN` =
+  parked source packs (`scripts/fetch_potential_assets.sh`).
+- **The frozen archive** (pre-transition private repo, full history
+  incl. licensed assets): `GabrielGLevine/wandering_inn_rpg`
+  (underscores). Its history contains non-redistributable assets —
+  it must NEVER be made public or pushed anywhere public. Read-only.
 
-## The sync (after every committed change to public-shipped files)
-`scripts/sync_public_export.sh -m "message"` — rsyncs (same exclusion
-set as the initial export), leak-checks the manifest paths, commits +
-pushes. The init-time `prepare_public_export.sh` is INIT-ONLY — never
-re-run it against the pushed repo.
+## The leak discipline (replaces the old sync-time check)
+`scripts/leak_check.sh` runs FIRST in CI on every push/PR and fails if
+any `assets_manifest.json` path (or its `.import`), any
+`docs/*_api_key.txt`, or anything under `potential_assets/` is tracked.
+`.gitignore` carries a GENERATED block covering every manifest path —
+**regenerate it whenever assets_manifest.json changes** (the block is
+labeled; scripts/fetch_private_assets.sh verifies coverage on every
+overlay). Adding a NEW licensed asset = manifest entry + gitignore
+block regen + `make_asset_bundle.sh` + new `bundle-vN` release, in that
+order, BEFORE the sprite/data commit that references it.
 
-## The deploy (tag-driven)
-1. Bundle current? If protected assets changed:
-   `scripts/make_asset_bundle.sh OUT.tar.gz` → attach to a new release
-   on the assets repo (`gh release create bundle-vN ... -R
-   GabrielGLevine/wandering-inn-rpg-assets`).
-2. From `../wandering-inn-rpg-public`:
-   `git tag v0.x.y && git push origin v0.x.y`.
+## Local dev setup (fresh machine)
+1. Clone the repo; `gh auth login`.
+2. `scripts/fetch_private_assets.sh` — licensed art/music overlay
+   (game boots on placeholders without it; fallback seam is shipped).
+3. Optional: `scripts/fetch_potential_assets.sh` (~1GB source packs).
+4. Key files (all gitignored, local-only): see `docs/SECRETS-SETUP.md`.
+5. Import pass, then the full gate per wi-verifying-changes.
+
+## The deploy (tag-driven, unchanged mechanics)
+1. If protected assets changed: `scripts/make_asset_bundle.sh` →
+   `gh release create bundle-vN ... -R GabrielGLevine/wandering-inn-rpg-assets`.
+2. `git tag v0.x.y && git push origin v0.x.y` (same repo now).
 3. release.yml: fetch bundle → overlay → FULL QA gate with real assets
    → wasm export → butler push to
    `sibianthegreybird/the-wandering-inn-rpg:html5`.
 4. Watch: `gh run watch -R GabrielGLevine/wandering-inn-rpg <id>
-   --exit-status`. Re-tag after a fix: delete remote tag
-   (`git push origin :refs/tags/vX`), `git tag -f`, re-push.
+   --exit-status`. Re-tag after a fix: `git push origin :refs/tags/vX`,
+   `git tag -f`, re-push.
+
+## External PRs (simplified by unification, 2026-07-07)
+PRs merge NORMALLY on GitHub now — the old port-privately flow is dead.
+CI (leak check + full sweep, fork-safe, zero secrets) gates every PR.
+Maintainer flow: review → confirm CI green → if it touches player-visible
+surfaces, pull the branch and do a windowed read → merge. A PR that
+adds tracked files matching the leak classes will fail CI by design.
 
 ## Gotchas (each cost a real failure)
 - Butler broth host is **broth.itch.zone** (`.ovh` is dead — first-tag
@@ -53,38 +71,17 @@ re-run it against the pushed repo.
   WITHOUT the SharedArrayBuffer toggle; flipping threads is a coupled
   3-part change (preset + itch toggle + web-parity runner).
 - Secrets live ONLY in release.yml (tag-triggered); ci.yml must stay
-  secret-free. `BUTLER_API_KEY` + `PRIVATE_ASSETS_TOKEN` on the public
-  repo. Local butler: `~/bin/butler`, key `docs/butler_api_key.txt`.
+  secret-free. `BUTLER_API_KEY` + `PRIVATE_ASSETS_TOKEN` on the repo.
+  Local butler: `~/bin/butler`, key `docs/butler_api_key.txt`.
 - The triage Action self-skips without `ANTHROPIC_API_KEY` (user has
   none — Claude Max): community triage is LOCAL, see docs/TRIAGE.md.
-
-## External PRs against the public repo (maintainer flow, 2026-07-07)
-Public history is GENERATED (`git archive HEAD` + `rsync --delete`) —
-**a PR merged on GitHub that never landed privately is silently
-REVERTED by the next sync.** Therefore: never use GitHub's merge
-button on the public repo. The flow:
-1. CI already gates PRs (full sweep, fork-safe, secret-free) — triage
-   red PRs on GitHub without local work.
-2. Test locally by applying the diff to the PRIVATE repo (the public
-   checkout lacks the protected-asset overlay):
-   `gh pr diff <N> -R GabrielGLevine/wandering-inn-rpg --patch | git apply`
-   (discard with `git apply -R`).
-3. Accept = run the full private gates, then commit HERE with
-   `Co-authored-by: Name <email-from-their-PR-commits>` and
-   "Land PR #N from @user" in the message.
-4. Sync public, then CLOSE the PR with a comment linking the landed
-   public commit — the Co-authored-by trailer carries their
-   contribution credit.
+- **RETIRED (2026-07-07): `sync_public_export.sh` and
+  `prepare_public_export.sh`** — the one-way private→public sync died
+  with the unified transition. If you find a reference to "the sync,"
+  it's stale doc — commits here ARE public.
 
 ## Licensing frame (user policy 2026-07-06)
 Public repo = redistributable only (CC0/CC-BY/MIT/PixelLab outputs).
 Redistribution-limited packs ship in the GAME via the private bundle —
 nothing is cut from official builds for licensing; flag any
 quality-for-licensing substitution to the user FIRST.
-
-## HEAD-based sync (hard rule, 2026-07-06)
-`sync_public_export.sh` ships `git archive HEAD`, never the working
-tree — a live implementer lane's uncommitted files once leaked
-half-finished PC sprites into a release build. Never "fix" the script
-back to tree-based; never hand-copy working-tree files to the public
-repo while any lane is running.

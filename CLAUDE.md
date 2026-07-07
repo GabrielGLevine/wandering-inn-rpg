@@ -2,13 +2,47 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Session bootstrap ("Continue project work")
+
+**This PUBLIC repo is the one working repo** (unified 2026-07-07 —
+every commit is public on push; there is no private working copy).
+A fresh session positions itself in this order:
+1. This file, then `wandering_inn_game/CLAUDE.md` (architecture,
+   commands, canonical QA seed table, gotchas).
+2. **The GitHub board is the work queue**: `gh issue list -R
+   GabrielGLevine/wandering-inn-rpg` (milestones = the roadmap ladder;
+   every issue body is a dispatch-grade brief; the Projects board is
+   the kanban view). Route execution through the `wi-*` skills in
+   `.claude/skills/` — start with `wi-start-here`.
+3. `HANDOFF.md` — the living cross-session state doc (tracked): open
+   flags, playtest checklists, taste-queue for the user. **Keep it
+   updated as work progresses**, not just at session end.
+4. `.superpowers/sdd/progress.md` (gitignored ledger) — exact
+   mid-milestone position, if present.
+Then: pick up the highest-priority unblocked issue (respect
+taste-gate/USER-SESSION labels — those wait for the user) and run the
+wi-running-the-machine cycle.
+
 ## Repo Layout
 
 - **`wandering_inn_game/`** — **the active project; all current work happens here.** A fresh Godot 4.7 build designed QA-first for agent-driven development: pure sim core, ObservableBus event log, declarative QA playtest scripts (`qa/run_qa.sh`). Has its own `CLAUDE.md` — read it when working here.
-- **Predecessors are out of the working tree** (v1 and v2 both removed 2026-07-02, user-approved scope-down; recover either from git history if needed — v2 was the GDQuest-based frozen reference, Godot 4.6.2-only via `/Applications/Godot4.6.app`, handoff history in `docs/archive/HANDOFF-v2-v3-archive.md`; `godot-open-rpg/` is v2's gitignored upstream clone, a separate repo, never commit into it).
 - **`docs/superpowers/specs/`** and **`docs/superpowers/plans/`** — design specs and implementation plans per milestone, written via the `superpowers:brainstorming` → `superpowers:writing-plans` → `superpowers:subagent-driven-development` skill chain. Read the relevant spec/plan before significant changes.
-- **`HANDOFF.md`** — the living cross-session state doc: current state, playtest checklists, next steps. **Keep it updated as work progresses** (not just at session end) — it's the primary handoff between sessions/agents (including Codex). Milestone execution detail lives in the ledger `.superpowers/sdd/progress.md` (gitignored).
-- **`potential_assets/`** — user-sourced asset packs, gitignored (licenses forbid redistribution — never commit). Asset plan: `docs/superpowers/specs/2026-07-02-wandering-inn-asset-design.md`.
+- **`potential_assets/`** — user-sourced asset packs, gitignored (licenses forbid redistribution — NEVER track; parked as `potential-assets-vN` on the private assets repo; restore via `scripts/fetch_potential_assets.sh`).
+- **Predecessor history**: the pre-transition private repo (`GabrielGLevine/wandering_inn_rpg`, underscores) is the frozen archive — full history incl. licensed assets; never make it public. v1/v2 game predecessors live in ITS history only.
+
+## Licensed assets & secrets (the unified-repo discipline)
+
+- 160 licensed asset paths (see `wandering_inn_game/assets_manifest.json`)
+  are NOT in this repo — local dev overlays them via
+  `scripts/fetch_private_assets.sh` (game boots on committed
+  placeholder fallbacks without them). They're covered by a GENERATED
+  `.gitignore` block; `scripts/leak_check.sh` runs first in CI and
+  fails the build if any is ever tracked. New licensed asset =
+  manifest entry + ignore-block regen + bundle release FIRST (see
+  wi-shipping skill).
+- API keys: `docs/*_api_key.txt`, gitignored, local-only —
+  `docs/SECRETS-SETUP.md` documents provisioning. Actions secrets live
+  only in release.yml.
 
 ## Working Conventions (apply repo-wide)
 

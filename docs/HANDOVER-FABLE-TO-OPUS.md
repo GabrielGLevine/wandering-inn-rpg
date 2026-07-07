@@ -3,8 +3,15 @@
 **Written 2026-07-02 by the Fable project lead; Fable access ends ~2026-07-09.** This is
 the long-term operating plan the user asked Fable to set so Opus can continue as project
 lead afterward. It complements — never replaces — the living docs: `HANDOFF.md` (session
-state), `docs/ROADMAP.md` (milestone ladder + decisions), `.superpowers/sdd/progress.md`
-(execution ledger), per-milestone specs/plans in `docs/superpowers/`.
+state), `.superpowers/sdd/progress.md` (execution ledger), per-milestone specs/plans in
+`docs/superpowers/`, and — above all — **the GitHub issue board, which is the plan**.
+
+**§0 UNIFIED REPO (2026-07-07, supersedes any private/public split language below):**
+this public repo became the ONE working repo. Session bootstrap = the top of the root
+`CLAUDE.md` (the "Continue project work" contract). Commits are public on push; licensed
+assets overlay via `scripts/fetch_private_assets.sh`; `scripts/leak_check.sh` is CI
+job 1; the pre-transition private repo (underscored name) is a frozen archive. Any
+"sync public" step in the history sections below is retired.
 
 ## 1. Operating model (keep it exactly)
 

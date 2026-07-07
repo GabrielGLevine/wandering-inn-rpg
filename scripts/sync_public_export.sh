@@ -42,9 +42,6 @@ docs/siliconflow_api_key.txt
 docs/pixellab_api_key.txt
 docs/retrodiffusion_api_key.txt
 docs/butler_api_key.txt
-MORNING_SUMMARY.md
-NIGHT-GOAL.md
-HANDOFF.md
 .claude/settings*
 .claude/agents
 .claude/commands

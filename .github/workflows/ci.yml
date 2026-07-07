@@ -43,6 +43,19 @@ env:
   GODOT_TEMPLATES_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz"
 
 jobs:
+  # ------------------------------------------------------------- leak-check
+  # Unified-repo guard (2026-07-07): this repo is the ONE working repo, so a
+  # tracked licensed-asset path or key file would be public the moment it
+  # lands. Cheap, runs first, fails everything.
+  leak-check:
+    name: Leak check (licensed assets + secrets untracked)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run leak check
+        run: bash scripts/leak_check.sh
+
   # ------------------------------------------------------------------ smoke
   smoke:
     name: Smoke (headless boot)

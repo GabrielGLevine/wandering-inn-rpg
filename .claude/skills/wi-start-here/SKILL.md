@@ -5,6 +5,13 @@ description: Use when starting any session on the Wandering Inn RPG repo, when u
 
 # Wandering Inn RPG — Start Here
 
+## Repo identity (UNIFIED 2026-07-07)
+This public repo IS the working repo — every commit is public on push;
+there is no sync step. Licensed assets overlay locally via
+`scripts/fetch_private_assets.sh`; `scripts/leak_check.sh` is CI job 1.
+Details: wi-shipping. The pre-transition private repo (underscored
+name) is a frozen read-only archive.
+
 ## Read order (every fresh session)
 1. `HANDOFF.md` — live state, playtest results, open decisions. **Trust its
    "next step" over your own guess.**
