@@ -1,5 +1,5 @@
 {
- "_comment": "M-FP Q2 (D1-4) + ONBOARDING O5: the Liscor gate district street content, now reached the ONLY way there is post-onboarding -- the real cold-start arc. Prologue reuses combat_walkthrough's proven part-1 (classless spar) + sleep (Warrior L1) + part-2 (proximity ambush, warrior+Relc) to arrive at street (1,3); the old goblin_parley 'Stand aside' bypass is dead (the ambush is corridor-free, so there is no combat-free crossing anymore). Then the street half proper (unchanged): the music_street + 640/106 map payload, the y4 transit lane with the market/Guild detours, krshia_stall/sewer_grate/guild_door exact toasts, the Watch gate_guard dialogue_line, and Selys at (26,4). Seed 9.",
+ "_comment": "M-FP Q2 (D1-4) + ONBOARDING O5: the Liscor gate district street content, now reached the ONLY way there is post-onboarding -- the real cold-start arc. Prologue reuses combat_walkthrough's proven part-1 (classless spar) + sleep (Warrior L1) + part-2 (proximity ambush, warrior+Relc) to arrive at street (1,3); the old goblin_parley 'Stand aside' bypass is dead (the ambush is corridor-free, so there is no combat-free crossing anymore). Then the street half proper: the music_street + 640/106 map payload, the y4 transit lane with the market/Guild detours, krshia_stall/sewer_grate exact toasts, the Watch gate_guard dialogue_line. M-DEPTH DP1: Selys RELOCATED off the street into the Guild interior (guild_interior_walkthrough is now her canonical proof, pool line + graph + desk) -- this script no longer stops at her old (26,4) cell (row y4 is clear all the way through it now) and guild_door is a REAL DOOR, not a toast (the old toast-wait pin moved to a map_changed/ui_map_rendered transition assertion, disclosed in the DP1 report). Seed 9.",
  "steps": [
   {
    "action": "wait_for_event",
@@ -592,7 +592,7 @@
    "name": "03_south_square"
   },
   {
-   "_comment": "Back up to y4 and east to Selys's doorstep -- the y4 lane is blocked-by-entity at her cell (26,4), so the walk naturally stops adjacent to her, facing right, ready to interact.",
+   "_comment": "M-DEPTH DP1 re-path: back up to y4. Selys relocated off the street, so row y4 is now clear straight through her old (26,4) cell -- stop at (25,4) anyway (10, not 11, steps) to reuse the proven Guild-block detour below unchanged.",
    "action": "move",
    "direction": "up",
    "steps": 7
@@ -600,59 +600,18 @@
   {
    "action": "move",
    "direction": "right",
-   "steps": 11
+   "steps": 10
   },
   {
-   "action": "press",
-   "name": "interact"
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    25,
+    4
+   ]
   },
   {
-   "_comment": "SOCIAL S4: first talk to Selys this waking plays her rotating pool line (dialogue_line + chatted_with_selys + heard_gossip banks); a second interact opens the real graph.",
-   "action": "wait_for_event",
-   "type": "dialogue_line",
-   "payload_contains": {
-    "speaker": "Selys"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_started",
-   "payload_contains": {
-    "conversation": "selys_delivery"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
-   "timeout_sec": 5
-  },
-  {
-   "action": "screenshot",
-   "name": "04_selys"
-  },
-  {
-   "_comment": "Fresh state: has_package/lyonette_tip/package_delivered are all unmet, so 'Just looking around.' is the only ungated visible option (index 0) -- confirm closes the conversation cleanly.",
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_ended",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_hidden",
-   "timeout_sec": 5
-  },
-  {
-   "_comment": "Detour around the Guild block's static-blocked (26,3) via the open y5 row, then up to the forecourt and bump the guild_door prop (28,3).",
+   "_comment": "Detour around the Guild block's static-blocked (26,3) via the open y5 row, then up to the forecourt and bump guild_door (28,3) -- a REAL DOOR now (M-DEPTH DP1), not a toast prop.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -677,6 +636,33 @@
    "name": "interact"
   },
   {
+   "_comment": "The old toast pin (\"The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today.\") is RETIRED -- the door transitions for real now. Chronology matches guild_interior_walkthrough's proven order: map_changed fires synchronously inside transition(), world.gd's handler rebuilds (mood/map/entities) BEFORE control returns to record on_enter_accomplishment.", "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "guild",
+    "cell": [8, 10]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "guild"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "guild",
+    "floor_cells": 192,
+    "blocked_cells": 57
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "wait_for_event",
    "type": "accomplishment_recorded",
    "payload_contains": {
@@ -685,21 +671,8 @@
    "timeout_sec": 5
   },
   {
-   "action": "wait_for_event",
-   "type": "toast",
-   "payload_contains": {
-    "text": "The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today."
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "timeout_sec": 5
-  },
-  {
    "action": "screenshot",
-   "name": "05_guild_frontage"
+   "name": "05_guild_interior"
   }
  ]
 }

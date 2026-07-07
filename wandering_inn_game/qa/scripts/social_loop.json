@@ -22,12 +22,17 @@
   { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_gate_guard", "count": 1 } },
   { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "heard_gossip", "count": 1 } },
 
-  { "_comment": "== PHASE A2: Selys's pool line (heard_gossip -> 2) ==. East along the y4 lane; Selys blocks (26,4), so the walk stops adjacent at (25,4) facing right. First talk -> her pool DIALOGUE_LINE.", "action": "move", "direction": "right", "steps": 24 },
+  { "_comment": "== PHASE A2: Selys's pool line (heard_gossip -> 2) ==. East along the y4 lane to (25,4) -- M-DEPTH DP1: Selys relocated off the street into the Guild interior, so this cell no longer blocks (row y4 is clear straight through it now); the walk still lands here deliberately (24 steps), it just isn't stopped BY her anymore.", "action": "move", "direction": "right", "steps": 24 },
   { "action": "assert_state", "path": "player_cell", "equals": [25, 4] },
+  { "_comment": "M-DEPTH DP1 re-path: teleport (debug-only, bypasses doors; still calls Game.sim.transition() for real render/mood events) straight to her desk approach -- the street->guild_door->desk walk is already proven end-to-end by gate_district_walkthrough/guild_interior_walkthrough. 'move up 7' is the same proven step, stopping blocked-adjacent to Selys (8,2) facing up.", "action": "teleport", "map": "guild", "cell": [8, 10] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "guild" }, "timeout_sec": 5 },
+  { "action": "move", "direction": "up", "steps": 7 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Selys" }, "timeout_sec": 5 },
   { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_selys", "count": 1 } },
   { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "heard_gossip", "count": 2 } },
+  { "_comment": "M-DEPTH DP1 re-path: teleport back to the exact street cell (25,4) PHASE A3's route below always started from -- everything from here on is byte-identical to before her relocation.", "action": "teleport", "map": "street", "cell": [25, 4] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
 
   { "_comment": "== PHASE A3: Krshia's pool line (heard_gossip -> 3, the volume gate) THEN a same-waking re-talk into her real crate graph ==. West to Krshia's column, bump north from (13,3) (she blocks 13,2). First interact -> pool line.", "action": "move", "direction": "left", "steps": 12 },
   { "action": "move", "direction": "up", "steps": 1 },

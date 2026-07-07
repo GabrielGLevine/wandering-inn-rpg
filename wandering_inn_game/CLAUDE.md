@@ -281,6 +281,7 @@ current-state-only, one short paragraph per live system.
 | `stealth_loop` | 9 (fixture `near_ambush_sneak`) | the [Stealth] seam: skip an ambush, break it, positive control |
 | `rogue_earn_loop` | 9 (fixture `near_rogue`) | K3 [Rogue] earn: `recovered_crate_watch` -> sleep -> `class_gained` -> [Stealth] fielded |
 | `stages_loop` | 9 (fixture `krshia_stage3_pre`) | Social Pillar II: `talk_pool_stages` base->final (Krshia), unlocked hub topic + shop discount perk surface |
+| `guild_interior_walkthrough` | 9 (fixture `near_guild`) | M-DEPTH DP1: guild_door real-door round-trip, Selys-behind-the-desk (pool + graph incl. desk-context node), board/notice-wall dressed props, Renn/Ilvo/Yelra walk-on pool lines |
 
 ## Working conventions
 

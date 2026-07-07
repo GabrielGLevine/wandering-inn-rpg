@@ -1652,7 +1652,8 @@
      "talk_pool": [
       "Three reports due by dawn and the ink is winning. If anyone asks, the [Tactician] of Liscor is 'strategizing'.",
       "Three reports due by dusk and two clerks who can't count past a company. I'll manage. I always manage.",
-      "Supply lines, sightlines, morale — a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak."
+      "Supply lines, sightlines, morale — a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak.",
+      "Selys works the desk inside now, board and all. I still find reasons to linger out here more than the job requires. The paperwork doesn't ask why."
      ],
      "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/olesm_stages.json (staging_note/_flag annotations stripped). Three stages. The chess-beat perk (stage 3, olesm_board_partner) is FLAGGED unbuilt this wave (the match copy itself is a follow-up writing task per the staging doc) -- only the stage rows + hub topic unlocks ship.",
      "talk_pool_stages": [
@@ -1715,59 +1716,21 @@
      "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere — a sign says she remembers faces, and debts."
     },
     {
+     "_comment": "M-DEPTH DP1: guild_door converts from a toast prop to a REAL door -- the Guild interior is now enterable. The old toast (\"The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today.\") is RETIRED (the player now walks in and sees the real hall; gate_district_walkthrough's pin moved from a toast-wait to the map_changed/ui_map_rendered transition -- see its _comment). door_when is NOT needed (the Guild is public, per plan). on_enter_accomplishment keeps the SAME accomplishment id (visited_guild) so every script asserting it still passes unchanged. to_cell (8,10) lands just inside, facing up into the hall, one cell north of the guild_exit door (8,11) -- never lands ON the exit door's own occupied cell.",
      "id": "guild_door",
-     "kind": "prop",
+     "kind": "door",
      "cell": [
       28,
       3
      ],
      "display_name": "Adventurer's Guild",
      "sprite": "door",
-     "on_interact_accomplishment": "visited_guild",
-     "toast": "The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today."
-    },
-    {
-     "id": "selys",
-     "kind": "npc",
-     "cell": [
-      26,
-      4
+     "to_map": "guild",
+     "to_cell": [
+      8,
+      10
      ],
-     "display_name": "Selys",
-     "sprite": "citizen_f",
-     "tint": [
-      0.45,
-      1.0,
-      0.55
-     ],
-     "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger — she has sized up a hundred adventurers today and found most of them wanting.",
-     "friendly_line": "...Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
-     "facing": "up",
-     "talk_pool": [
-      "Guild's the usual mess. Bounties on the board, arguments over the board, somebody bleeding near the board.",
-      "Need something stamped, filed, or explained slowly? That is the job. Mostly the slow part.",
-      "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
-      "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
-     ],
-     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/selys_stages.json (staging_note annotation stripped). Two stages only. Board perk (⚑ first pick at the board) is FLAGGED unbuilt this wave (a repeatable board is new machinery, out of v1 scope per the staging doc) -- only the stage row + hub topic unlock ship.",
-     "talk_pool_stages": [
-      {
-       "id": "selys_past_the_counter",
-       "requires_accomplishment": { "errand_decided": 1, "chatted_with_selys": 2 },
-       "lines": [
-        "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
-        "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
-        "Rough week on the board. If you're taking work, take the sane jobs — I flag the sane ones. It's not a service everyone gets."
-       ]
-      }
-     ],
-     "conversation": "selys_delivery",
-     "dialogue": [
-      {
-       "speaker": "Selys",
-       "text": "Adventurers. Always tracking mud in."
-      }
-     ]
+     "on_enter_accomplishment": "visited_guild"
     },
     {
      "_comment": "Onboarding rev O4: Pisces Jealnv (Human [Necromancer], canon -- Horns of Hammerad). Guild frontage (30,4), east of guild_door (28,3), clear of gate_district_walkthrough's forecourt approach cells (27,3/27,4/27,5/26,5/25,5). Track B1 (2026-07-06): bespoke PixelLab sprite (hooded young human in immaculate white robes with faded trim + sash), replacing the earlier citizen_f cool-white-tint stand-in. Teaches magic via the pisces_magic graph; mage.gained_by keys to its learned_magic_from_pisces bank.",
@@ -3682,6 +3645,194 @@
      },
      "on_victory": [
       "cleared_the_warren"
+     ]
+    }
+   ]
+  },
+  "guild": {
+   "_comment": "M-DEPTH DP1: the Adventurer's Guild interior (16x12), reached via guild_door on the street (28,3; now a real door, not a toast). Selys RELOCATES here from the street (26,4) -- same entity id, her ENTIRE existing surface unchanged (talk_pool/talk_pool_stages/conversation graph), now standing behind a real desk (counter_left/mid/right at (6,2)/(7,2)/(9,2)/(10,2), gap at (8,2) for her -- same desk-gap convention as Erin's inn counter). Reuses the `inn` biome (Interior_Walls_01.png wood-hall look) rather than a new tileset -- both are wood buildings in Liscor; moods.json's `guild` card (warm bureaucratic) supplies the grade. THE REQUEST BOARD (guild_board) and a second guild_notice_wall prop are DRESSED-ONLY this task (on_interact_accomplishment + toast/observe, board copy lifted verbatim from docs/design/board-staging/board-copy.md sec.1) -- the real repeatable-posting mechanics are DP2's, fed from guild-bounties.json (not touched here). Two Bronze-rank Drakes (Renn+Ilvo) bicker at the board -- a canon callback to the OLD guild_door toast's \"adventurers arguing over a bounty board\" -- plus a Gnoll archer (Yelra) at a side table; all three are talk_pool-only, inert-adjacent walk-ons (no quests/graphs v1), profiles in docs/design/character-profiles-staging.md. guild_exit (8,11) is the south-wall return door; guild_door's to_cell (8,10) lands one cell north of it (an entity's own cell is never a valid door landing -- the is_cell_blocked contract), facing up into the hall; guild_exit returns to street (27,3), the same open cell gate_district_walkthrough already stood on to approach the old guild_door prop, verified unaffected by Selys's removal.",
+   "biome": "inn",
+   "grid": {
+    "width": 16,
+    "height": 12
+   },
+   "blocked": [
+    [6, 2],
+    [7, 2],
+    [9, 2],
+    [10, 2],
+    [13, 6],
+    [12, 9]
+   ],
+   "floor_layers": [
+    {
+     "_pick": "Reuses the inn hall's plank floor variant set (Interior_Walls_01.png) -- same wood-hall read as the inn common room.",
+     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+     "tile_px": 16,
+     "variants": [
+      [1, 21],
+      [2, 21],
+      [1, 22],
+      [2, 22]
+     ],
+     "cells": "all"
+    }
+   ],
+   "walls": {
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "segments": [
+     { "from": [0, 0], "to": [15, 0], "cap": [14, 6], "face": [14, 7] },
+     { "from": [0, 1], "to": [0, 11], "cap": [14, 6] },
+     { "from": [15, 1], "to": [15, 11], "cap": [14, 6] },
+     { "_comment": "South wall, gapped at x=8 for guild_exit.", "from": [1, 11], "to": [7, 11], "cap": [14, 6] },
+     { "from": [9, 11], "to": [14, 11], "cap": [14, 6] }
+    ]
+   },
+   "decor": [
+    { "sprite": "counter_left", "cell": [6, 2] },
+    { "sprite": "counter_mid", "cell": [7, 2] },
+    { "sprite": "counter_mid", "cell": [9, 2] },
+    { "sprite": "counter_right", "cell": [10, 2] },
+    { "sprite": "rug_tan", "cell": [8, 4] },
+    { "sprite": "table_brown", "cell": [13, 6] },
+    { "sprite": "table_brown", "cell": [12, 9] },
+    { "sprite": "stool", "cell": [14, 6] }
+   ],
+   "_comment_ambience": "Same dusk/night-only dust-motes pattern as the inn hall (M-BEAUTY B3 judgment call).",
+   "ambience": [
+    { "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
+   ],
+   "entities": [
+    {
+     "id": "guild_exit",
+     "kind": "door",
+     "cell": [8, 11],
+     "display_name": "Liscor Street",
+     "sprite": "door",
+     "to_map": "street",
+     "to_cell": [27, 3]
+    },
+    {
+     "id": "selys",
+     "kind": "npc",
+     "cell": [8, 2],
+     "display_name": "Selys",
+     "sprite": "citizen_f",
+     "tint": [0.45, 1.0, 0.55],
+     "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger — she has sized up a hundred adventurers today and found most of them wanting.",
+     "friendly_line": "...Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
+     "facing": "down",
+     "talk_pool": [
+      "Guild's the usual mess. Bounties on the board, arguments over the board, somebody bleeding near the board.",
+      "Need something stamped, filed, or explained slowly? That is the job. Mostly the slow part.",
+      "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
+      "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
+     ],
+     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/selys_stages.json (staging_note annotation stripped). Two stages only. Board perk (⚑ first pick at the board) is FLAGGED unbuilt this wave (a repeatable board is new machinery, out of v1 scope per the staging doc) -- only the stage row + hub topic unlock ship.",
+     "talk_pool_stages": [
+      {
+       "id": "selys_past_the_counter",
+       "requires_accomplishment": { "errand_decided": 1, "chatted_with_selys": 2 },
+       "lines": [
+        "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
+        "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
+        "Rough week on the board. If you're taking work, take the sane jobs — I flag the sane ones. It's not a service everyone gets."
+       ]
+      }
+     ],
+     "conversation": "selys_delivery",
+     "dialogue": [
+      {
+       "speaker": "Selys",
+       "text": "Adventurers. Always tracking mud in."
+      }
+     ]
+    },
+    {
+     "_comment": "M-DEPTH DP1: THE REQUEST BOARD -- dressed-only (DP2 wires the real repeatable postings). Toast lifted verbatim from docs/design/board-staging/board-copy.md sec.1's header line; observe carries the footer/standing-notice line verbatim (the S.S. signature -- Selys Shivertail; Tekshia the Guildmistress stays OFFSTAGE, a signature only, per the staged canon note). Sprite: no dedicated corkboard/bulletin-board asset exists in any in-hand pack (same exhausted search as the 7c inn-sign precedent, docs/skeleton_scene.json's `_comment` at that entity) -- reuses the `inn_sign` hanging-plank crop (Furniture.png), the established closest semantic match for a board surface; VISUAL-LOG flagged pending a real asset.",
+     "id": "guild_board",
+     "kind": "prop",
+     "cell": [2, 3],
+     "display_name": "The Request Board",
+     "sprite": "inn_sign",
+     "tint": [0.85, 0.78, 0.6],
+     "facing": "right",
+     "on_interact_accomplishment": "read_the_board",
+     "toast": "The Request Board. Paper three layers deep in places — new notices pinned straight over the dead ones. Two or three have fresh ink.",
+     "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. — S.S."
+    },
+    {
+     "_comment": "M-DEPTH DP1: a second, smaller notice surface (city/personal notices, distinct from the Guild's own bounty board) -- ORIGINAL flavor copy, canon-safe (no invented named characters), voice-linted. Sprite: reuses `library_shelf` (a tall wood-shelf silhouette, tinted parchment) as a stand-in for a wall unit stacked with handbills -- VISUAL-LOG flagged pending a real asset.",
+     "id": "guild_notice_wall",
+     "kind": "prop",
+     "cell": [2, 5],
+     "display_name": "Notice Wall",
+     "sprite": "library_shelf",
+     "tint": [0.6, 0.5, 0.35],
+     "facing": "right",
+     "on_interact_accomplishment": "read_guild_notices",
+     "toast": "A second board, smaller and less official — lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time.",
+     "observe": "Handbills and scraps overlapping the request board's edge — the Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only."
+    },
+    {
+     "_comment": "M-DEPTH DP1 walk-on: Renn Coldscale, Bronze-rank Drake, half of a bickering duo at the board -- profile in docs/design/character-profiles-staging.md. Reuses the `pc_drake_m` character-creation rig (ash-grey tint) rather than new art. talk_pool + a static dialogue fallback (no conversation graph -- inert-adjacent per plan).",
+     "id": "renn",
+     "kind": "npc",
+     "cell": [3, 3],
+     "display_name": "Renn",
+     "sprite": "pc_drake_m",
+     "tint": [0.55, 0.58, 0.62],
+     "facing": "left",
+     "talk_pool": [
+      "Four silver for a nest clear? Four? My arrows cost more than that if it goes badly.",
+      "Every posting on that board is an insult with a wax seal. I'm taking it anyway. Don't look smug."
+     ],
+     "dialogue": [
+      {
+       "speaker": "Renn",
+       "text": "Still four silver. Still an insult."
+      }
+     ]
+    },
+    {
+     "_comment": "M-DEPTH DP1 walk-on: Ilvo Brackenhide, Bronze-rank Drake, the reasonable half of the duo. Reuses `pc_drake_f` (moss-green tint).",
+     "id": "ilvo",
+     "kind": "npc",
+     "cell": [2, 4],
+     "display_name": "Ilvo",
+     "sprite": "pc_drake_f",
+     "tint": [0.4, 0.55, 0.35],
+     "facing": "left",
+     "talk_pool": [
+      "He says that about every posting. Then he takes it. Then he complains the whole walk there.",
+      "The pay's fair for Bronze work. Renn just likes the sound of his own complaining."
+      ],
+     "dialogue": [
+      {
+       "speaker": "Ilvo",
+       "text": "He'll take it. Watch."
+      }
+     ]
+    },
+    {
+     "_comment": "M-DEPTH DP1 walk-on: Yelra, Bronze-rank Gnoll archer, waiting at a side table. Reuses `pc_gnoll_f` (tan-brown tint).",
+     "id": "yelra",
+     "kind": "npc",
+     "cell": [12, 6],
+     "display_name": "Yelra",
+     "sprite": "pc_gnoll_f",
+     "tint": [0.62, 0.5, 0.35],
+     "facing": "down",
+     "talk_pool": [
+      "Bronze-rank, six months in. Long enough to know which jobs pay in coin and which pay in regret.",
+      "Quiet week. Good for the coinpurse, bad for the nerves. I'll take quiet."
+     ],
+     "dialogue": [
+      {
+       "speaker": "Yelra",
+       "text": "Board's behind you, same as it was a minute ago."
+      }
      ]
     }
    ]

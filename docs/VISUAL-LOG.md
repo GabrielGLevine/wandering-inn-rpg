@@ -16,6 +16,37 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] SPRITE — **THE REQUEST BOARD (`guild_board`, M-DEPTH DP1, Adventurer's
+  Guild interior) reuses the `inn_sign` hanging-plank crop and reads
+  small/low-contrast against the wood-plank wall** — windowed-verified
+  in-frame (`.superpowers/sdd/fp-handoff/dp1-shots/03_the_board.png`): the
+  board is legible only because the toast fired on interact, not because a
+  stranger would spot it unprompted from a few cells away. No dedicated
+  corkboard/bulletin-board asset exists in any in-hand pack (same exhausted
+  search as the `inn_sign` 7c precedent — see that log entry below).
+  `guild_notice_wall` reuses `library_shelf` similarly (reads as a
+  wardrobe/bookshelf, not a wall of papers) and sits close enough to the
+  board + the Renn/Ilvo walk-on pair that the cluster reads a little dense
+  at a glance (Renn/Ilvo also share a silhouette, tint-only differentiated
+  — tint-only pairing, but
+  worth a look together with the board/notice-wall crop). DP2 (the board's
+  real mechanical payoff) is the natural point to also generate/assign a
+  bespoke board sprite; flag for a PixelLab pass then, or fold into the
+  next NIGHT polish wave.
+- [ ] UI/HOTBAR — **[Stealth] slot renders literal text, no icon glyph**
+  (S2-close rotation 2026-07-07, systemic across 4 shots / 2 scripts:
+  s2close-playtest-shots/rogue_earn_loop/01-03 + social_loop/01). The
+  first thing a player sees after earning [Rogue]. Check skills.json's
+  sneak icon id resolves against sprites.json (K3's rename may have
+  orphaned it) or pick/generate a semantically-right stealth glyph (the
+  K3 brief's glyph pattern). NIGHT fix wave after DP1 releases
+  sprites.json.
+- [ ] UI/INVENTORY — item card's last lore line rides the panel's bottom
+  fold AND collides with the "Press I" toast in tutorial_flow/03 (frame
+  illegible at that line). The scroll area's bottom margin vs the
+  art-safe band class + the toast's new layer-12 position over that
+  corner. Same fix wave.
+
 - [ ] SPRITE — `inn_sign` (Task 7c, "No Killing Goblins" sign, floodplains
   `(6,6)`) is a semantic-match STAND-IN, not a dedicated signpost asset: NO
   wooden-sign/signpost sprite exists in any in-hand pack (exhausted

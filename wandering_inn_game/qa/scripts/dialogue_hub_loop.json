@@ -538,14 +538,23 @@
    "equals": "street"
   },
   {
-   "action": "move",
-   "direction": "down",
-   "steps": 1
+   "_comment": "M-DEPTH DP1 re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); 'move up 7' is the exact proven step from guild_interior_walkthrough, stopping blocked-adjacent to Selys (8,2) facing up. No return-teleport needed -- this script ends at her hub.",
+   "action": "teleport",
+   "map": "guild",
+   "cell": [8, 10]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "guild"
+   },
+   "timeout_sec": 5
   },
   {
    "action": "move",
-   "direction": "right",
-   "steps": 25
+   "direction": "up",
+   "steps": 7
   },
   {
    "action": "press",

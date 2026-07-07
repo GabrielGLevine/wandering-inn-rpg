@@ -521,14 +521,23 @@
    "equals": "street"
   },
   {
-   "action": "move",
-   "direction": "down",
-   "steps": 1
+   "_comment": "M-DEPTH DP1 re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); 'move up 7' is the exact proven step from guild_interior_walkthrough, stopping blocked-adjacent to Selys (8,2) facing up.",
+   "action": "teleport",
+   "map": "guild",
+   "cell": [8, 10]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "guild"
+   },
+   "timeout_sec": 5
   },
   {
    "action": "move",
-   "direction": "right",
-   "steps": 25
+   "direction": "up",
+   "steps": 7
   },
   {
    "action": "press",
@@ -635,6 +644,20 @@
    "action": "assert_state",
    "path": "accomplishments.gave_reward",
    "equals": 1
+  },
+  {
+   "_comment": "M-DEPTH DP1 re-path: teleport back to the exact street cell (25,4) this script's ORIGINAL route always stopped at after Selys (blocked by her old street cell) -- every step from here on is byte-identical to before her relocation.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [25, 4]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
   },
   {
    "_comment": "M-FP Q1: back to inn via street_door -> floodplains -> floodplains_inn_door.",

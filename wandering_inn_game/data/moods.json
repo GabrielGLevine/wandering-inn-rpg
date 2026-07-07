@@ -85,6 +85,25 @@
    ],
    "vignette": 0.45
   },
+  "guild": {
+   "_comment": "M-DEPTH DP1: the Adventurer's Guild interior -- \"warm bureaucratic\" per the plan's direction-card convention. Warmer/ambery than the inn's own grade (lamp-and-parchment read for a paperwork hall), less vignette than the street (a busy, populated room, not an oppressive one).",
+   "day": [
+    1.0,
+    0.94,
+    0.82
+   ],
+   "dusk": [
+    0.88,
+    0.72,
+    0.5
+   ],
+   "night": [
+    0.7,
+    0.58,
+    0.4
+   ],
+   "vignette": 0.3
+  },
   "deep_tunnels": {
    "_comment": "M-ARC A2: the Raskghar descent -- the DARKEST pin in the game, time-invariant (below the sewers, no daylight ever reaches it). Meaningfully darker + colder than the sewers' [0.3,0.32,0.45] so the descent visibly escalates; a stronger vignette (0.55) squeezes the readable space to a lantern's reach. Any prop lights glow at every phase intent (light_energy day=0.0 still keeps day flat, so the tunnels lean on their own cold ambience).",
    "day": [
