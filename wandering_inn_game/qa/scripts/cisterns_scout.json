@@ -49,7 +49,7 @@
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "observe", "target": "nest_ledge" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "scouted_the_nest" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Appraise Foe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper — that's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade." } },
+  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Appraise Foe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper. That's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade." } },
   { "action": "assert_state", "path": "player_cell", "equals": [18, 10] },
 
   { "_comment": "== ASCEND: back to the ladder (2,1). Down 1 to (18,11), left to (2,11), up to (2,2), interact -> street (15,11). ==", "action": "move", "direction": "down", "steps": 1 },

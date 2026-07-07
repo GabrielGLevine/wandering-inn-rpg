@@ -40,7 +40,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "Hammered out in a hurry by goblin hands, more wedge than sword. It still cuts.",
-			"lore": "Goblin forges run on scavenge — plow edges, cartwheel rims. Whoever hammered this understood one thing about swords, and it was the edge."
+			"lore": "Goblin forges run on scavenge: plow edges, cartwheel rims. Whoever hammered this understood one thing about swords, and it was the edge."
 		},
 		{
 			"id": "chipped_spear",
@@ -114,7 +114,7 @@
 			"abilities": [],
 			"price": 5,
 			"description": "A weathered trinket found among old stones outside the city, strung on a cord gone soft with age. Something about it settles the nerves.",
-			"lore": "The old stones outside the city give up trinkets like this after a hard rain, and nobody living remembers who strung them. Hold it to your ear and it hums, faintly — most owners decide not to ask a second question."
+			"lore": "The old stones outside the city give up trinkets like this after a hard rain, and nobody living remembers who strung them. Hold it to your ear and it hums, faintly. Most owners decide not to ask a second question."
 		},
 		{
 			"id": "gnollish_hunting_knife",
@@ -129,7 +129,7 @@
 			"abilities": [],
 			"price": 15,
 			"description": "A short, wickedly balanced skinning blade from the Silverfang stalls, its bone grip worn smooth by a hunter's hand. Krshia swears by the steel.",
-			"lore": "Silverfang steel comes south with the tribe's caravans and gets worked plains-side, the old way, before it ever sees a city stall. Krshia could sell three times what her kin send her — she says so to anyone who buys one."
+			"lore": "Silverfang steel comes south with the tribe's caravans and gets worked plains-side, the old way, before it ever sees a city stall. Krshia could sell three times what her kin send her. She says so to anyone who buys one."
 		},
 		{
 			"id": "wool_lined_cloak",
@@ -144,7 +144,7 @@
 			"abilities": [],
 			"price": 18,
 			"description": "Heavy travel-weave lined with carded wool, cut for the Floodplains' wet cold. Market goods, honestly priced -- Krshia will remind you of that.",
-			"lore": "Plains wool, city loom — Gnoll caravans sell the fleece and Drake weavers argue the price, and the cloak comes out warmer than the bargaining. The Floodplains rain finds every cheaper seam."
+			"lore": "Plains wool, city loom: Gnoll caravans sell the fleece and Drake weavers argue the price, and the cloak comes out warmer than the bargaining. The Floodplains rain finds every cheaper seam."
 		},
 		{
 			"id": "copper_luck_band",
@@ -218,7 +218,7 @@
 			"abilities": [],
 			"price": 35,
 			"description": "A grey Drake scale, shed and gone stone-hard, set in an iron clasp. Heavier on the mind than on the neck.",
-			"lore": "Shed scales with stone in them turn up in the southern hills, and enchanters pay well for the rare one that takes a binding. Drakes find wearing another Drake's scale distasteful — the stall keeps this one under the counter."
+			"lore": "Shed scales with stone in them turn up in the southern hills, and enchanters pay well for the rare one that takes a binding. Drakes find wearing another Drake's scale distasteful; the stall keeps this one under the counter."
 		},
 		{
 			"id": "moon_bone_amulet",

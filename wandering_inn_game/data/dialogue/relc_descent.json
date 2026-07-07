@@ -4,7 +4,7 @@
 	"nodes": {
 		"join": {
 			"speaker": "Relc",
-			"text": "Bones. Old fires. Something's been living down here a good long while — and it just heard us walk in. ...Deep tunnels, huh? You know what lives in deep tunnels? Me. As of today. Come on — you swing, I'll skewer.",
+			"text": "Bones. Old fires. Something's been living down here a good long while, and it just heard us walk in. ...Deep tunnels, huh? You know what lives in deep tunnels? Me. As of today. Come on. You swing, I'll skewer.",
 			"options": [
 				{ "text": "[Go together.]", "effects": [ { "accomplishment": "relc_joined_descent" }, { "start_combat": "awakened_boss" } ], "end": true },
 				{ "text": "[I go alone.]", "goto": "alone_confirm" }
@@ -15,7 +15,7 @@
 			"text": "Alone? Ha! You're either very brave or very— actually, no. Just the one thing. I'll hang back at the mouth, then, and let the professional wait by the door for once. Shout if you find teeth. ...You sure about this?",
 			"options": [
 				{ "text": "[I'm sure. Wait here.]", "effects": [ { "accomplishment": "went_alone" }, { "start_combat": "awakened_boss" } ], "end": true },
-				{ "text": "[On second thought — with me.]", "goto": "join" }
+				{ "text": "[On second thought, with me.]", "goto": "join" }
 			]
 		}
 	}

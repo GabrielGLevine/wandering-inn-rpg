@@ -3,7 +3,7 @@
  "nodes": {
   "meet": {
    "speaker": "Relc",
-   "text": "Oi. Hold up. Big spear, bored Drake, official business — that's me covered. You came off the inn hill. Name and errand.",
+   "text": "Oi. Hold up. Big spear, bored Drake, official business. That's me covered. You came off the inn hill. Name and errand.",
    "text_variants": [
     {
      "requires": {
@@ -11,7 +11,7 @@
        "met_relc": 1
       }
      },
-     "text": "Hah — the inn's errand-runner. Road's been quiet since you passed. Mostly."
+     "text": "Hah! The inn's errand-runner. Road's been quiet since you passed. Mostly."
     },
     {
      "requires": {
@@ -19,7 +19,7 @@
        "sparred_with_relc": 1
       }
      },
-     "text": "There's the dummy-slayer. Straw fears you. Come here — I owe you something for the show."
+     "text": "There's the dummy-slayer. Straw fears you. Come here. I owe you something for the show."
     }
    ],
    "options": [
@@ -105,7 +105,7 @@
   },
   "banter": {
    "speaker": "Relc",
-   "text": "Relc. Senior Guardsman, best spear in Liscor, currently guarding grass. The inn feeds you, the city taxes you — everything between is my road, so behave on it. There's goblins about, if the walk gets boring.",
+   "text": "Relc. Senior Guardsman, best spear in Liscor, currently guarding grass. The inn feeds you, the city taxes you. Everything between is my road, so behave on it. There's goblins about, if the walk gets boring.",
    "options": [
     {
      "text": "You any good with that spear? (Spar)",
@@ -119,7 +119,7 @@
   },
   "warns": {
    "speaker": "Relc",
-   "text": "Goblins on the road since the thaw — a warband near the gate with a chief who's got actual teeth. Old stones to the north-east? Stay off them. And if the pond looks deep, that's because it is.",
+   "text": "Goblins on the road since the thaw. A warband near the gate with a chief who's got actual teeth. Old stones to the north-east? Stay off them. And if the pond looks deep, that's because it is.",
    "options": [
     {
      "text": "Good to know.",
@@ -133,7 +133,7 @@
   },
   "spar_offer": {
    "speaker": "Relc",
-   "text": "Ha! Good instinct — everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry.",
+   "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry.",
    "text_variants": [
     {
      "requires": {
@@ -141,7 +141,7 @@
        "sparred_with_relc": 1
       }
      },
-     "text": "Again? Fine. The dummies heal fast — perk of being straw. Same rules: move, hit, no crying."
+     "text": "Again? Fine. The dummies heal fast. Perk of being straw. Same rules: move, hit, no crying."
     }
    ],
    "options": [
@@ -162,7 +162,7 @@
   },
   "gift": {
    "speaker": "Relc",
-   "text": "My spare spear. Held gates wider than that one. Now listen — owning a weapon and HOLDING it are different things: press I, that's your pack. Put the spear in your hand before the road checks your grip. Sword arm, spear arm — the weapon you carry decides which of your moves come with you.",
+   "text": "My spare spear. Held gates wider than that one. Now listen. Owning a weapon and HOLDING it are different things: press I, that's your pack. Put the spear in your hand before the road checks your grip. Sword arm, spear arm. The weapon you carry decides which of your moves come with you.",
    "options": [
     {
      "text": "I’ll try it on. (Press I after this.)",
@@ -176,7 +176,7 @@
   },
   "relc_army": {
    "speaker": "Relc",
-   "text": "Ha! No. Army, before. Liscor's got one — it just never comes home. I did. Walls pay worse, but nobody makes you march in the rain, and I am DONE with marching. Best decision I ever made, after the spear.",
+   "text": "Ha! No. Army, before. Liscor's got one. It just never comes home. I did. Walls pay worse, but nobody makes you march in the rain, and I am DONE with marching. Best decision I ever made, after the spear.",
    "options": [
     {
      "text": "Why'd you leave?",

@@ -71,7 +71,7 @@
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "loadout_changed", "payload_contains": { "skill": "observe", "assigned": true, "loadout": ["observe"] }, "timeout_sec": 5 },
-  { "_comment": "A non-empty loadout intersects+reorders the field bar: only [Appraise Foe] survives ([Basic Cleaning]/[Basic Cooking] are known but unslotted this walk), so it's now the ONLY slot -- slot 1, not its old AUTO slot 3. Fires while the journal is still open (field_hotbar.gd isn't journal-gated).", "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "readout_lines": ["1  [Appraise Foe] — A measuring look that reads a room, a person, a problem — and files it away for later."] }, "timeout_sec": 5 },
+  { "_comment": "A non-empty loadout intersects+reorders the field bar: only [Appraise Foe] survives ([Basic Cleaning]/[Basic Cooking] are known but unslotted this walk), so it's now the ONLY slot -- slot 1, not its old AUTO slot 3. Fires while the journal is still open (field_hotbar.gd isn't journal-gated).", "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "readout_lines": ["1  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."] }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_journal_loadout_rendered", "payload_contains": { "skill": "observe", "assigned": true, "cursor_index": 6 }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "04_journal_observe_assigned" },
   { "action": "press", "name": "journal" },

@@ -1409,7 +1409,7 @@ func _interact_board(target: Dictionary) -> Dictionary:
 func _open_board_picker_dialogue() -> void:
 	var slate := board_bounties()
 	if times_slept != board_last_seen_times_slept:
-		_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Selys", "text": "New paper went up this morning. Old postings come down whether they're done or not — ink's cheap, wall space isn't."})
+		_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Selys", "text": "New paper went up this morning. Old postings come down whether they're done or not. Ink's cheap, wall space isn't."})
 	board_last_seen_times_slept = times_slept
 	_begin_code_dialogue(WIBounties.build_picker_graph(slate), "board_picker", "selys")
 
@@ -1554,7 +1554,7 @@ func _interact_delivery_board(target: Dictionary) -> Dictionary:
 ## the line once).
 func _open_delivery_picker_dialogue() -> void:
 	if delivery_failed:
-		_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Vess", "text": "Parcel came back on the night ledger. Happens. Happens ONCE, usually. Board's still live — take another slip and run it like you mean it."})
+		_emit(WIEvents.DIALOGUE_LINE, {"speaker": "Vess", "text": "Parcel came back on the night ledger. Happens. Happens ONCE, usually. Board's still live. Take another slip and run it like you mean it."})
 		delivery_failed = false
 	_begin_code_dialogue(WIBounties.build_delivery_picker_graph(delivery_board_deliveries()), "delivery_picker", "vess")
 
@@ -1917,7 +1917,7 @@ func resonance_used() -> int:
 ## raw stats -- resonance itself is a visible currency like gold/HP, fine to
 ## reference, but the arithmetic stays off-screen.
 const _CAPACITY_REFUSAL_TOAST := "It buzzes once against the others, like a wasp against glass, and will not settle."
-const _ACCESSORY_SLOTS_FULL_TOAST := "No room left for another charm — something has to come off first."
+const _ACCESSORY_SLOTS_FULL_TOAST := "No room left for another charm. Something has to come off first."
 
 
 ## Equips a carried item into its own kind's slot ("weapon", "armor", or --
@@ -2366,7 +2366,7 @@ func _resolve_evolutions() -> bool:
 			_emit(WIEvents.CLASS_EVOLVED, {"from": class_id, "to": new_id, "level": level})
 			var text := "[%s] has become [%s]!" % [old_name, new_name]
 			if bool(outcome.get("off_interval", false)):
-				text += " The change came later than most — but it holds all the same."
+				text += " The change came later than most, but it holds all the same."
 			_emit(WIEvents.TOAST, {"text": text})
 		elif bool(outcome.get("generalist", false)):
 			var grant_names: Array = []

@@ -20,7 +20,7 @@
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "browsed_bread_stall" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Warm bread smell over the whole row. No one's minding the stall this exact moment — the loaves aren't going anywhere without a fight." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Warm bread smell over the whole row. No one's minding the stall this exact moment. The loaves aren't going anywhere without a fight." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_bread_stall" },
 
@@ -59,8 +59,8 @@
   { "action": "assert_state", "path": "player_cell", "equals": [5, 4] },
   { "action": "move", "direction": "right", "steps": 1 },
   { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Dresk", "text": "Sergeant Ashgrave. If you're here to report something, the slate's on the wall — write it plain." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": { "text": "Dresk: Sergeant Ashgrave. If you're here to report something, the slate's on the wall — write it plain." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Dresk", "text": "Sergeant Ashgrave. If you're here to report something, the slate's on the wall. Write it plain." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": { "text": "Dresk: Sergeant Ashgrave. If you're here to report something, the slate's on the wall. Write it plain." }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "05_duty_sergeant" },
 
   { "_comment": "== (5) ZEVARA'S DESK == (5,4) down1 -> (5,5), right4 -> (9,5), right1 blocks on zevara_desk (10,5) & faces it. Flavor/observe only -- she herself stays at the gate (zevara_intro untouched).", "action": "move", "direction": "down", "steps": 1 },
@@ -81,7 +81,7 @@
   { "action": "move", "direction": "right", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "skill_unknown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Barred, and empty behind the bars — you can tell by the quiet. Whatever ends up in here hasn't happened yet." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Barred, and empty behind the bars. You can tell by the quiet. Whatever ends up in here hasn't happened yet." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "screenshot", "name": "07_the_cell" },
 

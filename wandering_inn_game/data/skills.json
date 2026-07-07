@@ -287,7 +287,7 @@
 			"contexts": ["exploration"],
 			"field": true,
 			"field_ambient": "[Appraise Foe] — You take in the empty space around you. Nothing here rewards a closer look.",
-			"description": "A measuring look that reads a room, a person, a problem — and files it away for later."
+			"description": "A measuring look that reads a room, a person, a problem, and files it away for later."
 		},
 		{
 			"id": "battlefield_awareness",
@@ -304,7 +304,7 @@
 			"contexts": ["exploration"],
 			"field": true,
 			"field_ambient": "[Soothe Clientele] — You offer the empty room a calming word. Only the dust settles.",
-			"description": "A word and a refilled glass, and the room's troubles ease — patrons forget whatever was gnawing at them."
+			"description": "A word and a refilled glass, and the room's troubles ease. Patrons forget whatever was gnawing at them."
 		},
 		{
 			"id": "unerring_aim",
@@ -313,7 +313,7 @@
 			"contexts": ["exploration"],
 			"field": true,
 			"field_ambient": "[Unerring Aim] — You size up a throw out of habit. Nothing here is worth the toss.",
-			"description": "Whatever you throw finds its mark — a mug slid down the bar, a rag, or a troublemaker's head."
+			"description": "Whatever you throw finds its mark: a mug slid down the bar, a rag, or a troublemaker's head."
 		},
 		{
 			"id": "sweep_the_tables",
@@ -331,7 +331,7 @@
 			"contexts": ["exploration"],
 			"field": true,
 			"field_ambient": "[Server's Prescience] — You listen for what the room needs next. All quiet, for now.",
-			"description": "You know what a guest wants before they raise a hand — the empty cup, the missing fork, the order about to be called."
+			"description": "You know what a guest wants before they raise a hand: the empty cup, the missing fork, the order about to be called."
 		},
 		{
 			"id": "charming_smile",

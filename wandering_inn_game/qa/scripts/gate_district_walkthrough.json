@@ -106,7 +106,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Ha! Good instinct — everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry."
+    "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry."
    },
    "timeout_sec": 5
   },
@@ -489,7 +489,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Watch Guard",
-    "text": "Keep the gate clear. And if you're headed out — the road's got goblins on it lately. Watch knows. Watch is dealing with it."
+    "text": "Keep the gate clear. And if you're headed out, the road's got goblins on it lately. Watch knows. Watch is dealing with it."
    },
    "timeout_sec": 5
   },
@@ -497,7 +497,7 @@
    "action": "wait_for_event",
    "type": "ui_dialogue_rendered",
    "payload_contains": {
-    "text": "Watch Guard: Keep the gate clear. And if you're headed out — the road's got goblins on it lately. Watch knows. Watch is dealing with it."
+    "text": "Watch Guard: Keep the gate clear. And if you're headed out, the road's got goblins on it lately. Watch knows. Watch is dealing with it."
    },
    "timeout_sec": 5
   },
@@ -528,7 +528,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere — a sign says she remembers faces, and debts."
+    "text": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere. A sign says she remembers faces, and debts."
    },
    "timeout_sec": 5
   },

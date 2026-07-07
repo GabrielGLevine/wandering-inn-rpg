@@ -74,7 +74,7 @@
 			"display_name": "Swordsman",
 			"stat_growth": { "str": 1, "dex": 1 },
 			"inherits": "warrior",
-			"aspiration": { "display_name": "Swordmaster", "text": "Far down this road waits the title of [Swordmaster] — earned by certification, or by defeating one." },
+			"aspiration": { "display_name": "Swordmaster", "text": "Far down this road waits the title of [Swordmaster], earned by certification, or by defeating one." },
 			"levels": [
 				{ "level": 1, "requires": {}, "grants": [] },
 				{ "level": 2, "requires": { "won_combat": 1 }, "grants": [] },

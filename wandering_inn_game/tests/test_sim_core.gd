@@ -1081,7 +1081,7 @@ func _init() -> void:
 	_events.clear()
 	assert(not gAcc.equip("test_charm_extra"), "a 4th accessory is refused: no free slot")
 	assert(_count("item_equipped") == 0, "refused equip emits no item_equipped")
-	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "No room left for another charm — something has to come off first.", "slot-full equip emits the DISTINCT slot-full refusal toast, not the capacity one")
+	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "No room left for another charm. Something has to come off first.", "slot-full equip emits the DISTINCT slot-full refusal toast, not the capacity one")
 
 	# equipped ⊆ inventory holds across the wider (5-key) dict.
 	for slot: String in gAcc.equipped:

@@ -94,7 +94,7 @@ func _show_offer(offer: Dictionary) -> void:
 	_target_display = String(offer.get("target_display", ""))
 	var a := String(parents[0]) if parents.size() > 0 else "one path"
 	var b := String(parents[1]) if parents.size() > 1 else "another"
-	_body_label.text = "You dream of two roads becoming one. [%s] and [%s] could consolidate into [%s] — or hold to their own shapes." % [a, b, _target_display]
+	_body_label.text = "You dream of two roads becoming one. [%s] and [%s] could consolidate into [%s], or hold to their own shapes." % [a, b, _target_display]
 	_cursor = 0
 	_refresh()
 	open = true

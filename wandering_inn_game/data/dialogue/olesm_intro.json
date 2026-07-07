@@ -6,15 +6,15 @@
 			"speaker": "Olesm",
 			"text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?",
 			"text_variants": [
-				{ "requires": { "class": { "tactician": 1 } }, "text": "Oh — hello. You have the look of someone who counts the exits on the way into a room. A [Tactician]? Truly? I so rarely get to talk shop — sit, sit. Well. Stand. How can I help?" },
+				{ "requires": { "class": { "tactician": 1 } }, "text": "Oh — hello. You have the look of someone who counts the exits on the way into a room. A [Tactician]? Truly? I so rarely get to talk shop. Sit, sit. Well. Stand. How can I help?" },
 				{ "requires": { "accomplishment": { "heard_olesm_briefing": 1 } }, "text": "Still up here? The gallery won't map itself, and I'd rather you were down there with a plan than up here with second thoughts. You have the map. Go." },
-				{ "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "text": "You climbed back out. I confess I ran the odds while you were down there and did not care for them. Tell me it's over — I have a column that badly wants a number in it." }
+				{ "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "text": "You climbed back out. I confess I ran the odds while you were down there and did not care for them. Tell me it's over. I have a column that badly wants a number in it." }
 			],
 			"options": [
-				{ "text": "That board — you're playing yourself?", "goto": "chess" },
+				{ "text": "That board. You're playing yourself?", "goto": "chess" },
 				{ "text": "[Tactician] What's the city's real weak point?", "requires": { "class": { "tactician": 1 } }, "goto": "resonance" },
 				{ "text": "You look worried about something.", "goto": "cisterns" },
-				{ "text": "Zevara sent me. The tunnels under the cisterns — what do you have?", "requires": { "accomplishment": { "heard_the_deep_tremor": 1 } }, "hide_when": { "accomplishment": { "heard_olesm_briefing": 1 } }, "effects": [ { "accomplishment": "heard_olesm_briefing" } ], "goto": "briefing" },
+				{ "text": "Zevara sent me. The tunnels under the cisterns. What do you have?", "requires": { "accomplishment": { "heard_the_deep_tremor": 1 } }, "hide_when": { "accomplishment": { "heard_olesm_briefing": 1 } }, "effects": [ { "accomplishment": "heard_olesm_briefing" } ], "goto": "briefing" },
 				{ "text": "It's dead. Zevara's sealing the gallery.", "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "hide_when": { "accomplishment": { "heard_olesm_resolution": 1 } }, "effects": [ { "accomplishment": "heard_olesm_resolution" } ], "goto": "resolution" },
 				{ "text": "I'll leave you to your tally.", "end": true },
 				{ "_comment": "Social Pillar II Phase B: stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/olesm_stages.json. Appended AFTER 'I'll leave you to your tally.' (array end) so it can never shift an earlier option's visible index.", "text": "You run half this city from that desk. You know that, right?", "requires": { "accomplishment": { "cisterns_reported": 1 } }, "goto": "olesm_doubt" },
@@ -24,7 +24,7 @@
 		},
 		"olesm_chess_invite": {
 			"speaker": "Olesm",
-			"text": "The board's been out since Tuesday, if you want the honest count. I'm not going to pretend otherwise. Whenever you're ready — I'll even let you have white, which should tell you how confident I am.",
+			"text": "The board's been out since Tuesday, if you want the honest count. I'm not going to pretend otherwise. Whenever you're ready. I'll even let you have white, which should tell you how confident I am.",
 			"options": [
 				{ "text": "Some other time, Olesm.", "end": true }
 			]
@@ -40,7 +40,7 @@
 		},
 		"olesm_doubt_two": {
 			"speaker": "Olesm",
-			"text": "So do I. That's the strange arithmetic of the job — you train your whole life for a day you pray never comes, and the better you are, the more boring the city stays. Liscor is very boring. I'm quietly proud of that.",
+			"text": "So do I. That's the strange arithmetic of the job: you train your whole life for a day you pray never comes, and the better you are, the more boring the city stays. Liscor is very boring. I'm quietly proud of that.",
 			"options": [
 				{ "text": "Back to the top.", "goto": "hub" },
 				{ "text": "Stay bored, Olesm.", "end": true }
@@ -48,7 +48,7 @@
 		},
 		"olesm_ambition": {
 			"speaker": "Olesm",
-			"text": "Honestly? There's a class above mine. [Strategist]. Cities write to theirs. Armies wait on them. Some nights I can almost see the shape of the level — like a move you know is on the board and cannot find yet. ...I've started writing to other [Tacticians]. Comparing games, doctrine, mistakes. Perhaps it becomes nothing. Perhaps it becomes something every city wants a copy of.",
+			"text": "Honestly? There's a class above mine. [Strategist]. Cities write to theirs. Armies wait on them. Some nights I can almost see the shape of the level, like a move you know is on the board and cannot find yet. ...I've started writing to other [Tacticians]. Comparing games, doctrine, mistakes. Perhaps it becomes nothing. Perhaps it becomes something every city wants a copy of.",
 			"options": [
 				{ "text": "I'd read it.", "goto": "olesm_ambition_two" },
 				{ "text": "Back to the top.", "goto": "hub" },
@@ -65,7 +65,7 @@
 		},
 		"briefing": {
 			"speaker": "Olesm",
-			"text": "I mapped your ledge sketches against the city plans. There's a gallery below the cisterns older than Liscor's walls — and something has been widening it. Kill it, chase it off, or map it — but do NOT let it follow you up. …Take Relc. Please.",
+			"text": "I mapped your ledge sketches against the city plans. There's a gallery below the cisterns older than Liscor's walls, and something has been widening it. Kill it, chase it off, or map it — but do NOT let it follow you up. …Take Relc. Please.",
 			"options": [
 				{ "text": "I'll take him.", "goto": "hub" },
 				{ "text": "Understood.", "end": true }
@@ -81,7 +81,7 @@
 		},
 		"chess": {
 			"speaker": "Olesm",
-			"text": "Both sides, yes — it's the only honest way to learn how the enemy thinks. You have to want to win as them. A human beat me across this very board once, so thoroughly I nearly thanked her. I did thank her. Best thing to happen to my game in years.",
+			"text": "Both sides, yes. It's the only honest way to learn how the enemy thinks. You have to want to win as them. A human beat me across this very board once, so thoroughly I nearly thanked her. I did thank her. Best thing to happen to my game in years.",
 			"options": [
 				{ "text": "You lost, and you're... pleased?", "goto": "chess_two" },
 				{ "text": "Back up a moment.", "goto": "hub" },
@@ -90,7 +90,7 @@
 		},
 		"chess_two": {
 			"speaker": "Olesm",
-			"text": "A loss you understand is worth ten wins you don't. That isn't just chess — that's the whole job. If only the Council read reports the way I read a board.",
+			"text": "A loss you understand is worth ten wins you don't. That isn't just chess. That's the whole job. If only the Council read reports the way I read a board.",
 			"options": [
 				{ "text": "Back up a moment.", "goto": "hub" },
 				{ "text": "Another time.", "end": true }
@@ -98,7 +98,7 @@
 		},
 		"resonance": {
 			"speaker": "Olesm",
-			"text": "The weak point? Everyone points at the gap in the south wall. It isn't. It's that Liscor has never been besieged long enough to learn its own supply — morale holds until the third hungry week, and no one has ever counted past the second. ...You already knew that. I can see you did. It is, honestly, a relief not to be the only one in the room doing that arithmetic.",
+			"text": "The weak point? Everyone points at the gap in the south wall. It isn't. It's that Liscor has never been besieged long enough to learn its own supply. Morale holds until the third hungry week, and no one has ever counted past the second. ...You already knew that. I can see you did. It is, honestly, a relief not to be the only one in the room doing that arithmetic.",
 			"options": [
 				{ "text": "We should compare notes sometime.", "goto": "resonance_two" },
 				{ "text": "Back to the top.", "goto": "hub" },
@@ -107,7 +107,7 @@
 		},
 		"resonance_two": {
 			"speaker": "Olesm",
-			"text": "I would like that. Genuinely. Bring a board — we'll settle the wall and the war in one afternoon.",
+			"text": "I would like that. Genuinely. Bring a board. We'll settle the wall and the war in one afternoon.",
 			"options": [
 				{ "text": "Back to the top.", "goto": "hub" },
 				{ "text": "Count on it.", "end": true }
@@ -115,26 +115,26 @@
 		},
 		"cisterns": {
 			"speaker": "Olesm",
-			"text": "Worried is the professional term, yes. The market's had reports — things moving under the grates, a cistern gone foul, a fishmonger who swears something looked back at him from the dark. Probably nothing. I do not care for probably-nothings under a walled city. ...Actually. You have the look of someone who finishes things. Would you go down and settle it?",
+			"text": "Worried is the professional term, yes. The market's had reports: things moving under the grates, a cistern gone foul, a fishmonger who swears something looked back at him from the dark. Probably nothing. I do not care for probably-nothings under a walled city. ...Actually. You have the look of someone who finishes things. Would you go down and settle it?",
 			"text_variants": [
-				{ "requires": { "accomplishment": { "heard_about_cisterns": 1 } }, "text": "You're back. The cisterns — any word? The grate's open now, and whatever's nesting down there will not count itself." },
-				{ "requires": { "accomplishment": { "cleared_the_nest": 1 } }, "text": "You've the look of someone who's swung a blade recently. The nest under the market — is it settled? Tell me straight." },
+				{ "requires": { "accomplishment": { "heard_about_cisterns": 1 } }, "text": "You're back. The cisterns. Any word? The grate's open now, and whatever's nesting down there will not count itself." },
+				{ "requires": { "accomplishment": { "cleared_the_nest": 1 } }, "text": "You've the look of someone who's swung a blade recently. The nest under the market. Is it settled? Tell me straight." },
 				{ "requires": { "accomplishment": { "watch_swept_cisterns": 1 } }, "text": "Word from the gate says the Watch moved on the cisterns. Was that your doing? I want to hear how it fell out." },
-				{ "requires": { "accomplishment": { "scouted_the_nest": 1 } }, "text": "You came back with your skin — and, unless I misread you, with a picture in your head. You mapped it, didn't you. Show me." },
+				{ "requires": { "accomplishment": { "scouted_the_nest": 1 } }, "text": "You came back with your skin and, unless I misread you, with a picture in your head. You mapped it, didn't you. Show me." },
 				{ "requires": { "accomplishment": { "cisterns_reported": 1 } }, "text": "The cisterns are off my ledger and onto the Council's, thanks to you. Quiet streets. I could get used to it." }
 			],
 			"options": [
 				{ "text": "I'll look into it. Where do I start?", "hide_when": { "accomplishment": { "heard_about_cisterns": 1 } }, "effects": [ { "quest": "cisterns" }, { "accomplishment": "heard_about_cisterns" } ], "goto": "cisterns_brief" },
-				{ "text": "It's dealt with — I cleared the nest myself.", "requires": { "accomplishment": { "cleared_the_nest": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "effects": [ { "accomplishment": "cisterns_reported" }, { "accomplishment": "commended_by_olesm" }, { "gold": 6 } ], "goto": "cisterns_done" },
-				{ "text": "The Watch swept it — Captain Zevara's people handled it.", "requires": { "accomplishment": { "watch_swept_cisterns": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "effects": [ { "accomplishment": "cisterns_reported" }, { "accomplishment": "commended_by_olesm" }, { "gold": 6 } ], "goto": "cisterns_done" },
-				{ "text": "I didn't fight it. I mapped it — the nest, the count, the exits. [Appraise Foe]", "requires": { "accomplishment": { "scouted_the_nest": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "effects": [ { "accomplishment": "resolved_the_cisterns" }, { "accomplishment": "cisterns_reported" }, { "accomplishment": "commended_by_olesm" }, { "gold": 6 } ], "goto": "cisterns_intel" },
+				{ "text": "It's dealt with. I cleared the nest myself.", "requires": { "accomplishment": { "cleared_the_nest": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "effects": [ { "accomplishment": "cisterns_reported" }, { "accomplishment": "commended_by_olesm" }, { "gold": 6 } ], "goto": "cisterns_done" },
+				{ "text": "The Watch swept it. Captain Zevara's people handled it.", "requires": { "accomplishment": { "watch_swept_cisterns": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "effects": [ { "accomplishment": "cisterns_reported" }, { "accomplishment": "commended_by_olesm" }, { "gold": 6 } ], "goto": "cisterns_done" },
+				{ "text": "I didn't fight it. I mapped it: the nest, the count, the exits. [Appraise Foe]", "requires": { "accomplishment": { "scouted_the_nest": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "effects": [ { "accomplishment": "resolved_the_cisterns" }, { "accomplishment": "cisterns_reported" }, { "accomplishment": "commended_by_olesm" }, { "gold": 6 } ], "goto": "cisterns_intel" },
 				{ "text": "Let me know if it turns into a something.", "goto": "hub" },
 				{ "text": "I'll keep an ear out.", "end": true }
 			]
 		},
 		"cisterns_brief": {
 			"speaker": "Olesm",
-			"text": "Thank you. Here's what I have. What: something's nested in the old cisterns under the market — the reports say spiders, big ones, silver-backed, the kind that climb up from the Dungeon when a wall cracks. Where: down the green sewer-grate off the south square. It's rusted, but it'll open now that someone official wants it open. How: I genuinely don't mind. Put a blade through it, get the Watch to sweep it, or just bring me a proper picture of what's down there — count, size, exits. A map is as good as a corpse to me, and cheaper in bandages. Settle it however suits you, then come tell me it's done.",
+			"text": "Thank you. Here's what I have. What: something's nested in the old cisterns under the market. The reports say spiders, big ones, silver-backed, the kind that climb up from the Dungeon when a wall cracks. Where: down the green sewer-grate off the south square. It's rusted, but it'll open now that someone official wants it open. How: I genuinely don't mind. Put a blade through it, get the Watch to sweep it, or just bring me a proper picture of what's down there — count, size, exits. A map is as good as a corpse to me, and cheaper in bandages. Settle it however suits you, then come tell me it's done.",
 			"options": [
 				{ "text": "Understood. I'll head down.", "goto": "hub" },
 				{ "text": "On it.", "end": true }
@@ -142,14 +142,14 @@
 		},
 		"cisterns_done": {
 			"speaker": "Olesm",
-			"text": "Then it's over, and the city's quieter for it. That's real work — the kind nobody thanks you for, so let me be the exception. You've the Council's gratitude, and mine, which comes with more paperwork but rather more warmth. If you ever want a game, or a job that needs a clear head, you know where the board is.",
+			"text": "Then it's over, and the city's quieter for it. That's real work, the kind nobody thanks you for, so let me be the exception. You've the Council's gratitude, and mine, which comes with more paperwork but rather more warmth. If you ever want a game, or a job that needs a clear head, you know where the board is.",
 			"options": [
 				{ "text": "Anytime, Olesm.", "end": true }
 			]
 		},
 		"cisterns_intel": {
 			"speaker": "Olesm",
-			"text": "...Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away — the whole shape of the problem on one page. Now the Watch goes in knowing the ground instead of bleeding to learn it. A map IS as good as a corpse, and I have never once gotten to say that to someone who agreed. Take the Council's thanks — and mine, doubled, because you did it the clever way.",
+			"text": "...Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away. The whole shape of the problem on one page. Now the Watch goes in knowing the ground instead of bleeding to learn it. A map IS as good as a corpse, and I have never once gotten to say that to someone who agreed. Take the Council's thanks — and mine, doubled, because you did it the clever way.",
 			"options": [
 				{ "text": "Glad it's useful.", "end": true }
 			]

@@ -164,7 +164,7 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
 		_mark_skill_used.call(skill_id)
 		_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [faced_cell.x, faced_cell.y], "to": "ice"})
-		var freeze_toast := String(_skills.get(skill_id, {}).get("freeze_toast", "Frost races across the water and locks it solid. You can cross now — until it thaws."))
+		var freeze_toast := String(_skills.get(skill_id, {}).get("freeze_toast", "Frost races across the water and locks it solid. You can cross now. Until it thaws."))
 		_emit(WIEvents.TOAST, {"text": freeze_toast})
 		return {"frozen": [faced_cell.x, faced_cell.y]}
 	var field_ambient := String(_skills.get(skill_id, {}).get("field_ambient", ""))

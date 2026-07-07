@@ -9,7 +9,7 @@
 			"gold": 1,
 			"band": "same-map short",
 			"condition": { "delivered_delivery_krshia_wool": 1 },
-			"slip_copy": "TO: Silverfang stall, market row. One wool bolt. Same waking. The Gnoll pays for dry, not for fast — it rains here, keep the paper on it."
+			"slip_copy": "TO: Silverfang stall, market row. One wool bolt. Same waking. The Gnoll pays for dry, not for fast. It rains here, keep the paper on it."
 		},
 		{
 			"id": "delivery_pisces_parcel",
@@ -29,7 +29,7 @@
 			"gold": 2,
 			"band": "same-map long",
 			"condition": { "delivered_delivery_gate_dispatch": 1 },
-			"slip_copy": "TO: Watch Captain Sunderscale, the gate. Dispatches. Priority. If a guardsman stops you, show the seals and keep walking — that is what the seals are FOR. Before the shift bell."
+			"slip_copy": "TO: Watch Captain Sunderscale, the gate. Dispatches. Priority. If a guardsman stops you, show the seals and keep walking. That is what the seals are FOR. Before the shift bell."
 		},
 		{
 			"id": "delivery_grate_phials",

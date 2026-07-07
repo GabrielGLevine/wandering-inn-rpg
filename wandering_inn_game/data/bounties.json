@@ -4,7 +4,7 @@
 		{
 			"id": "bounty_road_cull",
 			"pillar": "fight",
-			"giver": "The Watch (duty-sergeant's hand — terse, no wasted ink)",
+			"giver": "The Watch (duty-sergeant's hand, terse, no wasted ink)",
 			"condition": { "won_combat": 2 },
 			"gold": 4,
 			"copy": "WATCH NOTICE. Goblin raiders, Floodplains road, east approach. Cull two bands. Proof by Guild attestation. 4 gold on turn-in. No spoils claims against the Watch. Second Shift."
@@ -12,7 +12,7 @@
 		{
 			"id": "bounty_settle_dispute",
 			"pillar": "social",
-			"giver": "Watch Captain Zevara Sunderscale (dry, overworked, duty-first — longer hand than the sergeant's, and tired)",
+			"giver": "Watch Captain Zevara Sunderscale (dry, overworked, duty-first; longer hand than the sergeant's, and tired)",
 			"condition": { "persuaded_someone": 1 },
 			"gold": 3,
 			"copy": "Posted by order of the Watch Captain. The Watch is not a wall between every two fools in this city who disagree. End a quarrel with words, both parties still standing, and the Watch pays 3 gold on a guardsman's confirmation. This is cheaper than a cell and I am not above saying so. Z. Sunderscale."

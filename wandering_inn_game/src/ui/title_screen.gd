@@ -264,7 +264,7 @@ func _confirm() -> void:
 			if not Game.load_slot(_continue_slot):
 				_continue_slot = ""
 				_refresh_continue_state()
-				_show_notice("Save is from an older version — start a New Game")
+				_show_notice("Save is from an older version. Start a New Game")
 		"Quit":
 			get_tree().quit()
 

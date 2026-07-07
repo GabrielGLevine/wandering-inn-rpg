@@ -6,7 +6,7 @@
 			"speaker": "Peddler",
 			"text": "Watch gear, mostly honest. Some of it's even been laundered.",
 			"options": [
-				{ "text": "That gambeson — Watch-issue? (20 gold)", "requires": { "gold": 20 }, "effects": [ { "gold": -20 }, { "item": "watch_issue_gambeson" } ], "goto": "bought" },
+				{ "text": "That gambeson. Watch-issue? (20 gold)", "requires": { "gold": 20 }, "effects": [ { "gold": -20 }, { "item": "watch_issue_gambeson" } ], "goto": "bought" },
 				{ "text": "Just looking.", "end": true }
 			]
 		},

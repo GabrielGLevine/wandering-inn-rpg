@@ -87,7 +87,7 @@ static func condition_met(condition: Dictionary, baseline: Dictionary, accomplis
 static func _accept_line(bounty_id: String) -> String:
 	if bounty_id == "bounty_road_cull":
 		return "Good pick, actually. The road's been bad and the Watch pays on time. Take the south path back. I didn't say that."
-	return "That one? Fine. Logged. Don't die over a handful of gold — it's paperwork for me and embarrassing for you."
+	return "That one? Fine. Logged. Don't die over a handful of gold. It's paperwork for me and embarrassing for you."
 
 
 ## Builds the "Take on a posting." conversation. WINDOWED-SCREENSHOT FINDING
@@ -136,7 +136,7 @@ static func build_picker_graph(slate: Array) -> Dictionary:
 static func build_turnin_graph(met: bool) -> Dictionary:
 	var text := "The notice says proof. Bring the proof, not the story. The story's free and so is my time apparently."
 	if met:
-		text = "Done? …So it is. Here — counted twice, because the last adventurer counted once, loudly, and was wrong. The Guild thanks you. I'm the Guild. So: thanks."
+		text = "Done? …So it is. Here. Counted twice, because the last adventurer counted once, loudly, and was wrong. The Guild thanks you. I'm the Guild. So: thanks."
 	return {"start": "hub", "nodes": {"hub": {"speaker": "Selys", "text": text, "options": [{"text": "Continue.", "end": true}]}}}
 
 
@@ -153,7 +153,7 @@ static func build_turnin_graph(met: bool) -> Dictionary:
 ## posting."/"Turn in my posting." precedent: the entry point is data, the
 ## deferred code-built graph is where Selys's reaction line lives).
 static func build_abandon_graph() -> Dictionary:
-	var text := "Hand it back? Fine. I'll cross it off — no pay, no mark against you. It goes back on the board for someone with follow-through."
+	var text := "Hand it back? Fine. I'll cross it off: no pay, no mark against you. It goes back on the board for someone with follow-through."
 	return {"start": "hub", "nodes": {"hub": {"speaker": "Selys", "text": text, "options": [{"text": "Continue.", "end": true}]}}}
 
 
@@ -167,7 +167,7 @@ static func build_abandon_graph() -> Dictionary:
 ## staging doc: the flag rides the data, the copy carries the stakes).
 static func _delivery_issue_line(delivery: Dictionary) -> String:
 	if String(delivery["id"]) == "delivery_inn_hamper":
-		return "Gate, floodplains, the hill. Two legs and the road's got goblins, which is why it pays three. Runners move FAST — that's the whole trade. Fast things don't get grabbed."
+		return "Gate, floodplains, the hill. Two legs and the road's got goblins, which is why it pays three. Runners move FAST. That's the whole trade. Fast things don't get grabbed."
 	if bool(delivery.get("fragile", false)):
 		return "That one's glass. GLASS. Walk like it's your grandmother's teeth. The crew counts the phials in front of you, so arrive with six."
 	return "Signed, stamped, yours. That's a one-leg run, easy pace. Don't walk it TOO easy, the term's same-waking."
@@ -211,7 +211,7 @@ static func build_delivery_picker_graph(slate: Array) -> Dictionary:
 ## `met` picks between board-copy.md sec.3's two lines (mark confirmed vs.
 ## slip-says-the-mark refusal -- opaque-safe, no numbers either way).
 static func build_delivery_turnin_graph(met: bool) -> Dictionary:
-	var text := "Slip says the mark, not the counter. I can't pay you for carrying it AROUND, that's just… walking. Go on — daylight's a budget."
+	var text := "Slip says the mark, not the counter. I can't pay you for carrying it AROUND, that's just… walking. Go on. Daylight's a budget."
 	if met:
-		text = "Mark confirmed — hah — sorry, came in at a sprint myself. Coin's counted. Nice legs on that run. Hawk started on a board like this one, you know. Well. A board LIKE it."
+		text = "Mark confirmed. Hah — sorry, came in at a sprint myself. Coin's counted. Nice legs on that run. Hawk started on a board like this one, you know. Well. A board LIKE it."
 	return {"start": "hub", "nodes": {"hub": {"speaker": "Vess", "text": text, "options": [{"text": "Continue.", "end": true}]}}}

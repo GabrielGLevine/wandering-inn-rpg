@@ -27,7 +27,7 @@
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Relc", "text": "Ha! Good instinct — everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Relc", "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry." }, "timeout_sec": 5 },
   { "_comment": "'spar_offer' node: default cursor (0) is 'Ready when you are.' -- accept.", "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },

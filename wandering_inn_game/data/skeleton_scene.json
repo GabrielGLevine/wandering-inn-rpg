@@ -450,7 +450,7 @@
       1.0
      ],
      "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
-     "friendly_line": "Lyonette's chin lifts, then — despite itself — softens. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot.",
+     "friendly_line": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot.",
      "_comment_pool": "Content Wave C2: Lyonette's base talk_pool (wounded-pride-thawing, warmth-arc SEED; C4/Q2 grows it post-quest -- spec 2.2/3.Q2). She is the game's ONLY pre-existing QA-covered NPC to gain a pool, so dialogue_walkthrough (the sole script that interacts with her -- twice, once per waking across its two sleeps) was re-pathed to ABSORB the first-talk pool DIALOGUE_LINE at idx 0 (waking 1) and idx 1 (waking 3, chatted_with_lyonette then =1) before opening lyonette_tip, mirroring the S4 pooled-NPC re-path pattern. Zero rng, so seed 9 holds.",
      "talk_pool": [
       "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
@@ -463,7 +463,7 @@
        "id": "lyonette_thawed",
        "requires_accomplishment": { "resolved_wrong_order": 1 },
        "lines": [
-        "You covered for me. With the order, I mean. You didn't have to — and you didn't make it a story to tell later. That is... rare. Thank you.",
+        "You covered for me. With the order, I mean. You didn't have to, and you didn't make it a story to tell later. That is... rare. Thank you.",
         "Sit anywhere you like. The good chair by the fire, even. No, I insist — I'm allowed to insist, it's practically my inn too.",
         "I used to think kindness was something people spent on you to get something back. You keep not doing that. It's unsettling. In a good way. Mostly."
        ]
@@ -545,7 +545,7 @@
      "sprite": "dusty_scroll",
      "_comment": "Onboarding rev O4: RETIRED as the mage trigger. It no longer banks used_magic and grants no class -- [Mage] is now earned from Pisces (learned_magic_from_pisces). Kept as pure flavor: banks read_dusty_scroll (referenced nowhere as a gate) and toasts a hint that magic exists and is learnable from someone who knows it.",
      "on_interact_accomplishment": "read_dusty_scroll",
-     "toast": "Faded arcane script — you can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must."
+     "toast": "Faded arcane script. You can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must."
     },
     {
      "id": "unlit_lantern",
@@ -909,7 +909,7 @@
      "display_name": "Lyonette's Door",
      "sprite": "door",
      "locked_toast": "Locked. Lyonette keeps exactly one door in this inn that isn't anyone's business but hers.",
-     "observe": "Lyonette's door, shut the way she shuts most things — completely, and without discussion. Whatever the room looks like behind it, you'll have to imagine it; she's not one to leave doors, or herself, half open."
+     "observe": "Lyonette's door, shut the way she shuts most things: completely, and without discussion. Whatever the room looks like behind it, you'll have to imagine it; she's not one to leave doors, or herself, half open."
     }
    ]
   },
@@ -1817,7 +1817,7 @@
      ],
      "display_name": "Watch Guard",
      "sprite": "royal_soldier",
-     "observe": "Watch armor, kept. He stands the post properly — weight even, eyes on the gap in the wall. Bored, but the boredom is a discipline, not a lapse.",
+     "observe": "Watch armor, kept. He stands the post properly: weight even, eyes on the gap in the wall. Bored, but the boredom is a discipline, not a lapse.",
      "friendly_line": "The guard's mouth twitches toward a smile despite himself. Hah. You seem decent enough. Go on through easy - I'll remember the friendly one.",
      "facing": "up",
      "talk_pool": [
@@ -1829,7 +1829,7 @@
      "dialogue": [
       {
        "speaker": "Watch Guard",
-       "text": "Keep the gate clear. And if you're headed out — the road's got goblins on it lately. Watch knows. Watch is dealing with it."
+       "text": "Keep the gate clear. And if you're headed out, the road's got goblins on it lately. Watch knows. Watch is dealing with it."
       }
      ]
     },
@@ -1843,8 +1843,8 @@
      ],
      "display_name": "Zevara",
      "sprite": "zevara",
-     "observe": "Oldblood Drake, light scales, a scar down the left of her jaw she's long past explaining. She reads the gate the way a clerk reads a ledger — every figure accounted for, and every one of them a suspect.",
-     "friendly_line": "Zevara's shoulders come down a fraction. Huh. Civil, and no bribe. You would not believe how short that list is. Go on through. And — thank you. Genuinely.",
+     "observe": "Oldblood Drake, light scales, a scar down the left of her jaw she's long past explaining. She reads the gate the way a clerk reads a ledger: every figure accounted for, and every one of them a suspect.",
+     "friendly_line": "Zevara's shoulders come down a fraction. Huh. Civil, and no bribe. You would not believe how short that list is. Go on through. And, thank you. Genuinely.",
      "facing": "left",
      "talk_pool": [
       "If you're here to report a crime, the form's on the left. If you're here to commit one, don't. I've had a day.",
@@ -1859,7 +1859,7 @@
        "lines": [
         "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
         "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
-        "If you're between jobs, see me about bounty work. The Watch pays slow, but it pays — and I sign faster for people who don't invoice me for heroics."
+        "If you're between jobs, see me about bounty work. The Watch pays slow, but it pays. And I sign faster for people who don't invoice me for heroics."
        ]
       }
      ],
@@ -1881,13 +1881,13 @@
      ],
      "display_name": "Olesm",
      "sprite": "olesm",
-     "observe": "Thin, sky-blue scales, ink drying on three of his claws. A chess board waits at his elbow mid-game — played against himself, to feel how the other side thinks. His eyes are a wild, patterned blue \u2014 the one soft thing about a man who counts exits.",
-     "friendly_line": "Olesm brightens like a lamp. Oh — a friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you — that is — care to see the board sometime? No pressure. A little pressure.",
+     "observe": "Thin, sky-blue scales, ink drying on three of his claws. A chess board waits at his elbow mid-game, played against himself, to feel how the other side thinks. His eyes are a wild, patterned blue, the one soft thing about a man who counts exits.",
+     "friendly_line": "Olesm brightens like a lamp. Oh! A friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you... that is... care to see the board sometime? No pressure. A little pressure.",
      "facing": "down",
      "talk_pool": [
       "Three reports due by dawn and the ink is winning. If anyone asks, the [Tactician] of Liscor is 'strategizing'.",
       "Three reports due by dusk and two clerks who can't count past a company. I'll manage. I always manage.",
-      "Supply lines, sightlines, morale — a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak.",
+      "Supply lines, sightlines, morale: a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak.",
       "Selys works the desk inside now, board and all. I still find reasons to linger out here more than the job requires. The paperwork doesn't ask why."
      ],
      "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/olesm_stages.json (staging_note/_flag annotations stripped). Three stages. The chess-beat perk (stage 3, olesm_board_partner) is FLAGGED unbuilt this wave (the match copy itself is a follow-up writing task per the staging doc) -- only the stage rows + hub topic unlocks ship.",
@@ -1915,7 +1915,7 @@
      "dialogue": [
       {
        "speaker": "Olesm",
-       "text": "One moment — three columns into a tally. Say hello properly and I'll lose my place gladly."
+       "text": "One moment; three columns into a tally. Say hello properly and I'll lose my place gladly."
       }
      ]
     },
@@ -1949,7 +1949,7 @@
      "tint": [0.9, 0.75, 0.4],
      "observe": "Loaves stacked in a pyramid that will not survive the lunch rush. A chalked board promises today's price, then a second, higher price scratched in for after the fourth bell.",
      "on_interact_accomplishment": "browsed_bread_stall",
-     "toast": "Warm bread smell over the whole row. No one's minding the stall this exact moment — the loaves aren't going anywhere without a fight."
+     "toast": "Warm bread smell over the whole row. No one's minding the stall this exact moment. The loaves aren't going anywhere without a fight."
     },
     {
      "_comment": "M-DEPTH DP4: market-depth stall 2 of 2, the mini-buy surface -- an unnamed Peddler (title only, matching the gate_guard/watch_guard convention, profile in docs/design/character-profiles-staging.md) selling ONE item, watch_issue_gambeson (now priced 20g -- see items.json _comment_price), via conversation graph data/dialogue/peddler_stall.json (krshia_crate.json's exact buy contract). Placed at the east end of the market row, close to the Watch post/barracks -- thematically apt for Watch-surplus gear.",
@@ -1987,7 +1987,7 @@
      "sprite": "food_basket",
      "observe": "Silverfang goods laid out with a trap's care: cheapest at the front, the good stock where a browsing hand drifts. A note warns that the seller remembers faces.",
      "on_interact_accomplishment": "browsed_market",
-     "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere — a sign says she remembers faces, and debts."
+     "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere. A sign says she remembers faces, and debts."
     },
     {
      "_comment": "M-DEPTH DP1: guild_door converts from a toast prop to a REAL door -- the Guild interior is now enterable. The old toast (\"The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today.\") is RETIRED (the player now walks in and sees the real hall; gate_district_walkthrough's pin moved from a toast-wait to the map_changed/ui_map_rendered transition -- see its _comment). door_when is NOT needed (the Guild is public, per plan). on_enter_accomplishment keeps the SAME accomplishment id (visited_guild) so every script asserting it still passes unchanged. to_cell (8,10) lands just inside, facing up into the hall, one cell north of the guild_exit door (8,11) -- never lands ON the exit door's own occupied cell.",
@@ -2048,7 +2048,7 @@
        "id": "pisces_tolerable_company",
        "requires_accomplishment": { "learned_magic_from_pisces": 1, "chatted_with_pisces": 3 },
        "lines": [
-        "Ah. You. Acceptable timing — I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
+        "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
         "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
         "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
        ]
@@ -2071,7 +2071,7 @@
      ],
      "display_name": "Sewer Grate",
      "sprite": "sewer_grate",
-     "observe": "Rust holds the bars, not a lock. The draft is steady — a tunnel, not a pit — and the skittering keeps its distance. Something down there has learned to avoid shadows.",
+     "observe": "Rust holds the bars, not a lock. The draft is steady — a tunnel, not a pit. The skittering keeps its distance. Something down there has learned to avoid shadows.",
      "on_interact_accomplishment": "heard_the_sewers",
      "toast": "A heavy iron grate, rusted shut. Cold air rises from below, and something in the dark skitters away from your shadow.",
      "_comment_door_when": "Content Wave C1 grate-gate seam. Until `heard_about_cisterns` is banked (C3 banks it from Olesm), door_when's gate is UNMET and interact falls through to the on_interact_accomplishment branch above -- BYTE-IDENTICAL to the pre-quest behavior asserted by gate_district_walkthrough (heard_the_sewers + the exact toast). Once banked, the same interact hauls the grate open and descends: emits the `open_toast`, then transitions to the sewers landing. See wi_game.gd interact()'s prop branch + `_door_gate_met`.",
@@ -2126,7 +2126,7 @@
        "id": "krshia_fair_weight",
        "requires_accomplishment": { "crate_returned": 1 },
        "lines": [
-        "Hrr. The crate-finder. Sit, look, touch even — you have earned handling privileges.",
+        "Hrr. The crate-finder. Sit, look, touch even. You have earned handling privileges.",
         "You did a thing for me and did not name a price after. I remember this the way I remember debts. Better, even.",
         "The stall does well today. When the stall does well, the tribe does well. That is all the economics you need."
        ]
@@ -2211,7 +2211,7 @@
      ],
      "display_name": "Dark Cellar",
      "sprite": "door",
-     "observe": "A plain door with dark behind it. The dust on the sill is scuffed one way — something was dragged in, and not dragged out.",
+     "observe": "A plain door with dark behind it. The dust on the sill is scuffed one way. Something was dragged in, and not dragged out.",
      "requires_skill": "light",
      "locked_toast": "Too dark to see anything.",
      "on_skill_use": {
@@ -3144,9 +3144,9 @@
       0.78,
       0.9
      ],
-     "observe": "Something square and man-made rests on the pond floor a stride out from the bank, furred with silt. Too far to reach across open water — but water can be made to bear weight, if you know the trick of cold.",
+     "observe": "Something square and man-made rests on the pond floor a stride out from the bank, furred with silt. Too far to reach across open water. But water can be made to bear weight, if you know the trick of cold.",
      "on_interact_accomplishment": "found_the_frozen_cache",
-     "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through — and inside, dry against all odds, a few keepsakes someone drowned here meant never to be found."
+     "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, dry against all odds, a few keepsakes someone drowned here meant never to be found."
     },
     {
      "_comment": "M-ARC Task A1: `on_enter_accomplishment` banks `reached_liscor` on door travel INTO the street (the Act I gate's street-arrival counter -- nothing banked first-liscor-entry before). Fires ONLY on real door interaction (the `door` branch of interact()), never on QA teleport or save/load restore (those use bind_map_silent/transition without the entity), so a load can never spuriously advance the act. record_accomplishment is idempotent for gate purposes (>= 1). DISCLOSURE: every canonical script that walks floodplains -> liscor_gate -> street now carries reached_liscor:1 in its snapshot (additive counter; no script asserts an exact accomplishments dict).",
@@ -3293,7 +3293,7 @@
      ],
      "display_name": "Relc",
      "sprite": "relc",
-     "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it — including you, now.",
+     "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it. Including you, now.",
      "friendly_line": "Heh. Alright, alright - I like you. You've got the look of someone who buys a guy a drink after. We're good, you and me. Best guardsman in Liscor says so.",
      "facing": "left",
      "_comment_stages": "Social Pillar II Phase C: talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the relc_intro.json meet-topic unlocks (relc_army/relc_after) lifted verbatim from docs/design/social-2-staging/relc_stages.json after the re-path wave went green. relc_after's daughter/Embria reveal stays OUT (V5 canon, hard rail -- the staged oblique 'people I left in it' copy is what ships). Stage 3's spar-wager perk refinement stays UNBUILT/flagged (status quo: relc_spar already re-offers).",
@@ -3308,7 +3308,7 @@
        "id": "relc_sparring_partner",
        "requires_accomplishment": { "sparred_with_relc": 1, "chatted_with_relc": 2 },
        "lines": [
-        "Hah! There's my favorite punching bag. Kidding — the dummies are my favorite. You're a close third after lunch.",
+        "Hah! There's my favorite punching bag. Kidding. The dummies are my favorite. You're a close third after lunch.",
         "You're standing straighter. See that? That's me. I'm basically a [Teacher]. Don't tell the Watch, they'll dock my pay for moonlighting.",
         "Quiet shift. If anything with teeth shows up, you'll hear me laughing before you hear the bell."
        ]
@@ -3318,7 +3318,7 @@
        "requires_accomplishment": { "cleared_the_warren": 1, "chatted_with_relc": 3 },
        "lines": [
         "There they are. You know what I like about you? You went DOWN the creepy hole. Most people file a report about the hole. From upstairs.",
-        "Zevara smiled this week. Actual smile. The warren's sealed and the city's still standing — I'm taking full credit and handing you most of it.",
+        "Zevara smiled this week. Actual smile. The warren's sealed and the city's still standing. I'm taking full credit and handing you most of it.",
         "Next time something ugly crawls out of the ground, I'm not even worried. That's new for me. Don't make it weird."
        ]
       }
@@ -3554,7 +3554,7 @@
      "burnable": true,
      "observe": "A slumped heap of waterlogged timber and old rope, tarred black and long dead. It chokes the little side-nook past the ladder. Dry enough on top to take a flame, if you had one.",
      "burn_toast": "[Firefly] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air.",
-     "locked_toast": "Sodden timber and tarred rope, jammed wall to wall. You could haul at it for an hour, or you could burn it — if you had the means to make fire."
+     "locked_toast": "Sodden timber and tarred rope, jammed wall to wall. You could haul at it for an hour, or you could burn it, if you had the means to make fire."
     },
     {
      "id": "phosphor_moss",
@@ -3603,7 +3603,7 @@
      "sprite": "crate",
      "observe": "A market crate, swollen and burst, washed down through a grate above. Whatever was in it fed something down here long ago.",
      "on_interact_accomplishment": "searched_sunken_crate",
-     "toast": "A ruined crate, half-sunk in silt. Merchant stamps still show under the rot — lost cargo, swallowed by the sewers and picked clean."
+     "toast": "A ruined crate, half-sunk in silt. Merchant stamps still show under the rot: lost cargo, swallowed by the sewers and picked clean."
     },
     {
      "id": "spider_silk",
@@ -3658,7 +3658,7 @@
       0.44,
       0.52
      ],
-     "observe": "Two of them, banded carapaces catching the moss-light, waiting where the silk is thickest. Their legs test the air toward you. Behind them the tunnel drops away — and more eyes catch the light down there than you want to count.",
+     "observe": "Two of them, banded carapaces catching the moss-light, waiting where the silk is thickest. Their legs test the air toward you. Behind them the tunnel drops away, and more eyes catch the light down there than you want to count.",
      "arena": "sewers_nest",
      "enemies": [
       "shield_spider",
@@ -3689,9 +3689,9 @@
      "requires_skill": "observe",
      "on_skill_use": {
       "accomplishment": "scouted_the_nest",
-      "toast": "[Appraise Foe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper — that's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
+      "toast": "[Appraise Foe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper. That's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
      },
-     "locked_toast": "The ledge overlooks the nest — a perfect vantage, if you had the eye to read one. You don't, quite. Not yet."
+     "locked_toast": "The ledge overlooks the nest: a perfect vantage, if you had the eye to read one. You don't, quite. Not yet."
     },
     {
      "_comment": "M-ARC A2 (A3-gated) descent seam. A `door_when` prop on the SAME idiom as the street sewer_grate: its gate is `heard_the_deep_tremor` -- the NEW accomplishment A3's tremor beat (Zevara's post-Act-II summons) banks; A3 is its SOLE producer (documented in CLAUDE.md + the A2 report). Until banked, door_when is UNMET and interact falls through to on_interact_accomplishment + toast (found_the_fissure) -- pre-gate behavior is byte-identical, so sewers_walkthrough/cisterns_* stay green. Once banked, the same interact emits open_toast and descends to deep_tunnels (2,2). Placed at (8,12), the untouched bottom-middle band -- no sewers/cisterns route asserts or treads a bottom-band cell (all sewers-map cells they visit are top-band y2, the nest right-side y10, and (2,7)); disclosure verified in the A2 report. Sprite `boulder` is a rubble stand-in for a collapsed fissure (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
@@ -3703,9 +3703,9 @@
      ],
      "display_name": "Collapsed Fissure",
      "sprite": "boulder",
-     "observe": "The floor gave way here, not long ago — a raw crack breathing air colder and older than the sewers ever hold. The claw-scores on its lip all point one way: down. Something climbed up through this, and means to again.",
+     "observe": "The floor gave way here, not long ago: a raw crack breathing air colder and older than the sewers ever hold. The claw-scores on its lip all point one way: down. Something climbed up through this, and means to again.",
      "on_interact_accomplishment": "found_the_fissure",
-     "toast": "A fresh fissure splits the sewer floor, exhaling a dry, breathing cold from far below. Deep gouges rake the stone lip — something big has been using this as a door.",
+     "toast": "A fresh fissure splits the sewer floor, exhaling a dry, breathing cold from far below. Deep gouges rake the stone lip. Something big has been using this as a door.",
      "door_when": {
       "requires": {
        "heard_the_deep_tremor": 1
@@ -3850,7 +3850,7 @@
      "sprite": "boulder",
      "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Something sat here in the dark and knew how to keep a fire — or learned how, the way they say these things learn, when the moon is full and their minds come clear.",
      "on_interact_accomplishment": "found_cold_hearth",
-     "toast": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark — and left gnawed bones banked around the edge, cracked for their marrow.",
+     "toast": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark, and left gnawed bones banked around the edge, cracked for their marrow.",
      "light": {
       "color": [
        0.9,
@@ -3871,9 +3871,9 @@
      ],
      "display_name": "Gnawed Bones",
      "sprite": "boulder",
-     "observe": "A midden of cracked bones, marrow sucked clean. Gnoll, most of them. A few too large to name. They have been sorted — almost stacked — as though something down here counts its meals and keeps the score.",
+     "observe": "A midden of cracked bones, marrow sucked clean. Gnoll, most of them. A few too large to name. They have been sorted, almost stacked, as though something down here counts its meals and keeps the score.",
      "on_interact_accomplishment": "found_gnaw_pile",
-     "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered — and that is worse than if they had been."
+     "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered. And that is worse than if they had been."
     },
     {
      "_comment": "M-ARC A2: the deep_tunnels route-fight -- a Raskghar scout PAIR barring the way to the warren. Interact-only (no trigger_radius) so QA/A3 control the start; deep_descent clears it via combat_autoplay. Fought in cave_mouth (the generic cave arena); the deep_warren arena is reserved for A3's boss. on_victory banks cleared_raskghar_scouts.",
@@ -3906,7 +3906,7 @@
      ],
      "display_name": "Warren Mouth",
      "sprite": "boulder",
-     "observe": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den — and where the big one waits, breathing slow in the black.",
+     "observe": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den, and where the big one waits, breathing slow in the black.",
      "on_interact_accomplishment": "reached_the_warren",
      "toast": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren."
     },
@@ -3920,7 +3920,7 @@
      ],
      "display_name": "Awakened Raskghar",
      "sprite": "raskghar_awakened",
-     "observe": "It fills the gallery mouth like a landslide that learned to breathe — upright, moon-grey, a pale mane over shoulders wider than a doorway. Old scars cross its hide, and a Gnoll's picked bones lie stacked at its feet. Its eyes hold on you with something worse than hunger: thought.",
+     "observe": "It fills the gallery mouth like a landslide that learned to breathe: upright, moon-grey, a pale mane over shoulders wider than a doorway. Old scars cross its hide, and a Gnoll's picked bones lie stacked at its feet. Its eyes hold on you with something worse than hunger: thought.",
      "conversation": "relc_descent",
      "arena": "deep_warren",
      "enemies": [
@@ -4011,7 +4011,7 @@
      "display_name": "Selys",
      "sprite": "citizen_f",
      "tint": [0.45, 1.0, 0.55],
-     "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger — she has sized up a hundred adventurers today and found most of them wanting.",
+     "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger. She has sized up a hundred adventurers today and found most of them wanting.",
      "friendly_line": "...Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
      "facing": "down",
      "talk_pool": [
@@ -4028,7 +4028,7 @@
        "lines": [
         "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
         "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
-        "Rough week on the board. If you're taking work, take the sane jobs — I flag the sane ones. It's not a service everyone gets."
+        "Rough week on the board. If you're taking work, take the sane jobs. I flag the sane ones. It's not a service everyone gets."
        ]
       }
      ],
@@ -4050,7 +4050,7 @@
      "tint": [0.85, 0.78, 0.6],
      "facing": "right",
      "board": true,
-     "toast": "The Request Board. Paper three layers deep in places — new notices pinned straight over the dead ones. Two or three have fresh ink.",
+     "toast": "The Request Board. Paper three layers deep in places. New notices pinned straight over the dead ones. Two or three have fresh ink.",
      "second_visit_toast": "The Request Board. Your slip is still logged at the desk. The board does not care how it's going.",
      "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. — S.S."
     },
@@ -4064,8 +4064,8 @@
      "tint": [0.6, 0.5, 0.35],
      "facing": "right",
      "on_interact_accomplishment": "read_guild_notices",
-     "toast": "A second board, smaller and less official — lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time.",
-     "observe": "Handbills and scraps overlapping the request board's edge — the Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only."
+     "toast": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time.",
+     "observe": "Handbills and scraps overlapping the request board's edge. The Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only."
     },
     {
      "_comment": "M-DEPTH DP1 walk-on: Renn Coldscale, Bronze-rank Drake, half of a bickering duo at the board -- profile in docs/design/character-profiles-staging.md. Reuses the `pc_drake_m` character-creation rig (ash-grey tint) rather than new art. talk_pool + a static dialogue fallback (no conversation graph -- inert-adjacent per plan).",
@@ -4195,7 +4195,7 @@
      "observe": "Stripes on the sleeve, chalk dust on the fingers. He would rather stand a wall post than a briefing room, and it shows in how he stands even here.",
      "facing": "down",
      "talk_pool": [
-      "Sergeant Ashgrave. If you're here to report something, the slate's on the wall — write it plain.",
+      "Sergeant Ashgrave. If you're here to report something, the slate's on the wall. Write it plain.",
       "Quiet shift. Kit's counted, slates are current, and the cell's empty. Write that down as a good day.",
       "Watch business stays in the barracks. Yours is likely the street."
      ],
@@ -4210,7 +4210,7 @@
      "cell": [10, 5],
      "display_name": "Zevara's Desk",
      "sprite": "library_desk",
-     "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it — the gate keeps her busier than her own office does.",
+     "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it. The gate keeps her busier than her own office does.",
      "on_interact_accomplishment": "saw_zevaras_desk",
      "toast": "Watch Captain's desk. Empty, same as every other time you've walked past it."
     },
@@ -4222,7 +4222,7 @@
      "display_name": "The Cell",
      "sprite": "door",
      "tint": [0.5, 0.5, 0.55],
-     "locked_toast": "Barred, and empty behind the bars — you can tell by the quiet. Whatever ends up in here hasn't happened yet.",
+     "locked_toast": "Barred, and empty behind the bars. You can tell by the quiet. Whatever ends up in here hasn't happened yet.",
      "observe": "A single holding cell, iron-barred, straw swept into one corner. Duty-mundane, like everything else in this building — until it isn't."
     }
    ]
@@ -4291,7 +4291,7 @@
      "facing": "down",
      "observe": "A teenage Drake, wiry, a strap-scarred satchel worn even behind the counter -- she never fully sat down, she just stopped moving for a second. Slate-grey scales, a sweat-band she does not need indoors and wears anyway.",
      "talk_pool": [
-      "Runner's Guild! Board's live — take a slip, show me, go. Rules, quick: the parcel's yours until it's theirs. Sleep on a run and it comes back here, and you carry the shame instead. No pay for shame."
+      "Runner's Guild! Board's live. Take a slip, show me, go. Rules, quick: the parcel's yours until it's theirs. Sleep on a run and it comes back here, and you carry the shame instead. No pay for shame."
      ],
      "conversation": "vess_counter",
      "dialogue": [

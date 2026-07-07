@@ -25,7 +25,7 @@ const ROWS := ["Resume", "Save", "Load", "Load Autosave", "Music", "SFX", "Quit 
 const VOLUME_ROWS := ["Music", "SFX"]
 
 const CONFIRM_PANEL_SIZE := Vector2(340.0, 158.0)
-const CONFIRM_TEXT := "Unsaved progress since the\nlast autosave is lost — quit?"
+const CONFIRM_TEXT := "Unsaved progress since the\nlast autosave is lost. Quit?"
 ## Cursor defaults to "No" (index 0) on entry — quitting is destructive.
 const CONFIRM_ROWS := ["No", "Yes"]
 

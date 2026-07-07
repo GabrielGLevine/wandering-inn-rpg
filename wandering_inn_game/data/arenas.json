@@ -390,7 +390,7 @@
      "on": {
       "event": "combat_started"
      },
-     "line": "Relc: Loose grip, dead stance — we'll fix both. Arrows move you. Three easy steps a turn, so use your legs before anything fancy."
+     "line": "Relc: Loose grip, dead stance. We'll fix both. Arrows move you. Three easy steps a turn, so use your legs before anything fancy."
     },
     {
      "id": "first_step",
@@ -400,7 +400,7 @@
        "id": "pc"
       }
      },
-     "line": "Relc: That's walking. Now get next to one and press 1 — that's your arm. Numbers are your moves, remember them."
+     "line": "Relc: That's walking. Now get next to one and press 1. That's your arm. Numbers are your moves, remember them."
     },
     {
      "id": "pool_empty",
@@ -411,7 +411,7 @@
       },
       "nth": 3
      },
-     "line": "Relc: Steps run out, see? Slot 2 — [Dash]. Costs you wind, buys you stride."
+     "line": "Relc: Steps run out, see? Slot 2: [Dash]. Costs you wind, buys you stride."
     },
     {
      "id": "dash",
@@ -421,7 +421,7 @@
        "id": "pc"
       }
      },
-     "line": "Relc: And the legs are back. Wind for stride — that trade wins fights."
+     "line": "Relc: And the legs are back. Wind for stride. That trade wins fights."
     },
     {
      "id": "aim",
@@ -438,7 +438,7 @@
        "attacker": "pc"
       }
      },
-     "line": "Relc: Ha! Straw everywhere. When you're spent, press E — end your turn on YOUR terms."
+     "line": "Relc: Ha! Straw everywhere. When you're spent, press E. End your turn on YOUR terms."
     },
     {
      "id": "watch",
@@ -458,7 +458,7 @@
        "victory": true
       }
      },
-     "line": "Relc: Not bad for someone who smells of dish soap. Sleep is where a fight settles into your bones — do that. Then come see me; I owe you something."
+     "line": "Relc: Not bad for someone who smells of dish soap. Sleep is where a fight settles into your bones. Do that. Then come see me; I owe you something."
     }
    ]
   },
@@ -600,7 +600,7 @@
      "on": {
       "event": "combat_started"
      },
-     "line": "Relc: Real ones this time — stay behind me if you have to. You slept, so check your numbers: 3 and up are your [Skills] now. Earned, not given."
+     "line": "Relc: Real ones this time. Stay behind me if you have to. You slept, so check your numbers: 3 and up are your [Skills] now. Earned, not given."
     },
     {
      "id": "skill_aim",
@@ -610,7 +610,7 @@
        "mode": "skill"
       }
      },
-     "line": "Relc: That one puts everything behind one blow. What your slots hold follows the weapon you carry — sword skills for a sword arm, spear skills for mine."
+     "line": "Relc: That one puts everything behind one blow. What your slots hold follows the weapon you carry: sword skills for a sword arm, spear skills for mine."
     },
     {
      "id": "skill_hit",
@@ -620,7 +620,7 @@
        "actor": "pc"
       }
      },
-     "line": "Relc: THAT'S the stuff. Attacks keep you alive — [Skills] win the fight. Sleep grows both."
+     "line": "Relc: THAT'S the stuff. Attacks keep you alive. [Skills] win the fight. Sleep grows both."
     },
     {
      "id": "road_clear",
@@ -630,7 +630,7 @@
        "victory": true
       }
      },
-     "line": "Relc: Road's clear. Liscor's through the gate — tell the Watch that Relc let you pass. See the sign? Her inn, her rule — but under her roof? Don't."
+     "line": "Relc: Road's clear. Liscor's through the gate. Tell the Watch that Relc let you pass. See the sign? Her inn, her rule. But under her roof? Don't."
     }
    ]
   },
