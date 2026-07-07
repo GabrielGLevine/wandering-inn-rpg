@@ -660,6 +660,74 @@ in section 2:
   NOT separately confirmed — the armor stand is the closest existing
   match and the best candidate for a windowed crop pick.
 
+## 3b. 8a Magical Door — ruin + garden pixel-level pass (2026-07-07)
+
+**Task A1 (lane γ, issue #8 milestone 8a).** Full region/scale/anchor table
+lives in `docs/design/8a-asset-assembly.md`; this section is the qualitative
+summary + pack-choice reasoning, per the standing division of labor (sec.
+"Companion documents" above). Method: PIL alpha-channel + mean-color/
+texture-variance grid scans and connected-component bbox scans (never a
+direct image view) — the same discipline as sec. 3a's prop hunt, extended to
+produce actual pixel coordinates rather than just candidate-sheet names.
+
+**Ruin floor + wall (`ruin_surface`, Task D1):** Cemetery 0.4 is the primary
+pick over Castle — its own casting note already says "crypts near the Ruins
+of Liscor" (sec. 2), vs. Castle's "regal, still-standing interior" read,
+and the PIL scan confirms it: `Environment/TileSets/Floor.png` has a clean,
+fully-opaque, near-flat dark-olive stone tile (`(60,58,24)`, texture-std 1.6)
+repeating through its occupied block; `Environment/Structures/Walls.png` has
+both a flat warm-grey fill tile and a rougher masonry-textured alternate in
+the same palette family. Cave's `Assets/Tiles.png` (already scanned
+2026-07-02, sec. "Visual notes" in the mechanical index) supplies an organic
+rock-formation alternate for a "ruins reclaimed by nature" read, consistent
+with its own casting note ("deeper cave maps toward the Ruins," sec. 2).
+Castle's `Assets/Tiles.png` is kept as a tertiary candidate for a
+still-intact inner chamber (Warmage Thresk's own room, if the ruin design
+ever wants one) — its stone-wall cell reads warmer/cleaner than Cemetery's,
+appropriate for "regal," not "ruined."
+
+**Pedestal + rubble scatter (`anchor_stone_pedestal`, D1):** Cemetery's
+`Environment/Props/Props.png` has an isolated, dense (84% opaque) 48x48px
+blob at native (64,0) reading as a compact monument/altar silhouette — the
+pedestal candidate. `Environment/Props/Graves.png` has a taller (24x78px)
+standing-slab blob at (132,114) as an alternate "broken monument" pedestal
+if a taller read is wanted. Both sheets also carry several small (10-30px)
+isolated debris blobs in the same grey-brown palette, proposed as a 2-3
+piece rubble scatter (props-over-tiles rule — real debris props, not a
+recolored floor tile). Exact bboxes + proposed render_scale in the
+assembly doc.
+
+**Pantry-door awakened state (`pantry_door`, Task D4):** per the milestone
+plan's Global Constraints, v1 ships with **zero new art** — the existing
+`door` sprite entry (`sprites.json`, Free Pack `Furniture.png` region
+`[222,279,34,44]`, already IN USE) gets a `visual_states` tint + a
+phase-gated `PointLight2D`, the exact `unlit_lantern` precedent (sec.
+5 casting table has no row for this since it's a reuse, not a new asset).
+No Pixel Crawler pack in the Castle/Cemetery/Cave/Garden roster has an
+arcane-doorway motif worth swapping in over the existing door prop. A
+PixelLab generation spec for a real rune-glow frame (for when balance is
+topped up) is queued in the assembly doc per the deferral note in sec. 4's
+sibling asset-index and the milestone plan — **nothing generated this
+pass** (balance $0.00, per directive).
+
+**Garden of Sanctuary pre-work (issue #9, out of charter for 8a — picks
+only, no wiring):** confirms sec. 5's existing "near-literal fit" casting
+call. `Garden Environment/Assets/Tiles.png` (480x480, 30x30 @16px) has: a
+flat teal water tile (`(69,114,121)`, std 0.0 — fountain-basin water), a
+bright yellow-green textured foliage tile (`(114,122,35)` — trimmed-hedge
+top-face), and three flower-bed color swatches at the sheet's bottom rows
+(magenta/pink `(143,2,79)`, red `(144,30,9)`, purple `(69,3,144)`) — the
+magenta swatch is the closest match to the catalog's "pink flowerbeds"
+mockup read (sec. 2) and is the proposed source color for a petal
+`GPUParticles2D` ambience emitter (the existing atmosphere-layer pattern,
+`wandering_inn_game/CLAUDE.md` "Ambience layer" block). Garden ships no
+dedicated Props.png (confirmed via directory listing, unlike Cave/Cemetery)
+— hedge/fountain/statue objects live as multi-cell regions inside the one
+Tiles.png sheet; a full fountain *structure* crop (basin + rim + statue,
+not just the water fill tile) is deferred to #9's own asset pass since it
+needs a windowed screenshot to compose correctly and #9 is out of scope
+here by charter.
+
 ## 4. Audio packs
 
 ### Minifantasy_Dungeon_SFX — IN USE (curated set)

@@ -3862,6 +3862,54 @@ Bat creature idle animation, 4 frames facing down. Frame size ~96x96px. Reddish-
 
 Bandit/enemy soldier idle animation, 4 frames. Frame size ~64x64px. Green-skinned humanoid (orc-like) in armor/gear, facing down. Simple bobbing animation. Suitable for generic humanoid enemy (bandit, hired thug, goblin). Palette: pale green skin, dark armor/leather.
 
+### 8a Task A1 PIL-scan pass (2026-07-07, ruin + garden candidates)
+
+Unlike the narrative entries above (one-time *vision-model* reads,
+2026-07-02), these entries are produced by a **numeric PIL alpha/color grid
+scan** (16px-cell mean-RGB + luminance-stddev clustering, plus alpha-channel
+connected-component bbox extraction for prop sheets) — no image was ever
+rendered/viewed, per the wi-art-and-sprites "never browse pack PNGs into
+context" rule. Full per-candidate region/scale/anchor table (with the
+downstream `sprites.json`-shaped picks) lives in
+`docs/design/8a-asset-assembly.md`; this entry is the raw scan summary.
+
+- **Pixel Crawler - Cemetery 0.4 — Environment/TileSets/Floor.png (400x400,
+  25x25 @16px):** content occupies only cols 0-5, rows 0-11 (rest empty
+  canvas). One dominant flat cluster, dark-olive `rgb(60,58,24)`,
+  texture-std 1.6-1.8 where fully opaque. Plain-floor pick: cell (2,1) ->
+  native px `(32,16,16,16)`, alpha 1.00.
+- **Pixel Crawler - Cemetery 0.4 — Environment/Structures/Walls.png
+  (400x800, 25x50 @16px):** content in cols 0-24, rows 0-29. Two usable
+  wall fills: cell (2,2) -> px `(32,32,16,16)` flat warm-grey
+  `rgb(76,68,52)` std 6.6; cell (2,17) -> px `(32,272,16,16)` darker
+  `rgb(50,49,42)` std 20.3 (masonry-textured alternate).
+- **Pixel Crawler - Cemetery 0.4 — Environment/Props/Props.png (400x400):**
+  connected-component scan, 19 blobs >=40px area. Pedestal candidate: bbox
+  `(64,0,48,48)` fill 0.84 `rgb(43,39,24)`. Rubble-scatter candidates (small,
+  same grey-brown family): bbox `(65,48,14,34)` fill 0.82 `rgb(50,49,43)`;
+  bbox `(82,49,11,31)` fill 0.55 `rgb(53,55,55)`; bbox `(96,64,31,16)` fill
+  0.65 `rgb(53,38,27)`.
+- **Pixel Crawler - Cemetery 0.4 — Environment/Props/Graves.png (400x400):**
+  22 blobs. Alt tall pedestal/monument candidate: bbox `(132,114,24,78)`
+  fill 0.96 `rgb(62,59,52)`. Two large standing-slab blobs at bbox
+  `(161,92,30,100)`/`(193,92,30,100)`, fill ~0.76, `rgb` ~`(50,48,40)` grey
+  — alternate broken-gravestone reads.
+- **Pixel Crawler - Castle Environment 0.3 — Assets/Tiles.png (416x400,
+  26x25 @16px):** cell (2,2)/(2,3) -> px `(32,32,16,16)`/`(32,48,16,16)`,
+  fully flat (std 0.0) dark blue-purple `rgb(28,23,44)` — shadow/dark-floor
+  fill. Cell (6,2) -> px `(96,32,16,16)` warm grey `rgb(90,82,70)` std 14.1
+  — cleaner stone-wall candidate for an intact-chamber variant.
+- **Pixel Crawler - Garden Environment — Assets/Tiles.png (480x480, 30x30
+  @16px):** cell (21,7) -> px `(336,112,16,16)`, alpha 1.00, perfectly flat
+  (std 0.0) teal `rgb(69,114,121)` — fountain-basin water. Cell (1,8) -> px
+  `(16,128,16,16)` bright yellow-green `rgb(114,122,35)` std 26.8 — trimmed
+  hedge top-face. Flower-bed swatch block at rows 25-29: cell (1,26) -> px
+  `(16,416,16,16)` magenta/pink `rgb(143,2,79)` (closest catalog match to
+  "pink flowerbeds"); cell (4,26) -> px `(64,416,16,16)` red `rgb(144,30,9)`;
+  cell (7,26) -> px `(112,416,16,16)` purple `rgb(69,3,144)`. No dedicated
+  Props.png in this pack (confirmed via directory listing) — hedge/fountain/
+  statue objects live as multi-cell regions inside this one Tiles.png.
+
 ### M5 E3 committed extracts (not generated)
 
 `tools/asset_index.py` indexes `potential_assets/` only. These are the M5 E3
