@@ -1,0 +1,35 @@
+{
+ "_comment": "Issue #9 Task G1 (garden_walkthrough): standing at the inn bed (2,6 facing DOWN onto 2,7), ready for the qualifying sleep. Act III fully reached (near_act3 precedent: warrior 5 + a SECOND class already held so reached_two_classes derives on Continue -- helper 1, chosen instead of diplomat/mage so cleaned_the_inn:1 doesn't ALSO trigger a spurious Helper class_gained this sleep; 3 completed quests via the_errand/missing_crate/cisterns, same accomplishment set as near_act3). watch_runner_pointed is PRE-BANKED (unlike near_act3, which leaves it for arc_flow to fire live) so THIS fixture's qualifying sleep is a clean, single-purpose proof: nothing else fires, only the garden unlocks (silently) and 'You sleep soundly.' renders. Exactly K=2 of the 4 ratified legs are pre-banked -- cleaned_the_inn (the worked_the_inn-class leg, ALSO Helper's own gained_by threshold, hence helper already held above) and resolved_wrong_order (live, The Wrong Order) -- proving the gate opens at the K=2 threshold itself, not merely 'enough'. goblins_spared/sign_defended are deliberately ABSENT (no producer in this worktree; the absent-as-zero property).",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [2, 6],
+  "player_facing": [0, 1],
+  "classes": { "warrior": 5, "helper": 1 },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "met_relc": 1,
+   "watch_runner_pointed": 1,
+   "cleaned_the_inn": 1,
+   "resolved_wrong_order": 1
+  },
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": ["the_errand", "missing_crate", "cisterns"],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": { "weapon": "rusty_sword", "armor": "" },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}

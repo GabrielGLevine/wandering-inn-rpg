@@ -272,6 +272,18 @@ func _build_expected_counts() -> Dictionary:
 	counts["bat/hit"] = 4
 	counts["bat/death"] = 6
 
+	## Issue #9 Task G1: the Garden of Sanctuary. `garden_door_inner` is an
+	## owned single-frame PixelLab static (34x48, the door/pantry_door_glow
+	## convention); `garden_fountain_basin`/`garden_fountain_statue` are
+	## single-region crops of the LICENSED Garden Pixel Crawler pack (both
+	## FORBIDDEN/bundle:true/placeholder-fallback -- this test's own
+	## `is_fallback_sheet` relax-to-`>=1` branch covers them in this public
+	## checkout; the `== expected` pin below only bites once the private
+	## bundle lands the real PNGs).
+	counts["garden_door_inner/idle"] = 1
+	counts["garden_fountain_basin/idle"] = 1
+	counts["garden_fountain_statue/idle"] = 1
+
 	return counts
 
 

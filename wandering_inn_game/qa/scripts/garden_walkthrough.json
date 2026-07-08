@@ -1,0 +1,63 @@
+{
+ "_comment": "Issue #9 Task G1 (spec §5 RATIFIED): the Garden of Sanctuary's full unlock-to-rest loop from a beat-ready fixture (near_garden -- Act III fully reached, exactly K=2 of 4 ratified legs pre-banked: cleaned_the_inn + resolved_wrong_order). Proves live: (1) the qualifying sleep silently banks garden_door_unlocked (no toast beyond the ordinary 'You sleep soundly.' -- OPAQUE, no GDI line, this is Erin's moment); (2) Erin's own talk_pool_stages line acknowledges it on the very next talk (the PC witnesses); (3) `garden_door` (inn, 3,6) now opens for real instead of the pre-unlock bare-wall toast; (4) the garden_sanctuary map itself -- day-bright identity, the fountain, the misted-rise clearing; (5) rest-bed sleep parity at `garden_bed` (the DP3 sleep_toast idiom, live); (6) round-trip exit via `garden_exit` back to the inn. Move sequences are BFS-derived against the real inn/garden_sanctuary blocked-cell layout (python replay, see the G1 report), not hand-guessed.",
+ "starts_at_title": true,
+ "fixture_save": "near_garden",
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "_comment": "move down to the 'Continue' row, confirm loads the near_garden manual slot.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "inn" },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
+
+  { "_comment": "== The qualifying sleep: act III + K=2 of 4 legs already met by the fixture. garden_door_unlocked banks SILENTLY (no toast of its own) -- 'You sleep soundly.' still renders since nothing else fires this beat (watch_runner_pointed pre-banked, no pending level-ups/gains). ==", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "garden_door_unlocked" }, "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "ui_toast_rendered", "payload_contains": { "text": "You sleep soundly." } },
+  { "action": "assert_state", "path": "accomplishments.garden_door_unlocked", "equals": 1 },
+
+  { "_comment": "== Erin's own acknowledgment, the PC witnesses (no GDI line) -- the talk_pool_stages seam, gated on the SAME flag. ==", "action": "move", "direction": "up", "steps": 1 },
+  { "action": "move", "direction": "right", "steps": 5 },
+  { "action": "move", "direction": "up", "steps": 2 },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Erin", "text": "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit." }, "timeout_sec": 5 },
+
+  { "_comment": "== garden_door now opens for real (the shipped door_when mechanism -- see wi_game.gd's interact() prop branch). ==", "action": "move", "direction": "left", "steps": 4 },
+  { "action": "move", "direction": "down", "steps": 2 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "screenshot", "name": "01_garden_door_in_the_inn" },
+  { "action": "press", "name": "interact" },
+  { "_comment": "the open_toast fires immediately before transition() rebuilds the field, in the SAME beat -- the sewer_grate/deep_fissure precedent (sewers_walkthrough.json) asserts the DOMAIN `toast` event here, not `ui_toast_rendered`: the UI confirmation for a toast queued right before a map rebuild never actually renders (traced live -- the confirmation event genuinely never appears in this run's log), so this is the correct, precedented assertion shape, not a downgrade.", "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The vines part like a curtain, and the light beyond doesn't flicker." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "garden_sanctuary" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": { "map": "garden_sanctuary", "floor_cells": 168, "blocked_cells": 48 }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "garden_sanctuary" },
+  { "action": "assert_state", "path": "player_cell", "equals": [7, 10] },
+  { "action": "screenshot", "name": "02_garden_day_bright_identity" },
+
+  { "_comment": "== rest-bed sleep parity (the DP3 sleep_toast idiom, live in the garden). ==", "action": "move", "direction": "right", "steps": 4 },
+  { "action": "move", "direction": "up", "steps": 5 },
+  { "action": "screenshot", "name": "03_garden_bed" },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "press", "name": "interact" },
+  { "_comment": "chronology (traced live): toast{sleep_toast} fires FIRST (before sleep()'s own phase_changed emit), then phase_changed, then the rest of the beat -- wait on the DOMAIN toast, not the UI confirmation (same reasoning as the vines-toast step above), and in this exact order (the since-marker only scans forward).", "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Somewhere, a door shuts softly. The garden doesn't dim." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "ui_toast_rendered", "payload_contains": { "text": "You sleep soundly." } },
+
+  { "_comment": "== round-trip exit, back to the inn. ==", "action": "move", "direction": "left", "steps": 3 },
+  { "action": "move", "direction": "down", "steps": 2 },
+  { "action": "move", "direction": "left", "steps": 1 },
+  { "action": "move", "direction": "down", "steps": 3 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn" }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "inn" },
+  { "action": "assert_state", "path": "player_cell", "equals": [3, 7] },
+  { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "visited_the_garden" } },
+
+  { "_comment": "== No-violence sim guard, at the whole-run level: combat never once started anywhere in this script (the garden ships zero encounters and the sim guard refuses start_combat outright on this map -- unit-tested directly in test_sim_core.gd; this is the QA-level cross-check). ==", "action": "assert_event_absent", "type": "combat_started" }
+ ]
+}

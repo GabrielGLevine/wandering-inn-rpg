@@ -954,6 +954,73 @@ func _init() -> void:
 	assert(arc.accomplishment_count("watch_runner_pointed") == 1, "AF I1: post-consolidation sleep fires the tremor pointer (gate reads the flag, not the live count)")
 	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you."), "AF I1: the Watch-runner pointer toast renders after consolidation")
 
+	# --- Issue #9 Task G1: the Garden's K-of-N earn gate + the no-violence sim guard ---
+	# Same cc_arc shape (acts + a synthetic 3-quest catalog) so act_summary()/
+	# _quests_completed_count() are live; a fresh instance so the AF I1 block's
+	# consolidation/tremor state above doesn't leak in.
+	var cc_garden := combat_config.duplicate(true)
+	cc_garden["acts"] = _load_json("res://data/acts.json")
+	cc_garden["quests"] = {"quests": [
+		{WIKeys.ID: "q_a", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qa_done": 1}}]},
+		{WIKeys.ID: "q_b", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qb_done": 1}}]},
+		{WIKeys.ID: "q_c", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qc_done": 1}}]},
+	]}
+	var gg := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_garden)
+	gg.classes = {"warrior": 1}
+	gg.started_quests.assign(["q_a", "q_b", "q_c"])
+	gg.accomplishments = {"reached_liscor": 1, "qa_done": 1, "qb_done": 1, "qc_done": 1}
+	gg.reprime_quests()
+	assert(gg.act_summary()[WIKeys.ID] == "act_ii", "garden gate baseline: 1 class, quests done, but reached_two_classes unbanked -> still Act II")
+
+	# Sleep with Act III NOT yet reached (only 1 class held): the K-of-N legs
+	# are irrelevant while the act gate is unmet -- garden stays locked even
+	# though nothing else about this sleep is unusual.
+	_events.clear()
+	gg.sleep()
+	assert(gg.accomplishment_count("garden_door_unlocked") == 0, "garden gate: act < III refuses regardless of legs")
+
+	# Act III now reached (2nd class banks reached_two_classes this sleep) but
+	# only ONE of the four legs is banked (cleaned_the_inn) -- K=2 unmet.
+	# goblins_spared/sign_defended are absent entirely (no producer in this
+	# worktree, per the plan's Global Constraints + this task's own tracing)
+	# and must read as 0, contributing nothing -- proven implicitly by their
+	# total absence from `gg.accomplishments` here.
+	gg.classes["helper"] = 1
+	gg.accomplishments["cleaned_the_inn"] = 1
+	_events.clear()
+	gg.sleep()
+	assert(gg.act_summary()[WIKeys.ID] == "act_iii", "garden gate: 2nd class + 3 quests => Act III this sleep")
+	assert(gg.accomplishment_count("garden_door_unlocked") == 0, "garden gate: Act III reached but only 1 of 4 legs banked -- K=2 still unmet")
+
+	# The 2nd leg (resolved_wrong_order) lands: K=2 of 4 now met AND act >= III
+	# -- the qualifying sleep. Silent bank (no toast asserted -- "You sleep
+	# soundly." still fires, proven structurally by NOT setting anything_happened;
+	# `garden_walkthrough` is the live QA proof of the toast surface).
+	gg.accomplishments["resolved_wrong_order"] = 1
+	_events.clear()
+	gg.sleep()
+	assert(gg.accomplishment_count("garden_door_unlocked") == 1, "garden gate: K=2 of 4 (cleaned_the_inn + resolved_wrong_order) + Act III unlocks the garden")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "garden_door_unlocked"), "garden gate: the unlock fires accomplishment_recorded")
+
+	# Idempotent: a later sleep never re-banks it, even though the gate stays met.
+	_events.clear()
+	gg.sleep()
+	assert(gg.accomplishment_count("garden_door_unlocked") == 1, "garden gate: idempotent past the first qualifying sleep")
+	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "garden_door_unlocked"), "garden gate: no re-bank on a later sleep")
+
+	# The no-violence sim guard: start_combat refuses OUTRIGHT while standing
+	# on the garden map, before even looking up the entity (proven by passing
+	# an entity id that exists on a DIFFERENT map -- the guard must fire on
+	# current_map alone, not "entity not found on this map").
+	var gGuard := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gGuard.bind_map_silent("garden_sanctuary", Vector2i(1, 1))
+	assert(not gGuard.start_combat("goblin_encounter_2"), "garden sim guard: start_combat refuses on the garden map")
+	assert(gGuard.combat == null, "garden sim guard: no combat instance is ever built")
+	# Control: the SAME entity id starts combat fine once off the garden map
+	# (proves the guard is map-scoped, not a general regression).
+	gGuard.bind_map_silent("floodplains", Vector2i(1, 1))
+	assert(gGuard.start_combat("goblin_encounter_2"), "garden sim guard control: start_combat still works normally off the garden map")
+
 	# --- M7 Task E2: equipment state, API, combat-build injection ---
 	# Default start state (skeleton_scene.json player block, same idiom as
 	# player.skills): the starter sword is BOTH equipped AND possessed.

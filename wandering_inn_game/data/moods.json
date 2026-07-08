@@ -168,6 +168,13 @@
    "night": [0.26, 0.27, 0.38],
    "vignette": 0.42
   },
+  "garden": {
+   "_comment": "Issue #9 Task G1 (spec §2/§5: 'the ONE map with no darkness' -- Global Constraint: light_energy day-bright at every phase). The only card in the game that is BOTH identity-at-every-phase AND vignette 0.0 -- every other time-invariant pin above (sewers/inn_upstairs/barracks/runners_guild) holds a DARK/desaturated triple constant across phases; this is the same mechanism (atmosphere.gd's apply() is a pure per-(map,phase) lookup, oblivious to whether the three arrays happen to be equal -- traced, not assumed, before landing this one-liner) applied to the IDENTITY grade instead. The eyes-closed test IS the mood system itself: if the screen never dims and never vignettes on this map, you are in the garden. No `arena_moods` entry, ever -- combat can never start here (the sim guard in wi_game.gd's start_combat), so an arena card would itself be a bug.",
+   "day": [1.0, 1.0, 1.0],
+   "dusk": [1.0, 1.0, 1.0],
+   "night": [1.0, 1.0, 1.0],
+   "vignette": 0.0
+  },
   "deep_tunnels": {
    "_comment": "M-ARC A2: the Raskghar descent -- the DARKEST pin in the game, time-invariant (below the sewers, no daylight ever reaches it). Meaningfully darker + colder than the sewers' [0.3,0.32,0.45] so the descent visibly escalates; a stronger vignette (0.55) squeezes the readable space to a lantern's reach. Any prop lights glow at every phase intent (light_energy day=0.0 still keeps day flat, so the tunnels lean on their own cold ambience).",
    "day": [

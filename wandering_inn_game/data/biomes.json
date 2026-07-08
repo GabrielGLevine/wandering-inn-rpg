@@ -80,5 +80,24 @@
    0,
    0
   ]
+ },
+ "garden": {
+  "_comment": "Issue #9 Task G1 (art handoff docs/design/garden-art/handoff.md, staged biome fragment verbatim). Floor is the licensed Garden Pixel Crawler pack (assets_manifest.json already tracks assets/tiles/garden/Tiles.png as of 8a A1 -- FORBIDDEN/bundle:true/fallback:placeholder, so a public checkout renders the flat placeholder color and still boots/passes QA per the M-RELEASE R2 contract). `blocked` reuses the SAME sheet's trimmed-hedge top-face tile (no blocked_sheet override) -- the Garden ships NO wall family; the hedge hem IS the enclosure (sanctuary = absence of architecture). `skirt` is the ONE owned PixelLab asset this biome needs: the impossible bright sky-mist beyond the hedge (assets/tiles/garden/sky_mist.png, committed this task, SHIP-OK/redistributable per assets/LICENSES/pixellab-ai-generated-verdict.md).",
+  "sheet": "res://assets/tiles/garden/Tiles.png",
+  "tile_px": 16,
+  "floor": [
+   0,
+   0
+  ],
+  "blocked": [
+   1,
+   8
+  ],
+  "skirt_sheet": "res://assets/tiles/garden/sky_mist.png",
+  "skirt_tile_px": 32,
+  "skirt": [
+   0,
+   0
+  ]
  }
 }

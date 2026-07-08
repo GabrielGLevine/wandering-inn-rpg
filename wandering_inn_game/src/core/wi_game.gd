@@ -1907,9 +1907,25 @@ func _skill_entries(ids: Array) -> Array:
 	return out
 
 
+## Issue #9 Task G1 (spec §5.3): "It is ERIN'S Skill... No-violence rule =
+## sim guard: combat can never start on the garden map." A SIM GUARD, not a
+## data-convention -- the garden ships zero `encounter` entities today, but
+## this refusal holds even if a future edit ever placed one there, or a
+## dialogue effect tried `{"start_combat": ...}` while standing on the map
+## (the `goblin_parley`-style "Draw steel." shape). `start_combat` is the
+## ONE call site combat ever begins through (traced: both the dialogue
+## `start_combat` effect and `_check_trigger_radius`'s proximity ambush
+## funnel through this same function), so one early refusal here covers
+## every path. Unit-tested directly (`test_sim_core.gd`), not merely implied
+## by the garden map's own empty entity list.
+const GARDEN_MAP_ID := "garden_sanctuary"
+
+
 ## Starts a tactical combat for an encounter entity.
 func start_combat(entity_id: String) -> bool:
 	if dialogue != null or combat != null or _combat_config.is_empty():
+		return false
+	if current_map == GARDEN_MAP_ID:
 		return false
 	var entity: Dictionary = find_entity(entity_id)
 	if entity.is_empty() or String(entity[WIKeys.KIND]) != "encounter":
@@ -2474,6 +2490,18 @@ func sleep() -> void:
 			record_accomplishment("door_awakened")
 			anything_happened = true
 
+	# Issue #9 Task G1 (spec §5: "act >= III AND K-of-N inn accomplishments";
+	# ratified K=2 of 4). Runs AFTER every progression resolution above (same
+	# position as the D4 door-study hook) -- additive only. Erin's garden door
+	# APPEARS this sleep (spec §5's unlock SURFACE) but the bank is SILENT: no
+	# toast, no GDI line ("this is Erin's moment, not the system's") -- the
+	# player discovers it by walking into the inn and, separately, the next
+	# time they talk to Erin (her own `talk_pool_stages` line, gated on this
+	# SAME flag). Deliberately does NOT set anything_happened -- a sleep that
+	# only unlocks the garden still says "You sleep soundly." (the door_study_
+	# sleeps N=1/N=2 opaque-silence precedent, just above).
+	_bank_garden_unlock_if_earned()
+
 	if not anything_happened:
 		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
 
@@ -2527,6 +2555,77 @@ func _holds_consolidated_class() -> bool:
 		if classes.has(String((cons as Dictionary).get("target", ""))):
 			return true
 	return false
+
+
+## Issue #9 Task G1 -- the Garden's earn condition (spec §5 RATIFIED):
+## `act >= III` AND at least K=2 of 4 qualifying accomplishment legs.
+##
+## THE K-OF-N GATE SHAPE DECISION: `door_when`'s own validator
+## (`_door_gate_met`/`_accomplishment_gate_met`) is a plain ALL-of reader
+## (every keyed counter must clear its threshold); `WIProgression._level_met`'s
+## `requires_any` is the ANY-of sibling (K=1). Neither expresses "2 of these
+## 4, no single one mandatory." Rather than teach `door_when` a THIRD gate
+## arity (a K-of-N mini-language every future door_when caller would also
+## have to reason about), this milestone follows the SAME idiom already used
+## four times over in this file for a one-off milestone boundary
+## (`_bank_reached_two_classes_if_earned`, `_maybe_fire_tremor_pointer`,
+## `door_study_sleeps`/`door_awakened` just above): compute the bespoke
+## condition ONCE, here, in a small single-purpose pure function, and bank
+## the RESULT as a monotonic accomplishment flag (`garden_door_unlocked`).
+## `garden_door`'s `door_when.requires` then reads that ONE flag through the
+## existing, UNCHANGED `_accomplishment_gate_met` ALL-of reader -- zero new
+## gate shapes added to the shared door_when/visual_states validators. This
+## is the "door_when-class extension" the plan asked for, just applied
+## upstream of door_when instead of inside it: the shared validator never
+## learns about K-of-N at all.
+##
+## `act >= III` reuses the EXACT act_ii.advance_when test `data/acts.json`
+## already defines (the monotonic `reached_two_classes` flag + 3 completed
+## quests -- `_maybe_fire_tremor_pointer` above tests the identical pair for
+## the same reason: WIActs is deliberately never banked/stored, so reading it
+## live is the sanctioned way to ask "has Act III begun", not a new act-index
+## bank).
+##
+## The four ratified legs: `cleaned_the_inn` (Helper's own `gained_by`
+## threshold -- the most direct shipped "did real inn work" signal, standing
+## in for the "worked_the_inn-class counters" plural framing in the plan);
+## `goblins_spared` (issue #26, traced and confirmed NOT YET a producer in
+## this worktree -- reads 0 via plain counter semantics, exactly the
+## Global Constraints' pre-blessed absent-as-zero case); `sign_defended`
+## (traced exhaustively -- goblin_encounter_1/_2/chieftains_raid/goblin_parley
+## all bank only `won_combat`/`street_cleared`, NEVER a distinct sign-tied id;
+## `read_the_inn_sign` is a flavor read, not a "defended" beat -- this leg
+## ALSO has no shipped producer today, a finding beyond what the plan flagged
+## for goblins_spared alone; see the G1 report); `resolved_wrong_order` (The
+## Wrong Order, live). K=2 is checked as a plain "how many of the 4 are
+## banked" count -- with two legs currently unproducible, the gate is REACHABLE
+## today only via {cleaned_the_inn, resolved_wrong_order} (both live), exactly
+## matching the Global Constraints' assurance that K=2 stays reachable through
+## the remaining legs while `goblins_spared` (and now `sign_defended`) await
+## their own producer tasks.
+func _garden_earn_met() -> bool:
+	if accomplishment_count("reached_two_classes") < 1 or _quests_completed_count() < 3:
+		return false
+	var legs := ["cleaned_the_inn", "goblins_spared", "sign_defended", "resolved_wrong_order"]
+	var met := 0
+	for leg: String in legs:
+		if accomplishment_count(leg) >= 1:
+			met += 1
+	return met >= 2
+
+
+## Banks `garden_door_unlocked` ONCE, the first qualifying sleep after
+## `_garden_earn_met()` goes true (idempotent guard -- the door_awakened/
+## reached_two_classes idiom). SILENT: no toast, no event beyond the plain
+## `accomplishment_recorded` (spec §5's unlock SURFACE fires through
+## `garden_door`'s door_when + Erin's talk_pool_stages line instead, both
+## reading this same flag). Called from `sleep()` only.
+func _bank_garden_unlock_if_earned() -> void:
+	if accomplishment_count("garden_door_unlocked") >= 1:
+		return
+	if not _garden_earn_met():
+		return
+	record_accomplishment("garden_door_unlocked")
 
 
 ## Adds display names to a consolidation offer so the UI prompt can render class

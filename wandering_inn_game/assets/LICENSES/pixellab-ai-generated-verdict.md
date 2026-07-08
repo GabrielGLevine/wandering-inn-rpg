@@ -107,3 +107,19 @@ height: human 0.6154, gnoll 0.5926, drake 0.5161) since these are the same
 race body proportions. Full measured anchor table in the task report
 (`.superpowers/sdd/fp-handoff/task-art-wiring-report.md`). Same PixelLab-ToS
 ownership / redistributability as everything above.
+
+## Issue #9 Task G1 — the Garden of Sanctuary (2026-07-07)
+
+Two owned assets from the pre-staged `potential_assets/pixellab_2026-07-07_garden/`
+cache (art lane, direction.md/picks.md/handoff.md), generated ahead of this
+wiring task via the same v1 static-prop recipe (`/generate-image-pixflux`,
+`no_background: true`, hard-outline 16-bit top-down). The cache's other
+outputs (memorial statues, the empty plinth, alternate door/sky-mist takes)
+are G2/later-task scope, not committed this pass.
+
+| Path | Subject | Source / notes |
+|---|---|---|
+| `assets/sprites/garden_door/Idle-Sheet.png` | `garden_door_inner` prop (Erin's own vine-wreathed garden door, the inn side) | `garden_door_v2.png` (the winning candidate; `garden_door.png` is an earlier rejected pass, NOT used). Static, 34×48, 1 frame. Alpha bbox rows 7–41 of 48 (feet plane 42/48 ≈ 0.875) — `anchor: [0.5, 0.875]` set in sprites.json per the ANCHOR RULE; `render_scale: 0.5` (matches the shipped `door`/`pantry_door_glow` props' scale at a near-identical native frame size). |
+| `assets/tiles/garden/sky_mist.png` | Garden biome `skirt` tile (the impossible bright sky beyond the hedge hem) | `sky_mist_final.png` (the winning candidate over `sky_mist_tile.png`/`sky_mist_v2.png`, earlier passes, NOT used). Seamless, 32×32, `skirt_tile_px: 32`. |
+
+Same PixelLab-ToS ownership / redistributability as everything above.
