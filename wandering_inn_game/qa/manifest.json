@@ -378,6 +378,24 @@
    "seed": 9,
    "fixture": "near_riverfarm",
    "note": "8b Task R1 (issue #10): door arrival via the portal contract's first exercise (locked shape 1) -- village walk (headman talk_pool + the charmed villager's echo_of tell, locked shape 3) -- the night wolf gate NEGATIVE at day (encounter_when, locked shape 2, canonical-pinned) -- the hollow round-trip -- the witch's two-form read across a REAL live mid-waking phase crossing (no sleep, locked shape 4) -- routes around briar_collectors/briar_collectors_deep (live encounters post-R2 merge; interact-only, never faced -- combat_started absent whole-run)"
+  },
+  {
+   "script": "riverfarm_fight",
+   "seed": 9,
+   "fixture": "riverfarm_fight_start",
+   "note": "8b Task R3 (issue #11) 'The Price of a Favor' FIGHT path: give -> clear briar_collectors (shallow) -> clear briar_collectors_deep (the escalation R2 tuned, banks the shared blight_lifted convergence) -> report -> completion, plus the night-wolf POSITIVE leg (a real actions_since_sleep burst to night, river_wolf_pack's trigger_radius fires and is won). Fixture rng_state=1 governs all three live fights (seed-searched against the real start_combat draw order)."
+  },
+  {
+   "script": "riverfarm_talk",
+   "seed": 9,
+   "fixture": "riverfarm_talk_start",
+   "note": "8b Task R3 (issue #11) 'The Price of a Favor' TALK path -- no combat: give -> the witch's [Diplomat]-gated mediation (a renegotiated year of hearth-tending, banks blight_lifted) -> report -> completion, PLUS the shared post-conditions every path converges on: the village visual_states brighten, the charmed villager's echo retirement (talk_pool_stages swap), and the witch-cottage vendor unlock (a real buy)."
+  },
+  {
+   "script": "riverfarm_skill",
+   "seed": 9,
+   "fixture": "riverfarm_skill_start",
+   "note": "8b Task R3 (issue #11) 'The Price of a Favor' SKILL path -- no combat: give -> the gauntlet in sequence (basic_cooking the offering -> [Light] the threshold candles -> [Observe] the true knot, the existing requires_skill/on_skill_use field-skill seam) -- the last step banks blight_lifted directly, no separate report needed -- then report -> completion."
   }
  ]
 }

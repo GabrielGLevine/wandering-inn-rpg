@@ -1,0 +1,26 @@
+{
+ "_comment": "riverfarm_talk's start -- NO combat anywhere (its whole point). [Diplomat] L1 already held so the witch's mediation option shows visible-unlocked (a class the player earns elsewhere, per the goblin_parley warrior-intimidate precedent of a class-gated line that doesn't ALSO require quest-active state -- see riverfarm_witch.json's own _comment on why requires/hide_when split that way). riverfarm_attuned pre-banked (the door-chain arrival is R1's own proof). Standing at (11,10) facing up, directly south of riverfarm_headman (11,9) -- SAME start cell as riverfarm_fight/riverfarm_skill (parity: all three canonicals open from the identical vantage, only the resolution path differs). gold:20 covers the witch's 4g yarrow bundle with headroom. heard_price_of_a_favor is NOT banked and the quest is NOT started -- the script proves the full give -> mediate -> report -> completion loop honestly, PLUS the shared post-conditions (village brighten, vendor unlock, villager echo retirement) since this is the fastest (combat-free) path to prove them.",
+ "version": 5,
+ "state": {
+  "current_map": "riverfarm_village",
+  "player_cell": [11, 10],
+  "player_facing": [0, -1],
+  "classes": { "diplomat": 1 },
+  "accomplishments": {
+   "riverfarm_attuned": 1
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": { "weapon": "", "armor": "" },
+  "container_state": {},
+  "gold": 20,
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}
