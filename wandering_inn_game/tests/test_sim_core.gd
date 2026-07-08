@@ -2560,5 +2560,155 @@ func _init() -> void:
 	assert(gDel.accepted_delivery_id == "delivery_krshia_wool", "a delivered-but-unpaid slip survives sleep")
 	assert(gDel.turn_in_delivery() and gDel.gold == 2, "pay collects fine on a later waking")
 
+	# --- 8b R1 (issue #10): the encounter_when phase gate (locked shape 2) ---
+	# Two synthetic encounters against the REAL combat catalog (goblin_ambush
+	# arena + training_dummy_a, both already shipped) so a gate-open combat
+	# genuinely resolves, not just "start_combat returned true": isolates the
+	# interact() gate from the _check_trigger_radius gate (a single encounter
+	# carrying both trigger_radius AND being interact-faced would conflate
+	# which site actually blocked/allowed the fight).
+	var gate_scene := {
+		"start_map": "plaza",
+		"player": {WIKeys.CELL: [1, 1], "classes": {}, WIKeys.SKILLS: []},
+		"maps": {"plaza": {
+			"grid": {"width": 8, "height": 8},
+			"blocked": [],
+			"entities": [
+				{WIKeys.ID: "gate_interact_only", WIKeys.KIND: "encounter", WIKeys.CELL: [2, 1],
+				 WIKeys.DISPLAY_NAME: "Night Thing", "sprite": "",
+				 "arena": "goblin_ambush", "enemies": ["training_dummy_a"], "allies": [],
+				 "on_victory": "test_won_gate_interact",
+				 "encounter_when": {"phase": ["night"]},
+				 "gate_closed_toast": "Nothing there in daylight."},
+				{WIKeys.ID: "gate_trigger_only", WIKeys.KIND: "encounter", WIKeys.CELL: [2, 5],
+				 WIKeys.DISPLAY_NAME: "Night Thing", "sprite": "",
+				 "arena": "goblin_ambush", "enemies": ["training_dummy_a"], "allies": [],
+				 "on_victory": "test_won_gate_trigger",
+				 "encounter_when": {"phase": ["night"]},
+				 "trigger_radius": 1},
+			],
+		}},
+	}
+	var real_combat_config := {
+		"combatants": _load_json("res://data/combatants.json"),
+		"classes": _load_json("res://data/classes.json"),
+		"arenas": _load_json("res://data/arenas.json"),
+		"items": _load_json("res://data/items.json"),
+	}
+	# dusk_at/night_at compressed so a handful of ticks crosses both
+	# thresholds -- the gate mechanism under test, not the pacing tuning.
+	var gGate := WIGame.new(gate_scene, skill_config, _sink, 7, real_combat_config, {"dusk_at": 2, "night_at": 3})
+
+	# interact() site: player at (1,1) faces RIGHT by default -> faces
+	# gate_interact_only at (2,1). Day (actions_since_sleep 0): gate unmet.
+	assert(gGate.phase() == "day", "fixture starts at day")
+	_events.clear()
+	var gi_day := gGate.interact()
+	assert(gi_day.is_empty(), "gate_interact_only refuses at day (interact returns empty)")
+	assert(gGate.combat == null, "no combat starts through the closed gate")
+	assert(_count("combat_started") == 0, "encounter_when refuses BEFORE start_combat -- no combat_started at day")
+	assert(_toast_texts().has("Nothing there in daylight."), "the gate's own gate_closed_toast fires")
+	# One interact() ticked actions_since_sleep to 1 -- still day (dusk_at 2).
+	assert(gGate.phase() == "day", "one interact tick is not enough to cross dusk_at 2")
+
+	# _check_trigger_radius site: move toward gate_trigger_only at (2,5).
+	# This move ticks actions_since_sleep to 2 -> DUSK -- still not in the
+	# gate's ["night"] set, so proximity must NOT start combat either.
+	_events.clear()
+	assert(gGate.move_player(Vector2i.DOWN), "step to (1,2)")
+	assert(gGate.phase() == "dusk", "second tick crosses dusk_at 2")
+	assert(gGate.combat == null, "dusk is not in encounter_when's phase set -- gate stays closed")
+	assert(_count("combat_started") == 0, "no proximity trigger at dusk")
+
+	# One more tick crosses night_at 3: (1,2)->(1,3) is still Chebyshev
+	# distance 2 from gate_trigger_only (2,5) -- gate opens on this move, but
+	# the proximity check itself doesn't fire yet (out of trigger_radius 1).
+	assert(gGate.move_player(Vector2i.DOWN), "step to (1,3)")
+	assert(gGate.phase() == "night", "third tick crosses night_at 3")
+	assert(gGate.combat == null, "gate open, but still out of trigger_radius at (1,3)")
+	# The NEXT step (1,3)->(1,4) stays at night AND lands at Chebyshev
+	# distance 1 from (2,5) -- the trigger fires on THIS move.
+	_events.clear()
+	assert(gGate.move_player(Vector2i.DOWN), "step to (1,4), adjacent to gate_trigger_only")
+	assert(gGate.combat != null, "encounter_when OPEN at night -- proximity starts real combat")
+	assert(_count("combat_started") == 1, "combat_started fires exactly once through the open gate")
+	# Resolve it clean (forced victory) -- proves the gate-opened fight is a
+	# REAL, resolvable encounter against the shipped combat catalog, not a
+	# stub that merely returns true.
+	gGate.combat.apply_damage("training_dummy_a", 999, "pc", true)
+	assert(gGate.combat.finished and gGate.combat.outcome["victory"], "the gate-opened fight resolves for real")
+	gGate.resolve_combat()
+	assert(gGate.accomplishment_count("test_won_gate_trigger") == 1, "on_victory banks through the gated encounter same as any other")
+
+	# The OTHER encounter's own gate is independently proven open now too
+	# (interact() site, at the SAME night phase) -- re-face it and confirm a
+	# second real fight starts and resolves.
+	gGate.player_cell = Vector2i(1, 1)
+	gGate.player_facing = Vector2i.RIGHT
+	_events.clear()
+	var gi_night := gGate.interact()
+	assert(gi_night.get("combat", false), "gate_interact_only now opens through interact() at night")
+	assert(gGate.combat != null, "real combat fielded")
+	gGate.combat.apply_damage("training_dummy_a", 999, "pc", true)
+	gGate.resolve_combat()
+	assert(gGate.accomplishment_count("test_won_gate_interact") == 1, "interact-site gate's on_victory banks too")
+
+	# --- 8b R1 (issue #10): echo_of talk_pool resolution (locked shape 3) ---
+	# Cross-MAP on purpose (the real riverfarm shape: the charmed villager and
+	# the witch live on different maps) -- proves `_find_entity` (which
+	# searches every map) is what echo_of actually resolves through, not a
+	# same-map-only lookup.
+	var echo_scene := {
+		"start_map": "village",
+		"player": {WIKeys.CELL: [1, 1], "classes": {}, WIKeys.SKILLS: []},
+		"maps": {
+			"village": {
+				"grid": {"width": 6, "height": 6}, "blocked": [],
+				"entities": [
+					{WIKeys.ID: "echo_villager", WIKeys.KIND: "npc", WIKeys.CELL: [2, 1], WIKeys.DISPLAY_NAME: "A Villager",
+					 "talk_pool": [{"echo_of": "echo_witch"}]},
+				],
+			},
+			"hollow": {
+				"grid": {"width": 6, "height": 6}, "blocked": [],
+				"entities": [
+					{WIKeys.ID: "echo_witch", WIKeys.KIND: "npc", WIKeys.CELL: [2, 1], WIKeys.DISPLAY_NAME: "The Witch",
+					 "talk_pool": ["Tea first.", "I don't ask twice.", "Manners, always."]},
+				],
+			},
+		},
+	}
+	var gEcho := WIGame.new(echo_scene, skill_config, _sink, 7)
+
+	# Villager talks FIRST, before the witch has ever been talked to
+	# (chatted_with_echo_witch == 0): the echo must still resolve to the
+	# witch's index-0 line, not fail or fall back to something else.
+	_events.clear()
+	var ev0 := gEcho.interact()
+	assert(ev0.get("talked", "") == "echo_villager", "villager's pool interact resolves")
+	assert(_last_dialogue_text() == "Tea first.", "echo_of resolves to the witch's CURRENT (index 0) line sight-unseen")
+	assert(gEcho.accomplishment_count("chatted_with_echo_villager") == 1, "the villager's OWN counter still banks (dedup bookkeeping)")
+	assert(gEcho.accomplishment_count("chatted_with_echo_witch") == 0, "talking to the ECHO never advances the WITCH's own counter")
+
+	# Now advance the witch's real counter by actually talking to her (on the
+	# OTHER map) -- the echo must track this live, with zero drift, because
+	# it is the SAME lookup, not a second copy.
+	gEcho.sleep()
+	gEcho.transition("hollow", Vector2i(1, 1))
+	gEcho.player_facing = Vector2i.RIGHT
+	_events.clear()
+	var w0 := gEcho.interact()
+	assert(w0.get("talked", "") == "echo_witch", "the witch's own pool interact resolves")
+	assert(_last_dialogue_text() == "Tea first.", "the witch's own first line matches what the villager echoed earlier")
+	assert(gEcho.accomplishment_count("chatted_with_echo_witch") == 1, "the witch's real counter now advances")
+
+	gEcho.sleep()
+	gEcho.transition("village", Vector2i(1, 1))
+	gEcho.player_facing = Vector2i.RIGHT
+	_events.clear()
+	var ev1 := gEcho.interact()
+	assert(_last_dialogue_text() == "I don't ask twice.", "the echo advances to the witch's NEW current line (index 1), un-driftable by construction")
+	assert(gEcho.accomplishment_count("chatted_with_echo_villager") == 2, "the villager's own dedup counter still advances independently")
+
 	print("PASS: sim core behaves correctly")
 	quit(0)
