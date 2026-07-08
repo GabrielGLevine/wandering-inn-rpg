@@ -1567,6 +1567,23 @@
   },
   "shadow": true
  },
+ "wandering_inn_facade": {
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/wandering_inn_facade/Idle-Sheet.png",
+    "frame_size": [
+     120,
+     73
+    ],
+    "fps": 1
+   }
+  }
+ },
  "tree_round": {
   "render_scale": 0.2,
   "animations": {

@@ -529,11 +529,19 @@ func _build_floor() -> void:
 	var blocked_tile_px := int(biome.get("blocked_tile_px", tile_px))
 	var blocked_layer := WITileBoardBuilder.make_tile_layer(_field_root, blocked_sheet, blocked_tile_px, WISpriteRegistry)
 	var blocked_coord := Vector2i(int(biome["blocked"][0]), int(biome["blocked"][1]))
+	# `cover_skip` (map-level, render-only): blocked cells a large PROP sprite
+	# visually covers (e.g. the inn facade's footprint). Sim blocking is
+	# untouched — this only suppresses the generic cover tile, which would
+	# otherwise show through the sprite's transparent regions. Cells listed
+	# here MUST be under a sprite that owns the visual, or they render bare.
+	var cover_skip := {}
+	for c: Array in (map_cfg.get("cover_skip", []) as Array):
+		cover_skip[Vector2i(int(c[0]), int(c[1]))] = true
 	for cell: Vector2i in Game.sim.blocked_cells.keys():
 		# Cells covered by a walls segment already carry that segment's wall
 		# art; painting the generic blocked tile here would overdraw it (this
 		# layer is added after the walls layers).
-		if segment_covered.has(cell):
+		if segment_covered.has(cell) or cover_skip.has(cell):
 			continue
 		blocked_layer.set_cell(cell, 0, blocked_coord)
 	_field_root.add_child(blocked_layer)
@@ -860,6 +868,14 @@ func exit_combat_camera() -> void:
 func _build_entities() -> Array[Node2D]:
 	var visuals: Array[Node2D] = []
 	for ent: Dictionary in Game.sim.entities.values():
+		# `hide_sprite` (entity-level, render-only): a functional entity whose
+		# VISUAL is owned by something else (the inn facade paints its own
+		# entrance, so `floodplains_inn_door` draws nothing). Interact/door
+		# behavior is sim-side by cell and unaffected. Without this flag an
+		# empty sprite id falls through to the fallback COLOR CHIP — worse
+		# than the sprite it replaces.
+		if bool(ent.get("hide_sprite", false)):
+			continue
 		var color := NPC_COLOR if String(ent["kind"]) == "npc" else PROP_COLOR
 		var render := _resolve_entity_render(ent)
 		var visual := _make_entity_visual(

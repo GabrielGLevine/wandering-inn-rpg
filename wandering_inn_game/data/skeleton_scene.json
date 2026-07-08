@@ -2495,6 +2495,66 @@
    "_comment": "World environment. Reachable via the walkable inn_door route (inn_door -> floodplains (7,6); floodplains_peek was retired once this route landed, see CLAUDE.md). POI anchors: fishing-pond (13,18), ruin-stones interact (31,7). `goblin_encounter_1` sits at (30,23) with `trigger_radius: 2` -- the wall `segments` at y=25 block every column except x=31 (`liscor_gate`'s own cell), so (31,24) is the UNIQUE open cell from which the gate can be reached/interacted -- and (31,24) sits inside the 5x5 Chebyshev-2 square around (30,23) (x:[28,32], y:[21,25]). Any 4-directional path from outside that square to (31,24) (which lies inside it) must enter the square before arriving, so no route to `liscor_gate` avoids the ambush (BFS-proven). `goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
    "blocked": [
     [
+     4,
+     2
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     8,
+     3
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     4,
+     4
+    ],
+    [
      5,
      4
     ],
@@ -2515,6 +2575,14 @@
      4
     ],
     [
+     10,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
      5,
      5
     ],
@@ -2528,6 +2596,10 @@
     ],
     [
      9,
+     5
+    ],
+    [
+     10,
      5
     ],
     [
@@ -2584,6 +2656,95 @@
       ]
      },
      "_pick": "hill plateau tone"
+    },
+    {
+     "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+     "tile_px": 540,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "list": [
+       [
+        3,
+        3
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        3,
+        5
+       ],
+       [
+        3,
+        6
+       ],
+       [
+        3,
+        7
+       ],
+       [
+        3,
+        8
+       ],
+       [
+        4,
+        8
+       ],
+       [
+        5,
+        8
+       ],
+       [
+        6,
+        8
+       ],
+       [
+        7,
+        8
+       ],
+       [
+        8,
+        8
+       ],
+       [
+        9,
+        8
+       ],
+       [
+        10,
+        8
+       ],
+       [
+        11,
+        8
+       ],
+       [
+        11,
+        7
+       ],
+       [
+        11,
+        6
+       ],
+       [
+        11,
+        5
+       ],
+       [
+        11,
+        4
+       ],
+       [
+        11,
+        3
+       ]
+      ]
+     },
+     "_pick": "dry earthen hill brow; the later road layers cut through its south edge"
     },
     {
      "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
@@ -3034,18 +3195,38 @@
    },
    "decor": [
     {
-     "sprite": "inn_roof",
-     "cell": [
-      7,
-      4
-     ]
-    },
-    {
-     "sprite": "facade_plaster",
+     "_comment": "The 120x73 feet-anchored facade renders from x=3.75..11.25 and y=1.44..6.0 at this cell. Its blocked footprint is x=4..10/y=2..5 with the door gap at (7,5); the full y=6 arrival apron stays open. The warm glow is registered here so the shared atmosphere multiplier keeps it off by day and on at dusk/night; with Relc's fire this map has 2 of the allowed 8 lights.",
+     "sprite": "wandering_inn_facade",
      "cell": [
       7,
       5
-     ]
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.58,
+       0.24
+      ],
+      "energy": 1.15,
+      "radius": 56,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "grass_tuft",
+     "cell": [
+      4,
+      8
+     ],
+     "sway": true
+    },
+    {
+     "sprite": "grass_tuft",
+     "cell": [
+      10,
+      8
+     ],
+     "sway": true
     },
     {
      "sprite": "campfire",
@@ -3347,7 +3528,9 @@
      "to_cell": [
       14,
       3
-     ]
+     ],
+     "hide_sprite": true,
+     "_hide_comment": "Render-only: the wandering_inn_facade decor paints the entrance at this cell; the generic plank door drew ON TOP of it (2026-07-08 review Medium). Door function (interact/to_map) unchanged."
     },
     {
      "_comment": "The inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN \u2014 NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: a bespoke PixelLab signpost (a text-free wooden post + hanging plank, `assets/sprites/inn_sign/Idle-Sheet.png`) -- the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text). Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
@@ -3639,7 +3822,118 @@
       "open_toast": "The seam splits wider at your touch, cold air breathing out of the dark beneath. You step through, into somewhere else."
      }
     }
-   ]
+   ],
+   "cover_skip": [
+    [
+     4,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     6,
+     5
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     8,
+     3
+    ],
+    [
+     8,
+     4
+    ],
+    [
+     8,
+     5
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     10,
+     5
+    ]
+   ],
+   "_cover_skip_comment": "Render-only (world.gd's blocked layer): the wandering_inn_facade sprite visually owns these 27 blocked cells; the generic cover tile would show through the sprite's transparent regions (the roofline gap the 2026-07-08 windowed read caught). Sim blocking unchanged. If the facade sprite or its cell moves, move this list WITH it."
   },
   "sewers": {
    "_comment": "The Liscor sewers (~20x14, cave biome). Entered from the street `sewer_grate` prop once `heard_about_cisterns` is banked (C3 banks it from Olesm) -- see the door_when seam on that prop + wi_game.gd's prop-interact branch. Water channels are walls.segments on the free_pack Water_tiles sheet, so world.gd's `_build_water_shimmer` paints the shimmer overlay automatically (sheet-match) AND they block movement (segment_cells joins the sim blocked set). Left (x0-2) and right (x17-19) walkways cross the two channels. Dark mood pin lives in data/moods.json; lights glow at dusk/night (light_energy_by_phase day=0.0), while the always-on pond_glints/dust ambience carries the day-phase atmosphere.",
@@ -6313,7 +6607,6 @@
      "toast": "Just raised earth. Whatever it's for, nobody's finished it yet."
     },
     {
-     "_comment": "The communal longhouse -- the village's quest-giver anchor (the headman's own doorway). 7x4 sprite, block ~7x2 (handoff sec: 'door centered').",
      "_comment": "R3 (issue #11): the BRIGHTEN visual_states -- default tint is the pre-resolution washed-out blight read (R1 shipped no tint at all, one state only); `blight_lifted` swaps to a warm harvest-light tint, matching the direction card's own day palette. The map itself is the quest's reward readout.",
      "id": "riverfarm_longhouse_prop",
      "kind": "prop",
@@ -6357,7 +6650,7 @@
      "sprite": "bed",
      "observe": "A straw-tick pallet by the longhouse wall, blanket already turned down for whoever needs it.",
      "sleep": true,
-     "sleep_toast": "Straw tick, borrowed blanket — Riverfarm always finds room for one more."
+     "sleep_toast": "Straw tick, borrowed blanket \u2014 Riverfarm always finds room for one more."
     },
     {
      "id": "riverfarm_cottage_a",
@@ -7199,7 +7492,7 @@
      "locked_toast": "Something's meant to go in this, cooked properly. You don't know your way around a stew pot. Yet.",
      "on_skill_use": {
       "accomplishment": "cooked_the_offering",
-      "toast": "[Basic Cooking] — You cook the offering plain and honest, the way you'd feed anyone who'd walked far to eat."
+      "toast": "[Basic Cooking] \u2014 You cook the offering plain and honest, the way you'd feed anyone who'd walked far to eat."
      },
      "observe": "An iron pot set by the cottage door, empty and waiting. Someone means for it to be used."
     },
@@ -7217,7 +7510,7 @@
      "locked_toast": "A row of cold candle-stubs, set either side of the door. Whatever lights them, it isn't a match.",
      "on_skill_use": {
       "accomplishment": "lit_the_threshold_candles",
-      "toast": "[Light] — The candles catch, one after another, without a flame ever touching them."
+      "toast": "[Light] \u2014 The candles catch, one after another, without a flame ever touching them."
      },
      "observe": "Cold wax and old wicks, set along the threshold like they're waiting for something specific.",
      "visual_states": [
@@ -7258,7 +7551,7 @@
      "locked_toast": "Roots and briar, knotted tighter than any plant ties itself. Whatever it's holding, an untrained eye won't find it.",
      "on_skill_use": {
       "accomplishment": "blight_lifted",
-      "toast": "[Observe] — The knot isn't wood at all, once you look right at it: a price, tied off and waiting to be paid. You pay it yourself, plainly, and the tension goes out of the air like a held breath let go."
+      "toast": "[Observe] \u2014 The knot isn't wood at all, once you look right at it: a price, tied off and waiting to be paid. You pay it yourself, plainly, and the tension goes out of the air like a held breath let go."
      },
      "observe": "A snarl of root and briar at the center of the standing stones, tied in a knot that doesn't look like it grew that way."
     },

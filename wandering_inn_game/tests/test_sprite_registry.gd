@@ -229,6 +229,8 @@ func _build_expected_counts() -> Dictionary:
 	## copy only), single 64x64 sheet, 1 frame. Previously a Furniture.png
 	## hanging-plank crop (44x21) -- see VISUAL-LOG, now closed.
 	counts["inn_sign/idle"] = 1
+	## The floodplains inn facade is one static 120x73 frame.
+	counts["wandering_inn_facade/idle"] = 1
 	## Art-wiring task (2026-07-07): THE REQUEST BOARD's bespoke corkboard art
 	## (guild_board), replacing the inn_sign-crop reuse VISUAL-LOG flagged as
 	## reading small/dense. Single 64x64 PixelLab sheet, 1 frame.

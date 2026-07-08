@@ -64,6 +64,17 @@ Character ids + driver (`pc_variants.py`) + originals in
 `potential_assets/pixellab_2026-07-06/pc_variants_work/` (gitignored).
 Same PixelLab-ToS ownership / redistributability as everything above.
 
+## Floodplains Wandering Inn facade (2026-07-08)
+
+| Path | Subject | Source / notes |
+|---|---|---|
+| `assets/sprites/wandering_inn_facade/Idle-Sheet.png` | The Wandering Inn exterior on the floodplains | Bespoke alpha composite of two cached, user-owned PixelLab v2 `/map-objects` outputs: `prop_longhouse_thatch` (job `b7d617b0-b94b-4b9a-adc3-0afadf899583`) supplies the broad hall and roof wings; `prop_cottage_thatch_b` (job `b71044f1-7193-405c-8538-d4b9a90ea353`) supplies the central gabled entrance. Both were nearest-neighbor scaled and composited without paint-over, then cropped to the 120×73 alpha bounds. Zero new generations: shell DNS and the in-app browser path were unavailable. |
+
+Anchor `[0.5, 1.0]` is measured from the cropped alpha bounds: the content
+touches row 72 of the 73px frame, so the feet plane is the frame bottom.
+Same PixelLab-ToS ownership / redistributability as the cached source
+outputs above.
+
 ## M-ARC A2 — Raskghar (2026-07-06)
 
 `raskghar_scout` + `raskghar_awakened` (the Awakened boss) — two bespoke

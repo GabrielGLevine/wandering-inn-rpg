@@ -16,6 +16,12 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] INN/EXTERIOR — the facade's dusk/night WINDOW GLOW is
+  mechanism-verified (phase-gated light, 2-of-8 budget, the lantern
+  precedent) but not yet eyeballed at dusk outside — no script frames the
+  exterior at a non-day phase. One playtest look, or a future probe.
+  (#37's one deferred exit-criterion line, 2026-07-08.)
+
 - [ ] SPRITE/RIVERFARM — the witch's cell (3,8) sits close enough under
   witch_cottage_prop's (3,7) sprite that her figure visually overlaps the
   cottage wall/window rather than reading as clearly standing in front of
