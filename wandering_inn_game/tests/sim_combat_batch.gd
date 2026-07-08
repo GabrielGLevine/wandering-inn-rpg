@@ -195,12 +195,16 @@ const RUIN_CELLS := [
 ## hook), so the numbers below are the fight's raw difficulty with no
 ## mechanical ambush bonus applied -- reported honestly rather than gated to
 ## a band that would misrepresent what "ambush" currently means here.
+## The ally here is `riverfarm_hunter`, NOT `relc` (Riverfarm is a solo Door
+## arrival with no fictional basis for Liscor's Watch to be present --
+## combatants.json's riverfarm_hunter is an EXACT stat/weapon_die/ai/skills
+## clone of relc, so these bands stay numerically valid under the new id).
 const RIVERFARM_CELLS := [
-	{"name": "briar_collectors_w10_relc", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.95},
+	{"name": "briar_collectors_w10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.95},
 	{"name": "briar_collectors_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": true},
-	{"name": "briar_collectors_deep_w10_relc", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.85},
+	{"name": "briar_collectors_deep_w10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.85},
 	{"name": "briar_collectors_deep_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": true},
-	{"name": "river_wolf_pack_w10_relc", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "warrior5_mage5", "solo": false},
+	{"name": "river_wolf_pack_w10_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "warrior5_mage5", "solo": false},
 	{"name": "river_wolf_pack_w10_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "warrior5_mage5", "solo": true},
 ]
 
@@ -594,22 +598,23 @@ func _init() -> void:
 	## The Riverfarm axis. Same construction/gating shape as the
 	## RUIN_CELLS loop directly above (per-cell win_lo/win_hi, absent means
 	## measured-only) -- see RIVERFARM_CELLS' own doc comment for the
-	## per-cell band rationale (the wolf pack is deliberately ungated).
+	## per-cell band rationale (the wolf pack is deliberately ungated) and
+	## for why the ally combatant is `riverfarm_hunter`, not `relc`.
 	for cell: Dictionary in RIVERFARM_CELLS:
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
 		var wins := 0
 		var rounds: Array[int] = []
-		var relc_downed := 0
-		var has_relc := not bool(cell.get("solo", false))
+		var hunter_downed := 0
+		var has_hunter := not bool(cell.get("solo", false))
 		for seed_v in range(1, RUNS_PER_CELL + 1):
 			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
 			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
 			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
 			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
 			var cfgs: Array = [pc]
-			if has_relc:
-				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
+			if has_hunter:
+				cfgs.append((by_id["riverfarm_hunter"] as Dictionary).duplicate(true))
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
 			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
@@ -622,8 +627,8 @@ func _init() -> void:
 			if combat.outcome["victory"]:
 				wins += 1
 			rounds.append(int(combat.outcome["rounds"]))
-			if has_relc and not bool(combat.combatants.get("relc", {}).get(WIKeys.ALIVE, true)):
-				relc_downed += 1
+			if has_hunter and not bool(combat.combatants.get("riverfarm_hunter", {}).get(WIKeys.ALIVE, true)):
+				hunter_downed += 1
 
 		rounds.sort()
 		var win_rate := float(wins) / float(RUNS_PER_CELL)
@@ -634,12 +639,12 @@ func _init() -> void:
 		var gated := cell.has("win_lo")
 		print("[riverfarm / %s] arena=%s build=%s%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
 			cell["name"], String(cell["arena"]), String(cell["build"]),
-			"" if has_relc else " solo", "" if gated else " (measured)",
+			"" if has_hunter else " solo", "" if gated else " (measured)",
 			win_rate, median, rounds[0], rounds[-1],
 		])
 		print("  rounds histogram: ", hist)
-		if has_relc:
-			print("  relc_downed_rate=%.2f (%d/%d)" % [float(relc_downed) / float(RUNS_PER_CELL), relc_downed, RUNS_PER_CELL])
+		if has_hunter:
+			print("  hunter_downed_rate=%.2f (%d/%d)" % [float(hunter_downed) / float(RUNS_PER_CELL), hunter_downed, RUNS_PER_CELL])
 		if gated:
 			var lo := float(cell["win_lo"])
 			var hi := float(cell["win_hi"])
