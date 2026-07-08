@@ -1,5 +1,5 @@
 {
- "_comment": "M-ARC A3: the seal beat (the climax chain's POST-victory arc). Loads climax_sealed_start (street, Act II done + cleared_the_warren banked, raskghar_sealed NOT). Proves: (1) ZEVARA'S SEAL beat (gated on cleared_the_warren) banks raskghar_sealed -- the Act III advance key (acts.json); victory != sealed, the seal is a separate surface beat AFTER the return, per the acts-data trace; (2) the journal act-line advances to ACT III once sealed; (3) OLESM'S RESOLUTION (gated on cleared_the_warren) banks heard_olesm_resolution. This is a separate stream from deep_descent because it is a distinct game-time state (post-victory return). No combat -- fixture rng_state governs.",
+ "_comment": "The seal beat (the climax chain's POST-victory arc). Loads climax_sealed_start (street, Act II done + cleared_the_warren banked, raskghar_sealed NOT). Proves: (1) ZEVARA'S SEAL beat (gated on cleared_the_warren) banks raskghar_sealed -- the Act III advance key (acts.json); victory != sealed, the seal is a separate surface beat AFTER the return, per the acts-data trace; (2) the journal act-line advances to ACT III once sealed; (3) OLESM'S RESOLUTION (gated on cleared_the_warren) banks heard_olesm_resolution. This is a separate stream from deep_descent because it is a distinct game-time state (post-victory return). No combat -- fixture rng_state governs.",
  "fixture_save": "climax_sealed_start",
  "starts_at_title": true,
  "steps": [
@@ -85,7 +85,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "hub visible: 0 'Long shift?', 1 'It's done...' (requires cleared_the_warren, banked; summons hidden by heard_the_deep_tremor, sweep hidden), 2 'Just getting my bearings.'. down 1 -> seal, banks raskghar_sealed.",
+   "_comment": "Hub visible: 0 'Long shift?', 1 'It's done...' (requires cleared_the_warren, banked; summons hidden by heard_the_deep_tremor, sweep hidden), 2 'Just getting my bearings.'. down 1 -> seal, banks raskghar_sealed.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -103,7 +103,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "M-GEAR Task G2 (HAZARD 2): the hub's seal option now also grants moon_bone_amulet (the Act III capstone reward), firing item_gained + its 'Got:' toast right after the accomplishment, still before the seal node renders.",
+   "_comment": "HAZARD 2: the hub's seal option now also grants moon_bone_amulet (the Act III capstone reward), firing item_gained + its 'Got:' toast right after the accomplishment, still before the seal node renders.",
    "action": "wait_for_event",
    "type": "item_gained",
    "payload_contains": {
@@ -128,7 +128,7 @@
    "name": "01_seal"
   },
   {
-   "_comment": "seal: cursor 0 'For now.' (goto hub), 1 'Captain.' (end). down 1 -> end.",
+   "_comment": "Seal: cursor 0 'For now.' (goto hub), 1 'Captain.' (end). down 1 -> end.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -220,7 +220,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "hub cursor positions: 0 chess, 1 [Tactician] locked, 2 worried, 3 'It's dead. Zevara's sealing...' (requires cleared_the_warren; briefing hidden by heard_olesm_briefing), 4 leave. down 3 -> resolution, banks heard_olesm_resolution.",
+   "_comment": "Hub cursor positions: 0 chess, 1 [Tactician] locked, 2 worried, 3 'It's dead. Zevara's sealing...' (requires cleared_the_warren; briefing hidden by heard_olesm_briefing), 4 leave. down 3 -> resolution, banks heard_olesm_resolution.",
    "action": "move",
    "direction": "down",
    "steps": 3
@@ -246,7 +246,7 @@
    "name": "03_resolution"
   },
   {
-   "_comment": "resolution: cursor 0 'Set the board, Olesm.' (goto hub), 1 'Anytime.' (end). down 1 -> end.",
+   "_comment": "Resolution: cursor 0 'Set the board, Olesm.' (goto hub), 1 'Anytime.' (end). down 1 -> end.",
    "action": "move",
    "direction": "down",
    "steps": 1

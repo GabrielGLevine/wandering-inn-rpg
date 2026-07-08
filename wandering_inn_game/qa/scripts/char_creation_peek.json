@@ -1,5 +1,5 @@
 {
- "_comment": "M-ARC §5 / issue #42 peek-only (NOT a canonical gate member): windowed screenshots of the character-creation picker + name step to eyeball the UI. Same creation_ui opt-in as char_creation. Two screenshots ~0.5s apart at the pick step (wait_frames 30 between them) to catch two distinct idle-animation frames -- a single screenshot can't prove the sprites are animating, not just static art.",
+ "_comment": "peek-only (NOT a canonical gate member): windowed screenshots of the character-creation picker + name step to eyeball the UI. Same creation_ui opt-in as char_creation. Two screenshots ~0.5s apart at the pick step (wait_frames 30 between them) to catch two distinct idle-animation frames -- a single screenshot can't prove the sprites are animating, not just static art.",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [

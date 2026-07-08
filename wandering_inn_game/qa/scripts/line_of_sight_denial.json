@@ -28,7 +28,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "M-FP Q1: meet Relc (12,13) before the ally_requires-gated goblin_encounter_2 fight.",
+   "_comment": "Meet Relc (12,13) before the ally_requires-gated goblin_encounter_2 fight.",
    "action": "move",
    "direction": "right",
    "steps": 5
@@ -158,7 +158,7 @@
    "timeout_sec": 10
   },
   {
-   "_comment": "ONBOARDING O5: classless start -> hotbar is Attack/Dash/End = 3 slots (was 4 with the boot warrior kit). This script's SUBJECT is the enemy shaman's wall-aware ranged AI (flame_bolt resolves, no_los never fires), which is orthogonal to the PC's kit -- the classless PC + Relc ally still wins goblin_encounter_2 at seed 9 and the shaman still casts (baseline-verified), so this stays a pin edit, no warrior prologue needed.",
+   "_comment": "Classless start -> hotbar is Attack/Dash/End = 3 slots (was 4 with the boot warrior kit). This script's SUBJECT is the enemy shaman's wall-aware ranged AI (flame_bolt resolves, no_los never fires), which is orthogonal to the PC's kit -- the classless PC + Relc ally still wins goblin_encounter_2 at seed 9 and the shaman still casts (baseline-verified), so this stays a pin edit, no warrior prologue needed.",
    "action": "assert_event_logged",
    "type": "ui_hotbar_rendered",
    "payload_contains": {

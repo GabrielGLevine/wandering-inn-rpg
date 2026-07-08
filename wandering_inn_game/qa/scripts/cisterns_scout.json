@@ -1,5 +1,5 @@
 {
- "_comment": "Content Wave C3 Quest 1 'Something in the Cisterns' SKILL path -- NO combat (the interact-only shield_spiders is never engaged). Loads cisterns_scout_start (warrior L1 + [Tactician]/[Appraise Foe], beside Olesm at 29,4) via title Continue. Full loop: GIVE (Olesm banks heard_about_cisterns + starts the quest) -> descend the grate -> [Appraise Foe] the nest_ledge (17,10) overlooking the nest, banking scouted_the_nest (interact E routes through the SAME use_skill('observe',...) seam the field [Appraise Foe] hotbar uses -- crate_light/cellar_door precedent) -> ascend -> REPORT the INTELLIGENCE to Olesm (his [Tactician] 'a map is as good as a corpse' beat: banks resolved_the_cisterns + cisterns_reported together, firing BOTH beats + quest_completed at once -- crate guile precedent). Third script by judgment: the SKILL stream descends the sewers while the TALK stream never does, so they cannot share a run (a quest resolves once) -- see report for the 34->37 count note.",
+ "_comment": "Quest 1 'Something in the Cisterns' SKILL path -- NO combat (the interact-only shield_spiders is never engaged). Loads cisterns_scout_start (warrior L1 + [Tactician]/[Appraise Foe], beside Olesm at 29,4) via title Continue. Full loop: GIVE (Olesm banks heard_about_cisterns + starts the quest) -> descend the grate -> [Appraise Foe] the nest_ledge (17,10) overlooking the nest, banking scouted_the_nest (interact E routes through the SAME use_skill('observe',...) seam the field [Appraise Foe] hotbar uses -- crate_light/cellar_door precedent) -> ascend -> REPORT the INTELLIGENCE to Olesm (his [Tactician] 'a map is as good as a corpse' beat: banks resolved_the_cisterns + cisterns_reported together, firing BOTH beats + quest_completed at once -- crate guile precedent). Third script by judgment: the SKILL stream descends the sewers while the TALK stream never does, so they cannot share a run (a quest resolves once) -- see report for the 34->37 count note.",
  "fixture_save": "cisterns_scout_start",
  "starts_at_title": true,
  "steps": [
@@ -19,7 +19,7 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "hub: 'You look worried' at cursor 2 ([Tactician] option at 1 is now UNLOCKED but we still pass it). move_down x2, confirm.", "action": "move", "direction": "down", "steps": 2 },
+  { "_comment": "Hub: 'You look worried' at cursor 2 ([Tactician] option at 1 is now UNLOCKED but we still pass it). move_down x2, confirm.", "action": "move", "direction": "down", "steps": 2 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_frames", "frames": 3 },
   { "action": "press", "name": "confirm" },
@@ -69,7 +69,7 @@
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "action": "move", "direction": "down", "steps": 2 },
   { "action": "press", "name": "confirm" },
-  { "_comment": "cisterns node post-scout (scouted_the_nest banked, resolved/reported not): only the [Appraise Foe] intel report is visible, at cursor 0. It banks resolved_the_cisterns THEN cisterns_reported -> both beats + completion fire in this one report.", "action": "wait_frames", "frames": 3 },
+  { "_comment": "Cisterns node post-scout (scouted_the_nest banked, resolved/reported not): only the [Appraise Foe] intel report is visible, at cursor 0. It banks resolved_the_cisterns THEN cisterns_reported -> both beats + completion fire in this one report.", "action": "wait_frames", "frames": 3 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "resolved_the_cisterns" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "cisterns", "beat": 1 }, "timeout_sec": 5 },

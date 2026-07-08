@@ -523,7 +523,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "gift node: the 'press I' teaching line (the spear-equip nudge, spec sec.9).",
+   "_comment": "Gift node: the 'press I' teaching line (the spear-equip nudge, spec sec.9).",
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
@@ -537,7 +537,7 @@
    "name": "04_gift_node"
   },
   {
-   "_comment": "gift option 0 'I'll try it on.' ends the conversation.",
+   "_comment": "Gift option 0 'I'll try it on.' ends the conversation.",
    "action": "press",
    "name": "confirm"
   },

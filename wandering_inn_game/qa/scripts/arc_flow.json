@@ -139,7 +139,7 @@
    "action": "move",
    "direction": "down",
    "steps": 1,
-   "_comment": "hub 0 shift,1 summons,2 bearings -> summons"
+   "_comment": "Hub 0 shift,1 summons,2 bearings -> summons"
   },
   {
    "action": "press",
@@ -156,7 +156,7 @@
   {
    "action": "press",
    "name": "confirm",
-   "_comment": "summons 0 'Then I'll go down.' banks heard_the_deep_tremor"
+   "_comment": "Summons 0 'Then I'll go down.' banks heard_the_deep_tremor"
   },
   {
    "action": "wait_for_event",
@@ -241,7 +241,7 @@
    "action": "move",
    "direction": "down",
    "steps": 3,
-   "_comment": "hub 3 'Zevara sent me...' -> briefing"
+   "_comment": "Hub 3 'Zevara sent me...' -> briefing"
   },
   {
    "action": "press",
@@ -263,7 +263,7 @@
    "action": "move",
    "direction": "down",
    "steps": 1,
-   "_comment": "briefing 1 'Understood.' end"
+   "_comment": "Briefing 1 'Understood.' end"
   },
   {
    "action": "press",
@@ -725,7 +725,7 @@
    "action": "move",
    "direction": "down",
    "steps": 1,
-   "_comment": "hub 1 'It's done...' -> seal, banks raskghar_sealed"
+   "_comment": "Hub 1 'It's done...' -> seal, banks raskghar_sealed"
   },
   {
    "action": "press",
@@ -768,7 +768,7 @@
    "action": "move",
    "direction": "down",
    "steps": 1,
-   "_comment": "seal 1 'Captain.' end -> dialogue_ended ARMS+FIRES the epilogue"
+   "_comment": "Seal 1 'Captain.' end -> dialogue_ended ARMS+FIRES the epilogue"
   },
   {
    "action": "press",
@@ -796,7 +796,7 @@
    "action": "assert_state",
    "path": "accomplishments.post_game",
    "equals": 1,
-   "_comment": "the epilogue banked post_game"
+   "_comment": "The epilogue banked post_game"
   },
   {
    "action": "assert_state",
@@ -857,7 +857,7 @@
    "action": "move",
    "direction": "down",
    "steps": 1,
-   "_comment": "hub now 0 shift,1 bearings (seal hidden by raskghar_sealed) -> ends"
+   "_comment": "Hub now 0 shift,1 bearings (seal hidden by raskghar_sealed) -> ends"
   },
   {
    "action": "press",
@@ -898,7 +898,7 @@
     2,
     5
    ],
-   "_comment": "a plain move still works post-game"
+   "_comment": "A plain move still works post-game"
   },
   {
    "action": "move",
@@ -930,7 +930,7 @@
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "timeout_sec": 5,
-   "_comment": "plain sleep veil, NOT the epilogue"
+   "_comment": "Plain sleep veil, NOT the epilogue"
   },
   {
    "action": "assert_state",

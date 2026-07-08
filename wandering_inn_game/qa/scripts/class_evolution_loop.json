@@ -1,5 +1,5 @@
 {
- "_comment": "M6 T7: fixture start (near_evolution: warrior 10, sword_skill_used 11 -- one short of min_uses 12) + ORGANIC finish via the repeatable floodplains encounter (goblin_encounter_1, respawns:true, M6 T2 content flag added by this task). M-FP Q1 re-path: both goblin encounters now live on the floodplains and goblin_encounter_2/goblin_encounter_1's ally_requires{met_relc:1} gate means Relc must be met (12,13) before the FIRST fight (fight1, goblin_encounter_2 via goblin_parley's default 'Draw steel' option) so his combat participation is consistent across this script's three fights. goblin_encounter_1 (no conversation gate, repeatable) is the organic-uses fight proper (fight2 here, fight3 after the sleep/evolve beat). The fixture itself deliberately does not evolve on its own -- the organic win is what actually crosses the evolution gate.",
+ "_comment": "Fixture start (near_evolution: warrior 10, sword_skill_used 11 -- one short of min_uses 12) + ORGANIC finish via the repeatable floodplains encounter (goblin_encounter_1, respawns:true, content flag). Re-path: both goblin encounters live on the floodplains and goblin_encounter_2/goblin_encounter_1's ally_requires{met_relc:1} gate means Relc must be met (12,13) before the FIRST fight (fight1, goblin_encounter_2 via goblin_parley's default 'Draw steel' option) so his combat participation is consistent across this script's three fights. goblin_encounter_1 (no conversation gate, repeatable) is the organic-uses fight proper (fight2 here, fight3 after the sleep/evolve beat). The fixture itself deliberately does not evolve on its own -- the organic win is what actually crosses the evolution gate.",
  "fixture_save": "near_evolution",
  "starts_at_title": true,
  "steps": [
@@ -74,7 +74,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "M-FP Q1: meet Relc (12,13) before any ally_requires-gated fight.",
+   "_comment": "Meet Relc (12,13) before any ally_requires-gated fight.",
    "action": "move",
    "direction": "right",
    "steps": 5
@@ -290,7 +290,7 @@
    }
   },
   {
-   "_comment": "ONBOARDING O5: return to the inn from the ambush cell (28,21) -- goblin_encounter_1 (30,23) is dormant post-victory, so re-crossing its zone is safe. up15->(28,6) (gob2 removed, column clear), left21->(7,6), up+interact -> floodplains_inn_door.",
+   "_comment": "Return to the inn from the ambush cell (28,21) -- goblin_encounter_1 (30,23) is dormant post-victory, so re-crossing its zone is safe. up15->(28,6) (gob2 removed, column clear), left21->(7,6), up+interact -> floodplains_inn_door.",
    "action": "move",
    "direction": "up",
    "steps": 15
@@ -387,7 +387,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "ONBOARDING O5: fight3 -- goblin_encounter_1 (30,23) re-armed by the sleep/evolve beat (dormancy cleared), met_relc still banked. From the floodplains door (7,6): right21->(28,6), down14->(28,20) (safe, dist 3), down1->(28,21) springs the ambush.",
+   "_comment": "fight3 -- goblin_encounter_1 (30,23) re-armed by the sleep/evolve beat (dormancy cleared), met_relc still banked. From the floodplains door (7,6): right21->(28,6), down14->(28,20) (safe, dist 3), down1->(28,21) springs the ambush.",
    "action": "move",
    "direction": "right",
    "steps": 21

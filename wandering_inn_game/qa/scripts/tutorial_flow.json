@@ -121,7 +121,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "meet: option 0 'Just a traveler...' banks met_relc -> banter.",
+   "_comment": "Meet: option 0 'Just a traveler...' banks met_relc -> banter.",
    "action": "press",
    "name": "confirm"
   },
@@ -134,7 +134,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "banter: option 0 'spear? (Spar)' -> spar_offer.",
+   "_comment": "Banter: option 0 'spear? (Spar)' -> spar_offer.",
    "action": "press",
    "name": "confirm"
   },
@@ -275,7 +275,7 @@
    "equals": 0
   },
   {
-   "_comment": "dash: slot 2 arms the confirm gate (UI wave item 15), confirm executes.",
+   "_comment": "Dash: slot 2 arms the confirm gate, confirm executes.",
    "action": "press",
    "name": "hotbar_2"
   },
@@ -317,7 +317,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "aim: slot 1 Attack, now adjacent to two dummies, opens targeting.",
+   "_comment": "Aim: slot 1 Attack, now adjacent to two dummies, opens targeting.",
    "action": "press",
    "name": "hotbar_1"
   },
@@ -605,7 +605,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "meet (met_relc+sparred, given_spear unset): visible options ['What's out here'(0), 'You said you had something for me?'(1), 'Spar'(2), 'Keep walking'(3)] -- select index 1, the gift.",
+   "_comment": "Meet (met_relc+sparred, given_spear unset): visible options ['What's out here'(0), 'You said you had something for me?'(1), 'Spar'(2), 'Keep walking'(3)] -- select index 1, the gift.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -640,7 +640,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "gift node: the 'press I' teaching line.",
+   "_comment": "Gift node: the 'press I' teaching line.",
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
@@ -654,7 +654,7 @@
    "name": "02_gift_teaching"
   },
   {
-   "_comment": "gift option 0 'I'll try it on.' ends the conversation.",
+   "_comment": "Gift option 0 'I'll try it on.' ends the conversation.",
    "action": "press",
    "name": "confirm"
   },

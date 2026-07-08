@@ -1,5 +1,5 @@
 {
- "_comment": "Onboarding rev O4: [Mage]/[Light] via PISCES, not the retired Dusty Scroll. Same honest cold-start prologue as mage_unlock_loop (meet Relc -> spar -> sleep Warrior L1 -> cross the floodplains ambush -> street -> Pisces teaches magic -> back to the inn -> sleep = [Mage] with [Light] folded in at level 1), then the ORIGINAL payoff: interact the inn's unlit_lantern with [Light] -> lit_the_common_room + the exact toast. Cell routes are shared verbatim with mage_unlock_loop (task-o4-report.md).",
+ "_comment": "[Mage]/[Light] via PISCES, not the retired Dusty Scroll. Same honest cold-start prologue as mage_unlock_loop (meet Relc -> spar -> sleep Warrior L1 -> cross the floodplains ambush -> street -> Pisces teaches magic -> back to the inn -> sleep = [Mage] with [Light] folded in at level 1), then the ORIGINAL payoff: interact the inn's unlit_lantern with [Light] -> lit_the_common_room + the exact toast. Cell routes are shared verbatim with mage_unlock_loop (task-o4-report.md).",
  "steps": [
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
 

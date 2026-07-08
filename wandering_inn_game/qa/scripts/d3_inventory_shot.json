@@ -1,5 +1,5 @@
 {
- "_comment": "Economy v1 D3 windowed shot (NOT a canonical sweep member -- peek-style, excluded from ci_sweep). Loads the d2_shop fixture (Warrior L1 on the street, purse = 5 gold, carrying rusty_sword + relcs_spare_spear) via title Continue, opens the I panel, and screenshots the coin line so the D3 'Gold: N' header is visually inspectable. Windowed so the parchment coin line renders.",
+ "_comment": "Windowed shot: (NOT a canonical sweep member -- peek-style, excluded from ci_sweep). Loads the d2_shop fixture (Warrior L1 on the street, purse = 5 gold, carrying rusty_sword + relcs_spare_spear) via title Continue, opens the I panel, and screenshots the coin line so the D3 'Gold: N' header is visually inspectable. Windowed so the parchment coin line renders.",
  "fixture_save": "d2_shop",
  "starts_at_title": true,
  "steps": [

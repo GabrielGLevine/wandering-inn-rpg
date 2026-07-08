@@ -1,5 +1,5 @@
 {
- "_comment": "M-FP Q1 + ONBOARDING O5: the errand quest's delivery run, FIGHT variant (Selys 'kept reward' branch). Inn: accept the_errand from Erin. Then the real cold-start crossing (the old gob2-fight-then-gate route is superseded -- the mandatory floodplains ambush IS the fight now): meet Relc -> spar -> sleep (Warrior L1) -> cross the goblin_encounter_1 proximity ambush (warrior+Relc) -> street. Street: deliver to Selys and KEEP the reward (kept_reward), then the inn epilogue with Erin. Prologue cells reuse combat_walkthrough's proven from-floodplains arc. Seed 9.",
+ "_comment": "The errand quest's delivery run, FIGHT variant (Selys 'kept reward' branch). Inn: accept the_errand from Erin. Then the real cold-start crossing (the old gob2-fight-then-gate route is superseded -- the mandatory floodplains ambush IS the fight now): meet Relc -> spar -> sleep (Warrior L1) -> cross the goblin_encounter_1 proximity ambush (warrior+Relc) -> street. Street: deliver to Selys and KEEP the reward (kept_reward), then the inn epilogue with Erin. Prologue cells reuse combat_walkthrough's proven from-floodplains arc. Seed 9.",
  "steps": [
   {
    "action": "wait_for_event",
@@ -499,7 +499,7 @@
    "equals": "street"
   },
   {
-   "_comment": "M-DEPTH DP1 re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); 'move up 7' is the exact proven step from guild_interior_walkthrough, stopping blocked-adjacent to Selys (8,2) facing up.",
+   "_comment": "Re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); 'move up 7' is the exact proven step from guild_interior_walkthrough, stopping blocked-adjacent to Selys (8,2) facing up.",
    "action": "teleport",
    "map": "guild",
    "cell": [8, 10]
@@ -619,7 +619,7 @@
    "equals": 1
   },
   {
-   "_comment": "M-DEPTH DP1 re-path: teleport back to the exact street cell (25,4) this script's ORIGINAL route always stopped at after Selys (blocked by her old street cell) -- every step from here on is byte-identical to before her relocation.",
+   "_comment": "Re-path: teleport back to the exact street cell (25,4) this script's ORIGINAL route always stopped at after Selys (blocked by her old street cell) -- every step from here on is byte-identical to before her relocation.",
    "action": "teleport",
    "map": "street",
    "cell": [25, 4]
@@ -633,7 +633,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "M-FP Q1: back to inn via street_door -> floodplains -> floodplains_inn_door.",
+   "_comment": "Back to inn via street_door -> floodplains -> floodplains_inn_door.",
    "action": "move",
    "direction": "left",
    "steps": 24

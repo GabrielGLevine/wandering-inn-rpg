@@ -1,10 +1,10 @@
 {
- "_comment": "M6 T8 (part 1 review fix): a save taken mid-offer persists pending_consolidation but re-emits no consolidation_offered on load, so the prompt must RECONSTRUCT from sim state on world spawn (consolidation_prompt.gd _ready -> Game.sim.pending_offer_display()). Without the fix the player loads into a modal-but-invisible lockout (world/journal/pause all gate on pending_consolidation). Boots a fresh game, pause-Loads the pending_offer fixture (v3, warrior 6 + mage 7, pending_consolidation preset to the spellsword offer), asserts the prompt renders on load (ui_consolidation_prompt_rendered), then answers it (confirm = accept the default 'Consolidate' row) and confirms the deferred sleep beat resolves into [Spellsword] 9. Not reachable in normal play today (nothing autosaves while an offer is pending) -- this guards the persisted field against a future autosave-trigger/fixture change.",
+ "_comment": "A save taken mid-offer persists pending_consolidation but re-emits no consolidation_offered on load, so the prompt must RECONSTRUCT from sim state on world spawn (consolidation_prompt.gd _ready -> Game.sim.pending_offer_display()). Without the fix the player loads into a modal-but-invisible lockout (world/journal/pause all gate on pending_consolidation). Boots a fresh game, pause-Loads the pending_offer fixture (v3, warrior 6 + mage 7, pending_consolidation preset to the spellsword offer), asserts the prompt renders on load (ui_consolidation_prompt_rendered), then answers it (confirm = accept the default 'Consolidate' row) and confirms the deferred sleep beat resolves into [Spellsword] 9. Not reachable in normal play today (nothing autosaves while an offer is pending) -- this guards the persisted field against a future autosave-trigger/fixture change.",
  "fixture_save": "pending_offer",
  "steps": [
   {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
   {"action": "assert_state", "path": "current_map", "equals": "inn"},
-  {"_comment": "ONBOARDING O5: classless fresh boot (was {warrior:1}); the pending_offer fixture-loaded {spellsword:9} half below is unaffected.", "action": "assert_state", "path": "classes", "equals": {}},
+  {"_comment": "Classless fresh boot (was {warrior:1}); the pending_offer fixture-loaded {spellsword:9} half below is unaffected.", "action": "assert_state", "path": "classes", "equals": {}},
   {"action": "press", "name": "cancel"},
   {"action": "wait_for_event", "type": "ui_pause_shown", "timeout_sec": 5},
   {"action": "move", "direction": "down", "steps": 2},
