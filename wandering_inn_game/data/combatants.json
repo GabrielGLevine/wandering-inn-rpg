@@ -164,20 +164,20 @@
    "skills": []
   },
   {
-   "_comment": "Canon Liscor-area ambush predator (wiki.wanderinginn.com/Shield_Spiders -- black-and-silver armored carapace, Silver-rank individually, nest under Liscor's Dungeon). A goblin_raider-class melee reskin nudged toward the carapace fantasy: +con (armored back), +dex (ambusher), lower int/cha. SPRITE STAND-IN: uses `bat` (the only dark cave-creature sheet in-tree) -- flagged in docs/VISUAL-LOG.md for a real arachnid sprite (Track B / PixelLab). Balance is MEASURED-only in sim_combat_batch.gd's ENCOUNTER_CELLS (see report).",
+   "_comment": "Canon Liscor-area ambush predator (wiki.wanderinginn.com/Shield_Spiders -- black-and-silver armored carapace, Silver-rank individually, nest under Liscor's Dungeon). A goblin_raider-class melee reskin nudged toward the carapace fantasy: +con (armored back), +dex (ambusher), lower int/cha. SPRITE STAND-IN: uses `bat` (the only dark cave-creature sheet in-tree) -- flagged in docs/VISUAL-LOG.md for a real arachnid sprite (Track B / PixelLab). str/weapon_die tuned down from an earlier reading: the nest's ['shield_spider','shield_spider'] roster now correctly fields TWO distinct combatants (WICombat._init dedups same-catalog-id rosters at build time) instead of silently collapsing to one, so `cisterns_fight`'s warrior-L1-SOLO clear is a genuine 2-spider fight -- these numbers keep that findable (real risk, not free) without trivializing the ally-backed/level-2 approaches. Balance is MEASURED-only in sim_combat_batch.gd's ENCOUNTER_CELLS (see report).",
    "id": "shield_spider",
    "display_name": "Shield Spider",
    "sprite": "bat",
    "side": "enemy",
    "stats": {
-    "str": 12,
+    "str": 9,
     "dex": 11,
     "con": 17,
     "int": 3,
     "wis": 8,
     "cha": 2
    },
-   "weapon_die": 6,
+   "weapon_die": 4,
    "ai": "melee",
    "skills": []
   },
@@ -200,26 +200,26 @@
    "skills": []
   },
   {
-   "_comment": "Raskghar scout -- canon nocturnal cave predator (wiki.wanderinginn.com/Raskghar): a cross between an upright bear and a lion, towers over Gnolls, ~Level-15-warrior strength, tracks and ambushes prey. A bruiser-class melee pair: high con/str, low int/cha. Serves DOUBLE duty -- the deep_tunnels route-fight pair AND the 2 scout adds in the Awakened's boss roster. combat_scale 0.4492 contains the hulking 124px frame at the feet (the Relc containment lesson); sprite is a real directional PixelLab v2 idle/walk/slice set. Balance MEASURED-only in sim_combat_batch.gd SCOUT_CELLS/BOSS_CELLS.",
+   "_comment": "Raskghar scout -- canon nocturnal cave predator (wiki.wanderinginn.com/Raskghar): a cross between an upright bear and a lion, towers over Gnolls, tracks and ambushes prey. FICTION FLOOR (binding on any future retune): an elite Raskghar must STRICTLY dominate a plain goblin_raider on every combat axis -- currently str 11>10, con 14>9, weapon_die 5>4. If the boss band ever needs this fight easier, cut the BOSS's own numbers (see raskghar_awakened), never below raider-dominance here. A bruiser-class melee pair, low int/cha. Serves DOUBLE duty -- the deep_tunnels route-fight pair AND the 2 scout adds in the Awakened's boss roster (its ['raskghar_scout','raskghar_scout'] entry now correctly fields TWO distinct combatants -- WICombat._init dedups same-catalog-id rosters at build time). Down from the earlier str 15/con 20/die 7 reading: those values were calibrated while the boss roster silently fielded only ONE scout, so each scout carried double weight; with the pair real, awakened_boss_w2_relc's 0.6-0.75 band splits its difficulty budget across three bodies -- the bulk of the cut went to the boss's own HP/die, the remainder here, keeping raider-dominance intact. The route-fight cells (measured-only, no band) read easier than under the old inflated statline, which is fine. combat_scale 0.4492 contains the hulking 124px frame at the feet (the Relc containment lesson); sprite is a real directional PixelLab v2 idle/walk/slice set. Balance MEASURED-only in sim_combat_batch.gd SCOUT_CELLS; GATED via BOSS_CELLS (see raskghar_awakened's own comment).",
    "id": "raskghar_scout",
    "display_name": "Raskghar Scout",
    "sprite": "raskghar_scout",
    "combat_scale": 0.64,
    "side": "enemy",
    "stats": {
-    "str": 15,
+    "str": 11,
     "dex": 10,
-    "con": 20,
+    "con": 14,
     "int": 4,
     "wis": 8,
     "cha": 4
    },
-   "weapon_die": 7,
+   "weapon_die": 5,
    "ai": "melee",
    "skills": []
   },
   {
-   "_comment": "The Awakened Raskghar BOSS -- canon (a Raskghar that ate a Gnoll's heart, permanently smarter, matches a Level-20 warrior). High-HP bruiser (con 30 -> 50 max_hp). Its signature [Raskghar Maul] is a reaching slowed-rider swing on the EXISTING spell_damage+applies machinery (NO new effect type). `ai: caster` is REQUIRED, not decorative: the melee AI only fires attack/power_strike by name, so a `caster` boss (leads with the range-2 maul, falls through to claws) is the only shipped profile that actually LANDS the slow without a combat_ai.gd change. combat_scale 0.4839 lets it loom ~2 cells while HP bars stay readable. Balance: sim_combat_batch.gd BOSS_CELLS -- GATED 0.6-0.75 vs warrior2+Relc, measured solo. The boss ENCOUNTER entity (party/veto beat) is separate from this combatant + arena + harness band.",
+   "_comment": "The Awakened Raskghar BOSS -- canon (a Raskghar that ate a Gnoll's heart, permanently smarter, matches a Level-20 warrior). High-HP bruiser (con 30 -> 50 max_hp). Its signature [Raskghar Maul] is a reaching slowed-rider swing on the EXISTING spell_damage+applies machinery (NO new effect type). `ai: caster` is REQUIRED, not decorative: the melee AI only fires attack/power_strike by name, so a `caster` boss (leads with the range-2 maul, falls through to claws) is the only shipped profile that actually LANDS the slow without a combat_ai.gd change. combat_scale 0.4839 lets it loom ~2 cells while HP bars stay readable. Balance: sim_combat_batch.gd BOSS_CELLS -- GATED 0.6-0.75 vs warrior2+Relc, measured solo. The boss ENCOUNTER entity (party/veto beat) is separate from this combatant + arena + harness band. con/weapon_die carry the bulk of the band's difficulty budget by design: the two scout adds have a fiction FLOOR (must dominate a goblin_raider -- see raskghar_scout), so when the band needs the 3-vs-2 fight easier the boss's own HP/die move first. The earlier con 44/die 9 reading was calibrated while the roster silently fielded only ONE scout add; with both real, this record returned to its original design point and the band re-verified at 0.68.",
    "id": "raskghar_awakened",
    "display_name": "Awakened Raskghar",
    "sprite": "raskghar_awakened",
@@ -228,19 +228,19 @@
    "stats": {
     "str": 18,
     "dex": 11,
-    "con": 44,
+    "con": 30,
     "int": 12,
     "wis": 10,
     "cha": 8
    },
-   "weapon_die": 9,
+   "weapon_die": 5,
    "ai": "caster",
    "skills": [
     "raskghar_maul"
    ]
   },
   {
-   "_comment": "The rift_vermin_leak trash swarm (beat-2, inn-cellar-adjacent; the entity placement lives in skeleton_scene.json). CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient/leaking magic ('any place with magic'), display diverse powers incl. fire breath -- the anchor-stone's residual rift-link leaking mana into the cellar is exactly the draw the wiki describes, so this is a direct thematic fit realized generic-diegetically (no single named subspecies is attested for a plain magic-drawn rat swarm). Two melee twins (rift_vermin_a/b, letter-suffix convention per training_dummy_a/b) + one ranged 'ember-touched' caster (rift_vermin_c, EXISTING flame_bolt skill -- the canon fire-breath power, no new skill.json entry). SPRITE STAND-IN: reuses `bat` (same convention as cave_spider/sewer_vermin, VISUAL-LOG flagged for a real rodent sheet). Deliberately given DISTINCT ids rather than repeating one id 2-3x in an encounter's `enemies` array -- WICombat._init keys `combatants` by id (`combatants[c[WIKeys.ID]] = c`), so two cfgs sharing an id silently collapse to ONE fielded combatant (confirmed against the shipped shield_spiders/raskghar_scout-pair encounters, which DO hit this collision) -- a sim-code fix, out of scope here, but distinct ids sidestep it so the 'leak' reads honestly as 3 separate HP bars. Balance: sim_combat_batch.gd RUIN_CELLS, GATED 0.55-0.95 at the warrior5_mage5 (~L10, 'L8-12 kit') representative build.",
+   "_comment": "The rift_vermin_leak trash swarm (beat-2, inn-cellar-adjacent; the entity placement lives in skeleton_scene.json). CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient/leaking magic ('any place with magic'), display diverse powers incl. fire breath -- the anchor-stone's residual rift-link leaking mana into the cellar is exactly the draw the wiki describes, so this is a direct thematic fit realized generic-diegetically (no single named subspecies is attested for a plain magic-drawn rat swarm). Two melee twins (rift_vermin_a/b, letter-suffix convention per training_dummy_a/b) + one ranged 'ember-touched' caster (rift_vermin_c, EXISTING flame_bolt skill -- the canon fire-breath power, no new skill.json entry). SPRITE STAND-IN: reuses `bat` (same convention as cave_spider/sewer_vermin, VISUAL-LOG flagged for a real rodent sheet). Given DISTINCT ids rather than repeating one id 2-3x in an encounter's `enemies` array -- a duplicate-id roster now fields every listed combatant correctly (WICombat._init dedups same-catalog-id entries with a runtime suffix), but hand-authored distinct ids stay the clearer convention for a new multi-enemy roster: no suffix ever shows up in an event/snapshot id stream, and each individual can carry its own kit (rift_vermin_c's flame_bolt) without a shared-template constraint. Balance: sim_combat_batch.gd RUIN_CELLS, GATED 0.55-0.95 at the warrior5_mage5 (~L10, 'L8-12 kit') representative build.",
    "id": "rift_vermin_a",
    "display_name": "Rift Vermin",
    "sprite": "bat",
@@ -258,7 +258,7 @@
    "skills": []
   },
   {
-   "_comment": "Rift_vermin_leak's second melee twin -- see rift_vermin_a's _comment for the full canon cite + distinct-id rationale. Identical stat template (a matched pair), separate id only to avoid the WICombat same-id collision.",
+   "_comment": "Rift_vermin_leak's second melee twin -- see rift_vermin_a's _comment for the full canon cite + distinct-id rationale. Identical stat template (a matched pair), given its own id per that convention (not required for a correct fielding anymore, but keeps ids suffix-free and each individual independently reskinnable).",
    "id": "rift_vermin_b",
    "display_name": "Rift Vermin",
    "sprite": "bat",
@@ -317,7 +317,7 @@
    ]
   },
   {
-   "_comment": "Ruin_guardian's first escort ward -- see ruin_guardian's _comment for the full canon cite. A lesser attendant construct (deep_warren boss+2-scouts structure precedent), given its OWN id (not repeated) for the same WICombat same-id-collision reason documented on rift_vermin_a.",
+   "_comment": "Ruin_guardian's first escort ward -- see ruin_guardian's _comment for the full canon cite. A lesser attendant construct (deep_warren boss+2-scouts structure precedent), given its OWN id (not repeated) per the distinct-id convention documented on rift_vermin_a.",
    "id": "ruin_ward_a",
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
@@ -336,7 +336,7 @@
    "skills": []
   },
   {
-   "_comment": "Ruin_guardian's second escort ward -- identical template to ruin_ward_a (a matched pair), separate id only to avoid the WICombat same-id collision.",
+   "_comment": "Ruin_guardian's second escort ward -- identical template to ruin_ward_a (a matched pair), given its own id per the distinct-id convention documented on rift_vermin_a.",
    "id": "ruin_ward_b",
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
@@ -373,7 +373,7 @@
    "skills": []
   },
   {
-   "_comment": "Briar_collectors' second member -- see briar_collector_a's _comment for the full canon cite. Identical stat template (a matched pair, same convention as rift_vermin_a/b), separate id only to avoid the WICombat same-id collision documented on rift_vermin_a.",
+   "_comment": "Briar_collectors' second member -- see briar_collector_a's _comment for the full canon cite. Identical stat template (a matched pair, same convention as rift_vermin_a/b), given its own id per the distinct-id convention documented there.",
    "id": "briar_collector_b",
    "display_name": "Briar Collector",
    "sprite": "briar_collector",
@@ -411,7 +411,7 @@
    ]
   },
   {
-   "_comment": "Briar_collectors_deep's second member -- see briar_collector_deep_a's _comment for the canon cite + escalation rationale. Plain (no power_strike, slightly higher con instead) so the wave isn't two simultaneous 2x-multiplier hitters -- one heavy striker plus one bulkier grappler, same asymmetric-pair shape as goblin_ambush's raider+shaman. Separate id to avoid the WICombat same-id collision.",
+   "_comment": "Briar_collectors_deep's second member -- see briar_collector_deep_a's _comment for the canon cite + escalation rationale. Plain (no power_strike, slightly higher con instead) so the wave isn't two simultaneous 2x-multiplier hitters -- one heavy striker plus one bulkier grappler, same asymmetric-pair shape as goblin_ambush's raider+shaman. Given its own id per the distinct-id convention documented on rift_vermin_a.",
    "id": "briar_collector_deep_b",
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
@@ -447,7 +447,7 @@
    "skills": []
   },
   {
-   "_comment": "River_wolf_pack's second member -- see river_wolf_a's _comment for the canon cite. Identical stat template (a matched pack pair), separate id only to avoid the WICombat same-id collision.",
+   "_comment": "River_wolf_pack's second member -- see river_wolf_a's _comment for the canon cite. Identical stat template (a matched pack pair), given its own id per the distinct-id convention documented on rift_vermin_a.",
    "id": "river_wolf_b",
    "display_name": "River Wolf",
    "sprite": "river_wolf",

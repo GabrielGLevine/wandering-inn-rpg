@@ -79,8 +79,29 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 		var spawns: Array = arena_cfg["player_spawns"] if side == "player" else arena_cfg["enemy_spawns"]
 		var spawn: Array = spawns[spawn_i[side]]
 		spawn_i[side] += 1
+		# Same-catalog-id roster collapse fix: a roster listing the
+		# same combatant id twice (e.g. shield_spiders' ["shield_spider",
+		# "shield_spider"]) used to key `combatants` by the plain id, so the
+		# second entry silently overwrote the first -- the roster fielded one
+		# fewer combatant than it listed. Every cfg now gets a UNIQUE runtime
+		# id (first occurrence keeps the bare id; each further collision gets
+		# "_2", "_3", ... -- re-probed against `combatants` so it can never
+		# collide with a genuinely distinct id that happens to already carry
+		# a numeric suffix). Display name is untouched (`DISPLAY_NAME` below
+		# still reads straight off `cfg`) -- players see "Shield Spider"
+		# twice, the suffix is internal bookkeeping only. `TEMPLATE_ID` keeps
+		# the ORIGINAL catalog id so presentation can still resolve the
+		# static combatants.json record (sprite, combat_scale) by the id that
+		# actually exists there -- see board_renderer.gd's two read sites.
+		var base_id := String(cfg[WIKeys.ID])
+		var runtime_id := base_id
+		var suffix := 2
+		while combatants.has(runtime_id):
+			runtime_id = "%s_%d" % [base_id, suffix]
+			suffix += 1
 		var c := {
-			WIKeys.ID: String(cfg[WIKeys.ID]),
+			WIKeys.ID: runtime_id,
+			WIKeys.TEMPLATE_ID: base_id,
 			WIKeys.DISPLAY_NAME: String(cfg[WIKeys.DISPLAY_NAME]),
 			WIKeys.SIDE: side,
 			WIKeys.CELL: Vector2i(int(spawn[0]), int(spawn[1])),
