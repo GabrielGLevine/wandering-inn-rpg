@@ -377,7 +377,7 @@
    "script": "riverfarm_walkthrough",
    "seed": 9,
    "fixture": "near_riverfarm",
-   "note": "8b Task R1 (issue #10): door arrival via the portal contract's first exercise (locked shape 1) -- village walk (headman talk_pool + the charmed villager's echo_of tell, locked shape 3) -- the night wolf gate NEGATIVE at day (encounter_when, locked shape 2, canonical-pinned) -- the hollow round-trip -- the witch's two-form read across a REAL live mid-waking phase crossing (no sleep, locked shape 4) -- routes around briar_collectors/briar_collectors_deep (no combat data yet, lane beta's R2)"
+   "note": "8b Task R1 (issue #10): door arrival via the portal contract's first exercise (locked shape 1) -- village walk (headman talk_pool + the charmed villager's echo_of tell, locked shape 3) -- the night wolf gate NEGATIVE at day (encounter_when, locked shape 2, canonical-pinned) -- the hollow round-trip -- the witch's two-form read across a REAL live mid-waking phase crossing (no sleep, locked shape 4) -- routes around briar_collectors/briar_collectors_deep (live encounters post-R2 merge; interact-only, never faced -- combat_started absent whole-run)"
   }
  ]
 }

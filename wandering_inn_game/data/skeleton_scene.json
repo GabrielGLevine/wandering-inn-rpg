@@ -6604,7 +6604,8 @@
      },
      "trigger_radius": 1,
      "observe": "Eyes catch the light at the field's edge, gone again when you look straight at them. Only after dark.",
-     "gate_closed_toast": "Nothing there. Whatever you saw is gone with the light."
+     "gate_closed_toast": "Nothing there. Whatever you saw is gone with the light.",
+     "allies": []
     }
    ]
   },
@@ -7077,14 +7078,15 @@
       6
      ],
      "display_name": "Animated Briars",
-     "sprite": "hollow_mushroom_cluster",
+     "sprite": "briar_collector",
      "arena": "witch_hollow",
      "enemies": [
       "briar_collector_a",
       "briar_collector_b"
      ],
      "on_victory": "drove_off_collectors",
-     "observe": "Briars, moving without wind. They haven't noticed you yet."
+     "observe": "Briars, moving without wind. They haven't noticed you yet.",
+     "allies": []
     },
     {
      "_comment": "LOCKED interface: same arena/on_victory as the shallow briar_collectors (both fights share the witch_hollow arena template, lane beta/R2). The 'deep' variant, further from the entrance, past the cottage.",
@@ -7095,15 +7097,15 @@
       11
      ],
      "display_name": "Animated Briars",
-     "sprite": "hollow_mushroom_cluster",
+     "sprite": "briar_collector_deep",
      "arena": "witch_hollow",
      "enemies": [
-      "briar_collector_a",
-      "briar_collector_b",
-      "briar_collector_c"
+      "briar_collector_deep_a",
+      "briar_collector_deep_b"
      ],
      "on_victory": "drove_off_collectors",
-     "observe": "More briars, thicker here, coiled tight around something you can't quite see."
+     "observe": "More briars, thicker here, coiled tight around something you can't quite see.",
+     "allies": []
     },
     {
      "id": "hollow_village_path",
