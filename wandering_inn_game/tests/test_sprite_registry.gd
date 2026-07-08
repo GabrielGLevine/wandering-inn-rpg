@@ -293,6 +293,28 @@ func _build_expected_counts() -> Dictionary:
 	counts["memorial_statue_drake/idle"] = 1
 	counts["memorial_statue_goblin/idle"] = 1
 
+	## 8b R1 (issue #10) -- the owned PixelLab riverfarm village set + the
+	## witch's two-form idles, all single-frame statics (never fallback-
+	## relaxed, owned art).
+	for owned_static: String in ["cottage_thatch_a", "cottage_thatch_b", "riverfarm_longhouse",
+			"riverfarm_windmill", "riverfarm_well", "riverfarm_haystack", "riverfarm_scarecrow",
+			"riverfarm_earthwork", "riverfarm_fence_ew", "riverfarm_fence_ns", "riverfarm_dock_pier",
+			"riverfarm_rowboat", "witch_cottage", "riverfarm_witch_elder", "riverfarm_witch_young"]:
+		counts["%s/idle" % owned_static] = 1
+
+	## Licensed picks (Free Pack Farm.png/Vegetation.png, Fairy Forest
+	## Props.png/Tree.png) -- single-frame region crops, fallback-relaxed in a
+	## public checkout via the SAME is_fallback_sheet branch the garden picks
+	## above use.
+	for licensed_static: String in ["crop_row_orange", "crop_row_green", "crop_row_dark_green",
+			"tree_autumn_orange", "tree_autumn_red", "hollow_glow_stone", "hollow_mushroom_cluster",
+			"hollow_canopy_tree", "hollow_small_tree"]:
+		counts["%s/idle" % licensed_static] = 1
+
+	## river_wolf_idle -- Admurin Canine_Gray_Idle.png, 192x32 sheet @ 32x32
+	## frames = 6 frames (picks.md sec.6).
+	counts["river_wolf_idle/idle"] = 6
+
 	return counts
 
 

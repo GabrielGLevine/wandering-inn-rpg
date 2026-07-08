@@ -4497,7 +4497,15 @@
      "board": true,
      "toast": "The Request Board. Paper three layers deep in places. New notices pinned straight over the dead ones. Two or three have fresh ink.",
      "second_visit_toast": "The Request Board. Your slip is still logged at the desk. The board does not care how it's going.",
-     "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. \u2014 S.S."
+     "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. \u2014 S.S.",
+     "board_rumors": [
+      {
+       "_comment": "8b R1 (issue #10) -- locked shape 1's Guild-board rumor beat. A DISTINCT, non-rotating list from bounties.json's pool (pool.size() is load-bearing for every canonical seed's times_slept modulo -- appending a live posting there would shift every existing board rotation window; a rumor is read, not accepted/turned-in, so it needs no picker/turn-in surface at Selys's desk at all). Shown on every board browse; _interact_board banks banks_accomplishment idempotently (record_accomplishment's own >=1 gate semantics, same as read_the_board's own every-visit bank). Future region milestones (#12/#16) append their own entry here, zero rotation risk.",
+       "id": "rumor_riverfarm",
+       "banks_accomplishment": "riverfarm_attuned",
+       "copy": "TRAVELER'S NOTE, pinned crooked. Village called Riverfarm, downriver a fair walk, farming folk, growing fast under some new lord. They've got witch trouble, or so the last one through here said -- crops going bad, nobody saying why out loud. No bounty on it, just word passed along. Ask the Guild about the road if you're curious."
+      }
+     ]
     },
     {
      "_comment": "A second, smaller notice surface (city/personal notices, distinct from the Guild's own bounty board) -- ORIGINAL flavor copy, canon-safe (no invented named characters), voice-linted. Sprite: reuses `library_shelf` (a tall wood-shelf silhouette, tinted parchment) as a stand-in for a wall unit stacked with handbills -- VISUAL-LOG flagged pending a real asset.",
@@ -6583,7 +6591,8 @@
       ]
      },
      "trigger_radius": 1,
-     "observe": "Eyes catch the light at the field's edge, gone again when you look straight at them. Only after dark."
+     "observe": "Eyes catch the light at the field's edge, gone again when you look straight at them. Only after dark.",
+     "gate_closed_toast": "Nothing there. Whatever you saw is gone with the light."
     }
    ]
   },

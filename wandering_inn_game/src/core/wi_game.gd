@@ -351,7 +351,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_event_sink = event_sink
 	_run_seed = rng_seed
 	_economy = WIEconomy.new(event_sink, pickup, _set_gold)
-	_social = WISocial.new(event_sink, accomplishment_count, record_accomplishment)
+	_social = WISocial.new(event_sink, accomplishment_count, record_accomplishment, find_entity)
 	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active)
 	rng.seed = rng_seed
 	for s: Dictionary in skill_config.get(WIKeys.SKILLS, []):
@@ -666,6 +666,13 @@ func _check_trigger_radius() -> void:
 			continue
 		if not ent.has("trigger_radius"):
 			continue
+		# encounter_when phase gate (locked shape 2, 8b R1): an entity whose
+		# gate is unmet is not a danger at all right now -- skipped before the
+		# distance check even runs, so it can neither ambush the player nor
+		# bank a sneaked_past_danger credit for walking past something that
+		# was never live to begin with.
+		if not _encounter_gate_met(ent):
+			continue
 		var ent_cell: Vector2i = ent[WIKeys.CELL]
 		var dist := maxi(absi(player_cell.x - ent_cell.x), absi(player_cell.y - ent_cell.y))
 		if dist > int(ent["trigger_radius"]):
@@ -875,6 +882,17 @@ func interact() -> Dictionary:
 				return {"accomplishment": accomplishment_id}
 			return use_skill(String(target.get("requires_skill", "")), String(target[WIKeys.ID]))
 		"encounter":
+			# The encounter_when phase gate (locked shape 2, 8b R1) refuses
+			# BEFORE any combat/dialogue dispatch -- an entity whose gate is
+			# unmet (e.g. river_wolf_pack by day) is inert by construction,
+			# same precedence as door_when's own unmet-gate fallthrough.
+			# Optional `gate_closed_toast` gives it flavor; absent, this is a
+			# silent no-op (matches INTERACT_UNHANDLED's quiet default).
+			if not _encounter_gate_met(target):
+				var gate_toast := String(target.get("gate_closed_toast", ""))
+				if gate_toast != "":
+					_emit(WIEvents.TOAST, {"text": gate_toast})
+				return {}
 			if target.has(WIKeys.CONVERSATION):
 				if start_dialogue(String(target[WIKeys.CONVERSATION]), String(target[WIKeys.ID])):
 					return {"dialogue": true}
@@ -1131,6 +1149,28 @@ func _apply_gold_effect(amount: int, source: String) -> void:
 ## change, no events.
 func _door_gate_met(door_when: Dictionary) -> bool:
 	return _accomplishment_gate_met(door_when.get("requires", {}))
+
+
+## True when an `encounter` entity's optional `encounter_when` gate is
+## satisfied -- the door_when-family extension for a phase-conditional spawn
+## (8b R1, issue #10: the first NIGHT-gated encounter, river_wolf_pack). An
+## absent/empty `encounter_when` reads as always-on (matches `_door_gate_met`'s
+## empty-dict convention). Checked at BOTH real call sites a player can reach
+## an encounter's `start_combat` (interact()'s "encounter" branch,
+## `_check_trigger_radius`'s proximity ambush) -- mirrors `door_when` being
+## interact-site-gated rather than baked into `start_combat` itself, so a
+## debug `teleport` + direct combat-adjacent test path is unaffected. Only
+## shape today: `{"phase": [<phase strings>]}` -- current `phase()` must be a
+## member of the listed set (shared `when`-family vocabulary with
+## visual_states' own new `phase` shape below -- one design, two consumers,
+## per the plan's locked shape 2/4).
+func _encounter_gate_met(ent: Dictionary) -> bool:
+	var when: Dictionary = ent.get("encounter_when", {})
+	if when.is_empty():
+		return true
+	if when.has("phase"):
+		return (when["phase"] as Array).has(phase())
+	return true
 
 
 ## True when every accomplishment threshold in `req` (id -> min count) is met
@@ -1539,11 +1579,12 @@ func turn_in_bounty() -> bool:
 ## `guild_board`): assembles the header (the entity's own `toast` when no
 ## bounty is accepted, or its `second_visit_toast` variant when one is
 ## outstanding -- board-copy.md sec.1's two header lines), the CURRENT active
-## slate's copy, and the footer (the entity's `observe` text, reused verbatim
-## -- no duplication needed), then opens it as a one-option (`Step back from
-## the board.`) code-built dialogue. Read-only: no effects, no accept/turn-in
-## (those are Selys's, per the copy's own framing). Banks `read_the_board`
-## every time, same accomplishment id DP1 shipped.
+## slate's copy, the entity's own `board_rumors` (below), and the footer (the
+## entity's `observe` text, reused verbatim -- no duplication needed), then
+## opens it as a one-option (`Step back from the board.`) code-built dialogue.
+## Read-only: no effects, no accept/turn-in (those are Selys's, per the copy's
+## own framing). Banks `read_the_board` every time, same accomplishment id
+## DP1 shipped.
 func _interact_board(target: Dictionary) -> Dictionary:
 	record_accomplishment("read_the_board")
 	var header := String(target["toast"])
@@ -1553,6 +1594,18 @@ func _interact_board(target: Dictionary) -> Dictionary:
 	for bounty: Dictionary in board_bounties():
 		lines.append(String(bounty["copy"]))
 		lines.append("")
+	# 8b R1 (issue #10) -- the Guild-board rumor beat (locked shape 1). A
+	# DISTINCT list from bounties.json's rotating pool (deliberately NOT
+	# routed through board_bounties()/WIBounties.active_slate -- appending a
+	# live posting to that pool would shift `times_slept % pool.size()` for
+	# every existing canonical seed's board rotation window; a rumor is read,
+	# not accepted/turned-in). Every rumor on the entity shows on every
+	# browse; banks its own `banks_accomplishment` idempotently (>=1 gate
+	# semantics, same as `read_the_board` itself banking every visit).
+	for rumor: Dictionary in (target.get("board_rumors", []) as Array):
+		lines.append(String(rumor["copy"]))
+		lines.append("")
+		record_accomplishment(String(rumor["banks_accomplishment"]))
 	lines.append(String(target.get("observe", "")))
 	var graph := {
 		"start": "hub",
