@@ -10,6 +10,7 @@
   {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "pick"}, "timeout_sec": 5},
   {"_comment": "Cursor 0(human_m) -> col 1(drake) in the top (male) row.", "action": "move", "direction": "right", "steps": 1},
   {"_comment": "-> row 1(female), same column -> drake_f.", "action": "move", "direction": "down", "steps": 1},
+  {"_comment": "2026-07-08 hotfix wave item 6: the picker grid itself had no canonical visual coverage before this (only the post-creation inn did) -- windowed-only no-op under headless (test_driver.gd's _screenshot early-returns for DisplayServer 'headless'), same established precedent as every other screenshot step in this suite.", "action": "screenshot", "name": "00_picker_grid_drake_f_selected"},
   {"action": "press", "name": "confirm"},
   {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "name"}, "timeout_sec": 5},
   {"action": "type_text", "text": "Sella"},
