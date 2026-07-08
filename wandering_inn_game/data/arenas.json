@@ -1088,7 +1088,7 @@
    ]
   },
   {
-   "_comment": "The witch's hollow -- shared arena for both `briar_collectors` and `briar_collectors_deep` (same clearing, escalated roster on the second wave). biome `witch_hollow` matches the staged art fragment name (docs/design/riverfarm-art/handoff.md) so this arena resolves cleanly once that biome entry lands; until then WISpriteRegistry's fallback-art path renders a placeholder rather than failing. Blocked cells are the bent-tree ring (a forest clearing, not a walled room) -- kept off every spawn column/row so the reachability BFS in test_combat_data.gd holds. floor_layers/decor deliberately empty: no verified tile-variant coordinates exist for the not-yet-committed biome, and guessing pixel picks without a windowed screenshot is the exact mistake wi-art-and-sprites warns against -- leave for the wiring/art-verification pass rather than ship an unconfirmed guess.",
+   "_comment": "The witch's hollow -- shared arena for both `briar_collectors` and `briar_collectors_deep` (same clearing, escalated roster on the second wave). Blocked cells are the bent-tree ring (a forest clearing, not a walled room) -- kept off every spawn column/row so the reachability BFS in test_combat_data.gd holds; they render as hollow_bent_tree/bush_green props via board_renderer.gd's BLOCKED_PROPS_BY_BIOME (single-cell-scale picks only -- see hollow_bent_tree's own sprites.json constraint). floor_layers uses ONLY the biome's two already-verified Fairy Forest coords ([2,2] flat underwood + [9,9] textured grass -- data/biomes.json witch_hollow's own picks, no new guesses); decor sits OUTSIDE the 12x8 grid (the goblin_ambush/cave_mouth rule) in the map's own bent-tree register: canopy trees looming on both flanks, small trees behind the top edge. Windowed-verified via riverfarm_fight's 01 screenshot.",
    "id": "witch_hollow",
    "biome": "witch_hollow",
    "grid": {
@@ -1153,8 +1153,84 @@
      4
     ]
    ],
-   "floor_layers": [],
-   "decor": []
+   "floor_layers": [
+    {
+     "_pick": "Understory variation reusing the witch_hollow biome's OWN two verified Tiles.png coords -- [2,2] flat underwood green (the biome floor) repeated so [9,9] textured grass lands on roughly every third cell.",
+     "variants": [
+      [
+       2,
+       2
+      ],
+      [
+       2,
+       2
+      ],
+      [
+       9,
+       9
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "hollow_canopy_tree",
+     "cell": [
+      -2,
+      2
+     ]
+    },
+    {
+     "sprite": "hollow_canopy_tree",
+     "cell": [
+      -2,
+      6
+     ]
+    },
+    {
+     "sprite": "hollow_canopy_tree",
+     "cell": [
+      13,
+      3
+     ]
+    },
+    {
+     "sprite": "hollow_canopy_tree",
+     "cell": [
+      13,
+      7
+     ]
+    },
+    {
+     "sprite": "hollow_small_tree",
+     "cell": [
+      3,
+      -1
+     ]
+    },
+    {
+     "sprite": "hollow_small_tree",
+     "cell": [
+      8,
+      -1
+     ]
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      -1,
+      4
+     ]
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      12,
+      5
+     ]
+    }
+   ]
   },
   {
    "_comment": "Village edge at night -- `river_wolf_pack`'s arena, reached only through the map's own night-phase encounter gate (unreachable at day by design; the day-negative canonical proof is lane alpha's). biome `riverfarm_village` reuses the village's own staged floor family (docs/design/riverfarm-art/handoff.md) rather than a bespoke night biome -- the dark read comes from atmosphere.gd's phase mood grade, not a different tileset. Sparse blocked cells (an open field, not a forest) -- an ambush wants sightlines, not cover. TRAP for whoever wires moods.json: confirm riverfarm_village's night grade against atmosphere.gd's arena-brightness floor (the cave_mouth precedent) before shipping -- a fight this dark could read as HP-bar-illegible even though nothing here structurally requires an `arena_moods` override. floor_layers/decor empty for the same not-yet-verified-biome reason as witch_hollow.",

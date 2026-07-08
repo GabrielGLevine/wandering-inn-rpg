@@ -1,0 +1,24 @@
+{
+	"_comment": "The village hunter's come-along beat (issue #10/#11 FIX-FIRST): the ONE beat that puts an ally at Riverfarm's fights at all -- [Ask him to come with you.] banks `hunter_will_come`, which satisfies `river_wolf_pack`/`briar_collectors`/`briar_collectors_deep`'s `ally_requires` so `riverfarm_hunter` fields (skeleton_scene.json). Declining leaves every fight solo -- the honest, harder cell (sim_combat_batch.gd's own `_solo` siblings), the player's real choice, same shape as `relc_descent`'s veto branch. hub keeps the always-ungated exit ('Just passing through.') per the softlock guard; the ask option `hide_when`s itself once accepted (asking twice reads as forgetting the answer) and the greeting swaps via `text_variants` to confirm he's still coming.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "The Hunter",
+			"text": "Hollow's not safe alone. Hasn't been for weeks.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "hunter_will_come": 1 } }, "text": "Still headed that way? Say when. I'm not doing anything the fields need me for today." }
+			],
+			"options": [
+				{ "text": "[Ask him to come with you.]", "hide_when": { "accomplishment": { "hunter_will_come": 1 } }, "goto": "agreed" },
+				{ "text": "Just passing through.", "end": true }
+			]
+		},
+		"agreed": {
+			"speaker": "The Hunter",
+			"text": "Figured. Bring your own bandages -- I've got enough of my own to worry about.",
+			"options": [
+				{ "text": "Deal.", "effects": [ { "accomplishment": "hunter_will_come" } ], "end": true }
+			]
+		}
+	}
+}

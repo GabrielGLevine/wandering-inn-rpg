@@ -38,6 +38,26 @@
    ]
   },
   {
+   "_comment": "Riverfarm's own ally, `river_wolf_pack`/`briar_collectors`/`briar_collectors_deep` roster (issue #10/#11 FIX-FIRST: Relc has no fictional basis at Riverfarm -- reached solely via a SOLO Door arrival, Liscor's own Watch guardsman, no come-along beat, no locality; see wi-adding-an-encounter's ally precedent). CANON-GROUNDED, ORIGINAL+flag (docs/design/character-profiles-staging.md): wiki.wanderinginn.com/Riverfarm attests a [Hunter] class among the village's defenders (Califfy, Thel Grasse) -- this combatant realizes that attested profession, not an invented one. Stats/weapon_die/ai/skills are an EXACT clone of `relc`'s block (same numbers, only id/display_name/sprite differ) -- R2/R3's tuned harness bands (sim_combat_batch.gd RIVERFARM_CELLS, gated 0.55-0.95/0.55-0.85, measured 0.84) were tuned against this exact stat block under the old id; changing any stat here invalidates them. No `combat_scale` override (unlike relc's 0.61, which contains his bespoke 124px Drake frame) -- the `a_hunter` sprite is a plain 64px human frame, same convention as every other human-sized combatant. Fields only when `hunter_will_come` is banked (data/dialogue/riverfarm_hunter.json's own come-along beat, at the village) -- never on `met_relc` alone.",
+   "id": "riverfarm_hunter",
+   "display_name": "The Hunter",
+   "sprite": "a_hunter",
+   "side": "player",
+   "stats": {
+    "str": 14,
+    "dex": 12,
+    "con": 20,
+    "int": 8,
+    "wis": 8,
+    "cha": 8
+   },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": [
+    "basic_swordwork"
+   ]
+  },
+  {
    "id": "goblin_raider",
    "display_name": "Goblin Raider",
    "sprite": "goblin_base",

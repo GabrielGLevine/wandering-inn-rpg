@@ -47,6 +47,7 @@
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "light", "target": "hollow_threshold_candles" }, "timeout_sec": 5 },
   { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Light] — The candles catch, one after another, without a flame ever touching them." } },
   { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "lit_the_threshold_candles" } },
+  { "_comment": "Step back before the shot: the PC at (4,8) stands directly south of the candles and the tall feet-anchored PC sprite occludes the prop cell -- the lit visual_states swap (this shot's whole point) is invisible until the PC clears the cell. (4,9)/(4,10) are open floor.", "action": "move", "direction": "down", "steps": 2 },
   { "action": "screenshot", "name": "02_lit_the_candles" },
 
   { "_comment": "== GAUNTLET 3/3: observe the true knot (hollow_true_knot, 8,10) -- the SKILL path's OWN blight_lifted producer, no separate report needed. Teleport to (8,11), bump up, interact routes through use_skill(observe, ...). ==", "action": "teleport", "map": "witch_hollow", "cell": [8, 11] },

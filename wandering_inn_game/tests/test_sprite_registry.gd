@@ -308,7 +308,7 @@ func _build_expected_counts() -> Dictionary:
 	## above use.
 	for licensed_static: String in ["crop_row_orange", "crop_row_green", "crop_row_dark_green",
 			"tree_autumn_orange", "tree_autumn_red", "hollow_glow_stone", "hollow_mushroom_cluster",
-			"hollow_canopy_tree", "hollow_small_tree"]:
+			"hollow_canopy_tree", "hollow_small_tree", "hollow_bent_tree"]:
 		counts["%s/idle" % licensed_static] = 1
 
 	## river_wolf_idle -- Admurin Canine_Gray_Idle.png, 192x32 sheet @ 32x32

@@ -1,5 +1,5 @@
 {
- "_comment": "riverfarm_skill's start -- NO combat (the interact-only briar_collectors/briar_collectors_deep are never engaged). [Helper]/[Mage]/[Tactician] L1 held (basic_cooking/light/observe respectively -- the three field-skill seams the gauntlet chains through). riverfarm_attuned pre-banked. Standing at (11,10) facing up, directly south of riverfarm_headman (11,9) -- SAME start cell as riverfarm_fight/riverfarm_talk (parity). heard_price_of_a_favor is NOT banked and the quest is NOT started -- the script proves the full give -> cook/light/observe -> witch report -> headman report -> completion loop honestly.",
+ "_comment": "riverfarm_skill's start -- NO combat (the interact-only briar_collectors/briar_collectors_deep are never engaged). [Helper]/[Mage]/[Tactician] L1 held (basic_cooking/light/observe respectively -- the three field-skill seams the gauntlet chains through). riverfarm_attuned pre-banked. `hunter_will_come` pre-banked too (fixture-bank, not earned live -- this path never fights, so the ally never fields; banked purely for world-state parity with riverfarm_fight, which earns it live -- see combatants.json's riverfarm_hunter _comment for why the ally isn't Relc). Standing at (11,10) facing up, directly south of riverfarm_headman (11,9) -- SAME start cell as riverfarm_fight/riverfarm_talk (parity). heard_price_of_a_favor is NOT banked and the quest is NOT started -- the script proves the full give -> cook/light/observe -> witch report -> headman report -> completion loop honestly.",
  "version": 5,
  "state": {
   "current_map": "riverfarm_village",
@@ -7,7 +7,8 @@
   "player_facing": [0, -1],
   "classes": { "helper": 1, "mage": 1, "tactician": 1 },
   "accomplishments": {
-   "riverfarm_attuned": 1
+   "riverfarm_attuned": 1,
+   "hunter_will_come": 1
   },
   "player_skills": [],
   "removed_entities": [],
