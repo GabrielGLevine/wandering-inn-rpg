@@ -136,6 +136,11 @@ var _ice_overlay: TileMapLayer
 ## running before starting the other, or both fight over `.position` for up
 ## to ~0.12s. See `_kill_player_tween`.
 var _player_tween: Tween
+## Issue #41 (camera jitter fix): mirrors `_player_tween`'s one-slot-not-two
+## idiom, just for `_camera.position` instead of the player sprite's. See
+## `_pan_camera_to_player`'s doc comment for why this exists as a SEPARATE
+## tween from `_player_tween` rather than one tween driving both properties.
+var _camera_tween: Tween
 var _entity_visuals: Dictionary = {}
 var _journal: Node
 var _pause_menu: Node
@@ -704,9 +709,16 @@ func _current_map_cfg() -> Dictionary:
 
 ## Camera2D positioning (M5 R4): centers a map/arena smaller than the
 ## 320x180 view; clamped-follow (never shows past the content edge) for a
-## map/arena larger than the view. No current map/arena exceeds VIEW_SIZE
-## (largest is the 12x8 combat grid at 192x128), so the clamped-follow branch
-## is unexercised today but built now per the brief.
+## map/arena larger than the view. STALE CLAIM CORRECTED (issue #41): this
+## comment used to say no current map/arena exceeds VIEW_SIZE and the
+## clamped-follow branch was unexercised -- that stopped being true well
+## before #41 (street/floodplains/sewers/guild/ruin_surface/garden_sanctuary
+## are all bigger than 320x180 today), and the follow branch running live on
+## those maps is exactly what made the field-walk camera jitter visible.
+## `_update_camera` itself is still an instant snap on purpose -- used by map
+## rebuild and combat enter/exit, where a hard cut is correct. The
+## PLAYER_MOVED-driven walk uses `_pan_camera_to_player` instead (see its doc
+## comment) precisely so a real cell-to-cell walk animates rather than snaps.
 func _update_camera() -> void:
 	var grid_size := Game.sim.grid_size
 	var content_size := Vector2(grid_size) * CELL
@@ -721,6 +733,62 @@ static func _camera_axis(content: float, view: float, focus: float) -> float:
 	if content <= view:
 		return content * 0.5
 	return clampf(focus, view * 0.5, content - view * 0.5)
+
+
+## Issue #41 (camera jitter root cause + fix): `_update_camera()` above always
+## SNAPPED `_camera.position` to the destination the instant it was called --
+## fine for a map rebuild or a combat-camera swap (an instant cut IS correct
+## there), but the `PLAYER_MOVED` handler called it too, synchronously with
+## `_move_player_visual` starting a ~120ms CUBIC/EASE_OUT tween of the PLAYER
+## SPRITE toward that same point. Net effect on any map wider/taller than the
+## 320x180 view (clamped-follow branch of `_camera_axis` -- contra this file's
+## stale M5 R4 comment claiming no current map exceeds VIEW_SIZE: street/
+## floodplains/sewers/guild/ruin_surface/garden_sanctuary all do): the camera
+## HARD-JUMPED a full cell in a single frame, then sat perfectly still for the
+## remaining ~117ms while only the small player sprite eased into place --
+## measured directly off `_camera`/`_player_visual` (`camera_x` flat for 6+
+## consecutive cell-steps while `player_visual_x` swept continuously, then an
+## 8-16px jump in one process frame; see the #41 report). That is the
+## "continuous motion then alternating static/jump frames" the user's
+## recording showed. This variant re-derives the SAME `_camera_axis` target
+## (byte-identical math to `_update_camera`) but glides there over the exact
+## same duration/easing as `_move_player_visual`'s own tween instead of
+## snapping, so camera and sprite move in lockstep every frame -- both tweens
+## are pure functions of elapsed-time-since-start with the same trans/ease, so
+## two independently-created Tweens started in the same call stay in sync with
+## no cross-wiring needed. Falls back to the instant `_update_camera()` snap
+## whenever `_presentation_delay` collapses to zero (TestDriver-driven or
+## headless), which is the SAME collapse `_move_player_visual` already relies
+## on -- a QA script or headless run sees byte-identical camera placement to
+## before this fix, every canonical included. Only the `PLAYER_MOVED` handler
+## calls this; map rebuild (`_rebuild_field`) and combat enter/exit still use
+## the instant `_update_camera()` snap on purpose -- a fresh scene or mode
+## swap should never animate into place.
+func _pan_camera_to_player() -> void:
+	var duration := _presentation_delay(MOVE_TWEEN_SECONDS)
+	if duration <= 0.0:
+		_update_camera()
+		return
+	var grid_size := Game.sim.grid_size
+	var content_size := Vector2(grid_size) * CELL
+	var focus := Vector2(Game.sim.player_cell) * CELL + Vector2(CELL, CELL) * 0.5
+	var target := Vector2(
+		_camera_axis(content_size.x, VIEW_SIZE.x, focus.x),
+		_camera_axis(content_size.y, VIEW_SIZE.y, focus.y)
+	)
+	_kill_camera_tween()
+	_camera_tween = create_tween()
+	_camera_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_camera_tween.tween_property(_camera, "position", target, duration)
+
+
+## Mirrors `_kill_player_tween` (M5 R5 review Low #2's one-slot-not-two idiom)
+## for the camera pan tween -- a move landing while the previous step's pan is
+## still finishing must kill it first, or two tweens fight over
+## `_camera.position` for up to ~0.12s.
+func _kill_camera_tween() -> void:
+	if _camera_tween != null and _camera_tween.is_valid():
+		_camera_tween.kill()
 
 
 ## M5 R6 (I6 board extraction): the Node2D combat_screen.gd renders the arena
@@ -1164,7 +1232,10 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_move_player_visual(Vector2(cell) * CELL)
 		_play_player_anim("walk")
 		_queue_player_idle()
-		_update_camera()
+		# Issue #41: was `_update_camera()` (an instant snap) -- see
+		# `_pan_camera_to_player`'s doc comment for the jitter this caused on
+		# any map with clamped-follow (wider/taller than the 320x180 view).
+		_pan_camera_to_player()
 	elif type == WIEvents.PLAYER_BLOCKED:
 		_bump_player_visual()
 	elif type == WIEvents.MAP_CHANGED:
