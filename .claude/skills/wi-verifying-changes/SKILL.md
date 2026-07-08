@@ -82,3 +82,12 @@ the event log; `*.png` (windowed) for what a player sees.
 ## Full-gate one-liner (before any commit claiming "all green")
 Run: load_gate → all canonical scripts at pinned seeds (ci_sweep.sh) → every tests/test_*.gd suite → smoke.
 Report results per script, not "everything passed".
+
+## OS-level screen capture (available since 2026-07-08)
+macOS Screen Recording permission is granted: `screencapture -x <png>`
+and `ffmpeg -f avfoundation -i "Capture screen 0"` (at
+/opt/homebrew/bin/ffmpeg) work. Reach for them when the QA screenshot
+can't answer the question: motion/feel evidence (frame-diff a real
+windowed walk — the #41 jitter methodology), post-viewport-scaling
+artifacts (in-engine dumps show pre-scale pixels only), and trailer
+capture. QA screenshots stay the default for content/legibility reads.

@@ -131,6 +131,13 @@ GitHub Actions can't read in an `if:` condition pre-job).
 
 ## 8. Trailer — NOT delivered this pass (flagged, per the brief's danger list)
 
+> **TOOLING UPDATE (2026-07-08): the capture half is now UNBLOCKED** —
+> macOS Screen Recording permission granted + verified (`screencapture`,
+> `ffmpeg -f avfoundation`). Remaining work for the trailer is the
+> SCRIPTED-PLAYTHROUGH half (a QA-script-driven windowed run captured at
+> 30fps + cut points) — a normal agent task now, no new capability
+> needed. See wi-verifying-changes' OS-capture section.
+
 **A 30-60s trailer is scoped but explicitly NOT built in this pass.** This
 is called out deliberately, not silently dropped:
 

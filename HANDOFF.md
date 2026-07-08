@@ -20,8 +20,9 @@ near_garden restructure — re-pinned with the coupling documented.
 3. 8b Riverfarm plan (art handoff ready) + #26/#39 producer side-lanes.
 **USER GATES:** the #8 playtest checklist (above), the #9 checklist (GF
 writes it), pad/Deck pass, Steam CHECKLIST.md, [Ice Floor] feel.
-Screen recording lands post-reboot → #41-style OS-level capture + the
-#19 trailer become possible.
+Screen recording VERIFIED LIVE post-reboot (2026-07-08: screencapture +
+ffmpeg avfoundation both tested) — OS-level capture evidence + the #19
+trailer are now buildable; tooling notes in wi-verifying-changes.
 
 ## NEW USER DIRECTIVE (2026-07-07) → issue #37
 
