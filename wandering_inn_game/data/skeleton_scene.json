@@ -376,7 +376,7 @@
      ]
     }
    ],
-   "_comment_ambience": "M-BEAUTY Task B3: dust motes ship dusk/night-only for now (plan B3 judgment call -- day is the one ambience case explicitly deferred; a future pilot/rollout task decides whether they should also show at day).",
+   "_comment_ambience": "Dust motes ship dusk/night-only for now (plan B3 judgment call -- day is the one ambience case explicitly deferred; a future pilot/rollout task decides whether they should also show at day).",
    "ambience": [
     {
      "preset": "dust_motes",
@@ -399,7 +399,7 @@
      "sprite": "citizen_f",
      "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
      "friendly_line": "Oh - hi! You've got a good face, you know that? Come in, sit down. I'll find you something warm - on the house, probably. Don't tell Lyonette I said that.",
-     "_comment_stages": "Social Pillar II Phase C: talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the erin_errand.json hub-topic unlocks (erin_chess/erin_home) lifted verbatim from docs/design/social-2-staging/erin_stages.json after the re-path wave went green. Stage 3's erin_daily_meal perk stays UNBUILT/flagged (needs the entity_first_use per-waking dialogue seam, not built this task).",
+     "_comment_stages": "Talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the erin_errand.json hub-topic unlocks (erin_chess/erin_home) lifted verbatim from docs/design/social-2-staging/erin_stages.json after the re-path wave went green. Stage 3's erin_daily_meal perk stays UNBUILT/flagged (needs the entity_first_use per-waking dialogue seam, not built this task).",
      "talk_pool": [
       "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
       "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
@@ -426,7 +426,7 @@
        ]
       },
       {
-       "_comment": "Issue #9 Task G1 (spec §5 RATIFIED unlock SURFACE: 'one Erin pool-line acknowledging it -- she owns the Skill; the PC witnesses'). Gated on the SAME `garden_door_unlocked` flag wi_game.gd's sleep() beat banks (last-met-wins ordering: appended AFTER erin_friend_of_the_inn since the K-of-N gate structurally implies resolved_wrong_order is very often already met by the time this fires, though not required -- garden_door_unlocked can also land via cleaned_the_inn+goblins_spared/sign_defended once those get producers). ONE line (the one-entry-array = a landmark-acknowledgment stage convention, same idiom as lyonette_thawed) -- no mechanics readout, no counter numerals, no Skill name (spoiler cutoff: never 'the Magical Door'-class Vol-9 naming for Erin's own Skill either).",
+       "_comment": "One Erin pool-line acknowledging garden_door_unlocked -- she owns the Skill, the PC witnesses. Gated on the SAME `garden_door_unlocked` flag wi_game.gd's sleep() beat banks (last-met-wins ordering: appended AFTER erin_friend_of_the_inn since the K-of-N gate structurally implies resolved_wrong_order is very often already met by the time this fires, though not required -- garden_door_unlocked can also land via cleaned_the_inn+goblins_spared/sign_defended once those get producers). ONE line (the one-entry-array = a landmark-acknowledgment stage convention, same idiom as lyonette_thawed) -- no mechanics readout, no counter numerals, no Skill name (spoiler cutoff: never 'the Magical Door'-class Vol-9 naming for Erin's own Skill either).",
        "id": "erin_garden_open",
        "requires_accomplishment": { "garden_door_unlocked": 1 },
        "lines": [
@@ -454,13 +454,13 @@
      "sprite": "lyonette",
      "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
      "friendly_line": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot.",
-     "_comment_pool": "Content Wave C2: Lyonette's base talk_pool (wounded-pride-thawing, warmth-arc SEED; C4/Q2 grows it post-quest -- spec 2.2/3.Q2). She is the game's ONLY pre-existing QA-covered NPC to gain a pool, so dialogue_walkthrough (the sole script that interacts with her -- twice, once per waking across its two sleeps) was re-pathed to ABSORB the first-talk pool DIALOGUE_LINE at idx 0 (waking 1) and idx 1 (waking 3, chatted_with_lyonette then =1) before opening lyonette_tip, mirroring the S4 pooled-NPC re-path pattern. Zero rng, so seed 9 holds.",
+     "_comment_pool": "Lyonette's base talk_pool (wounded-pride-thawing, warmth-arc SEED; C4/Q2 grows it post-quest -- spec 2.2/3.Q2). She is the game's ONLY pre-existing QA-covered NPC to gain a pool, so dialogue_walkthrough (the sole script that interacts with her -- twice, once per waking across its two sleeps) was re-pathed to ABSORB the first-talk pool DIALOGUE_LINE at idx 0 (waking 1) and idx 1 (waking 3, chatted_with_lyonette then =1) before opening lyonette_tip, mirroring the S4 pooled-NPC re-path pattern. Zero rng, so seed 9 holds.",
      "talk_pool": [
       "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
       "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
       "...You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
      ],
-     "_comment_stages": "Social Pillar II Phase A retrofit (reference implementation): Content Wave C4's one-shot `talk_pool_post` migrated verbatim into the new `talk_pool_stages` seam (social.gd's talk_pool_line, ORDERED array, last-met-wins) -- a RENAME, not a rewrite; ZERO copy changes. One-entry array = stage 2 (`lyonette_thawed`), the shipped thaw: once `resolved_wrong_order` is banked (The Wrong Order settled by any path), her rotating small-talk REPLACES `talk_pool` with these warmer lines. Rotation still keys on chatted_with_lyonette % lines.size(), zero rng. Ships PERK-LESS (stage-tables.md's optional home-topic unlock + optional short-rest perk are both ⚑ user-gated, default OUT -- see HANDOFF).",
+     "_comment_stages": "The one-shot `talk_pool_post` migrated verbatim into the new `talk_pool_stages` seam (social.gd's talk_pool_line, ORDERED array, last-met-wins) -- a RENAME, not a rewrite; ZERO copy changes. One-entry array = stage 2 (`lyonette_thawed`), the shipped thaw: once `resolved_wrong_order` is banked (The Wrong Order settled by any path), her rotating small-talk REPLACES `talk_pool` with these warmer lines. Rotation still keys on chatted_with_lyonette % lines.size(), zero rng. Ships PERK-LESS (stage-tables.md's optional home-topic unlock + optional short-rest perk are both ⚑ user-gated, default OUT -- see HANDOFF).",
      "talk_pool_stages": [
       {
        "id": "lyonette_thawed",
@@ -546,7 +546,7 @@
      ],
      "display_name": "Dusty Scroll",
      "sprite": "dusty_scroll",
-     "_comment": "Onboarding rev O4: RETIRED as the mage trigger. It no longer banks used_magic and grants no class -- [Mage] is now earned from Pisces (learned_magic_from_pisces). Kept as pure flavor: banks read_dusty_scroll (referenced nowhere as a gate) and toasts a hint that magic exists and is learnable from someone who knows it.",
+     "_comment": "RETIRED as the mage trigger. It no longer banks used_magic and grants no class -- [Mage] is now earned from Pisces (learned_magic_from_pisces). Kept as pure flavor: banks read_dusty_scroll (referenced nowhere as a gate) and toasts a hint that magic exists and is learnable from someone who knows it.",
      "on_interact_accomplishment": "read_dusty_scroll",
      "toast": "Faded arcane script. You can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must."
     },
@@ -637,7 +637,7 @@
      }
     },
     {
-     "_comment": "Content Wave C4 (Q2 SKILL path): the short-order prep pot -- a bespoke quest cooking station (cellar_door/nest_ledge precedent) so cooking here banks `stretched_the_order` WITHOUT mutating the shared stew_pot (which work_loop asserts banks `cooked_meal`). requires_skill basic_cooking gates it gracefully behind Helper: pre-Helper the field/interact use refuses with locked_toast + skill_unknown and banks nothing (no skill-name leak). Placed at the far kitchen corner (1,1), approached from (1,2), off every canonical inn route (the [1,1]/[1,2] refs in scripts are combat-GRID cells, not this overworld). Reuses the registered `cauldron` sprite (no test_sprite_registry row; ui_entities_rendered inn count 12->13, disclosed in inn_walkthrough + work_loop).",
+     "_comment": "The short-order prep pot -- a bespoke quest cooking station (cellar_door/nest_ledge precedent) so cooking here banks `stretched_the_order` WITHOUT mutating the shared stew_pot (which work_loop asserts banks `cooked_meal`). requires_skill basic_cooking gates it gracefully behind Helper: pre-Helper the field/interact use refuses with locked_toast + skill_unknown and banks nothing (no skill-name leak). Placed at the far kitchen corner (1,1), approached from (1,2), off every canonical inn route (the [1,1]/[1,2] refs in scripts are combat-GRID cells, not this overworld). Reuses the registered `cauldron` sprite (no test_sprite_registry row; ui_entities_rendered inn count 12->13, disclosed in inn_walkthrough + work_loop).",
      "id": "short_order",
      "kind": "prop",
      "cell": [
@@ -675,7 +675,7 @@
      ]
     },
     {
-     "_comment": "M-DEPTH DP3: the stairs up to the private quarters. Placed at the far southeast corner (13,7), well clear of the main y3 hallway thoroughfare (lantern_check/mage_unlock_loop's x2-13 traverse along y3) and the bed corner (x1-3,y6-8 -- heavily fixtured by board_loop/atmosphere_check/field_skills_loop/rogue_earn_loop/social_loop/wrong_order_loop/inventory_loop/work_loop's exact player_cell pins). Approached from (13,6) facing down. on_enter_accomplishment mirrors the guild_door precedent (visited_guild) -- a flavor-only counter, not consumed by any quest. ui_entities_rendered inn count 13->14 (inn_walkthrough + work_loop updated).",
+     "_comment": "The stairs up to the private quarters. Placed at the far southeast corner (13,7), well clear of the main y3 hallway thoroughfare (lantern_check/mage_unlock_loop's x2-13 traverse along y3) and the bed corner (x1-3,y6-8 -- heavily fixtured by board_loop/atmosphere_check/field_skills_loop/rogue_earn_loop/social_loop/wrong_order_loop/inventory_loop/work_loop's exact player_cell pins). Approached from (13,6) facing down. on_enter_accomplishment mirrors the guild_door precedent (visited_guild) -- a flavor-only counter, not consumed by any quest. ui_entities_rendered inn count 13->14 (inn_walkthrough + work_loop updated).",
      "id": "stairs_up",
      "kind": "door",
      "cell": [
@@ -692,14 +692,14 @@
      "on_enter_accomplishment": "visited_own_room"
     },
     {
-     "_comment": "Magical Door plan Task D1 (issue #8, milestone 8a spec §1 beat 1/4): the pantry door prop, the LOCKED interface anchor for the whole chain -- 3 visual_states keyed on the chain's accomplishment counters (default / flicker once door_chain_started / awakened once door_awakened). Placed at (10,6), inside the free interior cluster (9-11,5-7) confirmed untouched by every existing inn-touching canonical's walked+faced cell set -- a full move/press replay of every qa/scripts/*.json (from its fixture start or the default (2,3) spawn) plus every qa/fixtures/*.json inn start was run before placement (the DP1 Selys precedent); the only free untouched interior cells in the whole 16x10 room were (2,2),(3,6),(3,7),(5,7),(7,7),(9,6),(9,7),(10,5),(10,6),(10,7),(11,5),(11,6),(11,7). ui_entities_rendered inn count 14->16 (this entity + rift_vermin_leak below) -- inn_walkthrough/work_loop/upstairs_walkthrough updated. D1 ships the interact copy STATIC (same flavor toast regardless of counter state) -- D3 wires the counter-aware beat-1 flicker line (Erin's dialogue banks door_chain_started; spec §3's Erin key) and any interact-copy differentiation; the door prop itself NEVER speaks (Global Constraint) -- only the GDI voices chain milestones, wired by D4's sleep-beat hook. Sprite states reuse a shared `pantry_door_glow` placeholder entry (data/sprites.json), tint-differentiated per state -- the flicker state is TINT-only in D1 (no baked 2-frame elsewhere-glimpse yet; PixelLab balance is $0.00 per the plan's Global Constraints, so the real rune-glow art stays a VISUAL-LOG/lane-γ item) rather than the spec's eventual literal sprite-swap glimpse.",
+     "_comment": "The pantry door prop, the LOCKED interface anchor for the whole chain -- 3 visual_states keyed on the chain's accomplishment counters (default / flicker once door_chain_started / awakened once door_awakened). Placed at (10,6), inside the free interior cluster (9-11,5-7) confirmed untouched by every existing inn-touching canonical's walked+faced cell set -- a full move/press replay of every qa/scripts/*.json (from its fixture start or the default (2,3) spawn) plus every qa/fixtures/*.json inn start was run before placement; the only free untouched interior cells in the whole 16x10 room were (2,2),(3,6),(3,7),(5,7),(7,7),(9,6),(9,7),(10,5),(10,6),(10,7),(11,5),(11,6),(11,7). ui_entities_rendered inn count 14->16 (this entity + rift_vermin_leak below) -- inn_walkthrough/work_loop/upstairs_walkthrough updated. Interact copy is STATIC (same flavor toast regardless of counter state); the counter-aware beat-1 flicker line (Erin's dialogue banks door_chain_started) and any interact-copy differentiation are wired elsewhere -- the door prop itself NEVER speaks (only the GDI voices chain milestones, on the sleep-beat hook). Sprite states reuse a shared `pantry_door_glow` placeholder entry (data/sprites.json), tint-differentiated per state -- the flicker state is TINT-only (no baked 2-frame elsewhere-glimpse yet; the real rune-glow art stays a VISUAL-LOG item) rather than the eventual literal sprite-swap glimpse.",
      "id": "pantry_door",
      "kind": "prop",
      "cell": [10, 6],
      "display_name": "The Pantry Door",
      "sprite": "door",
      "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
-     "_comment_d4": "Magical Door plan Task D4 (issue #8, spec §1 beat 4): the awakened interact rewire. `portal_menu`/`portal_menu_when` are checked BEFORE `on_interact_accomplishment` in wi_game.gd's interact() (the contains_when/door_when precedent, same file) -- once `door_awakened` is banked, every future interact opens WIPortals' fast-travel picker (src/core/portals.gd) instead of the flavor toast below, which stays the byte-identical PRE-awakening fallback (D1/D3 unchanged, gate unmet falls straight through).",
+     "_comment_d4": "The awakened interact rewire. `portal_menu`/`portal_menu_when` are checked BEFORE `on_interact_accomplishment` in wi_game.gd's interact() (the contains_when/door_when precedent, same file) -- once `door_awakened` is banked, every future interact opens WIPortals' fast-travel picker (src/core/portals.gd) instead of the flavor toast below, which stays the byte-identical PRE-awakening fallback (D1/D3 unchanged, gate unmet falls straight through).",
      "portal_menu": true,
      "portal_menu_when": { "requires": { "door_awakened": 1 } },
      "on_interact_accomplishment": "observed_the_pantry_door",
@@ -710,7 +710,7 @@
      ]
     },
     {
-     "_comment": "Magical Door plan Task D3 (issue #8 spec §1 beat 2 FIGHT leg): PROMOTED from D1's kind:\"prop\" placeholder (test_combat_data would have hard-failed against D2's absent combat data at D1's merge time; D2 has since landed rift_vermin_a/b/c in data/combatants.json + the inn_cellar arena in data/arenas.json, both confirmed present in this worktree) to the real `kind: \"encounter\"` shape. Locked ids per the plan's interface: arena `inn_cellar`, enemies EXACTLY [\"rift_vermin_a\",\"rift_vermin_b\",\"rift_vermin_c\"], on_victory banks `cleared_the_leak` (D2's own locked id) alongside the door-chain's shared `door_understood` (identity-locked convergence counter, banked identically by all 3 mage-consult legs -- pisces_magic.json's TALK/SKILL legs) and `pedestal_unsealed` (a D3-internal convergence counter gating anchor_stone_pedestal's `contains_when`, banked by this fight, `ruin_guardian`'s own on_victory below, AND both of Pisces's TALK/SKILL legs -- their consult knowledge doubles as safe-passage insight past the ruin guardian, same as fighting through him directly). `allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. Interact-only, NO trigger_radius (unchanged from D1's placement) -- Pisces's FIGHT branch (pisces_magic.json's `door_consult`) sends the player here by flavor text alone, no dialogue-side start_combat wiring (the crate/cisterns FIGHT-leg precedent: the fight lives on its own map, reached by the player's own feet). `on_interact_accomplishment`/`toast` DROPPED (dead fields on an encounter -- interact()'s \"encounter\" match arm never reads them); `observe` KEPT (the generic ANY-entity [Appraise Foe] fallback read works regardless of kind, inn_sign/shield_spiders precedent). `found_the_leak` (D1's now-orphaned flavor counter) was never referenced by any dialogue/quest gate or QA script (grepped clean) -- dropping its sole producer is harmless.",
+     "_comment": "PROMOTED from D1's kind:\"prop\" placeholder (test_combat_data would have hard-failed against D2's absent combat data at D1's merge time; D2 has since landed rift_vermin_a/b/c in data/combatants.json + the inn_cellar arena in data/arenas.json, both confirmed present in this worktree) to the real `kind: \"encounter\"` shape. Locked ids per the plan's interface: arena `inn_cellar`, enemies EXACTLY [\"rift_vermin_a\",\"rift_vermin_b\",\"rift_vermin_c\"], on_victory banks `cleared_the_leak` (D2's own locked id) alongside the door-chain's shared `door_understood` (identity-locked convergence counter, banked identically by all 3 mage-consult legs -- pisces_magic.json's TALK/SKILL legs) and `pedestal_unsealed` (a D3-internal convergence counter gating anchor_stone_pedestal's `contains_when`, banked by this fight, `ruin_guardian`'s own on_victory below, AND both of Pisces's TALK/SKILL legs -- their consult knowledge doubles as safe-passage insight past the ruin guardian, same as fighting through him directly). `allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. Interact-only, NO trigger_radius (unchanged from D1's placement) -- Pisces's FIGHT branch (pisces_magic.json's `door_consult`) sends the player here by flavor text alone, no dialogue-side start_combat wiring (the crate/cisterns FIGHT-leg precedent: the fight lives on its own map, reached by the player's own feet). `on_interact_accomplishment`/`toast` DROPPED (dead fields on an encounter -- interact()'s \"encounter\" match arm never reads them); `observe` KEPT (the generic ANY-entity [Appraise Foe] fallback read works regardless of kind, inn_sign/shield_spiders precedent). `found_the_leak` (D1's now-orphaned flavor counter) was never referenced by any dialogue/quest gate or QA script (grepped clean) -- dropping its sole producer is harmless.",
      "id": "rift_vermin_leak",
      "kind": "encounter",
      "cell": [9, 7],
@@ -725,7 +725,7 @@
      "on_victory": ["cleared_the_leak", "door_understood", "pedestal_unsealed"]
     },
     {
-     "_comment": "Magical Door plan Task D3 (issue #8 spec §1 beat 2 SKILL leg): the doorframe's own worked stone, north of pantry_door (10,6) at (10,5) -- the field-skill first-use idiom (cellar_door/nest_ledge precedent), `requires_skill: observe` (the Tactician L1 grant, matching nest_ledge/cisterns_scout) + `on_skill_use` banks `read_the_door_runes` (an intermediate counter, zero rng) deterministically. Reporting the finding to Pisces (pisces_magic.json's hub report option, gated on this counter) banks the shared `door_understood` + `pedestal_unsealed` together -- the cisterns_scout/wrong_order 'SKILL alone only banks the intermediate counter, reporting to the consult NPC banks the convergence counters' precedent (Olesm/Lyonette's role there is Pisces's role here -- no olesm_intro.json touch needed, out of this task's file charter). Reuses the registered `dusty_scroll` sprite (the retired [Light]-study prop, thematically apt for 'something to read with a skill') tinted, no test_sprite_registry row needed (reused sprite id). Placed at (10,5), one of the confirmed-untouched inn interior cells from pantry_door's own blast-radius audit (see that entity's _comment) -- (9,5) is lyonette's cell, ruled out. Approach from (10,4) facing down. Inn ui_entities_rendered sprite count bumps 16->17 (inn_walkthrough/work_loop/upstairs_walkthrough updated).",
+     "_comment": "The doorframe's own worked stone, north of pantry_door (10,6) at (10,5) -- the field-skill first-use idiom (cellar_door/nest_ledge precedent), `requires_skill: observe` (the Tactician L1 grant, matching nest_ledge/cisterns_scout) + `on_skill_use` banks `read_the_door_runes` (an intermediate counter, zero rng) deterministically. Reporting the finding to Pisces (pisces_magic.json's hub report option, gated on this counter) banks the shared `door_understood` + `pedestal_unsealed` together -- the cisterns_scout/wrong_order 'SKILL alone only banks the intermediate counter, reporting to the consult NPC banks the convergence counters' precedent (Olesm/Lyonette's role there is Pisces's role here -- no olesm_intro.json touch needed, out of this task's file charter). Reuses the registered `dusty_scroll` sprite (the retired [Light]-study prop, thematically apt for 'something to read with a skill') tinted, no test_sprite_registry row needed (reused sprite id). Placed at (10,5), one of the confirmed-untouched inn interior cells from pantry_door's own blast-radius audit (see that entity's _comment) -- (9,5) is lyonette's cell, ruled out. Approach from (10,4) facing down. Inn ui_entities_rendered sprite count bumps 16->17 (inn_walkthrough/work_loop/upstairs_walkthrough updated).",
      "id": "pantry_door_runes",
      "kind": "prop",
      "cell": [10, 5],
@@ -740,7 +740,7 @@
      "locked_toast": "The doorframe's old wood is carved with something under the paint, faint and worn. Whatever it says isn't for an untrained eye."
     },
     {
-     "_comment": "Issue #9 Task G1 (spec §5 RATIFIED): Erin's OWN summoned garden door, at the inn -- NOT the portal menu (a deliberate departure from the Magical Door/pantry_door precedent right above: this door is Erin's Skill, not an attuned destination). `door_when.requires: {garden_door_unlocked: 1}` reads ONE monotonic flag wi_game.gd's sleep() beat banks once `_garden_earn_met()` (act >= III AND K=2 of 4 ratified legs) goes true -- see that function's doc comment for the full K-of-N gate-shape reasoning (a bespoke sleep-beat computation feeding the EXISTING door_when/_accomplishment_gate_met ALL-of reader unchanged, not a new gate shape in the shared validator). Until banked, interact falls through to on_interact_accomplishment/toast below -- BYTE-IDENTICAL pre-unlock fallback, the sewer_grate/deep_fissure/ruin_door precedent -- so every existing inn canonical (inn_walkthrough/work_loop/upstairs_walkthrough/door_awakening/portal_menu/save_load_roundtrip) is unaffected: this entity is a normal always-present prop that just reads as bare wall until the flag lands. Placed at (3,6) -- confirmed OFF every inn cell any canonical QA script's move-replay touches (a python blocked-cell-aware replay of all 73 qa/scripts/*.json against the real inn walls/blocked/entity layout was run before picking this cell; see the G1 report for the full free-cell derivation and the union of touched cells). `garden_door_inner` (owned PixelLab art) is the SAME door sprite `garden_exit` uses on the far side -- one physical door, two faces.",
+     "_comment": "Erin's OWN summoned garden door, at the inn -- NOT the portal menu (a deliberate departure from the Magical Door/pantry_door precedent right above: this door is Erin's Skill, not an attuned destination). `door_when.requires: {garden_door_unlocked: 1}` reads ONE monotonic flag wi_game.gd's sleep() beat banks once `_garden_earn_met()` (act >= III AND K=2 of 4 ratified legs) goes true -- see that function's doc comment for the full K-of-N gate-shape reasoning (a bespoke sleep-beat computation feeding the EXISTING door_when/_accomplishment_gate_met ALL-of reader unchanged, not a new gate shape in the shared validator). Until banked, interact falls through to on_interact_accomplishment/toast below -- BYTE-IDENTICAL pre-unlock fallback, the sewer_grate/deep_fissure/ruin_door precedent -- so every existing inn canonical (inn_walkthrough/work_loop/upstairs_walkthrough/door_awakening/portal_menu/save_load_roundtrip) is unaffected: this entity is a normal always-present prop that just reads as bare wall until the flag lands. Placed at (3,6) -- confirmed OFF every inn cell any canonical QA script's move-replay touches (a python blocked-cell-aware replay of all 73 qa/scripts/*.json against the real inn walls/blocked/entity layout was run before picking this cell; see the G1 report for the full free-cell derivation and the union of touched cells). `garden_door_inner` (owned PixelLab art) is the SAME door sprite `garden_exit` uses on the far side -- one physical door, two faces.",
      "id": "garden_door",
      "kind": "prop",
      "cell": [3, 6],
@@ -759,7 +759,7 @@
    ]
   },
   "inn_upstairs": {
-   "_comment": "M-DEPTH DP3: the inn's second floor -- hallway + 3 guest-room doors (2 generic dressing, 1 Lyonette's, locked) + the PC's own room (real, walkable, holds the second sleep site). ONE open interior (no partition walls, matching the guild/DP1 precedent of zoning via decor rather than hand-built room walls) -- 'hallway' (x1-7) and 'your room' (x8-10) read as distinct zones via floor variant + dressing, not literal walls. biome 'inn' reused (same wood-hall material as downstairs).",
+   "_comment": "The inn's second floor -- hallway + 3 guest-room doors (2 generic dressing, 1 Lyonette's, locked) + the PC's own room (real, walkable, holds the second sleep site). ONE open interior (no partition walls, matching the guild's own precedent of zoning via decor rather than hand-built room walls) -- 'hallway' (x1-7) and 'your room' (x8-10) read as distinct zones via floor variant + dressing, not literal walls. biome 'inn' reused (same wood-hall material as downstairs).",
    "biome": "inn",
    "grid": {
     "width": 12,
@@ -775,7 +775,7 @@
      1
     ]
    ],
-   "_comment_walls": "M-DEPTH DP3: full 4-side perimeter, same walls-v2 idiom as inn/guild (north face+cap, sides/south cap-only) -- no interior gap needed since both stairs entities are ordinary floor-standing door props, not wall breaches.",
+   "_comment_walls": "Full 4-side perimeter, same walls-v2 idiom as inn/guild (north face+cap, sides/south cap-only) -- no interior gap needed since both stairs entities are ordinary floor-standing door props, not wall breaches.",
    "walls": {
     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
     "tile_px": 16,
@@ -949,7 +949,7 @@
      ]
     },
     {
-     "_comment": "M-DEPTH DP3: the PC's own bed -- a SECOND sleep site (interact()'s prop branch, `sleep: true`), mechanically IDENTICAL to the ground-floor `bed` (same sleep() call, same progression/toast machinery) per ratification -- NO gameplay difference v1. The ONE authored difference is `sleep_toast`, a flavor line fired BEFORE sleep()'s own stream (see wi_game.gd interact() prop branch) -- sleep-beat parity: same events (phase_changed, then either the class/level toasts or the 'You sleep soundly.' fallback), one extra toast first.",
+     "_comment": "The PC's own bed -- a SECOND sleep site (interact()'s prop branch, `sleep: true`), mechanically IDENTICAL to the ground-floor `bed` (same sleep() call, same progression/toast machinery) per ratification -- NO gameplay difference v1. The ONE authored difference is `sleep_toast`, a flavor line fired BEFORE sleep()'s own stream (see wi_game.gd interact() prop branch) -- sleep-beat parity: same events (phase_changed, then either the class/level toasts or the 'You sleep soundly.' fallback), one extra toast first.",
      "id": "your_bed",
      "kind": "prop",
      "cell": [
@@ -962,7 +962,7 @@
      "sleep_toast": "Your own bed."
     },
     {
-     "_comment": "M-DEPTH DP3: Lyonette's room, hinted but never entered -- a `prop` (not a real `door`, it never transitions anywhere) carrying `locked_toast` (fires on a plain interact -- no `requires_skill` set, so interact()'s use_skill('', id) fallback reads it straight through the SAME seam sewers' `sewer_debris` already uses for a skill-less locked prop) and the generic ANY-entity `observe` field ([Appraise Foe]'s fallback read, the inn_sign precedent -- data-authored, not live-exercised in THIS script; see report for the fixture-cost disclosure). Placed at (7,1), the hallway's north-wall alcove between the two generic doors and the your-room zone.",
+     "_comment": "Lyonette's room, hinted but never entered -- a `prop` (not a real `door`, it never transitions anywhere) carrying `locked_toast` (fires on a plain interact -- no `requires_skill` set, so interact()'s use_skill('', id) fallback reads it straight through the SAME seam sewers' `sewer_debris` already uses for a skill-less locked prop) and the generic ANY-entity `observe` field ([Appraise Foe]'s fallback read, the inn_sign precedent -- data-authored, not live-exercised in THIS script; see report for the fixture-cost disclosure). Placed at (7,1), the hallway's north-wall alcove between the two generic doors and the your-room zone.",
      "id": "lyonette_door",
      "kind": "prop",
      "cell": [
@@ -1208,7 +1208,7 @@
      16
     ]
    ],
-   "_comment": "Liscor gate district (consultant design 2026-07-03, grown from the 10x6 street per accepted Floodplains sec.5). Zones: gate plaza W, main street y2-4, market row y1 x10-19, Watch post x21-24, Adventurer's Guild x26-30 (XL anchor), dirt side street x14-15 south, sewer-grate POI (16,11). All goblin encounters migrated to floodplains POI anchors. Row y4 is the clear transit lane.",
+   "_comment": "Liscor gate district, grown from the 10x6 street (per accepted Floodplains sec.5). Zones: gate plaza W, main street y2-4, market row y1 x10-19, Watch post x21-24, Adventurer's Guild x26-30 (XL anchor), dirt side street x14-15 south, sewer-grate POI (16,11). All goblin encounters migrated to floodplains POI anchors. Row y4 is the clear transit lane.",
    "floor_layers": [
     {
      "_pick": "Main street cobble band, full width (existing street pick, extended)",
@@ -1417,7 +1417,7 @@
    },
    "decor": [
     {
-     "_comment": "M-BEAUTY R2 art fix 3 + torchlit-stone card: same fix as the (13,10) campfire below -- was unlit, read as a second fake sewer_grate near the gate plaza.",
+     "_comment": "Same fix as the (13,10) campfire below -- was unlit, read as a second fake sewer_grate near the gate plaza.",
      "sprite": "campfire",
      "cell": [
       3,
@@ -1652,7 +1652,7 @@
      ]
     },
     {
-     "_comment": "M-BEAUTY R2 art fix 1: this building's block is 4 wide (18-21,15-16) with TWO inn_roof pieces (19,15)/(21,15) but the facade below was a single tile at an unaligned x=20 -- neither roof lined up with a wall beneath it (VISUAL-LOG 'roofs misaligned'). Realigned to the guild building's own precedent (26-30,1-3: two roof/facade pairs at matching x, spaced 2 apart) -- one facade directly under each roof.",
+     "_comment": "This building's block is 4 wide (18-21,15-16) with TWO inn_roof pieces (19,15)/(21,15) but the facade below was a single tile at an unaligned x=20 -- neither roof lined up with a wall beneath it (VISUAL-LOG 'roofs misaligned'). Realigned to the guild building's own precedent (26-30,1-3: two roof/facade pairs at matching x, spaced 2 apart) -- one facade directly under each roof.",
      "sprite": "facade_plaster",
      "cell": [
       19,
@@ -1672,7 +1672,7 @@
       13,
       10
      ],
-     "_comment": "M-BEAUTY R2 art fix 3 + torchlit-stone card: was unlit street dressing -- the same stone-ring-with-red-center art as sewer_grate's placeholder rock art, so dark/unlit it read as a second fake sewer grate in the south square (VISUAL-LOG). Lighting it (matching the other street/inn campfire anchors' warm palette) both fixes the lookalike confusion (a flickering warm glow reads unmistakably as fire, not a cold iron grate) and gives the gate district a second torch-pool anchor per the mood card brief.",
+     "_comment": "Was unlit street dressing -- the same stone-ring-with-red-center art as sewer_grate's placeholder rock art, so dark/unlit it read as a second fake sewer grate in the south square (VISUAL-LOG). Lighting it (matching the other street/inn campfire anchors' warm palette) both fixes the lookalike confusion (a flickering warm glow reads unmistakably as fire, not a cold iron grate) and gives the gate district a second torch-pool anchor per the mood card brief.",
      "light": {
       "color": [
        1.0,
@@ -1827,7 +1827,7 @@
      ]
     },
     {
-     "_comment": "M-BEAUTY R2 art fix 2: cellar_door (entity, street 10,17) rendered freestanding with nothing behind it (VISUAL-LOG). crate_light.json's route walks down column x=13 then x=10 and stops at (10,16) facing down into the door -- moving the door's own cell would desync that script's hardcoded step counts, so per the brief this dresses AROUND the existing cell instead: one facade_plaster tile immediately east of the door, same row (11,17), never a cell the approach path crosses (path only touches x=10 southbound and x=10..13 at y=13), so it reads as the building wall the cellar is set into without the player ever visually overlapping it.",
+     "_comment": "Cellar_door (entity, street 10,17) rendered freestanding with nothing behind it (VISUAL-LOG). crate_light.json's route walks down column x=13 then x=10 and stops at (10,16) facing down into the door -- moving the door's own cell would desync that script's hardcoded step counts, so per the brief this dresses AROUND the existing cell instead: one facade_plaster tile immediately east of the door, same row (11,17), never a cell the approach path crosses (path only touches x=10 southbound and x=10..13 at y=13), so it reads as the building wall the cellar is set into without the player ever visually overlapping it.",
      "sprite": "facade_plaster",
      "cell": [
       11,
@@ -1897,7 +1897,7 @@
      ]
     },
     {
-     "_comment": "Content Wave C2: Zevara Sunderscale, Drake Watch Captain, just inside the gate below the guard. Cell (2,6) sits BELOW the three gate corridors every street-route walks -- y3 (entry/forecourt), y4 (transit lane), and crate_light's y5 PHASE-D return (left-28 to (2,5)) -- verified against the passing event logs of gate_district_walkthrough/crate_talk/crate_fight/social_loop and crate_light's intended path; she blocks no walked cell. NPCs are NOT in the sim blocked set (WIGame builds blocked_cells from static `blocked`+wall segments only), so she does NOT shift gate_district_walkthrough's blocked_cells:106 assert. sprite `zevara` is a Content Wave C2 PixelLab pixflux gen (armored light-blue Drake Watch officer) -- see sprites.json + VISUAL-LOG.",
+     "_comment": "Zevara Sunderscale, Drake Watch Captain, just inside the gate below the guard. Cell (2,6) sits BELOW the three gate corridors every street-route walks -- y3 (entry/forecourt), y4 (transit lane), and crate_light's y5 PHASE-D return (left-28 to (2,5)) -- verified against the passing event logs of gate_district_walkthrough/crate_talk/crate_fight/social_loop and crate_light's intended path; she blocks no walked cell. NPCs are NOT in the sim blocked set (WIGame builds blocked_cells from static `blocked`+wall segments only), so she does NOT shift gate_district_walkthrough's blocked_cells:106 assert. sprite `zevara` is a PixelLab pixflux gen (armored light-blue Drake Watch officer) -- see sprites.json + VISUAL-LOG.",
      "id": "zevara",
      "kind": "npc",
      "cell": [
@@ -1914,7 +1914,7 @@
       "Ten years running this Watch. Six weeks of leave, total. That's the whole personality, if you were wondering.",
       "Relc's off being enormous at someone. Klbkch is... Klbkch. Somehow the gate still stands. Don't jinx it."
      ],
-     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag annotations stripped). Two stages -- she does not do three degrees of warmth on duty. Perk (watch-bounty access) is the dialogue_unlocks wired into zevara_intro.json's hub + new claimed_bounty_{crate,cisterns,warren} counters, each banked on the CLAIM option (effects live on options, never nodes).",
+     "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag annotations stripped). Two stages -- she does not do three degrees of warmth on duty. Perk (watch-bounty access) is the dialogue_unlocks wired into zevara_intro.json's hub + new claimed_bounty_{crate,cisterns,warren} counters, each banked on the CLAIM option (effects live on options, never nodes).",
      "talk_pool_stages": [
       {
        "id": "zevara_trusted_irregular",
@@ -1935,7 +1935,7 @@
      ]
     },
     {
-     "_comment": "Content Wave C2: Olesm Swifttail, Drake [Tactician]/council clerk, at the Guild frontage. Cell (29,3) is tucked by the Guild building, clear of gate_district_walkthrough's forecourt cells (25,4)/(25,5)/(26,5)/(27,5)/(27,4)/(27,3) and of crate_light's y5 pisces approach -- verified off every street-route path, and NPCs are excluded from the blocked_cells count. sprite `olesm` is a Content Wave C2 PixelLab pixflux gen (slim sky-blue Drake holding a rolled map) -- see sprites.json + VISUAL-LOG.",
+     "_comment": "Olesm Swifttail, Drake [Tactician]/council clerk, at the Guild frontage. Cell (29,3) is tucked by the Guild building, clear of gate_district_walkthrough's forecourt cells (25,4)/(25,5)/(26,5)/(27,5)/(27,4)/(27,3) and of crate_light's y5 pisces approach -- verified off every street-route path, and NPCs are excluded from the blocked_cells count. sprite `olesm` is a PixelLab pixflux gen (slim sky-blue Drake holding a rolled map) -- see sprites.json + VISUAL-LOG.",
      "id": "olesm",
      "kind": "npc",
      "cell": [
@@ -1953,7 +1953,7 @@
       "Supply lines, sightlines, morale: a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak.",
       "Selys works the desk inside now, board and all. I still find reasons to linger out here more than the job requires. The paperwork doesn't ask why."
      ],
-     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/olesm_stages.json (staging_note/_flag annotations stripped). Three stages. The chess-beat perk (stage 3, olesm_board_partner) is FLAGGED unbuilt this wave (the match copy itself is a follow-up writing task per the staging doc) -- only the stage rows + hub topic unlocks ship.",
+     "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/olesm_stages.json (staging_note/_flag annotations stripped). Three stages. The chess-beat perk (stage 3, olesm_board_partner) is FLAGGED unbuilt this wave (the match copy itself is a follow-up writing task per the staging doc) -- only the stage rows + hub topic unlocks ship.",
      "talk_pool_stages": [
       {
        "id": "olesm_worth_interrupting_a_tally",
@@ -1983,7 +1983,7 @@
      ]
     },
     {
-     "_comment": "M-DEPTH DP4: the Watch post facade (roof/facade decor already at (22,1)/(22,2)) becomes a REAL door -- the barracks interior is now enterable. The old flavor NPC that stood here (`watch_guard`, display_name 'Watch Guard', a static single-line dialogue with ZERO canonical QA touches -- confirmed by grep before this change) is RELOCATED into the barracks interior as the profiled Duty Sergeant (`duty_sergeant`, docs/design/character-profiles.md), same as this task's precedent for a zero-risk silent move (no re-pathing needed anywhere, unlike Selys's DP1 relocation). Zevara Sunderscale herself stays at the gate (2,6) -- zevara_intro's own framing is unchanged; only her DESK lives in the barracks now. to_cell (2,6) lands one cell north of barracks_exit (2,7), same offset convention as guild_door/guild_exit.",
+     "_comment": "The Watch post facade (roof/facade decor already at (22,1)/(22,2)) becomes a REAL door -- the barracks interior is now enterable. The old flavor NPC that stood here (`watch_guard`, display_name 'Watch Guard', a static single-line dialogue with ZERO canonical QA touches -- confirmed by grep before this change) is RELOCATED into the barracks interior as the profiled Duty Sergeant (`duty_sergeant`, docs/design/character-profiles.md), a zero-risk silent move (no re-pathing needed anywhere, unlike Selys's own relocation). Zevara Sunderscale herself stays at the gate (2,6) -- zevara_intro's own framing is unchanged; only her DESK lives in the barracks now. to_cell (2,6) lands one cell north of barracks_exit (2,7), same offset convention as guild_door/guild_exit.",
      "id": "barracks_door",
      "kind": "door",
      "cell": [
@@ -2000,7 +2000,7 @@
      "on_enter_accomplishment": "visited_barracks"
     },
     {
-     "_comment": "M-DEPTH DP4: market-depth stall 1 of 2, flavor/observe only (no buy) -- pays off Pisces's existing street line ('The bread stall raises its prices after the fourth bell. Buy before.') with an actual entity, rather than leaving that a dangling reference to nothing on the map. Placed in the market row (x10-19,y1-2 per the street's own zone comment), west of krshia_stall/krshia so the row reads as a continuous market rather than one shopkeeper's island. Sprite is `food_basket` (the SAME base sprite krshia_stall already uses -- confirmed by a windowed read that `food_bread`'s own anchor ([0.5,1.5] in sprites.json) is authored for TABLETOP dressing paired with a table_brown decor cell, e.g. the inn's (7,6), never a lone floor-standing entity; using it directly here rendered wrong), differentiated by a warm wheat-gold `tint` -- the exact frozen_cache/sewer_debris precedent (both reuse `crate`, told apart by tint alone).",
+     "_comment": "Market-depth stall 1 of 2, flavor/observe only (no buy) -- pays off Pisces's existing street line ('The bread stall raises its prices after the fourth bell. Buy before.') with an actual entity, rather than leaving that a dangling reference to nothing on the map. Placed in the market row (x10-19,y1-2 per the street's own zone comment), west of krshia_stall/krshia so the row reads as a continuous market rather than one shopkeeper's island. Sprite is `food_basket` (the SAME base sprite krshia_stall already uses -- confirmed by a windowed read that `food_bread`'s own anchor ([0.5,1.5] in sprites.json) is authored for TABLETOP dressing paired with a table_brown decor cell, e.g. the inn's (7,6), never a lone floor-standing entity; using it directly here rendered wrong), differentiated by a warm wheat-gold `tint` -- the exact frozen_cache/sewer_debris precedent (both reuse `crate`, told apart by tint alone).",
      "id": "bread_stall",
      "kind": "prop",
      "cell": [
@@ -2015,7 +2015,7 @@
      "toast": "Warm bread smell over the whole row. No one's minding the stall this exact moment. The loaves aren't going anywhere without a fight."
     },
     {
-     "_comment": "M-DEPTH DP4: market-depth stall 2 of 2, the mini-buy surface -- an unnamed Peddler (title only, matching the gate_guard/watch_guard convention, profile in docs/design/character-profiles-staging.md) selling ONE item, watch_issue_gambeson (now priced 20g -- see items.json _comment_price), via conversation graph data/dialogue/peddler_stall.json (krshia_crate.json's exact buy contract). Placed at the east end of the market row, close to the Watch post/barracks -- thematically apt for Watch-surplus gear.",
+     "_comment": "Market-depth stall 2 of 2, the mini-buy surface -- an unnamed Peddler (title only, matching the gate_guard/watch_guard convention, profile in docs/design/character-profiles-staging.md) selling ONE item, watch_issue_gambeson (now priced 20g -- see items.json _comment_price), via conversation graph data/dialogue/peddler_stall.json (krshia_crate.json's exact buy contract). Placed at the east end of the market row, close to the Watch post/barracks -- thematically apt for Watch-surplus gear.",
      "id": "peddler",
      "kind": "npc",
      "cell": [
@@ -2053,7 +2053,7 @@
      "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere. A sign says she remembers faces, and debts."
     },
     {
-     "_comment": "M-DEPTH DP1: guild_door converts from a toast prop to a REAL door -- the Guild interior is now enterable. The old toast (\"The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today.\") is RETIRED (the player now walks in and sees the real hall; gate_district_walkthrough's pin moved from a toast-wait to the map_changed/ui_map_rendered transition -- see its _comment). door_when is NOT needed (the Guild is public, per plan). on_enter_accomplishment keeps the SAME accomplishment id (visited_guild) so every script asserting it still passes unchanged. to_cell (8,10) lands just inside, facing up into the hall, one cell north of the guild_exit door (8,11) -- never lands ON the exit door's own occupied cell.",
+     "_comment": "Guild_door converts from a toast prop to a REAL door -- the Guild interior is now enterable. The old toast (\"The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today.\") is RETIRED (the player now walks in and sees the real hall; gate_district_walkthrough's pin moved from a toast-wait to the map_changed/ui_map_rendered transition -- see its _comment). door_when is NOT needed (the Guild is public, per plan). on_enter_accomplishment keeps the SAME accomplishment id (visited_guild) so every script asserting it still passes unchanged. to_cell (8,10) lands just inside, facing up into the hall, one cell north of the guild_exit door (8,11) -- never lands ON the exit door's own occupied cell.",
      "id": "guild_door",
      "kind": "door",
      "cell": [
@@ -2070,7 +2070,7 @@
      "on_enter_accomplishment": "visited_guild"
     },
     {
-     "_comment": "M-DEPTH DP5: runners_guild_door converts a previously-decorative background building (roof/facade at (19,15)/(21,15)/(19,16)/(21,16), the SAME aligned-roof-pair convention M-BEAUTY R2 gave the guild's own facade) into a real door -- the Runner's Guild is now enterable. Placed one row south of the facade block (y=17), centered between the two facade columns (19/21), matching guild_door's own midpoint-between-two-roofs placement (28 between 27/29). Blast radius checked clear: no canonical script's street route touches x=18-21/y=15-17 (the crate-quest detour only ever walks x=10-13 at y13-16; watch_sergeant/crate_scavengers/supplier_scavengers all sit west of x=17). to_cell (5,6) lands one cell north of runners_guild_exit (5,7), the same offset convention as guild_door/barracks_door.",
+     "_comment": "Runners_guild_door converts a previously-decorative background building (roof/facade at (19,15)/(21,15)/(19,16)/(21,16), the SAME aligned-roof-pair convention the guild's own facade already uses) into a real door -- the Runner's Guild is now enterable. Placed one row south of the facade block (y=17), centered between the two facade columns (19/21), matching guild_door's own midpoint-between-two-roofs placement (28 between 27/29). Blast radius checked clear: no canonical script's street route touches x=18-21/y=15-17 (the crate-quest detour only ever walks x=10-13 at y13-16; watch_sergeant/crate_scavengers/supplier_scavengers all sit west of x=17). to_cell (5,6) lands one cell north of runners_guild_exit (5,7), the same offset convention as guild_door/barracks_door.",
      "id": "runners_guild_door",
      "kind": "door",
      "cell": [
@@ -2087,7 +2087,7 @@
      "on_enter_accomplishment": "visited_runners_guild"
     },
     {
-     "_comment": "Onboarding rev O4: Pisces Jealnv (Human [Necromancer], canon -- Horns of Hammerad). Guild frontage (30,4), east of guild_door (28,3), clear of gate_district_walkthrough's forecourt approach cells (27,3/27,4/27,5/26,5/25,5). Track B1 (2026-07-06): bespoke PixelLab sprite (hooded young human in immaculate white robes with faded trim + sash), replacing the earlier citizen_f cool-white-tint stand-in. Teaches magic via the pisces_magic graph; mage.gained_by keys to its learned_magic_from_pisces bank.",
+     "_comment": "Pisces Jealnv (Human [Necromancer], canon -- Horns of Hammerad). Guild frontage (30,4), east of guild_door (28,3), clear of gate_district_walkthrough's forecourt approach cells (27,3/27,4/27,5/26,5/25,5). Bespoke PixelLab sprite (hooded young human in immaculate white robes with faded trim + sash), replacing the earlier citizen_f cool-white-tint stand-in. Teaches magic via the pisces_magic graph; mage.gained_by keys to its learned_magic_from_pisces bank.",
      "id": "pisces",
      "kind": "npc",
      "cell": [
@@ -2105,7 +2105,7 @@
       "Yes, a [Necromancer]. No, I will not apologize for a competence others lack the wit to appreciate.",
       "Do continue standing there. I find the silence rather more edifying than most conversation."
      ],
-     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/pisces_stages.json (staging_note/_flag annotations stripped). Two stages -- he only ever thaws to 'tolerable'. NO spec-default perk (the staging doc explicitly says build nothing -- the duelist's-drill/gift proposal ships as an open flag, not code) -- only the stage row + the hard-railed hub topic unlock ship.",
+     "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/pisces_stages.json (staging_note/_flag annotations stripped). Two stages -- he only ever thaws to 'tolerable'. NO spec-default perk (the staging doc explicitly says build nothing -- the duelist's-drill/gift proposal ships as an open flag, not code) -- only the stage row + the hard-railed hub topic unlock ship.",
      "talk_pool_stages": [
       {
        "id": "pisces_tolerable_company",
@@ -2117,7 +2117,7 @@
        ]
       },
       {
-       "_comment": "Magical Door plan Task D4 (issue #8, spec §5.1: 'Pisces studies at the inn over N sleeps -- opaque-until-sleep: his talk-pool stages shift, zero progress text'). TWO stages, gated on the hidden `door_study_sleeps` counter (wi_game.gd's sleep()-beat hook, banked once all three of D3's beat-3 counters are held) -- the talk_pool_stages idiom itself (social.gd walks the array in AUTHORED order, last-met-wins), appended AFTER pisces_tolerable_company so an active study period reads as the more current topic even for a player who already reached 'tolerable company'. Zero numbers, zero fractions -- opacity holds.",
+       "_comment": "Pisces studies at the inn over N sleeps -- opaque-until-sleep: his talk-pool stages shift, zero progress text. TWO stages, gated on the hidden `door_study_sleeps` counter (wi_game.gd's sleep()-beat hook, banked once the ruin-recovery chain's beat-3 counters are held) -- the talk_pool_stages idiom itself (social.gd walks the array in AUTHORED order, last-met-wins), appended AFTER pisces_tolerable_company so an active study period reads as the more current topic even for a player who already reached 'tolerable company'. Zero numbers, zero fractions -- opacity holds.",
        "id": "pisces_door_study_1",
        "requires_accomplishment": { "door_study_sleeps": 1 },
        "lines": [
@@ -2152,7 +2152,7 @@
      "observe": "Rust holds the bars, not a lock. The draft is steady — a tunnel, not a pit. The skittering keeps its distance. Something down there has learned to avoid shadows.",
      "on_interact_accomplishment": "heard_the_sewers",
      "toast": "A heavy iron grate, rusted shut. Cold air rises from below, and something in the dark skitters away from your shadow.",
-     "_comment_door_when": "Content Wave C1 grate-gate seam. Until `heard_about_cisterns` is banked (C3 banks it from Olesm), door_when's gate is UNMET and interact falls through to the on_interact_accomplishment branch above -- BYTE-IDENTICAL to the pre-quest behavior asserted by gate_district_walkthrough (heard_the_sewers + the exact toast). Once banked, the same interact hauls the grate open and descends: emits the `open_toast`, then transitions to the sewers landing. See wi_game.gd interact()'s prop branch + `_door_gate_met`.",
+     "_comment_door_when": "The grate-gate seam. Until `heard_about_cisterns` is banked (from Olesm), door_when's gate is UNMET and interact falls through to the on_interact_accomplishment branch above -- BYTE-IDENTICAL to the pre-quest behavior asserted by gate_district_walkthrough (heard_the_sewers + the exact toast). Once banked, the same interact hauls the grate open and descends: emits the `open_toast`, then transitions to the sewers landing. See wi_game.gd interact()'s prop branch + `_door_gate_met`.",
      "door_when": {
       "requires": {
        "heard_about_cisterns": 1
@@ -2198,7 +2198,7 @@
       "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
       "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
      ],
-     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/krshia_stages.json (staging_note/_flag annotations stripped). Three stages -- crate_returned accrues TODAY (pool shipped), so stage 2 goes live the moment the seam lands. Stage 3's shop-discount perk is wired into krshia_crate.json's 'shop' node (4 stage-gated duplicate buy options + hide_when-retired full-price rows); the necklace-reveal hub topic (krshia_plans) is the OBLIQUE canon version -- never says 'spellbook' (user gate, see HANDOFF).",
+     "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/krshia_stages.json (staging_note/_flag annotations stripped). Three stages -- crate_returned accrues TODAY (pool shipped), so stage 2 goes live the moment the seam lands. Stage 3's shop-discount perk is wired into krshia_crate.json's 'shop' node (4 stage-gated duplicate buy options + hide_when-retired full-price rows); the necklace-reveal hub topic (krshia_plans) is the OBLIQUE canon version -- never says 'spellbook' (user gate, see HANDOFF).",
      "talk_pool_stages": [
       {
        "id": "krshia_fair_weight",
@@ -2254,7 +2254,7 @@
      ]
     },
     {
-     "_comment": "Content Wave C4 (Q2 FIGHT-adjacent path): the supplier's scavenger problem -- a NEW street encounter reusing the goblin_raider pair + goblin_ambush arena EXACTLY like crate_scavengers (crate precedent), so no new balance-harness cells are needed (identical, already-measured composition). Interact-only (no trigger_radius), placed at the far south-west market corner (5,16) clear of the crate cluster (crate_scavengers 12,16 / cellar_door 10,17 / watch_sergeant 17,12) and off gate_district's y2-5 lanes. Clearing it banks `strongarmed_the_supplier` + the shared `resolved_wrong_order` (beat 1 fires in combat). Encounters are excluded from blocked_cells (static+segments only) and no street script asserts a street entity count, so this is a silent street add.",
+     "_comment": "The supplier's scavenger problem -- a NEW street encounter reusing the goblin_raider pair + goblin_ambush arena EXACTLY like crate_scavengers (crate precedent), so no new balance-harness cells are needed (identical, already-measured composition). Interact-only (no trigger_radius), placed at the far south-west market corner (5,16) clear of the crate cluster (crate_scavengers 12,16 / cellar_door 10,17 / watch_sergeant 17,12) and off gate_district's y2-5 lanes. Clearing it banks `strongarmed_the_supplier` + the shared `resolved_wrong_order` (beat 1 fires in combat). Encounters are excluded from blocked_cells (static+segments only) and no street script asserts a street entity count, so this is a silent street add.",
      "id": "supplier_scavengers",
      "kind": "encounter",
      "cell": [
@@ -2322,7 +2322,7 @@
      ]
     },
     {
-     "_comment": "Magical Door plan Task D4 (issue #8, spec §5.5 the anchor-stone-per-region idiom): Liscor's OWN end of the fast-travel pair, pairing with the inn's `pantry_door`. Placed at (30,10) -- the open mid-street cell east of the guild/Pisces cluster (26-30,1-4), well clear of every `blocked` cell, wall segment (all 3 sit near x0/y0 borders), decor, and entity cell on this map (cross-checked against the full street entity/decor/blocked/walls listing before placement -- the D1 pantry_door blast-radius discipline; re-verified live via the full canonical sweep, see the D4 report). Ships default + awakened `visual_states` ONLY -- no flicker/chain-started state, unlike pantry_door: v1's Liscor pair is the player's EXISTING home region (the door awakening attunes both ends of ITS OWN connection at once), not a NEW region earning its own attunement beat -- the anchor-stone-per-region idiom's first genuinely NEW instance is a future region milestone's job (#10/#12/#16), which pairs a fresh anchor with its OWN attunement accomplishment in data/portals.json, zero code. Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate/ruin_door VISUAL-LOG precedent for a not-yet-bespoke gated prop) with the SAME amber awakened tint as pantry_door (spec §2: 'Liscor amber' is the only live destination color v1 ships).",
+     "_comment": "Liscor's OWN end of the fast-travel pair, pairing with the inn's `pantry_door`. Placed at (30,10) -- the open mid-street cell east of the guild/Pisces cluster (26-30,1-4), well clear of every `blocked` cell, wall segment (all 3 sit near x0/y0 borders), decor, and entity cell on this map (cross-checked against the full street entity/decor/blocked/walls listing before placement, same blast-radius discipline as pantry_door). Ships default + awakened `visual_states` ONLY -- no flicker/chain-started state, unlike pantry_door: v1's Liscor pair is the player's EXISTING home region (the door awakening attunes both ends of ITS OWN connection at once), not a NEW region earning its own attunement beat -- the anchor-stone-per-region idiom's first genuinely NEW instance is a future region milestone's job (#10/#12/#16), which pairs a fresh anchor with its OWN attunement accomplishment in data/portals.json, zero code. Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate/ruin_door VISUAL-LOG precedent for a not-yet-bespoke gated prop) with the SAME amber awakened tint as pantry_door (spec §2: 'Liscor amber' is the only live destination color v1 ships).",
      "id": "street_anchor_stone",
      "kind": "prop",
      "cell": [30, 10],
@@ -2346,14 +2346,14 @@
     "width": 40,
     "height": 26
    },
-   "_comment_freezable": "Skills Wave Task K1 (freezable-water seam, the pond-secret crossing): (10,17) is the north edge of the fishing-pond blocking rect (x7-13, y17-21 walls.segments). It is already impassable water, so unfrozen it changes NOTHING for any floodplains route (every ambush/Relc/gate lane is unchanged -- confirmed off the pond). Approaching from the open floor at (10,16) and casting [Snap Freeze] freezes it into walkable ice; stepping onto it and facing down reaches the `frozen_cache` prop at (10,18) (pond interior, otherwise unreachable). The 'secret' is that only a cold-caster can cross the water to it. Ice thaws at sleep. No QA drives this (the seam is proven by sewers_walkthrough); it ships as reachable content.",
+   "_comment_freezable": "(10,17) is the north edge of the fishing-pond blocking rect (x7-13, y17-21 walls.segments). It is already impassable water, so unfrozen it changes NOTHING for any floodplains route (every ambush/Relc/gate lane is unchanged -- confirmed off the pond). Approaching from the open floor at (10,16) and casting [Snap Freeze] freezes it into walkable ice; stepping onto it and facing down reaches the `frozen_cache` prop at (10,18) (pond interior, otherwise unreachable). The 'secret' is that only a cold-caster can cross the water to it. Ice thaws at sleep. No QA drives this (the seam is proven by sewers_walkthrough); it ships as reachable content.",
    "freezable": [
     [
      10,
      17
     ]
    ],
-   "_comment": "World environment (consultant design 2026-07-03 + controller integration). Reachable via the walkable inn_door route (M-FP Q1 door-retarget: inn_door -> floodplains (7,6); floodplains_peek was retired once this route landed, see CLAUDE.md). POI anchors: fishing-pond (13,18) [consultant's (12,18) was inside the pond blocking row], ruin-stones interact (31,7). Onboarding rev Task O2 (spec §3): `goblin_encounter_1` relocated from (21,12) to (30,23) with `trigger_radius: 2` -- the wall `segments` at y=25 block every column except x=31 (`liscor_gate`'s own cell), so (31,24) is the UNIQUE open cell from which the gate can be reached/interacted -- and (31,24) sits inside the 5x5 Chebyshev-2 square around (30,23) (x:[28,32], y:[21,25]). Any 4-directional path from outside that square to (31,24) (which lies inside it) must enter the square before arriving, so no route to `liscor_gate` avoids the ambush -- see the O2 report's BFS proof. `goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
+   "_comment": "World environment. Reachable via the walkable inn_door route (inn_door -> floodplains (7,6); floodplains_peek was retired once this route landed, see CLAUDE.md). POI anchors: fishing-pond (13,18), ruin-stones interact (31,7). `goblin_encounter_1` sits at (30,23) with `trigger_radius: 2` -- the wall `segments` at y=25 block every column except x=31 (`liscor_gate`'s own cell), so (31,24) is the UNIQUE open cell from which the gate can be reached/interacted -- and (31,24) sits inside the 5x5 Chebyshev-2 square around (30,23) (x:[28,32], y:[21,25]). Any 4-directional path from outside that square to (31,24) (which lies inside it) must enter the square before arriving, so no route to `liscor_gate` avoids the ambush (BFS-proven). `goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
    "blocked": [
     [
      5,
@@ -3144,7 +3144,7 @@
    ],
    "scatter": [
     {
-     "_comment": "M-BEAUTY Task B3: sway tagged on the whole spec (not split by sprite id) to avoid re-seeding the scatter presence hash, which would move WHICH cells host which prop and break the day-shot 'all else identical' contract -- the pebble instances in this mixed pool also get the shader at the shared subtle default amplitude, imperceptible in practice (see world.gd's _build_scatter comment / task-b3-report.md).",
+     "_comment": "Sway tagged on the whole spec (not split by sprite id) to avoid re-seeding the scatter presence hash, which would move WHICH cells host which prop and break the day-shot 'all else identical' contract -- the pebble instances in this mixed pool also get the shader at the shared subtle default amplitude, imperceptible in practice (see world.gd's _build_scatter comment / task-b3-report.md).",
      "pool": [
       "grass_tuft",
       "pebble",
@@ -3165,7 +3165,7 @@
      "sway": true
     }
    ],
-   "_comment_ambience": "M-BEAUTY Task B3: fireflies + pond_glints share the same rect -- a bounding box over the pond's water-segment cells (walls.segments rows y=17-21, x=7-13, see the walls block above) plus one cell of margin so fireflies read as hovering around/above the water, not clipped to exactly the water tiles.",
+   "_comment_ambience": "Fireflies + pond_glints share the same rect -- a bounding box over the pond's water-segment cells (walls.segments rows y=17-21, x=7-13, see the walls block above) plus one cell of margin so fireflies read as hovering around/above the water, not clipped to exactly the water tiles.",
    "ambience": [
     {
      "preset": "fireflies",
@@ -3211,7 +3211,7 @@
      ]
     },
     {
-     "_comment": "Task 7c (No Killing Goblins seed, Parts 1+2): the inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: art-wiring task (2026-07-07) closed the VISUAL-LOG stand-in flag with a bespoke PixelLab signpost (a text-free wooden post + hanging plank, `assets/sprites/inn_sign/Idle-Sheet.png`) -- the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text). Previously a hanging wood-plank-on-chains crop from Furniture.png (same sheet as door/crate/unlit_lantern), now retired. Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
+     "_comment": "The inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: a bespoke PixelLab signpost (a text-free wooden post + hanging plank, `assets/sprites/inn_sign/Idle-Sheet.png`) -- the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text). Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
      "id": "inn_sign",
      "kind": "prop",
      "cell": [
@@ -3225,7 +3225,7 @@
      "observe": "The paint is newer than the post it hangs on. Somebody meant it, and means it still."
     },
     {
-     "_comment": "Skills Wave Task K1 (the pond-secret payoff): a lost cache on the pond floor at (10,18), inside the fishing-pond blocking rect and thus unreachable UNLESS the player frost-freezes the pond edge (10,17) and steps onto the ice to interact it (see the floodplains `freezable` list). Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast. Sits on an already-blocked pond cell, so it alters no route and no script reaches or asserts it. Sprite `crate` stands in for a silt-buried strongbox (VISUAL-LOG flag). A future economy pass can hang gold/an item off this discovery.",
+     "_comment": "A lost cache on the pond floor at (10,18), inside the fishing-pond blocking rect and thus unreachable UNLESS the player frost-freezes the pond edge (10,17) and steps onto the ice to interact it (see the floodplains `freezable` list). Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast. Sits on an already-blocked pond cell, so it alters no route and no script reaches or asserts it. Sprite `crate` stands in for a silt-buried strongbox (VISUAL-LOG flag). A future economy pass can hang gold/an item off this discovery.",
      "id": "frozen_cache",
      "kind": "prop",
      "cell": [
@@ -3244,7 +3244,7 @@
      "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, dry against all odds, a few keepsakes someone drowned here meant never to be found."
     },
     {
-     "_comment": "M-ARC Task A1: `on_enter_accomplishment` banks `reached_liscor` on door travel INTO the street (the Act I gate's street-arrival counter -- nothing banked first-liscor-entry before). Fires ONLY on real door interaction (the `door` branch of interact()), never on QA teleport or save/load restore (those use bind_map_silent/transition without the entity), so a load can never spuriously advance the act. record_accomplishment is idempotent for gate purposes (>= 1). DISCLOSURE: every canonical script that walks floodplains -> liscor_gate -> street now carries reached_liscor:1 in its snapshot (additive counter; no script asserts an exact accomplishments dict).",
+     "_comment": "`on_enter_accomplishment` banks `reached_liscor` on door travel INTO the street (the Act I gate's street-arrival counter). Fires ONLY on real door interaction (the `door` branch of interact()), never on QA teleport or save/load restore (those use bind_map_silent/transition without the entity), so a load can never spuriously advance the act. record_accomplishment is idempotent for gate purposes (>= 1). DISCLOSURE: every canonical script that walks floodplains -> liscor_gate -> street now carries reached_liscor:1 in its snapshot (additive counter; no script asserts an exact accomplishments dict).",
      "id": "liscor_gate",
      "kind": "door",
      "cell": [
@@ -3393,7 +3393,7 @@
      "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it. Including you, now.",
      "friendly_line": "Heh. Alright, alright - I like you. You've got the look of someone who buys a guy a drink after. We're good, you and me. Best guardsman in Liscor says so.",
      "facing": "left",
-     "_comment_stages": "Social Pillar II Phase C: talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the relc_intro.json meet-topic unlocks (relc_army/relc_after) lifted verbatim from docs/design/social-2-staging/relc_stages.json after the re-path wave went green. relc_after's daughter/Embria reveal stays OUT (V5 canon, hard rail -- the staged oblique 'people I left in it' copy is what ships). Stage 3's spar-wager perk refinement stays UNBUILT/flagged (status quo: relc_spar already re-offers).",
+     "_comment_stages": "Talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the relc_intro.json meet-topic unlocks (relc_army/relc_after) lifted verbatim from docs/design/social-2-staging/relc_stages.json after the re-path wave went green. relc_after's daughter/Embria reveal stays OUT (V5 canon, hard rail -- the staged oblique 'people I left in it' copy is what ships). Stage 3's spar-wager perk refinement stays UNBUILT/flagged (status quo: relc_spar already re-offers).",
      "talk_pool": [
       "Heh. You walk like nobody's ever hit you properly. We should fix that sometime - for fun.",
       "Road's boring today. I keep hoping something stupid charges the gate so I can try out [Relc Headbutt].",
@@ -3465,7 +3465,7 @@
      ]
     },
     {
-     "_comment": "Magical Door plan Task D1 (issue #8 spec §5.2: 'the recovery run lives in a small DEDICATED ruin map family'). LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the new `ruin_surface` map below, the inside half). Gate `door_when.requires: {door_chain_started: 1}` (D3's Erin dialogue banks it at beat 1) -- until then interact falls through to the on_interact_accomplishment/toast branch below, the sewer_grate/deep_fissure pre-gate precedent (byte-identical fallback, no route change for any existing script). Placed at floodplains (38,11), inside the open grass_03 patch (33-38,9-14) -- confirmed off EVERY canonical floodplains route: a full replay of every qa/scripts/*.json's move/press/teleport sequence (blocked-cell-aware, starting from each script's real entry -- its fixture start where one exists, else the universal (7,6) door-arrival cell) showed every route that crosses the chieftains_raid/liscor_gate corridor caps out at x<=31 (tutorial_flow's 'right 18' from (12,6) lands x=30; quest_errand_fight/gate_district_walkthrough/combat_walkthrough/economy_loop all share that same capped-at-x31 shape) -- x=38 is walked and faced by nothing today. Well clear of the tree_big(36,10)/tree_round(35,15) decor and every other floodplains entity (chieftains_raid 31,7 / goblin_encounter_2 28,18 / relc 12,13 / relc_spar 13,12 / frozen_cache 10,18 / ruin_stones 3,8 / inn_sign 6,6). Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate VISUAL-LOG precedent for a not-yet-bespoke gated-entrance prop -- a real ruin-entrance crop is lane γ's job).",
+     "_comment": "The recovery run lives in a small DEDICATED ruin map family. LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the `ruin_surface` map below, the inside half). Gate `door_when.requires: {door_chain_started: 1}` (Erin's dialogue banks it at beat 1) -- until then interact falls through to the on_interact_accomplishment/toast branch below, the sewer_grate/deep_fissure pre-gate precedent (byte-identical fallback, no route change for any existing script). Placed at floodplains (38,11), inside the open grass_03 patch (33-38,9-14) -- confirmed off EVERY canonical floodplains route: a full replay of every qa/scripts/*.json's move/press/teleport sequence (blocked-cell-aware, starting from each script's real entry -- its fixture start where one exists, else the universal (7,6) door-arrival cell) showed every route that crosses the chieftains_raid/liscor_gate corridor caps out at x<=31 (tutorial_flow's 'right 18' from (12,6) lands x=30; quest_errand_fight/gate_district_walkthrough/combat_walkthrough/economy_loop all share that same capped-at-x31 shape) -- x=38 is walked and faced by nothing today. Well clear of the tree_big(36,10)/tree_round(35,15) decor and every other floodplains entity (chieftains_raid 31,7 / goblin_encounter_2 28,18 / relc 12,13 / relc_spar 13,12 / frozen_cache 10,18 / ruin_stones 3,8 / inn_sign 6,6). Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate VISUAL-LOG precedent for a not-yet-bespoke gated-entrance prop -- a real ruin-entrance crop is lane γ's job).",
      "id": "ruin_door",
      "kind": "prop",
      "cell": [38, 11],
@@ -3485,14 +3485,14 @@
    ]
   },
   "sewers": {
-   "_comment": "Content Wave C1: the Liscor sewers (~20x14, cave biome). Entered from the street `sewer_grate` prop once `heard_about_cisterns` is banked (C3 banks it from Olesm) -- see the door_when seam on that prop + wi_game.gd's prop-interact branch. Water channels are walls.segments on the free_pack Water_tiles sheet, so world.gd's `_build_water_shimmer` paints the shimmer overlay automatically (sheet-match) AND they block movement (segment_cells joins the sim blocked set). Left (x0-2) and right (x17-19) walkways cross the two channels. Dark mood pin lives in data/moods.json; lights glow at dusk/night (light_energy_by_phase day=0.0), while the always-on pond_glints/dust ambience carries the day-phase atmosphere.",
+   "_comment": "The Liscor sewers (~20x14, cave biome). Entered from the street `sewer_grate` prop once `heard_about_cisterns` is banked (C3 banks it from Olesm) -- see the door_when seam on that prop + wi_game.gd's prop-interact branch. Water channels are walls.segments on the free_pack Water_tiles sheet, so world.gd's `_build_water_shimmer` paints the shimmer overlay automatically (sheet-match) AND they block movement (segment_cells joins the sim blocked set). Left (x0-2) and right (x17-19) walkways cross the two channels. Dark mood pin lives in data/moods.json; lights glow at dusk/night (light_energy_by_phase day=0.0), while the always-on pond_glints/dust ambience carries the day-phase atmosphere.",
    "biome": "cave",
    "grid": {
     "width": 20,
     "height": 14
    },
    "blocked": [],
-   "_comment_freezable": "Skills Wave Task K1 (freezable-water seam): the channel-A/B cells at column x=3 the frost skill can turn to walkable ice, making a vertical SHORTCUT down the left side from the top band straight through both channels to the mid/lower bands (otherwise you must go around via the y11 row). Both are already blocked water (they sit under the channel walls.segments), so unfrozen they are byte-identical to today -- no route changes for any script that never casts frost here. Frozen ice thaws at the next sleep. sewers_walkthrough demos freezing (3,5).",
+   "_comment_freezable": "The channel-A/B cells at column x=3 the frost skill can turn to walkable ice, making a vertical SHORTCUT down the left side from the top band straight through both channels to the mid/lower bands (otherwise you must go around via the y11 row). Both are already blocked water (they sit under the channel walls.segments), so unfrozen they are byte-identical to today -- no route changes for any script that never casts frost here. Frozen ice thaws at the next sleep. sewers_walkthrough demos freezing (3,5).",
    "freezable": [
     [
      3,
@@ -3652,7 +3652,7 @@
      }
     },
     {
-     "_comment": "Skills Wave Task K1 (burnable-prop seam): a collapsed pile of rotten timber and tar-soaked rope blocking the dead-end side-nook WEST of the ladder (x0-1, off every canonical route -- cisterns/deep_descent only tread the x2 column and the y11 row, never x0-1, so this prop changes no other script's pathing or entity assertions). `burnable: true` is the ONLY tag the fire field seam keys on; facing it and casting [Firefly] removes it permanently (removed_entities, saved) and clears the nook. NOT a quest prop -- burning it costs nothing but the passage. Sprite `crate` is a debris stand-in (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
+     "_comment": "A collapsed pile of rotten timber and tar-soaked rope blocking the dead-end side-nook WEST of the ladder (x0-1, off every canonical route -- cisterns/deep_descent only tread the x2 column and the y11 row, never x0-1, so this prop changes no other script's pathing or entity assertions). `burnable: true` is the ONLY tag the fire field seam keys on; facing it and casting [Firefly] removes it permanently (removed_entities, saved) and clears the nook. NOT a quest prop -- burning it costs nothing but the passage. Sprite `crate` is a debris stand-in (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
      "id": "sewer_debris",
      "kind": "prop",
      "cell": [
@@ -3759,7 +3759,7 @@
      ]
     },
     {
-     "_comment": "The Shield Spider nest -- Quest 1 'Something in the Cisterns' FIGHT path (C3 wires the quest; on_victory banks cleared_the_nest for C3 to read). Interact-only (no trigger_radius) so C3's SKILL path can [Appraise Foe] the nest without triggering combat. M-GEAR Task G2 (HAZARD 2): phosphor_pendant loot rides the sewers-phosphor prop fiction. This encounter carried NO loot table before G2 (confirmed by grep), so the new table is purely additive -- no prior loot draw exists at any pinned seed for this entity to disturb. Loot RNG is isolated (hash(run_seed, encounter_id), M7), so this can never shift the main event stream or any OTHER encounter's draw. Chance 0.3 is a G2 pick (the staging doc names the source but not a chance value) -- mid-range between the shipped 0.25/0.5 precedents.",
+     "_comment": "The Shield Spider nest -- Quest 1 'Something in the Cisterns' FIGHT path (C3 wires the quest; on_victory banks cleared_the_nest for C3 to read). Interact-only (no trigger_radius) so C3's SKILL path can [Appraise Foe] the nest without triggering combat. Phosphor_pendant loot rides the sewers-phosphor prop fiction. This encounter carried NO loot table before G2 (confirmed by grep), so the new table is purely additive -- no prior loot draw exists at any pinned seed for this entity to disturb. Loot RNG is isolated (hash(run_seed, encounter_id), M7), so this can never shift the main event stream or any OTHER encounter's draw. Chance 0.3 is a G2 pick (the staging doc names the source but not a chance value) -- mid-range between the shipped 0.25/0.5 precedents.",
      "id": "shield_spiders",
      "kind": "encounter",
      "cell": [
@@ -3792,7 +3792,7 @@
      ]
     },
     {
-     "_comment": "Content Wave C3 Quest 1 SKILL path: the walkway ledge overlooking the Shield Spider nest. Mirrors the crate quest's cellar_door [Light] shape -- `requires_skill: observe` + `on_skill_use` banks `scouted_the_nest` deterministically (single accomplishment, zero rng). Both interact (E, facing it -> interact()'s prop branch use_skill('observe', id) fallback) and the field [Appraise Foe] hotbar (use_skill_field -> the requires_skill==observe && on_skill_use branch) route through the SAME use_skill seam, so the bank + toast are identical either way; the generic observe-string path never fires for this prop (the requires_skill+on_skill_use branch is checked first). `locked_toast` gates gracefully when [Appraise Foe] is unknown (no skill-name leak). Placed at (17,10) on the right walkway, one cell east of the open nest floor -- reachable WITHOUT interacting the interact-only shield_spiders at (15,10), so scouting never trips the fight. Sprite `boulder` is a stand-in (a broken brick lip) consistent with the drainage_marker; VISUAL-LOG flag.",
+     "_comment": "Quest 1 SKILL path: the walkway ledge overlooking the Shield Spider nest. Mirrors the crate quest's cellar_door [Light] shape -- `requires_skill: observe` + `on_skill_use` banks `scouted_the_nest` deterministically (single accomplishment, zero rng). Both interact (E, facing it -> interact()'s prop branch use_skill('observe', id) fallback) and the field [Appraise Foe] hotbar (use_skill_field -> the requires_skill==observe && on_skill_use branch) route through the SAME use_skill seam, so the bank + toast are identical either way; the generic observe-string path never fires for this prop (the requires_skill+on_skill_use branch is checked first). `locked_toast` gates gracefully when [Appraise Foe] is unknown (no skill-name leak). Placed at (17,10) on the right walkway, one cell east of the open nest floor -- reachable WITHOUT interacting the interact-only shield_spiders at (15,10), so scouting never trips the fight. Sprite `boulder` is a stand-in (a broken brick lip) consistent with the drainage_marker; VISUAL-LOG flag.",
      "id": "nest_ledge",
      "kind": "prop",
      "cell": [
@@ -3809,7 +3809,7 @@
      "locked_toast": "The ledge overlooks the nest: a perfect vantage, if you had the eye to read one. You don't, quite. Not yet."
     },
     {
-     "_comment": "M-ARC A2 (A3-gated) descent seam. A `door_when` prop on the SAME idiom as the street sewer_grate: its gate is `heard_the_deep_tremor` -- the NEW accomplishment A3's tremor beat (Zevara's post-Act-II summons) banks; A3 is its SOLE producer (documented in CLAUDE.md + the A2 report). Until banked, door_when is UNMET and interact falls through to on_interact_accomplishment + toast (found_the_fissure) -- pre-gate behavior is byte-identical, so sewers_walkthrough/cisterns_* stay green. Once banked, the same interact emits open_toast and descends to deep_tunnels (2,2). Placed at (8,12), the untouched bottom-middle band -- no sewers/cisterns route asserts or treads a bottom-band cell (all sewers-map cells they visit are top-band y2, the nest right-side y10, and (2,7)); disclosure verified in the A2 report. Sprite `boulder` is a rubble stand-in for a collapsed fissure (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
+     "_comment": "The descent seam, gated on Act III's tremor beat. A `door_when` prop on the SAME idiom as the street sewer_grate: its gate is `heard_the_deep_tremor` -- Zevara's post-Act-II summons is its SOLE producer (documented in CLAUDE.md). Until banked, door_when is UNMET and interact falls through to on_interact_accomplishment + toast (found_the_fissure) -- pre-gate behavior is byte-identical, so sewers_walkthrough/cisterns_* stay green. Once banked, the same interact emits open_toast and descends to deep_tunnels (2,2). Placed at (8,12), the untouched bottom-middle band -- no sewers/cisterns route asserts or treads a bottom-band cell (all sewers-map cells they visit are top-band y2, the nest right-side y10, and (2,7)). Sprite `boulder` is a rubble stand-in for a collapsed fissure (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
      "id": "deep_fissure",
      "kind": "prop",
      "cell": [
@@ -3836,7 +3836,7 @@
    ]
   },
   "deep_tunnels": {
-   "_comment": "M-ARC A2: the Raskghar descent -- a small (14x10) cave-biome map BELOW the sewers, entered from the sewers `deep_fissure` prop once A3 banks `heard_the_deep_tremor` (see the fissure's door_when seam). DARKEST pin in the game (data/moods.json deep_tunnels, vignette 0.55). A single interact-only scout route-fight (`raskghar_scouts`) blocks the way; two flavor props (cold_hearth = old fires, gnaw_pile = bones) + the `warren_mouth` widened-gallery marker (the 'warren door' deep_descent reaches) dress the escalation. The BOSS encounter (Awakened Raskghar in the deep_warren arena) is A3's climax chain -- A2 ships the map, the scouts, the threshold, and the deep_warren arena/harness band; A3 wires the boss entity at/beyond warren_mouth + the Relc party/veto. Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable.",
+   "_comment": "The Raskghar descent -- a small (14x10) cave-biome map BELOW the sewers, entered from the sewers `deep_fissure` prop once A3 banks `heard_the_deep_tremor` (see the fissure's door_when seam). DARKEST pin in the game (data/moods.json deep_tunnels, vignette 0.55). A single interact-only scout route-fight (`raskghar_scouts`) blocks the way; two flavor props (cold_hearth = old fires, gnaw_pile = bones) + the `warren_mouth` widened-gallery marker (the 'warren door' deep_descent reaches) dress the escalation. The BOSS encounter (Awakened Raskghar in the deep_warren arena) is A3's climax chain -- A2 ships the map, the scouts, the threshold, and the deep_warren arena/harness band; A3 wires the boss entity at/beyond warren_mouth + the Relc party/veto. Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable.",
    "biome": "cave",
    "grid": {
     "width": 14,
@@ -3991,7 +3991,7 @@
      "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered. And that is worse than if they had been."
     },
     {
-     "_comment": "M-ARC A2: the deep_tunnels route-fight -- a Raskghar scout PAIR barring the way to the warren. Interact-only (no trigger_radius) so QA/A3 control the start; deep_descent clears it via combat_autoplay. Fought in cave_mouth (the generic cave arena); the deep_warren arena is reserved for A3's boss. on_victory banks cleared_raskghar_scouts.",
+     "_comment": "The deep_tunnels route-fight -- a Raskghar scout PAIR barring the way to the warren. Interact-only (no trigger_radius) so QA/A3 control the start; deep_descent clears it via combat_autoplay. Fought in cave_mouth (the generic cave arena); the deep_warren arena is reserved for A3's boss. on_victory banks cleared_raskghar_scouts.",
      "id": "raskghar_scouts",
      "kind": "encounter",
      "cell": [
@@ -4012,7 +4012,7 @@
      ]
     },
     {
-     "_comment": "M-ARC A2: the widened-gallery marker -- the 'warren door' deep_descent reaches (its terminal beat). A flavor threshold prop in A2; A3 wires the Awakened Raskghar boss encounter (deep_warren arena) here / just beyond it, plus the Relc party/veto beat. Placed at (12,5), past the scout route-fight.",
+     "_comment": "The widened-gallery marker -- the 'warren door' deep_descent reaches (its terminal beat). A flavor threshold prop in A2; A3 wires the Awakened Raskghar boss encounter (deep_warren arena) here / just beyond it, plus the Relc party/veto beat. Placed at (12,5), past the scout route-fight.",
      "id": "warren_mouth",
      "kind": "prop",
      "cell": [
@@ -4026,7 +4026,7 @@
      "toast": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren."
     },
     {
-     "_comment": "M-ARC A3: THE BOSS encounter -- the Awakened Raskghar + 2 scout adds, fought in the deep_warren arena. Interact-triggered (no trigger_radius, so QA/the player choose to engage; it sits just past the warren_mouth threshold at (12,7), reachable by standing at (12,6) facing down). Carries a `conversation` (relc_descent = the Relc join/veto beat, the interact.encounter branch runs it before combat): the [Go together.] branch banks `relc_joined_descent`, satisfying THIS entity's `ally_requires` so Relc fields as an ally; the [I go alone.] branch banks `went_alone` and NEVER banks relc_joined_descent, so the roster fields no ally (the honest, measured 0.04 solo cell -- the player chose it). Both branches end on a `start_combat: awakened_boss` effect (self-reference). on_victory banks `cleared_the_warren`; the seal-beat resolutions (Zevara/Olesm) consume that and bank the Act III advance key `raskghar_sealed` after the player returns to the surface (NOT here -- victory != sealed, per the acts data trace). respawns:false + no persistent flag => the boss is removed for good on victory (no re-fight). Balance: sim_combat_batch.gd BOSS_CELLS (gated 0.6-0.75 vs warrior2+Relc, measured solo).",
+     "_comment": "THE BOSS encounter -- the Awakened Raskghar + 2 scout adds, fought in the deep_warren arena. Interact-triggered (no trigger_radius, so QA/the player choose to engage; it sits just past the warren_mouth threshold at (12,7), reachable by standing at (12,6) facing down). Carries a `conversation` (relc_descent = the Relc join/veto beat, the interact.encounter branch runs it before combat): the [Go together.] branch banks `relc_joined_descent`, satisfying THIS entity's `ally_requires` so Relc fields as an ally; the [I go alone.] branch banks `went_alone` and NEVER banks relc_joined_descent, so the roster fields no ally (the honest, measured 0.04 solo cell -- the player chose it). Both branches end on a `start_combat: awakened_boss` effect (self-reference). on_victory banks `cleared_the_warren`; the seal-beat resolutions (Zevara/Olesm) consume that and bank the Act III advance key `raskghar_sealed` after the player returns to the surface (NOT here -- victory != sealed, per the acts data trace). respawns:false + no persistent flag => the boss is removed for good on victory (no re-fight). Balance: sim_combat_batch.gd BOSS_CELLS (gated 0.6-0.75 vs warrior2+Relc, measured solo).",
      "id": "awakened_boss",
      "kind": "encounter",
      "cell": [
@@ -4056,7 +4056,7 @@
    ]
   },
   "guild": {
-   "_comment": "M-DEPTH DP1: the Adventurer's Guild interior (16x12), reached via guild_door on the street (28,3; now a real door, not a toast). Selys RELOCATES here from the street (26,4) -- same entity id, her ENTIRE existing surface unchanged (talk_pool/talk_pool_stages/conversation graph), now standing behind a real desk (counter_left/mid/right at (6,2)/(7,2)/(9,2)/(10,2), gap at (8,2) for her -- same desk-gap convention as Erin's inn counter). Reuses the `inn` biome (Interior_Walls_01.png wood-hall look) rather than a new tileset -- both are wood buildings in Liscor; moods.json's `guild` card (warm bureaucratic) supplies the grade. THE REQUEST BOARD (guild_board) and a second guild_notice_wall prop are DRESSED-ONLY this task (on_interact_accomplishment + toast/observe, board copy lifted verbatim from docs/design/board-staging/board-copy.md sec.1) -- the real repeatable-posting mechanics are DP2's, fed from guild-bounties.json (not touched here). Two Bronze-rank Drakes (Renn+Ilvo) bicker at the board -- a canon callback to the OLD guild_door toast's \"adventurers arguing over a bounty board\" -- plus a Gnoll archer (Yelra) at a side table; all three are talk_pool-only, inert-adjacent walk-ons (no quests/graphs v1), profiles in docs/design/character-profiles-staging.md. guild_exit (8,11) is the south-wall return door; guild_door's to_cell (8,10) lands one cell north of it (an entity's own cell is never a valid door landing -- the is_cell_blocked contract), facing up into the hall; guild_exit returns to street (27,3), the same open cell gate_district_walkthrough already stood on to approach the old guild_door prop, verified unaffected by Selys's removal.",
+   "_comment": "The Adventurer's Guild interior (16x12), reached via guild_door on the street (28,3; now a real door, not a toast). Selys RELOCATES here from the street (26,4) -- same entity id, her ENTIRE existing surface unchanged (talk_pool/talk_pool_stages/conversation graph), now standing behind a real desk (counter_left/mid/right at (6,2)/(7,2)/(9,2)/(10,2), gap at (8,2) for her -- same desk-gap convention as Erin's inn counter). Reuses the `inn` biome (Interior_Walls_01.png wood-hall look) rather than a new tileset -- both are wood buildings in Liscor; moods.json's `guild` card (warm bureaucratic) supplies the grade. THE REQUEST BOARD (guild_board) and a second guild_notice_wall prop are DRESSED-ONLY (on_interact_accomplishment + toast/observe, board copy lifted verbatim from docs/design/board-staging/board-copy.md sec.1) -- the real repeatable-posting mechanics live in THE REQUEST BOARD system, fed from guild-bounties.json (not touched here). Two Bronze-rank Drakes (Renn+Ilvo) bicker at the board -- a canon callback to the OLD guild_door toast's \"adventurers arguing over a bounty board\" -- plus a Gnoll archer (Yelra) at a side table; all three are talk_pool-only, inert-adjacent walk-ons (no quests/graphs v1), profiles in docs/design/character-profiles-staging.md. guild_exit (8,11) is the south-wall return door; guild_door's to_cell (8,10) lands one cell north of it (an entity's own cell is never a valid door landing -- the is_cell_blocked contract), facing up into the hall; guild_exit returns to street (27,3), the same open cell gate_district_walkthrough already stood on to approach the old guild_door prop, verified unaffected by Selys's removal.",
    "biome": "inn",
    "grid": {
     "width": 16,
@@ -4105,7 +4105,7 @@
     { "sprite": "table_brown", "cell": [12, 9] },
     { "sprite": "stool", "cell": [14, 6] }
    ],
-   "_comment_ambience": "Same dusk/night-only dust-motes pattern as the inn hall (M-BEAUTY B3 judgment call).",
+   "_comment_ambience": "Same dusk/night-only dust-motes pattern as the inn hall (a deliberate judgment call, not an oversight).",
    "ambience": [
     { "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
    ],
@@ -4135,7 +4135,7 @@
       "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
       "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
      ],
-     "_comment_stages": "Social Pillar II Phase B: lifted verbatim from docs/design/social-2-staging/selys_stages.json (staging_note annotation stripped). Two stages only. Board perk (⚑ first pick at the board) is FLAGGED unbuilt this wave (a repeatable board is new machinery, out of v1 scope per the staging doc) -- only the stage row + hub topic unlock ship.",
+     "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/selys_stages.json (staging_note annotation stripped). Two stages only. Board perk (⚑ first pick at the board) is FLAGGED unbuilt this wave (a repeatable board is new machinery, out of v1 scope per the staging doc) -- only the stage row + hub topic unlock ship.",
      "talk_pool_stages": [
       {
        "id": "selys_past_the_counter",
@@ -4156,7 +4156,7 @@
      ]
     },
     {
-     "_comment": "M-DEPTH DP2: THE REQUEST BOARD goes live -- `board: true` routes interact() to WIGame._interact_board (a browse-only, code-built dialogue: header + the CURRENT active slate's copy from data/bounties.json + footer). Toast is the DEFAULT header (board-copy.md sec.1's header line, unchanged from DP1); second_visit_toast is the NEW variant shown whenever a posting is outstanding (sec.1's second header line). observe still carries the footer/standing-notice line verbatim (the S.S. signature -- Selys Shivertail; Tekshia the Guildmistress stays OFFSTAGE, a signature only, per the staged canon note) -- reused directly by _interact_board, not duplicated. Accept/turn-in live at Selys's desk (selys_delivery.json), per the copy's own framing (\"taking a posting means telling me\"); the board itself never mutates state. Sprite: bespoke `request_board` art (art-wiring task, 2026-07-07) -- DP1/DP2 shipped on an `inn_sign` reuse, VISUAL-LOG flagged pending a real corkboard asset; now closed.",
+     "_comment": "THE REQUEST BOARD goes live -- `board: true` routes interact() to WIGame._interact_board (a browse-only, code-built dialogue: header + the CURRENT active slate's copy from data/bounties.json + footer). Toast is the DEFAULT header (board-copy.md sec.1's header line); second_visit_toast is the NEW variant shown whenever a posting is outstanding (sec.1's second header line). observe still carries the footer/standing-notice line verbatim (the S.S. signature -- Selys Shivertail; Tekshia the Guildmistress stays OFFSTAGE, a signature only, per the staged canon note) -- reused directly by _interact_board, not duplicated. Accept/turn-in live at Selys's desk (selys_delivery.json), per the copy's own framing (\"taking a posting means telling me\"); the board itself never mutates state. Sprite: bespoke `request_board` art (previously shipped on an `inn_sign` reuse, VISUAL-LOG flagged pending a real corkboard asset -- now closed).",
      "id": "guild_board",
      "kind": "prop",
      "cell": [2, 3],
@@ -4169,7 +4169,7 @@
      "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. — S.S."
     },
     {
-     "_comment": "M-DEPTH DP1: a second, smaller notice surface (city/personal notices, distinct from the Guild's own bounty board) -- ORIGINAL flavor copy, canon-safe (no invented named characters), voice-linted. Sprite: reuses `library_shelf` (a tall wood-shelf silhouette, tinted parchment) as a stand-in for a wall unit stacked with handbills -- VISUAL-LOG flagged pending a real asset.",
+     "_comment": "A second, smaller notice surface (city/personal notices, distinct from the Guild's own bounty board) -- ORIGINAL flavor copy, canon-safe (no invented named characters), voice-linted. Sprite: reuses `library_shelf` (a tall wood-shelf silhouette, tinted parchment) as a stand-in for a wall unit stacked with handbills -- VISUAL-LOG flagged pending a real asset.",
      "id": "guild_notice_wall",
      "kind": "prop",
      "cell": [2, 5],
@@ -4182,7 +4182,7 @@
      "observe": "Handbills and scraps overlapping the request board's edge. The Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only."
     },
     {
-     "_comment": "M-DEPTH DP1 walk-on: Renn Coldscale, Bronze-rank Drake, half of a bickering duo at the board -- profile in docs/design/character-profiles-staging.md. Reuses the `pc_drake_m` character-creation rig (ash-grey tint) rather than new art. talk_pool + a static dialogue fallback (no conversation graph -- inert-adjacent per plan).",
+     "_comment": "Renn Coldscale, Bronze-rank Drake, half of a bickering duo at the board -- profile in docs/design/character-profiles-staging.md. Reuses the `pc_drake_m` character-creation rig (ash-grey tint) rather than new art. talk_pool + a static dialogue fallback (no conversation graph -- inert-adjacent by design).",
      "id": "renn",
      "kind": "npc",
      "cell": [3, 3],
@@ -4202,7 +4202,7 @@
      ]
     },
     {
-     "_comment": "M-DEPTH DP1 walk-on: Ilvo Brackenhide, Bronze-rank Drake, the reasonable half of the duo. Reuses `pc_drake_f` (moss-green tint).",
+     "_comment": "Ilvo Brackenhide, Bronze-rank Drake, the reasonable half of the duo. Reuses `pc_drake_f` (moss-green tint).",
      "id": "ilvo",
      "kind": "npc",
      "cell": [2, 4],
@@ -4222,7 +4222,7 @@
      ]
     },
     {
-     "_comment": "M-DEPTH DP1 walk-on: Yelra, Bronze-rank Gnoll archer, waiting at a side table. Reuses `pc_gnoll_f` (tan-brown tint).",
+     "_comment": "Yelra, Bronze-rank Gnoll archer, waiting at a side table. Reuses `pc_gnoll_f` (tan-brown tint).",
      "id": "yelra",
      "kind": "npc",
      "cell": [12, 6],
@@ -4244,7 +4244,7 @@
    ]
   },
   "barracks": {
-   "_comment": "M-DEPTH DP4: the Watch barracks (14x8), reached via barracks_door on the street (22,3 -- the former watch_guard flavor NPC's spot, now a real door; the Watch post facade decor at (22,1)/(22,2) already implied a doorway here). Duty Sergeant Dresk Ashgrave (profile in docs/design/character-profiles.md) is that RELOCATED watch_guard, given a name/voice/tint -- zero canonical QA touches on watch_guard were found (grepped before the move), so this is a silent relocation, unlike Selys's heavily-repathed DP1 move. Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched) -- the barracks holds only her DESK (zevara_desk, flavor/observe, she is rarely at it). THE CELL (cell_door) is empty-v1, dressed, a quest-outcome surface for later -- same locked-prop idiom as inn_upstairs's lyonette_door (flush against a wall, no interior room modeled behind it, no requires_skill so a plain interact reads the locked_toast). Reuses the 'inn' biome (Interior_Walls_01.png) like guild/inn_upstairs -- every interior in this game differentiates via moods.json's grade + dressing, not new tile assets; moods.json's 'barracks' card supplies the 'stern'/cool-institutional grade per the plan's direction-card convention. Kit racks (shelf_bottles) + a briefing table (table_brown) + a kit crate (all ADDED to `blocked`, THE BLOCKING CONTRACT) + a stool (intentionally walkable, matching the guild/inn precedent) dress the room duty-mundane, per the canon note that the barracks is a SETTING, not a bounty source (watch-flavored bounties still post at the Guild board, per the ratified spec).",
+   "_comment": "The Watch barracks (14x8), reached via barracks_door on the street (22,3 -- the former watch_guard flavor NPC's spot, now a real door; the Watch post facade decor at (22,1)/(22,2) already implied a doorway here). Duty Sergeant Dresk Ashgrave (profile in docs/design/character-profiles.md) is that RELOCATED watch_guard, given a name/voice/tint -- zero canonical QA touches on watch_guard were found (grepped before the move), so this is a silent relocation, unlike Selys's own heavily-repathed relocation. Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched) -- the barracks holds only her DESK (zevara_desk, flavor/observe, she is rarely at it). THE CELL (cell_door) is empty-v1, dressed, a quest-outcome surface for later -- same locked-prop idiom as inn_upstairs's lyonette_door (flush against a wall, no interior room modeled behind it, no requires_skill so a plain interact reads the locked_toast). Reuses the 'inn' biome (Interior_Walls_01.png) like guild/inn_upstairs -- every interior in this game differentiates via moods.json's grade + dressing, not new tile assets; moods.json's 'barracks' card supplies the 'stern'/cool-institutional grade. Kit racks (shelf_bottles) + a briefing table (table_brown) + a kit crate (all ADDED to `blocked`, THE BLOCKING CONTRACT) + a stool (intentionally walkable, matching the guild/inn precedent) dress the room duty-mundane, per the canon note that the barracks is a SETTING, not a bounty source (watch-flavored bounties still post at the Guild board, per the ratified spec).",
    "biome": "inn",
    "grid": {
     "width": 14,
@@ -4299,7 +4299,7 @@
      "to_cell": [21, 3]
     },
     {
-     "_comment": "M-DEPTH DP4: Duty Sergeant Dresk Ashgrave -- the relocated watch_guard (see map comment above). talk_pool only (no conversation graph), inert-adjacent per the DP1 Yelra/Renn/Ilvo precedent -- duty-mundane background presence, not a quest-giver v1.",
+     "_comment": "Duty Sergeant Dresk Ashgrave -- the relocated watch_guard (see map comment above). talk_pool only (no conversation graph), inert-adjacent, matching Yelra/Renn/Ilvo's own precedent -- duty-mundane background presence, not a quest-giver v1.",
      "id": "duty_sergeant",
      "kind": "npc",
      "cell": [6, 4],
@@ -4318,7 +4318,7 @@
      ]
     },
     {
-     "_comment": "M-DEPTH DP4: Zevara's desk -- she stays at the gate (zevara_intro unchanged); this is flavor/observe only, the barracks holding her paperwork rather than her person.",
+     "_comment": "Zevara's desk -- she stays at the gate (zevara_intro unchanged); this is flavor/observe only, the barracks holding her paperwork rather than her person.",
      "id": "zevara_desk",
      "kind": "prop",
      "cell": [10, 5],
@@ -4329,7 +4329,7 @@
      "toast": "Watch Captain's desk. Empty, same as every other time you've walked past it."
     },
     {
-     "_comment": "M-DEPTH DP4: THE CELL, empty v1 and dressed -- a quest-outcome surface for later. Flush against the east wall, same idiom as inn_upstairs's lyonette_door (a locked prop, not a real door -- no room modeled behind it). No requires_skill, so a plain interact reads the locked_toast (the sewer_debris/lyonette_door seam).",
+     "_comment": "THE CELL, empty v1 and dressed -- a quest-outcome surface for later. Flush against the east wall, same idiom as inn_upstairs's lyonette_door (a locked prop, not a real door -- no room modeled behind it). No requires_skill, so a plain interact reads the locked_toast (the sewer_debris/lyonette_door seam).",
      "id": "cell_door",
      "kind": "prop",
      "cell": [12, 3],
@@ -4342,7 +4342,7 @@
    ]
   },
   "runners_guild": {
-   "_comment": "M-DEPTH DP5: the Runner's Guild (10x8), reached via runners_guild_door on the street (20,17). Reuses the 'inn' biome (every interior in this game differentiates via moods.json's grade + dressing, not new tile assets). Counter dressed via the Guild's OWN counter_left/counter_right precedent (Selys's exact convention -- Vess stands in the gap, no separate desk entity needed since she IS the counter-person, unlike Zevara's DP4 desk which needed its own prop because Zevara herself stays elsewhere). THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one. Vess (npc, conversation vess_counter) owns accept/turn-in, mirroring Selys's desk. The resting runner walk-on rests near a real `bench` prop (art-wiring task, 2026-07-07 -- was a `stool` stand-in, VISUAL-LOG'd; the delivery board itself stays on the `inn_sign` art, out of scope for this pass -- no bespoke delivery-board asset exists yet).",
+   "_comment": "The Runner's Guild (10x8), reached via runners_guild_door on the street (20,17). Reuses the 'inn' biome (every interior in this game differentiates via moods.json's grade + dressing, not new tile assets). Counter dressed via the Guild's OWN counter_left/counter_right precedent (Selys's exact convention -- Vess stands in the gap, no separate desk entity needed since she IS the counter-person, unlike Zevara's own desk, which needed its own prop because Zevara herself stays elsewhere). THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one. Vess (npc, conversation vess_counter) owns accept/turn-in, mirroring Selys's desk. The resting runner walk-on rests near a real `bench` prop (previously a `stool` stand-in, VISUAL-LOG'd; the delivery board itself stays on the `inn_sign` art -- no bespoke delivery-board asset exists yet).",
    "biome": "inn",
    "grid": {
     "width": 10,
@@ -4395,7 +4395,7 @@
      "to_cell": [19, 17]
     },
     {
-     "_comment": "M-DEPTH DP5: Vess, the Street Runner clerk -- profile in docs/design/character-profiles.md. Stands in the counter's own gap cell (5,2), between counter_left (4,2) and counter_right (6,2) -- the exact Selys/guild counter precedent (an NPC standing in a counter's pass-through, no separate desk entity). talk_pool fires her 'First approach' bark (board-copy.md sec.3) before the real conversation graph (vess_counter.json) on the first talk of a waking.",
+     "_comment": "Vess, the Street Runner clerk -- profile in docs/design/character-profiles.md. Stands in the counter's own gap cell (5,2), between counter_left (4,2) and counter_right (6,2) -- the exact Selys/guild counter precedent (an NPC standing in a counter's pass-through, no separate desk entity). talk_pool fires her 'First approach' bark (board-copy.md sec.3) before the real conversation graph (vess_counter.json) on the first talk of a waking.",
      "id": "vess",
      "kind": "npc",
      "cell": [5, 2],
@@ -4413,7 +4413,7 @@
      ]
     },
     {
-     "_comment": "M-DEPTH DP5: THE DELIVERY BOARD -- browse-only (WIGame._interact_delivery_board), the delivery-loop's twin of THE REQUEST BOARD (guild_board), same header/second_visit/footer shape, distinct delivery_board:true flag so interact()'s prop dispatch routes to the right board. Copy composed in staging register (board-copy.md sec.3 has no second-visit line; this one is ORIGINAL) sec.3.",
+     "_comment": "THE DELIVERY BOARD -- browse-only (WIGame._interact_delivery_board), the delivery-loop's twin of THE REQUEST BOARD (guild_board), same header/second_visit/footer shape, distinct delivery_board:true flag so interact()'s prop dispatch routes to the right board. Copy composed in staging register (board-copy.md sec.3 has no second-visit line; this one is ORIGINAL) sec.3.",
      "id": "runner_board",
      "kind": "prop",
      "cell": [8, 3],
@@ -4427,7 +4427,7 @@
      "observe": "Couriers are made, not hired. Start with the market run. — the counter"
     },
     {
-     "_comment": "M-DEPTH DP5: the resting runner walk-on (board-copy.md's proposal), title-only per THE PEDDLER precedent (an unnamed, purely ambient flavor NPC) -- staged in docs/design/character-profiles-staging.md, not promoted to the shipped file (matching Yelra/Renn/Ilvo, which also stayed staging-only; Vess is the one NAMED, mechanically-load-bearing NPC this task ships to the shipped profiles). talk_pool-only, no conversation graph, inert-adjacent. Rests near a `stool` (no bench sprite in the catalog -- disclosed, VISUAL-LOG'd) by the door.",
+     "_comment": "The resting runner walk-on (board-copy.md's proposal), title-only per THE PEDDLER precedent (an unnamed, purely ambient flavor NPC) -- staged in docs/design/character-profiles-staging.md, not promoted to the shipped file (matching Yelra/Renn/Ilvo, which also stayed staging-only; Vess is the one NAMED, mechanically-load-bearing NPC this task ships to the shipped profiles). talk_pool-only, no conversation graph, inert-adjacent. Rests near a `stool` (no bench sprite in the catalog -- disclosed, VISUAL-LOG'd) by the door.",
      "id": "resting_runner",
      "kind": "npc",
      "cell": [2, 5],
@@ -4446,12 +4446,12 @@
    ]
   },
   "ruin_surface": {
-   "_comment": "Magical Door plan Task D1 (issue #8 spec §5.2: 'a small DEDICATED ruin map family (Albez-flavored surface ruin, sewers-sized, one map)'). Sized identically to `sewers` (20x14, biome `cave` reused as the stone-floor default -- data/biomes.json is NOT touched by this task, so every new map must reuse an existing biome id; `cave` gives the rocky/rubble read an Albez ruin wants). Entered ONLY from floodplains' `ruin_door` (door_when-gated); the sole exit is `ruin_exit` below, landing back at floodplains (37,11) -- one cell west of `ruin_door`'s own (38,11) cell, the sewer_exit/deep_fissure 'never land on the door's own cell' convention. Reachability: (2,2) [the door_when to_cell] -> open floor the whole way east to the guardian alcove at (16-18,5-7); two decorative rubble piles (5,4)/(13,9) sit off that direct line and off any reasonable perimeter walk. `anchor_stone_pedestal` (17,6) is reachable from three of its four neighbor cells ((16,6)/(17,5)/(18,6) all open) -- `ruin_guardian` (17,7) occupies only the south approach, 'guarding' it in the fiction without sealing it, since D1 ships the pedestal LOCKED-FLAVOR (see that prop's own _comment for the full container-gating rationale/deviation) rather than the final `contains` shape D3 wires once the alternate TALK/SKILL gates land. DF fix-wave (2026-07-07, issue #8 rotation B1): `ruin_guardian` moved to (17,8) -- see that entity's own _comment for the sprite-fusion fix this served; the pedestal's south neighbor (17,7) is open floor now, all four neighbors reachable. Mood card `ruin_surface` (data/moods.json) is a tuned cold-daylight/dusty grade, day/dusk/night graded (a SURFACE ruin sees real weather, unlike the sewers/deep_tunnels time-invariant pins).",
+   "_comment": "A small dedicated ruin map (Albez-flavored surface ruin), sized identically to `sewers` (20x14, biome `cave` reused as the stone-floor default -- data/biomes.json is not touched here, so every new map must reuse an existing biome id; `cave` gives the rocky/rubble read an Albez ruin wants). Entered ONLY from floodplains' `ruin_door` (door_when-gated); the sole exit is `ruin_exit` below, landing back at floodplains (37,11) -- one cell west of `ruin_door`'s own (38,11) cell, the sewer_exit/deep_fissure 'never land on the door's own cell' convention. Reachability: (2,2) [the door_when to_cell] -> open floor the whole way east to the guardian alcove at (16-18,5-7); two decorative rubble piles (5,4)/(13,9) sit off that direct line and off any reasonable perimeter walk. `anchor_stone_pedestal` (17,6) is reachable from all four neighbor cells; `ruin_guardian` (17,8) stands one cell south of the pedestal's own south neighbor, 'guarding' it in the fiction without physically sealing any approach (see that entity's own _comment for the sprite-fusion fix that placed it there). The pedestal ships LOCKED-FLAVOR (see that prop's own _comment for the full container-gating rationale) rather than the `contains` shape wired once the alternate TALK/SKILL gates land. Mood card `ruin_surface` (data/moods.json) is a tuned cold-daylight/dusty grade, day/dusk/night graded (a SURFACE ruin sees real weather, unlike the sewers/deep_tunnels time-invariant pins).",
    "biome": "cave",
    "grid": { "width": 20, "height": 14 },
    "blocked": [[5, 4], [13, 9]],
    "walls": {
-    "_comment": "Magical Door plan Task D3 (D1 review Medium 2): ruin_surface shipped Task D1 with NO walls field at all. Every other cave-biome map (sewers/deep_tunnels) carries interior obstacle dressing via walls.segments even with NO perimeter enclosure (grid-bound clipping alone stops movement at the map edge; segments here are INTERIOR texture/blocking, matching deep_tunnels' stalactite-rubble/fallen-column precedent -- from/to only, no cap/face, same minimal shape). Both segments sit in the untouched middle of the room (x6-11, y8-11), clear of ruin_walkthrough's own leg-by-leg cell audit (top row y=2 x2-17; column x=17 y2-5; row y=5 x2-17; column x=2 y5-13; bottom row y=13 x2-19; column x=19 y1-13; row y=1 x3-19) and both existing `blocked` singletons (5,4)/(13,9) -- no re-derivation of that script's route needed; re-verified live (ruin_walkthrough passes unchanged).",
+    "_comment": "Every other cave-biome map (sewers/deep_tunnels) carries interior obstacle dressing via walls.segments even with NO perimeter enclosure (grid-bound clipping alone stops movement at the map edge; segments here are INTERIOR texture/blocking, matching deep_tunnels' stalactite-rubble/fallen-column precedent -- from/to only, no cap/face, same minimal shape). Both segments sit in the untouched middle of the room (x6-11, y8-11), clear of ruin_walkthrough's own leg-by-leg cell audit (top row y=2 x2-17; column x=17 y2-5; row y=5 x2-17; column x=2 y5-13; bottom row y=13 x2-19; column x=19 y1-13; row y=1 x3-19) and both existing `blocked` singletons (5,4)/(13,9) -- no re-derivation of that script's route needed; re-verified live (ruin_walkthrough passes unchanged).",
     "sheet": "res://assets/tiles/cave/Tiles.png",
     "tile_px": 16,
     "segments": [
@@ -4478,7 +4478,7 @@
      "to_cell": [37, 11]
     },
     {
-     "_comment": "Magical Door plan Task D3 (issue #8 spec §5.2/§5.5, the anchor-stone-per-region idiom's FIRST instance): the beat-3 recovery target. D1 shipped this locked-flavor only (no `contains_when` seam existed in the sim); D3 adds one -- see src/core/wi_game.gd's interact()/_interact_container (the door_when-style `contains_when: {requires: {...}}` gate, reusing `_door_gate_met` verbatim, no new gate logic). Gated on `pedestal_unsealed` (D3-internal convergence counter): banked by EITHER `cleared_ruin_guardian` (fight him right here) OR any of Pisces's TALK/SKILL mage-consult legs (their examination doubles as safe-passage insight -- the FIGHT-at-beat-2 leg, having sent the player to clear `rift_vermin_leak` in the inn instead, does NOT bank it, so THOSE players still have to clear the guardian in person; see that entity's own _comment below). `on_interact_accomplishment`/`toast` KEPT verbatim as the unmet-gate fallback (interact()'s new contains_when check falls through to this exact branch when unmet -- ruin_walkthrough's fixture has door_chain_started but neither pedestal_unsealed producer, so its locked-toast assertion is untouched, byte-identical). `on_open_accomplishment: recovered_anchor_stone` (the chain's locked id) fires once, on the SAME interact that grants the item, the first time the gate is met.",
+     "_comment": "The beat-3 recovery target. Gated by src/core/wi_game.gd's interact()/_interact_container (the door_when-style `contains_when: {requires: {...}}` gate, reusing `_door_gate_met` verbatim, no separate gate logic). Gated on `pedestal_unsealed` (an internal convergence counter): banked by EITHER `cleared_ruin_guardian` (fight him right here) OR any of Pisces's TALK/SKILL mage-consult legs (their examination doubles as safe-passage insight -- the FIGHT-at-beat-2 leg, having sent the player to clear `rift_vermin_leak` in the inn instead, does NOT bank it, so THOSE players still have to clear the guardian in person; see that entity's own _comment below). `on_interact_accomplishment`/`toast` KEPT verbatim as the unmet-gate fallback (interact()'s new contains_when check falls through to this exact branch when unmet -- ruin_walkthrough's fixture has door_chain_started but neither pedestal_unsealed producer, so its locked-toast assertion is untouched, byte-identical). `on_open_accomplishment: recovered_anchor_stone` (the chain's locked id) fires once, on the SAME interact that grants the item, the first time the gate is met.",
      "id": "anchor_stone_pedestal",
      "kind": "prop",
      "cell": [17, 6],
@@ -4493,7 +4493,7 @@
      "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea."
     },
     {
-     "_comment": "Magical Door plan Task D3 (issue #8): PROMOTED from D1's kind:\"prop\" placeholder to the real `kind: \"encounter\"` shape now that D2's combat data has landed (ruin_guardian/ruin_ward_a/ruin_ward_b in data/combatants.json, the `ruin_court` arena in data/arenas.json, both confirmed present in this worktree). Locked ids per the plan: arena `ruin_court`, enemies EXACTLY [\"ruin_guardian\",\"ruin_ward_a\",\"ruin_ward_b\"] (the entity id and the first enemy combatant id are both `ruin_guardian` by design -- separate registries, entities vs. combatants, no collision), on_victory banks `cleared_ruin_guardian` (D2's locked id) + the shared `pedestal_unsealed` convergence counter (see `anchor_stone_pedestal`'s own _comment for the full OR-gate rationale). `allies:[\"relc\"]`/`ally_requires:{met_relc:1}` matches D2's own harness gated cell (`ruin_guardian_w8_relc`, the tuned 0.55-0.8 band) over the harder ungated `_solo` variant -- a deviation from D1's 'no allies intended' placeholder note, made once D2's actual harness data showed a relc-eligible tuned band exists. `on_interact_accomplishment`/`toast` DROPPED (dead fields on an encounter, same rationale as `rift_vermin_leak`'s own promotion); `observe` KEPT. `found_the_ruin_guardian` (D1's now-orphaned flavor counter) was never referenced by any dialogue/quest gate or QA script (grepped clean). DF fix-wave (2026-07-07, issue #8 rotation B1): cell NUDGED from (17,7) to (17,8) -- one row south, off the pedestal's immediate south approach -- alongside `raskghar_awakened`'s own anchor correction (see that sprite's _comment) to fully clear a PC/guardian sprite-fusion bug at the canonical 2-cell viewing distance (`ruin_walkthrough`'s `01_pedestal_locked.png`, PC at (17,5)). Physical blocking now sits at (17,8) instead of (17,7) -- the pedestal's 4 neighbor cells are all open floor now (a minor narrative softening: the guardian still visibly stands one cell further south in the same alcove, still the last thing between the player and the stone, just no longer a hard physical block on that one approach cell); `door_chain_fight.json`'s teleport target updated to match (16,8), the new west-adjacent cell. `ruin_walkthrough`'s route (approaches only to (17,5), never faces the guardian's cell either way) is unaffected either way -- re-verified live.",
+     "_comment": "The real `kind: \"encounter\"` shape (ruin_guardian/ruin_ward_a/ruin_ward_b in data/combatants.json, the `ruin_court` arena in data/arenas.json). Locked ids: arena `ruin_court`, enemies EXACTLY [\"ruin_guardian\",\"ruin_ward_a\",\"ruin_ward_b\"] (the entity id and the first enemy combatant id are both `ruin_guardian` by design -- separate registries, entities vs. combatants, no collision), on_victory banks `cleared_ruin_guardian` + the shared `pedestal_unsealed` convergence counter (see `anchor_stone_pedestal`'s own _comment for the full OR-gate rationale). `allies:[\"relc\"]`/`ally_requires:{met_relc:1}` matches the harness's gated cell (`ruin_guardian_w8_relc`, the tuned 0.55-0.8 band) over the harder ungated `_solo` variant. `on_interact_accomplishment`/`toast` are dead fields on an encounter and stay unset; `observe` is kept. Placed at (17,8), one row south of the pedestal's immediate south approach -- keeps clear of a PC/guardian sprite-fusion bug at the canonical 2-cell viewing distance (`ruin_walkthrough`'s `01_pedestal_locked.png`, PC at (17,5)); the pedestal's 4 neighbor cells are all open floor, and the guardian still visibly stands in the same alcove, still the last thing between the player and the stone, just not a hard physical block on that one approach cell. CONTRACT: `door_chain_fight.json`'s teleport target must stay in sync at (16,8), the west-adjacent cell.",
      "id": "ruin_guardian",
      "kind": "encounter",
      "cell": [17, 8],
@@ -4510,7 +4510,7 @@
    ]
   },
   "garden_sanctuary": {
-   "_comment": "Issue #9 Task G1 (spec §2/§5 + docs/design/garden-art/direction.md+picks.md+handoff.md): Erin's Garden of Sanctuary -- the ONE map with no darkness, no walls, no violence. Formal south-to-north axis per the direction card: `garden_exit` (the vine door, the only way in or out) -> the sandstone path -> the statue-fountain centerpiece -> the misted rise (an open band at the north end -- G2's job to populate with memorial plinths/statues via visual_states; this task ships the CLEARING only, per Task G1's own file-list scope, no memorial entities yet). `biome: garden` (data/biomes.json) supplies the olive-grass floor + the hedge-hem `blocked` tile + the owned PixelLab sky-mist skirt (the impossible bright sky beyond the hedge). 14x12: small and serene per the plan (`docs/superpowers/plans/2026-07-07-garden-of-sanctuary-9.md` Task G1 -- 'a small serene map off the inn'). Reachability: `garden_exit` (7,11) is the sole hedge gap; every other perimeter cell is hedge-blocked. The fountain (7,6) sits ON the path axis and is the map's only interior obstacle -- a 1-cell detour left/right (both open floor) routes around it, matching a real garden path splitting around a centerpiece; no BFS pinch point exists (confirmed: the only blocked cells are the perimeter ring + this one center cell). `garden_bed` (11,4, east wing) is the rest-anywhere-equivalent bed, 'facing the rise' per handoff.md's own recommendation -- a literal bed under the open sky is the map's 'rest anywhere' read, not a mismatch. Mood: data/moods.json's `garden` card (identity-at-every-phase, vignette 0.0 -- the ONLY such card in the game). No `arena_moods` entry (combat impossible here, the sim guard in wi_game.gd's start_combat) and no `walls` field at all (the Garden ships NO wall family by design -- sanctuary is the absence of architecture; the hedge hem is expressed entirely via `blocked` + the biome's own hedge tile, the exact same mechanism inn/floodplains/etc use for their `blocked` cells, just with zero `walls.segments` on top).",
+   "_comment": "Erin's Garden of Sanctuary -- the ONE map with no darkness, no walls, no violence. Formal south-to-north axis per the direction card: `garden_exit` (the vine door, the only way in or out) -> the sandstone path -> the statue-fountain centerpiece -> the misted rise (an open band at the north end -- populating it with memorial plinths/statues via visual_states is a future task's job; this ships the CLEARING only, no memorial entities yet). `biome: garden` (data/biomes.json) supplies the olive-grass floor + the hedge-hem `blocked` tile + the owned PixelLab sky-mist skirt (the impossible bright sky beyond the hedge). 14x12: small and serene by design, 'a small serene map off the inn'. Reachability: `garden_exit` (7,11) is the sole hedge gap; every other perimeter cell is hedge-blocked. The fountain (7,6) sits ON the path axis and is the map's only interior obstacle -- a 1-cell detour left/right (both open floor) routes around it, matching a real garden path splitting around a centerpiece; no BFS pinch point exists (confirmed: the only blocked cells are the perimeter ring + this one center cell). `garden_bed` (11,4, east wing) is the rest-anywhere-equivalent bed, 'facing the rise' per handoff.md's own recommendation -- a literal bed under the open sky is the map's 'rest anywhere' read, not a mismatch. Mood: data/moods.json's `garden` card (identity-at-every-phase, vignette 0.0 -- the ONLY such card in the game). No `arena_moods` entry (combat impossible here, the sim guard in wi_game.gd's start_combat) and no `walls` field at all (the Garden ships NO wall family by design -- sanctuary is the absence of architecture; the hedge hem is expressed entirely via `blocked` + the biome's own hedge tile, the exact same mechanism inn/floodplains/etc use for their `blocked` cells, just with zero `walls.segments` on top).",
    "biome": "garden",
    "grid": { "width": 14, "height": 12 },
    "blocked": [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [9, 0], [10, 0], [11, 0], [12, 0], [13, 0], [0, 1], [13, 1], [0, 2], [13, 2], [0, 3], [13, 3], [0, 4], [13, 4], [0, 5], [13, 5], [0, 6], [7, 6], [13, 6], [0, 7], [13, 7], [0, 8], [13, 8], [0, 9], [13, 9], [0, 10], [13, 10], [0, 11], [1, 11], [2, 11], [3, 11], [4, 11], [5, 11], [6, 11], [8, 11], [9, 11], [10, 11], [11, 11], [12, 11], [13, 11]],
@@ -4546,7 +4546,7 @@
      "sleep_toast": "Somewhere, a door shuts softly. The garden doesn't dim."
     },
     {
-     "_comment": "Issue #9 Task G2: the memorial hill -- four plots on the misted-rise band (y=1, direction.md/handoff.md's memorial vocabulary), one per owned stone-ified statue in the roster (human/gnoll/drake/goblin, pixellab-batch.md), spaced at x=4/6/8/10 flanking the path axis (x=7, left open as the arc's own center per direction.md landmark 3). Canon: the sacred hill of statues Ch. 7.11 ('but for color they could have turned and greeted you') -- game simplification per handoff.md open question 2, one shared roster rather than per-viewer. Each plot is the dirty_table/unlit_lantern visual_states idiom EXACTLY (base sprite `memorial_plinth`, a single `{counter,at:1}` state swapping to its statue) with ONE addition this task needed and wi_game.gd now carries (`_resolve_observe_text`, doc-commented there): the SAME visual_states list also carries an optional `observe` override, so [Appraise Foe]'s existing single-string read shows the base plinth's 'waiting' flavor before the beat and the statue's own results-only remembrance line after -- proven live by garden_walkthrough (one plot pre-banked via the fixture's own resolved_wrong_order leg, present; one plot's counter genuinely unbanked, absent -- the negative tooth). Spoiler cutoff: every remembrance line stays Vol 1-7, no character named, deeds only -- the roster itself is deliberately race-generic (direction.md vocabulary point 5), the remembrance TEXT carries the specific memory, never the sprite. Memorial statues NEVER reuse a living NPC's colored sprite (the repo's known indistinguishable-prop failure mode) -- every one of these four is the ONE stoneify.py ramp, guaranteeing colorless memorial stone regardless of source figure.",
+     "_comment": "The memorial hill -- four plots on the misted-rise band (y=1, direction.md/handoff.md's memorial vocabulary), one per owned stone-ified statue in the roster (human/gnoll/drake/goblin, pixellab-batch.md), spaced at x=4/6/8/10 flanking the path axis (x=7, left open as the arc's own center per direction.md landmark 3). Canon: the sacred hill of statues Ch. 7.11 ('but for color they could have turned and greeted you') -- game simplification per handoff.md open question 2, one shared roster rather than per-viewer. Each plot is the dirty_table/unlit_lantern visual_states idiom EXACTLY (base sprite `memorial_plinth`, a single `{counter,at:1}` state swapping to its statue) with ONE addition this task needed and wi_game.gd now carries (`_resolve_observe_text`, doc-commented there): the SAME visual_states list also carries an optional `observe` override, so [Appraise Foe]'s existing single-string read shows the base plinth's 'waiting' flavor before the beat and the statue's own results-only remembrance line after -- proven live by garden_walkthrough (one plot pre-banked via the fixture's own resolved_wrong_order leg, present; one plot's counter genuinely unbanked, absent -- the negative tooth). Spoiler cutoff: every remembrance line stays Vol 1-7, no character named, deeds only -- the roster itself is deliberately race-generic (direction.md vocabulary point 5), the remembrance TEXT carries the specific memory, never the sprite. Memorial statues NEVER reuse a living NPC's colored sprite (the repo's known indistinguishable-prop failure mode) -- every one of these four is the ONE stoneify.py ramp, guaranteeing colorless memorial stone regardless of source figure.",
      "id": "memorial_plot_warren",
      "kind": "prop",
      "cell": [6, 1],

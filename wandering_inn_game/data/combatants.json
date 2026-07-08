@@ -144,7 +144,7 @@
    "skills": []
   },
   {
-   "_comment": "Content Wave C1: canon Liscor-area ambush predator (wiki.wanderinginn.com/Shield_Spiders -- black-and-silver armored carapace, Silver-rank individually, nest under Liscor's Dungeon). A goblin_raider-class melee reskin nudged toward the carapace fantasy: +con (armored back), +dex (ambusher), lower int/cha. SPRITE STAND-IN: uses `bat` (the only dark cave-creature sheet in-tree) -- flagged in docs/VISUAL-LOG.md for a real arachnid sprite (Track B / PixelLab). Balance is MEASURED-only in sim_combat_batch.gd's ENCOUNTER_CELLS (see report).",
+   "_comment": "Canon Liscor-area ambush predator (wiki.wanderinginn.com/Shield_Spiders -- black-and-silver armored carapace, Silver-rank individually, nest under Liscor's Dungeon). A goblin_raider-class melee reskin nudged toward the carapace fantasy: +con (armored back), +dex (ambusher), lower int/cha. SPRITE STAND-IN: uses `bat` (the only dark cave-creature sheet in-tree) -- flagged in docs/VISUAL-LOG.md for a real arachnid sprite (Track B / PixelLab). Balance is MEASURED-only in sim_combat_batch.gd's ENCOUNTER_CELLS (see report).",
    "id": "shield_spider",
    "display_name": "Shield Spider",
    "sprite": "bat",
@@ -162,7 +162,7 @@
    "skills": []
   },
   {
-   "_comment": "Content Wave C1: the sewers' weak trash pack. Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, same as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, flagged generic-diegetic per the spec. Deliberately fragile (low con/weapon_die) so the sewers_walkthrough autoplay clears it fast.",
+   "_comment": "The sewers' weak trash pack. Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, same as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, flagged generic-diegetic per the spec. Deliberately fragile (low con/weapon_die) so the sewers_walkthrough autoplay clears it fast.",
    "id": "sewer_vermin",
    "display_name": "Sewer Bat",
    "sprite": "bat",
@@ -180,7 +180,7 @@
    "skills": []
   },
   {
-   "_comment": "M-ARC A2: Raskghar scout -- canon nocturnal cave predator (wiki.wanderinginn.com/Raskghar): a cross between an upright bear and a lion, towers over Gnolls, ~Level-15-warrior strength, tracks and ambushes prey. A bruiser-class melee pair: high con/str, low int/cha. Serves DOUBLE duty -- the deep_tunnels route-fight pair AND the 2 scout adds in the Awakened's boss roster. combat_scale 0.4492 contains the hulking 124px frame at the feet (the Relc containment lesson); sprite is a real directional PixelLab v2 idle/walk/slice set. Balance MEASURED-only in sim_combat_batch.gd SCOUT_CELLS/BOSS_CELLS.",
+   "_comment": "Raskghar scout -- canon nocturnal cave predator (wiki.wanderinginn.com/Raskghar): a cross between an upright bear and a lion, towers over Gnolls, ~Level-15-warrior strength, tracks and ambushes prey. A bruiser-class melee pair: high con/str, low int/cha. Serves DOUBLE duty -- the deep_tunnels route-fight pair AND the 2 scout adds in the Awakened's boss roster. combat_scale 0.4492 contains the hulking 124px frame at the feet (the Relc containment lesson); sprite is a real directional PixelLab v2 idle/walk/slice set. Balance MEASURED-only in sim_combat_batch.gd SCOUT_CELLS/BOSS_CELLS.",
    "id": "raskghar_scout",
    "display_name": "Raskghar Scout",
    "sprite": "raskghar_scout",
@@ -199,7 +199,7 @@
    "skills": []
   },
   {
-   "_comment": "M-ARC A2: the Awakened Raskghar BOSS -- canon (a Raskghar that ate a Gnoll's heart, permanently smarter, matches a Level-20 warrior). High-HP bruiser (con 30 -> 50 max_hp). Its signature [Raskghar Maul] is a reaching slowed-rider swing on the EXISTING spell_damage+applies machinery (NO new effect type). `ai: caster` is REQUIRED, not decorative: the melee AI only fires attack/power_strike by name, so a `caster` boss (leads with the range-2 maul, falls through to claws) is the only shipped profile that actually LANDS the slow without a combat_ai.gd change (report AI-fit analysis). combat_scale 0.4839 lets it loom ~2 cells while HP bars stay readable. Balance: sim_combat_batch.gd BOSS_CELLS -- GATED 0.6-0.75 vs warrior2+Relc, measured solo. The boss ENCOUNTER entity + party/veto is A3; A2 ships the combatant + arena + harness band.",
+   "_comment": "The Awakened Raskghar BOSS -- canon (a Raskghar that ate a Gnoll's heart, permanently smarter, matches a Level-20 warrior). High-HP bruiser (con 30 -> 50 max_hp). Its signature [Raskghar Maul] is a reaching slowed-rider swing on the EXISTING spell_damage+applies machinery (NO new effect type). `ai: caster` is REQUIRED, not decorative: the melee AI only fires attack/power_strike by name, so a `caster` boss (leads with the range-2 maul, falls through to claws) is the only shipped profile that actually LANDS the slow without a combat_ai.gd change. combat_scale 0.4839 lets it loom ~2 cells while HP bars stay readable. Balance: sim_combat_batch.gd BOSS_CELLS -- GATED 0.6-0.75 vs warrior2+Relc, measured solo. The boss ENCOUNTER entity (party/veto beat) is separate from this combatant + arena + harness band.",
    "id": "raskghar_awakened",
    "display_name": "Awakened Raskghar",
    "sprite": "raskghar_awakened",
@@ -220,7 +220,7 @@
    ]
   },
   {
-   "_comment": "Magical Door 8a Task D2 (lane \u03b2): the rift_vermin_leak trash swarm (beat-2, inn-cellar-adjacent -- D1 owns the entity placement). CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient/leaking magic ('any place with magic'), display diverse powers incl. fire breath -- the anchor-stone's residual rift-link leaking mana into the cellar is exactly the draw the wiki describes, so this is a direct thematic fit realized generic-diegetically (no single named subspecies is attested for a plain magic-drawn rat swarm). Two melee twins (rift_vermin_a/b, letter-suffix convention per training_dummy_a/b) + one ranged 'ember-touched' caster (rift_vermin_c, EXISTING flame_bolt skill -- the canon fire-breath power, no new skill.json entry). SPRITE STAND-IN: reuses `bat` (same convention as cave_spider/sewer_vermin, VISUAL-LOG flagged for a real rodent sheet). Deliberately given DISTINCT ids rather than repeating one id 2-3x in an encounter's `enemies` array -- WICombat._init keys `combatants` by id (`combatants[c[WIKeys.ID]] = c`), so two cfgs sharing an id silently collapse to ONE fielded combatant (confirmed against the shipped shield_spiders/raskghar_scout-pair encounters, which DO hit this collision) -- out of D2's charter to fix (sim code), but distinct ids sidestep it here so the 'leak' reads honestly as 3 separate HP bars. Balance: sim_combat_batch.gd RUIN_CELLS, GATED 0.55-0.95 (plan directive) at the warrior5_mage5 (~L10, plan's 'L8-12 kit') representative build.",
+   "_comment": "The rift_vermin_leak trash swarm (beat-2, inn-cellar-adjacent; the entity placement lives in skeleton_scene.json). CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient/leaking magic ('any place with magic'), display diverse powers incl. fire breath -- the anchor-stone's residual rift-link leaking mana into the cellar is exactly the draw the wiki describes, so this is a direct thematic fit realized generic-diegetically (no single named subspecies is attested for a plain magic-drawn rat swarm). Two melee twins (rift_vermin_a/b, letter-suffix convention per training_dummy_a/b) + one ranged 'ember-touched' caster (rift_vermin_c, EXISTING flame_bolt skill -- the canon fire-breath power, no new skill.json entry). SPRITE STAND-IN: reuses `bat` (same convention as cave_spider/sewer_vermin, VISUAL-LOG flagged for a real rodent sheet). Deliberately given DISTINCT ids rather than repeating one id 2-3x in an encounter's `enemies` array -- WICombat._init keys `combatants` by id (`combatants[c[WIKeys.ID]] = c`), so two cfgs sharing an id silently collapse to ONE fielded combatant (confirmed against the shipped shield_spiders/raskghar_scout-pair encounters, which DO hit this collision) -- a sim-code fix, out of scope here, but distinct ids sidestep it so the 'leak' reads honestly as 3 separate HP bars. Balance: sim_combat_batch.gd RUIN_CELLS, GATED 0.55-0.95 at the warrior5_mage5 (~L10, 'L8-12 kit') representative build.",
    "id": "rift_vermin_a",
    "display_name": "Rift Vermin",
    "sprite": "bat",
@@ -238,7 +238,7 @@
    "skills": []
   },
   {
-   "_comment": "Magical Door 8a Task D2: rift_vermin_leak's second melee twin -- see rift_vermin_a's _comment for the full canon cite + distinct-id rationale. Identical stat template (a matched pair), separate id only to avoid the WICombat same-id collision.",
+   "_comment": "Rift_vermin_leak's second melee twin -- see rift_vermin_a's _comment for the full canon cite + distinct-id rationale. Identical stat template (a matched pair), separate id only to avoid the WICombat same-id collision.",
    "id": "rift_vermin_b",
    "display_name": "Rift Vermin",
    "sprite": "bat",
@@ -256,7 +256,7 @@
    "skills": []
   },
   {
-   "_comment": "Magical Door 8a Task D2: rift_vermin_leak's ranged member -- the canon 'fire breath' power (wiki.wanderinginn.com/Magical_Rats) realized via the EXISTING `flame_bolt` skill (goblin_shaman's spell_damage/range-4 bolt, no new skill.json entry -- flame is flame regardless of caster). `ai: ranged` so combat_ai.gd's ranged profile actually fires it (see wi-adding-an-encounter's autoplay gotcha: a melee-profile combatant never casts).",
+   "_comment": "Rift_vermin_leak's ranged member -- the canon 'fire breath' power (wiki.wanderinginn.com/Magical_Rats) realized via the EXISTING `flame_bolt` skill (goblin_shaman's spell_damage/range-4 bolt, no new skill.json entry -- flame is flame regardless of caster). `ai: ranged` so combat_ai.gd's ranged profile actually fires it (see wi-adding-an-encounter's autoplay gotcha: a melee-profile combatant never casts).",
    "id": "rift_vermin_c",
    "display_name": "Ember-Touched Vermin",
    "sprite": "bat",
@@ -276,7 +276,7 @@
    ]
   },
   {
-   "_comment": "Magical Door 8a Task D2: ruin_guardian -- the anchor-stone pedestal's warden (beat-3 recovery run, D1 places the entity in ruin_surface/D3 wires the pedestal gate). CANON-CITE, wiki.wanderinginn.com/Chapter_3.07_H (+ wiki.wanderinginn.com/Thresk): the Ruins of Albez house a guardian construct/Golem the Horns of Hammerad fought at Warmage Thresk's treasury door -- 'a White-Hot Flame Golem', humanoid, animate flame with a mana-stone core, immensely dangerous at Horns' (much higher) power level. THIS combatant is NOT that same already-narratively-resolved construct (it was destroyed on-page; reusing it verbatim would also be far too strong for a ~L10 recovery-run gate) -- it's CANON-PLAUSIBLE: Albez is described as 'a breeding ground for Monsters' riddled with 'several dungeons' on a leyline, so a lesser ward-construct of the same animate-guardian family, sentineling a DIFFERENT anchor-stone pedestal elsewhere in the ruins, is a direct, non-colliding extrapolation of the same lore (construct/undead-class per the plan brief -- realized construct-side, no new mechanic). `ai: melee` (no new skill needed -- `tough_body`, an EXISTING skill, supplies the construct's durability flavor as flat +10 hp). SPRITE STAND-IN: `training_dummy` (an already-animate humanoid-shaped combat prop reads as a plausible guardian effigy without colliding with any established character's sprite -- reusing raskghar_awakened's or a goblin's sprite here was explicitly avoided per CLAUDE.md's stray-sprite-reuse gotcha). combat_scale looms it slightly above the escort wards. Balance: sim_combat_batch.gd RUIN_CELLS, adjudicated win_lo/win_hi like deep_descent's raskghar_awakened (Relc-escorted cell explicitly banded, solo cell measured-only hard-mode frontier).",
+   "_comment": "Ruin_guardian -- the anchor-stone pedestal's warden (beat-3 recovery run; the entity lives in ruin_surface, the pedestal gate is wired separately). CANON-CITE, wiki.wanderinginn.com/Chapter_3.07_H (+ wiki.wanderinginn.com/Thresk): the Ruins of Albez house a guardian construct/Golem the Horns of Hammerad fought at Warmage Thresk's treasury door -- 'a White-Hot Flame Golem', humanoid, animate flame with a mana-stone core, immensely dangerous at Horns' (much higher) power level. THIS combatant is NOT that same already-narratively-resolved construct (it was destroyed on-page; reusing it verbatim would also be far too strong for a ~L10 recovery-run gate) -- it's CANON-PLAUSIBLE: Albez is described as 'a breeding ground for Monsters' riddled with 'several dungeons' on a leyline, so a lesser ward-construct of the same animate-guardian family, sentineling a DIFFERENT anchor-stone pedestal elsewhere in the ruins, is a direct, non-colliding extrapolation of the same lore (construct/undead-class per the plan brief -- realized construct-side, no new mechanic). `ai: melee` (no new skill needed -- `tough_body`, an EXISTING skill, supplies the construct's durability flavor as flat +10 hp). SPRITE STAND-IN: `training_dummy` (an already-animate humanoid-shaped combat prop reads as a plausible guardian effigy without colliding with any established character's sprite -- reusing raskghar_awakened's or a goblin's sprite here was explicitly avoided per CLAUDE.md's stray-sprite-reuse gotcha). combat_scale looms it slightly above the escort wards. Balance: sim_combat_batch.gd RUIN_CELLS, adjudicated win_lo/win_hi like deep_descent's raskghar_awakened (Relc-escorted cell explicitly banded, solo cell measured-only hard-mode frontier).",
    "id": "ruin_guardian",
    "display_name": "Ruin Warden",
    "sprite": "training_dummy",
@@ -297,7 +297,7 @@
    ]
   },
   {
-   "_comment": "Magical Door 8a Task D2: ruin_guardian's first escort ward -- see ruin_guardian's _comment for the full canon cite. A lesser attendant construct (deep_warren boss+2-scouts structure precedent), given its OWN id (not repeated) for the same WICombat same-id-collision reason documented on rift_vermin_a.",
+   "_comment": "Ruin_guardian's first escort ward -- see ruin_guardian's _comment for the full canon cite. A lesser attendant construct (deep_warren boss+2-scouts structure precedent), given its OWN id (not repeated) for the same WICombat same-id-collision reason documented on rift_vermin_a.",
    "id": "ruin_ward_a",
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
@@ -316,7 +316,7 @@
    "skills": []
   },
   {
-   "_comment": "Magical Door 8a Task D2: ruin_guardian's second escort ward -- identical template to ruin_ward_a (a matched pair), separate id only to avoid the WICombat same-id collision.",
+   "_comment": "Ruin_guardian's second escort ward -- identical template to ruin_ward_a (a matched pair), separate id only to avoid the WICombat same-id collision.",
    "id": "ruin_ward_b",
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
