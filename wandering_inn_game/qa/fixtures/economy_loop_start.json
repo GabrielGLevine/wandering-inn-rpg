@@ -1,5 +1,5 @@
 {
- "_comment": "The canonical economy-loop fixture. The honest post-onboarding state (warrior L1, met/sparred/given_spear) but standing at the INN spawn (2,3) with an EMPTY purse (gold 0) -- economy_loop needs an inn chore (gold is inn-only earn) AND Krshia's street shop AND a loot fight, so the run starts in the inn and walks the mandatory floodplains ambush (Relc-allied, deterministic) to reach the street. rng_state governs the two fights (ambush + street crate_scavengers); it is tuned so both are won. LOOT gold is isolated by the CLI --seed (=9, hash(run_seed,encounter_id)) not this rng_state, so both encounters drop gold 2 at seed 9 exactly as loot_probe verified -- independent of the fight-outcome rng_state. gold is an additive-optional save field (default 0, no version bump).",
+ "_comment": "The canonical economy-loop fixture. The honest post-onboarding state (warrior L1, met/sparred/given_spear) but standing at the INN spawn (2,3) with an EMPTY purse (gold 0) -- economy_loop needs an inn chore (gold is inn-only earn) AND Krshia's street shop AND a loot fight, so the run starts in the inn and walks the mandatory floodplains ambush (Relc-allied, deterministic) to reach the street. rng_state governs the two fights (ambush + street crate_scavengers) IN SEQUENCE (Game.sim.rng draws once per start_combat call, so this state's first randi() feeds fight 1, second feeds fight 2) -- re-derived so both still win now that crate_scavengers correctly fields BOTH goblin_raiders (same-id roster dedup fix; the old state relied on the pre-fix 1-raider collapse). LOOT gold is isolated by the CLI --seed (=9, hash(run_seed,encounter_id)) not this rng_state, so both encounters drop gold 2 at seed 9 exactly as loot_probe verified -- independent of the fight-outcome rng_state. gold is an additive-optional save field (default 0, no version bump).",
  "version": 5,
  "state": {
   "current_map": "inn",
@@ -39,6 +39,6 @@
   "container_state": {},
   "actions_since_sleep": 0,
   "gold": 0,
-  "rng_state": "9"
+  "rng_state": "-4456598255260841284"
  }
 }
