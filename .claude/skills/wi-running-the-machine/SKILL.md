@@ -64,6 +64,13 @@ The session has a fixed usage budget. Default the top model to orchestration
 burning fast → throttle top-model work, delegate more; budget to spare near
 session end → upshift to higher-tier models and spend it. Same-file work is
 still single-implementer: never run two agents on one file concurrently.
+**A merge that delivers NEW `.gd` files needs a main-tree import pass
+BEFORE the re-gate** (`--headless --import`): class_name registration
+lives in the local `.godot` cache and the lane's import does NOT travel
+with the merge — skipping it reads as a total-cascade compile failure
+(64/64 red on a correct tree, 2026-07-07). Corollary: capture the
+sweep's exit code explicitly and read the verdict line before pushing —
+never pipe the sweep into `tail` inside the same `&&` chain as the push.
 **Lane worktrees get the REAL asset overlay at dispatch (user directive
 2026-07-07: placeholders are for the public repo only — local dev uses real
 assets).** A fresh worktree has zero overlay files; the controller copies
