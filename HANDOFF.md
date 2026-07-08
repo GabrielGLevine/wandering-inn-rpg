@@ -1,5 +1,26 @@
 # Wandering Inn RPG Handoff
 
+## RC DRIVE TO v0.4.0 — LIVE (2026-07-08; scope = through 8c, Steam OUT)
+
+Landed today on this front: #38 roster collapse, #37 the inn's facade
+(⚑ taste: it reuses Riverfarm's building family — say if the inn needs
+a fully bespoke silhouette), #25 the Olesm chess match, 8c lane C2
+(Invrisil combat data, Wilovan canon [Thug]). Main = a038170, composed
+sweep 71/71 green, pushed.
+
+**IN FLIGHT — three concurrent Codex lanes** (worktrees off a038170,
+real-asset overlay in): **#22** [Invisibility] field verb,
+**8c-C1** Invrisil maps/cast/arrival (Wilovan fronts, parlor guest
+couch = the bed rule, portal row zero-code), **polish** #29+#30+#31+#45
+(street readability, arena dressing incl. sewers water, VISUAL-LOG
+drain, fixture rng_state hygiene). Then C3 "A Gentleman's
+Disagreement" → CF (opus whole-8c review, Closes #12/#13).
+
+**USER GATES before tag:** the four playtest checklists (#8, #9, 8b
+below, 8c's arrives with CF) + the itch Vol-7 spoiler line (drafted in
+chat — paste when ready). Then: verify release.yml fetches bundle-v4,
+tag v0.4.0, watch the release, confirm the itch build boots.
+
 ## MILESTONE 8b COMPLETE — RIVERFARM SHIPS (2026-07-08; #10 + #11 closed; 70/70; opus FIX-FIRST→fixed→READY; rotation 4/4 + 2 fix waves)
 
 The first Door expansion is live: the village ("harvest light") + the
