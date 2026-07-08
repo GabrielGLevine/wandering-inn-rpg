@@ -58,6 +58,36 @@ rule). #18 (controller support): input-surface investigation running;
 controller plan = Fable-authored next, then its own lane. #18/#19 files
 are disjoint from every 8a lane by construction.
 
+## #8 CLOSED — THE MAGICAL DOOR SHIPPED (2026-07-07; opus FIX-FIRST→fixed→READY; rotation 5/5 + fix wave; 64/64 + public CI green)
+
+The full chain is live: Erin's flicker → Pisces 3-path consult (one
+`door_understood`) → the Albez ruin recovery run (D2's real encounters)
+→ Krshia's 35g catalyst → 3 opaque study sleeps → the GDI awakening →
+the portal menu + Liscor fast-travel. `data/portals.json` is the ratified
+anchor-stone-per-region contract — opus traced it: #10/#12/#16 add a row
++ their own attunement beat, zero code. WIPortals is STATIC (WIBounties
+class, reviewer-ratified — the binding pattern for region modules).
+DF caught: 1 composed-suite blocker (missing test pin — CI was RED,
+fixed, CI green), 1 rotation blocker (PC/guardian sprite fusion — a
+mismeasured shared `raskghar_awakened` anchor; fixed, deep_descent boss
+windowed-verified unharmed), stale-toast class fix, rune-glow gen fired
+honestly (4/4 rejected — target too small for legible runes; tint+light
+ships, VISUAL-LOG carries the gap + candidates).
+
+**PLAYTEST CHECKLIST (#8, the human gate):**
+1. Fresh save → full chain in one sitting (each consult path on separate
+   runs): 2 silent study nights ("You sleep soundly."), GDI line ONLY on
+   night 3.
+2. The GDI line windowed: "[The inn has a Door. The Door has opinions.]"
+   gold-on-black, one line, no clipping (the one un-machined surface).
+3. Fast-travel round-trip: door menu → street arrival → street stone →
+   back. Glow reads? Arrival cells clear?
+4. Save between sleeps 2-3, reload, finish — no lost/double night.
+5. Lose the guardian fight on purpose, reload — progress survives,
+   consult path switchable, no soft-lock.
+6. Economy: is 35g affordable at act-III position without grinding?
+7. Load a pre-#8 save: no errors, door reads default, chain startable.
+
 ## #8 STATUS: D1-D3 MERGED (62/62), D4 IN FLIGHT
 
 Chain beats 1-3 LIVE on main: Erin's flicker beat, Pisces 3-path consult
