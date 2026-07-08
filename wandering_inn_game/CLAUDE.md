@@ -52,6 +52,7 @@ still contain a swallowed SCRIPT ERROR. Full gate discipline:
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_items.gd         # M7 E1: items/equipment validation
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_traversal_seams.gd  # Skills Wave K1: freeze/burn seams
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_input_hints.gd      # Issue #18 S3: WIInputHints label table + device classification
+	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_portals.gd          # Magical Door plan Task D4 (issue #8): WIPortals catalog filter + graph derivation
 
 	# Balance harness — 200 seeded AI-vs-AI fights; THE authority on combat data tuning
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
