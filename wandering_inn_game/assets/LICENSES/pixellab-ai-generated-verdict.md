@@ -123,3 +123,27 @@ are G2/later-task scope, not committed this pass.
 | `assets/tiles/garden/sky_mist.png` | Garden biome `skirt` tile (the impossible bright sky beyond the hedge hem) | `sky_mist_final.png` (the winning candidate over `sky_mist_tile.png`/`sky_mist_v2.png`, earlier passes, NOT used). Seamless, 32×32, `skirt_tile_px: 32`. |
 
 Same PixelLab-ToS ownership / redistributability as everything above.
+
+## Issue #9 Task G2 — the memorial hill (2026-07-07)
+
+Five more owned assets from the same pre-staged cache G1 left uncommitted
+(pixellab-batch.md's "KEEP" set — memorial statues + the empty plinth).
+**Zero new PixelLab generations this task**, per the batch note's own
+finding: "any sprite the game ever ships can become a remembrance statue
+with zero new generations." Provenance chain per file: raw PixelLab
+generation (cache, gitignored, not committed) → `stoneify.py` (the cache's
+deterministic, alpha-preserving luminance→4-step-ramp recolor, keyed to the
+pack statues' beige `rgb(130,117,100)`; script stays in the cache, not this
+repo) → the `_stone.png` output committed below.
+
+| Path | Subject | Source / notes |
+|---|---|---|
+| `assets/sprites/memorial_plinth/Idle-Sheet.png` | Waiting plinth (every memorial plot's base sprite) | `plinth_empty_stone.png` (batch item 5; raw `plinth_empty` rendered its "mist" as water, the ramp recolor fixed it). Static, 32×32, 1 frame. Anchor `[0.5, 0.75]` (alpha bbox feet plane 24/32). |
+| `assets/sprites/memorial_statue_human/Idle-Sheet.png` | Memorial roster, human (apron + offering bowl) | `statue_human_stone.png` (batch item 4). Static, 32×48, 1 frame. Anchor `[0.5, 0.979]`. |
+| `assets/sprites/memorial_statue_gnoll/Idle-Sheet.png` | Memorial roster, gnoll (sword point-down) | `statue_gnoll_v4_stone.png` (batch item 13, the winning pass after 3 rejects — v1/v2/v3 stay in the cache, NOT committed). Static, 32×48, 1 frame. Anchor `[0.5, 0.938]`. |
+| `assets/sprites/memorial_statue_drake/Idle-Sheet.png` | Memorial roster, drake (soldier, spear + shield) | `statue_drake_stone.png` (batch item 2). Static, 32×48, 1 frame. Anchor `[0.5, 1.0]` (measured, not assumed — happens to equal the default). |
+| `assets/sprites/memorial_statue_goblin/Idle-Sheet.png` | Memorial roster, goblin (reserved for the `goblins_spared` plot, no producer yet in this worktree) | `statue_goblin_v2_stone.png` (batch item 9, the winning pass after 1 reject). Static, 32×44, 1 frame. Anchor `[0.5, 0.977]`. |
+
+All 5 anchors PIL-measured (alpha bbox bottom / frame height) per the
+ANCHOR RULE, windowed-verified via `garden_walkthrough`. Same PixelLab-ToS
+ownership / redistributability as everything above.

@@ -4542,6 +4542,70 @@
      "observe": "Someone carried a real bed out here, onto real grass, under a sky that isn't real. It's made up with clean linen anyway, like that settles the argument.",
      "sleep": true,
      "sleep_toast": "Somewhere, a door shuts softly. The garden doesn't dim."
+    },
+    {
+     "_comment": "Issue #9 Task G2: the memorial hill -- four plots on the misted-rise band (y=1, direction.md/handoff.md's memorial vocabulary), one per owned stone-ified statue in the roster (human/gnoll/drake/goblin, pixellab-batch.md), spaced at x=4/6/8/10 flanking the path axis (x=7, left open as the arc's own center per direction.md landmark 3). Canon: the sacred hill of statues Ch. 7.11 ('but for color they could have turned and greeted you') -- game simplification per handoff.md open question 2, one shared roster rather than per-viewer. Each plot is the dirty_table/unlit_lantern visual_states idiom EXACTLY (base sprite `memorial_plinth`, a single `{counter,at:1}` state swapping to its statue) with ONE addition this task needed and wi_game.gd now carries (`_resolve_observe_text`, doc-commented there): the SAME visual_states list also carries an optional `observe` override, so [Appraise Foe]'s existing single-string read shows the base plinth's 'waiting' flavor before the beat and the statue's own results-only remembrance line after -- proven live by garden_walkthrough (one plot pre-banked via the fixture's own resolved_wrong_order leg, present; one plot's counter genuinely unbanked, absent -- the negative tooth). Spoiler cutoff: every remembrance line stays Vol 1-7, no character named, deeds only -- the roster itself is deliberately race-generic (direction.md vocabulary point 5), the remembrance TEXT carries the specific memory, never the sprite. Memorial statues NEVER reuse a living NPC's colored sprite (the repo's known indistinguishable-prop failure mode) -- every one of these four is the ONE stoneify.py ramp, guaranteeing colorless memorial stone regardless of source figure.",
+     "id": "memorial_plot_warren",
+     "kind": "prop",
+     "cell": [6, 1],
+     "display_name": "A Weathered Plinth",
+     "sprite": "memorial_plinth",
+     "observe": "A stone plinth, swept clean, facing the axis like the others. Whatever belongs here hasn't been carried up from below yet.",
+     "visual_states": [
+      {
+       "when": { "counter": "cleared_the_warren", "at": 1 },
+       "sprite": "memorial_statue_gnoll",
+       "observe": "A gnoll carved in stone, sword low and steady, facing down toward where the path forgets itself. Something old came up from under Liscor once. Something else went down after it, and came back up alone. The warren has been quiet since."
+      }
+     ]
+    },
+    {
+     "_comment": "The seal beat's own counter -- Zevara's 'It's done. The thing under the city won't be climbing up.' hub option (zevara_intro.json), gated on `cleared_the_warren` and banking `raskghar_sealed` (the Act III advance key, traced from data, not assumed) -- a DISTINCT beat from the boss victory itself (this plot's neighbor), the political/civic resolution rather than the fight.",
+     "id": "memorial_plot_seal",
+     "kind": "prop",
+     "cell": [8, 1],
+     "display_name": "A Weathered Plinth",
+     "sprite": "memorial_plinth",
+     "observe": "An empty plinth near the row's center, the mist pooling faintly at its base as if it expects company.",
+     "visual_states": [
+      {
+       "when": { "counter": "raskghar_sealed", "at": 1 },
+       "sprite": "memorial_statue_drake",
+       "observe": "A drake in stone, spear planted, watching over ground that used to worry the whole city. Liscor sealed the dark for good, once the warren was cleared -- masonry over memory, and no one asked for thanks. This is as close as the hill gets to giving one anyway."
+      }
+     ]
+    },
+    {
+     "_comment": "The Wrong Order's shared convergence counter (quests.json beat 'resolve') -- ALSO one of `near_garden`'s own two pre-banked K-of-4 legs (wi_game.gd's `_garden_earn_met`), so this plot ships PRESENT from the fixture's own load in garden_walkthrough, no extra live-banking needed to prove the swap (the counter genuinely met, read live through the exact same visual_states/`_resolve_observe_text` seam as every other plot).",
+     "id": "memorial_plot_wrong_order",
+     "kind": "prop",
+     "cell": [10, 1],
+     "display_name": "A Weathered Plinth",
+     "sprite": "memorial_plinth",
+     "observe": "A stone plinth at the far end of the row, otherwise unremarkable, waiting on whatever the inn hasn't settled yet.",
+     "visual_states": [
+      {
+       "when": { "counter": "resolved_wrong_order", "at": 1 },
+       "sprite": "memorial_statue_human",
+       "observe": "A human figure in stone, apron tied, a bowl held out in both hands like an offering that never quite finished being made. The inn came up short once. Nobody outside its walls ever had to know."
+      }
+     ]
+    },
+    {
+     "_comment": "The fourth, deliberately-reserved plot -- `goblins_spared` (#26) has no shipped producer in this worktree yet (the G1 report's own finding, absent-as-zero exactly like the K-of-4 gate's identical leg), so this plot renders as the waiting plinth today and swaps to `memorial_statue_goblin` the instant a future task gives that counter a real producer -- zero code/data changes needed here. Doubles as direction.md's 'the hill always waits' promise: even once all three OTHER plots claim their statues, the arc never reads as full.",
+     "id": "memorial_plot_reserved",
+     "kind": "prop",
+     "cell": [4, 1],
+     "display_name": "A Weathered Plinth",
+     "sprite": "memorial_plinth",
+     "observe": "A bare stone plinth at the end of the row, angled slightly wide of the others -- room left on purpose. Nothing stands on it yet. The mist doesn't seem to mind waiting.",
+     "visual_states": [
+      {
+       "when": { "counter": "goblins_spared", "at": 1 },
+       "sprite": "memorial_statue_goblin",
+       "observe": "A goblin carved in stone, unarmed, hands open at its sides. Not every ending here was a fight. This one is remembered for not being one."
+      }
+     ]
     }
    ]
   }

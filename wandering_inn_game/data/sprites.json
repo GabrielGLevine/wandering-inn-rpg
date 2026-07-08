@@ -2533,5 +2533,99 @@
     "fps": 1
    }
   }
+ },
+ "memorial_plinth": {
+  "_comment": "Issue #9 Task G2: the memorial hill's waiting plinth (direction.md's memorial vocabulary: 'the hill always waits' -- the base/default sprite for every memorial plot before its accomplishment counter is met). Owned PixelLab art, stone-ified in post via the deterministic ramp recolor (potential_assets/pixellab_2026-07-07_garden/stoneify.py -- alpha-preserving luminance->4-step-ramp keyed to the pack statues' beige; the generation was `plinth_empty` raw, stone-ify fixed a colorized-mist artifact per pixellab-batch.md item 5). PIL alpha bbox: (4,7)-(27,23) of 32x32 -- feet plane 24/32=0.75 (NOT the frame bottom -- real transparent padding below the plinth's own small base shadow), anchor set accordingly per the ANCHOR RULE.",
+  "render_scale": 0.6,
+  "anchor": [
+   0.5,
+   0.75
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/memorial_plinth/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "memorial_statue_human": {
+  "_comment": "Issue #9 Task G2: memorial roster, human figure (apron + offering bowl -- pixellab-batch.md item 4, `statue_human` raw -> stone-ified). Owned PixelLab art, same stoneify.py provenance as memorial_plinth. PIL alpha bbox: (3,2)-(28,46) of 32x48 -- feet plane 47/48=0.979, anchor measured (not default 1.0 -- a hair of padding below the figure's base).",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.979
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/memorial_statue_human/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "memorial_statue_gnoll": {
+  "_comment": "Issue #9 Task G2: memorial roster, gnoll figure (sword point-down, canine head/snout/ears -- pixellab-batch.md item 13, the WINNING `statue_gnoll_v4` pass after 3 rejected attempts -> stone-ified; v1/v2/v3 raw+stone sources kept in the cache as rejects, NOT wired). Owned PixelLab art, same stoneify.py provenance. PIL alpha bbox: (2,3)-(27,44) of 32x48 -- feet plane 45/48=0.938, anchor measured.",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.938
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/memorial_statue_gnoll/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "memorial_statue_drake": {
+  "_comment": "Issue #9 Task G2: memorial roster, drake figure (soldier, spear + shield -- pixellab-batch.md item 2, `statue_drake` raw -> stone-ified). Owned PixelLab art, same stoneify.py provenance. PIL alpha bbox: (4,2)-(27,47) of 32x48 -- feet plane 48/48=1.0, the default anchor is exactly correct (measured, not assumed -- the ANCHOR RULE requires checking even when the answer turns out to be the default).",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/memorial_statue_drake/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "memorial_statue_goblin": {
+  "_comment": "Issue #9 Task G2: memorial roster, goblin figure ('figure fills the frame' -- pixellab-batch.md item 9, the WINNING `statue_goblin_v2` pass after 1 rejected attempt -> stone-ified). Owned PixelLab art, same stoneify.py provenance. Reserved this task for the `goblins_spared` plot (K-of-4 leg, no producer yet in this worktree per the G1 report's finding -- absent-as-zero, so this plot renders as `memorial_plinth` today and will swap the moment a future task gives `goblins_spared` a real producer, zero code changes needed here, exactly like the door gate's own forward-compat property). PIL alpha bbox: (4,1)-(27,42) of 32x44 -- feet plane 43/44=0.977, anchor measured.",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.977
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/memorial_statue_goblin/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     44
+    ],
+    "fps": 1
+   }
+  }
  }
 }
