@@ -1,28 +1,34 @@
 # Wandering Inn RPG Handoff
 
-## QUIESCENCE CHECKPOINT (2026-07-08, pre-reboot) — ZERO WORK IN FLIGHT
+## MILESTONE 8a COMPLETE — #9 CLOSED (2026-07-08; GF READY-TO-CLOSE, 66/66, bundle-v3)
 
-**Reboot-safe.** All lanes landed, reviewed, merged, final sweep 66/66
-rc=0 on the composed tree, pushed. Landed this drain: **#42** (six-idle
-sprite picker), **#43** (debug-only playtest state boot — dedicated
-'playtest' slot, release-leak proven absent from a real release export),
-**G2** (memorial hill: 3 stoneify remembrances + reserved goblin plot,
-observe visual_states extension, both G1 Mediums closed), **#40+#41**
-(camera jitter root-caused by CSV trace [per-move snap vs sprite tween
-at the clamp seam] + fixed QA-invariantly; 8-way field movement with the
-no-corner-cutting rule, all 5 truth-table rows unit-pinned). One
-composed-tree catch: playtest_boot's fixture-classes pin vs G2's
-near_garden restructure — re-pinned with the coupling documented.
+The Garden of Sanctuary ships: unlock (act>=III + K=2-of-4, ALL FOUR legs
+now producing — #26 goblins_spared + #39 sign_defended landed as
+side-lanes), Erin's vine door, the day-bright sanctuary, the memorial
+hill, rest parity. GF's rotation caught a REAL blocker: the Garden's
+licensed art was manifested but never bundled (the wi-shipping order ran
+backwards — controller miss) → six extracts cut, fountain statue
+manifested (166 paths), **bundle-v3 released + fetched**, identity
+re-verified on real art (green garden, sky-mist, fountain composite all
+land). GF carries: observe-override doc tightening + empty-base-observe
+trap comment → #44; sign_defended's producer is the MANDATORY tutorial
+fight, so that leg is near-universal — the act gate carries the earn
+weight (honest note, not a bug).
 
-**NEXT SESSION (order ratified):** 1. GF closes #9 + milestone 8a
-(whole-#9 review + garden rotation + VISUAL-LOG + playtest checklist).
-2. #44 comment-corpus lint (the INTERLUDE — quiet tree, before 8b).
-3. 8b Riverfarm plan (art handoff ready) + #26/#39 producer side-lanes.
-**USER GATES:** the #8 playtest checklist (above), the #9 checklist (GF
-writes it), pad/Deck pass, Steam CHECKLIST.md, [Ice Floor] feel.
-Screen recording VERIFIED LIVE post-reboot (2026-07-08: screencapture +
-ffmpeg avfoundation both tested) — OS-level capture evidence + the #19
-trailer are now buildable; tooling notes in wi-verifying-changes.
+**PLAYTEST CHECKLIST (#9, the human gate):**
+1. The unlock, cold: work + Wrong Order → the qualifying sleep reads
+   ordinary; Erin's next talk surfaces the reveal unprompted. Earned
+   surprise, or telegraphed?
+2. The vine door at the inn — legible as new/special vs the pre-unlock
+   bare wall?
+3. Eyes-closed test on REAL art, incl. at dusk/night — unmistakable in
+   2 seconds? No darkness ever, by eye?
+4. The memorial hill read as a SET ([Appraise] each) — remembrance, or
+   does the waiting goblin plinth read as a gap? (Its producer is live
+   now — a merciful playthrough fills it.)
+5. Rest parity at garden_bed — the flavor line next to a class-level
+   sleep: natural or crowded?
+6. Save/reload INSIDE the garden (the one code-traced-only seam).
 
 ## NEW USER DIRECTIVE (2026-07-07) → issue #37
 

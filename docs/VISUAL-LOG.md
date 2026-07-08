@@ -454,6 +454,14 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   POSSIBLE label-removal regression on new-map encounter entities.
 - [ ] SPRITE — `shield_spider` ships on the `bat` sprite (flagged
   stand-in, C1) — needs a real arachnid via the next PixelLab batch.
+- [ ] GARDEN/UI — GF rotation frictions (2026-07-08, gf-rotation-report):
+  (a) `garden_bed` fully occluded by the standing player (the known
+  small-prop-south-approach family — this entry extends it to the garden
+  instance; re-look now that real floor art landed); (b) `playtest_boot`
+  picker summaries truncate MID-WORD ("...the ambus…") — word-boundary
+  truncate wanted; (c) QA coverage note: no diagonal move leg exists
+  INSIDE garden_sanctuary to re-check G1's Y-sort quirk near edges — a
+  future garden_walkthrough revision should add one.
 - [ ] COMBAT/TEXT — terrain-sourced slow expiry reuses the generic
   STATUS_EXPIRED feed line "shakes it off", which reads odd while the
   combatant is STILL standing on [Ice Floor] ice (slowed again next
