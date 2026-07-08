@@ -1404,3 +1404,109 @@ disclosure.
   sim rules directly (range/LoS refusal spend nothing, walls/bounds
   exclusion, friendly fire both sides, persistence across the exact
   round window, flat refresh on re-cast, and the empty-terrain no-op).
+
+### The Magical Door: study, awakening, the portal menu (Task D4, issue #8, 2026-07-07)
+
+D1 shipped the ruin map family + `pantry_door`'s `visual_states`; D3 wired
+the 3-path mage-consult chain and the recovery-run counter chain
+(`door_chain_started` → `door_understood` → `recovered_anchor_stone` +
+`bought_catalyst`). D4 closes the chain: Pisces's silent study over N
+sleeps, the awakening beat, and the portal menu itself.
+
+- **`WIPortals` (`src/core/portals.gd`)**: a pure, STATIC-ONLY class — no
+  instance, no injected-Callable constructor — deliberately following the
+  `WIBounties` precedent (`build_picker_graph`) rather than the
+  instantiated ARCH-4 sub-sim shape (`WIEconomy`/`WISocial`/
+  `WIFieldSkills`): this class owns no live WIGame field to mutate, so a
+  constructor + injected setters would be plumbing with nothing to plumb.
+  `attuned_destinations(rows, accomplishment_count_cb)` filters
+  `data/portals.json` rows by `requires_accomplishment` (>= 1, the
+  `door_when`/`contains_when` gate semantics). `build_portal_graph
+  (destinations, current_map)` returns a plain `{start, nodes}`
+  `WIDialogue`-shaped graph (identical shape to a `data/dialogue/*.json`
+  file, built fresh instead of loaded — the `WIBounties` "conversation
+  graph fed from data" idiom verbatim) excluding any destination whose
+  `map` equals `current_map` (you can't travel to where you stand),
+  appending an always-present "Let it be." fallback so the options array
+  is never empty. `destination_by_id` is the reverse lookup
+  `_travel_to_portal` uses.
+- **`data/portals.json` schema (the anchor-stone-per-region contract,
+  #10/#12/#16)**: `{id, display_name, map, cell, requires_accomplishment,
+  arrival_toast}`. v1 ships the Liscor pair — `pantry_door` (inn, arrival
+  `[9,6]`) ↔ `street_anchor_stone` (street, arrival `[29,10]`, a NEW prop
+  entity D4 adds) — both keyed on the SAME `door_awakened` (the player's
+  home region attunes both ends at once, unlike a future region's row,
+  which keys on its OWN new attunement accomplishment). Every future
+  region milestone appends a row here with zero code changes.
+- **The awakened interact rewire**: `pantry_door`/`street_anchor_stone`
+  both carry `portal_menu: true` + `portal_menu_when: {requires:
+  {door_awakened: 1}}`. `wi_game.gd`'s `interact()` checks this gate
+  (reusing `_door_gate_met` verbatim) BEFORE `on_interact_accomplishment`
+  — an unmet gate falls through to the ordinary flavor toast (D1/D3
+  byte-identical fallback), a met gate opens
+  `WIPortals.build_portal_graph(attuned_destinations(), current_map)` via
+  `_begin_code_dialogue` (the SAME code-built-graph mechanism `board_picker`/
+  `delivery_picker` use, so the existing dialogue-panel UI and QA
+  `wait_for_event` idiom serve it with zero new UI code).
+- **The O2 rule (portal travel is `transition()` ONLY)**: choosing a
+  destination fires a `{"travel_to": id}` dialogue effect on a
+  conversation-ending option; `dialogue_choose` defers it exactly like
+  `pending_combat`/`pending_board_action` (applied once dialogue is
+  already null), then `_travel_to_portal` resolves it via `transition()`
+  directly — never `move_player`, so `_check_trigger_radius` (the
+  proximity-ambush check) and every door-arrival helper can never fire on
+  a portal arrival. `portal_menu` (the canonical) asserts this
+  structurally: the whole script issues zero `move` QA actions, then
+  asserts `player_moved`/`player_blocked`/`combat_started` absent for the
+  ENTIRE run.
+- **The study-sleeps hook (`sleep()`, `wi_game.gd`)**: runs AFTER every
+  existing progression resolution (class gains, level-ups, the
+  consolidation-offer early return, evolutions, the tremor pointer) —
+  additive only, never alters an earlier branch's outcome. With all
+  three of D3's beat-3 counters banked (`door_understood`,
+  `recovered_anchor_stone`, `bought_catalyst`), each further sleep banks
+  `door_study_sleeps` — deliberately a PLAIN accomplishment counter, not
+  a dedicated WIGame field: this is the SAME opaque-counter idiom
+  `chatted_with_<id>`/`heard_gossip` already use (`social.gd`), so it
+  round-trips through the existing `accomplishments` save field with
+  ZERO new `save.gd` plumbing (no version bump, nothing to migrate) AND
+  Pisces's `talk_pool_stages` (`pisces_magic.json`'s
+  `requires_accomplishment` reader) can gate his study-period lines on it
+  directly, with no new gate mechanism. Guarded on `door_awakened` not
+  yet banked, so it stops incrementing once awake. OPAQUE-UNTIL-SLEEP is
+  strict: the two silent study sleeps (N=1, N=2) bank the counter with NO
+  toast override — "You sleep soundly." still fires, since nothing
+  player-visible happened on those nights; only Pisces's own pool line
+  (`pisces_door_study_1`/`pisces_door_study_2`, two new
+  `talk_pool_stages` entries, ZERO progress numbers) shifts, discoverable
+  only by talking to him. At N=3, `door_awakened` banks (fires
+  `accomplishment_recorded`) and this DOES count as "something happened"
+  (suppresses the fallback).
+- **The GDI's fourth cameo (`sleep_veil.gd`)**: `door_awakened` banks
+  SYNCHRONOUSLY inside the same `sleep()` call the veil is already
+  buffering (`_running` is true from that sleep's own unconditional
+  `phase_changed` emit, which always fires first) — so
+  `_on_domain_event`'s `ACCOMPLISHMENT_RECORDED` arm catches the id and
+  appends `"[The inn has a Door. The Door has opinions.]"` (spec §1 beat
+  4, quoted verbatim) to `_lines`, the EXACT SAME collection idiom
+  `CLASS_GAINED`/`CLASS_LEVEL_UP`/etc. already use — not a new mechanism,
+  not a new veil mode. The door prop itself never speaks (Global
+  Constraint); this is the GDI's own voice, the veil's fourth surface
+  after the sleep-beat class/level toasts, the F1 cold-open, and the A4
+  epilogue.
+- **QA**: `door_awakening` (fixture `door_awakening_start`, a classless
+  beat-3-ready PC) drives all 3 sleeps live, pinning
+  `ui_sleep_veil_rendered{lines:0}` for the two silent ones and
+  `{lines:1}` for the awakening sleep (with `accomplishment_recorded
+  {door_awakened}` asserted FIRST — it fires strictly before the veil's
+  own deferred coverage event in the same burst, a since-marker ordering
+  trap), then proves the interact rewire via `dialogue_started
+  {conversation:"portal_menu"}`. `portal_menu` (fixture
+  `portal_menu_start`, `door_awakened` pre-banked) drives the full
+  round-trip and is the O2 rule's own proof (see above). `tests/
+  test_portals.gd` covers `WIPortals` gating/graph-construction purely,
+  the study-counter arithmetic (including the counters-banked-mid-waking
+  edge — a sleep taken with only 2 of 3 beat-3 counters banked must NOT
+  advance the counter), the full interact/travel/return-trip flow against
+  a real `WIGame` instance, and a save round-trip of `door_study_sleeps`
+  via the ordinary `accomplishments` path.

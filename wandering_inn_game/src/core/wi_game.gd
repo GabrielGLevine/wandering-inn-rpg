@@ -814,6 +814,20 @@ func interact() -> Dictionary:
 					_emit(WIEvents.TOAST, {"text": open_toast})
 				transition(String(dw["to_map"]), Vector2i(int(dw["to_cell"][0]), int(dw["to_cell"][1])))
 				return {"map": current_map}
+			# Magical Door plan Task D4 (issue #8): a prop carrying
+			# `portal_menu: true` opens the fast-travel destination picker
+			# once its `portal_menu_when` accomplishment gate is met (the
+			# door_when-style gate, reusing `_door_gate_met` verbatim -- no
+			# new gate logic). `pantry_door` (inn) and `street_anchor_stone`
+			# (street) both carry this, sharing ONE WIPortals-built graph
+			# keyed off the PC's live attuned destinations + the entity's
+			# own map (see `_interact_portal_menu`, which excludes the
+			# anchor's own map so it only ever offers somewhere ELSE to
+			# go). An UNMET gate falls through to on_interact_accomplishment
+			# below -- pantry_door's own pre-awakening flavor toast, D1/D3
+			# byte-identical fallback.
+			if bool(target.get("portal_menu", false)) and _door_gate_met(target.get("portal_menu_when", {}) as Dictionary):
+				return _interact_portal_menu()
 			if target.has("on_interact_accomplishment"):
 				var accomplishment_id := String(target["on_interact_accomplishment"])
 				record_accomplishment(accomplishment_id)
@@ -1230,6 +1244,7 @@ func dialogue_choose(index: int) -> bool:
 		dialogue = null
 	var pending_combat := ""
 	var pending_board_action := ""
+	var pending_travel := ""
 	for effect: Dictionary in result["effects"]:
 		if effect.has("accomplishment"):
 			record_accomplishment(String(effect["accomplishment"]))
@@ -1275,6 +1290,14 @@ func dialogue_choose(index: int) -> bool:
 			well_fed = bool(effect["well_fed"])
 		elif effect.has("start_combat"):
 			pending_combat = String(effect["start_combat"])
+		elif effect.has("travel_to"):
+			# Magical Door plan Task D4: fired from WITHIN the portal menu's
+			# own options (portals.gd's build_portal_graph) -- always a
+			# conversation-ENDING option (the O2 rule: portal travel is
+			# never a mid-conversation branch), so this is deferred exactly
+			# like pending_combat/pending_board_action, applied AFTER the
+			# effects loop once dialogue is already null.
+			pending_travel = String(effect["travel_to"])
 		elif effect.has("accept_bounty"):
 			# M-DEPTH DP2: fired from WITHIN the board picker's own options
 			# (see bounties.gd's build_picker_graph) -- a SECOND
@@ -1335,6 +1358,8 @@ func dialogue_choose(index: int) -> bool:
 		_open_delivery_picker_dialogue()
 	elif pending_board_action == "delivery_turnin":
 		_open_delivery_turnin_dialogue()
+	if pending_travel != "":
+		_travel_to_portal(pending_travel)
 	return true
 
 
@@ -1657,6 +1682,59 @@ func _open_delivery_picker_dialogue() -> void:
 func _open_delivery_turnin_dialogue() -> void:
 	var met := turn_in_delivery()
 	_begin_code_dialogue(WIBounties.build_delivery_turnin_graph(met), "delivery_turnin", "vess")
+
+
+## Magical Door plan Task D4: the portal catalog, injected the same
+## `_combat_config` lane as bounties/deliveries/quests/items -- empty when
+## unconfigured (bare `--script` unit tests), every caller below tolerates
+## an empty list.
+func _portal_rows() -> Array:
+	return (_combat_config.get("portals", {}) as Dictionary).get("portals", [])
+
+
+## The PC's currently attuned portal destinations (WIPortals.attuned_
+## destinations over the injected catalog) -- read-only; QA/tests can call
+## this directly to prove the gate without opening the menu.
+func attuned_destinations() -> Array:
+	return WIPortals.attuned_destinations(_portal_rows(), Callable(self, "accomplishment_count"))
+
+
+## Opens the fast-travel destination picker at the CURRENT anchor
+## (pantry_door in the inn, street_anchor_stone in the street) --
+## WIPortals.build_portal_graph excludes `current_map` from the listed
+## options, so each anchor only ever offers somewhere ELSE to go.
+func _interact_portal_menu() -> Dictionary:
+	_begin_code_dialogue(WIPortals.build_portal_graph(attuned_destinations(), current_map), "portal_menu", "the_magical_door")
+	return {"dialogue": true}
+
+
+## Magical Door plan Task D4 (the O2 rule): resolves a chosen destination
+## via `transition()` ONLY -- never `move_player`, so `_check_trigger_radius`/
+## the door-arrival helpers can never fire on a portal arrival (the
+## `portal_menu` canonical asserts no trigger/combat event fires on
+## arrival). A missing/unknown destination id is a silent no-op (defensive;
+## every shipped option's `travel_to` id resolves to a real row).
+func _travel_to_portal(id: String) -> void:
+	var dest := WIPortals.destination_by_id(_portal_rows(), id)
+	if dest.is_empty():
+		return
+	transition(String(dest["map"]), Vector2i(int((dest[WIKeys.CELL] as Array)[0]), int((dest[WIKeys.CELL] as Array)[1])))
+	var arrival_toast := String(dest.get("arrival_toast", ""))
+	if arrival_toast != "":
+		_emit(WIEvents.TOAST, {"text": arrival_toast})
+
+
+## Magical Door plan Task D4: the hidden study-sleeps counter's read-only
+## accessor. Deliberately a PLAIN accomplishment counter (not a dedicated
+## WIGame field) -- the SAME opaque-counter idiom `chatted_with_<id>`/
+## `heard_gossip` already use (social.gd), so it round-trips through the
+## existing `accomplishments` save field with ZERO new save.gd plumbing
+## (no version bump, nothing to migrate) AND so Pisces's talk_pool_stages
+## (pisces_magic.json's requires_accomplishment reader, social.gd) can gate
+## his study-period pool lines on it directly, with no new gate mechanism.
+## See `sleep()`'s own hook for where this actually increments.
+func door_study_sleeps() -> int:
+	return accomplishment_count("door_study_sleeps")
 
 
 ## Starts a quest idempotently and emits a quest_started domain event.
@@ -2365,6 +2443,37 @@ func sleep() -> void:
 	if _maybe_fire_tremor_pointer():
 		anything_happened = true
 
+	# Magical Door plan Task D4 (issue #8 D4, spec §5.1/§5.5): the study-
+	# sleeps hook. Runs AFTER every progression resolution above (class
+	# gains/level-ups/the consolidation-offer early return/evolutions/the
+	# tremor pointer) -- additive only, never alters an earlier branch's
+	# outcome. With ALL THREE of D3's beat-3 counters banked
+	# (door_understood, the shared mage-consult convergence counter, plus
+	# the quest's own "recover" beat: recovered_anchor_stone AND
+	# bought_catalyst), each further sleep banks `door_study_sleeps`
+	# (see that accessor's own doc comment for why this is a plain
+	# accomplishment counter, not a dedicated field) -- OPAQUE-UNTIL-SLEEP:
+	# this banks silently, no toast, no progress text; only Pisces's own
+	# talk_pool_stages lines shift (pisces_magic.json, 2 stages). Guarded on
+	# door_awakened NOT yet banked so it stops incrementing once awake
+	# (idempotent past N=3, safe on a load that re-derives nothing here --
+	# sleep() only ever runs live). At N=3 the door AWAKENS: door_awakened
+	# banks once, which fires accomplishment_recorded -- sleep_veil.gd
+	# catches THIS SPECIFIC id and queues the GDI line under THIS SAME
+	# sleep's black veil (the veil's fourth cameo; see that file's
+	# _on_domain_event). OPAQUE means opaque: the two silent study sleeps
+	# (N=1, N=2) must NOT suppress "You sleep soundly." below -- from the
+	# player's own eyes nothing visible happened on those nights (the only
+	# thing that shifted is Pisces's OWN pool line, discovered by talking to
+	# him, never announced at the sleep beat itself) -- only the N=3
+	# awakening sleep (door_awakened banking) counts as "something
+	# happened".
+	if accomplishment_count("door_understood") >= 1 and accomplishment_count("recovered_anchor_stone") >= 1 and accomplishment_count("bought_catalyst") >= 1 and accomplishment_count("door_awakened") < 1:
+		record_accomplishment("door_study_sleeps")
+		if accomplishment_count("door_study_sleeps") >= 3:
+			record_accomplishment("door_awakened")
+			anything_happened = true
+
 	if not anything_happened:
 		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
 
@@ -2616,6 +2725,8 @@ func snapshot() -> Dictionary:
 		"accepted_delivery_id": accepted_delivery_id,
 		"delivery_failed": delivery_failed,
 		"board_active_deliveries": delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"])),
+		"door_study_sleeps": door_study_sleeps(),
+		"attuned_destinations": attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"])),
 	}
 
 
