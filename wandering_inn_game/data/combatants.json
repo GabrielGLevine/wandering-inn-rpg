@@ -333,6 +333,136 @@
    "weapon_die": 5,
    "ai": "melee",
    "skills": []
+  },
+  {
+   "_comment": "Briar collector, `briar_collectors` encounter roster (the hollow's shallow wave). Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this roster is the witch's craft animating that plant into a debt-collecting construct, not an invented species. High con/moderate str (woody, grabs and squeezes), low dex (rooted, doesn't dodge) and minimal int/wis/cha (mindless while animate). No skills -- a plain thorn-lash `attack()`, escalation is `briar_collector_deep`'s job. Own sprite (`briar_collector`, plant-flavored) rather than a cross-species reuse.",
+   "id": "briar_collector_a",
+   "display_name": "Briar Collector",
+   "sprite": "briar_collector",
+   "side": "enemy",
+   "stats": {
+    "str": 19,
+    "dex": 10,
+    "con": 30,
+    "int": 2,
+    "wis": 6,
+    "cha": 2
+   },
+   "weapon_die": 7,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "Briar_collectors' second member -- see briar_collector_a's _comment for the full canon cite. Identical stat template (a matched pair, same convention as rift_vermin_a/b), separate id only to avoid the WICombat same-id collision documented on rift_vermin_a.",
+   "id": "briar_collector_b",
+   "display_name": "Briar Collector",
+   "sprite": "briar_collector",
+   "side": "enemy",
+   "stats": {
+    "str": 19,
+    "dex": 10,
+    "con": 30,
+    "int": 2,
+    "wis": 6,
+    "cha": 2
+   },
+   "weapon_die": 7,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "Deep briar collector, `briar_collectors_deep` encounter roster (the escalated second wave of the same hollow fight, arena `witch_hollow` shared with `briar_collectors` -- same canon-cite as briar_collector_a). Tougher template: higher con/str and `power_strike` (a heavier constricting grab, the EXISTING skill goblin_chieftain already uses -- no new skill.json entry) so the wave reads as a genuine step up rather than a reskinned repeat. Own sprite (`briar_collector_deep`, deliberately darker/taller) carries the escalation visually too.",
+   "id": "briar_collector_deep_a",
+   "display_name": "Deep Briar Collector",
+   "sprite": "briar_collector_deep",
+   "side": "enemy",
+   "stats": {
+    "str": 17,
+    "dex": 9,
+    "con": 24,
+    "int": 3,
+    "wis": 6,
+    "cha": 2
+   },
+   "weapon_die": 7,
+   "ai": "melee",
+   "skills": [
+    "power_strike"
+   ]
+  },
+  {
+   "_comment": "Briar_collectors_deep's second member -- see briar_collector_deep_a's _comment for the canon cite + escalation rationale. Plain (no power_strike, slightly higher con instead) so the wave isn't two simultaneous 2x-multiplier hitters -- one heavy striker plus one bulkier grappler, same asymmetric-pair shape as goblin_ambush's raider+shaman. Separate id to avoid the WICombat same-id collision.",
+   "id": "briar_collector_deep_b",
+   "display_name": "Deep Briar Collector",
+   "sprite": "briar_collector_deep",
+   "side": "enemy",
+   "stats": {
+    "str": 16,
+    "dex": 9,
+    "con": 26,
+    "int": 3,
+    "wis": 6,
+    "cha": 2
+   },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "River wolf, `river_wolf_pack` roster (arena `village_edge_night`, spawns only under the night phase gate -- unreachable at day by design). Canon-cite: wiki.wanderinginn.com/Monsters -- Wilwolf (an attested wild-wolf monster whose fur is harvested as a crafting material, i.e. ordinary huntable wildlife, not the goblin-tamed Carn Wolf subspecies). Faster/leaner than the briar collectors (higher dex, lower con) -- a pack hunter that closes quickly rather than a rooted grappler. No skills; river_wolf_c (the pack's alpha) carries the roster's only power_strike.",
+   "id": "river_wolf_a",
+   "display_name": "River Wolf",
+   "sprite": "river_wolf",
+   "side": "enemy",
+   "stats": {
+    "str": 11,
+    "dex": 15,
+    "con": 12,
+    "int": 3,
+    "wis": 8,
+    "cha": 4
+   },
+   "weapon_die": 5,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "River_wolf_pack's second member -- see river_wolf_a's _comment for the canon cite. Identical stat template (a matched pack pair), separate id only to avoid the WICombat same-id collision.",
+   "id": "river_wolf_b",
+   "display_name": "River Wolf",
+   "sprite": "river_wolf",
+   "side": "enemy",
+   "stats": {
+    "str": 11,
+    "dex": 15,
+    "con": 12,
+    "int": 3,
+    "wis": 8,
+    "cha": 4
+   },
+   "weapon_die": 5,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "River_wolf_pack's third member, the pack's alpha -- see river_wolf_a's _comment for the canon cite. Slightly higher stats across the board plus `power_strike` (the pack leader's harder bite) so a 3-wolf night ambush has real teeth without every wolf carrying the same multiplier hit.",
+   "id": "river_wolf_c",
+   "display_name": "River Wolf Alpha",
+   "sprite": "river_wolf",
+   "side": "enemy",
+   "stats": {
+    "str": 13,
+    "dex": 14,
+    "con": 14,
+    "int": 4,
+    "wis": 8,
+    "cha": 5
+   },
+   "weapon_die": 5,
+   "ai": "melee",
+   "skills": [
+    "power_strike"
+   ]
   }
  ]
 }
