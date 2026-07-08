@@ -218,6 +218,34 @@ current-state-only, one short paragraph per live system.
   `runner_board` (`delivery_board: true`) browses. Full detail: "The
   Runner's Guild delivery loop (M-DEPTH DP5)" block in
   `docs/ARCHITECTURE-HISTORY.md`.
+- **The Magical Door / portal menu (`WIPortals`, `src/core/portals.gd`,
+  Magical Door plan Task D4, issue #8)** — a pure, STATIC-ONLY derivation +
+  code-built `WIDialogue` graph (the `WIBounties.build_picker_graph`
+  precedent, not the instantiated ARCH-4 sub-sim shape — this class owns no
+  WIGame field to mutate). `data/portals.json` rows
+  (`{id, display_name, map, cell, requires_accomplishment, arrival_toast}`)
+  are the anchor-stone-per-region seam every future region milestone
+  (#10/#12/#16) appends a row to, zero code.
+  `WIGame.attuned_destinations()` filters the catalog by accomplishment
+  gate; a prop carrying `portal_menu: true` (`pantry_door` in the inn,
+  `street_anchor_stone` in the street) opens
+  `WIPortals.build_portal_graph()` once its `portal_menu_when` gate is met
+  (the `door_when`/`contains_when` idiom) — the menu excludes the anchor's
+  OWN map, so each anchor only ever offers somewhere else to go. Choosing a
+  destination fires a `travel_to` dialogue effect, resolved by
+  `WIGame._travel_to_portal` via `transition()` ONLY (the O2 rule:
+  `move_player`/`_check_trigger_radius` are never touched, so an arrival
+  can never trigger a proximity fight — `portal_menu` is the canonical
+  proof). The awakening beat itself is a sleep()-beat hook: with D3's three
+  beat-3 counters banked, every further sleep banks the PLAIN
+  accomplishment counter `door_study_sleeps` (opaque-until-sleep — zero
+  progress text, only Pisces's own `talk_pool_stages` lines shift,
+  `pisces_magic.json`); at N=3 `door_awakened` banks, which
+  `sleep_veil.gd` catches (the veil's fourth cameo, after the class/level
+  toasts, the F1 opener, and the A4 epilogue) to queue the GDI's own line
+  under the same black veil — the door prop itself never speaks. Full
+  detail: "The Magical Door / portal menu (Task D4)" block in
+  `docs/ARCHITECTURE-HISTORY.md`.
 - **Character creation (`char_creation.gd`, M-ARC §5)** — New Game → race
   (Human/Drake/Gnoll) → gender (cosmetic) → name. Three cosmetic sim fields
   (`pc_name`/`pc_race`/`pc_gender`), additive save, no mechanical effect.
@@ -345,6 +373,8 @@ current-state-only, one short paragraph per live system.
 | `door_chain_fight` | 9 (fixture `door_chain_fight_start`) | Magical Door plan Task D3 (issue #8): the FIGHT leg + full end-to-end chain -- Erin's beat-1 flicker line live, Pisces sends the player to clear `rift_vermin_leak` (inn), the ruin recovery run (`ruin_guardian` fight + `anchor_stone_pedestal` opens), Krshia's `resonant_catalyst` purchase -- both quest beats complete |
 | `door_chain_talk` | 9 (fixture `door_chain_talk_start`) | Magical Door plan Task D3 (issue #8): the TALK leg -- persuades Pisces (zero combat), banks the SAME `door_understood` as the FIGHT leg, then opens `anchor_stone_pedestal` WITHOUT ever fighting `ruin_guardian` (the pedestal's `contains_when` OR-gate proof from a non-FIGHT producer) |
 | `door_chain_scout` | 9 (fixture `door_chain_scout_start`) | Magical Door plan Task D3 (issue #8): the SKILL leg -- `[Observe]`s `pantry_door_runes`, reports to Pisces (banks the SAME `door_understood`), then buys Krshia's `resonant_catalyst` (`bought_catalyst`) |
+| `door_awakening` | 9 (fixture `door_awakening_start`) | Magical Door plan Task D4 (issue #8): the full awakening chain from a beat-3-ready fixture through 3 real sleeps -- 2 silent study beats then `door_awakened` banks + the GDI line queues under the sleep veil -- to the awakened `pantry_door`'s interact rewire (opens the portal menu, not the flavor toast) |
+| `portal_menu` | 9 (fixture `portal_menu_start`) | Magical Door plan Task D4 (issue #8, the O2 rule): fast-travel round-trip -- menu at the inn anchor -> street arrival -> menu at the street anchor -> return to the inn -- pins the `map_changed` pair in order and asserts no `combat_started`/`player_moved`/`player_blocked` fires anywhere in the run (portal travel is `transition()` only) |
 
 ## Working conventions
 

@@ -691,6 +691,9 @@
      "display_name": "The Pantry Door",
      "sprite": "door",
      "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
+     "_comment_d4": "Magical Door plan Task D4 (issue #8, spec §1 beat 4): the awakened interact rewire. `portal_menu`/`portal_menu_when` are checked BEFORE `on_interact_accomplishment` in wi_game.gd's interact() (the contains_when/door_when precedent, same file) -- once `door_awakened` is banked, every future interact opens WIPortals' fast-travel picker (src/core/portals.gd) instead of the flavor toast below, which stays the byte-identical PRE-awakening fallback (D1/D3 unchanged, gate unmet falls straight through).",
+     "portal_menu": true,
+     "portal_menu_when": { "requires": { "door_awakened": 1 } },
      "on_interact_accomplishment": "observed_the_pantry_door",
      "toast": "Onions, a sack of soft potatoes, a shelf of jarred somethings gone dusty. The pantry door, same as it's always been.",
      "visual_states": [
@@ -2087,6 +2090,21 @@
         "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
         "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
        ]
+      },
+      {
+       "_comment": "Magical Door plan Task D4 (issue #8, spec §5.1: 'Pisces studies at the inn over N sleeps -- opaque-until-sleep: his talk-pool stages shift, zero progress text'). TWO stages, gated on the hidden `door_study_sleeps` counter (wi_game.gd's sleep()-beat hook, banked once all three of D3's beat-3 counters are held) -- the talk_pool_stages idiom itself (social.gd walks the array in AUTHORED order, last-met-wins), appended AFTER pisces_tolerable_company so an active study period reads as the more current topic even for a player who already reached 'tolerable company'. Zero numbers, zero fractions -- opacity holds.",
+       "id": "pisces_door_study_1",
+       "requires_accomplishment": { "door_study_sleeps": 1 },
+       "lines": [
+        "I've had that stone of yours on my desk every night since. It resists categorization. Aggravating. I approve."
+       ]
+      },
+      {
+       "id": "pisces_door_study_2",
+       "requires_accomplishment": { "door_study_sleeps": 2 },
+       "lines": [
+        "Closer. Whatever your door remembers being, it's stopped fighting me about it."
+       ]
       }
      ],
      "conversation": "pisces_magic",
@@ -2276,6 +2294,23 @@
        "speaker": "Watch Sergeant",
        "text": "Sewers, scavengers, paperwork. Pick one."
       }
+     ]
+    },
+    {
+     "_comment": "Magical Door plan Task D4 (issue #8, spec §5.5 the anchor-stone-per-region idiom): Liscor's OWN end of the fast-travel pair, pairing with the inn's `pantry_door`. Placed at (30,10) -- the open mid-street cell east of the guild/Pisces cluster (26-30,1-4), well clear of every `blocked` cell, wall segment (all 3 sit near x0/y0 borders), decor, and entity cell on this map (cross-checked against the full street entity/decor/blocked/walls listing before placement -- the D1 pantry_door blast-radius discipline; re-verified live via the full canonical sweep, see the D4 report). Ships default + awakened `visual_states` ONLY -- no flicker/chain-started state, unlike pantry_door: v1's Liscor pair is the player's EXISTING home region (the door awakening attunes both ends of ITS OWN connection at once), not a NEW region earning its own attunement beat -- the anchor-stone-per-region idiom's first genuinely NEW instance is a future region milestone's job (#10/#12/#16), which pairs a fresh anchor with its OWN attunement accomplishment in data/portals.json, zero code. Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate/ruin_door VISUAL-LOG precedent for a not-yet-bespoke gated prop) with the SAME amber awakened tint as pantry_door (spec §2: 'Liscor amber' is the only live destination color v1 ships).",
+     "id": "street_anchor_stone",
+     "kind": "prop",
+     "cell": [30, 10],
+     "display_name": "The Weathered Stone",
+     "sprite": "boulder",
+     "tint": [0.55, 0.58, 0.62],
+     "observe": "A worn marker stone, older than the buildings that grew up around it. Nobody living remembers who set it, or why it sits exactly here.",
+     "portal_menu": true,
+     "portal_menu_when": { "requires": { "door_awakened": 1 } },
+     "on_interact_accomplishment": "observed_street_anchor_stone",
+     "toast": "Cold, plain stone. Whatever it was for, it isn't for anything now.",
+     "visual_states": [
+      { "when": { "counter": "door_awakened", "at": 1 }, "sprite": "boulder", "tint": [1.05, 0.9, 0.6], "light": { "color": [0.85, 0.7, 1.0], "energy": 0.6, "radius": 16, "flicker": true } }
      ]
     }
    ]

@@ -116,6 +116,10 @@ func _make_sim(creation: Dictionary = {}) -> WIGame:
 	# injection lane. WIGame.delivery_board_deliveries()/accept_delivery()/
 	# turn_in_delivery() read it via `_combat_config.get("deliveries", {})`.
 	combat_config["deliveries"] = _load_json("res://data/deliveries.json")
+	# Magical Door plan Task D4: the portal-menu's destination catalog --
+	# same injection lane. WIGame.attuned_destinations()/_travel_to_portal()
+	# read it via `_combat_config.get("portals", {})`.
+	combat_config["portals"] = _load_json("res://data/portals.json")
 	var dialogue_graphs: Dictionary = {}
 	var dir: DirAccess = DirAccess.open("res://data/dialogue")
 	if dir != null:

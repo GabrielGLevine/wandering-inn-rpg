@@ -239,6 +239,21 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			# re-emits on load, so this arms at most once per playthrough.
 			if String(payload.get("id", "")) == "raskghar_sealed":
 				_epilogue_armed = true
+			# Magical Door plan Task D4 (issue #8, spec §1 beat 4): the
+			# door's OWN milestone line -- the veil's FOURTH cameo (after
+			# the class/level/evolution toasts above, the F1 opener, and
+			# the A4 epilogue). door_awakened banks INSIDE wi_game.gd's
+			# sleep() (after progression resolves, additive-only),
+			# synchronously within the SAME sleep burst this veil is
+			# already buffering (`_running` is true from this sleep's own
+			# UNCONDITIONAL phase_changed emit, which always fires FIRST)
+			# -- so this rides the EXACT SAME collection idiom
+			# CLASS_GAINED/CLASS_LEVEL_UP/etc. use above, not a new
+			# mechanism. The door itself NEVER speaks (Global Constraint)
+			# -- this is the GDI's OWN voice, quoted verbatim from spec §1
+			# beat 4.
+			if _running and String(payload.get("id", "")) == "door_awakened":
+				_lines.append("[The inn has a Door. The Door has opinions.]")
 		WIEvents.DIALOGUE_ENDED:
 			# A4: the armed epilogue plays as the seal conversation clears.
 			if _epilogue_armed:
