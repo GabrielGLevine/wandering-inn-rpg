@@ -6507,7 +6507,13 @@
       "A bad crop year, you learn to count what's yours twice. Once for the harvest, once for what walked off with it.",
       "Sorry, I don't mean to- never mind. Long nights lately."
      ],
-     "observe": "A ledger under one arm, mud to the knee, the look of a man doing three jobs badly instead of one job well."
+     "observe": "A ledger under one arm, mud to the knee, the look of a man doing three jobs badly instead of one job well.",
+     "dialogue": [
+      {
+       "speaker": "The Headman",
+       "text": "Not now. Got a village to hold together."
+      }
+     ]
     },
     {
      "_comment": "The charmed villager -- the quest's pivot (R3 wires the reveal/free chain). talk_pool carries the ONE echo_of entry (locked shape 3): WISocial resolves it to riverfarm_witch's CURRENT pool line verbatim at pick time.",
@@ -6525,7 +6531,13 @@
        "echo_of": "riverfarm_witch"
       }
      ],
-     "observe": "Ordinary, except for how still they stand, and a faint red thread at the wrist that doesn't match anything else they're wearing."
+     "observe": "Ordinary, except for how still they stand, and a faint red thread at the wrist that doesn't match anything else they're wearing.",
+     "dialogue": [
+      {
+       "speaker": "A Villager",
+       "text": "..."
+      }
+     ]
     },
     {
      "_comment": "Riverfarm's OWN end of the anchor-stone-per-region idiom (portals.json's new 'riverfarm' row). Reuses `boulder` tinted per the street_anchor_stone/pantry_door VISUAL-LOG precedent for a not-yet-bespoke gated prop. Gated on door_awakened (the SAME base network every anchor shares) -- reaching this cell at all already implies riverfarm_attuned (the ONLY way here is via another anchor's menu, itself door_awakened-gated), so no separate glow state is needed.",
@@ -7038,6 +7050,12 @@
       "The craft has manners, whatever they say about me in the village."
      ],
      "observe": "Green wool, a walking stick within reach, and a thread of red at the wrist that doesn't match anything else she's wearing.",
+     "dialogue": [
+      {
+       "speaker": "The Witch",
+       "text": "Tea's still hot. The offer doesn't get warmer with asking twice."
+      }
+     ],
      "visual_states": [
       {
        "when": {
