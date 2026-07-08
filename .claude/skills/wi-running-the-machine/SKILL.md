@@ -64,6 +64,12 @@ The session has a fixed usage budget. Default the top model to orchestration
 burning fast → throttle top-model work, delegate more; budget to spare near
 session end → upshift to higher-tier models and spend it. Same-file work is
 still single-implementer: never run two agents on one file concurrently.
+**Controller shell discipline: never `cd` into a lane worktree.** Build
+review packages and inspect lanes via `git -C <worktree>`; every mutating
+command (commit/merge/ledger append) runs from the repo root explicitly.
+A drifted CWD has committed controller work onto a LANE'S branch
+mid-review (2026-07-07, caught same-minute: cherry-pick to main +
+`reset --hard` the lane tip was the recovery).
 **A merge that delivers NEW `.gd` files needs a main-tree import pass
 BEFORE the re-gate** (`--headless --import`): class_name registration
 lives in the local `.godot` cache and the lane's import does NOT travel
