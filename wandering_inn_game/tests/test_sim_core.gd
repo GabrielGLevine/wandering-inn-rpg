@@ -437,6 +437,69 @@ func _init() -> void:
 	assert(g10.is_cell_blocked(Vector2i(4, 4)), "listed blocked cell still blocks")
 	assert(not g10.is_cell_blocked(Vector2i(2, 1)), "cap row above a face segment stays walkable")
 
+	# --- Issue #40: 8-way field movement + the corner-cutting rule ---
+	# A minimal 6x6 room, isolated per case via `bind_map_silent` (a pure
+	# reposition, no blocked-cell check -- lets each case start from exactly
+	# the cell the corner geometry needs without walking a real path there).
+	var diag_config := {
+		"start_map": "room",
+		"player": {WIKeys.CELL: [1, 1], "classes": {}, WIKeys.SKILLS: []},
+		"maps": {"room": {
+			"grid": {"width": 6, "height": 6},
+			"blocked": [],
+			"entities": [],
+		}},
+	}
+
+	# Open diagonal: nothing blocked anywhere -- the move lands on the
+	# diagonal target and `player_facing` collapses to the nearest cardinal
+	# (horizontal tie-break, both cardinals being an exact 45-degree tie).
+	var gDiagOpen := WIGame.new(diag_config, skill_config, _sink, 1)
+	assert(gDiagOpen.move_player(Vector2i(1, 1)), "open diagonal (down-right) succeeds")
+	assert(gDiagOpen.player_cell == Vector2i(2, 2), "lands on the diagonal target cell")
+	assert(gDiagOpen.player_facing == Vector2i.RIGHT, "diagonal facing collapses to the horizontal cardinal")
+	assert(gDiagOpen.move_player(Vector2i(-1, -1)), "open diagonal (up-left) succeeds")
+	assert(gDiagOpen.player_cell == Vector2i(1, 1), "lands back on the diagonal target cell")
+	assert(gDiagOpen.player_facing == Vector2i.LEFT, "up-left also collapses to a horizontal cardinal (LEFT, not UP)")
+	# A cardinal move through the same call is completely unaffected --
+	# `_nearest_cardinal` passes a non-diagonal `dir` through unchanged.
+	assert(gDiagOpen.move_player(Vector2i.UP), "cardinal move still works")
+	assert(gDiagOpen.player_facing == Vector2i.UP, "cardinal facing is untouched by the collapse")
+
+	# Corner-cutting rule, tooth 1: the x-axis orthogonal is blocked, the
+	# diagonal TARGET itself is open. Without the corner rule this move would
+	# wrongly succeed (only `is_cell_blocked(target)` would run) -- refusing
+	# the instant EITHER orthogonal is blocked is exactly what stops a
+	# diagonal slide through a wall corner two blocked cells share but never
+	# actually touch as a face.
+	var corner_x_config := diag_config.duplicate(true)
+	corner_x_config["maps"]["room"]["blocked"] = [[2, 1]]
+	var gCornerX := WIGame.new(corner_x_config, skill_config, _sink, 1)
+	assert(not gCornerX.is_cell_blocked(Vector2i(2, 2)), "sanity: the diagonal target itself is open")
+	assert(not gCornerX.move_player(Vector2i(1, 1)), "corner rule refuses the diagonal when the x-orthogonal is blocked")
+	assert(gCornerX.player_cell == Vector2i(1, 1), "player did not slide through the x-orthogonal corner")
+	assert(_count("player_blocked") >= 1, "the refusal emits player_blocked like any other blocked move")
+
+	# Corner-cutting rule, tooth 2 (the "both ways" the danger list calls
+	# for): the SAME diagonal, but this time the y-axis orthogonal is the
+	# one blocked instead -- proves the rule checks both orthogonals, not
+	# just one axis.
+	var corner_y_config := diag_config.duplicate(true)
+	corner_y_config["maps"]["room"]["blocked"] = [[1, 2]]
+	var gCornerY := WIGame.new(corner_y_config, skill_config, _sink, 1)
+	assert(not gCornerY.is_cell_blocked(Vector2i(2, 2)), "sanity: the diagonal target itself is open")
+	assert(not gCornerY.move_player(Vector2i(1, 1)), "corner rule refuses the diagonal when the y-orthogonal is blocked")
+	assert(gCornerY.player_cell == Vector2i(1, 1), "player did not slide through the y-orthogonal corner")
+
+	# A diagonal whose orthogonals are BOTH open but whose own target cell is
+	# blocked still refuses -- the pre-#40 `is_cell_blocked(target)` check,
+	# unchanged and still load-bearing alongside the new corner check.
+	var corner_target_config := diag_config.duplicate(true)
+	corner_target_config["maps"]["room"]["blocked"] = [[2, 2]]
+	var gCornerTarget := WIGame.new(corner_target_config, skill_config, _sink, 1)
+	assert(not gCornerTarget.is_cell_blocked(Vector2i(2, 1)) and not gCornerTarget.is_cell_blocked(Vector2i(1, 2)), "sanity: both orthogonals are open")
+	assert(not gCornerTarget.move_player(Vector2i(1, 1)), "a blocked diagonal target still refuses even with open orthogonals")
+
 	# --- M6 T1: victory banks the PC's action tally into accomplishments ---
 	# (spec §2.1 REV 2 — liveness is the `trivial: true` DATA flag only; no
 	# round-count or damage heuristic exists. Defeat banks nothing.)

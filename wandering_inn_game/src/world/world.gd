@@ -325,16 +325,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		Game.sim.interact()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_up"):
-		Game.sim.move_player(Vector2i.UP)
+		Game.sim.move_player(_combined_move_dir(Vector2i.UP))
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_down"):
-		Game.sim.move_player(Vector2i.DOWN)
+		Game.sim.move_player(_combined_move_dir(Vector2i.DOWN))
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_left"):
-		Game.sim.move_player(Vector2i.LEFT)
+		Game.sim.move_player(_combined_move_dir(Vector2i.LEFT))
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_right"):
-		Game.sim.move_player(Vector2i.RIGHT)
+		Game.sim.move_player(_combined_move_dir(Vector2i.RIGHT))
 		get_viewport().set_input_as_handled()
 	elif InputMap.has_action("slot_prev") and event.is_action_pressed("slot_prev"):
 		_move_field_slot_cursor(-1)
@@ -357,6 +357,37 @@ func _unhandled_input(event: InputEvent) -> void:
 			if skill_id != "":
 				Game.sim.use_skill_field(skill_id)
 				get_viewport().set_input_as_handled()
+
+
+## Issue #40 (8-way field movement): combines the axis the just-pressed
+## `primary` cardinal belongs to with whichever action on the OTHER axis is
+## ALSO currently held, producing a diagonal Vector2i when both are down.
+## `Input.is_action_pressed` (continuous held-state, not the discrete press
+## event) is deliberately what this polls -- it's true for a real second key
+## still held down AND for a pad stick pushed diagonally (move_up/move_right
+## etc. are each bound to one analog axis half per #18's input work, so a
+## diagonal stick push already satisfies two of these independently; no new
+## pad-specific code needed). A single cardinal press with nothing else held
+## returns `primary` unchanged -- byte-identical to the pre-#40 direct call.
+## QA scripts inject one action at a time, press-then-release synchronously
+## with no frame gap (`test_driver.gd`'s `_inject_action`), so by the time a
+## second injected action's press event reaches this check the first is
+## already released and `is_action_pressed` reads false -- every existing
+## canonical's single-dir moves stay pure cardinals, unaffected by this.
+func _combined_move_dir(primary: Vector2i) -> Vector2i:
+	var dx := primary.x
+	var dy := primary.y
+	if dx == 0:
+		if Input.is_action_pressed("move_left"):
+			dx = -1
+		elif Input.is_action_pressed("move_right"):
+			dx = 1
+	if dy == 0:
+		if Input.is_action_pressed("move_up"):
+			dy = -1
+		elif Input.is_action_pressed("move_down"):
+			dy = 1
+	return Vector2i(dx, dy)
 
 
 ## Controller support (S1): moves the field hotbar's pad cursor by `delta`
@@ -1371,35 +1402,41 @@ func _presentation_delay(seconds: float) -> float:
 	return seconds
 
 
-## FIELD HELD-KEY MOVEMENT (2026-07-05 playtest directive): the four movement
-## actions keyed to their sim direction, used by `_held_move_direction` below.
-const MOVE_ACTIONS := {
-	"move_up": Vector2i.UP,
-	"move_down": Vector2i.DOWN,
-	"move_left": Vector2i.LEFT,
-	"move_right": Vector2i.RIGHT,
-}
-
-
 ## Polls (not event-based -- OS key-repeat/"echo" events are filtered out of
 ## `is_action_pressed` by default, which is exactly why a held arrow currently
 ## only steps once) whether any movement action is still down, for the
-## held-repeat check on move-tween completion. Prefers continuing in the
-## player's CURRENT facing (a straight-line hold reads as one continuous walk
-## rather than re-resolving priority every step); falls back to whichever
-## other movement action is held, so a direction change mid-hold (still
-## holding one key, pressing a second) also continues stepping without a
-## release/re-press. Returns Vector2i.ZERO (not a valid direction any action
-## maps to) as the "nothing held" sentinel.
+## held-repeat check on move-tween completion. Issue #40: resolves each axis
+## (horizontal/vertical) INDEPENDENTLY via `_held_axis` below, so holding two
+## orthogonal keys together (or a pad stick pushed diagonally) continues
+## stepping diagonally, not just cardinally -- the held-repeat counterpart of
+## `_combined_move_dir`'s press-time combination above. Returns Vector2i.ZERO
+## (not a valid direction any combination produces) as the "nothing held"
+## sentinel.
 func _held_move_direction() -> Vector2i:
 	var facing := Game.sim.player_facing
-	for action_name: String in MOVE_ACTIONS:
-		if (MOVE_ACTIONS[action_name] as Vector2i) == facing and Input.is_action_pressed(action_name):
-			return facing
-	for action_name: String in MOVE_ACTIONS:
-		if Input.is_action_pressed(action_name):
-			return MOVE_ACTIONS[action_name]
-	return Vector2i.ZERO
+	var dx := _held_axis("move_left", -1, "move_right", 1, facing.x)
+	var dy := _held_axis("move_up", -1, "move_down", 1, facing.y)
+	return Vector2i(dx, dy)
+
+
+## Resolves one movement axis from its two opposing actions. Both held at once
+## (a genuine conflict, e.g. left+right together) prefers whichever matches
+## the player's CURRENT facing component -- continuing a straight-line hold
+## reads as one continuous walk rather than re-resolving priority every step,
+## the same intent the pre-#40 single-axis version documented -- falling back
+## to the negative action winning ties as a stable deterministic default.
+## Either action alone resolves normally; neither held returns 0 (this axis
+## contributes nothing to the combined direction).
+func _held_axis(neg_action: String, neg_val: int, pos_action: String, pos_val: int, facing_component: int) -> int:
+	var neg_held := Input.is_action_pressed(neg_action)
+	var pos_held := Input.is_action_pressed(pos_action)
+	if neg_held and pos_held:
+		return pos_val if facing_component == pos_val else neg_val
+	if neg_held:
+		return neg_val
+	if pos_held:
+		return pos_val
+	return 0
 
 
 ## FIELD HELD-KEY MOVEMENT (2026-07-05 playtest directive): fires once per

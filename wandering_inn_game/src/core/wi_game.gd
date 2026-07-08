@@ -574,11 +574,33 @@ func entity_at(cell: Vector2i) -> Dictionary:
 	return {}
 
 
+## Issue #40 (8-way field movement): `dir` is now any of the 8 unit vectors
+## (4 cardinal, 4 diagonal -- both components nonzero) rather than just the 4
+## cardinals; combat is untouched (`WICombat`/`move_active` is a wholly
+## separate class this function never touches, and world.gd only ever calls
+## THIS `move_player` from the field input handlers). `player_facing` always
+## collapses to a cardinal via `_nearest_cardinal` even for a diagonal `dir`
+## (every sprite rig / interact-target / bump-visual is 4-directional and
+## only ever expects UP/DOWN/LEFT/RIGHT) -- a cardinal `dir` passes through
+## unchanged, so every existing single-dir caller (QA scripts included) sees
+## byte-identical facing to before this change. The corner-cutting guard
+## below only runs for a genuine diagonal (`_is_diagonal`), so a cardinal
+## move's blocked check is exactly the pre-#40 `is_cell_blocked(target)`
+## call, unchanged.
 func move_player(dir: Vector2i) -> bool:
 	if dialogue != null:
 		return false
-	player_facing = dir
+	player_facing = _nearest_cardinal(dir)
 	var target := player_cell + dir
+	# Corner-cutting rule (block-if-either-orthogonal-blocked): a diagonal
+	# step is legal only when BOTH straight paths to it are open -- refusing
+	# it the instant EITHER orthogonal neighbor is blocked stops the player
+	# sliding diagonally through a wall corner two blocked cells share but
+	# never actually touch as a face. Checked before the target-cell check
+	# below (which still catches a blocked/occupied diagonal target itself).
+	if _is_diagonal(dir) and (is_cell_blocked(player_cell + Vector2i(dir.x, 0)) or is_cell_blocked(player_cell + Vector2i(0, dir.y))):
+		_emit(WIEvents.PLAYER_BLOCKED, {"cell": [target.x, target.y]})
+		return false
 	if is_cell_blocked(target):
 		_emit(WIEvents.PLAYER_BLOCKED, {"cell": [target.x, target.y]})
 		return false
@@ -588,6 +610,22 @@ func move_player(dir: Vector2i) -> bool:
 	_check_trigger_radius()
 	_check_delivery_arrival()
 	return true
+
+
+static func _is_diagonal(dir: Vector2i) -> bool:
+	return dir.x != 0 and dir.y != 0
+
+
+## Collapses any of the 8 move directions to one of the 4 cardinal unit
+## vectors. A cardinal `dir` passes through unchanged. A diagonal is exactly
+## 45 degrees from EITHER adjacent cardinal (this grid only ever produces
+## unit-magnitude diagonals), so "nearest" is a genuine tie -- broken toward
+## horizontal (LEFT/RIGHT) deterministically, matching the side-facing walk
+## cycle most 4-dir top-down rigs read most clearly on a diagonal step.
+static func _nearest_cardinal(dir: Vector2i) -> Vector2i:
+	if _is_diagonal(dir):
+		return Vector2i(dir.x, 0)
+	return dir
 
 
 ## Onboarding rev Task O2 (spec §3): proximity ambush. Any `encounter`
