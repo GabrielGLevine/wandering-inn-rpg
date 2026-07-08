@@ -247,11 +247,13 @@ current-state-only, one short paragraph per live system.
   under the same black veil — the door prop itself never speaks. Full
   detail: "The Magical Door / portal menu (Task D4)" block in
   `docs/ARCHITECTURE-HISTORY.md`.
-- **Character creation (`char_creation.gd`, M-ARC §5)** — New Game → race
-  (Human/Drake/Gnoll) → gender (cosmetic) → name. Three cosmetic sim fields
-  (`pc_name`/`pc_race`/`pc_gender`), additive save, no mechanical effect.
-  QA auto-skips creation with everyman defaults unless a script opts in.
-  Full detail: "Character creation (M-ARC §5)" block in
+- **Character creation (`char_creation.gd`, M-ARC §5, picker recomposed issue
+  #42)** — New Game → a one-step 2x3 sprite-picker grid (six idle-animated
+  AnimatedSprite2D PC variants via `WISpriteRegistry`: Human/Drake/Gnoll ×
+  Male/Female) → name. Picking a card sets `pc_race`+`pc_gender` together.
+  Three cosmetic sim fields (`pc_name`/`pc_race`/`pc_gender`), additive save,
+  no mechanical effect. QA auto-skips creation with everyman defaults unless
+  a script opts in. Full detail: "Character creation (M-ARC §5)" block in
   `docs/ARCHITECTURE-HISTORY.md`.
 - **Equipment & Gear** — pure sim state, `WIGame.inventory` (ids) +
   `equipped` (5 keys: `weapon`, `armor`, `accessory_1/_2/_3`, per M-GEAR

@@ -118,33 +118,51 @@ task names, and self-references to "this task"/"this block".
   skeleton_scene.json, `door` entities transition). UI: dialogue panel / journal (J) /
   pause menu (Esc: save/load).
 
-- **Character creation (M-ARC §5):** New Game → `char_creation.gd` (native-res,
-  title-family UIChrome): race (Human/Drake/Gnoll) → gender (m/f, cosmetic) →
-  name (default "Traveler"). Three COSMETIC sim fields — `pc_name`/`pc_race`/
-  `pc_gender` (WIGame, additive save, NO version bump, tolerant sanitizers; NO
-  mechanical effect, no sim rule branches on them). Flow: title New Game →
-  `WIMain.swap_to_char_creation` (deferred) → confirm fires
-  `Game.reset({pc_name,pc_race,pc_gender})`, threaded ctor→sim; a load restores
-  identity from the save (never sees the creation dict). **QA:** `TestDriver`
-  auto-skips creation with the everyman defaults (Human/m/"Traveler") — the
-  creation screen is only ever SPAWNED when actually wanted (real play, or a QA
-  script that opts in via top-level `creation_ui: true` → `TestDriver.wants_creation_ui()`);
-  the default skip is byte-identical to the pre-feature New Game. `char_creation`
-  is the one canonical driving the real UI (name typed via TestDriver's new
-  `type_text` unicode step). **`pc_name` everywhere:** the combat turn-strip/
-  readout name comes from the runtime combatant dict (`_build_player_combatant`
-  overrides `display_name` = `pc_name`); field name tags were retired (R3) so
-  there is no other player-name render surface. **Sprite variant-key
-  indirection (presentation-only, sim purity preserved):** the sim builds a pure
-  key `pc_sprite_variant()` = `"pc_<race>_<gender>"`; the TWO bind sites resolve
-  it against `WISpriteRegistry` — world.gd `_pc_variant_sprite` (field visual)
-  and board_renderer `_combatant_sprite_id` (combat chip) — each degrading to the
+- **Character creation (M-ARC §5; picker recomposed by issue #42):** New Game →
+  `char_creation.gd` (native-res, title-family UIChrome): a single PICK step —
+  a 2x3 grid of the six PC sprite variants (`PC_OPTIONS`, row-major: top row
+  Male across Human/Drake/Gnoll, bottom row Female), each card an
+  idle-animated `AnimatedSprite2D` built from `WISpriteRegistry.frames_for`
+  (playing `idle_down`, uniformly scaled to a fixed on-screen portrait height
+  regardless of each race's native frame size) inside the same
+  `UIChrome.make_chrome_panel`/`BLUE_BUTTON`/`BLUE_BUTTON_PRESSED`
+  cursor-highlight idiom the title screen's row menu uses — arrows move the
+  cursor across the grid (`move_left/right` change column/race, `move_up/down`
+  change row/gender), confirm picks the highlighted card and sets
+  `pc_race`+`pc_gender` TOGETHER — then a NAME step (default "Traveler"),
+  unchanged. Three COSMETIC sim fields — `pc_name`/`pc_race`/`pc_gender`
+  (WIGame, additive save, NO version bump, tolerant sanitizers; NO mechanical
+  effect, no sim rule branches on them) — are BYTE-IDENTICAL to the pre-#42
+  two-step race→gender menus; this was a presentation-only recomposition, no
+  sim payload change. Flow: title New Game → `WIMain.swap_to_char_creation`
+  (deferred) → confirm fires `Game.reset({pc_name,pc_race,pc_gender})`,
+  threaded ctor→sim; a load restores identity from the save (never sees the
+  creation dict). **QA:** `TestDriver` auto-skips creation with the everyman
+  defaults (Human/m/"Traveler") — the creation screen is only ever SPAWNED
+  when actually wanted (real play, or a QA script that opts in via top-level
+  `creation_ui: true` → `TestDriver.wants_creation_ui()`); the default skip is
+  byte-identical to the pre-feature New Game. `char_creation` is the one
+  canonical driving the real UI (name typed via TestDriver's `type_text`
+  unicode step; re-pinned for #42's step shape — `ui_char_creation_rendered`
+  now emits `{"step": "pick"}`/`{"step": "name"}`, not the old
+  `"race"`/`"gender"`/`"name"` trio). **`pc_name` everywhere:** the combat
+  turn-strip/readout name comes from the runtime combatant dict
+  (`_build_player_combatant` overrides `display_name` = `pc_name`); field
+  name tags were retired (R3) so there is no other player-name render
+  surface. **Sprite variant-key indirection (presentation-only, sim purity
+  preserved):** the sim builds a pure key `pc_sprite_variant()` =
+  `"pc_<race>_<gender>"`; the TWO bind sites resolve it against
+  `WISpriteRegistry` — world.gd `_pc_variant_sprite` (field visual) and
+  board_renderer `_combatant_sprite_id` (combat chip) — each degrading to the
   data default `body_a` when a variant's art is unregistered. 6 variants
-  (human/drake/gnoll × m/f, all in the same earth-tone traveler outfit) via the
-  F2 PixelLab v2 pipeline. **Opener branches by race** (`sleep_veil._opener_lines`):
-  Human keeps the otherworlder arrival; Drake/Gnoll get a canon-safe "starting
-  over in Liscor" variant (⚑ user taste-review); all 4 lines so the opener-line
-  count is race-invariant.
+  (human/drake/gnoll × m/f, all in the same earth-tone traveler outfit) via
+  the F2 PixelLab v2 pipeline; issue #42's picker is the first UI surface to
+  render all six side by side, so it doubles as the live distinct-silhouette
+  proof (verified via windowed screenshot, not just data presence). **Opener
+  branches by race** (`sleep_veil._opener_lines`): Human keeps the
+  otherworlder arrival; Drake/Gnoll get a canon-safe "starting over in
+  Liscor" variant (⚑ user taste-review); all 4 lines so the opener-line count
+  is race-invariant.
 
 - **Combat depth (M3):** movement economy — `move_pool` (3 free steps/turn) spends
   before AP; `dash()` costs 1 AP for +3 pool, repeatable. Statuses live in a

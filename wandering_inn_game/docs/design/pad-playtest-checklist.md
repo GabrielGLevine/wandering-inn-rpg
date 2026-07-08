@@ -55,8 +55,11 @@ issue if #18 is already closed) rather than silently working around it.
   `InputEventJoypadMotion` from the gesture check on purpose.)
 - [ ] Move the menu cursor with the d-pad or stick (Up/Down) between New
   Game / Continue / Quit. Confirm New Game with A.
-- [ ] **Character creation, race step:** move with d-pad/stick, confirm
-  with A. Repeat for the gender step.
+- [ ] **Character creation, sprite picker (issue #42):** a 2x3 grid of six
+  idle-animated sprites (Human/Drake/Gnoll × Male/Female). Move the cursor
+  in all four directions with d-pad/stick — left/right cross races, up/down
+  swap gender — and confirm your pick with A (this sets race+gender
+  together in one step, no separate gender screen anymore).
 - [ ] **Character creation, name step:** the field should already show
   "Traveler" as real (non-greyed) text. Press A without touching anything
   else — the game should start with the PC named "Traveler". (This is the
