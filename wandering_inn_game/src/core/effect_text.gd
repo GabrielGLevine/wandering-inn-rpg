@@ -1,6 +1,6 @@
 class_name WIEffectText
 extends RefCounted
-## M-LEGIBILITY L1: the effect-line formatter (pure, static).
+## The effect-line formatter (pure, static).
 ##
 ## Renders items, Skills, and statuses into the game's VISIBLE-CURRENCY tier
 ## ONLY: HP / MP / AP / damage dice+mods / move cells / gold / rounds. Every
@@ -22,7 +22,7 @@ extends RefCounted
 ## arg form loads res://data/skills.json (deterministic, side-effect-free data
 ## read) to source the `slowed` penalty from where it is DEFINED; `_caster_
 ## weapon_die` likewise loads res://data/combatants.json to source a spell's
-## damage die from where the SIM actually rolls it (M-LEGIBILITY L5: skills.json's
+## damage die from where the SIM actually rolls it (skills.json's
 ## old `effect.die` field was vestigial, never read by wi_combat.gd — see that
 ## function's doc comment). Both catalog-injecting overloads keep the
 ## derivation unit-testable / tripwire-able.
@@ -31,8 +31,7 @@ const SKILLS_PATH := "res://data/skills.json"
 const COMBATANTS_PATH := "res://data/combatants.json"
 ## The price line's prefix — WIDialogue drops the price line from shop-option
 ## effect_lines by matching THIS const (a buy option's text already names its
-## price), so rephrasing the price line here can never silently un-filter it
-## (opus final-review M4).
+## price), so rephrasing the price line here can never silently un-filter it.
 const PRICE_LINE_PREFIX := "Worth "
 
 ## Short present-tense verb appended to a Skill's effect line when it applies a
@@ -44,7 +43,7 @@ const _STATUS_VERB := {
 
 
 ## Concrete effect lines for an inventory/shop item card, top to bottom:
-## combat mods (damage, HP, reduction), resonance if present (M-GEAR), then the
+## combat mods (damage, HP, reduction), resonance if present, then the
 ## gold value. A plain item with no mods and no price yields an empty array —
 ## its card is name + description only.
 static func item_effect_lines(item: Dictionary) -> Array[String]:
@@ -58,7 +57,7 @@ static func item_effect_lines(item: Dictionary) -> Array[String]:
 	var reduction := int(item.get(WIKeys.DAMAGE_REDUCTION, 0))
 	if reduction > 0:
 		lines.append("Reduces every hit taken by %d" % reduction)
-	# M-GEAR ships resonance; formatted here now so the card is ready for it.
+	# Resonance is a live gear stat; formatted here so the card carries it.
 	if item.has(WIKeys.RESONANCE) and int(item[WIKeys.RESONANCE]) > 0:
 		lines.append("Resonance %d" % int(item[WIKeys.RESONANCE]))
 	if item.has(WIKeys.PRICE) and int(item[WIKeys.PRICE]) > 0:
@@ -125,7 +124,7 @@ static func _cost_prefix(skill: Dictionary) -> String:
 static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], ap_cost: int = 0) -> String:
 	match String(effect.get(WIKeys.TYPE, "")):
 		"spell_damage":
-			# M-LEGIBILITY L5: skills.json's `effect.die` was VESTIGIAL --
+			# skills.json's `effect.die` was VESTIGIAL --
 			# wi_combat.gd's _resolve_hit rolls the CASTER's own `weapon_die`
 			# for every hit, melee or spell alike, and never reads this field
 			# (L1 finding, resolved here). The die is real data, not a
@@ -140,7 +139,7 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 		"damage_mult":
 			return "×%s damage" % _fmt_mult(float(effect.get(WIKeys.MULT, 1.0)))
 		"heal":
-			# Skills Wave Task K4: WIRED -- `WISkillEffects.resolve_active`
+			# WIRED -- `WISkillEffects.resolve_active`
 			# (src/core/combat/skill_effects.gd) gained a real heal resolver,
 			# so the line is no longer a promise-only lie. SELF-ONLY tonight
 			# (the sim resolver refuses any target other than the actor's
@@ -149,7 +148,7 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			# "an ally". Widen this phrase the same task ally-targeting lands.
 			return "restore %d HP to yourself" % int(effect.get(WIKeys.AMOUNT, 0))
 		"icy_floor":
-			# GH#21: WIRED -- `WISkillEffects.resolve_active` (skill_effects.gd)
+			# WIRED -- `WISkillEffects.resolve_active` (skill_effects.gd)
 			# gained a real icy_floor resolver (an area-terrain cast: the target
 			# id picks the blast CENTER via the existing combatant-targeting
 			# mode -- no new cell-targeting UI needed after all -- and
@@ -164,13 +163,13 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 				side, side, int(effect.get(WIKeys.RANGE, 0)), int(effect.get(WIKeys.DURATION_ROUNDS, 0)),
 			]
 		"move_pool_bonus":
-			# Skills Wave Task K2: UN-SUPPRESSED for an actively-cast skill
+			# UN-SUPPRESSED for an actively-cast skill
 			# (ap_cost > 0) -- skill_effects.gd's `resolve_active` wires a
 			# real self-buff resolver for exactly that shape (today, only
 			# [Stealth]; see its doc comment for why the gate is ap_cost>0
 			# specifically).
 			#
-			# Skills Wave Task K4: the two PRE-EXISTING 0-cost move_pool_bonus
+			# The two PRE-EXISTING 0-cost move_pool_bonus
 			# skills (quick_movement, battlefield_awareness) are ALSO now
 			# UN-SUPPRESSED -- wi_combat.gd's `_start_turn` gained a real
 			# `_move_pool_bonus_total` passive consumer for exactly the
@@ -186,7 +185,7 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			return "+%d max HP" % int(effect.get(WIKeys.AMOUNT, 0))
 		"hit_bonus":
 			return "+%d to hit" % int(effect.get(WIKeys.AMOUNT, 0))
-		# DRIFT SEAM (opus final-review M1): the three arms below emit truthful
+		# DRIFT SEAM: the three arms below emit truthful
 		# lines for any skill carrying these effect TYPES, but the sim wires
 		# each mechanic by literal skill NAME (wi_combat.gd: counter_strike,
 		# battle_momentum, mana_shield). 1:1 today. A future skill REUSING one

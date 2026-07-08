@@ -1,5 +1,5 @@
 extends Node
-## Controller support (S3, issue #18): device detection + the keycap-hint
+## Device detection + the keycap-hint
 ## composer. Register as autoload `WIInputHints`.
 ##
 ## Tracks which device class the player last touched (keyboard/mouse vs.

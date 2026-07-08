@@ -1,6 +1,6 @@
 class_name WISocial
 extends RefCounted
-## ARCH-4: talk-pool rotation + heard_gossip banking, extracted from
+## talk-pool rotation + heard_gossip banking, extracted from
 ## wi_game.gd. PURITY RULE: no autoload/Node/scene-tree references.
 ## `social_talked` itself stays a WIGame field (save.gd reads/writes it
 ## directly and is banned from this task's diff, and it is reassigned
@@ -26,7 +26,7 @@ func _init(event_sink: Callable, accomplishment_count_cb: Callable, record_accom
 	_record_accomplishment = record_accomplishment_cb
 
 
-## The rotating "small talk" interact path (Social Pillar S1). Plays ONE
+## The rotating "small talk" interact path. Plays ONE
 ## pooled line from the faced NPC's `talk_pool` (an array of canon-voiced
 ## strings), chosen by `chatted_with_<id> % pool_size` so the line ROTATES
 ## deterministically across wakings with ZERO rng (no canonical-seed risk).
@@ -40,8 +40,8 @@ func _init(event_sink: Callable, accomplishment_count_cb: Callable, record_accom
 func talk_pool_line(target: Dictionary, social_talked: Dictionary) -> Dictionary:
 	var id := String(target[WIKeys.ID])
 	var pool: Array = target["talk_pool"]
-	# Social Pillar II (generalizes Content Wave C4's one-shot talk_pool_post
-	# growth): an NPC may carry `talk_pool_stages`, an ORDERED array of
+	# Generalizing the one-shot talk_pool_post
+	# growth: an NPC may carry `talk_pool_stages`, an ORDERED array of
 	# {id, requires_accomplishment, lines}. Walk it in AUTHORED order and let
 	# the LAST entry whose gate is met win (ascending authoring -- the same
 	# convention as visual_states/classes.json level tables); an empty/absent
@@ -64,7 +64,7 @@ func talk_pool_line(target: Dictionary, social_talked: Dictionary) -> Dictionary
 ## True when every accomplishment threshold in `req` (id -> min count) is
 ## met (>= semantics). An empty/absent dict reads as "always met".
 ## Keep in sync with WIGame._accomplishment_gate_met (deliberate tiny
-## duplicate over an 8th injected Callable -- ARCH-4 review LOW note).
+## duplicate, deliberately preferred over an 8th injected Callable).
 func _accomplishment_gate_met(req: Dictionary) -> bool:
 	for key: String in req:
 		if int(_accomplishment_count.call(key)) < int(req[key]):

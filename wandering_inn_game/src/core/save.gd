@@ -3,32 +3,32 @@ extends RefCounted
 ## Pure save serialization. NO file I/O here: the Game autoload owns disk.
 ## rng_state travels as a String because u64 states exceed JSON double precision.
 
-## 2 (M5 final review): the E3 inn re-layout (10x6 -> 16x10, new blocked
+## 2: the inn re-layout (10x6 -> 16x10, new blocked
 ## cells) makes v1 player_cell coordinates unsafe -- apply() rejects older
 ## versions rather than loading a position that may sit inside furniture or
 ## a wall segment (three v1-reachable cells are full softlocks).
-## 3 (M6 T2): adds `dormant_encounters` (respawning encounters beaten since
+## 3: adds `dormant_encounters` (respawning encounters beaten since
 ## the last sleep). v2 saves migrate transparently in _migrated() -- nothing
 ## could be dormant when a v2 save was written; v1 stays rejected.
-## (M6 T3): `generalist_classes` (classes that took the balanced-mage
+## `generalist_classes` (classes that took the balanced-mage
 ## evolution path) is added WITHOUT a version bump -- it is optional and
 ## NOT in `required`; a save missing the key (any v3 save written before
 ## this task) restores an empty set, which is exactly correct (no class
 ## had gone generalist yet). T5 owns any future coordinated version bump.
-## (M6 T5): `pending_consolidation` (an offer awaiting accept/decline at the
+## `pending_consolidation` (an offer awaiting accept/decline at the
 ## next sleep) is added the SAME way -- additive, optional, NOT in
 ## `required`, NO version bump. A save missing the key (any save written
 ## before this task, or simply a save with no offer pending) restores an
 ## empty Dictionary, which is exactly correct (no offer was pending).
-## (M6 T9): the base class id `fighter` was renamed to `warrior`; loaded saves
+## the base class id `fighter` was renamed to `warrior`; loaded saves
 ## are remapped in _migrated() with NO version bump (idempotent), so v3 stays
 ## the current VERSION.
-## (UI wave item 19): `used_skills` (the journal panel's first-use reveal SET)
+## `used_skills` (the journal panel's first-use reveal SET)
 ## is added the SAME additive-optional way as `generalist_classes`/
 ## `pending_consolidation` above — NOT in `required`, NO version bump. A save
 ## missing the key (any save written before this task) restores an empty
 ## Array, which is exactly correct (nothing had been revealed yet).
-## 4 (M-FP final review fix, W1 fallout): the W1 street relayout (10x6 ->
+## 4: the street relayout (10x6 ->
 ## 32x20, new gate district + blocked cells) makes v3 `street` player_cell
 ## coordinates unsafe -- same class of bug as the v1->v2 bump above (13
 ## old-street walkable cells are now blocked; (0,0)/(0,5) are full
@@ -36,11 +36,11 @@ extends RefCounted
 ## geometry is stale, not the state (v2->v3 precedent). A v3 save whose
 ## `current_map` is "street" gets `player_cell` relocated to `[1, 3]` (the
 ## `liscor_gate` arrival cell -- in-bounds, unblocked, unoccupied in the new
-## street layout, confirmed by M-FP Q2's gate_district_walkthrough). Every
+## street layout, confirmed by gate_district_walkthrough). Every
 ## other v3 save (any other current_map) passes through unchanged. _migrated
 ## composes this on top of the v2->v3 step, so a v2 `street` save chains
 ## through BOTH migrations in one call.
-## 5 (M7 Task E2, weapons+equipment + the M-BEAUTY FOLD amendment): adds
+## 5 (weapons+equipment + the phase-clock fold): adds
 ## `inventory` (Array[String]), `equipped` ({"weapon","armor"}),
 ## `container_state` (Dictionary), and `actions_since_sleep` (int) to
 ## `required` -- these are new REQUIRED fields (not the additive-optional
@@ -55,24 +55,24 @@ extends RefCounted
 ## v4-and-earlier PC's actual in-fiction state) with a freshly reset action
 ## clock. _migrated composes this as the fourth step on top of v2->v3->v4,
 ## so a v2 save chains through all three hops in one call.
-## (Social Pillar S1): `social_talked` and `entity_first_use` (both
+## `social_talked` and `entity_first_use` (both
 ## Dictionaries, the per-waking talk-pool + first-use dedup state) are added
 ## the SAME additive-optional way as generalist_classes/pending_consolidation/
 ## used_skills above -- NOT in `required`, NO version bump. A save missing
 ## either key (any save written before this task) restores an empty Dictionary,
 ## which is exactly correct (a fresh waking has done no small-talk and no
 ## first-use bank yet); a present-but-wrong-typed value is still rejected.
-## (Economy v1 Task D1): `gold` (int, the coin purse) is added the SAME
+## `gold` (int, the coin purse) is added the SAME
 ## additive-optional way as generalist_classes/pending_consolidation/
 ## used_skills/social_talked above -- NOT in `required`, NO version bump.
-## A save missing the key (any save written before Economy v1) restores 0,
+## A save missing the key (older saves) restores 0,
 ## which is exactly correct (currency did not exist yet, so nothing was
 ## earned); a present-but-wrong-typed value (not int/float) is still rejected.
 ## (Playtest feature 3): `light_active` (bool, the conjured [Light] orb glow) is
 ## added the SAME additive-optional way -- NOT in `required`, NO version bump.
 ## A save missing the key restores false (no orb was lit before the feature
 ## existed); a present-but-non-bool value is rejected.
-## (M-ARC §5 character creation): `pc_name` (String), `pc_race` (String), and
+## (character creation): `pc_name` (String), `pc_race` (String), and
 ## `pc_gender` (String) -- the PC's cosmetic identity -- are added the SAME
 ## additive-optional way as light_active/gold/used_skills above (NOT in
 ## `required`, NO version bump). A save missing any of them restores the
@@ -81,7 +81,7 @@ extends RefCounted
 ## load each value is re-sanitized through WIGame's own tolerant sanitizers, so
 ## a corrupt string can never poison the sprite-variant key or the opener
 ## branch; a present-but-non-String value is rejected.
-## (Skills Wave Task K1): `frozen_cells` (the frost-cast ice set, JSON form
+## `frozen_cells` (the frost-cast ice set, JSON form
 ## `{map_id: [[x,y], ...]}`) is added the SAME additive-optional way as
 ## light_active/gold above -- NOT in `required`, NO version bump. A save missing
 ## the key (any save written before the traversal seams) restores an empty set,
@@ -89,12 +89,12 @@ extends RefCounted
 ## every sleep anyway); a present-but-non-Dictionary value is rejected. Restored
 ## through WIGame.set_frozen_cells_json, which tolerantly skips malformed inner
 ## pairs, so a garbled cell list can never crash the load.
-## (M-LEGIBILITY L4): `seen_statuses` (the status glossary's seen-set, Array[String])
+## `seen_statuses` (the status glossary's seen-set, Array[String])
 ## is added the SAME additive-optional way as `used_skills` above -- NOT in
 ## `required`, NO version bump. A save missing the key (any save written before
 ## this task) restores an empty Array, which is exactly correct (nothing had
 ## been encountered yet).
-## (M-GEAR Task G1, resonance-limited accessory slots): TWO additive changes,
+## (resonance-limited accessory slots): TWO additive changes,
 ## neither bumps VERSION (still 5):
 ##   1. `equipped` (already REQUIRED since v5) gains three new keys inside the
 ##      SAME Dictionary shape -- `accessory_1`/`accessory_2`/`accessory_3`.
@@ -118,13 +118,13 @@ extends RefCounted
 ##      before this task could have changed it). A present-but-wrong-typed
 ##      value (not int/float) is rejected, mirroring the gold/
 ##      actions_since_sleep numeric checks.
-## (Skills Wave Task K2, the sneak seam): `WIGame.sneaking` is DELIBERATELY
+## (the sneak seam): `WIGame.sneaking` is DELIBERATELY
 ## NOT PERSISTED -- no key in `serialize()`/`apply()` at all, unlike every
 ## additive-optional flag above. A save/reload always restores false; sneaking
 ## honestly drops (see wi_game.gd's own doc comment on the field for the full
 ## break-condition list). No version bump (nothing to migrate: there was never
 ## a saved value to be missing).
-## (Skills Wave Task K2b): `hotbar_loadout` (Array[String], the player's
+## `hotbar_loadout` (Array[String], the player's
 ## ordered shared-bar assignment) follows the SAME additive-optional pattern
 ## as `frozen_cells`/`seen_statuses` above -- NOT in `required`, NO version
 ## bump. A save missing the key (any save written before this task) restores
@@ -134,7 +134,7 @@ extends RefCounted
 ## here -- `WIGame.apply_loadout`'s candidate-set intersection is what
 ## silently drops an id that no longer resolves to a known/fielded skill (a
 ## future K3 rename), not this load path.
-## (M-DEPTH Task DP2, THE REQUEST BOARD): FOUR additive fields follow the SAME
+## (THE REQUEST BOARD): FOUR additive fields follow the SAME
 ## additive-optional pattern as gold/generalist_classes/hotbar_loadout above --
 ## NOT in `required`, NO version bump:
 ##   `times_slept` (int, default 0) -- the board's rotation clock; a save
@@ -148,7 +148,7 @@ extends RefCounted
 ##   `board_last_seen_times_slept` (int, default 0) -- matches times_slept's
 ##   own default, so a restored old save never false-positives Selys's "slate
 ##   rotated overnight" line on its very first post-load board visit.
-## (M-DEPTH Task DP5, the Runner's Guild): THREE additive fields, the SAME
+## (the Runner's Guild): THREE additive fields, the SAME
 ## additive-optional pattern -- NOT in `required`, NO version bump:
 ##   `accepted_delivery_id` (String, default "") -- no slip could have been
 ##   held before this feature existed (accepted_bounty_id's exact twin).
@@ -157,13 +157,13 @@ extends RefCounted
 ##   `delivery_failed` (bool, default false) -- no run could have failed
 ##   before the feature existed; false means Vess's one-shot night-ledger
 ##   bark never false-fires on a restored old save.
-## (GH#27, the delivery-slate rotation signpost): ONE additive field, the
+## (the delivery-slate rotation signpost): ONE additive field, the
 ## SAME pattern as `board_last_seen_times_slept` above -- NOT in `required`,
 ## NO version bump:
 ##   `delivery_last_seen_times_slept` (int, default 0) -- matches
 ##   `times_slept`'s own default, so a restored old save never false-positives
 ##   Vess's rotation bark on its very first post-load picker open.
-## Issue #23 (Erin's daily meal, Social Pillar II): `well_fed` (bool) is added
+## `well_fed` (bool) is added
 ## the SAME additive-optional way as `light_active` above -- NOT in `required`,
 ## NO version bump. A save missing the key restores false (no meal was eaten
 ## before the feature existed, and the perk doesn't carry past a rest anyway);
@@ -223,7 +223,7 @@ static func serialize(game: WIGame) -> Dictionary:
 ##             IF AND ONLY IF current_map is "street" (W1 relayout fallout --
 ##             see the VERSION 4 note above); every other v3 save passes
 ##             through unchanged.
-## ON TOP of the version chain, the M6 T9 fighter->warrior class rename is
+## ON TOP of the version chain, the fighter->warrior class rename is
 ## applied to any v2/v3/v4 save WITHOUT a version bump -- the base class id
 ## changed from `fighter` to `warrior`, so a save written before the rename
 ## carries `fighter` in its classes dict and is remapped here; the remap is
@@ -246,7 +246,7 @@ static func _migrated(data: Dictionary) -> Dictionary:
 			state["player_cell"] = [1, 3]
 		version = 4
 	if version == 4:
-		# M7 Task E2: an old save wakes up carrying and wielding the starter
+		# An old save wakes up carrying and wielding the starter
 		# sword exactly as if it always had (the invariant equip() maintains
 		# going forward: equipped items are always also in inventory), with
 		# an empty container_state and a freshly reset action clock.
@@ -258,7 +258,7 @@ static func _migrated(data: Dictionary) -> Dictionary:
 	out["version"] = version
 	# Typed-assignment guard: a malformed save can carry a non-Dictionary
 	# "classes" (apply() rejects it later) -- fetching it into a typed var
-	# here threw a SCRIPT ERROR before rejection (caught in M-FP S1's sweep).
+	# here threw a SCRIPT ERROR before rejection.
 	var cls_raw: Variant = state.get("classes", {})
 	if cls_raw is Dictionary:
 		var cls: Dictionary = cls_raw
@@ -291,33 +291,33 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 		return false
 	if not (s["dormant_encounters"] is Array):
 		return false
-	# generalist_classes (M6 T3) is intentionally NOT in `required`: it is an
+	# generalist_classes is intentionally NOT in `required`: it is an
 	# additive optional field with a safe default. A present-but-wrong-typed
 	# value is still malformed and rejected.
 	if s.has("generalist_classes") and not (s["generalist_classes"] is Array):
 		return false
-	# pending_consolidation (M6 T5) follows the SAME additive-optional pattern.
+	# pending_consolidation follows the SAME additive-optional pattern.
 	if s.has("pending_consolidation") and not (s["pending_consolidation"] is Dictionary):
 		return false
-	# used_skills (UI wave item 19) follows the SAME additive-optional pattern.
+	# used_skills follows the SAME additive-optional pattern.
 	if s.has("used_skills") and not (s["used_skills"] is Array):
 		return false
-	# seen_statuses (M-LEGIBILITY L4) follows the SAME additive-optional pattern.
+	# seen_statuses follows the SAME additive-optional pattern.
 	if s.has("seen_statuses") and not (s["seen_statuses"] is Array):
 		return false
-	# social_talked / entity_first_use (Social Pillar S1) follow the SAME
+	# social_talked / entity_first_use follow the SAME
 	# additive-optional pattern -- default {} when absent, rejected if mistyped.
 	if s.has("social_talked") and not (s["social_talked"] is Dictionary):
 		return false
 	if s.has("entity_first_use") and not (s["entity_first_use"] is Dictionary):
 		return false
-	# gold (Economy v1 Task D1) follows the SAME additive-optional pattern --
+	# gold follows the SAME additive-optional pattern --
 	# default 0 when absent, rejected if present-but-non-numeric (JSON restores
 	# whole numbers as float, so int OR float is accepted, mirroring the
 	# actions_since_sleep check).
 	if s.has("gold") and not (s["gold"] is int or s["gold"] is float):
 		return false
-	# resonance_capacity (M-GEAR Task G1) follows the SAME additive-optional
+	# resonance_capacity follows the SAME additive-optional
 	# pattern as gold -- default 2 when absent, rejected if present-but-non-
 	# numeric (JSON restores whole numbers as float, so int OR float accepted).
 	if s.has("resonance_capacity") and not (s["resonance_capacity"] is int or s["resonance_capacity"] is float):
@@ -328,44 +328,44 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# version bump.
 	if s.has("light_active") and not (s["light_active"] is bool):
 		return false
-	# well_fed (Issue #23, Erin's daily meal) follows the SAME additive-optional
+	# well_fed (Erin's daily meal) follows the SAME additive-optional
 	# pattern as light_active above -- default false when absent, rejected if
 	# present-but-non-bool. No version bump.
 	if s.has("well_fed") and not (s["well_fed"] is bool):
 		return false
-	# frozen_cells (Skills Wave Task K1) follows the SAME additive-optional
+	# frozen_cells follows the SAME additive-optional
 	# pattern -- default {} when absent (no ice before the feature), rejected if
 	# present-but-non-Dictionary; malformed inner cell lists are skipped on
 	# restore (set_frozen_cells_json), never rejected.
 	if s.has("frozen_cells") and not (s["frozen_cells"] is Dictionary):
 		return false
-	# hotbar_loadout (Skills Wave Task K2b) follows the SAME additive-optional
+	# hotbar_loadout follows the SAME additive-optional
 	# pattern -- default [] (AUTO) when absent, rejected if present-but-non-Array.
 	if s.has("hotbar_loadout") and not (s["hotbar_loadout"] is Array):
 		return false
-	# pc_name/pc_race/pc_gender (M-ARC §5) follow the SAME additive-optional
+	# pc_name/pc_race/pc_gender follow the SAME additive-optional
 	# pattern -- default to the everyman identity when absent, rejected if
 	# present-but-non-String; the values themselves are re-sanitized on restore.
 	for pc_key: String in ["pc_name", "pc_race", "pc_gender"]:
 		if s.has(pc_key) and not (s[pc_key] is String):
 			return false
-	# times_slept/board_last_seen_times_slept (M-DEPTH DP2) follow the SAME
+	# times_slept/board_last_seen_times_slept follow the SAME
 	# additive-optional pattern as actions_since_sleep's numeric check above --
 	# default 0 when absent, rejected if present-but-non-numeric.
 	if s.has("times_slept") and not (s["times_slept"] is int or s["times_slept"] is float):
 		return false
 	if s.has("board_last_seen_times_slept") and not (s["board_last_seen_times_slept"] is int or s["board_last_seen_times_slept"] is float):
 		return false
-	# accepted_bounty_id (M-DEPTH DP2) follows the SAME additive-optional
+	# accepted_bounty_id follows the SAME additive-optional
 	# pattern -- default "" when absent, rejected if present-but-non-String.
 	if s.has("accepted_bounty_id") and not (s["accepted_bounty_id"] is String):
 		return false
-	# accepted_bounty_baseline (M-DEPTH DP2) follows the SAME additive-optional
+	# accepted_bounty_baseline follows the SAME additive-optional
 	# pattern -- default {} when absent, rejected if present-but-non-Dictionary.
 	if s.has("accepted_bounty_baseline") and not (s["accepted_bounty_baseline"] is Dictionary):
 		return false
-	# accepted_delivery_id/accepted_delivery_baseline/delivery_failed (M-DEPTH
-	# DP5) follow the SAME additive-optional pattern -- the DP2 bounty trio's
+	# accepted_delivery_id/accepted_delivery_baseline/delivery_failed follow
+	# the SAME additive-optional pattern -- the bounty trio's
 	# exact twins plus a bool (light_active's check shape).
 	if s.has("accepted_delivery_id") and not (s["accepted_delivery_id"] is String):
 		return false
@@ -373,12 +373,12 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 		return false
 	if s.has("delivery_failed") and not (s["delivery_failed"] is bool):
 		return false
-	# delivery_last_seen_times_slept (GH#27) follows the SAME additive-optional
+	# delivery_last_seen_times_slept follows the SAME additive-optional
 	# pattern as board_last_seen_times_slept above -- default 0 when absent,
 	# rejected if present-but-non-numeric.
 	if s.has("delivery_last_seen_times_slept") and not (s["delivery_last_seen_times_slept"] is int or s["delivery_last_seen_times_slept"] is float):
 		return false
-	# inventory/equipped/container_state/actions_since_sleep (M7 Task E2) ARE
+	# inventory/equipped/container_state/actions_since_sleep ARE
 	# in `required` above (this is a version-bumped addition, not the
 	# additive-optional pattern) -- still type-checked here like every other
 	# required field.
@@ -413,7 +413,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.player_facing = Vector2i(int(player_facing[0]), int(player_facing[1]))
 	game.classes = (s["classes"] as Dictionary).duplicate(true)
 	game.accomplishments = (s["accomplishments"] as Dictionary).duplicate(true)
-	# M-ARC AF I1: derive the monotonic `reached_two_classes` flag for saves
+	# Derive the monotonic `reached_two_classes` flag for saves
 	# written before it existed. A save holding two classes (or an already-merged
 	# consolidated class, itself proof two lines existed) has completed the Act II
 	# milestone; without the flag its Act II->III gate + tremor pointer would
@@ -456,7 +456,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.set_frozen_cells_json(s.get("frozen_cells", {}))
 	game.hotbar_loadout.clear()
 	game.hotbar_loadout.assign(s.get("hotbar_loadout", []))
-	# M-ARC §5: restore cosmetic identity through WIGame's tolerant sanitizers
+	# Restore cosmetic identity through WIGame's tolerant sanitizers
 	# (absent -> everyman default; garbage -> default), so the sprite-variant key
 	# and opener branch are always well-formed regardless of the save's contents.
 	game.pc_name = WIGame._sanitize_pc_name(String(s.get("pc_name", "Traveler")))

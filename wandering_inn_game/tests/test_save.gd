@@ -41,14 +41,14 @@ func _init() -> void:
 	original.classes["warrior"] = 2
 	original.player_skills.append("flame_bolt")
 	original.used_skills.append("basic_cleaning")
-	# M-LEGIBILITY L4: the status glossary's seen-set round-trips too.
+	# The status glossary's seen-set round-trips too.
 	original.seen_statuses.append("slowed")
 	original.record_accomplishment("package_delivered")
 	original.record_accomplishment("won_combat")
 	original.remove_entity("goblin_encounter_2")
 	original.start_quest("the_errand")
 	original.rng.randi()
-	# M7 Task E2: exercise inventory/equipped/container_state/actions_since_sleep
+	# Exercise inventory/equipped/container_state/actions_since_sleep
 	# through the round-trip too (pickup/equip so the invariant holds, plus a
 	# container mark and a nonzero action count).
 	original.pickup("leather_jerkin", "inn_chest")
@@ -58,27 +58,27 @@ func _init() -> void:
 	# Playtest feature 3: the [Light] PC-glow flag round-trips (additive-optional,
 	# default false) so a load restores the conjured orb.
 	original.light_active = true
-	# Issue #23: well_fed round-trips the SAME additive-optional way (default
+	# well_fed round-trips the SAME additive-optional way (default
 	# false) so a load restores Erin's meal perk mid-waking.
 	original.well_fed = true
-	# Skills Wave Task K2: `sneaking` is DELIBERATELY excluded from the
+	# `sneaking` is DELIBERATELY excluded from the
 	# round-trip (see save.gd's own comment + wi_game.gd's doc comment on the
 	# field) -- set it true here specifically so the assertion below proves
 	# the drop, not merely that a default-false value stayed false.
 	original.sneaking = true
-	# M-ARC §5: cosmetic identity round-trips (additive-optional; default
+	# Cosmetic identity round-trips (additive-optional; default
 	# Human/male/"Traveler"). A non-default trio here proves persistence.
 	original.pc_name = "Sella"
 	original.pc_race = "drake"
 	original.pc_gender = "f"
-	# Skills Wave Task K2b: a customized (non-empty) loadout round-trips too.
+	# A customized (non-empty) loadout round-trips too.
 	original.hotbar_loadout.assign(["flame_bolt", "basic_cleaning"])
 
 	var data := WISave.serialize(original)
 	assert(data["version"] == WISave.VERSION, "save version matches the current constant")
 	assert(data["state"]["rng_state"] is String, "rng state serializes as string")
 
-	# M5 final review: an older-version save is rejected, never applied with
+	# An older-version save is rejected, never applied with
 	# stale layout coordinates (v1 player_cell can sit inside E3 furniture).
 	var stale: Dictionary = JSON.parse_string(JSON.stringify(data))
 	stale["version"] = 1
@@ -99,7 +99,7 @@ func _init() -> void:
 	assert(restored.dormant_encounters == original.dormant_encounters, "dormant_encounters restored")
 	assert(restored.used_skills == original.used_skills, "used_skills restored")
 	assert(restored.seen_statuses == original.seen_statuses, "seen_statuses restored")
-	# M7 Task E2: inventory/equipped/container_state/actions_since_sleep restore.
+	# inventory/equipped/container_state/actions_since_sleep restore.
 	assert(restored.inventory == original.inventory, "inventory restored")
 	assert(restored.equipped == original.equipped, "equipped restored")
 	assert(restored.equipped == {"weapon": "rusty_sword", "armor": "leather_jerkin", "accessory_1": "", "accessory_2": "", "accessory_3": ""}, "equip() landed in the equipped dict as expected (M-GEAR Task G1: now the wider 5-key shape)")
@@ -110,7 +110,7 @@ func _init() -> void:
 	assert(restored.light_active == true, "light_active round-trips as true")
 	assert(restored.well_fed == original.well_fed, "well_fed restored")
 	assert(restored.well_fed == true, "well_fed round-trips as true")
-	# Skills Wave Task K2b: a customized loadout round-trips verbatim (order
+	# A customized loadout round-trips verbatim (order
 	# preserved), and an ABSENT key (any save written before this task)
 	# restores AUTO (empty), never a crash.
 	assert(restored.hotbar_loadout == original.hotbar_loadout, "hotbar_loadout restored")
@@ -123,7 +123,7 @@ func _init() -> void:
 	var bad_loadout: Dictionary = (data["state"] as Dictionary).duplicate(true)
 	bad_loadout["hotbar_loadout"] = "not_an_array"
 	assert(not WISave.apply(_new_game(), {"version": WISave.VERSION, "state": bad_loadout}), "non-Array hotbar_loadout rejected")
-	# Skills Wave Task K2: sneaking does NOT round-trip -- a save taken while
+	# Sneaking does NOT round-trip -- a save taken while
 	# sneaking (original.sneaking == true, set above) always restores to a
 	# NOT-sneaking game (the plan's explicit "drops on save/load honestly"
 	# requirement; see save.gd's comment for why there is no key at all).
@@ -145,7 +145,7 @@ func _init() -> void:
 	var bad_well_fed: Dictionary = (data["state"] as Dictionary).duplicate(true)
 	bad_well_fed["well_fed"] = "not_a_bool"
 	assert(not WISave.apply(_new_game(), {"version": WISave.VERSION, "state": bad_well_fed}), "non-bool well_fed rejected")
-	# M-ARC §5: cosmetic identity restores.
+	# Cosmetic identity restores.
 	assert(restored.pc_name == "Sella", "pc_name restored")
 	assert(restored.pc_race == "drake", "pc_race restored")
 	assert(restored.pc_gender == "f", "pc_gender restored")
@@ -239,7 +239,7 @@ func _init() -> void:
 	assert(m5_target.rng.state == m5_rng_state, "unknown current_map leaves rng untouched")
 	assert(not m5_target.find_entity("goblin_encounter_2").is_empty(), "unknown current_map leaves entities untouched")
 
-	# --- M6 T2: dormant respawning encounters persist (VERSION 3) ---
+	# --- dormant respawning encounters persist (VERSION 3) ---
 	var resp_original := _new_game()
 	resp_original.dormant_encounters.append("goblin_encounter_2")
 	var resp_data := WISave.serialize(resp_original)
@@ -263,7 +263,7 @@ func _init() -> void:
 	(m6_corrupt["state"] as Dictionary).erase("dormant_encounters")
 	assert(not WISave.apply(_new_game(), m6_corrupt), "v3 save without dormant_encounters rejected")
 
-	# --- M6 T3: generalist_classes persists WITHOUT a version bump ---
+	# --- generalist_classes persists WITHOUT a version bump ---
 	var gen_original := _new_game()
 	gen_original.generalist_classes.append("mage")
 	var gen_data := WISave.serialize(gen_original)
@@ -287,7 +287,7 @@ func _init() -> void:
 	(bad_gen_data["state"] as Dictionary)["generalist_classes"] = "mage"
 	assert(not WISave.apply(_new_game(), bad_gen_data), "wrong-typed generalist_classes rejected")
 
-	# --- M6 T5: pending_consolidation persists WITHOUT a version bump ---
+	# --- pending_consolidation persists WITHOUT a version bump ---
 	# (the T3 generalist_classes precedent: additive optional key, no bump).
 	var pending_original := _new_game()
 	pending_original.pending_consolidation = {"parents": ["warrior", "mage"], "target": "spellsword", "level": 14}
@@ -313,7 +313,7 @@ func _init() -> void:
 	(bad_pending_data["state"] as Dictionary)["pending_consolidation"] = "spellsword"
 	assert(not WISave.apply(_new_game(), bad_pending_data), "wrong-typed pending_consolidation rejected")
 
-	# --- UI wave item 19: used_skills persists WITHOUT a version bump ---
+	# --- used_skills persists WITHOUT a version bump ---
 	# (the T3/T5 additive-optional precedent: no bump, absent-safe default []).
 	var used_original := _new_game()
 	used_original.used_skills.append("power_strike")
@@ -338,7 +338,7 @@ func _init() -> void:
 	(bad_used_data["state"] as Dictionary)["used_skills"] = "power_strike"
 	assert(not WISave.apply(_new_game(), bad_used_data), "wrong-typed used_skills rejected")
 
-	# --- M-LEGIBILITY L4: seen_statuses persists WITHOUT a version bump ---
+	# --- seen_statuses persists WITHOUT a version bump ---
 	# (the used_skills precedent: no bump, absent-safe default []).
 	var status_original := _new_game()
 	status_original.seen_statuses.append("slowed")
@@ -363,13 +363,13 @@ func _init() -> void:
 	(bad_status_data["state"] as Dictionary)["seen_statuses"] = "slowed"
 	assert(not WISave.apply(_new_game(), bad_status_data), "wrong-typed seen_statuses rejected")
 
-	# --- M-FP final review fix: VERSION 4 street relayout migration ---
+	# --- VERSION 4 street relayout migration ---
 	# W1 re-laid out street 10x6 -> 32x20 without a save version bump; a v3
 	# street save's player_cell can now sit in a cell that's blocked in the
 	# new layout ((0,0) and (0,5) are full softlocks -- all 4 neighbors
 	# blocked). The fix migrates (not rejects) v3 street saves forward to
 	# VERSION 4, relocating player_cell to the liscor_gate arrival cell [1,3].
-	# M7 Task E2 bumped VERSION again, 4 -> 5 (weapons+equipment); the v3->v4
+	# VERSION later bumped 4 -> 5 (weapons+equipment); the v3->v4
 	# street-relocation step below still composes correctly underneath it.
 	assert(WISave.VERSION == 5, "VERSION bumped to 5 for M7 weapons+equipment")
 
@@ -422,7 +422,7 @@ func _init() -> void:
 	assert(street_v2_target.player_cell == Vector2i(1, 3), "v2 street save composes through to the v4 relocation")
 	assert(street_v2_target.dormant_encounters.is_empty(), "v2 street save still gets the v2->v3 dormant_encounters migration")
 
-	# --- M7 Task E2: VERSION 5 weapons+equipment migration ---
+	# --- VERSION 5 weapons+equipment migration ---
 	# A v4 save (any save written before this task) has none of
 	# inventory/equipped/container_state/actions_since_sleep -- _migrated
 	# fills in the plan's tolerant defaults, preserving the "equipped items
@@ -452,7 +452,7 @@ func _init() -> void:
 	assert(int(v4_target.accomplishments.get("browsed_market", 0)) == 1, "other v4 fields (accomplishments) pass through the v5 migration untouched")
 
 	# A v5-tagged save MISSING any of the four new required keys is malformed
-	# (they are REQUIRED, not the additive-optional T3/T5/UI-wave pattern) --
+	# (they are REQUIRED, not the additive-optional pattern) --
 	# rejected, not silently defaulted (migration only fires for version < VERSION).
 	for missing_key: String in ["inventory", "equipped", "container_state", "actions_since_sleep"]:
 		var m7_missing_data: Dictionary = WISave.serialize(_new_game()).duplicate(true)
@@ -493,8 +493,8 @@ func _init() -> void:
 	assert(int(v2_full_target.actions_since_sleep) == 0, "v2 save composes all the way through to the v5 actions_since_sleep default")
 	assert(v2_full_target.dormant_encounters.is_empty(), "v2 save still gets the v2->v3 dormant_encounters migration too")
 
-	# --- Social Pillar S1: social_talked + entity_first_use persist WITHOUT a
-	# version bump (the T3/T5/UI-wave additive-optional precedent). A mid-waking
+	# --- social_talked + entity_first_use persist WITHOUT a
+	# version bump (the additive-optional precedent). A mid-waking
 	# save/reload must NOT re-arm an already-spent talk-pool line or first-use bank.
 	var social_original := _new_game()
 	social_original.social_talked["krshia"] = true
@@ -526,7 +526,7 @@ func _init() -> void:
 	(bad_efu_data["state"] as Dictionary)["entity_first_use"] = ["observe:krshia"]
 	assert(not WISave.apply(_new_game(), bad_efu_data), "wrong-typed entity_first_use rejected")
 
-	# --- Economy v1 Task D1: gold (additive-optional, tolerant default 0) ---
+	# --- gold (additive-optional, tolerant default 0) ---
 	var gold_original := _new_game()
 	gold_original.gold = 42
 	var gold_data := WISave.serialize(gold_original)
@@ -534,7 +534,7 @@ func _init() -> void:
 	var gold_restored := _new_game()
 	assert(WISave.apply(gold_restored, gold_data), "save with gold applies")
 	assert(gold_restored.gold == 42, "gold round-trips")
-	# A save WITHOUT the key (any save written before Economy v1) restores 0.
+	# A save WITHOUT the key (an older save) restores 0.
 	var pre_gold_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
 	(pre_gold_data["state"] as Dictionary).erase("gold")
 	var pre_gold_target := _new_game()
@@ -546,7 +546,7 @@ func _init() -> void:
 	(bad_gold_data["state"] as Dictionary)["gold"] = "lots"
 	assert(not WISave.apply(_new_game(), bad_gold_data), "wrong-typed gold rejected")
 
-	# --- M-GEAR Task G1: resonance_capacity (additive-optional, tolerant
+	# --- resonance_capacity (additive-optional, tolerant
 	# default 2) + the wider (5-key) equipped dict, tolerant of an old save's
 	# 2-key shape -- MIGRATION-FREE by tolerant read, no version bump. ---
 	var res_original := _new_game()
@@ -591,7 +591,7 @@ func _init() -> void:
 	# mutable Dictionary, not just cosmetically read-through).
 	old_shape_target.pickup("leather_jerkin", "test")
 	assert(old_shape_target.equip("leather_jerkin"), "equip still succeeds (armor slot) from the tolerant-loaded 2-key shape")
-	# ...and an ACCESSORY equip, specifically, lands in accessory_1 even
+	# ..and an ACCESSORY equip, specifically, lands in accessory_1 even
 	# though the loaded dict never declared that key at all (proves the
 	# tolerance isn't read-only cosmetic -- equip()'s slot-finding loop reads
 	# the missing key as empty via `.get(slot_name, "")`, same as a fresh
@@ -606,7 +606,7 @@ func _init() -> void:
 	assert(old_shape_acc_target.equip("test_g1_charm"), "accessory equip succeeds from a tolerant-loaded 2-key equipped shape")
 	assert(String(old_shape_acc_target.equipped.get("accessory_1", "?")) == "test_g1_charm", "the accessory lands in accessory_1 even though the loaded dict never declared that key")
 
-	# --- M-DEPTH DP2 fix wave (MEDIUM finding, save round-trip coverage):
+	# --- Board-state save round-trip coverage:
 	# times_slept / accepted_bounty_id / accepted_bounty_baseline /
 	# board_last_seen_times_slept (additive-optional, no version bump) ---
 	var board_original := _new_game()
@@ -623,7 +623,7 @@ func _init() -> void:
 	assert(board_restored.accepted_bounty_baseline == {"heard_gossip": 1}, "accepted_bounty_baseline round-trips")
 	assert(board_restored.board_last_seen_times_slept == 2, "board_last_seen_times_slept round-trips")
 
-	# A save WITHOUT any of the 4 keys (any save written before M-DEPTH DP2)
+	# A save WITHOUT any of the 4 keys (an older save)
 	# restores each field's tolerant default -- 0/""/{}/0.
 	var pre_dp2_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
 	(pre_dp2_data["state"] as Dictionary).erase("times_slept")
@@ -655,10 +655,10 @@ func _init() -> void:
 	(bad_blsts_data["state"] as Dictionary)["board_last_seen_times_slept"] = "two"
 	assert(not WISave.apply(_new_game(), bad_blsts_data), "wrong-typed board_last_seen_times_slept rejected")
 
-	# --- M-DEPTH DP5 (the Runner's Guild): accepted_delivery_id /
+	# --- The Runner's Guild: accepted_delivery_id /
 	# accepted_delivery_baseline / delivery_failed -- the DP2 board trio's
 	# exact additive-optional twins (round-trip, absent-key defaults,
-	# wrong-type rejection), the same coverage bar the DP2 fix wave set. ---
+	# wrong-type rejection), the same coverage bar as the board fields. ---
 	var delivery_original := _new_game()
 	delivery_original.accepted_delivery_id = "delivery_krshia_wool"
 	delivery_original.accepted_delivery_baseline = {"delivered_delivery_krshia_wool": 0}
@@ -671,7 +671,7 @@ func _init() -> void:
 	assert(delivery_restored.accepted_delivery_baseline == {"delivered_delivery_krshia_wool": 0}, "accepted_delivery_baseline round-trips")
 	assert(delivery_restored.delivery_failed == true, "delivery_failed round-trips")
 
-	# A save WITHOUT any of the 3 keys (any save written before M-DEPTH DP5)
+	# A save WITHOUT any of the 3 keys (an older save)
 	# restores each field's tolerant default -- ""/{}/false.
 	var pre_dp5_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
 	(pre_dp5_data["state"] as Dictionary).erase("accepted_delivery_id")

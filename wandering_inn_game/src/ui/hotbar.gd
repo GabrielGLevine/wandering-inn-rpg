@@ -1,10 +1,10 @@
 class_name WIHotbar
 extends Control
-## M5 H1: bottom-center combat action bar -- replaces the old MENU/SKILL_PICK
+## bottom-center combat action bar -- replaces the old MENU/SKILL_PICK
 ## text lists (combat_screen.gd) with icon slots: Attack, Dash, combat
 ## skills (skills.json order), End Turn. Pure rendering: combat_screen.gd
 ## owns selection/affordability/input and calls `render(slots, selected_index)`
-## every `_refresh()` (`selected_index` -1 = nothing highlighted -- the M5 H2
+## every `_refresh()` (`selected_index` -1 = nothing highlighted -- the
 ## movement-first resting state; a slot highlights only while being aimed).
 ##
 ## Chrome per docs/superpowers/specs/2026-07-02-environment-ui-immersion-

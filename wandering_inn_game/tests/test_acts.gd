@@ -1,5 +1,5 @@
 extends SceneTree
-## Pure act-derivation tests (M-ARC Task A1).
+## Pure act-derivation tests.
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_acts.gd
 ##
 ## Acts derive from counters (never stored) -- so old saves land mid-act by
@@ -52,7 +52,7 @@ func _init() -> void:
 	assert(achieved_ids.has("errands_around") and achieved_ids.has("krshia_trust"), "mid Act II beats reflect counters")
 	assert(not achieved_ids.has("known_face"), "Act II capstone pending until the gate")
 
-	# M-ARC AF I1: act_ii advances on the MONOTONIC `reached_two_classes`
+	# act_ii advances on the MONOTONIC `reached_two_classes`
 	# accomplishment, NOT the live class count -- so a big raw classes_count with
 	# the flag absent does NOT advance (proves the gate no longer reads size, the
 	# property that stops a Spellsword consolidation from regressing the act line).

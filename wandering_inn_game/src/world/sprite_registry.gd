@@ -7,7 +7,7 @@ static var _catalog: Dictionary = {}
 static var _cache: Dictionary = {}
 static var _tile_sources: Dictionary = {}
 
-## M-RELEASE R2 fallback-art contract. A PUBLIC checkout is missing the
+## Fallback-art contract. A PUBLIC checkout is missing the
 ## protected asset packs (see wandering_inn_game/assets_manifest.json), so
 ## ResourceLoader.load() returns null for those sheets. Rather than
 ## assert/crash (the pre-R2 behavior), we synthesize a legible frame-sized
@@ -41,7 +41,7 @@ static func entry_for(sprite_id: String) -> Dictionary:
 
 
 ## Fractional anchor point within a sprite's frame that should align to a
-## cell's bottom-center (M5 R3 16px recalibration). Optional per-entry
+## cell's bottom-center (16px native tile size). Optional per-entry
 ## "anchor": [x, y] in data/sprites.json; defaults to [0.5, 1.0] (feet/base
 ## centered at the cell's bottom edge) -- the correct convention for both
 ## character sprites (which overhang the cell above, by design, at 16px) and
@@ -55,8 +55,7 @@ static func anchor_for(sprite_id: String) -> Vector2:
 	return Vector2(0.5, 1.0)
 
 
-## Deterministic position-seeded index into a variants array (M5 R4
-## floor_layers schema, docs/superpowers/specs/2026-07-02-environment-ui-
+## Deterministic position-seeded index into a variants array (floor_layers schema, docs/superpowers/specs/2026-07-02-environment-ui-
 ## immersion-design.md sec.1) -- a pure function of the cell coordinate, no
 ## RNG stream touched, so the same cell always renders the same variant
 ## across saves/replays/QA runs. Shared by world.gd (field) and
@@ -70,7 +69,7 @@ static func cell_variant_index(cell: Vector2i, count: int) -> int:
 	return int(abs(h)) % count
 
 
-## Shared contact-shadow texture (M5 E3, scene-assembly-guide P5): one cached
+## Shared contact-shadow texture (scene-assembly-guide P5): one cached
 ## soft black ellipse rendered under any sprite whose catalog entry sets
 ## "shadow": true. Generated, not an asset -- pack Shadows.png sheets can
 ## replace it per-prop later if the ellipse reads poorly.

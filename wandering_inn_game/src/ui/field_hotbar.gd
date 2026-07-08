@@ -1,6 +1,6 @@
 class_name WIFieldHotbar
 extends CanvasLayer
-## Three Pillars P2: the overworld ("field") skill bar -- the field-mode twin of
+## The overworld ("field") skill bar -- the field-mode twin of
 ## combat's action hotbar (combat_hud.gd). Shows the PC's KNOWN field-tagged
 ## skills (skills the PC actually has via `Game.sim.known_skills()`, filtered by
 ## skills.json `field: true`) as numbered carved slots; pressing the matching
@@ -38,7 +38,7 @@ extends CanvasLayer
 ## event still fires, which is the least-noisy option that stays QA-observable).
 ##
 ## PLAYTEST WAVE (uiwave2, item 1): the ALWAYS-ON bottom-left legend/readout
-## panel (M-LEGIBILITY L3, previously rendered here) is REMOVED per user
+## panel (previously rendered here) is REMOVED per user
 ## ruling -- the journal's loadout UI already surfaces per-skill cost/effect
 ## info, and the hotbar slots keep their key-hint numerals, so the panel was
 ## pure redundancy competing for screen space. `_readout_line`/
@@ -61,7 +61,7 @@ var _hotbar: WIHotbar
 ## queries `skill_for_slot(n)` against this same list, so a pressed number can
 ## never diverge from what the rendered slot shows.
 var _field_skills: Array = []
-## Controller support (S1, issue #18): the last slot-dict list `_render` built,
+## The last slot-dict list `_render` built,
 ## cached so `set_selected` can redraw with a different highlight WITHOUT
 ## rebuilding the list or re-emitting UI_FIELD_HOTBAR_RENDERED (world.gd owns
 ## the pad-cursor index, mirroring combat's `_bar_index` idiom -- this file
@@ -116,7 +116,7 @@ func set_selected(index: int) -> void:
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	match type:
-		# Skills Wave Task K2b: LOADOUT_CHANGED (a journal assign/unassign
+		# LOADOUT_CHANGED (a journal assign/unassign
 		# toggle) re-renders the bar with the newly chosen subset, the same
 		# trigger-list idiom as a class gain/level-up/evolution.
 		WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED:
@@ -139,7 +139,7 @@ func _render() -> void:
 	var slots: Array = []
 	var readout_lines: Array = []
 	var number := 1
-	# M-LEGIBILITY L5 fix wave, Item 2: load the combatants catalog ONCE
+	# Load the combatants catalog ONCE
 	# before the per-skill loop (mirrors journal.gd's identical fix) --
 	# every field-tagged skill today is exploration-only (no spell_damage
 	# effect, so `_readout_line`'s `skill_effect_lines` call never actually
@@ -163,7 +163,7 @@ func _render() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_FIELD_HOTBAR_RENDERED, {"slots": _field_skills.size(), "readout_lines": readout_lines})
 
 
-## The cost/effect summary row for one field skill (M-LEGIBILITY L3): "Name —
+## The cost/effect summary row for one field skill: "Name —
 ## <L1 effect line, if any> — description". `WIEffectText.skill_effect_lines`
 ## is the ONLY source of the mechanical segment (never hand-composed); every
 ## currently-shipped field skill is exploration-only (no `effect` key), so it
@@ -177,7 +177,7 @@ func _readout_line(sk: Dictionary, id: String, combatants_catalog: Array = []) -
 	var effect_lines := WIEffectText.skill_effect_lines(sk, combatants_catalog)
 	if effect_lines.is_empty():
 		return "%s — %s" % [display, desc] if desc != "" else display
-	# M-LEGIBILITY L5 fix wave, Item 4: guard the trailing-dash case (desc
+	# Guard the trailing-dash case (desc
 	# empty but effect_lines non-empty) the same way the branch above already
 	# does -- unreachable today (every shipped description is non-empty) but
 	# a future skill with no description shouldn't render "Name — effect — ".
@@ -186,7 +186,7 @@ func _readout_line(sk: Dictionary, id: String, combatants_catalog: Array = []) -
 	return "%s — %s — %s" % [display, effect_lines[0], desc]
 
 
-## M-LEGIBILITY L5 fix wave, Item 2: the combatants catalog (the array under
+## The combatants catalog (the array under
 ## combatants.json's "combatants" key), loaded ONCE per `_render()` call and
 ## threaded through `_readout_line` -- mirrors `WIEffectText._load_combatants`'s
 ## own FileAccess+JSON.parse idiom (kept as a per-file copy, same M6.5
@@ -204,7 +204,7 @@ func _load_combatants_catalog() -> Array:
 	return []
 
 
-## Skills Wave Task K2b: the field hotbar's slot list now comes straight from
+## The field hotbar's slot list now comes straight from
 ## the sim's own `field_hotbar_loadout()` (moved there so the FILTER lives on
 ## the sim, per the plan's "sim owns state + filters" rule -- this file used
 ## to duplicate the known_skills()-filtered-by-field derivation inline; it now

@@ -1,12 +1,12 @@
 extends SceneTree
-## M-LEGIBILITY L1: exact-string coverage for WIEffectText over the FULL shipped
+## exact-string coverage for WIEffectText over the FULL shipped
 ## catalogs, plus the data-drift tripwires and a forbidden-vocabulary grep.
 ## Every shipped item + Skill + status is pinned; an id present in data but
 ## absent from the expected maps is a hard failure, so new content forces a
 ## deliberate line here (no silent drift).
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_effect_text.gd
 
-# Forbidden player-string vocabulary (M-LEGIBILITY Global Constraints): raw
+# Forbidden player-string vocabulary (global constraint): raw
 # attributes as whole words. Percentages-toward are caught by the '%' scan.
 const _FORBIDDEN_ATTR := "(?i)\\b(str|dex|con|int|wis|cha)\\b"
 
@@ -17,17 +17,17 @@ const EXPECTED_ITEMS := {
 	"chipped_spear": [],
 	"solid_oak_spear": [],
 	"leather_jerkin": ["+4 HP", "Worth 24 gold"],
-	# M-DEPTH DP4: now priced (previously fixture/harness-only, no live buy
+	# Now priced (previously fixture/harness-only, no live buy
 	# path) -- sold at the new street `peddler_stall`.
 	"watch_issue_gambeson": ["Reduces every hit taken by 1", "Worth 20 gold"],
-	# M-GEAR Task G2: traveler_charm is the plan's entry enchanted item,
+	# traveler_charm is the plan's entry enchanted item,
 	# resonance 1 -- the formatter's "Resonance N" line (effect_text.gd,
-	# already wired pre-G2 by M-LEGIBILITY) now joins its card between the
+	# already wired) joins its card between the
 	# hp line and the price line.
 	"traveler_charm": ["+2 HP", "Resonance 1", "Worth 5 gold"],
 	"gnollish_hunting_knife": ["+1 damage on melee hits", "Worth 15 gold"],
 	"wool_lined_cloak": ["+3 HP", "Worth 18 gold"],
-	# M-GEAR Task G2: the 9 new items (7 accessories, 2 tools).
+	# The 9 new items (7 accessories, 2 tools).
 	"copper_luck_band": ["+1 HP", "Worth 4 gold"],
 	"hedge_ward_charm": ["+2 HP", "Resonance 1", "Worth 9 gold"],
 	"hunters_fang_talisman": ["+1 damage on melee hits", "Resonance 1", "Worth 14 gold"],
@@ -37,7 +37,7 @@ const EXPECTED_ITEMS := {
 	"watch_token": [],
 	"field_whetstone": ["Worth 5 gold"],
 	"fishers_handline": ["Worth 4 gold"],
-	# M-DEPTH DP5: the 5 Runner's Guild delivery parcels -- inert carried
+	# The 5 Runner's Guild delivery parcels -- inert carried
 	# flavor by design (no combat fields, no price), so their cards carry
 	# name + description only, zero generated effect lines.
 	"parcel_plains_wool": [],
@@ -45,10 +45,9 @@ const EXPECTED_ITEMS := {
 	"parcel_watch_dispatch": [],
 	"parcel_lamp_phials": [],
 	"parcel_bluefruit_hamper": [],
-	# Issue #8 D3: Krshia's attunement catalyst (priced tool, no combat
-	# fields — the DF final review caught this pin missing on merged main).
+	# Krshia's attunement catalyst (priced tool, no combat fields).
 	"resonant_catalyst": ["Worth 35 gold"],
-	# Magical Door plan Task D1 (issue #8): the beat-3 recovery item -- inert
+	# The beat-3 recovery item -- inert
 	# carried flavor by design (no combat fields, no price, kind "tool" per
 	# the parcel/field_whetstone precedent), so its card carries name +
 	# description only, zero generated effect lines.
@@ -70,7 +69,7 @@ const EXPECTED_SKILLS := {
 	"light": [],
 	"frost_touch": [],
 	"kindle": [],
-	# Skills Wave Task K2: [Stealth]'s combat read is a genuine ACTIVE cast
+	# [Stealth]'s combat read is a genuine ACTIVE cast
 	# (ap_cost 1) -- effect_text.gd's `_effect_phrase` now un-suppresses
 	# `move_pool_bonus` specifically for ap_cost > 0 (WISkillEffects.
 	# resolve_active wires a real self-buff resolver for exactly that shape).
@@ -78,15 +77,15 @@ const EXPECTED_SKILLS := {
 	# 0, still no resolver, still SUPPRESSED) -- see effect_text.gd's own
 	# comment on the ap_cost gate for why the two don't get un-suppressed too.
 	"sneak": ["1 AP — +2 move cells this turn"],
-	# Skills Wave Task K4: WIRED -- wi_combat.gd's `_start_turn` gained a real
+	# WIRED -- wi_combat.gd's `_start_turn` gained a real
 	# `_move_pool_bonus_total` passive consumer for the two PRE-EXISTING
 	# 0-cost move_pool_bonus skills (quick_movement, battlefield_awareness
 	# below); the standing-bonus phrasing is distinct from [Stealth]'s
 	# single-turn cast line above (see effect_text.gd's own comment).
 	"quick_movement": ["+1 move cell every turn"],
-	# Skills Wave Task K4: WIRED -- skill_effects.gd's `resolve_active` gained
+	# WIRED -- skill_effects.gd's `resolve_active` gained
 	# a real heal resolver (self-only; see its doc comment). dangersense
-	# stays a confirmed, intentional no-op (M6 T2; no clean currency read --
+	# stays a confirmed, intentional no-op (no clean currency read --
 	# see effect_text.gd's `_effect_phrase` doc comment) -- NOT part of this
 	# task's four wiring items, unchanged.
 	"second_wind": ["2 AP — restore 8 HP to yourself"],
@@ -99,7 +98,7 @@ const EXPECTED_SKILLS := {
 	"extended_sweep": ["2 AP — ×1.3 damage"],
 	"spear_flurry": ["4 AP — ×2.6 damage"],
 	"ice_shard": ["2 AP, 3 MP — damage 1d6 at range 4"],
-	# GH#21: WIRED -- WISkillEffects.resolve_active gained a real icy_floor
+	# WIRED -- WISkillEffects.resolve_active gained a real icy_floor
 	# resolver, so effect_text.gd generates the real card line (radius=1 ->
 	# 3x3 patch, range 3, duration_rounds 2, `applies.slowed` -> the "Slows."
 	# suffix).
@@ -111,14 +110,14 @@ const EXPECTED_SKILLS := {
 	"basic_cooking": [],
 	"lesser_strength": [],
 	"observe": [],
-	# Skills Wave Task K4: WIRED (same passive as quick_movement above).
+	# WIRED (same passive as quick_movement above).
 	"battlefield_awareness": ["+1 move cell every turn"],
 	"soothe_clientele": [],
 	"unerring_aim": [],
 	"sweep_the_tables": [],
 	"servers_prescience": [],
 	"charming_smile": [],
-	# M-LEGIBILITY L5: the die is now the CASTER's weapon_die (honest source,
+	# The die is now the CASTER's weapon_die (honest source,
 	# see effect_text.gd's _caster_weapon_die), not the deleted vestigial
 	# effect.die -- every one of these reads the "pc" default (weapon_die 6 in
 	# the shipped combatants.json), including raskghar_maul: it's cast by
@@ -201,7 +200,7 @@ func _test_tripwires() -> void:
 	_check(WIEffectText.item_effect_lines({"damage_mod": 9}) == ["+9 damage on melee hits"], "item damage tripwire")
 
 	# Skills: mutating effect.range moves the range in the line. effect.die is
-	# VESTIGIAL (M-LEGIBILITY L5: wi_combat.gd never reads it -- it rolls the
+	# VESTIGIAL (wi_combat.gd never reads it -- it rolls the
 	# CASTER's own weapon_die for every hit, melee or spell alike) and is
 	# IGNORED even if present; the die instead follows the caster catalog.
 	var spell := {"ap_cost": 1, "mp_cost": 2, "effect": {"type": "spell_damage", "range": 4}}

@@ -1,6 +1,6 @@
 class_name WIEconomy
 extends RefCounted
-## ARCH-4: gold state transitions + loot rolls, extracted from wi_game.gd.
+## Gold state transitions + loot rolls, extracted from wi_game.gd.
 ## PURITY RULE: no autoload/Node/scene-tree references. `gold` itself stays
 ## owned by WIGame (save.gd reads/writes `game.gold` directly and is banned
 ## from this task's diff) -- every method here takes the CURRENT gold as a
@@ -13,7 +13,7 @@ var _event_sink: Callable
 ## WIGame.pickup -- inventory ownership is out of this task's scope.
 var _pickup: Callable
 ## Callable(new_gold: int) -> void, forwards to WIGame's field BEFORE the
-## synchronous GOLD_CHANGED emit (ARCH-4 opus review fix-first: the emit's
+## synchronous GOLD_CHANGED emit (field-first, required: the emit's
 ## consumers read Game.sim.gold directly in the same frame -- inventory.gd's
 ## _refresh_gold -- so the field must already hold the new total when the
 ## event fires; the _set_light_active precedent, same contract).

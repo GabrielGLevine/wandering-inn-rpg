@@ -284,7 +284,7 @@ func _init() -> void:
 	assert(gsp3.accomplishment_count("street_cleared") == 0 and gsp3.accomplishment_count("persuaded_someone") == 0, "declining banks nothing at all")
 	assert(gsp3.entities.has("goblin_encounter_2"), "declining leaves the encounter in place")
 
-	# --- M2 Task 2: multi-map + doors ---
+	# --- multi-map + doors ---
 	var g2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(g2.current_map == "inn", "starts on start_map")
 	assert(g2.entities.has("erin") and not g2.entities.has("selys"), "entities are per-map")
@@ -1498,7 +1498,7 @@ func _init() -> void:
 	assert(e5.start_combat("goblin_encounter_2"), "spear-with-damage-mod combat starts")
 	assert(int(e5.combat.combatants["pc"][WIKeys.DAMAGE_MOD]) == 1, "relcs_spare_spear's damage_mod (+1) rides the combat build")
 
-	# Issue #23 (Erin's daily meal): well_fed folds +2 into hp_mod at the SAME
+	# well_fed folds +2 into hp_mod at the SAME
 	# build-injection seam armor's hp_mod rides (e4b above) -- field HP has no
 	# standalone concept, so the perk rides the next combat build instead.
 	# Additive alongside armor's own hp_mod (no interaction/override).
@@ -1957,7 +1957,7 @@ func _init() -> void:
 	assert(not gSleepClear.sneaking, "sleep clears sneaking")
 	assert(_count("sneak_ended") == 0, "sleep's clear is silent -- no sneak_ended (matches light_active/frozen_cells)")
 
-	# --- Three Pillars P1: use_skill_field (overworld field-skill dispatch) ---
+	# --- use_skill_field (overworld field-skill dispatch) ---
 	# The core promise: pressing a field skill while FACING a qualifying prop
 	# emits a BYTE-IDENTICAL event stream to today's interact-with-requires_skill
 	# on that same prop. Prove it by event-for-event comparison on the inn's
@@ -2025,7 +2025,7 @@ func _init() -> void:
 	g_glow.sleep()
 	assert(not g_glow.light_active, "sleep() clears light_active (the orb winks out)")
 
-	# Issue #23 (Erin's daily meal): well_fed MIRRORS light_active's lifecycle
+	# well_fed MIRRORS light_active's lifecycle
 	# exactly -- set directly (dialogue effect in real play, see test_dialogue.gd),
 	# cleared at sleep().
 	var g_fed := WIGame.new(scene_p1, skills_p1, _sink, 12345)
@@ -2067,7 +2067,7 @@ func _init() -> void:
 	assert(_count("toast") == 1, "no-ambient field-use toasts the established refusal")
 	assert(_count("skill_used") == 0, "no-ambient field-use fires nothing")
 
-	# --- Three Pillars P3: [Appraise Foe] field skill (faced-entity flavor + observed_things) ---
+	# --- [Appraise Foe] field skill (faced-entity flavor + observed_things) ---
 	# [Appraise Foe] reads a faced entity's `observe` flavor string (a DIFFERENT field
 	# than the requires_skill/on_skill_use seam above) and banks observed_things
 	# (opaque; feeds [Tactician]'s levels). Flavor only -- never numbers/stats.

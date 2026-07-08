@@ -33,7 +33,7 @@ func current_options() -> Array:
 		var req: Dictionary = opt.get("requires", {})
 		var locked := not _meets(req)
 		var row: Dictionary = {"text": String(opt["text"]), "locked": locked, "requirement": _requirement_text(req) if locked else ""}
-		# M-LEGIBILITY L2: an option that grants an item (a shop buy, or Relc's
+		# An option that grants an item (a shop buy, or Relc's
 		# spear gift) carries the item's mechanical effect line(s) so the panel
 		# answers "what am I buying/getting" in-place. GENERATED from the item
 		# data via the shared WIEffectText formatter (never hand-composed), and
@@ -102,7 +102,7 @@ func advance(next_id: String) -> void:
 
 
 ## True when this requires-dict gates on player PROGRESS (accomplishments), OR
-## on M-DEPTH DP2's `board_accepted` ctx flag (whether a bounty posting is
+## on the `board_accepted` ctx flag (whether a bounty posting is
 ## currently accepted), OR on DP5's `delivery_accepted` twin (whether a
 ## Runner's Guild slip is currently held), OR on Issue #23's `once_per_waking`
 ## twin (whether the "<verb>:<entity>" key is already banked in
@@ -115,7 +115,7 @@ func advance(next_id: String) -> void:
 ## option) must not clutter their hubs with an already-spent-this-waking
 ## choice -- it comes BACK, silently, once sleep() clears entity_first_use,
 ## exactly like a fresh talk_pool line.
-## REQUIRES-ONLY (Issue #23 fix wave, review finding 1): `once_per_waking`
+## REQUIRES-ONLY: `once_per_waking`
 ## is deliberately NOT a hide_when gate -- its "met" polarity ("not yet used
 ## this waking") is the INVERSE of every shipped hide_when key's ("the
 ## tracked state is now true"), so a hide_when carrying it would hide while
@@ -129,15 +129,15 @@ func _progress_gated(req: Dictionary) -> bool:
 
 
 ## Progress-only gate check used SOLELY to decide hide-until-met VISIBILITY
-## (Social Pillar II: a requires dict may now combine an accomplishment
+## (a requires dict may combine an accomplishment
 ## stage-gate with a gold affordability gate in one option -- e.g. Krshia's
 ## discount buy options, requires{accomplishment:{...}, gold:N}. The
 ## accomplishment leg ALONE controls whether the option is hidden or shown;
 ## a met stage-gate with insufficient gold must show GREYED/locked, never
-## vanish -- window-shopping is content, Economy v1 D1. _meets() below is the
+## vanish -- window-shopping is content. _meets() below is the
 ## full compound AND used for the actual locked/choosable decision.)
 func _meets_progress(req: Dictionary) -> bool:
-	# M-DEPTH DP2: the board_accepted leg is checked FIRST and independently --
+	# The board_accepted leg is checked FIRST and independently --
 	# a requires/hide_when dict combining it with accomplishment never ships in
 	# authored content (each of Selys's two new hub options uses exactly one
 	# gate type), but ANDing here rather than branching keeps the contract
@@ -145,11 +145,11 @@ func _meets_progress(req: Dictionary) -> bool:
 	if req.has("board_accepted"):
 		if bool(_ctx.get("board_accepted", false)) != bool(req["board_accepted"]):
 			return false
-	# M-DEPTH DP5: delivery_accepted, board_accepted's exact twin.
+	# delivery_accepted, board_accepted's exact twin.
 	if req.has("delivery_accepted"):
 		if bool(_ctx.get("delivery_accepted", false)) != bool(req["delivery_accepted"]):
 			return false
-	# Issue #23: once_per_waking's own leg, checked independently like the
+	# once_per_waking's own leg, checked independently like the
 	# two above -- met iff `entity_first_use` does NOT yet carry the
 	# "<verb>:<entity>" key this waking (Erin's meal / Relc's wager both
 	# combine this with an accomplishment stage-gate; each leg is ANDed).
@@ -184,7 +184,7 @@ func _visible_options() -> Array:
 	return out
 
 
-## Issue #23 fix wave (review finding 1): the hide_when-side gate check.
+## The hide_when-side gate check.
 ## `once_per_waking` is a REQUIRES-ONLY gate (see _progress_gated's doc
 ## comment for the polarity-inversion rationale); a hide_when carrying it is
 ## malformed content that test_content.gd's validator rejects at content
@@ -233,7 +233,7 @@ func _resolved_text(node: Dictionary) -> String:
 	return text
 
 
-## Social Pillar II: generalized from a first-match-wins chain (each key
+## Generalized from a first-match-wins chain (each key
 ## checked in isolation, only one recognized per call) to a full COMPOUND AND
 ## across every recognized key present -- needed for Krshia's discount buy
 ## options, whose requires combines an accomplishment stage-gate with a gold
@@ -258,7 +258,7 @@ func _meets(req: Dictionary) -> bool:
 			if int((_ctx["classes"] as Dictionary).get(id, 0)) < int(req["class"][id]):
 				return false
 	if req.has("gold"):
-		# Economy v1 Task D1: numeric affordability gate (a shop buy option's
+		# Numeric affordability gate (a shop buy option's
 		# `requires: {gold: price}`). The ONE sanctioned extension of the M4
 		# greying ctx (it was skill/class/accomplishment-only). Reads the `gold`
 		# key WIGame._build_dialogue_ctx now supplies (tolerant default 0). Gold
@@ -274,22 +274,22 @@ func _meets(req: Dictionary) -> bool:
 			if int((_ctx["accomplishments"] as Dictionary).get(id, 0)) < int(req["accomplishment"][id]):
 				return false
 	if req.has("board_accepted"):
-		# M-DEPTH DP2: the THIRD sanctioned non-accomplishment gate type (after
-		# gold, Economy v1 D1) -- a plain bool ctx flag (WIGame._build_dialogue_ctx's
+		# The THIRD sanctioned non-accomplishment gate type (after
+		# gold) -- a plain bool ctx flag (WIGame._build_dialogue_ctx's
 		# `board_accepted`, true iff a bounty posting is currently accepted).
 		# Equality, not >=/<= (this is a state flag, not a threshold).
 		recognized = true
 		if bool(_ctx.get("board_accepted", false)) != bool(req["board_accepted"]):
 			return false
 	if req.has("delivery_accepted"):
-		# M-DEPTH DP5: the FOURTH sanctioned gate type -- board_accepted's
+		# The FOURTH sanctioned gate type -- board_accepted's
 		# exact twin for the Runner's Guild slip (WIGame._build_dialogue_ctx's
 		# `delivery_accepted`, true iff a delivery slip is currently held).
 		recognized = true
 		if bool(_ctx.get("delivery_accepted", false)) != bool(req["delivery_accepted"]):
 			return false
 	if req.has("once_per_waking"):
-		# Issue #23: the FIFTH sanctioned non-accomplishment gate type --
+		# The FIFTH sanctioned non-accomplishment gate type --
 		# board_accepted/delivery_accepted's twin, checked against the shared
 		# `entity_first_use` per-waking dedup dict (WIGame ctx) the SAME way
 		# _meets_progress checks it above; recognized here too so a full

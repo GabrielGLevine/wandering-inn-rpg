@@ -109,7 +109,7 @@ func _init() -> void:
 	print("PASS: combat data is well-formed and cross-referenced")
 
 
-## M-ARC A3 (user descope): the party-veto's ROSTER proof at unit level -- the
+## The party-veto's ROSTER proof at unit level -- the
 ## dedicated canonical script was cut; the 0.04 solo cell (sim_combat_batch.gd
 ## BOSS_CELLS) already documents the difficulty, so all that remains to prove is
 ## the WIRING: declining fields NO ally. Builds a real WIGame twice against the

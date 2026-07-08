@@ -50,7 +50,7 @@ var _screenshots: PackedStringArray = []
 ## (scans from index 0) for the rare case a script needs to re-check an
 ## earlier-window event.
 var _wait_cursor := 0
-## M-ARC §5: set from the script's top-level `creation_ui` field in _run(). When
+## Set from the script's top-level `creation_ui` field in _run(). When
 ## true, title_screen's New Game drives the REAL character-creation screen
 ## instead of the default straight-to-reset skip (see title_screen._skip_creation).
 var _wants_creation_ui := false
@@ -61,7 +61,7 @@ func active() -> bool:
 	return not _script_path.is_empty()
 
 
-## M-ARC §5: whether this run opts into the real character-creation UI path.
+## Whether this run opts into the real character-creation UI path.
 func wants_creation_ui() -> bool:
 	return _wants_creation_ui
 
@@ -210,7 +210,7 @@ func _execute(step: Dictionary) -> void:
 				await get_tree().process_frame
 				await get_tree().process_frame
 		"type_text":
-			# M-ARC §5: type a name into the char-creation field one real unicode
+			# Type a name into the char-creation field one real unicode
 			# keystroke at a time (char_creation captures these in _unhandled_input,
 			# exactly like a player keystroke -- LineEdit GUI focus is not relied on).
 			var text := String(step["text"])
@@ -231,7 +231,7 @@ func _execute(step: Dictionary) -> void:
 			if _has_event(String(step["type"]), step.get("payload_contains", {})):
 				_fail("expected event to be absent but it was emitted: " + String(step["type"]))
 		"assert_event_count":
-			# M-ARC A4: assert an event fired EXACTLY N times over the whole run
+			# Assert an event fired EXACTLY N times over the whole run
 			# (arc_flow proves the epilogue rendered once and never re-fired --
 			# absence will not do, since it DID fire once). Scans the full log like
 			# _has_event, counting matches.
@@ -322,7 +322,7 @@ func _inject_diag(a: String, b: String) -> void:
 	Input.parse_input_event(release_b)
 
 
-## M-ARC §5: inject a single printable character as a real key event (unicode
+## Inject a single printable character as a real key event (unicode
 ## set), for the char-creation name field. keycode is left 0 so it can never
 ## coincide with a mapped action (confirm/cancel/etc.); the creation screen reads
 ## `event.unicode` for the character.
@@ -356,7 +356,7 @@ func _has_event(type: String, subset: Dictionary = {}) -> bool:
 	return false
 
 
-## M-ARC A4: how many logged events match type/subset (assert_event_count).
+## How many logged events match type/subset (assert_event_count).
 func _count_events(type: String, subset: Dictionary = {}) -> int:
 	var n := 0
 	for e: Dictionary in _events_seen:

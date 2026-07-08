@@ -37,7 +37,7 @@ var arena_id := ""
 ## victory; the tally itself emits nothing and consumes no rng.
 var action_tally: Dictionary = {}
 ## Per-fight SET of skill ids actually cast, actor id -> {skill_id: true}
-## (UI wave item 19). Recorded at the SAME spend site as action_tally
+## Recorded at the SAME spend site as action_tally
 ## (spend_skill_costs, below) — a refused cast never reaches it, same
 ## convention — but this is a bare presence set, never gated by any
 ## `trivial` flag: that gate lives entirely on WIGame's `_bank_action_tally`
@@ -45,7 +45,7 @@ var action_tally: Dictionary = {}
 ## ever been cast" for the journal's first-use reveal, which
 ## `WIGame.resolve_combat` merges in unconditionally.
 var used_skills_tally: Dictionary = {}
-## GH#21 ([Ice Floor] area terrain effect): `Vector2i` cell -> `{"kind":
+## `Vector2i` cell -> `{"kind":
 ## "icy_floor", "expires_after_round": int, "applies": Dictionary}`. NOT
 ## save-persisted (combat state never is, per data/skills.json/wi_combat.gd
 ## convention -- a combat is always mid-encounter, never resumed across a
@@ -178,7 +178,7 @@ func chebyshev(a_id: String, b_id: String) -> int:
 ## rule that makes this true even on diagonally-adjacent wall pairs). A
 ## single-raster Bresenham walk instead commits to one arbitrary path per
 ## direction and can therefore disagree with itself when reversed; this is
-## the M3 T3 review bug this replaces has_los((0,0),(3,6)) vs the reverse
+## the asymmetry bug this construction guards against: has_los((0,0),(3,6)) vs the reverse
 ## disagreeing on the blocked set {(5,3),(6,4),(3,5),(8,2)}.
 func has_los(a_id: String, b_id: String) -> bool:
 	var from: Vector2i = combatants[a_id][WIKeys.CELL]
@@ -425,7 +425,7 @@ func _deduct_hp(target_id: String, amount: int) -> int:
 	return int(t[WIKeys.HP])
 
 
-## Armor's flat damage_reduction (M7 §2), applied BEFORE mana_shield so the
+## Armor's flat damage_reduction, applied BEFORE mana_shield so the
 ## shield only ever absorbs what actually got past armor. A landed hit
 ## always deals >=1 regardless of how much reduction stacks against it (the
 ## floor only engages for a positive incoming amount -- _resolve_hit never
@@ -477,7 +477,7 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 	if hit:
 		var stat: int = int(a[WIKeys.STATS]["str"]) if melee else int(a[WIKeys.STATS]["int"])
 		var base_damage := int((stat / 2 + rng.randi_range(1, int(a[WIKeys.WEAPON_DIE]))) * mult)
-		# M7 §2: the weapon's flat damage_mod adds to melee damage only
+		# The weapon's flat damage_mod adds to melee damage only
 		# (basic Attack AND weapon-family skills like power_strike/
 		# piercing_strikes, since both route through this same melee=true
 		# call) -- never to a ranged spell_damage cast (melee=false, int-
@@ -556,7 +556,7 @@ func _start_turn() -> void:
 	_quick_cast_spent.erase(c[WIKeys.ID])
 	var pool := MOVE_POOL
 	var statuses: Dictionary = c["statuses"]
-	# GH#21: a combatant STARTING its turn already standing on icy_floor gets
+	# A combatant STARTING its turn already standing on icy_floor gets
 	# the penalty THIS turn, through the SAME consume-block below (applied
 	# here -> immediately consumed a few lines down) -- applied before the
 	# `slowed` check so this turn's TURN_STARTED move_pool reflects the
@@ -572,7 +572,7 @@ func _start_turn() -> void:
 	_emit(WIEvents.TURN_STARTED, {"id": c[WIKeys.ID], "ap": MAX_AP, "move_pool": pool})
 
 
-## Skills Wave Task K4: the two PRE-EXISTING 0-cost move_pool_bonus skills
+## The two PRE-EXISTING 0-cost move_pool_bonus skills
 ## (quick_movement, battlefield_awareness) are genuine PASSIVES -- a holder
 ## gets +amount move_pool at the START of every turn, unconditionally: no
 ## cast, no cost, no refusal path. This is deliberately separate from
@@ -596,7 +596,7 @@ func _move_pool_bonus_total(c: Dictionary) -> int:
 	return total
 
 
-## GH#21 ([Ice Floor] area terrain effect): applies the terrain entry (if
+## Applies the terrain entry (if
 ## any) registered at `c`'s CURRENT cell onto `c` -- the STANDING-terrain
 ## counterpart of `WISkillEffects._apply_status_from_effect` (that one fires
 ## on a HIT; this one fires on OCCUPYING a terrain cell). No-op when
@@ -618,7 +618,7 @@ func _apply_terrain_status(c: Dictionary) -> void:
 		_emit(WIEvents.STATUS_APPLIED, {"id": String(c[WIKeys.ID]), "status": status_id})
 
 
-## GH#21: called from `_advance_turn`'s round-rollover branch, after
+## Called from `_advance_turn`'s round-rollover branch, after
 ## `round_number` has already advanced and ROUND_STARTED has already
 ## emitted. Removes every terrain cell whose `expires_after_round` has
 ## passed (a cell cast at round N with `duration_rounds` D carries
@@ -712,7 +712,7 @@ func snapshot() -> Dictionary:
 	}
 
 
-## GH#21: `{kind: [[x,y],...] sorted}` -- empty dict when `terrain` is empty
+## `{kind: [[x,y],...] sorted}` -- empty dict when `terrain` is empty
 ## (every pre-existing fight). QA asserts through this exact shape
 ## (`assert_state combat.terrain.icy_floor`).
 func _terrain_snapshot() -> Dictionary:
@@ -750,8 +750,8 @@ func _tally_skill_use(actor_id: String, skill: Dictionary) -> void:
 		_tally(actor_id, "%s_cast" % String(skill["element"]))
 
 
-## Records `skill_id` into `used_skills_tally` for `actor_id` (UI wave item
-## 19's per-fight half — see that var's own doc comment). A no-op for an
+## Records `skill_id` into `used_skills_tally` for `actor_id` (the
+## per-fight half — see that var's own doc comment). A no-op for an
 ## empty id (skill dicts always carry one from data/skills.json in real
 ## play; the guard is pure hygiene against a hand-built test dict).
 func _mark_skill_used(actor_id: String, skill_id: String) -> void:

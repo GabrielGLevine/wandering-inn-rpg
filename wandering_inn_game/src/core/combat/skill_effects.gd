@@ -22,14 +22,16 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 	var effect_type := String(effect.get(WIKeys.TYPE, ""))
 	if effect_type == "line_damage":
 		return _resolve_line_damage(combat, actor_id, a, target_id, skill, effect)
-	# Skills Wave Task K2 (the sneak combat read): move_pool_bonus is a
+	# move_pool_bonus is a
 	# SELF-targeted grant, dispatched early exactly like line_damage above --
 	# neither needs the enemy-side gate just below (which would reject a
 	# self/no-target cast outright). Gated on `ap_cost > 0` so this ONLY
 	# fires for an actively-cast skill (today, only [Stealth]): the two
 	# PRE-EXISTING 0-cost move_pool_bonus skills (quick_movement,
-	# battlefield_awareness) are labeled passives with no resolver in THIS dispatch table (K4: wi_combat.gd's _start_turn now grants their bonus as a real turn-start passive -- see _move_pool_bonus_total)
-	# (M-LEGIBILITY L5 disclosed finding) -- generalizing this dispatch to
+	# battlefield_awareness) are labeled passives with no resolver in THIS
+	# dispatch table (wi_combat.gd's _start_turn grants their bonus as a real
+	# turn-start passive -- see _move_pool_bonus_total).
+	# TRAP: generalizing this dispatch to
 	# EVERY move_pool_bonus skill regardless of cost would silently turn
 	# those two into a free, repeatable-every-turn pool exploit (0 AP, no
 	# gate stops a re-press), which nothing asked for. This narrower gate
@@ -41,7 +43,7 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 	var t: Dictionary = combat.combatants.get(target_id, {})
 	if t.is_empty() or not t.get(WIKeys.ALIVE, false):
 		return false
-	# Skills Wave Task K4 (the second_wind fix): the same-side gate below is
+	# The same-side gate below is
 	# now TYPE-keyed, never skill-name-keyed (the exact drift-seam class
 	# effect_text.gd's own DRIFT SEAM comment warns about, applied here to the
 	# dispatch gate instead of the card text). Every effect type reaching this
@@ -83,7 +85,7 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 	return false
 
 
-## Skills Wave Task K2: the sneak combat read. Spends the skill's cost (1 AP,
+## The sneak combat read. Spends the skill's cost (1 AP,
 ## no MP), then adds `effect.amount` (2) straight to the ACTOR's own
 ## `move_pool` -- the exact field `dash()` mutates, so the pool is spent via
 ## the same `move_active`/MOVE_COST path afterward, no separate currency. No
@@ -100,7 +102,6 @@ static func _resolve_move_pool_bonus(combat: WICombat, actor_id: String, a: Dict
 	return true
 
 
-## Skills Wave Task K4 (the L5 ghost-skill escalation's second_wind fix):
 ## second_wind's real heal resolver. `target_id` has already cleared
 ## resolve_active's type-keyed same-side gate above (heal requires the SAME
 ## side), but this is SELF-ONLY tonight -- ally-targeting would need
@@ -167,7 +168,7 @@ static func _resolve_line_damage(combat: WICombat, actor_id: String, a: Dictiona
 	return true
 
 
-## GH#21 ([Ice Floor]): area terrain resolver. Gates BEFORE spend, mirroring
+## Area terrain resolver. Gates BEFORE spend, mirroring
 ## spell_damage exactly (range then LoS -- a refused cast costs neither AP
 ## nor MP): `target_id` must already be a living ENEMY (the same-side gate
 ## in `resolve_active`, above, enforces that before this is ever reached).

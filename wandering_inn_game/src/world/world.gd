@@ -340,7 +340,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_move_field_slot_cursor(1)
 		get_viewport().set_input_as_handled()
 	else:
-		# Three Pillars P2: field-skill hotbar direct-fire. Reuses combat's
+		# field-skill hotbar direct-fire. Reuses combat's
 		# `hotbar_1..9` input actions; the pressed number maps through the field
 		# hotbar's own slot list (single source of truth) to a KNOWN field skill,
 		# then fires P1's `use_skill_field`. Gated by `_movement_gated()` above
@@ -356,7 +356,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 
 
-## Issue #40 (8-way field movement): combines the axis the just-pressed
+## Combines the axis the just-pressed
 ## `primary` cardinal belongs to with whichever action on the OTHER axis is
 ## ALSO currently held, producing a diagonal Vector2i when both are down.
 ## `Input.is_action_pressed` (continuous held-state, not the discrete press

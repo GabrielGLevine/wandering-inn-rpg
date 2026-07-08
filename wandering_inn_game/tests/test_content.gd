@@ -4,7 +4,7 @@ extends SceneTree
 
 const DIALOGUE_DIR := "res://data/dialogue"
 
-## M-LEGIBILITY L5: every data file that carries player-facing strings, for
+## Every data file that carries player-facing strings, for
 ## `_validate_player_string_vocab`'s recursive sweep (dialogue/*.json is
 ## walked separately below, via the same DIALOGUE_DIR enumeration
 ## `_load_dialogue_graphs` uses). Deliberately excludes files with NO player
@@ -54,7 +54,7 @@ func _init() -> void:
 	quit(0)
 
 
-## M-LEGIBILITY L1: the FORBIDDEN-vocabulary grep over WIEffectText's output
+## The FORBIDDEN-vocabulary grep over WIEffectText's output
 ## across the FULL item + Skill + status catalogs. No generated player line may
 ## carry a raw attribute (STR/DEX/CON/INT/WIS/CHA as a whole word) or a
 ## percentage-toward ('%'). This runs the real formatter over the shipped data,
@@ -81,7 +81,7 @@ func _validate_effect_text_opacity() -> void:
 		assert(not line.contains("%"), "effect_text emits a forbidden percent-toward token: " + line)
 
 
-## M-LEGIBILITY L5: forbidden-vocab sweep over every player-string FIELD in
+## forbidden-vocab sweep over every player-string FIELD in
 ## content data, not just WIEffectText's GENERATED lines (that narrower sweep
 ## is `_validate_effect_text_opacity`, above, which exercises the formatter
 ## itself and stays separate). BEFORE this task the grep only ever reached
@@ -180,12 +180,12 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 					produced[String(skill_use["accomplishment"])] = true
 			if entity.has("on_interact_accomplishment"):
 				produced[String(entity["on_interact_accomplishment"])] = true
-			# Magical Door plan Task D3: a container's optional
+			# A container's optional
 			# `on_open_accomplishment` (src/core/wi_game.gd's _interact_container)
 			# is a producer too, same shape as on_interact_accomplishment above.
 			if entity.has("on_open_accomplishment"):
 				produced[String(entity["on_open_accomplishment"])] = true
-			# Social Pillar S1/S3: a non-empty talk_pool makes the sim's
+			# A non-empty talk_pool makes the sim's
 			# _talk_pool_line bank heard_gossip (+1) and chatted_with_<id> (+1) on
 			# the first talk of each waking. The bank happens in the sim, not a
 			# scanned data field, so record it here as genuinely content-produced
@@ -196,7 +196,7 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 				produced["chatted_with_%s" % String(entity["id"])] = true
 
 
-## Social Pillar II Phase A: `talk_pool_stages` authoring must be ASCENDING
+## `talk_pool_stages` authoring must be ASCENDING
 ## (the visual_states/classes.json level-table convention social.gd's
 ## talk_pool_line relies on -- it walks the array in AUTHORED order and lets
 ## the LAST entry whose gate is met win; it does NOT sort by difficulty).
@@ -291,7 +291,7 @@ func _validate_option(
 	if option.has("requires"):
 		_validate_requires(label, option["requires"], skill_ids, class_ids)
 	if option.has("hide_when"):
-		# Issue #23 fix wave (review finding 1): once_per_waking is a
+		# once_per_waking is a
 		# REQUIRES-ONLY gate -- its "met" polarity ("not yet used this
 		# waking") is inverted relative to every shipped hide_when key's
 		# ("the tracked state is now true"), so a hide_when carrying it is a
@@ -308,7 +308,7 @@ func _validate_option(
 ## validated against the same known-id catalogs. Accomplishment ids are not
 ## checked against a catalog here (they're free-form, cross-referenced instead
 ## via produced_accomplishments in _validate_quests). EXCEPTION (Issue #23 fix
-## wave): `once_per_waking` is requires-only -- _validate_option rejects it in
+## `once_per_waking` is requires-only -- _validate_option rejects it in
 ## a hide_when dict BEFORE this shared body runs (see
 ## _hide_when_gate_keys_allowed).
 func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictionary, class_ids: Dictionary) -> void:
@@ -325,7 +325,7 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 	if requires.has("accomplishment"):
 		gate_keys += 1
 	if requires.has("board_accepted"):
-		# M-DEPTH DP2: the THIRD sanctioned single-key gate (after
+		# The THIRD sanctioned single-key gate (after
 		# accomplishment/gold) -- WIDialogue._meets/_progress_gated's
 		# board_accepted ctx-flag check (Selys's "Take on a posting."/"Turn in
 		# my posting." hub options, selys_delivery.json). Bool value only; it
@@ -333,13 +333,13 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		gate_keys += 1
 		assert(requires["board_accepted"] is bool, label + " board_accepted must be a bool")
 	if requires.has("delivery_accepted"):
-		# M-DEPTH DP5: the FOURTH sanctioned single-key gate --
+		# The FOURTH sanctioned single-key gate --
 		# board_accepted's exact twin for the Runner's Guild slip (Vess's
 		# "Take a slip."/"Turn in a slip." hub options, vess_counter.json).
 		gate_keys += 1
 		assert(requires["delivery_accepted"] is bool, label + " delivery_accepted must be a bool")
 	if requires.has("gold"):
-		# Economy v1 D2: the affordability gate (Krshia's shop buy options).
+		# The affordability gate (Krshia's shop buy options).
 		# `requires: {gold: price}` is the D1-sanctioned numeric extension of the
 		# M4 greying ctx (skill/class/accomplishment were the only prior gate
 		# types). It greys a buy option VISIBLE when broke (never hidden --
@@ -347,7 +347,7 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		gate_keys += 1
 		assert(int(requires["gold"]) > 0, label + " gold requirement must be a positive price")
 	if requires.has("once_per_waking"):
-		# Issue #23: the FIFTH sanctioned single-key gate -- its OWN validator
+		# The FIFTH sanctioned single-key gate -- its OWN validator
 		# arm, not a silent reuse of any other key's shape.
 		# WIDialogue._meets/_progress_gated's once_per_waking check against
 		# the shared `entity_first_use` dict (Erin's meal / Relc's wager hub
@@ -356,7 +356,7 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# the `bank_first_use` effect shape below, same string contract).
 		gate_keys += 1
 		assert(_is_valid_verb_entity_key(requires["once_per_waking"]), label + " once_per_waking must be a \"<verb>:<entity>\" string with both segments non-empty")
-	# Social Pillar II Phase B: the FIRST sanctioned COMPOUND exception --
+	# The FIRST sanctioned COMPOUND exception --
 	# {gold, accomplishment} together (a stage-gated discount buy option,
 	# Krshia's `krshia_friend_of_the_silverfangs` perk). dialogue.gd's _meets()
 	# ANDs both legs; _meets_progress() reads ONLY the accomplishment leg for
@@ -381,7 +381,7 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 	assert(gate_keys == 1, label + " requires must use exactly one gate type")
 
 
-## Issue #23: the shared "<verb>:<entity>" shape check for BOTH the
+## The shared "<verb>:<entity>" shape check for BOTH the
 ## `once_per_waking` requires gate value (requires-ONLY -- see
 ## _hide_when_gate_keys_allowed below) and the `bank_first_use` effect value
 ## (same contract on both sides of the seam, see dialogue.gd's
@@ -396,7 +396,7 @@ func _is_valid_verb_entity_key(value: Variant) -> bool:
 	return parts.size() == 2 and not parts[0].is_empty() and not parts[1].is_empty()
 
 
-## Issue #23 fix wave (review finding 1): true iff this hide_when dict is
+## True iff this hide_when dict is
 ## free of requires-only gate keys. `once_per_waking` may never appear in a
 ## hide_when: its "met" polarity ("not yet used this waking") is the inverse
 ## of every shipped hide_when key's, so the retire idiom an author would
@@ -407,7 +407,7 @@ func _hide_when_gate_keys_allowed(hide_when: Dictionary) -> bool:
 	return not hide_when.has("once_per_waking")
 
 
-## Issue #23: acceptance + rejection coverage for _is_valid_verb_entity_key,
+## Acceptance + rejection coverage for _is_valid_verb_entity_key,
 ## called directly (not through the assert-based validators above, which
 ## would abort this SceneTree script on a deliberately-malformed shape).
 func _validate_once_per_waking_shape_cases() -> void:
@@ -425,7 +425,7 @@ func _validate_once_per_waking_shape_cases() -> void:
 	# never carry colons in this codebase, but the shape check must not choke
 	# on one) -- "meal:erin:extra" is still two non-empty segments post-split.
 	assert(_is_valid_verb_entity_key("meal:erin:extra"), "extra colon still splits into two non-empty segments")
-	# Issue #23 fix wave (review finding 1): once_per_waking is requires-only
+	# once_per_waking is requires-only
 	# -- a hide_when dict carrying it is a content ERROR (rejection case), any
 	# other hide_when key set stays valid (acceptance cases).
 	assert(not _hide_when_gate_keys_allowed({"once_per_waking": "meal:erin"}), "hide_when carrying once_per_waking rejected (requires-only gate)")
@@ -458,7 +458,7 @@ func _validate_effect(
 		var class_id: String = String(effect["class"])
 		assert(class_ids.has(class_id), label + " references unknown class: " + class_id)
 	if effect.has("bank_first_use"):
-		# Issue #23: the effect-side twin of the once_per_waking requires
+		# The effect-side twin of the once_per_waking requires
 		# shape check above -- same "<verb>:<entity>" contract, its OWN
 		# validator arm (not a silent fall-through), shared helper.
 		assert(_is_valid_verb_entity_key(effect["bank_first_use"]), label + " bank_first_use must be a \"<verb>:<entity>\" string with both segments non-empty")
@@ -485,13 +485,13 @@ func _validate_hide_when_nodes_have_always_available_exit(graphs: Dictionary) ->
 			var options: Array = node.get("options", [])
 			var has_vanishing_option := false
 			for option: Dictionary in options:
-				# M-DEPTH DP2: board_accepted is the SECOND recognized progress-gate
+				# board_accepted is the SECOND recognized progress-gate
 				# key (see WIDialogue._progress_gated) -- included here so a future
 				# board_accepted-only node (none ship today; the hub already has an
 				# always-available exit regardless) gets the same softlock check.
-				# M-DEPTH DP5: delivery_accepted, its twin (vess_counter.json's hub
+				# delivery_accepted, its twin (vess_counter.json's hub
 				# -- which does carry an ungated "Just passing through." exit).
-				# Issue #23: once_per_waking, the FIFTH -- Erin's "Sit, eat.
+				# once_per_waking, the FIFTH -- Erin's "Sit, eat.
 				# Cook's orders." and Relc's wager option both already sit in
 				# hubs with an ungated exit, but this check must catch a future
 				# once_per_waking-only node the same way.

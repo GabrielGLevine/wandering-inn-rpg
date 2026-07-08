@@ -123,7 +123,7 @@ func _init() -> void:
 		c3.end_turn()
 	assert(c3.outcome["draw"] == true and c3.outcome["victory"] == false, "round cap = draw, non-victory")
 
-	# --- Task 4: skill effects and reactions ---
+	# --- skill effects and reactions ---
 	var c4 := _make(11, _sink)
 	_events.clear()
 	# Teleport pc adjacent to raider for controlled melee tests
@@ -211,7 +211,7 @@ func _init() -> void:
 		assert(not c8.move_active(Vector2i.RIGHT), "dead active cannot move")
 		assert(not c8.attack(killer), "dead active cannot attack")
 
-	# --- Task 2: movement economy — move pool + Dash; status framework ---
+	# --- movement economy — move pool + Dash; status framework ---
 	# Locked-design numbers (M3 plan): everything below asserts RELATIVE to the
 	# constants, so pin the constants themselves here or a silent retune passes.
 	assert(WICombat.MOVE_POOL == 3, "locked design: 3 free move steps per turn")
@@ -354,7 +354,7 @@ func _init() -> void:
 	assert(c13.get_active() == floor_id, "cycled back to the floor-test combatant's turn")
 	assert(int(c13.combatants[floor_id][WIKeys.MOVE_POOL]) == 1, "slowed pool floors at 1, never 0 or negative")
 
-	# --- Task 3: line-of-sight ---
+	# --- line-of-sight ---
 	# Arena fixture: goblin_ambush blocks (5,3),(6,4),(3,5),(8,2).
 	var c14 := _make(11, _sink)
 	_events.clear()
@@ -401,7 +401,7 @@ func _init() -> void:
 	c16._start_turn()
 	assert(c16.attack("goblin_raider"), "melee attack is exempt from LoS gating")
 
-	# --- M3 T3 review fix #1: has_los supercover symmetry ---
+	# --- has_los supercover symmetry ---
 	# A single Bresenham raster picks one arbitrary path per direction and can
 	# disagree on diagonally-adjacent wall pairs; the supercover walk enumerates
 	# every cell the ideal segment crosses (a direction-independent geometric
@@ -447,7 +447,7 @@ func _init() -> void:
 	assert(not c22.has_los("pc", "goblin_raider"), "diagonal wall pair blocks LoS forward")
 	assert(not c22.has_los("goblin_raider", "pc"), "diagonal wall pair blocks LoS backward")
 
-	# --- Task 3: line_cells enumeration ---
+	# --- line_cells enumeration ---
 	var c17 := _make(11, _sink)
 	# Clear line, length 4, rightward from (0,0): all 4 cells in bounds and unblocked.
 	var cells_clear: Array[Vector2i] = c17.line_cells(Vector2i(0, 0), Vector2i.RIGHT, 4)
@@ -464,7 +464,7 @@ func _init() -> void:
 	var cells_occupant: Array[Vector2i] = c17.line_cells(Vector2i(0, 0), Vector2i.RIGHT, 4)
 	assert(cells_occupant == [Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0)], "occupants do not clip the line")
 
-	# --- Task 3: Flame Jet line_damage — friendly fire, cells + hit_ids on skill_resolved ---
+	# --- Flame Jet line_damage — friendly fire, cells + hit_ids on skill_resolved ---
 	var c18 := _make(11, _sink)
 	_events.clear()
 	c18.combatants["pc"][WIKeys.CELL] = Vector2i(0, 0)
@@ -507,7 +507,7 @@ func _init() -> void:
 	assert(not c19.use_skill("flame_jet", "diagonal"), "non-cardinal direction token refused")
 	assert(_count("skill_resolved") == 0, "refused line does not resolve")
 
-	# --- M3 T3 review fix #2: line_damage refused when its first cell is a wall ---
+	# --- line_damage refused when its first cell is a wall ---
 	var c23 := _make(11, _sink)
 	_events.clear()
 	c23.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)  # (5,3) is blocked, directly to the right
@@ -525,7 +525,7 @@ func _init() -> void:
 	assert(jet_refusal.get("reason", "") == "no_los", "wall-blocked line emits no_los action_refused")
 	assert(int(c23.combatants["pc"][WIKeys.AP]) == pc_ap_before_jet, "refused line-cast costs no AP")
 
-	# --- Task 3: frost_bolt applies slowed on hit ---
+	# --- frost_bolt applies slowed on hit ---
 	var c20 := _make(2, _sink)
 	_events.clear()
 	c20.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
@@ -570,7 +570,7 @@ func _init() -> void:
 		break
 	assert(found_slowed_seed, "found at least one seed where frost bolt hit, to verify slowed application")
 
-	# --- Task 3: AI never selects a line whose cells include an ally ---
+	# --- AI never selects a line whose cells include an ally ---
 	var c21 := _make(11, _sink)
 	_events.clear()
 	# Force a fixture: shaman (ranged AI) knows flame_jet; placing an ally goblin_raider
@@ -589,7 +589,7 @@ func _init() -> void:
 	WICombatAI.take_turn(c21)
 	assert(_count("skill_resolved") == 0, "line-capable AI refuses to cast a line that would hit its own ally")
 
-	# --- M3 T3 review fix #3: second slow on an already-slowed victim is a flat refresh ---
+	# --- second slow on an already-slowed victim is a flat refresh ---
 	var c24 := _make(11, _sink)
 	_events.clear()
 	var refresh_id: String = c24.get_active()
@@ -609,7 +609,7 @@ func _init() -> void:
 	assert(not (c24.combatants[refresh_id]["statuses"] as Dictionary).has("slowed"), "slowed expired exactly once")
 	assert(_count("status_expired") == 1, "exactly one status_expired despite two applications")
 
-	# --- Task 4: MP pool build ---
+	# --- MP pool build ---
 	var c25 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt", "quick_cast"]}})
 	assert(int(c25.combatants["pc"][WIKeys.MAX_MP]) == 8 + int(8 / 2), "max_mp = 8 + int(INT/2) for a combatant with a spell")
 	assert(int(c25.combatants["pc"][WIKeys.MP]) == int(c25.combatants["pc"][WIKeys.MAX_MP]), "mp starts at max_mp")
@@ -618,7 +618,7 @@ func _init() -> void:
 	var snap25 := c25.snapshot()
 	assert((snap25["combatants"]["pc"] as Dictionary).has(WIKeys.MP) and (snap25["combatants"]["pc"] as Dictionary).has(WIKeys.MAX_MP), "snapshot combatants carry mp/max_mp")
 
-	# --- Task 4: spell refused on insufficient MP; refusal costs nothing ---
+	# --- spell refused on insufficient MP; refusal costs nothing ---
 	var c26 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt"]}})
 	_events.clear()
 	c26.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
@@ -634,7 +634,7 @@ func _init() -> void:
 	c26.combatants["pc"][WIKeys.MP] = 2
 	assert(c26.use_skill("frost_bolt", "goblin_raider"), "spell succeeds once MP is sufficient")
 
-	# --- Task 4: Quick Cast discounts exactly the first spell each turn ---
+	# --- Quick Cast discounts exactly the first spell each turn ---
 	var c27 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt", "flame_jet", "quick_cast"]}})
 	_events.clear()
 	c27.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
@@ -658,7 +658,7 @@ func _init() -> void:
 	assert(c27.use_skill("frost_bolt", "goblin_raider"), "spell succeeds on the new turn")
 	assert(int(c27.combatants["pc"][WIKeys.AP]) == ap1, "quick_cast's discount resets each turn (_start_turn)")
 
-	# --- Task 4: Mana Shield absorbs damage into MP before HP ---
+	# --- Mana Shield absorbs damage into MP before HP ---
 	var c28 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt", "mana_shield"]}})
 	_events.clear()
 	var mp28: int = int(c28.combatants["pc"][WIKeys.MP])
@@ -694,7 +694,7 @@ func _init() -> void:
 	assert(int(c28.combatants["pc"][WIKeys.HP]) == hp_before_inert - 5, "shield inert at 0 MP: full damage to HP")
 	assert(_count("reaction_triggered") == 0, "no reaction fires once MP is empty")
 
-	# --- Task 4: regression — riposte still never triggers on spell hits ---
+	# --- regression — riposte still never triggers on spell hits ---
 	var c29 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt"]}})
 	_events.clear()
 	c29.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(1, 1)
@@ -705,7 +705,7 @@ func _init() -> void:
 	assert(c29.use_skill("frost_bolt", "goblin_raider"), "spell cast succeeds against a counter_strike holder")
 	assert(_count("reaction_triggered") == 0, "spells never trigger riposte, even against a counter_strike holder with MP wired in")
 
-	# --- Task 4: determinism holds through a spell-heavy scripted stream ---
+	# --- determinism holds through a spell-heavy scripted stream ---
 	var stream_e: Array = []
 	var stream_f: Array = []
 	for stream: Array in [stream_e, stream_f]:
@@ -725,7 +725,7 @@ func _init() -> void:
 	assert(stream_e.size() > 5, "spell-heavy scripted run produced events")
 	assert(stream_e == stream_f, "same seed + same spell-heavy intents = identical event stream")
 
-	# --- Task 4: AI skips spells it cannot afford (MP) ---
+	# --- AI skips spells it cannot afford (MP) ---
 	var c30 := _make(11, _sink)
 	_events.clear()
 	c30.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(1, 1)
@@ -739,7 +739,7 @@ func _init() -> void:
 	assert(_count("skill_resolved") == 0, "AI never casts a spell it cannot pay MP for")
 	assert(_count("mp_changed") == 0, "no MP was spent by the skipped cast")
 
-	# --- Task 4: AI prefers flame_jet when >=2 enemies share an ally-free line ---
+	# --- AI prefers flame_jet when >=2 enemies share an ally-free line ---
 	var c31 := _make(11, _sink)
 	_events.clear()
 	c31.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
@@ -776,7 +776,7 @@ func _init() -> void:
 			first_skill32 = String(e["payload"]["skill"])
 	assert(first_skill32 == "frost_bolt", "AI prefers the single-target spell when only one enemy is in the line")
 
-	# --- Onboarding rev Task O1: "inert" AI profile (training dummies) ---
+	# --- "inert" AI profile (training dummies) ---
 	# The dummies never act at all (no block mechanics exist, so standing
 	# still is correct design, not AI weakness -- onboarding-rev spec §2).
 	# Force the dummy adjacent to pc so a REAL melee profile would clearly
@@ -816,7 +816,7 @@ func _init() -> void:
 			dummy_attacked = true
 	assert(not dummy_attacked, "no attack_resolved ever names a dummy as attacker across the full autoplay fight")
 
-	# --- M6 T1: per-fight action tally (spec §2.1 REV 2) ---
+	# --- per-fight action tally (spec §2.1 REV 2) ---
 	# Counters accumulate per actor as actions resolve; skill counters come
 	# from skills.json weapon/element tags. hit_bonus ±1000 forces guaranteed
 	# hits/misses (hit_chance = BASE_HIT + hit_bonus - dex/4), so no seed
@@ -982,7 +982,7 @@ func _init() -> void:
 	assert(bool(c42.combatants["pc"][WIKeys.ALIVE]), "pc is still alive")
 	assert(not c42.finished, "relc's death alone does not end the fight -- only the pc's does")
 
-	# --- M7 Task E2: build-time equipment injection (damage_mod/hp_mod/
+	# --- build-time equipment injection (damage_mod/hp_mod/
 	# damage_reduction) -- WIGame._build_player_combatant is the only real
 	# caller that ever sets these; here we exercise wi_combat.gd's own
 	# handling of the fields directly, via _make_custom's cfg override.
@@ -1109,7 +1109,7 @@ func _init() -> void:
 			reduce_then_shield_payload = e["payload"]
 	assert(int(reduce_then_shield_payload.get("absorbed", -1)) == 7, "mana_shield's own reaction payload also reports the post-reduction amount")
 
-	# --- Skills Wave Task K2: the sneak combat read ---
+	# --- the sneak combat read ---
 	# [Stealth] in combat: 1 AP for +2 move_pool, a genuine self-buff -- no
 	# enemy, no adjacency, no LoS. `use_skill("sneak", "pc")` mirrors exactly
 	# how the real UI resolves it now (targeting_controller.gd's self-target
@@ -1175,7 +1175,7 @@ func _init() -> void:
 	assert(not c59.use_skill("quick_movement", "pc"), "the pre-existing 0-cost move_pool_bonus skill still refuses self-target")
 	assert(int(c59.combatants["pc"][WIKeys.MOVE_POOL]) == pool59_before, "quick_movement grants nothing as an ACTIVE cast -- still no resolve_active consumer")
 
-	# --- Skills Wave Task K4: quick_movement/battlefield_awareness are real
+	# --- quick_movement/battlefield_awareness are real
 	# TURN-START PASSIVES now (wi_combat.gd's `_move_pool_bonus_total`,
 	# applied inside `_start_turn`) -- c59 above proves the ACTIVE-cast path
 	# is untouched; this proves the PASSIVE path is real. ---
@@ -1211,7 +1211,7 @@ func _init() -> void:
 	c63._start_turn()
 	assert(int(c63.combatants["pc"][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL, "[Stealth]'s ACTIVE move_pool_bonus grants no turn-start passive")
 
-	# --- Skills Wave Task K4: second_wind's self-heal resolver (the L5
+	# --- second_wind's self-heal resolver (the
 	# ghost-skill escalation's other fix; `_resolve_heal` in skill_effects.gd) ---
 	var c64 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["second_wind"]}})
 	c64.active_index = c64.turn_order.find("pc")
@@ -1264,7 +1264,7 @@ func _init() -> void:
 	# `_resolve_heal`'s self-only gate.
 	assert(not c66.use_skill("second_wind", "goblin_raider"), "second_wind refuses an enemy target (fails the type-keyed same-side gate)")
 
-	# --- GH#21 [Ice Floor]: area terrain effect. Gates BEFORE spend, mirroring
+	# --- [Ice Floor]: area terrain effect. Gates BEFORE spend, mirroring
 	# spell_damage exactly (range then LoS -- a refused cast costs neither AP
 	# nor MP). Arena fixture: goblin_ambush blocks (5,3),(6,4),(3,5),(8,2). ---
 	var c67 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["icy_floor"]}})

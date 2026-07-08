@@ -1,6 +1,6 @@
 class_name WICombatTargeting
 extends RefCounted
-## M6.5 D4 extraction: the targeting-aim region MOVED out of combat_screen.gd
+## The targeting-aim region, extracted from combat_screen.gd
 ## -- filtering reachable targets (adjacency for Attack, range+LoS for a
 ## skill), the four cardinal line-skill directions, and the friendly-fire
 ## preview text for a line skill. Constructed FRESH per encounter by
@@ -92,7 +92,7 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 		var skill_effect: Dictionary = skill.get("effect", {}) as Dictionary
 		var effect_type := String(skill_effect.get("type", ""))
 		_line_mode = effect_type == "line_damage"
-		# Skills Wave Task K2 (the sneak combat read): a self-targeted active
+		# A self-targeted active
 		# move_pool_bonus cast (today only [Stealth]; MUST stay in lockstep with
 		# skill_effects.gd's `resolve_active` -- same effect.type + ap_cost>0
 		# pair gates its self-buff resolver there) needs no enemy at all.
@@ -104,7 +104,7 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 		# `combat.use_skill(skill_id, me)` then dispatches into the self-buff
 		# resolver, never the enemy-gated match.
 		#
-		# Skills Wave Task K4 (second_wind's self-heal): SAME plumbing, same
+		# SAME plumbing, same
 		# reasoning -- a heal cast needs no enemy either. SELF-ONLY tonight
 		# (skill_effects.gd's `_resolve_heal` refuses any target_id other
 		# than the actor's own; see its doc comment for the ally-targeting
@@ -217,15 +217,15 @@ func state() -> Dictionary:
 
 ## Verbatim move of `_line_target_text`, reading through `_view` instead of a
 ## raw `WICombat` param; `_grey` stays duplicated locally (see the file doc
-## comment) but the BBCode escape now calls `UIChrome.bb_escape` (M-ARCH Task
-## ARCH-2: promoted off a per-file copy here/journal.gd/combat_hud.gd -- the
-## M6.5 zero-cross-dependency idiom, amended for this one case: `UIChrome` is
+## comment) but the BBCode escape calls `UIChrome.bb_escape` (promoted off
+## a per-file copy here/journal.gd/combat_hud.gd -- the
+## zero-cross-dependency idiom, amended for this one case: `UIChrome` is
 ## a plain `class_name` script, not one of this file's forbidden bare
 ## autoload identifiers, so this is not a new dependency risk for the
 ## --script-mode compile safety this file otherwise guards -- verified by
 ## running test_combat_visuals.gd, which load()s+instantiates this file
 ## directly).
-## `cycle_glyph`/`confirm_glyph` (Controller support, S3, issue #18): the
+## `cycle_glyph`/`confirm_glyph`: the
 ## device-correct keycap text, byte-identical defaults to the old hardcoded
 ## literals ("Tab"/"Enter") -- this file carries ZERO bare autoload
 ## identifiers by contract (`tests/test_combat_visuals.gd` asserts it

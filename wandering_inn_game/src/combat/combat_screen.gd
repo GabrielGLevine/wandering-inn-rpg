@@ -1,7 +1,7 @@
 extends CanvasLayer
 ## Functional-minimal combat presentation. Renders the WICombat snapshot as
 ## a grid of squares with HP bars and AP pips, a turn-order strip, a hotbar-
-## driven action UI (arrows move the active unit directly -- M5 H2), and a
+## driven action UI (arrows move the active unit directly), and a
 ## prose event feed. HP readouts and damage numbers are player-visible; raw
 ## stats remain hidden by repo product constraint.
 ##
@@ -187,7 +187,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		if not tutor.is_empty():
 			# Stash the ALREADY-DECIDED match onto the queued event so
 			# dequeue-time playback only renders it (feed push + bus confirm)
-			# -- it never re-matches against live state (M4 T10 contract).
+			# -- it never re-matches against live state (the playback contract).
 			(event["payload"]["_ui"] as Dictionary)["tutor"] = tutor
 		_ai_playback.enqueue(event)
 		if type == WIEvents.COMBATANT_DOWNED:
@@ -324,7 +324,7 @@ func _refresh_combatants() -> void:
 		_board_renderer.apply_stats(id, _view.stats(id))
 
 
-## M6.5 D3 delegator — NOT dead code (D3 review correction): the real
+## Delegator — NOT dead code: the real
 ## implementation MOVED to `WICombatPlayback.capture_playback_event`
 ## (`combat_playback.gd`), and this wrapper has a LIVE production call site:
 ## `_on_domain_event`'s non-AI (player-turn) event branch calls
@@ -343,7 +343,7 @@ func _capture_playback_event(type: String, payload: Dictionary) -> Dictionary:
 	return _ai_playback.capture_playback_event(type, payload)
 
 
-## M6.5 D4 delegators to `WICombatHud`'s feed/tutor methods. `_feed_line_for_
+## Delegators to `WICombatHud`'s feed/tutor methods. `_feed_line_for_
 ## event` is a REQUIRED live delegator, not a test-only shim: `combat_
 ## playback.gd`'s `_capture_event_ui` (out of this task's edit scope) calls
 ## `_screen._feed_line_for_event(...)` on EVERY captured event, real gameplay
@@ -389,7 +389,7 @@ func _emit_targeting_shown_event(mode_text: String, skill_id: String, target_cou
 	})
 
 
-## M4 T10/M5 E2 render dispatcher, shared by the live event path
+## Render dispatcher, shared by the live event path
 ## (_on_domain_event) and paced AI playback (_apply_playback_event) -- stays
 ## on the screen (VFX-flash dispatch, not HUD's readout/feed/tutor domain),
 ## calling `_board_renderer`'s public animation surface instead of the
@@ -558,8 +558,8 @@ func _numbered_slot_pressed(event: InputEvent) -> int:
 ## slots refuse silently (no mode change), same convention as the pre-hotbar
 ## menu/skill-pick confirm handlers. Targeting slots set the mode FSM and
 ## record `_bar_index` so the aimed slot stays highlighted for the duration
-## of targeting, then hand off to `_targeting.enter(...)` (M6.5 D4); Dash is
-## a pure pool refill (M5 H2) -- no mode change, arrows spend the new pool
+## of targeting, then hand off to `_targeting.enter(...)`; Dash is
+## a pure pool refill -- no mode change, arrows spend the new pool
 ## directly from the HOTBAR resting state.
 func _activate_bar_slot(index: int) -> void:
 	if index < 0 or index >= _bar_slots.size():
@@ -739,7 +739,7 @@ func _move_active_or_bump(dir: Vector2i) -> void:
 		_board_renderer.bump(active_id, dir)
 
 
-## M6.5 D4: the mode-FSM/input-dispatch shell of the old `_input_target` --
+## The mode-FSM/input-dispatch shell of the old `_input_target` --
 ## Tab/Enter/Esc map to `_targeting`'s `cycle()`/`confirm()`/`cancel()`, and
 ## `confirm()`'s returned action is executed HERE (command surface stays at
 ## the composition root, per the plan): `combat.attack()`/`combat.use_skill()`

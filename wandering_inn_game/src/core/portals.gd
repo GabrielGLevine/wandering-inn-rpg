@@ -1,7 +1,7 @@
 class_name WIPortals
 extends RefCounted
-## Magical Door plan Task D4 (issue #8, milestone 8a spec §5.5 the
-## anchor-stone-per-region idiom): the portal-menu's pure derivation +
+## The anchor-stone-per-region idiom (spec §5.5):
+## the portal-menu's pure derivation +
 ## code-built conversation graph, riding the EXACT WIBounties idiom
 ## (bounties.gd's build_picker_graph) -- static-only, no instance, no
 ## injected-Callable constructor. This class owns NO WIGame state to
@@ -9,7 +9,7 @@ extends RefCounted
 ## each and are therefore instantiated per-game with injected setter
 ## Callables) -- attuned_destinations/build_portal_graph are pure reads
 ## over a catalog + the current map, so the WIBounties static-function
-## shape is the correct precedent to follow, not the instantiated ARCH-4
+## shape is the correct precedent to follow, not the instantiated
 ## sub-sim shape. PURITY RULE: no autoload/Node/scene-tree references --
 ## every method takes the current portal catalog / an injected
 ## accomplishment-count Callable and returns a value; wi_game.gd's own

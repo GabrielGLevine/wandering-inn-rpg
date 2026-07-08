@@ -1,10 +1,10 @@
 class_name WICombatHud
 extends RefCounted
-## M6.5 D4 extraction: the combat HUD region MOVED out of combat_screen.gd --
+## The combat HUD region, extracted from combat_screen.gd --
 ## the order/readout/feed/banner panels + hotbar built once in the old
 ## `_ready()`, the hotbar slot list + live affordability/cost rendering, the
 ## "what does this button do" info line, the prose feed (wrapped-line
-## budgeting, M-FP F contract), and the tutor-line matcher/renderer. Owns the
+## budgeting contract), and the tutor-line matcher/renderer. Owns the
 ## Control nodes it builds; `_mode`/`_bar_slots`/`_bar_index`/
 ## `_info_slot_index` all STAY on combat_screen.gd (mode-FSM + bar-data
 ## ownership, per the plan) -- this file only ever RENDERS from state handed
@@ -48,14 +48,14 @@ extends RefCounted
 const FEED_TEXT_WIDTH := 248.0
 const FEED_TEXT_HEIGHT := 90.0
 
-## Readout panel interior text box (M-LEGIBILITY L5 fix -- panel-class fix
+## Readout panel interior text box (panel-class fix
 ## flagged after L4's windowed shot: `.superpowers/sdd/fp-handoff/l4-shots/
 ## 01_first_encounter_feed.png` showed frost_bolt's full 3-segment slot-info
 ## line ("[Frost Bolt] — 1 AP, 2 MP — damage 1d6 at range 4. Slows. — A dart
 ## of biting cold that clings to the legs.") wrap to a 2nd line, pushing the
 ## readout's total to 4 wrapped lines (head + hint + 2 info lines); the 4th
 ## rode the parchment's bottom fold, same repo-wide "Control rect > art-safe
-## band" class the feed panel was already fixed for (M-FP F; see the Gotchas
+## band" class the feed panel was already fixed for (see the Gotchas
 ## entry "Message panels budget WRAPPED LINES, not entries"). WIDTH mirrors
 ## the readout MarginContainer's interior (panel width 620 minus its 22px
 ## left+right margins, see build()). This panel has no separately-measured
@@ -71,8 +71,8 @@ const FEED_TEXT_HEIGHT := 90.0
 const READOUT_TEXT_WIDTH := 576.0
 const READOUT_TEXT_HEIGHT := 64.0
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
-## Controller support (S3, issue #18): default keycap glyphs for the readout
-## hint strip, byte-identical to the pre-S3 hardcoded literals. This file
+## Default keycap glyphs for the readout
+## hint strip, byte-identical to the old hardcoded literals. This file
 ## carries ZERO bare autoload identifiers by contract (`tests/
 ## test_combat_visuals.gd` asserts it compiles standalone) -- the REAL
 ## device-correct glyphs come from `WIInputHints.label()` at the composition
@@ -83,7 +83,7 @@ const DEFAULT_HINTS := {
 	"confirm": "Enter", "cancel": "Esc", "cycle": "Tab", "move": "Arrows",
 	"hotbar": "number keys", "end_turn": "E",
 }
-## Fix-wave (review of d5dfbf3, finding 2): every `on.event` a `tutor_lines`
+## Every `on.event` a `tutor_lines`
 ## entry is allowed to target, because a render call site actually exists for
 ## it. `reset_tutor_lines` cross-checks fresh data against this list and
 ## `push_warning`s loudly for anything outside it (zero-warning rule: bad
@@ -96,19 +96,14 @@ const TUTOR_SUPPORTED_EVENTS := [
 	WIEvents.STATUS_EXPIRED, WIEvents.ACTION_REFUSED, WIEvents.UI_TARGETING_SHOWN,
 ]
 
-## NIGHT polish wave item 3 (docs/VISUAL-LOG.md "tutor panel clips Relc's
-## 'Earned, not given' line ... at panel bottom in the ambush fight"):
-## `feed_push`'s FEED_TEXT_HEIGHT=90 budget (M-FP F) turned out to be
-## calibrated slightly too generous for a full 4-wrapped-line entry -- a
-## pixel measurement of the ACTUAL clip (`qa_output/tutorial_flow/
-## 04_ambush_warrior_spear.png`, the "real_ones" tutor line, and
-## `qa_output/relc_tutorial/01_opening.png`, the "opening" tutor line -- both
-## 4-line beats) found the parchment's decorative fold sits at ~70% of the
-## panel's total height from the top (measured: fold at absolute y~597 on a
-## panel spanning y[514,636], i.e. (597-514)/(636-514) = 0.70 -- consistent
-## with the toast panel's own independently-measured fold position at ~68/96
-## = 0.71, see message_layer.gd's TOAST_FOLD_DANGER_PX derivation), NOT the
-## naive full interior the original 90px figure assumed.
+## `feed_push`'s FEED_TEXT_HEIGHT=90 budget is calibrated slightly too
+## generous for a full 4-wrapped-line entry: pixel measurement of a real
+## clipped tutor line found the parchment's decorative fold sits at ~70% of
+## the panel's total height from the top (fold at absolute y~597 on a panel
+## spanning y[514,636], i.e. (597-514)/(636-514) = 0.70 -- consistent with
+## the toast panel's own independently-measured fold position at ~68/96 =
+## 0.71, see message_layer.gd's TOAST_FOLD_DANGER_PX derivation), NOT the
+## naive full interior a 90px figure assumes.
 ## SCOPE: this only touches the TUTOR render path (`render_tutor_line` /
 ## `_grow_feed_panel_for_tutor`), never `feed_push`/FEED_TEXT_HEIGHT
 ## themselves -- ordinary combat-log entries (attack/damage/status lines)
@@ -145,7 +140,7 @@ var _readout_panel: Control
 var _banner_panel: Control
 var _hotbar: WIHotbar
 var _feed: Array = []
-## NIGHT polish wave item 3: current feed panel height, grown (never
+## Current feed panel height, grown (never
 ## shrunk mid-encounter) by `_grow_feed_panel_for_tutor` when a tutor beat
 ## needs more room than FEED_PANEL_BASE_SIZE.y safely provides. Reset to
 ## base on every fresh `reset_tutor_lines` call (combat_started).
@@ -172,7 +167,7 @@ func _init(root: Control, main_ref: Node, screen: Node) -> void:
 ## readout, banner, hotbar) to preserve paint order -- verbatim move of the
 ## UI-build block from combat_screen.gd's old `_ready()`.
 func build() -> void:
-	# Combat HUD bands (M5 H3 review, Critical 1 -- keep these DISJOINT; both
+	# Combat HUD bands (keep these DISJOINT; both
 	# parchment panels are opaque, so any overlap hides one under the other):
 	#   order strip   CENTER_TOP     x[32,1248]  y[10,52]
 	#   feed          BOTTOM_LEFT    x[28,320]   y[514,636]  (left column)
@@ -296,14 +291,14 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 		_hotbar.render(rendered_slots, bar_index)
 
 
-## M5 H1: builds the ordered slot list for the hotbar -- Attack, Dash, then
+## Builds the ordered slot list for the hotbar -- Attack, Dash, then
 ## `actor_id`'s combat skills with an AP cost (skills.json order), then End
 ## Turn. Rebuilt fresh every time a player turn starts (`combat_screen.gd`'s
 ## `_apply_turn_started`, which stores the result in its own `_bar_slots`).
 ## Static display data only (icon id, label, key hint) -- affordability and
 ## live AP-cost numbers are computed fresh every `refresh()` by
 ## `render_bar_slots`, not baked in here.
-## Skills Wave Task K2b: `loadout` (default `[]` -- every pre-K2b call site,
+## `loadout` (default `[]` -- every pre-K2b call site,
 ## including this file's own unit test, stays byte-identical) is
 ## `Game.sim.hotbar_loadout`, threaded in by `combat_screen.gd` (the actual
 ## screen, which already references `Game.sim` freely -- this file itself
@@ -332,7 +327,7 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = []) -> A
 			"type": "skill", "id": sk_id, "label": String(sk.get("display_name", sk_id)),
 			"icon": String(sk.get("icon", "")), "key_hint": str(number),
 			"description": String(sk.get("description", "")),
-			# M-LEGIBILITY L3: carried through untouched by render_bar_slots'
+			# Carried through untouched by render_bar_slots'
 			# duplicate() so `_slot_info_line` can hand it to
 			# `WIEffectText.skill_effect_lines` -- the generated mechanical
 			# line, never hand-composed here.
@@ -403,7 +398,7 @@ func skill_affordable(c: Dictionary, skill_id: String, view: RefCounted) -> bool
 ## distinguishes the HOTBAR resting-state hint from the ATTACK/SKILL_TARGET
 ## aiming hint (the original matched on `_mode` directly; see the file doc
 ## comment on why that enum can't be referenced from here). `dash_confirm`
-## (UI wave item 15) is its own third hint state -- Dash has no target list,
+## is its own third hint state -- Dash has no target list,
 ## so it is NOT folded into `in_targeting`. `rendered_slots` is this same
 ## call's already-computed `render_bar_slots()` array.
 func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictionary,
@@ -425,10 +420,10 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 	# RAW (un-escaped) -- `_compose_readout` measures/fits this against the
 	# panel's true wrap width, then escapes only the FITTED result. The event
 	# `_render_slot_info_line` fires (ui_slot_info_rendered) still carries the
-	# FULL escaped line regardless of what's rendered here (M-LEGIBILITY L5).
+	# FULL escaped line regardless of what's rendered here.
 	var info_line := _render_slot_info_line(rendered_slots, info_slot_index)
 	if dash_confirm:
-		# Dedupe (UI wave review): the confirm hint REPLACES the plain
+		# Dedupe: the confirm hint REPLACES the plain
 		# slot-info line rather than stacking above it — while the gate is
 		# armed, `info_slot_index` always points at the Dash slot, so both
 		# lines would start "Dash — 1 AP: ...". `_render_slot_info_line` is
@@ -462,7 +457,7 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 ## -- fitting ONLY the variable-length `info` segment to whatever WRAPPED-LINE
 ## budget remains in the panel's art-safe capacity after `head` and `hint`
 ## (design D2-7 #6: cut words, never widen; same discipline `feed_push`
-## already applies, generalized to this panel -- M-LEGIBILITY L5 panel fix,
+## already applies, generalized to this panel --
 ## see READOUT_TEXT_WIDTH/HEIGHT's doc comment above for the reproduction and
 ## the capacity derivation). `head`/`hint` are always render-ready (already
 ## bb-escaped by their callers above); `info` is the RAW slot-info line --
@@ -486,7 +481,7 @@ func _compose_readout(head: String, hint: String, info: String) -> String:
 ## `rendered_slots` (live cost data) and emits `ui_slot_info_rendered` the
 ## first time this exact (index, text) pair renders (dedup-guard). Returns
 ## the RAW (un-bb-escaped) line -- `ui_slot_info_rendered` gets the escaped
-## form at the emit site (M-LEGIBILITY L5: `_readout_text`'s wrap-fit needs
+## form at the emit site (`_readout_text`'s wrap-fit needs
 ## the true visible width, which the "[lb]"/"[rb]" escape placeholders would
 ## inflate; QA's exact pin on the ESCAPED text, e.g.
 ## combat_move_input.json's "[lb]Power Strike[rb] — 3 AP — …", is unchanged
@@ -504,20 +499,20 @@ func _render_slot_info_line(rendered_slots: Array, info_slot_index: int) -> Stri
 
 
 ## Name + costs + one-line canon-voiced description for a single rendered bar
-## slot (`d` is one entry of `render_bar_slots()`'s output). M-LEGIBILITY L3:
-## the skill arm's cost/effect segment is now GENERATED by
+## slot (`d` is one entry of `render_bar_slots()`'s output).
+## The skill arm's cost/effect segment is GENERATED by
 ## `WIEffectText.skill_effect_lines` from `d`'s own `ap_cost`/`mp_cost`/
 ## `effect` fields (`ap_cost` is the LIVE effective cost, quick_cast discount
 ## already applied by `render_bar_slots`) -- never hand-composed here. This
-## is the exact defect the milestone kills: the old "%d AP" cost line never
-## surfaced the skill's actual mechanical effect (e.g. Power Strike's ×2
-## damage multiplier was invisible on this line pre-L3). Every shipped
+## guards the exact defect a hand-composed line invites: a bare "%d AP"
+## cost line that never surfaces the skill's actual mechanical effect
+## (e.g. Power Strike's ×2 damage multiplier invisible). Every shipped
 ## active combat skill (ap_cost>0, contexts:combat -- the only skills this
 ## bar ever lists) has a mapped `_effect_phrase` case, so `effect_lines` is
 ## never empty in practice; the empty-array branch (name + description only,
 ## no dangling dash) mirrors the item-card degrade for a Skill the formatter
 ## can't yet phrase -- report that gap, don't hand-compose around it.
-## RAW (un-bb-escaped) return value -- M-LEGIBILITY L5: escaping moved to
+## RAW (un-bb-escaped) return value -- escaping belongs to
 ## each caller (`_render_slot_info_line`'s emit site, `_compose_readout`'s
 ## post-fit render site) so the wrap-fit measurement below sees the true
 ## visible width, not the "[lb]"/"[rb]" placeholder-inflated one.
@@ -538,7 +533,7 @@ func _slot_info_line(d: Dictionary) -> String:
 				"effect": d.get("effect", {}),
 			}
 			var effect_lines := WIEffectText.skill_effect_lines(record)
-			# M-LEGIBILITY L5 fix wave, Item 4: guard the trailing-dash case
+			# Guard the trailing-dash case
 			# in BOTH branches (desc empty) -- unreachable today (every
 			# shipped active combat skill has a non-empty description) but
 			# matching journal.gd's/field_hotbar.gd's identical guard so a
@@ -553,7 +548,7 @@ func _slot_info_line(d: Dictionary) -> String:
 
 
 ## BBCode-escaping (skill display_names like "[Power Strike]") is now
-## `UIChrome.bb_escape` (M-ARCH Task ARCH-2: promoted off a per-file copy
+## `UIChrome.bb_escape` (promoted off a per-file copy
 ## here/journal.gd/targeting_controller.gd -- the M6.5 zero-cross-dependency
 ## idiom, amended for this one case since this file already references
 ## UIChrome for its panel chrome, so calling `bb_escape` too adds no new
@@ -644,7 +639,7 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat) ->
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
 			line = "%s is %s!" % [String(combat.combatants[payload["id"]]["display_name"]), String(payload["status"])]
-			# M-LEGIBILITY L4: the first-encounter surface. TRACED before
+			# The first-encounter surface. TRACED before
 			# choosing this surface over a TOAST: combat_hud's own "disjoint
 			# opaque bands" doc comment (build(), above) places the readout
 			# panel at x[330,950] y[530,642]; message_layer's toast panel is
@@ -724,7 +719,7 @@ func _fit_to_lines(label: Label, text: String, width: float, max_lines: int) -> 
 
 
 ## RichTextLabel counterparts of `_wrapped_line_count`/`_line_capacity`/
-## `_fit_to_lines` above, for `_readout_label` (M-LEGIBILITY L5). Distinct
+## `_fit_to_lines` above, for `_readout_label`. Distinct
 ## functions, not a shared Label/RichTextLabel-typed one: RichTextLabel's
 ## real theme properties are "normal_font"/"normal_font_size"/
 ## "line_separation", not Label's "font"/"font_size"/"line_spacing" --
@@ -785,13 +780,13 @@ func reset_tutor_lines(arena_config: Dictionary) -> void:
 		var event_type := String(on.get("event", ""))
 		if not TUTOR_SUPPORTED_EVENTS.has(event_type):
 			push_warning("tutor_lines entry '%s' targets unsupported event '%s' -- combat HUD has no render call site for it and the line will never reach the feed" % [String(entry.get("id", "")), event_type])
-	# NIGHT polish wave item 3: a fresh combat starts every panel back at its
+	# A fresh combat starts every panel back at its
 	# base size -- a prior encounter's grown-for-a-long-beat feed panel must
 	# not carry over.
 	_resize_feed_panel(FEED_PANEL_BASE_SIZE.y)
 
 
-## Fix-wave (review of d5dfbf3, finding 1): counting and rendering are
+## Counting and rendering are
 ## SEPARATE concerns -- verbatim move, see combat_screen.gd's original doc
 ## comment for the full starvation-fix rationale. MUST be called exactly once
 ## per real domain event, at capture time.
@@ -852,7 +847,7 @@ func _tutor_loosely_equal(a: Variant, b: Variant) -> bool:
 ## Renders an already-decided tutor-line match (see `match_tutor_line`):
 ## pushes `tutor.line` into the feed and emits `ui_tutor_line_rendered
 ## {beat: id}` via the screen wrapper. `tutor` is `{}` for "no match this
-## event" (no-op). NIGHT polish wave item 3: grows the feed panel FIRST (see
+## event" (no-op). Grows the feed panel FIRST (see
 ## `_grow_feed_panel_for_tutor`) so a long beat never has to fall back to
 ## feed_push's ordinary cut-with-ellipsis discipline.
 func render_tutor_line(tutor: Dictionary) -> void:

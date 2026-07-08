@@ -26,7 +26,7 @@ var _active_music_index := 0
 var _current_music_id := ""
 var _field_context_id := ""
 
-## M-RELEASE R2 fallback-art contract (audio half). A PUBLIC checkout is
+## Fallback-art contract (audio half). A PUBLIC checkout is
 ## missing the protected music/SFX packs (see assets_manifest.json). A stream
 ## whose id is mapped in data/audio.json but whose FILE is absent is a silent
 ## no-op: we skip all AudioServer/stream work but STILL emit `audio_played`
@@ -50,7 +50,7 @@ func _ready() -> void:
 		_observable_bus.domain_event.connect(_on_domain_event)
 
 
-## Bug fix (M5 A2): `OS.has_feature("headless")` only reflects a dedicated
+## Bug fix: `OS.has_feature("headless")` only reflects a dedicated
 ## headless *export template* build -- it returns false for the regular
 ## editor/debug binary even when launched with the `--headless` CLI flag,
 ## which is how every QA script in this repo runs. Every prior `OS.has_

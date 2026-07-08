@@ -1,5 +1,5 @@
 extends SceneTree
-## Skills Wave Task K1: headless coverage for the freezable-water + burnable-prop
+## Headless coverage for the freezable-water + burnable-prop
 ## traversal seams (pure sim). Covers: freeze walkability flip, freeze/thaw
 ## round-trip (sleep clears the ice), the freeze save round-trip (additive
 ## frozen_cells set + its absent-key default), burn permanence (removed_entities,

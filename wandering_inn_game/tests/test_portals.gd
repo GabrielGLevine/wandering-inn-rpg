@@ -1,5 +1,5 @@
 extends SceneTree
-## Magical Door plan Task D4 (issue #8): WIPortals pure tests + the
+## WIPortals pure tests + the
 ## wi_game.gd study-sleeps hook + portal-menu interact/travel wiring.
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_portals.gd
 

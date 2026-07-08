@@ -70,7 +70,7 @@ func world_to_screen(world_pos: Vector2) -> Vector2:
 	return _container.get_global_transform() * canvas_pos
 
 
-## Controller support fix-wave (issue #18 review Finding B): whether the GDI
+## Whether the GDI
 ## cold-open/epilogue veil currently holds the screen. world.gd's
 ## `_movement_gated()` reaches this through its injected `_main` ref (the
 ## same injected-ref-not-tree-scan idiom the other modal gates use); the
@@ -87,7 +87,7 @@ func swap_to_title() -> void:
 	_spawn_title()
 
 
-## M-ARC §5: title NEW GAME (real play, or a QA script that opts in with
+## Title NEW GAME (real play, or a QA script that opts in with
 ## `creation_ui: true`) swaps here for race/gender/name selection. The screen
 ## itself fires Game.reset(creation) on confirm, whose GAME_RESET takes over the
 ## swap-to-world (with the GDI opener -- race-neutral since 2026-07-07); Esc on its first step calls
@@ -102,7 +102,7 @@ func swap_to_char_creation() -> void:
 
 
 ## `new_game` is true ONLY on the GAME_RESET (fresh-world) path — it drives the
-## M-ARC F1 GDI cold open. Continue/load (GAME_LOADED) passes false, so a loaded
+## GDI cold open. Continue/load (GAME_LOADED) passes false, so a loaded
 ## save never replays the arrival sequence.
 func swap_to_world(new_game: bool = false) -> void:
 	_clear_world_viewport()
@@ -166,7 +166,7 @@ func _clear_ui_layers() -> void:
 func _spawn_title() -> void:
 	_title_screen = TITLE_SCREEN_SCRIPT.new()
 	_title_screen.name = "TitleScreen"
-	# M-ARC §5: the title reaches back here to open character creation on New Game
+	# The title reaches back here to open character creation on New Game
 	# (injection idiom, matching combat_screen.main_ref) rather than scanning.
 	_title_screen.main_ref = self
 	add_child(_title_screen)
@@ -192,7 +192,7 @@ func _spawn_ui_layers() -> void:
 	add_child(_journal)
 	add_child(_pause_menu)
 	add_child(_inventory)
-	# Three-way mutual exclusion (M7 E4), same wiring idiom as the existing
+	# Three-way mutual exclusion, same wiring idiom as the existing
 	# journal<->pause pair: each field panel refuses to open while either of
 	# the other two is open.
 	_journal.pause_menu_ref = _pause_menu
@@ -207,7 +207,7 @@ func _spawn_ui_layers() -> void:
 	var consolidation_prompt := CONSOLIDATION_PROMPT_SCRIPT.new()
 	consolidation_prompt.name = "ConsolidationPrompt"
 	add_child(consolidation_prompt)
-	# Three Pillars P2: the overworld field-skill hotbar (field-only twin of
+	# The overworld field-skill hotbar (field-only twin of
 	# combat's bar). Spawned BEFORE _spawn_world so its bus listener is connected
 	# in time to catch the WORLD_READY that world.gd emits in its own _ready --
 	# its first (and load/reset) render trigger. world.gd receives it via
@@ -215,7 +215,7 @@ func _spawn_ui_layers() -> void:
 	_field_hotbar = FIELD_HOTBAR_SCRIPT.new()
 	_field_hotbar.name = "FieldHotbar"
 	add_child(_field_hotbar)
-	# M-JUICE Track P2: the GDI sleep veil (fade-to-black + centered night
+	# The GDI sleep veil (fade-to-black + centered night
 	# announcements). Layer 30, above every other UI so the darkness covers the
 	# screen; a pure renderer keyed on the sleep phase_changed. Torn down with
 	# the other UI layers on world/title swap (_clear_ui_layers).

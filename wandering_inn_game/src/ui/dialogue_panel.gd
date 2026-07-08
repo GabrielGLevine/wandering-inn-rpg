@@ -27,8 +27,7 @@ const LOCKED_COLOR := Color(0.45, 0.45, 0.45)
 ## "cut words never widen"). Non-final pages advance on the same `confirm`
 ## used to pick an option; the option list only appears on the LAST page.
 const PAGE_CHAR_BUDGET := 200
-## NIGHT polish wave item 4 (docs/VISUAL-LOG.md "page break splits mid-
-## sentence with no cue"): a page break landing anywhere in `PAGE_CHAR_BUDGET`
+## A page break landing anywhere in `PAGE_CHAR_BUDGET`
 ## reads fine mechanically but can visually open a page mid-sentence with no
 ## signal it's a continuation (e.g. relc_intro's "grip. Sword arm, spear arm
 ## —" opening a page after "...checks your" was cut off the prior page). Fix:
@@ -103,7 +102,7 @@ func _ready() -> void:
 	# Continuation affordance shown only on a non-final page of a paged node —
 	# it occupies the option row's space (options are hidden until the last
 	# page), so it never adds a row to the last-page layout that must fit.
-	# Controller support (S3, issue #18): text is set per-render in
+	# Text is set per-render in
 	# `_render_page()` (composed through WIInputHints), not fixed here --
 	# this initial value is just a placeholder before the first render.
 	_more_hint = UIChrome.make_label("")
@@ -216,7 +215,7 @@ func _render_page() -> void:
 			_options_box.remove_child(child)
 			child.queue_free()
 		_option_labels.clear()
-	# M-LEGIBILITY L2: the option list can now carry per-option effect sub-rows
+	# The option list can now carry per-option effect sub-rows
 	# (shop buys / gifts), which can push a many-option node (Krshia's 5-option
 	# stall) past the fixed panel height and clip options off the bottom. Rather
 	# than branch the QA vs human render path (option paging would, and can't be
@@ -273,7 +272,7 @@ func _rebuild_options() -> void:
 			l.add_theme_color_override("font_color", LOCKED_COLOR)
 		_options_box.add_child(l)
 		_option_labels.append(l)
-		# M-LEGIBILITY L2: an item-granting option (shop buy / gift) carries
+		# An item-granting option (shop buy / gift) carries
 		# generated effect line(s) -- render each as an indented "Small" sub-row
 		# beneath the option so "what am I buying/getting" is answered in-panel.
 		# Sub-rows are extra children of the options box only; they are NOT tracked
@@ -294,11 +293,10 @@ func _rebuild_options() -> void:
 ## "(5 gold)"), which would double up with the auto-generated suffix. Strip
 ## the "requires "/"costs " lead-in (WIDialogue._requirement_text's only two
 ## forms) and skip the suffix entirely when what's left is already present in
-## the option text. M-LEGIBILITY L5 fix: the gold case previously only tried
-## the "requires " prefix, so a locked buy's authored "(5 gold)" never matched
-## `_requirement_text`'s "costs 5 gold" core (missing the word "costs") and
-## the suffix rendered anyway -- a doubled price ("(5 gold)  (costs 5 gold)"),
-## VISUAL-LOG'd since Economy v1. Every shipped gold-gated option already
+## the option text. TRAP: the gold case must strip BOTH lead-ins -- matching
+## only "requires " leaves a locked buy's authored "(5 gold)" unmatched
+## against `_requirement_text`'s "costs 5 gold" core (missing the word
+## "costs"), rendering a doubled price ("(5 gold)  (costs 5 gold)"). Every shipped gold-gated option already
 ## authors its price inline (data/dialogue/krshia_crate.json's 4 buy options,
 ## the only `requires: {gold: ...}` sites in the game), so this is a strict
 ## fix, never a regression that would hide a price with nowhere else to show.

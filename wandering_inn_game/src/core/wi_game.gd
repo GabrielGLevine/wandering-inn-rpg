@@ -963,8 +963,8 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	return effect
 
 
-## Three Pillars P1: the ONE engine surface for overworld ("field") skills
-## (ARCH-4: the dispatch ladder lives in `field_skills.gd`; see that file's
+## The ONE engine surface for overworld ("field") skills
+## (the dispatch ladder lives in `field_skills.gd`; see that file's
 ## doc comment for the full contract). A field-skill press is a deliberate
 ## action -- tick the FOLD clock once, exactly as interact() does regardless
 ## of how it resolves.
@@ -1356,7 +1356,7 @@ func dialogue_choose(index: int) -> bool:
 		elif effect.has("start_combat"):
 			pending_combat = String(effect["start_combat"])
 		elif effect.has("travel_to"):
-			# Magical Door plan Task D4: fired from WITHIN the portal menu's
+			# Fired from WITHIN the portal menu's
 			# own options (portals.gd's build_portal_graph) -- always a
 			# conversation-ENDING option (portal travel is
 			# never a mid-conversation branch), so this is deferred exactly
@@ -1364,19 +1364,19 @@ func dialogue_choose(index: int) -> bool:
 			# effects loop once dialogue is already null.
 			pending_travel = String(effect["travel_to"])
 		elif effect.has("accept_bounty"):
-			# M-DEPTH DP2: fired from WITHIN the board picker's own options
+			# Fired from WITHIN the board picker's own options
 			# (see bounties.gd's build_picker_graph) -- a SECOND
 			# dialogue_choose call, distinct from the one that opened the
 			# picker via open_board_picker below.
 			accept_bounty(String(effect["accept_bounty"]))
 		elif effect.has("accept_delivery"):
-			# M-DEPTH DP5: the delivery twin of accept_bounty above -- fired
+			# The delivery twin of accept_bounty above -- fired
 			# from WITHIN the delivery picker's own options (bounties.gd's
 			# build_delivery_picker_graph). Grants the parcel item too (see
 			# accept_delivery's own doc comment).
 			accept_delivery(String(effect["accept_delivery"]))
 		elif effect.has("open_board_picker"):
-			# M-DEPTH DP2: fired from Selys's static hub option "Take on a
+			# Fired from Selys's static hub option "Take on a
 			# posting." (selys_delivery.json). Deferred like start_combat's
 			# pending_combat above -- applied AFTER the effects loop, once
 			# dialogue is already null (this option always ends the hub
@@ -1384,7 +1384,7 @@ func dialogue_choose(index: int) -> bool:
 			# never collides with walker.advance below.
 			pending_board_action = "picker"
 		elif effect.has("open_board_turnin"):
-			# M-DEPTH DP2: fired from Selys's static hub option "Turn in my
+			# Fired from Selys's static hub option "Turn in my
 			# posting." (only visible once board_accepted is true). Same
 			# deferred-swap shape as open_board_picker above.
 			pending_board_action = "turnin"
@@ -1397,13 +1397,13 @@ func dialogue_choose(index: int) -> bool:
 			# clears the accepted slip and shows Selys's one line.
 			pending_board_action = "abandon"
 		elif effect.has("open_delivery_picker"):
-			# M-DEPTH DP5: fired from Vess's static hub option "Take a slip."
+			# Fired from Vess's static hub option "Take a slip."
 			# (vess_counter.json). Same deferred-swap shape as
 			# open_board_picker above -- the hub option always ends its own
 			# conversation first.
 			pending_board_action = "delivery_picker"
 		elif effect.has("open_delivery_turnin"):
-			# M-DEPTH DP5: fired from Vess's "Turn in a slip." hub option
+			# Fired from Vess's "Turn in a slip." hub option
 			# (only visible once delivery_accepted is true). Same deferred-
 			# swap shape as open_board_turnin above.
 			pending_board_action = "delivery_turnin"
@@ -1602,7 +1602,7 @@ func _open_board_abandon_dialogue() -> void:
 	_begin_code_dialogue(WIBounties.build_abandon_graph(), "board_abandon", "selys")
 
 
-## M-DEPTH DP5 (the Runner's Guild): the delivery pool, injected the same
+## The delivery pool, injected the same
 ## `_combat_config` lane as bounties/quests/items (game.gd loads
 ## data/deliveries.json). Empty when unconfigured -- every caller below
 ## tolerates an empty pool/slate, exactly like `_bounty_pool`.
@@ -1720,8 +1720,8 @@ func _interact_delivery_board(target: Dictionary) -> Dictionary:
 ##   1. The "Parcel came back on the night ledger" run-failed bark
 ##      (board-copy.md sec.3), keyed on the `delivery_failed` flag (set by
 ##      sleep()'s fail path, cleared by showing the line once) -- unchanged
-##      from before GH#27.
-##   2. GH#27's plain rotation signpost (Vess's own voice, distinct copy
+##      -- fires with priority over the signpost below.
+##   2. The plain rotation signpost (Vess's own voice, distinct copy
 ##      from Selys's "slate rotated overnight" line), keyed on
 ##      `delivery_last_seen_times_slept` -- `_open_board_picker_dialogue`'s
 ##      exact mechanism, ridden rather than re-invented. Only checked when
@@ -1749,7 +1749,7 @@ func _open_delivery_turnin_dialogue() -> void:
 	_begin_code_dialogue(WIBounties.build_delivery_turnin_graph(met), "delivery_turnin", "vess")
 
 
-## Magical Door plan Task D4: the portal catalog, injected the same
+## The portal catalog, injected the same
 ## `_combat_config` lane as bounties/deliveries/quests/items -- empty when
 ## unconfigured (bare `--script` unit tests), every caller below tolerates
 ## an empty list.
@@ -1773,7 +1773,7 @@ func _interact_portal_menu() -> Dictionary:
 	return {"dialogue": true}
 
 
-## Magical Door plan Task D4 (the O2 rule): resolves a chosen destination
+## The O2 rule: resolves a chosen destination
 ## via `transition()` ONLY -- never `move_player`, so `_check_trigger_radius`/
 ## the door-arrival helpers can never fire on a portal arrival (the
 ## `portal_menu` canonical asserts no trigger/combat event fires on
@@ -1789,7 +1789,7 @@ func _travel_to_portal(id: String) -> void:
 		_emit(WIEvents.TOAST, {"text": arrival_toast})
 
 
-## Magical Door plan Task D4: the hidden study-sleeps counter's read-only
+## The hidden study-sleeps counter's read-only
 ## accessor. Deliberately a PLAIN accomplishment counter (not a dedicated
 ## WIGame field) -- the SAME opaque-counter idiom `chatted_with_<id>`/
 ## `heard_gossip` already use (social.gd), so it round-trips through the
@@ -1870,7 +1870,7 @@ func _quests_completed_count() -> int:
 	return n
 
 
-## M-ARC Task A1: the journal act-line data (current act header + milestone
+## The journal act-line data (current act header + milestone
 ## beats), the same "sim builds the render-ready structure, UI only renders it"
 ## convention as quest_summary/skills_journal. Counter-derived (WIActs), never
 ## stored -- old saves land in the correct act by construction. Empty catalog
@@ -1895,7 +1895,7 @@ func _quest_title(id: String) -> String:
 	return id
 
 
-## UI wave item 19: journal skills-by-class panel data (UI only renders,
+## Journal skills-by-class panel data (UI only renders,
 ## same "sim builds the strings" convention as `quest_summary` above). One
 ## group per heading, "Innate" first (player_skills — skills the PC started
 ## with, not gained from any class) then one group per CURRENTLY HELD class
@@ -1972,7 +1972,7 @@ func _skill_entries(ids: Array) -> Array:
 	return out
 
 
-## Issue #9 Task G1 (spec §5.3): "It is ERIN'S Skill... No-violence rule =
+## "It is ERIN'S Skill... No-violence rule =
 ## sim guard: combat can never start on the garden map." A SIM GUARD, not a
 ## data-convention -- the garden ships zero `encounter` entities today, but
 ## this refusal holds even if a future edit ever placed one there, or a
@@ -2017,7 +2017,7 @@ func start_combat(entity_id: String) -> bool:
 			arena = a
 	if arena.is_empty():
 		return false
-	# Skills Wave Task K2 (break condition): start_combat firing for ANY
+	# start_combat firing for ANY
 	# cause clears sneaking -- placed here, the single choke point past every
 	# early-return above, so only a fight that is ACTUALLY about to begin
 	# breaks it (a refused start_combat attempt costs nothing, matching every
@@ -2028,7 +2028,7 @@ func start_combat(entity_id: String) -> bool:
 	# call both route through this one site too.
 	_break_sneak()
 	_pending_encounter = entity_id
-	# M7 Task E2 (M-BEAUTY FOLD): route combat's events through
+	# Route combat's events through
 	# _combat_event_relay instead of _event_sink directly -- it forwards
 	# everything unchanged but ALSO ticks actions_since_sleep once per the
 	# PC's own turn_started. This is a WIGame-side wiring choice only
@@ -2041,7 +2041,7 @@ func start_combat(entity_id: String) -> bool:
 
 func _build_player_combatant(template: Dictionary) -> Dictionary:
 	var pc: Dictionary = template.duplicate(true)
-	# M-ARC §5: the PC's combat turn-strip/readout name follows the chosen
+	# The PC's combat turn-strip/readout name follows the chosen
 	# identity (cosmetic; stats/skills below untouched). The combat sprite chip
 	# is resolved presentation-side in board_renderer (`_combatant_sprite_id`),
 	# not here -- board_renderer re-reads the static combatant config, so this
@@ -2063,16 +2063,16 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	# that file's _init/_resolve_hit/_deduct_hp). `known_skills()`/
 	# `skills_journal()` deliberately do NOT apply this filter -- knowledge is
 	# not fieldability.
-	# M-GEAR Task G1: the three equipped accessories fold their own
+	# The three equipped accessories fold their own
 	# hp_mod/damage_mod/damage_reduction into these SAME three fields (summed
 	# alongside the weapon/armor contribution) -- NO new combat field, no
 	# change to wi_combat.gd's read side; an item without one of these keys
 	# (every M7-era item, and every accessory until G2 ships real values)
 	# contributes 0, so this is behaviorally inert until G2 lands.
-	# M-ARCH Task ARCH-2: both the weapon-gate filter and the mod summation
+	# Both the weapon-gate filter and the mod summation
 	# moved to the shared pure home `src/core/combat_build.gd` (`WICombatBuild`)
 	# -- `tests/sim_combat_batch.gd`'s balance harness calls the SAME two
-	# functions instead of hand-mirroring them (consultant-flagged drift
+	# functions instead of hand-mirroring them (drift
 	# class). No behavior change: same reads, same math, same fields.
 	var kit: Array = WIProgression.granted_skills(classes, _combat_config["classes"], generalist_classes)
 	var weapon := item(String(equipped.get(WIKeys.WEAPON, "")))
@@ -2083,7 +2083,7 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 		accessories.append(item(String(equipped.get(slot_name, ""))))
 	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
 	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
-	# Issue #23 (Erin's daily meal): field HP does not exist as a standalone
+	# Field HP does not exist as a standalone
 	# concept (HP is per-combat only, see this file's `well_fed` doc comment),
 	# so the staged "small HP restore" rides this SAME build-injection seam
 	# armor/accessories use just above -- +2 folded into hp_mod while the
@@ -2103,7 +2103,7 @@ func item(item_id: String) -> Dictionary:
 
 
 ## Adds `item_id` to the inventory and emits ITEM_GAINED + a "Got: <name>"
-## TOAST (M7 Task E3, spec §3: "Pickups toast via the existing parchment
+## TOAST (spec §3: "Pickups toast via the existing parchment
 ## toast" -- every pickup call site, container/loot/dialogue-gift alike,
 ## rides this ONE toast instead of each call site authoring its own copy;
 ## `message_layer.gd` already renders any TOAST generically, so no UI change
@@ -2123,7 +2123,7 @@ func pickup(item_id: String, source_id: String) -> bool:
 	return true
 
 
-## M-DEPTH DP5: removes `item_id` from the inventory and emits ITEM_LOST --
+## Removes `item_id` from the inventory and emits ITEM_LOST --
 ## pickup's inverse, the FIRST removal seam this sim has needed (every
 ## prior item flow only ever adds). Refuses (silent false) when the item
 ## isn't carried or is currently EQUIPPED in any slot -- the equipped guard
@@ -2145,7 +2145,7 @@ func remove_item(item_id: String, source_id: String) -> bool:
 
 
 ## Sums `item(id).resonance` (default 0 -- every M7-era item, uncatalogued
-## until G2) across all 5 currently equipped slots (M-GEAR Task G1). Pure
+## until G2) across all 5 currently equipped slots. Pure
 ## reader, no rng, no emit -- `equip()`'s capacity gate is the only caller.
 func _equipped_resonance_total() -> int:
 	var total := 0
@@ -2154,7 +2154,7 @@ func _equipped_resonance_total() -> int:
 	return total
 
 
-## M-GEAR Task G3: public read-only mirror of the private sum above, for the
+## Public read-only mirror of the private sum above, for the
 ## inventory panel's "Resonance N/M" header. `_equipped_resonance_total()`
 ## stays private/internal to `equip()`'s own capacity math (G1) -- this is a
 ## pure one-liner so the UI never re-derives the sum itself (the exact
@@ -2177,7 +2177,7 @@ const _ACCESSORY_SLOTS_FULL_TOAST := "No room left for another charm. Something 
 
 
 ## Equips a carried item into its own kind's slot ("weapon", "armor", or --
-## M-GEAR Task G1 -- the first EMPTY "accessory_1"/"accessory_2"/"accessory_3"),
+## The first EMPTY "accessory_1"/"accessory_2"/"accessory_3"),
 ## validating kind and possession. Field-only (spec §2: "no mid-combat
 ## swaps") -- refuses while a fight is active; the combat build reads
 ## equipment once at start_combat, so a live fight is never retroactively
@@ -2237,7 +2237,7 @@ func equip(item_id: String) -> bool:
 	return true
 
 
-## Clears a slot ("weapon", "armor", or one of the three M-GEAR Task G1
+## Clears a slot ("weapon", "armor", or one of the three
 ## accessory slots) back to "" -- unequipping the weapon is the deliberate-
 ## unarmed path (spec §2: base attack + untagged skills only at the next
 ## combat build); unequipping an accessory frees its resonance back into the
@@ -2263,7 +2263,7 @@ func unequip(slot: String) -> bool:
 func resolve_combat() -> void:
 	if combat == null or not combat.finished:
 		return
-	# UI wave item 19: merge the PC's cast-skill set (recorded unconditionally
+	# Merge the PC's cast-skill set (recorded unconditionally
 	# by WICombat.spend_skill_costs, regardless of trivial/victory) into the
 	# persistent `used_skills` SET here, BEFORE the victory/trivial branch
 	# below and BEFORE _bank_action_tally's `trivial` gate — proof that the
@@ -2272,7 +2272,7 @@ func resolve_combat() -> void:
 	# still reveal a skill's description after its first real use).
 	for skill_id: String in (combat.used_skills_tally.get("pc", {}) as Dictionary):
 		_mark_skill_used(skill_id)
-	# M-LEGIBILITY L4: `seen_statuses` deliberately has NO merge step here,
+	# `seen_statuses` deliberately has NO merge step here,
 	# unlike `used_skills` just above — it is banked in real time by
 	# `_combat_event_relay` as each STATUS_APPLIED passes through mid-fight
 	# (see that function's doc comment), not deferred to a per-fight tally.
@@ -2318,7 +2318,7 @@ func _bank_action_tally(entity: Dictionary) -> void:
 		record_accomplishment(counter, int(tally[counter]))
 
 
-## Rolls an encounter's loot table on victory (ARCH-4: the isolated
+## Rolls an encounter's loot table on victory (the isolated
 ## hash-derived RNG and drop math live in `economy.gd`, moved INTACT --
 ## its determinism pins every loot assert). `combat_screen.gd`'s
 ## `_close_banner` times `resolve_combat` (and therefore this roll) AFTER the
@@ -2349,7 +2349,7 @@ func erase_entity_silent(id: String) -> void:
 			return
 
 
-## At-cap "waiting" toast copy per class id (M6 T3 §2.3 REV 2) — fires once
+## At-cap "waiting" toast copy per class id (spec §2.3 REV 2) — fires once
 ## per sleep when a class has reached its evolution `at_level` but this
 ## sleep's accomplishment volume/dominance neither replaces it nor (mage
 ## only) grants the generalist kit. Exact canon-voice strings, no numbers
@@ -2380,7 +2380,7 @@ const _EVOLUTION_WAITING_TOASTS := {
 ## The sleep beat also re-arms dormant respawning encounters.
 func sleep() -> void:
 	dormant_encounters.clear()
-	# Social Pillar S1: the per-waking social dedup dicts reset every sleep,
+	# The per-waking social dedup dicts reset every sleep,
 	# re-arming each NPC's rotating talk-pool line (social_talked) and the
 	# shared first-use-per-entity bank guard (entity_first_use -- [Appraise Foe]
 	# today, S3's [Friendly Face] next). Cleared here alongside
@@ -2395,16 +2395,16 @@ func sleep() -> void:
 	# reads false and detaches the PC glow in the same beat. Runs before the
 	# _combat_config early-return so a config-less sim (unit tests) clears too.
 	light_active = false
-	# Issue #23: Erin's meal perk doesn't carry past a rest -- mirrors
+	# Erin's meal perk doesn't carry past a rest -- mirrors
 	# light_active's clear immediately above (same reasoning, same lifecycle).
 	well_fed = false
-	# Skills Wave Task K1: all frost-cast ice thaws when the PC rests (mirrors the
+	# All frost-cast ice thaws when the PC rests (mirrors the
 	# light_active clear above -- an opaque-until-sleep traversal aid, not a
 	# permanent map change). Cleared before the unconditional PHASE_CHANGED emit so
 	# world.gd's field reconcile drops the ice overlay on the same beat, and before
 	# the _combat_config early-return so a config-less sim (unit tests) thaws too.
 	frozen_cells.clear()
-	# Skills Wave Task K2: sleep clears sneaking too, "with everything else"
+	# Sleep clears sneaking too, "with everything else"
 	# per the plan -- a SILENT clear (no SNEAK_ENDED, no off-toast), the SAME
 	# convention as light_active/frozen_cells just above (sleep already has
 	# its own presentation for this beat; a second toast would be noise).
@@ -2412,7 +2412,7 @@ func sleep() -> void:
 	# that catches this and restores the PC's opacity, exactly like it
 	# catches the light/ice clears.
 	sneaking = false
-	# M-DEPTH DP5: the delivery run's WITHIN-THE-WAKING stakes (the staging
+	# The delivery run's WITHIN-THE-WAKING stakes (the staging
 	# doc's binding term: "sleep with an undelivered parcel = run failed,
 	# parcel returns to the counter, no pay" -- honest stakes, no timer UI,
 	# opaque-safe). Fires only while the parcel is STILL IN THE PACK: a
@@ -2420,7 +2420,7 @@ func sleep() -> void:
 	# was made same-waking; collecting at the counter later is just pay).
 	# This sleep-fail IS the delivery system's abandon semantics -- no
 	# "hand it back" option exists or is needed (contrast the bounty
-	# abandon fix wave: a bounty could be genuinely unfulfillable, while
+	# bounty-abandon rationale: a bounty could be genuinely unfulfillable, while
 	# every delivery destination is a reachable shipped anchor and sleep is
 	# always available). Emits its ITEM_LOST + return toast BEFORE the
 	# PHASE_CHANGED/progression stream below; every canonical that sleeps
@@ -2436,14 +2436,14 @@ func sleep() -> void:
 			accepted_delivery_id = ""
 			accepted_delivery_baseline = {}
 			delivery_failed = true
-	# M7 M-BEAUTY FOLD: the day/night clock resets UNCONDITIONALLY at every
+	# The day/night clock resets UNCONDITIONALLY at every
 	# sleep, and phase_changed fires every time too (even a "day"->"day"
 	# no-op reset) -- distinct from _tick_action's crossing-only emits during
 	# the day, so a future renderer can rely on "phase_changed after sleep"
 	# unconditionally. Runs before the early-return below: the clock is
 	# orthogonal to whether progression config exists.
 	actions_since_sleep = 0
-	# M-DEPTH DP2: the board's rotation clock. Unconditional (runs even in the
+	# The board's rotation clock. Unconditional (runs even in the
 	# config-less unit-test early-return path below, matching light_active/
 	# frozen_cells/sneaking just above) -- board_bounties() must advance on
 	# every real sleep, combat-config or not.
@@ -2488,7 +2488,7 @@ func sleep() -> void:
 				text += " — unlocked %s" % ", ".join(names)
 			_emit(WIEvents.TOAST, {"text": text})
 
-	# M-ARC AF I1: bank the monotonic "ever reached two classes" flag the moment
+	# Bank the monotonic "ever reached two classes" flag the moment
 	# the PC first holds two classes -- BEFORE the consolidation offer's early
 	# return below, so a Warrior/Mage who consolidates (2 classes -> 1) at the
 	# Act II threshold has already banked it and can never lose the Act III gate
@@ -2497,7 +2497,7 @@ func sleep() -> void:
 	# the "You sleep soundly." fallback on its own.
 	_bank_reached_two_classes_if_earned()
 
-	# --- M6 T5: consolidation OFFER, before evolutions resolve (spec §2.5
+	# --- consolidation OFFER, before evolutions resolve (spec §2.5
 	# REV 2) — a player who could consolidate this sleep must be offered the
 	# choice before an evolution outcome locks a class's identity. Firing an
 	# offer DEFERS the rest of this sleep beat entirely: no evolution check,
@@ -2512,7 +2512,7 @@ func sleep() -> void:
 	if _resolve_evolutions():
 		anything_happened = true
 
-	# M-ARC Task A3: the tremor beat. Once Act II is complete (Act III's entry
+	# The tremor beat. Once Act II is complete (Act III's entry
 	# gate -- a second class + 3 landmark quests, exactly acts.json act_ii's
 	# advance_when), the FIRST sleep points the player at the Watch. One-shot,
 	# guarded by `watch_runner_pointed`; firing it flags anything_happened so the
@@ -2524,7 +2524,7 @@ func sleep() -> void:
 	if _maybe_fire_tremor_pointer():
 		anything_happened = true
 
-	# Magical Door plan Task D4 (issue #8 D4, spec §5.1/§5.5): the study-
+	# The study-
 	# sleeps hook. Runs AFTER every progression resolution above (class
 	# gains/level-ups/the consolidation-offer early return/evolutions/the
 	# tremor pointer) -- additive only, never alters an earlier branch's
@@ -2555,7 +2555,7 @@ func sleep() -> void:
 			record_accomplishment("door_awakened")
 			anything_happened = true
 
-	# Issue #9 Task G1 (spec §5: "act >= III AND K-of-N inn accomplishments";
+	# The Garden earn condition (spec §5: "act >= III AND K-of-N inn accomplishments";
 	# ratified K=2 of 4). Runs AFTER every progression resolution above (same
 	# position as the D4 door-study hook) -- additive only. Erin's garden door
 	# APPEARS this sleep (spec §5's unlock SURFACE) but the bank is SILENT: no
@@ -2571,7 +2571,7 @@ func sleep() -> void:
 		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
 
 
-## M-ARC Task A3: fires the "A Watch runner is looking for you." pointer toast
+## Fires the "A Watch runner is looking for you." pointer toast
 ## ONCE, at the first sleep after Act II completes and before the tremor summons
 ## has been heard. Returns true iff it fired (so sleep() can mark the beat as
 ## "something happened"). Pure counter reads -- no rng, no world state beyond
@@ -2581,7 +2581,7 @@ func _maybe_fire_tremor_pointer() -> bool:
 		return false
 	if accomplishment_count("heard_the_deep_tremor") >= 1:
 		return false
-	# M-ARC AF I1: read the MONOTONIC reached_two_classes flag, never the live
+	# Read the MONOTONIC reached_two_classes flag, never the live
 	# classes.size() -- a Spellsword consolidation drops the count to 1 but must
 	# not un-fire the tremor pointer (the Act III entry). The flag is banked at
 	# the sleep beat two classes were first held, at consolidation-accept, and
@@ -2593,7 +2593,7 @@ func _maybe_fire_tremor_pointer() -> bool:
 	return true
 
 
-## M-ARC AF I1: banks the MONOTONIC `reached_two_classes` accomplishment ONCE,
+## Banks the MONOTONIC `reached_two_classes` accomplishment ONCE,
 ## the first time the PC holds two classes -- or holds an already-merged
 ## consolidated class, which is itself proof two lines existed. The Act II->III
 ## advance gate + the tremor pointer read THIS instead of the live
@@ -2622,7 +2622,7 @@ func _holds_consolidated_class() -> bool:
 	return false
 
 
-## Issue #9 Task G1 -- the Garden's earn condition (spec §5 RATIFIED):
+## The Garden's earn condition (spec §5 RATIFIED):
 ## `act >= III` AND at least K=2 of 4 qualifying accomplishment legs.
 ##
 ## THE K-OF-N GATE SHAPE DECISION: `door_when`'s own validator
@@ -2760,7 +2760,7 @@ func _resolve_evolutions() -> bool:
 	return anything_happened
 
 
-## Answers a pending consolidation offer (M6 T5, spec §2.5 REV 2) by
+## Answers a pending consolidation offer (spec §2.5 REV 2) by
 ## accepting it: both parent classes are consumed into the target class at
 ## the previously-computed merged level, and NO evolution check runs this
 ## sleep (accepting IS this sleep's identity choice). A safe no-op when
@@ -2786,7 +2786,7 @@ func accept_consolidation() -> void:
 	_emit(WIEvents.CONSOLIDATION_ACCEPTED, offer.duplicate(true))
 	var target_name := String(_class_display_name(target))
 	_emit(WIEvents.TOAST, {"text": "[%s] and [%s] merge into [%s]!" % [parent_names[0], parent_names[1], target_name]})
-	# M-ARC AF I1: the merge itself proves two class lines existed -- bank the
+	# The merge itself proves two class lines existed -- bank the
 	# monotonic flag now so a consolidation that happens BEFORE the reached_two
 	# _classes sleep-banking ever ran (or on a save that predates the flag)
 	# still holds the Act III gate. No-op if already banked (the usual case:
@@ -2819,7 +2819,7 @@ func _class_display_name(id: String) -> String:
 	return id
 
 
-## Onboarding rev O4 (spec §4/§9): a class-gained toast LISTS the skills the
+## A class-gained toast LISTS (spec §4/§9) the skills the
 ## class grants at level 1 -- e.g. "[Mage] class gained! — [Frost Bolt],
 ## [Quick Cast], [Light]" -- so the player can INFER what the new class unlocks
 ## (and, per §5, that a [Light]-wanting cellar is now within reach) with no
@@ -2890,7 +2890,7 @@ func snapshot() -> Dictionary:
 	}
 
 
-## M7 M-BEAUTY FOLD: pure reader classifying `actions_since_sleep` against
+## Pure reader classifying `actions_since_sleep` against
 ## `_phase_config`'s thresholds (defaults dusk_at 40, night_at 90 -- data-
 ## overridable later via a moods.json-sourced config, never hardcoded twice).
 ## No rng, no side effects, no emit -- callers that need the crossing event
@@ -2906,7 +2906,7 @@ func phase() -> String:
 
 
 ## The SINGLE site that mutates `actions_since_sleep` and checks for a
-## phase-threshold crossing (M7 M-BEAUTY FOLD) -- called from move_player
+## phase-threshold crossing -- called from move_player
 ## (on a successful step only), interact (unconditionally, any attempt), and
 ## _combat_event_relay (once per the PC's own turn_started). Keeping the
 ## increment + crossing-check + emit logic in exactly one place means every
@@ -2923,7 +2923,7 @@ func _tick_action() -> void:
 ## Relays every WICombat-emitted event straight to the real sink unchanged
 ## -- combat behaves identically whether or not this milestone's clock
 ## exists -- and additionally ticks actions_since_sleep once per the PC's
-## own turn_started (M7 M-BEAUTY FOLD), and (M-LEGIBILITY L4) enriches a
+## own turn_started, and enriches a
 ## STATUS_APPLIED event with `first_seen`/`status_text` the moment it passes
 ## through, banking the id into `seen_statuses` in the SAME breath. This is
 ## a WIGame-side wiring choice only, same idiom as the phase-clock tick:

@@ -2,7 +2,7 @@ class_name UIChrome
 extends RefCounted
 ## Shared Tiny Swords UI chrome helpers for code-built HUD/menu surfaces.
 
-## M-RELEASE R2 fallback-art contract (UI chrome half). These were `const
+## Fallback-art contract (UI chrome half). These were `const
 ## preload(...)` -- but preload is COMPILE-TIME, so a public checkout missing
 ## the Tiny Swords bundle (see assets_manifest.json) failed to compile
 ## UIChrome, cascading a parse error through EVERY UI script and preventing
@@ -83,8 +83,7 @@ const RIBBON_PATCH_MARGIN_Y := 16
 ## Art-bbox regions for the floating-art chrome textures (measured via PIL).
 const PARCHMENT_REGION := Rect2(36, 31, 120, 131)
 const BANNER_H_REGION := Rect2(33, 47, 126, 123)
-## UIWAVE2 title-centering fix (controller finding on the wave's first
-## pass): the blue button pills ALSO float in their 192x192 canvas -- the
+## The blue button pills ALSO float in their 192x192 canvas -- the
 ## UNPRESSED art occupies rows 0..183 / cols 7..184 (8 empty canvas rows at
 ## the BOTTOM), the PRESSED art rows 4..183 / cols 5..186 (4 empty top + 8
 ## empty bottom). Measured via PIL alpha scan 2026-07-07; every bbox edge
@@ -205,7 +204,7 @@ static func make_label(text: String = "", type_variation: String = "") -> Label:
 	var label := Label.new()
 	label.text = text
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# UIWAVE2 vertical-centering audit (item 2): defaults to
+	# Vertical centering: defaults to
 	# VERTICAL_ALIGNMENT_CENTER -- Label's own engine default is TOP, which
 	# reads as bottom-heavy clipping/crowding whenever a label sits inside a
 	# taller fixed-height chrome rect (the title screen's New Game/Continue
@@ -262,7 +261,7 @@ static func _auto_region(texture: Texture2D) -> Rect2:
 	return Rect2()
 
 
-## UIWAVE2 title-centering fix: swap a NinePatchRect's texture AND re-derive
+## Swap a NinePatchRect's texture AND re-derive
 ## its art-bbox region together. The title/creation menus swap between
 ## BLUE_BUTTON and BLUE_BUTTON_PRESSED on cursor move by assigning
 ## `.texture` directly -- but those two textures have DIFFERENT measured
@@ -281,8 +280,8 @@ static func set_patch_texture(patch: NinePatchRect, texture: Texture2D) -> void:
 ## `.replace("[", "[lb]").replace("]", "[rb]")` chain is self-colliding — the
 ## first replace's own output ("[lb]") contains a "]" the second replace then
 ## re-matches, garbling every bracketed name ("[Power Strike]" ->
-## "[lb[rb]Power Strike[rb]"; UI wave review fix, was user-visible on the
-## combat slot-info line). M-ARCH Task ARCH-2: promoted from three per-file
+## "[lb[rb]Power Strike[rb]" -- was user-visible on the
+## combat slot-info line). Promoted from three per-file
 ## copies (journal.gd/combat_hud.gd/targeting_controller.gd -- the M6.5
 ## zero-cross-dependency idiom, amended for this one case: all three already
 ## reference UIChrome, a plain class_name script, not an autoload, so routing

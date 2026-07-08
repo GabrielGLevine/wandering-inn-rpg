@@ -1,6 +1,6 @@
 class_name WICombatView
 extends RefCounted
-## M6.5 D2: thin read facade bounding combat-presentation reads of a live
+## Thin read facade bounding combat-presentation reads of a live
 ## `WICombat`. Constructed fresh per encounter by `combat_screen.gd`'s
 ## `_show_combat()` (`_view = WICombatView.new(_combat())`) and handed down to
 ## `WICombatBoardRenderer.build()` plus whichever of the screen's own

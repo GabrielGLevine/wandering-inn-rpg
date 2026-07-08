@@ -19,10 +19,10 @@ func _init() -> void:
 	assert((ups[0]["grants"] as Array).has("counter_strike"), "gains carry grants")
 	assert(WIProgression.check_level_ups({"warrior": 2}, {"won_combat": 5}, catalog).is_empty(), "warrior L3 gates on melee_hit, so won_combat alone earns no further level")
 
-	# --- M3 Task 5: earned multiclass (gained_by) ---
+	# --- earned multiclass (gained_by) ---
 	assert(WIProgression.check_class_gains({"warrior": 1}, {}, catalog).is_empty(), "unmet gained_by yields no gain")
-	# Onboarding rev O4: mage.gained_by moved from the retired Dusty Scroll
-	# (used_magic) to Pisces' lesson (learned_magic_from_pisces).
+	# mage.gained_by is Pisces' lesson (learned_magic_from_pisces); the
+	# Dusty Scroll accomplishment (used_magic) is retired and must NOT grant.
 	assert(WIProgression.check_class_gains({"warrior": 1}, {"learned_magic_from_pisces": 1}, catalog) == ["mage"], "met gained_by grants mage")
 	assert(WIProgression.check_class_gains({"warrior": 1, "mage": 1}, {"learned_magic_from_pisces": 1}, catalog).is_empty(), "already-held class is not re-gained")
 	assert(WIProgression.check_class_gains({"warrior": 1}, {"used_magic": 1}, catalog).is_empty(), "retired scroll accomplishment no longer grants mage")
@@ -33,7 +33,7 @@ func _init() -> void:
 	var mage_l1 := WIProgression.granted_skills({"mage": 1}, catalog)
 	assert(mage_l1.has("frost_bolt") and mage_l1.has("quick_cast"), "mage L1 grants frost_bolt + quick_cast")
 
-	# --- Onboarding rev Task O1: warrior is EARNED via gained_by (mage precedent shape) ---
+	# --- warrior is EARNED via gained_by (mage precedent shape) ---
 	# Classless start means warrior no longer holds by default; the first
 	# post-spar sleep (sparred_with_relc>=1, banked by training_yard's
 	# trivial relc_spar encounter) is what grants it.
@@ -44,7 +44,7 @@ func _init() -> void:
 	var warrior_l1 := WIProgression.granted_skills({"warrior": 1}, catalog)
 	assert(warrior_l1 == ["basic_swordwork", "tough_body", "power_strike", "piercing_strikes"], "warrior L1 still grants the full 4-skill kit once earned")
 
-	# --- Three Pillars P3: [Tactician] EARNED via studied_the_cellar (mage precedent) ---
+	# --- [Tactician] EARNED via studied_the_cellar (mage precedent) ---
 	# The slice's guile path banks studied_the_cellar; the next sleep grants
 	# [Tactician], whose L1 kit spans pillars ([Appraise Foe] field + [Battlefield
 	# Awareness] combat). Levels then climb on observed_things (banked by [Appraise Foe]).
@@ -57,7 +57,7 @@ func _init() -> void:
 	assert(tac_l2.size() == 1 and tac_l2[0]["class"] == "tactician" and tac_l2[0]["level"] == 2, "tactician L2 pending on observed_things")
 	assert(WIProgression.check_level_ups({"tactician": 1}, {"observed_things": 2}, catalog).is_empty(), "below observed_things threshold = no tactician level")
 
-	# --- Social Pillar S3: [Diplomat] EARNED via a MULTI-KEY gained_by ---
+	# --- [Diplomat] EARNED via a MULTI-KEY gained_by ---
 	# gained_by = {persuaded_someone:1, heard_gossip:3} — check_class_gains
 	# composes multi-key thresholds with AND semantics (every key must clear its
 	# threshold), so BOTH the persuasion identity gate AND the gossip volume gate
@@ -78,7 +78,7 @@ func _init() -> void:
 	assert(dip_l2_befriend.size() == 1 and dip_l2_befriend[0]["level"] == 2, "diplomat L2 ALSO pending on befriended_moments>=2 (requires_any)")
 	assert(WIProgression.check_level_ups({"diplomat": 1}, {"heard_gossip": 4, "befriended_moments": 1}, catalog).is_empty(), "below BOTH L2 thresholds = no diplomat level")
 
-	# --- M6 T2: counter-driven leveling (spec §2.2 REV 2) ---
+	# --- counter-driven leveling (spec §2.2 REV 2) ---
 	# Warrior levels from cumulative melee counters; one call returns EVERY
 	# earned level in ascending order (multi-level sleeps).
 	assert(WIProgression.check_level_ups({"warrior": 2}, {"melee_hit": 5}, catalog).is_empty(), "below the L3 melee threshold = no level")
@@ -112,7 +112,7 @@ func _init() -> void:
 	assert(sw_mixed.size() == 2 and int(sw_mixed[1]["level"]) == 3, "each level may be met by a DIFFERENT arm (L2 melee, L3 spell)")
 	assert((sw_mixed[0]["grants"] as Array).is_empty(), "spellsword L2 grants nothing (keener_edge is L1)")
 
-	# --- M6 T3: granted_skills resolves `inherits` (spec §2.6 ⟦B5⟧) ---
+	# --- granted_skills resolves `inherits` (spec §2.6 ⟦B5⟧) ---
 	# (a) held Swordsman 10 yields the warrior grants it grew out of PLUS its
 	# own swordsman grants (swordsman's own levels 1-9 grant nothing; L10
 	# grants quick_slash/flash_cut).
@@ -143,7 +143,7 @@ func _init() -> void:
 	assert(WIProgression.granted_skills({"warrior": 1}, catalog) == l1, "warrior grants unaffected by inherits resolution")
 	assert(WIProgression.granted_skills({"mage": 1}, catalog) == mage_l1, "mage grants unaffected by inherits resolution")
 
-	# --- M6 T3: check_evolutions (spec §2.3 REV 2) ---
+	# --- check_evolutions (spec §2.3 REV 2) ---
 	# warrior 10, sword-dominant -> Replacement to swordsman, carrying level.
 	var warrior_sword := WIProgression.check_evolutions({"warrior": 10}, {"sword_skill_used": 12, "spear_skill_used": 2}, catalog, [])
 	assert(warrior_sword.size() == 1, "warrior sword-dominant yields exactly one outcome")
@@ -202,7 +202,7 @@ func _init() -> void:
 	# An evolved class itself has no evolution block (naturally capped).
 	assert(WIProgression.check_evolutions({"ice_mage": 12}, {"ice_cast": 100, "fire_cast": 100}, catalog, []).is_empty(), "an evolved/inherited class has no evolution block, never re-evolves")
 
-	# --- M6 T3: sleep()-path integration — proves the early-return restructure ---
+	# --- sleep()-path integration — proves the early-return restructure ---
 	# A sleep with NO level-ups (warrior already at 10, no melee_hit banked
 	# this beat) must still resolve evolutions and emit class_evolved; the
 	# old `if gains.is_empty(): return` early return would have skipped this.
@@ -229,7 +229,7 @@ func _init() -> void:
 		var text := String(t["payload"]["text"])
 		assert(not text.is_empty(), "toast text is non-empty")
 
-	# --- M6 T4: non-linear multiclass scaling (spec §2.4 REV 2) ---
+	# --- non-linear multiclass scaling (spec §2.4 REV 2) ---
 	# THE GATE: at the shipped power_k, a 5/5 split lands in the locked
 	# 20-25% split-friction band relative to a focused 10.
 	var split_power := WIProgression.effective_power({"warrior": 5, "mage": 5}, catalog)
@@ -241,7 +241,7 @@ func _init() -> void:
 	assert(WIProgression.effective_power({"warrior": 5}, catalog) < WIProgression.effective_power({"warrior": 6}, catalog), "adding a level raises effective_power")
 	# Adding a second class raises TOTAL effective_power (5/5 > pure-5)...
 	assert(split_power > WIProgression.effective_power({"warrior": 5}, catalog), "5/5 split has higher total effective_power than pure-5")
-	# ...but the per-level MULTIPLIER drops relative to a focused build.
+	# ..but the per-level MULTIPLIER drops relative to a focused build.
 	assert(WIProgression.power_multiplier({"warrior": 5, "mage": 5}, catalog) < WIProgression.power_multiplier({"warrior": 5}, catalog), "split multiplier is lower than a focused build's")
 
 	# power_multiplier == 1.0 EXACTLY for any single-class build, no penalty.
@@ -256,7 +256,7 @@ func _init() -> void:
 	assert(WIProgression.effective_power({}, catalog) == 0.0, "empty classes yields effective_power 0.0")
 	assert(WIProgression.power_multiplier({}, catalog) == 1.0, "empty classes yields multiplier 1.0 (no penalty, no crash)")
 
-	# --- M6 T4b: additive stat_growth (spec §2.4 REVISION 2026-07-03) ---
+	# --- additive stat_growth (spec §2.4 REVISION 2026-07-03) ---
 	# Pinned formula: stat_bonus[S] = round((Σ_class growth_c[S] * L_c) * efficiency),
 	# efficiency == power_multiplier, rounded ONCE per stat, ADDED to base stats.
 
@@ -302,7 +302,7 @@ func _init() -> void:
 	assert(int(applied["dex"]) == 10 and int(applied["int"]) == 10, "apply_stat_bonuses leaves untouched stats as base")
 	assert(int(base_stats["str"]) == 10, "apply_stat_bonuses does not mutate the input dictionary")
 
-	# --- M6 T5: check_consolidation (spec §2.5 REV 2) ---
+	# --- check_consolidation (spec §2.5 REV 2) ---
 	# Pinned math: merged = max(ceil(2*(L_a+L_b)/3), max(L_a, L_b)), INTEGER
 	# arithmetic only. Trigger: both parents >= min_parent_level (6) AND
 	# sum >= min_combined_level (13).

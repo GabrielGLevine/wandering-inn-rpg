@@ -7,16 +7,16 @@ extends SceneTree
 ## Asserts per GATED cell: win_rate 0.55-0.95, median rounds 3-12; measured
 ## cells are recorded-only (no bounds contract). relc_downed_rate is printed
 ## for every non-solo cell (WAVE A2 frontier metric, recorded-only).
-## M7 Task E6: LOADOUT_CELLS below adds a measured-only equipment axis
+## LOADOUT_CELLS below adds a measured-only equipment axis
 ## (weapon/armor from data/items.json, injected the same way wi_game.gd's
 ## `_build_player_combatant` does) layered onto existing composition+build
 ## pairings — 5 cells x 100 seeds (500 more fights), never touching the
 ## gated matrix's construction above.
-## M-ARCH Task ARCH-2: the LOADOUT_CELLS loop's weapon-gate filter and
+## The LOADOUT_CELLS loop's weapon-gate filter and
 ## accessory-mod summation now call `WICombatBuild.weapon_gated_kit`/
 ## `equipment_mods` (`src/core/combat_build.gd`) -- the SAME functions
 ## `wi_game.gd`'s `_build_player_combatant` calls -- instead of hand-mirrored
-## copies (consultant-flagged manual-sync drift, closed by this task).
+## copies (a manual-sync drift class; keep the shared functions shared).
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
 
 const RUNS_PER_CELL := 100
@@ -33,9 +33,9 @@ const COMPOSITIONS := [
 ## build's whole win-rate edge reads as passive [Mana Shield]; the "caster"
 ## profile leads with spells then falls through to melee when mana-dry, which
 ## is the only way this harness measures a mage kit's ACTIVE spell
-## contribution (M6 T0 spec §2.4 dual-kit confound).
+## contribution (the spec §2.4 dual-kit confound).
 ##
-## M6 T4b (spec §2.4 REVISION 2026-07-03): additive per-class stat_growth,
+## Additive per-class stat_growth,
 ## scaled by the split-efficiency multiplier (kept from T4), ADDED to base
 ## template stats (see WIProgression.derived_stat_bonuses / apply_stat_bonuses
 ## / _build_player_combatant). Unlike T4's multiply-only reading, FOCUSED
@@ -46,9 +46,9 @@ const COMPOSITIONS := [
 ## caster sibling. The `pure_warrior10`/`pure_mage10_caster`/`warrior5_mage5`/
 ## `warrior5_mage5_caster` axes are the §2.4 power-axis matrix: a focused
 ## level-10 build vs. its 5/5 split counterpart, melee and caster profile.
-## M7 Task E6 (loadout axis): the harness builds combatants DIRECTLY from
-## combatants.json, bypassing WIGame/`_build_player_combatant` entirely (E2
-## review finding) -- so equipment was invisible to this harness until now.
+## The harness builds combatants DIRECTLY from
+## combatants.json, bypassing WIGame/`_build_player_combatant` entirely --
+## so equipment would be invisible to this harness without this section.
 ## Each cell below layers a weapon/armor pair (data/items.json ids, "" = none
 ## equipped) onto an EXISTING composition+build pairing (looked up by name
 ## below, never redefined) and runs its own 100-seed series. Deliberately
@@ -72,13 +72,13 @@ const LOADOUT_CELLS := [
 	{"name": "warrior2_sword_armored", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin"},
 	{"name": "warrior1_tutorial_solo_armored", "comp": "goblin_ambush", "build": "warrior1_tutorial_solo", WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin"},
 	{"name": "warrior2_mage2_gambeson", "comp": "chieftains_raid", "build": "warrior2_mage2", WIKeys.WEAPON: "rusty_sword", "armor": "watch_issue_gambeson"},
-	## M-GEAR Task G4: accessory cells (measured-only, same convention as the
+	## Accessory cells (measured-only, same convention as the
 	## 5 weapon/armor cells above). Each cell's optional `accessories` key is
 	## a list of `data/items.json` accessory ids whose damage_mod/hp_mod/
 	## damage_reduction are SUMMED onto the same three fields alongside the
 	## weapon/armor contribution -- a harness-local mirror of `wi_game.gd`'s
 	## `_build_player_combatant` loop over `["accessory_1","accessory_2",
-	## "accessory_3"]` (M-GEAR G1). A cell omitting `accessories` behaves
+	## "accessory_3"]`. A cell omitting `accessories` behaves
 	## exactly as before (empty list, zero contribution) -- the 5 cells above
 	## are UNTOUCHED in both data and construction.
 	## (1) `warrior2_max_legal_kit` / (2) its SOLO tutorial twin: the
@@ -114,7 +114,7 @@ const LOADOUT_CELLS := [
 	{"name": "moon_bone_capacity_unreachable", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["moon_bone_amulet"], "capacity_unreachable": true},
 ]
 
-## Content Wave C1: MEASURED-only cells for the two new sewers encounters
+## MEASURED-only cells for the two sewers encounters
 ## (shield_spider nest + sewer_vermin trash). Self-contained -- each carries
 ## its own arena/enemies/build (never touching COMPOSITIONS/BUILDS or the
 ## gated matrix above), so a new content encounter can never redden a balance
@@ -127,7 +127,7 @@ const ENCOUNTER_CELLS := [
 	{"name": "shield_spiders_w2_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior2", "solo": true},
 	{"name": "shield_spiders_w1_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "sewer_vermin_w2_solo", "arena": "sewers_nest", "enemies": ["sewer_vermin", "sewer_vermin"], "build": "warrior2", "solo": true},
-	## M-ARC A2: the deep_tunnels Raskghar scout route-fight (bruiser pair,
+	## The deep_tunnels Raskghar scout route-fight (bruiser pair,
 	## fought in cave_mouth). MEASURED-only -- the scouts are content, not a
 	## win-rate contract; deep_descent proves the fight clears via a pinned
 	## fixture rng. Recorded with + without Relc so the report shows the
@@ -137,7 +137,7 @@ const ENCOUNTER_CELLS := [
 	{"name": "raskghar_scouts_w5_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior5_mage5", "solo": true},
 ]
 
-## M-ARC A2: the Awakened Raskghar BOSS band (spec §2 / plan A2 item 4). Unlike
+## The Awakened Raskghar BOSS band (spec §2 / plan A2 item 4). Unlike
 ## every other new-content cell (all measured), the Relc-fielded boss cell is
 ## GATED to an EXPLICIT 0.6-0.75 win band (per-cell `win_lo`/`win_hi`, NOT the
 ## generic 0.55-0.95) -- the design contract "beatable-but-threatening with
@@ -150,7 +150,7 @@ const BOSS_CELLS := [
 	{"name": "awakened_boss_w2_solo", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": true},
 ]
 
-## Magical Door 8a Task D2 (lane β): the ruin encounter axis -- rift_vermin_leak
+## The ruin encounter axis -- rift_vermin_leak
 ## (beat-2 inn-cellar leak fight) and ruin_guardian (beat-3 Albez-flavored
 ## construct guarding the anchor-stone pedestal; D1/D3 wire the real encounter
 ## entities into skeleton_scene.json separately -- this file only proves the
@@ -185,7 +185,7 @@ const BUILDS := [
 	## tutorial fight must be winnable on the first attempt, so this cell is
 	## measured to keep the matchup visible whenever combat data moves.
 	{"name": "warrior1_tutorial", "classes": {"warrior": 1}, "gated": false},
-	## Hotfix wave A (playtest 8+9): the ABOVE cell always fields relc as an
+	## The ABOVE cell always fields relc as an
 	## ally, but ally_requires{met_relc:1} means a naive player who dashes
 	## straight at goblin_encounter_2 WITHOUT first talking to Relc fights this
 	## exact matchup SOLO. That's the scenario the playtest flagged as "must
@@ -193,7 +193,7 @@ const BUILDS := [
 	## bar is "not trivially easy, wants Relc's advice", not a win-rate
 	## contract) keeps the real risk visible whenever goblin_ambush data moves.
 	{"name": "warrior1_tutorial_solo", "classes": {"warrior": 1}, "gated": false, "solo": true},
-	## WAVE A2 (user directive 2026-07-04, playtest 8+9): goblin_ambush/warrior2
+	## goblin_ambush/warrior2
 	## is UN-GATED (per-cell, via `ungated_comps` -- the build stays gated for
 	## chieftains_raid). Relc is a high-level [Spearmaster] (canon) escorting
 	## the tutorial fight: a near-1.0 win rate on this ALLY-CARRIED cell is
@@ -202,7 +202,7 @@ const BUILDS := [
 	## gates for this fight are now the warrior1_tutorial_solo measured cell
 	## (target ~0.4-0.5 win) and relc_downed_rate (target <= ~0.15).
 	{"name": "warrior2", "classes": {"warrior": 2}, "ungated_comps": ["goblin_ambush"]},
-	## Three Pillars P4: the martial+service hybrid. [Helper] contributes only
+	## The martial+service hybrid. [Helper] contributes only
 	## con stat_growth (+1/level) and non-combat/exploration grants ([Basic
 	## Cooking] at L1; no combat skill until [Quick Movement] at L5) -- so at
 	## helper 2 this build is `warrior2`'s exact combat kit plus +2 con (a
@@ -247,7 +247,7 @@ func _init() -> void:
 	var by_id := {}
 	for c: Dictionary in catalog["combatants"]:
 		by_id[String(c[WIKeys.ID])] = c
-	# M7 Task E6: id-keyed mirrors for the loadout axis only -- the id-keyed
+	# id-keyed mirrors for the loadout axis only -- the id-keyed
 	# form matches wi_game.gd's `skills`/`_items` instance dicts (WICombat's
 	# own constructor keys its internal `skills` the same way from the raw
 	# array form the main loop below already passes it).
@@ -272,7 +272,7 @@ func _init() -> void:
 				var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
 				pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
 				# Calls the SAME shared application path as
-				# WIGame._build_player_combatant (M6 T4b: WIProgression.
+				# WIGame._build_player_combatant (WIProgression.
 				# apply_stat_bonuses) so the harness measures the exact stats a
 				# real PC combatant would carry for this class distribution.
 				pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
@@ -325,7 +325,7 @@ func _init() -> void:
 				any_failed = true
 				printerr("FAIL [%s / %s]: median rounds %d outside 3-12" % [comp["name"], build["name"], median])
 
-	## M7 Task E6: loadout axis. Every cell is measured-only (equipment is a
+	## Loadout axis. Every cell is measured-only (equipment is a
 	## new design axis, not yet subject to the generic 0.55-0.95/3-12 gate --
 	## same convention WAVE A2 established for the mentor-carried tutorial
 	## cell) -- resolves each cell's named composition/build back to the
@@ -333,7 +333,7 @@ func _init() -> void:
 	## reference, then injects equipment via the SAME shared pure functions
 	## `wi_game.gd`'s `_build_player_combatant` calls (`WICombatBuild.
 	## weapon_gated_kit`/`equipment_mods`, `src/core/combat_build.gd` --
-	## M-ARCH Task ARCH-2 promoted these off two hand-mirrored copies) before
+	## promoted off two hand-mirrored copies) before
 	## constructing the SAME WICombat class the main loop above uses.
 	for cell: Dictionary in LOADOUT_CELLS:
 		var comp: Dictionary = _find_by_name(COMPOSITIONS, String(cell["comp"]))
@@ -341,7 +341,7 @@ func _init() -> void:
 		var arena: Dictionary = arenas_by_id[String(comp["arena"])]
 		var weapon: Dictionary = items_by_id.get(String(cell[WIKeys.WEAPON]), {})
 		var armor: Dictionary = items_by_id.get(String(cell["armor"]), {})
-		# M-GEAR Task G4: resolve the cell's optional accessory ids ONCE (same
+		# Resolve the cell's optional accessory ids ONCE (same
 		# lifetime as weapon/armor above) -- a cell with no "accessories" key
 		# gets an empty list, matching the pre-G4 5 cells exactly.
 		var acc_ids: Array = cell.get("accessories", [])
@@ -358,7 +358,7 @@ func _init() -> void:
 			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
 			var kit: Array = WIProgression.granted_skills(build["classes"], classes)
 			pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
-			# M-ARCH Task ARCH-2: calls the SAME shared function wi_game.gd's
+			# Calls the SAME shared function wi_game.gd's
 			# `_build_player_combatant` calls -- weapon/armor contribute first,
 			# then each equipped accessory's own damage_mod/hp_mod/
 			# damage_reduction is SUMMED onto the same three fields (default 0
@@ -404,7 +404,7 @@ func _init() -> void:
 		if has_relc:
 			print("  relc_downed_rate=%.2f (%d/%d)" % [float(relc_downed) / float(RUNS_PER_CELL), relc_downed, RUNS_PER_CELL])
 
-	## Content Wave C1: sewers encounter axis. Measured-only -- mirrors the main
+	## Sewers encounter axis. Measured-only -- mirrors the main
 	## loop's construction (build pc from the named BUILDS entry's classes,
 	## optional Relc, enemies) with the cell's own inline arena/enemies.
 	for cell: Dictionary in ENCOUNTER_CELLS:
@@ -451,7 +451,7 @@ func _init() -> void:
 		if has_relc:
 			print("  relc_downed_rate=%.2f (%d/%d)" % [float(relc_downed) / float(RUNS_PER_CELL), relc_downed, RUNS_PER_CELL])
 
-	## M-ARC A2: the Awakened Raskghar boss axis. Same construction as the
+	## The Awakened Raskghar boss axis. Same construction as the
 	## ENCOUNTER loop (build pc from the named BUILDS entry, optional Relc, the
 	## boss + scout adds) but with a PER-CELL win band: a cell carrying
 	## `win_lo`/`win_hi` is GATED to THAT band (the 0.6-0.75 Relc contract);
@@ -509,7 +509,7 @@ func _init() -> void:
 				any_failed = true
 				printerr("FAIL [boss / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
 
-	## Magical Door 8a Task D2: the ruin axis. Same construction/gating shape as
+	## The ruin axis. Same construction/gating shape as
 	## the BOSS_CELLS loop directly above (per-cell win_lo/win_hi, absent means
 	## measured-only) -- see RUIN_CELLS' own doc comment for the per-cell band
 	## rationale.
