@@ -62,7 +62,7 @@
   { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 5 },
 
-  { "_comment": "== BEAT 3: the ruin recovery run. Teleport straight to the guardian alcove (16,7), west of ruin_guardian (17,7) -- door_chain_started is already banked so ruin_door's own gate is moot for this script (proven live by ruin_walkthrough). ==", "action": "teleport", "map": "ruin_surface", "cell": [16, 7] },
+  { "_comment": "== BEAT 3: the ruin recovery run. Teleport straight to the guardian alcove (16,8), west of ruin_guardian (17,8) -- door_chain_started is already banked so ruin_door's own gate is moot for this script (proven live by ruin_walkthrough). DF fix-wave (2026-07-07, issue #8 rotation B1): cell updated from (16,7) to (16,8) -- ruin_guardian itself moved from (17,7) to (17,8) to fix a PC/guardian sprite-fusion bug (see skeleton_scene.json's ruin_guardian _comment). ==", "action": "teleport", "map": "ruin_surface", "cell": [16, 8] },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "ruin_surface" }, "timeout_sec": 5 },
   { "action": "move", "direction": "right", "steps": 1 },
   { "action": "press", "name": "interact" },

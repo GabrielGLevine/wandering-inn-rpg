@@ -2339,7 +2339,7 @@
   ]
  },
  "raskghar_awakened": {
-  "_comment": "M-ARC A2 (2026-07-06): Raskghar via PixelLab v2 create-character-pro (mannequin, low top-down, 8 facings) -> animate-character idle/walk/slice -> directional down/side/up (side mirrors west). Canon bear-lion, moon-grey. render_scale = field figure 50.0px (towers over Gnolls); anchor feet-plane 97/124. combat_scale contains it at ~30.0px (Relc lesson).",
+  "_comment": "M-ARC A2 (2026-07-06): Raskghar via PixelLab v2 create-character-pro (mannequin, low top-down, 8 facings) -> animate-character idle/walk/slice -> directional down/side/up (side mirrors west). Canon bear-lion, moon-grey. render_scale = field figure 50.0px (towers over Gnolls); anchor feet-plane 97/124. combat_scale contains it at ~30.0px (Relc lesson). DF fix-wave (2026-07-07, issue #8 rotation B1): the 97/124 feet-plane above was a MISMEASURE -- a PIL alpha-channel scan of Idle_Down-Sheet.png's own frame 0 (the animation this field entity actually renders, per world.gd's idle_down default) finds the real opaque bbox at y35-87 of 124, i.e. feet at 87/124 (anchor.y=0.7016), not 97/124 (anchor.y=0.7823). The stale anchor placed the ground-contact point 10 raw px (~8 rendered px) BELOW the true feet, dragging the whole figure upward on top of its own cell and, at 2-cell range, straight into the PC's sprite (`ruin_walkthrough`'s `01_pedestal_locked.png`: 'small human head sitting on a tall gray monster torso'). Corrected below; `ruin_guardian`'s skeleton_scene.json cell also nudged one row south (17,7 -> 17,8, see that entity's own _comment) to fully clear the remaining overlap at the 2-cell PC distance while preserving this sprite's intentionally-larger-than-Gnoll render_scale (shrinking scale instead would have erased the 'towers over Gnolls' read this comment describes).",
   "directional": true,
   "render_scale": 0.8065,
   "animations": {
@@ -2376,7 +2376,7 @@
   },
   "anchor": [
    0.5,
-   0.7823
+   0.7016
   ]
  },
  "inn_sign": {
