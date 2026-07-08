@@ -208,6 +208,29 @@ const RIVERFARM_CELLS := [
 	{"name": "river_wolf_pack_w10_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "warrior5_mage5", "solo": true},
 ]
 
+## Invrisil 8c Task C2 (issues #12/#13) axis. The alley footpads
+## (shared `mercantile_alley` arena, lane alpha's two encounter placements
+## both resolve to this same pair) are SNEAK TARGETS, deliberately tuned
+## LOW-lethality (design contract: a player who fails the K2 [Stealth]
+## check and gets ambushed must not be walled by the fight) -- gated to an
+## EXPLICIT band favoring the floor (0.75-0.98, well above the generic
+## 0.55 floor) rather than the generic 0.55-0.95 band, at `warrior2` (the
+## same early/low representative build goblin_ambush uses) SOLO -- no ally
+## is structurally present when sneaking the alleys alone. A
+## `warrior1_tutorial`-tier read is recorded (measured-only) to show even a
+## fresh warrior1 isn't walled. `hired_blades` (the LOCKED `merchant_warehouse`
+## arena, the first all-human combatant family) is gated 0.6-0.8 with the
+## `wilovan` ally at `warrior5_mage5` (the deep_descent/ruin_guardian
+## gated-ally-band precedent); the solo cell (the come-along beat declined)
+## is measured-only, the hard-mode frontier, same convention as
+## awakened_boss_w2_solo/ruin_guardian_w8_solo.
+const INVRISIL_CELLS := [
+	{"name": "alley_footpads_w2_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "warrior2", "solo": true, "win_lo": 0.75, "win_hi": 0.98},
+	{"name": "alley_footpads_w1_tutorial_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "warrior1_tutorial", "solo": true},
+	{"name": "hired_blades_w10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.6, "win_hi": 0.8},
+	{"name": "hired_blades_w10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "warrior5_mage5", "solo": true},
+]
+
 const BUILDS := [
 	## The TUTORIAL profile: the player's actual first fight (street
 	## goblin_encounter_2 -> arena goblin_ambush) is fought at warrior 1 --
@@ -652,10 +675,68 @@ func _init() -> void:
 				any_failed = true
 				printerr("FAIL [riverfarm / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
 
+	## The Invrisil axis. Same construction/gating shape as the
+	## RIVERFARM_CELLS loop directly above (per-cell win_lo/win_hi, absent
+	## means measured-only) -- see INVRISIL_CELLS' own doc comment for the
+	## per-cell band rationale (footpads favor the floor; hired_blades mirrors
+	## the gated-ally-band precedent) and for why the ally combatant is
+	## `wilovan`, not `relc`/`riverfarm_hunter`.
+	for cell: Dictionary in INVRISIL_CELLS:
+		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
+		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
+		var wins := 0
+		var rounds: Array[int] = []
+		var wilovan_downed := 0
+		var has_wilovan := not bool(cell.get("solo", false))
+		for seed_v in range(1, RUNS_PER_CELL + 1):
+			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
+			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
+			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
+			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
+			var cfgs: Array = [pc]
+			if has_wilovan:
+				cfgs.append((by_id["wilovan"] as Dictionary).duplicate(true))
+			for enemy_id: String in cell["enemies"]:
+				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
+			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			combat.begin()
+			var guard := 0
+			while not combat.finished and guard < 2000:
+				guard += 1
+				WICombatAI.take_turn(combat)
+			assert(combat.finished, "invrisil %s fight %d did not terminate" % [cell["name"], seed_v])
+			if combat.outcome["victory"]:
+				wins += 1
+			rounds.append(int(combat.outcome["rounds"]))
+			if has_wilovan and not bool(combat.combatants.get("wilovan", {}).get(WIKeys.ALIVE, true)):
+				wilovan_downed += 1
+
+		rounds.sort()
+		var win_rate := float(wins) / float(RUNS_PER_CELL)
+		var median: int = rounds[RUNS_PER_CELL / 2]
+		var hist := {}
+		for r: int in rounds:
+			hist[r] = int(hist.get(r, 0)) + 1
+		var gated := cell.has("win_lo")
+		print("[invrisil / %s] arena=%s build=%s%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+			cell["name"], String(cell["arena"]), String(cell["build"]),
+			"" if has_wilovan else " solo", "" if gated else " (measured)",
+			win_rate, median, rounds[0], rounds[-1],
+		])
+		print("  rounds histogram: ", hist)
+		if has_wilovan:
+			print("  wilovan_downed_rate=%.2f (%d/%d)" % [float(wilovan_downed) / float(RUNS_PER_CELL), wilovan_downed, RUNS_PER_CELL])
+		if gated:
+			var lo := float(cell["win_lo"])
+			var hi := float(cell["win_hi"])
+			if win_rate < lo or win_rate > hi:
+				any_failed = true
+				printerr("FAIL [invrisil / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:
 		# Asserts are stripped in release templates; keep the exit code honest there too.
 		quit(1)
 		return
-	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size(), RUNS_PER_CELL])
+	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size(), RUNS_PER_CELL])
 	quit(0)

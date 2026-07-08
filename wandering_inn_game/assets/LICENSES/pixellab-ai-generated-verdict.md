@@ -179,3 +179,32 @@ encounter entities.
 | `assets/sprites/river_wolf/Idle-Sheet.png` | `river_wolf_pack` (night-gated village-edge) roster | "mundane grey wolf, lean pack predator, low top-down game creature, fur texture, alert stance" — canon-cite wiki.wanderinginn.com/Monsters (Wilwolf, an attested wild-wolf monster whose fur is a crafting material, distinct from the goblin-tamed Carn Wolf). Chosen as an OWNED generation over the licensed Admurin Canine candidate `docs/design/riverfarm-art/picks.md` §6 flags, specifically so this lane never touches assets_manifest.json/the bundle (R2's charter). Static, 64×64, 1 frame. Anchor `[0.5, 0.7188]`, `render_scale: 0.32`. |
 
 Same PixelLab-ToS ownership / redistributability as everything above.
+
+## Invrisil 8c, Task C2 (2026-07-08) — combat data lane, `hired_blade` rig
+
+The `hired_blades` roster (the merchant-prince's enforcers, warehouse fight)
+is the game's first all-human combatant family — the design spec (§2/§5,
+`docs/superpowers/specs/2026-07-06-invrisil-design.md`) requires a
+merchant-livery palette EXPLICITLY NOT Watch-alike (the game's existing
+Watch read is `royal_soldier`, steel/armored, tinted blue/brown for
+`watch_sergeant`/`duty_sergeant` — no in-hand human rig carries civilian
+"doublet + club" livery), so this task spent PixelLab v2 character-pipeline
+generations rather than reusing/tinting an existing sprite. `footpad`
+enemies (the alley sneak targets) needed no new generation — they reuse the
+existing `human_laborer` rig verbatim (an honest civilian-clothes match,
+zero gens).
+
+**v2 character pipeline** (`/create-character-with-8-directions` standard
+mode + `/animate-character` template mode, SEQUENTIAL per the ops rule —
+one job polled to completion before the next was submitted): 1 character
+create (1 generation) + `breathing-idle` animate ×3 directions (south/east/
+north, 1 gen/direction) + `walking` animate ×3 directions (1 gen/direction)
+= **7 generations spent** (balance 698 → 691, confirmed via `GET /balance`
+before/after — within the task's ≤8 budget). Provenance (job records +
+character zip export): `potential_assets/pixellab_2026-07-08_invrisil_combat/`.
+
+| Path | Subject | Prompt gist / notes |
+|---|---|---|
+| `assets/sprites/hired_blade/Idle_Down-Sheet.png`, `Idle_Side-Sheet.png`, `Idle_Up-Sheet.png`, `Walk_Down-Sheet.png`, `Walk_Side-Sheet.png`, `Walk_Up-Sheet.png` | `hired_blades` encounter roster (all 3 members share this one rig, distinguished only by `combatants.json` stats/skills — same convention as `briar_collector`/`river_wolf`) | "a gritty human thug, tough muscular build, fitted burgundy doublet jacket with brass buttons over a cream shirt, dark brown trousers, tall leather boots, no armor, no helmet, gripping a wooden club in one hand, merchant hired muscle, menacing scowl, top-down RPG game character" — burgundy/maroon doublet + brass trim is the merchant-livery palette; deliberately warm-toned and unarmored, quarantined from `royal_soldier`'s cool steel-armor Watch read (no shared hue, no plate/mail silhouette). Directional + animated (idle=`breathing-idle`(4 frames), walk=`walking`(6 frames), down/side/up — side mirrors for west, same template family as `human_laborer`/`lyonette`). Native frame 148×148 (`create-character-with-8-directions` pads beyond the requested 104×104), `render_scale: 0.4324` (64/148, matches the shipped 64px apparent footprint). Anchor `[0.5, 0.8716]` — PIL alpha-bbox measured across idle/walk frames in all 3 directions (feet plane 126–131 of 148, stable; not windowed-screenshot-verified — this is a combat-data-only lane with no `skeleton_scene.json` placement in scope, flagged for the encounter-wiring task's own machine-playtest pass). |
+
+Same PixelLab-ToS ownership / redistributability as everything above.

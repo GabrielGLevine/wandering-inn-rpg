@@ -1288,6 +1288,226 @@
    ],
    "floor_layers": [],
    "decor": []
+  },
+  {
+   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `alley_footpads_a`/`alley_footpads_b`'s SHARED arena (lane alpha's two encounter entities both resolve here, same witch_hollow/briar_collectors shared-arena-for-two-waves convention). `street` biome (the same cobble/cool-grey read the boulevard/alleys share per docs/design/invrisil-art/direction.md -- this lane does not touch biomes.json/the wang tileset; street is the honest in-hand fit). Interior `blocked` cells are the spec's 'stacked crates' alley clutter (sec.1: 'bent routes, stacked crates'), kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). floor_layers reuses goblin_ambush's own already-verified street cobble variant picks -- no new coordinate guessing.",
+   "id": "mercantile_alley",
+   "biome": "street",
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [
+    [
+     4,
+     2
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     9,
+     5
+    ]
+   ],
+   "player_spawns": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "_comment_dressing": "Decor sits just outside the 12x8 grid, same standing rule as goblin_ambush/cave_mouth/inn_cellar.",
+   "floor_layers": [
+    {
+     "_pick": "reuses goblin_ambush's own already-verified street cobble variant picks -- zero new coordinate guessing.",
+     "variants": [
+      [
+       16,
+       2
+      ],
+      [
+       17,
+       2
+      ],
+      [
+       18,
+       2
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "crate",
+     "cell": [
+      -1,
+      3
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      -1,
+      5
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      12,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `hired_blades`, the LOCKED arena id per the plan interface. The merchant-prince's counting-house warehouse (quest FIGHT path, the human-enemy roster debut per spec sec.3). `inn` biome (the same indoor-wood reuse inn_cellar already established for an interior combat arena -- this lane does not need a bespoke warehouse tileset). Interior `blocked` cells are stacked storage crates/barrels (a working warehouse's own goods, cover for the 3-roster fight, kept clear of every player/enemy spawn -- test_combat_data asserts spawn reachability + connectivity).",
+   "id": "merchant_warehouse",
+   "biome": "inn",
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     8,
+     2
+    ]
+   ],
+   "player_spawns": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "_comment_dressing": "Decor sits just outside the 12x8 grid.",
+   "floor_layers": [
+    {
+     "_pick": "reuses maps.inn's own verified 'kitchen zone: grey cobble swatch' variant picks (same convention as inn_cellar) -- a stone/plank warehouse floor, zero new coordinate guessing.",
+     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       9,
+       22
+      ],
+      [
+       9,
+       23
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "crate",
+     "cell": [
+      -1,
+      3
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      -1,
+      5
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      12,
+      4
+     ]
+    }
+   ]
   }
  ]
 }

@@ -324,6 +324,13 @@ func _build_expected_counts() -> Dictionary:
 	counts["briar_collector_deep/idle"] = 1
 	counts["river_wolf/idle"] = 1
 
+	## Invrisil 8c Task C2 -- hired_blade, DIRECTIONAL + animated (v2
+	## create-character-with-8-directions + animate-character template,
+	## 148x148 native frame). idle=breathing-idle(4), walk=walking(6), same
+	## template family as human_laborer/lyonette/gnoll_traveler/drake_patron.
+	counts["hired_blade/idle"] = 4
+	counts["hired_blade/walk"] = 6
+
 	return counts
 
 

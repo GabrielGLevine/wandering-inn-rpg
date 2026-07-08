@@ -483,6 +483,121 @@
    "skills": [
     "power_strike"
    ]
+  },
+  {
+   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `alley_footpads_a`/`alley_footpads_b`'s roster (lane alpha wires the two sneakable trigger_radius entities into mercantile_alleys; this lane owns only the combat data they resolve to). ORIGINAL, canon-plausible generic street crime -- the wiki (wiki.wanderinginn.com/Invrisil) attests Invrisil as the huge, wealthy 'City of Adventurers'; no single named petty-mugger gang is on-page distinct from the Brothers themselves, so a plain opportunistic footpad duo is a direct, non-colliding extrapolation (same convention as sewer_vermin/crate_scavengers' generic-diegetic stand-ins). DESIGN CONTRACT (spec sec.5 + the controller's design notes): footpads are SNEAK TARGETS, tuned LOW-lethality by design -- a player who fails the K2 [Stealth] check and gets ambushed must not be walled by a fight, so this pair sits BELOW goblin_raider (str10/con9/die4) on every axis, closer to sewer_vermin's fragile trash-tier. `footpad_lookout` is the leaner, dex-leaning half of the pair (a purse-snatcher, not a brawler). No skills -- a plain shove/grab, not a real weapon technique. Harness: sim_combat_batch.gd INVRISIL_CELLS, gated favoring the floor (0.75-0.98, above the generic 0.55 floor) at warrior2 SOLO (no ally structurally present when sneaking the alleys alone) -- the low-lethality intent as an explicit contract, not a vibe.",
+   "id": "footpad_lookout",
+   "display_name": "Footpad",
+   "sprite": "human_laborer",
+   "side": "enemy",
+   "stats": {
+    "str": 7,
+    "dex": 11,
+    "con": 6,
+    "int": 5,
+    "wis": 5,
+    "cha": 6
+   },
+   "weapon_die": 3,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "Alley_footpads' second member -- see footpad_lookout's own _comment for the canon-plausibility cite + the LOW-lethality design contract. `footpad_bruiser` is the pair's slightly sturdier half (a cudgel-swinger, still deliberately weaker than goblin_raider on every axis) -- an asymmetric-pair shape (lean+sturdy) matching goblin_ambush's raider+shaman and briar_collector_deep's own convention, without escalating overall lethality. Both `alley_footpads_a` and `alley_footpads_b` field this SAME two-combatant pair (lane alpha's two encounter placements, not two different rosters) -- distinct ids per member per the #38 convention, reused verbatim across both encounter entities.",
+   "id": "footpad_bruiser",
+   "display_name": "Footpad",
+   "sprite": "human_laborer",
+   "side": "enemy",
+   "stats": {
+    "str": 9,
+    "dex": 9,
+    "con": 8,
+    "int": 5,
+    "wis": 5,
+    "cha": 6
+   },
+   "weapon_die": 4,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `hired_blades`, the merchant-prince's warehouse roster (lane alpha/C3 wires the encounter entity + the Wilovan come-along beat separately; this lane owns the combat data + arena). The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'. The merchant-prince himself is ORIGINAL+flag (docs/design/character-profiles-staging.md 'Invrisil (8c)'); his hired muscle inherits that same ORIGINAL+flag status -- a respectable merchant paying for thuggery is generic and canon-plausible, not an invented named entity. `hired_blade_leader` is the pair's heavy -- a club-swinging foreman who leads with `power_strike` (the EXISTING skill goblin_chieftain/river_wolf_c already use for a 'pack leader hits harder' read; no new effect type), higher con than the two knife-thugs. Sprite `hired_blade` (owned PixelLab rig, burgundy/brass merchant-livery doublet -- see data/sprites.json's own _comment + assets/LICENSES/pixellab-ai-generated-verdict.md for the full NOT-Watch-alike palette-quarantine rationale) is shared by all 3 roster members, same convention as briar_collector/river_wolf/ruin_ward. Harness: sim_combat_batch.gd INVRISIL_CELLS, GATED 0.6-0.8 with the `wilovan` ally at warrior5_mage5 (the deep_descent/ruin_guardian boss-cell precedent for a gated-ally band); the solo cell (declined the come-along beat) is measured-only, the hard-mode frontier, same convention as awakened_boss_w2_solo/ruin_guardian_w8_solo.",
+   "id": "hired_blade_leader",
+   "display_name": "Hired Blade",
+   "sprite": "hired_blade",
+   "side": "enemy",
+   "stats": {
+    "str": 14,
+    "dex": 10,
+    "con": 18,
+    "int": 6,
+    "wis": 6,
+    "cha": 8
+   },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": [
+    "power_strike"
+   ]
+  },
+  {
+   "_comment": "Hired_blades' first knife-thug -- see hired_blade_leader's own _comment for the canon-plausibility cite + the first-all-human-family design contract. Leaner/quicker than the leader (higher dex, lower con), no skill -- a plain knife-thrust, not a technique. Matched pair with hired_blade_knife_b (river_wolf_a/b convention).",
+   "id": "hired_blade_knife_a",
+   "display_name": "Hired Blade",
+   "sprite": "hired_blade",
+   "side": "enemy",
+   "stats": {
+    "str": 11,
+    "dex": 13,
+    "con": 12,
+    "int": 5,
+    "wis": 6,
+    "cha": 5
+   },
+   "weapon_die": 5,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "Hired_blades' second knife-thug -- identical template to hired_blade_knife_a (a matched pair), given its own id per the distinct-id convention documented on rift_vermin_a/river_wolf_a.",
+   "id": "hired_blade_knife_b",
+   "display_name": "Hired Blade",
+   "sprite": "hired_blade",
+   "side": "enemy",
+   "stats": {
+    "str": 11,
+    "dex": 13,
+    "con": 12,
+    "int": 5,
+    "wis": 6,
+    "cha": 5
+   },
+   "weapon_die": 5,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- Wilovan, the Brothers' front (the plan's user-ratified shape 1: 'WILOVAN fronts the Brothers'). CANON, WIKI-VERIFIED 2026-07-08 (wiki.wanderinginn.com/Wilovan): a Gnoll [Thug], member of the Brothers of Serendipitous Meetings, known with his partner Ratici as the 'Gentlemen Callers' -- brick-built physique, dapper vest/leggings/tall hat, gentlemanly courtesy, self-educated and articulate. Fields ONLY via `ally_requires` on a real come-along beat (lane alpha/C3's dialogue, the 8b `riverfarm_hunter`/deep_descent `relc_descent` precedent -- no teleporting allies; this lane does not wire that gate, only the combatant record it resolves to). KIT: canon [Thug] has no class entry in this game's classes.json (out of this task's scope -- he is an ally-only combatant, never a player-selectable class), so his 'courtesy-as-menace, hats-off-then-violence' register is realized entirely with EXISTING skills (no new effect types per the plan brief): `basic_swordwork` (steadier hands with any blade -- a gentleman's cane-sword, not armor), `quick_slash` ('a cut loosed before the guard can rise' -- nimble, precise, fits a Thug who is fast and thoughtful before he is brutal), `counter_strike` (riposte -- 'the next blade that finds you meets an answer', a fencer's measured reply, not a berserker's), `quick_movement` (nimble feet). con17 reflects his canon 'brick-like physique' AND is a harness-derived ceiling, not an arbitrary pick: below ~14 he goes down in 90%+ of hired_blades fights (too fragile for a come-along ally to feel like a real participant, vs. relc/hunter's own 0.63-0.76 downed rates on comparable 3-body fights); at con20 the fight's own win_rate measures 0.83, OVER the gated 0.6-0.8 band -- con17 (win_rate 0.78) is the highest toughness this roster supports without breaching that ceiling. Any future retune of hired_blades' own stats must re-check this same ceiling, not assume con17 is free headroom. Sprite `wilovan` is lane alpha's own cast art (docs/superpowers/plans/2026-07-08-invrisil-8c.md Task C1 owns Wilovan's profile/pools/sprite) -- NOT generated by this lane; this record is a forward reference lane alpha's sprites.json entry must satisfy before any windowed QA of the FIGHT path. Harness: sim_combat_batch.gd INVRISIL_CELLS' hired_blades_w10_wilovan cell fields him as the ally (mirrors relc/riverfarm_hunter's role in their own cells).",
+   "id": "wilovan",
+   "display_name": "Wilovan",
+   "sprite": "wilovan",
+   "side": "player",
+   "stats": {
+    "str": 12,
+    "dex": 14,
+    "con": 17,
+    "int": 8,
+    "wis": 9,
+    "cha": 12
+   },
+   "weapon_die": 5,
+   "ai": "melee",
+   "skills": [
+    "basic_swordwork",
+    "quick_slash",
+    "counter_strike",
+    "quick_movement"
+   ]
   }
  ]
 }
