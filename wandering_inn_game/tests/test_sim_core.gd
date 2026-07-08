@@ -500,6 +500,16 @@ func _init() -> void:
 	assert(not gCornerTarget.is_cell_blocked(Vector2i(2, 1)) and not gCornerTarget.is_cell_blocked(Vector2i(1, 2)), "sanity: both orthogonals are open")
 	assert(not gCornerTarget.move_player(Vector2i(1, 1)), "a blocked diagonal target still refuses even with open orthogonals")
 
+	# BOTH orthogonals blocked, target open — the truth table's 5th row.
+	# Logically a superset of teeth 1+2 under the `or`, pinned anyway so a
+	# future refactor to per-axis logic can't silently drop the composed case.
+	var corner_both_config := diag_config.duplicate(true)
+	corner_both_config["maps"]["room"]["blocked"] = [[2, 1], [1, 2]]
+	var gCornerBoth := WIGame.new(corner_both_config, skill_config, _sink, 1)
+	assert(not gCornerBoth.is_cell_blocked(Vector2i(2, 2)), "sanity: the diagonal target itself is open")
+	assert(not gCornerBoth.move_player(Vector2i(1, 1)), "corner rule refuses when BOTH orthogonals are blocked")
+	assert(gCornerBoth.player_cell == Vector2i(1, 1), "no slide through a fully pinched corner")
+
 	# --- M6 T1: victory banks the PC's action tally into accomplishments ---
 	# (spec §2.1 REV 2 — liveness is the `trivial: true` DATA flag only; no
 	# round-count or damage heuristic exists. Defeat banks nothing.)
