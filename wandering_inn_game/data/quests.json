@@ -42,6 +42,15 @@
 				{ "id": "consult", "description": "Find out what's happening with the pantry door -- fight it, talk to Pisces, or read the wardwork yourself.", "complete_when": { "door_understood": 1 } },
 				{ "id": "recover", "description": "Recover the anchor stone from the ruin and buy Krshia's catalyst to attune it.", "complete_when": { "recovered_anchor_stone": 1, "bought_catalyst": 1 } }
 			]
+		},
+		{
+			"_comment": "8b R3 (issue #11) 'The Price of a Favor' (Riverfarm). Three-path parity mirroring the cisterns/wrong_order two-beat shape. Beat 1 `resolve` is the SHARED convergence counter `blight_lifted`, banked by ANY path: FIGHT (briar_collectors_deep on_victory -- clearing the escalated wave is the collecting craft's real source), TALK (the witch's own hub, a [Diplomat]-gated mediation banking a renegotiated year of hearth-tending), or SKILL (the hollow_true_knot prop -- the gauntlet's own [Observe] finish IS the resolution, no separate report needed, unlike cisterns_scout/wrong_order's single-action precedent). Beat 2 `report` (`price_of_a_favor_reported`) is the headman's closing beat, identical on all three paths. heard_price_of_a_favor (the quest-start, riverfarm_headman.json) is NOT a beat; it only opens the report option and starts the quest. blight_lifted ALSO drives the village visual_states brighten, the witch's vendor unlock, and the charmed villager's echo retirement -- none of those are quest beats, all three read the SAME raw accomplishment counter this beat completes on.",
+			"id": "price_of_a_favor",
+			"title": "The Price of a Favor",
+			"beats": [
+				{ "id": "resolve", "description": "Settle the debt collecting on Riverfarm -- drive it off, broker fair terms, or pay it yourself.", "complete_when": { "blight_lifted": 1 } },
+				{ "id": "report", "description": "Tell the headman it's done.", "complete_when": { "price_of_a_favor_reported": 1 } }
+			]
 		}
 	]
 }

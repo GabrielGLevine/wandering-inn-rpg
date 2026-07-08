@@ -377,6 +377,67 @@
 			"price": 35,
 			"description": "A sliver of worked amber-glass, humming faintly against the palm, wrapped in oiled cloth from under Krshia's counter.",
 			"lore": "Magical Door plan Task D3 (issue #8 spec §5.3, 'ruin + Krshia ONLY' attunement components): a Silverfang trade-route find, sold to the rare customer who asks the right way and pays the whole price without haggling. Krshia doesn't know what it's for. She knows it's worth what she charges for it. Carried, never worn or sold onward; the beat-3 recovery target D3's chain consumes alongside the anchor stone."
+		},
+		{
+			"_comment": "8b R3 (issue #11) witch-cottage vendor stock, unlocked at blight_lifted (riverfarm_witch.json's 'shop' node). Herb-craft consumables, generic-plausible (not deep TWI canon) per the peddler_stall/Krshia-charms precedent of original mundane/enchanted stock -- prices 4-20g, inside the shipped accessory envelope (hp_mod/resonance match copper_luck_band/hedge_ward_charm's own bounds, no combat mods beyond it).",
+			"id": "dried_yarrow_bundle",
+			"name": "Dried Yarrow Bundle",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 4,
+			"description": "A fist-sized bundle of dried yarrow, tied off with plain string.",
+			"lore": "Good for a cut, a fever, or an argument with a stubborn wound. The witch grows it along the hollow's own herb rows and sells it the same as any hedge-charmer would, no craft attached."
+		},
+		{
+			"id": "sleeproot_draught",
+			"name": "Sleeproot Draught",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 5,
+			"description": "A corked vial of something dark and bitter-green, steeped from root.",
+			"lore": "Drink it before sleep and the night goes quiet, one way or another. She won't say which way she means, and doesn't charge extra for the ambiguity."
+		},
+		{
+			"id": "hollow_herb_sachet",
+			"name": "Hollow Herb Sachet",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 1,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 6,
+			"description": "Dried herbs sewn into cloth, tied off with a loop of red thread.",
+			"lore": "The same knot the witch wears at her own wrist, sold plain rather than worked -- she says the thread is decoration and the herbs do the settling. Neither claim sounds entirely honest."
+		},
+		{
+			"id": "witch_wardstone_bead",
+			"name": "Witch's Wardstone Bead",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 2,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"abilities": [],
+			"price": 16,
+			"description": "A river-smoothed stone, warded and strung on cord without ceremony.",
+			"lore": "She swears it's nothing special, the same way she swears the tea is just tea. It's warm to the touch a full week after you buy it, which is either coincidence or the second lie."
 		}
 	]
 }

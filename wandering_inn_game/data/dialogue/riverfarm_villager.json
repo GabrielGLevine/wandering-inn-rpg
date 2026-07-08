@@ -1,0 +1,24 @@
+{
+	"_comment": "8b R3 (issue #11) the charmed villager's own graph -- reached on a SECOND same-waking talk (talk_pool's echo_of tell plays first). Purely reactive: no effects fire here, the real retirement is the entity's own talk_pool_stages swap (skeleton_scene.json). hub keeps the always-ungated exit ('Take care of yourself.') per the softlock guard.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "A Villager",
+			"text": "They look at you like the words are arriving from somewhere else, half a second late. \"Fine. I'm fine. Everyone keeps asking that.\"",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "So that's what that was. I keep losing the thread of what I meant to say to you. Thank you. However it happened, thank you." }
+			],
+			"options": [
+				{ "text": "What do you remember?", "requires": { "accomplishment": { "blight_lifted": 1 } }, "goto": "remember" },
+				{ "text": "Take care of yourself.", "end": true }
+			]
+		},
+		"remember": {
+			"speaker": "A Villager",
+			"text": "Pieces. A price I agreed to without reading the whole of it. A voice that wasn't mine coming out of my own mouth for weeks. I keep waiting to feel angrier about that than grateful. Maybe both fit.",
+			"options": [
+				{ "text": "For what it's worth, I'm glad it's over.", "end": true }
+			]
+		}
+	}
+}

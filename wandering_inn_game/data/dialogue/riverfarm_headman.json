@@ -1,0 +1,43 @@
+{
+	"_comment": "8b R3 (issue #11) quest-giver graph for 'The Price of a Favor'. Gives price_of_a_favor (heard_price_of_a_favor, NOT itself a beat -- heard_about_cisterns/heard_wrong_order precedent), closes beat 2 (price_of_a_favor_reported) on ANY path once blight_lifted lands. Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway. hub keeps the always-ungated exit ('Just passing through.') per the softlock guard, since two options below are gated.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "The Headman",
+			"text": "Village's had a bad run. Crops came up wrong two seasons straight, animals spooked for no cause, and the ledger won't add up no matter how many times I recount it. Something's collecting on us, and I mean to know what.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "text": "Whatever you find out there, I want to hear it plain. No riddles, and no half-truths either." },
+				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "Whatever you did, the air's changed. I can feel it in my knees, and I trust my knees more than most people." }
+			],
+			"options": [
+				{ "text": "Tell me about the blight.", "hide_when": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "effects": [ { "quest": "price_of_a_favor" }, { "accomplishment": "heard_price_of_a_favor" } ], "goto": "brief" },
+				{ "text": "It's handled. The blight's lifted.", "requires": { "accomplishment": { "blight_lifted": 1 } }, "hide_when": { "accomplishment": { "price_of_a_favor_reported": 1 } }, "effects": [ { "accomplishment": "price_of_a_favor_reported" } ], "goto": "reported" },
+				{ "text": "You said you don't truck with witches.", "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "goto": "witches_topic" },
+				{ "text": "Just passing through.", "end": true }
+			]
+		},
+		"brief": {
+			"speaker": "The Headman",
+			"text": "We don't truck with witches here. Didn't used to, anyway. But there's one in the old hollow past the fields, and half the village is pretending not to know it. Crops fail, stock spooks, and one of my own stands there mumbling like her mouth belongs to someone else. Find out what she wants, and end it. However you have to.",
+			"options": [
+				{ "text": "I'll see to it.", "end": true },
+				{ "text": "One more thing.", "goto": "hub" }
+			]
+		},
+		"witches_topic": {
+			"speaker": "The Headman",
+			"text": "We didn't USE to truck with witches, I mean. Things change when the harvest doesn't. Everyone's something these days, I suppose. Even me, apparently, since I sent someone door to door instead of walking out there myself.",
+			"options": [
+				{ "text": "Back to it.", "goto": "hub" },
+				{ "text": "Fair enough.", "end": true }
+			]
+		},
+		"reported": {
+			"speaker": "The Headman",
+			"text": "Handled. Good. I won't ask how -- a man learns when not to ask, running a village long enough. Whatever you did, thank you. Truly.",
+			"options": [
+				{ "text": "Glad to help.", "end": true }
+			]
+		}
+	}
+}

@@ -6314,6 +6314,7 @@
     },
     {
      "_comment": "The communal longhouse -- the village's quest-giver anchor (the headman's own doorway). 7x4 sprite, block ~7x2 (handoff sec: 'door centered').",
+     "_comment": "R3 (issue #11): the BRIGHTEN visual_states -- default tint is the pre-resolution washed-out blight read (R1 shipped no tint at all, one state only); `blight_lifted` swaps to a warm harvest-light tint, matching the direction card's own day palette. The map itself is the quest's reward readout.",
      "id": "riverfarm_longhouse_prop",
      "kind": "prop",
      "cell": [
@@ -6322,9 +6323,27 @@
      ],
      "display_name": "The Longhouse",
      "sprite": "riverfarm_longhouse",
+     "tint": [
+      0.68,
+      0.72,
+      0.66
+     ],
      "observe": "One long thatch ridge, twice the width of any cottage. Smoke curls from a vent at the peak even in daylight.",
      "on_interact_accomplishment": "observed_riverfarm_longhouse",
-     "toast": "The communal hall. Smells like woodsmoke and old stew."
+     "toast": "The communal hall. Smells like woodsmoke and old stew.",
+     "visual_states": [
+      {
+       "when": {
+        "counter": "blight_lifted",
+        "at": 1
+       },
+       "tint": [
+        1.08,
+        1.0,
+        0.82
+       ]
+      }
+     ]
     },
     {
      "id": "riverfarm_cottage_a",
@@ -6335,9 +6354,27 @@
      ],
      "display_name": "A Thatched Cottage",
      "sprite": "cottage_thatch_a",
+     "tint": [
+      0.68,
+      0.72,
+      0.66
+     ],
      "observe": "Clay-daub walls, a low thatch roof. A washing line strung between two posts.",
      "on_interact_accomplishment": "observed_riverfarm_cottage",
-     "toast": "Someone's home. Best not to just walk in."
+     "toast": "Someone's home. Best not to just walk in.",
+     "visual_states": [
+      {
+       "when": {
+        "counter": "blight_lifted",
+        "at": 1
+       },
+       "tint": [
+        1.08,
+        1.0,
+        0.82
+       ]
+      }
+     ]
     },
     {
      "id": "riverfarm_cottage_b",
@@ -6348,9 +6385,27 @@
      ],
      "display_name": "A Thatched Cottage",
      "sprite": "cottage_thatch_b",
+     "tint": [
+      0.68,
+      0.72,
+      0.66
+     ],
      "observe": "A second cottage, smaller, its thatch newer than its neighbor's.",
      "on_interact_accomplishment": "observed_riverfarm_cottage",
-     "toast": "Someone's home. Best not to just walk in."
+     "toast": "Someone's home. Best not to just walk in.",
+     "visual_states": [
+      {
+       "when": {
+        "counter": "blight_lifted",
+        "at": 1
+       },
+       "tint": [
+        1.08,
+        1.0,
+        0.82
+       ]
+      }
+     ]
     },
     {
      "_comment": "The tall silhouette that reads 'farming village' from anywhere on the map (art direction card, landmark read 1). Anchor.y is the base masonry, not frame bottom -- sails overhang above the blocked footprint.",
@@ -6362,9 +6417,27 @@
      ],
      "display_name": "The Windmill",
      "sprite": "riverfarm_windmill",
+     "tint": [
+      0.68,
+      0.72,
+      0.66
+     ],
      "observe": "Sails turning slow in whatever wind there is. The grinding floor above the wheat fields.",
      "on_interact_accomplishment": "observed_riverfarm_windmill",
-     "toast": "The sails creak overhead. No one's tending it right now."
+     "toast": "The sails creak overhead. No one's tending it right now.",
+     "visual_states": [
+      {
+       "when": {
+        "counter": "blight_lifted",
+        "at": 1
+       },
+       "tint": [
+        1.08,
+        1.0,
+        0.82
+       ]
+      }
+     ]
     },
     {
      "id": "riverfarm_well",
@@ -6375,9 +6448,27 @@
      ],
      "display_name": "The Village Well",
      "sprite": "riverfarm_well",
+     "tint": [
+      0.68,
+      0.72,
+      0.66
+     ],
      "observe": "A stone-ringed well, rope worn smooth by years of hauling. The water's clean this far from the blight talk.",
      "on_interact_accomplishment": "observed_riverfarm_well",
-     "toast": "Cool water, a long way down. You leave the rope where you found it."
+     "toast": "Cool water, a long way down. You leave the rope where you found it.",
+     "visual_states": [
+      {
+       "when": {
+        "counter": "blight_lifted",
+        "at": 1
+       },
+       "tint": [
+        1.08,
+        1.0,
+        0.82
+       ]
+      }
+     ]
     },
     {
      "id": "riverfarm_haystack",
@@ -6492,7 +6583,7 @@
      "observe": "Low fence rail, bordering the tilled rows."
     },
     {
-     "_comment": "The headman -- quest-giver (R3's job to wire the real conversation graph; R1 ships talk_pool + observe only, per the plan's own scope split). Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway.",
+     "_comment": "The headman -- quest-giver. R3 (issue #11) wires the real conversation graph (riverfarm_headman.json): gives price_of_a_favor, closes it on any path's blight_lifted. Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway.",
      "id": "riverfarm_headman",
      "kind": "npc",
      "cell": [
@@ -6508,6 +6599,7 @@
       "Sorry, I don't mean to- never mind. Long nights lately."
      ],
      "observe": "A ledger under one arm, mud to the knee, the look of a man doing three jobs badly instead of one job well.",
+     "conversation": "riverfarm_headman",
      "dialogue": [
       {
        "speaker": "The Headman",
@@ -6516,7 +6608,7 @@
      ]
     },
     {
-     "_comment": "The charmed villager -- the quest's pivot (R3 wires the reveal/free chain). talk_pool carries the ONE echo_of entry (locked shape 3): WISocial resolves it to riverfarm_witch's CURRENT pool line verbatim at pick time.",
+     "_comment": "The charmed villager -- the quest's pivot. talk_pool carries the ONE echo_of entry (locked shape 3): WISocial resolves it to riverfarm_witch's CURRENT pool line verbatim at pick time. R3 (issue #11) retires the tell via talk_pool_stages (the existing pool-stage machinery, social.gd's last-met-wins walk): once blight_lifted lands, the freed-villager stage's OWN plain-string lines fully replace the echo_of entry -- no more echo, ever, any path.",
      "id": "riverfarm_charmed_villager",
      "kind": "npc",
      "cell": [
@@ -6531,7 +6623,21 @@
        "echo_of": "riverfarm_witch"
       }
      ],
+     "talk_pool_stages": [
+      {
+       "id": "riverfarm_villager_freed",
+       "requires_accomplishment": {
+        "blight_lifted": 1
+       },
+       "lines": [
+        "Thank you. I don't think I said that right the first ten times I tried.",
+        "I keep counting days like the price is still running. Old habit. I'll lose it eventually.",
+        "Ask me again sometime, once I've had more practice sounding like myself."
+       ]
+      }
+     ],
      "observe": "Ordinary, except for how still they stand, and a faint red thread at the wrist that doesn't match anything else they're wearing.",
+     "conversation": "riverfarm_villager",
      "dialogue": [
       {
        "speaker": "A Villager",
@@ -6581,7 +6687,7 @@
      "observe": "A narrow break in the treeline, west of the fields. The light changes past the first few trees."
     },
     {
-     "_comment": "LOCKED interface (8b plan): encounter id river_wolf_pack, arena village_edge_night, on_victory survived_wolf_night (lane beta/R2). encounter_when is the phase-conditional spawn gate (spec sec.5) -- checked at interact() and _check_trigger_radius(), same sites door_when-class gates already run. trigger_radius 1 gives the NIGHT ambush read R2's harness rationale calls for; at day the gate refuses BEFORE start_combat runs (canonical-pinned NEGATIVE, riverfarm_walkthrough).",
+     "_comment": "LOCKED interface (8b plan): encounter id river_wolf_pack, arena village_edge_night, on_victory survived_wolf_night (lane beta/R2). encounter_when is the phase-conditional spawn gate (spec sec.5) -- checked at interact() and _check_trigger_radius(), same sites door_when-class gates already run. trigger_radius 1 gives the NIGHT ambush read R2's harness rationale calls for; at day the gate refuses BEFORE start_combat runs (canonical-pinned NEGATIVE, riverfarm_walkthrough). R3 (issue #11) wires the ally: sim_combat_batch.gd's river_wolf_pack_w10_relc cell (0.84 measured win rate) is the harness's own with-Relc tuning intent -- solo measures 0.22, unfit for a real player leg. allies/ally_requires mirrors rift_vermin_leak's exact shape (met_relc gate, relc joins).",
      "id": "river_wolf_pack",
      "kind": "encounter",
      "cell": [
@@ -6605,7 +6711,12 @@
      "trigger_radius": 1,
      "observe": "Eyes catch the light at the field's edge, gone again when you look straight at them. Only after dark.",
      "gate_closed_toast": "Nothing there. Whatever you saw is gone with the light.",
-     "allies": []
+     "allies": [
+      "relc"
+     ],
+     "ally_requires": {
+      "met_relc": 1
+     }
     }
    ]
   },
@@ -7036,6 +7147,60 @@
      "observe": "Another of the ring-stones, humming faintly if you hold still."
     },
     {
+     "_comment": "R3 (issue #11) SKILL gauntlet, prop 1 of 3: 'cook the offering' (basic_cooking). Field-skill first-use idiom (stew_pot/cellar_door precedent) -- requires_skill + on_skill_use, unordered relative to the other two props (no sequencing gate exists in this seam; the QA canonical performs them in narrative order). Reuses the registered `cauldron` sprite (stew_pot's own sprite), west of the cottage door.",
+     "id": "hollow_offering_pot",
+     "kind": "prop",
+     "cell": [
+      2,
+      7
+     ],
+     "display_name": "A Waiting Pot",
+     "sprite": "cauldron",
+     "requires_skill": "basic_cooking",
+     "locked_toast": "Something's meant to go in this, cooked properly. You don't know your way around a stew pot. Yet.",
+     "on_skill_use": {
+      "accomplishment": "cooked_the_offering",
+      "toast": "[Basic Cooking] — You cook the offering plain and honest, the way you'd feed anyone who'd walked far to eat."
+     },
+     "observe": "An iron pot set by the cottage door, empty and waiting. Someone means for it to be used."
+    },
+    {
+     "_comment": "R3 (issue #11) SKILL gauntlet, prop 2 of 3: 'light the threshold candles' ([Light]). Reuses the registered `unlit_lantern` sprite (the [Light] skill's own established prop), east of the cottage door -- the other flank of the threshold from hollow_offering_pot.",
+     "id": "hollow_threshold_candles",
+     "kind": "prop",
+     "cell": [
+      4,
+      7
+     ],
+     "display_name": "Threshold Candles",
+     "sprite": "unlit_lantern",
+     "requires_skill": "light",
+     "locked_toast": "A row of cold candle-stubs, set either side of the door. Whatever lights them, it isn't a match.",
+     "on_skill_use": {
+      "accomplishment": "lit_the_threshold_candles",
+      "toast": "[Light] — The candles catch, one after another, without a flame ever touching them."
+     },
+     "observe": "Cold wax and old wicks, set along the threshold like they're waiting for something specific."
+    },
+    {
+     "_comment": "R3 (issue #11) SKILL gauntlet, prop 3 of 3: 'observe the true knot' ([Observe]). Placed in the empty center of the standing-stone triangle (hollow_glow_1/2/3's own cells) -- the ritual clearing the spec calls out. THIS is the SKILL path's convergence bank: completing the gauntlet yourself IS the resolution, no separate report needed (unlike the cisterns_scout/wrong_order precedent, whose single skill action needed a consult-NPC report to close the loop) -- reuses the registered `hollow_mushroom_cluster` sprite (previously decor-only) as a distinct interactive tangle, visually apart from the standing stones themselves.",
+     "id": "hollow_true_knot",
+     "kind": "prop",
+     "cell": [
+      8,
+      10
+     ],
+     "display_name": "A Tangled Knot",
+     "sprite": "hollow_mushroom_cluster",
+     "requires_skill": "observe",
+     "locked_toast": "Roots and briar, knotted tighter than any plant ties itself. Whatever it's holding, an untrained eye won't find it.",
+     "on_skill_use": {
+      "accomplishment": "blight_lifted",
+      "toast": "[Observe] — The knot isn't wood at all, once you look right at it: a price, tied off and waiting to be paid. You pay it yourself, plainly, and the tension goes out of the air like a held breath let go."
+     },
+     "observe": "A snarl of root and briar at the center of the standing stones, tied in a knot that doesn't look like it grew that way."
+    },
+    {
      "id": "riverfarm_witch",
      "kind": "npc",
      "cell": [
@@ -7051,6 +7216,20 @@
       "The craft has manners, whatever they say about me in the village."
      ],
      "observe": "Green wool, a walking stick within reach, and a thread of red at the wrist that doesn't match anything else she's wearing.",
+     "conversation": "riverfarm_witch",
+     "talk_pool_stages": [
+      {
+       "id": "riverfarm_witch_paid",
+       "requires_accomplishment": {
+        "blight_lifted": 1
+       },
+       "lines": [
+        "Paid, one way or another. I don't ask which. Sit if you like.",
+        "The village sleeps easier. So do I, honestly, though I'd deny that if the headman asked.",
+        "I keep a little stock for coin now, for anyone who'd rather not owe me anything."
+       ]
+      }
+     ],
      "dialogue": [
       {
        "speaker": "The Witch",
@@ -7070,7 +7249,7 @@
      ]
     },
     {
-     "_comment": "LOCKED interface: arena witch_hollow, on_victory drove_off_collectors (lane beta/R2). The 'shallow' variant, near the entrance path.",
+     "_comment": "LOCKED interface: arena witch_hollow, on_victory drove_off_collectors (lane beta/R2). The 'shallow' variant, near the entrance path. R3 (issue #11) wires the ally: sim_combat_batch.gd's briar_collectors_w10_relc cell is the harness's OWN gated band (0.55-0.95, measured 0.71) -- the _solo sibling is explicitly ungated and measures 0.10, structurally unfit for a real FIGHT-path leg. allies/ally_requires mirrors rift_vermin_leak's shape exactly (met_relc gate, relc joins).",
      "id": "briar_collectors",
      "kind": "encounter",
      "cell": [
@@ -7086,10 +7265,15 @@
      ],
      "on_victory": "drove_off_collectors",
      "observe": "Briars, moving without wind. They haven't noticed you yet.",
-     "allies": []
+     "allies": [
+      "relc"
+     ],
+     "ally_requires": {
+      "met_relc": 1
+     }
     },
     {
-     "_comment": "LOCKED interface: same arena/on_victory as the shallow briar_collectors (both fights share the witch_hollow arena template, lane beta/R2). The 'deep' variant, further from the entrance, past the cottage.",
+     "_comment": "LOCKED interface: same arena as the shallow briar_collectors (both fights share the witch_hollow arena template, lane beta/R2). The 'deep' variant, further from the entrance, past the cottage -- the escalation R2 tuned (briar_collectors_deep_w10_relc: 0.55-0.85 gated, measured 0.74). R3 (issue #11): on_victory now banks blight_lifted ALONGSIDE drove_off_collectors -- clearing the deeper wave (the craft's real source, per spec sec.3) is the FIGHT path's convergence, same shared flag TALK/SKILL bank via their own routes. allies/ally_requires mirrors the shallow wave's relc wiring.",
      "id": "briar_collectors_deep",
      "kind": "encounter",
      "cell": [
@@ -7103,9 +7287,17 @@
       "briar_collector_deep_a",
       "briar_collector_deep_b"
      ],
-     "on_victory": "drove_off_collectors",
+     "on_victory": [
+      "drove_off_collectors",
+      "blight_lifted"
+     ],
      "observe": "More briars, thicker here, coiled tight around something you can't quite see.",
-     "allies": []
+     "allies": [
+      "relc"
+     ],
+     "ally_requires": {
+      "met_relc": 1
+     }
     },
     {
      "id": "hollow_village_path",
