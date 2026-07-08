@@ -3282,8 +3282,10 @@
      "ally_requires": {
       "met_relc": 1
      },
+     "_comment": "This arena's own tutor_lines close on road_clear's sign line (\"See the sign? Her inn, her rule. But under her roof? Don't.\") -- the shipped resolution moment for holding the inn's no-killing-goblins rule on the road. sign_defended banks alongside won_combat here (additive counter, fires every clear -- `respawns: true` means this can retrigger); the Garden gate's K-of-4 reads it via plain accomplishment_count, absent-as-zero before this landed.",
      "on_victory": [
-      "won_combat"
+      "won_combat",
+      "sign_defended"
      ],
      "loot": [
       {

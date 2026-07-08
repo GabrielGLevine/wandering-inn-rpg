@@ -808,6 +808,16 @@
    "name": "confirm"
   },
   {
+   "_comment": "resolve_combat() runs on the confirm dismiss, not at combat_finished -- goblin_encounter_1's on_victory bank fires here: sign_defended, the Garden gate's own K-of-4 leg for holding the sign's rule on the road.",
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "sign_defended",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "wait_for_event",
    "type": "ui_combat_hidden",
    "timeout_sec": 5

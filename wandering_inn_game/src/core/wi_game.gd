@@ -2673,20 +2673,15 @@ func _holds_consolidated_class() -> bool:
 ## The four ratified legs: `cleaned_the_inn` (Helper's own `gained_by`
 ## threshold -- the most direct shipped "did real inn work" signal, standing
 ## in for the "worked_the_inn-class counters" plural framing in the plan);
-## `goblins_spared` (issue #26, traced and confirmed NOT YET a producer in
-## this worktree -- reads 0 via plain counter semantics, exactly the
-## Global Constraints' pre-blessed absent-as-zero case); `sign_defended`
-## (traced exhaustively -- goblin_encounter_1/_2/chieftains_raid/goblin_parley
-## all bank only `won_combat`/`street_cleared`, NEVER a distinct sign-tied id;
-## `read_the_inn_sign` is a flavor read, not a "defended" beat -- this leg
-## ALSO has no shipped producer today, a finding beyond what the plan flagged
-## for goblins_spared alone; see the G1 report); `resolved_wrong_order` (The
-## Wrong Order, live). K=2 is checked as a plain "how many of the 4 are
-## banked" count -- with two legs currently unproducible, the gate is REACHABLE
-## today only via {cleaned_the_inn, resolved_wrong_order} (both live), exactly
-## matching the Global Constraints' assurance that K=2 stays reachable through
-## the remaining legs while `goblins_spared` (and now `sign_defended`) await
-## their own producer tasks.
+## `goblins_spared` (issue #26, still no producer -- reads 0 via plain
+## counter semantics, the Global Constraints' pre-blessed absent-as-zero
+## case); `sign_defended` (banked by `goblin_encounter_1`'s on_victory --
+## the mandatory floodplains ambush whose arena closes on the road_clear
+## sign line; `read_the_inn_sign` stays a flavor-only read, not this leg's
+## producer); `resolved_wrong_order` (The Wrong Order, live). K=2 is a
+## plain "how many of the 4 clear their threshold" count -- reachable via
+## any two of the three live legs while `goblins_spared` awaits its own
+## producer task.
 func _garden_earn_met() -> bool:
 	if accomplishment_count("reached_two_classes") < 1 or _quests_completed_count() < 3:
 		return false
