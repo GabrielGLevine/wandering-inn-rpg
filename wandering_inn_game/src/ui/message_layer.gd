@@ -469,6 +469,24 @@ func _resize_toast_panel(text: String) -> void:
 ## pre-fix hardcoded offset) -- the panel grows UPWARD only, identical to
 ## how the toast panel grows (see `_apply_toast_position`'s doc comment),
 ## so nothing below it (the hint strip, the field hotbar) is encroached on.
+##
+## FOLD FIX (2026-07-08 hotfix wave): the old exact-fit `text_height + 24.0`
+## (12+12 margin, no slack) put a real 2nd-line bark flush against the
+## panel's bottom margin -- exactly where the PARCHMENT_STRIP art's
+## decorative fold band sits, sliced clean through line 2 (playtest
+## evidence: garden_walkthrough's Erin reveal line, gate_district_
+## walkthrough's Watch Guard bark). `_dialogue_panel` uses the SAME chrome
+## texture + STRIP_PATCH_MARGIN as `_toast_panel` (see `_ready()`), so the
+## fold's measured pixel depth from the panel's own bottom edge
+## (TOAST_FOLD_DANGER_PX) transfers directly -- no independent re-measure
+## needed. `_dialogue_label` is VERTICALLY CENTERED (UIChrome.make_label's
+## default), so any panel growth beyond the exact text fit splits equally
+## above/below the text block -- same "budget the danger zone TWICE" rule
+## as `_toast_panel_height_for` (only half of `2.0 * TOAST_FOLD_DANGER_PX`
+## actually lands below the text, which is the half that needs to clear the
+## fold). `_dialogue_text_height` itself stays the raw 2-line text-block
+## height -- `_fit_dialogue_line`'s wrap-capacity math must keep measuring
+## against exactly 2 lines of TEXT, not the padded panel height.
 func _resize_dialogue_panel() -> void:
 	var font := _dialogue_label.get_theme_font("font")
 	var font_size := _dialogue_label.get_theme_font_size("font_size")
@@ -477,7 +495,7 @@ func _resize_dialogue_panel() -> void:
 	_dialogue_text_height = DIALOGUE_LINE_CAPACITY * pitch - line_spacing
 	# 12 + 12 = the dialogue_margin's own top+bottom content margins (see
 	# `_ready()`'s `UIChrome.add_margins(dialogue_margin, 22, 12, 22, 12)`).
-	var panel_height := _dialogue_text_height + 24.0
+	var panel_height := maxf(_dialogue_text_height + 24.0, _dialogue_text_height + 2.0 * TOAST_FOLD_DANGER_PX)
 	_dialogue_panel.custom_minimum_size = Vector2(700.0, panel_height)
 	_dialogue_panel.size = Vector2(700.0, panel_height)
 	const DIALOGUE_BOTTOM := -164.0
