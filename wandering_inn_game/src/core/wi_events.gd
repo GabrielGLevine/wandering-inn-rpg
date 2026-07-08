@@ -199,6 +199,12 @@ const UI_PAUSE_HIDDEN := &"ui_pause_hidden"
 const UI_TITLE_RENDERED := &"ui_title_rendered"
 const UI_TITLE_GATE_RENDERED := &"ui_title_gate_rendered"
 const UI_TITLE_NOTICE_RENDERED := &"ui_title_notice_rendered"
+## Issue #43 (playtest state boot): title_screen.gd's confirmation that the
+## debug-only "Playtest States" picker opened. Payload `{count:int, pages:int}`
+## -- `count` is the total fixture entries discovered under `qa/fixtures/`,
+## `pages` is the derived page count at `PLAYTEST_PAGE_SIZE` rows/page. Fired
+## once per open (the UI_PAUSE_SHOWN idiom), not on every cursor move.
+const UI_PLAYTEST_LIST_RENDERED := &"ui_playtest_list_rendered"
 const UI_CONSOLIDATION_PROMPT_RENDERED := &"ui_consolidation_prompt_rendered"
 const UI_CONSOLIDATION_PROMPT_HIDDEN := &"ui_consolidation_prompt_hidden"
 ## Floodplains P1: declarative `arena_config["tutor_lines"]` feed handler in
