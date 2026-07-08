@@ -355,7 +355,7 @@ current-state-only, one short paragraph per live system.
 | `wrong_order_talk` | 9 (fixture) | "The Wrong Order" TALK path (Krshia smooth-over, no combat) |
 | `wrong_order_fight` | 9 (fixture) | "The Wrong Order" FIGHT path (clear `supplier_scavengers`) |
 | `economy_loop` | 9 (fixture `economy_loop_start`) | the coin arc: chore earn → loot → shop → spend |
-| `char_creation` | none | THE character-creation UI proof (race/gender/name picker) |
+| `char_creation` | none | THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name) |
 | `deep_descent` | 9 (fixture `deep_descent_start`) | the Raskghar descent + JOIN-Relc boss victory |
 | `climax_chain` | 9 (fixture `climax_surface_start`) | the tremor beat + Zevara summons + Olesm briefing |
 | `climax_seal` | 9 (fixture `climax_sealed_start`) | the seal beat + journal Act III advance |

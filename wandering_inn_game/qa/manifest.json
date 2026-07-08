@@ -42,7 +42,7 @@
     { "script": "wrong_order_talk", "seed": 9, "fixture": "wrong_order_talk_start", "note": "The Wrong Order TALK path (Krshia smooth-over, no combat)" },
     { "script": "wrong_order_fight", "seed": 9, "fixture": "wrong_order_fight_start", "note": "The Wrong Order FIGHT path (clear supplier_scavengers)" },
     { "script": "economy_loop", "seed": 9, "fixture": "economy_loop_start", "note": "the coin arc: chore earn -> loot -> shop -> spend" },
-    { "script": "char_creation", "seed": null, "note": "THE character-creation UI proof (race/gender/name picker)" },
+    { "script": "char_creation", "seed": null, "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name)" },
     { "script": "deep_descent", "seed": 9, "fixture": "deep_descent_start", "note": "the Raskghar descent + JOIN-Relc boss victory" },
     { "script": "climax_chain", "seed": 9, "fixture": "climax_surface_start", "note": "the tremor beat + Zevara summons + Olesm briefing" },
     { "script": "climax_seal", "seed": 9, "fixture": "climax_sealed_start", "note": "the seal beat + journal Act III advance" },
