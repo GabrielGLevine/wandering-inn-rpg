@@ -45,6 +45,9 @@ const EXPECTED_ITEMS := {
 	"parcel_watch_dispatch": [],
 	"parcel_lamp_phials": [],
 	"parcel_bluefruit_hamper": [],
+	# Issue #8 D3: Krshia's attunement catalyst (priced tool, no combat
+	# fields — the DF final review caught this pin missing on merged main).
+	"resonant_catalyst": ["Worth 35 gold"],
 	# Magical Door plan Task D1 (issue #8): the beat-3 recovery item -- inert
 	# carried flavor by design (no combat fields, no price, kind "tool" per
 	# the parcel/field_whetstone precedent), so its card carries name +
