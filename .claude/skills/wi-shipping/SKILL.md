@@ -57,6 +57,14 @@ verdict → security posture) lives in the wi-handling-prs skill — use
 it for every external PR.**
 
 ## Gotchas (each cost a real failure)
+- **release.yml fetches the assets repo's LATEST release** (no tag pin) —
+  a `potential-assets-vN` release created AFTER the newest bundle would
+  become Latest and get overlaid as if it were the bundle. Cut every
+  potential-assets release with `--prerelease` (prereleases never win
+  Latest); pre-tag checklist: `gh release list -R ...-assets` and confirm
+  the newest bundle carries the Latest badge. (potential-assets-v1
+  predates bundle-v4 so 2026-07-08 is safe; the controller couldn't
+  retro-mark it prerelease — permission-gated, flagged to user.)
 - Butler broth host is **broth.itch.zone** (`.ovh` is dead — first-tag
   failure 2026-07-06).
 - **Butler does NOT auto-create the itch page** with a wharf key

@@ -86,7 +86,8 @@ jobs:
       - name: (a) Fetch private asset bundle
         env:
           GH_TOKEN: ${{ secrets.PRIVATE_ASSETS_TOKEN }}
-          # ⚠️ PLACEHOLDER — replace with the real private assets repo (owner/name).
+          # Downloads the LATEST release's tarball — parked potential-assets-vN
+          # releases in the assets repo must stay PRERELEASE or they shadow the bundle.
           PRIVATE_ASSETS_REPO: "GabrielGLevine/wandering-inn-rpg-assets"
         run: |
           set -euo pipefail
