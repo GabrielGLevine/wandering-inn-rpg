@@ -1,5 +1,5 @@
 {
- "_comment": "M-ARC A3 (climax_seal): POST-victory surface state. Act II complete + reached_liscor (so WIActs sits at Act II) with cleared_the_warren banked but raskghar_sealed NOT yet -- the seal dialogue banks it live, advancing the journal to Act III. Standing on the street (2,7 facing UP toward Zevara at 2,6). Pre-banks watch_runner_pointed/heard_the_deep_tremor/heard_olesm_briefing so Zevara's summons + Olesm's briefing options are hidden (already done) and only the seal/resolution options show. rng_state 9 (no combat in the path).",
+ "_comment": "climax_seal's POST-victory surface state. Act II complete + reached_liscor (so WIActs sits at Act II) with cleared_the_warren banked but raskghar_sealed NOT yet -- the seal dialogue banks it live, advancing the journal to Act III. Standing on the street (2,7 facing UP toward Zevara at 2,6). Pre-banks watch_runner_pointed/heard_the_deep_tremor/heard_olesm_briefing so Zevara's summons + Olesm's briefing options are hidden (already done) and only the seal/resolution options show. rng_state 9 (no combat in the path).",
  "version": 5,
  "state": {
   "current_map": "street",

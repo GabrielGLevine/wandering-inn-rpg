@@ -1,5 +1,5 @@
 {
- "_comment": "Onboarding rev O5: dedicated fixture for defeat_ally_alive. Identical to post_tutorial (warrior L1, met_relc, floodplains 7,6) EXCEPT rng_state, tuned so the level_up_loop-style route's FIGHT 2 (chieftains_raid, after fight1+sleep have advanced the rng) has the PC drop while Relc survives -- the canonical PC-death-defeat scenario. Separate fixture so its rng can differ from post_tutorial's (which level_up_loop pins to a fight-2 WIN).",
+ "_comment": "Dedicated fixture for defeat_ally_alive. Identical to post_tutorial (warrior L1, met_relc, floodplains 7,6) EXCEPT rng_state, tuned so the level_up_loop-style route's FIGHT 2 (chieftains_raid, after fight1+sleep have advanced the rng) has the PC drop while Relc survives -- the canonical PC-death-defeat scenario. Separate fixture so its rng can differ from post_tutorial's (which level_up_loop pins to a fight-2 WIN).",
  "version": 5,
  "state": {
   "current_map": "floodplains",

@@ -1,5 +1,5 @@
 {
- "_comment": "Content Wave C3 Quest 1 FIGHT path start. post_tutorial shape (warrior L1, met/sparred/given_spear, rusty_sword equipped) standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). heard_about_cisterns is NOT banked and the quest is NOT started -- the script proves the full give -> grate -> descend -> clear the nest -> report -> completion loop honestly. rng_state tuned so the warrior-L1-solo shield_spiders fight (C1 harness: ~0.74 win) lands a victory (fixture rng overrides --seed).",
+ "_comment": "Quest 1 FIGHT path start. post_tutorial shape (warrior L1, met/sparred/given_spear, rusty_sword equipped) standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). heard_about_cisterns is NOT banked and the quest is NOT started -- the script proves the full give -> grate -> descend -> clear the nest -> report -> completion loop honestly. rng_state tuned so the warrior-L1-solo shield_spiders fight (C1 harness: ~0.74 win) lands a victory (fixture rng overrides --seed).",
  "version": 5,
  "state": {
   "current_map": "street",

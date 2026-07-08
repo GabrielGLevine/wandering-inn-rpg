@@ -1,5 +1,5 @@
 {
- "_comment": "Magical Door plan Task D4 (issue #8): portal_menu's start (FIXTURE-FIRST -- the awakening chain itself is covered live by door_awakening, so this canonical starts PAST it, door_awakened already banked). Classless, standing at (9,6) facing right in the inn -- the D1-confirmed free interior cell immediately west of pantry_door (10,6), the SAME cell data/portals.json's `the_wandering_inn` row uses as its own arrival point (so the return trip in this script lands the PC back on the exact cell they started at, a clean round-trip proof).",
+ "_comment": "portal_menu's start (FIXTURE-FIRST -- the awakening chain itself is covered live by door_awakening, so this canonical starts PAST it, door_awakened already banked). Classless, standing at (9,6) facing right in the inn -- the confirmed free interior cell immediately west of pantry_door (10,6), the SAME cell data/portals.json's `the_wandering_inn` row uses as its own arrival point (so the return trip in this script lands the PC back on the exact cell they started at, a clean round-trip proof).",
  "version": 5,
  "state": {
   "current_map": "inn",
