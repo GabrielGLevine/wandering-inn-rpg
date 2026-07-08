@@ -12,7 +12,7 @@ var grid_size: Vector2i
 var current_map: String = ""
 var player_cell: Vector2i
 var player_facing := Vector2i.RIGHT
-## M-ARC §5 character creation (COSMETIC identity, zero mechanical effect).
+## Character creation (COSMETIC identity, zero mechanical effect).
 ## Set ONCE at New Game from the creation screen (via the ctor's
 ## `creation_config`), never mutated after; additive save fields with tolerant
 ## defaults (see save.gd). NO sim rule ever branches on these.
@@ -38,18 +38,18 @@ var classes: Dictionary = {}
 var combat: WICombat = null
 ## Active conversation walker, or null when no dialogue is open.
 var dialogue: WIDialogue = null
-## Quest ids started during this run; full quest state arrives in Task 5.
+## Quest ids started during this run.
 var started_quests: Array[String] = []
 ## Entity ids removed from their owning maps during this run.
 var removed_entities: Array[String] = []
-## Respawning encounters beaten since the last sleep (M6 §2.2): victory over
+## Respawning encounters beaten since the last sleep: victory over
 ## a `respawns: true` encounter leaves the entity on its map but dormant —
 ## start_combat refuses it — until the next sleep beat re-arms it.
 var dormant_encounters: Array[String] = []
-## Class ids that have taken the generalist evolution path (M6 T3, mage
+## Class ids that have taken the generalist evolution path (mage
 ## only today): identity-locked, never re-evolves even if later dominant.
 var generalist_classes: Array[String] = []
-## UI wave item 19: a SET (not a counter) of every skill id the PC has ever
+## A SET (not a counter) of every skill id the PC has ever
 ## actually used/cast, once ever — gates the journal's skills-by-class panel
 ## (canon reveal: pre-first-use a skill shows NAME ONLY, post-first-use the
 ## full static description). Recorded from BOTH the exploration `use_skill`
@@ -57,11 +57,11 @@ var generalist_classes: Array[String] = []
 ## per-encounter on `WICombat.used_skills_tally` (mirroring `action_tally`'s
 ## shape) and merged in here by `resolve_combat`, UNCONDITIONALLY, before the
 ## victory/trivial branch — a trivial fight (the Relc spar) suppresses the
-## ACCOMPLISHMENT tally bank (`_bank_action_tally`) but must NOT suppress this
+## accomplishment tally bank (`_bank_action_tally`) but must NOT suppress this
 ## set, so the merge deliberately does not share that gate. Additive save
 ## field (tolerant default [], see save.gd).
 var used_skills: Array[String] = []
-## M-LEGIBILITY L4: a SET of every combat status id the player has ever
+## A SET of every combat status id the player has ever
 ## WATCHED apply (any combatant's application counts — the PC watched it
 ## happen even when an enemy was the target, e.g. frost_bolt slowing a
 ## goblin), gating the journal's Effects glossary AND the first-encounter
@@ -77,87 +77,83 @@ var used_skills: Array[String] = []
 ## `seen_statuses` must already be correct for QA to assert by then).
 ## Additive save field (tolerant default [], see save.gd).
 var seen_statuses: Array[String] = []
-## The consolidation offer awaiting a player answer (M6 T5, spec §2.5 REV 2),
+## The consolidation offer awaiting a player answer,
 ## or an empty Dictionary when nothing is pending. Set by `sleep()` when
 ## `WIProgression.check_consolidation` fires; cleared by whichever of
 ## `accept_consolidation`/`decline_consolidation` answers it. Shape:
 ## `{parents: [a, b], target, level}` (see WIProgression.check_consolidation).
 var pending_consolidation: Dictionary = {}
-## Item ids currently carried by the PC (M7 §2). No stacking (spec §6 YAGNI)
+## Item ids currently carried by the PC. No stacking
 ## -- an id appears at most once; `pickup` is idempotent on a repeat pickup
 ## of an already-carried item. Additive save field (v5, see save.gd).
 var inventory: Array[String] = []
 ## Currently equipped items by slot, `{"weapon": id, "armor": id,
 ## "accessory_1": id, "accessory_2": id, "accessory_3": id}` -- `""` means the
-## slot is empty (M7 §2; M-GEAR Task G1 added the three accessory slots).
+## slot is empty.
 ## INVARIANT: every non-empty value here is also present in `inventory` --
 ## `equip()` enforces this by requiring possession before equipping, and
-## nothing in this milestone ever removes an item from `inventory` while it
+## nothing currently removes an item from `inventory` while it
 ## is equipped, so the invariant can never be broken by the sim's own API
 ## surface. Additive save field (v5) -- the three accessory keys are read
-## TOLERANTLY (`.get(key, "")`), so a pre-G1 save/scene-config carrying only
+## TOLERANTLY (`.get(key, "")`), so a save/scene-config carrying only
 ## the original 2-key shape restores exactly as if it always had three empty
 ## accessory slots (no migration, no version bump; see save.gd).
 var equipped: Dictionary = {WIKeys.WEAPON: "", "armor": "", "accessory_1": "", "accessory_2": "", "accessory_3": ""}
-## M-GEAR Task G1: the PC's resonance budget -- a VISIBLE currency (like gold/
+## The PC's resonance budget -- a VISIBLE currency (like gold/
 ## HP: fine in toasts/events/copy, never a raw hidden stat) that caps how much
 ## combined `data/items.json` "resonance" an equipped loadout may carry across
 ## ALL 5 slots (weapon/armor/accessory_1-3 alike -- data decides whether a
 ## weapon or armor entry carries a nonzero resonance too, the sim just sums
-## whatever `item()` reports). Every M7-era item is uncatalogued for
+## whatever `item()` reports). Every item currently in the catalog is uncatalogued for
 ## `resonance` and counts 0 (`item(id).get(WIKeys.RESONANCE, 0)`), so this budget
-## is inert today; G2 is the first task that ships items with a real nonzero
+## is inert until an item ships with a real nonzero
 ## value. Default 2. Capacity GROWTH is a later beat -- this field exists and
 ## round-trips (additive-optional save field, tolerant default 2, NO version
-## bump -- the generalist_classes/gold precedent) but nothing in this
-## milestone ever mutates it.
+## bump) but nothing currently mutates it.
 var resonance_capacity: int = 2
 ## Container entity id -> true once its `contains` list has been emptied by
-## an interact. M7 Task E2 declares and persists this shape only -- the
-## interact-side logic that populates it is Task E3's. Additive save field (v5).
+## an interact. Additive save field (v5).
 var container_state: Dictionary = {}
-## M7 M-BEAUTY FOLD (controller amendment): count of player actions (a
+## Count of player actions (a
 ## successful move, any interact attempt, or the PC's own combat turns)
 ## since the last `sleep()`. A pure clock -- consumes no rng and nothing
-## renders it this milestone (a future Beauty/mood pilot is the first real
+## renders it today (a future Beauty/mood pilot is the first real
 ## consumer). See `_tick_action` for the single site that mutates it,
 ## `phase()` for the pure classifying reader, and `_combat_event_relay` for
 ## how a combat turn reaches this counter without touching wi_combat.gd's
 ## runtime code. Additive save field (v5).
 var actions_since_sleep: int = 0
-## Economy v1 Task D1: the PC's coin purse. DIEGETIC money (user call), not a
+## The PC's coin purse. DIEGETIC money (user call), not a
 ## hidden stat -- the opaque-until-sleep rule does NOT apply (coins are
 ## countable in-world objects); earn/spend TOASTS + the inventory coin line
-## (D3) display it, never an always-on HUD counter. Mutated ONLY through
+## display it, never an always-on HUD counter. Mutated ONLY through
 ## `earn_gold`/`spend_gold` (both emit `gold_changed` + a toast); `spend_gold`
 ## REFUSES when short (no debt). Additive save field (tolerant default 0, NO
-## version bump -- see save.gd, the used_skills/generalist_classes precedent).
+## version bump -- see save.gd).
 var gold: int = 0
-## M-DEPTH DP2 (THE REQUEST BOARD): a monotonic count of sleeps taken this
+## THE REQUEST BOARD: a monotonic count of sleeps taken this
 ## run, incremented unconditionally in `sleep()` -- the rotation clock for
 ## `board_bounties()` (WIBounties.active_slate: `times_slept % pool.size()`,
 ## zero rng, the talk-pool rotation idiom applied to a pool of postings
 ## instead of a pool of strings) and the "slate rotated overnight" line's
 ## seen/unseen tracking (`board_last_seen_times_slept` below). Additive save
-## field (tolerant default 0, NO version bump -- the gold/generalist_classes
-## precedent).
+## field (tolerant default 0, NO version bump).
 var times_slept: int = 0
-## M-DEPTH DP2: the id of the ONE bounty currently accepted, or "" when the
-## player holds no posting (v1 simplification, disclosed in the DP2 report:
-## Selys won't log a second job while one's outstanding -- "Take on a
-## posting." hides once this is non-empty). Additive save field (tolerant
-## default "", NO version bump).
+## The id of the ONE bounty currently accepted, or "" when the
+## player holds no posting: Selys won't log a second job while one's
+## outstanding -- "Take on a posting." hides once this is non-empty.
+## Additive save field (tolerant default "", NO version bump).
 var accepted_bounty_id: String = ""
-## M-DEPTH DP2: the DELTA-SINCE-ACCEPT baseline for the currently accepted
+## The DELTA-SINCE-ACCEPT baseline for the currently accepted
 ## bounty's condition, `{accomplishment_id: count_at_accept}` -- snapshotted
 ## in `accept_bounty()`, read by `WIBounties.condition_met` (current count
-## MINUS this baseline, never an absolute read; the staging doc's binding
-## semantics call, guarding against a mid-game player insta-completing a
-## rotating cull off counters banked before they took the posting). Empty
+## MINUS this baseline, never an absolute read -- guards against a mid-game
+## player insta-completing a rotating cull off counters banked before they
+## took the posting). Empty
 ## when no bounty is accepted. Additive save field (tolerant default {}, NO
 ## version bump).
 var accepted_bounty_baseline: Dictionary = {}
-## M-DEPTH DP2: the `times_slept` value the player last opened the board's
+## The `times_slept` value the player last opened the board's
 ## accept picker at -- lets `_open_board_picker_dialogue` show Selys's "New
 ## paper went up this morning" line exactly once per rotation the player
 ## hasn't seen yet (compares against the LIVE `times_slept`, updated to match
@@ -165,20 +161,20 @@ var accepted_bounty_baseline: Dictionary = {}
 ## matching `times_slept`'s own default so a fresh save never false-positives
 ## a rotation that hasn't happened yet).
 var board_last_seen_times_slept: int = 0
-## M-DEPTH DP5 (the Runner's Guild): the id of the ONE delivery currently
+## The id of the ONE delivery currently
 ## accepted, or "" when none -- same one-job-at-a-time simplification as
 ## `accepted_bounty_id` (Vess's "Take a slip." hides while this is
 ## non-empty), and a SEPARATE slot from it (a bounty and a delivery are
-## independent systems; holding one of each is legal, disclosed in the DP5
-## report). UNLIKE a bounty, this is cleared by `sleep()` itself on a run
+## independent systems; holding one of each is legal). UNLIKE a bounty,
+## this is cleared by `sleep()` itself on a run
 ## failure (see `delivery_failed` below) as well as by a normal turn-in --
-## deliveries have a built-in exit valve a bounty never had pre-fix-wave
+## deliveries have a built-in exit valve a bounty never had
 ## (the sleep-fail IS the abandon: no pay, no penalty, parcel returned), so
-## no dedicated "hand it back" option was needed (traced explicitly; see
+## no dedicated "hand it back" option was needed (see
 ## `sleep()`'s delivery block). Additive save field (tolerant default "",
 ## NO version bump).
 var accepted_delivery_id: String = ""
-## M-DEPTH DP5: the DELTA-SINCE-ACCEPT baseline for the currently accepted
+## The DELTA-SINCE-ACCEPT baseline for the currently accepted
 ## delivery's condition -- the exact `accepted_bounty_baseline` shape and
 ## contract (snapshotted in `accept_delivery()`, read by
 ## `WIBounties.condition_met`, cleared with the slip). Every shipped
@@ -188,7 +184,7 @@ var accepted_delivery_id: String = ""
 ## would insta-complete the second acceptance. Additive save field
 ## (tolerant default {}, NO version bump).
 var accepted_delivery_baseline: Dictionary = {}
-## M-DEPTH DP5: true the moment a delivery run fails at `sleep()` (accepted
+## True the moment a delivery run fails at `sleep()` (accepted
 ## but not yet delivered), surfaced exactly once at Vess's counter
 ## (`_open_delivery_picker_dialogue`'s "Parcel came back on the night
 ## ledger" bark) then cleared -- the delivery-loop's own one-shot bark,
@@ -196,8 +192,8 @@ var accepted_delivery_baseline: Dictionary = {}
 ## line but boolean (a discrete failure event) rather than a rotation-clock
 ## comparison. Additive save field (tolerant default false, NO version bump).
 var delivery_failed: bool = false
-## GH#27 (delivery-slate rotation signpost): `board_last_seen_times_slept`'s
-## MISSING twin -- before this field, a slate rotation was only ever
+## `board_last_seen_times_slept`'s
+## twin for the delivery board -- before this field, a slate rotation was only ever
 ## signposted to the player when it ALSO happened to coincide with a failed
 ## run (`delivery_failed` above); a player who turned in cleanly (or who
 ## simply slept once with no slip held) got a silently-rotated slate with
@@ -209,28 +205,28 @@ var delivery_failed: bool = false
 ## `times_slept`'s own default so a fresh/restored save never false-positives
 ## a rotation that hasn't happened yet), NO version bump.
 var delivery_last_seen_times_slept: int = 0
-## Social Pillar S1: per-waking "already did small talk with this NPC this
+## Per-waking "already did small talk with this NPC this
 ## waking" flags, keyed by entity id -> true. Set by `_talk_pool_line` the
 ## first time an NPC carrying a `talk_pool` is talked to in a waking, so a
 ## SECOND talk that same waking falls through to the NPC's real conversation
-## (or its plain gate_guard dialogue line) EXACTLY as today. Cleared every
+## (or its plain gate_guard dialogue line). Cleared every
 ## `sleep()`, which re-arms the rotating pool line. Additive save field
 ## (tolerant default {}, see save.gd) -- a save/reload mid-waking must not
 ## re-arm an already-spent pool line.
 var social_talked: Dictionary = {}
-## Social Pillar S1: the SHARED per-waking first-use dedup dict, keyed by a
+## The SHARED per-waking first-use dedup dict, keyed by a
 ## "<verb>:<entity_id>" string -> true. Any opaque social/exploration bank
 ## that must fire AT MOST ONCE per entity per waking routes through
-## `_bank_first_use(verb, id)` (ARCH-4: now `field_skills.gd`'s helper, since
+## `_bank_first_use(verb, id)` (`field_skills.gd`'s helper, since
 ## its only two call sites, [Appraise Foe]/[Charming Smile], both live in that
 ## file's dispatch ladder -- the dict itself stays here, threaded in per
-## call): [Appraise Foe]'s `observed_things` (resolving the TP-review "Observe
-## farm" -- repeat-observing one entity to grind [Tactician]); S3's
-## [Friendly Face] `befriended_moments`, mirroring the exact same helper
+## call): [Appraise Foe]'s `observed_things` (guards against
+## repeat-observing one entity to grind [Tactician]); [Friendly Face]'s
+## `befriended_moments`, mirroring the exact same helper
 ## with its own verb prefix. Cleared every `sleep()`. Additive save field
 ## (tolerant default {}, see save.gd).
 var entity_first_use: Dictionary = {}
-## Playtest feature 3 ([Light] glow): true while the PC carries the conjured
+## True while the PC carries the conjured
 ## [Light] orb -- set by the field-ambient cast of [Light] (see use_skill_field),
 ## cleared at every `sleep()` (canon: the orb winks out when you rest), and
 ## round-tripped through save.gd (additive-optional, default false) so a load
@@ -239,7 +235,7 @@ var entity_first_use: Dictionary = {}
 ## the light node is derived. Diegetically constant across day/dusk/night (it is
 ## magic), so it deliberately bypasses atmosphere.gd's phase multiplier.
 var light_active := false
-## Issue #23 (Social Pillar II, Erin's daily meal): true after Erin's
+## True after Erin's
 ## once-per-waking meal perk is eaten (erin_errand.json's stage-3 "Sit, eat.
 ## Cook's orders." hub option). MIRRORS `light_active`'s lifecycle exactly:
 ## set by a dialogue effect (`{"well_fed": true}`, dialogue_choose's effect
@@ -248,10 +244,10 @@ var light_active := false
 ## field (default false, see save.gd, NO version bump). Field HP does not
 ## exist as a standalone concept (HP is per-combat only), so "a small HP
 ## restore" has no direct field target -- `_build_player_combatant` instead
-## folds this flag into `hp_mod` (+2) at the NEXT combat build, the same M7
+## folds this flag into `hp_mod` (+2) at the NEXT combat build, the same
 ## build-injection seam armor's hp_mod already rides.
 var well_fed := false
-## Skills Wave Task K1 (freezable-water seam): the set of freezable water cells
+## The set of freezable water cells
 ## the PC has frost-cast into walkable ice this waking, keyed by map id ->
 ## Dictionary of Vector2i -> true. A freezable cell (declared per-map in
 ## `_maps[map_id]["freezable"]`, forced blocked by default at construction) is
@@ -264,43 +260,42 @@ var well_fed := false
 ## sewers channels must survive a walk up to the street and back down within a
 ## waking, exactly as removed_entities is cross-map.
 var frozen_cells: Dictionary = {}
-## Skills Wave Task K2 (the sneak seam, user-ratified stealth model): true
+## True
 ## while the PC is deliberately sneaking. Toggled by `_toggle_sneak` (a
-## `sneaks: true`-tagged field skill's number key, K1's tag-not-id convention)
+## `sneaks: true`-tagged field skill's number key, tag-not-id convention)
 ## and cleared by `_break_sneak` on ANY of: interact() reaching a non-door
 ## entity/prop response, a successful field-skill use on a target
 ## (field_ambient no-op flourishes do NOT break it), or start_combat firing
 ## for any reason. While true, `_check_trigger_radius` never starts combat
 ## for a proximity danger (the whole point -- walk PAST a proximity ambush);
-## Skills Wave Task K3 added a silent `sneaked_past_danger` bank on that same
+## a silent `sneaked_past_danger` bank fires on that same
 ## skip, once per entity per waking (see that function's doc comment).
 ## DELIBERATELY NOT SAVED: no
 ## entry in save.gd's `serialize`/`apply` at all (see that file's comment) --
 ## a save/reload always restores false, honestly documented rather than
-## persisted, mirroring the plan's explicit "drops on save/load" requirement.
+## persisted (drops on save/load by design).
 ## Presentation (world.gd) reads this flag to tint the PC translucent.
 var sneaking := false
-## Skills Wave Task K2b: the player's ordered hotbar loadout -- a shared list
+## The player's ordered hotbar loadout -- a shared list
 ## of KNOWN skill ids across BOTH bars (field's `field_hotbar_loadout()` and
 ## combat's `WICombatHud.rebuild_slots`'s 3rd param), a VIEW never a grant.
 ## Empty (the default) is AUTO mode: both bars derive their slot list exactly
-## as they did before this task (byte-identical -- the whole existing QA
+## as they always did (byte-identical -- the whole existing QA
 ## suite passing untouched IS this parity's proof). The instant the player
 ## assigns/unassigns a skill via the journal (`loadout_toggle`), this becomes
 ## non-empty and BOTH bars switch to "loadout ∩ known/fielded, in LOADOUT
 ## order" (see `apply_loadout`) -- a skill known but not in this list is
 ## simply not shown on either bar this fight/this walk (still known, still
-## grantable, just unslotted -- the plan's explicit "slots are the verb
-## surface" ruling). Reorder is v1-minimal: assigning appends to the END
+## grantable, just unslotted -- "slots are the verb
+## surface" by design). Reorder is v1-minimal: assigning appends to the END
 ## (never inserts), so "assignment order IS the order" -- a dedicated reorder
-## key was assessed as not cheap enough to add this task, disclosed in the
-## report. Additive-optional save field (v5), NO version bump, same pattern
+## key was assessed as not cheap enough to add yet. Additive-optional save field (v5), NO version bump, same pattern
 ## as `frozen_cells`/`seen_statuses` above -- an old save missing the key
 ## restores `[]` (AUTO), which is exactly correct (no one could have
 ## customized a loadout before this field existed). Filtered against
 ## known/fielded skills ONLY AT READ TIME (`apply_loadout`'s candidate-set
 ## intersection) -- the stored array itself is never pruned, so a renamed/
-## removed skill id (a future K3 rename) just silently stops contributing a
+## removed skill id just silently stops contributing a
 ## slot rather than crashing or toasting.
 var hotbar_loadout: Array[String] = []
 var rng := RandomNumberGenerator.new()
@@ -311,40 +306,40 @@ var _maps: Dictionary = {}
 var _map_blocked: Dictionary = {}
 var _pending_encounter := ""
 var _quest_progress: Dictionary = {}
-## data/items.json records keyed by id (M7 §1), sourced from
+## data/items.json records keyed by id, sourced from
 ## `combat_config["items"]["items"]` -- the SAME injection pattern as
 ## `classes`/`quests`/`dialogue` above `skills`. Empty (item() always
 ## returns {}) for any caller that never supplies an "items" key -- a safe
 ## degraded mode for minimal test fixtures that don't touch equipment.
 var _items: Dictionary = {}
-## M7 M-BEAUTY FOLD: phase-threshold config, `{"dusk_at": int, "night_at":
+## Phase-threshold config, `{"dusk_at": int, "night_at":
 ## int}` -- defaults 40/90 (see `phase()`). Injected the same way as every
 ## other sim dependency (a config Dictionary), never hardcoded, so a later
 ## task can override it from `data/moods.json` meta without touching this
 ## file again.
 var _phase_config: Dictionary = {}
 ## Conversation id of the currently open (or most recently open) dialogue,
-## used as the `pickup()` source for a `{"item": id}` dialogue effect
-## (M7 §4) -- set by `start_dialogue`, read by `dialogue_choose`.
+## used as the `pickup()` source for a `{"item": id}` dialogue effect --
+## set by `start_dialogue`, read by `dialogue_choose`.
 var _dialogue_conversation_id := ""
-## The construction-time rng seed (M7 Task E3, Plan-time correction 3 --
-## LOOT RNG ISOLATION), stashed verbatim from `_init`'s `rng_seed` param so
+## The construction-time rng seed (LOOT RNG ISOLATION),
+## stashed verbatim from `_init`'s `rng_seed` param so
 ## `_roll_loot` can derive a PER-ENCOUNTER RandomNumberGenerator without ever
 ## reading `self.rng` (whose `.state` the live combat/sim stream mutates
 ## continuously -- a single post-victory draw on that stream would shift
 ## every subsequent fight's trajectory and invalidate multi-fight canonical
-## seeds, per the correction). Never mutated after construction.
+## seeds). Never mutated after construction.
 var _run_seed: int = 0
-## ARCH-4: the injected pure sub-sim owning gold-transition/loot-roll logic
+## The injected pure sub-sim owning gold-transition/loot-roll logic
 ## (see economy.gd). `gold` itself stays a WIGame field (save.gd reads/writes
-## it directly and is out of this task's scope) -- every call threads the
+## it directly) -- every call threads the
 ## current value in and gets the new value back.
 var _economy: WIEconomy
-## ARCH-4: the injected pure sub-sim owning talk-pool rotation (see
+## The injected pure sub-sim owning talk-pool rotation (see
 ## social.gd). `social_talked`/`entity_first_use` stay WIGame fields (see
 ## social.gd's own doc comment for why) -- every call threads them in.
 var _social: WISocial
-## ARCH-4: the injected pure sub-sim owning the `use_skill_field` dispatch
+## The injected pure sub-sim owning the `use_skill_field` dispatch
 ## ladder (see field_skills.gd). `sneaking`/`light_active`/`frozen_cells`/
 ## `entity_first_use` stay WIGame fields (see field_skills.gd's own doc
 ## comment for why) -- every call threads them in or a callback mutates
@@ -363,7 +358,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 		skills[String(s[WIKeys.ID])] = s
 	var p: Dictionary = scene_config["player"]
 	player_cell = Vector2i(int(p[WIKeys.CELL][0]), int(p[WIKeys.CELL][1]))
-	# M-ARC §5: cosmetic identity from the creation screen, sanitized on the way
+	# Cosmetic identity from the creation screen, sanitized on the way
 	# in (tolerant defaults, so a QA default-skip / an old load / a garbled dict
 	# all fall back to Human/male/"Traveler"). The scene player's display_name is
 	# the pc_name fallback so an untouched New Game reads "Traveler" as before.
@@ -397,7 +392,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 		var blocked := {}
 		for cell: Array in m.get("blocked", []):
 			blocked[Vector2i(int(cell[0]), int(cell[1]))] = true
-		# walls.segments (M5 E3) are blocking scenery: their covered cells
+		# walls.segments are blocking scenery: their covered cells
 		# join the blocked set here so map data never lists a wall twice
 		# (segment_cells is the single source of truth shared with the
 		# renderer, which paints wall art on exactly these cells).
@@ -405,7 +400,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 			if raw_seg is Dictionary:
 				for seg_cell: Vector2i in segment_cells(raw_seg as Dictionary):
 					blocked[seg_cell] = true
-		# Skills Wave Task K1: `freezable` (a top-level list of [x,y] water cells
+		# `freezable` (a top-level list of [x,y] water cells
 		# the frost seam can turn to ice) is recorded as its own per-map set AND
 		# forced into the blocked set here -- a freezable cell is impassable water
 		# by default (idempotent if it also sits under a water walls.segment, which
@@ -427,7 +422,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_emit(WIEvents.SIM_INITIALIZED, {"seed": rng_seed})
 
 
-## M-ARC §5 tolerant sanitizers for creation input. A blank/over-long/garbage
+## Tolerant sanitizers for creation input. A blank/over-long/garbage
 ## value always resolves to the everyman default rather than erroring, so a QA
 ## default-skip, an old save missing the field, and a fat-fingered LineEdit all
 ## land on Human/male/"Traveler".
@@ -513,7 +508,7 @@ static func segment_cells(seg: Dictionary) -> Array[Vector2i]:
 func is_cell_blocked(cell: Vector2i) -> bool:
 	if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y:
 		return true
-	# Skills Wave Task K1: a freezable water cell that has been frost-cast into
+	# A freezable water cell that has been frost-cast into
 	# ice this waking is walkable despite being in the blocked set (water). The
 	# entity-occupancy check below still runs -- nothing stands on water, but a
 	# frozen cell is treated exactly like any other open floor otherwise.
@@ -525,19 +520,19 @@ func is_cell_blocked(cell: Vector2i) -> bool:
 	return false
 
 
-## Skills Wave Task K1: true if `cell` is declared freezable on the current map
+## True if `cell` is declared freezable on the current map
 ## (a water cell the frost seam can turn to ice). Pure per-map data lookup.
 func _is_freezable(cell: Vector2i) -> bool:
 	return (_maps.get(current_map, {}).get("freezable", {}) as Dictionary).has(cell)
 
 
-## Skills Wave Task K1: true if `cell` on the current map is currently frozen
+## True if `cell` on the current map is currently frozen
 ## (frost-cast into walkable ice, not yet thawed by a sleep).
 func _is_frozen(cell: Vector2i) -> bool:
 	return (frozen_cells.get(current_map, {}) as Dictionary).has(cell)
 
 
-## Skills Wave Task K1: JSON-safe view of `frozen_cells` -- `{map_id: [[x,y], ...]}`
+## JSON-safe view of `frozen_cells` -- `{map_id: [[x,y], ...]}`
 ## -- shared by save.gd's serializer and `snapshot()` so both encode the ice set
 ## identically. Empty maps are omitted.
 func frozen_cells_json() -> Dictionary:
@@ -551,7 +546,7 @@ func frozen_cells_json() -> Dictionary:
 	return out
 
 
-## Skills Wave Task K1: rebuild `frozen_cells` from the JSON `{map_id: [[x,y],...]}`
+## Rebuild `frozen_cells` from the JSON `{map_id: [[x,y],...]}`
 ## form (save restore). Tolerant of a malformed inner value (skips non-arrays).
 func set_frozen_cells_json(data: Dictionary) -> void:
 	frozen_cells.clear()
@@ -574,19 +569,18 @@ func entity_at(cell: Vector2i) -> Dictionary:
 	return {}
 
 
-## Issue #40 (8-way field movement): `dir` is now any of the 8 unit vectors
-## (4 cardinal, 4 diagonal -- both components nonzero) rather than just the 4
-## cardinals; combat is untouched (`WICombat`/`move_active` is a wholly
+## `dir` may be any of the 8 unit vectors
+## (4 cardinal, 4 diagonal -- both components nonzero); combat is untouched
+## (`WICombat`/`move_active` is a wholly
 ## separate class this function never touches, and world.gd only ever calls
 ## THIS `move_player` from the field input handlers). `player_facing` always
 ## collapses to a cardinal via `_nearest_cardinal` even for a diagonal `dir`
 ## (every sprite rig / interact-target / bump-visual is 4-directional and
 ## only ever expects UP/DOWN/LEFT/RIGHT) -- a cardinal `dir` passes through
-## unchanged, so every existing single-dir caller (QA scripts included) sees
-## byte-identical facing to before this change. The corner-cutting guard
+## unchanged, so every single-dir caller (QA scripts included) sees
+## consistent facing. The corner-cutting guard
 ## below only runs for a genuine diagonal (`_is_diagonal`), so a cardinal
-## move's blocked check is exactly the pre-#40 `is_cell_blocked(target)`
-## call, unchanged.
+## move's blocked check is exactly `is_cell_blocked(target)`.
 func move_player(dir: Vector2i) -> bool:
 	if dialogue != null:
 		return false
@@ -628,7 +622,7 @@ static func _nearest_cardinal(dir: Vector2i) -> Vector2i:
 	return dir
 
 
-## Onboarding rev Task O2 (spec §3): proximity ambush. Any `encounter`
+## Proximity ambush. Any `encounter`
 ## entity on the CURRENT map carrying a `trigger_radius: N` fires
 ## `start_combat` the moment a successful move lands the player within N
 ## cells of it (Chebyshev/king-move distance -- symmetric on this
@@ -652,14 +646,14 @@ static func _nearest_cardinal(dir: Vector2i) -> Vector2i:
 func _check_trigger_radius() -> void:
 	if combat != null or dialogue != null:
 		return
-	# Skills Wave Task K2 (the sneak seam): the whole point of sneaking is
+	# The whole point of sneaking is
 	# walking PAST a proximity danger -- no roll, no near-miss combat,
 	# nothing. An interact-started encounter (the entity branch of
 	# interact()) is unaffected: sneaking past ≠ immunity to walking up and
 	# poking it (see interact()'s own break-on-response rule, which still
 	# fires start_combat there).
-	# Skills Wave Task K3 ([Rogue]'s LEVEL-UP counter, not its gained_by
-	# gate -- see classes.json's rogue _comment for the circularity trace):
+	# [Rogue]'s LEVEL-UP counter, not its gained_by
+	# gate (see classes.json's rogue _comment for the circularity trace):
 	# while sneaking, a danger that WOULD have triggered instead banks
 	# `sneaked_past_danger` once per entity per waking (entity_first_use,
 	# the [Appraise Foe]/[Friendly Face] dedup precedent -- cleared every
@@ -686,7 +680,7 @@ func _check_trigger_radius() -> void:
 		return
 
 
-## M-DEPTH DP5 (the Runner's Guild): the delivery-arrival check -- the
+## The delivery-arrival check (the Runner's Guild) -- the
 ## smallest honest seam for the plan's "reach map/cell X with the parcel"
 ## condition, traced against the two existing arrival seams before building:
 ## door `on_enter_accomplishment` fires only on a door's own cell (none of
@@ -708,7 +702,7 @@ func _check_trigger_radius() -> void:
 ## NPC relocation moves the mark with it), falling back to the authored
 ## destination cell only if the anchor id doesn't resolve.
 func _check_delivery_arrival() -> void:
-	# DP5 review minors: mirror _check_trigger_radius's modal guards (inert
+	# Mirrors _check_trigger_radius's modal guards (inert
 	# today -- move_player already gates -- but consistent defensive posture),
 	# and NO sneaking guard ON PURPOSE (arrival is a handoff, not an ambush).
 	if combat != null or dialogue != null:
@@ -741,8 +735,8 @@ func _check_delivery_arrival() -> void:
 
 
 func interact() -> Dictionary:
-	# Every interact ATTEMPT counts as one action for the M-BEAUTY FOLD clock
-	# (M7), regardless of what it resolves to (a blocked/refused move does
+	# Every interact ATTEMPT counts as one action for the actions-since-sleep
+	# clock, regardless of what it resolves to (a blocked/refused move does
 	# NOT tick -- see move_player -- but an interact is a deliberate action
 	# the moment it's pressed).
 	_tick_action()
@@ -750,7 +744,7 @@ func interact() -> Dictionary:
 	if target.is_empty():
 		_emit(WIEvents.INTERACT_NOTHING, {})
 		return {}
-	# Skills Wave Task K2 (break condition): interact() reaching ANY
+	# Break condition: interact() reaching ANY
 	# entity/prop response breaks sneaking -- EXCEPT a map transition
 	# ("crossing a door quietly is the point"), which covers both a real
 	# `door` entity and a `prop` whose `door_when` gate is currently met (the
@@ -766,7 +760,7 @@ func interact() -> Dictionary:
 		_break_sneak()
 	match String(target[WIKeys.KIND]):
 		"npc":
-			# Social Pillar S1: an NPC carrying a non-empty `talk_pool` plays a
+			# An NPC carrying a non-empty `talk_pool` plays a
 			# rotating small-talk line on the FIRST talk of a waking (before its
 			# conversation graph); `social_talked` then routes every later talk
 			# this waking to the real conversation below. An empty pool is
@@ -785,7 +779,7 @@ func interact() -> Dictionary:
 			return line
 		"prop":
 			if bool(target.get("sleep", false)):
-				# M-DEPTH DP3: a sleep prop may carry a flavor-distinct `sleep_toast`
+				# A sleep prop may carry a flavor-distinct `sleep_toast`
 				# (e.g. the PC's own bed upstairs, "Your own bed.") -- emitted as an
 				# ADDITIONAL toast BEFORE sleep()'s own emission stream, never
 				# replacing it. sleep() itself stays a single global beat with no
@@ -800,7 +794,7 @@ func interact() -> Dictionary:
 					_emit(WIEvents.TOAST, {"text": sleep_toast})
 				sleep()
 				return {"slept": true}
-			# M-DEPTH DP2: THE REQUEST BOARD -- checked before every other
+			# THE REQUEST BOARD -- checked before every other
 			# prop shape (mirrors `sleep`'s early-return position): a board
 			# prop is a browse-only surface (current active slate + header/
 			# footer, no accept/turn-in -- those live at Selys's desk per
@@ -808,20 +802,20 @@ func interact() -> Dictionary:
 			# so rotation always reads live.
 			if bool(target.get("board", false)):
 				return _interact_board(target)
-			# M-DEPTH DP5: THE DELIVERY BOARD (the Runner's Guild) -- a distinct
+			# THE DELIVERY BOARD (the Runner's Guild) -- a distinct
 			# flag from `board` so the prop dispatch routes to the right browse
 			# surface; same browse-only contract (accept/turn-in live at Vess's
 			# counter, vess_counter.json, per board-copy.md sec.3's framing).
 			if bool(target.get("delivery_board", false)):
 				return _interact_delivery_board(target)
-			# M7 Task E3: a container prop (`contains: [item_ids]`) is checked
+			# A container prop (`contains: [item_ids]`) is checked
 			# BEFORE `on_interact_accomplishment`/the `use_skill` fallback --
 			# no data-driven prop combines `contains` with either of those
 			# (a container is its own exclusive prop shape), so branch order
 			# among the three never matters in practice, but the container
 			# check comes first here to keep it visually adjacent to the
 			# other early-return prop shapes above it.
-			# Magical Door plan Task D3 (issue #8): a container may carry an
+			# A container may carry an
 			# optional sibling `contains_when: {requires: {...}}` gate --
 			# the door_when-style accomplishment gate, reusing `_door_gate_met`/
 			# `_accomplishment_gate_met` verbatim (same >= semantics, same
@@ -836,9 +830,9 @@ func interact() -> Dictionary:
 			# locked-flavor `on_interact_accomplishment` as the unmet fallback.
 			if target.has("contains") and (not target.has("contains_when") or _door_gate_met(target["contains_when"] as Dictionary)):
 				return _interact_container(target)
-			# Content Wave C1: a prop carrying `door_when` becomes a gated door
+			# A prop carrying `door_when` becomes a gated door
 			# once its accomplishment gate is met -- the ONE sanctioned sim seam
-			# for the sewer-grate entrance (spec §4). Checked BEFORE
+			# for the sewer-grate entrance. Checked BEFORE
 			# on_interact_accomplishment so a met gate transitions instead of
 			# re-banking; an UNMET gate falls straight through to the existing
 			# on_interact_accomplishment branch below, keeping the pre-quest
@@ -852,7 +846,7 @@ func interact() -> Dictionary:
 					_emit(WIEvents.TOAST, {"text": open_toast})
 				transition(String(dw["to_map"]), Vector2i(int(dw["to_cell"][0]), int(dw["to_cell"][1])))
 				return {"map": current_map}
-			# Magical Door plan Task D4 (issue #8): a prop carrying
+			# A prop carrying
 			# `portal_menu: true` opens the fast-travel destination picker
 			# once its `portal_menu_when` accomplishment gate is met (the
 			# door_when-style gate, reusing `_door_gate_met` verbatim -- no
@@ -872,7 +866,7 @@ func interact() -> Dictionary:
 				var toast_text := String(target.get("toast", ""))
 				if toast_text != "":
 					_emit(WIEvents.TOAST, {"text": toast_text})
-				# Economy v1 Task D1: an on_interact_accomplishment prop (e.g.
+				# An on_interact_accomplishment prop (e.g.
 				# serving_tray / patron serve) may carry a sibling optional
 				# `gold: N` wage (D2 content). Absent in all D1 data -> streams
 				# byte-identical; present in D2 it pays via the shared router.
@@ -892,7 +886,7 @@ func interact() -> Dictionary:
 			return {}
 		"door":
 			transition(String(target["to_map"]), Vector2i(int(target["to_cell"][0]), int(target["to_cell"][1])))
-			# M-ARC Task A1: a door may bank an arrival flavor counter on travel
+			# A door may bank an arrival flavor counter on travel
 			# (data seam -- liscor_gate banks `reached_liscor`, the Act I gate's
 			# street-arrival counter). Fires only here, on real door interaction:
 			# QA teleport and save/load restore go through bind_map_silent and
@@ -905,7 +899,7 @@ func interact() -> Dictionary:
 			return {}
 
 
-## Container prop interact (M7 Task E3): a `prop` entity carrying `contains:
+## Container prop interact: a `prop` entity carrying `contains:
 ## [item_ids]` grants every listed item via `pickup()` (source = the
 ## container's OWN entity id) on first interact, then marks
 ## `container_state[id] = true` -- persisted (see save.gd), so a re-interact
@@ -914,7 +908,7 @@ func interact() -> Dictionary:
 ## re-grants. Items already carried (e.g. a container holding an item the
 ## player separately already has) are silently skipped by `pickup`'s own
 ## idempotency -- the container still marks itself emptied either way.
-## Magical Door plan Task D3: an optional sibling `on_open_accomplishment`
+## An optional sibling `on_open_accomplishment`
 ## (same shape as `on_interact_accomplishment`/`door`'s `on_enter_accomplishment`)
 ## banks once, on the SAME first-open interact that grants the items --
 ## never re-banked on a later "Empty." re-interact. Absent on the two
@@ -938,13 +932,12 @@ func _interact_container(target: Dictionary) -> Dictionary:
 func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	# Gate on the FULL known set (innate + class-granted), not just innate
 	# player_skills: class-granted exploration skills ([Light], mage L1)
-	# must fire prop on_skill_use chains too (M6 T2, closing the T6 gap).
+	# must fire prop on_skill_use chains too.
 	var target: Dictionary = entities.get(target_id, {})
 	if not known_skills().has(skill_id):
 		_emit(WIEvents.SKILL_UNKNOWN, {"skill": skill_id})
-		# Hotfix wave A (2/18 blocker): a locked prop used to fail SILENTLY --
-		# no toast -- which read as "the prop is dead" (it also masked ALL
-		# Helper-line visibility). A prop may carry a bespoke `locked_toast`
+		# A prop must never fail silently (no toast reads as "the prop is
+		# dead" and masks Helper-line visibility). A prop may carry a bespoke `locked_toast`
 		# (tease-flavored, may name the required skill/action); absent that,
 		# fall back to a generic line that does NOT name the required skill
 		# (no progress-toward/skill-name leak on props without authored copy).
@@ -961,7 +954,7 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	_mark_skill_used(skill_id)
 	record_accomplishment(String(effect["accomplishment"]))
 	_emit(WIEvents.TOAST, {"text": String(effect["toast"])})
-	# Economy v1 Task D1: a chore/serve `on_skill_use` effect may carry an
+	# A chore/serve `on_skill_use` effect may carry an
 	# optional `gold: N` wage (D2 content, e.g. dirty_table clean). Absent in
 	# all D1 data, so every current stream stays byte-identical; present in D2
 	# it pays through the same earn/spend router the dialogue verb uses.
@@ -979,23 +972,15 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	_tick_action()
 	var known := known_skills().has(skill_id)
 	var target := entity_at(player_cell + player_facing)
-	# Issue #9 Task G2: a memorial statue's remembrance line must read
-	# DIFFERENTLY once its counter is met (the base plinth's "waiting" flavor
-	# vs. the claimed statue's results-only memory) -- [Appraise Foe]'s own
-	# dispatch branch (field_skills.gd) reads a single static `observe`
-	# string off the RAW entity, which `visual_states` never touched (that
-	# seam only ever resolved `sprite`/`tint`/`light`, presentation-side, in
-	# world.gd's `_resolve_entity_render`). Resolving the CURRENT `observe`
-	# text here, sim-side, before dispatch -- via `_resolve_observe_text`,
-	# below -- keeps field_skills.gd itself pure (no accomplishment-counter
-	# access needed there) and extends the visual_states FAMILY with one more
-	# overridable field rather than inventing a new gate shape (the SAME
-	# `{counter, at}` when-shape, the SAME ascending-order latest-wins
-	# convention `_resolve_entity_render`'s own doc comment already
-	# established). A `.duplicate()` is required: `target` is the LIVE
-	# reference `entity_at()` returns straight out of `entities` -- writing
-	# to it directly would permanently corrupt the stored entity's base
-	# `observe` field.
+	# A visual-states-driven observe override needs the CURRENT text resolved
+	# here, sim-side, before dispatch: field_skills.gd's dispatch branch reads
+	# a static `observe` string off the entity, and visual_states elsewhere
+	# only ever touches sprite/tint/light presentation-side (world.gd's
+	# `_resolve_entity_render`) -- never observe. Resolving it sim-side keeps
+	# field_skills.gd itself free of any accomplishment-counter access.
+	# `.duplicate()` is required: `target` is the LIVE reference `entity_at()`
+	# returns straight out of `entities` -- writing to it directly would
+	# permanently corrupt the stored entity's base `observe` field.
 	if skill_id == "observe" and not target.is_empty() and (target.get("visual_states", []) as Array).any(func(s: Variant) -> bool: return s is Dictionary and (s as Dictionary).has("observe")):
 		target = target.duplicate(true)
 		target["observe"] = _resolve_observe_text(target)
@@ -1004,18 +989,19 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	return _field_skills.dispatch(skill_id, known, target, faced_cell, current_map, frozen_cells, entity_first_use, is_freezable)
 
 
-## Issue #9 Task G2: resolves an entity's CURRENT `observe` line against its
-## optional `visual_states` list -- mirrors `world.gd`'s `_resolve_entity_
-## render`/`_visual_state_active` exactly (same `{"counter": id, "at": n}`
-## shape, same ascending-authored-order latest-wins convention: a LATER
-## satisfied entry overrides an earlier one, so a still-unmet entry can never
-## mask the base look), but lives here (sim-side, WIGame already owns
-## `accomplishment_count`) rather than in world.gd, which is presentation-
-## only and has no reason to be a dependency of a field-skill dispatch. Only
-## a `visual_states` entry carrying its OWN `observe` key participates --
-## the dirty_table/unlit_lantern entries (sprite/tint/light only) are
-## untouched by this reader and keep reading their base `observe` (absent,
-## in both those cases) unchanged.
+## Resolves an entity's CURRENT `observe` line against its optional
+## `visual_states` list. Only handles the `{"counter": id, "at": n}`
+## when-shape (same ascending-authored-order latest-wins convention as
+## world.gd's `_resolve_entity_render`/`_visual_state_active`: a LATER
+## satisfied entry overrides an earlier one) -- unlike that presentation-side
+## sibling, this does NOT evaluate `container_opened` or `dormant`
+## when-shapes; it exists only to serve the sim-side field-skill dispatch
+## path. Only a `visual_states` entry carrying its OWN `observe` key
+## participates; entries without one (sprite/tint/light only) are untouched.
+## TRAP: an entity with an `observe`-carrying visual_states entry but no base
+## `observe` string renders an empty toast until that entry's when-gate
+## fires. Any entity given an observe override must also define a base
+## `observe` string.
 func _resolve_observe_text(ent: Dictionary) -> String:
 	var text := String(ent.get("observe", ""))
 	for raw: Variant in ent.get("visual_states", []):
@@ -1030,14 +1016,14 @@ func _resolve_observe_text(ent: Dictionary) -> String:
 	return text
 
 
-## ARCH-4: `light_active` mutator, so field_skills.gd's dispatch can flip
+## `light_active` mutator, so field_skills.gd's dispatch can flip
 ## the flag via an injected Callable at the exact point (BEFORE the
 ## synchronous SKILL_USED emit) world.gd's reconcile handler needs it set.
 func _set_light_active(active: bool) -> void:
 	light_active = active
 
 
-## ARCH-4 opus review fix-first: WIEconomy sets the field through this BEFORE
+## WIEconomy sets the field through this BEFORE
 ## its synchronous GOLD_CHANGED emit, preserving the pre-extraction invariant
 ## "when GOLD_CHANGED fires, Game.sim.gold already equals total" (inventory's
 ## same-frame _refresh_gold depends on it). The wrappers' post-return
@@ -1046,7 +1032,7 @@ func _set_gold(new_gold: int) -> void:
 	gold = new_gold
 
 
-## Skills Wave Task K2: the sneak field toggle (see `use_skill_field`'s
+## The sneak field toggle (see `use_skill_field`'s
 ## `sneaks: true` tag dispatch). Flips `sneaking`, marks the skill used, and
 ## emits the matching state event + the on/off toast -- both voice-lint
 ## clean per the plan ("You soften your step." / "You straighten up.", the
@@ -1067,7 +1053,7 @@ func _toggle_sneak(skill_id: String) -> Dictionary:
 	return {"sneaking": sneaking}
 
 
-## Skills Wave Task K2: the ONE choke point that clears `sneaking` on any of
+## The ONE choke point that clears `sneaking` on any of
 ## the plan's break conditions (interact()'s non-door dispatch, a successful
 ## field-skill use on a target, start_combat firing for any cause). A no-op
 ## (no emit) when not currently sneaking, so every call site can call this
@@ -1084,7 +1070,7 @@ func _break_sneak() -> void:
 	_emit(WIEvents.TOAST, {"text": "You straighten up."})
 
 
-## Social Pillar S1: the rotating "small talk" interact path (ARCH-4: logic
+## The rotating "small talk" interact path (logic
 ## lives in `social.gd`; `social_talked` stays a WIGame field so save.gd's
 ## direct reads/writes are untouched).
 func _talk_pool_line(target: Dictionary) -> Dictionary:
@@ -1113,15 +1099,15 @@ func accomplishment_count(id: String) -> int:
 	return int(accomplishments.get(id, 0))
 
 
-## Adds `amount` coins to the purse (ARCH-4: logic lives in `economy.gd`,
+## Adds `amount` coins to the purse (logic lives in `economy.gd`,
 ## `gold` stays a WIGame field so save.gd's direct reads/writes are
-## untouched). `source` is free-form provenance, carried in the event for QA.
+## untouched). `source` is a free-form string, carried in the event for QA.
 func earn_gold(amount: int, source: String) -> void:
 	gold = _economy.earn(gold, amount, source)
 
 
-## Removes `amount` coins IF the purse can cover it (ARCH-4: see economy.gd).
-## REFUSES when short (spec §4, no debt), returning false so a caller (a
+## Removes `amount` coins IF the purse can cover it (see economy.gd).
+## REFUSES when short (no debt), returning false so a caller (a
 ## dialogue shop buy) can branch on affordability.
 func spend_gold(amount: int, source: String) -> bool:
 	var result := _economy.spend(gold, amount, source)
@@ -1130,7 +1116,7 @@ func spend_gold(amount: int, source: String) -> bool:
 
 
 ## The single `gold: +/-N` effect-verb router shared by the dialogue effect
-## applier (`dialogue_choose`) and chore/serve prop effects (ARCH-4: see
+## applier (`dialogue_choose`) and chore/serve prop effects (see
 ## economy.gd). NOTE: a `gold: -N` spend inside an effect list applies
 ## UNCONDITIONALLY of any sibling `item:` grant, so a shop buy option MUST
 ## carry a `requires: {gold: price}` affordability gate -- the gate is what
@@ -1139,7 +1125,7 @@ func _apply_gold_effect(amount: int, source: String) -> void:
 	gold = _economy.apply_gold_effect(gold, amount, source)
 
 
-## Content Wave C1: true when every accomplishment threshold in a `door_when`
+## True when every accomplishment threshold in a `door_when`
 ## gate's `requires` dict is met (same >= semantics as ally_requires). An
 ## empty/absent `requires` reads as "always open". Pure reader -- no state
 ## change, no events.
@@ -1150,7 +1136,7 @@ func _door_gate_met(door_when: Dictionary) -> bool:
 ## True when every accomplishment threshold in `req` (id -> min count) is met
 ## (>= semantics, same as ally_requires / door_when). An empty/absent dict reads
 ## as "always met". Pure reader -- no state change, no events. Shared by the
-## sewer-grate door gate (C1) and the talk_pool_post growth gate (C4).
+## sewer-grate door gate and the talk_pool_post growth gate.
 func _accomplishment_gate_met(req: Dictionary) -> bool:
 	for key: String in req:
 		if accomplishment_count(key) < int(req[key]):
@@ -1168,7 +1154,7 @@ func known_skills() -> Array:
 	return out
 
 
-## Skills Wave Task K2b: the ONE pure filter shared by BOTH hotbars (field
+## The ONE pure filter shared by BOTH hotbars (field
 ## calls this via `field_hotbar_loadout()` below; combat's
 ## `WICombatHud.rebuild_slots` calls it directly as a static, since it's a
 ## plain `class_name` -- not an autoload -- so it resolves fine from that
@@ -1177,7 +1163,7 @@ func known_skills() -> Array:
 ## non-empty loadout returns the ordered subset of `loadout` that also
 ## appears in `candidates` -- LOADOUT order wins (that's the player's chosen
 ## order), never `candidates`' own order; a loadout id no longer present in
-## `candidates` (unslotted-by-being-unfielded, or a K3 rename) is silently
+## `candidates` (unslotted-by-being-unfielded, or a later skill rename) is silently
 ## dropped, not an error. Pure: no autoload/Node references, safe from sim
 ## code, UI code, and bare --script tests alike.
 static func apply_loadout(candidates: Array, loadout: Array) -> Array:
@@ -1194,12 +1180,11 @@ static func apply_loadout(candidates: Array, loadout: Array) -> Array:
 	return out
 
 
-## Skills Wave Task K2b: the field hotbar's loadout-aware slot list -- the
-## SAME `known_skills()`-filtered-by-`field:true` candidate order
-## `field_hotbar.gd` used to compute inline (moved here so the sim, not the
-## UI, owns the filter, per the plan's "sim owns state + filters" rule),
+## The field hotbar's loadout-aware slot list -- the
+## SAME `known_skills()`-filtered-by-`field:true` candidate order lives here
+## (the sim, not the UI, owns the filter -- "sim owns state + filters"),
 ## passed through `apply_loadout` against the shared `hotbar_loadout`. AUTO
-## when the loadout is empty -- byte-identical to the pre-K2b order.
+## when the loadout is empty -- byte-identical to the unfiltered order.
 func field_hotbar_loadout() -> Array:
 	var candidates: Array = []
 	for raw: Variant in known_skills():
@@ -1209,7 +1194,7 @@ func field_hotbar_loadout() -> Array:
 	return WIGame.apply_loadout(candidates, hotbar_loadout)
 
 
-## Skills Wave Task K2b: assigns `skill_id` onto the shared loadout if it
+## Assigns `skill_id` onto the shared loadout if it
 ## isn't already there, or unassigns it if it is -- the journal's toggle key
 ## calls this directly (the only real call site; the id it passes is always
 ## a currently-known skill from `skills_journal()`'s own rows, but this
@@ -1224,7 +1209,7 @@ func loadout_toggle(skill_id: String) -> void:
 	var already := hotbar_loadout.has(skill_id)
 	if already:
 		hotbar_loadout.erase(skill_id)
-		# KF hardening (opus wave-review seam a): unslotting the skill whose
+		# Unslotting the skill whose
 		# tag currently holds sneak active removes the player's only obvious
 		# off-switch (the number key) -- the re-slot recovery is non-obvious,
 		# so break sneak honestly at the moment the verb leaves the bar.
@@ -1235,8 +1220,8 @@ func loadout_toggle(skill_id: String) -> void:
 	_emit(WIEvents.LOADOUT_CHANGED, {"skill": skill_id, "assigned": not already, "loadout": hotbar_loadout.duplicate()})
 
 
-## Snapshot of everything dialogue gating can see. Rebuilt per node advance
-## (M4): effects applied mid-conversation re-gate the same conversation.
+## Snapshot of everything dialogue gating can see. Rebuilt per node advance:
+## effects applied mid-conversation re-gate the same conversation.
 func _build_dialogue_ctx() -> Dictionary:
 	var names: Dictionary = {}
 	for sk_id: String in skills:
@@ -1244,28 +1229,28 @@ func _build_dialogue_ctx() -> Dictionary:
 	if not _combat_config.is_empty() and _combat_config.has("classes"):
 		for cls: Dictionary in _combat_config["classes"]["classes"]:
 			names[String(cls[WIKeys.ID])] = String(cls[WIKeys.DISPLAY_NAME])
-	# Economy v1 Task D1: `gold` rides the ctx so a shop option's affordability
-	# `requires: {gold: price}` greys through the SHIPPED M4 mechanism
-	# (WIDialogue._meets) -- the ONE sanctioned extension of that ctx (it was
-	# skill/class/accomplishment-only; a numeric gold compare is new). Rebuilt
+	# `gold` rides the ctx so a shop option's affordability
+	# `requires: {gold: price}` greys through the standard gate mechanism
+	# (WIDialogue._meets) -- a sanctioned extension of that ctx beyond
+	# skill/class/accomplishment. Rebuilt
 	# per node advance like everything else, so a mid-conversation gold spend
 	# re-greys the same node's remaining buy options.
-	# M-LEGIBILITY L2: the immutable item catalog rides the ctx (shared by
+	# The immutable item catalog rides the ctx (shared by
 	# reference, read-only) so the pure WIDialogue walker can format an
 	# item-granting option's effect_lines via WIEffectText without an autoload
 	# or file read.
-	# M-DEPTH DP2: `board_accepted` is the SECOND sanctioned non-accomplishment
-	# ctx extension (after `gold` above) -- a plain bool a `requires`/
+	# `board_accepted` is a sanctioned non-accomplishment
+	# ctx extension (alongside `gold` above) -- a plain bool a `requires`/
 	# `hide_when` dict can gate on (WIDialogue._meets/_progress_gated), so
 	# Selys's "Take on a posting."/"Turn in my posting." hub options can hide/
 	# show without a new dialogue.gd concept per feature.
-	# M-DEPTH DP5: `delivery_accepted` is the THIRD sanctioned
-	# non-accomplishment ctx extension (gold [D1], board_accepted [DP2]) --
+	# `delivery_accepted` is another sanctioned
+	# non-accomplishment ctx extension --
 	# the same plain-bool gate shape, recognized explicitly by
 	# WIDialogue._meets/_meets_progress/_progress_gated, so Vess's "Take a
 	# slip."/"Turn in a slip." hub options hide/show like Selys's board pair.
-	# Issue #23: `entity_first_use` (the shared per-waking dedup dict, already
-	# threaded into field_skills.gd's dispatch ladder) is the FIFTH sanctioned
+	# `entity_first_use` (the shared per-waking dedup dict, already
+	# threaded into field_skills.gd's dispatch ladder) is another sanctioned
 	# non-accomplishment ctx extension -- WIDialogue._meets/_meets_progress/
 	# _progress_gated recognize a `once_per_waking: "<verb>:<entity>"` gate
 	# key that's met iff this dict does NOT already carry that key (i.e. not
@@ -1294,7 +1279,7 @@ func start_dialogue(conversation_id: String, source_entity_id: String) -> bool:
 	return true
 
 
-## M-DEPTH DP2: starts a dialogue from a freshly-BUILT (not file-loaded) graph
+## Starts a dialogue from a freshly-BUILT (not file-loaded) graph
 ## Dictionary -- the mechanism behind THE REQUEST BOARD's browse view and
 ## Selys's bounty accept-picker/turn-in result (see bounties.gd's doc comment
 ## for the full rationale). Same guard/emit/begin shape as `start_dialogue`
@@ -1314,7 +1299,7 @@ func _begin_code_dialogue(graph: Dictionary, conversation_label: String, source_
 
 
 ## Applies the selected option's effects, refreshes the dialogue ctx, then
-## advances -- so the next node's gating sees this choice's effects (M4).
+## advances -- so the next node's gating sees this choice's effects.
 ## start_combat effects still only fire on conversation-ending options.
 func dialogue_choose(index: int) -> bool:
 	if dialogue == null:
@@ -1337,20 +1322,18 @@ func dialogue_choose(index: int) -> bool:
 		elif effect.has("remove_entity"):
 			remove_entity(String(effect["remove_entity"]))
 		elif effect.has("item"):
-			# M7 Task E2 (spec §4): a dialogue-granted item (e.g. Relc's gift)
-			# is a plain pickup with the CONVERSATION id as provenance -- Task
-			# E3 wires this into the real relc_intro graph as an
-			# effects-array addition; this task only implements the mechanism.
+			# A dialogue-granted item (e.g. Relc's gift)
+			# is a plain pickup with the CONVERSATION id as provenance.
 			pickup(String(effect["item"]), _dialogue_conversation_id)
 		elif effect.has("gold"):
-			# Economy v1 Task D1: the `gold: +/-N` dialogue effect verb, beside
+			# The `gold: +/-N` dialogue effect verb, beside
 			# item/accomplishment. Source/sink = the conversation id (Krshia's
 			# shop), same provenance shape pickup uses. A shop buy pairs this
 			# `gold: -price` with an `item:` grant AND a `requires: {gold: price}`
 			# gate (see _apply_gold_effect's contract note).
 			_apply_gold_effect(int(effect["gold"]), _dialogue_conversation_id)
 		elif effect.has("bank_first_use"):
-			# Issue #23: the per-waking dialogue-side twin of field_skills.gd's
+			# The per-waking dialogue-side twin of field_skills.gd's
 			# `_bank_first_use` -- same "<verb>:<entity_id>" -> true write into
 			# the SAME shared `entity_first_use` dict (WIGame-owned, see that
 			# field's doc comment), so a dialogue option can gate itself once
@@ -1360,14 +1343,12 @@ func dialogue_choose(index: int) -> bool:
 			# a split (verb, entity_id) pair and returns a bool a field-skill
 			# caller branches on, while this effect's value already arrives as
 			# the composed "verb:entity_id" string and dialogue_choose has no
-			# use for the return value -- splitting it back apart just to
-			# re-join it inside the call would add a step without changing
-			# behavior. The write itself is identical: `entity_first_use[key]
-			# = true`, single-writer discipline preserved (the SAME dict,
-			# cleared in the SAME place -- sleep()).
+			# use for the return value. The write itself is identical:
+			# `entity_first_use[key] = true`, single-writer discipline
+			# preserved (the SAME dict, cleared in the SAME place -- sleep()).
 			entity_first_use[String(effect["bank_first_use"])] = true
 		elif effect.has("well_fed"):
-			# Issue #23 (Erin's daily meal): sets the well_fed flag (see that
+			# Sets the well_fed flag (see that
 			# field's doc comment for the full lifecycle) -- the dialogue-side
 			# twin of the gold/item effect verbs above, applying a perk that
 			# isn't an item/gold/accomplishment.
@@ -1377,7 +1358,7 @@ func dialogue_choose(index: int) -> bool:
 		elif effect.has("travel_to"):
 			# Magical Door plan Task D4: fired from WITHIN the portal menu's
 			# own options (portals.gd's build_portal_graph) -- always a
-			# conversation-ENDING option (the O2 rule: portal travel is
+			# conversation-ENDING option (portal travel is
 			# never a mid-conversation branch), so this is deferred exactly
 			# like pending_combat/pending_board_action, applied AFTER the
 			# effects loop once dialogue is already null.
@@ -1447,7 +1428,7 @@ func dialogue_choose(index: int) -> bool:
 	return true
 
 
-## M-DEPTH DP2 (THE REQUEST BOARD): the full posting pool, injected the same
+## THE REQUEST BOARD: the full posting pool, injected the same
 ## way as every other catalog (`_combat_config`). Empty when unconfigured
 ## (bare `--script` unit tests) -- every caller below already tolerates an
 ## empty pool/slate.
