@@ -3161,5 +3161,36 @@
     "fps": 1
    }
   }
+ },
+ "hired_blade": {
+  "_comment": "Invrisil 8c Task C2 -- the `hired_blades` warehouse-fight roster (all 3 members share this one rig, distinguished only by combatants.json stats/skills, same convention as briar_collector/river_wolf). Owned PixelLab v2 character-pipeline generation (create-character-with-8-directions standard + animate-character template, 7 gens total; assets/LICENSES/pixellab-ai-generated-verdict.md has the full provenance + prompt). Burgundy/brass merchant-livery doublet, deliberately quarantined from royal_soldier's cool steel-armor Watch read (spec sec.2/sec.5's NOT-Watch-alike rule). Native frame 148x148 (the create-8-directions job padded beyond the requested 104x104); render_scale 0.4324 = 64/148, matching the shipped 64px apparent footprint other directional characters use. anchor PIL alpha-bbox measured (feet plane 126-131 of 148 across idle/walk/all 3 directions) -- NOT windowed-screenshot-verified (this is a combat-data-only lane, no skeleton_scene placement in scope; flagged for the encounter-wiring task's machine-playtest pass per the ANCHOR RULE). No `slice`/attack animation generated -- board_renderer.gd's play_anim falls back to idle_side gracefully when an attack anim is absent (same as any sprite lacking one).",
+  "directional": true,
+  "render_scale": 0.4324,
+  "anchor": [
+   0.5,
+   0.8716
+  ],
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/hired_blade/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/hired_blade/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/hired_blade/Idle_Up-Sheet.png",
+    "frame_size": [
+     148,
+     148
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/hired_blade/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/hired_blade/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/hired_blade/Walk_Up-Sheet.png",
+    "frame_size": [
+     148,
+     148
+    ],
+    "fps": 8
+   }
+  }
  }
 }
