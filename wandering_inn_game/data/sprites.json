@@ -2610,7 +2610,7 @@
   }
  },
  "memorial_statue_goblin": {
-  "_comment": "Issue #9 Task G2: memorial roster, goblin figure ('figure fills the frame' -- pixellab-batch.md item 9, the WINNING `statue_goblin_v2` pass after 1 rejected attempt -> stone-ified). Owned PixelLab art, same stoneify.py provenance. Reserved this task for the `goblins_spared` plot (K-of-4 leg, no producer yet in this worktree per the G1 report's finding -- absent-as-zero, so this plot renders as `memorial_plinth` today and will swap the moment a future task gives `goblins_spared` a real producer, zero code changes needed here, exactly like the door gate's own forward-compat property). PIL alpha bbox: (4,1)-(27,42) of 32x44 -- feet plane 43/44=0.977, anchor measured.",
+  "_comment": "Issue #9 Task G2: memorial roster, goblin figure ('figure fills the frame' -- pixellab-batch.md item 9, the WINNING `statue_goblin_v2` pass after 1 rejected attempt -> stone-ified). Owned PixelLab art, same stoneify.py provenance. Backs the `goblins_spared` plot (K-of-4 leg, issue #26 -- live producer via `goblin_parley`'s 'Stand aside' bypass); this plot renders as `memorial_plinth` for any save that never took that branch, swapping the instant `goblins_spared` reads >= 1, same forward-compat property as the door gate's own leg. PIL alpha bbox: (4,1)-(27,42) of 32x44 -- feet plane 43/44=0.977, anchor measured.",
   "render_scale": 0.5,
   "anchor": [
    0.5,
