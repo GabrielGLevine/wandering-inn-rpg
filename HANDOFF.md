@@ -1,24 +1,27 @@
 # Wandering Inn RPG Handoff
 
-## REBOOT-RECOVERY CHECKPOINT (2026-07-07 late): 4 lanes in flight
+## QUIESCENCE CHECKPOINT (2026-07-08, pre-reboot) — ZERO WORK IN FLIGHT
 
-User may reboot (screen-recording permission). If this session died:
-main is at the G1 merge (65/65 green, pushed; #8 CLOSED, #9's G1 done).
-FOUR worktree lanes were running — their branches/files persist on disk
-under `.claude/worktrees/`: **G2** (memorial hill + live-K-earn +
-dusk-proof, plan task in 2026-07-07-garden-of-sanctuary-9.md), **#40+#41**
-(jitter diagnose-first then diagonals — user recording frames in the old
-session scratchpad, signature: camera stalls in the tween-finished→reissue
-gap), **#42** (six-idle sprite picker), **#43** (debug-only fixture-boot
-picker; release-leak gate is the critical requirement). Recovery: inspect
-each worktree (`git -C <wt> log/status`), read scratchpad reports if
-present, resume or re-dispatch per its GitHub issue; merges serialize
-with an --import pass on main after any merge adding .gd/assets, full
-sweep rc-read before push. Issues #39-#43 carry the briefs. PixelLab:
-generation-count billing, ~700 left. Screen-recording permission (once
-applied) unlocks OS-level capture for #41 evidence + the #19 trailer.
+**Reboot-safe.** All lanes landed, reviewed, merged, final sweep 66/66
+rc=0 on the composed tree, pushed. Landed this drain: **#42** (six-idle
+sprite picker), **#43** (debug-only playtest state boot — dedicated
+'playtest' slot, release-leak proven absent from a real release export),
+**G2** (memorial hill: 3 stoneify remembrances + reserved goblin plot,
+observe visual_states extension, both G1 Mediums closed), **#40+#41**
+(camera jitter root-caused by CSV trace [per-move snap vs sprite tween
+at the clamp seam] + fixed QA-invariantly; 8-way field movement with the
+no-corner-cutting rule, all 5 truth-table rows unit-pinned). One
+composed-tree catch: playtest_boot's fixture-classes pin vs G2's
+near_garden restructure — re-pinned with the coupling documented.
 
-
+**NEXT SESSION (order ratified):** 1. GF closes #9 + milestone 8a
+(whole-#9 review + garden rotation + VISUAL-LOG + playtest checklist).
+2. #44 comment-corpus lint (the INTERLUDE — quiet tree, before 8b).
+3. 8b Riverfarm plan (art handoff ready) + #26/#39 producer side-lanes.
+**USER GATES:** the #8 playtest checklist (above), the #9 checklist (GF
+writes it), pad/Deck pass, Steam CHECKLIST.md, [Ice Floor] feel.
+Screen recording lands post-reboot → #41-style OS-level capture + the
+#19 trailer become possible.
 
 ## NEW USER DIRECTIVE (2026-07-07) → issue #37
 
