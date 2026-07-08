@@ -33,11 +33,73 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   flag worth a second look once a wiring pass has more of the field
   dressed. First seen: 8b Task R1 windowed read, 2026-07-08.
 
+- [x] FIXED (hotfix wave 155ee5c: scroll-to-0 on open + cursor_scroll pinned) UI/INVENTORY — **full-pack inventory opens with the CURSOR ROW scrolled
+  out of view**: `gear_loop` fixture (19 items), fresh open puts cursor on
+  row 0 (Rusty Sword — the item card proves the selection) but the visible
+  list starts at row 1 (Relc's Spare Spear) with NO `>` marker anywhere on
+  screen; one `move_down` press snaps it right (shot 01's bottom-cursor
+  autoscroll works). Small packs unaffected (tutorial_flow/03 shows row 0
+  fine). Suspect interaction between the G3 `ensure_control_visible` call
+  and the 30px scroll inset (783a733) — the viewport appears offset ~1 row
+  on open. First seen: 2026-07-08 comprehensive playtest,
+  `.superpowers/sdd/playtest-2026-07-08-shots/gear_loop/00_full_pack_top_cursor_rusty_sword.png`.
+- [x] FIXED (hotfix wave 155ee5c: field_y_sort_bias_px, net-zero visual shift) SPRITE — **the player-occlusion finding INVERTED: a big 2-tall ENEMY
+  sprite fully hides the PLAYER standing one row north of it.** arc_flow's
+  boss approach scripts the PC to (12,6) with the Awakened Raskghar anchored
+  at (12,7); the boss render extends up into the player's cell and y-sorts
+  over them — the player is INVISIBLE in both the "looming" field read AND
+  through the whole Relc-veto dialogue (playtest-2026-07-08-shots/arc_flow/
+  dd_04_awakened_field.png — no player pixels anywhere in frame, verified by
+  brightened crop; dd_05_relc_veto.png same; dd_07_warren_cleared.png shows
+  the player was at (12,6) all along). Same root geometry as the bed/
+  bread_stall entries below but severity is higher: it's the story's boss
+  reveal and the player loses their own character. dd_01b_scout_field.png
+  is likely a second instance (fire-pit observe, no player visible).
+- [ ] COMBAT/UI — **friend-vs-foe HP bars are all the SAME GREEN** — with
+  combat name tags retired (R3), the turn-order bar is now the ONLY cue of
+  who is an enemy. Reproduces in every fight this rotation: tutorial ambush
+  (goblins green), sewers vermin (bat green), dummy spar, and worst in the
+  4-combatant boss fight (2 allies + 2 enemies, all green;
+  playtest-2026-07-08-shots/arc_flow/dd_06_boss_fight.png). Compounds the
+  dark-arena target-legibility item (GH#28) and the sewers prop-vs-enemy
+  ambiguity below. Stats-hidden constraint leaves color as the main free
+  channel — an enemy-red/ally-green bar split (or hostile ring) would close
+  it. First LOGGED 2026-07-08 comprehensive playtest.
+- [ ] ART/WATER — **every water surface renders as a flat, hard-edged,
+  saturated-blue rectangle** — no bank/edge tiles, no depth gradient. In the
+  near-black sewers the two channels are the brightest thing on screen and
+  read as placeholder UI blocks / missing textures (playtest-2026-07-08-
+  shots/sewers_walkthrough/00_sewers_landing.png); the floodplains pond
+  shows the same flat read under the hotbar in field shots. The [Snap
+  Freeze] ice patch is a slightly-lighter blue rectangle on the blue
+  rectangle — the traversal seam's payoff is nearly invisible
+  (04_ice_crossing.png; the wading player sprite half-sinks into the flat
+  fill). Biome edge-tile or shader treatment wanted.
+- [ ] UI/TOAST — 4-line wrapped toasts let the 4th line's baseline ride the
+  parchment bottom-fold art (arc_flow dd_03 warren toast "…You have found
+  the warren.", dd_01b fire-pit toast "…cracked for their marrow." — both
+  readable but grazing; playtest-2026-07-08-shots/arc_flow/). The 3-line
+  fold fix (0f5b5f0) may not budget the auto-grown 4-line case. Watch item:
+  re-measure the toast panel's art-safe band at 4 lines.
+- [ ] FIELD/ARC — Relc's descent-veto conversation (arc_flow dd_05) plays
+  with NO Relc sprite anywhere on the field — he speaks from nowhere at the
+  warren mouth, then exists in the fight roster. A walk-on cameo (guild
+  DP1 idiom) at the warren mouth would ground the beat. Disclosed 2026-07-08
+  playtest, design-level.
 - [ ] UI/BARK — trailing period on a short wrapped 2nd line clips under the
   bark panel's bottom-left decorative fold (DPF rotation: Yelra +
   Dresk shots, payload always carries it). The 2-line budget landed; the
   FOLD inset needs the same measured-band treatment on line 2. DPF close
   fix-wave candidate.
+  **SEVERITY BUMP (2026-07-08 comprehensive playtest): this now eats the
+  Garden reveal.** Erin's #9 unlock bark — the exact line playtest-checklist
+  item 1 gates on — renders with its ENTIRE 2nd line ("mine. It's — new. Go
+  look, if you want. Just — knock first. Old habit.") half-cut under the
+  fold (playtest-2026-07-08-shots/garden_walkthrough/
+  01_garden_door_in_the_inn.png); the Watch Guard street bark clips the
+  same way ("Watch knows. Watch is dealing with it.", gate_district shots
+  02+03). Not a trailing-period edge anymore — full-sentence loss on the
+  milestone's payoff line. Payloads carry full text in every case.
 - [ ] UI/PICKER — the board/delivery picker paginates from the TOP,
   losing the header question + 2 of 3 postings' flavor (board_loop +
   delivery_loop shots). Board-centric milestone — severity with opus.

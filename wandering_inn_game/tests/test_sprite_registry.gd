@@ -315,6 +315,13 @@ func _build_expected_counts() -> Dictionary:
 	## frames = 6 frames (picks.md sec.6).
 	counts["river_wolf_idle/idle"] = 6
 
+	## Riverfarm combat roster -- owned, single-frame PixelLab statics
+	## (briar_collector/briar_collector_deep/river_wolf), same shape as the
+	## training_dummy/memorial-hill entries above.
+	counts["briar_collector/idle"] = 1
+	counts["briar_collector_deep/idle"] = 1
+	counts["river_wolf/idle"] = 1
+
 	return counts
 
 

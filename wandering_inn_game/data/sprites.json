@@ -2629,6 +2629,63 @@
    }
   }
  },
+ "briar_collector": {
+  "_comment": "Plant-class combatant, `briar_collectors` encounter roster. Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this sprite realizes an animate collector-construct of that plant, witch-craft-bound, not a new invented species. PixelLab v1 pixflux, 64x64, no_background, low top-down. PIL alpha bbox feet row 61/64 -- anchor measured; render_scale/anchor are a first-pass goblin-scale estimate, UNVERIFIED by windowed screenshot (no skeleton_scene entity references this sprite yet) -- confirm before trusting the silhouette read.",
+  "render_scale": 0.35,
+  "anchor": [
+   0.5,
+   0.9531
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/briar_collector/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "briar_collector_deep": {
+  "_comment": "Plant-class combatant, `briar_collectors_deep` encounter roster (the escalated second wave of the same hollow fight -- see `briar_collector`'s _comment for the shared canon-cite). Distinct sprite (darker, denser thorns/berries, taller) so the escalation reads visually, not just in stat sheets. PIL alpha bbox feet row 61/64 -- anchor measured; render_scale/anchor UNVERIFIED by windowed screenshot -- confirm before trusting the silhouette read.",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.9531
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/briar_collector_deep/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "river_wolf": {
+  "_comment": "Mundane-fauna combatant, `river_wolf_pack` (night-gated village-edge encounter) roster. Canon-cite: wiki.wanderinginn.com/Monsters -- Wilwolf (attested wiki monster, fur harvested as a crafting material per Chapter_8.06_RT, i.e. an ordinary huntable wild predator, not a named/tamed subspecies like Carn Wolf) -- realized as a plain grey pack wolf threatening farmland at night. OWNED PixelLab generation (v1 pixflux, 64x64, no_background, low top-down) chosen over the licensed Admurin Canine candidate (docs/design/riverfarm-art/picks.md sec.6) to avoid touching assets_manifest.json/the bundle for this sprite entirely -- swapping to the Admurin pack later is a sprites.json edit, not a data change. PIL alpha bbox feet row 46/64 -- anchor measured; render_scale/anchor UNVERIFIED by windowed screenshot -- confirm before trusting the silhouette read.",
+  "render_scale": 0.32,
+  "anchor": [
+   0.5,
+   0.7188
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/river_wolf/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
  "cottage_thatch_a": {
   "_comment": "8b R1 owned PixelLab village set (potential_assets/pixellab_2026-07-07_riverfarm/). Native 16px density, 4x4 cells; PIL alpha-scan anchor.",
   "render_scale": 1.0,
