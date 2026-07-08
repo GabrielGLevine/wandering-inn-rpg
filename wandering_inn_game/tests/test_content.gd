@@ -46,6 +46,9 @@ func _init() -> void:
 	_validate_class_gains(classes, produced_accomplishments)
 	_validate_props(scene)
 	_validate_talk_pool_stages_ascending(scene)
+	_validate_encounter_when(scene)
+	_validate_visual_states_phase(scene)
+	_validate_talk_pool_echo_of(scene, entity_ids)
 	_validate_effect_text_opacity()
 	_validate_player_string_vocab()
 	_validate_once_per_waking_shape_cases()
@@ -194,6 +197,12 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 			if entity.has("talk_pool") and not (entity["talk_pool"] as Array).is_empty():
 				produced["heard_gossip"] = true
 				produced["chatted_with_%s" % String(entity["id"])] = true
+			# 8b R1 (issue #10): a `board` prop's own `board_rumors` list
+			# (the Guild-board rumor beat, locked shape 1) -- each entry's
+			# `banks_accomplishment` is produced on every board browse
+			# (WIGame._interact_board), same idiom as on_interact_accomplishment.
+			for rumor: Dictionary in (entity.get("board_rumors", []) as Array):
+				produced[String(rumor["banks_accomplishment"])] = true
 
 
 ## `talk_pool_stages` authoring must be ASCENDING
@@ -222,6 +231,81 @@ func _validate_talk_pool_stages_ascending(scene: Dictionary) -> void:
 					if seen.has(key):
 						assert(threshold >= int(seen[key]), "entity %s talk_pool_stages authored OUT OF ORDER: stage %s's %s threshold (%d) is lower than an earlier stage's (%d)" % [String(entity["id"]), String(stage.get("id", "?")), key, threshold, int(seen[key])])
 					seen[key] = threshold
+
+
+## The set of phase() ever returns (wi_game.gd's phase()) -- the shared
+## vocabulary both `encounter_when` and `visual_states`' `phase` shape are
+## checked against below (locked shape 2/4, ONE design, two consumers).
+const VALID_PHASES := ["day", "dusk", "night"]
+
+
+## 8b R1 (issue #10), locked shape 2 -- `encounter_when` validator arm. Only
+## `kind: "encounter"` entities may carry it (the gate lives in
+## WIGame._encounter_gate_met, read from interact()'s encounter branch and
+## _check_trigger_radius, both `kind == "encounter"`-scoped); its one shape
+## today is `{"phase": [...]}`, every listed value a real phase string.
+func _validate_encounter_when(scene: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			if not entity.has("encounter_when"):
+				continue
+			var entity_id: String = String(entity["id"])
+			assert(String(entity.get("kind", "")) == "encounter", "entity %s carries encounter_when but is not kind:encounter" % entity_id)
+			var when: Dictionary = entity["encounter_when"]
+			assert(when.has("phase"), "entity %s encounter_when has no recognized shape (only 'phase' is sanctioned)" % entity_id)
+			for p: Variant in when["phase"]:
+				assert(VALID_PHASES.has(String(p)), "entity %s encounter_when references unknown phase: %s" % [entity_id, p])
+
+
+## 8b R1 (issue #10), locked shape 4 -- `visual_states`' new `phase` `when`
+## shape gets the SAME phase-vocabulary check as encounter_when above (shared
+## design). Every visual_states entry across every entity is scanned, not
+## just encounters -- the witch (an npc) is this shape's first live consumer.
+func _validate_visual_states_phase(scene: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			for state: Variant in (entity.get("visual_states", []) as Array):
+				if not (state is Dictionary):
+					continue
+				var when: Dictionary = (state as Dictionary).get("when", {})
+				if not when.has("phase"):
+					continue
+				for p: Variant in when["phase"]:
+					assert(VALID_PHASES.has(String(p)), "entity %s visual_states references unknown phase: %s" % [String(entity["id"]), p])
+
+
+## 8b R1 (issue #10), locked shape 3 -- `echo_of` validator arm. A `talk_pool`
+## entry shaped `{"echo_of": id}` must reference a REAL entity id that itself
+## carries a non-empty talk_pool of PLAIN STRINGS (social.gd's
+## `_resolve_pool_line` recurses one level only, per its own doc comment --
+## an echo-of-an-echo would silently resolve to an empty string at runtime).
+func _validate_talk_pool_echo_of(scene: Dictionary, entity_ids: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			for raw: Variant in (entity.get("talk_pool", []) as Array):
+				if not (raw is Dictionary):
+					continue
+				var entry := raw as Dictionary
+				assert(entry.has("echo_of") and entry.size() == 1, "entity %s talk_pool carries a Dictionary entry with an unrecognized shape (only {echo_of: id} is sanctioned): %s" % [String(entity["id"]), entry])
+				var echo_id: String = String(entry["echo_of"])
+				assert(entity_ids.has(echo_id), "entity %s echo_of references unknown entity: %s" % [String(entity["id"]), echo_id])
+				var echo_target: Dictionary = _find_entity_by_id(scene, echo_id)
+				var echo_pool: Array = echo_target.get("talk_pool", [])
+				assert(not echo_pool.is_empty(), "entity %s echo_of target %s has no talk_pool to echo" % [String(entity["id"]), echo_id])
+				for echo_line: Variant in echo_pool:
+					assert(echo_line is String, "entity %s echo_of target %s's talk_pool contains a non-string entry (echo_of does not chain -- social.gd resolves one level only)" % [String(entity["id"]), echo_id])
+
+
+func _find_entity_by_id(scene: Dictionary, id: String) -> Dictionary:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			if String(entity["id"]) == id:
+				return entity
+	return {}
 
 
 func _validate_conversations(scene: Dictionary, graphs: Dictionary) -> void:

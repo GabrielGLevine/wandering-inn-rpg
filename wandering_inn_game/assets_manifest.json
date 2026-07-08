@@ -44,6 +44,14 @@
    "fallback": "silent"
   },
   {
+   "path": "assets/props/admurin/Canine_Gray_Idle.png",
+   "source_pack": "Admurin's Freebies",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "8b Task R1 (issue #10): the night-gated river_wolf_pack encounter's field sprite (idle, 6 frames @ 32x32)."
+  },
+  {
    "path": "assets/props/admurin/Chests.png",
    "source_pack": "Admurin's Freebies",
    "verdict": "NEEDS-ATTESTATION",
@@ -72,6 +80,22 @@
    "bundle": true,
    "fallback": "placeholder",
    "_comment": "8a A1: anchor_stone_pedestal + rubble-scatter candidates (region table in docs/design/8a-asset-assembly.md)."
+  },
+  {
+   "path": "assets/props/fairy_forest/Props.png",
+   "source_pack": "Pixel Crawler - Fairy Forest 1.7",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "8b Task R1 (issue #10): witch_hollow glow-stones/mushroom/stump scatter (region table docs/design/riverfarm-art/picks.md sec.5)."
+  },
+  {
+   "path": "assets/props/fairy_forest/Tree.png",
+   "source_pack": "Pixel Crawler - Fairy Forest 1.7",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "8b Task R1 (issue #10): witch_hollow canopy enclosure (deep-shade y457 row, docs/design/riverfarm-art/picks.md sec.5)."
   },
   {
    "path": "assets/props/free_pack/Bonfire_01-Sheet.png",
@@ -114,6 +138,14 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/free_pack/Farm.png",
+   "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "8b Task R1 (issue #10): riverfarm_village crop rows + farm-prop dressing (region table docs/design/riverfarm-art/picks.md sec.3)."
   },
   {
    "path": "assets/props/free_pack/Furnace.png",
@@ -181,6 +213,13 @@
   {
    "path": "assets/props/free_pack/Vegetation.png",
    "source_pack": "Pixel Crawler - Free Pack 2.1",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
+   "path": "assets/props/garden/Feminine-Idle-Sheet.png",
+   "source_pack": "Pixel Crawler - Garden Environment",
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder"
@@ -1028,6 +1067,14 @@
    "_comment": "8a A1: ruin wall-tile candidate (region table in docs/design/8a-asset-assembly.md)."
   },
   {
+   "path": "assets/tiles/fairy_forest/Tiles.png",
+   "source_pack": "Pixel Crawler - Fairy Forest 1.7",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "8b Task R1 (issue #10): witch_hollow floor/path/pond (region table docs/design/riverfarm-art/picks.md sec.5)."
+  },
+  {
    "path": "assets/tiles/floor_tiles_12/dirt_01.png",
    "source_pack": "topdown_floor_tiles_12",
    "verdict": "NEEDS-ATTESTATION",
@@ -1097,13 +1144,6 @@
    "bundle": true,
    "fallback": "placeholder",
    "_comment": "8a A1 (issue #9 pre-work): garden hedge/fountain/petal-swatch candidates (region table in docs/design/8a-asset-assembly.md)."
-  },
-  {
-   "path": "assets/props/garden/Feminine-Idle-Sheet.png",
-   "source_pack": "Pixel Crawler - Garden Environment",
-   "verdict": "FORBIDDEN",
-   "bundle": true,
-   "fallback": "placeholder"
   },
   {
    "path": "assets/tiles/library/Tiles.png",

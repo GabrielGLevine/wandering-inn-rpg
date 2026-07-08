@@ -99,5 +99,46 @@
    0,
    0
   ]
+ },
+ "riverfarm_village": {
+  "_comment": "8b R1 (issue #10). Floodplains family ON PURPOSE (open-countryside continuity, per art handoff) -- the village identity comes from PROPS (thatch structures, wheat-field wang tiles, crop rows, river band), not a new floor. blocked_sheet reuses the SAME free_pack Wall_Tiles [14,4] pick already verified for street/floodplains (no new licensing).",
+  "sheet": "res://assets/tiles/floor_tiles_12/grass_01.png",
+  "tile_px": 540,
+  "floor": [
+   0,
+   0
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   14,
+   4
+  ],
+  "blocked_tile_px": 16,
+  "skirt_sheet": "res://assets/tiles/floor_tiles_12/grass_01.png",
+  "skirt_tile_px": 540,
+  "skirt": [
+   0,
+   0
+  ]
+ },
+ "witch_hollow": {
+  "_comment": "8b R1 (issue #10). Floor = flat underwood green Fairy Forest Tiles.png [2,2] rgb(12,82,44). `blocked` picks the SAME sheet's textured-grass variant [9,9] as an understory fallback fill -- the REAL enclosure is hollow_canopy_tree PROPS ringed on those blocked cells (map's own decor list), not a wall tile family (a forest pocket, not a room; handoff's staged fragment note). Skirt reuses the floor tile (open woodland continues past every edge, floodplains precedent).",
+  "sheet": "res://assets/tiles/fairy_forest/Tiles.png",
+  "tile_px": 16,
+  "floor": [
+   2,
+   2
+  ],
+  "blocked_sheet": "res://assets/tiles/fairy_forest/Tiles.png",
+  "blocked": [
+   9,
+   9
+  ],
+  "skirt_sheet": "res://assets/tiles/fairy_forest/Tiles.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   2,
+   2
+  ]
  }
 }

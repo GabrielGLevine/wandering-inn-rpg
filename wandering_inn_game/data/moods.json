@@ -163,16 +163,40 @@
   },
   "ruin_surface": {
    "_comment": "The ruin card -- \"cold daylight, dusty\". A SURFACE ruin sees real weather (unlike sewers/deep_tunnels' time-invariant underground pins), so it is day/dusk/night graded like inn/street/floodplains, just cooler and flatter than any of their [1,1,1]-identity day grades -- an overcast, slightly desaturated read rather than the warm/bright outdoor look. Vignette between floodplains (0.4) and sewers (0.45) -- exposed but ruined, not oppressive. The 'dusty' half of the brief is a texture/ambience call (floor tile choice + a future dust-mote emitter), not a color-grade one -- left to a later art/ambience task, ship-neutral here.",
-   "day": [0.86, 0.88, 0.95],
-   "dusk": [0.5, 0.5, 0.62],
-   "night": [0.26, 0.27, 0.38],
+   "day": [
+    0.86,
+    0.88,
+    0.95
+   ],
+   "dusk": [
+    0.5,
+    0.5,
+    0.62
+   ],
+   "night": [
+    0.26,
+    0.27,
+    0.38
+   ],
    "vignette": 0.42
   },
   "garden": {
    "_comment": "The only card in the game that is BOTH identity-at-every-phase AND vignette 0.0 -- every other time-invariant pin above (sewers/inn_upstairs/barracks/runners_guild) holds a DARK/desaturated triple constant across phases; this is the same mechanism (atmosphere.gd's apply() is a pure per-(map,phase) lookup, oblivious to whether the three arrays happen to be equal -- traced, not assumed, before landing this one-liner) applied to the IDENTITY grade instead. The eyes-closed test IS the mood system itself: if the screen never dims and never vignettes on this map, you are in the garden. No `arena_moods` entry, ever -- combat can never start here (the sim guard in wi_game.gd's start_combat), so an arena card would itself be a bug.",
-   "day": [1.0, 1.0, 1.0],
-   "dusk": [1.0, 1.0, 1.0],
-   "night": [1.0, 1.0, 1.0],
+   "day": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "dusk": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "night": [
+    1.0,
+    1.0,
+    1.0
+   ],
    "vignette": 0.0
   },
   "deep_tunnels": {
@@ -193,6 +217,44 @@
     0.3
    ],
    "vignette": 0.55
+  },
+  "riverfarm_village": {
+   "_comment": "8b R1 (issue #10). \"harvest light\" -- the ONLY map whose day grade tips warm (identity everywhere else is [1,1,1]); deep-blue night per spec sec.1. Values per docs/design/riverfarm-art/direction.md's Mood-card DRAFT, windowed-verified at day+dusk this task (the contrast IS the storytelling, art handoff).",
+   "day": [
+    1.06,
+    1.0,
+    0.88
+   ],
+   "dusk": [
+    0.55,
+    0.45,
+    0.7
+   ],
+   "night": [
+    0.26,
+    0.3,
+    0.55
+   ],
+   "vignette": 0.35
+  },
+  "witch_hollow": {
+   "_comment": "8b R1 (issue #10). \"green shade\" -- never reaches identity white even at day (canopy); dusk is the map's home key (firefly-dense per spec); vignette 0.50 > sewers' 0.45 (enclosure without an underground pin). Values per direction.md's Mood-card DRAFT.",
+   "day": [
+    0.72,
+    0.92,
+    0.78
+   ],
+   "dusk": [
+    0.4,
+    0.58,
+    0.5
+   ],
+   "night": [
+    0.2,
+    0.34,
+    0.3
+   ],
+   "vignette": 0.5
   }
  },
  "arena_moods": {

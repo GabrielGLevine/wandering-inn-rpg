@@ -1,0 +1,1340 @@
+{
+ "_comment": "8b R1 (issue #10) THE canonical proof: door arrival (the portal contract's first exercise) -> village walk (headman talk_pool + the charmed villager's echo_of tell) -> the night wolf gate NEGATIVE at day (encounter_when, canonical-pinned) -> the hollow round-trip -> the witch's two-form read across a REAL, live, mid-waking phase crossing (no sleep -- proves the swap tracks atmosphere.gd's own clock, the danger list's own requirement). Routes AROUND briar_collectors/briar_collectors_deep the whole run (no combat data yet, lane beta's R2 task) -- combat_started never fires.",
+ "starts_at_title": true,
+ "fixture_save": "near_riverfarm",
+ "steps": [
+  {
+   "_comment": "== Boot from the fixture (FIXTURE-FIRST) ==",
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "day"
+  },
+  {
+   "_comment": "== BEAT 1: door arrival -- the portal contract's first real exercise (locked shape 1). The awakened pantry_door now offers TWO destinations (liscor_street, riverfarm); Riverfarm is the second option. ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "portal_menu"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_village"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "The light warms and the air smells of wheat and river water before you've taken a step. Riverfarm, same as the rumor said."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    5
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "01_arrived_riverfarm_village_day"
+  },
+  {
+   "_comment": "== BEAT 5 (proven early, while still day): the night wolf gate NEGATIVE -- river_wolf_pack's encounter_when refuses BEFORE start_combat, canonical-pinned. ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    2,
+    13
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     2,
+     14
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Nothing there. Whatever you saw is gone with the light."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "day"
+  },
+  {
+   "_comment": "== BEAT 2: village walk -- the headman's talk_pool ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    10,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "The Headman",
+    "text": "We don't truck with witches here. Didn't used to, anyway."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_headman_talk_pool"
+  },
+  {
+   "_comment": "== BEAT 2 continued: the charmed villager's echo_of tell (locked shape 3) -- the SAME line the witch's own CURRENT pool index would give, verbatim, under the villager's own speaker name (the tell: right words, wrong register). ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    7,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "A Villager",
+    "text": "You want something. Everyone who finds this path wants something. Sit. Tea first."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_charmed_villager_echo"
+  },
+  {
+   "_comment": "== BEAT 4a: the hollow round-trip, entry -- riverfarm_hollow_path is a real door_when-free door transition ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    2,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "witch_hollow"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "witch_hollow"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    11
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "04_arrived_witch_hollow_day"
+  },
+  {
+   "_comment": "== BEAT 4b: the witch's DAY form (elder) -- talk_pool proof + the day sprite read (windowed) ==",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    3,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "The Witch",
+    "text": "You want something. Everyone who finds this path wants something. Sit. Tea first."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "day"
+  },
+  {
+   "action": "screenshot",
+   "name": "05_witch_elder_day"
+  },
+  {
+   "_comment": "== The phase crossing -- a LIVE mid-waking crossing (no sleep), the danger list's own requirement: the witch's visual_states swap must track atmosphere.gd's real phase clock, not fight it. 235 no-op interacts (each a real actions_since_sleep tick, facing an empty cell -- zero side effects) safely clears night_at (225). ==",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    6,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "_comment": "== BEAT 4c: the witch's NIGHT form (young) -- same silhouette line, live phase swap, no map reload. Deliberately NOT re-interacting (a second same-waking talk would fall through to her static dialogue fallback, not the pool) -- the proof here is the SPRITE, read visually. ==",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    3,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "06_witch_young_night"
+  },
+  {
+   "_comment": "== BEAT 4d: the hollow round-trip, exit -- back to riverfarm_village via hollow_village_path ==",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    10,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_village"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    11
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "07_returned_to_village"
+  },
+  {
+   "_comment": "== The dusk direction card, for the day/dusk contrast the art handoff calls out (village mood grade) -- one more no-op interact burst is unnecessary (already past night_at); this shot documents the SAME night grade already reached. ==",
+   "action": "screenshot",
+   "name": "08_village_night"
+  },
+  {
+   "_comment": "== Whole-run sim guard: the two hollow briar placements never got faced/interacted (no combat data yet, lane beta's R2), and the only combat_started the run could ever log is the empty set (the wolf gate never opened). ==",
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
+ ]
+}

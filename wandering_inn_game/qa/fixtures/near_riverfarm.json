@@ -1,0 +1,33 @@
+{
+ "_comment": "riverfarm_walkthrough's start (FIXTURE-FIRST). Same door-chain/awakening accomplishments as portal_menu_start (door_awakened already banked, standing at the SAME confirmed free cell (9,6) facing the awakened pantry_door) PLUS riverfarm_attuned -- the Guild-board rumor has already been read, so the portal menu offers Riverfarm as a real destination the moment this canonical opens it. Classless (no combat is exercised by this walkthrough -- the two hollow briar placements and the wolf pack have no combat data yet, lane beta's R2 task).",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [9, 6],
+  "player_facing": [1, 0],
+  "classes": {},
+  "accomplishments": {
+   "post_game": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "read_the_board": 1,
+   "riverfarm_attuned": 1
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": { "weapon": "rusty_sword", "armor": "" },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}

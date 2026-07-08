@@ -1,71 +1,383 @@
 {
-  "_comment": "The ONE source of truth for the canonical QA sweep. ci_sweep.sh parses this (python3) to build its run list; the CLAUDE.md canonical seed table is generated FROM it and ci_sweep.sh's startup drift-checks the table against this file on every run. Add/rename/reorder a script HERE first, then re-render the CLAUDE.md table row to match -- ci_sweep.sh will hard-fail the sweep if they disagree. seed:null means the script takes no --seed (load_gate, char_creation). fixture is the fixture_save this script's own qa/scripts/<name>.json loads via title Continue (its rng_state overrides --seed when present) -- informational, not consumed by ci_sweep.sh's invocation. note is the one-line purpose column.",
-  "scripts": [
-    { "script": "load_gate", "seed": null, "note": "native-only resource compile/load gate" },
-    { "script": "inn_walkthrough", "seed": 9, "note": "full inn journey, no screenshots in headless; issue #40's canonical diagonal leg (move_diag out-and-back, net zero) opens it" },
-    { "script": "dialogue_walkthrough", "seed": 9, "note": "Erin/Selys story path (meets Relc, then goblin_encounter_2)" },
-    { "script": "dialogue_hub_loop", "seed": 9, "note": "conversation hub loop-backs + hide_when sweep" },
-    { "script": "quest_errand_fight", "seed": 9, "note": "errand path with a goblin fight" },
-    { "script": "quest_errand_parley", "seed": 9, "note": "errand path through parley" },
-    { "script": "save_load_roundtrip", "seed": 9, "note": "save/load persistence path" },
-    { "script": "combat_walkthrough", "seed": 9, "note": "core combat proof; ally_requires roster gate negative-then-positive" },
-    { "script": "tutorial_flow", "seed": 9, "note": "the onboarding's own end-to-end proof (spar -> gift -> ambush -> street)" },
-    { "script": "level_up_loop", "seed": 9, "fixture": "post_tutorial", "note": "level-up loop; fight 2 tests riposte" },
-    { "script": "mage_unlock_loop", "seed": 9, "note": "[Mage] earned from Pisces; full cold-start arc + mage kit fielded" },
-    { "script": "line_of_sight_denial", "seed": 9, "note": "wall-aware ranged AI proof (positive has_los gate)" },
-    { "script": "defeat_reload", "seed": 1, "note": "losing seed; defeat loads auto slot, no game_reset" },
-    { "script": "defeat_ally_alive", "seed": 3, "fixture": "near_defeat", "note": "THE canonical proof of the PC-death-is-instant-defeat rule" },
-    { "script": "title_flow", "seed": 9, "note": "title screen flow; no combat" },
-    { "script": "playtest_boot", "seed": null, "note": "Issue #43: debug-only title 'Playtest States' picker -- boots near_garden via the real fixture-copy-then-Continue path" },
-    { "script": "combat_move_input", "seed": 9, "fixture": "post_tutorial", "note": "movement-first arrows + Dash refill via real input" },
-    { "script": "class_evolution_loop", "seed": 9, "fixture": "near_evolution", "note": "grind -> sleep -> class_evolved + evolved kit" },
-    { "script": "consolidation_flow", "seed": 9, "fixture": "near_consolidation", "note": "offer/decline/re-offer/accept -> [Spellsword]" },
-    { "script": "save_migration", "seed": 1, "fixture": "v2_format", "note": "v2->v3 migration + v1 pause-load rejection + stale-slot defeat-reload" },
-    { "script": "consolidation_reload", "seed": 9, "fixture": "pending_offer", "note": "pause-load reconstructs the consolidation prompt mid-offer" },
-    { "script": "generalist_loop", "seed": 9, "fixture": "near_generalist", "note": "Generalist evolution path + balanced-mastery grants" },
-    { "script": "lantern_check", "seed": 9, "note": "[Light] lit_the_common_room payoff, after the Pisces mage arc" },
-    { "script": "gate_district_walkthrough", "seed": 9, "note": "enters street for real via liscor_gate; gate NPCs + Selys" },
-    { "script": "relc_tutorial", "seed": 9, "note": "full relc_spar tutor_lines beats + opacity/persistence teeth" },
-    { "script": "work_loop", "seed": 9, "note": "inn work-loop, Helper leg (chores -> class_gained -> level 2)" },
-    { "script": "crate_fight", "seed": 9, "fixture": "post_tutorial_street", "note": "Missing Crate FORCE path" },
-    { "script": "crate_talk", "seed": 9, "fixture": "post_tutorial_street", "note": "Missing Crate WATCH path (no combat)" },
-    { "script": "crate_light", "seed": 9, "note": "Missing Crate SKILL path ([Light]-studies cellar_door)" },
-    { "script": "journal_skills", "seed": 9, "note": "journal skills-by-class panel; pre/post-first-use reveal" },
-    { "script": "inventory_loop", "seed": 9, "note": "THE inventory/equipment loop; weapon-gated kit proof" },
-    { "script": "atmosphere_check", "seed": 9, "note": "mood-grade/phase-clock proof; day->dusk->day cycle" },
-    { "script": "field_skills_loop", "seed": 9, "fixture": "near_tactician", "note": "field-skill hotbar loop (Basic Cleaning -> Observe); K2b loadout assign/unassign + remapped-slot proof" },
-    { "script": "social_loop", "seed": 9, "fixture": "post_tutorial_street", "note": "Social Pillar v1 proof; rotating talk pools -> [Diplomat]" },
-    { "script": "sewers_walkthrough", "seed": 9, "fixture": "near_sewers", "note": "Liscor sewers proof; grate-gate seam + vermin fight" },
-    { "script": "cisterns_fight", "seed": 9, "fixture": "cisterns_fight_start", "note": "Quest 1 FIGHT path (clear shield_spiders nest)" },
-    { "script": "cisterns_talk", "seed": 9, "fixture": "cisterns_talk_start", "note": "Quest 1 TALK path (persuade Zevara, no combat)" },
-    { "script": "cisterns_scout", "seed": 9, "fixture": "cisterns_scout_start", "note": "Quest 1 SKILL path ([Appraise Foe] the nest_ledge)" },
-    { "script": "wrong_order_loop", "seed": 9, "fixture": "wrong_order_loop_start", "note": "The Wrong Order inn-local give->cook->report loop" },
-    { "script": "wrong_order_talk", "seed": 9, "fixture": "wrong_order_talk_start", "note": "The Wrong Order TALK path (Krshia smooth-over, no combat)" },
-    { "script": "wrong_order_fight", "seed": 9, "fixture": "wrong_order_fight_start", "note": "The Wrong Order FIGHT path (clear supplier_scavengers)" },
-    { "script": "economy_loop", "seed": 9, "fixture": "economy_loop_start", "note": "the coin arc: chore earn -> loot -> shop -> spend" },
-    { "script": "char_creation", "seed": null, "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name)" },
-    { "script": "deep_descent", "seed": 9, "fixture": "deep_descent_start", "note": "the Raskghar descent + JOIN-Relc boss victory" },
-    { "script": "climax_chain", "seed": 9, "fixture": "climax_surface_start", "note": "the tremor beat + Zevara summons + Olesm briefing" },
-    { "script": "climax_seal", "seed": 9, "fixture": "climax_sealed_start", "note": "the seal beat + journal Act III advance" },
-    { "script": "arc_flow", "seed": 9, "fixture": "near_act3", "note": "THE WHOLE ACT III ARC PROOF, tremor through epilogue" },
-    { "script": "status_first_encounter", "seed": 9, "fixture": "near_mage_cast", "note": "status glossary + first-encounter combat-feed surface" },
-    { "script": "ice_floor_loop", "seed": 9, "fixture": "near_ice_floor", "note": "GH#21: [Ice Floor] area terrain effect -- cast/friendly-fire/standing-slow/expiry, live" },
-    { "script": "gear_loop", "seed": 9, "fixture": "gear_loop_start", "note": "resonance-gear UI proof (accessory rows, capacity refusal)" },
-    { "script": "stealth_loop", "seed": 9, "fixture": "near_ambush_sneak", "note": "the [Stealth] seam: skip an ambush, break it, positive control" },
-    { "script": "rogue_earn_loop", "seed": 9, "fixture": "near_rogue", "note": "K3 [Rogue] earn: recovered_crate_watch -> sleep -> class_gained -> [Stealth] fielded" },
-    { "script": "stages_loop", "seed": 9, "fixture": "krshia_stage3_pre", "note": "Social Pillar II: talk_pool_stages base->final (Krshia), unlocked hub topic + shop discount perk surface" },
-    { "script": "guild_interior_walkthrough", "seed": 9, "fixture": "near_guild", "note": "M-DEPTH DP1: guild_door real-door round-trip, Selys-behind-the-desk (pool + graph incl. desk-context node), board/notice-wall dressed props, Renn/Ilvo/Yelra walk-on pool lines" },
-    { "script": "board_loop", "seed": 9, "fixture": "board_loop_start", "note": "M-DEPTH DP2: THE REQUEST BOARD goes live -- browse/accept/fulfill/turn-in at Selys's desk (delta-since-accept, gold payout), slate rotation across a sleep + the 'slate rotated overnight' line" },
-    { "script": "upstairs_walkthrough", "seed": 9, "note": "M-DEPTH DP3: the inn's upstairs -- stairs door pair, Lyonette's locked door (observe+locked_toast), sleep-beat parity proven live at the PC's own bed (same events, one extra flavor toast)" },
-    { "script": "barracks_walkthrough", "seed": 9, "fixture": "near_barracks", "note": "M-DEPTH DP4: the Watch barracks + market-depth stalls -- bread_stall (flavor/observe) + peddler's mini-buy (watch_issue_gambeson, 20g), barracks_door real-door round-trip (the relocated watch_guard, zero prior QA touches), Duty Sergeant Dresk Ashgrave's talk_pool, Zevara's desk (she stays at the gate), THE CELL (locked_toast, empty-v1 dressed)" },
-    { "script": "delivery_loop", "seed": 9, "fixture": "near_runners_guild", "note": "M-DEPTH DP5: the Runner's Guild delivery loop -- runners_guild_door round-trip, Vess's counter (talk_pool + vess_counter graph), THE DELIVERY BOARD browse, take slip -> real walked carry -> Chebyshev-1 arrival handoff at krshia_stall -> turn-in pay (1g exact), sleep-fail negative (parcel returns, no pay, delivery_failed armed) + slate rotation + the one-shot night-ledger bark; GH#27: a second, failure-free sleep proves Vess's OWN plain-rotation bark fires once per rotation and not twice in the same waking" },
-    { "script": "stage3_perks_loop", "seed": 9, "fixture": "stage3_perks_pre", "note": "Issue #23: the once_per_waking dialogue seam's own proof -- Erin's daily meal (well_fed + hp_mod) and Relc's spar wager (+1g), both live: eat/win -> option gone same waking -> sleep clears well_fed + the bank -> both options back" },
-    { "script": "ruin_walkthrough", "seed": 9, "fixture": "near_ruin", "note": "Magical Door plan Task D1 (issue #8): enter the gated ruin via a fixture with door_chain_started, real ruin_door door_when transition, walk the new ruin_surface map's bounds, read the pedestal-locked toast (anchor_stone_pedestal), round-trip exit via ruin_exit -- routes AROUND both new dormant encounters (rift_vermin_leak/ruin_guardian have no combat data yet, D2's job)" },
-    { "script": "door_chain_fight", "seed": 9, "fixture": "door_chain_fight_start", "note": "Magical Door plan Task D3 (issue #8): the FIGHT leg + full end-to-end chain -- Erin's beat-1 flicker line live, Pisces sends the player to clear rift_vermin_leak (inn), the ruin recovery run (ruin_guardian fight + anchor_stone_pedestal opens), Krshia's resonant_catalyst purchase -- both quest beats complete" },
-    { "script": "door_chain_talk", "seed": 9, "fixture": "door_chain_talk_start", "note": "Magical Door plan Task D3 (issue #8): the TALK leg -- persuades Pisces (zero combat), banks the SAME door_understood as the FIGHT leg, then opens anchor_stone_pedestal WITHOUT ever fighting ruin_guardian (the pedestal's contains_when OR-gate proof from a non-FIGHT producer)" },
-    { "script": "door_chain_scout", "seed": 9, "fixture": "door_chain_scout_start", "note": "Magical Door plan Task D3 (issue #8): the SKILL leg -- [Observe]s pantry_door_runes, reports to Pisces (banks the SAME door_understood), then buys Krshia's resonant_catalyst (bought_catalyst)" },
-    { "script": "door_awakening", "seed": 9, "fixture": "door_awakening_start", "note": "Magical Door plan Task D4 (issue #8): the full awakening chain from a beat-3-ready fixture through 3 real sleeps -- 2 silent study beats then door_awakened banks + the GDI line queues under the sleep veil -- to the awakened pantry_door's interact rewire (opens the portal menu, not the flavor toast)" },
-    { "script": "portal_menu", "seed": 9, "fixture": "portal_menu_start", "note": "Magical Door plan Task D4 (issue #8, the O2 rule): fast-travel round-trip -- menu at the inn anchor -> street arrival -> menu at the street anchor -> return to the inn -- pins the map_changed pair in order and asserts no combat_started/player_moved/player_blocked fires anywhere in the run (portal travel is transition() only)" },
-    { "script": "garden_walkthrough", "seed": 9, "fixture": "near_garden", "note": "Issue #9 Task G1 (spec Sec5 RATIFIED): the Garden of Sanctuary unlock-to-rest loop -- the qualifying sleep silently banks garden_door_unlocked (act >= III AND K=2 of 4 ratified legs), Erin's talk_pool_stages acknowledgment, garden_door opens for real at the inn, day-bright identity + fountain + misted-rise clearing live on garden_sanctuary, rest-bed sleep parity at garden_bed, round-trip exit -- plus a whole-run no-violence sim-guard cross-check (combat_started never fires)" }
-  ]
+ "_comment": "The ONE source of truth for the canonical QA sweep. ci_sweep.sh parses this (python3) to build its run list; the CLAUDE.md canonical seed table is generated FROM it and ci_sweep.sh's startup drift-checks the table against this file on every run. Add/rename/reorder a script HERE first, then re-render the CLAUDE.md table row to match -- ci_sweep.sh will hard-fail the sweep if they disagree. seed:null means the script takes no --seed (load_gate, char_creation). fixture is the fixture_save this script's own qa/scripts/<name>.json loads via title Continue (its rng_state overrides --seed when present) -- informational, not consumed by ci_sweep.sh's invocation. note is the one-line purpose column.",
+ "scripts": [
+  {
+   "script": "load_gate",
+   "seed": null,
+   "note": "native-only resource compile/load gate"
+  },
+  {
+   "script": "inn_walkthrough",
+   "seed": 9,
+   "note": "full inn journey, no screenshots in headless; issue #40's canonical diagonal leg (move_diag out-and-back, net zero) opens it"
+  },
+  {
+   "script": "dialogue_walkthrough",
+   "seed": 9,
+   "note": "Erin/Selys story path (meets Relc, then goblin_encounter_2)"
+  },
+  {
+   "script": "dialogue_hub_loop",
+   "seed": 9,
+   "note": "conversation hub loop-backs + hide_when sweep"
+  },
+  {
+   "script": "quest_errand_fight",
+   "seed": 9,
+   "note": "errand path with a goblin fight"
+  },
+  {
+   "script": "quest_errand_parley",
+   "seed": 9,
+   "note": "errand path through parley"
+  },
+  {
+   "script": "save_load_roundtrip",
+   "seed": 9,
+   "note": "save/load persistence path"
+  },
+  {
+   "script": "combat_walkthrough",
+   "seed": 9,
+   "note": "core combat proof; ally_requires roster gate negative-then-positive"
+  },
+  {
+   "script": "tutorial_flow",
+   "seed": 9,
+   "note": "the onboarding's own end-to-end proof (spar -> gift -> ambush -> street)"
+  },
+  {
+   "script": "level_up_loop",
+   "seed": 9,
+   "fixture": "post_tutorial",
+   "note": "level-up loop; fight 2 tests riposte"
+  },
+  {
+   "script": "mage_unlock_loop",
+   "seed": 9,
+   "note": "[Mage] earned from Pisces; full cold-start arc + mage kit fielded"
+  },
+  {
+   "script": "line_of_sight_denial",
+   "seed": 9,
+   "note": "wall-aware ranged AI proof (positive has_los gate)"
+  },
+  {
+   "script": "defeat_reload",
+   "seed": 1,
+   "note": "losing seed; defeat loads auto slot, no game_reset"
+  },
+  {
+   "script": "defeat_ally_alive",
+   "seed": 3,
+   "fixture": "near_defeat",
+   "note": "THE canonical proof of the PC-death-is-instant-defeat rule"
+  },
+  {
+   "script": "title_flow",
+   "seed": 9,
+   "note": "title screen flow; no combat"
+  },
+  {
+   "script": "playtest_boot",
+   "seed": null,
+   "note": "Issue #43: debug-only title 'Playtest States' picker -- boots near_garden via the real fixture-copy-then-Continue path"
+  },
+  {
+   "script": "combat_move_input",
+   "seed": 9,
+   "fixture": "post_tutorial",
+   "note": "movement-first arrows + Dash refill via real input"
+  },
+  {
+   "script": "class_evolution_loop",
+   "seed": 9,
+   "fixture": "near_evolution",
+   "note": "grind -> sleep -> class_evolved + evolved kit"
+  },
+  {
+   "script": "consolidation_flow",
+   "seed": 9,
+   "fixture": "near_consolidation",
+   "note": "offer/decline/re-offer/accept -> [Spellsword]"
+  },
+  {
+   "script": "save_migration",
+   "seed": 1,
+   "fixture": "v2_format",
+   "note": "v2->v3 migration + v1 pause-load rejection + stale-slot defeat-reload"
+  },
+  {
+   "script": "consolidation_reload",
+   "seed": 9,
+   "fixture": "pending_offer",
+   "note": "pause-load reconstructs the consolidation prompt mid-offer"
+  },
+  {
+   "script": "generalist_loop",
+   "seed": 9,
+   "fixture": "near_generalist",
+   "note": "Generalist evolution path + balanced-mastery grants"
+  },
+  {
+   "script": "lantern_check",
+   "seed": 9,
+   "note": "[Light] lit_the_common_room payoff, after the Pisces mage arc"
+  },
+  {
+   "script": "gate_district_walkthrough",
+   "seed": 9,
+   "note": "enters street for real via liscor_gate; gate NPCs + Selys"
+  },
+  {
+   "script": "relc_tutorial",
+   "seed": 9,
+   "note": "full relc_spar tutor_lines beats + opacity/persistence teeth"
+  },
+  {
+   "script": "work_loop",
+   "seed": 9,
+   "note": "inn work-loop, Helper leg (chores -> class_gained -> level 2)"
+  },
+  {
+   "script": "crate_fight",
+   "seed": 9,
+   "fixture": "post_tutorial_street",
+   "note": "Missing Crate FORCE path"
+  },
+  {
+   "script": "crate_talk",
+   "seed": 9,
+   "fixture": "post_tutorial_street",
+   "note": "Missing Crate WATCH path (no combat)"
+  },
+  {
+   "script": "crate_light",
+   "seed": 9,
+   "note": "Missing Crate SKILL path ([Light]-studies cellar_door)"
+  },
+  {
+   "script": "journal_skills",
+   "seed": 9,
+   "note": "journal skills-by-class panel; pre/post-first-use reveal"
+  },
+  {
+   "script": "inventory_loop",
+   "seed": 9,
+   "note": "THE inventory/equipment loop; weapon-gated kit proof"
+  },
+  {
+   "script": "atmosphere_check",
+   "seed": 9,
+   "note": "mood-grade/phase-clock proof; day->dusk->day cycle"
+  },
+  {
+   "script": "field_skills_loop",
+   "seed": 9,
+   "fixture": "near_tactician",
+   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); K2b loadout assign/unassign + remapped-slot proof"
+  },
+  {
+   "script": "social_loop",
+   "seed": 9,
+   "fixture": "post_tutorial_street",
+   "note": "Social Pillar v1 proof; rotating talk pools -> [Diplomat]"
+  },
+  {
+   "script": "sewers_walkthrough",
+   "seed": 9,
+   "fixture": "near_sewers",
+   "note": "Liscor sewers proof; grate-gate seam + vermin fight"
+  },
+  {
+   "script": "cisterns_fight",
+   "seed": 9,
+   "fixture": "cisterns_fight_start",
+   "note": "Quest 1 FIGHT path (clear shield_spiders nest)"
+  },
+  {
+   "script": "cisterns_talk",
+   "seed": 9,
+   "fixture": "cisterns_talk_start",
+   "note": "Quest 1 TALK path (persuade Zevara, no combat)"
+  },
+  {
+   "script": "cisterns_scout",
+   "seed": 9,
+   "fixture": "cisterns_scout_start",
+   "note": "Quest 1 SKILL path ([Appraise Foe] the nest_ledge)"
+  },
+  {
+   "script": "wrong_order_loop",
+   "seed": 9,
+   "fixture": "wrong_order_loop_start",
+   "note": "The Wrong Order inn-local give->cook->report loop"
+  },
+  {
+   "script": "wrong_order_talk",
+   "seed": 9,
+   "fixture": "wrong_order_talk_start",
+   "note": "The Wrong Order TALK path (Krshia smooth-over, no combat)"
+  },
+  {
+   "script": "wrong_order_fight",
+   "seed": 9,
+   "fixture": "wrong_order_fight_start",
+   "note": "The Wrong Order FIGHT path (clear supplier_scavengers)"
+  },
+  {
+   "script": "economy_loop",
+   "seed": 9,
+   "fixture": "economy_loop_start",
+   "note": "the coin arc: chore earn -> loot -> shop -> spend"
+  },
+  {
+   "script": "char_creation",
+   "seed": null,
+   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name)"
+  },
+  {
+   "script": "deep_descent",
+   "seed": 9,
+   "fixture": "deep_descent_start",
+   "note": "the Raskghar descent + JOIN-Relc boss victory"
+  },
+  {
+   "script": "climax_chain",
+   "seed": 9,
+   "fixture": "climax_surface_start",
+   "note": "the tremor beat + Zevara summons + Olesm briefing"
+  },
+  {
+   "script": "climax_seal",
+   "seed": 9,
+   "fixture": "climax_sealed_start",
+   "note": "the seal beat + journal Act III advance"
+  },
+  {
+   "script": "arc_flow",
+   "seed": 9,
+   "fixture": "near_act3",
+   "note": "THE WHOLE ACT III ARC PROOF, tremor through epilogue"
+  },
+  {
+   "script": "status_first_encounter",
+   "seed": 9,
+   "fixture": "near_mage_cast",
+   "note": "status glossary + first-encounter combat-feed surface"
+  },
+  {
+   "script": "ice_floor_loop",
+   "seed": 9,
+   "fixture": "near_ice_floor",
+   "note": "GH#21: [Ice Floor] area terrain effect -- cast/friendly-fire/standing-slow/expiry, live"
+  },
+  {
+   "script": "gear_loop",
+   "seed": 9,
+   "fixture": "gear_loop_start",
+   "note": "resonance-gear UI proof (accessory rows, capacity refusal)"
+  },
+  {
+   "script": "stealth_loop",
+   "seed": 9,
+   "fixture": "near_ambush_sneak",
+   "note": "the [Stealth] seam: skip an ambush, break it, positive control"
+  },
+  {
+   "script": "rogue_earn_loop",
+   "seed": 9,
+   "fixture": "near_rogue",
+   "note": "K3 [Rogue] earn: recovered_crate_watch -> sleep -> class_gained -> [Stealth] fielded"
+  },
+  {
+   "script": "stages_loop",
+   "seed": 9,
+   "fixture": "krshia_stage3_pre",
+   "note": "Social Pillar II: talk_pool_stages base->final (Krshia), unlocked hub topic + shop discount perk surface"
+  },
+  {
+   "script": "guild_interior_walkthrough",
+   "seed": 9,
+   "fixture": "near_guild",
+   "note": "M-DEPTH DP1: guild_door real-door round-trip, Selys-behind-the-desk (pool + graph incl. desk-context node), board/notice-wall dressed props, Renn/Ilvo/Yelra walk-on pool lines"
+  },
+  {
+   "script": "board_loop",
+   "seed": 9,
+   "fixture": "board_loop_start",
+   "note": "M-DEPTH DP2: THE REQUEST BOARD goes live -- browse/accept/fulfill/turn-in at Selys's desk (delta-since-accept, gold payout), slate rotation across a sleep + the 'slate rotated overnight' line"
+  },
+  {
+   "script": "upstairs_walkthrough",
+   "seed": 9,
+   "note": "M-DEPTH DP3: the inn's upstairs -- stairs door pair, Lyonette's locked door (observe+locked_toast), sleep-beat parity proven live at the PC's own bed (same events, one extra flavor toast)"
+  },
+  {
+   "script": "barracks_walkthrough",
+   "seed": 9,
+   "fixture": "near_barracks",
+   "note": "M-DEPTH DP4: the Watch barracks + market-depth stalls -- bread_stall (flavor/observe) + peddler's mini-buy (watch_issue_gambeson, 20g), barracks_door real-door round-trip (the relocated watch_guard, zero prior QA touches), Duty Sergeant Dresk Ashgrave's talk_pool, Zevara's desk (she stays at the gate), THE CELL (locked_toast, empty-v1 dressed)"
+  },
+  {
+   "script": "delivery_loop",
+   "seed": 9,
+   "fixture": "near_runners_guild",
+   "note": "M-DEPTH DP5: the Runner's Guild delivery loop -- runners_guild_door round-trip, Vess's counter (talk_pool + vess_counter graph), THE DELIVERY BOARD browse, take slip -> real walked carry -> Chebyshev-1 arrival handoff at krshia_stall -> turn-in pay (1g exact), sleep-fail negative (parcel returns, no pay, delivery_failed armed) + slate rotation + the one-shot night-ledger bark; GH#27: a second, failure-free sleep proves Vess's OWN plain-rotation bark fires once per rotation and not twice in the same waking"
+  },
+  {
+   "script": "stage3_perks_loop",
+   "seed": 9,
+   "fixture": "stage3_perks_pre",
+   "note": "Issue #23: the once_per_waking dialogue seam's own proof -- Erin's daily meal (well_fed + hp_mod) and Relc's spar wager (+1g), both live: eat/win -> option gone same waking -> sleep clears well_fed + the bank -> both options back"
+  },
+  {
+   "script": "ruin_walkthrough",
+   "seed": 9,
+   "fixture": "near_ruin",
+   "note": "Magical Door plan Task D1 (issue #8): enter the gated ruin via a fixture with door_chain_started, real ruin_door door_when transition, walk the new ruin_surface map's bounds, read the pedestal-locked toast (anchor_stone_pedestal), round-trip exit via ruin_exit -- routes AROUND both new dormant encounters (rift_vermin_leak/ruin_guardian have no combat data yet, D2's job)"
+  },
+  {
+   "script": "door_chain_fight",
+   "seed": 9,
+   "fixture": "door_chain_fight_start",
+   "note": "Magical Door plan Task D3 (issue #8): the FIGHT leg + full end-to-end chain -- Erin's beat-1 flicker line live, Pisces sends the player to clear rift_vermin_leak (inn), the ruin recovery run (ruin_guardian fight + anchor_stone_pedestal opens), Krshia's resonant_catalyst purchase -- both quest beats complete"
+  },
+  {
+   "script": "door_chain_talk",
+   "seed": 9,
+   "fixture": "door_chain_talk_start",
+   "note": "Magical Door plan Task D3 (issue #8): the TALK leg -- persuades Pisces (zero combat), banks the SAME door_understood as the FIGHT leg, then opens anchor_stone_pedestal WITHOUT ever fighting ruin_guardian (the pedestal's contains_when OR-gate proof from a non-FIGHT producer)"
+  },
+  {
+   "script": "door_chain_scout",
+   "seed": 9,
+   "fixture": "door_chain_scout_start",
+   "note": "Magical Door plan Task D3 (issue #8): the SKILL leg -- [Observe]s pantry_door_runes, reports to Pisces (banks the SAME door_understood), then buys Krshia's resonant_catalyst (bought_catalyst)"
+  },
+  {
+   "script": "door_awakening",
+   "seed": 9,
+   "fixture": "door_awakening_start",
+   "note": "Magical Door plan Task D4 (issue #8): the full awakening chain from a beat-3-ready fixture through 3 real sleeps -- 2 silent study beats then door_awakened banks + the GDI line queues under the sleep veil -- to the awakened pantry_door's interact rewire (opens the portal menu, not the flavor toast)"
+  },
+  {
+   "script": "portal_menu",
+   "seed": 9,
+   "fixture": "portal_menu_start",
+   "note": "Magical Door plan Task D4 (issue #8, the O2 rule): fast-travel round-trip -- menu at the inn anchor -> street arrival -> menu at the street anchor -> return to the inn -- pins the map_changed pair in order and asserts no combat_started/player_moved/player_blocked fires anywhere in the run (portal travel is transition() only)"
+  },
+  {
+   "script": "garden_walkthrough",
+   "seed": 9,
+   "fixture": "near_garden",
+   "note": "Issue #9 Task G1 (spec Sec5 RATIFIED): the Garden of Sanctuary unlock-to-rest loop -- the qualifying sleep silently banks garden_door_unlocked (act >= III AND K=2 of 4 ratified legs), Erin's talk_pool_stages acknowledgment, garden_door opens for real at the inn, day-bright identity + fountain + misted-rise clearing live on garden_sanctuary, rest-bed sleep parity at garden_bed, round-trip exit -- plus a whole-run no-violence sim-guard cross-check (combat_started never fires)"
+  },
+  {
+   "script": "riverfarm_walkthrough",
+   "seed": 9,
+   "fixture": "near_riverfarm",
+   "note": "8b Task R1 (issue #10): door arrival via the portal contract's first exercise (locked shape 1) -- village walk (headman talk_pool + the charmed villager's echo_of tell, locked shape 3) -- the night wolf gate NEGATIVE at day (encounter_when, locked shape 2, canonical-pinned) -- the hollow round-trip -- the witch's two-form read across a REAL live mid-waking phase crossing (no sleep, locked shape 4) -- routes around briar_collectors/briar_collectors_deep (live encounters post-R2 merge; interact-only, never faced -- combat_started absent whole-run)"
+  }
+ ]
 }

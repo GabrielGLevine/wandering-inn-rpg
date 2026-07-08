@@ -909,7 +909,7 @@ func _resolve_entity_render(ent: Dictionary) -> Dictionary:
 	return result
 
 
-## Three `when` shapes:
+## Four `when` shapes:
 ## `{"counter": id, "at": n}` -- true once `Game.sim.accomplishment_count(id)
 ## >= n` (the dirty_table/unlit_lantern case, driven by ACCOMPLISHMENT_RECORDED
 ## below); `{"container_opened": true}` -- true once `Game.sim.container_state`
@@ -922,6 +922,13 @@ func _resolve_entity_render(ent: Dictionary) -> Dictionary:
 ## dormant set (set on victory, cleared at the sleep beat); driven by the
 ## UI_COMBAT_HIDDEN refresh below (post-combat, no map change) and by the
 ## MAP_CHANGED rebuild (re-arm shows on the next visit after sleep).
+## `{"phase": [<phase strings>]}` (8b R1, issue #10) -- true while
+## `Game.sim.phase()` is a member of the listed set; the SAME `when`-vocabulary
+## shape `_encounter_gate_met` (wi_game.gd) reads for `encounter_when` --
+## shared design, two consumers (locked shape 2/4). The witch's two-form read
+## (elder by day, young dusk/night) is this shape's first use: driven by the
+## PHASE_CHANGED refresh below, so the swap tracks atmosphere.gd's own phase
+## clock live, mid-waking, with no map reload needed.
 func _visual_state_active(when: Dictionary, entity_id: String) -> bool:
 	if when.has("counter"):
 		return Game.sim.accomplishment_count(String(when["counter"])) >= int(when.get("at", 1))
@@ -929,6 +936,8 @@ func _visual_state_active(when: Dictionary, entity_id: String) -> bool:
 		return bool(Game.sim.container_state.get(entity_id, false))
 	if when.has("dormant"):
 		return Game.sim.dormant_encounters.has(entity_id) == bool(when["dormant"])
+	if when.has("phase"):
+		return (when["phase"] as Array).has(Game.sim.phase())
 	return false
 
 
@@ -985,6 +994,23 @@ func _refresh_entities_watching_counter(counter_name: String) -> void:
 		var ent := raw_ent as Dictionary
 		for raw_state: Variant in ent.get("visual_states", []):
 			if raw_state is Dictionary and String((raw_state as Dictionary).get("when", {}).get("counter", "")) == counter_name:
+				_refresh_entity_visual(id)
+				break
+
+
+## PHASE_CHANGED fires on every phase crossing AND on the sleep beat
+## (which resets to "day") -- re-render any on-map entity whose
+## `visual_states` watch the `phase` shape (8b R1: the witch's elder/young
+## swap). Mirrors `_refresh_entities_watching_counter`'s scan shape exactly,
+## keyed on "phase" presence instead of a specific counter id (phase has no
+## id to match, just the shape itself).
+func _refresh_entities_watching_phase() -> void:
+	for id: String in _entity_visuals.keys():
+		var raw_ent: Variant = Game.sim.entities.get(id, null)
+		if raw_ent == null:
+			continue
+		for raw_state: Variant in (raw_ent as Dictionary).get("visual_states", []):
+			if raw_state is Dictionary and (raw_state as Dictionary).get("when", {}).has("phase"):
 				_refresh_entity_visual(id)
 				break
 
@@ -1349,6 +1375,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# the set is empty, so this frees the lingering overlay; on a mid-waking
 		# dusk/night crossing (ice still frozen) it repaints the same cells (cheap).
 		_reconcile_ice_overlay()
+		# 8b R1 (issue #10): the witch's two-form visual_states swap tracks
+		# atmosphere.gd's own phase clock live -- this fires on every
+		# crossing AND the sleep-to-day reset, so the elder/young read is
+		# never stale after a map reload OR mid-waking (danger list: "must
+		# not fight atmosphere.gd's phase clock").
+		_refresh_entities_watching_phase()
 	elif type == WIEvents.TERRAIN_CHANGED:
 		# A cell changed its traversable look. Only act on the
 		# CURRENT map (a stale cross-map event can't happen today -- both seams emit

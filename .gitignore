@@ -36,6 +36,8 @@ docs/*_api_key.txt
 /wandering_inn_game/assets/audio/music/title_theme.ogg.import
 /wandering_inn_game/assets/audio/music/victory.ogg
 /wandering_inn_game/assets/audio/music/victory.ogg.import
+/wandering_inn_game/assets/props/admurin/Canine_Gray_Idle.png
+/wandering_inn_game/assets/props/admurin/Canine_Gray_Idle.png.import
 /wandering_inn_game/assets/props/admurin/Chests.png
 /wandering_inn_game/assets/props/admurin/Chests.png.import
 /wandering_inn_game/assets/props/cave/Props.png
@@ -44,6 +46,10 @@ docs/*_api_key.txt
 /wandering_inn_game/assets/props/cemetery/Graves.png.import
 /wandering_inn_game/assets/props/cemetery/Props.png
 /wandering_inn_game/assets/props/cemetery/Props.png.import
+/wandering_inn_game/assets/props/fairy_forest/Props.png
+/wandering_inn_game/assets/props/fairy_forest/Props.png.import
+/wandering_inn_game/assets/props/fairy_forest/Tree.png
+/wandering_inn_game/assets/props/fairy_forest/Tree.png.import
 /wandering_inn_game/assets/props/free_pack/Bonfire_01-Sheet.png
 /wandering_inn_game/assets/props/free_pack/Bonfire_01-Sheet.png.import
 /wandering_inn_game/assets/props/free_pack/Building_Roofs.png
@@ -56,6 +62,8 @@ docs/*_api_key.txt
 /wandering_inn_game/assets/props/free_pack/Cooking_Estructure.png.import
 /wandering_inn_game/assets/props/free_pack/Esoteric.png
 /wandering_inn_game/assets/props/free_pack/Esoteric.png.import
+/wandering_inn_game/assets/props/free_pack/Farm.png
+/wandering_inn_game/assets/props/free_pack/Farm.png.import
 /wandering_inn_game/assets/props/free_pack/Furnace.png
 /wandering_inn_game/assets/props/free_pack/Furnace.png.import
 /wandering_inn_game/assets/props/free_pack/Furniture.png
@@ -76,6 +84,8 @@ docs/*_api_key.txt
 /wandering_inn_game/assets/props/free_pack/Tree_M2_S4.png.import
 /wandering_inn_game/assets/props/free_pack/Vegetation.png
 /wandering_inn_game/assets/props/free_pack/Vegetation.png.import
+/wandering_inn_game/assets/props/garden/Feminine-Idle-Sheet.png
+/wandering_inn_game/assets/props/garden/Feminine-Idle-Sheet.png.import
 /wandering_inn_game/assets/props/sewer/Props.png
 /wandering_inn_game/assets/props/sewer/Props.png.import
 /wandering_inn_game/assets/sprites/a_hunter/Idle_Down-Sheet.png
@@ -316,6 +326,8 @@ docs/*_api_key.txt
 /wandering_inn_game/assets/tiles/cemetery/Floor.png.import
 /wandering_inn_game/assets/tiles/cemetery/Walls.png
 /wandering_inn_game/assets/tiles/cemetery/Walls.png.import
+/wandering_inn_game/assets/tiles/fairy_forest/Tiles.png
+/wandering_inn_game/assets/tiles/fairy_forest/Tiles.png.import
 /wandering_inn_game/assets/tiles/floor_tiles_12/dirt_01.png
 /wandering_inn_game/assets/tiles/floor_tiles_12/dirt_01.png.import
 /wandering_inn_game/assets/tiles/floor_tiles_12/grass_01.png
@@ -336,8 +348,6 @@ docs/*_api_key.txt
 /wandering_inn_game/assets/tiles/free_pack/Water_tiles.png.import
 /wandering_inn_game/assets/tiles/garden/Tiles.png
 /wandering_inn_game/assets/tiles/garden/Tiles.png.import
-/wandering_inn_game/assets/props/garden/Feminine-Idle-Sheet.png
-/wandering_inn_game/assets/props/garden/Feminine-Idle-Sheet.png.import
 /wandering_inn_game/assets/tiles/library/Tiles.png
 /wandering_inn_game/assets/tiles/library/Tiles.png.import
 /wandering_inn_game/assets/ui/chrome/Banner_Horizontal.png

@@ -16,6 +16,15 @@
       "cell": [9, 6],
       "requires_accomplishment": "door_awakened",
       "arrival_toast": "Warm air, woodsmoke, the creak of the pantry door settling shut behind you. You're back, and you didn't walk here."
+    },
+    {
+      "id": "riverfarm",
+      "display_name": "Riverfarm",
+      "map": "riverfarm_village",
+      "cell": [13, 5],
+      "requires_accomplishment": "riverfarm_attuned",
+      "arrival_toast": "The light warms and the air smells of wheat and river water before you've taken a step. Riverfarm, same as the rumor said.",
+      "_comment": "8b R1 (issue #10) -- the anchor-stone-per-region idiom's first genuinely NEW instance (zero code, per this file's own top-level comment). riverfarm_attuned banks from the Guild-board rumor beat (guild_board's own board_rumors list in skeleton_scene.json, read at THE REQUEST BOARD -- deliberately NOT a bounties.json posting, since that pool's size is load-bearing for every canonical seed's rotation window), not from any door-awakening beat -- a new region earns its OWN attunement, distinct from the Liscor pair's shared door_awakened. Arrival cell (13,5) sits one cell east of riverfarm_anchor_stone (12,5) at the village's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
     }
   ]
 }
