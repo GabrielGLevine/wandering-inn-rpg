@@ -293,6 +293,13 @@ func _build_expected_counts() -> Dictionary:
 	counts["memorial_statue_drake/idle"] = 1
 	counts["memorial_statue_goblin/idle"] = 1
 
+	## Riverfarm combat roster -- owned, single-frame PixelLab statics
+	## (briar_collector/briar_collector_deep/river_wolf), same shape as the
+	## training_dummy/memorial-hill entries above.
+	counts["briar_collector/idle"] = 1
+	counts["briar_collector_deep/idle"] = 1
+	counts["river_wolf/idle"] = 1
+
 	return counts
 
 

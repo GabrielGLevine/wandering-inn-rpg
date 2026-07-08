@@ -1086,6 +1086,132 @@
      ]
     }
    ]
+  },
+  {
+   "_comment": "The witch's hollow -- shared arena for both `briar_collectors` and `briar_collectors_deep` (same clearing, escalated roster on the second wave). biome `witch_hollow` matches the staged art fragment name (docs/design/riverfarm-art/handoff.md) so this arena resolves cleanly once that biome entry lands; until then WISpriteRegistry's fallback-art path renders a placeholder rather than failing. Blocked cells are the bent-tree ring (a forest clearing, not a walled room) -- kept off every spawn column/row so the reachability BFS in test_combat_data.gd holds. floor_layers/decor deliberately empty: no verified tile-variant coordinates exist for the not-yet-committed biome, and guessing pixel picks without a windowed screenshot is the exact mistake wi-art-and-sprites warns against -- leave for the wiring/art-verification pass rather than ship an unconfirmed guess.",
+   "id": "witch_hollow",
+   "biome": "witch_hollow",
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     7,
+     5
+    ],
+    [
+     9,
+     0
+    ]
+   ],
+   "player_spawns": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "floor_layers": [],
+   "decor": []
+  },
+  {
+   "_comment": "Village edge at night -- `river_wolf_pack`'s arena, reached only through the map's own night-phase encounter gate (unreachable at day by design; the day-negative canonical proof is lane alpha's). biome `riverfarm_village` reuses the village's own staged floor family (docs/design/riverfarm-art/handoff.md) rather than a bespoke night biome -- the dark read comes from atmosphere.gd's phase mood grade, not a different tileset. Sparse blocked cells (an open field, not a forest) -- an ambush wants sightlines, not cover. TRAP for whoever wires moods.json: confirm riverfarm_village's night grade against atmosphere.gd's arena-brightness floor (the cave_mouth precedent) before shipping -- a fight this dark could read as HP-bar-illegible even though nothing here structurally requires an `arena_moods` override. floor_layers/decor empty for the same not-yet-verified-biome reason as witch_hollow.",
+   "id": "village_edge_night",
+   "biome": "riverfarm_village",
+   "grid": {
+    "width": 12,
+    "height": 8
+   },
+   "blocked": [
+    [
+     5,
+     1
+    ],
+    [
+     6,
+     6
+    ]
+   ],
+   "player_spawns": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "enemy_spawns": [
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "floor_layers": [],
+   "decor": []
   }
  ]
 }

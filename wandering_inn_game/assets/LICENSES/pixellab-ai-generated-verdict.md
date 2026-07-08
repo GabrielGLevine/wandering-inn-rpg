@@ -147,3 +147,24 @@ repo) → the `_stone.png` output committed below.
 All 5 anchors PIL-measured (alpha bbox bottom / frame height) per the
 ANCHOR RULE, windowed-verified via `garden_walkthrough`. Same PixelLab-ToS
 ownership / redistributability as everything above.
+
+## Riverfarm 8b, Task R2 (2026-07-08) — combat data lane
+
+Three static single-frame combat sprites, `/v1/generate-image-pixflux`
+(`no_background: true`, 64×64, `view: "low top-down"`), one accepted
+candidate each (3 gens total, no rejects). Provenance/raw outputs +
+generator script: `/private/tmp/.../scratchpad/riverfarm_r2_gens/`
+(session scratchpad, not committed — the PNGs below are the only
+artifact). Anchors PIL alpha-bbox-measured per the ANCHOR RULE but **NOT
+windowed-screenshot-verified** (R2 is a data-only lane with no skeleton_scene
+placement in scope this task) — flagged for the RF-close machine-playtest
+pass to confirm feet-plane/scale reads correctly once lane α wires the
+encounter entities.
+
+| Path | Subject | Prompt gist / notes |
+|---|---|---|
+| `assets/sprites/briar_collector/Idle-Sheet.png` | `briar_collectors` encounter roster (plant-class) | "animated briar bramble creature, thorned vine limbs, dark green foliage with wound-red berries, hunched menacing plant construct" — canon-cite wiki.wanderinginn.com/Plants (Birevine: "vines stronger than steel rope, covered in razor-sharp thorns"). Static, 64×64, 1 frame. Anchor `[0.5, 0.9531]`, `render_scale: 0.35`. |
+| `assets/sprites/briar_collector_deep/Idle-Sheet.png` | `briar_collectors_deep` encounter roster (escalated wave, same canon-cite) | "larger animated briar thicket creature, denser thorned vine limbs, near-black foliage with many deep wound-red berries, taller hunched menacing plant construct" — deliberately darker/taller silhouette so the escalation reads visually. Static, 64×64, 1 frame. Anchor `[0.5, 0.9531]`, `render_scale: 0.4`. |
+| `assets/sprites/river_wolf/Idle-Sheet.png` | `river_wolf_pack` (night-gated village-edge) roster | "mundane grey wolf, lean pack predator, low top-down game creature, fur texture, alert stance" — canon-cite wiki.wanderinginn.com/Monsters (Wilwolf, an attested wild-wolf monster whose fur is a crafting material, distinct from the goblin-tamed Carn Wolf). Chosen as an OWNED generation over the licensed Admurin Canine candidate `docs/design/riverfarm-art/picks.md` §6 flags, specifically so this lane never touches assets_manifest.json/the bundle (R2's charter). Static, 64×64, 1 frame. Anchor `[0.5, 0.7188]`, `render_scale: 0.32`. |
+
+Same PixelLab-ToS ownership / redistributability as everything above.
