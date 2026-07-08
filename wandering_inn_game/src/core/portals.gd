@@ -37,9 +37,15 @@ extends RefCounted
 ## Constraint: "the door prop NEVER speaks" -- this is a NEUTRAL location
 ## label in the WIBounties board-header idiom (`_interact_board`'s
 ## `target.get(DISPLAY_NAME, "The Request Board")`), never a character
-## line attributed to the door as a speaking entity.
+## line attributed to the door as a speaking entity. The Board precedent's
+## OTHER half binds the body copy too (D4 review MEDIUM): the boards' body
+## text is strict THIRD-PERSON notice register -- it describes the state of
+## the surface, it never addresses the player in the surface's own voice --
+## so HUB_TEXT below is a plain description of what the frame shows, not a
+## rhetorical question the door could be "asking". The door's only
+## milestone voice stays the GDI's (sleep_veil.gd's awakening line).
 const SPEAKER := "The Magical Door"
-const HUB_TEXT := "The frame has stopped pretending to be a door. Where does it open?"
+const HUB_TEXT := "The frame stands open on somewhere else. The attunement holds steady."
 const NEVER_MIND := "Let it be."
 
 
