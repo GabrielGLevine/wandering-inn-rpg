@@ -89,6 +89,17 @@ const SPARKS_TTL := 0.7  # frees the one-shot GPUParticles2D safely past its 0.4
 const BLOCKED_PROPS_BY_BIOME := {
 	"street": ["crate", "barrel"],
 	"cave": ["boulder", "mushroom_purple_s"],
+	## witch_hollow: the exploration map's bent-tree-ring identity must
+	## survive into the briar fights. `hollow_bent_tree` is the map's own
+	## small-tree pick re-scaled to single-cell cover (its sprites.json
+	## entry documents the scale constraint); `bush_green` is already
+	## cell-sized. Both are real silhouettes, not flat recolored tiles.
+	"witch_hollow": ["hollow_bent_tree", "bush_green"],
+	## riverfarm_village (village_edge_night): without a pool its 2 blocked
+	## cells fell to the flat blocked tile, which the deep-blue night grade
+	## crushed to bare black squares (windowed 03_night_wolf_arena read).
+	## Field-edge register: a rock and a bush, both single-cell-verified.
+	"riverfarm_village": ["boulder", "bush_green"],
 }
 
 ## GH #28 DARK-ARENAS legibility fix. combat_board_root() is a bare Node2D

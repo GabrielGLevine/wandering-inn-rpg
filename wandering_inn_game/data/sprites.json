@@ -2630,7 +2630,7 @@
   }
  },
  "briar_collector": {
-  "_comment": "Plant-class combatant, `briar_collectors` encounter roster. Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this sprite realizes an animate collector-construct of that plant, witch-craft-bound, not a new invented species. PixelLab v1 pixflux, 64x64, no_background, low top-down. PIL alpha bbox feet row 61/64 -- anchor measured; render_scale/anchor are a first-pass goblin-scale estimate, UNVERIFIED by windowed screenshot (no skeleton_scene entity references this sprite yet) -- confirm before trusting the silhouette read.",
+  "_comment": "Plant-class combatant, `briar_collectors` encounter roster. Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this sprite realizes an animate collector-construct of that plant, witch-craft-bound, not a new invented species. PixelLab v1 pixflux, 64x64, no_background, low top-down. PIL alpha bbox feet row 61/64 -- anchor measured; render_scale/anchor VERIFIED by windowed screenshot (riverfarm_fight's 01_briar_collectors_with_hunter: thorny silhouette legible on the witch_hollow board, feet on cell, HP bar clear of the sprite).",
   "render_scale": 0.35,
   "anchor": [
    0.5,
@@ -2649,7 +2649,7 @@
   }
  },
  "briar_collector_deep": {
-  "_comment": "Plant-class combatant, `briar_collectors_deep` encounter roster (the escalated second wave of the same hollow fight -- see `briar_collector`'s _comment for the shared canon-cite). Distinct sprite (darker, denser thorns/berries, taller) so the escalation reads visually, not just in stat sheets. PIL alpha bbox feet row 61/64 -- anchor measured; render_scale/anchor UNVERIFIED by windowed screenshot -- confirm before trusting the silhouette read.",
+  "_comment": "Plant-class combatant, `briar_collectors_deep` encounter roster (the escalated second wave of the same hollow fight -- see `briar_collector`'s _comment for the shared canon-cite). Distinct sprite (darker, denser thorns/berries, taller) so the escalation reads visually, not just in stat sheets. PIL alpha bbox feet row 61/64 -- anchor measured; render_scale/anchor VERIFIED by windowed screenshot (riverfarm_fight's 02_briar_deep_wave: reads darker/denser than the shallow variant beside the same PC/ally scale, feet on cell).",
   "render_scale": 0.4,
   "anchor": [
    0.5,
@@ -2668,7 +2668,7 @@
   }
  },
  "river_wolf": {
-  "_comment": "Mundane-fauna combatant, `river_wolf_pack` (night-gated village-edge encounter) roster. Canon-cite: wiki.wanderinginn.com/Monsters -- Wilwolf (attested wiki monster, fur harvested as a crafting material per Chapter_8.06_RT, i.e. an ordinary huntable wild predator, not a named/tamed subspecies like Carn Wolf) -- realized as a plain grey pack wolf threatening farmland at night. OWNED PixelLab generation (v1 pixflux, 64x64, no_background, low top-down) chosen over the licensed Admurin Canine candidate (docs/design/riverfarm-art/picks.md sec.6) to avoid touching assets_manifest.json/the bundle for this sprite entirely -- swapping to the Admurin pack later is a sprites.json edit, not a data change. PIL alpha bbox feet row 46/64 -- anchor measured; render_scale/anchor UNVERIFIED by windowed screenshot -- confirm before trusting the silhouette read.",
+  "_comment": "Mundane-fauna combatant, `river_wolf_pack` (night-gated village-edge encounter) roster. Canon-cite: wiki.wanderinginn.com/Monsters -- Wilwolf (attested wiki monster, fur harvested as a crafting material per Chapter_8.06_RT, i.e. an ordinary huntable wild predator, not a named/tamed subspecies like Carn Wolf) -- realized as a plain grey pack wolf threatening farmland at night. OWNED PixelLab generation (v1 pixflux, 64x64, no_background, low top-down) chosen over the licensed Admurin Canine candidate (docs/design/riverfarm-art/picks.md sec.6) to avoid touching assets_manifest.json/the bundle for this sprite entirely -- swapping to the Admurin pack later is a sprites.json edit, not a data change. PIL alpha bbox feet row 46/64 -- anchor measured; render_scale/anchor VERIFIED by windowed screenshot (riverfarm_fight's 03_night_wolf_arena: grey wolf silhouettes legible against the deep-blue night grade, HP numerals full-bright).",
   "render_scale": 0.32,
   "anchor": [
    0.5,
@@ -3074,6 +3074,26 @@
  },
  "hollow_small_tree": {
   "render_scale": 0.6,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/fairy_forest/Tree.png",
+    "region": [
+     471,
+     582,
+     50,
+     90
+    ],
+    "frame_size": [
+     50,
+     90
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "hollow_bent_tree": {
+  "_comment": "hollow_small_tree's exact region at COMBAT-COVER scale: in-grid blocked-cell props must stay ~1 cell wide (16px effective; oversized cover floats over neighbors' HP bars -- the mushroom_purple_l lesson on board_renderer.gd's BLOCKED_PROPS_BY_BIOME). 0.32 lands 16x28.8 -- a slim bent-tree silhouette that overhangs upward like boulder does, never sideways. Keep in sync with hollow_small_tree's region if that pick ever moves.",
+  "render_scale": 0.32,
   "animations": {
    "idle": {
     "sheet": "res://assets/props/fairy_forest/Tree.png",
