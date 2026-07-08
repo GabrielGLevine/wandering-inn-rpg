@@ -1,0 +1,29 @@
+{
+ "_comment": "Issue #25 canonical's fixture: Olesm's stage 3 already reached (cisterns_reported:1, chatted_with_olesm:3) so the chess hub option's accomplishment leg is met, but gold:1 is ONE SHORT of the wager's 2g floor -- the fixture-first policy's exact fit for a script whose SUBJECT is the gold-gate's honest-grey behavior (Krshia's stage3 precedent, applied to a real +/- wager instead of a buy). Positioned at the street, adjacent+facing Olesm (29,4) facing up, social_talked already carrying {olesm:true} so the FIRST interact opens the real hub directly (mirrors stage3_perks_pre's own trick) instead of spending a talk_pool line first.",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [29, 4],
+  "player_facing": [0, -1],
+  "classes": { "warrior": 1 },
+  "accomplishments": {
+   "cisterns_reported": 1,
+   "chatted_with_olesm": 3
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": { "weapon": "rusty_sword", "armor": "" },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "social_talked": { "olesm": true },
+  "entity_first_use": {},
+  "gold": 1,
+  "rng_state": "9"
+ }
+}

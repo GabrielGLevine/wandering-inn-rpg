@@ -396,6 +396,12 @@
    "seed": 9,
    "fixture": "riverfarm_skill_start",
    "note": "8b Task R3 (issue #11) 'The Price of a Favor' SKILL path -- no combat: give -> the gauntlet in sequence (basic_cooking the offering -> [Light] the threshold candles -> [Observe] the true knot, the existing requires_skill/on_skill_use field-skill seam) -- the last step banks blight_lifted directly, no separate report needed -- then report -> completion."
+  },
+  {
+   "script": "olesm_chess_loop",
+   "seed": 9,
+   "fixture": "olesm_chess_pre",
+   "note": "Issue #25: Olesm's chess-match payoff -- the stage-3 hub option is visible but GREYED while 2g-short (gold-gate honesty, never a debt); a real Serve earns the shortfall; the honest counter-move beat (a wrong-move loop proven, then the correct move) banks chess_with_olesm + the +2g win side of the wager; the hub option retires for good (hide_when) and the shorter rematch talk_pool_stages line stands in its place after a sleep"
   }
  ]
 }

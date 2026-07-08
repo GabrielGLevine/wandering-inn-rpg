@@ -1,0 +1,144 @@
+{
+ "_comment": "Issue #25 canonical: Olesm's chess-match payoff (was option+frame-only, a real dead end HANDOFF flagged from playtest). FIXTURE-FIRST (olesm_chess_pre: stage 3 already reached, gold:1 -- ONE SHORT of the 2g wager floor, social_talked pre-set so the first interact opens the real hub directly). Proves, in order: (1) BROKE GREY -- the stage-3-met hub option is visible but LOCKED ('costs 2 gold'), never hidden, never selectable into debt; (2) a REAL Serve (patron_serving, existing content, +2g) covers the shortfall; (3) re-opened, the SAME option is now unlocked; (4) the honest find-the-counter beat -- a wrong move loops back to the identical puzzle node (Olesm's in-voice correction, no state change), then the correct move wins: banks chess_with_olesm + the wager's +2g side; (5) the hub option is GONE for good afterward (hide_when on the counter, not a per-waking gate -- this is a one-time authored scene); (6) a real sleep clears social_talked, and the new waking's pool line is the shorter olesm_after_the_match residue (talk_pool_stages' third, newest-wins stage), still absent from the hub the second time around.",
+ "fixture_save": "olesm_chess_pre",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "street" },
+  { "action": "assert_state", "path": "player_cell", "equals": [29, 4] },
+  { "action": "assert_state", "path": "gold", "equals": 1 },
+
+  { "_comment": "== (1) BROKE GREY == social_talked already carries {olesm:true}, so this first interact opens the real hub directly. Fixture pins cisterns_reported:1 + chatted_with_olesm:3 (stage 3 met) with every other accomplishment unmet, so the visible list is exactly 7 entries: [0] chess flavor topic [1] [Tactician] weak-point (class-gated, visible-locked regardless of gold) [2] cisterns worry topic [3] I'll leave you to your tally. [4] stage-2 doubt topic [5] stage-3 ambition topic [6] Set the board, Olesm. -- LOCKED (gold:1 < the compound's gold:2 leg) even though its accomplishment leg is fully met.", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
+  { "_comment": "dialogue_node fires from WIDialogue._enter BEFORE the UI layer's own ui_dialogue_shown confirmation -- the domain-event-then-ui-confirmation order, not the reverse (krshia_stage3_pre's exact ordering for a fresh open whose hub content is under test).", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?", "options": [
+   { "text": "That board. You're playing yourself?", "locked": false, "requirement": "" },
+   { "text": "[Tactician] What's the city's real weak point?", "locked": true, "requirement": "requires Tactician 1" },
+   { "text": "You look worried about something.", "locked": false, "requirement": "" },
+   { "text": "I'll leave you to your tally.", "locked": false, "requirement": "" },
+   { "text": "You run half this city from that desk. You know that, right?", "locked": false, "requirement": "" },
+   { "text": "What's next for you, Olesm?", "locked": false, "requirement": "" },
+   { "text": "Set the board, Olesm.", "locked": true, "requirement": "costs 2 gold" }
+  ] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "00_broke_greyed_not_hidden" },
+
+  { "_comment": "Close out via 'I'll leave you to your tally.' (visible index 3).", "action": "move", "direction": "down", "steps": 3 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+
+  { "_comment": "== (2) EARN THE SHORTFALL == a real Serve at the Hungry Patron (inn, 5,6) -- existing content, +2 gold, no new mechanism. player_facing stays up the whole run (teleport never touches it, and only combat/field moves would) -- (5,7) facing up already targets (5,6).", "action": "teleport", "map": "inn", "cell": [5, 7] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [5, 7] }, "timeout_sec": 5 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "patron_serving" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Hungry Patron", "text": "There you are! Stew, bread, anything - I've been sitting here an age." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "_comment": "'Bring her a bowl from the kitchen. (Serve)' is visible index 0.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Hungry Patron", "text": "Ahh. Now THAT'S service. I'll want another before long, mind." }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "gold", "equals": 3 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+
+  { "_comment": "== (3) NOW UNLOCKED == back to Olesm, same waking (social_talked[olesm] still true).", "action": "teleport", "map": "street", "cell": [29, 4] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street", "cell": [29, 4] }, "timeout_sec": 5 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?", "options": [
+   { "text": "That board. You're playing yourself?", "locked": false, "requirement": "" },
+   { "text": "[Tactician] What's the city's real weak point?", "locked": true, "requirement": "requires Tactician 1" },
+   { "text": "You look worried about something.", "locked": false, "requirement": "" },
+   { "text": "I'll leave you to your tally.", "locked": false, "requirement": "" },
+   { "text": "You run half this city from that desk. You know that, right?", "locked": false, "requirement": "" },
+   { "text": "What's next for you, Olesm?", "locked": false, "requirement": "" },
+   { "text": "Set the board, Olesm.", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "01_funded_now_unlocked" },
+
+  { "_comment": "== (4) THE MATCH == 'Set the board, Olesm.' is visible index 6.", "action": "move", "direction": "down", "steps": 6 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "The board's been out since Tuesday, if you want the honest count. I'm not going to pretend otherwise. Whenever you're ready. I'll even let you have white, which should tell you how confident I am." }, "timeout_sec": 5 },
+  { "_comment": "'Sit. Show me.' is visible index 0.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Not a fresh game, actually. Same position, move for move: my opening, her replies, right up to the moment I stopped seeing straight. Eleven moves in, my bishop's aimed at your king and I am, in my own defense, feeling rather clever about it. Somewhere in here she found a door I didn't. Find it again and I'll believe two people can see the same board the same way." }, "timeout_sec": 5 },
+  { "_comment": "'Set it up.' is visible index 0.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Here. Your rook's pinned to the corner, my bishop threatens mate in three if you sit still, and I am rather pleased with myself. Two gold on it, friendly, either way. What's the move?", "options": [
+   { "text": "Trade the rook. Knight takes, clear the corner.", "locked": false, "requirement": "" },
+   { "text": "Queen takes the bishop. End the threat now.", "locked": false, "requirement": "" },
+   { "text": "Ignore the bishop. Push the pawn, threaten mate in two instead.", "locked": false, "requirement": "" },
+   { "text": "Play it safe. Offer the draw.", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+
+  { "_comment": "WRONG MOVE first (visible index 0) -- no effects, Olesm corrects in his own voice, loops back to the identical puzzle.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Safe. Sound. Exactly what I played, and exactly why I lost: I traded fear for fear and never once asked what SHE wanted. Try again." }, "timeout_sec": 5 },
+  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "chess_with_olesm" } },
+  { "action": "assert_state", "path": "gold", "equals": 3 },
+  { "_comment": "'Show me the board again.' is visible index 0.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Here. Your rook's pinned to the corner, my bishop threatens mate in three if you sit still, and I am rather pleased with myself. Two gold on it, friendly, either way. What's the move?", "options": [
+   { "text": "Trade the rook. Knight takes, clear the corner.", "locked": false, "requirement": "" },
+   { "text": "Queen takes the bishop. End the threat now.", "locked": false, "requirement": "" },
+   { "text": "Ignore the bishop. Push the pawn, threaten mate in two instead.", "locked": false, "requirement": "" },
+   { "text": "Play it safe. Offer the draw.", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+
+  { "_comment": "THE HONEST COUNTER (visible index 2) -- banks chess_with_olesm + the wager's +2g win side.", "action": "move", "direction": "down", "steps": 2 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "...Oh. OH. You'd let the mate stand and walk past it. That's her move. That is EXACTLY her move. I have stared at this position for a season and you found the door in one sitting. I don't know whether to be humiliated or thrilled. Both, I've decided. Here." }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "02_the_honest_counter" },
+  { "action": "assert_state", "path": "accomplishments.chess_with_olesm", "equals": 1 },
+  { "action": "assert_state", "path": "gold", "equals": 5 },
+  { "_comment": "'Good game, Olesm.' is visible index 0, ends the conversation.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+
+  { "_comment": "== (5) RETIRED FOR GOOD == re-open the SAME waking. chess_with_olesm:1 now hides 'Set the board, Olesm.' via hide_when -- the hub shrinks to exactly 6 entries, everything else byte-identical.", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?", "options": [
+   { "text": "That board. You're playing yourself?", "locked": false, "requirement": "" },
+   { "text": "[Tactician] What's the city's real weak point?", "locked": true, "requirement": "requires Tactician 1" },
+   { "text": "You look worried about something.", "locked": false, "requirement": "" },
+   { "text": "I'll leave you to your tally.", "locked": false, "requirement": "" },
+   { "text": "You run half this city from that desk. You know that, right?", "locked": false, "requirement": "" },
+   { "text": "What's next for you, Olesm?", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "_comment": "Close out via 'I'll leave you to your tally.' (still visible index 3 -- unaffected, it sits BEFORE the retired option in authored order).", "action": "move", "direction": "down", "steps": 3 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+
+  { "_comment": "== (6) THE RESIDUE POOL LINE == sleep clears social_talked (stage3_perks_loop's exact bed idiom).", "action": "teleport", "map": "inn", "cell": [2, 5] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [2, 5] }, "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "times_slept", "equals": 1 },
+
+  { "_comment": "Back to Olesm (29,4) -- the last real field move left facing DOWN from the bed, so a blocked 'move up' onto his occupied cell refaces up without displacing the player (move_player sets facing before its blocked check).", "action": "teleport", "map": "street", "cell": [29, 4] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street", "cell": [29, 4] }, "timeout_sec": 5 },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [29, 4] },
+  { "_comment": "New waking, social_talked cleared -- this first interact absorbs the rotating pool line. chatted_with_olesm is still 3 at gate-check time (stage gates read BEFORE this call's own bump): stage 1 and stage 2 are both met, but the NEW third stage (olesm_after_the_match, requires chess_with_olesm:1, banked earlier this run) is authored LAST and wins. idx = 3 % 2 = 1 -- the residue pool's SECOND line, the shorter callback.", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Olesm", "text": "I still replay our game some nights. I win in my head. It isn't the same." }, "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_olesm", "count": 4 } },
+  { "action": "screenshot", "name": "03_residue_pool_line" },
+
+  { "_comment": "Second interact this same new waking opens the real hub -- the retired option stays gone (still exactly 6 entries), proving the retirement survives a sleep, not just the rest of the original waking.", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "options": [
+   { "text": "That board. You're playing yourself?", "locked": false, "requirement": "" },
+   { "text": "[Tactician] What's the city's real weak point?", "locked": true, "requirement": "requires Tactician 1" },
+   { "text": "You look worried about something.", "locked": false, "requirement": "" },
+   { "text": "I'll leave you to your tally.", "locked": false, "requirement": "" },
+   { "text": "You run half this city from that desk. You know that, right?", "locked": false, "requirement": "" },
+   { "text": "What's next for you, Olesm?", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 3 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 }
+ ]
+}
