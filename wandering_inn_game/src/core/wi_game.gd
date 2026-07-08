@@ -2673,19 +2673,16 @@ func _holds_consolidated_class() -> bool:
 ## The four ratified legs: `cleaned_the_inn` (Helper's own `gained_by`
 ## threshold -- the most direct shipped "did real inn work" signal, standing
 ## in for the "worked_the_inn-class counters" plural framing in the plan);
-## `goblins_spared` (issue #26 -- banked by `goblin_parley`'s "Stand aside"
-## option, the sole currently-reachable nonviolent goblin-encounter
-## resolution; absent-as-zero for any save that never took that branch);
-## `sign_defended` (traced exhaustively -- goblin_encounter_1/_2/
-## chieftains_raid/goblin_parley all bank only `won_combat`/`street_cleared`,
-## NEVER a distinct sign-tied id; `read_the_inn_sign` is a flavor read, not a
-## "defended" beat -- this leg has no shipped producer today; see the G1
-## report); `resolved_wrong_order` (The Wrong Order, live). K=2 is checked as
-## a plain "how many of the 4 are banked" count -- with `sign_defended`
-## currently unproducible, the gate is REACHABLE today via any 2 of
-## {cleaned_the_inn, goblins_spared, resolved_wrong_order}, exactly matching
-## the Global Constraints' assurance that K=2 stays reachable through the
-## remaining legs while `sign_defended` awaits its own producer task.
+## `goblins_spared` (banked by `goblin_parley`'s "Stand aside" option, the
+## sole currently-reachable nonviolent goblin-encounter resolution;
+## absent-as-zero on any save that never took that branch);
+## `sign_defended` (banked by `goblin_encounter_1`'s on_victory -- the
+## mandatory floodplains ambush whose arena closes on the road_clear sign
+## line, so this leg is NEAR-UNIVERSAL post-tutorial; `read_the_inn_sign`
+## stays a flavor-only read, not a producer);
+## `resolved_wrong_order` (The Wrong Order, live). All four legs have live
+## producers; K=2 is a plain "how many of the 4 clear their threshold"
+## count.
 func _garden_earn_met() -> bool:
 	if accomplishment_count("reached_two_classes") < 1 or _quests_completed_count() < 3:
 		return false

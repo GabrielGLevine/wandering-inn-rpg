@@ -1095,11 +1095,11 @@ func _init() -> void:
 
 	# Act III now reached (2nd class banks reached_two_classes this sleep) but
 	# only ONE of the four legs is banked (cleaned_the_inn) -- K=2 unmet.
-	# goblins_spared/sign_defended are absent entirely from this instance's
-	# accomplishments -- sign_defended still has no shipped producer at all;
-	# goblins_spared now DOES have one (goblin_parley's "Stand aside" bypass,
-	# proven separately below) but this instance never banks it, so it must
-	# still read as 0 here, contributing nothing to K=2.
+	# Both goblins_spared (goblin_parley "Stand aside", proven separately
+	# below) and sign_defended (goblin_encounter_1 on_victory, proven in its
+	# own block) HAVE live producers -- but this synthetic gg deliberately
+	# banks neither, so both must read absent-as-zero here, contributing
+	# nothing to K=2.
 	gg.classes["helper"] = 1
 	gg.accomplishments["cleaned_the_inn"] = 1
 	_events.clear()
@@ -1122,6 +1122,19 @@ func _init() -> void:
 	gg.sleep()
 	assert(gg.accomplishment_count("garden_door_unlocked") == 1, "garden gate: idempotent past the first qualifying sleep")
 	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "garden_door_unlocked"), "garden gate: no re-bank on a later sleep")
+
+	# sign_defended's real producer (goblin_encounter_1's on_victory)
+	# reduces to the same record_accomplishment call a live fight would
+	# make. Banking a 3RD leg on a save that already cleared
+	# K=2 must still never re-toast -- the once-only guard in
+	# `_bank_garden_unlock_if_earned` reads the flag itself, not a live
+	# re-derivation of the leg count, so a late-arriving leg on an
+	# already-qualified save is inert.
+	gg.record_accomplishment("sign_defended")
+	_events.clear()
+	gg.sleep()
+	assert(gg.accomplishment_count("garden_door_unlocked") == 1, "garden gate: banking a 3rd leg post-qualification stays at 1, never bumps")
+	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "garden_door_unlocked"), "garden gate: banking sign_defended after qualification does not re-fire the unlock event")
 
 	# The no-violence sim guard: start_combat refuses OUTRIGHT while standing
 	# on the garden map, before even looking up the entity (proven by passing
