@@ -1335,6 +1335,53 @@
    "_comment": "== Whole-run sim guard: the two hollow briar placements never got faced/interacted (no combat data yet, lane beta's R2), and the only combat_started the run could ever log is the empty set (the wolf gate never opened). ==",
    "action": "assert_event_absent",
    "type": "combat_started"
+  },
+  {
+   "_comment": "== BEAT 6: the village's sleep site (standing rule -- every expansion area ships one), the DP3/G1 sleep_toast idiom live at riverfarm_guest_cot. LAST leg on purpose: sleep() advances the phase clock and resets actions_since_sleep, which would re-arm river_wolf_pack's night gate and unwind the phase/rotation pins every earlier beat in this run depends on -- nothing above may run after this. near_riverfarm's PC is classless with zero class-granting accomplishments banked (its accomplishment set is all door/riverfarm lore flags, none matching a classes.json threshold), so the 'You sleep soundly.' fallback below is deterministic, not a race against a class/level toast. Teleport to (9,5), bump up to face the cot at (9,4) -- same bump-and-interact idiom as every other prop this run. ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    9,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "Chronology (the DP3/G1 idiom, traced live): toast{sleep_toast} fires FIRST (before sleep()'s own phase_changed emit), then phase_changed, then the rest of the beat -- wait on the DOMAIN toast, not the UI confirmation, in this exact order (the since-marker only scans forward).",
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Straw tick, borrowed blanket — Riverfarm always finds room for one more."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You sleep soundly."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "09_guest_cot_sleep"
   }
  ]
 }

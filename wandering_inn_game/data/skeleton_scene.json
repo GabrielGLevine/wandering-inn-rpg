@@ -6346,6 +6346,20 @@
      ]
     },
     {
+     "_comment": "The village's sleep site (every expansion area ships one -- standing rule). A guest cot on the longhouse's open north lawn: UNCONDITIONAL access, same as garden_bed -- no quest gate, no requires_accomplishment, progression only ever resolves at sleep regardless of which bed triggers it. `sleep: true` is checked FIRST in interact()'s prop match (wi_game.gd) -- an on_interact_accomplishment/toast pair here would be dead code, so this entity carries none. Cell (9,4) is floor-only (no `blocked` entry needed -- entity occupancy alone blocks the cell) and PIXEL-footprint clear, not just Chebyshev-clear: village NPCs render at up to 64px tall (headman/hunter/villager, feet-anchored) and can visually overhang 3-4 cells north of their own cell, so grid-adjacency alone doesn't prove an unoccluded read -- (13,8), the first cell tried (one row south of the longhouse, `_comment` history preserved in git), sat almost fully behind riverfarm_hunter's overhang. (9,4)'s own bbox (world px, CELL=16, anchor default 0.5/1.0 unless overridden) genuinely intersects only the longhouse's own footprint, and only a 34x4px sliver at the cot's bottom edge (longhouse's cell-row 7 > this cell's row 4, so longhouse draws after/on top there) -- headman/hunter/villager/cottage_a/earthworks/anchor_stone all have zero true bbox intersection (one axis flush or clear). Also outside every riverfarm_walkthrough/_talk/_fight/_skill teleport-and-bump landing cell (nearest reserved cell is riverfarm_fight's (11,3)/(11,2) no-op-interact spot, Chebyshev distance 2) -- adding this prop cannot strand, reroute, or false-trigger any existing QA script.",
+     "id": "riverfarm_guest_cot",
+     "kind": "prop",
+     "cell": [
+      9,
+      4
+     ],
+     "display_name": "A Guest Cot",
+     "sprite": "bed",
+     "observe": "A straw-tick pallet by the longhouse wall, blanket already turned down for whoever needs it.",
+     "sleep": true,
+     "sleep_toast": "Straw tick, borrowed blanket — Riverfarm always finds room for one more."
+    },
+    {
      "id": "riverfarm_cottage_a",
      "kind": "prop",
      "cell": [
