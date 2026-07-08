@@ -1041,6 +1041,28 @@ func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallb
 		if catalog_entry.has("render_scale"):
 			var s := float(catalog_entry["render_scale"])
 			spr.scale = Vector2(s, s)
+		# `_entities_root.y_sort_enabled` sorts siblings by `holder.position.y`
+		# alone (the FEET-anchored cell row) -- correct for same-scale
+		# figures, but an oversized sprite's TOP can reach several rows above
+		# its own feet cell. A player standing one row north (the normal
+		# "facing the boss" approach distance) still sits BEHIND that
+		# overhang by row-only sort math, so the giant sprite draws over them
+		# and hides the PC entirely (playtest evidence: arc_flow's dd_04/
+		# dd_05 -- the Awakened Raskghar reveal + Relc-veto dialogue).
+		# `field_y_sort_bias_px` (sprites.json, opt-in, negative) lets a
+		# catalog entry pull its own `holder`'s Y-SORT KEY north without
+		# moving the sprite: `holder.position.y` gets the bias (sorts as if
+		# further back), while `spr`/the shadow below get the bias
+		# SUBTRACTED BACK OUT of their own (holder-relative) position so the
+		# rendered pixels land exactly where the true cell puts them -- net
+		# zero visual shift, sort-only effect. (An earlier version of this
+		# fix used a raw `z_index`, which is a canvas-layer-GLOBAL sort key,
+		# not scoped to y-sort siblings -- it drew the boss BEHIND THE FLOOR
+		# TILES too, since those default to z_index 0, making it vanish
+		# outright rather than just tuck behind the PC. Bias must stay
+		# WITHIN the y-sort comparison, hence the position trick.)
+		var y_sort_bias := float(catalog_entry.get("field_y_sort_bias_px", 0.0))
+		holder.position.y += y_sort_bias
 		# Anchor the sprite's feet/base to the cell's bottom-center:
 		# taller canvases (e.g. Body_A's 64px character canvas) correctly
 		# overhang the cell above instead of being top-left-aligned to it.
@@ -1049,14 +1071,14 @@ func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallb
 		var anchor := WISpriteRegistry.anchor_for(sprite_id)
 		spr.position = Vector2(
 			CELL * 0.5 - anchor.x * frame_size.x * spr.scale.x,
-			CELL - anchor.y * frame_size.y * spr.scale.y
+			CELL - anchor.y * frame_size.y * spr.scale.y - y_sort_bias
 		)
 		# Contact shadow: added before the sprite so it
 		# draws beneath; width tracks the rendered sprite footprint.
 		if bool(catalog_entry.get("shadow", false)):
 			var shadow := Sprite2D.new()
 			shadow.texture = WISpriteRegistry.shadow_texture()
-			shadow.position = Vector2(CELL * 0.5, CELL - 2.0)
+			shadow.position = Vector2(CELL * 0.5, CELL - 2.0 - y_sort_bias)
 			var shadow_w := clampf(frame_size.x * spr.scale.x / 24.0, 0.6, 2.5)
 			shadow.scale = Vector2(shadow_w, shadow_w * 0.8)
 			holder.add_child(shadow)
