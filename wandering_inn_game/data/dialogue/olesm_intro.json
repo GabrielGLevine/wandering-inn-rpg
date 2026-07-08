@@ -50,7 +50,7 @@
 		},
 		"olesm_chess_wrong_pieces": {
 			"speaker": "Olesm",
-			"text": "Safe. Sound. Exactly what I played, and exactly why I lost: I traded fear for fear and never once asked what SHE wanted. Try again.",
+			"text": "Safe. Sound. Exactly what I played that day, and exactly why I lost: I traded fear for fear and never once asked what SHE wanted. Try again.",
 			"options": [
 				{ "text": "Show me the board again.", "goto": "olesm_chess_puzzle" },
 				{ "text": "Another time.", "end": true }

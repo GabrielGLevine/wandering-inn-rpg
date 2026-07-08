@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #25 canonical: Olesm's chess-match payoff (was option+frame-only, a real dead end HANDOFF flagged from playtest). FIXTURE-FIRST (olesm_chess_pre: stage 3 already reached, gold:1 -- ONE SHORT of the 2g wager floor, social_talked pre-set so the first interact opens the real hub directly). Proves, in order: (1) BROKE GREY -- the stage-3-met hub option is visible but LOCKED ('costs 2 gold'), never hidden, never selectable into debt; (2) a REAL Serve (patron_serving, existing content, +2g) covers the shortfall; (3) re-opened, the SAME option is now unlocked; (4) the honest find-the-counter beat -- a wrong move loops back to the identical puzzle node (Olesm's in-voice correction, no state change), then the correct move wins: banks chess_with_olesm + the wager's +2g side; (5) the hub option is GONE for good afterward (hide_when on the counter, not a per-waking gate -- this is a one-time authored scene); (6) a real sleep clears social_talked, and the new waking's pool line is the shorter olesm_after_the_match residue (talk_pool_stages' third, newest-wins stage), still absent from the hub the second time around.",
+ "_comment": "Issue #25 canonical: Olesm's chess-match payoff (was option+frame-only, a real dead end HANDOFF flagged from playtest). FIXTURE-FIRST (olesm_chess_pre: stage 3 already reached, gold:1 -- ONE SHORT of the 2g wager floor, social_talked pre-set so the first interact opens the real hub directly). Proves, in order: (1) BROKE GREY -- the stage-3-met hub option is visible but LOCKED ('costs 2 gold'), never hidden, never selectable into debt; (2) a REAL Serve (patron_serving, existing content, +2g) covers the shortfall; (3) re-opened, the SAME option is now unlocked; (4) the honest find-the-counter beat -- BOTH wrong moves are entered for real (each loops back to the identical puzzle node with Olesm's in-voice correction, no state change), then the correct move wins: banks chess_with_olesm + the wager's +2g side; (5) the hub option is GONE for good afterward (hide_when on the counter, not a per-waking gate -- this is a one-time authored scene); (6) a real sleep clears social_talked, and the new waking's pool line is the shorter olesm_after_the_match residue (talk_pool_stages' third, newest-wins stage), still absent from the hub the second time around.",
  "fixture_save": "olesm_chess_pre",
  "starts_at_title": true,
  "steps": [
@@ -73,11 +73,24 @@
    { "text": "Play it safe. Offer the draw.", "locked": false, "requirement": "" }
   ] }, "timeout_sec": 5 },
 
-  { "_comment": "WRONG MOVE first (visible index 0) -- no effects, Olesm corrects in his own voice, loops back to the identical puzzle.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Safe. Sound. Exactly what I played, and exactly why I lost: I traded fear for fear and never once asked what SHE wanted. Try again." }, "timeout_sec": 5 },
+  { "_comment": "WRONG MOVE 1 (visible index 0, the rook trade) -- no effects, Olesm corrects in his own voice, loops back to the identical puzzle.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Safe. Sound. Exactly what I played that day, and exactly why I lost: I traded fear for fear and never once asked what SHE wanted. Try again." }, "timeout_sec": 5 },
   { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "chess_with_olesm" } },
   { "action": "assert_state", "path": "gold", "equals": 3 },
   { "_comment": "'Show me the board again.' is visible index 0.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Here. Your rook's pinned to the corner, my bishop threatens mate in three if you sit still, and I am rather pleased with myself. Two gold on it, friendly, either way. What's the move?", "options": [
+   { "text": "Trade the rook. Knight takes, clear the corner.", "locked": false, "requirement": "" },
+   { "text": "Queen takes the bishop. End the threat now.", "locked": false, "requirement": "" },
+   { "text": "Ignore the bishop. Push the pawn, threaten mate in two instead.", "locked": false, "requirement": "" },
+   { "text": "Play it safe. Offer the draw.", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+
+  { "_comment": "WRONG MOVE 2 (visible index 1, the queen trade) -- enters olesm_chess_wrong_queen for real (its own dialogue_node emission, not just list-content presence in the puzzle's options array), same no-effects loop-back contract.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "The obvious answer. Take the piece, kill the threat, sleep well. I made that exact trade against her, three games earlier, and it taught me nothing. Try again." }, "timeout_sec": 5 },
+  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "chess_with_olesm" } },
+  { "action": "assert_state", "path": "gold", "equals": 3 },
+  { "_comment": "'Show me the board again.' is visible index 0 here too.", "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Here. Your rook's pinned to the corner, my bishop threatens mate in three if you sit still, and I am rather pleased with myself. Two gold on it, friendly, either way. What's the move?", "options": [
    { "text": "Trade the rook. Knight takes, clear the corner.", "locked": false, "requirement": "" },
    { "text": "Queen takes the bishop. End the threat now.", "locked": false, "requirement": "" },
