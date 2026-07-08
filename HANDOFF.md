@@ -113,9 +113,7 @@ ships, VISUAL-LOG carries the gap + candidates).
 Chain beats 1-3 LIVE on main: Erin's flicker beat, Pisces 3-path consult
 (one door_understood), the ruin recovery run vs D2's real rosters, the
 pedestal anchor stone, Krshia's 35g catalyst. 62 canonicals.
-⚑ **USER SIGN-OFF: the Olesm assist beat** (spec §1's SKILL-leg flavor)
-shipped as Pisces-side flavor only — no Olesm-visible trace. Rec: bless;
-if you want it visible, a one-line Olesm pool nod rides DF. D4 (portals
+Olesm-assist scope-down: **BLESSED by user** (flavor-only stands). D4 (portals
 module + awakening + fast travel) dispatching now; DF closes #8.
 
 ## #8 IN FLIGHT (2026-07-07): plan committed, 3 lanes running
@@ -177,20 +175,17 @@ transcript-resume precedent, resolved cheaper).
 hits; windowed reads clean (both new dialogue lines render full, no fold
 bleed; "Earned 1 gold." toast lands beside Relc's line).**
 
-**⚑ TASTE QUEUE (new, user):**
-1. `well_fed` design call: staged spec said "small HP restore" but field HP
-   doesn't exist (combat starts full) — shipped +2 max HP until sleep as the
-   nearest honest mechanic. Bless or reshape.
-2. Erin's meal line names "+2 HP" out loud ("Call it +2 HP. Don't ask me to
-   explain the math.") — visible currency, permitted, deliberately
-   meta-flavored; read it in play (shot:
-   `qa_output/stage3_perks_loop/00_erin_meal_line.png`).
-3. Relc's wager line (fresh copy, no staged verbatim existed): "Ugh — fine,
-   you win. Here's your cut. Watch doesn't pay enough for me to keep losing
-   bets to my own students, but don't tell the paymaster I said that."
-   (shot: `01_relc_wager_line.png`).
-4. [Ice Floor] feel: cast it in the spar (ice_mage L10 kit) — does the 3×3
-   glaze + slow read as terrain magic?
+**TASTE QUEUE — RESOLVED (user rulings 2026-07-07 late session):**
+1. `well_fed` +2-max-HP-until-sleep: **BLESSED as shipped.**
+2. Erin's "+2 HP" meta-flavor line: **KEEP.**
+3. Relc's wager line: **BLESSED.** The #8 Olesm-assist-as-Pisces-flavor
+   scope-down: **BLESSED** (no Olesm nod needed).
+4. [Ice Floor] feel: still needs actual play (rides the #8/#21 playtest).
+**POST-8a DIRECTION RATIFIED: 8b Riverfarm as the main lane** (Witch
+chain, village map, the FIRST anchor-stone attunement beat proving #8's
+region contract) **with #26 goblins_spared + #39 sign_defended as small
+parallel side-lanes** (they restore the Garden gate's 4-leg freedom AND
+seed the Rags runway).
 
 Last updated: 2026-07-07 (**UNIFIED REPO — this public repo is now THE working repo** (local: ~/wandering-inn-rpg); commits are public on push; licensed assets overlay via scripts/fetch_private_assets.sh; leak_check is CI job 1; the old private repo is a frozen archive. Full gate 56/56 green post-transition with the overlay. v0.3.0 LIVE on itch. Board state: interlude #2-#5 + honest debts #27/#28 + cleanup #36 all closed; 8a gates on issue #7 (USER SESSION); spoiler cutoff ratified (Book 17 bar / Vol 7 advertised, docs/design/spoiler-cutoff.md). External PRs: wi-handling-prs skill. User queue: #7 session, taste #32-#35, itch page spoiler line.)
 
