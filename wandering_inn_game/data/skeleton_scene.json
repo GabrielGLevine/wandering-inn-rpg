@@ -2039,7 +2039,7 @@
       "Supply lines, sightlines, morale: a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak.",
       "Selys works the desk inside now, board and all. I still find reasons to linger out here more than the job requires. The paperwork doesn't ask why."
      ],
-     "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/olesm_stages.json (staging_note/_flag annotations stripped). Three stages. The chess-beat perk (stage 3, olesm_board_partner) is FLAGGED unbuilt this wave (the match copy itself is a follow-up writing task per the staging doc) -- only the stage rows + hub topic unlocks ship.",
+     "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/olesm_stages.json (staging_note/_flag annotations stripped). The chess-beat perk (stage 3, olesm_board_partner) shipped option+frame only for one wave; issue #25 built the real match (olesm_intro.json's olesm_chess_invite chain) and added the THIRD stage below as its residue -- once chess_with_olesm banks, the one-time hub option retires (hide_when) and this shorter rematch pool takes over. New key only (chess_with_olesm), so the ascending-threshold validator has nothing to compare it against on the shared keys.",
      "talk_pool_stages": [
       {
        "id": "olesm_worth_interrupting_a_tally",
@@ -2062,6 +2062,16 @@
         "I set the board up when the bells go quiet now, on the chance you wander past. That isn't pathetic, that's PREPARED.",
         "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
         "You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
+       ]
+      },
+      {
+       "id": "olesm_after_the_match",
+       "requires_accomplishment": {
+        "chess_with_olesm": 1
+       },
+       "lines": [
+        "Rematch, someday. Not today; I need my dignity back first.",
+        "I still replay our game some nights. I win in my head. It isn't the same."
        ]
       }
      ],

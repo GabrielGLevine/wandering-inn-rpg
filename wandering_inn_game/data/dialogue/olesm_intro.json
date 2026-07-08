@@ -19,14 +19,65 @@
 				{ "text": "I'll leave you to your tally.", "end": true },
 				{ "_comment": "stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/olesm_stages.json. Appended AFTER 'I'll leave you to your tally.' (array end) so it can never shift an earlier option's visible index.", "text": "You run half this city from that desk. You know that, right?", "requires": { "accomplishment": { "cisterns_reported": 1 } }, "goto": "olesm_doubt" },
 				{ "_comment": "stage-3 hub topic (⚑ mild canon -- [Strategist] ambition is safe early canon; the letters beat is a proto-newsletter nod kept oblique, never says 'newsletter'). Same array-end index safety.", "text": "What's next for you, Olesm?", "requires": { "accomplishment": { "cisterns_reported": 1, "chatted_with_olesm": 3 } }, "goto": "olesm_ambition" },
-				{ "_comment": "The chess perk's OPTION + FRAME NODE ONLY (per the brief -- the match copy itself is a follow-up writing task; do not improvise the scene). No counter, no wager -- this beat ends on the invitation, not a resolution.", "text": "Set the board, Olesm.", "requires": { "accomplishment": { "cisterns_reported": 1, "chatted_with_olesm": 3 } }, "goto": "olesm_chess_invite" }
+				{ "_comment": "Issue #25: the chess perk's real payoff (was option+frame only). requires ADDS gold:2 to the existing stage-3 accomplishment leg -- the sanctioned {gold, accomplishment} compound (dialogue.gd's _meets ANDs both; _meets_progress reads only the accomplishment leg, so a met stage with <2 gold shows GREYED, never vanished -- a player who cannot cover the wager's loss side must never be walked into it). hide_when retires the option for good once chess_with_olesm banks (the scene is one-time authored, not a repeatable perk) -- the shorter rematch line in talk_pool_stages is the residue.", "text": "Set the board, Olesm.", "requires": { "gold": 2, "accomplishment": { "cisterns_reported": 1, "chatted_with_olesm": 3 } }, "hide_when": { "accomplishment": { "chess_with_olesm": 1 } }, "goto": "olesm_chess_invite" }
 			]
 		},
 		"olesm_chess_invite": {
 			"speaker": "Olesm",
 			"text": "The board's been out since Tuesday, if you want the honest count. I'm not going to pretend otherwise. Whenever you're ready. I'll even let you have white, which should tell you how confident I am.",
 			"options": [
+				{ "text": "Sit. Show me.", "goto": "olesm_chess_setup" },
 				{ "text": "Some other time, Olesm.", "end": true }
+			]
+		},
+		"olesm_chess_setup": {
+			"speaker": "Olesm",
+			"text": "Not a fresh game, actually. Same position, move for move: my opening, her replies, right up to the moment I stopped seeing straight. Eleven moves in, my bishop's aimed at your king and I am, in my own defense, feeling rather clever about it. Somewhere in here she found a door I didn't. Find it again and I'll believe two people can see the same board the same way.",
+			"options": [
+				{ "text": "Set it up.", "goto": "olesm_chess_puzzle" },
+				{ "text": "Actually, another time.", "end": true }
+			]
+		},
+		"olesm_chess_puzzle": {
+			"speaker": "Olesm",
+			"text": "Here. Your rook's pinned to the corner, my bishop threatens mate in three if you sit still, and I am rather pleased with myself. Two gold on it, friendly, either way. What's the move?",
+			"options": [
+				{ "text": "Trade the rook. Knight takes, clear the corner.", "goto": "olesm_chess_wrong_pieces" },
+				{ "text": "Queen takes the bishop. End the threat now.", "goto": "olesm_chess_wrong_queen" },
+				{ "text": "Ignore the bishop. Push the pawn, threaten mate in two instead.", "effects": [ { "accomplishment": "chess_with_olesm" }, { "gold": 2 } ], "goto": "olesm_chess_win" },
+				{ "text": "Play it safe. Offer the draw.", "effects": [ { "accomplishment": "chess_with_olesm" }, { "gold": -2 } ], "goto": "olesm_chess_loss" }
+			]
+		},
+		"olesm_chess_wrong_pieces": {
+			"speaker": "Olesm",
+			"text": "Safe. Sound. Exactly what I played, and exactly why I lost: I traded fear for fear and never once asked what SHE wanted. Try again.",
+			"options": [
+				{ "text": "Show me the board again.", "goto": "olesm_chess_puzzle" },
+				{ "text": "Another time.", "end": true }
+			]
+		},
+		"olesm_chess_wrong_queen": {
+			"speaker": "Olesm",
+			"text": "The obvious answer. Take the piece, kill the threat, sleep well. I made that exact trade against her, three games earlier, and it taught me nothing. Try again.",
+			"options": [
+				{ "text": "Show me the board again.", "goto": "olesm_chess_puzzle" },
+				{ "text": "Another time.", "end": true }
+			]
+		},
+		"olesm_chess_win": {
+			"speaker": "Olesm",
+			"text": "...Oh. OH. You'd let the mate stand and walk past it. That's her move. That is EXACTLY her move. I have stared at this position for a season and you found the door in one sitting. I don't know whether to be humiliated or thrilled. Both, I've decided. Here.",
+			"options": [
+				{ "text": "Good game, Olesm.", "end": true },
+				{ "text": "I got lucky.", "end": true }
+			]
+		},
+		"olesm_chess_loss": {
+			"speaker": "Olesm",
+			"text": "A draw offered from a winning position is a resignation wearing a hat. I'll take it, and the coin, and I promise to feel appropriately guilty about both. ...Actually, no. Only the first one.",
+			"options": [
+				{ "text": "Take the coin, Olesm.", "end": true },
+				{ "text": "I'll find it next time.", "end": true }
 			]
 		},
 		"olesm_doubt": {
