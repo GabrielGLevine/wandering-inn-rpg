@@ -399,6 +399,14 @@ current-state-only, one short paragraph per live system.
   in this file's canonical seed table (and `qa/ci_sweep.sh`'s `CANON`
   array) if needed.
 - GDQuest GDScript style: tabs, static typing, `class_name` + `##` doc comments.
+- **Comment style (user directive 2026-07-07, binds all new code + _comment
+  fields):** comments state FUNCTION, CONSTRAINTS, and TRAPS — never
+  provenance. No task/wave/review-finding narratives, no issue citations
+  (exception: a forward-promise to an OPEN issue may cite it until that
+  issue closes). History lives in git blame, the ledger, and
+  docs/ARCHITECTURE-HISTORY.md. Trap/contract comments (drift seams, order
+  constraints, payload shapes) are the valuable kind — keep writing those.
+  The legacy corpus gets thinned by GH#44 at the 8a→8b boundary.
 
 ## Gotchas
 
