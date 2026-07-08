@@ -32,8 +32,8 @@ windowed garden shot on current HEAD.
 
 ## PLAYTEST TRIAGE (controller, 2026-07-08 — findings are directives)
 
-**HOTFIX WAVE (dispatches right after #44 merges; blocks the user's own
-#8/#9 human-gate playtests):**
+**HOTFIX WAVE — LANDED 2026-07-08 (all 6, windowed-verified; the #8/#9
+human-gate playtests are UNBLOCKED):**
 1. Bark 2nd-line fold clip (Erin's Garden reveal — THE #9 checklist-item-1
    line — + Watch Guard): the fold-inset measured-band treatment on
    line 2 (the known UI/BARK item, severity-bumped per the report).
