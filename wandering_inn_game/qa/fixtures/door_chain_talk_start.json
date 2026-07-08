@@ -1,5 +1,5 @@
 {
- "_comment": "Magical Door plan Task D3 (issue #8): door_chain_talk's start (FIXTURE-FIRST -- beat 1 is already covered live by door_chain_fight, so this leg starts PAST it). post_tutorial shape (warrior L1, met/sparred/given_spear) PLUS door_chain_started pre-banked, standing beside Pisces on the street (30,5) facing up so the FIRST interact is his talk_pool line and the SECOND opens pisces_magic. No combat anywhere in this script (the TALK leg's whole point, mirroring cisterns_talk) -- rng_state kept 9 for convention, no live rng consumer.",
+ "_comment": "door_chain_talk's start (FIXTURE-FIRST -- beat 1 is already covered live by door_chain_fight, so this leg starts PAST it). post_tutorial shape (warrior L1, met/sparred/given_spear) PLUS door_chain_started pre-banked, standing beside Pisces on the street (30,5) facing up so the FIRST interact is his talk_pool line and the SECOND opens pisces_magic. No combat anywhere in this script (the TALK leg's whole point, mirroring cisterns_talk) -- rng_state kept 9 for convention, no live rng consumer.",
  "version": 5,
  "state": {
   "current_map": "street",

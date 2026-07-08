@@ -42,7 +42,7 @@ func _init() -> void:
 	quit(0)
 
 
-## M-RELEASE R2 fallback-art contract: a nonexistent sheet path must yield a
+## Fallback-art contract: a nonexistent sheet path must yield a
 ## valid frame-sized placeholder (never assert/crash) so a public checkout
 ## without the private asset bundle still boots. Exercises BOTH the tile path
 ## (tile_set_for) and the sprite-strip path (_add_strip), including a region
@@ -97,7 +97,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["body_a/hit"] = 6       ## 624 / 104 (taking-punch)
 	counts["body_a/death"] = 7     ## 728 / 104 (falling-back-death)
 
-	## M-ARC §5 PC creation variants (6 = 3 races x 2 genders, all the SAME F2
+	## PC creation variants (6 = 3 races x 2 genders, all the SAME F2
 	## mannequin-template anim set, so counts match body_a exactly; per-variant
 	## frame_size/render_scale/anchor differ, but frame COUNTS are template-fixed).
 	## pc_human_m reuses body_a's sheets verbatim (the Human base).
@@ -115,7 +115,7 @@ func _build_expected_counts() -> Dictionary:
 
 	## static field prop entries (single 64x64 region)
 	counts["dusty_scroll/idle"] = 1
-	## Track B3: PixelLab prop batch -- dirty_table (cluttered pre-clean look),
+	## PixelLab prop batch -- dirty_table (cluttered pre-clean look),
 	## cauldron (stew_pot), training_dummy (straw pell) are all single 64x64
 	## PixelLab sheets, 1 frame each.
 	counts["dirty_table/idle"] = 1
@@ -123,12 +123,12 @@ func _build_expected_counts() -> Dictionary:
 	counts["bed/idle"] = 1
 	counts["door/idle"] = 1
 
-	## M5 R4 decor prop entries (single-region static crops, all 1 frame)
+	## Decor prop entries (single-region static crops, all 1 frame)
 	## (controller iteration: table_red/table_blue removed; rug_tan/table_brown added)
 	counts["rug_tan/idle"] = 1
 	counts["table_brown/idle"] = 1
 	counts["chest/idle"] = 1
-	## Track B2 item 4: Admurin open-lid chest, single-region static (inn_chest
+	## Admurin open-lid chest, single-region static (inn_chest
 	## visual_states "opened" swap).
 	counts["chest_open/idle"] = 1
 	counts["plant_pot/idle"] = 1
@@ -137,23 +137,23 @@ func _build_expected_counts() -> Dictionary:
 	counts["crate/idle"] = 1
 	counts["stool/idle"] = 1
 	counts["mushroom/idle"] = 1
-	## M5 R4 sconce: Bonfire_01-Sheet.png strip, 128px / 32px frame = 4 frames
+	## Sconce: Bonfire_01-Sheet.png strip, 128px / 32px frame = 4 frames
 	counts["sconce/idle"] = 4
 
-	## Three Pillars PF wave: 8 code-drawn field-skill icons (single-frame)
+	## 8 code-drawn field-skill icons (single-frame)
 	for icon_id: String in ["icon_basic_cleaning", "icon_light", "icon_basic_cooking", "icon_observe", "icon_soothe_clientele", "icon_unerring_aim", "icon_sweep_the_tables", "icon_servers_prescience"]:
 		counts[icon_id + "/idle"] = 1
 
-	## Social Pillar S3 ([Diplomat] kit): 2 code-drawn skill icons (single-frame)
+	## [Diplomat] kit: 2 code-drawn skill icons (single-frame)
 	## -- charming_smile (field) + calming_touch (combat).
 	for icon_id: String in ["icon_charming_smile", "icon_calming_touch"]:
 		counts[icon_id + "/idle"] = 1
 
-	## Fix wave 2 (VISUAL-LOG drain): [Stealth] (`sneak`) code-drawn boot glyph
+	## [Stealth] (`sneak`) code-drawn boot glyph
 	## (single-frame), same policy as every icon above.
 	counts["icon_sneak/idle"] = 1
 
-	## M-FP A1 additions: library/sewer/dummy statics (1-frame regions);
+	## Library/sewer/dummy statics (1-frame regions);
 	## royal_soldier single-facing battler idle 256/64 = 4;
 	## a_hunter directional idle 256/64 = 4, walk maps the Run sheets 384/64 = 6.
 	counts["library_desk/idle"] = 1
@@ -164,7 +164,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["a_hunter/idle"] = 4
 	counts["a_hunter/walk"] = 6
 
-	## Sprite-upgrade wave 2026-07-06: Relc is now DIRECTIONAL + animated
+	## Relc: DIRECTIONAL + animated
 	## (PixelLab v2 create-character-pro -> animate-character; 124x124 frames,
 	## down/side/up sheets). idle=breathing-idle(4), walk=walking(6),
 	## slice=lead-jab(3) -- the spear thrust reads cleanly.
@@ -172,13 +172,13 @@ func _build_expected_counts() -> Dictionary:
 	counts["relc/walk"] = 6
 	counts["relc/slice"] = 3
 
-	## Sprite-upgrade wave 2026-07-06: Pisces now DIRECTIONAL + animated
+	## Pisces: DIRECTIONAL + animated
 	## (hooded white-robe necromancer; 108x108 frames, down/side/up).
 	## idle=breathing-idle(4), walk=walking(6).
 	counts["pisces/idle"] = 4
 	counts["pisces/walk"] = 6
 
-	## Sprite-upgrade wave 2026-07-06: Olesm (sky-blue Drake clerk w/ rolled map)
+	## Olesm (sky-blue Drake clerk w/ rolled map)
 	## + Zevara (light-blue Drake Watch officer, armor) are now DIRECTIONAL +
 	## animated (112x112 frames, down/side/up). idle(4) + walk(6).
 	counts["olesm/idle"] = 4
@@ -186,7 +186,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["zevara/idle"] = 4
 	counts["zevara/walk"] = 6
 
-	## M-ARC A2: the two Raskghar (scout + awakened boss) are DIRECTIONAL +
+	## The two Raskghar (scout + awakened boss) are DIRECTIONAL +
 	## animated via the same F2/upgrade PixelLab v2 mannequin templates (124x124
 	## frames, down/side/up). idle=breathing-idle(4), walk=walking(6),
 	## slice=lead-jab(3) -- the reaching claw swipe reads.
@@ -195,7 +195,7 @@ func _build_expected_counts() -> Dictionary:
 		counts["%s/walk" % raskghar_id] = 6
 		counts["%s/slice" % raskghar_id] = 3
 
-	## M5 E3 dressing sprites (single-region statics; grill is a 4-frame strip)
+	## Dressing sprites (single-region statics; grill is a 4-frame strip)
 	for e3_static: String in [
 		"hearth", "counter_left", "counter_mid", "counter_right",
 		"shelf_bottles", "window_blue", "food_bread", "food_ham",
@@ -209,11 +209,11 @@ func _build_expected_counts() -> Dictionary:
 	counts["grill/idle"] = 4  ## Grill_01-Sheet 256px / 64px frames
 	counts["campfire/idle"] = 4  ## Bonfire strip, 128/32
 
-	## M5 H1 hotbar icons: single 16x16 crops, 1 frame each.
+	## Hotbar icons: single 16x16 crops, 1 frame each.
 	for icon_id: String in ["icon_attack", "icon_dash", "icon_power_strike", "icon_flame_bolt", "icon_flame_jet", "icon_frost_bolt"]:
 		counts["%s/idle" % icon_id] = 1
 
-	## M6 T6 class-kit icons (placeholder glyphs, single 16x16 frames).
+	## Class-kit icons (placeholder glyphs, single 16x16 frames).
 	for icon_id: String in [
 		"icon_second_wind", "icon_piercing_strikes", "icon_quick_slash",
 		"icon_flash_cut", "icon_devastating_slash", "icon_triple_thrust",
@@ -222,7 +222,7 @@ func _build_expected_counts() -> Dictionary:
 		"icon_keener_edge",
 	]:
 		counts["%s/idle" % icon_id] = 1
-	## M6 T6 [Light] prop (Furniture.png lantern crop, single frame).
+	## [Light] prop (Furniture.png lantern crop, single frame).
 	counts["unlit_lantern/idle"] = 1
 	## Art-wiring task (2026-07-07): inn_sign is now a bespoke PixelLab
 	## signpost (text-free plank; the sign's wording lives in toast/observe
@@ -238,7 +238,7 @@ func _build_expected_counts() -> Dictionary:
 	## sprite existed in any in-hand pack). Single 64x64 PixelLab sheet, 1 frame.
 	counts["bench/idle"] = 1
 
-	## Magical Door plan Task D1 (issue #8 spec §5.2): the ruin pedestal + the
+	## The ruin pedestal + the
 	## shared pantry_door flicker/awakened placeholder, both single-region
 	## statics (1 frame each), same convention as chest/sewer_grate/boulder.
 	counts["pedestal/idle"] = 1
@@ -261,7 +261,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["drake_patron/idle"] = 4
 	counts["drake_patron/walk"] = 6
 
-	## M5 E2 enemy sprites.
+	## Enemy sprites.
 	## Goblin sheets are 1536x1024, 256x256 frames: 6 columns per facing row.
 	for goblin_id: String in ["goblin_base", "goblin_female", "goblin_sword"]:
 		counts["%s/idle" % goblin_id] = 6
@@ -272,7 +272,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["bat/hit"] = 4
 	counts["bat/death"] = 6
 
-	## Issue #9 Task G1: the Garden of Sanctuary. `garden_door_inner` is an
+	## The Garden of Sanctuary. `garden_door_inner` is an
 	## owned single-frame PixelLab static (34x48, the door/pantry_door_glow
 	## convention); `garden_fountain_basin`/`garden_fountain_statue` are
 	## single-region crops of the LICENSED Garden Pixel Crawler pack (both
@@ -284,7 +284,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["garden_fountain_basin/idle"] = 1
 	counts["garden_fountain_statue/idle"] = 1
 
-	## Issue #9 Task G2: the memorial hill roster -- all 5 owned, single-frame
+	## The memorial hill roster -- all 5 owned, single-frame
 	## PixelLab statics (stone-ify ramp recolor, never LICENSED/never a
 	## fallback-relaxed case).
 	counts["memorial_plinth/idle"] = 1

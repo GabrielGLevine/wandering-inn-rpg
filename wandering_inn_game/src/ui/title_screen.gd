@@ -17,25 +17,24 @@ extends CanvasLayer
 ## This screen must NOT call Main.swap_to_world() itself or the world would be
 ## built twice.
 ##
-## Issue #43 (playtest state boot): "Playtest States" is a THIRD top-level
-## state (PLAYTEST_LIST) hung off MENU, gated at build time by
-## `OS.is_debug_build()` (see `_row_visible`) so it can never render in a
-## release export (itch/Steam ship `--export-release`, which the engine
-## itself flips `is_debug_build()` false for -- see qa/web/export_web.sh, the
-## same command release.yml runs). It lists `qa/fixtures/*.json` (name + a
-## `_comment`-derived one-line summary), story-position-ordered by
-## `PLAYTEST_FIXTURE_ORDER` with any unlisted fixture appended via raw
-## dirlist fallback. Confirming a row copies that fixture into a DEDICATED
-## "playtest" save slot (`Game.install_fixture_save`, the same byte-for-byte
-## copy qa/test_driver.gd's `_install_fixture_saves` performs -- never
-## "manual", so the user's own save is never clobbered; controller review)
-## and loads it via the same slot-generic `Game.load_slot` Continue uses --
-## zero new sim machinery, per the issue brief.
+## "Playtest States" is a THIRD top-level state (PLAYTEST_LIST) hung off
+## MENU, gated at build time by `OS.is_debug_build()` (see `_row_visible`)
+## so it can never render in a release export (itch/Steam ship
+## `--export-release`, which the engine itself flips `is_debug_build()`
+## false for -- see qa/web/export_web.sh, the same command release.yml
+## runs). It lists `qa/fixtures/*.json` (name + a `_comment`-derived
+## one-line summary), story-position-ordered by `PLAYTEST_FIXTURE_ORDER`
+## with any unlisted fixture appended via raw dirlist fallback. Confirming
+## a row copies that fixture into a DEDICATED "playtest" save slot
+## (`Game.install_fixture_save`, the same byte-for-byte copy
+## qa/test_driver.gd's `_install_fixture_saves` performs -- never "manual",
+## so the user's own save is never clobbered) and loads it via the same
+## slot-generic `Game.load_slot` Continue uses -- zero new sim machinery.
 
 enum State { GESTURE, MENU, PLAYTEST_LIST }
 
 const ROWS: Array[String] = ["New Game", "Continue", "Playtest States", "Quit"]
-## Issue #43: story-position ordering for the playtest-state picker. Any
+## Story-position ordering for the playtest-state picker. Any
 ## `qa/fixtures/*.json` NOT listed here (save-format-migration test fixtures
 ## like v1_format/v2_format, narrow verification-only fixtures like
 ## dp2_fixwave_absolute_start, or a future fixture nobody's curated yet)
@@ -67,8 +66,8 @@ const BACKDROP_COLOR := Color(0.08, 0.06, 0.05)
 ## so it uses the real window's own pixel space, not the world's).
 const NATIVE_SIZE := Vector2(1280.0, 720.0)
 
-## Injected by WIMain._spawn_title so New Game can open character creation
-## (M-ARC §5). The injection idiom (not a tree scan) matches combat_screen.
+## Injected by WIMain._spawn_title so New Game can open character creation.
+## The injection idiom (not a tree scan) matches combat_screen.
 var main_ref: WIMain
 
 var _state: int = State.GESTURE
@@ -82,11 +81,11 @@ var _notice_label: Label
 var _menu_root: VBoxContainer
 var _row_labels: Array[Label] = []
 
-## Issue #43: playtest-state picker. `_fixture_entries` is lazily built on
-## first open (`{name:String, summary:String}`, story-position ordered) and
-## cached for the rest of the process -- `qa/fixtures/*.json` never changes
-## mid-run. `_playtest_cursor` is a GLOBAL index into `_fixture_entries` (not
-## a per-page index); the displayed page is derived from it
+## Playtest-state picker. `_fixture_entries` is lazily built on first open
+## (`{name:String, summary:String}`, story-position ordered) and cached for
+## the rest of the process -- `qa/fixtures/*.json` never changes mid-run.
+## `_playtest_cursor` is a GLOBAL index into `_fixture_entries` (not a
+## per-page index); the displayed page is derived from it
 ## (`_playtest_cursor / PLAYTEST_PAGE_SIZE`), so Up/Down auto-paginates.
 var _playtest_root: Control
 var _playtest_row_labels: Array[Label] = []
@@ -124,13 +123,13 @@ func _is_gesture_event(event: InputEvent) -> bool:
 		return event.pressed and not event.echo
 	if event is InputEventMouseButton:
 		return event.pressed
-	# Controller support (S2, issue #18): a pad-only player never touches a
-	# key/mouse, so without this the GESTURE beat is an unbeatable wall for
-	# them. InputEventJoypadButton only -- InputEventJoypadMotion is
-	# deliberately EXCLUDED, or stick drift past the deadzone (a pad resting
-	# in a player's lap, no deliberate press) would silently skip the beat,
-	# defeating its whole purpose (the web AudioContext-unlock / iframe-focus
-	# gesture, per the file header doc).
+	# A pad-only player never touches a key/mouse, so without this the
+	# GESTURE beat is an unbeatable wall for them. InputEventJoypadButton
+	# only -- InputEventJoypadMotion is deliberately EXCLUDED, or stick
+	# drift past the deadzone (a pad resting in a player's lap, no
+	# deliberate press) would silently skip the beat, defeating its whole
+	# purpose (the web AudioContext-unlock / iframe-focus gesture, per the
+	# file header doc).
 	if event is InputEventJoypadButton:
 		return event.pressed
 	return false
@@ -151,8 +150,8 @@ func _build_ui() -> void:
 	_build_embers()
 
 	# make_texture_panel gives the ribbon its asymmetric X/Y patch margins —
-	# the same helper path dialogue_panel.gd/journal.gd use (H3 review
-	# Important 3; a symmetric 36 stretched the ribbon's short top/bottom border).
+	# the same helper path dialogue_panel.gd/journal.gd use (a symmetric 36
+	# stretched the ribbon's short top/bottom border).
 	var title_panel := UIChrome.make_texture_panel(UIChrome.BLUE_RIBBON)
 	title_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	title_panel.custom_minimum_size = Vector2(640.0, 92.0)
@@ -210,29 +209,29 @@ func _build_ui() -> void:
 
 	# End of the gate beat's render (backdrop + title + "press any key" +
 	# the menu skeleton, still hidden pending the gesture). Zero-payload --
-	# QA scripts that need to drive the gate deterministically (title_flow,
-	# S3) wait on this instead of a frame-count guess; title_peek retrofit
-	# per the S1 review (progress.md item 1).
+	# QA scripts that need to drive the gate deterministically (title_flow)
+	# wait on this instead of a frame-count guess.
 	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_GATE_RENDERED, {})
 
 
-## M-BEAUTY Task R1: subtle ember drift over the title screen -- the map
-## direction cards' "first impression" beat, and the one atmosphere touch
-## that lives entirely outside the world SubViewport (title is native-res UI,
-## per this file's header doc). `WIAmbience` is a pure static factory class
+## Subtle ember drift over the title screen -- the map direction cards'
+## "first impression" beat, and the one atmosphere touch that lives
+## entirely outside the world SubViewport (title is native-res UI, per
+## this file's header doc). `WIAmbience` is a pure static factory class
 ## (no autoload, no state -- see ambience.gd's header doc), reachable from
-## any UI context the same way hotbar.gd reaches `WISpriteRegistry` directly;
-## reusing its "embers" preset here keeps the look consistent with the
-## in-world campfire/hearth ember language instead of inventing a new visual
-## vocabulary for the title screen alone. Spans the full native-res rect
-## (`NATIVE_SIZE`) so a handful of embers drift somewhere on screen at any
-## moment; added right after the backdrop and before every other child (the
-## ribbon, menu rows, notice label) so it always draws BEHIND them -- tree
-## order is draw order within one CanvasLayer -- and never obscures readable
-## text. Not phase-gated (the title screen has no time-of-day) and not
-## registered with `WIAtmosphere` (that registry exists for the world
-## viewport's own lights/emitters only): it just emits continuously,
-## unconditionally, for as long as the title screen is alive.
+## any UI context the same way hotbar.gd reaches `WISpriteRegistry`
+## directly; reusing its "embers" preset here keeps the look consistent
+## with the in-world campfire/hearth ember language instead of inventing a
+## new visual vocabulary for the title screen alone. Spans the full
+## native-res rect (`NATIVE_SIZE`) so a handful of embers drift somewhere
+## on screen at any moment; added right after the backdrop and before
+## every other child (the ribbon, menu rows, notice label) so it always
+## draws BEHIND them -- tree order is draw order within one CanvasLayer --
+## and never obscures readable text. Not phase-gated (the title screen has
+## no time-of-day) and not registered with `WIAtmosphere` (that registry
+## exists for the world viewport's own lights/emitters only): it just
+## emits continuously, unconditionally, for as long as the title screen is
+## alive.
 func _build_embers() -> void:
 	var embers := WIAmbience.make("embers", Rect2(Vector2.ZERO, NATIVE_SIZE))
 	embers.emitting = true
@@ -240,8 +239,8 @@ func _build_embers() -> void:
 	_root.add_child(embers)
 
 
-## Issue #43: builds the (hidden-until-opened) playtest-state picker panel --
-## a title, the fixed caution line, PLAYTEST_PAGE_SIZE row labels (blanked
+## Builds the (hidden-until-opened) playtest-state picker panel -- a
+## title, the fixed caution line, PLAYTEST_PAGE_SIZE row labels (blanked
 ## when a page has fewer entries than the page size), and a page-position
 ## label. Same chrome idiom as `_menu_root`'s rows, minus the per-row
 ## NinePatch (a plain Label list, matching pause_menu.gd's simpler picker
@@ -298,11 +297,11 @@ func _enter_menu() -> void:
 	_gesture_label.hide()
 	_menu_root.show()
 	_refresh_rows()
-	# Issue #43 re-pin: `selectable_rows` is the "device-of-truth" row count --
-	# read live off `_row_selectable` (which itself reads `OS.is_debug_build()`
-	# for the Playtest States row and `_continue_enabled` for Continue) rather
-	# than a hardcoded literal, so this payload always reflects what THIS
-	# binary actually rendered, on whatever platform/build it's running as.
+	# `selectable_rows` is the "device-of-truth" row count -- read live off
+	# `_row_selectable` (which itself reads `OS.is_debug_build()` for the
+	# Playtest States row and `_continue_enabled` for Continue) rather than
+	# a hardcoded literal, so this payload always reflects what THIS binary
+	# actually rendered, on whatever platform/build it's running as.
 	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_RENDERED, {"continue_enabled": _continue_enabled, "selectable_rows": _selectable_row_count()})
 
 
@@ -317,14 +316,14 @@ func _first_selectable_row() -> int:
 ## to do in a browser tab, so it's hidden outright rather than shown-disabled
 ## (cleanest: no dead row a player can highlight and wonder about).
 ##
-## Issue #43 RELEASE-LEAK gate: "Playtest States" is hidden outright (not
-## shown-disabled) unless `OS.is_debug_build()` -- the same engine call every
-## Godot release export template bakes to `false` at compile time (a debug
-## export template / editor-run / bare `--headless` run all bake it `true`).
-## itch/Steam ship via `--export-release` (qa/web/export_web.sh, the exact
-## command release.yml's export job runs) which uses the RELEASE template, so
-## this row is provably absent from every shipped build -- see this file's
-## header doc for the full mechanism note and docs/... verification record.
+## "Playtest States" is hidden outright (not shown-disabled) unless
+## `OS.is_debug_build()` -- the same engine call every Godot release export
+## template bakes to `false` at compile time (a debug export template /
+## editor-run / bare `--headless` run all bake it `true`). itch/Steam ship
+## via `--export-release` (qa/web/export_web.sh, the exact command
+## release.yml's export job runs) which uses the RELEASE template, so this
+## row is provably absent from every shipped build -- see this file's
+## header doc for the full mechanism note.
 func _row_visible(i: int) -> bool:
 	if ROWS[i] == "Quit" and OS.has_feature("web"):
 		return false
@@ -341,10 +340,10 @@ func _row_selectable(i: int) -> bool:
 	return _row_visible(i) and _row_enabled(i)
 
 
-## Issue #43 re-pin: how many top-level menu rows are actually reachable by
-## the cursor right now, on THIS binary -- the title_flow canonical's
-## "device-of-truth" proof that the debug gate (and Continue's own
-## enabled/disabled state) is live, not assumed.
+## How many top-level menu rows are actually reachable by the cursor right
+## now, on THIS binary -- title_flow's canonical "device-of-truth" proof
+## that the debug gate (and Continue's own enabled/disabled state) is
+## live, not assumed.
 func _selectable_row_count() -> int:
 	var n := 0
 	for i in ROWS.size():
@@ -376,10 +375,9 @@ func _refresh_rows() -> void:
 		var panel := label.get_parent().get_parent() as Control
 		for child: Node in panel.get_children():
 			if child is NinePatchRect:
-				# UIWAVE2 title-centering fix: swap through set_patch_texture
-				# so the measured art-bbox region follows the texture (the two
-				# button arts have different bboxes -- see UIChrome's
-				# BLUE_BUTTON_REGION doc comment).
+				# Swap through set_patch_texture so the measured art-bbox region
+				# follows the texture (the two button arts have different bboxes
+				# -- see UIChrome's BLUE_BUTTON_REGION doc comment).
 				UIChrome.set_patch_texture(child as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if i == _cursor else UIChrome.BLUE_BUTTON)
 
 
@@ -388,11 +386,12 @@ func _confirm() -> void:
 		return
 	match ROWS[_cursor]:
 		"New Game":
-			# M-ARC §5: real play (and a QA script opting in via `creation_ui`)
-			# routes through the character-creation screen; every OTHER New Game
-			# path -- the default TestDriver skip -- calls Game.reset() straight
-			# through, byte-identical to before this feature (the creation screen
-			# is never even spawned), so every existing canonical is untouched.
+			# Real play (and a QA script opting in via `creation_ui`) routes
+			# through the character-creation screen; every OTHER New Game path
+			# -- the default TestDriver skip -- calls Game.reset() straight
+			# through, byte-identical to before this feature (the creation
+			# screen is never even spawned), so every existing canonical is
+			# untouched.
 			if _skip_creation():
 				Game.reset()
 			elif main_ref != null:
@@ -410,11 +409,11 @@ func _confirm() -> void:
 			get_tree().quit()
 
 
-## M5 final review: `load_slot` returns false on a corrupt or older-version
-## save (WISave.apply rejects mismatched VERSION). Without feedback the title
-## screen silently does nothing -- surface it and grey the Continue row so
-## New Game is the obvious path. (Continue-only: the playtest picker loads
-## its own "playtest" slot directly and shows its own failure notice -- see
+## `load_slot` returns false on a corrupt or older-version save (WISave.
+## apply rejects mismatched VERSION). Without feedback the title screen
+## silently does nothing -- surface it and grey the Continue row so New
+## Game is the obvious path. (Continue-only: the playtest picker loads its
+## own "playtest" slot directly and shows its own failure notice -- see
 ## `_confirm_playtest_row` -- because this helper's failure branch resets
 ## Continue-slot state, which the picker must not touch.)
 func _load_slot_or_notice(slot: String) -> void:
@@ -463,7 +462,7 @@ func _show_notice(text: String) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_NOTICE_RENDERED, {"text": text})
 
 
-# --- Issue #43: playtest-state picker -----------------------------------
+# --- Playtest-state picker -------------------------------------------------
 
 func _handle_playtest_input(event: InputEvent) -> void:
 	var vp := get_viewport()
@@ -515,17 +514,17 @@ func _move_playtest_cursor(delta: int) -> void:
 ## Copies the cursored fixture into the DEDICATED "playtest" save slot
 ## (`Game.install_fixture_save`, the qa/test_driver.gd fixture_save copy) and
 ## loads that slot directly via the same slot-generic `Game.load_slot`
-## Continue uses -- still zero new sim machinery. Controller review (issue
-## #43): the slot is "playtest", NEVER "manual" -- installing over the manual
-## slot would silently CLOBBER the user's own save, and the user is this
-## feature's whole audience. The extra slot file is benign everywhere else
-## (traced, not assumed): `_newest_save_slot` scans only auto/manual, so
-## Continue never offers it; pause_menu's Load rows hardcode manual/auto;
-## combat_screen's defeat path hardcodes auto; nothing in src/ enumerates the
-## saves dir. The first in-game autosave after booting a state writes "auto"
-## as usual, which Continue then picks up. Failure (a bad hand-authored
-## fixture rejected by WISave.apply) surfaces its own notice rather than
-## riding `_load_slot_or_notice` -- that helper's failure branch resets
+## Continue uses -- still zero new sim machinery. The slot is "playtest",
+## NEVER "manual" -- installing over the manual slot would silently CLOBBER
+## the user's own save, and the user is this feature's whole audience. The
+## extra slot file is benign everywhere else (traced, not assumed):
+## `_newest_save_slot` scans only auto/manual, so Continue never offers it;
+## pause_menu's Load rows hardcode manual/auto; combat_screen's defeat path
+## hardcodes auto; nothing in src/ enumerates the saves dir. The first
+## in-game autosave after booting a state writes "auto" as usual, which
+## Continue then picks up. Failure (a bad hand-authored fixture rejected by
+## WISave.apply) surfaces its own notice rather than riding
+## `_load_slot_or_notice` -- that helper's failure branch resets
 ## Continue-slot state, which this path must leave untouched.
 func _confirm_playtest_row() -> void:
 	if _fixture_entries.is_empty():

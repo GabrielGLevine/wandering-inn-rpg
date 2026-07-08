@@ -61,7 +61,7 @@
      4
     ]
    ],
-   "_comment_dressing": "M5 R4 (design doc sec.4). Same passthrough contract as skeleton_scene.json maps -- combat_screen.gd renders these, WICombat never reads them (arena_config.duplicate(true) just carries the extra keys inertly). Decor cells are deliberately OUTSIDE the 12x8 playable grid (x<0 or x>=12) so dressing never competes with tactical readability, per design doc sec.4's binding rule.",
+   "_comment_dressing": "Same passthrough contract as skeleton_scene.json maps -- combat_screen.gd renders these, WICombat never reads them (arena_config.duplicate(true) just carries the extra keys inertly). Decor cells are deliberately OUTSIDE the 12x8 playable grid (x<0 or x>=12) so dressing never competes with tactical readability, per design doc sec.4's binding rule.",
    "floor_layers": [
     {
      "_pick": "cobble variation reusing the street biome's verified floor-tile neighborhood.",
@@ -209,7 +209,7 @@
      4
     ]
    ],
-   "_comment_dressing": "M5 R4 (design doc sec.4). Decor sits just outside the 12x8 grid, same rule as goblin_ambush.",
+   "_comment_dressing": "Decor sits just outside the 12x8 grid, same rule as goblin_ambush.",
    "floor_layers": [
     {
      "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood.",
@@ -523,7 +523,7 @@
      4
     ]
    ],
-   "_comment_dressing": "M5 R4 (design doc sec.4). Same passthrough contract as skeleton_scene.json maps -- combat_screen.gd renders these, WICombat never reads them (arena_config.duplicate(true) just carries the extra keys inertly). Decor cells are deliberately OUTSIDE the 12x8 playable grid (x<0 or x>=12) so dressing never competes with tactical readability, per design doc sec.4's binding rule.",
+   "_comment_dressing": "Same passthrough contract as skeleton_scene.json maps -- combat_screen.gd renders these, WICombat never reads them (arena_config.duplicate(true) just carries the extra keys inertly). Decor cells are deliberately OUTSIDE the 12x8 playable grid (x<0 or x>=12) so dressing never competes with tactical readability, per design doc sec.4's binding rule.",
    "floor_layers": [
     {
      "_pick": "cobble variation reusing the street biome's verified floor-tile neighborhood.",
@@ -593,7 +593,7 @@
      ]
     }
    ],
-   "_comment": "Onboarding O3: layout-identical clone of goblin_ambush carrying the PART-2 tutor beats (arenas own tutor_lines and goblin_ambush is shared with goblin_encounter_2, which must stay beat-free). goblin_encounter_1 points here. Task 7c (No Killing Goblins seed, Part 2): road_clear's line grew a second sentence (Relc's sign acknowledgment, verbatim seed copy 3) -- placement trace: no shipped QA script pins `road_clear`'s exact `line` text (every reference is `payload_contains: {beat: \"road_clear\"}`, grepped across every qa/scripts/*.json), and `combat_hud.gd`'s `match_tutor_line` fires at most ONE tutor entry per incoming event (`ready[0]`), so a second tutor_lines entry on the SAME combat_finished/victory trigger could never fire -- appending to this existing line is the only way to land the beat here at all, and it moves ZERO pins. Thematically it is the natural close of the road-fight (\"teeth are teeth out here\" pairs directly with the ambush that just ended), unlike the harmless training-yard spar. The feed panel auto-grows for tutor lines (`_grow_feed_panel_for_tutor`, capped/evicts oldest -- see CLAUDE.md's wrapped-line-budget gotcha) and this fires as the LAST beat of the fight, so evicting older combat-log lines here is harmless. Windowed-verified via a throwaway probe (not committed) reading the grown feed panel in full.",
+   "_comment": "Layout-identical clone of goblin_ambush carrying its own tutor beats (arenas own tutor_lines, and goblin_ambush is shared with goblin_encounter_2, which must stay beat-free). goblin_encounter_1 points here. TRAP: `road_clear`'s `line` carries TWO sentences appended into one entry, not two separate tutor_lines entries -- no shipped QA script pins its exact text (every reference is `payload_contains: {beat: \"road_clear\"}`), but `combat_hud.gd`'s `match_tutor_line` fires at most ONE tutor entry per incoming event (`ready[0]`), so a second entry on the SAME combat_finished/victory trigger could never fire; appending to the existing line is the only way to land a second beat here. The feed panel auto-grows for tutor lines (`_grow_feed_panel_for_tutor`, capped/evicts oldest -- see CLAUDE.md's wrapped-line-budget gotcha) and this fires as the LAST beat of the fight, so evicting older combat-log lines here is harmless.",
    "tutor_lines": [
     {
      "id": "real_ones",
@@ -635,7 +635,7 @@
    ]
   },
   {
-   "_comment": "Content Wave C1: the Liscor sewers combat arena (12x8 per the M1 arena contract test_combat_data enforces). Cave biome. Interior `blocked` cells are a broken-pillar / rubble scatter acting as tactical cover -- kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability). Both sewers encounters (shield_spiders nest + sewer_vermin) use this arena.",
+   "_comment": "The Liscor sewers combat arena (12x8 per the M1 arena contract test_combat_data enforces). Cave biome. Interior `blocked` cells are a broken-pillar / rubble scatter acting as tactical cover -- kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability). Both sewers encounters (shield_spiders nest + sewer_vermin) use this arena.",
    "id": "sewers_nest",
    "biome": "cave",
    "grid": {
@@ -753,7 +753,7 @@
    ]
   },
   {
-   "_comment": "M-ARC A2: the deep warren -- the Awakened Raskghar's boss arena (12x8 per the M1 arena contract test_combat_data enforces; cave biome, darkest pin lives in data/moods.json arena_moods.deep_warren). Interior `blocked` cells are twin broken pillars (x3/x8) + a central rubble block (x6) that make the fight about POSITIONING: they break the boss's range-2 maul line-of-sight and give the player + Relc lanes to corner the kiting boss against, rather than an open trade. All six blocked cells are kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). The boss ENCOUNTER entity that fields raskghar_awakened + 2 raskghar_scout adds here is A3's climax chain; A2 ships the arena + the gated balance band (sim_combat_batch.gd BOSS_CELLS).",
+   "_comment": "The deep warren -- the Awakened Raskghar's boss arena (12x8 per the M1 arena contract test_combat_data enforces; cave biome, darkest pin lives in data/moods.json arena_moods.deep_warren). Interior `blocked` cells are twin broken pillars (x3/x8) + a central rubble block (x6) that make the fight about POSITIONING: they break the boss's range-2 maul line-of-sight and give the player + Relc lanes to corner the kiting boss against, rather than an open trade. All six blocked cells are kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). Balance band is gated in sim_combat_batch.gd's BOSS_CELLS.",
    "id": "deep_warren",
    "biome": "cave",
    "grid": {
@@ -882,7 +882,7 @@
    ]
   },
   {
-   "_comment": "Magical Door 8a Task D2 (lane β): the inn's cellar -- rift_vermin_leak's arena (beat 2, D1 places the encounter entity as `rift_vermin_leak` inn-cellar-adjacent; this arena id is D2's own choice, not part of the plan's locked interface -- only the encounter id/on_victory accomplishments and the `ruin_court` arena id below are locked). `inn` biome (12x8 per the M1 arena contract test_combat_data enforces). Interior `blocked` cells are stacked crates/barrels cellar clutter, kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). floor_layers reuses the INN map's own already-verified 'kitchen zone: grey cobble swatch' variant picks (data/skeleton_scene.json maps.inn.floor_layers) rather than guessing new coordinates -- a stone-floor read fits a cellar better than the hall planks anyway.",
+   "_comment": "The inn's cellar -- `rift_vermin_leak`'s arena (this arena id is not part of the door-chain's locked interface; only the encounter id/on_victory accomplishments and the `ruin_court` arena id below are locked). `inn` biome (12x8 per the M1 arena contract test_combat_data enforces). Interior `blocked` cells are stacked crates/barrels cellar clutter, kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). floor_layers reuses the INN map's own already-verified 'kitchen zone: grey cobble swatch' variant picks (data/skeleton_scene.json maps.inn.floor_layers) rather than guessing new coordinates -- a stone-floor read fits a cellar better than the hall planks anyway.",
    "id": "inn_cellar",
    "biome": "inn",
    "grid": {
@@ -947,7 +947,7 @@
      4
     ]
    ],
-   "_comment_dressing": "M5 R4 convention: decor sits just outside the 12x8 grid.",
+   "_comment_dressing": "Decor sits just outside the 12x8 grid.",
    "floor_layers": [
     {
      "_pick": "reuses maps.inn's own verified 'kitchen zone: grey cobble swatch' variant picks -- stone floor for the cellar, zero new coordinate guessing.",
@@ -984,7 +984,7 @@
    ]
   },
   {
-   "_comment": "Magical Door 8a Task D2 (lane β): `ruin_court` -- the LOCKED arena id from the plan's interface contract, ruin_guardian's pedestal-guard arena (D1 places the `ruin_guardian` entity in `ruin_surface`, guarding `anchor_stone_pedestal`; D2 ships only this combat arena). `cave` biome (12x8 per the M1 arena contract) -- no dedicated 'ruin' biome exists in data/biomes.json today (D2's charter is combatants/arenas/harness only, not biomes.json/sprites.json), so this reuses the closest existing stone-ruin-plausible biome; a future ruin-biome art pass (A1/DF) can retarget this arena's `biome` string alone without touching any balance-relevant field. Interior `blocked` cells are twin broken pillars + a rubble line flanking the pedestal, the same positioning-arena idiom as deep_warren (break the guardian's reach, give the player+Relc lanes to corner it), kept clear of every spawn (test_combat_data asserts reachability). floor_layers reuses the cave biome's already-verified floor-tile neighborhood (same picks as cave_mouth/sewers_nest/deep_warren).",
+   "_comment": "`ruin_court` -- a LOCKED arena id (door-chain interface contract), `ruin_guardian`'s pedestal-guard arena in `ruin_surface`, guarding `anchor_stone_pedestal`. `cave` biome (12x8 per the M1 arena contract) -- no dedicated 'ruin' biome exists in data/biomes.json, so this reuses the closest existing stone-ruin-plausible biome; a future ruin-biome art pass can retarget this arena's `biome` string alone without touching any balance-relevant field. Interior `blocked` cells are twin broken pillars + a rubble line flanking the pedestal, the same positioning-arena idiom as deep_warren (break the guardian's reach, give the player+Relc lanes to corner it), kept clear of every spawn (test_combat_data asserts reachability). floor_layers reuses the cave biome's already-verified floor-tile neighborhood (same picks as cave_mouth/sewers_nest/deep_warren).",
    "id": "ruin_court",
    "biome": "cave",
    "grid": {

@@ -127,7 +127,7 @@ func test_node_text_variants_last_match_wins() -> void:
 	assert(String(_events[0]["payload"]["text"]) == "last variant", "last matching text_variant wins")
 
 
-## Economy v1 Task D1: the `gold: +/-N` effect verb applied through a REAL
+## The `gold: +/-N` effect verb applied through a REAL
 ## dialogue_choose (not a direct earn/spend call) -- the earn beat, then a shop
 ## buy that spends AND grants a sibling item in one option, proving the verb
 ## lives beside item/accomplishment in the applier.
@@ -154,7 +154,7 @@ func test_gold_effect_verb_applies_through_dialogue_choose() -> void:
 	assert(game.inventory.has("leather_jerkin"), "sibling item effect still grants alongside the gold spend")
 
 
-## Issue #23: the well_fed effect verb (Erin's meal perk), the dialogue-side
+## The well_fed effect verb (Erin's meal perk), the dialogue-side
 ## twin of the gold effect verb test above -- applied through the real
 ## WIGame.dialogue_choose effect router, not set directly on the field.
 func test_well_fed_effect_verb_applies_through_dialogue_choose() -> void:
@@ -168,7 +168,7 @@ func test_well_fed_effect_verb_applies_through_dialogue_choose() -> void:
 	assert(game.well_fed, "well_fed effect verb applies through dialogue_choose")
 
 
-## Economy v1 Task D1: an unaffordable buy stays VISIBLE-locked (greyed), never
+## An unaffordable buy stays VISIBLE-locked (greyed), never
 ## hidden -- window-shopping is content (spec §3). Uses the SHIPPED M4 greying
 ## mechanism, now reading the numeric gold ctx key.
 func test_gold_affordability_greys_when_broke() -> void:
@@ -184,7 +184,7 @@ func test_gold_affordability_greys_when_broke() -> void:
 	assert(String(opts[0]["requirement"]) == "costs 50 gold", "greyed buy shows its cost requirement text")
 
 
-## Social Pillar II review finding 2: the ONE sanctioned compound gate
+## The ONE sanctioned compound gate
 ## ({gold, accomplishment}) unit-covered at the pure-walker level: the
 ## accomplishment leg HIDES until met; once met, the gold leg greys-visible;
 ## with both met the option unlocks. Mirrors the single-key tests above.
@@ -211,7 +211,7 @@ func test_compound_gold_accomplishment_gate() -> void:
 	assert(not bool(opts[0]["locked"]), "both legs met -> unlocked")
 
 
-## Issue #23: the once_per_waking gate at the pure-walker level, mirroring
+## The once_per_waking gate at the pure-walker level, mirroring
 ## test_accomplishment_requires_hides_until_met above -- HIDDEN (vanishing),
 ## not greyed, keyed off the ctx's `entity_first_use` dict rather than
 ## `accomplishments`.
@@ -229,7 +229,7 @@ func test_once_per_waking_requires_hides_until_used() -> void:
 	assert(String(d2.current_options()[0]["text"]) == "always", "only the unused/ungated option shows")
 
 
-## Issue #23 fix wave (review finding 1): once_per_waking is REQUIRES-ONLY.
+## once_per_waking is REQUIRES-ONLY.
 ## A hide_when carrying it is malformed content (test_content.gd rejects it
 ## at validation time); this covers the runtime belt-and-suspenders half
 ## (WIDialogue._meets_hide_when): the key is refused and IGNORED -- the
@@ -266,7 +266,7 @@ func test_once_per_waking_refused_in_hide_when() -> void:
 	assert(d3.current_options().size() == 1, "combined hide_when: the REAL key (accomplishment, met) still hides -- only once_per_waking is stripped")
 
 
-## Issue #23: the full per-waking dialogue gate lifecycle through the REAL
+## The full per-waking dialogue gate lifecycle through the REAL
 ## WIGame path (start_dialogue/dialogue_choose/sleep), the issue's named
 ## unmet -> used -> gone-this-waking -> back-after-sleep sequence. Uses the
 ## SAME synthetic-graph harness as the gold-effect tests above (a real
@@ -298,7 +298,7 @@ func test_once_per_waking_gate_lifecycle_through_bank_first_use() -> void:
 	assert(opts.size() == 2, "after sleep: the option is back")
 
 
-## Issue #23: the SECOND sanctioned compound gate ({accomplishment,
+## The SECOND sanctioned compound gate ({accomplishment,
 ## once_per_waking}) at the real-WIGame level, mirroring
 ## test_compound_gold_accomplishment_gate above. Unlike the gold compound,
 ## once_per_waking is itself a vanishing gate -- once BOTH legs are met, using
@@ -342,8 +342,8 @@ func _find_entity(scene: Dictionary, map_id: String, id: String) -> Dictionary:
 	return {}
 
 
-## Social Pillar II Phase A: the talk_pool_stages GROWTH seam (generalizes
-## Content Wave C4's one-shot talk_pool_post -- Lyonette's shipped
+## The talk_pool_stages GROWTH seam (generalizes
+## the one-shot talk_pool_post -- Lyonette's shipped
 ## talk_pool_post migrated to a one-entry talk_pool_stages array, RENAME not
 ## rewrite). Before the gate (resolved_wrong_order) is banked, Lyonette's
 ## rotating small-talk draws from her BASE talk_pool; after it, the same

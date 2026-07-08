@@ -1,7 +1,6 @@
 class_name WICombatPlayback
 extends RefCounted
-## M6.5 D3 extraction: the paced AI-turn playback queue (M4 T10) MOVED out of
-## combat_screen.gd -- enqueue-time event capture, the beat-paced drain loop,
+## The paced AI-turn playback queue, extracted from combat_screen.gd -- enqueue-time event capture, the beat-paced drain loop,
 ## dequeue-time apply/highlight, and the confirm/cancel skip gate. Constructed
 ## once by `combat_screen.gd._ready()` (alongside `_board_renderer`):
 ## `_ai_playback = load("res://src/combat/combat_playback.gd").new(_board_renderer, self)`.
@@ -72,7 +71,7 @@ var _skip_requested := false
 var _ai_turn_active := false
 
 
-## M-JUICE E2 hit-stop: a melee connect beat holds this long before the next
+## Hit-stop: a melee connect beat holds this long before the next
 ## beat plays -- a 60ms freeze inside the 40-80ms design band. Only ever added
 ## on top of a non-zero `beat_delay()` (see `drain()`), so it is QA-collapsed
 ## to zero under TestDriver/headless exactly like the AI pacing it rides on.
@@ -339,7 +338,7 @@ func _apply_playback_event(event: Dictionary, with_visuals: bool) -> void:
 			_screen._render_tutor_line(tutor)
 			_screen._refresh()
 		WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED:
-			# GH#21 review fix (Critical #1): terrain overlays are BOARD STATE,
+			# Terrain overlays are BOARD STATE,
 			# not transient juice -- `_play_event_visual`'s TERRAIN arms are the
 			# ONLY code that mutates board_renderer's persistent overlay tree,
 			# and unlike combatant position/HP/MP there is no post-drain resync

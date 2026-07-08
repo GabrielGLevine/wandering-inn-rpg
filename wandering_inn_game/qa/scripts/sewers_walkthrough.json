@@ -1,5 +1,5 @@
 {
- "_comment": "Content Wave C1: the Liscor sewers canonical walkthrough. Loads the near_sewers FIXTURE (post_tutorial_street shape + heard_about_cisterns pre-banked, so the grate-gate is open -- C3 banks that accomplishment from Olesm for real) via title Continue, positioned two steps north of the grate approach. Enters via the REAL sewer_grate interact (door_when seam), walks the sewers, reads two flavor props, clears the sewer_vermin trash pack (autoplay), then climbs the exit ladder back to the street. Proves: the grate-gate transition, the sewers dark mood + map render + always-on ambience, prop toasts, the new sewer_vermin encounter/arena, and the exit door. Fixture rng_state (9) governs -- no --seed search. NOTE: the shield_spider nest is placed but NOT fought here (that is Quest 1 / Task C3's job; interact-only, off this path). PLAYTEST FEATURE 3 EXTENSION: after landing, casts [Light] on the ambient path (hotbar_2) to conjure the PC-following arcane glow that makes the dark sewers navigable -- proving the new light_active sim flag, the ui_pc_light_rendered{active:true} UI confirmation, the follows-you toast copy, and a LIT vs UNLIT screenshot pair (00_sewers_landing = unlit, 00b_sewers_lit = lit). The near_sewers fixture was given `light` in player_skills for this (see its comment); the cast is exploration-only and fight-determinism-neutral, so the vermin autoplay is unchanged.",
+ "_comment": "The Liscor sewers canonical walkthrough. Loads the near_sewers FIXTURE (post_tutorial_street shape + heard_about_cisterns pre-banked, so the grate-gate is open -- the cisterns quest banks that accomplishment from Olesm for real) via title Continue, positioned two steps north of the grate approach. Enters via the REAL sewer_grate interact (door_when seam), walks the sewers, reads two flavor props, clears the sewer_vermin trash pack (autoplay), then climbs the exit ladder back to the street. Proves: the grate-gate transition, the sewers dark mood + map render + always-on ambience, prop toasts, the new sewer_vermin encounter/arena, and the exit door. Fixture rng_state (9) governs -- no --seed search. NOTE: the shield_spider nest is placed but NOT fought here (that is the cisterns quest's job; interact-only, off this path). PLAYTEST FEATURE 3 EXTENSION: after landing, casts [Light] on the ambient path (hotbar_2) to conjure the PC-following arcane glow that makes the dark sewers navigable -- proving the new light_active sim flag, the ui_pc_light_rendered{active:true} UI confirmation, the follows-you toast copy, and a LIT vs UNLIT screenshot pair (00_sewers_landing = unlit, 00b_sewers_lit = lit). The near_sewers fixture was given `light` in player_skills for this (see its comment); the cast is exploration-only and fight-determinism-neutral, so the vermin autoplay is unchanged.",
  "fixture_save": "near_sewers",
  "starts_at_title": true,
  "steps": [
@@ -146,7 +146,7 @@
    "name": "00_sewers_landing"
   },
   {
-   "_comment": "== PLAYTEST FEATURE 3: cast [Light] on the PC (ambient path) mid-sewers. The near_sewers fixture carries light/frost_touch/kindle in player_skills, so the field hotbar renders 4 slots: 1 [Basic Cleaning] (innate), 2 [Light], 3 [Snap Freeze], 4 [Firefly] (K1 seam skills). Pressing hotbar_2 while facing a non-light-prop cell takes use_skill_field's field_ambient path (no sewers prop carries requires_skill==light), which sets light_active and conjures the PC-following glow. Proves: the ambient skill_used stream (target empty), the new follows-you toast copy, ui_pc_light_rendered{active:true}, and the round-trippable sim flag. ==",
+   "_comment": "== PLAYTEST FEATURE 3: cast [Light] on the PC (ambient path) mid-sewers. The near_sewers fixture carries light/frost_touch/kindle in player_skills, so the field hotbar renders 4 slots: 1 [Basic Cleaning] (innate), 2 [Light], 3 [Snap Freeze], 4 [Firefly] (the disclosed-affordance seam skills). Pressing hotbar_2 while facing a non-light-prop cell takes use_skill_field's field_ambient path (no sewers prop carries requires_skill==light), which sets light_active and conjures the PC-following glow. Proves: the ambient skill_used stream (target empty), the new follows-you toast copy, ui_pc_light_rendered{active:true}, and the round-trippable sim flag. ==",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
@@ -212,7 +212,7 @@
    "equals": true
   },
   {
-   "_comment": "== SKILLS WAVE TASK K1 -- BURNABLE-PROP SEAM. The near_sewers PC knows [Firefly] (fire field skill, slot 4). Rotten debris (sewer_debris, burnable) blocks the dead-end nook at (1,2), one cell WEST of the landing. Face it and burn it -> the prop is removed PERMANENTLY (removed_entities, saved) and the nook opens. Nothing else treads x0-1, so this seam is invisible to every other sewers script. DISCLOSURE: this run now banks burned_the_debris:1 + marks [Firefly] used; no script asserts an exact accomplishments/used_skills dict. ==",
+   "_comment": "== BURNABLE-PROP SEAM. The near_sewers PC knows [Firefly] (fire field skill, slot 4). Rotten debris (sewer_debris, burnable) blocks the dead-end nook at (1,2), one cell WEST of the landing. Face it and burn it -> the prop is removed PERMANENTLY (removed_entities, saved) and the nook opens. Nothing else treads x0-1, so this seam is invisible to every other sewers script. DISCLOSURE: this run now banks burned_the_debris:1 + marks [Firefly] used; no script asserts an exact accomplishments/used_skills dict. ==",
    "action": "move",
    "direction": "left",
    "steps": 1
@@ -309,7 +309,7 @@
    "steps": 1
   },
   {
-   "_comment": "== SKILLS WAVE TASK K1 -- FREEZABLE-WATER SEAM. The PC knows [Snap Freeze] (slot 3). Channel-A cell (3,5) is a freezable crossing. Walk to (3,4) on the top band, face down at the water, prove it BLOCKS, frost-cast it into walkable ice, then step across -- the walkability flip. Ice thaws at the next sleep (not exercised here; the exit ladder ends the run). ==",
+   "_comment": "== FREEZABLE-WATER SEAM. The PC knows [Snap Freeze] (slot 3). Channel-A cell (3,5) is a freezable crossing. Walk to (3,4) on the top band, face down at the water, prove it BLOCKS, frost-cast it into walkable ice, then step across -- the walkability flip. Ice thaws at the next sleep (not exercised here; the exit ladder ends the run). ==",
    "action": "move",
    "direction": "right",
    "steps": 1

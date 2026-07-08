@@ -1,5 +1,5 @@
 {
- "_comment": "M-FP Q1 + ONBOARDING O5: save/load persistence across the errand run. Inn: accept the_errand from Erin. Then the real cold-start crossing (old parley bypass dead): meet Relc -> spar -> sleep (Warrior L1) -> cross the goblin_encounter_1 proximity ambush (warrior+Relc) -> street. Street: deliver to Selys (package_delivered), pause-Save to manual, complete the quest (errand_decided), pause-Load the manual slot and assert the delivered/street state round-trips intact. Prologue cells reuse combat_walkthrough's proven from-floodplains arc. Seed 9.",
+ "_comment": "save/load persistence across the errand run. Inn: accept the_errand from Erin. Then the real cold-start crossing (old parley bypass dead): meet Relc -> spar -> sleep (Warrior L1) -> cross the goblin_encounter_1 proximity ambush (warrior+Relc) -> street. Street: deliver to Selys (package_delivered), pause-Save to manual, complete the quest (errand_decided), pause-Load the manual slot and assert the delivered/street state round-trips intact. Prologue cells reuse combat_walkthrough's proven from-floodplains arc. Seed 9.",
  "steps": [
   {
    "action": "wait_for_event",
@@ -499,7 +499,7 @@
    "equals": "street"
   },
   {
-   "_comment": "M-DEPTH DP1 re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); 'move up 7' is the exact proven step from guild_interior_walkthrough, stopping blocked-adjacent to Selys (8,2) facing up. The pause-Save/Load below now captures/restores current_map:guild, not street -- that assertion is updated further down (disclosed in the DP1 report).",
+   "_comment": "Re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); 'move up 7' is the exact proven step from guild_interior_walkthrough, stopping blocked-adjacent to Selys (8,2) facing up. The pause-Save/Load below now captures/restores current_map:guild, not street -- that assertion is updated further down (disclosed in the DP1 report).",
    "action": "teleport",
    "map": "guild",
    "cell": [8, 10]
@@ -747,7 +747,7 @@
    "equals": 1
   },
   {
-   "_comment": "M-DEPTH DP1: the manual save was taken standing at Selys's guild desk (she relocated off the street), so the round-trip now restores current_map:guild -- pin moved from 'street'.",
+   "_comment": "The manual save was taken standing at Selys's guild desk (she relocated off the street), so the round-trip now restores current_map:guild -- pin moved from 'street'.",
    "action": "assert_state",
    "path": "current_map",
    "equals": "guild"
@@ -774,7 +774,7 @@
    "frames": 3
   },
   {
-   "_comment": "M-DEPTH DP2: 'Take on a posting.' is visible whenever no bounty is accepted (board_accepted false in this fixture -- nothing in this script ever calls accept_bounty), appended at array end so no earlier option's visible index shifts. 'Turn in my posting.' stays hidden (requires board_accepted:true, unmet) and does not appear in this exact-size array.",
+   "_comment": "'Take on a posting.' is visible whenever no bounty is accepted (board_accepted false in this fixture -- nothing in this script ever calls accept_bounty), appended at array end so no earlier option's visible index shifts. 'Turn in my posting.' stays hidden (requires board_accepted:true, unmet) and does not appear in this exact-size array.",
    "action": "assert_event_logged",
    "type": "dialogue_node",
    "payload_contains": {

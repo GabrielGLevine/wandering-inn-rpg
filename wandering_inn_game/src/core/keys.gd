@@ -1,6 +1,6 @@
 class_name WIKeys
 extends RefCounted
-## ARCH-3 (const key catalog, minimum viable): a shared home for the
+## A shared home for the
 ## stringly-typed dict keys used at HOT src/core call sites (combatant,
 ## skill, effect, item, and entity records) so a typo'd key becomes a
 ## visible-at-review named constant instead of a silent runtime `null`.
@@ -22,7 +22,7 @@ extends RefCounted
 ##
 ## SCOPE — hot paths only, not a full schema. Cataloged here: the
 ## combatant/build record, the skill record, the effect record, the item
-## record, and the entity record (consultant's list). One-off/rare keys
+## record, and the entity record. One-off/rare keys
 ## are deliberately NOT here — a catalog that tries to cover every key in
 ## the codebase becomes its own drift surface (goes stale the moment a new
 ## key is added elsewhere and nobody remembers to add it here). Data files
@@ -67,7 +67,7 @@ const MULT := "mult"
 const RANGE := "range"
 const LENGTH := "length"
 const APPLIES := "applies"
-## GH#21 (icy_floor area terrain): the effect's blast radius (Chebyshev cells
+## The effect's blast radius (Chebyshev cells
 ## around the target) and how many rounds a cast cell stays icy.
 const RADIUS := "radius"
 const DURATION_ROUNDS := "duration_rounds"

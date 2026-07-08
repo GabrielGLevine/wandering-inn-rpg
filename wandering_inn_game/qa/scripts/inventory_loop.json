@@ -1,5 +1,5 @@
 {
- "_comment": "M7 Task E5 / ONBOARDING O5: the canonical inventory/equipment loop, re-pathed for the classless start + O3 gift relocation + O2 ambush. Route: inn_chest pickup (leather_jerkin, items:2) -> floodplains -> meet Relc -> SPAR (accept no longer grants the spear -- O3) -> win the trivial spar -> re-talk Relc for the GIFT node ('You said you had something for me?' -> relcs_spare_spear + given_spear_by_relc) -> return to the inn, sleep -> Warrior L1 (the kit the equip test needs) -> equip the spear via the real UI (items:3, gift at index 2) -> cross the floodplains proximity ambush (goblin_encounter_1) with the warrior+spear kit + Relc ally -> THE kit proof: combat.combatants.pc.skills == [basic_swordwork, tough_body, piercing_strikes] (power_strike weapon:sword gated OUT, piercing_strikes weapon:spear kept IN) -> victory -> journal still lists BOTH warrior skills (knowledge != fieldability). Seed 9 (live play). The autoplay tally limitation and loot-roll determination are unchanged (see the comments at those steps).",
+ "_comment": "The canonical inventory/equipment loop, for the classless start + gift relocation + ambush. Route: inn_chest pickup (leather_jerkin, items:2) -> floodplains -> meet Relc -> SPAR (accept no longer grants the spear) -> win the trivial spar -> re-talk Relc for the GIFT node ('You said you had something for me?' -> relcs_spare_spear + given_spear_by_relc) -> return to the inn, sleep -> Warrior L1 (the kit the equip test needs) -> equip the spear via the real UI (items:3, gift at index 2) -> cross the floodplains proximity ambush (goblin_encounter_1) with the warrior+spear kit + Relc ally -> THE kit proof: combat.combatants.pc.skills == [basic_swordwork, tough_body, piercing_strikes] (power_strike weapon:sword gated OUT, piercing_strikes weapon:spear kept IN) -> victory -> journal still lists BOTH warrior skills (knowledge != fieldability). Seed 9 (live play). The autoplay tally limitation and loot-roll determination are unchanged (see the comments at those steps).",
  "steps": [
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
   { "action": "screenshot", "name": "00_start" },
@@ -15,7 +15,7 @@
   { "_comment": "Qualified wait (repo pattern for this toast-race class): clears the Got toast off the since-marker. The one-time first-pickup 'Press I -- your pack.' hint queues right behind it but is harmless -- every later toast wait in this script is qualified or a different event type, so nothing unqualified can match the hint.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "Got: Leather Jerkin" }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_chest_pickup_toast" },
 
-  { "_comment": "I opens the panel -- carried count pinned to 2 (rusty_sword starter + leather_jerkin). M-LEGIBILITY L2: ui_inventory_shown now carries item_effect_lines (one generated line-array per carried item, WIEffectText source, parallel to the rendered cards) -- rusty_sword's mods are all 0 so its card shows NO effect lines ([]); the leather_jerkin card shows its generated hp + gold-value lines. This pins the exact strings the inventory detail card draws.", "action": "press", "name": "inventory" },
+  { "_comment": "I opens the panel -- carried count pinned to 2 (rusty_sword starter + leather_jerkin). ui_inventory_shown carries item_effect_lines (one generated line-array per carried item, WIEffectText source, parallel to the rendered cards) -- rusty_sword's mods are all 0 so its card shows NO effect lines ([]); the leather_jerkin card shows its generated hp + gold-value lines. This pins the exact strings the inventory detail card draws.", "action": "press", "name": "inventory" },
   { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 2, "item_effect_lines": [ [], [ "+4 HP", "Worth 24 gold" ] ] }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "02_inventory_first_open" },
   { "action": "press", "name": "inventory" },
@@ -37,14 +37,14 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "relc_intro" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "meet option 0 'Just a traveler...' banks met_relc -> banter.", "action": "press", "name": "confirm" },
+  { "_comment": "Meet option 0 'Just a traveler...' banks met_relc -> banter.", "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "met_relc" }, "timeout_sec": 5 },
-  { "_comment": "banter option 0 'spear? (Spar)' -> spar_offer.", "action": "press", "name": "confirm" },
+  { "_comment": "Banter option 0 'spear? (Spar)' -> spar_offer.", "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Relc", "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry." }, "timeout_sec": 5 },
-  { "_comment": "spar_offer option 0 'Ready when you are.' -> start_combat relc_spar (NO item -- O3 moved the gift off the accept).", "action": "press", "name": "confirm" },
+  { "_comment": "spar_offer option 0 'Ready when you are.' -> start_combat relc_spar (NO item -- the gift moved off the accept).", "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "_comment": "The spar accept grants no NEW item (O3 moved the spear to the gift node); proving that here is redundant with the chest's item_gained already in the log, so tutorial_flow owns the accept-grants-nothing assertion instead.", "action": "combat_autoplay", "max_turns": 200 },
+  { "_comment": "The spar accept grants no NEW item (the spear moved to the gift node); proving that here is redundant with the chest's item_gained already in the log, so tutorial_flow owns the accept-grants-nothing assertion instead.", "action": "combat_autoplay", "max_turns": 200 },
   { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 15 },
   { "action": "wait_for_event", "type": "ui_tutor_line_rendered", "payload_contains": { "beat": "wrap" }, "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
@@ -78,7 +78,7 @@
   { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
 
   { "_comment": "== equip the spear ==. Inventory is now [rusty_sword, leather_jerkin, relcs_spare_spear] (gift appended last, index 2); cursor resets to 0 on open -> two move_down presses select the spear.", "action": "press", "name": "inventory" },
-  { "_comment": "M-LEGIBILITY L2: item_effect_lines parallel to [rusty_sword, leather_jerkin, relcs_spare_spear] -- the gift spear's generated +1 damage line now shows on its card.", "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 3, "item_effect_lines": [ [], [ "+4 HP", "Worth 24 gold" ], [ "+1 damage on melee hits" ] ] }, "timeout_sec": 5 },
+  { "_comment": "item_effect_lines parallel to [rusty_sword, leather_jerkin, relcs_spare_spear] -- the gift spear's generated +1 damage line now shows on its card.", "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 3, "item_effect_lines": [ [], [ "+4 HP", "Worth 24 gold" ], [ "+1 damage on melee hits" ] ] }, "timeout_sec": 5 },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "screenshot", "name": "03_spear_selected" },
@@ -111,7 +111,7 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "won_combat" }, "timeout_sec": 5 },
 
-  { "_comment": "Loot (Economy v1 D2 re-derivation): goblin_encounter_1's loot is now [{crude_blade,0.25},{gold:2,0.5}], rolled off the ISOLATED run-seed(=CLI --seed=9)+encounter-id RNG (never the live stream, so the pinned combat seed is untouched). At seed 9 the item still does NOT drop (crude_blade r=0.312 > 0.25 -- byte-identical to the pre-D2 first draw) but the appended gold entry FIRES (r=0.341 < 0.5): loot_dropped now carries {gold:2} (no items key) and an 'Earned 2 gold.' toast follows. Assert the coin drop positively. Re-derive via qa/loot_probe.gd if items.json/loot changes.", "action": "assert_event_logged", "type": "loot_dropped", "payload_contains": { "gold": 2 } },
+  { "_comment": "Loot: goblin_encounter_1's loot is [{crude_blade,0.25},{gold:2,0.5}], rolled off the ISOLATED run-seed(=CLI --seed=9)+encounter-id RNG (never the live stream, so the pinned combat seed is untouched). At seed 9 the item does NOT drop (crude_blade r=0.312 > 0.25) but the appended gold entry FIRES (r=0.341 < 0.5): loot_dropped now carries {gold:2} (no items key) and an 'Earned 2 gold.' toast follows. Assert the coin drop positively. Re-derive via qa/loot_probe.gd if items.json/loot changes.", "action": "assert_event_logged", "type": "loot_dropped", "payload_contains": { "gold": 2 } },
   { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "Earned 2 gold." } },
   { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 5 },
@@ -125,7 +125,7 @@
   { "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
 
-  { "_comment": "M-JUICE E1 audio-coverage assertions. This loop already traverses every juice beat -- chest pickup (item_gained), spar+ambush hits (attack_resolved{hit}) & won ambush (combat_finished{victory}), the Warrior sleep (class_gained = THE ding), the spear equip (item_equipped), and door transitions (map_changed) -- so it doubles as the audio_played coverage-map proof (chosen over a bespoke audio_feedback script per E1's judgment clause: same coverage, no new seed to derive, assert-only so the pinned seed-9 run is untouched). Every assert is payload-qualified by id, keeping the FIFO/qualified-wait discipline. audio_played fires in headless as 'mapping validated + would have played' (WIAudio silent no-op, no device), which is exactly the coverage surface.", "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "item_pickup" } },
+  { "_comment": "Audio-coverage assertions. This loop already traverses every juice beat -- chest pickup (item_gained), spar+ambush hits (attack_resolved{hit}) & won ambush (combat_finished{victory}), the Warrior sleep (class_gained = THE ding), the spear equip (item_equipped), and door transitions (map_changed) -- so it doubles as the audio_played coverage-map proof (chosen over a bespoke audio_feedback script: same coverage, no new seed to derive, assert-only so the pinned seed-9 run is untouched). Every assert is payload-qualified by id, keeping the FIFO/qualified-wait discipline. audio_played fires in headless as 'mapping validated + would have played' (WIAudio silent no-op, no device), which is exactly the coverage surface.", "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "item_pickup" } },
   { "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "item_equip" } },
   { "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "door_transition" } },
   { "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "attack_hit" } },

@@ -1,5 +1,5 @@
 {
- "_comment": "M-FP Q2 (D2-8): Relc's repeatable combat tutorial spar. Reaches Relc (12,13) via the same proven inn->floodplains->relc route combat_move_input.json uses. Covers all nine D2-8 elements: (1) skippable negative ('Another time.') asserting combat_started absent + met_relc banked; (2) real re-talk into the actual spar; (3-7) the beat-id ui_tutor_line_rendered sequence driven by real keys against the SHIPPED training_yard tutor_lines (id order: opening/first_step/pool_empty/dash/aim/first_blood/watch/wrap) -- PC dex 10 vs dummy dex 2 means PC's initiative floor (11) always exceeds the dummies' ceiling (8), so PC-always-first holds for any seed, and the beat order below is seed-robust; (8) the opacity + persistence teeth: sparred_with_relc==1, won_combat/melee_hit absent (trivial on both entity and arena suppresses _bank_action_tally entirely), no class_level_up/class_gained, relc_spar entity never entity_removed (persistent:true); (9) ONBOARDING O5 rewrite: re-talk after victory now walks the GIFT node (O3 moved the spear off the spar-accept to a post-spar meet option), banking relcs_spare_spear + given_spear_by_relc and rendering the 'press I' teaching line. Seed 9 candidate: PC-vs-dummy initiative math makes 'PC acts first' seed-independent, and 21 HP dummies vs the PC's real kit make the win itself seed-robust too (D2-7 #3).",
+ "_comment": "Relc's repeatable combat tutorial spar. Reaches Relc (12,13) via the same proven inn->floodplains->relc route combat_move_input.json uses. Covers: (1) skippable negative ('Another time.') asserting combat_started absent + met_relc banked; (2) real re-talk into the actual spar; (3-7) the beat-id ui_tutor_line_rendered sequence driven by real keys against the SHIPPED training_yard tutor_lines (id order: opening/first_step/pool_empty/dash/aim/first_blood/watch/wrap) -- PC dex 10 vs dummy dex 2 means PC's initiative floor (11) always exceeds the dummies' ceiling (8), so PC-always-first holds for any seed, and the beat order below is seed-robust; (8) the opacity + persistence teeth: sparred_with_relc==1, won_combat/melee_hit absent (trivial on both entity and arena suppresses _bank_action_tally entirely), no class_level_up/class_gained, relc_spar entity never entity_removed (persistent:true); (9) re-talk after victory now walks the GIFT node (the spear moved off the spar-accept to a post-spar meet option), banking relcs_spare_spear + given_spear_by_relc and rendering the 'press I' teaching line. Seed 9 candidate: PC-vs-dummy initiative math makes 'PC acts first' seed-independent, and 21 HP dummies vs the PC's real kit make the win itself seed-robust too.",
  "steps": [
   {
    "action": "wait_for_event",
@@ -71,7 +71,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "D2-8 #1, the skippable NEGATIVE first. 'meet' node, fresh game (met_relc unset): visible options are ['Just a traveler...', 'Keep walking.'] -- default cursor (0) picks the traveler line, banking met_relc and going to 'banter'.",
+   "_comment": "The skippable NEGATIVE first. 'meet' node, fresh game (met_relc unset): visible options are ['Just a traveler...', 'Keep walking.'] -- default cursor (0) picks the traveler line, banking met_relc and going to 'banter'.",
    "action": "press",
    "name": "confirm"
   },
@@ -123,7 +123,7 @@
    "type": "combat_started"
   },
   {
-   "_comment": "D2-8 #2: re-talk and actually take the spar. 'meet' now shows the met_relc variant text; visible options are now ['What's out here...', 'Got time to show me how to fight? (Spar)', 'Keep walking.'] -- spar is visible index 1.",
+   "_comment": "Re-talk and actually take the spar. 'meet' now shows the met_relc variant text; visible options are now ['What's out here...', 'Got time to show me how to fight? (Spar)', 'Keep walking.'] -- spar is visible index 1.",
    "action": "press",
    "name": "interact"
   },
@@ -174,7 +174,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "D2-8 #3: opening beat -- fires on combat_started itself, rendered before the first turn_started.",
+   "_comment": "Opening beat -- fires on combat_started itself, rendered before the first turn_started.",
    "action": "wait_for_event",
    "type": "ui_tutor_line_rendered",
    "payload_contains": {
@@ -213,7 +213,7 @@
    ]
   },
   {
-   "_comment": "D2-8 #4/#5: three free move-pool steps close 3 of the 5 Chebyshev cells to the dummies at (7,3)/(7,4). Step 1 fires first_step.",
+   "_comment": "Three free move-pool steps close 3 of the 5 Chebyshev cells to the dummies at (7,3)/(7,4). Step 1 fires first_step.",
    "action": "press",
    "name": "move_right"
   },
@@ -284,7 +284,7 @@
    "equals": 0
   },
   {
-   "_comment": "D2-8 #4: hotbar slot 2 -- Dash refills the pool, 1 AP. UI wave item 15: selecting Dash now only arms a confirm gate (readout/slot-info update, no spend) -- an explicit confirm press is required before the pool actually refills.",
+   "_comment": "Hotbar slot 2 -- Dash refills the pool, 1 AP. Selecting Dash only arms a confirm gate (readout/slot-info update, no spend) -- an explicit confirm press is required before the pool actually refills.",
    "action": "press",
    "name": "hotbar_2"
   },
@@ -327,7 +327,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "D2-8 #5: hotbar slot 1 -- Attack, now adjacent to two targets, opens targeting.",
+   "_comment": "Hotbar slot 1 -- Attack, now adjacent to two targets, opens targeting.",
    "action": "press",
    "name": "hotbar_1"
   },
@@ -374,7 +374,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "D2-8 #6: End Turn.",
+   "_comment": "End Turn.",
    "action": "press",
    "name": "end_turn"
   },
@@ -395,7 +395,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "D2-8 #6/#7: hand the rest of the fight (dummy turns + the PC's remaining turns) to autoplay -- 21 HP dummies dealing ~2 dmg vs the PC's real kit is a seed-robust win.",
+   "_comment": "Hand the rest of the fight (dummy turns + the PC's remaining turns) to autoplay -- 21 HP dummies dealing ~2 dmg vs the PC's real kit is a seed-robust win.",
    "action": "combat_autoplay",
    "max_turns": 200
   },
@@ -433,7 +433,7 @@
    "frames": 5
   },
   {
-   "_comment": "D2-8 #7, THE OPACITY TEETH: sparred_with_relc is the only counter banked. trivial on both the entity and the arena suppresses _bank_action_tally entirely (belt-and-braces per D2-1), so no melee_hit tally and no won_combat (on_victory is explicitly [\"sparred_with_relc\"] only, overriding the won_combat default) ever reach the accomplishments dict or the event log.",
+   "_comment": "THE OPACITY TEETH: sparred_with_relc is the only counter banked. trivial on both the entity and the arena suppresses _bank_action_tally entirely (belt-and-braces), so no melee_hit tally and no won_combat (on_victory is explicitly [\"sparred_with_relc\"] only, overriding the won_combat default) ever reach the accomplishments dict or the event log.",
    "action": "assert_state",
    "path": "accomplishments.sparred_with_relc",
    "equals": 1
@@ -453,7 +453,7 @@
    }
   },
   {
-   "_comment": "Q2 review note: this pair is DOCUMENTATION-GRADE, not teeth -- class events only fire from sleep() and this script never sleeps, so they pass in any run. The REAL opacity teeth are the won_combat/melee_hit absent asserts above (trivial-flag suppression); a sleep-beat opacity proof would need a walk back to the inn bed and belongs to a future script if ever needed.",
+   "_comment": "This pair is DOCUMENTATION-GRADE, not teeth -- class events only fire from sleep() and this script never sleeps, so they pass in any run. The REAL opacity teeth are the won_combat/melee_hit absent asserts above (trivial-flag suppression); a sleep-beat opacity proof would need a walk back to the inn bed and belongs to a future script if ever needed.",
    "action": "assert_event_absent",
    "type": "class_level_up"
   },
@@ -462,7 +462,7 @@
    "type": "class_gained"
   },
   {
-   "_comment": "D2-8 #8, PERSISTENCE: persistent:true means the victory branch never calls remove_entity -- relc_spar stays live and immediately re-fightable, no sleep required.",
+   "_comment": "PERSISTENCE: persistent:true means the victory branch never calls remove_entity -- relc_spar stays live and immediately re-fightable, no sleep required.",
    "action": "assert_event_absent",
    "type": "entity_removed",
    "payload_contains": {
@@ -470,7 +470,7 @@
    }
   },
   {
-   "_comment": "ONBOARDING O5 (worklist rewrite): the GIFT-NODE beat replaces the old second-spar re-talk. O3 added the 'You said you had something for me?' option to the meet node (requires sparred_with_relc, hide_when given_spear_by_relc), which shifts the post-spar option indices: with met_relc+sparred both banked and given_spear unset, the meet options are ['What's out here'(0), 'You said you had something for me?'(1), 'Got time to show me how to fight? (Spar)'(2), 'Keep walking'(3)]. Selecting index 1 banks the spear + given_spear_by_relc and walks into the gift/teaching node. (The spar's repeatability is still proven above by the persistence teeth -- relc_spar was never entity_removed.)",
+   "_comment": "The GIFT-NODE beat replaces the old second-spar re-talk. The meet node gained a 'You said you had something for me?' option (requires sparred_with_relc, hide_when given_spear_by_relc), which shifts the post-spar option indices: with met_relc+sparred both banked and given_spear unset, the meet options are ['What's out here'(0), 'You said you had something for me?'(1), 'Got time to show me how to fight? (Spar)'(2), 'Keep walking'(3)]. Selecting index 1 banks the spear + given_spear_by_relc and walks into the gift/teaching node. (The spar's repeatability is still proven above by the persistence teeth -- relc_spar was never entity_removed.)",
    "action": "press",
    "name": "interact"
   },
@@ -523,7 +523,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "gift node: the 'press I' teaching line (the spear-equip nudge, spec sec.9).",
+   "_comment": "Gift node: the 'press I' teaching line (the spear-equip nudge, spec sec.9).",
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
@@ -537,7 +537,7 @@
    "name": "04_gift_node"
   },
   {
-   "_comment": "gift option 0 'I'll try it on.' ends the conversation.",
+   "_comment": "Gift option 0 'I'll try it on.' ends the conversation.",
    "action": "press",
    "name": "confirm"
   },

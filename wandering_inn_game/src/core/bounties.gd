@@ -1,6 +1,6 @@
 class_name WIBounties
 extends RefCounted
-## M-DEPTH DP2: THE REQUEST BOARD's pure derivation + code-built conversation
+## THE REQUEST BOARD's pure derivation + code-built conversation
 ## graphs. PURITY RULE: no autoload/Node/scene-tree references -- every method
 ## takes the current pool/state as parameters (or an injected Callable for the
 ## one read that needs live accomplishment counters) and returns a value; it
@@ -56,7 +56,7 @@ static func active_slate(pool: Array, times_slept: int) -> Array:
 ##     snapshot taken at accept time (current - baseline >= threshold) -- the
 ##     right shape for a ROTATING/repeatable condition, so a mid-game player
 ##     can't insta-complete a bounty off counters banked before accepting.
-##   "absolute" (FIX WAVE, DP2 review HIGH finding): current count alone must
+##   "absolute" (DP2 review HIGH finding): current count alone must
 ##     clear the threshold, baseline ignored entirely -- the right shape for a
 ##     condition keyed on a ONE-SHOT accomplishment (bounty_sewer_survey/
 ##     bounty_silk_line/bounty_vermin_grate), where delta semantics would
@@ -157,7 +157,7 @@ static func build_abandon_graph() -> Dictionary:
 	return {"start": "hub", "nodes": {"hub": {"speaker": "Selys", "text": text, "options": [{"text": "Continue.", "end": true}]}}}
 
 
-## M-DEPTH DP5 (the Runner's Guild): Vess's issue line for a just-accepted
+## Vess's issue line for a just-accepted
 ## slip -- board-copy.md sec.3's three "Issue" variants, keyed the way the
 ## staged copy itself keys them: the cross-map run (the inn hamper) and the
 ## fragile run (the phials crate, `fragile: true` in data) each get their

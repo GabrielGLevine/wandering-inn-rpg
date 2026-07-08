@@ -1,12 +1,12 @@
 {
- "_comment": "Magical Door plan Task D3 (issue #8, milestone 8a). The SKILL leg of the 3-path mage-consult parity (cisterns_scout/crate_light field-skill-first-use precedent -- [Observe] a prop, then REPORT the finding to the consult NPC to bank the shared convergence counters, since the skill-use alone only banks the intermediate read_the_door_runes). door_chain_scout_start stands the player facing pantry_door_runes with door_chain_started already banked (beat 1 is door_chain_fight's own live proof) and classes.tactician:1 (grants [Observe]). Proves: the field-skill-then-report shape banks the SAME door_understood the FIGHT/TALK legs bank (3-path identity rule, the player's own report line restates Pisces's TALK-leg verdict verbatim -- deliberate parity), and separately re-proves Krshia's resonant_catalyst purchase (bought_catalyst) from this leg's own angle (door_chain_fight already proved it too, but paired with the FULL end-to-end recovery there -- this script isolates it as its own beat, splitting recovery-beat coverage across talk (anchor stone) and scout (catalyst) rather than tripling the whole chain).",
+ "_comment": "The SKILL leg of the 3-path mage-consult parity (cisterns_scout/crate_light field-skill-first-use precedent -- [Observe] a prop, then REPORT the finding to the consult NPC to bank the shared convergence counters, since the skill-use alone only banks the intermediate read_the_door_runes). door_chain_scout_start stands the player facing pantry_door_runes with door_chain_started already banked (beat 1 is door_chain_fight's own live proof) and classes.tactician:1 (grants [Observe]). Proves: the field-skill-then-report shape banks the SAME door_understood the FIGHT/TALK legs bank (3-path identity rule, the player's own report line restates Pisces's TALK-leg verdict verbatim -- deliberate parity), and separately re-proves Krshia's resonant_catalyst purchase (bought_catalyst) from this leg's own angle (door_chain_fight already proved it too, but paired with the FULL end-to-end recovery there -- this script isolates it as its own beat, splitting recovery-beat coverage across talk (anchor stone) and scout (catalyst) rather than tripling the whole chain).",
  "fixture_save": "door_chain_scout_start",
  "starts_at_title": true,
  "steps": [
   { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "_comment": "move down to the 'Continue' row, confirm loads the door_chain_scout_start manual slot.", "action": "move", "direction": "down", "steps": 1 },
+  { "_comment": "Move down to the 'Continue' row, confirm loads the door_chain_scout_start manual slot.", "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
@@ -18,7 +18,7 @@
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "read_the_door_runes" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away." } },
-  { "_comment": "DF fix wave (2026-07-07, issue #8 rotation N2): windowed-only cheap-permanence shot -- this canonical was shotless by design (no visual proof the [Observe] toast's on-screen wrap/fold-bleed is clean). No-op headless (screenshot() early-returns for the headless DisplayServer, the stage3_perks_loop precedent) -- no assertion depends on it, so nothing to re-verify headless.", "action": "screenshot", "name": "00_door_runes_observe_toast" },
+  { "_comment": "windowed-only cheap-permanence shot -- this canonical was shotless by design (no visual proof the [Observe] toast's on-screen wrap/fold-bleed is clean). No-op headless (screenshot() early-returns for the headless DisplayServer, the stage3_perks_loop precedent) -- no assertion depends on it, so nothing to re-verify headless.", "action": "screenshot", "name": "00_door_runes_observe_toast" },
 
   { "_comment": "== report to Pisces (street, 30,4) ==", "action": "teleport", "map": "street", "cell": [30, 5] },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },

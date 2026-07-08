@@ -1,5 +1,5 @@
 extends CanvasLayer
-## M-JUICE Track P2 — the GDI (Grand Design of Isthekenous) sleep sequence.
+## The GDI (Grand Design of Isthekenous) sleep sequence.
 ##
 ## When the player sleeps, instead of an instant morning this veil fades the
 ## whole screen to BLACK, holds the darkness, and renders the night's
@@ -31,12 +31,12 @@ extends CanvasLayer
 ## complete). Assumes a phase config where the fresh-clock phase is "day"
 ## (dusk_at > 0), which is invariant for every shipped/data moods.json config.
 ##
-## QA/HEADLESS COLLAPSE (the M4 T10 paced-playback precedent): under
-## TestDriver.active() or the headless server the entire fade/hold/reveal
-## collapses to ~0 and the veil clears the same beat — windowed QA is never
-## slowed and no screenshot catches a stuck black frame. FEEL is therefore
-## human-playtest-gated (like AI pacing); UI_SLEEP_VEIL_RENDERED{lines} is the
-## automated coverage proof that it fired.
+## QA/HEADLESS COLLAPSE: under TestDriver.active() or the headless server the
+## entire fade/hold/reveal collapses to ~0 and the veil clears the same beat
+## — windowed QA is never slowed and no screenshot catches a stuck black
+## frame. FEEL is therefore human-playtest-gated (like AI pacing);
+## UI_SLEEP_VEIL_RENDERED{lines} is the automated coverage proof that it
+## fired.
 ##
 ## CONSOLIDATION: a consolidation OFFER can fire at sleep (wi_game.gd defers the
 ## rest of the beat and emits consolidation_offered). Its modal prompt
@@ -61,26 +61,27 @@ const READ_HOLD := 1.5
 const EMPTY_HOLD := 0.4
 const LINE_FONT_SIZE := 24
 
-## M-ARC Task F1 — the GDI new-game opener. A New Game opens on BLACK: the Grand
-## Design's voice speaks a few arrival lines in this SAME gold-on-black device
-## (reusing _black + _add_line + the layer-30 discipline above — one renderer,
-## not a second), then fades into the inn. WIMain calls play_opener() ONLY on the
-## GAME_RESET (fresh-world) path — never on Continue/load (see main.gd
-## swap_to_world(new_game)). Under QA/headless it collapses to instant and emits
-## UI_GDI_OPENER_RENDERED{lines} for coverage (title_flow asserts it); in real
-## play it is SKIPPABLE — confirm/cancel advances line-by-line and, past the last
-## line, fades to the inn, so a replaying player is never held hostage. This is
-## the ONE interactive exception to the veil's "consumes nothing" invariant: the
-## opener swallows ONLY confirm/cancel while it holds; the sleep path above still
-## intercepts no input at all.
+## The GDI new-game opener. A New Game opens on BLACK: the Grand Design's
+## voice speaks a few arrival lines in this SAME gold-on-black device
+## (reusing _black + _add_line + the layer-30 discipline above — one
+## renderer, not a second), then fades into the inn. WIMain calls
+## play_opener() ONLY on the GAME_RESET (fresh-world) path — never on
+## Continue/load (see main.gd swap_to_world(new_game)). Under QA/headless
+## it collapses to instant and emits UI_GDI_OPENER_RENDERED{lines} for
+## coverage (title_flow asserts it); in real play it is SKIPPABLE —
+## confirm/cancel advances line-by-line and, past the last line, fades to
+## the inn, so a replaying player is never held hostage. This is the ONE
+## interactive exception to the veil's "consumes nothing" invariant: the
+## opener swallows ONLY confirm/cancel while it holds; the sleep path
+## above still intercepts no input at all.
 ##
-## COPY — USER-APPROVED verbatim (2026-07-07, docs/design/gdi-copy-staging.md),
-## no open taste flag remains. A cold system-readout opener, ONE version for
-## every race (the former Human/Drake/Gnoll branch read as an unearned canon
+## COPY — final, user-approved (docs/design/gdi-copy-staging.md), no open
+## taste flag remains. A cold system-readout opener, ONE version for every
+## race (the former Human/Drake/Gnoll branch read as an unearned canon
 ## distinction — dropped per user ruling; race-neutral by construction). 4
-## lines, ending on the same bracketed proclamation cadence as the rest of the
-## veil. Opaque-safe: no numbers, no lore claim beyond what the game itself
-## shows (the epilogue's class recount pays off the "none/none" open).
+## lines, ending on the same bracketed proclamation cadence as the rest of
+## the veil. Opaque-safe: no numbers, no lore claim beyond what the game
+## itself shows (the epilogue's class recount pays off the "none/none" open).
 const OPENER_LINES: Array[String] = [
 	"[Class: none.]",
 	"[Skills: none.]",
@@ -91,39 +92,43 @@ const OPENER_HOLD_BEFORE_TEXT := 0.6
 const OPENER_LINE_HOLD := 1.7
 const OPENER_READ_HOLD := 2.2
 
-## M-ARC Task A4 — the GDI epilogue (the veil's THIRD mode). The cinematic beat
-## after the Raskghar is SEALED: ARMED by accomplishment_recorded{raskghar_sealed}
-## (banked mid Zevara's seal dialogue) and PLAYED on the following dialogue_ended,
-## so her line lands and the conversation clears BEFORE the black. Renders the GDI
-## open lines, a GENERATED results-only recount (each EARNED class + its level from
-## the sim snapshot — the visible-tier rule: a class NAME + its level, never a
-## stat), the "warren is sealed"/"record remains open" close, and the wanderinginn.com
-## line, then fades back to the SAME world beneath (FREE PLAY — nothing resets, the
-## sleep machinery re-arms encounters as before). At completion it banks `post_game`
-## — the ONE sim write the epilogue mode makes ("the ending was witnessed" is
-## genuine game state, not presentation): the journal's Act III completed beat
-## reads it and it GUARDS the epilogue from ever re-firing. QA/headless collapses to
-## an instant UI_GDI_EPILOGUE_RENDERED{lines} (arc_flow asserts the count) and banks
-## post_game the same beat. Skippable in real play via the SAME confirm/cancel
-## advance the opener uses (_unhandled_input below now covers both modes).
+## The GDI epilogue (the veil's THIRD mode). The cinematic beat after the
+## Raskghar is SEALED: ARMED by accomplishment_recorded{raskghar_sealed}
+## (banked mid Zevara's seal dialogue) and PLAYED on the following
+## dialogue_ended, so her line lands and the conversation clears BEFORE the
+## black. Renders the GDI open lines, a GENERATED results-only recount
+## (each EARNED class + its level from the sim snapshot — the visible-tier
+## rule: a class NAME + its level, never a stat), the "warren is
+## sealed"/"record remains open" close, and the wanderinginn.com line, then
+## fades back to the SAME world beneath (FREE PLAY — nothing resets, the
+## sleep machinery re-arms encounters as before). At completion it banks
+## `post_game` — the ONE sim write the epilogue mode makes ("the ending was
+## witnessed" is genuine game state, not presentation): the journal's Act
+## III completed beat reads it and it GUARDS the epilogue from ever
+## re-firing. QA/headless collapses to an instant UI_GDI_EPILOGUE_RENDERED
+## {lines} (arc_flow asserts the count) and banks post_game the same beat.
+## Skippable in real play via the SAME confirm/cancel advance the opener
+## uses (_unhandled_input below now covers both modes).
 ##
-## TRIGGER CHOICE (A4 judgment): dialogue-end, NOT the next sleep. It is the more
-## cinematic beat (Zevara's seal line → fade to black, no walk-home gap) AND it
-## structurally SIDESTEPS the epilogue×consolidation collision the AF review
-## flagged: a consolidation OFFER only ever fires at a SLEEP, never at a
-## dialogue-end, so the epilogue reveal and the consolidation modal can NEVER
-## contend for the same frame. The first free-play sleep after the epilogue still
-## routes through the ordinary sleep path above, which already defers to a
-## consolidation modal — so the two mechanisms stay fully independent by
-## construction (no shared trigger moment to arbitrate).
+## TRIGGER CHOICE: dialogue-end, NOT the next sleep. It is the more
+## cinematic beat (Zevara's seal line → fade to black, no walk-home gap)
+## AND it structurally SIDESTEPS the epilogue×consolidation collision: a
+## consolidation OFFER only ever fires at a SLEEP, never at a
+## dialogue-end, so the epilogue reveal and the consolidation modal can
+## NEVER contend for the same frame. The first free-play sleep after the
+## epilogue still routes through the ordinary sleep path above, which
+## already defers to a consolidation modal — so the two mechanisms stay
+## fully independent by construction (no shared trigger moment to
+## arbitrate).
 ##
-## COPY — USER-APPROVED verbatim (2026-07-07, docs/design/gdi-copy-staging.md),
-## no open taste flag remains. Ledger-voiced understatement replacing the old
+## COPY — final, user-approved (docs/design/gdi-copy-staging.md), no open
+## taste flag remains. Ledger-voiced understatement replacing the old
 ## framing's announced sentiment ("Now Liscor knows your name", "The world
-## keeps counting" read as aphorism/cheese) — the System states facts and lets
-## the class recount between OPEN and CLOSE carry the weight. Opaque-safe:
-## class names + levels only, no stats; the bracketed GDI cadence matches the
-## sleep/opener proclamations. The class-recount mechanism itself is UNCHANGED.
+## keeps counting" read as aphorism/cheese) — the System states facts and
+## lets the class recount between OPEN and CLOSE carry the weight.
+## Opaque-safe: class names + levels only, no stats; the bracketed GDI
+## cadence matches the sleep/opener proclamations. The class-recount
+## mechanism itself is UNCHANGED.
 const EPILOGUE_LINES_OPEN: Array[String] = [
 	"[When you came to Liscor, there was nothing to record.]",
 	"[This is no longer true.]",
@@ -163,12 +168,12 @@ var _reveal_queued := false
 var _lines: Array[String] = []
 var _consolidation := false
 
-## F1 opener state. _opener_running gates its own input/sequence; _opener_advance
+## Opener state. _opener_running gates its own input/sequence; _opener_advance
 ## is set by a confirm/cancel press to cut the current line's hold short.
 var _opener_running := false
 var _opener_advance := false
 
-## M-ARC Task A4 epilogue state. _epilogue_armed is set true by
+## Epilogue state. _epilogue_armed is set true by
 ## accomplishment_recorded{raskghar_sealed} and consumed by the next
 ## dialogue_ended (which plays the epilogue); _epilogue_running gates its
 ## sequence. The skip flag is shared with the opener (_opener_advance).
@@ -239,19 +244,17 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			# re-emits on load, so this arms at most once per playthrough.
 			if String(payload.get("id", "")) == "raskghar_sealed":
 				_epilogue_armed = true
-			# Magical Door plan Task D4 (issue #8, spec §1 beat 4): the
-			# door's OWN milestone line -- the veil's FOURTH cameo (after
-			# the class/level/evolution toasts above, the F1 opener, and
-			# the A4 epilogue). door_awakened banks INSIDE wi_game.gd's
+			# Magical Door: the door's OWN milestone line -- the veil's FOURTH
+			# cameo (after the class/level/evolution toasts above, the opener,
+			# and the epilogue). door_awakened banks INSIDE wi_game.gd's
 			# sleep() (after progression resolves, additive-only),
-			# synchronously within the SAME sleep burst this veil is
-			# already buffering (`_running` is true from this sleep's own
-			# UNCONDITIONAL phase_changed emit, which always fires FIRST)
-			# -- so this rides the EXACT SAME collection idiom
+			# synchronously within the SAME sleep burst this veil is already
+			# buffering (`_running` is true from this sleep's own
+			# UNCONDITIONAL phase_changed emit, which always fires FIRST) --
+			# so this rides the EXACT SAME collection idiom
 			# CLASS_GAINED/CLASS_LEVEL_UP/etc. use above, not a new
-			# mechanism. The door itself NEVER speaks (Global Constraint)
-			# -- this is the GDI's OWN voice, quoted verbatim from spec §1
-			# beat 4.
+			# mechanism. The door itself NEVER speaks (Global Constraint) --
+			# this is the GDI's OWN voice.
 			if _running and String(payload.get("id", "")) == "door_awakened":
 				_lines.append("[The inn has a Door. The Door has opinions.]")
 		WIEvents.DIALOGUE_ENDED:
@@ -265,9 +268,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 ## deferred call runs at the next idle, AFTER sleep()'s whole synchronous emit
 ## burst has unwound, so `_lines`/`_consolidation` are fully populated by then.
 func _begin_sleep() -> void:
-	# EF review I2: guard against a sleep beat racing the F1/M-ARC cold open. A
-	# player who reaches the inn bed during the ~8s opener would otherwise start a
-	# SECOND veil coroutine over the shared _black/_line_box (a cosmetic un-black
+	# Guard against a sleep beat racing the cold open. A player who reaches
+	# the inn bed during the ~8s opener would otherwise start a SECOND veil
+	# coroutine over the shared _black/_line_box (a cosmetic un-black
 	# glitch); _opener_running blocks that until the opener has faded out and
 	# cleared. (play_opener has the mirror guard against a sleep already running.)
 	if _running or _opener_running or _epilogue_running:
@@ -280,11 +283,11 @@ func _begin_sleep() -> void:
 		_run_sequence.call_deferred()
 
 
-## M-ARC Task F1 — the GDI new-game cold open. Called by WIMain right after the
-## fresh world is spawned, ONLY on GAME_RESET. Opens opaque-black immediately (no
-## fade-in — a cold open, not a dip), speaks the arrival lines, then fades to the
-## inn. QA/headless collapses to an instant coverage event; real play is paced +
-## skippable via _unhandled_input below.
+## The GDI new-game cold open. Called by WIMain right after the fresh world
+## is spawned, ONLY on GAME_RESET. Opens opaque-black immediately (no
+## fade-in — a cold open, not a dip), speaks the arrival lines, then fades
+## to the inn. QA/headless collapses to an instant coverage event; real
+## play is paced + skippable via _unhandled_input below.
 func play_opener() -> void:
 	if _running or _opener_running or _epilogue_running:
 		return
@@ -297,9 +300,9 @@ func play_opener() -> void:
 	_run_opener.call_deferred()
 
 
-## De-race-ified (2026-07-07): ONE opener for every race now, so this just
-## returns the single const. Kept as a function (not inlined at call sites)
-## so a future string-table swap stays a one-line change here.
+## ONE opener for every race now, so this just returns the single const.
+## Kept as a function (not inlined at call sites) so a future string-table
+## swap stays a one-line change here.
 func _opener_lines() -> Array:
 	return OPENER_LINES
 
@@ -329,15 +332,15 @@ func _wait_or_advance(seconds: float) -> void:
 		await get_tree().process_frame
 
 
-## Controller support fix-wave (issue #18 review Finding B): true while the
-## cold-open or the epilogue holds the screen. world.gd's `_movement_gated()`
-## treats this as a modal (via WIMain.veil_modal_active()) -- on pad,
-## `interact` and this veil's confirm-advance share button A, so without the
-## gate a pad player advancing the opener text would simultaneously fire
-## world interact()s at whatever the PC happens to face under the black.
-## Never true under QA/TestDriver: `play_opener()`/`play_epilogue()` collapse
-## to an instant coverage emit before ever setting these flags, so every
-## canonical's input timing is untouched by the new gate.
+## True while the cold-open or the epilogue holds the screen. world.gd's
+## `_movement_gated()` treats this as a modal (via
+## WIMain.veil_modal_active()) -- on pad, `interact` and this veil's
+## confirm-advance share button A, so without the gate a pad player
+## advancing the opener text would simultaneously fire world interact()s
+## at whatever the PC happens to face under the black. Never true under
+## QA/TestDriver: `play_opener()`/`play_epilogue()` collapse to an instant
+## coverage emit before ever setting these flags, so every canonical's
+## input timing is untouched by the new gate.
 func modal_active() -> bool:
 	return _opener_running or _epilogue_running
 
@@ -355,16 +358,16 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _emit_opener_rendered(count: int) -> void:
-	# `race` predates the 2026-07-07 de-race-ification (the opener no longer
-	# branches on it) but stays in the payload harmlessly per the copy-staging
-	# doc's call — char_creation's payload_contains still pins it, no re-pin
+	# `race` predates the de-race-ification (the opener no longer branches
+	# on it) but stays in the payload harmlessly per the copy-staging doc's
+	# call — char_creation's payload_contains still pins it, no re-pin
 	# needed since Game.sim.pc_race itself is unchanged.
 	ObservableBus.emit_domain_event(WIEvents.UI_GDI_OPENER_RENDERED, {"lines": count, "race": Game.sim.pc_race})
 
 
-## M-ARC Task A4 — the GDI epilogue. Called from the DIALOGUE_ENDED handler once
-## the seal beat has closed. Fades to black over the SAME world beneath, speaks
-## the arrival-mirroring close + the generated recount, then fades back to free
+## The GDI epilogue. Called from the DIALOGUE_ENDED handler once the seal
+## beat has closed. Fades to black over the SAME world beneath, speaks the
+## arrival-mirroring close + the generated recount, then fades back to free
 ## play and banks post_game. QA/headless collapses to an instant coverage event.
 func play_epilogue() -> void:
 	if _running or _opener_running or _epilogue_running:
@@ -500,7 +503,7 @@ func _wait(seconds: float) -> void:
 
 
 ## Same TestDriver.active()/headless collapse gate combat_screen.gd and
-## world.gd use for their presentation delays (the M4 T10 precedent).
+## world.gd use for their presentation delays.
 func _is_qa() -> bool:
 	return (TestDriver != null and TestDriver.active()) or DisplayServer.get_name() == "headless"
 

@@ -33,7 +33,7 @@
    "slot": "auto"
   },
   {
-   "_comment": "M-FP Q1: meet Relc (12,13) before the ally_requires-gated chieftains_raid fight.",
+   "_comment": "Meet Relc (12,13) before the ally_requires-gated chieftains_raid fight.",
    "action": "move",
    "direction": "right",
    "steps": 5
@@ -147,7 +147,7 @@
    "timeout_sec": 10
   },
   {
-   "_comment": "ONBOARDING O5: classless start -> hotbar 3 slots (was 4). This script's SUBJECT is the defeat->auto-reload flow (victory:false -> game_loaded, no game_reset), orthogonal to the PC kit -- the classless PC still LOSES chieftains_raid at seed 1 (easier to lose classless; baseline-verified only this pin failed), so a pin edit suffices, no warrior prologue.",
+   "_comment": "Classless start -> hotbar 3 slots (was 4). This script's SUBJECT is the defeat->auto-reload flow (victory:false -> game_loaded, no game_reset), orthogonal to the PC kit -- the classless PC still LOSES chieftains_raid at seed 1 (easier to lose classless; baseline-verified only this pin failed), so a pin edit suffices, no warrior prologue.",
    "action": "assert_event_logged",
    "type": "ui_hotbar_rendered",
    "payload_contains": {

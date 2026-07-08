@@ -1,5 +1,5 @@
 extends SceneTree
-## Validates data/items.json (M7 E1: items data + events + validation).
+## Validates data/items.json (items data + events + validation).
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_items.gd
 
 const VALID_KINDS: Dictionary = {
@@ -7,7 +7,7 @@ const VALID_KINDS: Dictionary = {
 	"armor": true,
 	"accessory": true,
 	"tool": true,
-	# M-DEPTH DP5: a Runner's Guild delivery parcel -- inert carried flavor
+	# A Runner's Guild delivery parcel -- inert carried flavor
 	# (no price, no combat fields, resonance 0). Not equippable: WIGame.equip
 	# only accepts weapon/armor/accessory, and inventory.gd's confirm shows
 	# its neutral "isn't something you can equip" toast for this kind exactly
@@ -16,7 +16,7 @@ const VALID_KINDS: Dictionary = {
 	"parcel": true,
 }
 
-## M-GEAR Task G2: tier is now tied to resonance, not a mundane-only schema
+## Tier is now tied to resonance, not a mundane-only schema
 ## hook -- an item with resonance >= 1 is "enchanted" (the card's rarity
 ## vocabulary), everything else stays "mundane". Retiring the hard-pinned
 ## "mundane always" check from M7 in favor of this rule (G1/G2 call, per
@@ -80,8 +80,8 @@ func _init() -> void:
 			_fail("unknown weapon_family: %s for %s" % [weapon_family, id])
 
 		# weapons must carry a real family (never "none"); every other kind
-		# (armor/accessory/tool) is always "none" -- M-GEAR G2 generalizes the
-		# old armor-only check to the two new kinds, same rule.
+		# (armor/accessory/tool) is always "none" -- same rule for all
+		# non-weapon kinds.
 		if kind == "weapon" and weapon_family == "none":
 			_fail("weapon %s must have a real weapon_family, not none" % id)
 		if kind != "weapon" and weapon_family != "none":
@@ -117,7 +117,7 @@ func _init() -> void:
 		if String(entry["lore"]).is_empty():
 			_fail("item %s has empty lore" % id)
 
-		# M-GEAR Task G2: resonance is the single source of truth for the
+		# Resonance is the single source of truth for the
 		# capacity arithmetic (WIGame._equipped_resonance_total sums it across
 		# all 5 equipped slots); tier above is only its display bucket.
 		var resonance_value: Variant = entry["resonance"]
@@ -135,7 +135,7 @@ func _init() -> void:
 			_fail("item %s has resonance 0 but tier %s (resonance 0 must be tier mundane)" % [id, tier])
 
 	# Cross-reference: every weapon tag actually used by a skill (skills.json's
-	# "weapon" field, the M6 T1 seam -- see wi_combat.gd's sword_skill_used/
+	# "weapon" field seam -- see wi_combat.gd's sword_skill_used/
 	# spear_skill_used doc comment) must have at least one items.json entry of
 	# that weapon_family, or an equipped weapon could never field that skill.
 	var skills_config: Dictionary = _load("res://data/skills.json")

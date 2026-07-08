@@ -1,5 +1,5 @@
 {
- "_comment": "Onboarding rev O5 -- THE onboarding's own proof, the full part1->sleep->gift->part2 arc through the real input/AI/UI path. Boot CLASSLESS (hotbar 3 slots at the spar), meet Relc, accept the spar, drive part-1 beats by real keys against the SHIPPED training_yard tutor_lines (opening/first_step/pool_empty/dash/aim/first_blood/watch/wrap -- wrap's NEW O3 line references sleep + 'I owe you something'), win vs the inert 0-damage dummies (O1, seed-robust), then: item_gained is ABSENT until the gift node (accepting the spar no longer grants the spear -- O3 moved it), sleep -> class_gained{warrior} with the O4 grants-listing toast, RE-TALK Relc for the gift node (item_gained relcs_spare_spear + the 'press I' teaching + given_spear_by_relc), press I and EQUIP the spear via the real UI, then walk the gate road with NO interact -- the O2 proximity trigger fires the part-2 ambush (real_ones), the warrior+spear kit (hotbar 4 slots) + Relc ally win it (road_clear), and the gate opens onto the street. Seed 9. NOTE part-2 skill beats (skill_aim/skill_hit) are UI-manual-only -- WICombatAI never calls a spear-tagged skill by name under autoplay (the inventory_loop finding), and the part-1 'aim' beat already exercises the identical targeting UI, so part-2 asserts real_ones + road_clear (both deterministic) and leaves the skill beats to a player's hands / relc_tutorial's manual coverage.",
+ "_comment": "THE onboarding's own proof, the full part1->sleep->gift->part2 arc through the real input/AI/UI path. Boot CLASSLESS (hotbar 3 slots at the spar), meet Relc, accept the spar, drive part-1 beats by real keys against the SHIPPED training_yard tutor_lines (opening/first_step/pool_empty/dash/aim/first_blood/watch/wrap -- wrap's line references sleep + 'I owe you something'), win vs the inert 0-damage dummies (seed-robust), then: item_gained is ABSENT until the gift node (accepting the spar no longer grants the spear), sleep -> class_gained{warrior} with the grants-listing toast, RE-TALK Relc for the gift node (item_gained relcs_spare_spear + the 'press I' teaching + given_spear_by_relc), press I and EQUIP the spear via the real UI, then walk the gate road with NO interact -- the proximity trigger fires the part-2 ambush (real_ones), the warrior+spear kit (hotbar 4 slots) + Relc ally win it (road_clear), and the gate opens onto the street. Seed 9. NOTE part-2 skill beats (skill_aim/skill_hit) are UI-manual-only -- WICombatAI never calls a spear-tagged skill by name under autoplay, and the part-1 'aim' beat already exercises the identical targeting UI, so part-2 asserts real_ones + road_clear (both deterministic) and leaves the skill beats to a player's hands / relc_tutorial's manual coverage.",
  "steps": [
   {
    "action": "wait_for_event",
@@ -38,7 +38,7 @@
    ]
   },
   {
-   "_comment": "Task 7c (No Killing Goblins seed, Part 1): inn_sign sits at (6,6), one cell WEST of this exact arrival cell -- genuinely untouched ground (no canonical script ever moves west from (7,6); every one of them moves right/down from here). A blocked left-move turns facing onto the sign without displacing player_cell (move_player sets facing before the blocked check), then interact reads it: on_interact_accomplishment + toast, no skill gate, verbatim seed copy 1.",
+   "_comment": "inn_sign sits at (6,6), one cell WEST of this exact arrival cell -- genuinely untouched ground (no canonical script ever moves west from (7,6); every one of them moves right/down from here). A blocked left-move turns facing onto the sign without displacing player_cell (move_player sets facing before the blocked check), then interact reads it: on_interact_accomplishment + toast, no skill gate.",
    "action": "move",
    "direction": "left",
    "steps": 1
@@ -121,7 +121,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "meet: option 0 'Just a traveler...' banks met_relc -> banter.",
+   "_comment": "Meet: option 0 'Just a traveler...' banks met_relc -> banter.",
    "action": "press",
    "name": "confirm"
   },
@@ -134,7 +134,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "banter: option 0 'spear? (Spar)' -> spar_offer.",
+   "_comment": "Banter: option 0 'spear? (Spar)' -> spar_offer.",
    "action": "press",
    "name": "confirm"
   },
@@ -275,7 +275,7 @@
    "equals": 0
   },
   {
-   "_comment": "dash: slot 2 arms the confirm gate (UI wave item 15), confirm executes.",
+   "_comment": "Dash: slot 2 arms the confirm gate, confirm executes.",
    "action": "press",
    "name": "hotbar_2"
   },
@@ -317,7 +317,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "aim: slot 1 Attack, now adjacent to two dummies, opens targeting.",
+   "_comment": "Aim: slot 1 Attack, now adjacent to two dummies, opens targeting.",
    "action": "press",
    "name": "hotbar_1"
   },
@@ -417,7 +417,7 @@
    "equals": 1
   },
   {
-   "_comment": "Accepting the spar granted NO item (O3 moved the gift off the accept option): no item_gained anywhere yet.",
+   "_comment": "Accepting the spar granted NO item (the gift moved off the accept option): no item_gained anywhere yet.",
    "action": "assert_event_absent",
    "type": "item_gained"
   },
@@ -501,7 +501,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Playtest fix (veil first-class-gain grants): the GDI sleep veil now voices the level-1 kit as [Skill \u2013 X Obtained!] lines under the [Warrior Class Obtained!] proclamation, matching the toast's 4 grants. lines == 5 (1 class line + 4 skill lines) is the automated proof the FIRST class gain lists its grants; later level-ups already list theirs via skill_unlocked. Under QA the veil collapses but still emits this count.",
+   "_comment": "The GDI sleep veil voices the level-1 kit as [Skill \u2013 X Obtained!] lines under the [Warrior Class Obtained!] proclamation, matching the toast's 4 grants. lines == 5 (1 class line + 4 skill lines) is the automated proof the FIRST class gain lists its grants; later level-ups already list theirs via skill_unlocked. Under QA the veil collapses but still emits this count.",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "payload_contains": {
@@ -510,7 +510,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "RACE-SAFE (task-veiltoast-fix): ui_sleep_veil_rendered (veil, call_deferred) and ui_toast_rendered (message_layer's async toast drain) are TWO independent async streams whose relative emission order is NOT guaranteed -- it depends on whether the toast queue was empty when the class toast was enqueued (a wall-clock condition). When the prior 'Autosaved' toast is still mid-hold the veil emit lands first (the old local behavior); when the queue has drained the class toast renders immediately, before the veil (the slow-CI-runner behavior that stalled this to a 10s timeout). from_start:true scans from index 0 so this wait matches the (unique) class-toast render regardless of where the veil wait above left the cursor -- immune to either order. Paired with message_layer's headless frame-bounded drain (QA_TOAST_HOLD_HEADLESS_SECONDS).",
+   "_comment": "RACE-SAFE: ui_sleep_veil_rendered (veil, call_deferred) and ui_toast_rendered (message_layer's async toast drain) are TWO independent async streams whose relative emission order is NOT guaranteed -- it depends on whether the toast queue was empty when the class toast was enqueued (a wall-clock condition). When the prior 'Autosaved' toast is still mid-hold the veil emit lands first (the old local behavior); when the queue has drained the class toast renders immediately, before the veil (the slow-CI-runner behavior that stalled this to a 10s timeout). from_start:true scans from index 0 so this wait matches the (unique) class-toast render regardless of where the veil wait above left the cursor -- immune to either order. Paired with message_layer's headless frame-bounded drain (QA_TOAST_HOLD_HEADLESS_SECONDS).",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
@@ -605,7 +605,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "meet (met_relc+sparred, given_spear unset): visible options ['What's out here'(0), 'You said you had something for me?'(1), 'Spar'(2), 'Keep walking'(3)] -- select index 1, the gift.",
+   "_comment": "Meet (met_relc+sparred, given_spear unset): visible options ['What's out here'(0), 'You said you had something for me?'(1), 'Spar'(2), 'Keep walking'(3)] -- select index 1, the gift.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -640,7 +640,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "gift node: the 'press I' teaching line.",
+   "_comment": "Gift node: the 'press I' teaching line.",
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
@@ -654,7 +654,7 @@
    "name": "02_gift_teaching"
   },
   {
-   "_comment": "gift option 0 'I'll try it on.' ends the conversation.",
+   "_comment": "Gift option 0 'I'll try it on.' ends the conversation.",
    "action": "press",
    "name": "confirm"
   },

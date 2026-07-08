@@ -1,5 +1,5 @@
 {
- "_comment": "Playtest slice T3 + ONBOARDING O5: 'The Missing Crate' WATCH (talk) path -- NO combat_started anywhere (the ambush is skipped via the street fixture). The old inn->floodplains->goblin_parley-bypass->gate crossing is dead post-onboarding (the ambush is corridor-free/warrior-gated), so this loads the post_tutorial_street FIXTURE (warrior L1, at the street gate cell 1,3, honest post-onboarding state) via title Continue and runs its STREET content directly. Seed via fixture rng_state (overrides --seed).",
+ "_comment": "'The Missing Crate' WATCH (talk) path -- NO combat_started anywhere (the ambush is skipped via the street fixture). The old inn->floodplains->goblin_parley-bypass->gate crossing is dead post-onboarding (the ambush is corridor-free/warrior-gated), so this loads the post_tutorial_street FIXTURE (warrior L1, at the street gate cell 1,3, honest post-onboarding state) via title Continue and runs its STREET content directly. Seed via fixture rng_state (overrides --seed).",
  "fixture_save": "post_tutorial_street",
  "starts_at_title": true,
  "steps": [

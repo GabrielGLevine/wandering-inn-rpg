@@ -1,5 +1,5 @@
 {
- "_comment": "M-FP Q1 + ONBOARDING O5: conversation-hub loop-backs + decision-invalidation hide_when sweep. Inn: Erin's errand hub (the_errand started, has_package, the hide_when re-visit teeth). Then the real cold-start crossing (the old goblin_parley bypass is dead): meet Relc -> spar -> sleep (Warrior L1) -> cross the goblin_encounter_1 proximity ambush (warrior+Relc) -> street. Street: Selys delivery hub (quest_beat/quest_completed/errand_decided + its own decision-invalidation absent-assert). Prologue cells reuse combat_walkthrough's proven from-floodplains arc. Seed 9.",
+ "_comment": "conversation-hub loop-backs + decision-invalidation hide_when sweep. Inn: Erin's errand hub (the_errand started, has_package, the hide_when re-visit teeth). Then the real cold-start crossing (the old goblin_parley bypass is dead): meet Relc -> spar -> sleep (Warrior L1) -> cross the goblin_encounter_1 proximity ambush (warrior+Relc) -> street. Street: Selys delivery hub (quest_beat/quest_completed/errand_decided + its own decision-invalidation absent-assert). Prologue cells reuse combat_walkthrough's proven from-floodplains arc. Seed 9.",
  "steps": [
   {
    "action": "wait_for_event",
@@ -538,7 +538,7 @@
    "equals": "street"
   },
   {
-   "_comment": "M-DEPTH DP1 re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); 'move up 7' is the exact proven step from guild_interior_walkthrough, stopping blocked-adjacent to Selys (8,2) facing up. No return-teleport needed -- this script ends at her hub.",
+   "_comment": "Re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); 'move up 7' is the exact proven step from guild_interior_walkthrough, stopping blocked-adjacent to Selys (8,2) facing up. No return-teleport needed -- this script ends at her hub.",
    "action": "teleport",
    "map": "guild",
    "cell": [8, 10]

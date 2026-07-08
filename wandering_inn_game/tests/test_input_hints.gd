@@ -1,5 +1,5 @@
 extends SceneTree
-## Controller support (S3, issue #18): coverage for WIInputHints
+## Coverage for WIInputHints
 ## (src/ui/input_hints.gd) -- the device classifier + keycap-hint composer.
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_input_hints.gd
 ##

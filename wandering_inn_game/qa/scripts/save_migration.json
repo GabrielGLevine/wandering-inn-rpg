@@ -1,10 +1,10 @@
 {
- "_comment": "M6 T7 (spec I12 + save.gd VERSION=3). --seed=1 (defeat_reload's proven losing chieftains_raid seed; navigation here mirrors it verbatim). ORDER is deliberate: (C) the I12 defeat-reload runs FIRST on the fresh seed-1 boot game. Reaching the fight autosaves a VALID v3 save over the auto slot (the inn->street map_changed autosave), so the ONLY way to hold a stale/incompatible auto slot at defeat time -- the real thing I12 guards -- is to overwrite auto with the v1 fixture AFTER that autosave via install_fixture (a file copy only; no sim/rng touch, so the fight stays deterministic). Losing then exercises combat_screen._close_banner's `if not Game.load_slot(\"auto\"): Game.reset()`: load_slot rejects v1 (VERSION!=3) as a TRUE no-op thanks to game.gd's trial-apply-then-swap, so the defeat safely falls back to Game.reset() -> game_reset, world re-renders, zero SCRIPT ERROR. (A) v2 migration: after the reset, pause-menu Load of the v2 manual fixture migrates transparently through _migrated (game_loaded, state restored, dormant_encounters key added empty) AND proves the M6 T9 fighter->warrior remap -- the v2 fixture holds classes {fighter:2}, which _migrated rewrites to {warrior:2}, the value asserted here. (B) v1 rejection via pause-menu: the auto slot still holds v1 (reset + Load never autosave), so Load Autosave rejects it as a no-op -- pause_menu now surfaces a 'Could not load save.' notice AND the live v2 state is UNCHANGED (proving the fix: a rejected load no longer silently discards the live game).",
+ "_comment": "(spec I12 + save.gd VERSION=3). --seed=1 (defeat_reload's proven losing chieftains_raid seed; navigation here mirrors it verbatim). ORDER is deliberate: (C) the I12 defeat-reload runs FIRST on the fresh seed-1 boot game. Reaching the fight autosaves a VALID v3 save over the auto slot (the inn->street map_changed autosave), so the ONLY way to hold a stale/incompatible auto slot at defeat time -- the real thing I12 guards -- is to overwrite auto with the v1 fixture AFTER that autosave via install_fixture (a file copy only; no sim/rng touch, so the fight stays deterministic). Losing then exercises combat_screen._close_banner's `if not Game.load_slot(\"auto\"): Game.reset()`: load_slot rejects v1 (VERSION!=3) as a TRUE no-op thanks to game.gd's trial-apply-then-swap, so the defeat safely falls back to Game.reset() -> game_reset, world re-renders, zero SCRIPT ERROR. (A) v2 migration: after the reset, pause-menu Load of the v2 manual fixture migrates transparently through _migrated (game_loaded, state restored, dormant_encounters key added empty) AND proves the fighter->warrior remap -- the v2 fixture holds classes {fighter:2}, which _migrated rewrites to {warrior:2}, the value asserted here. (B) v1 rejection via pause-menu: the auto slot still holds v1 (reset + Load never autosave), so Load Autosave rejects it as a no-op -- pause_menu now surfaces a 'Could not load save.' notice AND the live v2 state is UNCHANGED (proving the fix: a rejected load no longer silently discards the live game).",
  "fixture_save": "v2_format",
  "steps": [
   {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
   {"action": "assert_state", "path": "current_map", "equals": "inn"},
-  {"_comment": "ONBOARDING O5: classless start -- fresh boot is now classes {} (was {warrior:1}). The v2-fixture-migrated {warrior:2} asserts below (fighter->warrior remap) are UNCHANGED; only the two fresh-boot pins moved to {}.", "action": "assert_state", "path": "classes", "equals": {}},
+  {"_comment": "Classless start -- fresh boot is now classes {} (was {warrior:1}). The v2-fixture-migrated {warrior:2} asserts below (fighter->warrior remap) are UNCHANGED; only the two fresh-boot pins moved to {}.", "action": "assert_state", "path": "classes", "equals": {}},
 
   {"action": "move", "direction": "right", "steps": 12},
   {"action": "move", "direction": "right", "steps": 1},
@@ -13,7 +13,7 @@
   {"action": "assert_save_exists", "slot": "auto"},
   {"action": "install_fixture", "fixture": "v1_format", "slot": "auto"},
 
-  {"_comment": "M-FP Q1: meet Relc (12,13) before the ally_requires-gated chieftains_raid fight -- no autosave-triggering event fires between install_fixture and combat (accomplishment_recorded alone doesn't autosave), so the v1 overwrite still lands intact at defeat time.", "action": "move", "direction": "right", "steps": 5},
+  {"_comment": "Meet Relc (12,13) before the ally_requires-gated chieftains_raid fight -- no autosave-triggering event fires between install_fixture and combat (accomplishment_recorded alone doesn't autosave), so the v1 overwrite still lands intact at defeat time.", "action": "move", "direction": "right", "steps": 5},
   {"action": "move", "direction": "down", "steps": 6},
   {"action": "press", "name": "interact"},
   {"_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Relc"}, "timeout_sec": 5},
@@ -41,7 +41,7 @@
   {"action": "wait_for_event", "type": "game_reset", "timeout_sec": 5},
   {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
   {"action": "assert_state", "path": "current_map", "equals": "inn"},
-  {"_comment": "ONBOARDING O5: classless fresh boot after the defeat game_reset.", "action": "assert_state", "path": "classes", "equals": {}},
+  {"_comment": "Classless fresh boot after the defeat game_reset.", "action": "assert_state", "path": "classes", "equals": {}},
 
   {"action": "press", "name": "cancel"},
   {"action": "wait_for_event", "type": "ui_pause_shown", "timeout_sec": 5},

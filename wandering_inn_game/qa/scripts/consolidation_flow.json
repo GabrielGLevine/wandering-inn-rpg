@@ -1,5 +1,5 @@
 {
- "_comment": "M6 T7 + T8: fixture start (near_consolidation: warrior 6 + mage 7, sum 13 -- meets both min_parent_level 6 and min_combined_level 13). Exercises the FULL offer round trip: decline -> evolutions stage still runs (both parents are below their at_level 10 evolution gate, so the fallback is the plain 'sleep soundly' toast) -> re-offered next qualifying sleep -> accept -> merged [Spellsword] at level 9 (max(ceil(2*13/3), max(6,7))=9, the spec's pinned (6,7)->9 case) with the merged kit fielded in a subsequent fight. T8: accept/decline are now driven through the REAL UI consolidation prompt (src/ui/consolidation_prompt.gd) -- the prompt renders on consolidation_offered (ui_consolidation_prompt_rendered), cancel = decline (keep them apart), confirm on the default 'Consolidate' row = accept, and it hides (ui_consolidation_prompt_hidden) before the sim resolves the deferred sleep beat.",
+ "_comment": "Fixture start (near_consolidation: warrior 6 + mage 7, sum 13 -- meets both min_parent_level 6 and min_combined_level 13). Exercises the FULL offer round trip: decline -> evolutions stage still runs (both parents are below their at_level 10 evolution gate, so the fallback is the plain 'sleep soundly' toast) -> re-offered next qualifying sleep -> accept -> merged [Spellsword] at level 9 (max(ceil(2*13/3), max(6,7))=9, the spec's pinned (6,7)->9 case) with the merged kit fielded in a subsequent fight. T8: accept/decline are now driven through the REAL UI consolidation prompt (src/ui/consolidation_prompt.gd) -- the prompt renders on consolidation_offered (ui_consolidation_prompt_rendered), cancel = decline (keep them apart), confirm on the default 'Consolidate' row = accept, and it hides (ui_consolidation_prompt_hidden) before the sim resolves the deferred sleep beat.",
  "fixture_save": "near_consolidation",
  "starts_at_title": true,
  "steps": [
@@ -218,7 +218,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "M-FP Q1: meet Relc (12,13) before the ally_requires-gated goblin_encounter_2 fight.",
+   "_comment": "Meet Relc (12,13) before the ally_requires-gated goblin_encounter_2 fight.",
    "action": "move",
    "direction": "right",
    "steps": 5

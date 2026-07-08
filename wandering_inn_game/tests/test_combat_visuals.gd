@@ -3,7 +3,7 @@ extends SceneTree
 ## --script mode (UI scripts depend on autoload globals and are exercised by QA).
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_combat_visuals.gd
 ##
-## M6.5 D4: combat_screen.gd's god-file was decomposed into board_renderer.gd
+## combat_screen.gd's god-file was decomposed into board_renderer.gd
 ## (D2), combat_playback.gd (D3), and targeting_controller.gd/combat_hud.gd
 ## (D4). This file's checks were reworked to follow the logic to its REAL new
 ## home rather than keep asserting raw-source substrings against
@@ -41,7 +41,7 @@ func _init() -> void:
 	# and the real on-disk file is untouched.
 	var raw_source := FileAccess.get_file_as_string("res://src/combat/combat_screen.gd")
 	assert(raw_source.find("_hp_labels") == -1, "combat HP numerals must not be stored as in-board Label nodes")
-	# M5 H1: the hotbar replaces the MENU/SKILL_PICK text lists -- assert the
+	# The hotbar replaces the MENU/SKILL_PICK text lists -- assert the
 	# old list-building machinery is actually gone, not just that a new method
 	# exists alongside it (a partial migration that left both would still pass
 	# a purely-additive check).
@@ -53,7 +53,7 @@ func _init() -> void:
 	# they're gone.
 	assert(raw_source.find("var _menu_items") == -1, "the old MENU text-list array must be removed")
 	assert(raw_source.find("var _skill_ids") == -1, "the old SKILL_PICK id list must be removed")
-	# M5 H2 (movement-first, consultant B4): the dedicated Move mode is gone --
+	# The dedicated Move mode is gone --
 	# arrows step the active unit directly from the hotbar resting state.
 	# Declaration-shaped needles again (prose in combat_screen.gd's comments
 	# says "Move mode"/"Move slot", never the literal enum member).
@@ -64,9 +64,9 @@ func _init() -> void:
 	assert(raw_source.find("\"type\": \"move\"") == -1, "the interim unnumbered Move bar slot must be removed")
 	var hotbar_input_body := raw_source.get_slice("func _input_hotbar", 1).get_slice("func ", 0)
 	assert(hotbar_input_body.find("_move_active_or_bump") != -1, "hotbar-mode arrows must move the active unit directly")
-	# Controller support (S1, issue #18) deliberately reopened this: a pad has
+	# Controller support deliberately reopened this: a pad has
 	# no number keys, so `slot_prev`/`slot_next` move a cursor into `_bar_index`
-	# and `confirm` activates whatever it points at. The M5 H2 contract this
+	# and `confirm` activates whatever it points at. The movement-first contract this
 	# used to assert outright ("no Enter-confirms-highlight branch") still
 	# holds for KEYBOARD play -- `_bar_index` stays -1 unless a pad cursor
 	# press set it, so Enter alone (no prior slot_prev/next) remains inert,
@@ -76,9 +76,9 @@ func _init() -> void:
 	# M5 arch: emit sites use WIEvents StringName consts (the bus string is
 	# unchanged -- WIEvents.UI_HOTBAR_RENDERED is &"ui_hotbar_rendered").
 	# ui_hotbar_rendered still fires from combat_screen.gd's own
-	# _apply_turn_started (M6.5 D4 did not move turn-start lifecycle).
+	# _apply_turn_started (the HUD extraction did not move turn-start lifecycle).
 	assert(raw_source.find("WIEvents.UI_HOTBAR_RENDERED") != -1, "combat screen must emit ui_hotbar_rendered for QA")
-	# Controller support (S3, issue #18): combat_screen.gd is the composition
+	# combat_screen.gd is the composition
 	# root for keycap hints too now (WIInputHints.label() calls in _refresh()/
 	# _apply_combat_finished()) -- stub it alongside the other three autoloads.
 	var patched_source := raw_source.replace(
@@ -90,7 +90,7 @@ func _init() -> void:
 	var compile_err := patched_script.reload()
 	assert(compile_err == OK, "combat_screen.gd (autoload-stubbed copy) failed to compile: %d" % compile_err)
 	var screen: CanvasLayer = patched_script.new()
-	# M6.5 D4: `_make_combatant_visual`/`_visual_for`/`_world_labels` (D2-era
+	# `_make_combatant_visual`/`_visual_for`/`_world_labels` (D2-era
 	# dead-code compat shims) were DELETED from combat_screen.gd -- the real
 	# implementations they used to delegate to (`WICombatBoardRenderer.
 	# make_combatant_visual`/`visual_for`, and the labels-publish contract)
@@ -120,7 +120,7 @@ func _init() -> void:
 	assert(screen.SHIELD_FLASH == Color(0.4, 0.6, 1.0), "SHIELD_FLASH const changed unexpectedly")
 	screen.free()
 
-	# M6.5 D4: board_renderer.gd (D2) is the REAL new home of the combatant-
+	# board_renderer.gd (D2) is the REAL new home of the combatant-
 	# visual builder + the WorldLabels-publish contract this test used to
 	# check against combat_screen.gd's now-deleted dead-code shims. It
 	# references ObservableBus/TestDriver directly (same as combat_screen.gd),
@@ -140,7 +140,7 @@ func _init() -> void:
 	assert(board_renderer_source.find("_world_labels()") != -1, "board renderer must publish combat labels through WorldLabels")
 	assert(board_renderer_source.find("rebuild_context") != -1, "board renderer must publish labels via WIWorldLabels.rebuild_context")
 
-	# M6.5 D4: targeting_controller.gd/combat_hud.gd carry ZERO bare autoload
+	# targeting_controller.gd/combat_hud.gd carry ZERO bare autoload
 	# identifiers by design (same idiom D3 established for combat_playback.gd)
 	# -- unlike combat_screen.gd/board_renderer.gd, they can be load()+
 	# instantiated directly here for real behavioral checks, not just
@@ -154,7 +154,7 @@ func _init() -> void:
 	assert((targeting_state.get("targets", []) as Array).is_empty(), "targeting state starts with no targets")
 	assert(targeting_state.has("line_mode") and targeting_state.has("skill_id"), "targeting state must expose line_mode/skill_id for the HUD readout")
 
-	# Skills Wave K2 fix wave (reviewer finding): test_combat_sim.gd's c57/c58/
+	# test_combat_sim.gd's c57/c58/
 	# c59 blocks already prove `WICombat.use_skill("sneak", "pc")` resolves the
 	# self-cast directly -- but that calls `use_skill` with a hand-picked
 	# target_id, bypassing `WICombatTargeting.enter()` entirely. Nothing
@@ -211,7 +211,7 @@ func _init() -> void:
 	assert(hud_script != null and hud_script.can_instantiate(), "combat_hud.gd must compile standalone (zero bare autoload identifiers)")
 	for method_name: String in ["build", "refresh", "rebuild_slots", "render_bar_slots", "feed_push", "feed_line_for_event", "reset_tutor_lines", "match_tutor_line", "render_tutor_line", "show_banner", "clear_feed"]:
 		assert(hud_script.new(null, null, null).has_method(method_name), "combat HUD missing method: " + method_name)
-	# Real behavioral check of the tutor-line matcher (M-FP F's counting half)
+	# Real behavioral check of the tutor-line matcher (the counting half)
 	# -- moved verbatim from combat_screen.gd, still must fire on its declared
 	# event and never re-fire once matched.
 	var hud_logic: RefCounted = hud_script.new(null, null, null)
@@ -222,7 +222,7 @@ func _init() -> void:
 	# Real behavioral check that build() actually instantiates the hotbar
 	# under a real Control root (the direct replacement for the old
 	# raw-source "HOTBAR_SCRIPT" substring check against combat_screen.gd --
-	# HOTBAR_SCRIPT moved to combat_hud.gd in M6.5 D4).
+	# HOTBAR_SCRIPT lives in combat_hud.gd).
 	var fake_root := Control.new()
 	var hud_visual: RefCounted = hud_script.new(fake_root, null, null)
 	hud_visual.build()
@@ -233,7 +233,7 @@ func _init() -> void:
 	assert(found_hotbar, "combat HUD build() must instantiate the hotbar under its root")
 	fake_root.free()
 
-	# Skills Wave Task K2b: rebuild_slots' new 3rd `loadout` arg. AUTO (the
+	# rebuild_slots' new 3rd `loadout` arg. AUTO (the
 	# default `[]`, exactly the pre-K2b 2-arg call every OTHER call site in
 	# this repo still uses) must be byte-identical to the old order; a
 	# non-empty loadout reorders/filters ONLY the kit-skill run (slots 3+) --
@@ -270,7 +270,7 @@ func _init() -> void:
 	var world_labels_script := load("res://src/ui/world_labels.gd") as Script
 	assert(world_labels_script != null and world_labels_script.can_instantiate(), "world_labels.gd must compile")
 
-	# M5 H1: hotbar.gd is pure rendering (no autoload references), so unlike
+	# hotbar.gd is pure rendering (no autoload references), so unlike
 	# combat_screen.gd/test_driver.gd above it can be loaded directly without
 	# the autoload-stub patching dance.
 	var hotbar_source := FileAccess.get_file_as_string("res://src/ui/hotbar.gd")
@@ -284,7 +284,7 @@ func _init() -> void:
 	var world_source := FileAccess.get_file_as_string("res://src/world/world.gd")
 	var entity_visual_body := world_source.get_slice("func _make_entity_visual", 1).get_slice("func _count_visual", 0)
 	assert(entity_visual_body.find("Label.new()") == -1, "field entity visual builder must not create in-board text labels")
-	# M-BEAUTY R3 (spec §8 addendum): field name tags are RETIRED -- world.gd
+	# Field name tags are RETIRED (spec §8 addendum) -- world.gd
 	# must no longer touch WIWorldLabels/publish ui_world_labels_rendered at
 	# all (that event retired entirely; combat's HP/MP stat readout still
 	# rides WIWorldLabels but ONLY from board_renderer.gd, checked above).
@@ -302,7 +302,7 @@ func _init() -> void:
 	var combat_label_body := board_renderer_source_r3.get_slice("func _rebuild_combat_labels", 1).get_slice("func _label_id", 0)
 	assert(combat_label_body.find("\"name\"") == -1, "combat labels must not publish a name field -- combat name tags are retired (M-BEAUTY R3), only the HP/MP stats readout survives")
 
-	# GH#21 review fix (Critical #1): TERRAIN_ADDED/TERRAIN_EXPIRED are BOARD
+	# TERRAIN_ADDED/TERRAIN_EXPIRED are BOARD
 	# STATE, not transient juice -- combat_playback.gd's `_apply_playback_event`
 	# must route them to `_screen._play_event_visual` even on the SKIP-forward
 	# path (`with_visuals == false`), the COMBATANT_MOVED idiom, because the

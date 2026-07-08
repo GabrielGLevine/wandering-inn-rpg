@@ -1,5 +1,5 @@
 {
- "_comment": "M-ARC A3: the tremor beat + surface briefings (the climax chain's PRE-descent arc). Loads climax_surface_start (inn bed, Act II complete). Proves: (1) THE TREMOR BEAT -- sleeping with Act II complete fires the one-shot pointer toast 'A Watch runner is looking for you.' + banks watch_runner_pointed; (2) ZEVARA'S SUMMONS -- her new summons option (gated on watch_runner_pointed) banks heard_the_deep_tremor, which is what opens the sewers deep_fissure (deep_descent's fixture pre-banks this key; here it is banked FOR REAL); (3) OLESM'S BRIEFING -- gated on the tremor, banks heard_olesm_briefing. The boss + JOIN path is deep_descent (the veto/solo roster is proven at unit level, test_combat_data._check_boss_veto_roster); the seal beats are climax_seal. Teleport-driven between NPCs (surface geography is proven by gate_district_walkthrough). No combat -- fixture rng_state governs, seed held straightaway.",
+ "_comment": "The tremor beat + surface briefings (the climax chain's PRE-descent arc). Loads climax_surface_start (inn bed, Act II complete). Proves: (1) THE TREMOR BEAT -- sleeping with Act II complete fires the one-shot pointer toast 'A Watch runner is looking for you.' + banks watch_runner_pointed; (2) ZEVARA'S SUMMONS -- her new summons option (gated on watch_runner_pointed) banks heard_the_deep_tremor, which is what opens the sewers deep_fissure (deep_descent's fixture pre-banks this key; here it is banked FOR REAL); (3) OLESM'S BRIEFING -- gated on the tremor, banks heard_olesm_briefing. The boss + JOIN path is deep_descent (the veto/solo roster is proven at unit level, test_combat_data._check_boss_veto_roster); the seal beats are climax_seal. Teleport-driven between NPCs (surface geography is proven by gate_district_walkthrough). No combat -- fixture rng_state governs, seed held straightaway.",
  "fixture_save": "climax_surface_start",
  "starts_at_title": true,
  "steps": [
@@ -137,7 +137,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "hub visible: 0 'Long shift?', 1 'You sent a runner for me?' (requires watch_runner_pointed, now banked; cisterns-sweep+seal both hidden), 2 'Just getting my bearings.'. down 1 -> summons.",
+   "_comment": "Hub visible: 0 'Long shift?', 1 'You sent a runner for me?' (requires watch_runner_pointed, now banked; cisterns-sweep+seal both hidden), 2 'Just getting my bearings.'. down 1 -> summons.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -155,7 +155,7 @@
    "name": "02_summons"
   },
   {
-   "_comment": "summons node: cursor 0 'Then I'll go down.' banks heard_the_deep_tremor (opens the sewers deep_fissure) -> summons_send.",
+   "_comment": "Summons node: cursor 0 'Then I'll go down.' banks heard_the_deep_tremor (opens the sewers deep_fissure) -> summons_send.",
    "action": "press",
    "name": "confirm"
   },
@@ -239,7 +239,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "hub visible cursor positions: 0 chess, 1 [Tactician] (class gate -> visible-LOCKED, occupies a position), 2 'You look worried', 3 'Zevara sent me...' (requires heard_the_deep_tremor, now banked; resolution hidden), 4 leave. down 3 -> briefing.",
+   "_comment": "Hub visible cursor positions: 0 chess, 1 [Tactician] (class gate -> visible-LOCKED, occupies a position), 2 'You look worried', 3 'Zevara sent me...' (requires heard_the_deep_tremor, now banked; resolution hidden), 4 leave. down 3 -> briefing.",
    "action": "move",
    "direction": "down",
    "steps": 3
@@ -265,7 +265,7 @@
    "name": "03_briefing"
   },
   {
-   "_comment": "briefing: cursor 0 'I'll take him.' (goto hub), 1 'Understood.' (end). down 1 -> end.",
+   "_comment": "Briefing: cursor 0 'I'll take him.' (goto hub), 1 'Understood.' (end). down 1 -> end.",
    "action": "move",
    "direction": "down",
    "steps": 1

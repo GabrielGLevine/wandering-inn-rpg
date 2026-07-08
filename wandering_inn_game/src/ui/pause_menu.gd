@@ -5,12 +5,12 @@ extends CanvasLayer
 ## Input arbitration (repo-wide precedence: combat > dialogue > pause >
 ## journal > inventory > world): pause only toggles/consumes input when
 ## combat is inactive, no dialogue is open, and BOTH the journal and the
-## inventory (M7 E4) are closed — world.gd wires `journal_ref`/
+## inventory are closed — world.gd wires `journal_ref`/
 ## `inventory_ref` after creating all three components so this check does
 ## not need a scene-tree lookup; world.gd itself checks `pause_menu.open`
 ## before handling movement/interact.
 ##
-## Reaching Main (M5 S2): this node is instantiated as a DIRECT CHILD of the
+## Reaching Main: this node is instantiated as a DIRECT CHILD of the
 ## `Main` node itself (`main.gd`'s `_spawn_ui_layers()` calls
 ## `add_child(_pause_menu)` on `self`), so `get_parent()` is Main — no
 ## scene-tree search needed. Main isn't preloaded here (that would create a
@@ -34,7 +34,7 @@ var open := false
 
 ## Set by world.gd right after both components are instantiated.
 var journal_ref: Node = null
-## Set by world.gd/main.gd alongside journal_ref (M7 E4 three-way mutual
+## Set by world.gd/main.gd alongside journal_ref (three-way mutual
 ## exclusion -- see inventory.gd's file doc comment).
 var inventory_ref: Node = null
 

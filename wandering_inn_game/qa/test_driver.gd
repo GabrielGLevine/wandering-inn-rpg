@@ -18,15 +18,15 @@ const ACTION_KEYS := {
 	"cycle": KEY_TAB,
 	"journal": KEY_J,
 	"inventory": KEY_I,
-	## M5 H1 hotbar: digits activate numbered slots; End Turn shares E with
-	## interact (combat consumes input first).
+	## Digits activate numbered hotbar slots; End Turn shares E with interact
+	## (combat consumes input first).
 	"hotbar_1": KEY_1,
 	"hotbar_2": KEY_2,
 	"hotbar_3": KEY_3,
-	## Skills Wave Task K1: the field hotbar can carry more than three slots
-	## (a PC that knows [Basic Cleaning]/[Light]/[Snap Freeze]/[Firefly] fills
-	## four), so map the full 1..9 digit row the hotbar_N input actions already
-	## define -- sewers_walkthrough presses hotbar_4 for [Firefly].
+	## The field hotbar can carry more than three slots (a PC that knows
+	## [Basic Cleaning]/[Light]/[Snap Freeze]/[Firefly] fills four), so map
+	## the full 1..9 digit row the hotbar_N input actions already define --
+	## sewers_walkthrough presses hotbar_4 for [Firefly].
 	"hotbar_4": KEY_4,
 	"hotbar_5": KEY_5,
 	"hotbar_6": KEY_6,
@@ -50,7 +50,7 @@ var _screenshots: PackedStringArray = []
 ## (scans from index 0) for the rare case a script needs to re-check an
 ## earlier-window event.
 var _wait_cursor := 0
-## M-ARC §5: set from the script's top-level `creation_ui` field in _run(). When
+## Set from the script's top-level `creation_ui` field in _run(). When
 ## true, title_screen's New Game drives the REAL character-creation screen
 ## instead of the default straight-to-reset skip (see title_screen._skip_creation).
 var _wants_creation_ui := false
@@ -61,7 +61,7 @@ func active() -> bool:
 	return not _script_path.is_empty()
 
 
-## M-ARC §5: whether this run opts into the real character-creation UI path.
+## Whether this run opts into the real character-creation UI path.
 func wants_creation_ui() -> bool:
 	return _wants_creation_ui
 
@@ -190,8 +190,8 @@ func _execute(step: Dictionary) -> void:
 				await get_tree().process_frame
 				await get_tree().process_frame
 		"move_diag":
-			# Issue #40 (8-way field movement): a genuine simultaneous-key-hold
-			# diagonal, through the REAL input pipeline -- world.gd's
+			# A genuine simultaneous-key-hold diagonal, through the REAL input
+			# pipeline -- world.gd's
 			# `_combined_move_dir` reads whether the OTHER axis's action is
 			# STILL held at the moment an axis's press event dispatches, so
 			# unlike `_inject_action` (press then immediate release, no held
@@ -210,7 +210,7 @@ func _execute(step: Dictionary) -> void:
 				await get_tree().process_frame
 				await get_tree().process_frame
 		"type_text":
-			# M-ARC §5: type a name into the char-creation field one real unicode
+			# Type a name into the char-creation field one real unicode
 			# keystroke at a time (char_creation captures these in _unhandled_input,
 			# exactly like a player keystroke -- LineEdit GUI focus is not relied on).
 			var text := String(step["text"])
@@ -231,7 +231,7 @@ func _execute(step: Dictionary) -> void:
 			if _has_event(String(step["type"]), step.get("payload_contains", {})):
 				_fail("expected event to be absent but it was emitted: " + String(step["type"]))
 		"assert_event_count":
-			# M-ARC A4: assert an event fired EXACTLY N times over the whole run
+			# Assert an event fired EXACTLY N times over the whole run
 			# (arc_flow proves the epilogue rendered once and never re-fired --
 			# absence will not do, since it DID fire once). Scans the full log like
 			# _has_event, counting matches.
@@ -257,15 +257,15 @@ func _execute(step: Dictionary) -> void:
 			await get_tree().process_frame
 			await get_tree().process_frame
 		"install_fixture":
-			# M6 T7: re-seed a fixture into a save slot MID-RUN (same copy path
-			# as the top-level `fixture_save` affordance, just deferred to a
-			# step). save_migration uses this for the I12 defeat-reload proof:
-			# reaching a fightable encounter autosaves a fresh, VALID save over
-			# the auto slot (map_changed autosave), so the only way to hold a
-			# stale/incompatible auto slot at defeat time -- the actual thing I12
-			# guards against -- is to overwrite auto with the old-version fixture
-			# after that autosave but before the loss. Writes a file only; never
-			# touches the sim or its rng, so combat determinism is unaffected.
+			# Re-seeds a fixture into a save slot MID-RUN (same copy path as the
+			# top-level `fixture_save` affordance, just deferred to a step).
+			# save_migration uses this for its defeat-reload proof: reaching a
+			# fightable encounter autosaves a fresh, VALID save over the auto
+			# slot (map_changed autosave), so the only way to hold a
+			# stale/incompatible auto slot at defeat time is to overwrite auto
+			# with the old-version fixture after that autosave but before the
+			# loss. Writes a file only; never touches the sim or its rng, so
+			# combat determinism is unaffected.
 			_install_fixture_saves([{"fixture": String(step["fixture"]), "slot": String(step.get("slot", "auto"))}])
 			await get_tree().process_frame
 		_:
@@ -289,8 +289,8 @@ func _inject_action(action_name: String) -> void:
 	Input.parse_input_event(release)
 
 
-## Issue #40: presses `a` and holds it, THEN presses `b` while `a` is still
-## down, then releases both -- see `move_diag`'s doc comment in `_execute`
+## Presses `a` and holds it, THEN presses `b` while `a` is still down, then
+## releases both -- see `move_diag`'s doc comment in `_execute`
 ## for why this (not two independent `_inject_action` calls) is what makes
 ## `b`'s dispatch see `a` as held via `Input.is_action_pressed`, the exact
 ## state `world.gd`'s `_combined_move_dir` reads to form a diagonal.
@@ -322,7 +322,7 @@ func _inject_diag(a: String, b: String) -> void:
 	Input.parse_input_event(release_b)
 
 
-## M-ARC §5: inject a single printable character as a real key event (unicode
+## Inject a single printable character as a real key event (unicode
 ## set), for the char-creation name field. keycode is left 0 so it can never
 ## coincide with a mapped action (confirm/cancel/etc.); the creation screen reads
 ## `event.unicode` for the character.
@@ -356,7 +356,7 @@ func _has_event(type: String, subset: Dictionary = {}) -> bool:
 	return false
 
 
-## M-ARC A4: how many logged events match type/subset (assert_event_count).
+## How many logged events match type/subset (assert_event_count).
 func _count_events(type: String, subset: Dictionary = {}) -> int:
 	var n := 0
 	for e: Dictionary in _events_seen:
@@ -484,10 +484,10 @@ func _assert_world_to_screen_camera_aware() -> void:
 		_fail("world_to_screen probe: expected camera delta %s, got %s" % [expected, actual])
 
 
-## M5 F1: anchor-relative WorldLabels probe. Each visible panel for `context`
-## must sit within its holder's projected 64px cell rect, expanded by one cell
-## on each side. This is tighter than the old viewport-only smoke test: a
-## label can be on-screen and still be detached from the unit it names.
+## Anchor-relative WorldLabels probe. Each visible panel for `context` must
+## sit within its holder's projected 64px cell rect, expanded by one cell on
+## each side -- tighter than a viewport-only smoke test: a label can be
+## on-screen and still be detached from the unit it names.
 func _assert_world_labels_in_view(step: Dictionary) -> void:
 	var context := String(step.get("context", "field"))
 	var main := get_tree().root.find_child("Main", true, false)
@@ -545,10 +545,10 @@ func _loosely_equal(a: Variant, b: Variant) -> bool:
 			if not _loosely_equal(a[i], b[i]):
 				return false
 		return true
-	# M6 T7: whole-Dictionary equals (e.g. asserting a full `classes` map after
-	# an evolution/consolidation) hits the same int-vs-float mismatch as
-	# Array elements above -- recurse per-key rather than falling through to
-	# strict `==`, which Godot does NOT loosely coerce for numeric leaves.
+	# Whole-Dictionary equals (e.g. asserting a full `classes` map after an
+	# evolution/consolidation) hits the same int-vs-float mismatch as Array
+	# elements above -- recurse per-key rather than falling through to strict
+	# `==`, which Godot does NOT loosely coerce for numeric leaves.
 	if a is Dictionary and b is Dictionary:
 		if a.keys().size() != b.keys().size():
 			return false

@@ -1,35 +1,31 @@
 extends CanvasLayer
 ## Functional-minimal combat presentation. Renders the WICombat snapshot as
 ## a grid of squares with HP bars and AP pips, a turn-order strip, a hotbar-
-## driven action UI (arrows move the active unit directly -- M5 H2), and a
+## driven action UI (arrows move the active unit directly), and a
 ## prose event feed. HP readouts and damage numbers are player-visible; raw
 ## stats remain hidden by repo product constraint.
 ##
 ## GOTCHA: CanvasLayer has no `modulate`; only child Controls are styled.
 
-## M5 R3 16px recalibration -- see world.gd's CELL doc comment and
-## .superpowers/sdd/m5-r3-report.md for the tile-grid audit.
+## 16px grid recalibration -- see world.gd's CELL doc comment.
 ##
-## M5 R6 (I6 board extraction): the board (tiles/skirt/holders/flashes -- all
+## The board (tiles/skirt/holders/flashes -- all
 ## world-space content) renders into `World.combat_board_root()`, a Node2D
 ## inside the world SubViewport, not this CanvasLayer. Combat UI (hotbar/
 ## readout/order/feed/banner) stays in this CanvasLayer, native resolution.
 ##
-## M6.5 presentation decomposition (D1-D4, see docs/superpowers/plans/
-## 2026-07-04-m65-presentation-decomposition.md and the per-task reports in
-## .superpowers/sdd/fp-handoff/): this file used to own the whole combat
-## screen; its regions MOVED out to focused components, each owned by a var
-## below -- `_board_renderer`/`_view` (D2, board+sprites), `_ai_playback` (D3,
-## the M4 T10 paced AI-turn queue), `_targeting`/`_hud` (D4, aim/HUD). This
-## file is now the mode FSM + `_unhandled_input` dispatch + `_on_domain_event`
+## Presentation is decomposed into focused components, each owned by a var
+## below -- `_board_renderer`/`_view` (board+sprites), `_ai_playback` (the
+## paced AI-turn queue), `_targeting`/`_hud` (aim/HUD). This
+## file is the mode FSM + `_unhandled_input` dispatch + `_on_domain_event`
 ## bus hub + lifecycle (`_show_combat`/`_apply_turn_started`/
 ## `_apply_combat_finished`/`_close_banner`) + composition root (the only
 ## place the 4 combat commands -- attack/use_skill/dash/end_turn -- plus
-## `Game.sim.resolve_combat()` are called). A handful of small compat-shim
-## methods below exist only because `tests/test_combat_visuals.gd` (out of
-## every extraction task's edit scope until D4 reworked it) asserts their
-## literal presence via raw-source substring or has_method -- see each shim's
-## doc comment and the D4 task report's test-cleanup table for the inventory.
+## `Game.sim.resolve_combat()` are called); new presentation code goes in the
+## matching component, never back into this file. A handful of small
+## compat-shim methods below exist only because `tests/test_combat_visuals.gd`
+## asserts their literal presence via raw-source substring or has_method --
+## see each shim's doc comment for which.
 
 ## Cardinal direction tokens for line_damage targeting -- kept here (not just
 ## on WICombatTargeting, which carries its own duplicate copy) because
@@ -42,13 +38,13 @@ const FROST_FLASH := Color(0.5, 0.8, 1.0)
 const FLAME_FLASH := Color(1.0, 0.45, 0.15)
 const SHIELD_FLASH := Color(0.4, 0.6, 1.0)
 const AI_BEAT_SECONDS := 0.5
-## M-JUICE E2: a hit dealing at least this much damage screenshakes even when
+## A hit dealing at least this much damage screenshakes even when
 ## the PC is the attacker (a "heavy hit landed"); every hit the PC TAKES shakes
 ## regardless of size. Calibrated above a normal swing (pc/relc basic ~7-13) so
 ## only power_strike-class blows and the chieftain's big rolls trigger the
 ## dealt-damage shake -- routine trades stay calm. Presentation-only threshold.
 const HEAVY_HIT_DAMAGE := 14
-## TRAP (M6.5 final review): an event that fires during an AI turn but is
+## TRAP: an event that fires during an AI turn but is
 ## MISSING from this list falls through to the live _on_domain_event arm and
 ## renders IMMEDIATELY against end-of-turn state (the T10 "teleport" desync),
 ## silently — QA can't see it (zero-delay). Adding a combat event type? Add
@@ -59,7 +55,7 @@ const AI_PLAYBACK_TYPES := [
 	WIEvents.DASHED, WIEvents.STATUS_APPLIED, WIEvents.STATUS_EXPIRED,
 	WIEvents.ACTION_REFUSED, WIEvents.TURN_STARTED, WIEvents.COMBAT_FINISHED,
 	WIEvents.TURN_ENDED,
-	# GH#21: TERRAIN_EXPIRED fires at round rollover, which happens MID an
+	# TERRAIN_EXPIRED fires at round rollover, which happens MID an
 	# AI turn (inside _advance_turn) -- exactly the desync class this const's
 	# TRAP comment warns about. TERRAIN_ADDED is only ever player-cast today
 	# (AI never selects icy_floor -- see skill_effects.gd/wi_combat_ai.gd
@@ -68,37 +64,37 @@ const AI_PLAYBACK_TYPES := [
 	WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED,
 ]
 
-## M5 H1: SKILL_PICK is gone -- the hotbar puts combat skills directly on
+## SKILL_PICK is gone -- the hotbar puts combat skills directly on
 ## numbered slots (spec sec.3: "the hotbar replaces the MENU/SKILL_PICK
 ## modes' text lists"), so selecting a skill slot jumps straight to
 ## SKILL_TARGET instead of opening a skill sub-list first.
-## M5 H2 (movement-first, consultant B4): the separate Move mode is gone too.
+## The separate Move mode is gone too:
 ## HOTBAR is the player's resting turn state: arrows step the active unit
 ## directly (spending move pool, bump feedback on refusal), number keys /
 ## E activate slots, and Dash just refills the pool without changing mode.
-## DASH_CONFIRM (UI wave item 15): Dash used to fire instantly on selection —
-## players fat-fingered AP away with a stray hotbar_2 press. Now it behaves
-## like an aimed slot: selecting it shows its cost/effect in the readout and
-## ARMS a confirm gate (Enter executes, Esc cancels back to HOTBAR) instead
-## of spending AP immediately. It is deliberately NOT folded into ATTACK/
+## DASH_CONFIRM guards against fat-fingering AP away with a stray hotbar_2
+## press (Dash used to fire instantly on selection) -- selecting it now
+## behaves like an aimed slot: shows its cost/effect in the readout and ARMS
+## a confirm gate (Enter executes, Esc cancels back to HOTBAR) instead of
+## spending AP immediately. It is deliberately NOT folded into ATTACK/
 ## SKILL_TARGET's `_targeting`-driven flow — Dash has no target to cycle, so
 ## `_input_dash_confirm` handles it directly at the composition-root level
-## (same "command surface stays on the screen" mandate the targeting
-## refactor established).
+## (same "command surface stays on the screen" contract the targeting
+## flow follows).
 enum Mode { INACTIVE, HOTBAR, ATTACK, SKILL_TARGET, DASH_CONFIRM, WAIT_AI, BANNER }
 
 var _mode: int = Mode.INACTIVE
 var _root: Control
-## Owns the arena board/sprite region (M6.5 D2, board_renderer.gd);
+## Owns the arena board/sprite region (board_renderer.gd);
 ## constructed once in `_ready()`. `_view`: read facade over the live
-## `WICombat` (D2, combat_view.gd), constructed fresh per encounter in
-## `_show_combat()`. `_ai_playback`: the paced AI-turn playback queue (M4
-## T10, D3, combat_playback.gd), constructed once in `_ready()`. `_targeting`:
-## the aim/target-filter region (D4, targeting_controller.gd), constructed
+## `WICombat` (combat_view.gd), constructed fresh per encounter in
+## `_show_combat()`. `_ai_playback`: the paced AI-turn playback queue
+## (combat_playback.gd), constructed once in `_ready()`. `_targeting`:
+## the aim/target-filter region (targeting_controller.gd), constructed
 ## FRESH per combat like `_view` -- NOT a `_ready()`-time singleton, because a
 ## targeting object bound to a stale `_view` from a previous encounter would
 ## silently operate on a torn-down `WICombat`. `_hud`: the HUD panels/tutor/
-## hotbar-slot-rendering region (D4, combat_hud.gd), constructed once in
+## hotbar-slot-rendering region (combat_hud.gd), constructed once in
 ## `_ready()`. All five are loosely typed (`Node`/`RefCounted`, never their
 ## real `class_name`) and built via `load(path).new(...)` rather than a bare
 ## type: `tests/test_combat_visuals.gd` recompiles a stubbed in-memory copy
@@ -117,19 +113,19 @@ var _hud: RefCounted
 ## `WICombatHud.rebuild_slots` each `_apply_turn_started`); activated by the
 ## numbered hotbar_N keys / End Turn key via `_activate_bar_slot`. `_bar_index`
 ## highlights the slot being AIMED (-1 = HOTBAR resting state). Data
-## ownership stays on the screen (M6.5 D4 mandate) -- `_hud` only ever
+## ownership stays on the screen -- `_hud` only ever
 ## renders from a `_bar_slots` copy handed to it each `refresh()` call.
 var _bar_slots: Array = []
 var _bar_index := -1
-## Playtest fix (M6): which slot's name/costs/description line the readout
+## Which slot's name/costs/description line the readout
 ## strip shows (`WICombatHud._slot_info_line`). Unlike `_bar_index`, always
 ## points at a real slot -- reset to 0 (Attack) at turn start, updated on
 ## every `_activate_bar_slot` (incl. Dash/End Turn, which never aim), and
 ## stays put across a cancel-back-to-HOTBAR so the strip keeps explaining
 ## whatever the player just did until they act again.
 var _info_slot_index := 0
-## The WIMain host, injected downward at spawn by WIMain._spawn_ui_layers (M5
-## arch finding 3) — the route to world_labels()/world_root() instead of a
+## The WIMain host, injected downward at spawn by WIMain._spawn_ui_layers
+## — the route to world_labels()/world_root() instead of a
 ## find_child scan. Typed Node, not WIMain: this file must stay compilable as
 ## the autoload-stubbed in-memory copy tests/test_combat_visuals.gd builds
 ## under bare --script mode, and a hard WIMain annotation would pull the
@@ -144,7 +140,7 @@ func _ready() -> void:
 	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.hide()
 	add_child(_root)
-	# The arena board is NOT created here (M5 R6 / M6.5 D2): it must live
+	# The arena board is NOT created here: it must live
 	# inside the world SubViewport (`World.combat_board_root()`), and the
 	# World node doesn't exist yet at this point in Main's boot sequence
 	# (`_spawn_ui_layers()` runs before `_spawn_world()`). Resolved lazily by
@@ -191,7 +187,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		if not tutor.is_empty():
 			# Stash the ALREADY-DECIDED match onto the queued event so
 			# dequeue-time playback only renders it (feed push + bus confirm)
-			# -- it never re-matches against live state (M4 T10 contract).
+			# -- it never re-matches against live state (the playback contract).
 			(event["payload"]["_ui"] as Dictionary)["tutor"] = tutor
 		_ai_playback.enqueue(event)
 		if type == WIEvents.COMBATANT_DOWNED:
@@ -199,7 +195,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		return
 	match type:
 		WIEvents.INPUT_DEVICE_CHANGED:
-			# Controller support (S3): re-render the readout/hint strip on a
+			# Re-render the readout/hint strip on a
 			# device swap mid-combat -- `_refresh()` recomputes `hints` fresh
 			# from WIInputHints every call, so this just re-triggers it.
 			if _mode != Mode.INACTIVE:
@@ -226,7 +222,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_render_tutor_line(tutor)
 				_refresh()
 		WIEvents.TURN_ENDED:
-			# Fix-wave (finding 2): the PC's own turn_ended never went through
+			# The PC's own turn_ended never went through
 			# AI_PLAYBACK_TYPES (only AI-turn end_turns are queued -- see the
 			# capture branch above), so it always reaches here live, during
 			# the player's own input. No board state changes on end-of-turn
@@ -236,7 +232,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if _mode != Mode.INACTIVE:
 				_render_tutor_line(tutor)
 		WIEvents.UI_TARGETING_SHOWN:
-			# Fix-wave (finding 2): combat_screen emits this event on itself
+			# combat_screen emits this event on itself
 			# (see WICombatTargeting.enter/`_emit_targeting_shown_event` below)
 			# while the player is aiming, so it always arrives on the live
 			# path (never during AI's WAIT_AI turn) -- render immediately,
@@ -250,7 +246,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 ## (_apply_playback_event) so the two can't drift out of sync with each other.
 func _apply_combat_finished(payload: Dictionary) -> void:
 	_mode = Mode.BANNER
-	# Controller support (S3, issue #18): composed through WIInputHints
+	# Composed through WIInputHints
 	# directly (combat_screen.gd IS the composition root, unlike combat_hud.gd/
 	# targeting_controller.gd, which stay autoload-free by contract); kb-mode
 	# output is byte-identical to the old literal.
@@ -290,7 +286,7 @@ func _refresh() -> void:
 	var bar_active := _mode in [Mode.HOTBAR, Mode.ATTACK, Mode.SKILL_TARGET, Mode.DASH_CONFIRM]
 	var in_targeting := _mode in [Mode.ATTACK, Mode.SKILL_TARGET]
 	var targeting_state := {}
-	# Controller support (S3, issue #18): the composition root is the ONLY
+	# The composition root is the ONLY
 	# place `targeting_controller.gd`/`combat_hud.gd` may be hinted with real
 	# device glyphs -- both files carry ZERO bare autoload identifiers by
 	# contract (test_combat_visuals.gd asserts standalone compile), so
@@ -309,10 +305,10 @@ func _refresh() -> void:
 
 
 ## Per-combatant board position, visibility, and HP/MP bars/labels, sourced
-## from the LIVE sim (via `_view`, the per-combat read facade -- M6.5 D2).
+## from the LIVE sim (via `_view`, the per-combat read facade).
 ## During paced AI-turn playback the live state is already at the turn's
 ## final state, so `_refresh()` skips this while `_ai_playback.is_playing()`
-## is true (M6.5 D3) — paced dequeue-time rendering applies each combatant's
+## is true — paced dequeue-time rendering applies each combatant's
 ## historically-captured position/stats instead (see combat_playback.gd's
 ## `_apply_playback_event` / `_capture_event_ui`), and this runs once more for
 ## real after the queue drains to guarantee the end state matches the live
@@ -328,7 +324,7 @@ func _refresh_combatants() -> void:
 		_board_renderer.apply_stats(id, _view.stats(id))
 
 
-## M6.5 D3 delegator — NOT dead code (D3 review correction): the real
+## Delegator — NOT dead code: the real
 ## implementation MOVED to `WICombatPlayback.capture_playback_event`
 ## (`combat_playback.gd`), and this wrapper has a LIVE production call site:
 ## `_on_domain_event`'s non-AI (player-turn) event branch calls
@@ -347,7 +343,7 @@ func _capture_playback_event(type: String, payload: Dictionary) -> Dictionary:
 	return _ai_playback.capture_playback_event(type, payload)
 
 
-## M6.5 D4 delegators to `WICombatHud`'s feed/tutor methods. `_feed_line_for_
+## Delegators to `WICombatHud`'s feed/tutor methods. `_feed_line_for_
 ## event` is a REQUIRED live delegator, not a test-only shim: `combat_
 ## playback.gd`'s `_capture_event_ui` (out of this task's edit scope) calls
 ## `_screen._feed_line_for_event(...)` on EVERY captured event, real gameplay
@@ -393,7 +389,7 @@ func _emit_targeting_shown_event(mode_text: String, skill_id: String, target_cou
 	})
 
 
-## M4 T10/M5 E2 render dispatcher, shared by the live event path
+## Render dispatcher, shared by the live event path
 ## (_on_domain_event) and paced AI playback (_apply_playback_event) -- stays
 ## on the screen (VFX-flash dispatch, not HUD's readout/feed/tutor domain),
 ## calling `_board_renderer`'s public animation surface instead of the
@@ -404,14 +400,14 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 		WIEvents.ATTACK_RESOLVED:
 			var attacker_id := String(payload["attacker"])
 			var target_id := String(payload["target"])
-			# Track B1: spell_damage/line_damage casts route through the sim's
+			# spell_damage/line_damage casts route through the sim's
 			# _resolve_hit with melee=false and reuse ATTACK_RESOLVED, so a
 			# ranged cast (frost_bolt/flame_jet) must play the cast/gesture
 			# animation, NOT the sword swing (VISUAL-LOG common-sense fix).
 			var attack_anim := "slice" if bool(payload.get("melee", true)) else "cast"
 			_play_combatant_anim(attacker_id, attack_anim, ui.get("attacker_flip_h", null))
 			if bool(payload.get("hit", false)):
-				# M-JUICE E2 combat feel (all no-ops under QA/headless via the
+				# Combat feel (all no-ops under QA/headless via the
 				# renderer's `_juice_enabled` gate). The struck-combatant reaction
 				# differs by kind: a sprited combatant plays its "hit" frame AND
 				# takes a white impact pulse on the sprite itself (`impact_flash`
@@ -441,14 +437,14 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 		WIEvents.SKILL_RESOLVED:
 			var color: Color = ui.get("flash_color", Color.TRANSPARENT)
 			if color.a > 0.0:
-				# _cells_from_payload lives on WICombatPlayback (M6.5 D3) --
+				# _cells_from_payload lives on WICombatPlayback --
 				# called cross-object since this dispatcher stays screen-side.
 				_flash_cells(_ai_playback._cells_from_payload(ui.get("flash_cells", [])), color)
 		WIEvents.REACTION_TRIGGERED:
 			if String(payload.get("skill", "")) == "mana_shield":
 				_flash_cells(_ai_playback._cells_from_payload(ui.get("flash_cells", [])), SHIELD_FLASH)
 		WIEvents.TERRAIN_ADDED:
-			# GH#21: no enqueue-time `_ui` capture needed -- `cells`/`kind` are
+			# No enqueue-time `_ui` capture needed -- `cells`/`kind` are
 			# already the full render input straight off the domain payload
 			# (same reasoning line_damage's SKILL_RESOLVED cells need none).
 			_board_renderer.add_terrain(String(payload.get("kind", "")), _ai_playback._cells_from_payload(payload.get("cells", [])))
@@ -456,7 +452,7 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 			_board_renderer.expire_terrain(String(payload.get("kind", "")), _ai_playback._cells_from_payload(payload.get("cells", [])))
 
 
-## M6.5 D2 compatibility shim: the real implementation MOVED to
+## Compatibility shim: the real implementation lives in
 ## `WICombatBoardRenderer.play_anim`. Kept here, still used by
 ## `_play_event_visual` just above, and asserted by
 ## `tests/test_combat_visuals.gd`'s `has_method` check.
@@ -470,9 +466,8 @@ func _skill_flash_color(skill_id: String) -> Color:
 		return Color.TRANSPARENT
 	var skill: Dictionary = combat.skills[skill_id]
 	var effect_type := String((skill.get("effect", {}) as Dictionary).get("type", ""))
-	# GH#21: icy_floor's SKILL_RESOLVED carries the same "cells" payload shape
-	# as line_damage (the line-skill precedent this task's brief calls out),
-	# so it rides the exact same _skill_flash_cells payload.has("cells")
+	# icy_floor's SKILL_RESOLVED carries the same "cells" payload shape
+	# as line_damage, so it rides the exact same _skill_flash_cells payload.has("cells")
 	# branch below with zero changes there -- only the eligible-type gate and
 	# color pick need to widen.
 	if not (effect_type in ["spell_damage", "line_damage", "icy_floor"]):
@@ -518,7 +513,7 @@ func _skill_flash_cells(payload: Dictionary, allow_live_fallback: bool = false) 
 	return out
 
 
-## M6.5 D2 compatibility shim: the real implementation MOVED to
+## Compatibility shim: the real implementation lives in
 ## `WICombatBoardRenderer.flash_cells` (which owns `_board`). Kept here,
 ## still used by `_play_event_visual` above, and asserted by
 ## `tests/test_combat_visuals.gd`'s `has_method` check.
@@ -563,8 +558,8 @@ func _numbered_slot_pressed(event: InputEvent) -> int:
 ## slots refuse silently (no mode change), same convention as the pre-hotbar
 ## menu/skill-pick confirm handlers. Targeting slots set the mode FSM and
 ## record `_bar_index` so the aimed slot stays highlighted for the duration
-## of targeting, then hand off to `_targeting.enter(...)` (M6.5 D4); Dash is
-## a pure pool refill (M5 H2) -- no mode change, arrows spend the new pool
+## of targeting, then hand off to `_targeting.enter(...)`; Dash is
+## a pure pool refill -- no mode change, arrows spend the new pool
 ## directly from the HOTBAR resting state.
 func _activate_bar_slot(index: int) -> void:
 	if index < 0 or index >= _bar_slots.size():
@@ -601,7 +596,7 @@ func _apply_turn_started(id: String) -> void:
 	if String(c["side"]) == "enemy" or String(c["ai"]) != "":
 		_mode = Mode.WAIT_AI
 		_refresh()
-		# M6.5 D3: AI-turn execution + the paced playback queue now live on
+		# AI-turn execution + the paced playback queue live on
 		# WICombatPlayback -- this file keeps only the mode-FSM transition.
 		_ai_playback.run_ai_turn.call_deferred()
 	else:
@@ -610,9 +605,7 @@ func _apply_turn_started(id: String) -> void:
 		# calls WICombatAI.take_turn directly, bypassing this UI entirely), so
 		# the bar's order is free to pick for readability rather than being
 		# pinned by test coupling.
-		# Skills Wave Task K2b: threads the PC's shared loadout in (AUTO/[] for
-		# every save before this task, so every existing canonical's bar order
-		# is byte-identical -- see rebuild_slots' own doc comment).
+		# Threads the PC's shared loadout in (see rebuild_slots' own doc comment).
 		_bar_slots = _hud.rebuild_slots(_view, id, Game.sim.hotbar_loadout)
 		_bar_index = -1
 		_info_slot_index = 0  # Attack, per the "slot 1's info at turn start" playtest fix
@@ -620,7 +613,7 @@ func _apply_turn_started(id: String) -> void:
 		_refresh()
 
 
-## M6.5 D3: `WICombatPlayback` calls these instead of touching `TestDriver`/
+## `WICombatPlayback` calls these instead of touching `TestDriver`/
 ## `ObservableBus` directly, keeping it free of bare autoload identifiers
 ## (see that file's doc comment).
 func _test_driver_active() -> bool:
@@ -657,7 +650,7 @@ func _close_banner() -> void:
 	Game.sim.resolve_combat()
 	_mode = Mode.INACTIVE
 	_root.hide()
-	# M5 R6 / M6.5 D2: hide the board and hand the camera back to the field --
+	# Hide the board and hand the camera back to the field --
 	# the inverse of `_board_renderer.build()`'s show + enter_combat_camera.
 	# `clear()` internally guards is_instance_valid, since a defeat below may
 	# already have torn the whole World down via Game.reset()/load_slot before
@@ -671,7 +664,7 @@ func _close_banner() -> void:
 			Game.reset()
 
 
-## M5 H2 (movement-first, consultant B4): in the HOTBAR resting state the
+## In the HOTBAR resting state the
 ## arrows step the active unit DIRECTLY (spending move pool; a refused step
 ## — empty pool, blocked/occupied/off-grid cell — bumps the sprite as
 ## feedback, exactly the old Move mode's behavior). Slots are activated by
@@ -681,7 +674,7 @@ func _close_banner() -> void:
 ## guards kept for the slot actions so a stripped-down input map degrades to
 ## inert instead of erroring.
 ##
-## Controller support (S1, issue #18): number keys have no pad equivalent, so
+## Number keys have no pad equivalent, so
 ## `slot_prev`/`slot_next` (LB/RB) move a visible cursor over `_bar_index`
 ## (reusing the same field the ATTACK/SKILL_TARGET aim-highlight already
 ## drives -- HOTBAR's resting `_bar_index == -1` just means "nothing
@@ -746,7 +739,7 @@ func _move_active_or_bump(dir: Vector2i) -> void:
 		_board_renderer.bump(active_id, dir)
 
 
-## M6.5 D4: the mode-FSM/input-dispatch shell of the old `_input_target` --
+## The mode-FSM/input-dispatch shell of the old `_input_target` --
 ## Tab/Enter/Esc map to `_targeting`'s `cycle()`/`confirm()`/`cancel()`, and
 ## `confirm()`'s returned action is executed HERE (command surface stays at
 ## the composition root, per the plan): `combat.attack()`/`combat.use_skill()`
@@ -780,7 +773,7 @@ func _input_target(event: InputEvent) -> void:
 	_refresh()
 
 
-## UI wave item 15: Dash's confirm gate. No target to cycle (Tab is inert
+## Dash's confirm gate. No target to cycle (Tab is inert
 ## here, unlike ATTACK/SKILL_TARGET) — Enter spends the AP via `combat.dash()`
 ## (the only new command-surface call this mode issues; still one of the 4
 ## sanctioned combat commands), Esc cancels back to HOTBAR with no sim call

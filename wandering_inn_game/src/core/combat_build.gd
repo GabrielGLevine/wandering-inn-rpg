@@ -1,12 +1,11 @@
 class_name WICombatBuild
 extends RefCounted
-## Pure combat-BUILD construction helpers (M-ARCH Task ARCH-2): the ONE
+## Pure combat-BUILD construction helpers: the ONE
 ## shared home for math that `wi_game.gd`'s `_build_player_combatant` and
 ## `tests/sim_combat_batch.gd`'s balance harness both need at combatant-build
-## time, previously hand-copied between the two (documented manual-sync
-## mirrors since M7 Task E6 / M-GEAR Task G4 -- a consultant review flagged
-## this drift class as the scariest kind: the harness silently measuring a
-## different game than shipped). Deliberately NOT on `wi_combat.gd` -- that
+## time. TRAP: hand-copying this math between the two is the scariest
+## drift class -- the harness silently measuring a different game than
+## shipped; keep it here, shared. Deliberately NOT on `wi_combat.gd` -- that
 ## class is the fight-resolution CONSUMER of a finished combatant dict, not
 ## the BUILDER; this file's functions run once, before a `WICombat` even
 ## exists. No autoloads, no instance state reads -- kit/records in, filtered
@@ -14,7 +13,7 @@ extends RefCounted
 
 
 ## Filters a class kit down to what's fieldable with `weapon_family` equipped
-## (M7 §2 weapon gate, reusing the M6 T1 `weapon` tag): a skill carrying
+## (the weapon gate, reusing the `weapon` tag): a skill carrying
 ## skills.json's `weapon` key requires an EXACT family match against the
 ## equipped weapon; a skill with no `weapon` key (every spell, every
 ## passive) always passes. `weapon_family` "" (no weapon item, or an
@@ -33,8 +32,8 @@ static func weapon_gated_kit(kit: Array, weapon_family: String, skills_by_id: Di
 
 
 ## Sums the combat-build fields (`damage_mod`/`hp_mod`/`damage_reduction`) a
-## weapon, an armor, and any number of accessories contribute (M-GEAR Task
-## G1/G4: the three equipped accessory slots fold into the SAME three fields
+## weapon, an armor, and any number of accessories contribute (the three
+## equipped accessory slots fold into the SAME three fields
 ## the weapon/armor already populate -- no new combat field, `wi_combat.gd`
 ## is untouched, it just reads whatever these end up being on the combatant
 ## dict). Every record is read tolerantly (`.get`, default 0) so an item

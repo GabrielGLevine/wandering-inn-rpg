@@ -22,7 +22,7 @@
    }
   },
   {
-   "_comment": "Content Wave C4: the inn gained the short_order prop (Q2 SKILL station, reuses the registered `cauldron` sprite), so the rendered entity count is 12 -> 13 (fallbacks stay 0). M-DEPTH DP3: the new stairs_up door entity bumps it again, 13 -> 14. Magical Door plan Task D1 (issue #8): pantry_door + rift_vermin_leak bump it twice more, 14 -> 16. Task D3: pantry_door_runes (the SKILL-leg rune prop) bumps it once more, 16 -> 17. Issue #9 Task G1: garden_door (the always-present, pre-unlock-gated prop at 3,6) bumps it once more, 17 -> 18. blocked_cells (55) is unchanged -- it is static blocked UNION wall segments only, never entity cells.",
+   "_comment": "The inn gained the short_order prop (Q2 SKILL station, reuses the registered `cauldron` sprite), so the rendered entity count is 12 -> 13 (fallbacks stay 0). the new stairs_up door entity bumps it again, 13 -> 14. pantry_door + rift_vermin_leak bump it twice more, 14 -> 16. pantry_door_runes (the SKILL-leg rune prop) bumps it once more, 16 -> 17. garden_door (the always-present, pre-unlock-gated prop at 3,6) bumps it once more, 17 -> 18. blocked_cells (55) is unchanged -- it is static blocked UNION wall segments only, never entity cells.",
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
@@ -42,7 +42,7 @@
    "name": "01_start"
   },
   {
-   "_comment": "Issue #40 (8-way field movement): a genuine diagonal leg through the REAL input pipeline (move_diag holds `a` through `b`'s press so world.gd's _combined_move_dir sees both held -- see test_driver.gd's _inject_diag doc comment). Combo 1 (right+down) nets one cardinal RIGHT step (2,3)->(3,3) then one real diagonal step (3,3)->(4,4); combo 2 (left+up) mirrors it exactly back to the start cell (2,3), so the rest of this script's scripted path (Erin's interact) is unaffected.",
+   "_comment": "A genuine diagonal leg through the REAL input pipeline (move_diag holds `a` through `b`'s press so world.gd's _combined_move_dir sees both held -- see test_driver.gd's _inject_diag doc comment). Combo 1 (right+down) nets one cardinal RIGHT step (2,3)->(3,3) then one real diagonal step (3,3)->(4,4); combo 2 (left+up) mirrors it exactly back to the start cell (2,3), so the rest of this script's scripted path (Erin's interact) is unaffected.",
    "action": "move_diag",
    "a": "move_right",
    "b": "move_down"

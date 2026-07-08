@@ -1,7 +1,6 @@
 class_name WICombatBoardRenderer
 extends Node
-## M6.5 D2 extraction: the board/sprite region MOVED verbatim out of
-## combat_screen.gd -- arena tiles/skirt/walls (via `WITileBoardBuilder`),
+## The board/sprite region, extracted from combat_screen.gd -- arena tiles/skirt/walls (via `WITileBoardBuilder`),
 ## blocked-cell cover props, arena decor, combatant visuals (sprite or
 ## ColorRect chip + HP/MP bars), world-space name/stat labels, and every
 ## tween/anim/flash that animates a combatant's holder. `extends Node` (not
@@ -28,7 +27,7 @@ const CELL := 16
 const PLAYER_COLOR := Color(0.25, 0.45, 0.9)
 const ENEMY_COLOR := Color(0.75, 0.25, 0.2)
 const MP_COLOR := Color(0.25, 0.4, 0.85)
-## GH#21 ([Ice Floor] area terrain effect): persistent frost tint for icy_floor
+## Persistent frost tint for icy_floor
 ## overlays -- combat_screen.gd's FROST_FLASH RGB (0.5, 0.8, 1.0) at a lower
 ## persistent alpha (0.35 vs the transient cast-flash's 0.55, since this rect
 ## sits on the board every round rather than pulsing once). board_renderer.gd
@@ -36,7 +35,7 @@ const MP_COLOR := Color(0.25, 0.4, 0.85)
 ## dispatch owner; this file owns rendering primitives), so the RGB is
 ## restated here verbatim -- keep in sync if FROST_FLASH ever changes.
 const ICY_FLOOR_COLOR := Color(0.5, 0.8, 1.0, 0.35)
-## z-index split (GH#21): terrain overlays render at COMBATANT_Z - 1 so they
+## z-index split: terrain overlays render at COMBATANT_Z - 1 so they
 ## always sit ABOVE the floor/decor (both default z_index 0) but BELOW every
 ## combatant visual, regardless of scene-tree add order -- `add_terrain` is
 ## called dynamically mid-combat (after `build()`'s own children are already
@@ -46,7 +45,7 @@ const COMBATANT_Z := 1
 const MOVE_TWEEN_SECONDS := 0.12
 const BUMP_PIXELS := 3.0
 const BUMP_TWEEN_SECONDS := 0.06
-## M-JUICE E2 combat-feel tuning (presentation-only, all QA-collapsed via
+## Combat-feel tuning (presentation-only, all QA-collapsed via
 ## `_juice_enabled` -> `_presentation_delay`, zero under TestDriver/headless).
 const HIT_FLASH_COLOR := Color(2.4, 2.4, 2.4, 1.0)  # white-hot pulse on the struck sprite
 const HIT_FLASH_SECONDS := 0.12
@@ -111,7 +110,7 @@ const LEGIBILITY_MAX_BOOST := 3.0
 
 static var _moods_cache: Dictionary = {}
 
-## M5 R6: the arena board itself -- a Node2D living in `World.combat_board_
+## The arena board itself -- a Node2D living in `World.combat_board_
 ## root()` (inside the SubViewport). Re-resolved (not just cached) at the top
 ## of every `build()` — see that function's doc comment for why a cached
 ## reference can't be trusted.
@@ -120,19 +119,19 @@ var _squares: Dictionary = {}
 var _hp_bars: Dictionary = {}
 var _mp_bars: Dictionary = {}
 ## One tween slot per combatant id, not two -- a move and a blocked-move bump
-## landing on the same holder in quick succession (M5 R5 review Low #2) must
+## landing on the same holder in quick succession must
 ## kill whichever tween is already running before starting the other. See
 ## `_kill_combat_tween`.
 var _combat_tweens: Dictionary = {}
 var _combat_anim_tokens: Dictionary = {}
-## M-JUICE E2: the single active screenshake tween on `_board.position` (killed
+## The single active screenshake tween on `_board.position` (killed
 ## + restarted so overlapping heavy hits never stack an ever-growing offset).
 var _shake_tween: Tween
 ## The WIMain host, stashed from `build()`'s `main_ref` param so `clear()` and
 ## the labels helpers below can resolve `World`/`WIWorldLabels` without the
 ## caller having to pass it again on every call.
 var _main_ref: Node
-## GH#21 ([Ice Floor] area terrain effect): persistent per-cell overlays,
+## Persistent per-cell overlays,
 ## kind -> {Vector2i: ColorRect}. Unlike `flash_cells` (a transient tween
 ## that self-frees), these stay on the board until `expire_terrain` removes
 ## them or the whole board tears down (`build()`'s wholesale queue_free of
@@ -148,7 +147,7 @@ var _terrain_overlays: Dictionary = {}
 var _legibility_boost: Color = Color(1.0, 1.0, 1.0, 1.0)
 
 
-## M5 R4 arena floor stack z-order -- same convention as world.gd's field
+## Arena floor stack z-order -- same convention as world.gd's field
 ## (see that file's `_build_floor` doc comment): skirt -> base floor ->
 ## floor_layers (dressed-skirt/dirt-transition, drawn over the base floor) ->
 ## blocked layer (always its own TileMapLayer, drawn last among floor-ish
@@ -158,7 +157,7 @@ var _legibility_boost: Color = Color(1.0, 1.0, 1.0, 1.0)
 ## matter for readability, but decor is added last to match the field's
 ## "dressing renders over the floor stack" convention).
 ##
-## M5 R6: resolves `_board` fresh from `World.combat_board_root()` every call
+## Resolves `_board` fresh from `World.combat_board_root()` every call
 ## rather than trusting a cached reference -- the World node itself gets
 ## torn down and recreated on `game_reset`/`game_loaded` (Main.swap_to_world,
 ## e.g. the defeat-reload path), which would leave a cached `_board` pointing
@@ -176,7 +175,7 @@ func build(view: WICombatView, main_ref: Node) -> void:
 		return
 	for child in _board.get_children():
 		child.queue_free()
-	# M-JUICE E2: a screenshake left mid-tween by a previous encounter (defeat
+	# A screenshake left mid-tween by a previous encounter (defeat
 	# reload, rapid re-entry) must never leave the reused board root offset --
 	# reset it and drop any live shake tween before building the new arena.
 	_stop_shake()
@@ -185,7 +184,7 @@ func build(view: WICombatView, main_ref: Node) -> void:
 	_mp_bars.clear()
 	_combat_anim_tokens.clear()
 	_combat_tweens.clear()
-	# GH#21: the wholesale queue_free loop above already frees every previous
+	# The wholesale queue_free loop above already frees every previous
 	# encounter's terrain overlay nodes (they're `_board` children); this just
 	# drops the now-stale tracking dict so a fresh combat starts with none.
 	_terrain_overlays.clear()
@@ -230,7 +229,7 @@ func clear() -> void:
 	if world != null:
 		world.exit_combat_camera()
 	_clear_combat_labels()
-	# GH#21: drop the tracking dict defensively (see build()'s matching
+	# Drop the tracking dict defensively (see build()'s matching
 	# comment) -- the next build() frees the actual overlay nodes wholesale.
 	_terrain_overlays.clear()
 
@@ -256,7 +255,7 @@ func _build_arena_blocked_cover(biome_id: String, biome: Dictionary, floor_tile_
 			_build_arena_blocked_fallback_tile(biome, floor_tile_px, [cell])
 
 
-## Old M5 R4 flat-tile blocked rendering, kept as the fallback path for any
+## Old flat-tile blocked rendering, kept as the fallback path for any
 ## biome without a defined prop pool (or a pool entry missing from the
 ## registry, which should never happen for the two shipped biomes).
 func _build_arena_blocked_fallback_tile(biome: Dictionary, floor_tile_px: int, blocked: Array) -> void:
@@ -293,7 +292,7 @@ static func _blocked_prop_index(cell: Vector2i, count: int) -> int:
 	return int(frac * count) % count
 
 
-## Renders arena `decor` entries (M5 R4 schema) -- unlabeled dressing sprites
+## Renders arena `decor` entries -- unlabeled dressing sprites
 ## positioned OUTSIDE the playable grid (data/arenas.json's contract: decor
 ## cells are deliberately x<0/x>=width or y<0/y>=height so dressing never
 ## competes with tactical-grid readability, per design doc sec.4).
@@ -310,8 +309,8 @@ func _build_arena_decor(decor_list: Array) -> void:
 
 
 ## Unlabeled decor visual, positioned like a combatant square (cell * CELL,
-## board-local since `_board` itself is centered on screen by the camera --
-## M5 R6) but without any HP/MP/name chrome -- arena counterpart of
+## board-local since `_board` itself is centered on screen by the camera)
+## but without any HP/MP/name chrome -- arena counterpart of
 ## world.gd's decor branch inside `_make_entity_visual`.
 func _make_decor_visual(cell: Vector2i, sprite_id: String) -> Node2D:
 	var holder := Node2D.new()
@@ -343,7 +342,7 @@ func _make_decor_visual(cell: Vector2i, sprite_id: String) -> Node2D:
 func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 	var holder := Node2D.new()
 	holder.set_meta("death_visible", false)
-	# GH#21: explicit z_index (see the COMBATANT_Z const doc comment) so a
+	# Explicit z_index (see the COMBATANT_Z const doc comment) so a
 	# terrain overlay added later at z_index 0 can never render on top of a
 	# combatant, regardless of tree add order.
 	holder.z_index = COMBATANT_Z
@@ -356,7 +355,7 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 		var spr := AnimatedSprite2D.new()
 		spr.sprite_frames = WISpriteRegistry.frames_for(sprite_id)
 		spr.centered = false
-		# Initial facing (M5 E2 fix wave): the unflipped sheet row faces right
+		# Initial facing: the unflipped sheet row faces right
 		# (see _flip_toward's convention -- flip_h true means "facing left").
 		# Player-side combatants spawn at low-x and face the enemy side (right,
 		# unflipped); enemy-side combatants spawn at high-x and face the player
@@ -387,7 +386,7 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 			scale_value = float(combat_scale)
 		if scale_value != 1.0:
 			spr.scale = Vector2(scale_value, scale_value)
-		# Anchor feet/base to the cell's bottom-center (M5 R3), matching
+		# Anchor feet/base to the cell's bottom-center, matching
 		# world.gd's field entities so a shared combatant sprite looks
 		# consistent between field and combat.
 		if anim != "":
@@ -415,7 +414,7 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 		holder.add_child(rect)
 	holder.set_meta("label_offset", Vector2(CELL * 0.5, maxf(label_top - 12.0, 0.0)))
 	# HP/MP bars are 1-2px-tall in-viewport pixel bars hugging the cell's
-	# bottom edge (M5 R3 spec §1 B3 split) -- numerals move to a native-res
+	# bottom edge -- numerals move to a native-res
 	# overlay in R5; this bar is the part that stays in-viewport permanently.
 	var bar := ColorRect.new()
 	bar.color = Color(0.2, 0.8, 0.2)
@@ -486,7 +485,7 @@ func _legibility_modulate(view: WICombatView) -> Color:
 
 
 func _combatant_sprite_id(id: String) -> String:
-	# M-ARC §5 variant-key indirection (presentation-only): the PC's combat chip
+	# Variant-key indirection (presentation-only): the PC's combat chip
 	# uses the sim's chosen race/gender sprite variant ("pc_<race>_<gender>"),
 	# degrading to the combatants.json default ("body_a") when that variant art
 	# is not registered. Every other combatant reads its static sprite unchanged.
@@ -497,7 +496,7 @@ func _combatant_sprite_id(id: String) -> String:
 	return String(WIDataRegistry.combatant_config(id).get("sprite", ""))
 
 
-## M-BEAUTY R3: combat NAME tags retired (spec §8 addendum) -- entries publish
+## Combat NAME tags retired (spec §8 addendum) -- entries publish
 ## id/anchor/offset only, no `name`. HP/MP bars (`_hp_bars`/`_mp_bars`, plain
 ## ColorRects on the board itself) are untouched by this change; the numeral
 ## readout ("57/80  MP 12/20") still rides through WIWorldLabels' `stats`
@@ -532,7 +531,7 @@ func _world_labels() -> WIWorldLabels:
 	return _main_ref.world_labels() as WIWorldLabels
 
 
-## M5 R6: the World node living inside the SubViewport (`Main.world_root()`).
+## The World node living inside the SubViewport (`Main.world_root()`).
 ## Board content (`build()`) and camera centering (`enter_combat_camera`/
 ## `exit_combat_camera`) both go through it. Main may exist before World does
 ## (early in boot) or World may have just been torn down and not yet recreated
@@ -588,7 +587,7 @@ func bump(id: String, dir: Vector2i) -> void:
 	_combat_tweens[id] = tw
 
 
-## Shared by both `move_visual` and `bump` (M5 R5 review Low #2) -- one active
+## Shared by both `move_visual` and `bump` -- one active
 ## positional tween per holder id, regardless of which of the two started it.
 func _kill_combat_tween(id: String) -> void:
 	var existing := _combat_tweens.get(id, null) as Tween
@@ -656,8 +655,8 @@ func play_anim(id: String, prefix: String, flip_h: Variant = null) -> void:
 		anim = prefix if spr.sprite_frames.has_animation(prefix) else "idle_side"
 	if prefix == "death" and not anim.begins_with("death"):
 		# No death animation on this sheet (e.g. goblins) -- resolving to an
-		# idle* fallback would loop forever on a "downed" combatant (M5 E2
-		# fix wave finding 1). Fade instead, reusing the fade_chip tween
+		# idle* fallback would loop forever on a "downed" combatant.
+		# Fade instead, reusing the fade_chip tween
 		# pattern; death_visible was already set by mark_death_visible
 		# before this call, so the sprite stays visible per the T9/T10
 		# death_visible contract, just dimmed like the chip fallback.
@@ -731,7 +730,7 @@ func flash_cells(cells: Array, color: Color) -> void:
 		tw.tween_callback(f.queue_free)
 
 
-## GH#21 ([Ice Floor] area terrain effect): persistent per-cell overlay --
+## Persistent per-cell overlay --
 ## one semi-transparent ColorRect per cell, unlike `flash_cells`' one-shot
 ## tween. `z_index` defaults to 0 (the const block's COMBATANT_Z split keeps
 ## it under every combatant regardless of add order); it renders over the
@@ -767,7 +766,7 @@ func add_terrain(kind: String, cells: Array) -> void:
 
 ## Inverse of `add_terrain` -- frees and untracks the overlay at each given
 ## cell for `kind`. No UI confirmation event on expiry (only the add side
-## rides the ui_*_rendered idiom, per GH#21's design); the domain-level
+## rides the ui_*_rendered idiom, by design); the domain-level
 ## TERRAIN_EXPIRED is the QA-visible signal for this half.
 func expire_terrain(kind: String, cells: Array) -> void:
 	var by_kind: Dictionary = _terrain_overlays.get(kind, {})
@@ -782,16 +781,16 @@ func expire_terrain(kind: String, cells: Array) -> void:
 	_terrain_overlays[kind] = by_kind
 
 
-## M-JUICE E2 gate: true only in real play (windowed non-QA / native). Reuses
+## Juice gate: true only in real play (windowed non-QA / native). Reuses
 ## `_presentation_delay`'s exact TestDriver/headless collapse so every combat-
 ## feel effect is a strict no-op under QA -- byte-identical event streams, no
 ## board offset left mid-screenshot, no wasted particle nodes headless. Same
-## discipline as the M4 T10 pacing / cast-flash precedents.
+## discipline as the paced-playback / cast-flash precedents.
 func _juice_enabled() -> bool:
 	return _presentation_delay(1.0) > 0.0
 
 
-## M-JUICE E2: white modulate pulse on the STRUCK combatant's sprite (cast-flash
+## White modulate pulse on the STRUCK combatant's sprite (cast-flash
 ## precedent). Pulses the AnimatedSprite2D child only -- the holder's own
 ## modulate is reserved for death fade / actor highlight, so a struck-then-
 ## downed combatant never gets two tweens fighting over the same property.
@@ -808,7 +807,7 @@ func impact_flash(id: String) -> void:
 	tw.tween_property(spr, "modulate", Color.WHITE, HIT_FLASH_SECONDS)
 
 
-## M-JUICE E2: brief screenshake on the combat BOARD ROOT (`_board.position`) --
+## Brief screenshake on the combat BOARD ROOT (`_board.position`) --
 ## the world-space Node2D that holds every combatant/tile, NOT the UI
 ## CanvasLayer (which must never jitter). `intensity` is 2-4px; a decaying
 ## multi-step tween that always lands back on Vector2.ZERO. QA-collapsed
@@ -840,7 +839,7 @@ func _stop_shake() -> void:
 		_board.position = Vector2.ZERO
 
 
-## M-JUICE E2: one-shot `hit_sparks` WIAmbience burst (<=8 particles, wasm-safe)
+## One-shot `hit_sparks` WIAmbience burst (<=8 particles, wasm-safe)
 ## at a struck combatant's cell. `cell_xy` is the enqueue-time-captured
 ## `_ui.target_cell` ([x,y] or []) -- never a live combat read, so paced AI
 ## playback sparks land on the historical cell of the beat, not wherever the sim

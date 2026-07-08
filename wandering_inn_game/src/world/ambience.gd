@@ -1,11 +1,11 @@
 class_name WIAmbience
-## M-BEAUTY Task B3: presentation-only ambience particle-emitter factories.
+## Presentation-only ambience particle-emitter factories.
 ## Pure static factory (no state, never instantiated -- same shape as
 ## WITileBoardBuilder) so world.gd can build a GPUParticles2D from a single
 ## `{preset, rect}` pair without any per-map/per-preset branching of its own.
 ## Every preset is a small param dict resolved into one GPUParticles2D +
 ## ParticleProcessMaterial, budget <=64 particles (spec §5) and native res
-## (the 320x180 world SubViewport, M5 R3) -- `rect` arrives already converted
+## (the 320x180 world SubViewport) -- `rect` arrives already converted
 ## to world pixel space by world.gd's `_resolve_ambience_rect`.
 ##
 ## Textures: `particle_dot.png` (fireflies/dust_motes/pond_glints/embers --
@@ -197,7 +197,7 @@ static func _embers(rect: Rect2) -> GPUParticles2D:
 	return node
 
 
-## M-JUICE E2: one-shot combat impact spark burst (<=8 particles) fired at a
+## One-shot combat impact spark burst (<=8 particles) fired at a
 ## struck combatant's cell. Unlike the always-on ambience presets above, the
 ## CALLER sets `one_shot`/`emitting` and frees it after `lifetime` (see
 ## board_renderer.gd's `spawn_hit_sparks`) -- so `preprocess` is forced back to

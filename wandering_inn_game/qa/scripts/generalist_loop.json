@@ -1,5 +1,5 @@
 {
- "_comment": "M6 whole-branch-review fix (Important): the Generalist evolution outcome's balanced_grants must reach the COMBAT KIT (built only from granted_skills), not just player_skills. Fixture near_generalist = mage 10 with a 7/7 ice/fire cast split (dominance share 0.5 < 0.6, total 14 >= min_uses 12), so the FIRST sleep fires the Generalist path (no Replacement, no consolidation, no level-up: mage L11 needs spell_cast 54, unset). Proves: (a) sleep emits skill_unlocked for ice_shard + flare_burst + the 'balanced mastery' toast, and persists mage in generalist_classes; (b) a subsequent fight's PC combat kit CONTAINS ice_shard + flare_burst -- the fix, since granted_skills now folds a generalist class's evolution.balanced_grants (combat snapshot gained a `skills` field for this assertion). Combat OUTCOME is not asserted (kit presence at the PC's first turn is the point). Fight = chieftains_raid (reachable without the goblin_encounter_2 x=5 gate).",
+ "_comment": "The Generalist evolution outcome's balanced_grants must reach the COMBAT KIT (built only from granted_skills), not just player_skills. Fixture near_generalist = mage 10 with a 7/7 ice/fire cast split (dominance share 0.5 < 0.6, total 14 >= min_uses 12), so the FIRST sleep fires the Generalist path (no Replacement, no consolidation, no level-up: mage L11 needs spell_cast 54, unset). Proves: (a) sleep emits skill_unlocked for ice_shard + flare_burst + the 'balanced mastery' toast, and persists mage in generalist_classes; (b) a subsequent fight's PC combat kit CONTAINS ice_shard + flare_burst -- the fix, since granted_skills now folds a generalist class's evolution.balanced_grants (combat snapshot gained a `skills` field for this assertion). Combat OUTCOME is not asserted (kit presence at the PC's first turn is the point). Fight = chieftains_raid (reachable without the goblin_encounter_2 x=5 gate).",
  "fixture_save": "near_generalist",
  "starts_at_title": true,
  "steps": [
@@ -27,7 +27,7 @@
   {"action": "press", "name": "interact"},
   {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "floodplains"}, "timeout_sec": 5},
 
-  {"_comment": "M-FP Q1: meet Relc (12,13) before the ally_requires-gated chieftains_raid fight.", "action": "move", "direction": "right", "steps": 5},
+  {"_comment": "Meet Relc (12,13) before the ally_requires-gated chieftains_raid fight.", "action": "move", "direction": "right", "steps": 5},
   {"action": "move", "direction": "down", "steps": 6},
   {"action": "press", "name": "interact"},
   {"_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Relc"}, "timeout_sec": 5},

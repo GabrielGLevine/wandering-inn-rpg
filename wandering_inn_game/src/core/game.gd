@@ -13,7 +13,7 @@ func _ready() -> void:
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
-## `creation` (M-ARC §5) carries the character-creation choices
+## `creation` carries the character-creation choices
 ## ({pc_name, pc_race, pc_gender}) from the creation screen; empty on any other
 ## New Game path (title default-skip, code-driven reset), which lands the
 ## everyman defaults. Threaded to the fresh sim only -- a load never sees it
@@ -38,7 +38,7 @@ func save_auto() -> void:
 	_write_slot("auto")
 	if not _autosave_announced:
 		_autosave_announced = true
-		# Controller support (S3, issue #18): composed through WIInputHints;
+		# Composed through WIInputHints;
 		# kb-mode output is byte-identical to the old literal, so work_loop's
 		# exact-text pin on this toast needs no re-pin.
 		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Autosaved. (%s — save/load anytime)" % WIInputHints.label("cancel")})
@@ -80,7 +80,7 @@ func load_slot(slot: String) -> bool:
 	return true
 
 
-## Issue #43 (playtest state boot, debug-only title picker): copies a
+## Copies a
 ## `qa/fixtures/<fixture>.json` file into `user://saves/<slot>.json` verbatim,
 ## so the EXISTING slot-generic `load_slot` can boot it (the picker passes a
 ## dedicated "playtest" slot -- never "manual", the user's own save) --
@@ -110,7 +110,7 @@ func _build_sim(creation: Dictionary = {}) -> void:
 
 ## Constructs a fresh WIGame from the data files + current seed WITHOUT
 ## assigning it to `sim`, so load_slot can trial-apply a save before committing
-## the swap (see load_slot). `creation` (M-ARC §5) is the character-creation
+## the swap (see load_slot). `creation` is the character-creation
 ## dict for a New Game; empty ({}) for a load trial and every cold boot, which
 ## lands WIGame's tolerant identity defaults.
 func _make_sim(creation: Dictionary = {}) -> WIGame:
@@ -122,25 +122,25 @@ func _make_sim(creation: Dictionary = {}) -> WIGame:
 		"arenas": _load_json("res://data/arenas.json"),
 	}
 	combat_config["quests"] = _load_json("res://data/quests.json")
-	# M-ARC Task A1: acts.json is the counter-derived act-line catalog consumed
+	# acts.json is the counter-derived act-line catalog consumed
 	# by WIActs (via WIGame.act_summary()) -- same injection lane as quests.
 	combat_config["acts"] = _load_json("res://data/acts.json")
-	# M7 Task E2: items.json feeds WIGame.item()/the combat-build weapon gate.
+	# items.json feeds WIGame.item()/the combat-build weapon gate.
 	# Without this the real game's `equipped.weapon` (default "rusty_sword")
 	# would resolve to {} at every combat build, defaulting weapon_family to
 	# "" and filtering OUT every weapon-tagged skill (including the intended
 	# sword-tagged power_strike) -- a real regression, not just an untested
 	# path, so this line is required for the feature to work at all in play.
 	combat_config["items"] = _load_json("res://data/items.json")
-	# M-DEPTH DP2: THE REQUEST BOARD's posting pool -- same injection lane as
+	# THE REQUEST BOARD's posting pool -- same injection lane as
 	# quests/items. WIGame.board_bounties()/accept_bounty()/turn_in_bounty()
 	# read it via `_combat_config.get("bounties", {})`.
 	combat_config["bounties"] = _load_json("res://data/bounties.json")
-	# M-DEPTH DP5: THE DELIVERY BOARD's pool (the Runner's Guild) -- same
+	# THE DELIVERY BOARD's pool (the Runner's Guild) -- same
 	# injection lane. WIGame.delivery_board_deliveries()/accept_delivery()/
 	# turn_in_delivery() read it via `_combat_config.get("deliveries", {})`.
 	combat_config["deliveries"] = _load_json("res://data/deliveries.json")
-	# Magical Door plan Task D4: the portal-menu's destination catalog --
+	# The portal-menu's destination catalog --
 	# same injection lane. WIGame.attuned_destinations()/_travel_to_portal()
 	# read it via `_combat_config.get("portals", {})`.
 	combat_config["portals"] = _load_json("res://data/portals.json")
@@ -156,11 +156,10 @@ func _make_sim(creation: Dictionary = {}) -> WIGame:
 		var js_seed: Variant = JavaScriptBridge.eval("window.__WI_QA__ ? String(window.__WI_QA__.seed ?? '') : ''", true)
 		seed_str = String(js_seed) if js_seed != null else ""
 	var rng_seed: int = int(seed_str) if not seed_str.is_empty() else 0
-	# M-BEAUTY RF fix wave (final-review Fix 3): moods.json's
-	# `meta.phase_thresholds` is the sim's phase-clock config now, not just
-	# documentation of it -- WIGame's ctor already accepted a phase_config
-	# dict (M7 M-BEAUTY fold), but this call never passed one, so
-	# WIGame._phase_config silently fell back to its own hardcoded
+	# moods.json's `meta.phase_thresholds` is the sim's phase-clock config,
+	# not just documentation of it -- WIGame's ctor accepts a phase_config
+	# dict, and if this call ever stops passing one,
+	# WIGame._phase_config silently falls back to its own hardcoded
 	# dusk_at/night_at 40/90 defaults every run. The shipped moods.json
 	# values EQUAL those defaults today, so this wiring is behavior-neutral
 	# (zero seed shift -- verified: atmosphere_check + 2 pinned-seed combat

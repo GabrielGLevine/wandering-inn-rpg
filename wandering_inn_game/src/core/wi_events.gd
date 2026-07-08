@@ -29,7 +29,7 @@ const PLAYER_BLOCKED := &"player_blocked"
 const INTERACT_NOTHING := &"interact_nothing"
 const INTERACT_UNHANDLED := &"interact_unhandled"
 const ENTITY_REMOVED := &"entity_removed"
-## Skills Wave Task K1 (traversal seams): a map CELL changed its traversable
+## A map CELL changed its traversable
 ## look. Payload `{map:String, cell:[x,y], to:String}` where `to` is:
 ##   "ice"      -- a freezable water cell was frost-cast into walkable ice
 ##                 (frozen until the next sleep). Presentation paints the ice
@@ -40,7 +40,7 @@ const ENTITY_REMOVED := &"entity_removed"
 ## Purely additive: the sim's walkability (is_cell_blocked) already reflects the
 ## change before this fires; nothing existing consumes or depends on it.
 const TERRAIN_CHANGED := &"terrain_changed"
-## Skills Wave Task K2 (the sneak seam): `sneaking` toggled true/false. Fired by
+## `sneaking` toggled true/false. Fired by
 ## the deliberate field-hotbar toggle (`_toggle_sneak`, a `sneaks: true`-tagged
 ## skill's number key) AND by every automatic break (`_break_sneak` -- interact()
 ## reaching a non-door response, a successful field-skill use on a target,
@@ -52,7 +52,7 @@ const TERRAIN_CHANGED := &"terrain_changed"
 ## file.
 const SNEAK_STARTED := &"sneak_started"
 const SNEAK_ENDED := &"sneak_ended"
-## Skills Wave Task K2b: `WIGame.hotbar_loadout` changed (a journal
+## `WIGame.hotbar_loadout` changed (a journal
 ## assign/unassign toggle). Payload `{skill:String, assigned:bool,
 ## loadout:Array[String]}` -- `assigned` is true on an assign, false on an
 ## unassign; `loadout` is the FULL updated ordered array so QA can assert
@@ -98,13 +98,13 @@ const ITEM_GAINED := &"item_gained"
 const ITEM_EQUIPPED := &"item_equipped"
 const ITEM_UNEQUIPPED := &"item_unequipped"
 const LOOT_DROPPED := &"loot_dropped"
-## M-DEPTH DP5: emitted by `WIGame.remove_item` -- the first inventory-REMOVAL
+## Emitted by `WIGame.remove_item` -- the first inventory-REMOVAL
 ## seam this codebase has needed (every prior item flow only ever ADDS via
 ## `pickup`). Payload `{item:String, source:String}`, the same shape as
 ## ITEM_GAINED -- `source` is free-form provenance (a delivery id on a
 ## handoff or a sleep-fail return), never branched on here.
 const ITEM_LOST := &"item_lost"
-## Economy v1 Task D1: emitted by `WIGame.earn_gold`/`spend_gold` on every
+## Emitted by `WIGame.earn_gold`/`spend_gold` on every
 ## successful gold change (a refused spend at insufficient gold emits NOTHING
 ## here -- only the refusal TOAST). Payload `{delta:int, total:int,
 ## source:String}` -- `delta` is signed (+earn, -spend), `total` is the new
@@ -113,7 +113,7 @@ const ITEM_LOST := &"item_lost"
 ## for a chore). Diegetic-money direction: no always-on HUD reads this; the
 ## inventory-panel coin line (D3) and the earn/spend toasts are the display.
 const GOLD_CHANGED := &"gold_changed"
-## M7 Task E2, M-BEAUTY FOLD amendment: emitted whenever `WIGame.phase()`'s
+## Emitted whenever `WIGame.phase()`'s
 ## classification of `actions_since_sleep` crosses a threshold (day->dusk->
 ## night), AND unconditionally on every `sleep()` reset (even a same-phase
 ## "day"->"day" reset) -- see wi_game.gd's `_tick_action`/`phase`/`sleep` doc
@@ -138,7 +138,7 @@ const AP_CHANGED := &"ap_changed"
 const MP_CHANGED := &"mp_changed"
 const STATUS_APPLIED := &"status_applied"
 const STATUS_EXPIRED := &"status_expired"
-## GH#21 ([Ice Floor] area terrain effect): emitted by WISkillEffects.
+## Emitted by WISkillEffects.
 ## resolve_active's icy_floor resolver the moment cells are registered into
 ## WICombat.terrain. Payload `{kind:"icy_floor", cells:[[x,y],...] sorted,
 ## rounds:int}` -- `cells` is the FULL blast area (walls/out-of-bounds
@@ -146,13 +146,13 @@ const STATUS_EXPIRED := &"status_expired"
 ## the authoritative expiry lives on each terrain entry's
 ## `expires_after_round`, not recomputed from this payload).
 const TERRAIN_ADDED := &"terrain_added"
-## GH#21: emitted by WICombat._advance_turn's round-rollover branch, once per
+## Emitted by WICombat._advance_turn's round-rollover branch, once per
 ## kind, whenever purging stale terrain removes at least one cell. Payload
 ## `{kind:String, cells:[[x,y],...] sorted}`.
 const TERRAIN_EXPIRED := &"terrain_expired"
 
 # --- Presentation confirmations (ui_* back onto the bus) + audio ---
-# M-BEAUTY R3 (spec §8 addendum): `ui_world_labels_rendered` RETIRED -- field
+# `ui_world_labels_rendered` RETIRED (spec §8 addendum) -- field
 # name tags/combat name tags no longer render at all, so nothing publishes
 # this event anymore (see world.gd's/board_renderer.gd's doc comments).
 # Combat's HP/MP stat readout still goes through WIWorldLabels, just with no
@@ -166,14 +166,14 @@ const UI_ARENA_RENDERED := &"ui_arena_rendered"
 const UI_COMBAT_SHOWN := &"ui_combat_shown"
 const UI_COMBAT_HIDDEN := &"ui_combat_hidden"
 const UI_HOTBAR_RENDERED := &"ui_hotbar_rendered"
-## Three Pillars P2: the overworld field-skill hotbar re-rendered (WORLD_READY /
+## The overworld field-skill hotbar re-rendered (WORLD_READY /
 ## class gain-levelup-evolve). Payload `{slots: int}` -- the count of KNOWN
 ## field-tagged skills currently shown (0 for a classless cold start), mirroring
 ## UI_HOTBAR_RENDERED's `{slots}` shape exactly.
 const UI_FIELD_HOTBAR_RENDERED := &"ui_field_hotbar_rendered"
 const UI_TARGETING_SHOWN := &"ui_targeting_shown"
 const UI_SLOT_INFO_RENDERED := &"ui_slot_info_rendered"
-## GH#21 ([Ice Floor] area terrain effect): board_renderer.gd's confirmation
+## board_renderer.gd's confirmation
 ## that a TERRAIN_ADDED cast actually drew its persistent cell overlay.
 ## Payload `{kind:String, cells:[[x,y],...]}`, same shape as the domain
 ## event it confirms -- the ui_*_rendered idiom (UI_ARENA_RENDERED et al.).
@@ -186,7 +186,7 @@ const UI_TOAST_RENDERED := &"ui_toast_rendered"
 const UI_HINT_RENDERED := &"ui_hint_rendered"
 const UI_JOURNAL_SHOWN := &"ui_journal_shown"
 const UI_JOURNAL_HIDDEN := &"ui_journal_hidden"
-## Skills Wave Task K2b: journal.gd's confirmation that its own skills-panel
+## journal.gd's confirmation that its own skills-panel
 ## body redrew after a loadout toggle (the cursor highlight + the ✓/blank
 ## assign marker) -- separate from UI_JOURNAL_SHOWN (which only fires on
 ## open) so QA can assert the LIVE in-panel update without closing/reopening.
@@ -199,7 +199,7 @@ const UI_PAUSE_HIDDEN := &"ui_pause_hidden"
 const UI_TITLE_RENDERED := &"ui_title_rendered"
 const UI_TITLE_GATE_RENDERED := &"ui_title_gate_rendered"
 const UI_TITLE_NOTICE_RENDERED := &"ui_title_notice_rendered"
-## Issue #43 (playtest state boot): title_screen.gd's confirmation that the
+## title_screen.gd's confirmation that the
 ## debug-only "Playtest States" picker opened. Payload `{count:int, pages:int}`
 ## -- `count` is the total fixture entries discovered under `qa/fixtures/`,
 ## `pages` is the derived page count at `PLAYTEST_PAGE_SIZE` rows/page. Fired
@@ -214,18 +214,18 @@ const UI_CONSOLIDATION_PROMPT_HIDDEN := &"ui_consolidation_prompt_hidden"
 ## triggers — see combat_screen.gd's _render_tutor_line doc comment).
 const UI_TUTOR_LINE_RENDERED := &"ui_tutor_line_rendered"
 
-## M-BEAUTY Task B1: emitted by src/world/atmosphere.gd (a CanvasModulate
+## Emitted by src/world/atmosphere.gd (a CanvasModulate
 ## child of the world viewport's root, WIWorld) every time it applies a
 ## mood color for (map, phase) — on world_ready, map_changed, and
 ## phase_changed. Identity-grade this task (moods.json ships [1,1,1] for
 ## every map/phase — zero visible change); the pilot (B4) is the first
 ## consumer of real color data.
 const UI_MOOD_APPLIED := &"ui_mood_applied"
-## M-BEAUTY Task B2 (declared now per plan, not yet emitted): light layer
+## Declared but not yet emitted: light layer
 ## confirmation — {map, count} once PointLight2Ds are spawned from
 ## entity/decor `light` data.
 const UI_LIGHTS_RENDERED := &"ui_lights_rendered"
-## M-BEAUTY Task B3 (declared now per plan, not yet emitted): ambience layer
+## Declared but not yet emitted: ambience layer
 ## confirmation — {map, emitters} once GPUParticles2D presets are spawned
 ## from map `ambience` data.
 const UI_AMBIENCE_RENDERED := &"ui_ambience_rendered"
@@ -237,7 +237,7 @@ const UI_AMBIENCE_RENDERED := &"ui_ambience_rendered"
 ## false when it is removed (the sleep clear). Emitted ONLY on a real state
 ## change, never on an idempotent re-cast/phase-crossing reconcile.
 const UI_PC_LIGHT_RENDERED := &"ui_pc_light_rendered"
-## Skills Wave Task K2: world.gd's confirmation that the PC sprite's
+## world.gd's confirmation that the PC sprite's
 ## translucency (modulate.a ~0.6, the tint-machinery precedent) actually
 ## matches `Game.sim.sneaking`. Payload `{active: bool}` -- mirrors
 ## UI_PC_LIGHT_RENDERED's shape exactly. Emitted from `_reconcile_sneak_visual`,
@@ -245,17 +245,17 @@ const UI_PC_LIGHT_RENDERED := &"ui_pc_light_rendered"
 ## crossing keeps `sneaking` true, so the translucency must survive the field
 ## rebuild the new map triggers).
 const UI_SNEAK_RENDERED := &"ui_sneak_rendered"
-## M-JUICE Track P2 (GDI sleep sequence): emitted by src/ui/sleep_veil.gd once
+## GDI sleep sequence: emitted by src/ui/sleep_veil.gd once
 ## the black veil is fully drawn and the night's GDI proclamation lines are laid
 ## out (before the read-hold), carrying {lines:int} = how many announcement lines
 ## the veil rendered (0 = a plain "slept soundly" black dip). PURELY ADDITIVE UI
 ## confirmation (the message_layer ui_*_rendered idiom): the veil consumes and
 ## alters NO existing event — the same phase_changed/class_*/toast stream still
 ## fires beneath it — so every prior QA assertion holds unchanged. Under QA/
-## headless the veil's fades/holds collapse to ~0 (the M4 T10 pacing precedent),
+## headless the veil's fades/holds collapse to ~0 (the paced-playback precedent),
 ## so this event fires effectively synchronously right after the sleep beat.
 const UI_SLEEP_VEIL_RENDERED := &"ui_sleep_veil_rendered"
-## M-ARC Task F1 (GDI new-game opener): emitted by src/ui/sleep_veil.gd once the
+## GDI new-game opener: emitted by src/ui/sleep_veil.gd once the
 ## black cold-open's Grand Design arrival lines are laid out, carrying
 ## {lines:int} = how many opener lines were rendered. Fired ONLY on a New Game
 ## (GAME_RESET -> fresh world; WIMain drives it), never on Continue/load. Same
@@ -263,7 +263,7 @@ const UI_SLEEP_VEIL_RENDERED := &"ui_sleep_veil_rendered"
 ## opener collapses to instant and this fires synchronously right after
 ## world_ready, so title_flow can assert it deterministically.
 const UI_GDI_OPENER_RENDERED := &"ui_gdi_opener_rendered"
-## M-ARC Task A4 (the GDI epilogue -- the veil's THIRD mode): emitted by
+## The GDI epilogue -- the veil's THIRD mode: emitted by
 ## src/ui/sleep_veil.gd once the post-victory epilogue's Grand Design lines are
 ## laid out, carrying {lines:int} = how many epilogue lines rendered (the GDI
 ## open/close copy + the GENERATED per-class recount + the wanderinginn.com
@@ -274,16 +274,16 @@ const UI_GDI_OPENER_RENDERED := &"ui_gdi_opener_rendered"
 ## line count. The epilogue's completion banks `post_game` (its re-fire guard +
 ## the journal Act III completed beat), so this event never re-emits.
 const UI_GDI_EPILOGUE_RENDERED := &"ui_gdi_epilogue_rendered"
-## M-ARC §5 character creation: emitted by src/ui/char_creation.gd each time the
+## Character creation: emitted by src/ui/char_creation.gd each time the
 ## creation screen (re)renders a step, carrying {step:String} where step is
-## "pick" (the six-sprite grid, issue #42) / "name" -- lets the char_creation QA script wait on the real
+## "pick" (the six-sprite grid) / "name" -- lets the char_creation QA script wait on the real
 ## UI advancing without frame-count guessing (the title_gate/title_rendered
 ## idiom). A separate {race,gender,name} payload rides UI_CHAR_CREATION_CONFIRMED
 ## when the player confirms and the New Game (with creation) fires.
 const UI_CHAR_CREATION_RENDERED := &"ui_char_creation_rendered"
 const UI_CHAR_CREATION_CONFIRMED := &"ui_char_creation_confirmed"
 
-## Controller support (S3, issue #18): emitted by `src/ui/input_hints.gd`
+## Emitted by `src/ui/input_hints.gd`
 ## (`WIInputHints` autoload) the moment the last-seen input device class
 ## actually CHANGES (never on every event -- see that file's doc comment).
 ## Payload `{device: "kb"|"pad"}`. Presentation panels that render a keycap

@@ -1,5 +1,5 @@
 {
- "_comment": "Social Pillar II Phase C: windowed spot-shot utility ONLY -- proves Erin's and Relc's rotating talk_pool first-talk lines render legibly. NOT a canonical (excluded from qa/manifest.json, same convention as title_peek/street_peek). Teleports to each NPC's approach cell, faces them via a blocked move (same idiom every canonical script uses), interacts, waits for the pool dialogue_line, screenshots the rendered panel.",
+ "_comment": "Windowed spot-shot utility ONLY -- proves Erin's and Relc's rotating talk_pool first-talk lines render legibly. NOT a canonical (excluded from qa/manifest.json, same convention as title_peek/street_peek). Teleports to each NPC's approach cell, faces them via a blocked move (same idiom every canonical script uses), interacts, waits for the pool dialogue_line, screenshots the rendered panel.",
  "steps": [
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 10 },
   { "action": "teleport", "map": "inn", "cell": [7, 3] },

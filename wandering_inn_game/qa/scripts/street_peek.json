@@ -1,5 +1,5 @@
 {
- "_comment": "M-FP Q1: reframed for the 32x20 Liscor gate district (W1). inn_door no longer reaches street directly (it now targets floodplains per W2's door retarget), so this peek teleports straight to street the same way floodplains_peek did for floodplains -- four D1-4 regions: plaza (gate_guard), market row (Krshia's stall), Guild frontage (Selys/watch), south square (sewer grate).",
+ "_comment": "Reframed for the 32x20 Liscor gate district. inn_door no longer reaches street directly (it now targets floodplains per the door retarget), so this peek teleports straight to street the same way floodplains_peek did for floodplains -- four D1-4 regions: plaza (gate_guard), market row (Krshia's stall), Guild frontage (Selys/watch), south square (sewer grate).",
  "steps": [
   {
    "action": "wait_for_event",

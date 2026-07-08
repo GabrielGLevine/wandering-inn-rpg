@@ -1,6 +1,6 @@
 class_name WIActs
 extends RefCounted
-## Pure act-line derivation (M-ARC Task A1). The CURRENT act is a FUNCTION of
+## Pure act-line derivation. The CURRENT act is a FUNCTION of
 ## counters the save already holds -- never stored, so old saves land mid-act
 ## correctly by construction. Mirrors the WIQuests pure-function idiom.
 ##

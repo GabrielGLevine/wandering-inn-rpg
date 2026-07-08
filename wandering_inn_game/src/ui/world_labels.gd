@@ -2,26 +2,26 @@ class_name WIWorldLabels
 extends CanvasLayer
 ## Native-resolution HP/MP stat readouts anchored to world-space positions.
 ##
-## M-BEAUTY R3: field name tags ("You"/"Erin"/etc.) and combat name tags are
-## RETIRED entirely (spec §8 addendum -- interactables must read from their
-## sprite, not a floating name). This class is now COMBAT-ONLY and STATS-ONLY:
-## board_renderer.gd's `_rebuild_combat_labels` is the sole remaining caller
-## of `rebuild_context`, publishing one entry per combatant with no name --
+## Field name tags ("You"/"Erin"/etc.) and combat name tags are RETIRED
+## entirely (interactables must read from their sprite, not a floating
+## name). This class is now COMBAT-ONLY and STATS-ONLY: board_renderer.gd's
+## `_rebuild_combat_labels` is the sole remaining caller of
+## `rebuild_context`, publishing one entry per combatant with no name --
 ## `set_stats` still drives the HP/MP numeral readout ("57/80  MP 12/20"),
-## the product-mandated readout that survives label removal (spec §8 pt.3).
-## world.gd no longer touches this class at all (field labels had their own
-## "field" context, now unused). Each entry tracks a Node2D anchor and is
-## projected through Main.world_to_screen every frame, so Camera2D and
-## viewport scaling are composed in one place.
+## the product-mandated readout that survives label removal. world.gd no
+## longer touches this class at all (field labels had their own "field"
+## context, now unused). Each entry tracks a Node2D anchor and is projected
+## through Main.world_to_screen every frame, so Camera2D and viewport
+## scaling are composed in one place.
 
 const PANEL_SIZE := Vector2(128.0, 14.0)
 const STATS_HEIGHT := 14.0
 const QA_CELL_SIZE := 64.0
 
-## The WIMain host, injected at creation (WIMain.world_labels() is the single
-## creation site — M5 arch finding 3). Typed Node, not WIMain: this script
-## must stay loadable in bare --script mode (tests/test_combat_visuals.gd
-## asserts can_instantiate), and a hard WIMain annotation would pull the
+## The WIMain host, injected at creation (WIMain.world_labels() is the
+## single creation site). Typed Node, not WIMain: this script must stay
+## loadable in bare --script mode (tests/test_combat_visuals.gd asserts
+## can_instantiate), and a hard WIMain annotation would pull the
 ## autoload-referencing main.gd into that compile.
 var main_ref: Node
 

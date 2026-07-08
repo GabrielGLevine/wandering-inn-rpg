@@ -1,5 +1,5 @@
 extends CanvasLayer
-## Consolidation offer prompt (M6 T8). The sim's sleep beat DEFERS before
+## Consolidation offer prompt. The sim's sleep beat DEFERS before
 ## evolutions when a consolidation is available (spec §2.5 REV 2), emitting
 ## `consolidation_offered` and stashing `pending_consolidation`. This prompt
 ## renders that choice; the player's answer drives Game.sim.accept_consolidation

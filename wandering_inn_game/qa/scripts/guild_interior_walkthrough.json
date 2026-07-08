@@ -1,5 +1,5 @@
 {
- "_comment": "M-DEPTH DP1 canonical: the Adventurer's Guild interior. FIXTURE-FIRST (near_guild -- the interior is the subject, not the street route): starts at (27,3) on the street, facing guild_door. Proves the door round-trip (street -> guild -> street, landing on sane open cells both ways), the desk+Selys interaction (pool-line absorb + her real graph, incl. the new desk-context node), the board and notice-wall dressed props, and walk-on pool lines (Renn, Ilvo, Yelra) -- the full DP1 surface. Seed 9 for convention; fixture rng_state governs (no combat in this script).",
+ "_comment": "The Adventurer's Guild interior. FIXTURE-FIRST (near_guild -- the interior is the subject, not the street route): starts at (27,3) on the street, facing guild_door. Proves the door round-trip (street -> guild -> street, landing on sane open cells both ways), the desk+Selys interaction (pool-line absorb + her real graph, incl. the new desk-context node), the board and notice-wall dressed props, and walk-on pool lines (Renn, Ilvo, Yelra) -- the full DP1 surface. Seed 9 for convention; fixture rng_state governs (no combat in this script).",
  "fixture_save": "near_guild",
  "starts_at_title": true,
  "steps": [
@@ -60,7 +60,7 @@
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "move", "direction": "right", "steps": 2 },
   { "action": "press", "name": "interact" },
-  { "_comment": "Ilvo (2,4 -- DP1 review fix: diagonal from Renn so the duo reads as TWO Drakes, no y-sort occlusion) blocks the right leg at its FIRST step, from (1,4) facing right; the following left step bumps the x0 wall harmlessly and the Yelra approach is unchanged.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Ilvo" }, "timeout_sec": 5 },
+  { "_comment": "Ilvo (2,4 -- diagonal from Renn so the duo reads as TWO Drakes, no y-sort occlusion) blocks the right leg at its FIRST step, from (1,4) facing right; the following left step bumps the x0 wall harmlessly and the Yelra approach is unchanged.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Ilvo" }, "timeout_sec": 5 },
   { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_ilvo", "count": 1 } },
   { "_comment": "Cross to Yelra's table (12,6) via the open y6 corridor.", "action": "move", "direction": "left", "steps": 1 },
   { "action": "move", "direction": "down", "steps": 2 },

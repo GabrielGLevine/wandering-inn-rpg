@@ -1,5 +1,5 @@
 class_name WITileBoardBuilder
-## Shared static tile/board painters (M6.5 D1 extraction). Both world.gd
+## Shared static tile/board painters. Both world.gd
 ## (field maps) and combat_screen.gd (arenas) painted near-identical
 ## TileMapLayer stacks from the same `data/skeleton_scene.json` /
 ## `data/arenas.json` schema -- this class is the single source for that
@@ -9,7 +9,7 @@ class_name WITileBoardBuilder
 ##
 ## `build_walls` is the SUPERSET form (world.gd's band+segments variant,
 ## world.gd:298 pre-extraction): arena configs never carry a `segments` key
-## (verified against data/arenas.json M6.5 D1 -- none of the three shipped
+## (verified against data/arenas.json -- none of the three shipped
 ## arenas, goblin_ambush/cave_mouth/training_yard, has a top-level `walls`
 ## key at all today), so combat_screen's band-only (or entirely absent)
 ## walls behavior falls out of this same code path unchanged; the
@@ -59,7 +59,7 @@ static func make_tile_layer(parent: Node2D, sheet_path: String, tile_px: int, re
 
 
 ## Renders `floor_layers` entries (data/skeleton_scene.json / data/arenas.json
-## M5 R4 schema): each entry paints either a fixed `coords` tile or a
+## schema): each entry paints either a fixed `coords` tile or a
 ## position-hashed pick from `variants` over the cells selected by `cells`
 ## ("all" | {"rect":[x,y,w,h]} | {"list":[[x,y],...]}). One TileMapLayer per
 ## entry, added (under `parent`) in array order so later entries draw over
@@ -117,13 +117,13 @@ static func build_skirt(parent: Node2D, grid: Vector2i, margin: int, biome_cfg: 
 	parent.add_child(layer)
 
 
-## Renders the `walls` entry. M5 R4 band schema: a `band_rows`-deep band
+## Renders the `walls` entry. Band schema: a `band_rows`-deep band
 ## painted in the margin directly ABOVE row 0 (y = -band_rows..-1) spanning
 ## the grid's width -- never touches a playable/blocked cell, purely visual.
 ## The single topmost row uses `top_coords` (stone cap); remaining rows use
 ## `base_coords` (wainscot/facade).
 ##
-## M5 E3 v2: optional `segments` list -- blocking wall runs anywhere in the
+## Walls-v2: optional `segments` list -- blocking wall runs anywhere in the
 ## grid (perimeter + interior partitions, the showcase-bar "rooms read as
 ## rooms" requirement). Each segment covers WIGame.segment_cells(seg) (the
 ## sim merges the same cells into blocked_cells -- single source of truth).

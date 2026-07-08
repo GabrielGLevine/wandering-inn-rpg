@@ -1,5 +1,5 @@
 {
- "_comment": "Onboarding rev O5: the POST-TUTORIAL fixture positioned PAST the ambush, at the street gate-arrival cell (1,3). Used by the street-quest scripts (crate_talk/crate_fight) so they run their STREET content with the honest post-onboarding state (warrior L1, met/sparred/given_spear) WITHOUT re-fighting the corridor-free floodplains ambush every run -- crate_talk needs a genuinely combat-free run (its whole point is the no-fight WATCH solution), and crate_fight's only fight is its own street crate_scavengers encounter. rng_state is tuned so crate_fight (post_tutorial_street's outcome-defining consumer) wins crate_scavengers solo.",
+ "_comment": "The POST-TUTORIAL fixture positioned PAST the ambush, at the street gate-arrival cell (1,3). Used by the street-quest scripts (crate_talk/crate_fight) so they run their STREET content with the honest post-onboarding state (warrior L1, met/sparred/given_spear) WITHOUT re-fighting the corridor-free floodplains ambush every run -- crate_talk needs a genuinely combat-free run (its whole point is the no-fight WATCH solution), and crate_fight's only fight is its own street crate_scavengers encounter. rng_state is tuned so crate_fight (post_tutorial_street's outcome-defining consumer) wins crate_scavengers solo.",
  "version": 5,
  "state": {
   "current_map": "street",

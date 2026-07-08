@@ -45,7 +45,7 @@ static func _act_once(combat: WICombat, id: String) -> bool:
 			return _act_melee(combat, id, c, foes)
 
 
-## M6 T0 calibration profile: a PC-style caster who leads with spells but does
+## Calibration profile: a PC-style caster who leads with spells but does
 ## NOT stall when mana-dry. `_act_ranged` returns false when no spell is
 ## castable/approachable this action; the caster then falls through to melee
 ## (close and stab) so a mana-exhausted mage keeps fighting — which is how a

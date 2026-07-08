@@ -1,5 +1,5 @@
 {
- "_comment": "M-DEPTH DP4 canonical fixture: post_tutorial_street's exact state (warrior L1, met/sparred/given_spear, standing at the street gate-arrival cell (1,3)) plus gold:25 -- the ONLY delta from post_tutorial_street.json. barracks_walkthrough needs pre-banked gold to prove the peddler's mini-buy (watch_issue_gambeson, 20g) live without an in-script earn-grind (that mechanic is already proven by economy_loop/inventory_loop); 25 leaves 5 gold spare after the 20g spend so the post-buy state is never accidentally exactly zero (which could mask a wrong subtraction). rng_state \"9\" carried over -- no combat in this script.",
+ "_comment": "The canonical barracks_walkthrough fixture: post_tutorial_street's exact state (warrior L1, met/sparred/given_spear, standing at the street gate-arrival cell (1,3)) plus gold:25 -- the ONLY delta from post_tutorial_street.json. barracks_walkthrough needs pre-banked gold to prove the peddler's mini-buy (watch_issue_gambeson, 20g) live without an in-script earn-grind (that mechanic is already proven by economy_loop/inventory_loop); 25 leaves 5 gold spare after the 20g spend so the post-buy state is never accidentally exactly zero (which could mask a wrong subtraction). rng_state \"9\" carried over -- no combat in this script.",
  "version": 5,
  "state": {
   "current_map": "street",

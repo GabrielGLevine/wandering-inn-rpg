@@ -1,7 +1,7 @@
 class_name WIFieldSkills
 extends RefCounted
-## ARCH-4: the `use_skill_field` dispatch ladder, extracted from wi_game.gd
-## (Three Pillars P1/P3, Social Pillar S3, Skills Wave K1/K2). PURITY RULE:
+## The `use_skill_field` dispatch ladder, extracted from wi_game.gd
+## PURITY RULE:
 ## no autoload/Node/scene-tree references. Cross-cutting state that other
 ## WIGame systems also read/mutate (the `sneaking` TOGGLE, `used_skills`,
 ## `accomplishments`, `_maps`-derived entity removal, the `use_skill`
@@ -50,7 +50,7 @@ func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, t
 	_set_light_active = set_light_active_cb
 
 
-## Three Pillars P1: the ONE engine surface for overworld ("field") skills.
+## The ONE engine surface for overworld ("field") skills.
 ## No target arg -- the FACED cell IS the target (`target`/`faced_cell` are
 ## already resolved by the caller exactly as interact() resolves its own).
 ## Dispatch order:
@@ -80,7 +80,7 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
 		_emit(WIEvents.TOAST, {"text": "That's not something you can do out here."})
 		return {}
-	# Skills Wave Task K2 (the sneak seam): the field toggle keys on a
+	# The field toggle keys on a
 	# `sneaks: true` data TAG (K1's tag-not-id convention), not this skill's
 	# id. Checked BEFORE the faced-cell branches below -- the toggle doesn't
 	# care what the PC is facing. Never falls through to the
@@ -88,12 +88,12 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 	if bool(_skills.get(skill_id, {}).get("sneaks", false)):
 		return _toggle_sneak.call(skill_id)
 	if not target.is_empty() and String(target.get("requires_skill", "")) == skill_id and target.has("on_skill_use"):
-		# Skills Wave Task K2 (break condition): a successful field-skill use
+		# A successful field-skill use
 		# ON A TARGET breaks sneaking -- broken BEFORE the skill's own
 		# use_skill() emits, so the off-toast reads first.
 		_break_sneak.call()
 		return _use_skill.call(skill_id, String(target[WIKeys.ID]))
-	# Three Pillars P3: [Appraise Foe] reads a DIFFERENT field than the
+	# [Appraise Foe] reads a DIFFERENT field than the
 	# requires_skill/on_skill_use seam above -- ANY faced entity responds
 	# with its own `observe` flavor string (generic fallback), banking
 	# observed_things (opaque; feeds [Tactician]'s levels). Empty faced cell
@@ -103,14 +103,14 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 		var observe_line := String(target.get("observe", "You watch. Details surface."))
 		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": String(target[WIKeys.ID])})
 		_mark_skill_used.call(skill_id)
-		# Social Pillar S1: bank observed_things only on the FIRST observe of
+		# Bank observed_things only on the FIRST observe of
 		# this entity this waking (shared per-waking dedup dict), so
 		# repeat-observing one NPC can no longer farm [Tactician].
 		if _bank_first_use(entity_first_use, "observe", String(target[WIKeys.ID])):
 			_record_accomplishment.call("observed_things", 1)
 		_emit(WIEvents.TOAST, {"text": observe_line})
 		return {"observed": String(target[WIKeys.ID])}
-	# Social Pillar S3: [Charming Smile] MIRRORS the [Appraise Foe] seam above --
+	# [Charming Smile] MIRRORS the [Appraise Foe] seam above --
 	# ANY faced entity responds with its own `friendly_line` (generic
 	# fallback), banking `befriended_moments` only on the FIRST charm of
 	# this entity this waking, under a DISTINCT verb ("friendly") so charm
@@ -125,7 +125,7 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 			_record_accomplishment.call("befriended_moments", 1)
 		_emit(WIEvents.TOAST, {"text": friendly_line})
 		return {"befriended": String(target[WIKeys.ID])}
-	# Skills Wave Task K1 (burnable-prop seam): a fire field skill
+	# A fire field skill
 	# (skills.json `burns: true`) faced at a blocking prop tagged
 	# `burnable: true` removes the prop PERMANENTLY (removed_entities is a
 	# saved set, so the clearing survives reload), banks an opaque
@@ -143,7 +143,7 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 		_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [burned_cell.x, burned_cell.y], "to": "scorched"})
 		_emit(WIEvents.TOAST, {"text": burn_toast})
 		return {"burned": burned_id}
-	# Skills Wave Task K1 (freezable-water seam): a frost field skill
+	# A frost field skill
 	# (skills.json `freezes: true`) faced at a freezable water CELL (no
 	# entity there) turns it into walkable ice until the next sleep. The
 	# frozen set is additive (never a second-freeze re-emit), keyed by map.
@@ -187,7 +187,7 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 	return {}
 
 
-## Social Pillar S1: the SHARED per-waking first-use gate (moved here
+## The SHARED per-waking first-use gate (moved here
 ## because its only two call sites, [Appraise Foe]/[Charming Smile], both live
 ## in this dispatch ladder -- `entity_first_use` itself stays on WIGame,
 ## see this file's own doc comment). Returns true the FIRST time
