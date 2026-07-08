@@ -1,10 +1,15 @@
 extends CanvasLayer
-## M-ARC §5 — character creation at New Game (race / gender / name).
+## M-ARC §5 — character creation at New Game (sprite picker / name).
 ##
 ## Flow: title NEW GAME -> this screen -> Game.reset({pc_name,pc_race,pc_gender})
-## -> the GDI cold open -> inn. Three steps, native-res title-family UI:
-##   RACE   -> Human / Drake / Gnoll (arrows move, confirm selects)
-##   GENDER -> Male / Female (cosmetic sprite variant only)
+## -> the GDI cold open -> inn. Two steps, native-res title-family UI:
+##   PICK -> a 2x3 grid of the six PC sprite variants (pc_human_m/f,
+##           pc_drake_m/f, pc_gnoll_m/f), each an idle-animated AnimatedSprite2D
+##           via WISpriteRegistry -- arrows move the cursor across the grid,
+##           confirm picks the highlighted card and sets pc_race + pc_gender
+##           TOGETHER (issue #42: replaces the old two-step race-then-gender
+##           text menus with one visual pick; the sim payload keys are
+##           unchanged, this is a presentation-only recomposition).
 ##   NAME   -> a text field (default placeholder "Traveler"; type to edit,
 ##             Enter confirms; empty -> "Traveler")
 ## Esc backs up one step; Esc on the first step returns to the title. Confirming
@@ -25,7 +30,7 @@ extends CanvasLayer
 ## script types via TestDriver's `type_text` step, which injects unicode key
 ## events that land here exactly like a real keystroke.
 
-enum Step { RACE, GENDER, NAME }
+enum Step { PICK, NAME }
 
 const NATIVE_SIZE := Vector2(1280.0, 720.0)
 const BACKDROP_COLOR := Color(0.08, 0.06, 0.05)
@@ -34,22 +39,36 @@ const CURSOR_COLOR := Color(1.0, 0.96, 0.8)
 const HINT_COLOR := Color(0.72, 0.68, 0.58)
 const NAME_MAX := 16
 
-const RACES: Array[Dictionary] = [
-	{"id": "human", "label": "Human"},
-	{"id": "drake", "label": "Drake"},
-	{"id": "gnoll", "label": "Gnoll"},
+## Issue #42: the six PC sprite variants, in GridContainer fill order
+## (row-major: top row is Male across the three races, bottom row is Female)
+## so a plain for-loop over this array lays the grid out correctly with
+## GRID_COLS columns. Picking a card sets pc_race + pc_gender together.
+const PC_OPTIONS: Array[Dictionary] = [
+	{"race": "human", "gender": "m", "sprite": "pc_human_m", "race_label": "Human", "gender_label": "Male"},
+	{"race": "drake", "gender": "m", "sprite": "pc_drake_m", "race_label": "Drake", "gender_label": "Male"},
+	{"race": "gnoll", "gender": "m", "sprite": "pc_gnoll_m", "race_label": "Gnoll", "gender_label": "Male"},
+	{"race": "human", "gender": "f", "sprite": "pc_human_f", "race_label": "Human", "gender_label": "Female"},
+	{"race": "drake", "gender": "f", "sprite": "pc_drake_f", "race_label": "Drake", "gender_label": "Female"},
+	{"race": "gnoll", "gender": "f", "sprite": "pc_gnoll_f", "race_label": "Gnoll", "gender_label": "Female"},
 ]
-const GENDERS: Array[Dictionary] = [
-	{"id": "m", "label": "Male"},
-	{"id": "f", "label": "Female"},
-]
+const GRID_COLS := 3
+const GRID_ROWS := 2
+const CARD_SIZE := Vector2(300.0, 196.0)
+const CARD_GAP := Vector2(18.0, 14.0)
+const GRID_SIZE := Vector2(936.0, 406.0)  # GRID_COLS*CARD_SIZE.x + gaps, GRID_ROWS*CARD_SIZE.y + gap
+## Uniform on-screen portrait height regardless of source frame size (human
+## 104px/drake 124px/gnoll 108px square frames all catalog at different native
+## sizes) -- keeps every card's silhouette the same scale for a fair compare.
+const PORTRAIT_HEIGHT := 128.0
+const PORTRAIT_CENTER_Y := 78.0
+const LABEL_HEIGHT := 40.0
+
 const STEP_PROMPT := {
-	Step.RACE: "Who are you?",
-	Step.GENDER: "Your appearance",
+	Step.PICK: "Who are you?",
 	Step.NAME: "Your name",
 }
 
-var _step: int = Step.RACE
+var _step: int = Step.PICK
 var _cursor := 0
 var _race := "human"
 var _gender := "m"
@@ -58,8 +77,10 @@ var _name := ""
 var _root: Control
 var _prompt_label: Label
 var _hint_label: Label
-var _option_root: VBoxContainer
-var _row_labels: Array[Label] = []
+var _grid_anchor: Control
+var _cards: Array[Control] = []
+var _card_labels: Array[Label] = []
+var _portraits: Array[AnimatedSprite2D] = []
 var _name_edit: LineEdit
 
 
@@ -115,33 +136,7 @@ func _build_ui() -> void:
 	_prompt_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	prompt_margin.add_child(_prompt_label)
 
-	# Option list (race/gender rows) — same panel-row idiom as the title menu.
-	var option_anchor := CenterContainer.new()
-	option_anchor.set_anchors_preset(Control.PRESET_CENTER)
-	option_anchor.custom_minimum_size = Vector2(360.0, 220.0)
-	option_anchor.size = Vector2(360.0, 220.0)
-	UIChrome.set_offsets(option_anchor, -180.0, -40.0, 180.0, 180.0)
-	option_anchor.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_root.add_child(option_anchor)
-	_option_root = VBoxContainer.new()
-	_option_root.add_theme_constant_override("separation", 8)
-	_option_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	option_anchor.add_child(_option_root)
-	# Build the max number of rows we ever need (RACES is the longest); rows are
-	# shown/hidden + relabelled per step so the layout is stable.
-	for i in RACES.size():
-		var row_panel := UIChrome.make_chrome_panel(UIChrome.BLUE_BUTTON, UIChrome.PATCH_MARGIN)
-		row_panel.custom_minimum_size = Vector2(320.0, 48.0)
-		_option_root.add_child(row_panel)
-		var row_margin := MarginContainer.new()
-		UIChrome.full_rect(row_margin)
-		UIChrome.add_margins(row_margin, 20, 10, 20, 10)
-		row_panel.add_child(row_margin)
-		var row := UIChrome.make_label("", "Menu")
-		row.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		row.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		row_margin.add_child(row)
-		_row_labels.append(row)
+	_build_picker_grid()
 
 	# Name field (used on the NAME step only; a LineEdit as the display surface).
 	_name_edit = LineEdit.new()
@@ -166,17 +161,62 @@ func _build_ui() -> void:
 	_root.add_child(_hint_label)
 
 
-func _current_options() -> Array:
-	return RACES if _step == Step.RACE else GENDERS
+## Issue #42: the six-sprite picker grid (2 rows x 3 cols, PC_OPTIONS' own
+## row-major order). Cards are built once at _ready and stay in the tree for
+## the screen's whole lifetime; only the NAME step hides the whole
+## `_grid_anchor` (see _render_step), same show/hide-the-whole-thing idiom the
+## old per-step row visibility used, just one container instead of per-row.
+func _build_picker_grid() -> void:
+	_grid_anchor = CenterContainer.new()
+	_grid_anchor.set_anchors_preset(Control.PRESET_CENTER)
+	_grid_anchor.custom_minimum_size = GRID_SIZE
+	_grid_anchor.size = GRID_SIZE
+	UIChrome.set_offsets(_grid_anchor, -GRID_SIZE.x * 0.5, -142.0, GRID_SIZE.x * 0.5, 264.0)
+	_grid_anchor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(_grid_anchor)
+
+	var grid := GridContainer.new()
+	grid.columns = GRID_COLS
+	grid.add_theme_constant_override("h_separation", int(CARD_GAP.x))
+	grid.add_theme_constant_override("v_separation", int(CARD_GAP.y))
+	grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_grid_anchor.add_child(grid)
+
+	for opt: Dictionary in PC_OPTIONS:
+		var card := UIChrome.make_chrome_panel(UIChrome.BLUE_BUTTON, UIChrome.PATCH_MARGIN)
+		card.custom_minimum_size = CARD_SIZE
+		card.size = CARD_SIZE
+		grid.add_child(card)
+
+		var sprite_id := String(opt["sprite"])
+		var portrait := AnimatedSprite2D.new()
+		portrait.sprite_frames = WISpriteRegistry.frames_for(sprite_id)
+		portrait.centered = true
+		var frame_tex := portrait.sprite_frames.get_frame_texture("idle_down", 0)
+		var frame_h := frame_tex.get_size().y if frame_tex != null else PORTRAIT_HEIGHT
+		var s := PORTRAIT_HEIGHT / frame_h
+		portrait.scale = Vector2(s, s)
+		portrait.position = Vector2(CARD_SIZE.x * 0.5, PORTRAIT_CENTER_Y)
+		portrait.play("idle_down")
+		card.add_child(portrait)
+		_portraits.append(portrait)
+
+		var label := UIChrome.make_label("", "Menu")
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.position = Vector2(0.0, CARD_SIZE.y - LABEL_HEIGHT)
+		label.size = Vector2(CARD_SIZE.x, LABEL_HEIGHT)
+		card.add_child(label)
+		_card_labels.append(label)
+		_cards.append(card)
 
 
 func _render_step() -> void:
 	_prompt_label.text = String(STEP_PROMPT[_step])
 	var is_name := _step == Step.NAME
 	_name_edit.visible = is_name
+	_grid_anchor.visible = not is_name
 	if is_name:
-		for row in _row_labels:
-			row.get_parent().get_parent().hide()
 		# Controller support (S2, issue #18): `_name` (the source of truth for
 		# typing/backspace/`_begin_game`'s fallback) stays untouched at "" --
 		# only the DISPLAYED text gets the everyman default ("Traveler", the
@@ -195,37 +235,31 @@ func _render_step() -> void:
 		# own doc comment), so no QA re-pin is needed here.
 		_hint_label.text = "Type a name  •  %s to begin  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
 	else:
-		var options := _current_options()
-		for i in _row_labels.size():
-			var panel := _row_labels[i].get_parent().get_parent() as Control
-			if i >= options.size():
-				panel.hide()
-				continue
-			panel.show()
-			_refresh_row(i, options)
-		_hint_label.text = "Up/Down to choose  •  %s to confirm  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
+		for i in PC_OPTIONS.size():
+			_refresh_card(i)
+		_hint_label.text = "Arrows to choose  •  %s to confirm  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
 	ObservableBus.emit_domain_event(WIEvents.UI_CHAR_CREATION_RENDERED, {"step": _step_name()})
 
 
-func _refresh_row(i: int, options: Array) -> void:
-	var label := _row_labels[i]
-	var mark := "> " if i == _cursor else "  "
-	label.text = mark + String(options[i]["label"])
-	label.add_theme_color_override("font_color", CURSOR_COLOR if i == _cursor else ENABLED_COLOR)
-	var panel := label.get_parent().get_parent() as Control
-	for child: Node in panel.get_children():
+func _refresh_card(i: int) -> void:
+	var opt: Dictionary = PC_OPTIONS[i]
+	var selected := i == _cursor
+	var label := _card_labels[i]
+	label.text = "%s — %s" % [String(opt["race_label"]), String(opt["gender_label"])]
+	label.add_theme_color_override("font_color", CURSOR_COLOR if selected else ENABLED_COLOR)
+	var card := _cards[i]
+	for child: Node in card.get_children():
 		if child is NinePatchRect:
-			# UIWAVE2 title-centering fix: swap through set_patch_texture so
-			# the measured art-bbox region follows the texture (the two button
-			# arts have different bboxes -- see UIChrome's BLUE_BUTTON_REGION
-			# doc comment).
-			UIChrome.set_patch_texture(child as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if i == _cursor else UIChrome.BLUE_BUTTON)
+			# UIWAVE2 title-centering fix (inherited idiom): swap through
+			# set_patch_texture so the measured art-bbox region follows the
+			# texture (the two button arts have different bboxes -- see
+			# UIChrome's BLUE_BUTTON_REGION doc comment).
+			UIChrome.set_patch_texture(child as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if selected else UIChrome.BLUE_BUTTON)
 
 
 func _step_name() -> String:
 	match _step:
-		Step.RACE: return "race"
-		Step.GENDER: return "gender"
+		Step.PICK: return "pick"
 		_: return "name"
 
 
@@ -233,11 +267,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _step == Step.NAME:
 		_handle_name_input(event)
 		return
-	if event.is_action_pressed("move_up"):
-		_move_cursor(-1)
+	if event.is_action_pressed("move_left"):
+		_move_col(-1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("move_right"):
+		_move_col(1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("move_up"):
+		_move_row(-1)
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_down"):
-		_move_cursor(1)
+		_move_row(1)
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("confirm"):
 		_confirm()
@@ -286,21 +326,28 @@ func _is_name_char(ch: String) -> bool:
 	return ch.to_lower() != ch.to_upper() or ch.is_valid_int()
 
 
-func _move_cursor(delta: int) -> void:
-	var count := _current_options().size()
-	_cursor = wrapi(_cursor + delta, 0, count)
+func _move_col(delta: int) -> void:
+	var col := _cursor % GRID_COLS
+	var row := _cursor / GRID_COLS
+	col = wrapi(col + delta, 0, GRID_COLS)
+	_cursor = row * GRID_COLS + col
+	_render_step()
+
+
+func _move_row(delta: int) -> void:
+	var col := _cursor % GRID_COLS
+	var row := _cursor / GRID_COLS
+	row = wrapi(row + delta, 0, GRID_ROWS)
+	_cursor = row * GRID_COLS + col
 	_render_step()
 
 
 func _confirm() -> void:
 	match _step:
-		Step.RACE:
-			_race = String(RACES[_cursor]["id"])
-			_step = Step.GENDER
-			_cursor = 0
-			_render_step()
-		Step.GENDER:
-			_gender = String(GENDERS[_cursor]["id"])
+		Step.PICK:
+			var opt: Dictionary = PC_OPTIONS[_cursor]
+			_race = String(opt["race"])
+			_gender = String(opt["gender"])
 			_step = Step.NAME
 			_render_step()
 		Step.NAME:
@@ -309,32 +356,24 @@ func _confirm() -> void:
 
 func _back() -> void:
 	match _step:
-		Step.RACE:
+		Step.PICK:
 			# Esc on the first step returns to the title (WIMain owns the swap).
 			# Deferred so this input handler finishes before the swap frees this
 			# screen out of the tree (else get_viewport() would be null on return).
 			if _main() != null:
 				_main().swap_to_title.call_deferred()
-		Step.GENDER:
-			_step = Step.RACE
-			_cursor = _race_index()
-			_render_step()
 		Step.NAME:
-			_step = Step.GENDER
-			_cursor = _gender_index()
+			_step = Step.PICK
+			_cursor = _option_index()
 			_render_step()
 
 
-func _race_index() -> int:
-	for i in RACES.size():
-		if String(RACES[i]["id"]) == _race:
-			return i
-	return 0
-
-
-func _gender_index() -> int:
-	for i in GENDERS.size():
-		if String(GENDERS[i]["id"]) == _gender:
+## Index of the PC_OPTIONS entry matching the current pc_race/pc_gender, so
+## backing out of NAME re-highlights the card the player actually picked.
+func _option_index() -> int:
+	for i in PC_OPTIONS.size():
+		var opt: Dictionary = PC_OPTIONS[i]
+		if String(opt["race"]) == _race and String(opt["gender"]) == _gender:
 			return i
 	return 0
 
