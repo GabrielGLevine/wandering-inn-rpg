@@ -82,7 +82,8 @@ func load_slot(slot: String) -> bool:
 
 ## Issue #43 (playtest state boot, debug-only title picker): copies a
 ## `qa/fixtures/<fixture>.json` file into `user://saves/<slot>.json` verbatim,
-## so the title screen's EXISTING `load_slot`/Continue path can boot it --
+## so the EXISTING slot-generic `load_slot` can boot it (the picker passes a
+## dedicated "playtest" slot -- never "manual", the user's own save) --
 ## the exact same copy the QA harness's own `fixture_save` affordance performs
 ## (qa/test_driver.gd's `_install_fixture_saves`), just triggered from the
 ## title UI instead of a script's top-level field. Returns false (no-op) if

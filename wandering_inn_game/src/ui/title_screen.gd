@@ -25,11 +25,12 @@ extends CanvasLayer
 ## same command release.yml runs). It lists `qa/fixtures/*.json` (name + a
 ## `_comment`-derived one-line summary), story-position-ordered by
 ## `PLAYTEST_FIXTURE_ORDER` with any unlisted fixture appended via raw
-## dirlist fallback. Confirming a row copies that fixture into the "manual"
-## save slot (`Game.install_fixture_save`, the same byte-for-byte copy
-## qa/test_driver.gd's `_install_fixture_saves` performs) and then rides the
-## EXISTING Continue-load path (`_load_slot_or_notice`) -- zero new sim
-## machinery, per the issue brief.
+## dirlist fallback. Confirming a row copies that fixture into a DEDICATED
+## "playtest" save slot (`Game.install_fixture_save`, the same byte-for-byte
+## copy qa/test_driver.gd's `_install_fixture_saves` performs -- never
+## "manual", so the user's own save is never clobbered; controller review)
+## and loads it via the same slot-generic `Game.load_slot` Continue uses --
+## zero new sim machinery, per the issue brief.
 
 enum State { GESTURE, MENU, PLAYTEST_LIST }
 
@@ -54,7 +55,7 @@ const PLAYTEST_FIXTURE_ORDER: Array[String] = [
 	"climax_surface_start", "climax_sealed_start", "near_act3",
 ]
 const PLAYTEST_PAGE_SIZE := 10
-const PLAYTEST_CAUTION := "QA states — counters may be odd."
+const PLAYTEST_CAUTION := "QA states — counters may be odd. Loads its own slot; your saves are safe."
 ## Sane truncation budget for a fixture's `_comment` first-sentence summary.
 const PLAYTEST_SUMMARY_CHAR_BUDGET := 70
 const ENABLED_COLOR := Color(0.95, 0.88, 0.66)
@@ -412,11 +413,10 @@ func _confirm() -> void:
 ## M5 final review: `load_slot` returns false on a corrupt or older-version
 ## save (WISave.apply rejects mismatched VERSION). Without feedback the title
 ## screen silently does nothing -- surface it and grey the Continue row so
-## New Game is the obvious path. Issue #43: the playtest-state picker's
-## confirm rides this SAME path after seeding the fixture into `slot`
-## (`_confirm_playtest_row`), per the issue's "reuse the Continue-load path
-## verbatim" directive -- a rejected fixture load (a hand-authored fixture
-## with a bad/missing required key) surfaces the identical notice.
+## New Game is the obvious path. (Continue-only: the playtest picker loads
+## its own "playtest" slot directly and shows its own failure notice -- see
+## `_confirm_playtest_row` -- because this helper's failure branch resets
+## Continue-slot state, which the picker must not touch.)
 func _load_slot_or_notice(slot: String) -> void:
 	if not Game.load_slot(slot):
 		_continue_slot = ""
@@ -512,20 +512,27 @@ func _move_playtest_cursor(delta: int) -> void:
 	_refresh_playtest()
 
 
-## Copies the cursored fixture into the "manual" save slot (`Game.
-## install_fixture_save`, the qa/test_driver.gd fixture_save copy) and then
-## rides the EXISTING Continue-load path (`_load_slot_or_notice`) -- per the
-## issue's "reuse verbatim, zero new sim machinery" directive. A fixture that
-## fails to copy (shouldn't happen -- the picker only ever lists real files
-## found on disk) surfaces the same notice strip a rejected load would.
+## Copies the cursored fixture into the DEDICATED "playtest" save slot
+## (`Game.install_fixture_save`, the qa/test_driver.gd fixture_save copy) and
+## loads that slot directly via the same slot-generic `Game.load_slot`
+## Continue uses -- still zero new sim machinery. Controller review (issue
+## #43): the slot is "playtest", NEVER "manual" -- installing over the manual
+## slot would silently CLOBBER the user's own save, and the user is this
+## feature's whole audience. The extra slot file is benign everywhere else
+## (traced, not assumed): `_newest_save_slot` scans only auto/manual, so
+## Continue never offers it; pause_menu's Load rows hardcode manual/auto;
+## combat_screen's defeat path hardcodes auto; nothing in src/ enumerates the
+## saves dir. The first in-game autosave after booting a state writes "auto"
+## as usual, which Continue then picks up. Failure (a bad hand-authored
+## fixture rejected by WISave.apply) surfaces its own notice rather than
+## riding `_load_slot_or_notice` -- that helper's failure branch resets
+## Continue-slot state, which this path must leave untouched.
 func _confirm_playtest_row() -> void:
 	if _fixture_entries.is_empty():
 		return
 	var fixture := String(_fixture_entries[_playtest_cursor]["name"])
-	if not Game.install_fixture_save(fixture, "manual"):
+	if not Game.install_fixture_save(fixture, "playtest") or not Game.load_slot("playtest"):
 		_show_notice("Could not load fixture: " + fixture)
-		return
-	_load_slot_or_notice("manual")
 
 
 func _playtest_page_count() -> int:
