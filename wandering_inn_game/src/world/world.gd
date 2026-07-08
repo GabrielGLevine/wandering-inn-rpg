@@ -750,7 +750,15 @@ func _current_map_cfg() -> Dictionary:
 ## rebuild and combat enter/exit, where a hard cut is correct. The
 ## PLAYER_MOVED-driven walk uses `_pan_camera_to_player` instead (see its doc
 ## comment) precisely so a real cell-to-cell walk animates rather than snaps.
+## Kills any in-flight `_camera_tween` FIRST (#41 fix hardening): a door/
+## combat-trigger event can land while the previous step's pan is still
+## finishing (e.g. interacting with a door moments after a walking step,
+## or a `_check_trigger_radius` ambush firing in the SAME `move_player` call
+## that also just started a pan) -- without this, the orphaned tween would
+## resume next frame and drag `_camera.position` away from the snap this
+## function just set, toward its now-stale field-walk target.
 func _update_camera() -> void:
+	_kill_camera_tween()
 	var grid_size := Game.sim.grid_size
 	var content_size := Vector2(grid_size) * CELL
 	var focus := Vector2(Game.sim.player_cell) * CELL + Vector2(CELL, CELL) * 0.5
@@ -842,7 +850,11 @@ func combat_board_root() -> Node2D:
 ## no player-cell equivalent. Every current arena (largest: 12x8 = 192x128)
 ## is smaller than the 320x180 view, so this always centers today; the
 ## clamped-follow branch is future-proofing, same as `_update_camera`'s.
+## Kills any in-flight `_camera_tween` first, same hardening as
+## `_update_camera` -- a proximity ambush (`_check_trigger_radius`) can start
+## combat in the SAME `move_player` call that just began a field pan.
 func enter_combat_camera(grid_size: Vector2i) -> void:
+	_kill_camera_tween()
 	var content_size := Vector2(grid_size) * CELL
 	_camera.position = Vector2(
 		_camera_axis(content_size.x, VIEW_SIZE.x, content_size.x * 0.5),
