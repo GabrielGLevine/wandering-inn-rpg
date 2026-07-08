@@ -7284,15 +7284,28 @@
        "text": "Tea's still hot. The offer doesn't get warmer with asking twice."
       }
      ],
+     "_comment_visual_states": "TWO entries, phase-split on purpose: dusk swaps the sprite only (dusk grade [0.4,0.58,0.5] leaves the young form readable bare), while night ALSO lifts her with a self-tint -- witch_hollow's night grade [0.2,0.34,0.3] crushes sprite detail to near-silhouette, and the two-form swap IS the tell (it must survive the grade; the dark-arena combat brightness-floor precedent, applied entity-side since field NPCs get no combat _legibility_boost). Uniform 2.0 lands her at ~[0.4,0.68,0.6] final under the night grade -- clearly readable, still night-cast, and diegetically right (the young form reading faintly luminous after dark). Entries are order-sensitive: later satisfied entries override, and each phase matches exactly one here.",
      "visual_states": [
       {
        "when": {
         "phase": [
-         "dusk",
-         "night"
+         "dusk"
         ]
        },
        "sprite": "riverfarm_witch_young"
+      },
+      {
+       "when": {
+        "phase": [
+         "night"
+        ]
+       },
+       "sprite": "riverfarm_witch_young",
+       "tint": [
+        2.0,
+        2.0,
+        2.0
+       ]
       }
      ]
     },
