@@ -353,17 +353,20 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIEvents.COMBAT_STARTED:
 			_hint_panel.hide()
 			_clear_dialogue_line()
+			_clear_toast()
 		WIEvents.UI_COMBAT_HIDDEN:
 			_hint_panel.show()
 		WIEvents.DIALOGUE_STARTED:
 			_conversation_open = true
 			_apply_toast_position()
 			_clear_dialogue_line()
+			_clear_toast()
 		WIEvents.DIALOGUE_ENDED:
 			_conversation_open = false
 			_apply_toast_position()
 		WIEvents.MAP_CHANGED:
 			_clear_dialogue_line()
+			_clear_toast()
 
 
 ## KF fix wave (2026-07-07): unconditionally hides the `dialogue_line` bark
@@ -395,6 +398,42 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 ## and-braces clear, not a replacement for it.
 func _clear_dialogue_line() -> void:
 	_dialogue_panel.hide()
+
+
+## DF fix-wave (2026-07-07, issue #8 rotation F2): the toast-panel sibling of
+## `_clear_dialogue_line()` above -- SAME three call sites (DIALOGUE_STARTED,
+## COMBAT_STARTED, MAP_CHANGED), same rationale: a toast belongs to the beat
+## that fired it, and a fresh dialogue-class panel/combat HUD/map has no
+## business inheriting a leftover toast from whatever came before it.
+## ROOT CAUSE (`door_awakening`'s `01_pantry_door_awakened_portal_menu.png`):
+## sleep 3's "You sleep soundly." toast is still mid-hold (the windowed
+## `QA_TOAST_HOLD_SECONDS` 0.4s legibility floor, or the real `TOAST_SECONDS`
+## in human play) when the very next script beat teleports across the map and
+## opens the awakened `pantry_door`'s portal menu -- `_apply_toast_position()`
+## already raises it clear of the WIDE center-bottom conversation panel, but
+## the toast is still ON SCREEN, reading as unrelated clutter next to a
+## brand-new, unrelated panel. Unlike the bark panel (single-slot, no queue),
+## the toast panel batches (`_toast_queue`/`_drain_toasts`) -- hiding only the
+## panel and leaving the queue intact would let the NEXT queued toast pop back
+## up mid-conversation/mid-combat/on-the-new-map, reproducing the same bug one
+## toast later. So this clears BOTH: the visible panel now, and any as-yet-
+## undrained backlog (dropped, not deferred) -- any toast still queued at the
+## exact instant one of these three events fires belongs to whatever action
+## just got superseded, same as the dialogue bark. Safe for QA waits: by
+## design, no script's `interact()` action fires a TOAST/INTERACT_NOTHING
+## queue-append in the SAME synchronous call as a DIALOGUE_STARTED/
+## COMBAT_STARTED/MAP_CHANGED emission (interact() dispatches to exactly one
+## outcome branch per entity kind -- a toast-branch prop and a dialogue-branch
+## NPC/door are mutually exclusive on a single interact), and every script
+## that asserts `ui_toast_rendered` waits on it BEFORE whatever later beat
+## triggers one of these three events, never after -- so no in-flight wait is
+## starved by the drop. A toast fired WHILE a conversation is already open
+## (e.g. a mid-dialogue gold/item reward) is unaffected: this only runs once,
+## at the moment DIALOGUE_STARTED/COMBAT_STARTED/MAP_CHANGED itself fires, not
+## as a continuous suppression for the rest of that state.
+func _clear_toast() -> void:
+	_toast_panel.hide()
+	_toast_queue.clear()
 
 
 ## Positions the toast panel: raised upper-right while a conversation is open
