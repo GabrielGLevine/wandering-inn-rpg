@@ -243,6 +243,47 @@ func _init() -> void:
 	assert(_count("game_over") == 1, "game_over on defeat")
 	assert(g.entities.has("goblin_encounter_1"), "encounter persists after defeat")
 
+	# --- Issue #26: goblins_spared -- real goblin_parley.json content (not a
+	# synthetic graph), proving the counter increments ONLY on the "Stand
+	# aside" bypass and nowhere else in that same conversation: never on
+	# "Draw steel" (even a won fight), never on "Back away slowly".
+	var goblin_parley_graph := _load_json("res://data/dialogue/goblin_parley.json")
+	var cc_parley: Dictionary = combat_config.duplicate(true)
+	cc_parley["dialogue"] = {"goblin_parley": goblin_parley_graph}
+
+	var gsp1 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_parley)
+	gsp1.classes = {"warrior": 1}
+	gsp1.transition("floodplains", Vector2i(27, 18))
+	assert(gsp1.start_dialogue("goblin_parley", "goblin_encounter_2"), "parley starts")
+	assert(gsp1.dialogue_choose(1), "Stand aside chosen (warrior gate met)")
+	assert(gsp1.accomplishment_count("goblins_spared") == 1, "Stand aside banks goblins_spared")
+	assert(gsp1.accomplishment_count("street_cleared") == 1 and gsp1.accomplishment_count("persuaded_someone") == 1, "Stand aside still banks its existing pair")
+	assert(gsp1.combat == null, "no fight on the bypass")
+	assert(not gsp1.entities.has("goblin_encounter_2"), "encounter removed by the bypass")
+
+	var gsp2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_parley)
+	gsp2.classes = {"warrior": 1}
+	gsp2.transition("floodplains", Vector2i(27, 18))
+	assert(gsp2.start_dialogue("goblin_parley", "goblin_encounter_2"), "parley starts")
+	assert(gsp2.dialogue_choose(0), "Draw steel chosen")
+	assert(gsp2.combat != null, "fight starts")
+	gsp2.combat.apply_damage("goblin_raider", 999, "pc", true)
+	gsp2.combat.apply_damage("goblin_shaman", 999, "pc", true)
+	assert(gsp2.combat.finished and gsp2.combat.outcome["victory"], "forced victory")
+	gsp2.resolve_combat()
+	assert(gsp2.accomplishment_count("won_combat") == 1 and gsp2.accomplishment_count("street_cleared") == 1, "fight path still banks its own pair")
+	assert(gsp2.accomplishment_count("goblins_spared") == 0, "a won fight never banks goblins_spared")
+
+	var gsp3 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_parley)
+	gsp3.classes = {"warrior": 1}
+	gsp3.transition("floodplains", Vector2i(27, 18))
+	assert(gsp3.start_dialogue("goblin_parley", "goblin_encounter_2"), "parley starts")
+	assert(gsp3.dialogue_choose(2), "Back away slowly chosen")
+	assert(gsp3.dialogue == null, "decline ends the conversation")
+	assert(gsp3.accomplishment_count("goblins_spared") == 0, "declining never banks goblins_spared")
+	assert(gsp3.accomplishment_count("street_cleared") == 0 and gsp3.accomplishment_count("persuaded_someone") == 0, "declining banks nothing at all")
+	assert(gsp3.entities.has("goblin_encounter_2"), "declining leaves the encounter in place")
+
 	# --- M2 Task 2: multi-map + doors ---
 	var g2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(g2.current_map == "inn", "starts on start_map")
@@ -1054,10 +1095,11 @@ func _init() -> void:
 
 	# Act III now reached (2nd class banks reached_two_classes this sleep) but
 	# only ONE of the four legs is banked (cleaned_the_inn) -- K=2 unmet.
-	# goblins_spared/sign_defended are absent entirely (no producer in this
-	# worktree, per the plan's Global Constraints + this task's own tracing)
-	# and must read as 0, contributing nothing -- proven implicitly by their
-	# total absence from `gg.accomplishments` here.
+	# goblins_spared/sign_defended are absent entirely from this instance's
+	# accomplishments -- sign_defended still has no shipped producer at all;
+	# goblins_spared now DOES have one (goblin_parley's "Stand aside" bypass,
+	# proven separately below) but this instance never banks it, so it must
+	# still read as 0 here, contributing nothing to K=2.
 	gg.classes["helper"] = 1
 	gg.accomplishments["cleaned_the_inn"] = 1
 	_events.clear()

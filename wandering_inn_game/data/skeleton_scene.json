@@ -4592,7 +4592,7 @@
      ]
     },
     {
-     "_comment": "The fourth, deliberately-reserved plot -- `goblins_spared` (#26) has no shipped producer in this worktree yet (the G1 report's own finding, absent-as-zero exactly like the K-of-4 gate's identical leg), so this plot renders as the waiting plinth today and swaps to `memorial_statue_goblin` the instant a future task gives that counter a real producer -- zero code/data changes needed here. Doubles as direction.md's 'the hill always waits' promise: even once all three OTHER plots claim their statues, the arc never reads as full.",
+     "_comment": "The fourth plot -- `goblins_spared` (#26) is now live, banked by `goblin_parley`'s 'Stand aside' bypass; this plot renders as the waiting plinth for any save that never took that branch and swaps to `memorial_statue_goblin` once the counter is >= 1, zero further code/data changes needed here. Doubles as direction.md's 'the hill always waits' promise: even once all three OTHER plots claim their statues, the arc never reads as full for a save that fought every goblin.",
      "id": "memorial_plot_reserved",
      "kind": "prop",
      "cell": [4, 1],
