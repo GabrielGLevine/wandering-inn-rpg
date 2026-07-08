@@ -1,36 +1,31 @@
 class_name WIAtmosphere
 extends CanvasModulate
-## M-BEAUTY Task B1: presentation-only mood grade layer. Spawned as a direct
+## Presentation-only mood grade layer. Spawned as a direct
 ## child of WIWorld (the world viewport's root -- see world.gd's _ready(),
 ## the same spot _field_root/_camera are added) so it lives inside the 320x180
-## world SubViewport (M5 R3) and never touches the native-res UI CanvasLayers
+## world SubViewport and never touches the native-res UI CanvasLayers
 ## that hang off WIMain directly (message_layer/combat_screen/journal/
 ## pause_menu/inventory/consolidation_prompt -- see main.gd's
-## `_spawn_ui_layers`). Verified empirically for this task (screenshot: a
-## journal opened over an identity grade renders unaffected -- see
-## task-b1-report.md).
+## `_spawn_ui_layers`).
 ##
-## EMPIRICAL FINDING (per plan B1's open question): CanvasModulate tints the
+## CanvasModulate tints the
 ## ENTIRE default canvas layer of the viewport it lives in, not just its own
 ## node subtree (Godot semantics: "only one CanvasModulate per canvas"). No
 ## CanvasLayer node wraps WIWorld.combat_board_root() (a plain Node2D sibling
-## of _field_root under the same World node, M5 R6) or anything else inside
+## of _field_root under the same World node) or anything else inside
 ## the world SubViewport, so a single WIAtmosphere instance here ALSO grades
 ## the combat board for free -- arenas inherit whatever mood this node is
-## currently applying. Nothing in this task changes that; the pilot (B4)
-## decides whether that's the final policy or arenas get their own pinned
-## mood later.
+## currently applying unless pinned via `arena_moods` (see below).
 ##
 ## Reads data/moods.json directly with its own tiny static cache (mirrors
-## WIDataRegistry's load-once pattern) rather than routing through
-## data_registry.gd, which is out of this task's file scope.
+## WIDataRegistry's load-once pattern).
 ##
-## M-BEAUTY Task B2 addition: also owns the light layer's phase multiplier
+## Also owns the light layer's phase multiplier
 ## and the registry of live PointLight2Ds world.gd spawns from entity/decor
 ## `light` data (`register_light`/`clear_lights`/`_refresh_lights`) plus the
 ## flicker wobble tick (`_process`) -- see those functions' doc comments.
 ##
-## M-BEAUTY Task B3 addition: the same registry pattern extended to
+## The same registry pattern extends to
 ## GPUParticles2D ambience emitters (`register_emitter`/`clear_emitters`/
 ## `_refresh_emitters` -- toggles `.emitting`/`.visible` by phase membership,
 ## not a continuous multiplier like lights, since an emitter is either "on
@@ -39,20 +34,19 @@ extends CanvasModulate
 ## Camera2D (`vignette_node`, set by world.gd right after creating it, read
 ## by `apply()`/`_apply_vignette` every mood application).
 ##
-## M-BEAUTY Task R1 addition (cave-mouth pin): the B1 EMPIRICAL FINDING above
-## means an arena normally inherits whatever mood is CURRENTLY applied to the
-## field map it was entered from -- correct for goblin_ambush/training_yard
-## (open-air, phase-appropriate), wrong for `cave_mouth` (a cave should read
-## dark regardless of the outdoor field's time-of-day). `moods.json`'s new
-## `arena_moods` dict (parallel to `moods`, keyed by ARENA id instead of map
-## id, same per-phase RGB + vignette shape) opts specific arenas OUT of field
-## inheritance; an arena absent from `arena_moods` (goblin_ambush,
-## training_yard, any future arena) keeps today's inherit-from-field
-## behavior completely unchanged -- `_on_domain_event`'s `COMBAT_STARTED`
-## handler only switches to `apply_arena()` when the just-started combat's
-## `arena_id` has an `arena_moods` entry; otherwise it does nothing at all,
-## leaving whatever color `apply()` last set (the field's own grade) exactly
-## as it was, for free, same as before this task. `_in_arena_override`/
+## Cave-mouth pin: an arena normally inherits whatever mood is CURRENTLY
+## applied to the field map it was entered from -- correct for
+## goblin_ambush/training_yard (open-air, phase-appropriate), wrong for
+## `cave_mouth` (a cave should read dark regardless of the outdoor field's
+## time-of-day). `moods.json`'s `arena_moods` dict (parallel to `moods`,
+## keyed by ARENA id instead of map id, same per-phase RGB + vignette shape)
+## opts specific arenas OUT of field inheritance; an arena absent from
+## `arena_moods` (goblin_ambush, training_yard, any future arena) keeps the
+## inherit-from-field behavior unchanged -- `_on_domain_event`'s
+## `COMBAT_STARTED` handler only switches to `apply_arena()` when the
+## just-started combat's `arena_id` has an `arena_moods` entry; otherwise it
+## does nothing at all, leaving whatever color `apply()` last set (the
+## field's own grade) exactly as it was. `_in_arena_override`/
 ## `_active_arena_id` track which source (arena pin vs. field map) is
 ## CURRENTLY driving the canvas, so a `phase_changed` mid-combat (the sim can
 ## tick the phase clock during a fight -- PC turns count toward
@@ -66,7 +60,7 @@ const MOODS_PATH := "res://data/moods.json"
 
 static var _moods_cache: Dictionary = {}
 
-## Task B2: registered {node: PointLight2D, base_energy: float} entries for
+## Registered {node: PointLight2D, base_energy: float} entries for
 ## every light currently spawned by world.gd, so a phase crossing can update
 ## every live light's energy in one place (`_refresh_lights`, called from
 ## `apply()`) instead of world.gd re-deriving the phase multiplier itself.
@@ -81,13 +75,13 @@ var _lights: Array[Dictionary] = []
 var _flicker_lights: Array[Dictionary] = []
 var _flicker_time := 0.0
 
-## M-BEAUTY Task B3: registered {node: GPUParticles2D, phases: Array}
+## Registered {node: GPUParticles2D, phases: Array}
 ## entries for every ambience emitter world.gd spawns from map `ambience`
 ## data. Cleared by world.gd's `clear_emitters()` call at the top of every
 ## `_rebuild_field` pass, same lifecycle as `_lights`.
 var _emitters: Array[Dictionary] = []
 
-## M-BEAUTY Task B3: the fullrect vignette ColorRect, created ONCE by
+## The fullrect vignette ColorRect, created ONCE by
 ## world.gd's `_ready()` as a child of the field Camera2D (so its rect always
 ## tracks the current view -- see the ColorRect's own doc comment in
 ## world.gd) and assigned here directly (not registered via a method --
@@ -98,7 +92,7 @@ var _emitters: Array[Dictionary] = []
 ## world.gd assigns it before the first `apply()` call can fire).
 var vignette_node: ColorRect
 
-## M-BEAUTY Task R1: true iff the canvas is CURRENTLY showing an
+## True iff the canvas is CURRENTLY showing an
 ## `arena_moods` pin rather than the field map's own mood -- set by
 ## `COMBAT_STARTED` (only when the started combat's arena has a pin) and
 ## cleared by `UI_COMBAT_HIDDEN`. `_active_arena_id` is the pinned arena's id
@@ -131,12 +125,11 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		else:
 			apply(Game.sim.current_map, phase)
 	elif type == WIEvents.COMBAT_STARTED:
-		# Task R1: only switch to the arena-pinned mood when this arena
+		# Only switch to the arena-pinned mood when this arena
 		# actually has an `arena_moods` entry -- an arena without one (every
 		# arena except cave_mouth, today) is left entirely alone, so the
-		# field's own grade keeps showing through the combat board exactly
-		# as it did before this task (the B1 EMPIRICAL FINDING's free
-		# inheritance, unchanged).
+		# field's own grade keeps showing through the combat board (the
+		# free inheritance described above, unchanged).
 		var combat: WICombat = Game.sim.combat
 		var arena_id := String(combat.arena_id) if combat != null else ""
 		if _arena_moods().has(arena_id):
@@ -149,10 +142,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			apply(Game.sim.current_map, phase_now())
 
 
-## Pure passthrough to the sim's phase classifier (M7 M-BEAUTY fold; see
-## wi_game.gd's `phase()` doc comment). Its own function per the plan's
-## Interfaces block so B2/B3 have one canonical "what phase is it right now"
-## call instead of each reaching into Game.sim directly.
+## Pure passthrough to the sim's phase classifier (see
+## wi_game.gd's `phase()` doc comment) -- one canonical "what phase is it
+## right now" call instead of each caller reaching into Game.sim directly.
 func phase_now() -> String:
 	return Game.sim.phase()
 
@@ -167,7 +159,7 @@ func phase_now() -> String:
 func apply(map_id: String, phase: String) -> void:
 	var mood: Dictionary = (_moods_data().get("moods", {}) as Dictionary).get(map_id, {})
 	var rgb: Array = mood.get(phase, [1.0, 1.0, 1.0])
-	# Task B2 review carry (bounds-check on the CARRIED rgb value): malformed
+	# Malformed
 	# content data (wrong-length rgb) is a data-authoring bug, not a runtime
 	# possibility to tolerate -- assert loudly here rather than (a) push_error
 	# + a silent identity fallback, which would print on every single run
@@ -187,7 +179,7 @@ func apply(map_id: String, phase: String) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_MOOD_APPLIED, {"map": map_id, "phase": phase})
 
 
-## M-BEAUTY Task R1: same job as `apply()` but reads moods.json's
+## Same job as `apply()` but reads moods.json's
 ## `arena_moods` dict (keyed by ARENA id, not map id) instead of `moods`.
 ## Kept as a thin sibling rather than folding a second lookup table into
 ## `apply()` itself -- the two dicts share a schema but never the same key
@@ -210,21 +202,20 @@ func apply_arena(arena_id: String, phase: String) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_MOOD_APPLIED, {"map": arena_id, "phase": phase})
 
 
-## M-BEAUTY Task R1: moods.json's `arena_moods` dict, or `{}` if the file
-## predates this task's schema addition (never true in practice -- kept only
+## moods.json's `arena_moods` dict, or `{}` if the file
+## predates this schema addition (never true in practice -- kept only
 ## so `.has()`/`.get()` on the return value can never fail on an unexpected
 ## dict shape).
 static func _arena_moods() -> Dictionary:
 	return _moods_data().get("arena_moods", {}) as Dictionary
 
 
-## Task B2: per-phase light-intensity multiplier from moods.json meta
+## Per-phase light-intensity multiplier from moods.json meta
 ## (`light_energy_by_phase`) -- day's 0.0 keeps every PointLight2D invisible
 ## at day BY CONSTRUCTION (today's look preserved with no identity hack
 ## needed on the light data itself). Unknown phase falls back to 1.0 (full
 ## intensity), matching `apply()`'s identity-first fallback philosophy --
-## every phase this task actually reaches (day/dusk/night) has an explicit
-## moods.json entry already (shipped by B1).
+## every phase in use (day/dusk/night) has an explicit moods.json entry.
 func light_multiplier(phase: String) -> float:
 	var by_phase: Dictionary = (_moods_data().get("meta", {}) as Dictionary).get("light_energy_by_phase", {})
 	return float(by_phase.get(phase, 1.0))
@@ -253,7 +244,7 @@ func register_light(node: PointLight2D, base_energy: float, flicker: bool) -> vo
 	node.energy = base_energy * light_multiplier(phase_now())
 
 
-## M-BEAUTY RF fix wave (final-review Fix 1, 2026-07-05): removes a single
+## Removes a single
 ## light node's registration from BOTH `_lights` and `_flicker_lights` --
 ## the surgical single-node counterpart `clear_lights()` (a whole-map wipe,
 ## scoped to `_rebuild_field`) doesn't cover. `world.gd`'s
@@ -290,14 +281,15 @@ func _refresh_lights() -> void:
 			node.energy = float(entry["base_energy"]) * mult
 
 
-## M-BEAUTY Task B3: registers a GPUParticles2D spawned by world.gd from map
+## Registers a GPUParticles2D spawned by world.gd from map
 ## `ambience` data and immediately sets its on/off state for the CURRENT
 ## phase (mirrors `register_light`'s immediate-apply so an emitter spawned
 ## mid-dusk, e.g. right after a map change, is never dark/hidden until the
 ## next `phase_changed`). An empty `phases` list means "always on" (no
-## shipped preset uses this yet -- every B3 data entry authors an explicit
-## phase list -- but it is the natural default for a future always-visible
-## preset, same fallback philosophy as `apply()`'s identity-color default).
+## shipped preset uses this yet -- every current data entry authors an
+## explicit phase list -- but it is the natural default for a future
+## always-visible preset, same fallback philosophy as `apply()`'s
+## identity-color default).
 func register_emitter(node: GPUParticles2D, phases: Array) -> void:
 	_emitters.append({"node": node, "phases": phases})
 	_set_emitter_state(node, phases)
@@ -328,15 +320,15 @@ func _refresh_emitters() -> void:
 ## fully identity" claim time-dependent/non-deterministic (a shot taken a
 ## few frames after crossing back to day could still show stragglers). The
 ## hard visibility cut keeps every day-phase QA shot deterministic, matching
-## the ship-neutral-first day-identity contract B1/B2 already established.
+## the ship-neutral-first day-identity contract already established.
 func _set_emitter_state(node: GPUParticles2D, phases: Array) -> void:
 	var should_emit: bool = phases.is_empty() or (phase_now() in phases)
 	node.emitting = should_emit
 	node.visible = should_emit
 
 
-## M-BEAUTY Task B3: writes moods.json's per-map `vignette` field (already in
-## the schema since B1, a flat 0..1 float, not phase-keyed) into the
+## Writes moods.json's per-map `vignette` field (a
+## flat 0..1 float, not phase-keyed) into the
 ## vignette ColorRect's ShaderMaterial `strength` uniform. No-ops if
 ## world.gd hasn't assigned `vignette_node` yet (never happens in practice --
 ## world.gd assigns it before `_rebuild_field()`/`WORLD_READY`, i.e. before
