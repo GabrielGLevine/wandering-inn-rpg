@@ -80,8 +80,10 @@
    "path": "classes",
    "equals": {
     "warrior": 5,
-    "helper": 1
-   }
+    "helper": 1,
+    "tactician": 1
+   },
+   "_comment": "RE-PINNED at the G2 merge: near_garden gained tactician:1 in its K-earn restructure \u2014 this pin tracks the fixture it boots; when that fixture changes, change this WITH it."
   }
  ]
 }
