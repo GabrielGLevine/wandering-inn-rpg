@@ -52,6 +52,13 @@ const EXPECTED_ITEMS := {
 	# the parcel/field_whetstone precedent), so its card carries name +
 	# description only, zero generated effect lines.
 	"anchor_stone": [],
+	# 8b R3 (issue #11) witch-cottage vendor stock -- herb-craft consumables,
+	# inside the shipped accessory envelope (copper_luck_band/hedge_ward_charm's
+	# own hp_mod/resonance bounds).
+	"dried_yarrow_bundle": ["Worth 4 gold"],
+	"sleeproot_draught": ["Worth 5 gold"],
+	"hollow_herb_sachet": ["+1 HP", "Worth 6 gold"],
+	"witch_wardstone_bead": ["+2 HP", "Resonance 1", "Worth 16 gold"],
 }
 
 const EXPECTED_SKILLS := {
