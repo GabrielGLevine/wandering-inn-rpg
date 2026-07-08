@@ -276,7 +276,11 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 		var mark := "> " if id == view.active_id() else ""
 		if view.alive(id):
 			order_bits.append(mark + String(view.combatant(id)["display_name"]))
-	_order_label.text = "Turn: " + "  |  ".join(order_bits)
+	# "Turn:" + a bare space read as glued to the first name at a glance
+	# (playtest report: "Turn: Relc | > Traveler" misreads as possessive --
+	# "Turn's Relc"). An em dash is an unambiguous label/content break, same
+	# grammar as the readout's own "AP ●●●●  Move ○○○○" spaced segments.
+	_order_label.text = "Turn — " + "  |  ".join(order_bits)
 	_feed_label.text = "\n".join(_feed)
 	# Empty feed = no floating empty parchment (E3 merge windowed pass).
 	_feed_label.get_parent().get_parent().visible = not _feed.is_empty()
