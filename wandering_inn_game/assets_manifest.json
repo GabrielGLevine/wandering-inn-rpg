@@ -1099,6 +1099,13 @@
    "_comment": "8a A1 (issue #9 pre-work): garden hedge/fountain/petal-swatch candidates (region table in docs/design/8a-asset-assembly.md)."
   },
   {
+   "path": "assets/props/garden/Feminine-Idle-Sheet.png",
+   "source_pack": "Pixel Crawler - Garden Environment",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "placeholder"
+  },
+  {
    "path": "assets/tiles/library/Tiles.png",
    "source_pack": "Pixel Crawler - Library",
    "verdict": "FORBIDDEN",
