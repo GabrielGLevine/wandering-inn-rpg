@@ -409,7 +409,10 @@
      "talk_pool_stages": [
       {
        "id": "erin_regular",
-       "requires_accomplishment": { "errand_decided": 1, "chatted_with_erin": 2 },
+       "requires_accomplishment": {
+        "errand_decided": 1,
+        "chatted_with_erin": 2
+       },
        "lines": [
         "Hey, you! Good timing. I just invented a new way to burn soup. Kidding. Mostly. Sit, sit.",
         "You know you don't have to hover by the door anymore, right? You're basically furniture now. Nice furniture.",
@@ -418,7 +421,10 @@
       },
       {
        "id": "erin_friend_of_the_inn",
-       "requires_accomplishment": { "resolved_wrong_order": 1, "chatted_with_erin": 4 },
+       "requires_accomplishment": {
+        "resolved_wrong_order": 1,
+        "chatted_with_erin": 4
+       },
        "lines": [
         "There you are! Sit down, I'm testing a recipe on you. That came out wrong. WITH you. Testing it with you.",
         "Lyonette hums when she scrubs now. She'd deny it under oath, so don't tell her I said anything. That was you, by the way.",
@@ -428,9 +434,11 @@
       {
        "_comment": "One Erin pool-line acknowledging garden_door_unlocked -- she owns the Skill, the PC witnesses. Gated on the SAME `garden_door_unlocked` flag wi_game.gd's sleep() beat banks (last-met-wins ordering: appended AFTER erin_friend_of_the_inn since the K-of-N gate structurally implies resolved_wrong_order is very often already met by the time this fires, though not required -- garden_door_unlocked can also land via cleaned_the_inn+goblins_spared/sign_defended once those get producers). ONE line (the one-entry-array = a landmark-acknowledgment stage convention, same idiom as lyonette_thawed) -- no mechanics readout, no counter numerals, no Skill name (spoiler cutoff: never 'the Magical Door'-class Vol-9 naming for Erin's own Skill either).",
        "id": "erin_garden_open",
-       "requires_accomplishment": { "garden_door_unlocked": 1 },
+       "requires_accomplishment": {
+        "garden_door_unlocked": 1
+       },
        "lines": [
-        "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit."
+        "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's \u2014 new. Go look, if you want. Just... knock first. Old habit."
        ]
       }
      ],
@@ -458,16 +466,18 @@
      "talk_pool": [
       "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
       "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
-      "...You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
+      "...You said thank you. To me. Hm. Most don't. \u2014 Well. Don't let it go to your head."
      ],
-     "_comment_stages": "The one-shot `talk_pool_post` migrated verbatim into the new `talk_pool_stages` seam (social.gd's talk_pool_line, ORDERED array, last-met-wins) -- a RENAME, not a rewrite; ZERO copy changes. One-entry array = stage 2 (`lyonette_thawed`), the shipped thaw: once `resolved_wrong_order` is banked (The Wrong Order settled by any path), her rotating small-talk REPLACES `talk_pool` with these warmer lines. Rotation still keys on chatted_with_lyonette % lines.size(), zero rng. Ships PERK-LESS (stage-tables.md's optional home-topic unlock + optional short-rest perk are both ⚑ user-gated, default OUT -- see HANDOFF).",
+     "_comment_stages": "The one-shot `talk_pool_post` migrated verbatim into the new `talk_pool_stages` seam (social.gd's talk_pool_line, ORDERED array, last-met-wins) -- a RENAME, not a rewrite; ZERO copy changes. One-entry array = stage 2 (`lyonette_thawed`), the shipped thaw: once `resolved_wrong_order` is banked (The Wrong Order settled by any path), her rotating small-talk REPLACES `talk_pool` with these warmer lines. Rotation still keys on chatted_with_lyonette % lines.size(), zero rng. Ships PERK-LESS (stage-tables.md's optional home-topic unlock + optional short-rest perk are both \u2691 user-gated, default OUT -- see HANDOFF).",
      "talk_pool_stages": [
       {
        "id": "lyonette_thawed",
-       "requires_accomplishment": { "resolved_wrong_order": 1 },
+       "requires_accomplishment": {
+        "resolved_wrong_order": 1
+       },
        "lines": [
         "You covered for me. With the order, I mean. You didn't have to, and you didn't make it a story to tell later. That is... rare. Thank you.",
-        "Sit anywhere you like. The good chair by the fire, even. No, I insist — I'm allowed to insist, it's practically my inn too.",
+        "Sit anywhere you like. The good chair by the fire, even. No, I insist \u2014 I'm allowed to insist, it's practically my inn too.",
         "I used to think kindness was something people spent on you to get something back. You keep not doing that. It's unsettling. In a good way. Mostly."
        ]
       }
@@ -494,7 +504,7 @@
      "on_skill_use": {
       "accomplishment": "cleaned_the_inn",
       "gold": 1,
-      "toast": "[Basic Cleaning] — The table is spotless."
+      "toast": "[Basic Cleaning] \u2014 The table is spotless."
      },
      "visual_states": [
       {
@@ -562,7 +572,7 @@
      "requires_skill": "light",
      "on_skill_use": {
       "accomplishment": "lit_the_common_room",
-      "toast": "[Light] — A steady white orb settles into the lantern's glass."
+      "toast": "[Light] \u2014 A steady white orb settles into the lantern's glass."
      },
      "visual_states": [
       {
@@ -633,7 +643,7 @@
      "locked_toast": "You don't know your way around a stew pot. Yet.",
      "on_skill_use": {
       "accomplishment": "cooked_meal",
-      "toast": "[Basic Cooking] — The stew comes out rich and hot."
+      "toast": "[Basic Cooking] \u2014 The stew comes out rich and hot."
      }
     },
     {
@@ -650,7 +660,7 @@
      "locked_toast": "The order's a mess and you haven't the first idea how to stretch it. Not yet.",
      "on_skill_use": {
       "accomplishment": "stretched_the_order",
-      "toast": "[Basic Cooking] — You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
+      "toast": "[Basic Cooking] \u2014 You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
      }
     },
     {
@@ -695,47 +705,112 @@
      "_comment": "The pantry door prop, the LOCKED interface anchor for the whole chain -- 3 visual_states keyed on the chain's accomplishment counters (default / flicker once door_chain_started / awakened once door_awakened). Placed at (10,6), inside the free interior cluster (9-11,5-7) confirmed untouched by every existing inn-touching canonical's walked+faced cell set -- a full move/press replay of every qa/scripts/*.json (from its fixture start or the default (2,3) spawn) plus every qa/fixtures/*.json inn start was run before placement; the only free untouched interior cells in the whole 16x10 room were (2,2),(3,6),(3,7),(5,7),(7,7),(9,6),(9,7),(10,5),(10,6),(10,7),(11,5),(11,6),(11,7). ui_entities_rendered inn count 14->16 (this entity + rift_vermin_leak below) -- inn_walkthrough/work_loop/upstairs_walkthrough updated. Interact copy is STATIC (same flavor toast regardless of counter state); the counter-aware beat-1 flicker line (Erin's dialogue banks door_chain_started) and any interact-copy differentiation are wired elsewhere -- the door prop itself NEVER speaks (only the GDI voices chain milestones, on the sleep-beat hook). Sprite states reuse a shared `pantry_door_glow` placeholder entry (data/sprites.json), tint-differentiated per state -- the flicker state is TINT-only (no baked 2-frame elsewhere-glimpse yet; the real rune-glow art stays a VISUAL-LOG item) rather than the eventual literal sprite-swap glimpse.",
      "id": "pantry_door",
      "kind": "prop",
-     "cell": [10, 6],
+     "cell": [
+      10,
+      6
+     ],
      "display_name": "The Pantry Door",
      "sprite": "door",
      "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
      "_comment_d4": "The awakened interact rewire. `portal_menu`/`portal_menu_when` are checked BEFORE `on_interact_accomplishment` in wi_game.gd's interact() (the contains_when/door_when precedent, same file) -- once `door_awakened` is banked, every future interact opens WIPortals' fast-travel picker (src/core/portals.gd) instead of the flavor toast below, which stays the byte-identical PRE-awakening fallback (D1/D3 unchanged, gate unmet falls straight through).",
      "portal_menu": true,
-     "portal_menu_when": { "requires": { "door_awakened": 1 } },
+     "portal_menu_when": {
+      "requires": {
+       "door_awakened": 1
+      }
+     },
      "on_interact_accomplishment": "observed_the_pantry_door",
      "toast": "Onions, a sack of soft potatoes, a shelf of jarred somethings gone dusty. The pantry door, same as it's always been.",
      "visual_states": [
-      { "when": { "counter": "door_chain_started", "at": 1 }, "sprite": "pantry_door_glow", "tint": [0.7, 0.85, 1.05] },
-      { "when": { "counter": "door_awakened", "at": 1 }, "sprite": "pantry_door_glow", "tint": [1.05, 0.9, 0.6], "light": { "color": [0.85, 0.7, 1.0], "energy": 0.6, "radius": 16, "flicker": true } }
+      {
+       "when": {
+        "counter": "door_chain_started",
+        "at": 1
+       },
+       "sprite": "pantry_door_glow",
+       "tint": [
+        0.7,
+        0.85,
+        1.05
+       ]
+      },
+      {
+       "when": {
+        "counter": "door_awakened",
+        "at": 1
+       },
+       "sprite": "pantry_door_glow",
+       "tint": [
+        1.05,
+        0.9,
+        0.6
+       ],
+       "light": {
+        "color": [
+         0.85,
+         0.7,
+         1.0
+        ],
+        "energy": 0.6,
+        "radius": 16,
+        "flicker": true
+       }
+      }
      ]
     },
     {
      "_comment": "PROMOTED from D1's kind:\"prop\" placeholder (test_combat_data would have hard-failed against D2's absent combat data at D1's merge time; D2 has since landed rift_vermin_a/b/c in data/combatants.json + the inn_cellar arena in data/arenas.json, both confirmed present in this worktree) to the real `kind: \"encounter\"` shape. Locked ids per the plan's interface: arena `inn_cellar`, enemies EXACTLY [\"rift_vermin_a\",\"rift_vermin_b\",\"rift_vermin_c\"], on_victory banks `cleared_the_leak` (D2's own locked id) alongside the door-chain's shared `door_understood` (identity-locked convergence counter, banked identically by all 3 mage-consult legs -- pisces_magic.json's TALK/SKILL legs) and `pedestal_unsealed` (a D3-internal convergence counter gating anchor_stone_pedestal's `contains_when`, banked by this fight, `ruin_guardian`'s own on_victory below, AND both of Pisces's TALK/SKILL legs -- their consult knowledge doubles as safe-passage insight past the ruin guardian, same as fighting through him directly). `allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. Interact-only, NO trigger_radius (unchanged from D1's placement) -- Pisces's FIGHT branch (pisces_magic.json's `door_consult`) sends the player here by flavor text alone, no dialogue-side start_combat wiring (the crate/cisterns FIGHT-leg precedent: the fight lives on its own map, reached by the player's own feet). `on_interact_accomplishment`/`toast` DROPPED (dead fields on an encounter -- interact()'s \"encounter\" match arm never reads them); `observe` KEPT (the generic ANY-entity [Appraise Foe] fallback read works regardless of kind, inn_sign/shield_spiders precedent). `found_the_leak` (D1's now-orphaned flavor counter) was never referenced by any dialogue/quest gate or QA script (grepped clean) -- dropping its sole producer is harmless.",
      "id": "rift_vermin_leak",
      "kind": "encounter",
-     "cell": [9, 7],
+     "cell": [
+      9,
+      7
+     ],
      "display_name": "A Leak in the Wall",
      "sprite": "bat",
-     "tint": [0.55, 0.5, 0.42],
+     "tint": [
+      0.55,
+      0.5,
+      0.42
+     ],
      "observe": "A hairline crack seams the plaster here, and the draft through it is colder than a pantry has any right to be. Something small moves on the other side of it, and doesn't like being watched back.",
      "arena": "inn_cellar",
-     "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"],
-     "allies": ["relc"],
-     "ally_requires": { "met_relc": 1 },
-     "on_victory": ["cleared_the_leak", "door_understood", "pedestal_unsealed"]
+     "enemies": [
+      "rift_vermin_a",
+      "rift_vermin_b",
+      "rift_vermin_c"
+     ],
+     "allies": [
+      "relc"
+     ],
+     "ally_requires": {
+      "met_relc": 1
+     },
+     "on_victory": [
+      "cleared_the_leak",
+      "door_understood",
+      "pedestal_unsealed"
+     ]
     },
     {
      "_comment": "The doorframe's own worked stone, north of pantry_door (10,6) at (10,5) -- the field-skill first-use idiom (cellar_door/nest_ledge precedent), `requires_skill: observe` (the Tactician L1 grant, matching nest_ledge/cisterns_scout) + `on_skill_use` banks `read_the_door_runes` (an intermediate counter, zero rng) deterministically. Reporting the finding to Pisces (pisces_magic.json's hub report option, gated on this counter) banks the shared `door_understood` + `pedestal_unsealed` together -- the cisterns_scout/wrong_order 'SKILL alone only banks the intermediate counter, reporting to the consult NPC banks the convergence counters' precedent (Olesm/Lyonette's role there is Pisces's role here -- no olesm_intro.json touch needed, out of this task's file charter). Reuses the registered `dusty_scroll` sprite (the retired [Light]-study prop, thematically apt for 'something to read with a skill') tinted, no test_sprite_registry row needed (reused sprite id). Placed at (10,5), one of the confirmed-untouched inn interior cells from pantry_door's own blast-radius audit (see that entity's _comment) -- (9,5) is lyonette's cell, ruled out. Approach from (10,4) facing down. Inn ui_entities_rendered sprite count bumps 16->17 (inn_walkthrough/work_loop/upstairs_walkthrough updated).",
      "id": "pantry_door_runes",
      "kind": "prop",
-     "cell": [10, 5],
+     "cell": [
+      10,
+      5
+     ],
      "display_name": "The Doorframe's Grain",
      "sprite": "dusty_scroll",
-     "tint": [0.8, 0.8, 0.9],
+     "tint": [
+      0.8,
+      0.8,
+      0.9
+     ],
      "requires_skill": "observe",
      "on_skill_use": {
       "accomplishment": "read_the_door_runes",
-      "toast": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
+      "toast": "[Observe] \u2014 The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
      },
      "locked_toast": "The doorframe's old wood is carved with something under the paint, faint and worn. Whatever it says isn't for an untrained eye."
     },
@@ -743,16 +818,24 @@
      "_comment": "Erin's OWN summoned garden door, at the inn -- NOT the portal menu (a deliberate departure from the Magical Door/pantry_door precedent right above: this door is Erin's Skill, not an attuned destination). `door_when.requires: {garden_door_unlocked: 1}` reads ONE monotonic flag wi_game.gd's sleep() beat banks once `_garden_earn_met()` (act >= III AND K=2 of 4 ratified legs) goes true -- see that function's doc comment for the full K-of-N gate-shape reasoning (a bespoke sleep-beat computation feeding the EXISTING door_when/_accomplishment_gate_met ALL-of reader unchanged, not a new gate shape in the shared validator). Until banked, interact falls through to on_interact_accomplishment/toast below -- BYTE-IDENTICAL pre-unlock fallback, the sewer_grate/deep_fissure/ruin_door precedent -- so every existing inn canonical (inn_walkthrough/work_loop/upstairs_walkthrough/door_awakening/portal_menu/save_load_roundtrip) is unaffected: this entity is a normal always-present prop that just reads as bare wall until the flag lands. Placed at (3,6) -- confirmed OFF every inn cell any canonical QA script's move-replay touches (a python blocked-cell-aware replay of all 73 qa/scripts/*.json against the real inn walls/blocked/entity layout was run before picking this cell; see the G1 report for the full free-cell derivation and the union of touched cells). `garden_door_inner` (owned PixelLab art) is the SAME door sprite `garden_exit` uses on the far side -- one physical door, two faces.",
      "id": "garden_door",
      "kind": "prop",
-     "cell": [3, 6],
+     "cell": [
+      3,
+      6
+     ],
      "display_name": "A Door of Vines",
      "sprite": "garden_door_inner",
      "observe": "Plaster, old and thin, and a nail with nothing hung on it. If something is meant to be here, it isn't yet.",
      "on_interact_accomplishment": "noticed_the_bare_wall",
      "toast": "Bare wall. A nail with nothing hung on it.",
      "door_when": {
-      "requires": { "garden_door_unlocked": 1 },
+      "requires": {
+       "garden_door_unlocked": 1
+      },
       "to_map": "garden_sanctuary",
-      "to_cell": [7, 10],
+      "to_cell": [
+       7,
+       10
+      ],
       "open_toast": "The vines part like a curtain, and the light beyond doesn't flicker."
      }
     }
@@ -1918,7 +2001,10 @@
      "talk_pool_stages": [
       {
        "id": "zevara_trusted_irregular",
-       "requires_accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 },
+       "requires_accomplishment": {
+        "resolved_the_cisterns": 1,
+        "chatted_with_zevara": 2
+       },
        "lines": [
         "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
         "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
@@ -1957,16 +2043,21 @@
      "talk_pool_stages": [
       {
        "id": "olesm_worth_interrupting_a_tally",
-       "requires_accomplishment": { "cisterns_reported": 1 },
+       "requires_accomplishment": {
+        "cisterns_reported": 1
+       },
        "lines": [
-        "Oh — you! No no, the tally can wait. The tally is wrong anyway; it will still be wrong in an hour.",
+        "Oh \u2014 you! No no, the tally can wait. The tally is wrong anyway; it will still be wrong in an hour.",
         "I put your cistern business in my report. With your name spelled correctly and everything. In this office that is practically a parade.",
-        "I've started leaving the second chair out. Statistically you keep existing near my desk, so — efficiency."
+        "I've started leaving the second chair out. Statistically you keep existing near my desk, so \u2014 efficiency."
        ]
       },
       {
        "id": "olesm_board_partner",
-       "requires_accomplishment": { "cisterns_reported": 1, "chatted_with_olesm": 3 },
+       "requires_accomplishment": {
+        "cisterns_reported": 1,
+        "chatted_with_olesm": 3
+       },
        "lines": [
         "I set the board up when the bells go quiet now, on the chance you wander past. That isn't pathetic, that's PREPARED.",
         "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
@@ -2009,7 +2100,11 @@
      ],
      "display_name": "Bread Stall",
      "sprite": "food_basket",
-     "tint": [0.9, 0.75, 0.4],
+     "tint": [
+      0.9,
+      0.75,
+      0.4
+     ],
      "observe": "Loaves stacked in a pyramid that will not survive the lunch rush. A chalked board promises today's price, then a second, higher price scratched in for after the fourth bell.",
      "on_interact_accomplishment": "browsed_bread_stall",
      "toast": "Warm bread smell over the whole row. No one's minding the stall this exact moment. The loaves aren't going anywhere without a fight."
@@ -2109,24 +2204,31 @@
      "talk_pool_stages": [
       {
        "id": "pisces_tolerable_company",
-       "requires_accomplishment": { "learned_magic_from_pisces": 1, "chatted_with_pisces": 3 },
+       "requires_accomplishment": {
+        "learned_magic_from_pisces": 1,
+        "chatted_with_pisces": 3
+       },
        "lines": [
         "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
         "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
-        "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
+        "The bread stall raises its prices after the fourth bell. Buy before. There \u2014 advice worth coin, given freely. Note the date."
        ]
       },
       {
        "_comment": "Pisces studies at the inn over N sleeps -- opaque-until-sleep: his talk-pool stages shift, zero progress text. TWO stages, gated on the hidden `door_study_sleeps` counter (wi_game.gd's sleep()-beat hook, banked once the ruin-recovery chain's beat-3 counters are held) -- the talk_pool_stages idiom itself (social.gd walks the array in AUTHORED order, last-met-wins), appended AFTER pisces_tolerable_company so an active study period reads as the more current topic even for a player who already reached 'tolerable company'. Zero numbers, zero fractions -- opacity holds.",
        "id": "pisces_door_study_1",
-       "requires_accomplishment": { "door_study_sleeps": 1 },
+       "requires_accomplishment": {
+        "door_study_sleeps": 1
+       },
        "lines": [
         "I've had that stone of yours on my desk every night since. It resists categorization. Aggravating. I approve."
        ]
       },
       {
        "id": "pisces_door_study_2",
-       "requires_accomplishment": { "door_study_sleeps": 2 },
+       "requires_accomplishment": {
+        "door_study_sleeps": 2
+       },
        "lines": [
         "Closer. Whatever your door remembers being, it's stopped fighting me about it."
        ]
@@ -2149,7 +2251,7 @@
      ],
      "display_name": "Sewer Grate",
      "sprite": "sewer_grate",
-     "observe": "Rust holds the bars, not a lock. The draft is steady — a tunnel, not a pit. The skittering keeps its distance. Something down there has learned to avoid shadows.",
+     "observe": "Rust holds the bars, not a lock. The draft is steady \u2014 a tunnel, not a pit. The skittering keeps its distance. Something down there has learned to avoid shadows.",
      "on_interact_accomplishment": "heard_the_sewers",
      "toast": "A heavy iron grate, rusted shut. Cold air rises from below, and something in the dark skitters away from your shadow.",
      "_comment_door_when": "The grate-gate seam. Until `heard_about_cisterns` is banked (from Olesm), door_when's gate is UNMET and interact falls through to the on_interact_accomplishment branch above -- BYTE-IDENTICAL to the pre-quest behavior asserted by gate_district_walkthrough (heard_the_sewers + the exact toast). Once banked, the same interact hauls the grate open and descends: emits the `open_toast`, then transitions to the sewers landing. See wi_game.gd interact()'s prop branch + `_door_gate_met`.",
@@ -2202,7 +2304,9 @@
      "talk_pool_stages": [
       {
        "id": "krshia_fair_weight",
-       "requires_accomplishment": { "crate_returned": 1 },
+       "requires_accomplishment": {
+        "crate_returned": 1
+       },
        "lines": [
         "Hrr. The crate-finder. Sit, look, touch even. You have earned handling privileges.",
         "You did a thing for me and did not name a price after. I remember this the way I remember debts. Better, even.",
@@ -2211,9 +2315,12 @@
       },
       {
        "id": "krshia_friend_of_the_silverfangs",
-       "requires_accomplishment": { "crate_returned": 1, "chatted_with_krshia": 4 },
+       "requires_accomplishment": {
+        "crate_returned": 1,
+        "chatted_with_krshia": 4
+       },
        "lines": [
-        "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
+        "Good \u2014 you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
         "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
         "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week."
        ]
@@ -2294,7 +2401,7 @@
      "locked_toast": "Too dark to see anything.",
      "on_skill_use": {
       "accomplishment": "studied_the_cellar",
-      "toast": "[Light] — The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf."
+      "toast": "[Light] \u2014 The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf."
      }
     },
     {
@@ -2322,20 +2429,52 @@
      ]
     },
     {
-     "_comment": "Liscor's OWN end of the fast-travel pair, pairing with the inn's `pantry_door`. Placed at (30,10) -- the open mid-street cell east of the guild/Pisces cluster (26-30,1-4), well clear of every `blocked` cell, wall segment (all 3 sit near x0/y0 borders), decor, and entity cell on this map (cross-checked against the full street entity/decor/blocked/walls listing before placement, same blast-radius discipline as pantry_door). Ships default + awakened `visual_states` ONLY -- no flicker/chain-started state, unlike pantry_door: v1's Liscor pair is the player's EXISTING home region (the door awakening attunes both ends of ITS OWN connection at once), not a NEW region earning its own attunement beat -- the anchor-stone-per-region idiom's first genuinely NEW instance is a future region milestone's job (#10/#12/#16), which pairs a fresh anchor with its OWN attunement accomplishment in data/portals.json, zero code. Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate/ruin_door VISUAL-LOG precedent for a not-yet-bespoke gated prop) with the SAME amber awakened tint as pantry_door (spec §2: 'Liscor amber' is the only live destination color v1 ships).",
+     "_comment": "Liscor's OWN end of the fast-travel pair, pairing with the inn's `pantry_door`. Placed at (30,10) -- the open mid-street cell east of the guild/Pisces cluster (26-30,1-4), well clear of every `blocked` cell, wall segment (all 3 sit near x0/y0 borders), decor, and entity cell on this map (cross-checked against the full street entity/decor/blocked/walls listing before placement, same blast-radius discipline as pantry_door). Ships default + awakened `visual_states` ONLY -- no flicker/chain-started state, unlike pantry_door: v1's Liscor pair is the player's EXISTING home region (the door awakening attunes both ends of ITS OWN connection at once), not a NEW region earning its own attunement beat -- the anchor-stone-per-region idiom's first genuinely NEW instance is a future region milestone's job (#10/#12/#16), which pairs a fresh anchor with its OWN attunement accomplishment in data/portals.json, zero code. Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate/ruin_door VISUAL-LOG precedent for a not-yet-bespoke gated prop) with the SAME amber awakened tint as pantry_door (spec \u00a72: 'Liscor amber' is the only live destination color v1 ships).",
      "id": "street_anchor_stone",
      "kind": "prop",
-     "cell": [30, 10],
+     "cell": [
+      30,
+      10
+     ],
      "display_name": "The Weathered Stone",
      "sprite": "boulder",
-     "tint": [0.55, 0.58, 0.62],
+     "tint": [
+      0.55,
+      0.58,
+      0.62
+     ],
      "observe": "A worn marker stone, older than the buildings that grew up around it. Nobody living remembers who set it, or why it sits exactly here.",
      "portal_menu": true,
-     "portal_menu_when": { "requires": { "door_awakened": 1 } },
+     "portal_menu_when": {
+      "requires": {
+       "door_awakened": 1
+      }
+     },
      "on_interact_accomplishment": "observed_street_anchor_stone",
      "toast": "Cold, plain stone. Whatever it was for, it isn't for anything now.",
      "visual_states": [
-      { "when": { "counter": "door_awakened", "at": 1 }, "sprite": "boulder", "tint": [1.05, 0.9, 0.6], "light": { "color": [0.85, 0.7, 1.0], "energy": 0.6, "radius": 16, "flicker": true } }
+      {
+       "when": {
+        "counter": "door_awakened",
+        "at": 1
+       },
+       "sprite": "boulder",
+       "tint": [
+        1.05,
+        0.9,
+        0.6
+       ],
+       "light": {
+        "color": [
+         0.85,
+         0.7,
+         1.0
+        ],
+        "energy": 0.6,
+        "radius": 16,
+        "flicker": true
+       }
+      }
      ]
     }
    ]
@@ -2924,7 +3063,7 @@
       "radius": 48,
       "flicker": true
      },
-     "_comment": "Relc's fire — moved beside him (12,13) per pilot verdict: it must READ as his."
+     "_comment": "Relc's fire \u2014 moved beside him (12,13) per pilot verdict: it must READ as his."
     },
     {
      "sprite": "tree_big",
@@ -3211,7 +3350,7 @@
      ]
     },
     {
-     "_comment": "The inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: a bespoke PixelLab signpost (a text-free wooden post + hanging plank, `assets/sprites/inn_sign/Idle-Sheet.png`) -- the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text). Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
+     "_comment": "The inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN \u2014 NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: a bespoke PixelLab signpost (a text-free wooden post + hanging plank, `assets/sprites/inn_sign/Idle-Sheet.png`) -- the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text). Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
      "id": "inn_sign",
      "kind": "prop",
      "cell": [
@@ -3221,7 +3360,7 @@
      "display_name": "Inn Sign",
      "sprite": "inn_sign",
      "on_interact_accomplishment": "read_the_inn_sign",
-     "toast": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN — NO KILLING GOBLINS.",
+     "toast": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN \u2014 NO KILLING GOBLINS.",
      "observe": "The paint is newer than the post it hangs on. Somebody meant it, and means it still."
     },
     {
@@ -3403,7 +3542,10 @@
      "talk_pool_stages": [
       {
        "id": "relc_sparring_partner",
-       "requires_accomplishment": { "sparred_with_relc": 1, "chatted_with_relc": 2 },
+       "requires_accomplishment": {
+        "sparred_with_relc": 1,
+        "chatted_with_relc": 2
+       },
        "lines": [
         "Hah! There's my favorite punching bag. Kidding. The dummies are my favorite. You're a close third after lunch.",
         "You're standing straighter. See that? That's me. I'm basically a [Teacher]. Don't tell the Watch, they'll dock my pay for moonlighting.",
@@ -3412,7 +3554,10 @@
       },
       {
        "id": "relc_brother_in_arms",
-       "requires_accomplishment": { "cleared_the_warren": 1, "chatted_with_relc": 3 },
+       "requires_accomplishment": {
+        "cleared_the_warren": 1,
+        "chatted_with_relc": 3
+       },
        "lines": [
         "There they are. You know what I like about you? You went DOWN the creepy hole. Most people file a report about the hole. From upstairs.",
         "Zevara smiled this week. Actual smile. The warren's sealed and the city's still standing. I'm taking full credit and handing you most of it.",
@@ -3465,20 +3610,32 @@
      ]
     },
     {
-     "_comment": "The recovery run lives in a small DEDICATED ruin map family. LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the `ruin_surface` map below, the inside half). Gate `door_when.requires: {door_chain_started: 1}` (Erin's dialogue banks it at beat 1) -- until then interact falls through to the on_interact_accomplishment/toast branch below, the sewer_grate/deep_fissure pre-gate precedent (byte-identical fallback, no route change for any existing script). Placed at floodplains (38,11), inside the open grass_03 patch (33-38,9-14) -- confirmed off EVERY canonical floodplains route: a full replay of every qa/scripts/*.json's move/press/teleport sequence (blocked-cell-aware, starting from each script's real entry -- its fixture start where one exists, else the universal (7,6) door-arrival cell) showed every route that crosses the chieftains_raid/liscor_gate corridor caps out at x<=31 (tutorial_flow's 'right 18' from (12,6) lands x=30; quest_errand_fight/gate_district_walkthrough/combat_walkthrough/economy_loop all share that same capped-at-x31 shape) -- x=38 is walked and faced by nothing today. Well clear of the tree_big(36,10)/tree_round(35,15) decor and every other floodplains entity (chieftains_raid 31,7 / goblin_encounter_2 28,18 / relc 12,13 / relc_spar 13,12 / frozen_cache 10,18 / ruin_stones 3,8 / inn_sign 6,6). Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate VISUAL-LOG precedent for a not-yet-bespoke gated-entrance prop -- a real ruin-entrance crop is lane γ's job).",
+     "_comment": "The recovery run lives in a small DEDICATED ruin map family. LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the `ruin_surface` map below, the inside half). Gate `door_when.requires: {door_chain_started: 1}` (Erin's dialogue banks it at beat 1) -- until then interact falls through to the on_interact_accomplishment/toast branch below, the sewer_grate/deep_fissure pre-gate precedent (byte-identical fallback, no route change for any existing script). Placed at floodplains (38,11), inside the open grass_03 patch (33-38,9-14) -- confirmed off EVERY canonical floodplains route: a full replay of every qa/scripts/*.json's move/press/teleport sequence (blocked-cell-aware, starting from each script's real entry -- its fixture start where one exists, else the universal (7,6) door-arrival cell) showed every route that crosses the chieftains_raid/liscor_gate corridor caps out at x<=31 (tutorial_flow's 'right 18' from (12,6) lands x=30; quest_errand_fight/gate_district_walkthrough/combat_walkthrough/economy_loop all share that same capped-at-x31 shape) -- x=38 is walked and faced by nothing today. Well clear of the tree_big(36,10)/tree_round(35,15) decor and every other floodplains entity (chieftains_raid 31,7 / goblin_encounter_2 28,18 / relc 12,13 / relc_spar 13,12 / frozen_cache 10,18 / ruin_stones 3,8 / inn_sign 6,6). Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate VISUAL-LOG precedent for a not-yet-bespoke gated-entrance prop -- a real ruin-entrance crop is lane \u03b3's job).",
      "id": "ruin_door",
      "kind": "prop",
-     "cell": [38, 11],
+     "cell": [
+      38,
+      11
+     ],
      "display_name": "A Cracked Seam",
      "sprite": "boulder",
-     "tint": [0.55, 0.6, 0.68],
+     "tint": [
+      0.55,
+      0.6,
+      0.68
+     ],
      "observe": "A hairline crack runs through old, dressed stone half-swallowed by turf -- not natural rock, something built. Cold air breathes up out of it, and it smells of somewhere else.",
      "on_interact_accomplishment": "found_the_rift_seam",
      "toast": "A cold seam splits the earth here, sealed by old stone. It doesn't feel like it goes anywhere. Yet.",
      "door_when": {
-      "requires": { "door_chain_started": 1 },
+      "requires": {
+       "door_chain_started": 1
+      },
       "to_map": "ruin_surface",
-      "to_cell": [2, 2],
+      "to_cell": [
+       2,
+       2
+      ],
       "open_toast": "The seam splits wider at your touch, cold air breathing out of the dark beneath. You step through, into somewhere else."
      }
     }
@@ -3668,7 +3825,7 @@
      ],
      "burnable": true,
      "observe": "A slumped heap of waterlogged timber and old rope, tarred black and long dead. It chokes the little side-nook past the ladder. Dry enough on top to take a flame, if you had one.",
-     "burn_toast": "[Firefly] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air.",
+     "burn_toast": "[Firefly] \u2014 Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air.",
      "locked_toast": "Sodden timber and tarred rope, jammed wall to wall. You could haul at it for an hour, or you could burn it, if you had the means to make fire."
     },
     {
@@ -3705,7 +3862,7 @@
      "sprite": "boulder",
      "observe": "A carved stone boundary marker, Drake glyphs worn shallow. It counts cisterns and sluice-gates in a hand two centuries dead. Someone scratched a newer mark beside it: a spider, hastily.",
      "on_interact_accomplishment": "read_drainage_marker",
-     "toast": "An old Drake drainage marker, its glyphs half-swallowed by grime. You can just make out a map of channels — and a fresh scratch, shaped like a spider, gouged over the third cistern."
+     "toast": "An old Drake drainage marker, its glyphs half-swallowed by grime. You can just make out a map of channels \u2014 and a fresh scratch, shaped like a spider, gouged over the third cistern."
     },
     {
      "id": "sunken_crate",
@@ -3804,7 +3961,7 @@
      "requires_skill": "observe",
      "on_skill_use": {
       "accomplishment": "scouted_the_nest",
-      "toast": "[Appraise Foe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper. That's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
+      "toast": "[Appraise Foe] \u2014 You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper. That's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
      },
      "locked_toast": "The ledge overlooks the nest: a perfect vantage, if you had the eye to read one. You don't, quite. Not yet."
     },
@@ -3963,7 +4120,7 @@
      ],
      "display_name": "Cold Hearth",
      "sprite": "boulder",
-     "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Something sat here in the dark and knew how to keep a fire — or learned how, the way they say these things learn, when the moon is full and their minds come clear.",
+     "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Something sat here in the dark and knew how to keep a fire \u2014 or learned how, the way they say these things learn, when the moon is full and their minds come clear.",
      "on_interact_accomplishment": "found_cold_hearth",
      "toast": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark, and left gnawed bones banked around the edge, cracked for their marrow.",
      "light": {
@@ -4000,7 +4157,7 @@
      ],
      "display_name": "Raskghar Scouts",
      "sprite": "raskghar_scout",
-     "observe": "Two of them crouch where the tunnel narrows, moon-grey and mountain-shouldered, knuckles to the stone. Their small eyes track you without blinking. Between you and the deeper dark, they are the door — and the lock.",
+     "observe": "Two of them crouch where the tunnel narrows, moon-grey and mountain-shouldered, knuckles to the stone. Their small eyes track you without blinking. Between you and the deeper dark, they are the door \u2014 and the lock.",
      "arena": "cave_mouth",
      "enemies": [
       "raskghar_scout",
@@ -4063,12 +4220,30 @@
     "height": 12
    },
    "blocked": [
-    [6, 2],
-    [7, 2],
-    [9, 2],
-    [10, 2],
-    [13, 6],
-    [12, 9]
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     13,
+     6
+    ],
+    [
+     12,
+     9
+    ]
    ],
    "floor_layers": [
     {
@@ -4076,10 +4251,22 @@
      "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
      "tile_px": 16,
      "variants": [
-      [1, 21],
-      [2, 21],
-      [1, 22],
-      [2, 22]
+      [
+       1,
+       21
+      ],
+      [
+       2,
+       21
+      ],
+      [
+       1,
+       22
+      ],
+      [
+       2,
+       22
+      ]
      ],
      "cells": "all"
     }
@@ -4088,44 +4275,182 @@
     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
     "tile_px": 16,
     "segments": [
-     { "from": [0, 0], "to": [15, 0], "cap": [14, 6], "face": [14, 7] },
-     { "from": [0, 1], "to": [0, 11], "cap": [14, 6] },
-     { "from": [15, 1], "to": [15, 11], "cap": [14, 6] },
-     { "_comment": "South wall, gapped at x=8 for guild_exit.", "from": [1, 11], "to": [7, 11], "cap": [14, 6] },
-     { "from": [9, 11], "to": [14, 11], "cap": [14, 6] }
+     {
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       15,
+       0
+      ],
+      "cap": [
+       14,
+       6
+      ],
+      "face": [
+       14,
+       7
+      ]
+     },
+     {
+      "from": [
+       0,
+       1
+      ],
+      "to": [
+       0,
+       11
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "from": [
+       15,
+       1
+      ],
+      "to": [
+       15,
+       11
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "_comment": "South wall, gapped at x=8 for guild_exit.",
+      "from": [
+       1,
+       11
+      ],
+      "to": [
+       7,
+       11
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "from": [
+       9,
+       11
+      ],
+      "to": [
+       14,
+       11
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     }
     ]
    },
    "decor": [
-    { "sprite": "counter_left", "cell": [6, 2] },
-    { "sprite": "counter_mid", "cell": [7, 2] },
-    { "sprite": "counter_mid", "cell": [9, 2] },
-    { "sprite": "counter_right", "cell": [10, 2] },
-    { "sprite": "rug_tan", "cell": [8, 4] },
-    { "sprite": "table_brown", "cell": [13, 6] },
-    { "sprite": "table_brown", "cell": [12, 9] },
-    { "sprite": "stool", "cell": [14, 6] }
+    {
+     "sprite": "counter_left",
+     "cell": [
+      6,
+      2
+     ]
+    },
+    {
+     "sprite": "counter_mid",
+     "cell": [
+      7,
+      2
+     ]
+    },
+    {
+     "sprite": "counter_mid",
+     "cell": [
+      9,
+      2
+     ]
+    },
+    {
+     "sprite": "counter_right",
+     "cell": [
+      10,
+      2
+     ]
+    },
+    {
+     "sprite": "rug_tan",
+     "cell": [
+      8,
+      4
+     ]
+    },
+    {
+     "sprite": "table_brown",
+     "cell": [
+      13,
+      6
+     ]
+    },
+    {
+     "sprite": "table_brown",
+     "cell": [
+      12,
+      9
+     ]
+    },
+    {
+     "sprite": "stool",
+     "cell": [
+      14,
+      6
+     ]
+    }
    ],
    "_comment_ambience": "Same dusk/night-only dust-motes pattern as the inn hall (a deliberate judgment call, not an oversight).",
    "ambience": [
-    { "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
+    {
+     "preset": "dust_motes",
+     "rect": "all",
+     "phase": [
+      "dusk",
+      "night"
+     ]
+    }
    ],
    "entities": [
     {
      "id": "guild_exit",
      "kind": "door",
-     "cell": [8, 11],
+     "cell": [
+      8,
+      11
+     ],
      "display_name": "Liscor Street",
      "sprite": "door",
      "to_map": "street",
-     "to_cell": [27, 3]
+     "to_cell": [
+      27,
+      3
+     ]
     },
     {
      "id": "selys",
      "kind": "npc",
-     "cell": [8, 2],
+     "cell": [
+      8,
+      2
+     ],
      "display_name": "Selys",
      "sprite": "citizen_f",
-     "tint": [0.45, 1.0, 0.55],
+     "tint": [
+      0.45,
+      1.0,
+      0.55
+     ],
      "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger. She has sized up a hundred adventurers today and found most of them wanting.",
      "friendly_line": "...Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
      "facing": "down",
@@ -4135,11 +4460,14 @@
       "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
       "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
      ],
-     "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/selys_stages.json (staging_note annotation stripped). Two stages only. Board perk (⚑ first pick at the board) is FLAGGED unbuilt this wave (a repeatable board is new machinery, out of v1 scope per the staging doc) -- only the stage row + hub topic unlock ship.",
+     "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/selys_stages.json (staging_note annotation stripped). Two stages only. Board perk (\u2691 first pick at the board) is FLAGGED unbuilt this wave (a repeatable board is new machinery, out of v1 scope per the staging doc) -- only the stage row + hub topic unlock ship.",
      "talk_pool_stages": [
       {
        "id": "selys_past_the_counter",
-       "requires_accomplishment": { "errand_decided": 1, "chatted_with_selys": 2 },
+       "requires_accomplishment": {
+        "errand_decided": 1,
+        "chatted_with_selys": 2
+       },
        "lines": [
         "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
         "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
@@ -4159,23 +4487,33 @@
      "_comment": "THE REQUEST BOARD goes live -- `board: true` routes interact() to WIGame._interact_board (a browse-only, code-built dialogue: header + the CURRENT active slate's copy from data/bounties.json + footer). Toast is the DEFAULT header (board-copy.md sec.1's header line); second_visit_toast is the NEW variant shown whenever a posting is outstanding (sec.1's second header line). observe still carries the footer/standing-notice line verbatim (the S.S. signature -- Selys Shivertail; Tekshia the Guildmistress stays OFFSTAGE, a signature only, per the staged canon note) -- reused directly by _interact_board, not duplicated. Accept/turn-in live at Selys's desk (selys_delivery.json), per the copy's own framing (\"taking a posting means telling me\"); the board itself never mutates state. Sprite: bespoke `request_board` art (previously shipped on an `inn_sign` reuse, VISUAL-LOG flagged pending a real corkboard asset -- now closed).",
      "id": "guild_board",
      "kind": "prop",
-     "cell": [2, 3],
+     "cell": [
+      2,
+      3
+     ],
      "display_name": "The Request Board",
      "sprite": "request_board",
      "facing": "right",
      "board": true,
      "toast": "The Request Board. Paper three layers deep in places. New notices pinned straight over the dead ones. Two or three have fresh ink.",
      "second_visit_toast": "The Request Board. Your slip is still logged at the desk. The board does not care how it's going.",
-     "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. — S.S."
+     "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. \u2014 S.S."
     },
     {
      "_comment": "A second, smaller notice surface (city/personal notices, distinct from the Guild's own bounty board) -- ORIGINAL flavor copy, canon-safe (no invented named characters), voice-linted. Sprite: reuses `library_shelf` (a tall wood-shelf silhouette, tinted parchment) as a stand-in for a wall unit stacked with handbills -- VISUAL-LOG flagged pending a real asset.",
      "id": "guild_notice_wall",
      "kind": "prop",
-     "cell": [2, 5],
+     "cell": [
+      2,
+      5
+     ],
      "display_name": "Notice Wall",
      "sprite": "library_shelf",
-     "tint": [0.6, 0.5, 0.35],
+     "tint": [
+      0.6,
+      0.5,
+      0.35
+     ],
      "facing": "right",
      "on_interact_accomplishment": "read_guild_notices",
      "toast": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time.",
@@ -4185,10 +4523,17 @@
      "_comment": "Renn Coldscale, Bronze-rank Drake, half of a bickering duo at the board -- profile in docs/design/character-profiles-staging.md. Reuses the `pc_drake_m` character-creation rig (ash-grey tint) rather than new art. talk_pool + a static dialogue fallback (no conversation graph -- inert-adjacent by design).",
      "id": "renn",
      "kind": "npc",
-     "cell": [3, 3],
+     "cell": [
+      3,
+      3
+     ],
      "display_name": "Renn",
      "sprite": "pc_drake_m",
-     "tint": [0.55, 0.58, 0.62],
+     "tint": [
+      0.55,
+      0.58,
+      0.62
+     ],
      "facing": "left",
      "talk_pool": [
       "Four silver for a nest clear? Four? My arrows cost more than that if it goes badly.",
@@ -4205,15 +4550,22 @@
      "_comment": "Ilvo Brackenhide, Bronze-rank Drake, the reasonable half of the duo. Reuses `pc_drake_f` (moss-green tint).",
      "id": "ilvo",
      "kind": "npc",
-     "cell": [2, 4],
+     "cell": [
+      2,
+      4
+     ],
      "display_name": "Ilvo",
      "sprite": "pc_drake_f",
-     "tint": [0.4, 0.55, 0.35],
+     "tint": [
+      0.4,
+      0.55,
+      0.35
+     ],
      "facing": "left",
      "talk_pool": [
       "He says that about every posting. Then he takes it. Then he complains the whole walk there.",
       "The pay's fair for Bronze work. Renn just likes the sound of his own complaining."
-      ],
+     ],
      "dialogue": [
       {
        "speaker": "Ilvo",
@@ -4225,10 +4577,17 @@
      "_comment": "Yelra, Bronze-rank Gnoll archer, waiting at a side table. Reuses `pc_gnoll_f` (tan-brown tint).",
      "id": "yelra",
      "kind": "npc",
-     "cell": [12, 6],
+     "cell": [
+      12,
+      6
+     ],
      "display_name": "Yelra",
      "sprite": "pc_gnoll_f",
-     "tint": [0.62, 0.5, 0.35],
+     "tint": [
+      0.62,
+      0.5,
+      0.35
+     ],
      "facing": "down",
      "talk_pool": [
       "Bronze-rank, six months in. Long enough to know which jobs pay in coin and which pay in regret.",
@@ -4251,19 +4610,40 @@
     "height": 8
    },
    "blocked": [
-    [6, 2],
-    [9, 2],
-    [3, 2]
+    [
+     6,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     3,
+     2
+    ]
    ],
    "floor_layers": [
     {
      "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
      "tile_px": 16,
      "variants": [
-      [1, 21],
-      [2, 21],
-      [1, 22],
-      [2, 22]
+      [
+       1,
+       21
+      ],
+      [
+       2,
+       21
+      ],
+      [
+       1,
+       22
+      ],
+      [
+       2,
+       22
+      ]
      ],
      "cells": "all"
     }
@@ -4272,40 +4652,154 @@
     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
     "tile_px": 16,
     "segments": [
-     { "from": [0, 0], "to": [13, 0], "cap": [14, 6], "face": [14, 7] },
-     { "from": [0, 1], "to": [0, 7], "cap": [14, 6] },
-     { "from": [13, 1], "to": [13, 7], "cap": [14, 6] },
-     { "_comment": "South wall, gapped at x=2 for barracks_exit.", "from": [1, 7], "to": [1, 7], "cap": [14, 6] },
-     { "from": [3, 7], "to": [12, 7], "cap": [14, 6] }
+     {
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       13,
+       0
+      ],
+      "cap": [
+       14,
+       6
+      ],
+      "face": [
+       14,
+       7
+      ]
+     },
+     {
+      "from": [
+       0,
+       1
+      ],
+      "to": [
+       0,
+       7
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "from": [
+       13,
+       1
+      ],
+      "to": [
+       13,
+       7
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "_comment": "South wall, gapped at x=2 for barracks_exit.",
+      "from": [
+       1,
+       7
+      ],
+      "to": [
+       1,
+       7
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "from": [
+       3,
+       7
+      ],
+      "to": [
+       12,
+       7
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     }
     ]
    },
    "decor": [
-    { "sprite": "table_brown", "cell": [6, 2] },
-    { "sprite": "shelf_bottles", "cell": [9, 2] },
-    { "sprite": "crate", "cell": [3, 2] },
-    { "sprite": "stool", "cell": [7, 2] }
+    {
+     "sprite": "table_brown",
+     "cell": [
+      6,
+      2
+     ]
+    },
+    {
+     "sprite": "shelf_bottles",
+     "cell": [
+      9,
+      2
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      3,
+      2
+     ]
+    },
+    {
+     "sprite": "stool",
+     "cell": [
+      7,
+      2
+     ]
+    }
    ],
    "ambience": [
-    { "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
+    {
+     "preset": "dust_motes",
+     "rect": "all",
+     "phase": [
+      "dusk",
+      "night"
+     ]
+    }
    ],
    "entities": [
     {
      "id": "barracks_exit",
      "kind": "door",
-     "cell": [2, 7],
+     "cell": [
+      2,
+      7
+     ],
      "display_name": "Liscor Street",
      "sprite": "door",
      "to_map": "street",
-     "to_cell": [21, 3]
+     "to_cell": [
+      21,
+      3
+     ]
     },
     {
      "_comment": "Duty Sergeant Dresk Ashgrave -- the relocated watch_guard (see map comment above). talk_pool only (no conversation graph), inert-adjacent, matching Yelra/Renn/Ilvo's own precedent -- duty-mundane background presence, not a quest-giver v1.",
      "id": "duty_sergeant",
      "kind": "npc",
-     "cell": [6, 4],
+     "cell": [
+      6,
+      4
+     ],
      "display_name": "Dresk",
      "sprite": "royal_soldier",
-     "tint": [0.55, 0.35, 0.3],
+     "tint": [
+      0.55,
+      0.35,
+      0.3
+     ],
      "observe": "Stripes on the sleeve, chalk dust on the fingers. He would rather stand a wall post than a briefing room, and it shows in how he stands even here.",
      "facing": "down",
      "talk_pool": [
@@ -4314,14 +4808,20 @@
       "Watch business stays in the barracks. Yours is likely the street."
      ],
      "dialogue": [
-      { "speaker": "Dresk", "text": "Barracks is Watch business only. State yours." }
+      {
+       "speaker": "Dresk",
+       "text": "Barracks is Watch business only. State yours."
+      }
      ]
     },
     {
      "_comment": "Zevara's desk -- she stays at the gate (zevara_intro unchanged); this is flavor/observe only, the barracks holding her paperwork rather than her person.",
      "id": "zevara_desk",
      "kind": "prop",
-     "cell": [10, 5],
+     "cell": [
+      10,
+      5
+     ],
      "display_name": "Zevara's Desk",
      "sprite": "library_desk",
      "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it. The gate keeps her busier than her own office does.",
@@ -4332,12 +4832,19 @@
      "_comment": "THE CELL, empty v1 and dressed -- a quest-outcome surface for later. Flush against the east wall, same idiom as inn_upstairs's lyonette_door (a locked prop, not a real door -- no room modeled behind it). No requires_skill, so a plain interact reads the locked_toast (the sewer_debris/lyonette_door seam).",
      "id": "cell_door",
      "kind": "prop",
-     "cell": [12, 3],
+     "cell": [
+      12,
+      3
+     ],
      "display_name": "The Cell",
      "sprite": "door",
-     "tint": [0.5, 0.5, 0.55],
+     "tint": [
+      0.5,
+      0.5,
+      0.55
+     ],
      "locked_toast": "Barred, and empty behind the bars. You can tell by the quiet. Whatever ends up in here hasn't happened yet.",
-     "observe": "A single holding cell, iron-barred, straw swept into one corner. Duty-mundane, like everything else in this building — until it isn't."
+     "observe": "A single holding cell, iron-barred, straw swept into one corner. Duty-mundane, like everything else in this building \u2014 until it isn't."
     }
    ]
   },
@@ -4349,18 +4856,36 @@
     "height": 8
    },
    "blocked": [
-    [4, 2],
-    [6, 2]
+    [
+     4,
+     2
+    ],
+    [
+     6,
+     2
+    ]
    ],
    "floor_layers": [
     {
      "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
      "tile_px": 16,
      "variants": [
-      [1, 21],
-      [2, 21],
-      [1, 22],
-      [2, 22]
+      [
+       1,
+       21
+      ],
+      [
+       2,
+       21
+      ],
+      [
+       1,
+       22
+      ],
+      [
+       2,
+       22
+      ]
      ],
      "cells": "all"
     }
@@ -4369,39 +4894,147 @@
     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
     "tile_px": 16,
     "segments": [
-     { "from": [0, 0], "to": [9, 0], "cap": [10, 6], "face": [10, 7] },
-     { "from": [0, 1], "to": [0, 7], "cap": [10, 6] },
-     { "from": [9, 1], "to": [9, 7], "cap": [10, 6] },
-     { "_comment": "South wall, gapped at x=5 for runners_guild_exit.", "from": [1, 7], "to": [4, 7], "cap": [10, 6] },
-     { "from": [6, 7], "to": [8, 7], "cap": [10, 6] }
+     {
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       9,
+       0
+      ],
+      "cap": [
+       10,
+       6
+      ],
+      "face": [
+       10,
+       7
+      ]
+     },
+     {
+      "from": [
+       0,
+       1
+      ],
+      "to": [
+       0,
+       7
+      ],
+      "cap": [
+       10,
+       6
+      ]
+     },
+     {
+      "from": [
+       9,
+       1
+      ],
+      "to": [
+       9,
+       7
+      ],
+      "cap": [
+       10,
+       6
+      ]
+     },
+     {
+      "_comment": "South wall, gapped at x=5 for runners_guild_exit.",
+      "from": [
+       1,
+       7
+      ],
+      "to": [
+       4,
+       7
+      ],
+      "cap": [
+       10,
+       6
+      ]
+     },
+     {
+      "from": [
+       6,
+       7
+      ],
+      "to": [
+       8,
+       7
+      ],
+      "cap": [
+       10,
+       6
+      ]
+     }
     ]
    },
    "decor": [
-    { "sprite": "counter_left", "cell": [4, 2] },
-    { "sprite": "counter_right", "cell": [6, 2] },
-    { "sprite": "bench", "cell": [1, 5] }
+    {
+     "sprite": "counter_left",
+     "cell": [
+      4,
+      2
+     ]
+    },
+    {
+     "sprite": "counter_right",
+     "cell": [
+      6,
+      2
+     ]
+    },
+    {
+     "sprite": "bench",
+     "cell": [
+      1,
+      5
+     ]
+    }
    ],
    "ambience": [
-    { "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
+    {
+     "preset": "dust_motes",
+     "rect": "all",
+     "phase": [
+      "dusk",
+      "night"
+     ]
+    }
    ],
    "entities": [
     {
      "id": "runners_guild_exit",
      "kind": "door",
-     "cell": [5, 7],
+     "cell": [
+      5,
+      7
+     ],
      "display_name": "Liscor Street",
      "sprite": "door",
      "to_map": "street",
-     "to_cell": [19, 17]
+     "to_cell": [
+      19,
+      17
+     ]
     },
     {
      "_comment": "Vess, the Street Runner clerk -- profile in docs/design/character-profiles.md. Stands in the counter's own gap cell (5,2), between counter_left (4,2) and counter_right (6,2) -- the exact Selys/guild counter precedent (an NPC standing in a counter's pass-through, no separate desk entity). talk_pool fires her 'First approach' bark (board-copy.md sec.3) before the real conversation graph (vess_counter.json) on the first talk of a waking.",
      "id": "vess",
      "kind": "npc",
-     "cell": [5, 2],
+     "cell": [
+      5,
+      2
+     ],
      "display_name": "Vess",
      "sprite": "pc_drake_f",
-     "tint": [0.5, 0.55, 0.58],
+     "tint": [
+      0.5,
+      0.55,
+      0.58
+     ],
      "facing": "down",
      "observe": "A teenage Drake, wiry, a strap-scarred satchel worn even behind the counter -- she never fully sat down, she just stopped moving for a second. Slate-grey scales, a sweat-band she does not need indoors and wears anyway.",
      "talk_pool": [
@@ -4409,38 +5042,58 @@
      ],
      "conversation": "vess_counter",
      "dialogue": [
-      { "speaker": "Vess", "text": "Runner's Guild. Counter's open." }
+      {
+       "speaker": "Vess",
+       "text": "Runner's Guild. Counter's open."
+      }
      ]
     },
     {
      "_comment": "THE DELIVERY BOARD -- browse-only (WIGame._interact_delivery_board), the delivery-loop's twin of THE REQUEST BOARD (guild_board), same header/second_visit/footer shape, distinct delivery_board:true flag so interact()'s prop dispatch routes to the right board. Copy composed in staging register (board-copy.md sec.3 has no second-visit line; this one is ORIGINAL) sec.3.",
      "id": "runner_board",
      "kind": "prop",
-     "cell": [8, 3],
+     "cell": [
+      8,
+      3
+     ],
      "display_name": "The Delivery Board",
      "sprite": "inn_sign",
-     "tint": [0.65, 0.72, 0.8],
+     "tint": [
+      0.65,
+      0.72,
+      0.8
+     ],
      "facing": "left",
      "delivery_board": true,
      "toast": "THE DELIVERY BOARD. Legs and ledgers. Gold by distance, paid on the mark, same-waking terms. Slips at the counter.",
      "second_visit_toast": "THE DELIVERY BOARD. Your slip's still logged at the counter. Legs and ledgers don't care how it's going either.",
-     "observe": "Couriers are made, not hired. Start with the market run. — the counter"
+     "observe": "Couriers are made, not hired. Start with the market run. \u2014 the counter"
     },
     {
      "_comment": "The resting runner walk-on (board-copy.md's proposal), title-only per THE PEDDLER precedent (an unnamed, purely ambient flavor NPC) -- staged in docs/design/character-profiles-staging.md, not promoted to the shipped file (matching Yelra/Renn/Ilvo, which also stayed staging-only; Vess is the one NAMED, mechanically-load-bearing NPC this task ships to the shipped profiles). talk_pool-only, no conversation graph, inert-adjacent. Rests near a `stool` (no bench sprite in the catalog -- disclosed, VISUAL-LOG'd) by the door.",
      "id": "resting_runner",
      "kind": "npc",
-     "cell": [2, 5],
+     "cell": [
+      2,
+      5
+     ],
      "display_name": "Resting Runner",
      "sprite": "pc_gnoll_m",
-     "tint": [0.5, 0.46, 0.4],
+     "tint": [
+      0.5,
+      0.46,
+      0.4
+     ],
      "facing": "left",
      "observe": "A Gnoll runner, propped against the wall by the stool, legs out, boots still laced. Not asleep. Not far from it.",
      "talk_pool": [
       "Floodplains double, both legs mud. Wake me for a fire or a Courier."
      ],
      "dialogue": [
-      { "speaker": "Resting Runner", "text": "...five more minutes." }
+      {
+       "speaker": "Resting Runner",
+       "text": "...five more minutes."
+      }
      ]
     }
    ]
@@ -4448,46 +5101,136 @@
   "ruin_surface": {
    "_comment": "A small dedicated ruin map (Albez-flavored surface ruin), sized identically to `sewers` (20x14, biome `cave` reused as the stone-floor default -- data/biomes.json is not touched here, so every new map must reuse an existing biome id; `cave` gives the rocky/rubble read an Albez ruin wants). Entered ONLY from floodplains' `ruin_door` (door_when-gated); the sole exit is `ruin_exit` below, landing back at floodplains (37,11) -- one cell west of `ruin_door`'s own (38,11) cell, the sewer_exit/deep_fissure 'never land on the door's own cell' convention. Reachability: (2,2) [the door_when to_cell] -> open floor the whole way east to the guardian alcove at (16-18,5-7); two decorative rubble piles (5,4)/(13,9) sit off that direct line and off any reasonable perimeter walk. `anchor_stone_pedestal` (17,6) is reachable from all four neighbor cells; `ruin_guardian` (17,8) stands one cell south of the pedestal's own south neighbor, 'guarding' it in the fiction without physically sealing any approach (see that entity's own _comment for the sprite-fusion fix that placed it there). The pedestal ships LOCKED-FLAVOR (see that prop's own _comment for the full container-gating rationale) rather than the `contains` shape wired once the alternate TALK/SKILL gates land. Mood card `ruin_surface` (data/moods.json) is a tuned cold-daylight/dusty grade, day/dusk/night graded (a SURFACE ruin sees real weather, unlike the sewers/deep_tunnels time-invariant pins).",
    "biome": "cave",
-   "grid": { "width": 20, "height": 14 },
-   "blocked": [[5, 4], [13, 9]],
+   "grid": {
+    "width": 20,
+    "height": 14
+   },
+   "blocked": [
+    [
+     5,
+     4
+    ],
+    [
+     13,
+     9
+    ]
+   ],
    "walls": {
     "_comment": "Every other cave-biome map (sewers/deep_tunnels) carries interior obstacle dressing via walls.segments even with NO perimeter enclosure (grid-bound clipping alone stops movement at the map edge; segments here are INTERIOR texture/blocking, matching deep_tunnels' stalactite-rubble/fallen-column precedent -- from/to only, no cap/face, same minimal shape). Both segments sit in the untouched middle of the room (x6-11, y8-11), clear of ruin_walkthrough's own leg-by-leg cell audit (top row y=2 x2-17; column x=17 y2-5; row y=5 x2-17; column x=2 y5-13; bottom row y=13 x2-19; column x=19 y1-13; row y=1 x3-19) and both existing `blocked` singletons (5,4)/(13,9) -- no re-derivation of that script's route needed; re-verified live (ruin_walkthrough passes unchanged).",
     "sheet": "res://assets/tiles/cave/Tiles.png",
     "tile_px": 16,
     "segments": [
-     { "_comment": "A fallen ceiling rubble column, Albez-ruin dressing.", "from": [7, 9], "to": [7, 11] },
-     { "_comment": "A broken lintel span.", "from": [10, 8], "to": [11, 8] }
+     {
+      "_comment": "A fallen ceiling rubble column, Albez-ruin dressing.",
+      "from": [
+       7,
+       9
+      ],
+      "to": [
+       7,
+       11
+      ]
+     },
+     {
+      "_comment": "A broken lintel span.",
+      "from": [
+       10,
+       8
+      ],
+      "to": [
+       11,
+       8
+      ]
+     }
     ]
    },
    "floor_layers": [
-    { "_pick": "ruin floor, reusing the verified cave-floor tile neighborhood (Albez-flavored rubble/stone read).", "variants": [[8, 13], [9, 13], [10, 13]], "cells": "all" }
+    {
+     "_pick": "ruin floor, reusing the verified cave-floor tile neighborhood (Albez-flavored rubble/stone read).",
+     "variants": [
+      [
+       8,
+       13
+      ],
+      [
+       9,
+       13
+      ],
+      [
+       10,
+       13
+      ]
+     ],
+     "cells": "all"
+    }
    ],
    "decor": [
-    { "sprite": "boulder", "cell": [5, 4], "tint": [0.62, 0.6, 0.56] },
-    { "sprite": "boulder", "cell": [13, 9], "tint": [0.62, 0.6, 0.56] }
+    {
+     "sprite": "boulder",
+     "cell": [
+      5,
+      4
+     ],
+     "tint": [
+      0.62,
+      0.6,
+      0.56
+     ]
+    },
+    {
+     "sprite": "boulder",
+     "cell": [
+      13,
+      9
+     ],
+     "tint": [
+      0.62,
+      0.6,
+      0.56
+     ]
+    }
    ],
    "entities": [
     {
      "_comment": "The way back up -- returns to floodplains beside `ruin_door` (38,11); see that entity's own _comment for the full placement/blast-radius disclosure. Landing cell (2,2) is one cell south of this door, matching the sewer_exit/deep_fissure 'the way back up' convention.",
      "id": "ruin_exit",
      "kind": "door",
-     "cell": [2, 1],
+     "cell": [
+      2,
+      1
+     ],
      "display_name": "Cracked Daylight",
      "sprite": "door",
      "to_map": "floodplains",
-     "to_cell": [37, 11]
+     "to_cell": [
+      37,
+      11
+     ]
     },
     {
      "_comment": "The beat-3 recovery target. Gated by src/core/wi_game.gd's interact()/_interact_container (the door_when-style `contains_when: {requires: {...}}` gate, reusing `_door_gate_met` verbatim, no separate gate logic). Gated on `pedestal_unsealed` (an internal convergence counter): banked by EITHER `cleared_ruin_guardian` (fight him right here) OR any of Pisces's TALK/SKILL mage-consult legs (their examination doubles as safe-passage insight -- the FIGHT-at-beat-2 leg, having sent the player to clear `rift_vermin_leak` in the inn instead, does NOT bank it, so THOSE players still have to clear the guardian in person; see that entity's own _comment below). `on_interact_accomplishment`/`toast` KEPT verbatim as the unmet-gate fallback (interact()'s new contains_when check falls through to this exact branch when unmet -- ruin_walkthrough's fixture has door_chain_started but neither pedestal_unsealed producer, so its locked-toast assertion is untouched, byte-identical). `on_open_accomplishment: recovered_anchor_stone` (the chain's locked id) fires once, on the SAME interact that grants the item, the first time the gate is met.",
      "id": "anchor_stone_pedestal",
      "kind": "prop",
-     "cell": [17, 6],
+     "cell": [
+      17,
+      6
+     ],
      "display_name": "A Cracked Plinth",
      "sprite": "pedestal",
-     "tint": [0.7, 0.7, 0.75],
+     "tint": [
+      0.7,
+      0.7,
+      0.75
+     ],
      "observe": "A stone rests in a shallow cradle atop the plinth, held there by nothing you can see. Something older than the dust stands close enough to notice you noticing.",
-     "contains": ["anchor_stone"],
-     "contains_when": { "requires": { "pedestal_unsealed": 1 } },
+     "contains": [
+      "anchor_stone"
+     ],
+     "contains_when": {
+      "requires": {
+       "pedestal_unsealed": 1
+      }
+     },
      "on_open_accomplishment": "recovered_anchor_stone",
      "on_interact_accomplishment": "found_the_pedestal",
      "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea."
@@ -4496,49 +5239,405 @@
      "_comment": "The real `kind: \"encounter\"` shape (ruin_guardian/ruin_ward_a/ruin_ward_b in data/combatants.json, the `ruin_court` arena in data/arenas.json). Locked ids: arena `ruin_court`, enemies EXACTLY [\"ruin_guardian\",\"ruin_ward_a\",\"ruin_ward_b\"] (the entity id and the first enemy combatant id are both `ruin_guardian` by design -- separate registries, entities vs. combatants, no collision), on_victory banks `cleared_ruin_guardian` + the shared `pedestal_unsealed` convergence counter (see `anchor_stone_pedestal`'s own _comment for the full OR-gate rationale). `allies:[\"relc\"]`/`ally_requires:{met_relc:1}` matches the harness's gated cell (`ruin_guardian_w8_relc`, the tuned 0.55-0.8 band) over the harder ungated `_solo` variant. `on_interact_accomplishment`/`toast` are dead fields on an encounter and stay unset; `observe` is kept. Placed at (17,8), one row south of the pedestal's immediate south approach -- keeps clear of a PC/guardian sprite-fusion bug at the canonical 2-cell viewing distance (`ruin_walkthrough`'s `01_pedestal_locked.png`, PC at (17,5)); the pedestal's 4 neighbor cells are all open floor, and the guardian still visibly stands in the same alcove, still the last thing between the player and the stone, just not a hard physical block on that one approach cell. CONTRACT: `door_chain_fight.json`'s teleport target must stay in sync at (16,8), the west-adjacent cell.",
      "id": "ruin_guardian",
      "kind": "encounter",
-     "cell": [17, 8],
+     "cell": [
+      17,
+      8
+     ],
      "display_name": "The Ruin Guardian",
      "sprite": "raskghar_awakened",
-     "tint": [0.55, 0.55, 0.6],
+     "tint": [
+      0.55,
+      0.55,
+      0.6
+     ],
      "observe": "Stone shaped like a soldier, or close enough that the difference doesn't help you. It hasn't moved since you stepped into this room. That is not the same as harmless.",
      "arena": "ruin_court",
-     "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"],
-     "allies": ["relc"],
-     "ally_requires": { "met_relc": 1 },
-     "on_victory": ["cleared_ruin_guardian", "pedestal_unsealed"]
+     "enemies": [
+      "ruin_guardian",
+      "ruin_ward_a",
+      "ruin_ward_b"
+     ],
+     "allies": [
+      "relc"
+     ],
+     "ally_requires": {
+      "met_relc": 1
+     },
+     "on_victory": [
+      "cleared_ruin_guardian",
+      "pedestal_unsealed"
+     ]
     }
    ]
   },
   "garden_sanctuary": {
    "_comment": "Erin's Garden of Sanctuary -- the ONE map with no darkness, no walls, no violence. Formal south-to-north axis per the direction card: `garden_exit` (the vine door, the only way in or out) -> the sandstone path -> the statue-fountain centerpiece -> the misted rise (an open band at the north end -- populating it with memorial plinths/statues via visual_states is a future task's job; this ships the CLEARING only, no memorial entities yet). `biome: garden` (data/biomes.json) supplies the olive-grass floor + the hedge-hem `blocked` tile + the owned PixelLab sky-mist skirt (the impossible bright sky beyond the hedge). 14x12: small and serene by design, 'a small serene map off the inn'. Reachability: `garden_exit` (7,11) is the sole hedge gap; every other perimeter cell is hedge-blocked. The fountain (7,6) sits ON the path axis and is the map's only interior obstacle -- a 1-cell detour left/right (both open floor) routes around it, matching a real garden path splitting around a centerpiece; no BFS pinch point exists (confirmed: the only blocked cells are the perimeter ring + this one center cell). `garden_bed` (11,4, east wing) is the rest-anywhere-equivalent bed, 'facing the rise' per handoff.md's own recommendation -- a literal bed under the open sky is the map's 'rest anywhere' read, not a mismatch. Mood: data/moods.json's `garden` card (identity-at-every-phase, vignette 0.0 -- the ONLY such card in the game). No `arena_moods` entry (combat impossible here, the sim guard in wi_game.gd's start_combat) and no `walls` field at all (the Garden ships NO wall family by design -- sanctuary is the absence of architecture; the hedge hem is expressed entirely via `blocked` + the biome's own hedge tile, the exact same mechanism inn/floodplains/etc use for their `blocked` cells, just with zero `walls.segments` on top).",
    "biome": "garden",
-   "grid": { "width": 14, "height": 12 },
-   "blocked": [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [9, 0], [10, 0], [11, 0], [12, 0], [13, 0], [0, 1], [13, 1], [0, 2], [13, 2], [0, 3], [13, 3], [0, 4], [13, 4], [0, 5], [13, 5], [0, 6], [7, 6], [13, 6], [0, 7], [13, 7], [0, 8], [13, 8], [0, 9], [13, 9], [0, 10], [13, 10], [0, 11], [1, 11], [2, 11], [3, 11], [4, 11], [5, 11], [6, 11], [8, 11], [9, 11], [10, 11], [11, 11], [12, 11], [13, 11]],
+   "grid": {
+    "width": 14,
+    "height": 12
+   },
+   "blocked": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     13,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     13,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     13,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     13,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     13,
+     5
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     7,
+     6
+    ],
+    [
+     13,
+     6
+    ],
+    [
+     0,
+     7
+    ],
+    [
+     13,
+     7
+    ],
+    [
+     0,
+     8
+    ],
+    [
+     13,
+     8
+    ],
+    [
+     0,
+     9
+    ],
+    [
+     13,
+     9
+    ],
+    [
+     0,
+     10
+    ],
+    [
+     13,
+     10
+    ],
+    [
+     0,
+     11
+    ],
+    [
+     1,
+     11
+    ],
+    [
+     2,
+     11
+    ],
+    [
+     3,
+     11
+    ],
+    [
+     4,
+     11
+    ],
+    [
+     5,
+     11
+    ],
+    [
+     6,
+     11
+    ],
+    [
+     8,
+     11
+    ],
+    [
+     9,
+     11
+    ],
+    [
+     10,
+     11
+    ],
+    [
+     11,
+     11
+    ],
+    [
+     12,
+     11
+    ],
+    [
+     13,
+     11
+    ]
+   ],
    "floor_layers": [
-    { "_comment": "The formal north-south path axis (direction.md: 'one straight line of meaning'). Sandstone family per picks.md §1b, position-hashed variants (the inn plank-floor idiom). Skips (7,6) -- the fountain's own cell, painted by the base grass floor underneath its decor sprite instead.", "sheet": "res://assets/tiles/garden/Tiles.png", "tile_px": 16, "variants": [[9, 1], [8, 3], [10, 3], [13, 6]], "cells": { "list": [[7, 2], [7, 3], [7, 4], [7, 5], [7, 7], [7, 8], [7, 9], [7, 10]] } },
-    { "_comment": "The misted rise (direction.md: 'an arc of colorless statues standing in a band of white mist at the axis head'). G1 ships the CLEARING only -- a lighter grass variant marking the band, no statues/plinths yet (G2's memorial seam). One row south of the north hedge so a future plinth row has open floor to stand on.", "sheet": "res://assets/tiles/garden/Tiles.png", "tile_px": 16, "variants": [[1, 2]], "cells": { "list": [[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1], [8, 1], [9, 1], [10, 1], [11, 1], [12, 1]] } }
+    {
+     "_comment": "The formal north-south path axis (direction.md: 'one straight line of meaning'). Sandstone family per picks.md \u00a71b, position-hashed variants (the inn plank-floor idiom). Skips (7,6) -- the fountain's own cell, painted by the base grass floor underneath its decor sprite instead.",
+     "sheet": "res://assets/tiles/garden/Tiles.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       9,
+       1
+      ],
+      [
+       8,
+       3
+      ],
+      [
+       10,
+       3
+      ],
+      [
+       13,
+       6
+      ]
+     ],
+     "cells": {
+      "list": [
+       [
+        7,
+        2
+       ],
+       [
+        7,
+        3
+       ],
+       [
+        7,
+        4
+       ],
+       [
+        7,
+        5
+       ],
+       [
+        7,
+        7
+       ],
+       [
+        7,
+        8
+       ],
+       [
+        7,
+        9
+       ],
+       [
+        7,
+        10
+       ]
+      ]
+     }
+    },
+    {
+     "_comment": "The misted rise (direction.md: 'an arc of colorless statues standing in a band of white mist at the axis head'). G1 ships the CLEARING only -- a lighter grass variant marking the band, no statues/plinths yet (G2's memorial seam). One row south of the north hedge so a future plinth row has open floor to stand on.",
+     "sheet": "res://assets/tiles/garden/Tiles.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       1,
+       2
+      ]
+     ],
+     "cells": {
+      "list": [
+       [
+        1,
+        1
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        3,
+        1
+       ],
+       [
+        4,
+        1
+       ],
+       [
+        5,
+        1
+       ],
+       [
+        6,
+        1
+       ],
+       [
+        7,
+        1
+       ],
+       [
+        8,
+        1
+       ],
+       [
+        9,
+        1
+       ],
+       [
+        10,
+        1
+       ],
+       [
+        11,
+        1
+       ],
+       [
+        12,
+        1
+       ]
+      ]
+     }
+    }
    ],
    "decor": [
-    { "_comment": "The statue-fountain composite (picks.md §2, resolving the 8a §5 deferral): basin FIRST, statue SECOND -- both licensed Pixel Crawler crops (placeholder-rendering until the controller lands the assets/props/garden/Feminine-Idle-Sheet.png manifest entry; see the G1 report). THE BLOCKING CONTRACT: (7,6) is in this map's own `blocked` list above (the boulder/ruin_surface precedent -- a decor-only 'solid' object is a real bug).", "sprite": "garden_fountain_basin", "cell": [7, 6] },
-    { "sprite": "garden_fountain_statue", "cell": [7, 6] }
+    {
+     "_comment": "The statue-fountain composite (picks.md \u00a72, resolving the 8a \u00a75 deferral): basin FIRST, statue SECOND -- both licensed Pixel Crawler crops (placeholder-rendering until the controller lands the assets/props/garden/Feminine-Idle-Sheet.png manifest entry; see the G1 report). THE BLOCKING CONTRACT: (7,6) is in this map's own `blocked` list above (the boulder/ruin_surface precedent -- a decor-only 'solid' object is a real bug).",
+     "sprite": "garden_fountain_basin",
+     "cell": [
+      7,
+      6
+     ]
+    },
+    {
+     "sprite": "garden_fountain_statue",
+     "cell": [
+      7,
+      6
+     ]
+    }
    ],
    "entities": [
     {
      "_comment": "The way back to the inn -- pairs with `garden_door` (inn map, cell 3,6). Landing (3,7) is one cell south of that door, the sewer_exit/deep_fissure/ruin_exit 'never land on the door's own cell' convention. `garden_door_inner` reused verbatim (one physical door, two faces). Ungated (a real `door`, always open from this side -- the K-of-N gate lives entirely on the inn-side prop).",
      "id": "garden_exit",
      "kind": "door",
-     "cell": [7, 11],
+     "cell": [
+      7,
+      11
+     ],
      "display_name": "The Way Back",
      "sprite": "garden_door_inner",
      "to_map": "inn",
-     "to_cell": [3, 7],
+     "to_cell": [
+      3,
+      7
+     ],
      "on_enter_accomplishment": "visited_the_garden"
     },
     {
-     "_comment": "The rest-anywhere-equivalent bed (spec §5's mechanical surface list). Same `sleep()` call, same progression/toast machinery as every other bed (the inn_upstairs your_bed precedent) -- the ONE authored difference is `sleep_toast`, an additional flavor line emitted BEFORE sleep()'s own stream, never replacing it.",
+     "_comment": "The rest-anywhere-equivalent bed (spec \u00a75's mechanical surface list). Same `sleep()` call, same progression/toast machinery as every other bed (the inn_upstairs your_bed precedent) -- the ONE authored difference is `sleep_toast`, an additional flavor line emitted BEFORE sleep()'s own stream, never replacing it.",
      "id": "garden_bed",
      "kind": "prop",
-     "cell": [11, 4],
+     "cell": [
+      11,
+      4
+     ],
      "display_name": "A Bed Under Open Sky",
      "sprite": "bed",
      "observe": "Someone carried a real bed out here, onto real grass, under a sky that isn't real. It's made up with clean linen anyway, like that settles the argument.",
@@ -4549,13 +5648,19 @@
      "_comment": "The memorial hill -- four plots on the misted-rise band (y=1, direction.md/handoff.md's memorial vocabulary), one per owned stone-ified statue in the roster (human/gnoll/drake/goblin, pixellab-batch.md), spaced at x=4/6/8/10 flanking the path axis (x=7, left open as the arc's own center per direction.md landmark 3). Canon: the sacred hill of statues Ch. 7.11 ('but for color they could have turned and greeted you') -- game simplification per handoff.md open question 2, one shared roster rather than per-viewer. Each plot is the dirty_table/unlit_lantern visual_states idiom EXACTLY (base sprite `memorial_plinth`, a single `{counter,at:1}` state swapping to its statue) with ONE addition this task needed and wi_game.gd now carries (`_resolve_observe_text`, doc-commented there): the SAME visual_states list also carries an optional `observe` override, so [Appraise Foe]'s existing single-string read shows the base plinth's 'waiting' flavor before the beat and the statue's own results-only remembrance line after -- proven live by garden_walkthrough (one plot pre-banked via the fixture's own resolved_wrong_order leg, present; one plot's counter genuinely unbanked, absent -- the negative tooth). Spoiler cutoff: every remembrance line stays Vol 1-7, no character named, deeds only -- the roster itself is deliberately race-generic (direction.md vocabulary point 5), the remembrance TEXT carries the specific memory, never the sprite. Memorial statues NEVER reuse a living NPC's colored sprite (the repo's known indistinguishable-prop failure mode) -- every one of these four is the ONE stoneify.py ramp, guaranteeing colorless memorial stone regardless of source figure.",
      "id": "memorial_plot_warren",
      "kind": "prop",
-     "cell": [6, 1],
+     "cell": [
+      6,
+      1
+     ],
      "display_name": "A Weathered Plinth",
      "sprite": "memorial_plinth",
      "observe": "A stone plinth, swept clean, facing the axis like the others. Whatever belongs here hasn't been carried up from below yet.",
      "visual_states": [
       {
-       "when": { "counter": "cleared_the_warren", "at": 1 },
+       "when": {
+        "counter": "cleared_the_warren",
+        "at": 1
+       },
        "sprite": "memorial_statue_gnoll",
        "observe": "A gnoll carved in stone, sword low and steady, facing down toward where the path forgets itself. Something old came up from under Liscor once. Something else went down after it, and came back up alone. The warren has been quiet since."
       }
@@ -4565,13 +5670,19 @@
      "_comment": "The seal beat's own counter -- Zevara's 'It's done. The thing under the city won't be climbing up.' hub option (zevara_intro.json), gated on `cleared_the_warren` and banking `raskghar_sealed` (the Act III advance key, traced from data, not assumed) -- a DISTINCT beat from the boss victory itself (this plot's neighbor), the political/civic resolution rather than the fight.",
      "id": "memorial_plot_seal",
      "kind": "prop",
-     "cell": [8, 1],
+     "cell": [
+      8,
+      1
+     ],
      "display_name": "A Weathered Plinth",
      "sprite": "memorial_plinth",
      "observe": "An empty plinth near the row's center, the mist pooling faintly at its base as if it expects company.",
      "visual_states": [
       {
-       "when": { "counter": "raskghar_sealed", "at": 1 },
+       "when": {
+        "counter": "raskghar_sealed",
+        "at": 1
+       },
        "sprite": "memorial_statue_drake",
        "observe": "A drake in stone, spear planted, watching over ground that used to worry the whole city. Liscor sealed the dark for good, once the warren was cleared -- masonry over memory, and no one asked for thanks. This is as close as the hill gets to giving one anyway."
       }
@@ -4581,13 +5692,19 @@
      "_comment": "The Wrong Order's shared convergence counter (quests.json beat 'resolve') -- ALSO one of `near_garden`'s own two pre-banked K-of-4 legs (wi_game.gd's `_garden_earn_met`), so this plot ships PRESENT from the fixture's own load in garden_walkthrough, no extra live-banking needed to prove the swap (the counter genuinely met, read live through the exact same visual_states/`_resolve_observe_text` seam as every other plot).",
      "id": "memorial_plot_wrong_order",
      "kind": "prop",
-     "cell": [10, 1],
+     "cell": [
+      10,
+      1
+     ],
      "display_name": "A Weathered Plinth",
      "sprite": "memorial_plinth",
      "observe": "A stone plinth at the far end of the row, otherwise unremarkable, waiting on whatever the inn hasn't settled yet.",
      "visual_states": [
       {
-       "when": { "counter": "resolved_wrong_order", "at": 1 },
+       "when": {
+        "counter": "resolved_wrong_order",
+        "at": 1
+       },
        "sprite": "memorial_statue_human",
        "observe": "A human figure in stone, apron tied, a bowl held out in both hands like an offering that never quite finished being made. The inn came up short once. Nobody outside its walls ever had to know."
       }
@@ -4597,17 +5714,1385 @@
      "_comment": "The fourth plot -- `goblins_spared` (#26) is now live, banked by `goblin_parley`'s 'Stand aside' bypass; this plot renders as the waiting plinth for any save that never took that branch and swaps to `memorial_statue_goblin` once the counter is >= 1, zero further code/data changes needed here. Doubles as direction.md's 'the hill always waits' promise: even once all three OTHER plots claim their statues, the arc never reads as full for a save that fought every goblin.",
      "id": "memorial_plot_reserved",
      "kind": "prop",
-     "cell": [4, 1],
+     "cell": [
+      4,
+      1
+     ],
      "display_name": "A Weathered Plinth",
      "sprite": "memorial_plinth",
      "observe": "A bare stone plinth at the end of the row, angled slightly wide of the others -- room left on purpose. Nothing stands on it yet. The mist doesn't seem to mind waiting.",
      "visual_states": [
       {
-       "when": { "counter": "goblins_spared", "at": 1 },
+       "when": {
+        "counter": "goblins_spared",
+        "at": 1
+       },
        "sprite": "memorial_statue_goblin",
        "observe": "A goblin carved in stone, unarmed, hands open at its sides. Not every ending here was a fight. This one is remembered for not being one."
       }
      ]
+    }
+   ]
+  },
+  "riverfarm_village": {
+   "_comment": "8b R1 (issue #10). ~24x16 timber-and-thatch village (art direction: 'harvest light'). biome riverfarm_village = floodplains floor family on purpose (open-countryside continuity); village identity comes from PROPS + the wheat/loam floor_layers bands below, not a new floor tile. Reachable ONLY via the portal contract (data/portals.json's new 'riverfarm' row, requires_accomplishment riverfarm_attuned, banked by the Guild-board rumor beat) -- no door chain from the inn (per wi-adding-a-scene's reachability rule, an anchor-stone region is its own explicit exception, same as the ruin's door_when gate before it, just one layer further: portal-gated rather than door_when-gated). The witch_hollow path (riverfarm_hollow_path) is the map's own second exit, a treeline gap not a literal door.",
+   "biome": "riverfarm_village",
+   "grid": {
+    "width": 24,
+    "height": 16
+   },
+   "blocked": [
+    [
+     7,
+     0
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     13,
+     0
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     8,
+     1
+    ],
+    [
+     9,
+     1
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     1
+    ],
+    [
+     12,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     8,
+     6
+    ],
+    [
+     9,
+     6
+    ],
+    [
+     10,
+     6
+    ],
+    [
+     11,
+     6
+    ],
+    [
+     12,
+     6
+    ],
+    [
+     13,
+     6
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     9,
+     7
+    ],
+    [
+     10,
+     7
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     7
+    ],
+    [
+     13,
+     7
+    ],
+    [
+     14,
+     7
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     3,
+     7
+    ],
+    [
+     4,
+     7
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     16,
+     8
+    ],
+    [
+     17,
+     8
+    ],
+    [
+     18,
+     8
+    ],
+    [
+     19,
+     8
+    ],
+    [
+     16,
+     9
+    ],
+    [
+     17,
+     9
+    ],
+    [
+     18,
+     9
+    ],
+    [
+     19,
+     9
+    ],
+    [
+     19,
+     4
+    ],
+    [
+     20,
+     4
+    ],
+    [
+     21,
+     4
+    ],
+    [
+     19,
+     5
+    ],
+    [
+     20,
+     5
+    ],
+    [
+     21,
+     5
+    ],
+    [
+     21,
+     0
+    ],
+    [
+     21,
+     1
+    ],
+    [
+     21,
+     2
+    ],
+    [
+     21,
+     3
+    ],
+    [
+     21,
+     4
+    ],
+    [
+     21,
+     5
+    ],
+    [
+     21,
+     6
+    ],
+    [
+     21,
+     7
+    ],
+    [
+     21,
+     8
+    ],
+    [
+     21,
+     9
+    ],
+    [
+     21,
+     10
+    ],
+    [
+     21,
+     11
+    ],
+    [
+     21,
+     12
+    ],
+    [
+     21,
+     13
+    ],
+    [
+     21,
+     14
+    ],
+    [
+     21,
+     15
+    ],
+    [
+     22,
+     0
+    ],
+    [
+     22,
+     1
+    ],
+    [
+     22,
+     2
+    ],
+    [
+     22,
+     3
+    ],
+    [
+     22,
+     4
+    ],
+    [
+     22,
+     5
+    ],
+    [
+     22,
+     6
+    ],
+    [
+     22,
+     7
+    ],
+    [
+     22,
+     8
+    ],
+    [
+     22,
+     9
+    ],
+    [
+     22,
+     10
+    ],
+    [
+     22,
+     11
+    ],
+    [
+     22,
+     12
+    ],
+    [
+     22,
+     13
+    ],
+    [
+     22,
+     14
+    ],
+    [
+     22,
+     15
+    ],
+    [
+     23,
+     0
+    ],
+    [
+     23,
+     1
+    ],
+    [
+     23,
+     2
+    ],
+    [
+     23,
+     3
+    ],
+    [
+     23,
+     4
+    ],
+    [
+     23,
+     5
+    ],
+    [
+     23,
+     6
+    ],
+    [
+     23,
+     7
+    ],
+    [
+     23,
+     8
+    ],
+    [
+     23,
+     9
+    ],
+    [
+     23,
+     10
+    ],
+    [
+     23,
+     11
+    ],
+    [
+     23,
+     12
+    ],
+    [
+     23,
+     13
+    ],
+    [
+     23,
+     14
+    ],
+    [
+     23,
+     15
+    ],
+    [
+     3,
+     9
+    ],
+    [
+     4,
+     9
+    ],
+    [
+     5,
+     9
+    ],
+    [
+     6,
+     9
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     2,
+     7
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     11,
+     11
+    ],
+    [
+     8,
+     11
+    ]
+   ],
+   "floor_layers": [
+    {
+     "_pick": "Wheat field -- the owned PixelLab wang tileset, full-wheat corner bit (15, all four bits set) as a flat fill (autotile edges deferred, per handoff open-question 1's simplest resolution: ONE representative tile via the same floor_layers mechanism street/floodplains already use for banded ground).",
+     "sheet": "res://assets/props/riverfarm/tileset_wheat_over_loam.png",
+     "tile_px": 16,
+     "coords": [
+      3,
+      3
+     ],
+     "cells": {
+      "rect": [
+       15,
+       1,
+       8,
+       5
+      ]
+     }
+    },
+    {
+     "_pick": "Tilled loam plot (wang tile 0, pure loam) -- crop_row decor sits on top.",
+     "sheet": "res://assets/props/riverfarm/tileset_wheat_over_loam.png",
+     "tile_px": 16,
+     "coords": [
+      0,
+      0
+     ],
+     "cells": {
+      "rect": [
+       2,
+       9,
+       6,
+       3
+      ]
+     }
+    },
+    {
+     "_pick": "The river -- Free Pack Water_tiles.png flat fill (picks.md sec.2, col2/row7), same floor_layers mechanism as the wheat band above (handoff open-question 2: static bank row, no animation seam this task).",
+     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+     "tile_px": 16,
+     "coords": [
+      2,
+      7
+     ],
+     "cells": {
+      "rect": [
+       21,
+       0,
+       3,
+       16
+      ]
+     }
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "crop_row_orange",
+     "cell": [
+      3,
+      10
+     ]
+    },
+    {
+     "sprite": "crop_row_green",
+     "cell": [
+      4,
+      10
+     ]
+    },
+    {
+     "sprite": "crop_row_orange",
+     "cell": [
+      5,
+      11
+     ]
+    },
+    {
+     "sprite": "crop_row_green",
+     "cell": [
+      6,
+      11
+     ]
+    },
+    {
+     "sprite": "tree_autumn_orange",
+     "cell": [
+      1,
+      3
+     ]
+    },
+    {
+     "sprite": "tree_autumn_red",
+     "cell": [
+      1,
+      13
+     ]
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      1,
+      7
+     ]
+    },
+    {
+     "sprite": "riverfarm_rowboat",
+     "cell": [
+      22,
+      5
+     ]
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      0,
+      11
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "The north-edge earthworks -- the emperor's rising works hinted as DRESSING ONLY (Laken himself out of v1 scope, spec sec.1/handoff canon flags). Non-interactive; blocks its own 7x2 footprint.",
+     "id": "riverfarm_earthworks",
+     "kind": "prop",
+     "cell": [
+      10,
+      1
+     ],
+     "display_name": "Raw-Earth Rampart",
+     "sprite": "riverfarm_earthwork",
+     "observe": "Fresh-turned earth, packed and raised into a long low wall. Someone's been digging with purpose, not just drainage.",
+     "on_interact_accomplishment": "observed_riverfarm_earthworks",
+     "toast": "Just raised earth. Whatever it's for, nobody's finished it yet."
+    },
+    {
+     "_comment": "The communal longhouse -- the village's quest-giver anchor (the headman's own doorway). 7x4 sprite, block ~7x2 (handoff sec: 'door centered').",
+     "id": "riverfarm_longhouse_prop",
+     "kind": "prop",
+     "cell": [
+      11,
+      7
+     ],
+     "display_name": "The Longhouse",
+     "sprite": "riverfarm_longhouse",
+     "observe": "One long thatch ridge, twice the width of any cottage. Smoke curls from a vent at the peak even in daylight.",
+     "on_interact_accomplishment": "observed_riverfarm_longhouse",
+     "toast": "The communal hall. Smells like woodsmoke and old stew."
+    },
+    {
+     "id": "riverfarm_cottage_a",
+     "kind": "prop",
+     "cell": [
+      5,
+      7
+     ],
+     "display_name": "A Thatched Cottage",
+     "sprite": "cottage_thatch_a",
+     "observe": "Clay-daub walls, a low thatch roof. A washing line strung between two posts.",
+     "on_interact_accomplishment": "observed_riverfarm_cottage",
+     "toast": "Someone's home. Best not to just walk in."
+    },
+    {
+     "id": "riverfarm_cottage_b",
+     "kind": "prop",
+     "cell": [
+      18,
+      9
+     ],
+     "display_name": "A Thatched Cottage",
+     "sprite": "cottage_thatch_b",
+     "observe": "A second cottage, smaller, its thatch newer than its neighbor's.",
+     "on_interact_accomplishment": "observed_riverfarm_cottage",
+     "toast": "Someone's home. Best not to just walk in."
+    },
+    {
+     "_comment": "The tall silhouette that reads 'farming village' from anywhere on the map (art direction card, landmark read 1). Anchor.y is the base masonry, not frame bottom -- sails overhang above the blocked footprint.",
+     "id": "riverfarm_windmill_prop",
+     "kind": "prop",
+     "cell": [
+      20,
+      4
+     ],
+     "display_name": "The Windmill",
+     "sprite": "riverfarm_windmill",
+     "observe": "Sails turning slow in whatever wind there is. The grinding floor above the wheat fields.",
+     "on_interact_accomplishment": "observed_riverfarm_windmill",
+     "toast": "The sails creak overhead. No one's tending it right now."
+    },
+    {
+     "id": "riverfarm_well",
+     "kind": "prop",
+     "cell": [
+      11,
+      11
+     ],
+     "display_name": "The Village Well",
+     "sprite": "riverfarm_well",
+     "observe": "A stone-ringed well, rope worn smooth by years of hauling. The water's clean this far from the blight talk.",
+     "on_interact_accomplishment": "observed_riverfarm_well",
+     "toast": "Cool water, a long way down. You leave the rope where you found it."
+    },
+    {
+     "id": "riverfarm_haystack",
+     "kind": "prop",
+     "cell": [
+      8,
+      11
+     ],
+     "display_name": "Haystack",
+     "sprite": "riverfarm_haystack",
+     "observe": "Bundled and stacked before the rain, the way a good harvest gets stored."
+    },
+    {
+     "id": "riverfarm_scarecrow",
+     "kind": "prop",
+     "cell": [
+      4,
+      11
+     ],
+     "display_name": "Scarecrow",
+     "sprite": "riverfarm_scarecrow",
+     "observe": "Straw and an old coat, arms out over the tilled rows. It isn't working today -- there are crows on its own hat."
+    },
+    {
+     "id": "riverfarm_dock",
+     "kind": "prop",
+     "cell": [
+      20,
+      6
+     ],
+     "display_name": "The Dock",
+     "sprite": "riverfarm_dock_pier",
+     "observe": "A plank pier reaching out over the river. The village's whole trade with anywhere downstream starts here (wiki Riverfarm, ch. 3.00-3.01 E: 'farming land fed by a river').",
+     "on_interact_accomplishment": "observed_riverfarm_dock",
+     "toast": "Weathered planks, sound underfoot. The current runs steady past the end of it."
+    },
+    {
+     "id": "riverfarm_fence_ew_3_9",
+     "kind": "prop",
+     "cell": [
+      3,
+      9
+     ],
+     "display_name": "Fence",
+     "sprite": "riverfarm_fence_ew",
+     "observe": "Low fence rail, bordering the tilled rows."
+    },
+    {
+     "id": "riverfarm_fence_ew_4_9",
+     "kind": "prop",
+     "cell": [
+      4,
+      9
+     ],
+     "display_name": "Fence",
+     "sprite": "riverfarm_fence_ew",
+     "observe": "Low fence rail, bordering the tilled rows."
+    },
+    {
+     "id": "riverfarm_fence_ew_5_9",
+     "kind": "prop",
+     "cell": [
+      5,
+      9
+     ],
+     "display_name": "Fence",
+     "sprite": "riverfarm_fence_ew",
+     "observe": "Low fence rail, bordering the tilled rows."
+    },
+    {
+     "id": "riverfarm_fence_ew_6_9",
+     "kind": "prop",
+     "cell": [
+      6,
+      9
+     ],
+     "display_name": "Fence",
+     "sprite": "riverfarm_fence_ew",
+     "observe": "Low fence rail, bordering the tilled rows."
+    },
+    {
+     "id": "riverfarm_fence_ns_2_6",
+     "kind": "prop",
+     "cell": [
+      2,
+      6
+     ],
+     "display_name": "Fence",
+     "sprite": "riverfarm_fence_ns",
+     "observe": "Low fence rail, bordering the tilled rows."
+    },
+    {
+     "id": "riverfarm_fence_ns_2_7",
+     "kind": "prop",
+     "cell": [
+      2,
+      7
+     ],
+     "display_name": "Fence",
+     "sprite": "riverfarm_fence_ns",
+     "observe": "Low fence rail, bordering the tilled rows."
+    },
+    {
+     "id": "riverfarm_fence_ns_2_8",
+     "kind": "prop",
+     "cell": [
+      2,
+      8
+     ],
+     "display_name": "Fence",
+     "sprite": "riverfarm_fence_ns",
+     "observe": "Low fence rail, bordering the tilled rows."
+    },
+    {
+     "_comment": "The headman -- quest-giver (R3's job to wire the real conversation graph; R1 ships talk_pool + observe only, per the plan's own scope split). Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway.",
+     "id": "riverfarm_headman",
+     "kind": "npc",
+     "cell": [
+      11,
+      9
+     ],
+     "facing": "up",
+     "display_name": "The Headman",
+     "sprite": "human_laborer",
+     "talk_pool": [
+      "We don't truck with witches here. Didn't used to, anyway.",
+      "A bad crop year, you learn to count what's yours twice. Once for the harvest, once for what walked off with it.",
+      "Sorry, I don't mean to- never mind. Long nights lately."
+     ],
+     "observe": "A ledger under one arm, mud to the knee, the look of a man doing three jobs badly instead of one job well."
+    },
+    {
+     "_comment": "The charmed villager -- the quest's pivot (R3 wires the reveal/free chain). talk_pool carries the ONE echo_of entry (locked shape 3): WISocial resolves it to riverfarm_witch's CURRENT pool line verbatim at pick time.",
+     "id": "riverfarm_charmed_villager",
+     "kind": "npc",
+     "cell": [
+      6,
+      10
+     ],
+     "facing": "down",
+     "display_name": "A Villager",
+     "sprite": "citizen_f",
+     "talk_pool": [
+      {
+       "echo_of": "riverfarm_witch"
+      }
+     ],
+     "observe": "Ordinary, except for how still they stand, and a faint red thread at the wrist that doesn't match anything else they're wearing."
+    },
+    {
+     "_comment": "Riverfarm's OWN end of the anchor-stone-per-region idiom (portals.json's new 'riverfarm' row). Reuses `boulder` tinted per the street_anchor_stone/pantry_door VISUAL-LOG precedent for a not-yet-bespoke gated prop. Gated on door_awakened (the SAME base network every anchor shares) -- reaching this cell at all already implies riverfarm_attuned (the ONLY way here is via another anchor's menu, itself door_awakened-gated), so no separate glow state is needed.",
+     "id": "riverfarm_anchor_stone",
+     "kind": "prop",
+     "cell": [
+      12,
+      5
+     ],
+     "display_name": "A Weathered Milestone",
+     "sprite": "boulder",
+     "tint": [
+      0.55,
+      0.58,
+      0.62
+     ],
+     "observe": "A worn marker stone at the village's heart. Someone scratched a spiral into its face, long since softened by weather.",
+     "portal_menu": true,
+     "portal_menu_when": {
+      "requires": {
+       "door_awakened": 1
+      }
+     },
+     "on_interact_accomplishment": "observed_riverfarm_anchor_stone",
+     "toast": "Cold, plain stone. Whatever it was for, it isn't for anything now."
+    },
+    {
+     "id": "riverfarm_hollow_path",
+     "kind": "door",
+     "cell": [
+      1,
+      11
+     ],
+     "display_name": "A Gap in the Trees",
+     "sprite": "hollow_small_tree",
+     "to_map": "witch_hollow",
+     "to_cell": [
+      10,
+      11
+     ],
+     "observe": "A narrow break in the treeline, west of the fields. The light changes past the first few trees."
+    },
+    {
+     "_comment": "LOCKED interface (8b plan): encounter id river_wolf_pack, arena village_edge_night, on_victory survived_wolf_night (lane beta/R2). encounter_when is the phase-conditional spawn gate (spec sec.5) -- checked at interact() and _check_trigger_radius(), same sites door_when-class gates already run. trigger_radius 1 gives the NIGHT ambush read R2's harness rationale calls for; at day the gate refuses BEFORE start_combat runs (canonical-pinned NEGATIVE, riverfarm_walkthrough).",
+     "id": "river_wolf_pack",
+     "kind": "encounter",
+     "cell": [
+      2,
+      14
+     ],
+     "display_name": "Shapes in the Dark",
+     "sprite": "river_wolf_idle",
+     "arena": "village_edge_night",
+     "enemies": [
+      "river_wolf_a",
+      "river_wolf_b",
+      "river_wolf_c"
+     ],
+     "on_victory": "survived_wolf_night",
+     "encounter_when": {
+      "phase": [
+       "night"
+      ]
+     },
+     "trigger_radius": 1,
+     "observe": "Eyes catch the light at the field's edge, gone again when you look straight at them. Only after dark."
+    }
+   ]
+  },
+  "witch_hollow": {
+   "_comment": "8b R1 (issue #10). ~12x14 forest pocket (art direction: 'green shade'; spec sec.1: bent trees, a cottage, herb rows, a ritual clearing). biome witch_hollow (data/biomes.json): floor = flat underwood green, enclosure via hollow_canopy_tree PROPS on the ring's blocked cells (top/bottom/left edges + entrance-adjacent), not a wall tile family -- 'a forest pocket, not a room' (handoff's staged fragment). Reachable only via riverfarm_village's riverfarm_hollow_path door (round-trip pair: hollow_village_path here).",
+   "biome": "witch_hollow",
+   "grid": {
+    "width": 12,
+    "height": 14
+   },
+   "blocked": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     13
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     13
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     13
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     13
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     5,
+     13
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     6,
+     13
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     7,
+     13
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     8,
+     13
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     9,
+     13
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     10,
+     13
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     11,
+     13
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     0,
+     7
+    ],
+    [
+     0,
+     8
+    ],
+    [
+     0,
+     9
+    ],
+    [
+     0,
+     10
+    ],
+    [
+     0,
+     11
+    ],
+    [
+     0,
+     12
+    ],
+    [
+     0,
+     13
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     9,
+     10
+    ],
+    [
+     7,
+     10
+    ]
+   ],
+   "decor": [
+    {
+     "sprite": "hollow_small_tree",
+     "cell": [
+      6,
+      5
+     ]
+    },
+    {
+     "sprite": "hollow_small_tree",
+     "cell": [
+      9,
+      5
+     ]
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      5,
+      8
+     ]
+    },
+    {
+     "sprite": "crop_row_dark_green",
+     "cell": [
+      3,
+      9
+     ]
+    },
+    {
+     "sprite": "crop_row_green",
+     "cell": [
+      4,
+      9
+     ]
+    },
+    {
+     "sprite": "hollow_mushroom_cluster",
+     "cell": [
+      6,
+      3
+     ]
+    },
+    {
+     "sprite": "hollow_small_tree",
+     "cell": [
+      9,
+      3
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "id": "hollow_tree_0",
+     "kind": "prop",
+     "cell": [
+      2,
+      0
+     ],
+     "display_name": "Bent Tree",
+     "sprite": "hollow_canopy_tree",
+     "observe": "A tree grown crooked, leaning in over the path like it's listening."
+    },
+    {
+     "id": "hollow_tree_1",
+     "kind": "prop",
+     "cell": [
+      5,
+      0
+     ],
+     "display_name": "Bent Tree",
+     "sprite": "hollow_canopy_tree",
+     "observe": "A tree grown crooked, leaning in over the path like it's listening."
+    },
+    {
+     "id": "hollow_tree_2",
+     "kind": "prop",
+     "cell": [
+      8,
+      0
+     ],
+     "display_name": "Bent Tree",
+     "sprite": "hollow_canopy_tree",
+     "observe": "A tree grown crooked, leaning in over the path like it's listening."
+    },
+    {
+     "id": "hollow_tree_3",
+     "kind": "prop",
+     "cell": [
+      2,
+      13
+     ],
+     "display_name": "Bent Tree",
+     "sprite": "hollow_canopy_tree",
+     "observe": "A tree grown crooked, leaning in over the path like it's listening."
+    },
+    {
+     "id": "hollow_tree_4",
+     "kind": "prop",
+     "cell": [
+      5,
+      13
+     ],
+     "display_name": "Bent Tree",
+     "sprite": "hollow_canopy_tree",
+     "observe": "A tree grown crooked, leaning in over the path like it's listening."
+    },
+    {
+     "id": "hollow_tree_5",
+     "kind": "prop",
+     "cell": [
+      8,
+      13
+     ],
+     "display_name": "Bent Tree",
+     "sprite": "hollow_canopy_tree",
+     "observe": "A tree grown crooked, leaning in over the path like it's listening."
+    },
+    {
+     "id": "hollow_tree_6",
+     "kind": "prop",
+     "cell": [
+      0,
+      3
+     ],
+     "display_name": "Bent Tree",
+     "sprite": "hollow_canopy_tree",
+     "observe": "A tree grown crooked, leaning in over the path like it's listening."
+    },
+    {
+     "id": "hollow_tree_7",
+     "kind": "prop",
+     "cell": [
+      0,
+      6
+     ],
+     "display_name": "Bent Tree",
+     "sprite": "hollow_canopy_tree",
+     "observe": "A tree grown crooked, leaning in over the path like it's listening."
+    },
+    {
+     "id": "hollow_tree_8",
+     "kind": "prop",
+     "cell": [
+      0,
+      9
+     ],
+     "display_name": "Bent Tree",
+     "sprite": "hollow_canopy_tree",
+     "observe": "A tree grown crooked, leaning in over the path like it's listening."
+    },
+    {
+     "_comment": "The witch's cottage -- the ONE warm window inside a cool green-dark frame (spec sec.1's landmark read 6, 'the contrast IS the storytelling'). 5x5 sprite, block ~5x3 at its base. Carries the map's single warm PointLight2D, always-on (a lived-in cottage keeps its hearth lit day and night, unlike the phase-gated street/pantry lanterns) -- stays within the \u22648/map light budget (the only light this map ships).",
+     "id": "witch_cottage_prop",
+     "kind": "prop",
+     "cell": [
+      3,
+      7
+     ],
+     "display_name": "The Witch's Cottage",
+     "sprite": "witch_cottage",
+     "observe": "A mossy, sagging roof, a crooked chimney, and one window that's always lit no matter the hour.",
+     "on_interact_accomplishment": "observed_witch_cottage",
+     "toast": "The door's shut. Whatever's inside isn't asking for company right now.",
+     "light": {
+      "color": [
+       1.0,
+       0.67,
+       0.27
+      ],
+      "energy": 0.7,
+      "radius": 28,
+      "flicker": true
+     }
+    },
+    {
+     "id": "hollow_glow_1",
+     "kind": "prop",
+     "cell": [
+      8,
+      9
+     ],
+     "display_name": "A Standing Stone",
+     "sprite": "hollow_glow_stone",
+     "tint": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "observe": "A stone taller than it should be able to stand on its own, glowing faint purple at the seams."
+    },
+    {
+     "id": "hollow_glow_2",
+     "kind": "prop",
+     "cell": [
+      9,
+      10
+     ],
+     "display_name": "A Standing Stone",
+     "sprite": "hollow_glow_stone",
+     "observe": "Another of the ring-stones, humming faintly if you hold still."
+    },
+    {
+     "id": "hollow_glow_3",
+     "kind": "prop",
+     "cell": [
+      7,
+      10
+     ],
+     "display_name": "A Standing Stone",
+     "sprite": "hollow_glow_stone",
+     "observe": "Another of the ring-stones, humming faintly if you hold still."
+    },
+    {
+     "id": "riverfarm_witch",
+     "kind": "npc",
+     "cell": [
+      3,
+      8
+     ],
+     "facing": "up",
+     "display_name": "The Witch",
+     "sprite": "riverfarm_witch_elder",
+     "talk_pool": [
+      "You want something. Everyone who finds this path wants something. Sit. Tea first.",
+      "I don't ask twice. Say what you need, and what you'll trade for it.",
+      "The craft has manners, whatever they say about me in the village."
+     ],
+     "observe": "Green wool, a walking stick within reach, and a thread of red at the wrist that doesn't match anything else she's wearing.",
+     "visual_states": [
+      {
+       "when": {
+        "phase": [
+         "dusk",
+         "night"
+        ]
+       },
+       "sprite": "riverfarm_witch_young"
+      }
+     ]
+    },
+    {
+     "_comment": "LOCKED interface: arena witch_hollow, on_victory drove_off_collectors (lane beta/R2). The 'shallow' variant, near the entrance path.",
+     "id": "briar_collectors",
+     "kind": "encounter",
+     "cell": [
+      9,
+      6
+     ],
+     "display_name": "Animated Briars",
+     "sprite": "hollow_mushroom_cluster",
+     "arena": "witch_hollow",
+     "enemies": [
+      "briar_collector_a",
+      "briar_collector_b"
+     ],
+     "on_victory": "drove_off_collectors",
+     "observe": "Briars, moving without wind. They haven't noticed you yet."
+    },
+    {
+     "_comment": "LOCKED interface: same arena/on_victory as the shallow briar_collectors (both fights share the witch_hollow arena template, lane beta/R2). The 'deep' variant, further from the entrance, past the cottage.",
+     "id": "briar_collectors_deep",
+     "kind": "encounter",
+     "cell": [
+      4,
+      11
+     ],
+     "display_name": "Animated Briars",
+     "sprite": "hollow_mushroom_cluster",
+     "arena": "witch_hollow",
+     "enemies": [
+      "briar_collector_a",
+      "briar_collector_b",
+      "briar_collector_c"
+     ],
+     "on_victory": "drove_off_collectors",
+     "observe": "More briars, thicker here, coiled tight around something you can't quite see."
+    },
+    {
+     "id": "hollow_village_path",
+     "kind": "door",
+     "cell": [
+      11,
+      11
+     ],
+     "display_name": "A Gap in the Trees",
+     "sprite": "hollow_small_tree",
+     "to_map": "riverfarm_village",
+     "to_cell": [
+      2,
+      11
+     ],
+     "observe": "The trees thin out this way. Open fields past the last few trunks."
     }
    ]
   }
