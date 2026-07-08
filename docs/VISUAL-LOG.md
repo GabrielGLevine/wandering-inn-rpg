@@ -467,9 +467,80 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   the L5 contract) — GH#21 controller read,
   `qa_output/ice_floor_loop/00_icy_floor_cast.png`. Cosmetic; the feed
   shows the slow anyway on first application.
+- [ ] SPRITE — `pantry_door`'s AWAKENED state still reads as barely-
+  distinguishable from default/flicker at gameplay distance — DF fix wave
+  (2026-07-07, issue #8 rotation item 3). Fired 4 PixelLab v1 `/inpaint`
+  generations at the queued `docs/design/8a-asset-assembly.md` sec. 4 spec
+  (target: the existing 34x44 `door` crop, wood-panel-only mask across a
+  strength/prompt sweep 60-260) — full log in
+  `potential_assets/pixellab_2026-07-07/manifest.md`. None passed the bar:
+  the model either abandoned the door's silhouette entirely at high
+  strength (gen1) or produced no visible glow/rune detail at all at lower
+  strength (gen2-4) — the ~28x14px inpaint target is likely too small for
+  legible rune linework at this model's resolution. Kept the shipped
+  tint (`[1.05,0.9,0.6]`) + warm flickering `PointLight2D` (unchanged).
+  Windowed-verified honestly (`qa_output/door_awakening/
+  01_pantry_door_awakened_portal_menu.png`, cropped/zoomed): the warm tint
+  IS present but subtle — a first-time player would likely NOT read this
+  door as magically awakened from the tint alone; the light's flicker
+  isn't visible in a single static frame either. Candidate fixes for a
+  future pass: a brighter tint delta and/or larger light radius/energy
+  (data-only, no art needed), or a re-attempt generating a LARGER
+  reference frame (e.g. via `/v2/create-tileset` or a dedicated object
+  endpoint) and downscaling, rather than inpainting directly at the
+  shipped 34x44 size.
+- [ ] MAP/RUIN — `ruin_surface`'s canonical route (`ruin_walkthrough`)
+  never crosses the map's one dressed area (the fallen-rubble-column/
+  broken-lintel `walls.segments` at x6-11,y8-11, deliberately "the
+  untouched middle of the room" per that map's own D3 _comment) — so every
+  screenshot this canonical actually produces
+  (`qa_output/ruin_walkthrough/00_ruin_landing.png`,
+  `01_pedestal_locked.png`) reads as a flat, uniform cave floor with two
+  identical `boulder` decor props, not a ruin (DPF rotation F1, confirmed
+  live in the DF fix wave rotation, 2026-07-07). Root cause: the map's
+  `biome` is literally `"cave"` (reusing the verified cave-floor tile
+  neighborhood, per D1's own _comment) and its only Albez-specific
+  architectural dressing sits off the walked path. Candidate fixes (design
+  call, not implemented this pass): (a) extend `ruin_walkthrough`'s route
+  or add a screenshot beat through the rubble-column area so the existing
+  dressing is at least visible to QA/players who walk there, or (b)
+  relocate some of that dressing (or add ruin-specific floor variety, per
+  `docs/design/8a-asset-assembly.md` sec. 1's Cemetery-pack candidates,
+  never wired) along the edge-hugging route players actually walk. Not
+  implemented here — DF's charter is fixes, not new map-dressing content;
+  flagging for a future content pass.
 
 ## Fixed
 
+- [x] SPRITE — FIXED (DF fix wave, 2026-07-07, commit `92cffcb`) —
+  **`ruin_guardian` visually fused with the PC's own sprite at 2-cell
+  range** (BLOCKING, DPF machine-playtest rotation B1,
+  `qa_output/ruin_walkthrough/01_pedestal_locked.png`: "a small human head
+  sitting directly on top of a tall gray monster torso"). Root cause: a
+  mismeasured `raskghar_awakened` anchor (`data/sprites.json` had
+  anchor.y=0.7823/97-124, but a PIL alpha-scan of the sprite's own
+  `Idle_Down-Sheet.png` frame 0 finds the true feet at 87/124=0.7016) —
+  the stale anchor dragged the whole figure ~8 rendered px too far north,
+  on top of its own cell. Fixed the anchor AND nudged `ruin_guardian`'s
+  `skeleton_scene.json` cell one row south (17,7 -> 17,8, `door_chain_fight.
+  json`'s teleport target updated to match) to fully clear the remaining
+  overlap at 2-cell PC range while preserving the sprite's intentionally-
+  larger-than-Gnoll `render_scale` (shrinking it instead would have erased
+  the "towers over Gnolls" read). Windowed-reverified: the two figures now
+  read as distinct (small tan human vs. large blue-grey beast).
+- [x] UI/TOAST — FIXED (DF fix wave, 2026-07-07, commit `0f5b5f0`) —
+  **stale "You sleep soundly." toast still on screen when the awakened
+  `pantry_door`'s portal menu opens** (FRICTION, DPF rotation F2,
+  `qa_output/door_awakening/01_pantry_door_awakened_portal_menu.png`).
+  The toast panel had no clear-on-transition treatment, unlike the ambient
+  dialogue-line bark panel (which the Skills-wave fix already clears on
+  DIALOGUE_STARTED/COMBAT_STARTED/MAP_CHANGED). Added `_clear_toast()`
+  (`src/ui/message_layer.gd`) mirroring those exact three call sites — a
+  fix at the CLASS level (any stale toast surviving into a dialogue/
+  combat/map transition), not a bespoke one-off for this one toast.
+  Windowed-reverified clean; regression-checked headless against the
+  highest toast-volume canonicals (work_loop, tutorial_flow, arc_flow,
+  deep_descent, field_skills_loop, barracks_walkthrough, portal_menu).
 - [x] SPRITE/CANON — FIXED (art-wiring task, 2026-07-07, commit pending,
   uncommitted) — **Lyonette** used the `citizen_f` sprite with a pink tint,
   a human-woman stand-in with the wrong hair (wiki canon: bright RED hair
