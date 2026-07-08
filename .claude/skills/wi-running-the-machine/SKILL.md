@@ -48,9 +48,16 @@ Playtest findings are directives: triage each into hotfix-now vs
 milestone-scoped, record the triage in HANDOFF.
 
 ## Delegation ladder
+- **IMPLEMENTERS = Codex 5.5 (user directive 2026-07-08):** dispatch via the
+  codex plugin's rescue lane with the task brief. Codex sandbox constraints
+  (standing env note): cannot write `.git`, cannot open windows — so Codex
+  lanes are NO-COMMIT (controller stages from the lane's reported file list)
+  and verify HEADLESS only; windowed/visual reads are the controller's or a
+  Claude lane's. Reviewers stay Claude-side (the review chain is the check
+  on the implementer, never the same vendor reviewing itself).
 - Mechanical, tightly-bounded, reviewer-covered (renames, fixtures, ports):
   cheap model (SiliconFlow Qwen; key `docs/siliconflow_api_key.txt`, never commit).
-- Bounded implementation with judgment (a UI element, a QA script): Sonnet
+- Bounded implementation with judgment when Codex is unavailable: Sonnet
   subagent with a precise brief (files, constraints, verification commands,
   "do not commit").
 - Design, sim-core semantics, canon, balance philosophy: do not delegate.
