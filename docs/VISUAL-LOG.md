@@ -16,6 +16,23 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] SPRITE/RIVERFARM — the witch's cell (3,8) sits close enough under
+  witch_cottage_prop's (3,7) sprite that her figure visually overlaps the
+  cottage wall/window rather than reading as clearly standing in front of
+  it (riverfarm_walkthrough/05_witch_elder_day.png,
+  06_witch_young_night.png). Still legible (both forms distinguishable),
+  but a cleaner read would nudge the witch one cell further south or add a
+  small field_y_sort_bias_px on the cottage. First seen: 8b Task R1
+  windowed read, 2026-07-08.
+- [ ] SPRITE/RIVERFARM — the Farm.png crop-row decor (crop_row_orange/
+  green/dark_green, tilled-plot dressing) reads as a row of rounded
+  colored blobs at native zoom rather than a clearly legible planted-crop
+  silhouette (riverfarm_walkthrough/01_arrived_riverfarm_village_day.png,
+  03_charmed_villager_echo.png). Not a semantic mismatch (it IS a crop
+  sprite, licensed pick per picks.md sec.3) but a fidelity/legibility
+  flag worth a second look once a wiring pass has more of the field
+  dressed. First seen: 8b Task R1 windowed read, 2026-07-08.
+
 - [ ] UI/BARK — trailing period on a short wrapped 2nd line clips under the
   bark panel's bottom-left decorative fold (DPF rotation: Yelra +
   Dresk shots, payload always carries it). The 2-line budget landed; the
