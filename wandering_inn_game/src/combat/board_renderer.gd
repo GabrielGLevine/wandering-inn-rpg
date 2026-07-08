@@ -27,6 +27,20 @@ const CELL := 16
 const PLAYER_COLOR := Color(0.25, 0.45, 0.9)
 const ENEMY_COLOR := Color(0.75, 0.25, 0.2)
 const MP_COLOR := Color(0.25, 0.4, 0.85)
+## HP bars were one green regardless of side -- with combat name tags
+## retired (R3), the turn strip was the only friend/foe cue, worst in a
+## multi-combatant fight (playtest evidence: arc_flow's dd_06 boss fight,
+## 4 combatants, all-green bars). Side-keyed per `make_combatant_visual`'s
+## `c["side"]` (already the ally/enemy source of truth used for the chip
+## fallback above) -- stats stay hidden, this is presentation-only. Enemy
+## hue is a red-ORANGE, not pure red: red/green is the confusable pair for
+## the common (deuteranopia/protanopia) colorblind types, and orange's
+## extra luminance/blue-channel separation from green survives that
+## confusion where a pure red wouldn't. `_legibility_boost` (GH#28
+## dark-arenas) still self-modulates both colors up to the same brightness
+## floor, so the hue split holds in dark arenas too, not just bright ones.
+const ALLY_HP_COLOR := Color(0.2, 0.8, 0.2)
+const ENEMY_HP_COLOR := Color(0.95, 0.45, 0.05)
 ## Persistent frost tint for icy_floor
 ## overlays -- combat_screen.gd's FROST_FLASH RGB (0.5, 0.8, 1.0) at a lower
 ## persistent alpha (0.35 vs the transient cast-flash's 0.55, since this rect
@@ -417,7 +431,7 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 	# bottom edge -- numerals move to a native-res
 	# overlay in R5; this bar is the part that stays in-viewport permanently.
 	var bar := ColorRect.new()
-	bar.color = Color(0.2, 0.8, 0.2)
+	bar.color = ALLY_HP_COLOR if String(c["side"]) == "player" else ENEMY_HP_COLOR
 	bar.position = Vector2(1, CELL - 3)
 	bar.size = Vector2(CELL - 2, 2)
 	bar.self_modulate = _legibility_boost
