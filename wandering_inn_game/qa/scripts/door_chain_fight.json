@@ -51,6 +51,7 @@
   { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
+  { "_comment": "DF fix wave (2026-07-07, issue #8 rotation N2): windowed-only cheap-permanence shot -- this canonical was shotless by design (no visual proof the 3 rift_vermin combatants render as distinct entities on the inn_cellar board). No-op headless (screenshot() early-returns for the headless DisplayServer, the stage3_perks_loop precedent) -- no assertion depends on it, so nothing to re-verify headless.", "action": "screenshot", "name": "00_rift_vermin_leak_board" },
   { "action": "combat_autoplay", "max_turns": 300 },
   { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
   { "action": "press", "name": "confirm" },

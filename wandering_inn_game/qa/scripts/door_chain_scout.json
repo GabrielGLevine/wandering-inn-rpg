@@ -18,6 +18,7 @@
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "read_the_door_runes" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away." } },
+  { "_comment": "DF fix wave (2026-07-07, issue #8 rotation N2): windowed-only cheap-permanence shot -- this canonical was shotless by design (no visual proof the [Observe] toast's on-screen wrap/fold-bleed is clean). No-op headless (screenshot() early-returns for the headless DisplayServer, the stage3_perks_loop precedent) -- no assertion depends on it, so nothing to re-verify headless.", "action": "screenshot", "name": "00_door_runes_observe_toast" },
 
   { "_comment": "== report to Pisces (street, 30,4) ==", "action": "teleport", "map": "street", "cell": [30, 5] },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
