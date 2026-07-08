@@ -307,13 +307,19 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 
 
 ## The `ui_inventory_shown` re-confirm payload, shared by `_open()` and the
-## domain-event re-renders above so the two never drift.
+## domain-event re-renders above so the two never drift. `cursor_scroll`
+## (2026-07-08 hotfix) is `_scroll.scroll_vertical` at emit time -- a real
+## RENDERED fact (like every other `ui_*_shown`/`ui_*_rendered` payload
+## field), not sim state, so QA can assert the on-open first-row-visible
+## fix honestly (gear_loop/00: full pack open must land at scroll 0, or
+## row 0's own cursor mark is off-screen with nothing to prove it happened).
 func _emit_shown() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {
 		"items": _item_ids.size(),
 		"gold": Game.sim.gold,
 		"item_effect_lines": _rendered_effect_lines(),
 		"resonance": {"used": Game.sim.resonance_used(), "capacity": Game.sim.resonance_capacity},
+		"cursor_scroll": _scroll.scroll_vertical,
 	})
 
 
@@ -515,15 +521,27 @@ func _rebuild_items() -> void:
 			cursor_row = name_label
 	_render_detail()
 	if cursor_row != null:
-		# A FRESH rebuild (every child freed and recreated above) needs the
-		# VBoxContainer's own queued sort to actually run before its rows'
-		# rects are trustworthy -- a single `call_deferred` hop can still race
-		# that queued sort (confirmed empirically: after a full rebuild, one
-		# hop left the view scrolled to wherever it was BEFORE the rebuild,
-		# not at the cursor's fresh row). Deferring the deferred call gives it
-		# a second idle-time hop, past the container's own layout pass.
-		var row := cursor_row
-		(func() -> void: _scroll.ensure_control_visible.call_deferred(row)).call_deferred()
+		if _cursor == 0:
+			# Row 0 is always the correct top-of-list on a fresh `_open()`
+			# (`_cursor` resets to 0 there) -- scroll to it DIRECTLY rather
+			# than through `ensure_control_visible` below. That helper reads
+			# `_items_box`'s row geometry, which is unreliable on the very
+			# FIRST rebuild after `_items_box` goes from zero rows to a full
+			# batch (playtest evidence: gear_loop/00 -- full-pack open left
+			# row 0 scrolled out of view entirely, no ">" cursor mark
+			# anywhere on screen). Scroll 0 needs no geometry read at all, so
+			# it can't race the container's own layout pass.
+			_scroll.scroll_vertical = 0
+		else:
+			# A FRESH rebuild (every child freed and recreated above) needs the
+			# VBoxContainer's own queued sort to actually run before its rows'
+			# rects are trustworthy -- a single `call_deferred` hop can still race
+			# that queued sort (confirmed empirically: after a full rebuild, one
+			# hop left the view scrolled to wherever it was BEFORE the rebuild,
+			# not at the cursor's fresh row). Deferring the deferred call gives it
+			# a second idle-time hop, past the container's own layout pass.
+			var row := cursor_row
+			(func() -> void: _scroll.ensure_control_visible.call_deferred(row)).call_deferred()
 
 
 ## Renders the RIGHT-column detail card for whatever item the cursor is

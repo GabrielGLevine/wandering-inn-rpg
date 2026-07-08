@@ -14,8 +14,8 @@
   { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
 
-  { "_comment": "== (1) full pack open ==. ui_inventory_shown gains resonance{used,capacity} -- both pre-equipped items (rusty_sword, leather_jerkin) are resonance 0, so used starts at 0.", "action": "press", "name": "inventory" },
-  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 19, "gold": 0, "resonance": { "used": 0, "capacity": 2 } }, "timeout_sec": 5 },
+  { "_comment": "== (1) full pack open ==. ui_inventory_shown gains resonance{used,capacity} -- both pre-equipped items (rusty_sword, leather_jerkin) are resonance 0, so used starts at 0. 2026-07-08 hotfix: cursor_scroll:0 is the on-open first-row-visible proof -- row 0 (cursor start) must land at the TOP of the scroll, not scrolled past with no cursor mark on screen (the playtest-caught bug).", "action": "press", "name": "inventory" },
+  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 19, "gold": 0, "resonance": { "used": 0, "capacity": 2 }, "cursor_scroll": 0 }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "00_full_pack_top_cursor_rusty_sword" },
 
   { "_comment": "Cursor wraps to the LAST item (fishers_handline, index 18) -- the full-pack scroll/clip check: `_scroll.ensure_control_visible` should keep the selected row on-screen even though the ScrollContainer's own mouse_filter is IGNORE (no wheel input wired).", "action": "press", "name": "move_down" },
