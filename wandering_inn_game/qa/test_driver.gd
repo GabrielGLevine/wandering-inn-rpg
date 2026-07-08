@@ -189,6 +189,26 @@ func _execute(step: Dictionary) -> void:
 				_inject_action("move_" + String(step["direction"]))
 				await get_tree().process_frame
 				await get_tree().process_frame
+		"move_diag":
+			# Issue #40 (8-way field movement): a genuine simultaneous-key-hold
+			# diagonal, through the REAL input pipeline -- world.gd's
+			# `_combined_move_dir` reads whether the OTHER axis's action is
+			# STILL held at the moment an axis's press event dispatches, so
+			# unlike `_inject_action` (press then immediate release, no held
+			# state ever observable), this holds `a` down THROUGH `b`'s press
+			# before releasing either. `a` alone dispatches first and is a
+			# real move on its own (nothing else is held yet -- one honest
+			# cardinal step), THEN `b`'s press dispatches with `a` still held,
+			# which IS the diagonal (a's axis + b's axis combined). This is
+			# exactly how two physical keys produce a diagonal -- true
+			# simultaneity doesn't exist for sequential event dispatch, so a
+			# `move_diag` step always resolves to one cardinal step (`a`)
+			# immediately followed by one diagonal step (`a`+`b`), never a
+			# lone diagonal -- scripts using this account for both steps.
+			for i in int(step.get("steps", 1)):
+				_inject_diag(String(step["a"]), String(step["b"]))
+				await get_tree().process_frame
+				await get_tree().process_frame
 		"type_text":
 			# M-ARC §5: type a name into the char-creation field one real unicode
 			# keystroke at a time (char_creation captures these in _unhandled_input,
@@ -267,6 +287,39 @@ func _inject_action(action_name: String) -> void:
 	release.keycode = key
 	release.pressed = false
 	Input.parse_input_event(release)
+
+
+## Issue #40: presses `a` and holds it, THEN presses `b` while `a` is still
+## down, then releases both -- see `move_diag`'s doc comment in `_execute`
+## for why this (not two independent `_inject_action` calls) is what makes
+## `b`'s dispatch see `a` as held via `Input.is_action_pressed`, the exact
+## state `world.gd`'s `_combined_move_dir` reads to form a diagonal.
+func _inject_diag(a: String, b: String) -> void:
+	if not ACTION_KEYS.has(a) or not ACTION_KEYS.has(b):
+		_fail("no key mapping for diagonal action: %s / %s" % [a, b])
+		return
+	var key_a: Key = ACTION_KEYS[a]
+	var key_b: Key = ACTION_KEYS[b]
+	var press_a := InputEventKey.new()
+	press_a.physical_keycode = key_a
+	press_a.keycode = key_a
+	press_a.pressed = true
+	Input.parse_input_event(press_a)
+	var press_b := InputEventKey.new()
+	press_b.physical_keycode = key_b
+	press_b.keycode = key_b
+	press_b.pressed = true
+	Input.parse_input_event(press_b)
+	var release_a := InputEventKey.new()
+	release_a.physical_keycode = key_a
+	release_a.keycode = key_a
+	release_a.pressed = false
+	Input.parse_input_event(release_a)
+	var release_b := InputEventKey.new()
+	release_b.physical_keycode = key_b
+	release_b.keycode = key_b
+	release_b.pressed = false
+	Input.parse_input_event(release_b)
 
 
 ## M-ARC §5: inject a single printable character as a real key event (unicode

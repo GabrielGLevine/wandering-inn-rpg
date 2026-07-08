@@ -136,6 +136,11 @@ var _ice_overlay: TileMapLayer
 ## running before starting the other, or both fight over `.position` for up
 ## to ~0.12s. See `_kill_player_tween`.
 var _player_tween: Tween
+## Issue #41 (camera jitter fix): mirrors `_player_tween`'s one-slot-not-two
+## idiom, just for `_camera.position` instead of the player sprite's. See
+## `_pan_camera_to_player`'s doc comment for why this exists as a SEPARATE
+## tween from `_player_tween` rather than one tween driving both properties.
+var _camera_tween: Tween
 var _entity_visuals: Dictionary = {}
 var _journal: Node
 var _pause_menu: Node
@@ -320,16 +325,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		Game.sim.interact()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_up"):
-		Game.sim.move_player(Vector2i.UP)
+		Game.sim.move_player(_combined_move_dir(Vector2i.UP))
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_down"):
-		Game.sim.move_player(Vector2i.DOWN)
+		Game.sim.move_player(_combined_move_dir(Vector2i.DOWN))
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_left"):
-		Game.sim.move_player(Vector2i.LEFT)
+		Game.sim.move_player(_combined_move_dir(Vector2i.LEFT))
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_right"):
-		Game.sim.move_player(Vector2i.RIGHT)
+		Game.sim.move_player(_combined_move_dir(Vector2i.RIGHT))
 		get_viewport().set_input_as_handled()
 	elif InputMap.has_action("slot_prev") and event.is_action_pressed("slot_prev"):
 		_move_field_slot_cursor(-1)
@@ -352,6 +357,37 @@ func _unhandled_input(event: InputEvent) -> void:
 			if skill_id != "":
 				Game.sim.use_skill_field(skill_id)
 				get_viewport().set_input_as_handled()
+
+
+## Issue #40 (8-way field movement): combines the axis the just-pressed
+## `primary` cardinal belongs to with whichever action on the OTHER axis is
+## ALSO currently held, producing a diagonal Vector2i when both are down.
+## `Input.is_action_pressed` (continuous held-state, not the discrete press
+## event) is deliberately what this polls -- it's true for a real second key
+## still held down AND for a pad stick pushed diagonally (move_up/move_right
+## etc. are each bound to one analog axis half per #18's input work, so a
+## diagonal stick push already satisfies two of these independently; no new
+## pad-specific code needed). A single cardinal press with nothing else held
+## returns `primary` unchanged -- byte-identical to the pre-#40 direct call.
+## QA scripts inject one action at a time, press-then-release synchronously
+## with no frame gap (`test_driver.gd`'s `_inject_action`), so by the time a
+## second injected action's press event reaches this check the first is
+## already released and `is_action_pressed` reads false -- every existing
+## canonical's single-dir moves stay pure cardinals, unaffected by this.
+func _combined_move_dir(primary: Vector2i) -> Vector2i:
+	var dx := primary.x
+	var dy := primary.y
+	if dx == 0:
+		if Input.is_action_pressed("move_left"):
+			dx = -1
+		elif Input.is_action_pressed("move_right"):
+			dx = 1
+	if dy == 0:
+		if Input.is_action_pressed("move_up"):
+			dy = -1
+		elif Input.is_action_pressed("move_down"):
+			dy = 1
+	return Vector2i(dx, dy)
 
 
 ## Controller support (S1): moves the field hotbar's pad cursor by `delta`
@@ -704,10 +740,25 @@ func _current_map_cfg() -> Dictionary:
 
 ## Camera2D positioning (M5 R4): centers a map/arena smaller than the
 ## 320x180 view; clamped-follow (never shows past the content edge) for a
-## map/arena larger than the view. No current map/arena exceeds VIEW_SIZE
-## (largest is the 12x8 combat grid at 192x128), so the clamped-follow branch
-## is unexercised today but built now per the brief.
+## map/arena larger than the view. STALE CLAIM CORRECTED (issue #41): this
+## comment used to say no current map/arena exceeds VIEW_SIZE and the
+## clamped-follow branch was unexercised -- that stopped being true well
+## before #41 (street/floodplains/sewers/guild/ruin_surface/garden_sanctuary
+## are all bigger than 320x180 today), and the follow branch running live on
+## those maps is exactly what made the field-walk camera jitter visible.
+## `_update_camera` itself is still an instant snap on purpose -- used by map
+## rebuild and combat enter/exit, where a hard cut is correct. The
+## PLAYER_MOVED-driven walk uses `_pan_camera_to_player` instead (see its doc
+## comment) precisely so a real cell-to-cell walk animates rather than snaps.
+## Kills any in-flight `_camera_tween` FIRST (#41 fix hardening): a door/
+## combat-trigger event can land while the previous step's pan is still
+## finishing (e.g. interacting with a door moments after a walking step,
+## or a `_check_trigger_radius` ambush firing in the SAME `move_player` call
+## that also just started a pan) -- without this, the orphaned tween would
+## resume next frame and drag `_camera.position` away from the snap this
+## function just set, toward its now-stale field-walk target.
 func _update_camera() -> void:
+	_kill_camera_tween()
 	var grid_size := Game.sim.grid_size
 	var content_size := Vector2(grid_size) * CELL
 	var focus := Vector2(Game.sim.player_cell) * CELL + Vector2(CELL, CELL) * 0.5
@@ -721,6 +772,62 @@ static func _camera_axis(content: float, view: float, focus: float) -> float:
 	if content <= view:
 		return content * 0.5
 	return clampf(focus, view * 0.5, content - view * 0.5)
+
+
+## Issue #41 (camera jitter root cause + fix): `_update_camera()` above always
+## SNAPPED `_camera.position` to the destination the instant it was called --
+## fine for a map rebuild or a combat-camera swap (an instant cut IS correct
+## there), but the `PLAYER_MOVED` handler called it too, synchronously with
+## `_move_player_visual` starting a ~120ms CUBIC/EASE_OUT tween of the PLAYER
+## SPRITE toward that same point. Net effect on any map wider/taller than the
+## 320x180 view (clamped-follow branch of `_camera_axis` -- contra this file's
+## stale M5 R4 comment claiming no current map exceeds VIEW_SIZE: street/
+## floodplains/sewers/guild/ruin_surface/garden_sanctuary all do): the camera
+## HARD-JUMPED a full cell in a single frame, then sat perfectly still for the
+## remaining ~117ms while only the small player sprite eased into place --
+## measured directly off `_camera`/`_player_visual` (`camera_x` flat for 6+
+## consecutive cell-steps while `player_visual_x` swept continuously, then an
+## 8-16px jump in one process frame; see the #41 report). That is the
+## "continuous motion then alternating static/jump frames" the user's
+## recording showed. This variant re-derives the SAME `_camera_axis` target
+## (byte-identical math to `_update_camera`) but glides there over the exact
+## same duration/easing as `_move_player_visual`'s own tween instead of
+## snapping, so camera and sprite move in lockstep every frame -- both tweens
+## are pure functions of elapsed-time-since-start with the same trans/ease, so
+## two independently-created Tweens started in the same call stay in sync with
+## no cross-wiring needed. Falls back to the instant `_update_camera()` snap
+## whenever `_presentation_delay` collapses to zero (TestDriver-driven or
+## headless), which is the SAME collapse `_move_player_visual` already relies
+## on -- a QA script or headless run sees byte-identical camera placement to
+## before this fix, every canonical included. Only the `PLAYER_MOVED` handler
+## calls this; map rebuild (`_rebuild_field`) and combat enter/exit still use
+## the instant `_update_camera()` snap on purpose -- a fresh scene or mode
+## swap should never animate into place.
+func _pan_camera_to_player() -> void:
+	var duration := _presentation_delay(MOVE_TWEEN_SECONDS)
+	if duration <= 0.0:
+		_update_camera()
+		return
+	var grid_size := Game.sim.grid_size
+	var content_size := Vector2(grid_size) * CELL
+	var focus := Vector2(Game.sim.player_cell) * CELL + Vector2(CELL, CELL) * 0.5
+	var target := Vector2(
+		_camera_axis(content_size.x, VIEW_SIZE.x, focus.x),
+		_camera_axis(content_size.y, VIEW_SIZE.y, focus.y)
+	)
+	_kill_camera_tween()
+	_camera_tween = create_tween()
+	_camera_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_camera_tween.tween_property(_camera, "position", target, duration)
+
+
+## Mirrors `_kill_player_tween` (M5 R5 review Low #2's one-slot-not-two idiom)
+## for the camera pan tween -- a move landing while the previous step's pan is
+## still finishing must kill it first, or two tweens fight over
+## `_camera.position` for up to ~0.12s.
+func _kill_camera_tween() -> void:
+	if _camera_tween != null and _camera_tween.is_valid():
+		_camera_tween.kill()
 
 
 ## M5 R6 (I6 board extraction): the Node2D combat_screen.gd renders the arena
@@ -743,7 +850,11 @@ func combat_board_root() -> Node2D:
 ## no player-cell equivalent. Every current arena (largest: 12x8 = 192x128)
 ## is smaller than the 320x180 view, so this always centers today; the
 ## clamped-follow branch is future-proofing, same as `_update_camera`'s.
+## Kills any in-flight `_camera_tween` first, same hardening as
+## `_update_camera` -- a proximity ambush (`_check_trigger_radius`) can start
+## combat in the SAME `move_player` call that just began a field pan.
 func enter_combat_camera(grid_size: Vector2i) -> void:
+	_kill_camera_tween()
 	var content_size := Vector2(grid_size) * CELL
 	_camera.position = Vector2(
 		_camera_axis(content_size.x, VIEW_SIZE.x, content_size.x * 0.5),
@@ -1164,7 +1275,10 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_move_player_visual(Vector2(cell) * CELL)
 		_play_player_anim("walk")
 		_queue_player_idle()
-		_update_camera()
+		# Issue #41: was `_update_camera()` (an instant snap) -- see
+		# `_pan_camera_to_player`'s doc comment for the jitter this caused on
+		# any map with clamped-follow (wider/taller than the 320x180 view).
+		_pan_camera_to_player()
 	elif type == WIEvents.PLAYER_BLOCKED:
 		_bump_player_visual()
 	elif type == WIEvents.MAP_CHANGED:
@@ -1300,35 +1414,41 @@ func _presentation_delay(seconds: float) -> float:
 	return seconds
 
 
-## FIELD HELD-KEY MOVEMENT (2026-07-05 playtest directive): the four movement
-## actions keyed to their sim direction, used by `_held_move_direction` below.
-const MOVE_ACTIONS := {
-	"move_up": Vector2i.UP,
-	"move_down": Vector2i.DOWN,
-	"move_left": Vector2i.LEFT,
-	"move_right": Vector2i.RIGHT,
-}
-
-
 ## Polls (not event-based -- OS key-repeat/"echo" events are filtered out of
 ## `is_action_pressed` by default, which is exactly why a held arrow currently
 ## only steps once) whether any movement action is still down, for the
-## held-repeat check on move-tween completion. Prefers continuing in the
-## player's CURRENT facing (a straight-line hold reads as one continuous walk
-## rather than re-resolving priority every step); falls back to whichever
-## other movement action is held, so a direction change mid-hold (still
-## holding one key, pressing a second) also continues stepping without a
-## release/re-press. Returns Vector2i.ZERO (not a valid direction any action
-## maps to) as the "nothing held" sentinel.
+## held-repeat check on move-tween completion. Issue #40: resolves each axis
+## (horizontal/vertical) INDEPENDENTLY via `_held_axis` below, so holding two
+## orthogonal keys together (or a pad stick pushed diagonally) continues
+## stepping diagonally, not just cardinally -- the held-repeat counterpart of
+## `_combined_move_dir`'s press-time combination above. Returns Vector2i.ZERO
+## (not a valid direction any combination produces) as the "nothing held"
+## sentinel.
 func _held_move_direction() -> Vector2i:
 	var facing := Game.sim.player_facing
-	for action_name: String in MOVE_ACTIONS:
-		if (MOVE_ACTIONS[action_name] as Vector2i) == facing and Input.is_action_pressed(action_name):
-			return facing
-	for action_name: String in MOVE_ACTIONS:
-		if Input.is_action_pressed(action_name):
-			return MOVE_ACTIONS[action_name]
-	return Vector2i.ZERO
+	var dx := _held_axis("move_left", -1, "move_right", 1, facing.x)
+	var dy := _held_axis("move_up", -1, "move_down", 1, facing.y)
+	return Vector2i(dx, dy)
+
+
+## Resolves one movement axis from its two opposing actions. Both held at once
+## (a genuine conflict, e.g. left+right together) prefers whichever matches
+## the player's CURRENT facing component -- continuing a straight-line hold
+## reads as one continuous walk rather than re-resolving priority every step,
+## the same intent the pre-#40 single-axis version documented -- falling back
+## to the negative action winning ties as a stable deterministic default.
+## Either action alone resolves normally; neither held returns 0 (this axis
+## contributes nothing to the combined direction).
+func _held_axis(neg_action: String, neg_val: int, pos_action: String, pos_val: int, facing_component: int) -> int:
+	var neg_held := Input.is_action_pressed(neg_action)
+	var pos_held := Input.is_action_pressed(pos_action)
+	if neg_held and pos_held:
+		return pos_val if facing_component == pos_val else neg_val
+	if neg_held:
+		return neg_val
+	if pos_held:
+		return pos_val
+	return 0
 
 
 ## FIELD HELD-KEY MOVEMENT (2026-07-05 playtest directive): fires once per

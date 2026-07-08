@@ -42,6 +42,27 @@
    "name": "01_start"
   },
   {
+   "_comment": "Issue #40 (8-way field movement): a genuine diagonal leg through the REAL input pipeline (move_diag holds `a` through `b`'s press so world.gd's _combined_move_dir sees both held -- see test_driver.gd's _inject_diag doc comment). Combo 1 (right+down) nets one cardinal RIGHT step (2,3)->(3,3) then one real diagonal step (3,3)->(4,4); combo 2 (left+up) mirrors it exactly back to the start cell (2,3), so the rest of this script's scripted path (Erin's interact) is unaffected.",
+   "action": "move_diag",
+   "a": "move_right",
+   "b": "move_down"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [4, 4]
+  },
+  {
+   "action": "move_diag",
+   "a": "move_left",
+   "b": "move_up"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [2, 3]
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 5
