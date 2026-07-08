@@ -1,5 +1,66 @@
 # Wandering Inn RPG Handoff
 
+## COMPREHENSIVE PLAYTEST (2026-07-08, detached worktree @ a0a320b) — 10 scripts windowed, ALL PASS; findings logged
+
+Full machine-playtest rotation (tutorial_flow, char_creation,
+gate_district, atmosphere_check, gear_loop, social_loop, sewers,
+status_first_encounter, arc_flow + garden_walkthrough) on a pinned
+snapshot with the licensed overlay synced. Evidence:
+`.superpowers/sdd/playtest-2026-07-08-shots/`. Six NEW entries + one
+severity bump in `docs/VISUAL-LOG.md`. Top items for the next fix wave:
+1. **Bark 2nd-line fold clip now eats Erin's #9 Garden-reveal line**
+   (whole sentence half-cut) — the known UI/BARK item graduated from
+   trailing-period nit to milestone-payoff loss. Fix before the #9
+   human playtest gate.
+2. **Full-pack inventory opens with the cursor row scrolled out of
+   view** (gear_loop/00; no `>` visible anywhere) — likely G3
+   ensure_control_visible × 30px-inset interaction.
+3. **Player fully hidden behind the Awakened Raskghar** through the
+   boss reveal + Relc-veto dialogue (arc_flow dd_04/dd_05) — the prop-
+   occlusion geometry inverted, now hides the PC at the story climax.
+4. **Friend/foe HP bars all one green** — with name tags retired, the
+   turn bar is the only enemy cue (worst in the 4-combatant boss fight).
+5. Water = flat hard-edged blue rectangles everywhere (sewers channels
+   read as placeholder blocks; ice patch nearly invisible).
+Flaky: one ObjectDB 4-instance leak at exit, status_first_encounter
+windowed only, not reproducible (matches the standing windowed-exit
+flake class at the bottom of this doc). QA-coverage notes: canonical
+char_creation screenshots only the post-creation inn (picker grid has
+no canonical visual coverage); fountain-statue composite couldn't be
+verified at the pin (its manifest entry postdates a0a320b) — worth one
+windowed garden shot on current HEAD.
+
+## PLAYTEST TRIAGE (controller, 2026-07-08 — findings are directives)
+
+**HOTFIX WAVE (dispatches right after #44 merges; blocks the user's own
+#8/#9 human-gate playtests):**
+1. Bark 2nd-line fold clip (Erin's Garden reveal — THE #9 checklist-item-1
+   line — + Watch Guard): the fold-inset measured-band treatment on
+   line 2 (the known UI/BARK item, severity-bumped per the report).
+2. Inventory opens with the cursor row scrolled out of view (gear_loop
+   00) — ensure-visible × inset interaction.
+3. PC invisible behind the Awakened Raskghar through the boss reveal +
+   veto dialogue — the occlusion family INVERTED (oversized south-anchored
+   sprite y-sorts over the PC at the story climax).
+4. Friend/foe HP bars all green (design finding, cheap fix, huge
+   legibility win): bar color keyed by side — color is the main free
+   channel under stats-hidden.
+5. "Turn:" glued to the first name (misreads as possessive) — separator.
+6. QA: char_creation canonical gains a picker-grid screenshot step.
+
+**MILESTONE-SCOPED (stays queued):** water-as-rectangles + ice payoff
+(#29-31 polish wave, sewers-first); fire-pit vs scatter-rock mimicry;
+twin street vendors same sprite; Relc's descent-veto walk-on cameo (8d's
+descent content is the natural home); 4-line toast graze (watch);
+tail-page dialogue open + page indicator (the standing taste pass).
+**NO ACTION:** ObjectDB exit flake (documented class, 4th-7th sightings).
+**CLOSED BY CURRENT HEAD:** the fountain-statue composite verification —
+bundle-v3's windowed garden read on HEAD shows basin+statue rendering
+(qa_output/garden_walkthrough/02_garden_day_bright_identity.png).
+**PROTECT LIST (the report's "what lands"):** copy voice, Raskghar
+silhouettes, dusk hearth-glow/dust motes, garden identity, every
+legibility surface — regressions here are fix-first by definition.
+
 ## MILESTONE 8a COMPLETE — #9 CLOSED (2026-07-08; GF READY-TO-CLOSE, 66/66, bundle-v3)
 
 The Garden of Sanctuary ships: unlock (act>=III + K=2-of-4, ALL FOUR legs
