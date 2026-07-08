@@ -6,19 +6,57 @@ extends CanvasLayer
 ##    the menu. This doubles as the web AudioContext unlock gesture and the
 ##    iframe focus-grabber, so title/game audio is never silently dead on a
 ##    fresh itch.io page load.
-## 2. MENU — New Game / Continue / Quit, arrows to move, Enter to confirm.
-##    Continue is enabled iff a save exists (auto or manual, newest wins) and
-##    is skipped over (not selectable) while disabled.
+## 2. MENU — New Game / Continue / Playtest States (debug builds only) / Quit,
+##    arrows to move, Enter to confirm. Continue is enabled iff a save exists
+##    (auto or manual, newest wins) and is skipped over (not selectable) while
+##    disabled.
 ##
 ## New Game calls Game.reset() and Continue calls Game.load_slot(...) only --
 ## both already emit "game_reset" / "game_loaded", which Main._on_domain_event()
 ## already handles by re-instantiating the world (swap_to_world.call_deferred()).
 ## This screen must NOT call Main.swap_to_world() itself or the world would be
 ## built twice.
+##
+## Issue #43 (playtest state boot): "Playtest States" is a THIRD top-level
+## state (PLAYTEST_LIST) hung off MENU, gated at build time by
+## `OS.is_debug_build()` (see `_row_visible`) so it can never render in a
+## release export (itch/Steam ship `--export-release`, which the engine
+## itself flips `is_debug_build()` false for -- see qa/web/export_web.sh, the
+## same command release.yml runs). It lists `qa/fixtures/*.json` (name + a
+## `_comment`-derived one-line summary), story-position-ordered by
+## `PLAYTEST_FIXTURE_ORDER` with any unlisted fixture appended via raw
+## dirlist fallback. Confirming a row copies that fixture into the "manual"
+## save slot (`Game.install_fixture_save`, the same byte-for-byte copy
+## qa/test_driver.gd's `_install_fixture_saves` performs) and then rides the
+## EXISTING Continue-load path (`_load_slot_or_notice`) -- zero new sim
+## machinery, per the issue brief.
 
-enum State { GESTURE, MENU }
+enum State { GESTURE, MENU, PLAYTEST_LIST }
 
-const ROWS: Array[String] = ["New Game", "Continue", "Quit"]
+const ROWS: Array[String] = ["New Game", "Continue", "Playtest States", "Quit"]
+## Issue #43: story-position ordering for the playtest-state picker. Any
+## `qa/fixtures/*.json` NOT listed here (save-format-migration test fixtures
+## like v1_format/v2_format, narrow verification-only fixtures like
+## dp2_fixwave_absolute_start, or a future fixture nobody's curated yet)
+## falls back to raw alphabetical dirlist order, appended after every
+## curated entry (see `_load_fixture_entries`).
+const PLAYTEST_FIXTURE_ORDER: Array[String] = [
+	"post_tutorial", "post_tutorial_street", "near_sewers", "near_tactician",
+	"near_ambush_sneak", "near_rogue", "near_guild", "near_barracks",
+	"near_runners_guild", "board_loop_start", "economy_loop_start",
+	"gear_loop_start", "cisterns_talk_start", "cisterns_scout_start",
+	"cisterns_fight_start", "wrong_order_talk_start", "wrong_order_fight_start",
+	"wrong_order_loop_start", "krshia_stage3_pre", "stage3_perks_pre",
+	"near_evolution", "near_consolidation", "pending_offer", "near_generalist",
+	"near_mage_cast", "near_ice_floor", "near_defeat", "door_chain_talk_start",
+	"door_chain_scout_start", "door_chain_fight_start", "door_awakening_start",
+	"portal_menu_start", "near_ruin", "near_garden", "deep_descent_start",
+	"climax_surface_start", "climax_sealed_start", "near_act3",
+]
+const PLAYTEST_PAGE_SIZE := 10
+const PLAYTEST_CAUTION := "QA states — counters may be odd."
+## Sane truncation budget for a fixture's `_comment` first-sentence summary.
+const PLAYTEST_SUMMARY_CHAR_BUDGET := 70
 const ENABLED_COLOR := Color(0.95, 0.88, 0.66)
 const DISABLED_COLOR := Color(0.5, 0.47, 0.4)
 const GESTURE_COLOR := Color(0.85, 0.8, 0.68)
@@ -43,6 +81,18 @@ var _notice_label: Label
 var _menu_root: VBoxContainer
 var _row_labels: Array[Label] = []
 
+## Issue #43: playtest-state picker. `_fixture_entries` is lazily built on
+## first open (`{name:String, summary:String}`, story-position ordered) and
+## cached for the rest of the process -- `qa/fixtures/*.json` never changes
+## mid-run. `_playtest_cursor` is a GLOBAL index into `_fixture_entries` (not
+## a per-page index); the displayed page is derived from it
+## (`_playtest_cursor / PLAYTEST_PAGE_SIZE`), so Up/Down auto-paginates.
+var _playtest_root: Control
+var _playtest_row_labels: Array[Label] = []
+var _playtest_page_label: Label
+var _fixture_entries: Array[Dictionary] = []
+var _playtest_cursor := 0
+
 
 func _ready() -> void:
 	_build_ui()
@@ -53,6 +103,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if _is_gesture_event(event):
 			_enter_menu()
 			get_viewport().set_input_as_handled()
+		return
+	if _state == State.PLAYTEST_LIST:
+		_handle_playtest_input(event)
 		return
 	if event.is_action_pressed("move_up"):
 		_move_cursor(-1)
@@ -152,6 +205,8 @@ func _build_ui() -> void:
 		row_margin.add_child(row)
 		_row_labels.append(row)
 
+	_build_playtest_panel()
+
 	# End of the gate beat's render (backdrop + title + "press any key" +
 	# the menu skeleton, still hidden pending the gesture). Zero-payload --
 	# QA scripts that need to drive the gate deterministically (title_flow,
@@ -184,6 +239,57 @@ func _build_embers() -> void:
 	_root.add_child(embers)
 
 
+## Issue #43: builds the (hidden-until-opened) playtest-state picker panel --
+## a title, the fixed caution line, PLAYTEST_PAGE_SIZE row labels (blanked
+## when a page has fewer entries than the page size), and a page-position
+## label. Same chrome idiom as `_menu_root`'s rows, minus the per-row
+## NinePatch (a plain Label list, matching pause_menu.gd's simpler picker
+## style -- this panel is denser than the 3/4-row title menu).
+func _build_playtest_panel() -> void:
+	_playtest_root = Control.new()
+	UIChrome.apply_theme(_playtest_root)
+	_playtest_root.set_anchors_preset(Control.PRESET_CENTER)
+	var panel_size := Vector2(680.0, 400.0)
+	_playtest_root.custom_minimum_size = panel_size
+	_playtest_root.size = panel_size
+	UIChrome.set_offsets(_playtest_root, -panel_size.x * 0.5, -panel_size.y * 0.5, panel_size.x * 0.5, panel_size.y * 0.5)
+	_playtest_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_playtest_root.hide()
+	_root.add_child(_playtest_root)
+	_playtest_root.add_child(UIChrome.make_patch(UIChrome.CARVED_PANEL))
+
+	var margin := MarginContainer.new()
+	UIChrome.full_rect(margin)
+	UIChrome.add_margins(margin, 28, 20, 28, 16)
+	_playtest_root.add_child(margin)
+
+	var stack := VBoxContainer.new()
+	stack.add_theme_constant_override("separation", 3)
+	margin.add_child(stack)
+
+	var title := UIChrome.make_label("Playtest States", "Menu")
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stack.add_child(title)
+
+	var caution := UIChrome.make_label(PLAYTEST_CAUTION, "Small")
+	caution.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stack.add_child(caution)
+
+	var spacer := Control.new()
+	spacer.custom_minimum_size = Vector2(0.0, 6.0)
+	stack.add_child(spacer)
+
+	for i in PLAYTEST_PAGE_SIZE:
+		var row := UIChrome.make_label("", "Small")
+		row.clip_text = true
+		stack.add_child(row)
+		_playtest_row_labels.append(row)
+
+	_playtest_page_label = UIChrome.make_label("", "Small")
+	_playtest_page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stack.add_child(_playtest_page_label)
+
+
 func _enter_menu() -> void:
 	_state = State.MENU
 	_refresh_continue_state()
@@ -191,7 +297,12 @@ func _enter_menu() -> void:
 	_gesture_label.hide()
 	_menu_root.show()
 	_refresh_rows()
-	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_RENDERED, {"continue_enabled": _continue_enabled})
+	# Issue #43 re-pin: `selectable_rows` is the "device-of-truth" row count --
+	# read live off `_row_selectable` (which itself reads `OS.is_debug_build()`
+	# for the Playtest States row and `_continue_enabled` for Continue) rather
+	# than a hardcoded literal, so this payload always reflects what THIS
+	# binary actually rendered, on whatever platform/build it's running as.
+	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_RENDERED, {"continue_enabled": _continue_enabled, "selectable_rows": _selectable_row_count()})
 
 
 func _first_selectable_row() -> int:
@@ -204,8 +315,21 @@ func _first_selectable_row() -> int:
 ## Web builds have no OS process for Quit to close -- there is nothing for it
 ## to do in a browser tab, so it's hidden outright rather than shown-disabled
 ## (cleanest: no dead row a player can highlight and wonder about).
+##
+## Issue #43 RELEASE-LEAK gate: "Playtest States" is hidden outright (not
+## shown-disabled) unless `OS.is_debug_build()` -- the same engine call every
+## Godot release export template bakes to `false` at compile time (a debug
+## export template / editor-run / bare `--headless` run all bake it `true`).
+## itch/Steam ship via `--export-release` (qa/web/export_web.sh, the exact
+## command release.yml's export job runs) which uses the RELEASE template, so
+## this row is provably absent from every shipped build -- see this file's
+## header doc for the full mechanism note and docs/... verification record.
 func _row_visible(i: int) -> bool:
-	return not (ROWS[i] == "Quit" and OS.has_feature("web"))
+	if ROWS[i] == "Quit" and OS.has_feature("web"):
+		return false
+	if ROWS[i] == "Playtest States" and not OS.is_debug_build():
+		return false
+	return true
 
 
 func _row_enabled(i: int) -> bool:
@@ -214,6 +338,18 @@ func _row_enabled(i: int) -> bool:
 
 func _row_selectable(i: int) -> bool:
 	return _row_visible(i) and _row_enabled(i)
+
+
+## Issue #43 re-pin: how many top-level menu rows are actually reachable by
+## the cursor right now, on THIS binary -- the title_flow canonical's
+## "device-of-truth" proof that the debug gate (and Continue's own
+## enabled/disabled state) is live, not assumed.
+func _selectable_row_count() -> int:
+	var n := 0
+	for i in ROWS.size():
+		if _row_selectable(i):
+			n += 1
+	return n
 
 
 func _move_cursor(delta: int) -> void:
@@ -266,16 +402,26 @@ func _confirm() -> void:
 			else:
 				Game.reset()
 		"Continue":
-			# M5 final review: load_slot returns false on a corrupt or
-			# older-version save (WISave.apply rejects mismatched VERSION).
-			# Without feedback the title screen silently does nothing --
-			# surface it and grey the row so New Game is the obvious path.
-			if not Game.load_slot(_continue_slot):
-				_continue_slot = ""
-				_refresh_continue_state()
-				_show_notice("Save is from an older version. Start a New Game")
+			_load_slot_or_notice(_continue_slot)
+		"Playtest States":
+			_enter_playtest_list()
 		"Quit":
 			get_tree().quit()
+
+
+## M5 final review: `load_slot` returns false on a corrupt or older-version
+## save (WISave.apply rejects mismatched VERSION). Without feedback the title
+## screen silently does nothing -- surface it and grey the Continue row so
+## New Game is the obvious path. Issue #43: the playtest-state picker's
+## confirm rides this SAME path after seeding the fixture into `slot`
+## (`_confirm_playtest_row`), per the issue's "reuse the Continue-load path
+## verbatim" directive -- a rejected fixture load (a hand-authored fixture
+## with a bad/missing required key) surfaces the identical notice.
+func _load_slot_or_notice(slot: String) -> void:
+	if not Game.load_slot(slot):
+		_continue_slot = ""
+		_refresh_continue_state()
+		_show_notice("Save is from an older version. Start a New Game")
 
 
 ## True when a QA run is driving and has NOT opted into the real creation UI --
@@ -315,3 +461,154 @@ func _show_notice(text: String) -> void:
 		(_menu_root.get_parent() as Control).add_child(_notice_label)
 	_notice_label.text = text
 	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_NOTICE_RENDERED, {"text": text})
+
+
+# --- Issue #43: playtest-state picker -----------------------------------
+
+func _handle_playtest_input(event: InputEvent) -> void:
+	var vp := get_viewport()
+	if event.is_action_pressed("move_up"):
+		_move_playtest_cursor(-1)
+		vp.set_input_as_handled()
+	elif event.is_action_pressed("move_down"):
+		_move_playtest_cursor(1)
+		vp.set_input_as_handled()
+	elif event.is_action_pressed("move_left"):
+		_move_playtest_cursor(-PLAYTEST_PAGE_SIZE)
+		vp.set_input_as_handled()
+	elif event.is_action_pressed("move_right"):
+		_move_playtest_cursor(PLAYTEST_PAGE_SIZE)
+		vp.set_input_as_handled()
+	elif event.is_action_pressed("confirm"):
+		_confirm_playtest_row()
+		vp.set_input_as_handled()
+	elif event.is_action_pressed("cancel"):
+		_exit_playtest_list()
+		vp.set_input_as_handled()
+
+
+func _enter_playtest_list() -> void:
+	if _fixture_entries.is_empty():
+		_fixture_entries = _load_fixture_entries()
+	_state = State.PLAYTEST_LIST
+	_playtest_cursor = 0
+	_menu_root.hide()
+	_playtest_root.show()
+	_refresh_playtest()
+	ObservableBus.emit_domain_event(WIEvents.UI_PLAYTEST_LIST_RENDERED, {"count": _fixture_entries.size(), "pages": _playtest_page_count()})
+
+
+func _exit_playtest_list() -> void:
+	_state = State.MENU
+	_playtest_root.hide()
+	_menu_root.show()
+	_refresh_rows()
+
+
+func _move_playtest_cursor(delta: int) -> void:
+	if _fixture_entries.is_empty():
+		return
+	_playtest_cursor = clampi(_playtest_cursor + delta, 0, _fixture_entries.size() - 1)
+	_refresh_playtest()
+
+
+## Copies the cursored fixture into the "manual" save slot (`Game.
+## install_fixture_save`, the qa/test_driver.gd fixture_save copy) and then
+## rides the EXISTING Continue-load path (`_load_slot_or_notice`) -- per the
+## issue's "reuse verbatim, zero new sim machinery" directive. A fixture that
+## fails to copy (shouldn't happen -- the picker only ever lists real files
+## found on disk) surfaces the same notice strip a rejected load would.
+func _confirm_playtest_row() -> void:
+	if _fixture_entries.is_empty():
+		return
+	var fixture := String(_fixture_entries[_playtest_cursor]["name"])
+	if not Game.install_fixture_save(fixture, "manual"):
+		_show_notice("Could not load fixture: " + fixture)
+		return
+	_load_slot_or_notice("manual")
+
+
+func _playtest_page_count() -> int:
+	return maxi(1, int(ceil(float(_fixture_entries.size()) / float(PLAYTEST_PAGE_SIZE))))
+
+
+func _refresh_playtest() -> void:
+	var page := _playtest_cursor / PLAYTEST_PAGE_SIZE
+	var start := page * PLAYTEST_PAGE_SIZE
+	for i in PLAYTEST_PAGE_SIZE:
+		var idx := start + i
+		var label: Label = _playtest_row_labels[i]
+		if idx >= _fixture_entries.size():
+			label.text = ""
+			continue
+		var entry: Dictionary = _fixture_entries[idx]
+		var mark := "> " if idx == _playtest_cursor else "  "
+		var line := _display_fixture_name(String(entry["name"]))
+		var summary := String(entry["summary"])
+		if not summary.is_empty():
+			line += " — " + summary
+		label.text = mark + line
+		label.add_theme_color_override("font_color", ENABLED_COLOR if idx == _playtest_cursor else DISABLED_COLOR)
+	_playtest_page_label.text = "Page %d / %d" % [page + 1, _playtest_page_count()]
+
+
+## Underscore-separated fixture basename -> "Title Case With Spaces" for
+## display (e.g. "post_tutorial_street" -> "Post Tutorial Street").
+func _display_fixture_name(fixture: String) -> String:
+	var words := fixture.split("_")
+	for i in words.size():
+		var w: String = words[i]
+		if not w.is_empty():
+			words[i] = w[0].to_upper() + w.substr(1)
+	return " ".join(words)
+
+
+## Scans `qa/fixtures/*.json` for every fixture, ordered per
+## PLAYTEST_FIXTURE_ORDER with unlisted fixtures appended alphabetically
+## (raw dirlist fallback), each paired with a `_comment`-derived summary.
+func _load_fixture_entries() -> Array[Dictionary]:
+	var names: Array[String] = []
+	var dir := DirAccess.open("res://qa/fixtures")
+	if dir != null:
+		for f: String in dir.get_files():
+			if f.ends_with(".json"):
+				names.append(f.get_basename())
+	names.sort()
+	var ordered: Array[String] = []
+	for n: String in PLAYTEST_FIXTURE_ORDER:
+		if names.has(n):
+			ordered.append(n)
+	for n: String in names:
+		if not ordered.has(n):
+			ordered.append(n)
+	var entries: Array[Dictionary] = []
+	for n: String in ordered:
+		entries.append({"name": n, "summary": _fixture_summary(n)})
+	return entries
+
+
+## First-sentence (or char-budget-truncated) summary of a fixture's
+## `_comment` field, "" if the fixture has none (several hand-authored
+## fixtures predate the `_comment` convention -- the row falls back to
+## the display name alone, still fully usable via `_display_fixture_name`).
+func _fixture_summary(fixture: String) -> String:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://qa/fixtures/%s.json" % fixture))
+	if not (parsed is Dictionary):
+		return ""
+	return _first_sentence(String((parsed as Dictionary).get("_comment", "")))
+
+
+## Sane truncation: prefer the first sentence break ("able to."/"?"/"!"
+## followed by a space or end of string); fall back to a hard char budget
+## with an ellipsis when no early sentence break exists (some `_comment`s
+## run long before their first period, e.g. abbreviations like "M-ARC A3").
+func _first_sentence(text: String) -> String:
+	if text.is_empty():
+		return ""
+	for terminator in [". ", "! ", "? "]:
+		var at := text.find(terminator)
+		if at != -1 and at < PLAYTEST_SUMMARY_CHAR_BUDGET:
+			return text.substr(0, at + 1)
+	if text.length() <= PLAYTEST_SUMMARY_CHAR_BUDGET:
+		return text
+	return text.substr(0, PLAYTEST_SUMMARY_CHAR_BUDGET).strip_edges() + "…"

@@ -327,6 +327,7 @@ current-state-only, one short paragraph per live system.
 | `defeat_reload` | 1 | losing seed; defeat loads `auto` slot, no `game_reset` |
 | `defeat_ally_alive` | 3 (fixture `near_defeat`) | THE canonical proof of the PC-death-is-instant-defeat rule |
 | `title_flow` | 9 | title screen flow; no combat |
+| `playtest_boot` | none | Issue #43: debug-only title 'Playtest States' picker -- boots `near_garden` via the real fixture-copy-then-Continue path |
 | `combat_move_input` | 9 (fixture `post_tutorial`) | movement-first arrows + Dash refill via real input |
 | `class_evolution_loop` | 9 (fixture `near_evolution`) | grind → sleep → `class_evolved` + evolved kit |
 | `consolidation_flow` | 9 (fixture `near_consolidation`) | offer/decline/re-offer/accept → [Spellsword] |

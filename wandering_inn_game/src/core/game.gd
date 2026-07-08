@@ -80,6 +80,29 @@ func load_slot(slot: String) -> bool:
 	return true
 
 
+## Issue #43 (playtest state boot, debug-only title picker): copies a
+## `qa/fixtures/<fixture>.json` file into `user://saves/<slot>.json` verbatim,
+## so the title screen's EXISTING `load_slot`/Continue path can boot it --
+## the exact same copy the QA harness's own `fixture_save` affordance performs
+## (qa/test_driver.gd's `_install_fixture_saves`), just triggered from the
+## title UI instead of a script's top-level field. Returns false (no-op) if
+## the named fixture doesn't exist or the slot file couldn't be written; the
+## caller (title_screen.gd) surfaces that as a notice, same as a rejected
+## `load_slot`.
+func install_fixture_save(fixture: String, slot: String) -> bool:
+	var src_path := "res://qa/fixtures/%s.json" % fixture
+	if not FileAccess.file_exists(src_path):
+		return false
+	var contents := FileAccess.get_file_as_string(src_path)
+	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
+	var dst := FileAccess.open("%s/%s.json" % [SAVE_DIR, slot], FileAccess.WRITE)
+	if dst == null:
+		return false
+	dst.store_string(contents)
+	dst.close()
+	return true
+
+
 func _build_sim(creation: Dictionary = {}) -> void:
 	sim = _make_sim(creation)
 
