@@ -43,6 +43,17 @@ Wiki-verify canon entries at generation/writing time.
   TOO-SMOOTH stance (idle uses a stiller animation), faint red thread
   at the wrist (the witch's accent — environmental tell). Voice:
   echoes the witch's current pool line verbatim, wrong register.
+- **The Hunter** (ORIGINAL+flag; canon-attested profession — wiki
+  wiki.wanderinginn.com/Riverfarm names Califfy and Thel Grasse as
+  village [Hunters]; this is a third, unnamed member of that same
+  attested class, not an invented one): lean, weathered human, plain
+  leathers, a hunting knife worn at the hip (not the bow — this is the
+  village's own defender for close work, not Relc's kit relabeled).
+  Voice: terse and practical · knows the hollow's paths better than
+  the headman does · offers help before it's asked, never dramatizes
+  the offer. NOT written in a cavalry-officer/knightly register (that
+  belongs to Riverfarm's actual named military, e.g. Beniar) — he's a
+  village hand, not a soldier.
 
 ## Invrisil (8c)
 - **Brothers lieutenant** (canon-frame VERIFIED 2026-07-07: the gang is
