@@ -1430,5 +1430,38 @@ func _init() -> void:
 	assert(_count("terrain_added") == 0 and _count("terrain_expired") == 0, "zero terrain events fire in a fight that never casts icy_floor")
 	assert((c73.snapshot()["terrain"] as Dictionary).is_empty(), "snapshot terrain key is an empty dict when unused")
 
+	# A roster listing the same catalog id twice must field TWO
+	# distinct, independently-tracked combatants, never collapse to one via
+	# dict-key overwrite. shield_spiders' real shipped roster
+	# (["shield_spider", "shield_spider"]) reproduced directly via `_cfgs`
+	# (which appends one cfg dict PER occurrence in the requested id list,
+	# exactly like `WIGame.start_combat`'s enemy-roster loop).
+	var arena_sn: Dictionary = _load("res://data/arenas.json")["arenas"][0]
+	for a: Dictionary in _load("res://data/arenas.json")["arenas"]:
+		if String(a[WIKeys.ID]) == "sewers_nest":
+			arena_sn = a
+	var c74 := WICombat.new(arena_sn, _cfgs(["pc", "shield_spider", "shield_spider"]), _load("res://data/skills.json"), _sink, 1)
+	c74.begin()
+	assert(c74.combatants.size() == 3, "duplicate-id roster fields THREE combatants (pc + both spiders), not two via overwrite")
+	assert(c74.turn_order.size() == 3, "initiative order also carries all three -- no combatant silently missing from the fight")
+	assert(c74.combatants.has("shield_spider") and c74.combatants.has("shield_spider_2"), "first spider keeps the bare id, second gets a deduped suffix")
+	assert(String(c74.combatants["shield_spider"][WIKeys.DISPLAY_NAME]) == String(c74.combatants["shield_spider_2"][WIKeys.DISPLAY_NAME]), "both spiders show the SAME player-facing display name -- the suffix is internal bookkeeping only")
+	assert(String(c74.combatants["shield_spider"][WIKeys.TEMPLATE_ID]) == "shield_spider" and String(c74.combatants["shield_spider_2"][WIKeys.TEMPLATE_ID]) == "shield_spider", "both resolve back to the SAME static catalog id (template_id) for presentation lookups (sprite/combat_scale)")
+	assert((c74.combatants["shield_spider"][WIKeys.CELL] as Vector2i) != (c74.combatants["shield_spider_2"][WIKeys.CELL] as Vector2i), "the two spiders occupy distinct spawn cells -- real independent combatants, not aliases of one dict")
+	# Damaging one must never affect the other -- the strongest proof the
+	# pre-fix dict-overwrite aliasing is gone (before the fix there was
+	# structurally only ONE dict for both list entries to share).
+	c74.apply_damage("shield_spider", 5, "pc", true)
+	assert(int(c74.combatants["shield_spider"][WIKeys.HP]) == int(c74.combatants["shield_spider"][WIKeys.MAX_HP]) - 5, "damage lands on the targeted spider")
+	assert(int(c74.combatants["shield_spider_2"][WIKeys.HP]) == int(c74.combatants["shield_spider_2"][WIKeys.MAX_HP]), "the OTHER spider is untouched -- no aliasing between the two")
+
+	# Generalizes past a single duplicate pair: three occurrences of the same
+	# id (a hypothetical worse case than any shipped roster today) still get
+	# three distinct runtime ids via the same re-probed suffix loop.
+	var c75 := WICombat.new(arena_sn, _cfgs(["pc", "goblin_raider", "goblin_raider", "goblin_raider"]), _load("res://data/skills.json"), _sink, 1)
+	c75.begin()
+	assert(c75.combatants.size() == 4, "triple-duplicate roster fields all four combatants")
+	assert(c75.combatants.has("goblin_raider") and c75.combatants.has("goblin_raider_2") and c75.combatants.has("goblin_raider_3"), "third occurrence gets _3, not a collision with _2")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

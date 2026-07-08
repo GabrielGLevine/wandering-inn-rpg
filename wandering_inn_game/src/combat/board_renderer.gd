@@ -371,7 +371,13 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 	# terrain overlay added later at z_index 0 can never render on top of a
 	# combatant, regardless of tree add order.
 	holder.z_index = COMBATANT_Z
-	var sprite_id := _combatant_sprite_id(id)
+	# Same-id roster fix: a dedup-suffixed runtime id (e.g.
+	# "shield_spider_2") does not exist in the static combatants.json catalog
+	# -- any lookup that needs the catalog record (sprite, combat_scale) must
+	# use TEMPLATE_ID (the pre-suffix id), never `id` itself. Falls back to
+	# `id` when TEMPLATE_ID is absent (hand-built dicts in older tests).
+	var template_id := String(c.get(WIKeys.TEMPLATE_ID, id))
+	var sprite_id := _combatant_sprite_id(id, template_id)
 	# Labels stack above the cell; the sprite branch below moves this up
 	# further once the sprite's actual (possibly overhanging) top edge is
 	# known, same convention as world.gd's field entities.
@@ -406,7 +412,7 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 		# (feet-anchored, so the trimmed height comes off the TOP into empty
 		# air) WITHOUT touching the field render_scale. Only combatants that
 		# declare it are affected; everyone else keeps the sprite catalog scale.
-		var combat_scale: Variant = WIDataRegistry.combatant_config(id).get("combat_scale")
+		var combat_scale: Variant = WIDataRegistry.combatant_config(template_id).get("combat_scale")
 		if combat_scale != null:
 			scale_value = float(combat_scale)
 		if scale_value != 1.0:
@@ -509,16 +515,19 @@ func _legibility_modulate(view: WICombatView) -> Color:
 	return Color(boost, boost, boost, 1.0)
 
 
-func _combatant_sprite_id(id: String) -> String:
+func _combatant_sprite_id(id: String, template_id: String) -> String:
 	# Variant-key indirection (presentation-only): the PC's combat chip
 	# uses the sim's chosen race/gender sprite variant ("pc_<race>_<gender>"),
 	# degrading to the combatants.json default ("body_a") when that variant art
-	# is not registered. Every other combatant reads its static sprite unchanged.
+	# is not registered. Every other combatant reads its static sprite unchanged
+	# -- keyed off template_id, not id, since a same-catalog-id
+	# roster's second+ combatant carries a dedup-suffixed id that does not
+	# exist in the static catalog.
 	if id == "pc":
 		var key := Game.sim.pc_sprite_variant()
 		if WISpriteRegistry.has_sprite(key):
 			return key
-	return String(WIDataRegistry.combatant_config(id).get("sprite", ""))
+	return String(WIDataRegistry.combatant_config(template_id).get("sprite", ""))
 
 
 ## Combat NAME tags retired (spec §8 addendum) -- entries publish

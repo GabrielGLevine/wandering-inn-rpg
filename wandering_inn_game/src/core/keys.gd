@@ -35,6 +35,15 @@ extends RefCounted
 
 # --- Combatant / build record ---
 const ID := "id"
+## The data/combatants.json id this runtime combatant was built from, BEFORE
+## any same-id dedup suffix (WICombat._init) makes ID itself unique within a
+## fight. Equal to ID for every non-duplicate roster (the overwhelming
+## majority) -- only diverges when a roster fields the same catalog id twice
+## (e.g. `shield_spider`/`shield_spider_2`). Presentation-only: anything that
+## needs to re-read a combatant's STATIC catalog record (sprite, combat_scale)
+## must key off this, never off ID, or a suffixed second combatant resolves
+## to an unknown catalog id and renders with no sprite.
+const TEMPLATE_ID := "template_id"
 const SIDE := "side"
 const ALIVE := "alive"
 const HP := "hp"
