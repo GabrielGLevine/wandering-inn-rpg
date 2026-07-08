@@ -1,34 +1,36 @@
 # Wandering Inn RPG Handoff
 
-## COMPREHENSIVE PLAYTEST (2026-07-08, detached worktree @ a0a320b) — 10 scripts windowed, ALL PASS; findings logged
+## MILESTONE 8b COMPLETE — RIVERFARM SHIPS (2026-07-08; #10 + #11 closed; 70/70; opus FIX-FIRST→fixed→READY; rotation 4/4 + 2 fix waves)
 
-Full machine-playtest rotation (tutorial_flow, char_creation,
-gate_district, atmosphere_check, gear_loop, social_loop, sewers,
-status_first_encounter, arc_flow + garden_walkthrough) on a pinned
-snapshot with the licensed overlay synced. Evidence:
-`.superpowers/sdd/playtest-2026-07-08-shots/`. Six NEW entries + one
-severity bump in `docs/VISUAL-LOG.md`. Top items for the next fix wave:
-1. **Bark 2nd-line fold clip now eats Erin's #9 Garden-reveal line**
-   (whole sentence half-cut) — the known UI/BARK item graduated from
-   trailing-period nit to milestone-payoff loss. Fix before the #9
-   human playtest gate.
-2. **Full-pack inventory opens with the cursor row scrolled out of
-   view** (gear_loop/00; no `>` visible anywhere) — likely G3
-   ensure_control_visible × 30px-inset interaction.
-3. **Player fully hidden behind the Awakened Raskghar** through the
-   boss reveal + Relc-veto dialogue (arc_flow dd_04/dd_05) — the prop-
-   occlusion geometry inverted, now hides the PC at the story climax.
-4. **Friend/foe HP bars all one green** — with name tags retired, the
-   turn bar is the only enemy cue (worst in the 4-combatant boss fight).
-5. Water = flat hard-edged blue rectangles everywhere (sewers channels
-   read as placeholder blocks; ice patch nearly invisible).
-Flaky: one ObjectDB 4-instance leak at exit, status_first_encounter
-windowed only, not reproducible (matches the standing windowed-exit
-flake class at the bottom of this doc). QA-coverage notes: canonical
-char_creation screenshots only the post-creation inn (picker grid has
-no canonical visual coverage); fountain-statue composite couldn't be
-verified at the pin (its manifest entry postdates a0a320b) — worth one
-windowed garden shot on current HEAD.
+The first Door expansion is live: the village ("harvest light") + the
+witch's hollow ("green shade"), the two-form Witch / headman / charmed
+villager (the echo tell), "The Price of a Favor" 3-path quest converging
+on one `blight_lifted`, the village BRIGHTENS as the reward readout
+(bumped to 50/255 mean delta after the rotation read it faint), the
+witch's herb vendor opens, and the arrival is the FIRST real exercise of
+#8's anchor-stone contract — one portals.json row, zero code
+(reviewer-verified). The composed review caught its milestone blocker
+again: **Relc was teleporting into every Riverfarm fight** (fiction-
+breaking, test-passing) — replaced by "The Hunter" (canon-attested
+village [Hunter], Relc's exact kit so R2's tuned bands hold, a real
+come-along beat). The rotation's blocker (narrated-but-invisible
+threshold candles) + the night-witch legibility floor + the hollow-arena
+identity + a bonus catch (night arena's bare black blocked cells) all
+fixed on real art. bundle-v4 carries the licensed picks.
+
+**PLAYTEST CHECKLIST (8b, the human gate):**
+1. The ally, live: arrive solo via the Door, FIGHT path — does the
+   Hunter's come-along beat read naturally (no teleporting guardsman)?
+2. Night wolf arena windowed: grey wolf legible on the night grade?
+3. The two direction cards day vs dusk — does the contrast tell the
+   story (golden village / green-shade hollow, one warm window)?
+4. The witch's two forms across a live phase crossing — same person?
+5. The brighten payoff post-resolution — legible now? (⚑ TASTE: tuned to
+   50/255; say if you want more/less.)
+6. The vendor: 4 herb items, prices feel fair post-quest?
+7. ⚑ TASTE: the charmed villager's echo — eerie, or does the flat
+   verbatim repeat read as a bug? A register cue (delivery/prefix) is a
+   cheap follow-up if it under-reads.
 
 ## PLAYTEST TRIAGE (controller, 2026-07-08 — findings are directives)
 
