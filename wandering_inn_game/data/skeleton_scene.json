@@ -7190,7 +7190,7 @@
      "observe": "An iron pot set by the cottage door, empty and waiting. Someone means for it to be used."
     },
     {
-     "_comment": "R3 (issue #11) SKILL gauntlet, prop 2 of 3: 'light the threshold candles' ([Light]). Reuses the registered `unlit_lantern` sprite (the [Light] skill's own established prop), east of the cottage door -- the other flank of the threshold from hollow_offering_pot.",
+     "_comment": "SKILL gauntlet, prop 2 of 3: 'light the threshold candles' ([Light]). Reuses the registered `unlit_lantern` sprite (the [Light] skill's own established prop), east of the cottage door -- the other flank of the threshold from hollow_offering_pot. The `visual_states` lit swap is REQUIRED, not decoration: the on_skill_use toast narrates the candles catching, and a toast promising a visible change with no sprite/tint change is the exact 'logically correct but never rendered' gotcha class -- same warm tint + flickering light as the inn's own unlit_lantern (the precedent), keyed on this prop's own accomplishment. Light budget: witch_hollow carries 1 base light (witch_cottage_prop) before this, well under the 8/map cap.",
      "id": "hollow_threshold_candles",
      "kind": "prop",
      "cell": [
@@ -7205,7 +7205,30 @@
       "accomplishment": "lit_the_threshold_candles",
       "toast": "[Light] — The candles catch, one after another, without a flame ever touching them."
      },
-     "observe": "Cold wax and old wicks, set along the threshold like they're waiting for something specific."
+     "observe": "Cold wax and old wicks, set along the threshold like they're waiting for something specific.",
+     "visual_states": [
+      {
+       "when": {
+        "counter": "lit_the_threshold_candles",
+        "at": 1
+       },
+       "tint": [
+        1.4,
+        1.25,
+        0.75
+       ],
+       "light": {
+        "color": [
+         1.0,
+         0.85,
+         0.5
+        ],
+        "energy": 0.55,
+        "radius": 14,
+        "flicker": true
+       }
+      }
+     ]
     },
     {
      "_comment": "R3 (issue #11) SKILL gauntlet, prop 3 of 3: 'observe the true knot' ([Observe]). Placed in the empty center of the standing-stone triangle (hollow_glow_1/2/3's own cells) -- the ritual clearing the spec calls out. THIS is the SKILL path's convergence bank: completing the gauntlet yourself IS the resolution, no separate report needed (unlike the cisterns_scout/wrong_order precedent, whose single skill action needed a consult-NPC report to close the loop) -- reuses the registered `hollow_mushroom_cluster` sprite (previously decor-only) as a distinct interactive tangle, visually apart from the standing stones themselves.",
