@@ -91,3 +91,14 @@ can't answer the question: motion/feel evidence (frame-diff a real
 windowed walk — the #41 jitter methodology), post-viewport-scaling
 artifacts (in-engine dumps show pre-scale pixels only), and trailer
 capture. QA screenshots stay the default for content/legibility reads.
+
+## The full sweep CANNOT run foreground in one subagent shell call
+A 60+-script `ci_sweep.sh` exceeds any single Bash-call budget, so the
+harness ALWAYS promotes it to background — and a subagent waiting for
+that background notification is stranded (it never arrives; the #1
+recurring stall, 7 instances by 2026-07-08). The working idiom for
+subagents: start the sweep writing to a log file, then POLL — repeated
+short foreground calls (`sleep 60; tail -1 <log>`) until the verdict
+line appears; read rc from the log's own `rc=` echo, never from the
+promoted task. Controllers run sweeps as explicit background tasks and
+get real notifications — the trap is subagent-side only.
