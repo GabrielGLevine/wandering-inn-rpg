@@ -1021,6 +1021,55 @@ func _init() -> void:
 	gGuard.bind_map_silent("floodplains", Vector2i(1, 1))
 	assert(gGuard.start_combat("goblin_encounter_2"), "garden sim guard control: start_combat still works normally off the garden map")
 
+	# --- Issue #9 Task G2: the memorial hill's observe-line override seam ---
+	# `_resolve_observe_text` (via `use_skill_field`) extends the visual_states
+	# family with one more overridable field: [Appraise Foe] on a memorial plot
+	# must read the base plinth's "waiting" line before its counter is met, and
+	# the claimed statue's own results-only remembrance line after -- the SAME
+	# `{counter, at}` when-shape/ascending-order convention world.gd's
+	# `_resolve_entity_render` already established for sprite/tint/light.
+	var gMem := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345)
+	gMem.player_skills.append("observe")
+	assert(gMem.known_skills().has("observe"), "memorial observe test: [Appraise Foe] known")
+	gMem.bind_map_silent("garden_sanctuary", Vector2i(6, 2))
+	gMem.player_facing = Vector2i.UP  # faces memorial_plot_warren at (6,1)
+	_events.clear()
+	var before_res := gMem.use_skill_field("observe")
+	assert(before_res.get("observed", "") == "memorial_plot_warren", "memorial observe: pre-claim appraise targets the plot")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A stone plinth, swept clean, facing the axis like the others. Whatever belongs here hasn't been carried up from below yet."), "memorial observe: pre-claim reads the WAITING plinth line, not the remembrance")
+	assert(gMem.accomplishment_count("cleared_the_warren") == 0, "memorial observe: appraising the plinth never itself banks the story beat")
+
+	# The story beat lands (banked directly, matching the garden gate block's
+	# own idiom above -- the beat's REAL producer, zevara_intro.json's seal
+	# option and the deep_warren boss's on_victory, is out of a pure sim
+	# test's reach). The SAME plot, the SAME facing, now reads the statue's
+	# remembrance line -- no re-fetch of the entity needed, proving the
+	# resolution is live against current accomplishment state, not cached.
+	gMem.accomplishments["cleared_the_warren"] = 1
+	_events.clear()
+	var after_res := gMem.use_skill_field("observe")
+	assert(after_res.get("observed", "") == "memorial_plot_warren", "memorial observe: post-claim appraise still targets the same plot")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]).begins_with("A gnoll carved in stone")), "memorial observe: post-claim reads the gnoll's remembrance line")
+
+	# Negative tooth: a DIFFERENT plot on the same hill, whose counter is
+	# genuinely unbanked, stays on its own waiting line (no cross-plot bleed).
+	gMem.bind_map_silent("garden_sanctuary", Vector2i(10, 2))
+	gMem.player_facing = Vector2i.UP  # faces memorial_plot_wrong_order at (10,1)
+	_events.clear()
+	gMem.use_skill_field("observe")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A stone plinth at the far end of the row, otherwise unremarkable, waiting on whatever the inn hasn't settled yet."), "memorial observe: a sibling plot's own counter being unbanked reads ITS waiting line, unaffected by cleared_the_warren above")
+
+	# Regression guard: a visual_states prop with NO `observe` key in its
+	# states (dirty_table -- sprite/tint only) must be completely unaffected
+	# by this seam -- the generic [Appraise Foe] fallback string still reads.
+	var gReg := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345)
+	gReg.player_skills.append("observe")
+	gReg.player_cell = Vector2i(6, 4)
+	gReg.player_facing = Vector2i.LEFT  # faces dirty_table at (5,4)
+	_events.clear()
+	gReg.use_skill_field("observe")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You watch. Details surface."), "memorial observe regression guard: a visual_states prop with no observe override (dirty_table) keeps the generic [Appraise Foe] fallback")
+
 	# --- M7 Task E2: equipment state, API, combat-build injection ---
 	# Default start state (skeleton_scene.json player block, same idiom as
 	# player.skills): the starter sword is BOTH equipped AND possessed.

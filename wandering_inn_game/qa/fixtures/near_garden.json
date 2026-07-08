@@ -1,11 +1,11 @@
 {
- "_comment": "Issue #9 Task G1 (garden_walkthrough): standing at the inn bed (2,6 facing DOWN onto 2,7), ready for the qualifying sleep. Act III fully reached (near_act3 precedent: warrior 5 + a SECOND class already held so reached_two_classes derives on Continue -- helper 1, chosen instead of diplomat/mage so cleaned_the_inn:1 doesn't ALSO trigger a spurious Helper class_gained this sleep; 3 completed quests via the_errand/missing_crate/cisterns, same accomplishment set as near_act3). watch_runner_pointed is PRE-BANKED (unlike near_act3, which leaves it for arc_flow to fire live) so THIS fixture's qualifying sleep is a clean, single-purpose proof: nothing else fires, only the garden unlocks (silently) and 'You sleep soundly.' renders. Exactly K=2 of the 4 ratified legs are pre-banked -- cleaned_the_inn (the worked_the_inn-class leg, ALSO Helper's own gained_by threshold, hence helper already held above) and resolved_wrong_order (live, The Wrong Order) -- proving the gate opens at the K=2 threshold itself, not merely 'enough'. goblins_spared/sign_defended are deliberately ABSENT (no producer in this worktree; the absent-as-zero property).",
+ "_comment": "Issue #9 Task G1 (garden_walkthrough): standing at the inn bed (2,6 facing DOWN onto 2,7), ready for the qualifying sleep. Act III fully reached (near_act3 precedent: warrior 5 + a SECOND class already held so reached_two_classes derives on Continue -- helper 1, chosen instead of diplomat/mage so a live cleaned_the_inn crossing doesn't ALSO trigger a spurious Helper class_gained this sleep; 3 completed quests via the_errand/missing_crate/cisterns, same accomplishment set as near_act3). watch_runner_pointed is PRE-BANKED (unlike near_act3, which leaves it for arc_flow to fire live) so THIS fixture's qualifying sleep is a clean, single-purpose proof: nothing else fires, only the garden unlocks (silently) and 'You sleep soundly.' renders. Also carries `tactician: 1` (pre-GRANTED directly, the SAME trick as `helper` above, bypassing its own gained_by threshold -- not earned via a banked `studied_the_cellar`, which would either sit unused or, if banked, risk its OWN class_gained firing at the qualifying sleep) so [Appraise Foe] (`observe`) is known from load, needed live by garden_walkthrough's memorial-hill appraisal beat (Task G2). G1 review Medium 2 (folded into this fixture): exactly K-1=1 of the ratified legs is PRE-banked here -- resolved_wrong_order (live, The Wrong Order) -- while the 2nd leg, cleaned_the_inn (the worked_the_inn-class leg, ALSO Helper's own gained_by threshold, hence helper is pre-granted directly above rather than earned), is left UNBANKED so garden_walkthrough earns it LIVE (a real dirty_table [Basic Cleaning] use) immediately before the qualifying sleep -- proving the Kth leg lands in-script, not merely pre-baked into the fixture. goblins_spared/sign_defended are deliberately ABSENT (no producer in this worktree; the absent-as-zero property).",
  "version": 5,
  "state": {
   "current_map": "inn",
   "player_cell": [2, 6],
   "player_facing": [0, 1],
-  "classes": { "warrior": 5, "helper": 1 },
+  "classes": { "warrior": 5, "helper": 1, "tactician": 1 },
   "accomplishments": {
    "reached_liscor": 1,
    "package_delivered": 1,
@@ -16,7 +16,6 @@
    "cisterns_reported": 1,
    "met_relc": 1,
    "watch_runner_pointed": 1,
-   "cleaned_the_inn": 1,
    "resolved_wrong_order": 1
   },
   "player_skills": ["basic_cleaning"],

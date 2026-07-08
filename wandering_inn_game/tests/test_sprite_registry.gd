@@ -284,6 +284,15 @@ func _build_expected_counts() -> Dictionary:
 	counts["garden_fountain_basin/idle"] = 1
 	counts["garden_fountain_statue/idle"] = 1
 
+	## Issue #9 Task G2: the memorial hill roster -- all 5 owned, single-frame
+	## PixelLab statics (stone-ify ramp recolor, never LICENSED/never a
+	## fallback-relaxed case).
+	counts["memorial_plinth/idle"] = 1
+	counts["memorial_statue_human/idle"] = 1
+	counts["memorial_statue_gnoll/idle"] = 1
+	counts["memorial_statue_drake/idle"] = 1
+	counts["memorial_statue_goblin/idle"] = 1
+
 	return counts
 
 

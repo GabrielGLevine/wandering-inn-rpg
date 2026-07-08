@@ -941,9 +941,55 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	_tick_action()
 	var known := known_skills().has(skill_id)
 	var target := entity_at(player_cell + player_facing)
+	# Issue #9 Task G2: a memorial statue's remembrance line must read
+	# DIFFERENTLY once its counter is met (the base plinth's "waiting" flavor
+	# vs. the claimed statue's results-only memory) -- [Appraise Foe]'s own
+	# dispatch branch (field_skills.gd) reads a single static `observe`
+	# string off the RAW entity, which `visual_states` never touched (that
+	# seam only ever resolved `sprite`/`tint`/`light`, presentation-side, in
+	# world.gd's `_resolve_entity_render`). Resolving the CURRENT `observe`
+	# text here, sim-side, before dispatch -- via `_resolve_observe_text`,
+	# below -- keeps field_skills.gd itself pure (no accomplishment-counter
+	# access needed there) and extends the visual_states FAMILY with one more
+	# overridable field rather than inventing a new gate shape (the SAME
+	# `{counter, at}` when-shape, the SAME ascending-order latest-wins
+	# convention `_resolve_entity_render`'s own doc comment already
+	# established). A `.duplicate()` is required: `target` is the LIVE
+	# reference `entity_at()` returns straight out of `entities` -- writing
+	# to it directly would permanently corrupt the stored entity's base
+	# `observe` field.
+	if skill_id == "observe" and not target.is_empty() and (target.get("visual_states", []) as Array).any(func(s: Variant) -> bool: return s is Dictionary and (s as Dictionary).has("observe")):
+		target = target.duplicate(true)
+		target["observe"] = _resolve_observe_text(target)
 	var faced_cell := player_cell + player_facing
 	var is_freezable := _is_freezable(faced_cell)
 	return _field_skills.dispatch(skill_id, known, target, faced_cell, current_map, frozen_cells, entity_first_use, is_freezable)
+
+
+## Issue #9 Task G2: resolves an entity's CURRENT `observe` line against its
+## optional `visual_states` list -- mirrors `world.gd`'s `_resolve_entity_
+## render`/`_visual_state_active` exactly (same `{"counter": id, "at": n}`
+## shape, same ascending-authored-order latest-wins convention: a LATER
+## satisfied entry overrides an earlier one, so a still-unmet entry can never
+## mask the base look), but lives here (sim-side, WIGame already owns
+## `accomplishment_count`) rather than in world.gd, which is presentation-
+## only and has no reason to be a dependency of a field-skill dispatch. Only
+## a `visual_states` entry carrying its OWN `observe` key participates --
+## the dirty_table/unlit_lantern entries (sprite/tint/light only) are
+## untouched by this reader and keep reading their base `observe` (absent,
+## in both those cases) unchanged.
+func _resolve_observe_text(ent: Dictionary) -> String:
+	var text := String(ent.get("observe", ""))
+	for raw: Variant in ent.get("visual_states", []):
+		if not (raw is Dictionary):
+			continue
+		var state := raw as Dictionary
+		if not state.has("observe"):
+			continue
+		var when: Dictionary = state.get("when", {})
+		if when.has("counter") and accomplishment_count(String(when["counter"])) >= int(when.get("at", 1)):
+			text = String(state["observe"])
+	return text
 
 
 ## ARCH-4: `light_active` mutator, so field_skills.gd's dispatch can flip
