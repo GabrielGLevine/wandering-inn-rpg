@@ -1,5 +1,25 @@
 # Wandering Inn RPG Handoff
 
+## REBOOT-RECOVERY CHECKPOINT (2026-07-07 late): 4 lanes in flight
+
+User may reboot (screen-recording permission). If this session died:
+main is at the G1 merge (65/65 green, pushed; #8 CLOSED, #9's G1 done).
+FOUR worktree lanes were running — their branches/files persist on disk
+under `.claude/worktrees/`: **G2** (memorial hill + live-K-earn +
+dusk-proof, plan task in 2026-07-07-garden-of-sanctuary-9.md), **#40+#41**
+(jitter diagnose-first then diagonals — user recording frames in the old
+session scratchpad, signature: camera stalls in the tween-finished→reissue
+gap), **#42** (six-idle sprite picker), **#43** (debug-only fixture-boot
+picker; release-leak gate is the critical requirement). Recovery: inspect
+each worktree (`git -C <wt> log/status`), read scratchpad reports if
+present, resume or re-dispatch per its GitHub issue; merges serialize
+with an --import pass on main after any merge adding .gd/assets, full
+sweep rc-read before push. Issues #39-#43 carry the briefs. PixelLab:
+generation-count billing, ~700 left. Screen-recording permission (once
+applied) unlocks OS-level capture for #41 evidence + the #19 trailer.
+
+
+
 ## NEW USER DIRECTIVE (2026-07-07) → issue #37
 
 The inn's floodplains exterior needs a DISTINCT visual identity (reads as
