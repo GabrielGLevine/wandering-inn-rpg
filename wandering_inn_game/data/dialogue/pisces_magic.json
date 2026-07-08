@@ -51,7 +51,7 @@
      "end": true
     },
     {
-     "_comment": "Social Pillar II Phase B: stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/pisces_stages.json (staging_note/_flag stripped). CANON tread-light: father a [Fencer] is staged (mild); the sold-rapier line is an OBLIQUE Wistram-era nod. HARD RAILS (absolute, per the companion doc): no expulsion cause, no deaths, no Az'kerash, no Ceria specifics. Appended AFTER 'Never mind.' (array end) so it can never shift an earlier option's visible index.",
+     "_comment": "stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/pisces_stages.json (staging_note/_flag stripped). CANON tread-light: father a [Fencer] is staged (mild); the sold-rapier line is an OBLIQUE Wistram-era nod. HARD RAILS (absolute, per the companion doc): no expulsion cause, no deaths, no Az'kerash, no Ceria specifics. Appended AFTER 'Never mind.' (array end) so it can never shift an earlier option's visible index.",
      "text": "You hold yourself like a swordsman, not a scholar.",
      "requires": {
       "accomplishment": {
@@ -62,14 +62,14 @@
      "goto": "pisces_fence"
     },
     {
-     "_comment": "Magical Door plan Task D3 (issue #8 spec §1 beat 2, the 3-path mage-consult opener). Requires door_chain_started (Erin's flicker beat, erin_errand.json), hide_when door_understood (the shared convergence counter -- 3-path identity rule) so it stops offering once ANY leg resolves. Appended at array END (index-safety convention, matches pisces_fence above).",
+     "_comment": "(spec §1 beat 2, the 3-path mage-consult opener) Requires door_chain_started (Erin's flicker beat, erin_errand.json), hide_when door_understood (the shared convergence counter -- 3-path identity rule) so it stops offering once ANY leg resolves. Appended at array END (index-safety convention, matches pisces_fence above).",
      "text": "Something's come through our pantry door. Will you look at it?",
      "requires": { "accomplishment": { "door_chain_started": 1 } },
      "hide_when": { "accomplishment": { "door_understood": 1 } },
      "goto": "door_consult"
     },
     {
-     "_comment": "Magical Door plan Task D3: the SKILL leg's REPORT step (cisterns_scout/wrong_order precedent -- [Observe]-ing pantry_door_runes in the inn alone only banks the intermediate read_the_door_runes; reporting the finding here banks the shared door_understood + pedestal_unsealed). The player's own line restates Pisces's TALK-leg verdict verbatim (consult_talk_done below) -- deliberate identity-rule parity, both legs arrive at the SAME understanding.",
+     "_comment": "The SKILL leg's REPORT step (cisterns_scout/wrong_order precedent -- [Observe]-ing pantry_door_runes in the inn alone only banks the intermediate read_the_door_runes; reporting the finding here banks the shared door_understood + pedestal_unsealed). The player's own line restates Pisces's TALK-leg verdict verbatim (consult_talk_done below) -- deliberate identity-rule parity, both legs arrive at the SAME understanding.",
      "text": "I read the wardwork myself: a spatial anchor, something that remembers being elsewhere.",
      "requires": { "accomplishment": { "read_the_door_runes": 1 } },
      "hide_when": { "accomplishment": { "door_understood": 1 } },
@@ -111,7 +111,7 @@
    ]
   },
   "consult_talk_done": {
-   "_comment": "Magical Door plan Task D3 (issue #8 spec §3 Pisces TALK key, quoted verbatim).",
+   "_comment": "(spec §3 Pisces TALK key, quoted verbatim)",
    "speaker": "Pisces",
    "text": "A spatial anchor. Crude. Fascinating. Whoever built your inn, adventurer, built it on something that remembers being elsewhere.",
    "options": [

@@ -60,7 +60,7 @@
      1
     ]
    ],
-   "_comment_dressing": "M5 R4 immersion pass (docs/superpowers/specs/2026-07-02-environment-ui-immersion-design.md sec.2). floor_layers/walls/decor are sim-passthrough only (WIGame never reads them; world.gd renders them). ALL coords below are UNVERIFIED screenshot-pending picks -- see .superpowers/sdd/m5-r4-report.md pick table.",
+   "_comment_dressing": "Immersion pass (docs/superpowers/specs/2026-07-02-environment-ui-immersion-design.md sec.2). floor_layers/walls/decor are sim-passthrough only (WIGame never reads them; world.gd renders them). ALL coords below are UNVERIFIED screenshot-pending picks -- see .superpowers/sdd/m5-r4-report.md pick table.",
    "floor_layers": [
     {
      "_pick": "E3 L1 hall planks: position-hashed variants from the light plank swatch",
@@ -133,7 +133,7 @@
      }
     }
    ],
-   "_comment_walls": "M5 E3 L0: full 4-side perimeter via walls-v2 segments; north face+cap, sides/south cap-only; east gap at [15,3] for the door. Same Interior_Walls_01 tiles the M5 R4 band used (screenshot-verified then).",
+   "_comment_walls": "Full 4-side perimeter via walls-v2 segments; north face+cap, sides/south cap-only; east gap at [15,3] for the door. Same Interior_Walls_01 tiles the wall band uses (screenshot-verified).",
    "walls": {
     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
     "tile_px": 16,
@@ -2770,7 +2770,7 @@
      "_pick": "POI-A shoulder"
     }
    ],
-   "_comment_walls": "Liscor wall SE margin (castle picks, iterate) + flood pond as water segments (cap [1,7] = still-water pick from controller grid of Water_tiles; consultant guess [3,3] was island rim).",
+   "_comment_walls": "Liscor wall SE margin (castle picks, iterate) + flood pond as water segments (cap [1,7] = the verified still-water pick from Water_tiles; [3,3] looks right but is island rim, not still water).",
    "walls": {
     "sheet": "res://assets/tiles/castle/Tiles.png",
     "tile_px": 16,

@@ -102,7 +102,7 @@
      "goto": "relc_after"
     },
     {
-     "_comment": "Issue #23 (Social Pillar II, relc_spar_wager): stage-3 refinement, once per waking. Status quo (relc_spar already re-offers) is unaffected -- this is a SEPARATE payoff option, gated on the SAME stage-3 accomplishment leg as relc_after plus the new once_per_waking seam (the second sanctioned {accomplishment, once_per_waking} compound). No combat-victory-to-dialogue bridge: resolve_combat's victory branch has no dialogue hook to ride (traced -- it banks on_victory accomplishments/loot and returns straight to the field), so the payoff rides the EXISTING next-talk-with-Relc idiom instead, the same shape the gift option above already uses to react to sparred_with_relc.",
+     "_comment": "stage-3 refinement, once per waking. Status quo (relc_spar already re-offers) is unaffected -- this is a SEPARATE payoff option, gated on the SAME stage-3 accomplishment leg as relc_after plus the new once_per_waking seam (the second sanctioned {accomplishment, once_per_waking} compound). No combat-victory-to-dialogue bridge: resolve_combat's victory branch has no dialogue hook to ride (traced -- it banks on_victory accomplishments/loot and returns straight to the field), so the payoff rides the EXISTING next-talk-with-Relc idiom instead, the same shape the gift option above already uses to react to sparred_with_relc.",
      "text": "Wasn't that spar worth something?",
      "requires": {
       "accomplishment": {

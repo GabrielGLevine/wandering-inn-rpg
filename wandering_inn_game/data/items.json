@@ -97,7 +97,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"price": 20,
-			"_comment_price": "M-DEPTH DP4: previously unpriced (no live acquisition path -- fixture/harness-only). Sold at the new street `peddler_stall` (surplus gear, one mini-buy per the market-depth task). Priced against the existing mundane-armor band: leather_jerkin (dr0/+4hp) is 24g, wool_lined_cloak (+3hp) is 18g -- this item trades hp_mod for a full damage_reduction point (a stat the M-GEAR harness treats as meaningfully strong, e.g. the dr-2 stack cell), so 20g sits between them rather than under-pricing a defensive stat nothing else in the shop band grants alone.",
+			"_comment_price": "Previously unpriced (no live acquisition path -- fixture/harness-only). Sold at the new street `peddler_stall` (surplus gear, one mini-buy per the market-depth task). Priced against the existing mundane-armor band: leather_jerkin (dr0/+4hp) is 24g, wool_lined_cloak (+3hp) is 18g -- this item trades hp_mod for a full damage_reduction point (a stat the balance harness treats as meaningfully strong, e.g. the dr-2 stack cell), so 20g sits between them rather than under-pricing a defensive stat nothing else in the shop band grants alone.",
 			"description": "Quilted padding stamped with the Liscor Watch's seal. Standard issue for anyone patrolling the walls.",
 			"lore": "Signed out against a deposit, and Watch Captain Zevara knows exactly how many never came back. The padding is older than some of the guards inside it; the budget for replacements has died in council three years running."
 		},
@@ -279,7 +279,7 @@
 			"lore": "Drakes fish the pond in fair weather and swear off it every winter, when the water starts moving wrong. The line-sellers do their best business in spring, replacing gear that was 'lost.'"
 		},
 		{
-			"_comment": "M-DEPTH DP5 (the Runner's Guild): 5 parcel items, one per LIVE delivery (docs/design/board-staging/runner-deliveries.json's 6th entry, delivery_hermit_antlers, is a FORWARD-REF -- kept out of data/deliveries.json until HR-II places its destination, so no parcel item ships for it either). kind:\"parcel\" is INERT carried flavor per the staging doc's own note: no price (never sold -- no sell surface exists in this game), no combat fields, and no weapon/armor/accessory kind means WIGame.equip() structurally refuses it (falls to inventory.gd's generic 'not equippable' toast) with zero new code. Granted by WIGame.accept_delivery via the existing pickup() seam and removed by the new remove_item() seam (on handoff or a sleep-fail return) -- never stacked, matching every other item in this catalog.",
+			"_comment": "5 parcel items, one per LIVE delivery (docs/design/board-staging/runner-deliveries.json's 6th entry, delivery_hermit_antlers, is a FORWARD-REF -- kept out of data/deliveries.json until HR-II places its destination, so no parcel item ships for it either). kind:\"parcel\" is INERT carried flavor per the staging doc's own note: no price (never sold -- no sell surface exists in this game), no combat fields, and no weapon/armor/accessory kind means WIGame.equip() structurally refuses it (falls to inventory.gd's generic 'not equippable' toast) with zero new code. Granted by WIGame.accept_delivery via the existing pickup() seam and removed by the new remove_item() seam (on handoff or a sleep-fail return) -- never stacked, matching every other item in this catalog.",
 			"id": "parcel_plains_wool",
 			"name": "Plains-Wool Bolt",
 			"kind": "parcel",

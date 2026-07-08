@@ -11,14 +11,14 @@
    2,
    2
   ],
-  "_comment_skirt": "M5 R4 iter-2: grey-stone fill from Interior_Walls_01 [7,21] so the warm inn floor pops as a lit room against dark surround (controller screenshot-verified).",
+  "_comment_skirt": "grey-stone fill from Interior_Walls_01 [7,21] so the warm inn floor pops as a lit room against dark surround (controller screenshot-verified).",
   "skirt_sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
   "skirt_tile_px": 16,
   "skirt": [
    7,
    21
   ],
-  "_comment_floor": "M5 E3 L1: warm plank swatch from Interior_Walls_01 bottom-left (tavern hall floor); variants via floor_layers."
+  "_comment_floor": "Warm plank swatch from Interior_Walls_01 bottom-left (tavern hall floor); variants via floor_layers."
  },
  "street": {
   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
@@ -32,7 +32,7 @@
    14,
    4
   ],
-  "_comment_skirt": "M5 R4: dirt shoulder outside the cobble street, per design doc sec.3 ('dirt transition edges'). Whole-image single-tile pick from topdown_floor_tiles_12 (extracted this task) -- zero coordinate-guessing risk, but the tile's exact look is UNVERIFIED (never screenshotted).",
+  "_comment_skirt": "Dirt shoulder outside the cobble street, per design doc sec.3 ('dirt transition edges'). Whole-image single-tile pick from topdown_floor_tiles_12 (extracted this task) -- zero coordinate-guessing risk, but the tile's exact look is UNVERIFIED (never screenshotted).",
   "skirt_sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
   "skirt_tile_px": 540,
   "skirt": [
@@ -52,7 +52,7 @@
    2,
    3
   ],
-  "_comment_skirt": "M5 R4: reuses the already-verified 'blocked' rock/wall tile as the skirt fill so the cave_mouth arena reads as a rock band bordering the playable floor, per design doc sec.4.",
+  "_comment_skirt": "Reuses the already-verified 'blocked' rock/wall tile as the skirt fill so the cave_mouth arena reads as a rock band bordering the playable floor, per design doc sec.4.",
   "skirt_sheet": "res://assets/tiles/cave/Tiles.png",
   "skirt_tile_px": 16,
   "skirt": [
@@ -82,7 +82,7 @@
   ]
  },
  "garden": {
-  "_comment": "Issue #9 Task G1 (art handoff docs/design/garden-art/handoff.md, staged biome fragment verbatim). Floor is the licensed Garden Pixel Crawler pack (assets_manifest.json already tracks assets/tiles/garden/Tiles.png as of 8a A1 -- FORBIDDEN/bundle:true/fallback:placeholder, so a public checkout renders the flat placeholder color and still boots/passes QA per the M-RELEASE R2 contract). `blocked` reuses the SAME sheet's trimmed-hedge top-face tile (no blocked_sheet override) -- the Garden ships NO wall family; the hedge hem IS the enclosure (sanctuary = absence of architecture). `skirt` is the ONE owned PixelLab asset this biome needs: the impossible bright sky-mist beyond the hedge (assets/tiles/garden/sky_mist.png, committed this task, SHIP-OK/redistributable per assets/LICENSES/pixellab-ai-generated-verdict.md).",
+  "_comment": "(art handoff docs/design/garden-art/handoff.md, staged biome fragment verbatim) Floor is the licensed Garden Pixel Crawler pack (assets_manifest.json already tracks assets/tiles/garden/Tiles.png as of 8a A1 -- FORBIDDEN/bundle:true/fallback:placeholder, so a public checkout renders the flat placeholder color and still boots/passes QA per the fallback-art contract). `blocked` reuses the SAME sheet's trimmed-hedge top-face tile (no blocked_sheet override) -- the Garden ships NO wall family; the hedge hem IS the enclosure (sanctuary = absence of architecture). `skirt` is the ONE owned PixelLab asset this biome needs: the impossible bright sky-mist beyond the hedge (assets/tiles/garden/sky_mist.png, committed this task, SHIP-OK/redistributable per assets/LICENSES/pixellab-ai-generated-verdict.md).",
   "sheet": "res://assets/tiles/garden/Tiles.png",
   "tile_px": 16,
   "floor": [
