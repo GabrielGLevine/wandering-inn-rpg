@@ -1,5 +1,5 @@
 extends CanvasLayer
-## M-ARC §5 — character creation at New Game (sprite picker / name).
+## Character creation at New Game (sprite picker / name).
 ##
 ## Flow: title NEW GAME -> this screen -> Game.reset({pc_name,pc_race,pc_gender})
 ## -> the GDI cold open -> inn. Two steps, native-res title-family UI:
@@ -7,14 +7,14 @@ extends CanvasLayer
 ##           pc_drake_m/f, pc_gnoll_m/f), each an idle-animated AnimatedSprite2D
 ##           via WISpriteRegistry -- arrows move the cursor across the grid,
 ##           confirm picks the highlighted card and sets pc_race + pc_gender
-##           TOGETHER (issue #42: replaces the old two-step race-then-gender
-##           text menus with one visual pick; the sim payload keys are
-##           unchanged, this is a presentation-only recomposition).
+##           TOGETHER (one visual pick, not a two-step race-then-gender text
+##           menu; the sim payload keys are unchanged, this is a
+##           presentation-only recomposition).
 ##   NAME   -> a text field (default placeholder "Traveler"; type to edit,
 ##             Enter confirms; empty -> "Traveler")
 ## Esc backs up one step; Esc on the first step returns to the title. Confirming
 ## the name fires Game.reset(creation), whose GAME_RESET drives WIMain into the
-## world + the GDI opener (race-neutral since the 2026-07-07 copy wave).
+## world + the GDI opener (race-neutral).
 ##
 ## QA: this screen is spawned ONLY when it is actually wanted -- real play, or a
 ## QA script that opts in via top-level `creation_ui: true`. Every OTHER New Game
@@ -39,10 +39,10 @@ const CURSOR_COLOR := Color(1.0, 0.96, 0.8)
 const HINT_COLOR := Color(0.72, 0.68, 0.58)
 const NAME_MAX := 16
 
-## Issue #42: the six PC sprite variants, in GridContainer fill order
-## (row-major: top row is Male across the three races, bottom row is Female)
-## so a plain for-loop over this array lays the grid out correctly with
-## GRID_COLS columns. Picking a card sets pc_race + pc_gender together.
+## The six PC sprite variants, in GridContainer fill order (row-major: top
+## row is Male across the three races, bottom row is Female) so a plain
+## for-loop over this array lays the grid out correctly with GRID_COLS
+## columns. Picking a card sets pc_race + pc_gender together.
 const PC_OPTIONS: Array[Dictionary] = [
 	{"race": "human", "gender": "m", "sprite": "pc_human_m", "race_label": "Human", "gender_label": "Male"},
 	{"race": "drake", "gender": "m", "sprite": "pc_drake_m", "race_label": "Drake", "gender_label": "Male"},
@@ -90,12 +90,12 @@ func _ready() -> void:
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
-## Controller support fix-wave (issue #18 review, LOW): re-render the current
-## step on a device swap so the hint strip's glyphs (composed through
-## WIInputHints in `_render_step`) can't go stale mid-screen -- e.g. a player
-## who picked up the pad on the NAME step. Re-emits UI_CHAR_CREATION_RENDERED
-## (a `_render_step` side effect), which is QA-invisible: the harness only
-## injects keys, so the device never changes during a canonical run.
+## Re-render the current step on a device swap so the hint strip's glyphs
+## (composed through WIInputHints in `_render_step`) can't go stale
+## mid-screen -- e.g. a player who picked up the pad on the NAME step.
+## Re-emits UI_CHAR_CREATION_RENDERED (a `_render_step` side effect), which
+## is QA-invisible: the harness only injects keys, so the device never
+## changes during a canonical run.
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.INPUT_DEVICE_CHANGED:
 		_render_step()
@@ -161,11 +161,11 @@ func _build_ui() -> void:
 	_root.add_child(_hint_label)
 
 
-## Issue #42: the six-sprite picker grid (2 rows x 3 cols, PC_OPTIONS' own
-## row-major order). Cards are built once at _ready and stay in the tree for
-## the screen's whole lifetime; only the NAME step hides the whole
-## `_grid_anchor` (see _render_step), same show/hide-the-whole-thing idiom the
-## old per-step row visibility used, just one container instead of per-row.
+## The six-sprite picker grid (2 rows x 3 cols, PC_OPTIONS' own row-major
+## order). Cards are built once at _ready and stay in the tree for the
+## screen's whole lifetime; only the NAME step hides the whole
+## `_grid_anchor` (see _render_step), same show/hide-the-whole-thing idiom
+## the old per-step row visibility used, just one container instead of per-row.
 func _build_picker_grid() -> void:
 	_grid_anchor = CenterContainer.new()
 	_grid_anchor.set_anchors_preset(Control.PRESET_CENTER)
@@ -217,22 +217,22 @@ func _render_step() -> void:
 	_name_edit.visible = is_name
 	_grid_anchor.visible = not is_name
 	if is_name:
-		# Controller support (S2, issue #18): `_name` (the source of truth for
-		# typing/backspace/`_begin_game`'s fallback) stays untouched at "" --
-		# only the DISPLAYED text gets the everyman default ("Traveler", the
-		# same fallback `_begin_game` already substitutes for an empty name)
-		# so a pad-only player -- who cannot type at all, no on-screen keyboard
-		# in v1 -- sees a real name already in the field and can confidently
-		# press confirm having accepted the default. Keyboard typing is
-		# unaffected: the first keystroke sets `_name` and overwrites this
-		# text wholesale (`_handle_name_input` always does `_name_edit.text =
-		# _name`, never appends to the displayed string), so nothing needs to
-		# be cleared first.
+		# `_name` (the source of truth for typing/backspace/`_begin_game`'s
+		# fallback) stays untouched at "" -- only the DISPLAYED text gets the
+		# everyman default ("Traveler", the same fallback `_begin_game`
+		# already substitutes for an empty name) so a pad-only player -- who
+		# cannot type at all, no on-screen keyboard in v1 -- sees a real name
+		# already in the field and can confidently press confirm having
+		# accepted the default. Keyboard typing is unaffected: the first
+		# keystroke sets `_name` and overwrites this text wholesale
+		# (`_handle_name_input` always does `_name_edit.text = _name`, never
+		# appends to the displayed string), so nothing needs to be cleared
+		# first.
 		_name_edit.text = _name if not _name.is_empty() else "Traveler"
-		# Controller support (S3, issue #18): composed through WIInputHints so
-		# a pad-only player sees A/B instead of Enter/Esc; kb-mode glyphs are
-		# byte-identical to the old hardcoded strings (WIInputHints.label's
-		# own doc comment), so no QA re-pin is needed here.
+		# Composed through WIInputHints so a pad-only player sees A/B instead
+		# of Enter/Esc; kb-mode glyphs are byte-identical to the old
+		# hardcoded strings (WIInputHints.label's own doc comment), so no QA
+		# re-pin is needed here.
 		_hint_label.text = "Type a name  •  %s to begin  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
 	else:
 		for i in PC_OPTIONS.size():
@@ -250,10 +250,9 @@ func _refresh_card(i: int) -> void:
 	var card := _cards[i]
 	for child: Node in card.get_children():
 		if child is NinePatchRect:
-			# UIWAVE2 title-centering fix (inherited idiom): swap through
-			# set_patch_texture so the measured art-bbox region follows the
-			# texture (the two button arts have different bboxes -- see
-			# UIChrome's BLUE_BUTTON_REGION doc comment).
+			# Swap through set_patch_texture so the measured art-bbox region
+			# follows the texture (the two button arts have different bboxes
+			# -- see UIChrome's BLUE_BUTTON_REGION doc comment).
 			UIChrome.set_patch_texture(child as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if selected else UIChrome.BLUE_BUTTON)
 
 
