@@ -35,6 +35,9 @@ const EXPECTED_ITEMS := {
 	"stonescale_talisman": ["Reduces every hit taken by 1", "Resonance 2", "Worth 35 gold"],
 	"moon_bone_amulet": ["+1 damage on melee hits", "+3 HP", "Resonance 3"],
 	"watch_token": [],
+	# brothers_marker: watch_token precedent shape verbatim (mundane
+	# accessory, zero stat fields -- items.json's own _comment).
+	"brothers_marker": [],
 	"field_whetstone": ["Worth 5 gold"],
 	"fishers_handline": ["Worth 4 gold"],
 	# The 5 Runner's Guild delivery parcels -- inert carried
