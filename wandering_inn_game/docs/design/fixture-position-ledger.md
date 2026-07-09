@@ -48,13 +48,15 @@ Reward amounts pulled directly from `data/dialogue/*.json` /
 | Olesm cisterns report | +6g | `olesm_intro.json` cisterns_reported |
 | Zevara bounty: warren | +10g | `zevara_intro.json` claimed_bounty_warren (needs `cleared_the_warren`) |
 | wrong_order resolution tip | +3g | `lyonette_tip.json` |
-| typical work-loop chores (~3 dirty_table uses) | +6g | `basic_cleaning` gold effect |
+| work-loop chores (dirty_table clean, 1g PER USE — `skeleton_scene.json`'s `on_skill_use.gold: 1`; ~10 uses across the dozen wakings a post_game position's `times_slept: 12` implies) | +10g | `basic_cleaning` gold effect |
 
-**Tier A — post_game, pre-door-chain-spend** (the honest total above,
-rounded): **40g floor**. Used by `door_chain_talk_start`,
-`door_chain_scout_start`, `door_chain_fight_start` — none of these three
-have bought Krshia's `resonant_catalyst` yet (35g, `data/dialogue/
-krshia_crate.json`), so the floor must clear that price with headroom.
+**Tier A — post_game, pre-door-chain-spend**: 4+3+4+6+10+3 = 30g of quest
+income + ~10g of chores = **40g floor**, exact, no rounding. Used by
+`door_chain_talk_start`, `door_chain_scout_start`, `door_chain_fight_start`
+— none of these three have bought Krshia's `resonant_catalyst` yet (35g,
+`data/dialogue/krshia_crate.json`), so the floor must clear that price with
+headroom; the tier assumes no discretionary vendor spend (the PC is saving
+for a purchase Pisces has told them the attunement needs).
 
 **Tier B — post_game, post-catalyst-spend**: Tier A's 40g minus the 35g
 catalyst = **5g floor**. Used by `door_awakening_start`, `portal_menu_start`,
@@ -65,8 +67,10 @@ catalyst = **5g floor**. Used by `door_awakening_start`, `portal_menu_start`,
 the Raskghar arc — no `raskghar_sealed`, no warren bounty — and never
 touches the door chain — no catalyst spend): the_errand (4g) + crate bounty
 (3g) + cisterns bounty (4g) + Olesm report (6g) + wrong_order tip (3g)
-+ a couple of chores, rounds to **15g floor**. Used by `near_garden` and
-`garden_unlocked` (same tier — the reveal itself costs nothing).
+= 20g of quest income + ~4g of chores (`times_slept: 6`) = ~24g, minus a
+typical small vendor spend (a charm or two at Krshia's stall, 5-9g) =
+**15g floor**. Used by `near_garden` and `garden_unlocked` (same tier —
+the reveal itself costs nothing).
 
 A fixture's exact `gold` value may sit above its tier floor (headroom is
 fine, the invariant is a floor, not a pin) but must never sit below it.
@@ -118,17 +122,20 @@ swap).
 
 - `near_act3`, `climax_surface_start`, `climax_sealed_start`,
   `deep_descent_start`, `near_ruin` all carry `gold == 0` at an
-  Act-III-or-later position (the SAME gold-floor gap this pass fixed for the
-  gate fixtures) — each is the fixture for a long whole-arc canonical
-  (`arc_flow`/`climax_chain`/`climax_seal`/`deep_descent`), and none was
-  named in issue #48's Part 3 scope. `test_fixture_coherence.gd`'s economy
-  check is deliberately scoped to `GATE_FIXTURES` only for this reason.
+  Act-III-or-later position (the same gold-floor gap the gate fixtures were
+  cured of) — each is the fixture for a long whole-arc canonical
+  (`arc_flow`/`climax_chain`/`climax_seal`/`deep_descent`) whose gold change
+  needs its own dedicated re-verification pass before it lands.
+  `test_fixture_coherence.gd`'s economy check is deliberately scoped to
+  `GATE_FIXTURES` only until that pass exists.
 - `near_invrisil` carries `post_game` without the rest of the Act-III
   backbone (`reached_two_classes`, the raskghar chain) — its own `_comment`
   LOCKS `classes: {warrior: 2}` to the `alley_footpads` combat-tuning
   baseline (measured at "warrior2 SOLO"); adding a second class to earn
   `reached_two_classes` would shift that already-measured win rate off-band.
-  A real gap, deliberately not closed here — needs a dedicated
-  combat-tuning pass (re-tune the alley_footpads band for a 2-class PC, or
-  find another route to `reached_two_classes` that doesn't touch combat
-  stats), not a fixture-data edit.
+  Closing it needs a dedicated combat-tuning pass (re-tune the
+  alley_footpads band for a 2-class PC, or find another route to
+  `reached_two_classes` that doesn't touch combat stats), never a bare
+  fixture-data edit — `test_fixture_coherence.gd` carries the matching
+  backbone exemption plus an exact-build combat-band check on this fixture,
+  so the lock is enforced, not prose-only.

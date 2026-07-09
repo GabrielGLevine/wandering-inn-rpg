@@ -1,5 +1,5 @@
 {
- "_comment": "Windowed shop-shot fixture. Warrior L1 standing directly south of Krshia's stall (13,2) on the street, facing up so a single interact reaches her. Purse seeded to exactly 5 gold -- enough for the cheapest buy option (traveler_charm, 5) so ONE screenshot shows an affordable option beside the three greyed pricier ones, and after the 5-gold purchase the purse is 0 so a re-opened shop shows ALL options greyed (the greyed-while-broke proof). rng_state cosmetic (no combat in the shot). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "Windowed shop-shot fixture (loaded by the peek-style d2_shop_shot/d3_inventory_shot utilities, neither in the canonical sweep). Warrior L1 standing directly south of Krshia's stall (13,2) on the street, facing up so a single interact reaches her -- reached_liscor banked alongside the tutorial trio, the position's own reachability backbone (standing on the street implies the gate was crossed; test_fixture_coherence.gd enforces this). Purse seeded to exactly 5 gold -- enough for the cheapest buy option (traveler_charm, 5) so ONE screenshot shows an affordable option beside the three greyed pricier ones, and after the 5-gold purchase the purse is 0 so a re-opened shop shows ALL options greyed (the greyed-while-broke proof). rng_state cosmetic (no combat in the shot). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -17,7 +17,8 @@
   "accomplishments": {
    "met_relc": 1,
    "sparred_with_relc": 1,
-   "given_spear_by_relc": 1
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1
   },
   "player_skills": [
    "basic_cleaning"

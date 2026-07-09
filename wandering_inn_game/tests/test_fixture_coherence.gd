@@ -8,16 +8,17 @@ extends SceneTree
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_fixture_coherence.gd
 ##
 ## SCOPING NOTE (read before extending): two tiers of rigor.
-##   GATE_FIXTURES (Part 3's rebuild set -- the door-chain septet +
-##   near_garden + near_riverfarm + garden_unlocked) get the FULL invariant
-##   set: exact documented gold floors, the act-III equipment-tier check,
-##   and (where the fixture's own canonical resolves a fight) the tuning-band
-##   check. Every OTHER checked fixture gets the GENERAL invariants only
-##   (identity, monotone chains, tutorial cleanup, position plausibility,
-##   a minimal past-Act-II gold floor, rng_state non-degeneracy, equipped-
-##   weapon-in-inventory). Extending full rigor repo-wide is real future work
-##   (see docs/design/fixture-position-ledger.md's own closing note) but was
-##   not this ticket's mandate -- Part 3 named nine fixtures, not forty-five.
+##   GATE_FIXTURES (the door-chain septet + near_garden + near_riverfarm +
+##   garden_unlocked -- the fixtures with ledger-derived positions) get the
+##   FULL invariant set: exact documented gold floors, the act-III
+##   equipment-tier check, and (where the fixture's own canonical resolves a
+##   fight) the tuning-band check. Every OTHER checked fixture gets the
+##   GENERAL invariants only (identity, monotone chains, tutorial cleanup,
+##   position plausibility, rng_state non-degeneracy, equipped-weapon-in-
+##   inventory). Extending full rigor repo-wide is real future work -- see
+##   docs/design/fixture-position-ledger.md's own closing note for the known
+##   gold-floor gaps deliberately left open pending their own re-verification
+##   passes.
 
 const FIXTURES_DIR := "res://qa/fixtures"
 
@@ -30,12 +31,12 @@ const FIXTURES_DIR := "res://qa/fixtures"
 const SKIP := {
 	"v1_format": "pre-v2 save format, deliberately REJECTED by WISave.apply (test_save.gd's own migration-rejection proof) -- not a loadable story position at all",
 	"v2_format": "pre-v3 migration INPUT (consumed by _migrated(), never applied verbatim) -- not itself a playtest destination",
-	"d2_shop": "windowed shop-screenshot fixture (named explicitly in title_screen.gd's own doc comment) -- narrow verification-only, not a story position",
-	"dp2_fixwave_absolute_start": "non-canonical soft-lock repro, explicitly 'NOT registered in qa/manifest.json' per its own _comment -- not a story position",
+	"dp2_fixwave_absolute_start": "a deliberately MID-ANOMALY soft-lock repro (found_spider_silk banked before its posting was ever accepted), explicitly 'NOT registered in qa/manifest.json' per its own _comment -- its incoherence IS its subject",
 }
 
-## The Part 3 rebuild set: the door-chain septet + the two Garden-access
-## fixtures Part 5 adds/enriches. These get the full invariant tier.
+## The full-rigor set: the door-chain septet + the two Garden-access
+## fixtures, each with a ledger-derived position (docs/design/
+## fixture-position-ledger.md is the authoring source for these).
 const GATE_FIXTURES := [
 	"door_chain_talk_start", "door_chain_scout_start", "door_chain_fight_start",
 	"door_awakening_start", "portal_menu_start", "near_garden", "near_riverfarm",
@@ -47,13 +48,21 @@ const GATE_FIXTURES := [
 ## ones the combat-readiness invariant's numeric band applies to. Every
 ## other checked fixture either never fights, or fights via a documented
 ## alternate leg that bypasses combat entirely (see each fixture's own
-## _comment). Value = minimum total held class levels, matching the
-## harness's own tuned build name (sim_combat_batch.gd's `warrior5_mage5`,
-## "10 total levels, split-efficiency ~0.78" -- the tuned band for BOTH
-## rift_vermin_leak and ruin_guardian, the two fights door_chain_fight_start
-## drives end-to-end).
+## _comment). Value = the EXACT total held class levels of the harness
+## build the fixture's fights were tuned/measured at, enforced in BOTH
+## directions -- an under-leveled PC can lose a tuned-winnable fight, an
+## over-leveled one silently invalidates the measured band the other way:
+##   door_chain_fight_start / riverfarm_fight_start: `warrior5_mage5` (10
+##     total levels, split-efficiency ~0.78 -- sim_combat_batch.gd's tuned
+##     band for rift_vermin_leak/ruin_guardian and the briar/wolf cells).
+##   near_invrisil: warrior2 (the alley_footpads gated 0.75-0.98 cell was
+##     measured at "warrior2 SOLO specifically" per combatants.json + the
+##     fixture's own _comment -- the same lock that exempts it from the
+##     post_game-backbone check, now enforced instead of prose-only).
 const COMBAT_BAND_FIXTURES := {
 	"door_chain_fight_start": 10,
+	"riverfarm_fight_start": 10,
+	"near_invrisil": 2,
 }
 
 ## Region-entry gates, DERIVED from data/skeleton_scene.json's own
@@ -104,10 +113,10 @@ const POST_GAME_BACKBONE := [
 ## warrior2 SOLO specifically" -- enriching it to the full post_game
 ## backbone (reached_two_classes needs a SECOND class) would shift that
 ## already-tuned sneak-negative fight's win rate off the measured band.
-## Real gap (flagged in the report for controller/a dedicated combat-tuning
-## pass), deliberately NOT fixed here -- out of #48 Part 3's named scope,
-## and fixing it correctly needs a combat-tuning pass this ticket doesn't
-## budget for, not a fixture-data edit.
+## CONSTRAINT: closing this exemption requires a combat-tuning pass
+## (re-measure the alley_footpads band at the enriched build), never a
+## bare fixture-data edit; the COMBAT_BAND_FIXTURES exact-match check below
+## enforces the same lock from the other direction.
 const POST_GAME_BACKBONE_EXEMPT := {
 	"near_invrisil": "classes locked to the alley_footpads combat-tuning baseline; see const's own doc comment",
 }
@@ -300,17 +309,15 @@ func _check_position_plausibility(name: String, game: WIGame) -> void:
 
 
 ## economy: gold >= the documented floor for the position tier. SCOPED TO
-## GATE_FIXTURES ONLY (see the file header's two-tier note): the brief's
-## general rule ("a fixture past act II with gold==0 FAILS") is real and
-## caught real gaps repo-wide (near_act3/climax_surface_start/
-## climax_sealed_start/deep_descent_start/near_ruin all carry gold==0 at an
-## Act-III-or-later position) -- but those five predate this economy pass,
-## are each the fixture for a LONG whole-arc canonical (arc_flow/
-## climax_chain/climax_seal/deep_descent), and a gold change on any of them
-## needs its own dedicated re-verification pass this ticket doesn't budget
-## for. Flagged in the report as a real finding beyond the four named
-## examples; deliberately not touched here. GATE_FIXTURES carry the Part 2
-## ledger's exact derived floors (docs/design/fixture-position-ledger.md).
+## GATE_FIXTURES ONLY (see the file header's two-tier note): the general
+## rule ("a position past Act II with gold==0 is incoherent") also holds
+## for near_act3/climax_surface_start/climax_sealed_start/
+## deep_descent_start/near_ruin (all gold==0 at an Act-III-or-later
+## position), but each of those is the fixture for a LONG whole-arc
+## canonical (arc_flow/climax_chain/climax_seal/deep_descent) whose gold
+## change needs its own dedicated re-verification pass -- see the ledger's
+## "known gaps" section. Until that pass lands, only GATE_FIXTURES carry
+## the ledger's exact derived floors (docs/design/fixture-position-ledger.md).
 func _check_economy(name: String, game: WIGame) -> void:
 	if not GATE_FIXTURES.has(name):
 		return
@@ -322,23 +329,22 @@ func _check_economy(name: String, game: WIGame) -> void:
 		_fail(name, "gold %d below documented floor %d for this position tier" % [game.gold, floor_g])
 
 
-## Part 2 ledger's exact per-fixture floors (docs/design/fixture-position-ledger.md):
-## 40g honest Act III/post_game income pre-catalyst-spend; 5g after the
-## mandatory 35g resonant_catalyst purchase. near_garden reaches Act III via
-## a cheaper leg set (no raskghar_sealed bounty, no door-chain spend) --
-## its own floor is 15g per the ledger's Tier-3 math.
+## The ledger's exact per-fixture floors (docs/design/fixture-position-ledger.md):
+## 40g honest Act III/post_game income pre-catalyst-spend (Tier A -- must
+## clear Krshia's 35g resonant_catalyst with headroom); 5g after that
+## mandatory purchase (Tier B). near_garden/garden_unlocked reach Act III
+## via a cheaper leg set (no warren bounty, no door-chain spend) -- their
+## floor is 15g per the ledger's Tier-3 math.
 func _gate_gold_floor(name: String, game: WIGame) -> int:
-	if name == "near_garden":
+	if name == "near_garden" or name == "garden_unlocked":
 		return 15
-	if name == "near_riverfarm" or name == "garden_unlocked":
-		return 5
 	if int(game.accomplishments.get("bought_catalyst", 0)) >= 1:
 		return 5
-	return 35
+	return 40
 
 
 ## combat readiness: only the fixtures COMBAT_BAND_FIXTURES names (see that
-## const's own doc comment for why the set is this narrow).
+## const's own doc comment for the exact-match, both-directions rationale).
 func _check_combat_band(name: String, game: WIGame) -> void:
 	if not COMBAT_BAND_FIXTURES.has(name):
 		return
@@ -346,8 +352,8 @@ func _check_combat_band(name: String, game: WIGame) -> void:
 	for lvl: Variant in game.classes.values():
 		total += int(lvl)
 	var need := int(COMBAT_BAND_FIXTURES[name])
-	if total < need:
-		_fail(name, "total class levels %d below the %d-level tuned band its own canonical's fights assume" % [total, need])
+	if total != need:
+		_fail(name, "total class levels %d != the %d-level tuned build its own canonical's fights were measured at (band invalid in either direction)" % [total, need])
 
 
 ## equipment: equipped weapon (if any) must exist in inventory (the
@@ -364,10 +370,12 @@ func _check_equipment(name: String, game: WIGame) -> void:
 
 ## rng_state: string form (guaranteed by JSON's own dict shape --
 ## WISave.apply already rejected anything else above) and non-degenerate.
-## A properly-derived `.state` (RandomNumberGenerator.seed = N, then read
-## `.state`) is a full-range signed 64-bit value; a hand-typed small int
-## (the literal seed number, or "12345") is the exact bug the #45 convention
-## fixed elsewhere -- this threshold is comfortably below every real
+## TRAP: WISave restores `.state` directly, never `.seed` -- a properly
+## derived `.state` (RandomNumberGenerator.seed = N, then read `.state`,
+## tests/_derive_rng_state.gd) is a full-range signed 64-bit value, while a
+## hand-typed small int (the literal seed number, or "12345") collapses the
+## first randi() draw to the same degenerate output regardless of which
+## small int was picked. This threshold is comfortably below every real
 ## derived state in the repo (smallest magnitude seen: ~2.9e16) and
 ## comfortably above any plausible hand-typed seed literal.
 const RNG_STATE_MIN_MAGNITUDE := 1_000_000
