@@ -443,20 +443,26 @@ func _emit_epilogue_rendered(count: int) -> void:
 
 
 ## Playtest hotfix #8: NO special case for a consolidation-offering sleep any
-## more -- it runs this exact same sequence as every other sleep. A pending
-## consolidation_prompt.gd modal is already open beneath (layer 1, shown
-## unconditionally on consolidation_offered, independent of this veil) and
-## only becomes VISIBLE once the fade-out below clears -- so the offer
-## surfaces with/after this sleep's own level-up toast lines, never before.
+## more -- it runs this exact same sequence as every other sleep, then emits
+## UI_SLEEP_VEIL_FINISHED as its very last act. consolidation_prompt.gd holds
+## a pending offer HIDDEN (input dead) until that event, so the offer
+## surfaces with/after this sleep's own announcement lines, never on top of
+## the black and never answerable blind. TRAP: the finished emit must fire in
+## the QA-collapsed branch too, and must always come AFTER _finish() -- the
+## whole ordering contract (rendered -> finished -> prompt) is pinned by
+## consolidation_flow's forward-only event waits.
 func _run_sequence() -> void:
 	_reveal_queued = false
 	var lines := _lines.duplicate()
 
 	if _is_qa():
 		# Collapsed: no visible hold — record coverage and clear the same beat so
-		# no QA screenshot ever catches a black frame.
+		# no QA screenshot ever catches a black frame. The finished emit still
+		# fires (after _finish, mirroring the real path below) so the
+		# rendered -> finished -> prompt order is provable headless.
 		_emit_rendered(lines.size())
 		_finish()
+		_emit_finished()
 		return
 
 	_black.show()
@@ -470,6 +476,10 @@ func _run_sequence() -> void:
 	await _wait(READ_HOLD if not lines.is_empty() else EMPTY_HOLD)
 	await _fade(_black, 0.0)
 	_finish()
+	# The "screen is the player's again" moment. CONSTRAINT: after _finish()
+	# (black hidden, _running false) so a listener showing UI on this event
+	# can never race the fade-out.
+	_emit_finished()
 
 
 ## Adds one centered proclamation label that fades itself in.
@@ -494,6 +504,25 @@ func _finish() -> void:
 
 func _emit_rendered(count: int) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_SLEEP_VEIL_RENDERED, {"lines": count})
+
+
+func _emit_finished() -> void:
+	ObservableBus.emit_domain_event(WIEvents.UI_SLEEP_VEIL_FINISHED, {})
+
+
+## True while a SLEEP reveal is running or queued (from the sleep
+## phase_changed until _run_sequence's finished emit) -- queried by
+## consolidation_prompt.gd the instant an offer arrives, to decide
+## wait-for-finished vs show-now. Sleep-mode only on purpose: the offer can
+## only ever fire inside wi_game.gd's sleep() (whose UNCONDITIONAL
+## phase_changed has already run _begin_sleep by the time the offer event
+## lands, bus delivery being synchronous and in-order), so opener/epilogue
+## states are irrelevant here -- if THEY blocked _begin_sleep (the rare race
+## _begin_sleep's own guard covers), this correctly reads false and the
+## prompt shows immediately rather than waiting for a finished emit that
+## would never come.
+func sleep_sequence_active() -> bool:
+	return _running or _reveal_queued
 
 
 func _fade(rect: ColorRect, to_alpha: float) -> void:

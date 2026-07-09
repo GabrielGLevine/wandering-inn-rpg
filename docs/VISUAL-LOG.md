@@ -1098,3 +1098,18 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 ## 2026-07-08 — 8c C1 merge (controller windowed adjudication)
 - OPEN (taste, CF pass): Wilovan's parlor tint sits at [0.62,0.7,0.56] after the legibility lift — hat/shape read, features borderline. Next lever ready: [0.75,0.8,0.68]. Judge live at the 8c gate.
 - OPEN (noted at C1 fix wave, deferred): streetlamp blocked cells render the generic stone tile under the lamp sprite (plinth read) — flag at CF if it reads as noise against the corrected paving.
+
+## 2026-07-09 — hotfix wave 2 (item 8 fix-first rev)
+- OPEN (art follow-up): riverfarm's river band tile — `Water_tiles.png[2,7]`
+  is genuinely blue but PIXEL-FLAT: every pixel in the 16x16 region is the
+  identical (62,146,209), zero variance (the SAME defect class as the
+  documented ICE_CAP_COORD trap in world.gd — a flat fill reads as a flat
+  rectangle regardless of hue). The hotfix-wave-2 cover_skip fix makes the
+  blue SHOW; making it read as WATER needs a textured tile pick (the
+  water sheet's rippled variants, e.g. the [1,5] family ICE_CAP_COORD
+  uses) and/or extending the floodplains pond-shimmer overlay treatment
+  (world.gd's water_shimmer, currently keyed to walls-segment water, not
+  floor_layers water) to the riverfarm band. Deliberately not done in the
+  hotfix lane — the shimmer overlay's cell source is a walls-segment
+  derivation, so the floor_layers river needs its own small mechanism
+  decision (windowed-judged, controller call).

@@ -1,5 +1,5 @@
 {
- "_comment": "A save taken mid-offer persists pending_consolidation but re-emits no consolidation_offered on load, so the prompt must RECONSTRUCT from sim state on world spawn (consolidation_prompt.gd _ready -> Game.sim.pending_offer_display()). Without the fix the player loads into a modal-but-invisible lockout (world/journal/pause all gate on pending_consolidation). Boots a fresh game, pause-Loads the pending_offer fixture (v3, warrior 6 + mage 7, pending_consolidation preset to the spellsword offer), asserts the prompt renders on load (ui_consolidation_prompt_rendered), then answers it (confirm = accept the default 'Consolidate' row) and confirms the deferred sleep beat resolves into [Spellsword] 9. Not reachable in normal play today (nothing autosaves while an offer is pending) -- this guards the persisted field against a future autosave-trigger/fixture change.",
+ "_comment": "A save taken mid-offer persists pending_consolidation but re-emits no consolidation_offered on load, so the prompt must RECONSTRUCT from sim state on world spawn (consolidation_prompt.gd _ready -> Game.sim.pending_offer_display()). Without the fix the player loads into a modal-but-invisible lockout (world/journal/pause all gate on pending_consolidation). Boots a fresh game, pause-Loads the pending_offer fixture (v3, warrior 6 + mage 7, pending_consolidation preset to the spellsword offer), asserts the prompt renders on load (ui_consolidation_prompt_rendered), then answers it (confirm = accept the default 'Consolidate' row) and confirms the deferred sleep beat resolves into [Spellsword] 9. Not reachable in normal play today (nothing autosaves while an offer is pending) -- this guards the persisted field against a future autosave-trigger/fixture change. RELOAD-MID-OFFER x VEIL GATE (playtest hotfix #8, fix-first rev): the documented contract for a reload landing mid-offer is IMMEDIATE surface -- a load re-emits no phase_changed, so no sleep veil ever runs on this path and the prompt's _ready() reconstruction shows unheld. The trailing assert_event_absent pair pins the 'no veil ran' half of that contract for the whole run.",
  "fixture_save": "pending_offer",
  "steps": [
   {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
@@ -17,6 +17,8 @@
   {"action": "wait_for_event", "type": "ui_consolidation_prompt_hidden", "timeout_sec": 5},
   {"action": "wait_for_event", "type": "consolidation_accepted", "payload_contains": {"target": "spellsword", "level": 9}, "timeout_sec": 5},
   {"action": "assert_state", "path": "classes", "equals": {"spellsword": 9}},
-  {"action": "assert_state", "path": "pending_consolidation", "equals": {}}
+  {"action": "assert_state", "path": "pending_consolidation", "equals": {}},
+  {"_comment": "The 'no veil ran' half of the reload-mid-offer contract (see the top-level _comment): a load fires no phase_changed, so NO sleep-veil sequence may appear anywhere in this run -- the prompt surfaced immediately on load, not after a veil.", "action": "assert_event_absent", "type": "ui_sleep_veil_rendered"},
+  {"action": "assert_event_absent", "type": "ui_sleep_veil_finished"}
  ]
 }

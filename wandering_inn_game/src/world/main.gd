@@ -202,7 +202,10 @@ func _spawn_ui_layers() -> void:
 	_inventory.pause_menu_ref = _pause_menu
 	_inventory.journal_ref = _journal
 	# Consolidation prompt self-wires via ObservableBus + Game.sim; input
-	# arbitration keys off Game.sim.pending_consolidation, so no refs needed.
+	# arbitration keys off Game.sim.pending_consolidation. Its ONE ref
+	# (sleep_veil_ref, assigned below once the veil exists) gates the modal's
+	# visibility behind the veil's sleep sequence -- the offer surfaces only
+	# after the GDI reveal completes, never on top of the black.
 	# Cleared with the other UI layers on world swap (_clear_ui_layers).
 	var consolidation_prompt := CONSOLIDATION_PROMPT_SCRIPT.new()
 	consolidation_prompt.name = "ConsolidationPrompt"
@@ -222,6 +225,10 @@ func _spawn_ui_layers() -> void:
 	_sleep_veil = SLEEP_VEIL_SCRIPT.new()
 	_sleep_veil.name = "SleepVeil"
 	add_child(_sleep_veil)
+	# The journal<->pause mutual-ref idiom: both nodes live in this same
+	# spawn batch, so the assignment is safe here even though the prompt was
+	# added first.
+	consolidation_prompt.sleep_veil_ref = _sleep_veil
 
 
 func _spawn_world() -> void:
