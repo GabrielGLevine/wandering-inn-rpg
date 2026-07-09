@@ -157,7 +157,10 @@ func _init() -> void:
 		_check_rng_state(name, data as Dictionary)
 
 	if _errors.is_empty():
-		print("test_fixture_coherence: %d/%d fixtures coherent, 0 failures" % [_checked, _checked])
+		# CONTRACT: every suite's success line must start with "PASS" — CI's
+		# unit gate greps ^PASS and fails the job without it (bit v0.4.0's
+		# first tag: 50/50 green here, job red there).
+		print("PASS: fixture coherence — %d/%d fixtures are reachable story positions" % [_checked, _checked])
 	else:
 		print("test_fixture_coherence: %d failures across %d fixtures:" % [_errors.size(), _checked])
 		for e: String in _errors:
