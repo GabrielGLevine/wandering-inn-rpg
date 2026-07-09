@@ -1,5 +1,5 @@
 {
- "_comment": "door_chain_fight's start -- the FULL end-to-end FIGHT-leg canonical (the 'route is the subject' script per FIXTURE-FIRST POLICY's own exception, since it's the one script that proves Erin's beat-1 flicker line fires for real). warrior5+mage5 (the harness-tuned 'warrior5_mage5' build) with met_relc banked so Relc fields as an ally in both live fights (rift_vermin_leak/ruin_guardian ship allies:[relc]/ally_requires:{met_relc:1}, matching the gated 0.55-0.95/0.55-0.8 cells rather than the harder ungated _solo variants). post_game pre-banked simulates 'post-epilogue' (the sole gate on Erin's new flicker option) without replaying the whole Act III arc (post_game gates nothing else in the sim today -- grepped clean, sleep_veil.gd's own re-fire guard is the only reader). Positioned directly facing Erin (7,2) so the FIRST interact is her talk_pool line and the SECOND opens erin_errand for real. gold:40 covers Krshia's 35g catalyst with headroom. rng_state governs both live fights. TRAP: rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673), never hand-typed -- WISave restores .state directly, not .seed. Every fight in this fixture's run is unaffected by rng_state choice.",
+ "_comment": "door_chain_fight's start -- the FULL end-to-end FIGHT-leg canonical (the 'route is the subject' script per FIXTURE-FIRST POLICY's own exception, since it's the one script that proves Erin's beat-1 flicker line fires for real). Rebuilt for #48 (playtest directive item 9): post_game requires the FULL Act II/III backbone (acts.json's seal_holds beat) -- the old shape (warrior5+mage5 but no quests, no Act III markers) banked post_game without ever having reached Liscor, sealed the Raskghar, or completed a quest. Now carries the near_act3/climax_sealed_start Act III-complete shape ON TOP OF the already-correct warrior5+mage5 build (the harness-tuned 'warrior5_mage5' build, UNCHANGED -- this is the one door-chain fixture whose OWN canonical resolves real fights at a pinned seed, so the combat-relevant fields (classes, weapon, rng_state) are preserved exactly; only the story backbone was enriched). met_relc banked so Relc fields as an ally in both live fights (rift_vermin_leak/ruin_guardian ship allies:[relc]/ally_requires:{met_relc:1}, matching the gated 0.55-0.95/0.55-0.8 cells rather than the harder ungated _solo variants). door_chain_started/door_understood/etc. stay UNBANKED on purpose -- this fixture is the moment BEFORE beat 1, so Erin's flicker option is what the canonical triggers live. Positioned directly facing Erin (7,2) so the FIRST interact is her talk_pool line and the SECOND opens erin_errand for real. gold 40 (Part 2 ledger's Tier-A honest Act III income, pre-catalyst-spend) covers Krshia's 35g catalyst with headroom. Equipped `relcs_spare_spear` instead of the starter rusty_sword -- warrior's own L1 grants BOTH power_strike (sword) and piercing_strikes (spear), so the tuned kit is unaffected; re-verified end-to-end at this exact rng_state, both live fights (rift_vermin_leak, ruin_guardian) still land victories. times_slept 12 (cosmetic -- only rotates the request/delivery board slate, never visited by this canonical). rng_state governs both live fights. TRAP: rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673), never hand-typed -- WISave restores .state directly, not .seed.",
  "version": 5,
  "state": {
   "current_map": "inn",
@@ -19,6 +19,19 @@
    "met_relc": 1,
    "sparred_with_relc": 1,
    "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
    "post_game": 1
   },
   "player_skills": [
@@ -27,19 +40,25 @@
   "removed_entities": [],
   "dormant_encounters": [],
   "generalist_classes": [],
-  "started_quests": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns"
+  ],
   "pending_consolidation": {},
   "used_skills": [],
   "inventory": [
-   "rusty_sword"
+   "rusty_sword",
+   "relcs_spare_spear"
   ],
   "equipped": {
-   "weapon": "rusty_sword",
+   "weapon": "relcs_spare_spear",
    "armor": ""
   },
   "container_state": {},
   "gold": 40,
   "actions_since_sleep": 0,
+  "times_slept": 12,
   "rng_state": "-1966449618399012673"
  }
 }

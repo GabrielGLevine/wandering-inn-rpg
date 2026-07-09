@@ -1,5 +1,5 @@
 {
- "_comment": "door_awakening's start (FIXTURE-FIRST -- beats 1-3 are already covered live by door_chain_fight/talk/scout, so this canonical starts PAST all of them, beat-3-ready). Classless on purpose (no `classes` entry at all) so sleep()'s class_gains/level_ups/consolidation/evolution branches are all guaranteed no-ops for the whole run -- the ONLY thing that can happen at any of the three sleeps this script drives is the study hook itself, keeping every ui_sleep_veil_rendered{lines} assertion unambiguous. All three beat-3 counters are pre-banked (door_understood, recovered_anchor_stone, bought_catalyst) alongside door_chain_started (the chain's own start-of-consult flag) and post_game (harmlessly inert here, matching the door_chain_talk_start precedent's convention of a quiet epilogue-suppressed state). Standing at (2,6) facing down, one cell north of the ground-floor `bed` (2,7) -- interact triggers sleep() directly, no traversal needed. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "door_awakening's start (FIXTURE-FIRST -- beats 1-3 are already covered live by door_chain_fight/talk/scout, so this canonical starts PAST all of them, beat-3-ready). Rebuilt for #48 (playtest directive item 9): post_game requires the FULL Act II/III backbone (acts.json's seal_holds beat) -- the old shape (classless, no quests, no Act III markers) banked post_game and the entire beat-3 door-chain trio with a PC who had never even met Relc. Now carries the near_act3/climax_sealed_start Act III-complete shape (warrior5+mage5, matching door_chain_fight_start's own tuned build -- same PC across the whole door-chain arc) instead of the deliberately-classless placeholder. classless-on-purpose is no longer needed for the no-op guarantee: every backbone accomplishment here is ALREADY banked (never freshly crossed at any of this script's 3 sleeps, so no sleep-beat pointer/class-gain re-fires), warrior5/mage5 sit well below every level-up threshold (melee_hit/spell_cast counters are 0, so no level 6 fires) and below the Spellsword consolidation's min_parent_level:6 (data/classes.json) -- so the ONLY beat any of the three sleeps can still produce is the study hook itself, exactly as before; re-verified end-to-end (all three ui_sleep_veil_rendered{lines} assertions unchanged). All three beat-3 counters are pre-banked (door_understood, recovered_anchor_stone, bought_catalyst) alongside door_chain_started; door_understood's provenance for this rebuilt door-chain family is the TALK/SKILL leg -- rift_vermin_leak/ruin_guardian stay unfought/live (removed_entities/dormant_encounters correctly empty). gold 5 (Part 2 ledger's Tier-B honest Act III income: the 40g Tier-A floor minus the 35g resonant_catalyst this position has already spent). Equipped `relcs_spare_spear` instead of the starter rusty_sword. times_slept 12 (cosmetic, bumped by the three sleeps this script itself drives past that). Standing at (2,6) facing down, one cell north of the ground-floor `bed` (2,7) -- interact triggers sleep() directly, no traversal needed. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
   "current_map": "inn",
@@ -11,32 +11,59 @@
    0,
    1
   ],
-  "classes": {},
+  "classes": {
+   "warrior": 5,
+   "mage": 5
+  },
   "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
    "post_game": 1,
    "door_chain_started": 1,
    "door_understood": 1,
    "recovered_anchor_stone": 1,
    "bought_catalyst": 1
   },
-  "player_skills": [],
+  "player_skills": [
+   "basic_cleaning"
+  ],
   "removed_entities": [],
   "dormant_encounters": [],
   "generalist_classes": [],
   "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
    "door_that_goes_elsewhere"
   ],
   "pending_consolidation": {},
   "used_skills": [],
   "inventory": [
-   "rusty_sword"
+   "rusty_sword",
+   "relcs_spare_spear"
   ],
   "equipped": {
-   "weapon": "rusty_sword",
+   "weapon": "relcs_spare_spear",
    "armor": ""
   },
   "container_state": {},
+  "gold": 5,
   "actions_since_sleep": 0,
+  "times_slept": 12,
   "rng_state": "-6393592048753323481"
  }
 }

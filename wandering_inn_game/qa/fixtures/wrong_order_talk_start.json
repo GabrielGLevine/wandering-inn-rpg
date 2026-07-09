@@ -1,5 +1,5 @@
 {
- "_comment": "Quest 2 TALK path start (STREET). Krshia (the supplier) is at her market stall (13,2); the smooth-over is her SOCIAL resolution -- persuade her to extend the order on a good word for Lyonette. Player spawns at (13,3) facing UP so the first interact opens Krshia (first-talk plays her rotating pool line, second opens krshia_crate). heard_wrong_order is PRE-BANKED and the quest PRE-STARTED (the give beat is proven by wrong_order_loop; the report beat too -- this street run proves the DISTINCT TALK resolution + that resolved_wrong_order completes quest beat 1, with NO combat anywhere, the path's whole point). Classless: the smooth-over needs no combat class. No rng consumer; rng_state cosmetic (9). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "Quest 2 TALK path start (STREET). Krshia (the supplier) is at her market stall (13,2); the smooth-over is her SOCIAL resolution -- persuade her to extend the order on a good word for Lyonette. Player spawns at (13,3) facing UP so the first interact opens Krshia (first-talk plays her rotating pool line, second opens krshia_crate). heard_wrong_order is PRE-BANKED and the quest PRE-STARTED (the give beat is proven by wrong_order_loop; the report beat too -- this street run proves the DISTINCT TALK resolution + that resolved_wrong_order completes quest beat 1, with NO combat anywhere, the path's whole point). #48 fixture-coherence fix: added the tutorial trio (met_relc/sparred_with_relc/given_spear_by_relc) + warrior:1 -- the old classless shape stood on the street (reached_liscor-gated) with zero classes and no tutorial history, the same 'no player reaches this position' bug class the user's directive named; the TALK path itself still needs no combat class to resolve, but the PC standing here has necessarily already done the tutorial that got them to Liscor at all. No rng consumer; rng_state cosmetic (9). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -11,8 +11,14 @@
    0,
    -1
   ],
-  "classes": {},
+  "classes": {
+   "warrior": 1
+  },
   "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
    "heard_wrong_order": 1
   },
   "player_skills": [
@@ -26,9 +32,11 @@
   ],
   "pending_consolidation": {},
   "used_skills": [],
-  "inventory": [],
+  "inventory": [
+   "rusty_sword"
+  ],
   "equipped": {
-   "weapon": "",
+   "weapon": "rusty_sword",
    "armor": ""
   },
   "container_state": {},

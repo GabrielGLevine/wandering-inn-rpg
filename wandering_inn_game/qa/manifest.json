@@ -380,6 +380,12 @@
    "note": "Issue #9 Task G1 (spec Sec5 RATIFIED): the Garden of Sanctuary unlock-to-rest loop -- the qualifying sleep silently banks garden_door_unlocked (act >= III AND K=2 of 4 ratified legs), Erin's talk_pool_stages acknowledgment, garden_door opens for real at the inn, day-bright identity + fountain + misted-rise clearing live on garden_sanctuary, rest-bed sleep parity at garden_bed, round-trip exit -- plus a whole-run no-violence sim-guard cross-check (combat_started never fires)"
   },
   {
+   "script": "garden_unlocked_entry",
+   "seed": 9,
+   "fixture": "garden_unlocked",
+   "note": "Issue #48 Part 5b: smoke canonical for the NEW garden_unlocked fixture (the position immediately after the reveal, garden_door_unlocked already banked) -- one interact from (3,7) steps straight into garden_sanctuary (arrival (7,10), facing carried over unchanged since transition() never touches it) and the very next interact is a clean round-trip back to the inn via garden_exit (7,11), directly south; garden_walkthrough already covers the Garden's own content end-to-end from a fresh chore+sleep run, this script only proves the new fixture itself boots into a working position"
+  },
+  {
    "script": "riverfarm_walkthrough",
    "seed": 9,
    "fixture": "near_riverfarm",

@@ -1,5 +1,5 @@
 {
- "_comment": "riverfarm_skill's start -- NO combat (the interact-only briar_collectors/briar_collectors_deep are never engaged). [Helper]/[Mage]/[Tactician] L1 held (basic_cooking/light/observe respectively -- the three field-skill seams the gauntlet chains through). riverfarm_attuned pre-banked. `hunter_will_come` pre-banked too (fixture-bank, not earned live -- this path never fights, so the ally never fields; banked purely for world-state parity with riverfarm_fight, which earns it live -- see combatants.json's riverfarm_hunter _comment for why the ally isn't Relc). Standing at (11,10) facing up, directly south of riverfarm_headman (11,9) -- SAME start cell as riverfarm_fight/riverfarm_talk (parity). heard_price_of_a_favor is NOT banked and the quest is NOT started -- the script proves the full give -> cook/light/observe -> witch report -> headman report -> completion loop honestly. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "riverfarm_skill's start -- NO combat (the interact-only briar_collectors/briar_collectors_deep are never engaged). [Helper]/[Mage]/[Tactician] L1 held (basic_cooking/light/observe respectively -- the three field-skill seams the gauntlet chains through). #48 fixture-coherence fix: added met_relc/sparred_with_relc/given_spear_by_relc (the tutorial that grants a first class at all) and the full door-awakening chain (riverfarm_attuned implies door_awakened per data/portals.json's own contract; door_understood's provenance is the TALK/SKILL leg convention). riverfarm_attuned pre-banked. `hunter_will_come` pre-banked too (fixture-bank, not earned live -- this path never fights, so the ally never fields; banked purely for world-state parity with riverfarm_fight, which earns it live -- see combatants.json's riverfarm_hunter _comment for why the ally isn't Relc). Standing at (11,10) facing up, directly south of riverfarm_headman (11,9) -- SAME start cell as riverfarm_fight/riverfarm_talk (parity). heard_price_of_a_favor is NOT banked and the quest is NOT started -- the script proves the full give -> cook/light/observe -> witch report -> headman report -> completion loop honestly. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
   "current_map": "riverfarm_village",
@@ -17,6 +17,15 @@
    "tactician": 1
   },
   "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
    "riverfarm_attuned": 1,
    "hunter_will_come": 1
   },
