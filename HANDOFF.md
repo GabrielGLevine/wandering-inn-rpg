@@ -1,5 +1,25 @@
 # Wandering Inn RPG Handoff
 
+## MILESTONE 8c COMPLETE — INVRISIL SHIPS (2026-07-09; #12 + #13 closed; 77/77 + 50/50 fixture coherence)
+
+The second Door expansion: the boulevard (facade scale-shock band,
+marble plaza, 7 crowd extras), the mercantile alleys (lantern-maze
+night, sneakable footpads), the Brothers' parlor (guest couch = the
+bed rule), Cups' rumor-by-the-cup economy, and "A Gentleman's
+Disagreement" — the game's first moral fork (expose XOR extort,
+structurally exclusive), Wilovan fielded as a real combat ally, his
+hats-off beat distinct per fork, permanent safe passage as the reward.
+CF (opus) caught the milestone blocker again: parallel-lane fixture
+standard drift had CI's unit job red while the sweep masked it — fixed
+same-day (777500f), lesson folded into wi-running-the-machine.
+
+**PLAYTEST CHECKLIST (8c, the human gate):** see the 12-item list in
+the retest package below (boots from `near_invrisil` + the three
+`near_invrisil_*` path fixtures — all validator-coherent now).
+⚑ taste: fork endings in play, hats-off delivery, scale-shock first
+impression, parlor mood + Wilovan tint (lifted once already), alley
+night read, Cups' 1g rumors, Wilovan's 0.86 downed-rate (band-boxed).
+
 ## RC DRIVE TO v0.4.0 — LIVE (2026-07-08; scope = through 8c, Steam OUT)
 
 Landed today on this front: #38 roster collapse, #37 the inn's facade

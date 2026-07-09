@@ -150,6 +150,16 @@ re-evaluate fresh — do not resurrect the old setup from history.
   a defensible outcome does not retroactively convert a STOP into a
   judgment call. Brief-writers: if a trigger is meant to be advisory,
   write "disclose"; write STOP only when you mean pause.
+- **A parallel lane SETTING A NEW STANDARD (a validator, a lint, a
+  schema check) while sibling lanes author artifacts of that class**
+  (2026-07-09: the fixture-coherence validator merged mid-flight; the
+  parallel C3 lane's NEW fixtures were authored to the old standard —
+  CI's unit job went red on main while the sweep job stayed green and
+  masked it; CF caught it). When a standard-setter merges, either
+  re-brief every concurrently-open lane that authors that artifact
+  class, or run the new validator against sibling branches BEFORE
+  their merge. Corollary: "the sweep is green" ≠ "CI is green" — the
+  unit job is a separate gate; check both before declaring main clean.
 - **Merging a worktree lane by file-copy while a main-tree lane holds
   UNCOMMITTED work** — intersect the worktree's file map against `git
   status` AND the live lane's reported file list BEFORE copying; any
