@@ -16,6 +16,7 @@
 	],
 	"classes": [
 		{
+			"_comment": "Grant-ladder shape: L1 is the starter trio (frost_bolt/quick_cast/light), L2 the first gated grant wave (won_combat:3 -> flame_jet/mana_shield), and [Invisibility] sits at L5 -- a canon Tier-4 second-wave utility verb (see the skill's own `_comment`), so it belongs neither in the L1 starter slot nor L2's combat-power wave; L5 (spell_cast:13, the ladder's midpoint before the L10 evolution branch) keeps it reachable well before evolution without perturbing either. CONSTRAINT: the grant is balance-neutral only because [Invisibility] is field-only (its `contexts` has no \"combat\") -- if it ever gains a combat read, re-run `sim_combat_batch.gd` and re-justify the rung.",
 			"id": "mage",
 			"display_name": "Mage",
 			"stat_growth": { "int": 1 },
@@ -33,7 +34,7 @@
 				{ "level": 2, "requires": { "won_combat": 3 }, "grants": ["flame_jet", "mana_shield"] },
 				{ "level": 3, "requires": { "spell_cast": 4 }, "grants": [] },
 				{ "level": 4, "requires": { "spell_cast": 8 }, "grants": [] },
-				{ "level": 5, "requires": { "spell_cast": 13 }, "grants": [] },
+				{ "level": 5, "requires": { "spell_cast": 13 }, "grants": ["invisibility"] },
 				{ "level": 6, "requires": { "spell_cast": 18 }, "grants": [] },
 				{ "level": 7, "requires": { "spell_cast": 24 }, "grants": [] },
 				{ "level": 8, "requires": { "spell_cast": 30 }, "grants": [] },

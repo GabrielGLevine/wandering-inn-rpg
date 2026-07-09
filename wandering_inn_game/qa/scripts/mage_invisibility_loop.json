@@ -1,0 +1,53 @@
+{
+ "_comment": "Issue #22 [Invisibility] canonical -- the Mage-kit mirror of stealth_loop's sneak-past-the-ambush pattern, PLUS the ruling's two-verbs-one-stance proof. Loads near_mage_invisibility (mage L5 + rogue L1, both fixture-set directly, floodplains at (30,16) facing down, six open steps north of goblin_encounter_1). Field-hotbar order: 1 [Basic Cleaning], 2 [Light], 3 [Invisibility], 4 [Stealth]. Toggles [Invisibility] ON (hotbar_3) -- proves its OWN distinct render (deeper alpha 0.35 + shimmer:true on ui_sneak_rendered, vs [Stealth]'s plain 0.6/no-shimmer default) -- walks the REAL goblin_encounter_1 Chebyshev-2 zone with zero combat_started (the skip). Then, DELIBERATELY using the OTHER sneaks-tagged skill, [Stealth] (hotbar_4), to turn sneaking back OFF: a sneak_ended (not a fresh sneak_started) fires, proving both verbs flip the SAME single `sneaking` bool rather than stacking or nesting -- live through real input, not just the unit-test synthetic-tag proof. The positive control mirrors stealth_loop exactly: same cell, now not sneaking, the very next move fires the ambush for real. Ends right after combat_started (mid-combat by design, the stealth_loop/combat_move_input precedent) -- no fight is resolved. Fixture rng_state is cosmetic, seed 9 for convention.",
+ "fixture_save": "near_mage_invisibility",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "floodplains" },
+  { "action": "assert_state", "path": "player_cell", "equals": [30, 16] },
+  { "action": "assert_state", "path": "classes.mage", "equals": 5 },
+  { "action": "assert_state", "path": "classes.rogue", "equals": 1 },
+  { "action": "assert_state", "path": "sneaking", "equals": false },
+
+  { "_comment": "4 field slots: basic_cleaning, light, invisibility, sneak (known_skills order: player_skills, then mage's L1-L5 grants in level order, then rogue's L1 grant) -- [Invisibility] and [Stealth] both present and correctly carded (invisibility's card has no effect line, the honest field-only read; sneak's carries its real move_pool_bonus combat read).", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 4, "readout_lines": [
+   "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
+   "2  [Light] — A mage's first, faithful spell: a small orb of steady white light.",
+   "3  [Invisibility] — A working that bends the light around you until even a careful eye finds nothing worth watching.",
+   "4  [Stealth] — 1 AP — +2 move cells this turn — A soft step that slips past watching eyes and clears ground when blades are drawn."
+  ] } },
+  { "action": "screenshot", "name": "00_pre_sneak_4slots" },
+
+  { "_comment": "Toggle [Invisibility] ON (slot 3). Distinct render: alpha 0.35 + shimmer true, vs [Stealth]'s plain 0.6/no-shimmer default -- the DATA-driven sneak_visual hook, proven live.", "action": "press", "name": "hotbar_3" },
+  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "invisibility", "context": "exploration", "target": "" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "sneak_started", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You soften your step." }, "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "ui_sneak_rendered", "payload_contains": { "active": true, "alpha": 0.35, "shimmer": true } },
+  { "action": "assert_event_logged", "type": "ui_toast_rendered", "payload_contains": { "text": "You soften your step." } },
+  { "action": "assert_state", "path": "sneaking", "equals": true },
+
+  { "_comment": "Walk the REAL Chebyshev-2 zone around goblin_encounter_1 (30,23), same route stealth_loop proves for [Stealth].", "action": "move", "direction": "down", "steps": 6 },
+  { "action": "assert_state", "path": "player_cell", "equals": [30, 22] },
+  { "action": "assert_event_absent", "type": "combat_started" },
+  { "action": "screenshot", "name": "01_invisible_in_zone" },
+
+  { "_comment": "Break sneak with the OTHER tagged skill, [Stealth] (slot 4) -- NOT the skill that turned it on. A DIFFERENT id carrying sneaks:true still flips the SAME shared flag: sneak_ended (not sneak_started) fires, the off-toast is the SAME shared line, proving one stance/two keys live (issue #22 ruling), not the [Invisibility]-only unit-test coverage.", "action": "press", "name": "hotbar_4" },
+  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "sneak", "context": "exploration", "target": "" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "sneak_ended", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You straighten up." }, "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "ui_sneak_rendered", "payload_contains": { "active": false, "alpha": 1.0, "shimmer": false } },
+  { "action": "assert_state", "path": "sneaking", "equals": false },
+
+  { "_comment": "POSITIVE CONTROL, same run: still standing at (30,22) inside the SAME Chebyshev-2 zone, now NOT sneaking -- the very next move fires the ambush for real, proving the earlier skip was `sneaking` itself.", "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [31, 22] },
+  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "02_ambush_fires" }
+ ]
+}
