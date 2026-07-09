@@ -1337,17 +1337,17 @@
    "type": "combat_started"
   },
   {
-   "_comment": "== BEAT 6: the village's sleep site (standing rule -- every expansion area ships one), the DP3/G1 sleep_toast idiom live at riverfarm_guest_cot. LAST leg on purpose: sleep() advances the phase clock and resets actions_since_sleep, which would re-arm river_wolf_pack's night gate and unwind the phase/rotation pins every earlier beat in this run depends on -- nothing above may run after this. near_riverfarm's PC is classless with zero class-granting accomplishments banked (its accomplishment set is all door/riverfarm lore flags, none matching a classes.json threshold), so the 'You sleep soundly.' fallback below is deterministic, not a race against a class/level toast. Teleport to (9,5), bump up to face the cot at (9,4) -- same bump-and-interact idiom as every other prop this run. ==",
+   "_comment": "== BEAT 6: the village's sleep site (standing rule -- every expansion area ships one), the DP3/G1 sleep_toast idiom live at riverfarm_guest_cot. LAST leg on purpose: sleep() advances the phase clock and resets actions_since_sleep, which would re-arm river_wolf_pack's night gate and unwind the phase/rotation pins every earlier beat in this run depends on -- nothing above may run after this. near_riverfarm's PC is classless with zero class-granting accomplishments banked (its accomplishment set is all door/riverfarm lore flags, none matching a classes.json threshold), so the 'You sleep soundly.' fallback below is deterministic, not a race against a class/level toast. Playtest hotfix #7c moved the cot (9,4)->(9,5), against the longhouse wall -- teleport to (9,4) (the vacated cell, now the open-lawn approach), bump DOWN to face the cot at (9,5) -- same bump-and-interact idiom as every other prop this run. ==",
    "action": "teleport",
    "map": "riverfarm_village",
    "cell": [
     9,
-    5
+    4
    ]
   },
   {
    "action": "move",
-   "direction": "up",
+   "direction": "down",
    "steps": 1
   },
   {
