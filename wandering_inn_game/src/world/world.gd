@@ -81,7 +81,16 @@ const WATER_SHIMMER_SHADER := preload("res://src/world/shaders/water_shimmer.gds
 ## pale, frosted blue and drawn ON TOP of the shimmer layer, so a frozen channel
 ## cell reads as grey-white ice over the water it replaced. Cool, near-white,
 ## slightly translucent so a hint of the water below still shows.
-const ICE_CAP_COORD := Vector2i(1, 7)
+## Issue #30 (2026-07-08): was (1,7), a completely flat solid-fill tile
+## (verified via PIL alpha-scan: every pixel in that 16x16 region is the
+## identical (62,146,209) -- zero variance). A frost tint over a perfectly
+## flat tile still reads as perfectly flat, exactly VISUAL-LOG's "nearly
+## invisible ice patch" complaint. (1,5) is one of the sheet's genuine
+## rippled-open-water tiles (5 distinct blue shades, a real subtle wave
+## pattern) -- same swap as the water-shimmer cap default just below, so a
+## frozen cell now reads as a distinctly textured, frost-tinted surface
+## instead of a slightly-lighter flat rectangle.
+const ICE_CAP_COORD := Vector2i(1, 5)
 const ICE_TINT := Color(0.74, 0.86, 1.0, 0.92)
 const VIGNETTE_SHADER := preload("res://src/world/shaders/vignette.gdshader")
 ## VIEW_SIZE is declared further down this file; the vignette ColorRect is
@@ -612,7 +621,12 @@ func _build_water_shimmer() -> void:
 			var mat := ShaderMaterial.new()
 			mat.shader = WATER_SHIMMER_SHADER
 			overlay.material = mat
-		var cap_raw: Array = seg.get("cap", [1, 7])
+		# Issue #30 (2026-07-08): default now matches ICE_CAP_COORD's own
+		# textured-tile swap (see that constant's doc comment) -- every
+		# shipped water segment sets its own "cap" explicitly today, so
+		# this fallback is defensive-only, kept in sync to avoid a future
+		# segment silently regressing to the flat fill.
+		var cap_raw: Array = seg.get("cap", [1, 5])
 		var coord := Vector2i(int(cap_raw[0]), int(cap_raw[1]))
 		for cell: Vector2i in cells:
 			overlay.set_cell(cell, 0, coord)

@@ -608,6 +608,11 @@ func _fixture_summary(fixture: String) -> String:
 ## followed by a space or end of string); fall back to a hard char budget
 ## with an ellipsis when no early sentence break exists (some `_comment`s
 ## run long before their first period, e.g. abbreviations like "M-ARC A3").
+## The fallback cuts at the last WORD boundary at-or-before the budget, not
+## a raw char index (VISUAL-LOG: "...the ambus…" mid-word truncation) --
+## only a single unbroken run longer than the whole budget (no space
+## anywhere in the first PLAYTEST_SUMMARY_CHAR_BUDGET chars) falls back to
+## the raw char cut, so short real words are never split.
 func _first_sentence(text: String) -> String:
 	if text.is_empty():
 		return ""
@@ -617,4 +622,8 @@ func _first_sentence(text: String) -> String:
 			return text.substr(0, at + 1)
 	if text.length() <= PLAYTEST_SUMMARY_CHAR_BUDGET:
 		return text
-	return text.substr(0, PLAYTEST_SUMMARY_CHAR_BUDGET).strip_edges() + "…"
+	var budgeted := text.substr(0, PLAYTEST_SUMMARY_CHAR_BUDGET)
+	var last_space := budgeted.rfind(" ")
+	if last_space > 0:
+		budgeted = budgeted.substr(0, last_space)
+	return budgeted.strip_edges() + "…"

@@ -1,31 +1,32 @@
 {
-	"state": {
-		"accomplishments": {
-			"ice_cast": 7,
-			"fire_cast": 7,
-			"learned_magic_from_pisces": 1
-		},
-		"classes": {
-			"mage": 10
-		},
-		"current_map": "inn",
-		"dormant_encounters": [],
-		"generalist_classes": [],
-		"pending_consolidation": {},
-		"player_cell": [
-			2,
-			3
-		],
-		"player_facing": [
-			1,
-			0
-		],
-		"player_skills": [
-			"basic_cleaning"
-		],
-		"removed_entities": [],
-		"rng_state": "9",
-		"started_quests": []
-	},
-	"version": 3
+ "_comment": "Issue #45 rng_state re-derivation: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed, so any hand-typed small int collapses the first randi() draw to the same degenerate output; the #38 method). Re-derived by seeding a fresh RNG with .seed=1, capturing the resulting .state (-1966449618399012673), installing it here, and re-running this fixture's canonical end-to-end -- passed on the first candidate, every fight in the run unaffected in outcome.",
+ "state": {
+  "accomplishments": {
+   "ice_cast": 7,
+   "fire_cast": 7,
+   "learned_magic_from_pisces": 1
+  },
+  "classes": {
+   "mage": 10
+  },
+  "current_map": "inn",
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "pending_consolidation": {},
+  "player_cell": [
+   2,
+   3
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "rng_state": "-1966449618399012673",
+  "started_quests": []
+ },
+ "version": 3
 }

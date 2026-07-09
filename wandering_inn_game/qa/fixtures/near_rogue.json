@@ -1,5 +1,5 @@
 {
- "_comment": "The rogue_earn_loop fixture. near_tactician shape (warrior L1, met/sparred/given_spear, standing at the inn (2,3) facing right) PLUS the Missing Crate WATCH path's own resolution pre-banked -- asked_about_crate/recovered_crate_watch/found_the_crate/crate_returned/persuaded_someone (data/dialogue/watch_crate.json's exact effects-array bank) and removed_entities:[crate_scavengers] (that option's remove_entity effect) -- an honest snapshot of a save that actually played crate_talk to completion. recovered_crate_watch is [Rogue]'s gained_by gate (classes.json's rogue _comment has the full earn trace + circularity/onboarding-integrity analysis); rogue_earn_loop's next sleep grants [Rogue] (sneak, canon-renamed [Stealth]) fresh -- player_skills carries only basic_cleaning, deliberately NOT sneak, so the loop proves the REAL class-granted skill, not a QA-fixture shortcut (distinct from stealth_loop's near_ambush_sneak, which grants sneak directly as an earlier disclosed test affordance). No combat in this path; rng_state cosmetic, kept 9 for convention.",
+ "_comment": "The rogue_earn_loop fixture. near_tactician shape (warrior L1, met/sparred/given_spear, standing at the inn (2,3) facing right) PLUS the Missing Crate WATCH path's own resolution pre-banked -- asked_about_crate/recovered_crate_watch/found_the_crate/crate_returned/persuaded_someone (data/dialogue/watch_crate.json's exact effects-array bank) and removed_entities:[crate_scavengers] (that option's remove_entity effect) -- an honest snapshot of a save that actually played crate_talk to completion. recovered_crate_watch is [Rogue]'s gained_by gate (classes.json's rogue _comment has the full earn trace + circularity/onboarding-integrity analysis); rogue_earn_loop's next sleep grants [Rogue] (sneak, canon-renamed [Stealth]) fresh -- player_skills carries only basic_cleaning, deliberately NOT sneak, so the loop proves the REAL class-granted skill, not a QA-fixture shortcut (distinct from stealth_loop's near_ambush_sneak, which grants sneak directly as an earlier disclosed test affordance). No combat in this path; rng_state cosmetic, kept 9 for convention. Issue #45 rng_state hygiene sweep: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed; the #38 method). This fixture's own canonical never resolves a fight to completion off this rng_state (either no combat fires, or combat is asserted absent/left mid-combat by design -- verified by inspecting the consuming script), so the value is cosmetic/inert for outcome purposes; still replaced with a properly-derived state (.seed=9, captured .state) for hygiene, and the canonical re-run green after the swap.",
  "version": 5,
  "state": {
   "current_map": "inn",
@@ -45,6 +45,6 @@
   },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "9"
+  "rng_state": "-6393592048753323481"
  }
 }

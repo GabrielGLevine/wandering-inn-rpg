@@ -1,5 +1,5 @@
 {
- "_comment": "The deep_descent canonical fixture. Sewers, standing at (8,11) facing DOWN onto the deep_fissure (8,12), with `heard_the_deep_tremor` PRE-BANKED so the fissure's door_when gate is MET and interacting it descends to deep_tunnels (climax_chain's tremor beat -- Zevara's post-Act-II summons -- banks that key for real; this fixture stands in for it). Warrior L5 (an Act III-strength PC) with rusty_sword equipped clears the interact-only raskghar_scouts route-fight SOLO at the pinned fixture rng_state; the party/veto + the Awakened BOSS are climax_chain's own scope, so deep_descent fields NO ally and STOPS at the warren_mouth (the 'warren door' -- the boss is wired there instead). heard_about_cisterns/resolved_the_cisterns mark Act II done. rng_state governs the scout autoplay (overrides --seed, same contract as near_sewers).",
+ "_comment": "The deep_descent canonical fixture. Sewers, standing at (8,11) facing DOWN onto the deep_fissure (8,12), with `heard_the_deep_tremor` PRE-BANKED so the fissure's door_when gate is MET and interacting it descends to deep_tunnels (climax_chain's tremor beat -- Zevara's post-Act-II summons -- banks that key for real; this fixture stands in for it). Warrior L5 (an Act III-strength PC) with rusty_sword equipped clears the interact-only raskghar_scouts route-fight SOLO at the pinned fixture rng_state; the party/veto + the Awakened BOSS are climax_chain's own scope, so deep_descent fields NO ally and STOPS at the warren_mouth (the 'warren door' -- the boss is wired there instead). heard_about_cisterns/resolved_the_cisterns mark Act II done. rng_state governs the scout autoplay (overrides --seed, same contract as near_sewers). Issue #45 rng_state re-derivation: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed, so any hand-typed small int collapses the first randi() draw to the same degenerate output; the #38 method). Re-derived by seeding a fresh RNG with .seed=1, capturing the resulting .state (-1966449618399012673), installing it here, and re-running this fixture's canonical end-to-end -- passed on the first candidate, every fight in the run unaffected in outcome.",
  "version": 5,
  "state": {
   "current_map": "sewers",
@@ -42,6 +42,6 @@
   },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "9"
+  "rng_state": "-1966449618399012673"
  }
 }

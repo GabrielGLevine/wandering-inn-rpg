@@ -1,5 +1,5 @@
 {
- "_comment": "`door_chain_started` pre-banked (simulates the beat-1 Erin dialogue, not yet wired) so `ruin_door`'s door_when gate is MET and interacting it descends into the new `ruin_surface` map. Positioned on floodplains at (36,11), two steps west of the door's own (38,11) cell, so ruin_walkthrough reaches it in a couple moves. Warrior L1 (met/sparred/given_spear) purely so the fixture matches the established post-tutorial baseline shape -- this script never fights (both new encounters are dormant PLACEMENTS with no combat data yet).",
+ "_comment": "`door_chain_started` pre-banked (simulates the beat-1 Erin dialogue, not yet wired) so `ruin_door`'s door_when gate is MET and interacting it descends into the new `ruin_surface` map. Positioned on floodplains at (36,11), two steps west of the door's own (38,11) cell, so ruin_walkthrough reaches it in a couple moves. Warrior L1 (met/sparred/given_spear) purely so the fixture matches the established post-tutorial baseline shape -- this script never fights (both new encounters are dormant PLACEMENTS with no combat data yet). Issue #45 rng_state hygiene sweep: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed; the #38 method). This fixture's own canonical never resolves a fight to completion off this rng_state (either no combat fires, or combat is asserted absent/left mid-combat by design -- verified by inspecting the consuming script), so the value is cosmetic/inert for outcome purposes; still replaced with a properly-derived state (.seed=9, captured .state) for hygiene, and the canonical re-run green after the swap.",
  "version": 5,
  "state": {
   "current_map": "floodplains",
@@ -38,6 +38,6 @@
   },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "9"
+  "rng_state": "-6393592048753323481"
  }
 }
