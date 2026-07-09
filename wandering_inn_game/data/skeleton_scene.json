@@ -4808,6 +4808,12 @@
        "id": "rumor_riverfarm",
        "banks_accomplishment": "riverfarm_attuned",
        "copy": "TRAVELER'S NOTE, pinned crooked. Village called Riverfarm, downriver a fair walk, farming folk, growing fast under some new lord. They've got witch trouble, or so the last one through here said -- crops going bad, nobody saying why out loud. No bounty on it, just word passed along. Ask the Guild about the road if you're curious."
+      },
+      {
+       "_comment": "Invrisil 8c Task C1 (issue #12) -- locked shape 1's Guild-board letter beat, same idiom as rumor_riverfarm (a DISTINCT board_rumors entry, not a bounties.json posting -- that pool's size stays load-bearing for canonical rotation windows). banks_accomplishment invrisil_attuned idempotently on every board browse (_interact_board's existing >=1 semantics).",
+       "id": "rumor_invrisil",
+       "banks_accomplishment": "invrisil_attuned",
+       "copy": "A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor -- and a professional one -- if a stranger to the city might look into it. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself somehow the strangest part."
       }
      ]
     },
@@ -7692,6 +7698,2968 @@
       11
      ],
      "observe": "The trees thin out this way. Open fields past the last few trunks."
+    }
+   ]
+  },
+  "invrisil_boulevard": {
+   "_comment": "Invrisil 8c Task C1 (issue #12) -- ~28x18 boulevard, the scale-shock map (locked shape: Liscor is a town, this is a city). biome invrisil_street: OWNED PixelLab marble/paving wang tileset + already-present Wall_Tiles cool stone facade (see biomes.json's own _comment; no NEW manifest entry, avoids the licensed-pick STOP). North/south facade bands (y in {0,1} / {16,17}) are the 'buildings loom' read; the walkable band (y 2-15) carries the marble PLAZA patch (floor_layers below) around the fountain, the lamp-row signature (8 anchors total, non-flicker gold -- the spec's exact budget), and the crowd (7 pool-less extras, locked shape 2) with the mid-street kept clear per direction.md. Reachable ONLY via the portal contract (data/portals.json's new 'invrisil' row, requires_accomplishment invrisil_attuned, banked by the Guild-board letter beat) -- no door chain from Liscor's own street, matching the riverfarm_village precedent one region further. The mercantile_alleys door is the map's own second exit (the alleys-around-fronts traversal signature).",
+   "biome": "invrisil_street",
+   "grid": {
+    "width": 28,
+    "height": 18
+   },
+   "blocked": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     13,
+     0
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     15,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     20,
+     0
+    ],
+    [
+     21,
+     0
+    ],
+    [
+     22,
+     0
+    ],
+    [
+     23,
+     0
+    ],
+    [
+     24,
+     0
+    ],
+    [
+     25,
+     0
+    ],
+    [
+     26,
+     0
+    ],
+    [
+     27,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     6,
+     1
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     8,
+     1
+    ],
+    [
+     9,
+     1
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     1
+    ],
+    [
+     12,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     14,
+     1
+    ],
+    [
+     15,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ],
+    [
+     20,
+     1
+    ],
+    [
+     21,
+     1
+    ],
+    [
+     22,
+     1
+    ],
+    [
+     23,
+     1
+    ],
+    [
+     24,
+     1
+    ],
+    [
+     25,
+     1
+    ],
+    [
+     26,
+     1
+    ],
+    [
+     27,
+     1
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     22,
+     3
+    ],
+    [
+     3,
+     8
+    ],
+    [
+     14,
+     8
+    ],
+    [
+     4,
+     14
+    ],
+    [
+     10,
+     14
+    ],
+    [
+     16,
+     14
+    ],
+    [
+     22,
+     14
+    ],
+    [
+     0,
+     16
+    ],
+    [
+     1,
+     16
+    ],
+    [
+     2,
+     16
+    ],
+    [
+     3,
+     16
+    ],
+    [
+     4,
+     16
+    ],
+    [
+     5,
+     16
+    ],
+    [
+     6,
+     16
+    ],
+    [
+     7,
+     16
+    ],
+    [
+     8,
+     16
+    ],
+    [
+     9,
+     16
+    ],
+    [
+     10,
+     16
+    ],
+    [
+     11,
+     16
+    ],
+    [
+     12,
+     16
+    ],
+    [
+     13,
+     16
+    ],
+    [
+     14,
+     16
+    ],
+    [
+     15,
+     16
+    ],
+    [
+     16,
+     16
+    ],
+    [
+     17,
+     16
+    ],
+    [
+     18,
+     16
+    ],
+    [
+     19,
+     16
+    ],
+    [
+     20,
+     16
+    ],
+    [
+     21,
+     16
+    ],
+    [
+     22,
+     16
+    ],
+    [
+     23,
+     16
+    ],
+    [
+     24,
+     16
+    ],
+    [
+     25,
+     16
+    ],
+    [
+     26,
+     16
+    ],
+    [
+     27,
+     16
+    ],
+    [
+     0,
+     17
+    ],
+    [
+     1,
+     17
+    ],
+    [
+     2,
+     17
+    ],
+    [
+     3,
+     17
+    ],
+    [
+     4,
+     17
+    ],
+    [
+     5,
+     17
+    ],
+    [
+     6,
+     17
+    ],
+    [
+     7,
+     17
+    ],
+    [
+     8,
+     17
+    ],
+    [
+     9,
+     17
+    ],
+    [
+     10,
+     17
+    ],
+    [
+     11,
+     17
+    ],
+    [
+     12,
+     17
+    ],
+    [
+     13,
+     17
+    ],
+    [
+     14,
+     17
+    ],
+    [
+     15,
+     17
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     17,
+     17
+    ],
+    [
+     18,
+     17
+    ],
+    [
+     19,
+     17
+    ],
+    [
+     20,
+     17
+    ],
+    [
+     21,
+     17
+    ],
+    [
+     22,
+     17
+    ],
+    [
+     23,
+     17
+    ],
+    [
+     24,
+     17
+    ],
+    [
+     25,
+     17
+    ],
+    [
+     26,
+     17
+    ],
+    [
+     27,
+     17
+    ]
+   ],
+   "floor_layers": [
+    {
+     "_pick": "The marble plaza patch around the fountain -- OWNED wang tileset, pure-marble tile. CONTROLLER FIX 2026-07-08: [3,3] (row-major by wang id, id15 = pure marble), not the handoff doc's wrong [0,3] (a transition tile -- the doc's id->position table was corrected on main).",
+     "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+     "tile_px": 16,
+     "coords": [
+      3,
+      3
+     ],
+     "cells": {
+      "rect": [
+       10,
+       5,
+       10,
+       7
+      ]
+     }
+    },
+    {
+     "_pick": "FIX WAVE facade assembly, handoff.md's recipe executed DATA-SIDE (per-cell picks; a committed composite of licensed pieces is forbidden in the public repo, and floor_layers rects accept negative y -- verified in tile_board_builder.resolve_layer_cells, plain range(), no grid clamp -- so the above-grid loom rows need no code). Layer 1/5: the cornice/roofline cap, Wall_Tiles (8,2) cool blue-grey stone (picks.md sec.2, MOCKUP-PROVEN), one row above the visible plaster at y=-2.",
+     "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+     "tile_px": 16,
+     "coords": [
+      8,
+      2
+     ],
+     "cells": {
+      "rect": [
+       0,
+       -2,
+       28,
+       1
+      ]
+     }
+    },
+    {
+     "_pick": "Layer 2/5: cream plaster upper floors, Building_Walls (26,2) (picks.md sec.1, MOCKUP-PROVEN flat #ddccb8) -- y=-1 (above-grid loom row) + y=0 (in-grid blocked row, cover_skip'd). Two plaster rows over a glass row = the 2-cell-facade scale-shock read, plus the cornice above.",
+     "sheet": "res://assets/props/free_pack/Building_Walls.png",
+     "tile_px": 16,
+     "coords": [
+      26,
+      2
+     ],
+     "cells": {
+      "rect": [
+       0,
+       -1,
+       28,
+       2
+      ]
+     }
+    },
+    {
+     "_pick": "Layer 3/5: the leaded-glass storefront line, Building_Walls (13,35) (picks.md sec.1, MOCKUP-PROVEN, 'USE SPARINGLY -- one shopfront band') -- exactly one band, the ground-floor row y=1 the player walks past.",
+     "sheet": "res://assets/props/free_pack/Building_Walls.png",
+     "tile_px": 16,
+     "coords": [
+      13,
+      35
+     ],
+     "cells": {
+      "rect": [
+       0,
+       1,
+       28,
+       1
+      ]
+     }
+    },
+    {
+     "_pick": "Layer 4/5: pilaster strips every 3 cells (the spec's 'vertical LINES'), Wall_Tiles (8,2) stone columns spanning y=-1..1. Full 16px cells, not the mockup's 6px strips -- the cell-pick machinery has no sub-cell crop, so each pilaster is a full stone column dividing the glass line into 2-cell shopfronts (an honest approximation the windowed re-take judges).",
+     "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+     "tile_px": 16,
+     "coords": [
+      8,
+      2
+     ],
+     "cells": {
+      "list": [
+       [
+        2,
+        -1
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        5,
+        -1
+       ],
+       [
+        5,
+        0
+       ],
+       [
+        5,
+        1
+       ],
+       [
+        8,
+        -1
+       ],
+       [
+        8,
+        0
+       ],
+       [
+        8,
+        1
+       ],
+       [
+        11,
+        -1
+       ],
+       [
+        11,
+        0
+       ],
+       [
+        11,
+        1
+       ],
+       [
+        14,
+        -1
+       ],
+       [
+        14,
+        0
+       ],
+       [
+        14,
+        1
+       ],
+       [
+        17,
+        -1
+       ],
+       [
+        17,
+        0
+       ],
+       [
+        17,
+        1
+       ],
+       [
+        20,
+        -1
+       ],
+       [
+        20,
+        0
+       ],
+       [
+        20,
+        1
+       ],
+       [
+        23,
+        -1
+       ],
+       [
+        23,
+        0
+       ],
+       [
+        23,
+        1
+       ],
+       [
+        26,
+        -1
+       ],
+       [
+        26,
+        0
+       ],
+       [
+        26,
+        1
+       ]
+      ]
+     }
+    },
+    {
+     "_pick": "Layer 5/5: the south band (y 16-17) -- building BACKS/rooftops seen from the street's north side, textured masonry variant Wall_Tiles (8,17) (picks.md sec.2's darker band) instead of the flat cool slab the windowed read flagged. Roofline texture, not facade (their fronts face away).",
+     "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+     "tile_px": 16,
+     "coords": [
+      8,
+      17
+     ],
+     "cells": {
+      "rect": [
+       0,
+       16,
+       28,
+       2
+      ]
+     }
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "plaza_fountain",
+     "cell": [
+      14,
+      8
+     ]
+    },
+    {
+     "sprite": "street_lamp",
+     "cell": [
+      4,
+      3
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.5
+      ],
+      "energy": 0.9,
+      "radius": 32,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "street_lamp",
+     "cell": [
+      10,
+      3
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.5
+      ],
+      "energy": 0.9,
+      "radius": 32,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "street_lamp",
+     "cell": [
+      16,
+      3
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.5
+      ],
+      "energy": 0.9,
+      "radius": 32,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "street_lamp",
+     "cell": [
+      22,
+      3
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.5
+      ],
+      "energy": 0.9,
+      "radius": 32,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "street_lamp",
+     "cell": [
+      4,
+      14
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.5
+      ],
+      "energy": 0.9,
+      "radius": 32,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "street_lamp",
+     "cell": [
+      10,
+      14
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.5
+      ],
+      "energy": 0.9,
+      "radius": 32,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "street_lamp",
+     "cell": [
+      16,
+      14
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.5
+      ],
+      "energy": 0.9,
+      "radius": 32,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "street_lamp",
+     "cell": [
+      22,
+      14
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.5
+      ],
+      "energy": 0.9,
+      "radius": 32,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "coin_shop_sign",
+     "cell": [
+      8,
+      1
+     ]
+    },
+    {
+     "sprite": "coin_shop_sign",
+     "cell": [
+      22,
+      1
+     ]
+    },
+    {
+     "sprite": "guild_banner",
+     "cell": [
+      13,
+      1
+     ]
+    },
+    {
+     "_comment": "FIX WAVE facade recipe's 'door punched into the glass line' -- the wired `door` SPRITE as decor on two shopfront cells (x4/x18, y1), render-only: v1 shops aren't enterable, the sim cell stays plain blocked (bumping reads as any wall).",
+     "sprite": "door",
+     "cell": [
+      4,
+      1
+     ]
+    },
+    {
+     "sprite": "door",
+     "cell": [
+      18,
+      1
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "Invrisil 8c Task C1 (issue #12) -- the anchor-stone-per-region idiom's newest end (data/portals.json's new 'invrisil' row). Reuses `boulder` tinted coin-gold per the street_anchor_stone/riverfarm_anchor_stone precedent for a not-yet-bespoke gated prop. Gated on door_awakened (the same base network every anchor shares) -- reaching this cell at all already implies invrisil_attuned (the only way here is via another anchor's menu, itself door_awakened-gated), so no separate glow state is needed.",
+     "id": "invrisil_anchor_stone",
+     "kind": "prop",
+     "cell": [
+      3,
+      8
+     ],
+     "display_name": "A Weathered Marker",
+     "sprite": "boulder",
+     "tint": [
+      0.78,
+      0.66,
+      0.4
+     ],
+     "facing": "right",
+     "portal_menu": true,
+     "portal_menu_when": {
+      "door_awakened": 1
+     },
+     "toast": "A plain grey stone, out of place against the marble -- until you notice the coin-gold vein running through it, and the frame of light waiting just under the surface.",
+     "observe": "The Liscor stones were rougher. This one has been handled by people with better manners; it barely shows the wear."
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- the boulevard's own exit into the stealth playground (locked shape: alleys around fronts, the city's one traversal signature). Landing (1,7) on the alleys side sits inside that map's own west corridor, open + off every blocked/entity cell there.",
+     "id": "boulevard_to_alleys",
+     "kind": "door",
+     "cell": [
+      26,
+      8
+     ],
+     "display_name": "Into the Alleys",
+     "sprite": "door",
+     "to_map": "mercantile_alleys",
+     "to_cell": [
+      1,
+      7
+     ]
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- the merchant-prince, NPC surface PRE-QUEST only (docs/superpowers/specs/2026-07-06-invrisil-design.md sec.2: 'respectable, hires thugs, launders reputation'). Voice lifted from docs/design/dialogue-drafts/invrisil/merchant_prince.json's register (prices everything, never raises his voice) WITHOUT wiring that draft's quest-gated conversation graph -- 'a_gentlemans_disagreement' (quest) and 'merchant_blades' (combat entity) are Task C3's own deliverables per the plan's lane split (CONTEXT ALREADY MERGED note: this lane places nothing for the warehouse fight). talk_pool + a static dialogue fallback only, NO `conversation` key -- C3 adds it when the quest graph lands (the Lyonette/Krshia precedent for a pool-then-conversation NPC, just not-yet-conversation here). Sprite: reused `pc_human_m` rig tinted cream/gold (coin-gold-on-a-person, per character-profiles-staging.md's 'the city's accent hue ON a person' tell) -- zero new generation.",
+     "id": "master_coyle",
+     "kind": "npc",
+     "cell": [
+      24,
+      6
+     ],
+     "display_name": "Master Coyle",
+     "sprite": "pc_human_m",
+     "tint": [
+      0.85,
+      0.75,
+      0.55
+     ],
+     "facing": "left",
+     "observe": "Coin-gold trim on a merchant's collar, rings enough to case a fist. He totals you before you've said a word \u2014 cheaply, by the look on his face.",
+     "friendly_line": "He offers a smile with the price tag still visible on the underside. \"Charming,\" he allows, in the tone of a man crossing an item off a ledger.",
+     "talk_pool": [
+      "New face. I do like a new face \u2014 they're cheap, and occasionally they appreciate into something useful.",
+      "Everything has a price. The trick, which so few of you learn, is finding out whose.",
+      "Do step out of the doorway. You're blocking a view I paid a great deal to own."
+     ],
+     "dialogue": [
+      {
+       "speaker": "Master Coyle",
+       "text": "Browsing, or selling?"
+      }
+     ]
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- one of the 6-8 pool-less citizen extras (locked shape 2: the crowd IS the message; walk-on density, no talk_pool, no observe, no conversation -- interact() falls straight to the static `dialogue` one-liner below, the resting-runner-walk-on precedent for an inert-adjacent NPC). Sprite: reused generic rig (zero new PixelLab generation, per character-profiles-staging.md's Yelra/Renn Coldscale reuse-and-tint convention), fashion-variance via `tint` only.",
+     "id": "invrisil_extra_1",
+     "kind": "npc",
+     "cell": [
+      7,
+      6
+     ],
+     "display_name": "A Passerby",
+     "sprite": "citizen_f",
+     "tint": [
+      0.72,
+      0.5,
+      0.6
+     ],
+     "facing": "down",
+     "dialogue": [
+      {
+       "speaker": "",
+       "text": "A woman in a rose-dyed cloak checks a folded slip of paper against a shopfront number, unimpressed by both."
+      }
+     ]
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- one of the 6-8 pool-less citizen extras (locked shape 2: the crowd IS the message; walk-on density, no talk_pool, no observe, no conversation -- interact() falls straight to the static `dialogue` one-liner below, the resting-runner-walk-on precedent for an inert-adjacent NPC). Sprite: reused generic rig (zero new PixelLab generation, per character-profiles-staging.md's Yelra/Renn Coldscale reuse-and-tint convention), fashion-variance via `tint` only.",
+     "id": "invrisil_extra_2",
+     "kind": "npc",
+     "cell": [
+      10,
+      11
+     ],
+     "display_name": "A Passerby",
+     "sprite": "citizen_f",
+     "tint": [
+      0.5,
+      0.55,
+      0.78
+     ],
+     "facing": "left",
+     "dialogue": [
+      {
+       "speaker": "",
+       "text": "Blue-grey wool, city cut. She doesn't look at you. Nobody here looks at anybody."
+      }
+     ]
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- one of the 6-8 pool-less citizen extras (locked shape 2: the crowd IS the message; walk-on density, no talk_pool, no observe, no conversation -- interact() falls straight to the static `dialogue` one-liner below, the resting-runner-walk-on precedent for an inert-adjacent NPC). Sprite: reused generic rig (zero new PixelLab generation, per character-profiles-staging.md's Yelra/Renn Coldscale reuse-and-tint convention), fashion-variance via `tint` only.",
+     "id": "invrisil_extra_3",
+     "kind": "npc",
+     "cell": [
+      13,
+      5
+     ],
+     "display_name": "A Passerby",
+     "sprite": "human_laborer",
+     "tint": [
+      0.6,
+      0.45,
+      0.35
+     ],
+     "facing": "right",
+     "dialogue": [
+      {
+       "speaker": "",
+       "text": "A porter's barrow, half-unloaded, and a man in no hurry to finish the other half."
+      }
+     ]
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- one of the 6-8 pool-less citizen extras (locked shape 2: the crowd IS the message; walk-on density, no talk_pool, no observe, no conversation -- interact() falls straight to the static `dialogue` one-liner below, the resting-runner-walk-on precedent for an inert-adjacent NPC). Sprite: reused generic rig (zero new PixelLab generation, per character-profiles-staging.md's Yelra/Renn Coldscale reuse-and-tint convention), fashion-variance via `tint` only.",
+     "id": "invrisil_extra_4",
+     "kind": "npc",
+     "cell": [
+      17,
+      12
+     ],
+     "display_name": "A Passerby",
+     "sprite": "human_laborer",
+     "tint": [
+      0.45,
+      0.5,
+      0.4
+     ],
+     "facing": "down",
+     "dialogue": [
+      {
+       "speaker": "",
+       "text": "Olive work clothes, ink-stained cuffs. A clerk between one ledger and the next."
+      }
+     ]
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- one of the 6-8 pool-less citizen extras (locked shape 2: the crowd IS the message; walk-on density, no talk_pool, no observe, no conversation -- interact() falls straight to the static `dialogue` one-liner below, the resting-runner-walk-on precedent for an inert-adjacent NPC). Sprite: reused generic rig (zero new PixelLab generation, per character-profiles-staging.md's Yelra/Renn Coldscale reuse-and-tint convention), fashion-variance via `tint` only.",
+     "id": "invrisil_extra_5",
+     "kind": "npc",
+     "cell": [
+      20,
+      6
+     ],
+     "display_name": "A Passerby",
+     "sprite": "pc_human_m",
+     "tint": [
+      0.65,
+      0.55,
+      0.35
+     ],
+     "facing": "up",
+     "dialogue": [
+      {
+       "speaker": "",
+       "text": "Mustard-brown coat, city boots, the specific walk of a man pretending he isn't lost."
+      }
+     ]
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- one of the 6-8 pool-less citizen extras (locked shape 2: the crowd IS the message; walk-on density, no talk_pool, no observe, no conversation -- interact() falls straight to the static `dialogue` one-liner below, the resting-runner-walk-on precedent for an inert-adjacent NPC). Sprite: reused generic rig (zero new PixelLab generation, per character-profiles-staging.md's Yelra/Renn Coldscale reuse-and-tint convention), fashion-variance via `tint` only.",
+     "id": "invrisil_extra_6",
+     "kind": "npc",
+     "cell": [
+      23,
+      10
+     ],
+     "display_name": "A Passerby",
+     "sprite": "pc_human_f",
+     "tint": [
+      0.55,
+      0.35,
+      0.45
+     ],
+     "facing": "left",
+     "dialogue": [
+      {
+       "speaker": "",
+       "text": "Plum silk, a little too fine for the errand she's running. She counts her change twice."
+      }
+     ]
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- one of the 6-8 pool-less citizen extras (locked shape 2: the crowd IS the message; walk-on density, no talk_pool, no observe, no conversation -- interact() falls straight to the static `dialogue` one-liner below, the resting-runner-walk-on precedent for an inert-adjacent NPC). Sprite: reused generic rig (zero new PixelLab generation, per character-profiles-staging.md's Yelra/Renn Coldscale reuse-and-tint convention), fashion-variance via `tint` only.",
+     "id": "invrisil_extra_7",
+     "kind": "npc",
+     "cell": [
+      9,
+      13
+     ],
+     "display_name": "A Passerby",
+     "sprite": "gnoll_traveler",
+     "tint": [
+      0.6,
+      0.55,
+      0.5
+     ],
+     "facing": "right",
+     "dialogue": [
+      {
+       "speaker": "",
+       "text": "A Gnoll traveler, tan road-cloak, watching the crowd the way a stranger watches weather."
+      }
+     ]
+    }
+   ],
+   "cover_skip": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     13,
+     0
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     15,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     20,
+     0
+    ],
+    [
+     21,
+     0
+    ],
+    [
+     22,
+     0
+    ],
+    [
+     23,
+     0
+    ],
+    [
+     24,
+     0
+    ],
+    [
+     25,
+     0
+    ],
+    [
+     26,
+     0
+    ],
+    [
+     27,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     6,
+     1
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     8,
+     1
+    ],
+    [
+     9,
+     1
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     1
+    ],
+    [
+     12,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     14,
+     1
+    ],
+    [
+     15,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ],
+    [
+     20,
+     1
+    ],
+    [
+     21,
+     1
+    ],
+    [
+     22,
+     1
+    ],
+    [
+     23,
+     1
+    ],
+    [
+     24,
+     1
+    ],
+    [
+     25,
+     1
+    ],
+    [
+     26,
+     1
+    ],
+    [
+     27,
+     1
+    ],
+    [
+     0,
+     16
+    ],
+    [
+     1,
+     16
+    ],
+    [
+     2,
+     16
+    ],
+    [
+     3,
+     16
+    ],
+    [
+     4,
+     16
+    ],
+    [
+     5,
+     16
+    ],
+    [
+     6,
+     16
+    ],
+    [
+     7,
+     16
+    ],
+    [
+     8,
+     16
+    ],
+    [
+     9,
+     16
+    ],
+    [
+     10,
+     16
+    ],
+    [
+     11,
+     16
+    ],
+    [
+     12,
+     16
+    ],
+    [
+     13,
+     16
+    ],
+    [
+     14,
+     16
+    ],
+    [
+     15,
+     16
+    ],
+    [
+     16,
+     16
+    ],
+    [
+     17,
+     16
+    ],
+    [
+     18,
+     16
+    ],
+    [
+     19,
+     16
+    ],
+    [
+     20,
+     16
+    ],
+    [
+     21,
+     16
+    ],
+    [
+     22,
+     16
+    ],
+    [
+     23,
+     16
+    ],
+    [
+     24,
+     16
+    ],
+    [
+     25,
+     16
+    ],
+    [
+     26,
+     16
+    ],
+    [
+     27,
+     16
+    ],
+    [
+     0,
+     17
+    ],
+    [
+     1,
+     17
+    ],
+    [
+     2,
+     17
+    ],
+    [
+     3,
+     17
+    ],
+    [
+     4,
+     17
+    ],
+    [
+     5,
+     17
+    ],
+    [
+     6,
+     17
+    ],
+    [
+     7,
+     17
+    ],
+    [
+     8,
+     17
+    ],
+    [
+     9,
+     17
+    ],
+    [
+     10,
+     17
+    ],
+    [
+     11,
+     17
+    ],
+    [
+     12,
+     17
+    ],
+    [
+     13,
+     17
+    ],
+    [
+     14,
+     17
+    ],
+    [
+     15,
+     17
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     17,
+     17
+    ],
+    [
+     18,
+     17
+    ],
+    [
+     19,
+     17
+    ],
+    [
+     20,
+     17
+    ],
+    [
+     21,
+     17
+    ],
+    [
+     22,
+     17
+    ],
+    [
+     23,
+     17
+    ],
+    [
+     24,
+     17
+    ],
+    [
+     25,
+     17
+    ],
+    [
+     26,
+     17
+    ],
+    [
+     27,
+     17
+    ]
+   ],
+   "_cover_skip_comment": "Render-only (world.gd's blocked layer skip, the #37 wandering_inn_facade precedent): the north band (y 0-1) carries the assembled facade paint and the south band (y 16-17) the textured rooftop paint (floor_layers entries below) -- the generic blocked tile would overdraw both. Sim blocking unchanged (all 4 rows stay in `blocked`)."
+  },
+  "mercantile_alleys": {
+   "_comment": "Invrisil 8c Task C1 (issue #12) -- ~20x14 mercantile alleys, the stealth playground (locked shape: bent routes, stacked crates, 2-3 SNEAKABLE trigger_radius footpad placements). biome invrisil_alley (FIX WAVE: same wang paving floor as the boulevard per direction.md's 'same stone, meaner hour', but its OWN blocked+skirt -- the darker textured masonry band picks.md sec.2 flagged for alley walls -- after the controller's windowed read caught the shared-street version rendering as corridors floating on void; see biomes.json's invrisil_alley _comment). Sparse sconce lantern pools on wall cells (decor below) + the night mood card carry the 'lantern maze' read -- direction doc open-question 4's own fence-less fallback. The open path is a bent L: a west corridor (y6-7) -> a north-south connector (x8-10) -> an east corridor (y11-12) to the parlor door, matching the design doc's 'bent routes' literally, not just in flavor -- footpads sit IN the turn and just past it. Crate/barrel decor dresses the corridor's blocked-adjacent cells (the 'CLIMBABLE flavor, not literal climbing' note -- stacked goods, not scatter).",
+   "biome": "invrisil_alley",
+   "grid": {
+    "width": 20,
+    "height": 14
+   },
+   "blocked": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     13,
+     0
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     15,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     6,
+     1
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     8,
+     1
+    ],
+    [
+     9,
+     1
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     1
+    ],
+    [
+     12,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     14,
+     1
+    ],
+    [
+     15,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     12,
+     2
+    ],
+    [
+     13,
+     2
+    ],
+    [
+     14,
+     2
+    ],
+    [
+     15,
+     2
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     2
+    ],
+    [
+     18,
+     2
+    ],
+    [
+     19,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     8,
+     3
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     13,
+     3
+    ],
+    [
+     14,
+     3
+    ],
+    [
+     15,
+     3
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     17,
+     3
+    ],
+    [
+     18,
+     3
+    ],
+    [
+     19,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     8,
+     4
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     12,
+     4
+    ],
+    [
+     13,
+     4
+    ],
+    [
+     14,
+     4
+    ],
+    [
+     15,
+     4
+    ],
+    [
+     16,
+     4
+    ],
+    [
+     17,
+     4
+    ],
+    [
+     18,
+     4
+    ],
+    [
+     19,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     6,
+     5
+    ],
+    [
+     7,
+     5
+    ],
+    [
+     8,
+     5
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     10,
+     5
+    ],
+    [
+     11,
+     5
+    ],
+    [
+     12,
+     5
+    ],
+    [
+     13,
+     5
+    ],
+    [
+     14,
+     5
+    ],
+    [
+     15,
+     5
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     17,
+     5
+    ],
+    [
+     18,
+     5
+    ],
+    [
+     19,
+     5
+    ],
+    [
+     11,
+     6
+    ],
+    [
+     12,
+     6
+    ],
+    [
+     13,
+     6
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     15,
+     6
+    ],
+    [
+     16,
+     6
+    ],
+    [
+     17,
+     6
+    ],
+    [
+     18,
+     6
+    ],
+    [
+     19,
+     6
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     7
+    ],
+    [
+     13,
+     7
+    ],
+    [
+     14,
+     7
+    ],
+    [
+     15,
+     7
+    ],
+    [
+     16,
+     7
+    ],
+    [
+     17,
+     7
+    ],
+    [
+     18,
+     7
+    ],
+    [
+     19,
+     7
+    ],
+    [
+     0,
+     8
+    ],
+    [
+     1,
+     8
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     3,
+     8
+    ],
+    [
+     4,
+     8
+    ],
+    [
+     5,
+     8
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     11,
+     8
+    ],
+    [
+     12,
+     8
+    ],
+    [
+     13,
+     8
+    ],
+    [
+     14,
+     8
+    ],
+    [
+     15,
+     8
+    ],
+    [
+     16,
+     8
+    ],
+    [
+     17,
+     8
+    ],
+    [
+     18,
+     8
+    ],
+    [
+     19,
+     8
+    ],
+    [
+     0,
+     9
+    ],
+    [
+     1,
+     9
+    ],
+    [
+     2,
+     9
+    ],
+    [
+     3,
+     9
+    ],
+    [
+     4,
+     9
+    ],
+    [
+     5,
+     9
+    ],
+    [
+     6,
+     9
+    ],
+    [
+     7,
+     9
+    ],
+    [
+     11,
+     9
+    ],
+    [
+     12,
+     9
+    ],
+    [
+     13,
+     9
+    ],
+    [
+     14,
+     9
+    ],
+    [
+     15,
+     9
+    ],
+    [
+     16,
+     9
+    ],
+    [
+     17,
+     9
+    ],
+    [
+     18,
+     9
+    ],
+    [
+     19,
+     9
+    ],
+    [
+     0,
+     10
+    ],
+    [
+     1,
+     10
+    ],
+    [
+     2,
+     10
+    ],
+    [
+     3,
+     10
+    ],
+    [
+     4,
+     10
+    ],
+    [
+     5,
+     10
+    ],
+    [
+     6,
+     10
+    ],
+    [
+     7,
+     10
+    ],
+    [
+     11,
+     10
+    ],
+    [
+     12,
+     10
+    ],
+    [
+     13,
+     10
+    ],
+    [
+     14,
+     10
+    ],
+    [
+     15,
+     10
+    ],
+    [
+     16,
+     10
+    ],
+    [
+     17,
+     10
+    ],
+    [
+     18,
+     10
+    ],
+    [
+     19,
+     10
+    ],
+    [
+     0,
+     11
+    ],
+    [
+     1,
+     11
+    ],
+    [
+     2,
+     11
+    ],
+    [
+     3,
+     11
+    ],
+    [
+     4,
+     11
+    ],
+    [
+     5,
+     11
+    ],
+    [
+     6,
+     11
+    ],
+    [
+     7,
+     11
+    ],
+    [
+     0,
+     12
+    ],
+    [
+     1,
+     12
+    ],
+    [
+     2,
+     12
+    ],
+    [
+     3,
+     12
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     5,
+     12
+    ],
+    [
+     6,
+     12
+    ],
+    [
+     7,
+     12
+    ],
+    [
+     0,
+     13
+    ],
+    [
+     1,
+     13
+    ],
+    [
+     2,
+     13
+    ],
+    [
+     3,
+     13
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     5,
+     13
+    ],
+    [
+     6,
+     13
+    ],
+    [
+     7,
+     13
+    ],
+    [
+     8,
+     13
+    ],
+    [
+     9,
+     13
+    ],
+    [
+     10,
+     13
+    ],
+    [
+     11,
+     13
+    ],
+    [
+     12,
+     13
+    ],
+    [
+     13,
+     13
+    ],
+    [
+     14,
+     13
+    ],
+    [
+     15,
+     13
+    ],
+    [
+     16,
+     13
+    ],
+    [
+     17,
+     13
+    ],
+    [
+     18,
+     13
+    ],
+    [
+     19,
+     13
+    ]
+   ],
+   "decor": [
+    {
+     "sprite": "crate",
+     "cell": [
+      5,
+      8
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      7,
+      8
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      12,
+      9
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      15,
+      10
+     ]
+    },
+    {
+     "_comment": "FIX WAVE lantern pools (direction.md alleys card: 'sparse fence-lantern anchors, wider gaps between pools than the boulevard's serviced rhythm'). Reuses the existing `sconce` sprite (the inn's own wall lamp -- zero new assets, the direction doc's own 'consider owned/wired art instead of the speculative sewer lantern pick' note) on wall cells adjacent to the corridors. Four pools over three corridor legs vs the boulevard's eight -- the sparser rhythm IS the card. Non-flicker per the direction card's Invrisil-wide rule (serviced city lamps; flicker reads poor).",
+     "sprite": "sconce",
+     "cell": [
+      3,
+      5
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.78,
+       0.45
+      ],
+      "energy": 0.8,
+      "radius": 22,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      7,
+      8
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.78,
+       0.45
+      ],
+      "energy": 0.8,
+      "radius": 22,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      11,
+      10
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.78,
+       0.45
+      ],
+      "energy": 0.8,
+      "radius": 22,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      16,
+      13
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.78,
+       0.45
+      ],
+      "energy": 0.8,
+      "radius": 22,
+      "flicker": false
+     }
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "Round-trip pair with boulevard_to_alleys (invrisil_boulevard cell 26,8). Landing (25,8) on the boulevard side is the open mid-street cell immediately west of that door.",
+     "id": "alleys_to_boulevard",
+     "kind": "door",
+     "cell": [
+      0,
+      7
+     ],
+     "display_name": "Back to the Boulevard",
+     "sprite": "door",
+     "to_map": "invrisil_boulevard",
+     "to_cell": [
+      25,
+      8
+     ]
+    },
+    {
+     "_comment": "Round-trip pair with parlor_to_alleys (brothers_parlor cell 0,4). Landing (1,4) on the parlor side is the open interior cell immediately east of that door.",
+     "id": "alleys_to_parlor",
+     "kind": "door",
+     "cell": [
+      19,
+      12
+     ],
+     "display_name": "A Plain Door, Better Locks Than It Looks",
+     "sprite": "door",
+     "to_map": "brothers_parlor",
+     "to_cell": [
+      1,
+      4
+     ]
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- the street fixer, 'Cups' (docs/superpowers/specs/2026-07-06-invrisil-design.md sec.2/sec.4: 'sells rumors by the CUP -- tea-house pricing bit'). FULL conversation graph wired now (data/dialogue/invrisil_fixer.json) -- unlike Wilovan/Coyle, none of her effects reference a quest id or a start_combat entity C1 doesn't own (gold/accomplishment only), so the rumor-vending hub + the TALK-path testimony chain's *shape* are safe to ship now; the testimony options stay naturally hidden (requires took_brothers_job/fixer_will_testify, both absent==0) until Task C3 lands the quest that banks them -- a forward reference, same convention as C2's Wilovan combatant record. Sprite: reused `citizen_f` rig tinted muted teal-grey (a shawl-and-tea-tray read), zero new generation.",
+     "id": "cups",
+     "kind": "npc",
+     "cell": [
+      2,
+      6
+     ],
+     "display_name": "Cups",
+     "sprite": "citizen_f",
+     "tint": [
+      0.55,
+      0.6,
+      0.6
+     ],
+     "facing": "right",
+     "observe": "A tea-tray harness worn shiny at the left shoulder \u2014 she pours right-handed and listens left-eared. The cups are chipped. The ears are not.",
+     "friendly_line": "She pours you a cup without being asked. \"On the house,\" she says, \"which is the only kind of trade I ever regret.\"",
+     "conversation": "invrisil_fixer",
+     "dialogue": [
+      {
+       "speaker": "Cups",
+       "text": "Tea's free. Rumor's a gold the cup."
+      }
+     ]
+    },
+    {
+     "_comment": "LOCKED interface (8c plan) -- `alley_footpads_a`, one of 2-3 sneakable trigger_radius encounters (the K2 payoff: traced _check_trigger_radius before placing -- `sneaking` skips the ambush entirely and instead banks sneaked_past_danger, silently, per that function's own doc comment; walking it WITHOUT sneaking fires start_combat for real). Arena `mercantile_alley`, roster `footpad_lookout`/`footpad_bruiser` (lane beta/C2's combat data, tuned LOW-lethality by design so a failed sneak never walls the player). Sits inside the vertical connector (the bent route's turn), the corridor's narrowest point.",
+     "id": "alley_footpads_a",
+     "kind": "encounter",
+     "cell": [
+      9,
+      9
+     ],
+     "trigger_radius": 2,
+     "display_name": "Footpads in the Turn",
+     "sprite": "human_laborer",
+     "arena": "mercantile_alley",
+     "enemies": [
+      "footpad_lookout",
+      "footpad_bruiser"
+     ],
+     "on_victory": "cleared_footpads_a",
+     "observe": "Two figures loitering with the specific stillness of people about to stop pretending they're not waiting for you.",
+     "allies": [],
+     "respawns": true
+    },
+    {
+     "_comment": "LOCKED interface -- `alley_footpads_b`, the pair's second placement (east corridor, toward the parlor door). Chebyshev distance from alley_footpads_a's own radius-2 zone is 5 (dx5/dy3) -- deliberately non-overlapping, so a canonical script can sneak past BOTH independently without _check_trigger_radius's single-fire-per-move loop masking one behind the other.",
+     "id": "alley_footpads_b",
+     "kind": "encounter",
+     "cell": [
+      14,
+      12
+     ],
+     "trigger_radius": 2,
+     "display_name": "Footpads by the Cheese-Propped Door",
+     "sprite": "human_laborer",
+     "arena": "mercantile_alley",
+     "enemies": [
+      "footpad_lookout",
+      "footpad_bruiser"
+     ],
+     "on_victory": "cleared_footpads_b",
+     "observe": "The second pair, closer to the counting-house door \u2014 same trick, same stillness, better light to see it by.",
+     "allies": [],
+     "respawns": true
+    }
+   ]
+  },
+  "brothers_parlor": {
+   "_comment": "Invrisil 8c Task C1 (issue #12) -- ~14x10 Brothers' parlor (hideout interior, 'borrowed elegance': shabby-genteel, one absurdly good rug, warm low light over the card table). biome brothers_parlor (see biomes.json's own _comment for the already-present-asset picks). Border blocked on every edge except the single door gap at (0,4) (the door entity's own cell is never double-counted in `blocked` -- entity occupancy alone suffices, the liscor_gate/garden_door precedent verified against this exact codebase before writing this). THE GUEST COUCH sits at (2,7), Wilovan greets at (6,3), the card table + rug anchor the room's center (6,5)/(6,6) -- see each entity/decor entry's own _comment for the render-bbox math.",
+   "biome": "brothers_parlor",
+   "grid": {
+    "width": 14,
+    "height": 10
+   },
+   "blocked": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     13,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     13,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     13,
+     3
+    ],
+    [
+     13,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     6,
+     5
+    ],
+    [
+     13,
+     5
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     13,
+     6
+    ],
+    [
+     0,
+     7
+    ],
+    [
+     13,
+     7
+    ],
+    [
+     0,
+     8
+    ],
+    [
+     13,
+     8
+    ],
+    [
+     0,
+     9
+    ],
+    [
+     1,
+     9
+    ],
+    [
+     2,
+     9
+    ],
+    [
+     3,
+     9
+    ],
+    [
+     4,
+     9
+    ],
+    [
+     5,
+     9
+    ],
+    [
+     6,
+     9
+    ],
+    [
+     7,
+     9
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     9,
+     9
+    ],
+    [
+     10,
+     9
+    ],
+    [
+     11,
+     9
+    ],
+    [
+     12,
+     9
+    ],
+    [
+     13,
+     9
+    ]
+   ],
+   "decor": [
+    {
+     "sprite": "table_brown",
+     "cell": [
+      6,
+      5
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.6
+      ],
+      "energy": 1.0,
+      "radius": 40,
+      "flicker": false
+     },
+     "_comment_light": "FIX WAVE: energy 0.9->1.0, radius 30->40 (reaches Wilovan's cell (6,3), 2 cells from the table) -- NOTE this light only contributes at dusk/night (light_multiplier day=0.0, traced in atmosphere.gd), so it shapes evening visits, not the canonical's day-phase shot; the day fix is the floor/tint/vignette set."
+    },
+    {
+     "sprite": "rug_tan",
+     "cell": [
+      6,
+      6
+     ],
+     "tint": [
+      0.55,
+      0.15,
+      0.3
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "Round-trip pair with alleys_to_parlor (mercantile_alleys cell 19,12). This is the parlor's ONLY exit -- a dead-end hideout interior, matching witch_hollow's own single-purpose-room shape one map further in.",
+     "id": "parlor_to_alleys",
+     "kind": "door",
+     "cell": [
+      0,
+      4
+     ],
+     "display_name": "Out to the Alley",
+     "sprite": "door",
+     "to_map": "mercantile_alleys",
+     "to_cell": [
+      18,
+      12
+     ]
+    },
+    {
+     "_comment": "Invrisil 8c Task C1 -- Wilovan, CANON (wiki.wanderinginn.com/Wilovan, WIKI-VERIFIED 2026-07-08, same verification C2's combatant record already banked): a Gnoll [Thug] of the Brothers of Serendipitous Meetings, brick-built, dapper vest/leggings/tall hat, gentlemanly courtesy -- 'perfect gentlemen. Until the hats come off.' The plan's User-ratified shape 1 (WILOVAN fronts the Brothers, supersedes the dialogue-drafts lane's ORIGINAL 'Mister Sable' -- that draft's register informs a background Brother, never fronts). talk_pool + static dialogue fallback ONLY, NO `conversation` key: the commission/ways/marker quest graph (docs/design/dialogue-drafts/invrisil/brothers_lieutenant.json, recast Sable->Wilovan at wiring time) is Task C3's own deliverable (it starts the `a_gentlemans_disagreement` quest, which does not exist in quests.json yet -- wiring it now would fail test_content's quest_ids assert). Sprite: reused `pc_gnoll_m` rig tinted dapper vest/hat colors (dark green + brass), zero new generation -- the hats-off violence tell is staged at CONTENT time (C3), not art time.",
+     "id": "wilovan",
+     "kind": "npc",
+     "cell": [
+      6,
+      3
+     ],
+     "display_name": "Wilovan",
+     "sprite": "pc_gnoll_m",
+     "tint": [
+      0.62,
+      0.7,
+      0.56
+     ],
+     "facing": "down",
+     "observe": "A Gnoll in a vest cut sharper than his manners need to be, tall hat squared like it's holding a rank. He watches the room's exits before he watches you.",
+     "friendly_line": "He inclines the hat half an inch \u2014 a genuine courtesy, not a performance of one. \"A pleasure,\" he says, and seems to mean it.",
+     "talk_pool": [
+      "Evening. Might I say, sir, you carry yourself like a person things happen to. We collect a few of those.",
+      "Manners cost nothing and buy everything, in my experience. Mind the rug \u2014 Normen fusses over it more than he'll admit.",
+      "You'll notice the hat stays on. Best we keep it that way, between friends.",
+      "We don't steal, whatever you've heard. We RECOVER. It's a finer distinction than it sounds, and it's the whole of our business."
+     ],
+     "dialogue": [
+      {
+       "speaker": "Wilovan",
+       "text": "Evening, sir. Fine weather for good behavior."
+      }
+     ],
+     "_comment_tint": "FIX ITERATION 3: [0.42,0.5,0.4] -> [0.62,0.7,0.56] -- the marquee NPC must read at a glance (controller windowed verdict: still a silhouette after the mood lift). Keeps the dark-green dapper-vest identity, materially brighter under the parlor grade; tint multiplies the rig, so the old values cut every channel roughly in half."
+    },
+    {
+     "_comment": "THE BED RULE (standing, plan's user-ratified shape 3): the parlor's guest couch, sleep:true, unconditional once the parlor is reachable (no quest gate -- reaching this room already required the door chain: portal -> boulevard -> alleys door -> parlor door, no shortcut exists). Reuses the EXISTING `bed` sprite verbatim (Interior_Props_01.png, frame 34x44, render_scale 0.375, default anchor [0.5,1.0]) -- the SAME already-shipped asset the inn's own bed uses, not a new pick: rendered footprint is ~12.75px wide / ~16.5px tall, i.e. it overhangs its OWN cell's north edge by well under 1px and stays fully inside its own cell on every other axis (measured against CELL=16px) -- functionally self-contained, the lowest-risk placement shape available, chosen specifically to satisfy the render-bbox placement discipline (the Riverfarm cot lesson) without a windowed check. Cell (2,7) is deep interior (open per the border-blocked computation above), 4 cells from Wilovan (6,3) and 4 cells from the table (6,5) -- no neighbor decor shares (2,6)/(2,8)/(1,7)/(3,7), so the sub-1px north overhang lands on bare floor.",
+     "id": "brothers_guest_couch",
+     "kind": "prop",
+     "cell": [
+      2,
+      7
+     ],
+     "display_name": "The Guest Couch",
+     "sprite": "bed",
+     "sleep": true,
+     "sleep_toast": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality."
     }
    ]
   }

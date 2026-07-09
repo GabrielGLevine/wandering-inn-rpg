@@ -1,0 +1,103 @@
+{
+	"_comment": "Invrisil 8c Task C1 (issue #12). Lifted from docs/design/dialogue-drafts/invrisil/fixer.json (dialogue-drafts lane, 2026-07-06) verbatim -- the street fixer 'Cups': rumor-by-the-cup vending (5 one-gold rumors seeding city texture + quest-path hints) + the TALK-path testimony chain. Spec: docs/superpowers/specs/2026-07-06-invrisil-design.md sec.2/sec.4 ('sells rumors by the CUP -- tea-house pricing bit'). Voice contract: character-profiles-staging.md 'The street fixer' (sells rumors by the cup, trade cant, genuinely likes gossip beyond its price). Speaker 'Cups' = ORIGINAL street-name+flag. SAFE TO WIRE NOW (unlike Wilovan/Coyle's full quest graphs): every effect here is gold/accomplishment only -- no `quest`/`start_combat`/`remove_entity` effect, so nothing forward-references an entity or quests.json row Task C3 hasn't landed yet. The testimony chain (balk/agreed_persuaded/agreed_paid/arranged) requires `took_brothers_job`/`fixer_will_testify`, both absent==0 today -- naturally hidden until C3's quest banks them, a forward reference (same convention as C2's Wilovan combatant record). Rumor buys: gold-gated (grey visible when broke, D1/D2 precedent) + hide_when heard_rumor_* (each sells once). Softlock audit (from the draft, re-verified against this exact file): hub has many hidden/gold-locked options + an ungated 'Just the tea today.' exit; balk keeps an ungated 'Fair. Forget I asked.' back-out; no start_combat anywhere.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Cups",
+			"text": "Tea comes free with the rumor; rumor's a gold the cup. Sit on the crate — mind the wobble, it's structural. Now. What are we drinking?",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "fixer_will_testify": 1 } }, "text": "Testimony's steeping — my face on paper, gods help my complexion. One cup left in the pot worth pouring: Hellam. Say when." },
+				{ "requires": { "accomplishment": { "secured_testimony": 1 } }, "text": "Hellam signed, I signed, and for once I'm IN the best rumor on the street instead of selling it. Tea's still a gold. Fame hasn't changed me." }
+			],
+			"options": [
+				{ "text": "The alley boys. What's their round? (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_footpads": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_footpads" } ], "goto": "rumor_footpads" },
+				{ "text": "Coyle's counting-house. (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_counting_house": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_counting_house" } ], "goto": "rumor_counting_house" },
+				{ "text": "Who in this city hates Coyle enough to say so? (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_hellam": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_hellam" } ], "goto": "rumor_hellam" },
+				{ "text": "The men in the hats. (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_hats": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_hats" } ], "goto": "rumor_hats" },
+				{ "text": "Anything strange brewing? (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_door": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_door" } ], "goto": "rumor_door" },
+				{ "text": "I need more than rumor. Coyle hired that theft — will you swear to it?", "requires": { "accomplishment": { "took_brothers_job": 1 } }, "hide_when": { "accomplishment": { "fixer_will_testify": 1 } }, "goto": "balk" },
+				{ "text": "Pour for three. Set it up with Hellam.", "requires": { "accomplishment": { "fixer_will_testify": 1 } }, "hide_when": { "accomplishment": { "secured_testimony": 1 } }, "effects": [ { "accomplishment": "secured_testimony" } ], "goto": "arranged" },
+				{ "text": "Just the tea today.", "goto": "just_tea" }
+			]
+		},
+		"rumor_footpads": {
+			"speaker": "Cups",
+			"text": "Wister's Alley boys walk it in pairs, and pairs keep habits: every round they turn at the fish-drying racks — both heads, every time, like the fish might've moved. That's a whole alley of nobody-looking twice a bell. A patient someone could stroll it like a garden. Drink up.",
+			"options": [
+				{ "text": "Another cup.", "goto": "hub" },
+				{ "text": "Useful fish. My thanks.", "end": true }
+			]
+		},
+		"rumor_counting_house": {
+			"speaker": "Cups",
+			"text": "Lamps burn past midnight there two nights before every 'audit' — a man cooking books likes them fresh. Better cup: the clerk with the inky cuffs takes his supper OUT, and props the yard-side door for his return. Props it with a cheese wedge. I have SEEN the cheese. That's not rumor, that's reportage.",
+			"options": [
+				{ "text": "Another cup.", "goto": "hub" },
+				{ "text": "To the cheese. My thanks.", "end": true }
+			]
+		},
+		"rumor_hellam": {
+			"speaker": "Cups",
+			"text": "Master Hellam — silk trade, salt tongue. Coyle soured their partnership over a warehouse lease, then bought that same lease through a cousin. Hellam keeps the grudge fed and walked like a prize hound. He'd testify against Coyle at his own wedding, mid-vow, and call it a toast.",
+			"options": [
+				{ "text": "Another cup.", "goto": "hub" },
+				{ "text": "Good hound. My thanks.", "end": true }
+			]
+		},
+		"rumor_hats": {
+			"speaker": "Cups",
+			"text": "The Brothers? Sweetest muggers you'll ever meet. Tip the hat, beg your pardon, relieve you of exactly what's owed and not a clip more — I've had ruder service in shops. But the whole street knows the arithmetic: hat on, you talk. Hat comes off, you RUN, and you don't spend breath asking why.",
+			"options": [
+				{ "text": "Another cup.", "goto": "hub" },
+				{ "text": "Hats on, then. My thanks.", "end": true }
+			]
+		},
+		"rumor_door": {
+			"speaker": "Cups",
+			"text": "There's talk of a door — an inn door, in some Drake town two hundred miles south — that opens HERE, when it's minded to. Adventurers swear by it. Me, I say any door that shortchanges two hundred miles of road out of its gossip is a menace to my trade personally. ...Marvelous, though. If true.",
+			"options": [
+				{ "text": "Another cup.", "goto": "hub" },
+				{ "text": "Mind your trade. My thanks.", "end": true }
+			]
+		},
+		"balk": {
+			"speaker": "Cups",
+			"text": "Swearing's different water, friend. A rumor's a bird — nobody knows whose window it flew from. Testimony has my FACE on it, and Coyle prices faces. Some of them stop being worn.",
+			"options": [
+				{ "text": "The Brothers stand behind their people. Stand with them once, and every hat in this city tips your way after. (Persuade)", "effects": [ { "accomplishment": "fixer_will_testify" }, { "accomplishment": "persuaded_someone" } ], "goto": "agreed_persuaded" },
+				{ "text": "Ten gold says the water's fine. (10 gold)", "requires": { "gold": 10 }, "effects": [ { "gold": -10 }, { "accomplishment": "fixer_will_testify" } ], "goto": "agreed_paid" },
+				{ "text": "Fair. Forget I asked.", "goto": "hub" }
+			]
+		},
+		"agreed_persuaded": {
+			"speaker": "Cups",
+			"text": "...Every hat, hm. You know what nobody's ever offered the tea-girl before? Standing. ...Done. Pour it in ink, I'll sign. But one cup won't drown a man like Coyle — you want Hellam's grudge on paper next to mine. Come back and say 'pour for three' and I'll have him here, wedding manners and all.",
+			"options": [
+				{ "text": "Pour for three, then. Set it up.", "effects": [ { "accomplishment": "secured_testimony" } ], "goto": "arranged" },
+				{ "text": "I'll be back for it.", "end": true }
+			]
+		},
+		"agreed_paid": {
+			"speaker": "Cups",
+			"text": "Ten. Well. The water's warmer already — funny how that works; it's why I sell the cups and not the kettle. Done, I'll sign. But one cup won't drown a man like Coyle — you want Hellam's grudge on paper next to mine. Come back and say 'pour for three' and I'll have him here, wedding manners and all.",
+			"options": [
+				{ "text": "Pour for three, then. Set it up.", "effects": [ { "accomplishment": "secured_testimony" } ], "goto": "arranged" },
+				{ "text": "I'll be back for it.", "end": true }
+			]
+		},
+		"arranged": {
+			"speaker": "Cups",
+			"text": "Done and DONE. Hellam didn't even finish his cup — signed, sanded, sealed, then asked could he sign twice. Take the papers wherever names like Coyle's go to be spent. And friend — best rumor I ever poured, this one. Because I'm in it.",
+			"options": [
+				{ "text": "You earned the byline, Cups.", "end": true }
+			]
+		},
+		"just_tea": {
+			"speaker": "Cups",
+			"text": "Free tea, paid company. Worst trade I make all day, and I make it happily — furniture gets lonely. That's me. I'm the furniture.",
+			"options": [
+				{ "text": "Good tea, Cups.", "end": true }
+			]
+		}
+	}
+}
