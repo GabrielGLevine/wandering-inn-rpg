@@ -27,6 +27,17 @@ extends CanvasLayer
 ## world/title swap). Field-only -- hides on COMBAT_STARTED and shows again on
 ## UI_COMBAT_HIDDEN, the same field-only-hide idiom message_layer.gd uses for
 ## its hint panel (combat_screen owns its OWN hotbar; the two never coexist).
+## DIALOGUE gate: this layer is added to the tree AFTER `DialoguePanel`
+## (main.gd's `_spawn_ui_layers` order) and neither sets an explicit
+## CanvasLayer `layer`, so at the shared default it drew ON TOP of the
+## conversation panel's bottom-anchored option rows. RULING: dialogue always
+## wins -- HIDE (never reposition/shift; a moving hotbar reads as jitter)
+## while a conversation is open. Gated on `_dialogue_open`, tracked from the
+## SAME DIALOGUE_STARTED/DIALOGUE_ENDED pair message_layer.gd's own
+## `_conversation_open` already keys off (the dialogue-open state the UI
+## already tracks) -- combined with `_combat_hidden` via `_apply_visibility`
+## since combat and a real conversation never overlap (combat_screen ends
+## any open dialogue first) but both independently want this layer hidden.
 ##
 ## RENDER TRIGGERS (bus): WORLD_READY (covers cold boot + every load/reset,
 ## since main.gd respawns the world -- and this layer -- on GAME_LOADED/
@@ -68,6 +79,12 @@ var _field_skills: Array = []
 ## stays a pure renderer, same division of labor `_render`'s doc comment
 ## already establishes for slot data vs. drawing).
 var _last_slots: Array = []
+## CONSTRAINT: never toggle `visible` directly from either event handler --
+## always go through `_apply_visibility` so the combat and dialogue gates
+## compose (either one hidden hides the layer) instead of the later event
+## clobbering the earlier one's hide.
+var _combat_hidden := false
+var _dialogue_open := false
 
 
 func _ready() -> void:
@@ -122,9 +139,23 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 		WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED:
 			_render()
 		WIEvents.COMBAT_STARTED:
-			visible = false
+			_combat_hidden = true
+			_apply_visibility()
 		WIEvents.UI_COMBAT_HIDDEN:
-			visible = true
+			_combat_hidden = false
+			_apply_visibility()
+		WIEvents.DIALOGUE_STARTED:
+			_dialogue_open = true
+			_apply_visibility()
+		WIEvents.DIALOGUE_ENDED:
+			_dialogue_open = false
+			_apply_visibility()
+
+
+## Single write site for `visible` (see the two gate vars' doc comment) --
+## hidden while EITHER combat or a real conversation is open.
+func _apply_visibility() -> void:
+	visible = not (_combat_hidden or _dialogue_open)
 
 
 ## Rebuilds the bar from the PC's current known field-tagged skills and hands the
