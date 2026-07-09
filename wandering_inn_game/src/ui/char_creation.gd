@@ -34,34 +34,40 @@ enum Step { PICK, NAME }
 
 const NATIVE_SIZE := Vector2(1280.0, 720.0)
 const BACKDROP_COLOR := Color(0.08, 0.06, 0.05)
-const ENABLED_COLOR := Color(0.95, 0.88, 0.66)
-const CURSOR_COLOR := Color(1.0, 0.96, 0.8)
 const HINT_COLOR := Color(0.72, 0.68, 0.58)
 const NAME_MAX := 16
 
 ## The six PC sprite variants, in GridContainer fill order (row-major: top
 ## row is Male across the three races, bottom row is Female) so a plain
 ## for-loop over this array lays the grid out correctly with GRID_COLS
-## columns. Picking a card sets pc_race + pc_gender together.
+## columns. Picking a card sets pc_race + pc_gender together. CONSTRAINT: no
+## race/gender text anywhere in this dict on purpose (playtest hotfix #3 --
+## identity reads from the art alone; stats are never shown either, same
+## rule) -- do not add a label field back without re-checking that rule.
 const PC_OPTIONS: Array[Dictionary] = [
-	{"race": "human", "gender": "m", "sprite": "pc_human_m", "race_label": "Human", "gender_label": "Male"},
-	{"race": "drake", "gender": "m", "sprite": "pc_drake_m", "race_label": "Drake", "gender_label": "Male"},
-	{"race": "gnoll", "gender": "m", "sprite": "pc_gnoll_m", "race_label": "Gnoll", "gender_label": "Male"},
-	{"race": "human", "gender": "f", "sprite": "pc_human_f", "race_label": "Human", "gender_label": "Female"},
-	{"race": "drake", "gender": "f", "sprite": "pc_drake_f", "race_label": "Drake", "gender_label": "Female"},
-	{"race": "gnoll", "gender": "f", "sprite": "pc_gnoll_f", "race_label": "Gnoll", "gender_label": "Female"},
+	{"race": "human", "gender": "m", "sprite": "pc_human_m"},
+	{"race": "drake", "gender": "m", "sprite": "pc_drake_m"},
+	{"race": "gnoll", "gender": "m", "sprite": "pc_gnoll_m"},
+	{"race": "human", "gender": "f", "sprite": "pc_human_f"},
+	{"race": "drake", "gender": "f", "sprite": "pc_drake_f"},
+	{"race": "gnoll", "gender": "f", "sprite": "pc_gnoll_f"},
 ]
 const GRID_COLS := 3
 const GRID_ROWS := 2
-const CARD_SIZE := Vector2(300.0, 196.0)
+## Playtest hotfix #3: cards carry NO race/gender label any more (identity
+## must be evident from the art alone -- see `_refresh_card`'s doc comment)
+## and the reclaimed label space folds into the portrait, which also grows
+## a further increment on top of that -- CARD_SIZE.y 196->236 (+40),
+## PORTRAIT_HEIGHT 128->200 (+56%). The prompt ribbon (shrunk + raised) and
+## hint strip (lowered) below make room; see their own offsets.
+const CARD_SIZE := Vector2(300.0, 236.0)
 const CARD_GAP := Vector2(18.0, 14.0)
-const GRID_SIZE := Vector2(936.0, 406.0)  # GRID_COLS*CARD_SIZE.x + gaps, GRID_ROWS*CARD_SIZE.y + gap
+const GRID_SIZE := Vector2(936.0, 486.0)  # GRID_COLS*CARD_SIZE.x + gaps, GRID_ROWS*CARD_SIZE.y + gap
 ## Uniform on-screen portrait height regardless of source frame size (human
 ## 104px/drake 124px/gnoll 108px square frames all catalog at different native
 ## sizes) -- keeps every card's silhouette the same scale for a fair compare.
-const PORTRAIT_HEIGHT := 128.0
-const PORTRAIT_CENTER_Y := 78.0
-const LABEL_HEIGHT := 40.0
+const PORTRAIT_HEIGHT := 200.0
+const PORTRAIT_CENTER_Y := 118.0  # CARD_SIZE.y * 0.5 -- centered, no label row below it any more
 
 const STEP_PROMPT := {
 	Step.PICK: "Who are you?",
@@ -79,7 +85,6 @@ var _prompt_label: Label
 var _hint_label: Label
 var _grid_anchor: Control
 var _cards: Array[Control] = []
-var _card_labels: Array[Label] = []
 var _portraits: Array[AnimatedSprite2D] = []
 var _name_edit: LineEdit
 
@@ -121,15 +126,17 @@ func _build_ui() -> void:
 	_root.add_child(embers)
 
 	# Prompt ribbon (the title screen's BLUE_RIBBON idiom / asymmetric patch).
+	# Shrunk + raised from the original 92-tall/y120-212 (playtest hotfix #3):
+	# reclaims room below for the larger picker grid.
 	var prompt_panel := UIChrome.make_texture_panel(UIChrome.BLUE_RIBBON)
 	prompt_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	prompt_panel.custom_minimum_size = Vector2(640.0, 92.0)
-	prompt_panel.size = Vector2(640.0, 92.0)
-	UIChrome.set_offsets(prompt_panel, -320.0, 120.0, 320.0, 212.0)
+	prompt_panel.custom_minimum_size = Vector2(640.0, 76.0)
+	prompt_panel.size = Vector2(640.0, 76.0)
+	UIChrome.set_offsets(prompt_panel, -320.0, 104.0, 320.0, 180.0)
 	_root.add_child(prompt_panel)
 	var prompt_margin := MarginContainer.new()
 	UIChrome.full_rect(prompt_margin)
-	UIChrome.add_margins(prompt_margin, 42, 18, 42, 18)
+	UIChrome.add_margins(prompt_margin, 42, 14, 42, 14)
 	prompt_panel.add_child(prompt_margin)
 	_prompt_label = UIChrome.make_label("", "Title")
 	_prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -152,11 +159,12 @@ func _build_ui() -> void:
 	_name_edit.hide()
 	_root.add_child(_name_edit)
 
-	# Hint strip under the content.
+	# Hint strip under the content. Lowered from the original y-90/-54
+	# (playtest hotfix #3): reclaims room above for the larger picker grid.
 	_hint_label = UIChrome.make_label("", "Small")
 	_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hint_label.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	UIChrome.set_offsets(_hint_label, -400.0, -90.0, 400.0, -54.0)
+	UIChrome.set_offsets(_hint_label, -400.0, -34.0, 400.0, -4.0)
 	_hint_label.add_theme_color_override("font_color", HINT_COLOR)
 	_root.add_child(_hint_label)
 
@@ -171,7 +179,11 @@ func _build_picker_grid() -> void:
 	_grid_anchor.set_anchors_preset(Control.PRESET_CENTER)
 	_grid_anchor.custom_minimum_size = GRID_SIZE
 	_grid_anchor.size = GRID_SIZE
-	UIChrome.set_offsets(_grid_anchor, -GRID_SIZE.x * 0.5, -142.0, GRID_SIZE.x * 0.5, 264.0)
+	# top/bottom widened to fit the taller GRID_SIZE (playtest hotfix #3) --
+	# 10px clear of the shrunk prompt ribbon above (bottom edge y180) and the
+	# lowered hint strip below (top edge y686) at every screen height this
+	# NATIVE_SIZE-scaled layout renders at.
+	UIChrome.set_offsets(_grid_anchor, -GRID_SIZE.x * 0.5, -170.0, GRID_SIZE.x * 0.5, 316.0)
 	_grid_anchor.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_grid_anchor)
 
@@ -200,14 +212,6 @@ func _build_picker_grid() -> void:
 		portrait.play("idle_down")
 		card.add_child(portrait)
 		_portraits.append(portrait)
-
-		var label := UIChrome.make_label("", "Menu")
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		label.position = Vector2(0.0, CARD_SIZE.y - LABEL_HEIGHT)
-		label.size = Vector2(CARD_SIZE.x, LABEL_HEIGHT)
-		card.add_child(label)
-		_card_labels.append(label)
 		_cards.append(card)
 
 
@@ -241,12 +245,11 @@ func _render_step() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_CHAR_CREATION_RENDERED, {"step": _step_name()})
 
 
+## The selection cue is the card's OWN chrome texture (BLUE_BUTTON_PRESSED
+## vs BLUE_BUTTON below) -- no text label. CONSTRAINT: never add a
+## race/gender text row back here (see PC_OPTIONS's doc comment).
 func _refresh_card(i: int) -> void:
-	var opt: Dictionary = PC_OPTIONS[i]
 	var selected := i == _cursor
-	var label := _card_labels[i]
-	label.text = "%s — %s" % [String(opt["race_label"]), String(opt["gender_label"])]
-	label.add_theme_color_override("font_color", CURSOR_COLOR if selected else ENABLED_COLOR)
 	var card := _cards[i]
 	for child: Node in card.get_children():
 		if child is NinePatchRect:
