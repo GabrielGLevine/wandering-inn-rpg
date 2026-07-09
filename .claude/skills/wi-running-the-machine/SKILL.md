@@ -48,13 +48,18 @@ Playtest findings are directives: triage each into hotfix-now vs
 milestone-scoped, record the triage in HANDOFF.
 
 ## Delegation ladder
-- **IMPLEMENTERS = Codex 5.5 (user directive 2026-07-08):** dispatch via the
-  codex plugin's rescue lane with the task brief. Codex sandbox constraints
-  (standing env note): cannot write `.git`, cannot open windows — so Codex
-  lanes are NO-COMMIT (controller stages from the lane's reported file list)
-  and verify HEADLESS only; windowed/visual reads are the controller's or a
-  Claude lane's. Reviewers stay Claude-side (the review chain is the check
-  on the implementer, never the same vendor reviewing itself).
+- **IMPLEMENTERS = Claude (Sonnet) worktree lanes (user directive 2026-07-08
+  evening, superseding the same-day Codex directive):** precise brief (files,
+  constraints, verification commands), commit-on-lane-branch allowed,
+  HEADLESS-only verification (controller does windowed reads), verification
+  FOREGROUND alarm-wrapped except the full sweep (log-polling idiom).
+- Codex 5.5 remains sanctioned when quota allows, with its sandbox
+  constraints: cannot write `.git` (NO-COMMIT, controller stages from the
+  lane's reported file list), cannot open windows, shell DNS blocked (no
+  `gh`/PixelLab from inside). QUOTA LESSON (2026-07-08): concurrent
+  high-effort lanes drain a ChatGPT-plan quota in MINUTES — Codex fits one
+  bounded lane at a time, never a fan-out. Reviewers stay Claude-side
+  regardless (the review chain is the check on the implementer).
 - Mechanical, tightly-bounded, reviewer-covered (renames, fixtures, ports):
   cheap model (SiliconFlow Qwen; key `docs/siliconflow_api_key.txt`, never commit).
 - Bounded implementation with judgment when Codex is unavailable: Sonnet
