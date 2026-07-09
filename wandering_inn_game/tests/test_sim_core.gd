@@ -1833,11 +1833,11 @@ func _init() -> void:
 	assert(_count("sneak_ended") == 1, "sneak_ended fires on the off-toggle")
 	assert(_toast_texts() == ["You straighten up."], "the off-toast fires exactly once")
 
-	# Issue #22 ruling: [Invisibility] (Mage) and [Stealth]
-	# (Rogue) are TWO REAL shipped skills carrying `sneaks: true` -- prove
-	# they share the SAME single `sneaking` flag, not independent stances.
-	# Pressing [Invisibility] then [Stealth] toggles ON then OFF, exactly as
-	# pressing the SAME skill twice would -- honest, documented in both
+	# [Invisibility] (Mage) and [Stealth] (Rogue) are TWO
+	# REAL shipped skills carrying `sneaks: true` -- prove they share the
+	# SAME single `sneaking` flag, not independent stances. Pressing
+	# [Invisibility] then [Stealth] toggles ON then OFF, exactly as pressing
+	# the SAME skill twice would -- one stance, two keys, documented in both
 	# skills' own _comment.
 	var gTwoVerbs := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gTwoVerbs.player_skills.append("sneak")

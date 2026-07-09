@@ -84,12 +84,11 @@ const EXPECTED_SKILLS := {
 	# 0, still no resolver, still SUPPRESSED) -- see effect_text.gd's own
 	# comment on the ap_cost gate for why the two don't get un-suppressed too.
 	"sneak": ["1 AP — +2 move cells this turn"],
-	# Issue #22 [Invisibility]: FIELD-ONLY this issue (no
-	# `ap_cost`/`effect` -- the combat AI-targeting read is DEFERRED, see the
-	# skill's own _comment). `_effect_phrase` reads only those two keys, sees
-	# neither, and returns "" same as frost_touch/kindle above -- the honest
-	# no-combat-effect card, NOT a suppressed-fake line for a promise this
-	# skill doesn't keep yet.
+	# [Invisibility] is FIELD-ONLY (no `ap_cost`/`effect`,
+	# no combat context -- see the skill's own _comment). `_effect_phrase`
+	# reads only those two keys, sees neither, and returns "" same as
+	# frost_touch/kindle above -- the honest no-combat-effect card, NOT a
+	# suppressed-fake line for a promise this skill doesn't keep.
 	"invisibility": [],
 	# WIRED -- wi_combat.gd's `_start_turn` gained a real
 	# `_move_pool_bonus_total` passive consumer for the two PRE-EXISTING
