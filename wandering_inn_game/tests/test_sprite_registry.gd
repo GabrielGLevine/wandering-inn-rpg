@@ -164,6 +164,11 @@ func _build_expected_counts() -> Dictionary:
 	counts["a_hunter/idle"] = 4
 	counts["a_hunter/walk"] = 6
 
+	## wilovan: combat alias of pc_gnoll_m's full template set (see the
+	## sprite's own _comment -- swap a bespoke rig THERE, counts move with it).
+	for anim_name in [["idle", 4], ["walk", 6], ["slice", 3], ["cast", 6], ["hit", 6], ["death", 7]]:
+		counts["wilovan/%s" % anim_name[0]] = int(anim_name[1])
+
 	## Relc: DIRECTIONAL + animated
 	## (PixelLab v2 create-character-pro -> animate-character; 124x124 frames,
 	## down/side/up sheets). idle=breathing-idle(4), walk=walking(6),
