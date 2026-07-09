@@ -394,6 +394,17 @@
 			"ap_cost": 1,
 			"effect": { "type": "move_pool_bonus", "amount": 2 },
 			"description": "A soft step that slips past watching eyes and clears ground when blades are drawn."
+		},
+		{
+			"_comment": "Issue #22, the Mage's own second stealth verb -- USER RULING 4: stealth's HOME is [Rogue] ([Stealth] above), but a Mage may separately gain [Invisibility] as a spell. CANON-VERDICT (docs/design/k3-canon-verdicts.md): ATTESTED Tier-4 spell (Montressa du Valeross, Salamani, Ecleeif; [Greater Invisibility] also attested). SEAM INVESTIGATION (the issue's core question): does this need new sim machinery, or does it reuse [Stealth]'s seam? It reuses it COMPLETELY -- field_skills.gd's `use_skill_field` dispatch keys the sneak toggle on the `sneaks: true` DATA TAG, never on a skill id (see `sneak`'s own comment + test_sim_core.gd's synthetic `stealth_ritual` tag-vs-id proof), so tagging THIS skill `sneaks: true` wires it into the exact same `WIGame.sneaking` flag/`_toggle_sneak`/`_break_sneak`/`_check_trigger_radius` skip with ZERO sim edits. FIELD-ONLY this issue (`contexts: [\"exploration\"]`, no `ap_cost`/`effect`): the COMBAT read (excluding this PC from enemy AI targeting) is DEFERRED per the ruling's \"queue, don't force\" clause -- that is new sim ground (AI-targeting exclusion has no existing seam to reuse, unlike the exploration skip), so it is queued as its own follow-up rather than half-shipped here. Consequence, working as intended: `WIEffectText.skill_effect_lines` reads only `effect`/`ap_cost`, sees neither, and returns [] -- the honest no-combat-effect card (see test_effect_text.gd's EXPECTED_SKILLS pin), same as frost_touch/kindle. The description below is worded to promise ONLY the real exploration effect, never a combat one. VISUAL: `sneak_visual` is a NEW but presentation-only data key (read by world.gd's `_reconcile_sneak_visual`, never by any sim file) giving this skill a DISTINCT look from [Stealth]'s plain translucency -- deeper alpha (0.35 vs [Stealth]'s default 0.6 `SNEAK_ALPHA`) plus the shimmer treatment (a ShaderMaterial reusing the EXISTING water_shimmer.gdshader's uv-wobble, the same shader the floodplains pond overlay already uses -- reused wholesale, not a new shader file, so this is a DATA-driven variation of the existing sneak-visual hook, not new presentation machinery either). COEXISTENCE (ruling's point on two verbs at once): [Stealth] and [Invisibility] both flip the SAME single `sneaking` bool -- there is only ever one stance, so pressing one while the other is \"active\" just re-toggles that one shared flag off (whichever skill is pressed second wins, honestly, not a stacked/nested state) -- `mage_invisibility_loop`'s canonical proves this live: [Invisibility] toggles sneaking ON with its own distinct render, then [Stealth] toggles the SAME flag OFF.",
+			"id": "invisibility",
+			"display_name": "[Invisibility]",
+			"icon": "icon_sneak",
+			"contexts": ["exploration"],
+			"field": true,
+			"sneaks": true,
+			"sneak_visual": { "alpha": 0.35, "shimmer": true },
+			"description": "A working that bends the light around you until even a careful eye finds nothing worth watching."
 		}
 	]
 }

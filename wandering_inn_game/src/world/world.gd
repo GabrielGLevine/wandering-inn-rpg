@@ -52,7 +52,10 @@ const PC_LIGHT_ENERGY := 1.0
 ## `Game.sim.sneaking` -- the SAME
 ## tint machinery (`modulate`) `_make_entity_visual`'s tint arg already uses,
 ## just touching alpha only (RGB untouched, so a future PC tint variant would
-## still compose correctly -- no shipped variant carries one today).
+## still compose correctly -- no shipped variant carries one today). The
+## DEFAULT/fallback alpha for any `sneaks: true` skill with no `sneak_visual`
+## data of its own (every one today except [Invisibility], issue #22) --
+## see `_reconcile_sneak_visual`.
 const SNEAK_ALPHA := 0.6
 
 ## Ambience presets (fireflies/dust_motes/leaves/
@@ -122,6 +125,22 @@ var _pc_light: PointLight2D
 ## reset, a sneaking PC crossing a door (which KEEPS `sneaking` true) would
 ## read want==have as already-satisfied and skip re-tinting the new sprite.
 var _sneak_tinted := false
+## Issue #22: the id of the LAST `sneaks: true`-tagged
+## skill whose deliberate toggle press turned `sneaking` ON -- presentation-
+## only memory, never read by any sim file. The sim itself only tracks the
+## single `sneaking` bool (see that field's own doc comment: it does not know
+## or care WHICH tagged skill flipped it -- two verbs, one shared stance, by
+## design). This var exists purely so `_reconcile_sneak_visual` can look up
+## THAT skill's own optional `sneak_visual` data (falling back to
+## [Stealth]'s plain SNEAK_ALPHA look when absent or when this is still ""),
+## giving a skill like [Invisibility] a genuinely distinct render without
+## teaching the sim anything new. Updated only in the SKILL_USED handler
+## below, only on a toggle-ON press (a toggle-OFF press of the SAME or a
+## DIFFERENT tagged skill leaves it alone -- harmless, since it is only ever
+## read while `sneaking` is true). Survives `_rebuild_field` (a door crossing
+## keeps `sneaking` true, so the active skill's identity must persist too,
+## same reasoning as `_sneak_tinted`'s reset just not the RESET itself).
+var _sneak_active_skill := ""
 ## The frost-cast ice overlay TileMapLayer for the current
 ## map (null when no cell is frozen). Rebuilt from `Game.sim.frozen_cells` on
 ## every `_rebuild_field` (so ice survives a map re-entry / load while frozen)
@@ -187,6 +206,15 @@ var _ambience_count := 0
 ## doc comment) -- created once in `_ready()`, assigned as `.material` on
 ## every AnimatedSprite2D whose decor/scatter record carries `sway: true`.
 var _sway_material: ShaderMaterial
+## Issue #22 [Invisibility]'s "shimmer treatment" --
+## created once in `_ready()`, assigned as `_player_sprite.material` only
+## while sneaking AND the active sneak skill's `sneak_visual.shimmer` is
+## true (today: only [Invisibility]; [Stealth] carries no `sneak_visual`, so
+## it stays plain-translucent as before). REUSES WATER_SHIMMER_SHADER
+## wholesale (the same uv-wobble the floodplains pond overlay already runs)
+## rather than authoring a new shader file -- a data-driven skin on an
+## existing presentation hook, not new machinery.
+var _sneak_shimmer_material: ShaderMaterial
 ## The fullrect vignette ColorRect -- created once in
 ## `_ready()` as a child of `_camera` (see the ColorRect's own doc comment
 ## for why it's parented there) and handed to `_atmosphere.vignette_node` so
@@ -205,6 +233,8 @@ func _ready() -> void:
 	_camera.make_current()
 	_sway_material = ShaderMaterial.new()
 	_sway_material.shader = SWAY_SHADER
+	_sneak_shimmer_material = ShaderMaterial.new()
+	_sneak_shimmer_material.shader = WATER_SHIMMER_SHADER
 	# Parented under `_camera` (not this World node
 	# directly) so its rect tracks the camera's centered/clamped view
 	# regardless of map size -- see vignette.gdshader's doc comment. Must be
@@ -1199,16 +1229,28 @@ func _reconcile_pc_light() -> void:
 ## SNEAK_STARTED/SNEAK_ENDED hook (every toggle and every automatic break),
 ## and PHASE_CHANGED (sleep silently clears `sneaking`, same as light_active/
 ## frozen_cells -- no dedicated toast/event, just the flag drop -- so this is
-## the only hook that catches the sleep-clear).
+## the only hook that catches the sleep-clear). Issue #22: alpha/shimmer are
+## now looked up from the active sneak skill's own `sneak_visual` data
+## (`_sneak_active_skill`) rather than hardcoded to SNEAK_ALPHA -- see that
+## var's doc comment.
 func _reconcile_sneak_visual() -> void:
 	if _player_sprite == null:
 		return
 	var want := Game.sim.sneaking
 	if want == _sneak_tinted:
 		return
-	_player_sprite.modulate.a = SNEAK_ALPHA if want else 1.0
+	# Issue #22: DATA-driven visual variant -- the
+	# active sneak skill's own `sneak_visual` dict (absent for [Stealth],
+	# present for [Invisibility]) overrides the plain SNEAK_ALPHA look. Read
+	# ONLY while turning ON (`want` true); turning off always resets to the
+	# fully-visible, no-shimmer look regardless of which skill was active.
+	var visual: Dictionary = Game.sim.skills.get(_sneak_active_skill, {}).get("sneak_visual", {}) if want else {}
+	var alpha: float = float(visual.get("alpha", SNEAK_ALPHA)) if want else 1.0
+	var shimmer: bool = want and bool(visual.get("shimmer", false))
+	_player_sprite.modulate.a = alpha
+	_player_sprite.material = _sneak_shimmer_material if shimmer else null
 	_sneak_tinted = want
-	ObservableBus.emit_domain_event(WIEvents.UI_SNEAK_RENDERED, {"active": want})
+	ObservableBus.emit_domain_event(WIEvents.UI_SNEAK_RENDERED, {"active": want, "alpha": alpha, "shimmer": shimmer})
 
 
 ## Builds the PC glow PointLight2D as a child of
@@ -1368,8 +1410,21 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# skill_used{skill:"light"}). Reconcile against Game.sim.light_active --
 		# the ambient cast set it true (attach the PC glow); the prop-targeted
 		# lantern/cellar cast leaves it false (no-op here, prop light unchanged).
-		if String(payload.get("skill", "")) == "light":
+		var used_skill := String(payload.get("skill", ""))
+		if used_skill == "light":
 			_reconcile_pc_light()
+		# Issue #22: remember WHICH `sneaks: true`-tagged
+		# skill just toggled `sneaking` ON, for `_reconcile_sneak_visual`'s
+		# data-driven look-up below -- presentation-only memory, see
+		# `_sneak_active_skill`'s own doc comment. `_toggle_sneak` flips
+		# `sneaking` BEFORE emitting skill_used (then sneak_started/ended
+		# right after), so `Game.sim.sneaking` here already carries the
+		# POST-toggle value: true
+		# only on a toggle-ON press (a toggle-OFF press of ANY tagged skill
+		# leaves the last-ON skill's id in place, harmlessly unread while not
+		# sneaking).
+		if Game.sim.sneaking and bool(Game.sim.skills.get(used_skill, {}).get("sneaks", false)):
+			_sneak_active_skill = used_skill
 	elif type == WIEvents.SNEAK_STARTED or type == WIEvents.SNEAK_ENDED:
 		# Every deliberate toggle and every automatic
 		# break fires one of these -- reconcile the PC's translucency to match.
