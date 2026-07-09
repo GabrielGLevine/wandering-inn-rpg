@@ -63,8 +63,8 @@ it for every external PR.**
   potential-assets release with `--prerelease` (prereleases never win
   Latest); pre-tag checklist: `gh release list -R ...-assets` and confirm
   the newest bundle carries the Latest badge. (potential-assets-v1
-  predates bundle-v4 so 2026-07-08 is safe; the controller couldn't
-  retro-mark it prerelease — permission-gated, flagged to user.)
+  retro-marked prerelease 2026-07-08; `gh release edit` is now on the
+  project allow-list — future parked releases get `--prerelease` at cut.)
 - Butler broth host is **broth.itch.zone** (`.ovh` is dead — first-tag
   failure 2026-07-06).
 - **Butler does NOT auto-create the itch page** with a wharf key
