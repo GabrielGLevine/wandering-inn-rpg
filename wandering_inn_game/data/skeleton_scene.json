@@ -1291,7 +1291,7 @@
      16
     ]
    ],
-   "_comment": "Liscor gate district, grown from the 10x6 street (per accepted Floodplains sec.5). Zones: gate plaza W, main street y2-4, market row y1 x10-19, Watch post x21-24, Adventurer's Guild x26-30 (XL anchor), dirt side street x14-15 south, sewer-grate POI (16,11). All goblin encounters migrated to floodplains POI anchors. Row y4 is the clear transit lane. Issue #29 (2026-07-08) readability pass: floor-vs-wall contrast fixed via a facade_plaster brighten/warm tint (1.28,1.14,0.9 -- avg color moves from (142,119,98), barely distinguishable from the cobble floor's (116,106,95), to a clearly brighter (182,136,88), still warm/amber not neutral gray -- both measured by direct pixel sample, not eyeballed) contrasted against the untouched floor tile. `inn_roof`'s saturated teal (avg (43,138,100), a sheet color clashing hard with Liscor's amber-warm identity) retinted to a warm terracotta (2.6,0.5,0.45) -- STREET-ONLY (inn_roof has no other map consumer, checked). The three market-row NPCs sharing one citizen_f sprite (Krshia/Peddler/Watch Sergeant, tint-only differentiated -- the 'twin vendors' finding) were ALSO canon/pronoun mismatches on inspection (Krshia's own copy says 'A Gnoll', the Peddler's and Watch Sergeant's copy both use 'he'/'his', all three were on the one female-human sprite) -- swapped to pc_gnoll_f/pc_human_m/pc_drake_m respectively (real directional sprites already in the catalog for character creation), tints dropped. DEAD SPACE: reviewed the map's own zone comment above and the entity layout -- large open cells exist at the gate plaza (W) and the main street's y2-4 transit lane, but both are ALREADY load-bearing (the plaza is the multi-destination hub the map's own name describes; y4 is explicitly documented as 'the clear transit lane', i.e. deliberately kept clear for movement, not an oversight). ACCEPTED as deliberate breathing room, not dressed further this pass -- a headless-only lane can't windowed-judge whether added dressing there would help or just clutter the busiest crossing in the game.",
+   "_comment": "Liscor gate district, grown from the 10x6 street (per accepted Floodplains sec.5). Zones: gate plaza W, main street y2-4, market row y1 x10-19, Watch post x21-24, Adventurer's Guild x26-30 (XL anchor), dirt side street x14-15 south, sewer-grate POI (16,11). All goblin encounters migrated to floodplains POI anchors. Row y4 is the clear transit lane. Floor-vs-wall contrast: facade_plaster carries a brighten/warm tint (1.28,1.14,0.9 -- avg color moves from (142,119,98), barely distinguishable from the cobble floor's (116,106,95), to a clearly brighter (182,136,88), still warm/amber not neutral gray -- both measured by direct pixel sample) against the untouched floor tile. `inn_roof`'s saturated teal (avg (43,138,100)) is retinted to a warm terracotta (2.6,0.5,0.45) -- CONSTRAINT: STREET-ONLY, inn_roof has no other map consumer. The three market-row NPCs (Krshia/Peddler/Watch Sergeant) each carry their own directional sprite (pc_gnoll_f/pc_human_m/pc_drake_m respectively) matching their own copy's canon/pronouns, no shared tint-differentiated sprite between them. TRAP: the gate plaza (W) and the main street's y2-4 transit lane are large open cells but ARE load-bearing (the plaza is the multi-destination hub; y4 is the clear transit lane) -- deliberate breathing room, not dead space to dress.",
    "floor_layers": [
     {
      "_pick": "Main street cobble band, full width (existing street pick, extended)",
@@ -2230,7 +2230,7 @@
      "toast": "Warm bread smell over the whole row. No one's minding the stall this exact moment. The loaves aren't going anywhere without a fight."
     },
     {
-     "_comment": "Market-depth stall 2 of 2, the mini-buy surface -- an unnamed Peddler (title only, matching the gate_guard/watch_guard convention, profile in docs/design/character-profiles-staging.md) selling ONE item, watch_issue_gambeson (now priced 20g -- see items.json _comment_price), via conversation graph data/dialogue/peddler_stall.json (krshia_crate.json's exact buy contract). Placed at the east end of the market row, close to the Watch post/barracks -- thematically apt for Watch-surplus gear. Issue #29 (2026-07-08): sprite was `citizen_f` (female) despite this entity's own copy using 'he'/'his' throughout -- swapped to `pc_human_m`, dropped the now-unneeded tint. Also de-twins the market row: Krshia and the Peddler no longer share one sprite differentiated by tint alone.",
+     "_comment": "Market-depth stall 2 of 2, the mini-buy surface -- an unnamed Peddler (title only, matching the gate_guard/watch_guard convention, profile in docs/design/character-profiles-staging.md) selling ONE item, watch_issue_gambeson (now priced 20g -- see items.json _comment_price), via conversation graph data/dialogue/peddler_stall.json (krshia_crate.json's exact buy contract). Placed at the east end of the market row, close to the Watch post/barracks -- thematically apt for Watch-surplus gear. Sprite is `pc_human_m`, matching this entity's own copy ('he'/'his' throughout); no tint. De-twinned from Krshia -- the two no longer share one sprite differentiated by tint alone.",
      "id": "peddler",
      "kind": "npc",
      "cell": [
@@ -2393,7 +2393,7 @@
      }
     },
     {
-     "_comment": "Issue #29 (2026-07-08): sprite was `citizen_f`, a HUMAN female stand-in -- but this entity's own copy says 'A Gnoll with a merchant's smile' and every line uses her canon 'Hrr.' speech tic. Swapped to `pc_gnoll_f` (a real directional Gnoll sprite already in the catalog for character creation), dropped the tint. Also de-twins the market row from the Peddler, who shared this exact sprite before.",
+     "_comment": "Sprite is `pc_gnoll_f` (a real directional Gnoll sprite, matching this entity's own copy -- 'A Gnoll with a merchant's smile', canon 'Hrr.' speech tic); no tint. De-twinned from the Peddler, who no longer shares this sprite.",
      "id": "krshia",
      "kind": "npc",
      "cell": [
@@ -2516,7 +2516,7 @@
      }
     },
     {
-     "_comment": "Issue #29 (2026-07-08): sprite was `citizen_f` (female) despite this entity's own copy using 'He would send...' -- swapped to `pc_drake_m`, matching Zevara's established Drake Watch-officer precedent (the gate).",
+     "_comment": "Sprite is `pc_drake_m`, matching this entity's own copy ('He would send...') and Zevara's established Drake Watch-officer precedent (the gate).",
      "id": "watch_sergeant",
      "kind": "npc",
      "cell": [
