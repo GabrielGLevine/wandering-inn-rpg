@@ -1,10 +1,10 @@
 {
- "_comment": "door_chain_scout's start (FIXTURE-FIRST -- beat 1 is already covered live by door_chain_fight, so this leg starts PAST it). post_tutorial shape PLUS classes.tactician:1 (grants [Observe] -- the field-tagged exploration skill this path needs, cisterns_scout_start precedent) PLUS door_chain_started, standing in the inn facing pantry_door_runes (10,5) from (10,4) so the FIRST interact studies the doorframe directly. gold:40 covers Krshia's 35g catalyst. No combat anywhere in this script -- rng_state kept 9 for convention, no live rng consumer. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "door_chain_scout's start (FIXTURE-FIRST -- beat 1 is already covered live by door_chain_fight, so this leg starts PAST it). post_tutorial shape PLUS classes.tactician:1 (grants [Observe] -- the field-tagged exploration skill this path needs, cisterns_scout_start precedent) PLUS door_chain_started, standing in the inn facing pantry_door_runes (14,5, moved against the east wall by playtest hotfix #2) from (14,4) so the FIRST interact studies the doorframe directly. gold:40 covers Krshia's 35g catalyst. No combat anywhere in this script -- rng_state kept 9 for convention, no live rng consumer. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
   "current_map": "inn",
   "player_cell": [
-   10,
+   14,
    4
   ],
   "player_facing": [

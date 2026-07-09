@@ -46,7 +46,7 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    9,
+    13,
     6
    ]
   },

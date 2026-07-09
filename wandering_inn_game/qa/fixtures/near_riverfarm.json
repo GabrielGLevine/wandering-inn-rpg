@@ -1,10 +1,10 @@
 {
- "_comment": "riverfarm_walkthrough's start (FIXTURE-FIRST). Same door-chain/awakening accomplishments as portal_menu_start (door_awakened already banked, standing at the SAME confirmed free cell (9,6) facing the awakened pantry_door) PLUS riverfarm_attuned -- the Guild-board rumor has already been read, so the portal menu offers Riverfarm as a real destination the moment this canonical opens it. Classless (no combat is exercised by this walkthrough -- the two hollow briar placements and the wolf pack have no combat data yet, lane beta's R2 task). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "riverfarm_walkthrough's start (FIXTURE-FIRST). Same door-chain/awakening accomplishments as portal_menu_start (door_awakened already banked, standing at the SAME free cell (13,6) facing the awakened pantry_door, moved against the east wall by playtest hotfix #2) PLUS riverfarm_attuned -- the Guild-board rumor has already been read, so the portal menu offers Riverfarm as a real destination the moment this canonical opens it. Classless (no combat is exercised by this walkthrough -- the two hollow briar placements and the wolf pack have no combat data yet, lane beta's R2 task). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
   "current_map": "inn",
   "player_cell": [
-   9,
+   13,
    6
   ],
   "player_facing": [
