@@ -129,8 +129,65 @@
       12,
       4
      ]
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      -2,
+      2
+     ]
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      -2,
+      6
+     ]
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      13,
+      3
+     ]
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      13,
+      7
+     ]
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      3,
+      -1
+     ]
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      8,
+      -1
+     ]
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      -1,
+      4
+     ]
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      12,
+      5
+     ]
     }
-   ]
+   ],
+   "_comment_dressing_frame": "Issue #30 evocative-dressing pass (2026-07-08): the on-grid blocked cells already render crate/barrel via BLOCKED_PROPS_BY_BIOME (board_renderer.gd), but the arena's only decor was 2 lone props at the grid edges -- the exact 'empty dirt + scattered buckets' read VISUAL-LOG named for this arena especially. Added an OFF-GRID tree/bush frame mirroring witch_hollow's own precedent shape (same 8 relative cell positions -- 4 big canopy-equivalent trees at the left/right corners, 2 smaller trees along the top edge, 2 bushes at the left/right mid-edges), all x<0 or x>=12/y<0 so nothing competes with tactical readability (the same binding rule the existing crate/barrel entries already respect). Sprite ids (tree_big/tree_round/bush_green) are the SAME ones the floodplains FIELD map already uses as decor -- field-to-arena continuity, not a new pick, so the ambush clearing reads as the same grassy floodplains the player was just walking, framed rather than floating in a void."
   },
   {
    "id": "cave_mouth",
@@ -591,6 +648,62 @@
       12,
       4
      ]
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      -2,
+      2
+     ]
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      -2,
+      6
+     ]
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      13,
+      3
+     ]
+    },
+    {
+     "sprite": "tree_big",
+     "cell": [
+      13,
+      7
+     ]
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      3,
+      -1
+     ]
+    },
+    {
+     "sprite": "tree_round",
+     "cell": [
+      8,
+      -1
+     ]
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      -1,
+      4
+     ]
+    },
+    {
+     "sprite": "bush_green",
+     "cell": [
+      12,
+      5
+     ]
     }
    ],
    "_comment": "Layout-identical clone of goblin_ambush carrying its own tutor beats (arenas own tutor_lines, and goblin_ambush is shared with goblin_encounter_2, which must stay beat-free). goblin_encounter_1 points here. TRAP: `road_clear`'s `line` carries TWO sentences appended into one entry, not two separate tutor_lines entries -- no shipped QA script pins its exact text (every reference is `payload_contains: {beat: \"road_clear\"}`), but `combat_hud.gd`'s `match_tutor_line` fires at most ONE tutor entry per incoming event (`ready[0]`), so a second entry on the SAME combat_finished/victory trigger could never fire; appending to the existing line is the only way to land a second beat here. The feed panel auto-grows for tutor lines (`_grow_feed_panel_for_tutor`, capped/evicts oldest -- see CLAUDE.md's wrapped-line-budget gotcha) and this fires as the LAST beat of the fight, so evicting older combat-log lines here is harmless.",
@@ -632,7 +745,8 @@
      },
      "line": "Relc: Road's clear. Liscor's through the gate. Tell the Watch that Relc let you pass. See the sign? Her inn, her rule. But under her roof? Don't."
     }
-   ]
+   ],
+   "_comment_dressing_frame": "Issue #30 evocative-dressing pass (2026-07-08): the on-grid blocked cells already render crate/barrel via BLOCKED_PROPS_BY_BIOME (board_renderer.gd), but the arena's only decor was 2 lone props at the grid edges -- the exact 'empty dirt + scattered buckets' read VISUAL-LOG named for this arena especially. Added an OFF-GRID tree/bush frame mirroring witch_hollow's own precedent shape (same 8 relative cell positions -- 4 big canopy-equivalent trees at the left/right corners, 2 smaller trees along the top edge, 2 bushes at the left/right mid-edges), all x<0 or x>=12/y<0 so nothing competes with tactical readability (the same binding rule the existing crate/barrel entries already respect). Sprite ids (tree_big/tree_round/bush_green) are the SAME ones the floodplains FIELD map already uses as decor -- field-to-arena continuity, not a new pick, so the ambush clearing reads as the same grassy floodplains the player was just walking, framed rather than floating in a void."
   },
   {
    "_comment": "The Liscor sewers combat arena (12x8 per the M1 arena contract test_combat_data enforces). Cave biome. Interior `blocked` cells are a broken-pillar / rubble scatter acting as tactical cover -- kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability). Both sewers encounters (shield_spiders nest + sewer_vermin) use this arena.",

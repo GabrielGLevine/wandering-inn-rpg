@@ -3132,7 +3132,7 @@
       ],
       "cap": [
        1,
-       7
+       5
       ],
       "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
       "tile_px": 16
@@ -3148,7 +3148,7 @@
       ],
       "cap": [
        1,
-       7
+       5
       ],
       "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
       "tile_px": 16
@@ -3164,7 +3164,7 @@
       ],
       "cap": [
        1,
-       7
+       5
       ],
       "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
       "tile_px": 16
@@ -3180,7 +3180,7 @@
       ],
       "cap": [
        1,
-       7
+       5
       ],
       "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
       "tile_px": 16
@@ -3196,7 +3196,7 @@
       ],
       "cap": [
        1,
-       7
+       5
       ],
       "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
       "tile_px": 16
@@ -4000,7 +4000,7 @@
       ],
       "cap": [
        1,
-       7
+       5
       ],
       "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
       "tile_px": 16
@@ -4017,7 +4017,7 @@
       ],
       "cap": [
        1,
-       7
+       5
       ],
       "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
       "tile_px": 16

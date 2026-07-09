@@ -61,7 +61,15 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   Freeze] ice patch is a slightly-lighter blue rectangle on the blue
   rectangle — the traversal seam's payoff is nearly invisible
   (04_ice_crossing.png; the wading player sprite half-sinks into the flat
-  fill). Biome edge-tile or shader treatment wanted.
+  fill). Biome edge-tile or shader treatment wanted. **Issue #30
+  (2026-07-08): ROOT CAUSE FOUND + FIXED, see the Fixed section entry
+  below** — the water_shimmer.gdshader was already wired (both maps'
+  segments were already using it) but its UV-wobble was sampling a
+  perfectly flat-fill tile (verified: zero pixel variance across the
+  whole 16x16 region), so the "shimmer" was structurally invisible on
+  ANY map, not a sewers-specific gap. Windowed re-confirmation still
+  wanted (headless-only lane) — controller shot list in the polish
+  report.
 - [ ] FIELD/ARC — Relc's descent-veto conversation (arc_flow dd_05) plays
   with NO Relc sprite anywhere on the field — he speaks from nowhere at the
   warren mouth, then exists in the fight roster. A walk-on cameo (guild
@@ -310,7 +318,28 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   `combat_move_input_BRIGHT_AFTER.png` (goblin_ambush, day) unaffected.
 - [ ] COMBAT/ARENAS — arenas read sparse (empty dirt + scattered buckets)
   vs the strong field maps; floodplains ambush arena especially.
-  Evocative-dressing pass candidate.
+  Evocative-dressing pass candidate. **Issue #30 (2026-07-08): the named
+  worst offender (`goblin_ambush`/`goblin_ambush_tutorial`, the floodplains
+  ambush) got an 8-entry off-grid tree/bush frame mirroring
+  `witch_hollow`'s own precedent shape, using the SAME sprite ids the
+  floodplains field map already dresses with (field-to-arena continuity).
+  Also closed a more severe gap the audit turned up: the `inn` biome
+  (`inn_cellar`/`merchant_warehouse`, 10 blocked cells combined) had NO
+  `BLOCKED_PROPS_BY_BIOME` pool at all — every blocked cell there was
+  rendering the OLD flat recolored tile, not even props-over-tiles;
+  added `"inn": ["crate", "barrel"]` (reusing the already single-cell-
+  verified street pool). Remaining arenas (`cave_mouth`/`sewers_nest`/
+  `deep_warren`/`ruin_court` all already have a `cave` pool + some
+  off-grid decor; `mercantile_alley` has a `street` pool + 3 off-grid
+  entries) were reviewed and left as-is — none reproduce the "flat
+  fallback tile" defect this pass specifically hunted, and further
+  off-grid decor density is a taste call a windowed read should make, not
+  a blind addition. Verified: `load_gate`, `test_content`,
+  `tutorial_flow`, `level_up_loop`, `defeat_ally_alive`, `crate_fight`,
+  `wrong_order_fight`, `door_chain_fight` green; balance harness
+  unaffected (decor is presentation-only, never read by `WICombat`).
+  Windowed re-confirmation still wanted — controller shot list in the
+  polish report.
 - [ ] UI/FIELD-READOUT — (supersedes the K2 drop-row note) permanent
   legend furniture grows with progression; playtest recommends collapse
   to icons-only after first waking, expand on hold. K2b owns. **#31
@@ -592,13 +621,15 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   verified distinct-at-a-glance from the inn's clean tables, and the swap
   verified non-jarring: `.superpowers/sdd/fp-handoff/b3-shots/
   b3_inn_start_dirty.png` (dirty) vs `b3_dirty_table_cleaned.png` (clean).
-- [ ] SEWERS — water channels read as FLAT solid-blue stripes under the
+- [x] SEWERS — water channels read as FLAT solid-blue stripes under the
   dark mood pin (tile texture invisible) — C1 controller read 2026-07-06,
   `fp-handoff/c1-shots/00_sewers_landing.png` — shimmer overlay exists;
   candidate fixes: channel-adjacent light anchor or a lighter pin B channel.
-  **#31 drain (2026-07-08): folded into issue #30's water-shimmer pass
-  (adapting the floodplains pond's shader to the sewers channels) —
-  see #30's section of the polish report, not re-litigated here.**
+  **FIXED by issue #30 (2026-07-08) — see the ART/WATER entry in the Fixed
+  section above (same root cause, same fix: the shimmer's cap tile was a
+  flat fill, swapped to a textured one).** "shimmer overlay exists" in
+  this item's own text was the tell — the mechanism was never missing,
+  it had nothing to shimmer.
 - [ ] GARDEN/UI — GF rotation frictions (2026-07-08, gf-rotation-report),
   part (c) only (parts (a)/(b) resolved — see below): QA coverage note —
   no diagonal move leg exists INSIDE `garden_sanctuary` to re-check G1's
@@ -689,6 +720,40 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Fixed
 
+- [x] ART/WATER — FIXED (issue #30, this pass, 2026-07-08, uncommitted) —
+  every water surface (floodplains pond, sewers channels) read as a flat,
+  hard-edged, saturated-blue rectangle, worst in the near-black sewers
+  where it read as a placeholder UI block. ROOT CAUSE, found by reading
+  the actual pipeline rather than assuming a missing feature: BOTH maps'
+  water segments already reference `water_shimmer.gdshader`
+  (`world.gd`'s `_build_water_shimmer` is fully generic — keys off
+  `sheet == Water_tiles.png`, no map-name check — and the sewers map's
+  own `_comment` already says "auto shimmer overlay + blocking", meaning
+  it was authored expecting the shimmer to just work). The shimmer WAS
+  active; it just had nothing to shimmer — every water segment's `cap`
+  tile was `Water_tiles.png`'s `(1,7)`, verified via a PIL alpha-scan to
+  be a COMPLETELY FLAT fill (every pixel in the 16x16 region is the
+  identical `(62,146,209)`, zero variance) — a UV-wobble shader sampling
+  a uniform-color texture produces zero visible change at any offset, by
+  definition. Scanned the rest of the sheet for a tile with real texture
+  and picked `(1,5)` (5 distinct blue shades, a genuine subtle ripple
+  pattern, still fully opaque/seamless-tileable). Swapped the `cap`
+  coordinate on all 7 shipped water segments (5 floodplains + 2 sewers,
+  `data/skeleton_scene.json`) from `[1,7]` to `[1,5]`, plus the two
+  code-level defaults that mirror it: `world.gd`'s `ICE_CAP_COORD`
+  (the [Snap Freeze] ice overlay reuses the water sheet's cap tile,
+  tinted frost — same flat-tile problem, same fix) and
+  `_build_water_shimmer`'s fallback default (defensive; every shipped
+  segment sets its own `cap` explicitly today). Zero shader/code-logic
+  change — this was a DATA pick, not a missing mechanism. Verified:
+  `load_gate`, `test_content`, `test_sprite_registry`,
+  `test_traversal_seams`, `tutorial_flow`, `sewers_walkthrough`,
+  `ice_floor_loop`, `atmosphere_check`, `inn_walkthrough` all green;
+  balance harness unaffected (55 cells x 100 seeds, PASS — this never
+  touches combat data). NOT windowed-verified in this pass (headless-only
+  lane) — see the polish report's controller shot list for the exact
+  before/after frames to confirm the ripple actually reads at native
+  zoom under both the day floodplains grade and the dark sewers grade.
 - [x] UI/TOAST — FIXED (commit `da57786`, "ARCH track complete... +
   playtest polish wave") — 3-line toasts clipped their last line at the
   parchment fold, everywhere (the M-FP F wrapped-line budget had reached
