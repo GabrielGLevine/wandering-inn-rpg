@@ -283,10 +283,37 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   risks shifting page counts on every existing multi-page conversation
   (any canonical asserting page N/M would need re-verification). Left for
   a pass that can windowed-confirm the new break points read naturally.
-- [ ] MAP/STREET — the gate district reads worst of all maps (grey brick
-  floor-vs-wall ambiguity, saturated teal awnings vs muted palette, open
-  dead space). It's the hub players crisscross most. Design-level —
-  M-DEPTH-adjacent map polish task.
+- [x] MAP/STREET — FIXED (issue #29, this pass, 2026-07-08, uncommitted)
+  — the gate district read worst of all maps (grey brick floor-vs-wall
+  ambiguity, saturated teal awnings vs muted palette, open dead space).
+  All three named defects addressed, each measured (pixel-sampled), not
+  eyeballed, since this is a headless-only lane: (1) floor-vs-wall —
+  `facade_plaster`'s avg color (142,119,98) was only ~26 luminance units
+  above the cobble floor's (116,106,95); brightened/warmed it to
+  (182,136,88) via a data-only tint, staying warm/amber not neutral gray.
+  (2) teal awnings — traced to `inn_roof` (avg (43,138,100), a genuinely
+  saturated teal from its source sheet, street-map-only consumer,
+  checked), retinted to a warm terracotta. (3) dead space — reviewed and
+  ACCEPTED as deliberate (the gate plaza + the documented "clear transit
+  lane" at y4), not dressed further. Bonus finding while fixing the
+  "twin same-sprite vendors" companion complaint: the 3 market-row NPCs
+  sharing one `citizen_f` sprite were ALSO canon/pronoun mismatches
+  (Krshia is textually a Gnoll, the Peddler and Watch Sergeant are both
+  textually "he") — swapped to `pc_gnoll_f`/`pc_human_m`/`pc_drake_m`.
+  Verified: `load_gate`, `test_content`, `test_sprite_registry`, all 18
+  unit suites, and every canonical touching the street/these NPCs
+  (`gate_district_walkthrough`, `crate_fight/talk/light`, `economy_loop`
+  *, `wrong_order_*`, `barracks_walkthrough`, `door_chain_*`,
+  `delivery_loop`, `stages_loop`, `social_loop`, `olesm_chess_loop`,
+  `stage3_perks_loop`) all green. * `economy_loop` fails, but this is a
+  PRE-EXISTING regression bisected to BEFORE this lane's first commit
+  (reproduces identically on a fresh worktree checked out at this lane's
+  own base commit, `a038170`, with zero of this lane's changes present)
+  — a fight's `loot_dropped`/`gold_changed` never fires, cascading into
+  every later assertion; root cause not chased further (out of scope for
+  #29/#30/#31/#45), flagged for the controller. No windowed
+  re-confirmation performed (headless-only lane) — controller shot list
+  in the polish report.
 - [x] COMBAT/DARK-ARENAS — enemy HP numerals + small dark sprites hard to
   pick out in sewers/deep-tunnel fights. Mood pin is right; add rim/
   outline on combatant chips or brighten HP labels under dark grades.
