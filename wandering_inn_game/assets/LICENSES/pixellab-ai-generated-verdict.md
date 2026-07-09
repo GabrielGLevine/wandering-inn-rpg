@@ -249,3 +249,11 @@ promoted them from the gitignored cache to real committed files (the garden
 | `assets/sprites/invrisil/guild_banner_v2.png` | `guild_banner` (cream+gold vertical facade banner; emblem re-roll spec queued in the batch doc, deliberately not spent) | `/map-objects` 32×64. Static, 1 frame. Anchor `[0.5, 0.9688]`, `render_scale: 0.5`. Cost 1. |
 
 Same PixelLab-ToS ownership / redistributability as everything above.
+
+## v0.4.1 playtest-fix batch (2026-07-09)
+
+| Path | Subject | Notes |
+|---|---|---|
+| `assets/sprites/trail_gap/Idle-Sheet.png` | `trail_gap` (forest-trail-entrance door affordance; first use: the riverfarm↔witch-hollow door pair, which previously wore an ordinary tree sprite and was unfindable) | v1 `/generate-image-pixflux` 64×64, low top-down, first-try pass. Static, 1 frame, full-bleed. `render_scale: 0.6`. Cost 1. |
+
+Same PixelLab-ToS ownership / redistributability as everything above.

@@ -93,7 +93,21 @@ const TOAST_TEXT_WIDTH := 412.0
 ## other half lands below it, meaning the danger zone must be budgeted
 ## TWICE (`_toast_panel_height`'s derivation) to actually clear the fold
 ## rather than just approach it.
-const TOAST_FOLD_DANGER_PX := 28.0
+## TRAP (v0.4.0 playtest, the Invrisil ledger toast): that 28px was measured
+## at the BASE 96px panel height -- but Banner_Horizontal's fold art starts
+## 29px above the texture region's bottom while STRIP_PATCH_MARGIN is only
+## 20, so 9 source px of fold live in the 9-patch's STRETCHED CENTER band.
+## A grown panel stretches the fold with it (~41px at a 6-line toast),
+## blowing past any fixed budget. Fix: STRIP_FOLD_PATCH_BOTTOM below pins
+## the whole fold inside the unstretched bottom patch, making the fold a
+## true constant; DANGER_PX is 30 to cover the full unstretched fold
+## (29px source, rendered 1:1) with 1px slack.
+const TOAST_FOLD_DANGER_PX := 30.0
+## Bottom patch margin for the two grow-able PARCHMENT_STRIP panels (toast +
+## dialogue bark): >= the fold art's full 29px source depth, so no fold
+## pixel ever lands in the 9-patch's stretched center no matter how tall
+## the panel grows. Left/right/top keep STRIP_PATCH_MARGIN.
+const STRIP_FOLD_PATCH_BOTTOM := 32
 
 ## The toast panel's own CanvasLayer, above every other UI surface in the
 ## project. FULL LAYER MAP (traced across every `extends CanvasLayer`
@@ -239,6 +253,7 @@ func _ready() -> void:
 	_toast_layer.add_child(toast_root)
 
 	_toast_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
+	(_toast_panel.get_child(0) as NinePatchRect).patch_margin_bottom = STRIP_FOLD_PATCH_BOTTOM
 	_toast_panel.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	# 448 wide x 96 tall base size (fits up to ~2 wrapped lines cleanly).
 	# A 3+-line toast grows the panel taller per-display
@@ -261,6 +276,7 @@ func _ready() -> void:
 	toast_root.add_child(_toast_panel)
 
 	_dialogue_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
+	(_dialogue_panel.get_child(0) as NinePatchRect).patch_margin_bottom = STRIP_FOLD_PATCH_BOTTOM
 	_dialogue_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_dialogue_panel.hide()
 	var dialogue_margin := MarginContainer.new()
@@ -333,7 +349,13 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			# broken". Any explicit player action needs visible feedback.
 			_queue_toast("Nothing there.")
 		WIEvents.DIALOGUE_LINE:
-			var text := "%s: %s" % [String(payload["speaker"]), String(payload["text"])]
+			# An empty speaker (ambient/narration lines, e.g. the Invrisil
+			# crowd extras) must not render a bare leading ": " -- prefix
+			# only when someone is actually speaking. The bus confirmation
+			# below carries whatever composed string renders, so QA text
+			# pins stay exact either way.
+			var speaker := String(payload["speaker"])
+			var text := "%s: %s" % [speaker, String(payload["text"])] if speaker != "" else String(payload["text"])
 			# The bus confirmation carries the FULL semantic line (QA asserts
 			# exact text on `ui_dialogue_rendered`, e.g. gate_district_walkthrough's
 			# Watch Guard beat) -- only the on-screen Label is shortened to

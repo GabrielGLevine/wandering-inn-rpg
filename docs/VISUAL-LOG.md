@@ -1099,6 +1099,97 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 - [x] TINT — APPLIED (CF fix wave): Wilovan's parlor tint lifted [0.62,0.7,0.56] -> [0.75,0.8,0.68] (the reserve lever, adjudicated warranted for the marquee NPC). Windowed-verified, `invrisil_disagreement_fight`/`invrisil_walkthrough` seed 9. Judge live at the 8c gate.
 - [x] SPRITE/REGION — CLOSED, not-a-bug (whole-8c review): streetlamp blocked-cell plinth read checked against `invrisil_walkthrough`'s frames `00_scale_shock_arrival`/`06_facade_scale_shock` — the base plate reads as an intentional lamp-base/glow-pad against the corrected boulevard paving, not as noise. No further action.
 
+## 2026-07-09 — post-v0.4.0 machine playtest (4 parallel opus lanes, 13 scripts, all PASS; findings = screenshots)
+### v0.4.1 fix wave (same day) — applied + windowed-verified
+- [x] SPRITE/FRAME — APPLIED: `river_wolf_idle` was sliced at
+  `frame_size: [32,32]`/6 frames against a 192x32 sheet that actually
+  holds FOUR 48x32 wolves — every frame a dismembered chunk, strobing at
+  6fps. Fixed to [48,32]/4 frames + PIL-measured anchor [0.443,1.0].
+  Windowed-verified whole wolf: `08_village_night.png` re-shot (evidence
+  kept at scratchpad v041-evidence/night_whole_wolf.png). Combat wolf was
+  always a separate correct rig. Trap comment now in sprites.json.
+- [x] UI/TOAST — APPLIED, root cause REVISED from the machine-playtest
+  diagnosis: the toast panel DID have a grow-to-fit budget
+  (`_resize_toast_panel`, measure was even correct: 6 lines) — the real
+  bug was the 9-PATCH: Banner_Horizontal's fold art starts 29px above the
+  region bottom but STRIP_PATCH_MARGIN is 20, so 9 source px of fold sat
+  in the STRETCHED CENTER band and scaled with panel height (~41px fold at
+  a 6-line toast vs the fixed 28px budget). Fix: STRIP_FOLD_PATCH_BOTTOM
+  := 32 pins the whole fold in the unstretched bottom patch (toast +
+  dialogue bark panels), DANGER_PX 28→30. Windowed-verified: the 343-char
+  ledger toast renders all 6 lines clear of the fold
+  (v041-evidence/toast_fold_fixed.png). LESSON for every 9-patch panel
+  that GROWS: border-art measurements taken at one height do not survive
+  center-stretch; border art belongs inside the patch margins.
+- [x] SPRITE/REGION — APPLIED: crop_row_orange/green/dark_green regions
+  moved off Farm.png's icon-labelled seed-sack columns (x0-64) onto the
+  real planted rows (carrots [80,14], leafy [33,82], dark herbs [33,178]),
+  cut at measured inter-plant gap columns. Windowed-verified: village plot
+  reads as a garden, charmed villager no longer occluded
+  (v041-evidence/day_no_wolf_real_crops.png, villager_unoccluded.png).
+- [x] UI/DIALOGUE — APPLIED: empty-speaker lines no longer compose a
+  leading `": "` (message_layer.gd DIALOGUE_LINE arm; no QA pin depended
+  on the old form — repo-grepped). Windowed-verified on the Invrisil
+  crowd-extra bark (v041-evidence/no_leading_colon.png).
+- [x] DESIGN — APPLIED: the night-wolf field marker now day/dusk-HIDES via
+  a new render-only `hidden` field in `visual_states` (world.gd; keys on
+  the same phase shape the encounter gate uses), so the sprite can never
+  again contradict its own "gone with the light" day toast. Sim-side
+  interact/observe/gate behavior untouched at every phase.
+  Windowed-verified both directions (v041-evidence/day_no_wolf_real_crops
+  .png vs night_whole_wolf.png). CORRECTION to the machine-playtest entry:
+  the "gravestone" beside the cot is actually `riverfarm_anchor_stone`
+  (the portal waystone) — no gravestone exists; that claim is retracted.
+- [x] SIGNPOSTING — APPLIED (the user's "can't find the witch's hollow"):
+  the riverfarm↔hollow door pair wore `hollow_small_tree` — a door
+  indistinguishable from ordinary forest edge. New owned PixelLab prop
+  `trail_gap` (sunlit worn-footpath opening between two bent trunks) on
+  BOTH sides. Windowed-verified: pops against the hollow's dark treeline
+  (v041-evidence/hollow_trail_gap.png).
+- [x] PROP — APPLIED (user directive, item 1): the inn pantry door's
+  flicker/awakened `visual_states` now wear `anchor_waystone` — the SAME
+  portal-arch prop as every region's anchor stone (cool-blue flicker,
+  warm-gold awakened + light). Retired the `pantry_door_glow` placeholder
+  and its missing-sheet fallback warning. Windowed-verified with the
+  portal menu open (v041-evidence/inn_waystone.png).
+- OPEN (COMBAT/LEGIBILITY, P2): sewer vermin fight — enemy bat sprites are
+  near-invisible dark specks on the dark floor; players locate enemies by
+  HP bars only, while ~6 bright purple fungus DECOR sprites out-compete
+  the actual threats for attention. HP numerals themselves fine. Fix
+  territory: brighten/outline the bat sprite or dim the fungus.
+  Evidence: `qa_output/sewers_walkthrough/01_vermin_encounter.png`.
+- OPEN → ISSUE #49 (PROP/DESIGN, the user-confirmed "bed outside"):
+  `riverfarm_guest_cot` still floats on open lawn despite hotfix #7c (the
+  longhouse sprite's visible extent ends south of it). RATIFIED fix
+  (user, 2026-07-09): a longhouse INTERIOR re-homes the cot — an interim
+  shift was deliberately skipped (it re-risks the occlusion family that
+  burned placement #1 at this exact site, for a position #49 deletes).
+  The systemic sleep-site presentation clause (garden_bed taste call,
+  Invrisil crate-couch) also lives in #49.
+  Evidence: `qa_output/riverfarm_walkthrough/09_guest_cot_sleep.png`.
+- OPEN (QA-blindness note, reviewer finding): phase-keyed `visual_states`
+  — including the new `hidden` field — have ZERO headless teeth: no bus
+  event reflects entity visibility, so deleting the PHASE_CHANGED refresh
+  hook would still sweep green. Every phase-keyed visual change is
+  windowed-read-only verifiable (the witch two-form read always was; the
+  wolf day-hide joins it). Any future headless pin would need a
+  `ui_entity_visibility` confirmation event — log-worthy, not yet worth
+  the machinery.
+- OPEN (minor sweep, residuals): status readout numerals collide with a
+  decor post right of the PC
+  (`qa_output/status_first_encounter/01_first_encounter_feed.png`);
+  upstairs `your_bed` pale-tan sprite barely reads as a bed on the hatched
+  nook floor (`qa_output/upstairs_walkthrough/01_upstairs_hallway.png`).
+  (Guest-couch-as-crate, identical Hired Blade triplets, and base-less day
+  braziers moved to ISSUE #49's charter.)
+- VERIFIED HOLDING (regression checks, don't break): L5 3-line readout
+  budget exact (head+hint+truncated slot-info, full text in payload,
+  `status_first_encounter/01`); toast 2-line fits everywhere outside the
+  Invrisil long-line case; gear panel zero clipping end-to-end; village
+  brighten payoff unmistakable (`riverfarm_talk/01`→`02`); night wolf
+  ARENA legible; garden map identity lands; [Light] dark-map reveal lands;
+  no baked-sheet artifacts anywhere; no payload-only punchlines.
+
 ## 2026-07-09 — hotfix wave 2 (item 8 fix-first rev)
 - OPEN (art follow-up): riverfarm's river band tile — `Water_tiles.png[2,7]`
   is genuinely blue but PIXEL-FLAT: every pixel in the 16x16 region is the

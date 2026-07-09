@@ -43,6 +43,12 @@ while [ "$#" -gt 0 ]; do
 done
 if [ -z "$USER_DIR" ]; then
 	USER_DIR="$REPO_ROOT/.godot_home/qa-${NAME}-$$"
+	# Auto per-PID homes are throwaway isolation; without this trap they
+	# accumulate one dir per run and .godot_home balloons to GBs over a
+	# session. An explicitly passed --user-dir is never touched (the trap
+	# is only installed on this auto branch). A SIGALRM kill skips EXIT
+	# traps -- flush_artifacts.sh reaps those stale dirs.
+	trap 'rm -rf "$USER_DIR"' EXIT
 fi
 mkdir -p "$USER_DIR"
 echo "QA_USER_DIR: $USER_DIR"

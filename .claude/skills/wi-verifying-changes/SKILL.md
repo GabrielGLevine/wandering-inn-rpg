@@ -68,6 +68,14 @@ the event log; `*.png` (windowed) for what a player sees.
   Read windowed shots IMMEDIATELY after capture, or copy them out
   (scratchpad / fp-handoff) if any later run could touch that script.
   This has cost redundant windowed re-runs twice (Q2, slice T2).
+- **Artifact flush is automatic at full sweeps** (user directive
+  2026-07-09): `ci_sweep.sh` runs `qa/flush_artifacts.sh` at startup
+  (skipped for `--only` subsets), and `run_qa.sh` deletes its own per-PID
+  `.godot_home` isolation dir on exit. Run `qa/flush_artifacts.sh`
+  manually between milestones if `qa_output/` balloons — everything it
+  removes regenerates on the next run. Corollary of the clobber rule
+  above: a full sweep now wipes ALL prior windowed evidence, so copy
+  keepers out BEFORE sweeping.
 - **Common-sense pass rides every visual read** (user directive 2026-07-04):
   does the animation/icon/sfx MATCH the action semantically (a spell cast must
   not swing a sword), does text wrap/fit, is anything placeholder-grade? Any

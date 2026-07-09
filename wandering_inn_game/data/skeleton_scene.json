@@ -713,7 +713,7 @@
      "on_enter_accomplishment": "visited_own_room"
     },
     {
-     "_comment": "The pantry door prop, the LOCKED interface anchor for the whole chain -- 3 visual_states keyed on the chain's accomplishment counters (default / flicker once door_chain_started / awakened once door_awakened). Placed at (14,6), against the east wall (the x=15 wall segment covers y=4-9) per the against-a-wall placement rule (playtest hotfix #2) -- CONSTRAINT: the free approach cell is (13,6), facing right; pantry_door_runes sits at (14,5) directly north, approached from (14,4) facing down. ui_entities_rendered inn count 14->16 (this entity + rift_vermin_leak below) -- inn_walkthrough/work_loop/upstairs_walkthrough updated. Interact copy is STATIC (same flavor toast regardless of counter state); the counter-aware beat-1 flicker line (Erin's dialogue banks door_chain_started) and any interact-copy differentiation are wired elsewhere -- the door prop itself NEVER speaks (only the GDI voices chain milestones, on the sleep-beat hook). Sprite states reuse a shared `pantry_door_glow` placeholder entry (data/sprites.json), tint-differentiated per state -- the flicker state is TINT-only (no baked 2-frame elsewhere-glimpse yet; the real rune-glow art stays a VISUAL-LOG item) rather than the eventual literal sprite-swap glimpse.",
+     "_comment": "The pantry door prop, the LOCKED interface anchor for the whole chain -- 3 visual_states keyed on the chain's accomplishment counters (default / flicker once door_chain_started / awakened once door_awakened). Placed at (14,6), against the east wall (the x=15 wall segment covers y=4-9) per the against-a-wall placement rule (playtest hotfix #2) -- CONSTRAINT: the free approach cell is (13,6), facing right; pantry_door_runes sits at (14,5) directly north, approached from (14,4) facing down. ui_entities_rendered inn count 14->16 (this entity + rift_vermin_leak below) -- inn_walkthrough/work_loop/upstairs_walkthrough updated. Interact copy is STATIC (same flavor toast regardless of counter state); the counter-aware beat-1 flicker line (Erin's dialogue banks door_chain_started) and any interact-copy differentiation are wired elsewhere -- the door prop itself NEVER speaks (only the GDI voices chain milestones, on the sleep-beat hook). Sprite states use `anchor_waystone` (the same portal-anchor arch every region's anchor stone uses -- user directive 2026-07-09: the Magical Door reads as the SAME prop family everywhere), tint-differentiated per state (flicker = cool blue, awakened = warm gold + light). This retired the `pantry_door_glow` placeholder and its missing-sheet fallback warning.",
      "id": "pantry_door",
      "kind": "prop",
      "cell": [
@@ -738,7 +738,7 @@
         "counter": "door_chain_started",
         "at": 1
        },
-       "sprite": "pantry_door_glow",
+       "sprite": "anchor_waystone",
        "tint": [
         0.7,
         0.85,
@@ -750,7 +750,7 @@
         "counter": "door_awakened",
         "at": 1
        },
-       "sprite": "pantry_door_glow",
+       "sprite": "anchor_waystone",
        "tint": [
         1.15,
         0.92,
@@ -7580,7 +7580,7 @@
       11
      ],
      "display_name": "A Gap in the Trees",
-     "sprite": "hollow_small_tree",
+     "sprite": "trail_gap",
      "to_map": "witch_hollow",
      "to_cell": [
       10,
@@ -7613,6 +7613,18 @@
      "trigger_radius": 1,
      "observe": "Eyes catch the light at the field's edge, gone again when you look straight at them. Only after dark.",
      "gate_closed_toast": "Nothing there. Whatever you saw is gone with the light.",
+     "visual_states": [
+      {
+       "_comment": "Marker visible ONLY while the night encounter_when gate can fire -- a wolf standing in daylight beside its own 'gone with the light' toast contradicts the copy (v0.4.0 playtest). hidden is render-only; the cell's interact/observe/gate behavior is untouched at every phase.",
+       "when": {
+        "phase": [
+         "day",
+         "dusk"
+        ]
+       },
+       "hidden": true
+      }
+     ],
      "allies": [
       "riverfarm_hunter"
      ],
@@ -8245,7 +8257,7 @@
       11
      ],
      "display_name": "A Gap in the Trees",
-     "sprite": "hollow_small_tree",
+     "sprite": "trail_gap",
      "to_map": "riverfarm_village",
      "to_cell": [
       2,

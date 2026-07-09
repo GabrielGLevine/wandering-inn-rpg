@@ -32,6 +32,15 @@ PER_SCRIPT_TIMEOUT="${CI_SWEEP_TIMEOUT:-240}"
 MANIFEST="$HERE/manifest.json"
 CLAUDE_MD="$HERE/../CLAUDE.md"
 
+# A full sweep regenerates every artifact anyway — start from a clean slate
+# so qa_output/.godot_home never balloon across sessions (the regular flush
+# stage). Skipped for --only subset runs, which may sit alongside a prior
+# full sweep's artifacts a controller is still reading.
+case " $* " in
+	*" --only"*) : ;;
+	*) "$HERE/flush_artifacts.sh" ;;
+esac
+
 # --- Load LOUD: manifest missing/unparseable is an immediate exit 1, never a
 # silent zero-script run (the load_gate "scanned zero resources" precedent). --
 if [ ! -f "$MANIFEST" ]; then

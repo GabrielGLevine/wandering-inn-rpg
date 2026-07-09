@@ -928,6 +928,7 @@ func _build_entities() -> Array[Node2D]:
 			String(ent.get("facing", "")),
 			render["light"]
 		)
+		visual.visible = not bool(render["hidden"])
 		_entity_visuals[String(ent["id"])] = visual
 		visuals.append(visual)
 	return visuals
@@ -946,11 +947,18 @@ func _build_entities() -> Array[Node2D]:
 ## past threshold must render the post-state immediately, not the base dirty
 ## look) and by `_refresh_entity_visual`'s live re-render on the owning
 ## counter's change.
+## A state may also set `hidden: true` (render-only): the visual node stays
+## built but invisible -- sim-side interact/trigger behavior is unaffected.
+## First use: `river_wolf_pack`'s field marker, visible only while its
+## night-phase `encounter_when` gate can actually fire (a marker standing
+## in daylight next to its own "gone with the light" refusal toast read as
+## a bug in the v0.4.0 playtest).
 func _resolve_entity_render(ent: Dictionary) -> Dictionary:
 	var result := {
 		"sprite": String(ent.get("sprite", "")),
 		"tint": ent.get("tint", []),
 		"light": ent.get("light", {}),
+		"hidden": false,
 	}
 	for raw: Variant in ent.get("visual_states", []):
 		if not (raw is Dictionary):
@@ -964,6 +972,8 @@ func _resolve_entity_render(ent: Dictionary) -> Dictionary:
 			result["tint"] = state["tint"]
 		if state.has("light"):
 			result["light"] = state["light"]
+		if state.has("hidden"):
+			result["hidden"] = bool(state["hidden"])
 	return result
 
 
@@ -1032,6 +1042,7 @@ func _refresh_entity_visual(id: String) -> void:
 			_light_count -= 1
 	old_visual.queue_free()
 	var new_visual := _make_entity_visual(cell, String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"])
+	new_visual.visible = not bool(render["hidden"])
 	_entity_visuals[id] = new_visual
 	assert(_light_count <= LIGHT_BUDGET,
 		"map %s exceeds the %d-light budget (%d) after a visual_states refresh -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])

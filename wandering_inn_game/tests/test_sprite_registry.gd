@@ -245,15 +245,19 @@ func _build_expected_counts() -> Dictionary:
 	## sprite existed in any in-hand pack). Single 64x64 PixelLab sheet, 1 frame.
 	counts["bench/idle"] = 1
 
-	## The ruin pedestal + the
-	## shared pantry_door flicker/awakened placeholder, both single-region
-	## statics (1 frame each), same convention as chest/sewer_grate/boulder.
+	## The ruin pedestal, single-region
+	## static (1 frame), same convention as chest/sewer_grate/boulder.
+	## (pantry_door_glow retired 2026-07-09: the pantry door's flicker/
+	## awakened visual_states use anchor_waystone now.)
 	counts["pedestal/idle"] = 1
-	counts["pantry_door_glow/idle"] = 1
 	## Playtest hotfix #6: THE portal-anchor sprite (owned PixelLab art),
 	## replacing `boulder` at every anchor-stone-per-region site. Single
 	## 64x80 static, 1 frame.
 	counts["anchor_waystone/idle"] = 1
+	## Forest-trail-entrance door affordance (owned PixelLab art) -- the
+	## riverfarm_hollow_path/hollow_village_path door pair. Single 64x64
+	## static, 1 frame.
+	counts["trail_gap/idle"] = 1
 
 	## Art-wiring task (2026-07-07): Lyonette's canon-correct bright-red-hair
 	## sprite (replacing the citizen_f pink-tint stand-in, VISUAL-LOG closed) +
@@ -284,7 +288,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["bat/death"] = 6
 
 	## The Garden of Sanctuary. `garden_door_inner` is an
-	## owned single-frame PixelLab static (34x48, the door/pantry_door_glow
+	## owned single-frame PixelLab static (34x48, the `door`-prop
 	## convention); `garden_fountain_basin`/`garden_fountain_statue` are
 	## single-region crops of the LICENSED Garden Pixel Crawler pack (both
 	## FORBIDDEN/bundle:true/placeholder-fallback -- this test's own
@@ -322,9 +326,12 @@ func _build_expected_counts() -> Dictionary:
 			"hollow_canopy_tree", "hollow_small_tree", "hollow_bent_tree"]:
 		counts["%s/idle" % licensed_static] = 1
 
-	## river_wolf_idle -- Admurin Canine_Gray_Idle.png, 192x32 sheet @ 32x32
-	## frames = 6 frames (picks.md sec.6).
-	counts["river_wolf_idle/idle"] = 6
+	## river_wolf_idle -- Admurin Canine_Gray_Idle.png, 192x32 sheet @ 48x32
+	## frames = 4 frames. TRAP: the sheet holds FOUR 48px wolves; the old
+	## 32x32/6-frame pin matched a frame_size that dismembered every wolf
+	## (shipped v0.4.0 bug) -- a green count here proves slicing arithmetic,
+	## not figure integrity; only a windowed read proves the wolf is whole.
+	counts["river_wolf_idle/idle"] = 4
 
 	## Riverfarm combat roster -- owned, single-frame PixelLab statics
 	## (briar_collector/briar_collector_deep/river_wolf), same shape as the

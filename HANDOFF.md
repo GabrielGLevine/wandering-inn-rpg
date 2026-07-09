@@ -1,5 +1,29 @@
 # Wandering Inn RPG Handoff
 
+## v0.4.1 FIX WAVE LANDED (2026-07-09) — awaiting review close-out + tag call
+
+The post-v0.4.0 findings (machine playtest + user report) are FIXED on
+main's working tree, verified: composed sweep 77/77 rc=0, full unit
+suite green (^PASS contract + swallowed-error grep), every visual fix
+read windowed by the controller. Applied: wolf frame_size (whole wolf),
+toast fold (ROOT CAUSE was 9-patch center-stretch, not a missing budget
+— see VISUAL-LOG), real crop rows, empty-speaker `": "`, wolf-marker
+day-hide (new render-only `hidden` visual_states field), inn Magical
+Door = anchor_waystone arch (user item 1; glow placeholder retired),
+hollow trail_gap door prop both sides (user item 4's access fix), QA
+artifact flush (run_qa EXIT trap + qa/flush_artifacts.sh + sweep hook).
+
+**NEW ISSUES (user directives 2026-07-09):** #49 depth pass
+Riverfarm+Invrisil (longhouse interior re-homes the cot; parlor; blades
+variety; signposting audit), #50 quest fork audit (Invrisil TALK path is
+free — every path pays a real cost; taste-gate), #51 Klbkch + Antinium
+in Liscor.
+
+**USER DELIVERABLE:** `docs/FULL-GAME-PLAYTEST.md` — the prescriptive
+top-to-bottom playtest script (incl. v0.4.1 re-check points + standing
+taste flags). Sewer-bat legibility + 2 residual minors stay in
+VISUAL-LOG for the next polish wave.
+
 ## v0.4.0 RELEASED (2026-07-09) — LIVE ON ITCH
 
 Tagged and shipped: butler channel html5 serves build v0.4.0 (verified

@@ -2562,29 +2562,23 @@
 			}
 		}
 	},
-	"pantry_door_glow": {
-		"_comment": "Shared placeholder region for `pantry_door`'s flicker/awakened visual_states (data/skeleton_scene.json's `inn` map) -- tint-differentiated per state (see that entity's visual_states). A DISTINCT sheet path from the base `door` sprite so the fallback-art placeholder color reads visibly different in a windowed screenshot even before the real rune-glow art lands (generation deferred, VISUAL-LOG).",
-		"render_scale": 0.5,
+	"trail_gap": {
+		"_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a worn-footpath forest-trail entrance framed by two bent trunks -- THE door affordance for tree-line map exits (first use: riverfarm_hollow_path, which previously wore the plain hollow_small_tree sprite and was indistinguishable from ordinary forest edge -- the v0.4.0 playtest's 'can't find the witch's hollow' report). Full-bleed 64x64 single frame.",
+		"render_scale": 0.6,
 		"shadow": true,
 		"animations": {
 			"idle": {
-				"sheet": "res://assets/props/free_pack/Furniture_Rift.png",
-				"region": [
-					222,
-					279,
-					34,
-					44
-				],
+				"sheet": "res://assets/sprites/trail_gap/Idle-Sheet.png",
 				"frame_size": [
-					34,
-					44
+					64,
+					64
 				],
 				"fps": 1
 			}
 		}
 	},
 	"garden_door_inner": {
-		"_comment": "Erin's own garden door (the inn side), owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md). Anchor PIL-measured: alpha bbox rows 7-41 of 48 (feet plane 42/48=0.875) -- NOT the default frame-bottom 1.0 (some transparent padding below the figure, the ANCHOR RULE). render_scale 0.5 matches the shipped door/pantry_door_glow props at a near-identical native frame size (34x44/34x48).",
+		"_comment": "Erin's own garden door (the inn side), owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md). Anchor PIL-measured: alpha bbox rows 7-41 of 48 (feet plane 42/48=0.875) -- NOT the default frame-bottom 1.0 (some transparent padding below the figure, the ANCHOR RULE). render_scale 0.5 matches the shipped `door` prop at a near-identical native frame size (34x44/34x48).",
 		"render_scale": 0.5,
 		"anchor": [
 			0.5,
@@ -3025,19 +3019,19 @@
 		}
 	},
 	"crop_row_orange": {
-		"_comment": "Licensed pick, Free Pack Farm.png (docs/design/riverfarm-art/picks.md sec.3).",
+		"_comment": "Licensed pick, Free Pack Farm.png. TRAP: Farm.png's x0-64 columns are ICON-LABELLED SEED SACKS (white produce icons baked into the art) -- picking there renders the field as jerry-can stacks (shipped v0.4.0 playtest bug). Real planted rows live at x32-176 in 32px-tall bands (y16 carrots, y80 leafy, y176 dark herbs); regions below cut at measured inter-plant gap columns so no plant is sliced mid-leaf.",
 		"animations": {
 			"idle": {
 				"sheet": "res://assets/props/free_pack/Farm.png",
 				"region": [
-					0,
-					0,
+					80,
+					14,
 					32,
-					30
+					18
 				],
 				"frame_size": [
 					32,
-					30
+					18
 				],
 				"fps": 1
 			}
@@ -3048,14 +3042,14 @@
 			"idle": {
 				"sheet": "res://assets/props/free_pack/Farm.png",
 				"region": [
-					0,
-					64,
+					33,
+					82,
 					32,
-					30
+					16
 				],
 				"frame_size": [
 					32,
-					30
+					16
 				],
 				"fps": 1
 			}
@@ -3067,14 +3061,14 @@
 			"idle": {
 				"sheet": "res://assets/props/free_pack/Farm.png",
 				"region": [
-					0,
-					96,
+					33,
+					178,
 					32,
-					30
+					16
 				],
 				"frame_size": [
 					32,
-					30
+					16
 				],
 				"fps": 1
 			}
@@ -3219,16 +3213,16 @@
 		}
 	},
 	"river_wolf_idle": {
-		"_comment": "Licensed pick, Admurin Canine_Gray_Idle.png (6 frames @ 32x32) -- non-directional (ADMURIN family, own encounter, per style-family discipline).",
+		"_comment": "Licensed pick, Admurin Canine_Gray_Idle.png -- non-directional (ADMURIN family, own encounter, per style-family discipline). TRAP: the sheet is 192x32 = FOUR 48x32 frames, NOT 32x32 -- a 32px frame_size slices every wolf into head/torso chunks (shipped dismembered-strobe bug, v0.4.0 playtest). Anchor x from measured figure bbox (x 4-39 of 48, feet flush at frame bottom).",
 		"anchor": [
-			0.562,
+			0.443,
 			1.0
 		],
 		"animations": {
 			"idle": {
 				"sheet": "res://assets/props/admurin/Canine_Gray_Idle.png",
 				"frame_size": [
-					32,
+					48,
 					32
 				],
 				"fps": 6
