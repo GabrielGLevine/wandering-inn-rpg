@@ -9182,7 +9182,7 @@
      ]
     },
     {
-     "_comment": "Invrisil 8c Task C1 -- the merchant-prince, NPC surface PRE-QUEST only (docs/superpowers/specs/2026-07-06-invrisil-design.md sec.2: 'respectable, hires thugs, launders reputation'). Voice lifted from docs/design/dialogue-drafts/invrisil/merchant_prince.json's register (prices everything, never raises his voice) WITHOUT wiring that draft's quest-gated conversation graph -- 'a_gentlemans_disagreement' (quest) and 'merchant_blades' (combat entity) are Task C3's own deliverables per the plan's lane split (CONTEXT ALREADY MERGED note: this lane places nothing for the warehouse fight). talk_pool + a static dialogue fallback only, NO `conversation` key -- C3 adds it when the quest graph lands (the Lyonette/Krshia precedent for a pool-then-conversation NPC, just not-yet-conversation here). Sprite: reused `pc_human_m` rig tinted cream/gold (coin-gold-on-a-person, per character-profiles-staging.md's 'the city's accent hue ON a person' tell) -- zero new generation.",
+     "_comment": "Invrisil 8c Task C1 (NPC surface) + Task C3 issue #13 (this edit -- wires `conversation`). Voice lifted from docs/design/dialogue-drafts/invrisil/merchant_prince.json's register (prices everything, never raises his voice). C3's own graph (data/dialogue/invrisil_merchant_prince.json, recast merchant_blades->hired_blades + exposed/extorted_merchant_prince->merchant_exposed/merchant_extorted at wiring time -- see that file's own _comment) now lands, matching the Lyonette/Krshia precedent for a pool-then-conversation NPC: interact()'s `npc` branch plays the FIRST talk of a waking from `talk_pool` (unchanged), then routes every later talk that same waking into `conversation` -- both surfaces stay live, none of the pre-quest flavor is orphaned. Sprite: reused `pc_human_m` rig tinted cream/gold (coin-gold-on-a-person, per character-profiles-staging.md's 'the city's accent hue ON a person' tell) -- zero new generation.",
      "id": "master_coyle",
      "kind": "npc",
      "cell": [
@@ -9204,6 +9204,7 @@
       "Everything has a price. The trick, which so few of you learn, is finding out whose.",
       "Do step out of the doorway. You're blocking a view I paid a great deal to own."
      ],
+     "conversation": "invrisil_merchant_prince",
      "dialogue": [
       {
        "speaker": "Master Coyle",
@@ -10933,6 +10934,48 @@
      "observe": "The second pair, closer to the counting-house door \u2014 same trick, same stillness, better light to see it by.",
      "allies": [],
      "respawns": true
+    },
+    {
+     "_comment": "Invrisil 8c Task C3 (issue #13) -- the STEALTH/SKILL path's own beat: 'the [Observe] true-books + keen-eye hidden-safe beat' (spec sec.3), through the propped yard-side door Cups' rumor already named (invrisil_fixer.json's rumor_counting_house: 'the clerk with the inky cuffs... props it with a cheese wedge'). Mirrors the shield-spider `nest_ledge`/pantry-doorframe SKILL-prop shape EXACTLY: `requires_skill: observe` (the [Appraise Foe] Tactician grant -- NOTE the 2026-07-07 canon rename [Observe]->[Appraise Foe], id `observe` unchanged; the spec/plan's own prose still says '[Observe]', which now reads STALE against the shipped skill catalog -- toast copy below uses the CURRENT display name, not the plan's) + `on_skill_use` banks `lifted_true_ledger` deterministically (zero rng), matching the number/date accusation.json's own accusation-node option quotes verbatim (forty gold, dated the night before). The hidden-safe beat is folded into the SAME single reveal rather than a second prop -- the ledger drawer's own false back is where the safe sits (an honest scope collapse for a single-cell abstraction of 'the counting-house', which this map doesn't model as a separate interior; flagged for controller review). PLACEMENT FIX (this lane's own regression catch, same class as hired_blades' own note below): originally (17,11) sat DIRECTLY on invrisil_walkthrough's own pinned sneak-positive route (right 8 from (10,11) to (18,11), walked BOTH directions including the epilogue) -- entity occupancy silently blocked that shipped C1 canonical. Relocated to (16,12), east corridor floor between alley_footpads_b (14,12) and the parlor door (19,12) -- a cell that script's own asserted route never steps on (it drops straight from (18,11) to (18,12), never touching x15-17 on row 12). Chebyshev distance 2 from alley_footpads_b's own trigger_radius-2 zone is irrelevant here (my own canonical script reaches this prop via `teleport` + a stationary `interact`, never a `move` step near it, and `_check_trigger_radius` only ever runs from `move_player`). Sprite `dusty_scroll` reused (the retired [Light]-study prop, thematically apt for 'something to read with a skill' -- the doorframe-runes precedent), zero new generation.",
+     "id": "counting_house_ledger",
+     "kind": "prop",
+     "cell": [
+      16,
+      12
+     ],
+     "display_name": "The Counting-House Desk",
+     "sprite": "dusty_scroll",
+     "requires_skill": "observe",
+     "on_skill_use": {
+      "accomplishment": "lifted_true_ledger",
+      "toast": "[Appraise Foe] \u2014 The true ledger, tucked behind a false-backed drawer no honest desk needs. Forty gold to a 'removal man,' dated the night before Coyle's own theft: his hand, his numbers, his mistake. The drawer's second catch gives up a shallow hidden safe behind it, empty now but scored where something heavier than coin sat until recently."
+     },
+     "locked_toast": "The desk's own ledger reads clean, which is exactly the kind of clean a man pays for. You don't have the eye to find the real one. Not yet."
+    },
+    {
+     "_comment": "Invrisil 8c Task C3 (issue #13) -- `hired_blades`, the LOCKED interface id (plan's lane map: arena `merchant_warehouse`, on_victory banking the confrontation flag) for the quest's FIGHT path: Coyle's warehouse crew. Interact-only (no trigger_radius), the crate/cisterns/rift_vermin_leak FIGHT-leg precedent -- 'the fight lives on its own map, reached by the player's own feet', no dialogue-side start_combat wiring required (though invrisil_merchant_prince.json's accusation node ALSO offers a second, reactive entry into this SAME entity id via its '(Draw steel.)' option -- both routes converge on one start_combat(id) call, per wi_game.gd's own single-choke-point design). `allies: [\"wilovan\"]` + `ally_requires: {wilovan_will_fight: 1}` is the come-along gate, banked ONLY by data/dialogue/invrisil_wilovan.json's `fists_door` ask (no teleporting allies, the riverfarm_hunter/relc_descent precedent) -- matches combatants.json's own wilovan record + sim_combat_batch.gd's `hired_blades_w10_wilovan`/`hired_blades_w10_solo` harness cells (gated 0.6-0.8 with the ally, measured-only solo). `on_victory: forced_confession` is the accomplishment invrisil_merchant_prince.json's hub/cornered nodes both key on -- kept as the DRAFT dialogue's literal wired string (the plan's own lane-map prose paraphrases this 'forced_the_confession'; using the draft's exact string keeps data and dialogue internally consistent, flagged for controller review same as the wilovan file's own note). PLACEMENT FIX (this lane's own regression catch): originally placed at (6,7) in the west corridor, which sits DIRECTLY on invrisil_walkthrough's own pinned sneak-negative route (right 6 from (1,7) to (7,7)) -- entity occupancy blocks movement, so that placement silently broke the shipped C1 canonical (caught by re-running it, not by test_content, which has no route-collision check). Relocated to (17,12), east corridor, south of the new counting_house_ledger prop (17,11) and Chebyshev distance 3 from alley_footpads_b (14,12) -- outside its trigger_radius-2 zone -- and NOT on any cell invrisil_walkthrough's script asserts or steps through (it drops straight from (18,11) to (18,12) without ever touching x15-17 on row 12). Sprite `hired_blade` (C2's owned PixelLab rig) -- ANCHOR RULE machine-playtest verification still owed per combatants.json's own comment (a windowed check, out of this headless lane's verification scope; flagged for the controller).",
+     "id": "hired_blades",
+     "kind": "encounter",
+     "cell": [
+      17,
+      12
+     ],
+     "display_name": "Coyle's Warehouse Crew",
+     "sprite": "hired_blade",
+     "arena": "merchant_warehouse",
+     "enemies": [
+      "hired_blade_leader",
+      "hired_blade_knife_a",
+      "hired_blade_knife_b"
+     ],
+     "allies": [
+      "wilovan"
+     ],
+     "ally_requires": {
+      "wilovan_will_fight": 1
+     },
+     "on_victory": "forced_confession",
+     "observe": "Three men in burgundy-and-brass doublets, clubs and knives held like men who've used them before. Merchant-livery, not Watch steel \u2014 Coyle's, all the way down to the stitching."
     }
    ]
   },
@@ -11171,7 +11214,7 @@
      ]
     },
     {
-     "_comment": "Invrisil 8c Task C1 -- Wilovan, CANON (wiki.wanderinginn.com/Wilovan, WIKI-VERIFIED 2026-07-08, same verification C2's combatant record already banked): a Gnoll [Thug] of the Brothers of Serendipitous Meetings, brick-built, dapper vest/leggings/tall hat, gentlemanly courtesy -- 'perfect gentlemen. Until the hats come off.' The plan's User-ratified shape 1 (WILOVAN fronts the Brothers, supersedes the dialogue-drafts lane's ORIGINAL 'Mister Sable' -- that draft's register informs a background Brother, never fronts). talk_pool + static dialogue fallback ONLY, NO `conversation` key: the commission/ways/marker quest graph (docs/design/dialogue-drafts/invrisil/brothers_lieutenant.json, recast Sable->Wilovan at wiring time) is Task C3's own deliverable (it starts the `a_gentlemans_disagreement` quest, which does not exist in quests.json yet -- wiring it now would fail test_content's quest_ids assert). Sprite: reused `pc_gnoll_m` rig tinted dapper vest/hat colors (dark green + brass), zero new generation -- the hats-off violence tell is staged at CONTENT time (C3), not art time.",
+     "_comment": "Invrisil 8c Task C1 (cast) + Task C3 issue #13 (this edit -- wires `conversation`) -- Wilovan, CANON (wiki.wanderinginn.com/Wilovan, WIKI-VERIFIED 2026-07-08, same verification C2's combatant record already banked): a Gnoll [Thug] of the Brothers of Serendipitous Meetings, brick-built, dapper vest/leggings/tall hat, gentlemanly courtesy -- 'perfect gentlemen. Until the hats come off.' The plan's User-ratified shape 1 (WILOVAN fronts the Brothers, supersedes the dialogue-drafts lane's ORIGINAL 'Mister Sable' -- that draft's register informs a background Brother, never fronts). The commission/ways/marker quest graph (data/dialogue/invrisil_wilovan.json, recast Sable->Wilovan from docs/design/dialogue-drafts/invrisil/brothers_lieutenant.json) now lands -- talk_pool stays the pool-then-conversation precedent's first-talk-of-a-waking flavor (interact()'s npc branch), `conversation` carries every later talk into the real graph. Sprite: reused `pc_gnoll_m` rig tinted dapper vest/hat colors (dark green + brass), zero new generation -- the hats-off violence tell is staged HERE, at content time (marker's two text_variants), not at art/sprite time.",
      "id": "wilovan",
      "kind": "npc",
      "cell": [
@@ -11194,6 +11237,7 @@
       "You'll notice the hat stays on. Best we keep it that way, between friends.",
       "We don't steal, whatever you've heard. We RECOVER. It's a finer distinction than it sounds, and it's the whole of our business."
      ],
+     "conversation": "invrisil_wilovan",
      "dialogue": [
       {
        "speaker": "Wilovan",

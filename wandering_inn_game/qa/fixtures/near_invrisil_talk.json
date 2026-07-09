@@ -1,0 +1,29 @@
+{
+ "_comment": "invrisil_disagreement_talk's start (FIXTURE-FIRST). `a_gentlemans_disagreement` already taken (`took_brothers_job` banked, quest in `started_quests`), same 'skip the give-beat, start at the beat under test' idiom as cisterns_talk_start. Standing at (2,7) in mercantile_alleys, facing up (0,-1) -- directly adjacent to Cups (2,6), so the FIRST step opens her testimony chain with zero incidental navigation (the alley route is already proven by invrisil_walkthrough). gold:0 deliberately (the free Persuade branch of the testimony ask is the one under test, not the 10-gold buyout -- and it proves the rumor menu's gold-gated options stay VISIBLE-locked rather than hidden at zero gold, the D1/D2 precedent). No footpad/combat encounter anywhere on this route (teleport carries the script past both trigger zones entirely), so `rng_state` is cosmetic.",
+ "version": 5,
+ "state": {
+  "current_map": "mercantile_alleys",
+  "player_cell": [2, 7],
+  "player_facing": [0, -1],
+  "classes": {},
+  "accomplishments": {
+   "post_game": 1,
+   "invrisil_attuned": 1,
+   "read_the_board": 1,
+   "took_brothers_job": 1
+  },
+  "gold": 0,
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": ["a_gentlemans_disagreement"],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}
