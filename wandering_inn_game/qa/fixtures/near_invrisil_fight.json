@@ -1,0 +1,29 @@
+{
+ "_comment": "invrisil_disagreement_fight's start (FIXTURE-FIRST). `a_gentlemans_disagreement` already taken (`took_brothers_job` banked, quest in `started_quests`). Standing at (5,3) in brothers_parlor, facing right (1,0) -- directly adjacent to Wilovan (6,3), so the script opens on the come-along ask itself (the ONE beat this canonical must exercise live, since it's this lane's own new ally-flag wiring) with zero incidental navigation. `classes: {warrior: 5, mage: 5}` matches sim_combat_batch.gd's INVRISIL_CELLS `hired_blades_w10_wilovan` harness build EXACTLY (the gated 0.6-0.8-with-ally band's own tuning baseline) -- known_skills() derives class skills from this dict dynamically, so the fixture fields the same kit the harness measured against. rng_state IS load-bearing (a real fight resolves) -- NOT a small hand-typed int (issue #45's landmine: WISave restores `.state` directly, not `.seed`, so a small integer collapses the first randi() draw to a degenerate output almost regardless of which small int is picked -- confirmed empirically here: candidates 1-1500 as raw `.state` values lost the hired_blades fight in EVERY single trial). Re-derived exactly like riverfarm_fight_start.json's own documented fix: seeded a fresh RandomNumberGenerator with `.seed=1`, captured the resulting `.state`, installed it here -- verified (a throwaway harness-mirroring script) to win this specific fight with Wilovan fielded on the FIRST candidate. Coincidentally the SAME derived state riverfarm_fight_start.json already ships (both are simply `.seed=1`'s own `.state`), independently re-verified against THIS roster/arena, not copied blind.",
+ "version": 5,
+ "state": {
+  "current_map": "brothers_parlor",
+  "player_cell": [5, 3],
+  "player_facing": [1, 0],
+  "classes": {"warrior": 5, "mage": 5},
+  "accomplishments": {
+   "post_game": 1,
+   "invrisil_attuned": 1,
+   "read_the_board": 1,
+   "took_brothers_job": 1
+  },
+  "gold": 0,
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": ["a_gentlemans_disagreement"],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673"
+ }
+}

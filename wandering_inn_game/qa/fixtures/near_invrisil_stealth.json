@@ -1,0 +1,29 @@
+{
+ "_comment": "invrisil_disagreement_stealth's start (FIXTURE-FIRST). `a_gentlemans_disagreement` already taken (`took_brothers_job` banked, quest in `started_quests`) via Wilovan's commission, same 'skip the give-beat, start at the beat under test' idiom as cisterns_talk_start skipping straight to its own map. Standing at (16,11) in mercantile_alleys, facing DOWN (0,1) -- directly adjacent to the `counting_house_ledger` prop at (16,12) (relocated off invrisil_walkthrough's own pinned route -- see that entity's own _comment), so the FIRST step exercises the STEALTH path's own beat with zero incidental navigation (the alley's bent-route sneak mechanic is already proven by invrisil_walkthrough; re-deriving that route here would just be fragile duplication). `player_skills` carries the QA-fixture-only `observe` grant (the SAME convention near_invrisil already established for `sneak`/`observe` -- no shipped class grants it this early; a real [Tactician] earn supersedes it later), needed to pass the ledger's `requires_skill: observe` gate. No combat expected on this path (teleport carries the script past both footpad trigger zones entirely), so `rng_state` is cosmetic.",
+ "version": 5,
+ "state": {
+  "current_map": "mercantile_alleys",
+  "player_cell": [16, 11],
+  "player_facing": [0, 1],
+  "classes": {},
+  "accomplishments": {
+   "post_game": 1,
+   "invrisil_attuned": 1,
+   "read_the_board": 1,
+   "took_brothers_job": 1
+  },
+  "gold": 0,
+  "player_skills": ["basic_cleaning", "observe"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": ["a_gentlemans_disagreement"],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "9"
+ }
+}
