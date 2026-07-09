@@ -291,6 +291,12 @@
    "note": "K3 [Rogue] earn: recovered_crate_watch -> sleep -> class_gained -> [Stealth] fielded"
   },
   {
+   "script": "mage_invisibility_loop",
+   "seed": 9,
+   "fixture": "near_mage_invisibility",
+   "note": "Issue #22: the Mage's [Invisibility] seam -- distinct visual, skip an ambush, break it with the OTHER sneaks-tagged skill ([Stealth]), positive control"
+  },
+  {
    "script": "stages_loop",
    "seed": 9,
    "fixture": "krshia_stage3_pre",
