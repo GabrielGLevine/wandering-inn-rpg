@@ -7,6 +7,7 @@
   "player_facing": [0, 1],
   "classes": { "warrior": 1 },
   "accomplishments": {
+   "reached_liscor": 1,
    "met_relc": 1,
    "sparred_with_relc": 1,
    "given_spear_by_relc": 1,

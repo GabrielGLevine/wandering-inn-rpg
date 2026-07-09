@@ -432,13 +432,24 @@
        ]
       },
       {
-       "_comment": "One Erin pool-line acknowledging garden_door_unlocked -- she owns the Skill, the PC witnesses. Gated on the SAME `garden_door_unlocked` flag wi_game.gd's sleep() beat banks (last-met-wins ordering: appended AFTER erin_friend_of_the_inn since the K-of-N gate structurally implies resolved_wrong_order is very often already met by the time this fires, though not required -- garden_door_unlocked can also land via cleaned_the_inn+goblins_spared/sign_defended once those get producers). ONE line (the one-entry-array = a landmark-acknowledgment stage convention, same idiom as lyonette_thawed) -- no mechanics readout, no counter numerals, no Skill name (spoiler cutoff: never 'the Magical Door'-class Vol-9 naming for Erin's own Skill either).",
+       "_comment": "One Erin pool-line acknowledging garden_door_unlocked -- she owns the Skill, the PC witnesses. Gated on the SAME `garden_door_unlocked` flag wi_game.gd's sleep() beat banks (last-met-wins ordering: appended AFTER erin_friend_of_the_inn since the K-of-N gate structurally implies resolved_wrong_order is very often already met by the time this fires, though not required -- garden_door_unlocked can also land via cleaned_the_inn+goblins_spared/sign_defended once those get producers). ONE line (the one-entry-array = a landmark-acknowledgment stage convention, same idiom as lyonette_thawed) -- no mechanics readout, no counter numerals, no Skill name (spoiler cutoff: never 'the Magical Door'-class Vol-9 naming for Erin's own Skill either). CONSTRAINT: this stage deliberately repeats every waking until the residue stage below takes over -- it is the game's only signpost toward the new door, so it must keep firing until the player has actually acted on it, never for a fixed number of hearings.",
        "id": "erin_garden_open",
        "requires_accomplishment": {
         "garden_door_unlocked": 1
        },
        "lines": [
         "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's \u2014 new. Go look, if you want. Just... knock first. Old habit."
+       ]
+      },
+      {
+       "_comment": "The reveal's residue stage (the olesm_after_the_match idiom: once the landmark beat has been acted on, the NPC demotes to normal callback chatter instead of repeating the reveal verbatim forever). Gated on `visited_the_garden` -- the EXISTING resolution accomplishment `garden_exit` banks via on_enter_accomplishment the first time the player walks through the vine door and back out -- rather than a heard-it-once marker, so the reveal keeps signposting until the player has actually SEEN the garden; a player who wanders in without ever talking to Erin also correctly skips straight to this stage (the reveal would be stale for them). Array-order-wins: authored last, wins the moment the gate is met.",
+       "id": "erin_garden_shared",
+       "requires_accomplishment": {
+        "visited_the_garden": 1
+       },
+       "lines": [
+        "Still there this morning. I checked before breakfast. Okay, during. I checked during breakfast.",
+        "Take whoever needs it in there sometime. That's what it's for. I think that's what it's for."
        ]
       }
      ],

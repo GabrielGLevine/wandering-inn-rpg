@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #25 canonical's fixture: Olesm's stage 3 already reached (cisterns_reported:1, chatted_with_olesm:3) so the chess hub option's accomplishment leg is met, but gold:1 is ONE SHORT of the wager's 2g floor -- the fixture-first policy's exact fit for a script whose SUBJECT is the gold-gate's honest-grey behavior (Krshia's stage3 precedent, applied to a real +/- wager instead of a buy). Positioned at the street, adjacent+facing Olesm (29,4) facing up, social_talked already carrying {olesm:true} so the FIRST interact opens the real hub directly (mirrors stage3_perks_pre's own trick) instead of spending a talk_pool line first. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "olesm_chess_loop's fixture: Olesm's stage 3 already reached (cisterns_reported:1, chatted_with_olesm:3) so the chess hub option's accomplishment leg is met, but gold:1 is ONE SHORT of the wager's 2g floor -- the fixture-first policy's exact fit for a script whose SUBJECT is the gold-gate's honest-grey behavior (Krshia's stage3 precedent, applied to a real +/- wager instead of a buy). Positioned at the street, adjacent+facing Olesm (29,4) facing up, social_talked already carrying {olesm:true} so the FIRST interact opens the real hub directly (mirrors stage3_perks_pre's own trick) instead of spending a talk_pool line first. met_relc/sparred_with_relc/given_spear_by_relc + reached_liscor are banked as the backbone any street-standing warrior:1 necessarily has (test_fixture_coherence.gd enforces both). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -15,6 +15,10 @@
    "warrior": 1
   },
   "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
    "cisterns_reported": 1,
    "chatted_with_olesm": 3
   },

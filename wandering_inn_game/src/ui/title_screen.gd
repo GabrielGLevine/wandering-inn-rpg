@@ -50,7 +50,7 @@ const PLAYTEST_FIXTURE_ORDER: Array[String] = [
 	"near_evolution", "near_consolidation", "pending_offer", "near_generalist",
 	"near_mage_cast", "near_ice_floor", "near_defeat", "door_chain_talk_start",
 	"door_chain_scout_start", "door_chain_fight_start", "door_awakening_start",
-	"portal_menu_start", "near_ruin", "near_garden", "deep_descent_start",
+	"portal_menu_start", "near_ruin", "near_garden", "garden_unlocked", "deep_descent_start",
 	"climax_surface_start", "climax_sealed_start", "near_act3",
 ]
 const PLAYTEST_PAGE_SIZE := 10
