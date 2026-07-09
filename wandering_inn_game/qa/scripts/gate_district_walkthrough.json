@@ -658,7 +658,7 @@
    "payload_contains": {
     "map": "guild",
     "floor_cells": 192,
-    "blocked_cells": 57
+    "blocked_cells": 58
    },
    "timeout_sec": 5
   },

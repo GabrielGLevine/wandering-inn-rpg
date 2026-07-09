@@ -11,7 +11,7 @@
   { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "inn" },
-  { "action": "assert_state", "path": "player_cell", "equals": [9, 6] },
+  { "action": "assert_state", "path": "player_cell", "equals": [13, 6] },
 
   { "_comment": "== BEAT 1: portal arrival -- the awakened pantry_door offers TWO destinations this fixture (liscor_street, invrisil -- riverfarm_attuned is deliberately absent from near_invrisil's accomplishments, so Riverfarm never enters the filtered list); Invrisil is the SECOND option (index 1), 'Let it be.' third. ==", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "portal_menu" }, "timeout_sec": 5 },

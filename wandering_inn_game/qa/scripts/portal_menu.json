@@ -1,5 +1,5 @@
 {
- "_comment": "The fast-travel round-trip -- menu -> street arrival (pinning the map_changed PAIR: inn->street then street->inn, in order, via the since-marker) -- AND asserts no combat_started/trigger event fires on EITHER arrival (portal travel goes through transition() ONLY; move_player/_check_trigger_radius are never called by it) -- then the return trip. Fixture starts door_awakened already banked, standing at (9,6) facing the awakened pantry_door. The whole script issues ZERO `move` QA actions (only `press interact`/`press confirm`), so a bare `assert_event_absent player_moved` for the FULL run is itself part of the O2 proof: nothing in this script's own input stream could produce one, and neither can transition().",
+ "_comment": "The fast-travel round-trip -- menu -> street arrival (pinning the map_changed PAIR: inn->street then street->inn, in order, via the since-marker) -- AND asserts no combat_started/trigger event fires on EITHER arrival (portal travel goes through transition() ONLY; move_player/_check_trigger_radius are never called by it) -- then the return trip. Fixture starts door_awakened already banked, standing at (13,6) facing the awakened pantry_door (moved against the east wall by playtest hotfix #2). The whole script issues ZERO `move` QA actions (only `press interact`/`press confirm`), so a bare `assert_event_absent player_moved` for the FULL run is itself part of the O2 proof: nothing in this script's own input stream could produce one, and neither can transition().",
  "starts_at_title": true,
  "fixture_save": "portal_menu_start",
  "steps": [
@@ -11,7 +11,7 @@
   { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "inn" },
-  { "action": "assert_state", "path": "player_cell", "equals": [9, 6] },
+  { "action": "assert_state", "path": "player_cell", "equals": [13, 6] },
 
   { "_comment": "== Open the menu at the inn anchor: only the street destination + 'Let it be.' (the_wandering_inn is excluded -- you're already there) ==", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "portal_menu" }, "timeout_sec": 5 },
@@ -34,7 +34,7 @@
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "Warm air, woodsmoke, the creak of the pantry door settling shut behind you. You're back, and you didn't walk here." }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "inn" },
-  { "action": "assert_state", "path": "player_cell", "equals": [9, 6] },
+  { "action": "assert_state", "path": "player_cell", "equals": [13, 6] },
   { "action": "screenshot", "name": "03_returned_to_the_inn" },
 
   { "_comment": "== The O2 rule, whole-run: neither arrival ever fires a trigger/combat event, and this script never issues a single `move` action of its own -- so a player_moved event can ONLY have come from move_player, which portal travel never calls. ==", "action": "assert_event_absent", "type": "combat_started" },

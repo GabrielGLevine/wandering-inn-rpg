@@ -38,16 +38,22 @@ extends CanvasLayer
 ## UI_SLEEP_VEIL_RENDERED{lines} is the automated coverage proof that it
 ## fired.
 ##
-## CONSOLIDATION: a consolidation OFFER can fire at sleep (wi_game.gd defers the
-## rest of the beat and emits consolidation_offered). Its modal prompt
-## (consolidation_prompt.gd, layer 1) is input-blocking and lives BENEATH this
-## veil (layer 30). To never deadlock or hide it, the veil DEFERS: on seeing
-## consolidation_offered in the sleep burst it skips the dark hold/reveal and
-## fades straight back so the modal owns an unobstructed screen. That sleep
-## simply forgoes the GDI treatment (its class/level toasts still fire beneath
-## for the player and QA); the black-screen voice returns on the next ordinary
-## sleep. A consolidation is rare and self-announced by its own themed modal,
-## so this is the low-risk, non-deadlocking choice.
+## CONSOLIDATION (playtest hotfix #8): a consolidation OFFER can fire at sleep
+## (wi_game.gd defers the rest of the beat and emits consolidation_offered).
+## Its modal prompt (consolidation_prompt.gd, layer 1) is input-blocking and
+## lives BENEATH this veil (layer 30) -- but shows itself IMMEDIATELY and
+## unconditionally on consolidation_offered (`_show_offer`/`_root.show()`),
+## independent of the veil's own timing; it never needs the veil to defer to
+## it. RULING: progression resolves in sleep, so the offer is fiction-bound to
+## the SAME sleep beat as every other announcement -- the veil now runs its
+## ordinary full reveal (hold, then this sleep's class/level toast lines, same
+## as any other sleep) for a consolidation-offering sleep too, no special-case
+## skip. The modal sits ready beneath the whole time; it only becomes VISIBLE
+## once the veil fades back to transparent at the end of the sequence, so the
+## offer surfaces with/after the level-up toasts, never before the player has
+## seen "you slept." No deadlock risk: the veil never consumes input (see the
+## file doc comment above), so the modal's own input handling is unaffected by
+## how long the veil holds first.
 
 ## Layer above every other UI (journal/inventory are 10; message_layer/dialogue/
 ## consolidation are the default 1) so the darkness covers the whole screen.
@@ -166,7 +172,6 @@ var _running := false
 ## a second reveal for the same sleep.
 var _reveal_queued := false
 var _lines: Array[String] = []
-var _consolidation := false
 
 ## Opener state. _opener_running gates its own input/sequence; _opener_advance
 ## is set by a confirm/cancel press to cut the current line's hold short.
@@ -234,8 +239,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if _running:
 				_lines.append("[%s Class → %s Class!]" % [_class_name(String(payload.get("from", ""))), _class_name(String(payload.get("to", "")))])
 		WIEvents.CONSOLIDATION_OFFERED:
-			if _running:
-				_consolidation = true
+			# No-op here on purpose (playtest hotfix #8) -- the veil no longer
+			# special-cases this sleep; it runs the SAME reveal as any other.
+			# consolidation_prompt.gd shows its own modal unconditionally on
+			# this same event, independent of the veil's timing (see the file
+			# doc comment's CONSOLIDATION section).
+			pass
 		WIEvents.ACCOMPLISHMENT_RECORDED:
 			# A4: ARM the epilogue the instant the Raskghar is sealed (banked mid
 			# Zevara's seal dialogue). The reveal waits for the dialogue to END so
@@ -266,7 +275,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 
 ## Opens the collection window and queues the (single) deferred reveal. The
 ## deferred call runs at the next idle, AFTER sleep()'s whole synchronous emit
-## burst has unwound, so `_lines`/`_consolidation` are fully populated by then.
+## burst has unwound, so `_lines` is fully populated by then.
 func _begin_sleep() -> void:
 	# Guard against a sleep beat racing the cold open. A player who reaches
 	# the inn bed during the ~8s opener would otherwise start a SECOND veil
@@ -277,7 +286,6 @@ func _begin_sleep() -> void:
 		return
 	_running = true
 	_lines = []
-	_consolidation = false
 	if not _reveal_queued:
 		_reveal_queued = true
 		_run_sequence.call_deferred()
@@ -434,29 +442,31 @@ func _emit_epilogue_rendered(count: int) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_GDI_EPILOGUE_RENDERED, {"lines": count})
 
 
+## Playtest hotfix #8: NO special case for a consolidation-offering sleep any
+## more -- it runs this exact same sequence as every other sleep, then emits
+## UI_SLEEP_VEIL_FINISHED as its very last act. consolidation_prompt.gd holds
+## a pending offer HIDDEN (input dead) until that event, so the offer
+## surfaces with/after this sleep's own announcement lines, never on top of
+## the black and never answerable blind. TRAP: the finished emit must fire in
+## the QA-collapsed branch too, and must always come AFTER _finish() -- the
+## whole ordering contract (rendered -> finished -> prompt) is pinned by
+## consolidation_flow's forward-only event waits.
 func _run_sequence() -> void:
 	_reveal_queued = false
 	var lines := _lines.duplicate()
-	var defer_to_modal := _consolidation
 
 	if _is_qa():
 		# Collapsed: no visible hold — record coverage and clear the same beat so
-		# no QA screenshot ever catches a black frame.
+		# no QA screenshot ever catches a black frame. The finished emit still
+		# fires (after _finish, mirroring the real path below) so the
+		# rendered -> finished -> prompt order is provable headless.
 		_emit_rendered(lines.size())
 		_finish()
+		_emit_finished()
 		return
 
 	_black.show()
 	await _fade(_black, 1.0)
-
-	if defer_to_modal:
-		# A consolidation modal is about to demand the screen (layer 1, beneath
-		# this veil): fade straight back so it is unobstructed. This sleep forgoes
-		# the GDI reveal; its toasts still fire beneath for the player + QA.
-		_emit_rendered(0)
-		await _fade(_black, 0.0)
-		_finish()
-		return
 
 	await _wait(HOLD_BEFORE_TEXT)
 	for line: String in lines:
@@ -466,6 +476,10 @@ func _run_sequence() -> void:
 	await _wait(READ_HOLD if not lines.is_empty() else EMPTY_HOLD)
 	await _fade(_black, 0.0)
 	_finish()
+	# The "screen is the player's again" moment. CONSTRAINT: after _finish()
+	# (black hidden, _running false) so a listener showing UI on this event
+	# can never race the fade-out.
+	_emit_finished()
 
 
 ## Adds one centered proclamation label that fades itself in.
@@ -490,6 +504,25 @@ func _finish() -> void:
 
 func _emit_rendered(count: int) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_SLEEP_VEIL_RENDERED, {"lines": count})
+
+
+func _emit_finished() -> void:
+	ObservableBus.emit_domain_event(WIEvents.UI_SLEEP_VEIL_FINISHED, {})
+
+
+## True while a SLEEP reveal is running or queued (from the sleep
+## phase_changed until _run_sequence's finished emit) -- queried by
+## consolidation_prompt.gd the instant an offer arrives, to decide
+## wait-for-finished vs show-now. Sleep-mode only on purpose: the offer can
+## only ever fire inside wi_game.gd's sleep() (whose UNCONDITIONAL
+## phase_changed has already run _begin_sleep by the time the offer event
+## lands, bus delivery being synchronous and in-order), so opener/epilogue
+## states are irrelevant here -- if THEY blocked _begin_sleep (the rare race
+## _begin_sleep's own guard covers), this correctly reads false and the
+## prompt shows immediately rather than waiting for a finished emit that
+## would never come.
+func sleep_sequence_active() -> bool:
+	return _running or _reveal_queued
 
 
 func _fade(rect: ColorRect, to_alpha: float) -> void:

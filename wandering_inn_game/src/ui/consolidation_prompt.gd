@@ -15,6 +15,26 @@ extends CanvasLayer
 ## keyboard until the choice is made. Cancel maps to decline (always safe -- the
 ## offer is re-presented at the next qualifying sleep) and consuming cancel here
 ## also stops the pause menu opening over the modal.
+##
+## VEIL GATE (playtest hotfix #8, fix-first rev): consolidation_offered fires
+## SYNCHRONOUSLY inside wi_game.gd's sleep() -- showing the modal on that
+## event put it on screen BEFORE the sleep veil's own sequence (which only
+## starts via call_deferred) did anything, and left it answerable blind
+## during the black hold (this node's _unhandled_input gates only on `open`).
+## Now: on the offer event, if the veil's SLEEP sequence is running/queued
+## (`sleep_veil_ref.sleep_sequence_active()` -- true by then for every real
+## sleep, since sleep()'s unconditional phase_changed has already run the
+## veil's _begin_sleep), the offer is STASHED and the modal stays hidden with
+## `open` false (input dead) until UI_SLEEP_VEIL_FINISHED -- the veil's
+## "screen is the player's again" emit -- then shows and THEN emits
+## UI_CONSOLIDATION_PROMPT_RENDERED, so that event fires at the TRUE visual
+## moment (bus events are ground truth; an event that lies is a defect).
+## NO-VEIL PATHS show immediately: (a) reload-mid-offer -- the _ready()
+## reconstruction below; a load re-emits no phase_changed, so no veil ever
+## runs and the offer surfaces immediately on load (the DOCUMENTED choice for
+## the reload edge; consolidation_reload pins it) -- and (b) the rare
+## sleep-while-opener/epilogue race, where the veil's _begin_sleep guard
+## blocked the sequence and a finished emit would never come.
 
 const PANEL_SIZE := Vector2(600.0, 300.0)
 const ROWS := ["Consolidate", "Keep them apart"]
@@ -23,12 +43,22 @@ const ROWS := ["Consolidate", "Keep them apart"]
 ## world/journal/pause input gates key off Game.sim.pending_consolidation.
 var open := false
 
+## Set by main.gd's _spawn_ui_layers (the journal<->pause mutual-ref idiom,
+## same untyped-Node + duck-call convention as journal.gd's pause_menu_ref).
+## Queried ONLY at the offer event; a null ref degrades to show-immediately
+## (the pre-fix behavior), never a hang.
+var sleep_veil_ref: Node = null
+
 var _root: Control
 var _title_label: Label
 var _body_label: Label
 var _row_labels: Array[Label] = []
 var _cursor := 0
 var _target_display := ""
+## The offer payload held back while the sleep veil's sequence runs (see the
+## VEIL GATE doc comment above). Non-empty only between consolidation_offered
+## and the veil's UI_SLEEP_VEIL_FINISHED.
+var _held_offer: Dictionary = {}
 
 
 func _ready() -> void:
@@ -79,6 +109,12 @@ func _ready() -> void:
 	# A save taken mid-offer restores Game.sim.pending_consolidation but re-emits
 	# no consolidation_offered event, so reconstruct the prompt from sim state on
 	# spawn (this node is rebuilt fresh on every world swap -- see main.gd).
+	# RELOAD-MID-OFFER CONTRACT (the documented choice for the veil-gate edge):
+	# a load re-emits no phase_changed, so no sleep veil ever runs on this
+	# path -- the offer surfaces IMMEDIATELY on load, unheld. This is the
+	# no-veil branch of the VEIL GATE doc comment above; consolidation_reload
+	# pins it (prompt rendered straight after game_loaded/world_ready, with
+	# zero ui_sleep_veil_* events anywhere in the run).
 	var pending := Game.sim.pending_offer_display()
 	if not pending.is_empty():
 		_show_offer(pending)
@@ -86,7 +122,18 @@ func _ready() -> void:
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.CONSOLIDATION_OFFERED:
-		_show_offer(payload)
+		# See the VEIL GATE doc comment: hold hidden until the veil's sleep
+		# sequence completes; show immediately only on a genuinely veil-less
+		# path (null ref / blocked-veil race).
+		if sleep_veil_ref != null and bool(sleep_veil_ref.call("sleep_sequence_active")):
+			_held_offer = payload
+		else:
+			_show_offer(payload)
+	elif type == WIEvents.UI_SLEEP_VEIL_FINISHED:
+		if not _held_offer.is_empty():
+			var offer := _held_offer
+			_held_offer = {}
+			_show_offer(offer)
 
 
 func _show_offer(offer: Dictionary) -> void:

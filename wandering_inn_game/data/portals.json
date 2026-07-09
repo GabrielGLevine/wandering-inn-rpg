@@ -1,5 +1,5 @@
 {
- "_comment": "(spec \u00a75.5 the anchor-stone-per-region idiom -- the #10/#12/#16 contract) Each row is one fast-travel DESTINATION: {id, display_name, map, cell, requires_accomplishment, arrival_toast}. `requires_accomplishment` gates the row at >= 1 (the door_when/contains_when >= semantics); a future region milestone appends a row keyed on ITS OWN attunement accomplishment, zero code (src/core/portals.gd's WIPortals.attuned_destinations/build_portal_graph read this list generically). v1 ships the Liscor pair: the inn's pantry_door <-> the street's street_anchor_stone, both gated on door_awakened (they attune together -- the SAME beat-4 awakening opens both ends of the player's own home-region connection). Arrival cells are blast-radius-checked walkable + off every canonical route (the DP3 discipline): inn (9,6) is the D1-confirmed free interior cell immediately west of pantry_door (10,6); street (29,10) is the open mid-street cell immediately west of the new street_anchor_stone (30,10), clear of every blocked/decor/entity cell on that map.",
+ "_comment": "(spec \u00a75.5 the anchor-stone-per-region idiom -- the #10/#12/#16 contract) Each row is one fast-travel DESTINATION: {id, display_name, map, cell, requires_accomplishment, arrival_toast}. `requires_accomplishment` gates the row at >= 1 (the door_when/contains_when >= semantics); a future region milestone appends a row keyed on ITS OWN attunement accomplishment, zero code (src/core/portals.gd's WIPortals.attuned_destinations/build_portal_graph read this list generically). v1 ships the Liscor pair: the inn's pantry_door <-> the street's street_anchor_stone, both gated on door_awakened (they attune together -- the SAME beat-4 awakening opens both ends of the player's own home-region connection). Arrival cells are blast-radius-checked walkable + off every canonical route (the DP3 discipline): inn (13,6) is the free interior cell immediately west of pantry_door (14,6, moved against the east wall by playtest hotfix #2 -- was (10,6)/(9,6)); street (29,10) is the open mid-street cell immediately west of the new street_anchor_stone (30,10), clear of every blocked/decor/entity cell on that map.",
  "portals": [
   {
    "id": "liscor_street",
@@ -17,7 +17,7 @@
    "display_name": "The Wandering Inn",
    "map": "inn",
    "cell": [
-    9,
+    13,
     6
    ],
    "requires_accomplishment": "door_awakened",

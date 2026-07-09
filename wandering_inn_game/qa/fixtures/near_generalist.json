@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #45 rng_state re-derivation: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed, so any hand-typed small int collapses the first randi() draw to the same degenerate output; the #38 method). Re-derived by seeding a fresh RNG with .seed=1, capturing the resulting .state (-1966449618399012673), installing it here, and re-running this fixture's canonical end-to-end -- passed on the first candidate, every fight in the run unaffected in outcome.",
+ "_comment": "TRAP: rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673), never hand-typed -- WISave restores .state directly, not .seed. Every fight in this fixture's run is unaffected by rng_state choice.",
  "state": {
   "accomplishments": {
    "ice_cast": 7,

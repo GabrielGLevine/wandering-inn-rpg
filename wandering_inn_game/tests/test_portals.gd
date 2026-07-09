@@ -124,7 +124,9 @@ func _init() -> void:
 	var attuned_ids2: Array = game.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"]))
 	assert(attuned_ids2.has("liscor_street") and attuned_ids2.has("the_wandering_inn"), "both portals.json rows are attuned once door_awakened is banked")
 
-	game.bind_map_silent("inn", Vector2i(9, 6))
+	# Playtest hotfix #2 moved pantry_door (10,6)->(14,6), against the east
+	# wall -- the free approach cell moved with it, (9,6)->(13,6).
+	game.bind_map_silent("inn", Vector2i(13, 6))
 	game.player_facing = Vector2i.RIGHT
 	_events.clear()
 	var result := game.interact()
@@ -155,12 +157,12 @@ func _init() -> void:
 	assert(return_options.size() == 2, "from the street, the menu offers ONLY the inn destination + 'Let it be.'")
 	assert(game.dialogue_choose(0), "picking the inn destination succeeds")
 	assert(game.current_map == "inn", "the return trip lands back on the inn")
-	assert(game.player_cell == Vector2i(9, 6), "the return trip lands on the inn's authored arrival cell")
+	assert(game.player_cell == Vector2i(13, 6), "the return trip lands on the inn's authored arrival cell")
 
 	# --- Pre-awakening fallback: an UNMET portal_menu_when gate still shows
 	# pantry_door's ordinary flavor toast (D1/D3 byte-identical fallback) ---
 	var fresh := _new_game()
-	fresh.bind_map_silent("inn", Vector2i(9, 6))
+	fresh.bind_map_silent("inn", Vector2i(13, 6))
 	fresh.player_facing = Vector2i.RIGHT
 	var fresh_result := fresh.interact()
 	assert(fresh_result.get("accomplishment", "") == "observed_the_pantry_door", "before door_awakened, pantry_door still falls through to its plain flavor toast, not the portal menu")

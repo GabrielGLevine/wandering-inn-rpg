@@ -135,18 +135,16 @@ const ENCOUNTER_CELLS := [
 	{"name": "raskghar_scouts_w2_relc", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": false},
 	{"name": "raskghar_scouts_w2_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": true},
 	{"name": "raskghar_scouts_w5_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior5_mage5", "solo": true},
-	## Issue #45: the street "Missing Crate"/"Wrong Order" scavenger
-	## encounters (crate_scavengers/supplier_scavengers, skeleton_scene.json --
-	## both 2x goblin_raider on arena goblin_ambush, allies: [], never Relc)
-	## had ZERO harness cells before this -- no visibility into their real
-	## difficulty. Added here MEASURED-only, same rationale as the
-	## raskghar_scouts route-fight cells above: crate_fight/wrong_order_fight
-	## already prove each one clears via its own pinned fixture rng_state (a
-	## real content proof); a win-rate CONTRACT would risk CI churn on
-	## balance-neutral changes elsewhere for two solo warrior1-vs-2-raider
-	## street fights without changing anything a player experiences.
-	## warrior1_tutorial SOLO is the honest representative build -- neither
-	## encounter ever fields an ally.
+	## The street "Missing Crate"/"Wrong Order" scavenger encounters
+	## (crate_scavengers/supplier_scavengers, skeleton_scene.json -- both 2x
+	## goblin_raider on arena goblin_ambush, allies: [], never Relc).
+	## MEASURED-only, same rationale as the raskghar_scouts route-fight cells
+	## above: crate_fight/wrong_order_fight already prove each one clears via
+	## its own pinned fixture rng_state (a real content proof); a win-rate
+	## CONTRACT would risk CI churn on balance-neutral changes elsewhere for
+	## two solo warrior1-vs-2-raider street fights without changing anything
+	## a player experiences. warrior1_tutorial SOLO is the honest
+	## representative build -- neither encounter ever fields an ally.
 	{"name": "crate_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "supplier_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
 ]

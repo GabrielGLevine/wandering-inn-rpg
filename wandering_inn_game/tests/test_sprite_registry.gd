@@ -245,6 +245,10 @@ func _build_expected_counts() -> Dictionary:
 	## statics (1 frame each), same convention as chest/sewer_grate/boulder.
 	counts["pedestal/idle"] = 1
 	counts["pantry_door_glow/idle"] = 1
+	## Playtest hotfix #6: THE portal-anchor sprite (owned PixelLab art),
+	## replacing `boulder` at every anchor-stone-per-region site. Single
+	## 64x80 static, 1 frame.
+	counts["anchor_waystone/idle"] = 1
 
 	## Art-wiring task (2026-07-07): Lyonette's canon-correct bright-red-hair
 	## sprite (replacing the citizen_f pink-tint stand-in, VISUAL-LOG closed) +

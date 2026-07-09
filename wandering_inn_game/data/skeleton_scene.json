@@ -702,11 +702,11 @@
      "on_enter_accomplishment": "visited_own_room"
     },
     {
-     "_comment": "The pantry door prop, the LOCKED interface anchor for the whole chain -- 3 visual_states keyed on the chain's accomplishment counters (default / flicker once door_chain_started / awakened once door_awakened). Placed at (10,6), inside the free interior cluster (9-11,5-7) confirmed untouched by every existing inn-touching canonical's walked+faced cell set -- a full move/press replay of every qa/scripts/*.json (from its fixture start or the default (2,3) spawn) plus every qa/fixtures/*.json inn start was run before placement; the only free untouched interior cells in the whole 16x10 room were (2,2),(3,6),(3,7),(5,7),(7,7),(9,6),(9,7),(10,5),(10,6),(10,7),(11,5),(11,6),(11,7). ui_entities_rendered inn count 14->16 (this entity + rift_vermin_leak below) -- inn_walkthrough/work_loop/upstairs_walkthrough updated. Interact copy is STATIC (same flavor toast regardless of counter state); the counter-aware beat-1 flicker line (Erin's dialogue banks door_chain_started) and any interact-copy differentiation are wired elsewhere -- the door prop itself NEVER speaks (only the GDI voices chain milestones, on the sleep-beat hook). Sprite states reuse a shared `pantry_door_glow` placeholder entry (data/sprites.json), tint-differentiated per state -- the flicker state is TINT-only (no baked 2-frame elsewhere-glimpse yet; the real rune-glow art stays a VISUAL-LOG item) rather than the eventual literal sprite-swap glimpse.",
+     "_comment": "The pantry door prop, the LOCKED interface anchor for the whole chain -- 3 visual_states keyed on the chain's accomplishment counters (default / flicker once door_chain_started / awakened once door_awakened). Placed at (14,6), against the east wall (the x=15 wall segment covers y=4-9) per the against-a-wall placement rule (playtest hotfix #2) -- CONSTRAINT: the free approach cell is (13,6), facing right; pantry_door_runes sits at (14,5) directly north, approached from (14,4) facing down. ui_entities_rendered inn count 14->16 (this entity + rift_vermin_leak below) -- inn_walkthrough/work_loop/upstairs_walkthrough updated. Interact copy is STATIC (same flavor toast regardless of counter state); the counter-aware beat-1 flicker line (Erin's dialogue banks door_chain_started) and any interact-copy differentiation are wired elsewhere -- the door prop itself NEVER speaks (only the GDI voices chain milestones, on the sleep-beat hook). Sprite states reuse a shared `pantry_door_glow` placeholder entry (data/sprites.json), tint-differentiated per state -- the flicker state is TINT-only (no baked 2-frame elsewhere-glimpse yet; the real rune-glow art stays a VISUAL-LOG item) rather than the eventual literal sprite-swap glimpse.",
      "id": "pantry_door",
      "kind": "prop",
      "cell": [
-      10,
+      14,
       6
      ],
      "display_name": "The Pantry Door",
@@ -793,11 +793,11 @@
      ]
     },
     {
-     "_comment": "The doorframe's own worked stone, north of pantry_door (10,6) at (10,5) -- the field-skill first-use idiom (cellar_door/nest_ledge precedent), `requires_skill: observe` (the Tactician L1 grant, matching nest_ledge/cisterns_scout) + `on_skill_use` banks `read_the_door_runes` (an intermediate counter, zero rng) deterministically. Reporting the finding to Pisces (pisces_magic.json's hub report option, gated on this counter) banks the shared `door_understood` + `pedestal_unsealed` together -- the cisterns_scout/wrong_order 'SKILL alone only banks the intermediate counter, reporting to the consult NPC banks the convergence counters' precedent (Olesm/Lyonette's role there is Pisces's role here -- no olesm_intro.json touch needed, out of this task's file charter). Reuses the registered `dusty_scroll` sprite (the retired [Light]-study prop, thematically apt for 'something to read with a skill') tinted, no test_sprite_registry row needed (reused sprite id). Placed at (10,5), one of the confirmed-untouched inn interior cells from pantry_door's own blast-radius audit (see that entity's _comment) -- (9,5) is lyonette's cell, ruled out. Approach from (10,4) facing down. Inn ui_entities_rendered sprite count bumps 16->17 (inn_walkthrough/work_loop/upstairs_walkthrough updated).",
+     "_comment": "The doorframe's own worked stone, north of pantry_door (14,6) at (14,5) -- the field-skill first-use idiom (cellar_door/nest_ledge precedent), `requires_skill: observe` (the Tactician L1 grant, matching nest_ledge/cisterns_scout) + `on_skill_use` banks `read_the_door_runes` (an intermediate counter, zero rng) deterministically. Reporting the finding to Pisces (pisces_magic.json's hub report option, gated on this counter) banks the shared `door_understood` + `pedestal_unsealed` together -- the cisterns_scout/wrong_order 'SKILL alone only banks the intermediate counter, reporting to the consult NPC banks the convergence counters' precedent (Olesm/Lyonette's role there is Pisces's role here -- no olesm_intro.json touch needed, out of this task's file charter). Reuses the registered `dusty_scroll` sprite (the retired [Light]-study prop, thematically apt for 'something to read with a skill') tinted, no test_sprite_registry row needed (reused sprite id). Approach from (14,4) facing down.",
      "id": "pantry_door_runes",
      "kind": "prop",
      "cell": [
-      10,
+      14,
       5
      ],
      "display_name": "The Doorframe's Grain",
@@ -815,12 +815,12 @@
      "locked_toast": "The doorframe's old wood is carved with something under the paint, faint and worn. Whatever it says isn't for an untrained eye."
     },
     {
-     "_comment": "Erin's OWN summoned garden door, at the inn -- NOT the portal menu (a deliberate departure from the Magical Door/pantry_door precedent right above: this door is Erin's Skill, not an attuned destination). `door_when.requires: {garden_door_unlocked: 1}` reads ONE monotonic flag wi_game.gd's sleep() beat banks once `_garden_earn_met()` (act >= III AND K=2 of 4 ratified legs) goes true -- see that function's doc comment for the full K-of-N gate-shape reasoning (a bespoke sleep-beat computation feeding the EXISTING door_when/_accomplishment_gate_met ALL-of reader unchanged, not a new gate shape in the shared validator). Until banked, interact falls through to on_interact_accomplishment/toast below -- BYTE-IDENTICAL pre-unlock fallback, the sewer_grate/deep_fissure/ruin_door precedent -- so every existing inn canonical (inn_walkthrough/work_loop/upstairs_walkthrough/door_awakening/portal_menu/save_load_roundtrip) is unaffected: this entity is a normal always-present prop that just reads as bare wall until the flag lands. Placed at (3,6) -- confirmed OFF every inn cell any canonical QA script's move-replay touches (a python blocked-cell-aware replay of all 73 qa/scripts/*.json against the real inn walls/blocked/entity layout was run before picking this cell; see the G1 report for the full free-cell derivation and the union of touched cells). `garden_door_inner` (owned PixelLab art) is the SAME door sprite `garden_exit` uses on the far side -- one physical door, two faces.",
+     "_comment": "Erin's OWN summoned garden door, at the inn -- NOT the portal menu (a deliberate departure from the Magical Door/pantry_door precedent right above: this door is Erin's Skill, not an attuned destination). `door_when.requires: {garden_door_unlocked: 1}` reads ONE monotonic flag wi_game.gd's sleep() beat banks once `_garden_earn_met()` (act >= III AND K=2 of 4 ratified legs) goes true -- see that function's doc comment for the full K-of-N gate-shape reasoning (a bespoke sleep-beat computation feeding the EXISTING door_when/_accomplishment_gate_met ALL-of reader unchanged, not a new gate shape in the shared validator). Until banked, interact falls through to on_interact_accomplishment/toast below -- BYTE-IDENTICAL pre-unlock fallback, the sewer_grate/deep_fissure/ruin_door precedent -- so every existing inn canonical is unaffected: this entity is a normal always-present prop that just reads as bare wall until the flag lands. Placed at (3,8), against the south wall (the y=9 wall segment covers x=1-14) per the against-a-wall placement rule (playtest hotfix #2) -- CONSTRAINT: the free approach cell is (3,7), facing down (same column as before, shifted onto the wall). `garden_door_inner` (owned PixelLab art) is the SAME door sprite `garden_exit` uses on the far side -- one physical door, two faces.",
      "id": "garden_door",
      "kind": "prop",
      "cell": [
       3,
-      6
+      8
      ],
      "display_name": "A Door of Vines",
      "sprite": "garden_door_inner",
@@ -1291,7 +1291,7 @@
      16
     ]
    ],
-   "_comment": "Liscor gate district, grown from the 10x6 street (per accepted Floodplains sec.5). Zones: gate plaza W, main street y2-4, market row y1 x10-19, Watch post x21-24, Adventurer's Guild x26-30 (XL anchor), dirt side street x14-15 south, sewer-grate POI (16,11). All goblin encounters migrated to floodplains POI anchors. Row y4 is the clear transit lane. Issue #29 (2026-07-08) readability pass: floor-vs-wall contrast fixed via a facade_plaster brighten/warm tint (1.28,1.14,0.9 -- avg color moves from (142,119,98), barely distinguishable from the cobble floor's (116,106,95), to a clearly brighter (182,136,88), still warm/amber not neutral gray -- both measured by direct pixel sample, not eyeballed) contrasted against the untouched floor tile. `inn_roof`'s saturated teal (avg (43,138,100), a sheet color clashing hard with Liscor's amber-warm identity) retinted to a warm terracotta (2.6,0.5,0.45) -- STREET-ONLY (inn_roof has no other map consumer, checked). The three market-row NPCs sharing one citizen_f sprite (Krshia/Peddler/Watch Sergeant, tint-only differentiated -- the 'twin vendors' finding) were ALSO canon/pronoun mismatches on inspection (Krshia's own copy says 'A Gnoll', the Peddler's and Watch Sergeant's copy both use 'he'/'his', all three were on the one female-human sprite) -- swapped to pc_gnoll_f/pc_human_m/pc_drake_m respectively (real directional sprites already in the catalog for character creation), tints dropped. DEAD SPACE: reviewed the map's own zone comment above and the entity layout -- large open cells exist at the gate plaza (W) and the main street's y2-4 transit lane, but both are ALREADY load-bearing (the plaza is the multi-destination hub the map's own name describes; y4 is explicitly documented as 'the clear transit lane', i.e. deliberately kept clear for movement, not an oversight). ACCEPTED as deliberate breathing room, not dressed further this pass -- a headless-only lane can't windowed-judge whether added dressing there would help or just clutter the busiest crossing in the game.",
+   "_comment": "Liscor gate district, grown from the 10x6 street (per accepted Floodplains sec.5). Zones: gate plaza W, main street y2-4, market row y1 x10-19, Watch post x21-24, Adventurer's Guild x26-30 (XL anchor), dirt side street x14-15 south, sewer-grate POI (16,11). All goblin encounters migrated to floodplains POI anchors. Row y4 is the clear transit lane. Floor-vs-wall contrast: facade_plaster carries a brighten/warm tint (1.28,1.14,0.9 -- avg color moves from (142,119,98), barely distinguishable from the cobble floor's (116,106,95), to a clearly brighter (182,136,88), still warm/amber not neutral gray -- both measured by direct pixel sample) against the untouched floor tile. `inn_roof`'s saturated teal (avg (43,138,100)) is retinted to a warm terracotta (2.6,0.5,0.45) -- CONSTRAINT: STREET-ONLY, inn_roof has no other map consumer. The three market-row NPCs (Krshia/Peddler/Watch Sergeant) each carry their own directional sprite (pc_gnoll_f/pc_human_m/pc_drake_m respectively) matching their own copy's canon/pronouns, no shared tint-differentiated sprite between them. TRAP: the gate plaza (W) and the main street's y2-4 transit lane are large open cells but ARE load-bearing (the plaza is the multi-destination hub; y4 is the clear transit lane) -- deliberate breathing room, not dead space to dress.",
    "floor_layers": [
     {
      "_pick": "Main street cobble band, full width (existing street pick, extended)",
@@ -2230,7 +2230,7 @@
      "toast": "Warm bread smell over the whole row. No one's minding the stall this exact moment. The loaves aren't going anywhere without a fight."
     },
     {
-     "_comment": "Market-depth stall 2 of 2, the mini-buy surface -- an unnamed Peddler (title only, matching the gate_guard/watch_guard convention, profile in docs/design/character-profiles-staging.md) selling ONE item, watch_issue_gambeson (now priced 20g -- see items.json _comment_price), via conversation graph data/dialogue/peddler_stall.json (krshia_crate.json's exact buy contract). Placed at the east end of the market row, close to the Watch post/barracks -- thematically apt for Watch-surplus gear. Issue #29 (2026-07-08): sprite was `citizen_f` (female) despite this entity's own copy using 'he'/'his' throughout -- swapped to `pc_human_m`, dropped the now-unneeded tint. Also de-twins the market row: Krshia and the Peddler no longer share one sprite differentiated by tint alone.",
+     "_comment": "Market-depth stall 2 of 2, the mini-buy surface -- an unnamed Peddler (title only, matching the gate_guard/watch_guard convention, profile in docs/design/character-profiles-staging.md) selling ONE item, watch_issue_gambeson (now priced 20g -- see items.json _comment_price), via conversation graph data/dialogue/peddler_stall.json (krshia_crate.json's exact buy contract). Placed at the east end of the market row, close to the Watch post/barracks -- thematically apt for Watch-surplus gear. Sprite is `pc_human_m`, matching this entity's own copy ('he'/'his' throughout); no tint. De-twinned from Krshia -- the two no longer share one sprite differentiated by tint alone.",
      "id": "peddler",
      "kind": "npc",
      "cell": [
@@ -2393,7 +2393,7 @@
      }
     },
     {
-     "_comment": "Issue #29 (2026-07-08): sprite was `citizen_f`, a HUMAN female stand-in -- but this entity's own copy says 'A Gnoll with a merchant's smile' and every line uses her canon 'Hrr.' speech tic. Swapped to `pc_gnoll_f` (a real directional Gnoll sprite already in the catalog for character creation), dropped the tint. Also de-twins the market row from the Peddler, who shared this exact sprite before.",
+     "_comment": "Sprite is `pc_gnoll_f` (a real directional Gnoll sprite, matching this entity's own copy -- 'A Gnoll with a merchant's smile', canon 'Hrr.' speech tic); no tint. De-twinned from the Peddler, who no longer shares this sprite.",
      "id": "krshia",
      "kind": "npc",
      "cell": [
@@ -2516,7 +2516,7 @@
      }
     },
     {
-     "_comment": "Issue #29 (2026-07-08): sprite was `citizen_f` (female) despite this entity's own copy using 'He would send...' -- swapped to `pc_drake_m`, matching Zevara's established Drake Watch-officer precedent (the gate).",
+     "_comment": "Sprite is `pc_drake_m`, matching this entity's own copy ('He would send...') and Zevara's established Drake Watch-officer precedent (the gate).",
      "id": "watch_sergeant",
      "kind": "npc",
      "cell": [
@@ -2536,7 +2536,7 @@
      ]
     },
     {
-     "_comment": "Liscor's OWN end of the fast-travel pair, pairing with the inn's `pantry_door`. Placed at (30,10) -- the open mid-street cell east of the guild/Pisces cluster (26-30,1-4), well clear of every `blocked` cell, wall segment (all 3 sit near x0/y0 borders), decor, and entity cell on this map (cross-checked against the full street entity/decor/blocked/walls listing before placement, same blast-radius discipline as pantry_door). Ships default + awakened `visual_states` ONLY -- no flicker/chain-started state, unlike pantry_door: v1's Liscor pair is the player's EXISTING home region (the door awakening attunes both ends of ITS OWN connection at once), not a NEW region earning its own attunement beat -- the anchor-stone-per-region idiom's first genuinely NEW instance is a future region milestone's job (#10/#12/#16), which pairs a fresh anchor with its OWN attunement accomplishment in data/portals.json, zero code. Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate/ruin_door VISUAL-LOG precedent for a not-yet-bespoke gated prop) with the SAME amber awakened tint as pantry_door (spec \u00a72: 'Liscor amber' is the only live destination color v1 ships).",
+     "_comment": "Liscor's OWN end of the fast-travel pair, pairing with the inn's `pantry_door`. Placed at (30,10) -- the open mid-street cell east of the guild/Pisces cluster (26-30,1-4), well clear of every `blocked` cell, wall segment (all 3 sit near x0/y0 borders), decor, and entity cell on this map (cross-checked against the full street entity/decor/blocked/walls listing before placement, same blast-radius discipline as pantry_door). Ships default + awakened `visual_states` ONLY -- no flicker/chain-started state, unlike pantry_door: v1's Liscor pair is the player's EXISTING home region (the door awakening attunes both ends of ITS OWN connection at once), not a NEW region earning its own attunement beat -- the anchor-stone-per-region idiom's first genuinely NEW instance is a future region milestone's job (#10/#12/#16), which pairs a fresh anchor with its OWN attunement accomplishment in data/portals.json, zero code. Playtest hotfix #6: sprite swapped `boulder` -> `anchor_waystone` (a bespoke waystone-archway silhouette, not a rock) with the SAME amber awakened tint as pantry_door (spec \u00a72: 'Liscor amber' is the only live destination color v1 ships). The awakened light is stronger and STEADY now (energy 0.6->0.9, radius 16->22, flicker off) -- the #8 rune-glow rejection stands (target too small for legible runes), so this glow carries the whole portal read pre-interact.",
      "id": "street_anchor_stone",
      "kind": "prop",
      "cell": [
@@ -2544,7 +2544,7 @@
       10
      ],
      "display_name": "The Weathered Stone",
-     "sprite": "boulder",
+     "sprite": "anchor_waystone",
      "tint": [
       0.55,
       0.58,
@@ -2565,7 +2565,7 @@
         "counter": "door_awakened",
         "at": 1
        },
-       "sprite": "boulder",
+       "sprite": "anchor_waystone",
        "tint": [
         1.05,
         0.9,
@@ -2577,9 +2577,9 @@
          0.7,
          1.0
         ],
-        "energy": 0.6,
-        "radius": 16,
-        "flicker": true
+        "energy": 0.9,
+        "radius": 22,
+        "flicker": false
        }
       }
      ]
@@ -4644,6 +4644,10 @@
     [
      12,
      9
+    ],
+    [
+     8,
+     4
     ]
    ],
    "floor_layers": [
@@ -4783,6 +4787,7 @@
      ]
     },
     {
+     "_comment": "Playtest hotfix #5: rug_tan's real footprint (80x72 @0.4 render_scale = 32x28.8px, ~2x2 cells) is bigger than its single decor cell -- a non-blocking prop that visually occupies more than it mechanically claims reads as occluding the PC walking through it. CONSTRAINT: (8,4) is in `blocked` below for exactly this reason -- do not remove it without re-checking the sprite footprint. The room is wide open on both sides (no other blocked cell within 2 of this one), so blocking doesn't choke the approach to Selys's desk.",
      "sprite": "rug_tan",
      "cell": [
       8,
@@ -6586,6 +6591,437 @@
      11
     ]
    ],
+   "_comment_cover_skip": "Playtest hotfix #7b/7a: every blocked cell on this map is footprint for a building/fence/earthwork or the river -- none of them is bare dirt. The generic blocked-cell overlay tile (Wall_Tiles[14,4], a brown dirt/plank crop) painted a brown patch under every one of them, fighting the grass under buildings and hiding the river's own blue water tile entirely (world.gd's _build_floor paints floor_layers THEN the blocked overlay on top, per cell, unless listed in cover_skip -- the #37 mechanism). cover_skip == blocked verbatim: every cell here is already fully dressed by a real sprite or a real floor_layers tile, so skipping the generic overlay lets that real art show through instead.",
+   "cover_skip": [
+    [
+     7,
+     0
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     13,
+     0
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     8,
+     1
+    ],
+    [
+     9,
+     1
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     1
+    ],
+    [
+     12,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     8,
+     6
+    ],
+    [
+     9,
+     6
+    ],
+    [
+     10,
+     6
+    ],
+    [
+     11,
+     6
+    ],
+    [
+     12,
+     6
+    ],
+    [
+     13,
+     6
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     9,
+     7
+    ],
+    [
+     10,
+     7
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     7
+    ],
+    [
+     13,
+     7
+    ],
+    [
+     14,
+     7
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     3,
+     7
+    ],
+    [
+     4,
+     7
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     16,
+     8
+    ],
+    [
+     17,
+     8
+    ],
+    [
+     18,
+     8
+    ],
+    [
+     19,
+     8
+    ],
+    [
+     16,
+     9
+    ],
+    [
+     17,
+     9
+    ],
+    [
+     18,
+     9
+    ],
+    [
+     19,
+     9
+    ],
+    [
+     19,
+     4
+    ],
+    [
+     20,
+     4
+    ],
+    [
+     21,
+     4
+    ],
+    [
+     19,
+     5
+    ],
+    [
+     20,
+     5
+    ],
+    [
+     21,
+     5
+    ],
+    [
+     21,
+     0
+    ],
+    [
+     21,
+     1
+    ],
+    [
+     21,
+     2
+    ],
+    [
+     21,
+     3
+    ],
+    [
+     21,
+     4
+    ],
+    [
+     21,
+     5
+    ],
+    [
+     21,
+     6
+    ],
+    [
+     21,
+     7
+    ],
+    [
+     21,
+     8
+    ],
+    [
+     21,
+     9
+    ],
+    [
+     21,
+     10
+    ],
+    [
+     21,
+     11
+    ],
+    [
+     21,
+     12
+    ],
+    [
+     21,
+     13
+    ],
+    [
+     21,
+     14
+    ],
+    [
+     21,
+     15
+    ],
+    [
+     22,
+     0
+    ],
+    [
+     22,
+     1
+    ],
+    [
+     22,
+     2
+    ],
+    [
+     22,
+     3
+    ],
+    [
+     22,
+     4
+    ],
+    [
+     22,
+     5
+    ],
+    [
+     22,
+     6
+    ],
+    [
+     22,
+     7
+    ],
+    [
+     22,
+     8
+    ],
+    [
+     22,
+     9
+    ],
+    [
+     22,
+     10
+    ],
+    [
+     22,
+     11
+    ],
+    [
+     22,
+     12
+    ],
+    [
+     22,
+     13
+    ],
+    [
+     22,
+     14
+    ],
+    [
+     22,
+     15
+    ],
+    [
+     23,
+     0
+    ],
+    [
+     23,
+     1
+    ],
+    [
+     23,
+     2
+    ],
+    [
+     23,
+     3
+    ],
+    [
+     23,
+     4
+    ],
+    [
+     23,
+     5
+    ],
+    [
+     23,
+     6
+    ],
+    [
+     23,
+     7
+    ],
+    [
+     23,
+     8
+    ],
+    [
+     23,
+     9
+    ],
+    [
+     23,
+     10
+    ],
+    [
+     23,
+     11
+    ],
+    [
+     23,
+     12
+    ],
+    [
+     23,
+     13
+    ],
+    [
+     23,
+     14
+    ],
+    [
+     23,
+     15
+    ],
+    [
+     3,
+     9
+    ],
+    [
+     4,
+     9
+    ],
+    [
+     5,
+     9
+    ],
+    [
+     6,
+     9
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     2,
+     7
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     11,
+     11
+    ],
+    [
+     8,
+     11
+    ]
+   ],
    "floor_layers": [
     {
      "_pick": "Wheat field -- the owned PixelLab wang tileset, full-wheat corner bit (15, all four bits set) as a flat fill (autotile edges deferred, per handoff open-question 1's simplest resolution: ONE representative tile via the same floor_layers mechanism street/floodplains already use for banded ground).",
@@ -6752,12 +7188,12 @@
      ]
     },
     {
-     "_comment": "The village's sleep site (every expansion area ships one -- standing rule). A guest cot on the longhouse's open north lawn: UNCONDITIONAL access, same as garden_bed -- no quest gate, no requires_accomplishment, progression only ever resolves at sleep regardless of which bed triggers it. `sleep: true` is checked FIRST in interact()'s prop match (wi_game.gd) -- an on_interact_accomplishment/toast pair here would be dead code, so this entity carries none. Cell (9,4) is floor-only (no `blocked` entry needed -- entity occupancy alone blocks the cell) and PIXEL-footprint clear, not just Chebyshev-clear: village NPCs render at up to 64px tall (headman/hunter/villager, feet-anchored) and can visually overhang 3-4 cells north of their own cell, so grid-adjacency alone doesn't prove an unoccluded read -- (13,8), the first cell tried (one row south of the longhouse, `_comment` history preserved in git), sat almost fully behind riverfarm_hunter's overhang. (9,4)'s own bbox (world px, CELL=16, anchor default 0.5/1.0 unless overridden) genuinely intersects only the longhouse's own footprint, and only a 34x4px sliver at the cot's bottom edge (longhouse's cell-row 7 > this cell's row 4, so longhouse draws after/on top there) -- headman/hunter/villager/cottage_a/earthworks/anchor_stone all have zero true bbox intersection (one axis flush or clear). Also outside every riverfarm_walkthrough/_talk/_fight/_skill teleport-and-bump landing cell (nearest reserved cell is riverfarm_fight's (11,3)/(11,2) no-op-interact spot, Chebyshev distance 2) -- adding this prop cannot strand, reroute, or false-trigger any existing QA script.",
+     "_comment": "The village's sleep site (every expansion area ships one -- standing rule). A guest cot on the longhouse's open north lawn: UNCONDITIONAL access, same as garden_bed -- no quest gate, no requires_accomplishment, progression only ever resolves at sleep regardless of which bed triggers it. `sleep: true` is checked FIRST in interact()'s prop match (wi_game.gd) -- an on_interact_accomplishment/toast pair here would be dead code, so this entity carries none. Playtest hotfix #7c: moved (9,4) -> (9,5) -- the OLD cell read as floating alone in open lawn (Chebyshev distance 3 from the longhouse's own footprint), contradicting its own observe copy ('by the longhouse wall'). (9,5) is Chebyshev-ADJACENT (distance 1) to the longhouse's blocked footprint (row 6 starts immediately south) -- the cot now genuinely sits against the wall. Re-checked the SAME two hazards the original placement audit covered: PIXEL-footprint clear of every NPC overhang (headman (11,9)/villager (6,10)/hunter (13,10) are all 6+ rows south, nowhere near this north-side cell) and NOT inside the longhouse's own visible sprite span (footprint columns 8-14 include x=9, but the sprite's vertical extent reads as roof-above-row-6, not encroaching further north into row 5 the way it grazed row 4 before -- if a windowed read disagrees, shift one column off the footprint's center instead of re-opening the row).",
      "id": "riverfarm_guest_cot",
      "kind": "prop",
      "cell": [
       9,
-      4
+      5
      ],
      "display_name": "A Guest Cot",
      "sprite": "bed",
@@ -7091,7 +7527,7 @@
      ]
     },
     {
-     "_comment": "Riverfarm's OWN end of the anchor-stone-per-region idiom (portals.json's new 'riverfarm' row). Reuses `boulder` tinted per the street_anchor_stone/pantry_door VISUAL-LOG precedent for a not-yet-bespoke gated prop. Gated on door_awakened (the SAME base network every anchor shares) -- reaching this cell at all already implies riverfarm_attuned (the ONLY way here is via another anchor's menu, itself door_awakened-gated), so no separate glow state is needed.",
+     "_comment": "Riverfarm's OWN end of the anchor-stone-per-region idiom (portals.json's new 'riverfarm' row). Playtest hotfix #6: sprite swapped `boulder` -> `anchor_waystone` (a bespoke waystone-archway silhouette, not a rock), same tint precedent as street_anchor_stone. Gated on door_awakened (the SAME base network every anchor shares) -- reaching this cell at all already implies riverfarm_attuned (the ONLY way here is via another anchor's menu, itself door_awakened-gated), so the `light` below is unconditional (no visual_states gate needed) -- a stronger, steady glow every time this cell is ever seen.",
      "id": "riverfarm_anchor_stone",
      "kind": "prop",
      "cell": [
@@ -7099,7 +7535,7 @@
       5
      ],
      "display_name": "A Weathered Milestone",
-     "sprite": "boulder",
+     "sprite": "anchor_waystone",
      "tint": [
       0.55,
       0.58,
@@ -7113,7 +7549,17 @@
       }
      },
      "on_interact_accomplishment": "observed_riverfarm_anchor_stone",
-     "toast": "Cold, plain stone. Whatever it was for, it isn't for anything now."
+     "toast": "Cold, plain stone. Whatever it was for, it isn't for anything now.",
+     "light": {
+      "color": [
+       0.85,
+       0.7,
+       1.0
+      ],
+      "energy": 0.9,
+      "radius": 22,
+      "flicker": false
+     }
     },
     {
      "id": "riverfarm_hollow_path",
@@ -8686,7 +9132,7 @@
    ],
    "entities": [
     {
-     "_comment": "Invrisil 8c Task C1 (issue #12) -- the anchor-stone-per-region idiom's newest end (data/portals.json's new 'invrisil' row). Reuses `boulder` tinted coin-gold per the street_anchor_stone/riverfarm_anchor_stone precedent for a not-yet-bespoke gated prop. Gated on door_awakened (the same base network every anchor shares) -- reaching this cell at all already implies invrisil_attuned (the only way here is via another anchor's menu, itself door_awakened-gated), so no separate glow state is needed.",
+     "_comment": "Invrisil 8c Task C1 (issue #12) -- the anchor-stone-per-region idiom's newest end (data/portals.json's new 'invrisil' row). Playtest hotfix #6: sprite swapped `boulder` -> `anchor_waystone` (a bespoke waystone-archway silhouette, not a rock) -- the entity's OWN toast copy already foreshadowed this ('the frame of light waiting just under the surface'), so the swap makes the art match the text that was already there. CONSTRAINT: NO new `light` here -- this map's 8 `street_lamp` decor entries already sit at the hard 8-light-per-map budget (WIWorld._rebuild_field's assertion, spec §5); a 9th light hard-fails the map build. Every other anchor site got a stronger/steady light; this one gets the sprite-only fix. If a future pass wants the glow here too, it has to trade off one of the 8 lamps first, not just add a 9th light.",
      "id": "invrisil_anchor_stone",
      "kind": "prop",
      "cell": [
@@ -8694,7 +9140,7 @@
       8
      ],
      "display_name": "A Weathered Marker",
-     "sprite": "boulder",
+     "sprite": "anchor_waystone",
      "tint": [
       0.78,
       0.66,

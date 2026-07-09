@@ -1469,6 +1469,25 @@
   },
   "shadow": true
  },
+ "anchor_waystone": {
+  "_comment": "Playtest hotfix #6: THE portal-anchor sprite, one entry reused at every anchor-stone-per-region site (data/portals.json's contract -- street_anchor_stone/riverfarm_anchor_stone/invrisil_anchor_stone all swap their `sprite` field to this id, replacing `boulder`). Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a small freestanding stone waystone archway/doorframe silhouette with a faint painted glow in the opening -- reads as a portal, not a rock. CONSTRAINT: no runes/carvings baked into the art (the #8 rune-glow rejection stands -- target too small for legible runes; silhouette + glow carries the read, and each entity's own `light`/`visual_states` layer the runtime glow on top). Static, 64x80, 1 frame. Anchor `[0.5, 0.95]` (PIL alpha-bbox measured, bottom row 76 of 80). Per-site `tint` fields on the entities are unchanged -- the base art is neutral stone/grey-green so existing tints (cold grey-blue / weathered grey / coin-gold) still read correctly over it.",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.95
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/anchor_waystone/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     80
+    ],
+    "fps": 1
+   }
+  }
+ },
  "tree_big": {
   "render_scale": 0.3,
   "animations": {

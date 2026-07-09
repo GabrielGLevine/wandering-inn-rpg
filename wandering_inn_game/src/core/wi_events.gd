@@ -255,6 +255,18 @@ const UI_SNEAK_RENDERED := &"ui_sneak_rendered"
 ## headless the veil's fades/holds collapse to ~0 (the paced-playback precedent),
 ## so this event fires effectively synchronously right after the sleep beat.
 const UI_SLEEP_VEIL_RENDERED := &"ui_sleep_veil_rendered"
+## The veil's sleep sequence is FULLY OVER (fade back to transparent complete,
+## black hidden, line labels freed) -- emitted by src/ui/sleep_veil.gd at the
+## very end of _run_sequence, AFTER UI_SLEEP_VEIL_RENDERED (which fires at
+## line-layout time, before the read-hold/fade-out). This is the "screen is
+## the player's again" moment: consolidation_prompt.gd holds a pending offer
+## modal hidden (and its input dead) until this event, so the offer surfaces
+## with/after the sleep's own announcements, never on top of the black
+## (playtest hotfix #8). Fires for EVERY sleep sequence (offer or not) in
+## both the QA-collapsed and real-paced paths -- so event ORDER
+## (ui_sleep_veil_rendered -> ui_sleep_veil_finished ->
+## ui_consolidation_prompt_rendered) is headless-provable.
+const UI_SLEEP_VEIL_FINISHED := &"ui_sleep_veil_finished"
 ## GDI new-game opener: emitted by src/ui/sleep_veil.gd once the
 ## black cold-open's Grand Design arrival lines are laid out, carrying
 ## {lines:int} = how many opener lines were rendered. Fired ONLY on a New Game

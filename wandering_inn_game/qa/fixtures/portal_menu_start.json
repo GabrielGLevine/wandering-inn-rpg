@@ -1,10 +1,10 @@
 {
- "_comment": "portal_menu's start (FIXTURE-FIRST -- the awakening chain itself is covered live by door_awakening, so this canonical starts PAST it, door_awakened already banked). Classless, standing at (9,6) facing right in the inn -- the confirmed free interior cell immediately west of pantry_door (10,6), the SAME cell data/portals.json's `the_wandering_inn` row uses as its own arrival point (so the return trip in this script lands the PC back on the exact cell they started at, a clean round-trip proof). Issue #45 rng_state hygiene sweep: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed; the #38 method). This fixture's own canonical never resolves a fight to completion off this rng_state (either no combat fires, or combat is asserted absent/left mid-combat by design -- verified by inspecting the consuming script), so the value is cosmetic/inert for outcome purposes; still replaced with a properly-derived state (.seed=9, captured .state) for hygiene, and the canonical re-run green after the swap.",
+ "_comment": "portal_menu's start (FIXTURE-FIRST -- the awakening chain itself is covered live by door_awakening, so this canonical starts PAST it, door_awakened already banked). Classless, standing at (13,6) facing right in the inn -- the free interior cell immediately west of pantry_door (14,6, moved against the east wall by playtest hotfix #2), the SAME cell data/portals.json's `the_wandering_inn` row uses as its own arrival point (so the return trip in this script lands the PC back on the exact cell they started at, a clean round-trip proof). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
   "current_map": "inn",
   "player_cell": [
-   9,
+   13,
    6
   ],
   "player_facing": [

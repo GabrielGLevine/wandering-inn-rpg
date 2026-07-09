@@ -100,14 +100,13 @@ const BLOCKED_PROPS_BY_BIOME := {
 	## crushed to bare black squares (windowed 03_night_wolf_arena read).
 	## Field-edge register: a rock and a bush, both single-cell-verified.
 	"riverfarm_village": ["boulder", "bush_green"],
-	## Issue #30 (2026-07-08): `inn` biome (inn_cellar/merchant_warehouse,
-	## 10 blocked cells combined) had NO pool at all -- every blocked cell
-	## fell to the flat recolored tile, the exact "props-over-tiles" defect
-	## this whole mechanism exists to kill, just never extended here.
-	## Reuses `crate`/`barrel` (the SAME already single-cell-verified
-	## sprites the `street` pool uses) rather than sourcing new art --
-	## crates and barrels are, if anything, a MORE natural fit for a
-	## cellar/warehouse than a street.
+	## `inn` biome (inn_cellar/merchant_warehouse, 10 blocked cells
+	## combined): every blocked cell falls to this pool rather than the flat
+	## recolored tile ("props-over-tiles" is the defect this mechanism
+	## exists to kill). Reuses `crate`/`barrel` (the SAME already
+	## single-cell-verified sprites the `street` pool uses) rather than
+	## sourcing new art -- crates and barrels are, if anything, a MORE
+	## natural fit for a cellar/warehouse than a street.
 	"inn": ["crate", "barrel"],
 }
 
