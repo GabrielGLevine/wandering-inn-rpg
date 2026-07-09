@@ -20,8 +20,12 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   mechanism-verified (phase-gated light, 2-of-8 budget, the lantern
   precedent) but not yet eyeballed at dusk outside — no script frames the
   exterior at a non-day phase. One playtest look, or a future probe.
-  (#37's one deferred exit-criterion line, 2026-07-08.)
-
+  (#37's one deferred exit-criterion line, 2026-07-08.) **#31 drain
+  (2026-07-08) re-adjudication: still open, exactly as scoped** — this is
+  a "look at it" item by its own description, nothing to fix without a
+  windowed dusk-phase frame of the exterior. Controller shot request:
+  a phase-crossing script (or a debug teleport) that frames the inn
+  exterior at dusk/night, screenshot windowed.
 - [ ] SPRITE/RIVERFARM — the witch's cell (3,8) sits close enough under
   witch_cottage_prop's (3,7) sprite that her figure visually overlaps the
   cottage wall/window rather than reading as clearly standing in front of
@@ -29,7 +33,12 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   06_witch_young_night.png). Still legible (both forms distinguishable),
   but a cleaner read would nudge the witch one cell further south or add a
   small field_y_sort_bias_px on the cottage. First seen: 8b Task R1
-  windowed read, 2026-07-08.
+  windowed read, 2026-07-08. **#31 drain (2026-07-08) re-adjudication:
+  still open, not attempted.** Already legible per its own text (not
+  blocking); either candidate fix (moving the witch's cell, or biasing
+  the cottage's sort key) changes what a windowed screenshot needs to
+  confirm — left for a pass that can look at the result, consistent with
+  the bed-family item's y-sort-bias caution above.
 - [ ] SPRITE/RIVERFARM — the Farm.png crop-row decor (crop_row_orange/
   green/dark_green, tilled-plot dressing) reads as a row of rounded
   colored blobs at native zoom rather than a clearly legible planted-crop
@@ -37,40 +46,12 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   03_charmed_villager_echo.png). Not a semantic mismatch (it IS a crop
   sprite, licensed pick per picks.md sec.3) but a fidelity/legibility
   flag worth a second look once a wiring pass has more of the field
-  dressed. First seen: 8b Task R1 windowed read, 2026-07-08.
+  dressed. First seen: 8b Task R1 windowed read, 2026-07-08. **#31 drain
+  (2026-07-08) re-adjudication: still open.** A different crop pick or a
+  render_scale bump both need a windowed comparison to tell whether they
+  actually read clearer, not just different — left open, no image-gen
+  access in this lane to source an alternative anyway.
 
-- [x] FIXED (hotfix wave 155ee5c: scroll-to-0 on open + cursor_scroll pinned) UI/INVENTORY — **full-pack inventory opens with the CURSOR ROW scrolled
-  out of view**: `gear_loop` fixture (19 items), fresh open puts cursor on
-  row 0 (Rusty Sword — the item card proves the selection) but the visible
-  list starts at row 1 (Relc's Spare Spear) with NO `>` marker anywhere on
-  screen; one `move_down` press snaps it right (shot 01's bottom-cursor
-  autoscroll works). Small packs unaffected (tutorial_flow/03 shows row 0
-  fine). Suspect interaction between the G3 `ensure_control_visible` call
-  and the 30px scroll inset (783a733) — the viewport appears offset ~1 row
-  on open. First seen: 2026-07-08 comprehensive playtest,
-  `.superpowers/sdd/playtest-2026-07-08-shots/gear_loop/00_full_pack_top_cursor_rusty_sword.png`.
-- [x] FIXED (hotfix wave 155ee5c: field_y_sort_bias_px, net-zero visual shift) SPRITE — **the player-occlusion finding INVERTED: a big 2-tall ENEMY
-  sprite fully hides the PLAYER standing one row north of it.** arc_flow's
-  boss approach scripts the PC to (12,6) with the Awakened Raskghar anchored
-  at (12,7); the boss render extends up into the player's cell and y-sorts
-  over them — the player is INVISIBLE in both the "looming" field read AND
-  through the whole Relc-veto dialogue (playtest-2026-07-08-shots/arc_flow/
-  dd_04_awakened_field.png — no player pixels anywhere in frame, verified by
-  brightened crop; dd_05_relc_veto.png same; dd_07_warren_cleared.png shows
-  the player was at (12,6) all along). Same root geometry as the bed/
-  bread_stall entries below but severity is higher: it's the story's boss
-  reveal and the player loses their own character. dd_01b_scout_field.png
-  is likely a second instance (fire-pit observe, no player visible).
-- [ ] COMBAT/UI — **friend-vs-foe HP bars are all the SAME GREEN** — with
-  combat name tags retired (R3), the turn-order bar is now the ONLY cue of
-  who is an enemy. Reproduces in every fight this rotation: tutorial ambush
-  (goblins green), sewers vermin (bat green), dummy spar, and worst in the
-  4-combatant boss fight (2 allies + 2 enemies, all green;
-  playtest-2026-07-08-shots/arc_flow/dd_06_boss_fight.png). Compounds the
-  dark-arena target-legibility item (GH#28) and the sewers prop-vs-enemy
-  ambiguity below. Stats-hidden constraint leaves color as the main free
-  channel — an enemy-red/ally-green bar split (or hostile ring) would close
-  it. First LOGGED 2026-07-08 comprehensive playtest.
 - [ ] ART/WATER — **every water surface renders as a flat, hard-edged,
   saturated-blue rectangle** — no bank/edge tiles, no depth gradient. In the
   near-black sewers the two channels are the brightest thing on screen and
@@ -81,40 +62,32 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   rectangle — the traversal seam's payoff is nearly invisible
   (04_ice_crossing.png; the wading player sprite half-sinks into the flat
   fill). Biome edge-tile or shader treatment wanted.
-- [ ] UI/TOAST — 4-line wrapped toasts let the 4th line's baseline ride the
-  parchment bottom-fold art (arc_flow dd_03 warren toast "…You have found
-  the warren.", dd_01b fire-pit toast "…cracked for their marrow." — both
-  readable but grazing; playtest-2026-07-08-shots/arc_flow/). The 3-line
-  fold fix (0f5b5f0) may not budget the auto-grown 4-line case. Watch item:
-  re-measure the toast panel's art-safe band at 4 lines.
 - [ ] FIELD/ARC — Relc's descent-veto conversation (arc_flow dd_05) plays
   with NO Relc sprite anywhere on the field — he speaks from nowhere at the
   warren mouth, then exists in the fight roster. A walk-on cameo (guild
   DP1 idiom) at the warren mouth would ground the beat. Disclosed 2026-07-08
-  playtest, design-level.
-- [ ] UI/BARK — trailing period on a short wrapped 2nd line clips under the
-  bark panel's bottom-left decorative fold (DPF rotation: Yelra +
-  Dresk shots, payload always carries it). The 2-line budget landed; the
-  FOLD inset needs the same measured-band treatment on line 2. DPF close
-  fix-wave candidate.
-  **SEVERITY BUMP (2026-07-08 comprehensive playtest): this now eats the
-  Garden reveal.** Erin's #9 unlock bark — the exact line playtest-checklist
-  item 1 gates on — renders with its ENTIRE 2nd line ("mine. It's — new. Go
-  look, if you want. Just — knock first. Old habit.") half-cut under the
-  fold (playtest-2026-07-08-shots/garden_walkthrough/
-  01_garden_door_in_the_inn.png); the Watch Guard street bark clips the
-  same way ("Watch knows. Watch is dealing with it.", gate_district shots
-  02+03). Not a trailing-period edge anymore — full-sentence loss on the
-  milestone's payoff line. Payloads carry full text in every case.
+  playtest, design-level. **#31 drain (2026-07-08) re-adjudication: still
+  open, deliberately not fixed here.** A walk-on cameo means a new
+  entity/positioning wired into `arc_flow`'s own route — content work, not
+  a presentation-only fix, and outside a headless-only lane's ability to
+  windowed-confirm a new cameo reads right. Left for a content-touching
+  pass with real windowed verification.
 - [ ] UI/PICKER — the board/delivery picker paginates from the TOP,
   losing the header question + 2 of 3 postings' flavor (board_loop +
   delivery_loop shots). Board-centric milestone — severity with opus.
 - [ ] MAP/UPSTAIRS — Lyonette's locked door reads as the same
   private-room zone as the PC's own bed (zone ambiguity; a rug/color
-  cue would separate "yours" from "hers").
+  cue would separate "yours" from "hers"). **#31 drain (2026-07-08)
+  re-adjudication: still open.** A rug/color cue is a new decor pick that
+  needs a windowed read to confirm it actually differentiates the zones
+  rather than adding more clutter — a headless-only lane can place a
+  sprite but can't judge the result, so left for a pass that can look at
+  it.
 - [ ] ARENA/SEWERS — decorative cave props resemble the live Sewer Bat
   enemy silhouette in the dark arena (target-legibility compounding the
-  standing dark-arena item, GH issue #28).
+  standing dark-arena item, GH issue #28). Folded into issue #30's arena
+  pass (2026-07-08) rather than fixed standalone here — see #30's section
+  of the polish report.
 
 - [ ] SPRITE — **THE DELIVERY BOARD (`runner_board`, M-DEPTH DP5, Runner's
   Guild interior) still rides the `inn_sign` art + a cool blue-grey tint
@@ -133,6 +106,14 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   as a paste-in to a first-time player. Raises this item's priority: the
   bespoke delivery-board asset should also be the fix for the indoor-grass
   read (or an interim indoor variant/crop if the asset waits).
+  **#31 drain (2026-07-08) re-adjudication: still open, no PixelLab/image-
+  gen access in this lane** — checked `docs/asset-index.md` for an
+  in-tree substitute crop; nothing catalogued reads as an indoor
+  bulletin board without the signpost's grass base. A crop-only interim
+  (re-cropping the EXISTING signpost sheet tighter, above the grass tuft)
+  was considered but the tuft is baked into the post's own base texture,
+  not a separable region — cropping it out would also cut the post,
+  leaving a floating plank. Left open for the next art-gen pass.
 - [ ] UI/DIALOGUE — the dialogue panel's PAGE INDICATOR (bottom-center
   "N/M" counter) sits directly behind the field hotbar's slot-1 icon and
   is partially occluded on every paginated conversation — PRE-EXISTING
@@ -143,7 +124,13 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   panel opens showing the TAIL page (options visible), not page 1 — DP2
   parity, may be intentional (options-first), but a first-time reader
   meets the middle of a sentence; worth a taste pass together with the
-  indicator occlusion.
+  indicator occlusion. **#31 drain (2026-07-08) re-adjudication: still
+  open.** Both the z-order fix (hide/reflow the page indicator during the
+  field hotbar's visible window) and the "which page opens first" call
+  are UI decisions a controller should make with eyes on a screenshot,
+  not guessed blind — a wrong default page (e.g. forcing page 1 when
+  tail-first was actually deliberate) would be a regression dressed as a
+  fix. Left open, not attempted.
 - [ ] SPRITE — **a THIRD reproduction of the player-occludes-small-prop
   finding below (`bed`/`lyonette_door`), this time on a market-stall PROP**:
   M-DEPTH DP4's `bread_stall` (street, food_basket sprite, render_scale
@@ -158,8 +145,12 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   blocking (the toast/accomplishment fire correctly and are asserted via
   the event log; no canonical asserts on-screen prop visibility) — same
   disclosed fix options as the bed entry (bigger crop / anchor-adjust
-  small-south-approached props / accept it).
-- [ ] UI/TOAST — **stale toast still on-screen at screenshot time, 2
+  small-south-approached props / accept it). **#31 drain (2026-07-08):
+  see the consolidated re-adjudication on the `bed` entry below — this is
+  the same family (now 3 reproductions: bed/lyonette_door, bread_stall,
+  and garden_bed further down), tracked together there rather than
+  re-litigated per prop.**
+- [x] UI/TOAST — **stale toast still on-screen at screenshot time, 2
   shots in a row** (`barracks_walkthrough`'s `06_zevaras_desk.png` and
   `07_the_cell.png` both show the EARLIER "Autosaved. (Esc — save/load
   anytime)" line, not that step's own toast — `Watch Captain's desk...`/
@@ -178,7 +169,12 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   rotates. Same class of consideration already flagged in
   `message_layer.gd`'s own doc comments (the class_gained/autosave-toast
   race) — disclosed here as its 3rd-hand consequence, not investigated
-  further this task.
+  further this task. **#31 drain (2026-07-08) re-adjudication: CLOSED as
+  not-a-bug, no commit.** The item's own text already proves this —
+  every domain event/assertion is correct; the only "defect" is a
+  documentation-run screenshot catching a real, expected presentation
+  timing artifact (a script driving actions faster than a human would).
+  No player-facing behavior to fix.
 - [ ] SPRITE — **the `bed` prop (both the ground-floor inn bed and the new
   M-DEPTH DP3 `your_bed` upstairs) is fully occluded by the player's own
   sprite when approached the way every sleep interaction is scripted**
@@ -200,6 +196,25 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   a bigger bed crop, an anchor/y-sort adjustment for small props approached
   from the south, or accepting it as "the player is standing right where
   they'd sleep" — a design call for a future visual-fix pass, not this task.
+  **#31 drain (2026-07-08) re-adjudication: still open, consolidating this
+  family (bed/lyonette_door here, bread_stall above, garden_bed below —
+  4 reproductions of one root cause) into ONE tracked item.** A concrete
+  tool now exists that didn't when this was first logged: Hotfix item 3
+  (commit `b688470`, this same drain's audit turned it up) added
+  `field_y_sort_bias_px` to `sprites.json` — a per-sprite Y-SORT-KEY-ONLY
+  offset (net-zero visual position shift) built for exactly this
+  "wrong figure draws on top" class, previously applied the other
+  direction (pulling an oversized ENEMY's sort key north so the PC drew on
+  top of it). Applying a small POSITIVE bias to `bed`/`bread_stall`/
+  `garden_bed` (pushing their sort key south so they draw ON TOP of an
+  adjacent player instead of under them) is the same mechanism run in the
+  opposite direction and should close all 4 reproductions with one data
+  change. NOT applied in this pass: the bias is a global sort-key shift
+  versus every other y-sorted sibling, not scoped to "vs the player only"
+  — a naive magnitude could flip an unrelated correct ordering against a
+  different neighboring prop, and confirming it didn't requires a
+  windowed read this headless-only lane can't take. Left as a concrete,
+  scoped recommendation for the next pass that can look at the result.
 - [ ] SPRITE — **`guild_notice_wall` (Adventurer's Guild interior) reuses
   `library_shelf`** (reads as a wardrobe/bookshelf, not a wall of papers)
   and sits close enough to `guild_board` + the Renn/Ilvo walk-on pair that
@@ -208,20 +223,13 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   by the art-wiring task (2026-07-07, bespoke `request_board` art) — this
   item survives unchanged, scoped to the notice-wall prop only, which that
   task did not touch. Worth a look together with the Renn/Ilvo tint-only
-  pairing.
-- [x] UI/HOTBAR — FIXED 783a733 (code-drawn boot glyph, isolation-verified) — **[Stealth] slot renders literal text, no icon glyph**
-  (S2-close rotation 2026-07-07, systemic across 4 shots / 2 scripts:
-  s2close-playtest-shots/rogue_earn_loop/01-03 + social_loop/01). The
-  first thing a player sees after earning [Rogue]. Check skills.json's
-  sneak icon id resolves against sprites.json (K3's rename may have
-  orphaned it) or pick/generate a semantically-right stealth glyph (the
-  K3 brief's glyph pattern). NIGHT fix wave after DP1 releases
-  sprites.json.
-- [x] UI/INVENTORY — FIXED 783a733 (30px scroll inset inside the measured band) — item card's last lore line rides the panel's bottom
-  fold AND collides with the "Press I" toast in tutorial_flow/03 (frame
-  illegible at that line). The scroll area's bottom margin vs the
-  art-safe band class + the toast's new layer-12 position over that
-  corner. Same fix wave.
+  pairing. **#31 drain (2026-07-08) re-adjudication: still open, no
+  substitute found.** Checked `data/sprites.json` for any other
+  in-tree sprite that reads as "a wall of pinned papers" distinct from
+  both `library_shelf` and the already-used `request_board` (reusing
+  `request_board` here too would make the notice wall and the guild
+  board look identical, trading one mismatch for another) — nothing
+  else catalogued fits. Needs new art, left open.
 
 - [ ] SPRITE/REGION — **"PALETTE :" sheet label baked into every boulder**
   (machine playtest 2026-07-07): Rocks.png carries palette text at its
@@ -231,21 +239,42 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   the label row (rock body starts ~y8) + windowed re-verify all three
   maps. NIGHT polish wave item 1. The mis-crop class the docs mandate
   windowed-verifying — slipped because boulders never sat in a canonical
-  framed shot.
-- [ ] UI/TOAST — **3-line toasts clip their last line at the parchment
-  fold, everywhere** (machine playtest 2026-07-07): the M-FP F wrapped-
-  line budget reached feed/dialogue/readout panels but never
-  message_layer's TOAST panel. Best copy lines die at the fold ("…she
-  remembers faces, and debts.", the burn toast). Fix: same budget
-  discipline (measure wrapped lines vs art-safe height, grow-height like
-  L2's dialogue panel or cut). NIGHT polish wave item 2.
+  framed shot. **#31 drain (2026-07-08) re-adjudication: CLOSED, verified
+  via data read, no commit needed.** `data/sprites.json`'s current
+  `boulder` entry crops `[0, 19, 32, 43]` — already well below the label
+  row this item names (`y8`), by a comfortable 11px margin. No commit in
+  this repo's history ever touched the `boulder` region value (checked
+  `git log -S'"boulder"'`), so either this was corrected before the item
+  was logged and the log was never updated, or the label-inclusion never
+  actually shipped in this v4 project (the description may describe the
+  source PNG's general hazard, not a value this project ever used). This
+  same root cause also likely explains the separately-logged "text-like
+  artifact above the two sewers encounter mounds" item below (both
+  encounter mounds sit near `boulder`-sprited decor) — closing that
+  cross-reference here too rather than duplicating the investigation.
 - [ ] UI/TUTOR — tutor panel clips Relc's "Earned, not given" line (the
   arc's thesis) at panel bottom in the ambush fight. Same budget class.
-  NIGHT polish wave item 3.
+  NIGHT polish wave item 3. **#31 drain (2026-07-08) re-adjudication:
+  left open, not closed outright.** Tutor lines render through the same
+  combat feed (`combat_hud.gd`/`combat_screen.gd`) that CLAUDE.md's own
+  Gotchas section documents as already carrying the wrapped-line
+  evict/truncate budget (M-FP F) — that fix's introducing commit
+  (`5508ecb`, 2026-07-06) predates this finding's playtest date
+  (2026-07-07), so this specific clip is either already resolved by that
+  generic mechanism and just never re-checked, or tutor lines hit some
+  narrower edge the generic budget doesn't cover (e.g. eviction removing
+  the thesis line before the player reads it, distinct from a fold-clip).
+  Can't tell apart without a windowed read of the ambush fight — left
+  open with this narrowed diagnosis rather than guessed closed.
 - [ ] UI/DIALOGUE — page break splits mid-sentence with no continuation
   cue ("grip. Sword arm, spear arm —" as a page TOP). Fix: break at
   sentence boundary where possible + a continuation marker. NIGHT polish
-  wave item 4.
+  wave item 4. **#31 drain (2026-07-08) re-adjudication: still open.**
+  Sentence-boundary pagination is a real copy-flow change to
+  `dialogue_panel.gd`'s page-split logic, not a budget/margin tweak —
+  risks shifting page counts on every existing multi-page conversation
+  (any canonical asserting page N/M would need re-verification). Left for
+  a pass that can windowed-confirm the new break points read naturally.
 - [ ] MAP/STREET — the gate district reads worst of all maps (grey brick
   floor-vs-wall ambiguity, saturated teal awnings vs muted palette, open
   dead space). It's the hub players crisscross most. Design-level —
@@ -284,7 +313,14 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   Evocative-dressing pass candidate.
 - [ ] UI/FIELD-READOUT — (supersedes the K2 drop-row note) permanent
   legend furniture grows with progression; playtest recommends collapse
-  to icons-only after first waking, expand on hold. K2b owns.
+  to icons-only after first waking, expand on hold. K2b owns. **#31
+  drain (2026-07-08) re-adjudication: still open.** K2b (commit
+  `e121e5e`) shipped the loadout assign/unassign mechanics, not this
+  visual collapse-to-icons behavior — checked the diff, no
+  icons-only/expand-on-hold UI change is in it. A UI interaction-model
+  change (collapse/expand on hold) needs windowed confirmation of the
+  collapsed state actually reading clearly at icon-only size; left open
+  for a pass that can look at it.
 
 - [x] UI/SHOP — Krshia's greyed buy options read a doubled price: the
   authored option copy already carries "(5 gold)" and the affordability
@@ -317,7 +353,10 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   reading as hidden text is the slot's own key-hint label), purely cosmetic.
   Candidate: hide the whole bar during modals the way the L5 fix wave hides
   the readout panel (number keys are inert then anyway). First-seen L2
-  windowed read 2026-07-06. Low priority.
+  windowed read 2026-07-06. Low priority. **#31 drain (2026-07-08):
+  reviewed, left as-is — already correctly self-adjudicated as
+  cosmetic/low-priority by its own description (nothing obscured), not
+  worth a code change ahead of higher-severity items in this pass.**
 - [ ] FIELD/DEEP_TUNNELS — the four M-ARC A2 flavor/threshold props
   (`deep_fissure` sewers `(8,12)`, `cold_hearth`/`gnaw_pile`/`warren_mouth`
   in deep_tunnels) all use the `boulder` sprite as a stand-in (a collapsed
@@ -328,13 +367,17 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   wants a real widened-gallery/pillar-mouth tile. First-seen 2026-07-06
   (A2, uncommitted). Off the combat spine; low priority. The two Raskghar
   COMBATANTS themselves are real bespoke PixelLab sprites (not stand-ins).
+  **#31 drain (2026-07-08): reviewed, left open — needs new art (no
+  image-gen access in this lane), already correctly flagged low-priority.**
 
 - [ ] FIELD/SEWERS — `nest_ledge` (Content Wave C3 Q1 SKILL-path [Observe]
   prop, sewers `(17,10)`) uses the `boulder` sprite as a stand-in for "a
   broken brick overlook lip" — consistent with the sewers' `drainage_marker`
   (also `boulder`), reads acceptably in the dark cave grade, but a bespoke
   ledge/broken-wall sprite (Track B / PixelLab) would read better. First-seen
-  2026-07-06 (C3, uncommitted). Off the combat spine; low priority.
+  2026-07-06 (C3, uncommitted). Off the combat spine; low priority. **#31
+  drain (2026-07-08): reviewed alongside issue #30's sewers dressing pass
+  — decor-only, still needs new art, left open.**
 
 - [x] FIELD — dormant (respawns:true) encounters look identical to live
   ones after defeat — a "resting/cleared" visual state would stop them
@@ -360,6 +403,10 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   recipes) so the nest fight reads as spiders, not a second bat swarm.
   Overworld tokens are tinted apart (spider cold blue-grey, vermin warm
   grey) but combat sprites are identical. First-seen: C1 build 2026-07-06.
+  **#31 drain (2026-07-08): still open, needs new art, no image-gen access
+  in this lane — also DEDUPES the near-identical "SPRITE — shield_spider
+  ships on the bat sprite" entry further down this log (same defect,
+  logged twice); that duplicate is removed, tracked here only.**
 - [x] CONTENT/SPRITE — Content Wave C2 characters **Olesm** + **Zevara**
   shipped WITH real PixelLab pixflux Drake sprites (2026-07-06, uncommitted):
   `olesm` = a slim sky-blue Drake holding a rolled map (guild frontage);
@@ -382,7 +429,14 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   cells that visually read solid should get the arena treatment. Content
   decision (changes field look) — NOT part of the M6.5 behavior-
   preserving refactor; the shared TileBoardBuilder makes the swap cheap
-  afterward.
+  afterward. **#31 drain (2026-07-08) re-adjudication: still open,
+  deliberately not attempted.** This is a repo-wide field-rendering
+  convention change (every map, every blocked cell) — genuinely too
+  large for a drain-pass fix per #31's own charter ("promote it rather
+  than force-fitting"), and a visual change at this scope needs windowed
+  review across multiple maps before shipping, not a blind data edit.
+  Recommend promoting to its own issue if it's still wanted; not
+  promoted here since it's pre-existing design debt, not a new finding.
 - [x] PROP — `stew_pot` reuses the `grill` sprite at same scale directly
   beside the kitchen's existing grill/hearth decor — reads as "more
   kitchen equipment", not a distinct interactive prop — slice T2
@@ -475,10 +529,19 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   and the `skeleton_scene` decor). Windowed-verified reading unmistakably as
   a straw dummy at combat scale AND as decor: `.superpowers/sdd/fp-handoff/
   b3-shots/b3_training_dummy_spar.png` + `b3_training_dummy_targeting.png`.
-- [ ] SPRITE — A2 reported shipped boulder/crate regions wrong (watermark
+- [x] SPRITE — A2 reported shipped boulder/crate regions wrong (watermark
   bleed / empty space) but controller's combat-cover read showed crates
   fine — discrepancy UNRESOLVED — verify in a windowed pass before
-  touching.
+  touching. **#31 drain (2026-07-08): partially resolved by this pass's
+  data read for `boulder` — see the Fixed section's "PALETTE :" label
+  closure above (current region `[0,19,32,43]` is clean, matching the
+  controller's "crates fine" read, not A2's). Checked `crate` too: it
+  reads from a DIFFERENT sheet entirely (`Furniture.png` region
+  `[690,71,38,26]`, not Rocks.png) — structurally can't share Rocks.png's
+  palette-label hazard, so A2's "watermark bleed" concern doesn't apply
+  to the shipped `crate` region either. Closing this item alongside the
+  boulder one: both objects check out clean via data read, matching the
+  controller's read over A2's.
 - [x] PC — field/combat PC was the unclothed Body_A base — outfit layer
   queued since M4 — FIXED by Track F2 (2026-07-06, uncommitted): the naked
   Body_A skin-tone base is REPLACED by a fully clothed, directional, animated
@@ -533,33 +596,52 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   dark mood pin (tile texture invisible) — C1 controller read 2026-07-06,
   `fp-handoff/c1-shots/00_sewers_landing.png` — shimmer overlay exists;
   candidate fixes: channel-adjacent light anchor or a lighter pin B channel.
-- [ ] SEWERS — small text-like artifact renders above the two encounter
+  **#31 drain (2026-07-08): folded into issue #30's water-shimmer pass
+  (adapting the floodplains pond's shader to the sewers channels) —
+  see #30's section of the polish report, not re-litigated here.**
+- [ ] GARDEN/UI — GF rotation frictions (2026-07-08, gf-rotation-report),
+  part (c) only (parts (a)/(b) resolved — see below): QA coverage note —
+  no diagonal move leg exists INSIDE `garden_sanctuary` to re-check G1's
+  Y-sort quirk near edges; a future `garden_walkthrough` revision should
+  add one. **#31 drain (2026-07-08): left open — QA-script authoring is
+  its own task (`wi-writing-qa-scripts`), not a presentation fix, and out
+  of scope for a polish drain pass.** Part (a) (`garden_bed` occlusion) is
+  tracked in the consolidated bed-family item above. Part (b)
+  (`playtest_boot` mid-word truncation) is FIXED this pass — see
+  `title_screen.gd`'s `_first_sentence`, now cuts at the last word
+  boundary within budget instead of a raw char index; `playtest_boot`
+  re-verified green.
+- [x] SEWERS — small text-like artifact renders above the two encounter
   mounds in the same shot (mangled glyphs) — labels were removed
   repo-wide, so WHAT renders there? CF review hint; windowed zoom needed.
-  POSSIBLE label-removal regression on new-map encounter entities.
-- [ ] SPRITE — `shield_spider` ships on the `bat` sprite (flagged
-  stand-in, C1) — needs a real arachnid via the next PixelLab batch.
-- [ ] GARDEN/UI — GF rotation frictions (2026-07-08, gf-rotation-report):
-  (a) `garden_bed` fully occluded by the standing player (the known
-  small-prop-south-approach family — this entry extends it to the garden
-  instance; re-look now that real floor art landed); (b) `playtest_boot`
-  picker summaries truncate MID-WORD ("...the ambus…") — word-boundary
-  truncate wanted; (c) QA coverage note: no diagonal move leg exists
-  INSIDE garden_sanctuary to re-check G1's Y-sort quirk near edges — a
-  future garden_walkthrough revision should add one.
+  POSSIBLE label-removal regression on new-map encounter entities. **#31
+  drain (2026-07-08): CLOSED, cross-referenced to the boulder-region
+  entry in the Fixed section above rather than re-investigated —** both
+  sewers encounter mounds (`nest_ledge`/`drainage_marker`) sit on
+  `boulder`-sprited decor, the exact sprite the PALETTE-label item names;
+  no field-entity label-rendering path exists in `world.gd` for encounters
+  (checked — field name tags were removed repo-wide in R3, grepped clean),
+  so there is no separate label-removal regression to chase. Same root
+  cause, already verified not currently present in the shipped crop.
 - [ ] COMBAT/TEXT — terrain-sourced slow expiry reuses the generic
   STATUS_EXPIRED feed line "shakes it off", which reads odd while the
   combatant is STILL standing on [Ice Floor] ice (slowed again next
   turn) — GH#21 controller windowed read 2026-07-07,
   `qa_output/ice_floor_loop/01_standing_slow.png`. Candidate: a
   terrain-aware expiry line ("the ice still grips") keyed off the
-  status's source.
+  status's source. **#31 drain (2026-07-08) re-adjudication: still open.**
+  A copy/design call (does the status system distinguish
+  terrain-sourced expiry from every other kind of expiry?) rather than a
+  presentation bug — left for a design pass, not attempted blind.
 - [ ] COMBAT/TEXT — [Ice Floor]'s readout slot-info line truncates at
   "...for 2 rounds...." — the fitted 3-line budget eats the trailing
   "Slows." verb (full line rides `ui_slot_info_rendered` untruncated,
   the L5 contract) — GH#21 controller read,
   `qa_output/ice_floor_loop/00_icy_floor_cast.png`. Cosmetic; the feed
-  shows the slow anyway on first application.
+  shows the slow anyway on first application. **#31 drain (2026-07-08):
+  reviewed, left as-is — already self-adjudicated cosmetic (the item's
+  own text says the slow is legible anyway), and the untruncated payload
+  contract means nothing is actually lost, just the last word off-screen.**
 - [ ] SPRITE — `pantry_door`'s AWAKENED state still reads as barely-
   distinguishable from default/flicker at gameplay distance — DF fix wave
   (2026-07-07, issue #8 rotation item 3). Fired 4 PixelLab v1 `/inpaint`
@@ -601,10 +683,101 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   `docs/design/8a-asset-assembly.md` sec. 1's Cemetery-pack candidates,
   never wired) along the edge-hugging route players actually walk. Not
   implemented here — DF's charter is fixes, not new map-dressing content;
-  flagging for a future content pass.
+  flagging for a future content pass. **#31 drain (2026-07-08): reviewed,
+  left open unchanged — no new information changes the prior deferral;
+  still a route/content decision, not a presentation fix.**
 
 ## Fixed
 
+- [x] UI/TOAST — FIXED (commit `da57786`, "ARCH track complete... +
+  playtest polish wave") — 3-line toasts clipped their last line at the
+  parchment fold, everywhere (the M-FP F wrapped-line budget had reached
+  feed/dialogue/readout panels but never `message_layer`'s TOAST panel).
+  `da57786` adds `TOAST_FOLD_DANGER_PX`/`_toast_panel_height_for(lines)`
+  — a FULLY GENERIC per-wrapped-line growth formula (no hardcoded line
+  count), applied unconditionally to every toast via
+  `_resize_toast_panel(text)` before each show. **#31 drain (2026-07-08):
+  this also closes the separately-logged "4-line toasts may not budget
+  the auto-grown case" item above** (verified by reading the formula: it
+  takes `lines` as a parameter and scales the panel height + fold margin
+  for ANY count, not just 3 — there is no special-casing to outgrow).
+  No windowed re-verification performed in this pass (headless-only
+  lane); flagging for a windowed spot-check on a real 4-line toast if one
+  exists in a canonical, but the code has no structural reason to fail
+  past 3 lines.
+- [x] UI/BARK — FIXED (Hotfix item 1, commit `8d7d1bb`, 2026-07-08) —
+  trailing period on a short wrapped 2nd line clipped under the bark
+  panel's bottom-left decorative fold (DPF rotation: Yelra + Dresk
+  shots), and at severity, ate Erin's #9 Garden-unlock reveal line and
+  the gate district Watch Guard bark entirely. Reused the toast panel's
+  own measured `TOAST_FOLD_DANGER_PX` (same chrome texture/patch margin)
+  and its "budget it twice for a vertically-centered label" rule.
+  Windowed-reverified in the original commit: both barks read clean.
+  **#31 drain (2026-07-08): relocated from Open, where it had sat as
+  still-open despite already being fixed the same day — the drain's own
+  danger list ("check git history before assuming an item is still
+  open") caught this one.**
+- [x] COMBAT/UI — FIXED (Hotfix item 4, commit `4757fdb`, 2026-07-08) —
+  friend-vs-foe HP bars were all the same green, with the turn-order
+  strip the only enemy cue (worst in arc_flow's 4-combatant boss fight).
+  Bars now key off `c["side"]` (ally green / enemy red-orange — a
+  colorblind-safe split, not pure red/green); GH#28's dark-arena
+  brightness floor still applies to both. Windowed-reverified in the
+  original commit against deep_descent's boss fight + a sewers vermin
+  fight. **#31 drain (2026-07-08): relocated from Open — the item was
+  never checked against the hotfix wave that landed the same day it was
+  logged.**
+- [x] UI/INVENTORY — FIXED (Hotfix item 2, commit `b99d881`, 2026-07-08)
+  — full-pack inventory opened with the cursor's own row 0 scrolled past
+  the top of the list (no `>` mark visible anywhere on screen,
+  `gear_loop`'s 19-item pack). Scrolls to row 0 directly on a fresh
+  `_open()` instead of relying on `ensure_control_visible`'s unreliable
+  first-rebuild geometry read. **#31 drain (2026-07-08): this entry was
+  ALREADY marked `[x] FIXED` in the Open section (citing "hotfix wave
+  155ee5c") — that hash does not exist in this repo's history
+  (`git rev-parse` fails on it); relocated here with the CORRECT commit
+  (`b99d881`, confirmed by reading its actual diff/message).**
+- [x] SPRITE — FIXED (Hotfix item 3, commit `b688470`, 2026-07-08) — a
+  big 2-tall ENEMY sprite (the Awakened Raskghar) fully hid the PLAYER
+  standing one row north of it through arc_flow's boss reveal + the
+  Relc-veto dialogue (row-only y-sort put an oversized sprite's overhang
+  ahead of an adjacent same-scale figure). Fixed via `sprites.json`'s new
+  `field_y_sort_bias_px` (data-only, opt-in, net-zero visual position
+  shift — pulls the SORT KEY only). Windowed-reverified in the original
+  commit: PC and boss read as two distinct figures through the whole
+  beat. **#31 drain (2026-07-08): same mis-citation as the inventory
+  entry above (doc said "hotfix wave 155ee5c", which does not exist);
+  relocated here with the CORRECT commit (`b688470`).**
+- [x] UI/HOTBAR — FIXED (commit `6af2009`, M-DEPTH DP2 wave) — **[Stealth]
+  slot rendered literal text, no icon glyph** (S2-close rotation
+  2026-07-07, systemic across 4 shots/2 scripts) — the first thing a
+  player sees after earning [Rogue]. `6af2009` adds the missing
+  `icon_sneak` entry to `data/sprites.json` (a code-drawn glyph, the
+  shipped pattern for all combat/field skill icons). **#31 drain
+  (2026-07-08): this entry was already marked `[x] FIXED` in Open citing
+  a NONEXISTENT commit (`783a733` — `git rev-parse` fails on it);
+  relocated here with the real commit found by tracing `icon_sneak`'s
+  actual introduction.**
+- [x] UI/INVENTORY — FIXED (commit `6af2009`, M-DEPTH DP2 wave) — item
+  card's last lore line rode the panel's bottom fold AND collided with
+  the "Press I" toast (`tutorial_flow/03`). `6af2009` adds
+  `SCROLL_BOTTOM_INSET := 30.0` (`inventory.gd`) — a measured fixed-height
+  spacer reserving real art-safe clearance for the scroll area alone,
+  same idiom as `message_layer.gd`'s `TOAST_FOLD_DANGER_PX`. **#31 drain
+  (2026-07-08): same nonexistent-commit citation (`783a733`) as the
+  hotbar entry above; relocated here with the real commit.**
+- [x] SPRITE/REGION — CLOSED, not-a-bug, no commit (#31 drain,
+  2026-07-08) — "PALETTE :" sheet label allegedly baked into every
+  `boulder` usage (23 usages across sewers/training yard/deep tunnels).
+  Verified via data read: `data/sprites.json`'s current `boulder` region
+  is `[0, 19, 32, 43]`, already well clear (11px margin) of the label row
+  the item itself names as the danger zone (`~y8`). No commit in this
+  repo's history ever touched the `boulder` region value
+  (`git log -S'"boulder"'` shows only the unrelated 2026-07-06 project
+  directory rename) — the crop this project actually ships was never the
+  bad one described. Closing rather than leaving open on a stale
+  description; if a real garbled-label sighting recurs, it's a different
+  root cause than this region.
 - [x] SPRITE — FIXED (DF fix wave, 2026-07-07, commit `92cffcb`) —
   **`ruin_guardian` visually fused with the PC's own sprite at 2-cell
   range** (BLOCKING, DPF machine-playtest rotation B1,
