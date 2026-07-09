@@ -11224,9 +11224,9 @@
      "display_name": "Wilovan",
      "sprite": "pc_gnoll_m",
      "tint": [
-      0.62,
-      0.7,
-      0.56
+      0.75,
+      0.8,
+      0.68
      ],
      "facing": "down",
      "observe": "A Gnoll in a vest cut sharper than his manners need to be, tall hat squared like it's holding a rank. He watches the room's exits before he watches you.",
@@ -11244,7 +11244,7 @@
        "text": "Evening, sir. Fine weather for good behavior."
       }
      ],
-     "_comment_tint": "FIX ITERATION 3: [0.42,0.5,0.4] -> [0.62,0.7,0.56] -- the marquee NPC must read at a glance (controller windowed verdict: still a silhouette after the mood lift). Keeps the dark-green dapper-vest identity, materially brighter under the parlor grade; tint multiplies the rig, so the old values cut every channel roughly in half."
+     "_comment_tint": "Lifted to [0.75,0.8,0.68] -- as the marquee NPC, Wilovan must read clearly against the parlor's warm low-light grade; tint multiplies the rig, so low channel values darken him more than ambient decor. Keeps the dark-green dapper-vest identity (channel ratios preserved), just materially brighter."
     },
     {
      "_comment": "THE BED RULE (standing, plan's user-ratified shape 3): the parlor's guest couch, sleep:true, unconditional once the parlor is reachable (no quest gate -- reaching this room already required the door chain: portal -> boulevard -> alleys door -> parlor door, no shortcut exists). Reuses the EXISTING `bed` sprite verbatim (Interior_Props_01.png, frame 34x44, render_scale 0.375, default anchor [0.5,1.0]) -- the SAME already-shipped asset the inn's own bed uses, not a new pick: rendered footprint is ~12.75px wide / ~16.5px tall, i.e. it overhangs its OWN cell's north edge by well under 1px and stays fully inside its own cell on every other axis (measured against CELL=16px) -- functionally self-contained, the lowest-risk placement shape available, chosen specifically to satisfy the render-bbox placement discipline (the Riverfarm cot lesson) without a windowed check. Cell (2,7) is deep interior (open per the border-blocked computation above), 4 cells from Wilovan (6,3) and 4 cells from the table (6,5) -- no neighbor decor shares (2,6)/(2,8)/(1,7)/(3,7), so the sub-1px north overhang lands on bare floor.",
