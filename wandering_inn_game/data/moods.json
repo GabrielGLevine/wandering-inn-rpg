@@ -293,22 +293,23 @@
    "vignette": 0.48
   },
   "brothers_parlor": {
+   "_comment": "C1 FIX WAVE (controller windowed read: 'brown murk -- Wilovan a silhouette, the rug invisible'). Lifted to sit ON the shipped warm-dim legibility floor rather than below it: inn_upstairs' time-invariant [0.85,0.72,0.55]/0.4 is the codebase's own proven 'candlelit room that stays legible' pin (and the 8b night-witch fix established characters must read under the grade) -- this card lands at the same floor, one step warmer in the blue channel ([0.85,0.72,0.58]) so it stays distinct from inn_upstairs' exact grade, vignette eased 0.42->0.38. The hero-light-over-the-card-table contrast survives the lift (the table light's own energy was raised 0.9->1.0 in the same fix, mercantile decor entry).",
    "day": [
+    0.85,
     0.72,
-    0.62,
-    0.52
+    0.58
    ],
    "dusk": [
+    0.85,
     0.72,
-    0.62,
-    0.52
+    0.58
    ],
    "night": [
+    0.85,
     0.72,
-    0.62,
-    0.52
+    0.58
    ],
-   "vignette": 0.42
+   "vignette": 0.38
   }
  },
  "arena_moods": {

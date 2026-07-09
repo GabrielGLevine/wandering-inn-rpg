@@ -8200,11 +8200,11 @@
    ],
    "floor_layers": [
     {
-     "_pick": "The marble plaza patch around the fountain -- OWNED wang tileset, pure-marble corner bit (wang id15, col0/row3 per tileset_marble_meta.json's tile order), the same floor_layers mechanism street/floodplains/riverfarm already use for a banded ground overlay.",
+     "_pick": "The marble plaza patch around the fountain -- OWNED wang tileset, pure-marble tile. CONTROLLER FIX 2026-07-08: [3,3] (row-major by wang id, id15 = pure marble), not the handoff doc's wrong [0,3] (a transition tile -- the doc's id->position table was corrected on main).",
      "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
      "tile_px": 16,
      "coords": [
-      0,
+      3,
       3
      ],
      "cells": {
@@ -8213,6 +8213,195 @@
        5,
        10,
        7
+      ]
+     }
+    },
+    {
+     "_pick": "FIX WAVE facade assembly, handoff.md's recipe executed DATA-SIDE (per-cell picks; a committed composite of licensed pieces is forbidden in the public repo, and floor_layers rects accept negative y -- verified in tile_board_builder.resolve_layer_cells, plain range(), no grid clamp -- so the above-grid loom rows need no code). Layer 1/5: the cornice/roofline cap, Wall_Tiles (8,2) cool blue-grey stone (picks.md sec.2, MOCKUP-PROVEN), one row above the visible plaster at y=-2.",
+     "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+     "tile_px": 16,
+     "coords": [
+      8,
+      2
+     ],
+     "cells": {
+      "rect": [
+       0,
+       -2,
+       28,
+       1
+      ]
+     }
+    },
+    {
+     "_pick": "Layer 2/5: cream plaster upper floors, Building_Walls (26,2) (picks.md sec.1, MOCKUP-PROVEN flat #ddccb8) -- y=-1 (above-grid loom row) + y=0 (in-grid blocked row, cover_skip'd). Two plaster rows over a glass row = the 2-cell-facade scale-shock read, plus the cornice above.",
+     "sheet": "res://assets/props/free_pack/Building_Walls.png",
+     "tile_px": 16,
+     "coords": [
+      26,
+      2
+     ],
+     "cells": {
+      "rect": [
+       0,
+       -1,
+       28,
+       2
+      ]
+     }
+    },
+    {
+     "_pick": "Layer 3/5: the leaded-glass storefront line, Building_Walls (13,35) (picks.md sec.1, MOCKUP-PROVEN, 'USE SPARINGLY -- one shopfront band') -- exactly one band, the ground-floor row y=1 the player walks past.",
+     "sheet": "res://assets/props/free_pack/Building_Walls.png",
+     "tile_px": 16,
+     "coords": [
+      13,
+      35
+     ],
+     "cells": {
+      "rect": [
+       0,
+       1,
+       28,
+       1
+      ]
+     }
+    },
+    {
+     "_pick": "Layer 4/5: pilaster strips every 3 cells (the spec's 'vertical LINES'), Wall_Tiles (8,2) stone columns spanning y=-1..1. Full 16px cells, not the mockup's 6px strips -- the cell-pick machinery has no sub-cell crop, so each pilaster is a full stone column dividing the glass line into 2-cell shopfronts (an honest approximation the windowed re-take judges).",
+     "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+     "tile_px": 16,
+     "coords": [
+      8,
+      2
+     ],
+     "cells": {
+      "list": [
+       [
+        2,
+        -1
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        5,
+        -1
+       ],
+       [
+        5,
+        0
+       ],
+       [
+        5,
+        1
+       ],
+       [
+        8,
+        -1
+       ],
+       [
+        8,
+        0
+       ],
+       [
+        8,
+        1
+       ],
+       [
+        11,
+        -1
+       ],
+       [
+        11,
+        0
+       ],
+       [
+        11,
+        1
+       ],
+       [
+        14,
+        -1
+       ],
+       [
+        14,
+        0
+       ],
+       [
+        14,
+        1
+       ],
+       [
+        17,
+        -1
+       ],
+       [
+        17,
+        0
+       ],
+       [
+        17,
+        1
+       ],
+       [
+        20,
+        -1
+       ],
+       [
+        20,
+        0
+       ],
+       [
+        20,
+        1
+       ],
+       [
+        23,
+        -1
+       ],
+       [
+        23,
+        0
+       ],
+       [
+        23,
+        1
+       ],
+       [
+        26,
+        -1
+       ],
+       [
+        26,
+        0
+       ],
+       [
+        26,
+        1
+       ]
+      ]
+     }
+    },
+    {
+     "_pick": "Layer 5/5: the south band (y 16-17) -- building BACKS/rooftops seen from the street's north side, textured masonry variant Wall_Tiles (8,17) (picks.md sec.2's darker band) instead of the flat cool slab the windowed read flagged. Roofline texture, not facade (their fronts face away).",
+     "sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+     "tile_px": 16,
+     "coords": [
+      8,
+      17
+     ],
+     "cells": {
+      "rect": [
+       0,
+       16,
+       28,
+       2
       ]
      }
     }
@@ -8379,6 +8568,21 @@
      "sprite": "guild_banner",
      "cell": [
       13,
+      1
+     ]
+    },
+    {
+     "_comment": "FIX WAVE facade recipe's 'door punched into the glass line' -- the wired `door` SPRITE as decor on two shopfront cells (x4/x18, y1), render-only: v1 shops aren't enterable, the sim cell stays plain blocked (bumping reads as any wall).",
+     "sprite": "door",
+     "cell": [
+      4,
+      1
+     ]
+    },
+    {
+     "sprite": "door",
+     "cell": [
+      18,
       1
      ]
     }
@@ -8614,11 +8818,462 @@
       }
      ]
     }
-   ]
+   ],
+   "cover_skip": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     13,
+     0
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     15,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     20,
+     0
+    ],
+    [
+     21,
+     0
+    ],
+    [
+     22,
+     0
+    ],
+    [
+     23,
+     0
+    ],
+    [
+     24,
+     0
+    ],
+    [
+     25,
+     0
+    ],
+    [
+     26,
+     0
+    ],
+    [
+     27,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     6,
+     1
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     8,
+     1
+    ],
+    [
+     9,
+     1
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     11,
+     1
+    ],
+    [
+     12,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     14,
+     1
+    ],
+    [
+     15,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ],
+    [
+     20,
+     1
+    ],
+    [
+     21,
+     1
+    ],
+    [
+     22,
+     1
+    ],
+    [
+     23,
+     1
+    ],
+    [
+     24,
+     1
+    ],
+    [
+     25,
+     1
+    ],
+    [
+     26,
+     1
+    ],
+    [
+     27,
+     1
+    ],
+    [
+     0,
+     16
+    ],
+    [
+     1,
+     16
+    ],
+    [
+     2,
+     16
+    ],
+    [
+     3,
+     16
+    ],
+    [
+     4,
+     16
+    ],
+    [
+     5,
+     16
+    ],
+    [
+     6,
+     16
+    ],
+    [
+     7,
+     16
+    ],
+    [
+     8,
+     16
+    ],
+    [
+     9,
+     16
+    ],
+    [
+     10,
+     16
+    ],
+    [
+     11,
+     16
+    ],
+    [
+     12,
+     16
+    ],
+    [
+     13,
+     16
+    ],
+    [
+     14,
+     16
+    ],
+    [
+     15,
+     16
+    ],
+    [
+     16,
+     16
+    ],
+    [
+     17,
+     16
+    ],
+    [
+     18,
+     16
+    ],
+    [
+     19,
+     16
+    ],
+    [
+     20,
+     16
+    ],
+    [
+     21,
+     16
+    ],
+    [
+     22,
+     16
+    ],
+    [
+     23,
+     16
+    ],
+    [
+     24,
+     16
+    ],
+    [
+     25,
+     16
+    ],
+    [
+     26,
+     16
+    ],
+    [
+     27,
+     16
+    ],
+    [
+     0,
+     17
+    ],
+    [
+     1,
+     17
+    ],
+    [
+     2,
+     17
+    ],
+    [
+     3,
+     17
+    ],
+    [
+     4,
+     17
+    ],
+    [
+     5,
+     17
+    ],
+    [
+     6,
+     17
+    ],
+    [
+     7,
+     17
+    ],
+    [
+     8,
+     17
+    ],
+    [
+     9,
+     17
+    ],
+    [
+     10,
+     17
+    ],
+    [
+     11,
+     17
+    ],
+    [
+     12,
+     17
+    ],
+    [
+     13,
+     17
+    ],
+    [
+     14,
+     17
+    ],
+    [
+     15,
+     17
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     17,
+     17
+    ],
+    [
+     18,
+     17
+    ],
+    [
+     19,
+     17
+    ],
+    [
+     20,
+     17
+    ],
+    [
+     21,
+     17
+    ],
+    [
+     22,
+     17
+    ],
+    [
+     23,
+     17
+    ],
+    [
+     24,
+     17
+    ],
+    [
+     25,
+     17
+    ],
+    [
+     26,
+     17
+    ],
+    [
+     27,
+     17
+    ]
+   ],
+   "_cover_skip_comment": "Render-only (world.gd's blocked layer skip, the #37 wandering_inn_facade precedent): the north band (y 0-1) carries the assembled facade paint and the south band (y 16-17) the textured rooftop paint (floor_layers entries below) -- the generic blocked tile would overdraw both. Sim blocking unchanged (all 4 rows stay in `blocked`)."
   },
   "mercantile_alleys": {
-   "_comment": "Invrisil 8c Task C1 (issue #12) -- ~20x14 mercantile alleys, the stealth playground (locked shape: bent routes, stacked crates, 2-3 SNEAKABLE trigger_radius footpad placements). biome invrisil_street reused verbatim (same cool paving as the boulevard; the mood card alone -- moods.json's 'lantern maze', darker at every hour than the boulevard -- carries the 'same stone, meaner hour' read per direction.md, no second biome). The open path is a bent L: a west corridor (y6-7) -> a north-south connector (x8-10) -> an east corridor (y11-12) to the parlor door, matching the design doc's 'bent routes' literally, not just in flavor -- footpads sit IN the turn and just past it. Crate/barrel decor dresses the corridor's blocked-adjacent cells (the 'CLIMBABLE flavor, not literal climbing' note -- stacked goods, not scatter).",
-   "biome": "invrisil_street",
+   "_comment": "Invrisil 8c Task C1 (issue #12) -- ~20x14 mercantile alleys, the stealth playground (locked shape: bent routes, stacked crates, 2-3 SNEAKABLE trigger_radius footpad placements). biome invrisil_alley (FIX WAVE: same wang paving floor as the boulevard per direction.md's 'same stone, meaner hour', but its OWN blocked+skirt -- the darker textured masonry band picks.md sec.2 flagged for alley walls -- after the controller's windowed read caught the shared-street version rendering as corridors floating on void; see biomes.json's invrisil_alley _comment). Sparse sconce lantern pools on wall cells (decor below) + the night mood card carry the 'lantern maze' read -- direction doc open-question 4's own fence-less fallback. The open path is a bent L: a west corridor (y6-7) -> a north-south connector (x8-10) -> an east corridor (y11-12) to the parlor door, matching the design doc's 'bent routes' literally, not just in flavor -- footpads sit IN the turn and just past it. Crate/barrel decor dresses the corridor's blocked-adjacent cells (the 'CLIMBABLE flavor, not literal climbing' note -- stacked goods, not scatter).",
+   "biome": "invrisil_alley",
    "grid": {
     "width": 20,
     "height": 14
@@ -9553,6 +10208,75 @@
       15,
       10
      ]
+    },
+    {
+     "_comment": "FIX WAVE lantern pools (direction.md alleys card: 'sparse fence-lantern anchors, wider gaps between pools than the boulevard's serviced rhythm'). Reuses the existing `sconce` sprite (the inn's own wall lamp -- zero new assets, the direction doc's own 'consider owned/wired art instead of the speculative sewer lantern pick' note) on wall cells adjacent to the corridors. Four pools over three corridor legs vs the boulevard's eight -- the sparser rhythm IS the card. Non-flicker per the direction card's Invrisil-wide rule (serviced city lamps; flicker reads poor).",
+     "sprite": "sconce",
+     "cell": [
+      3,
+      5
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.78,
+       0.45
+      ],
+      "energy": 0.8,
+      "radius": 22,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      7,
+      8
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.78,
+       0.45
+      ],
+      "energy": 0.8,
+      "radius": 22,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      11,
+      10
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.78,
+       0.45
+      ],
+      "energy": 0.8,
+      "radius": 22,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      16,
+      13
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.78,
+       0.45
+      ],
+      "energy": 0.8,
+      "radius": 22,
+      "flicker": false
+     }
     }
    ],
    "entities": [
@@ -9856,10 +10580,11 @@
        0.85,
        0.6
       ],
-      "energy": 0.9,
+      "energy": 1.0,
       "radius": 30,
       "flicker": false
-     }
+     },
+     "_comment_light": "FIX WAVE: energy 0.9->1.0 alongside the mood lift (moods.json brothers_parlor) so the hero-light-over-the-table contrast survives the brighter ambient."
     },
     {
      "sprite": "rug_tan",

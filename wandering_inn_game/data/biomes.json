@@ -142,12 +142,12 @@
   ]
  },
  "invrisil_street": {
-  "_comment": "Invrisil 8c Task C1 (issue #12). OWNED PixelLab wang tileset (docs/design/invrisil-art/direction.md + handoff.md's staged fragment, committed this task at assets/tiles/invrisil/tileset_marble_wang4x4.png -- MOCKUP-PROVEN pure tiles, see assets/LICENSES/pixellab-ai-generated-verdict.md). floor = wang id0 (cool grey-violet paving, col2/row1 of the assembled 4x4 sheet per tileset_marble_meta.json's tile order); blocked reuses the ALREADY-PRESENT Free Pack Wall_Tiles.png cool blue-grey stone pick (picks.md sec.2, [8,2], MOCKUP-PROVEN) -- no NEW manifest entry needed for this lane (avoids the licensed-pick STOP; the two speculative NEW packs the art lane flagged, hideout/Tiles.png and sewer/Props.png, are NOT used here). Shared by both the boulevard and the alleys (direction.md: 'Alleys reuse the paving tile with the night mood card doing the darkening -- same stone, meaner hour') -- the mood-card values (moods.json) carry the distinct read, not a second biome.",
+  "_comment": "Invrisil 8c Task C1 (issue #12). OWNED PixelLab wang tileset (docs/design/invrisil-art/direction.md + handoff.md's staged fragment, committed this task at assets/tiles/invrisil/tileset_marble_wang4x4.png -- MOCKUP-PROVEN pure tiles, see assets/LICENSES/pixellab-ai-generated-verdict.md). floor = wang id0 (cool grey-violet paving) at [0,0] -- CONTROLLER FIX 2026-07-08: the handoff doc's id->position table was WRONG (since corrected on main); the sheet is row-major by wang id, so pure paving (id0) = [0,0] and pure marble (id15) = [3,3]; the previously-quoted [2,1] is a diagonal TRANSITION tile that tiled as checkerboard noise in the windowed read; blocked reuses the ALREADY-PRESENT Free Pack Wall_Tiles.png cool blue-grey stone pick (picks.md sec.2, [8,2], MOCKUP-PROVEN) -- no NEW manifest entry needed for this lane (avoids the licensed-pick STOP; the two speculative NEW packs the art lane flagged, hideout/Tiles.png and sewer/Props.png, are NOT used here). Shared by both the boulevard and the alleys (direction.md: 'Alleys reuse the paving tile with the night mood card doing the darkening -- same stone, meaner hour') -- the mood-card values (moods.json) carry the distinct read, not a second biome.",
   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
   "tile_px": 16,
   "floor": [
-   2,
-   1
+   0,
+   0
   ],
   "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
   "blocked": [
@@ -158,8 +158,8 @@
   "skirt_sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
   "skirt_tile_px": 16,
   "skirt": [
-   2,
-   1
+   0,
+   0
   ]
  },
  "brothers_parlor": {
@@ -181,6 +181,27 @@
   "skirt": [
    23,
    4
+  ]
+ },
+ "invrisil_alley": {
+  "_comment": "Invrisil 8c C1 FIX WAVE (controller windowed read: 'corridors float on flat void background'). The alleys previously shared invrisil_street verbatim -- correct for the FLOOR (direction.md: 'same stone, meaner hour') but the shared cool-slab blocked pick + paving skirt gave no wall mass, so the corridors read as floating. This biome keeps the SAME wang paving floor [0,0] and swaps blocked+skirt to picks.md sec.2's darker textured masonry variant (Wall_Tiles [8,17], #3c484a family, flagged there specifically as the 'darker alley-wall band' candidate) -- blocked cells now read as close brick walls and the beyond-grid skirt reads as MORE wall (enclosure), not void. Direction doc open-question 4's own fallback governs the rest of the card: crates + lantern pools (sconce decor lights, mercantile_alleys' own decor list) carry the 'lantern maze' read, no fence pick needed.",
+  "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+  "tile_px": 16,
+  "floor": [
+   0,
+   0
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   8,
+   17
+  ],
+  "blocked_tile_px": 16,
+  "skirt_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   8,
+   17
   ]
  }
 }
