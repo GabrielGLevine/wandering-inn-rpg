@@ -1,5 +1,5 @@
 {
- "_comment": "Windowed shop-shot fixture. Warrior L1 standing directly south of Krshia's stall (13,2) on the street, facing up so a single interact reaches her. Purse seeded to exactly 5 gold -- enough for the cheapest buy option (traveler_charm, 5) so ONE screenshot shows an affordable option beside the three greyed pricier ones, and after the 5-gold purchase the purse is 0 so a re-opened shop shows ALL options greyed (the greyed-while-broke proof). rng_state cosmetic (no combat in the shot).",
+ "_comment": "Windowed shop-shot fixture. Warrior L1 standing directly south of Krshia's stall (13,2) on the street, facing up so a single interact reaches her. Purse seeded to exactly 5 gold -- enough for the cheapest buy option (traveler_charm, 5) so ONE screenshot shows an affordable option beside the three greyed pricier ones, and after the 5-gold purchase the purse is 0 so a re-opened shop shows ALL options greyed (the greyed-while-broke proof). rng_state cosmetic (no combat in the shot). Issue #45 rng_state hygiene sweep: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed; the #38 method). This fixture's own canonical never resolves a fight to completion off this rng_state (either no combat fires, or combat is asserted absent/left mid-combat by design -- verified by inspecting the consuming script), so the value is cosmetic/inert for outcome purposes; still replaced with a properly-derived state (.seed=9, captured .state) for hygiene, and the canonical re-run green after the swap.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -39,6 +39,6 @@
   "container_state": {},
   "actions_since_sleep": 0,
   "gold": 5,
-  "rng_state": "9"
+  "rng_state": "-6393592048753323481"
  }
 }

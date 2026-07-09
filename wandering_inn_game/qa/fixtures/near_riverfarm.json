@@ -1,10 +1,16 @@
 {
- "_comment": "riverfarm_walkthrough's start (FIXTURE-FIRST). Same door-chain/awakening accomplishments as portal_menu_start (door_awakened already banked, standing at the SAME confirmed free cell (9,6) facing the awakened pantry_door) PLUS riverfarm_attuned -- the Guild-board rumor has already been read, so the portal menu offers Riverfarm as a real destination the moment this canonical opens it. Classless (no combat is exercised by this walkthrough -- the two hollow briar placements and the wolf pack have no combat data yet, lane beta's R2 task).",
+ "_comment": "riverfarm_walkthrough's start (FIXTURE-FIRST). Same door-chain/awakening accomplishments as portal_menu_start (door_awakened already banked, standing at the SAME confirmed free cell (9,6) facing the awakened pantry_door) PLUS riverfarm_attuned -- the Guild-board rumor has already been read, so the portal menu offers Riverfarm as a real destination the moment this canonical opens it. Classless (no combat is exercised by this walkthrough -- the two hollow briar placements and the wolf pack have no combat data yet, lane beta's R2 task). Issue #45 rng_state hygiene sweep: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed; the #38 method). This fixture's own canonical never resolves a fight to completion off this rng_state (either no combat fires, or combat is asserted absent/left mid-combat by design -- verified by inspecting the consuming script), so the value is cosmetic/inert for outcome purposes; still replaced with a properly-derived state (.seed=9, captured .state) for hygiene, and the canonical re-run green after the swap.",
  "version": 5,
  "state": {
   "current_map": "inn",
-  "player_cell": [9, 6],
-  "player_facing": [1, 0],
+  "player_cell": [
+   9,
+   6
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
   "classes": {},
   "accomplishments": {
    "post_game": 1,
@@ -24,10 +30,15 @@
   "started_quests": [],
   "pending_consolidation": {},
   "used_skills": [],
-  "inventory": ["rusty_sword"],
-  "equipped": { "weapon": "rusty_sword", "armor": "" },
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "9"
+  "rng_state": "-6393592048753323481"
  }
 }

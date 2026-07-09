@@ -1,10 +1,16 @@
 {
- "_comment": "door_awakening's start (FIXTURE-FIRST -- beats 1-3 are already covered live by door_chain_fight/talk/scout, so this canonical starts PAST all of them, beat-3-ready). Classless on purpose (no `classes` entry at all) so sleep()'s class_gains/level_ups/consolidation/evolution branches are all guaranteed no-ops for the whole run -- the ONLY thing that can happen at any of the three sleeps this script drives is the study hook itself, keeping every ui_sleep_veil_rendered{lines} assertion unambiguous. All three beat-3 counters are pre-banked (door_understood, recovered_anchor_stone, bought_catalyst) alongside door_chain_started (the chain's own start-of-consult flag) and post_game (harmlessly inert here, matching the door_chain_talk_start precedent's convention of a quiet epilogue-suppressed state). Standing at (2,6) facing down, one cell north of the ground-floor `bed` (2,7) -- interact triggers sleep() directly, no traversal needed.",
+ "_comment": "door_awakening's start (FIXTURE-FIRST -- beats 1-3 are already covered live by door_chain_fight/talk/scout, so this canonical starts PAST all of them, beat-3-ready). Classless on purpose (no `classes` entry at all) so sleep()'s class_gains/level_ups/consolidation/evolution branches are all guaranteed no-ops for the whole run -- the ONLY thing that can happen at any of the three sleeps this script drives is the study hook itself, keeping every ui_sleep_veil_rendered{lines} assertion unambiguous. All three beat-3 counters are pre-banked (door_understood, recovered_anchor_stone, bought_catalyst) alongside door_chain_started (the chain's own start-of-consult flag) and post_game (harmlessly inert here, matching the door_chain_talk_start precedent's convention of a quiet epilogue-suppressed state). Standing at (2,6) facing down, one cell north of the ground-floor `bed` (2,7) -- interact triggers sleep() directly, no traversal needed. Issue #45 rng_state hygiene sweep: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed; the #38 method). This fixture's own canonical never resolves a fight to completion off this rng_state (either no combat fires, or combat is asserted absent/left mid-combat by design -- verified by inspecting the consuming script), so the value is cosmetic/inert for outcome purposes; still replaced with a properly-derived state (.seed=9, captured .state) for hygiene, and the canonical re-run green after the swap.",
  "version": 5,
  "state": {
   "current_map": "inn",
-  "player_cell": [2, 6],
-  "player_facing": [0, 1],
+  "player_cell": [
+   2,
+   6
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
   "classes": {},
   "accomplishments": {
    "post_game": 1,
@@ -17,13 +23,20 @@
   "removed_entities": [],
   "dormant_encounters": [],
   "generalist_classes": [],
-  "started_quests": ["door_that_goes_elsewhere"],
+  "started_quests": [
+   "door_that_goes_elsewhere"
+  ],
   "pending_consolidation": {},
   "used_skills": [],
-  "inventory": ["rusty_sword"],
-  "equipped": { "weapon": "rusty_sword", "armor": "" },
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "9"
+  "rng_state": "-6393592048753323481"
  }
 }

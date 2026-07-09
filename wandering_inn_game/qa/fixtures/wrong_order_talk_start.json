@@ -1,25 +1,38 @@
 {
- "_comment": "Quest 2 TALK path start (STREET). Krshia (the supplier) is at her market stall (13,2); the smooth-over is her SOCIAL resolution -- persuade her to extend the order on a good word for Lyonette. Player spawns at (13,3) facing UP so the first interact opens Krshia (first-talk plays her rotating pool line, second opens krshia_crate). heard_wrong_order is PRE-BANKED and the quest PRE-STARTED (the give beat is proven by wrong_order_loop; the report beat too -- this street run proves the DISTINCT TALK resolution + that resolved_wrong_order completes quest beat 1, with NO combat anywhere, the path's whole point). Classless: the smooth-over needs no combat class. No rng consumer; rng_state cosmetic (9).",
+ "_comment": "Quest 2 TALK path start (STREET). Krshia (the supplier) is at her market stall (13,2); the smooth-over is her SOCIAL resolution -- persuade her to extend the order on a good word for Lyonette. Player spawns at (13,3) facing UP so the first interact opens Krshia (first-talk plays her rotating pool line, second opens krshia_crate). heard_wrong_order is PRE-BANKED and the quest PRE-STARTED (the give beat is proven by wrong_order_loop; the report beat too -- this street run proves the DISTINCT TALK resolution + that resolved_wrong_order completes quest beat 1, with NO combat anywhere, the path's whole point). Classless: the smooth-over needs no combat class. No rng consumer; rng_state cosmetic (9). Issue #45 rng_state hygiene sweep: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed; the #38 method). This fixture's own canonical never resolves a fight to completion off this rng_state (either no combat fires, or combat is asserted absent/left mid-combat by design -- verified by inspecting the consuming script), so the value is cosmetic/inert for outcome purposes; still replaced with a properly-derived state (.seed=9, captured .state) for hygiene, and the canonical re-run green after the swap.",
  "version": 5,
  "state": {
   "current_map": "street",
-  "player_cell": [13, 3],
-  "player_facing": [0, -1],
+  "player_cell": [
+   13,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
   "classes": {},
   "accomplishments": {
    "heard_wrong_order": 1
   },
-  "player_skills": ["basic_cleaning"],
+  "player_skills": [
+   "basic_cleaning"
+  ],
   "removed_entities": [],
   "dormant_encounters": [],
   "generalist_classes": [],
-  "started_quests": ["wrong_order"],
+  "started_quests": [
+   "wrong_order"
+  ],
   "pending_consolidation": {},
   "used_skills": [],
   "inventory": [],
-  "equipped": { "weapon": "", "armor": "" },
+  "equipped": {
+   "weapon": "",
+   "armor": ""
+  },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "9"
+  "rng_state": "-6393592048753323481"
  }
 }

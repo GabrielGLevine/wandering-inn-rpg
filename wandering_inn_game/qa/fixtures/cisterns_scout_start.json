@@ -1,28 +1,45 @@
 {
- "_comment": "Quest 1 SKILL path start. post_tutorial shape PLUS classes.tactician:1 (grants [Appraise Foe] -- the field-tagged exploration skill this path needs), standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). The SKILL path resolves the quest by [Appraise Foe]-scouting the nest_ledge in the sewers and bringing Olesm the intelligence -- NO combat (the interact-only shield_spiders is never engaged). heard_about_cisterns is NOT banked and the quest NOT started; the script proves give (Olesm) -> grate -> descend -> [Appraise Foe] nest_ledge (scouted_the_nest) -> report intel (Olesm, banks resolve+report together) -> completion. No rng consumer; rng_state cosmetic, kept 9.",
+ "_comment": "Quest 1 SKILL path start. post_tutorial shape PLUS classes.tactician:1 (grants [Appraise Foe] -- the field-tagged exploration skill this path needs), standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). The SKILL path resolves the quest by [Appraise Foe]-scouting the nest_ledge in the sewers and bringing Olesm the intelligence -- NO combat (the interact-only shield_spiders is never engaged). heard_about_cisterns is NOT banked and the quest NOT started; the script proves give (Olesm) -> grate -> descend -> [Appraise Foe] nest_ledge (scouted_the_nest) -> report intel (Olesm, banks resolve+report together) -> completion. No rng consumer; rng_state cosmetic, kept 9. Issue #45 rng_state hygiene sweep: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed; the #38 method). This fixture's own canonical never resolves a fight to completion off this rng_state (either no combat fires, or combat is asserted absent/left mid-combat by design -- verified by inspecting the consuming script), so the value is cosmetic/inert for outcome purposes; still replaced with a properly-derived state (.seed=9, captured .state) for hygiene, and the canonical re-run green after the swap.",
  "version": 5,
  "state": {
   "current_map": "street",
-  "player_cell": [29, 4],
-  "player_facing": [0, -1],
-  "classes": { "warrior": 1, "tactician": 1 },
+  "player_cell": [
+   29,
+   4
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 1,
+   "tactician": 1
+  },
   "accomplishments": {
    "met_relc": 1,
    "sparred_with_relc": 1,
    "given_spear_by_relc": 1,
    "studied_the_cellar": 1
   },
-  "player_skills": ["basic_cleaning"],
+  "player_skills": [
+   "basic_cleaning"
+  ],
   "removed_entities": [],
   "dormant_encounters": [],
   "generalist_classes": [],
   "started_quests": [],
   "pending_consolidation": {},
   "used_skills": [],
-  "inventory": ["rusty_sword", "relcs_spare_spear"],
-  "equipped": { "weapon": "rusty_sword", "armor": "" },
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "9"
+  "rng_state": "-6393592048753323481"
  }
 }

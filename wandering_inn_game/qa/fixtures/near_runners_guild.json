@@ -1,5 +1,5 @@
 {
- "_comment": "The canonical delivery_loop fixture: post_tutorial_street's exact state (warrior L1, met/sparred/given_spear) standing at street (18,17) facing right, two cells west of the new runners_guild_door (20,17) -- FIXTURE-FIRST per the near_guild/near_barracks precedent: delivery_loop's subject is the Runner's Guild delivery machinery, not the gate->market walk (proven by gate_district_walkthrough). gold 0 (the turn-in payout is asserted as an exact total, and a zero start makes a wrong delta unmaskable). rng_state \"9\" carried over -- no combat in this script.",
+ "_comment": "The canonical delivery_loop fixture: post_tutorial_street's exact state (warrior L1, met/sparred/given_spear) standing at street (18,17) facing right, two cells west of the new runners_guild_door (20,17) -- FIXTURE-FIRST per the near_guild/near_barracks precedent: delivery_loop's subject is the Runner's Guild delivery machinery, not the gate->market walk (proven by gate_district_walkthrough). gold 0 (the turn-in payout is asserted as an exact total, and a zero start makes a wrong delta unmaskable). rng_state \"9\" carried over -- no combat in this script. Issue #45 rng_state hygiene sweep: the prior value was a hand-typed raw RandomNumberGenerator.state ('9') -- the repo-wide landmine (WISave restores .state directly, not .seed; the #38 method). This fixture's own canonical never resolves a fight to completion off this rng_state (either no combat fires, or combat is asserted absent/left mid-combat by design -- verified by inspecting the consuming script), so the value is cosmetic/inert for outcome purposes; still replaced with a properly-derived state (.seed=9, captured .state) for hygiene, and the canonical re-run green after the swap.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -39,6 +39,6 @@
   "container_state": {},
   "actions_since_sleep": 0,
   "gold": 0,
-  "rng_state": "9"
+  "rng_state": "-6393592048753323481"
  }
 }
