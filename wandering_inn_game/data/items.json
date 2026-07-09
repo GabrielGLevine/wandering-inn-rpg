@@ -249,6 +249,21 @@
 			"lore": "Zevara signs maybe ten of these a year, and she remembers every one. Losing it is a worse conversation than never having earned it."
 		},
 		{
+			"_comment": "Invrisil 8c Task C3 (issue #13) -- `brothers_marker`, the plan's locked shape 5 vendor/perk gate token (docs/design/dialogue-drafts/invrisil/brothers_lieutenant.json's wiring notes: 'Wood and tin, and worth rather more than its materials'). Granted alongside the accomplishment of the same id (data/dialogue/invrisil_wilovan.json's report option) -- the item is the physical/flavor half, the accomplishment is the gate-checkable half (this game's `requires` gate vocabulary is skill/class/accomplishment/gold only, no item-presence gate, so future fence/vendor content must key off the accomplishment, not this item's inventory presence). watch_token precedent shape verbatim (mundane accessory, zero stat fields).",
+			"id": "brothers_marker",
+			"name": "Brother's Marker",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "Wood and tin, and worth rather more than its materials. Shown in the alleys, trouble steps around you. Shown at the parlor, certain shops stop pretending they don't stock certain things.",
+			"lore": "The Brothers of Serendipitous Meetings hand these out rarely and remember every one they've given. Losing it insults the wrong people."
+		},
+		{
 			"id": "field_whetstone",
 			"name": "Field Whetstone",
 			"kind": "tool",
