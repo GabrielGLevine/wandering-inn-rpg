@@ -829,3 +829,7 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   (`combat_hud.gd`) as the sanctioned name surface. Windowed-verified,
   `combat_walkthrough` seed 9: `.superpowers/sdd/fp-handoff/r3-shots/
   combat_01_no_name_tags_stats_survive.png`.
+
+## 2026-07-08 — 8c C1 merge (controller windowed adjudication)
+- OPEN (taste, CF pass): Wilovan's parlor tint sits at [0.62,0.7,0.56] after the legibility lift — hat/shape read, features borderline. Next lever ready: [0.75,0.8,0.68]. Judge live at the 8c gate.
+- OPEN (noted at C1 fix wave, deferred): streetlamp blocked cells render the generic stone tile under the lamp sprite (plinth read) — flag at CF if it reads as noise against the corrected paving.
