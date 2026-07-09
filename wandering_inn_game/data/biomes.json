@@ -140,5 +140,47 @@
    2,
    2
   ]
+ },
+ "invrisil_street": {
+  "_comment": "Invrisil 8c Task C1 (issue #12). OWNED PixelLab wang tileset (docs/design/invrisil-art/direction.md + handoff.md's staged fragment, committed this task at assets/tiles/invrisil/tileset_marble_wang4x4.png -- MOCKUP-PROVEN pure tiles, see assets/LICENSES/pixellab-ai-generated-verdict.md). floor = wang id0 (cool grey-violet paving, col2/row1 of the assembled 4x4 sheet per tileset_marble_meta.json's tile order); blocked reuses the ALREADY-PRESENT Free Pack Wall_Tiles.png cool blue-grey stone pick (picks.md sec.2, [8,2], MOCKUP-PROVEN) -- no NEW manifest entry needed for this lane (avoids the licensed-pick STOP; the two speculative NEW packs the art lane flagged, hideout/Tiles.png and sewer/Props.png, are NOT used here). Shared by both the boulevard and the alleys (direction.md: 'Alleys reuse the paving tile with the night mood card doing the darkening -- same stone, meaner hour') -- the mood-card values (moods.json) carry the distinct read, not a second biome.",
+  "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+  "tile_px": 16,
+  "floor": [
+   2,
+   1
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   8,
+   2
+  ],
+  "blocked_tile_px": 16,
+  "skirt_sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   2,
+   1
+  ]
+ },
+ "brothers_parlor": {
+  "_comment": "Invrisil 8c Task C1 (issue #12) -- the Brothers' parlor ('borrowed elegance'). Floor: Library Tiles.png warm wood floor cell (23,4) (picks.md sec.3, already-present manifest path assets/tiles/library/Tiles.png -- a wealthy-interior candidate, numerically flat #8c5934, windowed check still owed per picks.md's own discipline, VISUAL-LOG'd). Blocked DELIBERATELY reuses the 'inn' biome's own already-shipped, already-verified Wall_Tiles [2,2] warm-toned stone (picks.md flagged this exact cell as the WRONG temperature for the boulevard's cool exterior -- but a warm interior wall is precisely right for a candlelit hideout, and reusing an already-screenshot-verified pick means zero new windowed-check risk for this lane). Skirt mirrors the floor (interior room, no meaningful 'past the edge' read).",
+  "sheet": "res://assets/tiles/library/Tiles.png",
+  "tile_px": 16,
+  "floor": [
+   23,
+   4
+  ],
+  "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+  "blocked": [
+   2,
+   2
+  ],
+  "blocked_tile_px": 16,
+  "skirt_sheet": "res://assets/tiles/library/Tiles.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   23,
+   4
+  ]
  }
 }

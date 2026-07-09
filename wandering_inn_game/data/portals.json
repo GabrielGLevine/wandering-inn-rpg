@@ -1,30 +1,51 @@
 {
-  "_comment": "(spec §5.5 the anchor-stone-per-region idiom -- the #10/#12/#16 contract) Each row is one fast-travel DESTINATION: {id, display_name, map, cell, requires_accomplishment, arrival_toast}. `requires_accomplishment` gates the row at >= 1 (the door_when/contains_when >= semantics); a future region milestone appends a row keyed on ITS OWN attunement accomplishment, zero code (src/core/portals.gd's WIPortals.attuned_destinations/build_portal_graph read this list generically). v1 ships the Liscor pair: the inn's pantry_door <-> the street's street_anchor_stone, both gated on door_awakened (they attune together -- the SAME beat-4 awakening opens both ends of the player's own home-region connection). Arrival cells are blast-radius-checked walkable + off every canonical route (the DP3 discipline): inn (9,6) is the D1-confirmed free interior cell immediately west of pantry_door (10,6); street (29,10) is the open mid-street cell immediately west of the new street_anchor_stone (30,10), clear of every blocked/decor/entity cell on that map.",
-  "portals": [
-    {
-      "id": "liscor_street",
-      "display_name": "Liscor — the Gate District",
-      "map": "street",
-      "cell": [29, 10],
-      "requires_accomplishment": "door_awakened",
-      "arrival_toast": "Cold light, gone as fast as it came. The gate district's noise rushes back in around you."
-    },
-    {
-      "id": "the_wandering_inn",
-      "display_name": "The Wandering Inn",
-      "map": "inn",
-      "cell": [9, 6],
-      "requires_accomplishment": "door_awakened",
-      "arrival_toast": "Warm air, woodsmoke, the creak of the pantry door settling shut behind you. You're back, and you didn't walk here."
-    },
-    {
-      "id": "riverfarm",
-      "display_name": "Riverfarm",
-      "map": "riverfarm_village",
-      "cell": [13, 5],
-      "requires_accomplishment": "riverfarm_attuned",
-      "arrival_toast": "The light warms and the air smells of wheat and river water before you've taken a step. Riverfarm, same as the rumor said.",
-      "_comment": "8b R1 (issue #10) -- the anchor-stone-per-region idiom's first genuinely NEW instance (zero code, per this file's own top-level comment). riverfarm_attuned banks from the Guild-board rumor beat (guild_board's own board_rumors list in skeleton_scene.json, read at THE REQUEST BOARD -- deliberately NOT a bounties.json posting, since that pool's size is load-bearing for every canonical seed's rotation window), not from any door-awakening beat -- a new region earns its OWN attunement, distinct from the Liscor pair's shared door_awakened. Arrival cell (13,5) sits one cell east of riverfarm_anchor_stone (12,5) at the village's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
-    }
-  ]
+ "_comment": "(spec \u00a75.5 the anchor-stone-per-region idiom -- the #10/#12/#16 contract) Each row is one fast-travel DESTINATION: {id, display_name, map, cell, requires_accomplishment, arrival_toast}. `requires_accomplishment` gates the row at >= 1 (the door_when/contains_when >= semantics); a future region milestone appends a row keyed on ITS OWN attunement accomplishment, zero code (src/core/portals.gd's WIPortals.attuned_destinations/build_portal_graph read this list generically). v1 ships the Liscor pair: the inn's pantry_door <-> the street's street_anchor_stone, both gated on door_awakened (they attune together -- the SAME beat-4 awakening opens both ends of the player's own home-region connection). Arrival cells are blast-radius-checked walkable + off every canonical route (the DP3 discipline): inn (9,6) is the D1-confirmed free interior cell immediately west of pantry_door (10,6); street (29,10) is the open mid-street cell immediately west of the new street_anchor_stone (30,10), clear of every blocked/decor/entity cell on that map.",
+ "portals": [
+  {
+   "id": "liscor_street",
+   "display_name": "Liscor \u2014 the Gate District",
+   "map": "street",
+   "cell": [
+    29,
+    10
+   ],
+   "requires_accomplishment": "door_awakened",
+   "arrival_toast": "Cold light, gone as fast as it came. The gate district's noise rushes back in around you."
+  },
+  {
+   "id": "the_wandering_inn",
+   "display_name": "The Wandering Inn",
+   "map": "inn",
+   "cell": [
+    9,
+    6
+   ],
+   "requires_accomplishment": "door_awakened",
+   "arrival_toast": "Warm air, woodsmoke, the creak of the pantry door settling shut behind you. You're back, and you didn't walk here."
+  },
+  {
+   "id": "riverfarm",
+   "display_name": "Riverfarm",
+   "map": "riverfarm_village",
+   "cell": [
+    13,
+    5
+   ],
+   "requires_accomplishment": "riverfarm_attuned",
+   "arrival_toast": "The light warms and the air smells of wheat and river water before you've taken a step. Riverfarm, same as the rumor said.",
+   "_comment": "8b R1 (issue #10) -- the anchor-stone-per-region idiom's first genuinely NEW instance (zero code, per this file's own top-level comment). riverfarm_attuned banks from the Guild-board rumor beat (guild_board's own board_rumors list in skeleton_scene.json, read at THE REQUEST BOARD -- deliberately NOT a bounties.json posting, since that pool's size is load-bearing for every canonical seed's rotation window), not from any door-awakening beat -- a new region earns its OWN attunement, distinct from the Liscor pair's shared door_awakened. Arrival cell (13,5) sits one cell east of riverfarm_anchor_stone (12,5) at the village's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
+  },
+  {
+   "id": "invrisil",
+   "display_name": "Invrisil \u2014 the City of Adventurers",
+   "map": "invrisil_boulevard",
+   "cell": [
+    4,
+    8
+   ],
+   "requires_accomplishment": "invrisil_attuned",
+   "arrival_toast": "The light turns pale and cool, and the noise of a much bigger city rushes in to fill the silence. Invrisil, same as the letter promised.",
+   "_comment": "Invrisil 8c Task C1 (issue #12) -- the anchor-stone-per-region idiom's newest instance (zero code). invrisil_attuned banks from the Guild-board rumor beat (guild_board's own board_rumors list in skeleton_scene.json, the Brothers' letter -- locked shape 1), same convention as riverfarm_attuned. Arrival cell (4,8) sits one cell east of invrisil_anchor_stone (3,8) at the boulevard's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
+  }
+ ]
 }

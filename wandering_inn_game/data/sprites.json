@@ -3209,5 +3209,79 @@
     "fps": 8
    }
   }
+ },
+ "plaza_fountain": {
+  "_comment": "Invrisil 8c Task C1 (issue #12) -- OWNED PixelLab landmark (docs/design/invrisil-art/handoff.md's staged fragment, committed verbatim this task at assets/sprites/invrisil/fountain_v2.png; anchor/scale as specified there, PIL alpha-bbox measured). 'The Adventurer's Fountain' -- ORIGINAL, canon-ALIGNED with Invrisil's 'City of Adventurers' epithet (wiki lists no named plaza fountain); see handoff.md's canon-flags section.",
+  "render_scale": 0.6,
+  "shadow": true,
+  "anchor": [
+   0.4938,
+   0.9583
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil/fountain_v2.png",
+    "frame_size": [
+     80,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "street_lamp": {
+  "_comment": "Invrisil 8c Task C1 -- OWNED PixelLab lamp-row signature (handoff.md staged fragment). Non-flicker gold PointLight2D per-instance (direction.md: 'city lamps are SERVICED, unlike Liscor's flickering hearths').",
+  "render_scale": 0.6,
+  "shadow": true,
+  "anchor": [
+   0.5312,
+   0.9531
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil/streetlamp_v2.png",
+    "frame_size": [
+     32,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "coin_shop_sign": {
+  "_comment": "Invrisil 8c Task C1 -- OWNED PixelLab ornament (handoff.md staged fragment). Mounted on facade blocked cells (no separate blocking needed).",
+  "render_scale": 0.75,
+  "anchor": [
+   0.4688,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil/shop_sign_v2.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "guild_banner": {
+  "_comment": "Invrisil 8c Task C1 -- OWNED PixelLab ornament (handoff.md staged fragment). Cream+gold vertical banner, mounted on facade blocked cells.",
+  "render_scale": 0.5,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/invrisil/guild_banner_v2.png",
+    "frame_size": [
+     32,
+     64
+    ],
+    "fps": 1
+   }
+  }
  }
 }
