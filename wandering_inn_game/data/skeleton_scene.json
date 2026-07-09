@@ -4644,6 +4644,10 @@
     [
      12,
      9
+    ],
+    [
+     8,
+     4
     ]
    ],
    "floor_layers": [
@@ -4783,6 +4787,7 @@
      ]
     },
     {
+     "_comment": "Playtest hotfix #5: rug_tan's real footprint (80x72 @0.4 render_scale = 32x28.8px, ~2x2 cells) is bigger than its single decor cell -- a non-blocking prop that visually occupies more than it mechanically claims reads as occluding the PC walking through it. CONSTRAINT: (8,4) is in `blocked` below for exactly this reason -- do not remove it without re-checking the sprite footprint. The room is wide open on both sides (no other blocked cell within 2 of this one), so blocking doesn't choke the approach to Selys's desk.",
      "sprite": "rug_tan",
      "cell": [
       8,

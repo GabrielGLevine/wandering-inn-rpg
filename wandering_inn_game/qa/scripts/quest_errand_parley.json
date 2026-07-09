@@ -521,7 +521,7 @@
    "equals": "street"
   },
   {
-   "_comment": "Re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); 'move up 7' is the exact proven step from guild_interior_walkthrough, stopping blocked-adjacent to Selys (8,2) facing up.",
+   "_comment": "Re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); the sidestep-around-(8,4) detour below is the exact proven step from guild_interior_walkthrough (playtest hotfix #5 -- the rug there now blocks), stopping blocked-adjacent to Selys (8,2) facing up.",
    "action": "teleport",
    "map": "guild",
    "cell": [8, 10]
@@ -534,11 +534,11 @@
    },
    "timeout_sec": 5
   },
-  {
-   "action": "move",
-   "direction": "up",
-   "steps": 7
-  },
+  { "action": "move", "direction": "up", "steps": 5 },
+  { "action": "move", "direction": "right", "steps": 1 },
+  { "action": "move", "direction": "up", "steps": 2 },
+  { "action": "move", "direction": "left", "steps": 1 },
+  { "action": "move", "direction": "up", "steps": 1 },
   {
    "action": "press",
    "name": "interact"
