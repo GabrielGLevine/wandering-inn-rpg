@@ -163,12 +163,12 @@
   ]
  },
  "brothers_parlor": {
-  "_comment": "Invrisil 8c Task C1 (issue #12) -- the Brothers' parlor ('borrowed elegance'). Floor: Library Tiles.png warm wood floor cell (23,4) (picks.md sec.3, already-present manifest path assets/tiles/library/Tiles.png -- a wealthy-interior candidate, numerically flat #8c5934, windowed check still owed per picks.md's own discipline, VISUAL-LOG'd). Blocked DELIBERATELY reuses the 'inn' biome's own already-shipped, already-verified Wall_Tiles [2,2] warm-toned stone (picks.md flagged this exact cell as the WRONG temperature for the boulevard's cool exterior -- but a warm interior wall is precisely right for a candlelit hideout, and reusing an already-screenshot-verified pick means zero new windowed-check risk for this lane). Skirt mirrors the floor (interior room, no meaningful 'past the edge' read).",
-  "sheet": "res://assets/tiles/library/Tiles.png",
+  "_comment": "Invrisil 8c C1 FIX ITERATION 3 (controller windowed read: Wilovan still a silhouette on a near-black floor). The biggest lever per the controller's own ordering: the FLOOR pick. The scan-derived library Tiles.png (23,4) 'warm wood' candidate read near-black in-engine (picks.md's own windowed-check-required caveat proved right) -- replaced with the inn biome's OWN floor, Interior_Walls_01 [1,21] warm plank: already screenshot-verified as a warm LIT room read in the game's most-photographed map, zero new pick risk. Skirt likewise reuses the inn's verified [7,21] grey-stone surround ('the warm floor pops as a lit room against dark surround' -- the inn's own _comment_skirt rationale, which is exactly the hideout-interior read wanted here). Blocked keeps the warm Wall_Tiles [2,2] stone from iteration 1. TRACED, not assumed: atmosphere.gd's light_multiplier is GLOBAL-phase (meta.light_energy_by_phase day=0.0), so the card-table hero light contributes ZERO at day phase -- the canonical's parlor shot is day, which is why the light lever couldn't fix the 04 murk and the floor/tint/vignette levers had to.",
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
   "tile_px": 16,
   "floor": [
-   23,
-   4
+   1,
+   21
   ],
   "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
   "blocked": [
@@ -176,11 +176,11 @@
    2
   ],
   "blocked_tile_px": 16,
-  "skirt_sheet": "res://assets/tiles/library/Tiles.png",
+  "skirt_sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
   "skirt_tile_px": 16,
   "skirt": [
-   23,
-   4
+   7,
+   21
   ]
  },
  "invrisil_alley": {

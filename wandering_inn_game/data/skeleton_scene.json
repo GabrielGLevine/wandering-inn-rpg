@@ -10581,10 +10581,10 @@
        0.6
       ],
       "energy": 1.0,
-      "radius": 30,
+      "radius": 40,
       "flicker": false
      },
-     "_comment_light": "FIX WAVE: energy 0.9->1.0 alongside the mood lift (moods.json brothers_parlor) so the hero-light-over-the-table contrast survives the brighter ambient."
+     "_comment_light": "FIX WAVE: energy 0.9->1.0, radius 30->40 (reaches Wilovan's cell (6,3), 2 cells from the table) -- NOTE this light only contributes at dusk/night (light_multiplier day=0.0, traced in atmosphere.gd), so it shapes evening visits, not the canonical's day-phase shot; the day fix is the floor/tint/vignette set."
     },
     {
      "sprite": "rug_tan",
@@ -10627,9 +10627,9 @@
      "display_name": "Wilovan",
      "sprite": "pc_gnoll_m",
      "tint": [
-      0.42,
-      0.5,
-      0.4
+      0.62,
+      0.7,
+      0.56
      ],
      "facing": "down",
      "observe": "A Gnoll in a vest cut sharper than his manners need to be, tall hat squared like it's holding a rank. He watches the room's exits before he watches you.",
@@ -10645,7 +10645,8 @@
        "speaker": "Wilovan",
        "text": "Evening, sir. Fine weather for good behavior."
       }
-     ]
+     ],
+     "_comment_tint": "FIX ITERATION 3: [0.42,0.5,0.4] -> [0.62,0.7,0.56] -- the marquee NPC must read at a glance (controller windowed verdict: still a silhouette after the mood lift). Keeps the dark-green dapper-vest identity, materially brighter under the parlor grade; tint multiplies the rig, so the old values cut every channel roughly in half."
     },
     {
      "_comment": "THE BED RULE (standing, plan's user-ratified shape 3): the parlor's guest couch, sleep:true, unconditional once the parlor is reachable (no quest gate -- reaching this room already required the door chain: portal -> boulevard -> alleys door -> parlor door, no shortcut exists). Reuses the EXISTING `bed` sprite verbatim (Interior_Props_01.png, frame 34x44, render_scale 0.375, default anchor [0.5,1.0]) -- the SAME already-shipped asset the inn's own bed uses, not a new pick: rendered footprint is ~12.75px wide / ~16.5px tall, i.e. it overhangs its OWN cell's north edge by well under 1px and stays fully inside its own cell on every other axis (measured against CELL=16px) -- functionally self-contained, the lowest-risk placement shape available, chosen specifically to satisfy the render-bbox placement discipline (the Riverfarm cot lesson) without a windowed check. Cell (2,7) is deep interior (open per the border-blocked computation above), 4 cells from Wilovan (6,3) and 4 cells from the table (6,5) -- no neighbor decor shares (2,6)/(2,8)/(1,7)/(3,7), so the sub-1px north overhang lands on bare floor.",
