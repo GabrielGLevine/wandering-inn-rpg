@@ -30,24 +30,27 @@ this lane. Everything below is STAGED — no game data file was touched.
 ```jsonc
 // biomes.json — DRAFT. The wang tileset is 4x4 tiles of 16px; the
 // engine's biome shape takes single [col,row] picks: pure paving =
-// wang id 0, pure marble = wang id 15 (positions per
-// tileset_marble_meta.json tile order: id0 -> col 2 row 1;
-// id15 -> col 0 row 3 in the assembled 4x4 sheet).
+// wang id 0 -> col 0 row 0; pure marble = wang id 15 -> col 3 row 3.
+// (CORRECTED 2026-07-08 by pixel inspection: the sheet is row-major by
+// wang id, meta.json lists ids only. The original table here said
+// id0->[2,1]/id15->[0,3] — BOTH are diagonal TRANSITION tiles; used as
+// a base floor they tile into checkerboard noise, which shipped in
+// C1's first pass and was caught on the controller's windowed read.)
 "invrisil_street": {
   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
   "tile_px": 16,
-  "floor": [2, 1],              // wang id 0 — cool grey paving
+  "floor": [0, 0],              // wang id 0 — cool grey paving
   "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
   "blocked": [8, 2],            // cool blue-grey stone (picks.md §2)
   "blocked_tile_px": 16,
   "skirt_sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
   "skirt_tile_px": 16,
-  "skirt": [2, 1]
+  "skirt": [0, 0]
 },
 "invrisil_plaza": {             // if the plaza is its own map/layer;
   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
   "tile_px": 16,                // otherwise use floor_layers with the
-  "floor": [0, 3],              // wang id 15 marble + curb tiles
+  "floor": [3, 3],              // wang id 15 marble + curb tiles
   "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
   "blocked": [8, 2],
   "blocked_tile_px": 16
