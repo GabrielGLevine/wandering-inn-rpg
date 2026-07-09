@@ -1,5 +1,20 @@
 # Wandering Inn RPG Handoff
 
+## v0.4.0 RELEASED (2026-07-09) — LIVE ON ITCH
+
+Tagged and shipped: butler channel html5 serves build v0.4.0 (verified
+via butler status). Release run green end-to-end (leak check, full QA
+gate on real assets, wasm export, butler push, desktop exports;
+SteamPipe correctly skipped — Steam is out of scope this release).
+First tag attempt failed on a suite OUTPUT-CONTRACT bug (the fixture
+validator's green line didn't start with ^PASS) — fixed, re-tagged.
+
+**POST-RELEASE USER ACTIONS:** (1) the retest package (four sessions,
+states + checklists in the chat log + below) — findings roll into
+v0.4.1; (2) paste the itch Vol-7 spoiler line on the page (drafted in
+chat 2026-07-08); (3) taste flags: fork endings, hats-off, Wilovan's
+0.86 downed-rate, facade family reuse, echo tell, brighten strength.
+
 ## MILESTONE 8c COMPLETE — INVRISIL SHIPS (2026-07-09; #12 + #13 closed; 77/77 + 50/50 fixture coherence)
 
 The second Door expansion: the boulevard (facade scale-shock band,
