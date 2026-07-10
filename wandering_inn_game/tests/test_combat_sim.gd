@@ -139,6 +139,24 @@ func _init() -> void:
 	assert(c4.combatants["pc"][WIKeys.AP] == 1, "power strike cost 3 AP")
 	assert(_count("skill_resolved") == 1 and _count("attack_resolved") >= 1, "skill resolved into a hit roll")
 
+	# piercing_strikes (playtest finding 10): a reported "only works
+	# horizontally adjacent" bug. is_adjacent()/damage_mult's gate both read
+	# maxi(absi(dx), absi(dy)) <= 1 -- axis-symmetric by construction, no
+	# horizontal-only filter anywhere in src/core/combat/*. Positive proof:
+	# a VERTICAL-adjacency (dx==0, dy==1) cast succeeds identically to the
+	# horizontal case above.
+	var c4v := _make(11, _sink)
+	_events.clear()
+	c4v.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
+	c4v.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(8, 4)
+	c4v.active_index = c4v.turn_order.find("pc")
+	c4v._start_turn()
+	c4v.combatants["pc"][WIKeys.SKILLS] = ["piercing_strikes"]
+	assert(c4v.is_adjacent("pc", "goblin_raider"), "vertical neighbors read as adjacent")
+	assert(c4v.use_skill("piercing_strikes", "goblin_raider"), "piercing_strikes usable on a vertically-adjacent enemy")
+	assert(c4v.combatants["pc"][WIKeys.AP] == 2, "piercing_strikes cost 2 AP")
+	assert(_count("skill_resolved") == 1 and _count("attack_resolved") >= 1, "vertical cast resolved into a hit roll")
+
 	# spell_damage: range-checked, refused out of range, never riposted
 	var c5 := _make(11, _sink)
 	_events.clear()

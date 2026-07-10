@@ -33,7 +33,7 @@ const EXPECTED_ITEMS := {
 	"hunters_fang_talisman": ["+1 damage on melee hits", "Resonance 1", "Worth 14 gold"],
 	"phosphor_pendant": ["+3 HP", "Resonance 1"],
 	"stonescale_talisman": ["Reduces every hit taken by 1", "Resonance 2", "Worth 35 gold"],
-	"moon_bone_amulet": ["+1 damage on melee hits", "+3 HP", "Resonance 3"],
+	"moon_bone_amulet": ["+1 damage on melee hits", "+3 HP", "Resonance 2"],
 	"watch_token": [],
 	# brothers_marker: watch_token precedent shape verbatim (mundane
 	# accessory, zero stat fields -- items.json's own _comment).

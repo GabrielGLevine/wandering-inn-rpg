@@ -1,0 +1,66 @@
+{
+ "_comment": "door_chain_sequence_break's start -- the SEQUENCE-BREAK position: door_chain_started is ALREADY banked (Erin's beat-1 flicker has already happened, one step further than door_chain_fight_start's own pre-beat-1 moment) but door_understood/pedestal_unsealed/met_pisces/everything downstream stays UNBANKED -- the player has never yet talked to Pisces at all. door_chain_started requires post_game:1 (erin_errand.json's own gate), so this fixture carries the SAME full Act II/III backbone door_chain_fight_start does (test_fixture_coherence.gd's post_game monotone-chain check enforces the whole list) plus the same harness-tuned 'warrior5_mage5' build/rng_state -- this fixture's own canonical resolves the SAME two real fights (rift_vermin_leak, then ruin_guardian) at this exact rng_state, just in a DIFFERENT order relative to talking to Pisces (fight first, consult after) than door_chain_fight's canonical does (consult first, fight after). Positioned near the inn cellar (9,6, facing down into rift_vermin_leak at 9,7) instead of facing Erin -- the flicker beat is already behind this fixture, not its subject. gold 40 (Tier-A honest Act III income, pre-catalyst-spend) and relcs_spare_spear equipped, same as door_chain_fight_start. TRAP: rng_state is the SAME properly-derived state door_chain_fight_start uses (.seed=1, captured .state = -1966449618399012673) -- reusing it is deliberate: dialogue/teleports/purchases never consume `rng` (the sim's only rng.randi() call site is start_combat), so the extra Pisces-recap detour between the two fights cannot shift either fight's seed off the already-proven-winning draw.",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   9,
+   6
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 5,
+   "mage": 5
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
+   "post_game": 1,
+   "door_chain_started": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
+   "door_that_goes_elsewhere"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "relcs_spare_spear",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 40,
+  "actions_since_sleep": 0,
+  "times_slept": 12,
+  "rng_state": "-1966449618399012673"
+ }
+}

@@ -99,19 +99,19 @@ const LOADOUT_CELLS := [
 	## skills (weapon_family "" only matches untagged), conflating "no
 	## weapon equipped" with the accessory hp-stack read this cell wants
 	## isolated. No armor, so hp+5 is entirely the accessories' contribution.
-	## (5) `moon_bone_capacity_unreachable`: moon_bone_amulet alone is
-	## resonance 3 > the shipped capacity 2 -- CANNOT be equipped in real
-	## play today (G1's `equip()` capacity refusal would block it). Still
-	## given a measured cell per the brief (the harness bypasses equip()
-	## entirely) so its numbers exist for whenever capacity grows -- LABELED
-	## here and in its print line as capacity-unreachable so nobody mistakes
-	## it for a live balance read.
+	## (5) `moon_bone_solo`: playtest finding 44 lowered moon_bone_amulet's
+	## resonance 3 -> 2 (it was unequippable the moment it was awarded --
+	## resonance_capacity never grows past its default 2 anywhere in this
+	## codebase). Equal to capacity is legal (`equip()` refuses only
+	## STRICTLY over capacity), so this is now a REAL fieldable solo kit, not
+	## the capacity-unreachable measured-only curiosity it used to be --
+	## renamed from `moon_bone_capacity_unreachable` and the `capacity_unreachable`
+	## print-label flag dropped accordingly.
 	{"name": "warrior2_max_legal_kit", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin", "accessories": ["copper_luck_band", "hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "warrior1_tutorial_solo_max_legal_kit", "comp": "goblin_ambush", "build": "warrior1_tutorial_solo", WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin", "accessories": ["copper_luck_band", "hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "warrior2_mage2_stonescale_dr2", "comp": "chieftains_raid", "build": "warrior2_mage2", WIKeys.WEAPON: "rusty_sword", "armor": "watch_issue_gambeson", "accessories": ["stonescale_talisman"]},
 	{"name": "chieftains_hp_stack", "comp": "chieftains_raid", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["phosphor_pendant", "hedge_ward_charm"]},
-	# capacity-unreachable-today: moon_bone_amulet resonance 3 > capacity 2 -- measured-only, not a live kit.
-	{"name": "moon_bone_capacity_unreachable", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["moon_bone_amulet"], "capacity_unreachable": true},
+	{"name": "moon_bone_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["moon_bone_amulet"]},
 ]
 
 ## MEASURED-only cells for the two sewers encounters

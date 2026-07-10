@@ -362,6 +362,12 @@
    "note": "Magical Door plan Task D3 (issue #8): the SKILL leg -- [Observe]s pantry_door_runes, reports to Pisces (banks the SAME door_understood), then buys Krshia's resonant_catalyst (bought_catalyst)"
   },
   {
+   "script": "door_chain_sequence_break",
+   "seed": 9,
+   "fixture": "door_chain_sequence_break_start",
+   "note": "the sequence-break canonical: fights rift_vermin_leak BEFORE ever consulting Pisces (door_chain_started pre-banked, met_pisces still 0) -- proves the finding-50 recap option ('About the pantry door -- I understand what it is now...') surfaces and its door_recap node renders from a REAL fight-first run, then completes the chain (ruin recovery + Krshia's catalyst) exactly like door_chain_fight's own tail"
+  },
+  {
    "script": "door_awakening",
    "seed": 9,
    "fixture": "door_awakening_start",
