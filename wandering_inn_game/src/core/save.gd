@@ -412,6 +412,17 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.bind_map_silent(String(s["current_map"]), Vector2i(int(player_cell[0]), int(player_cell[1])))
 	game.player_facing = Vector2i(int(player_facing[0]), int(player_facing[1]))
 	game.classes = (s["classes"] as Dictionary).duplicate(true)
+	# Retired-line sanitize (additive, idempotent, NO version bump -- the
+	# reached_two_classes precedent below): a save written before the
+	# progression retired-line rule can hold GHOST parent classes re-granted
+	# beside their consolidation target ([Warrior]+[Mage] beside [Spellsword],
+	# v0.4.0 playtest finding 47) or beside an evolution target. Strip them
+	# on load with the same derivation the acquisition path now uses --
+	# otherwise the next sleep re-offers the consolidation against the
+	# ghosts. A healthy save strips nothing.
+	for retired_id: String in WIProgression._retired_class_ids(
+			game.classes, game._combat_config.get("classes", {})):
+		game.classes.erase(retired_id)
 	game.accomplishments = (s["accomplishments"] as Dictionary).duplicate(true)
 	# Derive the monotonic `reached_two_classes` flag for saves
 	# written before it existed. A save holding two classes (or an already-merged

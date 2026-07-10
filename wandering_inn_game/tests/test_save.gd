@@ -697,5 +697,18 @@ func _init() -> void:
 	(bad_df_data["state"] as Dictionary)["delivery_failed"] = "yes"
 	assert(not WISave.apply(_new_game(), bad_df_data), "wrong-typed delivery_failed rejected")
 
+	# Retired-line load sanitize (v0.4.0 playtest finding 47): a pre-fix save
+	# holding ghost parents beside their consolidation target must strip the
+	# ghosts on load; every other held class survives untouched.
+	var ghost_data := WISave.serialize(_new_game()).duplicate(true)
+	(ghost_data["state"] as Dictionary)["classes"] = {
+		"spellsword": 11, "warrior": 7, "mage": 10, "helper": 4}
+	var ghost_game := _new_game()
+	assert(WISave.apply(ghost_game, ghost_data), "ghost-parent save still applies")
+	assert(not ghost_game.classes.has("warrior") and not ghost_game.classes.has("mage"),
+		"consolidation-target ghosts stripped on load")
+	assert(int(ghost_game.classes.get("spellsword", 0)) == 11 and int(ghost_game.classes.get("helper", 0)) == 4,
+		"non-retired classes survive the sanitize untouched")
+
 	print("PASS: save round-trips the full sim including rng state")
 	quit(0)
