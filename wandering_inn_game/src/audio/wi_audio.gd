@@ -25,6 +25,10 @@ var _music_players: Array[AudioStreamPlayer] = []
 var _active_music_index := 0
 var _current_music_id := ""
 var _field_context_id := ""
+## The live crossfade Tween, if any -- killed before scheduling a new one
+## (see `_crossfade_to_music`'s doc comment for the double-trigger ordering
+## trap this guards).
+var _music_tween: Tween
 
 ## Fallback-art contract (audio half). A PUBLIC checkout is
 ## missing the protected music/SFX packs (see assets_manifest.json). A stream
@@ -339,9 +343,27 @@ func _play_music_entry(entry: Dictionary) -> void:
 	_emit_audio_played(id, bus)
 
 
+## TRAP (double-trigger ordering): two music context switches can land in
+## the SAME synchronous beat -- e.g. a map edge cell that also sits inside a
+## proximity encounter's `trigger_radius` fires `map_changed` (field-music
+## crossfade) immediately followed by `combat_started` (combat-music
+## crossfade). Without the `_music_tween` kill below, both Tweens animate
+## `volume_db` on the SAME two players in opposite directions each frame
+## (whichever tween steps later that frame wins), audible as a stutter/
+## restart at the transition. Killing the in-flight crossfade first makes
+## the LATER transition win outright: a Tween captures its start value when
+## it begins running, so the new fade picks up cleanly from whatever volume
+## the kill left each player at. In the double-trigger case the interrupted
+## crossfade's `new_player` (still silent -- its fade-in never ran) becomes
+## this call's `old_player` and fades out from silence (harmless no-op),
+## while its `old_player` (still at the prior track's volume) becomes this
+## call's `new_player` and fades cleanly into the new track -- the
+## intermediate track is never audibly played.
 func _crossfade_to_music(stream: AudioStream, bus: String, target_db: float, return_to_field: bool) -> void:
 	if _music_players.size() < 2:
 		return
+	if _music_tween != null and _music_tween.is_valid():
+		_music_tween.kill()
 	var old_player := _music_players[_active_music_index]
 	var new_index := 1 - _active_music_index
 	var new_player := _music_players[new_index]
@@ -363,6 +385,7 @@ func _crossfade_to_music(stream: AudioStream, bus: String, target_db: float, ret
 		if old_player != new_player and old_player.playing:
 			old_player.stop()
 	)
+	_music_tween = tween
 
 	_active_music_index = new_index
 	## Non-looping "sting" contexts (e.g. victory) resume the last field

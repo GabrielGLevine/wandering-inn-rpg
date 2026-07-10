@@ -219,6 +219,36 @@ func _init() -> void:
 	var matched: Dictionary = hud_logic.match_tutor_line("combat_started", {})
 	assert(String(matched.get("id", "")) == "t1", "tutor line matching must fire on its declared event")
 	assert(hud_logic.match_tutor_line("combat_started", {}).is_empty(), "a fired tutor line must not re-fire")
+	# `requires_any_class`/`fallback_line` contract: a gated tutor entry
+	# must render its FALLBACK when `_screen._pc_has_any_class()` reads
+	# false, and its normal `line` unchanged when true -- proven against
+	# real class stub screens, not just the raw-source presence of the keys.
+	var class_stub_script := GDScript.new()
+	class_stub_script.source_code = "extends Node\nvar has_class: bool = false\nfunc _pc_has_any_class() -> bool:\n\treturn has_class\n"
+	assert(class_stub_script.reload() == OK, "class-gate stub screen failed to compile")
+	var no_class_screen: Node = class_stub_script.new()
+	no_class_screen.has_class = false
+	var gated_hud_no_class: RefCounted = hud_script.new(null, null, no_class_screen)
+	gated_hud_no_class.reset_tutor_lines({"tutor_lines": [{
+		"id": "real_ones", "on": {"event": "combat_started"}, "requires_any_class": true,
+		"line": "Relc: you slept.", "fallback_line": "Relc: you haven't slept.",
+	}]})
+	var no_class_match: Dictionary = gated_hud_no_class.match_tutor_line("combat_started", {})
+	assert(String(no_class_match.get("line", "")) == "Relc: you haven't slept.", "requires_any_class gate must render fallback_line when the PC has no class yet")
+	var has_class_screen: Node = class_stub_script.new()
+	has_class_screen.has_class = true
+	var gated_hud_has_class: RefCounted = hud_script.new(null, null, has_class_screen)
+	gated_hud_has_class.reset_tutor_lines({"tutor_lines": [{
+		"id": "real_ones", "on": {"event": "combat_started"}, "requires_any_class": true,
+		"line": "Relc: you slept.", "fallback_line": "Relc: you haven't slept.",
+	}]})
+	var has_class_match: Dictionary = gated_hud_has_class.match_tutor_line("combat_started", {})
+	assert(String(has_class_match.get("line", "")) == "Relc: you slept.", "requires_any_class gate must render the normal line once the PC has a class")
+	# Control: an UNGATED entry (every pre-existing tutor_lines entry) must
+	# stay byte-identical -- no _pc_has_any_class call, no behavior change.
+	assert(String(matched.get("line", "")) == "Begin!", "an ungated tutor entry must render its plain line untouched")
+	no_class_screen.free()
+	has_class_screen.free()
 	# Real behavioral check that build() actually instantiates the hotbar
 	# under a real Control root (the direct replacement for the old
 	# raw-source "HOTBAR_SCRIPT" substring check against combat_screen.gd --
@@ -331,6 +361,48 @@ func _init() -> void:
 	playback._apply_playback_event({"type": "skill_resolved", "payload": {"actor": "pc", "skill": "frost_bolt", "target": "goblin_raider", "_ui": {}}}, false)
 	assert(recorder.visual_calls == ["terrain_expired", "terrain_added"], "VFX-class events (skill_resolved) stay gated behind with_visuals on the skip path -- the terrain fix is surgical, not a wholesale gate removal")
 	recorder.free()
+
+	# Dead-actor re-flash guard: `_highlight_actor` must never re-flash a
+	# combatant already marked `death_visible`. TRAP being covered:
+	# `_actor_id_for_event` has no dedicated COMBATANT_DOWNED case, so it
+	# names the DOWNED unit itself as "actor", and that same unit's own
+	# trailing bookkeeping event in the SAME AI-turn batch (its own
+	# turn_ended, which still fires when it died mid-turn to a
+	# reaction/counter-strike) would otherwise re-trigger the
+	# bright-flash-then-white tween on the SAME node the death fade
+	# (fade_chip) is already animating, snapping modulate back to opaque.
+	# Stub renderer only implements the two methods `_highlight_actor`
+	# actually calls (`visual_for`/`death_visible`); a real in-tree screen
+	# stub lets `_screen.create_tween()` succeed if the guard is EVER
+	# reached (it must not be, for the dead case).
+	var hl_renderer_script := GDScript.new()
+	hl_renderer_script.source_code = "extends Node\nvar dead: bool = false\nvar visual: Node2D\nfunc visual_for(_id: String) -> Node2D:\n\treturn visual\nfunc death_visible(_id: String) -> bool:\n\treturn dead\n"
+	assert(hl_renderer_script.reload() == OK, "stub highlight renderer failed to compile")
+	var hl_renderer: Node = hl_renderer_script.new()
+	var hl_visual := Node2D.new()
+	var post_fade_modulate := Color(1.0, 1.0, 1.0, 0.28)  # fade_chip's own end value
+	hl_visual.modulate = post_fade_modulate
+	hl_renderer.visual = hl_visual
+	hl_renderer.dead = true
+	var hl_screen := Node.new()
+	root.add_child(hl_screen)
+	var hl_playback: RefCounted = playback_script.new(hl_renderer, hl_screen)
+	hl_playback._highlight_actor({"payload": {"_ui": {"actor_id": "raskghar_scout"}}})
+	assert(hl_visual.modulate.is_equal_approx(post_fade_modulate), "_highlight_actor must NOT touch modulate for an already-dead combatant -- would undo its death fade")
+	# Control: a LIVE combatant still gets the highlight bump -- the fix must
+	# be surgical (death-visible guard only), not a wholesale disable.
+	hl_renderer.dead = false
+	hl_playback._highlight_actor({"payload": {"_ui": {"actor_id": "raskghar_scout"}}})
+	assert(not hl_visual.modulate.is_equal_approx(post_fade_modulate), "_highlight_actor must still flash a LIVE combatant")
+	# Direct free() (not queue_free -- this script's own SceneTree quits
+	# synchronously right after this function returns, before a deferred free
+	# would ever run, leaking the ObjectDB entry), same idiom this file's
+	# other bare-Node stubs already use (driver.free()/recorder.free()/
+	# fake_root.free() above).
+	root.remove_child(hl_screen)
+	hl_screen.free()
+	hl_visual.free()
+	hl_renderer.free()
 
 	var driver_source := FileAccess.get_file_as_string("res://qa/test_driver.gd").replace(
 		"extends Node",

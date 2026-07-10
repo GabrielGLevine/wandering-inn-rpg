@@ -709,11 +709,14 @@
    "_comment": "Layout-identical clone of goblin_ambush carrying its own tutor beats (arenas own tutor_lines, and goblin_ambush is shared with goblin_encounter_2, which must stay beat-free). goblin_encounter_1 points here. TRAP: `road_clear`'s `line` carries TWO sentences appended into one entry, not two separate tutor_lines entries -- no shipped QA script pins its exact text (every reference is `payload_contains: {beat: \"road_clear\"}`), but `combat_hud.gd`'s `match_tutor_line` fires at most ONE tutor entry per incoming event (`ready[0]`), so a second entry on the SAME combat_finished/victory trigger could never fire; appending to the existing line is the only way to land a second beat here. The feed panel auto-grows for tutor lines (`_grow_feed_panel_for_tutor`, capped/evicts oldest -- see CLAUDE.md's wrapped-line-budget gotcha) and this fires as the LAST beat of the fight, so evicting older combat-log lines here is harmless.",
    "tutor_lines": [
     {
+     "_comment": "requires_any_class (combat_hud.gd's `_tutor_line_text`): this line's whole point is 'go check your new skill slots', which is only TRUE once a sleep has actually granted a class -- the ambush's proximity trigger is reachable cold-start too (walk straight past Relc to the road, never spar/sleep), where the PC has zero classes and a bare 2-slot Attack/Dash bar with no slot 3 to check. `fallback_line` keeps Relc's same opening (voice-consistent) but points the player at the ACTUAL prerequisite (sleep at the inn) instead of a false past-tense claim.",
      "id": "real_ones",
      "on": {
       "event": "combat_started"
      },
-     "line": "Relc: Real ones this time. Stay behind me if you have to. You slept, so check your numbers: 3 and up are your [Skills] now. Earned, not given."
+     "requires_any_class": true,
+     "line": "Relc: Real ones this time. Stay behind me if you have to. You slept, so check your numbers: 3 and up are your [Skills] now. Earned, not given.",
+     "fallback_line": "Relc: Real ones this time. Stay behind me if you have to. No numbers yet -- you haven't slept. Win this, then get back to the inn and sleep. That's when the real stuff shows up."
     },
     {
      "id": "skill_aim",

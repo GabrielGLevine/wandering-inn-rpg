@@ -408,6 +408,20 @@ func _wait_for_skip(seconds: float) -> void:
 ## the event's captured `_ui.actor_id` (`_capture_event_ui`), not recomputed,
 ## so it still names the right combatant if the sim has moved on by dequeue.
 ## `_screen.create_tween()` since this is a RefCounted, not a Node.
+##
+## TRAP (dead-actor re-flash): `_actor_id_for_event` has no dedicated case
+## for COMBATANT_DOWNED, so it falls to the default branch and names the
+## DOWNED combatant itself as "actor" -- and a combatant that dies MID-TURN
+## (to a reaction/counter-strike) still emits its own turn_ended, riding the
+## SAME AI-turn playback batch as its downed beat and resolving to the same
+## id via the same default-branch fallback. Without the `death_visible`
+## guard below, that trailing event re-runs this flash on a holder whose
+## death fade (fade_chip, fired for the downed beat moments earlier) is
+## already in flight -- both tweens write the same node's `modulate`, and
+## this one ends at opaque WHITE, undoing the fade. CONSTRAINT: a combatant
+## marked `death_visible` (set at COMBATANT_DOWNED capture AND render time,
+## see combat_screen.gd/board_renderer.gd) must never be re-flashed,
+## regardless of which later event in the same batch names it.
 func _highlight_actor(event: Dictionary) -> void:
 	var payload: Dictionary = event["payload"]
 	var ui: Dictionary = payload.get("_ui", {})
@@ -416,6 +430,8 @@ func _highlight_actor(event: Dictionary) -> void:
 		return
 	var visual: Node2D = _renderer.visual_for(actor_id)
 	if visual == null:
+		return
+	if _renderer.death_visible(actor_id):
 		return
 	visual.modulate = Color(1.25, 1.25, 1.25, 1.0)
 	var tw: Tween = _screen.create_tween()
