@@ -1,5 +1,34 @@
 # Wandering Inn RPG Handoff
 
+## USER PLAYTEST TRIAGE (2026-07-09, 51 findings through Stage 6) — LIVE
+
+Full list in the chat log; triage:
+- **FIXED SAME-DAY on main**: finding 47 (post-consolidation re-grant
+  loop — new retired-line rule in progression.gd, covers the evolution
+  flavor of the same bug + unit-tested both directions) and finding 50
+  (door-chain sequence break — Pisces `door_recap` pointer option,
+  appended LAST so QA option-numbering holds; the user was never
+  hard-blocked: `rift_vermin_leak.on_victory` banks the counters in any
+  order, only the ruin POINTER was consult-response-only).
+  **USER UNBLOCK (immediate):** the ruin seam is on the floodplains at
+  cell (38,11) — far EAST past the gate road, open grass, grey-blue
+  cracked-stone boulder; interact opens the ruin, the plinth is already
+  unsealed for you. After the stone + catalyst: sleep 3 times.
+- **#52 = the mechanical wave** (exploit: infinite patron gold; walk-
+  through Liscor segments; [Piercing Strike] axis bug; dialogue
+  staleness batch; earn-gold toast consistency; locked-door toasts;
+  stairs/cot visibility; posting names; door-prop state timing (finding
+  45: no arch until awakened); feed fold; bark hold; + the
+  door_chain_sequence_break canonical).
+- **#53 = the design batch** (flee/abandon combat, skill-driven chores,
+  boards-in-journal, selling, night pacing, music variety, verb-label
+  policy, GDI-delivered consolidation, journal levels + passive cards,
+  catalyst price vs Act-1 economy, garden fanfare, sewer readability,
+  Liscor facade z-order) — most taste-gated.
+- Finding 28 self-retracted (MP doesn't refill post-battle — by design).
+- Findings 23/39 (toast overflows) may predate the v0.4.1 fold fix —
+  re-verify on current main before treating as live.
+
 ## v0.4.1 FIX WAVE LANDED (2026-07-09) — awaiting review close-out + tag call
 
 The post-v0.4.0 findings (machine playtest + user report) are FIXED on

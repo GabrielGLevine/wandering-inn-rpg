@@ -351,5 +351,29 @@ func _init() -> void:
 	assert(not same_line.is_empty(), "the higher-level candidate (swordsman 9) qualifies even though warrior 3 (same line, sub-threshold) is also held")
 	assert((same_line["parents"] as Array) == ["swordsman", "mage"], "the best (highest-level) candidate per line is reported, not the first-listed id")
 
+	# Retired-line rule (v0.4.0 playtest finding 47): once a consolidation
+	# target is held, its parent lines can NEVER be re-acquired even with
+	# every gained_by threshold banked -- without this, the sleep after
+	# accepting [Spellsword] re-granted [Warrior]+[Mage] (counters never
+	# reset) and re-offered the consolidation in a loop.
+	var post_consolidation := WIProgression.check_class_gains(
+		{"spellsword": 14},
+		{"sparred_with_relc": 5, "learned_magic_from_pisces": 5},
+		catalog)
+	assert(not post_consolidation.has("warrior") and not post_consolidation.has("mage"),
+		"held spellsword retires BOTH parent lines from re-acquisition")
+	# Same hazard, evolution flavor: a held evolution target retires its
+	# base id (Replacement erased it; its gained_by is still met forever).
+	var post_evolution := WIProgression.check_class_gains(
+		{"swordsman": 10},
+		{"sparred_with_relc": 5},
+		catalog)
+	assert(not post_evolution.has("warrior"),
+		"held swordsman (warrior's evolution target) retires warrior from re-acquisition")
+	# Negative control: with NOTHING downstream held, the same counters do
+	# still acquire -- the retire rule must not over-block.
+	assert(WIProgression.check_class_gains({}, {"sparred_with_relc": 5}, catalog).has("warrior"),
+		"retire rule leaves normal first-acquisition untouched")
+
 	print("PASS: progression checks behave correctly")
 	quit(0)

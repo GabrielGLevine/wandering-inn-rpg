@@ -64,17 +64,56 @@
     {
      "_comment": "(spec §1 beat 2, the 3-path mage-consult opener) Requires door_chain_started (Erin's flicker beat, erin_errand.json), hide_when door_understood (the shared convergence counter -- 3-path identity rule) so it stops offering once ANY leg resolves. Appended at array END (index-safety convention, matches pisces_fence above).",
      "text": "Something's come through our pantry door. Will you look at it?",
-     "requires": { "accomplishment": { "door_chain_started": 1 } },
-     "hide_when": { "accomplishment": { "door_understood": 1 } },
+     "requires": {
+      "accomplishment": {
+       "door_chain_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "door_understood": 1
+      }
+     },
      "goto": "door_consult"
     },
     {
      "_comment": "The SKILL leg's REPORT step (cisterns_scout/wrong_order precedent -- [Observe]-ing pantry_door_runes in the inn alone only banks the intermediate read_the_door_runes; reporting the finding here banks the shared door_understood + pedestal_unsealed). The player's own line restates Pisces's TALK-leg verdict verbatim (consult_talk_done below) -- deliberate identity-rule parity, both legs arrive at the SAME understanding.",
      "text": "I read the wardwork myself: a spatial anchor, something that remembers being elsewhere.",
-     "requires": { "accomplishment": { "read_the_door_runes": 1 } },
-     "hide_when": { "accomplishment": { "door_understood": 1 } },
-     "effects": [ { "accomplishment": "door_understood" }, { "accomplishment": "pedestal_unsealed" } ],
+     "requires": {
+      "accomplishment": {
+       "read_the_door_runes": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "door_understood": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "door_understood"
+      },
+      {
+       "accomplishment": "pedestal_unsealed"
+      }
+     ],
      "goto": "consult_skill_report"
+    },
+    {
+     "_comment": "Sequence-break rescue + recap (v0.4.0 playtest finding 50): the ruin pointer used to live ONLY inside the three consult responses -- a player who cleared rift_vermin_leak BEFORE consulting (its on_victory banks door_understood, hiding both consult options) never heard where the anchor stone is and stalled. Gated on the understanding existing, retired once the stone is recovered; APPENDED LAST so existing visible-option numbering (QA scripts press numbers) is untouched.",
+     "text": "About the pantry door -- I understand what it is now. Where does that leave me?",
+     "requires": {
+      "accomplishment": {
+       "door_chain_started": 1,
+       "door_understood": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "recovered_anchor_stone": 1
+      }
+     },
+     "goto": "door_recap"
     }
    ]
   },
@@ -82,32 +121,67 @@
    "speaker": "Pisces",
    "text": "A door with opinions. How very like this city. Three ways to satisfy my curiosity: bleed for it, talk me into caring, or prove you can read a ward without my help. Choose, and don't waste my morning.",
    "options": [
-    { "text": "I'll clear whatever's coming through myself.", "goto": "consult_fight_response" },
-    { "text": "Come look at it yourself. Your kind of magic, not mine.", "goto": "consult_talk_pitch" },
-    { "text": "I'll read the wardwork myself, then.", "goto": "consult_skill_response" }
+    {
+     "text": "I'll clear whatever's coming through myself.",
+     "goto": "consult_fight_response"
+    },
+    {
+     "text": "Come look at it yourself. Your kind of magic, not mine.",
+     "goto": "consult_talk_pitch"
+    },
+    {
+     "text": "I'll read the wardwork myself, then.",
+     "goto": "consult_skill_response"
+    }
    ]
   },
   "consult_fight_response": {
    "speaker": "Pisces",
    "text": "Bleeding it is. Predictable, but effective. Go on, then. I'll be here, dry and uninjured, exactly as planned.",
    "options": [
-    { "text": "Wish me luck.", "end": true }
+    {
+     "text": "Wish me luck.",
+     "end": true
+    }
    ]
   },
   "consult_talk_pitch": {
    "speaker": "Pisces",
    "text": "You want me to walk into someone's pantry and grope at a wild ward with my bare senses. No. I have wards of my own I'd rather keep.",
    "options": [
-    { "text": "It's not asking much. You'd know in a glance.", "goto": "consult_talk_argue" },
-    { "text": "Forget it, then.", "end": true }
+    {
+     "text": "It's not asking much. You'd know in a glance.",
+     "goto": "consult_talk_argue"
+    },
+    {
+     "text": "Forget it, then.",
+     "end": true
+    }
    ]
   },
   "consult_talk_argue": {
    "speaker": "Pisces",
    "text": "...A glance. Hm. If it truly reads as spatial and not necrotic, I could examine it without touching a thing. Fine, for the intellectual insult of not knowing, not for you.",
    "options": [
-    { "text": "Then it's settled.", "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "door_understood" }, { "accomplishment": "pedestal_unsealed" } ], "goto": "consult_talk_done" },
-    { "text": "Actually - never mind.", "end": true }
+    {
+     "text": "Then it's settled.",
+     "effects": [
+      {
+       "accomplishment": "persuaded_someone"
+      },
+      {
+       "accomplishment": "door_understood"
+      },
+      {
+       "accomplishment": "pedestal_unsealed"
+      }
+     ],
+     "goto": "consult_talk_done"
+    },
+    {
+     "text": "Actually - never mind.",
+     "end": true
+    }
    ]
   },
   "consult_talk_done": {
@@ -115,21 +189,30 @@
    "speaker": "Pisces",
    "text": "A spatial anchor. Crude. Fascinating. Whoever built your inn, adventurer, built it on something that remembers being elsewhere.",
    "options": [
-    { "text": "Thank you, Pisces.", "end": true }
+    {
+     "text": "Thank you, Pisces.",
+     "end": true
+    }
    ]
   },
   "consult_skill_response": {
    "speaker": "Pisces",
    "text": "Read it yourself, then. [Observe] the frame close, and mind that the pattern doesn't repeat the same way twice. Report back if you actually understand what you saw. I'll judge whether you do.",
    "options": [
-    { "text": "I'll take a look.", "end": true }
+    {
+     "text": "I'll take a look.",
+     "end": true
+    }
    ]
   },
   "consult_skill_report": {
    "speaker": "Pisces",
    "text": "...Correct. Aggravatingly correct. You have the eye, if not the training. Don't let it go to your head. The training is where the real work is.",
    "options": [
-    { "text": "I'll take the compliment anyway.", "end": true }
+    {
+     "text": "I'll take the compliment anyway.",
+     "end": true
+    }
    ]
   },
   "pisces_fence": {
@@ -222,6 +305,30 @@
    "options": [
     {
      "text": "Thank you, Pisces.",
+     "end": true
+    }
+   ]
+  },
+  "door_recap": {
+   "speaker": "Pisces",
+   "text": "Then attend, because I dislike repeating myself. The door remembers being elsewhere; it wants an anchor to remember BY. East across the floodplains, well past the gate road, there is a seam of old dressed stone in the open grass -- a ruin, collapsed and rude, but its plinth still cradles an anchor stone. Retrieve it. Krshia's resonant catalyst will attune the pairing. And do try not to die somewhere so architecturally disappointing.",
+   "options": [
+    {
+     "text": "East past the gate road. Understood.",
+     "end": true
+    },
+    {
+     "text": "'Architecturally disappointing.' You've been there?",
+     "goto": "door_recap_two"
+    }
+   ]
+  },
+  "door_recap_two": {
+   "speaker": "Pisces",
+   "text": "I have STANDARDS, not an itinerary. The Guild survey called it a seam and moved on; I call it a doorframe that lost its house. Go and prove one of us right.",
+   "options": [
+    {
+     "text": "On my way.",
      "end": true
     }
    ]

@@ -145,14 +145,42 @@ static func granted_skills(classes: Dictionary, class_catalog: Dictionary, gener
 	return out
 
 
+## Class ids permanently RETIRED from re-acquisition, derived purely from
+## what's held (no save-state needed, reconstructs correctly on load):
+## (1) every id in BOTH parent_lines of a consolidation whose target is
+## held -- accept_consolidation erases the parents, but their gained_by
+## thresholds stay met forever, so without this the very next sleep
+## re-granted [Warrior]+[Mage] beside [Spellsword] and re-offered the
+## consolidation in a loop (v0.4.0 playtest, finding 47);
+## (2) the base id of any evolution whose target is held -- the Replacement
+## path erases the base, which has the identical re-grant hazard.
+static func _retired_class_ids(classes: Dictionary, class_catalog: Dictionary) -> Dictionary:
+	var retired: Dictionary = {}
+	for entry: Dictionary in class_catalog.get("consolidations", []):
+		if not classes.has(String(entry.get("target", ""))):
+			continue
+		for line: Variant in entry.get("parent_lines", []):
+			for id: Variant in (line as Array):
+				retired[String(id)] = true
+	for cls: Dictionary in class_catalog.get("classes", []):
+		var targets: Dictionary = (cls.get("evolution", {}) as Dictionary).get("targets", {})
+		for key: String in targets:
+			if classes.has(String(targets[key])):
+				retired[String(cls[WIKeys.ID])] = true
+				break
+	return retired
+
+
 ## Returns ids of classes whose gained_by condition is met and which are not
 ## already held. Classes with no gained_by field are never returned here --
 ## earning them requires already holding them (see check_level_ups instead).
+## Retired lines (see _retired_class_ids) are never re-acquired.
 static func check_class_gains(classes: Dictionary, accomplishments: Dictionary, class_catalog: Dictionary) -> Array:
 	var gains: Array = []
+	var retired := _retired_class_ids(classes, class_catalog)
 	for cls: Dictionary in class_catalog.get("classes", []):
 		var id := String(cls[WIKeys.ID])
-		if classes.has(id) or not cls.has("gained_by"):
+		if classes.has(id) or retired.has(id) or not cls.has("gained_by"):
 			continue
 		# A gained_by with no accomplishment requirements would otherwise be
 		# vacuously met and granted to everyone at the first sleep beat.
