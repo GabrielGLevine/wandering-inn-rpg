@@ -1,5 +1,28 @@
 # Wandering Inn RPG Handoff
 
+## RULINGS BATCH 2 (2026-07-10, f43eac6/f03f3a4/36e40c1) — sweep 80/80 x3
+
+- **#50 SHIPPED**: witch-pattern everywhere (persuades = [Diplomat]-gated
+  visible-locked + one real-cost alternate each: 2g/3g/2g/10g/5g;
+  persuaded_someone Diplomat-only). Entry widened per ruling: the
+  frazzled drayman (street 19,14) — free NON-quest persuade, proven in
+  gate_district_walkthrough.
+- **EXPLICIT-HOTBAR RULING SHIPPED** (user override of the parity
+  adjudication; memory feedback_explicit_skill_use): interact NEVER
+  auto-casts a skill-prop — nudge toast names the tool; hotbar is the
+  only caster; P1 parity test replaced by the new contract; TestDriver
+  gains `press_field_skill` (cast-by-id, loadout-robust); 12 canonicals
+  re-pinned. Doctrine: tiresome-frequency actives become passives.
+- **Night pacing SHIPPED**: dusk/night 100/225 → 150/338 (1.5x, ratio
+  held); crossings verified live in event logs, not just green.
+- **Music**: 14 CC0 tracks (Junkala towns/calm/action + RandomMind inn
+  folk) in potential_assets/music_2026-07-10/ + LICENSE-VERIFICATION.md
+  + mapping proposal — USER LISTENS, then wiring.
+- dist/ gitignored (asset-bundle tarball).
+- **AWAITING USER**: selling design proposal (drafted in chat), music
+  verdicts, #53 residue (GDI consolidation delivery, journal levels +
+  passive cards, garden fanfare, sewer contrast, Liscor facades).
+
 ## #49 WAVE A + POSTINGS SHIPPED (2026-07-10, pushed 3252e2c) — sweep 80/80
 
 Two Sonnet lanes, both opus-reviewed MERGE (RF: zero findings; POST: one
