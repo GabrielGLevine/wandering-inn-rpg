@@ -132,11 +132,15 @@ static func _accept_line(bounty_id: String) -> String:
 ## ribbon with it. Fixed by moving the full copy into the HUB NODE's own body
 ## text instead (numbered "1./2./3.", the SAME paginate-safe surface
 ## `_interact_board`'s browse view already uses) and keeping every OPTION a
-## short "Take: <title>. (G gold)" label (the bare "Take posting N." numeral
-## read as unrecognizable at the option row -- a player picking blind by
+## one-line "Take: <title>. (G gold)" label (a bare "Take posting N." numeral
+## reads as unrecognizable at the option row -- a player picking blind by
 ## index, not by what the posting actually is; `_posting_title` supplies the
-## name) + a final "Never mind." -- options never need to wrap. Selecting a
-## posting accepts it via the `accept_bounty`
+## name) + a final "Never mind.". CONSTRAINT: option Labels still have no
+## autowrap, so every composed title must stay one line -- the longest
+## current composition is ~50 chars, far under the paragraph case that
+## caused the original bug, but unverified against the panel edge in a
+## windowed read; re-measure windowed if a longer title is ever added.
+## Selecting a posting accepts it via the `accept_bounty`
 ## dialogue effect and lands on a per-bounty confirmation node reading Selys's
 ## accept line (short, single-line, safe as an option/body either way).
 static func build_picker_graph(slate: Array) -> Dictionary:
@@ -213,9 +217,11 @@ static func _delivery_issue_line(delivery: Dictionary) -> String:
 ## Builds Vess's "Take a slip." conversation -- build_picker_graph's exact
 ## twin (and its hard-won layout lesson applies verbatim: full slip copy
 ## lives in the HUB NODE's paginated body, numbered; every OPTION stays a
-## short unwrapped "Take: <title>. (G gold)" label (`_delivery_title` names
-## the slip, same fix as `_posting_title` above) -- dialogue_panel option
-## Labels have no autowrap). Selecting a slip accepts it via the
+## one-line "Take: <title>. (G gold)" label (`_delivery_title` names the
+## slip, `_posting_title`'s twin). CONSTRAINT: dialogue_panel option Labels
+## have no autowrap -- composed titles (~50 chars max today) are unverified
+## against the panel edge in a windowed read; re-measure windowed if a
+## longer title is ever added. Selecting a slip accepts it via the
 ## `accept_delivery` dialogue effect (which also grants the parcel item)
 ## and lands on a per-slip confirmation node reading Vess's issue line.
 static func build_delivery_picker_graph(slate: Array) -> Dictionary:

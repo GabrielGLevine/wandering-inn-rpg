@@ -67,7 +67,7 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 2 },
+  { "_comment": "Hub at report time: 'You look worried about something.' hides once heard_about_cisterns is banked; 'Any word on the cisterns?' (requires it, appended at array end) re-enters the cisterns node. Visible: 0 chess, 1 [Tactician] (UNLOCKED here, still passed), 2 'I'll leave you to your tally.', 3 'Any word on the cisterns?'. move_down x3, confirm.", "action": "move", "direction": "down", "steps": 3 },
   { "action": "press", "name": "confirm" },
   { "_comment": "Cisterns node post-scout (scouted_the_nest banked, resolved/reported not): only the [Appraise Foe] intel report is visible, at cursor 0. It banks resolved_the_cisterns THEN cisterns_reported -> both beats + completion fire in this one report.", "action": "wait_frames", "frames": 3 },
   { "action": "press", "name": "confirm" },

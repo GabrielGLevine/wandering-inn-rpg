@@ -782,7 +782,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Finding #6 fix: 'Fair enough. Go on.' (visible index 0, only option besides 'Maybe later.') now banks lyonette_tip and goes STRAIGHT to `tip` -- it no longer loops back through hub's opening line a second time before the player can actually hear the advice.",
+   "_comment": "'Fair enough. Go on.' (visible index 0, only option besides 'Maybe later.') banks lyonette_tip and goes STRAIGHT to `tip` -- no hub re-entry between the retort and the advice.",
    "action": "press",
    "name": "confirm"
   },

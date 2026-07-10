@@ -72,7 +72,7 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Hub: 'You look worried about something.' at cursor 2 (chess 0, [Tactician] locked 1). move_down x2, confirm -> cisterns node.", "action": "move", "direction": "down", "steps": 2 },
+  { "_comment": "Hub at report time: heard_about_cisterns is banked, so 'You look worried about something.' (hide_when that counter) is GONE; its in-progress replacement 'Any word on the cisterns?' (requires that counter, appended at array end) is the way back into the cisterns node. Visible: 0 chess, 1 [Tactician] (locked), 2 'I'll leave you to your tally.', 3 'Any word on the cisterns?'. move_down x3, confirm.", "action": "move", "direction": "down", "steps": 3 },
   { "action": "press", "name": "confirm" },
   { "_comment": "Cisterns node post-victory (cleared_the_nest banked, cisterns_reported not): accept is HIDDEN, watch/skill reports HIDDEN -> only 'It's dealt with -- I cleared the nest myself.' is the effect option, at cursor 0.", "action": "wait_frames", "frames": 3 },
   { "action": "press", "name": "confirm" },

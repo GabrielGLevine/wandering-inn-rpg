@@ -55,7 +55,7 @@
   { "action": "assert_state", "path": "accomplishments.delivered_item", "equals": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [10, 3] },
 
-  { "_comment": "Beat 3: hungry_patron, serve x1 -> served_customer count 1. Findings #5/#49 fix (v0.4.2 hotfix): the Serve option is now once_per_waking (was an infinite-gold exploit -- unlimited re-serves, same waking, no gate at all). This beat used to serve TWICE back to back with no sleep between; it now proves the gate itself -- exit, re-talk the SAME waking, and the Serve option is GONE from the visible list (not just un-selectable), leaving only the dismiss line.", "action": "move", "direction": "left", "steps": 4 },
+  { "_comment": "Beat 3: hungry_patron, serve x1 -> served_customer count 1, then prove the once_per_waking gate: exit, re-talk the SAME waking, and the Serve option must be GONE from the visible list (not merely locked), leaving only the dismiss line. TRAP: a second same-waking serve here would be the infinite-gold repeat the gate exists to block -- if this beat ever waits for served_customer count 2 without a sleep between, the gate is broken, not the script.", "action": "move", "direction": "left", "steps": 4 },
   { "action": "move", "direction": "down", "steps": 3 },
   { "action": "move", "direction": "left", "steps": 1 },
   { "action": "press", "name": "interact" },
