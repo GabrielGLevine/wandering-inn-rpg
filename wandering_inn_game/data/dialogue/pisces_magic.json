@@ -114,6 +114,22 @@
       }
      },
      "goto": "door_recap"
+    },
+    {
+     "_comment": "The post-recovery pointer (the second sequence-gap a real playthrough hit): once the stone + catalyst are both in hand every other door option has retired, and the awakening's sleep-study window is OPAQUE by design -- this is the one line allowed to say 'rest' without counting anything. Appended LAST (numbering safety); retires at door_awakened.",
+     "text": "I have the stone and Krshia's catalyst. Now what?",
+     "requires": {
+      "accomplishment": {
+       "recovered_anchor_stone": 1,
+       "bought_catalyst": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "door_awakened": 1
+      }
+     },
+     "goto": "door_attune"
     }
    ]
   },
@@ -353,6 +369,16 @@
    "options": [
     {
      "text": "On my way.",
+     "end": true
+    }
+   ]
+  },
+  "door_attune": {
+   "speaker": "Pisces",
+   "text": "Then the scholarship is done and the tedium begins. Keep both near the door and REST. Attunement is not a lever, it is a residency -- the frame learns the stone the way a house learns its family: overnight, and more than once. Sleep. Let the inn do the part no [Mage] can rush.",
+   "options": [
+    {
+     "text": "Sleep on it. Literally. Got it.",
      "end": true
     }
    ]

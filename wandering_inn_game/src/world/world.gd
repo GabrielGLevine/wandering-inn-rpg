@@ -499,6 +499,12 @@ func _rebuild_field() -> void:
 	_entities_root = Node2D.new()
 	_entities_root.y_sort_enabled = true
 	_field_root.add_child(_entities_root)
+	# TRAP (load-bearing ORDER): decor builds BEFORE entities so a door
+	# entity sharing a cell with a facade decor tile draws OVER it -- equal
+	# y-sort keys tie-break by tree order in Godot 4 (later sibling on
+	# top). The street's barracks_door sits ON its facade tile relying on
+	# exactly this; reordering these builds buries that door with every QA
+	# gate still green (render-only).
 	_build_decor(_current_map_cfg().get("decor", []))
 	_build_scatter(_current_map_cfg().get("scatter", []))
 	var render_counts := {"sprites": 0, "fallbacks": 0}
@@ -1144,7 +1150,9 @@ func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallb
 		# overhang by row-only sort math, so the giant sprite draws over them
 		# and hides the PC entirely (playtest evidence: arc_flow's dd_04/
 		# dd_05 -- the Awakened Raskghar reveal + Relc-veto dialogue).
-		# `field_y_sort_bias_px` (sprites.json, opt-in, negative) lets a
+		# `field_y_sort_bias_px` (sprites.json, opt-in, SIGNED -- negative pulls
+		# the key north, positive pushes it south; inn_roof's +20 is the first
+		# positive consumer) lets a
 		# catalog entry pull its own `holder`'s Y-SORT KEY north without
 		# moving the sprite: `holder.position.y` gets the bias (sorts as if
 		# further back), while `spr`/the shadow below get the bias
