@@ -1,5 +1,28 @@
 # Wandering Inn RPG Handoff
 
+## #49 WAVE A + POSTINGS SHIPPED (2026-07-10, pushed 3252e2c) — sweep 80/80
+
+Two Sonnet lanes, both opus-reviewed MERGE (RF: zero findings; POST: one
+Minor, controller-applied — bounties.gd back-references the journal's
+duplicated title maps). LANDED: `riverfarm_longhouse` interior (hearth/
+long table/headman's-corner ledger/storage, 3 lights), guest cot sleeps
+INSIDE (lawn cot deleted — the original "bed outside" playtest finding
+CLOSED), longhouse prop converted in-place to a real door (BRIGHTEN
+visual_states intact), headman hub hollow-pointer line + sharpened
+journal beat, NEW `longhouse_walkthrough` canonical; Postings journal
+section (between Quests and Skills, binary "In hand."/"Ready to turn
+in.", full-pool title lookup, delivery-fail shows nothing, board_loop/
+delivery_loop extended). Windowed reads clean (interior, door approach,
+journal panel). VISUAL-LOG minor: longhouse facade has no drawn door
+decal — approach reads fine, art polish later.
+
+**AWAITING USER: the #50 fork-cost ratification** (packet delivered in
+chat: every TALK path except Riverfarm's is a free ungated persuade;
+recommendation = witch-pattern repo-wide, [Diplomat]-gated persuades +
+one real-cost alternate per quest, which also resolves the finding-29
+verb-label policy). #49 remainder: garden dressing, inn bed migration,
+Invrisil parlor/blades. #53 remainder: taste items.
+
 ## USER RULINGS BATCH (2026-07-10) + SAME-DAY SHIPS
 
 Four rulings taken via in-session questions, two shipped immediately:
