@@ -409,25 +409,19 @@ func _wait_for_skip(seconds: float) -> void:
 ## so it still names the right combatant if the sim has moved on by dequeue.
 ## `_screen.create_tween()` since this is a RefCounted, not a Node.
 ##
-## PLAYTEST HOTFIX (multi-death-in-one-beat opacity bug): `_actor_id_for_event`
-## has no dedicated case for COMBATANT_DOWNED, so it falls to the default
-## branch and names the DOWNED combatant itself as "actor". That combatant's
-## own bookkeeping events (its OWN turn_ended still fires even when it died
-## mid-turn to a reaction/counter-strike, both riding the SAME AI-turn
-## playback batch as its downed beat -- confirmed live via deep_descent's own
-## event log: a raskghar_scout downed by a counter-attack DURING its own turn
-## is immediately followed by a turn_ended for that SAME id) ALSO resolve to
-## that id via the same default-branch fallback, and used to re-run this
-## flash on a combatant that had ALREADY started fading out
-## (fade_chip/_screen._play_event_visual's COMBATANT_DOWNED arm, which fires
-## for THIS SAME beat, just before this call in the default match arm below)
-## -- snapping its holder's modulate back to opaque WHITE, undoing the death
-## fade entirely (the single-tween assumption: this flash assumed every actor
-## it's ever handed is a live combatant worth one transient tween, never a
-## corpse with an in-flight SEPARATE fade tween on the exact same node). Any
-## combatant already marked `death_visible` (set at COMBATANT_DOWNED capture
-## AND render time, see combat_screen.gd/board_renderer.gd) must never be
-## re-flashed, regardless of which later event in the same batch names it.
+## TRAP (dead-actor re-flash): `_actor_id_for_event` has no dedicated case
+## for COMBATANT_DOWNED, so it falls to the default branch and names the
+## DOWNED combatant itself as "actor" -- and a combatant that dies MID-TURN
+## (to a reaction/counter-strike) still emits its own turn_ended, riding the
+## SAME AI-turn playback batch as its downed beat and resolving to the same
+## id via the same default-branch fallback. Without the `death_visible`
+## guard below, that trailing event re-runs this flash on a holder whose
+## death fade (fade_chip, fired for the downed beat moments earlier) is
+## already in flight -- both tweens write the same node's `modulate`, and
+## this one ends at opaque WHITE, undoing the fade. CONSTRAINT: a combatant
+## marked `death_visible` (set at COMBATANT_DOWNED capture AND render time,
+## see combat_screen.gd/board_renderer.gd) must never be re-flashed,
+## regardless of which later event in the same batch names it.
 func _highlight_actor(event: Dictionary) -> void:
 	var payload: Dictionary = event["payload"]
 	var ui: Dictionary = payload.get("_ui", {})

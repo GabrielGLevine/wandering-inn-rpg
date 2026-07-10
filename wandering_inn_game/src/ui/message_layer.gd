@@ -33,13 +33,12 @@ const QA_TOAST_HOLD_SECONDS := 0.4
 ## `from_start` on the class-toast render wait makes that script robust to
 ## EITHER emission order regardless.
 const QA_TOAST_HOLD_HEADLESS_SECONDS := 0.05
-## Base real-seconds hold for a 1-line bark (unchanged from before this
-## fix -- playtest evidence never flagged a short bark as too fast). Scales
-## UP per extra wrapped line via DIALOGUE_SECONDS_PER_EXTRA_LINE (see
-## `_dialogue_hold_seconds`): the playtest finding was that a bark actually
-## using the panel's full DIALOGUE_LINE_CAPACITY (2 lines) has more text to
-## read but held for this same fixed pace regardless, reading as "gone
-## before I could read it". This const is now a FLOOR, never reduced.
+## Base real-seconds hold for a 1-line bark. Scales UP per extra wrapped
+## line via DIALOGUE_SECONDS_PER_EXTRA_LINE (see `_dialogue_hold_seconds`):
+## a bark using the panel's full DIALOGUE_LINE_CAPACITY (2 lines) has more
+## text to read than a short one, and a fixed hold reads as "gone before I
+## could read it" on the longer text. CONSTRAINT: this const is a FLOOR --
+## the computed hold is never below it, so a short bark's pace never drops.
 const DIALOGUE_SECONDS := 3.0
 ## Extra real-seconds granted per wrapped line beyond the first (see
 ## `_dialogue_hold_seconds`) -- a rough reading-speed increment, not a
@@ -571,12 +570,12 @@ func _drain_toasts() -> void:
 ## WINDOWED QA keeps the 0.4s floor so a toast a script just waited on is
 ## still on screen when the (windowed-only) screenshot fires (see
 ## QA_TOAST_HOLD_SECONDS). Gated per-call via `_show`'s `collapse_under_qa`
-## flag -- the toast queue always passes it; the dialogue bark (hotfix wave,
-## see DIALOGUE_SECONDS_PER_EXTRA_LINE) now passes it too, since its own
-## hold can run longer than the old fixed DIALOGUE_SECONDS for a 2-line
-## bark and, same as the toast case, no script ever waits on a bark's
-## DISAPPEARANCE (only on `ui_dialogue_rendered`, fired well before this
-## hold even starts) -- so collapsing it costs a scripted run nothing.
+## flag -- the toast queue and the dialogue bark both pass it: the bark's
+## hold scales with its wrapped-line count (see
+## DIALOGUE_SECONDS_PER_EXTRA_LINE) so it can exceed DIALOGUE_SECONDS for a
+## 2-line bark, and, same as the toast case, no script ever waits on a
+## bark's DISAPPEARANCE (only on `ui_dialogue_rendered`, fired well before
+## this hold even starts) -- so collapsing it costs a scripted run nothing.
 func _hold_seconds(seconds: float) -> float:
 	if DisplayServer.get_name() == "headless":
 		return minf(seconds, QA_TOAST_HOLD_HEADLESS_SECONDS)
@@ -659,12 +658,11 @@ func _line_capacity(label: Label, height: float) -> int:
 
 ## The real-seconds hold for `display_text` (the ALREADY-FITTED, at-most-
 ## DIALOGUE_LINE_CAPACITY-lines string `_fit_dialogue_line` returns) --
-## DIALOGUE_SECONDS for a 1-line bark (unchanged), longer for a bark that
-## actually wraps to the panel's full 2-line ceiling (playtest finding: a
-## longer bark disappeared at the same fixed pace as a short one, read as
-## "gone before I could read it"). Called with the FITTED text, not the raw
-## one, so the hold always matches what's actually on screen -- a bark that
-## would have wrapped to 4 lines but got ellipsis-truncated to 2 by
+## DIALOGUE_SECONDS for a 1-line bark, longer per extra wrapped line so a
+## bark filling the panel's full 2-line ceiling holds long enough to read.
+## CONSTRAINT: call with the FITTED text, not the raw one, so the hold
+## always matches what's actually on screen -- a bark that would have
+## wrapped to 4 lines but got ellipsis-truncated to 2 by
 ## `_fit_dialogue_line` earns the 2-line hold, not a 4-line one.
 func _dialogue_hold_seconds(display_text: String) -> float:
 	var lines := _wrapped_line_count(_dialogue_label, display_text, DIALOGUE_TEXT_WIDTH)

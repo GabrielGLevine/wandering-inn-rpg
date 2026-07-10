@@ -43,11 +43,11 @@ extends RefCounted
 ## directly (`ui_slot_info_rendered`, `ui_tutor_line_rendered`) now call back
 ## through `_screen._emit_slot_info(...)`/`_screen._emit_tutor_rendered(...)`.
 
-## Feed panel interior text box width -- see combat_screen.gd's original doc
-## comment (moved verbatim) for the full pre-fold-pin FEED_TEXT_HEIGHT
-## derivation history. The USABLE text height is no longer a fixed const
-## (see `_feed_text_capacity_height` below) -- it tracks `_feed_panel_height`,
-## which can grow past the base size for a long tutor beat.
+## Feed panel interior text box width (panel width 292 minus the 22px
+## left+right content margins -- see `build()`). The USABLE text HEIGHT is
+## deliberately NOT a const (see `_feed_text_capacity_height`): it tracks
+## `_feed_panel_height`, which can grow past the base size for a long tutor
+## beat.
 const FEED_TEXT_WIDTH := 248.0
 
 ## Readout panel interior text box (panel-class fix
@@ -98,32 +98,26 @@ const TUTOR_SUPPORTED_EVENTS := [
 	WIEvents.STATUS_EXPIRED, WIEvents.ACTION_REFUSED, WIEvents.UI_TARGETING_SHOWN,
 ]
 
-## PLAYTEST HOTFIX (combat feed bottom line still riding the parchment
-## fold): the feed panel shares its chrome (PARCHMENT_STRIP / Banner_
-## Horizontal.png) with message_layer.gd's toast/dialogue-bark panels, but
-## unlike those two it was never given the STRIP_FOLD_PATCH_BOTTOM treatment
-## -- it kept the default STRIP_PATCH_MARGIN (20) on all four sides, so only
-## 9 of the fold art's 29 source px sat in the 9-patch's UNSTRETCHED bottom
-## band; the rest lived in the STRETCHED center band. This panel grows
-## (`_grow_feed_panel_for_tutor`/`_resize_feed_panel`) for a long tutor beat
-## exactly like the toast panel grows for a long toast -- and a stretched
-## fold grows WITH the panel (message_layer.gd's own doc comment on
-## STRIP_FOLD_PATCH_BOTTOM has the full measurement/mechanism), so the old
-## ~70%-of-height fraction below (`TUTOR_FOLD_SAFE_FRACTION`) was chasing a
-## moving target and could still let a long beat's last line ride the fold.
-## Fix: `build()` pins this panel's own NinePatchRect `patch_margin_bottom`
-## to FEED_STRIP_FOLD_PATCH_BOTTOM (same value/rationale as message_layer.
-## gd's STRIP_FOLD_PATCH_BOTTOM -- same texture, same measured 29px source
-## fold depth, 32 covers it with slack) -- the fold now lives ENTIRELY in the
-## unstretched bottom patch, so its position is a TRUE PIXEL CONSTANT
-## (FEED_FOLD_DANGER_PX) regardless of how tall the panel grows. Both the
-## base capacity (`_feed_text_capacity_height`, replacing the old flat
-## FEED_TEXT_HEIGHT=90 const `feed_push` used regardless of the panel's
-## actual height) and the tutor-grow formula (`_grow_feed_panel_for_tutor`,
-## replacing the fraction) are re-derived off this same fixed-pixel model --
-## the toast panel's own `_toast_panel_height_for` idiom, generalized here
-## with a SINGLE deficit (this label is TOP-aligned, not centered like the
-## toast's, so only the bottom needs budgeting, not doubled).
+## Fold-pin for the feed panel's PARCHMENT_STRIP chrome (Banner_Horizontal.
+## png, shared with message_layer.gd's toast/dialogue-bark panels). TRAP:
+## at the default STRIP_PATCH_MARGIN (20), only 9 of the fold art's 29
+## source px sit in the 9-patch's UNSTRETCHED bottom band -- the rest live
+## in the STRETCHED center band, so on a panel that grows
+## (`_grow_feed_panel_for_tutor`/`_resize_feed_panel`) the fold stretches
+## and moves WITH the height (message_layer.gd's STRIP_FOLD_PATCH_BOTTOM
+## doc comment has the full measurement/mechanism), and any proportional
+## fold-position estimate chases that moving target -- a long beat's last
+## line can still ride the fold. `build()` pins this panel's NinePatchRect
+## `patch_margin_bottom` to this value (same as message_layer.gd's
+## STRIP_FOLD_PATCH_BOTTOM: same texture, same measured 29px source fold
+## depth, 32 covers it with slack) so the fold lives ENTIRELY in the
+## unstretched bottom patch and its position is a TRUE PIXEL CONSTANT
+## (FEED_FOLD_DANGER_PX) at any panel height. Both the base capacity
+## (`_feed_text_capacity_height`) and the tutor-grow formula
+## (`_grow_feed_panel_for_tutor`) derive from this fixed-pixel model -- the
+## toast panel's `_toast_panel_height_for` idiom, with a SINGLE deficit
+## (this label is TOP-aligned, not centered like the toast's, so only the
+## bottom needs budgeting, not doubled).
 const FEED_STRIP_FOLD_PATCH_BOTTOM := 32
 ## Danger-zone depth from the panel's own bottom edge once the fold is
 ## pinned into the unstretched bottom patch -- mirrors message_layer.gd's
@@ -600,14 +594,14 @@ func clear_feed() -> void:
 
 ## The usable text-content height for the feed label RIGHT NOW, derived from
 ## `_feed_panel_height` (base size, or grown -- see `_resize_feed_panel`) and
-## the fixed fold-danger pixel budget now that the fold is pinned into the
-## unstretched bottom patch (FEED_STRIP_FOLD_PATCH_BOTTOM/FEED_FOLD_DANGER_PX
-## -- see that const's doc comment). The label is TOP-aligned (a single
-## measured deficit, unlike the vertically-centered toast label which budgets
-## it twice), so: usable = panel_height - top_content_margin - danger_zone.
-## Replaces the old flat FEED_TEXT_HEIGHT=90 const, which `feed_push` used
-## UNCONDITIONALLY even after the panel had grown for a tutor beat -- this
-## tracks the panel's REAL current height instead, base or grown alike.
+## the fixed fold-danger pixel budget (FEED_STRIP_FOLD_PATCH_BOTTOM/
+## FEED_FOLD_DANGER_PX -- see that const block's doc comment). The label is
+## TOP-aligned (a single measured deficit, unlike the vertically-centered
+## toast label which budgets it twice), so: usable = panel_height -
+## top_content_margin - danger_zone. CONSTRAINT: must stay a function of the
+## LIVE `_feed_panel_height`, never a flat const -- a capacity computed
+## against the base size while the panel is grown under-fills it, and one
+## computed against the grown size while at base overflows the fold.
 func _feed_text_capacity_height() -> float:
 	return maxf(_feed_panel_height - FEED_CONTENT_MARGIN_TOP - FEED_FOLD_DANGER_PX, 0.0)
 
@@ -862,15 +856,13 @@ func match_tutor_line(type: String, payload: Dictionary) -> Dictionary:
 
 
 ## Resolves the RENDERED line for a tutor entry: `line` unconditionally,
-## UNLESS the entry carries the optional `requires_any_class` gate (a
-## minimal per-entry conditional -- goblin_ambush_tutorial's `real_ones`
-## beat claimed "You slept, so check your numbers: 3 and up are your
-## [Skills] now" even on the cold-start path where the ambush is reached
-## WITHOUT ever sparring/sleeping first, i.e. with zero classes and zero
-## skill slots -- a false, confusing claim) that reads false -- then
-## `fallback_line` renders instead, if the entry has one. Entries with no
-## `requires_any_class` key (every pre-existing tutor_lines entry) always
-## take this first branch, byte-identical to before this fix.
+## UNLESS the entry carries the optional `requires_any_class` gate and the
+## gate reads false -- then `fallback_line` renders instead, if the entry
+## has one. The gate exists for lines whose content presumes progression
+## state (e.g. "check your new skill slots") on an arena also reachable
+## before that state exists -- the entry's `_comment` in data/arenas.json
+## carries the per-line rationale. Entries with no `requires_any_class` key
+## always take the plain-`line` branch, unchanged. CONSTRAINTS:
 ## `_screen._pc_has_any_class()` is a read-only sim query (see that
 ## wrapper's own doc comment for why this isn't an accomplishment-counter
 ## gate like `ally_requires`/`door_when` elsewhere in this repo) --

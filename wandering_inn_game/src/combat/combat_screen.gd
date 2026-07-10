@@ -274,17 +274,15 @@ func _show_combat() -> void:
 	# active by then.
 
 
-## PLAYTEST FIX (a gated ally fielded with zero introduction -- Relc in the
-## Raskghar boss fight, the Hunter in the Riverfarm wolf-pack fight): pushes
-## ONE feed line naming whichever ally(s) `start_combat`'s `ally_requires`
-## gate actually fielded this fight, right after `_view` is built (so the
-## line is already in the feed by this same `_show_combat()` call's own
-## `_refresh()`). No new sim event -- `combatants.json` has no distinct
-## "ally" side (a fielded ally rides the SAME "player" side as the PC, see
-## that file's own records), so this derives the fielded-ally set from
-## `_view`'s existing per-combatant data (`combatant(id)["side"]`) the
-## screen already reads elsewhere, filtering out "pc" itself. Generic for
-## any current or future gated ally -- no per-character-name branching.
+## Pushes ONE feed line naming whichever ally(s) `start_combat`'s
+## `ally_requires` gate actually fielded this fight, called right after
+## `_view` is built (so the line is already in the feed by this same
+## `_show_combat()` call's own `_refresh()`). CONSTRAINTS: no new sim event
+## -- `combatants.json` has no distinct "ally" side (a fielded ally rides
+## the SAME "player" side as the PC, see that file's own records), so the
+## fielded-ally set derives from `_view`'s existing per-combatant data
+## (`combatant(id)["side"]`), filtering out "pc" itself. Generic for any
+## current or future gated ally -- never per-character-name branching.
 func _announce_allies() -> void:
 	var names: Array[String] = []
 	for id: String in _view.ids():
@@ -425,18 +423,18 @@ func _emit_targeting_shown_event(mode_text: String, skill_id: String, target_cou
 	})
 
 
-## PLAYTEST FIX (a tutor_lines entry rendering a false "you slept" claim on
-## the cold-start ambush path): whether the PC has been granted ANY class
-## yet -- `combat_hud.gd`'s `_tutor_line_text` reads this to pick between a
-## tutor entry's `line`/`fallback_line`. `Game.sim.classes` is a plain sim
-## Dictionary, not an "accomplishment" -- investigated first, no
-## accomplishment counter fires unconditionally on every sleep the way a
-## true "has slept, has a class" signal needed to (`times_slept` is a bare
-## int field, not accomplishment-tracked; `sparred_with_relc` bans BEFORE
-## the sleep that actually grants the class, so it can't stand in for it).
-## Read-only, same as every other `_screen.*` wrapper on this file --
-## `combat_hud.gd` never touches the `Game` autoload directly (zero-bare-
-## autoload-identifier contract, see that file's doc comment).
+## Whether the PC has been granted ANY class yet -- `combat_hud.gd`'s
+## `_tutor_line_text` reads this to pick between a tutor entry's
+## `line`/`fallback_line` (the `requires_any_class` gate). CONSTRAINTS:
+## `Game.sim.classes` is the direct sim read, deliberately NOT an
+## accomplishment counter -- no counter fires unconditionally on every
+## sleep the way a true "has slept, has a class" signal would need
+## (`times_slept` is a bare int field, not accomplishment-tracked;
+## `sparred_with_relc` banks BEFORE the sleep that actually grants the
+## class, so it cannot stand in). Read-only, same as every other
+## `_screen.*` wrapper on this file -- `combat_hud.gd` never touches the
+## `Game` autoload directly (zero-bare-autoload-identifier contract, see
+## that file's doc comment).
 func _pc_has_any_class() -> bool:
 	return not Game.sim.classes.is_empty()
 

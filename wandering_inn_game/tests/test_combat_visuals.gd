@@ -219,11 +219,10 @@ func _init() -> void:
 	var matched: Dictionary = hud_logic.match_tutor_line("combat_started", {})
 	assert(String(matched.get("id", "")) == "t1", "tutor line matching must fire on its declared event")
 	assert(hud_logic.match_tutor_line("combat_started", {}).is_empty(), "a fired tutor line must not re-fire")
-	# `requires_any_class`/`fallback_line` (goblin_ambush_tutorial's
-	# real_ones cold-start fix): a gated entry must render its FALLBACK when
-	# `_screen._pc_has_any_class()` reads false, and its normal `line`
-	# unchanged when true -- proven against real class stub screens, not
-	# just the raw-source presence of the keys.
+	# `requires_any_class`/`fallback_line` contract: a gated tutor entry
+	# must render its FALLBACK when `_screen._pc_has_any_class()` reads
+	# false, and its normal `line` unchanged when true -- proven against
+	# real class stub screens, not just the raw-source presence of the keys.
 	var class_stub_script := GDScript.new()
 	class_stub_script.source_code = "extends Node\nvar has_class: bool = false\nfunc _pc_has_any_class() -> bool:\n\treturn has_class\n"
 	assert(class_stub_script.reload() == OK, "class-gate stub screen failed to compile")
@@ -363,20 +362,19 @@ func _init() -> void:
 	assert(recorder.visual_calls == ["terrain_expired", "terrain_added"], "VFX-class events (skill_resolved) stay gated behind with_visuals on the skip path -- the terrain fix is surgical, not a wholesale gate removal")
 	recorder.free()
 
-	# Multi-death-in-one-beat opacity fix: `_highlight_actor` must never
-	# re-flash a combatant already marked `death_visible` -- the actual
-	# playtest bug (a Raskghar kept full opacity after death in a
-	# multi-enemy fight). Root cause: `_actor_id_for_event` has no dedicated
-	# COMBATANT_DOWNED case, so it names the DOWNED unit itself as "actor";
-	# that same unit's own trailing bookkeeping event in the SAME AI-turn
-	# batch (its own turn_ended, which still fires when it died mid-turn to
-	# a reaction/counter-strike -- confirmed live in deep_descent's own event
-	# log) used to re-trigger this bright-flash-then-white tween on the
-	# SAME node the death fade (fade_chip) was already animating, snapping
-	# modulate back to opaque. Stub renderer only implements the two methods
-	# `_highlight_actor` actually calls (`visual_for`/`death_visible`); a
-	# real in-tree screen stub lets `_screen.create_tween()` succeed if the
-	# guard is EVER reached (it must not be, for the dead case).
+	# Dead-actor re-flash guard: `_highlight_actor` must never re-flash a
+	# combatant already marked `death_visible`. TRAP being covered:
+	# `_actor_id_for_event` has no dedicated COMBATANT_DOWNED case, so it
+	# names the DOWNED unit itself as "actor", and that same unit's own
+	# trailing bookkeeping event in the SAME AI-turn batch (its own
+	# turn_ended, which still fires when it died mid-turn to a
+	# reaction/counter-strike) would otherwise re-trigger the
+	# bright-flash-then-white tween on the SAME node the death fade
+	# (fade_chip) is already animating, snapping modulate back to opaque.
+	# Stub renderer only implements the two methods `_highlight_actor`
+	# actually calls (`visual_for`/`death_visible`); a real in-tree screen
+	# stub lets `_screen.create_tween()` succeed if the guard is EVER
+	# reached (it must not be, for the dead case).
 	var hl_renderer_script := GDScript.new()
 	hl_renderer_script.source_code = "extends Node\nvar dead: bool = false\nvar visual: Node2D\nfunc visual_for(_id: String) -> Node2D:\n\treturn visual\nfunc death_visible(_id: String) -> bool:\n\treturn dead\n"
 	assert(hl_renderer_script.reload() == OK, "stub highlight renderer failed to compile")
