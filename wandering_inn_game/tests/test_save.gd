@@ -697,7 +697,7 @@ func _init() -> void:
 	(bad_df_data["state"] as Dictionary)["delivery_failed"] = "yes"
 	assert(not WISave.apply(_new_game(), bad_df_data), "wrong-typed delivery_failed rejected")
 
-	# Retired-line load sanitize (v0.4.0 playtest finding 47): a pre-fix save
+	# Retired-line load sanitize: a pre-fix save
 	# holding ghost parents beside their consolidation target must strip the
 	# ghosts on load; every other held class survives untouched.
 	var ghost_data := WISave.serialize(_new_game()).duplicate(true)

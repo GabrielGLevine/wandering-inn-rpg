@@ -139,7 +139,7 @@ func _init() -> void:
 	assert(c4.combatants["pc"][WIKeys.AP] == 1, "power strike cost 3 AP")
 	assert(_count("skill_resolved") == 1 and _count("attack_resolved") >= 1, "skill resolved into a hit roll")
 
-	# piercing_strikes (playtest finding 10): a reported "only works
+	# piercing_strikes: a reported "only works
 	# horizontally adjacent" bug. is_adjacent()/damage_mult's gate both read
 	# maxi(absi(dx), absi(dy)) <= 1 -- axis-symmetric by construction, no
 	# horizontal-only filter anywhere in src/core/combat/*. Positive proof:

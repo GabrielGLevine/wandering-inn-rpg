@@ -1519,7 +1519,7 @@ func _move_player_visual(target: Vector2) -> void:
 func _bump_player_visual() -> void:
 	if _player_visual == null:
 		return
-	# Playtest finding 24: a blocked press already turned the PC sim-side
+	# A blocked press already turned the PC sim-side
 	# (`Game.sim.player_facing` is set unconditionally in `move_player`,
 	# before the blocked check) -- update the sprite's facing/flip to match
 	# BEFORE the early-return below, so a zero-duration (headless/QA)

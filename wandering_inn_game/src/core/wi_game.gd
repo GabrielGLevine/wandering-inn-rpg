@@ -580,11 +580,12 @@ func entity_at(cell: Vector2i) -> Dictionary:
 ## unchanged, so every single-dir caller (QA scripts included) sees
 ## consistent facing. The corner-cutting guard
 ## below only runs for a genuine diagonal (`_is_diagonal`), so a cardinal
-## move's blocked check is exactly `is_cell_blocked(target)`. Playtest finding
-## 24: `player_facing` is set UNCONDITIONALLY above, before either blocked
-## check -- a blocked press already turns the PC sim-side; `PLAYER_BLOCKED`
-## carries the just-updated `facing` too (world.gd's bump reads it to update
-## the sprite's facing/flip on a blocked press, not just the nudge direction).
+## move's blocked check is exactly `is_cell_blocked(target)`.
+## `player_facing` is set UNCONDITIONALLY above, before either blocked
+## check -- a blocked press already turns the PC sim-side. `PLAYER_BLOCKED`
+## additionally carries the just-updated `facing` in its payload for QA/log
+## consumers; the sprite turn itself is presentation-side (world.gd's bump
+## reads `Game.sim.player_facing` directly, not this payload key).
 func move_player(dir: Vector2i) -> bool:
 	if dialogue != null:
 		return false
@@ -952,7 +953,7 @@ func _interact_container(target: Dictionary) -> Dictionary:
 
 
 ## Resolves an `on_skill_use` effect against its optional `variants` list
-## (playtest finding 18, the cellar_door post-return-toast seam) -- an entry
+## (the cellar_door post-return-toast seam) -- an entry
 ## whose `when` accomplishment-gate is met (reusing `_accomplishment_gate_met`
 ## verbatim, the door_when-family reader) OVERRIDES the base effect's fields
 ## (`toast`, and `accomplishment` if a variant ever needs to bank something

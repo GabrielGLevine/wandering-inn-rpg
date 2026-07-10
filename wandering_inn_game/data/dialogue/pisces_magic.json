@@ -100,7 +100,7 @@
      "goto": "consult_skill_report"
     },
     {
-     "_comment": "Sequence-break rescue + recap (v0.4.0 playtest finding 50): the ruin pointer used to live ONLY inside the three consult responses -- a player who cleared rift_vermin_leak BEFORE consulting (its on_victory banks door_understood, hiding both consult options) never heard where the anchor stone is and stalled. Gated on the understanding existing, retired once the stone is recovered; APPENDED LAST so existing visible-option numbering (QA scripts press numbers) is untouched.",
+     "_comment": "Sequence-break rescue + recap: the ruin pointer used to live ONLY inside the three consult responses -- a player who cleared rift_vermin_leak BEFORE consulting (its on_victory banks door_understood, hiding both consult options) never heard where the anchor stone is and stalled. Gated on the understanding existing, retired once the stone is recovered; APPENDED LAST so existing visible-option numbering (QA scripts press numbers) is untouched.",
      "text": "About the pantry door -- I understand what it is now. Where does that leave me?",
      "requires": {
       "accomplishment": {

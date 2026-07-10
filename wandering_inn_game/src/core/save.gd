@@ -415,8 +415,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# Retired-line sanitize (additive, idempotent, NO version bump -- the
 	# reached_two_classes precedent below): a save written before the
 	# progression retired-line rule can hold GHOST parent classes re-granted
-	# beside their consolidation target ([Warrior]+[Mage] beside [Spellsword],
-	# v0.4.0 playtest finding 47) or beside an evolution target. Strip them
+	# beside their consolidation target ([Warrior]+[Mage] beside [Spellsword])
+	# or beside an evolution target. Strip them
 	# on load with the same derivation the acquisition path now uses --
 	# otherwise the next sleep re-offers the consolidation against the
 	# ghosts. A healthy save strips nothing.

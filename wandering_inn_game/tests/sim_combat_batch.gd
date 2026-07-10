@@ -99,7 +99,7 @@ const LOADOUT_CELLS := [
 	## skills (weapon_family "" only matches untagged), conflating "no
 	## weapon equipped" with the accessory hp-stack read this cell wants
 	## isolated. No armor, so hp+5 is entirely the accessories' contribution.
-	## (5) `moon_bone_solo`: playtest finding 44 lowered moon_bone_amulet's
+	## (5) `moon_bone_solo`: moon_bone_amulet's resonance was lowered so the
 	## resonance 3 -> 2 (it was unequippable the moment it was awarded --
 	## resonance_capacity never grows past its default 2 anywhere in this
 	## codebase). Equal to capacity is legal (`equip()` refuses only

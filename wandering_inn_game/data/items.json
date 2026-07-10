@@ -221,7 +221,7 @@
 			"lore": "Shed scales with stone in them turn up in the southern hills, and enchanters pay well for the rare one that takes a binding. Drakes find wearing another Drake's scale distasteful; the stall keeps this one under the counter."
 		},
 		{
-			"_comment": "Playtest finding 44: resonance lowered 3 -> 2 (mod values kept). resonance_capacity never grows anywhere in this codebase (fixed default 2, wi_game.gd -- no quest/progression seam mutates it), so a quest-awarded accessory with resonance 3 was structurally unequippable the moment it was granted. The honest minimal fix is capping it at the budget it's actually awarded into, not inventing a capacity-growth mechanic this milestone doesn't have; it still spends the WHOLE budget alone (a deliberate Act-III-capstone trade-off, not a bug).",
+			"_comment": "Resonance lowered 3 -> 2 (mod values kept). resonance_capacity never grows anywhere in this codebase (fixed default 2, wi_game.gd -- no quest/progression seam mutates it), so a quest-awarded accessory with resonance 3 was structurally unequippable the moment it was granted. The honest minimal fix is capping it at the budget it's actually awarded into, not inventing a capacity-growth mechanic this milestone doesn't have; it still spends the WHOLE budget alone (a deliberate Act-III-capstone trade-off, not a bug).",
 			"id": "moon_bone_amulet",
 			"name": "Moon-Bone Amulet",
 			"kind": "accessory",

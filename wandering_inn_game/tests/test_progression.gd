@@ -351,7 +351,7 @@ func _init() -> void:
 	assert(not same_line.is_empty(), "the higher-level candidate (swordsman 9) qualifies even though warrior 3 (same line, sub-threshold) is also held")
 	assert((same_line["parents"] as Array) == ["swordsman", "mage"], "the best (highest-level) candidate per line is reported, not the first-listed id")
 
-	# Retired-line rule (v0.4.0 playtest finding 47): once a consolidation
+	# Retired-line rule: once a consolidation
 	# target is held, its parent lines can NEVER be re-acquired even with
 	# every gained_by threshold banked -- without this, the sleep after
 	# accepting [Spellsword] re-granted [Warrior]+[Mage] (counters never

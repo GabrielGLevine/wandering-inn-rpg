@@ -734,7 +734,7 @@
      "toast": "Onions, a sack of soft potatoes, a shelf of jarred somethings gone dusty. The pantry door, same as it's always been.",
      "visual_states": [
       {
-       "_comment": "Playtest finding 45: the FLICKER state used to swap in the anchor_waystone arch -- the same portal-anchor sprite the AWAKENED state below uses -- which read as the door having already become the portal mid-quest, far too early. No `sprite` key here now: it stays the plain pantry door, only the cool-blue tint (the flicker tell) applied. AWAKENED (below) keeps its own sprite+light swap untouched -- that IS the moment the door becomes the anchor.",
+       "_comment": "The FLICKER state used to swap in the anchor_waystone arch -- the same portal-anchor sprite the AWAKENED state below uses -- which read as the door having already become the portal mid-quest, far too early. No `sprite` key here now: it stays the plain pantry door, only the cool-blue tint (the flicker tell) applied. AWAKENED (below) keeps its own sprite+light swap untouched -- that IS the moment the door becomes the anchor.",
        "when": {
         "counter": "door_chain_started",
         "at": 1
@@ -975,7 +975,7 @@
      }
     }
    ],
-   "_comment_decor": "The two generic 'more rooms than just Lyonette's' door graphics (3,1)/(5,1) are now REAL entities (see `entities` below, playtest finding 9 fix) -- a facing interact used to hit empty space here (non-entity decor, INTERACT_NOTHING's 'Nothing there.') which read as a broken door on a visible doorway; promoted to `prop` entities carrying a generic locked_toast, same idiom as `lyonette_door` but without her name-specific copy. rug_tan (9,3) + window_blue (10,4) dress 'your room' -- same modest-personal-space read as the inn's own bedroom corner, not the common room's full furniture set. rug_tan sits ONE ROW south of its original (9,2) placement (playtest finding 8): its real sprite footprint (see the guild's own rug_tan _comment, ~2 cells tall) bled upward into `your_bed`'s (9,1) cell under y-sort, visually burying the bed; (9,3) keeps the same footprint entirely inside the 'your room' floor variant without touching the bed's row.",
+   "_comment_decor": "The two generic 'more rooms than just Lyonette's' door graphics (3,1)/(5,1) are now REAL entities (see `entities` below) -- a facing interact used to hit empty space here (non-entity decor, INTERACT_NOTHING's 'Nothing there.') which read as a broken door on a visible doorway; promoted to `prop` entities carrying a generic locked_toast, same idiom as `lyonette_door` but without her name-specific copy. rug_tan (9,3) + window_blue (10,4) dress 'your room' -- same modest-personal-space read as the inn's own bedroom corner, not the common room's full furniture set. rug_tan sits ONE ROW south of its original (9,2) placement: its real sprite footprint (see the guild's own rug_tan _comment, ~2 cells tall) bled upward into `your_bed`'s (9,1) cell under y-sort, visually burying the bed; (9,3) keeps the same footprint entirely inside the 'your room' floor variant without touching the bed's row.",
    "decor": [
     {
      "sprite": "rug_tan",
@@ -1004,7 +1004,7 @@
    ],
    "entities": [
     {
-     "_comment": "The down-stairs landing -- arrives here from inn's stairs_up (to_cell [1,2], one cell north). No on_enter_accomplishment (matches the guild_exit precedent: the 'entry' side banks the flavor counter, not the 'exit' side). Sprite `stairs_up` (playtest finding 8): same staircase, same door-affordance art as the ground-floor side -- it's a floor-change door, not a direction-specific graphic, matching the sprite's own registered doc comment ('THE door affordance for floor-change doors').",
+     "_comment": "The down-stairs landing -- arrives here from inn's stairs_up (to_cell [1,2], one cell north). No on_enter_accomplishment (matches the guild_exit precedent: the 'entry' side banks the flavor counter, not the 'exit' side). Sprite `stairs_up`: same staircase, same door-affordance art as the ground-floor side -- it's a floor-change door, not a direction-specific graphic, matching the sprite's own registered doc comment ('THE door affordance for floor-change doors').",
      "id": "stairs_down",
      "kind": "door",
      "cell": [
@@ -1020,7 +1020,7 @@
      ]
     },
     {
-     "_comment": "Playtest finding 9: promoted from non-entity decor (a facing interact used to hit empty air here, INTERACT_NOTHING's 'Nothing there.' toast, on a doorway that plainly LOOKS like a door). A `prop` with a generic locked_toast, same idiom as `lyonette_door` below but without her name-specific copy -- there is genuinely nothing authored behind either of these two guest-room doors.",
+     "_comment": "Promoted from non-entity decor (a facing interact used to hit empty air here, INTERACT_NOTHING's 'Nothing there.' toast, on a doorway that plainly LOOKS like a door). A `prop` with a generic locked_toast, same idiom as `lyonette_door` below but without her name-specific copy -- there is genuinely nothing authored behind either of these two guest-room doors.",
      "id": "hallway_door_a",
      "kind": "prop",
      "cell": [
@@ -1032,7 +1032,7 @@
      "locked_toast": "It doesn't budge."
     },
     {
-     "_comment": "Playtest finding 9, same fix as hallway_door_a above.",
+     "_comment": "Same fix as hallway_door_a above.",
      "id": "hallway_door_b",
      "kind": "prop",
      "cell": [
@@ -2015,7 +2015,7 @@
      ]
     },
     {
-     "_comment": "Playtest finding 16: was authored at x=32 -- one past the last valid column of this 32-wide grid (x:0-31) -- so the cell itself was structurally unreachable (is_cell_blocked's own bounds check refuses cell.x >= grid_size.x) but the sprite still RENDERED at that position, its footprint bleeding onto the real, unblocked (31,7) beside it -- a wall the player could see and walk straight through. Repositioned to the valid (31,7) and added to `blocked` below (a wall face, same facade_plaster-is-a-wall contract every other freestanding segment on this map follows).",
+     "_comment": "Was authored at x=32 -- one past the last valid column of this 32-wide grid (x:0-31) -- so the cell itself was structurally unreachable (is_cell_blocked's own bounds check refuses cell.x >= grid_size.x) but the sprite still RENDERED at that position, its footprint bleeding onto the real, unblocked (31,7) beside it -- a wall the player could see and walk straight through. Repositioned to the valid (31,7) and added to `blocked` below (a wall face, same facade_plaster-is-a-wall contract every other freestanding segment on this map follows).",
      "sprite": "facade_plaster",
      "cell": [
       31,
@@ -2028,7 +2028,7 @@
      ]
     },
     {
-     "_comment": "Playtest finding 16, same fix as the (31,7) segment above -- was x=32 (one past the grid's last valid column), repositioned to (31,14) and blocked.",
+     "_comment": "Same fix as the (31,7) segment above -- was x=32 (one past the grid's last valid column), repositioned to (31,14) and blocked.",
      "sprite": "facade_plaster",
      "cell": [
       31,
@@ -2041,7 +2041,7 @@
      ]
     },
     {
-     "_comment": "Cellar_door (entity, street 10,17) rendered freestanding with nothing behind it (VISUAL-LOG). crate_light.json's route walks down column x=13 then x=10 and stops at (10,16) facing down into the door -- moving the door's own cell would desync that script's hardcoded step counts, so per the brief this dresses AROUND the existing cell instead: one facade_plaster tile immediately east of the door, same row (11,17), never a cell the approach path crosses (path only touches x=10 southbound and x=10..13 at y=13), so it reads as the building wall the cellar is set into without the player ever visually overlapping it. Playtest finding 16: that reasoning covered the SCRIPTED route only -- a free-roaming player could walk straight through this wall tile (it was never added to `blocked`, unlike every other freestanding facade_plaster segment on this map). Added below; still off every canonical route (same cell, same reasoning, just genuinely solid now).",
+     "_comment": "Cellar_door (entity, street 10,17) rendered freestanding with nothing behind it (VISUAL-LOG). crate_light.json's route walks down column x=13 then x=10 and stops at (10,16) facing down into the door -- moving the door's own cell would desync that script's hardcoded step counts, so per the brief this dresses AROUND the existing cell instead: one facade_plaster tile immediately east of the door, same row (11,17), never a cell the approach path crosses (path only touches x=10 southbound and x=10..13 at y=13), so it reads as the building wall the cellar is set into without the player ever visually overlapping it. TRAP: that reasoning covered the SCRIPTED route only -- a free-roaming player could walk straight through this wall tile (it was never added to `blocked`, unlike every other freestanding facade_plaster segment on this map). Added below; still off every canonical route (same cell, same reasoning, just genuinely solid now).",
      "sprite": "facade_plaster",
      "cell": [
       11,
@@ -2536,7 +2536,7 @@
      "observe": "A plain door with dark behind it. The dust on the sill is scuffed one way. Something was dragged in, and not dragged out.",
      "requires_skill": "light",
      "locked_toast": "Too dark to see anything.",
-     "_comment_on_skill_use": "Playtest finding 18: re-casting [Light] here after the crate is already back with Krshia used to repeat the 'There: Krshia's crate' find every time -- the crate isn't there anymore, it's been returned. `variants` (use_skill()'s new minimal data-driven seam, wi_game.gd) overrides `toast` once `crate_returned` (the quest's own recovered/returned counter, banked by krshia_crate.json's guile/skill report options) is banked -- latest-satisfied-wins over the base entry, the same convention visual_states already uses. `accomplishment` still banks unconditionally either cast (harmless repeat count, its only consumer is a >=1 gate).",
+     "_comment_on_skill_use": "Re-casting [Light] here after the crate is already back with Krshia used to repeat the 'There: Krshia's crate' find every time -- the crate isn't there anymore, it's been returned. `variants` (use_skill()'s new minimal data-driven seam, wi_game.gd) overrides `toast` once `crate_returned` (the quest's own recovered/returned counter, banked by krshia_crate.json's guile/skill report options) is banked -- latest-satisfied-wins over the base entry, the same convention visual_states already uses. `accomplishment` still banks unconditionally either cast (harmless repeat count, its only consumer is a >=1 gate).",
      "on_skill_use": {
       "accomplishment": "studied_the_cellar",
       "toast": "[Light] \u2014 The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf.",
@@ -3748,7 +3748,7 @@
      "ally_requires": {
       "met_relc": 1
      },
-     "_comment": "This arena's own tutor_lines close on road_clear's sign line (\"See the sign? Her inn, her rule. But under her roof? Don't.\") -- the shipped resolution moment for holding the inn's no-killing-goblins rule on the road. sign_defended banks alongside won_combat here (additive counter, fires every clear -- `respawns: true` means this can retrigger). Playtest finding 17: the tutor_lines themselves must NOT retrigger past the first arming -- `entity_first_use` resets every sleep() (wrong seam, would still replay after re-arming), so `repeat_arena`/`tutorial_seen_when` (start_combat, wi_game.gd) swap to the plain `goblin_ambush` arena -- layout-identical, tutor-line-free, the SAME composition goblin_encounter_2 already fights there -- once `sign_defended` (this entity's own one-shot producer, unlike the shared `won_combat`) has banked at least once. The Garden gate's K-of-4 reads sign_defended via plain accomplishment_count, absent-as-zero before this landed.",
+     "_comment": "This arena's own tutor_lines close on road_clear's sign line (\"See the sign? Her inn, her rule. But under her roof? Don't.\") -- the shipped resolution moment for holding the inn's no-killing-goblins rule on the road. sign_defended banks alongside won_combat here (additive counter, fires every clear -- `respawns: true` means this can retrigger). CONSTRAINT: the tutor_lines themselves must NOT retrigger past the first arming -- `entity_first_use` resets every sleep() (wrong seam, would still replay after re-arming), so `repeat_arena`/`tutorial_seen_when` (start_combat, wi_game.gd) swap to the plain `goblin_ambush` arena -- layout-identical, tutor-line-free, the SAME composition goblin_encounter_2 already fights there -- once `sign_defended` (this entity's own one-shot producer, unlike the shared `won_combat`) has banked at least once. The Garden gate's K-of-4 reads sign_defended via plain accomplishment_count, absent-as-zero before this landed.",
      "on_victory": [
       "won_combat",
       "sign_defended"
@@ -4820,7 +4820,7 @@
      ]
     },
     {
-     "_comment": "Playtest finding 11: hotfix #5's own (8,4) block (rug_tan's real footprint, 80x72 @0.4 render_scale = 32x28.8px, ~2x2 cells, bigger than its single decor cell) turned out to crowd the ONLY straight approach to Selys's desk -- a real player reported a prop blocking the path behind her counter. UNBLOCKED again: the minor visual occlusion hotfix #5 traded against is the lesser cost versus genuinely obstructing an NPC approach; rug_tan is now non-blocking set-dressing like every other floor rug in this codebase (the window_blue flush-decor precedent). guild_interior_walkthrough/board_loop's own routes, which used to detour around this cell, now walk straight through it for real (positive proof the block is gone).",
+     "_comment": "Hotfix #5's own (8,4) block (rug_tan's real footprint, 80x72 @0.4 render_scale = 32x28.8px, ~2x2 cells, bigger than its single decor cell) turned out to crowd the ONLY straight approach to Selys's desk -- a real player reported a prop blocking the path behind her counter. UNBLOCKED again: the minor visual occlusion hotfix #5 traded against is the lesser cost versus genuinely obstructing an NPC approach; rug_tan is now non-blocking set-dressing like every other floor rug in this codebase (the window_blue flush-decor precedent). guild_interior_walkthrough/board_loop's own routes, which used to detour around this cell, now walk straight through it for real (positive proof the block is gone).",
      "sprite": "rug_tan",
      "cell": [
       8,
