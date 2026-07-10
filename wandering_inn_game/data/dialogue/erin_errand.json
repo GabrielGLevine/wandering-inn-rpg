@@ -21,7 +21,7 @@
 			{ "text": "Actually - one more thing.", "goto": "hub" },
 			{ "text": "On my way.", "end": true }
 		] },
-		"cleaning_directions": { "speaker": "Erin", "text": "Really? It's the horror show by the south wall. I owe you one - or the table does.", "options": [
+		"cleaning_directions": { "speaker": "Erin", "text": "Really? It's the horror show by the south wall. I owe you one - or the table does. [Basic Cleaning]'s already on your bar — number key, then go introduce yourself to it.", "options": [
 			{ "text": "Actually - one more thing.", "goto": "hub" },
 			{ "text": "On it.", "end": true }
 		] },
