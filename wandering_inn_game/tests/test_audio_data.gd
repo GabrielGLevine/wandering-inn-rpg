@@ -104,8 +104,13 @@ func _load(path: String) -> Dictionary:
 
 
 func _fail(message: String) -> void:
+	# TRAP: quit(1) only SCHEDULES exit -- _init keeps executing to its
+	# final `print PASS; quit(0)`, which overrode the failure exit code and
+	# let a red validation print green (caught live: a missing music
+	# stream ERROR'd and still PASSed). assert halts the frame HERE and
+	# trips the ^PASS output contract + the SCRIPT ERROR grep.
 	push_error(message)
-	quit(1)
+	assert(false, message)
 
 
 func _init() -> void:

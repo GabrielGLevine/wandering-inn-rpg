@@ -16,3 +16,12 @@ Credited anyway (house style): Juhani Junkala — https://juhanijunkala.com/
 Tracks are authored as seamless loops (the Towns pack's own description);
 loop playback is applied at runtime by wi_audio (`loop: true` per entry).
 Source archives + verification note: potential_assets/music_2026-07-10/.
+
+## Addendum: RandomMind — "The Old Tower Inn" (2026-07-10)
+`assets/audio/music/randommind_old_tower_inn.ogg` — converted (ffmpeg,
+vorbis q5) from the author's own SEAMLESS-LOOP WAV (`Loop_The_Old_Tower_
+Inn.wav`), not the fade-in/out full mp3, per the looping directive.
+Source: https://opengameart.org/content/medieval-the-old-tower-inn —
+**CC0** (stated on page). Author: RandomMind. Assigned: the inn (map
+`inn`), replacing definitely_our_town (which stays in the repo,
+unassigned).
