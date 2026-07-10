@@ -376,3 +376,4 @@ docs/*_api_key.txt
 /MORNING_SUMMARY*.md
 /NIGHT-GOAL*.md
 docs/reports/
+/dist/
