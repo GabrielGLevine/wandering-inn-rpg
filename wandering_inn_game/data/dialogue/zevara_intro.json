@@ -117,13 +117,22 @@
 			"speaker": "Zevara",
 			"text": "...Before it's an emergency. Hm. You argue like someone who's read a casualty report. Fine. Make it plain. What am I actually sending them into?",
 			"options": [
-				{ "text": "A nest. Silver-backed spiders, crept up from the Dungeon. Small now. It won't be small next month.", "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "watch_swept_cisterns" }, { "accomplishment": "resolved_the_cisterns" }, { "remove_entity": "shield_spiders" }, { "item": "watch_token" } ], "goto": "swept" },
-				{ "text": "Actually — never mind.", "end": true }
+				{ "text": "A nest. Silver-backed spiders, crept up from the Dungeon. Small now. It won't be small next month. (Diplomat)", "requires": { "class": { "diplomat": 1 } }, "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "watch_swept_cisterns" }, { "accomplishment": "resolved_the_cisterns" }, { "remove_entity": "shield_spiders" }, { "item": "watch_token" } ], "goto": "swept" },
+				{ "text": "Actually — never mind.", "end": true },
+				{ "_comment": "Issue #50 re-pricing: the non-Diplomat alternate. Zevara refuses BRIBES (this file's own top _comment) so this is framed as covering the sweep's OPERATIONAL cost (the lanterns/healer/overtime she just itemized in sweep_pitch), never a personal payoff -- routes to its own swept_paid reaction so that framing stays honest rather than reusing the persuaded 'swept' text. persuaded_someone deliberately absent (paying isn't persuading).", "text": "Here — three gold toward the lanterns and the healer. That's the budget problem solved, at least. (3 gold)", "requires": { "gold": 3 }, "effects": [ { "gold": -3 }, { "accomplishment": "watch_swept_cisterns" }, { "accomplishment": "resolved_the_cisterns" }, { "remove_entity": "shield_spiders" }, { "item": "watch_token" } ], "goto": "swept_paid" }
 			]
 		},
 		"swept": {
 			"speaker": "Zevara",
 			"text": "Spiders from the Dungeon. Wonderful. That's exactly the small-now-large-later I'd rather pay for in overtime than in funerals. Consider it swept. I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing it to me clean, before it had teeth. Go tell whoever set you on this that the Watch has it. And, good work. That's rarer from my side of the gate than you'd think.",
+			"options": [
+				{ "text": "That's all I ask, Captain.", "goto": "hub" },
+				{ "text": "Appreciated.", "end": true }
+			]
+		},
+		"swept_paid": {
+			"speaker": "Zevara",
+			"text": "Funding, not evidence. Fine — my ledger doesn't much care which. I'll pull a squad at dusk and burn the silk out, whatever's actually down there. Paperwork's cleaner when someone else already covered the bill.",
 			"options": [
 				{ "text": "That's all I ask, Captain.", "goto": "hub" },
 				{ "text": "Appreciated.", "end": true }

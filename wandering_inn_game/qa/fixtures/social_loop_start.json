@@ -1,0 +1,45 @@
+{
+ "_comment": "Social Pillar v1 proof's own start (issue #50 split off from post_tutorial_street, which crate_talk/crate_fight still share -- crate_fight's combat build stays untouched by this fork). Same post-tutorial STREET position (1,3), warrior L1, met/sparred/given_spear -- PLUS [Diplomat] L1 already held (a class the player earns elsewhere, per riverfarm_talk_start's own precedent, since the Watch Sergeant's persuade this script visits is now [Diplomat]-gated per issue #50's ratified rule). Consequence: the field hotbar starts at 2 slots ([Basic Cleaning], [Charming Smile]), not 1 -- social_loop.gd's boot assertion was updated to match, and the script's PHASE B/C purpose shifted from 'earn Diplomat live via this persuade' (no longer reachable -- the earn-persuade now requires the class it grants) to 'prove the Diplomat-gated free branch fires + the kit is usable'; see social_loop.json's own _comment for the full account. rng_state identical to post_tutorial_street's own (still wins the floodplains ambush this script fights).",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [
+   1,
+   3
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 1,
+   "diplomat": 1
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "5043351203278607731"
+ }
+}
