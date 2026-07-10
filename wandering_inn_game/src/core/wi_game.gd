@@ -3064,6 +3064,15 @@ func _combat_event_relay(type: String, payload: Dictionary) -> void:
 		_tick_action()
 	if type == WIEvents.STATUS_APPLIED:
 		payload = _enrich_status_applied(payload)
+	# Passive skills never "cast", so nothing else ever banks them into
+	# `used_skills` (the journal's first-use card reveal) -- their first
+	# real PROC is the reveal moment: a pc-owned reaction ([Counter
+	# Strike], [Battle Momentum]) marks the skill used the first time it
+	# fires. Idempotent set-append; non-pc reactions never reveal.
+	if type == WIEvents.REACTION_TRIGGERED and String(payload.get(WIKeys.ID, "")) == "pc":
+		var reaction_skill := String(payload.get("skill", ""))
+		if reaction_skill != "" and not used_skills.has(reaction_skill):
+			used_skills.append(reaction_skill)
 	_emit(type, payload)
 
 
