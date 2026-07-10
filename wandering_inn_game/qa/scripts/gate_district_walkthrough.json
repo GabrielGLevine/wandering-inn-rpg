@@ -447,13 +447,13 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "D1-4: 32x20 payload computed from the shipped street block -- floor_cells = 32*20 = 640. blocked_cells is the SIM's runtime blocked set (Game.sim.blocked_cells), which is the static 'blocked' list (56 cells) UNION the wall 'segments' expansion (WIGame.segment_cells): [0,0]-[31,0] = 32 cells, [0,1]-[0,2] = 2 cells, [0,4]-[0,19] = 16 cells, none overlapping the interior 'blocked' list -- 56 + 32 + 2 + 16 = 106. Verified against the actual ui_map_rendered payload, not guessed from the static list alone.",
+   "_comment": "D1-4: 32x20 payload computed from the shipped street block -- floor_cells = 32*20 = 640. blocked_cells is the SIM's runtime blocked set (Game.sim.blocked_cells), which is the static 'blocked' list (59 cells, playtest finding 16/J: +3 for the three walkable-through wall segments now genuinely blocked -- (11,17)/(31,7)/(31,14)) UNION the wall 'segments' expansion (WIGame.segment_cells): [0,0]-[31,0] = 32 cells, [0,1]-[0,2] = 2 cells, [0,4]-[0,19] = 16 cells, none overlapping the interior 'blocked' list -- 59 + 32 + 2 + 16 = 109. Verified against the actual ui_map_rendered payload, not guessed from the static list alone.",
    "action": "assert_event_logged",
    "type": "ui_map_rendered",
    "payload_contains": {
     "map": "street",
     "floor_cells": 640,
-    "blocked_cells": 106
+    "blocked_cells": 109
    }
   },
   {
@@ -653,12 +653,13 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "blocked_cells 58 -> 57 (playtest finding 11): guild's rug_tan (8,4) unblocked -- see guild_interior_walkthrough's own comment.",
    "action": "wait_for_event",
    "type": "ui_map_rendered",
    "payload_contains": {
     "map": "guild",
     "floor_cells": 192,
-    "blocked_cells": 58
+    "blocked_cells": 57
    },
    "timeout_sec": 5
   },

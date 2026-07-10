@@ -580,7 +580,11 @@ func entity_at(cell: Vector2i) -> Dictionary:
 ## unchanged, so every single-dir caller (QA scripts included) sees
 ## consistent facing. The corner-cutting guard
 ## below only runs for a genuine diagonal (`_is_diagonal`), so a cardinal
-## move's blocked check is exactly `is_cell_blocked(target)`.
+## move's blocked check is exactly `is_cell_blocked(target)`. Playtest finding
+## 24: `player_facing` is set UNCONDITIONALLY above, before either blocked
+## check -- a blocked press already turns the PC sim-side; `PLAYER_BLOCKED`
+## carries the just-updated `facing` too (world.gd's bump reads it to update
+## the sprite's facing/flip on a blocked press, not just the nudge direction).
 func move_player(dir: Vector2i) -> bool:
 	if dialogue != null:
 		return false
@@ -593,10 +597,10 @@ func move_player(dir: Vector2i) -> bool:
 	# never actually touch as a face. Checked before the target-cell check
 	# below (which still catches a blocked/occupied diagonal target itself).
 	if _is_diagonal(dir) and (is_cell_blocked(player_cell + Vector2i(dir.x, 0)) or is_cell_blocked(player_cell + Vector2i(0, dir.y))):
-		_emit(WIEvents.PLAYER_BLOCKED, {"cell": [target.x, target.y]})
+		_emit(WIEvents.PLAYER_BLOCKED, {"cell": [target.x, target.y], "facing": [player_facing.x, player_facing.y]})
 		return false
 	if is_cell_blocked(target):
-		_emit(WIEvents.PLAYER_BLOCKED, {"cell": [target.x, target.y]})
+		_emit(WIEvents.PLAYER_BLOCKED, {"cell": [target.x, target.y], "facing": [player_facing.x, player_facing.y]})
 		return false
 	player_cell = target
 	_emit(WIEvents.PLAYER_MOVED, {"cell": [target.x, target.y]})
@@ -947,6 +951,29 @@ func _interact_container(target: Dictionary) -> Dictionary:
 	return {"container": id, "items": granted}
 
 
+## Resolves an `on_skill_use` effect against its optional `variants` list
+## (playtest finding 18, the cellar_door post-return-toast seam) -- an entry
+## whose `when` accomplishment-gate is met (reusing `_accomplishment_gate_met`
+## verbatim, the door_when-family reader) OVERRIDES the base effect's fields
+## (`toast`, and `accomplishment` if a variant ever needs to bank something
+## different), ascending-authored-order latest-satisfied-wins, same
+## convention as `visual_states`/`_resolve_observe_text`. Absent `variants`
+## (every pre-existing on_skill_use prop) returns the base effect untouched --
+## byte-identical fallback.
+func _resolve_skill_use_effect(effect: Dictionary) -> Dictionary:
+	var resolved := effect.duplicate(true)
+	for raw: Variant in effect.get("variants", []):
+		if not (raw is Dictionary):
+			continue
+		var variant := raw as Dictionary
+		if not _accomplishment_gate_met(variant.get("when", {}) as Dictionary):
+			continue
+		for key: String in variant:
+			if key != "when":
+				resolved[key] = variant[key]
+	return resolved
+
+
 func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	# Gate on the FULL known set (innate + class-granted), not just innate
 	# player_skills: class-granted exploration skills ([Light], mage L1)
@@ -957,17 +984,23 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 		# A prop must never fail silently (no toast reads as "the prop is
 		# dead" and masks Helper-line visibility). A prop may carry a bespoke `locked_toast`
 		# (tease-flavored, may name the required skill/action); absent that,
-		# fall back to a generic line that does NOT name the required skill
-		# (no progress-toward/skill-name leak on props without authored copy).
+		# fall back to a generic line. A door-shaped prop (kind "door", or a
+		# `door_when`-gated prop standing in as a door) gets a door-flavored
+		# fallback instead of the skill-flavored one -- "you don't know how to
+		# do that" reads as a missing SKILL, which is wrong for a plain closed
+		# door nobody ever meant to gate behind a skill. Neither fallback names
+		# the required skill/action (no progress-toward/skill-name leak on
+		# props without authored copy).
 		var locked_toast := String(target.get("locked_toast", ""))
 		if locked_toast == "":
-			locked_toast = "You don't know how to do that yet."
+			var is_door_shaped := String(target.get(WIKeys.KIND, "")) == "door" or target.has("door_when")
+			locked_toast = "It doesn't budge." if is_door_shaped else "You don't know how to do that yet."
 		_emit(WIEvents.TOAST, {"text": locked_toast})
 		return {}
 	if target.is_empty() or not target.has("on_skill_use"):
 		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": target_id})
 		return {}
-	var effect: Dictionary = target["on_skill_use"]
+	var effect: Dictionary = _resolve_skill_use_effect(target["on_skill_use"])
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
 	record_accomplishment(String(effect["accomplishment"]))
@@ -2064,9 +2097,21 @@ func start_combat(entity_id: String) -> bool:
 		cfgs.append((by_id[String(ally)] as Dictionary).duplicate(true))
 	for enemy: Variant in entity.get("enemies", []):
 		cfgs.append((by_id[String(enemy)] as Dictionary).duplicate(true))
+	# An entity may carry `repeat_arena`/`tutorial_seen_when` (a tutor_lines-
+	# bearing arena's own repeatable-fight seam, e.g. goblin_encounter_1):
+	# once `tutorial_seen_when`'s accomplishment has banked at least once (a
+	# prior real victory here), every SUBSequent arming swaps to the plain
+	# `repeat_arena` instead -- same layout, no tutor_lines, so the tutorial
+	# beats fire on the first arming only, never replayed on a respawns:true
+	# re-arm. Absent `repeat_arena` (every other encounter) leaves `arena_id`
+	# at the entity's own static `arena`, byte-identical to before.
+	var arena_id := String(entity["arena"])
+	var repeat_arena_id := String(entity.get("repeat_arena", ""))
+	if repeat_arena_id != "" and accomplishment_count(String(entity.get("tutorial_seen_when", ""))) > 0:
+		arena_id = repeat_arena_id
 	var arena: Dictionary = {}
 	for a: Dictionary in _combat_config["arenas"]["arenas"]:
-		if String(a[WIKeys.ID]) == String(entity["arena"]):
+		if String(a[WIKeys.ID]) == arena_id:
 			arena = a
 	if arena.is_empty():
 		return false

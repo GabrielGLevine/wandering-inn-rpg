@@ -52,17 +52,22 @@ const GATE_FIXTURES := [
 ## build the fixture's fights were tuned/measured at, enforced in BOTH
 ## directions -- an under-leveled PC can lose a tuned-winnable fight, an
 ## over-leveled one silently invalidates the measured band the other way:
-##   door_chain_fight_start / riverfarm_fight_start / near_invrisil_fight:
+##   door_chain_fight_start / door_chain_sequence_break_start /
+##   riverfarm_fight_start / near_invrisil_fight:
 ##     `warrior5_mage5` (10 total levels, split-efficiency ~0.78 --
 ##     sim_combat_batch.gd's tuned band for rift_vermin_leak/ruin_guardian,
 ##     the briar/wolf cells, and (near_invrisil_fight) the
-##     `hired_blades_w10_wilovan` ally-fielded cell).
+##     `hired_blades_w10_wilovan` ally-fielded cell). door_chain_sequence_break_start
+##     resolves the SAME two fights (rift_vermin_leak, ruin_guardian) at the
+##     SAME rng_state as door_chain_fight_start, just in the opposite order
+##     relative to the Pisces consult -- same build, same band.
 ##   near_invrisil: warrior2 (the alley_footpads gated 0.75-0.98 cell was
 ##     measured at "warrior2 SOLO specifically" per combatants.json + the
 ##     fixture's own _comment -- the same lock that exempts it from the
 ##     post_game-backbone check, now enforced instead of prose-only).
 const COMBAT_BAND_FIXTURES := {
 	"door_chain_fight_start": 10,
+	"door_chain_sequence_break_start": 10,
 	"riverfarm_fight_start": 10,
 	"near_invrisil": 2,
 	"near_invrisil_fight": 10,

@@ -125,8 +125,7 @@
   { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
   { "action": "combat_autoplay", "max_turns": 300 },
   { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "wait_for_event", "type": "ui_tutor_line_rendered", "payload_contains": { "beat": "road_clear" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
+  { "_comment": "Playtest finding 17: this is goblin_encounter_1's SECOND arming (fight 1 above already banked sign_defended) -- start_combat's repeat_arena seam swaps to the plain, tutor-line-free goblin_ambush arena once sign_defended has banked, so road_clear does NOT fire again here (positive proof the tutorial doesn't replay past its first arming). No tutor-line wait; straight to the victory confirm.", "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
   { "action": "move", "direction": "right", "steps": 1 },
   { "action": "move", "direction": "down", "steps": 3 },
@@ -175,6 +174,14 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "toast", "payload_contains": { "text": "1/2" } }
+  { "action": "assert_event_absent", "type": "toast", "payload_contains": { "text": "1/2" } },
+
+  { "_comment": "== PHASE G (playtest finding 18): back down to cellar_door and cast [Light] again -- the crate is already reported (crate_returned banked above), so the toast must acknowledge that instead of repeating the 'crate is there' find. Reverse of the up-to-Krshia leg above: down 10, left 3, down 3, back to (10,16) facing down into cellar_door.", "action": "move", "direction": "down", "steps": 10 },
+  { "action": "move", "direction": "left", "steps": 3 },
+  { "action": "move", "direction": "down", "steps": 3 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "light", "target": "cellar_door" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Light] — The orb drifts down the stairs. Just an empty cellar now, and a scuff in the dust where the crate used to sit." } }
  ]
 }

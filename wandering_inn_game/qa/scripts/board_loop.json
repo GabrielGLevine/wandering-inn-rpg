@@ -15,9 +15,8 @@
 
   { "_comment": "== (0) ROTATION, PRE-STATE == times_slept 0 -> pool window [0,1,2] = road_cull/settle_dispute/gossip_tea. Asserted via state, not dialogue text (the board's assembled text is long/multi-paragraph -- the determinism proof belongs on the derived state, the human-legible copy proof belongs to the windowed screenshot below).", "action": "assert_state", "path": "board_active_bounties", "equals": ["bounty_road_cull", "bounty_settle_dispute", "bounty_gossip_tea"] },
 
-  { "_comment": "== (1) BOARD BROWSE == guild_board (2,3) sits past Renn (3,3), who blocks a direct westward walk along y3 (the same blocking guild_interior_walkthrough's own script hits at (4,3)). Detour via the open y6 corridor, the same precedent for reaching the board -- sidestepping right around (8,4) first (playtest hotfix #5 -- the rug there now blocks): right 1 to (9,3), down 3 to (9,6), left 8 to (1,6), up 3 to (1,3) (column x=1 is clear of both Renn (3,3) and Ilvo (2,4)), then a blocked 'right 1' bump into the board's own cell (2,3) to face right without moving.", "action": "move", "direction": "right", "steps": 1 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "left", "steps": 8 },
+  { "_comment": "== (1) BOARD BROWSE == guild_board (2,3) sits past Renn (3,3), who blocks a direct westward walk along y3 (the same blocking guild_interior_walkthrough's own script hits at (4,3)). Detour via the open y6 corridor, the same precedent for reaching the board -- straight down the x=8 column now (playtest finding 11 unblocked (8,4), the old rug-detour sidestep is gone): down 3 to (8,6), left 7 to (1,6), up 3 to (1,3) (column x=1 is clear of both Renn (3,3) and Ilvo (2,4)), then a blocked 'right 1' bump into the board's own cell (2,3) to face right without moving.", "action": "move", "direction": "down", "steps": 3 },
+  { "action": "move", "direction": "left", "steps": 7 },
   { "action": "move", "direction": "up", "steps": 3 },
   { "action": "assert_state", "path": "player_cell", "equals": [1, 3] },
   { "action": "move", "direction": "right", "steps": 1 },
@@ -31,11 +30,9 @@
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
 
-  { "_comment": "== (2) ACCEPT == back to the desk-approach cell via the SAME y6 detour in reverse (down 3 to (1,6), right 7 to (8,6)), then sidestepping right around (8,4) again on the way back up (playtest hotfix #5): right 1 to (9,6), up 3 to (9,3), left 1 to (8,3), then a blocked bump up against Selys to set facing up. Then Selys: fresh waking, first interact plays her rotating pool line (banks heard_gossip 0->1), second opens the real graph.", "action": "move", "direction": "down", "steps": 3 },
+  { "_comment": "== (2) ACCEPT == back to the desk-approach cell via the SAME y6 detour in reverse (down 3 to (1,6), right 7 to (8,6)), then straight up the x=8 column (playtest finding 11 unblocked (8,4), no more sidestep): up 3 to (8,3), then a blocked bump up against Selys to set facing up. Then Selys: fresh waking, first interact plays her rotating pool line (banks heard_gossip 0->1), second opens the real graph.", "action": "move", "direction": "down", "steps": 3 },
   { "action": "move", "direction": "right", "steps": 7 },
-  { "action": "move", "direction": "right", "steps": 1 },
   { "action": "move", "direction": "up", "steps": 3 },
-  { "action": "move", "direction": "left", "steps": 1 },
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [8, 3] },
   { "action": "press", "name": "interact" },
@@ -96,10 +93,8 @@
 
   { "_comment": "Condition met: heard_gossip 4 - baseline 1 = 3 >= 3. Confirmed opaque-safe -- no progress-toward event or readout exists anywhere in this trace, only the counter itself.", "action": "assert_state", "path": "accepted_bounty_id", "equals": "bounty_gossip_tea" },
 
-  { "_comment": "== (4) TURN IN == back to the desk-approach cell: left 3 to (8,6), then sidestepping right around (8,4) on the way up (playtest hotfix #5): right 1 to (9,6), up 3 to (9,3), left 1 to (8,3), blocked bump up to set facing up. Same waking -- social_talked[selys] already true, so ONE interact opens the graph directly (no repeated pool line).", "action": "move", "direction": "left", "steps": 3 },
-  { "action": "move", "direction": "right", "steps": 1 },
+  { "_comment": "== (4) TURN IN == back to the desk-approach cell: left 3 to (8,6), then straight up the x=8 column (playtest finding 11 unblocked (8,4), no more sidestep): up 3 to (8,3), blocked bump up to set facing up. Same waking -- social_talked[selys] already true, so ONE interact opens the graph directly (no repeated pool line).", "action": "move", "direction": "left", "steps": 3 },
   { "action": "move", "direction": "up", "steps": 3 },
-  { "action": "move", "direction": "left", "steps": 1 },
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [8, 3] },
   { "action": "press", "name": "interact" },

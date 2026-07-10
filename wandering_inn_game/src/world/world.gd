@@ -1519,6 +1519,15 @@ func _move_player_visual(target: Vector2) -> void:
 func _bump_player_visual() -> void:
 	if _player_visual == null:
 		return
+	# Playtest finding 24: a blocked press already turned the PC sim-side
+	# (`Game.sim.player_facing` is set unconditionally in `move_player`,
+	# before the blocked check) -- update the sprite's facing/flip to match
+	# BEFORE the early-return below, so a zero-duration (headless/QA)
+	# presentation still turns the PC even though the nudge tween never
+	# plays. Idempotent on a held key against the same wall (same facing,
+	# same anim, `AnimatedSprite2D.play()` on an already-playing animation is
+	# a no-op) -- nothing new to spam.
+	_play_player_anim("idle")
 	var duration := _presentation_delay(BUMP_TWEEN_SECONDS)
 	if duration <= 0.0:
 		return
