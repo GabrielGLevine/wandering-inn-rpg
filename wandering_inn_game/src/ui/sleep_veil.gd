@@ -239,12 +239,20 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if _running:
 				_lines.append("[%s Class → %s Class!]" % [_class_name(String(payload.get("from", ""))), _class_name(String(payload.get("to", "")))])
 		WIEvents.CONSOLIDATION_OFFERED:
-			# No-op here on purpose (playtest hotfix #8) -- the veil no longer
-			# special-cases this sleep; it runs the SAME reveal as any other.
-			# consolidation_prompt.gd shows its own modal unconditionally on
-			# this same event, independent of the veil's timing (see the file
-			# doc comment's CONSOLIDATION section).
-			pass
+			# The GDI ANNOUNCES the offer under the veil (user ruling: the
+			# consolidation choice is delivered by the Grand Design during
+			# sleep) -- one line in its own voice, riding the same collection
+			# idiom as every other reveal. The CHOICE itself still happens in
+			# consolidation_prompt.gd's modal AFTER the veil completes: the
+			# input-dead-until-UI_SLEEP_VEIL_FINISHED contract (the
+			# prompt-held rework) is untouched -- the veil only speaks, it
+			# never takes input.
+			if _running:
+				var parents: Array = payload.get("parents", [])
+				if parents.size() == 2:
+					_lines.append("[%s and %s pull toward one another. The Design offers: %s.]" % [
+						_class_name(String(parents[0])), _class_name(String(parents[1])),
+						_class_name(String(payload.get("target", "")))])
 		WIEvents.ACCOMPLISHMENT_RECORDED:
 			# A4: ARM the epilogue the instant the Raskghar is sealed (banked mid
 			# Zevara's seal dialogue). The reveal waits for the dialogue to END so
@@ -266,6 +274,13 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			# this is the GDI's OWN voice.
 			if _running and String(payload.get("id", "")) == "door_awakened":
 				_lines.append("[The inn has a Door. The Door has opinions.]")
+			# Garden fanfare (user ruling: the unlock was silent): the
+			# qualifying sleep banks garden_door_unlocked inside sleep() --
+			# same synchronous-burst idiom as door_awakened above, the
+			# veil's fifth cameo. Erin's own morning acknowledgment
+			# (talk_pool_stages) remains the daylight half of the beat.
+			if _running and String(payload.get("id", "")) == "garden_door_unlocked":
+				_lines.append("[A door opens that no one built. The Garden of Sanctuary remembers how to wait.]")
 		WIEvents.DIALOGUE_ENDED:
 			# A4: the armed epilogue plays as the seal conversation clears.
 			if _epilogue_armed:

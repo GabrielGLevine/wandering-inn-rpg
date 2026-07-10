@@ -44,7 +44,10 @@
   {
    "action": "assert_state",
    "path": "classes",
-   "equals": {"warrior": 6, "mage": 7}
+   "equals": {
+    "warrior": 6,
+    "mage": 7
+   }
   },
   {
    "action": "move",
@@ -77,14 +80,17 @@
   {
    "action": "assert_state",
    "path": "classes",
-   "equals": {"warrior": 6, "mage": 7}
+   "equals": {
+    "warrior": 6,
+    "mage": 7
+   }
   },
   {
-   "_comment": "THE ORDER PIN (playtest hotfix #8): wait_for_event's since-marker is a forward-only cursor, so these three consecutive waits prove the veil's sleep sequence RENDERS and FINISHES strictly BEFORE the consolidation prompt shows -- the offer surfaces after the sleep beat, never on top of it. The veil emits both events in the QA-collapsed path too (sleep_veil.gd's _run_sequence), so this ordering is headless-provable and can never silently regress. lines:0 -- this sleep banks no class/level announcements (the fixture sits exactly at the offer threshold).",
+   "_comment": "THE ORDER PIN (playtest hotfix #8): wait_for_event's since-marker is a forward-only cursor, so these three consecutive waits prove the veil's sleep sequence RENDERS and FINISHES strictly BEFORE the consolidation prompt shows -- the offer surfaces after the sleep beat, never on top of it. The veil emits both events in the QA-collapsed path too (sleep_veil.gd's _run_sequence), so this ordering is headless-provable and can never silently regress. lines:0 -- this sleep banks no class/level announcements (the fixture sits exactly at the offer threshold). lines:1 = the GDI offer-announce line (the veil speaks the consolidation in the Design's voice; the modal choice still waits for the veil to finish).",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "payload_contains": {
-    "lines": 0
+    "lines": 1
    },
    "timeout_sec": 5
   },
@@ -135,7 +141,10 @@
   {
    "action": "assert_state",
    "path": "classes",
-   "equals": {"warrior": 6, "mage": 7}
+   "equals": {
+    "warrior": 6,
+    "mage": 7
+   }
   },
   {
    "action": "press",
@@ -156,11 +165,11 @@
    "equals": "spellsword"
   },
   {
-   "_comment": "The SAME order pin as the first offer above -- the re-offer sleep also runs the full veil sequence before its prompt shows.",
+   "_comment": "The SAME order pin as the first offer above -- the re-offer sleep also runs the full veil sequence before its prompt shows. lines:1 = the GDI offer-announce line (the veil speaks the consolidation in the Design's voice; the modal choice still waits for the veil to finish).",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "payload_contains": {
-    "lines": 0
+    "lines": 1
    },
    "timeout_sec": 5
   },
@@ -207,7 +216,9 @@
   {
    "action": "assert_state",
    "path": "classes",
-   "equals": {"spellsword": 9}
+   "equals": {
+    "spellsword": 9
+   }
   },
   {
    "action": "assert_state",
