@@ -120,7 +120,7 @@
   { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "sword_skill_used" } },
 
   { "_comment": "Knowledge != fieldability: even with the spear equipped (power_strike gated out of the live kit), the journal still lists BOTH warrior grants -- skills_journal is never weapon-filtered. skill_count 5 (1 innate + 4 warrior).", "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "skill_groups": ["Innate", "Warrior"], "skill_count": 5 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "skill_groups": ["Innate", "Warrior — Lv 1"], "skill_count": 5 }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "06_journal_knowledge_not_fieldability" },
   { "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },

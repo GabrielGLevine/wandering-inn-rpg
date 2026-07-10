@@ -75,7 +75,7 @@
   { "action": "assert_event_logged", "type": "entity_removed", "payload_contains": { "id": "chieftains_raid" } },
   { "action": "screenshot", "name": "03_loop_complete" },
 
-  { "_comment": "== Issue #53 finding 42/43: the journal header-level format + the passive first-proc reveal, both live off this same fight. Warrior is now L2 (assert_state above), so its heading carries ' -- Lv 2' next to 'Innate' (the classless start's basic_cleaning group, unsuffixed) -- exact skill_groups array, same idiom journal_skills.json already pins. Fight 2 fired reaction_triggered{counter_strike} (riposte) TWICE and reaction_triggered{battle_momentum} (ap_on_kill) TWICE for the pc (both real procs, not scripted) -- commit 180acd9 banks both into used_skills on first pc-owned proc, so both cards are revealed (used_skills contains -- the real assertable proof, not the full revealed_skills array, which also carries every combat skill combat_autoplay's basic attacks already used).", "action": "press", "name": "journal" },
+  { "_comment": "== ", "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "skill_groups": [ "Innate", "Warrior — Lv 2" ] }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "used_skills", "contains": [ "counter_strike", "battle_momentum" ] },
   { "action": "screenshot", "name": "04_journal_level_and_passive_cards" },
