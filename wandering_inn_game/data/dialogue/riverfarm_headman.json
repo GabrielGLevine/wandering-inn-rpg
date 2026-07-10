@@ -6,7 +6,7 @@
 			"speaker": "The Headman",
 			"text": "Village's had a bad run. Crops came up wrong two seasons straight, animals spooked for no cause, and the ledger won't add up no matter how many times I recount it. Something's collecting on us, and I mean to know what.",
 			"text_variants": [
-				{ "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "text": "Whatever you find out there, I want to hear it plain. No riddles, and no half-truths either." },
+				{ "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "text": "Whatever you find out there, I want to hear it plain. No riddles, and no half-truths either. The witch keeps to the hollow -- west, past my fields, where the trees break." },
 				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "Whatever you did, the air's changed. I can feel it in my knees, and I trust my knees more than most people." }
 			],
 			"options": [

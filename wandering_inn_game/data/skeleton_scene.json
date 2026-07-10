@@ -7189,9 +7189,9 @@
      "toast": "Just raised earth. Whatever it's for, nobody's finished it yet."
     },
     {
-     "_comment": "R3 (issue #11): the BRIGHTEN visual_states -- default tint is the pre-resolution washed-out blight read (R1 shipped no tint at all, one state only); `blight_lifted` swaps to a warm harvest-light tint, matching the direction card's own day palette. The map itself is the quest's reward readout.",
-     "id": "riverfarm_longhouse_prop",
-     "kind": "prop",
+     "_comment": "The longhouse is a REAL door now, not a toast prop -- same entity, same footprint cell, sprite/tint/visual_states untouched (the BRIGHTEN entry below still fires on blight_lifted whether the entity is read as prop or door; visual refresh is kind-agnostic). CONSTRAINT: cell (11,7) is the footprint's own south-face row (the blocked rampart at rows 6-7 spans cols 8-14; the sprite's anchor puts its visible door at x-center ~11, y near the bottom of the frame) -- approached from the open cell one row further south (11,8), facing up. to_cell (5,5) lands one row inside `riverfarm_longhouse`'s own south gap, facing away from the exit, matching the guild_door/guild_exit offset convention.",
+     "id": "longhouse_door",
+     "kind": "door",
      "cell": [
       11,
       7
@@ -7204,8 +7204,12 @@
       0.66
      ],
      "observe": "One long thatch ridge, twice the width of any cottage. Smoke curls from a vent at the peak even in daylight.",
-     "on_interact_accomplishment": "observed_riverfarm_longhouse",
-     "toast": "The communal hall. Smells like woodsmoke and old stew.",
+     "to_map": "riverfarm_longhouse",
+     "to_cell": [
+      5,
+      5
+     ],
+     "on_enter_accomplishment": "observed_riverfarm_longhouse",
      "visual_states": [
       {
        "when": {
@@ -7219,20 +7223,6 @@
        ]
       }
      ]
-    },
-    {
-     "_comment": "The village's sleep site (every expansion area ships one -- standing rule). A guest cot on the longhouse's open north lawn: UNCONDITIONAL access, same as garden_bed -- no quest gate, no requires_accomplishment, progression only ever resolves at sleep regardless of which bed triggers it. `sleep: true` is checked FIRST in interact()'s prop match (wi_game.gd) -- an on_interact_accomplishment/toast pair here would be dead code, so this entity carries none. Playtest hotfix #7c: moved (9,4) -> (9,5) -- the OLD cell read as floating alone in open lawn (Chebyshev distance 3 from the longhouse's own footprint), contradicting its own observe copy ('by the longhouse wall'). (9,5) is Chebyshev-ADJACENT (distance 1) to the longhouse's blocked footprint (row 6 starts immediately south) -- the cot now genuinely sits against the wall. Re-checked the SAME two hazards the original placement audit covered: PIXEL-footprint clear of every NPC overhang (headman (11,9)/villager (6,10)/hunter (13,10) are all 6+ rows south, nowhere near this north-side cell) and NOT inside the longhouse's own visible sprite span (footprint columns 8-14 include x=9, but the sprite's vertical extent reads as roof-above-row-6, not encroaching further north into row 5 the way it grazed row 4 before -- if a windowed read disagrees, shift one column off the footprint's center instead of re-opening the row).",
-     "id": "riverfarm_guest_cot",
-     "kind": "prop",
-     "cell": [
-      9,
-      5
-     ],
-     "display_name": "A Guest Cot",
-     "sprite": "bed",
-     "observe": "A straw-tick pallet by the longhouse wall, blanket already turned down for whoever needs it.",
-     "sleep": true,
-     "sleep_toast": "Straw tick, borrowed blanket \u2014 Riverfarm always finds room for one more."
     },
     {
      "id": "riverfarm_cottage_a",
@@ -7653,6 +7643,319 @@
      "ally_requires": {
       "hunter_will_come": 1
      }
+    }
+   ]
+  },
+  "riverfarm_longhouse": {
+   "_comment": "Interior behind `longhouse_door` (riverfarm_village) -- small communal hall, 10x7. FUNCTION: gives the village's one guest bed a real room (retires the open-lawn sleep-site read) and gives the headman's ledger a physical anchor. biome 'inn' reused (same wood-hall plank family as guild/inn_upstairs, not a new tileset). CONSTRAINT: south wall gapped at x=5 for `longhouse_exit`; arrival from the village lands one cell north of it (5,5), matching the guild_door/guild_exit offset convention. Hearth + 2 sconces = 3 lights total, well under the 8/map budget. TRAP: hearth/long-table/headman-table are added to `blocked` manually (decor never auto-blocks movement) -- stools/barrels/crate/sconces stay walkable, matching guild's own furniture-blocking split (counters/tables blocked, stools/rugs not).",
+   "biome": "inn",
+   "grid": {
+    "width": 10,
+    "height": 7
+   },
+   "blocked": [
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     8,
+     1
+    ]
+   ],
+   "floor_layers": [
+    {
+     "_pick": "Same plank variant set as guild/inn_upstairs (Interior_Walls_01.png) -- every wood building in Liscor's orbit reads as the same hall material.",
+     "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+     "tile_px": 16,
+     "variants": [
+      [
+       1,
+       21
+      ],
+      [
+       2,
+       21
+      ],
+      [
+       1,
+       22
+      ],
+      [
+       2,
+       22
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "walls": {
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "segments": [
+     {
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       9,
+       0
+      ],
+      "cap": [
+       14,
+       6
+      ],
+      "face": [
+       14,
+       7
+      ]
+     },
+     {
+      "from": [
+       0,
+       1
+      ],
+      "to": [
+       0,
+       6
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "from": [
+       9,
+       1
+      ],
+      "to": [
+       9,
+       6
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "_comment": "South wall, gapped at x=5 for longhouse_exit.",
+      "from": [
+       1,
+       6
+      ],
+      "to": [
+       4,
+       6
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     },
+     {
+      "from": [
+       6,
+       6
+      ],
+      "to": [
+       8,
+       6
+      ],
+      "cap": [
+       14,
+       6
+      ]
+     }
+    ]
+   },
+   "decor": [
+    {
+     "sprite": "hearth",
+     "cell": [
+      2,
+      1
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.62,
+       0.32
+      ],
+      "energy": 1.1,
+      "radius": 40,
+      "flicker": true
+     }
+    },
+    {
+     "sprite": "table_brown",
+     "cell": [
+      2,
+      3
+     ]
+    },
+    {
+     "sprite": "table_brown",
+     "cell": [
+      3,
+      3
+     ]
+    },
+    {
+     "sprite": "stool",
+     "cell": [
+      2,
+      2
+     ]
+    },
+    {
+     "sprite": "stool",
+     "cell": [
+      3,
+      2
+     ]
+    },
+    {
+     "sprite": "stool",
+     "cell": [
+      2,
+      4
+     ]
+    },
+    {
+     "sprite": "stool",
+     "cell": [
+      3,
+      4
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      1,
+      2
+     ]
+    },
+    {
+     "sprite": "barrel",
+     "cell": [
+      1,
+      4
+     ]
+    },
+    {
+     "sprite": "crate",
+     "cell": [
+      1,
+      3
+     ]
+    },
+    {
+     "sprite": "table_brown",
+     "cell": [
+      8,
+      1
+     ]
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      6,
+      1
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.75,
+       0.4
+      ],
+      "energy": 0.6,
+      "radius": 18,
+      "flicker": true
+     }
+    },
+    {
+     "sprite": "sconce",
+     "cell": [
+      7,
+      4
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.75,
+       0.4
+      ],
+      "energy": 0.6,
+      "radius": 18,
+      "flicker": true
+     }
+    }
+   ],
+   "_comment_ambience": "Same dusk/night dust-motes pattern as every other wood interior (guild/inn_upstairs precedent).",
+   "ambience": [
+    {
+     "preset": "dust_motes",
+     "rect": "all",
+     "phase": [
+      "dusk",
+      "night"
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "Return door -- to_cell (11,8) is the SAME open cell the player stood on outside to approach longhouse_door in the first place (the guild_exit/guild_door offset convention).",
+     "id": "longhouse_exit",
+     "kind": "door",
+     "cell": [
+      5,
+      6
+     ],
+     "display_name": "Outside",
+     "sprite": "door",
+     "to_map": "riverfarm_village",
+     "to_cell": [
+      11,
+      8
+     ]
+    },
+    {
+     "_comment": "The village's sleep site, relocated off the open lawn into a real room. Mechanically identical to every other sleep prop (sleep: true, checked first in interact()'s prop match) -- sleep_toast text held verbatim across the move. Placed against the east wall (col 9), footprint clear of the approach column (col 8, rows 3/5 open on both sides).",
+     "id": "riverfarm_guest_cot",
+     "kind": "prop",
+     "cell": [
+      8,
+      4
+     ],
+     "display_name": "A Guest Cot",
+     "sprite": "bed",
+     "observe": "A straw-tick pallet against the wall, blanket already turned down for whoever needs it.",
+     "sleep": true,
+     "sleep_toast": "Straw tick, borrowed blanket \u2014 Riverfarm always finds room for one more."
+    },
+    {
+     "_comment": "Flavor-only (on_interact_accomplishment + toast, same shape as guild_notice_wall) -- the headman's own ledger, left on his corner table. No gate, no quest tie.",
+     "id": "riverfarm_headman_ledger",
+     "kind": "prop",
+     "cell": [
+      8,
+      2
+     ],
+     "display_name": "The Headman's Ledger",
+     "sprite": "dusty_scroll",
+     "observe": "A ledger left open on the corner table, the same one he carries everywhere else. Columns re-summed in three different inks -- he never trusts the first count, or the second.",
+     "on_interact_accomplishment": "observed_headman_ledger",
+     "toast": "Grain against debts, and the debts keep winning most years. Best not to read it over his shoulder."
     }
    ]
   },

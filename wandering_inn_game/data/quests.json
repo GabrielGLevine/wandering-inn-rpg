@@ -48,7 +48,7 @@
 			"id": "price_of_a_favor",
 			"title": "The Price of a Favor",
 			"beats": [
-				{ "id": "resolve", "description": "Settle the debt collecting on Riverfarm -- drive it off, broker fair terms, or pay it yourself.", "complete_when": { "blight_lifted": 1 } },
+				{ "id": "resolve", "description": "Settle the debt collecting on Riverfarm -- the witch in the hollow west of the fields is the one collecting it. Drive her off, broker fair terms, or pay it yourself.", "complete_when": { "blight_lifted": 1 } },
 				{ "id": "report", "description": "Tell the headman it's done.", "complete_when": { "price_of_a_favor_reported": 1 } }
 			]
 		},
