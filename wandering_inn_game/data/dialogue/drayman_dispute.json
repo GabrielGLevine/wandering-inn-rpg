@@ -1,0 +1,24 @@
+{
+ "_comment": "The free SOCIAL persuade beat (user-ratified): a non-quest street moment that banks persuaded_someone with NO class gate -- the deliberate second producer alongside goblin_parley's Warrior-intimidate, so [Diplomat]'s entry counter is never a single missable point of failure. CONSTRAINT: this is the carve-out side of the fork-pricing rule -- quest-FORK resolutions gate on [Diplomat]; ordinary social persuasion like this stays free BY DESIGN (it is how a player discovers the class). One-shot: the persuade option retires on its own counter; the greet text calms via text_variant on the same counter.",
+ "start": "greet",
+ "nodes": {
+  "greet": {
+   "speaker": "A Frazzled Drayman",
+   "text": "Half a day! Half a day stuck behind the market row and now the axle-pin's walked off somewhere and the Watch says MOVE ALONG -- move along WHERE, exactly? Nobody -- NOBODY -- is listening.",
+   "text_variants": [
+    { "requires": { "accomplishment": { "soothed_the_drayman": 1 } }, "text": "Found the pin. Right where you said to look -- under the whole mess, not in it. Cart's rolling before dusk. I owe you a quiet word, and that's worth more than it sounds on this street." }
+   ],
+   "options": [
+    { "text": "Breathe. Start at the axle-pin -- walk me through it once, slow.", "hide_when": { "accomplishment": { "soothed_the_drayman": 1 } }, "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "soothed_the_drayman" } ], "goto": "calmed" },
+    { "text": "Not my cart, not my problem.", "end": true }
+   ]
+  },
+  "calmed": {
+   "speaker": "A Frazzled Drayman",
+   "text": "...Slow. Right. Pin came loose past the gate, cart's been dragging since, which means it's UNDER the load, not lost on the road. Huh. You just stood there and let me hear myself. Sergeant's been shouting at me for an hour and got less done.",
+   "options": [
+    { "text": "Good luck with the cart.", "end": true }
+   ]
+  }
+ }
+}

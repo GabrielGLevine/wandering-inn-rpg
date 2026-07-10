@@ -162,7 +162,7 @@
   "consult_talk_argue": {
    "speaker": "Pisces",
    "text": "...A glance. Hm. If it truly reads as spatial and not necrotic, I could examine it without touching a thing. Fine, for the intellectual insult of not knowing, not for you.",
-   "_comment": "Issue #50 sweep-caught re-pricing: this TALK-leg close was a free ungated persuade resolving the door_that_goes_elsewhere quest fork (banks persuaded_someone + door_understood + pedestal_unsealed) -- same rule as the four named quests. Split Diplomat-gated free vs a paid alternate (Pisces is mercenary/vain, not bribe-averse like Zevara, so a flat consultation fee reads honest); both converge on the SAME consult_talk_done (Pisces reacting to what he found, not to how he was won over, so it fits either branch).",
+   "_comment": "sweep-caught re-pricing: this TALK-leg close was a free ungated persuade resolving the door_that_goes_elsewhere quest fork (banks persuaded_someone + door_understood + pedestal_unsealed) -- same rule as the four named quests. Split Diplomat-gated free vs a paid alternate (Pisces is mercenary/vain, not bribe-averse like Zevara, so a flat consultation fee reads honest); both converge on the SAME consult_talk_done (Pisces reacting to what he found, not to how he was won over, so it fits either branch).",
    "options": [
     {
      "text": "Then it's settled. (Diplomat)",

@@ -455,7 +455,7 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# reads BOTH legs (accomplishment AND once_per_waking) for
 		# hide-until-met visibility -- unlike the gold compound, once_per_waking
 		# is itself a vanishing gate, so there is no "greyed" state to preserve.
-		# Issue #50 adds a THIRD sanctioned compound -- {accomplishment, class}
+		# adds a THIRD sanctioned compound -- {accomplishment, class}
 		# together (a persuade-fork resolution that is BOTH progress-gated on
 		# the quest having been opened AND locked behind a class, e.g.
 		# watch_crate's "asked_about_crate" + "diplomat" or krshia_crate's

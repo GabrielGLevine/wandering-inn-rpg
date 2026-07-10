@@ -611,6 +611,128 @@
    ]
   },
   {
+   "_comment": "== THE FREE SOCIAL PERSUADE (the ungated persuaded_someone producer): (25,4) left4 -> (21,4), down9 -> (21,13) (the x19-20 col hits the x18-20,y8-9 building), left2 -> (19,13), then a bump DOWN onto the drayman (19,14) sets facing. One-shot soothe, then a re-talk proves the persuade option retired and the calmed text_variant took over. Position-restoring leg: returns to (25,4) before the guild beat continues.",
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    19,
+    13
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "drayman_dispute"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "persuaded_someone"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "soothed_the_drayman"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Re-talk: the calmed variant renders and the persuade option is GONE (exact one-element options array -- the retire proof).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "A Frazzled Drayman",
+    "options": [
+     {
+      "text": "Not my cart, not my problem.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 9
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    25,
+    4
+   ]
+  },
+  {
    "_comment": "Detour around the Guild block's static-blocked (26,3) via the open y5 row, then up to the forecourt and bump guild_door (28,3) -- a REAL DOOR now, not a toast prop.",
    "action": "move",
    "direction": "down",
@@ -636,11 +758,15 @@
    "name": "interact"
   },
   {
-   "_comment": "The old toast pin (\"The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today.\") is RETIRED -- the door transitions for real now. Chronology matches guild_interior_walkthrough's proven order: map_changed fires synchronously inside transition(), world.gd's handler rebuilds (mood/map/entities) BEFORE control returns to record on_enter_accomplishment.", "action": "wait_for_event",
+   "_comment": "The old toast pin (\"The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today.\") is RETIRED -- the door transitions for real now. Chronology matches guild_interior_walkthrough's proven order: map_changed fires synchronously inside transition(), world.gd's handler rebuilds (mood/map/entities) BEFORE control returns to record on_enter_accomplishment.",
+   "action": "wait_for_event",
    "type": "map_changed",
    "payload_contains": {
     "map": "guild",
-    "cell": [8, 10]
+    "cell": [
+     8,
+     10
+    ]
    },
    "timeout_sec": 5
   },

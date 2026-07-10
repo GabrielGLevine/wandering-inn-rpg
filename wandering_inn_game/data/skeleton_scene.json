@@ -2551,6 +2551,20 @@
      }
     },
     {
+     "_comment": "The free social persuade beat: ungated one-shot persuaded_someone producer so [Diplomat]'s entry never hangs on goblin_parley's single missable branch. Non-quest BY DESIGN -- the fork-pricing rule covers quest resolutions; ordinary street persuasion stays free (it is how a player discovers the class). Cell (19,14): off every canonical route (crate columns x10/x13 + the y13 row, gate lane y6, market row y2, runners door (20,17)), 2 cells from watch_sergeant (17,12) -- a scene unfolding in the sergeant's earshot, which the calmed node's own copy leans on.",
+     "id": "frazzled_drayman",
+     "kind": "npc",
+     "cell": [
+      19,
+      14
+     ],
+     "facing": "left",
+     "display_name": "A Frazzled Drayman",
+     "sprite": "human_laborer",
+     "conversation": "drayman_dispute",
+     "observe": "A dray cart, a missing axle-pin, and a man about one shout from tipping the whole day over."
+    },
+    {
      "_comment": "Sprite is `pc_drake_m`, matching this entity's own copy ('He would send...') and Zevara's established Drake Watch-officer precedent (the gate).",
      "id": "watch_sergeant",
      "kind": "npc",
