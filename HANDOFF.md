@@ -1,5 +1,53 @@
 # Wandering Inn RPG Handoff
 
+## #52 WAVE 1 LANDED (2026-07-10, pushed d7e3531) — sweep 78/78
+
+Three Sonnet worktree lanes implemented, opus-reviewed (DLG FIX-FIRST →
+fixed; UI MERGE; SIM MERGE), merged, re-gated (import + unit suite +
+composed sweep 78/78 incl. the NEW door_chain_sequence_break canonical),
+windowed-verified (stairs read, bed clear of rug, ally-arrival bark,
+posting titles fit, feed/toast/bark all clear of the fold). Landed:
+locked-door toasts, ambush tutor one-shot (repeat_arena seam),
+face-on-blocked-move, charm slot, amulet resonance, pantry flicker
+sprite revert (arch only at awakened), stairs door pair, Selys approach
+unblocked, 3 walk-through Liscor cells solid, stale cellar text
+(on_skill_use.variants — new data seam), patron-gold exploit closed
+(once_per_waking), posting-name pickers, Lyonette/Olesm/Erin staleness,
+Lism signpost via Olesm, bark hold scales with lines, feed fold pinned,
+field-hotbar hardening, multi-death downed-tint guard, Relc/Hunter
+arrival feed line, ambush music crossfade race, Relc "you slept" tutor
+variant + go-sleep fallback. DEFERRED (commented on #52): common-room
+bed removal (28-script re-route, pends #49), patron real-fetch gate
+(needs an item-possession dialogue gate type), targeting_controller
+melee adjacency filter (over-permissive UI list), 3 off-grid y=20 decor
+tiles. Music gap map for #53 captured in the UI lane report: 12 of 15
+maps have NO dedicated track; combat music is one universal track.
+
+## #52 WAVE DISPATCH RECORD (2026-07-09 evening) — 3 Sonnet worktree lanes
+
+Controller pre-work landed (602ea3e): grey boulder (finding 46,
+windowed-verified) + `stairs_up` sprite registered for the lanes. Lanes
+off 602ea3e, overlay copied, imports green:
+- **lane-52-dlg** (/tmp/wi-52-dlg): dialogue staleness batch (2, 6, 7,
+  12, 25, 26), patron-gold exploit (5+49, once_per_waking), posting
+  NAMES in the Selys picker (14, bounties.gd), Lism-task diagnosis (20).
+- **lane-52-sim** (/tmp/wi-52-sim): locked-door fallback toast (9),
+  [Piercing Strike] axis diagnosis (10), ambush tutor-line re-arm (17),
+  face-on-blocked-move (24), traveler_charm slot (31), amulet resonance
+  (44), pantry flicker-state sprite revert (45), stairs door + rug/cot +
+  alcove-bed removal (8), Selys prop (11), Liscor walk-through cells
+  (16), stale cellar text (18), NEW `door_chain_sequence_break`
+  canonical (fixture per #48 validator).
+- **lane-52-ui** (/tmp/wi-52-ui): bark hold scales with lines (1), feed
+  fold patch (39), field-hotbar refusal disappearance (33), multi-death
+  downed tint (38), ally-arrival feed line (36), ambush music transition
+  (40), current music map documented for #53 (27).
+Merge protocol: review each lane, controller merges + import pass +
+composed sweep FROM ROOT + windowed reads (stairs, bed, feed fold,
+downed tint, boulder surfaces) before push. Stale worktree note:
+/private/tmp/wi-lanes/lane-polish (ab0f8db) predates this session —
+untouched.
+
 ## USER PLAYTEST TRIAGE (2026-07-09, 51 findings through Stage 6) — LIVE
 
 Full list in the chat log; triage:
