@@ -1568,7 +1568,9 @@
 		}
 	},
 	"inn_roof": {
+		"_comment": "Issue #53 finding 13: street's roof/facade pairing is always roof at row Y, facade at row Y+1, one cell south -- inn_roof's own render (frame 128x72, render_scale 0.5 -> 64x36, default anchor [0.5,1.0]) overhangs 20px above its feet-anchored row, spilling 8px INTO the facade tile's own visual band below it. Plain row-based y-sort drew the facade (holder.position.y = (Y+1)*CELL, the larger key) over that overlap band, cutting off the roof's bottom edge/eaves -- the exact 'fronts draw over roofs' defect. field_y_sort_bias_px (world.gd's `_make_entity_visual`, shared by decor via `_build_decor`) pulls this sprite's Y-SORT KEY 20px SOUTH (past the paired facade's own key, one cell/16px below) with the render position compensated back out (net zero visual shift) -- roof now draws AFTER (over) the facade in the shared 8px band. Single consumer (STREET-ONLY per this sprite's other callers), so this bias can never affect an unrelated pairing.",
 		"render_scale": 0.5,
+		"field_y_sort_bias_px": 20.0,
 		"animations": {
 			"idle": {
 				"sheet": "res://assets/props/free_pack/Building_Roofs.png",

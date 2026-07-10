@@ -1,15 +1,15 @@
 {
- "_comment": "FIXTURE-FIRST start for guild_interior_walkthrough (the interior is the subject under test, not the street route). Same honest post-onboarding base as post_tutorial_street (warrior L1, met/sparred/given_spear) but positioned at (27,3) on the street, facing right at guild_door (28,3) -- the exact cell gate_district_walkthrough already stands on before bumping the door, verified unaffected by Selys's relocation. rng_state 9 for convention (no combat in this script). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "FIXTURE-FIRST start for guild_interior_walkthrough (the interior is the subject under test, not the street route). Same honest post-onboarding base as post_tutorial_street (warrior L1, met/sparred/given_spear), positioned at (28,3) on the street, facing UP at guild_door -- door moved to (28,2) (issue #53 finding 13, flush into the facade line between the twin facade_plaster tiles); this fixture's start point/facing updated in lockstep, no longer (27,3) facing right. rng_state 9 for convention (no combat in this script). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
   "current_map": "street",
   "player_cell": [
-   27,
+   28,
    3
   ],
   "player_facing": [
-   1,
-   0
+   0,
+   -1
   ],
   "classes": {
    "warrior": 1

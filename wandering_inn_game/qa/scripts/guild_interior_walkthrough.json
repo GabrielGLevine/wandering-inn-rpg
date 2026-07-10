@@ -1,5 +1,5 @@
 {
- "_comment": "The Adventurer's Guild interior. FIXTURE-FIRST (near_guild -- the interior is the subject, not the street route): starts at (27,3) on the street, facing guild_door. Proves the door round-trip (street -> guild -> street, landing on sane open cells both ways), the desk+Selys interaction (pool-line absorb + her real graph, incl. the new desk-context node), the board and notice-wall dressed props, and walk-on pool lines (Renn, Ilvo, Yelra) -- the full DP1 surface. Seed 9 for convention; fixture rng_state governs (no combat in this script).",
+ "_comment": "The Adventurer's Guild interior. FIXTURE-FIRST (near_guild -- the interior is the subject, not the street route): starts at (28,3) on the street, facing up at guild_door (28,2) -- issue #53 finding 13 moved the door into the facade line, so this fixture's start moved from (27,3)-facing-right in lockstep. Proves the door round-trip (street -> guild -> street, landing on sane open cells both ways), the desk+Selys interaction (pool-line absorb + her real graph, incl. the new desk-context node), the board and notice-wall dressed props, and walk-on pool lines (Renn, Ilvo, Yelra) -- the full DP1 surface. Seed 9 for convention; fixture rng_state governs (no combat in this script).",
  "fixture_save": "near_guild",
  "starts_at_title": true,
  "steps": [
@@ -11,8 +11,8 @@
   { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "street" },
-  { "action": "assert_state", "path": "player_cell", "equals": [27, 3] },
-  { "_comment": "Bump guild_door (28,3) from (27,3) facing right -- the door is REAL now, no more toast.", "action": "press", "name": "interact" },
+  { "action": "assert_state", "path": "player_cell", "equals": [28, 3] },
+  { "_comment": "Bump guild_door (28,2) from (28,3) facing up -- the door is REAL now, no more toast. Issue #53 finding 13: door moved from (28,3) to (28,2) (flush into the facade line); this fixture's start position/facing moved in lockstep from (27,3)-facing-right to (28,3)-facing-up.", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "guild", "cell": [8, 10] }, "timeout_sec": 5 },
   { "_comment": "Chronology: transition() fires map_changed synchronously, world.gd's handler rebuilds the field (mood/map/entities/lights/ambience) BEFORE control returns to wi_game.gd's interact() to record on_enter_accomplishment -- visited_guild is asserted AFTER the render events, matching the real event order.", "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "guild" }, "timeout_sec": 5 },
   { "_comment": "blocked_cells 58 -> 57: the rug_tan (8,4) crowded the only straight approach to Selys's desk -- unblocked, so the static list is one shorter.", "action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": { "map": "guild", "floor_cells": 192, "blocked_cells": 57 }, "timeout_sec": 5 },
@@ -75,7 +75,7 @@
   { "action": "move", "direction": "left", "steps": 3 },
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "interact" },
-  { "_comment": "Round-trip integrity: lands back on the open street cell (27,3) gate_district_walkthrough already used to approach guild_door, not inside a wall.", "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street", "cell": [27, 3] }, "timeout_sec": 5 },
+  { "_comment": "Round-trip integrity: lands back on the open street cell (27,3) -- guild_exit's own to_cell (unrelated to guild_door's street-side cell, untouched by issue #53 finding 13's door move), still a sane open cell clear of any wall.", "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street", "cell": [27, 3] }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "05_back_on_street" }
  ]

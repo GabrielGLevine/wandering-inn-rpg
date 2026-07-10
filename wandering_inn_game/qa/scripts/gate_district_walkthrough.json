@@ -733,7 +733,7 @@
    ]
   },
   {
-   "_comment": "Detour around the Guild block's static-blocked (26,3) via the open y5 row, then up to the forecourt and bump guild_door (28,3) -- a REAL DOOR now, not a toast prop.",
+   "_comment": "Detour around the Guild block's static-blocked (26,3) via the open y5 row, up to the forecourt at (28,3) -- open ground now (issue #53 finding 13: guild_door moved into the facade line at (28,2), the gap between the twin facade_plaster tiles, flush with the wall instead of floating a cell out in the street) -- then bump guild_door (28,2) facing up.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -751,6 +751,19 @@
   {
    "action": "move",
    "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    28,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
    "steps": 1
   },
   {

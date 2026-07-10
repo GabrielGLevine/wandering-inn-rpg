@@ -15,8 +15,9 @@
 
   { "_comment": "== (0) ROTATION PRE-STATE == times_slept 0 -> pool window [0,1,2] = krshia_wool/pisces_parcel/gate_dispatch (data/deliveries.json order, the board_loop determinism convention).", "action": "assert_state", "path": "board_active_deliveries", "equals": ["delivery_krshia_wool", "delivery_pisces_parcel", "delivery_gate_dispatch"] },
 
-  { "_comment": "== (1) IN THROUGH THE DOOR == (18,17) right 2: step 1 -> (19,17), step 2 blocks on runners_guild_door (20,17) & faces it. Interact transitions to runners_guild (5,6) and banks visited_runners_guild (door on_enter_accomplishment).", "action": "move", "direction": "right", "steps": 2 },
-  { "action": "assert_state", "path": "player_cell", "equals": [19, 17] },
+  { "_comment": "== (1) IN THROUGH THE DOOR == (18,17) right 2 -> (20,17) -- open ground now (issue #53 finding 13: runners_guild_door moved into the facade line at (20,16), the gap between the twin facade_plaster tiles, flush with the wall instead of floating a cell out in the street), up 1 blocks on runners_guild_door (20,16) & faces it. Interact transitions to runners_guild (5,6) and banks visited_runners_guild (door on_enter_accomplishment).", "action": "move", "direction": "right", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [20, 17] },
+  { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "_comment": "Emission order (traced from the first run's events.jsonl): map_changed -> ui_mood_applied (presentation reacts to the transition synchronously) -> THEN the door's on_enter_accomplishment (banked after transition() returns, back in interact()) -- so the mood wait sits BEFORE the accomplishment wait or the since-marker skips past it.", "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "runners_guild" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "runners_guild" }, "timeout_sec": 5 },
@@ -97,11 +98,13 @@
   { "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
 
-  { "_comment": "== (6) TURN IN == walk back (reverse of the outbound leg): down 10 -> (15,13), right 2 -> (17,13), down 4 -> (17,17), right 2 -> (19,17); right 1 blocks on the door & faces it; interact -> runners_guild (5,6); up 3 -> (5,3); up 1 blocks on Vess. Same waking, so ONE interact opens the graph directly. delivery_accepted true: idx0 'Just passing through.', idx1 'Turn in a slip.' ('Take a slip.' hidden).", "action": "move", "direction": "down", "steps": 10 },
+  { "_comment": "== (6) TURN IN == walk back (reverse of the outbound leg): down 10 -> (15,13), right 2 -> (17,13), down 4 -> (17,17), right 2 -> (19,17), right 1 -> (20,17) -- open ground (the door moved to (20,16), issue #53 finding 13); up 1 blocks on runners_guild_door (20,16) & faces it; interact -> runners_guild (5,6); up 3 -> (5,3); up 1 blocks on Vess. Same waking, so ONE interact opens the graph directly. delivery_accepted true: idx0 'Just passing through.', idx1 'Turn in a slip.' ('Take a slip.' hidden).", "action": "move", "direction": "down", "steps": 10 },
   { "action": "move", "direction": "right", "steps": 2 },
   { "action": "move", "direction": "down", "steps": 4 },
   { "action": "move", "direction": "right", "steps": 2 },
   { "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [20, 17] },
+  { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "runners_guild" }, "timeout_sec": 5 },
   { "action": "move", "direction": "up", "steps": 3 },
