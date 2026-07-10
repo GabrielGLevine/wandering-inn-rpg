@@ -108,6 +108,12 @@ var _open_combatants_catalog: Array = []
 ## mirrors the real turn-in lookup, not the browse-only slate.
 var _open_bounty_pool: Array = []
 var _open_delivery_pool: Array = []
+## Class DISPLAY NAME -> held level, for every class the PC currently holds
+## (built once per `_open()` from data/classes.json's catalog + Game.sim.
+## classes -- see `_class_levels_by_heading`'s own doc comment). Keyed by
+## display name, not id, because `skills_journal()`'s group dicts only carry
+## the rendered heading string, never the class id.
+var _open_class_levels: Dictionary = {}
 
 
 func _ready() -> void:
@@ -239,6 +245,7 @@ func _open() -> void:
 	var combatants_catalog := _load_combatants_catalog()
 	var bounty_pool := _load_json_pool("res://data/bounties.json", "bounties")
 	var delivery_pool := _load_json_pool("res://data/deliveries.json", "deliveries")
+	var class_levels := _class_levels_by_heading(_load_json_pool("res://data/classes.json", "classes"))
 	# Cache this open's inputs so a later cursor move or assign/unassign
 	# toggle can rebuild the body without re-querying Game.sim (see these
 	# fields' own doc comment -- nothing can change the known-skill set
@@ -250,9 +257,10 @@ func _open() -> void:
 	_open_combatants_catalog = combatants_catalog
 	_open_bounty_pool = bounty_pool
 	_open_delivery_pool = delivery_pool
+	_open_class_levels = class_levels
 	_flat_skill_ids = _flatten_skill_ids(skill_groups)
 	_cursor_index = 0 if not _flat_skill_ids.is_empty() else -1
-	var built := _build_body_text(act, quest_lines, skill_groups, seen_statuses, combatants_catalog, _cursor_index, bounty_pool, delivery_pool)
+	var built := _build_body_text(act, quest_lines, skill_groups, seen_statuses, combatants_catalog, _cursor_index, bounty_pool, delivery_pool, class_levels)
 	_body_label.text = String(built["text"])
 	_root.show()
 	# The RichTextLabel's scrollbar geometry is only valid after a layout pass,
@@ -276,7 +284,7 @@ func _open() -> void:
 	var skill_count := 0
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary
-		headings.append(String(group["heading"]))
+		headings.append(_class_heading_text(String(group["heading"]), class_levels))
 		for raw_skill: Variant in (group["skills"] as Array):
 			var skill := raw_skill as Dictionary
 			skill_count += 1
@@ -338,6 +346,39 @@ func _flatten_skill_ids(skill_groups: Array) -> Array[String]:
 	return out
 
 
+## `heading` with " — Lv N" appended when `class_levels` carries an entry for
+## it, else `heading` unchanged (the "Innate" group never has an entry --
+## see `_class_levels_by_heading`'s doc comment). Single source for the
+## suffix so the `ui_journal_shown` event's `skill_groups` field and the
+## rendered panel body can never drift from each other.
+func _class_heading_text(heading: String, class_levels: Dictionary) -> String:
+	if class_levels.has(heading):
+		return "%s — Lv %d" % [heading, int(class_levels[heading])]
+	return heading
+
+
+## Class DISPLAY NAME -> held level, for every class id `Game.sim.classes`
+## currently holds. `catalog` is data/classes.json's "classes" array (loaded
+## via `_load_json_pool`, this file's existing per-file-copy idiom -- same
+## reasoning as `_load_combatants_catalog`'s own doc comment: zero cross-
+## dependency into wi_game.gd's private catalog fields). Keyed by display
+## name rather than id because `skills_journal()`'s group dicts only ever
+## carry the RENDERED heading string (`cls.get(WIKeys.DISPLAY_NAME, id)`),
+## never the id itself -- display names are unique across the shipped
+## catalog today (verified: 13 classes, 13 distinct display_name values), so
+## this round-trips cleanly; a future class sharing another's display_name
+## would collide here and needs its own disambiguation, not silently reached
+## from this function.
+func _class_levels_by_heading(catalog: Array) -> Dictionary:
+	var out: Dictionary = {}
+	for raw_cls: Variant in catalog:
+		var cls := raw_cls as Dictionary
+		var id := String(cls.get(WIKeys.ID, ""))
+		if id != "" and Game.sim.classes.has(id):
+			out[String(cls.get(WIKeys.DISPLAY_NAME, id))] = int(Game.sim.classes[id])
+	return out
+
+
 ## Moves the cursor by `delta` rows, clamped to the flattened list's bounds
 ## (no wrap), then rebuilds the body so the new cursor row highlights and
 ## scrolls into view. A no-op when the PC knows zero skills.
@@ -371,7 +412,7 @@ func _toggle_cursor_skill() -> void:
 ## the cursor's row into view -- used by both cursor movement and the toggle
 ## (unlike `_open()`, which deliberately resets to the panel's top instead).
 func _rebuild_body_follow_cursor() -> void:
-	var built := _build_body_text(_open_act, _open_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool)
+	var built := _build_body_text(_open_act, _open_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels)
 	_body_label.text = String(built["text"])
 	var cursor_line := int(built["cursor_line"])
 	if cursor_line >= 0:
@@ -412,12 +453,17 @@ func _update_scroll_hint() -> void:
 ## `Game.sim.hotbar_loadout` directly — journal.gd already references
 ## Game.sim freely, it isn't purity-constrained) and the `cursor_index`'th
 ## row (in the SAME flattened order `_flatten_skill_ids` produces) is
-## wrapped in `[b]...[/b]` with a "▶ " lead glyph. Returns a Dictionary
-## `{text: String, cursor_line: int}` instead of a bare String --
-## `cursor_line` is the 0-based BBCode line the cursor row landed on (-1 if
-## `cursor_index` didn't match any row), so the caller can `scroll_to_line`
-## it into view without a second, drift-prone line-counting pass.
-func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, seen_statuses: Array, combatants_catalog: Array = [], cursor_index: int = -1, bounty_pool: Array = [], delivery_pool: Array = []) -> Dictionary:
+## wrapped in `[b]...[/b]` with a "▶ " lead glyph. A class group's heading
+## additionally gets " — Lv N" appended (`class_levels`, keyed by the SAME
+## display-name string the heading already is -- see `_class_levels_by_
+## heading`'s doc comment) -- "Innate" never matches an entry there, so it
+## stays bare, per the OPAQUE-UNTIL-SLEEP rule (class LEVEL is player-visible,
+## unlike raw stats). Returns a Dictionary `{text: String, cursor_line: int}`
+## instead of a bare String -- `cursor_line` is the 0-based BBCode line the
+## cursor row landed on (-1 if `cursor_index` didn't match any row), so the
+## caller can `scroll_to_line` it into view without a second, drift-prone
+## line-counting pass.
+func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, seen_statuses: Array, combatants_catalog: Array = [], cursor_index: int = -1, bounty_pool: Array = [], delivery_pool: Array = [], class_levels: Dictionary = {}) -> Dictionary:
 	var parts: Array = []
 	var cursor_line := -1
 	# The act-line section leads the journal -- the current act header + its
@@ -463,7 +509,7 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, 
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary
 		parts.append("")
-		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(group["heading"])))
+		parts.append("[b]%s[/b]" % UIChrome.bb_escape(_class_heading_text(String(group["heading"]), class_levels)))
 		for raw_skill: Variant in (group["skills"] as Array):
 			var skill := raw_skill as Dictionary
 			var row_text: String
