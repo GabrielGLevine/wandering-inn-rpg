@@ -258,6 +258,9 @@ func _build_expected_counts() -> Dictionary:
 	## riverfarm_hollow_path/hollow_village_path door pair. Single 64x64
 	## static, 1 frame.
 	counts["trail_gap/idle"] = 1
+	## Interior-staircase door affordance (owned PixelLab art) -- floor-change
+	## doors (first use: the inn upstairs door). Single 64x64 static, 1 frame.
+	counts["stairs_up/idle"] = 1
 
 	## Art-wiring task (2026-07-07): Lyonette's canon-correct bright-red-hair
 	## sprite (replacing the citizen_f pink-tint stand-in, VISUAL-LOG closed) +

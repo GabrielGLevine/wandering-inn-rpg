@@ -1450,12 +1450,13 @@
 		}
 	},
 	"boulder": {
+		"_comment": "Grey rock column of Rocks.png (x96 family) -- the x0 column is the same silhouette in BROWN, which read as a mud smear on grass (v0.4.0 playtest finding 46) and muddied every downstream tint (ruin_door's cold grey-blue). Same 32x43 shape, so all consumers keep geometry.",
 		"render_scale": 0.5,
 		"animations": {
 			"idle": {
 				"sheet": "res://assets/props/free_pack/Rocks.png",
 				"region": [
-					0,
+					96,
 					19,
 					32,
 					43
@@ -2557,6 +2558,21 @@
 				"frame_size": [
 					28,
 					30
+				],
+				"fps": 1
+			}
+		}
+	},
+	"stairs_up": {
+		"_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): interior wooden staircase with railing -- THE door affordance for floor-change doors (first use: the inn's upstairs door, which wore the plain `door` sprite and read as just another room; v0.4.0 playtest finding 8). Full-bleed 64x64 single frame (art reaches y63 of 64, default bottom anchor fine).",
+		"render_scale": 0.5,
+		"shadow": true,
+		"animations": {
+			"idle": {
+				"sheet": "res://assets/sprites/stairs_up/Idle-Sheet.png",
+				"frame_size": [
+					64,
+					64
 				],
 				"fps": 1
 			}

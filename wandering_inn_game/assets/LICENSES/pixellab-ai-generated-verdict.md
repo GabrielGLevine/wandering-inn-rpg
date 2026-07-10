@@ -257,3 +257,4 @@ Same PixelLab-ToS ownership / redistributability as everything above.
 | `assets/sprites/trail_gap/Idle-Sheet.png` | `trail_gap` (forest-trail-entrance door affordance; first use: the riverfarm↔witch-hollow door pair, which previously wore an ordinary tree sprite and was unfindable) | v1 `/generate-image-pixflux` 64×64, low top-down, first-try pass. Static, 1 frame, full-bleed. `render_scale: 0.6`. Cost 1. |
 
 Same PixelLab-ToS ownership / redistributability as everything above.
+| `assets/sprites/stairs_up/Idle-Sheet.png` | `stairs_up` (interior-staircase door affordance; first use: the inn's upstairs door — plain `door` sprite read as just another room, playtest finding 8) | v1 `/generate-image-pixflux` 64×64, low top-down, first-try pass. Static, 1 frame. `render_scale: 0.5`. Cost 1. |
