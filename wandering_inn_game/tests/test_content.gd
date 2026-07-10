@@ -455,12 +455,24 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# reads BOTH legs (accomplishment AND once_per_waking) for
 		# hide-until-met visibility -- unlike the gold compound, once_per_waking
 		# is itself a vanishing gate, so there is no "greyed" state to preserve.
+		# Issue #50 adds a THIRD sanctioned compound -- {accomplishment, class}
+		# together (a persuade-fork resolution that is BOTH progress-gated on
+		# the quest having been opened AND locked behind a class, e.g.
+		# watch_crate's "asked_about_crate" + "diplomat" or krshia_crate's
+		# "heard_wrong_order" + "diplomat"). Same mechanism as the gold
+		# compound: _meets_progress() reads ONLY the accomplishment leg for
+		# hide-until-met visibility, so the option stays fully hidden before
+		# the quest stage, then shows VISIBLE-LOCKED (never vanished) once the
+		# stage is reached but the class isn't held -- the witch-precedent
+		# idiom, extended to options that also need a stage gate (the witch's
+		# own mediate option needed no stage gate, so it never needed this).
 		# Every OTHER combination (skill+class, class+gold, gold+once_per_waking,
 		# three-or-more keys, etc.) is still rejected -- these are narrow,
 		# disclosed carve-outs, not a general compound-gate license.
 		var sanctioned_gold_accomplishment := requires.has("gold") and requires.has("accomplishment")
 		var sanctioned_stage_once := requires.has("accomplishment") and requires.has("once_per_waking")
-		assert(sanctioned_gold_accomplishment or sanctioned_stage_once, label + " the only sanctioned compound requires are {gold, accomplishment} and {accomplishment, once_per_waking}")
+		var sanctioned_stage_class := requires.has("accomplishment") and requires.has("class")
+		assert(sanctioned_gold_accomplishment or sanctioned_stage_once or sanctioned_stage_class, label + " the only sanctioned compound requires are {gold, accomplishment}, {accomplishment, once_per_waking}, and {accomplishment, class}")
 		return
 	assert(gate_keys == 1, label + " requires must use exactly one gate type")
 

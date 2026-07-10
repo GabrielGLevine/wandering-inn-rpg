@@ -64,7 +64,7 @@
 			"speaker": "Cups",
 			"text": "Swearing's different water, friend. A rumor's a bird — nobody knows whose window it flew from. Testimony has my FACE on it, and Coyle prices faces. Some of them stop being worn.",
 			"options": [
-				{ "text": "The Brothers stand behind their people. Stand with them once, and every hat in this city tips your way after. (Persuade)", "effects": [ { "accomplishment": "fixer_will_testify" }, { "accomplishment": "persuaded_someone" } ], "goto": "agreed_persuaded" },
+				{ "_comment": "Issue #50: class-gated (Diplomat) per the ratified persuade-fork rule -- (Persuade) stripped in favor of the class hint. The 10-gold branch below is the existing non-Diplomat alternate (already omits persuaded_someone).", "text": "The Brothers stand behind their people. Stand with them once, and every hat in this city tips your way after. (Diplomat)", "requires": { "class": { "diplomat": 1 } }, "effects": [ { "accomplishment": "fixer_will_testify" }, { "accomplishment": "persuaded_someone" } ], "goto": "agreed_persuaded" },
 				{ "text": "Ten gold says the water's fine. (10 gold)", "requires": { "gold": 10 }, "effects": [ { "gold": -10 }, { "accomplishment": "fixer_will_testify" } ], "goto": "agreed_paid" },
 				{ "text": "Fair. Forget I asked.", "goto": "hub" }
 			]
