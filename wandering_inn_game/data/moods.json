@@ -67,23 +67,23 @@
    "vignette": 0.4
   },
   "sewers": {
-   "_comment": "A DARK, time-invariant pin (cave_mouth precedent values) -- the sewers read the same at any phase. Phosphor/shaft lights glow only at dusk/night (light_energy_by_phase day=0.0); the always-on pond_glints/dust ambience carries the day-phase atmosphere against this grade.",
+   "_comment": "Issue #53 finding 21: deepened from the old cave_mouth-precedent pin (day/dusk [0.3,0.32,0.45] avg .357, night [0.26,0.28,0.4] avg .313) -- user + machine playtest concurred the sewers read too close to street-at-dusk without [Light], not like an unlit tunnel. New values sit meaningfully below the old pin while staying clearly above deep_tunnels (day/dusk [0.2,0.22,0.33] avg .25, night [0.18,0.2,0.3] avg .227) -- deep_tunnels stays the game's absolute darkest pin, the sewers escalate toward it rather than matching it. Same day/dusk/night shape as before (night a further even step down), vignette nudged 0.45->0.48 (between the old sewers pin and deep_tunnels' 0.55). Phosphor/shaft lights still glow only at dusk/night (light_energy_by_phase day=0.0); the PC's own [Light] glow (world.gd PC_LIGHT_* consts, fixed energy/radius, never phase/mood-scaled) now swings from a darker floor, so its lit-vs-unlit contrast is BIGGER, not smaller, with no change to the light itself needed. `arena_moods.sewers_nest` below is kept in lockstep (same day/dusk value) per its own \"inherits the map's pin\" contract -- see that entry's comment for the GH#28 legibility-boost knock-on.",
    "day": [
-    0.3,
-    0.32,
-    0.45
+    0.24,
+    0.26,
+    0.37
    ],
    "dusk": [
-    0.3,
-    0.32,
-    0.45
+    0.24,
+    0.26,
+    0.37
    ],
    "night": [
-    0.26,
-    0.28,
-    0.4
+    0.2,
+    0.22,
+    0.32
    ],
-   "vignette": 0.45
+   "vignette": 0.48
   },
   "guild": {
    "_comment": "The Adventurer's Guild interior -- \"warm bureaucratic\". Warmer/ambery than the inn's own grade (lamp-and-parchment read for a paperwork hall), less vignette than the street (a busy, populated room, not an oppressive one).",
@@ -314,23 +314,23 @@
  },
  "arena_moods": {
   "sewers_nest": {
-   "_comment": "Sewers combat inherits the same dark cave pin as the map (cave_mouth values), so the vermin/nest fights read as underground.",
+   "_comment": "Issue #53 finding 22: kept in lockstep with the deepened `moods.sewers` field pin (day/dusk [0.24,0.26,0.37], avg .29) so the vermin/nest fights still read as the SAME underground the player just walked through, not a lit-back-up combat pin. Knock-on via board_renderer.gd's GH#28 dark-arenas legibility fix (`_legibility_modulate`, self-modulates every combatant sprite/chip/HP-bar toward LEGIBILITY_TARGET 0.85): old avg .357 -> boost 0.85/.357 = 2.38x; new avg .29 -> boost 0.85/.29 = 2.93x (+23%), still under LEGIBILITY_MAX_BOOST 3.0 (not clamped) -- bat/rat enemies read brighter against the darker board with zero code change, purely a byproduct of this data-only darken. This is a read-only presentation compensation already shipped in code; this entry only supplies the mood value it reads.",
    "day": [
-    0.3,
-    0.32,
-    0.45
+    0.24,
+    0.26,
+    0.37
    ],
    "dusk": [
-    0.3,
-    0.32,
-    0.45
+    0.24,
+    0.26,
+    0.37
    ],
    "night": [
-    0.3,
-    0.32,
-    0.45
+    0.24,
+    0.26,
+    0.37
    ],
-   "vignette": 0.45
+   "vignette": 0.48
   },
   "cave_mouth": {
    "day": [

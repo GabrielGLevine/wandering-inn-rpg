@@ -42,9 +42,11 @@
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
 
-  { "_comment": "== (3) INTO THE BARRACKS == (18,3) right3 -> (21,3), right1 blocks on barracks_door (22,3) & faces it (the former watch_guard flavor cell -- zero canonical QA touches on watch_guard were found before this task's move, confirmed by grep). to_cell (2,6) lands one cell north of barracks_exit (2,7), the same offset convention as guild_door/guild_exit.", "action": "move", "direction": "right", "steps": 3 },
+  { "_comment": "== (3) INTO THE BARRACKS == (18,3) right3 -> (21,3), right1 -> (22,3) -- open ground now (issue #53 finding 13: barracks_door moved into the facade line at (22,2), flush with the wall instead of floating a cell out in the street), up1 blocks on barracks_door (22,2) & faces it (the former watch_guard flavor cell -- zero canonical QA touches on watch_guard were found before this task's move, confirmed by grep). to_cell (2,6) lands one cell north of barracks_exit (2,7), the same offset convention as guild_door/guild_exit.", "action": "move", "direction": "right", "steps": 3 },
   { "action": "assert_state", "path": "player_cell", "equals": [21, 3] },
   { "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [22, 3] },
+  { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "barracks", "cell": [2, 6] }, "timeout_sec": 5 },
   { "_comment": "Chronology mirrors guild_door/stairs_up: transition() fires map_changed synchronously, world.gd rebuilds the field (mood/map/entities) BEFORE wi_game.gd's interact() records on_enter_accomplishment -- visited_barracks asserted AFTER the render events.", "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "barracks" }, "timeout_sec": 5 },

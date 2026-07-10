@@ -2220,12 +2220,12 @@
      ]
     },
     {
-     "_comment": "The Watch post facade (roof/facade decor already at (22,1)/(22,2)) becomes a REAL door -- the barracks interior is now enterable. The old flavor NPC that stood here (`watch_guard`, display_name 'Watch Guard', a static single-line dialogue with ZERO canonical QA touches -- confirmed by grep before this change) is RELOCATED into the barracks interior as the profiled Duty Sergeant (`duty_sergeant`, docs/design/character-profiles.md), a zero-risk silent move (no re-pathing needed anywhere, unlike Selys's own relocation). Zevara Sunderscale herself stays at the gate (2,6) -- zevara_intro's own framing is unchanged; only her DESK lives in the barracks now. to_cell (2,6) lands one cell north of barracks_exit (2,7), same offset convention as guild_door/guild_exit.",
+     "_comment": "The Watch post facade (roof/facade decor already at (22,1)/(22,2)) becomes a REAL door -- the barracks interior is now enterable. The old flavor NPC that stood here (`watch_guard`, display_name 'Watch Guard', a static single-line dialogue with ZERO canonical QA touches -- confirmed by grep before this change) is RELOCATED into the barracks interior as the profiled Duty Sergeant (`duty_sergeant`, docs/design/character-profiles.md), a zero-risk silent move (no re-pathing needed anywhere, unlike Selys's own relocation). Zevara Sunderscale herself stays at the gate (2,6) -- zevara_intro's own framing is unchanged; only her DESK lives in the barracks now. to_cell (2,6) lands one cell north of barracks_exit (2,7), same offset convention as guild_door/guild_exit. Issue #53 finding 13: moved from (22,3) to (22,2), flush into the facade_plaster tile at that SAME cell (this building has only one wall segment, no gap like guild/runners_guild's twin-facade blocks -- the door renders on top of the wall tile since `_build_decor` runs before `_build_entities` in world.gd's `_rebuild_field`, so equal-y-sort ties resolve entity-after-decor) instead of floating a full cell out in the open street. (22,3) is now open ground (only the door entity ever occupied it; the static `blocked` list never listed it) -- approach shifts from bumping east at (21,3) to walking onto (22,3) then bumping north; re-pinned in barracks_walkthrough.json. (22,2) was already in the street's static `blocked` list (the facade's own wall cell), so floor_cells/blocked_cells counts are unchanged.",
      "id": "barracks_door",
      "kind": "door",
      "cell": [
       22,
-      3
+      2
      ],
      "display_name": "Watch Barracks",
      "sprite": "door",
@@ -2289,12 +2289,12 @@
      "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere. A sign says she remembers faces, and debts."
     },
     {
-     "_comment": "Guild_door converts from a toast prop to a REAL door -- the Guild interior is now enterable. The old toast (\"The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today.\") is RETIRED (the player now walks in and sees the real hall; gate_district_walkthrough's pin moved from a toast-wait to the map_changed/ui_map_rendered transition -- see its _comment). door_when is NOT needed (the Guild is public, per plan). on_enter_accomplishment keeps the SAME accomplishment id (visited_guild) so every script asserting it still passes unchanged. to_cell (8,10) lands just inside, facing up into the hall, one cell north of the guild_exit door (8,11) -- never lands ON the exit door's own occupied cell.",
+     "_comment": "Guild_door converts from a toast prop to a REAL door -- the Guild interior is now enterable. The old toast (\"The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today.\") is RETIRED (the player now walks in and sees the real hall; gate_district_walkthrough's pin moved from a toast-wait to the map_changed/ui_map_rendered transition -- see its _comment). door_when is NOT needed (the Guild is public, per plan). on_enter_accomplishment keeps the SAME accomplishment id (visited_guild) so every script asserting it still passes unchanged. to_cell (8,10) lands just inside, facing up into the hall, one cell north of the guild_exit door (8,11) -- never lands ON the exit door's own occupied cell. Issue #53 finding 13: moved from (28,3) to (28,2) -- the gap cell between the twin facade_plaster tiles at (27,2)/(29,2), flush into the facade line instead of floating a full cell out in the street (no decor sprite occupies (28,2) itself, so this is a clean placement, no sprite-stack). (28,3) is now open ground (only the door entity ever occupied it); approach shifts from bumping east at (27,3) to walking onto (28,3) then bumping north -- re-pinned in gate_district_walkthrough.json, guild_interior_walkthrough.json (incl. its near_guild fixture's start position/facing), and disclosed for delivery_loop/quest_errand_fight/quest_errand_parley/save_load_roundtrip/social_loop/dialogue_hub_loop (all of which reach the guild via a debug `teleport` straight to the interior desk approach, never walking this street cell -- unaffected, confirmed by grep before this edit). (28,2) was already in the street's static `blocked` list (the gap between the two wall cells), so floor_cells/blocked_cells counts are unchanged.",
      "id": "guild_door",
      "kind": "door",
      "cell": [
       28,
-      3
+      2
      ],
      "display_name": "Adventurer's Guild",
      "sprite": "door",
@@ -2306,12 +2306,12 @@
      "on_enter_accomplishment": "visited_guild"
     },
     {
-     "_comment": "Runners_guild_door converts a previously-decorative background building (roof/facade at (19,15)/(21,15)/(19,16)/(21,16), the SAME aligned-roof-pair convention the guild's own facade already uses) into a real door -- the Runner's Guild is now enterable. Placed one row south of the facade block (y=17), centered between the two facade columns (19/21), matching guild_door's own midpoint-between-two-roofs placement (28 between 27/29). Blast radius checked clear: no canonical script's street route touches x=18-21/y=15-17 (the crate-quest detour only ever walks x=10-13 at y13-16; watch_sergeant/crate_scavengers/supplier_scavengers all sit west of x=17). to_cell (5,6) lands one cell north of runners_guild_exit (5,7), the same offset convention as guild_door/barracks_door.",
+     "_comment": "Runners_guild_door converts a previously-decorative background building (roof/facade at (19,15)/(21,15)/(19,16)/(21,16), the SAME aligned-roof-pair convention the guild's own facade already uses) into a real door -- the Runner's Guild is now enterable. Matching guild_door's own midpoint-between-two-roofs placement (28 between 27/29). Blast radius checked clear: no canonical script's street route touches x=18-21/y=15-17 (the crate-quest detour only ever walks x=10-13 at y13-16; watch_sergeant/crate_scavengers/supplier_scavengers all sit west of x=17). to_cell (5,6) lands one cell north of runners_guild_exit (5,7), the same offset convention as guild_door/barracks_door. Issue #53 finding 13: moved from (20,17) to (20,16) -- the gap cell between the twin facade_plaster tiles at (19,16)/(21,16), flush into the facade line (the guild_door precedent) instead of floating a full cell south in the street. (20,17) is now open ground (only the door entity ever occupied it); approach shifts from bumping east at (19,17) to walking onto (20,17) then bumping north -- re-pinned in delivery_loop.json at BOTH crossings (the outbound entry and the same-waking turn-in return). (20,16) was already in the street's static `blocked` list (the gap between the two wall cells), so floor_cells/blocked_cells counts are unchanged.",
      "id": "runners_guild_door",
      "kind": "door",
      "cell": [
       20,
-      17
+      16
      ],
      "display_name": "Runner's Guild",
      "sprite": "door",
