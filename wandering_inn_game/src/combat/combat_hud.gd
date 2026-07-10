@@ -43,10 +43,12 @@ extends RefCounted
 ## directly (`ui_slot_info_rendered`, `ui_tutor_line_rendered`) now call back
 ## through `_screen._emit_slot_info(...)`/`_screen._emit_tutor_rendered(...)`.
 
-## Feed panel interior text box -- see combat_screen.gd's original doc
-## comment (moved verbatim) for the full FEED_TEXT_HEIGHT derivation history.
+## Feed panel interior text box width -- see combat_screen.gd's original doc
+## comment (moved verbatim) for the full pre-fold-pin FEED_TEXT_HEIGHT
+## derivation history. The USABLE text height is no longer a fixed const
+## (see `_feed_text_capacity_height` below) -- it tracks `_feed_panel_height`,
+## which can grow past the base size for a long tutor beat.
 const FEED_TEXT_WIDTH := 248.0
-const FEED_TEXT_HEIGHT := 90.0
 
 ## Readout panel interior text box (panel-class fix
 ## flagged after L4's windowed shot: `.superpowers/sdd/fp-handoff/l4-shots/
@@ -96,31 +98,53 @@ const TUTOR_SUPPORTED_EVENTS := [
 	WIEvents.STATUS_EXPIRED, WIEvents.ACTION_REFUSED, WIEvents.UI_TARGETING_SHOWN,
 ]
 
-## `feed_push`'s FEED_TEXT_HEIGHT=90 budget is calibrated slightly too
-## generous for a full 4-wrapped-line entry: pixel measurement of a real
-## clipped tutor line found the parchment's decorative fold sits at ~70% of
-## the panel's total height from the top (fold at absolute y~597 on a panel
-## spanning y[514,636], i.e. (597-514)/(636-514) = 0.70 -- consistent with
-## the toast panel's own independently-measured fold position at ~68/96 =
-## 0.71, see message_layer.gd's TOAST_FOLD_DANGER_PX derivation), NOT the
-## naive full interior a 90px figure assumes.
-## SCOPE: this only touches the TUTOR render path (`render_tutor_line` /
-## `_grow_feed_panel_for_tutor`), never `feed_push`/FEED_TEXT_HEIGHT
-## themselves -- ordinary combat-log entries (attack/damage/status lines)
-## keep their exact pre-existing evict/truncate behavior. Tutor beats are
-## rare, scripted, story-critical lines (not spammy combat log noise), so
-## GROWING the panel to clear the fold (never truncating the arc's own
-## thesis line) is the right call here, matching the toast fix's "grow,
-## never cut" precedent -- falls back to the existing feed_push
-## cut-with-ellipsis discipline only if a beat is so long that even the
-## grown panel can't clear it (see `_grow_feed_panel_for_tutor`'s cap).
+## PLAYTEST HOTFIX (combat feed bottom line still riding the parchment
+## fold): the feed panel shares its chrome (PARCHMENT_STRIP / Banner_
+## Horizontal.png) with message_layer.gd's toast/dialogue-bark panels, but
+## unlike those two it was never given the STRIP_FOLD_PATCH_BOTTOM treatment
+## -- it kept the default STRIP_PATCH_MARGIN (20) on all four sides, so only
+## 9 of the fold art's 29 source px sat in the 9-patch's UNSTRETCHED bottom
+## band; the rest lived in the STRETCHED center band. This panel grows
+## (`_grow_feed_panel_for_tutor`/`_resize_feed_panel`) for a long tutor beat
+## exactly like the toast panel grows for a long toast -- and a stretched
+## fold grows WITH the panel (message_layer.gd's own doc comment on
+## STRIP_FOLD_PATCH_BOTTOM has the full measurement/mechanism), so the old
+## ~70%-of-height fraction below (`TUTOR_FOLD_SAFE_FRACTION`) was chasing a
+## moving target and could still let a long beat's last line ride the fold.
+## Fix: `build()` pins this panel's own NinePatchRect `patch_margin_bottom`
+## to FEED_STRIP_FOLD_PATCH_BOTTOM (same value/rationale as message_layer.
+## gd's STRIP_FOLD_PATCH_BOTTOM -- same texture, same measured 29px source
+## fold depth, 32 covers it with slack) -- the fold now lives ENTIRELY in the
+## unstretched bottom patch, so its position is a TRUE PIXEL CONSTANT
+## (FEED_FOLD_DANGER_PX) regardless of how tall the panel grows. Both the
+## base capacity (`_feed_text_capacity_height`, replacing the old flat
+## FEED_TEXT_HEIGHT=90 const `feed_push` used regardless of the panel's
+## actual height) and the tutor-grow formula (`_grow_feed_panel_for_tutor`,
+## replacing the fraction) are re-derived off this same fixed-pixel model --
+## the toast panel's own `_toast_panel_height_for` idiom, generalized here
+## with a SINGLE deficit (this label is TOP-aligned, not centered like the
+## toast's, so only the bottom needs budgeting, not doubled).
+const FEED_STRIP_FOLD_PATCH_BOTTOM := 32
+## Danger-zone depth from the panel's own bottom edge once the fold is
+## pinned into the unstretched bottom patch -- mirrors message_layer.gd's
+## TOAST_FOLD_DANGER_PX (30, same source art, 1px slack over the 29px
+## measured fold depth).
+const FEED_FOLD_DANGER_PX := 30.0
+## The feed label's own top content margin (`_make_panel_label`'s
+## `UIChrome.add_margins(margin, 22, 8, 22, 8)` call for this panel) --
+## text starts this far below the panel's top edge, so it factors into both
+## the base capacity and the tutor-grow formula below.
+const FEED_CONTENT_MARGIN_TOP := 8.0
+## Extra print-safety margin stacked on top of FEED_FOLD_DANGER_PX when
+## GROWING the panel for a long tutor beat (never applied to the base,
+## already-measured-safe capacity) -- errs generous since a tutor beat is a
+## rare, story-critical line worth a few extra px of headroom, not spammy
+## combat-log noise.
+const TUTOR_SAFETY_BUFFER_PX := 12.0
 const FEED_PANEL_BASE_SIZE := Vector2(292.0, 122.0)
 const FEED_OFFSET_LEFT := 28.0
 const FEED_OFFSET_RIGHT := 320.0
 const FEED_OFFSET_BOTTOM := -84.0
-const TUTOR_FOLD_SAFE_FRACTION := 0.70
-const TUTOR_CONTENT_MARGIN_TOP := 8.0
-const TUTOR_SAFETY_BUFFER_PX := 12.0
 ## Hard cap so a pathological future tutor-lines edit can't grow the panel
 ## into the order strip/board above -- board headroom is generous (see
 ## build()'s band comment), but a bound keeps this fix from ever becoming
@@ -195,13 +219,19 @@ func build() -> void:
 	(_order_label.get_parent() as MarginContainer).add_theme_constant_override("margin_bottom", 24)
 	# Feed: PARCHMENT_STRIP (landscape banner) -- the portrait scroll squashed
 	# to a wide rect read wrong (H3 review minor). "Small" text; capacity is
-	# budgeted in WRAPPED lines, not entry count (see FEED_TEXT_WIDTH/HEIGHT
-	# and feed_push) -- a long tutor line can consume more of the budget and
+	# budgeted in WRAPPED lines, not entry count (see FEED_TEXT_WIDTH and
+	# feed_push) -- a long tutor line can consume more of the budget and
 	# evict older entries sooner.
 	_feed_label = _make_panel_label(
 		UIChrome.PARCHMENT_STRIP, Control.PRESET_BOTTOM_LEFT,
 		Vector2(292.0, 122.0), Vector4(28.0, -206.0, 320.0, -84.0), false, "Small"
 	)
+	# Pin the fold into the unstretched bottom patch (see
+	# FEED_STRIP_FOLD_PATCH_BOTTOM's doc comment) -- `_make_panel_label` ->
+	# `_make_panel` -> `UIChrome.make_texture_panel` already built this
+	# panel's NinePatchRect as child 0 with the default STRIP_PATCH_MARGIN on
+	# all four sides; only the bottom margin needs widening here.
+	(_feed_label.get_parent().get_parent().get_child(0) as NinePatchRect).patch_margin_bottom = FEED_STRIP_FOLD_PATCH_BOTTOM
 	# Height grown from 62/70px to 104/112px (M6 playtest fix) to fit the new
 	# third slot-info line (name + costs + description) without truncation --
 	# see _readout_text/_slot_info_line. Grown upward only (top offset), so
@@ -568,6 +598,20 @@ func clear_feed() -> void:
 	_feed.clear()
 
 
+## The usable text-content height for the feed label RIGHT NOW, derived from
+## `_feed_panel_height` (base size, or grown -- see `_resize_feed_panel`) and
+## the fixed fold-danger pixel budget now that the fold is pinned into the
+## unstretched bottom patch (FEED_STRIP_FOLD_PATCH_BOTTOM/FEED_FOLD_DANGER_PX
+## -- see that const's doc comment). The label is TOP-aligned (a single
+## measured deficit, unlike the vertically-centered toast label which budgets
+## it twice), so: usable = panel_height - top_content_margin - danger_zone.
+## Replaces the old flat FEED_TEXT_HEIGHT=90 const, which `feed_push` used
+## UNCONDITIONALLY even after the panel had grown for a tutor beat -- this
+## tracks the panel's REAL current height instead, base or grown alike.
+func _feed_text_capacity_height() -> float:
+	return maxf(_feed_panel_height - FEED_CONTENT_MARGIN_TOP - FEED_FOLD_DANGER_PX, 0.0)
+
+
 ## Appends `line` to the feed and evicts the OLDEST entries (list-front, per
 ## design D2-7 #6) until the TOTAL WRAPPED line count fits the panel's real
 ## capacity -- never raw entry count. A single entry longer than the whole
@@ -575,7 +619,7 @@ func clear_feed() -> void:
 func feed_push(line: String) -> void:
 	if line == "":
 		return
-	var capacity := _line_capacity(_feed_label, FEED_TEXT_HEIGHT)
+	var capacity := _line_capacity(_feed_label, _feed_text_capacity_height())
 	_feed.append(_fit_to_lines(_feed_label, line, FEED_TEXT_WIDTH, capacity))
 	while _feed.size() > 1 and _feed_wrapped_total() > capacity:
 		_feed.pop_front()
@@ -809,12 +853,32 @@ func match_tutor_line(type: String, payload: Dictionary) -> Dictionary:
 		var count: int = int(_tutor_match_counts.get(id, 0)) + 1
 		_tutor_match_counts[id] = count
 		if count >= nth:
-			ready.append({"id": id, "line": String(entry.get("line", ""))})
+			ready.append({"id": id, "line": _tutor_line_text(entry)})
 	if ready.is_empty():
 		return {}
 	var chosen: Dictionary = ready[0]
 	_tutor_fired[String(chosen["id"])] = true
 	return chosen
+
+
+## Resolves the RENDERED line for a tutor entry: `line` unconditionally,
+## UNLESS the entry carries the optional `requires_any_class` gate (a
+## minimal per-entry conditional -- goblin_ambush_tutorial's `real_ones`
+## beat claimed "You slept, so check your numbers: 3 and up are your
+## [Skills] now" even on the cold-start path where the ambush is reached
+## WITHOUT ever sparring/sleeping first, i.e. with zero classes and zero
+## skill slots -- a false, confusing claim) that reads false -- then
+## `fallback_line` renders instead, if the entry has one. Entries with no
+## `requires_any_class` key (every pre-existing tutor_lines entry) always
+## take this first branch, byte-identical to before this fix.
+## `_screen._pc_has_any_class()` is a read-only sim query (see that
+## wrapper's own doc comment for why this isn't an accomplishment-counter
+## gate like `ally_requires`/`door_when` elsewhere in this repo) --
+## presentation reads sim state here, never mutates it.
+func _tutor_line_text(entry: Dictionary) -> String:
+	if bool(entry.get("requires_any_class", false)) and not _screen._pc_has_any_class():
+		return String(entry.get("fallback_line", entry.get("line", "")))
+	return String(entry.get("line", ""))
 
 
 ## Subset match: every key in `subset` must exist in `payload` with a loosely
@@ -864,12 +928,16 @@ func render_tutor_line(tutor: Dictionary) -> void:
 
 ## Grows the feed panel (never shrinks -- see `_feed_panel_height`'s doc
 ## comment) so `text`'s own wrapped-line count clears the parchment fold with
-## TUTOR_SAFETY_BUFFER_PX to spare (see the const block above `reset_tutor_
-## lines` for the 0.70 fold-position derivation). No-op if `_feed_label` is
-## null (hud built via `hud_script.new(null,null,null)` with no `build()`
-## call -- test_combat_visuals.gd's direct `reset_tutor_lines`/matcher check
-## exercises exactly that path) or if the computed need already fits the
-## panel's current height.
+## TUTOR_SAFETY_BUFFER_PX to spare. Fixed-pixel model (needed = text block +
+## top content margin + fold danger zone + safety buffer), not the old
+## proportional ~70%-of-height fraction -- valid now that FEED_STRIP_FOLD_
+## PATCH_BOTTOM pins the fold at a TRUE CONSTANT depth from the panel's own
+## bottom edge regardless of how tall the panel grows (see that const's doc
+## comment for why the old fraction could still ride the fold on a long
+## beat). No-op if `_feed_label` is null (hud built via `hud_script.new(null,
+## null,null)` with no `build()` call -- test_combat_visuals.gd's direct
+## `reset_tutor_lines`/matcher check exercises exactly that path) or if the
+## computed need already fits the panel's current height.
 func _grow_feed_panel_for_tutor(text: String) -> void:
 	if _feed_label == null:
 		return
@@ -879,7 +947,7 @@ func _grow_feed_panel_for_tutor(text: String) -> void:
 	var line_spacing := float(_feed_label.get_theme_constant("line_spacing"))
 	var pitch := font.get_height(font_size) + line_spacing
 	var text_block := float(lines) * pitch - line_spacing
-	var needed := (text_block + TUTOR_CONTENT_MARGIN_TOP + TUTOR_SAFETY_BUFFER_PX) / TUTOR_FOLD_SAFE_FRACTION
+	var needed := text_block + FEED_CONTENT_MARGIN_TOP + FEED_FOLD_DANGER_PX + TUTOR_SAFETY_BUFFER_PX
 	needed = minf(needed, FEED_PANEL_MAX_HEIGHT)
 	if needed > _feed_panel_height:
 		_resize_feed_panel(needed)

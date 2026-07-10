@@ -261,6 +261,7 @@ func _show_combat() -> void:
 	_view = load("res://src/combat/combat_view.gd").new(_combat())
 	_targeting = load("res://src/combat/targeting_controller.gd").new(_view, self)
 	_board_renderer.build(_view, main_ref)
+	_announce_allies()
 	_refresh()
 	_root.show()
 	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_SHOWN, {})
@@ -271,6 +272,41 @@ func _show_combat() -> void:
 	# deferred() when the first actor is AI-controlled, and the stale second
 	# call would fire after that turn ends, hijacking whichever combatant is
 	# active by then.
+
+
+## PLAYTEST FIX (a gated ally fielded with zero introduction -- Relc in the
+## Raskghar boss fight, the Hunter in the Riverfarm wolf-pack fight): pushes
+## ONE feed line naming whichever ally(s) `start_combat`'s `ally_requires`
+## gate actually fielded this fight, right after `_view` is built (so the
+## line is already in the feed by this same `_show_combat()` call's own
+## `_refresh()`). No new sim event -- `combatants.json` has no distinct
+## "ally" side (a fielded ally rides the SAME "player" side as the PC, see
+## that file's own records), so this derives the fielded-ally set from
+## `_view`'s existing per-combatant data (`combatant(id)["side"]`) the
+## screen already reads elsewhere, filtering out "pc" itself. Generic for
+## any current or future gated ally -- no per-character-name branching.
+func _announce_allies() -> void:
+	var names: Array[String] = []
+	for id: String in _view.ids():
+		if id == "pc":
+			continue
+		if String(_view.combatant(id).get("side", "")) == "player":
+			names.append(String(_view.combatant(id)["display_name"]))
+	if names.is_empty():
+		return
+	var verb := "wades" if names.size() == 1 else "wade"
+	_hud.feed_push("%s %s in beside you." % [_join_and(names), verb])
+
+
+## Plain English "and"-join for a name list of any size (1: "X", 2: "X and
+## Y", 3+: "X, Y, and Z") -- kept local (one call site) rather than adding a
+## shared formatter dependency for a single feed line.
+func _join_and(names: Array[String]) -> String:
+	if names.size() == 1:
+		return names[0]
+	if names.size() == 2:
+		return "%s and %s" % [names[0], names[1]]
+	return "%s, and %s" % [", ".join(names.slice(0, names.size() - 1)), names[names.size() - 1]]
 
 
 ## Readout/order-strip/feed/banner text — cheap, and always safe to refresh from
@@ -387,6 +423,22 @@ func _emit_targeting_shown_event(mode_text: String, skill_id: String, target_cou
 	ObservableBus.emit_domain_event(WIEvents.UI_TARGETING_SHOWN, {
 		"mode": mode_text, "skill": skill_id, "targets": target_count,
 	})
+
+
+## PLAYTEST FIX (a tutor_lines entry rendering a false "you slept" claim on
+## the cold-start ambush path): whether the PC has been granted ANY class
+## yet -- `combat_hud.gd`'s `_tutor_line_text` reads this to pick between a
+## tutor entry's `line`/`fallback_line`. `Game.sim.classes` is a plain sim
+## Dictionary, not an "accomplishment" -- investigated first, no
+## accomplishment counter fires unconditionally on every sleep the way a
+## true "has slept, has a class" signal needed to (`times_slept` is a bare
+## int field, not accomplishment-tracked; `sparred_with_relc` bans BEFORE
+## the sleep that actually grants the class, so it can't stand in for it).
+## Read-only, same as every other `_screen.*` wrapper on this file --
+## `combat_hud.gd` never touches the `Game` autoload directly (zero-bare-
+## autoload-identifier contract, see that file's doc comment).
+func _pc_has_any_class() -> bool:
+	return not Game.sim.classes.is_empty()
 
 
 ## Render dispatcher, shared by the live event path

@@ -25,6 +25,14 @@ var _music_players: Array[AudioStreamPlayer] = []
 var _active_music_index := 0
 var _current_music_id := ""
 var _field_context_id := ""
+## The live crossfade Tween, if any -- killed before scheduling a new one
+## (see `_crossfade_to_music`'s doc comment: a rapid double context-switch,
+## e.g. a map-edge step that ALSO trips a proximity encounter's
+## combat_started in the same beat, used to schedule a second crossfade
+## while the first was still mid-fade, and both Tweens wrote to the SAME two
+## players' volume_db in opposite directions -- audible as a stutter/
+## restart).
+var _music_tween: Tween
 
 ## Fallback-art contract (audio half). A PUBLIC checkout is
 ## missing the protected music/SFX packs (see assets_manifest.json). A stream
@@ -339,9 +347,34 @@ func _play_music_entry(entry: Dictionary) -> void:
 	_emit_audio_played(id, bus)
 
 
+## PLAYTEST HOTFIX (music glitch entering the goblin ambush from the Liscor
+## side): entering `floodplains` at the edge cell that ALSO sits inside the
+## goblin ambush's `trigger_radius` fires `map_changed` (the field-music
+## crossfade to `music_floodplains`) immediately followed by `combat_started`
+## (the crossfade to `music_combat`), both in the same synchronous beat --
+## this function had no guard against a second call landing before the
+## first's Tween finished, so BOTH tweens ended up independently animating
+## `volume_db` on the SAME two players in opposite directions each frame
+## (whichever tween's step ran later that frame "won", flickering/fighting
+## the other), audible as a stutter or restart right at the transition.
+## Fix: kill any crossfade still in flight before scheduling this one -- the
+## new Tween picks up cleanly from whatever volume the kill left each player
+## at (Tween captures its start value when it begins running, not when
+## `tween_property` is called), so a rapid re-trigger just means this LATER
+## transition wins outright instead of fighting the earlier one. Traced
+## through the actual double-trigger: the interrupted first crossfade's
+## `new_player` (silenced immediately, before its own fade-in tween ever got
+## to run) becomes THIS call's `old_player` and fades out from silence (a
+## harmless no-op), while its `old_player` (still at the PRIOR field track's
+## volume) becomes THIS call's `new_player` and fades cleanly into combat
+## music -- the net effect a player actually hears is the field track never
+## audibly played at all, combat music takes over immediately, exactly the
+## right outcome for a fight starting right at a map edge.
 func _crossfade_to_music(stream: AudioStream, bus: String, target_db: float, return_to_field: bool) -> void:
 	if _music_players.size() < 2:
 		return
+	if _music_tween != null and _music_tween.is_valid():
+		_music_tween.kill()
 	var old_player := _music_players[_active_music_index]
 	var new_index := 1 - _active_music_index
 	var new_player := _music_players[new_index]
@@ -363,6 +396,7 @@ func _crossfade_to_music(stream: AudioStream, bus: String, target_db: float, ret
 		if old_player != new_player and old_player.playing:
 			old_player.stop()
 	)
+	_music_tween = tween
 
 	_active_music_index = new_index
 	## Non-looping "sting" contexts (e.g. victory) resume the last field

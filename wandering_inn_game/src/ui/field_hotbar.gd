@@ -133,10 +133,30 @@ func set_selected(index: int) -> void:
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	match type:
+		WIEvents.WORLD_READY:
+			# PLAYTEST HOTFIX (#33 class): a field-skill press that refuses
+			# must never leave the bar stuck invisible. This file's own
+			# visibility gates (`_combat_hidden`/`_dialogue_open`) are only
+			# ever CLEARED by their matching UI_COMBAT_HIDDEN/DIALOGUE_ENDED
+			# arm below -- if some combat-exit or dialogue-teardown path ever
+			# skips that emit (a malformed/edge-case encounter, or any future
+			# branch this presentation-only file can't see from here), the
+			# bar would stay hidden for the rest of the run even though the
+			# player is plainly back in the field with nothing open. WORLD_
+			# READY is a genuine "definitely field, not combat, not
+			# mid-conversation" checkpoint -- it fires on every fresh map
+			# build, cold boot, and load/reset, and never fires mid-combat or
+			# mid-dialogue -- so self-healing both gates here makes a stuck
+			# hide unable to survive a map transition. Re-render still runs
+			# every time (unchanged behavior for the normal boot/load case).
+			_combat_hidden = false
+			_dialogue_open = false
+			_apply_visibility()
+			_render()
 		# LOADOUT_CHANGED (a journal assign/unassign
 		# toggle) re-renders the bar with the newly chosen subset, the same
 		# trigger-list idiom as a class gain/level-up/evolution.
-		WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED:
+		WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED:
 			_render()
 		WIEvents.COMBAT_STARTED:
 			_combat_hidden = true
@@ -242,4 +262,14 @@ func _load_combatants_catalog() -> Array:
 ## only asks for the already-filtered result). AUTO (loadout empty) is
 ## byte-identical to the pre-K2b order: innate skills first, then kit order.
 func _collect_field_skills() -> Array:
-	return Game.sim.field_hotbar_loadout()
+	var loadout: Array = Game.sim.field_hotbar_loadout()
+	# PLAYTEST HOTFIX (#33 class): defensive filter so ONE stale/malformed
+	# entry (a skill id no longer in `Game.sim.skills` at all -- a rename or
+	# data edit the sim's own field:true filter wouldn't catch, since it only
+	# checks the TAG, not that the catalog entry still exists) can never
+	# produce a broken/blank slot that reads as part of the bar having
+	# vanished. `_render()` builds `slots`/`skill_for_slot`'s mapping straight
+	# off this list, so filtering HERE (not inside `_render()`'s per-skill
+	# loop) keeps both in lockstep -- a skipped id is skipped everywhere, not
+	# just in the visual row.
+	return loadout.filter(func(id: Variant) -> bool: return Game.sim.skills.has(String(id)))
