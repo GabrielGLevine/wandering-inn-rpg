@@ -896,9 +896,14 @@ func interact() -> Dictionary:
 			# caster now.
 			var req_skill := String(target.get("requires_skill", ""))
 			if known_skills().has(req_skill):
+				# The nudge is NARRATIVE, never prescriptive (ruling: the
+				# player infers the right Skill -- "a filthy table in need
+				# of cleaning", not "use [Basic Cleaning]"). Per-prop
+				# `skill_hint_toast` carries the authored line; the generic
+				# fallback names nothing.
 				var hint := String(target.get("skill_hint_toast", ""))
 				if hint == "":
-					hint = "%s is the tool for this. Pick it off your bar." % _skill_display_name(req_skill)
+					hint = "Bare hands won't do it. Something you know how to do might."
 				_emit(WIEvents.TOAST, {"text": hint})
 				return {"skill_hint": req_skill}
 			return use_skill(req_skill, String(target[WIKeys.ID]))

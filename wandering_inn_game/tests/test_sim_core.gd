@@ -139,7 +139,7 @@ func _init() -> void:
 	assert(hint_effect.get("skill_hint", "") == "basic_cleaning", "prop interact returns the hint shape, not the cast")
 	assert(_count("skill_used") == 0, "interact never casts the required skill")
 	assert(_count("toast") == 1, "one nudge toast")
-	assert(String(_events[-1]["payload"]["text"]).contains("[Basic Cleaning]"), "the nudge names the tool")
+	assert(String(_events[-1]["payload"]["text"]).contains("wipe-down"), "the nudge is the prop's authored NARRATIVE line, never a skill name")
 	assert(game.accomplishment_count("cleaned_the_inn") == 0, "no accomplishment from the hint")
 	assert(not game.used_skills.has("basic_cleaning"), "no used_skills entry from the hint")
 
@@ -2007,7 +2007,7 @@ func _init() -> void:
 	var hint_fx := g_interact.interact()
 	assert(hint_fx.get("skill_hint", "") == "basic_cleaning", "interact on a known-skill prop returns the hint shape")
 	assert(_events.size() == 1 and _events[0]["type"] == "toast", "hint path emits exactly one toast, nothing else")
-	assert(String(_events[0]["payload"]["text"]).contains("[Basic Cleaning]"), "the nudge names the tool")
+	assert(not String(_events[0]["payload"]["text"]).contains("[") and String(_events[0]["payload"]["text"]).contains("wipe-down"), "the nudge is narrative -- no bracketed skill name anywhere in it")
 	assert(g_interact.accomplishment_count("cleaned_the_inn") == 0, "interact never casts")
 
 	var g_field := WIGame.new(scene_p1, skills_p1, _sink, 12345)
