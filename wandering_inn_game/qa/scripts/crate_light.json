@@ -1,187 +1,1031 @@
 {
  "_comment": "'The Missing Crate' SKILL (guile) path. [Light] now comes from Pisces, not the retired Dusty Scroll, so this script inherits mage_unlock_loop/lantern_check's honest cold-start prologue (meet Relc -> spar -> sleep Warrior L1 -> cross the ambush -> Pisces -> back to the inn -> sleep = [Mage]/[Light]) and only THEN reaches the street crate quest. Because [Light] requires a sleep that RE-ARMS goblin_encounter_1, and the cellar to study is on the street, this path crosses the floodplains ambush TWICE (fight 1 pre-mage as Warrior; fight 2 post-mage as Warrior/Mage) -- both won at the pinned seed. Then: accept from Krshia, prove the report option is hidden-until-studied, study cellar_door with [Light], report. Prologue cells shared with mage_unlock_loop; crate-quest tail unchanged from the pre-O4 script (task-o4-report.md).",
  "steps": [
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-
-  { "_comment": "== PHASE A: meet Relc, spar, sleep -> Warrior L1 ==", "action": "move", "direction": "right", "steps": 13 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "right", "steps": 5 },
-  { "action": "move", "direction": "down", "steps": 6 },
-  { "action": "assert_state", "path": "player_cell", "equals": [12, 12] },
-  { "action": "press", "name": "interact" },
-  { "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Relc" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "relc_intro" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "met_relc" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "combat_autoplay", "max_turns": 200 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 15 },
-  { "action": "wait_for_event", "type": "ui_tutor_line_rendered", "payload_contains": { "beat": "wrap" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.sparred_with_relc", "equals": 1 },
-
-  { "action": "move", "direction": "up", "steps": 6 },
-  { "action": "move", "direction": "left", "steps": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [14, 3] },
-  { "action": "move", "direction": "left", "steps": 12 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "warrior" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
-
-  { "_comment": "== PHASE B: cross the floodplains ambush (fight 1, Warrior kit + Relc ally) ==", "action": "move", "direction": "up", "steps": 3 },
-  { "action": "move", "direction": "right", "steps": 12 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "right", "steps": 23 },
-  { "action": "move", "direction": "down", "steps": 14 },
-  { "action": "assert_state", "path": "player_cell", "equals": [30, 20] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "wait_for_event", "type": "ui_tutor_line_rendered", "payload_contains": { "beat": "road_clear" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [31, 24] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [1, 3] },
-
-  { "_comment": "== PHASE C: Pisces teaches magic ==", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "move", "direction": "right", "steps": 24 },
-  { "action": "assert_state", "path": "player_cell", "equals": [25, 4] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "move", "direction": "right", "steps": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [30, 5] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "_comment": "SOCIAL S4: first talk to Pisces this waking plays his pool line (dialogue_line + chatted_with_pisces + heard_gossip banks); a second interact opens the magic lesson.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Pisces" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pisces_magic" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "met_pisces" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "press", "name": "confirm" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "learned_magic_from_pisces" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== PHASE D: back to the inn, sleep -> [Mage]/[Light] ==", "action": "move", "direction": "left", "steps": 28 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 5] },
-  { "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [31, 24] },
-  { "action": "move", "direction": "up", "steps": 16 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "left", "steps": 23 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn" }, "timeout_sec": 5 },
-  { "action": "move", "direction": "left", "steps": 12 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "mage" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "classes.mage", "equals": 1 },
-
-  { "_comment": "== PHASE E: back to the street for the crate quest. The mage sleep RE-ARMED goblin_encounter_1, so crossing the zone again fights it (fight 2, now Warrior/Mage). ==", "action": "move", "direction": "up", "steps": 3 },
-  { "action": "move", "direction": "right", "steps": 13 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "right", "steps": 23 },
-  { "action": "move", "direction": "down", "steps": 14 },
-  { "action": "assert_state", "path": "player_cell", "equals": [30, 20] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "_comment": "This is goblin_encounter_1's SECOND arming (fight 1 above already banked sign_defended) -- start_combat's repeat_arena seam swaps to the plain, tutor-line-free goblin_ambush arena once sign_defended has banked, so road_clear does NOT fire again here (positive proof the tutorial doesn't replay past its first arming). No tutor-line wait; straight to the victory confirm.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [31, 24] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [1, 3] },
-
-  { "_comment": "== PHASE F: the crate quest (guile path), unchanged from the pre-O4 script. East to Krshia (13,2), accept.", "action": "move", "direction": "right", "steps": 12 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "_comment": "SOCIAL S4: this waking's mage sleep RE-ARMED social_talked, so the first talk to Krshia here plays her pool line (dialogue_line + chatted_with_krshia + heard_gossip banks); a second interact opens the real crate graph.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Krshia" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_crate" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "quest_started", "payload_contains": { "id": "missing_crate" }, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 3 },
-  { "_comment": "'accepted' node index 0 loops back to the hub for the hidden-until-studied check.", "action": "press", "name": "confirm" },
-  { "_comment": "OPACITY TEETH: at the hub with asked_about_crate banked but studied_the_cellar NOT yet, the guile report option is genuinely absent (exact-length array match). Krshia's hub also carries an ALWAYS-visible shop-entry option ('Hrr — what's on the stall today?', unlocked -- no gold gate on the nav option itself), so the exact array is now [shop-entry, Just visiting] -- both unlocked. The buy options' gold-greying lives one node deeper (the 'shop' node), not here.", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "options": [ { "text": "What's on the stall today?", "locked": false, "requirement": "" }, { "text": "Just visiting.", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
-  { "_comment": "'Just visiting.' is now visible index 1 (shop-entry took index 0): move down 1 to it, then confirm to close.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "_comment": "South to cellar_door (10,17): down column 13, left to the open x10 column, down; the door blocks (10,17) and faces it.", "action": "move", "direction": "down", "steps": 10 },
-  { "action": "move", "direction": "left", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 4 },
-  { "action": "screenshot", "name": "01_cellar_door" },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "light", "target": "cellar_door" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "studied_the_cellar" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Light] — The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf." } },
-  { "_comment": "Back up to Krshia (13,2) to report via the now-visible guile option.", "action": "move", "direction": "up", "steps": 3 },
-  { "action": "move", "direction": "right", "steps": 3 },
-  { "action": "move", "direction": "up", "steps": 10 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_crate" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "recovered_crate_guile" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "missing_crate", "beat": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "missing_crate", "beat": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_completed", "payload_contains": { "id": "missing_crate" }, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "toast", "payload_contains": { "text": "1/2" } },
-
-  { "_comment": "== PHASE G: back down to cellar_door and cast [Light] again -- the crate is already reported (crate_returned banked above), so the toast must acknowledge that instead of repeating the 'crate is there' find. Reverse of the up-to-Krshia leg above: down 10, left 3, down 3, back to (10,16) facing down into cellar_door.", "action": "move", "direction": "down", "steps": 10 },
-  { "action": "move", "direction": "left", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "light", "target": "cellar_door" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Light] — The orb drifts down the stairs. Just an empty cellar now, and a scuff in the dust where the crate used to sit." } }
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== PHASE A: meet Relc, spar, sleep -> Warrior L1 ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "met_relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "wrap"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.sparred_with_relc",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "warrior"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "_comment": "== PHASE B: cross the floodplains ambush (fight 1, Warrior kit + Relc ally) ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "road_clear"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "_comment": "== PHASE C: Pisces teaches magic ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    25,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL S4: first talk to Pisces this waking plays his pool line (dialogue_line + chatted_with_pisces + heard_gossip banks); a second interact opens the magic lesson.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "met_pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "learned_magic_from_pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== PHASE D: back to the inn, sleep -> [Mage]/[Light] ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 28
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "mage"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.mage",
+   "equals": 1
+  },
+  {
+   "_comment": "== PHASE E: back to the street for the crate quest. The mage sleep RE-ARMED goblin_encounter_1, so crossing the zone again fights it (fight 2, now Warrior/Mage). ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "_comment": "This is goblin_encounter_1's SECOND arming (fight 1 above already banked sign_defended) -- start_combat's repeat_arena seam swaps to the plain, tutor-line-free goblin_ambush arena once sign_defended has banked, so road_clear does NOT fire again here (positive proof the tutorial doesn't replay past its first arming). No tutor-line wait; straight to the victory confirm.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "_comment": "== PHASE F: the crate quest (guile path), unchanged from the pre-O4 script. East to Krshia (13,2), accept.",
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL S4: this waking's mage sleep RE-ARMED social_talked, so the first talk to Krshia here plays her pool line (dialogue_line + chatted_with_krshia + heard_gossip banks); a second interact opens the real crate graph.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "missing_crate"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "_comment": "'accepted' node index 0 loops back to the hub for the hidden-until-studied check.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "OPACITY TEETH: at the hub with asked_about_crate banked but studied_the_cellar NOT yet, the guile report option is genuinely absent (exact-length array match). Krshia's hub also carries an ALWAYS-visible shop-entry option ('Hrr — what's on the stall today?', unlocked -- no gold gate on the nav option itself), so the exact array is now [shop-entry, Just visiting] -- both unlocked. The buy options' gold-greying lives one node deeper (the 'shop' node), not here.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "options": [
+     {
+      "text": "What's on the stall today?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just visiting.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'Just visiting.' is now visible index 1 (shop-entry took index 0): move down 1 to it, then confirm to close.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "South to cellar_door (10,17): down column 13, left to the open x10 column, down; the door blocks (10,17) and faces it.",
+   "action": "move",
+   "direction": "down",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "screenshot",
+   "name": "01_cellar_door"
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "light"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "light",
+    "target": "cellar_door"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "studied_the_cellar"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Light] — The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf."
+   }
+  },
+  {
+   "_comment": "Back up to Krshia (13,2) to report via the now-visible guile option.",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 10
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "recovered_crate_guile"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "missing_crate",
+    "beat": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "missing_crate",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "missing_crate"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "toast",
+   "payload_contains": {
+    "text": "1/2"
+   }
+  },
+  {
+   "_comment": "== PHASE G: back down to cellar_door and cast [Light] again -- the crate is already reported (crate_returned banked above), so the toast must acknowledge that instead of repeating the 'crate is there' find. Reverse of the up-to-Krshia leg above: down 10, left 3, down 3, back to (10,16) facing down into cellar_door.",
+   "action": "move",
+   "direction": "down",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "light"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "light",
+    "target": "cellar_door"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Light] — The orb drifts down the stairs. Just an empty cellar now, and a scuff in the dust where the crate used to sit."
+   }
+  }
  ]
 }

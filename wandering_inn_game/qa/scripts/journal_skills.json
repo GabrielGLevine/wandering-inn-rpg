@@ -14,7 +14,9 @@
    "action": "wait_for_event",
    "type": "ui_journal_shown",
    "payload_contains": {
-    "skill_groups": ["Innate"],
+    "skill_groups": [
+     "Innate"
+    ],
     "skill_count": 1,
     "revealed_skills": [],
     "revealed_effect_lines": [],
@@ -49,8 +51,8 @@
    "steps": 1
   },
   {
-   "action": "press",
-   "name": "interact"
+   "action": "press_field_skill",
+   "skill": "basic_cleaning"
   },
   {
    "action": "wait_for_event",
@@ -82,10 +84,16 @@
    "action": "wait_for_event",
    "type": "ui_journal_shown",
    "payload_contains": {
-    "skill_groups": ["Innate"],
+    "skill_groups": [
+     "Innate"
+    ],
     "skill_count": 1,
-    "revealed_skills": ["basic_cleaning"],
-    "revealed_effect_lines": [[]],
+    "revealed_skills": [
+     "basic_cleaning"
+    ],
+    "revealed_effect_lines": [
+     []
+    ],
     "act_id": "act_i",
     "act_beats": 2,
     "act_beats_achieved": 0

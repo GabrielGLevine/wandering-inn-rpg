@@ -34,7 +34,7 @@
    "action": "assert_event_logged",
    "type": "ui_hint_rendered",
    "payload_contains": {
-    "text": "Esc \u2014 menu (save/load)   J \u2014 journal   I \u2014 inventory"
+    "text": "Esc — menu (save/load)   J — journal   I — inventory"
    }
   },
   {
@@ -50,7 +50,10 @@
   {
    "action": "assert_state",
    "path": "player_cell",
-   "equals": [4, 4]
+   "equals": [
+    4,
+    4
+   ]
   },
   {
    "action": "move_diag",
@@ -60,7 +63,10 @@
   {
    "action": "assert_state",
    "path": "player_cell",
-   "equals": [2, 3]
+   "equals": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",
@@ -136,8 +142,8 @@
    "steps": 1
   },
   {
-   "action": "press",
-   "name": "interact"
+   "action": "press_field_skill",
+   "skill": "basic_cleaning"
   },
   {
    "action": "wait_for_event",

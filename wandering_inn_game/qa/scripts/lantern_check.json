@@ -1,127 +1,677 @@
 {
  "_comment": "[Mage]/[Light] via PISCES, not the retired Dusty Scroll. Same honest cold-start prologue as mage_unlock_loop (meet Relc -> spar -> sleep Warrior L1 -> cross the floodplains ambush -> street -> Pisces teaches magic -> back to the inn -> sleep = [Mage] with [Light] folded in at level 1), then the ORIGINAL payoff: interact the inn's unlit_lantern with [Light] -> lit_the_common_room + the exact toast. Cell routes are shared verbatim with mage_unlock_loop (task-o4-report.md).",
  "steps": [
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-
-  { "_comment": "== PHASE A: meet Relc, spar, sleep -> Warrior L1 ==", "action": "move", "direction": "right", "steps": 13 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "right", "steps": 5 },
-  { "action": "move", "direction": "down", "steps": 6 },
-  { "action": "assert_state", "path": "player_cell", "equals": [12, 12] },
-  { "action": "press", "name": "interact" },
-  { "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Relc" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "relc_intro" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "met_relc" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "combat_autoplay", "max_turns": 200 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 15 },
-  { "action": "wait_for_event", "type": "ui_tutor_line_rendered", "payload_contains": { "beat": "wrap" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.sparred_with_relc", "equals": 1 },
-
-  { "action": "move", "direction": "up", "steps": 6 },
-  { "action": "move", "direction": "left", "steps": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [14, 3] },
-  { "action": "move", "direction": "left", "steps": 12 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "warrior" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
-
-  { "_comment": "== PHASE B: cross the floodplains ambush (warrior kit + Relc ally) ==", "action": "move", "direction": "up", "steps": 3 },
-  { "action": "move", "direction": "right", "steps": 12 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "right", "steps": 23 },
-  { "action": "move", "direction": "down", "steps": 14 },
-  { "action": "assert_state", "path": "player_cell", "equals": [30, 20] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "wait_for_event", "type": "ui_tutor_line_rendered", "payload_contains": { "beat": "road_clear" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [31, 24] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [1, 3] },
-
-  { "_comment": "== PHASE C: Pisces (Guild frontage 30,4) teaches magic ==", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "move", "direction": "right", "steps": 24 },
-  { "action": "assert_state", "path": "player_cell", "equals": [25, 4] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "move", "direction": "right", "steps": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [30, 5] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "_comment": "SOCIAL S4: first talk to Pisces this waking plays his pool line (dialogue_line + chatted_with_pisces + heard_gossip banks); a second interact opens the magic lesson.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Pisces" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pisces_magic" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "met_pisces" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "press", "name": "confirm" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "learned_magic_from_pisces" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== PHASE D: back to the inn, sleep -> [Mage] (with [Light] folded in at level 1) ==", "action": "move", "direction": "left", "steps": 28 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 5] },
-  { "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [31, 24] },
-  { "action": "move", "direction": "up", "steps": 16 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "left", "steps": 23 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn" }, "timeout_sec": 5 },
-  { "action": "move", "direction": "left", "steps": 12 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "mage" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Mage] class gained! — [Frost Bolt], [Quick Cast], [Light]" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "classes.mage", "equals": 1 },
-
-  { "_comment": "== Payoff: light the inn's unlit_lantern (13,1) with [Light] ==. Post-sleep (2,6): up to (2,3), east along y3 to (13,3), up to (13,2), up blocks on the lantern and faces it, interact.", "action": "move", "direction": "up", "steps": 3 },
-  { "action": "move", "direction": "right", "steps": 11 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "light", "target": "unlit_lantern" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "lit_the_common_room" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "01_lantern_lit" },
-  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Light] — A steady white orb settles into the lantern's glass." } },
-  { "action": "assert_state", "path": "accomplishments.lit_the_common_room", "equals": 1 }
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== PHASE A: meet Relc, spar, sleep -> Warrior L1 ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 13
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "met_relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "wrap"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.sparred_with_relc",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "warrior"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "_comment": "== PHASE B: cross the floodplains ambush (warrior kit + Relc ally) ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "road_clear"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "_comment": "== PHASE C: Pisces (Guild frontage 30,4) teaches magic ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 24
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    25,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL S4: first talk to Pisces this waking plays his pool line (dialogue_line + chatted_with_pisces + heard_gossip banks); a second interact opens the magic lesson.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "met_pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "learned_magic_from_pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== PHASE D: back to the inn, sleep -> [Mage] (with [Light] folded in at level 1) ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 28
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 16
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "mage"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Mage] class gained! — [Frost Bolt], [Quick Cast], [Light]"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.mage",
+   "equals": 1
+  },
+  {
+   "_comment": "== Payoff: light the inn's unlit_lantern (13,1) with [Light] ==. Post-sleep (2,6): up to (2,3), east along y3 to (13,3), up to (13,2), up blocks on the lantern and faces it, interact.",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 11
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "light"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "light",
+    "target": "unlit_lantern"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "lit_the_common_room"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_lantern_lit"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Light] — A steady white orb settles into the lantern's glass."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.lit_the_common_room",
+   "equals": 1
+  }
  ]
 }

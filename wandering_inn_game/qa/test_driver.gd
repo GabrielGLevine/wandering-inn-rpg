@@ -184,6 +184,22 @@ func _execute(step: Dictionary) -> void:
 			_inject_action(String(step["name"]))
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"press_field_skill":
+			# Casts a field skill BY ID through the real hotbar input path:
+			# looks the skill up in the live loadout and injects that slot's
+			# hotbar_N key -- scripts stay robust against loadout-order
+			# shifts (new innate/class grants renumbering slots) instead of
+			# hardcoding slot numbers. Fails loud if the skill isn't on the
+			# bar (the explicit-hotbar ruling: interact never casts, so a
+			# script that needs a cast MUST find it here).
+			var cast_skill := String(step["skill"])
+			var slot_idx: int = (Game.sim.field_hotbar_loadout() as Array).find(cast_skill)
+			if slot_idx == -1:
+				_fail("press_field_skill: not on the bar: " + cast_skill)
+			else:
+				_inject_action("hotbar_%d" % (slot_idx + 1))
+				await get_tree().process_frame
+				await get_tree().process_frame
 		"move":
 			for i in int(step.get("steps", 1)):
 				_inject_action("move_" + String(step["direction"]))

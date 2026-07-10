@@ -132,9 +132,20 @@ func _init() -> void:
 	game.move_player(Vector2i.LEFT)  # blocked by table, faces it
 	assert(game.player_cell == Vector2i(6, 4), "player stands right of table")
 
-	# Interact with prop -> skill chain
-	var effect := game.interact()
-	assert(effect.get("accomplishment", "") == "cleaned_the_inn", "prop interact returns effect")
+	# Interact with a skill-prop while the skill is KNOWN: a nudge toast
+	# naming the tool, NEVER the cast (the explicit-hotbar ruling -- interact
+	# gates and points, only the hotbar casts).
+	var hint_effect := game.interact()
+	assert(hint_effect.get("skill_hint", "") == "basic_cleaning", "prop interact returns the hint shape, not the cast")
+	assert(_count("skill_used") == 0, "interact never casts the required skill")
+	assert(_count("toast") == 1, "one nudge toast")
+	assert(String(_events[-1]["payload"]["text"]).contains("[Basic Cleaning]"), "the nudge names the tool")
+	assert(game.accomplishment_count("cleaned_the_inn") == 0, "no accomplishment from the hint")
+	assert(not game.used_skills.has("basic_cleaning"), "no used_skills entry from the hint")
+
+	# The HOTBAR path casts -> skill chain
+	var effect := game.use_skill_field("basic_cleaning")
+	assert(effect.get("accomplishment", "") == "cleaned_the_inn", "hotbar cast on the faced prop returns effect")
 	assert(_count("skill_used") == 1, "skill_used emitted")
 	# Erin's earlier talk_pool interact (above) already banked TWO
 	# accomplishment_recorded events (chatted_with_erin + heard_gossip, both
@@ -143,8 +154,9 @@ func _init() -> void:
 	assert(_count("accomplishment_recorded") == 3, "accomplishment_recorded emitted")
 	# dirty_table's on_skill_use carries a `gold: 1` wage, so cleaning emits
 	# TWO toasts (the "[Basic Cleaning]..." accomplishment toast + the
-	# "Earned 1 gold." wage toast) and one gold_changed, and the purse gains 1.
-	assert(_count("toast") == 2, "cleaning toast + D2 wage toast both emitted")
+	# "Earned 1 gold." wage toast) on top of the hint toast above, and one
+	# gold_changed, and the purse gains 1.
+	assert(_count("toast") == 3, "hint toast + cleaning toast + D2 wage toast all emitted")
 	assert(_count("gold_changed") == 1, "cleaning wage emits one gold_changed")
 	assert(game.gold == 1, "cleaning the table pays the D2 wage of 1 gold")
 	assert(game.accomplishment_count("cleaned_the_inn") == 1, "accomplishment stored")
@@ -153,7 +165,7 @@ func _init() -> void:
 	assert(game.used_skills.has("basic_cleaning"), "exploration use_skill records into used_skills")
 
 	# Counter semantics: re-use increments the count, event fires each time
-	game.interact()
+	game.use_skill_field("basic_cleaning")
 	assert(_count("skill_used") == 2, "second use still emits skill_used")
 	assert(_count("accomplishment_recorded") == 4, "counter records each increment")
 	assert(game.accomplishment_count("cleaned_the_inn") == 2, "count is 2 after two uses")
@@ -1979,9 +1991,11 @@ func _init() -> void:
 	assert(_count("sneak_ended") == 0, "sleep's clear is silent -- no sneak_ended (matches light_active/frozen_cells)")
 
 	# --- use_skill_field (overworld field-skill dispatch) ---
-	# The core promise: pressing a field skill while FACING a qualifying prop
-	# emits a BYTE-IDENTICAL event stream to today's interact-with-requires_skill
-	# on that same prop. Prove it by event-for-event comparison on the inn's
+	# THE EXPLICIT-HOTBAR CONTRACT (2026-07-10 ruling; this block REPLACED
+	# the old interact/hotbar byte-parity proof, deliberately): the hotbar
+	# is the ONLY caster on a skill-prop. interact() with the skill KNOWN
+	# yields a nudge toast + skill_hint shape and NO cast; use_skill_field
+	# on the same faced prop performs the real cast. Proven on the inn's
 	# dirty_table (requires_skill=basic_cleaning, innate) from [6,4] facing LEFT.
 	var scene_p1 := _load_json("res://data/skeleton_scene.json")
 	var skills_p1 := _load_json("res://data/skills.json")
@@ -1990,18 +2004,20 @@ func _init() -> void:
 	g_interact.player_cell = Vector2i(6, 4)
 	g_interact.player_facing = Vector2i.LEFT  # faces dirty_table at [5,4]
 	_events.clear()
-	g_interact.interact()
-	var interact_events := _events.duplicate(true)
+	var hint_fx := g_interact.interact()
+	assert(hint_fx.get("skill_hint", "") == "basic_cleaning", "interact on a known-skill prop returns the hint shape")
+	assert(_events.size() == 1 and _events[0]["type"] == "toast", "hint path emits exactly one toast, nothing else")
+	assert(String(_events[0]["payload"]["text"]).contains("[Basic Cleaning]"), "the nudge names the tool")
+	assert(g_interact.accomplishment_count("cleaned_the_inn") == 0, "interact never casts")
 
 	var g_field := WIGame.new(scene_p1, skills_p1, _sink, 12345)
 	g_field.player_cell = Vector2i(6, 4)
 	g_field.player_facing = Vector2i.LEFT
 	_events.clear()
 	var fx := g_field.use_skill_field("basic_cleaning")
-	var field_events := _events.duplicate(true)
 	assert(fx.get("accomplishment", "") == "cleaned_the_inn", "field use of a faced prop returns the prop's effect")
-	assert(interact_events == field_events, "faced-prop field use is byte-same events as interact-with-requires_skill")
-	assert(g_field.accomplishment_count("cleaned_the_inn") == 1, "faced-prop field use fires the SAME accomplishment as interact")
+	assert(_count("skill_used") == 1, "the hotbar path is the caster")
+	assert(g_field.accomplishment_count("cleaned_the_inn") == 1, "faced-prop field use fires the accomplishment")
 	assert(g_field.used_skills.has("basic_cleaning"), "faced-prop field use records used_skills (journal reveal)")
 
 	# Ambient fallback: same skill, NO qualifying faced entity -> the skill's

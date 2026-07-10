@@ -187,8 +187,8 @@
    "steps": 1
   },
   {
-   "action": "press",
-   "name": "interact"
+   "action": "press_field_skill",
+   "skill": "basic_cleaning"
   },
   {
    "action": "wait_for_event",

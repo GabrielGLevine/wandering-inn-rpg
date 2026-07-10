@@ -3,115 +3,600 @@
  "starts_at_title": true,
  "fixture_save": "near_garden",
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "_comment": "Move down to the 'Continue' row, confirm loads the near_garden manual slot.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "inn" },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
-
-  { "_comment": "== earn the Kth K-of-4 leg LIVE, not pre-baked. cleaned_the_inn is unbanked in the fixture (only resolved_wrong_order is pre-banked); a real [Basic Cleaning] use on dirty_table (5,4) here is the SAME chore work_loop.json proves, banking cleaned_the_inn:1 in-script -- Helper is already held directly (fixture classes), so this crossing fires no spurious class_gained. ==", "action": "move", "direction": "up", "steps": 1 },
-  { "action": "move", "direction": "right", "steps": 3 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "basic_cleaning", "target": "dirty_table" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cleaned_the_inn", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Basic Cleaning] — The table is spotless." }, "timeout_sec": 5 },
-  { "_comment": "Drain BOTH queued toasts (the clean line + the chore's own gold payout) before moving on, so neither is still mid-render (message_layer.gd's toast queue) when the qualifying sleep's own 'You sleep soundly.' toast is asserted a few steps below -- the work_loop.json precedent for this exact dirty_table beat.", "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.cleaned_the_inn", "equals": 1 },
-  { "action": "move", "direction": "left", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
-
-  { "_comment": "== The qualifying sleep: act III + K=2 of 4 legs NOW met (cleaned_the_inn just landed live above, resolved_wrong_order pre-banked). garden_door_unlocked banks SILENTLY (no toast of its own) -- 'You sleep soundly.' still renders since nothing else fires this beat (watch_runner_pointed pre-banked, no pending level-ups/gains -- helper/tactician both pre-held directly). ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "garden_door_unlocked" }, "timeout_sec": 5 },
-  { "_comment": "Wait (not assert_event_logged) for the sleep toast's UI confirmation -- the message_layer.gd toast queue always needs >=1 real process_frame to render even a single item (`_show`'s own unconditional `await tree.process_frame` before the emit), and this beat's own chore detour left less slack than the pre-G2 script had; polling here is robust to that regardless of exact frame timing.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "You sleep soundly." }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.garden_door_unlocked", "equals": 1 },
-
-  { "_comment": "== Erin's own acknowledgment, the PC witnesses (no GDI line) -- the talk_pool_stages seam, gated on the SAME flag. ==", "action": "move", "direction": "up", "steps": 1 },
-  { "action": "move", "direction": "right", "steps": 5 },
-  { "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Erin", "text": "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit." }, "timeout_sec": 5 },
-
-  { "_comment": "== garden_door now opens for real (the shipped door_when mechanism -- see wi_game.gd's interact() prop branch). garden_door moved to (3,8) against the south wall by playtest hotfix #2 (was (3,6)) -- the down-move is 4 steps now, not 2, to clear the vacated (3,6)/(3,7) row before the blocked bump at (3,8). ==", "action": "move", "direction": "left", "steps": 4 },
-  { "action": "move", "direction": "down", "steps": 4 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "screenshot", "name": "01_garden_door_in_the_inn" },
-  { "action": "press", "name": "interact" },
-  { "_comment": "The open_toast fires immediately before transition() rebuilds the field, in the SAME beat -- the sewer_grate/deep_fissure precedent (sewers_walkthrough.json) asserts the DOMAIN `toast` event here, not `ui_toast_rendered`: the UI confirmation for a toast queued right before a map rebuild never actually renders (traced live -- the confirmation event genuinely never appears in this run's log), so this is the correct, precedented assertion shape, not a downgrade.", "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The vines part like a curtain, and the light beyond doesn't flicker." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "garden_sanctuary" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": { "map": "garden_sanctuary", "floor_cells": 168, "blocked_cells": 48 }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "garden_sanctuary" },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 10] },
-  { "action": "screenshot", "name": "02_garden_day_bright_identity" },
-
-  { "_comment": "== the memorial hill: walk to the misted rise, detouring around the fountain (7,6) exactly as the map's own path axis does (left one column, past row 6, back to the target column). memorial_plot_warren (6,1, cleared_the_warren) is genuinely UNBANKED in this fixture -- [Appraise Foe] must read its base plinth's waiting line, not a statue's remembrance. ==", "action": "move", "direction": "up", "steps": 3 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "move", "direction": "up", "steps": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [6, 2] },
-  { "action": "press", "name": "hotbar_3" },
-  { "_comment": "Hotbar slot 3 is [Appraise Foe] -- catalog order innate basic_cleaning (1), helper's basic_cooking (2), tactician's observe (3), the SAME slot field_skills_loop.json's own precedent uses.", "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "observe", "context": "exploration", "target": "memorial_plot_warren" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "A stone plinth, swept clean, facing the axis like the others. Whatever belongs here hasn't been carried up from below yet." }, "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "cleared_the_warren" } },
-
-  { "_comment": "== the negative tooth's counterpart: memorial_plot_wrong_order (10,1, resolved_wrong_order) IS banked -- pre-baked by the fixture as one of its own two K-of-4 legs -- so [Appraise Foe] here must read the claimed human statue's remembrance line, not a waiting plinth. Same seam, opposite state, side by side on the same hill. ==", "action": "move", "direction": "right", "steps": 4 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [10, 2] },
-  { "action": "press", "name": "hotbar_3" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "observe", "context": "exploration", "target": "memorial_plot_wrong_order" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "A human figure in stone, apron tied, a bowl held out in both hands like an offering that never quite finished being made. The inn came up short once. Nobody outside its walls ever had to know." }, "timeout_sec": 5 },
-
-  { "_comment": "== an honest phase-clock crossing INSIDE the garden. The garden's phase clock is the SAME actions_since_sleep mechanism every map runs (wi_game.gd's phase()/`_tick_action`); this worktree's real threshold is data-driven (data/moods.json meta.phase_thresholds, dusk_at 100, NOT wi_game.gd's own 40 fallback -- traced, not assumed, the atmosphere_check.json precedent for sizing this correctly). ~31 actions are already spent since the qualifying sleep's reset by this point (the dirty_table detour doesn't count -- it happened BEFORE the reset); shuttling down the fully-open x=9 column (no memorial plot, no entity, clear y=2..10) and back, 5 round trips, carries the clock past 100 with margin. The garden's own `garden` mood card pins day/dusk/night all to [1,1,1] + vignette 0.0 -- this screenshot is the READ of that claim at a phase OTHER than day, not just an assertion. ==", "action": "move", "direction": "left", "steps": 1 },
-  { "action": "move", "direction": "down", "steps": 8 },
-  { "action": "move", "direction": "up", "steps": 8 },
-  { "action": "move", "direction": "down", "steps": 8 },
-  { "action": "move", "direction": "up", "steps": 8 },
-  { "action": "move", "direction": "down", "steps": 8 },
-  { "action": "move", "direction": "up", "steps": 8 },
-  { "action": "move", "direction": "down", "steps": 8 },
-  { "action": "move", "direction": "up", "steps": 8 },
-  { "action": "move", "direction": "down", "steps": 8 },
-  { "action": "move", "direction": "up", "steps": 8 },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "dusk" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [9, 2] },
-  { "action": "screenshot", "name": "03_memorial_hill_dusk_no_darkness" },
-  { "action": "move", "direction": "right", "steps": 1 },
-
-  { "_comment": "== rest-bed sleep parity (the DP3 sleep_toast idiom, live in the garden). Lands at (11,5), the SAME pre-sleep cell the original (pre-G2) route reached via right4/up5 from the entrance -- the exit route below is untouched. ==", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [11, 5] },
-  { "action": "screenshot", "name": "04_garden_bed" },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "_comment": "Chronology (traced live): toast{sleep_toast} fires FIRST (before sleep()'s own phase_changed emit), then phase_changed, then the rest of the beat -- wait on the DOMAIN toast, not the UI confirmation (same reasoning as the vines-toast step above), and in this exact order (the since-marker only scans forward).", "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Somewhere, a door shuts softly. The garden doesn't dim." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
-  { "_comment": "Wait (not assert_event_logged) for the sleep toast's UI confirmation -- the message_layer.gd toast queue always needs >=1 real process_frame to render even a single item (`_show`'s own unconditional `await tree.process_frame` before the emit), and this beat's own chore detour left less slack than the pre-G2 script had; polling here is robust to that regardless of exact frame timing.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "You sleep soundly." }, "timeout_sec": 5 },
-
-  { "_comment": "== round-trip exit, back to the inn. ==", "action": "move", "direction": "left", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 2 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "inn" },
-  { "action": "assert_state", "path": "player_cell", "equals": [3, 7] },
-  { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "visited_the_garden" } },
-
-  { "_comment": "== the reveal's residue (second waking): the garden-bed sleep above cleared social_talked, and visited_the_garden just banked on the exit -- so this next Erin talk must serve the erin_garden_shared residue stage (array-order-wins over erin_garden_open), NOT a verbatim repeat of the reveal. Rotation: chatted_with_erin is 1 (banked once by the reveal talk earlier this run), the residue pool has 2 lines -> index 1, deterministic. ==", "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "right", "steps": 4 },
-  { "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Erin", "text": "Take whoever needs it in there sometime. That's what it's for. I think that's what it's for." }, "timeout_sec": 5 },
-
-  { "_comment": "== No-violence sim guard, at the whole-run level: combat never once started anywhere in this script (the garden ships zero encounters and the sim guard refuses start_combat outright on this map -- unit-tested directly in test_sim_core.gd; this is the QA-level cross-check). ==", "action": "assert_event_absent", "type": "combat_started" }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Move down to the 'Continue' row, confirm loads the near_garden manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "_comment": "== earn the Kth K-of-4 leg LIVE, not pre-baked. cleaned_the_inn is unbanked in the fixture (only resolved_wrong_order is pre-banked); a real [Basic Cleaning] use on dirty_table (5,4) here is the SAME chore work_loop.json proves, banking cleaned_the_inn:1 in-script -- Helper is already held directly (fixture classes), so this crossing fires no spurious class_gained. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cleaning"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "target": "dirty_table"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleaned_the_inn",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Basic Cleaning] — The table is spotless."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Drain BOTH queued toasts (the clean line + the chore's own gold payout) before moving on, so neither is still mid-render (message_layer.gd's toast queue) when the qualifying sleep's own 'You sleep soundly.' toast is asserted a few steps below -- the work_loop.json precedent for this exact dirty_table beat.",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cleaned_the_inn",
+   "equals": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "_comment": "== The qualifying sleep: act III + K=2 of 4 legs NOW met (cleaned_the_inn just landed live above, resolved_wrong_order pre-banked). garden_door_unlocked banks SILENTLY (no toast of its own) -- 'You sleep soundly.' still renders since nothing else fires this beat (watch_runner_pointed pre-banked, no pending level-ups/gains -- helper/tactician both pre-held directly). ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "garden_door_unlocked"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Wait (not assert_event_logged) for the sleep toast's UI confirmation -- the message_layer.gd toast queue always needs >=1 real process_frame to render even a single item (`_show`'s own unconditional `await tree.process_frame` before the emit), and this beat's own chore detour left less slack than the pre-G2 script had; polling here is robust to that regardless of exact frame timing.",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You sleep soundly."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.garden_door_unlocked",
+   "equals": 1
+  },
+  {
+   "_comment": "== Erin's own acknowledgment, the PC witnesses (no GDI line) -- the talk_pool_stages seam, gated on the SAME flag. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Erin",
+    "text": "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== garden_door now opens for real (the shipped door_when mechanism -- see wi_game.gd's interact() prop branch). garden_door moved to (3,8) against the south wall by playtest hotfix #2 (was (3,6)) -- the down-move is 4 steps now, not 2, to clear the vacated (3,6)/(3,7) row before the blocked bump at (3,8). ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "01_garden_door_in_the_inn"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "The open_toast fires immediately before transition() rebuilds the field, in the SAME beat -- the sewer_grate/deep_fissure precedent (sewers_walkthrough.json) asserts the DOMAIN `toast` event here, not `ui_toast_rendered`: the UI confirmation for a toast queued right before a map rebuild never actually renders (traced live -- the confirmation event genuinely never appears in this run's log), so this is the correct, precedented assertion shape, not a downgrade.",
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The vines part like a curtain, and the light beyond doesn't flicker."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "garden_sanctuary"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "garden_sanctuary",
+    "floor_cells": 168,
+    "blocked_cells": 48
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "garden_sanctuary"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    10
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "02_garden_day_bright_identity"
+  },
+  {
+   "_comment": "== the memorial hill: walk to the misted rise, detouring around the fountain (7,6) exactly as the map's own path axis does (left one column, past row 6, back to the target column). memorial_plot_warren (6,1, cleared_the_warren) is genuinely UNBANKED in this fixture -- [Appraise Foe] must read its base plinth's waiting line, not a statue's remembrance. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "hotbar_3"
+  },
+  {
+   "_comment": "Hotbar slot 3 is [Appraise Foe] -- catalog order innate basic_cleaning (1), helper's basic_cooking (2), tactician's observe (3), the SAME slot field_skills_loop.json's own precedent uses.",
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "context": "exploration",
+    "target": "memorial_plot_warren"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "A stone plinth, swept clean, facing the axis like the others. Whatever belongs here hasn't been carried up from below yet."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_the_warren"
+   }
+  },
+  {
+   "_comment": "== the negative tooth's counterpart: memorial_plot_wrong_order (10,1, resolved_wrong_order) IS banked -- pre-baked by the fixture as one of its own two K-of-4 legs -- so [Appraise Foe] here must read the claimed human statue's remembrance line, not a waiting plinth. Same seam, opposite state, side by side on the same hill. ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "hotbar_3"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "context": "exploration",
+    "target": "memorial_plot_wrong_order"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "A human figure in stone, apron tied, a bowl held out in both hands like an offering that never quite finished being made. The inn came up short once. Nobody outside its walls ever had to know."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== an honest phase-clock crossing INSIDE the garden. The garden's phase clock is the SAME actions_since_sleep mechanism every map runs (wi_game.gd's phase()/`_tick_action`); this worktree's real threshold is data-driven (data/moods.json meta.phase_thresholds, dusk_at 100, NOT wi_game.gd's own 40 fallback -- traced, not assumed, the atmosphere_check.json precedent for sizing this correctly). ~31 actions are already spent since the qualifying sleep's reset by this point (the dirty_table detour doesn't count -- it happened BEFORE the reset); shuttling down the fully-open x=9 column (no memorial plot, no entity, clear y=2..10) and back, 5 round trips, carries the clock past 100 with margin. The garden's own `garden` mood card pins day/dusk/night all to [1,1,1] + vignette 0.0 -- this screenshot is the READ of that claim at a phase OTHER than day, not just an assertion. ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "dusk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "03_memorial_hill_dusk_no_darkness"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "_comment": "== rest-bed sleep parity (the DP3 sleep_toast idiom, live in the garden). Lands at (11,5), the SAME pre-sleep cell the original (pre-G2) route reached via right4/up5 from the entrance -- the exit route below is untouched. ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    5
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "04_garden_bed"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "Chronology (traced live): toast{sleep_toast} fires FIRST (before sleep()'s own phase_changed emit), then phase_changed, then the rest of the beat -- wait on the DOMAIN toast, not the UI confirmation (same reasoning as the vines-toast step above), and in this exact order (the since-marker only scans forward).",
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Somewhere, a door shuts softly. The garden doesn't dim."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Wait (not assert_event_logged) for the sleep toast's UI confirmation -- the message_layer.gd toast queue always needs >=1 real process_frame to render even a single item (`_show`'s own unconditional `await tree.process_frame` before the emit), and this beat's own chore detour left less slack than the pre-G2 script had; polling here is robust to that regardless of exact frame timing.",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You sleep soundly."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== round-trip exit, back to the inn. ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    7
+   ]
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "visited_the_garden"
+   }
+  },
+  {
+   "_comment": "== the reveal's residue (second waking): the garden-bed sleep above cleared social_talked, and visited_the_garden just banked on the exit -- so this next Erin talk must serve the erin_garden_shared residue stage (array-order-wins over erin_garden_open), NOT a verbatim repeat of the reveal. Rotation: chatted_with_erin is 1 (banked once by the reveal talk earlier this run), the residue pool has 2 lines -> index 1, deterministic. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Erin",
+    "text": "Take whoever needs it in there sometime. That's what it's for. I think that's what it's for."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== No-violence sim guard, at the whole-run level: combat never once started anywhere in this script (the garden ships zero encounters and the sim guard refuses start_combat outright on this map -- unit-tested directly in test_sim_core.gd; this is the QA-level cross-check). ==",
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
  ]
 }

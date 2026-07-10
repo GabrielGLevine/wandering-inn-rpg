@@ -885,7 +885,23 @@ func interact() -> Dictionary:
 				if target.has("gold"):
 					_apply_gold_effect(int(target["gold"]), String(target[WIKeys.ID]))
 				return {"accomplishment": accomplishment_id}
-			return use_skill(String(target.get("requires_skill", "")), String(target[WIKeys.ID]))
+			# RULING (2026-07-10, repeals the interact/hotbar byte-parity
+			# contract): generic interact NEVER auto-casts a prop's required
+			# Skill -- explicit hotbar selection is the design (the player
+			# picks the right tool; interact only gates/points). Skill KNOWN
+			# -> a nudge toast naming the tool (prop-optional
+			# `skill_hint_toast` overrides the generic line); skill UNKNOWN
+			# -> the unchanged use_skill() path (skill_unknown + locked_toast).
+			# The hotbar path (use_skill_field -> use_skill) is the ONLY
+			# caster now.
+			var req_skill := String(target.get("requires_skill", ""))
+			if known_skills().has(req_skill):
+				var hint := String(target.get("skill_hint_toast", ""))
+				if hint == "":
+					hint = "%s is the tool for this. Pick it off your bar." % _skill_display_name(req_skill)
+				_emit(WIEvents.TOAST, {"text": hint})
+				return {"skill_hint": req_skill}
+			return use_skill(req_skill, String(target[WIKeys.ID]))
 		"encounter":
 			# The encounter_when phase gate (locked shape 2, 8b R1) refuses
 			# BEFORE any combat/dialogue dispatch -- an entity whose gate is
@@ -1219,6 +1235,18 @@ func _accomplishment_gate_met(req: Dictionary) -> bool:
 
 
 ## Returns innate exploration skills plus class-granted skills, deduplicated.
+## The player-facing bracketed name for a skill id, from the injected
+## skills catalog (`display_name`, e.g. "[Basic Cleaning]"); falls back to
+## a capitalized bracket form for an uncatalogued id so a hint toast can
+## never render a bare snake_case internal id.
+func _skill_display_name(skill_id: String) -> String:
+	var entry: Dictionary = skills.get(skill_id, {})
+	var label := String(entry.get("display_name", ""))
+	if label != "":
+		return label
+	return "[%s]" % skill_id.capitalize()
+
+
 func known_skills() -> Array:
 	var out: Array = player_skills.duplicate()
 	if not _combat_config.is_empty() and _combat_config.has("classes"):
