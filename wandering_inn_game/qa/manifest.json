@@ -422,6 +422,12 @@
    "note": "8b Task R3 (issue #11) 'The Price of a Favor' SKILL path -- no combat: give -> the gauntlet in sequence (basic_cooking the offering -> [Light] the threshold candles -> [Observe] the true knot, the existing requires_skill/on_skill_use field-skill seam) -- the last step banks blight_lifted directly, no separate report needed -- then report -> completion."
   },
   {
+   "script": "longhouse_walkthrough",
+   "seed": 9,
+   "fixture": "near_riverfarm",
+   "note": "Riverfarm depth: the longhouse's real interior -- longhouse_door round-trip (walked around the building's own footprint), the headman's-corner ledger prop, sleep-beat parity at the relocated riverfarm_guest_cot (same event stream + the flavor toast held verbatim from the old open-lawn cot)."
+  },
+  {
    "script": "olesm_chess_loop",
    "seed": 9,
    "fixture": "olesm_chess_pre",

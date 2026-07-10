@@ -1337,17 +1337,69 @@
    "type": "combat_started"
   },
   {
-   "_comment": "== BEAT 6: the village's sleep site (standing rule -- every expansion area ships one), the DP3/G1 sleep_toast idiom live at riverfarm_guest_cot. LAST leg on purpose: sleep() advances the phase clock and resets actions_since_sleep, which would re-arm river_wolf_pack's night gate and unwind the phase/rotation pins every earlier beat in this run depends on -- nothing above may run after this. near_riverfarm's PC is classless with zero class-granting accomplishments banked (its accomplishment set is all door/riverfarm lore flags, none matching a classes.json threshold), so the 'You sleep soundly.' fallback below is deterministic, not a race against a class/level toast. Playtest hotfix #7c moved the cot (9,4)->(9,5), against the longhouse wall -- teleport to (9,4) (the vacated cell, now the open-lawn approach), bump DOWN to face the cot at (9,5) -- same bump-and-interact idiom as every other prop this run. ==",
+   "_comment": "== BEAT 6: the village's sleep site, relocated off the open lawn into a real room behind `longhouse_door`. LAST leg on purpose: sleep() advances the phase clock and resets actions_since_sleep, which would re-arm river_wolf_pack's night gate and unwind the phase/rotation pins every earlier beat in this run depends on -- nothing above may run after this (everything below is enter -> sleep -> exit, in that order, with no further pinned assertion after). near_riverfarm's PC is classless with zero class-granting accomplishments banked, so the 'You sleep soundly.' fallback below is deterministic, not a race against a class/level toast. Teleport to (11,8), the open cell south of longhouse_door's own footprint cell (11,7); bump UP into the door (blocked by entity occupancy) to pick up the right facing, same bump-and-interact idiom as every prop this run. ==",
    "action": "teleport",
    "map": "riverfarm_village",
    "cell": [
-    9,
-    4
+    11,
+    8
    ]
   },
   {
    "action": "move",
-   "direction": "down",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_longhouse"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_longhouse"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    5
+   ]
+  },
+  {
+   "_comment": "Arrival facing (up, left over from the door bump outside) is irrelevant here -- walk the row to the cot's column, then bump up into it.",
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
    "steps": 1
   },
   {
@@ -1355,7 +1407,7 @@
    "name": "interact"
   },
   {
-   "_comment": "Chronology (the DP3/G1 idiom, traced live): toast{sleep_toast} fires FIRST (before sleep()'s own phase_changed emit), then phase_changed, then the rest of the beat -- wait on the DOMAIN toast, not the UI confirmation, in this exact order (the since-marker only scans forward).",
+   "_comment": "Chronology (the DP3/G1 idiom, traced live): toast{sleep_toast} fires FIRST (before sleep()'s own phase_changed emit), then phase_changed, then the rest of the beat -- wait on the DOMAIN toast, not the UI confirmation, in this exact order (the since-marker only scans forward). sleep_toast text is held verbatim from the open-lawn cot.",
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
@@ -1382,6 +1434,50 @@
   {
    "action": "screenshot",
    "name": "09_guest_cot_sleep"
+  },
+  {
+   "_comment": "Round-trip exit: walk back to longhouse_exit (5,6) and interact -- lands back at (11,8), the same cell the player stood on to enter.",
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_village"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    8
+   ]
   }
  ]
 }
