@@ -145,7 +145,11 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 ## Separated from _init so the owner can finish wiring (e.g. assigning this
 ## instance somewhere listeners can reach) before any event fires.
 func begin() -> void:
-	_emit(WIEvents.COMBAT_STARTED, {"order": turn_order.duplicate()})
+	# `arena` is additive (every QA pin uses payload_contains subset match):
+	# it keys per-arena music variants in data/audio.json (first-match-wins,
+	# specific-before-generic ordering there) and any future arena-keyed
+	# presentation.
+	_emit(WIEvents.COMBAT_STARTED, {"order": turn_order.duplicate(), "arena": arena_id})
 	_start_round()
 	_start_turn()
 

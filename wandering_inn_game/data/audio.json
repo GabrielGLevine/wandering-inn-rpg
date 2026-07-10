@@ -306,6 +306,71 @@
    "loop": true
   },
   {
+   "id": "music_combat_deep_warren",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "deep_warren"
+   },
+   "stream": "res://assets/audio/music/junkala_encounter_witches.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_ruin_court",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "ruin_court"
+   },
+   "stream": "res://assets/audio/music/junkala_army_approaching.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_merchant_warehouse",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "merchant_warehouse"
+   },
+   "stream": "res://assets/audio/music/junkala_army_approaching.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_sewers_nest",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "sewers_nest"
+   },
+   "stream": "res://assets/audio/music/junkala_preparing_battle.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_inn_cellar",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "inn_cellar"
+   },
+   "stream": "res://assets/audio/music/junkala_preparing_battle.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
    "id": "music_combat",
    "kind": "combat",
    "context": "combat",
@@ -328,6 +393,163 @@
    "volume_db": -5.0,
    "loop": false,
    "return_to_field": true
+  },
+  {
+   "id": "music_riverfarm_village",
+   "kind": "field",
+   "context": "riverfarm_village",
+   "event": "map_changed",
+   "payload": {
+    "map": "riverfarm_village"
+   },
+   "stream": "res://assets/audio/music/junkala_home_town.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_riverfarm_longhouse",
+   "kind": "field",
+   "context": "riverfarm_longhouse",
+   "event": "map_changed",
+   "payload": {
+    "map": "riverfarm_longhouse"
+   },
+   "stream": "res://assets/audio/music/junkala_home_town.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_invrisil_boulevard",
+   "kind": "field",
+   "context": "invrisil_boulevard",
+   "event": "map_changed",
+   "payload": {
+    "map": "invrisil_boulevard"
+   },
+   "stream": "res://assets/audio/music/junkala_bazaar.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_mercantile_alleys",
+   "kind": "field",
+   "context": "mercantile_alleys",
+   "event": "map_changed",
+   "payload": {
+    "map": "mercantile_alleys"
+   },
+   "stream": "res://assets/audio/music/junkala_bazaar.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_brothers_parlor",
+   "kind": "field",
+   "context": "brothers_parlor",
+   "event": "map_changed",
+   "payload": {
+    "map": "brothers_parlor"
+   },
+   "stream": "res://assets/audio/music/junkala_childhood_friends.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_garden_sanctuary",
+   "kind": "field",
+   "context": "garden_sanctuary",
+   "event": "map_changed",
+   "payload": {
+    "map": "garden_sanctuary"
+   },
+   "stream": "res://assets/audio/music/junkala_time_stands_still.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_inn_upstairs",
+   "kind": "field",
+   "context": "inn_upstairs",
+   "event": "map_changed",
+   "payload": {
+    "map": "inn_upstairs"
+   },
+   "stream": "res://assets/audio/music/junkala_place_i_call_home.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_witch_hollow",
+   "kind": "field",
+   "context": "witch_hollow",
+   "event": "map_changed",
+   "payload": {
+    "map": "witch_hollow"
+   },
+   "stream": "res://assets/audio/music/junkala_peaceful_days.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_ruin_surface",
+   "kind": "field",
+   "context": "ruin_surface",
+   "event": "map_changed",
+   "payload": {
+    "map": "ruin_surface"
+   },
+   "stream": "res://assets/audio/music/junkala_innocence.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_guild",
+   "kind": "field",
+   "context": "guild",
+   "event": "map_changed",
+   "payload": {
+    "map": "guild"
+   },
+   "stream": "res://assets/audio/music/junkala_sunshine_coast.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_barracks",
+   "kind": "field",
+   "context": "barracks",
+   "event": "map_changed",
+   "payload": {
+    "map": "barracks"
+   },
+   "stream": "res://assets/audio/music/junkala_childhood_friends.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_runners_guild",
+   "kind": "field",
+   "context": "runners_guild",
+   "event": "map_changed",
+   "payload": {
+    "map": "runners_guild"
+   },
+   "stream": "res://assets/audio/music/junkala_summer_memories.ogg",
+   "bus": "Music",
+   "volume_db": -8.0,
+   "loop": true
   }
- ]
+ ],
+ "_comment_music_order": "TRAP (wi_audio._dispatch_music_event is FIRST-MATCH-WINS then returns): arena-keyed combat variants MUST precede the generic music_combat entry, or they never play. Field entries match map_changed payload {map}; sync-on-load matches kind=field + context==current_map. Sewers/deep_tunnels/cave maps are deliberately TRACKLESS -- silence is the dark-map mood; [Light] and the fights carry the audio there. All junkala_* tracks are CC0 (assets/LICENSES/junkala-cc0-music-verdict.md) and authored as seamless loops."
 }
