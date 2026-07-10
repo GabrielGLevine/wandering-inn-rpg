@@ -1,5 +1,24 @@
 # Wandering Inn RPG Handoff
 
+## USER RULINGS BATCH (2026-07-10) + SAME-DAY SHIPS
+
+Four rulings taken via in-session questions, two shipped immediately:
+1. **Flee combat** → Abandon-to-save now, [Flee] verb later. SHIPPED:
+   pause opens mid-fight (HOTBAR resting mode only; combat_ref.is_resting
+   gate), reduced COMBAT_ROWS (no Save/Load — combat is never
+   serialized), Abandon = confirm panel (No default) → teardown WITHOUT
+   resolve_combat → load auto (defeat-path parity). New canonical
+   `combat_abandon` (manifest + seed table) pins the whole flow incl.
+   combat_resolved absent; windowed shots read clean.
+2. **Boards in journal** → separate "Postings" section (DP2 distinction
+   preserved). Queued on #53, implementable.
+3. **Catalyst price** → 15-20g band. SHIPPED at 18g (was 35g; the old
+   30-40g band comment superseded); door-chain gold pins re-derived
+   (40g fixture − 18 = 22 post-buy).
+4. **Bed policy** → garden bed gets DRESSED; the inn's common-room
+   alcove bed is REMOVED (upstairs room becomes THE bed) — both folded
+   into #49's charter with the 28-script sleep-route migration.
+
 ## #52 WAVE 1 LANDED (2026-07-10, pushed d7e3531) — sweep 78/78
 
 Three Sonnet worktree lanes implemented, opus-reviewed (DLG FIX-FIRST →

@@ -124,6 +124,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `title_flow` | 9 | title screen flow; no combat |
 | `playtest_boot` | none | Issue #43: debug-only title 'Playtest States' picker -- boots `near_garden` via the real fixture-copy-then-Continue path |
 | `combat_move_input` | 9 (fixture `post_tutorial`) | movement-first arrows + Dash refill via real input |
+| `combat_abandon` | 9 (fixture `post_tutorial`) | pause opens mid-fight (HOTBAR resting mode), Abandon returns to last autosave; combat_resolved never fires |
 | `class_evolution_loop` | 9 (fixture `near_evolution`) | grind → sleep → `class_evolved` + evolved kit |
 | `consolidation_flow` | 9 (fixture `near_consolidation`) | offer/decline/re-offer/accept → [Spellsword] |
 | `save_migration` | 1 | v2→v3 migration + v1 pause-load rejection + stale-slot defeat-reload |

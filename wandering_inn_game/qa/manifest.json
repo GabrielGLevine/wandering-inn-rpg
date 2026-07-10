@@ -90,6 +90,12 @@
    "note": "movement-first arrows + Dash refill via real input"
   },
   {
+   "script": "combat_abandon",
+   "seed": 9,
+   "fixture": "post_tutorial",
+   "note": "pause opens mid-fight (HOTBAR resting mode), Abandon returns to last autosave; combat_resolved never fires"
+  },
+  {
    "script": "class_evolution_loop",
    "seed": 9,
    "fixture": "near_evolution",

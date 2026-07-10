@@ -67,6 +67,6 @@
   { "action": "assert_state", "path": "accomplishments.door_understood", "equals": 1 },
   { "action": "assert_state", "path": "accomplishments.bought_catalyst", "equals": 1 },
   { "action": "assert_state", "path": "inventory", "contains": "resonant_catalyst" },
-  { "action": "assert_state", "path": "gold", "equals": 5 }
+  { "action": "assert_state", "path": "gold", "equals": 22 }
  ]
 }

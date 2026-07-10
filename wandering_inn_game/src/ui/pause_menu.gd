@@ -4,8 +4,10 @@ extends CanvasLayer
 ##
 ## Input arbitration (repo-wide precedence: combat > dialogue > pause >
 ## journal > inventory > world): pause only toggles/consumes input when
-## combat is inactive, no dialogue is open, and BOTH the journal and the
-## inventory are closed — world.gd wires `journal_ref`/
+## no dialogue is open and BOTH the journal and the inventory are closed;
+## during combat it opens ONLY from the HOTBAR resting mode (see
+## `_can_open`/`combat_ref`) with the reduced COMBAT_ROWS set, whose one
+## extra verb is Abandon-to-last-autosave — world.gd wires `journal_ref`/
 ## `inventory_ref` after creating all three components so this check does
 ## not need a scene-tree lookup; world.gd itself checks `pause_menu.open`
 ## before handling movement/interact.
@@ -22,11 +24,18 @@ const PANEL_SIZE := Vector2(280.0, 276.0)
 ## "Music"/"SFX" double as `WIAudio` bus names, so `_row_text()` and
 ## `_adjust_volume_row()` can use the row key directly as the bus arg.
 const ROWS := ["Resume", "Save", "Load", "Load Autosave", "Music", "SFX", "Quit to Title"]
+## The reduced row set while a fight is live (combat_ref.is_resting() gates
+## opening at all). No Save/Load rows: combat state is never serialized, so a
+## mid-fight save would silently drop the fight — Abandon is the honest verb
+## (returns to the last autosave, same slot the defeat path loads).
+const COMBAT_ROWS := ["Resume", "Abandon to Last Save", "Music", "SFX", "Quit to Title"]
 const VOLUME_ROWS := ["Music", "SFX"]
 
 const CONFIRM_PANEL_SIZE := Vector2(340.0, 158.0)
 const CONFIRM_TEXT := "Unsaved progress since the\nlast autosave is lost. Quit?"
-## Cursor defaults to "No" (index 0) on entry — quitting is destructive.
+const ABANDON_CONFIRM_TEXT := "Abandon the fight? You return\nto your last autosave."
+## Cursor defaults to "No" (index 0) on entry — both confirmed actions are
+## destructive.
 const CONFIRM_ROWS := ["No", "Yes"]
 
 ## True while the pause panel is visible; world.gd and journal.gd gate on this.
@@ -37,15 +46,30 @@ var journal_ref: Node = null
 ## Set by world.gd/main.gd alongside journal_ref (three-way mutual
 ## exclusion -- see inventory.gd's file doc comment).
 var inventory_ref: Node = null
+## Set by main.gd (the combat screen instance). Gates in-combat opening to
+## the HOTBAR resting mode (is_resting()) and owns the abandon teardown
+## (abandon_combat()) -- the menu never touches combat internals itself.
+var combat_ref: Node = null
 
 var _root: Control
 var _row_labels: Array[Label] = []
 var _cursor := 0
+var _confirm_label: Label
 
 var _confirm_root: Control
 var _confirm_option_labels: Array[Label] = []
 var _confirming_quit := false
+## Which destructive action the shared No/Yes panel is confirming:
+## "quit" (title) or "abandon" (combat -> last autosave).
+var _confirm_action := "quit"
 var _confirm_cursor := 0
+
+
+## The live row set: the reduced COMBAT_ROWS while a fight is up, the full
+## set otherwise. Everything cursor/refresh/confirm reads goes through this
+## so the two sets can never drift from the rendered labels.
+func _active_rows() -> Array:
+	return COMBAT_ROWS if Game.sim.combat != null else ROWS
 
 
 func _ready() -> void:
@@ -89,10 +113,10 @@ func _ready() -> void:
 	var confirm_stack := VBoxContainer.new()
 	confirm_stack.add_theme_constant_override("separation", 8)
 	confirm_margin.add_child(confirm_stack)
-	var confirm_label := UIChrome.make_label()
-	confirm_label.text = CONFIRM_TEXT
-	confirm_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	confirm_stack.add_child(confirm_label)
+	_confirm_label = UIChrome.make_label()
+	_confirm_label.text = CONFIRM_TEXT
+	_confirm_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	confirm_stack.add_child(_confirm_label)
 	for i in CONFIRM_ROWS.size():
 		var row := UIChrome.make_label("", "Menu")
 		confirm_stack.add_child(row)
@@ -121,11 +145,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		_close()
 		vp.set_input_as_handled()
 	elif event.is_action_pressed("move_up"):
-		_cursor = wrapi(_cursor - 1, 0, ROWS.size())
+		_cursor = wrapi(_cursor - 1, 0, _active_rows().size())
 		_refresh()
 		vp.set_input_as_handled()
 	elif event.is_action_pressed("move_down"):
-		_cursor = wrapi(_cursor + 1, 0, ROWS.size())
+		_cursor = wrapi(_cursor + 1, 0, _active_rows().size())
 		_refresh()
 		vp.set_input_as_handled()
 	elif event.is_action_pressed("move_left"):
@@ -150,16 +174,29 @@ func _handle_confirm_input(event: InputEvent, vp: Viewport) -> void:
 	elif event.is_action_pressed("confirm"):
 		var choice := String(CONFIRM_ROWS[_confirm_cursor])
 		if choice == "Yes":
+			var action := _confirm_action
 			_close()
-			_quit_to_title()
+			if action == "abandon":
+				if combat_ref != null and combat_ref.has_method("abandon_combat"):
+					combat_ref.call("abandon_combat")
+			else:
+				_quit_to_title()
 		else:
 			_exit_confirm_quit()
 		vp.set_input_as_handled()
 
 
 func _can_open() -> bool:
-	if Game.sim.combat != null or Game.sim.dialogue != null:
+	if Game.sim.dialogue != null:
 		return false
+	# Mid-combat opening is allowed ONLY in the HOTBAR resting mode (your
+	# turn, no targeting/dash/banner sub-mode in flight) -- combat_ref owns
+	# that answer. Combat's own _unhandled_input never consumes `cancel` in
+	# HOTBAR mode, and this node sits LATER in Main's child order, so it
+	# sees the un-consumed Esc first on the way back.
+	if Game.sim.combat != null:
+		if combat_ref == null or not combat_ref.has_method("is_resting") or not bool(combat_ref.call("is_resting")):
+			return false
 	if not Game.sim.pending_consolidation.is_empty():
 		return false
 	if journal_ref != null and bool(journal_ref.get("open")):
@@ -187,8 +224,10 @@ func _close() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_PAUSE_HIDDEN, {})
 
 
-func _enter_confirm_quit() -> void:
+func _enter_confirm(action: String) -> void:
 	_confirming_quit = true
+	_confirm_action = action
+	_confirm_label.text = ABANDON_CONFIRM_TEXT if action == "abandon" else CONFIRM_TEXT
 	_confirm_cursor = 0
 	_root.hide()
 	_confirm_root.show()
@@ -218,13 +257,17 @@ func _quit_to_title() -> void:
 
 
 func _refresh() -> void:
-	for i in ROWS.size():
-		var mark := "> " if i == _cursor else "  "
-		(_row_labels[i] as Label).text = mark + _row_text(i)
+	var rows := _active_rows()
+	for i in _row_labels.size():
+		var label := _row_labels[i] as Label
+		label.visible = i < rows.size()
+		if i < rows.size():
+			var mark := "> " if i == _cursor else "  "
+			label.text = mark + _row_text(i)
 
 
 func _row_text(i: int) -> String:
-	var key := String(ROWS[i])
+	var key := String(_active_rows()[i])
 	if VOLUME_ROWS.has(key):
 		return "%s volume: %d" % [key, int(WIAudio.get_bus_volume(key))]
 	return key
@@ -238,7 +281,7 @@ func _refresh_confirm() -> void:
 
 ## Only Music/SFX rows respond; harmless no-op otherwise.
 func _adjust_volume_row(delta: int) -> void:
-	var key := String(ROWS[_cursor])
+	var key := String(_active_rows()[_cursor])
 	if not VOLUME_ROWS.has(key):
 		return
 	WIAudio.set_bus_volume(key, WIAudio.get_bus_volume(key) + float(delta))
@@ -246,9 +289,11 @@ func _adjust_volume_row(delta: int) -> void:
 
 
 func _confirm() -> void:
-	match String(ROWS[_cursor]):
+	match String(_active_rows()[_cursor]):
 		"Resume":
 			_close()
+		"Abandon to Last Save":
+			_enter_confirm("abandon")
 		"Save":
 			_close()
 			Game.save_manual()
@@ -261,4 +306,4 @@ func _confirm() -> void:
 			if not Game.load_slot("auto"):
 				ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Could not load save."})
 		"Quit to Title":
-			_enter_confirm_quit()
+			_enter_confirm("quit")

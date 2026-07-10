@@ -698,20 +698,44 @@ func _unhandled_input(event: InputEvent) -> void:
 func _close_banner() -> void:
 	var was_victory: bool = _combat() != null and _combat().outcome.get("victory", false)
 	Game.sim.resolve_combat()
-	_mode = Mode.INACTIVE
-	_root.hide()
-	# Hide the board and hand the camera back to the field --
-	# the inverse of `_board_renderer.build()`'s show + enter_combat_camera.
-	# `clear()` internally guards is_instance_valid, since a defeat below may
-	# already have torn the whole World down via Game.reset()/load_slot before
-	# this runs on some paths.
-	_board_renderer.clear()
-	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HIDDEN, {})
+	_teardown_board()
 	if not was_victory:
 		# Defeat returns the player to their last autosave (sleep/quest/map
 		# beats), not to a fresh game. Reset only when no autosave exists yet.
 		if not Game.load_slot("auto"):
 			Game.reset()
+
+
+## Hides the board and hands the camera back to the field --
+## the inverse of `_board_renderer.build()`'s show + enter_combat_camera.
+## `clear()` internally guards is_instance_valid, since a defeat may
+## already have torn the whole World down via Game.reset()/load_slot before
+## this runs on some paths.
+func _teardown_board() -> void:
+	_mode = Mode.INACTIVE
+	_root.hide()
+	_board_renderer.clear()
+	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HIDDEN, {})
+
+
+## True in the HOTBAR resting state (the player's own turn, no targeting/
+## dash/banner sub-mode in flight) -- the only combat moment the pause menu
+## may open from (pause_menu.gd's `_can_open`). Esc is unbound in HOTBAR
+## mode, so the un-consumed press reaches the pause layer cleanly.
+func is_resting() -> bool:
+	return _mode == Mode.HOTBAR
+
+
+## The pause menu's Abandon verb: tear the fight's UI down WITHOUT resolving
+## the combat, then return to the last autosave -- byte-identical recovery
+## path to the defeat branch of `_close_banner` (load `auto`, reset only if
+## no autosave exists). No `resolve_combat()`: the loaded save replaces the
+## whole sim, so resolving the doomed fight first would only fire spurious
+## outcome events into the log.
+func abandon_combat() -> void:
+	_teardown_board()
+	if not Game.load_slot("auto"):
+		Game.reset()
 
 
 ## In the HOTBAR resting state the

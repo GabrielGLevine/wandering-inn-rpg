@@ -199,6 +199,7 @@ func _spawn_ui_layers() -> void:
 	_journal.inventory_ref = _inventory
 	_pause_menu.journal_ref = _journal
 	_pause_menu.inventory_ref = _inventory
+	_pause_menu.combat_ref = combat_screen
 	_inventory.pause_menu_ref = _pause_menu
 	_inventory.journal_ref = _journal
 	# Consolidation prompt self-wires via ObservableBus + Game.sim; input
