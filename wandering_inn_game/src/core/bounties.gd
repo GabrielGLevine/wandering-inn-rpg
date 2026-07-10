@@ -87,6 +87,11 @@ static func condition_met(condition: Dictionary, baseline: Dictionary, accomplis
 ## copy of the notice). One entry per bounty currently in data/bounties.json;
 ## an id with no authored title still gets a readable fallback (underscores
 ## to spaces, title-cased) rather than silently reverting to a bare number.
+## KEEP IN LOCKSTEP: src/ui/journal.gd's _POSTING_TITLES/_DELIVERY_TITLES
+## duplicate these maps (the journal can't reach these private statics) --
+## a new posting/delivery id added here needs its title there too, or the
+## journal's Postings section silently shows the generic fallback title
+## while this picker shows the authored one.
 static func _posting_title(bounty_id: String) -> String:
 	var titles := {
 		"bounty_road_cull": "Goblin Cull, Floodplains Road",
