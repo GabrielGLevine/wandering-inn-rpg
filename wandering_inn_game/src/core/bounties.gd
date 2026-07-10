@@ -81,6 +81,40 @@ static func condition_met(condition: Dictionary, baseline: Dictionary, accomplis
 	return true
 
 
+## Short board-title per posting id, for the picker's OPTION row (the body
+## text above already carries the full numbered copy paragraph -- the option
+## itself only needs a name a player can recognize at a glance, not a second
+## copy of the notice). One entry per bounty currently in data/bounties.json;
+## an id with no authored title still gets a readable fallback (underscores
+## to spaces, title-cased) rather than silently reverting to a bare number.
+static func _posting_title(bounty_id: String) -> String:
+	var titles := {
+		"bounty_road_cull": "Goblin Cull, Floodplains Road",
+		"bounty_settle_dispute": "Settle a Quarrel",
+		"bounty_gossip_tea": "Gather Gossip for Krshia",
+		"bounty_observe_survey": "District Observation Log",
+		"bounty_sewer_survey": "Drainage Gallery Check",
+		"bounty_silk_line": "Mark the Silk Line",
+		"bounty_inn_hands": "Extra Hands at the Inn",
+		"bounty_evening_stew": "Evening Stew Shift",
+		"bounty_vermin_grate": "Vermin Under the Grate",
+	}
+	return String(titles.get(bounty_id, bounty_id.trim_prefix("bounty_").capitalize()))
+
+
+## Short board-title per delivery slip id -- build_delivery_picker_graph's
+## exact twin of _posting_title above, same rationale.
+static func _delivery_title(delivery_id: String) -> String:
+	var titles := {
+		"delivery_krshia_wool": "Wool Bolt to Silverfang Stall",
+		"delivery_pisces_parcel": "Ticking Parcel to the Necromancer",
+		"delivery_gate_dispatch": "Dispatches to the Gate",
+		"delivery_grate_phials": "Glass Phials to the Grate",
+		"delivery_inn_hamper": "Fruit Hamper to the Inn",
+	}
+	return String(titles.get(delivery_id, delivery_id.trim_prefix("delivery_").capitalize()))
+
+
 ## Selys's accept line (board-copy.md sec.2), road-cull steer as the ONE
 ## authored special case (a soft, specific nudge from the staging copy);
 ## every other bounty gets the generic accept line.
@@ -98,8 +132,11 @@ static func _accept_line(bounty_id: String) -> String:
 ## ribbon with it. Fixed by moving the full copy into the HUB NODE's own body
 ## text instead (numbered "1./2./3.", the SAME paginate-safe surface
 ## `_interact_board`'s browse view already uses) and keeping every OPTION a
-## short "Take posting N. (G gold)" label + a final "Never mind." -- options
-## never need to wrap. Selecting a posting accepts it via the `accept_bounty`
+## short "Take: <title>. (G gold)" label (the bare "Take posting N." numeral
+## read as unrecognizable at the option row -- a player picking blind by
+## index, not by what the posting actually is; `_posting_title` supplies the
+## name) + a final "Never mind." -- options never need to wrap. Selecting a
+## posting accepts it via the `accept_bounty`
 ## dialogue effect and lands on a per-bounty confirmation node reading Selys's
 ## accept line (short, single-line, safe as an option/body either way).
 static func build_picker_graph(slate: Array) -> Dictionary:
@@ -113,7 +150,7 @@ static func build_picker_graph(slate: Array) -> Dictionary:
 		body_lines.append("%d. %s" % [n, String(bounty["copy"])])
 		body_lines.append("")
 		options.append({
-			"text": "Take posting %d. (%d gold)" % [n, int(bounty["gold"])],
+			"text": "Take: %s. (%d gold)" % [_posting_title(id), int(bounty["gold"])],
 			"effects": [{"accept_bounty": id}],
 			"goto": "confirm_%s" % id,
 		})
@@ -176,7 +213,8 @@ static func _delivery_issue_line(delivery: Dictionary) -> String:
 ## Builds Vess's "Take a slip." conversation -- build_picker_graph's exact
 ## twin (and its hard-won layout lesson applies verbatim: full slip copy
 ## lives in the HUB NODE's paginated body, numbered; every OPTION stays a
-## short unwrapped "Take slip N. (G gold)" label -- dialogue_panel option
+## short unwrapped "Take: <title>. (G gold)" label (`_delivery_title` names
+## the slip, same fix as `_posting_title` above) -- dialogue_panel option
 ## Labels have no autowrap). Selecting a slip accepts it via the
 ## `accept_delivery` dialogue effect (which also grants the parcel item)
 ## and lands on a per-slip confirmation node reading Vess's issue line.
@@ -191,7 +229,7 @@ static func build_delivery_picker_graph(slate: Array) -> Dictionary:
 		body_lines.append("%d. %s" % [n, String(delivery["slip_copy"])])
 		body_lines.append("")
 		options.append({
-			"text": "Take slip %d. (%d gold)" % [n, int(delivery["gold"])],
+			"text": "Take: %s. (%d gold)" % [_delivery_title(id), int(delivery["gold"])],
 			"effects": [{"accept_delivery": id}],
 			"goto": "confirm_%s" % id,
 		})

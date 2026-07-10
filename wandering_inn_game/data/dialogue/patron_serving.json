@@ -1,8 +1,9 @@
 {
+	"_comment": "Findings #5/#49 (v0.4.2 hotfix, EXPLOIT): the Serve option used to have no gate at all -- select it, +2 gold, walk away, re-interact, +2 gold again, unbounded (infinite gold). Gated once_per_waking on its own dedicated verb:entity key (the shipped Erin's-meal/Relc's-wager seam, dialogue.gd's fifth sanctioned gate type): before first use this waking the option reads met/unlocked (entity_first_use lacks the key); after use it drops OUT of the visible list entirely until the next sleep (WIDialogue._meets_progress hides once_per_waking on the SAME leg it locks on, no separate hide_when needed -- see the requires-only contract's own doc comment). Requires-only, single-key (no accomplishment leg to compound with -- every patron visit is eligible, no stage-gate). DISCLOSED DEVIATION (ii not shipped here): the finding also asks whether the serve can require the real fetch (an actual stew/bowl item in hand) instead of banking instantly on selection -- dialogue.gd's _meets() has no `item`/inventory-possession gate type (skill/class/gold/accomplishment/board_accepted/delivery_accepted/once_per_waking only), so requiring a real fetched item needs a NEW gate type in dialogue.gd (src/core/dialogue.gd, outside this lane's data/dialogue/*.json + bounties.gd file ownership) -- shipping once_per_waking alone here; the real-fetch half needs the sim-core lane.",
 	"start": "greet",
 	"nodes": {
 		"greet": { "speaker": "Hungry Patron", "text": "There you are! Stew, bread, anything - I've been sitting here an age.", "options": [
-			{ "text": "Bring her a bowl from the kitchen. (Serve)", "effects": [ { "accomplishment": "served_customer" }, { "gold": 2 } ], "goto": "served" },
+			{ "text": "Bring her a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:hungry_patron" }, "effects": [ { "bank_first_use": "serve:hungry_patron" }, { "accomplishment": "served_customer" }, { "gold": 2 } ], "goto": "served" },
 			{ "text": "\"Someone will be right with you.\"", "end": true }
 		] },
 		"served": { "speaker": "Hungry Patron", "text": "Ahh. Now THAT'S service. I'll want another before long, mind.", "options": [

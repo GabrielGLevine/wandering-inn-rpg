@@ -55,7 +55,7 @@
   { "action": "assert_state", "path": "accomplishments.delivered_item", "equals": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [10, 3] },
 
-  { "_comment": "Beat 3: hungry_patron, serve x1, exit, re-talk, serve again, exit -> served_customer count 2", "action": "move", "direction": "left", "steps": 4 },
+  { "_comment": "Beat 3: hungry_patron, serve x1 -> served_customer count 1. Findings #5/#49 fix (v0.4.2 hotfix): the Serve option is now once_per_waking (was an infinite-gold exploit -- unlimited re-serves, same waking, no gate at all). This beat used to serve TWICE back to back with no sleep between; it now proves the gate itself -- exit, re-talk the SAME waking, and the Serve option is GONE from the visible list (not just un-selectable), leaving only the dismiss line.", "action": "move", "direction": "left", "steps": 4 },
   { "action": "move", "direction": "down", "steps": 3 },
   { "action": "move", "direction": "left", "steps": 1 },
   { "action": "press", "name": "interact" },
@@ -68,12 +68,10 @@
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "patron_serving" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Hungry Patron", "text": "There you are! Stew, bread, anything - I've been sitting here an age.", "options": [ { "text": "\"Someone will be right with you.\"", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer", "count": 2 }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.served_customer", "equals": 2 },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "accomplishments.served_customer", "equals": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [6, 6] },
 
   { "_comment": "Beat 4: walk to bed, sleep -> class_gained{helper} (cleaned_the_inn>=1) + exact toast containing Helper", "action": "move", "direction": "up", "steps": 1 },
@@ -99,7 +97,7 @@
   { "action": "assert_state", "path": "accomplishments.cooked_meal", "equals": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [4, 2] },
 
-  { "_comment": "Beat 6: second chore burst -- clean x2 (cleaned_the_inn 3, 4 -- crosses L2 requires_any threshold of 3), serve x1 (served_customer 3) -> sleep -> class_level_up{helper,2} batched toast", "action": "move", "direction": "down", "steps": 1 },
+  { "_comment": "Beat 6: second chore burst -- clean x2 (cleaned_the_inn 3, 4 -- crosses L2 requires_any threshold of 3), serve x1 (served_customer 2, this waking's once_per_waking freshly re-armed by Beat 4's sleep) -> sleep -> class_level_up{helper,2} batched toast (the L2 requires_any is already cleared by cleaned_the_inn alone, so the lower served_customer total doesn't change this gate).", "action": "move", "direction": "down", "steps": 1 },
   { "action": "move", "direction": "right", "steps": 1 },
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "interact" },
@@ -115,7 +113,7 @@
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "patron_serving" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer", "count": 3 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer", "count": 2 }, "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
   { "action": "move", "direction": "up", "steps": 1 },
@@ -128,7 +126,7 @@
   { "action": "screenshot", "name": "05_level_up" },
   { "action": "assert_state", "path": "classes.helper", "equals": 2 },
   { "action": "assert_state", "path": "accomplishments.cleaned_the_inn", "equals": 4 },
-  { "action": "assert_state", "path": "accomplishments.served_customer", "equals": 3 },
+  { "action": "assert_state", "path": "accomplishments.served_customer", "equals": 2 },
   { "action": "assert_state", "path": "accomplishments.delivered_item", "equals": 1 },
   { "action": "assert_state", "path": "accomplishments.cooked_meal", "equals": 1 }
  ]
