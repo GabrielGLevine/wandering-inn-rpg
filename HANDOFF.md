@@ -1,5 +1,45 @@
 # Wandering Inn RPG Handoff
 
+## WAVES 2-3 LANDED (2026-07-11) — #51/#54/#56/#57 merged, sweep 83/83
+
+Four parallel tracks, each opus-reviewed MERGE (56 zero-blocking, 54
+zero-blocking, 57 zero-blocking; 5th+6th harness misfires re-dispatched
+clean):
+- **#56 formations**: river_wolf_pack + alley footpads open SURROUNDED
+  (authored spawn sets, zero sim code); tutorial ambush correctly NOT
+  converted; only gated band (alley_footpads_w2_solo 0.95) held flat;
+  no seed re-derivation needed; surround windowed-read (pincer
+  unmistakable). Review minors for the record: alley_footpads
+  w1-tutorial measured cell now 0.11 (unreachable tier, watch if
+  routing ever changes); village_edge_night's unused 4th enemy spawn
+  (8,4) is Chebyshev-2 from the PC (tighter than the ring) if a future
+  4-enemy roster lands there.
+- **#57 mouse**: all four behaviors (hotbar clicks one-dispatch-path
+  with keys; adjacent click-interact; distant click = walk-then-STOP;
+  click-to-walk = real per-step move_player BFS feeder, cancels
+  everywhere incl. synchronous mid-path combat — trace-proven); combat
+  target-click via select_at_cell; screen_to_world = exact affine
+  inverse; 10 mouse_filter flips audited (no focus stealing); driver
+  gains click/click_screen/click_slot; mouse_loop canonical + ONE web
+  parity run green. Follow-ups (non-blocking, logged on the issue):
+  trigger-radius-mid-path canonical; combat feed/readout panels stay
+  IGNORE (click-through re-points aim cosmetically — flip to STOP if
+  ever judged surprising).
+- **#54 sparse tables (Shape 1)**: 7 evolution-only classes trimmed to
+  derived floors (spellsword floor 9 PROVEN minimum; its keener_edge
+  grant migrated off the deleted padding — the near-miss is now a trap
+  note in wi-adding-a-class-or-skill); validator derives floors from
+  live data, negative-controlled both directions. #61 filed: spellsword
+  table max 14 vs merge-math max 16 (pre-existing top-end gap).
+- **#51 Antinium**: Klbkch at the gate plaza (4,6) — his first cell
+  (3,5) broke three canonicals' left-walk; NPC placement now carries
+  the corner-pick lesson. Talk pool + cisterns stage + Relc pairing
+  line; two four-armed Workers (pro-rig attempt 3) ambient; walkthrough
+  beat + windowed reads; provenance logged. TASTE-QUEUE: Klbkch's
+  sub-arm pair is ambiguous at 1x — user eyeball wanted.
+- Also: #49/#50 closed (audit tables posted); skill library gained the
+  every-path-pays principle + the sparse-table convention.
+
 ## WAVE 1 CLOSED + #58/#46 MERGED (2026-07-11, post-reset) — sweep 82/82
 
 Spend limit reset; the parked lanes were finished, reviewed, merged.
