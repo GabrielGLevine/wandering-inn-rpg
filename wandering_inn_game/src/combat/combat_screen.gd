@@ -136,6 +136,23 @@ var _info_slot_index := 0
 ## autoload-referencing main.gd into that compile.
 var main_ref: Node
 
+## Issue #60 item 1: a one-time "your hotbar is class+weapon-derived" feed
+## line on the FIRST combat of a sitting -- there is no loadout editor for
+## combat skills, so the player just needs to be told. `static var` (not an
+## instance var) for the SAME reason message_layer.gd's `_first_pickup_hint_
+## shown` is static: it must survive this script's own teardown/respawn
+## (main.gd's `_clear_ui_layers`/`_spawn_ui_layers` swap on every GAME_RESET/
+## GAME_LOADED) rather than resetting to false on a mid-sitting reload.
+## Re-armed only on GAME_RESET (fresh run deserves the hint again), same
+## precedent -- see `_reset_first_combat_hint`.
+static var _first_combat_hint_shown := false
+static var _combat_hint_reset_hooked := false
+
+
+static func _reset_first_combat_hint(type: String, _payload: Dictionary) -> void:
+	if type == WIEvents.GAME_RESET:
+		_first_combat_hint_shown = false
+
 
 func _ready() -> void:
 	_root = Control.new()
@@ -164,6 +181,13 @@ func _ready() -> void:
 	add_child(_board_renderer)
 	_ai_playback = load("res://src/combat/combat_playback.gd").new(_board_renderer, self)
 	ObservableBus.domain_event.connect(_on_domain_event)
+	# See `_first_combat_hint_shown`'s doc comment: hooked once per process,
+	# bound to the SCRIPT resource (get_script()), never to this instance --
+	# same message_layer.gd precedent (a GAME_RESET fired from the title
+	# screen, before any fresh CombatScreen exists, must still reach it).
+	if not _combat_hint_reset_hooked:
+		_combat_hint_reset_hooked = true
+		ObservableBus.domain_event.connect(Callable(get_script(), "_reset_first_combat_hint"))
 
 
 func _combat() -> WICombat:
@@ -269,6 +293,7 @@ func _show_combat() -> void:
 	_targeting = load("res://src/combat/targeting_controller.gd").new(_view, self)
 	_board_renderer.build(_view, main_ref)
 	_announce_allies()
+	_announce_first_combat_hint()
 	_refresh()
 	_root.show()
 	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_SHOWN, {})
@@ -301,6 +326,24 @@ func _announce_allies() -> void:
 		return
 	var verb := "wades" if names.size() == 1 else "wade"
 	_hud.feed_push("%s %s in beside you." % [_join_and(names), verb])
+
+
+## Issue #60 item 1: pushes the one-time "combat kit is class+weapon-derived"
+## feed line, gated by `_first_combat_hint_shown` -- fires at most once per
+## sitting, after `_announce_allies()`'s own feed line (so a fielded-ally
+## fight reads "X wades in beside you." before this, matching the existing
+## call order at this call site). Composed through WIInputHints.label()
+## (combat_screen.gd IS the composition root, same contract `_apply_combat_
+## finished`'s confirm_glyph line already follows) so the glyph tracks the
+## live input device; kb-mode text never changes across a device swap
+## mid-fight because this only ever renders ONCE.
+func _announce_first_combat_hint() -> void:
+	if _first_combat_hint_shown:
+		return
+	_first_combat_hint_shown = true
+	var text := "Your hotbar (%s) shows the skills your classes and weapon grant." % WIInputHints.label("hotbar")
+	_hud.feed_push(text)
+	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HINT_RENDERED, {"text": text})
 
 
 ## Plain English "and"-join for a name list of any size (1: "X", 2: "X and

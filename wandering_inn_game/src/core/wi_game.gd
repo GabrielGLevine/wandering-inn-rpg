@@ -3275,8 +3275,14 @@ func _combat_event_relay(type: String, payload: Dictionary) -> void:
 	# `used_skills` (the journal's first-use card reveal) -- their first
 	# real PROC is the reveal moment: a pc-owned reaction ([Counter
 	# Strike], [Battle Momentum]) marks the skill used the first time it
-	# fires. Idempotent set-append; non-pc reactions never reveal.
-	if type == WIEvents.REACTION_TRIGGERED and String(payload.get(WIKeys.ID, "")) == "pc":
+	# fires. Idempotent set-append; non-pc reactions never reveal. Issue #60
+	# item 3: PASSIVE_APPLIED (wi_combat.gd's `_move_pool_bonus_total`,
+	# quick_movement/battlefield_awareness -- a turn-start passive, not a
+	# reaction) rides the SAME bank, same shape `{id, skill}` -- additive
+	# second event type in this match, nothing about the REACTION_TRIGGERED
+	# arm above changed.
+	if (type == WIEvents.REACTION_TRIGGERED or type == WIEvents.PASSIVE_APPLIED) \
+			and String(payload.get(WIKeys.ID, "")) == "pc":
 		var reaction_skill := String(payload.get("skill", ""))
 		if reaction_skill != "" and not used_skills.has(reaction_skill):
 			used_skills.append(reaction_skill)

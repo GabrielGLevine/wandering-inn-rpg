@@ -54,6 +54,7 @@
   { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
+  { "_comment": "Issue #60 item 3: [Quick Movement] (warrior L3, a turn-start move_pool_bonus PASSIVE -- never cast) now reveals into used_skills the moment this first pc turn starts, riding the SAME REACTION_TRIGGERED-shaped bank counter_strike/battle_momentum already use (wi_combat.gd's `_move_pool_bonus_total` emits PASSIVE_APPLIED{id,skill} at the exact turn-start site the bonus is granted; wi_game.gd's `_combat_event_relay` matches it into `used_skills`, additive to the existing REACTION_TRIGGERED arm).", "action": "assert_state", "path": "used_skills", "contains": "quick_movement" },
   { "action": "screenshot", "name": "01_briar_collectors_with_hunter" },
   { "action": "combat_autoplay", "max_turns": 300 },
   { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },

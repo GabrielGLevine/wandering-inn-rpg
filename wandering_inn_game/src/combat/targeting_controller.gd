@@ -67,6 +67,17 @@ var _targets_out_of_range := false
 var _targeting_skill_id := ""
 var _line_mode := false
 var _line_dir_index := 0
+## Issue #60 item 2: the line-skill direction picker's PER-COMBAT memory --
+## the last direction a line skill was actually CAST (confirm()ed, not merely
+## cycled to) this encounter, so re-entering line targeting (a second
+## [Flame Jet] a few turns later) doesn't force the player back to "up"
+## every time. Defaults to 0 ("up", LINE_DIRS' first entry) -- the pre-#60
+## behavior for the FIRST line cast of a fight, unchanged. Deliberately an
+## INSTANCE var, not persisted anywhere: `combat_screen.gd._show_combat()`
+## constructs a brand new WICombatTargeting per encounter (this file's own
+## doc comment above), so this naturally resets to 0 at combat start/a new
+## encounter with zero extra reset code -- no hook needed in combat_screen.
+var _last_line_dir_index := 0
 
 
 func _init(view: RefCounted, screen: Node) -> void:
@@ -122,7 +133,9 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 			_emit_targeting_shown(mode)
 			return state()
 	if _line_mode:
-		_line_dir_index = 0
+		# Issue #60 item 2: default to the last direction actually CAST this
+		# combat (see `_last_line_dir_index`'s doc comment), not always "up".
+		_line_dir_index = _last_line_dir_index
 		_emit_targeting_shown(mode)
 		return state()
 	# Melee (Attack, skill_id == "") is filtered to adjacency first;
@@ -221,6 +234,11 @@ func confirm() -> Dictionary:
 	if _targeting_skill_id == "":
 		return {"kind": "attack", "target_id": String(_targets[_target_index])}
 	if _line_mode:
+		# Bank the cast direction as this combat's new default (see
+		# `_last_line_dir_index`'s doc comment) -- only on an actual confirm,
+		# never on a bare cycle()/cancel(), so aiming around without firing
+		# doesn't move the remembered direction.
+		_last_line_dir_index = _line_dir_index
 		return {"kind": "line_skill", "skill_id": _targeting_skill_id, "direction": String(LINE_DIRS[_line_dir_index])}
 	return {"kind": "skill", "skill_id": _targeting_skill_id, "target_id": String(_targets[_target_index])}
 

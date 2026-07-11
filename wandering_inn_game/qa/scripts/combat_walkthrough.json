@@ -24,6 +24,7 @@
   { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
   { "_comment": "Classless: exactly Attack/Dash/End = 3 slots.", "action": "assert_event_logged", "type": "ui_hotbar_rendered", "payload_contains": { "slots": 3 } },
+  { "_comment": "Issue #60 item 1: the ONE-TIME first-combat kit hint (fires before ui_combat_shown in the real event log -- assert_event_logged scans the whole log, not the wait cursor, so ordering here doesn't matter).", "action": "assert_event_logged", "type": "ui_combat_hint_rendered", "payload_contains": { "text": "Your hotbar (number keys) shows the skills your classes and weapon grant." } },
   { "action": "wait_for_event", "type": "ui_tutor_line_rendered", "payload_contains": { "beat": "opening" }, "timeout_sec": 5 },
   { "action": "combat_autoplay", "max_turns": 200 },
   { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 15 },
@@ -79,6 +80,7 @@
   { "action": "assert_state", "path": "player_cell", "equals": [31, 24] },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "street" }
+  { "action": "assert_state", "path": "current_map", "equals": "street" },
+  { "_comment": "Issue #60 item 1: the first-combat hint fired exactly once across BOTH fights this run -- it's a one-time-per-sitting disclosure, not a per-encounter tutor line.", "action": "assert_event_count", "type": "ui_combat_hint_rendered", "count": 1 }
  ]
 }

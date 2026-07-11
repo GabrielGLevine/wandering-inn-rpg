@@ -133,6 +133,29 @@ const ATTACK_RESOLVED := &"attack_resolved"
 const SKILL_RESOLVED := &"skill_resolved"
 const ACTION_REFUSED := &"action_refused"
 const REACTION_TRIGGERED := &"reaction_triggered"
+## Issue #60 item 3: emitted by WICombat._move_pool_bonus_total (called from
+## `_start_turn`) once per holder per turn for EVERY skill whose
+## `effect.type == "move_pool_bonus"` (today quick_movement/battlefield_
+## awareness -- data-driven off the effect type, never a skill-id check, so
+## a future 0-cost move_pool_bonus passive is covered for free). Payload
+## `{id:String, skill:String}` -- same shape as REACTION_TRIGGERED, on
+## purpose: wi_game.gd's `_combat_event_relay` matches BOTH types to bank
+## the first proc into `used_skills` (the journal's first-use reveal), since
+## a passive never "casts" and so never reaches `used_skills` any other way.
+## Fires unconditionally every turn a holder acts (no cast/cost/refusal --
+## see `_move_pool_bonus_total`'s own doc comment), so this is NOT a rare
+## trigger like a reaction -- the relay's used_skills.append is idempotent
+## (a no-op past the first proc), same contract REACTION_TRIGGERED already
+## relies on. Presentation-inert: `combat_screen.gd` has no render arm for
+## it and it needs none (no card/feed text change, no visual) -- fires fine
+## from inside an AI-controlled turn's `_start_turn` (verified: TURN_STARTED
+## for the NEXT active combatant, fired synchronously from inside
+## WICombatAI.take_turn's own end_turn() call, already reaches combat_
+## screen.gd's live match arm the same way even though `_ai_turn_active` is
+## still true at that moment -- AI_PLAYBACK_TYPES only matters for events
+## with an actual render effect; this one has none, so no new entry needed
+## there).
+const PASSIVE_APPLIED := &"passive_applied"
 const DASHED := &"dashed"
 const AP_CHANGED := &"ap_changed"
 const MP_CHANGED := &"mp_changed"
@@ -235,6 +258,14 @@ const UI_CONSOLIDATION_PROMPT_HIDDEN := &"ui_consolidation_prompt_hidden"
 ## the AI playback queue for AI-turn triggers, immediate for player-turn
 ## triggers — see combat_screen.gd's _render_tutor_line doc comment).
 const UI_TUTOR_LINE_RENDERED := &"ui_tutor_line_rendered"
+## combat_screen.gd's confirmation that the one-time first-combat kit hint
+## (issue #60 item 1: combat skills are class+weapon-derived, no loadout
+## editor -- the player just needs to be TOLD) pushed into the prose feed.
+## Fires at most once per process/GAME_RESET (the message_layer.gd first-
+## pickup-hint static-var idiom), on the FIRST combat_started only. Payload
+## `{text:String}` -- the exact composed line (WIInputHints.label("hotbar")
+## threaded in), so QA can assert content without OCR-ing a screenshot.
+const UI_COMBAT_HINT_RENDERED := &"ui_combat_hint_rendered"
 
 ## Emitted by src/world/atmosphere.gd (a CanvasModulate
 ## child of the world viewport's root, WIWorld) every time it applies a
