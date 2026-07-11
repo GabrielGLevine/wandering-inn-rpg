@@ -83,6 +83,22 @@ func render(slots: Array, selected_index: int) -> void:
 		x += SLOT_SIZE.x
 
 
+## Read-only geometry accessor (issue #58): the on-screen rect of slot
+## `index` as of the last `render()` call -- for a caller (field_hotbar.gd's
+## selection label) that needs to position UI relative to a specific slot
+## without this file taking on label-rendering responsibility itself. `render()`
+## rebuilds every slot Control fresh each call, so this always reflects the
+## CURRENT layout; empty Rect2 for an out-of-range index (no crash -- caller
+## treats a zero-size rect as "nothing to anchor to").
+func slot_rect(index: int) -> Rect2:
+	if index < 0 or index >= get_child_count():
+		return Rect2()
+	var slot_node := get_child(index) as Control
+	if slot_node == null:
+		return Rect2()
+	return Rect2(slot_node.global_position, slot_node.size)
+
+
 func _make_slot(slot: Dictionary, selected: bool) -> Control:
 	var root := Control.new()
 	root.custom_minimum_size = SLOT_SIZE

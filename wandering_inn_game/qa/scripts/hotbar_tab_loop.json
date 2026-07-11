@@ -1,0 +1,45 @@
+{
+ "_comment": "Issue #58: Tab-primed field-hotbar selection loop. Same title-Continue opening as field_skills_loop (near_tactician fixture: warrior L1 at the inn, [Basic Cleaning] innate, 1-slot bar). Proves: the bar renders (slots:1); Tab primes the keyboard cursor onto slot 0 (a ui_field_hotbar_selection_rendered event, index 0, label \"[Basic Cleaning]\"); move_right on a 1-slot bar wraps to itself (a FRESH selection event, still index 0) and the player's cell is provably unchanged -- arrows never reach Game.sim.move_player while primed; Esc disarms (selection event index -1, both skill/label empty); Tab re-primes (proves disarm didn't wedge the seam); confirm on the faced dirty_table fires the EXACT SAME stream field_skills_loop's number-key press does (skill_used{basic_cleaning,dirty_table} + cleaned_the_inn + toast) -- the number-key-equivalence exit criterion -- and activation's own one-shot disarm is proven by the trailing index:-1 selection event.",
+ "fixture_save": "near_tactician",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "inn" },
+  { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
+
+  { "_comment": "Bar renders 1 innate slot, same as field_skills_loop's own opening proof.", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1 } },
+
+  { "_comment": "Face dirty_table (5,4): right3 -> (5,3), down1 blocks on the table & faces it -- same route field_skills_loop's number-key press uses, so the confirm-fired stream at the end of this script is directly comparable.", "action": "move", "direction": "right", "steps": 3 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
+
+  { "_comment": "== TAB PRIMES == a non-empty bar with the cursor resting (-1): the cursor lands on slot 0 and the selection event fires with the real skill id + its (already-bracketed) display_name as the label.", "action": "press", "name": "hotbar_prime" },
+  { "action": "wait_for_event", "type": "ui_field_hotbar_selection_rendered", "payload_contains": { "index": 0, "skill": "basic_cleaning", "label": "[Basic Cleaning]" }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "00_hotbar_primed_label" },
+
+  { "_comment": "== move_right ON A 1-SLOT BAR WRAPS TO ITSELF, and arrows never reach Game.sim.move_player while primed == a fresh selection-rendered event fires (set_selected always redraws, even onto the same index) and the player's cell is provably unchanged from the assert just above.", "action": "press", "name": "move_right" },
+  { "action": "wait_for_event", "type": "ui_field_hotbar_selection_rendered", "payload_contains": { "index": 0, "skill": "basic_cleaning", "label": "[Basic Cleaning]" }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
+
+  { "_comment": "== Esc DISARMS == selection event fires with index -1 and both skill/label empty; the floating label is gone.", "action": "press", "name": "cancel" },
+  { "action": "wait_for_event", "type": "ui_field_hotbar_selection_rendered", "payload_contains": { "index": -1, "skill": "", "label": "" }, "timeout_sec": 5 },
+
+  { "_comment": "== Tab RE-PRIMES == identical to the first prime -- proves disarm left the seam in a clean, re-armable state.", "action": "press", "name": "hotbar_prime" },
+  { "action": "wait_for_event", "type": "ui_field_hotbar_selection_rendered", "payload_contains": { "index": 0, "skill": "basic_cleaning", "label": "[Basic Cleaning]" }, "timeout_sec": 5 },
+
+  { "_comment": "== CONFIRM fires the primed slot on the faced dirty_table -- byte-identical stream to field_skills_loop's hotbar_1 press (same skill, same target, same toast, same accomplishment). The number-key-equivalence exit criterion.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "basic_cleaning", "target": "dirty_table", "context": "exploration" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cleaned_the_inn", "count": 1 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Basic Cleaning] — The table is spotless." }, "timeout_sec": 5 },
+  { "_comment": "Activation is one-shot: confirm's own branch calls use_skill_field then disarms SYNCHRONOUSLY, before the toast panel's own queued/drained ui_toast_rendered confirmation fires -- this selection event lands chronologically BEFORE the ui_toast_rendered wait below, not after.", "action": "wait_for_event", "type": "ui_field_hotbar_selection_rendered", "payload_contains": { "index": -1, "skill": "", "label": "" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "accomplishments.cleaned_the_inn", "equals": 1 }
+ ]
+}

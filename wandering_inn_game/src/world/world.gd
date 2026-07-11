@@ -272,6 +272,12 @@ func inject_ui_refs(journal: Node, pause_menu: Node, inventory: Node, main: WIMa
 	_inventory = inventory
 	_main = main
 	_field_hotbar = field_hotbar
+	# See pause_menu.gd's `world_ref` doc comment -- lets its `_can_open()`
+	# decline while the field hotbar's cursor is armed, so an armed Esc/
+	# cancel reaches THIS file's own cancel-disarm branch below instead of
+	# opening the pause menu first (it sits later in Main's child order).
+	if _pause_menu != null:
+		_pause_menu.world_ref = self
 
 
 func _wire_ui_refs() -> void:
@@ -331,6 +337,12 @@ func _movement_gated() -> bool:
 ## keyboard: `confirm` (Enter) and `cancel` (Esc) previously did nothing in
 ## the world context, both new branches are `_field_slot_index >= 0`-gated,
 ## and keyboard players only arm that index via the additive `[`/`]` keys.
+## Issue #58 (Tab-primed select) ADDS branches (hotbar_prime, and
+## `_field_slot_index >= 0`-gated move_left/move_right/move_up/move_down)
+## between the interact check and the plain movement branches -- it does NOT
+## reorder confirm/cancel/interact's own relative order above, which stays
+## exactly as this comment describes. `move_left`/`move_right` share no
+## button with anything pad-side, so no analogous trap applies to them.
 func _unhandled_input(event: InputEvent) -> void:
 	if _movement_gated():
 		return
@@ -357,6 +369,40 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("interact"):
 		Game.sim.interact()
+		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("hotbar_prime") and event.is_action_pressed("hotbar_prime") and _field_slot_index >= 0:
+		# Tab TOGGLES OFF an already-primed bar -- the keyboard mirror of
+		# cancel's disarm, so a player can back out of slot-select without
+		# reaching for Esc (which the pause menu also wants).
+		_disarm_field_slot()
+		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("hotbar_prime") and event.is_action_pressed("hotbar_prime") and _field_hotbar != null and _field_hotbar.slot_count() > 0:
+		# Tab PRIMES from resting (-1) straight to slot 0 -- the keyboard
+		# entry point into the same pad-cursor seam `[`/`]`/LB/RB already
+		# arm (S1, `_move_field_slot_cursor`'s -1->0 landing). Pure UI: no
+		# `Game.sim` call here, only the highlight render -- activation is a
+		# separate confirm/number-key press (see those branches). Empty bar
+		# (classless cold start) fails this guard and falls all the way
+		# through unhandled, per design -- Tab is inert with nothing to prime.
+		_field_slot_index = 0
+		_field_hotbar.set_selected(0)
+		get_viewport().set_input_as_handled()
+	elif _field_slot_index >= 0 and event.is_action_pressed("move_left"):
+		# While primed, left/right NAVIGATE the bar instead of moving the
+		# player -- must be checked BEFORE the plain move_left/move_right
+		# branches below (same if/elif short-circuit this file's existing
+		# branches already rely on), gated on an armed index so an unprimed
+		# press falls through to those unchanged.
+		_move_field_slot_cursor(-1)
+		get_viewport().set_input_as_handled()
+	elif _field_slot_index >= 0 and event.is_action_pressed("move_right"):
+		_move_field_slot_cursor(1)
+		get_viewport().set_input_as_handled()
+	elif _field_slot_index >= 0 and (event.is_action_pressed("move_up") or event.is_action_pressed("move_down")):
+		# Swallowed, not routed anywhere -- up/down have no meaning for a
+		# 1-D slot bar. Consuming (not falling through to the plain
+		# move_up/move_down branches) is the point: the player must not
+		# drift while aiming the bar.
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("move_up"):
 		Game.sim.move_player(_combined_move_dir(Vector2i.UP))
@@ -387,6 +433,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		# unhandled (harmless), never swallowed.
 		var slot := _field_hotbar_slot_pressed(event)
 		if slot > 0 and _field_hotbar != null:
+			# One-shot consistency (issue #58): a direct number-key press
+			# bypasses the primed cursor entirely (it targets ITS OWN slot,
+			# not `_field_slot_index`), but it should still clear a LEFTOVER
+			# primed selection so a later confirm/Tab doesn't act on a stale
+			# highlight the player has already moved past.
+			if _field_slot_index >= 0:
+				_disarm_field_slot()
 			var skill_id := String(_field_hotbar.skill_for_slot(slot))
 			if skill_id != "":
 				Game.sim.use_skill_field(skill_id)
@@ -451,6 +504,14 @@ func _disarm_field_slot() -> void:
 	_field_slot_index = -1
 	if _field_hotbar != null:
 		_field_hotbar.set_selected(-1)
+
+
+## Duck-typed accessor (issue #58) -- see pause_menu.gd's `world_ref` doc
+## comment. Public (not `_`-prefixed) since it is called cross-file via
+## `Node.call()`, unlike every other `_field_slot_index` reader/writer here,
+## which all stay private/same-file.
+func field_slot_armed() -> bool:
+	return _field_slot_index >= 0
 
 
 ## Which `hotbar_N` action (1..9) this event pressed, or -1 for none -- the same

@@ -16,6 +16,12 @@ const ACTION_KEYS := {
 	"confirm": KEY_ENTER,
 	"cancel": KEY_ESCAPE,
 	"cycle": KEY_TAB,
+	## Same physical key as "cycle" above (combat's target-cycle) -- harmless
+	## overlap: hotbar_prime is checked only in world.gd's field context
+	## (gated out entirely during combat by `_movement_gated()`), cycle only
+	## in combat_screen.gd's own `_unhandled_input`; the two contexts never
+	## both read a Tab press.
+	"hotbar_prime": KEY_TAB,
 	"journal": KEY_J,
 	"inventory": KEY_I,
 	## Digits activate numbered hotbar slots; End Turn shares E with interact

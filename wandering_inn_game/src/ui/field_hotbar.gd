@@ -48,6 +48,17 @@ extends CanvasLayer
 ## a classless cold start (an empty bar renders zero-width/invisible chrome; the
 ## event still fires, which is the least-noisy option that stays QA-observable).
 ##
+## TAB-PRIMED SELECT (issue #58): `selected_index` is no longer ALWAYS -1 --
+## world.gd can prime a keyboard/pad cursor onto this bar (Tab, or the
+## existing `[`/`]`/pad-LB/RB seam) and route arrow-left/right + confirm/
+## cancel through it instead of movement while primed (that gating lives
+## entirely in world.gd's `_unhandled_input`; this file only renders whatever
+## index it's told via `set_selected`). Every selection change draws a small
+## floating "[Skill Name]" label above the highlighted slot (`_selection_label`,
+## `_update_selection_label`) and emits UI_FIELD_HOTBAR_SELECTION_RENDERED --
+## a SEPARATE event from UI_FIELD_HOTBAR_RENDERED above (see that event's own
+## doc comment for the "list changed" vs. "highlight changed" split).
+##
 ## PLAYTEST WAVE (uiwave2, item 1): the ALWAYS-ON bottom-left legend/readout
 ## panel (previously rendered here) is REMOVED per user
 ## ruling -- the journal's loadout UI already surfaces per-skill cost/effect
@@ -66,7 +77,23 @@ extends CanvasLayer
 ## is no more on-screen surface for any of it to fit or hide.
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
 
+## Selection-label layout (issue #58, Tab-primed slot select): gap between a
+## slot's top edge and the label sitting above it, and the horizontal
+## clamp margin so the label can never run off either screen edge (measured
+## against the longest shipped field-skill `display_name`,
+## "[Server's Prescience]" at 21 chars -- comfortably inside the 1280px
+## native-res window at the default theme font size even unclamped; the
+## clamp exists for the edge slots on a full 9-wide bar, not for length).
+const SELECTION_LABEL_GAP := 4.0
+
 var _hotbar: WIHotbar
+## The floating "[Skill Name]" label that tracks the Tab/[/]/pad-selected
+## slot -- created once in `_ready()`, shown/positioned/hidden entirely from
+## `set_selected()` (the single call site every selection-changing input
+## routes through; see that func's doc comment). Plain Label, no chrome
+## backing -- same "no bespoke styling" precedent as `world_labels.gd`'s
+## HP/MP readout (UIChrome theme only, positioning is the only bespoke part).
+var _selection_label: Label
 ## The ordered field-skill ids currently shown (slot i == this[i]). The SINGLE
 ## source of truth for the number-key -> skill mapping: world.gd's input routing
 ## queries `skill_for_slot(n)` against this same list, so a pressed number can
@@ -99,6 +126,11 @@ func _ready() -> void:
 	_hotbar = HOTBAR_SCRIPT.new()
 	_hotbar.name = "FieldHotbarBar"
 	root.add_child(_hotbar)
+	_selection_label = UIChrome.make_label("")
+	_selection_label.name = "SelectionLabel"
+	_selection_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_selection_label.visible = false
+	root.add_child(_selection_label)
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
@@ -129,6 +161,54 @@ func slot_count() -> int:
 ## today; this is manual-pass-only per the plan).
 func set_selected(index: int) -> void:
 	_hotbar.render(_last_slots, index)
+	_update_selection_label(index)
+
+
+## Shows/positions/hides the floating skill-name label for the given
+## selection index and emits UI_FIELD_HOTBAR_SELECTION_RENDERED -- the ONE
+## place both halves happen together, so the event always describes exactly
+## what's on screen. `index < 0` (or out of range -- defensive only, callers
+## never pass an invalid non-negative index today) is the disarmed case:
+## label hidden, payload all-empty per that event's own doc comment.
+func _update_selection_label(index: int) -> void:
+	var skill_id := ""
+	var label_text := ""
+	if index >= 0 and index < _field_skills.size():
+		skill_id = String(_field_skills[index])
+		var sk: Dictionary = Game.sim.skills.get(skill_id, {})
+		# `display_name` is ALREADY bracket-formatted ("[Basic Cleaning]") --
+		# see this file's own doc comment; do not re-wrap it.
+		label_text = String(sk.get("display_name", skill_id))
+	if label_text == "":
+		_selection_label.visible = false
+	else:
+		_selection_label.text = label_text
+		_position_selection_label(index)
+		_selection_label.visible = true
+	ObservableBus.emit_domain_event(WIEvents.UI_FIELD_HOTBAR_SELECTION_RENDERED, {
+		"index": index if label_text != "" else -1,
+		"skill": skill_id if label_text != "" else "",
+		"label": label_text,
+	})
+
+
+## Centers the label over slot `index`'s current on-screen rect (queried from
+## WIHotbar's `slot_rect` -- this file owns no slot geometry of its own),
+## clamped horizontally to the native-res viewport so it can never run off
+## either edge (SELECTION_LABEL_GAP's doc comment) -- never wraps, just slides
+## in from whichever edge it would otherwise cross.
+func _position_selection_label(index: int) -> void:
+	var rect := _hotbar.slot_rect(index)
+	if rect.size == Vector2.ZERO:
+		_selection_label.visible = false
+		return
+	var label_size := _selection_label.get_minimum_size()
+	_selection_label.size = label_size
+	var slot_center_x := rect.position.x + rect.size.x * 0.5
+	var target_x := slot_center_x - label_size.x * 0.5
+	var viewport_width := get_viewport().get_visible_rect().size.x
+	target_x = clampf(target_x, 0.0, maxf(0.0, viewport_width - label_size.x))
+	_selection_label.position = Vector2(target_x, rect.position.y - label_size.y - SELECTION_LABEL_GAP)
 
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:

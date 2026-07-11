@@ -171,6 +171,19 @@ const UI_HOTBAR_RENDERED := &"ui_hotbar_rendered"
 ## field-tagged skills currently shown (0 for a classless cold start), mirroring
 ## UI_HOTBAR_RENDERED's `{slots}` shape exactly.
 const UI_FIELD_HOTBAR_RENDERED := &"ui_field_hotbar_rendered"
+## The field hotbar's cursor selection (re)rendered -- fires from
+## `field_hotbar.gd`'s `set_selected(index)`, the single call site world.gd's
+## Tab-prime/[/]/pad-cursor navigation and the confirm/cancel/disarm branches
+## all route through (issue #58). Distinct from UI_FIELD_HOTBAR_RENDERED
+## (which means "the slot LIST changed"): this one means "the HIGHLIGHT (and
+## its floating skill-name label) changed", firing on every cursor step
+## including disarm (`index == -1`, label goes away). Payload `{index: int,
+## skill: String, label: String}` -- `index` mirrors world.gd's
+## `_field_slot_index`; `skill` is the selected slot's skill id ("" when
+## disarmed); `label` is the rendered bracket-style text ("[Basic Cleaning]"
+## -- already bracketed by `display_name` itself, see field_hotbar.gd's file
+## doc comment) or "" when disarmed.
+const UI_FIELD_HOTBAR_SELECTION_RENDERED := &"ui_field_hotbar_selection_rendered"
 const UI_TARGETING_SHOWN := &"ui_targeting_shown"
 const UI_SLOT_INFO_RENDERED := &"ui_slot_info_rendered"
 ## board_renderer.gd's confirmation
