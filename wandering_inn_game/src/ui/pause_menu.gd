@@ -50,6 +50,15 @@ var inventory_ref: Node = null
 ## the HOTBAR resting mode (is_resting()) and owns the abandon teardown
 ## (abandon_combat()) -- the menu never touches combat internals itself.
 var combat_ref: Node = null
+## Set by world.gd's `inject_ui_refs` to `self` (a same-file self-ref, not a
+## cross-script preload -- world.gd already owns this assignment, no new
+## cycle). Lets `_can_open()` refuse to open while the field hotbar's Tab/pad
+## cursor is armed (issue #58) -- this node sits LATER in Main's child order
+## (see the file doc comment's arbitration note / `_can_open`'s combat
+## comment for the general shape of that trap), so an armed Esc/cancel would
+## otherwise open the pause menu INSTEAD of ever reaching world.gd's own
+## cancel-disarm branch.
+var world_ref: Node = null
 
 var _root: Control
 var _row_labels: Array[Label] = []
@@ -202,6 +211,10 @@ func _can_open() -> bool:
 	if journal_ref != null and bool(journal_ref.get("open")):
 		return false
 	if inventory_ref != null and bool(inventory_ref.get("open")):
+		return false
+	# See `world_ref`'s own doc comment -- an armed field-hotbar cursor wants
+	# THIS cancel press for itself (disarm), not a pause-menu open.
+	if world_ref != null and world_ref.has_method("field_slot_armed") and bool(world_ref.call("field_slot_armed")):
 		return false
 	return true
 
