@@ -1558,13 +1558,18 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 					_paint_ice_cell(tc_cell)
 				"scorched":
 					_spawn_burn_poof(tc_cell)
-	elif type in [WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED]:
-		# These are exactly the events
+	elif type in [WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED, WIEvents.COMBAT_STARTED, WIEvents.DIALOGUE_STARTED]:
+		# The first five are exactly the events
 		# `field_hotbar.gd`'s `_render()` re-derives the slot LIST on -- the
 		# pad cursor here must reset alongside it (a stale index could point
 		# past a shrunk list, or at a now-different skill on a same-size one).
 		# (The hotbar's own `_render()` already drew with -1, so the helper's
 		# `set_selected(-1)` is an idempotent no-op redraw here.)
+		# COMBAT_STARTED/DIALOGUE_STARTED: the bar HIDES in both, and an
+		# armed index that survives into them makes pause_menu's
+		# `field_slot_armed()` guard refuse to open while `_movement_gated()`
+		# keeps the cancel-disarm branch unreachable -- a full pause lockout
+		# for the whole fight/conversation (review finding on this commit).
 		_disarm_field_slot()
 
 
