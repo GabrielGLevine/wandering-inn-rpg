@@ -75,6 +75,16 @@ mediation):
   (`[Persuade]`) are reserved for REAL Skills/classes the option gates
   on — never decorative.
 
+## QUESTS ARE MULTI-STAGE; POSTINGS ARE JOBS (user ruling 2026-07-11)
+A quest (journal entry, beat text) needs 2+ REAL STAGES per path — a
+stage is a distinct beat with its own location/interaction and a state
+change between (travel, a gate opening, information re-gating a hub).
+One-interaction resolution is a POSTING's shape (Request/Delivery
+board jobs are legitimately single-task); shipping it as a quest was
+the Invrisil mistake (GH#68 rework). Composes with the two rules
+above: the Skill/gold alternate prices ONE STAGE, never the quest;
+no path auto-wins past the quest's middle beats (GH#64).
+
 ## Option lists are VISIBLE lists — index shifts
 `current_options()`/`choose(index)` both iterate `_visible_options()`, so a
 hidden option is invisible to indexing too — drive QA by the **currently
