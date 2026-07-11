@@ -56,6 +56,27 @@ Merged level = `max(ceil(2*(L_a+L_b)/3), max(L_a,L_b))`, **integer** math
 only. Sleep DEFERS the offer before evolutions; decline is re-offered every
 qualifying sleep.
 
+## SPARSE LEVEL TABLES for evolution-only classes (GH#54 convention)
+A class reached ONLY via Replacement (`evolution.targets`) or
+consolidation (`consolidations[].target`) never counts up from 1 —
+`_resolve_evolutions`/`accept_consolidation` write the held level in
+directly. Author its `levels` array starting EXACTLY at its floor,
+contiguous to its max, with a `_comment` stating floor + formula:
+- Replacement floor = the source class's `evolution.at_level`.
+- Consolidation floor = the merge formula's minimum given
+  `min_parent_level`/`min_combined_level` — DERIVE it (see
+  `WIProgression._consolidation_merged_level`), never guess.
+`tests/test_content.gd::_validate_class_level_tables` enforces all three
+rules (no sub-floor entries, contiguous, lowest == floor) from the same
+evolution/consolidation data — a new evolution-only class is covered
+automatically, no list to maintain.
+**Trap:** if a to-be-trimmed low entry carries a REAL skill grant (not
+`[]`), migrate the grant onto the floor entry — deleting the entry
+silently unlearns the skill for every future holder (spellsword's
+`keener_edge` nearly shipped that way).
+Shape 2 (an `extends` inheritance key) is PARKED until the class count
+justifies a resolver — don't build it ad-hoc.
+
 ## PRODUCT LOCKS (checked every time)
 Opaque-until-sleep (no "3/12", no %, no merged-level in prompts — results
 only); stats hidden (STR/DEX/etc. never shown; HP/MP/AP/damage fine); canon
