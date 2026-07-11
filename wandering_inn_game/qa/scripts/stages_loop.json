@@ -1,5 +1,5 @@
 {
- "_comment": "The talk_pool_stages seam's own end-to-end proof (spec QA §2): drives ONE NPC (Krshia -- cheapest live choice, pool+perk both shipped) base->final through the new talk_pool_stages seam. FIXTURE-FIRST (krshia_stage3_pre: crate_returned:1, chatted_with_krshia:3, social_talked:{krshia:true} -- one leg short of stage 3, mid-waking so the FIRST interact opens her REAL hub instead of a pool line). Proves, in order: (1) BEFORE -- the stage-3 hub topic is genuinely absent at count 3 (exact-length visible-options array); (2) the run banks the LAST leg for real via one first-talk-of-a-NEW-waking pool line (exact staged stage-1 line, since the gate is read BEFORE this call's own counter bump) -- sleep is driven via a debug teleport to the inn bed (short-circuits the long street->inn walk any organic route would need, in the spirit of FIXTURE-FIRST); (3) AFTER -- the stage-3 hub topic is now present (same exact-length-array idiom) and choosing it fires the OBLIQUE necklace reveal + banks heard_krshia_plans; (4) the perk surface -- the shop node's full-price rows are gone and the friend's-price duplicates stand in their place (affordability greying still independent of the stage gate, per gold:10 in the fixture: the charm ungreys, the pricier three stay locked).",
+ "_comment": "The talk_pool_stages seam's own end-to-end proof (spec QA §2): drives ONE NPC (Krshia -- cheapest live choice, pool+perk both shipped) base->final through the new talk_pool_stages seam. FIXTURE-FIRST (krshia_stage3_pre: crate_returned:1, chatted_with_krshia:3, social_talked:{krshia:true} -- one leg short of stage 3, mid-waking so the FIRST interact opens her REAL hub instead of a pool line). Proves, in order: (1) BEFORE -- the stage-3 hub topic is genuinely absent at count 3 (exact-length visible-options array); (2) the run banks the LAST leg for real via one first-talk-of-a-NEW-waking pool line (exact staged stage-1 line, since the gate is read BEFORE this call's own counter bump) -- sleep is driven via a debug teleport to the inn bed (short-circuits the long street->inn walk any organic route would need, in the spirit of FIXTURE-FIRST); (2.5) DIEGETIC-FIRST GATE (issue #33 ruling): with chatted_with_krshia:4/crate_returned:1 both met but heard_krshia_plans still 0 (the necklace topic offered, not yet chosen), the shop is opened and proven to STILL show full-price rows / no friend's-price rows -- the exact window the tightening closes; (3) AFTER choosing the necklace topic -- the stage-3 hub topic fires the OBLIQUE necklace reveal + banks heard_krshia_plans; (4) the perk surface -- ONLY NOW do the shop node's full-price rows retire and the friend's-price duplicates stand in their place (affordability greying still independent of the stage gate, per gold:10 in the fixture: the charm ungreys, the pricier three stay locked).",
  "fixture_save": "krshia_stage3_pre",
  "starts_at_title": true,
  "steps": [
@@ -50,6 +50,28 @@
   { "_comment": "== AFTER: SECOND interact this same (new) waking falls through to the real hub -- chatted_with_krshia is now 4, so the stage-3 topic is present (5-entry visible array, exact length, sell-nav still appended last).", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_crate" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "Crate is home. You, I will remember. Yes.", "options": [
+   { "text": "What's on the stall today?", "locked": false, "requirement": "" },
+   { "text": "Just visiting.", "locked": false, "requirement": "" },
+   { "text": "Silverfang. That's your tribe?", "locked": false, "requirement": "" },
+   { "text": "You said the necklace was a promise.", "locked": false, "requirement": "" },
+   { "text": "I've a few things I don't need. Buying?", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+
+  { "_comment": "== DIEGETIC-FIRST GATE PROOF (issue #33 ruling): chatted_with_krshia:4 and crate_returned:1 are BOTH already met here, but heard_krshia_plans is still 0 -- the necklace topic has been offered but not yet chosen. Open the shop NOW (index 0) and prove the discount rows stay absent and the full-price rows still stand: this is the exact window the tightening closes (previously the discount went mechanically live right here, before her grant line ever fired).", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "options": [
+   { "text": "The old charm-cord, then. (5 gold)", "locked": false, "requirement": "", "effect_lines": ["+2 HP", "Resonance 1"] },
+   { "text": "That Silverfang hunting knife. Good steel. (15 gold)", "locked": true, "requirement": "costs 15 gold", "effect_lines": ["+1 damage on melee hits"] },
+   { "text": "The wool-lined cloak. The wet gets in, out on the road. (18 gold)", "locked": true, "requirement": "costs 18 gold", "effect_lines": ["+3 HP"] },
+   { "text": "The boiled-leather jerkin. (24 gold)", "locked": true, "requirement": "costs 24 gold", "effect_lines": ["+4 HP"] },
+   { "text": "Show me the charms.", "locked": false, "requirement": "" },
+   { "text": "Nothing today.", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+  { "action": "assert_event_absent", "type": "dialogue_node", "payload_contains": { "options": [
+   { "text": "The old charm-cord, friend's price. (4 gold)" }
+  ] } },
+  { "_comment": "Close out ('Nothing today.', visible index 5) back to the hub -- still the 5-entry array, necklace topic not yet chosen.", "action": "move", "direction": "down", "steps": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "options": [
    { "text": "What's on the stall today?", "locked": false, "requirement": "" },
    { "text": "Just visiting.", "locked": false, "requirement": "" },
    { "text": "Silverfang. That's your tribe?", "locked": false, "requirement": "" },

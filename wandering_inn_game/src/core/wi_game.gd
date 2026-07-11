@@ -2497,17 +2497,24 @@ func resonance_used() -> int:
 	return _equipped_resonance_total()
 
 
-## Refusal copy. `_ACCESSORY_SLOTS_FULL_TOAST` is G1's plain-practical
-## placeholder, kept per the RESOLVED ruling (2026-07-07 HANDOFF item 1) unless
-## a better line falls out naturally. `_CAPACITY_REFUSAL_TOAST` is the
-## RATIFIED line (same ruling, candidate 4 from docs/design/gear-staging/
-## item-lore-and-accessory-roster.md §C) -- canon-truest: Dissonance's warning
-## sign is artifacts SHAKING, so the refusal moment itself is a vibration line.
-## Both stay voice-lint clean and diegetic, no "capacity"/"slot" vocabulary, no
-## raw stats -- resonance itself is a visible currency like gold/HP, fine to
-## reference, but the arithmetic stays off-screen.
+## Refusal copy. `_CAPACITY_REFUSAL_TOAST` is the
+## RATIFIED line (2026-07-07 HANDOFF item 1, candidate 4 from docs/archive/
+## staging/gear-staging/item-lore-and-accessory-roster.md §C) -- canon-truest:
+## Dissonance's warning sign is artifacts SHAKING, so the refusal moment
+## itself is a vibration line. `_ACCESSORY_SLOTS_FULL_TOAST` was G1's
+## plain-practical placeholder ("No room left for another charm. Something
+## has to come off first.") until issue #35's ruling upgraded it -- the §C
+## candidates are all resonance-interference flavored (hum/static/argument),
+## the wrong register for THIS refusal (a purely physical "no free slot"
+## condition, independent of resonance -- see equip()'s slot-full check,
+## which fires before capacity is even considered), so this line is
+## authored fresh to the same sensory/diegetic register rather than
+## repurposing a §C candidate. Both stay voice-lint clean and diegetic, no
+## "capacity"/"slot" vocabulary, no raw stats -- resonance itself is a
+## visible currency like gold/HP, fine to reference, but the arithmetic
+## stays off-screen.
 const _CAPACITY_REFUSAL_TOAST := "It buzzes once against the others, like a wasp against glass, and will not settle."
-const _ACCESSORY_SLOTS_FULL_TOAST := "No room left for another charm. Something has to come off first."
+const _ACCESSORY_SLOTS_FULL_TOAST := "There's nowhere left on you for it to rest. It waits in your palm, patient as stone."
 
 
 ## Equips a carried item into its own kind's slot ("weapon", "armor", or --
