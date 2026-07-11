@@ -196,6 +196,18 @@ func _build_expected_counts() -> Dictionary:
 	## down/side/up). idle=breathing-idle(4), walk=walking(6).
 	counts["klbkch/idle"] = 4
 	counts["klbkch/walk"] = 6
+	counts["klbkch/slice"] = 3
+
+	## The Horns of Hammerad (8d A2; pro rigs, jab_attack slices for the
+	## two who field as delve allies).
+	counts["ceria/idle"] = 4
+	counts["ceria/walk"] = 6
+	counts["yvlon/idle"] = 4
+	counts["yvlon/walk"] = 6
+	counts["yvlon/slice"] = 3
+	counts["ksmvr/idle"] = 4
+	counts["ksmvr/walk"] = 6
+	counts["ksmvr/slice"] = 3
 
 	## Antinium Worker (ambient extra rig, idle-only by design; 116x116).
 	counts["antinium_worker/idle"] = 4

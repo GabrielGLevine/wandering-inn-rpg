@@ -3400,7 +3400,7 @@
   }
  },
  "klbkch": {
-  "_comment": "PixelLab v2 create-character-with-8-directions (char 085b8d4f) -> animate-character (breathing-idle, walking) -> directional down/side/up (side = east frames, world.gd flips for west). render_scale targets ~30px on-screen figure (Zevara-class height; figure 69px of 92). anchor feet-plane-measured (78/92).",
+  "_comment": "PixelLab v2 create-character-with-8-directions (char 085b8d4f) -> animate-character (breathing-idle, walking) -> directional down/side/up (side = east frames, world.gd flips for west). render_scale targets ~30px on-screen figure (Zevara-class height; figure 69px of 92). anchor feet-plane-measured (78/92). slice = lead-jab (GH#69: fields as the alternating early companion).",
   "directional": true,
   "render_scale": 0.4348,
   "animations": {
@@ -3418,6 +3418,16 @@
     "sheet_down": "res://assets/sprites/klbkch/Walk_Down-Sheet.png",
     "sheet_side": "res://assets/sprites/klbkch/Walk_Side-Sheet.png",
     "sheet_up": "res://assets/sprites/klbkch/Walk_Up-Sheet.png",
+    "frame_size": [
+     92,
+     92
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/klbkch/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/klbkch/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/klbkch/Slice_Up-Sheet.png",
     "frame_size": [
      92,
      92
@@ -3450,6 +3460,122 @@
   "anchor": [
    0.5,
    0.698
+  ],
+  "shadow": true
+ },
+ "ceria": {
+  "_comment": "8d A2: Ceria Springwalker (PixelLab pro char 0f4f644e; profile in character-profiles.md — half-Elf, blue robes, wand, bone hand GLOVED v1, NO circlet [Vol-8+ spoiler catch]). render_scale targets ~26px (canonically short; figure 51px of 152). anchor feet-plane 101/152.",
+  "directional": true,
+  "render_scale": 0.51,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/ceria/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ceria/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ceria/Idle_Up-Sheet.png",
+    "frame_size": [
+     152,
+     152
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/ceria/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ceria/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ceria/Walk_Up-Sheet.png",
+    "frame_size": [
+     152,
+     152
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.664
+  ],
+  "shadow": true
+ },
+ "yvlon": {
+  "_comment": "8d A2: Yvlon Byres (pro char ec33c32c — silver plate, golden hair, silversteel arms V6-canon-honest). ~32px tall (figure 83px of 176). anchor 129/176. slice = jab_attack (fields as delve ally).",
+  "directional": true,
+  "render_scale": 0.386,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/yvlon/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/yvlon/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/yvlon/Idle_Up-Sheet.png",
+    "frame_size": [
+     176,
+     176
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/yvlon/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/yvlon/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/yvlon/Walk_Up-Sheet.png",
+    "frame_size": [
+     176,
+     176
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/yvlon/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/yvlon/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/yvlon/Slice_Up-Sheet.png",
+    "frame_size": [
+     176,
+     176
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.733
+  ],
+  "shadow": true
+ },
+ "ksmvr": {
+  "_comment": "8d A2: Ksmvr (pro char 3dc39703 — the worker four-arm kernel + gear harness/crossbow/buckler; all four arms READ in the lineup, better than Klbkch's). ~28px (figure 58px of 128). anchor 92/128. slice = jab_attack (delve ally). Sub-arm 1x legibility: same user flag as Klbkch.",
+  "directional": true,
+  "render_scale": 0.483,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/ksmvr/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ksmvr/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ksmvr/Idle_Up-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/ksmvr/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ksmvr/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ksmvr/Walk_Up-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/ksmvr/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ksmvr/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ksmvr/Slice_Up-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.719
   ],
   "shadow": true
  }
