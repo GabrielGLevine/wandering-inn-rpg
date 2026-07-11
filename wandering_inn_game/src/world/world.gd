@@ -399,6 +399,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		_disarm_field_slot()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("interact"):
+		# Issue #62 Lane U item 6: the press ITSELF counts as "I've read it"
+		# -- fired before the sim call so it reads as an ack of whatever
+		# toast was already up, independent of what this interact resolves
+		# to (a fresh toast the resolve fires enqueues normally, and drains
+		# next -- see `dismiss_current_toast_early`'s own doc comment).
+		_notify_action_taken()
 		Game.sim.interact()
 		get_viewport().set_input_as_handled()
 	elif InputMap.has_action("hotbar_prime") and event.is_action_pressed("hotbar_prime") and _field_slot_index >= 0:
@@ -534,6 +540,22 @@ func _disarm_field_slot() -> void:
 	_field_slot_index = -1
 	if _field_hotbar != null:
 		_field_hotbar.set_selected(-1)
+
+
+## Issue #62 Lane U item 6: notifies MessageLayer that the player just took
+## a deliberate action (an interact press -- move's own trigger is the
+## PLAYER_MOVED bus event message_layer.gd listens to directly, no wiring
+## needed here), which ends the currently showing toast's hold early. Both
+## `_unhandled_input`'s keyboard/pad interact branch and
+## `handle_world_click`'s adjacent-click-interact branch call this. Null-
+## guarded: `_main`/`message_layer()` can be unset in a bare-node test
+## context that never ran `inject_ui_refs`.
+func _notify_action_taken() -> void:
+	if _main == null:
+		return
+	var ml := _main.message_layer()
+	if ml != null:
+		ml.dismiss_current_toast_early()
 
 
 ## THE one field-hotbar activation dispatch (issue #57): fires slot `n`
@@ -1786,6 +1808,7 @@ func handle_world_click(world_pos: Vector2) -> void:
 		if _chebyshev(Game.sim.player_cell, cell) <= 1:
 			_click_path.clear()
 			_face_cell(cell)
+			_notify_action_taken()
 			Game.sim.interact()
 		else:
 			_start_click_path_to_adjacent(cell)

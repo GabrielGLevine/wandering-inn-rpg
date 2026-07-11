@@ -88,22 +88,39 @@ const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
 signal slot_activate_requested(slot: int)
 
 ## Selection-label layout (issue #58, Tab-primed slot select): gap between a
-## slot's top edge and the label sitting above it, and the horizontal
-## clamp margin so the label can never run off either screen edge (measured
-## against the longest shipped field-skill `display_name`,
+## slot's top edge and the label's BACKING panel sitting above it, and the
+## horizontal clamp margin so the label can never run off either screen edge
+## (measured against the longest shipped field-skill `display_name`,
 ## "[Server's Prescience]" at 21 chars -- comfortably inside the 1280px
 ## native-res window at the default theme font size even unclamped; the
 ## clamp exists for the edge slots on a full 9-wide bar, not for length).
 const SELECTION_LABEL_GAP := 4.0
+## Backing-panel padding around the label text (issue #62 Lane U item 5:
+## playtest found the bare label washed out at night under the darkest
+## mood grades -- sewers/deep_tunnels -- because it was plain white-on-
+## world text with nothing behind it; the CanvasLayer sits ABOVE the mood
+## CanvasModulate so the grade itself was never the tint culprit, it was
+## always bare-text-on-variable-background contrast). Fix: a parchment-strip
+## chrome backing (same UIChrome art the hint strip already uses at a near-
+## identical height) sized to the text + this padding, so the label reads on
+## every background regardless of mood grade or floor color underneath.
+const SELECTION_LABEL_PADDING_X := 10.0
+const SELECTION_LABEL_PADDING_Y := 4.0
 
 var _hotbar: WIHotbar
 ## The floating "[Skill Name]" label that tracks the Tab/[/]/pad-selected
 ## slot -- created once in `_ready()`, shown/positioned/hidden entirely from
 ## `set_selected()` (the single call site every selection-changing input
-## routes through; see that func's doc comment). Plain Label, no chrome
-## backing -- same "no bespoke styling" precedent as `world_labels.gd`'s
-## HP/MP readout (UIChrome theme only, positioning is the only bespoke part).
+## routes through; see that func's doc comment). Backed by
+## `_selection_label_backing` (issue #62 Lane U item 5) -- the label itself
+## stays a plain Label, only its background changed.
 var _selection_label: Label
+## Parchment-strip chrome panel drawn directly behind `_selection_label`
+## (added to the tree BEFORE it, so it draws underneath -- Control siblings
+## paint in child order). Sized/positioned in lockstep with the label by
+## `_position_selection_label`; visibility mirrors the label's own in
+## `_update_selection_label`.
+var _selection_label_backing: Control
 ## The ordered field-skill ids currently shown (slot i == this[i]). The SINGLE
 ## source of truth for the number-key -> skill mapping: world.gd's input routing
 ## queries `skill_for_slot(n)` against this same list, so a pressed number can
@@ -136,6 +153,12 @@ func _ready() -> void:
 	_hotbar = HOTBAR_SCRIPT.new()
 	_hotbar.name = "FieldHotbarBar"
 	root.add_child(_hotbar)
+	# Backing added BEFORE the label so it draws behind it (see
+	# `_selection_label_backing`'s doc comment).
+	_selection_label_backing = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
+	_selection_label_backing.name = "SelectionLabelBacking"
+	_selection_label_backing.visible = false
+	root.add_child(_selection_label_backing)
 	_selection_label = UIChrome.make_label("")
 	_selection_label.name = "SelectionLabel"
 	_selection_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -200,10 +223,12 @@ func _update_selection_label(index: int) -> void:
 		label_text = String(sk.get("display_name", skill_id))
 	if label_text == "":
 		_selection_label.visible = false
+		_selection_label_backing.visible = false
 	else:
 		_selection_label.text = label_text
 		_position_selection_label(index)
 		_selection_label.visible = true
+		_selection_label_backing.visible = true
 	ObservableBus.emit_domain_event(WIEvents.UI_FIELD_HOTBAR_SELECTION_RENDERED, {
 		"index": index if label_text != "" else -1,
 		"skill": skill_id if label_text != "" else "",
@@ -211,23 +236,32 @@ func _update_selection_label(index: int) -> void:
 	})
 
 
-## Centers the label over slot `index`'s current on-screen rect (queried from
-## WIHotbar's `slot_rect` -- this file owns no slot geometry of its own),
-## clamped horizontally to the native-res viewport so it can never run off
-## either edge (SELECTION_LABEL_GAP's doc comment) -- never wraps, just slides
-## in from whichever edge it would otherwise cross.
+## Centers the label (and its backing panel) over slot `index`'s current
+## on-screen rect (queried from WIHotbar's `slot_rect` -- this file owns no
+## slot geometry of its own). The BACKING rect (label size + padding) is the
+## one clamped to the native-res viewport, not the bare label, so the backing
+## itself can never run off either edge (SELECTION_LABEL_GAP's doc comment)
+## -- never wraps, just slides in from whichever edge it would otherwise
+## cross; the label is then positioned padding-inset from the clamped
+## backing so the two always move together.
 func _position_selection_label(index: int) -> void:
 	var rect := _hotbar.slot_rect(index)
 	if rect.size == Vector2.ZERO:
 		_selection_label.visible = false
+		_selection_label_backing.visible = false
 		return
 	var label_size := _selection_label.get_minimum_size()
 	_selection_label.size = label_size
+	var padding := Vector2(SELECTION_LABEL_PADDING_X, SELECTION_LABEL_PADDING_Y)
+	var backing_size := label_size + padding * 2.0
 	var slot_center_x := rect.position.x + rect.size.x * 0.5
-	var target_x := slot_center_x - label_size.x * 0.5
 	var viewport_width := get_viewport().get_visible_rect().size.x
-	target_x = clampf(target_x, 0.0, maxf(0.0, viewport_width - label_size.x))
-	_selection_label.position = Vector2(target_x, rect.position.y - label_size.y - SELECTION_LABEL_GAP)
+	var backing_x := clampf(slot_center_x - backing_size.x * 0.5, 0.0, maxf(0.0, viewport_width - backing_size.x))
+	var backing_top := rect.position.y - backing_size.y - SELECTION_LABEL_GAP
+	_selection_label_backing.custom_minimum_size = backing_size
+	_selection_label_backing.size = backing_size
+	_selection_label_backing.position = Vector2(backing_x, backing_top)
+	_selection_label.position = Vector2(backing_x, backing_top) + padding
 
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:

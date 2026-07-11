@@ -30,6 +30,12 @@ var _journal: Node
 var _pause_menu: Node
 var _inventory: Node
 var _field_hotbar: Node
+## Issue #62 Lane U item 6: world.gd reaches this (via its own `_main` ref)
+## to call `dismiss_current_toast_early()` on an interact press -- the same
+## injection-root idiom `world_labels()` below already follows, except this
+## one is spawned eagerly in `_spawn_ui_layers()` (not lazily), so the
+## accessor just returns the stored ref.
+var _message_layer: Node
 var _title_screen: Node
 var _sleep_veil: Node
 ## The combat HUD/mode-FSM screen (issue #57) -- kept here so mouse clicks
@@ -69,6 +75,14 @@ func world_labels() -> WIWorldLabels:
 		_world_labels.main_ref = self
 		add_child(_world_labels)
 	return _world_labels
+
+
+## Issue #62 Lane U item 6: world.gd's interact call sites read this to
+## notify the toast queue of an interact press. May be null before
+## `_spawn_ui_layers()` has run once (title screen) -- callers already
+## null-check.
+func message_layer() -> Node:
+	return _message_layer
 
 
 func world_to_screen(world_pos: Vector2) -> Vector2:
@@ -221,6 +235,7 @@ func _clear_ui_layers() -> void:
 	_sleep_veil = null
 	_world_labels = null
 	_combat_screen = null
+	_message_layer = null
 
 
 func _spawn_title() -> void:
@@ -236,6 +251,7 @@ func _spawn_ui_layers() -> void:
 	var message_layer := MESSAGE_LAYER_SCRIPT.new()
 	message_layer.name = "MessageLayer"
 	add_child(message_layer)
+	_message_layer = message_layer
 	var combat_screen := COMBAT_SCREEN_SCRIPT.new()
 	combat_screen.name = "CombatScreen"
 	combat_screen.main_ref = self

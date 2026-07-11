@@ -715,8 +715,14 @@ func hotbar_node() -> WIHotbar:
 	return _hud.hotbar_node()
 
 
+## Issue #62 Lane U item 7 (playtest: clicking slot B while slot A was
+## aim-armed no-op'd until Esc): now live during ATTACK/SKILL_TARGET/
+## DASH_CONFIRM too, not just resting HOTBAR -- a click in one of those
+## modes routes through `_switch_bar_slot` (same cancel-then-activate
+## motion Esc-then-click used to require), while a resting-HOTBAR click
+## keeps the plain `_activate_bar_slot` path unchanged.
 func _on_hotbar_slot_clicked(index: int) -> void:
-	if _mode != Mode.HOTBAR:
+	if _mode != Mode.HOTBAR and _mode != Mode.ATTACK and _mode != Mode.SKILL_TARGET and _mode != Mode.DASH_CONFIRM:
 		return
 	# Mouse-audit finding: the pause menu may be open ON TOP of a resting
 	# HOTBAR turn (`is_resting()`'s own doc comment) -- `_mode` alone can't
@@ -724,8 +730,29 @@ func _on_hotbar_slot_clicked(index: int) -> void:
 	# pause_open() the same way `_movement_gated()` checks it in world.gd.
 	if main_ref != null and main_ref.pause_open():
 		return
-	_activate_bar_slot(index)
+	if _mode == Mode.HOTBAR:
+		_activate_bar_slot(index)
+	else:
+		_switch_bar_slot(index)
 	_refresh()
+
+
+## Shared cancel-then-activate motion for a slot press (mouse click or
+## numbered key) that arrives while ATTACK/SKILL_TARGET/DASH_CONFIRM is
+## already armed -- issue #62 Lane U item 7. Tears down the current aim via
+## the EXACT SAME path Esc uses (`_targeting.cancel()` only for the two
+## targeting modes; DASH_CONFIRM has no targeting object to cancel), resets
+## the mode FSM back to HOTBAR, then activates the newly pressed slot via
+## the ordinary `_activate_bar_slot` -- one motion, no new activation logic.
+## An unaffordable new slot leaves the screen sitting in HOTBAR (the aim was
+## already torn down, `_activate_bar_slot` itself no-ops on unaffordable),
+## matching the existing "unaffordable slots refuse silently" convention.
+func _switch_bar_slot(index: int) -> void:
+	if _mode == Mode.ATTACK or _mode == Mode.SKILL_TARGET:
+		_targeting.cancel()
+	_mode = Mode.HOTBAR
+	_bar_index = -1
+	_activate_bar_slot(index)
 
 
 ## Click-to-select-target on the arena board (issue #57, controller ruling:
@@ -947,6 +974,15 @@ func _input_target(event: InputEvent) -> void:
 			_mode = Mode.HOTBAR
 			_bar_index = -1
 		get_viewport().set_input_as_handled()
+	else:
+		# Issue #62 Lane U item 7, keyboard/pad half: a numbered hotbar_N
+		# press mid-aim used to fall through this match unhandled (no case
+		# existed for it) -- number keys and mouse clicks now have parity,
+		# both route a mid-aim slot press through `_switch_bar_slot`.
+		var numbered := _numbered_slot_pressed(event)
+		if numbered >= 0:
+			_switch_bar_slot(numbered)
+			get_viewport().set_input_as_handled()
 	_refresh()
 
 
@@ -965,4 +1001,12 @@ func _input_dash_confirm(event: InputEvent) -> void:
 		_bar_index = -1
 		get_viewport().set_input_as_handled()
 		_combat().dash()
+	else:
+		# Issue #62 Lane U item 7, keyboard/pad parity -- see `_input_target`'s
+		# identical else-arm doc comment; DASH_CONFIRM has no targeting
+		# object to cancel, `_switch_bar_slot` already skips that call for it.
+		var numbered := _numbered_slot_pressed(event)
+		if numbered >= 0:
+			_switch_bar_slot(numbered)
+			get_viewport().set_input_as_handled()
 	_refresh()

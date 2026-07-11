@@ -6,7 +6,10 @@ extends CanvasLayer
 ## GOTCHA (shipped a dead quest chain in v2): CanvasLayer has NO `modulate`
 ## property. Fade/tint the child Control panels, never `self`.
 
-const TOAST_SECONDS := 2.5
+## Issue #62 Lane U item 6 (playtest: toasts vanish too fast): +50% over the
+## original 2.5s. Real-play only -- collapsed under both QA hold floors
+## below exactly as before, so no canonical timing changed.
+const TOAST_SECONDS := 3.75
 ## Toast hold under WINDOWED QA (TestDriver active, real DisplayServer) -- a
 ## 0.4s FLOOR, not zero: toast legibility in windowed screenshots is
 ## load-bearing for the controller-read discipline (wi-verifying-changes
@@ -170,6 +173,13 @@ var _hint_label: Label
 ## concurrent _queue_toast calls never start a second drain loop.
 var _toast_queue: Array[String] = []
 var _toast_draining := false
+## Issue #62 Lane U item 6: set by `dismiss_current_toast_early()`, consumed
+## by `_show()`'s interruptible hold-wait (toast panel only -- the dialogue
+## bark never sets or checks this). Does NOT drop or reorder anything in
+## `_toast_queue` -- it only shortens the CURRENTLY showing toast's remaining
+## hold; `_drain_toasts`'s own while-loop still pops and shows every
+## remaining queued toast, in order, right after.
+var _toast_skip_requested := false
 
 ## A one-time "Press I — your pack." toast on the FIRST ITEM_GAINED, so a
 ## player can discover the inventory key exists. Presentation-side only --
@@ -404,6 +414,17 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIEvents.MAP_CHANGED:
 			_clear_dialogue_line()
 			_clear_toast()
+		WIEvents.PLAYER_MOVED:
+			# Issue #62 Lane U item 6: a successful move is a deliberate
+			# player action -- "I've read it, moving on" -- so it ends the
+			# CURRENTLY showing toast's hold early. Fires on every real step
+			# (tap, held-repeat, diagonal, click-to-walk) since they all route
+			# through `Game.sim.move_player`, which only emits this on
+			# success (a blocked/refused step emits PLAYER_BLOCKED instead,
+			# never this) -- covers every move call site in world.gd with no
+			# presentation-layer wiring needed. See interact's own dismiss
+			# call sites in world.gd for the other half of this fix.
+			dismiss_current_toast_early()
 
 
 ## Unconditionally hides the `dialogue_line` bark panel (`_dialogue_panel`/
@@ -558,6 +579,20 @@ func _queue_toast(text: String) -> void:
 		_drain_toasts()
 
 
+## Issue #62 Lane U item 6: ends the CURRENTLY showing toast's remaining
+## hold early -- called on a successful move (`PLAYER_MOVED`, see
+## `_on_domain_event`) or an interact press (world.gd's own call sites,
+## fired BEFORE `Game.sim.interact()` runs so the press itself, not its
+## outcome, is what counts as "read"). No-op if no toast is currently
+## visible (a request landing between toasts, or while only the dialogue
+## bark/hint strip are on screen, has nothing to shorten). Never touches
+## `_toast_queue` -- see that var's own doc comment for why this can never
+## drop or reorder a pending toast.
+func dismiss_current_toast_early() -> void:
+	if _toast_panel.visible:
+		_toast_skip_requested = true
+
+
 ## Displays queued toasts ONE AT A TIME, in emission order. A toast queued
 ## while this loop is mid-`await` (re-entrant emit, or simply a second toast
 ## landing in the same beat) is just appended to `_toast_queue` and picked up
@@ -566,7 +601,7 @@ func _drain_toasts() -> void:
 	_toast_draining = true
 	while not _toast_queue.is_empty():
 		var text: String = _toast_queue.pop_front()
-		await _show(_toast_panel, _toast_label, text, TOAST_SECONDS, WIEvents.UI_TOAST_RENDERED, "", true)
+		await _show(_toast_panel, _toast_label, text, TOAST_SECONDS, WIEvents.UI_TOAST_RENDERED, "", true, true)
 	_toast_draining = false
 
 
@@ -605,7 +640,15 @@ func _hold_seconds(seconds: float) -> float:
 ## `get_tree()` again or doing any further UI access
 ## (`ObservableBus.emit_domain_event`, `panel.hide()`). Guards only: the
 ## live (still-in-tree) path's timing/behavior is unchanged.
-func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false) -> void:
+## `interruptible` (issue #62 Lane U item 6): when true, the hold-wait below
+## polls per-frame instead of a single `create_timer` await, so
+## `dismiss_current_toast_early()` can cut it short mid-hold -- ONLY the
+## toast queue passes this (`_drain_toasts`); the dialogue bark keeps the
+## plain single-timer wait, unaffected. Frame-polling still respects
+## `_hold_seconds`' QA collapse (that collapse happens BEFORE this branch,
+## on `hold` itself), so a headless/windowed-QA run is already down to 1-2
+## frames of poll either way -- this adds no new QA-timing dependency.
+func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false, interruptible: bool = false) -> void:
 	# Only the toast panel grows -- feed/dialogue/readout already have their
 	# own fixed-panel wrapped-line budgets, so this is scoped to
 	# `panel == _toast_panel` only.
@@ -622,12 +665,24 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 	ObservableBus.emit_domain_event(rendered_event, {"text": text})
 	var hold := _hold_seconds(seconds) if collapse_under_qa else seconds
 	if hold > 0.0:
-		tree = get_tree()
-		if tree == null:
-			return
-		await tree.create_timer(hold).timeout
-		if not is_inside_tree():
-			return
+		if interruptible:
+			_toast_skip_requested = false
+			var deadline_msec := Time.get_ticks_msec() + int(hold * 1000.0)
+			while Time.get_ticks_msec() < deadline_msec and not _toast_skip_requested:
+				tree = get_tree()
+				if tree == null:
+					return
+				await tree.process_frame
+				if not is_inside_tree():
+					return
+			_toast_skip_requested = false
+		else:
+			tree = get_tree()
+			if tree == null:
+				return
+			await tree.create_timer(hold).timeout
+			if not is_inside_tree():
+				return
 	panel.hide()
 
 
