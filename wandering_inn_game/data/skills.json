@@ -270,6 +270,16 @@
 			"description": "Mana runs down the blade until the edge sings."
 		},
 		{
+			"_comment": "GH#61: [Spellsword]'s L16 capstone (classes.json's own _comment on that class carries the full provenance trace). CANON-VERDICT: INVENTED, flagged -- [Spellsword] itself is attested canon (Pisces's 'dubiously qualified' hybrids; the wiki names Edward/Requiel as holders, both within the Book-17 bar) but no single clean canon Skill name/effect for the class survived wiki verification, so a restrained name matching the class fantasy (magic bound into a weapon strike) was used instead. Rides the EXISTING damage_mult type -- NO new effect type. Deliberately carries NO `weapon` key (unlike keener_edge's sword-only gate): combat_build.gd's `weapon_gated_kit` only filters skills that DECLARE a `weapon` tag, so an untagged skill fields for every equipped weapon family -- this is the one grant every real consolidated spellsword gets regardless of which parent line (swordsman/spearmaster) they came from. `mp_cost` alongside `ap_cost` is new for a damage_mult skill in this catalog (every other one only spends AP) -- a genuine capstone tax on both halves of the class's resource pool, mechanically inert elsewhere (WISkillEffects.resolve_active's damage_mult arm already calls the generic `spend_skill_costs`, which deducts MP whenever `mp_cost` > 0 regardless of effect type -- see that function's own doc comment). No `icon` -- same disclosed ICON GAP as flame_pillar/a dozen other shipped skills, degrades gracefully. Structurally unreachable by `sim_combat_batch.gd` (spellsword is never assigned in the harness's BUILDS array, same as fire_mage/ice_mage precedent) -- no balance-harness re-run needed.",
+			"id": "spellbound_strike",
+			"display_name": "[Spellbound Strike]",
+			"contexts": ["combat"],
+			"ap_cost": 4,
+			"mp_cost": 3,
+			"effect": { "type": "damage_mult", "mult": 3.0 },
+			"description": "Every spell you have ever cast settles into the strike, and the strike remembers all of them at once."
+		},
+		{
 			"id": "lesser_stamina",
 			"display_name": "[Lesser Stamina]",
 			"contexts": ["exploration"],

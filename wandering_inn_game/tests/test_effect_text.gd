@@ -132,6 +132,13 @@ const EXPECTED_SKILLS := {
 	# phrase itself instead.
 	"flame_pillar": ["3 AP, 5 MP — blast a 3×3 area around the target for 1d6. Hits friend and foe."],
 	"keener_edge": ["2 AP — ×1.6 damage"],
+	# GH#61: [Spellsword] L16 capstone (INVENTED name, flagged -- see the
+	# skill's own _comment in skills.json for the wiki-verification trace).
+	# The only damage_mult skill in the catalog that also spends MP --
+	# `_cost_prefix` joins both currencies exactly like a spell_damage line
+	# would (see frost_bolt above), then `_effect_phrase`'s damage_mult arm
+	# renders the mult unchanged.
+	"spellbound_strike": ["4 AP, 3 MP — ×3 damage"],
 	"lesser_stamina": [],
 	"basic_cooking": [],
 	"lesser_strength": [],
