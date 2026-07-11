@@ -19,6 +19,15 @@ extends SceneTree
 ## to settle before any metric is trustworthy. Every measurement below runs
 ## AFTER that settle.
 ##
+## NOT COVERED (deliberate -- every surface below wraps AND grows/scrolls,
+## so words are never lost, the failure this suite exists to catch):
+## items.json descriptions (inventory lore card: autowrap + ScrollContainer),
+## quest beat descriptions + journal section notes (journal body: autowrap +
+## scroll), WIEffectText card lines (exact-pinned in test_effect_text.gd,
+## rendered into wrapping sub-rows), and runtime-COMPOSED toast strings
+## (earn/level toasts built from short templates). If any of those surfaces
+## ever gains a fixed-width no-wrap row, add its corpus here.
+##
 ## FOUR budgeted surfaces (mirrored from their real source consts, each with
 ## a drift-tripwire regex assertion below so a future const edit there fails
 ## THIS suite loudly instead of silently invalidating the mirrored budget):
@@ -173,6 +182,10 @@ func _setup_font_metrics() -> void:
 	await process_frame
 	_font = _label.get_theme_font("font")
 	_font_size = _label.get_theme_font_size("font_size")
+	# Tripwire: if theme propagation ever regresses to the engine default
+	# (16), every budget silently widens past the real panels' (over-strict
+	# false alarms with no signal why). Pin the settled size.
+	assert(_font_size == 14, "theme font_size did not settle to wi_ui_theme's 14 (got %d) -- the one-frame settle regressed" % _font_size)
 	_line_spacing = float(_label.get_theme_constant("line_spacing"))
 	_pitch = _font.get_height(_font_size) + _line_spacing
 	assert(_font != null, "theme font failed to load headless -- exact-font method unavailable (see STOP trigger)")
