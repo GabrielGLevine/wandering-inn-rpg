@@ -18,13 +18,19 @@ content). One milestone, five phases; A runs background from day one.
    proceeding as spec'd — surfacing here for visibility, not blocking).
 
 ## Phase A — art pipeline (background lane; starts immediately)
-- A1: "old dark" tile family via v2 `/create-tileset` — FIRST use of the
-  endpoint. Budget real experiments (≤6 candidates, park rejects);
-  fallback if the endpoint disappoints: pixflux per-tile family (the
-  props recipe) or a licensed-pack family via the catalog (check
-  Pixel Crawler cave/castle first — index says both exist). Fresh
-  ANCHOR MEASUREMENT per the gotcha (new family = new measurements).
-  Windowed adjacency read before any map authoring consumes it.
+- A1: "old dark" tile family. FIRST /create-tileset EXPERIMENT DONE
+  (tileset 86d6dd3d, 2026-07-11): the endpoint does TERRAIN-BLEND
+  semantics — two ground types + 16 transition tiles (dual-grid
+  corners), NOT floor-vs-wall; both prompts rendered near-identical
+  dark brick joined by a transition curve. LEARNINGS: (a) use it for
+  FLOOR VARIETY (lower=flagstone, upper=worn/cracked flagstone —
+  organic patches of wear, exactly what a trapped hall wants);
+  (b) the dark blue-grey brick PALETTE from the experiment is right —
+  reuse the prompt kernel; (c) WALLS stay separate (walls.segments
+  render path — source wall texture via pixflux or the Pixel Crawler
+  cave/castle families per the catalog). Fresh ANCHOR MEASUREMENT per
+  the gotcha. Windowed adjacency read before any map authoring
+  consumes it.
 - A2: three Horns characters, v2 create-character-pro → animate
   (idle+walk; slice for Yvlon/Ksmvr who field as allies) → zips.
   PROFILES FIRST (wiki-verified) into character-profiles.md: Ceria
