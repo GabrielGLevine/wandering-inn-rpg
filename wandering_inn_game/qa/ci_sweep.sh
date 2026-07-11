@@ -207,28 +207,53 @@ mkdir -p "$LOGDIR"
 FAILURES=0
 FAILED_NAMES=()
 
+# Launches one script's run (alarm-wrapped) writing its log + an rc file.
+# Runs are fully isolated already (per-PID user:// HOMEs in run_qa.sh,
+# per-script qa_output dirs), so parallel launches cannot collide.
+run_one() {
+	local NAME="$1" SEED="$2"
+	local LOG="$LOGDIR/$NAME.log"
+	local ARGS=("$NAME" "headless")
+	if [ "$SEED" != "none" ]; then ARGS+=("--seed=$SEED"); fi
+	perl -e 'alarm shift; exec @ARGV' "$PER_SCRIPT_TIMEOUT" \
+		bash "$RUN_QA" "${ARGS[@]}" >"$LOG" 2>&1
+	echo $? >"$LOGDIR/$NAME.rc"
+}
+
+# WI_SWEEP_JOBS>1 runs scripts concurrently (local speedup: the 80-script
+# sweep drops from ~3-4 min serial to <1 min at -j8). Default stays 1:
+# CI keeps deterministic streaming output, and the aggregation below is
+# identical either way (it reads only the per-script log + rc files).
+JOBS="${WI_SWEEP_JOBS:-1}"
+
+# Phase 1: launch. Missing scripts fail immediately (also the
+# deterministic path for catching a bad --only name).
+LAUNCHED=()
 for pair in "${RUNLIST[@]}"; do
 	NAME="${pair%%:*}"
 	SEED="${pair#*:}"
-	LOG="$LOGDIR/$NAME.log"
-
-	# Pre-flight: a missing script file is an immediate failure (also the
-	# deterministic path for catching a bad --only name).
 	if [ ! -f "$SCRIPTS_DIR/$NAME.json" ]; then
 		echo "FAIL  $NAME — no such QA script ($SCRIPTS_DIR/$NAME.json)"
 		FAILURES=$((FAILURES + 1)); FAILED_NAMES+=("$NAME(missing)")
 		continue
 	fi
+	echo "==> $NAME (seed=$SEED, timeout=${PER_SCRIPT_TIMEOUT}s, jobs=$JOBS)"
+	if [ "$JOBS" -gt 1 ]; then
+		while [ "$(jobs -rp | wc -l)" -ge "$JOBS" ]; do wait -n; done
+		run_one "$NAME" "$SEED" &
+	else
+		run_one "$NAME" "$SEED"
+	fi
+	LAUNCHED+=("$pair")
+done
+wait
 
-	# Assemble the run_qa.sh invocation (load_gate takes no seed).
-	ARGS=("$NAME" "headless")
-	if [ "$SEED" != "none" ]; then ARGS+=("--seed=$SEED"); fi
-
-	echo "==> $NAME (seed=$SEED, timeout=${PER_SCRIPT_TIMEOUT}s)"
-	# Alarm-wrap the whole run so a hung script can never wedge the sweep.
-	perl -e 'alarm shift; exec @ARGV' "$PER_SCRIPT_TIMEOUT" \
-		bash "$RUN_QA" "${ARGS[@]}" >"$LOG" 2>&1
-	RC=$?
+# Phase 2: aggregate (serial; reads logs + rc files only).
+for pair in "${LAUNCHED[@]}"; do
+	NAME="${pair%%:*}"
+	SEED="${pair#*:}"
+	LOG="$LOGDIR/$NAME.log"
+	RC="$(cat "$LOGDIR/$NAME.rc" 2>/dev/null || echo 99)"
 
 	SCRIPT_FAIL=0
 	if [ "$RC" -ne 0 ]; then
