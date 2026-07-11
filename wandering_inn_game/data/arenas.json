@@ -1350,7 +1350,7 @@
    ]
   },
   {
-   "_comment": "Village edge at night -- `river_wolf_pack`'s arena, reached only through the map's own night-phase encounter gate (unreachable at day by design; the day-negative canonical proof is lane alpha's). biome `riverfarm_village` reuses the village's own staged floor family (docs/design/riverfarm-art/handoff.md) rather than a bespoke night biome -- the dark read comes from atmosphere.gd's phase mood grade, not a different tileset. Sparse blocked cells (an open field, not a forest) -- an ambush wants sightlines, not cover. TRAP for whoever wires moods.json: confirm riverfarm_village's night grade against atmosphere.gd's arena-brightness floor (the cave_mouth precedent) before shipping -- a fight this dark could read as HP-bar-illegible even though nothing here structurally requires an `arena_moods` override. floor_layers/decor empty for the same not-yet-verified-biome reason as witch_hollow.",
+   "_comment": "Village edge at night -- `river_wolf_pack`'s arena, reached only through the map's own night-phase encounter gate (unreachable at day by design; the day-negative canonical proof is lane alpha's). biome `riverfarm_village` reuses the village's own staged floor family (docs/design/riverfarm-art/handoff.md) rather than a bespoke night biome -- the dark read comes from atmosphere.gd's phase mood grade, not a different tileset. Sparse blocked cells (an open field, not a forest) -- an ambush wants sightlines, not cover. TRAP for whoever wires moods.json: confirm riverfarm_village's night grade against atmosphere.gd's arena-brightness floor (the cave_mouth precedent) before shipping -- a fight this dark could read as HP-bar-illegible even though nothing here structurally requires an `arena_moods` override. floor_layers/decor empty for the same not-yet-verified-biome reason as witch_hollow. SURROUND FORMATION (issue #56, the flagship ambush conversion): PC spawns center-ish at (6,3) with the `riverfarm_hunter` ally (when fielded) adjacent west at (5,3) -- NOT in the ring. The 3-wolf roster (river_wolf_a/b/c, consumed in that array order) rings the PC at N (6,1), E (9,3), S (7,6) -- deliberately NOT clustered on one side, the whole point of a night pack closing in from multiple directions. `player_spawns`/`enemy_spawns` keep the design-for-4 sizing test_combat_data.gd requires (>=4 player spawns); indices 2-3 of each array are unused fallback cells (no encounter here fields a 3rd/4th player-side or 4th enemy combatant today) placed near the same cluster so they stay trivially reachable. Reachability re-verified: only 2 blocked cells in an open 12x8 field, single connected component, BFS-proven by test_combat_data.gd.",
    "id": "village_edge_night",
    "biome": "riverfarm_village",
    "grid": {
@@ -1369,37 +1369,37 @@
    ],
    "player_spawns": [
     [
-     1,
+     6,
      3
     ],
     [
-     1,
+     5,
+     3
+    ],
+    [
+     6,
      4
     ],
     [
-     2,
-     3
-    ],
-    [
-     2,
+     5,
      4
     ]
    ],
    "enemy_spawns": [
     [
-     10,
-     3
-    ],
-    [
-     10,
-     4
+     6,
+     1
     ],
     [
      9,
      3
     ],
     [
-     9,
+     7,
+     6
+    ],
+    [
+     8,
      4
     ]
    ],
@@ -1407,7 +1407,7 @@
    "decor": []
   },
   {
-   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `alley_footpads_a`/`alley_footpads_b`'s SHARED arena (lane alpha's two encounter entities both resolve here, same witch_hollow/briar_collectors shared-arena-for-two-waves convention). `street` biome (the same cobble/cool-grey read the boulevard/alleys share per docs/design/invrisil-art/direction.md -- this lane does not touch biomes.json/the wang tileset; street is the honest in-hand fit). Interior `blocked` cells are the spec's 'stacked crates' alley clutter (sec.1: 'bent routes, stacked crates'), kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). floor_layers reuses goblin_ambush's own already-verified street cobble variant picks -- no new coordinate guessing.",
+   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `alley_footpads_a`/`alley_footpads_b`'s SHARED arena (lane alpha's two encounter entities both resolve here, same witch_hollow/briar_collectors shared-arena-for-two-waves convention). `street` biome (the same cobble/cool-grey read the boulevard/alleys share per docs/design/invrisil-art/direction.md -- this lane does not touch biomes.json/the wang tileset; street is the honest in-hand fit). Interior `blocked` cells are the spec's 'stacked crates' alley clutter (sec.1: 'bent routes, stacked crates'), kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). floor_layers reuses goblin_ambush's own already-verified street cobble variant picks -- no new coordinate guessing. SURROUND FORMATION (issue #56): both footpad placements field `allies: []` (never an ally, see skeleton_scene.json's own comment on alley_footpads_a/b), so only `player_spawns[0]` is ever consumed -- placed center-ish at (5,4). The 2-combatant roster (footpad_lookout/footpad_bruiser, array order) pincers N (5,1) and S (5,6) instead of the old single-side line -- a failed [Stealth] jump should read as flanked, not as a corridor fight. Kept at the design-for-4 sizing test_combat_data.gd requires; the unused player_spawns[1-3]/enemy_spawns[2-3] fallback cells sit near the same cluster, clear of every `blocked` cell.",
    "id": "mercantile_alley",
    "biome": "street",
    "grid": {
@@ -1438,37 +1438,37 @@
    ],
    "player_spawns": [
     [
-     1,
-     3
-    ],
-    [
-     1,
+     5,
      4
     ],
     [
-     2,
+     5,
      3
     ],
     [
-     2,
+     6,
      4
+    ],
+    [
+     6,
+     3
     ]
    ],
    "enemy_spawns": [
     [
-     10,
-     3
+     5,
+     1
     ],
     [
-     10,
+     5,
+     6
+    ],
+    [
+     8,
      4
     ],
     [
-     9,
-     3
-    ],
-    [
-     9,
+     2,
      4
     ]
    ],
