@@ -46,6 +46,7 @@ func _init() -> void:
 	_validate_quests(quests, produced_accomplishments)
 	_validate_hide_when_nodes_have_always_available_exit(graphs)
 	_validate_class_gains(classes, produced_accomplishments)
+	_validate_class_level_tables(classes)
 	_validate_props(scene)
 	_validate_talk_pool_stages_ascending(scene)
 	_validate_encounter_when(scene)
@@ -631,6 +632,106 @@ func _validate_class_gains(classes: Dictionary, produced_accomplishments: Dictio
 				produced_accomplishments.has(accomplishment_id),
 				"class %s gained_by waits on unproduced accomplishment: %s" % [String(cls["id"]), accomplishment_id]
 			)
+
+
+## GH#54 sparse-level-table convention. A class reached ONLY through an
+## evolution Replacement (`evolution.targets` values) or a consolidation
+## (`consolidations[].target`) is never assigned a level via check_level_ups
+## counting up from 1 -- `_resolve_evolutions`/`accept_consolidation`
+## (wi_game.gd) both write `classes[target] = level` directly, carrying the
+## PARENT's held level (Replacement) or the merged level (consolidation)
+## straight in. So such a class has a real FLOOR below which it can never be
+## held, and any `levels` entry below that floor is dead, easily-regressed
+## padding (see the class's own `_comment` for the derivation, but this
+## validator re-derives it independently from the SAME evolution/
+## consolidation data every real code path reads -- never a hardcoded class
+## list, so a new evolution-only class added later is covered automatically
+## without a second place to update). Normally-gained classes (gained_by, or
+## simply never targeted by any evolution/consolidation) keep the old
+## expectation: contiguous from level 1.
+##
+## Three rules enforced per class:
+##   (a) no levels entry authored below the derived floor (padding regression
+##       guard -- a sub-floor entry can never be read at runtime, so its
+##       presence only invites bit rot / accidental re-padding);
+##   (b) entries are CONTIGUOUS from the floor up to the class's own max level
+##       (no holes -- check_level_ups' by_level.has(next) walk would silently
+##       stop at a hole, capping the class short of its authored ceiling);
+##   (c) an evolution-only class's minimum authored level is EXACTLY its
+##       derived floor (not just >= it -- catches an author leaving a gap
+##       between the true floor and the first entry, which (a)+(b) alone
+##       would not catch since there'd be no entry AT the floor to be "below").
+func _validate_class_level_tables(classes: Dictionary) -> void:
+	var catalog_list: Array = classes.get("classes", [])
+
+	# id -> Array[int]: every floor this id could be assigned at, read from
+	# the same fields check_evolutions/check_consolidation read (at_level for
+	# Replacement targets, the merge-math boundary for consolidation targets).
+	# More than one candidate is possible in principle (two different source
+	# classes both targeting the same id); the true floor is the MINIMUM
+	# across all reachable paths.
+	var floor_candidates: Dictionary = {}
+
+	for cls: Dictionary in catalog_list:
+		var evo: Dictionary = cls.get("evolution", {})
+		var targets: Dictionary = evo.get("targets", {})
+		if targets.is_empty():
+			continue
+		var at_level := int(evo.get("at_level", 0))
+		for key: String in targets:
+			var target_id := String(targets[key])
+			if not floor_candidates.has(target_id):
+				floor_candidates[target_id] = []
+			(floor_candidates[target_id] as Array).append(at_level)
+
+	for entry: Dictionary in classes.get("consolidations", []):
+		var target_id := String(entry.get("target", ""))
+		var min_parent_level := int(entry.get("min_parent_level", 0))
+		var min_combined_level := int(entry.get("min_combined_level", 0))
+		# Minimum sum honoring BOTH gates (check_consolidation's trigger: both
+		# parents >= min_parent_level AND combined >= min_combined_level).
+		var s_min := maxi(min_combined_level, 2 * min_parent_level)
+		# For a fixed sum, the merge formula's max(La,Lb) term is minimized by
+		# the most-balanced split -- so the floor is reached there.
+		var level_a := s_min / 2
+		var level_b := s_min - level_a
+		var merged := WIProgression._consolidation_merged_level(level_a, level_b)
+		if not floor_candidates.has(target_id):
+			floor_candidates[target_id] = []
+		(floor_candidates[target_id] as Array).append(merged)
+
+	for cls: Dictionary in catalog_list:
+		var id := String(cls["id"])
+		var levels: Array = cls.get("levels", [])
+		assert(not levels.is_empty(), "class %s has no levels entries" % id)
+
+		var level_set: Dictionary = {}
+		var max_level := 0
+		var min_level := 999999
+		for lv: Dictionary in levels:
+			var l := int(lv["level"])
+			level_set[l] = true
+			max_level = maxi(max_level, l)
+			min_level = mini(min_level, l)
+
+		var reqs: Dictionary = (cls.get("gained_by", {}) as Dictionary).get("accomplishment", {})
+		var has_gained_by := not reqs.is_empty()
+
+		var floor_level := 1
+		var is_evolution_only := false
+		if not has_gained_by and floor_candidates.has(id):
+			is_evolution_only = true
+			floor_level = 999999
+			for f: Variant in (floor_candidates[id] as Array):
+				floor_level = mini(floor_level, int(f))
+
+		assert(min_level >= floor_level, "class %s has a levels entry (level %d) below its derived floor %d -- sub-floor entries are unreachable padding (GH#54 sparse-table convention)" % [id, min_level, floor_level])
+
+		for l in range(floor_level, max_level + 1):
+			assert(level_set.has(l), "class %s is missing a levels entry at %d (floor %d, max %d) -- the level-up/evolution walk could arrive at an uncovered level" % [id, l, floor_level, max_level])
+
+		if is_evolution_only:
+			assert(min_level == floor_level, "class %s (evolution-only, reachable only via Replacement/consolidation) must start EXACTLY at its derived floor %d, found its lowest authored entry at %d" % [id, floor_level, min_level])
 
 
 func _validate_quests(quests: Dictionary, produced_accomplishments: Dictionary) -> void:
