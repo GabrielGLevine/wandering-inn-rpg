@@ -266,3 +266,10 @@ derives the path from the item id and falls back gracefully when a
 future item ships before its icon). v1 `/generate-image-pixflux` 32×32,
 no_background, single-object-centered prompts. Cost 25.
 Same PixelLab-ToS ownership / redistributability as everything above.
+
+## Antinium batch (2026-07-11, issue #51)
+| Asset | Consumer | Provenance |
+|---|---|---|
+| `assets/sprites/klbkch/{Idle,Walk}_{Down,Side,Up}-Sheet.png` | `klbkch` NPC (street gate plaza) | v2 create-character-with-8-directions char `085b8d4f` ("Antinium Worker guardsman, ant-like insectoid...") -> animate-character breathing-idle(4) + walking(6); 92x92 frames, side=east. |
+| `assets/sprites/antinium_worker/Idle_{Down,Side,Up}-Sheet.png` | `antinium_worker_a/_b` ambient extras | v2 create-character-pro char `c46d1038` ("four-armed ant man drone...") -> breathing-idle(4); 116x116, idle-only by design. Attempt 1 (char `28eb787e`, two-armed) and a failed retry parked unused. |
+| `assets/ui/icons/icon_invisibility.png` | `[Invisibility]` hotbar/journal icon | NOT PixelLab: hand-drawn 16px 2-tone glyph (controller), icon_sneak palette. Listed here for the icon set's audit trail. |
