@@ -14,6 +14,15 @@ const VALID_KINDS: Dictionary = {
 	# as for tools. Granted by accept_delivery, removed by remove_item on the
 	# arrival handoff or a sleep-fail return.
 	"parcel": true,
+	# The dish-fetch seam (issue #59): hot_meal, granted by
+	# stew_pot's basic_cooking use (WIGame.use_skill's new `item` grant on
+	# on_skill_use) and consumed by the hungry patron's Serve dialogue
+	# option (the new `remove_item` effect arm). Same inert-carried shape as
+	# parcel: no price (items.json's own _comment on hot_meal explains the
+	# structural-non-sellability call), no combat fields, and no weapon/
+	# armor/accessory kind means WIGame.equip() structurally refuses it with
+	# zero new code.
+	"meal": true,
 }
 
 ## Tier is now tied to resonance, not a mundane-only schema

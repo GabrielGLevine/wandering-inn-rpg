@@ -633,6 +633,7 @@
      "toast": "You carry the laden tray out to the tables."
     },
     {
+     "_comment": "Issue #59 (the dish-item seam): on_skill_use now ALSO grants a carryable `hot_meal` item (WIGame.use_skill's new optional `item` field, mirroring the pre-existing optional `gold` field used elsewhere on this same seam) alongside the `cooked_meal` accomplishment it already banked -- the hungry patron's Serve option (patron_serving.json) now gates on actually HOLDING this dish, not just once_per_waking. Deliberately the SAME prop/accomplishment work_loop.json already exercises, not a bespoke second pot (that pattern is reserved for quest-scoped cooking that must NOT feed this shared counter -- see short_order's own comment below).",
      "id": "stew_pot",
      "kind": "prop",
      "cell": [
@@ -646,6 +647,7 @@
      "locked_toast": "You don't know your way around a stew pot. Yet.",
      "on_skill_use": {
       "accomplishment": "cooked_meal",
+      "item": "hot_meal",
       "toast": "[Basic Cooking] — The stew comes out rich and hot."
      }
     },
