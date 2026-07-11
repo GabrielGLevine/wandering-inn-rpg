@@ -250,7 +250,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Visible hub options: [0 'I'll look into it.', 1 'What's on the stall today?', 2 'Just visiting.'] -- move to index 1.",
+   "_comment": "Visible hub options: [0 'I'll look into it.', 1 'What's on the stall today?', 2 'Just visiting.', 3 sell-nav (ALWAYS-visible, appended last)] -- move to index 1.",
    "action": "move",
    "direction": "down",
    "steps": 1

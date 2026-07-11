@@ -96,7 +96,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Fresh state: hub's only visible options are the pitch (index 0) and 'Just visiting.' -- confirm takes the pitch.",
+   "_comment": "Fresh state: hub's visible options are the pitch (index 0), 'Just visiting.', and the ALWAYS-visible sell-nav (appended last, unaffected by index-0 confirm) -- confirm takes the pitch.",
    "action": "press",
    "name": "confirm"
   },

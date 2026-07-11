@@ -95,7 +95,7 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_crate" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Visible hub options: [0 'I'll look into it.', 1 'What's on the stall today?', 2 'Just visiting.'] -- move to index 1.", "action": "move", "direction": "down", "steps": 1 },
+  { "_comment": "Visible hub options: [0 'I'll look into it.', 1 'What's on the stall today?', 2 'Just visiting.', 3 sell-nav (ALWAYS-visible, appended last)] -- move to index 1.", "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia" }, "timeout_sec": 5 },
   { "_comment": "Visible shop options: [0 charm, 1 knife, 2 cloak, 3 jerkin, 4 'Show me the charms.', 5 'Nothing today.'] (the friend's-price rows stay hidden -- chatted_with_krshia:4 never banked this run) -- move to index 4.", "action": "move", "direction": "down", "steps": 4 },

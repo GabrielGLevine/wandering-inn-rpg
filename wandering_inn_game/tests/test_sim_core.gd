@@ -1266,6 +1266,83 @@ func _init() -> void:
 	assert(not e1.unequip("armor"), "unequip on an already-empty slot is a no-op")
 	assert(not e1.unequip("bogus_slot"), "unequip on an unknown slot name is a no-op")
 
+	# --- Krshia buyback (sell_price/sellable_items/sell_item) ---
+	# Own fresh instance -- e1 above is about to enter combat for the
+	# field-only equip guard check below; selling has no such guard of its
+	# own (start_dialogue/_begin_code_dialogue already refuse while
+	# combat != null, so the picker can never even open mid-fight), but a
+	# dedicated instance keeps this block's inventory/gold assertions
+	# independent of e1's ongoing equipment story either way.
+	var eSell := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	assert(eSell.sell_price(24) == 12, "sell_price halves worth (leather_jerkin's 24 -> 12, trade_bonus 0)")
+	assert(eSell.sell_price(5) == 2, "sell_price rounds DOWN on an odd worth (traveler_charm's 5 -> floor(2.5) = 2)")
+	assert(eSell.sell_price(1) == 0, "sell_price rounds a worth of 1 down to 0 (floor(0.5) = 0)")
+	assert(eSell.sell_price(0) == 0, "sell_price of a zero worth is 0")
+
+	eSell.pickup("leather_jerkin", "test")
+	assert(eSell.sellable_items() == ["leather_jerkin"], "sellable_items lists the priced item carried, in inventory order")
+	assert(not eSell.sellable_items().has("rusty_sword"), "sellable_items excludes the starter sword (no price field -- never established worth)")
+
+	# Equipped items are structurally excluded (the "refuse, don't
+	# auto-unequip" rule implemented as never offering it) -- and the
+	# equipped ⊆ inventory invariant means sell_item's own remove_item guard
+	# would ALSO refuse it if this exclusion ever lapsed.
+	assert(eSell.equip("leather_jerkin"), "fixture: equip the jerkin to prove the equipped exclusion")
+	assert(not eSell.sellable_items().has("leather_jerkin"), "sellable_items excludes a currently-equipped item")
+	_events.clear()
+	assert(not eSell.sell_item("leather_jerkin"), "sell_item refuses an equipped item (remove_item's own equipped guard, defense-in-depth)")
+	assert(_events.is_empty(), "refused equipped-item sell emits nothing")
+	assert(eSell.unequip("armor"), "fixture: unequip the jerkin back before the real sale")
+	assert(eSell.sellable_items() == ["leather_jerkin"], "sellable_items lists it again once unequipped")
+
+	# The real sale: gold_changed + toast ride the SAME earn_gold router every
+	# other reward uses; item_lost is remove_item's existing event, no new
+	# event type introduced.
+	_events.clear()
+	assert(eSell.sell_item("leather_jerkin"), "sell_item succeeds on a sellable, carried, unequipped item")
+	assert(not eSell.inventory.has("leather_jerkin"), "sold item leaves the inventory")
+	assert(eSell.gold == 12, "sell_item pays sell_price(24) = 12 gold")
+	assert(_count("item_lost") == 1, "item_lost emitted once")
+	assert(_count("gold_changed") == 1, "gold_changed emitted once")
+	var sold_gold_payload: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "gold_changed":
+			sold_gold_payload = e["payload"]
+	assert(sold_gold_payload.get("delta", 0) == 12 and sold_gold_payload.get("total", 0) == 12 and sold_gold_payload.get("source", "") == "krshia_sell", "gold_changed payload carries delta/total/source for the sale")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "Earned 12 gold."), "the standard earn toast fires for a sale like any other reward")
+
+	_events.clear()
+	assert(not eSell.sell_item("leather_jerkin"), "selling an item no longer carried is a no-op")
+	assert(_events.is_empty(), "no-op resale emits nothing")
+
+	# Unpriced gear (no established worth) is unsellable even carried+unequipped.
+	assert(eSell.unequip("weapon"), "fixture: unequip the starter sword")
+	_events.clear()
+	assert(not eSell.sell_item("rusty_sword"), "sell_item refuses an item with no price field")
+	assert(_events.is_empty(), "refused unpriced-item sell emits nothing")
+
+	# The `unsellable` flag carve-out: resonant_catalyst carries a real price
+	# (35) but is flagged unsellable in items.json (a quest macguffin, per its
+	# own _comment) -- it must never appear in sellable_items() nor sell for
+	# anything despite having worth.
+	eSell.pickup("resonant_catalyst", "test")
+	assert(not eSell.sellable_items().has("resonant_catalyst"), "sellable_items excludes an unsellable-flagged item despite its price")
+	_events.clear()
+	assert(not eSell.sell_item("resonant_catalyst"), "sell_item refuses an unsellable-flagged item")
+	assert(eSell.inventory.has("resonant_catalyst"), "the refused item stays carried")
+	assert(_events.is_empty(), "refused unsellable-flagged sell emits nothing")
+
+	# The [Trader]/[Merchant] modifier seam: a known skill carrying
+	# `trade_bonus` (no shipped skill has one yet -- this proves the seam a
+	# future skills.json entry would land into, without touching skills.json
+	# itself). Written directly into a scratch instance's own `skills`/
+	# `player_skills` so nothing here leaks into any other test's catalog.
+	var eBonus := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	assert(eBonus.sell_price(24) == 12, "fixture baseline: no trade_bonus known yet")
+	eBonus.skills["test_trader_instinct"] = {"id": "test_trader_instinct", "trade_bonus": 0.1}
+	eBonus.player_skills.append("test_trader_instinct")
+	assert(eBonus.sell_price(24) == 13, "a known skill's trade_bonus scales the rate: floor(24 * 0.5 * 1.1) = floor(13.2) = 13")
+
 	# Field-only guard: equip/unequip refuse while a fight is active.
 	e1.transition("floodplains", Vector2i(27, 18))
 	e1.record_accomplishment("met_relc")
@@ -2580,22 +2657,48 @@ func _init() -> void:
 	assert(_count("item_lost") == 1, "the return emits item_lost")
 	assert(_toast_texts().has("The undelivered parcel goes back on the night ledger."), "the return is toasted at the sleep beat")
 	assert(gDel.accomplishment_count("completed_delivery_delivery_gate_dispatch") == 0 and gDel.gold == 1, "no pay, no completion on a failed run")
+	# RETIREMENT (item D bug fix, user report): a completed delivery must
+	# never rotate back into the slate, EVEN THOUGH its raw pool index would
+	# otherwise fall inside this window (times_slept 1, unfiltered pool
+	# would read [pisces_parcel, gate_dispatch, grate_phials] -- the OLD,
+	# now-superseded assertion). With krshia_wool filtered OUT of the pool
+	# before rotation, the remaining 4-item pool's OWN window shifts too
+	# (the "simplest choice" the fix's doc comment discloses: the window can
+	# shift/shrink once a slip retires) -- landing on
+	# [gate_dispatch, grate_phials, inn_hamper] instead, with pisces_parcel
+	# (not yet completed) pushed just outside this particular window.
 	var del_slate_after: Array = gDel.delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"]))
-	assert(del_slate_after == ["delivery_pisces_parcel", "delivery_gate_dispatch", "delivery_grate_phials"], "the sleep rotates the slate (times_slept 1 window)")
-	# Re-accept honesty (WHY the mode is delta, not absolute): taking the
-	# already-completed krshia run again must NOT insta-complete off the
-	# previous run's delivered counter -- a fresh arrival is required.
+	assert(del_slate_after == ["delivery_gate_dispatch", "delivery_grate_phials", "delivery_inn_hamper"], "the sleep rotates the slate over the RETIREMENT-FILTERED pool (times_slept 1 window, krshia_wool excluded)")
+	assert(not del_slate_after.has("delivery_krshia_wool"), "a completed delivery never reappears in the slate, permanently")
+
+	# accept_delivery refuses a retired (already-completed) id outright --
+	# no re-grant, no baseline, no state change -- defense-in-depth for
+	# delivery_board_deliveries()'s own filter above (the real picker can
+	# never offer a retired id to begin with, since it's built from that
+	# same filtered slate).
+	_events.clear()
 	gDel.accept_delivery("delivery_krshia_wool")
-	assert(gDel.accepted_delivery_baseline == {"delivered_delivery_krshia_wool": 1}, "re-accept baselines at the previous run's counter")
-	assert(not gDel.turn_in_delivery(), "a re-accepted delivery does not insta-complete (delta-since-accept)")
-	assert(gDel.inventory.has("parcel_plains_wool"), "fresh parcel granted for the repeat run")
-	assert(gDel.move_player(Vector2i.DOWN) and gDel.move_player(Vector2i.UP), "step away and back to the mark")
-	assert(gDel.accomplishment_count("delivered_delivery_krshia_wool") == 2, "the repeat arrival banks a second delivered count")
+	assert(gDel.accepted_delivery_id == "", "accept_delivery refuses a retired (completed) delivery id")
+	assert(not gDel.inventory.has("parcel_plains_wool"), "no parcel re-granted for a retired id")
+	assert(_events.is_empty(), "the refused re-accept emits nothing")
+
 	# A delivered-but-not-yet-paid slip SURVIVES a sleep (the mark was made
-	# same-waking; the parcel is already out of the pack, so no fail fires).
+	# same-waking; the parcel is already out of the pack, so no fail fires) --
+	# same coverage the old (pre-retirement) test proved via a krshia
+	# re-accept; proved here on pisces_parcel instead (still live, never
+	# completed, so a normal fresh accept is legitimate).
+	gDel.accept_delivery("delivery_pisces_parcel")
+	assert(gDel.accepted_delivery_id == "delivery_pisces_parcel", "a still-live (uncompleted) delivery accepts normally")
+	gDel.transition("street", Vector2i(30, 6))
+	assert(gDel.inventory.has("parcel_that_ticks"), "a transition/teleport never triggers arrival")
+	_events.clear()
+	assert(gDel.move_player(Vector2i.UP), "step to (30,5), adjacent to pisces (30,4)")
+	assert(gDel.accomplishment_count("delivered_delivery_pisces_parcel") == 1, "arrival banks delivered_<id>")
+	assert(not gDel.inventory.has("parcel_that_ticks"), "arrival IS the handoff -- parcel leaves the pack")
 	gDel.sleep()
-	assert(gDel.accepted_delivery_id == "delivery_krshia_wool", "a delivered-but-unpaid slip survives sleep")
+	assert(gDel.accepted_delivery_id == "delivery_pisces_parcel", "a delivered-but-unpaid slip survives sleep")
 	assert(gDel.turn_in_delivery() and gDel.gold == 2, "pay collects fine on a later waking")
+	assert(gDel.accomplishment_count("completed_delivery_delivery_pisces_parcel") == 1, "second delivery completes too")
 
 	# --- 8b R1 (issue #10): the encounter_when phase gate (locked shape 2) ---
 	# Two synthetic encounters against the REAL combat catalog (goblin_ambush

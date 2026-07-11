@@ -15,12 +15,13 @@
   { "action": "assert_state", "path": "accomplishments.crate_returned", "equals": 1 },
   { "action": "assert_state", "path": "accomplishments.chatted_with_krshia", "equals": 3 },
 
-  { "_comment": "== BEFORE: social_talked[krshia] is already true (fixture), so this FIRST interact falls straight through to the REAL hub -- no pool line consumed. At count 3 the stage-3 topic is genuinely absent: exact-length 3-entry visible array (shop-nav/just-visiting/tribe-topic only).", "action": "press", "name": "interact" },
+  { "_comment": "== BEFORE: social_talked[krshia] is already true (fixture), so this FIRST interact falls straight through to the REAL hub -- no pool line consumed. At count 3 the stage-3 topic is genuinely absent: exact-length 4-entry visible array (shop-nav/just-visiting/tribe-topic/sell-nav -- the ratified sell mechanic's ALWAYS-visible option, appended last, has no stage gate of its own so it shows at every count).", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_crate" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "Crate is home. You, I will remember. Yes.", "options": [
    { "text": "What's on the stall today?", "locked": false, "requirement": "" },
    { "text": "Just visiting.", "locked": false, "requirement": "" },
-   { "text": "Silverfang. That's your tribe?", "locked": false, "requirement": "" }
+   { "text": "Silverfang. That's your tribe?", "locked": false, "requirement": "" },
+   { "text": "I've a few things I don't need. Buying?", "locked": false, "requirement": "" }
   ] }, "timeout_sec": 5 },
   { "action": "assert_event_absent", "type": "dialogue_node", "payload_contains": { "options": [
    { "text": "What's on the stall today?", "locked": false, "requirement": "" },
@@ -46,13 +47,14 @@
   { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_krshia", "count": 4 } },
   { "action": "screenshot", "name": "01_stage_swap_pool_line" },
 
-  { "_comment": "== AFTER: SECOND interact this same (new) waking falls through to the real hub -- chatted_with_krshia is now 4, so the stage-3 topic is present (4-entry visible array, exact length).", "action": "press", "name": "interact" },
+  { "_comment": "== AFTER: SECOND interact this same (new) waking falls through to the real hub -- chatted_with_krshia is now 4, so the stage-3 topic is present (5-entry visible array, exact length, sell-nav still appended last).", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_crate" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "Crate is home. You, I will remember. Yes.", "options": [
    { "text": "What's on the stall today?", "locked": false, "requirement": "" },
    { "text": "Just visiting.", "locked": false, "requirement": "" },
    { "text": "Silverfang. That's your tribe?", "locked": false, "requirement": "" },
-   { "text": "You said the necklace was a promise.", "locked": false, "requirement": "" }
+   { "text": "You said the necklace was a promise.", "locked": false, "requirement": "" },
+   { "text": "I've a few things I don't need. Buying?", "locked": false, "requirement": "" }
   ] }, "timeout_sec": 5 },
   { "_comment": "Choose the newly-unlocked topic (visible index 3) -- the OBLIQUE necklace reveal, banks heard_krshia_plans.", "action": "move", "direction": "down", "steps": 3 },
   { "action": "press", "name": "confirm" },
@@ -63,7 +65,7 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia" }, "timeout_sec": 5 },
 
-  { "_comment": "== PERK SURFACE: 'What's on the stall today?' (visible index 0 -- heard_krshia_plans now banked, so the necklace topic itself is hide_when-retired; the hub's visible array is back to 3 entries with the tribe topic still showing) opens the shop. Full-price rows are hide_when-hidden (stage gate met); the 4 friend's-price duplicates stand in their place. gold:10 ungreys only the charm.", "action": "press", "name": "confirm" },
+  { "_comment": "== PERK SURFACE: 'What's on the stall today?' (visible index 0 -- heard_krshia_plans now banked, so the necklace topic itself is hide_when-retired; the hub's visible array is back to 4 entries -- tribe topic still showing, plus the ALWAYS-visible sell-nav appended last) opens the shop. Full-price rows are hide_when-hidden (stage gate met); the 4 friend's-price duplicates stand in their place. gold:10 ungreys only the charm.", "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "options": [
    { "text": "Show me the charms.", "locked": false, "requirement": "" },
    { "text": "Nothing today.", "locked": false, "requirement": "" },
