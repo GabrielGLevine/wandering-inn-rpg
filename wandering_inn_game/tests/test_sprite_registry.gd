@@ -387,6 +387,16 @@ func _build_expected_counts() -> Dictionary:
 	for invrisil_owned_static: String in ["plaza_fountain", "street_lamp", "coin_shop_sign", "guild_banner"]:
 		counts["%s/idle" % invrisil_owned_static] = 1
 
+	## 8d Phase B -- dungeon dressing (licensed Cemetery/Castle/Cave region
+	## crops, fallback-relaxed in a public checkout via is_fallback_sheet like
+	## every other licensed pick above) + the two integrated trap-tell props
+	## (owned PixelLab art, single 32x32 statics, never fallback-relaxed).
+	counts["dungeon_statue/idle"] = 1
+	counts["dungeon_rubble/idle"] = 1
+	counts["pressure_plate/idle"] = 1
+	counts["snare_coil/idle"] = 1
+	counts["illusory_floor_tell/idle"] = 1
+
 	return counts
 
 

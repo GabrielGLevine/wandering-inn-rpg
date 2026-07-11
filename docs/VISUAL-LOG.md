@@ -16,6 +16,20 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] DUNGEON/TRAP TELLS — `dart_slit_a` (`trapped_halls`) reuses the
+  registered `sewer_grate` sprite (tinted cool-dark) as a placeholder —
+  the A3 pixellab `dart_slit.png` candidate drifted purple against the
+  Cemetery family's olive-warm-grey palette and was never integrated.
+  `illusory_floor_a` reuses a same-pack Cemetery `Props.png` debris crop
+  (`illusory_floor_tell`, guaranteed palette match) instead of the A3
+  `illusory_floor.png` candidate, which was already flagged "too
+  uniform" at A3 and separately drifts navy-blue against this floor.
+  Both mechanisms are fully wired and legible via toast text + tint
+  swap (see `qa_output/dungeon_peek/06_dart_slit_disarmed.png` and
+  `07_illusory_floor_revealed.png`); only the bespoke tell art is
+  missing. First seen: 8d Phase B (issue #14), 2026-07-11. Fix: regen
+  both candidates against the real Cemetery floor family (dark
+  blue-grey brick, olive cast) via PixelLab, controller art pass.
 - [ ] INN/EXTERIOR — the facade's dusk/night WINDOW GLOW is
   mechanism-verified (phase-gated light, 2-of-8 budget, the lantern
   precedent) but not yet eyeballed at dusk outside — no script frames the

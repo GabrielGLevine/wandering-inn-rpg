@@ -3652,5 +3652,95 @@
    0.736
   ],
   "shadow": true
+ },
+ "dungeon_statue": {
+  "_comment": "8d Phase B dressing FIX (windowed-read caught the original pick wrong -- it was Castle's own window/archway art, not a statue; both candidate blobs in the same size class rendered as arched glass panes, confirmed against a full-sheet crop before this correction, no PNG-into-context violation for anything past this one verification pass). CASTLE 0.3's REAL statue/bust family: a 3x2 grid of stone busts-on-plinths (Assets/Tiles.png, no separate Props.png -- furniture lives embedded in the tileset). PIL connected-component blob scan on that grid specifically: bbox (279,75,18,32), a bearded-elder bust, warm-grey stone rgb~(91,83,77). render_scale raised to 0.85 (native crop is narrower than the boulder/rubble family) so it reads clearly at 1 cell wide, ~1.7 cells tall. ANCHOR RULE: alpha-bbox-derived crop, default anchor [0.5,1.0] correct, no override.",
+  "render_scale": 0.85,
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/tiles/castle/Tiles.png",
+    "region": [
+     279,
+     75,
+     18,
+     32
+    ],
+    "frame_size": [
+     18,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "dungeon_rubble": {
+  "_comment": "8d Phase B dressing FIX (windowed-read caught the original pick wrong -- Cave Props.png turned out to be entirely purple mushroom-cap art, confirmed against a full-sheet crop; no rock content on that sheet at all). Re-sourced from the CAVE BIOME's own Tiles.png (already the exact sheet cave/sewers/ruin_surface's floor+blocked tiles come from -- no new manifest entry) instead: a small column of plain grey round boulders (3 sizes) sits beside the tileset's spike-rock formations. PIL connected-component blob scan, greyish-only filter (low channel saturation, mid-tone): bbox (194,83,11,9), the largest of the three, rgb~(80,83,69) -- a muted grey-olive that already sits close to the dungeon floor's own cast. render_scale raised to 1.4 (native crop is a small pebble, boulder/statue's own 0.5 would render it near-invisible) so it reads as a real rubble chunk, roughly 1 cell across. ANCHOR RULE: alpha-bbox-derived crop, default anchor [0.5,1.0] correct, no override.",
+  "render_scale": 1.4,
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/tiles/cave/Tiles.png",
+    "region": [
+     194,
+     83,
+     11,
+     9
+    ],
+    "frame_size": [
+     11,
+     9
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pressure_plate": {
+  "_comment": "8d Phase B trap tell (A3 parked candidate, INTEGRATED -- 'reads' verdict held at B2 against the real Cemetery floor). Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a worked-stone floor tile with a subtly raised/cracked-border square plate at center. Static, 32x32, full-bleed (PIL alpha bbox scan: content fills 0-31 on both axes, zero transparent padding -- ANCHOR RULE check done, default anchor [0.5,1.0] correct, no override needed). render_scale 0.5 -> displays at exactly one 16px cell (a floor-flush decal, so no `shadow`).",
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pressure_plate/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "snare_coil": {
+  "_comment": "8d Phase B trap tell (A3 parked candidate, INTEGRATED -- 'reads' verdict held at B2). Owned PixelLab art: a coil of taut wire/rope strung across a worn floor patch. Static, 32x32, full-bleed (PIL alpha bbox: 0-31 both axes, ANCHOR RULE check done, default anchor correct). render_scale 0.5 -> one 16px cell, no `shadow` (floor-flush).",
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/snare_coil/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "illusory_floor_tell": {
+  "_comment": "8d Phase B trap tell, PLACEHOLDER-BEST-FIT (controller art-pass flag): the A3 pixellab `illusory_floor.png` candidate was judged against the real Cemetery floor at B2 and rejected -- its dark blue-navy palette clashes hard with the family's olive-grey-green (the SAME palette-drift concern A3 already flagged for dart_slit, unretuned since; see this task's report). Substituted with a same-PACK crop so the palette is guaranteed to match: Cemetery Props.png bbox (96,64,31,16), PIL connected-component scan, a low floor-hugging debris/crack cluster rgb~(53,38,27), fill 0.65. Represents 'a patch of floor that reads slightly wrong', not the floor tile itself (the props-over-tiles rule's concern is disguising a real OBJECT as terrain out of laziness; this is the opposite -- a deliberate floor-illusion prop that must read as floor-ish by design, a documented exception). Entity-level `tint` nudges it toward the dungeon floor's olive cast; `visual_states` swaps to a warning tint on the reveal accomplishment. ANCHOR RULE: alpha-bbox-derived crop, default anchor correct. render_scale 0.5, no `shadow` (floor-flush, matches rug_tan/rug_green's un-shadowed floor-covering precedent).",
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/cemetery/Props.png",
+    "region": [
+     96,
+     64,
+     31,
+     16
+    ],
+    "frame_size": [
+     31,
+     16
+    ],
+    "fps": 1
+   }
+  }
  }
 }
