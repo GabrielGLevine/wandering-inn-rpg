@@ -127,6 +127,17 @@ follow-up with `"requires":{"accomplishment":{"asked_x":1}}`, and
 `"hide_when"` the asking option (so it stops re-offering) — exactly
 `lyonette_tip.json`'s `hub`→`barmaid_retort`→`tip` shape.
 
+## THE THIRD DASH FORM (audit find, 2026-07-11)
+The dash lint greps `—` and `\u2014` — but new copy keeps arriving with
+ASCII `--`, which renders as two literal hyphens through the plain
+`Label` pipeline. Lint all THREE forms; normalize `--` to `—` in spoken
+lines at delivery time, and hold the one-dash-per-line budget on NEW
+copy in the same pass (the Invrisil wave shipped 8 multi-dash lines —
+the discipline exists, apply it at authoring, not in audits). Also:
+hub EXIT options must be per-character voice ("Just tea, then." /
+"Just getting my bearings."), never the shared "Actually - one more
+thing." template — 11 byte-identical copies shipped before this rule.
+
 ## Verification
 `tests/test_content.gd` (cross-references every graph: gate ids, goto
 targets, effect targets, softlock guard, every `gained_by`/quest

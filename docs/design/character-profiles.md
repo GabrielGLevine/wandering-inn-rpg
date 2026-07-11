@@ -242,3 +242,23 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   considered: Agratha [Witch Teacher] — better-documented palette but
   teacher-coded; Mavika — threat/gatekeeper register, wrong for a
   shopfront. Eloise's residence + tea-vendor craft won.)
+
+## Wilovan (promoted + CORRECTED 2026-07-11; #17 audit find)
+- Canon (wiki): GNOLL — a Gentleman Caller, [Thug]/[Ruffian]-line,
+  broad, immaculate manners over real menace; hat-tipping courtesy.
+  THE STAGING PROFILE SAID HUMAN — wrong; shipped rig (pc_gnoll_m) and
+  wiki agree on Gnoll. This entry supersedes staging line 62.
+- Voice contract (as shipped, audit-verified strong): "sir" address,
+  apology-before-threat, "recover" never "steal", removes his hat
+  plain-and-slow in respect. One dash per line (his `ways` node blew
+  the budget — fix-lane item).
+- Partner Ratici exists in canon; NOT shipped — do not reference.
+
+## Frazzled Drayman (profile added 2026-07-11; #17 audit find)
+- OUR INVENTION (no canon figure) — the [Diplomat] system's free-entry
+  persuade NPC (street 19,14). Voice contract, capturing what the
+  shipped copy already does: harried, repetitive, caps-for-panic, zero
+  malice — a man drowning in a small problem. Persuading him is
+  FIRST-AID, not manipulation (the system's moral framing lives here).
+  No dashes (caps carry the panic — the greet's triple-dash is a
+  fix-lane item).

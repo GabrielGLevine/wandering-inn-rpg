@@ -60,7 +60,7 @@ Wiki-verify canon entries at generation/writing time.
   canon, Invrisil-based, hat-defined — "perfect gentlemen. Until the
   hats come off." — honor code confirmed; named members exist [Normen,
   Alcaz] if a canon name is wanted, else ORIGINAL+flag for ours): human,
-  immaculate-but-worn suit, hat CENTRAL to the read (type unspecified in
+  immaculate-but-worn suit [CANON ERROR — superseded: see the promoted entry in character-profiles.md; shipped Wilovan is a GNOLL], hat CENTRAL to the read (type unspecified in
   canon — bowler-class passes), cudgel like an umbrella. Voice:
   courtesy-as-menace ("sir/miss" every sentence) · apologizes BEFORE the
   threat · "recover", never "steal". The hats-off moment is the canon
