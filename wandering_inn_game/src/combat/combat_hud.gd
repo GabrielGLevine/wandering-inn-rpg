@@ -389,6 +389,10 @@ func render_bar_slots(view: RefCounted, bar_slots: Array) -> Array:
 			"attack":
 				d["affordable"] = bar_action_affordable("Attack", c)
 				d["ap_cost"] = WICombat.ATTACK_COST
+				# GH#70: carried through so _slot_info_line can branch its text --
+				# see that function own comment. weapon_range defaults to 1 for
+				# every pre-GH#70 combatant.
+				d["weapon_range"] = int(c.get("weapon_range", 1))
 			"dash":
 				d["affordable"] = bar_action_affordable("Dash", c)
 				d["ap_cost"] = WICombat.DASH_COST
@@ -555,6 +559,13 @@ func _render_slot_info_line(rendered_slots: Array, info_slot_index: int) -> Stri
 func _slot_info_line(d: Dictionary) -> String:
 	match String(d.get("type", "")):
 		"attack":
+			# GH#70: a bow (weapon_range > 1) reads its live range instead of
+			# the melee-only phrasing -- gated strictly on > 1 so every
+			# pre-GH#70 combatant (weapon_range defaults to 1) keeps the exact
+			# original string, byte-identical.
+			var attack_range := int(d.get("weapon_range", 1))
+			if attack_range > 1:
+				return "Attack — strike a target within range %d" % attack_range
 			return "Attack — strike an adjacent enemy"
 		"dash":
 			return "Dash — %d AP: refill your move pool" % int(d.get("ap_cost", WICombat.DASH_COST))

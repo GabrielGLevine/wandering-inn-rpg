@@ -873,6 +873,26 @@ func interact() -> Dictionary:
 			if bool(target.get("portal_menu", false)) and _door_gate_met(target.get("portal_menu_when", {}) as Dictionary):
 				return _interact_portal_menu()
 			if target.has("on_interact_accomplishment"):
+				# GH#70 item-possession gate for a bare PROP (the
+				# archery-butt's "bow held" requirement): the #59 item gate
+				# (WIDialogue._meets's `requires: {item: ...}`) only reaches
+				# CONVERSATION options, never a plain on_interact_accomplishment
+				# prop -- this is the small parallel gate that closes that gap,
+				# same narrow shape as `requires_skill` just below (gate, else a
+				# diegetic nudge, per the explicit-hotbar doctrine: never
+				# auto-grant without genuine possession). `requires_weapon_family`
+				# names an items.json `weapon_family` (checked against the
+				# CARRIED inventory, not the equipped slot -- mirrors #59's own
+				# "carries a real dish item" possession semantics, never
+				# equip-state); met by ANY item of that family, so a future T3
+				# bow satisfies it for free. Absent (every pre-GH#70
+				# on_interact_accomplishment prop) skips this whole branch,
+				# byte-identical.
+				var req_family := String(target.get("requires_weapon_family", ""))
+				if req_family != "" and not _holds_weapon_family(req_family):
+					var hint := String(target.get("item_hint_toast", "Empty hands won't do it. You'd need the right weapon in your pack."))
+					_emit(WIEvents.TOAST, {"text": hint})
+					return {"item_hint": req_family}
 				var accomplishment_id := String(target["on_interact_accomplishment"])
 				record_accomplishment(accomplishment_id)
 				var toast_text := String(target.get("toast", ""))
@@ -2332,6 +2352,13 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	var kit: Array = WIProgression.granted_skills(classes, _combat_config["classes"], generalist_classes)
 	var weapon := item(String(equipped.get(WIKeys.WEAPON, "")))
 	pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills)
+		# GH#70 range+LoS seam: a bow's items.json `range` (4) rides onto the
+		# runtime combatant dict the SAME build-time-only way weapon_die
+		# would if it were per-weapon (see WEAPON_RANGE's own doc comment) --
+		# `wi_combat.gd`'s `_init` reads this key straight off the cfg. Every
+		# pre-GH#70 weapon item omits `range`, so `weapon.get` defaults to 1
+		# (melee) for every equip state that predates this task.
+		pc[WIKeys.WEAPON_RANGE] = int(weapon.get(WIKeys.RANGE, 1))
 	var armor := item(String(equipped.get("armor", "")))
 	var accessories: Array = []
 	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
@@ -2355,6 +2382,17 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 ## (the empty-slot sentinel).
 func item(item_id: String) -> Dictionary:
 	return _items.get(item_id, {})
+
+
+## GH#70: whether the player currently CARRIES (inventory, not equip-state --
+## see `interact()`'s `requires_weapon_family` doc comment) any item whose
+## items.json `weapon_family` matches `family`. The archery-butt's item-
+## possession gate; pure lookup, no side effects.
+func _holds_weapon_family(family: String) -> bool:
+	for item_id: String in inventory:
+		if String(item(item_id).get("weapon_family", "")) == family:
+			return true
+	return false
 
 
 ## Adds `item_id` to the inventory and emits ITEM_GAINED + a "Got: <name>"

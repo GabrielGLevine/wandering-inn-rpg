@@ -419,6 +419,45 @@
 			"mp_cost": 3,
 			"effect": { "type": "invisibility", "duration_rounds": 3, "applies": { "invisible": { "untargetable": true } } },
 			"description": "A working that bends the light around you until even a careful eye finds nothing worth watching."
+		},
+		{
+			"_comment": "GH#70 [Archer]. The power_strike twin, weapon-gated to bow instead of sword -- SAME effect type (damage_mult), SAME resolver (skill_effects.gd's damage_mult case), now range+LoS-aware via WICombat.in_weapon_range so this actually fires at a bow's range 4 instead of only adjacent. No icon: assets/ui/icons/ has no unclaimed bow/arrow art (checked against every skills.json `icon` usage before writing this -- icon_attack/icon_dash are the only two unclaimed ids, and both are reserved for the innate hotbar slots, not a Skill); degrades gracefully like flame_pillar/mana_shield/counter_strike and a dozen other shipped iconless skills -- disclosed as an art-pass gap, not a blocker.",
+			"id": "power_shot",
+			"display_name": "[Power Shot]",
+			"contexts": ["combat"],
+			"ap_cost": 3,
+			"weapon": "bow",
+			"effect": { "type": "damage_mult", "mult": 2.0 },
+			"description": "A full draw, held a breath too long, loosed dead center."
+		},
+		{
+			"_comment": "GH#70 [Archer]. The quick_slash twin, weapon-gated to bow. Same damage_mult resolver/range-aware seam as Power Shot above.",
+			"id": "quick_nock",
+			"display_name": "[Quick Nock]",
+			"contexts": ["combat"],
+			"ap_cost": 1,
+			"weapon": "bow",
+			"effect": { "type": "damage_mult", "mult": 0.7 },
+			"description": "Nock, draw, loose -- before the first arrow lands, the second is already gone."
+		},
+		{
+			"_comment": "GH#70 [Archer]. Reuses line_damage VERBATIM (flame_jet's own effect type/resolver, WISkillEffects._resolve_line_damage) -- an arrow that overpenetrates instead of a jet of fire, weapon-gated to bow instead of element-gated. NO new effect type. Friendly fire is real on this type by design (every occupant of the walked cells is hit, same as flame_jet) -- canon-fun for a piercing shaft down a corridor. Costed like triple_thrust (3 AP, no MP -- archers carry no mana pool; giving this an mp_cost would incidentally grant [Archer] a max_mp pool, which nothing in this class wants) rather than flame_jet's 2 AP/4 MP, since MP can't do any of the power-gating work here.",
+			"id": "piercing_shot",
+			"display_name": "[Piercing Shot]",
+			"contexts": ["combat"],
+			"ap_cost": 3,
+			"weapon": "bow",
+			"effect": { "type": "line_damage", "length": 4 },
+			"description": "One arrow, and everything in its path pays the same price."
+		},
+		{
+			"_comment": "GH#70 [Archer]'s field-flavor grant, the observe-family shape ([Appraise Foe]'s own field/field_ambient contract) reused for the archer's own read of a room -- the third-pillar (non-combat) presence every earned class carries (mage has [Light], rogue/warrior lean on their combat kit alone, but archer gets a bespoke flavor skill matching mage's precedent). Deliberately NOT the same skill id as `observe` (a distinct grant, not a re-grant of Tactician's [Appraise Foe]) -- no combat effect, exploration-only, contexts/field/field_ambient shape copied from `observe` verbatim.",
+			"id": "keen_eye",
+			"display_name": "[Keen Eye]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Keen Eye] — You read the room the way you'd read a stand of trees for game: what moved, what didn't, what's worth a second look. Nothing here needs tracking.",
+			"description": "A hunter's habit of noticing: the broken twig, the wrong shadow, the one thing that doesn't belong."
 		}
 	]
 }
