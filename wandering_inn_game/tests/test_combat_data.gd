@@ -56,9 +56,17 @@ func _init() -> void:
 			assert(skill_ids.has(String(sk)), "combatant %s references unknown skill %s" % [c[WIKeys.ID], sk])
 
 	for cls: Dictionary in classes["classes"]:
-		var prev_level := 0
+		# GH#54 sparse-table convention: evolution-only classes start at a
+		# derived floor, not 1 -- this file only asserts contiguity from the
+		# FIRST entry; the floor itself (and no-sub-floor padding) is
+		# test_content.gd's _validate_class_level_tables, which derives it
+		# from the evolution/consolidation data. TRAP: these two validators
+		# overlap -- the old contiguous-from-1 assert here went CI-red the
+		# moment #54's trim landed (the lane verified test_content, the
+		# sweep never runs unit suites). Change one, grep for the other.
+		var prev_level := -1
 		for lv: Dictionary in cls["levels"]:
-			assert(int(lv["level"]) == prev_level + 1, "class levels must be contiguous from 1")
+			assert(prev_level == -1 or int(lv["level"]) == prev_level + 1, "class %s levels must be contiguous (gap before %d)" % [String(cls.get("id", "?")), int(lv["level"])])
 			prev_level = int(lv["level"])
 			for sk: Variant in lv["grants"]:
 				assert(skill_ids.has(String(sk)), "class grant references unknown skill %s" % sk)
