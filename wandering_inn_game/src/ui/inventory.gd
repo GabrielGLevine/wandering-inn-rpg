@@ -54,8 +54,11 @@ extends CanvasLayer
 ## (the `ui_inventory_shown` payload's `item_effect_lines`, one array per
 ## CARRIED item in list order) is unchanged and independent of where the
 ## effect lines are drawn on screen; `selected_icon`/`mech_line` are
-## additive payload fields for the CURSOR's own selection (see
-## `_emit_shown`).
+## additive payload fields for the CURSOR's own selection, carried on BOTH
+## `ui_inventory_shown` (opens + gold/equip re-confirms ONLY -- it drives
+## the `ui_open` chime, see `_emit_shown`'s AUDIO TRAP note) and the
+## per-cursor-move `ui_inventory_selection_rendered` (see
+## `_emit_selection`).
 ##
 ## `_scroll`'s `mouse_filter` is left at Control's own default (`STOP`, not
 ## `IGNORE`) so real mouse-wheel/drag scroll input actually reaches the
@@ -94,8 +97,14 @@ const ICON_DIR := "res://assets/icons/items/"
 ## Fixed reservation for the breakout box's height (same "reserve real
 ## metrics for the true current max, not a guess" idiom as
 ## `STATUS_LABEL_RESERVED_LINES` below) -- 3 lines covers every shipped item
-## today (e.g. traveler_charm's HP + Resonance + Worth lines together); a
-## future item needing a 4th simultaneous line must bump this.
+## today (e.g. traveler_charm's HP + Resonance + Worth lines together).
+## TRAP: this is a RESERVE, not a clamp -- there is NO runtime guard, so an
+## item whose card generates a 4th simultaneous effect line silently GROWS
+## the box past the reservation (custom_minimum_size is a floor, and the
+## lines VBox renders every line regardless), shoving the layout below it.
+## Adding a 4th line-producing field to any items.json entry (or a new arm
+## to WIEffectText.item_effect_lines) means bumping this constant in the
+## same change.
 const CORNER_BREAKOUT_RESERVED_LINES := 3
 ## Symmetric content margin inside the breakout box's carved-panel background.
 const CORNER_BREAKOUT_MARGIN := 10
@@ -452,7 +461,10 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 ## `_corner_mech_line` (the breakout's lines, `" | "`-joined, `""` when the
 ## selection has none) -- both read state `_render_corner` already set,
 ## never recomputed a second time, so the payload can't drift from what's
-## drawn.
+## drawn. AUDIO TRAP -- this event carries the `ui_open` panel-open chime
+## (data/audio.json), so it must fire only on real opens and the sparse
+## gold/equip re-confirms above, NEVER per cursor move; per-move corner
+## confirmation goes through `_emit_selection()` below instead.
 func _emit_shown() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SHOWN, {
 		"items": _item_ids.size(),
@@ -460,6 +472,21 @@ func _emit_shown() -> void:
 		"item_effect_lines": _rendered_effect_lines(),
 		"resonance": {"used": Game.sim.resonance_used(), "capacity": Game.sim.resonance_capacity},
 		"cursor_scroll": _scroll.scroll_vertical,
+		"selected_icon": _corner_icon.visible,
+		"mech_line": _corner_mech_line,
+	})
+
+
+## The per-cursor-move confirmation that the selection corner redrew --
+## DISTINCT from `_emit_shown()` (see its AUDIO TRAP note; the
+## UI_JOURNAL_LOADOUT_RENDERED idiom) so navigating the list never replays
+## the panel-open chime. Same real-rendered-fact contract: `selected_icon`/
+## `mech_line` read the state `_render_corner` just set, `cursor`/`item`
+## name the selection they describe.
+func _emit_selection() -> void:
+	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_SELECTION_RENDERED, {
+		"cursor": _cursor,
+		"item": "" if _item_ids.is_empty() else String(_item_ids[_cursor]),
 		"selected_icon": _corner_icon.visible,
 		"mech_line": _corner_mech_line,
 	})
@@ -522,13 +549,14 @@ func _move_cursor(delta: int) -> void:
 	# navigation so it never lingers over a different item.
 	_status_label.text = ""
 	_rebuild_items()
-	# Re-confirm on every cursor move, not just open/gold/equip -- the corner
-	# (icon + mech_line) is SELECTION-driven (file doc comment), so it
-	# changes on every move same as `_detail_box` does; without this, QA
-	# (and any future consumer of the bus) could only ever observe the
-	# corner for whatever item happened to be under the cursor at open time
-	# or at the next unrelated domain event.
-	_emit_shown()
+	# Confirm the redrawn corner via the DISTINCT selection event, NEVER
+	# `_emit_shown()`: audio.json keys the `ui_open` panel-open chime on
+	# ui_inventory_shown, so a shown-per-cursor-move emit replays that chime
+	# on every arrow press (18 chimes walking a full pack; WIAudio's 60ms
+	# cooldown only suppresses held-key repeats) -- a defect QA can't hear,
+	# since event pins are existence-only. The selection event carries the
+	# corner's own facts so QA still pins them per move.
+	_emit_selection()
 
 
 ## Returns the slot name `item_id` currently occupies ("weapon", "armor",
