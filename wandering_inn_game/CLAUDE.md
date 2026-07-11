@@ -135,7 +135,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `gate_district_walkthrough` | 9 | enters street for real via `liscor_gate`; gate NPCs + Selys |
 | `relc_tutorial` | 9 | full `relc_spar` tutor_lines beats + opacity/persistence teeth |
 | `work_loop` | 9 | inn work-loop, Helper leg (chores → `class_gained` → level 2) |
-| `crate_fight` | 9 (fixture `post_tutorial_street`) | "Missing Crate" FORCE path |
+| `crate_fight` | 9 (fixture `post_tutorial_street`) | "Missing Crate" FORCE path; issue #69's Klbkch ally-gate roster proof (`chatted_with_klbkch` fields him, not Relc) |
 | `crate_talk` | 9 (fixture `post_tutorial_street`) | "Missing Crate" WATCH path (no combat) |
 | `crate_light` | 9 | "Missing Crate" SKILL path ([Light]-studies `cellar_door`) |
 | `journal_skills` | 9 | journal skills-by-class panel; pre/post-first-use reveal |
@@ -145,7 +145,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `hotbar_tab_loop` | 9 (fixture `near_tactician`) | Issue #58: Tab-primed field-hotbar select -- prime/re-prime, wrap-in-place move_right with player_cell unchanged (arrows captured while primed), Esc disarm, confirm fires the number-key-equivalent stream |
 | `social_loop` | 9 (fixture `post_tutorial_street`) | Social Pillar v1 proof; rotating talk pools → [Diplomat] |
 | `sewers_walkthrough` | 9 (fixture `near_sewers`) | Liscor sewers proof; grate-gate seam + vermin fight |
-| `cisterns_fight` | 9 (fixture `cisterns_fight_start`) | Quest 1 FIGHT path (clear `shield_spiders` nest) |
+| `cisterns_fight` | 9 (fixture `cisterns_fight_start`) | Quest 1 FIGHT path (clear `shield_spiders` nest); issue #69's other Klbkch-allied fight (seed re-verified, not independently roster-asserted -- crate_fight carries that proof) |
 | `cisterns_talk` | 9 (fixture `cisterns_talk_start`) | Quest 1 TALK path (persuade Zevara, no combat) |
 | `cisterns_scout` | 9 (fixture `cisterns_scout_start`) | Quest 1 SKILL path ([Appraise Foe] the `nest_ledge`) |
 | `wrong_order_loop` | 9 (fixture) | "The Wrong Order" inn-local give→cook→report loop |

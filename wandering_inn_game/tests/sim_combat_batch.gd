@@ -119,11 +119,22 @@ const LOADOUT_CELLS := [
 ## its own arena/enemies/build (never touching COMPOSITIONS/BUILDS or the
 ## gated matrix above), so a new content encounter can never redden a balance
 ## gate. `build` names a BUILDS entry (resolved for its `classes`); `solo`
-## drops Relc. warrior2 is the representative level a player enters the sewers
-## at. Numbers are recorded to the report, not bounded (a nest fight's
-## difficulty is content, not a win-rate contract).
+## drops the ally entirely; an optional per-cell `ally` string (issue #69,
+## Klbkch's own alternation) names WHICH combatants.json ally id to field
+## when `solo` is false -- defaults to "relc" so every pre-#69 cell's
+## construction and print output are byte-identical. warrior2 is the
+## representative level a player enters the sewers at. Numbers are recorded
+## to the report, not bounded (a nest fight's difficulty is content, not a
+## win-rate contract).
 const ENCOUNTER_CELLS := [
+	## shield_spiders_w2_relc is a legacy MEASURED hypothetical -- the real
+	## `shield_spiders` encounter (skeleton_scene.json) never actually fielded
+	## Relc (its own `allies` was `[]`); issue #69 wires that entity's real
+	## `ally_requires` to Klbkch instead (`shield_spiders_w2_klbkch` below is
+	## the cell that now matches live content). Kept for the historical
+	## with-Relc read, no longer content-representative.
 	{"name": "shield_spiders_w2_relc", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior2", "solo": false},
+	{"name": "shield_spiders_w2_klbkch", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior2", "solo": false, "ally": "klbkch"},
 	{"name": "shield_spiders_w2_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior2", "solo": true},
 	{"name": "shield_spiders_w1_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "sewer_vermin_w2_solo", "arena": "sewers_nest", "enemies": ["sewer_vermin", "sewer_vermin"], "build": "warrior2", "solo": true},
@@ -137,15 +148,18 @@ const ENCOUNTER_CELLS := [
 	{"name": "raskghar_scouts_w5_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior5_mage5", "solo": true},
 	## The street "Missing Crate"/"Wrong Order" scavenger encounters
 	## (crate_scavengers/supplier_scavengers, skeleton_scene.json -- both 2x
-	## goblin_raider on arena goblin_ambush, allies: [], never Relc).
-	## MEASURED-only, same rationale as the raskghar_scouts route-fight cells
-	## above: crate_fight/wrong_order_fight already prove each one clears via
-	## its own pinned fixture rng_state (a real content proof); a win-rate
-	## CONTRACT would risk CI churn on balance-neutral changes elsewhere for
-	## two solo warrior1-vs-2-raider street fights without changing anything
-	## a player experiences. warrior1_tutorial SOLO is the honest
-	## representative build -- neither encounter ever fields an ally.
+	## goblin_raider on arena goblin_ambush). Issue #69 wired crate_scavengers'
+	## real `ally_requires` to Klbkch (`crate_scavengers_w1_klbkch` below
+	## matches live content now); supplier_scavengers is untouched, still
+	## `allies: []`, never any ally. MEASURED-only, same rationale as the
+	## raskghar_scouts route-fight cells above: crate_fight/wrong_order_fight
+	## already prove each one clears via its own pinned fixture rng_state (a
+	## real content proof); a win-rate CONTRACT would risk CI churn on
+	## balance-neutral changes elsewhere for solo/allied warrior1-vs-2-raider
+	## street fights without changing anything a player experiences.
+	## warrior1_tutorial is the honest representative build for both.
 	{"name": "crate_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
+	{"name": "crate_scavengers_w1_klbkch", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": false, "ally": "klbkch"},
 	{"name": "supplier_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
 ]
 
@@ -471,22 +485,25 @@ func _init() -> void:
 
 	## Sewers encounter axis. Measured-only -- mirrors the main
 	## loop's construction (build pc from the named BUILDS entry's classes,
-	## optional Relc, enemies) with the cell's own inline arena/enemies.
+	## an optional ally, enemies) with the cell's own inline arena/enemies.
+	## `ally_id` (issue #69) defaults to "relc" so every pre-#69 cell's
+	## construction and print label are byte-identical to before.
 	for cell: Dictionary in ENCOUNTER_CELLS:
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
 		var wins := 0
 		var rounds: Array[int] = []
-		var relc_downed := 0
-		var has_relc := not bool(cell.get("solo", false))
+		var ally_downed := 0
+		var has_ally := not bool(cell.get("solo", false))
+		var ally_id := String(cell.get("ally", "relc"))
 		for seed_v in range(1, RUNS_PER_CELL + 1):
 			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
 			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
 			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
 			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
 			var cfgs: Array = [pc]
-			if has_relc:
-				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
+			if has_ally:
+				cfgs.append((by_id[ally_id] as Dictionary).duplicate(true))
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
 			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
@@ -499,8 +516,8 @@ func _init() -> void:
 			if combat.outcome["victory"]:
 				wins += 1
 			rounds.append(int(combat.outcome["rounds"]))
-			if has_relc and not bool(combat.combatants.get("relc", {}).get(WIKeys.ALIVE, true)):
-				relc_downed += 1
+			if has_ally and not bool(combat.combatants.get(ally_id, {}).get(WIKeys.ALIVE, true)):
+				ally_downed += 1
 
 		rounds.sort()
 		var win_rate := float(wins) / float(RUNS_PER_CELL)
@@ -510,11 +527,11 @@ func _init() -> void:
 			hist[r] = int(hist.get(r, 0)) + 1
 		print("[encounter / %s] arena=%s build=%s%s (measured) win_rate=%.2f median_rounds=%d min=%d max=%d" % [
 			cell["name"], String(cell["arena"]), String(cell["build"]),
-			"" if has_relc else " solo", win_rate, median, rounds[0], rounds[-1],
+			"" if has_ally else " solo", win_rate, median, rounds[0], rounds[-1],
 		])
 		print("  rounds histogram: ", hist)
-		if has_relc:
-			print("  relc_downed_rate=%.2f (%d/%d)" % [float(relc_downed) / float(RUNS_PER_CELL), relc_downed, RUNS_PER_CELL])
+		if has_ally:
+			print("  %s_downed_rate=%.2f (%d/%d)" % [ally_id, float(ally_downed) / float(RUNS_PER_CELL), ally_downed, RUNS_PER_CELL])
 
 	## The Awakened Raskghar boss axis. Same construction as the
 	## ENCOUNTER loop (build pc from the named BUILDS entry, optional Relc, the

@@ -1,5 +1,5 @@
 {
- "_comment": "The POST-TUTORIAL fixture positioned PAST the ambush, at the street gate-arrival cell (1,3). Used by the street-quest scripts (crate_talk/crate_fight) so they run their STREET content with the honest post-onboarding state (warrior L1, met/sparred/given_spear) WITHOUT re-fighting the corridor-free floodplains ambush every run -- crate_talk needs a genuinely combat-free run (its whole point is the no-fight WATCH solution), and crate_fight's only fight is its own street crate_scavengers encounter. rng_state re-derived: crate_scavengers now correctly fields BOTH goblin_raiders (same-id roster dedup fix), a genuinely harder solo warrior-L1 fight than the old 1-raider collapse; this state is one of the real winning draws for crate_fight (post_tutorial_street's outcome-defining consumer). gold raised 0->2 so crate_talk can afford the Watch Sergeant's new non-Diplomat 2-gold alternate (this fixture carries no [Diplomat], so crate_talk proves BOTH the locked free branch and the paid one) -- inert for crate_fight (gold has no combat effect) and for social_loop, which moved to its own dedicated social_loop_start fixture (issue #50) rather than share this one, since it needs [Diplomat] pre-held and this fixture's build backs crate_fight's own combat tuning.",
+ "_comment": "The POST-TUTORIAL fixture positioned PAST the ambush, at the street gate-arrival cell (1,3). Used by the street-quest scripts (crate_talk/crate_fight) so they run their STREET content with the honest post-onboarding state (warrior L1, met/sparred/given_spear) WITHOUT re-fighting the corridor-free floodplains ambush every run -- crate_talk needs a genuinely combat-free run (its whole point is the no-fight WATCH solution), and crate_fight's only fight is its own street crate_scavengers encounter. rng_state re-derived: crate_scavengers now correctly fields BOTH goblin_raiders (same-id roster dedup fix), a genuinely harder solo warrior-L1 fight than the old 1-raider collapse; this state is one of the real winning draws for crate_fight (post_tutorial_street's outcome-defining consumer). gold raised 0->2 so crate_talk can afford the Watch Sergeant's new non-Diplomat 2-gold alternate (this fixture carries no [Diplomat], so crate_talk proves BOTH the locked free branch and the paid one) -- inert for crate_fight (gold has no combat effect) and for social_loop, which moved to its own dedicated social_loop_start fixture (issue #50) rather than share this one, since it needs [Diplomat] pre-held and this fixture's build backs crate_fight's own combat tuning. Issue #69: `chatted_with_klbkch: 1` added so crate_fight's own canonical proves the real ally gate live (crate_scavengers now fields Klbkch, not Relc) -- plausible on this exact story position (both NPCs stand at the same gate plaza a real player passes through reaching the street). rng_state re-verified still resolves a win with Klbkch fielded (extra roster entry shifts initiative-order rng draws) -- crate_talk's own no-combat run is unaffected by this addition (the counter has no other consumer on that path).",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -19,7 +19,8 @@
    "reached_liscor": 1,
    "met_relc": 1,
    "sparred_with_relc": 1,
-   "given_spear_by_relc": 1
+   "given_spear_by_relc": 1,
+   "chatted_with_klbkch": 1
   },
   "player_skills": [
    "basic_cleaning"

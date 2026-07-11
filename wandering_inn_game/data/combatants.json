@@ -38,6 +38,27 @@
    ]
   },
   {
+   "_comment": "Klbkch the Slayer -- Antinium Senior Guardsman, Relc's patrol partner (issue #69: fields as the ALTERNATE early companion in the WATCH-context fights -- crate_scavengers' FORCE path and shield_spiders' cisterns FIGHT path -- while Relc keeps the tutorial/road/inn fights + the deep_tunnels descent, his own arc; no fight fields both). Voice/canon precedent: the #51 gate NPC (data/skeleton_scene.json's `klbkch` entity, whose talk_pool is precise/courteous/dry, never jokey) -- twin shortswords. Stats banded like relc's own record, a notch different in CHARACTER (the harness decides the final numbers, sim_combat_batch.gd ENCOUNTER_CELLS below): dex 16 (>relc's 12) reads as faster/more evasive -- WICombat._resolve_hit's hit_chance formula subtracts the TARGET's dex/4 from the attacker's roll, so a higher-dex ally is genuinely harder for enemies to land a hit on, not mere flavor. str 12 (<relc's 14) and weapon_die 5 (<relc's 6) together read as slightly less raw damage per landed hit (damage = str/2 + roll(weapon_die)) -- lighter twin shortswords vs. a spear. con 18 (<relc's 20) is a notch less bulky than a Drake spearmaster (max_hp = 20+con). `quick_slash` (damage_mult 0.7, 1 AP -- existing skill shape, NO new effect type) is the dual-shortsword flavor grant alongside the shared `basic_swordwork` baseline (same idiom as wilovan's own kit, this file's own record); WICombatAI's melee profile only ever calls power_strike BY NAME (never quick_slash), so this is known-kit flavor, not an AI-exercised skill -- matches the precedent exactly. NO `combat_scale` override: klbkch's field render_scale (data/sprites.json: 0.4348 on a 92px frame, figure crop 69px) already puts his on-screen figure at 69*0.4348=30.0px -- the SAME ~30px standard the Relc containment fix (combat_scale 0.61 on his bespoke 124px Drake frame) exists to force an OVERSIZED rig down to. Klbkch's rig is already standard-sized (Zevara-class per its own sprites.json comment), so no override is needed -- the riverfarm_hunter/antinium_worker precedent (only canon-tall rigs carry combat_scale).",
+   "id": "klbkch",
+   "display_name": "Klbkch",
+   "sprite": "klbkch",
+   "side": "player",
+   "stats": {
+    "str": 12,
+    "dex": 16,
+    "con": 18,
+    "int": 9,
+    "wis": 9,
+    "cha": 8
+   },
+   "weapon_die": 5,
+   "ai": "melee",
+   "skills": [
+    "basic_swordwork",
+    "quick_slash"
+   ]
+  },
+  {
    "_comment": "Riverfarm's own ally, `river_wolf_pack`/`briar_collectors`/`briar_collectors_deep` roster (issue #10/#11 FIX-FIRST: Relc has no fictional basis at Riverfarm -- reached solely via a SOLO Door arrival, Liscor's own Watch guardsman, no come-along beat, no locality; see wi-adding-an-encounter's ally precedent). CANON-GROUNDED, ORIGINAL+flag (docs/design/character-profiles-staging.md): wiki.wanderinginn.com/Riverfarm attests a [Hunter] class among the village's defenders (Califfy, Thel Grasse) -- this combatant realizes that attested profession, not an invented one. Stats/weapon_die/ai/skills are an EXACT clone of `relc`'s block (same numbers, only id/display_name/sprite differ) -- R2/R3's tuned harness bands (sim_combat_batch.gd RIVERFARM_CELLS, gated 0.55-0.95/0.55-0.85, measured 0.84) were tuned against this exact stat block under the old id; changing any stat here invalidates them. No `combat_scale` override (unlike relc's 0.61, which contains his bespoke 124px Drake frame) -- the `a_hunter` sprite is a plain 64px human frame, same convention as every other human-sized combatant. Fields only when `hunter_will_come` is banked (data/dialogue/riverfarm_hunter.json's own come-along beat, at the village) -- never on `met_relc` alone.",
    "id": "riverfarm_hunter",
    "display_name": "The Hunter",
