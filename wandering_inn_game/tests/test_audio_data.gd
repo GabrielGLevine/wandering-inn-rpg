@@ -113,6 +113,27 @@ func _fail(message: String) -> void:
 	assert(false, message)
 
 
+## Licensed-overlay contract (mirrors test_sprite_registry's public-checkout
+## relaxation): a stream that is ABSENT on disk is still valid when its path
+## is listed in assets_manifest.json -- public checkouts lack the private
+## bundle and WIAudio degrades to silence for exactly those files. A missing
+## stream NOT in the manifest is a real typo/regression and still fails.
+var _manifest_paths := {}
+
+
+func _stream_ok(stream: String) -> bool:
+	if FileAccess.file_exists(stream):
+		return true
+	if _manifest_paths.is_empty() and FileAccess.file_exists("res://assets_manifest.json"):
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets_manifest.json"))
+		var entries: Variant = parsed.get("assets", parsed) if parsed is Dictionary else parsed
+		if entries is Array:
+			for e: Variant in entries:
+				var path := String(e["path"]) if e is Dictionary else String(e)
+				_manifest_paths[path] = true
+	return _manifest_paths.has(stream.trim_prefix("res://"))
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var config := _load("res://data/audio.json")
@@ -143,7 +164,7 @@ func _init() -> void:
 			_fail("audio stream outside assets/audio: %s" % stream)
 		if not (stream.ends_with(".wav") or stream.ends_with(".ogg")):
 			_fail("audio stream must be WAV or OGG: %s" % stream)
-		if not FileAccess.file_exists(stream):
+		if not _stream_ok(stream):
 			_fail("missing audio stream for %s: %s" % [id, stream])
 
 		var cooldown := int(entry.get("cooldown_ms", 0))
@@ -186,7 +207,7 @@ func _init() -> void:
 			_fail("music stream outside assets/audio/music: %s" % stream)
 		if not stream.ends_with(".ogg"):
 			_fail("music stream must be OGG: %s" % stream)
-		if not FileAccess.file_exists(stream):
+		if not _stream_ok(stream):
 			_fail("missing music stream for %s: %s" % [id, stream])
 
 		var volume_db := float(entry.get("volume_db", 0.0))
