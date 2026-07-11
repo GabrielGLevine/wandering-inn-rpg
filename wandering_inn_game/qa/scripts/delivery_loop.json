@@ -50,7 +50,7 @@
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
   { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Vess", "text": "Runner's Guild! Board's live. Take a slip, show me, go. Rules, quick: the parcel's yours until it's theirs. Sleep on a run and it comes back here, and you carry the shame instead. No pay for shame." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Vess", "text": "Runner's Guild! Board's live. Take a slip, show me, go. It's yours until it's theirs — sleep on a run, you carry the shame instead." }, "timeout_sec": 5 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "vess_counter", "entity": "vess" }, "timeout_sec": 5 },
   { "action": "move", "direction": "down", "steps": 1 },

@@ -72,7 +72,7 @@
 					"goto": "cornered"
 				},
 				{
-					"text": "Cups will swear to the hiring. So will Master Hellam — you soured that partnership over a warehouse lease, and he kept the receipts.",
+					"text": "Cups will swear to the hiring. So will Hellam — you soured his lease, and he kept the receipts.",
 					"requires": {
 						"accomplishment": {
 							"secured_testimony": 1
@@ -110,7 +110,7 @@
 			],
 			"options": [
 				{
-					"text": "Not for sale. The ledger goes to the Watch, the Guild, and every crier in Invrisil with working lungs.",
+					"text": "Not for sale. The ledger goes to the Watch, the Guild, and every crier with working lungs.",
 					"effects": [
 						{
 							"accomplishment": "merchant_exposed"
@@ -122,7 +122,7 @@
 					"goto": "ending_exposed"
 				},
 				{
-					"text": "Forty gold — the removal-man's rate. Call it a consulting retainer, and Farley's charges evaporate by morning.",
+					"text": "Forty gold — the removal-man's rate. A retainer, and Farley's charges evaporate by morning.",
 					"effects": [
 						{
 							"gold": 40
