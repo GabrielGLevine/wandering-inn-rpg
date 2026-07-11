@@ -1367,7 +1367,14 @@ func _build_dialogue_ctx() -> Dictionary:
 	# `dialogue_choose`'s `bank_first_use` effect ever writes it); duplicated
 	# here like every other ctx dict so a stale walker never sees a live
 	# mutation out of order with set_ctx's per-node refresh.
-	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "board_accepted": accepted_bounty_id != "", "delivery_accepted": accepted_delivery_id != "", "entity_first_use": entity_first_use.duplicate(true)}
+	# `inventory` is the SIXTH sanctioned ctx extension --
+	# the player's actually-HELD item ids (plain `Array[String]` dup of the
+	# live field), distinct from `items` above (the read-only CATALOG of item
+	# definitions, keyed by id, used only for effect-line text).
+	# WIDialogue._meets's `item` gate checks possession against THIS key,
+	# never against `items` (a catalog membership check would be
+	# meaningless -- every item is always "in" the catalog).
+	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "inventory": inventory.duplicate(), "board_accepted": accepted_bounty_id != "", "delivery_accepted": accepted_delivery_id != "", "entity_first_use": entity_first_use.duplicate(true)}
 
 
 ## Starts a conversation graph if no other modal sim is active.

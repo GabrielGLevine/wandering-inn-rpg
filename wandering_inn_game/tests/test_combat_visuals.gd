@@ -177,7 +177,7 @@ func _init() -> void:
 	var tc_arena: Dictionary = _load_json("res://data/arenas.json")["arenas"][0]
 	var tc_skills: Dictionary = _load_json("res://data/skills.json")
 	var tc_pc_cfg: Dictionary = (_combatant_config(tc_combatants, "pc") as Dictionary).duplicate(true)
-	tc_pc_cfg["skills"] = ["sneak", "quick_movement"]
+	tc_pc_cfg["skills"] = ["sneak", "quick_movement", "power_strike"]
 	var tc_goblin_cfg: Dictionary = (_combatant_config(tc_combatants, "goblin_raider") as Dictionary).duplicate(true)
 	var tc_combat := WICombat.new(tc_arena, [tc_pc_cfg, tc_goblin_cfg], tc_skills, func(_t: String, _p: Dictionary) -> void: pass, 9)
 	tc_combat.begin()
@@ -205,6 +205,26 @@ func _init() -> void:
 	quick_targeting.enter(0, "quick_movement")
 	var quick_targets: Array = quick_targeting.state()["targets"]
 	assert(not quick_targets.has("pc"), "enter() must NOT self-target for quick_movement (ap_cost 0) -- a self-target here would silently reopen the free-pool exploit the ap_cost>0 gate exists to close")
+
+	# (3) [Power Strike] (damage_mult, NO `range` field in data/skills.json --
+	# every OTHER active-cast effect type reaching the enemy-gated match
+	# declares one). enter() must filter its candidates to ADJACENCY, exactly
+	# like plain Attack (skill_id == ""): skill_effects.gd's own `damage_mult`
+	# arm silently refuses (`return false`, no ACTION_REFUSED event) a
+	# non-adjacent target downstream, so an unfiltered candidate list here was
+	# a genuine "sim quietly no-ops, player sees nothing" trap the UI must
+	# never produce. Adjacent first (positive control: the filter must not
+	# also wrongly exclude a real target), then pulled apart (negative: the
+	# out-of-range candidate must not be offered).
+	tc_combat.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
+	tc_combat.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(2, 1)
+	var power_targeting_adjacent: RefCounted = targeting_script.new(tc_view, stub_screen)
+	power_targeting_adjacent.enter(0, "power_strike")
+	assert((power_targeting_adjacent.state()["targets"] as Array).has("goblin_raider"), "power_strike (melee, no range field) offers an ADJACENT enemy -- the adjacency filter must not exclude a real target")
+	tc_combat.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(4, 1)
+	var power_targeting_far: RefCounted = targeting_script.new(tc_view, stub_screen)
+	power_targeting_far.enter(0, "power_strike")
+	assert(not (power_targeting_far.state()["targets"] as Array).has("goblin_raider"), "power_strike (melee, no range field) must NOT offer a non-adjacent enemy -- skill_effects.gd's damage_mult arm would silently refuse it downstream")
 	stub_screen.free()
 
 	var hud_script := load("res://src/combat/combat_hud.gd") as Script

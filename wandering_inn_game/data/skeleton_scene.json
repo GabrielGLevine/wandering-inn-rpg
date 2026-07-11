@@ -1318,6 +1318,18 @@
     [
      31,
      14
+    ],
+    [
+     6,
+     19
+    ],
+    [
+     15,
+     19
+    ],
+    [
+     24,
+     19
     ]
    ],
    "_comment": "Liscor gate district, grown from the 10x6 street (per accepted Floodplains sec.5). Zones: gate plaza W, main street y2-4, market row y1 x10-19, Watch post x21-24, Adventurer's Guild x26-30 (XL anchor), dirt side street x14-15 south, sewer-grate POI (16,11). All goblin encounters migrated to floodplains POI anchors. Row y4 is the clear transit lane. Floor-vs-wall contrast: facade_plaster carries a brighten/warm tint (1.28,1.14,0.9 -- avg color moves from (142,119,98), barely distinguishable from the cobble floor's (116,106,95), to a clearly brighter (182,136,88), still warm/amber not neutral gray -- both measured by direct pixel sample) against the untouched floor tile. `inn_roof`'s saturated teal (avg (43,138,100)) is retinted to a warm terracotta (2.6,0.5,0.45) -- CONSTRAINT: STREET-ONLY, inn_roof has no other map consumer. The three market-row NPCs (Krshia/Peddler/Watch Sergeant) each carry their own directional sprite (pc_gnoll_f/pc_human_m/pc_drake_m respectively) matching their own copy's canon/pronouns, no shared tint-differentiated sprite between them. TRAP: the gate plaza (W) and the main street's y2-4 transit lane are large open cells but ARE load-bearing (the plaza is the multi-destination hub; y4 is the clear transit lane) -- deliberate breathing room, not dead space to dress.",
@@ -1984,10 +1996,11 @@
      ]
     },
     {
+     "_comment": "Was authored at y=20 -- one past the last valid row of this 20-tall grid (y:0-19), the same off-by-one authoring mistake as the (31,7)/(31,14) x=32 segments below. Structurally unreachable (out of grid bounds) but the sprite still rendered there, bleeding onto the real (6,19) beside it. Repositioned to the valid (6,19) and added to `blocked` (wall-family, same facade_plaster-is-a-wall contract).",
      "sprite": "facade_plaster",
      "cell": [
       6,
-      20
+      19
      ],
      "tint": [
       1.28,
@@ -1996,10 +2009,11 @@
      ]
     },
     {
+     "_comment": "Same fix as the (6,19) segment above -- was y=20 (one past the grid's last valid row), repositioned to (15,19) and blocked.",
      "sprite": "facade_plaster",
      "cell": [
       15,
-      20
+      19
      ],
      "tint": [
       1.28,
@@ -2008,10 +2022,11 @@
      ]
     },
     {
+     "_comment": "Same fix as the (6,19)/(15,19) segments above -- was y=20 (one past the grid's last valid row), repositioned to (24,19) and blocked.",
      "sprite": "facade_plaster",
      "cell": [
       24,
-      20
+      19
      ],
      "tint": [
       1.28,

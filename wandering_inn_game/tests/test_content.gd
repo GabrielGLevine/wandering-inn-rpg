@@ -31,16 +31,18 @@ func _init() -> void:
 	var scene: Dictionary = _load_json("res://data/skeleton_scene.json")
 	var skills: Dictionary = _load_json("res://data/skills.json")
 	var classes: Dictionary = _load_json("res://data/classes.json")
+	var items: Dictionary = _load_json("res://data/items.json")
 
 	var skill_ids: Dictionary = _ids_from_catalog(skills, "skills")
 	var class_ids: Dictionary = _ids_from_catalog(classes, "classes")
 	var quest_ids: Dictionary = _ids_from_catalog(quests, "quests")
+	var item_ids: Dictionary = _ids_from_catalog(items, "items")
 	var entity_ids: Dictionary = _entity_ids(scene)
 	var produced_accomplishments: Dictionary = {}
 
 	_collect_scene_accomplishments(scene, produced_accomplishments)
 	_validate_conversations(scene, graphs)
-	_validate_dialogue_graphs(graphs, skill_ids, class_ids, quest_ids, entity_ids, produced_accomplishments)
+	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)
 	_validate_hide_when_nodes_have_always_available_exit(graphs)
 	_validate_class_gains(classes, produced_accomplishments)
@@ -321,6 +323,7 @@ func _validate_dialogue_graphs(
 	graphs: Dictionary,
 	skill_ids: Dictionary,
 	class_ids: Dictionary,
+	item_ids: Dictionary,
 	quest_ids: Dictionary,
 	entity_ids: Dictionary,
 	produced_accomplishments: Dictionary
@@ -331,13 +334,13 @@ func _validate_dialogue_graphs(
 		assert(nodes.has(String(graph["start"])), "%s start node missing: %s" % [graph_id, String(graph["start"])])
 		for node_id: String in nodes:
 			var node: Dictionary = nodes[node_id]
-			_validate_node(graph_id, node_id, node, skill_ids, class_ids)
+			_validate_node(graph_id, node_id, node, skill_ids, class_ids, item_ids)
 			for option_index: int in (node.get("options", []) as Array).size():
 				var option: Dictionary = (node.get("options", []) as Array)[option_index]
-				_validate_option(graph_id, node_id, option_index, option, nodes, skill_ids, class_ids, quest_ids, entity_ids, produced_accomplishments)
+				_validate_option(graph_id, node_id, option_index, option, nodes, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 
 
-func _validate_node(graph_id: String, node_id: String, node: Dictionary, skill_ids: Dictionary, class_ids: Dictionary) -> void:
+func _validate_node(graph_id: String, node_id: String, node: Dictionary, skill_ids: Dictionary, class_ids: Dictionary, item_ids: Dictionary) -> void:
 	var label: String = "%s.%s" % [graph_id, node_id]
 	assert(node.has("speaker"), label + " missing speaker")
 	assert(node.has("text"), label + " missing text")
@@ -349,7 +352,7 @@ func _validate_node(graph_id: String, node_id: String, node: Dictionary, skill_i
 			assert(variant.has("text"), variant_label + " missing text")
 			assert(variant.has("requires"), variant_label + " missing requires")
 			assert(variant["requires"] is Dictionary, variant_label + " requires must be a dictionary")
-			_validate_requires(variant_label, variant["requires"], skill_ids, class_ids)
+			_validate_requires(variant_label, variant["requires"], skill_ids, class_ids, item_ids)
 
 
 func _validate_option(
@@ -360,6 +363,7 @@ func _validate_option(
 	nodes: Dictionary,
 	skill_ids: Dictionary,
 	class_ids: Dictionary,
+	item_ids: Dictionary,
 	quest_ids: Dictionary,
 	entity_ids: Dictionary,
 	produced_accomplishments: Dictionary
@@ -373,7 +377,7 @@ func _validate_option(
 	if has_end:
 		assert(bool(option["end"]), label + " end must be true")
 	if option.has("requires"):
-		_validate_requires(label, option["requires"], skill_ids, class_ids)
+		_validate_requires(label, option["requires"], skill_ids, class_ids, item_ids)
 	if option.has("hide_when"):
 		# once_per_waking is a
 		# REQUIRES-ONLY gate -- its "met" polarity ("not yet used this
@@ -382,7 +386,7 @@ func _validate_option(
 		# content ERROR rejected loudly here, not just a runtime refusal
 		# (WIDialogue._meets_hide_when is the belt-and-suspenders half).
 		assert(_hide_when_gate_keys_allowed(option["hide_when"]), label + " hide_when must not carry once_per_waking (requires-only gate, Issue #23)")
-		_validate_requires(label + " hide_when", option["hide_when"], skill_ids, class_ids)
+		_validate_requires(label + " hide_when", option["hide_when"], skill_ids, class_ids, item_ids)
 	for effect: Dictionary in option.get("effects", []):
 		_validate_effect(label, effect, quest_ids, class_ids, entity_ids, produced_accomplishments)
 
@@ -395,7 +399,7 @@ func _validate_option(
 ## `once_per_waking` is requires-only -- _validate_option rejects it in
 ## a hide_when dict BEFORE this shared body runs (see
 ## _hide_when_gate_keys_allowed).
-func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictionary, class_ids: Dictionary) -> void:
+func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictionary, class_ids: Dictionary, item_ids: Dictionary) -> void:
 	var gate_keys := 0
 	if requires.has("skill"):
 		gate_keys += 1
@@ -440,6 +444,16 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# the `bank_first_use` effect shape below, same string contract).
 		gate_keys += 1
 		assert(_is_valid_verb_entity_key(requires["once_per_waking"]), label + " once_per_waking must be a \"<verb>:<entity>\" string with both segments non-empty")
+	if requires.has("item"):
+		# The SIXTH sanctioned single-key gate -- possession
+		# (WIDialogue._meets's `item` check against the ctx's `inventory`,
+		# distinct from the read-only `items` catalog key). Mirrors gold's
+		# visible-locked precedent, not accomplishment's: NOT progress-gated
+		# (_progress_gated deliberately omits it), so an option gated on an
+		# unheld item stays visible/greyed rather than vanishing.
+		gate_keys += 1
+		var item_id: String = String(requires["item"])
+		assert(item_ids.has(item_id), label + " requires unknown item: " + item_id)
 	# The FIRST sanctioned COMPOUND exception --
 	# {gold, accomplishment} together (a stage-gated discount buy option,
 	# Krshia's `krshia_friend_of_the_silverfangs` perk). dialogue.gd's _meets()

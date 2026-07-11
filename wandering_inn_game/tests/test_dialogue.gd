@@ -328,6 +328,82 @@ func test_compound_accomplishment_once_per_waking_gate() -> void:
 	assert(opts.size() == 2, "after sleep, with the accomplishment still held: the option is back")
 
 
+## The SIXTH sanctioned gate type -- possession, not progress.
+## Mirrors gold's VISIBLE-LOCKED precedent (test_gold_affordability_greys_
+## when_broke above), not accomplishment's hide-until-met: an option gated on
+## an unheld item stays visible, greyed, and names the missing item -- never
+## vanishes. `_ctx["items"]` here is the read-only item CATALOG (name lookup
+## for the requirement text); `_ctx["inventory"]` is the actually-HELD ids the
+## gate itself checks -- deliberately distinct keys (see dialogue.gd's _meets
+## doc comment).
+func test_item_requires_stays_visible_locked() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "give bowl", "requires": {"item": "stew_bowl"}, "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var catalog := {"stew_bowl": {"name": "Bowl of Stew"}}
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "items": catalog, "inventory": []}, Callable())
+	d.begin()
+	assert(d.current_options().size() == 2, "item gate stays VISIBLE when unmet (matches gold's precedent, not hidden)")
+	assert(bool(d.current_options()[0]["locked"]), "unheld item is locked/greyed")
+	assert(String(d.current_options()[0]["requirement"]) == "requires Bowl of Stew", "greyed item option names the missing item")
+
+	var d2 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "items": catalog, "inventory": ["stew_bowl"]}, Callable())
+	d2.begin()
+	assert(not bool(d2.current_options()[0]["locked"]), "held item unlocks the option")
+	assert(not d2.choose(0).is_empty(), "choose() resolves once the item gate is met")
+
+
+## An item id absent from the catalog (or an empty catalog
+## entirely -- a minimal test ctx that never supplies "items") still gates
+## correctly and falls back to the raw id for its requirement text, matching
+## every other name-lookup gate's tolerant-default precedent (skill/class
+## above read from `names` the same way).
+func test_item_requires_falls_back_to_raw_id_when_uncatalogued() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "give bowl", "requires": {"item": "stew_bowl"}, "end": true},
+	]}}}
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "inventory": []}, Callable())
+	d.begin()
+	assert(bool(d.current_options()[0]["locked"]), "uncatalogued item still locked when unheld")
+	assert(String(d.current_options()[0]["requirement"]) == "requires stew_bowl", "uncatalogued item falls back to raw id in requirement text")
+
+
+## The full real-WIGame path: `inventory` rides the dialogue ctx
+## (WIGame._build_dialogue_ctx), so a real `pickup()` -- not a synthetic
+## ctx dict -- unlocks the option, and ctx refresh mid-conversation (the same
+## mechanism the gold-effect test above exercises) re-gates it live.
+func test_item_requires_unlocks_after_real_pickup() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Krshia", "text": "t", "options": [
+		{"text": "hand over the marker", "requires": {"item": "brothers_marker"}, "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)
+	game.start_dialogue("test_conv", "krshia")
+	assert(bool(game.dialogue.current_options()[0]["locked"]), "not yet carried -- locked")
+	game.dialogue_choose(1)  # leave
+	game.pickup("brothers_marker", "test")
+	game.start_dialogue("test_conv", "krshia")
+	assert(not bool(game.dialogue.current_options()[0]["locked"]), "real pickup() unlocks the item gate")
+
+
+## Unrecognized requires keys are unaffected by adding `item`:
+## a requires dict carrying ONLY a key _meets doesn't recognize still fails
+## closed (`recognized` stays false -> locked), and (since it is not one of
+## the four progress-gated keys) the option stays VISIBLE rather than
+## vanishing -- the same fail-safe contract every prior gate type preserved.
+func test_unrecognized_requires_key_stays_visible_and_locked() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "mystery", "requires": {"nonsense_key": true}, "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "inventory": []}, Callable())
+	d.begin()
+	assert(d.current_options().size() == 2, "unrecognized-only requires key does not hide the option")
+	assert(bool(d.current_options()[0]["locked"]), "unrecognized-only requires key fails closed (locked)")
+	assert(d.choose(0).is_empty(), "locked-via-unrecognized-key choose still refused")
+
+
 func _last_line_text() -> String:
 	for i in range(_events.size() - 1, -1, -1):
 		if String(_events[i]["type"]) == "dialogue_line":
@@ -479,6 +555,10 @@ func _init() -> void:
 	test_once_per_waking_refused_in_hide_when()
 	test_once_per_waking_gate_lifecycle_through_bank_first_use()
 	test_compound_accomplishment_once_per_waking_gate()
+	test_item_requires_stays_visible_locked()
+	test_item_requires_falls_back_to_raw_id_when_uncatalogued()
+	test_item_requires_unlocks_after_real_pickup()
+	test_unrecognized_requires_key_stays_visible_and_locked()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)

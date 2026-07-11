@@ -127,21 +127,35 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 	# the player). The cycle then skips anyone without LoS -- if a filter
 	# empties an otherwise-nonempty list, `state()`'s los_blocked/
 	# out_of_range flags say which one, not just "no enemies at all".
-	var spell_range := 0
+	var effect: Dictionary = {}
 	if _targeting_skill_id != "":
-		spell_range = int(((_view.skill(_targeting_skill_id) as Dictionary).get("effect", {}) as Dictionary).get("range", 0))
+		effect = (_view.skill(_targeting_skill_id) as Dictionary).get("effect", {}) as Dictionary
+	var spell_range := int(effect.get("range", 0))
+	# A skill whose effect omits `range` entirely is a MELEE active (the
+	# damage_mult techniques -- power_strike/quick_slash/flash_cut/etc; every
+	# ranged type here -- spell_damage/icy_floor -- always declares `range` in
+	# data/skills.json). `effect.get("range", 0)` alone can't distinguish
+	# "no range field" from "explicit range: 0" (never authored, but the
+	# distinction matters): check `effect.has("range")`, not just the
+	# defaulted value. Without this, an out-of-adjacency damage_mult target
+	# stayed in the candidate list -- skill_effects.gd's own `damage_mult` arm
+	# refuses non-adjacent targets downstream (silently, no event, unlike
+	# spell_damage's `no_los` refusal) -- so the UI could offer a target the
+	# sim would quietly no-op on. Extends the SAME adjacency filter Attack
+	# already used, rather than inventing a second gate.
+	var melee := _targeting_skill_id == "" or not effect.has("range")
 	var in_range: Array = []
 	for foe: String in _view.alive_enemies_of(me):
-		if _targeting_skill_id == "" and not _view.is_adjacent(me, foe):
+		if melee and not _view.is_adjacent(me, foe):
 			continue
-		if spell_range > 0 and _view.chebyshev(me, foe) > spell_range:
+		if not melee and spell_range > 0 and _view.chebyshev(me, foe) > spell_range:
 			continue
 		in_range.append(foe)
 	for foe: String in in_range:
 		if _view.has_los(me, foe):
 			_targets.append(foe)
 	_targets_los_blocked = not in_range.is_empty() and _targets.is_empty()
-	_targets_out_of_range = in_range.is_empty() and spell_range > 0 \
+	_targets_out_of_range = in_range.is_empty() and not melee and spell_range > 0 \
 			and not _view.alive_enemies_of(me).is_empty()
 	_target_index = 0
 	_emit_targeting_shown(mode)
