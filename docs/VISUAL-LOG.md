@@ -1222,3 +1222,5 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   pack (user pointer) — catalog/index pass, then decor entries.
 - (19) witch sprite grossly over-scale vs PC — rescale + regen rides
   the #63 canon pass (named witch profile first).
+- [Flame Pillar] ships ICONLESS (every flame icon claimed) — needs a
+  dedicated blast icon; hotbar degrades to text label gracefully.
