@@ -50,6 +50,31 @@ other combination fails content validation.
   `{"class":{"warrior":1}}` intimidate line is an accepted in-fiction
   exception.
 
+## EVERY QUEST PATH PAYS A REAL COST (user ruling 2026-07-10, GH#50)
+A fork path with no Skill gate, gold cost, combat risk, or exploration
+work is a SIGNPOSTING LINE, not a solution — the v0.4.0 playtest
+resolved the whole Invrisil main quest with two free conversations.
+The shipped repo-wide pattern (the "witch pattern", from Riverfarm's
+mediation):
+- **Persuade-class options are [Diplomat]-gated, visible-locked** —
+  the tease teaches that social is a build, not a freebie. The
+  `persuaded_someone` counter is produced ONLY by Diplomat-gated
+  persuades.
+- **Each quest's TALK fork carries one real-cost ALTERNATE** for
+  non-Diplomat players (gold priced to the quest's act: 2-10g), so the
+  fork stays reachable without the class but never free.
+- **The cost must FIT the fantasy** — a fixer selling testimony fits;
+  an arbitrary toll does not. Never nerf a fork into a key-behind-a-
+  door: the point is expression, not friction.
+- **Entry point stays free**: exactly one ungated persuade lives in
+  the world (the frazzled drayman, street 19,14) so a player can
+  discover the Diplomat line at all. Don't add more; don't remove it.
+- Re-pricing a shipped path invalidates its canonical's fixture/route —
+  script + fixture update land in the SAME commit as the gate.
+- Verb-label corollary (finding 29): bracket-verb labels on options
+  (`[Persuade]`) are reserved for REAL Skills/classes the option gates
+  on — never decorative.
+
 ## Option lists are VISIBLE lists — index shifts
 `current_options()`/`choose(index)` both iterate `_visible_options()`, so a
 hidden option is invisible to indexing too — drive QA by the **currently
