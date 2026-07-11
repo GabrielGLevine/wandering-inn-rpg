@@ -1,5 +1,32 @@
 # Wandering Inn RPG Handoff
 
+## USER PLAYTEST BATCH 2 (2026-07-11, 29 findings) — TRIAGE LIVE
+
+- **#62 v0.4.3 hotfix wave** (findings 1-15,20,22,24,29 mechanical):
+  TWO LANES DISPATCHED — W (world/data/copy: rugs, inn layout rework
+  stairs-to-corner + chest upstairs, music revert definitely_our_town
+  + old-tower re-home + upstairs unify, ruin music tense, ambush
+  one-shot, task-ref leak scrub, Erin staleness re-fix, door-opinions
+  rewrite, headman facing, longhouse door, village pre-dim, night
+  pacing 200/450, guardian anchor) and U (label backing, toast
+  +50%/dismiss-on-action, combat mouse re-select).
+- **#63 Riverfarm canon pass** (16/19/21): named witches (Eloise vs
+  Mavika pick), Headman-vs-Laken framing = USER CALL presented in the
+  issue, witch rescale, wolves/Hunter thread wiring. Controller work.
+- **#64 skill-gates policy** (17/18): [Charming Smile] over (Diplomat)
+  repo-wide; alternates never auto-win.
+- **#65 progressive unlocks** (23): Invrisil attunes via witch-sold
+  stone post-Riverfarm.
+- **#66 difficulty tiers** (28): region-tier bands, spec-first; 8d
+  authors to the new table.
+- **#67 copy-fit validator** (26): systematic overflow prevention +
+  the two reported lines.
+- VISUAL-LOG: guardian dormant prop (10), hideout-pack dressing (25),
+  witch scale (19).
+- (27) answered in chat (tremor = Act-II close -> Zevara summons).
+- (29) Old Tower Inn cleared BY EAR — encode check closed; track
+  re-homes off the Inn per (2).
+
 ## SMALL QUEUE CLEARED + 8d OPENED (2026-07-11) — #59/#60 merged, sweep 83/83
 
 - **#59 dish seam MERGED** (opus MERGE; the two twin sim arms
