@@ -18,6 +18,31 @@ extends SceneTree
 ## `wi_game.gd`'s `_build_player_combatant` calls -- instead of hand-mirrored
 ## copies (a manual-sync drift class; keep the shared functions shared).
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
+##
+## REGION TIERS (issue #66, THE AUTHORITY -- docs/design/region-tiers.md is a
+## content-author-facing copy of this exact table, keep both in sync). Fixed
+## tiers, no scaling-to-player (canon-hostile; ratified 2026-07-11): a region's
+## roster is tuned to the build a player is EXPECTED to hold at first arrival,
+## never re-tuned to whatever level the player actually is. A consolidated
+## build wandering back to a lower tier SHOULD trivialize it -- that is
+## progression feeling real, not a balance bug. The only bug this table fixes
+## is the inverse: a NEW area opened at the frontier failing to press the
+## frontier build.
+##   | Tier | Regions                                   | Expected build           | Notes |
+##   |------|--------------------------------------------|---------------------------|-------|
+##   | T1   | Inn/Liscor/floodplains (tutorial + the 3   | warrior 1-4               | existing goblin_ambush/chieftains_raid cells already band here |
+##   |      | starter quests)                            |                            | |
+##   | T2   | Sewers, descent, door chain                | 4-7 (first consolidation  | existing ENCOUNTER_CELLS/BOSS_CELLS/RUIN_CELLS bands roughly hold -- verified, untouched |
+##   |      |                                             | possible at the tail)      | |
+##   | T3   | Riverfarm + Invrisil (post-door unlocks)   | 8-10, often consolidated  | THE RETUNE SET (this task) -- BUILDS.t3_spellsword9/t3_warrior9 are the reference builds |
+##   |      |                                             | (spellsword ~9)            | |
+##   | T4   | Dungeon (8d)                               | 10-12 + the Horns party    | bands derived WITH allies from day one; BUILDS.t4_spellsword11_party is the forward reference, unused until 8d |
+##   | T5   | Pallass (8e)                               | 12-14                      | authored to table at build time, not retuned here |
+## Off-tier cells (a build below or above its encounter's tier) stay
+## MEASURED-only -- e.g. this file's own goblin_ambush/chieftains_raid matrix
+## against pure_warrior10 is a deliberate over-tier read: a T1 comp facing a
+## T3+ build is EXPECTED to read near-1.0/trivial, and that expectation is
+## itself the design contract, never a gate to hit.
 
 const RUNS_PER_CELL := 100
 
@@ -207,31 +232,54 @@ const RUIN_CELLS := [
 ## The Riverfarm encounter axis (briar collectors, both waves, arena
 ## `witch_hollow`; the night wolf ambush, arena `village_edge_night`). Same
 ## per-cell win_lo/win_hi gating shape as RUIN_CELLS -- a cell without them is
-## measured-only. All four ally-fielded cells use `warrior5_mage5` (the
-## representative "~L8-12 kit" build the plan brief calls out, same
-## convention as RUIN_CELLS). `briar_collectors`/`briar_collectors_deep`
-## are GATED to the generic 0.55-0.95 band (a two-enemy trash/escalation
-## pair, not a boss) -- the deep wave carries a slightly tighter explicit
-## band (0.55-0.85) reflecting its own `power_strike`-bearing striker on top
-## of the shallow wave's plain pair. `river_wolf_pack` is deliberately
-## MEASURED-ONLY: it's a NIGHT AMBUSH by design (spec sec.5) -- the point is
-## that a 3-wolf pack caught at a bad moment is genuinely dangerous, not that
-## it clears the generic win-rate band. No ambush/surprise mechanic exists in
-## the sim today (no first-strike/stealth-detection seam for a night spawn to
-## hook), so the numbers below are the fight's raw difficulty with no
-## mechanical ambush bonus applied -- reported honestly rather than gated to
-## a band that would misrepresent what "ambush" currently means here.
+## measured-only.
+## ISSUE #66 RETUNE: `briar_collectors`/`briar_collectors_deep` are Riverfarm's
+## real quest-completion fights (`riverfarm_fight`'s ONLY combats), so they
+## get the FULL tier treatment -- the GATING AUTHORITY moves from the old
+## `_w10_hunter` cells (`warrior5_mage5`, ungeared -- pre-dates the region-tier
+## table, no longer the T3 reference build) to the new `_t3_spellsword9_
+## hunter` cells (GEARED, `check_rounds: true`), which is why the `_w10_`
+## cells below lost their `win_lo`/`win_hi` and are now printed "(measured)":
+## an off-tier build vs. an on-tier roster, kept purely as the pre-retune
+## historical baseline (compare the printed win_rate before/after this task
+## in the harness log). `briar_collectors` keeps the generic 0.55-0.95 band
+## (a two-enemy trash/escalation pair, not a boss); `briar_collectors_deep`
+## keeps its own slightly tighter 0.55-0.85 band (its `power_strike`-bearing
+## striker on top of the shallow wave's plain pair). combatants.json's
+## `briar_collector_a/b`/`briar_collector_deep_a/b` con/str were raised to
+## hold these bands against t3_spellsword9's much higher str (see those
+## records' own `_comment` for the exact before/after). `t3_warrior9_hunter`
+## siblings are measured comparison points (the non-consolidated alternative
+## build), same convention as the BUILDS row itself.
+## `river_wolf_pack` STAYS MEASURED-ONLY (issue #56's own solo-danger design,
+## re-affirmed here, not re-opened): it's a NIGHT AMBUSH by design (spec
+## sec.5) -- the point is that a 3-wolf pack caught at a bad moment is
+## genuinely dangerous, not that it clears a win-rate band. No ambush/
+## surprise mechanic exists in the sim today (no first-strike/stealth-
+## detection seam for a night spawn to hook), so the numbers below are the
+## fight's raw difficulty with no mechanical ambush bonus applied -- reported
+## honestly rather than gated to a band that would misrepresent what
+## "ambush" currently means here. Its cells were swapped from `warrior5_
+## mage5` to `t3_spellsword9` in place (never gated either way, so no
+## before/after baseline needs preserving) -- combatants.json's
+## `river_wolf_a/b/c` are UNTOUCHED (no gate to hold, and the pack reads
+## appropriately dangerous, even brutal solo, against the new build too; see
+## the harness log's own `river_wolf_pack_t3_solo` win_rate).
 ## The ally here is `riverfarm_hunter`, NOT `relc` (Riverfarm is a solo Door
 ## arrival with no fictional basis for Liscor's Watch to be present --
 ## combatants.json's riverfarm_hunter is an EXACT stat/weapon_die/ai/skills
 ## clone of relc, so these bands stay numerically valid under the new id).
 const RIVERFARM_CELLS := [
-	{"name": "briar_collectors_w10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.95},
+	{"name": "briar_collectors_w10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": false},
 	{"name": "briar_collectors_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": true},
-	{"name": "briar_collectors_deep_w10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.85},
+	{"name": "briar_collectors_t3_spellsword9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_spellsword9", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "briar_collectors_t3_warrior9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_warrior9", "solo": false},
+	{"name": "briar_collectors_deep_w10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": false},
 	{"name": "briar_collectors_deep_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": true},
-	{"name": "river_wolf_pack_w10_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "warrior5_mage5", "solo": false},
-	{"name": "river_wolf_pack_w10_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "warrior5_mage5", "solo": true},
+	{"name": "briar_collectors_deep_t3_spellsword9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_spellsword9", "solo": false, "win_lo": 0.55, "win_hi": 0.85, "check_rounds": true},
+	{"name": "briar_collectors_deep_t3_warrior9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior9", "solo": false},
+	{"name": "river_wolf_pack_t3_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_spellsword9", "solo": false},
+	{"name": "river_wolf_pack_t3_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_spellsword9", "solo": true},
 ]
 
 ## Invrisil 8c Task C2 (issues #12/#13) axis. The alley footpads
@@ -244,17 +292,40 @@ const RIVERFARM_CELLS := [
 ## same early/low representative build goblin_ambush uses) SOLO -- no ally
 ## is structurally present when sneaking the alleys alone. A
 ## `warrior1_tutorial`-tier read is recorded (measured-only) to show even a
-## fresh warrior1 isn't walled. `hired_blades` (the LOCKED `merchant_warehouse`
-## arena, the first all-human combatant family) is gated 0.6-0.8 with the
-## `wilovan` ally at `warrior5_mage5` (the deep_descent/ruin_guardian
-## gated-ally-band precedent); the solo cell (the come-along beat declined)
-## is measured-only, the hard-mode frontier, same convention as
+## fresh warrior1 isn't walled.
+## ISSUE #66 RETUNE DECISION: footpads keep their EXISTING `warrior2` gate
+## UNCHANGED -- this is NOT an off-tier baseline to retire, it's the
+## load-bearing design contract (protect a player who fails the stealth
+## check regardless of what level they actually are when it happens; low
+## lethality is the promise, not a function of tier). `alley_footpads_t3_
+## spellsword9_solo` is a NEW measured-only cell recording the T3-build read
+## -- footpads trivializing against a consolidated spellsword9 (see the
+## harness log) is the "over-tier trivial is INTENDED" case from this file's
+## own header table, not a retune target: nobody expects a generic street
+## thug to threaten a Riverfarm/Invrisil-tier PC, and gating that expectation
+## would fight the design instead of confirming it. No combatants.json
+## changes for `footpad_lookout`/`footpad_bruiser`.
+## `hired_blades` (the LOCKED `merchant_warehouse` arena, the first
+## all-human combatant family) IS the real T3 treatment, same shape as
+## `briar_collectors` above: the gating authority moves from `hired_blades_
+## w10_wilovan` (now measured, the pre-tier `warrior5_mage5` baseline) to
+## `hired_blades_t3_spellsword9_wilovan` (GEARED, `check_rounds: true`,
+## SAME 0.6-0.8 band -- the deep_descent/ruin_guardian gated-ally-band
+## precedent). combatants.json's `hired_blade_leader`/`hired_blade_knife_a/b`
+## con/str were raised to hold the band against t3_spellsword9's higher str
+## (see those records' own `_comment`). `hired_blades_t3_warrior9_wilovan` is
+## the measured comparison build. The solo cells (the come-along beat
+## declined) stay measured-only, the hard-mode frontier, same convention as
 ## awakened_boss_w2_solo/ruin_guardian_w8_solo.
 const INVRISIL_CELLS := [
 	{"name": "alley_footpads_w2_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "warrior2", "solo": true, "win_lo": 0.75, "win_hi": 0.98},
 	{"name": "alley_footpads_w1_tutorial_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "warrior1_tutorial", "solo": true},
-	{"name": "hired_blades_w10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.6, "win_hi": 0.8},
+	{"name": "alley_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
+	{"name": "hired_blades_w10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "warrior5_mage5", "solo": false},
 	{"name": "hired_blades_w10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "warrior5_mage5", "solo": true},
+	{"name": "hired_blades_t3_spellsword9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": false, "win_lo": 0.6, "win_hi": 0.8, "check_rounds": true},
+	{"name": "hired_blades_t3_warrior9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior9", "solo": false},
+	{"name": "hired_blades_t3_spellsword9_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": true},
 ]
 
 const BUILDS := [
@@ -297,6 +368,50 @@ const BUILDS := [
 	{"name": "pure_mage10_caster", "classes": {"mage": 10}, WIKeys.AI: "caster", "gated": false},
 	{"name": "warrior5_mage5", "classes": {"warrior": 5, "mage": 5}, "gated": false},
 	{"name": "warrior5_mage5_caster", "classes": {"warrior": 5, "mage": 5}, WIKeys.AI: "caster", "gated": false},
+	## T3 reference builds (issue #66's retune set) -- gear included per the
+	## controller spec ("tier expectation covers equipment, not just levels"),
+	## carried directly on the ROW via optional `WIKeys.WEAPON`/"armor"/
+	## "accessories" keys (an opt-in extension: `_build_pc` below applies gear
+	## ONLY when a build carries `WIKeys.WEAPON`, so every row ABOVE this
+	## comment -- and every existing LOADOUT_CELLS/ENCOUNTER_CELLS/BOSS_CELLS/
+	## RUIN_CELLS cell -- stays byte-identical, ungeared). Gear basis (traced
+	## against what a player can actually own by Riverfarm/Invrisil arrival):
+	## `gnollish_hunting_knife` (15g, Krshia's stall, sword family -- keeps
+	## `power_strike` weapon-gated IN; a spear would gate it OUT in favor of
+	## `piercing_strikes`, which `combat_ai.gd`'s `_act_melee` never calls by
+	## name, a silent DPS trap) + `leather_jerkin` (24g, Krshia's stall, the
+	## mundane-armor-tier ceiling -- `watch_issue_gambeson`'s dr+1 is the
+	## flat-damage-reduction alternative at the same price band, not modeled
+	## here so the two T3 builds below stay directly comparable on identical
+	## gear) + `hedge_ward_charm` + `hunters_fang_talisman` (9g+14g, resonance
+	## 1+1 = the shipped capacity-2 ceiling exactly -- the SAME "actual
+	## best-case early loadout" combo LOADOUT_CELLS' own `warrior2_max_legal_
+	## kit` already established; Riverfarm's own post-quest vendor stocks
+	## `witch_wardstone_bead`, an equal-value resonance-1 alternative, not
+	## additional headroom). Combined: damage_mod +2, hp_mod +6,
+	## damage_reduction +0.
+	{"name": "t3_spellsword9", "classes": {"spellsword": 9}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	## Non-consolidated T3 alternative -- same total level (9) and the SAME
+	## gear basis as t3_spellsword9 above (directly comparable), for the
+	## player who never accepted (or was never offered) the [Spellsword]
+	## consolidation: a plain warrior kit, no mage skills/MP/`mana_shield`
+	## passive. Per WIProgression.derived_stat_bonuses a single held class
+	## always applies at full efficiency (no split penalty) -- warrior9 gets
+	## str+9/con+9 (vs spellsword9's str+9/int+9), trading `mana_shield`'s
+	## passive damage absorption for a bigger hp pool. MEASURED, not gated --
+	## the retune targets t3_spellsword9 (the spec's own primary reference);
+	## this build is the comparison point, recorded so a retune never
+	## secretly depends on the mage-shield passive to clear.
+	{"name": "t3_warrior9", "classes": {"warrior": 9}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	## T4 forward reference (the dungeon, 8d) -- spellsword 11 on the SAME T3
+	## gear basis (no higher-tier gear exists in data/items.json yet; 8d's own
+	## content pass owns pricing a real T4 shop ceiling). UNUSED today -- no
+	## cell in this file references it (the spec directive: "8d C2 authors its
+	## cells against T4 from the start," and T4 bands are meant to be derived
+	## WITH allies/party math 8d itself lands, not guessed here). Defined now
+	## so 8d's own BUILDS lookup by name doesn't have to land the row and the
+	## cells in the same commit.
+	{"name": "t4_spellsword11_party", "classes": {"spellsword": 11}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 ]
 
 
@@ -313,6 +428,39 @@ func _find_by_name(list: Array, value: String) -> Dictionary:
 		if String(e["name"]) == value:
 			return e
 	return {}
+
+
+## Builds ONE fresh pc combatant dict from a BUILDS row: classes -> stats/kit
+## via the shared WIProgression path (identical to every call site before
+## this task), THEN, only when the row carries `WIKeys.WEAPON` (the T3 rows'
+## opt-in gear extension -- see their own doc comment), layers weapon/armor/
+## accessory mods via the SAME `WICombatBuild.weapon_gated_kit`/
+## `equipment_mods` LOADOUT_CELLS and `wi_game.gd`'s `_build_player_combatant`
+## already use. A build with no `WIKeys.WEAPON` key takes the untouched
+## pre-gear path -- every pre-existing BUILDS row (and therefore every loop
+## below that resolves a "build" name through this function) is byte-
+## identical to before this task. Centralized here (T0's own "hand-mirrored
+## copies are the scariest drift class" lesson) instead of repeating the
+## same 3-4 lines across the six loops that build a pc from a named build.
+func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dictionary, skills_by_id: Dictionary, items_by_id: Dictionary) -> Dictionary:
+	var pc: Dictionary = pc_template.duplicate(true)
+	pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
+	pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes_catalog)
+	var kit: Array = WIProgression.granted_skills(build["classes"], classes_catalog)
+	if build.has(WIKeys.WEAPON):
+		var weapon: Dictionary = items_by_id.get(String(build[WIKeys.WEAPON]), {})
+		var armor: Dictionary = items_by_id.get(String(build.get("armor", "")), {})
+		var accessories: Array = []
+		for acc_id_v: Variant in (build.get("accessories", []) as Array):
+			accessories.append(items_by_id.get(String(acc_id_v), {}))
+		pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
+		var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
+		pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
+		pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD]
+		pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION]
+	else:
+		pc[WIKeys.SKILLS] = kit
+	return pc
 
 
 func _init() -> void:
@@ -348,14 +496,12 @@ func _init() -> void:
 			var relc_downed := 0
 			var has_relc := not bool(build.get("solo", false))
 			for seed_v in range(1, RUNS_PER_CELL + 1):
-				var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
-				pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
-				# Calls the SAME shared application path as
+				# _build_pc: SAME shared application path as
 				# WIGame._build_player_combatant (WIProgression.
-				# apply_stat_bonuses) so the harness measures the exact stats a
-				# real PC combatant would carry for this class distribution.
-				pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
-				pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
+				# apply_stat_bonuses/granted_skills), so the harness measures the
+				# exact stats a real PC combatant would carry for this class
+				# distribution (plus gear, for the opt-in T3 rows).
+				var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
 				var cfgs: Array = [pc]
 				if not bool(build.get("solo", false)):
 					cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
@@ -660,10 +806,7 @@ func _init() -> void:
 		var hunter_downed := 0
 		var has_hunter := not bool(cell.get("solo", false))
 		for seed_v in range(1, RUNS_PER_CELL + 1):
-			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
-			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
-			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
-			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
+			var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
 			var cfgs: Array = [pc]
 			if has_hunter:
 				cfgs.append((by_id["riverfarm_hunter"] as Dictionary).duplicate(true))
@@ -703,6 +846,13 @@ func _init() -> void:
 			if win_rate < lo or win_rate > hi:
 				any_failed = true
 				printerr("FAIL [riverfarm / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+			# Opt-in rounds gate (issue #66's T3 cells only -- every pre-existing
+			# gated cell in this loop predates the requirement and stays
+			# win-rate-only, unchanged): median rounds 3-12, the SAME bound the
+			# main COMPOSITIONS x BUILDS loop enforces unconditionally.
+			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
+				any_failed = true
+				printerr("FAIL [riverfarm / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
 	## The Invrisil axis. Same construction/gating shape as the
 	## RIVERFARM_CELLS loop directly above (per-cell win_lo/win_hi, absent
@@ -718,10 +868,7 @@ func _init() -> void:
 		var wilovan_downed := 0
 		var has_wilovan := not bool(cell.get("solo", false))
 		for seed_v in range(1, RUNS_PER_CELL + 1):
-			var pc: Dictionary = (by_id["pc"] as Dictionary).duplicate(true)
-			pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
-			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
-			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
+			var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
 			var cfgs: Array = [pc]
 			if has_wilovan:
 				cfgs.append((by_id["wilovan"] as Dictionary).duplicate(true))
@@ -761,6 +908,11 @@ func _init() -> void:
 			if win_rate < lo or win_rate > hi:
 				any_failed = true
 				printerr("FAIL [invrisil / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+			# Opt-in rounds gate -- see RIVERFARM_CELLS' own identical block
+			# directly above for the full rationale (issue #66's T3 cells only).
+			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
+				any_failed = true
+				printerr("FAIL [invrisil / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:

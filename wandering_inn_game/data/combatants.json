@@ -412,7 +412,7 @@
    "skills": []
   },
   {
-   "_comment": "Deep briar collector, `briar_collectors_deep` encounter roster (the escalated second wave of the same hollow fight, arena `witch_hollow` shared with `briar_collectors` -- same canon-cite as briar_collector_a). Tougher template: higher con/str and `power_strike` (a heavier constricting grab, the EXISTING skill goblin_chieftain already uses -- no new skill.json entry) so the wave reads as a genuine step up rather than a reskinned repeat. Own sprite (`briar_collector_deep`, deliberately darker/taller) carries the escalation visually too.",
+   "_comment": "Deep briar collector, `briar_collectors_deep` encounter roster (the escalated second wave of the same hollow fight, arena `witch_hollow` shared with `briar_collectors` -- same canon-cite as briar_collector_a). Tougher template: higher con/str and `power_strike` (a heavier constricting grab, the EXISTING skill goblin_chieftain already uses -- no new skill.json entry) so the wave reads as a genuine step up rather than a reskinned repeat. Own sprite (`briar_collector_deep`, deliberately darker/taller) carries the escalation visually too. ISSUE #66 (region tiers): con raised (a/b: 24/26 -> 38/40) so `briar_collectors_deep_t3_spellsword9_hunter` (sim_combat_batch.gd RIVERFARM_CELLS, GATED 0.55-0.85 against the T3 reference build) holds its band -- `briar_collectors_w10_hunter`'s old `warrior5_mage5` cell is now the measured pre-tier baseline; see docs/design/region-tiers.md.",
    "id": "briar_collector_deep_a",
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
@@ -420,7 +420,7 @@
    "stats": {
     "str": 17,
     "dex": 9,
-    "con": 24,
+    "con": 38,
     "int": 3,
     "wis": 6,
     "cha": 2
@@ -440,7 +440,7 @@
    "stats": {
     "str": 16,
     "dex": 9,
-    "con": 26,
+    "con": 40,
     "int": 3,
     "wis": 6,
     "cha": 2
@@ -542,7 +542,7 @@
    "skills": []
   },
   {
-   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `hired_blades`, the merchant-prince's warehouse roster (lane alpha/C3 wires the encounter entity + the Wilovan come-along beat separately; this lane owns the combat data + arena). The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'. The merchant-prince himself is ORIGINAL+flag (docs/design/character-profiles-staging.md 'Invrisil (8c)'); his hired muscle inherits that same ORIGINAL+flag status -- a respectable merchant paying for thuggery is generic and canon-plausible, not an invented named entity. `hired_blade_leader` is the pair's heavy -- a club-swinging foreman who leads with `power_strike` (the EXISTING skill goblin_chieftain/river_wolf_c already use for a 'pack leader hits harder' read; no new effect type), higher con than the two knife-thugs. Sprite `hired_blade` (owned PixelLab rig, burgundy/brass merchant-livery doublet -- see data/sprites.json's own _comment + assets/LICENSES/pixellab-ai-generated-verdict.md for the full NOT-Watch-alike palette-quarantine rationale) is shared by all 3 roster members, same convention as briar_collector/river_wolf/ruin_ward. Harness: sim_combat_batch.gd INVRISIL_CELLS, GATED 0.6-0.8 with the `wilovan` ally at warrior5_mage5 (the deep_descent/ruin_guardian boss-cell precedent for a gated-ally band); the solo cell (declined the come-along beat) is measured-only, the hard-mode frontier, same convention as awakened_boss_w2_solo/ruin_guardian_w8_solo.",
+   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `hired_blades`, the merchant-prince's warehouse roster (lane alpha/C3 wires the encounter entity + the Wilovan come-along beat separately; this lane owns the combat data + arena). The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'. The merchant-prince himself is ORIGINAL+flag (docs/design/character-profiles-staging.md 'Invrisil (8c)'); his hired muscle inherits that same ORIGINAL+flag status -- a respectable merchant paying for thuggery is generic and canon-plausible, not an invented named entity. `hired_blade_leader` is the pair's heavy -- a club-swinging foreman who leads with `power_strike` (the EXISTING skill goblin_chieftain/river_wolf_c already use for a 'pack leader hits harder' read; no new effect type), higher con than the two knife-thugs. Sprite `hired_blade` (owned PixelLab rig, burgundy/brass merchant-livery doublet -- see data/sprites.json's own _comment + assets/LICENSES/pixellab-ai-generated-verdict.md for the full NOT-Watch-alike palette-quarantine rationale) is shared by all 3 roster members, same convention as briar_collector/river_wolf/ruin_ward. Harness: sim_combat_batch.gd INVRISIL_CELLS, GATED 0.6-0.8 with the `wilovan` ally (the deep_descent/ruin_guardian boss-cell precedent for a gated-ally band); the solo cell (declined the come-along beat) is measured-only, the hard-mode frontier, same convention as awakened_boss_w2_solo/ruin_guardian_w8_solo. ISSUE #66 (region tiers): the gating build moved from `warrior5_mage5` to the T3 reference build `t3_spellsword9` (`hired_blades_t3_spellsword9_wilovan`, same 0.6-0.8 band) -- `warrior5_mage5`'s own cell (`hired_blades_w10_wilovan`) is now the measured pre-tier baseline. con raised on all three roster members (leader 18->32, knife_a/knife_b 12->23 each) to hold the 0.6-0.8 band against t3_spellsword9's much higher str; see docs/design/region-tiers.md.",
    "id": "hired_blade_leader",
    "display_name": "Hired Blade",
    "sprite": "hired_blade",
@@ -550,7 +550,7 @@
    "stats": {
     "str": 14,
     "dex": 10,
-    "con": 18,
+    "con": 32,
     "int": 6,
     "wis": 6,
     "cha": 8
@@ -570,7 +570,7 @@
    "stats": {
     "str": 11,
     "dex": 13,
-    "con": 12,
+    "con": 23,
     "int": 5,
     "wis": 6,
     "cha": 5
@@ -588,7 +588,7 @@
    "stats": {
     "str": 11,
     "dex": 13,
-    "con": 12,
+    "con": 23,
     "int": 5,
     "wis": 6,
     "cha": 5
@@ -598,7 +598,7 @@
    "skills": []
   },
   {
-   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- Wilovan, the Brothers' front (the plan's user-ratified shape 1: 'WILOVAN fronts the Brothers'). CANON, WIKI-VERIFIED 2026-07-08 (wiki.wanderinginn.com/Wilovan): a Gnoll [Thug], member of the Brothers of Serendipitous Meetings, known with his partner Ratici as the 'Gentlemen Callers' -- brick-built physique, dapper vest/leggings/tall hat, gentlemanly courtesy, self-educated and articulate. Fields ONLY via `ally_requires` on a real come-along beat (lane alpha/C3's dialogue, the 8b `riverfarm_hunter`/deep_descent `relc_descent` precedent -- no teleporting allies; this lane does not wire that gate, only the combatant record it resolves to). KIT: canon [Thug] has no class entry in this game's classes.json (out of this task's scope -- he is an ally-only combatant, never a player-selectable class), so his 'courtesy-as-menace, hats-off-then-violence' register is realized entirely with EXISTING skills (no new effect types per the plan brief): `basic_swordwork` (steadier hands with any blade -- a gentleman's cane-sword, not armor), `quick_slash` ('a cut loosed before the guard can rise' -- nimble, precise, fits a Thug who is fast and thoughtful before he is brutal), `counter_strike` (riposte -- 'the next blade that finds you meets an answer', a fencer's measured reply, not a berserker's), `quick_movement` (nimble feet). con17 reflects his canon 'brick-like physique' AND is a harness-derived ceiling, not an arbitrary pick: below ~14 he goes down in 90%+ of hired_blades fights (too fragile for a come-along ally to feel like a real participant). MEASURED (sim_combat_batch.gd, 100 runs): win_rate=0.78 (inside the gated 0.6-0.8 band) but wilovan_downed_rate=0.86 (86/100) -- well ABOVE relc/hunter's own 0.63-0.76 downed rates on comparable 3-body fights; con17 is BAND-BOXED, not downed-rate-boxed -- raising con to 20 lifts the fight's own win_rate to 0.83, OVER the gated 0.6-0.8 ceiling, so con17 (not a higher, less-frequently-downed value) is the highest toughness this roster supports without breaching the win-rate band. The downed-rate gap vs. relc/hunter is a live taste flag (open on the review checklist), not yet resolved -- any future retune of hired_blades' own stats must re-check the SAME win-rate ceiling, not assume con17 is free headroom. Sprite `wilovan` is lane alpha's own cast art (docs/superpowers/plans/2026-07-08-invrisil-8c.md Task C1 owns Wilovan's profile/pools/sprite) -- NOT generated by this lane; this record is a forward reference lane alpha's sprites.json entry must satisfy before any windowed QA of the FIGHT path. Harness: sim_combat_batch.gd INVRISIL_CELLS' hired_blades_w10_wilovan cell fields him as the ally (mirrors relc/riverfarm_hunter's role in their own cells).",
+   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- Wilovan, the Brothers' front (the plan's user-ratified shape 1: 'WILOVAN fronts the Brothers'). CANON, WIKI-VERIFIED 2026-07-08 (wiki.wanderinginn.com/Wilovan): a Gnoll [Thug], member of the Brothers of Serendipitous Meetings, known with his partner Ratici as the 'Gentlemen Callers' -- brick-built physique, dapper vest/leggings/tall hat, gentlemanly courtesy, self-educated and articulate. Fields ONLY via `ally_requires` on a real come-along beat (lane alpha/C3's dialogue, the 8b `riverfarm_hunter`/deep_descent `relc_descent` precedent -- no teleporting allies; this lane does not wire that gate, only the combatant record it resolves to). KIT: canon [Thug] has no class entry in this game's classes.json (out of this task's scope -- he is an ally-only combatant, never a player-selectable class), so his 'courtesy-as-menace, hats-off-then-violence' register is realized entirely with EXISTING skills (no new effect types per the plan brief): `basic_swordwork` (steadier hands with any blade -- a gentleman's cane-sword, not armor), `quick_slash` ('a cut loosed before the guard can rise' -- nimble, precise, fits a Thug who is fast and thoughtful before he is brutal), `counter_strike` (riposte -- 'the next blade that finds you meets an answer', a fencer's measured reply, not a berserker's), `quick_movement` (nimble feet). con17 reflects his canon 'brick-like physique' AND is a harness-derived ceiling, not an arbitrary pick: below ~14 he goes down in 90%+ of hired_blades fights (too fragile for a come-along ally to feel like a real participant). ISSUE #66 UPDATE: the gating authority for hired_blades moved from `warrior5_mage5` (now `hired_blades_w10_wilovan`, measured-only, win_rate=0.44) to the T3 reference build `t3_spellsword9` (`hired_blades_t3_spellsword9_wilovan`, GATED 0.6-0.8, win_rate=0.76) -- the RETUNE target was the ENEMY roster (hired_blade_leader/knife_a/knife_b con raised, see their own `_comment`), wilovan's own con17 untouched by this task. wilovan_downed_rate is now 0.93 (93/100) on the gated T3 cell -- HIGHER than the pre-retune 0.86 (a tougher enemy roster downs the ally more often at the same ally toughness, unsurprising) and still well above relc/hunter's own 0.63-0.76 downed rates on comparable 3-body fights; the raising-con-lifts-win_rate-over-the-gate-ceiling BAND-BOXED relationship documented here still holds (verified against the retuned roster, con17 kept as the highest toughness that doesn't breach 0.6-0.8). The downed-rate gap vs. relc/hunter remains a live, unresolved taste flag -- any future retune of hired_blades' own stats (or of wilovan) must re-check the SAME win-rate ceiling against whichever build is that encounter's current gating authority, not assume con17 is free headroom. Sprite `wilovan` is lane alpha's own cast art (docs/superpowers/plans/2026-07-08-invrisil-8c.md Task C1 owns Wilovan's profile/pools/sprite) -- NOT generated by this lane; this record is a forward reference lane alpha's sprites.json entry must satisfy before any windowed QA of the FIGHT path. Harness: sim_combat_batch.gd INVRISIL_CELLS' hired_blades_t3_spellsword9_wilovan cell fields him as the ally (mirrors relc/riverfarm_hunter's role in their own cells).",
    "id": "wilovan",
    "display_name": "Wilovan",
    "sprite": "wilovan",
