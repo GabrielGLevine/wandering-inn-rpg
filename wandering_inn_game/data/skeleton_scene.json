@@ -534,17 +534,6 @@
      ]
     },
     {
-     "id": "bed",
-     "kind": "prop",
-     "sleep": true,
-     "cell": [
-      2,
-      7
-     ],
-     "display_name": "Bed",
-     "sprite": "bed"
-    },
-    {
      "id": "inn_door",
      "kind": "door",
      "cell": [
@@ -6099,6 +6088,14 @@
       7,
       6
      ]
+    },
+    {
+     "_comment": "#49 garden bed dressing: rug_tan beneath `garden_bed` (11,4), the your_bed/inn_upstairs precedent (data/sprites.json's rug_tan _comment on that placement) applied here. Bbox math: rug_tan is 80x72 native @ render_scale 0.4 = 32x28.8px = 2.0x1.8 cells; default anchor [0.5,1.0] (bottom-center) means a sprite placed at cell (X,Y) renders its full height across row Y PLUS ~80% of row Y-1 (12.8 of that row's 16px), never reaching row Y-2. Placed at (11,6) -- two rows south of the bed (11,4), one south of its own approach cell (11,5) -- the rug's bleed covers row 6 fully + ~80% of row 5 (the approach cell, a natural 'rug in front of the bed' read) and stops there, never touching the bed's own row 4 -- the exact same 2-row offset that kept your_bed clear of burial. Non-blocking decor; the bed's cell and approach are untouched, garden_walkthrough's route needs no re-pin.",
+     "sprite": "rug_tan",
+     "cell": [
+      11,
+      6
+     ]
     }
    ],
    "entities": [
@@ -11571,6 +11568,14 @@
       0.15,
       0.3
      ]
+    },
+    {
+     "_comment": "#49 parlor 'borrowed elegance' dressing: window_blue (the your_bed/inn_upstairs + inn precedent, data/sprites.json) on the north wall. Bbox math: 16x28 native @ render_scale 0.75 = 12x21px = 0.75x1.3125 cells, default anchor [0.5,1.0] -- horizontally stays fully inside its own column (2..14 of 16px, no sideways bleed); vertically spans 5px into the row ABOVE (the wall row0, exactly the 'set into the wall' read) down through the full row1 -- matches the inn's own south-wall window convention. (10,1) is well clear of Wilovan (6,3)/table+rug (6,5)/(6,6)/the couch (2,7).",
+     "sprite": "window_blue",
+     "cell": [
+      10,
+      1
+     ]
     }
    ],
    "entities": [
@@ -11624,7 +11629,7 @@
      "_comment_tint": "Lifted to [0.75,0.8,0.68] -- as the marquee NPC, Wilovan must read clearly against the parlor's warm low-light grade; tint multiplies the rig, so low channel values darken him more than ambient decor. Keeps the dark-green dapper-vest identity (channel ratios preserved), just materially brighter."
     },
     {
-     "_comment": "THE BED RULE (standing, plan's user-ratified shape 3): the parlor's guest couch, sleep:true, unconditional once the parlor is reachable (no quest gate -- reaching this room already required the door chain: portal -> boulevard -> alleys door -> parlor door, no shortcut exists). Reuses the EXISTING `bed` sprite verbatim (Interior_Props_01.png, frame 34x44, render_scale 0.375, default anchor [0.5,1.0]) -- the SAME already-shipped asset the inn's own bed uses, not a new pick: rendered footprint is ~12.75px wide / ~16.5px tall, i.e. it overhangs its OWN cell's north edge by well under 1px and stays fully inside its own cell on every other axis (measured against CELL=16px) -- functionally self-contained, the lowest-risk placement shape available, chosen specifically to satisfy the render-bbox placement discipline (the Riverfarm cot lesson) without a windowed check. Cell (2,7) is deep interior (open per the border-blocked computation above), 4 cells from Wilovan (6,3) and 4 cells from the table (6,5) -- no neighbor decor shares (2,6)/(2,8)/(1,7)/(3,7), so the sub-1px north overhang lands on bare floor.",
+     "_comment": "THE BED RULE (standing, plan's user-ratified shape 3): the parlor's guest couch, sleep:true, unconditional once the parlor is reachable (no quest gate -- reaching this room already required the door chain: portal -> boulevard -> alleys door -> parlor door, no shortcut exists). #49: swapped from the reused `bed` sprite (a literal bed graphic, wrong read for a 'couch') to `bench` (assets/sprites/bench/Idle-Sheet.png, ALREADY committed + used once in runners_guild -- a real seating-furniture read, not a bed). Bbox math: 64x64 native @ render_scale 0.5 = 32x32px = 2.0x2.0 cells, anchor [0.4922,0.6875] (bottom-center-ish, CELL=16 convention). Placed at (2,7): horizontally spans the right half of col1 through the left half of col3 (bleeds into (1,7)/(3,7), both bare floor -- (3,7) is the player's own pre-bump standing cell, so the couch's armrest edge reads as the player standing right up against it, not clipping through anything solid); vertically spans the bottom ~37% of row6 through the top ~62% of row8 (also bare floor, no neighbor decor at (2,6)/(2,8)). Windowed-verified (peek screenshot): reads as an actual couch, no clipping through walls/other props.",
      "id": "brothers_guest_couch",
      "kind": "prop",
      "cell": [
@@ -11632,7 +11637,7 @@
       7
      ],
      "display_name": "The Guest Couch",
-     "sprite": "bed",
+     "sprite": "bench",
      "sleep": true,
      "sleep_toast": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality."
     }

@@ -12,7 +12,8 @@
   {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
   {"action": "assert_state", "path": "classes", "equals": {"mage": 10}},
 
-  {"action": "move", "direction": "down", "steps": 4},
+  {"_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2]},
+  {"action": "move", "direction": "up", "steps": 1},
   {"action": "press", "name": "interact"},
   {"action": "wait_for_event", "type": "skill_unlocked", "payload_contains": {"skill": "ice_shard"}, "timeout_sec": 5},
   {"action": "wait_for_event", "type": "skill_unlocked", "payload_contains": {"skill": "flare_burst"}, "timeout_sec": 5},
@@ -21,7 +22,7 @@
   {"action": "assert_state", "path": "classes", "equals": {"mage": 10}},
   {"action": "screenshot", "name": "01_generalist_toast"},
 
-  {"action": "move", "direction": "up", "steps": 3},
+  {"_comment": "Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3').", "action": "teleport", "map": "inn", "cell": [2, 3]},
   {"action": "move", "direction": "right", "steps": 12},
   {"action": "move", "direction": "right", "steps": 1},
   {"action": "press", "name": "interact"},

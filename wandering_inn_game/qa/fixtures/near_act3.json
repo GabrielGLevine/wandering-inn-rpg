@@ -1,15 +1,15 @@
 {
- "_comment": "arc_flow's start (the whole-arc proof): Act II COMPLETE (2 classes: warrior 2 + diplomat 1; 3 completed quests the_errand/missing_crate/cisterns), standing at the inn bed (2,6 facing DOWN onto the bed at 2,7), met_relc banked. NO Act III keys yet (heard_the_deep_tremor/watch_runner_pointed/cleared_the_warren/raskghar_sealed/post_game all UNBANKED) so arc_flow drives the ENTIRE arc live from here: tremor sleep -> Zevara summons -> Olesm briefing -> descent (teleported, deep_descent owns the walk) -> boss JOIN -> victory -> seal -> the GDI epilogue -> post_game -> free play. Progression-inert like climax_surface_start (no volume counters, evolutions at_level 10) so the tremor sleep does no gains/level-ups and classes stay {warrior:2,diplomat:1} through the epilogue (recount = 2 lines -> 7 epilogue lines total). heard_about_cisterns deliberately absent (keeps Zevara's cisterns-sweep option hidden so her summons/seal options index cleanly, matching climax_chain/climax_seal). rng_state 9 governs BOTH of arc_flow's live fights: the raskghar_scouts route-fight (arc_flow autoplays it -- combat_autoplay then asserts cleared_raskghar_scouts) consumes the 1st rng.randi(), the awakened_boss the 2nd. Note: deep_descent skips its scouts by teleporting past them, but arc_flow does NOT. This fixture holds 2 live classes but no `reached_two_classes` accomplishment (it predates the flag); save.gd's load-derivation banks it silently on Continue, so the tremor pointer + Act II->III gate fire exactly as before. TRAP: rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673), never hand-typed -- WISave restores .state directly, not .seed. Every fight in this fixture's run is unaffected by rng_state choice.",
+ "_comment": "arc_flow's start (the whole-arc proof): Act II COMPLETE (2 classes: warrior 2 + diplomat 1; 3 completed quests the_errand/missing_crate/cisterns), standing at your_bed upstairs (9,2 facing UP onto the bed at 9,1 -- #49: the ground-floor alcove bed is REMOVED, the inn's only bed is upstairs now), met_relc banked. NO Act III keys yet (heard_the_deep_tremor/watch_runner_pointed/cleared_the_warren/raskghar_sealed/post_game all UNBANKED) so arc_flow drives the ENTIRE arc live from here: tremor sleep -> Zevara summons -> Olesm briefing -> descent (teleported, deep_descent owns the walk) -> boss JOIN -> victory -> seal -> the GDI epilogue -> post_game -> free play. Progression-inert like climax_surface_start (no volume counters, evolutions at_level 10) so the tremor sleep does no gains/level-ups and classes stay {warrior:2,diplomat:1} through the epilogue (recount = 2 lines -> 7 epilogue lines total). heard_about_cisterns deliberately absent (keeps Zevara's cisterns-sweep option hidden so her summons/seal options index cleanly, matching climax_chain/climax_seal). rng_state 9 governs BOTH of arc_flow's live fights: the raskghar_scouts route-fight (arc_flow autoplays it -- combat_autoplay then asserts cleared_raskghar_scouts) consumes the 1st rng.randi(), the awakened_boss the 2nd. Note: deep_descent skips its scouts by teleporting past them, but arc_flow does NOT. This fixture holds 2 live classes but no `reached_two_classes` accomplishment (it predates the flag); save.gd's load-derivation banks it silently on Continue, so the tremor pointer + Act II->III gate fire exactly as before. TRAP: rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673), never hand-typed -- WISave restores .state directly, not .seed. Every fight in this fixture's run is unaffected by rng_state choice.",
  "version": 5,
  "state": {
-  "current_map": "inn",
+  "current_map": "inn_upstairs",
   "player_cell": [
-   2,
-   6
+   9,
+   2
   ],
   "player_facing": [
    0,
-   1
+   -1
   ],
   "classes": {
    "warrior": 5,

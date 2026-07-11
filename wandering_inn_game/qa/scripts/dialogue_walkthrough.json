@@ -461,18 +461,14 @@
    "timeout_sec": 5
   },
   {
-   "action": "move",
-   "direction": "left",
-   "steps": 12
+   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [9, 2]
   },
   {
    "action": "move",
-   "direction": "down",
-   "steps": 3
-  },
-  {
-   "action": "move",
-   "direction": "down",
+   "direction": "up",
    "steps": 1
   },
   {
@@ -493,10 +489,10 @@
    "equals": 1
   },
   {
-   "_comment": "Back to (7,3) so the original gob2-fight route (move right 7 -> inn_door) resumes unchanged. (2,6) up3->(2,3), right5->(7,3).",
-   "action": "move",
-   "direction": "up",
-   "steps": 3
+   "_comment": "Back to (7,3) so the original gob2-fight route (move right 7 -> inn_door) resumes unchanged. Teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3'), right5->(7,3).",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [2, 3]
   },
   {
    "action": "move",
@@ -651,18 +647,14 @@
    "timeout_sec": 5
   },
   {
-   "action": "move",
-   "direction": "left",
-   "steps": 12
+   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [9, 2]
   },
   {
    "action": "move",
-   "direction": "down",
-   "steps": 3
-  },
-  {
-   "action": "move",
-   "direction": "down",
+   "direction": "up",
    "steps": 1
   },
   {
@@ -703,6 +695,12 @@
    "action": "wait_for_event",
    "type": "ui_journal_hidden",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "Teleport down to (2,6) (the cell the old ground-floor route stood on before this journal check) so the rest of this route resumes unchanged.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [2, 6]
   },
   {
    "action": "move",

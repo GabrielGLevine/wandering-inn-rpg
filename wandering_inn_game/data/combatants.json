@@ -541,10 +541,10 @@
    ]
   },
   {
-   "_comment": "Hired_blades' first knife-thug -- see hired_blade_leader's own _comment for the canon-plausibility cite + the first-all-human-family design contract. Leaner/quicker than the leader (higher dex, lower con), no skill -- a plain knife-thrust, not a technique. Matched pair with hired_blade_knife_b (river_wolf_a/b convention).",
+   "_comment": "Hired_blades' first knife-thug -- see hired_blade_leader's own _comment for the canon-plausibility cite + the first-all-human-family design contract. Leaner/quicker than the leader (higher dex, lower con), no skill -- a plain knife-thrust, not a technique. Matched pair with hired_blade_knife_b (river_wolf_a/b convention). #49: sprite varied off the leader's rig -- `citizen_f` (ALREADY-registered directional human rig, idle+walk, same animation-coverage shape as goblin_base/hired_blade itself) is UNCLAIMED by any other combatant entry (grepped data/combatants.json before picking) and human (preserves the all-human-family contract), so a warehouse roster of 3 doesn't read as one man cloned twice. board_renderer.gd's `_combatant_sprite_id` keys off `template_id` (this entry's own `id`), not the shared `display_name`/roster grouping, so this is a pure data-field change -- no code touched.",
    "id": "hired_blade_knife_a",
    "display_name": "Hired Blade",
-   "sprite": "hired_blade",
+   "sprite": "citizen_f",
    "side": "enemy",
    "stats": {
     "str": 11,
@@ -559,10 +559,10 @@
    "skills": []
   },
   {
-   "_comment": "Hired_blades' second knife-thug -- identical template to hired_blade_knife_a (a matched pair), given its own id per the distinct-id convention documented on rift_vermin_a/river_wolf_a.",
+   "_comment": "Hired_blades' second knife-thug -- identical template to hired_blade_knife_a (a matched pair), given its own id per the distinct-id convention documented on rift_vermin_a/river_wolf_a. #49: sprite varied to `human_laborer` (ALREADY-registered directional human rig, idle+walk) so all 3 roster members read distinctly (leader keeps `hired_blade`, thug A is `citizen_f`, thug B is `human_laborer`). CAVEAT flagged for the controller's own windowed judgment: `human_laborer` is ALSO `footpad_lookout`/`footpad_bruiser`'s sprite (data/combatants.json, the SAME Invrisil region's alley_footpads roster) -- a soft region-level reuse (footpads and hired_blades are alternate quest-resolution paths, not usually faced back-to-back in one run, per invrisil_disagreement_*'s own fork structure), not a hard collision, but worth a look if a playthrough ever faces both.",
    "id": "hired_blade_knife_b",
    "display_name": "Hired Blade",
-   "sprite": "hired_blade",
+   "sprite": "human_laborer",
    "side": "enemy",
    "stats": {
     "str": 11,

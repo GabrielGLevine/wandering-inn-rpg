@@ -18,9 +18,8 @@
   { "_comment": "Boot: 1 innate field slot, [Rogue] not yet held.", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "readout_lines": ["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease."] } },
   { "action": "screenshot", "name": "00_pre_rogue_1slot" },
 
-  { "_comment": "To the bed (near_tactician/field_skills_loop precedent): down3 -> (2,6), down1 blocks on the bed (2,7) & faces it, interact -> sleep.", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
+  { "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
+  { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "rogue" }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "classes.rogue", "equals": 1 },

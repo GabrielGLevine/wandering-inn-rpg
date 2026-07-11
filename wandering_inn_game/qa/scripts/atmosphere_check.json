@@ -34,10 +34,11 @@
   { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "phase": "dusk" }, "timeout_sec": 5 },
   { "_comment": "No second ui_lights_rendered is expected here -- that event only fires from world.gd's _rebuild_field pass (world_ready/map_changed), and this route never changes map across the dusk crossing, only phase. Light ENERGY (what actually goes from 0 at day to >0 at dusk) is presentation state atmosphere.gd owns directly and the sim never sees or emits -- there is no honest sim-observable event to assert energy>0 on. The real proof that the inn's hearth/grill are lit at dusk is a windowed screenshot read, same idiom as the identity-grade zero-visual-change proof above; see task-b2-report.md's dusk shot (a THROWAWAY floodplains script proves the visible glow at the campfire anchor specifically, since the inn route here never leaves day/dusk mood parity that a screenshot alone could show apart).", "action": "screenshot", "name": "01_dusk" },
 
-  { "_comment": "Walk to the bed (2,7) and sleep: [2,3]->down3->(2,6) (bed itself at (2,7) blocks the straight column, same idiom as work_loop/inventory_loop's chest routes -- only 3 of the 3 attempted down-moves land since bed is one cell further), then interact triggers sleep() -- unconditional actions_since_sleep reset to 0 + phase_changed always fires, even day->day (M7 doc comment).", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
+  { "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the specific bed is incidental to this test -- the subject is the unconditional actions_since_sleep reset to 0 + phase_changed firing even day->day (M7 doc comment). Then interact triggers sleep(), and a return teleport to the inn re-renders the inn's own day mood grade so the ui_mood_applied{map:inn,phase:day} wait below still observes it.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
+  { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
+  { "action": "teleport", "map": "inn", "cell": [2, 3] },
   { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "inn", "phase": "day" }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "actions_since_sleep", "equals": 0 },
   { "action": "assert_state", "path": "phase", "equals": "day" },

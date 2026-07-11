@@ -109,10 +109,8 @@
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn" }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "player_cell", "equals": [14, 3] },
 
-  { "_comment": "== PHASE B5: to the inn bed (2,7), sleep. [Diplomat] is already held (pre-granted by social_loop_start) so it grants nothing further here -- BUT this sleep is NOT a no-op: recovered_crate_watch was banked at the watch_crate hub above regardless of which branch fired it (both the Diplomat and paid alternates bank it, per issue #50's rule -- 'the quest counters', not persuaded_someone, are shared), and recovered_crate_watch is [Rogue]'s OWN unrelated gained_by gate (classes.json) -- this was already true before issue #50 (the original script's class_gained{diplomat} wait simply skipped past the same interleaved rogue/warrior-level-up events, matching only the diplomat one). With diplomat no longer gained live, [Rogue] is now the first class_gained this sleep, plus a Warrior level-up (counter_strike/battle_momentum) rides the same beat. left to (2,3), down to (2,6), down bumps the bed and faces it, interact -> sleep.", "action": "move", "direction": "left", "steps": 12 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
+  { "_comment": "== PHASE B5: sleep. [Diplomat] is already held (pre-granted by social_loop_start) so it grants nothing further here -- BUT this sleep is NOT a no-op: recovered_crate_watch was banked at the watch_crate hub above regardless of which branch fired it (both the Diplomat and paid alternates bank it, per issue #50's rule -- 'the quest counters', not persuaded_someone, are shared), and recovered_crate_watch is [Rogue]'s OWN unrelated gained_by gate (classes.json) -- this was already true before issue #50 (the original script's class_gained{diplomat} wait simply skipped past the same interleaved rogue/warrior-level-up events, matching only the diplomat one). With diplomat no longer gained live, [Rogue] is now the first class_gained this sleep, plus a Warrior level-up (counter_strike/battle_momentum) rides the same beat. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
+  { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "rogue" }, "timeout_sec": 5 },
@@ -127,7 +125,7 @@
 
   { "_comment": "== PHASE C1: [Charming Smile] (Diplomat) already reached the field hotbar at BOOT (issue #50 -- see the slots:2 wait near the top of this script); this sleep's OWN [Stealth] grant (Rogue, also field-tagged) grows it live 2 -> 3, an unrelated but still-real growth proof.", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3 } },
 
-  { "_comment": "== PHASE C2: field-fire [Charming Smile] on Erin ==. Sleep left the PC at (2,6); up to (2,3), east to (7,3), up bumps Erin (7,2) and faces her. Slot 2 (hotbar_2) is [Charming Smile].", "action": "move", "direction": "up", "steps": 3 },
+  { "_comment": "== PHASE C2: field-fire [Charming Smile] on Erin ==. Teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3'); east to (7,3), up bumps Erin (7,2) and faces her. Slot 2 (hotbar_2) is [Charming Smile].", "action": "teleport", "map": "inn", "cell": [2, 3] },
   { "action": "move", "direction": "right", "steps": 5 },
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [7, 3] },

@@ -34,8 +34,8 @@
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
 
-  { "_comment": "== BANK THE LAST LEG FOR REAL, via a debug teleport to the inn bed (FIXTURE-FIRST short-circuit of the organic street<->inn walk) rather than re-deriving a full route. Bump the bed (2,7) from (2,6) facing down, interact -> sleep().", "action": "teleport", "map": "inn", "cell": [2, 6] },
-  { "action": "move", "direction": "down", "steps": 1 },
+  { "_comment": "== BANK THE LAST LEG FOR REAL, via a debug teleport to your_bed upstairs (FIXTURE-FIRST short-circuit of the organic street<->inn walk) rather than re-deriving a full route. #49: the ground-floor alcove bed is REMOVED, the inn's only bed is upstairs now. Bump your_bed (9,1) from (9,2) facing up, interact -> sleep().", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
+  { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
 

@@ -1,10 +1,10 @@
 {
  "steps": [
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "_comment": "+1 rendered entity (the short_order Q2 SKILL pot, reusing the cauldron sprite) -> sprites 12 -> 13, fallbacks still 0. +1 again (stairs_up door) -> sprites 13 -> 14. pantry_door + rift_vermin_leak -> sprites 14 -> 16. pantry_door_runes -> sprites 16 -> 17. garden_door -> sprites 17 -> 18.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 18, "fallbacks": 0 } },
+  { "_comment": "+1 rendered entity (the short_order Q2 SKILL pot, reusing the cauldron sprite) -> sprites 12 -> 13, fallbacks still 0. +1 again (stairs_up door) -> sprites 13 -> 14. pantry_door + rift_vermin_leak -> sprites 14 -> 16. pantry_door_runes -> sprites 16 -> 17. garden_door -> sprites 17 -> 18. #49: the ground-floor alcove bed is REMOVED (the inn's only bed is now upstairs, your_bed) -> sprites 18 -> 17.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 17, "fallbacks": 0 } },
   { "action": "screenshot", "name": "00_start" },
 
-  { "_comment": "inn_chest container beat, inserted at the very start (before Beat 0) so it round-trips back to the exact spawn cell (2,3) and every existing beat below stays untouched -- inn_chest is at [1,8]; bed [2,7] blocks the straight column-2 path down, so the route jogs left one column early (E4's proven peek route / inventory_loop.json's identical detour): [2,3]->down3->[2,6]->left1->[1,6]->down1->[1,7], face down (blocked by the chest, no move) + interact -> item_gained/toast/ui_toast_rendered (no autosave competes here -- pickup isn't one of the autosave-triggering events, so no toast-queue race like inventory_loop's Relc-gift beat). Then the reverse of the same four moves restores (2,3) exactly before Beat 0 begins.", "action": "move", "direction": "down", "steps": 3 },
+  { "_comment": "inn_chest container beat, inserted at the very start (before Beat 0) so it round-trips back to the exact spawn cell (2,3) and every existing beat below stays untouched -- inn_chest is at [1,8]; the route jogs left one column early to its own approach (E4's proven peek route / inventory_loop.json's identical detour): [2,3]->down3->[2,6]->left1->[1,6]->down1->[1,7], face down (blocked by the chest, no move) + interact -> item_gained/toast/ui_toast_rendered (no autosave competes here -- pickup isn't one of the autosave-triggering events, so no toast-queue race like inventory_loop's Relc-gift beat). Then the reverse of the same four moves restores (2,3) exactly before Beat 0 begins. (#49: the ground-floor alcove bed that used to sit at [2,7] is removed -- this route never passed through that cell anyway, unaffected.)", "action": "move", "direction": "down", "steps": 3 },
   { "action": "move", "direction": "left", "steps": 1 },
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [1, 7] },
@@ -74,9 +74,8 @@
   { "action": "assert_state", "path": "accomplishments.served_customer", "equals": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [6, 6] },
 
-  { "_comment": "Beat 4: walk to bed, sleep -> class_gained{helper} (cleaned_the_inn>=1) + exact toast containing Helper", "action": "move", "direction": "up", "steps": 1 },
-  { "action": "move", "direction": "left", "steps": 4 },
-  { "action": "move", "direction": "down", "steps": 2 },
+  { "_comment": "Beat 4: sleep -> class_gained{helper} (cleaned_the_inn>=1) + exact toast containing Helper. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
+  { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "helper" }, "timeout_sec": 5 },
   { "_comment": "The first-ever autosave toast is a NESTED emission fired from inside Game's class_gained listener, so it lands in the event log BEFORE class_gained itself is recorded here -- assert_event_logged (whole-run scan) rather than wait_for_event (cursor-gated) avoids the ordering trap.", "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "Autosaved. (Esc — save/load anytime)" } },
@@ -85,8 +84,8 @@
   { "action": "screenshot", "name": "04_helper_gained" },
   { "action": "assert_event_absent", "type": "class_level_up", "payload_contains": { "class": "helper" } },
 
-  { "_comment": "Beat 5 : snapshot classes.helper==1; stew_pot right after Helper L1 gain -> NOW USABLE (basic_cooking is the L1 grant post-swap) -> positive skill_used + cooked_meal + toast. The pre-class skill_unknown negative moved to Beat 0 above. Hotbar now carries 2 slots (known_skills() order: innate basic_cleaning, then helper's basic_cooking) -- basic_cooking is slot 2, hotbar_2.", "action": "assert_state", "path": "classes.helper", "equals": 1 },
-  { "action": "move", "direction": "up", "steps": 3 },
+  { "_comment": "Beat 5 : snapshot classes.helper==1; stew_pot right after Helper L1 gain -> NOW USABLE (basic_cooking is the L1 grant post-swap) -> positive skill_used + cooked_meal + toast. The pre-class skill_unknown negative moved to Beat 0 above. Hotbar now carries 2 slots (known_skills() order: innate basic_cleaning, then helper's basic_cooking) -- basic_cooking is slot 2, hotbar_2. Teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3').", "action": "assert_state", "path": "classes.helper", "equals": 1 },
+  { "action": "teleport", "map": "inn", "cell": [2, 3] },
   { "action": "move", "direction": "right", "steps": 2 },
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "hotbar_2" },
@@ -116,9 +115,8 @@
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer", "count": 2 }, "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
+  { "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
   { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "move", "direction": "left", "steps": 4 },
-  { "action": "move", "direction": "down", "steps": 2 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "class_level_up", "payload_contains": { "class": "helper", "level": 2 }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Helper Level 2]" }, "timeout_sec": 5 },

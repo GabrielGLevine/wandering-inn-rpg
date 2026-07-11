@@ -40,20 +40,20 @@
   {
    "action": "assert_state",
    "path": "current_map",
-   "equals": "inn"
+   "equals": "inn_upstairs"
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    2,
-    6
+    9,
+    2
    ]
   },
   {
    "action": "press",
    "name": "interact",
-   "_comment": "== TREMOR ==. Bed (2,7) -> sleep(); Act II complete, tremor unbanked -> pointer fires once."
+   "_comment": "== TREMOR ==. #49: the fixture now parks the PC at your_bed's approach (inn_upstairs, the inn's only bed since the ground-floor alcove bed was removed) -> sleep(); Act II complete, tremor unbanked -> pointer fires once."
   },
   {
    "action": "wait_for_event",
@@ -870,12 +870,12 @@
   },
   {
    "action": "teleport",
-   "map": "inn",
+   "map": "inn_upstairs",
    "cell": [
-    2,
-    6
+    9,
+    2
    ],
-   "_comment": "== FREE PLAY == nothing reset."
+   "_comment": "== FREE PLAY == nothing reset. #49: teleport to your_bed's approach (the inn's only bed now) rather than the removed ground-floor alcove."
   },
   {
    "action": "wait_frames",
@@ -884,21 +884,7 @@
   {
    "action": "assert_state",
    "path": "current_map",
-   "equals": "inn"
-  },
-  {
-   "action": "move",
-   "direction": "up",
-   "steps": 1
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    2,
-    5
-   ],
-   "_comment": "A plain move still works post-game"
+   "equals": "inn_upstairs"
   },
   {
    "action": "move",
@@ -909,9 +895,28 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    2,
-    6
+    9,
+    3
+   ],
+   "_comment": "A plain move still works post-game"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
    ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
   },
   {
    "action": "press",
