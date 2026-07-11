@@ -1212,3 +1212,13 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   texture's soft edge banding to nothing under the dark modulate. Fix
   idea: scale shadow alpha with the map grade, or swap to a smaller
   ellipse for tall thin props.
+
+## 2026-07-11 (user playtest batch 2)
+- (10) ruin_surface: the dormant ruin_guardian marker REUSES the
+  Raskghar sprite — confusing (reads as a Raskghar, is a construct).
+  Needs a distinct dormant-guardian/statue prop — fold into the 8d A3
+  pixflux prop batch.
+- (25) brothers_parlor: dress further with the Pixel Crawler hideout
+  pack (user pointer) — catalog/index pass, then decor entries.
+- (19) witch sprite grossly over-scale vs PC — rescale + regen rides
+  the #63 canon pass (named witch profile first).
