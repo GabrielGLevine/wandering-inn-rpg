@@ -20,6 +20,72 @@ tag in flight. **NEXT RUNG: step 8a**, which OPENS with issue #7 —
 a USER-SESSION spec-brainstorm (Door/Garden earn conditions; canon-
 grounded options prepped in the issue's comments).
 
+## ISSUE PLAN (Fable recommendation, written 2026-07-11 by user request)
+
+The board stays the queue; this section is the recommended ORDER +
+grouping over the currently-open issues, written at the close of the
+2026-07-10 autonomous stretch (post-v0.4.0-playtest waves: #52/#53
+substantially landed, selling + retirement + explicit-hotbar + night
+pacing + music + Stage-7 fixture shipped; Actions budget squeezed for
+~21 days — batched pushes, no tags unless critical).
+
+**Wave 1 — close the playtest arc (finish what's open in flight):**
+1. Land the in-flight lanes (inventory corner #INV, #49-remainder bed
+   migration/garden dressing/parlor/blades, Klbkch art) + one batched
+   push. Close #52 (only the dish-item fetch seam remains — fold it
+   into wave 3's content) and #53 (all items shipped or re-homed).
+2. #55 decor-tint dead code (S) — trivial fix + a windowed retune pass
+   over the maps whose authored tints suddenly render. Do EARLY: every
+   scene lane until then authors tints that silently no-op.
+3. #24 bounty_crab_cull encounter bank (S, honest-debt) + #46
+   [Invisibility] combat read (S) — two small combat items, one lane.
+
+**Wave 2 — interaction feel (the user's own asks, high play-value):**
+4. #58 hotbar selection (Tab, ratified) + skill-name labels (M) —
+   self-contained, ships the hover plumbing #57 reuses.
+5. #57 mouse support (L) — after #58 (shares the hotbar dispatch +
+   label surfaces). The QA driver's mouse vocabulary is the real cost;
+   budget it as its own task inside the issue.
+6. #56 combat formations (M) — independent of 4-5; can pair with the
+   #24/#46 combat lane if bandwidth allows. Balance re-verification is
+   the cost center (re-derived seeds + bands).
+
+**Wave 3 — content depth (before the next region):**
+7. #51 Klbkch + Antinium (M) — art already generated/approved; wire +
+   place + walk-ons. Cheap now.
+8. #50 close-out: the witch-pattern re-pricing SHIPPED; what remains is
+   the wi-adding-dialogue-and-quests principle write-up + closing the
+   issue with the audit table. (Fable-only skill edit — do before
+   handover or leave as HANDOFF proposal.)
+9. The dish-item seam (from #52): stew_pot/short_order produce a
+   carryable dish; the patron fetch gate turns real; unlocks food
+   content generally. Small sim seam + content.
+10. #54 sparse class tables (M) — convention + validator; do BEFORE
+    authoring any high-level class content (8e+ waves want it).
+
+**Wave 4 — the region ladder resumes (the original chain):**
+11. #14 dungeon map family (L) — unblocks the Act-IV-facing content.
+12. #15 Horns of Hammerad party content (L) — pairs with #14 thematically.
+13. #16 Pallass (L, 8e) — the QUALIFY verb city; #54 first (its class
+    waves), #10/#12 contract precedent applies.
+
+**Continuous / gated:**
+- #17 voice audit (L, copy): run as a standing background lane per
+  region rather than one monolith.
+- #32-#35 taste batch (S, user-gated): bundle into one USER-SESSION
+  sitting — 15 minutes of rulings, then a single copy lane.
+- #19 Steam presets: EXPLICITLY PARKED until the Actions budget resets
+  (desktop-export runners are the expensive multiplier) — re-open at
+  the reset with the v0.4.x tag decision.
+- Move-pool passive reveal seam + Old-Tower-Inn encode-quality check +
+  #55's windowed retune: fold into whichever wave touches those files.
+
+Rationale: waves 1-2 maximize the active playtester's experience with
+zero new-region risk; wave 3 clears every small debt that compounds
+(dead code, unearned-class hygiene, schema convention) before wave 4's
+big content opens. The Actions squeeze biases everything toward fewer,
+bigger pushes and NO tags — release cadence resumes at the budget reset.
+
 ## The chain, in order
 
 **1. M-ARC — ✅ CLOSED (opus SHIP, 2026-07-06):**
