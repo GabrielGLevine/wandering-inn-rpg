@@ -172,6 +172,13 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "Issue #69: Roster POSITIVE -- chatted_with_klbkch banked in post_tutorial_street's own fixture accomplishments, so ally_requires fields Klbkch (not Relc) on the player side here (crate_scavengers' FORCE path is Klbkch's own alternation slot). Same roster-gate assert shape as combat_walkthrough's Relc proof.",
+   "action": "assert_state",
+   "path": "combat.combatants.klbkch.side",
+   "equals": "player"
+  },
+  {
+   "_comment": "combat_screen.gd's `_announce_allies()` (the generic Relc/Hunter arrival-line mechanism -- feed_push, no bus event) pushed 'Klbkch wades in beside you.' into the combat feed the instant _show_combat() built the view, before this fixed-position PC ever spends an action -- so the very next assertion (Klbkch present in turn_order, proven by the roster-gate assert above) already postdates it. No separate wait_for_event exists for this line (feed_push mutates HUD-internal state only, never a domain event) -- the roster-gate assert IS the canonical proof this lane can make headlessly; the line itself is windowed-verifiable only (wi-machine-playtest territory, out of this HEADLESS lane's scope).",
    "action": "wait_for_event",
    "type": "turn_started",
    "payload_contains": {

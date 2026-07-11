@@ -2514,6 +2514,7 @@
      ]
     },
     {
+     "_comment": "Issue #69: Klbkch fields here (the crate quest's FORCE path), NOT Relc -- this is a WATCH-context street fight, Klbkch's own alternation slot (crate_scavengers/shield_spiders vs. Relc's tutorial/road/inn fights + the descent). Was `allies: []` before this lane (no ally ever fielded here) -- no swap needed, this is a net-new gate. `ally_requires: {chatted_with_klbkch: 1}` is banked ONLY by talking to Klbkch at the gate (#51's talk_pool, `data/skeleton_scene.json`'s own `klbkch` entity) -- a player who never talked to him fights this alone (companions are earned by relationship, the riverfarm_hunter/relc_descent precedent). Balance: sim_combat_batch.gd ENCOUNTER_CELLS `crate_scavengers_w1_klbkch` (measured-only, same rationale as the pre-existing `_w1_solo` sibling -- crate_fight's own pinned fixture rng_state is the real content proof, not a win-rate contract).",
      "id": "crate_scavengers",
      "kind": "encounter",
      "cell": [
@@ -2527,7 +2528,12 @@
       "goblin_raider",
       "goblin_raider"
      ],
-     "allies": [],
+     "allies": [
+      "klbkch"
+     ],
+     "ally_requires": {
+      "chatted_with_klbkch": 1
+     },
      "on_victory": [
       "recovered_crate_force",
       "found_the_crate"
@@ -4450,7 +4456,7 @@
      ]
     },
     {
-     "_comment": "The Shield Spider nest -- Quest 1 'Something in the Cisterns' FIGHT path (C3 wires the quest; on_victory banks cleared_the_nest for C3 to read). Interact-only (no trigger_radius) so C3's SKILL path can [Appraise Foe] the nest without triggering combat. Phosphor_pendant loot rides the sewers-phosphor prop fiction. This encounter carried NO loot table before G2 (confirmed by grep), so the new table is purely additive -- no prior loot draw exists at any pinned seed for this entity to disturb. Loot RNG is isolated (hash(run_seed, encounter_id), M7), so this can never shift the main event stream or any OTHER encounter's draw. Chance 0.3 is a G2 pick (the staging doc names the source but not a chance value) -- mid-range between the shipped 0.25/0.5 precedents.",
+     "_comment": "The Shield Spider nest -- Quest 1 'Something in the Cisterns' FIGHT path (C3 wires the quest; on_victory banks cleared_the_nest for C3 to read). Interact-only (no trigger_radius) so C3's SKILL path can [Appraise Foe] the nest without triggering combat. Phosphor_pendant loot rides the sewers-phosphor prop fiction. This encounter carried NO loot table before G2 (confirmed by grep), so the new table is purely additive -- no prior loot draw exists at any pinned seed for this entity to disturb. Loot RNG is isolated (hash(run_seed, encounter_id), M7), so this can never shift the main event stream or any OTHER encounter's draw. Chance 0.3 is a G2 pick (the staging doc names the source but not a chance value) -- mid-range between the shipped 0.25/0.5 precedents. Issue #69: Klbkch fields here (the cisterns quest's FIGHT path), NOT Relc -- this is Klbkch's own alternation slot alongside crate_scavengers (Relc keeps the tutorial/road/inn fights + the descent). Was `allies: []` before this lane (no ally ever fielded here despite sim_combat_batch.gd's pre-existing `shield_spiders_w2_relc` harness cell, which was always a measured-only hypothetical, never wired to this entity) -- no swap needed, this is a net-new gate, and that pre-existing relc cell is now stale documentation of an unwired hypothetical, kept for the record. `ally_requires: {chatted_with_klbkch: 1}` is banked ONLY by talking to Klbkch at the gate (#51's talk_pool). Balance: sim_combat_batch.gd ENCOUNTER_CELLS `shield_spiders_w2_klbkch` (measured-only, same rationale as the `_w2_solo`/`_w1_solo` siblings -- cisterns_fight's own pinned fixture rng_state is the real content proof, not a win-rate contract).",
      "id": "shield_spiders",
      "kind": "encounter",
      "cell": [
@@ -4470,7 +4476,12 @@
       "shield_spider",
       "shield_spider"
      ],
-     "allies": [],
+     "allies": [
+      "klbkch"
+     ],
+     "ally_requires": {
+      "chatted_with_klbkch": 1
+     },
      "on_victory": [
       "cleared_the_nest",
       "resolved_the_cisterns"
