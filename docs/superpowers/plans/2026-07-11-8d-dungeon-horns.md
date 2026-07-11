@@ -27,10 +27,16 @@ content). One milestone, five phases; A runs background from day one.
   organic patches of wear, exactly what a trapped hall wants);
   (b) the dark blue-grey brick PALETTE from the experiment is right —
   reuse the prompt kernel; (c) WALLS stay separate (walls.segments
-  render path — source wall texture via pixflux or the Pixel Crawler
-  cave/castle families per the catalog). Fresh ANCHOR MEASUREMENT per
-  the gotcha. Windowed adjacency read before any map authoring
-  consumes it.
+  render path). SECOND EXPERIMENT (floor-wear pair, tileset 3a7f4643):
+  the transition CRACK lines read well, but terrain differentiation is
+  weak at 16px — 'heavily worn/rubble' rendered as the same brick.
+  A1 VERDICT after 2 of the budgeted attempts: base floor+wall from
+  the LICENSED families (Pixel Crawler cave/castle per the catalog —
+  the fidelity ceiling is higher), pixflux for trap-tell accents and
+  the rune-carved feature tiles; /create-tileset parked (both attempts
+  in potential_assets/pixellab_2026-07-11_tilesets/). Fresh ANCHOR
+  MEASUREMENT per the gotcha. Windowed adjacency read before any map
+  authoring consumes it.
 - A2: three Horns characters, v2 create-character-pro → animate
   (idle+walk; slice for Yvlon/Ksmvr who field as allies) → zips.
   PROFILES FIRST (wiki-verified) into character-profiles.md: Ceria
