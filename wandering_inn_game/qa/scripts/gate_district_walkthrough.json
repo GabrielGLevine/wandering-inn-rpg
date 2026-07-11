@@ -209,7 +209,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -237,7 +240,10 @@
    "_comment": "== PART 2: cross the proximity ambush (warrior + Relc) ==. Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3'); resumes unchanged: right12+1 -> inn_door -> floodplains (7,6), right23->(30,6), down14->(30,20), down1 springs the ambush.",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 3]
+   "cell": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",
@@ -496,6 +502,61 @@
     "text": "Watch Guard: Keep the gate clear. And if you're headed out, the road's got goblins on it lately. Watch knows. Watch is dealing with it."
    },
    "timeout_sec": 5
+  },
+  {
+   "_comment": "== ISSUE #51: KLBKCH AT THE GATE == The city's one visible Antinium, stationed at (4,6) off both walk-lanes ((3,5) broke three canonicals -- the corner-pick lesson applies to NPC placement). Detour off the y4 lane: (1,4) right3 -> (4,4), down1 -> (4,5), down1 blocks on klbkch (4,6) & faces him; first interact this waking absorbs HIS rotating pool line (idx 0) + banks the counter; then up1, left3 restores (1,4) so the step-84 'right 13' column math is untouched.",
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Klbkch",
+    "text": "Guardsman Klbkch, Liscor Watch. If you have business, state it plainly. If you have none, the plaza is pleasant and I am content to stand here with you."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "chatted_with_klbkch",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04b_klbkch_at_the_gate"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
   },
   {
    "_comment": "East along y4 to krshia_stall's column (14,2) -- bump north from (14,3), the stall entity blocks (14,2) so interact fires without ever standing on the counter.",

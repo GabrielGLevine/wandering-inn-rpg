@@ -197,6 +197,9 @@ func _build_expected_counts() -> Dictionary:
 	counts["klbkch/idle"] = 4
 	counts["klbkch/walk"] = 6
 
+	## Antinium Worker (ambient extra rig, idle-only by design; 116x116).
+	counts["antinium_worker/idle"] = 4
+
 	## The two Raskghar (scout + awakened boss) are DIRECTIONAL +
 	## animated via the same F2/upgrade PixelLab v2 mannequin templates (124x124
 	## frames, down/side/up). idle=breathing-idle(4), walk=walking(6),
