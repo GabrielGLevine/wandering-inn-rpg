@@ -310,6 +310,21 @@
 			"lore": "The stew pot doesn't care who it's for -- Watch, patron, or the cook themselves. It only cares that it's stirred."
 		},
 		{
+			"_comment": "GH#68 (Invrisil quest-stage rework, TALK path Stage 2 favor beat): Cups' trust-arc carry item, the #59 item-gate/remove_item seam's second consumer OUTSIDE the delivery board (patron_serving.json's hot_meal precedent, reused for a quest-internal favor rather than a paid Runner's Guild job). kind:\"parcel\" reused verbatim from the delivery precedent below -- inert carried flavor, no price (never sold), no weapon/armor/accessory kind so equip() structurally refuses it. Granted by invrisil_fixer.json's cups_favor node (a plain dialogue `item` effect, not accept_delivery -- this favor never touches THE DELIVERY BOARD/Vess's counter at all), removed by invrisil_wilovan.json's hub option via `remove_item` on handoff. Never stacked.",
+			"id": "cups_debt_chit",
+			"name": "A Debt Chit, Long Overdue",
+			"kind": "parcel",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A folded scrap of paper, Cups' own hand, one line of figures and a name that isn't hers. Worth nothing to sell. Worth plenty to whoever's owed it.",
+			"lore": "Every fixer owes somebody for the corner they work. Cups' somebody wears a hat."
+		},
+		{
 			"_comment": "5 parcel items, one per LIVE delivery (docs/design/board-staging/runner-deliveries.json's 6th entry, delivery_hermit_antlers, is a FORWARD-REF -- kept out of data/deliveries.json until HR-II places its destination, so no parcel item ships for it either). kind:\"parcel\" is INERT carried flavor per the staging doc's own note: no price (never sold -- no sell surface exists in this game), no combat fields, and no weapon/armor/accessory kind means WIGame.equip() structurally refuses it (falls to inventory.gd's generic 'not equippable' toast) with zero new code. Granted by WIGame.accept_delivery via the existing pickup() seam and removed by the new remove_item() seam (on handoff or a sleep-fail return) -- never stacked, matching every other item in this catalog.",
 			"id": "parcel_plains_wool",
 			"name": "Plains-Wool Bolt",

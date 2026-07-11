@@ -9828,6 +9828,44 @@
        "text": "A Gnoll traveler, tan road-cloak, watching the crowd the way a stranger watches weather."
       }
      ]
+    },
+    {
+     "_comment": "GH#68 (Invrisil quest-stage rework): Stage 1's SHARED scouting beat -- 'A Gentleman's Disagreement' no longer resolves off Wilovan's brief alone; the player has to actually walk the city and place Coyle's operation before any evidence path opens up. Plain on_interact_accomplishment (no skill gate -- 'cheap but real', reachable by every build/path). Sprite reused (`crate`, the merchant-city decor idiom already established by the alley's own stacked-goods dressing) -- zero new generation. Cell (18,13): south band, off invrisil_walkthrough's own pinned route (that canonical's re-pathed BEAT 3 detours here explicitly; see that script's own comment) and off every entity cell on this map.",
+     "id": "coyle_operation_lookout",
+     "kind": "prop",
+     "cell": [
+      18,
+      13
+     ],
+     "display_name": "A Good Vantage",
+     "sprite": "crate",
+     "tint": [
+      0.6,
+      0.55,
+      0.45
+     ],
+     "observe": "Stacked shipping crates, waist-high, the kind of cover a man leans on to watch a street without looking like he's watching it.",
+     "on_interact_accomplishment": "coyle_operation_found",
+     "toast": "You circle the block twice before it clicks: the modest COYLE AND SONS sign out front doesn't match the two wagons idling round the side, or the men counting crates like men who've been shorted before. Whatever Coyle's really running out of, the front door is the least of it."
+    },
+    {
+     "_comment": "GH#68 (Invrisil quest-stage rework): the FIGHT path's Stage 2 tailing chain, first leg. Plain on_interact_accomplishment, no skill gate -- fielding a fighter-built PC must never require an [Appraise Foe]/observe investment to reach a fight. Pairs with `warehouse_approach`'s second leg (mercantile_alleys) to bank `warehouse_located`, the counter `invrisil_wilovan.json`'s `fists_door` come-along ask now gates on. Sprite reused (`food_basket`, the market-stall idiom already used for bread_stall/krshia_stall) -- zero new generation. Cell (20,13): south band, clear of every pinned route and entity on this map (this prop is FIGHT-path-only, exercised via teleport in near_invrisil_fight/invrisil_disagreement_fight, never walked by the shared invrisil_walkthrough canonical).",
+     "id": "coyle_runner_trail",
+     "kind": "prop",
+     "cell": [
+      20,
+      13
+     ],
+     "display_name": "A Hurrying Runner",
+     "sprite": "food_basket",
+     "tint": [
+      0.5,
+      0.45,
+      0.4
+     ],
+     "observe": "A runner ducks out Coyle's side door with a ledger under one arm, moving with the particular haste of someone who'd rather not be noticed leaving.",
+     "on_interact_accomplishment": "spotted_the_runner",
+     "toast": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back -- just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end."
     }
    ],
    "cover_skip": [
@@ -11392,7 +11430,7 @@
      "respawns": true
     },
     {
-     "_comment": "Invrisil 8c Task C3 (issue #13) -- the STEALTH/SKILL path's own beat: 'the [Observe] true-books + keen-eye hidden-safe beat' (spec sec.3), through the propped yard-side door Cups' rumor already named (invrisil_fixer.json's rumor_counting_house: 'the clerk with the inky cuffs... props it with a cheese wedge'). Mirrors the shield-spider `nest_ledge`/pantry-doorframe SKILL-prop shape EXACTLY: `requires_skill: observe` (the [Appraise Foe] Tactician grant -- NOTE the 2026-07-07 canon rename [Observe]->[Appraise Foe], id `observe` unchanged; the spec/plan's own prose still says '[Observe]', which now reads STALE against the shipped skill catalog -- toast copy below uses the CURRENT display name, not the plan's) + `on_skill_use` banks `lifted_true_ledger` deterministically (zero rng), matching the number/date accusation.json's own accusation-node option quotes verbatim (forty gold, dated the night before). The hidden-safe beat is folded into the SAME single reveal rather than a second prop -- the ledger drawer's own false back is where the safe sits (an honest scope collapse for a single-cell abstraction of 'the counting-house', which this map doesn't model as a separate interior; flagged for controller review). PLACEMENT FIX (this lane's own regression catch, same class as hired_blades' own note below): originally (17,11) sat DIRECTLY on invrisil_walkthrough's own pinned sneak-positive route (right 8 from (10,11) to (18,11), walked BOTH directions including the epilogue) -- entity occupancy silently blocked that shipped C1 canonical. Relocated to (16,12), east corridor floor between alley_footpads_b (14,12) and the parlor door (19,12) -- a cell that script's own asserted route never steps on (it drops straight from (18,11) to (18,12), never touching x15-17 on row 12). Chebyshev distance 2 from alley_footpads_b's own trigger_radius-2 zone is irrelevant here (my own canonical script reaches this prop via `teleport` + a stationary `interact`, never a `move` step near it, and `_check_trigger_radius` only ever runs from `move_player`). Sprite `dusty_scroll` reused (the retired [Light]-study prop, thematically apt for 'something to read with a skill' -- the doorframe-runes precedent), zero new generation.",
+     "_comment": "Invrisil 8c Task C3 (issue #13) -- the STEALTH/SKILL path's own beat: 'the [Observe] true-books + keen-eye hidden-safe beat' (spec sec.3), through the propped yard-side door Cups' rumor already named (invrisil_fixer.json's rumor_counting_house: 'the clerk with the inky cuffs... props it with a cheese wedge'). Mirrors the shield-spider `nest_ledge`/pantry-doorframe SKILL-prop shape EXACTLY: `requires_skill: observe` (the [Appraise Foe] Tactician grant -- NOTE the 2026-07-07 canon rename [Observe]->[Appraise Foe], id `observe` unchanged; the spec/plan's own prose still says '[Observe]', which now reads STALE against the shipped skill catalog -- toast copy below uses the CURRENT display name, not the plan's) + `on_skill_use` banks `lifted_true_ledger` deterministically (zero rng), matching the number/date accusation.json's own accusation-node option quotes verbatim (forty gold, dated the night before). The hidden-safe beat is folded into the SAME single reveal rather than a second prop -- the ledger drawer's own false back is where the safe sits (an honest scope collapse for a single-cell abstraction of 'the counting-house', which this map doesn't model as a separate interior; flagged for controller review). PLACEMENT FIX (this lane's own regression catch, same class as hired_blades' own note below): originally (17,11) sat DIRECTLY on invrisil_walkthrough's own pinned sneak-positive route (right 8 from (10,11) to (18,11), walked BOTH directions including the epilogue) -- entity occupancy silently blocked that shipped C1 canonical. Relocated to (16,12), east corridor floor between alley_footpads_b (14,12) and the parlor door (19,12) -- a cell that script's own asserted route never steps on (it drops straight from (18,11) to (18,12), never touching x15-17 on row 12). Chebyshev distance 2 from alley_footpads_b's own trigger_radius-2 zone is irrelevant here (my own canonical script reaches this prop via `teleport` + a stationary `interact`, never a `move` step near it, and `_check_trigger_radius` only ever runs from `move_player`). Sprite `dusty_scroll` reused (the retired [Light]-study prop, thematically apt for 'something to read with a skill' -- the doorframe-runes precedent), zero new generation. GH#68 (quest-stage rework) GATE ADDED: the real evidence now needs `assessed_guard_pattern` banked first (`counting_house_watch`, this map's own new prop, below) -- reuses the on_skill_use `variants` seam verbatim (the cellar_door precedent, wi_game.gd's `_resolve_skill_use_effect`), no new sim code. Base effect fires on an [Appraise Foe] attempt made before the guard pattern is known (bank a real, harmless, disclosed flavor counter -- `noticed_the_clean_ledger` -- never the true ledger); the variant overrides both `accomplishment` and `toast` once `assessed_guard_pattern` is already banked. `locked_toast` (skill UNKNOWN case) is untouched.",
      "id": "counting_house_ledger",
      "kind": "prop",
      "cell": [
@@ -11404,10 +11442,61 @@
      "requires_skill": "observe",
      "skill_hint_toast": "The clean ledger is the tell. Sizing up what is really here takes a practiced read.",
      "on_skill_use": {
-      "accomplishment": "lifted_true_ledger",
-      "toast": "[Appraise Foe] — The true ledger, tucked behind a false-backed drawer no honest desk needs. Forty gold to a 'removal man,' dated the night before Coyle's own theft: his hand, his numbers, his mistake. The drawer's second catch gives up a shallow hidden safe behind it, empty now but scored where something heavier than coin sat until recently."
+      "accomplishment": "noticed_the_clean_ledger",
+      "toast": "The desk's own ledger reads clean -- too clean, the kind of clean a man pays for. Whatever's real is hidden better than this. You'll want to know how this place is watched before you go digging further.",
+      "variants": [
+       {
+        "when": {
+         "assessed_guard_pattern": 1
+        },
+        "accomplishment": "lifted_true_ledger",
+        "toast": "[Appraise Foe] — Now you know the gap in the watch, the true ledger comes easy: tucked behind a false-backed drawer no honest desk needs. Forty gold to a 'removal man,' dated the night before Coyle's own theft: his hand, his numbers, his mistake. The drawer's second catch gives up a shallow hidden safe behind it, empty now but scored where something heavier than coin sat until recently."
+       }
+      ]
      },
      "locked_toast": "The desk's own ledger reads clean, which is exactly the kind of clean a man pays for. You don't have the eye to find the real one. Not yet."
+    },
+    {
+     "_comment": "GH#68 (Invrisil quest-stage rework): the SKILL path's Stage 2 gate -- the counting-house's guard rotation, watched from a shadowed nook before ever trying the desk itself. Ungated [Appraise Foe] use (single interaction -- the guard-pattern/ledger PAIR is the 'two interactions, two locations' the stage map calls for; this prop itself needs no prerequisite). Sprite `dusty_scroll` reused (same 'something to read with a skill' idiom as the ledger it gates), tint distinguishes it from the ledger's own sprite use. Cell (15,12): free floor, adjacent to counting_house_ledger (16,12) and alley_footpads_b (14,12) -- off invrisil_walkthrough's own pinned route (that script never steps on (15,12), only (18,11)/(18,12) on this stretch), reached via teleport by the SKILL canonical (never a walked `move` step near footpads_b's trigger_radius).",
+     "id": "counting_house_watch",
+     "kind": "prop",
+     "cell": [
+      15,
+      12
+     ],
+     "display_name": "A Shadowed Nook",
+     "sprite": "dusty_scroll",
+     "tint": [
+      0.5,
+      0.5,
+      0.55
+     ],
+     "requires_skill": "observe",
+     "skill_hint_toast": "Two men keep the counting-house door. Sizing up their rhythm takes a practiced read.",
+     "on_skill_use": {
+      "accomplishment": "assessed_guard_pattern",
+      "toast": "[Appraise Foe] — Two men on the counting-house door, and they're sloppier than they think: the same slow circuit, the same gap while both backs are turned, near enough on the bell to set a watch by. Time it right and the desk inside is yours for a minute, maybe two."
+     },
+     "locked_toast": "Two men on the door, pacing something. You don't have the eye to time it yet."
+    },
+    {
+     "_comment": "GH#68 (Invrisil quest-stage rework): the FIGHT path's Stage 2 tailing chain, second leg (pairs with `coyle_runner_trail`, invrisil_boulevard). Plain on_interact_accomplishment, no skill gate (a fighter-built PC must never need [Appraise Foe] to reach a fight). Banks the counter invrisil_wilovan.json's `fists_door` come-along ask gates on. Cell (19,11): free floor, off invrisil_walkthrough's own pinned route (that script's sneak leg touches (18,11)/(18,12), never (19,11)) and off both footpad trigger_radius zones. FIGHT-path-only, reached via teleport in near_invrisil_fight/invrisil_disagreement_fight -- never walked by the shared invrisil_walkthrough canonical.",
+     "id": "warehouse_approach",
+     "kind": "prop",
+     "cell": [
+      19,
+      11
+     ],
+     "display_name": "A Side Door, Watched",
+     "sprite": "food_basket",
+     "tint": [
+      0.45,
+      0.4,
+      0.4
+     ],
+     "observe": "The runner's trail ends at a side door with fresh boot-scuff on the sill and burgundy-and-brass livery moving past the gap in the shutters. Coyle's crew, and no mistaking the building now.",
+     "on_interact_accomplishment": "warehouse_located",
+     "toast": "The runner ducks inside, and you finally see the whole of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. Wherever the come-along ends, it ends here."
     },
     {
      "_comment": "Invrisil 8c Task C3 (issue #13) -- `hired_blades`, the LOCKED interface id (plan's lane map: arena `merchant_warehouse`, on_victory banking the confrontation flag) for the quest's FIGHT path: Coyle's warehouse crew. Interact-only (no trigger_radius), the crate/cisterns/rift_vermin_leak FIGHT-leg precedent -- 'the fight lives on its own map, reached by the player's own feet', no dialogue-side start_combat wiring required (though invrisil_merchant_prince.json's accusation node ALSO offers a second, reactive entry into this SAME entity id via its '(Draw steel.)' option -- both routes converge on one start_combat(id) call, per wi_game.gd's own single-choke-point design). `allies: [\"wilovan\"]` + `ally_requires: {wilovan_will_fight: 1}` is the come-along gate, banked ONLY by data/dialogue/invrisil_wilovan.json's `fists_door` ask (no teleporting allies, the riverfarm_hunter/relc_descent precedent) -- matches combatants.json's own wilovan record + sim_combat_batch.gd's `hired_blades_w10_wilovan`/`hired_blades_w10_solo` harness cells (gated 0.6-0.8 with the ally, measured-only solo). `on_victory: forced_confession` is the accomplishment invrisil_merchant_prince.json's hub/cornered nodes both key on -- kept as the DRAFT dialogue's literal wired string (the plan's own lane-map prose paraphrases this 'forced_the_confession'; using the draft's exact string keeps data and dialogue internally consistent, flagged for controller review same as the wilovan file's own note). PLACEMENT FIX (this lane's own regression catch): originally placed at (6,7) in the west corridor, which sits DIRECTLY on invrisil_walkthrough's own pinned sneak-negative route (right 6 from (1,7) to (7,7)) -- entity occupancy blocks movement, so that placement silently broke the shipped C1 canonical (caught by re-running it, not by test_content, which has no route-collision check). Relocated to (17,12), east corridor, south of the new counting_house_ledger prop (17,11) and Chebyshev distance 3 from alley_footpads_b (14,12) -- outside its trigger_radius-2 zone -- and NOT on any cell invrisil_walkthrough's script asserts or steps through (it drops straight from (18,11) to (18,12) without ever touching x15-17 on row 12). Sprite `hired_blade` (C2's owned PixelLab rig) -- ANCHOR RULE machine-playtest verification still owed per combatants.json's own comment (a windowed check, out of this headless lane's verification scope; flagged for the controller).",

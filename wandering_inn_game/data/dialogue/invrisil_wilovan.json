@@ -1,223 +1,297 @@
 {
-	"_comment": "Invrisil 8c Task C3 (issue #13) -- Wilovan's full quest graph: the commission give-beat, the three-door signpost, the FIGHT door's come-along ask, and the marker/report close. RECAST from docs/design/dialogue-drafts/invrisil/brothers_lieutenant.json (speaker 'Mister Sable' -> Wilovan, per the plan's User-ratified shape 1 -- Wilovan fronts the Brothers, superseding the draft's ORIGINAL placeholder; the courtesy-as-menace register carries over untouched, it fits Wilovan's own canon 'perfect gentlemen. Until the hats come off' at least as well). Voice contract: character-profiles-staging.md 'Brothers lieutenant' entry (now Wilovan's) -- sir/miss, apologizes before the threat, 'recover' never 'steal'. FORK CONTRACT accomplishment names NORMALIZED to the plan's literal locked shape 5 wording (`merchant_exposed`/`merchant_extorted`), not the draft's `exposed_merchant_prince`/`extorted_merchant_prince` -- see invrisil_merchant_prince.json's own _comment for the same rename. `cleared_brothers_name`/`forced_confession` kept as the DRAFT's literal wired strings (the plan's own prose paraphrases these with an inserted 'the' -- 'cleared_the_brothers_name'/'forced_the_confession' -- but the drafts are the thing we were told to lift verbatim, and a naming mismatch between dialogue and encounter data would be a real bug; flagged for controller review in the report). THE HATS-OFF BEAT (locked, load-bearing): `marker`'s two text_variants now stage WILOVAN physically removing HIS OWN hat at quest close -- the canon violence tell, subverted into a genuine respect gesture, distinct wording per fork per the brief. THE COME-ALONG BEAT (new, this lane's own wiring -- the draft's `ways` node gestured at 'a man would be honored to attend' but never banked a flag): `ways` gained a third, hidden-once-answered option routing to `fists_door`, which banks `wilovan_will_fight` -- the EXACT key data/skeleton_scene.json's `hired_blades` encounter reads via `ally_requires` (no teleporting allies, the riverfarm_hunter/relc_descent precedent). SAFE-PASSAGE REWARD (locked shape 3): the report option (`hub`'s 'Coyle's answered for it' -> `marker`) now also banks `brothers_marker` (accomplishment, the vendor/perk gate) and fires `remove_entity` on BOTH alley footpads -- completing the quest, on ANY path/either fork, retires them permanently (the existing `remove_entity` effect verb, same as goblin_parley/watch_crate/zevara_intro's shield_spiders precedent; no new sim machinery, per the brief's own data-driven constraint). Wiring notes: resolution gates on `merchant_fate_decided` (banked at invrisil_merchant_prince.json's fork, EITHER ending), so the report path works for all 3 quest paths + both fates identically; per-fate flavor lives entirely in `marker`'s text_variants.",
-	"start": "hub",
-	"nodes": {
-		"hub": {
-			"speaker": "Wilovan",
-			"text": "Begging your pardon, sir — a moment of your evening. We don't steal, whatever you've heard. We RECOVER. Occasionally we recover things that were never lost. Tonight we'd like to recover a man's good name — his, and by unfortunate arithmetic, ours.",
-			"text_variants": [
-				{
-					"requires": {
-						"accomplishment": {
-							"took_brothers_job": 1
-						}
-					},
-					"text": "Evening, sir. The city's ears are long and the night is short — how goes our small disagreement?"
-				},
-				{
-					"requires": {
-						"accomplishment": {
-							"brothers_job_done": 1
-						}
-					},
-					"text": "Sir. The parlor door is never shut to you, the alleys are safe as churches — safer, we keep better hours — and a man remembers. All of us remember."
-				}
-			],
-			"options": [
-				{
-					"text": "Recover a name. Go on.",
-					"hide_when": {
-						"accomplishment": {
-							"took_brothers_job": 1
-						}
-					},
-					"goto": "commission"
-				},
-				{
-					"text": "Remind me of the three doors.",
-					"requires": {
-						"accomplishment": {
-							"took_brothers_job": 1
-						}
-					},
-					"hide_when": {
-						"accomplishment": {
-							"brothers_job_done": 1
-						}
-					},
-					"goto": "ways"
-				},
-				{
-					"text": "Coyle's answered for it. Farley's name is clear.",
-					"requires": {
-						"accomplishment": {
-							"merchant_fate_decided": 1
-						}
-					},
-					"hide_when": {
-						"accomplishment": {
-							"brothers_job_done": 1
-						}
-					},
-					"effects": [
-						{
-							"accomplishment": "brothers_job_done"
-						},
-						{
-							"accomplishment": "cleared_brothers_name"
-						},
-						{
-							"accomplishment": "brothers_marker"
-						},
-						{
-							"item": "brothers_marker"
-						},
-						{
-							"remove_entity": "alley_footpads_a"
-						},
-						{
-							"remove_entity": "alley_footpads_b"
-						}
-					],
-					"goto": "marker"
-				},
-				{
-					"text": "Evening.",
-					"end": true
-				}
-			]
-		},
-		"commission": {
-			"speaker": "Wilovan",
-			"text": "A merchant of standing, sir — Master Coyle, of Coyle and Sons, though the sons are decorative. He commissioned a quiet removal of certain goods. The removal went exactly as paid for. The ARREST afterward did not: our Mister Farley sits in a Watch cell for a theft he was hired to perform by the man now weeping loudest about it. We apologize in advance for imposing, sir. The Brothers cannot abide a frame. It's untidy.",
-			"options": [
-				{
-					"text": "I'll take it.",
-					"effects": [
-						{
-							"quest": "a_gentlemans_disagreement"
-						},
-						{
-							"accomplishment": "took_brothers_job"
-						}
-					],
-					"goto": "ways"
-				},
-				{
-					"text": "Why bring it to me?",
-					"goto": "why_you"
-				},
-				{
-					"text": "Not my fight.",
-					"end": true
-				}
-			]
-		},
-		"why_you": {
-			"speaker": "Wilovan",
-			"text": "Because you're not us, sir — that's the whole of your qualification, and we mean it as flattery. Every hand in this brotherhood is known to the Watch by its glove size. A stranger's word lands where ours bounces. Also, and we say this with affection: you look like a person things HAPPEN to. We'd like to point you at Master Coyle and observe.",
-			"options": [
-				{
-					"text": "Fair. I'll take it.",
-					"effects": [
-						{
-							"quest": "a_gentlemans_disagreement"
-						},
-						{
-							"accomplishment": "took_brothers_job"
-						}
-					],
-					"goto": "ways"
-				},
-				{
-					"text": "I'll sleep on it.",
-					"end": true
-				}
-			]
-		},
-		"ways": {
-			"speaker": "Wilovan",
-			"text": "Three doors, sir, as a man might put it. PAPER: Coyle keeps his true ledger at the counting-house off Wister's Alley, and paper doesn't lie — his says he paid for the theft himself. TONGUES: the fixer called Cups pours rumor by the alley gate, and Coyle has soured more partners than tea has leaves; testimony can be arranged. Politely arranged. Or FISTS — his warehouse crew — and we apologize for even setting that on the table, though should you open that particular door, sir, a man would be honored to attend.",
-			"options": [
-				{
-					"text": "The warehouse, then. Will you come?",
-					"hide_when": {
-						"accomplishment": {
-							"wilovan_will_fight": 1
-						}
-					},
-					"goto": "fists_door"
-				},
-				{
-					"text": "One more thing.",
-					"goto": "hub"
-				},
-				{
-					"text": "I'll pick my door.",
-					"end": true
-				}
-			]
-		},
-		"fists_door": {
-			"speaker": "Wilovan",
-			"text": "Sir. Say the word and I'll come along — a Brother doesn't send a friend into a warehouse alone, not over an invitation this personal. I won't dress up what happens once we're through that door: hats off, and I do mean it literally.",
-			"options": [
-				{
-					"text": "Come with me.",
-					"effects": [
-						{
-							"accomplishment": "wilovan_will_fight"
-						}
-					],
-					"goto": "hub"
-				},
-				{
-					"text": "I'll go alone.",
-					"goto": "hub"
-				}
-			]
-		},
-		"marker": {
-			"speaker": "Wilovan",
-			"text": "So we heard, sir. Mister Farley walked out this morning, hat restored to him at the gate — a small ceremony, but ours.",
-			"text_variants": [
-				{
-					"requires": {
-						"accomplishment": {
-							"merchant_exposed": 1
-						}
-					},
-					"text": "So we heard, sir, the criers had it by breakfast and the Merchant's Guild by lunch. Coyle's name is worth exactly what he paid for ours: nothing. Wilovan takes his hat off, plain and slow, and doesn't set it back on right away. Mister Farley walked at dawn — that's Farley's ceremony. This one's mine, sir, for a man who held a fortune in his hand and burned it for a stranger in a cheap hat. We don't often get to mean it this way."
-				},
-				{
-					"requires": {
-						"accomplishment": {
-							"merchant_extorted": 1
-						}
-					},
-					"text": "Quietly withdrawn, sir, charges and all, and a man notices your purse rides heavier than it did. We don't judge. We admire, on occasion, and this is one of those occasions. Wilovan takes his hat off too, the same unhurried motion, though there's something closer to approval than respect in it this time. Mind he stays bought, sir — gentlemen of Coyle's sort tend to un-buy themselves the moment it's cheap to."
-				}
-			],
-			"options": [
-				{
-					"text": "And this marker?",
-					"goto": "marker_terms"
-				},
-				{
-					"text": "Glad Farley's out.",
-					"end": true
-				}
-			]
-		},
-		"marker_terms": {
-			"speaker": "Wilovan",
-			"text": "A Brother's marker, sir. Wood and tin, and worth rather more than its materials. Shown in the alleys, trouble will beg your pardon and step around you. Shown at the parlor, a man can find you things the shops pretend not to stock — recovered things, sir, of impeccable provenance. Which is to say: don't ask, and we shan't tell.",
-			"options": [
-				{
-					"text": "A pleasure doing business, Wilovan.",
-					"end": true
-				}
-			]
-		}
-	}
+ "_comment": "Invrisil 8c Task C3 (issue #13) -- Wilovan's full quest graph: the commission give-beat, the three-door signpost, the FIGHT door's come-along ask, and the marker/report close. RECAST from docs/design/dialogue-drafts/invrisil/brothers_lieutenant.json (speaker 'Mister Sable' -> Wilovan, per the plan's User-ratified shape 1 -- Wilovan fronts the Brothers, superseding the draft's ORIGINAL placeholder; the courtesy-as-menace register carries over untouched, it fits Wilovan's own canon 'perfect gentlemen. Until the hats come off' at least as well). Voice contract: character-profiles-staging.md 'Brothers lieutenant' entry (now Wilovan's) -- sir/miss, apologizes before the threat, 'recover' never 'steal'. FORK CONTRACT accomplishment names NORMALIZED to the plan's literal locked shape 5 wording (`merchant_exposed`/`merchant_extorted`), not the draft's `exposed_merchant_prince`/`extorted_merchant_prince` -- see invrisil_merchant_prince.json's own _comment for the same rename. `cleared_brothers_name`/`forced_confession` kept as the DRAFT's literal wired strings (the plan's own prose paraphrases these with an inserted 'the' -- 'cleared_the_brothers_name'/'forced_the_confession' -- but the drafts are the thing we were told to lift verbatim, and a naming mismatch between dialogue and encounter data would be a real bug; flagged for controller review in the report). THE HATS-OFF BEAT (locked, load-bearing): `marker`'s two text_variants now stage WILOVAN physically removing HIS OWN hat at quest close -- the canon violence tell, subverted into a genuine respect gesture, distinct wording per fork per the brief. THE COME-ALONG BEAT (new, this lane's own wiring -- the draft's `ways` node gestured at 'a man would be honored to attend' but never banked a flag): `ways` gained a third, hidden-once-answered option routing to `fists_door`, which banks `wilovan_will_fight` -- the EXACT key data/skeleton_scene.json's `hired_blades` encounter reads via `ally_requires` (no teleporting allies, the riverfarm_hunter/relc_descent precedent). SAFE-PASSAGE REWARD (locked shape 3): the report option (`hub`'s 'Coyle's answered for it' -> `marker`) now also banks `brothers_marker` (accomplishment, the vendor/perk gate) and fires `remove_entity` on BOTH alley footpads -- completing the quest, on ANY path/either fork, retires them permanently (the existing `remove_entity` effect verb, same as goblin_parley/watch_crate/zevara_intro's shield_spiders precedent; no new sim machinery, per the brief's own data-driven constraint). Wiring notes: resolution gates on `merchant_fate_decided` (banked at invrisil_merchant_prince.json's fork, EITHER ending), so the report path works for all 3 quest paths + both fates identically; per-fate flavor lives entirely in `marker`'s text_variants.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Wilovan",
+   "text": "Begging your pardon, sir — a moment of your evening. We don't steal, whatever you've heard. We RECOVER. Occasionally we recover things that were never lost. Tonight we'd like to recover a man's good name — his, and by unfortunate arithmetic, ours.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "took_brothers_job": 1
+      }
+     },
+     "text": "Evening, sir. The city's ears are long and the night is short — how goes our small disagreement?"
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "brothers_job_done": 1
+      }
+     },
+     "text": "Sir. The parlor door is never shut to you, the alleys are safe as churches — safer, we keep better hours — and a man remembers. All of us remember."
+    }
+   ],
+   "options": [
+    {
+     "text": "Recover a name. Go on.",
+     "hide_when": {
+      "accomplishment": {
+       "took_brothers_job": 1
+      }
+     },
+     "goto": "commission"
+    },
+    {
+     "text": "Remind me of the three doors.",
+     "requires": {
+      "accomplishment": {
+       "took_brothers_job": 1,
+       "coyle_operation_found": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "brothers_job_done": 1
+      }
+     },
+     "goto": "ways"
+    },
+    {
+     "_comment": "GH#68 (quest-stage rework): the diegetic gate for a player who's taken the job but hasn't scouted Coyle's operation yet -- Wilovan won't lay out doors on a target nobody's placed. Hidden the instant coyle_operation_found banks (the option above takes over); the only other visible route out of the hub in this window is 'Evening.'",
+     "text": "Where do I even start with him?",
+     "requires": {
+      "accomplishment": {
+       "took_brothers_job": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "coyle_operation_found": 1
+      }
+     },
+     "goto": "scout_nudge"
+    },
+    {
+     "text": "Coyle's answered for it. Farley's name is clear.",
+     "requires": {
+      "accomplishment": {
+       "merchant_fate_decided": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "brothers_job_done": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "brothers_job_done"
+      },
+      {
+       "accomplishment": "cleared_brothers_name"
+      },
+      {
+       "accomplishment": "brothers_marker"
+      },
+      {
+       "item": "brothers_marker"
+      },
+      {
+       "remove_entity": "alley_footpads_a"
+      },
+      {
+       "remove_entity": "alley_footpads_b"
+      }
+     ],
+     "goto": "marker"
+    },
+    {
+     "text": "Evening.",
+     "end": true
+    },
+    {
+     "_comment": "GH#68 (quest-stage rework, TALK path Stage 2 favor beat): the item-possession gate + remove_item pair (issue #59 seam, patron_serving.json precedent), Cups' side reached via invrisil_fixer.json's cups_favor node. Item gate is NOT progress-gated (dialogue.gd's _progress_gated), so this shows visible-locked to every path/player who never met Cups -- same as any other item-gated option elsewhere (the Serve option's own precedent). Appended LAST in the array (after the always-visible 'Evening.') so its presence never shifts the authored-index-derived visible-index of any option ABOVE it -- the option-index discipline every existing invrisil_disagreement_* canonical presses by number.",
+     "text": "Cups asked me to see something back to you.",
+     "requires": {
+      "item": "cups_debt_chit"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "returned_cups_debt": 1
+      }
+     },
+     "effects": [
+      {
+       "remove_item": "cups_debt_chit"
+      },
+      {
+       "accomplishment": "returned_cups_debt"
+      }
+     ],
+     "goto": "cups_favor_returned"
+    }
+   ]
+  },
+  "scout_nudge": {
+   "speaker": "Wilovan",
+   "text": "Sir. A gentleman doesn't accuse a man he can't find. Walk the city a while -- ask around, look past the front door, and come back once you know where Master Coyle actually keeps his business. Then we'll speak of doors.",
+   "options": [
+    {
+     "text": "Fair enough.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "cups_favor_returned": {
+   "speaker": "Wilovan",
+   "text": "Ah. That. Settled, then, and Cups need not have worried -- we collect debts, sir, we don't chase tea-girls for them. Tell her the account's closed. Tell her we said so kindly, which is rarer than she'll admit.",
+   "options": [
+    {
+     "text": "I'll tell her.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "commission": {
+   "speaker": "Wilovan",
+   "text": "A merchant of standing, sir — Master Coyle, of Coyle and Sons, though the sons are decorative. He commissioned a quiet removal of certain goods. The removal went exactly as paid for. The ARREST afterward did not: our Mister Farley sits in a Watch cell for a theft he was hired to perform by the man now weeping loudest about it. We apologize in advance for imposing, sir. The Brothers cannot abide a frame. It's untidy.",
+   "options": [
+    {
+     "text": "I'll take it.",
+     "effects": [
+      {
+       "quest": "a_gentlemans_disagreement"
+      },
+      {
+       "accomplishment": "took_brothers_job"
+      }
+     ],
+     "goto": "ways"
+    },
+    {
+     "text": "Why bring it to me?",
+     "goto": "why_you"
+    },
+    {
+     "text": "Not my fight.",
+     "end": true
+    }
+   ]
+  },
+  "why_you": {
+   "speaker": "Wilovan",
+   "text": "Because you're not us, sir — that's the whole of your qualification, and we mean it as flattery. Every hand in this brotherhood is known to the Watch by its glove size. A stranger's word lands where ours bounces. Also, and we say this with affection: you look like a person things HAPPEN to. We'd like to point you at Master Coyle and observe.",
+   "options": [
+    {
+     "text": "Fair. I'll take it.",
+     "effects": [
+      {
+       "quest": "a_gentlemans_disagreement"
+      },
+      {
+       "accomplishment": "took_brothers_job"
+      }
+     ],
+     "goto": "ways"
+    },
+    {
+     "text": "I'll sleep on it.",
+     "end": true
+    }
+   ]
+  },
+  "ways": {
+   "speaker": "Wilovan",
+   "text": "Three doors, sir, as a man might put it. PAPER: Coyle keeps his true ledger at the counting-house off Wister's Alley, and paper doesn't lie — his says he paid for the theft himself. TONGUES: the fixer called Cups pours rumor by the alley gate, and Coyle has soured more partners than tea has leaves; testimony can be arranged. Politely arranged. Or FISTS — his warehouse crew — and we apologize for even setting that on the table, though should you open that particular door, sir, a man would be honored to attend.",
+   "options": [
+    {
+     "text": "The warehouse, then. Will you come?",
+     "hide_when": {
+      "accomplishment": {
+       "wilovan_will_fight": 1
+      }
+     },
+     "goto": "fists_door"
+    },
+    {
+     "text": "One more thing.",
+     "goto": "hub"
+    },
+    {
+     "text": "I'll pick my door.",
+     "end": true
+    }
+   ]
+  },
+  "fists_door": {
+   "_comment": "GH#68 (quest-stage rework): the FIGHT path's Stage 2 gate. Base text is the diegetic hold -- Wilovan won't commit to a building nobody's found yet; the text_variant (warehouse_located met) restores the ORIGINAL come-along speech verbatim. 'Come with me.' itself gates on the same counter (single sanctioned accomplishment key, HIDDEN until met -- Gating Split policy), so a player who hasn't walked the tailing chain (coyle_runner_trail on invrisil_boulevard -> warehouse_approach in mercantile_alleys) sees only 'I'll go alone.', the pre-existing ungated fallback.",
+   "speaker": "Wilovan",
+   "text": "Sir, I'd come gladly -- once we know precisely which building we're walking into. A Brother doesn't blunder in blind, whatever the invitation. Find the place first.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "warehouse_located": 1
+      }
+     },
+     "text": "Sir. Say the word and I'll come along — a Brother doesn't send a friend into a warehouse alone, not over an invitation this personal. I won't dress up what happens once we're through that door: hats off, and I do mean it literally."
+    }
+   ],
+   "options": [
+    {
+     "text": "Come with me.",
+     "requires": {
+      "accomplishment": {
+       "warehouse_located": 1,
+       "spotted_the_runner": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "wilovan_will_fight"
+      }
+     ],
+     "goto": "hub"
+    },
+    {
+     "text": "I'll go alone.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "marker": {
+   "speaker": "Wilovan",
+   "text": "So we heard, sir. Mister Farley walked out this morning, hat restored to him at the gate — a small ceremony, but ours.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "merchant_exposed": 1
+      }
+     },
+     "text": "So we heard, sir, the criers had it by breakfast and the Merchant's Guild by lunch. Coyle's name is worth exactly what he paid for ours: nothing. Wilovan takes his hat off, plain and slow, and doesn't set it back on right away. Mister Farley walked at dawn — that's Farley's ceremony. This one's mine, sir, for a man who held a fortune in his hand and burned it for a stranger in a cheap hat. We don't often get to mean it this way."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "merchant_extorted": 1
+      }
+     },
+     "text": "Quietly withdrawn, sir, charges and all, and a man notices your purse rides heavier than it did. We don't judge. We admire, on occasion, and this is one of those occasions. Wilovan takes his hat off too, the same unhurried motion, though there's something closer to approval than respect in it this time. Mind he stays bought, sir — gentlemen of Coyle's sort tend to un-buy themselves the moment it's cheap to."
+    }
+   ],
+   "options": [
+    {
+     "text": "And this marker?",
+     "goto": "marker_terms"
+    },
+    {
+     "text": "Glad Farley's out.",
+     "end": true
+    }
+   ]
+  },
+  "marker_terms": {
+   "speaker": "Wilovan",
+   "text": "A Brother's marker, sir. Wood and tin, and worth rather more than its materials. Shown in the alleys, trouble will beg your pardon and step around you. Shown at the parlor, a man can find you things the shops pretend not to stock — recovered things, sir, of impeccable provenance. Which is to say: don't ask, and we shan't tell.",
+   "options": [
+    {
+     "text": "A pleasure doing business, Wilovan.",
+     "end": true
+    }
+   ]
+  }
+ }
 }
