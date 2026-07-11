@@ -132,6 +132,22 @@ canon cites · current sprite state.
   integration target: Klbkch (Worker-origin Senior Guardsman,
   canonical [Diplomat]).
 
+## Klbkch (wiki-verified 2026-07-10: wiki.wanderinginn.com/Klbkch)
+- Canon, OUR ERA (Vol 1-7 body -- the slimmer two-armed Rite-of-
+  Anastases rebirth form is later-volume, DO NOT use): Worker-shaped
+  Antinium -- dark brown chitinous body, FOUR arms, antennae, large
+  black bulbous eyes, mouth pincers; a PAIR OF SWORDS at his sides
+  (the one visual that separates him from every other Worker).
+  Senior Guardsman of Liscor's Watch, Relc's partner.
+- Silhouette contract (the 3 features a 64px sprite must hold):
+  (1) four-arm read -- at minimum the second pair as a clear sub-arm
+  mass, flagged to user if illegible at scale; (2) antennae; (3) the
+  twin sword hilts at the hips. Palette: chitin dark brown (near the
+  Worker s21 pick), NO Watch armor over the chitin (canon: he wears
+  his blades, not a uniform).
+- Voice: precise, courteous, unfailingly calm; dry understatement.
+  Never jokey. He manages Relc; he has time for people.
+
 ## Raskghar (M-ARC A2, GENERATED + INTEGRATED 2026-07-06)
 - Canon (wiki.wanderinginn.com/Raskghar): "a cross between an upright
   bear and a lion", tower over Gnolls, hunched with long claws + sharp
