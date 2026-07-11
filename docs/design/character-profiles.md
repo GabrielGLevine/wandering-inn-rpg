@@ -171,3 +171,51 @@ canon cites · current sprite state.
   spell_damage+applies machinery (no new effect type), `caster` AI.
   Balance: sim_combat_batch.gd BOSS_CELLS, 0.72 win vs warrior2+Relc
   (gated 0.6-0.75), 0.04 solo (measured veto).
+
+## Ceria Springwalker (wiki-verified 2026-07-11; 8d A2)
+- Canon Vols 1-7: Boreal half-Elf, 65, SHORTER than her teammates;
+  pointed ears; dirty-blonde hair; pale-yellow eyes (a later "winter-
+  pale blue-grey" shift exists but its volume is unpinned — use pale
+  yellow); skin subtly more vibrant than human. RIGHT HAND: bare white
+  bone from the wrist, blackened frostbite-like join — VOLUME 1 CANON
+  (the Ruins of Liscor disaster; she is introduced already injured).
+  SPEC CORRECTION: the circlet is Volume 8+ (Putrid One's) — MUST NOT
+  appear; the spec's circlet note is superseded by this verification.
+- v1 sprite contract: enchanted blue robes, wand in hand, blonde hair.
+  The bone hand ships GLOVED/HIDDEN v1 per the spec's taste flag (note:
+  it IS early canon — user may ungate it; the sprite reads fine either
+  way since the wand hand can be the gloved one).
+- Class display: [Cryomancer]. Voice: blunt, upfront, informal,
+  zero pretension, gallows humor; the leader who sounds least like one.
+
+## Yvlon Byres (wiki-verified 2026-07-11; 8d A2)
+- Canon Vols 1-7: human, tall, heavily muscled; long golden hair; fair
+  skin; faint scar on the LEFT side of her face. Eye color undocumented
+  on the wiki — steel-grey chosen to fit the silver palette (invented-
+  within-gap, flagged). ARMS: silver-steel and shapeable from Volume 6
+  (the Adult Creler fight) — a V6-7 snapshot shows METALLIC ARMS
+  honestly, not hinted; before that, plate armor fused to flesh (V3).
+- v1 sprite contract: silver plate, sword at hip, golden hair, both
+  forearms reading METAL (the silhouette's must-show), face scar parked
+  (sub-pixel at 30px).
+- Class display: [Silversteel Armsmistress]. Voice: stiff, formal,
+  unintentionally intimidating, renders any topic bland; blunt-kind.
+
+## Ksmvr (wiki-verified 2026-07-11; 8d A2)
+- Canon Vols 1-7: Antinium, former PROGNUGATOR of the Free Hive
+  (elite command caste, Klbkch-trained, exiled as a "failure" —
+  disciplined military bearing over Worker docility, laced with
+  self-doubt). Four arms (the missing lower-right regrows via healing
+  gel within the window — ship 4-arm). Chitin/eye color undocumented —
+  use the Worker family's dark brown for caste consistency (flagged).
+  Gear: crossbows + Forceshield Buckler + kris daggers.
+- v1 sprite contract: the antinium_worker attempt-3 kernel ("four-armed
+  ant man: TWO PAIRS...") + a gear harness/bandolier with a slung
+  crossbow and small buckler — the equipment IS what separates him from
+  a Worker at 30px. Same sub-arm legibility flag as Klbkch.
+- Class display: [Skirmisher] (no "Brave", no level). Voice: formal,
+  literal, "comrade" as address, clarifying questions about idioms;
+  earnest, never jokey.
+
+## Horns roster note (Vols 2-7, verified): Ceria (leader), Yvlon,
+Pisces (ours already), Ksmvr — complete; no other members in-window.
