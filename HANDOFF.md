@@ -1,5 +1,28 @@
 # Wandering Inn RPG Handoff
 
+## IN-FLIGHT ALL LANDED + BATCHED PUSH (2026-07-10 night) — GOAL-CHAIN Wave 1 opens
+
+Standing order: execute GOAL-CHAIN.md ISSUE PLAN (committed section in
+GOAL-CHAIN.md). This push batches 9 commits: parallel ci_sweep
+(WI_SWEEP_JOBS=8, 80 scripts ~35s), inventory corner (icon + mechanical
+breakout; audio decoupled via new `ui_inventory_selection_rendered`
+event — gear_loop pins ui_inventory_shown at exactly 4, teeth QA can
+hear), [Tactician]-from-chess ruling (classes.json gained_by swap, 7
+fixtures, olesm post-sleep pin unlocked), GOAL-CHAIN issue plan, #49
+remainder (inn ground-floor bed REMOVED — 37 scripts migrated to
+your_bed upstairs; garden rug; parlor window + couch-as-bench; hired
+blades = citizen_f/human_laborer; opus review MERGE zero defects),
+Klbkch sprite set (92px directional idle+walk, ~30px on-screen,
+windowed-verified beside Zevara; map wiring = #51). Merged-tree gates:
+sweep 80/80, fixture coherence 53/53, progression/sim-core/registry
+PASS. Klbkch profile added to character-profiles.md (our-era 4-arm
+form; sub-arm legibility at 30px flagged as watch-item for #51's
+windowed reads).
+
+**NEXT (Wave 1):** close #52/#53 scraps, #55 decor-tint dead code
+(EARLY — scene lanes author silent no-op tints until fixed), #24+#46
+combat pair. Then Wave 2 (#58 Tab-selection → #57 mouse, #56).
+
 ## AUTONOMOUS EXECUTION STRETCH (2026-07-10 evening) — through the SELL merge
 
 Standing order active (/goal: continuous execution). Shipped since the
