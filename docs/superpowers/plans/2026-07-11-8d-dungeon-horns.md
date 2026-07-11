@@ -43,10 +43,13 @@ content). One milestone, five phases; A runs background from day one.
   sleeve-hinted metal arms), Ksmvr (Antinium, the worker kernel + a
   harness/belt to distinguish him from Workers). Klbkch/worker scale
   precedents: ~28-30px on-screen, feet-plane anchors measured.
-- A3: trap-tell props (pressure plate, dart slit, illusory-floor shimmer
-  tile, snare coil) — pixflux flat-swap recipe (`view:"high top-down"`),
-  16px world scale. Tells must read AT A GLANCE against the old-dark
-  floor (windowed reads; the interactables-must-read rule).
+- A3: trap-tell props — FIRST CANDIDATES GENERATED (parked in
+  potential_assets/pixellab_2026-07-11_trap_props/): pressure_plate and
+  snare_coil READ; dart_slit palette drifts purple (regen against the
+  real floor); illusory_floor too uniform (the tell must be findable
+  on inspection — retune shimmer edge). FINAL reads happen at B2
+  against the sourced floor family — tell contrast is floor-relative,
+  don't commit these until then.
 
 ## Phase B — maps + traps (Sonnet lane; after A1's family lands)
 - B1: `dungeon_approach` (~16x12) in skeleton_scene.json — the sealed
