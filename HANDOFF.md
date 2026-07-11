@@ -1,5 +1,26 @@
 # Wandering Inn RPG Handoff
 
+## AUTONOMOUS EXECUTION STRETCH (2026-07-10 evening) — through the SELL merge
+
+Standing order active (/goal: continuous execution). Shipped since the
+#53 batch: narrative skill nudges + #56 formations issue; inn folk theme
+(seamless-loop source) + the _fail-swallows-failures validator tooth;
+stage7_playtest fixture (generator-built, first sleep fires the Garden
+reveal — boot via Playtest States); LEFT lane (item-possession dialogue
+gate; ALL 9 melee skills had zero UI adjacency filtering — fixed;
+off-grid decor); SELL lane (Krshia half-worth buyback + [Trader] seam,
+arbitrage disproven per-item; delivery retirement unconditional + the 3
+absolute-mode bounties retire — user bug closed); potential_assets zip
+purge (930MB); Klbkch candidate approved + animating. Sweeps green
+throughout; everything pushed.
+
+**QUEUE (in order):** inventory-corner UI (user design: selected-item
+image top-right + mechanical breakout separate from lore), #49 remainder
+(garden dressing, parlor, blades variety, inn bed migration), Klbkch
+integration + walk-ons (#51), #52's dish-item seam (patron fetch),
+move-pool passive reveal seam. AWAITING USER: nothing — all current
+directives ratified or shipped.
+
 ## RULINGS BATCH 2 (2026-07-10, f43eac6/f03f3a4/36e40c1) — sweep 80/80 x3
 
 - **#50 SHIPPED**: witch-pattern everywhere (persuades = [Diplomat]-gated
