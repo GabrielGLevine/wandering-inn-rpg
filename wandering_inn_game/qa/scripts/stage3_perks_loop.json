@@ -359,37 +359,37 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== (4) SLEEP == teleport to the inn bed one cell short (transition() never touches player_facing -- board_loop.json's exact idiom), move down 1 for the real facing, interact.",
+   "_comment": "== (4) SLEEP == #49: ground-floor alcove bed removed; teleport to your_bed upstairs one cell short (transition() never touches player_facing -- board_loop.json's exact idiom), move up 1 for the real facing, interact.",
    "action": "teleport",
-   "map": "inn",
+   "map": "inn_upstairs",
    "cell": [
-    2,
-    5
+    9,
+    3
    ]
   },
   {
    "action": "wait_for_event",
    "type": "map_changed",
    "payload_contains": {
-    "map": "inn",
+    "map": "inn_upstairs",
     "cell": [
-     2,
-     5
+     9,
+     3
     ]
    },
    "timeout_sec": 5
   },
   {
    "action": "move",
-   "direction": "down",
+   "direction": "up",
    "steps": 1
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    2,
-    6
+    9,
+    2
    ]
   },
   {

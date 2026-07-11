@@ -195,18 +195,14 @@
    "timeout_sec": 5
   },
   {
-   "action": "move",
-   "direction": "left",
-   "steps": 12
+   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [9, 2]
   },
   {
    "action": "move",
-   "direction": "down",
-   "steps": 3
-  },
-  {
-   "action": "move",
-   "direction": "down",
+   "direction": "up",
    "steps": 1
   },
   {
@@ -236,10 +232,10 @@
    "equals": 2
   },
   {
-   "_comment": "== FIGHT 2: chieftains_raid (31,7) with the L2 kit ==. (2,6) up3->(2,3), right12->(14,3), right1->(15,3) inn_door -> floodplains (7,6), right23->(30,6), down1->(30,7), right1 blocks on the chieftains cell (31,7) & faces it, interact.",
-   "action": "move",
-   "direction": "up",
-   "steps": 3
+   "_comment": "== FIGHT 2: chieftains_raid (31,7) with the L2 kit ==. Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3'); resumes unchanged: right12->(14,3), right1->(15,3) inn_door -> floodplains (7,6), right23->(30,6), down1->(30,7), right1 blocks on the chieftains cell (31,7) & faces it, interact.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [2, 3]
   },
   {
    "action": "move",

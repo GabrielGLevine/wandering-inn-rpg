@@ -1,15 +1,15 @@
 {
- "_comment": "climax_chain's start: Act II COMPLETE (2 classes + 3 completed quests: the_errand/missing_crate/cisterns), standing at the inn bed (2,6 facing DOWN onto the bed at 2,7). heard_the_deep_tremor/watch_runner_pointed both UNBANKED, so the first sleep fires the tremor pointer ('A Watch runner is looking for you.') exactly once. Progression-inert: no won_combat/persuaded_someone/etc. volume counters, classes already declared, evolutions are at_level 10 -- so the sleep does no gains/level-ups/consolidation and the pointer is the only beat. heard_about_cisterns is deliberately NOT banked (keeps Zevara's cisterns-sweep option hidden, so her summons option indexes cleanly). rng_state 9. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "climax_chain's start: Act II COMPLETE (2 classes + 3 completed quests: the_errand/missing_crate/cisterns), standing at your_bed upstairs (9,2 facing UP onto the bed at 9,1 -- #49: the ground-floor alcove bed is REMOVED, the inn's only bed is upstairs now). heard_the_deep_tremor/watch_runner_pointed both UNBANKED, so the first sleep fires the tremor pointer ('A Watch runner is looking for you.') exactly once. Progression-inert: no won_combat/persuaded_someone/etc. volume counters, classes already declared, evolutions are at_level 10 -- so the sleep does no gains/level-ups/consolidation and the pointer is the only beat. heard_about_cisterns is deliberately NOT banked (keeps Zevara's cisterns-sweep option hidden, so her summons option indexes cleanly). rng_state 9. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
-  "current_map": "inn",
+  "current_map": "inn_upstairs",
   "player_cell": [
-   2,
-   6
+   9,
+   2
   ],
   "player_facing": [
    0,
-   1
+   -1
   ],
   "classes": {
    "warrior": 2,

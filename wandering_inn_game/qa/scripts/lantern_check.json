@@ -188,18 +188,14 @@
    ]
   },
   {
-   "action": "move",
-   "direction": "left",
-   "steps": 12
+   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [9, 2]
   },
   {
    "action": "move",
-   "direction": "down",
-   "steps": 3
-  },
-  {
-   "action": "move",
-   "direction": "down",
+   "direction": "up",
    "steps": 1
   },
   {
@@ -220,10 +216,10 @@
    "equals": 1
   },
   {
-   "_comment": "== PHASE B: cross the floodplains ambush (warrior kit + Relc ally) ==",
-   "action": "move",
-   "direction": "up",
-   "steps": 3
+   "_comment": "== PHASE B: cross the floodplains ambush (warrior kit + Relc ally) ==. Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3').",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [2, 3]
   },
   {
    "action": "move",
@@ -571,18 +567,14 @@
    "timeout_sec": 5
   },
   {
-   "action": "move",
-   "direction": "left",
-   "steps": 12
+   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [9, 2]
   },
   {
    "action": "move",
-   "direction": "down",
-   "steps": 3
-  },
-  {
-   "action": "move",
-   "direction": "down",
+   "direction": "up",
    "steps": 1
   },
   {
@@ -611,10 +603,10 @@
    "equals": 1
   },
   {
-   "_comment": "== Payoff: light the inn's unlit_lantern (13,1) with [Light] ==. Post-sleep (2,6): up to (2,3), east along y3 to (13,3), up to (13,2), up blocks on the lantern and faces it, interact.",
-   "action": "move",
-   "direction": "up",
-   "steps": 3
+   "_comment": "== Payoff: light the inn's unlit_lantern (13,1) with [Light] ==. Teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3'), east along y3 to (13,3), up to (13,2), up blocks on the lantern and faces it, interact.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [2, 3]
   },
   {
    "action": "move",

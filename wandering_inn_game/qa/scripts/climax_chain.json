@@ -40,18 +40,18 @@
   {
    "action": "assert_state",
    "path": "current_map",
-   "equals": "inn"
+   "equals": "inn_upstairs"
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    2,
-    6
+    9,
+    2
    ]
   },
   {
-   "_comment": "== THE TREMOR BEAT ==. Interact the bed (2,7) -> sleep(). Act II is complete (fixture), heard_the_deep_tremor/watch_runner_pointed unbanked, so _maybe_fire_tremor_pointer fires the pointer toast ONCE.",
+   "_comment": "== THE TREMOR BEAT ==. #49: the fixture now parks the PC at your_bed's approach (inn_upstairs, the inn's only bed since the ground-floor alcove bed was removed). Interact -> sleep(). Act II is complete (fixture), heard_the_deep_tremor/watch_runner_pointed unbanked, so _maybe_fire_tremor_pointer fires the pointer toast ONCE.",
    "action": "press",
    "name": "interact"
   },

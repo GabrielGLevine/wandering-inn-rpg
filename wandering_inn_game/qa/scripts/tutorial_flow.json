@@ -466,18 +466,14 @@
    ]
   },
   {
-   "action": "move",
-   "direction": "left",
-   "steps": 12
+   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [9, 2]
   },
   {
    "action": "move",
-   "direction": "down",
-   "steps": 3
-  },
-  {
-   "action": "move",
-   "direction": "down",
+   "direction": "up",
    "steps": 1
   },
   {
@@ -529,10 +525,10 @@
    "name": "01_warrior_gained"
   },
   {
-   "_comment": "== GIFT NODE ==. Back to Relc for the spear. (2,6) up3->(2,3), right12->(14,3), right1->(15,3) inn_door -> floodplains (7,6), right5->(12,6), down6->(12,12), interact.",
-   "action": "move",
-   "direction": "up",
-   "steps": 3
+   "_comment": "== GIFT NODE ==. Back to Relc for the spear. Teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3'); resumes unchanged: right12->(14,3), right1->(15,3) inn_door -> floodplains (7,6), right5->(12,6), down6->(12,12), interact.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [2, 3]
   },
   {
    "action": "move",

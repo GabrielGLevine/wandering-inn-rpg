@@ -113,22 +113,15 @@
    "equals": 1
   },
   {
-   "action": "move",
-   "direction": "left",
-   "steps": 3
+   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [9, 2]
   },
   {
    "action": "move",
-   "direction": "down",
+   "direction": "up",
    "steps": 1
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    2,
-    6
-   ]
   },
   {
    "_comment": "== The qualifying sleep: act III + K=2 of 4 legs NOW met (cleaned_the_inn just landed live above, resolved_wrong_order pre-banked). garden_door_unlocked banks SILENTLY (no toast of its own) -- 'You sleep soundly.' still renders since nothing else fires this beat (watch_runner_pointed pre-banked, no pending level-ups/gains -- helper/tactician both pre-held directly). ==",
@@ -166,7 +159,12 @@
    "equals": 1
   },
   {
-   "_comment": "== Erin's own acknowledgment, the PC witnesses (no GDI line) -- the talk_pool_stages seam, gated on the SAME flag. ==",
+   "_comment": "== Erin's own acknowledgment, the PC witnesses (no GDI line) -- the talk_pool_stages seam, gated on the SAME flag. Teleport back down to (2,6) (the cell the old ground-floor route stood on), so the rest of this route (BFS-derived against the inn's real layout) resumes unchanged. ==",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [2, 6]
+  },
+  {
    "action": "move",
    "direction": "up",
    "steps": 1

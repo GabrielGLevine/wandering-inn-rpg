@@ -323,14 +323,15 @@
    "timeout_sec": 5
   },
   {
-   "action": "move",
-   "direction": "left",
-   "steps": 12
+   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [9, 2]
   },
   {
    "action": "move",
-   "direction": "down",
-   "steps": 4
+   "direction": "up",
+   "steps": 1
   },
   {
    "action": "press",
@@ -360,9 +361,10 @@
    "name": "01_evolved_toast"
   },
   {
-   "action": "move",
-   "direction": "up",
-   "steps": 3
+   "_comment": "Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3').",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [2, 3]
   },
   {
    "action": "move",
