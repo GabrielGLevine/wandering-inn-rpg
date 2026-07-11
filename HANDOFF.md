@@ -1,5 +1,43 @@
 # Wandering Inn RPG Handoff
 
+## ⚖️ CHOICES LOG (ultracode deference directive, 2026-07-11) — FOR USER REVIEW
+
+Decisions I made under "don't block, record for review." Each reversible;
+say the word and any flips.
+
+1. **#66 tier table: self-adjudicated GO** (my own spec — fixed tiers
+   T1-T5, over-tier-trivial-is-intended). Lane running.
+2. **#61 spellsword 15-16: content-first** (author the entries + a
+   capstone grant at 16; no sim cap). Wiki-attested name preferred,
+   restrained invention sanctioned + flagged.
+3. **#63 witch = ELOISE** (canonically RESIDES in Riverfarm — the
+   digest's decisive find; Mavika = threat register; Agratha noted as
+   better-documented alternative). Invented-within-gap: warm brown
+   eyes, sage/mauve palette, teacup prop (all flagged in profile).
+4. **Klbkch sub-arm at 1x: ACCEPTED** (antennae+head carry the read;
+   flag stays open if you disagree). Same standard applied to Ksmvr
+   (whose four arms read cleaner).
+5. **#33 Krshia discount: DIEGETIC-FIRST** (waits for her grant line —
+   matches the project's diegetic doctrine).
+6. **#34 Relc sign line: RESTORE THE SEED COPY IF it passes the new
+   copy-fit validator**, else keep the trim (measurement recorded).
+7. **#35: gambeson 20g CONFIRMED; barracks stern grade CONFIRMED;
+   slot-full refusal line UPGRADED** to the over-capacity line's bar.
+8. **#32 (the 18 Social II flags): CONFIRM-AS-SHIPPED across the
+   board** with three exceptions — Selys board pick → REPEATABLE;
+   Pisces perk → DEFERRED (needs real design, logged); Relc stage-3
+   stays NEUTRAL (warmer variant locks out solo-veto players). All 5
+   canon reveals stay OBLIQUE; Lyonette home topic stays OUT.
+9. **8d boss = construct** (you ratified); **8d B lane dispatched**
+   without the gallery-door edit (controller carries it at merge).
+10. **Gap-analysis workflow launched** (8 dimensions vs first-class
+    RPG bar → judge → adversarial verify) — confirmed gaps become
+    issues; dispositions logged here when it lands.
+11. **[Flame Pillar]** name (wiki-attested 9.14VM) for the AoE spell;
+    ships ICONLESS (all flame icons claimed — VISUAL-LOG).
+12. **Old Tower Inn track re-homed** to a tavern-adjacent interior
+    (62W lane picks guild vs runners and comments why).
+
 ## USER PLAYTEST BATCH 2 (2026-07-11, 29 findings) — TRIAGE LIVE
 
 - **#62 v0.4.3 hotfix wave** (findings 1-15,20,22,24,29 mechanical):
