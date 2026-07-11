@@ -30,7 +30,8 @@
   "pending_consolidation": {},
   "used_skills": [],
   "inventory": [
-   "rusty_sword"
+   "rusty_sword",
+   "hot_meal"
   ],
   "equipped": {
    "weapon": "rusty_sword",

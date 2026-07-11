@@ -481,13 +481,26 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# stage is reached but the class isn't held -- the witch-precedent
 		# idiom, extended to options that also need a stage gate (the witch's
 		# own mediate option needed no stage gate, so it never needed this).
+		# Issue #59 adds a FOURTH sanctioned compound --
+		# {once_per_waking, item} together (the hungry patron's Serve option,
+		# patron_serving.json): possession-gated AND per-waking-gated in the
+		# same requires dict, the dish-fetch seam's own compound. Same GATING
+		# SPLIT as the {accomplishment, once_per_waking} compound above, with
+		# `item` standing in for `accomplishment`: dialogue.gd's _meets() ANDs
+		# both legs for the lock/choose decision; _meets_progress() reads ONLY
+		# the once_per_waking leg for hide-until-met visibility (item is NOT
+		# progress-gated -- an unheld dish greys the option, never hides it,
+		# same as gold's precedent) -- so a fresh dish cooked AFTER the
+		# option's already retired this waking still can't bring it back;
+		# only sleep does.
 		# Every OTHER combination (skill+class, class+gold, gold+once_per_waking,
-		# three-or-more keys, etc.) is still rejected -- these are narrow,
-		# disclosed carve-outs, not a general compound-gate license.
+		# gold+item, three-or-more keys, etc.) is still rejected -- these are
+		# narrow, disclosed carve-outs, not a general compound-gate license.
 		var sanctioned_gold_accomplishment := requires.has("gold") and requires.has("accomplishment")
 		var sanctioned_stage_once := requires.has("accomplishment") and requires.has("once_per_waking")
 		var sanctioned_stage_class := requires.has("accomplishment") and requires.has("class")
-		assert(sanctioned_gold_accomplishment or sanctioned_stage_once or sanctioned_stage_class, label + " the only sanctioned compound requires are {gold, accomplishment}, {accomplishment, once_per_waking}, and {accomplishment, class}")
+		var sanctioned_once_item := requires.has("once_per_waking") and requires.has("item")
+		assert(sanctioned_gold_accomplishment or sanctioned_stage_once or sanctioned_stage_class or sanctioned_once_item, label + " the only sanctioned compound requires are {gold, accomplishment}, {accomplishment, once_per_waking}, {accomplishment, class}, and {once_per_waking, item}")
 		return
 	assert(gate_keys == 1, label + " requires must use exactly one gate type")
 

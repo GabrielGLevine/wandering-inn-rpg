@@ -295,6 +295,21 @@
 			"lore": "Drakes fish the pond in fair weather and swear off it every winter, when the water starts moving wrong. The line-sellers do their best business in spring, replacing gear that was 'lost.'"
 		},
 		{
+			"_comment": "Issue #59 (the dish-item seam): the hungry patron's Serve option now requires actually FETCHING this from the kitchen (stew_pot's basic_cooking use grants it, wi_game.gd's use_skill) rather than a bare once_per_waking gold-grant. kind:\"meal\" is the SECOND inert-carried-flavor kind (parcel precedent below) -- no weapon/armor/accessory kind means WIGame.equip() structurally refuses it with zero new code. STRUCTURAL SELLABILITY CALL (WIShop's sellable_items() convention): deliberately NO `price` field at all, same as every parcel -- a plate of stew carried fresh from the kitchen isn't a trade good Krshia would buy back (parcels' own rationale: 'never sold -- no sell surface exists for this kind of carried good'), and omitting the field (rather than authoring `price: 0`) matches the parcel precedent's own structural-exclusion shape instead of a priced-but-worthless item that would need the separate `unsellable` flag (resonant_catalyst's carve-out, reserved for an item that DOES carry a price for its 'Worth N gold' flavor line). Granted by WIGame.use_skill's on_skill_use `item` grant (pickup()), consumed by the patron's Serve dialogue option via the new `remove_item` effect arm -- never stacked, matching every other item in this catalog (cooking again while already holding one is a silent no-op, exactly correct: you don't need two dishes in hand at once).",
+			"id": "hot_meal",
+			"name": "Hot Meal",
+			"kind": "meal",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A bowl of stew and a heel of bread, still steaming from the pot. Someone's waiting on this.",
+			"lore": "The stew pot doesn't care who it's for -- Watch, patron, or the cook themselves. It only cares that it's stirred."
+		},
+		{
 			"_comment": "5 parcel items, one per LIVE delivery (docs/design/board-staging/runner-deliveries.json's 6th entry, delivery_hermit_antlers, is a FORWARD-REF -- kept out of data/deliveries.json until HR-II places its destination, so no parcel item ships for it either). kind:\"parcel\" is INERT carried flavor per the staging doc's own note: no price (never sold -- no sell surface exists in this game), no combat fields, and no weapon/armor/accessory kind means WIGame.equip() structurally refuses it (falls to inventory.gd's generic 'not equippable' toast) with zero new code. Granted by WIGame.accept_delivery via the existing pickup() seam and removed by the new remove_item() seam (on handoff or a sleep-fail return) -- never stacked, matching every other item in this catalog.",
 			"id": "parcel_plains_wool",
 			"name": "Plains-Wool Bolt",

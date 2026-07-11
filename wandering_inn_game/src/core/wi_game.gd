@@ -1033,6 +1033,20 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	# it pays through the same earn/spend router the dialogue verb uses.
 	if effect.has("gold"):
 		_apply_gold_effect(int(effect["gold"]), target_id)
+	# The dish-fetch seam (issue #59): an `on_skill_use` effect may ALSO
+	# carry an optional `item: <id>` grant -- stew_pot's basic_cooking use
+	# now produces a carryable `hot_meal` alongside the `cooked_meal`
+	# accomplishment, mirroring the `gold` optional field one line above
+	# (same "absent everywhere else, byte-identical" contract; only
+	# stew_pot's data carries this key). Routed through the same `pickup()`
+	# seam every other item grant uses (source = the prop's own id, the
+	# provenance shape `_interact_container`/dialogue's `item` effect both
+	# already use) -- pickup() silently no-ops if a hot_meal is already held
+	# (items are never stacked in this catalog), which is the correct
+	# behavior here: cooking again before serving just doesn't hand you a
+	# second dish.
+	if effect.has("item"):
+		pickup(String(effect["item"]), target_id)
 	return effect
 
 
@@ -1461,6 +1475,21 @@ func dialogue_choose(index: int) -> bool:
 			# `entity_first_use[key] = true`, single-writer discipline
 			# preserved (the SAME dict, cleared in the SAME place -- sleep()).
 			entity_first_use[String(effect["bank_first_use"])] = true
+		elif effect.has("remove_item"):
+			# The dish-fetch seam's consume verb (issue #59) -- the
+			# ONE sanctioned dialogue_choose effect addition this feature
+			# needed: `remove_item`'s dialogue-side twin of the `item` grant
+			# arm above, mirroring gold/accomplishment's shape (a single
+			# `has()`-gated arm reading straight off the effect dict). Routes
+			# through the sim's existing `remove_item()` seam (the delivery
+			# board's parcel-handoff precedent) with the conversation id as
+			# provenance, same as `item`'s `pickup()` call above. Used by the
+			# hungry patron's Serve option to consume the `hot_meal` the
+			# player must be carrying (gated by the item-possession `requires`
+			# leg) -- silent no-op if the item somehow isn't held (defensive;
+			# unreachable through authored content since the option's own
+			# `requires: {item: ...}` already refused the choice).
+			remove_item(String(effect["remove_item"]), _dialogue_conversation_id)
 		elif effect.has("well_fed"):
 			# Sets the well_fed flag (see that
 			# field's doc comment for the full lifecycle) -- the dialogue-side

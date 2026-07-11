@@ -328,6 +328,52 @@ func test_compound_accomplishment_once_per_waking_gate() -> void:
 	assert(opts.size() == 2, "after sleep, with the accomplishment still held: the option is back")
 
 
+## The FOURTH sanctioned compound gate ({once_per_waking, item},
+## issue #59's dish-fetch seam) at the real-WIGame level -- item's own
+## twin of test_compound_accomplishment_once_per_waking_gate above, with
+## `item` standing in for `accomplishment`. The KEY difference from that
+## test: `item` is NOT progress-gated (unlike `accomplishment`), so the
+## option stays VISIBLE (greyed) rather than fully hidden while the dish is
+## unheld -- only the once_per_waking leg controls hide-until-met visibility.
+## The interplay this proves that the accomplishment compound cannot: a
+## FRESH item grant (cooking a second dish) after the option has already
+## retired this waking does NOT bring it back -- only sleep does.
+func test_compound_once_per_waking_item_gate() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Patron", "text": "t", "options": [
+		{"text": "serve", "requires": {"once_per_waking": "serve:test_patron", "item": "dish"}, "effects": [{"bank_first_use": "serve:test_patron"}, {"accomplishment": "served"}, {"remove_item": "dish"}], "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)
+	game.start_dialogue("test_conv", "patron")
+	var opts: Array = game.dialogue.current_options()
+	assert(opts.size() == 2, "unused this waking, item leg unmet: option stays VISIBLE (item is not progress-gated)")
+	assert(bool(opts[0]["locked"]), "empty-handed: greyed, not hidden")
+	game.dialogue_choose(1)  # leave
+	game.pickup("dish", "test")
+	game.start_dialogue("test_conv", "patron")
+	opts = game.dialogue.current_options()
+	assert(not bool(opts[0]["locked"]), "dish in hand: option unlocks")
+	game.dialogue_choose(0)  # serve -- consumes the dish, banks once_per_waking
+	assert(not (game.inventory as Array).has("dish"), "remove_item effect consumed the dish")
+	game.start_dialogue("test_conv", "patron")
+	opts = game.dialogue.current_options()
+	assert(opts.size() == 1, "served this waking: once_per_waking leg HIDES the option (empty-handed too, both reasons)")
+	game.dialogue_choose(0)  # leave (only visible option)
+	# The interplay this test exists for: cook a SECOND dish the SAME
+	# waking. A naive item-only gate would unlock the option again -- the
+	# once_per_waking leg must still retire it.
+	game.pickup("dish", "test")
+	game.start_dialogue("test_conv", "patron")
+	opts = game.dialogue.current_options()
+	assert(opts.size() == 1, "fresh dish held, same waking: option STAYS hidden (once_per_waking, not item, is the blocker now)")
+	game.dialogue_choose(0)  # leave
+	game.sleep()
+	game.start_dialogue("test_conv", "patron")
+	opts = game.dialogue.current_options()
+	assert(opts.size() == 2, "after sleep: option is back")
+	assert(not bool(opts[0]["locked"]), "the leftover dish from the second cook is still held -- fully unlocked, not just visible")
+
+
 ## The SIXTH sanctioned gate type -- possession, not progress.
 ## Mirrors gold's VISIBLE-LOCKED precedent (test_gold_affordability_greys_
 ## when_broke above), not accomplishment's hide-until-met: an option gated on
@@ -555,6 +601,7 @@ func _init() -> void:
 	test_once_per_waking_refused_in_hide_when()
 	test_once_per_waking_gate_lifecycle_through_bank_first_use()
 	test_compound_accomplishment_once_per_waking_gate()
+	test_compound_once_per_waking_item_gate()
 	test_item_requires_stays_visible_locked()
 	test_item_requires_falls_back_to_raw_id_when_uncatalogued()
 	test_item_requires_unlocks_after_real_pickup()
