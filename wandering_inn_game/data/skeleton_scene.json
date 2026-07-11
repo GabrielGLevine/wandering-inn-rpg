@@ -11725,6 +11725,408 @@
      "sleep_toast": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality."
     }
    ]
+  },
+  "dungeon_approach": {
+   "_comment": "8d Phase B1 (issue #14): the dungeon's entrance chamber -- the sealed M-ARC gallery (`warren_mouth`, data/skeleton_scene.json's `deep_tunnels` map, the 'widened-gallery marker' the Raskghar seal-beat's 'for now' hook left standing) REOPENS into this room. B3/the controller carries the actual door edit into `warren_mouth` -- explicitly OUT of this lane's charter. `gallery_seal_anchor` below is THIS map's own clearly-commented landing anchor: once the gallery-side door lands, convert this entity (or a wall-embedded twin at the same cell) into a real `door` back to `deep_tunnels`. UNREACHABLE BY DESIGN this phase (no door routes here from any live map -- matches the ruin/floodplains reachability-note convention) -- `dungeon_peek` proves it via `teleport` only. Biome `dungeon` (data/biomes.json, Cemetery 0.4 family). One dormant-encounter PLACEHOLDER (`dormant_guardian_marker`, kind:prop -- NOT kind:encounter, matching the rift_vermin_leak D1 precedent exactly: no combat data exists yet, C-phase promotes it) foreshadows the ratified GUARDIAN CONSTRUCT boss pick via the reused `vault_construct` sprite, tinted dormant. Statue (CASTLE 0.3) + rubble (CAVE) dressing per the family recipe, decor+blocked pairs (the ruin_surface boulder convention). Grid-bound clipping alone stops movement at the map edge (sewers/ruin_surface precedent) -- no perimeter walls.segments; one short interior segment (a fallen lintel) for texture only.",
+   "biome": "dungeon",
+   "grid": {
+    "width": 16,
+    "height": 12
+   },
+   "blocked": [
+    [
+     4,
+     2
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     3,
+     9
+    ],
+    [
+     12,
+     9
+    ]
+   ],
+   "walls": {
+    "sheet": "res://assets/tiles/cemetery/Walls.png",
+    "tile_px": 16,
+    "segments": [
+     {
+      "_comment": "A fallen lintel span, interior texture only (ruin_surface's own minimal from/to-only precedent) -- clear of every entity/decor cell on this map.",
+      "from": [
+       6,
+       4
+      ],
+      "to": [
+       7,
+       4
+      ]
+     }
+    ]
+   },
+   "floor_layers": [
+    {
+     "_pick": "Cemetery-floor variation reusing the dungeon biome's own verified floor-tile neighborhood (2,2)/(3,7) plus the genuinely darker worn variant (2,11) for real wear texture.",
+     "variants": [
+      [
+       2,
+       2
+      ],
+      [
+       3,
+       7
+      ],
+      [
+       2,
+       11
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "decor": [
+    {
+     "_comment": "CASTLE 0.3 statue dressing, blocked-pair (THE BLOCKING CONTRACT).",
+     "sprite": "dungeon_statue",
+     "cell": [
+      4,
+      2
+     ],
+     "tint": [
+      0.75,
+      0.75,
+      0.78
+     ]
+    },
+    {
+     "sprite": "dungeon_statue",
+     "cell": [
+      11,
+      2
+     ],
+     "tint": [
+      0.7,
+      0.7,
+      0.74
+     ]
+    },
+    {
+     "_comment": "CAVE rubble dressing (a collapse band), blocked-pair.",
+     "sprite": "dungeon_rubble",
+     "cell": [
+      3,
+      9
+     ],
+     "tint": [
+      0.85,
+      0.82,
+      0.85
+     ]
+    },
+    {
+     "sprite": "dungeon_rubble",
+     "cell": [
+      12,
+      9
+     ],
+     "tint": [
+      0.85,
+      0.82,
+      0.85
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "B3 ANCHOR CELL -- controller: once `deep_tunnels`' `warren_mouth` gets its own door-edit half of this reopen, convert THIS entity into a real `door` (to_map: deep_tunnels, to_cell: adjacent to warren_mouth's (12,5)) or place a twin door beside it. Ships this phase as an inert rubble-choked prop -- 'sealed... for now' pays off narratively but not mechanically yet (no edit to any EXISTING map, per this lane's STOP rule).",
+     "id": "gallery_seal_anchor",
+     "kind": "prop",
+     "cell": [
+      1,
+      6
+     ],
+     "display_name": "Choked Passage",
+     "sprite": "dungeon_rubble",
+     "tint": [
+      0.5,
+      0.48,
+      0.5
+     ],
+     "observe": "Rubble and worked stone choke a passage that clearly led somewhere once. Someone sealed this side deliberately, and not long ago either.",
+     "on_interact_accomplishment": "found_the_sealed_passage",
+     "toast": "The stone doesn't budge. Whatever's on the other side stays sealed. For now."
+    },
+    {
+     "_comment": "Dormant-encounter SLOT, placement only (rift_vermin_leak D1 precedent: kind:prop, never kind:encounter, until C-phase lands real combatants/arena data -- test_combat_data would hard-fail against absent data otherwise). Foreshadows the RATIFIED guardian-construct boss pick (vault_construct sprite, already in the registry from Phase A2) sitting dormant near the entrance before the real one deeper in. C-phase promotes: swap kind to 'encounter', add arena/enemies/trigger_radius, drop the flavor on_interact_accomplishment/toast pair.",
+     "id": "dormant_guardian_marker",
+     "kind": "prop",
+     "cell": [
+      8,
+      9
+     ],
+     "display_name": "A Still Shape",
+     "sprite": "vault_construct",
+     "tint": [
+      0.4,
+      0.4,
+      0.42
+     ],
+     "observe": "A carved shape crouches against the far wall, limbs folded, its eyeless face turned to the floor. It has not moved since you noticed it. That is the only reason you are still standing here.",
+     "on_interact_accomplishment": "eyed_the_dormant_guardian",
+     "toast": "You keep your distance. Whatever wakes it, you would rather not be the one who finds out."
+    },
+    {
+     "_comment": "The real, brand-new door pairing to trapped_halls (both maps are new this phase -- linking them to EACH OTHER is not the excluded B3 gallery-door edit, which is the deep_tunnels/warren_mouth pairing). to_cell (2,7) lands one cell east of the return door's own (1,7) cell in trapped_halls.",
+     "id": "dungeon_depths_door",
+     "kind": "door",
+     "cell": [
+      14,
+      6
+     ],
+     "display_name": "Deeper In",
+     "sprite": "door",
+     "to_map": "trapped_halls",
+     "to_cell": [
+      2,
+      7
+     ]
+    }
+   ]
+  },
+  "trapped_halls": {
+   "_comment": "8d Phase B2 (issue #14): the trap gauntlet, the SKILL pillar's showcase map -- identity is TRAPS, not monsters. Four trap classes as DATA PROPS on existing machinery (no new sim): pressure_plate_a (plain on_interact_accomplishment/toast trigger + the generic ANY-entity observe fallback reveal -- no requires_skill needed), dart_slit_a and illusory_floor_a (both requires_skill:'observe' + on_skill_use -- the DISARM-ONLY shape: a dash-through timing window was traced and does not exist anywhere in this sim [no field-movement timing/i-frame mechanism, combat's own Dash is a separate AP-economy system], so per the icy_floor escalate-don't-force-fit lesson this ships disarm-only, not flagged as a gap), snare_nest_slot (a trigger_radius ENCOUNTER SLOT, placement-only prop per the rift_vermin_leak D1 precedent -- no combat data, C-phase promotes). Biome `dungeon`. Connects to dungeon_approach via a real new door pair (dungeon_approach_return); UNREACHABLE from any EXISTING live map this phase, `dungeon_peek` teleports in. Grid-bound clipping stops movement at the edge (no perimeter walls); one interior rubble-column segment for texture.",
+   "biome": "dungeon",
+   "grid": {
+    "width": 20,
+    "height": 14
+   },
+   "blocked": [
+    [
+     5,
+     3
+    ],
+    [
+     15,
+     3
+    ],
+    [
+     4,
+     11
+    ],
+    [
+     16,
+     11
+    ]
+   ],
+   "walls": {
+    "sheet": "res://assets/tiles/cemetery/Walls.png",
+    "tile_px": 16,
+    "segments": [
+     {
+      "_comment": "A collapsed rubble column, interior texture only -- clear of every entity/decor/blocked cell.",
+      "from": [
+       9,
+       10
+      ],
+      "to": [
+       9,
+       11
+      ]
+     }
+    ]
+   },
+   "floor_layers": [
+    {
+     "_pick": "Cemetery-floor variation reusing the dungeon biome's own verified floor-tile neighborhood (2,2)/(3,7) plus the genuinely darker worn variant (2,11) for real wear texture.",
+     "variants": [
+      [
+       2,
+       2
+      ],
+      [
+       3,
+       7
+      ],
+      [
+       2,
+       11
+      ]
+     ],
+     "cells": "all"
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "dungeon_statue",
+     "cell": [
+      5,
+      3
+     ],
+     "tint": [
+      0.75,
+      0.75,
+      0.78
+     ]
+    },
+    {
+     "sprite": "dungeon_statue",
+     "cell": [
+      15,
+      3
+     ],
+     "tint": [
+      0.7,
+      0.7,
+      0.74
+     ]
+    },
+    {
+     "sprite": "dungeon_rubble",
+     "cell": [
+      4,
+      11
+     ],
+     "tint": [
+      0.85,
+      0.82,
+      0.85
+     ]
+    },
+    {
+     "sprite": "dungeon_rubble",
+     "cell": [
+      16,
+      11
+     ],
+     "tint": [
+      0.85,
+      0.82,
+      0.85
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "Return leg of the new dungeon_approach<->trapped_halls door pair. to_cell (13,6) sits one cell west of dungeon_depths_door's own (14,6) cell (the sewer_exit/deep_fissure 'never land on the door's own cell' convention).",
+     "id": "dungeon_approach_return",
+     "kind": "door",
+     "cell": [
+      1,
+      7
+     ],
+     "display_name": "Back Toward the Chamber",
+     "sprite": "door",
+     "to_map": "dungeon_approach",
+     "to_cell": [
+      13,
+      6
+     ]
+    },
+    {
+     "_comment": "TRAP CLASS 1: pressure plate. Plain prop shape -- on_interact_accomplishment/toast fires the TRIGGER on any plain E-interact (no skill gate; a real player can blunder into it), the generic ANY-entity `observe` fallback ([Appraise Foe], no requires_skill needed) is the REVEAL. visual_states swaps to a warning tint once triggered (live re-render, ACCOMPLISHMENT_RECORDED).",
+     "id": "pressure_plate_a",
+     "kind": "prop",
+     "cell": [
+      6,
+      7
+     ],
+     "display_name": "A Loose Flagstone",
+     "sprite": "pressure_plate",
+     "observe": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Stepping square on it feels like a very bad idea.",
+     "on_interact_accomplishment": "triggered_pressure_plate",
+     "toast": "The flagstone gives half an inch under your hand. Somewhere close, something CLICKS. Nothing else happens. This time.",
+     "visual_states": [
+      {
+       "when": {
+        "counter": "triggered_pressure_plate",
+        "at": 1
+       },
+       "tint": [
+        0.85,
+        0.4,
+        0.35
+       ]
+      }
+     ]
+    },
+    {
+     "_comment": "TRAP CLASS 2: dart line. DISARM-ONLY shape (see map _comment for the traced dash-through-window verdict). requires_skill:'observe' + on_skill_use is the real disarm (field-hotbar [Appraise Foe] faced at this entity). A plain E-interact with the skill KNOWN reads the 2026-07-10 nudge ruling (skill_hint_toast, never auto-disarms); with the skill UNKNOWN it falls to use_skill()'s skill_unknown + locked_toast refusal (already covered generically elsewhere in the QA corpus -- barracks_walkthrough/upstairs_walkthrough/wrong_order_loop/work_loop). Placeholder art: A3's own pixellab dart_slit.png candidate drifted purple against the Cemetery family's olive-warm-grey palette (A3's own flagged concern, unretuned) -- NOT integrated; reuses the registered `sewer_grate` sprite (a wall-vent silhouette, thematically apt) tinted cool-dark. Flagged for the controller's art pass: regen dart_slit against this real floor family.",
+     "id": "dart_slit_a",
+     "kind": "prop",
+     "cell": [
+      10,
+      5
+     ],
+     "display_name": "A Dart Slit",
+     "sprite": "sewer_grate",
+     "tint": [
+      0.55,
+      0.53,
+      0.58
+     ],
+     "requires_skill": "observe",
+     "skill_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. This wants a careful, deliberate touch, not a shove.",
+     "locked_toast": "A narrow slit runs along the wall at knee height. Whatever is loaded behind it, you have no idea how to disable it.",
+     "on_skill_use": {
+      "accomplishment": "disarmed_dart_line",
+      "toast": "You trace the mechanism with a careful eye, find the catch, and wedge it still. The slit stays dark."
+     }
+    },
+    {
+     "_comment": "TRAP CLASS 3: illusory floor. VERIFIED the existing visual_states seam covers 'floor that isn't' -- no new sim needed: this is a plain kind:prop entity, and any entity's occupied cell already blocks movement (is_cell_blocked's occupancy check, src/core/wi_game.gd) regardless of `blocked`/`kind` -- so a player who tries to walk straight across gets a real PLAYER_BLOCKED bump, exactly the 'the floor visibly continues but something refuses to let you cross' read, zero new mechanism. requires_skill:'observe' + on_skill_use is the reveal (a bespoke per-prop accomplishment, not the shared observed_things counter); visual_states swaps to a warning tint once spotted. Placeholder art: A3's own pixellab illusory_floor.png candidate was already flagged 'too uniform' at A3 AND drifts navy-blue against the Cemetery family (unretuned, same palette-drift class as dart_slit) -- NOT integrated; substituted with a same-PACK Cemetery Props.png debris crop (guaranteed palette match, see sprites.json's illusory_floor_tell entry for the full rationale) tinted toward this map's floor. Flagged for the controller's art pass: regen illusory_floor against this real floor family, retuned shimmer edge per A3's own note.",
+     "id": "illusory_floor_a",
+     "kind": "prop",
+     "cell": [
+      14,
+      7
+     ],
+     "display_name": "Ordinary Flagstones",
+     "sprite": "illusory_floor_tell",
+     "tint": [
+      0.95,
+      1.0,
+      0.75
+     ],
+     "requires_skill": "observe",
+     "skill_hint_toast": "The floor ahead looks exactly like the floor behind you. Somehow, that is the part that bothers you.",
+     "locked_toast": "The floor ahead looks perfectly ordinary. Something about it still itches at the back of your mind.",
+     "on_skill_use": {
+      "accomplishment": "spotted_illusory_floor",
+      "toast": "You look again, and this time you see it: the grain runs the wrong way, and no dust has settled in months. That is not floor. That is a very good painting of floor."
+     },
+     "visual_states": [
+      {
+       "when": {
+        "counter": "spotted_illusory_floor",
+        "at": 1
+       },
+       "tint": [
+        0.8,
+        0.35,
+        0.3
+       ]
+      }
+     ]
+    },
+    {
+     "_comment": "TRAP CLASS 4: snare. trigger_radius ENCOUNTER SLOT, PLACEMENT ONLY (rift_vermin_leak D1 precedent exactly: kind:prop, never kind:encounter, until C-phase lands real combatants/arena data -- no trigger_radius field authored here either, since _check_trigger_radius only ever scans kind=='encounter' entities). Integrated A3 art (snare_coil.png -- 'reads' verdict held). C-phase promotes: swap kind to 'encounter', add arena/enemies, add trigger_radius (intended ~2, matching the alley_footpads precedent), drop the flavor on_interact_accomplishment/toast pair.",
+     "id": "snare_nest_slot",
+     "kind": "prop",
+     "cell": [
+      17,
+      8
+     ],
+     "display_name": "A Coiled Wire",
+     "sprite": "snare_coil",
+     "observe": "A coil of taut wire lies strung ankle-height between two stones, near-invisible against the dust. Whatever it is rigged to is worse than a stubbed toe.",
+     "on_interact_accomplishment": "spotted_the_snare_nest",
+     "toast": "You give the wire a wide berth. Something in the dark past it has not noticed you yet."
+    }
+   ]
   }
  }
 }

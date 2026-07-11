@@ -310,6 +310,44 @@
     0.58
    ],
    "vignette": 0.34
+  },
+  "dungeon_approach": {
+   "_comment": "8d Phase B: the Liscor dungeon's own grade -- 'old dark', deep like deep_tunnels (the game's prior darkest pin, avg .25 day/dusk / .227 night) but DISTINGUISHABLE by hue, not by matching it: the blue channel drops hard (0.19 vs deep_tunnels' 0.33) so this reads as neutral olive-grey worked stone (the Cemetery family's own cool-bleak cast) rather than deep_tunnels' blue-purple raw rock. Time-invariant (same sewers/deep_tunnels precedent -- no daylight reaches a sealed dungeon), vignette 0.56 nudged fractionally past deep_tunnels' 0.55 (this is the deepest point the demo reaches, one door further than the Raskghar warren per the seal-beat's 'for now' hook). Per-prop accent variation (the 4 trap tells' post-reveal warning tints, the statue/rubble dressing) rides the live decor `tint` field (GH#55) on top of this base grade, not a second mood card. KEYED BY MAP ID, NOT BIOME ID (atmosphere.gd's `apply(Game.sim.current_map, ...)` reads `moods.json`'s `moods` dict off the literal current map id, same as every other cave-biome map's own distinct card -- sewers/ruin_surface/deep_tunnels all share biome `cave` but each carries its OWN mood entry here; there is no generic per-biome fallback) -- trapped_halls carries the identical grade as its own sibling entry below, both dungeon maps reading as the same sealed dark.",
+   "day": [
+    0.21,
+    0.22,
+    0.19
+   ],
+   "dusk": [
+    0.21,
+    0.22,
+    0.19
+   ],
+   "night": [
+    0.17,
+    0.18,
+    0.15
+   ],
+   "vignette": 0.56
+  },
+  "trapped_halls": {
+   "_comment": "Identical grade to dungeon_approach (same sealed dungeon, same darkness) -- see that entry's own _comment for the full derivation/rationale. Duplicated rather than shared because moods.json keys on MAP id, not biome id (no indirection mechanism exists).",
+   "day": [
+    0.21,
+    0.22,
+    0.19
+   ],
+   "dusk": [
+    0.21,
+    0.22,
+    0.19
+   ],
+   "night": [
+    0.17,
+    0.18,
+    0.15
+   ],
+   "vignette": 0.56
   }
  },
  "arena_moods": {

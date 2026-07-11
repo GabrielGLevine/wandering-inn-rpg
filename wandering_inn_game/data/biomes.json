@@ -203,5 +203,25 @@
    8,
    17
   ]
+ },
+ "dungeon": {
+  "_comment": "8d Phase B (dungeon_approach/trapped_halls). FAMILY PICK per the 8d A1 verdict: Pixel Crawler CEMETERY 0.4 (bleak grey-green worked stone -- ancient, not city-sewer/regal-castle/living-cave) supplies floor+walls; CASTLE 0.3 statue/bust + CAVE rubble dress on top via sprites.json entities (dungeon_statue/dungeon_rubble), not this biome. PIL numeric grid-scan picks (16px cells, no PNG ever browsed into context, per wi-art-and-sprites): floor variants (2,2)/(3,7) fully-opaque flat olive rgb~(60-63,57-60,24-25) std~17, (2,11) a genuinely darker worn variant rgb~(51,48,20) std~14 for real floor-wear texture (Floor.png content only occupies cols1-5/rows0-11 -- confirmed by full-grid scan, matches the prior 8a PIL pass). Wall/blocked+skirt fill: Walls.png cell (8,2), flat warm-grey stone rgb~(81,79,70) std4.8. Both sheets already assets_manifest.json-registered (FORBIDDEN/bundle:true/fallback:placeholder, orphaned from an earlier 8a ruin-candidate pass that ended up using the `cave` biome instead -- reused here for their first real consumer) so no new manifest rows needed.",
+  "sheet": "res://assets/tiles/cemetery/Floor.png",
+  "tile_px": 16,
+  "floor": [
+   2,
+   2
+  ],
+  "blocked_sheet": "res://assets/tiles/cemetery/Walls.png",
+  "blocked": [
+   8,
+   2
+  ],
+  "skirt_sheet": "res://assets/tiles/cemetery/Walls.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   8,
+   2
+  ]
  }
 }
