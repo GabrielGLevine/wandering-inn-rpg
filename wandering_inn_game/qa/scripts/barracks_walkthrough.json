@@ -12,7 +12,7 @@
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "street" },
   { "action": "assert_state", "path": "player_cell", "equals": [1, 3] },
-  { "_comment": "Street payload (blocked_cells 109 -- see gate_district_walkthrough's own comment for the derivation, 's +3 walkable-through wall fix) -- props/npcs never enter the static blocked_cells set (walls UNION the static `blocked` list only), and the grid size is untouched.", "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "street", "floor_cells": 640, "blocked_cells": 109 } },
+  { "_comment": "Street payload (blocked_cells 112 -- see gate_district_walkthrough's own comment for the derivation: +3 walkable-through wall fix, then +3 more for the (6,19)/(15,19)/(24,19) off-grid facade fix) -- props/npcs never enter the static blocked_cells set (walls UNION the static `blocked` list only), and the grid size is untouched.", "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "street", "floor_cells": 640, "blocked_cells": 112 } },
   { "action": "screenshot", "name": "00_start" },
 
   { "_comment": "== (1) BREAD STALL == (1,3) right10 -> (11,3), up1 blocks on bread_stall (11,2) & faces it. Flavor/observe only, no buy -- pays off Pisces's pre-existing street line.", "action": "move", "direction": "right", "steps": 10 },
@@ -95,7 +95,7 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street", "cell": [21, 3] }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": { "map": "street", "floor_cells": 640, "blocked_cells": 109 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": { "map": "street", "floor_cells": 640, "blocked_cells": 112 }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "street" },
   { "action": "assert_state", "path": "player_cell", "equals": [21, 3] },
   { "action": "screenshot", "name": "08_back_on_street" }

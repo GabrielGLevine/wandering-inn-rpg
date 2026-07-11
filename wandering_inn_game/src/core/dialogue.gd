@@ -300,6 +300,20 @@ func _meets(req: Dictionary) -> bool:
 		recognized = true
 		if (_ctx.get("entity_first_use", {}) as Dictionary).has(String(req["once_per_waking"])):
 			return false
+	if req.has("item"):
+		# The SIXTH sanctioned gate type -- possession, not
+		# progress. Checks the ctx's `inventory` (the player's actually-HELD
+		# item ids; NOT the `items` key above, which is the read-only item
+		# CATALOG used only for effect-line text -- a catalog-membership
+		# check would be meaningless, every item id is always "in" the
+		# catalog). Mirrors `gold`'s precedent, not `accomplishment`'s: NOT
+		# in _progress_gated below, so an option gated on an unheld item
+		# stays VISIBLE-LOCKED (greyed, names what's missing), never
+		# vanishes -- "you need to bring X" is a visible tease, same as an
+		# unaffordable price.
+		recognized = true
+		if not (_ctx.get("inventory", []) as Array).has(String(req["item"])):
+			return false
 	return recognized
 
 
@@ -312,6 +326,9 @@ func _requirement_text(req: Dictionary) -> String:
 			return "requires %s %d" % [String(names.get(id, id)), int(req["class"][id])]
 	if req.has("gold"):
 		return "costs %d gold" % int(req["gold"])
+	if req.has("item"):
+		var items: Dictionary = _ctx.get("items", {})
+		return "requires %s" % String(items.get(String(req["item"]), {}).get("name", String(req["item"])))
 	return "requires more progress"
 
 
