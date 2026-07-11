@@ -405,11 +405,30 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 		# side (left, flipped) until the first attack/hit event re-derives flip
 		# from actual cell positions.
 		spr.flip_h = (String(c["side"]) != "player")
+		# Issue #62 addendum (finding 11): a NON-directional sprite (e.g.
+		# `training_dummy`, ruin_guardian's combat sprite) registers its sole
+		# animation as the bare "idle" (WISpriteRegistry._facings(false) ->
+		# facing "" -> full_name = anim_name unsuffixed, no "_side"/"_down").
+		# Neither literal check above ever matched it, so `anim` stayed ""
+		# and BOTH `spr.play` and the feet-anchor block below (`if anim !=
+		# ""`) were skipped outright -- the sprite kept Node2D's default
+		# (0,0) position (holder-origin/top-left) instead of being
+		# feet-anchored bottom-center, then never even played its idle
+		# frame. `_make_decor_visual` already carries the equivalent
+		# "idle"-literal fallback (this file, `_make_decor_visual`'s own
+		# `anim` line) -- this mirrors it. The resulting top-left offset is
+		# small for a modest render_scale (river_wolf/briar_collector*) but
+		# large for `ruin_guardian`, whose `combat_scale: 1.15` REPLACES (not
+		# multiplies) training_dummy's own 0.5 scale -- at 1.15x a 64px
+		# frame, the un-anchored sprite renders visibly down-and-right of its
+		# own cell, reading as "the hitbox sits up-left of the sprite".
 		var anim := ""
 		if spr.sprite_frames.has_animation("idle_side"):
 			anim = "idle_side"
 		elif spr.sprite_frames.has_animation("idle_down"):
 			anim = "idle_down"
+		elif spr.sprite_frames.has_animation("idle"):
+			anim = "idle"
 		if anim != "":
 			spr.play(anim)
 		var catalog_entry: Dictionary = WISpriteRegistry.entry_for(sprite_id)

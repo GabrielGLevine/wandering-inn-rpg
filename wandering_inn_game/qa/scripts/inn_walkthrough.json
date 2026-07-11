@@ -22,11 +22,11 @@
    }
   },
   {
-   "_comment": "The inn gained the short_order prop (Q2 SKILL station, reuses the registered `cauldron` sprite), so the rendered entity count is 12 -> 13 (fallbacks stay 0). the new stairs_up door entity bumps it again, 13 -> 14. pantry_door + rift_vermin_leak bump it twice more, 14 -> 16. pantry_door_runes (the SKILL-leg rune prop) bumps it once more, 16 -> 17. garden_door (the always-present, pre-unlock-gated prop at 3,8) bumps it once more, 17 -> 18. #49: the ground-floor alcove bed is REMOVED (the inn's only bed is now upstairs, your_bed) -> 18 -> 17. blocked_cells (55) is unchanged -- it is static blocked UNION wall segments only, never entity cells.",
+   "_comment": "The inn gained the short_order prop (Q2 SKILL station, reuses the registered `cauldron` sprite), so the rendered entity count is 12 -> 13 (fallbacks stay 0). the new stairs_up door entity bumps it again, 13 -> 14. pantry_door + rift_vermin_leak bump it twice more, 14 -> 16. pantry_door_runes (the SKILL-leg rune prop) bumps it once more, 16 -> 17. garden_door (the always-present, pre-unlock-gated prop at 3,8) bumps it once more, 17 -> 18. #49: the ground-floor alcove bed is REMOVED (the inn's only bed is now upstairs, your_bed) -> 18 -> 17. Issue #62 finding 4: inn_chest moved upstairs (the ground-floor cell it occupied now holds the relocated stairs_up instead -- net swap, but the chest itself is simply GONE from this map) -> 17 -> 16. blocked_cells (55) is unchanged -- it is static blocked UNION wall segments only, never entity cells.",
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 17,
+    "sprites": 16,
     "fallbacks": 0
    }
   },

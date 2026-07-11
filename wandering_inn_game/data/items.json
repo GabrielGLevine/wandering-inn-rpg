@@ -392,7 +392,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "A fist-sized stone, warm despite the ruin's cold air, its surface veined with a pattern that never quite resolves into a shape.",
-			"lore": "Warmage Thresk built more than doors, in the end. This one remembers being elsewhere, the same crude trick that woke somewhere it shouldn't have, once, in an inn far from here. Magical Door plan Task D1 (issue #8 spec §5.3): carried, never worn or sold; the beat-3 recovery target D3's chain consumes at the pedestal."
+			"lore": "Warmage Thresk built more than doors, in the end. This one remembers being elsewhere, the same crude trick that woke somewhere it shouldn't have, once, in an inn far from here. Carried, never worn or sold -- it feels like it's waiting to be given back to something."
 		},
 		{
 			"_comment_unsellable": "Krshia sell mechanic: the only item in this catalog that needs the explicit flag -- it carries a `price` (so it WOULD otherwise leak into WIGame.sellable_items()'s priced-item filter) but its own lore line above already says 'never sold onward'. anchor_stone/brothers_marker/every parcel need no flag (no `price` field at all -- sellable_items() excludes them structurally, same as every other unpriced loot/quest item).",
@@ -409,7 +409,7 @@
 			"price": 35,
 			"unsellable": true,
 			"description": "A sliver of worked amber-glass, humming faintly against the palm, wrapped in oiled cloth from under Krshia's counter.",
-			"lore": "Magical Door plan Task D3 (issue #8 spec §5.3, 'ruin + Krshia ONLY' attunement components): a Silverfang trade-route find, sold to the rare customer who asks the right way and pays the whole price without haggling. Krshia doesn't know what it's for. She knows it's worth what she charges for it. Carried, never worn or sold onward; the beat-3 recovery target D3's chain consumes alongside the anchor stone."
+			"lore": "A Silverfang trade-route find, sold to the rare customer who asks the right way and pays the whole price without haggling. Krshia doesn't know what it's for. She knows it's worth what she charges for it. Carried, never worn or sold onward."
 		},
 		{
 			"_comment": "8b R3 (issue #11) witch-cottage vendor stock, unlocked at blight_lifted (riverfarm_witch.json's 'shop' node). Herb-craft consumables, generic-plausible (not deep TWI canon) per the peddler_stall/Krshia-charms precedent of original mundane/enchanted stock -- prices 4-20g, inside the shipped accessory envelope (hp_mod/resonance match copper_luck_band/hedge_ward_charm's own bounds, no combat mods beyond it).",

@@ -1484,10 +1484,10 @@ func _init() -> void:
 	# --- Kit-intersection: weapon-family gate on the combat build ---
 	# Each sub-case uses a FRESH instance fighting goblin_encounter_2 once:
 	# it's a non-respawning, non-persistent encounter (removed after one
-	# win), and goblin_encounter_1 is `respawns: true` (goes DORMANT after a
-	# win until the next sleep re-arms it) -- reusing either across sequential
-	# fights on the SAME instance would refuse the second start_combat call,
-	# so every sub-case below gets its own instance instead.
+	# win, same one-shot shape goblin_encounter_1 also carries since issue
+	# #62 finding 8) -- reusing it across sequential fights on the SAME
+	# instance would refuse the second start_combat call (entity gone after
+	# the first win), so every sub-case below gets its own instance instead.
 	#
 	# Default rusty_sword (sword family): the base warrior kit at L1 grants
 	# BOTH power_strike (sword) and piercing_strikes (spear); sword-equipped
@@ -1781,16 +1781,18 @@ func _init() -> void:
 	assert(L3.rng.state == rng_state_after_start, "a loot roll consumes ZERO draws from the live sim rng stream")
 
 	# --- Container props (`contains` + `container_state`) ---
-	# Reach inn_chest ([1,8]): from the start cell (2,3), one step left onto
-	# the open x=1 corridor (west wall is x=0 only), then four steps down
-	# (bed sits at [2,7], not [1,7], so this column is clear) lands on [1,7]
-	# facing down -- squarely facing the chest.
+	# Issue #62 finding 4: inn_chest moved to inn_upstairs (9,5) -- its old
+	# ground-floor cell (1,8) now holds the relocated stairs_up door instead.
+	# `transition()` jumps straight there (pure-sim direct call, no door/UI
+	# needed for this unit test) landing at (9,2) -- the same cell every real
+	# gameplay route already lands at for `your_bed` -- then two steps down
+	# (9,4) faces the chest at (9,5) directly south.
 	var gC := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(not gC.inventory.has("leather_jerkin"), "inn_chest's contents not carried before opening")
-	assert(gC.move_player(Vector2i.LEFT), "step onto the open x=1 corridor")
-	for i in 4:
-		assert(gC.move_player(Vector2i.DOWN), "corridor west of the bed is clear down to the chest")
-	assert(gC.player_cell == Vector2i(1, 7), "player stands one cell north of inn_chest, facing down")
+	gC.transition("inn_upstairs", Vector2i(9, 2))
+	for i in 2:
+		assert(gC.move_player(Vector2i.DOWN), "the your-room column is clear down to the chest")
+	assert(gC.player_cell == Vector2i(9, 4), "player stands one cell north of inn_chest, facing down")
 	_events.clear()
 	var chest_result := gC.interact()
 	assert(chest_result.get("container", "") == "inn_chest", "container interact returns its own id")
@@ -1823,8 +1825,8 @@ func _init() -> void:
 	# than re-deriving "already opened" some other way that a load could miss.
 	var gC2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gC2.container_state["inn_chest"] = true
-	gC2.move_player(Vector2i.LEFT)
-	for i in 4:
+	gC2.transition("inn_upstairs", Vector2i(9, 2))
+	for i in 2:
 		gC2.move_player(Vector2i.DOWN)
 	_events.clear()
 	var restored_result := gC2.interact()

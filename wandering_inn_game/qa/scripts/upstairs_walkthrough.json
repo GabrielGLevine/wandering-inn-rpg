@@ -16,11 +16,11 @@
    }
   },
   {
-   "_comment": "The new stairs_up door bumps the inn's rendered entity count 13 -> 14 (blocked_cells unchanged -- entity cells were never counted, static blocked UNION wall segments only). pantry_door + rift_vermin_leak bump it again, 14 -> 16. pantry_door_runes bumps it once more, 16 -> 17. garden_door bumps it once more, 17 -> 18. #49: the ground-floor alcove bed is REMOVED -> 18 -> 17.",
+   "_comment": "The ground floor's stairs_up/inn_chest swap is a wash for total count (13 -> 14 via the short_order pot -> 16 via pantry_door+rift_vermin_leak -> 17 via pantry_door_runes -> 18 via garden_door -> 17 via #49's bed removal), but issue #62 finding 4 then moves inn_chest OFF this map entirely (its old cell now holds the relocated stairs_up instead) -> 17 -> 16.",
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 17,
+    "sprites": 16,
     "fallbacks": 0
    }
   },
@@ -29,7 +29,7 @@
    "name": "00_start"
   },
   {
-   "_comment": "== UP THE STAIRS: fresh boot spawns at (2,3) -- right11 -> (13,3) along the shared y3 hallway, down5 -> (13,8), bump RIGHT onto stairs_up (14,8) to face it, interact. The staircase hugs the SE corner (user direction: never mid-floor; the NW corner was rejected -- it sat on short_order (1,1)'s approach cell).",
+   "_comment": "Issue #62 finding 4: == UP THE STAIRS: the stairs relocated to the bottom-left corner (the herringbone 'bedroom corner' floor swatch), replacing inn_chest at its old cell -- fresh boot spawns at (2,3), down3 -> (2,6), left1 -> (1,6), down1 -> (1,7), face down (blocked by the stairs) and interact. Same approach route the chest used to use before it moved upstairs.",
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
@@ -39,33 +39,30 @@
   },
   {
    "action": "move",
-   "direction": "right",
-   "steps": 11
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    13,
-    3
+    1,
+    7
    ]
   },
   {
    "action": "move",
    "direction": "down",
-   "steps": 5
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    13,
-    8
-   ]
-  },
-  {
-   "action": "move",
-   "direction": "right",
    "steps": 1
   },
   {
@@ -79,7 +76,7 @@
     "map": "inn_upstairs",
     "cell": [
      1,
-     2
+     1
     ]
    },
    "timeout_sec": 5
@@ -105,11 +102,11 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "5 entities (stairs_down, your_bed, lyonette_door, hallway_door_a, hallway_door_b) + the PC's own sprite (render_counts counts the PC too, world.gd's _count_visual(_player_visual, ...) call) = 6. the two generic hallway doors are now real entities instead of non-entity decor.",
+   "_comment": "6 entities (stairs_down, your_bed, lyonette_door, hallway_door_a, hallway_door_b, inn_chest -- issue #62 finding 4's relocated chest) + the PC's own sprite (render_counts counts the PC too, world.gd's _count_visual(_player_visual, ...) call) = 7. the two generic hallway doors are now real entities instead of non-entity decor.",
    "action": "wait_for_event",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 6,
+    "sprites": 7,
     "fallbacks": 0
    },
    "timeout_sec": 5
@@ -128,10 +125,20 @@
    "name": "01_upstairs_hallway"
   },
   {
-   "_comment": "== THE TWO GENERIC HALLWAY DOORS (): (1,2) right2 -> (3,2), up1 blocks on hallway_door_a (3,1) & faces it. Previously non-entity decor (a facing interact hit empty space -> INTERACT_NOTHING's 'Nothing there.'); now a real prop with a generic locked_toast.",
+   "_comment": "Issue #62 finding 4: == THE TWO GENERIC HALLWAY DOORS: arrival lands at (1,1) now; (1,2) is stairs_down itself (blocked), so detour one column east before dropping to the y2 hallway lane: right1 -> (2,1), down1 -> (2,2), right1 -> (3,2), up1 blocks on hallway_door_a (3,1) & faces it. Previously non-entity decor (a facing interact hit empty space -> INTERACT_NOTHING's 'Nothing there.'); now a real prop with a generic locked_toast.",
    "action": "move",
    "direction": "right",
-   "steps": 2
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
   },
   {
    "action": "assert_state",
@@ -253,7 +260,7 @@
    "name": "02_lyonette_door"
   },
   {
-   "_comment": "== YOUR BED: (7,2) right2 -> (9,2) (plain floor -- the rug moved to (9,3) per so it no longer bleeds under your_bed), up1 blocks on your_bed (9,1) & faces it. sleep_toast fires FIRST, then sleep()'s own stream -- the SAME two events every sleep() call produces (phase_changed, then the fallback toast) -- the inn's ONLY sleep site since #49 removed the ground-floor alcove bed.",
+   "_comment": "== YOUR BED: (7,2) right2 -> (9,2) (plain floor -- issue #62 finding 1 REMOVED the rug outright, it no longer sits anywhere near here), up1 blocks on your_bed (9,1) & faces it. sleep_toast fires FIRST, then sleep()'s own stream.",
    "action": "move",
    "direction": "right",
    "steps": 2
@@ -307,17 +314,32 @@
    "equals": 1
   },
   {
-   "_comment": "== BACK DOWNSTAIRS: (9,2) left8 -> (1,2), down1 blocks on stairs_down (1,3) & faces it, interact -> lands back at (13,8) in the inn (one cell west of the SE-corner stairs), round-trip integrity.",
+   "_comment": "Issue #62 finding 4: == BACK DOWNSTAIRS: (9,2) left7 -> (2,2) (stairs_down itself now blocks (1,2), so the old direct left8 no longer reaches it), up1 -> (2,1), left1 -> (1,1), down1 blocks on stairs_down (1,2) & faces it, interact -> lands back at (1,7) in the inn (matching the relocated stairs_up's own approach cell), round-trip integrity.",
    "action": "move",
    "direction": "left",
    "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
     1,
-    2
+    1
    ]
   },
   {
@@ -335,8 +357,8 @@
    "payload_contains": {
     "map": "inn",
     "cell": [
-     13,
-     8
+     1,
+     7
     ]
    },
    "timeout_sec": 5

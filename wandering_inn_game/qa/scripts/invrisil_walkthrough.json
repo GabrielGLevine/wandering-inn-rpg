@@ -3,171 +3,960 @@
  "starts_at_title": true,
  "fixture_save": "near_invrisil",
  "steps": [
-  { "_comment": "== Boot from the fixture (FIXTURE-FIRST) ==", "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "inn" },
-  { "action": "assert_state", "path": "player_cell", "equals": [13, 6] },
-
-  { "_comment": "== BEAT 1: portal arrival -- the awakened pantry_door offers TWO destinations this fixture (liscor_street, invrisil -- riverfarm_attuned is deliberately absent from near_invrisil's accomplishments, so Riverfarm never enters the filtered list); Invrisil is the SECOND option (index 1), 'Let it be.' third. ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "portal_menu" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "invrisil_boulevard" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "The light turns pale and cool, and the noise of a much bigger city rushes in to fill the silence. Invrisil, same as the letter promised." }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "invrisil_boulevard" },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 8] },
-  { "action": "screenshot", "name": "00_scale_shock_arrival" },
-
-  { "_comment": "== BEAT 2: the crowd is really there -- invrisil_extra_1 (7,6), a pool-less walk-on (no talk_pool/observe/conversation). Up 2 to (4,6), right 2 to (6,6), bump right to face (7,6), interact -- falls straight to the static `dialogue` one-liner (locked shape 2 proof). ==", "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "right", "steps": 2 },
-  { "action": "assert_state", "path": "player_cell", "equals": [6, 6] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "", "text": "A woman in a rose-dyed cloak checks a folded slip of paper against a shopfront number, unimpressed by both." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "01_extras_density" },
-
-  { "_comment": "== BEAT 3: the merchant-prince, NPC surface pre-quest -- Master Coyle (24,6), talk_pool only (no conversation yet, Task C3's own deliverable). extra_1 still occupies (7,6) (entities are never removed by a talk), so the route detours south to the clear row y=9 (no lamp/fountain/extra cell crosses it) for the long eastward leg, then back up to (23,6): down 3 to (6,9), right 17 to (23,9), up 3 to (23,6), bump right, interact -- first talk this waking absorbs the pool's rotation-0 line. ==", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "right", "steps": 17 },
-  { "action": "move", "direction": "up", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [23, 6] },
-  { "_comment": "The last move step left the player facing UP -- bump right (blocked by Coyle's own cell, sets facing without moving) before interacting.", "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [23, 6] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Master Coyle", "text": "New face. I do like a new face — they're cheap, and occasionally they appreciate into something useful." }, "timeout_sec": 5 },
-
-  { "_comment": "== BEAT 4: into the alleys (the traversal signature). Down 2 to (23,8), right 2 to (25,8), bump right to face boulevard_to_alleys (26,8), interact -> alleys landing (1,7). ==", "action": "move", "direction": "down", "steps": 2 },
-  { "action": "move", "direction": "right", "steps": 2 },
-  { "action": "assert_state", "path": "player_cell", "equals": [25, 8] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "mercantile_alleys" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [1, 7] },
-  { "action": "screenshot", "name": "02_alley_entry_night_card" },
-
-  { "_comment": "== BEAT 5: SNEAK-NEGATIVE, the K2 payoff proven the hard way first. alley_footpads_a sits at (9,9), trigger_radius 2. Walking the west corridor WITHOUT sneaking, the zone is entered at (7,7) (Chebyshev distance to (9,9) is exactly 2) -- 6 steps right from (1,7); Cups (2,6) is off this row (y=6), so nothing blocks the corridor. start_combat fires for real; the roster is tuned LOW-lethality (footpad_lookout/footpad_bruiser, gated 0.75-0.98 win rate at warrior2 solo) so this is a safe, deterministic win at seed 9. combat_started's payload carries only `order` (no encounter id) -- no payload filter needed, this is the run's first and only fight so far. ==", "action": "move", "direction": "right", "steps": 6 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 7] },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "screenshot", "name": "02b_footpads_surround_opens" },
-  { "action": "combat_autoplay", "max_turns": 200 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cleared_footpads_a" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== BEAT 6: the fixer Cups (2,6), the rumor-by-the-cup bit. Up 1 to (7,6), left 4 to (3,6), bump left to face her, interact. First hub visit, gold:1 in the fixture: hub option 0 ('The alley boys...', footpads rumor -- thematically on-the-nose right after clearing them) -> rumor_footpads node, option 1 ('Useful fish. My thanks.') is the ungated exit. ==", "action": "move", "direction": "up", "steps": 1 },
-  { "action": "move", "direction": "left", "steps": 4 },
-  { "action": "assert_state", "path": "player_cell", "equals": [3, 6] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_fixer" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "heard_rumor_footpads" }, "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "gold", "equals": 0 },
-
-  { "_comment": "== BEAT 7: SNEAK-POSITIVE. Toggle [Stealth] ON (hotbar_2, known_skills order basic_cleaning/sneak/observe -- the stealth_loop precedent verbatim) from (3,6). Route: right 7 to (10,6) [re-enters footpad_a's own zone in passing at x=7-11 -- harmless while sneaking, it just re-marks the already-dedup'd sneaked_past_danger bank], down 5 to (10,11) through the connector, right 8 to (18,11) -- this whole stretch (x12-16 at y11) sits inside footpad_b's (14,12) radius-2 zone, proving the sneak-past with zero second fight -- down 1 to (18,12), facing right at the parlor door. assert_event_count pins combat_started at EXACTLY 1 for the whole run (the negative leg's fight, and only that one) -- the correct proof shape since combat_started carries no encounter id to filter by. ==", "action": "press", "name": "hotbar_2" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "sneak", "context": "exploration", "target": "" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "sneak_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You soften your step." }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "sneaking", "equals": true },
-  { "action": "move", "direction": "right", "steps": 7 },
-  { "action": "assert_state", "path": "player_cell", "equals": [10, 6] },
-  { "action": "move", "direction": "down", "steps": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [10, 11] },
-  { "action": "move", "direction": "right", "steps": 8 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 11] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 12] },
-  { "action": "assert_event_count", "type": "combat_started", "count": 1 },
-  { "action": "screenshot", "name": "03_alley_sneak_past" },
-
-  { "_comment": "== BEAT 8: drop sneak before the door (harmless either way -- a real door transition never breaks sneaking -- but keeping state clean for the parlor beat). ==", "action": "press", "name": "hotbar_2" },
-  { "action": "wait_for_event", "type": "sneak_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You straighten up." }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "sneaking", "equals": false },
-
-  { "_comment": "== BEAT 9: into the parlor. Bump right to face alleys_to_parlor (19,12), interact -> landing (1,4). ==", "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "brothers_parlor" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [1, 4] },
-  { "action": "screenshot", "name": "04_parlor_borrowed_elegance" },
-
-  { "_comment": "== BEAT 10: Wilovan (6,3), talk_pool only (courtesy-as-menace register; the full commission graph is Task C3's). Up 1 to (1,3), right 4 to (5,3), bump right, interact. ==", "action": "move", "direction": "up", "steps": 1 },
-  { "action": "move", "direction": "right", "steps": 4 },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Wilovan", "text": "Evening. Might I say, sir, you carry yourself like a person things happen to. We collect a few of those." }, "timeout_sec": 5 },
-
-  { "_comment": "== BEAT 11 (the LAST pre-sleep beat -- sleep() advances the phase clock, so every phase/rotation-sensitive assertion above had to precede it; the proof-shot EPILOGUE below runs in the NEW waking sleep() opens, deliberately self-contained): THE GUEST COUCH (2,7), the standing bed rule, unconditional. Down 4 to (5,7) [column x=5 is clear of the table (6,5)/rug (6,6)], left 2 to (3,7), bump left to face the couch, interact. ==", "action": "move", "direction": "down", "steps": 4 },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 7] },
-  { "action": "move", "direction": "left", "steps": 2 },
-  { "action": "assert_state", "path": "player_cell", "equals": [3, 7] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
-  { "_comment": "NOT 'You sleep soundly.' here (the riverfarm_walkthrough precedent's own deterministic fallback) -- traced live at seed 9: the footpads_a fight's melee_hit tally crosses warrior's own level-3 gate (requires melee_hit:6; the fixture preloads warrior at level 2 to match the combat data's own 'warrior2 solo' tuning baseline, see near_invrisil.json's _comment) inside sleep()'s class-resolution pass, which replaces the generic sleep toast with the level/skill-unlock one -- a race the riverfarm cot's classless PC never had to run. class_level_up{class:warrior,level:3} + skill_unlocked{skill:quick_movement} fire first (both asserted), then THIS toast.", "action": "wait_for_event", "type": "class_level_up", "payload_contains": { "class": "warrior", "level": 3 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "skill_unlocked", "payload_contains": { "skill": "quick_movement" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "[Warrior Level 3] — unlocked [Quick Movement]" }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "05_guest_couch_sleep" },
-
-  { "_comment": "== EPILOGUE (proof shots 06/07, controller evidence-gap ask -- APPENDED, shots 00-05 untouched): a fresh post-sleep waking. sleep() cleared dormant_encounters (footpads_a is live again -- respawns:true) and the per-waking sneak dedup, so the walk back out re-sneaks the whole alley run: toggle [Stealth] ON once here and NOTHING below breaks it (door transitions never break sneak -- interact()'s own is_door_transition carve-out; moves and screenshots don't either), so one toggle covers both alley crossings and the boulevard pacing. ==", "action": "press", "name": "hotbar_2" },
-  { "action": "wait_for_event", "type": "sneak_started", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "sneaking", "equals": true },
-  { "_comment": "Parlor exit from (3,7): up 3, left 2 to (1,4), bump left to face parlor_to_alleys (0,4), interact -> alleys (18,12).", "action": "move", "direction": "up", "steps": 3 },
-  { "action": "move", "direction": "left", "steps": 2 },
-  { "action": "assert_state", "path": "player_cell", "equals": [1, 4] },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "mercantile_alleys" }, "timeout_sec": 5 },
-  { "_comment": "Back across both re-armed footpad zones sneaking -- along y11, NOT y12: footpads_b's own entity cell (14,12) blocks the y12 corridor (entity occupancy, the same reason the pre-sleep leg used y11). Up 1, left 8 through its zone, up 4 the connector (through footpads_a's), left 9 along y7, bump the west door, out to the boulevard (25,8).", "action": "move", "direction": "up", "steps": 1 },
-  { "action": "move", "direction": "left", "steps": 8 },
-  { "action": "assert_state", "path": "player_cell", "equals": [10, 11] },
-  { "action": "move", "direction": "up", "steps": 4 },
-  { "action": "move", "direction": "left", "steps": 9 },
-  { "action": "assert_state", "path": "player_cell", "equals": [1, 7] },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "invrisil_boulevard" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [25, 8] },
-
-  { "_comment": "== SHOT 06: the facade band framed. Up 6 to (25,2) [the northmost walkable row], left 11 to mid-street (14,2) -- the camera centers the player, putting the fix wave's assembled facade (glass line y=1, plaster y=0/-1, cornice y=-2, pilasters, punched doors) directly above center-frame. Day phase: the facade is a materials read, not a light read. ==", "action": "move", "direction": "up", "steps": 6 },
-  { "action": "move", "direction": "left", "steps": 11 },
-  { "action": "assert_state", "path": "player_cell", "equals": [14, 2] },
-  { "action": "screenshot", "name": "06_facade_scale_shock" },
-
-  { "_comment": "== PHASE GRIND to night for shot 07 (the lantern-maze card is a NIGHT read, and light_multiplier is 0.0 at day -- the sconce pools are structurally invisible until dusk). Row 2 is fully open x0-27 (facade bands are y0-1; lamps sit at y3/y14), so pace it: 13 left + 7x26 swing = 195 ticks on top of the ~47 the walk-out spent, crossing dusk_at=100 mid-swing and night_at=225 before the swings end (242 total). The two phase_changed waits after the swings match retroactively from the log (the since-cursor scans forward from the last match, and both fired after it). ==", "action": "move", "direction": "left", "steps": 13 },
-  { "action": "assert_state", "path": "player_cell", "equals": [1, 2] },
-  { "action": "move", "direction": "right", "steps": 26 },
-  { "action": "move", "direction": "left", "steps": 26 },
-  { "action": "move", "direction": "right", "steps": 26 },
-  { "action": "move", "direction": "left", "steps": 26 },
-  { "action": "move", "direction": "right", "steps": 26 },
-  { "action": "move", "direction": "left", "steps": 26 },
-  { "action": "move", "direction": "right", "steps": 26 },
-  { "action": "assert_state", "path": "player_cell", "equals": [27, 2] },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "dusk" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "night" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "phase", "equals": "night" },
-
-  { "_comment": "== SHOT 07: the alleys' lantern pools at night. Down 6 to (27,8), bump left at the door (26,8), interact -> alleys (1,7) -- still sneaking, so the re-armed footpads_a zone stays quiet. Right 2 + up 1 to (3,6), directly under the (3,5) sconce's pool. ==", "action": "move", "direction": "down", "steps": 6 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "mercantile_alleys" }, "timeout_sec": 5 },
-  { "action": "move", "direction": "right", "steps": 2 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [3, 6] },
-  { "action": "assert_state", "path": "sneaking", "equals": true },
-  { "_comment": "The whole epilogue re-crossed both live footpad zones -- the run-total combat_started pin (exactly 1, beat 5's deliberate fight) is the epilogue's own sneak proof too.", "action": "assert_event_count", "type": "combat_started", "count": 1 },
-  { "action": "screenshot", "name": "07_alley_lantern_night" }
+  {
+   "_comment": "== Boot from the fixture (FIXTURE-FIRST) ==",
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "_comment": "== BEAT 1: portal arrival -- the awakened pantry_door offers TWO destinations this fixture (liscor_street, invrisil -- riverfarm_attuned is deliberately absent from near_invrisil's accomplishments, so Riverfarm never enters the filtered list); Invrisil is the SECOND option (index 1), 'Let it be.' third. ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "portal_menu"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "The light turns pale and cool, and the noise of a much bigger city rushes in to fill the silence. Invrisil, same as the letter promised."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "invrisil_boulevard"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    8
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "00_scale_shock_arrival"
+  },
+  {
+   "_comment": "== BEAT 2: the crowd is really there -- invrisil_extra_1 (7,6), a pool-less walk-on (no talk_pool/observe/conversation). Up 2 to (4,6), right 2 to (6,6), bump right to face (7,6), interact -- falls straight to the static `dialogue` one-liner (locked shape 2 proof). ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "",
+    "text": "A woman in a rose-dyed cloak checks a folded slip of paper against a shopfront number, unimpressed by both."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_extras_density"
+  },
+  {
+   "_comment": "== BEAT 3: the merchant-prince, NPC surface pre-quest -- Master Coyle (24,6), talk_pool only (no conversation yet, Task C3's own deliverable). extra_1 still occupies (7,6) (entities are never removed by a talk), so the route detours south to the clear row y=9 (no lamp/fountain/extra cell crosses it) for the long eastward leg, then back up to (23,6): down 3 to (6,9), right 17 to (23,9), up 3 to (23,6), bump right, interact -- first talk this waking absorbs the pool's rotation-0 line. ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 17
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    6
+   ]
+  },
+  {
+   "_comment": "The last move step left the player facing UP -- bump right (blocked by Coyle's own cell, sets facing without moving) before interacting.",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Master Coyle",
+    "text": "New face. I do like a new face \u2014 they're cheap, and occasionally they appreciate into something useful."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BEAT 4: into the alleys (the traversal signature). Down 2 to (23,8), right 2 to (25,8), bump right to face boulevard_to_alleys (26,8), interact -> alleys landing (1,7). ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    25,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "02_alley_entry_night_card"
+  },
+  {
+   "_comment": "== BEAT 5: SNEAK-NEGATIVE, the K2 payoff proven the hard way first. alley_footpads_a sits at (9,9), trigger_radius 2. Walking the west corridor WITHOUT sneaking, the zone is entered at (7,7) (Chebyshev distance to (9,9) is exactly 2) -- 6 steps right from (1,7); Cups (2,6) is off this row (y=6), so nothing blocks the corridor. start_combat fires for real; the roster is tuned LOW-lethality (footpad_lookout/footpad_bruiser, gated 0.75-0.98 win rate at warrior2 solo) so this is a safe, deterministic win at seed 9. combat_started's payload carries only `order` (no encounter id) -- no payload filter needed, this is the run's first and only fight so far. ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02b_footpads_surround_opens"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_footpads_a"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BEAT 6: the fixer Cups (2,6), the rumor-by-the-cup bit. Up 1 to (7,6), left 4 to (3,6), bump left to face her, interact. First hub visit, gold:1 in the fixture: hub option 0 ('The alley boys...', footpads rumor -- thematically on-the-nose right after clearing them) -> rumor_footpads node, option 1 ('Useful fish. My thanks.') is the ungated exit. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_fixer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_rumor_footpads"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "_comment": "== BEAT 7: SNEAK-POSITIVE. Toggle [Stealth] ON (hotbar_2, known_skills order basic_cleaning/sneak/observe -- the stealth_loop precedent verbatim) from (3,6). Route: right 7 to (10,6) [re-enters footpad_a's own zone in passing at x=7-11 -- harmless while sneaking, it just re-marks the already-dedup'd sneaked_past_danger bank], down 5 to (10,11) through the connector, right 8 to (18,11) -- this whole stretch (x12-16 at y11) sits inside footpad_b's (14,12) radius-2 zone, proving the sneak-past with zero second fight -- down 1 to (18,12), facing right at the parlor door. assert_event_count pins combat_started at EXACTLY 1 for the whole run (the negative leg's fight, and only that one) -- the correct proof shape since combat_started carries no encounter id to filter by. ==",
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "sneak",
+    "context": "exploration",
+    "target": ""
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sneak_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You soften your step."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "sneaking",
+   "equals": true
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    12
+   ]
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "03_alley_sneak_past"
+  },
+  {
+   "_comment": "== BEAT 8: drop sneak before the door (harmless either way -- a real door transition never breaks sneaking -- but keeping state clean for the parlor beat). ==",
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sneak_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You straighten up."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "sneaking",
+   "equals": false
+  },
+  {
+   "_comment": "== BEAT 9: into the parlor. Bump right to face alleys_to_parlor (19,12), interact -> landing (1,4). ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "brothers_parlor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    4
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "04_parlor_borrowed_elegance"
+  },
+  {
+   "_comment": "== BEAT 10: Wilovan (6,3), talk_pool only (courtesy-as-menace register; the full commission graph is Task C3's). Up 1 to (1,3), right 4 to (5,3), bump right, interact. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "Evening. Might I say, sir, you carry yourself like a person things happen to. We collect a few of those."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BEAT 11 (the LAST pre-sleep beat -- sleep() advances the phase clock, so every phase/rotation-sensitive assertion above had to precede it; the proof-shot EPILOGUE below runs in the NEW waking sleep() opens, deliberately self-contained): THE GUEST COUCH (2,7), the standing bed rule, unconditional. Down 4 to (5,7) [column x=5 is clear of the table (6,5)/rug (6,6)], left 2 to (3,7), bump left to face the couch, interact. ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "NOT 'You sleep soundly.' here (the riverfarm_walkthrough precedent's own deterministic fallback) -- traced live at seed 9: the footpads_a fight's melee_hit tally crosses warrior's own level-3 gate (requires melee_hit:6; the fixture preloads warrior at level 2 to match the combat data's own 'warrior2 solo' tuning baseline, see near_invrisil.json's _comment) inside sleep()'s class-resolution pass, which replaces the generic sleep toast with the level/skill-unlock one -- a race the riverfarm cot's classless PC never had to run. class_level_up{class:warrior,level:3} + skill_unlocked{skill:quick_movement} fire first (both asserted), then THIS toast.",
+   "action": "wait_for_event",
+   "type": "class_level_up",
+   "payload_contains": {
+    "class": "warrior",
+    "level": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unlocked",
+   "payload_contains": {
+    "skill": "quick_movement"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Warrior Level 3] \u2014 unlocked [Quick Movement]"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_guest_couch_sleep"
+  },
+  {
+   "_comment": "== EPILOGUE (proof shots 06/07, controller evidence-gap ask -- APPENDED, shots 00-05 untouched): a fresh post-sleep waking. sleep() cleared dormant_encounters (footpads_a is live again -- respawns:true) and the per-waking sneak dedup, so the walk back out re-sneaks the whole alley run: toggle [Stealth] ON once here and NOTHING below breaks it (door transitions never break sneak -- interact()'s own is_door_transition carve-out; moves and screenshots don't either), so one toggle covers both alley crossings and the boulevard pacing. ==",
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "sneak_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "sneaking",
+   "equals": true
+  },
+  {
+   "_comment": "Parlor exit from (3,7): up 3, left 2 to (1,4), bump left to face parlor_to_alleys (0,4), interact -> alleys (18,12).",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Back across both re-armed footpad zones sneaking -- along y11, NOT y12: footpads_b's own entity cell (14,12) blocks the y12 corridor (entity occupancy, the same reason the pre-sleep leg used y11). Up 1, left 8 through its zone, up 4 the connector (through footpads_a's), left 9 along y7, bump the west door, out to the boulevard (25,8).",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 9
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    25,
+    8
+   ]
+  },
+  {
+   "_comment": "== SHOT 06: the facade band framed. Up 6 to (25,2) [the northmost walkable row], left 11 to mid-street (14,2) -- the camera centers the player, putting the fix wave's assembled facade (glass line y=1, plaster y=0/-1, cornice y=-2, pilasters, punched doors) directly above center-frame. Day phase: the facade is a materials read, not a light read. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    2
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "06_facade_scale_shock"
+  },
+  {
+   "_comment": "== PHASE GRIND to night for shot 07 (the lantern-maze card is a NIGHT read, and light_multiplier is 0.0 at day -- the sconce pools are structurally invisible until dusk). Row 2 is fully open x0-27 (facade bands are y0-1; lamps sit at y3/y14), so pace it: 13 left + 17x26 swing = 455 ticks on top of the 47 the walk-out spent (measured via a temporary probe assert, matching the old ~47 estimate exactly), crossing dusk_at=200 and night_at=450 (issue #62 finding 24 doubled both from 100/225) before the swings end (502 total, a 52-action buffer over night_at). ODD swing count (17) preserves the old parity -- ends on a RIGHT swing, landing back at x=27 same as before, so shot 07's own route below needs no further changes. The two phase_changed waits after the swings match retroactively from the log (the since-cursor scans forward from the last match, and both fired after it).",
+   "action": "move",
+   "direction": "left",
+   "steps": 13
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    27,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "dusk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "night"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "_comment": "== SHOT 07: the alleys' lantern pools at night. Down 6 to (27,8), bump left at the door (26,8), interact -> alleys (1,7) -- still sneaking, so the re-armed footpads_a zone stays quiet. Right 2 + up 1 to (3,6), directly under the (3,5) sconce's pool. ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "sneaking",
+   "equals": true
+  },
+  {
+   "_comment": "The whole epilogue re-crossed both live footpad zones -- the run-total combat_started pin (exactly 1, beat 5's deliberate fight) is the epilogue's own sneak proof too.",
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "07_alley_lantern_night"
+  }
  ]
 }

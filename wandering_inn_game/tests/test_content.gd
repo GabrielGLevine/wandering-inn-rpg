@@ -108,33 +108,45 @@ func _validate_effect_text_opacity() -> void:
 func _validate_player_string_vocab() -> void:
 	var attr := RegEx.new()
 	attr.compile("(?i)\\b(str|dex|con|int|wis|cha)\\b")
+	# Issue #62 finding 12: a dev-provenance citation ("Magical Door plan Task
+	# D1 (issue #8 spec §5.3)") shipped straight into a player-visible item
+	# lore field (anchor_stone) undetected -- this sweep only ever checked
+	# the attribute/percent vocab, never provenance leaks. Deliberately NOT
+	# a bare "plan" check (too common a word -- Olesm's own hub line "down
+	# there with a plan" is real, in-voice content, not a leak); scoped to
+	# the two shapes that are ALWAYS a leak: "Task <letter><digits>" and
+	# "issue #<digits>".
+	var provenance := RegEx.new()
+	provenance.compile("(?i)Task [A-Z]?\\d+|issue #\\d+")
 	for path: String in PLAYER_STRING_FILES:
-		_scan_player_strings(_load_json(path), path, attr)
+		_scan_player_strings(_load_json(path), path, attr, provenance)
 	var dir: DirAccess = DirAccess.open(DIALOGUE_DIR)
 	for file_name: String in dir.get_files():
 		if file_name.ends_with(".json"):
 			var full_path := DIALOGUE_DIR.path_join(file_name)
-			_scan_player_strings(_load_json(full_path), full_path, attr)
+			_scan_player_strings(_load_json(full_path), full_path, attr, provenance)
 
 
 ## Recurses through an arbitrary parsed-JSON value, applying the forbidden-
-## attribute regex + a literal-percent check to every String leaf. Dictionary
-## keys starting with "_" are skipped entirely (dev comments, never player-
-## facing) -- their VALUES are never visited, so a `_comment` field can freely
-## discuss STR/DEX/percentages as design notes without tripping the sweep.
-func _scan_player_strings(node: Variant, path: String, attr: RegEx) -> void:
+## attribute regex + a literal-percent check + a dev-provenance-leak check to
+## every String leaf. Dictionary keys starting with "_" are skipped entirely
+## (dev comments, never player-facing) -- their VALUES are never visited, so
+## a `_comment` field can freely discuss STR/DEX/percentages/Task IDs as
+## design notes without tripping the sweep.
+func _scan_player_strings(node: Variant, path: String, attr: RegEx, provenance: RegEx) -> void:
 	if node is Dictionary:
 		for key: String in (node as Dictionary):
 			if key.begins_with("_"):
 				continue
-			_scan_player_strings((node as Dictionary)[key], "%s.%s" % [path, key], attr)
+			_scan_player_strings((node as Dictionary)[key], "%s.%s" % [path, key], attr, provenance)
 	elif node is Array:
 		for i: int in (node as Array).size():
-			_scan_player_strings((node as Array)[i], "%s[%d]" % [path, i], attr)
+			_scan_player_strings((node as Array)[i], "%s[%d]" % [path, i], attr, provenance)
 	elif node is String:
 		var s := node as String
 		assert(attr.search(s) == null, "%s carries a forbidden attribute token: %s" % [path, s])
 		assert(not s.contains("%"), "%s carries a forbidden percent-toward token: %s" % [path, s])
+		assert(provenance.search(s) == null, "%s carries a dev-provenance leak (Task/issue citation): %s" % [path, s])
 
 
 func _load_json(path: String) -> Dictionary:

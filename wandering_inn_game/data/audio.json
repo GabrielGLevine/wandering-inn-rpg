@@ -267,6 +267,7 @@
    "loop": true
   },
   {
+   "_comment": "Issue #62 findings 2/3/29: REVERTED to definitely_our_town.ogg (the pre-51bb992 track, still committed) per user preference -- one inn, one theme, the same stream music_inn_upstairs uses below. randommind_old_tower_inn.ogg (also user-cleared, a good track on its own) re-homes to music_guild rather than being dropped.",
    "id": "music_inn",
    "kind": "field",
    "context": "inn",
@@ -274,7 +275,7 @@
    "payload": {
     "map": "inn"
    },
-   "stream": "res://assets/audio/music/randommind_old_tower_inn.ogg",
+   "stream": "res://assets/audio/music/definitely_our_town.ogg",
    "bus": "Music",
    "volume_db": -6.0,
    "loop": true
@@ -473,6 +474,7 @@
    "loop": true
   },
   {
+   "_comment": "Issue #62 finding 2: SAME stream as music_inn (definitely_our_town.ogg) -- one inn, one theme; the upstairs private quarters isn't a separate place, unlike the Garden (which keeps its own junkala_time_stands_still.ogg above).",
    "id": "music_inn_upstairs",
    "kind": "field",
    "context": "inn_upstairs",
@@ -480,7 +482,7 @@
    "payload": {
     "map": "inn_upstairs"
    },
-   "stream": "res://assets/audio/music/junkala_place_i_call_home.ogg",
+   "stream": "res://assets/audio/music/definitely_our_town.ogg",
    "bus": "Music",
    "volume_db": -8.0,
    "loop": true
@@ -499,6 +501,7 @@
    "loop": true
   },
   {
+   "_comment": "Issue #62 finding 9: junkala_innocence.ogg (calm) read wrong for an active guarded ruin -- swapped for a TENSE track. junkala_army_approaching.ogg is already `music_combat_ruin_court`'s own arena variant below (the ruin_guardian fight THIS map leads to) -- reusing it here too would double-book the same track across field-and-fight, muddying the identity of walking-in vs the fight itself, so this picks junkala_preparing_battle.ogg instead (the OTHER tense Junkala track, already proven elsewhere as a combat variant but not on this map's own fight).",
    "id": "music_ruin_surface",
    "kind": "field",
    "context": "ruin_surface",
@@ -506,12 +509,13 @@
    "payload": {
     "map": "ruin_surface"
    },
-   "stream": "res://assets/audio/music/junkala_innocence.ogg",
+   "stream": "res://assets/audio/music/junkala_preparing_battle.ogg",
    "bus": "Music",
    "volume_db": -8.0,
    "loop": true
   },
   {
+   "_comment": "Issue #62 finding 2/3: inherits randommind_old_tower_inn.ogg, vacated by music_inn's revert to definitely_our_town.ogg above. Picked over runners_guild as the 'tavern-adjacent interior' -- Selys (the Guild's own desk) is practically an inn regular in the social loop, the closer of the two to the inn's own orbit; runners_guild keeps its existing junkala_summer_memories.ogg untouched.",
    "id": "music_guild",
    "kind": "field",
    "context": "guild",
@@ -519,7 +523,7 @@
    "payload": {
     "map": "guild"
    },
-   "stream": "res://assets/audio/music/junkala_sunshine_coast.ogg",
+   "stream": "res://assets/audio/music/randommind_old_tower_inn.ogg",
    "bus": "Music",
    "volume_db": -8.0,
    "loop": true

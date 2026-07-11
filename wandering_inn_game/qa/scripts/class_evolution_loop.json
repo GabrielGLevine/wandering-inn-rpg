@@ -44,7 +44,9 @@
   {
    "action": "assert_state",
    "path": "classes",
-   "equals": {"warrior": 10}
+   "equals": {
+    "warrior": 10
+   }
   },
   {
    "action": "assert_state",
@@ -236,7 +238,10 @@
   {
    "action": "assert_state",
    "path": "player_cell",
-   "equals": [28, 20]
+   "equals": [
+    28,
+    20
+   ]
   },
   {
    "action": "move",
@@ -283,14 +288,15 @@
    "timeout_sec": 5
   },
   {
-   "action": "assert_event_absent",
+   "_comment": "Issue #62 finding 8: goblin_encounter_1 is now a ONE-SHOT retirement -- this victory (fight2) is its ONLY win ever, so it IS removed for good here (flipped from the old assert_event_absent, which proved the opposite -- respawns:true dormancy -- before this fix).",
+   "action": "assert_event_logged",
    "type": "entity_removed",
    "payload_contains": {
     "id": "goblin_encounter_1"
    }
   },
   {
-   "_comment": "Return to the inn from the ambush cell (28,21) -- goblin_encounter_1 (30,23) is dormant post-victory, so re-crossing its zone is safe. up15->(28,6) (gob2 removed, column clear), left21->(7,6), up+interact -> floodplains_inn_door.",
+   "_comment": "Return to the inn from the ambush cell (28,21) -- goblin_encounter_1 (30,23) is gone for good now (one-shot), so re-crossing its zone is trivially safe. up15->(28,6) (gob2 removed, column clear), left21->(7,6), up+interact -> floodplains_inn_door.",
    "action": "move",
    "direction": "up",
    "steps": 15
@@ -303,7 +309,10 @@
   {
    "action": "assert_state",
    "path": "player_cell",
-   "equals": [7, 6]
+   "equals": [
+    7,
+    6
+   ]
   },
   {
    "action": "move",
@@ -326,7 +335,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -354,7 +366,9 @@
   {
    "action": "assert_state",
    "path": "classes",
-   "equals": {"swordsman": 10}
+   "equals": {
+    "swordsman": 10
+   }
   },
   {
    "action": "screenshot",
@@ -364,7 +378,10 @@
    "_comment": "Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3').",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 3]
+   "cell": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",
@@ -389,25 +406,91 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "fight3 -- goblin_encounter_1 (30,23) re-armed by the sleep/evolve beat (dormancy cleared), met_relc still banked. From the floodplains door (7,6): right21->(28,6), down14->(28,20) (safe, dist 3), down1->(28,21) springs the ambush.",
+   "_comment": "fight3 -- issue #62 finding 8: goblin_encounter_1 is now a ONE-SHOT retirement (no more respawns:true), already spent by fight2 above, so it can't re-arm here. Re-pinned onto relc_spar (persistent:true, ALWAYS immediately re-fightable, trivial-flagged so it doesn't touch the accomplishment tally this beat never needed) -- proves the evolved Swordsman kit in a real live fight instead. From the floodplains door (7,6): right5->(12,6), down6->(12,12) (the same Meet-Relc approach fight1 already used), interact -- met_relc is already banked from fight1's own beat, so `meet`'s re-entry hides the fresh-intro option and shows ['What's out here worth guarding?'(0), 'Got time to show me how to fight? (Spar)'(1), 'Keep walking.'(2)]; move down 1 to the Spar option.",
    "action": "move",
    "direction": "right",
-   "steps": 21
+   "steps": 5
   },
   {
    "action": "move",
    "direction": "down",
-   "steps": 14
+   "steps": 6
   },
   {
    "action": "assert_state",
    "path": "player_cell",
-   "equals": [28, 20]
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "First interact this waking (a sleep just happened for the evolution beat) absorbs Relc's rotating pool bark -- a second interact opens the real relc_intro graph.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "options": [
+     {
+      "text": "What's out here worth guarding?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Got time to show me how to fight? (Spar)",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Keep walking.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
   },
   {
    "action": "move",
    "direction": "down",
    "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "spar_offer node -- base text (sparred_with_relc not yet banked this run). Options ['Ready when you are.'(0), 'Another time.'(1)]; confirm at the default cursor (0) fires start_combat:relc_spar and ends the conversation in the same choose() call.",
+   "action": "assert_event_logged",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry."
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
   },
   {
    "action": "wait_for_event",
@@ -458,6 +541,11 @@
    "payload_contains": {
     "victory": true
    }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.sparred_with_relc",
+   "equals": 1
   }
  ]
 }

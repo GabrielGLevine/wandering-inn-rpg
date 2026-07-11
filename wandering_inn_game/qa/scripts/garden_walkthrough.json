@@ -1,5 +1,5 @@
 {
- "_comment": "(spec §5 RATIFIED) the Garden of Sanctuary's full unlock-to-rest loop from a beat-ready fixture (near_garden -- Act III fully reached, resolved_wrong_order pre-banked as the fixture's ONE pre-baked K-of-4 leg, tactician pre-granted so [Appraise Foe] is known). Proves live: (0) the 2nd leg, cleaned_the_inn, is earned LIVE via a real dirty_table [Basic Cleaning] use immediately before the qualifying sleep -- the K-of-4 gate's Kth leg lands in-script, not pre-baked; (1) that sleep silently banks garden_door_unlocked (no toast beyond the ordinary 'You sleep soundly.' -- OPAQUE, no GDI line, this is Erin's moment); (2) Erin's own talk_pool_stages line acknowledges it on the very next talk (the PC witnesses); (3) `garden_door` (inn, 3,8) now opens for real instead of the pre-unlock bare-wall toast; (4) the garden_sanctuary map itself -- day-bright identity, the fountain, the misted-rise clearing; (5) the memorial hill: [Appraise Foe] on memorial_plot_warren (cleared_the_warren, genuinely unbanked) reads the WAITING plinth line -- the negative tooth -- while memorial_plot_wrong_order (resolved_wrong_order, banked by the fixture) reads its claimed statue's remembrance line, proving the visual_states/observe-override seam live end-to-end; (6) a real, honest phase-clock crossing (harmless shuttle moves, actions_since_sleep -> dusk) proves the garden reads DAY-BRIGHT at a non-day phase -- the no-darkness card's own claim, read by eyes in the dusk screenshot; (7) rest-bed sleep parity at `garden_bed` (the DP3 sleep_toast idiom, live); (8) round-trip exit via `garden_exit` back to the inn; (9) the reveal's residue on the SECOND waking -- once visited_the_garden banks, Erin's next pool talk serves the erin_garden_shared residue stage, never a verbatim repeat of the reveal. Move sequences are BFS-derived against the real inn/garden_sanctuary blocked-cell layout (python replay, including the 4 new memorial-plot entities as blockers), not hand-guessed.",
+ "_comment": "(spec \u00a75 RATIFIED) the Garden of Sanctuary's full unlock-to-rest loop from a beat-ready fixture (near_garden -- Act III fully reached, resolved_wrong_order pre-banked as the fixture's ONE pre-baked K-of-4 leg, tactician pre-granted so [Appraise Foe] is known). Proves live: (0) the 2nd leg, cleaned_the_inn, is earned LIVE via a real dirty_table [Basic Cleaning] use immediately before the qualifying sleep -- the K-of-4 gate's Kth leg lands in-script, not pre-baked; (1) that sleep silently banks garden_door_unlocked (no toast beyond the ordinary 'You sleep soundly.' -- OPAQUE, no GDI line, this is Erin's moment); (2) Erin's own talk_pool_stages line acknowledges it on the very next talk (the PC witnesses); (3) `garden_door` (inn, 3,8) now opens for real instead of the pre-unlock bare-wall toast; (4) the garden_sanctuary map itself -- day-bright identity, the fountain, the misted-rise clearing; (5) the memorial hill: [Appraise Foe] on memorial_plot_warren (cleared_the_warren, genuinely unbanked) reads the WAITING plinth line -- the negative tooth -- while memorial_plot_wrong_order (resolved_wrong_order, banked by the fixture) reads its claimed statue's remembrance line, proving the visual_states/observe-override seam live end-to-end; (6) a real, honest phase-clock crossing (harmless shuttle moves, actions_since_sleep -> dusk) proves the garden reads DAY-BRIGHT at a non-day phase -- the no-darkness card's own claim, read by eyes in the dusk screenshot; (7) rest-bed sleep parity at `garden_bed` (the DP3 sleep_toast idiom, live); (8) round-trip exit via `garden_exit` back to the inn; (9) the reveal's residue on the SECOND waking -- once visited_the_garden banks, Erin's next pool talk serves the erin_garden_shared residue stage, never a verbatim repeat of the reveal. Move sequences are BFS-derived against the real inn/garden_sanctuary blocked-cell layout (python replay, including the 4 new memorial-plot entities as blockers), not hand-guessed.",
  "starts_at_title": true,
  "fixture_save": "near_garden",
  "steps": [
@@ -92,7 +92,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Basic Cleaning] — The table is spotless."
+    "text": "[Basic Cleaning] \u2014 The table is spotless."
    },
    "timeout_sec": 5
   },
@@ -116,7 +116,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -162,7 +165,10 @@
    "_comment": "== Erin's own acknowledgment, the PC witnesses (no GDI line) -- the talk_pool_stages seam, gated on the SAME flag. Teleport back down to (2,6) (the cell the old ground-floor route stood on), so the rest of this route (BFS-derived against the inn's real layout) resumes unchanged. ==",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 6]
+   "cell": [
+    2,
+    6
+   ]
   },
   {
    "action": "move",
@@ -193,7 +199,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit."
+    "text": "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's \u2014 new. Go look, if you want. Just... knock first. Old habit."
    },
    "timeout_sec": 5
   },
@@ -361,10 +367,80 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== an honest phase-clock crossing INSIDE the garden. The garden's phase clock is the SAME actions_since_sleep mechanism every map runs (wi_game.gd's phase()/`_tick_action`); this worktree's real threshold is data-driven (data/moods.json meta.phase_thresholds, dusk_at 100, NOT wi_game.gd's own 40 fallback -- traced, not assumed, the atmosphere_check.json precedent for sizing this correctly). ~31 actions are already spent since the qualifying sleep's reset by this point (the dirty_table detour doesn't count -- it happened BEFORE the reset); shuttling down the fully-open x=9 column (no memorial plot, no entity, clear y=2..10) and back, 5 round trips, carries the clock past 100 with margin. The garden's own `garden` mood card pins day/dusk/night all to [1,1,1] + vignette 0.0 -- this screenshot is the READ of that claim at a phase OTHER than day, not just an assertion. ==",
+   "_comment": "== an honest phase-clock crossing INSIDE the garden. The garden's phase clock is the SAME actions_since_sleep mechanism every map runs (wi_game.gd's phase()/`_tick_action`); this worktree's real threshold is data-driven (data/moods.json meta.phase_thresholds, dusk_at 200 -- issue #62 finding 24 doubled it from 100 -- NOT wi_game.gd's own 40 fallback -- traced, not assumed, the atmosphere_check.json precedent for sizing this correctly). 33 actions are already spent since the qualifying sleep's reset by this point (measured via a temporary probe assert, not estimated -- the dirty_table detour doesn't count, it happened BEFORE the reset); shuttling down the fully-open x=9 column (no memorial plot, no entity, clear y=2..10) and back, TWELVE round trips (doubled from the old FIVE to match dusk_at doubling, plus a little extra margin), carries the clock past 200 with room to spare. The garden's own `garden` mood card pins day/dusk/night all to [1,1,1] + vignette 0.0 -- this screenshot is the READ of that claim at a phase OTHER than day, not just an assertion. ==",
    "action": "move",
    "direction": "left",
    "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
   },
   {
    "action": "move",
