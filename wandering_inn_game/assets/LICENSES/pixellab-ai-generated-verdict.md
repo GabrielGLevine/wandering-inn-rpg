@@ -273,3 +273,12 @@ Same PixelLab-ToS ownership / redistributability as everything above.
 | `assets/sprites/klbkch/{Idle,Walk}_{Down,Side,Up}-Sheet.png` | `klbkch` NPC (street gate plaza) | v2 create-character-with-8-directions char `085b8d4f` ("Antinium Worker guardsman, ant-like insectoid...") -> animate-character breathing-idle(4) + walking(6); 92x92 frames, side=east. |
 | `assets/sprites/antinium_worker/Idle_{Down,Side,Up}-Sheet.png` | `antinium_worker_a/_b` ambient extras | v2 create-character-pro char `c46d1038` ("four-armed ant man drone...") -> breathing-idle(4); 116x116, idle-only by design. Attempt 1 (char `28eb787e`, two-armed) and a failed retry parked unused. |
 | `assets/ui/icons/icon_invisibility.png` | `[Invisibility]` hotbar/journal icon | NOT PixelLab: hand-drawn 16px 2-tone glyph (controller), icon_sneak palette. Listed here for the icon set's audit trail. |
+
+## 8d Phase A batch (2026-07-11)
+| Asset | Consumer | Provenance |
+|---|---|---|
+| `assets/sprites/ceria/*` | Horns delve ally (8d) | pro char `0f4f644e` (half-Elf ice mage, wiki profile; NO circlet — Vol-8+ catch) → breathing-idle(4)+walking(6); 152px. |
+| `assets/sprites/yvlon/*` | Horns delve ally | pro char `ec33c32c` (silversteel arms V6-honest) → idle(4)+walk(6)+jab(3); 176px. |
+| `assets/sprites/ksmvr/*` | Horns delve ally | pro char `3dc39703` (four-arm worker kernel + gear harness) → idle(4)+walk(6)+jab(3); 128px. |
+| `assets/sprites/klbkch/Slice_*` | GH#69 companion combat | jab(3) on char `085b8d4f`. |
+| (pending integration) vault construct | 8d C3 boss | pro char `367edfed` v2 ("headless, rune-eye chest, full-frame"; v1 `ab80bd56` head-clipped, parked) 220px; anims generating. |
