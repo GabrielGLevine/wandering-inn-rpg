@@ -246,10 +246,12 @@ func _check_identity(name: String, game: WIGame) -> void:
 ## any post-tutorial accomplishment ⇒ classes non-empty AND the tutorial's
 ## own map entities are in the state a real playthrough leaves them in.
 ## `relc_spar` is `persistent: true` (wi_game.gd's remove_entity is never
-## called on it by design -- Relc's spar re-offers forever) and
-## `goblin_encounter_1` `respawns: true` (dormant-until-next-sleep, never
-## permanently removed) -- so the ONLY correct state for either, at ANY
-## story position, is "not in removed_entities". This also catches the
+## called on it by design -- Relc's spar re-offers forever) -- so the ONLY
+## correct state for it, at ANY story position, is "not in removed_entities".
+## (Issue #62 finding 8: `goblin_encounter_1` used to share this same
+## never-removed shape via `respawns: true`; it is now a one-shot like any
+## other ambush and CAN legitimately appear in removed_entities post-victory,
+## so it dropped out of this check.) This also catches the
 ## user's literal "Riverfarm with zero classes" example: door_awakening/
 ## portal_menu/near_riverfarm's ORIGINAL fixtures carried post_game/
 ## door_chain_started with classes == {} and no tutorial banked at all.

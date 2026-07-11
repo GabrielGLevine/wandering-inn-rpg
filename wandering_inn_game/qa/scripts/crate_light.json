@@ -191,7 +191,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -219,7 +222,10 @@
    "_comment": "== PHASE B: cross the floodplains ambush (fight 1, Warrior kit + Relc ally) ==. Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3').",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 3]
+   "cell": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",
@@ -570,7 +576,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -598,7 +607,10 @@
    "_comment": "== PHASE E: back to the street for the crate quest. The mage sleep RE-ARMED goblin_encounter_1, so crossing the zone again fights it (fight 2, now Warrior/Mage). Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3'). ==",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 3]
+   "cell": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",
@@ -626,27 +638,68 @@
    ]
   },
   {
+   "_comment": "Issue #62 finding 8: goblin_encounter_1 is now a ONE-SHOT retirement -- fight1 above (Phase B) already spent it, it can no longer re-arm here. Re-pinned onto relc_spar (persistent:true, always immediately re-fightable) for the 'prove the post-mage kit in a real fight' beat this second crossing existed for. sparred_with_relc is ALREADY 1 from Phase A's own spar, so `meet`'s re-entry now ALSO shows the (still-ungranted) spear-gift option ahead of Spar in authored order -- visible list is ['What's out here worth guarding?'(0), 'You said you had something for me?'(1), 'Got time to show me how to fight? (Spar)'(2), 'Keep walking.'(3)]; move down 2 to skip past both and land on Spar.",
    "action": "move",
    "direction": "right",
-   "steps": 23
+   "steps": 5
   },
   {
    "action": "move",
    "direction": "down",
-   "steps": 14
+   "steps": 6
   },
   {
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    30,
-    20
+    12,
+    12
    ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "First interact this waking (two sleeps happened since Phase A's Relc talk) absorbs the rotating pool bark -- a second interact opens the real relc_intro graph.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
   },
   {
    "action": "move",
    "direction": "down",
-   "steps": 1
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "spar_offer node -- sparred_with_relc:1 already banked, so the text_variant ('Again? Fine...') wins over the base line this time. Options ['Ready when you are.'(0), 'Another time.'(1)]; confirm at the default cursor fires start_combat:relc_spar and ends the conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Again? Fine. The dummies heal fast. Perk of being straw. Same rules: move, hit, no crying."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
   },
   {
    "action": "wait_for_event",
@@ -679,7 +732,6 @@
    "timeout_sec": 20
   },
   {
-   "_comment": "This is goblin_encounter_1's SECOND arming (fight 1 above already banked sign_defended) -- start_combat's repeat_arena seam swaps to the plain, tutor-line-free goblin_ambush arena once sign_defended has banked, so road_clear does NOT fire again here (positive proof the tutorial doesn't replay past its first arming). No tutor-line wait; straight to the victory confirm.",
    "action": "press",
    "name": "confirm"
   },
@@ -687,6 +739,56 @@
    "action": "wait_for_event",
    "type": "ui_combat_hidden",
    "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "_comment": "Back to the liscor_gate approach -- same geometry Phase B already proved, now just a plain safe walk (goblin_encounter_1 is gone for good after Phase B's win, no second ambush here anymore). up6->(12,6), left5->(7,6), right23->(30,6), down14->(30,20), down1->(30,21).",
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
   },
   {
    "action": "move",
@@ -789,7 +891,7 @@
    "name": "confirm"
   },
   {
-   "_comment": "OPACITY TEETH: at the hub with asked_about_crate banked but studied_the_cellar NOT yet, the guile report option is genuinely absent (exact-length array match). Krshia's hub also carries an ALWAYS-visible shop-entry option ('Hrr — what's on the stall today?', unlocked -- no gold gate on the nav option itself) and, since the ratified sell mechanic, an ALWAYS-visible sell-entry option too (appended last, krshia_crate.json), so the exact array is now [shop-entry, Just visiting, sell-entry] -- all unlocked. The buy options' gold-greying lives one node deeper (the 'shop' node), not here.",
+   "_comment": "OPACITY TEETH: at the hub with asked_about_crate banked but studied_the_cellar NOT yet, the guile report option is genuinely absent (exact-length array match). Krshia's hub also carries an ALWAYS-visible shop-entry option ('Hrr \u2014 what's on the stall today?', unlocked -- no gold gate on the nav option itself) and, since the ratified sell mechanic, an ALWAYS-visible sell-entry option too (appended last, krshia_crate.json), so the exact array is now [shop-entry, Just visiting, sell-entry] -- all unlocked. The buy options' gold-greying lives one node deeper (the 'shop' node), not here.",
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
@@ -884,7 +986,7 @@
    "action": "assert_event_logged",
    "type": "toast",
    "payload_contains": {
-    "text": "[Light] — The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf."
+    "text": "[Light] \u2014 The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf."
    }
   },
   {
@@ -1021,7 +1123,7 @@
    "action": "assert_event_logged",
    "type": "toast",
    "payload_contains": {
-    "text": "[Light] — The orb drifts down the stairs. Just an empty cellar now, and a scuff in the dust where the crate used to sit."
+    "text": "[Light] \u2014 The orb drifts down the stairs. Just an empty cellar now, and a scuff in the dust where the crate used to sit."
    }
   }
  ]

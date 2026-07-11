@@ -1,169 +1,1090 @@
 {
  "steps": [
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "_comment": "+1 rendered entity (the short_order Q2 SKILL pot, reusing the cauldron sprite) -> sprites 12 -> 13, fallbacks still 0. +1 again (stairs_up door) -> sprites 13 -> 14. pantry_door + rift_vermin_leak -> sprites 14 -> 16. pantry_door_runes -> sprites 16 -> 17. garden_door -> sprites 17 -> 18. #49: the ground-floor alcove bed is REMOVED (the inn's only bed is now upstairs, your_bed) -> sprites 18 -> 17.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 17, "fallbacks": 0 } },
-  { "action": "screenshot", "name": "00_start" },
-
-  { "_comment": "inn_chest container beat, inserted at the very start (before Beat 0) so it round-trips back to the exact spawn cell (2,3) and every existing beat below stays untouched -- inn_chest is at [1,8]; the route jogs left one column early to its own approach (E4's proven peek route / inventory_loop.json's identical detour): [2,3]->down3->[2,6]->left1->[1,6]->down1->[1,7], face down (blocked by the chest, no move) + interact -> item_gained/toast/ui_toast_rendered (no autosave competes here -- pickup isn't one of the autosave-triggering events, so no toast-queue race like inventory_loop's Relc-gift beat). Then the reverse of the same four moves restores (2,3) exactly before Beat 0 begins. (#49: the ground-floor alcove bed that used to sit at [2,7] is removed -- this route never passed through that cell anyway, unaffected.)", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [1, 7] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "leather_jerkin", "source": "inn_chest" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Got: Leather Jerkin" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "Got: Leather Jerkin" }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "00b_chest_pickup" },
-  { "_comment": "This is the FIRST item_gained of the run, so message_layer.gd queues the one-time 'Press I -- your pack.' hint right behind this toast (see message_layer.gd's _first_pickup_hint_pending doc comment). Consume its qualified render here so the since-marker cursor clears it -- every later unqualified ui_toast_rendered wait below (stew_pot/dirty_table/tray/etc.) would otherwise match THIS toast's render instead of its own.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "Press I — your pack." }, "timeout_sec": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "move", "direction": "up", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
-
-  { "_comment": "Beat 0 : stew_pot PRE-CLASS -- Helper not yet gained, basic_cooking unknown -> skill_unknown negative + the new locked-prop feedback toast (was previously silent/invisible, the 2/18 blocker). This negative moved here from the post-class-gain slot below because the Helper L1/L3 grant swap (fix 6, onboarding spec sec6) makes basic_cooking available the moment Helper is gained, so the pot is no longer locked after that sleep. Stays a bare `interact` (not hotbar_N): an unknown field skill has no hotbar slot to press at all, so this is the one chore beat with no hotbar-equivalent input -- matches the ratified design's classless-window carve-out (skill unknown -> today's bare-interact refusal, unchanged).", "action": "move", "direction": "right", "steps": 2 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "skill_unknown", "payload_contains": { "skill": "basic_cooking" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You don't know your way around a stew pot. Yet." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "00b_stew_pot_locked_toast" },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "cooked_meal" } },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 2] },
-
-  { "_comment": "Beat 1: dirty_table clean x2 via the hotbar -- basic_cleaning is innate (skeleton_scene.json player.skills), so slot 1 is live from boot, before any class exists. Chores route through the field-skill seam (field_skills_loop's own idiom): hotbar_1 fires the exact same skill_used/accomplishment/toast stream as bare interact would (use_skill_field's P1 byte-parity contract, test_sim_core.gd) -- authored via the hotbar here because that's the taught path (erin_errand.json's cleaning_directions line), not because bare interact stops working on this prop.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "hotbar_1" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "basic_cleaning", "target": "dirty_table" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cleaned_the_inn", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Basic Cleaning] — The table is spotless." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "01_clean_toast" },
-  { "action": "press", "name": "hotbar_1" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cleaned_the_inn", "count": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.cleaned_the_inn", "equals": 2 },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-
-  { "_comment": "Beat 2: serving_tray interact x1 -> delivered_item count 1", "action": "move", "direction": "right", "steps": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "delivered_item", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You carry the laden tray out to the tables." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "02_tray_toast" },
-  { "action": "assert_state", "path": "accomplishments.delivered_item", "equals": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [10, 3] },
-
-  { "_comment": "Beat 3 (issue #59 rewrite): hungry_patron, EMPTY-HANDED -- no Helper class yet, so no hot_meal has ever been cooked. The Serve option now compound-gates on {once_per_waking, item}; once_per_waking is unmet-yet (visible per the vanishing-tease leg) but item is unmet too, so `_meets()`'s AND refuses it -- VISIBLE-LOCKED (GATING SPLIT: item possession is in-conversation-actionable, never hidden, unlike once_per_waking), greyed with the diegetic 'requires Hot Meal' string. This is the dish-fetch seam's own negative proof, replacing this beat's old job (proving once_per_waking alone) -- that job moves to Beat 6c below, where it can be proven ALONGSIDE a held dish (the interplay issue #59 cares about). TRAP: this beat must NOT choose the locked option (dialogue_panel.gd's _confirm refuses a locked cursor row outright) -- move the cursor to the dismiss row first.", "action": "move", "direction": "left", "steps": 4 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "patron_serving" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Hungry Patron", "text": "There you are! Stew, bread, anything - I've been sitting here an age.", "options": [ { "text": "Bring her a bowl from the kitchen. (Serve)", "locked": true, "requirement": "requires Hot Meal" }, { "text": "\"Someone will be right with you.\"", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "03_patron_dialogue_locked_no_dish" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer" } },
-  { "action": "assert_state", "path": "player_cell", "equals": [6, 6] },
-
-  { "_comment": "Beat 4: sleep -> class_gained{helper} (cleaned_the_inn>=1) + exact toast containing Helper. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "helper" }, "timeout_sec": 5 },
-  { "_comment": "The first-ever autosave toast is a NESTED emission fired from inside Game's class_gained listener, so it lands in the event log BEFORE class_gained itself is recorded here -- assert_event_logged (whole-run scan) rather than wait_for_event (cursor-gated) avoids the ordering trap.", "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "Autosaved. (Esc — save/load anytime)" } },
-  { "_comment": "class_gained toasts now list the class's level-1 grants (spec §4). Helper L1 grants [Basic Cooking] (the §6 stew-pot swap), so the toast reads '[Helper] class gained! — [Basic Cooking]'. Toast matching is exact-equality (test_driver _loosely_equal), so the full O4 text is pinned here.", "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Helper] class gained! — [Basic Cooking]" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "04_helper_gained" },
-  { "action": "assert_event_absent", "type": "class_level_up", "payload_contains": { "class": "helper" } },
-
-  { "_comment": "Beat 5 (issue #59): snapshot classes.helper==1; stew_pot right after Helper L1 gain -> NOW USABLE (basic_cooking is the L1 grant post-swap) -> positive skill_used + cooked_meal + toast + NEW: on_skill_use's `item` field grants a carryable hot_meal (WIGame.use_skill), the dish-fetch seam. The pre-class skill_unknown negative moved to Beat 0 above. Hotbar now carries 2 slots (known_skills() order: innate basic_cleaning, then helper's basic_cooking) -- basic_cooking is slot 2, hotbar_2. Teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3').", "action": "assert_state", "path": "classes.helper", "equals": 1 },
-  { "action": "teleport", "map": "inn", "cell": [2, 3] },
-  { "action": "move", "direction": "right", "steps": 2 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "hotbar_2" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "basic_cooking", "target": "stew_pot" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cooked_meal", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Basic Cooking] — The stew comes out rich and hot." }, "timeout_sec": 5 },
-  { "_comment": "item_gained/its own toast fire SYNCHRONOUSLY right after the skill's own accomplishment/toast (all inside the one use_skill() call) -- BEFORE message_layer.gd dequeues either toast into a ui_toast_rendered render. Waiting on the two ui_toast_rendered renders must come AFTER both domain waits below, not interleaved with them (an interleaved unqualified ui_toast_rendered wait here would advance the cursor PAST item_gained's actual log position and time out).", "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "hot_meal", "source": "stew_pot" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Got: Hot Meal" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.cooked_meal", "equals": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 2] },
-
-  { "_comment": "Beat 5.5 (NEW, issue #59): the FIRST REAL serve -- a hot_meal is now held and once_per_waking is still unbanked (Beat 3's attempt never fired bank_first_use, it was refused outright), so the Serve option is unlocked. Teleport to (5,7) (olesm_chess_loop's own proven approach: player_facing survives a teleport untouched, so a single blocked 'move up' onto the patron's own cell (5,6) both re-faces up and leaves the player parked at (5,7) -- move_player sets facing before its blocked-cell check). This SPENDS the dish (remove_item effect) and pays gold.", "action": "teleport", "map": "inn", "cell": [5, 7] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "patron_serving" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Hungry Patron", "text": "There you are! Stew, bread, anything - I've been sitting here an age.", "options": [ { "text": "Bring her a bowl from the kitchen. (Serve)", "locked": false, "requirement": "" }, { "text": "\"Someone will be right with you.\"", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "05_patron_dialogue_unlocked_dish_in_hand" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "hot_meal", "source": "patron_serving" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.served_customer", "equals": 1 },
-  { "action": "assert_state", "path": "gold", "equals": 5 },
-
-  { "_comment": "Beat 6a (issue #59, was Beat 6's opening half): second chore burst -- clean x2 via hotbar_1 (cleaned_the_inn 3, 4 -- crosses L2 requires_any threshold of 3). Teleport to dirty_table's own approach cell (5,3); a blocked 'move down' onto it (5,4) re-faces down without displacing (same move_player precedent as Beat 5.5's patron approach).", "action": "teleport", "map": "inn", "cell": [5, 3] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "hotbar_1" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cleaned_the_inn", "count": 3 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "hotbar_1" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cleaned_the_inn", "count": 4 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-
-  { "_comment": "Beat 6b (NEW, issue #59): cook a SECOND hot_meal, same waking, AFTER already serving once. Teleport back to the stew_pot's approach cell (4,2); a blocked 'move up' onto the pot (4,1) re-faces up without displacing.", "action": "teleport", "map": "inn", "cell": [4, 2] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "hotbar_2" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cooked_meal", "count": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "hot_meal", "source": "stew_pot" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Got: Hot Meal" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.cooked_meal", "equals": 2 },
-
-  { "_comment": "Beat 6c (NEW, issue #59 -- THE compound-gate interplay proof): a FRESH dish is held, but this waking's Serve is already spent (Beat 5.5 banked once_per_waking). The item leg alone would unlock the option -- proving it stays HIDDEN (not merely greyed) shows once_per_waking, not item, is the reason: `_meets_progress` reads the once_per_waking leg for hide-until-met visibility and never even looks at item. Teleport to the patron's approach cell again.", "action": "teleport", "map": "inn", "cell": [5, 7] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "patron_serving" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Hungry Patron", "text": "There you are! Stew, bread, anything - I've been sitting here an age.", "options": [ { "text": "\"Someone will be right with you.\"", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "06_patron_dialogue_hidden_despite_fresh_dish" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer", "count": 2 } },
-
-  { "_comment": "Beat 7 (was Beat 6's closing half): sleep -> class_level_up{helper,2} batched toast (the L2 requires_any is already cleared by cleaned_the_inn==4 alone, unaffected by served_customer still sitting at 1) -- and clears entity_first_use, re-arming the Serve gate. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now).", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "class_level_up", "payload_contains": { "class": "helper", "level": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Helper Level 2]" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "07_level_up" },
-
-  { "_comment": "Beat 8 (NEW, issue #59): POST-SLEEP AVAILABLE AGAIN -- the leftover hot_meal from Beat 6b (never consumed, since Beat 6c's attempt was refused) is still held, and sleep cleared once_per_waking, so the Serve option is unlocked and choosable again for real. Closes the full fetch/lock/consume/once_per_waking-survives-a-second-cook/post-sleep-available loop this issue exists to prove.", "action": "teleport", "map": "inn", "cell": [5, 7] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "patron_serving" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Hungry Patron", "text": "There you are! Stew, bread, anything - I've been sitting here an age.", "options": [ { "text": "Bring her a bowl from the kitchen. (Serve)", "locked": false, "requirement": "" }, { "text": "\"Someone will be right with you.\"", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer", "count": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "hot_meal", "source": "patron_serving" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "action": "assert_state", "path": "classes.helper", "equals": 2 },
-  { "action": "assert_state", "path": "accomplishments.cleaned_the_inn", "equals": 4 },
-  { "action": "assert_state", "path": "accomplishments.served_customer", "equals": 2 },
-  { "action": "assert_state", "path": "accomplishments.delivered_item", "equals": 1 },
-  { "action": "assert_state", "path": "accomplishments.cooked_meal", "equals": 2 },
-  { "action": "assert_state", "path": "gold", "equals": 9 }
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "+1 rendered entity (the short_order Q2 SKILL pot, reusing the cauldron sprite) -> sprites 12 -> 13, fallbacks still 0. +1 again (stairs_up door) -> sprites 13 -> 14. pantry_door + rift_vermin_leak -> sprites 14 -> 16. pantry_door_runes -> sprites 16 -> 17. garden_door -> sprites 17 -> 18. #49: the ground-floor alcove bed is REMOVED (the inn's only bed is now upstairs, your_bed) -> sprites 18 -> 17. Issue #62 finding 4: inn_chest moved upstairs (its old cell now holds the relocated stairs_up instead) -> sprites 17 -> 16.",
+   "action": "assert_event_logged",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 16,
+    "fallbacks": 0
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_start"
+  },
+  {
+   "_comment": "Issue #62 finding 4: inn_chest container beat, inserted at the very start (before Beat 0) so it round-trips back to the exact spawn cell (2,3) and every existing beat below stays untouched. The chest itself moved upstairs (its old ground-floor cell [1,8] now holds the relocated stairs_up) -- this route walks the IDENTICAL approach the chest used to use: jog left one column early: (2,3)->down3->(2,6)->left1->(1,6)->down1->(1,7), face down (blocked by the stairs, not the chest anymore) and interact to climb.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "Climb: arrival lands at (1,1); (1,2) is stairs_down itself (blocked), so detour one column east before dropping to the y2 hallway lane: right1->(2,1), down1->(2,2), right7->(9,2), down2->(9,4) (inn_chest's new approach cell), face down (blocked by the chest) and interact.",
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "visited_own_room"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "leather_jerkin",
+    "source": "inn_chest"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Got: Leather Jerkin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Leather Jerkin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00b_chest_pickup"
+  },
+  {
+   "_comment": "This is the FIRST item_gained of the run, so message_layer.gd queues the one-time 'Press I \u2014 your pack.' hint right behind this toast (see message_layer.gd's _first_pickup_hint_pending doc comment). Consume its qualified render here so the since-marker cursor clears it -- every later unqualified ui_toast_rendered wait below (stew_pot/dirty_table/tray/etc.) would otherwise match THIS toast's render instead of its own.",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Press I \u2014 your pack."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Back down: reverse the detour -- up2->(9,2), left7->(2,2), up1->(2,1), left1->(1,1), face down (blocked by stairs_down) and interact. to_cell (1,7) on the ground floor matches this route's own next leg exactly, so it needs zero further changes.",
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "_comment": "Beat 0 : stew_pot PRE-CLASS -- Helper not yet gained, basic_cooking unknown -> skill_unknown negative + the new locked-prop feedback toast (was previously silent/invisible, the 2/18 blocker). This negative moved here from the post-class-gain slot below because the Helper L1/L3 grant swap (fix 6, onboarding spec sec6) makes basic_cooking available the moment Helper is gained, so the pot is no longer locked after that sleep. Stays a bare `interact` (not hotbar_N): an unknown field skill has no hotbar slot to press at all, so this is the one chore beat with no hotbar-equivalent input -- matches the ratified design's classless-window carve-out (skill unknown -> today's bare-interact refusal, unchanged).",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "payload_contains": {
+    "skill": "basic_cooking"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You don't know your way around a stew pot. Yet."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00b_stew_pot_locked_toast"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cooked_meal"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "_comment": "Beat 1: dirty_table clean x2 via the hotbar -- basic_cleaning is innate (skeleton_scene.json player.skills), so slot 1 is live from boot, before any class exists. Chores route through the field-skill seam (field_skills_loop's own idiom): hotbar_1 fires the exact same skill_used/accomplishment/toast stream as bare interact would (use_skill_field's P1 byte-parity contract, test_sim_core.gd) -- authored via the hotbar here because that's the taught path (erin_errand.json's cleaning_directions line), not because bare interact stops working on this prop.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "target": "dirty_table"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleaned_the_inn",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Basic Cleaning] \u2014 The table is spotless."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_clean_toast"
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleaned_the_inn",
+    "count": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cleaned_the_inn",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "_comment": "Beat 2: serving_tray interact x1 -> delivered_item count 1",
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "delivered_item",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You carry the laden tray out to the tables."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_tray_toast"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.delivered_item",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    3
+   ]
+  },
+  {
+   "_comment": "Beat 3 (issue #59 rewrite): hungry_patron, EMPTY-HANDED -- no Helper class yet, so no hot_meal has ever been cooked. The Serve option now compound-gates on {once_per_waking, item}; once_per_waking is unmet-yet (visible per the vanishing-tease leg) but item is unmet too, so `_meets()`'s AND refuses it -- VISIBLE-LOCKED (GATING SPLIT: item possession is in-conversation-actionable, never hidden, unlike once_per_waking), greyed with the diegetic 'requires Hot Meal' string. This is the dish-fetch seam's own negative proof, replacing this beat's old job (proving once_per_waking alone) -- that job moves to Beat 6c below, where it can be proven ALONGSIDE a held dish (the interplay issue #59 cares about). TRAP: this beat must NOT choose the locked option (dialogue_panel.gd's _confirm refuses a locked cursor row outright) -- move the cursor to the dismiss row first.",
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "patron_serving"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hungry Patron",
+    "text": "There you are! Stew, bread, anything - I've been sitting here an age.",
+    "options": [
+     {
+      "text": "Bring her a bowl from the kitchen. (Serve)",
+      "locked": true,
+      "requirement": "requires Hot Meal"
+     },
+     {
+      "text": "\"Someone will be right with you.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_patron_dialogue_locked_no_dish"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "served_customer"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    6
+   ]
+  },
+  {
+   "_comment": "Beat 4: sleep -> class_gained{helper} (cleaned_the_inn>=1) + exact toast containing Helper. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "helper"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The first-ever autosave toast is a NESTED emission fired from inside Game's class_gained listener, so it lands in the event log BEFORE class_gained itself is recorded here -- assert_event_logged (whole-run scan) rather than wait_for_event (cursor-gated) avoids the ordering trap.",
+   "action": "assert_event_logged",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Autosaved. (Esc \u2014 save/load anytime)"
+   }
+  },
+  {
+   "_comment": "class_gained toasts now list the class's level-1 grants (spec \u00a74). Helper L1 grants [Basic Cooking] (the \u00a76 stew-pot swap), so the toast reads '[Helper] class gained! \u2014 [Basic Cooking]'. Toast matching is exact-equality (test_driver _loosely_equal), so the full O4 text is pinned here.",
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Helper] class gained! \u2014 [Basic Cooking]"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_helper_gained"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "class_level_up",
+   "payload_contains": {
+    "class": "helper"
+   }
+  },
+  {
+   "_comment": "Beat 5 (issue #59): snapshot classes.helper==1; stew_pot right after Helper L1 gain -> NOW USABLE (basic_cooking is the L1 grant post-swap) -> positive skill_used + cooked_meal + toast + NEW: on_skill_use's `item` field grants a carryable hot_meal (WIGame.use_skill), the dish-fetch seam. The pre-class skill_unknown negative moved to Beat 0 above. Hotbar now carries 2 slots (known_skills() order: innate basic_cleaning, then helper's basic_cooking) -- basic_cooking is slot 2, hotbar_2. Teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3').",
+   "action": "assert_state",
+   "path": "classes.helper",
+   "equals": 1
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cooking",
+    "target": "stew_pot"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cooked_meal",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Basic Cooking] \u2014 The stew comes out rich and hot."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "item_gained/its own toast fire SYNCHRONOUSLY right after the skill's own accomplishment/toast (all inside the one use_skill() call) -- BEFORE message_layer.gd dequeues either toast into a ui_toast_rendered render. Waiting on the two ui_toast_rendered renders must come AFTER both domain waits below, not interleaved with them (an interleaved unqualified ui_toast_rendered wait here would advance the cursor PAST item_gained's actual log position and time out).",
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal",
+    "source": "stew_pot"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Got: Hot Meal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cooked_meal",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "_comment": "Beat 5.5 (NEW, issue #59): the FIRST REAL serve -- a hot_meal is now held and once_per_waking is still unbanked (Beat 3's attempt never fired bank_first_use, it was refused outright), so the Serve option is unlocked. Teleport to (5,7) (olesm_chess_loop's own proven approach: player_facing survives a teleport untouched, so a single blocked 'move up' onto the patron's own cell (5,6) both re-faces up and leaves the player parked at (5,7) -- move_player sets facing before its blocked-cell check). This SPENDS the dish (remove_item effect) and pays gold.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "patron_serving"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hungry Patron",
+    "text": "There you are! Stew, bread, anything - I've been sitting here an age.",
+    "options": [
+     {
+      "text": "Bring her a bowl from the kitchen. (Serve)",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Someone will be right with you.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_patron_dialogue_unlocked_dish_in_hand"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "served_customer",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "hot_meal",
+    "source": "patron_serving"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.served_customer",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "_comment": "Beat 6a (issue #59, was Beat 6's opening half): second chore burst -- clean x2 via hotbar_1 (cleaned_the_inn 3, 4 -- crosses L2 requires_any threshold of 3). Teleport to dirty_table's own approach cell (5,3); a blocked 'move down' onto it (5,4) re-faces down without displacing (same move_player precedent as Beat 5.5's patron approach).",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleaned_the_inn",
+    "count": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleaned_the_inn",
+    "count": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Beat 6b (NEW, issue #59): cook a SECOND hot_meal, same waking, AFTER already serving once. Teleport back to the stew_pot's approach cell (4,2); a blocked 'move up' onto the pot (4,1) re-faces up without displacing.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cooked_meal",
+    "count": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal",
+    "source": "stew_pot"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Got: Hot Meal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cooked_meal",
+   "equals": 2
+  },
+  {
+   "_comment": "Beat 6c (NEW, issue #59 -- THE compound-gate interplay proof): a FRESH dish is held, but this waking's Serve is already spent (Beat 5.5 banked once_per_waking). The item leg alone would unlock the option -- proving it stays HIDDEN (not merely greyed) shows once_per_waking, not item, is the reason: `_meets_progress` reads the once_per_waking leg for hide-until-met visibility and never even looks at item. Teleport to the patron's approach cell again.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "patron_serving"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hungry Patron",
+    "text": "There you are! Stew, bread, anything - I've been sitting here an age.",
+    "options": [
+     {
+      "text": "\"Someone will be right with you.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_patron_dialogue_hidden_despite_fresh_dish"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "served_customer",
+    "count": 2
+   }
+  },
+  {
+   "_comment": "Beat 7 (was Beat 6's closing half): sleep -> class_level_up{helper,2} batched toast (the L2 requires_any is already cleared by cleaned_the_inn==4 alone, unaffected by served_customer still sitting at 1) -- and clears entity_first_use, re-arming the Serve gate. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now).",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_level_up",
+   "payload_contains": {
+    "class": "helper",
+    "level": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Helper Level 2]"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "07_level_up"
+  },
+  {
+   "_comment": "Beat 8 (NEW, issue #59): POST-SLEEP AVAILABLE AGAIN -- the leftover hot_meal from Beat 6b (never consumed, since Beat 6c's attempt was refused) is still held, and sleep cleared once_per_waking, so the Serve option is unlocked and choosable again for real. Closes the full fetch/lock/consume/once_per_waking-survives-a-second-cook/post-sleep-available loop this issue exists to prove.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "patron_serving"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hungry Patron",
+    "text": "There you are! Stew, bread, anything - I've been sitting here an age.",
+    "options": [
+     {
+      "text": "Bring her a bowl from the kitchen. (Serve)",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Someone will be right with you.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "served_customer",
+    "count": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "hot_meal",
+    "source": "patron_serving"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.helper",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cleaned_the_inn",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.served_customer",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.delivered_item",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cooked_meal",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 9
+  }
  ]
 }

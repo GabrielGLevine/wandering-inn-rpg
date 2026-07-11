@@ -307,7 +307,7 @@
    "name": "05_witch_elder_day"
   },
   {
-   "_comment": "== The phase crossing -- a LIVE mid-waking crossing (no sleep), the danger list's own requirement: the witch's visual_states swap must track atmosphere.gd's real phase clock, not fight it. 235 no-op interacts (each a real actions_since_sleep tick, facing an empty cell -- zero side effects) safely clears night_at (225). ==",
+   "_comment": "== The phase crossing -- a LIVE mid-waking crossing (no sleep), the danger list's own requirement: the witch's visual_states swap must track atmosphere.gd's real phase clock, not fight it. 470 no-op interacts (doubled from 235, issue #62 finding 24 -- each a real actions_since_sleep tick, facing an empty cell, zero side effects) safely clears night_at (450, doubled from 225). Baseline before this beat measured at 7 via a temporary probe assert, so 7+470=477, a 27-action buffer over 450. ==",
    "action": "teleport",
    "map": "witch_hollow",
    "cell": [
@@ -319,6 +319,946 @@
    "action": "move",
    "direction": "up",
    "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
   },
   {
    "action": "press",
@@ -1411,7 +2351,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Straw tick, borrowed blanket — Riverfarm always finds room for one more."
+    "text": "Straw tick, borrowed blanket \u2014 Riverfarm always finds room for one more."
    },
    "timeout_sec": 5
   },

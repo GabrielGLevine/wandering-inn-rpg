@@ -292,7 +292,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -320,7 +323,10 @@
    "_comment": "== PART 2: cross the proximity ambush (warrior + Relc) ==. Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3'); resumes unchanged: right12+1 -> inn_door -> floodplains (7,6), right23->(30,6), down14->(30,20), down1 springs the ambush.",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 3]
+   "cell": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",
@@ -520,7 +526,10 @@
    "_comment": "Re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); the sidestep-around-(8,4) detour below is the exact proven step from guild_interior_walkthrough (playtest hotfix #5 -- the rug there now blocks), stopping blocked-adjacent to Selys (8,2) facing up.",
    "action": "teleport",
    "map": "guild",
-   "cell": [8, 10]
+   "cell": [
+    8,
+    10
+   ]
   },
   {
    "action": "wait_for_event",
@@ -530,11 +539,31 @@
    },
    "timeout_sec": 5
   },
-  { "action": "move", "direction": "up", "steps": 5 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "move", "direction": "up", "steps": 1 },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
   {
    "action": "press",
    "name": "interact"
@@ -645,7 +674,10 @@
    "_comment": "Re-path: teleport back to the exact street cell (25,4) this script's ORIGINAL route always stopped at after Selys (blocked by her old street cell) -- every step from here on is byte-identical to before her relocation.",
    "action": "teleport",
    "map": "street",
-   "cell": [25, 4]
+   "cell": [
+    25,
+    4
+   ]
   },
   {
    "action": "wait_for_event",
@@ -786,6 +818,58 @@
   {
    "action": "screenshot",
    "name": "03_final"
+  },
+  {
+   "_comment": "Issue #62 finding 13 regression proof: 'You sent it back!' must retire for good after being heard once (reward_acknowledged hide_when). No prior canonical re-entered Erin's hub after choosing it, so this gap shipped unverified -- a live headless trace (temp probe, since reverted) confirmed the CURRENT hide_when/effects wiring already retires it correctly; this step is the permanent regression pin so a future data change can't silently reopen it. Re-interact Erin (still facing her from the epilogue above) -- the hub options list must NOT contain 'You sent it back!' (exact-array match, payload_contains does full-array equality on 'options').",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "erin_errand"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Erin",
+    "options": [
+     {
+      "text": "Let me deal with that table. ([Basic Cleaning])",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just passing through.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I heard you play chess.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
   }
  ]
 }

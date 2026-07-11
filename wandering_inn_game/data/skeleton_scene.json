@@ -670,32 +670,11 @@
      }
     },
     {
-     "id": "inn_chest",
-     "kind": "prop",
-     "cell": [
-      1,
-      8
-     ],
-     "display_name": "Old Chest",
-     "sprite": "chest",
-     "contains": [
-      "leather_jerkin"
-     ],
-     "visual_states": [
-      {
-       "when": {
-        "container_opened": true
-       },
-       "sprite": "chest_open"
-      }
-     ]
-    },
-    {
-     "_comment": "The stairs up to the private quarters. Placed at the far southeast corner (13,7), well clear of the main y3 hallway thoroughfare (lantern_check/mage_unlock_loop's x2-13 traverse along y3) and the bed corner (x1-3,y6-8 -- heavily fixtured by board_loop/atmosphere_check/field_skills_loop/rogue_earn_loop/social_loop/wrong_order_loop/inventory_loop/work_loop's exact player_cell pins). Approached from (13,6) facing down. on_enter_accomplishment mirrors the guild_door precedent (visited_guild) -- a flavor-only counter, not consumed by any quest. ui_entities_rendered inn count 13->14 (inn_walkthrough + work_loop updated).",
+     "_comment": "Issue #62 finding 4: RELOCATED to the bottom-left corner -- the herringbone 'bedroom corner' floor swatch (floor_layers rect [1,6,3,3], x1-3/y6-8) was the map's own differently-tinted region and had no real purpose beyond dressing; the stairs now anchor it. Sits exactly where `inn_chest` used to be (that prop moved upstairs, see inn_upstairs' own inn_chest entity) -- same cell, same north-approach-facing-down convention, zero new blocked-cell math. to_cell shifted to (1,1): inn_upstairs' own `stairs_down` shifted up one tile flush into ITS corner (1,3 -> 1,2) as the matching half of this move, so the landing moves with it (one row further north, same north-of-the-door relative offset preserved). ui_entities_rendered inn count UNCHANGED (16, still swapping one entity for another at this cell -- inn_chest is simply gone from the ground floor now, net -1 there; inn_upstairs gains it, net +1 there) -- inn_walkthrough/work_loop/upstairs_walkthrough all re-pinned.",
      "id": "stairs_up",
      "kind": "door",
      "cell": [
-      14,
+      1,
       8
      ],
      "display_name": "Stairs Up",
@@ -703,7 +682,7 @@
      "to_map": "inn_upstairs",
      "to_cell": [
       1,
-      2
+      1
      ],
      "on_enter_accomplishment": "visited_own_room"
     },
@@ -971,15 +950,8 @@
      }
     }
    ],
-   "_comment_decor": "The two generic 'more rooms than just Lyonette's' door graphics (3,1)/(5,1) are now REAL entities (see `entities` below) -- a facing interact used to hit empty space here (non-entity decor, INTERACT_NOTHING's 'Nothing there.') which read as a broken door on a visible doorway; promoted to `prop` entities carrying a generic locked_toast, same idiom as `lyonette_door` but without her name-specific copy. rug_tan (9,3) + window_blue (10,4) dress 'your room' -- same modest-personal-space read as the inn's own bedroom corner, not the common room's full furniture set. rug_tan sits ONE ROW south of its original (9,2) placement: its real sprite footprint (see the guild's own rug_tan _comment, ~2 cells tall) bled upward into `your_bed`'s (9,1) cell under y-sort, visually burying the bed; (9,3) keeps the same footprint entirely inside the 'your room' floor variant without touching the bed's row.",
+   "_comment_decor": "The two generic 'more rooms than just Lyonette's' door graphics (3,1)/(5,1) are now REAL entities (see `entities` below) -- a facing interact used to hit empty space here (non-entity decor, INTERACT_NOTHING's 'Nothing there.') which read as a broken door on a visible doorway; promoted to `prop` entities carrying a generic locked_toast, same idiom as `lyonette_door` but without her name-specific copy. window_blue (10,4) dresses 'your room' -- same modest-personal-space read as the inn's own bedroom corner, not the common room's full furniture set. Issue #62 finding 1: the rug_tan that used to sit at (9,3) (one row south of `your_bed`, 9,1) is REMOVED outright -- even clear of the bed's own row, its real sprite footprint (~2 cells tall) still bled up into the bed's approach/stand cell (9,2) under y-sort, obscuring the PC there; removal (not a further re-site) per user directive.",
    "decor": [
-    {
-     "sprite": "rug_tan",
-     "cell": [
-      9,
-      3
-     ]
-    },
     {
      "sprite": "window_blue",
      "cell": [
@@ -1000,19 +972,19 @@
    ],
    "entities": [
     {
-     "_comment": "The down-stairs landing -- arrives here from inn's stairs_up (to_cell [1,2], one cell north). No on_enter_accomplishment (matches the guild_exit precedent: the 'entry' side banks the flavor counter, not the 'exit' side). Sprite `stairs_up`: same staircase, same door-affordance art as the ground-floor side -- it's a floor-change door, not a direction-specific graphic, matching the sprite's own registered doc comment ('THE door affordance for floor-change doors').",
+     "_comment": "Issue #62 finding 4: shifted ONE TILE UP, flush into the hallway's own NW corner (1,3 -> 1,2) as the upstairs half of the ground-floor stairs relocation (see inn's own `stairs_up` entity). Arrives here from inn's stairs_up (to_cell [1,1], one cell north of THIS door -- the same relative offset the old (1,2)/(1,3) pair had, just shifted up together). No on_enter_accomplishment (matches the guild_exit precedent: the 'entry' side banks the flavor counter, not the 'exit' side). Sprite `stairs_up`: same staircase, same door-affordance art as the ground-floor side -- it's a floor-change door, not a direction-specific graphic, matching the sprite's own registered doc comment ('THE door affordance for floor-change doors'). to_cell (1,7) mirrors the same 'land one cell north of the door, immediately re-climbable' convention the OLD (13,8) landing used relative to the OLD (14,8) stairs -- now relative to the NEW (1,8) ground-floor stairs.",
      "id": "stairs_down",
      "kind": "door",
      "cell": [
       1,
-      3
+      2
      ],
      "display_name": "Down the Stairs",
      "sprite": "stairs_up",
      "to_map": "inn",
      "to_cell": [
-      13,
-      8
+      1,
+      7
      ]
     },
     {
@@ -1051,6 +1023,28 @@
      "sprite": "bed",
      "sleep": true,
      "sleep_toast": "Your own bed."
+    },
+    {
+     "_comment": "Issue #62 finding 4: the Old Chest moves up here (ground floor's own `inn_chest` cell got claimed by the relocated stairs) -- it's the PC's own storage, so 'your room' (the herringbone floor variant, x8-10) is the natural new home. Placed at (9,5), clear of the y2 hallway thoroughfare every OTHER upstairs fixture is approached from (this map's real walk lane) and off `your_bed`'s own (9,1)/(9,2) cell+approach -- approached from (9,4) facing down, the SAME north-approach/face-down convention the ground-floor chest used at its old cell. Same contents/visual_states, byte-identical otherwise.",
+     "id": "inn_chest",
+     "kind": "prop",
+     "cell": [
+      9,
+      5
+     ],
+     "display_name": "Old Chest",
+     "sprite": "chest",
+     "contains": [
+      "leather_jerkin"
+     ],
+     "visual_states": [
+      {
+       "when": {
+        "container_opened": true
+       },
+       "sprite": "chest_open"
+      }
+     ]
     },
     {
      "_comment": "Lyonette's room, hinted but never entered -- a `prop` (not a real `door`, it never transitions anywhere) carrying `locked_toast` (fires on a plain interact -- no `requires_skill` set, so interact()'s use_skill('', id) fallback reads it straight through the SAME seam sewers' `sewer_debris` already uses for a skill-less locked prop) and the generic ANY-entity `observe` field ([Appraise Foe]'s fallback read, the inn_sign precedent -- data-authored, not live-exercised in THIS script; see report for the fixture-cost disclosure). Placed at (7,1), the hallway's north-wall alcove between the two generic doors and the your-room zone.",
@@ -3828,7 +3822,6 @@
     {
      "id": "goblin_encounter_1",
      "kind": "encounter",
-     "respawns": true,
      "cell": [
       30,
       23
@@ -3837,8 +3830,6 @@
      "display_name": "Goblin Ambush",
      "sprite": "goblin_base",
      "arena": "goblin_ambush_tutorial",
-     "repeat_arena": "goblin_ambush",
-     "tutorial_seen_when": "sign_defended",
      "enemies": [
       "goblin_raider",
       "goblin_shaman"
@@ -3849,7 +3840,7 @@
      "ally_requires": {
       "met_relc": 1
      },
-     "_comment": "This arena's own tutor_lines close on road_clear's sign line (\"See the sign? Her inn, her rule. The road's the road. Teeth are teeth out here. But under her roof? Don't.\" -- issue #34 restored the seed's middle clause, zero-dash) -- the shipped resolution moment for holding the inn's no-killing-goblins rule on the road. sign_defended banks alongside won_combat here (additive counter, fires every clear -- `respawns: true` means this can retrigger). CONSTRAINT: the tutor_lines themselves must NOT retrigger past the first arming -- `entity_first_use` resets every sleep() (wrong seam, would still replay after re-arming), so `repeat_arena`/`tutorial_seen_when` (start_combat, wi_game.gd) swap to the plain `goblin_ambush` arena -- layout-identical, tutor-line-free, the SAME composition goblin_encounter_2 already fights there -- once `sign_defended` (this entity's own one-shot producer, unlike the shared `won_combat`) has banked at least once. The Garden gate's K-of-4 reads sign_defended via plain accomplishment_count, absent-as-zero before this landed.",
+     "_comment": "Issue #62 finding 8: RETIRED to one-shot -- `respawns: true` used to leave this armed forever (dormant-until-next-sleep, re-arming every waking), so the same ambush kept springing on every trip past the gate, sleep after sleep, long after the tutorial beat it exists for was long over. `respawns` (and its now-dead `repeat_arena`/`tutorial_seen_when` pair, which only ever mattered for a POST-dormancy re-arm) are gone outright: resolve_combat's existing `elif not persistent: remove_entity(...)` arm (already shipped, no new sim mechanism) now fires on this entity's first victory, same as any ordinary one-shot encounter -- it is gone from the map for good afterward, exactly like goblin_encounter_2. riverfarm's river_wolf_pack pair keeps `respawns: true` (deliberate, unrelated -- a night-only recurring danger, not a one-time tutorial beat). This arena's own tutor_lines close on road_clear's sign line (\"See the sign? Her inn, her rule. The road's the road. Teeth are teeth out here. But under her roof? Don't.\") -- the shipped resolution moment for holding the inn's no-killing-goblins rule on the road; sign_defended (below) still banks once, satisfying the Garden gate's K-of-4 read (`accomplishment_count` >=1, unaffected by this fight now being unrepeatable).",
      "on_victory": [
       "won_combat",
       "sign_defended"
@@ -3862,18 +3853,6 @@
       {
        "gold": 2,
        "chance": 0.5
-      }
-     ],
-     "visual_states": [
-      {
-       "when": {
-        "dormant": true
-       },
-       "tint": [
-        0.42,
-        0.5,
-        0.55
-       ]
       }
      ]
     },
@@ -6171,14 +6150,6 @@
       7,
       6
      ]
-    },
-    {
-     "_comment": "#49 garden bed dressing: rug_tan beneath `garden_bed` (11,4), the your_bed/inn_upstairs precedent (data/sprites.json's rug_tan _comment on that placement) applied here. Bbox math: rug_tan is 80x72 native @ render_scale 0.4 = 32x28.8px = 2.0x1.8 cells; default anchor [0.5,1.0] (bottom-center) means a sprite placed at cell (X,Y) renders its full height across row Y PLUS ~80% of row Y-1 (12.8 of that row's 16px), never reaching row Y-2. Placed at (11,6) -- two rows south of the bed (11,4), one south of its own approach cell (11,5) -- the rug's bleed covers row 6 fully + ~80% of row 5 (the approach cell, a natural 'rug in front of the bed' read) and stops there, never touching the bed's own row 4 -- the exact same 2-row offset that kept your_bed clear of burial. Non-blocking decor; the bed's cell and approach are untouched, garden_walkthrough's route needs no re-pin.",
-     "sprite": "rug_tan",
-     "cell": [
-      11,
-      6
-     ]
     }
    ],
    "entities": [
@@ -7287,6 +7258,14 @@
       0,
       11
      ]
+    },
+    {
+     "_comment": "Issue #62 finding 20: the longhouse facade (the big riverfarm_longhouse sheet, 7x4 cells) reads as a blank wall of thatch -- no visible door despite `longhouse_door` (11,7) being a real, working transition. Overlays the existing `door` sprite (the same small door prop used for hallway_door_a/b, Furniture.png, ~1x1.4 cells at render_scale 0.5) directly on the facade's own south-face row, the entity's real interact cell -- decor never blocks movement (matches the TRAP comment on this map's own interior, riverfarm_longhouse), so it's purely a readability overlay; bbox check: neighbors at this row are the open approach cell (11,8, south) and floor either side, no collision.",
+     "sprite": "door",
+     "cell": [
+      11,
+      7
+     ]
     }
    ],
    "entities": [
@@ -7578,14 +7557,14 @@
      "observe": "Low fence rail, bordering the tilled rows."
     },
     {
-     "_comment": "The headman -- quest-giver. R3 (issue #11) wires the real conversation graph (riverfarm_headman.json): gives price_of_a_favor, closes it on any path's blight_lifted. Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway.",
+     "_comment": "The headman -- quest-giver. R3 (issue #11) wires the real conversation graph (riverfarm_headman.json): gives price_of_a_favor, closes it on any path's blight_lifted. Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway. Issue #62 finding 15: facing flipped up->down -- every canonical approaches him from the SOUTH (village_edge/(11,10), 'Teleport doesn't carry facing -- re-face up' toward him in riverfarm_fight/riverfarm_talk/riverfarm_skill), so `up` had him showing his back to the player he's talking to; `down` faces the approach.",
      "id": "riverfarm_headman",
      "kind": "npc",
      "cell": [
       11,
       9
      ],
-     "facing": "up",
+     "facing": "down",
      "display_name": "The Headman",
      "sprite": "human_laborer",
      "talk_pool": [

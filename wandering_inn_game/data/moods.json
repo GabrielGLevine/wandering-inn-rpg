@@ -1,9 +1,9 @@
 {
- "_comment": "Ship-neutral-first: every map carries IDENTITY grade values ([1,1,1], vignette 0) by default so atmosphere.gd is live end-to-end with no visible change on its own; specific maps below tune inn/street/floodplains/cave_mouth/etc for real -- see CLAUDE.md's rollout blocks. `meta.phase_thresholds` is LIVE: game.gd's `_build_sim` reads this dict and passes {dusk_at, night_at} into WIGame's `phase_config` ctor arg -- if that wiring is ever removed, WIGame._phase_config silently falls back to its own hardcoded 40/90 defaults (see wi_game.gd's phase() doc comment), so this dict genuinely drives phase timing, not just documentation. Current values (150/338, the 100/225 originals scaled 1.5x by user ruling -- night arrived too fast in the first full playtest; same 2.25x dusk->night ratio) size the honest inn->Liscor onboarding route (measured N~60 post-Warrior-sleep actions to arrive at street; gate_district_walkthrough hits actions_since_sleep==62 at map_changed{street}) to land in LATE DAY with dusk ~38 actions later (dusk_at 100 ~=1.6xN; night_at 225 = 2.25x dusk_at). TRAP: changing dusk/night here genuinely moves phase_changed in every event stream -- same full-canonical-seed-reverify rule as combat data (CLAUDE.md's Equipment block). atmosphere_check.json's dusk-crossing route is SIZED to dusk_at and must stay in lockstep with it. `meta.light_energy_by_phase` is read by atmosphere.gd's `light_multiplier` (day 0.0 keeps every light invisible by day, preserving the daylight look).",
+ "_comment": "Ship-neutral-first: every map carries IDENTITY grade values ([1,1,1], vignette 0) by default so atmosphere.gd is live end-to-end with no visible change on its own; specific maps below tune inn/street/floodplains/cave_mouth/etc for real -- see CLAUDE.md's rollout blocks. `meta.phase_thresholds` is LIVE: game.gd's `_build_sim` reads this dict and passes {dusk_at, night_at} into WIGame's `phase_config` ctor arg -- if that wiring is ever removed, WIGame._phase_config silently falls back to its own hardcoded 40/90 defaults (see wi_game.gd's phase() doc comment), so this dict genuinely drives phase timing, not just documentation. TRAP (issue #62 finding 24, the real lesson here): a PRIOR commit's comment claimed these were scaled 1.5x to 150/338 ('night arrived too fast in the first full playtest') -- but only the PROSE changed; the JSON numbers stayed 100/225 the whole time, so that fix never actually shipped and night kept arriving exactly as fast as before. Trust the live numbers, never the comment, when auditing a data file. Current values (200/450) are a genuine 2x scale off the ORIGINAL 100/225 (the 1.5x that was promised-but-never-applied, compounded with another ~1.33x on top, landing on a clean round number) -- same 2.25x dusk->night ratio preserved. Sizes the honest inn->Liscor onboarding route (measured N~60 post-Warrior-sleep actions to arrive at street; gate_district_walkthrough hits actions_since_sleep==62 at map_changed{street}) to land comfortably in DAY, dusk now well clear of that route entirely. TRAP: changing dusk/night here genuinely moves phase_changed in every event stream -- same full-canonical-seed-reverify rule as combat data (CLAUDE.md's Equipment block). atmosphere_check.json's dusk-crossing route is SIZED to dusk_at and must stay in lockstep with it; riverfarm_fight.json's night-wolf burst is sized to night_at similarly -- both re-pinned this same finding.",
  "meta": {
   "phase_thresholds": {
-   "dusk": 100,
-   "night": 225
+   "dusk": 200,
+   "night": 450
   },
   "light_energy_by_phase": {
    "day": 0.0,
@@ -219,23 +219,23 @@
    "vignette": 0.55
   },
   "riverfarm_village": {
-   "_comment": "8b R1 (issue #10). \"harvest light\" -- the ONLY map whose day grade tips warm (identity everywhere else is [1,1,1]); deep-blue night per spec sec.1. Values per docs/design/riverfarm-art/direction.md's Mood-card DRAFT, windowed-verified at day+dusk this task (the contrast IS the storytelling, art handoff).",
+   "_comment": "8b R1 (issue #10). \"harvest light\" -- the ONLY map whose day grade tips warm (identity everywhere else is [1,1,1]); deep-blue night per spec sec.1. Values per docs/design/riverfarm-art/direction.md's Mood-card DRAFT, windowed-verified at day+dusk this task (the contrast IS the storytelling, art handoff). Issue #62 finding 22: day/dusk DEEPENED -- the old day grade (avg ~0.98, essentially full white) left the per-prop `blight_lifted` visual_states BRIGHTEN (longhouse/cottages/windmill/well tint 0.68->1.2, same warm ratio) with almost no baseline to brighten AWAY FROM -- pre-quest already read like a sunny village, so the post-quest jump barely registered. Same warm ratio preserved (R>G>B), scaled down (~0.72x day, ~0.87x dusk) so the pre-quest village reads overcast/muted -- the props' own BRIGHTEN then has real headroom to land against. Vignette nudged 0.35->0.4 (still short of the guild's 0.3<0.4<barracks' 0.36 neighbors -- a lightly oppressive, not enclosed, read) to reinforce the pre-quest mood. PROPOSED, unverified -- windowed A/B read pending (pre-quest vs. post-blight_lifted village).",
    "day": [
-    1.06,
-    1.0,
-    0.88
+    0.76,
+    0.72,
+    0.63
    ],
    "dusk": [
-    0.55,
-    0.45,
-    0.7
+    0.48,
+    0.4,
+    0.62
    ],
    "night": [
     0.26,
     0.3,
     0.55
    ],
-   "vignette": 0.35
+   "vignette": 0.4
   },
   "witch_hollow": {
    "_comment": "8b R1 (issue #10). \"green shade\" -- never reaches identity white even at day (canopy); dusk is the map's home key (firefly-dense per spec); vignette 0.50 > sewers' 0.45 (enclosure without an underground pin). Values per direction.md's Mood-card DRAFT.",

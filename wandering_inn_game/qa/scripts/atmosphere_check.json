@@ -1,47 +1,271 @@
 {
  "_comment": "(seed 9). Proves the phase clock + mood-grade wiring end-to-end: world_ready -> ui_mood_applied{inn,day} -> exactly 100 real actions (the dusk threshold, matching moods.json meta.phase_thresholds -- retuned 40->100) -> phase_changed{dusk} + ui_mood_applied{*,dusk} -> sleep at the bed -> phase_changed{day} + ui_mood_applied{inn,day}. No combat anywhere in the path (phase's PC-turn tick is proven by M7's own fold, not this script). Also proves the UI-ungraded claim: the journal opens/closes at the identity day grade with no visible interference (windowed screenshot is the real evidence -- see task-b1-report.md).",
-
  "steps": [
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "inn", "phase": "day" }, "timeout_sec": 5 },
-  { "_comment": "The inn's two light anchors (hearth [2,1] + grill [3,2], both warm/flicker) are always spawned regardless of phase -- energy is what phase-gates their visibility, not existence -- so count==2 holds at EVERY rebuild of this map, day included. This is the honest headless tooth for the light layer per the plan's own note (energy is presentation state with no sim-side signal to assert on): event presence + count, not a visible-glow assertion -- the windowed dusk shot (task-b2-report.md) is what actually proves a light reads as lit. assert_event_logged (whole-run scan), NOT wait_for_event -- ui_lights_rendered fires inside world.gd's _rebuild_field, which runs BEFORE world_ready is emitted (same ordering class as work_loop's nested-autosave gotcha in CLAUDE.md), so by the time the world_ready wait above resolves the since-marker cursor has already passed it; a forward-only wait here would hang to timeout.", "action": "assert_event_logged", "type": "ui_lights_rendered", "payload_contains": { "map": "inn", "count": 2 } },
-  { "_comment": "The inn's one ambience entry (dust_motes, rect:'all', phase [dusk,night]) is ALSO always spawned regardless of the current phase -- same emitter-always-exists/emitting-toggled-by-phase design as lights -- so emitters==1 holds at every rebuild, day included. Same since-marker reasoning as the ui_lights_rendered tooth above: assert_event_logged (whole-run scan), not wait_for_event.", "action": "assert_event_logged", "type": "ui_ambience_rendered", "payload_contains": { "map": "inn", "emitters": 1 } },
-  { "action": "assert_state", "path": "actions_since_sleep", "equals": 0 },
-  { "action": "assert_state", "path": "phase", "equals": "day" },
-  { "action": "screenshot", "name": "00_start_day" },
-
-  { "_comment": "UI-ungraded proof: open the journal under the identity day grade, screenshot, close. Journal open/close never touches actions_since_sleep (only move/interact/PC-turn tick it).", "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "00b_journal_open_identity_grade" },
-  { "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
-
-  { "_comment": "100 real actions via paced back-and-forth moves along inn row y=3, which is clear of every entity/blocked cell from x=1 to x=14 (only inn_door sits at [15,3], well outside this range) -- see CLAUDE.md's inn layout lock + skeleton_scene.json. (2,3)->right10->(12,3)->left10->(2,3), FIVE round trips = 100 successful move_player calls, zero blocked attempts, net displacement zero. Math: dusk_at is 100 (moods.json meta.phase_thresholds, retuned 40->100), so the 100th successful move crosses day->dusk exactly (before=99<100 day, after=100>=100 dusk). This route is SIZED to dusk_at and re-sizes with it -- see CLAUDE.md's phase-threshold change rule.", "action": "move", "direction": "right", "steps": 10 },
-  { "action": "move", "direction": "left", "steps": 10 },
-  { "action": "move", "direction": "right", "steps": 10 },
-  { "action": "move", "direction": "left", "steps": 10 },
-  { "action": "move", "direction": "right", "steps": 10 },
-  { "action": "move", "direction": "left", "steps": 10 },
-  { "action": "move", "direction": "right", "steps": 10 },
-  { "action": "move", "direction": "left", "steps": 10 },
-  { "action": "move", "direction": "right", "steps": 10 },
-  { "action": "move", "direction": "left", "steps": 10 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
-  { "action": "assert_state", "path": "actions_since_sleep", "equals": 100 },
-  { "action": "assert_state", "path": "phase", "equals": "dusk" },
-
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "dusk" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "phase": "dusk" }, "timeout_sec": 5 },
-  { "_comment": "No second ui_lights_rendered is expected here -- that event only fires from world.gd's _rebuild_field pass (world_ready/map_changed), and this route never changes map across the dusk crossing, only phase. Light ENERGY (what actually goes from 0 at day to >0 at dusk) is presentation state atmosphere.gd owns directly and the sim never sees or emits -- there is no honest sim-observable event to assert energy>0 on. The real proof that the inn's hearth/grill are lit at dusk is a windowed screenshot read, same idiom as the identity-grade zero-visual-change proof above; see task-b2-report.md's dusk shot (a THROWAWAY floodplains script proves the visible glow at the campfire anchor specifically, since the inn route here never leaves day/dusk mood parity that a screenshot alone could show apart).", "action": "screenshot", "name": "01_dusk" },
-
-  { "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the specific bed is incidental to this test -- the subject is the unconditional actions_since_sleep reset to 0 + phase_changed firing even day->day (M7 doc comment). Then interact triggers sleep(), and a return teleport to the inn re-renders the inn's own day mood grade so the ui_mood_applied{map:inn,phase:day} wait below still observes it.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
-  { "action": "teleport", "map": "inn", "cell": [2, 3] },
-  { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "inn", "phase": "day" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "actions_since_sleep", "equals": 0 },
-  { "action": "assert_state", "path": "phase", "equals": "day" },
-  { "action": "screenshot", "name": "02_after_sleep_day" }
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "inn",
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The inn's two light anchors (hearth [2,1] + grill [3,2], both warm/flicker) are always spawned regardless of phase -- energy is what phase-gates their visibility, not existence -- so count==2 holds at EVERY rebuild of this map, day included. This is the honest headless tooth for the light layer per the plan's own note (energy is presentation state with no sim-side signal to assert on): event presence + count, not a visible-glow assertion -- the windowed dusk shot (task-b2-report.md) is what actually proves a light reads as lit. assert_event_logged (whole-run scan), NOT wait_for_event -- ui_lights_rendered fires inside world.gd's _rebuild_field, which runs BEFORE world_ready is emitted (same ordering class as work_loop's nested-autosave gotcha in CLAUDE.md), so by the time the world_ready wait above resolves the since-marker cursor has already passed it; a forward-only wait here would hang to timeout.",
+   "action": "assert_event_logged",
+   "type": "ui_lights_rendered",
+   "payload_contains": {
+    "map": "inn",
+    "count": 2
+   }
+  },
+  {
+   "_comment": "The inn's one ambience entry (dust_motes, rect:'all', phase [dusk,night]) is ALSO always spawned regardless of the current phase -- same emitter-always-exists/emitting-toggled-by-phase design as lights -- so emitters==1 holds at every rebuild, day included. Same since-marker reasoning as the ui_lights_rendered tooth above: assert_event_logged (whole-run scan), not wait_for_event.",
+   "action": "assert_event_logged",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "inn",
+    "emitters": 1
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "actions_since_sleep",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "day"
+  },
+  {
+   "action": "screenshot",
+   "name": "00_start_day"
+  },
+  {
+   "_comment": "UI-ungraded proof: open the journal under the identity day grade, screenshot, close. Journal open/close never touches actions_since_sleep (only move/interact/PC-turn tick it).",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00b_journal_open_identity_grade"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #62 finding 24: 200 real actions (dusk_at doubled 100->200) via paced back-and-forth moves along inn row y=3, which is clear of every entity/blocked cell from x=1 to x=14 (only inn_door sits at [15,3], well outside this range) -- see CLAUDE.md's inn layout lock + skeleton_scene.json. (2,3)->right10->(12,3)->left10->(2,3), TEN round trips = 200 successful move_player calls, zero blocked attempts, net displacement zero. Math: dusk_at is 200 (moods.json meta.phase_thresholds), so the 200th successful move crosses day->dusk exactly (before=199<200 day, after=200>=200 dusk). This route is SIZED to dusk_at and re-sizes with it -- see CLAUDE.md's phase-threshold change rule.",
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "actions_since_sleep",
+   "equals": 200
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "dusk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "dusk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "phase": "dusk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "No second ui_lights_rendered is expected here -- that event only fires from world.gd's _rebuild_field pass (world_ready/map_changed), and this route never changes map across the dusk crossing, only phase. Light ENERGY (what actually goes from 0 at day to >0 at dusk) is presentation state atmosphere.gd owns directly and the sim never sees or emits -- there is no honest sim-observable event to assert energy>0 on. The real proof that the inn's hearth/grill are lit at dusk is a windowed screenshot read, same idiom as the identity-grade zero-visual-change proof above; see task-b2-report.md's dusk shot (a THROWAWAY floodplains script proves the visible glow at the campfire anchor specifically, since the inn route here never leaves day/dusk mood parity that a screenshot alone could show apart).",
+   "action": "screenshot",
+   "name": "01_dusk"
+  },
+  {
+   "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the specific bed is incidental to this test -- the subject is the unconditional actions_since_sleep reset to 0 + phase_changed firing even day->day (M7 doc comment). Then interact triggers sleep(), and a return teleport to the inn re-renders the inn's own day mood grade so the ui_mood_applied{map:inn,phase:day} wait below still observes it.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "inn",
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "actions_since_sleep",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "day"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_after_sleep_day"
+  }
  ]
 }

@@ -3,142 +3,2499 @@
  "fixture_save": "riverfarm_fight_start",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "riverfarm_village" },
-  { "action": "assert_state", "path": "classes.warrior", "equals": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [11, 10] },
-
-  { "_comment": "== GIVE: the headman (11,9). First interact = talk_pool line; second opens riverfarm_headman. ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "The Headman" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "riverfarm_headman" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Hub fresh: 0 'Tell me about the blight.', 1 'Just passing through.'. Take 0.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "quest_started", "payload_contains": { "id": "price_of_a_favor" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "heard_price_of_a_favor" }, "timeout_sec": 5 },
-  { "_comment": "brief: 0 'I'll see to it.' ends.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== THE COME-ALONG: the hunter (13,10). First interact = talk_pool line; second opens riverfarm_hunter and asks him along -- banks hunter_will_come LIVE, the ONLY thing that fields riverfarm_hunter as an ally in the three fights below. This is the fix for the Relc-at-Riverfarm ship-blocker: no ally without this beat. Teleport to (12,10), bump right to face him. ==", "action": "teleport", "map": "riverfarm_village", "cell": [12, 10] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "The Hunter" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "riverfarm_hunter" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "00_hunter_at_village" },
-  { "_comment": "hub fresh: 0 '[Ask him to come with you.]', 1 'Just passing through.'. Take 0.", "action": "press", "name": "confirm" },
-  { "_comment": "agreed: 0 'Deal.' ends -- an end+effects option reports dialogue_ended BEFORE wi_game.gd applies effects (the riverfarm_talk mediate_argue trap), so hunter_will_come lands AFTER dialogue_ended/ui_dialogue_hidden here, not before.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "hunter_will_come" }, "timeout_sec": 5 },
-
-  { "_comment": "== TRAVEL: riverfarm_hollow_path (1,11). ==", "action": "teleport", "map": "riverfarm_village", "cell": [2, 11] },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "witch_hollow" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [10, 11] },
-
-  { "_comment": "== CLEAR THE SHALLOW WAVE: briar_collectors (9,6). Teleport adjacent, bump-face, interact starts combat directly (interact-only, no conversation on this encounter). ==", "action": "teleport", "map": "witch_hollow", "cell": [9, 7] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "_comment": "Issue #60 item 3: [Quick Movement] (warrior L3, a turn-start move_pool_bonus PASSIVE -- never cast) now reveals into used_skills the moment this first pc turn starts, riding the SAME REACTION_TRIGGERED-shaped bank counter_strike/battle_momentum already use (wi_combat.gd's `_move_pool_bonus_total` emits PASSIVE_APPLIED{id,skill} at the exact turn-start site the bonus is granted; wi_game.gd's `_combat_event_relay` matches it into `used_skills`, additive to the existing REACTION_TRIGGERED arm).", "action": "assert_state", "path": "used_skills", "contains": "quick_movement" },
-  { "action": "screenshot", "name": "01_briar_collectors_with_hunter" },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "entity_removed", "payload_contains": { "id": "briar_collectors" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "drove_off_collectors" } },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "blight_lifted" } },
-
-  { "_comment": "== CLEAR THE DEEP WAVE: briar_collectors_deep (4,11). The escalation -- this victory is the FIGHT path's own blight_lifted producer. Screenshot pins the deep-variant sprite read (darker/taller than the shallow wave's). ==", "action": "teleport", "map": "witch_hollow", "cell": [4, 12] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "screenshot", "name": "02_briar_deep_wave" },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "blight_lifted" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "price_of_a_favor", "beat": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "entity_removed", "payload_contains": { "id": "briar_collectors_deep" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-
-  { "_comment": "== RETURN: hollow_village_path (11,11). ==", "action": "teleport", "map": "witch_hollow", "cell": [10, 11] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "riverfarm_village" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 11] },
-
-  { "_comment": "== REPORT: back to the headman (11,9). Same waking, pool spent -- interact opens riverfarm_headman directly. Teleport doesn't carry facing -- re-face up. ==", "action": "teleport", "map": "riverfarm_village", "cell": [11, 10] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "riverfarm_headman" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Hub post-victory (blight_lifted met, heard_price_of_a_favor met, price_of_a_favor_reported not): 0 'It's handled. The blight's lifted.', 1 'You said you don't truck with witches.', 2 'Just passing through.'. Take 0.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "price_of_a_favor_reported" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "price_of_a_favor", "beat": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_completed", "payload_contains": { "id": "price_of_a_favor" }, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== THE NIGHT-WOLF POSITIVE LEG (the arrival negative is R1's canonical, riverfarm_walkthrough): a real actions_since_sleep burst clears night_at (225, data/moods.json meta.phase_thresholds) via no-op interacts facing an empty cell, zero side effects. river_wolf_pack's encounter_when then reads night and its trigger_radius fires for real. Issue #56: `village_edge_night` now opens SURROUNDED (PC center at [6,3], `riverfarm_hunter` adjacent west, the 3-wolf pack ringed N/E/S) instead of the old player-left/enemies-right line -- `03_night_wolf_arena` below (already shot at fight-open, pre-existing) is now ALSO the surround-opens proof; win/loss shape at seed 9 unchanged (still a clean win), river_wolf_pack stays MEASURED-only (no gate) per user directive. ==", "action": "teleport", "map": "riverfarm_village", "cell": [11, 3] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" }, { "action": "press", "name": "interact" },
-  { "action": "assert_state", "path": "phase", "equals": "night" },
-
-  { "_comment": "== NIGHT WOLF POSITIVE: village_edge (2,14), trigger_radius 1. Walk adjacent -- the encounter_when phase gate reads night now and start_combat fires automatically, no interact needed. Screenshot pins the grey-wolf-on-night-grade contrast read (the one arena no other script shoots). ==", "action": "teleport", "map": "riverfarm_village", "cell": [2, 12] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "screenshot", "name": "03_night_wolf_arena" },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "survived_wolf_night" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    10
+   ]
+  },
+  {
+   "_comment": "== GIVE: the headman (11,9). First interact = talk_pool line; second opens riverfarm_headman. ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "The Headman"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_headman"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub fresh: 0 'Tell me about the blight.', 1 'Just passing through.'. Take 0.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "price_of_a_favor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_price_of_a_favor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "brief: 0 'I'll see to it.' ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE COME-ALONG: the hunter (13,10). First interact = talk_pool line; second opens riverfarm_hunter and asks him along -- banks hunter_will_come LIVE, the ONLY thing that fields riverfarm_hunter as an ally in the three fights below. This is the fix for the Relc-at-Riverfarm ship-blocker: no ally without this beat. Teleport to (12,10), bump right to face him. ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "The Hunter"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_hunter_at_village"
+  },
+  {
+   "_comment": "hub fresh: 0 '[Ask him to come with you.]', 1 'Just passing through.'. Take 0.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "agreed: 0 'Deal.' ends -- an end+effects option reports dialogue_ended BEFORE wi_game.gd applies effects (the riverfarm_talk mediate_argue trap), so hunter_will_come lands AFTER dialogue_ended/ui_dialogue_hidden here, not before.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "hunter_will_come"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== TRAVEL: riverfarm_hollow_path (1,11). ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    2,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "witch_hollow"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    11
+   ]
+  },
+  {
+   "_comment": "== CLEAR THE SHALLOW WAVE: briar_collectors (9,6). Teleport adjacent, bump-face, interact starts combat directly (interact-only, no conversation on this encounter). ==",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    9,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "Issue #60 item 3: [Quick Movement] (warrior L3, a turn-start move_pool_bonus PASSIVE -- never cast) now reveals into used_skills the moment this first pc turn starts, riding the SAME REACTION_TRIGGERED-shaped bank counter_strike/battle_momentum already use (wi_combat.gd's `_move_pool_bonus_total` emits PASSIVE_APPLIED{id,skill} at the exact turn-start site the bonus is granted; wi_game.gd's `_combat_event_relay` matches it into `used_skills`, additive to the existing REACTION_TRIGGERED arm).",
+   "action": "assert_state",
+   "path": "used_skills",
+   "contains": "quick_movement"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_briar_collectors_with_hunter"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "briar_collectors"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "drove_off_collectors"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "blight_lifted"
+   }
+  },
+  {
+   "_comment": "== CLEAR THE DEEP WAVE: briar_collectors_deep (4,11). The escalation -- this victory is the FIGHT path's own blight_lifted producer. Screenshot pins the deep-variant sprite read (darker/taller than the shallow wave's). ==",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    4,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02_briar_deep_wave"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "blight_lifted"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "price_of_a_favor",
+    "beat": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "briar_collectors_deep"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "_comment": "== RETURN: hollow_village_path (11,11). ==",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    10,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_village"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    11
+   ]
+  },
+  {
+   "_comment": "== REPORT: back to the headman (11,9). Same waking, pool spent -- interact opens riverfarm_headman directly. Teleport doesn't carry facing -- re-face up. ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    11,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_headman"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub post-victory (blight_lifted met, heard_price_of_a_favor met, price_of_a_favor_reported not): 0 'It's handled. The blight's lifted.', 1 'You said you don't truck with witches.', 2 'Just passing through.'. Take 0.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "price_of_a_favor_reported"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "price_of_a_favor",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "price_of_a_favor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE NIGHT-WOLF POSITIVE LEG (the arrival negative is R1's canonical, riverfarm_walkthrough): a real actions_since_sleep burst clears night_at (450, data/moods.json meta.phase_thresholds -- issue #62 finding 24 doubled it from 225) via no-op interacts facing an empty cell, zero side effects. Burst size doubled in lockstep (235 -> 470 interacts; baseline actions_since_sleep before this beat measured at 17 via a temporary probe assert, so 17+1(move)+470 = 488, a 38-action buffer over 450 -- similar proportional margin to the old 28-over-225 buffer). river_wolf_pack's encounter_when then reads night and its trigger_radius fires for real. Issue #56: `village_edge_night` now opens SURROUNDED (PC center at [6,3], `riverfarm_hunter` adjacent west, the 3-wolf pack ringed N/E/S) instead of the old player-left/enemies-right line -- `03_night_wolf_arena` below (already shot at fight-open, pre-existing) is now ALSO the surround-opens proof; win/loss shape at seed 9 unchanged (still a clean win), river_wolf_pack stays MEASURED-only (no gate) per user directive. ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    11,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "_comment": "== NIGHT WOLF POSITIVE: village_edge (2,14), trigger_radius 1. Walk adjacent -- the encounter_when phase gate reads night now and start_combat fires automatically, no interact needed. Screenshot pins the grey-wolf-on-night-grade contrast read (the one arena no other script shoots). ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    2,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_night_wolf_arena"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "survived_wolf_night"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  }
  ]
 }
