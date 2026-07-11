@@ -146,6 +146,35 @@
    "name": "00_sewers_landing"
   },
   {
+   "_comment": "#62 item 5 windowed evidence: the Tab-primed skill-name label must READ against the sewers' dark grade (the playtest finding was night-illegibility; this is the darkest canonical map). Prime, shoot, disarm -- pure UI, no sim action, route untouched.",
+   "action": "press",
+   "name": "hotbar_prime"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_selection_rendered",
+   "payload_contains": {
+    "index": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00c_label_dark_read"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_selection_rendered",
+   "payload_contains": {
+    "index": -1
+   },
+   "timeout_sec": 5
+  },
+  {
    "_comment": "== PLAYTEST FEATURE 3: cast [Light] on the PC (ambient path) mid-sewers. The near_sewers fixture carries light/frost_touch/kindle in player_skills, so the field hotbar renders 4 slots: 1 [Basic Cleaning] (innate), 2 [Light], 3 [Snap Freeze], 4 [Firefly] (the disclosed-affordance seam skills). Pressing hotbar_2 while facing a non-light-prop cell takes use_skill_field's field_ambient path (no sewers prop carries requires_skill==light), which sets light_active and conjures the PC-following glow. Proves: the ambient skill_used stream (target empty), the new follows-you toast copy, ui_pc_light_rendered{active:true}, and the round-trippable sim flag. ==",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
