@@ -1448,6 +1448,118 @@ func _init() -> void:
 	assert(_count("terrain_added") == 0 and _count("terrain_expired") == 0, "zero terrain events fire in a fight that never casts icy_floor")
 	assert((c73.snapshot()["terrain"] as Dictionary).is_empty(), "snapshot terrain key is an empty dict when unused")
 
+	# --- [Flame Pillar] blast_damage (GH#71): instant AoE damage, no
+	# terrain/status writes. Gates BEFORE spend, mirroring icy_floor/
+	# spell_damage exactly (range then LoS). Same goblin_ambush arena blocks
+	# as icy_floor's own tests: (5,3),(6,4),(3,5),(8,2). ---
+	var c90 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["flame_pillar"]}})
+	_events.clear()
+	c90.active_index = c90.turn_order.find("pc")
+	c90._start_turn()
+	var ap74_before := int(c90.combatants["pc"][WIKeys.AP])
+	var mp74_before := int(c90.combatants["pc"][WIKeys.MP])
+	assert(not c90.use_skill("flame_pillar", "goblin_raider"), "flame_pillar refused out of range (default spawn distance 7 > range 3)")
+	assert(int(c90.combatants["pc"][WIKeys.AP]) == ap74_before and int(c90.combatants["pc"][WIKeys.MP]) == mp74_before, "refused out-of-range cast spends neither AP nor MP")
+	assert(_count("skill_resolved") == 0, "refused out-of-range cast never resolves")
+
+	var c91 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["flame_pillar"]}})
+	_events.clear()
+	c91.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)
+	c91.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)  # wall (5,3) sits directly between, in range (2)
+	c91.active_index = c91.turn_order.find("pc")
+	c91._start_turn()
+	var ap75_before := int(c91.combatants["pc"][WIKeys.AP])
+	var mp75_before := int(c91.combatants["pc"][WIKeys.MP])
+	assert(not c91.use_skill("flame_pillar", "goblin_raider"), "flame_pillar refused without LoS despite being in range")
+	var refusal75: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "action_refused":
+			refusal75 = e["payload"]
+	assert(refusal75.get("reason", "") == "no_los", "no_los action_refused emitted")
+	assert(int(c91.combatants["pc"][WIKeys.AP]) == ap75_before and int(c91.combatants["pc"][WIKeys.MP]) == mp75_before, "refused no-LoS cast spends neither AP nor MP")
+	assert(_count("skill_resolved") == 0, "refused no-LoS cast never resolves")
+
+	# Successful cast: an enemy adjacent to a SECOND enemy AND an ally all
+	# land in the same blast (friendly fire real, three-way); the wall cell
+	# (5,3) sits inside the candidate square and is excluded exactly like
+	# icy_floor's own wall exclusion; the actor (pc) stands OUTSIDE the
+	# blast this time and is untouched (the "combatant outside the blast"
+	# control, mirroring icy_floor's goblin_shaman control in c69 above).
+	var c92 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["flame_pillar"]}})
+	_events.clear()
+	c92.combatants["pc"][WIKeys.CELL] = Vector2i(2, 4)
+	c92.combatants["relc"][WIKeys.CELL] = Vector2i(3, 4)           # inside the blast -- ally
+	c92.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(4, 3)  # cast target, inside the blast
+	c92.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(5, 4)  # second enemy, inside the blast (adjacent to the target)
+	c92.active_index = c92.turn_order.find("pc")
+	c92._start_turn()
+	var ap76_before := int(c92.combatants["pc"][WIKeys.AP])
+	var mp76_before := int(c92.combatants["pc"][WIKeys.MP])
+	var relc_hp76 := int(c92.combatants["relc"][WIKeys.HP])
+	var raider_hp76 := int(c92.combatants["goblin_raider"][WIKeys.HP])
+	var shaman_hp76 := int(c92.combatants["goblin_shaman"][WIKeys.HP])
+	var pc_hp76 := int(c92.combatants["pc"][WIKeys.HP])
+	assert(c92.use_skill("flame_pillar", "goblin_raider"), "flame_pillar cast succeeds in range with clear LoS")
+	assert(int(c92.combatants["pc"][WIKeys.AP]) == ap76_before - 3, "flame_pillar costs exactly 3 AP")
+	assert(int(c92.combatants["pc"][WIKeys.MP]) == mp76_before - 5, "flame_pillar costs exactly 5 MP")
+	# Radius-1 blast around (4,3): (3..5, 2..4) minus blocked (5,3).
+	var expected_cells76 := [[3, 2], [3, 3], [3, 4], [4, 2], [4, 3], [4, 4], [5, 2], [5, 4]]
+	var resolved76: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			resolved76 = e["payload"]
+	assert(resolved76.get("actor", "") == "pc" and resolved76.get("skill", "") == "flame_pillar" and resolved76.get("target", "") == "goblin_raider", "skill_resolved reports actor/skill/target")
+	assert((resolved76.get("cells", []) as Array) == expected_cells76, "skill_resolved reports the sorted blast-area cells, the wall cell (5,3) excluded")
+	var hit_ids76: Array = resolved76.get("hit_ids", [])
+	assert(hit_ids76.has("relc") and hit_ids76.has("goblin_raider") and hit_ids76.has("goblin_shaman"), "hit_ids includes the ally, the cast target, and the second enemy -- friendly fire is real")
+	assert(not hit_ids76.has("pc"), "the actor standing outside the blast is not in hit_ids")
+	# Each victim actually took an attack_resolved roll (melee=false, no
+	# riposte possible from a blast) -- the deterministic proof, since an
+	# individual hit-chance roll can still miss (mirrors flame_jet's c18
+	# test above, which asserts HP `<=` before for the same reason).
+	var blast_targets_seen76: Array = []
+	for e: Dictionary in _events:
+		if e["type"] == "attack_resolved":
+			assert(bool(e["payload"]["melee"]) == false, "blast hits are non-melee")
+			blast_targets_seen76.append(String(e["payload"]["target"]))
+	assert(blast_targets_seen76.has("relc") and blast_targets_seen76.has("goblin_raider") and blast_targets_seen76.has("goblin_shaman"), "all three struck combatants got an attack_resolved roll")
+	assert(not blast_targets_seen76.has("pc"), "the actor outside the blast gets no attack_resolved roll at all")
+	assert(int(c92.combatants["relc"][WIKeys.HP]) <= relc_hp76, "the ally in the blast can take real damage (friendly fire)")
+	assert(int(c92.combatants["goblin_raider"][WIKeys.HP]) <= raider_hp76, "the cast target can take real damage")
+	assert(int(c92.combatants["goblin_shaman"][WIKeys.HP]) <= shaman_hp76, "the second enemy in the blast can take real damage")
+	assert(int(c92.combatants["pc"][WIKeys.HP]) == pc_hp76, "the actor outside the blast took no damage")
+	assert(c92.terrain.is_empty(), "flame_pillar writes NO terrain (instant damage only, unlike icy_floor)")
+	assert(_count("terrain_added") == 0, "flame_pillar never emits terrain_added")
+	assert((c92.combatants["relc"]["statuses"] as Dictionary).is_empty(), "flame_pillar applies NO status to the ally")
+	assert((c92.combatants["goblin_raider"]["statuses"] as Dictionary).is_empty(), "flame_pillar applies NO status to the cast target either")
+	assert(_count("status_applied") == 0, "flame_pillar never emits status_applied")
+	assert(_count("reaction_triggered") == 0, "blast hits never trigger riposte (mirrors line_damage's no-riposte contract)")
+
+	# Self-hit: the caster's OWN cell can land in the blast when adjacent to
+	# the target -- deliberate, same rule icy_floor documents for its terrain.
+	var c93 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["flame_pillar"]}})
+	_events.clear()
+	c93.combatants["pc"][WIKeys.CELL] = Vector2i(6, 3)
+	c93.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(7, 3)
+	c93.combatants["relc"][WIKeys.CELL] = Vector2i(11, 6)
+	c93.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(11, 7)
+	c93.active_index = c93.turn_order.find("pc")
+	c93._start_turn()
+	var pc_hp77 := int(c93.combatants["pc"][WIKeys.HP])
+	assert(c93.use_skill("flame_pillar", "goblin_raider"), "flame_pillar cast succeeds")
+	var resolved77: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			resolved77 = e["payload"]
+	var hit_ids77: Array = resolved77.get("hit_ids", [])
+	assert(hit_ids77.has("pc"), "the caster's own cell landed in the blast, so it's in hit_ids too")
+	var self_hit_seen77 := false
+	for e: Dictionary in _events:
+		if e["type"] == "attack_resolved" and String(e["payload"]["target"]) == "pc":
+			self_hit_seen77 = true
+	assert(self_hit_seen77, "the caster gets a real attack_resolved roll against its own cell")
+	assert(int(c93.combatants["pc"][WIKeys.HP]) <= pc_hp77, "the caster can take real self-inflicted damage (a miss just leaves HP unchanged this roll)")
+
 	# A roster listing the same catalog id twice must field TWO
 	# distinct, independently-tracked combatants, never collapse to one via
 	# dict-key overwrite. shield_spiders' real shipped roster

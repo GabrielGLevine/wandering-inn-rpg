@@ -124,6 +124,13 @@ const EXPECTED_SKILLS := {
 	"icy_floor": ["2 AP, 4 MP — glaze a 3×3 patch of ground at range 3 for 2 rounds. Slows."],
 	"flame_scythe": ["2 AP, 4 MP — damage 1d6 at range 1"],
 	"flare_burst": ["1 AP, 2 MP — damage 1d6 at range 3"],
+	# GH#71 -- WISkillEffects.resolve_active gained a real blast_damage
+	# resolver (skill_effects.gd's `_resolve_blast_damage`); radius=1 -> 3x3
+	# area, die is the caster's own weapon_die (pc's is 6, same source as
+	# every spell_damage line above), no `applies` rider so no trailing
+	# "Slows."-style suffix -- the friendly-fire sentence is baked into the
+	# phrase itself instead.
+	"flame_pillar": ["3 AP, 5 MP — blast a 3×3 area around the target for 1d6. Hits friend and foe."],
 	"keener_edge": ["2 AP — ×1.6 damage"],
 	"lesser_stamina": [],
 	"basic_cooking": [],

@@ -249,6 +249,17 @@
 			"description": "A snap of light and heat that leaves spots dancing in the eyes."
 		},
 		{
+			"_comment": "GH#71: the first blast_damage grant (fireball-class AoE). CANON-VERDICT: ATTESTED, [Flame Pillar] ('Creates a circle of flames around the Target which then erupts into a pillar of fire.', ch. 9.14 VM) -- [Flare Burst] was checked first per the brief and is already a SHIPPED spell_damage skill (fire_mage L10, icon_flare_burst claimed), so this is a fresh name/id, not a reuse. AREA-SHAPE CONTRACT (must match icy_floor exactly, skill_effects.gd's `_radius_area` doc comment is the single source): Chebyshev radius 1 around the TARGET's cell (a 3x3 blast), wall cells excluded, occupied cells included, the caster's OWN cell can land in the blast when adjacent to the target [D: friendly fire is real, including self]. Instant damage only -- no terrain write, no status write, no expiry seam (contrast icy_floor, which glazes+slows for `duration_rounds`). Costs MORE than flame_jet's 2 AP/4 MP (a single-line skill) since a blast can hit strictly more bodies per cast: 3 AP/5 MP. No `icon` field -- `icon_flare_burst`/`icon_flame_bolt`/`icon_flame_jet`/`icon_flame_scythe` are all already claimed by shipped skills and no spare fire-blast art exists in `assets/ui/icons/`; twelve other shipped skills already ship iconless (mana_shield, quick_cast, counter_strike, battle_momentum, etc.) and `hotbar.gd`/`combat_hud.gd`/`field_hotbar.gd` all already degrade gracefully on an empty icon id -- disclosed as an ICON GAP for a future art pass, not a blocker. AI never selects it (WICombatAI only picks line_damage/spell_damage, see combat_ai.gd's own doc comment) -- player-only today, same as icy_floor/invisibility; `sim_combat_batch.gd`'s BUILDS array never assigns a `fire_mage` class directly (only bare `mage`), so this grant is unreachable by the harness regardless -- byte-identical before/after, verified.",
+			"id": "flame_pillar",
+			"display_name": "[Flame Pillar]",
+			"contexts": ["combat"],
+			"ap_cost": 3,
+			"mp_cost": 5,
+			"element": "fire",
+			"effect": { "type": "blast_damage", "range": 3, "radius": 1 },
+			"description": "A ring of fire blooms at the target's feet, then erupts into a roaring pillar."
+		},
+		{
 			"id": "keener_edge",
 			"display_name": "[Keener Edge]",
 			"contexts": ["combat"],

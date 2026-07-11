@@ -1,0 +1,42 @@
+{
+ "_comment": "A fire_mage-kitted PC fixture for the [Flame Pillar] blast_damage proof (flame_pillar_loop, GH#71). Mirrors near_ice_floor's shape/route (floodplains, met_relc banked so Relc's 'meet' node offers the Spar option directly) but classes {fire_mage:11} instead of {ice_mage:10} -- VERIFIED via progression.gd's inherits-chain walk (WIProgression.granted_skills/_collect_inherited, data/classes.json): fire_mage `inherits` mage, so a held fire_mage:11 auto-grants BOTH its own level-10 AND level-11 kit (flame_scythe, flare_burst, flame_pillar -- own grants walked in ascending level order) AND every mage grant evaluated at level 11 (frost_bolt/quick_cast/light from mage L1, flame_jet/mana_shield from mage L2, invisibility from mage L5, since 11>=5) with zero hand-stuffed player_skills -- classes:{fire_mage:11} alone is sufficient (do not add flame_pillar to player_skills; that would mask an inheritance regression instead of proving it). The resulting combat kit (weapon-gated but none of these carry a `weapon` tag, so all nine pass through unfiltered; only the six with contexts:combat + ap_cost>0 populate the hotbar) orders flame_scythe, flare_burst, flame_pillar, frost_bolt, flame_jet, invisibility -> hotbar slots 3/4/5/6/7/8 (Attack=1, Dash=2) -- flame_pillar is hotbar_5. combat_autoplay never casts a spell for the pc (melee-profile default, see CLAUDE.md Gotchas), so flame_pillar_loop drives the cast by hand via a real hotbar press, same idiom as ice_floor_loop's icy_floor proof. rng_state '9' held on first try (a hit-chance MISS anywhere in the blast changes HP deltas but never the deterministic cast geometry the script asserts -- cells/hit_ids/costs are pure data, no rng in the area derivation itself, see skill_effects.gd's `_resolve_blast_damage` doc comment); the fight finish is combat_autoplay's basic melee attacks against inert 21-HP-class training dummies, the same low-risk shape ice_floor_loop already established. TRAP: rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673, same derivation as near_ice_floor -- classes differ, rng does not), never hand-typed -- WISave restores .state directly, not .seed.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   12,
+   12
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "fire_mage": 11
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "learned_magic_from_pisces": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "seen_statuses": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673"
+ }
+}
