@@ -110,8 +110,12 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 		# than the actor's own; see its doc comment for the ally-targeting
 		# follow-up this narrower gate defers) -- widen both together when
 		# ally-targeting lands.
+		# [Invisibility]'s combat read is
+		# ALSO self-only (`_resolve_invisibility` never even looks at
+		# target_id -- it is dispatched before resolve_active's target
+		# lookup at all, same as move_pool_bonus), same plumbing again.
 		var is_self_cast := (effect_type == "move_pool_bonus" and int(skill.get("ap_cost", 0)) > 0) \
-				or effect_type == "heal"
+				or effect_type == "heal" or effect_type == "invisibility"
 		if not _line_mode and is_self_cast:
 			_targets = [me]
 			_target_index = 0

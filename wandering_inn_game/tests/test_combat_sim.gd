@@ -1481,5 +1481,146 @@ func _init() -> void:
 	assert(c75.combatants.size() == 4, "triple-duplicate roster fields all four combatants")
 	assert(c75.combatants.has("goblin_raider") and c75.combatants.has("goblin_raider_2") and c75.combatants.has("goblin_raider_3"), "third occurrence gets _3, not a collision with _2")
 
+	# --- [Invisibility]'s combat read: self-cast untargetable status ---
+	var c80 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["invisibility"]}})
+	c80.active_index = c80.turn_order.find("pc")
+	c80._start_turn()
+	var ap80_before := int(c80.combatants["pc"][WIKeys.AP])
+	var mp80_before := int(c80.combatants["pc"][WIKeys.MP])
+	_events.clear()
+	assert(c80.use_skill("invisibility", "pc"), "invisibility resolves as a self-cast")
+	assert(int(c80.combatants["pc"][WIKeys.AP]) == ap80_before - 1, "invisibility costs exactly 1 AP")
+	assert(int(c80.combatants["pc"][WIKeys.MP]) == mp80_before - 3, "invisibility costs exactly 3 MP")
+	var pc_statuses80: Dictionary = c80.combatants["pc"]["statuses"]
+	assert(pc_statuses80.has("invisible"), "casting applies the invisible status to the CASTER")
+	assert(bool((pc_statuses80["invisible"] as Dictionary).get("untargetable", false)), "the invisible status carries the untargetable flag AI-exclusion keys on")
+	assert(int((pc_statuses80["invisible"] as Dictionary).get("expires_after_round", -1)) == c80.round_number + 3 - 1, "expires_after_round stamped from duration_rounds, icy_floor's own idiom")
+	var resolved80: Dictionary = {}
+	var applied80: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			resolved80 = e["payload"]
+		if e["type"] == "status_applied":
+			applied80 = e["payload"]
+	assert(resolved80.get("actor", "") == "pc" and resolved80.get("skill", "") == "invisibility" and resolved80.get("target", "") == "pc", "skill_resolved reports the actor as its own target, same convention as sneak/second_wind")
+	assert(applied80.get("id", "") == "pc" and applied80.get("status", "") == "invisible", "status_applied reports the caster + the invisible status id")
+
+	# --- AI target-selection exclusion + break-on-damage + re-targetable ---
+	var cfgs81 := _cfgs(["pc", "goblin_raider"])
+	for cfg: Dictionary in cfgs81:
+		if String(cfg[WIKeys.ID]) == "pc":
+			cfg[WIKeys.SKILLS] = ["invisibility"]
+	var c81 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], cfgs81, _load("res://data/skills.json"), _sink, 11)
+	c81.begin()
+	c81.combatants["pc"][WIKeys.CELL] = Vector2i(3, 3)
+	c81.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(4, 3)  # adjacent -- a real melee AI would attack immediately if targetable
+	c81.combatants["pc"]["hit_bonus"] = 1000
+	c81.combatants["goblin_raider"]["hit_bonus"] = 1000
+	c81.active_index = c81.turn_order.find("pc")
+	c81._start_turn()
+	_events.clear()
+	assert(c81.use_skill("invisibility", "pc"), "pc casts invisibility before the raider's turn")
+	c81.end_turn()
+	var guard81 := 0
+	while c81.get_active() != "goblin_raider" and guard81 < 8:
+		c81.end_turn()
+		guard81 += 1
+	assert(c81.get_active() == "goblin_raider", "cycled to the raider's turn")
+	_events.clear()
+	WICombatAI.take_turn(c81)
+	assert(_count("attack_resolved") == 0, "melee AI never attacks its sole foe while that foe is invisible")
+	assert(_count("skill_resolved") == 0, "melee AI takes no skill action either -- it has nothing left to do")
+	assert(c81.combatants["goblin_raider"][WIKeys.CELL] == Vector2i(4, 3), "melee AI does not even move -- an invisible sole foe leaves it with no living enemy to path toward, exactly like the empty-foes case")
+	assert(_count("turn_ended") == 1, "the raider's turn ends immediately, exactly like the inert-profile/no-foe cases")
+
+	# Break on damage: pc attacks (guaranteed hit via hit_bonus 1000), clearing
+	# its own invisible status; the raider can then target pc again.
+	c81.end_turn()
+	var guard81b := 0
+	while c81.get_active() != "pc" and guard81b < 8:
+		c81.end_turn()
+		guard81b += 1
+	assert(c81.get_active() == "pc", "cycled back to pc's turn")
+	_events.clear()
+	assert(c81.attack("goblin_raider"), "pc attacks the raider")
+	var expired81: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "status_expired" and e["payload"].get("id", "") == "pc":
+			expired81 = e["payload"]
+	assert(expired81.get("status", "") == "invisible", "pc's own attack clears its invisible status (break-on-damage), keyed on the untargetable flag not this skill id")
+	assert(not (c81.combatants["pc"]["statuses"] as Dictionary).has("invisible"), "invisible is gone from pc's statuses")
+
+	c81.end_turn()
+	var guard81c := 0
+	while c81.get_active() != "goblin_raider" and guard81c < 8:
+		c81.end_turn()
+		guard81c += 1
+	assert(c81.get_active() == "goblin_raider", "cycled back to the raider's turn")
+	_events.clear()
+	WICombatAI.take_turn(c81)
+	assert(_count("attack_resolved") >= 1, "once invisibility breaks, the melee AI can target pc again")
+
+	# --- Natural expiry: fades after duration_rounds if never broken ---
+	var cfgs82 := _cfgs(["pc", "training_dummy_a"])
+	for cfg: Dictionary in cfgs82:
+		if String(cfg[WIKeys.ID]) == "pc":
+			cfg[WIKeys.SKILLS] = ["invisibility"]
+	var c82 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], cfgs82, _load("res://data/skills.json"), _sink, 11)
+	c82.begin()
+	c82.active_index = c82.turn_order.find("pc")
+	c82._start_turn()
+	_events.clear()
+	assert(c82.use_skill("invisibility", "pc"), "pc casts invisibility (duration_rounds 3)")
+	assert(int(c82.round_number) == 1, "cast happened in round 1")
+	assert(int((c82.combatants["pc"]["statuses"]["invisible"] as Dictionary).get("expires_after_round", -1)) == 3, "expires_after_round = round(1) + duration(3) - 1 = 3")
+	var members82 := c82.turn_order.size()
+	for i in members82:
+		c82.end_turn()
+	assert(int(c82.round_number) == 2, "one full cycle advances exactly one round")
+	assert((c82.combatants["pc"]["statuses"] as Dictionary).has("invisible"), "invisible persists through round 2")
+	for i in members82:
+		c82.end_turn()
+	assert(int(c82.round_number) == 3, "a second full cycle advances to round 3")
+	assert((c82.combatants["pc"]["statuses"] as Dictionary).has("invisible"), "invisible persists through round 3 -- not yet past its expiry")
+	assert(_count("status_expired") == 0, "not yet purged mid-lifetime")
+	_events.clear()
+	for i in members82:
+		c82.end_turn()
+	assert(int(c82.round_number) == 4, "a third full cycle advances to round 4")
+	assert(not (c82.combatants["pc"]["statuses"] as Dictionary).has("invisible"), "invisible is purged once round_number passes its expiry, never broken by damage")
+	assert(_count("status_expired") == 1, "status_expired fires exactly once")
+	var expired82: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "status_expired":
+			expired82 = e["payload"]
+	assert(expired82.get("id", "") == "pc" and expired82.get("status", "") == "invisible", "status_expired reports the caster + invisible")
+	assert(_count("attack_resolved") == 0, "control: nothing ever attacked -- this expiry is purely round-based, not break-on-damage")
+
+	# --- Area effects don't respect invisibility: a line skill still HITS an
+	# invisible occupant standing in it. Only the AI's SELECTION heuristic
+	# skips COUNTING them toward the >=2-enemies-hit gate (combat_ai.gd's
+	# _act_line) -- the resolver itself (_resolve_line_damage) is untouched
+	# and hits every occupied cell unconditionally. Being HIT is also not
+	# DEALING damage, so this never breaks the invisible occupant's own status. ---
+	var c83 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["invisibility"]}, "goblin_shaman": {WIKeys.SKILLS: ["flame_jet"]}})
+	c83.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
+	c83.combatants["pc"][WIKeys.CELL] = Vector2i(1, 0)
+	c83.combatants["goblin_shaman"]["hit_bonus"] = 1000
+	c83.active_index = c83.turn_order.find("pc")
+	c83._start_turn()
+	assert(c83.use_skill("invisibility", "pc"), "pc casts invisibility")
+	assert((c83.combatants["pc"]["statuses"] as Dictionary).has("invisible"), "fixture: pc is invisible")
+	c83.end_turn()
+	var guard83 := 0
+	while c83.get_active() != "goblin_shaman" and guard83 < 8:
+		c83.end_turn()
+		guard83 += 1
+	assert(c83.get_active() == "goblin_shaman", "cycled to goblin_shaman's turn")
+	var hp83_before := int(c83.combatants["pc"][WIKeys.HP])
+	_events.clear()
+	assert(c83.use_skill("flame_jet", "right"), "goblin_shaman casts flame_jet down the line pc occupies")
+	assert(int(c83.combatants["pc"][WIKeys.HP]) < hp83_before, "line damage still lands on the invisible occupant standing in the line")
+	assert((c83.combatants["pc"]["statuses"] as Dictionary).has("invisible"), "being HIT (not dealing damage) never breaks invisibility -- pc is still invisible after")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)
