@@ -20,6 +20,15 @@ on:
     branches: [main]
   push:
     branches: [main]
+  # Actions-budget conservation (user directive 2026-07-10, 21-day
+  # squeeze): the two heavy jobs below (sweep, web-parity) SKIP plain
+  # pushes to main -- every push is already gated by the identical local
+  # sweep per wi-verifying-changes. They still run on: every PR (external
+  # code gets full rigor), a nightly schedule (drift catch), manual
+  # dispatch, or any push whose commit message contains [ci-full].
+  schedule:
+    - cron: "17 9 * * *"
+  workflow_dispatch:
 
 # No write scopes — read-only, fork-PR safe.
 permissions:
@@ -156,6 +165,7 @@ jobs:
   # ------------------------------------------------------------------ sweep
   sweep:
     name: Canonical QA sweep
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[ci-full]')
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -185,6 +195,7 @@ jobs:
   # -------------------------------------------------------------- web-parity
   web-parity:
     name: Web parity (headless Chromium)
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[ci-full]')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
