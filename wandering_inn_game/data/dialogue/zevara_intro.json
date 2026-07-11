@@ -109,7 +109,7 @@
 			"speaker": "Zevara",
 			"text": "Sweep the cisterns. You know what a sweep costs? Six Watchmen off the wall, lanterns, a healer on standby, and a form in triplicate explaining to the Council why the wall was six thin. Give me one reason worth the ink.",
 			"options": [
-				{ "text": "If it's under the city and it's moving, it's already Watch business. I'm just the one telling you before it's an emergency instead of a form.", "goto": "sweep_argue" },
+				{ "text": "If it's under the city and moving, it's Watch business — before it's an emergency, not a form.", "goto": "sweep_argue" },
 				{ "text": "Forget I asked.", "end": true }
 			]
 		},
@@ -117,9 +117,9 @@
 			"speaker": "Zevara",
 			"text": "...Before it's an emergency. Hm. You argue like someone who's read a casualty report. Fine. Make it plain. What am I actually sending them into?",
 			"options": [
-				{ "text": "A nest. Silver-backed spiders, crept up from the Dungeon. Small now. It won't be small next month. (Diplomat)", "requires": { "class": { "diplomat": 1 } }, "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "watch_swept_cisterns" }, { "accomplishment": "resolved_the_cisterns" }, { "remove_entity": "shield_spiders" }, { "item": "watch_token" } ], "goto": "swept" },
+				{ "text": "A nest. Silver-backed spiders, up from the Dungeon. (Diplomat)", "requires": { "class": { "diplomat": 1 } }, "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "watch_swept_cisterns" }, { "accomplishment": "resolved_the_cisterns" }, { "remove_entity": "shield_spiders" }, { "item": "watch_token" } ], "goto": "swept" },
 				{ "text": "Actually — never mind.", "end": true },
-				{ "_comment": "re-pricing: the non-Diplomat alternate. Zevara refuses BRIBES (this file's own top _comment) so this is framed as covering the sweep's OPERATIONAL cost (the lanterns/healer/overtime she just itemized in sweep_pitch), never a personal payoff -- routes to its own swept_paid reaction so that framing stays honest rather than reusing the persuaded 'swept' text. persuaded_someone deliberately absent (paying isn't persuading).", "text": "Here — three gold toward the lanterns and the healer. That's the budget problem solved, at least. (3 gold)", "requires": { "gold": 3 }, "effects": [ { "gold": -3 }, { "accomplishment": "watch_swept_cisterns" }, { "accomplishment": "resolved_the_cisterns" }, { "remove_entity": "shield_spiders" }, { "item": "watch_token" } ], "goto": "swept_paid" }
+				{ "_comment": "re-pricing: the non-Diplomat alternate. Zevara refuses BRIBES (this file's own top _comment) so this is framed as covering the sweep's OPERATIONAL cost (the lanterns/healer/overtime she just itemized in sweep_pitch), never a personal payoff -- routes to its own swept_paid reaction so that framing stays honest rather than reusing the persuaded 'swept' text. persuaded_someone deliberately absent (paying isn't persuading).", "text": "Here — three gold for the lanterns and the healer. Budget problem solved, at least. (3 gold)", "requires": { "gold": 3 }, "effects": [ { "gold": -3 }, { "accomplishment": "watch_swept_cisterns" }, { "accomplishment": "resolved_the_cisterns" }, { "remove_entity": "shield_spiders" }, { "item": "watch_token" } ], "goto": "swept_paid" }
 			]
 		},
 		"swept": {

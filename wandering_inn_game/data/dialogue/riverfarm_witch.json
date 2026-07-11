@@ -11,7 +11,7 @@
 			],
 			"options": [
 				{ "text": "What's this blight really about?", "goto": "truth" },
-				{ "text": "Let's not make this ugly. I'll broker fair terms between you two. (Diplomat)", "requires": { "class": { "diplomat": 1 } }, "hide_when": { "accomplishment": { "blight_lifted": 1 } }, "goto": "mediate_pitch" },
+				{ "text": "Let's not make this ugly. I'll broker fair terms. (Diplomat)", "requires": { "class": { "diplomat": 1 } }, "hide_when": { "accomplishment": { "blight_lifted": 1 } }, "goto": "mediate_pitch" },
 				{ "text": "What have you got, for coin instead of favors?", "requires": { "accomplishment": { "blight_lifted": 1 } }, "goto": "shop" },
 				{ "text": "Just tea, then.", "end": true }
 			]
