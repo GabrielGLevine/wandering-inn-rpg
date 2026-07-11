@@ -1,5 +1,51 @@
 # Wandering Inn RPG Handoff
 
+## ⛔ ORG SPEND LIMIT HIT (2026-07-11 ~02:45) — session parked mid-Wave-1/2
+
+Subagent lanes died on the org monthly spend limit mid-work. Exact state
+secured; resume points below. USER ACTION: raise the limit
+(claude.ai/admin-settings/usage or /usage-credits) or wait for reset.
+
+**Shipped + PUSHED before the stop (main green, CI green):**
+- Batched push 712f3a9 (see next section: INV corner, 49R, Klbkch
+  sprites, tactician-chess, GOAL-CHAIN plan, parallel sweep).
+- 5062c69 CI-RED FIX: test_audio_data honors the licensed-overlay
+  contract (5 bundle-only music streams; manifest'd-missing = OK,
+  unknown-missing still fails; negative-controlled). CI back to green.
+
+**LOCAL commits, NOT yet pushed (push these first on resume):**
+- #55 decor-tint fix (0da3736 area): tint threads through field decor/
+  scatter + arena decor; street terracotta roofs/facades now render,
+  windowed-retuned; VISUAL-LOG note re boulder shadow-square (pre-
+  existing, A/B-proven). Commit message carries `Closes #55`.
+- ci_sweep bash-3.2 throttle fix (`wait -n` → sleep-poll) +
+  icon_invisibility.png (16px glyph, icon_sneak palette) parked for #46.
+
+**Branch lane-58 (worktree /tmp/wi-58, commit 241dd96 + review pending):
+Tab-primed hotbar selection (#58), COMPLETE + self-verified 81/81** —
+includes a disclosed out-of-scope pause_menu.gd fix (Esc-on-armed-cursor
+opened pause instead of disarming; adjudicate at review). Opus review
+was killed by the spend limit mid-trace (partial output positive, no
+verdict). DO NOT merge without finishing the review (7 risk areas in
+the dispatch: dispatch-order trap, pause_menu adjudication, Tab/cycle
+overlap, label coord space, equivalence canonical, ACTION_KEYS
+collision, UI_FIELD_HOTBAR_RENDERED untouched).
+
+**Branch lane-46 (worktree /tmp/wi-46, WIP commit): invisibility combat
+read (#46), IMPLEMENTATION COMPLETE, VERIFICATION NOT RUN.** Killed
+right before first run of its new `invisibility_combat_loop` canonical.
+Remaining: run the canonical, mage_invisibility_loop + ice_floor_loop +
+combat_walkthrough, full sweep, sim_combat_batch BEFORE/AFTER diff
+(must be byte-identical — STOP trigger if not), then opus review, then
+merge + wire icon_invisibility into data/skills.json invisibility.icon.
+Design ruling (controller, binding): invisible = self-cast status, AI
+target exclusion via untargetable flag, breaks on dealing damage,
+line-area still hits.
+
+**Then:** #52/#53 CLOSED with dispositions; #59 (dish seam) + #60
+(residue) filed; #24 re-parked. GOAL-CHAIN Wave 2 remainder: #57 mouse
+(after 58), #56 formations (after 46 merges — same combat surface).
+
 ## IN-FLIGHT ALL LANDED + BATCHED PUSH (2026-07-10 night) — GOAL-CHAIN Wave 1 opens
 
 Standing order: execute GOAL-CHAIN.md ISSUE PLAN (committed section in
