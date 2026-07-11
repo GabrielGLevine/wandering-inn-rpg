@@ -219,3 +219,26 @@ canon cites · current sprite state.
 
 ## Horns roster note (Vols 2-7, verified): Ceria (leader), Yvlon,
 Pisces (ours already), Ksmvr — complete; no other members in-window.
+
+## Eloise du Havin (wiki-verified 2026-07-11; #63 canon pass)
+- Canon Vols 6-7 (first appearance 6.37E, in-window): human, elderly,
+  SHORT, "surprising agility for her age" — stooped-but-spry. Grey
+  locks. [Tea Witch]; craft/magic root = KINDNESS (her own words);
+  Skills in-window: [Deft Hand], [Tea Gossip], [Tea Omens]; formerly
+  [Lady] in Terandria. RESIDES IN RIVERFARM (confirmed — settled,
+  with trading trips; the strongest possible fit for our vendor/
+  mediator role). Signature: a FRIENDLY GREY witch hat with pressed
+  tea leaves + embroidered flowers (grey and floral, NOT black-and-
+  pointed-plain — the one wiki-sourced silhouette anchor).
+- Invented-within-gap (wiki silent, flagged): warm brown eyes; soft
+  sage dress + mauve shawl under the hat (tea-garden palette); a small
+  teacup in hand (her craft output — extrapolated prop, flagged).
+- v1 sprite contract: short elderly figure, the grey floral hat
+  (must-read at 30px), sage/mauve warmth against Riverfarm's earth
+  tones. REPLACES the shipped oversize generic witch (playtest
+  finding 19).
+- Voice: formal, aphoristic, gently moralizing — "Kindness asks
+  questions." Never sharp; patience as pressure. (Alternative
+  considered: Agratha [Witch Teacher] — better-documented palette but
+  teacher-coded; Mavika — threat/gatekeeper register, wrong for a
+  shopfront. Eloise's residence + tea-vendor craft won.)
