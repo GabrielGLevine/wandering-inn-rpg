@@ -1204,3 +1204,11 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   hotfix lane — the shimmer overlay's cell source is a walls-segment
   derivation, so the floor_layers river needs its own small mechanism
   decision (windowed-judged, controller call).
+
+## 2026-07-10 (#55 windowed retune pass)
+- ruin_surface boulders: contact-shadow blob reads as a hard DARK SQUARE
+  under the cave-dark grade (pre-existing, A/B-verified NOT the #55 tint
+  thread — square present with tint code stashed). Likely the shadow
+  texture's soft edge banding to nothing under the dark modulate. Fix
+  idea: scale shadow alpha with the map grade, or swap to a smaller
+  ellipse for tall thin props.

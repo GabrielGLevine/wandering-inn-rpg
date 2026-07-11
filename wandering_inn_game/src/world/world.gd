@@ -714,7 +714,7 @@ func _build_decor(decor_list: Array) -> void:
 		if sprite_id == "" or not WISpriteRegistry.has_sprite(sprite_id):
 			continue
 		var cell := Vector2i(int(entry["cell"][0]), int(entry["cell"][1]))
-		_make_entity_visual(cell, sprite_id, [], PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)))
+		_make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)))
 
 
 ## Renders `scatter` entries: seeded
@@ -764,7 +764,8 @@ func _build_scatter(specs: Array) -> void:
 				var pick: Variant = pool[int(_scatter_hash(seed_v, cell, 31) * pool.size()) % pool.size()]
 				var sprite_id := String(pick)
 				if WISpriteRegistry.has_sprite(sprite_id):
-					_make_entity_visual(cell, sprite_id, [], PROP_COLOR, "", {}, sway)
+					# tint applies per SPEC (whole pool), same trade-off as sway above.
+					_make_entity_visual(cell, sprite_id, spec.get("tint", []), PROP_COLOR, "", {}, sway)
 
 
 ## Deterministic [0,1) hash for scatter decisions — stable per (seed, cell,

@@ -338,14 +338,15 @@ func _build_arena_decor(decor_list: Array) -> void:
 		if sprite_id == "" or not WISpriteRegistry.has_sprite(sprite_id):
 			continue
 		var cell := Vector2i(int(entry["cell"][0]), int(entry["cell"][1]))
-		_board.add_child(_make_decor_visual(cell, sprite_id))
+		_board.add_child(_make_decor_visual(cell, sprite_id, entry.get("tint", [])))
 
 
 ## Unlabeled decor visual, positioned like a combatant square (cell * CELL,
 ## board-local since `_board` itself is centered on screen by the camera)
 ## but without any HP/MP/name chrome -- arena counterpart of
-## world.gd's decor branch inside `_make_entity_visual`.
-func _make_decor_visual(cell: Vector2i, sprite_id: String) -> Node2D:
+## world.gd's decor branch inside `_make_entity_visual`. `tint` is the decor
+## entry's optional [r,g,b] multiplier (same shape as the field path).
+func _make_decor_visual(cell: Vector2i, sprite_id: String, tint: Variant = []) -> Node2D:
 	var holder := Node2D.new()
 	holder.position = Vector2(cell) * CELL
 	var spr := AnimatedSprite2D.new()
@@ -353,6 +354,9 @@ func _make_decor_visual(cell: Vector2i, sprite_id: String) -> Node2D:
 	spr.centered = false
 	var anim := "idle_down" if spr.sprite_frames.has_animation("idle_down") else "idle"
 	spr.play(anim)
+	if tint is Array and (tint as Array).size() == 3:
+		var tint_values := tint as Array
+		spr.modulate = Color(float(tint_values[0]), float(tint_values[1]), float(tint_values[2]))
 	var catalog_entry: Dictionary = WISpriteRegistry.entry_for(sprite_id)
 	if catalog_entry.has("render_scale"):
 		var s := float(catalog_entry["render_scale"])
