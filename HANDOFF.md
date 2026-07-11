@@ -1,5 +1,49 @@
 # Wandering Inn RPG Handoff
 
+## 🔄 QUIESCENT STATE (2026-07-11, session limit) — RESUME MAP
+
+Main is GREEN and PUSHED (every merge swept; last composed re-gates
+targeted — run ONE full sweep + ALL units before the next push).
+All four in-flight lane branches pushed to origin as backup.
+
+**MERGED + LOCAL on main (unpushed commits exist — push after full
+gates):** #68 rework (+review FIX-FIRST: stage-1 gate closes the
+bypass), #69 Klbkch companion, #71 [Flame Pillar], #67 copy-fit
+(+minors), #61 spellsword top-end, #32-35 rulings lane (reviewed
+MERGE — closes those 4 issues at push), voice-audit structural fixes,
+8d Phase A art (Horns/construct/Klbkch-slice rigs + Eloise profile),
+CHOICES log, 8d plan updates.
+
+**AWAITING REVIEW VERDICT (branches pushed, committed, DO NOT merge
+without the verdict):**
+- lane-62w (11f7c83): ALL 13 world hotfixes + guardian-anchor src fix.
+  Review was re-dispatched (misfire #8) — RE-DISPATCH FRESH on resume
+  (brief in this session's log; 6 trace priorities incl. the
+  board_renderer idle-fallback DP2 adjudication). THE MERGE HUB:
+  reconciles skeleton vs 5 later main merges; then full sweep + ALL
+  units + windowed reads (inn layout, village grade, guardian
+  adjacency) + batched push closing #62.
+- lane-66 (077d8f5): T3 tier retune. Review dispatched late — verdict
+  unknown; re-dispatch if absent.
+
+**WIP SNAPSHOTS (implementation incomplete — resume the lane agent's
+checklist, do NOT merge):**
+- lane-70 (Archer): seam + kit edits visible; canonical/harness
+  unverified. Spec = the binding comment on #70.
+- lane-8db (dungeon Phase B): biomes/moods/skeleton/sprites edits
+  visible; peek canonical unverified. Charter = plan doc Phase B.
+
+**RUNNING WORK LOST WITH SESSION (restart these):** the gap-analysis
+workflow (rerun: workflows/scripts/rpg-gap-analysis-wf_630d4e7b-296.js
+via Workflow scriptPath); Eloise char gen COMPLETE server-side (char
+717c7f2a — download zip, integrate per the Horns recipe); construct
+anims already integrated.
+
+**QUEUE after the hub merge:** voice-fix copy lane (#17 dispositions
+in the issue comment), #63 Eloise exec (profile+gen ready; Former
+Headman rename; witch scale), #65 witch-stone, #64 skill-gates lane,
+#72 (post-66), #73 scene-dynamism tool (spec in issue), 8d C/D.
+
 ## ⚖️ CHOICES LOG (ultracode deference directive, 2026-07-11) — FOR USER REVIEW
 
 Decisions I made under "don't block, record for review." Each reversible;
