@@ -1,5 +1,29 @@
 # Wandering Inn RPG Handoff
 
+## 🔬 GAP ANALYSIS LANDED (2026-07-11, ultracode workflow) — 37 confirmed → #74-#84
+
+51-agent workflow (8 dimension analysts → judge dedup/rank → per-gap
+adversarial verify vs repo+backlog+locks): 42 ranked, 37 CONFIRMED,
+3 REJECTED with evidence (autosave cadence = protection already
+adequate; consolidation-consequences = opaque-until-sleep lock
+violation; Invrisil-boulevard-sparse = stale census, #68 already
+densified it), 2 unverified (verifiers lost to the session reset;
+folded into batches anyway as small items).
+
+FILED (thematic batches, not 37 singles): #74 travel signposting (THE
+top gap — the user's own ruin hard-stall is its evidence; S, first),
+#75 combat readability (aim preview/damage numbers/connection/status
+marks/turn clarity), #76 audio identity, #77 settings+accessibility,
+#78 save/defeat UX, #79 journal+progression communication, #80 world
+reactivity (taste-gate on NPC presence scope), #81 exploration+
+optional content, #82 boss telegraphs (+[Dangersense] payoff — FEEDS
+8d C3), #83 enemy AI variety, #84 mouse menus (DISPATCHED as a lane
+immediately — free surface).
+
+CHOICES: batching over singles; #74 sequenced first post-hub (its
+dialogue files collide with the 62W merge); #82 explicitly coupled to
+the 8d construct so the boss ships WITH the telegraph language.
+
 ## 🔄 QUIESCENT STATE (2026-07-11, session limit) — RESUME MAP
 
 Main is GREEN and PUSHED (every merge swept; last composed re-gates
