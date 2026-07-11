@@ -209,6 +209,10 @@ func _build_expected_counts() -> Dictionary:
 	counts["ksmvr/walk"] = 6
 	counts["ksmvr/slice"] = 3
 
+	## Eloise the [Tea Witch] (#63; 148x148).
+	counts["eloise/idle"] = 4
+	counts["eloise/walk"] = 6
+
 	## The vault guardian construct (8d C3 boss; 220x220).
 	counts["vault_construct/idle"] = 4
 	counts["vault_construct/walk"] = 6

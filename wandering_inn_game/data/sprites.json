@@ -3620,5 +3620,37 @@
    0.709
   ],
   "shadow": true
+ },
+ "eloise": {
+  "_comment": "#63 canon pass: Eloise du Havin, [Tea Witch] (pro char 717c7f2a; wiki-verified profile in character-profiles.md — grey floral hat = the one wiki-sourced silhouette anchor; teacup prop + sage/mauve = flagged inventions-within-gap). Elderly-short: ~24px on-screen (figure 74px of 148). anchor feet-plane 109/148. REPLACES the oversize generic witch (playtest finding 19) — the skeleton swap lands with the #63 dialogue pass.",
+  "directional": true,
+  "render_scale": 0.324,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/eloise/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/eloise/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/eloise/Idle_Up-Sheet.png",
+    "frame_size": [
+     148,
+     148
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/eloise/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/eloise/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/eloise/Walk_Up-Sheet.png",
+    "frame_size": [
+     148,
+     148
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.736
+  ],
+  "shadow": true
  }
 }
