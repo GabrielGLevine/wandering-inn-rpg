@@ -243,7 +243,7 @@
 			"id": "tactician",
 			"display_name": "Tactician",
 			"stat_growth": { "int": 1 },
-			"gained_by": { "accomplishment": { "studied_the_cellar": 1 } },
+			"gained_by": { "accomplishment": { "chess_with_olesm": 1 } },
 			"aspiration": { "display_name": "Strategist", "text": "Those who learn to move armies as easily as pieces are one day named [Strategists]." },
 			"levels": [
 				{ "level": 1, "requires": {}, "grants": ["observe", "battlefield_awareness"] },

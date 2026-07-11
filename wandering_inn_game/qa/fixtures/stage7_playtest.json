@@ -50,7 +50,8 @@
    "visited_guild": 1,
    "visited_own_room": 1,
    "watch_runner_pointed": 1.0,
-   "won_combat": 4
+   "won_combat": 4,
+   "chess_with_olesm": 1
   },
   "actions_since_sleep": 0,
   "board_last_seen_times_slept": 0,

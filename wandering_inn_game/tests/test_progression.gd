@@ -48,7 +48,8 @@ func _init() -> void:
 	# The slice's guile path banks studied_the_cellar; the next sleep grants
 	# [Tactician], whose L1 kit spans pillars ([Appraise Foe] field + [Battlefield
 	# Awareness] combat). Levels then climb on observed_things (banked by [Appraise Foe]).
-	assert(WIProgression.check_class_gains({"warrior": 1}, {"studied_the_cellar": 1}, catalog) == ["tactician"], "met studied_the_cellar gained_by grants tactician")
+	assert(WIProgression.check_class_gains({"warrior": 1}, {"chess_with_olesm": 1}, catalog) == ["tactician"], "winning Olesm's chess match grants tactician (the class is earned at the board)")
+	assert(WIProgression.check_class_gains({"warrior": 1}, {"studied_the_cellar": 1}, catalog).is_empty(), "the cellar study no longer grants tactician (superseded driver)")
 	assert(WIProgression.check_class_gains({"warrior": 1, "tactician": 1}, {"studied_the_cellar": 1}, catalog).is_empty(), "already-held tactician is not re-gained")
 	assert(WIProgression.check_class_gains({"warrior": 1}, {"studied_the_cellar": 0}, catalog).is_empty(), "studied_the_cellar banked but below threshold = no gain")
 	var tactician_l1 := WIProgression.granted_skills({"tactician": 1}, catalog)

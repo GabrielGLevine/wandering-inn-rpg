@@ -34,7 +34,8 @@
    "cleared_the_warren": 1,
    "raskghar_sealed": 1,
    "post_game": 1,
-   "door_chain_started": 1
+   "door_chain_started": 1,
+   "chess_with_olesm": 1
   },
   "player_skills": [
    "basic_cleaning"

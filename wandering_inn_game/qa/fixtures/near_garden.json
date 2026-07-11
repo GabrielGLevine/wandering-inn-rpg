@@ -26,7 +26,8 @@
    "cisterns_reported": 1,
    "met_relc": 1,
    "watch_runner_pointed": 1,
-   "resolved_wrong_order": 1
+   "resolved_wrong_order": 1,
+   "chess_with_olesm": 1
   },
   "player_skills": [
    "basic_cleaning"

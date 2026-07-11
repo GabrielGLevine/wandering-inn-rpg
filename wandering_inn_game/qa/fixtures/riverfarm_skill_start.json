@@ -27,7 +27,8 @@
    "door_study_sleeps": 3,
    "door_awakened": 1,
    "riverfarm_attuned": 1,
-   "hunter_will_come": 1
+   "hunter_will_come": 1,
+   "chess_with_olesm": 1
   },
   "player_skills": [],
   "removed_entities": [],
