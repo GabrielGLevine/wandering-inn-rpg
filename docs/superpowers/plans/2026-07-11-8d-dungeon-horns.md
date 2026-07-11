@@ -5,11 +5,10 @@ authority). Issues: #14 (dungeon maps + traps + vault), #15 (Horns party
 content). One milestone, five phases; A runs background from day one.
 
 ## USER GATES (park in HANDOFF taste-queue; phases note their blocks)
-1. **Boss pick** (blocks C3 only): guardian construct vs Raskghar war
-   party. RECOMMENDATION: the construct — the spec's own read ("reads
-   more 'dungeon'"), it showcases the trap-identity (a trap that fights
-   back), and the Raskghar already had their arc beat (A2 descent);
-   a war party re-treads. War party's case: zero new art (rigs exist).
+1. **Boss pick: RATIFIED 2026-07-11 — GUARDIAN CONSTRUCT** (user, in
+   chat). C3 unblocked. Art rides Phase A (character-pro gen); combat
+   identity: a trap that fights back — slow, heavy, telegraphed AP
+   spikes, terrain interplay with the halls' trap classes.
 2. **Ksmvr sub-arm legibility**: same flag as Klbkch — the 4-arm read at
    sprite scale. The antinium_worker attempt-3 prompt kernel ("four-armed
    ant man: TWO PAIRS...") is the proven recipe; user eyeballs the result

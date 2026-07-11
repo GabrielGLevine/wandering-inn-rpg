@@ -52,12 +52,13 @@
   families, pixflux accents; candidates parked in potential_assets.
 
 **TASTE QUEUE (user):**
-1. 8d BOSS PICK (blocks C3 only): guardian construct (RECOMMENDED —
-   trap-that-fights-back fits the dungeon identity; Raskghar had their
-   arc beat) vs Raskghar war party (zero new art).
+1. ~~8d boss pick~~ RATIFIED 2026-07-11: GUARDIAN CONSTRUCT (C3 open).
 2. Klbkch sub-arm legibility at 1x (windowed shots in the repo) — same
    question will apply to Ksmvr (8d A2).
-3. #32-35 copy batch (one sitting), Old-Tower-Inn encode by ear.
+3. #68 Invrisil stage map (drafted in the issue) — approve/edit before
+   the rework dispatches.
+4. #63 Headman-vs-Laken framing (both options in the issue).
+5. #32-35 copy batch (one sitting).
 
 ## WAVES 2-3 LANDED (2026-07-11) — #51/#54/#56/#57 merged, sweep 83/83
 
