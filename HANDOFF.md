@@ -1,5 +1,37 @@
 # Wandering Inn RPG Handoff
 
+## SMALL QUEUE CLEARED + 8d OPENED (2026-07-11) — #59/#60 merged, sweep 83/83
+
+- **#59 dish seam MERGED** (opus MERGE; the two twin sim arms
+  adjudicated on merits after a disclosed STOP-bypass — process note:
+  brief STOP wording should pre-clear twin-of-existing-arm pairs):
+  hot_meal (structurally unsellable), cook-via-[Basic Cooking] grants,
+  Serve compound-gates {once_per_waking, item} + consumes; work_loop
+  proves the full loop incl. the second-dish-same-waking negative.
+- **#60 residue MERGED** (opus MERGE): journal combat-kit note +
+  first-combat hint (once per process launch, precedent-matched);
+  [Flame Jet] remembers its last confirmed direction per combat;
+  move-pool passives reveal via new PASSIVE_APPLIED -> used_skills
+  (PC-gated); sewers darkening confirmed ALREADY SHIPPED — windowed
+  read: the unlit/[Light] contrast finally lands. Finding 22's spider
+  sprite stays in VISUAL-LOG (art, controller).
+- Composition fix: hot_meal pinned in test_effect_text's exhaustive
+  table (each lane green alone, composed tree red — the K1xL1 class,
+  caught by the controller's all-units re-gate).
+- **8d OPENED**: plan committed (docs/superpowers/plans/
+  2026-07-11-8d-dungeon-horns.md, 5 phases, lane ownership).
+  /create-tileset EXPERIMENTS CONCLUDED (2 attempts): terrain-blend
+  semantics, weak 16px differentiation — base tiles come from licensed
+  families, pixflux accents; candidates parked in potential_assets.
+
+**TASTE QUEUE (user):**
+1. 8d BOSS PICK (blocks C3 only): guardian construct (RECOMMENDED —
+   trap-that-fights-back fits the dungeon identity; Raskghar had their
+   arc beat) vs Raskghar war party (zero new art).
+2. Klbkch sub-arm legibility at 1x (windowed shots in the repo) — same
+   question will apply to Ksmvr (8d A2).
+3. #32-35 copy batch (one sitting), Old-Tower-Inn encode by ear.
+
 ## WAVES 2-3 LANDED (2026-07-11) — #51/#54/#56/#57 merged, sweep 83/83
 
 Four parallel tracks, each opus-reviewed MERGE (56 zero-blocking, 54
