@@ -152,6 +152,7 @@ func _build_expected_counts() -> Dictionary:
 	## [Stealth] (`sneak`) code-drawn boot glyph
 	## (single-frame), same policy as every icon above.
 	counts["icon_sneak/idle"] = 1
+	counts["icon_invisibility/idle"] = 1
 
 	## Library/sewer/dummy statics (1-frame regions);
 	## royal_soldier single-facing battler idle 256/64 = 4;

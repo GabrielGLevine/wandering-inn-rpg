@@ -1116,6 +1116,19 @@
    }
   }
  },
+ "icon_invisibility": {
+  "_comment": "Hand-drawn 2-tone glyph (icon_sneak's exact palette): a figure dissolving at its right edge -- the second stealth verb gets its own icon instead of reusing [Stealth]'s boot.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_invisibility.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
  "hearth": {
   "render_scale": 0.5,
   "animations": {

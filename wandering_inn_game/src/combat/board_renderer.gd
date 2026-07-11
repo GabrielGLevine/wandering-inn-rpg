@@ -690,6 +690,17 @@ func set_visible(id: String, value: bool) -> void:
 		visual.visible = value
 
 
+## Whole-visual translucency (the combat twin of the field's sneak_visual
+## alpha) -- applied to the HOLDER's modulate, deliberately not the sprite's:
+## hit-flash tweens own `spr.modulate` (they tween back to opaque WHITE and
+## would silently erase a sprite-level alpha) and the legibility boost owns
+## `spr.self_modulate`; the holder layer composes above both untouched.
+func set_combatant_alpha(id: String, alpha: float) -> void:
+	var visual := visual_for(id)
+	if visual != null:
+		visual.modulate.a = alpha
+
+
 func play_anim(id: String, prefix: String, flip_h: Variant = null) -> void:
 	var spr := _sprite_for(id)
 	if spr == null or spr.sprite_frames == null:

@@ -484,6 +484,18 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 				_play_combatant_anim(downed_id, "death")
 			else:
 				_board_renderer.fade_chip(downed_id)
+		WIEvents.STATUS_APPLIED:
+			# The combat twin of the field's sneak_visual translucency:
+			# without this, an invisible combatant renders fully opaque and
+			# the whole read lives in feed text only (the "logically correct
+			# but never visible" class CLAUDE.md flags). Presentation keys on
+			# the status id -- per-status visuals are presentation data, same
+			# as `slowed`'s ice-cell paint.
+			if String(payload.get("status", "")) == "invisible":
+				_board_renderer.set_combatant_alpha(String(payload["id"]), 0.35)
+		WIEvents.STATUS_EXPIRED:
+			if String(payload.get("status", "")) == "invisible":
+				_board_renderer.set_combatant_alpha(String(payload["id"]), 1.0)
 		WIEvents.SKILL_RESOLVED:
 			var color: Color = ui.get("flash_color", Color.TRANSPARENT)
 			if color.a > 0.0:
