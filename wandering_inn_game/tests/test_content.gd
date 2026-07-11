@@ -674,6 +674,23 @@ func _validate_class_gains(classes: Dictionary, produced_accomplishments: Dictio
 ##       derived floor (not just >= it -- catches an author leaving a gap
 ##       between the true floor and the first entry, which (a)+(b) alone
 ##       would not catch since there'd be no entry AT the floor to be "below").
+##   (d) TOP-END (GH#61): for every consolidation target, the table's own MAX
+##       level is >= the merge formula's LARGEST possible output -- derived
+##       the same data-driven way as the floor, but from the OTHER end: both
+##       parent lines pushed to their own table max (never a literal), fed
+##       through the same WIProgression._consolidation_merged_level pinned
+##       formula the floor derivation and the real sim both use. A player who
+##       levels both parent lines to their real ceiling before consolidating
+##       is assigned the merged level directly (accept_consolidation, no
+##       counting-up walk to stop short at) -- if that level has no table
+##       entry, HP/MP growth and grants silently stop (GH#61's exact,
+##       non-crashing bug). Replacement targets have no such gap: a held
+##       level over `evolution.at_level` just carries straight across, and
+##       (b)'s contiguity rule already forces the target's table to cover
+##       every level up through the SOURCE class's own max (see e.g.
+##       swordsman/ice_mage's floor comments, "12, matching warrior's/mage's
+##       own max"). Consolidation is the only shape where TWO independent
+##       source ceilings compress through a formula that can overshoot both.
 func _validate_class_level_tables(classes: Dictionary) -> void:
 	var catalog_list: Array = classes.get("classes", [])
 
@@ -713,6 +730,11 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 			floor_candidates[target_id] = []
 		(floor_candidates[target_id] as Array).append(merged)
 
+	# id -> that class's OWN table max level (rule (d) reads this to derive
+	# each consolidation parent line's real ceiling below -- same
+	# never-hardcoded spirit as floor_candidates above).
+	var class_table_max: Dictionary = {}
+
 	for cls: Dictionary in catalog_list:
 		var id := String(cls["id"])
 		var levels: Array = cls.get("levels", [])
@@ -726,6 +748,7 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 			level_set[l] = true
 			max_level = maxi(max_level, l)
 			min_level = mini(min_level, l)
+		class_table_max[id] = max_level
 
 		var reqs: Dictionary = (cls.get("gained_by", {}) as Dictionary).get("accomplishment", {})
 		var has_gained_by := not reqs.is_empty()
@@ -745,6 +768,33 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 
 		if is_evolution_only:
 			assert(min_level == floor_level, "class %s (evolution-only, reachable only via Replacement/consolidation) must start EXACTLY at its derived floor %d, found its lowest authored entry at %d" % [id, floor_level, min_level])
+
+	# Rule (d), TOP-END reachability (GH#61): for each consolidation entry,
+	# the gate-legal maximum is BOTH parent lines held at their own table
+	# max (the same "push every knob to its ceiling" reading the floor
+	# derivation above uses at the OTHER end, min_parent_level/
+	# min_combined_level pushed to their minimum). A parent LINE's own
+	# ceiling is the highest table max across every id in that line (a
+	# player can hold any one of them -- base or evolved -- see
+	# `_held_line_candidate`'s own doc comment for why evolved ids remain
+	# valid parents).
+	for entry: Dictionary in classes.get("consolidations", []):
+		var target_id := String(entry.get("target", ""))
+		var lines: Array = entry.get("parent_lines", [])
+		if lines.size() != 2:
+			continue
+		var line_ceilings: Array = []
+		for line: Variant in lines:
+			var line_max := 0
+			for line_id: Variant in (line as Array):
+				line_max = maxi(line_max, int(class_table_max.get(String(line_id), 0)))
+			line_ceilings.append(line_max)
+		var merged_ceiling := WIProgression._consolidation_merged_level(int(line_ceilings[0]), int(line_ceilings[1]))
+		var target_max := int(class_table_max.get(target_id, 0))
+		assert(
+			target_max >= merged_ceiling,
+			"consolidation target %s table max %d cannot hold the merge formula's top-end %d (parent lines' own table maxes: %d, %d) -- a player who levels both parent lines to their real ceiling before consolidating is assigned a held level with no levels entry (HP/MP growth and grants silently stop, GH#61)" % [target_id, target_max, merged_ceiling, line_ceilings[0], line_ceilings[1]]
+		)
 
 
 func _validate_quests(quests: Dictionary, produced_accomplishments: Dictionary) -> void:
