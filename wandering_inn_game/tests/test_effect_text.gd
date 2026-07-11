@@ -48,6 +48,10 @@ const EXPECTED_ITEMS := {
 	"parcel_watch_dispatch": [],
 	"parcel_lamp_phials": [],
 	"parcel_bluefruit_hamper": [],
+	# The kitchen's dish (issue #59) -- same inert-carried shape as the
+	# parcels: no combat fields, deliberately NO price (structurally
+	# unsellable), so name + description only.
+	"hot_meal": [],
 	# Krshia's attunement catalyst (priced tool, no combat fields).
 	"resonant_catalyst": ["Worth 35 gold"],
 	# The beat-3 recovery item -- inert
