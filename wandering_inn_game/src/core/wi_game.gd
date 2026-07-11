@@ -1482,6 +1482,12 @@ func dialogue_choose(index: int) -> bool:
 			# build_delivery_picker_graph). Grants the parcel item too (see
 			# accept_delivery's own doc comment).
 			accept_delivery(String(effect["accept_delivery"]))
+		elif effect.has("sell_item"):
+			# Fired from WITHIN Krshia's sell picker's own options
+			# (see shop.gd's build_sell_graph) -- accept_bounty's exact twin:
+			# a SECOND dialogue_choose call, distinct from the one that opened
+			# the picker via open_sell_picker below.
+			sell_item(String(effect["sell_item"]))
 		elif effect.has("open_board_picker"):
 			# Fired from Selys's static hub option "Take on a
 			# posting." (selys_delivery.json). Deferred like start_combat's
@@ -1514,6 +1520,13 @@ func dialogue_choose(index: int) -> bool:
 			# (only visible once delivery_accepted is true). Same deferred-
 			# swap shape as open_board_turnin above.
 			pending_board_action = "delivery_turnin"
+		elif effect.has("open_sell_picker"):
+			# Fired from Krshia's static hub option (krshia_crate.json,
+			# "I've a few things I don't need. Buying?"). Same deferred-swap
+			# shape as open_board_picker above -- the hub option always ends
+			# its own conversation first, so the swap to the code-built sell
+			# graph never collides with walker.advance below.
+			pending_board_action = "sell_picker"
 	if not bool(result["ended"]):
 		walker.set_ctx(_build_dialogue_ctx())
 		walker.advance(String(result["next"]))
@@ -1530,6 +1543,8 @@ func dialogue_choose(index: int) -> bool:
 		_open_delivery_picker_dialogue()
 	elif pending_board_action == "delivery_turnin":
 		_open_delivery_turnin_dialogue()
+	elif pending_board_action == "sell_picker":
+		_open_sell_dialogue()
 	if pending_travel != "":
 		_travel_to_portal(pending_travel)
 	return true
@@ -1553,16 +1568,42 @@ func _bounty_by_id(id: String) -> Dictionary:
 ## The board's CURRENT active slate (2-3 postings), derived fresh every call
 ## from `times_slept` -- never stored, exactly the WIQuests/progression
 ## "derived, not stored" convention (see quests.gd's own doc comment).
+## RETIREMENT (user bug report, item D audit): a bounty carrying
+## `condition_mode: "absolute"` keys on a ONE-SHOT accomplishment that never
+## resets (found_phosphor_moss/found_spider_silk/cleared_sewer_vermin) --
+## once completed, its condition reads MET FOREVER with zero new player
+## action, so if it stayed in the rotation pool it could be re-accepted and
+## re-paid indefinitely every time the window cycled back to it. These 3
+## (bounty_sewer_survey/bounty_silk_line/bounty_vermin_grate) are filtered
+## out of the pool once `completed_bounty_<id>` banks. The other 6 (default
+## `condition_mode: "delta"`, keyed on ever-accumulating counters like
+## won_combat/heard_gossip/served_customer) are deliberately NOT retired --
+## completing one and having it rotate back is legitimate repeat work (the
+## delta-since-accept baseline makes a repeat cost real NEW actions each
+## time, exactly the design this file's own top _comment describes), not the
+## same exploit. Rotation runs over the FILTERED remaining pool (simplest
+## choice: the window can shift/shrink once the 3 retirable postings start
+## dropping out, same as the delivery board's own choice below -- acceptable,
+## disclosed).
 func board_bounties() -> Array:
-	return WIBounties.active_slate(_bounty_pool(), times_slept)
+	var remaining: Array = []
+	for bounty: Dictionary in _bounty_pool():
+		var one_shot := String(bounty.get("condition_mode", "delta")) == "absolute"
+		if one_shot and accomplishment_count("completed_bounty_%s" % String(bounty[WIKeys.ID])) >= 1:
+			continue
+		remaining.append(bounty)
+	return WIBounties.active_slate(remaining, times_slept)
 
 
 ## Accepts a posting from the CURRENT active slate. A no-op if the player
 ## already holds one (v1 simplification: one job at a time, matching Selys's
 ## hub option being hidden whenever `accepted_bounty_id` is non-empty -- this
-## guard is a defensive second line, not the primary gate) or if `id` doesn't
+## guard is a defensive second line, not the primary gate), if `id` doesn't
 ## resolve (can't happen from the real picker, which only ever offers ids
-## straight from `_bounty_pool()`). Snapshots a DELTA-SINCE-ACCEPT baseline
+## straight from `_bounty_pool()`), or if `id` is a retired one-shot posting
+## (defensive second line for `board_bounties()`'s own filter above -- the
+## real picker can never offer a retired id, since it's built from that same
+## filtered slate). Snapshots a DELTA-SINCE-ACCEPT baseline
 ## for every counter the condition reads (the staging doc's binding
 ## semantics) and banks `accepted_bounty_<id>` (a real accomplishment counter,
 ## per the plan's "ride existing machinery" scope) for QA/future-content
@@ -1577,6 +1618,8 @@ func accept_bounty(id: String) -> void:
 		return
 	var bounty := _bounty_by_id(id)
 	if bounty.is_empty():
+		return
+	if String(bounty.get("condition_mode", "delta")) == "absolute" and accomplishment_count("completed_bounty_%s" % id) >= 1:
 		return
 	accepted_bounty_id = id
 	if String(bounty.get("condition_mode", "delta")) == "absolute":
@@ -1740,9 +1783,30 @@ func _delivery_by_id(id: String) -> Dictionary:
 ## THE DELIVERY BOARD's current active slate (2-3 slips), derived fresh from
 ## `times_slept` via the SAME rotation function the request board uses
 ## (WIBounties.active_slate -- the whole point of riding DP2's machinery:
-## one rotation idiom, two pools, zero new derivation code).
+## one rotation idiom, two pools, zero new derivation code). RETIREMENT
+## (user bug report, item D): unlike the Request Board's mixed pool (most
+## postings are genuinely repeatable standing jobs), every slip in
+## data/deliveries.json is a specific NAMED one-off favor (a particular
+## bolt of wool, a particular parcel) -- there is no "repeatable delivery"
+## in this pool, so a completed one (`completed_delivery_<id>` banked)
+## RETIRES from the pool PERMANENTLY, unconditionally (no mode check like
+## board_bounties()' one-shot-vs-delta split -- deliveries have only one
+## shape). Without this, a completed slip re-entering the rotation window
+## could be re-accepted and re-paid forever for the SAME short, already-
+## walked route. Rotation runs over the FILTERED remaining pool (simplest
+## choice: `times_slept % remaining.size()` -- the window can shift/shrink
+## once a slip retires, acceptable and disclosed, matching the choice made
+## for board_bounties() above). An all-retired pool returns an empty slate,
+## same as an unconfigured one -- WIBounties.active_slate already handles
+## an empty input; build_delivery_picker_graph's own empty-slate branch
+## (see bounties.gd) is the new piece that keeps that state from rendering
+## as a bare, contentless picker.
 func delivery_board_deliveries() -> Array:
-	return WIBounties.active_slate(_delivery_pool(), times_slept)
+	var remaining: Array = []
+	for delivery: Dictionary in _delivery_pool():
+		if accomplishment_count("completed_delivery_%s" % String(delivery[WIKeys.ID])) < 1:
+			remaining.append(delivery)
+	return WIBounties.active_slate(remaining, times_slept)
 
 
 ## Accepts a slip from the CURRENT active slate: banks
@@ -1753,13 +1817,18 @@ func delivery_board_deliveries() -> Array:
 ## pickup's own ITEM_GAINED + "Got: <name>" toast are the player-visible
 ## confirmation the parcel is now in the pack). Guards mirror
 ## accept_bounty: no-op if a slip is already held (Vess's "Take a slip."
-## hub option is the primary gate, hidden while delivery_accepted) or if
-## the id doesn't resolve.
+## hub option is the primary gate, hidden while delivery_accepted), if
+## the id doesn't resolve, or if `id` is a retired (already-completed) slip
+## (defensive second line for `delivery_board_deliveries()`'s own filter
+## above -- the real picker can never offer a retired id, since it's built
+## from that same filtered slate).
 func accept_delivery(id: String) -> void:
 	if accepted_delivery_id != "":
 		return
 	var delivery := _delivery_by_id(id)
 	if delivery.is_empty():
+		return
+	if accomplishment_count("completed_delivery_%s" % id) >= 1:
 		return
 	accepted_delivery_id = id
 	var baseline: Dictionary = {}
@@ -1867,6 +1936,24 @@ func _open_delivery_picker_dialogue() -> void:
 func _open_delivery_turnin_dialogue() -> void:
 	var met := turn_in_delivery()
 	_begin_code_dialogue(WIBounties.build_delivery_turnin_graph(met), "delivery_turnin", "vess")
+
+
+## Opens Krshia's sell picker (fired by her hub's new "I've a few things I
+## don't need. Buying?" option, krshia_crate.json). Builds {id, name, price}
+## records fresh from the CURRENT sellable_items() every open (same
+## "code-built from live state" contract as _open_board_picker_dialogue --
+## a sale in one visit is never stale in the next) -- shop.gd's
+## build_sell_graph turns the plain records into the actual conversation.
+## Always opens (no board_accepted-style gate): an empty sellable list still
+## yields a valid graph (Krshia's own flavor line), so the hub option itself
+## needs no requires/hide_when either.
+func _open_sell_dialogue() -> void:
+	var records: Array = []
+	for raw_id: Variant in sellable_items():
+		var id := String(raw_id)
+		var rec := item(id)
+		records.append({"id": id, "name": String(rec.get("name", id)), "price": sell_price(int(rec.get(WIKeys.PRICE, 0)))})
+	_begin_code_dialogue(WIShop.build_sell_graph(records), "krshia_sell", "krshia")
 
 
 ## The portal catalog, injected the same
@@ -2273,6 +2360,85 @@ func remove_item(item_id: String, source_id: String) -> bool:
 			return false
 	inventory.erase(item_id)
 	_emit(WIEvents.ITEM_LOST, {"item": item_id, "source": source_id})
+	return true
+
+
+## The [Trader]/[Merchant] modifier seam (RATIFIED sell design, day-one
+## no-op): sums a `trade_bonus` float off every currently KNOWN skill's own
+## catalog record (skills.json) -- 0.0 today, since no shipped skill carries
+## the field, but a future entry (e.g. {"id": "trader_instinct",
+## "trade_bonus": 0.1}) needs zero code once known_skills() surfaces it.
+## Pure reader, no rng, no emit.
+func _trade_bonus() -> float:
+	var bonus := 0.0
+	for sk_id: Variant in known_skills():
+		bonus += float(skills.get(String(sk_id), {}).get("trade_bonus", 0.0))
+	return bonus
+
+
+## Krshia's buyback rate (RATIFIED): floor(worth * 0.5 * (1 + trade_bonus)),
+## `worth` being an item's own `price` field -- the SAME number
+## WIEffectText's "Worth N gold" card line already reads, no separate worth
+## concept invented for this. Pure arithmetic.
+func sell_price(worth: int) -> int:
+	return int(floor(float(worth) * 0.5 * (1.0 + _trade_bonus())))
+
+
+## The CURRENT sellable inventory, in `inventory` order -- shop.gd's
+## build_sell_graph's input (via `_open_sell_dialogue`'s record-building
+## below). Excludes: anything with no `price` field or a non-positive one
+## (starting/loot-only gear -- rusty_sword, crude_blade, chipped_spear,
+## solid_oak_spear, relcs_spare_spear, and every quest/flavor item that was
+## never priced to begin with -- anchor_stone, brothers_marker, every
+## parcel -- has no established worth, so Krshia has no basis to buy it
+## back either; this is the SAME "Worth N gold" card line's own absence,
+## not a new concept); anything flagged `unsellable` in items.json (the
+## quest-macguffin carve-out for an item that DOES carry a price --
+## resonant_catalyst, see its own items.json _comment); and anything
+## currently EQUIPPED in any of the 5 slots (the "refuse, don't
+## auto-unequip" rule implemented as "never offer it" -- an equipped item
+## simply isn't sellable inventory, so there's no invalid state for
+## sell_item to refuse from at confirm time).
+func sellable_items() -> Array:
+	var out: Array = []
+	for raw_id: Variant in inventory:
+		var id := String(raw_id)
+		var rec := item(id)
+		if rec.is_empty() or bool(rec.get("unsellable", false)):
+			continue
+		if int(rec.get(WIKeys.PRICE, 0)) <= 0:
+			continue
+		var equipped_here := false
+		for slot_name: String in equipped:
+			if String(equipped[slot_name]) == id:
+				equipped_here = true
+				break
+		if equipped_here:
+			continue
+		out.append(id)
+	return out
+
+
+## Resolves a Krshia buyback sale -- fired from WITHIN the sell picker's own
+## options (see shop.gd's build_sell_graph). Removes `item_id` from
+## inventory (via `remove_item` -- refuses on equipped/not-carried, pure
+## defense-in-depth: `sellable_items()` already excludes both cases, so a
+## real picker option can't reach that refusal) and pays out
+## `sell_price(worth)` through the shared `earn_gold` router (the same
+## gold_changed/toast machinery every other reward uses -- "Earned N gold."
+## fires here exactly like a bounty payout or loot gold). A no-op (false,
+## no state change) on an uncatalogued/unsellable/zero-worth item --
+## defensive; the real picker never offers one.
+func sell_item(item_id: String) -> bool:
+	var rec := item(item_id)
+	if rec.is_empty() or bool(rec.get("unsellable", false)):
+		return false
+	var worth := int(rec.get(WIKeys.PRICE, 0))
+	if worth <= 0:
+		return false
+	if not remove_item(item_id, "krshia_sell"):
+		return false
+	earn_gold(sell_price(worth), "krshia_sell")
 	return true
 
 

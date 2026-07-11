@@ -229,7 +229,16 @@ static func _delivery_issue_line(delivery: Dictionary) -> String:
 ## longer title is ever added. Selecting a slip accepts it via the
 ## `accept_delivery` dialogue effect (which also grants the parcel item)
 ## and lands on a per-slip confirmation node reading Vess's issue line.
+## Zero eligible slips (every delivery in the pool retired -- see
+## WIGame.delivery_board_deliveries()'s own doc comment, item D fix) still
+## returns a valid one-option graph: Vess's own flavor line, never the bare
+## "Slips on the board right now." header with nothing under it (the
+## pre-fix render for this state) -- same zero-eligible-item contract as
+## WIShop.build_sell_graph's empty-sellables branch / WIPortals.
+## build_portal_graph's "Let it be." fallback.
 static func build_delivery_picker_graph(slate: Array) -> Dictionary:
+	if slate.is_empty():
+		return {"start": "hub", "nodes": {"hub": {"speaker": "Vess", "text": "Nothing needs running today. Board's clear -- every leg's paid out and closed. Come back when something new goes up.", "options": [{"text": "Fair enough.", "end": true}]}}}
 	var nodes: Dictionary = {}
 	var options: Array = []
 	var body_lines: Array[String] = ["Slips on the board right now. Pick your leg:", ""]

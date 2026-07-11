@@ -380,6 +380,7 @@
 			"lore": "Warmage Thresk built more than doors, in the end. This one remembers being elsewhere, the same crude trick that woke somewhere it shouldn't have, once, in an inn far from here. Magical Door plan Task D1 (issue #8 spec §5.3): carried, never worn or sold; the beat-3 recovery target D3's chain consumes at the pedestal."
 		},
 		{
+			"_comment_unsellable": "Krshia sell mechanic: the only item in this catalog that needs the explicit flag -- it carries a `price` (so it WOULD otherwise leak into WIGame.sellable_items()'s priced-item filter) but its own lore line above already says 'never sold onward'. anchor_stone/brothers_marker/every parcel need no flag (no `price` field at all -- sellable_items() excludes them structurally, same as every other unpriced loot/quest item).",
 			"id": "resonant_catalyst",
 			"name": "Resonant Catalyst",
 			"kind": "tool",
@@ -391,6 +392,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"price": 35,
+			"unsellable": true,
 			"description": "A sliver of worked amber-glass, humming faintly against the palm, wrapped in oiled cloth from under Krshia's counter.",
 			"lore": "Magical Door plan Task D3 (issue #8 spec §5.3, 'ruin + Krshia ONLY' attunement components): a Silverfang trade-route find, sold to the rare customer who asks the right way and pays the whole price without haggling. Krshia doesn't know what it's for. She knows it's worth what she charges for it. Carried, never worn or sold onward; the beat-3 recovery target D3's chain consumes alongside the anchor stone."
 		},

@@ -1,5 +1,5 @@
 {
- "_comment": "Canonical proof: The whole coin arc in one run: (1) CHORE EARN -- clean dirty_table in the inn (Earned 1 gold + gold_changed), open the I panel to prove the D3 coin line shows 'Gold: 1' in its ui_inventory_shown payload; (2) cross the mandatory floodplains ambush (Relc-allied) to the street -- a LOOT-GOLD FIGHT (goblin_encounter_1 drops gold 2 at seed 9, D2's isolated-RNG verdict) -> gold 3; (3) KRSHIA BUY ATTEMPT WHILE BROKE -- open the stall at 3 gold, every buy option greys (the charm's own 'costs 5 gold' lock proves the affordability-negative surface honestly in the dialogue_node options payload); (4) EARN TO PRICE via a second loot-gold fight, crate_scavengers (gold 2 at seed 9) -> gold 5; (5) SUCCESSFUL BUY -- the charm now ungreyed, buy it (Paid 5 gold + item_gained{traveler_charm} + gold_changed decrement) -> gold 0; (6) I PANEL open, payload gold asserted (0, proving the spend decrement reached the coin line). Geography note: gold is inn-only earn while Krshia + loot fights are street-only, separated by a corridor-free (warrior-gated) ambush, so the loot fights double as the crossing + the earn-to-price; the ambush loot is genuinely won before Krshia is reachable. LOOT gold is isolated by the CLI --seed (=9), fight OUTCOMES by the fixture rng_state (=9) -- both fights won at that state. Seed 9, fixture rng governs the fights.",
+ "_comment": "Canonical proof: The whole coin arc in one run: (1) CHORE EARN -- clean dirty_table in the inn (Earned 1 gold + gold_changed), open the I panel to prove the D3 coin line shows 'Gold: 1' in its ui_inventory_shown payload; (2) cross the mandatory floodplains ambush (Relc-allied) to the street -- a LOOT-GOLD FIGHT (goblin_encounter_1 drops gold 2 at seed 9, D2's isolated-RNG verdict) -> gold 3; (3) KRSHIA BUY ATTEMPT WHILE BROKE -- open the stall at 3 gold, every buy option greys (the charm's own 'costs 5 gold' lock proves the affordability-negative surface honestly in the dialogue_node options payload); (4) EARN TO PRICE via a second loot-gold fight, crate_scavengers (gold 2 at seed 9) -> gold 5; (5) SUCCESSFUL BUY -- the charm now ungreyed, buy it (Paid 5 gold + item_gained{traveler_charm} + gold_changed decrement) -> gold 0; (6) I PANEL open, payload gold asserted (0, proving the spend decrement reached the coin line); (7) KRSHIA BUYBACK (the ratified sell mechanic) -- her hub's new always-visible sell option opens WIShop.build_sell_graph's picker, built fresh from the CURRENT sellable inventory: only the just-bought traveler_charm qualifies (rusty_sword/relcs_spare_spear carry no price field, so they never show -- unpriced loot/starter gear has no established worth to buy back), sell it for floor(5 * 0.5) = 2 gold (item_lost + gold_changed + the standard earn toast, then Krshia's fixed sell reaction); (8) I PANEL again, pack back to the ORIGINAL 2-item pair and gold 2 -- proves the sale's removal + payout both reached the coin line. Geography note: gold is inn-only earn while Krshia + loot fights are street-only, separated by a corridor-free (warrior-gated) ambush, so the loot fights double as the crossing + the earn-to-price; the ambush loot is genuinely won before Krshia is reachable. LOOT gold is isolated by the CLI --seed (=9), fight OUTCOMES by the fixture rng_state (=9) -- both fights won at that state. Seed 9, fixture rng governs the fights.",
  "fixture_save": "economy_loop_start",
  "starts_at_title": true,
  "steps": [
@@ -777,6 +777,160 @@
   {
    "action": "screenshot",
    "name": "06_inventory_gold_0"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== (7) KRSHIA BUYBACK == still at (13,3), same waking (pool already spent, interact opens the graph directly, same as step 5's reopen). Hub layout unchanged since step 5 (found_the_crate:1, crate_returned:0): visible options [0] 'I'll look into it.', [1] \"Your crate's accounted for.\", [2] 'What's on the stall today?', [3] 'Just visiting.', [4] the new sell entry (appended last, so none of the earlier four shift). Down 4, confirm.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "The sell picker (WIShop.build_sell_graph) opens fresh from the CURRENT sellable_items(): only traveler_charm (price 5) qualifies -- rusty_sword/relcs_spare_spear carry no price field at all (never established worth, unsellable by construction, not a new flag). Option posts the rate: floor(5 * 0.5) = 2 gold. Full options array pinned (test_driver array match is size-exact, same convention as the shop node above).",
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_sell",
+    "entity": "krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "Hrr. Let me see what you're carrying.",
+    "options": [
+     {
+      "text": "Sell: Traveler's Charm. (+2 gold)",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Never mind.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "07_sell_picker"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "sell_item's own resolution order: remove_item (item_lost) THEN earn_gold (gold_changed + the standard 'Earned N gold.' toast -- the same router every other reward rides) -- both BEFORE the goto advances into the shared 'sold' reaction node.",
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "traveler_charm",
+    "source": "krshia_sell"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "payload_contains": {
+    "delta": 2,
+    "total": 2,
+    "source": "krshia_sell"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Earned 2 gold."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "Hrr. Half its worth, paid straight -- I don't forget a fair trade any more than an unfair one. Sold."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "08_sold"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== (8) I PANEL, post-sale == pack back down to 2 items (the charm sold off, back to the ORIGINAL start-of-run pair) and gold 2 (paid by the sale) -- proves the removal + payout both reached the panel. item_effect_lines parallel to [rusty_sword, relcs_spare_spear], byte-identical to step (1)'s own pre-charm pin.",
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {
+    "items": 2,
+    "gold": 2,
+    "item_effect_lines": [
+     [],
+     [
+      "+1 damage on melee hits"
+     ]
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "09_inventory_post_sale"
   },
   {
    "action": "press",

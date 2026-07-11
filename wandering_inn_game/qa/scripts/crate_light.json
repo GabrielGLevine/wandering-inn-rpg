@@ -797,7 +797,7 @@
    "name": "confirm"
   },
   {
-   "_comment": "OPACITY TEETH: at the hub with asked_about_crate banked but studied_the_cellar NOT yet, the guile report option is genuinely absent (exact-length array match). Krshia's hub also carries an ALWAYS-visible shop-entry option ('Hrr — what's on the stall today?', unlocked -- no gold gate on the nav option itself), so the exact array is now [shop-entry, Just visiting] -- both unlocked. The buy options' gold-greying lives one node deeper (the 'shop' node), not here.",
+   "_comment": "OPACITY TEETH: at the hub with asked_about_crate banked but studied_the_cellar NOT yet, the guile report option is genuinely absent (exact-length array match). Krshia's hub also carries an ALWAYS-visible shop-entry option ('Hrr — what's on the stall today?', unlocked -- no gold gate on the nav option itself) and, since the ratified sell mechanic, an ALWAYS-visible sell-entry option too (appended last, krshia_crate.json), so the exact array is now [shop-entry, Just visiting, sell-entry] -- all unlocked. The buy options' gold-greying lives one node deeper (the 'shop' node), not here.",
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
@@ -810,6 +810,11 @@
      },
      {
       "text": "Just visiting.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I've a few things I don't need. Buying?",
       "locked": false,
       "requirement": ""
      }
