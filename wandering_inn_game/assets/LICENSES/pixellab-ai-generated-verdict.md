@@ -258,3 +258,11 @@ Same PixelLab-ToS ownership / redistributability as everything above.
 
 Same PixelLab-ToS ownership / redistributability as everything above.
 | `assets/sprites/stairs_up/Idle-Sheet.png` | `stairs_up` (interior-staircase door affordance; first use: the inn's upstairs door — plain `door` sprite read as just another room, playtest finding 8) | v1 `/generate-image-pixflux` 64×64, low top-down, first-try pass. Static, 1 frame. `render_scale: 0.5`. Cost 1. |
+
+## Item-icon batch (2026-07-10, inventory panel corner)
+`assets/icons/items/<item_id>.png` — 25 icons, one per data/items.json
+entry, PATH-BY-CONVENTION (no per-item data field; the inventory panel
+derives the path from the item id and falls back gracefully when a
+future item ships before its icon). v1 `/generate-image-pixflux` 32×32,
+no_background, single-object-centered prompts. Cost 25.
+Same PixelLab-ToS ownership / redistributability as everything above.
