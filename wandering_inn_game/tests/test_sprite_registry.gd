@@ -209,6 +209,11 @@ func _build_expected_counts() -> Dictionary:
 	counts["ksmvr/walk"] = 6
 	counts["ksmvr/slice"] = 3
 
+	## The vault guardian construct (8d C3 boss; 220x220).
+	counts["vault_construct/idle"] = 4
+	counts["vault_construct/walk"] = 6
+	counts["vault_construct/slice"] = 3
+
 	## Antinium Worker (ambient extra rig, idle-only by design; 116x116).
 	counts["antinium_worker/idle"] = 4
 

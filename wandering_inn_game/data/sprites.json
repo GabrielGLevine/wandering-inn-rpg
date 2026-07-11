@@ -3578,5 +3578,47 @@
    0.719
   ],
   "shadow": true
+ },
+ "vault_construct": {
+  "_comment": "8d C3 boss (RATIFIED: guardian construct). Pro char 367edfed v2 ('headless, chest rune-eye, full-frame' -- v1 head-clipped, parked). Figure 90px of 220; render_scale targets ~40px on-screen (boss presence, sub-Relc-arena-sprawl -- C3 sets combat_scale per the contained-bar rule when the combatant entry lands). anchor feet-plane 156/220. Slow fps by design: a trap that fights back moves like architecture.",
+  "directional": true,
+  "render_scale": 0.444,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/vault_construct/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/vault_construct/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/vault_construct/Idle_Up-Sheet.png",
+    "frame_size": [
+     220,
+     220
+    ],
+    "fps": 5
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/vault_construct/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/vault_construct/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/vault_construct/Walk_Up-Sheet.png",
+    "frame_size": [
+     220,
+     220
+    ],
+    "fps": 6
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/vault_construct/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/vault_construct/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/vault_construct/Slice_Up-Sheet.png",
+    "frame_size": [
+     220,
+     220
+    ],
+    "fps": 7
+   }
+  },
+  "anchor": [
+   0.5,
+   0.709
+  ],
+  "shadow": true
  }
 }
