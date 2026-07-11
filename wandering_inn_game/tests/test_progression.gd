@@ -104,19 +104,23 @@ func _init() -> void:
 
 	# requires_any (spellsword): a level is met when EITHER counter reaches
 	# its threshold — canon "levels via either parent's counters" (spec §2.5).
-	var sw_melee := WIProgression.check_level_ups({"spellsword": 1}, {"melee_hit": 3}, catalog)
-	assert(sw_melee.size() == 1 and sw_melee[0]["level"] == 2, "spellsword L2 via the melee arm")
-	var sw_spell := WIProgression.check_level_ups({"spellsword": 1}, {"spell_cast": 2}, catalog)
-	assert(sw_spell.size() == 1 and sw_spell[0]["level"] == 2, "spellsword L2 via the spell arm")
-	assert(WIProgression.check_level_ups({"spellsword": 1}, {"melee_hit": 2, "spell_cast": 1}, catalog).is_empty(), "neither arm met = no level (requires_any is not vacuously true)")
-	var sw_mixed := WIProgression.check_level_ups({"spellsword": 1}, {"melee_hit": 3, "spell_cast": 4}, catalog)
-	assert(sw_mixed.size() == 2 and int(sw_mixed[1]["level"]) == 3, "each level may be met by a DIFFERENT arm (L2 melee, L3 spell)")
-	assert((sw_mixed[0]["grants"] as Array).is_empty(), "spellsword L2 grants nothing (keener_edge is L1)")
+	# GH#54 SPARSE TABLE: spellsword's table now starts at its real floor (9,
+	# the minimum merge level — see the class's own `_comment`), so these
+	# probe from held=9 (L10/L11 thresholds) rather than the old held=1 (L2/L3)
+	# — level 1-8 entries no longer exist, held=1 would find no L2 to walk to.
+	var sw_melee := WIProgression.check_level_ups({"spellsword": 9}, {"melee_hit": 57}, catalog)
+	assert(sw_melee.size() == 1 and sw_melee[0]["level"] == 10, "spellsword L10 via the melee arm")
+	var sw_spell := WIProgression.check_level_ups({"spellsword": 9}, {"spell_cast": 45}, catalog)
+	assert(sw_spell.size() == 1 and sw_spell[0]["level"] == 10, "spellsword L10 via the spell arm")
+	assert(WIProgression.check_level_ups({"spellsword": 9}, {"melee_hit": 56, "spell_cast": 44}, catalog).is_empty(), "neither arm met = no level (requires_any is not vacuously true)")
+	var sw_mixed := WIProgression.check_level_ups({"spellsword": 9}, {"melee_hit": 57, "spell_cast": 54}, catalog)
+	assert(sw_mixed.size() == 2 and int(sw_mixed[1]["level"]) == 11, "each level may be met by a DIFFERENT arm (L10 melee, L11 spell)")
+	assert((sw_mixed[0]["grants"] as Array).is_empty(), "spellsword L10 grants nothing (keener_edge migrated to the L9 floor entry)")
 
 	# --- granted_skills resolves `inherits` (spec §2.6 ⟦B5⟧) ---
 	# (a) held Swordsman 10 yields the warrior grants it grew out of PLUS its
-	# own swordsman grants (swordsman's own levels 1-9 grant nothing; L10
-	# grants quick_slash/flash_cut).
+	# own swordsman grants (swordsman's own table starts at its floor, L10;
+	# L10 itself grants quick_slash/flash_cut).
 	var swordsman10 := WIProgression.granted_skills({"swordsman": 10}, catalog)
 	for sk: String in ["basic_swordwork", "tough_body", "power_strike", "piercing_strikes", "counter_strike", "battle_momentum", "quick_movement", "second_wind", "dangersense"]:
 		assert(swordsman10.has(sk), "swordsman 10 inherits warrior grant %s" % sk)
@@ -124,10 +128,12 @@ func _init() -> void:
 	assert(not swordsman10.has("frost_bolt"), "swordsman does not inherit mage")
 
 	# (b) held Spellsword yields warrior ∪ mage ∪ its own (multi-parent inherits).
-	var spellsword1 := WIProgression.granted_skills({"spellsword": 1}, catalog)
-	assert(spellsword1.has("basic_swordwork"), "spellsword 1 inherits warrior L1")
-	assert(spellsword1.has("frost_bolt") and spellsword1.has("quick_cast") and spellsword1.has("light"), "spellsword 1 inherits mage L1")
-	assert(spellsword1.has("keener_edge"), "spellsword 1 keeps its own L1 grant")
+	# GH#54: probed at held=9 (spellsword's real floor) — keener_edge now lives
+	# on the L9 floor entry, not a since-removed L1.
+	var spellsword9 := WIProgression.granted_skills({"spellsword": 9}, catalog)
+	assert(spellsword9.has("basic_swordwork"), "spellsword 9 inherits warrior L1")
+	assert(spellsword9.has("frost_bolt") and spellsword9.has("quick_cast") and spellsword9.has("light"), "spellsword 9 inherits mage L1")
+	assert(spellsword9.has("keener_edge"), "spellsword 9 keeps its own signature grant (migrated to the floor entry)")
 
 	# (c) a hand-built cyclic catalog terminates and returns a finite set —
 	# never infinite-loops, never crashes.
