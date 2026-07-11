@@ -165,6 +165,20 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			return "glaze a %d×%d patch of ground at range %d for %d rounds" % [
 				side, side, int(effect.get(WIKeys.RANGE, 0)), int(effect.get(WIKeys.DURATION_ROUNDS, 0)),
 			]
+		"blast_damage":
+			# WIRED -- WISkillEffects.resolve_active gained a real blast_damage
+			# resolver (skill_effects.gd's `_resolve_blast_damage`, the icy_floor
+			# area-derivation reused for instant damage instead of terrain/status).
+			# `radius` derives the blast's side length exactly like icy_floor's
+			# phrase above (a radius-R square spans 2R+1 cells); the die is the
+			# CASTER's weapon_die, same honest source as spell_damage's phrase.
+			# The trailing sentence is literal, not a `_status_suffix` verb (this
+			# effect applies no status) -- spelled out here since friendly fire on
+			# an AoE is the one property a player must not have to infer.
+			var blast_side := int(effect.get(WIKeys.RADIUS, 0)) * 2 + 1
+			return "blast a %d×%d area around the target for 1d%d. Hits friend and foe." % [
+				blast_side, blast_side, _caster_weapon_die(combatants_catalog),
+			]
 		"move_pool_bonus":
 			# UN-SUPPRESSED for an actively-cast skill
 			# (ap_cost > 0) -- skill_effects.gd's `resolve_active` wires a

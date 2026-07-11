@@ -76,8 +76,10 @@ const MULT := "mult"
 const RANGE := "range"
 const LENGTH := "length"
 const APPLIES := "applies"
-## The effect's blast radius (Chebyshev cells
-## around the target) and how many rounds a cast cell stays icy.
+## The effect's blast radius (Chebyshev cells around the target -- shared by
+## icy_floor's terrain blast and blast_damage's instant-damage blast, see
+## skill_effects.gd's `_radius_area`) and how many rounds a cast cell stays
+## icy (icy_floor only -- blast_damage writes no duration).
 const RADIUS := "radius"
 const DURATION_ROUNDS := "duration_rounds"
 

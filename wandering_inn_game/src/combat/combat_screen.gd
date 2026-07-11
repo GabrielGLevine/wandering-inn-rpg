@@ -581,13 +581,18 @@ func _skill_flash_color(skill_id: String) -> Color:
 	# icy_floor's SKILL_RESOLVED carries the same "cells" payload shape
 	# as line_damage, so it rides the exact same _skill_flash_cells payload.has("cells")
 	# branch below with zero changes there -- only the eligible-type gate and
-	# color pick need to widen.
-	if not (effect_type in ["spell_damage", "line_damage", "icy_floor"]):
+	# color pick need to widen. blast_damage (GH#71) shares that same "cells"
+	# shape too (skill_effects.gd's `_resolve_blast_damage` emits it verbatim
+	# from `_radius_area`), so it rides the identical branch.
+	if not (effect_type in ["spell_damage", "line_damage", "icy_floor", "blast_damage"]):
 		return Color.TRANSPARENT
 	# Only two elements exist today (frost/flame); anything not frost-prefixed
 	# defaults to the flame flash. Revisit this binary split when a third
 	# element is added. icy_floor is ice-element but doesn't share the
 	# "frost_*" id prefix (frost_bolt/frost_touch), so it's checked explicitly.
+	# blast_damage's shipped skill (flame_pillar) is fire-element and DOES
+	# match the flame prefix convention already ("flame_"), so it needs no
+	# equivalent explicit carve-out -- falls through to FLAME_FLASH below.
 	if skill_id.begins_with("frost") or effect_type == "icy_floor":
 		return FROST_FLASH
 	return FLAME_FLASH

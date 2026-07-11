@@ -109,7 +109,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Fire Mage] is Replacement-only (never gained_by), the fire-dominant twin of [Ice Mage] above -- same floor derivation (mage's evolution.at_level == 10) and same reasoning applies verbatim.",
+			"_comment": "SPARSE TABLE (GH#54): [Fire Mage] is Replacement-only (never gained_by), the fire-dominant twin of [Ice Mage] above -- same floor derivation (mage's evolution.at_level == 10) and same reasoning applies verbatim. GH#71: L11's `fire_cast:30` rung already existed with an empty grants list (padding within the existing 10-12 sparse-table window, not a new floor/ceiling) -- [Flame Pillar] (the first blast_damage grant) lands there, a full level after the L10 evolution kit, matching the mage line's own second-wave-utility precedent ([Invisibility] at mage L5, a midpoint rung, not the L1/L2 opening waves). BALANCE NEUTRALITY: AI never selects blast_damage (combat_ai.gd only ever picks line_damage/spell_damage) and PC autoplay is melee-profile (never casts any spell, see CLAUDE.md Gotchas) -- `sim_combat_batch.gd` BUILDS never assign `fire_mage` directly (only bare `mage`) either, so this grant is structurally unreachable by the harness; batch run byte-identical before/after, verified per-task (the invisibility precedent).",
 			"id": "fire_mage",
 			"display_name": "Fire Mage",
 			"stat_growth": { "int": 1 },
@@ -117,7 +117,7 @@
 			"aspiration": { "display_name": "Pyromancer", "text": "Fire obeys many mages. It answers only a [Pyromancer]." },
 			"levels": [
 				{ "level": 10, "requires": { "spell_cast": 45 }, "grants": ["flame_scythe", "flare_burst"] },
-				{ "level": 11, "requires": { "fire_cast": 30 }, "grants": [] },
+				{ "level": 11, "requires": { "fire_cast": 30 }, "grants": ["flame_pillar"] },
 				{ "level": 12, "requires": { "fire_cast": 40 }, "grants": [] }
 			]
 		},

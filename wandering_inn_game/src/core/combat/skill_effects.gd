@@ -88,6 +88,8 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 			return true
 		"icy_floor":
 			return _resolve_icy_floor(combat, actor_id, a, target_id, skill, effect)
+		"blast_damage":
+			return _resolve_blast_damage(combat, actor_id, a, target_id, skill, effect)
 	return false
 
 
@@ -225,7 +227,7 @@ static func _resolve_icy_floor(combat: WICombat, actor_id: String, a: Dictionary
 		return false
 	combat.spend_skill_costs(a, skill)
 	var center: Vector2i = combat.combatants[target_id][WIKeys.CELL]
-	var cells := _icy_floor_area(combat, center, int(effect.get(WIKeys.RADIUS, 0)))
+	var cells := _radius_area(combat, center, int(effect.get(WIKeys.RADIUS, 0)))
 	var applies: Dictionary = effect.get(WIKeys.APPLIES, {})
 	var expires_after := combat.round_number + int(effect.get(WIKeys.DURATION_ROUNDS, 0)) - 1
 	var occupant_by_cell: Dictionary = {}
@@ -245,11 +247,73 @@ static func _resolve_icy_floor(combat: WICombat, actor_id: String, a: Dictionary
 	return true
 
 
-## The icy_floor blast area: every cell within Chebyshev `radius` of `center`
-## (the TARGET's cell), clipped to grid bounds, excluding `blocked` cells.
-## Sorted x-then-y for determinism (SKILL_RESOLVED's cells, TERRAIN_ADDED's
-## cells, and the terrain dict's iteration order all trace back to this).
-static func _icy_floor_area(combat: WICombat, center: Vector2i, radius: int) -> Array[Vector2i]:
+## Flame Pillar (GH#71): instant blast damage, no terrain/status writes. Gates
+## BEFORE spend, mirroring icy_floor/spell_damage exactly (range then LoS --
+## a refused cast costs neither AP nor MP). `target_id` must already be a
+## living ENEMY (the same-side gate in `resolve_active`, above, enforces that
+## before this is ever reached) -- the area itself is derived FROM that
+## target's cell (icy_floor's own dodge of a new cell-targeting mode), so the
+## existing enemy-cycling targeting UI needs no changes. Area = `_radius_area`
+## (the exact icy_floor Chebyshev-radius/wall-exclusion derivation, shared
+## verbatim -- see that function's doc comment for the wall-shadow contract),
+## then every LIVING occupant of the area is hit regardless of side
+## [D: friendly fire is real, including the caster's own cell when it lands
+## in the blast -- same deliberate rule icy_floor documents], reusing
+## _resolve_line_damage's multi-hit application shape (no riposte eligibility,
+## sorted hit_ids, stop early if the fight ends mid-resolution). No rng
+## consumption in the AREA derivation itself (only the per-hit damage rolls,
+## same as every other damage effect) -- deterministic blast shape, real
+## random damage.
+static func _resolve_blast_damage(combat: WICombat, actor_id: String, a: Dictionary, target_id: String, skill: Dictionary, effect: Dictionary) -> bool:
+	if combat.chebyshev(actor_id, target_id) > int(effect[WIKeys.RANGE]):
+		return false
+	if not combat.has_los(actor_id, target_id):
+		combat._emit(WIEvents.ACTION_REFUSED, {"actor": actor_id, "reason": "no_los", "target": target_id})
+		return false
+	combat.spend_skill_costs(a, skill)
+	var center: Vector2i = combat.combatants[target_id][WIKeys.CELL]
+	var cells := _radius_area(combat, center, int(effect.get(WIKeys.RADIUS, 0)))
+	var hit_ids: Array = []
+	for id: String in combat.combatants:
+		if not bool(combat.combatants[id][WIKeys.ALIVE]):
+			continue
+		if (combat.combatants[id][WIKeys.CELL] as Vector2i) in cells:
+			hit_ids.append(id)
+	hit_ids.sort()
+	var cells_payload: Array = []
+	for cell: Vector2i in cells:
+		cells_payload.append([cell.x, cell.y])
+	combat._emit(WIEvents.SKILL_RESOLVED, {
+		"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": target_id,
+		"cells": cells_payload, "hit_ids": hit_ids,
+	})
+	for id: String in hit_ids:
+		if not bool(combat.combatants[id][WIKeys.ALIVE]):
+			continue  # an earlier hit in this same blast may have already downed them
+		combat._resolve_hit(actor_id, id, 1.0, false, false)
+		if combat.finished:
+			return true
+	return true
+
+
+## Shared Chebyshev-radius area derivation (icy_floor GH#21 + blast_damage
+## GH#71): every cell within `radius` of `center` (the TARGET's cell), clipped
+## to grid bounds, excluding `blocked` cells. WALL-SHAPE CONTRACT (documented
+## here so a future radius change doesn't silently drift the two area effects
+## apart): this is a flat radius clip, NOT shadow-casting -- a wall cell
+## itself is never a member of the set, but a cell simply BEYOND a wall (still
+## within `radius` of `center`, itself unblocked) gets no separate occlusion
+## check and stays in the set. At the shipped radius (1, both callers) this
+## distinction never surfaces -- every candidate cell is directly adjacent to
+## `center`, so "beyond a wall" cannot occur without the wall cell itself
+## being the only thing between them. A future skill widening `radius` past 1
+## would need a real occlusion pass if "wall-shadowed" is meant literally;
+## until then, icy_floor's terrain shape and blast_damage's hit shape stay
+## visually/mechanically identical by construction (same function, same
+## clip). Sorted x-then-y for determinism (SKILL_RESOLVED's cells,
+## TERRAIN_ADDED's cells, and the terrain dict's iteration order all trace
+## back to this).
+static func _radius_area(combat: WICombat, center: Vector2i, radius: int) -> Array[Vector2i]:
 	var cells: Array[Vector2i] = []
 	for dx in range(-radius, radius + 1):
 		for dy in range(-radius, radius + 1):
