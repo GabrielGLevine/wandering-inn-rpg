@@ -101,6 +101,9 @@ static func status_line(status_id: String, skills_catalog: Array = []) -> String
 		"slowed":
 			var penalty := _slowed_penalty(skills_catalog)
 			return "Slowed — moves %d fewer cells next turn (min 1)." % penalty
+		"invisible":
+			var duration := _invisibility_duration(skills_catalog)
+			return "Invisible — enemies can't choose you as a target; breaks if you deal damage, or fades after %d rounds." % duration
 	return ""
 
 
@@ -200,6 +203,15 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			return "Spend MP to absorb incoming damage."
 		"quick_cast":
 			return "Your first spell each turn costs 1 less AP."
+		"invisibility":
+			# WIRED -- WISkillEffects.resolve_active
+			# gained a real invisibility resolver (a self-cast untargetable
+			# status; see its doc comment). `duration_rounds` is the only
+			# number this phrase reads (visible-currency: rounds); the
+			# `applies.invisible.untargetable` rider carries no player-facing
+			# number of its own, so no `_status_suffix` verb is needed here --
+			# the phrase already says everything the card promises.
+			return "become impossible to target for %d rounds (breaks if you deal damage)" % int(effect.get(WIKeys.DURATION_ROUNDS, 0))
 	return ""
 
 
@@ -227,6 +239,22 @@ static func _slowed_penalty(skills_catalog: Array) -> int:
 		if applies.has("slowed"):
 			return int((applies["slowed"] as Dictionary).get("pool_penalty", 2))
 	return 2
+
+
+## Reads invisibility's `duration_rounds` from the skills catalog (the first
+## skill whose effect.type is "invisibility" -- mirrors `_slowed_penalty`'s
+## derive-from-where-it's-defined idiom). Falls back to the shipped file when
+## no catalog is injected, and to 3 only if the catalog holds no invisibility
+## skill at all (keeps the glossary from emitting a nonsense 0).
+static func _invisibility_duration(skills_catalog: Array) -> int:
+	var catalog := skills_catalog
+	if catalog.is_empty():
+		catalog = _load_skills()
+	for skill: Dictionary in catalog:
+		var effect: Dictionary = skill.get(WIKeys.EFFECT, {})
+		if String(effect.get(WIKeys.TYPE, "")) == "invisibility":
+			return int(effect.get(WIKeys.DURATION_ROUNDS, 3))
+	return 3
 
 
 static func _load_skills() -> Array:

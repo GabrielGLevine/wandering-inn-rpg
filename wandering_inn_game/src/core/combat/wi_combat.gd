@@ -521,6 +521,14 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 	})
 	if not hit:
 		return
+	# [Invisibility]'s break-on-damage rule: dealing damage (any attack or
+	# damaging skill -- every one of them routes through this single
+	# `_resolve_hit` choke point, melee or spell or line alike) clears the
+	# ATTACKER's own untargetable status. Keyed on the flag, not this
+	# combatant's held skills, so it fires identically for a riposte
+	# counter-attack (the recursive `_resolve_hit` call below, attacker_id
+	# swapped to the riposter) as for a normal turn action.
+	_break_untargetable_statuses(attacker_id)
 	_post_damage(target_id, attacker_id)
 	if finished:
 		return
@@ -531,6 +539,21 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 		var riposte_mult := float(skills["counter_strike"][WIKeys.EFFECT][WIKeys.MULT])
 		_emit(WIEvents.REACTION_TRIGGERED, {"id": target_id, "skill": "counter_strike"})
 		_resolve_hit(target_id, attacker_id, riposte_mult, true, false)
+
+
+## Clears any status on `id` carrying `untargetable: true` (today only
+## invisibility's `invisible` entry) and emits STATUS_EXPIRED per cleared
+## entry -- the break-on-damage half of the untargetable contract (the
+## natural-expiry half lives in `_purge_expired_statuses` below). DATA-DRIVEN:
+## reads the flag off whatever is in `statuses`, never checks a skill id or
+## the status name "invisible" specifically, so any future status reusing
+## this flag breaks on damage for free.
+func _break_untargetable_statuses(id: String) -> void:
+	var statuses: Dictionary = combatants[id]["statuses"]
+	for status_id: String in statuses.keys():
+		if bool((statuses[status_id] as Dictionary).get("untargetable", false)):
+			statuses.erase(status_id)
+			_emit(WIEvents.STATUS_EXPIRED, {"id": id, "status": status_id})
 
 
 func _on_kill(killer_id: String) -> void:
@@ -564,6 +587,7 @@ func _advance_turn() -> void:
 				return
 			_emit(WIEvents.ROUND_STARTED, {"round": round_number})
 			_purge_expired_terrain()
+			_purge_expired_statuses()
 		if combatants[get_active()][WIKeys.ALIVE]:
 			_start_turn()
 			return
@@ -672,6 +696,29 @@ func _purge_expired_terrain() -> void:
 		for cell: Vector2i in cells:
 			cells_payload.append([cell.x, cell.y])
 		_emit(WIEvents.TERRAIN_EXPIRED, {"kind": kind, "cells": cells_payload})
+
+
+## The per-COMBATANT counterpart of `_purge_expired_terrain` above, called
+## from the SAME round-rollover site: removes any status entry carrying an
+## `expires_after_round` that has passed. This is a GENERIC, opt-in mechanism
+## -- only a status entry that itself stamps `expires_after_round` (today,
+## invisibility's `invisible`, set by WISkillEffects._resolve_invisibility)
+## is ever touched here. Every pre-existing per-unit status (`slowed`, from
+## frost_bolt/icy_floor's hit-applied `applies` dict) carries NO such key, so
+## this purge is a guaranteed no-op for every fight that never casts
+## invisibility -- `slowed` keeps expiring exactly as before, via
+## `_start_turn`'s own dedicated consume-block, untouched by this function.
+## Iterates combatant ids in sorted order for deterministic event ordering.
+func _purge_expired_statuses() -> void:
+	var ids := combatants.keys()
+	ids.sort()
+	for id: String in ids:
+		var statuses: Dictionary = combatants[id]["statuses"]
+		for status_id: String in statuses.keys():
+			var entry: Dictionary = statuses[status_id]
+			if entry.has("expires_after_round") and int(entry["expires_after_round"]) < round_number:
+				statuses.erase(status_id)
+				_emit(WIEvents.STATUS_EXPIRED, {"id": id, "status": status_id})
 
 
 ## Deterministic cell ordering (x then y) shared by every terrain payload

@@ -1,0 +1,41 @@
+{
+ "_comment": "Issue #46 canonical fixture for invisibility_combat_loop: [Invisibility]'s COMBAT read, a solo-PC proof. classes {mage:5} FIXTURE-SET DIRECTLY (mage L1-L5 grants: frost_bolt/quick_cast/light, flame_jet/mana_shield, invisibility -- same fixture-set-the-level idiom as near_mage_invisibility/near_ice_floor, classes.json's own level table is the grant source). Positioned identically to near_mage_invisibility/near_ambush_sneak: floodplains (30,16) facing down, six open steps north of goblin_encounter_1 (30,23) -- but `met_relc` is DELIBERATELY ABSENT (0), unlike near_mage_invisibility: goblin_encounter_1's `ally_requires: {met_relc: 1}` (skeleton_scene.json) only fields Relc once that accomplishment is banked, so this fixture walks into the ambush SOLO -- pc is the sole player-side combatant, giving both `goblin_raider` (melee) and `goblin_shaman` (ranged/caster) exactly ONE possible target each, the deterministic 'exactly one valid target' shape the AI-exclusion proof needs (a fielded ally would give the AI a second, non-invisible target to fall back on and mask the exclusion). rng_state derived via tests/_derive_rng_state.gd from seed 9 (repo convention, matches near_mage_invisibility's own state) -- verified live: the pc's own post-break Attack (hit_chance 85 + 0 hit_bonus - goblin_raider dex(9)/4 = 83%) lands, and at least one enemy action resolves against pc on the following enemy turn.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   30,
+   16
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "mage": 5
+  },
+  "accomplishments": {
+   "learned_magic_from_pisces": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "seen_statuses": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

@@ -8,6 +8,18 @@ extends RefCounted
 const DIRS: Array[Vector2i] = [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]
 
 
+## Data-driven AI-targeting exclusion: true iff `id` currently holds ANY
+## status carrying `untargetable: true` -- never a skill-id or status-name
+## check, so any future status reusing the flag (not just invisibility's
+## `invisible`) is excluded for free with zero new AI code.
+static func _is_untargetable(combat: WICombat, id: String) -> bool:
+	var statuses: Dictionary = combat.combatants[id].get("statuses", {})
+	for status_id: String in statuses:
+		if bool((statuses[status_id] as Dictionary).get("untargetable", false)):
+			return true
+	return false
+
+
 static func take_turn(combat: WICombat) -> void:
 	var id := combat.get_active()
 	var guard := 0
@@ -31,7 +43,16 @@ static func _act_once(combat: WICombat, id: String) -> bool:
 	var profile := String(c.get(WIKeys.AI, ""))
 	if profile == "":
 		profile = "melee"
-	var foes: Array = combat.alive_enemies_of(id)
+	# [Invisibility]'s AI-exclusion contract: a foe holding an
+	# `untargetable`-flagged status (today only invisibility's `invisible`,
+	# see skill_effects.gd's `_resolve_invisibility`) can never be PICKED as a
+	# target by any single-target act path below. Filtered here, once, before
+	# profile dispatch -- an invisible sole foe makes `foes` empty, which
+	# already falls through to `return false` exactly like "no living enemy
+	# at all" (this turn does nothing, same as today's empty-foes case).
+	var foes: Array = combat.alive_enemies_of(id).filter(
+		func(foe: String) -> bool: return not _is_untargetable(combat, foe)
+	)
 	if foes.is_empty():
 		return false
 	match profile:
@@ -160,7 +181,14 @@ static func _act_line(combat: WICombat, id: String, c: Dictionary, line_id: Stri
 				continue
 			if String(other[WIKeys.SIDE]) == side:
 				hits_ally = true
-			else:
+			elif not _is_untargetable(combat, other_id):
+				# An untargetable (invisible) occupant does not COUNT toward
+				# the multi-hit gate -- canon ruling: area effects don't
+				# respect invisibility, so if the line is cast anyway (via
+				# other qualifying occupants) `WISkillEffects._resolve_line_
+				# damage` still hits every occupied cell unconditionally,
+				# invisible or not. This branch only affects whether the AI
+				# CHOOSES to cast, never what the resolver actually hits.
 				enemies_hit += 1
 		if enemies_hit >= 2 and not hits_ally:
 			return combat.use_skill(line_id, String(token_by_dir[dir]))

@@ -456,6 +456,12 @@
    "seed": 9,
    "fixture": "near_invrisil_fight",
    "note": "8c Task C3 (issue #13) 'A Gentleman's Disagreement' FIGHT path -> EXPOSE fork: the come-along ask LIVE (Wilovan's hub -> ways -> fists_door -> 'Come with me.' banks wilovan_will_fight, this lane's own new ally-gate wiring) -- win the hired_blades warehouse fight with Wilovan fielded as the gated ally (banks forced_confession) -- confront Coyle via the post-fight hub entry, proving `cornered`'s own forced_confession 'beaten register' text_variant -- EXPOSE, report, quest_completed + safe-passage reward -- the only one of the 3 scripts fielding a real combat ally"
+  },
+  {
+   "script": "invisibility_combat_loop",
+   "seed": 9,
+   "fixture": "near_invisibility_combat",
+   "note": "Issue #46: [Invisibility]'s combat read -- self-cast untargetable status live, solo pc vs goblin_raider/goblin_shaman (no ally, exactly one valid target): enemy turn passes without targeting the invisible pc, pc's own Attack breaks it, the next enemy turn can target pc again"
   }
  ]
 }

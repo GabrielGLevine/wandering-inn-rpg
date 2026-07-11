@@ -87,12 +87,11 @@ const EXPECTED_SKILLS := {
 	# 0, still no resolver, still SUPPRESSED) -- see effect_text.gd's own
 	# comment on the ap_cost gate for why the two don't get un-suppressed too.
 	"sneak": ["1 AP — +2 move cells this turn"],
-	# [Invisibility] is FIELD-ONLY (no `ap_cost`/`effect`,
-	# no combat context -- see the skill's own _comment). `_effect_phrase`
-	# reads only those two keys, sees neither, and returns "" same as
-	# frost_touch/kindle above -- the honest no-combat-effect card, NOT a
-	# suppressed-fake line for a promise this skill doesn't keep.
-	"invisibility": [],
+	# WIRED -- [Invisibility]'s combat read
+	# (a self-cast untargetable status; see skill_effects.gd's
+	# `_resolve_invisibility` and skills.json's own _comment). The field-only
+	# seam this skill also carries (`sneaks: true`) is completely unaffected.
+	"invisibility": ["1 AP, 3 MP — become impossible to target for 3 rounds (breaks if you deal damage)"],
 	# WIRED -- wi_combat.gd's `_start_turn` gained a real
 	# `_move_pool_bonus_total` passive consumer for the two PRE-EXISTING
 	# 0-cost move_pool_bonus skills (quick_movement, battlefield_awareness
@@ -207,6 +206,11 @@ func _test_status_exact() -> void:
 		"slowed glossary line: got %s" % WIEffectText.status_line("slowed")
 	)
 	_check(WIEffectText.status_line("nonexistent") == "", "unknown status yields empty string")
+	# Single-arg form reads the SHIPPED skills.json duration_rounds (currently 3).
+	_check(
+		WIEffectText.status_line("invisible") == "Invisible — enemies can't choose you as a target; breaks if you deal damage, or fades after 3 rounds.",
+		"invisible glossary line: got %s" % WIEffectText.status_line("invisible")
+	)
 
 
 func _test_tripwires() -> void:
@@ -253,6 +257,21 @@ func _test_tripwires() -> void:
 		WIEffectText.status_line("slowed", catalog) == "Slowed — moves 5 fewer cells next turn (min 1).",
 		"status tripwire: penalty follows the catalog"
 	)
+	var inv_skill := {"ap_cost": 1, "mp_cost": 3, "effect": {"type": "invisibility", "duration_rounds": 3}}
+	_check(
+		WIEffectText.skill_effect_lines(inv_skill) == ["1 AP, 3 MP — become impossible to target for 3 rounds (breaks if you deal damage)"],
+		"invisibility tripwire base"
+	)
+	inv_skill["effect"]["duration_rounds"] = 5
+	_check(
+		WIEffectText.skill_effect_lines(inv_skill) == ["1 AP, 3 MP — become impossible to target for 5 rounds (breaks if you deal damage)"],
+		"invisibility tripwire: duration_rounds moves"
+	)
+	var inv_catalog := [{"id": "x", "effect": {"type": "invisibility", "duration_rounds": 7}}]
+	_check(
+		WIEffectText.status_line("invisible", inv_catalog) == "Invisible — enemies can't choose you as a target; breaks if you deal damage, or fades after 7 rounds.",
+		"invisible status tripwire: duration follows the catalog"
+	)
 
 
 func _test_forbidden_vocab() -> void:
@@ -264,6 +283,7 @@ func _test_forbidden_vocab() -> void:
 	for skill: Dictionary in _load("res://data/skills.json")["skills"]:
 		lines.append_array(WIEffectText.skill_effect_lines(skill))
 	lines.append(WIEffectText.status_line("slowed"))
+	lines.append(WIEffectText.status_line("invisible"))
 	for line: String in lines:
 		_check(attr.search(line) == null, "forbidden attribute token in generated line: %s" % line)
 		_check(not line.contains("%"), "forbidden percent-toward token in generated line: %s" % line)

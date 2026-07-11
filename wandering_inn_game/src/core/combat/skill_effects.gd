@@ -40,6 +40,12 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 	# refusing exactly as `test_sim_core.gd`'s g18 block already pins.
 	if effect_type == "move_pool_bonus" and int(skill.get(WIKeys.AP_COST, 0)) > 0:
 		return _resolve_move_pool_bonus(combat, actor_id, a, skill, effect)
+	# [Invisibility]'s combat read: another SELF-targeted
+	# grant, dispatched early exactly like move_pool_bonus above -- a self-cast
+	# status has no enemy/adjacency/LoS concept either. See _resolve_invisibility's
+	# own doc comment for the untargetable-flag contract.
+	if effect_type == "invisibility":
+		return _resolve_invisibility(combat, actor_id, a, skill, effect)
 	var t: Dictionary = combat.combatants.get(target_id, {})
 	if t.is_empty() or not t.get(WIKeys.ALIVE, false):
 		return false
@@ -99,6 +105,33 @@ static func _resolve_move_pool_bonus(combat: WICombat, actor_id: String, a: Dict
 	combat.spend_skill_costs(a, skill)
 	a[WIKeys.MOVE_POOL] = int(a[WIKeys.MOVE_POOL]) + int(effect.get(WIKeys.AMOUNT, 0))
 	combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": actor_id})
+	return true
+
+
+## [Invisibility]'s combat read (controller canon ruling): applies every
+## status in `effect.applies` (today just `invisible: {untargetable: true}`)
+## onto the ACTOR's OWN statuses, stamping each entry's `expires_after_round`
+## from `effect.duration_rounds` -- the icy_floor terrain idiom (`combat.
+## round_number + duration_rounds - 1`), reused here per-COMBATANT instead of
+## per-cell; `WICombat._purge_expired_statuses` is the generic round-rollover
+## consumer (mirrors `_purge_expired_terrain`). `untargetable` is the ONLY key
+## any consumer reads: combat_ai.gd's foe-filter and `_act_line`'s enemies_hit
+## gate, and wi_combat.gd's break-on-damage in `_resolve_hit` -- none key on
+## this skill's id or the `invisible` status name, so a future status reusing
+## the flag gets the same AI-exclusion/break-on-damage for free. No enemy, no
+## adjacency, no LoS -- a self-buff has none of those concepts (mirrors
+## _resolve_move_pool_bonus exactly).
+static func _resolve_invisibility(combat: WICombat, actor_id: String, a: Dictionary, skill: Dictionary, effect: Dictionary) -> bool:
+	combat.spend_skill_costs(a, skill)
+	combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": actor_id})
+	var expires_after := combat.round_number + int(effect.get(WIKeys.DURATION_ROUNDS, 0)) - 1
+	var applies: Dictionary = effect.get(WIKeys.APPLIES, {})
+	var statuses: Dictionary = a["statuses"]
+	for status_id: String in applies:
+		var entry: Dictionary = (applies[status_id] as Dictionary).duplicate(true)
+		entry["expires_after_round"] = expires_after
+		statuses[status_id] = entry
+		combat._emit(WIEvents.STATUS_APPLIED, {"id": actor_id, "status": status_id})
 	return true
 
 
