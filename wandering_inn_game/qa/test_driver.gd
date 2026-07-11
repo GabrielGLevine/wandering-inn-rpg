@@ -42,6 +42,10 @@ const ACTION_KEYS := {
 	"end_turn": KEY_E,
 }
 const SCREENSHOT_SETTLE_SECONDS := 0.15
+## Same 16px grid every render file (world.gd/board_renderer.gd/
+## combat_screen.gd) keeps its own copy of -- the `click` step's cell-center
+## math needs it too.
+const CELL := 16
 
 var _script_path := ""
 var _out_dir := ""
@@ -211,6 +215,48 @@ func _execute(step: Dictionary) -> void:
 				_inject_action("move_" + String(step["direction"]))
 				await get_tree().process_frame
 				await get_tree().process_frame
+		"click":
+			# World-cell click (issue #57): converts the cell to a screen
+			# position via `Main.world_to_screen` -- the SAME forward
+			# transform `Main.screen_to_world` (the feature's own click
+			# handler) inverts -- so this exercises the real transform chain,
+			# not a parallel hardcoded approximation. Clicks the cell's
+			# CENTER (where a player's cursor naturally lands), not a corner.
+			var cell := Vector2i(int(step["cell"][0]), int(step["cell"][1]))
+			var world_pos := Vector2(cell) * float(CELL) + Vector2(CELL, CELL) * 0.5
+			var screen_pos: Variant = _world_to_screen(world_pos)
+			if screen_pos == null:
+				_fail("click: could not resolve Main.world_to_screen")
+			else:
+				_inject_mouse_click(screen_pos as Vector2)
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_screen":
+			# Raw window-space click (issue #57) -- bypasses the cell->screen
+			# math entirely, for a script that wants to click an exact pixel
+			# (e.g. a UI element the world-cell form can't address).
+			var pos := Vector2(float(step["pos"][0]), float(step["pos"][1]))
+			_inject_mouse_click(pos)
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_slot":
+			# Hotbar slot click (issue #57): resolves the REAL on-screen slot
+			# rect at click time via `WIHotbar.slot_rect` (#58) -- field or
+			# combat bar, whichever is currently live -- never a hardcoded
+			# slot pixel offset, so a chrome/layout change can't silently
+			# desync this from what a player would actually click.
+			var slot_n := int(step["slot"])
+			var hb := _resolve_hotbar_node()
+			if hb == null:
+				_fail("click_slot: no live hotbar node found")
+			else:
+				var rect: Rect2 = hb.call("slot_rect", slot_n - 1)
+				if rect.size == Vector2.ZERO:
+					_fail("click_slot: slot %d has no rendered rect" % slot_n)
+				else:
+					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"move_diag":
 			# A genuine simultaneous-key-hold diagonal, through the REAL input
 			# pipeline -- world.gd's
@@ -342,6 +388,61 @@ func _inject_diag(a: String, b: String) -> void:
 	release_b.keycode = key_b
 	release_b.pressed = false
 	Input.parse_input_event(release_b)
+
+
+## Resolves `Main` and calls its `world_to_screen` (the forward transform;
+## `click`'s only consumer) -- returns null if Main isn't found rather than
+## crashing, so a mis-timed click step fails loud via `_fail` instead.
+func _world_to_screen(world_pos: Vector2) -> Variant:
+	var main := get_tree().root.find_child("Main", true, false)
+	if main == null or not main.has_method("world_to_screen"):
+		return null
+	return main.call("world_to_screen", world_pos)
+
+
+## Finds whichever hotbar is currently live -- combat's (while a fight is
+## up) or the field's (otherwise) -- for `click_slot`'s real-geometry lookup.
+## Both `combat_screen.gd` and `field_hotbar.gd` expose the SAME
+## `hotbar_node()` accessor name on purpose, so this doesn't need to know
+## which one it's calling.
+func _resolve_hotbar_node() -> Node:
+	var screen_name := "CombatScreen" if Game.sim.combat != null else "FieldHotbar"
+	var owner_node := get_tree().root.find_child(screen_name, true, false)
+	if owner_node == null or not owner_node.has_method("hotbar_node"):
+		return null
+	return owner_node.call("hotbar_node")
+
+
+## Real InputEventMouseButton press+release at `pos`, in the ROOT viewport's
+## own LOCAL/design coordinate space (1280x720, matching `Main.
+## world_to_screen`'s output and `WIHotbar.slot_rect`'s `global_position`
+## exactly) -- pushed straight into that viewport via `push_input(...,
+## true)`, NOT `Input.parse_input_event`. TRAP found empirically: `Input.
+## parse_input_event` treats the position as raw OS/physical-window pixels
+## and Godot re-applies the window's stretch/DPI transform on top before any
+## Control sees it -- under headless, that transform is NOT the identity
+## (confirmed via a throwaway debug probe: an injected (480,328) arrived at
+## Controls as roughly (9600,6280), a ~20x mismatch), so a design-space
+## position fed through parse_input_event lands nowhere near the intended
+## Control. `push_input(event, true)` bypasses that second transform
+## entirely -- still the real GUI-input pipeline (`_gui_input`/mouse_filter
+## hit-testing all apply normally), just injected at the viewport level
+## instead of the OS/DisplayServer level, exactly as `Input.parse_input_event`
+## already does for physical keyboard events (which have no such transform to
+## dodge).
+func _inject_mouse_click(pos: Vector2) -> void:
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.position = pos
+	press.global_position = pos
+	get_tree().root.push_input(press, true)
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.pressed = false
+	release.position = pos
+	release.global_position = pos
+	get_tree().root.push_input(release, true)
 
 
 ## Inject a single printable character as a real key event (unicode

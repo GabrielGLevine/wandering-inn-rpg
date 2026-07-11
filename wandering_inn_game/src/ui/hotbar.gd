@@ -46,11 +46,50 @@ const UNAFFORDABLE_MODULATE := Color(0.55, 0.55, 0.55, 1.0)
 const AP_PIP_COLOR := Color(0.05, 0.05, 0.05)
 const MP_DIAMOND_COLOR := Color(0.1, 0.2, 0.6)
 
+## Issue #57: a left-click on a rendered slot activates it EXACTLY as its
+## number key -- callers (field_hotbar.gd/combat_screen.gd, via combat_hud.gd)
+## connect this and route it into the SAME dispatch a number-key press
+## already uses (`use_skill_field`/`_activate_bar_slot`), so there is only
+## ever one activation path, click or key. `index` is 0-based, matching
+## `render()`'s child order (and `slot_rect`'s existing convention).
+signal slot_clicked(index: int)
+
 
 func _ready() -> void:
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# STOP (not the repo-wide panel-chrome IGNORE default): this bar is now a
+	# real clickable widget, and its own rect must swallow a click over ANY
+	# slot OR the gaps between them -- a click landing in a gap must not leak
+	# through to a world/board click underneath the bar's footprint (mouse_filter
+	# audit, issue #57). Every child slot Control stays IGNORE (see `_make_slot`)
+	# so a click always bottoms out here rather than being claimed by chrome.
+	mouse_filter = Control.MOUSE_FILTER_STOP
 	UIChrome.apply_theme(self)
 	set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+
+
+## Left-click dispatch: resolves which slot (if any) the click landed on and
+## emits `slot_clicked`. Motion/other mouse events and right/middle clicks are
+## ignored -- this bar has no hover/secondary-click behavior.
+func _gui_input(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	var idx := _slot_index_at(mb.position)
+	if idx >= 0:
+		slot_clicked.emit(idx)
+	accept_event()
+
+
+## Which child slot (0-based) contains `local_pos`, or -1 -- children are
+## added in `render()`'s slot order, matching `slot_rect`'s own indexing.
+func _slot_index_at(local_pos: Vector2) -> int:
+	for i in get_child_count():
+		var child := get_child(i) as Control
+		if child != null and Rect2(child.position, child.size).has_point(local_pos):
+			return i
+	return -1
 
 
 ## Rebuilds the bar from scratch every call -- slot counts are small (<=9)

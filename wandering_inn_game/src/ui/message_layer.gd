@@ -266,6 +266,11 @@ func _ready() -> void:
 	_toast_layer.add_child(toast_root)
 
 	_toast_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
+	# STOP (mouse-filter audit, issue #57): overrides `make_chrome_panel`'s own
+	# IGNORE default -- a click on the toast strip while it is showing must
+	# not leak through to a world click-to-walk/interact underneath it.
+	# `.hide()`/`.show()` below already gate this Control's own visibility.
+	_toast_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	(_toast_panel.get_child(0) as NinePatchRect).patch_margin_bottom = STRIP_FOLD_PATCH_BOTTOM
 	_toast_panel.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	# 448 wide x 96 tall base size (fits up to ~2 wrapped lines cleanly).
@@ -289,6 +294,10 @@ func _ready() -> void:
 	toast_root.add_child(_toast_panel)
 
 	_dialogue_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
+	# STOP (mouse-filter audit, issue #57): see `_toast_panel`'s identical fix
+	# just above -- this is the field NPC-bark strip (distinct from the real
+	# conversation UI in dialogue_panel.gd, which has its own audited `_root`).
+	_dialogue_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	(_dialogue_panel.get_child(0) as NinePatchRect).patch_margin_bottom = STRIP_FOLD_PATCH_BOTTOM
 	_dialogue_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_dialogue_panel.hide()

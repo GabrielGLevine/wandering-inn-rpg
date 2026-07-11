@@ -181,6 +181,17 @@ var _field_hotbar: Node
 ## here (not on `_field_hotbar`) for the same "screen owns selection, hotbar
 ## only renders" split combat's `_bar_index` already follows.
 var _field_slot_index := -1
+## Click-to-walk (issue #57): the remaining ABSOLUTE cells still to step
+## through, cell 0 == the NEXT step (excludes the player's current cell).
+## Empty == no path in flight. Populated by `handle_world_click`'s ground/
+## approach-cell branches; consumed one cell per `_advance_click_path` call
+## via a REAL `Game.sim.move_player` (never a teleport -- trigger radii/
+## actions_since_sleep/sneak checks all fire per step, same as a held key).
+## Cleared (not recomputed -- v1) by: any keyboard/pad press
+## (`_unhandled_input`'s top-of-function check), `_movement_gated()` becoming
+## true mid-path (combat/dialogue/pause/journal/inventory), a step the sim
+## refuses (something moved into the way), and a map rebuild.
+var _click_path: Array = []
 ## The WIMain host, injected downward at spawn.
 ## world.gd no longer calls `world_labels()` itself (field labels
 ## retired) -- kept for architectural symmetry with the other injected UI
@@ -278,6 +289,11 @@ func inject_ui_refs(journal: Node, pause_menu: Node, inventory: Node, main: WIMa
 	# opening the pause menu first (it sits later in Main's child order).
 	if _pause_menu != null:
 		_pause_menu.world_ref = self
+	# Issue #57: a hotbar SLOT CLICK routes through the exact same
+	# `_activate_field_slot` helper the number-key branch below calls -- one
+	# dispatch, click or key.
+	if _field_hotbar != null:
+		_field_hotbar.slot_activate_requested.connect(_activate_field_slot)
 
 
 func _wire_ui_refs() -> void:
@@ -344,6 +360,21 @@ func _movement_gated() -> bool:
 ## exactly as this comment describes. `move_left`/`move_right` share no
 ## button with anything pad-side, so no analogous trap applies to them.
 func _unhandled_input(event: InputEvent) -> void:
+	# CLICK-PATH CANCEL (issue #57): "keyboard wins" -- ANY fresh keyboard/pad
+	# press cancels an in-flight click-to-walk path outright, checked BEFORE
+	# `_movement_gated()` so a press that opens the pause menu/journal/
+	# inventory (Esc/J/I, none of which this function otherwise matches)
+	# still clears the path, not just a move/interact/hotbar key. Does not
+	# consume the event -- whatever the press would otherwise do still
+	# happens via the branches below (a movement key both cancels AND moves
+	# in the same keystroke, which is the intended "keyboard wins" feel).
+	# Echoes (OS key-repeat) and mouse events are excluded -- a held key's
+	# repeat firing every frame would be a harmless no-op here anyway (the
+	# path is already empty by the second repeat), and mouse clicks are
+	# routed through `handle_world_click` below, never through this function.
+	if not _click_path.is_empty() and event.is_pressed() and not event.is_echo() \
+			and not (event is InputEventMouseButton or event is InputEventMouseMotion):
+		_click_path.clear()
 	if _movement_gated():
 		return
 	if event.is_action_pressed("confirm") and _field_slot_index >= 0:
@@ -433,16 +464,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		# unhandled (harmless), never swallowed.
 		var slot := _field_hotbar_slot_pressed(event)
 		if slot > 0 and _field_hotbar != null:
-			# One-shot consistency (issue #58): a direct number-key press
-			# bypasses the primed cursor entirely (it targets ITS OWN slot,
-			# not `_field_slot_index`), but it should still clear a LEFTOVER
-			# primed selection so a later confirm/Tab doesn't act on a stale
-			# highlight the player has already moved past.
-			if _field_slot_index >= 0:
-				_disarm_field_slot()
-			var skill_id := String(_field_hotbar.skill_for_slot(slot))
-			if skill_id != "":
-				Game.sim.use_skill_field(skill_id)
+			# `_activate_field_slot` is the ONE dispatch (issue #57): a slot
+			# CLICK (`slot_activate_requested`, connected in `inject_ui_refs`)
+			# calls the exact same helper. Read whether it WILL fire before
+			# calling it, purely to preserve this branch's own
+			# "mark input handled only on a real fire" contract -- a stripped/
+			# empty slot must stay unhandled, same as before this refactor.
+			var will_fire := String(_field_hotbar.skill_for_slot(slot)) != ""
+			_activate_field_slot(slot)
+			if will_fire:
 				get_viewport().set_input_as_handled()
 
 
@@ -506,6 +536,35 @@ func _disarm_field_slot() -> void:
 		_field_hotbar.set_selected(-1)
 
 
+## THE one field-hotbar activation dispatch (issue #57): fires slot `n`
+## (1-based) exactly as its number key would -- disarms a Tab-primed cursor
+## first (one-shot consistency, matching the number-key branch's own
+## comment), then calls `use_skill_field` if a real skill occupies the slot.
+## Two callers: the number-key branch in `_unhandled_input` above, and
+## `_field_hotbar.slot_activate_requested` (a rendered slot's mouse click,
+## connected in `inject_ui_refs`) -- click or key, there is only ever this
+## one call site into `Game.sim.use_skill_field`.
+func _activate_field_slot(slot: int) -> void:
+	if slot <= 0 or _field_hotbar == null:
+		return
+	# `_movement_gated()` (mouse-audit finding, issue #57): the number-key
+	# caller can never reach this function while gated at all (`_unhandled_input`
+	# returns before its else-branch) -- but a hotbar SLOT CLICK arrives via a
+	# separate GUI-input dispatch chain that bypasses that early return
+	# entirely, and the field hotbar does NOT hide for pause/journal/
+	# inventory/the sleep veil (only for combat/dialogue -- see
+	# `_apply_visibility`'s own gates in field_hotbar.gd), so a rendered,
+	# still-clickable bar sitting behind an open panel could otherwise still
+	# fire a skill. This check is what actually closes that gap.
+	if _movement_gated():
+		return
+	if _field_slot_index >= 0:
+		_disarm_field_slot()
+	var skill_id := String(_field_hotbar.skill_for_slot(slot))
+	if skill_id != "":
+		Game.sim.use_skill_field(skill_id)
+
+
 ## Duck-typed accessor (issue #58) -- see pause_menu.gd's `world_ref` doc
 ## comment. Public (not `_`-prefixed) since it is called cross-file via
 ## `Node.call()`, unlike every other `_field_slot_index` reader/writer here,
@@ -526,6 +585,10 @@ func _field_hotbar_slot_pressed(event: InputEvent) -> int:
 
 
 func _rebuild_field() -> void:
+	# A map change cancels any in-flight click path (issue #57) -- the old
+	# map's cells are meaningless on the new one, and "cancel is fine v1"
+	# (no cross-map recompute) per the plan.
+	_click_path.clear()
 	for child: Node in _field_root.get_children():
 		child.queue_free()
 	_entity_visuals.clear()
@@ -1680,6 +1743,15 @@ func _held_axis(neg_action: String, neg_val: int, pos_action: String, pos_val: i
 ## (`_movement_gated`) so a panel/dialogue/combat opening mid-hold stops the
 ## repeat immediately rather than only at the next fresh keypress.
 func _on_move_tween_finished() -> void:
+	# Click-to-walk (issue #57) PIGGYBACKS this exact seam: an in-flight
+	# click path takes priority over held-key repeat (mutually exclusive in
+	# practice -- a keyboard press cancels the path outright, see
+	# `_unhandled_input`'s top-of-function check -- but checked first
+	# regardless, for clarity). See `_advance_click_path`'s own doc comment
+	# for the headless-collapse counterpart of this same continuation.
+	if not _click_path.is_empty():
+		_advance_click_path()
+		return
 	if TestDriver != null and TestDriver.active():
 		return
 	if _movement_gated():
@@ -1688,3 +1760,224 @@ func _on_move_tween_finished() -> void:
 	if dir == Vector2i.ZERO:
 		return
 	Game.sim.move_player(dir)
+
+
+## Mouse click into the field (issue #57), in WORLD/pixel space -- Main.gd's
+## `_gui_input` computes this via `screen_to_world` (the real transform
+## chain, not a hardcoded /4) before calling. Three outcomes:
+## - clicked cell hosts an entity AND the player is already Chebyshev-1
+##   adjacent to it -> face it (facing DERIVED from the click direction, not
+##   from a move) + interact -- `interact()` itself is untouched (no skill
+##   ever auto-fires; explicit-hotbar doctrine).
+## - clicked cell hosts an entity but the player is NOT adjacent -> walk to
+##   its nearest open Chebyshev-1 approach cell and STOP (never
+##   auto-interact on arrival -- no accidental skill-prop nudges).
+## - clicked cell is empty, unblocked ground -> click-to-walk there.
+## Anything else (off-grid, a blocked non-entity cell) is a silent no-op.
+func handle_world_click(world_pos: Vector2) -> void:
+	if _movement_gated():
+		return
+	var cell := Vector2i(floori(world_pos.x / CELL), floori(world_pos.y / CELL))
+	var grid_size := Game.sim.grid_size
+	if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y:
+		return
+	var target: Dictionary = Game.sim.entity_at(cell)
+	if not target.is_empty():
+		if _chebyshev(Game.sim.player_cell, cell) <= 1:
+			_click_path.clear()
+			_face_cell(cell)
+			Game.sim.interact()
+		else:
+			_start_click_path_to_adjacent(cell)
+		return
+	if Game.sim.is_cell_blocked(cell):
+		return
+	_start_click_path(cell)
+
+
+static func _chebyshev(a: Vector2i, b: Vector2i) -> int:
+	return maxi(absi(a.x - b.x), absi(a.y - b.y))
+
+
+## Derives a single cardinal facing from an arbitrary click delta (dominant
+## axis; ties break horizontal, same convention as `WIGame._nearest_cardinal`
+## -- kept as a local copy rather than reaching into that sim-private helper,
+## since this is a genuinely new case it was never meant to cover: turning
+## to face WITHOUT moving). `Vector2i.ZERO` (clicking the player's own cell,
+## never reachable today -- the player's cell never hosts an `entities`
+## record) falls back to DOWN, matching the sprite's own idle default.
+static func _facing_from_delta(delta: Vector2i) -> Vector2i:
+	if delta == Vector2i.ZERO:
+		return Vector2i.DOWN
+	if absi(delta.x) >= absi(delta.y):
+		return Vector2i.RIGHT if delta.x > 0 else Vector2i.LEFT
+	return Vector2i.DOWN if delta.y > 0 else Vector2i.UP
+
+
+## Turns the PC to face `cell` (already known Chebyshev-1 adjacent by the
+## only caller) WITHOUT moving -- sets the sim's `player_facing` directly
+## (a public field every presentation read/bump already reads straight off
+## `Game.sim`, see `_bump_player_visual`) and refreshes the idle animation so
+## the turn is visible before `interact()` resolves against the new facing.
+func _face_cell(cell: Vector2i) -> void:
+	Game.sim.player_facing = _facing_from_delta(cell - Game.sim.player_cell)
+	_play_player_anim("idle")
+
+
+## Every entity's occupied cell on the current map -- the pathfinder's
+## "don't route through/onto an NPC or prop" set (mirrors `is_cell_blocked`'s
+## own wall/terrain gate, which this is layered on top of, never a
+## replacement for).
+func _occupied_cells() -> Dictionary:
+	var occ := {}
+	for ent: Dictionary in Game.sim.entities.values():
+		occ[ent["cell"] as Vector2i] = true
+	return occ
+
+
+## PRESENTATION-SIDE pathfinder (issue #57 -- "the sim never learns about
+## paths"): a plain 4-directional BFS from `start` over `Game.sim.
+## is_cell_blocked` + `_occupied_cells()`, exactly the same two gates
+## `move_player` itself enforces one step at a time. Diagonal-free by design
+## (matches every existing keyboard-driven walk, and sidesteps `move_player`'s
+## own corner-cutting rule entirely -- a BFS-planned cardinal step is never a
+## diagonal). Returns the full `came_from` map for the whole reachable area
+## (cheap at this project's map sizes, <=~20x12), so a caller can test/
+## compare several candidate goals (the entity-approach-cell case) without
+## re-running BFS per candidate.
+func _bfs_from(start: Vector2i) -> Dictionary:
+	var occupied := _occupied_cells()
+	var grid_size := Game.sim.grid_size
+	var came_from := {start: start}
+	var frontier: Array[Vector2i] = [start]
+	var dirs := [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
+	while not frontier.is_empty():
+		var next_frontier: Array[Vector2i] = []
+		for cur: Vector2i in frontier:
+			for d: Vector2i in dirs:
+				var n := cur + d
+				if came_from.has(n):
+					continue
+				if n.x < 0 or n.y < 0 or n.x >= grid_size.x or n.y >= grid_size.y:
+					continue
+				if Game.sim.is_cell_blocked(n) or occupied.has(n):
+					continue
+				came_from[n] = cur
+				next_frontier.append(n)
+		frontier = next_frontier
+	return came_from
+
+
+## Walks a `_bfs_from` result backward from `goal` to `start`, returning the
+## forward cell sequence (excluding `start`, including `goal`) -- the exact
+## shape `_begin_click_path`/`_advance_click_path` consume.
+static func _reconstruct_path(came_from: Dictionary, start: Vector2i, goal: Vector2i) -> Array:
+	var path: Array = []
+	var cur := goal
+	while cur != start:
+		path.append(cur)
+		cur = came_from[cur]
+	path.reverse()
+	return path
+
+
+## Click-to-walk to an empty, unblocked ground cell (`handle_world_click`'s
+## third branch). No-op if unreachable (walled off / no path at all) --
+## silent, matching the codebase's existing "an out-of-range action just
+## doesn't happen" convention rather than a toast for an unreachable click.
+func _start_click_path(cell: Vector2i) -> void:
+	var came_from := _bfs_from(Game.sim.player_cell)
+	if not came_from.has(cell):
+		return
+	_begin_click_path(_reconstruct_path(came_from, Game.sim.player_cell, cell))
+
+
+## Click-to-walk to the NEAREST open Chebyshev-1 approach cell of a distant
+## entity (`handle_world_click`'s second branch -- the "walk up, then stop,
+## never auto-interact" ruling). Tries all 8 neighbors of the entity's cell,
+## keeping the reachable one whose BFS path is shortest; a tie keeps
+## whichever neighbor was tried first (stable, not meaningfully different by
+## eye). No-op (empty path, `_begin_click_path` swallows it) if every
+## neighbor is blocked/occupied/unreachable.
+func _start_click_path_to_adjacent(entity_cell: Vector2i) -> void:
+	var came_from := _bfs_from(Game.sim.player_cell)
+	var occupied := _occupied_cells()
+	var grid_size := Game.sim.grid_size
+	var best_path: Array = []
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			if dx == 0 and dy == 0:
+				continue
+			var cand := entity_cell + Vector2i(dx, dy)
+			if cand.x < 0 or cand.y < 0 or cand.x >= grid_size.x or cand.y >= grid_size.y:
+				continue
+			if Game.sim.is_cell_blocked(cand) or occupied.has(cand):
+				continue
+			if not came_from.has(cand):
+				continue
+			var path := _reconstruct_path(came_from, Game.sim.player_cell, cand)
+			if best_path.is_empty() or path.size() < best_path.size():
+				best_path = path
+	_begin_click_path(best_path)
+
+
+## Arms `_click_path` and takes the FIRST real step immediately (no need to
+## wait for a tween that may not even be running yet) -- every later step
+## rides `_advance_click_path`/`_on_move_tween_finished`'s continuation.
+func _begin_click_path(path: Array) -> void:
+	if path.is_empty():
+		return
+	_click_path = path
+	_advance_click_path()
+
+
+## Takes exactly ONE real step of the in-flight click path via a genuine
+## `Game.sim.move_player` call -- never a teleport, so every per-step sim
+## side effect (trigger radii, actions_since_sleep, sneak checks) fires the
+## same as a held key's repeat. Re-checks `_movement_gated()` both BEFORE
+## the step (a panel could have opened between the click and this call) and
+## AFTER it (a trigger_radius ambush or similar can open one AS A SIDE
+## EFFECT of the very step that just landed) -- either case cancels the rest
+## of the path outright, no recompute (v1: "cancel is fine").
+func _advance_click_path() -> void:
+	if _click_path.is_empty():
+		return
+	if _movement_gated():
+		_click_path.clear()
+		return
+	var next_cell: Vector2i = _click_path[0]
+	var dir := next_cell - Game.sim.player_cell
+	var moved := Game.sim.move_player(dir)
+	_click_path.remove_at(0)
+	if not moved:
+		# A step became blocked (something moved into the way since the path
+		# was planned) -- cancel, no recompute (v1).
+		_click_path.clear()
+		return
+	if _click_path.is_empty():
+		return
+	if _movement_gated():
+		_click_path.clear()
+		return
+	# Real presentation (windowed): `_move_player_visual`'s tween just
+	# connected its `finished` signal to `_on_move_tween_finished`, which
+	# checks `_click_path` FIRST (see that function) and continues from
+	# there -- piggybacking the existing held-key re-issue seam, per the
+	# plan. Headless/QA (`_presentation_delay` collapses to 0): that connect
+	# never happens at all (see `_move_player_visual`'s own doc comment), so
+	# continue via ONE REAL ENGINE FRAME instead of a `.finished` signal that
+	# will never fire. TRAP found empirically: a plain `call_deferred` here
+	# chains through Godot's deferred-call queue near-instantly (a whole
+	# multi-step path can drain across a single `await get_tree().
+	# process_frame` in the QA driver, since a deferred call made WHILE
+	# flushing the deferred queue can be re-flushed in the same pass) --
+	# indistinguishable from a teleport to any script that doesn't poll
+	# faster than the drain, and leaving no real window for a keyboard press
+	# to land mid-path. `await get_tree().process_frame` is a genuine engine
+	# frame boundary instead (input for frame N+1 dispatches BEFORE this
+	# resumes for frame N+1), so a keyboard press injected between steps
+	# reliably cancels before the NEXT step, not after the whole path drains.
+	if _presentation_delay(MOVE_TWEEN_SECONDS) <= 0.0:
+		await get_tree().process_frame
+		_advance_click_path()
+

@@ -8,6 +8,10 @@ extends CanvasLayer
 ## GOTCHA: CanvasLayer has no `modulate`; only child Controls are styled.
 
 ## 16px grid recalibration -- see world.gd's CELL doc comment.
+## Own copy (issue #57's `handle_board_click`, same convention board_renderer.gd's
+## own `CELL` const already follows -- this codebase duplicates the literal
+## per-file rather than cross-referencing another file's const).
+const CELL := 16
 ##
 ## The board (tiles/skirt/holders/flashes -- all
 ## world-space content) renders into `World.combat_board_root()`, a Node2D
@@ -152,6 +156,9 @@ func _ready() -> void:
 	# compile.
 	_hud = load("res://src/combat/combat_hud.gd").new(_root, main_ref, self)
 	_hud.build()
+	# Issue #57: a hotbar slot CLICK routes through the exact same
+	# `_activate_bar_slot` dispatch the numbered hotbar_N keys use.
+	_hud.hotbar_node().slot_clicked.connect(_on_hotbar_slot_clicked)
 	_board_renderer = load("res://src/combat/board_renderer.gd").new()
 	_board_renderer.name = "BoardRenderer"
 	add_child(_board_renderer)
@@ -650,6 +657,47 @@ func _activate_bar_slot(index: int) -> void:
 		"end_turn":
 			_info_slot_index = index
 			_combat().end_turn()
+
+
+## Hotbar slot CLICK (issue #57): the SAME `_activate_bar_slot` dispatch a
+## numbered hotbar_N key uses, gated the same way `_input_hotbar` gates its
+## own numbered-key branch -- only live in the HOTBAR resting state (a click
+## on a rendered-but-inactive bar during ATTACK/SKILL_TARGET/DASH_CONFIRM is
+## a no-op, matching "Dash/aim confirm gates unchanged").
+## Read-only accessor (issue #57): passthrough to `_hud`'s own `hotbar_node()`
+## -- `qa/test_driver.gd`'s `click_slot` step looks up `CombatScreen`/
+## `FieldHotbar` by the SAME method name on whichever is currently live, so
+## this file needs its own copy of the accessor, not just combat_hud.gd's.
+func hotbar_node() -> WIHotbar:
+	return _hud.hotbar_node()
+
+
+func _on_hotbar_slot_clicked(index: int) -> void:
+	if _mode != Mode.HOTBAR:
+		return
+	# Mouse-audit finding: the pause menu may be open ON TOP of a resting
+	# HOTBAR turn (`is_resting()`'s own doc comment) -- `_mode` alone can't
+	# tell "paused" apart from "actively resting", so check main_ref's
+	# pause_open() the same way `_movement_gated()` checks it in world.gd.
+	if main_ref != null and main_ref.pause_open():
+		return
+	_activate_bar_slot(index)
+	_refresh()
+
+
+## Click-to-select-target on the arena board (issue #57, controller ruling:
+## movement stays keys-only; a click only re-points the aim, confirm stays
+## Enter). `world_pos` is world/pixel space (Main.gd's `_gui_input` already
+## ran it through `screen_to_world` -- the arena renders into the SAME
+## SubViewport/camera as the field, so the identical transform applies). A
+## no-op outside ATTACK/SKILL_TARGET (nothing to aim), and `select_at_cell`
+## itself no-ops on the line-mode/self-cast target lists.
+func handle_board_click(world_pos: Vector2) -> void:
+	if _mode != Mode.ATTACK and _mode != Mode.SKILL_TARGET:
+		return
+	var cell := Vector2i(floori(world_pos.x / CELL), floori(world_pos.y / CELL))
+	if _targeting.select_at_cell(cell):
+		_refresh()
 
 
 func _apply_turn_started(id: String) -> void:

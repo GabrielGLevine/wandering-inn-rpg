@@ -193,10 +193,16 @@ func _ready() -> void:
 	_black = ColorRect.new()
 	_black.color = Color.BLACK
 	_black.set_anchors_preset(Control.PRESET_FULL_RECT)
-	# Pure renderer: never intercept input (zero behaviour change — a player
+	# Never intercepts KEYBOARD input (zero behaviour change there -- a player
 	# mashing keys under the brief black still drives the world exactly as
-	# before). CanvasLayer has no modulate, so fade the ColorRect's own alpha.
-	_black.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# before; `world.gd`'s `_movement_gated()` gates that via
+	# `veil_modal_active()`, not this Control). STOP for MOUSE (mouse-filter
+	# audit, issue #57): the veil is a full-screen cover -- a click during it
+	# must not leak through to a world click-to-walk/interact underneath the
+	# black. `.show()`/`.hide()` below already gate this Control's own
+	# visibility, so this is harmless while the veil is inactive. CanvasLayer
+	# has no modulate, so fade the ColorRect's own alpha.
+	_black.mouse_filter = Control.MOUSE_FILTER_STOP
 	_black.modulate.a = 0.0
 	_black.hide()
 	add_child(_black)

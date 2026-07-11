@@ -225,6 +225,35 @@ func _init() -> void:
 	var power_targeting_far: RefCounted = targeting_script.new(tc_view, stub_screen)
 	power_targeting_far.enter(0, "power_strike")
 	assert(not (power_targeting_far.state()["targets"] as Array).has("goblin_raider"), "power_strike (melee, no range field) must NOT offer a non-adjacent enemy -- skill_effects.gd's damage_mult arm would silently refuse it downstream")
+
+	# (4) select_at_cell (issue #57, mouse click-to-select-target): with TWO
+	# adjacent enemies offered, a click on the SECOND one's cell must
+	# re-point `_target_index` to it -- `confirm()` then resolves to the
+	# CLICKED combatant, never enter()'s own default (first-in-roster-order)
+	# pick. Movement stays keys-only; this never fires the attack itself
+	# (that's still Enter -> `_input_target`'s confirm branch, unchanged).
+	# A duplicate combatant id ("goblin_raider" twice) auto-suffixes to
+	# "goblin_raider_2" (WICombat._init's own same-catalog-id collision fix)
+	# -- exactly what a real 2-goblin roster (e.g. goblin_ambush) produces.
+	var sel_pc_cfg: Dictionary = (_combatant_config(tc_combatants, "pc") as Dictionary).duplicate(true)
+	var sel_g1_cfg: Dictionary = (_combatant_config(tc_combatants, "goblin_raider") as Dictionary).duplicate(true)
+	var sel_g2_cfg: Dictionary = (_combatant_config(tc_combatants, "goblin_raider") as Dictionary).duplicate(true)
+	var sel_combat := WICombat.new(tc_arena, [sel_pc_cfg, sel_g1_cfg, sel_g2_cfg], tc_skills, func(_t: String, _p: Dictionary) -> void: pass, 9)
+	sel_combat.begin()
+	sel_combat.active_index = sel_combat.turn_order.find("pc")
+	sel_combat._start_turn()
+	sel_combat.combatants["pc"][WIKeys.CELL] = Vector2i(5, 5)
+	sel_combat.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 5)
+	sel_combat.combatants["goblin_raider_2"][WIKeys.CELL] = Vector2i(4, 5)
+	var sel_view := WICombatView.new(sel_combat)
+	var sel_targeting: RefCounted = targeting_script.new(sel_view, stub_screen)
+	sel_targeting.enter(0, "")
+	var sel_targets: Array = sel_targeting.state()["targets"]
+	assert(sel_targets.size() == 2, "select_at_cell test setup needs both adjacent enemies offered by enter()")
+	assert(sel_targeting.select_at_cell(Vector2i(4, 5)), "select_at_cell must find the candidate standing at the clicked cell")
+	var sel_action: Dictionary = sel_targeting.confirm()
+	assert(String(sel_action["target_id"]) == "goblin_raider_2", "a click must re-point confirm() at the CLICKED combatant, not enter()'s default ordering")
+	assert(not sel_targeting.select_at_cell(Vector2i(99, 99)), "a click on a cell with no candidate must return false")
 	stub_screen.free()
 
 	var hud_script := load("res://src/combat/combat_hud.gd") as Script
