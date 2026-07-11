@@ -32,6 +32,12 @@ var _inventory: Node
 var _field_hotbar: Node
 var _title_screen: Node
 var _sleep_veil: Node
+## The combat HUD/mode-FSM screen (issue #57) -- kept here so mouse clicks
+## can be routed to its board click-to-target handler alongside the world's
+## own click-to-walk/interact handler (`_gui_input` below calls both; each
+## is independently no-op-gated by its own mode, so calling both is safe and
+## keeps this file free of any `Game.sim.combat` branching of its own).
+var _combat_screen: Node
 
 
 func _ready() -> void:
@@ -70,6 +76,48 @@ func world_to_screen(world_pos: Vector2) -> Vector2:
 	return _container.get_global_transform() * canvas_pos
 
 
+## The exact inverse of `world_to_screen` (issue #57's screen->cell trap):
+## un-does the SubViewportContainer's global transform (its centering
+## position + the 4x WORLD_SCALE), THEN the SubViewport's own `canvas_transform`
+## (the Camera2D's pan) -- both via `Transform2D.affine_inverse()`, never a
+## hardcoded /4.0. `qa/test_driver.gd`'s `click` step composes the FORWARD
+## direction (`world_to_screen`, already used by its own camera-aware probe)
+## to know where on screen to inject a synthetic click, so a real player
+## click and a driver-injected one are proven by the SAME two transforms,
+## just walked in opposite directions -- one source of truth either way.
+func screen_to_world(screen_pos: Vector2) -> Vector2:
+	var canvas_pos := _container.get_global_transform().affine_inverse() * screen_pos
+	return _sub_viewport.canvas_transform.affine_inverse() * canvas_pos
+
+
+## Mouse click entry point (issue #57). Main sits at the root of the native-
+## resolution Control tree (default `mouse_filter == STOP`), so `_gui_input`
+## here only ever fires for a click that fell all the way through every
+## panel/hotbar Control in front of it WITHOUT being swallowed (mouse_filter
+## STOP on an open modal panel, or on a rendered hotbar slot, consumes the
+## event before it reaches here -- see the mouse_filter audit: journal.gd/
+## pause_menu.gd/inventory.gd/dialogue_panel.gd/consolidation_prompt.gd/
+## sleep_veil.gd/message_layer.gd/hotbar.gd). Deliberately does NOT branch on
+## `Game.sim.combat` itself: both the field (`_world`) and combat
+## (`_combat_screen`) click handlers are called unconditionally and each is
+## independently gated by its OWN mode (`_world.handle_world_click`'s
+## `_movement_gated()` no-ops during combat; `_combat_screen.handle_board_click`
+## no-ops outside ATTACK/SKILL_TARGET) -- so this file never needs to know
+## which screen currently owns the moment.
+func _gui_input(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	var world_pos := screen_to_world(mb.position)
+	if _world != null:
+		_world.handle_world_click(world_pos)
+	if _combat_screen != null:
+		_combat_screen.handle_board_click(world_pos)
+	accept_event()
+
+
 ## Whether the GDI
 ## cold-open/epilogue veil currently holds the screen. world.gd's
 ## `_movement_gated()` reaches this through its injected `_main` ref (the
@@ -79,6 +127,17 @@ func world_to_screen(world_pos: Vector2) -> Vector2:
 ## spawned) and across `_clear_ui_layers` teardown windows.
 func veil_modal_active() -> bool:
 	return _sleep_veil != null and _sleep_veil.modal_active()
+
+
+## Mouse-audit finding (issue #57): the pause menu may open DURING combat
+## (`combat_screen.gd`'s `is_resting()` -- only from the HOTBAR resting
+## state), and combat's own hotbar does not hide for it (only for a mode
+## change) -- so a hotbar slot CLICK, which arrives via a GUI-input path
+## `_mode == Mode.HOTBAR` alone can't distinguish from "still resting, just
+## paused", needs this extra check. Combat_screen.gd's own `main_ref` reaches
+## it the same injected-ref way `veil_modal_active()` above is reached.
+func pause_open() -> bool:
+	return _pause_menu != null and bool(_pause_menu.get("open"))
 
 
 func swap_to_title() -> void:
@@ -161,6 +220,7 @@ func _clear_ui_layers() -> void:
 	_title_screen = null
 	_sleep_veil = null
 	_world_labels = null
+	_combat_screen = null
 
 
 func _spawn_title() -> void:
@@ -180,6 +240,7 @@ func _spawn_ui_layers() -> void:
 	combat_screen.name = "CombatScreen"
 	combat_screen.main_ref = self
 	add_child(combat_screen)
+	_combat_screen = combat_screen
 	var dialogue_panel := DIALOGUE_PANEL_SCRIPT.new()
 	dialogue_panel.name = "DialoguePanel"
 	add_child(dialogue_panel)

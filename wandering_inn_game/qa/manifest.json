@@ -190,6 +190,12 @@
    "note": "Issue #58: Tab-primed field-hotbar select -- prime/re-prime, wrap-in-place move_right with player_cell unchanged (arrows captured while primed), Esc disarm, confirm fires the number-key-equivalent stream"
   },
   {
+   "script": "mouse_loop",
+   "seed": 9,
+   "fixture": "near_tactician",
+   "note": "Issue #57: mouse support -- distant prop click walks to nearest approach cell and stops without interacting, hotbar slot CLICK fires the number-key-equivalent stream and disarms a Tab-primed cursor, adjacent click faces+interacts in one click, click-to-walk on open ground (exact per-step count), keyboard press mid-path cancels"
+  },
+  {
    "script": "social_loop",
    "seed": 9,
    "fixture": "post_tutorial_street",

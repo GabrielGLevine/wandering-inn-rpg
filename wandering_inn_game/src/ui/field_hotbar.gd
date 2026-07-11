@@ -77,6 +77,16 @@ extends CanvasLayer
 ## is no more on-screen surface for any of it to fit or hide.
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
 
+## Issue #57: fires whenever the underlying `WIHotbar` reports a slot click,
+## carrying the SAME 1-based slot number the `hotbar_N` key actions use --
+## world.gd connects this (in `inject_ui_refs`) to its own
+## `_activate_field_slot`, the identical helper the number-key branch in
+## `_unhandled_input` calls, so a click and a key press are one dispatch, not
+## two. Not used by any QA script directly (the driver's `click_slot` step
+## drives the real `WIHotbar` click path via `hotbar_node()` below instead,
+## for full transform-chain fidelity).
+signal slot_activate_requested(slot: int)
+
 ## Selection-label layout (issue #58, Tab-primed slot select): gap between a
 ## slot's top edge and the label sitting above it, and the horizontal
 ## clamp margin so the label can never run off either screen edge (measured
@@ -131,7 +141,16 @@ func _ready() -> void:
 	_selection_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_selection_label.visible = false
 	root.add_child(_selection_label)
+	_hotbar.slot_clicked.connect(func(index: int) -> void: slot_activate_requested.emit(index + 1))
 	ObservableBus.domain_event.connect(_on_domain_event)
+
+
+## Read-only accessor (issue #57): the real `WIHotbar` node, for a caller
+## (world.gd's click wiring, `qa/test_driver.gd`'s `click_slot` step) that
+## needs its rendered geometry (`slot_rect`) or click signal directly, rather
+## than duplicating either here.
+func hotbar_node() -> WIHotbar:
+	return _hotbar
 
 
 ## Slot n (1-based, matching the `hotbar_n` key hint) -> the field skill id, or

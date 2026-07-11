@@ -194,6 +194,23 @@ func has_valid_target() -> bool:
 	return _line_mode or not _targets.is_empty()
 
 
+## Click-to-select (issue #57, controller ruling): re-points `_target_index`
+## at whichever CURRENT candidate occupies `cell`, if any -- returns whether
+## it found one (the caller only re-`_refresh()`es on a real change).
+## Movement stays keys-only; this NEVER confirms the attack/skill itself,
+## Tab/Enter still own cycling/confirming exactly as before. No-op (false)
+## during line-mode (a direction, not a combatant, is being aimed) or an
+## empty target list -- both already have nothing a click could select.
+func select_at_cell(cell: Vector2i) -> bool:
+	if _line_mode or _targets.is_empty():
+		return false
+	for i in _targets.size():
+		if _view.cell(String(_targets[i])) == cell:
+			_target_index = i
+			return true
+	return false
+
+
 ## Returns the action for the SCREEN to execute on `combat` (command surface
 ## stays at the composition root, per the plan). `kind` is "attack" (no
 ## skill_id -- the `_targeting_skill_id == ""` substitution again),

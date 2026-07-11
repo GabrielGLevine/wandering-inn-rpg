@@ -65,7 +65,11 @@ func _ready() -> void:
 	_root = Control.new()
 	UIChrome.apply_theme(_root)
 	_root.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# STOP (mouse-filter audit, issue #57): see journal.gd's identical fix's
+	# doc comment. A live conversation is exactly the case the click-to-walk
+	# doctrine most wants shielded (its panel sits directly over the field,
+	# often over the very NPC being talked to).
+	_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.custom_minimum_size = PANEL_SIZE
 	_root.size = PANEL_SIZE
 	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -PANEL_SIZE.y - 18.0, PANEL_SIZE.x * 0.5, -18.0)

@@ -253,6 +253,14 @@ func build() -> void:
 	_root.add_child(_hotbar)
 
 
+## Read-only accessor (issue #57): the real `WIHotbar` node, for
+## `combat_screen.gd` to connect its `slot_clicked` signal (same dispatch as
+## a `hotbar_N` key -- `_activate_bar_slot`) and for `qa/test_driver.gd`'s
+## `click_slot` step to read its rendered `slot_rect` geometry.
+func hotbar_node() -> WIHotbar:
+	return _hotbar
+
+
 func _make_panel(texture: Texture2D, preset: int, min_size: Vector2, offsets: Vector4) -> Control:
 	# make_texture_panel threads texture-appropriate patch margins (ribbon
 	# asymmetric, strip narrow, panel default) -- H3 review Important 2.

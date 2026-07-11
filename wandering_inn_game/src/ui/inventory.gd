@@ -191,7 +191,12 @@ func _ready() -> void:
 	_root.custom_minimum_size = PANEL_SIZE
 	_root.size = PANEL_SIZE
 	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -PANEL_SIZE.y * 0.5, PANEL_SIZE.x * 0.5, PANEL_SIZE.y * 0.5)
-	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# STOP (mouse-filter audit, issue #57): see journal.gd's identical fix's
+	# doc comment. `_scroll` (built below) already defaults to STOP on its
+	# own (its own doc comment), but the panel's border/padding OUTSIDE the
+	# scroll rect was still IGNORE-passthrough until this -- this closes
+	# that gap too.
+	_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.hide()
 	add_child(_root)
 

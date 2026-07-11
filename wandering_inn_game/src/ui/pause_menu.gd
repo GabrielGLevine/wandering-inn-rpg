@@ -88,7 +88,10 @@ func _ready() -> void:
 	_root.custom_minimum_size = PANEL_SIZE
 	_root.size = PANEL_SIZE
 	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -PANEL_SIZE.y * 0.5, PANEL_SIZE.x * 0.5, PANEL_SIZE.y * 0.5)
-	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# STOP (mouse-filter audit, issue #57): see journal.gd's identical fix's
+	# doc comment -- swallows a click on the open panel instead of leaking to
+	# the world/board underneath. `.hide()`/`.show()` gate visibility.
+	_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.hide()
 	add_child(_root)
 	_root.add_child(UIChrome.make_patch(UIChrome.CARVED_PANEL))
@@ -111,7 +114,8 @@ func _ready() -> void:
 	_confirm_root.custom_minimum_size = CONFIRM_PANEL_SIZE
 	_confirm_root.size = CONFIRM_PANEL_SIZE
 	UIChrome.set_offsets(_confirm_root, -CONFIRM_PANEL_SIZE.x * 0.5, -CONFIRM_PANEL_SIZE.y * 0.5, CONFIRM_PANEL_SIZE.x * 0.5, CONFIRM_PANEL_SIZE.y * 0.5)
-	_confirm_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# STOP (mouse-filter audit, issue #57): same fix as `_root` above.
+	_confirm_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_confirm_root.hide()
 	add_child(_confirm_root)
 	_confirm_root.add_child(UIChrome.make_patch(UIChrome.PARCHMENT_PANEL))
