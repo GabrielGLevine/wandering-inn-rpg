@@ -239,7 +239,10 @@ for pair in "${RUNLIST[@]}"; do
 	fi
 	echo "==> $NAME (seed=$SEED, timeout=${PER_SCRIPT_TIMEOUT}s, jobs=$JOBS)"
 	if [ "$JOBS" -gt 1 ]; then
-		while [ "$(jobs -rp | wc -l)" -ge "$JOBS" ]; do wait -n; done
+		# macOS ships bash 3.2: `wait -n` is unsupported there (it errors and
+		# the loop busy-spins). Sleep-poll instead — throttle behavior is
+		# identical, just coarser-grained.
+		while [ "$(jobs -rp | wc -l)" -ge "$JOBS" ]; do sleep 0.2; done
 		run_one "$NAME" "$SEED" &
 	else
 		run_one "$NAME" "$SEED"
