@@ -1,5 +1,5 @@
 {
- "_comment": "Invrisil 8c Task C3 (issue #13) 'A Gentleman's Disagreement' -- STEALTH/SKILL path -> the EXPOSE fork. Loads near_invrisil_stealth (took_brothers_job already banked, standing beside the new counting_house_ledger prop) via title Continue. Full loop: lift the true ledger ([Appraise Foe], banks lifted_true_ledger) -> teleport to Master Coyle on the boulevard, accuse him with the ledger evidence (accusation -> cornered), choose EXPOSE (banks merchant_exposed + merchant_fate_decided -> quest beat 1) -> teleport to Wilovan at the parlor, report (banks brothers_job_done + cleared_brothers_name + the shared brothers_marker -> quest beat 2 + quest_completed) and prove the SAFE-PASSAGE reward fires (entity_removed on BOTH alley footpads, either fork's shared 'quest complete' moment). Teleport is used between the 3 maps deliberately -- the door-chain navigation across boulevard/alleys/parlor is already proven by invrisil_walkthrough; this canonical isolates the quest/fork logic instead of re-deriving that route a third time.",
+ "_comment": "Invrisil 8c Task C3 (issue #13) 'A Gentleman's Disagreement' STEALTH/SKILL path -> EXPOSE fork. GH#68 (quest-stage rework, issue #68) RE-ROUTED: Stage 1 (coyle_operation_found) is fixture-skipped (near_invrisil_stealth pre-banks it -- invrisil_walkthrough is the canonical that walks Stage 1 live); this script now walks its OWN Stage 2 LIVE -- the counting_house_watch prop's [Appraise Foe] beat (banks assessed_guard_pattern) BEFORE the counting_house_ledger prop's own [Appraise Foe] beat (now gated on that counter, banks lifted_true_ledger) -- then Stage 3/4 unchanged: accuse Coyle with the ledger, corner him, EXPOSE (`merchant_exposed` + `merchant_fate_decided`, quest beat 2 post-rework) -- report to Wilovan (`brothers_job_done` + `cleared_brothers_name` + the shared `brothers_marker` item/accomplishment, quest beat 3 + `quest_completed`) -- THE SAFE-PASSAGE REWARD proven (`entity_removed` on both alley footpads) -- zero combat the whole run.",
  "starts_at_title": true,
  "fixture_save": "near_invrisil_stealth",
  "steps": [
@@ -45,12 +45,61 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
+    15,
+    11
+   ]
+  },
+  {
+   "_comment": "== STAGE 2, LEG 1: counting_house_watch (15,12), requires_skill observe (fixture-granted). Cast via the hotbar per the explicit-skill-use rule -- interact no longer auto-casts. ==",
+   "action": "press_field_skill",
+   "skill": "observe"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "assessed_guard_pattern"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Appraise Foe] — Two men on the counting-house door, and they're sloppier than they think: the same slow circuit, the same gap while both backs are turned, near enough on the bell to set a watch by. Time it right and the desk inside is yours for a minute, maybe two."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_guard_pattern_assessed"
+  },
+  {
+   "_comment": "== STAGE 2, LEG 2: TELEPORT (not move) to (16,11), still facing down -- the assessed_guard_pattern variant now fires instead of the base 'locked' effect. Teleport, never a real `move` step, because (15,11)/(16,11) BOTH sit inside alley_footpads_b's own trigger_radius-2 zone (14,12) -- transition() never calls _check_trigger_radius (the portal-menu O2 rule's own precedent), so this is the honest way to reposition here without a spurious ambush. ==",
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
     16,
     11
    ]
   },
   {
-   "_comment": "== THE LEDGER: counting_house_ledger (16,12), requires_skill observe (fixture-granted). Cast via the hotbar per the explicit-skill-use rule -- interact no longer auto-casts. ==",
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    11
+   ]
+  },
+  {
    "action": "press_field_skill",
    "skill": "observe"
   },
@@ -66,7 +115,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Appraise Foe] — The true ledger, tucked behind a false-backed drawer no honest desk needs. Forty gold to a 'removal man,' dated the night before Coyle's own theft: his hand, his numbers, his mistake. The drawer's second catch gives up a shallow hidden safe behind it, empty now but scored where something heavier than coin sat until recently."
+    "text": "[Appraise Foe] — Now you know the gap in the watch, the true ledger comes easy: tucked behind a false-backed drawer no honest desk needs. Forty gold to a 'removal man,' dated the night before Coyle's own theft: his hand, his numbers, his mistake. The drawer's second catch gives up a shallow hidden safe behind it, empty now but scored where something heavier than coin sat until recently."
    },
    "timeout_sec": 5
   },
@@ -75,7 +124,7 @@
    "name": "01_ledger_lifted"
   },
   {
-   "_comment": "== CONFRONT COYLE: teleport to (23,6) on the boulevard (invrisil_walkthrough's own verified adjacent-to-Coyle cell). Facing is still DOWN (0,1) from the fixture's own initial facing toward the ledger -- teleport never changes it, and neither does a plain interact. Bump right into Coyle's own cell (24,6) to reorient facing without moving (the invrisil_walkthrough precedent verbatim). First interact plays his talk_pool line (first talk this waking); second opens invrisil_merchant_prince. ==",
+   "_comment": "== CONFRONT COYLE: teleport to (23,6) on the boulevard (invrisil_walkthrough's own verified adjacent-to-Coyle cell). Facing is still DOWN (0,1) from the ledger beat -- teleport never changes it, and neither does a plain interact. Bump right into Coyle's own cell (24,6) to reorient facing without moving (the invrisil_walkthrough precedent verbatim). First interact plays his talk_pool line (first talk this waking); second opens invrisil_merchant_prince. ==",
    "action": "teleport",
    "map": "invrisil_boulevard",
    "cell": [
@@ -152,7 +201,7 @@
    "name": "confirm"
   },
   {
-   "_comment": "accusation: visible [0 'Your own ledger prices it...' (lifted_true_ledger met), 1 '(Draw steel.)', 2 'Another day, Coyle.'] -- the testimony option (secured_testimony) stays hidden. Cursor at 0.",
+   "_comment": "accusation: coyle_operation_found is met (fixture pre-bank), so the ORIGINAL text_variant renders, not the sequence-break line. visible [0 'Your own ledger prices it...' (lifted_true_ledger met), 1 '(Draw steel.)', 2 'Another day, Coyle.'] -- the testimony option (secured_testimony) stays hidden. Cursor at 0.",
    "action": "wait_frames",
    "frames": 3
   },
@@ -186,11 +235,12 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "GH#68: beat_index shifted +1 by the new shared 'scout' beat (already primed to 1 from the fixture's pre-banked coyle_operation_found, so it fires no event of its own) -- resolve's own completion now reads beat:2, not the pre-rework beat:1.",
    "action": "wait_for_event",
    "type": "quest_beat_completed",
    "payload_contains": {
     "id": "a_gentlemans_disagreement",
-    "beat": 1
+    "beat": 2
    },
    "timeout_sec": 5
   },
@@ -272,7 +322,7 @@
    "name": "02_wilovan_report"
   },
   {
-   "_comment": "hub, 'took_brothers_job' text_variant (brothers_job_done unset): visible [0 'Remind me of the three doors.', 1 'Coyle's answered for it...' (merchant_fate_decided met), 2 'Evening.']. Take index 1.",
+   "_comment": "hub, 'took_brothers_job' text_variant (brothers_job_done unset): coyle_operation_found is met so 'Remind me of the three doors.' shows (not the scout_nudge line); cups_debt_chit was never carried on this path, so the item-gated favor-return option stays visible-locked but doesn't disturb this list's ORDER. visible [0 'Remind me of the three doors.', 1 'Coyle's answered for it...' (merchant_fate_decided met), 2 'Evening.', 3 'Cups asked me to see something back to you.' (locked, no chit)]. Take index 1.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -291,11 +341,12 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "GH#68: report's own completion now reads beat:3 (=beats.size(), so completed:true fires alongside it).",
    "action": "wait_for_event",
    "type": "quest_beat_completed",
    "payload_contains": {
     "id": "a_gentlemans_disagreement",
-    "beat": 2
+    "beat": 3
    },
    "timeout_sec": 5
   },

@@ -59,8 +59,19 @@
 			]
 		},
 		"accusation": {
+			"_comment": "GH#68 (quest-stage rework) SEQUENCE-BREAK READ: a player who never completed Stage 1 (coyle_operation_found -- reachable well before this node via any path, since it only needs took_brothers_job) but still reaches the accusation somehow (the ledger/testimony gates already prevent an empty-handed WIN; '(Draw steel.)' stays a legitimate ungated shortcut) gets Coyle's own mocking tell that the player is bluffing on specifics they never actually pinned down, rather than the same confident line a properly-scouted accusation earns -- the door_recap idiom (a diegetic catch-up, not a hard block; no option gains a new gate here). Base text is the SEQUENCE-BREAK line (default, coyle_operation_found unmet); the variant restores the ORIGINAL line once Stage 1 is actually banked.",
 			"speaker": "Master Coyle",
-			"text": "Do you know what reputation costs in this city? More than you. Considerably more than him. Whoever sold you that story overvalued your discretion and undervalued mine — an amateur's pricing error on both counts. So. Prove it, or price your next words very carefully.",
+			"text": "You've a story, and no idea where it's set. Where does this 'theft' supposedly run out of, consultant? ...Quiet. Thought so. Come back when you've walked the ground, and we'll discuss reputations properly.",
+			"text_variants": [
+				{
+					"requires": {
+						"accomplishment": {
+							"coyle_operation_found": 1
+						}
+					},
+					"text": "Do you know what reputation costs in this city? More than you. Considerably more than him. Whoever sold you that story overvalued your discretion and undervalued mine — an amateur's pricing error on both counts. So. Prove it, or price your next words very carefully."
+				}
+			],
 			"options": [
 				{
 					"text": "Your own ledger prices it. Forty gold to a 'removal man' — dated the night before your theft.",

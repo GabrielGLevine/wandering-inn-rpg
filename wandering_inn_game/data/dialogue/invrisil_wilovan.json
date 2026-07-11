@@ -37,7 +37,8 @@
 					"text": "Remind me of the three doors.",
 					"requires": {
 						"accomplishment": {
-							"took_brothers_job": 1
+							"took_brothers_job": 1,
+							"coyle_operation_found": 1
 						}
 					},
 					"hide_when": {
@@ -46,6 +47,21 @@
 						}
 					},
 					"goto": "ways"
+				},
+				{
+					"_comment": "GH#68 (quest-stage rework): the diegetic gate for a player who's taken the job but hasn't scouted Coyle's operation yet -- Wilovan won't lay out doors on a target nobody's placed. Hidden the instant coyle_operation_found banks (the option above takes over); the only other visible route out of the hub in this window is 'Evening.'",
+					"text": "Where do I even start with him?",
+					"requires": {
+						"accomplishment": {
+							"took_brothers_job": 1
+						}
+					},
+					"hide_when": {
+						"accomplishment": {
+							"coyle_operation_found": 1
+						}
+					},
+					"goto": "scout_nudge"
 				},
 				{
 					"text": "Coyle's answered for it. Farley's name is clear.",
@@ -84,6 +100,47 @@
 				{
 					"text": "Evening.",
 					"end": true
+				},
+				{
+					"_comment": "GH#68 (quest-stage rework, TALK path Stage 2 favor beat): the item-possession gate + remove_item pair (issue #59 seam, patron_serving.json precedent), Cups' side reached via invrisil_fixer.json's cups_favor node. Item gate is NOT progress-gated (dialogue.gd's _progress_gated), so this shows visible-locked to every path/player who never met Cups -- same as any other item-gated option elsewhere (the Serve option's own precedent). Appended LAST in the array (after the always-visible 'Evening.') so its presence never shifts the authored-index-derived visible-index of any option ABOVE it -- the option-index discipline every existing invrisil_disagreement_* canonical presses by number.",
+					"text": "Cups asked me to see something back to you.",
+					"requires": {
+						"item": "cups_debt_chit"
+					},
+					"hide_when": {
+						"accomplishment": {
+							"returned_cups_debt": 1
+						}
+					},
+					"effects": [
+						{
+							"remove_item": "cups_debt_chit"
+						},
+						{
+							"accomplishment": "returned_cups_debt"
+						}
+					],
+					"goto": "cups_favor_returned"
+				}
+			]
+		},
+		"scout_nudge": {
+			"speaker": "Wilovan",
+			"text": "Sir. A gentleman doesn't accuse a man he can't find. Walk the city a while -- ask around, look past the front door -- and come back once you know where Master Coyle actually keeps his business. Then we'll speak of doors.",
+			"options": [
+				{
+					"text": "Fair enough.",
+					"goto": "hub"
+				}
+			]
+		},
+		"cups_favor_returned": {
+			"speaker": "Wilovan",
+			"text": "Ah. That. Settled, then, and Cups need not have worried -- we collect debts, sir, we don't chase tea-girls for them. Tell her the account's closed. Tell her we said so kindly, which is rarer than she'll admit.",
+			"options": [
+				{
+					"text": "I'll tell her.",
+					"goto": "hub"
 				}
 			]
 		},
@@ -159,11 +216,27 @@
 			]
 		},
 		"fists_door": {
+			"_comment": "GH#68 (quest-stage rework): the FIGHT path's Stage 2 gate. Base text is the diegetic hold -- Wilovan won't commit to a building nobody's found yet; the text_variant (warehouse_located met) restores the ORIGINAL come-along speech verbatim. 'Come with me.' itself gates on the same counter (single sanctioned accomplishment key, HIDDEN until met -- Gating Split policy), so a player who hasn't walked the tailing chain (coyle_runner_trail on invrisil_boulevard -> warehouse_approach in mercantile_alleys) sees only 'I'll go alone.', the pre-existing ungated fallback.",
 			"speaker": "Wilovan",
-			"text": "Sir. Say the word and I'll come along — a Brother doesn't send a friend into a warehouse alone, not over an invitation this personal. I won't dress up what happens once we're through that door: hats off, and I do mean it literally.",
+			"text": "Sir, I'd come gladly -- once we know precisely which building we're walking into. A Brother doesn't blunder in blind, whatever the invitation. Find the place first.",
+			"text_variants": [
+				{
+					"requires": {
+						"accomplishment": {
+							"warehouse_located": 1
+						}
+					},
+					"text": "Sir. Say the word and I'll come along — a Brother doesn't send a friend into a warehouse alone, not over an invitation this personal. I won't dress up what happens once we're through that door: hats off, and I do mean it literally."
+				}
+			],
 			"options": [
 				{
 					"text": "Come with me.",
+					"requires": {
+						"accomplishment": {
+							"warehouse_located": 1
+						}
+					},
 					"effects": [
 						{
 							"accomplishment": "wilovan_will_fight"
