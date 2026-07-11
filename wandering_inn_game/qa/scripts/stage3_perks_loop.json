@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #23 canonical: the per-waking dialogue seam's own end-to-end proof, driving BOTH shipped consumers live in one continuous run (extend-vs-new call, per wi-writing-qa-scripts: stages_loop.json's fixture (krshia_stage3_pre) is Krshia-specific state at her street cell -- Erin/Relc need a DIFFERENT fixture at a different map/cell entirely, and this script's subject is the once_per_waking GATE lifecycle itself, not Krshia's talk_pool_stages growth -- so a new fixture+script is the fixture-first-policy fit, not an extension). FIXTURE-FIRST (stage3_perks_pre: both NPCs already at stage 3, entity_first_use empty, social_talked pre-set so the run's first interacts open the real hubs directly). Proves, in order: (1) Erin's meal -- the hub option is visible and choosable, banks well_fed + the SAME staged line; (2) the option is GONE on re-open the SAME waking (a fixed-length navigation that used to land on the meal now wraps to a DIFFERENT, known option instead of the meal); (3) Relc's wager -- winning a re-spar (the shipped re-offer status quo, unaffected) then opening the hub pays +1 gold exactly once, with the SAME regression proof the option vanishes for the rest of the waking; (4) a real sleep clears both well_fed and the per-waking bank; (5) BOTH options are back post-sleep (Erin's re-verified in full incl. a second well_fed grant; Relc's re-verified via a second successful payout, gold 1->2).",
+ "_comment": "Issue #23 canonical: the per-waking dialogue seam's own end-to-end proof, driving THREE shipped consumers live in one continuous run (Selys' board pick added by issue #32's REPEATABLE ruling -- converted from a permanent claimed_board_pick hide_when to this SAME once_per_waking seam, so this script is now its canonical proof too; extend-vs-new call, per wi-writing-qa-scripts: this script's subject is the once_per_waking GATE lifecycle itself, so a new consumer extends here rather than spawning a parallel script). FIXTURE-FIRST (stage3_perks_pre: all three NPCs already at their perk-eligible stage, entity_first_use empty, social_talked pre-set for Erin/Relc/Selys so the run's first interacts open the real hubs directly). Proves, in order: (1) Erin's meal -- the hub option is visible and choosable, banks well_fed + the SAME staged line; (2) the option is GONE on re-open the SAME waking (a fixed-length navigation that used to land on the meal now wraps to a DIFFERENT, known option instead of the meal); (3) Relc's wager -- winning a re-spar (the shipped re-offer status quo, unaffected) then opening the hub pays +1 gold exactly once, with the SAME regression proof the option vanishes for the rest of the waking; (3.5) Selys' board pick -- the newly-repeatable hub option grants +5 gold once, then the exact-length visible-options array proves it's gone the same waking; (4) a real sleep clears well_fed, both once_per_waking banks, and social_talked; (5) ALL THREE are back post-sleep (Erin's re-verified in full incl. a second well_fed grant; Relc's and Selys' re-verified via a second successful payout each, gold climbing 1->6 pre-sleep then 7->12 post-sleep).",
  "fixture_save": "stage3_perks_pre",
  "starts_at_title": true,
  "steps": [
@@ -359,6 +359,135 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "== (3.5) SELYS' BOARD PICK == issue #32 ruling: converted from a permanent one-time grant to the SAME once_per_waking seam this canonical already proves for Erin/Relc -- a THIRD consumer. Teleport to the guild, one cell south of her desk-approach cell, move up 1 for the real facing (the guild_interior_walkthrough/board_loop precedent). Fixture pre-sets social_talked.selys:true, so this first interact this waking opens her real hub directly (no pool bark to predict). package_delivered/errand_decided are both met (fixture), chatted_with_selys is pinned at exactly 2 (her stage-2 threshold) and board_pick:selys is unused -- 5 visible options: [0] Just looking around. [1] Shivertail. Any relation to the Guildmistress? [2] Anything on the board worth my time? [3] How does the board work? [4] Take on a posting.",
+   "action": "teleport",
+   "map": "guild",
+   "cell": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "guild"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "selys_delivery"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys",
+    "options": [
+     { "text": "Just looking around.", "locked": false, "requirement": "" },
+     { "text": "Shivertail. Any relation to the Guildmistress?", "locked": false, "requirement": "" },
+     { "text": "Anything on the board worth my time?", "locked": false, "requirement": "" },
+     { "text": "How does the board work?", "locked": false, "requirement": "" },
+     { "text": "Take on a posting.", "locked": false, "requirement": "" }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys",
+    "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt and I'll square you from the Guild's own purse, not the client's excuse for one."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_selys_board_pick_line"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 6
+  },
+  {
+   "_comment": "== SELYS OPTION GONE, SAME WAKING == board_pick:selys is now banked, so the hub shrinks to exactly 4 visible entries -- the picked option is gone, proving the retire, not just a reorder.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "selys_delivery"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys",
+    "options": [
+     { "text": "Just looking around.", "locked": false, "requirement": "" },
+     { "text": "Shivertail. Any relation to the Guildmistress?", "locked": false, "requirement": "" },
+     { "text": "How does the board work?", "locked": false, "requirement": "" },
+     { "text": "Take on a posting.", "locked": false, "requirement": "" }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
    "_comment": "== (4) SLEEP == #49: ground-floor alcove bed removed; teleport to your_bed upstairs one cell short (transition() never touches player_facing -- board_loop.json's exact idiom), move up 1 for the real facing, interact.",
    "action": "teleport",
    "map": "inn_upstairs",
@@ -599,7 +728,124 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 2
+   "equals": 7
+  },
+  {
+   "_comment": "The original script ENDED here with Relc's relc_wager reaction node still open -- appending more steps after it (Selys' own leg below) needs that dialogue genuinely closed first, or the next 'press interact' just advances THIS node instead of doing a world interact. Close it the same way leg (3)'s own wager close does: 'Back a step.' (default cursor 0) returns to the meet hub, then 'Keep walking.' (visible index 2 of the same 5-entry hub) ends the conversation cleanly.", "action": "press", "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "There's the dummy-slayer. Straw fears you. Come here. I owe you something for the show."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== (5c) SELYS' BOARD PICK IS BACK TOO == same new-waking pool-line-then-graph shape as Erin/Relc above. gold is 7 here (1 pre-sleep Relc wager + 5 pre-sleep Selys pick + 1 post-sleep Relc wager); a second successful pick proves +5 exactly once more.",
+   "action": "teleport",
+   "map": "guild",
+   "cell": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "guild"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "selys_delivery"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys",
+    "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt and I'll square you from the Guild's own purse, not the client's excuse for one."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 12
   }
  ]
 }
