@@ -193,6 +193,15 @@ const UI_JOURNAL_HIDDEN := &"ui_journal_hidden"
 ## Payload `{skill:String, assigned:bool, cursor_index:int}`.
 const UI_JOURNAL_LOADOUT_RENDERED := &"ui_journal_loadout_rendered"
 const UI_INVENTORY_SHOWN := &"ui_inventory_shown"
+## inventory.gd's confirmation that the selection corner (icon + mechanical
+## breakout) redrew after a cursor move -- separate from UI_INVENTORY_SHOWN
+## (which fires on open and on gold/equip re-confirms) so QA can pin the
+## per-selection corner WITHOUT re-firing the panel-open event: audio.json
+## keys the `ui_open` chime on UI_INVENTORY_SHOWN, so a shown-per-cursor-move
+## emit would replay the open chime on every arrow press (the
+## UI_JOURNAL_LOADOUT_RENDERED idiom, same reason). Payload `{cursor:int,
+## item:String, selected_icon:bool, mech_line:String}`.
+const UI_INVENTORY_SELECTION_RENDERED := &"ui_inventory_selection_rendered"
 const UI_INVENTORY_HIDDEN := &"ui_inventory_hidden"
 const UI_PAUSE_SHOWN := &"ui_pause_shown"
 const UI_PAUSE_HIDDEN := &"ui_pause_hidden"

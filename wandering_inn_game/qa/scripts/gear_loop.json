@@ -14,18 +14,21 @@
   { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
 
-  { "_comment": "== (1) full pack open ==. ui_inventory_shown gains resonance{used,capacity} -- both pre-equipped items (rusty_sword, leather_jerkin) are resonance 0, so used starts at 0. 2026-07-08 hotfix: cursor_scroll:0 is the on-open first-row-visible proof -- row 0 (cursor start) must land at the TOP of the scroll, not scrolled past with no cursor mark on screen (the playtest-caught bug).", "action": "press", "name": "inventory" },
-  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 19, "gold": 0, "resonance": { "used": 0, "capacity": 2 }, "cursor_scroll": 0 }, "timeout_sec": 5 },
+  { "_comment": "== (1) full pack open ==. ui_inventory_shown gains resonance{used,capacity} -- both pre-equipped items (rusty_sword, leather_jerkin) are resonance 0, so used starts at 0. 2026-07-08 hotfix: cursor_scroll:0 is the on-open first-row-visible proof -- row 0 (cursor start) must land at the TOP of the scroll, not scrolled past with no cursor mark on screen (the playtest-caught bug). Inventory-corner design: cursor opens on rusty_sword (index 0) -- selected_icon:true (rusty_sword.png ships), the corner's icon-only read for a plain item.", "action": "press", "name": "inventory" },
+  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 19, "gold": 0, "resonance": { "used": 0, "capacity": 2 }, "cursor_scroll": 0, "selected_icon": true }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "00_full_pack_top_cursor_rusty_sword" },
 
-  { "_comment": "Cursor wraps to the LAST item (fishers_handline, index 18) -- the full-pack scroll/clip check: `_scroll.ensure_control_visible` should keep the selected row on-screen even though the ScrollContainer's own mouse_filter is IGNORE (no wheel input wired).", "action": "press", "name": "move_down" },
+  { "_comment": "Detour to traveler_charm (index 7) -- the corner's 3-LINE case (hp_mod + resonance + price all at once, the real max across data/items.json that CORNER_BREAKOUT_RESERVED_LINES is sized for): selected_icon:true (traveler_charm.png ships) and mech_line joins all three in card order. Pinned via the per-move ui_inventory_selection_rendered event -- cursor moves never emit ui_inventory_shown (that would replay audio.json's ui_open chime per arrow press).", "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
+  { "action": "wait_for_event", "type": "ui_inventory_selection_rendered", "payload_contains": { "cursor": 7, "item": "traveler_charm", "selected_icon": true, "mech_line": "+2 HP | Resonance 1 | Worth 5 gold" }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "00b_corner_traveler_charm_three_lines" },
+
+  { "_comment": "Cursor wraps to the LAST item (fishers_handline, index 18) -- the full-pack scroll/clip check: `_scroll.ensure_control_visible` should keep the selected row on-screen even though the ScrollContainer's own mouse_filter is IGNORE (no wheel input wired). 11 more presses from traveler_charm (index 7) reaches index 18, same destination as the old flat 18-from-0 count.", "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
   { "action": "press", "name": "move_down" },
@@ -55,7 +58,7 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "item_equipped", "payload_contains": { "item": "hedge_ward_charm", "slot": "accessory_2" }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "equipped.accessory_2", "equals": "hedge_ward_charm" },
-  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "resonance": { "used": 1, "capacity": 2 } }, "timeout_sec": 5 },
+  { "_comment": "Corner proof alongside the resonance header: cursor is still on hedge_ward_charm post-equip -- selected_icon:true (hedge_ward_charm.png ships) and mech_line matches its own card's three lines.", "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "resonance": { "used": 1, "capacity": 2 }, "selected_icon": true, "mech_line": "+2 HP | Resonance 1 | Worth 9 gold" }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "02_accessory_equipped_resonance_header_and_lore" },
 
   { "_comment": "== (4) CAPACITY REFUSAL negative ==. stonescale_talisman (index 14, resonance 2): 1 (already equipped) + 2 = 3 > capacity 2. Cursor at 11, down 3 -> index 14. The ratified vibration-line toast text; equipped.accessory_3 must stay empty and no item_equipped fires.", "action": "press", "name": "move_down" },
@@ -85,6 +88,8 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "That isn't something you can equip." }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "equipped.accessory_2", "equals": "hedge_ward_charm" },
+
+  { "_comment": "AUDIO teeth for the selection/shown decoupling: ui_inventory_shown drives audio.json's ui_open panel-open chime, and this run presses ~35 cursor moves -- if cursor moves ever regress to emitting shown, the chime replays per arrow press (inaudible to existence-only pins). Exactly 4 shown emits are legitimate here: 1 open + 3 equip/unequip re-confirms (copper equip, hedge equip, copper unequip); the refusal + tool toasts don't re-confirm and gold never changes.", "action": "assert_event_count", "type": "ui_inventory_shown", "count": 4 },
 
   { "action": "press", "name": "inventory" },
   { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 }
