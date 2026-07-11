@@ -1,5 +1,47 @@
 # Wandering Inn RPG Handoff
 
+## 8d Phase B LANDED (2026-07-11, lane-8db) — B1+B2 complete, sweep 85/85
+
+Resumed a killed-mid-write WIP (died registering `qa/manifest.json`); the
+WIP's own map/biome/mood/sprite work was already complete and correct —
+only the canonical's manifest/CLAUDE.md registration was missing.
+- **B1** `dungeon_approach` (16x12) + **B2** `trapped_halls` (20x14) in
+  `data/skeleton_scene.json`, biome `dungeon` (`data/biomes.json`:
+  Cemetery 0.4 floor/walls) + a new `dungeon_approach`/`trapped_halls`
+  moods.json grade (distinguishable-darker than `deep_tunnels`, per the
+  A1 verdict). Castle statue + Cave rubble dressing via `decor`.
+- 4 trap classes, all on existing machinery (no new sim): pressure
+  plate (plain trigger + observe reveal), dart slit (requires_skill
+  disarm-only — traced, no dash-timing mechanism exists, escalate-vs-
+  force-fit lesson applied), illusory floor (requires_skill reveal +
+  the existing entity-occupancy blocking IS the "floor that isn't",
+  zero new mechanism), snare (trigger_radius encounter SLOT,
+  placement-only prop, C-phase promotes — `rift_vermin_leak` precedent).
+- Art integrated: `pressure_plate`/`snare_coil` (A3 owned PixelLab,
+  "reads" verdict held). Art flagged for controller pass (VISUAL-LOG):
+  `dart_slit`/`illusory_floor` A3 candidates palette-drifted against
+  the real Cemetery floor — shipped on same-family placeholder sprites
+  instead (`sewer_grate` tinted, a Cemetery Props.png debris crop).
+  `dungeon_statue`/`dungeon_rubble` decor re-sourced this lane after
+  the original A1 picks turned out to be windows/mushrooms (windowed
+  read caught it, PIL blob-scan re-verified against real sheets).
+  Boss foreshadow: `dormant_guardian_marker` prop reuses `vault_construct`
+  (C3's ratified pick), dimmed — C-phase promotes to the real encounter.
+- New canonical `dungeon_peek` (fixture `cisterns_scout_start`, seed 9,
+  teleport-based — neither map is reachable from live play this phase,
+  matching the D1/riverfarm precedent): registered in `qa/manifest.json`
+  + `wandering_inn_game/CLAUDE.md`'s seed table. Full verification green:
+  import, all 21 unit suites, `dungeon_peek` headless + windowed
+  (screenshots read, trap tint-swaps + toasts legible even under the
+  deliberately-darkest-yet mood grade), full `ci_sweep.sh` 85/85 (was
+  84 before this canonical), zero grep hits.
+- **B3 (gallery-door reopen into `deep_tunnels`) correctly NOT done** —
+  excluded from this lane's charter, carried by the controller; the
+  landing anchor (`gallery_seal_anchor`, cell (1,6) in `dungeon_approach`)
+  is commented for exactly that hookup. No existing-map edit made.
+- Phase C (party fight, vault, C4 skill-assist) and Phase D (dialogue)
+  still open per the plan.
+
 ## USER PLAYTEST BATCH 2 (2026-07-11, 29 findings) — TRIAGE LIVE
 
 - **#62 v0.4.3 hotfix wave** (findings 1-15,20,22,24,29 mechanical):
