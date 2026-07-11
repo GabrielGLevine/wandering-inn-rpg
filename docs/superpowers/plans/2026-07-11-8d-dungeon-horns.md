@@ -29,13 +29,19 @@ content). One milestone, five phases; A runs background from day one.
   render path). SECOND EXPERIMENT (floor-wear pair, tileset 3a7f4643):
   the transition CRACK lines read well, but terrain differentiation is
   weak at 16px — 'heavily worn/rubble' rendered as the same brick.
-  A1 VERDICT after 2 of the budgeted attempts: base floor+wall from
-  the LICENSED families (Pixel Crawler cave/castle per the catalog —
-  the fidelity ceiling is higher), pixflux for trap-tell accents and
-  the rune-carved feature tiles; /create-tileset parked (both attempts
-  in potential_assets/pixellab_2026-07-11_tilesets/). Fresh ANCHOR
-  MEASUREMENT per the gotcha. Windowed adjacency read before any map
-  authoring consumes it.
+  A1 VERDICT after 2 of the budgeted attempts: /create-tileset parked
+  (both attempts in potential_assets/pixellab_2026-07-11_tilesets/).
+  FAMILY PICK (catalog pass 2026-07-11): base floor+walls = Pixel
+  Crawler CEMETERY 0.4 (bleak grey-green worked stone, own floor/
+  tiles/walls sheets — the one family that reads ancient-worked, not
+  city-sewer, not regal-castle, not living-cave); dress with CASTLE
+  0.3 stone busts/statues (pre-human relief) + CAVE rubble for
+  collapse bands; the old-dark PALETTE comes from moods.json's map
+  grade + the now-live decor tint (#55), not from recoloring sheets.
+  B-lane: index pass for exact sheet paths/dims, biomes.json slices at
+  16px, fresh ANCHOR MEASUREMENT per the gotcha, windowed adjacency
+  read before any map authoring consumes it. Trap tells (A3 parked
+  candidates) re-read/regen against THIS floor.
 - A2: three Horns characters, v2 create-character-pro → animate
   (idle+walk; slice for Yvlon/Ksmvr who field as allies) → zips.
   PROFILES FIRST (wiki-verified) into character-profiles.md: Ceria
