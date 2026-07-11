@@ -632,7 +632,12 @@ func _start_turn() -> void:
 ## of these still gets its passive bonus on top of the reduced base (a
 ## flat add, same as dash() stacking on top of whatever pool state already
 ## exists; there is no design reason the passive would selectively skip a
-## slowed turn).
+## slowed turn). Issue #60 item 3: also emits PASSIVE_APPLIED{id, skill} for
+## every contributing skill -- the ONLY site this bonus is granted, so this
+## is the ONLY place that can mark it "used" for the journal's first-use
+## reveal (a passive never goes through use_skill/resolve_active). Data-
+## driven off `effect.type` (the SAME check already gating the total below),
+## never a skill-id special case.
 func _move_pool_bonus_total(c: Dictionary) -> int:
 	var total := 0
 	for sk: String in (c[WIKeys.SKILLS] as Array):
@@ -642,6 +647,7 @@ func _move_pool_bonus_total(c: Dictionary) -> int:
 		var effect: Dictionary = s.get(WIKeys.EFFECT, {})
 		if String(effect.get(WIKeys.TYPE, "")) == "move_pool_bonus":
 			total += int(effect.get(WIKeys.AMOUNT, 0))
+			_emit(WIEvents.PASSIVE_APPLIED, {"id": String(c[WIKeys.ID]), "skill": sk})
 	return total
 
 

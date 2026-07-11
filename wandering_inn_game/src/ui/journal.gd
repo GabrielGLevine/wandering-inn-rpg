@@ -24,6 +24,14 @@ extends CanvasLayer
 
 const PANEL_SIZE := Vector2(640.0, 560.0)
 
+## Issue #60 item 1: the Skills section's one-line disclosure that combat
+## kit is class+weapon-DERIVED, not player-assigned (there is no loadout
+## editor for combat skills -- only field/hotbar assignment, handled by the
+## toggle hint right below this one). Threaded into `ui_journal_shown`'s
+## payload too (`skills_note` field) so QA can assert the exact copy without
+## reading the rendered RichTextLabel.
+const COMBAT_KIT_NOTE := "Combat skills follow your classes and weapon."
+
 ## Posting-id -> short board title, DUPLICATED from `WIBounties._posting_title`
 ## (that helper is a private-by-convention static on bounties.gd — this file
 ## already keeps a zero-cross-dependency per-file copy for the combatants
@@ -318,6 +326,7 @@ func _open() -> void:
 		"quest_lines": quest_lines.size(),
 		"skill_groups": headings,
 		"skill_count": skill_count,
+		"skills_note": COMBAT_KIT_NOTE,
 		"revealed_skills": revealed_skills,
 		"revealed_effect_lines": revealed_effect_lines,
 		"act_id": String(act.get("id", "")),
@@ -505,6 +514,7 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, 
 		parts.append(line)
 	parts.append("")
 	parts.append("[b]Skills[/b]")
+	parts.append(COMBAT_KIT_NOTE)
 	# The assignment surface's one-line disclosure, matching the established
 	# hint-copy grammar (char_creation.gd's "Up/Down to choose  •  Enter to
 	# confirm  •  Esc to go back"). Composed through WIInputHints (kb-mode
