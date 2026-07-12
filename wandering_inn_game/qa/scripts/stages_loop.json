@@ -72,7 +72,8 @@
    { "text": "The old charm-cord, friend's price. (4 gold)", "locked": false, "requirement": "", "effect_lines": ["+2 HP", "Resonance 1"] },
    { "text": "That Silverfang hunting knife, friend's price. (13 gold)", "locked": true, "requirement": "costs 13 gold", "effect_lines": ["+1 damage on melee hits"] },
    { "text": "The wool-lined cloak, friend's price. (16 gold)", "locked": true, "requirement": "costs 16 gold", "effect_lines": ["+3 HP"] },
-   { "text": "The boiled-leather jerkin, friend's price. (22 gold)", "locked": true, "requirement": "costs 22 gold", "effect_lines": ["+4 HP"] }
+   { "text": "The boiled-leather jerkin, friend's price. (22 gold)", "locked": true, "requirement": "costs 22 gold", "effect_lines": ["+4 HP"] },
+   { "text": "The hunting bow, then. Gnoll-strung, proper draw. (18 gold)", "locked": true, "requirement": "costs 18 gold", "effect_lines": ["+1 damage on ranged hits", "Range 4"] }
   ] }, "timeout_sec": 5 },
   { "action": "assert_event_absent", "type": "dialogue_node", "payload_contains": { "options": [
    { "text": "The old charm-cord, then. (5 gold)" }

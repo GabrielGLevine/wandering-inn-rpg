@@ -5406,6 +5406,27 @@
      ],
      "locked_toast": "Barred, and empty behind the bars. You can tell by the quiet. Whatever ends up in here hasn't happened yet.",
      "observe": "A single holding cell, iron-barred, straw swept into one corner. Duty-mundane, like everything else in this building — until it isn't."
+    },
+    {
+     "_comment": "GH#70 [Archer]'s earn seam: the practice archery butt, item-gated on carrying any bow (`requires_weapon_family`, wi_game.gd's interact() gate -- the small parallel to the #59 conversation item-gate for a bare prop, checked against the CARRIED inventory, not the equipped slot). Each successful interact banks `ranged_hit` DIRECTLY (the SAME counter a bow's basic Attack tallies in a real fight -- see wi_combat.gd's _resolve_hit doc comment) -- repeatable (nothing marks it consumed), so 3 practice shots alone clear [Archer]'s gained_by threshold with zero combat required, matching the classless-start onboarding parity every other earned class already gives (warrior=spar, mage/rogue/diplomat=one conversation). Reuses the `training_dummy` sprite (relc_spar's own straw-target art on a DIFFERENT map -- floodplains training_yard's Relc-run dummies vs this barracks butt, never on screen together) tinted straw-tan so it reads as a fixed range target rather than a hackable melee dummy. Placed at (11,1) against the north wall (the established 'against a wall' placement rule), approached from (11,2) -- reachable via the SAME (2,3)->(11,3) waypoints barracks_walkthrough's own cell_door leg already uses, then straight up 2, clear of every blocked/decor cell in the room (table_brown/shelf_bottles/crate all sit on row y=2 at x=3/6/9, never touched by this column-11 approach).",
+     "id": "archery_butt",
+     "kind": "prop",
+     "cell": [
+      11,
+      1
+     ],
+     "display_name": "Archery Butt",
+     "sprite": "training_dummy",
+     "tint": [
+      0.85,
+      0.75,
+      0.45
+     ],
+     "observe": "A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster, more or less -- somebody here takes the drills seriously.",
+     "requires_weapon_family": "bow",
+     "item_hint_toast": "Nothing to shoot with. A bow in hand would do it.",
+     "on_interact_accomplishment": "ranged_hit",
+     "toast": "You put an arrow in the straw. Not bad, for someone who still flinches at the draw."
     }
    ]
   },

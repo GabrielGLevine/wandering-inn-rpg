@@ -66,6 +66,11 @@ const EXPECTED_ITEMS := {
 	"sleeproot_draught": ["Worth 5 gold"],
 	"hollow_herb_sachet": ["+1 HP", "Worth 6 gold"],
 	"witch_wardstone_bead": ["+2 HP", "Resonance 1", "Worth 16 gold"],
+	# GH#70 [Archer]: the two bows. `range` (4, > 1) earns the "Range 4" line;
+	# damage_mod (hunting_bow only) reads "ranged hits" instead of "melee
+	# hits" (effect_text.gd's own range-aware branch).
+	"training_bow": ["Range 4", "Worth 8 gold"],
+	"hunting_bow": ["+1 damage on ranged hits", "Range 4", "Worth 18 gold"],
 }
 
 const EXPECTED_SKILLS := {
@@ -154,6 +159,16 @@ const EXPECTED_SKILLS := {
 	# scope).
 	"calming_touch": ["2 AP — damage 1d6 at range 1. Slows."],
 	"raskghar_maul": ["3 AP — damage 1d6 at range 2. Slows."],
+	# GH#70 [Archer] kit -- all three existing effect TYPES (damage_mult twice,
+	# line_damage once), zero new resolvers, so the phrasing matches their
+	# sword/spear twins exactly (power_strike/quick_slash/triple_thrust's own
+	# lines above).
+	"power_shot": ["3 AP — ×2 damage"],
+	"quick_nock": ["1 AP — ×0.7 damage"],
+	"piercing_shot": ["3 AP — damage everything in a line 4 cells long"],
+	# [Keen Eye]: field-only, no combat effect -- same empty card as
+	# basic_cleaning/observe above.
+	"keen_eye": [],
 }
 
 
@@ -229,6 +244,20 @@ func _test_tripwires() -> void:
 	_check(WIEffectText.item_effect_lines({"hp_mod": 4}) == ["+4 HP"], "item hp tripwire base")
 	_check(WIEffectText.item_effect_lines({"hp_mod": 7}) == ["+7 HP"], "item hp tripwire moved")
 	_check(WIEffectText.item_effect_lines({"damage_mod": 9}) == ["+9 damage on melee hits"], "item damage tripwire")
+	# GH#70: `range > 1` earns its own line AND flips the damage phrasing to
+	# "ranged hits" -- both numbers READ from the dict, never literals.
+	_check(
+		WIEffectText.item_effect_lines({"damage_mod": 3, "range": 4}) == ["+3 damage on ranged hits", "Range 4"],
+		"item ranged-damage tripwire base"
+	)
+	_check(
+		WIEffectText.item_effect_lines({"damage_mod": 3, "range": 6}) == ["+3 damage on ranged hits", "Range 6"],
+		"item ranged-damage tripwire: range moves"
+	)
+	_check(
+		WIEffectText.item_effect_lines({"range": 1}) == [],
+		"item range tripwire: range<=1 is melee, no Range line (byte-identical default)"
+	)
 
 	# Skills: mutating effect.range moves the range in the line. effect.die is
 	# VESTIGIAL (wi_combat.gd never reads it -- it rolls the

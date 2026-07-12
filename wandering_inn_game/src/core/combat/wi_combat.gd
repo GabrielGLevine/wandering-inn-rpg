@@ -822,6 +822,11 @@ func snapshot() -> Dictionary:
 			"move_pool": c[WIKeys.MOVE_POOL],
 			"alive": c[WIKeys.ALIVE], "side": c[WIKeys.SIDE],
 			"skills": (c[WIKeys.SKILLS] as Array).duplicate(),
+			# GH#70: exposed the same way max_mp was when MP shipped -- lets QA
+			# assert the range+LoS seam directly (`archer_earn_loop`) instead of
+			# only inferring it from attack_resolved's absence of a distance
+			# field. Defaults to 1 for every pre-GH#70 combatant.
+			"weapon_range": int(c.get(WIKeys.WEAPON_RANGE, 1)),
 		}
 	return {
 		"round": round_number, "active": get_active() if not turn_order.is_empty() else "",

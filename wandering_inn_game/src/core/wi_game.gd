@@ -2352,13 +2352,13 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	var kit: Array = WIProgression.granted_skills(classes, _combat_config["classes"], generalist_classes)
 	var weapon := item(String(equipped.get(WIKeys.WEAPON, "")))
 	pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills)
-		# GH#70 range+LoS seam: a bow's items.json `range` (4) rides onto the
-		# runtime combatant dict the SAME build-time-only way weapon_die
-		# would if it were per-weapon (see WEAPON_RANGE's own doc comment) --
-		# `wi_combat.gd`'s `_init` reads this key straight off the cfg. Every
-		# pre-GH#70 weapon item omits `range`, so `weapon.get` defaults to 1
-		# (melee) for every equip state that predates this task.
-		pc[WIKeys.WEAPON_RANGE] = int(weapon.get(WIKeys.RANGE, 1))
+	# GH#70 range+LoS seam: a bow's items.json `range` (4) rides onto the
+	# runtime combatant dict the SAME build-time-only way weapon_die
+	# would if it were per-weapon (see WEAPON_RANGE's own doc comment) --
+	# `wi_combat.gd`'s `_init` reads this key straight off the cfg. Every
+	# pre-GH#70 weapon item omits `range`, so `weapon.get` defaults to 1
+	# (melee) for every equip state that predates this task.
+	pc[WIKeys.WEAPON_RANGE] = int(weapon.get(WIKeys.RANGE, 1))
 	var armor := item(String(equipped.get("armor", "")))
 	var accessories: Array = []
 	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
