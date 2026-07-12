@@ -1,152 +1,195 @@
 {
-	"_comment": "THE REQUEST BOARD's live posting pool. Assembled VERBATIM from docs/design/board-staging/guild-bounties.json -- copy/giver/condition/gold carried over unchanged, _notes/_comment_* annotations stripped per the G2 discipline. Pool order is LOAD-BEARING (WIBounties.active_slate: rotation index = times_slept % pool.size(), zero rng) -- do not reorder without re-deriving every canonical seed that touches the board. `bounty_crab_cull` (the staging doc's 10th entry) is PARKED, not shipped: its condition names a bank (`rock_crabs_culled`) that doesn't exist until HR-II lands a Rock Crab encounter -- the staging doc itself flags 'keep OUT of the live pool until HR-II lands', so this file ships the 9 bounties that ride REAL, already-produced accomplishment counters (won_combat/persuaded_someone/heard_gossip/observed_things/found_phosphor_moss+read_drainage_marker/found_spider_silk/served_customer/cooked_meal/cleared_sewer_vermin -- every one cross-checked against a real on_victory/on_skill_use/on_interact_accomplishment/talk_pool producer in skeleton_scene.json before this file was written). Conditions use the quests.json complete_when dict shape (multi-key = AND). Evaluation mode is PER-BOUNTY via an OPTIONAL `condition_mode` field (default \"delta\" when absent -- WIGame.accept_bounty snapshots each condition key's accomplishment_count as a baseline; WIBounties.condition_met compares CURRENT - BASELINE against the threshold, the staging doc's own binding design note, so a mid-game player can never insta-complete a ROTATING/repeatable bounty off counters banked before they took the posting). ONE-SHOT SOFT-LOCK GUARD: `bounty_sewer_survey`/`bounty_silk_line`/`bounty_vermin_grate` key on ONE-SHOT accomplishments (found_phosphor_moss+read_drainage_marker/found_spider_silk/cleared_sewer_vermin) a player can bank BEFORE ever accepting the posting -- under delta semantics that makes them permanently unfulfillable once already done, with no way to un-stick the slip. These three carry `condition_mode: \"absolute\"`: condition_met reads the counter directly (current >= threshold, baseline ignored, no baseline even snapshotted at accept) -- work already done is honest board pay, and because the underlying accomplishments are one-shot, this can't be gamed into a repeatable grind. APPEND (issue #72, the generated posting batch): 9 more bounties, indices [9..17], appended AFTER the original 9 -- pure append, nothing above reordered, so every existing rotation window (times_slept 0/1, board_loop.json/test_sim_core.gd) stays byte-identical (small early indices never reach the new tail before wrapping past a MUCH larger pool.size()). Grammar/producer trace + pay-formula derivation + REJECTED alternates: docs/design/board-staging/generated-candidates.json (scripts/generate_postings.py). Every condition key here is cross-checked against a real producer by test_content.gd's _validate_bounties (new, this task).",
-	"bounties": [
-		{
-			"id": "bounty_road_cull",
-			"pillar": "fight",
-			"giver": "The Watch (duty-sergeant's hand, terse, no wasted ink)",
-			"condition": { "won_combat": 2 },
-			"gold": 4,
-			"copy": "WATCH NOTICE. Goblin raiders, Floodplains road, east approach. Cull two bands. Proof by Guild attestation. 4 gold on turn-in. No spoils claims against the Watch. Second Shift."
-		},
-		{
-			"id": "bounty_settle_dispute",
-			"pillar": "social",
-			"giver": "Watch Captain Zevara Sunderscale (dry, overworked, duty-first; longer hand than the sergeant's, and tired)",
-			"condition": { "persuaded_someone": 1 },
-			"gold": 3,
-			"copy": "Posted by order of the Watch Captain. The Watch is not a wall between every two fools in this city who disagree. End a quarrel with words, both parties still standing, and the Watch pays 3 gold on a guardsman's confirmation. This is cheaper than a cell and I am not above saying so. Z. Sunderscale."
-		},
-		{
-			"id": "bounty_gossip_tea",
-			"pillar": "social",
-			"giver": "Krshia Silverfang (measured, proud, Silverfang pragmatism; 'Hrr' used once, sparingly)",
-			"condition": { "heard_gossip": 3 },
-			"gold": 2,
-			"copy": "A request, for one with ears. Talk to people. The gate, the Guild, the stalls. What they say freely, you remember, and you tell me over tea. Not spying. Listening. Hrr. The difference matters to Gnolls. 2 gold, and the tea is mine to pour. Krshia Silverfang."
-		},
-		{
-			"id": "bounty_observe_survey",
-			"pillar": "explore",
-			"giver": "Olesm Swifttail (earnest clerk-precise; the tactics budget is real to him)",
-			"condition": { "observed_things": 3 },
-			"gold": 3,
-			"copy": "Request, Guild-posted, standing. The Guild's map of the district is older than my vest. Persons holding [Observe] or a comparable Skill: three fresh observations logged this rotation, any subject of note, reported to the desk. 3 gold from the tactics budget. Neat handwriting appreciated. Not required. Olesm Swifttail, [Tactician]."
-		},
-		{
-			"id": "bounty_sewer_survey",
-			"pillar": "explore",
-			"giver": "Lism Swifttail (Olesm's uncle, [Shopkeeper]; fussy merchant hand: itemized, suspicious of vagueness)",
-			"condition": { "found_phosphor_moss": 1, "read_drainage_marker": 1 },
-			"condition_mode": "absolute",
-			"gold": 3,
-			"copy": "NOTICE, itemized. Wanted: written confirmation, both items, no substitutions. Item one, that the old drainage marker in the east gallery is still legible. Item two, whether the glow-moss has spread past the first junction. My stockroom shares a wall with that gallery and my insurance man wants ANSWERS, not feelings. Payment 3 gold, exact. I do not pay for 'probably.' L. Swifttail, purveyor."
-		},
-		{
-			"id": "bounty_silk_line",
-			"pillar": "explore",
-			"giver": "Redscar Vell, Bronze-rank adventurer (misspelled-confident; the hand IS the character)",
-			"condition": { "found_spider_silk": 1 },
-			"condition_mode": "absolute",
-			"gold": 2,
-			"copy": "SILK!! i know were the spiders keep there silk in the sewers. i mean i know ROUGHLY. first one to find the silk-line and mark it on the gild map gets 2 gold of my own coin. its good silk. dont fight the nest. thats MY nest. i called it. REDSCAR VELL, bronze rank (almost silver)"
-		},
-		{
-			"id": "bounty_inn_hands",
-			"pillar": "work",
-			"giver": "Erin Solstice (warm runaway babble, self-interrupting; the exclamation points are load-bearing)",
-			"condition": { "served_customer": 3 },
-			"gold": 2,
-			"copy": "HI! The Wandering Inn (the one on the hill, across the Floodplains, you literally cannot miss it) needs an extra pair of hands! Serve three guests. That's it! That's the whole job! Dinner included, and Lyonette says I can't keep adding exclamation points to these, so: two gold at the Guild. Promise! Erin Solstice, [Innkeeper]."
-		},
-		{
-			"id": "bounty_evening_stew",
-			"pillar": "work",
-			"giver": "Lyonette du Marquin (formal diction slipping into sincerity; signs a bare initial)",
-			"condition": { "cooked_meal": 2 },
-			"gold": 2,
-			"copy": "The Wandering Inn requires a competent hand at the stew pot for the evening service. Two proper meals, cooked, not burnt, not 'stretched.' Payment of 2 gold, lodged with the Guild, which I am assured is the respectable way these things are done. The kitchen is cleaner than the last notice implied. L."
-		},
-		{
-			"id": "bounty_vermin_grate",
-			"pillar": "fight",
-			"giver": "Essram, cellarman of the Tailless Cask (aggrieved run-on complaint hand)",
-			"condition": { "cleared_sewer_vermin": 1 },
-			"condition_mode": "absolute",
-			"gold": 3,
-			"copy": "To whoever clears out the wet-vermin under Market Street: my cellar shares a wall with the drainage gallery and I can HEAR them at night, scratching, always at the same brick, the third one down, I have counted. The Guild holds my three gold. Bring me quiet. Essram, cellarman, the Tailless Cask."
-		},
-		{
-			"id": "bounty_lamp_upkeep",
-			"pillar": "work",
-			"giver": "Lyonette du Marquin (formal diction slipping into sincerity; signs a bare initial)",
-			"condition": { "lit_the_common_room": 2 },
-			"gold": 2,
-			"copy": "The common room's light gutters some evenings when nobody's minded it -- the Inn would rather not sit dark while custom's in. Relight it properly, twice over, and the Guild holds 2 gold for the trouble. Not a complicated request. L."
-		},
-		{
-			"id": "bounty_tavern_tables",
-			"pillar": "work",
-			"giver": "Erin Solstice (warm runaway babble, self-interrupting; the exclamation points are load-bearing)",
-			"condition": { "cleaned_the_inn": 3 },
-			"gold": 2,
-			"copy": "HI AGAIN! Okay so tables get sticky, that's just tables, but THREE of them wiped down properly would be amazing, Lyonette keeps giving me a Look about it. 2 gold at the Guild, same as always! You know where the rags are! Erin Solstice, [Innkeeper]."
-		},
-		{
-			"id": "bounty_market_watch",
-			"pillar": "work",
-			"giver": "Watch Guard (gate detail, brief -- even more clipped than the sergeant's own hand)",
-			"condition": { "browsed_market": 2, "browsed_bread_stall": 1 },
-			"gold": 2,
-			"copy": "WATCH NOTICE, gate detail. Two passes of the Silverfang stall, one of the bread stall, same shift. Eyes open, nothing more -- pickpockets work a crowd, not an empty street. 2 gold on a guardsman's word. Post standing."
-		},
-		{
-			"id": "bounty_barracks_checkin",
-			"pillar": "social",
-			"giver": "Duty Sergeant Dresk Ashgrave (the road-cull sergeant's same hand -- terse, no wasted ink)",
-			"condition": { "chatted_with_duty_sergeant": 2 },
-			"gold": 1,
-			"copy": "BARRACKS NOTICE. Come by twice, state your business, don't loiter. I like knowing who's carrying a blade in this city before I hear about it secondhand. 1 gold for the courtesy. Second Shift."
-		},
-		{
-			"id": "bounty_charm_offensive",
-			"pillar": "social",
-			"giver": "Krshia Silverfang (measured, proud, Silverfang pragmatism; 'Hrr' used once, sparingly)",
-			"condition": { "befriended_moments": 3 },
-			"gold": 2,
-			"copy": "A second request, small. This city does not warm to strangers quickly, and strangers who do not try stay strangers. Three kind words, three different faces, freely given. Hrr. Good for the city. Good for you. 2 gold, same as before. Krshia Silverfang."
-		},
-		{
-			"id": "bounty_bow_practice",
-			"pillar": "work",
-			"giver": "Duty Sergeant Dresk Ashgrave",
-			"condition": { "ranged_hit": 3 },
-			"gold": 2,
-			"copy": "BARRACKS NOTICE, archery butt. Three clean hits, logged by whoever's on the yard. String's provided. Arm's your own. 2 gold, no fuss. Second Shift."
-		},
-		{
-			"id": "bounty_guild_census",
-			"pillar": "explore",
-			"giver": "Olesm Swifttail (earnest clerk-precise; the tactics budget is real to him)",
-			"condition": { "visited_guild": 3 },
-			"gold": 3,
-			"copy": "Request, standing, Guild-posted. The tactics budget wants a rough count of who's actually taking Guild work this rotation, not just registered. Three visits through this door counts you. 3 gold from the same budget as before. Olesm Swifttail, [Tactician]."
-		},
-		{
-			"id": "bounty_alley_cull",
-			"pillar": "fight",
-			"giver": "Master Coyle (prices everything, never raises his voice)",
-			"condition": { "cleared_footpads_a": 1, "cleared_footpads_b": 1 },
-			"gold": 8,
-			"copy": "Two nests of small-time opportunists work the alleys off my street -- the Turn, and the door with the cheese wedged under it. Amateurs, cutting into trade that isn't theirs to cut into. Clear both and there's 8 gold in it, paid quietly, no questions asked either direction. Master Coyle."
-		},
-		{
-			"id": "bounty_second_watch",
-			"pillar": "social",
-			"giver": "Watch Captain Zevara Sunderscale (dry, overworked, duty-first; longer hand than the sergeant's, and tired)",
-			"condition": { "persuaded_someone": 2 },
-			"gold": 9,
-			"copy": "A second standing order, same reasoning as the first: I would rather this city talked its way out of two more fights than swung its way through them. Two settled disputes, words only, both parties upright after. 9 gold -- more than the first, because it is harder work than it sounds, and I know exactly how hard. Z. Sunderscale."
-		}
-	]
+ "_comment": "THE REQUEST BOARD's live posting pool. Assembled VERBATIM from docs/design/board-staging/guild-bounties.json -- copy/giver/condition/gold carried over unchanged, _notes/_comment_* annotations stripped per the G2 discipline. Pool order is LOAD-BEARING (WIBounties.active_slate: rotation index = times_slept % pool.size(), zero rng) -- do not reorder without re-deriving every canonical seed that touches the board. `bounty_crab_cull` (the staging doc's 10th entry) is PARKED, not shipped: its condition names a bank (`rock_crabs_culled`) that doesn't exist until HR-II lands a Rock Crab encounter -- the staging doc itself flags 'keep OUT of the live pool until HR-II lands', so this file ships the 9 bounties that ride REAL, already-produced accomplishment counters (won_combat/persuaded_someone/heard_gossip/observed_things/found_phosphor_moss+read_drainage_marker/found_spider_silk/served_customer/cooked_meal/cleared_sewer_vermin -- every one cross-checked against a real on_victory/on_skill_use/on_interact_accomplishment/talk_pool producer in skeleton_scene.json before this file was written). Conditions use the quests.json complete_when dict shape (multi-key = AND). Evaluation mode is PER-BOUNTY via an OPTIONAL `condition_mode` field (default \"delta\" when absent -- WIGame.accept_bounty snapshots each condition key's accomplishment_count as a baseline; WIBounties.condition_met compares CURRENT - BASELINE against the threshold, the staging doc's own binding design note, so a mid-game player can never insta-complete a ROTATING/repeatable bounty off counters banked before they took the posting). ONE-SHOT SOFT-LOCK GUARD: `bounty_sewer_survey`/`bounty_silk_line`/`bounty_vermin_grate` key on ONE-SHOT accomplishments (found_phosphor_moss+read_drainage_marker/found_spider_silk/cleared_sewer_vermin) a player can bank BEFORE ever accepting the posting -- under delta semantics that makes them permanently unfulfillable once already done, with no way to un-stick the slip. These three carry `condition_mode: \"absolute\"`: condition_met reads the counter directly (current >= threshold, baseline ignored, no baseline even snapshotted at accept) -- work already done is honest board pay, and because the underlying accomplishments are one-shot, this can't be gamed into a repeatable grind. APPEND (issue #72, the generated posting batch): 9 more bounties, indices [9..17], appended AFTER the original 9 -- pure append, nothing above reordered, so every existing rotation window (times_slept 0/1, board_loop.json/test_sim_core.gd) stays byte-identical (small early indices never reach the new tail before wrapping past a MUCH larger pool.size()). Grammar/producer trace + pay-formula derivation + REJECTED alternates: docs/design/board-staging/generated-candidates.json (scripts/generate_postings.py). Every condition key here is cross-checked against a real producer by test_content.gd's _validate_bounties (new, this task).",
+ "bounties": [
+  {
+   "id": "bounty_road_cull",
+   "pillar": "fight",
+   "giver": "The Watch (duty-sergeant's hand, terse, no wasted ink)",
+   "condition": {
+    "won_combat": 2
+   },
+   "gold": 4,
+   "copy": "WATCH NOTICE. Goblin raiders, Floodplains road, east approach. Cull two bands. Proof by Guild attestation. 4 gold on turn-in. No spoils claims against the Watch. Second Shift."
+  },
+  {
+   "id": "bounty_settle_dispute",
+   "pillar": "social",
+   "giver": "Watch Captain Zevara Sunderscale (dry, overworked, duty-first; longer hand than the sergeant's, and tired)",
+   "condition": {
+    "persuaded_someone": 1
+   },
+   "gold": 3,
+   "copy": "Posted by order of the Watch Captain. The Watch is not a wall between every two fools in this city who disagree. End a quarrel with words, both parties still standing, and the Watch pays 3 gold on a guardsman's confirmation. This is cheaper than a cell and I am not above saying so. Z. Sunderscale."
+  },
+  {
+   "id": "bounty_gossip_tea",
+   "pillar": "social",
+   "giver": "Krshia Silverfang (measured, proud, Silverfang pragmatism; 'Hrr' used once, sparingly)",
+   "condition": {
+    "heard_gossip": 3
+   },
+   "gold": 2,
+   "copy": "A request, for one with ears. Talk to people. The gate, the Guild, the stalls. What they say freely, you remember, and you tell me over tea. Not spying. Listening. Hrr. The difference matters to Gnolls. 2 gold, and the tea is mine to pour. Krshia Silverfang."
+  },
+  {
+   "id": "bounty_observe_survey",
+   "pillar": "explore",
+   "giver": "Olesm Swifttail (earnest clerk-precise; the tactics budget is real to him)",
+   "condition": {
+    "observed_things": 3
+   },
+   "gold": 3,
+   "copy": "Request, Guild-posted, standing. The Guild's map of the district is older than my vest. Persons holding [Observe] or a comparable Skill: three fresh observations logged this rotation, any subject of note, reported to the desk. 3 gold from the tactics budget. Neat handwriting appreciated. Not required. Olesm Swifttail, [Tactician]."
+  },
+  {
+   "id": "bounty_sewer_survey",
+   "pillar": "explore",
+   "giver": "Lism Swifttail (Olesm's uncle, [Shopkeeper]; fussy merchant hand: itemized, suspicious of vagueness)",
+   "condition": {
+    "found_phosphor_moss": 1,
+    "read_drainage_marker": 1
+   },
+   "condition_mode": "absolute",
+   "gold": 3,
+   "copy": "NOTICE, itemized. Wanted: written confirmation, both items, no substitutions. Item one, that the old drainage marker in the east gallery is still legible. Item two, whether the glow-moss has spread past the first junction. My stockroom shares a wall with that gallery and my insurance man wants ANSWERS, not feelings. Payment 3 gold, exact. I do not pay for 'probably.' L. Swifttail, purveyor."
+  },
+  {
+   "id": "bounty_silk_line",
+   "pillar": "explore",
+   "giver": "Redscar Vell, Bronze-rank adventurer (misspelled-confident; the hand IS the character)",
+   "condition": {
+    "found_spider_silk": 1
+   },
+   "condition_mode": "absolute",
+   "gold": 2,
+   "copy": "SILK!! i know were the spiders keep there silk in the sewers. i mean i know ROUGHLY. first one to find the silk-line and mark it on the gild map gets 2 gold of my own coin. its good silk. dont fight the nest. thats MY nest. i called it. REDSCAR VELL, bronze rank (almost silver)"
+  },
+  {
+   "id": "bounty_inn_hands",
+   "pillar": "work",
+   "giver": "Erin Solstice (warm runaway babble, self-interrupting; the exclamation points are load-bearing)",
+   "condition": {
+    "served_customer": 3
+   },
+   "gold": 2,
+   "copy": "HI! The Wandering Inn (the one on the hill, across the Floodplains, you literally cannot miss it) needs an extra pair of hands! Serve three guests. That's it! That's the whole job! Dinner included, and Lyonette says I can't keep adding exclamation points to these, so: two gold at the Guild. Promise! Erin Solstice, [Innkeeper]."
+  },
+  {
+   "id": "bounty_evening_stew",
+   "pillar": "work",
+   "giver": "Lyonette du Marquin (formal diction slipping into sincerity; signs a bare initial)",
+   "condition": {
+    "cooked_meal": 2
+   },
+   "gold": 2,
+   "copy": "The Wandering Inn requires a competent hand at the stew pot for the evening service. Two proper meals, cooked, not burnt, not 'stretched.' Payment of 2 gold, lodged with the Guild, which I am assured is the respectable way these things are done. The kitchen is cleaner than the last notice implied. L."
+  },
+  {
+   "id": "bounty_vermin_grate",
+   "pillar": "fight",
+   "giver": "Essram, cellarman of the Tailless Cask (aggrieved run-on complaint hand)",
+   "condition": {
+    "cleared_sewer_vermin": 1
+   },
+   "condition_mode": "absolute",
+   "gold": 3,
+   "copy": "To whoever clears out the wet-vermin under Market Street: my cellar shares a wall with the drainage gallery and I can HEAR them at night, scratching, always at the same brick, the third one down, I have counted. The Guild holds my three gold. Bring me quiet. Essram, cellarman, the Tailless Cask."
+  },
+  {
+   "id": "bounty_lamp_upkeep",
+   "pillar": "work",
+   "giver": "Lyonette du Marquin (formal diction slipping into sincerity; signs a bare initial)",
+   "condition": {
+    "lit_the_common_room": 2
+   },
+   "gold": 2,
+   "copy": "The common room's light gutters some evenings when nobody's minded it -- the Inn would rather not sit dark while custom's in. Relight it properly, twice over, and the Guild holds 2 gold for the trouble. Not a complicated request. L."
+  },
+  {
+   "id": "bounty_tavern_tables",
+   "pillar": "work",
+   "giver": "Erin Solstice (warm runaway babble, self-interrupting; the exclamation points are load-bearing)",
+   "condition": {
+    "cleaned_the_inn": 3
+   },
+   "gold": 2,
+   "copy": "HI AGAIN! Okay so tables get sticky, that's just tables, but THREE of them wiped down properly would be amazing, Lyonette keeps giving me a Look about it. 2 gold at the Guild, same as always! You know where the rags are! Erin Solstice, [Innkeeper]."
+  },
+  {
+   "id": "bounty_market_watch",
+   "pillar": "work",
+   "giver": "Watch Guard (gate detail, brief -- even more clipped than the sergeant's own hand)",
+   "condition": {
+    "browsed_market": 2,
+    "browsed_bread_stall": 1
+   },
+   "gold": 2,
+   "copy": "WATCH NOTICE, gate detail. Two passes of the Silverfang stall, one of the bread stall, same shift. Eyes open, nothing more -- pickpockets work a crowd, not an empty street. 2 gold on a guardsman's word. Post standing."
+  },
+  {
+   "id": "bounty_barracks_checkin",
+   "pillar": "social",
+   "giver": "Duty Sergeant Dresk Ashgrave (the road-cull sergeant's same hand -- terse, no wasted ink)",
+   "condition": {
+    "chatted_with_duty_sergeant": 2
+   },
+   "gold": 1,
+   "copy": "BARRACKS NOTICE. Come by twice, state your business, don't loiter. I like knowing who's carrying a blade in this city before I hear about it secondhand. 1 gold for the courtesy. Second Shift."
+  },
+  {
+   "id": "bounty_charm_offensive",
+   "pillar": "social",
+   "giver": "Krshia Silverfang (measured, proud, Silverfang pragmatism; 'Hrr' used once, sparingly)",
+   "condition": {
+    "befriended_moments": 3
+   },
+   "gold": 2,
+   "copy": "A second request, small. This city does not warm to strangers quickly, and strangers who do not try stay strangers. Three kind words, three different faces, freely given. Hrr. Good for the city. Good for you. 2 gold, same as before. Krshia Silverfang."
+  },
+  {
+   "id": "bounty_bow_practice",
+   "pillar": "work",
+   "giver": "Duty Sergeant Dresk Ashgrave",
+   "condition": {
+    "ranged_hit": 3
+   },
+   "gold": 2,
+   "copy": "BARRACKS NOTICE, archery butt. Three clean hits, logged by whoever's on the yard. String's provided. Arm's your own. 2 gold, no fuss. Second Shift."
+  },
+  {
+   "id": "bounty_guild_census",
+   "pillar": "explore",
+   "giver": "Olesm Swifttail (earnest clerk-precise; the tactics budget is real to him)",
+   "condition": {
+    "visited_guild": 3
+   },
+   "gold": 3,
+   "copy": "Request, standing, Guild-posted. The tactics budget wants a rough count of who's actually taking Guild work this rotation, not just registered. Three visits through this door counts you. 3 gold from the same budget as before. Olesm Swifttail, [Tactician]."
+  },
+  {
+   "id": "bounty_alley_cull",
+   "pillar": "fight",
+   "giver": "Master Coyle (prices everything, never raises his voice)",
+   "condition": {
+    "cleared_footpads_a": 1,
+    "cleared_footpads_b": 1
+   },
+   "gold": 8,
+   "copy": "Two nests of small-time opportunists work the alleys off my street -- the Turn, and the door with the cheese wedged under it. Amateurs, cutting into trade that isn't theirs to cut into. Clear both and there's 8 gold in it, paid quietly, no questions asked either direction. Master Coyle.",
+   "condition_mode": "absolute",
+   "_trace": " MODE FIX (review HIGH): absolute -- Wilovan's quest close remove_entity-erases both footpad encounters permanently, so a delta posting dead-ends forever; absolute retires on first completion via the existing one-shot filter (the sewer-trio convention)."
+  },
+  {
+   "id": "bounty_second_watch",
+   "pillar": "social",
+   "giver": "Watch Captain Zevara Sunderscale (dry, overworked, duty-first; longer hand than the sergeant's, and tired)",
+   "condition": {
+    "persuaded_someone": 2
+   },
+   "gold": 9,
+   "copy": "A second standing order, same reasoning as the first: I would rather this city talked its way out of two more fights than swung its way through them. Two settled disputes, words only, both parties upright after. 9 gold -- more than the first, because it is harder work than it sounds, and I know exactly how hard. Z. Sunderscale.",
+   "condition_mode": "absolute",
+   "_trace": " MODE FIX (review MEDIUM): absolute -- persuaded_someone producers are all one-shot dialogue resolutions (~7 lifetime); a delta-2 posting can strand a player who spent all but one before accepting. One honest payout, then retired."
+  }
+ ]
 }

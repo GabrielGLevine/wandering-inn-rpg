@@ -49,7 +49,7 @@ original 9):
                transit, confirmed against wi_game.gd's door branch).
 
 PAY FORMULA -- tier-banded, delta-mode default. Recovered by regression
-against the 9 EXISTING delta-mode bounties (the 3 absolute/one-shot
+against the 6 EXISTING delta-mode bounties (the 3 absolute/one-shot
 discovery bounties are hand-tuned finder's fees, deliberately excluded from
 this formula -- see PILLAR_BASE_GOLD_PER_UNIT's own comment):
     pay = round(PILLAR_BASE_GOLD_PER_UNIT[pillar] * total_condition_units
@@ -77,6 +77,11 @@ STAGING_DIR = GAME_ROOT / "docs" / "design" / "board-staging"
 STAGING_OUT = STAGING_DIR / "generated-candidates.json"
 
 
+# KILL-RULE HARDENING (review HIGH): a respawning encounter is still a
+# DEAD producer if any dialogue effect remove_entity-erases it (quest
+# closes do this). Scan data/dialogue/*.json for remove_entity targets
+# and either exclude those encounters from repeatable kill postings or
+# emit condition_mode="absolute".
 def load_json(path: Path) -> dict:
     return json.loads(path.read_text())
 
