@@ -1,0 +1,72 @@
+{
+ "_comment": "Issue #79 (journal & progression communication wave): THE canonical for the journal's three new results-only surfaces -- the Completed section (chosen-path HISTORY line), the Postings section's detail view (accepted posting/slip's own authored copy, recoverable even off the browsable board slate), and the per-class aspiration identity line. Loads journal_history_start (the_errand complete via kept_reward, bounty_road_cull + delivery_krshia_wool both accepted, mage held@1) and opens the journal once -- every new field asserted structurally off the SAME ui_journal_shown event the pre-existing skills/act/postings fields already ride (one event, no OCR). A trailing cursor move + toggle proves the pre-existing skill-row keyboard/click mechanism (issue #84's own QA-teeth target) still works correctly with the new sections rendered above it -- cursor_line is computed fresh off parts.size() every render, so the new content can never desync it. Canonical seed: 9 (fixture rng_state governs; held for convention).",
+ "fixture_save": "journal_history_start",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "started_quests", "contains": "the_errand" },
+  { "action": "assert_state", "path": "accepted_bounty_id", "equals": "bounty_road_cull" },
+  { "action": "assert_state", "path": "accepted_delivery_id", "equals": "delivery_krshia_wool" },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "_comment": "Completed section: 'The Errand' resolved via kept_reward -- the chosen-path line, not a bare 'Complete.'. Postings section: BOTH the bounty and the delivery slip's own authored copy/slip_copy text, verbatim (WIBounties' real board strings, reused -- never re-authored, so this can't drift from what the board itself said). Skills section: 'Mage' heading (Lv 1) paired with its own authored aspiration line at the SAME index in class_aspirations; 'Innate' (index 0) carries none.",
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "completed_quest_lines": [
+     "The Errand — You kept the coin as your own courier's fee."
+    ],
+    "skill_groups": [
+     "Innate",
+     "Mage — Lv 1"
+    ],
+    "class_aspirations": [
+     "",
+     "Mages who refuse to narrow their craft are rare. The few who master its whole breadth are named [High Mages]."
+    ],
+    "skill_count": 4,
+    "posting_title": "Goblin Cull, Floodplains Road",
+    "posting_status": "In hand.",
+    "posting_gold": 4,
+    "posting_detail": "WATCH NOTICE. Goblin raiders, Floodplains road, east approach. Cull two bands. Proof by Guild attestation. 4 gold on turn-in. No spoils claims against the Watch. Second Shift.",
+    "delivery_title": "Wool Bolt to Silverfang Stall",
+    "delivery_status": "In hand.",
+    "delivery_gold": 1,
+    "delivery_detail": "TO: Silverfang stall, market row. One wool bolt. Same waking. The Gnoll pays for dry, not for fast. It rains here, keep the paper on it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_journal_history"
+  },
+  {
+   "_comment": "Issue #84 QA-teeth precedent: the pre-existing skill-row cursor still moves/toggles correctly with the new Completed/Postings-detail/aspiration content rendered above it in the SAME body -- cursor row 0 is Innate's [Basic Cleaning], one Down lands on Mage's [Frost Bolt].",
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_loadout_rendered",
+   "payload_contains": {
+    "skill": "frost_bolt",
+    "assigned": true,
+    "cursor_index": 1
+   },
+   "timeout_sec": 5
+  }
+ ]
+}

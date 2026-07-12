@@ -957,10 +957,11 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "Issue #79: a grant-less level-up (Helper L2 grants nothing) previously announced nothing felt -- helper's con growth now states its own +1 Max HP instead of a bare bracket.",
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Helper Level 2]"
+    "text": "[Helper Level 2] (+1 Max HP)"
    },
    "timeout_sec": 5
   },

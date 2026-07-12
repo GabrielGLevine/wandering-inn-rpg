@@ -174,7 +174,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== EQUIP THE BOW == Inventory is now [rusty_sword, relcs_spare_spear, training_bow] (bought item appended last, index 2); cursor resets to 0 on open -> two move_down presses select it.",
+   "_comment": "== EQUIP THE BOW == Inventory is now [rusty_sword, relcs_spare_spear, training_bow] (bought item appended last, index 2); cursor resets to 0 on open -> two move_down presses select it. Issue #79: every weapon card now carries its own kit-family line.",
    "action": "press",
    "name": "inventory"
   },
@@ -184,17 +184,21 @@
    "payload_contains": {
     "items": 3,
     "item_effect_lines": [
-     [],
      [
-      "+1 damage on melee hits"
+      "Sword kit replaces other weapon Skills in combat"
+     ],
+     [
+      "+1 damage on melee hits",
+      "Spear kit replaces other weapon Skills in combat"
      ],
      [
       "Range 4",
+      "Bow kit replaces other weapon Skills in combat",
       "Worth 8 gold"
      ]
     ],
     "selected_icon": true,
-    "mech_line": ""
+    "mech_line": "Sword kit replaces other weapon Skills in combat"
    },
    "timeout_sec": 5
   },
@@ -214,7 +218,7 @@
     "cursor": 2,
     "item": "training_bow",
     "selected_icon": false,
-    "mech_line": "Range 4 | Worth 8 gold"
+    "mech_line": "Range 4 | Bow kit replaces other weapon Skills in combat | Worth 8 gold"
    },
    "timeout_sec": 5
   },

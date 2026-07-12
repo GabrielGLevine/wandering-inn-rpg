@@ -521,6 +521,12 @@
    "seed": 1,
    "fixture": "horns_residence_start",
    "note": "8d D2 (issue #14/#15): the Horns of Hammerad's post-delve inn residence -- pool presences only v1 (Social II talk_pool_stages explicitly deferred). Walks to Ceria (common-room table)/Yvlon (by the hearth)/Ksmvr (beside the pantry door), pins one talk_pool line each via ui_dialogue_rendered, and proves entity presence via ui_entities_rendered's inn sprite count (16 -> 19); inn_walkthrough's own unmodified pre-quest run is this canonical's negative half"
+  },
+  {
+   "script": "journal_history",
+   "seed": 9,
+   "fixture": "journal_history_start",
+   "note": "Issue #79 (journal & progression communication wave): the journal's Completed section (chosen-path history line), Postings section detail view (accepted posting/slip's own authored copy text), and per-class aspiration identity line, all asserted structurally off one ui_journal_shown open; a trailing cursor move + toggle proves the pre-existing skill-row mechanism still works with the new sections rendered above it"
   }
  ]
 }

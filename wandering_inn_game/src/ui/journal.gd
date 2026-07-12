@@ -115,6 +115,10 @@ var _cursor_index := -1
 ## the journal is open -- see `_flat_skill_ids`' doc comment above).
 var _open_act: Dictionary = {}
 var _open_quest_lines: Array = []
+## Issue #79: completed-quest HISTORY lines (Game.sim.completed_quest_
+## summary()) -- see quest_summary()'s own doc comment for why completed
+## quests no longer appear in `_open_quest_lines` at all.
+var _open_completed_quest_lines: Array = []
 var _open_skill_groups: Array = []
 var _open_seen_statuses: Array = []
 var _open_combatants_catalog: Array = []
@@ -136,6 +140,11 @@ var _open_delivery_pool: Array = []
 ## display name, not id, because `skills_journal()`'s group dicts only carry
 ## the rendered heading string, never the class id.
 var _open_class_levels: Dictionary = {}
+## Class DISPLAY NAME -> its authored `aspiration.text` (data/classes.json),
+## for every class carrying one (see `_class_aspirations_by_heading`'s own
+## doc comment) -- issue #79's "dead aspiration text" surfaced at last. Keyed
+## the SAME way `_open_class_levels` is, same reasoning.
+var _open_class_aspirations: Dictionary = {}
 
 
 func _ready() -> void:
@@ -266,6 +275,13 @@ func _open() -> void:
 	open = true
 	var act: Dictionary = Game.sim.act_summary()
 	var quest_lines: Array = Game.sim.quest_summary()
+	# Issue #79 (journal history cluster): completed quests move OUT of the
+	# active Quests list (quest_summary() above now excludes them) into
+	# their own results-only "Completed" section, one line per finished
+	# quest with its own chosen-path HISTORY line when the quest's data
+	# resolves one (WIQuests.resolution_path_text via completed_quest_
+	# summary()'s own doc comment).
+	var completed_quest_lines: Array = Game.sim.completed_quest_summary()
 	var skill_groups: Array = Game.sim.skills_journal()
 	## Every status id the player has ever watched apply (Game.sim.
 	## seen_statuses -- any combatant's application counts, not just the
@@ -283,22 +299,30 @@ func _open() -> void:
 	var combatants_catalog := _load_combatants_catalog()
 	var bounty_pool := _load_json_pool("res://data/bounties.json", "bounties")
 	var delivery_pool := _load_json_pool("res://data/deliveries.json", "deliveries")
-	var class_levels := _class_levels_by_heading(_load_json_pool("res://data/classes.json", "classes"))
+	# Loaded ONCE, fed to both per-class derivations below (levels and the
+	# issue #79 aspiration line) -- avoids a second FileAccess+JSON.parse of
+	# the same file (the combatants_catalog doc comment above's own
+	# reasoning).
+	var classes_catalog := _load_json_pool("res://data/classes.json", "classes")
+	var class_levels := _class_levels_by_heading(classes_catalog)
+	var class_aspirations := _class_aspirations_by_heading(classes_catalog)
 	# Cache this open's inputs so a later cursor move or assign/unassign
 	# toggle can rebuild the body without re-querying Game.sim (see these
 	# fields' own doc comment -- nothing can change the known-skill set
 	# while the journal is open).
 	_open_act = act
 	_open_quest_lines = quest_lines
+	_open_completed_quest_lines = completed_quest_lines
 	_open_skill_groups = skill_groups
 	_open_seen_statuses = seen_statuses
 	_open_combatants_catalog = combatants_catalog
 	_open_bounty_pool = bounty_pool
 	_open_delivery_pool = delivery_pool
 	_open_class_levels = class_levels
+	_open_class_aspirations = class_aspirations
 	_flat_skill_ids = _flatten_skill_ids(skill_groups)
 	_cursor_index = 0 if not _flat_skill_ids.is_empty() else -1
-	var built := _build_body_text(act, quest_lines, skill_groups, seen_statuses, combatants_catalog, _cursor_index, bounty_pool, delivery_pool, class_levels)
+	var built := _build_body_text(act, quest_lines, completed_quest_lines, skill_groups, seen_statuses, combatants_catalog, _cursor_index, bounty_pool, delivery_pool, class_levels, class_aspirations)
 	_body_label.text = String(built["text"])
 	_root.show()
 	# The RichTextLabel's scrollbar geometry is only valid after a layout pass,
@@ -311,6 +335,13 @@ func _open() -> void:
 		vbar.value = 0.0
 	_update_scroll_hint.call_deferred()
 	var headings: Array = []
+	## Parallel to `headings` (same index order) -- issue #79's per-class
+	## identity line, "" for a group with none authored (Innate always, plus
+	## most classes -- see `_class_aspirations_by_heading`'s doc comment).
+	## Lets QA assert the exact aspiration text landed on the right group
+	## without OCR, the same structural-proof shape `revealed_effect_lines`
+	## below already established for the skill rows.
+	var class_aspiration_lines: Array = []
 	var revealed_skills: Array = []
 	## Parallel to `revealed_skills` (same index order) -- each entry is that
 	## skill's `WIEffectText.skill_effect_lines` output (0 or 1 strings), so
@@ -322,7 +353,9 @@ func _open() -> void:
 	var skill_count := 0
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary
-		headings.append(_class_heading_text(String(group["heading"]), class_levels))
+		var heading := String(group["heading"])
+		headings.append(_class_heading_text(heading, class_levels))
+		class_aspiration_lines.append(String(class_aspirations.get(heading, "")))
 		for raw_skill: Variant in (group["skills"] as Array):
 			var skill := raw_skill as Dictionary
 			skill_count += 1
@@ -344,11 +377,16 @@ func _open() -> void:
 	# ui_journal_shown too, not a second event; see `revealed_skills`/
 	# `act_id` above). Empty string/0 when nothing is accepted -- QA asserts
 	# presence via the non-empty title, never a "none" sentinel.
-	var posting := _posting_slot_state(bounty_pool, Game.sim.accepted_bounty_id, Game.sim.accepted_bounty_baseline, Callable(self, "_posting_title"))
-	var delivery := _posting_slot_state(delivery_pool, Game.sim.accepted_delivery_id, Game.sim.accepted_delivery_baseline, Callable(self, "_delivery_title"))
+	var posting := _posting_slot_state(bounty_pool, Game.sim.accepted_bounty_id, Game.sim.accepted_bounty_baseline, Callable(self, "_posting_title"), "copy")
+	var delivery := _posting_slot_state(delivery_pool, Game.sim.accepted_delivery_id, Game.sim.accepted_delivery_baseline, Callable(self, "_delivery_title"), "slip_copy")
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_SHOWN, {
 		"quest_lines": quest_lines.size(),
+		# Issue #79: the Completed section's own structural proof -- the FULL
+		# lines (not just a count), since each already carries the
+		# chosen-path text QA needs to assert without OCR.
+		"completed_quest_lines": completed_quest_lines,
 		"skill_groups": headings,
+		"class_aspirations": class_aspiration_lines,
 		"skill_count": skill_count,
 		"skills_note": COMBAT_KIT_NOTE,
 		"revealed_skills": revealed_skills,
@@ -360,9 +398,11 @@ func _open() -> void:
 		"posting_title": String(posting.get("title", "")),
 		"posting_status": String(posting.get("status", "")),
 		"posting_gold": int(posting.get("gold", 0)),
+		"posting_detail": String(posting.get("detail", "")),
 		"delivery_title": String(delivery.get("title", "")),
 		"delivery_status": String(delivery.get("status", "")),
 		"delivery_gold": int(delivery.get("gold", 0)),
+		"delivery_detail": String(delivery.get("detail", "")),
 	})
 
 
@@ -415,6 +455,31 @@ func _class_levels_by_heading(catalog: Array) -> Dictionary:
 		var id := String(cls.get(WIKeys.ID, ""))
 		if id != "" and Game.sim.classes.has(id):
 			out[String(cls.get(WIKeys.DISPLAY_NAME, id))] = int(Game.sim.classes[id])
+	return out
+
+
+## Class DISPLAY NAME -> its authored `aspiration.text` (data/classes.json),
+## for every class id `Game.sim.classes` currently holds AND that carries an
+## `aspiration` block. Issue #79 gap-analysis: "authored class 'aspiration'
+## text is dead content" -- every class's own far-future-title flavor line
+## (e.g. Swordsman's "Far down this road waits the title of [Swordmaster]
+## ...") was authored in data/classes.json but never read by ANY code path.
+## Not every shipped class carries one (warrior/spearmaster/spellsword/
+## helper/barmaid/server/diplomat/rogue/archer have none) -- `.has()`-gated
+## the same way `_class_levels_by_heading` skips a class with no entry,
+## degrading to no line rather than a "None yet" filler (this file's own
+## Effects/Postings-section precedent). Same keying rationale (display name,
+## not id) as `_class_levels_by_heading`'s own doc comment.
+func _class_aspirations_by_heading(catalog: Array) -> Dictionary:
+	var out: Dictionary = {}
+	for raw_cls: Variant in catalog:
+		var cls := raw_cls as Dictionary
+		var id := String(cls.get(WIKeys.ID, ""))
+		if id == "" or not Game.sim.classes.has(id) or not cls.has("aspiration"):
+			continue
+		var text := String((cls["aspiration"] as Dictionary).get("text", ""))
+		if text != "":
+			out[String(cls.get(WIKeys.DISPLAY_NAME, id))] = text
 	return out
 
 
@@ -495,7 +560,7 @@ func click_skill_row(flat_i: int) -> void:
 ## scroll-to-cursor-line/scroll-hint follow-up -- see
 ## `_on_skill_row_hover_started`'s doc comment for why hover must NOT scroll.
 func _rebuild_body_no_scroll() -> void:
-	var built := _build_body_text(_open_act, _open_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels)
+	var built := _build_body_text(_open_act, _open_quest_lines, _open_completed_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels, _open_class_aspirations)
 	_body_label.text = String(built["text"])
 
 
@@ -504,7 +569,7 @@ func _rebuild_body_no_scroll() -> void:
 ## the cursor's row into view -- used by both cursor movement and the toggle
 ## (unlike `_open()`, which deliberately resets to the panel's top instead).
 func _rebuild_body_follow_cursor() -> void:
-	var built := _build_body_text(_open_act, _open_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels)
+	var built := _build_body_text(_open_act, _open_quest_lines, _open_completed_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels, _open_class_aspirations)
 	_body_label.text = String(built["text"])
 	var cursor_line := int(built["cursor_line"])
 	if cursor_line >= 0:
@@ -524,14 +589,22 @@ func _update_scroll_hint() -> void:
 	_scroll_hint.visible = open and more_below
 
 
-## Builds the BBCode body text: a "Quests" section (unchanged content, from
-## `quest_summary()`), then "Postings" (the accepted board posting/delivery
-## slip -- see `_build_postings_lines`'s doc comment; ordered right after
-## Quests since it's the same "things I've taken on" reading, but its own
+## Builds the BBCode body text: a "Quests" section (ACTIVE quests only as of
+## issue #79 -- `quest_summary()`'s own doc comment), then "Completed"
+## (issue #79's own new HISTORY section -- one line per finished quest with
+## its chosen-path text, `Game.sim.completed_quest_summary()`; OMITTED
+## ENTIRELY when empty, the Effects section's own "no filler" precedent, so
+## a save with no completed quest yet renders byte-identical to before this
+## task), then "Postings" (the accepted board posting/delivery slip -- see
+## `_build_postings_lines`'s doc comment; ordered right after Completed
+## since it's the same "things I've taken on/finished" reading, but its own
 ## heading per the DP2 board/quest split ruling: board work never gets a
 ## journal entry folded into the quest log), then a "Skills" section, one
 ## sub-heading per `skills_journal()` group ("Innate" first, then held
-## classes). Pre-reveal a
+## classes). A class heading is immediately followed by its issue #79
+## aspiration line (`class_aspirations`, the SAME display-name keying as
+## `class_levels` -- see `_class_aspirations_by_heading`'s doc comment),
+## omitted for a class with none authored. Pre-reveal a
 ## skill row is `text` verbatim (name-only — the opacity/reveal split lives
 ## entirely in WIGame.skills_journal/_skill_entries). Post-reveal the row is
 ## built HERE by `_revealed_skill_line` instead of using `text` (which only
@@ -555,7 +628,7 @@ func _update_scroll_hint() -> void:
 ## cursor row landed on (-1 if `cursor_index` didn't match any row), so the
 ## caller can `scroll_to_line` it into view without a second, drift-prone
 ## line-counting pass.
-func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, seen_statuses: Array, combatants_catalog: Array = [], cursor_index: int = -1, bounty_pool: Array = [], delivery_pool: Array = [], class_levels: Dictionary = {}) -> Dictionary:
+func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines: Array, skill_groups: Array, seen_statuses: Array, combatants_catalog: Array = [], cursor_index: int = -1, bounty_pool: Array = [], delivery_pool: Array = [], class_levels: Dictionary = {}, class_aspirations: Dictionary = {}) -> Dictionary:
 	var parts: Array = []
 	var cursor_line := -1
 	# The act-line section leads the journal -- the current act header + its
@@ -570,11 +643,24 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, 
 		parts.append("")
 	parts.append("[b]Quests[/b]")
 	if quest_lines.is_empty():
-		parts.append("No quests yet.")
+		# "No quests in progress." once history exists (a completed quest
+		# means the player HAS had quests -- "No quests yet." would misread
+		# as never-started, exactly the cluster's own "history vanishes"
+		# complaint) -- else the original fresh-game line, byte-identical.
+		parts.append("No quests in progress." if not completed_quest_lines.is_empty() else "No quests yet.")
 	else:
 		for line: Variant in quest_lines:
 			parts.append(UIChrome.bb_escape(String(line)))
 	parts.append("")
+	# Completed section (issue #79 journal history cluster): one line per
+	# finished quest with its own chosen-path HISTORY line (results-only --
+	# what already happened, never how-close-to-finishing). OMITTED ENTIRELY
+	# when empty, the Effects section's own "no filler" precedent.
+	if not completed_quest_lines.is_empty():
+		parts.append("[b]Completed[/b]")
+		for line: Variant in completed_quest_lines:
+			parts.append(UIChrome.bb_escape(String(line)))
+		parts.append("")
 	# Postings section (own section per user ruling -- board work never
 	# conflates with story quests): the accepted board posting + delivery
 	# slip, each "<title> — <status> (<gold> gold)". OPAQUE-UNTIL-DONE: status
@@ -601,8 +687,14 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, 
 	var flat_i := 0
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary
+		var heading := String(group["heading"])
 		parts.append("")
-		parts.append("[b]%s[/b]" % UIChrome.bb_escape(_class_heading_text(String(group["heading"]), class_levels)))
+		parts.append("[b]%s[/b]" % UIChrome.bb_escape(_class_heading_text(heading, class_levels)))
+		# Issue #79: the per-class identity line (the authored, previously-
+		# dead `aspiration.text`) -- a class carrying none (most of the
+		# roster) renders no extra line, byte-identical to before this task.
+		if class_aspirations.has(heading):
+			parts.append("[i]%s[/i]" % UIChrome.bb_escape(String(class_aspirations[heading])))
 		for raw_skill: Variant in (group["skills"] as Array):
 			var skill := raw_skill as Dictionary
 			var row_text: String
@@ -634,37 +726,59 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, 
 
 
 ## Builds the "Postings" section's rendered lines: one line per accepted
-## board posting/delivery slip, "<title> — <status> (<gold> gold)". Neither
+## board posting/delivery slip, "<title> — <status> (<gold> gold)", followed
+## by a SECOND, indented line carrying the posting's own authored detail
+## text (issue #79: "accepted posting/slip text unrecoverable" -- once a
+## posting rotates out of the board's 2-3-wide browsable slate it was
+## PREVIOUSLY only ever readable at accept time; the journal now carries it
+## for as long as the posting stays accepted). That detail text is the
+## SAME `copy`/`slip_copy` string `WIBounties.build_picker_graph`/
+## `build_delivery_picker_graph` already render into the board's own
+## dialogue-panel body (test_copy_fit.gd's `_check_bounty_delivery_copy`
+## already budgets it for that surface) -- reused verbatim, never
+## re-authored, so this can't drift from what the board itself said; the
+## journal body is its own copy_fit-EXEMPT surface (autowrap + scroll, this
+## file's own doc-comment precedent), so no new budget check is needed for
+## re-using an already-budgeted string on a MORE permissive panel. Neither
 ## accepted -> a single flavor line, no sub-items (the Effects section's own
 ## "omit entirely, no filler" precedent, not a "None yet" row). Never emits a
 ## progress count -- `_posting_slot_state`'s `status` field is the ONLY
-## per-posting text, and it's always one of exactly two literals.
+## per-posting status text, and it's always one of exactly two literals.
 func _build_postings_lines(bounty_pool: Array, delivery_pool: Array) -> Array[String]:
 	var lines: Array[String] = []
-	var posting := _posting_slot_state(bounty_pool, Game.sim.accepted_bounty_id, Game.sim.accepted_bounty_baseline, Callable(self, "_posting_title"))
+	var posting := _posting_slot_state(bounty_pool, Game.sim.accepted_bounty_id, Game.sim.accepted_bounty_baseline, Callable(self, "_posting_title"), "copy")
 	if not posting.is_empty():
 		lines.append(UIChrome.bb_escape("%s — %s (%d gold)" % [String(posting["title"]), String(posting["status"]), int(posting["gold"])]))
-	var delivery := _posting_slot_state(delivery_pool, Game.sim.accepted_delivery_id, Game.sim.accepted_delivery_baseline, Callable(self, "_delivery_title"))
+		var posting_detail := String(posting["detail"])
+		if posting_detail != "":
+			lines.append("   " + UIChrome.bb_escape(posting_detail))
+	var delivery := _posting_slot_state(delivery_pool, Game.sim.accepted_delivery_id, Game.sim.accepted_delivery_baseline, Callable(self, "_delivery_title"), "slip_copy")
 	if not delivery.is_empty():
 		lines.append(UIChrome.bb_escape("%s — %s (%d gold)" % [String(delivery["title"]), String(delivery["status"]), int(delivery["gold"])]))
+		var delivery_detail := String(delivery["detail"])
+		if delivery_detail != "":
+			lines.append("   " + UIChrome.bb_escape(delivery_detail))
 	if lines.is_empty():
 		lines.append("No postings in hand. The boards at the Guilds always have more.")
 	return lines
 
 
-## Returns `{title, status, gold}` for the currently-accepted posting/slip in
-## `pool` (found over the FULL pool -- see `_open_bounty_pool`'s doc comment),
-## or `{}` when nothing is accepted / the id doesn't resolve (defensive; can't
-## happen from real accept/turn-in flow). `title_fn` is `_posting_title`'s or
-## `_delivery_title`'s Callable (bounty vs. delivery id prefixes need
-## different maps). `status` is the OPAQUE-UNTIL-DONE binary line -- see
-## `_condition_met`'s doc comment for how it stays in lockstep with the real
-## turn-in gate. Shared by `_build_postings_lines` (the panel body) and
-## `_open()`'s event-emission block (the `ui_journal_shown` payload) -- each
-## call site computes it independently rather than threading one result
-## through both, the SAME duplication shape this file already accepts for
-## the skill-groups/headings loop above.
-func _posting_slot_state(pool: Array, accepted_id: String, baseline: Dictionary, title_fn: Callable) -> Dictionary:
+## Returns `{title, status, gold, detail}` for the currently-accepted
+## posting/slip in `pool` (found over the FULL pool -- see `_open_bounty_
+## pool`'s doc comment), or `{}` when nothing is accepted / the id doesn't
+## resolve (defensive; can't happen from real accept/turn-in flow).
+## `title_fn` is `_posting_title`'s or `_delivery_title`'s Callable (bounty
+## vs. delivery id prefixes need different maps). `detail_key` is the
+## record's own flavor-text field ("copy" for a bounty, "slip_copy" for a
+## delivery -- issue #79's own posting-slip detail view, see `_build_
+## postings_lines`'s doc comment). `status` is the OPAQUE-UNTIL-DONE binary
+## line -- see `_condition_met`'s doc comment for how it stays in lockstep
+## with the real turn-in gate. Shared by `_build_postings_lines` (the panel
+## body) and `_open()`'s event-emission block (the `ui_journal_shown`
+## payload) -- each call site computes it independently rather than
+## threading one result through both, the SAME duplication shape this file
+## already accepts for the skill-groups/headings loop above.
+func _posting_slot_state(pool: Array, accepted_id: String, baseline: Dictionary, title_fn: Callable, detail_key: String) -> Dictionary:
 	if accepted_id == "":
 		return {}
 	var record := _pool_record(pool, accepted_id)
@@ -675,6 +789,7 @@ func _posting_slot_state(pool: Array, accepted_id: String, baseline: Dictionary,
 		"title": String(title_fn.call(accepted_id)),
 		"status": "Ready to turn in." if met else "In hand.",
 		"gold": int(record.get("gold", 0)),
+		"detail": String(record.get(detail_key, "")),
 	}
 
 

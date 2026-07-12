@@ -769,9 +769,19 @@ func _init() -> void:
 			warrior_toasts.append(String(e["payload"]["text"]))
 	assert(warrior_levels == [3, 4, 5], "a class_level_up event per earned level, ascending")
 	assert(warrior_toasts.size() == 1, "ONE batched toast per class")
-	assert(warrior_toasts[0] == "[Warrior Level 2 → 5] — unlocked [Quick Movement], [Second Wind], [Dangersense]", "batched toast announces span + all unlocks")
+	# Issue #79: every level-up toast now also states its own HP/damage/MP
+	# payoff (visible-currency, derived the SAME "/2 floor" way wi_combat.gd's
+	# own damage/MP formulas work) -- warrior's con+str growth (2->5, held
+	# alongside mage 1) yields +2 Max HP / +1 damage here (WIProgression.
+	# derived_stat_bonuses before/after this span, verified against the real
+	# catalog: con 2->4, str 2->4).
+	assert(warrior_toasts[0] == "[Warrior Level 2 → 5] — unlocked [Quick Movement], [Second Wind], [Dangersense] (+2 Max HP, +1 damage)", "batched toast announces span + all unlocks + felt growth")
 	assert(_count("skill_unlocked") == 3, "per-level grants all unlock")
-	# Grant-less spans keep the toast clean (no dangling unlock clause).
+	# Grant-less spans keep the toast clean (no dangling unlock clause) --
+	# issue #79: a grant-less span is EXACTLY the "announces nothing felt"
+	# gap this task closes, so it now states its own growth instead of
+	# staying bare (con 4->8, str 4->8 over this span -> +4 Max HP, +2
+	# damage; mage still held@1, no MP change).
 	g16.record_accomplishment("melee_hit", 30)
 	_events.clear()
 	g16.sleep()
@@ -780,7 +790,7 @@ func _init() -> void:
 	for e: Dictionary in _events:
 		if e["type"] == "toast" and String(e["payload"]["text"]).begins_with("[Warrior"):
 			span_toast = String(e["payload"]["text"])
-	assert(span_toast == "[Warrior Level 5 → 9]", "grant-less batch toasts the span only")
+	assert(span_toast == "[Warrior Level 5 → 9] (+4 Max HP, +2 damage)", "grant-less batch toasts the span's own felt growth, not silence")
 	# Single-level sleeps keep the established single-level shape (mage L2 on
 	# won_combat 3; warrior is past L2 and has no won_combat gate above it).
 	g16.record_accomplishment("won_combat", 3)
@@ -790,7 +800,10 @@ func _init() -> void:
 	for e: Dictionary in _events:
 		if e["type"] == "toast" and String(e["payload"]["text"]).begins_with("[Mage"):
 			mage_toast = String(e["payload"]["text"])
-	assert(mage_toast == "[Mage Level 2] — unlocked [Flame Jet], [Mana Shield]", "single level keeps the plain shape")
+	# Issue #79: mage's int growth (1->2, warrior held@9 throughout) yields
+	# +1 Max MP -- the PC already holds an mp_cost Skill (frost_bolt, mage's
+	# own level-1 grant), so the MP line is never withheld here.
+	assert(mage_toast == "[Mage Level 2] — unlocked [Flame Jet], [Mana Shield] (+1 Max MP)", "single level keeps the plain shape + felt growth")
 
 	# --- Respawning encounters (the counter volume valve) ---
 	# Victory over a `respawns: true` encounter leaves it on the map but
