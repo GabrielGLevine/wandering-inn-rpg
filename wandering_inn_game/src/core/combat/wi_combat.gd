@@ -674,18 +674,19 @@ func _start_turn() -> void:
 	# Issue #82's WINDUP SIM SPEC: resolution happens FIRST, before this
 	# turn's own AP/pool are granted -- "the slam lands, THEN your turn
 	# properly begins". `_resolve_windup` routes every hit through
-	# `_resolve_hit`, which can down combatants (including, on a friendly-fire
-	# overlap, the caster itself) and end the fight via the SAME
-	# `_post_damage`/`_check_end` chain every other damage source uses -- so
-	# this guards the SAME two ways `_post_damage` already can react:
-	# (a) `finished` -- a kill/PC-death ended the fight mid-resolution, this
-	#     frame must not go on to grant AP/emit TURN_STARTED for a finished
-	#     combat; (b) the ACTIVE combatant died to its own windup (adjacent
-	#     friendly fire, see `declare_windup`'s doc comment) -- `_post_damage`
-	#     already detects "the active combatant just went down" and calls
-	#     `_advance_turn()` itself (its own `get_active() == target_id`
-	#     branch), which RECURSIVELY starts the next turn; continuing this
-	#     frame past that point would double-advance/desync `active_index`.
+	# `_resolve_hit`, which can down combatants and end the fight via the SAME
+	# `_post_damage`/`_check_end` chain every other damage source uses -- the
+	# `finished` guard stops this frame from granting AP/emitting TURN_STARTED
+	# into a fight that just ended mid-resolution (a PC-death instant defeat,
+	# or the last opposer falling). The `not alive` guard is DEFENSIVE, not a
+	# live path today: the caster is EXCLUDED from its own resolution by id
+	# (`_resolve_windup`'s F1 ruling, see its doc comment) and ripostes are
+	# disabled there, so nothing in the current windup shape can kill the
+	# active combatant during its own turn start -- but a future effect that
+	# can would hit `_post_damage`'s "active combatant just went down"
+	# recursive `_advance_turn()`, and continuing THIS frame past that point
+	# would double-advance/desync `active_index`; the guard keeps that class
+	# of bug impossible rather than merely unlikely.
 	_resolve_windup(c)
 	if finished or not bool(c[WIKeys.ALIVE]):
 		return
@@ -723,10 +724,22 @@ func _start_turn() -> void:
 ## the caster's own basic-Attack/power_strike math) -- deliberately NOT
 ## blast_damage's own `_resolve_blast_damage` resolver, which always passes
 ## melee=false (INT-based, correct for its one shipped grant, the MAGE spell
-## flame_pillar, but wrong for a construct's physical slam). Friendly fire is
-## real here too, same contract as every other blast: the caster's own cell
-## can be among the frozen cells if it never moved away from an adjacent
-## declare.
+## flame_pillar, but wrong for a construct's physical slam).
+##
+## THE CASTER IS EXCLUDED, by actor id, never by cell (controller ruling,
+## review finding F1): a range-1 windup declared while adjacent puts the
+## caster's OWN cell inside its radius-1 blast with geometric certainty, and
+## the melee AI never repositions after declaring -- caster-inclusion made
+## EVERY resolution a guaranteed self-hit (62/62 measured across the harness)
+## whose feed line read "Guardian Construct strikes Guardian Construct for
+## N!". DELIBERATE ASYMMETRY vs blast_damage's instant resolver: a player-cast
+## blast keeps caster-own-cell friendly fire (standing in your own blast is a
+## CHOSEN, card-warned risk taken at cast time); an AI windup's self-hit is
+## neither chosen nor avoidable -- a tax, not a choice. Everyone ELSE in the
+## frozen cells is still hit regardless of side -- the ally-side friendly
+## fire that makes move-out counterplay honest is untouched. Excluding by id
+## (not by "skip the caster's cell") means a DIFFERENT combatant standing on
+## the caster's old cell at resolution still gets hit correctly.
 func _resolve_windup(c: Dictionary) -> void:
 	var actor_id := String(c[WIKeys.ID])
 	if not windups.has(actor_id):
@@ -737,6 +750,8 @@ func _resolve_windup(c: Dictionary) -> void:
 	var cells: Array = w["cells"]
 	var hit_ids: Array = []
 	for id: String in combatants:
+		if id == actor_id:
+			continue  # caster excluded by id (see doc comment) -- never by cell
 		if not bool(combatants[id][WIKeys.ALIVE]):
 			continue
 		if (combatants[id][WIKeys.CELL] as Vector2i) in cells:
@@ -748,23 +763,15 @@ func _resolve_windup(c: Dictionary) -> void:
 	_emit(WIEvents.SKILL_RESOLVED, {
 		"actor": actor_id, "skill": skill_id, "cells": cells_payload, "hit_ids": hit_ids,
 	})
+	# The caster can no longer die mid-resolution (it is excluded from
+	# hit_ids and allow_riposte is false), so the only mid-loop exit needed
+	# is `finished` -- a hit downing the PC (instant defeat) or the last
+	# living opposer.
 	for id: String in hit_ids:
 		if not bool(combatants[id][WIKeys.ALIVE]):
 			continue  # an earlier hit in this same resolution may have already downed them
 		_resolve_hit(actor_id, id, 1.0, true, false)
 		if finished:
-			return
-		# Defensive (unreachable at every currently-tuned windup's stats, but
-		# not structurally impossible -- see this function's own doc comment
-		# on caster-in-blast friendly fire): if the CASTER itself was among
-		# `hit_ids` and just died to its own resolution, `_post_damage`
-		# already detected "the active combatant went down" and recursively
-		# called `_advance_turn()` -> a NEW `_start_turn()` for whoever's
-		# next -- the sim has already moved on to a different turn, so
-		# continuing this loop with the now-dead, no-longer-active `actor_id`
-		# would apply damage attributed to a stale attacker on top of
-		# already-advanced state. Stop immediately instead.
-		if not bool(combatants.get(actor_id, {}).get(WIKeys.ALIVE, false)):
 			return
 
 

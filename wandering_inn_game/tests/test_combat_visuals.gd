@@ -522,10 +522,15 @@ func _init() -> void:
 	# the resolved skill's own `windup_rounds` field off a real combat instance,
 	# not a hand-typed payload flag.
 	var wd_renderer_script := GDScript.new()
-	wd_renderer_script.source_code = "extends Node\nvar added: Array = []\nvar expired: Array = []\nfunc add_terrain(kind: String, _cells: Array) -> void:\n\tadded.append(kind)\nfunc expire_terrain(kind: String, _cells: Array) -> void:\n\texpired.append(kind)\n"
+	# `apply_stats` is needed because a captured COMBATANT_DOWNED event's
+	# dequeue (the F3 block below) routes through `_apply_captured_stats`.
+	wd_renderer_script.source_code = "extends Node\nvar added: Array = []\nvar expired: Array = []\nfunc add_terrain(kind: String, _cells: Array) -> void:\n\tadded.append(kind)\nfunc expire_terrain(kind: String, _cells: Array) -> void:\n\texpired.append(kind)\nfunc apply_stats(_id: String, _stats: Dictionary) -> void:\n\tpass\n"
 	assert(wd_renderer_script.reload() == OK, "recording stub windup renderer failed to compile")
 	var wd_screen_script := GDScript.new()
-	wd_screen_script.source_code = "extends Node\nvar combat: Variant = null\nfunc _combat_or_null() -> Variant:\n\treturn combat\nfunc _push_feed(_payload: Dictionary) -> void:\n\tpass\nfunc _render_tutor_line(_tutor: Dictionary) -> void:\n\tpass\nfunc _refresh() -> void:\n\tpass\nfunc _play_event_visual(_type: String, _payload: Dictionary) -> void:\n\tpass\n"
+	# `_feed_line_for_event` is needed because the F3 block below exercises
+	# the REAL capture stage (`capture_playback_event`), which calls it for
+	# every captured event.
+	wd_screen_script.source_code = "extends Node\nvar combat: Variant = null\nfunc _combat_or_null() -> Variant:\n\treturn combat\nfunc _feed_line_for_event(_type: String, _payload: Dictionary) -> String:\n\treturn \"\"\nfunc _push_feed(_payload: Dictionary) -> void:\n\tpass\nfunc _render_tutor_line(_tutor: Dictionary) -> void:\n\tpass\nfunc _refresh() -> void:\n\tpass\nfunc _play_event_visual(_type: String, _payload: Dictionary) -> void:\n\tpass\n"
 	assert(wd_screen_script.reload() == OK, "stub windup screen failed to compile")
 
 	var wd_combatants: Dictionary = _load_json("res://data/combatants.json")
@@ -565,6 +570,26 @@ func _init() -> void:
 	# Control: a non-windup skill's resolution must never spuriously touch it.
 	wd_playback._apply_playback_event({"type": "skill_resolved", "payload": {"actor": "pc", "skill": "power_strike", "target": "vault_construct", "_ui": {}}}, false)
 	assert(wd_renderer.expired == ["windup_danger"], "a non-windup skill's own resolution must not touch the windup_danger overlay")
+
+	# F3 (issue #82): the OTHER overlay-clear path -- the windup CASTER goes
+	# down before resolving (no posthumous resolution means no SKILL_RESOLVED
+	# will ever fire to clear it). Exercises the REAL capture stage: the sim's
+	# `windups` dict still holds vault_construct's parked declare (nothing
+	# above resolved it sim-side -- the _apply_playback_event calls are
+	# presentation-only), so `capture_playback_event` must stash the cells
+	# onto `_ui.windup_cells`, and the dequeue must expire the overlay even
+	# skip-fast-forwarded (with_visuals=false).
+	assert(wd_combat.windups.has("vault_construct"), "fixture: the declare is still parked sim-side")
+	var wd_downed_event: Dictionary = wd_playback.capture_playback_event("combatant_downed", {"id": "vault_construct"})
+	assert((wd_downed_event["payload"]["_ui"] as Dictionary).get("windup_cells", []) == wd_cells, "COMBATANT_DOWNED capture stashes the downed caster's parked windup cells")
+	wd_playback._apply_playback_event(wd_downed_event, false)
+	assert(wd_renderer.expired == ["windup_danger", "windup_danger"], "a downed windup-caster's beat expires the windup_danger overlay, even skip-fast-forwarded -- no leaked overlay after the caster dies")
+	# Control: an ordinary (non-caster) down captures no windup_cells and
+	# expires nothing.
+	var wd_plain_downed: Dictionary = wd_playback.capture_playback_event("combatant_downed", {"id": "pc"})
+	assert(not (wd_plain_downed["payload"]["_ui"] as Dictionary).has("windup_cells"), "an ordinary down (no pending windup) captures no windup_cells key")
+	wd_playback._apply_playback_event(wd_plain_downed, false)
+	assert(wd_renderer.expired == ["windup_danger", "windup_danger"], "an ordinary down never touches the windup_danger overlay")
 	wd_screen.free()
 	wd_renderer.free()
 

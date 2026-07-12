@@ -1735,20 +1735,21 @@ func _init() -> void:
 	assert((c83.combatants["pc"]["statuses"] as Dictionary).has("invisible"), "being HIT (not dealing damage) never breaks invisibility -- pc is still invisible after")
 
 	# --- Issue #82's WINDUP SIM SPEC: `slam` (vault_construct, data/skills.json)
-	# is the first `windup_rounds` skill. Four blocks below prove the whole
+	# is the first `windup_rounds` skill. The blocks below prove the whole
 	# contract against the REAL shipped data (no synthetic stand-in skill):
 	# declare freezes cells + spends ALL 4 AP; move-out whiffs the target;
 	# standing-still eats the hit; downing the caster before its next turn
-	# means no posthumous resolution. arenas[0] (goblin_ambush) reused for a
+	# means no posthumous resolution; the caster is EXCLUDED from its own
+	# resolution while a same-blast bystander is NOT (the F1 controller
+	# ruling -- see _resolve_windup's own doc comment for the deliberate
+	# asymmetry vs blast_damage). arenas[0] (goblin_ambush) reused for a
 	# plain open 12x8 grid -- the vault arena's own shape is C3's content
 	# deliverable, not needed to prove the MECHANISM. ---
 
-	# Block A: declare -> move-out (BOTH occupants relocate) -> whiff. Adjacent
-	# cast (slam's own range:1 contract) means the caster's cell is ALWAYS
-	# inside its own radius-1 blast at declaration [D: friendly fire, same as
-	# blast_damage] -- moving the caster away too (its move_pool is untouched
-	# by the declare's AP spend, a real same-turn option) is what makes this a
-	# clean TOTAL whiff rather than a caster-self-tag muddying the read.
+	# Block A: declare -> move-out -> whiff. The caster relocating same-turn
+	# also proves declare spends AP but never touches move_pool (the boss CAN
+	# reposition after declaring -- counterplay-relevant); with the pc moving
+	# out too, resolution finds every frozen cell empty: a total whiff.
 	var c84 := _cfgs(["pc", "vault_construct"])
 	var combat84 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], c84, _load("res://data/skills.json"), _sink, 5)
 	combat84.begin()
@@ -1845,6 +1846,57 @@ func _init() -> void:
 	# resolution event.
 	assert(_count("skill_resolved") == 0, "the downed caster's windup never resolves -- no posthumous damage")
 	assert(int(combat86.combatants["pc"][WIKeys.HP]) == hp86_before, "pc took no damage from a windup whose caster died first")
+
+	# Block D: the F1 caster-exclusion ruling. The caster stands INSIDE its
+	# own frozen radius-1 blast (adjacent declare, never moves) alongside a
+	# bystander ally (relc, also inside the blast): at resolution the caster
+	# takes ZERO damage and is absent from hit_ids, while BOTH the target (pc)
+	# and the bystander (relc) are hit -- ally-side friendly fire stays real,
+	# only the caster's self-tax is removed. pc's HP is inflated so the pc hit
+	# (sorted first in hit_ids) can never end the fight by instant defeat
+	# before relc's own hit lands; hit_bonus 1000 makes both hits land
+	# deterministically at any seed (the c83 idiom above).
+	var c87 := _cfgs(["pc", "relc", "vault_construct"])
+	var combat87 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], c87, _load("res://data/skills.json"), _sink, 5)
+	combat87.begin()
+	combat87.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
+	combat87.combatants["relc"][WIKeys.CELL] = Vector2i(2, 2)
+	combat87.combatants["vault_construct"][WIKeys.CELL] = Vector2i(2, 1)
+	combat87.combatants["pc"][WIKeys.MAX_HP] = 500
+	combat87.combatants["pc"][WIKeys.HP] = 500
+	combat87.combatants["relc"][WIKeys.MAX_HP] = 500
+	combat87.combatants["relc"][WIKeys.HP] = 500
+	combat87.combatants["vault_construct"]["hit_bonus"] = 1000
+	combat87.active_index = combat87.turn_order.find("vault_construct")
+	combat87._start_turn()
+	assert(combat87.use_skill("slam", "pc"), "vault_construct declares slam on pc")
+	var frozen87: Array = combat87.windups["vault_construct"]["cells"]
+	assert(Vector2i(2, 1) in frozen87, "fixture: the caster's OWN cell is inside its frozen blast (adjacent declare, radius 1)")
+	assert(Vector2i(2, 2) in frozen87, "fixture: the bystander ally's cell is inside the frozen blast too")
+	# HP snapshots BEFORE the turn cycling: nothing in the loop below deals
+	# damage except the resolution itself (pc/relc "act" via bare end_turn),
+	# so pre-loop reads are the honest pre-resolution values.
+	var construct87_hp_before := int(combat87.combatants["vault_construct"][WIKeys.HP])
+	var pc87_hp_before := int(combat87.combatants["pc"][WIKeys.HP])
+	var relc87_hp_before := int(combat87.combatants["relc"][WIKeys.HP])
+	_events.clear()
+	# Cycle bare end_turns (pc and relc stand their ground) until the wrap
+	# back to the caster fires the resolution from its own _start_turn.
+	var guard87 := 0
+	while _count("skill_resolved") == 0 and guard87 < 8:
+		combat87.end_turn()
+		guard87 += 1
+	assert(_count("skill_resolved") == 1, "the windup resolved exactly once on the caster's next turn")
+	var resolved87: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			resolved87 = e["payload"]
+	var hit_ids87: Array = resolved87.get("hit_ids", [])
+	assert(not hit_ids87.has("vault_construct"), "the caster is EXCLUDED from its own resolution's hit_ids -- never self-hit (F1 ruling)")
+	assert(hit_ids87.has("pc") and hit_ids87.has("relc"), "the target AND the same-blast bystander ally are both hit -- friendly fire stays real for everyone but the caster")
+	assert(int(combat87.combatants["vault_construct"][WIKeys.HP]) == construct87_hp_before, "the caster's HP is untouched by its own resolution")
+	assert(int(combat87.combatants["pc"][WIKeys.HP]) < pc87_hp_before, "pc took real damage")
+	assert(int(combat87.combatants["relc"][WIKeys.HP]) < relc87_hp_before, "the bystander ally took real damage")
 
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

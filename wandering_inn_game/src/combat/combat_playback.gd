@@ -148,6 +148,16 @@ func _capture_event_ui(type: String, payload: Dictionary) -> Dictionary:
 				ui["flash_color"] = _screen.SHIELD_FLASH
 		WIEvents.COMBATANT_DOWNED:
 			ui["stats"] = _capture_combatant_stats(combat, [String(payload.get("id", ""))])
+			# F3 (issue #82): a downed windup-CASTER's pending declare never
+			# resolves (the sim's downed-clears contract), so nothing would
+			# ever expire its dangersense overlay -- capture the parked cells
+			# NOW (the sim leaves `combat.windups` populated for a dead
+			# caster; enqueue-time read, this function's whole contract) so
+			# the dequeue/live render path can clear the overlay at the down
+			# beat. Absent/empty for every non-caster down -- a no-op key.
+			var downed_id := String(payload.get("id", ""))
+			if combat != null and combat.windups.has(downed_id):
+				ui["windup_cells"] = _cells_payload(combat.windups[downed_id]["cells"])
 		WIEvents.WINDUP_DECLARED:
 			# Issue #82's WINDUP SIM SPEC / [Dangersense] payoff: captured at
 			# ENQUEUE time (this function's whole contract -- read live combat
@@ -358,6 +368,20 @@ func _apply_playback_event(event: Dictionary, with_visuals: bool) -> void:
 		var resolved_skill: Dictionary = resolved_combat.skills.get(String(payload.get("skill", "")), {}) if resolved_combat != null else {}
 		if int((resolved_skill.get("effect", {}) as Dictionary).get("windup_rounds", 0)) > 0:
 			_renderer.expire_terrain("windup_danger", _cells_from_payload(payload.get("cells", [])))
+	# F3 (issue #82): the OTHER way a declared windup ends -- its caster goes
+	# down before resolving (no posthumous resolution, so no SKILL_RESOLVED
+	# will ever fire to clear the overlay). `_capture_event_ui` stashed the
+	# dead caster's parked cells at enqueue time (`_ui.windup_cells`, absent
+	# for every ordinary down); same pre-match/unconditional placement as the
+	# SKILL_RESOLVED clear above, for the same skip-path reason. NOTE both
+	# clears also run redundantly from `_play_event_visual`'s own arms on the
+	# paced/live paths -- expire_terrain no-ops on already-cleared cells, and
+	# the redundancy is what covers the LIVE path (a resolution/down arriving
+	# outside AI playback never passes through this function at all).
+	if type == WIEvents.COMBATANT_DOWNED:
+		var downed_windup_cells: Array = (payload.get("_ui", {}) as Dictionary).get("windup_cells", [])
+		if not downed_windup_cells.is_empty():
+			_renderer.expire_terrain("windup_danger", _cells_from_payload(downed_windup_cells))
 	match type:
 		WIEvents.TURN_STARTED:
 			_screen._render_tutor_line(tutor)
