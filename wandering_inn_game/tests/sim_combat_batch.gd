@@ -222,6 +222,21 @@ const BOSS_CELLS := [
 ## easier band since the guardian is "mid-weight", not a capstone boss); the
 ## solo cell (no ally assumed on the pedestal approach) is measured-only, the
 ## hard-mode frontier, same convention as awakened_boss_w2_solo.
+## ISSUE #83 ADOPTION (new AI profiles beyond the melee dogpile): rift_vermin_a/b
+## -> `coward` (flees under 30% hp, rallies toward its nest-mates -- the direct
+## read for scattering vermin), ruin_ward_a/b -> `guard` (body-blocks for
+## whichever of its side is hurt worst, the direct read for an "escort ward").
+## rift_vermin_leak_w8_relc re-measured 0.74 -> 0.81 win_rate, comfortably
+## inside its wide generic 0.55-0.95 band (rift_vermin_leak_w8_solo, measured,
+## moved 0.09 -> 0.16 alongside it). ruin_guardian_w8_relc dropped 0.69 -> 0.54,
+## just BELOW its tighter 0.55-0.8 floor (the wards clustering near their
+## wounded side instead of rushing individually reads as a harder fight) --
+## restored to 0.59 by nerfing `ruin_guardian`'s OWN con (28 -> 24, see its
+## combatants.json _comment), never the wards. The `guard` wards serve ONLY
+## this roster now: the trapped_halls snare originally shared ruin_ward_a/b
+## by id and inherited the guard profile with them, which eroded ITS gated
+## cell the opposite way -- fixed by splitting that roster onto the melee-ai
+## `snare_ward_a/b` clones (see DUNGEON_CELLS' own doc comment).
 const RUIN_CELLS := [
 	{"name": "rift_vermin_leak_w8_relc", "arena": "inn_cellar", "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.95},
 	{"name": "rift_vermin_leak_w8_solo", "arena": "inn_cellar", "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"], "build": "warrior5_mage5", "solo": true},
@@ -261,10 +276,17 @@ const RUIN_CELLS := [
 ## honestly rather than gated to a band that would misrepresent what
 ## "ambush" currently means here. Its cells were swapped from `warrior5_
 ## mage5` to `t3_spellsword9` in place (never gated either way, so no
-## before/after baseline needs preserving) -- combatants.json's
-## `river_wolf_a/b/c` are UNTOUCHED (no gate to hold, and the pack reads
-## appropriately dangerous, even brutal solo, against the new build too; see
-## the harness log's own `river_wolf_pack_t3_solo` win_rate).
+## before/after baseline needs preserving).
+## ISSUE #83 ADOPTION: river_wolf_a/b (the two flankers, NOT the alpha
+## river_wolf_c) carry the new `skirmisher` profile -- a fast pack hunter
+## nipping in then darting clear before retaliation, extending this const's
+## own pre-existing "closes quickly" flavor text to the retreat half. No gate
+## to hold (measured-only, per the design note above), so this is a
+## re-measurement, not a re-band: win_rate rose 0.95 -> 0.99 (hunter) and
+## 0.30 -> 0.48 (solo) -- a skirmisher spends part of its turn disengaging
+## instead of standing in melee range attacking every turn, which is real
+## reduced enemy DPS pressure over a multi-round fight, so the pack reading
+## SAFER (never more dangerous) is the expected direction, not a red flag.
 ## The ally here is `riverfarm_hunter`, NOT `relc` (Riverfarm is a solo Door
 ## arrival with no fictional basis for Liscor's Watch to be present --
 ## combatants.json's riverfarm_hunter is an EXACT stat/weapon_die/ai/skills
@@ -492,8 +514,24 @@ const PARTY_CELLS := [
 ## only 2 enemy_spawns -- the 3rd enemy index-overflowed WICombat._init
 ## (the SAME spawn-ceiling trap the vault's own C2 review named,
 ## enemy-side); the arena now carries 4.
+## ISSUE #83 FIX (the FIGHT-route-cost erosion, second occurrence): when
+## ruin_ward_a/b first adopted the `guard` profile, THIS roster inherited it
+## by id-sharing -- and with no boss to escort here (just each other + the
+## ranged rift_vermin_c) the guard wards clustered instead of engaging,
+## eroding the skirmish to 0.94 win_rate: technically still inside the
+## 0.55-0.95 ceiling, but the exact illusory-cost failure the 8d C1
+## roster-only ruling above fixed once already. No per-encounter AI override
+## exists, so the fix is the SAME roster-only pattern: the roster now fields
+## `snare_ward_a`/`snare_ward_b` (combatants.json), stat CLONES of
+## ruin_ward_a/b with plain melee ai -- a distinct id IS the override.
+## Behaviorally identical to the pre-#83 wards in this arena (same stats,
+## same profile, same relative id sort order), so the cell re-derives to its
+## pre-adoption 0.69/3r; RUIN_CELLS' ruin_guardian_w8_relc keeps its
+## guard-ward roster (and its own #83 con retune) untouched -- the two gated
+## cells no longer pull in opposite directions off one shared combatant.
+## Re-verified via delve_fight (the live QA canonical for this exact fight).
 const DUNGEON_CELLS := [
-	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["ruin_ward_a", "ruin_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["snare_ward_a", "snare_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 
