@@ -237,6 +237,92 @@ here: the recommended values (`min_parent_level: 10`,
 pass doesn't have to re-derive them, but the T3 roster re-tune is a
 prerequisite, not an afterthought.
 
+## R3 EXECUTED (class-foundation pass, #93/#95/#96, 2026-07-12): the fix
+## landed, prerequisite cleared
+
+The retune above is no longer rejected-pending — the class-foundation
+pass's R3 ruling executed it, WITH the coupled T3 rework this page's own
+empirical check said was the prerequisite. `data/classes.json`'s
+`consolidations[0]`: `min_parent_level` 6→10, `min_combined_level` 13→21
+(the exact pinned values above); `spellsword`'s `SPARSE TABLE` floor
+9→14 (re-derived from the same formula this page already walked).
+
+**The T3 coupling, resolved differently than either option this page
+weighed** — not "re-tune the three rosters" and not "leave the
+consolidation race broken": the T3 tier's own **reference build**
+changed instead. "Spellsword ~9" (the ratified issue #66 tier
+expectation) is now structurally unreachable — consolidation can never
+land below level 14 — so a real T3-arriving player is a MONO warrior at
+the tier's own level ceiling (10), not a consolidated hybrid at all. The
+three GATED encounters (`briar_collectors_t3_*`, `briar_collectors_deep_
+t3_*`, `hired_blades_t3_*`, `tests/sim_combat_batch.gd`) were re-derived
+GATED at a new `t3_warrior10` build (warrior 10, the SAME T3 gear basis
+`t3_spellsword9`/`t3_warrior9` already established) — **all three landed
+inside their EXISTING bands on the first attempt, zero roster/stat
+changes to any shipped combatant**:
+
+| encounter | band | old (t3_spellsword9, now measured) | new (t3_warrior10, GATED) |
+|---|---|---|---|
+| `briar_collectors` | 0.55-0.95 | 0.94 | **0.93** |
+| `briar_collectors_deep` | 0.55-0.85 | 0.79 | **0.73** |
+| `hired_blades` | 0.6-0.8 | 0.76 | **0.75** |
+
+The old `t3_spellsword9`/`t3_warrior9`-gated/measured cells were NOT
+deleted — they lost their `win_lo`/`win_hi` and became measured
+historical baselines (the "Off-tier baselines" convention,
+`docs/design/region-tiers.md`), so the before/after delta stays visible
+in `sim_combat_batch.gd` rather than lost to git blame. T4's own shipped
+`vault_construct_t4_party` gate stayed PINNED to `t4_spellsword11_party`
+(a working, tuned boss fight — R3's own ruling was not to re-tune it
+over a reachability-only floor change); a `t4_spellsword14_party`
+MEASURED companion cell was added at the real new floor and reads
+0.91/5 median rounds — matching THIS page's own "built, tested" finding
+above almost exactly, re-confirming that number rather than contradicting
+it.
+
+**The re-run proof (`tools/evolution_reachability.gd`, re-run verbatim,
+deterministic, zero SCRIPT ERROR/WARNING):**
+
+| profile | target | outcome | waking (level) | consolidation cross-check |
+|---|---|---|---|---|
+| `warrior_sword` | warrior | REPLACEMENT → [Swordsman] | 23 (L10) | — |
+| `mage_mono_ice` | mage | REPLACEMENT → [Ice Mage] | 11 (L10) | — |
+| `mixed_mage_warrior` (decline every offer) → **warrior** | warrior | REPLACEMENT → [Swordsman] | **20** (L10) | (same offer as below) |
+| `mixed_mage_warrior` (decline every offer) → **mage** | mage | REPLACEMENT → [Ice Mage] | **39** (L10) | offered at waking **39** (→ [Spellsword] L15) |
+
+**The inversion, read directly off this table:** under MONO play, both
+axes still resolve early and cleanly (warrior 11-24 wakings, mage 11-26
+— unchanged from the original table, since neither single-class profile
+ever qualifies for a consolidation offer at all). Under MIXED play (THE
+user's exact original scenario — 50% warrior-sword, 25% ice, 25% fire),
+the warrior HALF now evolves into [Swordsman] on its own at waking 20 —
+**before the consolidation offer ever appears**, the opposite of the old
+table's "offered at waking 21, mage's own Replacement not until waking
+39" race. The offer itself now surfaces only at waking 39, against an
+ALREADY-EVOLVED swordsman (continued mono investment pushed it to level
+12 by then: `merged = max(ceil(2*22/3), max(12,10)) = 15`, matching the
+logged L15 offer) and a mage just reaching its own L10 threshold — co-
+arriving with mage's OWN Replacement, not preempting it by 18 wakings.
+A mixed player now sees BOTH single-line payoffs (Swordsman genuinely
+held, Ice Mage's own evolution resolving the same beat) before ever
+facing the consolidation choice, exactly the exit criterion this pass
+set: "evolution-first under mono play; consolidation at 14+ for mixed."
+
+Re-verified alongside: `class_evolution_loop`/`generalist_loop` (both
+single-class fixtures — `near_evolution.json`/`near_generalist.json`
+hold only `{"warrior": 10}`/`{"mage": 10}`, no second parent line, so
+`check_consolidation` can never fire regardless of threshold; both
+canonicals re-ran BYTE-IDENTICAL, no fixture edit needed — confirmed,
+not assumed). `near_consolidation.json`/`pending_offer.json` (the two
+fixtures that DO hold both parent lines) were re-based to `{"warrior":
+11, "mage": 10}` (sum 21, the new boundary, matching this page's own
+`(11,10) → 14` derivation) — `consolidation_flow`/`consolidation_reload`
+re-derived and green; the DECLINE leg's own toast changed honestly (both
+parents now individually clear `evolution.at_level`, so declining
+re-triggers a real per-class "Waiting" outcome for each — two toasts,
+not the old fixture's "You sleep soundly." fallback, since that
+class-below-at_level shortcut no longer applies to either parent).
+
 ## Content gap reported (not retuned): Fire Mage's earn surface
 
 Per "Structural finding 2" above: Fire Mage is not blocked by a threshold,
@@ -265,14 +351,27 @@ fork, matching its own `_comment`'s "not a fork" design note), `helper`
 own (terminal or evolution-only targets), confirmed by a full scan of
 `data/classes.json`.
 
-## Re-verification
+## Re-verification (original, Helper-fix-only — see "R3 EXECUTED" above
+## for the later, larger re-verification)
 
-Since the executed fix is purely additive (`helper.evolution.
-balanced_grants`, a new key on an existing block — no threshold, no
-level-table, no skill-effect change), `class_evolution_loop`,
+Since the executed fix was purely additive at the time
+(`helper.evolution.balanced_grants`, a new key on an existing block — no
+threshold, no level-table, no skill-effect change), `class_evolution_loop`,
 `generalist_loop`, and `consolidation_flow` (all mage/warrior-only
-scenarios) are structurally untouched: re-run green, byte-identical
+scenarios) were structurally untouched: re-run green, byte-identical
 positions. No `sim_combat_batch.gd` cell exercises Helper at an
 evolution-eligible level, so the balance harness needed no re-run for this
-change specifically (still run as part of this task's full sweep per
-`wi-verifying-changes` discipline).
+change specifically.
+
+**SUPERSEDED for `consolidation_flow`/`consolidation_reload` by the class-
+foundation pass R3 (2026-07-12, "R3 EXECUTED" section above)** — the
+consolidation threshold retune that section executes changes
+`near_consolidation.json`/`pending_offer.json`'s own held levels (no
+longer byte-identical to this original state), and the "Every evolution/
+consolidation target audited" section just above this one is now a
+historical snapshot of the PRE-R1 catalog — R1 (the same pass) gave
+`tactician`/`diplomat`/`rogue`/`sharpshooter` real `evolution` blocks of
+their own (see `docs/superpowers/plans/2026-07-12-class-foundation.md`),
+so that sentence no longer holds for the current catalog. Left unedited
+above as the audit trail of what #96 originally scoped; this note is the
+correction.

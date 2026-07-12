@@ -573,7 +573,7 @@
    "script": "boulevard_night_footpads_loop",
    "seed": 9,
    "fixture": "boulevard_night_footpads_start",
-   "note": "Issue #80 (world reactivity wave): Invrisil boulevard's own night-only encounter slot, the river_wolf_pack precedent's third application -- fixture starts past night_at (T3 spellsword9 gear), one real move into trigger_radius 1 fires start_combat live (footpad_lookout/footpad_bruiser, solo), win banks won_combat"
+   "note": "Issue #80 (world reactivity wave): Invrisil boulevard's own night-only encounter slot, the river_wolf_pack precedent's third application -- fixture starts past night_at (T3 warrior10 gear, R3 2026-07-12), one real move into trigger_radius 1 fires start_combat live (footpad_lookout/footpad_bruiser, solo), win banks won_combat"
   }
  ]
 }

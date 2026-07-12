@@ -1,5 +1,5 @@
 {
- "_comment": "Fixture start (near_consolidation: warrior 6 + mage 7, sum 13 -- meets both min_parent_level 6 and min_combined_level 13). Exercises the FULL offer round trip: decline -> evolutions stage still runs (both parents are below their at_level 10 evolution gate, so the fallback is the plain 'sleep soundly' toast) -> re-offered next qualifying sleep -> accept -> merged [Spellsword] at level 9 (max(ceil(2*13/3), max(6,7))=9, the spec's pinned (6,7)->9 case) with the merged kit fielded in a subsequent fight. T8: accept/decline are now driven through the REAL UI consolidation prompt (src/ui/consolidation_prompt.gd) -- the prompt renders on consolidation_offered (ui_consolidation_prompt_rendered), cancel = decline (keep them apart), confirm on the default 'Consolidate' row = accept, and it hides (ui_consolidation_prompt_hidden) before the sim resolves the deferred sleep beat.",
+ "_comment": "Fixture start (near_consolidation: warrior 11 + mage 10, sum 21 -- meets both min_parent_level 10 and min_combined_level 21). Class-foundation pass R3 (2026-07-12) re-based this fixture to the new consolidation gate (min_parent_level 6->10, min_combined_level 13->21) -- BOTH parents now individually clear their own evolution.at_level (10) too, which changes the DECLINE leg's own behavior from the old fixture: `_resolve_evolutions()` no longer skips warrior/mage outright (they're no longer below at_level), it recomputes a real 'waiting' outcome for EACH (min_uses not met -- this fixture's accomplishments carry no sword_skill_used/spear_skill_used/ice_cast/fire_cast at all, so both land in Waiting, never a real evolution), so decline now surfaces BOTH classes' own waiting toasts (mage first, catalog order, then warrior) instead of the old single 'You sleep soundly.' fallback. Exercises the FULL offer round trip: decline -> evolutions stage runs (both waiting) -> re-offered next qualifying sleep -> accept -> merged [Spellsword] at level 14 (max(ceil(2*21/3), max(11,10))=14, the new floor -- see classes.json's own consolidations[0]/spellsword `_comment`s) with the merged kit fielded in a subsequent fight. T8: accept/decline are now driven through the REAL UI consolidation prompt (src/ui/consolidation_prompt.gd) -- the prompt renders on consolidation_offered (ui_consolidation_prompt_rendered), cancel = decline (keep them apart), confirm on the default 'Consolidate' row = accept, and it hides (ui_consolidation_prompt_hidden) before the sim resolves the deferred sleep beat.",
  "fixture_save": "near_consolidation",
  "starts_at_title": true,
  "steps": [
@@ -45,8 +45,8 @@
    "action": "assert_state",
    "path": "classes",
    "equals": {
-    "warrior": 6,
-    "mage": 7
+    "warrior": 11,
+    "mage": 10
    }
   },
   {
@@ -69,7 +69,7 @@
    "type": "consolidation_offered",
    "payload_contains": {
     "target": "spellsword",
-    "level": 9
+    "level": 14
    },
    "timeout_sec": 5
   },
@@ -81,14 +81,14 @@
   {
    "action": "assert_state",
    "path": "pending_consolidation.level",
-   "equals": 9
+   "equals": 14
   },
   {
    "action": "assert_state",
    "path": "classes",
    "equals": {
-    "warrior": 6,
-    "mage": 7
+    "warrior": 11,
+    "mage": 10
    }
   },
   {
@@ -132,10 +132,19 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "R3 (2026-07-12): unlike the old fixture (both parents below at_level, no evolution outcome at all -> the plain 'sleep soundly' fallback), warrior 11 + mage 10 BOTH now clear evolution.at_level (10) -- decline's own `_resolve_evolutions()` recompute produces a real 'Waiting' outcome for EACH (this fixture banks no sword_skill_used/spear_skill_used/ice_cast/fire_cast, so min_uses is nowhere close to met for either axis). Both waiting toasts fire, catalog order (mage's class block precedes warrior's in classes.json) -- mage's first.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "You sleep soundly."
+    "text": "Your focus wavers between frost and flame."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Your hands haven't chosen sword or spear yet."
    },
    "timeout_sec": 5
   },
@@ -148,8 +157,8 @@
    "action": "assert_state",
    "path": "classes",
    "equals": {
-    "warrior": 6,
-    "mage": 7
+    "warrior": 11,
+    "mage": 10
    }
   },
   {
@@ -161,7 +170,7 @@
    "type": "consolidation_offered",
    "payload_contains": {
     "target": "spellsword",
-    "level": 9
+    "level": 14
    },
    "timeout_sec": 5
   },
@@ -210,7 +219,7 @@
    "type": "consolidation_accepted",
    "payload_contains": {
     "target": "spellsword",
-    "level": 9
+    "level": 14
    },
    "timeout_sec": 5
   },
@@ -223,7 +232,7 @@
    "action": "assert_state",
    "path": "classes",
    "equals": {
-    "spellsword": 9
+    "spellsword": 14
    }
   },
   {
@@ -392,7 +401,7 @@
   {
    "action": "assert_state",
    "path": "combat.combatants.pc.max_mp",
-   "equals": 16
+   "equals": 19
   },
   {
    "action": "screenshot",

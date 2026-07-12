@@ -1,13 +1,13 @@
 {
 	"state": {
 		"accomplishments": {
-			"melee_hit": 25,
-			"spell_cast": 18,
+			"melee_hit": 68,
+			"spell_cast": 45,
 			"won_combat": 3
 		},
 		"classes": {
-			"mage": 7,
-			"warrior": 6
+			"mage": 10,
+			"warrior": 11
 		},
 		"current_map": "inn",
 		"dormant_encounters": [],
@@ -18,7 +18,7 @@
 				"mage"
 			],
 			"target": "spellsword",
-			"level": 9
+			"level": 14
 		},
 		"player_cell": [
 			2,

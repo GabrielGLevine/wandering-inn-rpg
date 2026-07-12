@@ -929,7 +929,7 @@ func _init() -> void:
 	# pending offer, and STOPS before evolutions resolve -- the "You sleep
 	# soundly." fallback must not fire on a sleep that produced one.
 	var g19 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g19.classes = {"warrior": 10, "mage": 10}
+	g19.classes = {"warrior": 11, "mage": 10}
 	g19.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	_events.clear()
 	g19.sleep()
@@ -940,7 +940,7 @@ func _init() -> void:
 			offered_payload = e["payload"]
 	assert((offered_payload["parents"] as Array) == ["warrior", "mage"], "offer payload carries parents")
 	assert(offered_payload["target"] == "spellsword", "offer payload carries target")
-	assert(int(offered_payload["level"]) == 14, "offer payload carries merged level (10,10) -> 14")
+	assert(int(offered_payload["level"]) == 14, "offer payload carries merged level (11,10) -> 14")
 	assert(_count("class_evolved") == 0, "evolutions are DEFERRED, not resolved, on the offering sleep")
 	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "the soundly-sleep fallback never fires on an offering sleep")
 	assert(g19.classes.has("warrior") and g19.classes.has("mage"), "parents are untouched until the offer resolves")
@@ -970,7 +970,7 @@ func _init() -> void:
 	# EXACTLY as an un-offered sleep would (recomputed from CURRENT counters
 	# at answer time -- not stashed derived results from the offering sleep).
 	var g20 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g20.classes = {"warrior": 10, "mage": 10}
+	g20.classes = {"warrior": 11, "mage": 10}
 	g20.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	_events.clear()
 	g20.sleep()
@@ -988,25 +988,30 @@ func _init() -> void:
 	g20.decline_consolidation()
 	assert(_events.is_empty(), "decline with no pending offer emits nothing")
 
-	# Decline where the evolution stage produces NO outcome at all (neither
-	# parent at its evolution at_level yet) still falls through to the
-	# "You sleep soundly." fallback -- decline's evolution stage behaves
-	# exactly like a normal non-offering sleep, including that fallback.
+	# Class-foundation pass R3 (2026-07-12): under the NEW consolidation
+	# thresholds (min_parent_level 10 == each parent's own evolution.
+	# at_level), it is now STRUCTURALLY IMPOSSIBLE for an offer to fire
+	# while a parent is still below its own evolution eligibility -- the
+	# exact invariant the retune was FOR (the old test here proved the
+	# OPPOSITE, pre-retune: "warrior 6 / mage 7 still triggers the offer
+	# below evolution's at_level 10", which was precisely the reachability
+	# bug #96 diagnosed). A sleep with neither class evolution-eligible
+	# still falls through to the plain "You sleep soundly." fallback,
+	# exactly as before -- just via the DIRECT (non-offering, non-deferred)
+	# sleep() path now, since no offer is even generated to decline.
 	var g20b := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g20b.classes = {"warrior": 6, "mage": 7}
 	_events.clear()
 	g20b.sleep()
-	assert(g20b.pending_consolidation.get("target", "") == "spellsword", "warrior 6 / mage 7 (sum 13) still triggers the offer below evolution's at_level 10")
-	_events.clear()
-	g20b.decline_consolidation()
+	assert(g20b.pending_consolidation.is_empty(), "warrior 6 / mage 7 (sum 13, both below min_parent_level 10) no longer triggers an offer -- the retune's own invariant")
 	assert(_count("class_evolved") == 0, "neither class is at its evolution at_level yet -- no outcome at all")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "decline with zero evolution outcomes still falls through to the soundly-sleep fallback")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "a sleep with no offer and no evolution outcome still falls through to the soundly-sleep fallback")
 
 	# Decline -> re-offered at every future qualifying sleep (no decline-memory
 	# suppression). Simulate: rebuild the same pre-evolution state and sleep
 	# again; the offer must fire again identically.
 	var g21 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g21.classes = {"warrior": 10, "mage": 10}
+	g21.classes = {"warrior": 11, "mage": 10}
 	g21.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	g21.sleep()
 	_events.clear()
@@ -1014,7 +1019,7 @@ func _init() -> void:
 	# Nothing else changed; re-arm the same qualifying state (evolutions already
 	# consumed warrior/mage on decline, so re-create the parents to prove
 	# re-offer works on a FRESH qualifying instance, not the same evolved one).
-	g21.classes = {"warrior": 10, "mage": 10}
+	g21.classes = {"warrior": 11, "mage": 10}
 	_events.clear()
 	g21.sleep()
 	assert(_count("consolidation_offered") == 1, "decline does not suppress future offers -- re-offered at the next qualifying sleep")
@@ -1023,7 +1028,7 @@ func _init() -> void:
 	# between offer and answer must evolve based on CURRENT counters, not
 	# stashed derived results from the offering sleep.
 	var g22 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g22.classes = {"warrior": 10, "mage": 10}
+	g22.classes = {"warrior": 11, "mage": 10}
 	g22.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	g22.sleep()
 	assert(g22.pending_consolidation.get("target", "") == "spellsword", "offer pending")
@@ -1060,10 +1065,12 @@ func _init() -> void:
 		{WIKeys.ID: "q_c", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qc_done": 1}}]},
 	]}
 	var arc := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_arc)
-	# Act II complete: warrior+mage at the consolidation threshold (6/7, sum 13),
-	# 3 quests done, reached_liscor -- but reached_two_classes NOT yet banked
-	# (this game never loaded a save), no Act III keys.
-	arc.classes = {"warrior": 6, "mage": 7}
+	# Act II complete: warrior+mage at the consolidation threshold (11/10,
+	# sum 21 -- class-foundation pass R3, 2026-07-12: min_parent_level 10/
+	# min_combined_level 21, up from 6/13), 3 quests done, reached_liscor --
+	# but reached_two_classes NOT yet banked (this game never loaded a
+	# save), no Act III keys.
+	arc.classes = {"warrior": 11, "mage": 10}
 	arc.started_quests.assign(["q_a", "q_b", "q_c"])
 	arc.accomplishments = {"reached_liscor": 1, "qa_done": 1, "qb_done": 1, "qc_done": 1}
 	arc.reprime_quests()

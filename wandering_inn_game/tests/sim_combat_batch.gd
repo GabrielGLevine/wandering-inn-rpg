@@ -34,9 +34,9 @@ extends SceneTree
 ##   |      | starter quests)                            |                            | |
 ##   | T2   | Sewers, descent, door chain                | 4-7 (first consolidation  | existing ENCOUNTER_CELLS/BOSS_CELLS/RUIN_CELLS bands roughly hold -- verified, untouched |
 ##   |      |                                             | possible at the tail)      | |
-##   | T3   | Riverfarm + Invrisil (post-door unlocks)   | 8-10, often consolidated  | THE RETUNE SET (this task) -- BUILDS.t3_spellsword9/t3_warrior9 are the reference builds |
-##   |      |                                             | (spellsword ~9)            | |
-##   | T4   | Dungeon (8d)                               | 10-12 + the Horns party    | bands derived WITH allies from day one; PARTY_CELLS is the first 4-ally harness, measured-only (boss seed + over-tier calibration) |
+##   | T3   | Riverfarm + Invrisil (post-door unlocks)   | 8-10, MONO (consolidation | RE-RETUNE SET (class-foundation pass R3, 2026-07-12) -- BUILDS.t3_warrior10 is now the GATING reference (t3_spellsword9/t3_warrior9 are measured historical baselines: [Spellsword]'s new floor, 14, makes "spellsword ~9" unreachable by real play) |
+##   |      |                                             | no longer reachable here) | |
+##   | T4   | Dungeon (8d)                               | 10-12 + the Horns party    | bands derived WITH allies from day one; PARTY_CELLS is the first 4-ally harness. GATED vault cell stays PINNED to t4_spellsword11_party (shipped, working); t4_spellsword14_party is the R3 real-floor MEASURED companion |
 ##   | T5   | Pallass (8e)                               | 12-14                      | authored to table at build time, not retuned here |
 ## Off-tier cells (a build below or above its encounter's tier) stay
 ## MEASURED-only -- e.g. this file's own goblin_ambush/chieftains_raid matrix
@@ -323,14 +323,24 @@ const RUIN_CELLS := [
 const RIVERFARM_CELLS := [
 	{"name": "briar_collectors_w10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": false},
 	{"name": "briar_collectors_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": true},
-	{"name": "briar_collectors_t3_spellsword9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_spellsword9", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	## R3: GATING AUTHORITY moved to t3_warrior10 (below) -- t3_spellsword9 is
+	## now structurally unreachable (see that BUILD row's own comment). This
+	## cell stays, gate stripped, a measured historical baseline.
+	{"name": "briar_collectors_t3_spellsword9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_spellsword9", "solo": false},
 	{"name": "briar_collectors_t3_warrior9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_warrior9", "solo": false},
+	{"name": "briar_collectors_t3_warrior10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "briar_collectors_deep_w10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": false},
 	{"name": "briar_collectors_deep_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": true},
-	{"name": "briar_collectors_deep_t3_spellsword9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_spellsword9", "solo": false, "win_lo": 0.55, "win_hi": 0.85, "check_rounds": true},
+	## R3: gate stripped, same reasoning as briar_collectors_t3_spellsword9_hunter above.
+	{"name": "briar_collectors_deep_t3_spellsword9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_spellsword9", "solo": false},
 	{"name": "briar_collectors_deep_t3_warrior9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior9", "solo": false},
-	{"name": "river_wolf_pack_t3_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_spellsword9", "solo": false},
-	{"name": "river_wolf_pack_t3_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_spellsword9", "solo": true},
+	{"name": "briar_collectors_deep_t3_warrior10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.55, "win_hi": 0.85, "check_rounds": true},
+	## R3: river_wolf_pack stays measured-only by design (a night ambush, not
+	## a win-rate contract -- see this const's own header doc) but its BUILD
+	## reference moves to the new T3 reference (t3_warrior10) so the printed
+	## numbers reflect what a real player actually holds at Riverfarm arrival.
+	{"name": "river_wolf_pack_t3_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": false},
+	{"name": "river_wolf_pack_t3_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": true},
 ]
 
 ## Invrisil 8c Task C2 (issues #12/#13) axis. The alley footpads
@@ -372,24 +382,34 @@ const INVRISIL_CELLS := [
 	{"name": "alley_footpads_w2_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "warrior2", "solo": true, "win_lo": 0.75, "win_hi": 0.98},
 	{"name": "alley_footpads_w1_tutorial_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "alley_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
+	## R3: the same over-tier-trivial confirmation, at the NEW real T3
+	## reference build.
+	{"name": "alley_footpads_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_warrior10", "solo": true},
 	{"name": "hired_blades_w10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "warrior5_mage5", "solo": false},
 	{"name": "hired_blades_w10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "warrior5_mage5", "solo": true},
-	{"name": "hired_blades_t3_spellsword9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": false, "win_lo": 0.6, "win_hi": 0.8, "check_rounds": true},
+	## R3: GATING AUTHORITY moved to hired_blades_t3_warrior10_wilovan below --
+	## gate stripped, measured historical baseline (same reasoning as the
+	## briar_collectors_t3_spellsword9_hunter cells above).
+	{"name": "hired_blades_t3_spellsword9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": false},
 	{"name": "hired_blades_t3_warrior9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior9", "solo": false},
+	{"name": "hired_blades_t3_warrior10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.6, "win_hi": 0.8, "check_rounds": true},
 	{"name": "hired_blades_t3_spellsword9_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": true},
+	{"name": "hired_blades_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true},
 	## Issue #80 (world reactivity wave, item 4): `boulevard_night_footpads`,
 	## Invrisil's own night-only slot (skeleton_scene.json, invrisil_boulevard --
 	## the river_wolf_pack precedent's second application). STAYS
 	## MEASURED-ONLY (same rationale as river_wolf_pack/goblin_night_patrol
 	## above -- a night ambush, not a win-rate contract). Same
 	## footpad_lookout/footpad_bruiser roster as alley_footpads_a/b, but at
-	## the region's real T3 build (t3_spellsword9, GEARED) rather than the
+	## the region's real T3 build (GEARED) rather than the
 	## deliberately-low-lethality warrior2 those two are pinned to -- this is
 	## a genuine night danger on open ground, not a failed-stealth safety
 	## net, so it reads at Invrisil's own tier like hired_blades does. No
 	## ally (matches alley_footpads_a/b's own solo convention -- nobody's
-	## fielded on the boulevard at night).
+	## fielded on the boulevard at night). R3: build reference moved to
+	## t3_warrior10 (the old t3_spellsword9 cell stays below as a baseline).
 	{"name": "boulevard_night_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
+	{"name": "boulevard_night_footpads_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_warrior10", "solo": true},
 ]
 
 const BUILDS := [
@@ -467,13 +487,46 @@ const BUILDS := [
 	## this build is the comparison point, recorded so a retune never
 	## secretly depends on the mage-shield passive to clear.
 	{"name": "t3_warrior9", "classes": {"warrior": 9}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	## CLASS-FOUNDATION PASS R3 (2026-07-12): THE NEW T3 GATING-AUTHORITY
+	## REFERENCE, replacing t3_spellsword9 above. The consolidation retune
+	## (min_parent_level 6->10, min_combined_level 13->21 -- data/classes.json's
+	## `consolidations[0]`) moves [Spellsword]'s earliest reachable level to 14
+	## (the merge formula's floor at the new thresholds, WIProgression.
+	## _consolidation_merged_level(10,11)=14) -- "spellsword ~9" (the OLD
+	## ratified T3 reference, docs/design/evolution-reachability.md's own
+	## rejected-then-executed recommendation) is now STRUCTURALLY UNREACHABLE
+	## by real play: no player can hold [Spellsword] below level 14 anymore.
+	## The new T3 "expected build" is a MONO warrior at level 10 (T3's own
+	## tier ceiling, region-tiers.md's "8-10" band's top end, AND warrior's own
+	## `evolution.at_level` -- a real narrative beat, "just hit 10") on the
+	## SAME gear basis as t3_warrior9/t3_spellsword9 above (directly
+	## comparable). t3_spellsword9's own cells below are NOT deleted -- they
+	## lose their win_lo/win_hi and become measured historical baselines (the
+	## "Off-tier baselines" convention, docs/design/region-tiers.md) so the
+	## before/after delta from this retune stays visible in this file rather
+	## than lost to git blame.
+	{"name": "t3_warrior10", "classes": {"warrior": 10}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	## T4 reference build (the dungeon) -- spellsword 11 on the SAME T3 gear
 	## basis (no higher-tier gear exists in data/items.json yet; a real T4
 	## shop ceiling is a separate content pass). Consumed by PARTY_CELLS below
 	## -- see that constant's own doc comment for why neither T4 cell is
 	## gated yet (a boss-stat seed awaiting its own tuning pass, and an
 	## over-tier calibration cross-check that is EXPECTED to read trivial).
+	## R3 NOTE: spellsword 11 is now BELOW the new consolidation floor (14) --
+	## same unreachability the T3 build faced -- but the plan's own ruling
+	## keeps this SHIPPED GATED cell pinned to its current build (it still
+	## measures a real, meaningful roster difficulty; only the fictional "how
+	## would a player get here" story changed, not the combat data under
+	## test). A real-floor companion (`t4_spellsword14_party`, MEASURED-only)
+	## is added below instead of replacing this one.
 	{"name": "t4_spellsword11_party", "classes": {"spellsword": 11}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	## R3: the genuinely-reachable T4 companion -- spellsword AT its new real
+	## floor (14), same T3 gear basis (no T4-specific shop ceiling exists
+	## yet, same disclosed gap t4_spellsword11_party's own comment already
+	## carries). MEASURED-only (PARTY_CELLS' vault cell stays gated on the
+	## pinned t4_spellsword11_party build per the ruling above; this is the
+	## added real-floor data point, not a replacement gate).
+	{"name": "t4_spellsword14_party", "classes": {"spellsword": 14}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 ]
 
 ## The T4 dungeon party axis -- the FIRST 4-ally harness cells:
@@ -531,6 +584,11 @@ const PARTY_CELLS := [
 	## cost actually does to the band, never gates it.
 	{"name": "vault_construct_t4_party_guided", "arena": "vault", "enemies": ["vault_construct"], "build": "t4_spellsword11_party", "ally_hp_mods": {"ksmvr": -18}},
 	{"name": "raskghar_awakened_t4_party", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "t4_spellsword11_party"},
+	## R3: the real-floor companion cell (t4_spellsword14_party's own BUILDS
+	## comment) -- MEASURED-only, the vault gate stays pinned to the SHIPPED
+	## t4_spellsword11_party build above per the ruling (don't re-tune a
+	## working boss over a reachability-only floor change).
+	{"name": "vault_construct_t4_spellsword14_party", "arena": "vault", "enemies": ["vault_construct"], "build": "t4_spellsword14_party"},
 ]
 
 ## The dungeon FIGHT-route axis (8d C1, issue #14): trapped_halls' promoted
