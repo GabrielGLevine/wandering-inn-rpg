@@ -51,6 +51,17 @@ Five lanes, every one opus-reviewed (two FIX-FIRST cycles adjudicated + re-revie
 
 Full arc live: dungeon maps + traps → Horns recruit → three-cost halls routes → windup-telegraph vault boss → FIND beat → report → inn residence. E2 whole-branch review SHIP; machine playtest read by controller eyes (Yvlon/bench fix, dark-edge + overlay findings actioned); AI-variety profiles landed with the snare ward-id split. User playtest checklist + CHOICES 18-20 below.
 
+## 🚢 RELEASE POINT SET (user, 2026-07-12): v0.5.0 to itch
+
+CUT AFTER lane-96 (evolution audit) + lane-80 (reactivity) land — BEFORE
+#93 class churn + the #99-#101 architecture track. Local butler path
+(NO release tag — Actions freeze until ~2026-07-31); bundle-v6 already
+current. Contents since v0.4.0: 8d dungeon+Horns arc, 8e Pallass,
+settings/accessibility, save slots + defeat interstitial, journal
+history/lore, mouse everywhere, audio v1, AI variety, skill-gate rework,
+crab/mini-quests/lore thread, + the two landing lanes. Controller runs
+wi-shipping at the seam.
+
 ## 🔄 THE NEXT QUEUE (2026-07-12, post-8e) — user directives + gap-round-2
 
 **Shipped since 8e:** the six-item debt sweep (pushed 1b1eddd, CI green — board_rumors copy-fit corpus, {item:id} validation, serving_tray's unbounded +1g farm daily-gated with a QA tooth, drake lines proven live via pallass_race_peek, pallass MAP_REQUIRES coherence arms, duck-depth reset).
