@@ -40,8 +40,8 @@ func current_options() -> Array:
 	for entry: Dictionary in _visible_options():
 		var opt: Dictionary = entry["option"]
 		var req: Dictionary = opt.get("requires", {})
-		var locked := not _meets(req)
-		var row: Dictionary = {"text": _priced_text(opt, req), "locked": locked, "requirement": _requirement_text(req) if locked else ""}
+		var locked := not _meets(req, opt)
+		var row: Dictionary = {"text": _priced_text(opt, req), "locked": locked, "requirement": _requirement_text(req, opt) if locked else ""}
 		# An option that grants an item (a shop buy, or Relc's
 		# spear gift) carries the item's mechanical effect line(s) so the panel
 		# answers "what am I buying/getting" in-place. GENERATED from the item
@@ -94,7 +94,7 @@ func choose(index: int) -> Dictionary:
 		return {}
 	var opt: Dictionary = visible[index]["option"]
 	var req: Dictionary = opt.get("requires", {})
-	if not _meets(req):
+	if not _meets(req, opt):
 		return {}
 	var effects: Array = (opt.get("effects", []) as Array).duplicate(true)
 	# [Bargain] price_mod (class-foundation pass R5, 2026-07-12): the
@@ -106,7 +106,7 @@ func choose(index: int) -> Dictionary:
 	# content.gd-validated) -- a plain payout option (positive gold, no
 	# matching negative effect) is never touched.
 	if req.has("gold"):
-		var discounted := _priced_gold(int(req["gold"]))
+		var discounted := _priced_gold(int(req["gold"]), opt)
 		for effect: Dictionary in effects:
 			if effect.has("gold") and int(effect["gold"]) == -int(req["gold"]):
 				effect["gold"] = -discounted
@@ -227,6 +227,27 @@ func _meets_hide_when(hide_when: Dictionary) -> bool:
 	return not cleaned.is_empty() and _meets(cleaned)
 
 
+## GH#98-followup (found live during the R1-R5 sweep, class-foundation pass):
+## [Bargain] must only touch genuine PURCHASE options -- ones that actually
+## spend gold via a matching `effects{gold: -requires.gold}` pair (the same
+## shape test_content.gd's validator checks). A `requires.gold` gate can also
+## exist WITHOUT a purchase (Olesm's chess wager: `requires.gold` is a pure
+## solvency check -- "you must be able to cover a hypothetical loss" -- with
+## no `effects` at all; the actual gold only ever moves on the win node).
+## Un-scoped, `_priced_gold`/`_priced_text` discounted/decorated that wager
+## too, appending a spurious "(2 gold)" onto "Set the board, Olesm." for
+## EVERY player (not just [Bargain] holders -- the append was unconditional
+## on the option's OWN text, not on holding the skill), breaking the
+## authored copy. `opt` defaults to `{}` for callers with no option context
+## (hide_when/text_variant `_meets` checks) -- an empty opt never matches a
+## purchase, so those paths stay fully unaffected (raw, undiscounted gold).
+func _is_priced_purchase(opt: Dictionary, base: int) -> bool:
+	for effect: Dictionary in opt.get("effects", []):
+		if effect.has("gold") and int(effect["gold"]) == -base:
+			return true
+	return false
+
+
 ## [Bargain] price_mod's one resolution function (class-foundation pass R5).
 ## `base` is the AUTHORED price (a `requires.gold` value, never touched at
 ## rest in data). Pallass shop nodes REFUSE haggling diegetically
@@ -234,10 +255,13 @@ func _meets_hide_when(hide_when: Dictionary) -> bool:
 ## bible.md's posted-prices register) and skip the mod entirely, checked
 ## FIRST so it wins even for a Trader who holds [Bargain]. Otherwise, a
 ## buyer whose known skills include "bargain" pays `floor(base * (1 -
-## BARGAIN_PRICE_MOD))` -- every OTHER caller (no skill, or a no_haggle
-## node) reads `base` back unchanged, byte-identical to every option this
-## pass didn't touch.
-func _priced_gold(base: int) -> int:
+## BARGAIN_PRICE_MOD))` -- every OTHER caller (no skill, a no_haggle node, or
+## (GH#98-followup) a non-purchase gold gate with no matching spend effect)
+## reads `base` back unchanged, byte-identical to every option this pass
+## didn't touch.
+func _priced_gold(base: int, opt: Dictionary = {}) -> int:
+	if not _is_priced_purchase(opt, base):
+		return base
 	if bool(_node().get("no_haggle", false)):
 		return base
 	if not (_ctx.get(WIKeys.SKILLS, []) as Array).has("bargain"):
@@ -257,14 +281,18 @@ func _priced_gold(base: int) -> int:
 ## APPENDED here, computed live from `_priced_gold` -- the SAME number the
 ## gate and the actual deduction (choose(), below) use, so gate/effect/
 ## display can never drift (the plan's own "validator-checked consistency"
-## is structural: one function, three callers).
+## is structural: one function, three callers). GH#98-followup: gated on
+## `_is_priced_purchase` FIRST -- a non-purchase gold gate (Olesm's chess
+## wager) is returned completely untouched, never decorated.
 func _priced_text(opt: Dictionary, req: Dictionary) -> String:
 	var text := String(opt["text"])
 	if not req.has("gold"):
 		return text
+	if not _is_priced_purchase(opt, int(req["gold"])):
+		return text
 	if text.contains("gold)"):
 		return text
-	return "%s (%d gold)" % [text, _priced_gold(int(req["gold"]))]
+	return "%s (%d gold)" % [text, _priced_gold(int(req["gold"]), opt)]
 
 
 func _node() -> Dictionary:
@@ -307,7 +335,7 @@ func _resolved_text(node: Dictionary) -> String:
 ## first-checked key's branch ever ran). `recognized` preserves the old
 ## fallback: a requires dict carrying none of the four known keys still
 ## refuses (same as the old trailing `return false`).
-func _meets(req: Dictionary) -> bool:
+func _meets(req: Dictionary, opt: Dictionary = {}) -> bool:
 	if req.is_empty():
 		return true
 	var recognized := false
@@ -329,7 +357,7 @@ func _meets(req: Dictionary) -> bool:
 		# `accomplishment` key), so an unaffordable buy stays VISIBLE-locked/
 		# greyed, never hidden: window-shopping is content (spec §3).
 		recognized = true
-		if int(_ctx.get("gold", 0)) < _priced_gold(int(req["gold"])):
+		if int(_ctx.get("gold", 0)) < _priced_gold(int(req["gold"]), opt):
 			return false
 	if req.has("accomplishment"):
 		recognized = true
@@ -421,7 +449,7 @@ func _meets(req: Dictionary) -> bool:
 	return recognized
 
 
-func _requirement_text(req: Dictionary) -> String:
+func _requirement_text(req: Dictionary, opt: Dictionary = {}) -> String:
 	var names: Dictionary = _ctx.get("names", {})
 	if req.has("skill"):
 		return "requires %s" % String(names.get(String(req["skill"]), String(req["skill"])))
@@ -429,7 +457,7 @@ func _requirement_text(req: Dictionary) -> String:
 		for id: String in req["class"]:
 			return "requires %s %d" % [String(names.get(id, id)), int(req["class"][id])]
 	if req.has("gold"):
-		return "costs %d gold" % _priced_gold(int(req["gold"]))
+		return "costs %d gold" % _priced_gold(int(req["gold"]), opt)
 	if req.has("item"):
 		var items: Dictionary = _ctx.get("items", {})
 		return "requires %s" % String(items.get(String(req["item"]), {}).get("name", String(req["item"])))
