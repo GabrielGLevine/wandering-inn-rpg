@@ -1,0 +1,43 @@
+{
+ "_comment": "8d E1 (issue #14) 'What the Seal Kept' TALK route: talk Ksmvr through the trapped_halls pressure plates (8d C4). Loads delve_skill_start-adjacent state (delve_talk_start: horns_delve_started/horns_party_formed already banked, standing at (7,6) facing ksmvr_plates). Proves: the guide option fires only once the party is formed (already true here) -- opens the graph, picks the real guide option, gets the compliance-then-success beats, banks BOTH `guided_ksmvr_through_plates` (the real cost, ally_hp_penalty reads it) and `halls_cleared` (the shared convergence counter) -- then proves the vault's own `encounter_when` gate FLIPPED: interacting at vault_boss_slot now fires `combat_started` instead of the gate-closed toast (ends here, no second full boss fight -- delve_fight already proves that win). Zero combat resolves before that point.",
+ "fixture_save": "delve_talk_start",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "trapped_halls" },
+  { "action": "assert_state", "path": "accomplishments.horns_party_formed", "equals": 1 },
+
+  { "_comment": "== talk to Ksmvr -- his hub's own default text IS the compliance line.", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "text": "I understand. I will step only where you have said. If I am wrong, I apologize in advance." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "00_ksmvr_compliance" },
+
+  { "_comment": "== 'Follow exactly. Left, then straight.' -- the real guide option (index 0).", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_choice", "payload_contains": { "index": 0 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "guided_ksmvr_through_plates" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "halls_cleared" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "text": "I did not die. This is the preferred outcome." }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "01_ksmvr_success" },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+
+  { "_comment": "== a re-approach reads the standing success variant (the hub's own text_variant), and the guide option has hidden (hide_when guided_ksmvr_through_plates) -- confirming immediately now hits the hub's remaining ungated option ('Not yet.') and simply ends, never re-firing the guide effects.", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "text": "I did not die. This is the preferred outcome." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+
+  { "_comment": "== THE VAULT's own encounter_when gate flipped: halls_cleared is met, so interacting now starts the fight instead of the gate-closed toast. Row 6 is clear the whole way from (7,6) to (17,6) -- no entity/blocked cell sits on it (dart_slit_a is row 5, illusory_floor_a/snare_nest_slot are row 7/8).", "action": "move", "direction": "right", "steps": 10 },
+  { "action": "assert_state", "path": "player_cell", "equals": [17, 6] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "combat.combatants.pc.alive", "equals": true },
+  { "action": "screenshot", "name": "02_vault_gate_opened" }
+ ]
+}

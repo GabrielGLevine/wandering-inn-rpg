@@ -1,0 +1,17 @@
+{
+	"_comment": "8d C1/D1 (issue #14/#15) Yvlon Byres, standing with Ceria/Ksmvr at dungeon_approach. Canon (wiki.wanderinginn.com/Yvlon_Byres): silver-armed [Battlemage], blunt-kind register -- protective without sentiment (character-profiles.md). No gate of her own (Ceria owns the party-formed beat) -- a single hub whose text_variants carry the pool bark (default), the halls-anticipating bark (once the party has formed and the trap gauntlet is the next real step), and the post-victory line, ascending order, LAST-satisfied-wins.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Yvlon",
+			"text": "Stay behind my shield arm if it goes bad. Not out of charity — I just hate digging graves.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "horns_party_formed": 1 } }, "text": "Dust this thick means nothing's walked here in years. Or the thing that walks here doesn't leave tracks." },
+				{ "requires": { "accomplishment": { "vault_construct_downed": 1 } }, "text": "Solid work back there. You'd pass for a second-string Silver-rank. That's a compliment. Take it." }
+			],
+			"options": [
+				{ "text": "Noted.", "end": true }
+			]
+		}
+	}
+}

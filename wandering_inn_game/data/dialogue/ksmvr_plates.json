@@ -1,0 +1,24 @@
+{
+	"_comment": "8d C4 (issue #14) 'What the Seal Kept' TALK route: talk Ksmvr through the trapped_halls pressure plates. A SECOND sighting of Ksmvr (`ksmvr_plates` entity, trapped_halls, beside pressure_plate_a), distinct graph from `ksmvr_intro.json`. hub's own text IS the BINDING compliance line (doubles as his greeting here -- he's already anticipating being guided). The real beat is the guide option: `requires: {accomplishment: {horns_party_formed: 1}}` (C1's own binding gate -- the party must exist before he can be guided) + `hide_when` on the SAME counter it banks (one-shot). Banks `guided_ksmvr_through_plates` (the REAL cost -- `vault_boss_slot`'s `ally_hp_penalty.ksmvr` reads it, an 18-point hp_mod hit for the vault fight) alongside `halls_cleared` DIRECTLY (the shared three-pillar convergence counter, the price_of_a_favor `hollow_true_knot` precedent -- no separate report step). Softlock guard: hub's 'Not yet.' stays fully ungated. hub also carries a text_variant so a post-guide re-approach reads his own success line instead of looping the compliance framing forever.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Ksmvr",
+			"text": "I understand. I will step only where you have said. If I am wrong, I apologize in advance.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "guided_ksmvr_through_plates": 1 } }, "text": "I did not die. This is the preferred outcome." }
+			],
+			"options": [
+				{ "text": "Follow exactly. Left, then straight.", "requires": { "accomplishment": { "horns_party_formed": 1 } }, "hide_when": { "accomplishment": { "guided_ksmvr_through_plates": 1 } }, "effects": [ { "accomplishment": "guided_ksmvr_through_plates" }, { "accomplishment": "halls_cleared" } ], "goto": "success" },
+				{ "text": "Not yet.", "end": true }
+			]
+		},
+		"success": {
+			"speaker": "Ksmvr",
+			"text": "I did not die. This is the preferred outcome.",
+			"options": [
+				{ "text": "Good.", "end": true }
+			]
+		}
+	}
+}

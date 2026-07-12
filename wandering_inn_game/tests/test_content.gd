@@ -212,8 +212,29 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 				var skill_use: Dictionary = entity["on_skill_use"]
 				if skill_use.has("accomplishment"):
 					produced[String(skill_use["accomplishment"])] = true
+				# A `variants` entry (the cellar_door override seam,
+				# WIGame._resolve_skill_use_effect) may override `accomplishment`
+				# itself, not just `toast` -- a second producer for the SAME
+				# prop, gated differently. No shipped on_skill_use variant does
+				# this yet, but the shape is real (accomplishment is just
+				# another key `_resolve_skill_use_effect` can override), so it's
+				# scanned defensively alongside the plain on_interact_accomplishment
+				# case below, which does have a real consumer (8d C1's
+				# `seal_kept_door`).
+				for variant: Dictionary in (skill_use.get("variants", []) as Array):
+					if variant.has("accomplishment"):
+						produced[String(variant["accomplishment"])] = true
 			if entity.has("on_interact_accomplishment"):
 				produced[String(entity["on_interact_accomplishment"])] = true
+				# 8d C1 (issue #14): a plain on_interact_accomplishment prop may
+				# ALSO carry a sibling `variants` list (WIGame's new reuse of
+				# `_resolve_skill_use_effect` at this second call site) --
+				# `seal_kept_door`'s real find (`seal_kept_found`) lives ONLY in
+				# a variant, never the base field, so it must be scanned here
+				# too or every gate reading it looks unproduced.
+				for variant: Dictionary in (entity.get("variants", []) as Array):
+					if variant.has("accomplishment"):
+						produced[String(variant["accomplishment"])] = true
 			# A container's optional
 			# `on_open_accomplishment` (src/core/wi_game.gd's _interact_container)
 			# is a producer too, same shape as on_interact_accomplishment above.
@@ -280,8 +301,12 @@ const VALID_PHASES := ["day", "dusk", "night"]
 ## 8b R1 (issue #10), locked shape 2 -- `encounter_when` validator arm. Only
 ## `kind: "encounter"` entities may carry it (the gate lives in
 ## WIGame._encounter_gate_met, read from interact()'s encounter branch and
-## _check_trigger_radius, both `kind == "encounter"`-scoped); its one shape
-## today is `{"phase": [...]}`, every listed value a real phase string.
+## _check_trigger_radius, both `kind == "encounter"`-scoped). Two shapes
+## sanctioned: `{"phase": [...]}`, every listed value a real phase string
+## (locked shape 2's own original), and `{"requires": {...}}` (8d C1, issue
+## #14 -- the accomplishment-gate shape, same `requires` key name/semantics
+## as door_when/contains_when, just a plain Dictionary so no further
+## structural check beyond the type is needed here).
 func _validate_encounter_when(scene: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
@@ -291,9 +316,12 @@ func _validate_encounter_when(scene: Dictionary) -> void:
 			var entity_id: String = String(entity["id"])
 			assert(String(entity.get("kind", "")) == "encounter", "entity %s carries encounter_when but is not kind:encounter" % entity_id)
 			var when: Dictionary = entity["encounter_when"]
-			assert(when.has("phase"), "entity %s encounter_when has no recognized shape (only 'phase' is sanctioned)" % entity_id)
-			for p: Variant in when["phase"]:
-				assert(VALID_PHASES.has(String(p)), "entity %s encounter_when references unknown phase: %s" % [entity_id, p])
+			assert(when.has("phase") or when.has("requires"), "entity %s encounter_when has no recognized shape (only 'phase'/'requires' are sanctioned)" % entity_id)
+			if when.has("phase"):
+				for p: Variant in when["phase"]:
+					assert(VALID_PHASES.has(String(p)), "entity %s encounter_when references unknown phase: %s" % [entity_id, p])
+			if when.has("requires"):
+				assert(when["requires"] is Dictionary, "entity %s encounter_when.requires must be a Dictionary" % entity_id)
 
 
 ## 8b R1 (issue #10), locked shape 4 -- `visual_states`' new `phase` `when`
@@ -934,8 +962,18 @@ func _accomplishment_producer_maps(scene: Dictionary, graphs: Dictionary, conver
 				_mark_producer(out, String(id), map_id)
 			if entity.has("on_skill_use") and (entity["on_skill_use"] as Dictionary).has("accomplishment"):
 				_mark_producer(out, String((entity["on_skill_use"] as Dictionary)["accomplishment"]), map_id)
+			for su_variant: Dictionary in ((entity.get("on_skill_use", {}) as Dictionary).get("variants", []) as Array):
+				if su_variant.has("accomplishment"):
+					_mark_producer(out, String(su_variant["accomplishment"]), map_id)
 			if entity.has("on_interact_accomplishment"):
 				_mark_producer(out, String(entity["on_interact_accomplishment"]), map_id)
+			# 8d C1 (issue #14): a plain on_interact_accomplishment prop's
+			# sibling `variants` override (same reuse as _collect_scene_
+			# accomplishments above) -- `seal_kept_found` (`seal_kept_door`)
+			# is produced on trapped_halls, not the base flavor id's map alone.
+			for variant: Dictionary in (entity.get("variants", []) as Array):
+				if variant.has("accomplishment"):
+					_mark_producer(out, String(variant["accomplishment"]), map_id)
 			if entity.has("on_open_accomplishment"):
 				_mark_producer(out, String(entity["on_open_accomplishment"]), map_id)
 			for rumor: Dictionary in (entity.get("board_rumors", []) as Array):

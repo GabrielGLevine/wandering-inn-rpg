@@ -1,0 +1,68 @@
+{
+ "_comment": "8d E1 (issue #14) delve_skill canonical's start -- the SKILL route's own beat, tight per FIXTURE-FIRST POLICY (the route isn't the subject, the dart_slit_a/trap_kit cost is). Positioned directly in `trapped_halls` at (9,5) facing right onto dart_slit_a (10,5), quest already at the halls stage (`horns_delve_started`/`horns_party_formed` both banked -- the accept+recruit beats are `delve_fight`'s own proof, not re-derived here). Carries `trap_kit` already purchased (gold docked 3 from the Tier-A 40g floor) -- proves the CONSUME (ITEM_LOST + halls_cleared bank), not the live purchase. classes carries `tactician: 1` (the door_chain_scout_start precedent) for [Appraise Foe]/observe, needed for the dart_slit_a disarm's requires_skill gate -- no fight resolves in this script, so no COMBAT_BAND_FIXTURES registration needed.",
+ "version": 5,
+ "state": {
+  "current_map": "trapped_halls",
+  "player_cell": [
+   9,
+   5
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 5,
+   "mage": 5,
+   "tactician": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
+   "post_game": 1,
+   "horns_delve_started": 1,
+   "horns_party_formed": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
+   "what_the_seal_kept"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "trap_kit"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 37,
+  "actions_since_sleep": 0,
+  "times_slept": 12,
+  "rng_state": "-1966449618399012673"
+ }
+}

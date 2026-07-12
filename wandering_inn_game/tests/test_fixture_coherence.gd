@@ -65,12 +65,17 @@ const GATE_FIXTURES := [
 ##     measured at "warrior2 SOLO specifically" per combatants.json + the
 ##     fixture's own _comment -- the same lock that exempts it from the
 ##     post_game-backbone check, now enforced instead of prose-only).
+##   delve_fight_start: `t4_spellsword11_party` (11 total levels) -- the
+##     SAME T4 reference build sim_combat_batch.gd's PARTY_CELLS/DUNGEON_CELLS
+##     tune the vault fight and the trapped_halls_snare skirmish against;
+##     this canonical resolves BOTH from this one state.
 const COMBAT_BAND_FIXTURES := {
 	"door_chain_fight_start": 10,
 	"door_chain_sequence_break_start": 10,
 	"riverfarm_fight_start": 10,
 	"near_invrisil": 2,
 	"near_invrisil_fight": 10,
+	"delve_fight_start": 11,
 }
 
 ## Region-entry gates, DERIVED from data/skeleton_scene.json's own
@@ -90,6 +95,8 @@ const MAP_REQUIRES := {
 	"runners_guild": ["reached_liscor"],
 	"sewers": ["reached_liscor", "heard_about_cisterns"],
 	"deep_tunnels": ["reached_liscor", "heard_about_cisterns", "heard_the_deep_tremor"],
+	"dungeon_approach": ["horns_delve_started"],
+	"trapped_halls": ["horns_delve_started"],
 	"ruin_surface": ["door_chain_started"],
 	"garden_sanctuary": ["garden_door_unlocked"],
 	"riverfarm_village": ["door_awakened", "riverfarm_attuned"],

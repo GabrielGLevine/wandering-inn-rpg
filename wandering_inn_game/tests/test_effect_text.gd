@@ -85,6 +85,9 @@ const EXPECTED_ITEMS := {
 	# hits" (effect_text.gd's own range-aware branch).
 	"training_bow": ["Range 4", "Worth 8 gold"],
 	"hunting_bow": ["+1 damage on ranged hits", "Range 4", "Worth 18 gold"],
+	# 8d C1 (issue #14): the trapped_halls SKILL route's coin cost --
+	# priced tool, no combat fields, same shape as field_whetstone's card.
+	"trap_kit": ["Worth 3 gold"],
 }
 
 const EXPECTED_SKILLS := {

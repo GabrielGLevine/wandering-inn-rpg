@@ -1,0 +1,67 @@
+{
+ "_comment": "8d E1 (issue #14) 'What the Seal Kept' delve_fight canonical's start -- the FULL end-to-end FIGHT-route proof (accept at Olesm -> FIGHT the promoted snare -> the vault fight, 4-ally party -> the FIND beat -> report). Positioned on `street` facing Olesm (29,3), quest state fresh (`horns_delve_started`/`horns_party_formed`/`halls_cleared`/`vault_construct_downed`/`seal_kept_found`/`seal_kept_reported` all UNBANKED -- this is the moment BEFORE the stipend accept, matching every other quest-start fixture's 'moment before beat 1' convention). CONSTRAINT: post_game structurally implies the full Act II/III backbone (test_fixture_coherence.gd's POST_GAME_BACKBONE) -- carries the SAME accomplishments block as door_chain_fight_start/door_chain_scout_start, the proven-coherent Act III baseline. Gear-aware T4 build: `classes: {spellsword: 11}` + gnollish_hunting_knife/leather_jerkin/hedge_ward_charm/hunters_fang_talisman, the EXACT `t4_spellsword11_party` reference build sim_combat_batch.gd's PARTY_CELLS tunes the vault fight against (registered in test_fixture_coherence.gd's COMBAT_BAND_FIXTURES at 11 -- this canonical resolves TWO real fights from this state, both need the tuned build). rng_state governs both live fights (the snare skirmish, then the vault boss) in sequence -- re-derive via tests/_derive_rng_state.gd if either loses.",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [
+   29,
+   4
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "spellsword": 11
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
+   "post_game": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "gold": 40,
+  "actions_since_sleep": 0,
+  "times_slept": 12,
+  "rng_state": "-1966449618399012673"
+ }
+}

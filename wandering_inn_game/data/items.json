@@ -608,6 +608,22 @@
 			"unsellable": true,
 			"description": "A plain grey stone, palm-sized, humming so faintly you'd miss it if you weren't listening.",
 			"lore": "Eloise's own stock, sold to those bound for the city rather than the hearth. It doesn't point the way so much as remember it. Carried, never worn or sold onward."
+		},
+		{
+			"_comment": "8d C1 (issue #14) 'What the Seal Kept', the SKILL route's real cost: consumed via a dialogue-side `remove_item` on the dart_slit_a disarm (trapped_halls), the hungry-patron hot_meal precedent (issue #59) applied to a field prop's `on_skill_use` instead of a conversation option -- same remove_item() seam, same possession-gate shape (a plain requires:{item:...} leg). Stocked at the peddler's stall pre-quest (peddler_stall.json) for 3g, the cheapest priced tool in the catalog on purpose (a coin cost, not a wall).",
+			"id": "trap_kit",
+			"name": "Trap Kit",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 3,
+			"description": "Wax, wire, and a folding pick, wrapped in oilcloth. Cheap enough that adventurers buy three and lose two.",
+			"lore": "Every peddler within a day of Liscor stocks these now -- the Watch started recommending them after the gallery reopened, and word travels fast when word means coin."
 		}
 	]
 }

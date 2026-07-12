@@ -893,9 +893,26 @@ func interact() -> Dictionary:
 					var hint := String(target.get("item_hint_toast", "Empty hands won't do it. You'd need the right weapon in your pack."))
 					_emit(WIEvents.TOAST, {"text": hint})
 					return {"item_hint": req_family}
-				var accomplishment_id := String(target["on_interact_accomplishment"])
+				# 8d C1 (issue #14): a plain interact-reveal prop may carry a
+				# sibling `variants` list -- the SAME override seam
+				# `_resolve_skill_use_effect` already reads for on_skill_use
+				# props (the cellar_door seam), reused verbatim against a
+				# base effect built from this branch's own two fields instead
+				# of a nested on_skill_use dict. Lets a plain (no-skill)
+				# prop's toast/accomplishment change once an accomplishment
+				# gate is met (e.g. `seal_kept_door`'s locked read before
+				# `vault_construct_downed`, the real find after) with zero
+				# new gate logic. Absent `variants` (every pre-existing
+				# on_interact_accomplishment prop) returns the base effect
+				# untouched -- byte-identical fallback.
+				var resolved := _resolve_skill_use_effect({
+					"accomplishment": target["on_interact_accomplishment"],
+					"toast": target.get("toast", ""),
+					"variants": target.get("variants", []),
+				})
+				var accomplishment_id := String(resolved["accomplishment"])
 				record_accomplishment(accomplishment_id)
-				var toast_text := String(target.get("toast", ""))
+				var toast_text := String(resolved.get("toast", ""))
 				if toast_text != "":
 					_emit(WIEvents.TOAST, {"text": toast_text})
 				# An on_interact_accomplishment prop (e.g.
@@ -993,15 +1010,17 @@ func _interact_container(target: Dictionary) -> Dictionary:
 	return {"container": id, "items": granted}
 
 
-## Resolves an `on_skill_use` effect against its optional `variants` list
-## (the cellar_door post-return-toast seam) -- an entry
-## whose `when` accomplishment-gate is met (reusing `_accomplishment_gate_met`
+## Resolves a base effect dict (`accomplishment`/`toast`) against its optional
+## `variants` list (the cellar_door post-return-toast seam, on_skill_use's own
+## consumer; the plain on_interact_accomplishment branch reuses this same
+## function against a base dict it builds itself, 8d C1) -- an entry whose
+## `when` accomplishment-gate is met (reusing `_accomplishment_gate_met`
 ## verbatim, the door_when-family reader) OVERRIDES the base effect's fields
 ## (`toast`, and `accomplishment` if a variant ever needs to bank something
 ## different), ascending-authored-order latest-satisfied-wins, same
 ## convention as `visual_states`/`_resolve_observe_text`. Absent `variants`
-## (every pre-existing on_skill_use prop) returns the base effect untouched --
-## byte-identical fallback.
+## returns the base effect untouched -- byte-identical fallback for every
+## caller/prop that never authors one.
 func _resolve_skill_use_effect(effect: Dictionary) -> Dictionary:
 	var resolved := effect.duplicate(true)
 	for raw: Variant in effect.get("variants", []):
@@ -1042,6 +1061,17 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	if target.is_empty() or not target.has("on_skill_use"):
 		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": target_id})
 		return {}
+	# 8d C4 (issue #14): an on_skill_use prop may require possessing a
+	# specific item (the dart_slit_a disarm's trap_kit) -- the use_skill()
+	# twin of interact()'s `requires_weapon_family` gate (archery_butt), same
+	# "nudge, never auto-grant" shape, checked against CARRIED inventory
+	# (never equip-state -- tools are never equipped). Absent (every
+	# pre-existing on_skill_use prop) skips this branch, byte-identical.
+	var req_item := String(target.get("requires_item", ""))
+	if req_item != "" and not inventory.has(req_item):
+		var item_hint := String(target.get("item_hint_toast", "Bare hands won't do it. Something in your pack might."))
+		_emit(WIEvents.TOAST, {"text": item_hint})
+		return {"item_hint": req_item}
 	var effect: Dictionary = _resolve_skill_use_effect(target["on_skill_use"])
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
@@ -1067,6 +1097,14 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	# second dish.
 	if effect.has("item"):
 		pickup(String(effect["item"]), target_id)
+	# 8d C4 (issue #14): the trap_kit consume -- the use_skill() twin of
+	# dialogue_choose's own `remove_item` effect verb (issue #59's
+	# hungry-patron seam), same shape, one line up from the `item` grant
+	# arm above. Routes through the existing `remove_item()` seam (no new
+	# sim code); silent no-op if the item somehow isn't held (defensive --
+	# `requires_item` above already refused this call otherwise).
+	if effect.has("remove_item"):
+		remove_item(String(effect["remove_item"]), target_id)
 	return effect
 
 
@@ -1248,17 +1286,24 @@ func _door_gate_met(door_when: Dictionary) -> bool:
 ## an encounter's `start_combat` (interact()'s "encounter" branch,
 ## `_check_trigger_radius`'s proximity ambush) -- mirrors `door_when` being
 ## interact-site-gated rather than baked into `start_combat` itself, so a
-## debug `teleport` + direct combat-adjacent test path is unaffected. Only
-## shape today: `{"phase": [<phase strings>]}` -- current `phase()` must be a
+## debug `teleport` + direct combat-adjacent test path is unaffected. Two
+## shapes today: `{"phase": [<phase strings>]}` -- current `phase()` must be a
 ## member of the listed set (shared `when`-family vocabulary with
 ## visual_states' own new `phase` shape below -- one design, two consumers,
-## per the plan's locked shape 2/4).
+## per the plan's locked shape 2/4) -- and `{"requires": {<accomplishment
+## gate>}}` (8d C1, issue #14: the vault's own gate, `halls_cleared` -- reuses
+## `_accomplishment_gate_met` verbatim, the SAME door_when/ally_requires
+## reader, no new gate logic). A shape with neither key falls through to
+## `true` (defensive; every authored encounter_when carries one or the
+## other, `_validate_encounter_when` enforces it structurally).
 func _encounter_gate_met(ent: Dictionary) -> bool:
 	var when: Dictionary = ent.get("encounter_when", {})
 	if when.is_empty():
 		return true
 	if when.has("phase"):
 		return (when["phase"] as Array).has(phase())
+	if when.has("requires"):
+		return _accomplishment_gate_met(when["requires"] as Dictionary)
 	return true
 
 
@@ -2276,8 +2321,23 @@ func start_combat(entity_id: String) -> bool:
 		if accomplishment_count(key) < int(ally_req[key]):
 			allies = []
 			break
+	# 8d C4 (issue #14): an OPTIONAL per-ally HP cost an earlier field choice
+	# already paid (e.g. Ksmvr guided through the trapped_halls pressure
+	# plates, grazed but alive). `ally_hp_penalty` is a dict ally_id ->
+	# {"when": <accomplishment gate>, "hp_mod": <negative int>}, reusing
+	# `_accomplishment_gate_met` (the door_when-family reader, zero new gate
+	# logic) and `WIKeys.HP_MOD` (already a GENERIC per-combatant field --
+	# wi_combat.gd's `_init` reads it off ANY cfg, not just the PC's own
+	# gear-build seam; `well_fed`'s +2 hp_mod is the exact same pattern one
+	# level up). Absent/unmet reads as "no penalty" -- byte-identical for
+	# every pre-existing encounter, which never sets this key.
+	var hp_penalties: Dictionary = entity.get("ally_hp_penalty", {})
 	for ally: Variant in allies:
-		cfgs.append((by_id[String(ally)] as Dictionary).duplicate(true))
+		var ally_cfg: Dictionary = (by_id[String(ally)] as Dictionary).duplicate(true)
+		var penalty: Dictionary = hp_penalties.get(String(ally), {})
+		if not penalty.is_empty() and _accomplishment_gate_met(penalty.get("when", {}) as Dictionary):
+			ally_cfg[WIKeys.HP_MOD] = int(ally_cfg.get(WIKeys.HP_MOD, 0)) + int(penalty.get("hp_mod", 0))
+		cfgs.append(ally_cfg)
 	for enemy: Variant in entity.get("enemies", []):
 		cfgs.append((by_id[String(enemy)] as Dictionary).duplicate(true))
 	# An entity may carry `repeat_arena`/`tutorial_seen_when` (a tutor_lines-

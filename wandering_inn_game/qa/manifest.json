@@ -485,7 +485,7 @@
    "script": "dungeon_peek",
    "seed": 9,
    "fixture": "cisterns_scout_start",
-   "note": "8d Phase B (issue #14): teleport-based canonical for dungeon_approach + trapped_halls -- neither map is reachable from any live map this phase (the M-ARC gallery reopen is B3/controller's own excluded task), so this is the sole proof they render/work; bounds lap, gallery-seal anchor, dormant-guardian foreshadow, the new door pair, all 4 trap classes (pressure plate trigger, dart-slit disarm, illusory-floor block+reveal, snare placement slot), 8d C3's vault_boss_slot (the guardian's second, closer sighting -- still dormant, kind:prop), round-trip exit, whole-run combat_started absence"
+   "note": "8d Phase B/C1 (issue #14): teleport-based canonical for dungeon_approach + trapped_halls, independent of the quest -- bounds lap, gallery-seal anchor, dormant-guardian foreshadow, the new door pair, all 4 trap classes (pressure plate trigger, dart-slit nudge + the requires_item gate refusing without trap_kit, illusory-floor block+reveal, snare/vault now REAL kind:encounter entities correctly gate-closed at this fixture's unmet state), round-trip exit, whole-run combat_started absence"
   },
   {
    "script": "archer_earn_loop",
@@ -497,6 +497,24 @@
    "script": "settings_loop",
    "seed": null,
    "note": "issue #77: the settings + accessibility surface -- bus-routing fix (UI sends to SFX, provable via AudioServer.get_bus_send), a real SFX slider move asserted via AudioServer.get_bus_volume_db, fullscreen toggle, text-scale step + a copy-fit-sensitive TOAST re-render post-scale, reduce_motion surviving a full Save->Load UI-layer rebuild, the Controls reference sub-page, Replay Hints re-arming the two one-shot session hints, settings.cfg written -- opened from BOTH the title screen and the in-game pause menu"
+  },
+  {
+   "script": "delve_fight",
+   "seed": 1,
+   "fixture": "delve_fight_start",
+   "note": "8d C1/C4/D1 (issue #14) 'What the Seal Kept' FULL CHAIN: accept the stipend at Olesm -> the reopened gallery (B3 door_when live) -> recruit Ceria/Yvlon/Ksmvr (horns_party_formed) -> FIGHT the promoted snare (trapped_halls_snare arena, solo T4) -> the vault boss (4-ally party, windup_declared live, GATED PARTY_CELLS band) -> the FIND beat (seal_kept_door's gated variant) -> report, quest_completed, 15g paid"
+  },
+  {
+   "script": "delve_skill",
+   "seed": 1,
+   "fixture": "delve_skill_start",
+   "note": "8d C1/C4 (issue #14) SKILL route: dart_slit_a's disarm now gates on carrying trap_kit (requires_item, item_hint_toast when unheld) -- the real hotbar disarm consumes it (item_lost) and banks halls_cleared directly; proves the vault's encounter_when gate flips open (combat_started fires) without a second full boss fight"
+  },
+  {
+   "script": "delve_talk",
+   "seed": 1,
+   "fixture": "delve_talk_start",
+   "note": "8d C4 (issue #14) TALK route: talk Ksmvr through the trapped_halls pressure plates (ksmvr_plates.json, gated on horns_party_formed) -- banks guided_ksmvr_through_plates (the real cost, vault_boss_slot's ally_hp_penalty reads it) and halls_cleared directly; proves the vault's encounter_when gate flips open without a second full boss fight"
   }
  ]
 }
