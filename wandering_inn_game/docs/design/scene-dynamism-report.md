@@ -59,13 +59,13 @@ that were never meant to show up here (uncounted, not a gap).
 
 | Scene | Region | Composite | c1 variety | c2 distinct | c3 composition | c4 utilization | c5 clutter | Verdict |
 |---|---|---|---|---|---|---|---|---|
-| pallass_market | pallass | 74.60 | 24.04 | 25.00 | 21.81 | 3.75 | 0.00 | dynamic |
-| pallass_forge | pallass | 73.79 | 24.06 | 25.00 | 21.40 | 3.33 | 0.00 | dynamic |
+| pallass_market | pallass | 76.53 | 25.18 | 24.47 | 21.42 | 5.45 | 0.00 | dynamic |
 | invrisil_boulevard | invrisil | 71.93 | 21.74 | 23.38 | 22.19 | 4.62 | 0.00 | dynamic |
 | street | liscor | 71.74 | 24.63 | 22.00 | 22.52 | 2.59 | 0.00 | dynamic |
+| pallass_forge | pallass | 71.59 | 24.06 | 24.47 | 21.40 | 1.67 | 0.00 | dynamic |
 | mercantile_alleys | invrisil | 70.86 | 22.83 | 23.23 | 23.68 | 1.11 | 0.00 | dynamic |
-| inn | interiors | 69.30 | 23.11 | 22.54 | 21.93 | 1.72 | 0.00 | dynamic |
 | riverfarm_village | riverfarm | 69.03 | 20.90 | 21.19 | 20.14 | 6.80 | 0.00 | dynamic |
+| inn | interiors | 68.96 | 23.11 | 22.54 | 21.93 | 1.38 | 0.00 | dynamic |
 | witch_hollow | riverfarm | 68.31 | 20.54 | 20.90 | 20.45 | 6.43 | 0.00 | dynamic |
 | garden_sanctuary | sanctuary | 66.79 | 19.74 | 23.50 | 17.55 | 6.00 | 0.00 | dynamic |
 | floodplains | liscor | 66.76 | 22.50 | 22.14 | 18.38 | 3.75 | 0.00 | dynamic |

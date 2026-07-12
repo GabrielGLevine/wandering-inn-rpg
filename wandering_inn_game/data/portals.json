@@ -52,12 +52,12 @@
    "display_name": "Pallass — the Market Tier",
    "map": "pallass_market",
    "cell": [
-    10,
-    10
+    4,
+    7
    ],
    "requires_accomplishment": "pallass_attuned",
    "arrival_toast": "The light sharpens and the air turns to hot metal and stone dust. Pallass, tier on tier, rising past where you can see the top.",
-   "_comment": "8e Phase C ('Papers for Pallass' Stage 2, controller ruling 2, the GH#65 late-attuning precedent -- invrisil's own row above is the template). pallass_attuned banks from Krshia's attunement-stone purchase (data/dialogue/krshia_crate.json's 'charms' node, gated on pallass_sponsored), the SAME late-attuning shape as invrisil_attuned. FORWARD-REFERENCED map/cell: pallass_market and the (10,10) arrival cell do NOT exist in skeleton_scene.json yet -- Phase B's own parallel worktree lane owns pallass_market's actual map authoring (this lane's ownership is quest/portal/dialogue wiring only, per the phase plan's file-ownership split, disjoint from B's skeleton_scene.json). requires_accomplishment gates this row structurally inert (WIPortals.attuned_destinations excludes it) until pallass_attuned banks, which cannot happen before B's map lands (krshia_crate.json's own gate on pallass_sponsored is the only live producer) -- so no canonical QA run selects this row today. CONTROLLER RECONCILIATION REQUIRED at merge: replace (10,10) with B's actual walkable arrival cell (the DP3 discipline -- off every blocked/decor/entity cell, blast-radius checked). Full forward-reference table: docs/design/pallass-staging/phase-c-forward-references.json."
+   "_comment": "8e Phase C ('Papers for Pallass' Stage 2, controller ruling 2, the GH#65 late-attuning precedent -- invrisil's own row above is the template). pallass_attuned banks from Krshia's attunement-stone purchase (data/dialogue/krshia_crate.json's 'charms' node, gated on pallass_sponsored), the SAME late-attuning shape as invrisil_attuned. requires_accomplishment gates this row structurally inert (WIPortals.attuned_destinations excludes it) until pallass_attuned banks -- no canonical QA run selects this row today (the quest chain's own future canonical will). ARRIVAL CELL RECONCILED (B lane, replacing C's forward-referenced (10,10) placeholder -- which sat on the map's blocked void row): (4,7) is the open cell directly south of `pallass_market_arrival_anchor` (4,6), off every blocked/decor/entity cell, zero trigger_radius encounters on the map (blast-radius trivially clear), with the arrival checkpoint clerk (7,5) three cells east -- the DP3 discipline."
   }
  ]
 }

@@ -549,7 +549,7 @@
   {
    "script": "pallass_peek",
    "seed": 9,
-   "note": "8e Phase B (issue #16): teleport-based canonical for pallass_market/pallass_forge, the dungeon_peek precedent -- no live route exists until Phase C's arrival quest chain; bounds laps both maps' walkable shelf, the elevator's locked read on both sides, the landmark props (arrival anchor, tier clerk, price board, a market stall, Grimalkin, a forge station, the molten seam bump), whole-run combat_started absence"
+   "note": "8e Phase B+reconciliation (issue #16): teleport-based canonical for pallass_market/pallass_forge, the dungeon_peek precedent -- no live route exists at default boot (portals row gates on pallass_attuned); band-hardened bounds laps (up-bump y1 + down-bump y10, both maps), THE PERMIT OFFICE (forge_permit_clerk + the moved Grimalkin, C's graphs opened/closed at conversation-id level), the stallkeeper + checkpoint-clerk conversations, the elevator's locked read on both sides, the landmark props, the molten seam bump, whole-run combat_started absence"
   }
  ]
 }

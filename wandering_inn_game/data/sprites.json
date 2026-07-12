@@ -3826,6 +3826,25 @@
   ],
   "shadow": true
  },
+ "anchor_waystone_slate": {
+  "_comment": "8e Phase B (issue #16): Pallass's own waystone -- a MODEST PIL RECOLOR of the owned `anchor_waystone` sheet (hue 55-170 mossy-green band rotated to the ratified slate 213deg at 0.55x saturation, luminance preserved; greys + the blue opening-glow pass through untouched) so the arrival plinth reads as Pallass slate, not Liscor moss (controller windowed finding). Same 64x80 geometry as the base sheet, so anchor/scale carry verbatim.",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.95
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/anchor_waystone_slate/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     80
+    ],
+    "fps": 1
+   }
+  }
+ },
  "great_lift": {
   "_comment": "8e Phase A/B (issue #16): OWNED PixelLab landmark, the Grand Lift -- bronze-riveted cage tower spanning both Pallass tier maps at the SAME x=22 column (skeleton_scene.json's grand_lift_market/grand_lift_forge). Native 64x96, anchor MEASURED (tile-family-verdict.md's PIL alpha-bbox pass, bbox (8,9,56,87) -- an 8px margin below the cage, not full-bleed). render_scale 1.0 (native size -- the tallest landmark this task ships, 6 cells, deliberately rises from the floor band up into the wall band above it).",
   "render_scale": 1.0,

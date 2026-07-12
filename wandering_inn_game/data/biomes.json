@@ -244,18 +244,19 @@
   ]
  },
  "pallass_forge": {
-  "_comment": "8e Phase B (issue #16): base full-grid default, same mechanism as pallass_market above but the forge-tier atlas (brick_over_molten) -- floor=[3,3] dark charcoal-navy brick (id15), blocked=[0,0] the molten/void lower terrain (id0), consumed both by the auto-painted void row (y10) and the hand-authored molten-seam blocked cells (both read as the SAME impassable material -- a floor you can't walk on, whether it's the tier's edge or a channel running through it).",
+  "_comment": "8e Phase B (issue #16): floor=[3,3] the brick_over_molten atlas's dark charcoal-navy brick (id15). BLOCKED + SKIRT come from the slate_over_void atlas's dark void cell [0,0] instead of this map's own atlas (controller windowed ruling: brick_over_molten's LOWER terrain is MOLTEN -- using it as the blocked/skirt default painted the void row, the lift bulk and the whole out-of-grid margin orange, ~40% of the frame, an amber-adjacent quarantine drift; the tier bands are the machine's dark slate mass on EVERY tier). Molten renders ONLY at the mid-floor seam via the map's own cover_skip + floor_layers pair (see skeleton_scene.json pallass_forge).",
   "sheet": "res://assets/tiles/pallass/tileset_brick_over_molten_atlas.png",
   "tile_px": 16,
   "floor": [
    3,
    3
   ],
+  "blocked_sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
   "blocked": [
    0,
    0
   ],
-  "skirt_sheet": "res://assets/tiles/pallass/tileset_brick_over_molten_atlas.png",
+  "skirt_sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
   "skirt_tile_px": 16,
   "skirt": [
    0,

@@ -1000,6 +1000,13 @@ const LANDMARK_TOKENS := {
 	"brothers_parlor": ["parlor"],
 	"dungeon_approach": ["dungeon"],
 	"trapped_halls": ["trapped halls", "halls"],
+	# Two-tier city: "pallass" alone is a valid landmark for the market tier
+	# (the arrival tier -- "into Pallass" IS the place), but deliberately NOT
+	# for the forge tier, whose beats must name the tier or the lift (naming
+	# the city wouldn't disambiguate WHICH tier when a gated lift separates
+	# them -- the same naming-WHERE-not-WHAT rule as ruin_surface above).
+	"pallass_market": ["pallass", "market tier"],
+	"pallass_forge": ["forge tier", "grand lift"],
 }
 
 

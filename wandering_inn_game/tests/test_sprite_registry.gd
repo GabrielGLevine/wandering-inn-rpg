@@ -414,8 +414,10 @@ func _build_expected_counts() -> Dictionary:
 	## 64x96, crystal_lamp 32x64, steam_vent 32x48, price_board 48x48,
 	## forge_station 48x64, market_stall_pallass 64x48, tier_wall 128x48 --
 	## idle-only (no walk anim), same convention as street_lamp/plaza_fountain.
+	## anchor_waystone_slate is the base waystone's slate PIL recolor (64x80).
 	for pallass_static: String in ["great_lift", "crystal_lamp", "steam_vent",
-			"price_board", "forge_station", "market_stall_pallass", "tier_wall"]:
+			"price_board", "forge_station", "market_stall_pallass", "tier_wall",
+			"anchor_waystone_slate"]:
 		counts["%s/idle" % pallass_static] = 1
 
 	return counts
