@@ -50,6 +50,15 @@ const _POSTING_TITLES := {
 	"bounty_inn_hands": "Extra Hands at the Inn",
 	"bounty_evening_stew": "Evening Stew Shift",
 	"bounty_vermin_grate": "Vermin Under the Grate",
+	"bounty_lamp_upkeep": "Keep the Common Room Lit",
+	"bounty_tavern_tables": "Wipe the Tables Down",
+	"bounty_market_watch": "Watch the Market Stalls",
+	"bounty_barracks_checkin": "Check In at the Barracks",
+	"bounty_charm_offensive": "A Friendly Word or Three",
+	"bounty_bow_practice": "Archery Butt Practice",
+	"bounty_guild_census": "Guild Headcount",
+	"bounty_alley_cull": "Clear the Boulevard Alleys",
+	"bounty_second_watch": "Settle Two More Quarrels",
 }
 
 ## `WIBounties._delivery_title`'s exact twin, same lockstep contract as
@@ -62,6 +71,11 @@ const _DELIVERY_TITLES := {
 	"delivery_gate_dispatch": "Dispatches to the Gate",
 	"delivery_grate_phials": "Glass Phials to the Grate",
 	"delivery_inn_hamper": "Fruit Hamper to the Inn",
+	"delivery_barracks_gear": "Gambesons to the Barracks",
+	"delivery_guild_ledger": "Sealed Ledger to the Guild Desk",
+	"delivery_tactics_brief": "Tactics Brief to Olesm",
+	"delivery_boulevard_letter": "Sealed Letter to the Boulevard",
+	"delivery_riverfarm_seed": "Seed Grain to Riverfarm",
 }
 
 ## True while the journal panel is visible; world.gd and pause_menu.gd gate on this.

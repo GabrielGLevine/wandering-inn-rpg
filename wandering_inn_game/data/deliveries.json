@@ -1,5 +1,5 @@
 {
-	"_comment": "THE DELIVERY BOARD's live pool (the Runner's Guild). Assembled from docs/design/board-staging/runner-deliveries.json -- parcel/destination/gold/band/slip_copy carried over verbatim, _notes/_comment_* annotations stripped per the G2/DP2 discipline. RIDES WIBounties (DP2's bounty machinery, extended not forked): `condition` is the ONE field the staging doc didn't author, because the plan's reach-condition (\"reach map/cell X with the parcel\") can't be expressed as an accomplishment-counter threshold directly -- WIGame._check_delivery_arrival (the smallest honest reuse of the trigger_radius seam: Chebyshev/king-move adjacency to the destination's anchor_entity, checked from a REAL move_player only, parcel-in-pack as the guard) is the ONE producer of a `delivered_<id>` accomplishment per delivery, so `condition: {\"delivered_<id>\": 1}` rides WIBounties.condition_met completely unchanged. MODE TRACE (delta/absolute decided deliberately per delivery -- all five land the same way): every entry uses the DEFAULT \"delta\" mode, deliberately NOT \"absolute\". Absolute exists for conditions a player can bank BEFORE ever accepting (DP2's one-shot soft-lock class); `delivered_<id>` is structurally un-bankable pre-accept (the parcel only exists in the pack while THIS slip is held), so that soft-lock class cannot occur here -- and delta was ALSO defended (pre-item-D) as re-acceptance honesty: `delivered_<id>` persists after a completed run (accomplishments are monotonic), so an absolute read would insta-complete the same posting taken again after a rotation, paying twice for one carry -- delta's accept-time baseline forced a FRESH arrival per acceptance. SUPERSEDED (item D bug fix, user report): re-acceptance of a completed delivery is no longer possible at all -- WIGame.delivery_board_deliveries() permanently retires any id whose `completed_delivery_<id>` has banked (unconditionally, unlike board_bounties()'s one-shot-vs-delta split: every slip here is a specific one-off favor, never a repeatable standing job), and accept_delivery() refuses a retired id defensively even so. Delta mode is KEPT anyway (harmless, and still the right shape for the pre-completion refused-turn-in case above) but is no longer the primary defense against a double-paid carry -- retirement is. Pool order: keep stable going forward (WIBounties.active_slate's rotation window is order-sensitive, the bounties.json convention; delivery_loop pins the slate ids at times_slept 0 and 1). `delivery_hermit_antlers` (runner-deliveries.json's 6th, FORWARD-REF) is PARKED, not shipped: its destination is null until HR-II places the hermit-alchemist, per the staging doc's own instruction -- and its BINDING double-pay hazard note travels with it: docs/design/dialogue-drafts/home_region_2/hermit_antler_order.json already stages this SAME delivery as a dialogue beat paying 2g at the hermit's door, so HR-II must reconcile (either the hermit conversation IS the turn-in surface [his 2g + a 2g balance at the counter = the 4g band] or the board pays the full 4 and the dialogue's gold effect is dropped) BEFORE either surface ships live -- never both untouched. Resolved for THIS task by shipping neither: no hermit entry here, and hermit_antler_order.json stays a draft outside data/, so no live double-pay path exists.",
+	"_comment": "THE DELIVERY BOARD's live pool (the Runner's Guild). Assembled from docs/design/board-staging/runner-deliveries.json -- parcel/destination/gold/band/slip_copy carried over verbatim, _notes/_comment_* annotations stripped per the G2/DP2 discipline. RIDES WIBounties (DP2's bounty machinery, extended not forked): `condition` is the ONE field the staging doc didn't author, because the plan's reach-condition (\"reach map/cell X with the parcel\") can't be expressed as an accomplishment-counter threshold directly -- WIGame._check_delivery_arrival (the smallest honest reuse of the trigger_radius seam: Chebyshev/king-move adjacency to the destination's anchor_entity, checked from a REAL move_player only, parcel-in-pack as the guard) is the ONE producer of a `delivered_<id>` accomplishment per delivery, so `condition: {\"delivered_<id>\": 1}` rides WIBounties.condition_met completely unchanged. MODE TRACE (delta/absolute decided deliberately per delivery -- all five land the same way): every entry uses the DEFAULT \"delta\" mode, deliberately NOT \"absolute\". Absolute exists for conditions a player can bank BEFORE ever accepting (DP2's one-shot soft-lock class); `delivered_<id>` is structurally un-bankable pre-accept (the parcel only exists in the pack while THIS slip is held), so that soft-lock class cannot occur here -- and delta was ALSO defended (pre-item-D) as re-acceptance honesty: `delivered_<id>` persists after a completed run (accomplishments are monotonic), so an absolute read would insta-complete the same posting taken again after a rotation, paying twice for one carry -- delta's accept-time baseline forced a FRESH arrival per acceptance. SUPERSEDED (item D bug fix, user report): re-acceptance of a completed delivery is no longer possible at all -- WIGame.delivery_board_deliveries() permanently retires any id whose `completed_delivery_<id>` has banked (unconditionally, unlike board_bounties()'s one-shot-vs-delta split: every slip here is a specific one-off favor, never a repeatable standing job), and accept_delivery() refuses a retired id defensively even so. Delta mode is KEPT anyway (harmless, and still the right shape for the pre-completion refused-turn-in case above) but is no longer the primary defense against a double-paid carry -- retirement is. Pool order: keep stable going forward (WIBounties.active_slate's rotation window is order-sensitive, the bounties.json convention; delivery_loop pins the slate ids at times_slept 0 and 1). `delivery_hermit_antlers` (runner-deliveries.json's 6th, FORWARD-REF) is PARKED, not shipped: its destination is null until HR-II places the hermit-alchemist, per the staging doc's own instruction -- and its BINDING double-pay hazard note travels with it: docs/design/dialogue-drafts/home_region_2/hermit_antler_order.json already stages this SAME delivery as a dialogue beat paying 2g at the hermit's door, so HR-II must reconcile (either the hermit conversation IS the turn-in surface [his 2g + a 2g balance at the counter = the 4g band] or the board pays the full 4 and the dialogue's gold effect is dropped) BEFORE either surface ships live -- never both untouched. Resolved for THIS task by shipping neither: no hermit entry here, and hermit_antler_order.json stays a draft outside data/, so no live double-pay path exists. APPEND (issue #72, the generated batch): 5 more slips, indices [5..9], appended AFTER the original 5 -- pure append, nothing above reordered. This SHIFTS the retirement-filtered rotation window at times_slept 2 for delivery_loop.json's step (9) (a real re-pin, not a bug: the pre-append 4-item retirement-filtered pool wrapped back to delivery_pisces_parcel at that index; the post-append 9-item pool no longer wraps there, landing on delivery_barracks_gear instead -- see qa/scripts/delivery_loop.json's own updated comment). times_slept 0/1 windows are unaffected (their indices sit well inside the pool either way). Grammar/producer trace + pay-band derivation + REJECTED alternates: docs/design/board-staging/generated-candidates.json (scripts/generate_postings.py). New band \"cross-region\" (2 slips, via the Magical Door / portal system -- WIGame._check_delivery_arrival works generically off current_map, no engine change needed) priced above cross-map, reflecting the longer portal-gated trip; a player without portal access yet who takes one anyway simply sleeps on it (the existing sleep-fail valve -- no pay, no penalty, parcel returns), same as any other unmet delivery.",
 	"deliveries": [
 		{
 			"id": "delivery_krshia_wool",
@@ -51,6 +51,56 @@
 			"band": "cross-map",
 			"condition": { "delivered_delivery_inn_hamper": 1 },
 			"slip_copy": "TO: The Wandering Inn, the hill past the gate. One fruit hamper for the [Innkeeper]. Juice is on tonight's menu, so: tonight. The road has goblins. The hamper has a poison core policy. Read the label."
+		},
+		{
+			"id": "delivery_barracks_gear",
+			"type": "delivery",
+			"parcel": { "item_id": "parcel_gambeson_bundle", "display_name": "Bundled Gambesons", "flavor": "Watch-issue gambesons, three of them, bundled tight and none too soft." },
+			"destination": { "map": "barracks", "cell": [6, 4], "anchor_entity": "duty_sergeant" },
+			"gold": 2,
+			"band": "cross-map, short",
+			"condition": { "delivered_delivery_barracks_gear": 1 },
+			"slip_copy": "TO: the barracks, Duty Sergeant Dresk. Bundled gambesons, watch-issue, itchy even folded. Same waking, and count them before you hand them over -- he will."
+		},
+		{
+			"id": "delivery_guild_ledger",
+			"type": "delivery",
+			"parcel": { "item_id": "parcel_ledger_transfer", "display_name": "Sealed Ledger Transfer", "flavor": "A ledger, sealed, Guild business written on the outside and nothing else." },
+			"destination": { "map": "guild", "cell": [8, 2], "anchor_entity": "selys" },
+			"gold": 2,
+			"band": "cross-map",
+			"condition": { "delivered_delivery_guild_ledger": 1 },
+			"slip_copy": "TO: the Adventurer's Guild desk, Selys. A sealed ledger, Guild business, not yours to read. Straight there, straight back to whoever's asking. Same waking."
+		},
+		{
+			"id": "delivery_tactics_brief",
+			"type": "delivery",
+			"parcel": { "item_id": "parcel_tactics_brief", "display_name": "Rolled Tactics Brief", "flavor": "A brief, rolled and string-tied, the ink still faintly damp at the edges." },
+			"destination": { "map": "street", "cell": [29, 3], "anchor_entity": "olesm" },
+			"gold": 2,
+			"band": "same-map long",
+			"condition": { "delivered_delivery_tactics_brief": 1 },
+			"slip_copy": "TO: the [Tactician] by the Guild steps. A rolled brief, string-tied, corners bent from travel -- don't bend them worse. He'll want it before the ink he's already using dries."
+		},
+		{
+			"id": "delivery_boulevard_letter",
+			"type": "delivery",
+			"parcel": { "item_id": "parcel_sealed_letter", "display_name": "A Sealed Letter", "flavor": "A letter, wax-sealed, no return address, the kind that pays for its own silence." },
+			"destination": { "map": "invrisil_boulevard", "cell": [24, 6], "anchor_entity": "master_coyle" },
+			"gold": 4,
+			"band": "cross-region",
+			"condition": { "delivered_delivery_boulevard_letter": 1 },
+			"slip_copy": "TO: Master Coyle, the Invrisil boulevard. One letter, wax sealed, no return address. Long leg -- mind the door before you knock. Four gold reflects the distance, not the danger."
+		},
+		{
+			"id": "delivery_riverfarm_seed",
+			"type": "delivery",
+			"parcel": { "item_id": "parcel_seed_grain", "display_name": "A Sack of Seed Grain", "flavor": "A sack of seed grain, dense and dry, tied at the neck against damp roads." },
+			"destination": { "map": "riverfarm_village", "cell": [11, 9], "anchor_entity": "riverfarm_headman" },
+			"gold": 4,
+			"band": "cross-region",
+			"condition": { "delivered_delivery_riverfarm_seed": 1 },
+			"slip_copy": "TO: the Headman, Riverfarm village. One sack, seed grain, keep it dry and keep it whole -- a torn sack halfway there pays nobody. Four gold, long leg."
 		}
 	]
 }
