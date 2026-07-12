@@ -33,7 +33,13 @@ extends CanvasLayer
 
 enum State { GESTURE, MENU, PLAYTEST_LIST }
 
-const ROWS: Array[String] = ["New Game", "Continue", "Playtest States", "Quit"]
+## "Settings" is APPENDED at the end (issue #77) -- never inserted earlier --
+## so every existing index-based/count-based QA reference (mouse_loop.json's
+## `click_title_row row:2` = Continue, title_flow.json's "move down 1" to
+## reach Continue) keeps the exact same target row. title_flow.json's
+## `selectable_rows` counts DO bump by 1 (a real new always-selectable row),
+## re-pinned there.
+const ROWS: Array[String] = ["New Game", "Continue", "Playtest States", "Quit", "Settings"]
 ## Story-position ordering for the playtest-state picker. Any
 ## `qa/fixtures/*.json` NOT listed here (save-format-migration test fixtures
 ## like v1_format/v2_format, narrow verification-only fixtures like
@@ -69,6 +75,9 @@ const NATIVE_SIZE := Vector2(1280.0, 720.0)
 ## Injected by WIMain._spawn_title so New Game can open character creation.
 ## The injection idiom (not a tree scan) matches combat_screen.
 var main_ref: WIMain
+## Set by main.gd alongside main_ref (issue #77) -- the shared
+## settings_panel.gd instance, opened by the new "Settings" row.
+var settings_ref: Node = null
 
 var _state: int = State.GESTURE
 var _cursor := 0
@@ -323,6 +332,15 @@ func _enter_menu() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_RENDERED, {"continue_enabled": _continue_enabled, "selectable_rows": _selectable_row_count()})
 
 
+## settings_panel.gd's `on_close` callback (issue #77) -- re-shows the
+## top-level menu once Settings closes back out, matching pause_menu.gd's
+## `_reopen_after_settings` precedent (a resume, not a fresh `_enter_menu()`
+## -- no cursor reset, no re-fired ui_title_rendered).
+func _reopen_after_settings() -> void:
+	if _state == State.MENU:
+		_menu_root.show()
+
+
 func _first_selectable_row() -> int:
 	for i in ROWS.size():
 		if _row_selectable(i):
@@ -465,6 +483,13 @@ func _confirm() -> void:
 			_enter_playtest_list()
 		"Quit":
 			get_tree().quit()
+		"Settings":
+			# Hides the top-level menu (state stays MENU throughout -- see
+			# `_reopen_after_settings`) and hands settings_panel.gd a callback
+			# to re-show it on Back/Cancel.
+			if settings_ref != null:
+				_menu_root.hide()
+				settings_ref.call("open", Callable(self, "_reopen_after_settings"))
 
 
 ## `load_slot` returns false on a corrupt or older-version save (WISave.

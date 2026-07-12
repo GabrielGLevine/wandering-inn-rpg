@@ -843,6 +843,8 @@ func queue_idle(id: String) -> void:
 
 
 func flash_chip(id: String) -> void:
+	if _reduce_motion():
+		return
 	var chip := _chip_for(id)
 	if chip == null:
 		return
@@ -875,6 +877,8 @@ func mark_death_visible(id: String) -> void:
 
 ## Cheap cast readability: tween a translucent colored rect over each cell.
 func flash_cells(cells: Array, color: Color) -> void:
+	if _reduce_motion():
+		return
 	for cell: Vector2i in cells:
 		var f := ColorRect.new()
 		f.name = "CastFlash"
@@ -1201,12 +1205,26 @@ func clear_active_marker() -> void:
 	_active_marker_id = ""
 
 
-## Juice gate: true only in real play (windowed non-QA / native). Reuses
-## `_presentation_delay`'s exact TestDriver/headless collapse so every combat-
-## feel effect is a strict no-op under QA -- byte-identical event streams, no
-## board offset left mid-screenshot, no wasted particle nodes headless. Same
-## discipline as the paced-playback / cast-flash precedents.
+## Issue #77: the ONE shared reduce-motion gate for every screen-shake/flash
+## juice call site in this file (shake_board/impact_flash/flash_chip/
+## flash_cells) -- never a per-site copy of `WISettings.reduce_motion()`.
+## board_renderer.gd already references autoloads directly (ObservableBus/
+## Game/TestDriver -- unlike combat_hud.gd/targeting_controller.gd's
+## autoload-free contract), so a bare `WISettings` reference here is
+## consistent with the existing pattern, not a new one.
+func _reduce_motion() -> bool:
+	return WISettings.reduce_motion()
+
+
+## Juice gate: true only in real play (windowed non-QA / native) AND when the
+## player hasn't asked to reduce motion. Reuses `_presentation_delay`'s exact
+## TestDriver/headless collapse so every combat-feel effect is a strict no-op
+## under QA -- byte-identical event streams, no board offset left
+## mid-screenshot, no wasted particle nodes headless. Same discipline as the
+## paced-playback / cast-flash precedents.
 func _juice_enabled() -> bool:
+	if _reduce_motion():
+		return false
 	return _presentation_delay(1.0) > 0.0
 
 

@@ -492,6 +492,11 @@
    "seed": 9,
    "fixture": "near_barracks",
    "note": "GH#70 [Archer] earn: bow bought+equipped -> archery_butt practice (ranged_hit x3, no combat) -> sleep -> class_gained -> a won ranged fight proving Attack resolves at distance >1 (the range+LoS seam, live)"
+  },
+  {
+   "script": "settings_loop",
+   "seed": null,
+   "note": "issue #77: the settings + accessibility surface -- bus-routing fix (UI sends to SFX, provable via AudioServer.get_bus_send), a real SFX slider move asserted via AudioServer.get_bus_volume_db, fullscreen toggle, text-scale step + a copy-fit-sensitive TOAST re-render post-scale, reduce_motion surviving a full Save->Load UI-layer rebuild, the Controls reference sub-page, Replay Hints re-arming the two one-shot session hints, settings.cfg written -- opened from BOTH the title screen and the in-game pause menu"
   }
  ]
 }

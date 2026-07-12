@@ -1,0 +1,83 @@
+{
+ "_comment": "Issue #77: the settings + accessibility surface, canonical end-to-end. No fixture needed -- boots straight at title (starts_at_title) so the FIRST phase covers the boot path (settings.cfg loaded before title, the bus-routing fix live from process start) via Settings opened from the TITLE screen; the SECOND phase re-opens it from the in-game PAUSE menu after a real New Game, proving the SAME panel/state survives the title->world boundary and a later save/load round-trip. Covers: (1) the CONFIRMED bus-routing bug fix -- AudioServer.get_bus_send('UI') == 'SFX' (a real bus-GRAPH assertion, not by ear), SFX untouched (still sends to Master); (2) a real SFX volume slider move asserted via AudioServer.get_bus_volume_db (linear_to_db formula, headless-real since wi_audio.gd's bus setup is no longer headless-gated); (3) fullscreen toggle via its ui_settings_rendered payload; (4) a text-scale step change (100%->115%) immediately followed by a real interact-at-spawn (facing RIGHT from the classless-start default (2,3), (3,3) is open floor -- INTERACT_NOTHING) proving the TOAST panel (a copy-fit-budgeted surface) still renders cleanly post-scale; (5) reduce_motion toggled, then proven to SURVIVE a full Save->Load round-trip (which tears down and rebuilds EVERY UI layer, including this panel itself, via game_loaded's swap_to_world) by reading the live WISettings autoload directly, not the save file; (6) the Controls reference sub-page renders; (7) Replay Hints fires its confirmation + toast, re-arming the two one-shot session hints WITHOUT touching any accomplishment counter (see wi_settings.gd's replay_hints() doc comment); (8) settings.cfg exists on disk both immediately at boot (WIAudio's own unconditional first-save) and again at the very end. Every control exercised through BOTH a keyboard path (move+confirm) and a mouse path (click_title_row/click_pause_row/click_settings_row) somewhere in the run, per the issue #84 standard.",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "payload_contains": { "continue_enabled": false, "selectable_rows": 4 }, "timeout_sec": 5 },
+
+  { "_comment": "== BOOT-PATH PROOF (before any player action): the bus graph fix is live from process start, and settings.cfg already exists (WIAudio's own _load_settings->set_bus_volume chain writes it unconditionally at _ready()).", "action": "assert_audio_bus_send", "bus": "UI", "sends_to": "SFX" },
+  { "action": "assert_audio_bus_send", "bus": "SFX", "sends_to": "Master" },
+  { "action": "assert_settings_file_exists" },
+
+  { "_comment": "== TITLE -> Settings (MOUSE path): row 5 = 'Settings' (ROWS appended at the end, never inserted earlier).", "action": "click_title_row", "row": 5 },
+  { "action": "wait_for_event", "type": "ui_settings_shown", "timeout_sec": 5 },
+  { "_comment": "assert_event_logged (whole-log scan), not wait_for_event: this exact all-defaults snapshot already fired as part of open() itself (BEFORE ui_settings_shown, by construction -- see settings_panel.gd's open() doc comment), so it's already behind the forward-only wait cursor by the time ui_settings_shown resolves; nothing LATER reproduces all-defaults once the very next steps start changing values.", "action": "assert_event_logged", "type": "ui_settings_rendered", "payload_contains": { "master": 10, "music": 10, "sfx": 10, "fullscreen": false, "text_scale_step": 0, "reduce_motion": false } },
+
+  { "_comment": "== SFX slider (KEYBOARD path): cursor starts at 'Master volume' (index 0) on a fresh open() -- down x2 reaches 'SFX volume' (index 2).", "action": "move", "direction": "down", "steps": 2 },
+  { "action": "press", "name": "move_left" },
+  { "action": "wait_for_event", "type": "ui_settings_rendered", "payload_contains": { "sfx": 9 }, "timeout_sec": 5 },
+  { "action": "assert_audio_bus_volume", "bus": "SFX", "value_0_to_10": 9 },
+
+  { "_comment": "== Fullscreen toggle: down x1 -> 'Fullscreen' (index 3), Confirm flips it.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_settings_rendered", "payload_contains": { "fullscreen": true }, "timeout_sec": 5 },
+
+  { "_comment": "== Text Scale step: down x1 -> 'Text Scale' (index 4), Confirm cycles 100%->115% (step 0->1).", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_settings_rendered", "payload_contains": { "text_scale_step": 1 }, "timeout_sec": 5 },
+
+  { "_comment": "== Back (MOUSE path): row 9 = 'Back' (index 8, last row).", "action": "click_settings_row", "row": 9 },
+  { "action": "wait_for_event", "type": "ui_settings_hidden", "timeout_sec": 5 },
+  { "action": "wait_frames", "frames": 2 },
+
+  { "_comment": "== New Game (MOUSE path): row 1 = 'New Game'. Classless-start default spawn (2,3), facing RIGHT -- lands on the open (3,3) cell.", "action": "click_title_row", "row": 1 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_gdi_opener_rendered", "payload_contains": { "lines": 4 }, "timeout_sec": 5 },
+
+  { "_comment": "== COPY-FIT PROOF at the scaled font: an interact into open ground -> INTERACT_NOTHING -> the TOAST panel (a budgeted surface, TOAST_FIELDS' own family) renders cleanly through message_layer.gd's LIVE theme-font wrap math -- no hang, no truncation garbage, exact text.", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "interact_nothing", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "Nothing there." }, "timeout_sec": 5 },
+
+  { "_comment": "== In-game PAUSE -> Settings (MOUSE path): row 8 = 'Settings' (index 7, appended after 'Quit to Title'). The panel is a FRESH instance (world swap rebuilt every UI layer) -- its render still reflects fullscreen/text_scale_step carried by WISettings across the title->world boundary.", "action": "press", "name": "cancel" },
+  { "action": "wait_for_event", "type": "ui_pause_shown", "timeout_sec": 5 },
+  { "action": "click_pause_row", "row": 8 },
+  { "action": "wait_for_event", "type": "ui_settings_shown", "timeout_sec": 5 },
+  { "_comment": "Same assert_event_logged fix as the title-side open above -- this snapshot fires as part of open() itself, before ui_settings_shown.", "action": "assert_event_logged", "type": "ui_settings_rendered", "payload_contains": { "fullscreen": true, "text_scale_step": 1, "reduce_motion": false } },
+
+  { "_comment": "== Reduce Motion toggle (KEYBOARD path): down x5 from 'Master volume' -> 'Reduce Motion' (index 5).", "action": "move", "direction": "down", "steps": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_settings_rendered", "payload_contains": { "reduce_motion": true }, "timeout_sec": 5 },
+  { "action": "assert_settings_value", "path": "reduce_motion", "equals": true },
+
+  { "_comment": "== Controls reference sub-page: down x1 -> 'Controls...' (index 6), Confirm opens it -- data-driven row count from WIInputHints.LABELS.kb.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_controls_rendered", "payload_contains": { "rows": 9 }, "timeout_sec": 5 },
+  { "action": "press", "name": "cancel" },
+  { "action": "wait_frames", "frames": 2 },
+
+  { "_comment": "== Replay Hints: down x1 from 'Controls...' -> 'Replay Hints' (index 7), Confirm fires the re-arm.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_hints_replayed", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Tutorial hints will show again." }, "timeout_sec": 5 },
+
+  { "_comment": "== Close settings (KEYBOARD path): down x1 -> 'Back' (index 8), Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_settings_hidden", "timeout_sec": 5 },
+  { "action": "wait_frames", "frames": 2 },
+
+  { "_comment": "== SAVE / LOAD round trip: pause_menu's own cursor is still on 'Settings' (index 7, the row that opened it) -- down x2 reaches 'Save' (index 1).", "action": "move", "direction": "down", "steps": 2 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Game saved." }, "timeout_sec": 5 },
+
+  { "_comment": "Save closed the pause menu -- reopen (fresh cursor 0) and down x2 reaches 'Load' (index 2).", "action": "press", "name": "cancel" },
+  { "action": "wait_for_event", "type": "ui_pause_shown", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 2 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+
+  { "_comment": "== PERSISTENCE PROOF: the save/load round trip just tore down and rebuilt EVERY UI layer (including settings_panel.gd itself) via swap_to_world -- reduce_motion survives because WISettings is a config-file-backed autoload, never touched by Game.load_slot/WISave. Config-file idiom, NOT save data.", "action": "assert_settings_value", "path": "reduce_motion", "equals": true },
+  { "action": "assert_settings_file_exists" }
+ ]
+}

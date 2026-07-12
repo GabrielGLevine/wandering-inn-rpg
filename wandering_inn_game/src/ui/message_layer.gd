@@ -252,6 +252,17 @@ static func _reset_first_pickup_hint(type: String, _payload: Dictionary) -> void
 		_first_pickup_hint_shown = false
 
 
+## Issue #77: settings_panel.gd's "Replay Hints" action calls this directly
+## (via `WISettings.replay_hints()`'s dynamic `load(...).call("reset_hints")`
+## -- see that file's doc comment) to re-arm this hint mid-sitting, the same
+## effect `_reset_first_pickup_hint` already has on GAME_RESET, just without
+## resetting the whole game. Static, script-bound (see `_first_pickup_hint_
+## shown`'s own doc comment for why the flag itself is static) -- callable
+## with zero live MessageLayer instance in the tree.
+static func reset_hints() -> void:
+	_first_pickup_hint_shown = false
+
+
 func _ready() -> void:
 	var root := Control.new()
 	UIChrome.apply_theme(root)

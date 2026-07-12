@@ -20,14 +20,21 @@ extends CanvasLayer
 ## duck-typed via `has_method()`, mirroring main.gd's own
 ## `world.has_method("inject_ui_refs")` pattern for the same reason.
 
-const PANEL_SIZE := Vector2(280.0, 276.0)
+const PANEL_SIZE := Vector2(280.0, 300.0)
 ## "Music"/"SFX" double as `WIAudio` bus names, so `_row_text()` and
 ## `_adjust_volume_row()` can use the row key directly as the bus arg.
-const ROWS := ["Resume", "Save", "Load", "Load Autosave", "Music", "SFX", "Quit to Title"]
+## "Settings" is APPENDED at the end (issue #77) -- never inserted earlier --
+## so every existing index-based QA reference (mouse_loop.json's
+## `click_pause_row row:1` = Resume, the "move down N" navigations in
+## board_loop/consolidation_reload/save_migration/save_load_roundtrip) keeps
+## the exact same target row.
+const ROWS := ["Resume", "Save", "Load", "Load Autosave", "Music", "SFX", "Quit to Title", "Settings"]
 ## The reduced row set while a fight is live (combat_ref.is_resting() gates
 ## opening at all). No Save/Load rows: combat state is never serialized, so a
 ## mid-fight save would silently drop the fight — Abandon is the honest verb
-## (returns to the last autosave, same slot the defeat path loads).
+## (returns to the last autosave, same slot the defeat path loads). No
+## Settings row either -- deliberately unreachable mid-combat (keeps
+## combat_abandon.json's canonical COMBAT_ROWS shape untouched).
 const COMBAT_ROWS := ["Resume", "Abandon to Last Save", "Music", "SFX", "Quit to Title"]
 const VOLUME_ROWS := ["Music", "SFX"]
 
@@ -59,6 +66,9 @@ var combat_ref: Node = null
 ## otherwise open the pause menu INSTEAD of ever reaching world.gd's own
 ## cancel-disarm branch.
 var world_ref: Node = null
+## Set by main.gd alongside the other refs (issue #77) -- the shared
+## settings_panel.gd instance, opened by the new "Settings" row.
+var settings_ref: Node = null
 
 var _root: Control
 var _row_labels: Array[Label] = []
@@ -328,6 +338,17 @@ func _close() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_PAUSE_HIDDEN, {})
 
 
+## settings_panel.gd's `on_close` callback (issue #77) -- re-shows this
+## panel's own root once Settings closes back out. `open`/`_cursor` were
+## never touched while Settings was up, so the row list re-appears exactly
+## where the player left it (no `_open()` re-call -- that would reset the
+## cursor to 0 and re-fire ui_pause_shown, which this is NOT: it's a resume,
+## not a fresh open).
+func _reopen_after_settings() -> void:
+	if open:
+		_root.show()
+
+
 func _enter_confirm(action: String) -> void:
 	_confirming_quit = true
 	_confirm_action = action
@@ -411,3 +432,11 @@ func _confirm() -> void:
 				ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Could not load save."})
 		"Quit to Title":
 			_enter_confirm("quit")
+		"Settings":
+			# Hides this panel (stays logically `open` throughout -- see
+			# `_reopen_after_settings`) and hands settings_panel.gd a callback
+			# to re-show it on Back/Cancel. Never reachable mid-combat
+			# (COMBAT_ROWS has no "Settings" row).
+			if settings_ref != null:
+				_root.hide()
+				settings_ref.call("open", Callable(self, "_reopen_after_settings"))
