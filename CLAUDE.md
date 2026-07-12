@@ -16,7 +16,13 @@ A fresh session positions itself in this order:
    `.claude/skills/` — start with `wi-start-here`.
 3. `HANDOFF.md` — the living cross-session state doc (tracked): open
    flags, playtest checklists, taste-queue for the user. **Keep it
-   updated as work progresses**, not just at session end.
+   updated as work progresses**, not just at session end. **It is
+   current-state, NOT a changelog — trim the tail regularly** (drop
+   dated session-close/milestone/wave entries once they're shipped and
+   in git; keep only genuinely-live sections + the Commands/env footer).
+   Left unpruned it accreted to 1296 lines / 78KB loaded every session
+   (pruned 2026-07-12); git history is the archive, so delete freely.
+   Never leave inline-code file paths wrapped across lines.
 4. `.superpowers/sdd/progress.md` (gitignored ledger) — exact
    mid-milestone position, if present.
 Then: pick up the highest-priority unblocked issue (respect
