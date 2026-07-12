@@ -2136,7 +2136,7 @@
      "talk_pool": [
       "If you're here to report a crime, the form's on the left. If you're here to commit one, don't. I've had a day.",
       "Ten years running this Watch. Six weeks of leave, total. That's the whole personality, if you were wondering.",
-      "Relc's off being enormous at someone. Klbkch is... Klbkch. Somehow the gate still stands. Don't jinx it."
+      "Relc's off being enormous at someone. Klbkch is... Klbkch. The gate still stands. Don't jinx it."
      ],
      "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag annotations stripped). Two stages -- she does not do three degrees of warmth on duty. Perk (watch-bounty access) is the dialogue_unlocks wired into zevara_intro.json's hub + new claimed_bounty_{crate,cisterns,warren} counters, each banked on the CLAIM option (effects live on options, never nodes).",
      "talk_pool_stages": [
@@ -2398,7 +2398,7 @@
         "door_study_sleeps": 1
        },
        "lines": [
-        "I've had that stone of yours on my desk every night since. It resists categorization. Aggravating. I approve."
+        "I have had that stone of yours on my desk every night since. It resists categorization. Aggravating. I approve."
        ]
       },
       {
@@ -2407,7 +2407,7 @@
         "door_study_sleeps": 2
        },
        "lines": [
-        "Closer. Whatever your door remembers being, it's stopped fighting me about it."
+        "Closer. Whatever your door remembers being, it has stopped fighting me about it."
        ]
       }
      ],
@@ -2465,7 +2465,7 @@
      "display_name": "Krshia",
      "sprite": "pc_gnoll_f",
      "observe": "A Gnoll with a merchant's smile and a soldier's eyes. She prices you the moment you approach, and remembers the number.",
-     "friendly_line": "Hrr. You have a warm way about you, and warmth I can trade with. Come - for you, I will call it a fair price, and I will mean it. This is not nothing, from me.",
+     "friendly_line": "You have a warm way about you, and warmth I can trade with. Come - for you, I will call it a fair price, and I will mean it. This is not nothing, from me.",
      "facing": "right",
      "talk_pool": [
       "You look, you do not buy. This is fine. Looking is its own kind of respect.",
@@ -2481,7 +2481,7 @@
         "crate_returned": 1
        },
        "lines": [
-        "Hrr. The crate-finder. Sit, look, touch even. You have earned handling privileges.",
+        "The crate-finder. Sit, look, touch even. You have earned handling privileges.",
         "You did a thing for me and did not name a price after. I remember this the way I remember debts. Better, even.",
         "The stall does well today. When the stall does well, the tribe does well. That is all the economics you need."
        ]
@@ -2503,7 +2503,7 @@
      "dialogue": [
       {
        "speaker": "Krshia",
-       "text": "Hrr. Busy, yes? Come back when you can talk."
+       "text": "Busy, yes? Come back when you can talk."
       }
      ]
     },
@@ -3942,7 +3942,7 @@
      "_comment_stages": "Talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the relc_intro.json meet-topic unlocks (relc_army/relc_after) lifted verbatim from docs/design/social-2-staging/relc_stages.json after the re-path wave went green. relc_after's daughter/Embria reveal stays OUT (V5 canon, hard rail -- the staged oblique 'people I left in it' copy is what ships). Stage 3's spar-wager perk refinement stays UNBUILT/flagged (status quo: relc_spar already re-offers).",
      "talk_pool": [
       "Heh. You walk like nobody's ever hit you properly. We should fix that sometime - for fun.",
-      "Road's boring today. I keep hoping something stupid charges the gate so I can try out [Relc Headbutt].",
+      "Road's boring today. I keep hoping something stupid charges the gate so I can try out the old Relc Headbutt.",
       "You gonna eat that? ...No? Shame. Guarding's hungry work, and I'm the best there is at it.",
       "Stand up straight, kid. Best guardsman in Liscor is watching this road. That's me. Obviously.",
       "You met Klb yet? Senior Guardsman, four arms, does paperwork like it's a Skill. Best partner in the Watch. Tell him he owes me a drink — he'll say ants don't drink. He's lying."
@@ -5035,7 +5035,7 @@
        "_comment": "Invrisil 8c Task C1 (issue #12) -- locked shape 1's Guild-board letter beat, same idiom as rumor_riverfarm (a DISTINCT board_rumors entry, not a bounties.json posting -- that pool's size stays load-bearing for canonical rotation windows). banks_accomplishment invrisil_attuned idempotently on every board browse (_interact_board's existing >=1 semantics).",
        "id": "rumor_invrisil",
        "banks_accomplishment": "invrisil_attuned",
-       "copy": "A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor -- and a professional one -- if a stranger to the city might look into it. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself somehow the strangest part."
+       "copy": "A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor -- and a professional one -- if a stranger to the city might look into it. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself the strangest part."
       }
      ]
     },
@@ -5131,7 +5131,7 @@
      "facing": "down",
      "talk_pool": [
       "Bronze-rank, six months in. Long enough to know which jobs pay in coin and which pay in regret.",
-      "Quiet week. Good for the coinpurse, bad for the nerves. I'll take quiet."
+      "Quiet week. Short on the draws, long on daylight. I'll take quiet."
      ],
      "dialogue": [
       {
@@ -5340,12 +5340,12 @@
       0.35,
       0.3
      ],
-     "observe": "Stripes on the sleeve, chalk dust on the fingers. He would rather stand a wall post than a briefing room, and it shows in how he stands even here.",
+     "observe": "A belt-slate at his hip, chalk stub worn to a nub, already a line into today's tally. Rust-brown scales, no plate for a desk posting — he'd rather be finishing the count than talking to you.",
      "facing": "down",
      "talk_pool": [
       "Sergeant Ashgrave. If you're here to report something, the slate's on the wall. Write it plain.",
       "Quiet shift. Kit's counted, slates are current, and the cell's empty. Write that down as a good day.",
-      "Watch business stays in the barracks. Yours is likely the street."
+      "Barracks business, filed here. Yours is filed at the gate."
      ],
      "dialogue": [
       {
@@ -7578,7 +7578,7 @@
      "observe": "Low fence rail, bordering the tilled rows."
     },
     {
-     "_comment": "The headman -- quest-giver. R3 (issue #11) wires the real conversation graph (riverfarm_headman.json): gives price_of_a_favor, closes it on any path's blight_lifted. Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway. Issue #62 finding 15: facing flipped up->down -- every canonical approaches him from the SOUTH (village_edge/(11,10), 'Teleport doesn't carry facing -- re-face up' toward him in riverfarm_fight/riverfarm_talk/riverfarm_skill), so `up` had him showing his back to the player he's talking to; `down` faces the approach.",
+     "_comment": "The headman -- quest-giver. R3 (issue #11) wires the real conversation graph (riverfarm_headman.json): gives price_of_a_favor, closes it on any path's blight_lifted. Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway. Issue #62 finding 15: facing flipped up->down -- every canonical approaches him from the SOUTH (village_edge/(11,10), 'Teleport doesn't carry facing -- re-face up' toward him in riverfarm_fight/riverfarm_talk/riverfarm_skill), so `up` had him showing his back to the player he's talking to; `down` faces the approach. #63 canon pass: display_name/speaker renamed The Headman -> Former Headman (wiki-verified: Riverfarm answers to Emperor Laken Godart's Unseen Empire now; the placing line lives in riverfarm_headman.json's authority_topic node).",
      "id": "riverfarm_headman",
      "kind": "npc",
      "cell": [
@@ -7586,18 +7586,19 @@
       9
      ],
      "facing": "down",
-     "display_name": "The Headman",
+     "display_name": "Former Headman",
      "sprite": "human_laborer",
      "talk_pool": [
       "We don't truck with witches here. Didn't used to, anyway.",
       "A bad crop year, you learn to count what's yours twice. Once for the harvest, once for what walked off with it.",
-      "Sorry, I don't mean to- never mind. Long nights lately."
+      "Sorry, I don't mean to- never mind. Long nights lately.",
+      "Wolves didn't used to come this close to the fences. Whatever's stirring up that hollow is pushing everything our way, wolves included."
      ],
      "observe": "A ledger under one arm, mud to the knee, the look of a man doing three jobs badly instead of one job well.",
      "conversation": "riverfarm_headman",
      "dialogue": [
       {
-       "speaker": "The Headman",
+       "speaker": "Former Headman",
        "text": "Not now. Got a village to hold together."
       }
      ]
@@ -7654,7 +7655,8 @@
      "talk_pool": [
       "Hollow's quieter than it should be. Doesn't sit right.",
       "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
-      "Know that treeline better than the headman does. He'd rather not."
+      "Know that treeline better than the headman does. He'd rather not.",
+      "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health."
      ],
      "observe": "Weathered hands, a hunting knife worn plain at the hip, eyes on the treeline more than on you.",
      "conversation": "riverfarm_hunter",
@@ -8582,6 +8584,7 @@
      "observe": "A snarl of root and briar at the center of the standing stones, tied in a knot that doesn't look like it grew that way."
     },
     {
+     "_comment": "#63 canon pass: entity swapped from a generic witch to Eloise (wiki-verified, character-profiles.md). This ALSO resolves the #17 audit's coin-vs-favors finding -- the generic witch trading for coin (shop node) while also collecting a debt-in-favors (mediate/blight_lifted) read as two contradictory roles on one invented character. Eloise is canonically a travelling trader of sorts as well as a [Tea Witch], so coin-for-goods and favor-for-service are both native to HER, not a role clash; the contradiction dies with the generic witch it was about.",
      "id": "riverfarm_witch",
      "kind": "npc",
      "cell": [
@@ -8589,14 +8592,14 @@
       8
      ],
      "facing": "up",
-     "display_name": "The Witch",
-     "sprite": "riverfarm_witch_elder",
+     "display_name": "Eloise",
+     "sprite": "eloise",
      "talk_pool": [
-      "You want something. Everyone who finds this path wants something. Sit. Tea first.",
-      "I don't ask twice. Say what you need, and what you'll trade for it.",
-      "The craft has manners, whatever they say about me in the village."
+      "Sit. The tea is nearly right, and nothing sensible was ever decided standing up.",
+      "Kindness asks questions, dear. That is my craft, so forgive me for asking several.",
+      "The village worries loudly. I prefer to worry with a pot on."
      ],
-     "observe": "Green wool, a walking stick within reach, and a thread of red at the wrist that doesn't match anything else she's wearing.",
+     "observe": "A small grey witch in a hat pressed with tea leaves and old flowers. She holds a cup like the answer to a question you haven't asked yet.",
      "conversation": "riverfarm_witch",
      "talk_pool_stages": [
       {
@@ -8605,15 +8608,14 @@
         "blight_lifted": 1
        },
        "lines": [
-        "Paid, one way or another. I don't ask which. Sit if you like.",
-        "The village sleeps easier. So do I, honestly, though I'd deny that if the headman asked.",
-        "I keep a little stock for coin now, for anyone who'd rather not owe me anything."
+        "The fields breathe easier. So do I. Tea?",
+        "You did the hollow a kindness. It remembers, and so do I."
        ]
       }
      ],
      "dialogue": [
       {
-       "speaker": "The Witch",
+       "speaker": "Eloise",
        "text": "Tea's still hot. The offer doesn't get warmer with asking twice."
       }
      ],

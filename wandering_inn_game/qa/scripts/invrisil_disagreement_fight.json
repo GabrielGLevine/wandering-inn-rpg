@@ -83,7 +83,7 @@
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "_comment": "hub: visible [0 'You framed a man...' (took_brothers_job met, merchant_fate_decided unset -- STILL visible), 1 'Your blades are groaning...' (forced_confession met), 2 'Just looking.']. Take index 1, the FIGHT path's own entry, straight to cornered.", "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "confirm" },
-  { "_comment": "cornered, THE forced_confession text_variant ('Enough. ENOUGH...' the beaten register -- only reachable via this entry). options [0 EXPOSE, 1 EXTORT]. Take EXPOSE.", "action": "wait_frames", "frames": 3 },
+  { "_comment": "cornered, THE forced_confession text_variant ('Enough. You've made your point in bruises...' the beaten register -- only reachable via this entry). options [0 EXPOSE, 1 EXTORT]. Take EXPOSE.", "action": "wait_frames", "frames": 3 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "merchant_exposed" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "merchant_fate_decided" }, "timeout_sec": 5 },

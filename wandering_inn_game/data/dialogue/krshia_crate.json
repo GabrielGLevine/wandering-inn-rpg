@@ -205,6 +205,21 @@
       }
      ],
      "end": true
+    },
+    {
+     "_comment": "Issue #74: standing non-banking recap, requires-active (heard_wrong_order)/hide_when-resolved (wrong_order_reported), place-named. Appended at array end (index-safety convention).",
+     "text": "What's the story with the inn's order?",
+     "requires": {
+      "accomplishment": {
+       "heard_wrong_order": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "wrong_order_reported": 1
+      }
+     },
+     "goto": "wrong_order_recap"
     }
    ]
   },
@@ -228,7 +243,7 @@
   },
   "krshia_tribe_two": {
    "speaker": "Krshia",
-   "text": "Hrr. Ask me when you have known me longer than one crate. A promise spoken cheap gets spent cheap. This is true of coin and truer of words.",
+   "text": "Ask me when you have known me longer than one crate. A promise spoken cheap gets spent cheap. This is true of coin and truer of words.",
    "options": [
     {
      "text": "Back to business.",
@@ -474,7 +489,7 @@
   },
   "charms": {
    "speaker": "Krshia",
-   "text": "Hrr. The charmed stock costs more because it does more. Wear too much of it at once and it starts to argue with itself, so choose with sense. Coin on the counter, same as the rest.",
+   "text": "The charmed stock costs more because it does more. Wear too much of it at once and it starts to argue with itself, so choose with sense. Coin on the counter, same as the rest.",
    "_comment": "HAZARD 1: the 6 new accessories/tools that would have overflowed 'shop' past its grown-panel bound. Same buy contract as 'shop' (requires:{gold:price} + effects:[{gold:-price},{item:id}]), cheapest-first ordering matching the shop's own convention, price named in each option's own text (the L5 dedup in dialogue.gd's _item_effect_lines strips WIEffectText's 'Worth N gold' line from the rendered effect_lines because the price is already spelled here). 'Back to the regular stall.' is the required fully-ungated exit (no requires/hide_when) back to 'shop'.",
    "options": [
     {
@@ -594,7 +609,7 @@
   },
   "catalyst_sold": {
    "speaker": "Krshia",
-   "text": "Hrr. That one, I do not ask questions about. Silverfang trade brings stranger things than that through Liscor, and it always finds the buyer who was already looking for it. Yours now. Spend the rest of your coin on something that talks less.",
+   "text": "That one, I do not ask questions about. Silverfang trade brings stranger things than that through Liscor, and it always finds the buyer who was already looking for it. Yours now. Spend the rest of your coin on something that talks less.",
    "options": [
     {
      "text": "Show me the stall again.",
@@ -625,7 +640,7 @@
    "text": "Good. Sewer grates, south of here. Start there. Careful of teeth.",
    "options": [
     {
-     "text": "Actually - one more thing.",
+     "text": "There's more.",
      "goto": "hub"
     },
     {
@@ -636,7 +651,7 @@
   },
   "thanks": {
    "speaker": "Krshia",
-   "text": "Hrr. Yes. This is mine. My thanks. Do not expect a discount, but my thanks.",
+   "text": "Yes. This is mine. My thanks. Do not expect a discount, but my thanks.",
    "options": [
     {
      "text": "Glad to help.",
@@ -646,7 +661,7 @@
   },
   "smoothed": {
    "speaker": "Krshia",
-   "text": "Hrr. For the barmaid, then. She is prickly, that one, but she works. I have watched her learn it. The order goes out full, and no word of the shortfall reaches Erin from my stall. You speak plainly and you speak for a friend. That, I respect.",
+   "text": "For the barmaid, then. She is prickly, that one, but she works. I have watched her learn it. The order goes out full, and no word of the shortfall reaches Erin from my stall. You speak plainly and you speak for a friend. That, I respect.",
    "options": [
     {
      "text": "Thank you, Krshia.",
@@ -656,10 +671,35 @@
   },
   "smoothed_paid": {
    "speaker": "Krshia",
-   "text": "Hrr. Coin instead of words. Simpler, some days. The order goes out full and Erin hears nothing of the shortfall. We are square, you and I.",
+   "text": "Coin instead of words. Simpler, some days. The order goes out full and Erin hears nothing of the shortfall. We are square, you and I.",
    "options": [
     {
      "text": "Thank you, Krshia.",
+     "end": true
+    }
+   ]
+  },
+  "wrong_order_recap": {
+   "_comment": "Issue #74: replays the CURRENT beat only -- never re-banks heard_wrong_order/resolved_wrong_order/wrong_order_reported (goto only, no effects on this node or its options).",
+   "speaker": "Krshia",
+   "text": "The inn's shortfall, yes. Smooth it here at my stall, or settle it your own way. Either gets Lyonette her full order.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "resolved_wrong_order": 1
+      }
+     },
+     "text": "That's handled on my end. Go tell Lyonette, back at the inn, before Erin hears it from someone else."
+    }
+   ],
+   "options": [
+    {
+     "text": "Back to business.",
+     "goto": "hub"
+    },
+    {
+     "text": "Understood.",
      "end": true
     }
    ]

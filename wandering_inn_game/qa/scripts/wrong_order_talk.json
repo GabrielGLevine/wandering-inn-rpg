@@ -33,7 +33,7 @@
   { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "wrong_order", "beat": 1 }, "timeout_sec": 5 },
   { "action": "assert_event_absent", "type": "combat_started" },
 
-  { "_comment": "Advance through the smoothed node's single farewell to close the conversation.", "action": "assert_event_logged", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "Hrr. For the barmaid, then. She is prickly, that one, but she works. I have watched her learn it. The order goes out full, and no word of the shortfall reaches Erin from my stall. You speak plainly and you speak for a friend. That, I respect." } },
+  { "_comment": "Advance through the smoothed node's single farewell to close the conversation.", "action": "assert_event_logged", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "For the barmaid, then. She is prickly, that one, but she works. I have watched her learn it. The order goes out full, and no word of the shortfall reaches Erin from my stall. You speak plainly and you speak for a friend. That, I respect." } },
   { "action": "screenshot", "name": "02_smoothed" },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },

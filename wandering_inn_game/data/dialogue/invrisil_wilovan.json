@@ -4,7 +4,7 @@
  "nodes": {
   "hub": {
    "speaker": "Wilovan",
-   "text": "Begging your pardon, sir — a moment of your evening. We don't steal, whatever you've heard. We RECOVER. Occasionally we recover things that were never lost. Tonight we'd like to recover a man's good name — his, and by unfortunate arithmetic, ours.",
+   "text": "Begging your pardon, sir, a moment of your evening. We don't steal, whatever you've heard. We RECOVER. Occasionally we recover things that were never lost. Tonight we'd like to recover a man's good name — his, and by unfortunate arithmetic, ours.",
    "text_variants": [
     {
      "requires": {
@@ -20,7 +20,7 @@
        "brothers_job_done": 1
       }
      },
-     "text": "Sir. The parlor door is never shut to you, the alleys are safe as churches — safer, we keep better hours — and a man remembers. All of us remember."
+     "text": "Sir. The parlor door is never shut to you, the alleys are safe as churches. Safer, if anything — we keep better hours. And a man remembers. All of us remember."
     }
    ],
    "options": [
@@ -126,7 +126,7 @@
   },
   "scout_nudge": {
    "speaker": "Wilovan",
-   "text": "Sir. A gentleman doesn't accuse a man he can't find. Walk the city a while -- ask around, look past the front door, and come back once you know where Master Coyle actually keeps his business. Then we'll speak of doors.",
+   "text": "Sir. A gentleman doesn't accuse a man he can't find. Walk the city a while — ask around, look past the front door, and come back once you know where Master Coyle actually keeps his business. Then we'll speak of doors.",
    "options": [
     {
      "text": "Fair enough.",
@@ -136,7 +136,7 @@
   },
   "cups_favor_returned": {
    "speaker": "Wilovan",
-   "text": "Ah. That. Settled, then, and Cups need not have worried -- we collect debts, sir, we don't chase tea-girls for them. Tell her the account's closed. Tell her we said so kindly, which is rarer than she'll admit.",
+   "text": "Ah. That. Settled, then, and Cups need not have worried — we collect debts, sir, we don't chase tea-girls for them. Tell her the account's closed. Tell her we said so kindly, which is rarer than she'll admit.",
    "options": [
     {
      "text": "I'll tell her.",
@@ -194,7 +194,7 @@
   },
   "ways": {
    "speaker": "Wilovan",
-   "text": "Three doors, sir, as a man might put it. PAPER: Coyle keeps his true ledger at the counting-house off Wister's Alley, and paper doesn't lie — his says he paid for the theft himself. TONGUES: the fixer called Cups pours rumor by the alley gate, and Coyle has soured more partners than tea has leaves; testimony can be arranged. Politely arranged. Or FISTS — his warehouse crew — and we apologize for even setting that on the table, though should you open that particular door, sir, a man would be honored to attend.",
+   "text": "Three doors, sir, as a man might put it. PAPER: Coyle keeps his true ledger at the counting-house off Wister's Alley, and paper doesn't lie. His says he paid for the theft himself. TONGUES: the fixer called Cups pours rumor by the alley gate, and Coyle has soured more partners than tea has leaves; testimony can be arranged. Politely arranged. Or FISTS, his warehouse crew — and we apologize for even setting that on the table, though should you open that particular door, sir, a man would be honored to attend.",
    "options": [
     {
      "text": "The warehouse, then. Will you come?",
@@ -218,7 +218,7 @@
   "fists_door": {
    "_comment": "GH#68 (quest-stage rework): the FIGHT path's Stage 2 gate. Base text is the diegetic hold -- Wilovan won't commit to a building nobody's found yet; the text_variant (warehouse_located met) restores the ORIGINAL come-along speech verbatim. 'Come with me.' itself gates on the same counter (single sanctioned accomplishment key, HIDDEN until met -- Gating Split policy), so a player who hasn't walked the tailing chain (coyle_runner_trail on invrisil_boulevard -> warehouse_approach in mercantile_alleys) sees only 'I'll go alone.', the pre-existing ungated fallback.",
    "speaker": "Wilovan",
-   "text": "Sir, I'd come gladly -- once we know precisely which building we're walking into. A Brother doesn't blunder in blind, whatever the invitation. Find the place first.",
+   "text": "Sir, I'd come gladly — once we know precisely which building we're walking into. A Brother doesn't blunder in blind, whatever the invitation. Find the place first.",
    "text_variants": [
     {
      "requires": {
@@ -261,7 +261,7 @@
        "merchant_exposed": 1
       }
      },
-     "text": "So we heard, sir, the criers had it by breakfast and the Merchant's Guild by lunch. Coyle's name is worth exactly what he paid for ours: nothing. Wilovan takes his hat off, plain and slow, and doesn't set it back on right away. Mister Farley walked at dawn — that's Farley's ceremony. This one's mine, sir, for a man who held a fortune in his hand and burned it for a stranger in a cheap hat. We don't often get to mean it this way."
+     "text": "So we heard, sir, the criers had it by breakfast and the Merchant's Guild by lunch. Coyle's name is worth exactly what he paid for ours: nothing. Wilovan takes his hat off, plain and slow, and doesn't set it back on right away. Not the warning kind, sir. The other one. Mister Farley walked at dawn — that's Farley's ceremony. This one's mine, sir, for a man who held a fortune in his hand and burned it for a stranger in a cheap hat. We don't often get to mean it this way."
     },
     {
      "requires": {

@@ -15,18 +15,19 @@
 			{ "text": "I heard you play chess.", "requires": { "accomplishment": { "errand_decided": 1, "chatted_with_erin": 2 } }, "goto": "erin_chess" },
 			{ "text": "You never talk about where you're from.", "requires": { "accomplishment": { "resolved_wrong_order": 1, "chatted_with_erin": 4 } }, "goto": "erin_home" },
 			{ "_comment": "stage-3 perk, once per waking. Gate combines the SAME accomplishment stage-gate erin_home uses with the new once_per_waking seam (dialogue.gd's second sanctioned {accomplishment, once_per_waking} compound) -- meal:erin banked by bank_first_use, cleared at sleep(). well_fed:true folds into hp_mod at the next combat build (field HP has no direct target).", "text": "Sit, eat. Cook's orders.", "requires": { "accomplishment": { "resolved_wrong_order": 1, "chatted_with_erin": 4 }, "once_per_waking": "meal:erin" }, "effects": [ { "bank_first_use": "meal:erin" }, { "well_fed": true } ], "goto": "erin_meal" },
-			{ "_comment": "(spec §1 beat 1 / §5.4: 'no Erin gate on the chain -- she reacts via existing pool lines, gates nothing'; this OPTION is the beat-1 trigger itself, not a gate on anything downstream) Gated on post_game (the GDI epilogue's own completion marker, banked by sleep_veil.gd once -- 'post-epilogue sleep' per spec §1), so the flicker beat can only start after Act III's own ending. Appended AFTER every existing option (index-safety convention -- this option is hidden pre-post_game for every earlier canonical, so appending here never shifts any prior visible index). Starts the quest AND banks door_chain_started in one option, matching the_errand/missing_crate's own quest-start shape.", "text": "Something wrong with the pantry door?", "requires": { "accomplishment": { "post_game": 1 } }, "hide_when": { "accomplishment": { "door_chain_started": 1 } }, "effects": [ { "quest": "door_that_goes_elsewhere" }, { "accomplishment": "door_chain_started" } ], "goto": "erin_door_flicker" }
+			{ "_comment": "(spec §1 beat 1 / §5.4: 'no Erin gate on the chain -- she reacts via existing pool lines, gates nothing'; this OPTION is the beat-1 trigger itself, not a gate on anything downstream) Gated on post_game (the GDI epilogue's own completion marker, banked by sleep_veil.gd once -- 'post-epilogue sleep' per spec §1), so the flicker beat can only start after Act III's own ending. Appended AFTER every existing option (index-safety convention -- this option is hidden pre-post_game for every earlier canonical, so appending here never shifts any prior visible index). Starts the quest AND banks door_chain_started in one option, matching the_errand/missing_crate's own quest-start shape.", "text": "Something wrong with the pantry door?", "requires": { "accomplishment": { "post_game": 1 } }, "hide_when": { "accomplishment": { "door_chain_started": 1 } }, "effects": [ { "quest": "door_that_goes_elsewhere" }, { "accomplishment": "door_chain_started" } ], "goto": "erin_door_flicker" },
+			{ "_comment": "Issue #74: standing non-banking recap, requires-active (has_package)/hide_when-resolved (errand_decided), place-named. Appended at array end (index-safety convention).", "text": "Remind me where Selys needs me?", "requires": { "accomplishment": { "has_package": 1 } }, "hide_when": { "accomplishment": { "errand_decided": 1 } }, "goto": "errand_recap" }
 		] },
 		"package": { "speaker": "Erin", "text": "You're a lifesaver! Selys is out the door, past the... goblin situation. She's the Drake who looks like she's already done with your nonsense.", "options": [
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Wait, one more thing!", "goto": "hub" },
 			{ "text": "On my way.", "end": true }
 		] },
 		"cleaning_directions": { "speaker": "Erin", "text": "Really? It's the horror show by the south wall. I owe you one - or the table does. [Basic Cleaning]'s already on your bar — number key, then go introduce yourself to it.", "options": [
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Wait, one more thing!", "goto": "hub" },
 			{ "text": "On it.", "end": true }
 		] },
 		"cleaned": { "speaker": "Erin", "text": "Whoa. That was - the table's actually reflective now. Skills are so unfair.", "options": [
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Wait, one more thing!", "goto": "hub" },
 			{ "text": "All part of the service.", "end": true }
 		] },
 		"epilogue_gave": { "speaker": "Erin", "text": "Selys sent the whole reward back with you? That Drake pretends she's all scales. Free breakfast for a week, I mean it.", "options": [ { "text": "Happy to help.", "end": true } ] },
@@ -55,7 +56,13 @@
 		] },
 		"erin_door_flicker": { "_comment": "(spec §3 Erin key, quoted verbatim)", "speaker": "Erin", "text": "It went somewhere COLD this morning. Doors shouldn't have moods. …Can you look? If it eats you, yell.", "options": [
 			{ "text": "I'll take a look.", "end": true },
-			{ "text": "Actually - one more thing.", "goto": "hub" }
+			{ "text": "Wait, one more thing!", "goto": "hub" }
+		] },
+		"errand_recap": { "_comment": "Issue #74: replays the CURRENT beat only -- never re-banks has_package/package_delivered/errand_decided (goto only, no effects on this node or its options).", "speaker": "Erin", "text": "Selys is still waiting on that package — the Adventurer's Guild, same as it ever was.", "text_variants": [
+			{ "requires": { "accomplishment": { "package_delivered": 1 } }, "text": "The package made it. It's the reward you still need to sort out, back at the Guild counter." }
+		], "options": [
+			{ "text": "Back to it.", "goto": "hub" },
+			{ "text": "Right, the Guild.", "end": true }
 		] }
 	}
 }

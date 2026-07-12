@@ -3,11 +3,11 @@
 	"start": "hub",
 	"nodes": {
 		"hub": {
-			"speaker": "The Witch",
+			"speaker": "Eloise",
 			"text": "Sit. Tea first. Then we'll talk about whatever brought you all this way.",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "text": "You want the blight gone. I want what I'm owed. One of these is easy. Sit. Tea first. The craft has MANNERS." },
-				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "Paid, one way or another. I don't ask which. Sit if you like, or don't -- I've got stock for coin now too, if that suits you better than favors." }
+				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "Paid, one way or another. I don't ask which. Sit if you like, or don't — I've got stock for coin now too, if that suits you better than favors." }
 			],
 			"options": [
 				{ "text": "What's this blight really about?", "goto": "truth" },
@@ -17,7 +17,7 @@
 			]
 		},
 		"truth": {
-			"speaker": "The Witch",
+			"speaker": "Eloise",
 			"text": "No blight. A bargain, unpaid. Someone in that village asked me for a favor and got exactly what they asked for. The price was always the second half of the deal, and they're pretending they forgot that part. The craft doesn't forget. It collects.",
 			"options": [
 				{ "text": "Back to it.", "goto": "hub" },
@@ -25,7 +25,7 @@
 			]
 		},
 		"mediate_pitch": {
-			"speaker": "The Witch",
+			"speaker": "Eloise",
 			"text": "Broker. That's a word for it. Go on, then, make your pitch. I'm not unreasonable. I'm owed, which isn't the same thing.",
 			"options": [
 				{ "text": "Take a year of hearth-tending instead of whatever you were owed.", "goto": "mediate_argue" },
@@ -33,7 +33,7 @@
 			]
 		},
 		"mediate_argue": {
-			"speaker": "The Witch",
+			"speaker": "Eloise",
 			"text": "A year, tending my hearth. Not nothing, and not the debt I was owed either.",
 			"_comment": "Effects live here (goto, not end) so dialogue_ended fires only on 'mediated's OWN end option, after the effects -- same shape as krshia_crate.json's smoothed-over TALK resolution (effects on a non-ending option, a separate reaction node closes the conversation).",
 			"options": [
@@ -41,15 +41,15 @@
 			]
 		},
 		"mediated": {
-			"speaker": "The Witch",
-			"text": "Fine. Tea first, and then it's settled -- a year's honest work is worth more to me than a favor nobody meant to keep.",
+			"speaker": "Eloise",
+			"text": "Fine. Tea first, and then it's settled — a year's honest work is worth more to me than a favor nobody meant to keep.",
 			"options": [
 				{ "text": "Fair enough.", "end": true }
 			]
 		},
 		"shop": {
-			"speaker": "The Witch",
-			"text": "Coin, then. Fine -- not everyone wants to owe me something bigger. Take what you need and go.",
+			"speaker": "Eloise",
+			"text": "Coin, then. Fine — not everyone wants to owe me something bigger. Take what you need and go.",
 			"_comment": "Buy-option contract verbatim (peddler_stall/krshia_crate): requires:{gold:price} + effects:[{gold:-price},{item:id}], price named in the option text. Four items, 4-20g, herb-craft consumables (data/items.json).",
 			"options": [
 				{ "text": "The yarrow bundle. (4 gold)", "requires": { "gold": 4 }, "effects": [ { "gold": -4 }, { "item": "dried_yarrow_bundle" } ], "goto": "bought" },
@@ -60,7 +60,7 @@
 			]
 		},
 		"bought": {
-			"speaker": "The Witch",
+			"speaker": "Eloise",
 			"text": "Sold. Don't come back asking for a refund because it didn't work the way you hoped. Nothing ever works the way anyone hopes.",
 			"options": [
 				{ "text": "Show me again.", "goto": "shop" },

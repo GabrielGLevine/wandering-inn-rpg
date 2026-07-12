@@ -18,7 +18,8 @@
 				{ "text": "Just getting my bearings.", "end": true },
 				{ "_comment": "stage-2 hub topics, lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag stripped). Appended AFTER 'Just getting my bearings.' (array end) so they can never shift an earlier option's visible index.", "text": "I heard you can breathe fire.", "requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } }, "goto": "zevara_oldblood" },
 				{ "_comment": "CANON ⚑ mild -- the Eresc story obliqued: no predecessor named, no Antinium named ('the kind the city didn't mourn'). User gates naming.", "text": "Why'd you take this job? It's eating you.", "requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } }, "goto": "zevara_oath" },
-				{ "_comment": "PERK surface (watch-bounty access, spec default, authorable now -- see zevara_bounties below).", "text": "About that bounty work.", "requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } }, "goto": "zevara_bounties" }
+				{ "_comment": "PERK surface (watch-bounty access, spec default, authorable now -- see zevara_bounties below).", "text": "About that bounty work.", "requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } }, "goto": "zevara_bounties" },
+				{ "_comment": "Issue #74: standing non-banking recap, requires-active (heard_about_cisterns)/hide_when-resolved (cisterns_reported), place-named. Appended at array end (index-safety convention).", "text": "Remind me what's happening with the cisterns?", "requires": { "accomplishment": { "heard_about_cisterns": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "goto": "cisterns_recap" }
 			]
 		},
 		"zevara_oldblood": {
@@ -136,6 +137,18 @@
 			"options": [
 				{ "text": "That's all I ask, Captain.", "goto": "hub" },
 				{ "text": "Appreciated.", "end": true }
+			]
+		},
+		"cisterns_recap": {
+			"_comment": "Issue #74: replays the CURRENT beat only -- never re-banks heard_about_cisterns/resolved_the_cisterns/cisterns_reported (goto only, no effects on this node or its options).",
+			"speaker": "Zevara",
+			"text": "Whatever's nested in the cisterns under the market is still down there, last I heard. Same grate, south of here.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "resolved_the_cisterns": 1 } }, "text": "It's cleared, is it? Then go tell Olesm at the Guild — he's the one keeping the tally, not me." }
+			],
+			"options": [
+				{ "text": "Back a step.", "goto": "hub" },
+				{ "text": "Understood, Captain.", "end": true }
 			]
 		}
 	}

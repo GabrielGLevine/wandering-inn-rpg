@@ -198,7 +198,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Krshia",
-    "text": "Hrr. The crate-finder. Sit, look, touch even. You have earned handling privileges."
+    "text": "The crate-finder. Sit, look, touch even. You have earned handling privileges."
    },
    "timeout_sec": 5
   },
@@ -206,7 +206,7 @@
    "action": "wait_for_event",
    "type": "ui_dialogue_rendered",
    "payload_contains": {
-    "text": "Krshia: Hrr. The crate-finder. Sit, look, touch even. You have earned handling privileges."
+    "text": "Krshia: The crate-finder. Sit, look, touch even. You have earned handling privileges."
    },
    "timeout_sec": 5
   },
@@ -324,15 +324,6 @@
       "text": "Nothing today.",
       "locked": false,
       "requirement": ""
-     },
-     {
-      "text": "The hunting bow, then. Gnoll-strung, proper draw. (18 gold)",
-      "locked": true,
-      "requirement": "costs 18 gold",
-      "effect_lines": [
-       "+1 damage on ranged hits",
-       "Range 4"
-      ]
      }
     ]
    },
@@ -345,6 +336,15 @@
     "options": [
      {
       "text": "The old charm-cord, friend's price. (4 gold)"
+     },
+     {
+      "text": "The hunting bow, then. Gnoll-strung, proper draw. (18 gold)",
+      "locked": true,
+      "requirement": "costs 18 gold",
+      "effect_lines": [
+       "+1 damage on ranged hits",
+       "Range 4"
+      ]
      }
     ]
    }

@@ -25,5 +25,10 @@ static func evaluate(quest_catalog: Dictionary, started: Array, accomplishments:
 			"beat_index": idx,
 			"completed": idx >= beats.size(),
 			"beat_description": String(beats[idx]["description"]) if idx < beats.size() else "",
+			# Optional signposting suffix (issue #74) -- empty string for a
+			# quest with no "region" field (every Liscor-local quest today).
+			# journal.gd's quest_summary line is the ONLY consumer; toasts
+			# (_start_quest/_check_quests) deliberately stay title-only.
+			"region": String(quest.get("region", "")),
 		}
 	return out

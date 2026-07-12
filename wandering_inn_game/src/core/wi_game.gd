@@ -2115,6 +2115,12 @@ func quest_summary() -> Array:
 		if not ev.has(id):
 			continue
 		var title := _quest_title(id)
+		# Issue #74: an optional region suffix ("... (Riverfarm)") disambiguates
+		# a far-away quest at a glance -- data-only (quests.json "region"),
+		# absent leaves the line byte-identical to before this feature.
+		var region := String(ev[id].get("region", ""))
+		if region != "":
+			title = "%s (%s)" % [title, region]
 		out.append("%s — %s" % [title, "Complete" if bool(ev[id]["completed"]) else String(ev[id]["beat_description"])])
 	return out
 

@@ -25,7 +25,7 @@ const SPEAKER := "Krshia"
 ## player with nothing sellable still gets a real reaction, never a bare
 ## "Never mind." with nothing to explain it.
 const EMPTY_TEXT := "Nothing in your pack I'd give coin for. Yet."
-const HUB_TEXT := "Hrr. Let me see what you're carrying."
+const HUB_TEXT := "Let me see what you're carrying."
 ## Krshia's sell reaction (Silverfang trader register -- she "remembers
 ## debts", per her own krshia_fair_weight talk_pool_stages line in
 ## skeleton_scene.json: "I remember this the way I remember debts. Better,
@@ -33,7 +33,7 @@ const HUB_TEXT := "Hrr. Let me see what you're carrying."
 ## WIBounties' per-posting confirm nodes (Selys's road-cull steer is the
 ## one bounty with a distinct accept line), nothing about a sale's flavor
 ## varies by item, so a second authored line would be pure duplication.
-const SOLD_TEXT := "Hrr. Half its worth, paid straight -- I don't forget a fair trade any more than an unfair one. Sold."
+const SOLD_TEXT := "Half its worth, paid straight — I don't forget a fair trade any more than an unfair one. Sold."
 const NEVER_MIND := "Never mind."
 
 

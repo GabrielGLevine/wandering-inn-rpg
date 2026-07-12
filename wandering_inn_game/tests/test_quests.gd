@@ -7,6 +7,19 @@ const CATALOG := {"quests": [{"id": "the_errand", "title": "The Errand", "beats"
 	{"id": "decide", "description": "Decide about the reward.", "complete_when": {"errand_decided": 1}},
 ]}]}
 
+## Issue #74: the optional "region" field, one quest carrying it and one
+## without -- proves evaluate() threads a present region through and defaults
+## a missing one to "" (never null/missing-key, so wi_game.gd's
+## quest_summary() can read it unconditionally).
+const REGION_CATALOG := {"quests": [
+	{"id": "far_quest", "title": "Far Quest", "region": "Riverfarm", "beats": [
+		{"id": "only", "description": "Do the thing.", "complete_when": {"did_the_thing": 1}},
+	]},
+	{"id": "local_quest", "title": "Local Quest", "beats": [
+		{"id": "only", "description": "Do the local thing.", "complete_when": {"did_the_local_thing": 1}},
+	]},
+]}
+
 
 func _init() -> void:
 	WITestWatchdog.arm(self)
@@ -22,6 +35,10 @@ func _init() -> void:
 	assert(WIQuests.evaluate(CATALOG, [], {}).is_empty(), "unstarted quests absent")
 	var done := WIQuests.evaluate(CATALOG, ["the_errand"], {"package_delivered": 1, "errand_decided": 1})
 	assert(done["the_errand"]["completed"] and done["the_errand"]["beat_description"] == "", "completed shape")
+
+	var regions := WIQuests.evaluate(REGION_CATALOG, ["far_quest", "local_quest"], {})
+	assert(regions["far_quest"]["region"] == "Riverfarm", "region field threads through when authored")
+	assert(regions["local_quest"]["region"] == "", "region defaults to empty string, never missing/null, when unauthored")
 
 	print("PASS: quest progress derives purely from accomplishment counters")
 	quit(0)

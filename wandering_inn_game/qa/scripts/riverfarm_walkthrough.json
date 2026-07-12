@@ -187,7 +187,7 @@
    "action": "wait_for_event",
    "type": "dialogue_line",
    "payload_contains": {
-    "speaker": "The Headman",
+    "speaker": "Former Headman",
     "text": "We don't truck with witches here. Didn't used to, anyway."
    },
    "timeout_sec": 5
@@ -219,7 +219,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "A Villager",
-    "text": "You want something. Everyone who finds this path wants something. Sit. Tea first."
+    "text": "Sit. The tea is nearly right, and nothing sensible was ever decided standing up."
    },
    "timeout_sec": 5
   },
@@ -292,8 +292,8 @@
    "action": "wait_for_event",
    "type": "dialogue_line",
    "payload_contains": {
-    "speaker": "The Witch",
-    "text": "You want something. Everyone who finds this path wants something. Sit. Tea first."
+    "speaker": "Eloise",
+    "text": "Sit. The tea is nearly right, and nothing sensible was ever decided standing up."
    },
    "timeout_sec": 5
   },
