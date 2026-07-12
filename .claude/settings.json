@@ -3,5 +3,19 @@
     "allow": [
       "Bash(gh release edit:*)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/scripts/usage_hook.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }

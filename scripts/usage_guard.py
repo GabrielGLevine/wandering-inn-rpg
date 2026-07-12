@@ -283,13 +283,94 @@ def cmd_status(argv):
     return EXIT_CODES[st["tier"]]
 
 
+def stamp_path(session_id):
+    safe = re.sub(r"[^A-Za-z0-9_-]", "_", session_id)[:64] or "global"
+    return os.path.expanduser("~/.claude/usage-guard-notify-%s" % safe)
+
+
+def kick_background_refresh():
+    """Detached refresh so hook calls never wait on `claude -p /usage`.
+    A lockfile stops concurrent hook fires from stampeding."""
+    lock = os.path.expanduser("~/.claude/usage-guard-refresh.lock")
+    try:
+        if (os.path.exists(lock)
+                and time.time() - os.path.getmtime(lock) < REFRESH_LOCK_SECS):
+            return
+        os.makedirs(os.path.dirname(lock), exist_ok=True)
+        with open(lock, "w") as fh:
+            fh.write(str(os.getpid()))
+        subprocess.Popen(
+            [sys.executable, os.path.abspath(__file__), "refresh"],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            start_new_session=True)
+    except Exception:
+        pass
+
+
+def cmd_hook():
+    """PostToolUse hook: read cache only, notify ONLY on tier change.
+    Every path exits 0 — the hook must never block tools."""
+    try:
+        raw = sys.stdin.read()
+        session_id = "global"
+        if raw.strip():
+            try:
+                session_id = json.loads(raw).get("session_id") or "global"
+            except Exception:
+                pass
+        fake = fake_sample()
+        if fake:
+            st = assemble(fake, [fake])
+        else:
+            samples = load_cache()
+            newest = samples[-1] if samples else None
+            age = (now_ts() - newest["ts"]) if newest else None
+            if newest is None or age > CACHE_TTL_SECS:
+                kick_background_refresh()
+            if newest is None or age > STALE_LIMIT_SECS:
+                return 0  # nothing trustworthy; stay silent
+            st = assemble(newest, samples, stale_secs=age)
+        prev = None
+        try:
+            with open(stamp_path(session_id)) as fh:
+                prev = fh.read().strip()
+        except Exception:
+            pass
+        if st["tier"] == prev or (prev is None and st["tier"] == "OK"):
+            if prev is None:
+                path = stamp_path(session_id)
+                os.makedirs(os.path.dirname(path), exist_ok=True)
+                with open(path, "w") as fh:
+                    fh.write(st["tier"])
+            return 0
+        path = stamp_path(session_id)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w") as fh:
+            fh.write(st["tier"])
+        prev_idx = TIERS.index(prev) if prev in TIERS else 0
+        direction = ("escalated" if TIERS.index(st["tier"]) > prev_idx
+                     else "de-escalated")
+        context = ("USAGE-GUARD %s to %s: %s — follow the wi-usage-guard "
+                   "skill checklist for this tier."
+                   % (direction, st["tier"], format_line(st)))
+        print(json.dumps({"hookSpecificOutput": {
+            "hookEventName": "PostToolUse",
+            "additionalContext": context}}))
+        return 0
+    except Exception:
+        return 0
+
+
 def main(argv):
     cmd = argv[1] if len(argv) > 1 else "status"
     if cmd == "status":
         return cmd_status(argv[2:])
     if cmd == "refresh":
         return 0 if refresh() else 1
-    print("usage: usage_guard.py [status [--fresh]|refresh]", file=sys.stderr)
+    if cmd == "hook":
+        return cmd_hook()
+    print("usage: usage_guard.py [status [--fresh]|refresh|hook]",
+          file=sys.stderr)
     return 2
 
 
