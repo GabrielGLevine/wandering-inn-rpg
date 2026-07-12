@@ -13,6 +13,15 @@ var _graph: Dictionary
 var _ctx: Dictionary
 var _event_sink: Callable
 
+## [Bargain] price_mod (class-foundation pass R5, 2026-07-12): a shop price
+## a [Bargain]-holding buyer pays/needs is cut by this fraction (~10%),
+## floor-rounded (player-favorable). ONE constant, read from the ONE
+## resolution site (_priced_gold) that the gate (_meets), the displayed
+## price (current_options'/`_requirement_text`'s callers), and the actual
+## gold deduction (choose()) all share -- gate/effect/display can never
+## drift apart because there is only one number.
+const BARGAIN_PRICE_MOD := 0.1
+
 
 func _init(graph: Dictionary, ctx: Dictionary, event_sink: Callable) -> void:
 	_graph = graph
@@ -32,7 +41,7 @@ func current_options() -> Array:
 		var opt: Dictionary = entry["option"]
 		var req: Dictionary = opt.get("requires", {})
 		var locked := not _meets(req)
-		var row: Dictionary = {"text": String(opt["text"]), "locked": locked, "requirement": _requirement_text(req) if locked else ""}
+		var row: Dictionary = {"text": _priced_text(opt, req), "locked": locked, "requirement": _requirement_text(req) if locked else ""}
 		# An option that grants an item (a shop buy, or Relc's
 		# spear gift) carries the item's mechanical effect line(s) so the panel
 		# answers "what am I buying/getting" in-place. GENERATED from the item
@@ -84,9 +93,23 @@ func choose(index: int) -> Dictionary:
 	if index < 0 or index >= visible.size():
 		return {}
 	var opt: Dictionary = visible[index]["option"]
-	if not _meets(opt.get("requires", {})):
+	var req: Dictionary = opt.get("requires", {})
+	if not _meets(req):
 		return {}
 	var effects: Array = (opt.get("effects", []) as Array).duplicate(true)
+	# [Bargain] price_mod (class-foundation pass R5, 2026-07-12): the
+	# ACTUAL gold deduction is price-mod'd the SAME way the gate/display
+	# already were (req.gold -> _priced_gold) -- ONE resolution site, so
+	# a purchase can never charge the un-discounted amount after passing
+	# a discounted gate. Only touches an effect matching the EXISTING
+	# authoring convention (requires{gold:N} + effects{gold:-N}, test_
+	# content.gd-validated) -- a plain payout option (positive gold, no
+	# matching negative effect) is never touched.
+	if req.has("gold"):
+		var discounted := _priced_gold(int(req["gold"]))
+		for effect: Dictionary in effects:
+			if effect.has("gold") and int(effect["gold"]) == -int(req["gold"]):
+				effect["gold"] = -discounted
 	var ended := bool(opt.get("end", false))
 	if ended:
 		finished = true
@@ -204,6 +227,46 @@ func _meets_hide_when(hide_when: Dictionary) -> bool:
 	return not cleaned.is_empty() and _meets(cleaned)
 
 
+## [Bargain] price_mod's one resolution function (class-foundation pass R5).
+## `base` is the AUTHORED price (a `requires.gold` value, never touched at
+## rest in data). Pallass shop nodes REFUSE haggling diegetically
+## (`no_haggle: true` on the CURRENT node -- docs/design/city-identity-
+## bible.md's posted-prices register) and skip the mod entirely, checked
+## FIRST so it wins even for a Trader who holds [Bargain]. Otherwise, a
+## buyer whose known skills include "bargain" pays `floor(base * (1 -
+## BARGAIN_PRICE_MOD))` -- every OTHER caller (no skill, or a no_haggle
+## node) reads `base` back unchanged, byte-identical to every option this
+## pass didn't touch.
+func _priced_gold(base: int) -> int:
+	if bool(_node().get("no_haggle", false)):
+		return base
+	if not (_ctx.get(WIKeys.SKILLS, []) as Array).has("bargain"):
+		return base
+	return int(floor(float(base) * (1.0 - BARGAIN_PRICE_MOD)))
+
+
+## The DISPLAYED option text, price-mod-aware (class-foundation pass R5).
+## Every PRE-EXISTING gold-gated option already bakes its price into the
+## authored `text` string verbatim ("Buy the leather jerkin. (24 gold)") --
+## detected by the substring check below (mirrors the price-dedup fix
+## `dialogue_panel.gd`'s own `_requirement_suffix` already uses for the
+## locked-case suffix: "skip when the text already names the price") and
+## left BYTE-IDENTICAL, since retrofitting every shipped shop's copy is out
+## of scope and risks the existing exact-string QA pins. A NEW option
+## authored WITHOUT a baked-in number (no "gold)" substring) gets the price
+## APPENDED here, computed live from `_priced_gold` -- the SAME number the
+## gate and the actual deduction (choose(), below) use, so gate/effect/
+## display can never drift (the plan's own "validator-checked consistency"
+## is structural: one function, three callers).
+func _priced_text(opt: Dictionary, req: Dictionary) -> String:
+	var text := String(opt["text"])
+	if not req.has("gold"):
+		return text
+	if text.contains("gold)"):
+		return text
+	return "%s (%d gold)" % [text, _priced_gold(int(req["gold"]))]
+
+
 func _node() -> Dictionary:
 	return (_graph["nodes"] as Dictionary)[current_id]
 
@@ -266,7 +329,7 @@ func _meets(req: Dictionary) -> bool:
 		# `accomplishment` key), so an unaffordable buy stays VISIBLE-locked/
 		# greyed, never hidden: window-shopping is content (spec §3).
 		recognized = true
-		if int(_ctx.get("gold", 0)) < int(req["gold"]):
+		if int(_ctx.get("gold", 0)) < _priced_gold(int(req["gold"])):
 			return false
 	if req.has("accomplishment"):
 		recognized = true
@@ -366,7 +429,7 @@ func _requirement_text(req: Dictionary) -> String:
 		for id: String in req["class"]:
 			return "requires %s %d" % [String(names.get(id, id)), int(req["class"][id])]
 	if req.has("gold"):
-		return "costs %d gold" % int(req["gold"])
+		return "costs %d gold" % _priced_gold(int(req["gold"]))
 	if req.has("item"):
 		var items: Dictionary = _ctx.get("items", {})
 		return "requires %s" % String(items.get(String(req["item"]), {}).get("name", String(req["item"])))

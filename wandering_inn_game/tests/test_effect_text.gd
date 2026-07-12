@@ -102,6 +102,10 @@ const EXPECTED_ITEMS := {
 	# 8d C1 (issue #14): the trapped_halls SKILL route's coin cost --
 	# priced tool, no combat fields, same shape as field_whetstone's card.
 	"trap_kit": ["Worth 3 gold"],
+	# Class-foundation pass R5 (2026-07-12): the [Bargain] price_mod's own
+	# real dynamic-priced buy option at Eloise's shop -- all-zero mods, same
+	# priced-tool-no-combat-fields shape as field_whetstone/fishers_handline.
+	"warding_salt_pinch": ["Worth 7 gold"],
 }
 
 const EXPECTED_SKILLS := {
@@ -254,6 +258,13 @@ const EXPECTED_SKILLS := {
 	# read_the_field phrasing) -- weapon-gated to bow, invisible to the
 	# card text (WIEffectText never renders `weapon`).
 	"steady_draw": ["+8 to hit"],
+	# R5 ([Trader]/[Merchant]): bargain/bulk_terms are pure passive identity
+	# traits (no `effect` key at all -- same empty card as lesser_stamina/
+	# lesser_strength above); appraise_goods is field-only, no combat
+	# effect (same empty card as keen_eye/observe).
+	"bargain": [],
+	"appraise_goods": [],
+	"bulk_terms": [],
 }
 
 

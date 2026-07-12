@@ -60,6 +60,21 @@
      "goto": "shop"
     },
     {
+     "_comment": "Class-foundation pass R5 (2026-07-12): the SELL surface -- generalized WIShop.build_sell_graph (see shop.gd's own doc comment; was Krshia-only) opened via open_sell_picker's now-vendor-id'd value. Same gate as the buy option above (coin-dealing opens at blight_lifted together, not separately).",
+     "text": "I've got a few things I don't need, myself. Buying?",
+     "requires": {
+      "accomplishment": {
+       "blight_lifted": 1
+      }
+     },
+     "effects": [
+      {
+       "open_sell_picker": "eloise"
+      }
+     ],
+     "end": true
+    },
+    {
      "text": "Just tea, then.",
      "end": true
     }
@@ -212,6 +227,22 @@
       }
      ],
      "goto": "stone_sold"
+    },
+    {
+     "_comment": "Class-foundation pass R5 (2026-07-12): the [Bargain] price_mod's own real, dynamic-priced buy option -- text is authored WITHOUT a baked-in price (dialogue.gd's `_priced_text` appends '(N gold)' live from `requires.gold`, price-mod'd when the buyer holds [Bargain]) rather than retrofitting one of the four options above (which qa/scripts/riverfarm_talk.json exact-array pins). No no_haggle here (unlike Krshia's shop, whose own hub text says 'no discounts, no haggling' -- Eloise's never does).",
+     "text": "That pinch of warding salt, for the threshold.",
+     "requires": {
+      "gold": 7
+     },
+     "effects": [
+      {
+       "gold": -7
+      },
+      {
+       "item": "warding_salt_pinch"
+      }
+     ],
+     "goto": "bought"
     },
     {
      "text": "Nothing today.",

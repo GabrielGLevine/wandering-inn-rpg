@@ -53,6 +53,14 @@ func _init() -> void:
 	# always-live producers, not a scan gap).
 	produced_accomplishments["observed_things"] = true
 	produced_accomplishments["befriended_moments"] = true
+	# [Trader]'s earn axis (class-foundation pass R5, 2026-07-12): banked
+	# by THREE structural sim code paths, none of them a scannable
+	# `{"accomplishment": "..."}` data literal -- WIGame.sell_item (a real
+	# vendor sale), WIGame.turn_in_delivery (a completed Runner's Guild
+	# turn-in), and WIGame._apply_gold_effect (any dialogue-effect spend of
+	# >=5 gold). Same hardcode-not-scan-gap reasoning as observed_things/
+	# befriended_moments above.
+	produced_accomplishments["deliberate_commerce"] = true
 	_validate_conversations(scene, graphs)
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)
@@ -530,6 +538,20 @@ func _validate_option(
 		_validate_requires(label + " hide_when", option["hide_when"], skill_ids, class_ids, item_ids)
 	for effect: Dictionary in option.get("effects", []):
 		_validate_effect(label, effect, quest_ids, class_ids, item_ids, entity_ids, produced_accomplishments)
+	# [Bargain] price_mod (class-foundation pass R5, 2026-07-12):
+	# WIDialogue.choose()'s discount logic identifies the gold-spend effect
+	# to price-mod by matching `effect.gold == -requires.gold` EXACTLY --
+	# so every gold-gated buy option's authored pair must actually hold
+	# that shape, or a real purchase would silently charge the FULL
+	# (un-discounted) price to a [Bargain] holder even though the gate/
+	# display both read the discounted number. Content-time, not just
+	# runtime: catches an authoring slip (mismatched requires/effects gold
+	# values) before it ships.
+	if option.has("requires") and (option["requires"] as Dictionary).has("gold"):
+		var gold_requirement := int((option["requires"] as Dictionary)["gold"])
+		for effect: Dictionary in option.get("effects", []):
+			if effect.has("gold"):
+				assert(int(effect["gold"]) == -gold_requirement, "%s requires.gold (%d) has a mismatched effects.gold (%d) -- WIDialogue.choose()'s [Bargain] price_mod can only discount an effect matching -requires.gold exactly" % [label, gold_requirement, int(effect["gold"])])
 
 
 ## Shared by both "requires" and "hide_when" -- both use the same condition

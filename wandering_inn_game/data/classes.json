@@ -381,6 +381,41 @@
 				{ "level": 15, "requires_any": { "melee_hit": 119, "ranged_hit": 95 }, "grants": [] },
 				{ "level": 16, "requires_any": { "melee_hit": 134, "ranged_hit": 110 }, "grants": [] }
 			]
+		},
+		{
+			"_comment": "Class-foundation pass R5 (issue #98, 2026-07-12): [Trader], an EARNED class (not consolidation-only) -- gained_by `deliberate_commerce` (a NEW accomplishment counter, threshold 5: deliberate, not incidental commerce). Banked by THREE sanctioned sources, none an invented mechanic: a real sale (WIGame.sell_item -- the ALREADY-SHIPPED Krshia buyback mechanism this pass GENERALIZED to any vendor, see shop.gd's own doc comment), a completed Runner's Guild delivery turn-in (WIGame.turn_in_delivery), and a genuine shop purchase >=5 gold (WIGame._apply_gold_effect, scoped to spends so a 1-2g rumor buy never counts). test_content.gd hardcodes deliberate_commerce as a produced accomplishment (same class as observed_things/befriended_moments -- a structural sim-code producer, not a scannable data literal). Level curve continues the SAME counter past the gained_by floor (the archer/ranged_hit precedent) rather than inventing a second one. stat_growth `cha` -- the FIRST class to grow charisma (every prior class picked str/dex/con/int only; cha/wis are already live fields on every combatant's `stats` block, `derived_stat_bonuses`/`apply_stat_bonuses` are stat-key-generic, so this needed zero new sim code, just an unused-until-now data choice; stats stay hidden from the player regardless). Evolution: SINGLE-AXIS Replacement on `deliberate_commerce` itself (the tactician/diplomat/rogue precedent -- a lone target class, so a second key would only risk the 2-keys-1-target dominance-share trap for no benefit). Table stops at its own floor (10, the archer/sharpshooter 'not a fork' shape) -- [Merchant] is the sole payoff.",
+			"id": "trader",
+			"display_name": "Trader",
+			"stat_growth": { "cha": 1 },
+			"gained_by": { "accomplishment": { "deliberate_commerce": 5 } },
+			"evolution": {
+				"at_level": 10,
+				"dominance_share": 0.6,
+				"min_uses": 12,
+				"targets": { "deliberate_commerce": "merchant" }
+			},
+			"levels": [
+				{ "level": 1, "requires": {}, "grants": ["bargain"] },
+				{ "level": 2, "requires": { "deliberate_commerce": 8 }, "grants": [] },
+				{ "level": 3, "requires": { "deliberate_commerce": 12 }, "grants": [] },
+				{ "level": 4, "requires": { "deliberate_commerce": 17 }, "grants": [] },
+				{ "level": 5, "requires": { "deliberate_commerce": 23 }, "grants": ["appraise_goods"] },
+				{ "level": 6, "requires": { "deliberate_commerce": 30 }, "grants": [] },
+				{ "level": 7, "requires": { "deliberate_commerce": 38 }, "grants": [] },
+				{ "level": 8, "requires": { "deliberate_commerce": 47 }, "grants": [] },
+				{ "level": 9, "requires": { "deliberate_commerce": 57 }, "grants": [] },
+				{ "level": 10, "requires": { "deliberate_commerce": 68 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "SPARSE TABLE (GH#54 convention). [Merchant] is Replacement-only (never gained_by) -- trader's evolution carries the PARENT's HELD level directly in. Floor = trader's own evolution.at_level (10); trader's OWN table stops at 10 too (archer/sharpshooter's stop-at-floor shape), so this table's single entry is already contiguous to its own max. CANON-VERDICT 2026-07-12: [Merchant] FAMILY-ATTESTED -- the wiki does not itself show a bare '[Merchant]' class page, but Ysara Byres ('the Silver Trader') holds '[Armored Merchant]' at level 34, an '[Adjective] [Merchant]' variant that structurally implies the base [Merchant] class family is real canon (the SAME '[Ranger of the Woods]'/'[Grandmaster Strategist]' variant-implies-base reasoning this pass already applies elsewhere) -- matches this pass's own framing ('Krshia canon': Krshia herself is a merchant/stallkeeper by trade). Grants `bulk_terms` at the floor -- see that skill's own _comment for the `trade_bonus` seam it rides (an ALREADY-BUILT, never-before-used hook: `_trade_bonus()`'s own doc comment names this EXACT example, 'a future entry ({\"trade_bonus\": 0.1})').",
+			"id": "merchant",
+			"display_name": "Merchant",
+			"stat_growth": { "cha": 2 },
+			"inherits": "trader",
+			"levels": [
+				{ "level": 10, "requires": { "deliberate_commerce": 68 }, "grants": ["bulk_terms"] }
+			]
 		}
 	]
 }

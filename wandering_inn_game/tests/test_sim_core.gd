@@ -1319,7 +1319,16 @@ func _init() -> void:
 
 	# The real sale: gold_changed + toast ride the SAME earn_gold router every
 	# other reward uses; item_lost is remove_item's existing event, no new
-	# event type introduced.
+	# event type introduced. Class-foundation pass R5 (2026-07-12):
+	# sell_item's source tag generalized from the hardcoded literal
+	# "krshia_sell" to `_dialogue_conversation_id` (stamped by
+	# _begin_code_dialogue/_open_sell_dialogue to "<vendor_id>_sell" for
+	# whichever vendor's picker is actually open) -- this test calls
+	# sell_item() directly, bypassing the real dialogue-open flow, so it
+	# sets the internal field itself to simulate "opened via Krshia's own
+	# sell picker" (the exact string _open_sell_dialogue("krshia") would
+	# stamp), keeping this assertion's expected source unchanged.
+	eSell._dialogue_conversation_id = "krshia_sell"
 	_events.clear()
 	assert(eSell.sell_item("leather_jerkin"), "sell_item succeeds on a sellable, carried, unequipped item")
 	assert(not eSell.inventory.has("leather_jerkin"), "sold item leaves the inventory")
