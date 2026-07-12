@@ -30,7 +30,7 @@
   { "action": "assert_state", "path": "combat.active", "equals": "pc" },
   { "action": "assert_state", "path": "combat.combatants.pc.cell", "equals": [2, 3] },
   { "action": "assert_state", "path": "combat.combatants.pc.skills", "contains": "flame_pillar" },
-  { "_comment": "Kit order flame_scythe/flare_burst/flame_pillar/frost_bolt/flame_jet/invisibility (all contexts:combat + ap_cost>0) -- Attack(1)/Dash(2)/flame_scythe(3)/flare_burst(4)/flame_pillar(5)/frost_bolt(6)/flame_jet(7)/invisibility(8)/End Turn = 8 numbered slots, 9 total.", "action": "assert_event_logged", "type": "ui_hotbar_rendered", "payload_contains": { "slots": 9 } },
+  { "_comment": "Kit order flame_scythe/flare_burst/flame_pillar/frost_bolt/flame_jet/flame_dart/invisibility (all contexts:combat + ap_cost>0; class-foundation R2 (issue #98) added [Flame Dart] to mage L2's grants, right after flame_jet, ahead of invisibility) -- Attack(1)/Dash(2)/flame_scythe(3)/flare_burst(4)/flame_pillar(5)/frost_bolt(6)/flame_jet(7)/flame_dart(8)/invisibility(9)/End Turn = 9 numbered slots, 10 total.", "action": "assert_event_logged", "type": "ui_hotbar_rendered", "payload_contains": { "slots": 10 } },
   { "_comment": "Issue #75 item 5a: THE active-unit marker read -- a persistent chevron over the pc's holder at turn_started, before any input this fight. Windowed-verified alongside the aim-preview-over-blast shot below.", "action": "screenshot", "name": "00_active_marker" },
 
   { "_comment": "Dash first: pool 3 -> 6, AP 4 -> 3. Needed so this SAME turn can close all the way onto (6,3), inside flame_pillar's own future blast radius (the self-hit proof).", "action": "press", "name": "hotbar_2" },
