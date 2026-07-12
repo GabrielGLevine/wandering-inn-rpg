@@ -80,7 +80,11 @@ content). One milestone, five phases; A runs background from day one.
   pattern ×3) + Pisces bridge beat. HARNESS ATTENTION: first 4-ally
   cells — new sim_combat_batch rows, bands derived fresh (not assumed);
   PC-death-instant-defeat re-check (ally-carried wins can't win).
-- C3 (GATED: boss pick): vault arena + boss data + the FIND beat (the
+- C3 TRAP (from the C2 review): WICombat spawn indexing has NO bounds
+  guard and the 4-ally party uses exactly 4 player_spawns — the vault
+  arena MUST author >= 4 player spawn cells or the build index-overflows.
+- C3 (boss RATIFIED: construct; stat seed + combat_scale shipped in C2):
+  vault arena + boss tuning + the FIND beat (the
   deeper door, same runes as the inn's — data + toast/veil copy only,
   no new mechanism).
 - C4: party-member skill assist (talk-Ksmvr-through-the-plates) — the
