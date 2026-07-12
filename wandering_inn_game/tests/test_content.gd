@@ -61,6 +61,8 @@ func _init() -> void:
 	_validate_hide_when_nodes_have_always_available_exit(graphs)
 	_validate_class_gains(classes, produced_accomplishments)
 	_validate_class_level_tables(classes)
+	_validate_class_skill_grant_ids(classes, skill_ids)
+	_validate_class_skill_grant_ids_shape_cases()
 	_validate_props(scene)
 	_validate_talk_pool_stages_ascending(scene)
 	_validate_encounter_when(scene, produced_accomplishments)
@@ -988,6 +990,74 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 			target_max >= merged_ceiling,
 			"consolidation target %s table max %d cannot hold the merge formula's top-end %d (parent lines' own table maxes: %d, %d) -- a player who levels both parent lines to their real ceiling before consolidating is assigned a held level with no levels entry (HP/MP growth and grants silently stop, GH#61)" % [target_id, target_max, merged_ceiling, line_ceilings[0], line_ceilings[1]]
 		)
+
+
+## Class-foundation pass (2026-07-12), COMMIT 0 -- the #96 review's own
+## reported gap: `classes.json` grant lists were NEVER cross-referenced
+## against `skills.json` anywhere in this file (grep-confirmed before this
+## task: `skill_ids` was built at the top of `_init` and used for dialogue
+## `requires`/`hide_when` checks only). A typo'd or since-renamed skill id in
+## either grant surface below would silently produce a ghost grant --
+## `WIProgression.granted_skills`/`_own_grants_at_level` just never match it
+## against anything, so the class's own `_comment` can claim a skill is
+## wired while the player's real kit quietly never contains it. Two grant
+## surfaces, per class:
+##   (1) `levels[].grants` -- every level-up/evolution/consolidation-target
+##       class's own kit lives here (SPARSE TABLE classes like spellsword,
+##       and R4's innkeeper/ranger, are ordinary `classes.classes[]` entries
+##       too, so this single walk covers "consolidation grants" as well --
+##       no second code path needed, per the task brief's naming).
+##   (2) `evolution.balanced_grants` -- the Generalist path's kit (mage,
+##       helper, and any future balanced-grants class).
+func _missing_class_skill_grant_ids(classes: Dictionary, skill_ids: Dictionary) -> Array:
+	var missing: Array = []
+	for cls: Dictionary in classes.get("classes", []):
+		var cls_id := String(cls.get("id", "?"))
+		for lv: Dictionary in cls.get("levels", []):
+			var lv_num := str(lv.get("level", "?"))
+			for sk: Variant in lv.get("grants", []):
+				var sk_id := String(sk)
+				if not skill_ids.has(sk_id):
+					missing.append("class %s L%s grants unknown skill id: %s" % [cls_id, lv_num, sk_id])
+		var evo: Dictionary = cls.get("evolution", {})
+		for sk: Variant in evo.get("balanced_grants", []):
+			var sk_id := String(sk)
+			if not skill_ids.has(sk_id):
+				missing.append("class %s evolution.balanced_grants unknown skill id: %s" % [cls_id, sk_id])
+	return missing
+
+
+func _validate_class_skill_grant_ids(classes: Dictionary, skill_ids: Dictionary) -> void:
+	var missing := _missing_class_skill_grant_ids(classes, skill_ids)
+	assert(missing.is_empty(), "class grant(s) reference unknown skill id(s) -- ghost grants (#96 hardening): " + ", ".join(missing))
+
+
+## Negative probe: a hand-built catalog with a typo'd `levels[].grants` id
+## AND a typo'd `evolution.balanced_grants` id must both be caught -- proof
+## the validator catches the exact failure class this task closes, not just
+## that the current (already-clean) shipped data happens to pass.
+func _validate_class_skill_grant_ids_shape_cases() -> void:
+	var skill_ids: Dictionary = {"real_skill": true}
+
+	var clean: Dictionary = {"classes": [{
+		"id": "x",
+		"levels": [{"level": 1, "grants": ["real_skill"]}],
+		"evolution": {"balanced_grants": ["real_skill"]},
+	}]}
+	assert(_missing_class_skill_grant_ids(clean, skill_ids).is_empty(), "clean catalog should report no missing grant ids")
+
+	var bad_level: Dictionary = {"classes": [{
+		"id": "x",
+		"levels": [{"level": 1, "grants": ["ghost_skill"]}],
+	}]}
+	assert(not _missing_class_skill_grant_ids(bad_level, skill_ids).is_empty(), "NEGATIVE CONTROL: a typo'd levels[].grants id must be caught")
+
+	var bad_balanced: Dictionary = {"classes": [{
+		"id": "x",
+		"levels": [{"level": 1, "grants": []}],
+		"evolution": {"balanced_grants": ["ghost_skill"]},
+	}]}
+	assert(not _missing_class_skill_grant_ids(bad_balanced, skill_ids).is_empty(), "NEGATIVE CONTROL: a typo'd evolution.balanced_grants id must be caught")
 
 
 func _validate_quests(quests: Dictionary, produced_accomplishments: Dictionary) -> void:
