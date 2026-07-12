@@ -665,6 +665,11 @@ func _score_distinctiveness(a: Dictionary, analyzed: Dictionary, self_name: Stri
 	var in_score: float
 	var avg_in: float
 	if in_sims.is_empty():
+		# Singleton region group: the in-region axis is UNMEASURED — this is a
+		# CREDIT, not a score. TRAP: giving a poorly-scoring scene its own
+		# singleton group converts 40% of c2 into this free 0.85; any new
+		# singleton in REGION_GROUPS needs its rationale documented in the
+		# header (see garden_sanctuary) and the report disclosure kept true.
 		avg_in = -1.0  # N/A: singleton region group, not a failure
 		in_score = 0.85
 	else:
@@ -898,6 +903,18 @@ func _build_report(results: Dictionary, analyzed: Dictionary) -> String:
 	lines.append("```")
 	lines.append("godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd")
 	lines.append("```")
+	lines.append("")
+	lines.append("## What this metric cannot see")
+	lines.append("")
+	lines.append("No pixel/palette analysis -- visual harmony is proxied via asset-pack")
+	lines.append("families + mood-grade buckets, so the score is blind to actual color/pixel")
+	lines.append("clash inside a family. Combat arenas (data/arenas.json) are out of scope.")
+	lines.append("A scene in a SINGLETON region group (currently garden_sanctuary; any unknown")
+	lines.append("future map by default) gets a flat 0.85 CREDIT on the in-region half of c2")
+	lines.append("because there are no siblings to measure against -- garden_sanctuary's")
+	lines.append("upper-half calibration placement depends on that grouping decision (in the")
+	lines.append("'interiors' group it would rank mid-table). The windowed screenshot read")
+	lines.append("stays the final authority; this tool only catches the brown-box class early.")
 	lines.append("")
 	lines.append("## Weights (30/25/25/10/10, per the spec's own starting split -- unchanged;")
 	lines.append("only each component's internal formula was tuned to satisfy calibration)")

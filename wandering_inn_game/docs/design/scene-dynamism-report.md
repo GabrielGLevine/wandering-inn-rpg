@@ -22,6 +22,18 @@ spending a windowed screenshot on it.
 godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd
 ```
 
+## What this metric cannot see
+
+No pixel/palette analysis -- visual harmony is proxied via asset-pack
+families + mood-grade buckets, so the score is blind to actual color/pixel
+clash inside a family. Combat arenas (data/arenas.json) are out of scope.
+A scene in a SINGLETON region group (currently garden_sanctuary; any unknown
+future map by default) gets a flat 0.85 CREDIT on the in-region half of c2
+because there are no siblings to measure against -- garden_sanctuary's
+upper-half calibration placement depends on that grouping decision (in the
+'interiors' group it would rank mid-table). The windowed screenshot read
+stays the final authority; this tool only catches the brown-box class early.
+
 ## Weights (30/25/25/10/10, per the spec's own starting split -- unchanged;
 only each component's internal formula was tuned to satisfy calibration)
 
