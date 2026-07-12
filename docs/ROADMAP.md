@@ -41,3 +41,9 @@ consolidations, absorbs #95's [Rogue] trap kit as one design pass), with
 #95's game-wide trap-placement pass following. The gap-2 ranking resumes
 after (#87 pacing, #88 save safety, ...). Rationale: the user names
 Class+Skill progression as the basis the rest of the game balances around.
+
+## Bestiary directive (2026-07-12, user): #97 combatant variety feeds the
+posting generator. Slots naturally WITH #90 (the new statuses/AI arms need
+carriers) and after #96/#93 (class balance first — fights are tuned against
+the class ladder). Suggested execution: #96 → #93+#95 → #90+#97 as one
+combat wave → the rest of gap-2.
