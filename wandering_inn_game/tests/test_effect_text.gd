@@ -77,6 +77,9 @@ const EXPECTED_ITEMS := {
 	"sleeproot_draught": ["Worth 5 gold"],
 	"hollow_herb_sachet": ["+1 HP", "Worth 6 gold"],
 	"witch_wardstone_bead": ["+2 HP", "Resonance 1", "Worth 16 gold"],
+	# Issue #65: the post-Riverfarm Invrisil attunement purchase -- priced
+	# tool, no combat fields, same shape as resonant_catalyst's card.
+	"invrisil_attunement_stone": ["Worth 18 gold"],
 	# GH#70 [Archer]: the two bows. `range` (4, > 1) earns the "Range 4" line;
 	# damage_mod (hunting_bow only) reads "ranged hits" instead of "melee
 	# hits" (effect_text.gd's own range-aware branch).

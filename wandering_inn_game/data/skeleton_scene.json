@@ -5032,10 +5032,10 @@
        "copy": "TRAVELER'S NOTE, pinned crooked. Village called Riverfarm, downriver a fair walk, farming folk, growing fast under some new lord. They've got witch trouble, or so the last one through here said -- crops going bad, nobody saying why out loud. No bounty on it, just word passed along. Ask the Guild about the road if you're curious."
       },
       {
-       "_comment": "Invrisil 8c Task C1 (issue #12) -- locked shape 1's Guild-board letter beat, same idiom as rumor_riverfarm (a DISTINCT board_rumors entry, not a bounties.json posting -- that pool's size stays load-bearing for canonical rotation windows). banks_accomplishment invrisil_attuned idempotently on every board browse (_interact_board's existing >=1 semantics).",
+       "_comment": "Locked shape 1's Guild-board letter beat, same idiom as rumor_riverfarm (a DISTINCT board_rumors entry, not a bounties.json posting -- that pool's size stays load-bearing for canonical rotation windows). Stays a SIGNPOST only: banks heard_of_invrisil idempotently on every board browse (_interact_board's existing >=1 semantics), a flavor-only counter no gate reads. The real invrisil_attuned banks from Eloise's stone purchase instead (riverfarm_witch.json's 'shop' node, gated on blight_lifted) -- the letter's own added clause points the player there, so the chain reads letter -> Riverfarm's quest -> Eloise -> Invrisil.",
        "id": "rumor_invrisil",
-       "banks_accomplishment": "invrisil_attuned",
-       "copy": "A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor -- and a professional one -- if a stranger to the city might look into it. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself the strangest part."
+       "banks_accomplishment": "heard_of_invrisil",
+       "copy": "A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor -- and a professional one -- if a stranger to the city might look into it. The witch at Riverfarm keeps the stones, should the distance prove an obstacle. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself the strangest part."
       }
      ]
     },
