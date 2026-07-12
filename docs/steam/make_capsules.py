@@ -6,9 +6,9 @@ whatever the QA pipeline already produces (qa/run_qa.sh <script> windowed) —
 no new art, no hand-drawn assets. This script center-crops one screenshot to
 each capsule's exact aspect ratio, darkens the lower band for legibility, and
 letters the title only (no tagline/subtitle art per the brief: "title text
-only, keep it clean"). Placeholder-fallback game art in, placeholder-fallback
-capsule art out — this is a pipeline proof, not final store art; re-run this
-same script once the licensed asset overlay is live for a real submission.
+only, keep it clean"). Re-run whenever screenshots/01_inn.png is refreshed
+(new content, new licensed-asset overlay wave) — the four capsule PNGs are
+committed derivatives, never hand-edited directly.
 
 Usage: python3 docs/steam/make_capsules.py
 Requires: Pillow (already a repo dependency for asset-pipeline tooling).
