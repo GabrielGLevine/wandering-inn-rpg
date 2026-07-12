@@ -52,6 +52,10 @@ const EXPECTED_ITEMS := {
 	# parcels: no combat fields, deliberately NO price (structurally
 	# unsellable), so name + description only.
 	"hot_meal": [],
+	# Cups' favor-carry chit (GH#68 TALK stage 2) -- the parcel shape:
+	# no combat fields, no price (structurally unsellable), name +
+	# description only.
+	"cups_debt_chit": [],
 	# Krshia's attunement catalyst (priced tool, no combat fields).
 	"resonant_catalyst": ["Worth 35 gold"],
 	# The beat-3 recovery item -- inert
