@@ -1,5 +1,28 @@
 # Wandering Inn RPG Handoff
 
+## 🚢 HUB SHIPPED (2026-07-11, pushed ab21ea3, CI GREEN) — 8 issues closed
+
+The 62W hub merge landed: all 13 world hotfixes (inn stairs in the
+herringbone corner — windowed-read ✓; music revert; ambush one-shot;
+the night-pacing fix that HAD NEVER SHIPPED now genuinely 200/450;
+guardian anchor src fix), reconciled against 5 later merges (the
+invrisil_walkthrough graft: 62W's burst re-pin + #68's stage-1 detour
+compose, PASS). 8dB dungeon merged (both maps + traps + dungeon_peek,
+85/85; illusory-floor mouse tell-leak disclosed in-data). Eloise rig
+landed. Full gates: ALL unit suites + 85/85 sweep + windowed reads.
+CLOSED at push: #32 #33 #34 #35 #61 #62 #66 #68.
+
+**RUNNING:** lane-dlgwave (#74 signposting + #17 voice fixes + #63
+Eloise/Former-Headman wiring — controller-authored lines in the brief),
+lane-70 finisher (Archer — resumed from WIP), lane-84 (mouse menus).
+
+**QUEUE:** 8d C1 (quest — after dlgwave settles quests.json), C2
+(Horns combat entries + 4-ally bands — free surface, next slot), C3
+(construct + #82 windup mechanism — spec in #82), D (Horns dialogue,
+controller); #65 witch-stone (after dlgwave's riverfarm files settle);
+#64 skill-gates audit (LAST dialogue pass); #72 (post-#66 ✓ — tier
+table shipped, dispatchable); #73 scene-dynamism tool; gap issues
+#75-#83 by priority (75 combat readability first — pairs with #82).
 ## 🔬 GAP ANALYSIS LANDED (2026-07-11, ultracode workflow) — 37 confirmed → #74-#84
 
 51-agent workflow (8 dimension analysts → judge dedup/rank → per-gap
