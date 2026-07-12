@@ -51,6 +51,19 @@ Five lanes, every one opus-reviewed (two FIX-FIRST cycles adjudicated + re-revie
 
 Full arc live: dungeon maps + traps → Horns recruit → three-cost halls routes → windup-telegraph vault boss → FIND beat → report → inn residence. E2 whole-branch review SHIP; machine playtest read by controller eyes (Yvlon/bench fix, dark-edge + overlay findings actioned); AI-variety profiles landed with the snare ward-id split. User playtest checklist + CHOICES 18-20 below.
 
+## 🌊 8e PALLASS SHIPPED (2026-07-12) — closes #16 at push
+
+The third city, one session end-to-end: A (owned Wang tilesets ratified under quarantine; Grimalkin + tier-clerk rigs, PixelLab v2, measured anchors) → B+C (stacked-band tier maps, dynamism 76.5/71.6; THE PERMIT OFFICE ruling dissolved the reconciliation review's circular deadlock — the exam sat behind the gate it unlocks, a failure mode both lanes independently agreed on and no per-lane review could see; the race key = _meets' 7th gate, text-variants-only, visible-locked; portal rows now map-existence-guarded after the live-crash Critical) → D (controller voice: Grimalkin's measured register — 'adequate. From me, that is not an insult.' — deliberately race-variant-free, CHOICES 26) → E1 (pallass_walkthrough: 207 steps, the full live route with exact gold ledger, 97/97) → E2 whole-branch: SHIP (economy adjudicated WITH numbers — the EXTORT fork alone nearly funds the 46g chain; comment-hygiene finding fixed; drake-line live coverage = optional follow-up). Controller windowed reads: quarantine PASS (market slate/forge industrial-heat), office composition PASS, molten channel within budget.
+
+**8e USER PLAYTEST CHECKLIST:**
+1. Papers for Pallass live: Selys 10g → Krshia stone 18g → portal → arrival stamp 2g; fees deduct, journal advances.
+2. The permit chain: file 5g → Grimalkin's exam 8g → stamp 3g → the lift opens (locked before, open after).
+3. Race read: a DRAKE and a HUMAN PC at the checkpoint clerk + stallkeeper — friction vs assumed-local; GNOLL gets the clean base line.
+4. Economy: take Invrisil's EXPOSE fork (0g) — can you still afford the 46g chain by arrival without grinding?
+5. Third-city distinctness: market (cool slate) + forge (industrial warm) vs Liscor/Invrisil/Riverfarm.
+6. Grimalkin: massive green examiner beside the office window — does he read canon, without swallowing the clerk?
+7. Save after the exam, before the stamp → reload → 'About that stamp.' still offered, lift still locked.
+
 ## 🌊 WAVE 5 SHIPPED (2026-07-12, pushed 1848890, CI GREEN) — closed #24 #85 #86
 
 Three small lanes, all opus-reviewed: #85 mouse for the last two keyboard-only panels (consolidation modal + char-creation grid; NAME step's missing clickable commit = INFO for a future Begin control); #86 the sync_assets manifest-overlay guard (dry-run default, per-path force, normalization — both review hardenings applied; 15 dead body_a rows removed, 145 legitimate bundle-map rows kept under guard) + the Super Dialogue verdict file; #24 the Rock Crab slice (dr-8 identity, informed-consent confirm conversation with the armor telegraph — review caught a startable-but-hopeless fight for fresh PCs; Relc-downed frontier = CHOICES 22; bundle-v6 released with the baked crab recolor). 95-script sweep green.
