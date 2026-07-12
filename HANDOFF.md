@@ -51,6 +51,21 @@ Five lanes, every one opus-reviewed (two FIX-FIRST cycles adjudicated + re-revie
 
 Full arc live: dungeon maps + traps → Horns recruit → three-cost halls routes → windup-telegraph vault boss → FIND beat → report → inn residence. E2 whole-branch review SHIP; machine playtest read by controller eyes (Yvlon/bench fix, dark-edge + overlay findings actioned); AI-variety profiles landed with the snare ward-id split. User playtest checklist + CHOICES 18-20 below.
 
+## 🚢 v0.5.0 SHIPPED TO ITCH (2026-07-12, local butler path)
+
+Pushed at the planned seam (post lanes 96+80, pre class-foundation/architecture). The composed release gate: ALL 21 units + the 80-cell harness + the full 100-script sweep, CI green on 43a0132. Leak check clean; bundle-v6 = the Latest badge.
+
+**RELEASE NOTES (itch summary — copy below is page-ready):**
+- TWO NEW REGIONS: the Liscor dungeon reopens — delve the trapped halls with the Horns of Hammerad and face what guards the second door. And Pallass, the machine city: two tiers, posted prices, permits, and a certain Magus who measures everything.
+- The world reacts: day and night change what people say, a few regulars go home after dark, night roads carry real danger, and news of your deeds travels.
+- Combat: bosses now telegraph their heaviest blows ([Dangersense] pays off), enemies fight smarter (skirmishers, guards, cowards), damage numbers + aim previews + status pips.
+- Systems: three save slots with a proper defeat flow, full settings (audio buses, text scale, reduce-motion, controls reference), journal history + lore collection, mouse support everywhere.
+- Classes: [Archer] joins with a full bow kit; skill-gated dialogue ([Charming Smile], not '(Diplomat)'); Helper's Generalist path unstuck.
+- Sound: skill SFX, stingers, a vault boss theme, and music that ducks under conversation.
+- Plus: the request/delivery boards doubled, discovery rewards, two new optional quests, a lore-note thread, and dozens of fixes from live playtests.
+
+**Known-for-next**: the class-foundation wave (#93+#95+#98 — the consolidation race is diagnosed and pinned), then the full-game architecture track (#99-#101).
+
 ## 🚢 RELEASE POINT SET (user, 2026-07-12): v0.5.0 to itch
 
 CUT AFTER lane-96 (evolution audit) + lane-80 (reactivity) land — BEFORE
