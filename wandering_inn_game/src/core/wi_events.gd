@@ -173,6 +173,16 @@ const TERRAIN_ADDED := &"terrain_added"
 ## kind, whenever purging stale terrain removes at least one cell. Payload
 ## `{kind:String, cells:[[x,y],...] sorted}`.
 const TERRAIN_EXPIRED := &"terrain_expired"
+## Issue #82's WINDUP SIM SPEC: emitted by WISkillEffects.declare_windup the
+## moment a `windup_rounds`-carrying skill DECLARES (spends its cost, freezes
+## the target cell set) instead of resolving. Payload `{id:String (the
+## caster), skill:String, cells:[[x,y],...] sorted}` -- `cells` is the SAME
+## frozen shape resolution will apply against later (WICombat._resolve_windup,
+## at the caster's own next turn start), not recomputed at that point. Fires
+## mid-AI-turn (today's only holder, `slam`, is enemy-only) -- MUST ride
+## combat_screen.gd's `AI_PLAYBACK_TYPES` (see that const's own TRAP comment)
+## or it renders desynced against end-of-turn state.
+const WINDUP_DECLARED := &"windup_declared"
 
 # --- Presentation confirmations (ui_* back onto the bus) + audio ---
 # `ui_world_labels_rendered` RETIRED (spec §8 addendum) -- field

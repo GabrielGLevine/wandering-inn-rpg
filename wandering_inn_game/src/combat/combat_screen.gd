@@ -66,6 +66,12 @@ const AI_PLAYBACK_TYPES := [
 	# doc comments) but is listed alongside it for symmetry and so a future
 	# enemy-cast icy_floor doesn't silently reopen the same desync.
 	WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED,
+	# Issue #82's WINDUP SIM SPEC: WINDUP_DECLARED fires mid-AI-turn (today's
+	# only holder, `slam`, is enemy-only) -- exactly the class this const
+	# exists to catch. Without this entry it would fall through to the live
+	# `_on_domain_event` arm and render against END-of-turn state instead of
+	# the moment it actually declared.
+	WIEvents.WINDUP_DECLARED,
 ]
 
 ## SKILL_PICK is gone -- the hotbar puts combat skills directly on

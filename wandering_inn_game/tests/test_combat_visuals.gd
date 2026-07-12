@@ -490,7 +490,13 @@ func _init() -> void:
 	var playback_script := load("res://src/combat/combat_playback.gd") as Script
 	assert(playback_script != null and playback_script.can_instantiate(), "combat_playback.gd must compile standalone (zero bare autoload identifiers)")
 	var recorder_script := GDScript.new()
-	recorder_script.source_code = "extends Node\nvar visual_calls: Array = []\nfunc _play_event_visual(type: String, _payload: Dictionary) -> void:\n\tvisual_calls.append(type)\nfunc _push_feed(_payload: Dictionary) -> void:\n\tpass\nfunc _render_tutor_line(_tutor: Dictionary) -> void:\n\tpass\nfunc _refresh() -> void:\n\tpass\n"
+	# `_combat_or_null` returning null (no live combat in this minimal stub) is
+	# REQUIRED, not decorative: issue #82's windup-resolution-expire check
+	# (`_apply_playback_event`'s pre-match SKILL_RESOLVED lookup, below) calls
+	# it for EVERY skill_resolved event that flows through, including the
+	# control case this block already exercises -- without this method the
+	# call errors (Invalid call, nonexistent function) on a bare stub Node.
+	recorder_script.source_code = "extends Node\nvar visual_calls: Array = []\nfunc _play_event_visual(type: String, _payload: Dictionary) -> void:\n\tvisual_calls.append(type)\nfunc _push_feed(_payload: Dictionary) -> void:\n\tpass\nfunc _render_tutor_line(_tutor: Dictionary) -> void:\n\tpass\nfunc _refresh() -> void:\n\tpass\nfunc _combat_or_null() -> Variant:\n\treturn null\n"
 	assert(recorder_script.reload() == OK, "recording stub screen failed to compile")
 	var recorder: Node = recorder_script.new()
 	var playback: RefCounted = playback_script.new(null, recorder)
@@ -505,6 +511,62 @@ func _init() -> void:
 	playback._apply_playback_event({"type": "skill_resolved", "payload": {"actor": "pc", "skill": "frost_bolt", "target": "goblin_raider", "_ui": {}}}, false)
 	assert(recorder.visual_calls == ["terrain_expired", "terrain_added"], "VFX-class events (skill_resolved) stay gated behind with_visuals on the skip path -- the terrain fix is surgical, not a wholesale gate removal")
 	recorder.free()
+
+	# Issue #82's WINDUP SIM SPEC / [Dangersense] payoff: WINDUP_DECLARED's cell
+	# overlay is dangersense-GATED persistent renderer state -- the SAME trap
+	# class as TERRAIN_ADDED/EXPIRED just above (applies unconditionally,
+	# outside `with_visuals`), proven behaviorally against a REAL WICombat
+	# (vault_construct's shipped `slam`) with a RECORDING stub renderer
+	# (captures add_terrain/expire_terrain kind calls) and a stub screen
+	# exposing `_combat_or_null()` -- the resolve-time expire check looks up
+	# the resolved skill's own `windup_rounds` field off a real combat instance,
+	# not a hand-typed payload flag.
+	var wd_renderer_script := GDScript.new()
+	wd_renderer_script.source_code = "extends Node\nvar added: Array = []\nvar expired: Array = []\nfunc add_terrain(kind: String, _cells: Array) -> void:\n\tadded.append(kind)\nfunc expire_terrain(kind: String, _cells: Array) -> void:\n\texpired.append(kind)\n"
+	assert(wd_renderer_script.reload() == OK, "recording stub windup renderer failed to compile")
+	var wd_screen_script := GDScript.new()
+	wd_screen_script.source_code = "extends Node\nvar combat: Variant = null\nfunc _combat_or_null() -> Variant:\n\treturn combat\nfunc _push_feed(_payload: Dictionary) -> void:\n\tpass\nfunc _render_tutor_line(_tutor: Dictionary) -> void:\n\tpass\nfunc _refresh() -> void:\n\tpass\nfunc _play_event_visual(_type: String, _payload: Dictionary) -> void:\n\tpass\n"
+	assert(wd_screen_script.reload() == OK, "stub windup screen failed to compile")
+
+	var wd_combatants: Dictionary = _load_json("res://data/combatants.json")
+	var wd_pc_cfg := (_combatant_config(wd_combatants, "pc") as Dictionary).duplicate(true)
+	var wd_construct_cfg := (_combatant_config(wd_combatants, "vault_construct") as Dictionary).duplicate(true)
+	var wd_arenas: Dictionary = _load_json("res://data/arenas.json")
+	var wd_combat := WICombat.new(wd_arenas["arenas"][0], [wd_pc_cfg, wd_construct_cfg], _load_json("res://data/skills.json"), func(_t: String, _p: Dictionary) -> void: pass, 5)
+	wd_combat.begin()
+	wd_combat.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
+	wd_combat.combatants["vault_construct"][WIKeys.CELL] = Vector2i(2, 1)
+	wd_combat.active_index = wd_combat.turn_order.find("vault_construct")
+	wd_combat._start_turn()
+	assert(wd_combat.use_skill("slam", "pc"), "fixture: vault_construct declares slam on pc")
+	var wd_cells: Array = []
+	for cell: Vector2i in (wd_combat.windups["vault_construct"]["cells"] as Array):
+		wd_cells.append([cell.x, cell.y])
+
+	var wd_renderer: Node = wd_renderer_script.new()
+	var wd_screen: Node = wd_screen_script.new()
+	wd_screen.combat = wd_combat
+	var wd_playback: RefCounted = playback_script.new(wd_renderer, wd_screen)
+
+	# Non-holder: no overlay, even skip-fast-forwarded (with_visuals=false).
+	wd_playback._apply_playback_event({"type": "windup_declared", "payload": {"id": "vault_construct", "skill": "slam", "cells": wd_cells, "_ui": {"dangersense": false, "actor_id": "vault_construct"}}}, false)
+	assert(wd_renderer.added.is_empty(), "no [Dangersense] -> no cell overlay drawn, even on the skip path")
+
+	# Holder: overlay draws, unconditionally.
+	wd_playback._apply_playback_event({"type": "windup_declared", "payload": {"id": "vault_construct", "skill": "slam", "cells": wd_cells, "_ui": {"dangersense": true, "actor_id": "vault_construct"}}}, false)
+	assert(wd_renderer.added == ["windup_danger"], "[Dangersense] holder sees the cell overlay (kind windup_danger), even skip-fast-forwarded -- persistent state, not gated VFX")
+
+	# Resolution clears it: slam's own SKILL_RESOLVED (a REAL windup_rounds
+	# skill, looked up off the stub screen's real WICombat) must expire the
+	# overlay -- even on the skip path (no post-drain resync exists for it).
+	wd_playback._apply_playback_event({"type": "skill_resolved", "payload": {"actor": "vault_construct", "skill": "slam", "cells": wd_cells, "hit_ids": [], "_ui": {}}}, false)
+	assert(wd_renderer.expired == ["windup_danger"], "slam's own resolution expires the windup_danger overlay, even skip-fast-forwarded")
+
+	# Control: a non-windup skill's resolution must never spuriously touch it.
+	wd_playback._apply_playback_event({"type": "skill_resolved", "payload": {"actor": "pc", "skill": "power_strike", "target": "vault_construct", "_ui": {}}}, false)
+	assert(wd_renderer.expired == ["windup_danger"], "a non-windup skill's own resolution must not touch the windup_danger overlay")
+	wd_screen.free()
+	wd_renderer.free()
 
 	# Dead-actor re-flash guard: `_highlight_actor` must never re-flash a
 	# combatant already marked `death_visible`. TRAP being covered:

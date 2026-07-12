@@ -406,6 +406,25 @@
     0.33
    ],
    "vignette": 0.55
+  },
+  "vault": {
+   "_comment": "8d C3: the vault inherits the SAME 'old dark' grade dungeon_approach/trapped_halls established (day/dusk [0.21,0.22,0.19], night [0.17,0.18,0.15], vignette 0.56) -- one door deeper into the same sealed dungeon, no reason to read any different. KEYED BY ARENA ID under arena_moods (not the field-map moods dict above) -- board_renderer.gd's arena-mood lookup, the deep_warren/sewers_nest/cave_mouth precedent.",
+   "day": [
+    0.21,
+    0.22,
+    0.19
+   ],
+   "dusk": [
+    0.21,
+    0.22,
+    0.19
+   ],
+   "night": [
+    0.17,
+    0.18,
+    0.15
+   ],
+   "vignette": 0.56
   }
  }
 }

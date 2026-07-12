@@ -29,7 +29,7 @@ frontier build (finding 28 — Riverfarm/Invrisil read trivial at
 | T1 | Inn / Liscor / floodplains (tutorial + the 3 starter quests) | warrior 1-4 | Existing `goblin_ambush`/`chieftains_raid` cells already band here. |
 | T2 | Sewers, the descent, the door chain | 4-7 (first consolidation possible at the tail) | Existing `ENCOUNTER_CELLS`/`BOSS_CELLS`/`RUIN_CELLS` bands roughly hold — reverified by this task, left untouched. |
 | T3 | Riverfarm + Invrisil (post-door unlocks) | 8-10, often consolidated (spellsword ~9) | THE RETUNE SET (issue #66) — `BUILDS.t3_spellsword9` / `BUILDS.t3_warrior9` are the reference builds. |
-| T4 | The dungeon (8d) | 10-12 + the Horns party | Bands are derived WITH allies from day one (the 4-ally math) — `BUILDS.t4_spellsword11_party` + `PARTY_CELLS` (`sim_combat_batch.gd`) are the first 4-ally harness cells, both MEASURED-only today (a boss-stat seed awaiting its own tuning pass, plus an over-tier calibration cross-check that is expected to read trivial). |
+| T4 | The dungeon (8d) | 10-12 + the Horns party | Bands are derived WITH allies from day one (the 4-ally math) — `BUILDS.t4_spellsword11_party` + `PARTY_CELLS` (`sim_combat_batch.gd`) are the first 4-ally harness cells. 8d C3 (issue #82) landed the windup mechanism + the boss's final tuning: `vault_construct_t4_party` is now GATED (0.55-0.95 win rate, 3-12 median rounds — measured 0.86 / 6); `raskghar_awakened_t4_party` stays the over-tier calibration cross-check, MEASURED-only (a T2 boss vs. a T4 party reads near-1.0, as expected). |
 | T5 | Pallass (8e) | 12-14 | Authored to this table at build time — not retuned by this task. |
 
 ## What "geared to the tier" means

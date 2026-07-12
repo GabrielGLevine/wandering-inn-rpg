@@ -468,6 +468,16 @@
 			"field": true,
 			"field_ambient": "[Keen Eye] — You read the room the way you'd read a stand of trees for game: what moved, what didn't, what's worth a second look. Nothing here needs tracking.",
 			"description": "A hunter's habit of noticing: the broken twig, the wrong shadow, the one thing that doesn't belong."
+		},
+		{
+			"_comment": "issue #82's WINDUP SIM SPEC: the first `windup_rounds` skill. Declares on cast (WISkillEffects.declare_windup freezes the blast_damage-shaped target cells verbatim off _radius_area, spends ALL 4 AP -- the 'telegraphed AP spike' the original gap-analysis issue named), resolves at the caster's OWN next turn start (WICombat._resolve_windup) against whoever stands in the frozen cells then, not on cast. melee=true damage math there (STR-based, matching a construct's own basic Attack/power_strike) -- deliberately NOT blast_damage's own resolve_active resolver (that stays melee=false/INT-based, correct for flame_pillar, its only other grant). `windup_cadence` paces how often combat_ai.gd's melee-profile windup arm escalates to this over a plain attack. Enemy-only (vault_construct, data/combatants.json) -- no class grants it.",
+			"id": "slam",
+			"display_name": "[Slam]",
+			"contexts": ["combat"],
+			"ap_cost": 4,
+			"windup_cadence": 2,
+			"effect": { "type": "blast_damage", "range": 1, "radius": 1, "windup_rounds": 1 },
+			"description": "A vast fist draws back, and the floor itself seems to brace."
 		}
 	]
 }

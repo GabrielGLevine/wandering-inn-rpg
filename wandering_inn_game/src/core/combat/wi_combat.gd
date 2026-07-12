@@ -58,6 +58,23 @@ var used_skills_tally: Dictionary = {}
 ## pre-existing combat-data payload.
 var terrain: Dictionary = {}
 
+## Issue #82's WINDUP SIM SPEC: actor_id -> `{"skill_id": String, "cells":
+## Array[Vector2i]}` for a combatant that DECLARED a `windup_rounds`-carrying
+## skill (WISkillEffects.declare_windup) and hasn't resolved it yet. `cells`
+## is frozen at declaration (the blast/line derivation, verbatim) -- whoever
+## stands there at resolution takes the hit, not whoever was there at cast
+## time [D: the counterplay IS moving]. Consumed and erased by
+## `_resolve_windup`, called from `_start_turn` at the START of the SAME
+## caster's next turn. DOWNED-CLEARS IS FREE: `_advance_turn` never calls
+## `_start_turn` for a dead combatant (its `if combatants[get_active()][ALIVE]`
+## guard), so a caster downed before its next turn simply never resolves --
+## no posthumous damage, by construction, not a special-cased check. NOT
+## save-persisted (same convention as `terrain` above -- combat state is
+## never serialized at all, verified: `WISave.serialize` has no `combat`
+## field anywhere; a mid-fight save is structurally impossible, `combat_
+## abandon`'s Abandon-to-last-autosave path is the proof).
+var windups: Dictionary = {}
+
 var _event_sink: Callable
 var _momentum_used: Dictionary = {}
 var _quick_cast_spent: Dictionary = {}
@@ -427,6 +444,14 @@ func use_skill(skill_id: String, target_id: String) -> bool:
 		return false
 	if int(a[WIKeys.AP]) < effective_ap_cost(a, skill):
 		return false
+	# Issue #82's WINDUP SIM SPEC: a `windup_rounds`-carrying skill never
+	# reaches WISkillEffects.resolve_active's normal instant-resolve dispatch
+	# -- it DECLARES instead (see `declare_windup`'s own doc comment). Checked
+	# here, after the shared AP/MP affordability gates above (identical spend
+	# discipline to every other skill) but before the resolve_active call, so
+	# a refused declare still costs nothing.
+	if int((skill.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.WINDUP_ROUNDS, 0)) > 0:
+		return WISkillEffects.declare_windup(self, actor_id, target_id, skill)
 	return WISkillEffects.resolve_active(self, actor_id, target_id, skill)
 
 
@@ -646,6 +671,24 @@ func _start_round() -> void:
 
 func _start_turn() -> void:
 	var c: Dictionary = combatants[get_active()]
+	# Issue #82's WINDUP SIM SPEC: resolution happens FIRST, before this
+	# turn's own AP/pool are granted -- "the slam lands, THEN your turn
+	# properly begins". `_resolve_windup` routes every hit through
+	# `_resolve_hit`, which can down combatants (including, on a friendly-fire
+	# overlap, the caster itself) and end the fight via the SAME
+	# `_post_damage`/`_check_end` chain every other damage source uses -- so
+	# this guards the SAME two ways `_post_damage` already can react:
+	# (a) `finished` -- a kill/PC-death ended the fight mid-resolution, this
+	#     frame must not go on to grant AP/emit TURN_STARTED for a finished
+	#     combat; (b) the ACTIVE combatant died to its own windup (adjacent
+	#     friendly fire, see `declare_windup`'s doc comment) -- `_post_damage`
+	#     already detects "the active combatant just went down" and calls
+	#     `_advance_turn()` itself (its own `get_active() == target_id`
+	#     branch), which RECURSIVELY starts the next turn; continuing this
+	#     frame past that point would double-advance/desync `active_index`.
+	_resolve_windup(c)
+	if finished or not bool(c[WIKeys.ALIVE]):
+		return
 	c[WIKeys.AP] = MAX_AP
 	_momentum_used.erase(c[WIKeys.ID])
 	_quick_cast_spent.erase(c[WIKeys.ID])
@@ -665,6 +708,64 @@ func _start_turn() -> void:
 	pool += _move_pool_bonus_total(c)
 	c[WIKeys.MOVE_POOL] = pool
 	_emit(WIEvents.TURN_STARTED, {"id": c[WIKeys.ID], "ap": MAX_AP, "move_pool": pool})
+
+
+## Issue #82's WINDUP SIM SPEC: resolves `c`'s pending windup (if any) against
+## the FROZEN cells `declare_windup` stashed -- whoever occupies them NOW,
+## never recomputed from the original target. No-op when `c` has no pending
+## windup (every combatant, every turn, until `slam` declares one -- the
+## zero-behavior-change guarantee for every existing fight). Emits the SAME
+## resolution shape an instant blast_damage cast would (SKILL_RESOLVED with
+## `cells`/`hit_ids`, then one ATTACK_RESOLVED per hit via `_resolve_hit`) so
+## presentation's existing SKILL_RESOLVED flash/feed handling needs no windup-
+## specific case for the IMPACT itself (only the DECLARE moment,
+## WINDUP_DECLARED, is new to presentation). melee=true (STR-based, matching
+## the caster's own basic-Attack/power_strike math) -- deliberately NOT
+## blast_damage's own `_resolve_blast_damage` resolver, which always passes
+## melee=false (INT-based, correct for its one shipped grant, the MAGE spell
+## flame_pillar, but wrong for a construct's physical slam). Friendly fire is
+## real here too, same contract as every other blast: the caster's own cell
+## can be among the frozen cells if it never moved away from an adjacent
+## declare.
+func _resolve_windup(c: Dictionary) -> void:
+	var actor_id := String(c[WIKeys.ID])
+	if not windups.has(actor_id):
+		return
+	var w: Dictionary = windups[actor_id]
+	windups.erase(actor_id)
+	var skill_id := String(w["skill_id"])
+	var cells: Array = w["cells"]
+	var hit_ids: Array = []
+	for id: String in combatants:
+		if not bool(combatants[id][WIKeys.ALIVE]):
+			continue
+		if (combatants[id][WIKeys.CELL] as Vector2i) in cells:
+			hit_ids.append(id)
+	hit_ids.sort()
+	var cells_payload: Array = []
+	for cell: Vector2i in cells:
+		cells_payload.append([cell.x, cell.y])
+	_emit(WIEvents.SKILL_RESOLVED, {
+		"actor": actor_id, "skill": skill_id, "cells": cells_payload, "hit_ids": hit_ids,
+	})
+	for id: String in hit_ids:
+		if not bool(combatants[id][WIKeys.ALIVE]):
+			continue  # an earlier hit in this same resolution may have already downed them
+		_resolve_hit(actor_id, id, 1.0, true, false)
+		if finished:
+			return
+		# Defensive (unreachable at every currently-tuned windup's stats, but
+		# not structurally impossible -- see this function's own doc comment
+		# on caster-in-blast friendly fire): if the CASTER itself was among
+		# `hit_ids` and just died to its own resolution, `_post_damage`
+		# already detected "the active combatant went down" and recursively
+		# called `_advance_turn()` -> a NEW `_start_turn()` for whoever's
+		# next -- the sim has already moved on to a different turn, so
+		# continuing this loop with the now-dead, no-longer-active `actor_id`
+		# would apply damage attributed to a stale attacker on top of
+		# already-advanced state. Stop immediately instead.
+		if not bool(combatants.get(actor_id, {}).get(WIKeys.ALIVE, false)):
+			return
 
 
 ## The two PRE-EXISTING 0-cost move_pool_bonus skills
