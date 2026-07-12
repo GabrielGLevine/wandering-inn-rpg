@@ -76,3 +76,7 @@ audio smoke + touch DSL) first as the QA prerequisite, then #106 v1
 overlay + hit-target audit). Slot: immediately after the class-foundation
 wave lands; before/with the demo-boundary decision. The itch
 mobile-friendly flag = the user's final step.
+
+## #107 Help reference in Settings (user, 2026-07-12): S-sized; slots
+with #88's onboarding batch (shares the rules-copy voice) or any free
+UI-lane window; controller writes the help copy at merge.
