@@ -3742,5 +3742,69 @@
     "fps": 1
    }
   }
+ },
+ "grimalkin": {
+  "_comment": "PixelLab v2 create-character-pro (char 82cb307c-2a38-42df-8a7e-f35f352fd182, mannequin, low top-down, 132x132) -> animate-character breathing-idle(4)+walking(6), south/east/north only (side mirrors west, diagonals parked). Prompt derived verbatim from character-profiles.md's Grimalkin silhouette contract (MASSIVE green-scale Drake, tight clothing straining, notebook+quill). render_scale targets ~50.0px on-screen (the tallest shipped Drake, above Relc's 43.4px; figure 108px of 224). anchor feet-plane-measured (bottom row 164/224). Idle-only combat-adjacent (no combat entries -- Grimalkin doesn't fight v1).",
+  "directional": true,
+  "render_scale": 0.463,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/grimalkin/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/grimalkin/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/grimalkin/Idle_Up-Sheet.png",
+    "frame_size": [
+     224,
+     224
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/grimalkin/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/grimalkin/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/grimalkin/Walk_Up-Sheet.png",
+    "frame_size": [
+     224,
+     224
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.7321
+  ],
+  "shadow": true
+ },
+ "tier_clerk": {
+  "_comment": "PixelLab v2 create-character-pro (char 77b48a16-cadc-496a-9b47-fbd36bfd91a7, mannequin, low top-down, 108x108) -> animate-character breathing-idle(4)+walking(6), south/east/north only (side mirrors west, diagonals parked). ORIGINAL+flag civic role (no canon figure) -- the QUALIFY-verb stamp-desk clerk, one rig reused at every Pallass desk. DESK-SHAPED silhouette (stiff rectangular formal coat, upright posture, stamp+ledger) deliberately distinct from Zevara/Olesm/Relc. render_scale targets ~29.0px on-screen (trim -- just under Pisces' 30.0px; figure 66px of 140). anchor feet-plane-measured (bottom row 102/140).",
+  "directional": true,
+  "render_scale": 0.4394,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/tier_clerk/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/tier_clerk/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/tier_clerk/Idle_Up-Sheet.png",
+    "frame_size": [
+     140,
+     140
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/tier_clerk/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/tier_clerk/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/tier_clerk/Walk_Up-Sheet.png",
+    "frame_size": [
+     140,
+     140
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.5,
+   0.7286
+  ],
+  "shadow": true
  }
 }

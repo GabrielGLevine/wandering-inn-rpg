@@ -1,0 +1,194 @@
+{
+ "13": {
+  "corners": {
+   "NW": "upper",
+   "NE": "upper",
+   "SW": "lower",
+   "SE": "upper"
+  },
+  "atlas_cell": [
+   1,
+   3
+  ]
+ },
+ "10": {
+  "corners": {
+   "NW": "upper",
+   "NE": "lower",
+   "SW": "upper",
+   "SE": "lower"
+  },
+  "atlas_cell": [
+   2,
+   2
+  ]
+ },
+ "4": {
+  "corners": {
+   "NW": "lower",
+   "NE": "upper",
+   "SW": "lower",
+   "SE": "lower"
+  },
+  "atlas_cell": [
+   0,
+   1
+  ]
+ },
+ "12": {
+  "corners": {
+   "NW": "upper",
+   "NE": "upper",
+   "SW": "lower",
+   "SE": "lower"
+  },
+  "atlas_cell": [
+   0,
+   3
+  ]
+ },
+ "6": {
+  "corners": {
+   "NW": "lower",
+   "NE": "upper",
+   "SW": "upper",
+   "SE": "lower"
+  },
+  "atlas_cell": [
+   2,
+   1
+  ]
+ },
+ "8": {
+  "corners": {
+   "NW": "upper",
+   "NE": "lower",
+   "SW": "lower",
+   "SE": "lower"
+  },
+  "atlas_cell": [
+   0,
+   2
+  ]
+ },
+ "0": {
+  "corners": {
+   "NW": "lower",
+   "NE": "lower",
+   "SW": "lower",
+   "SE": "lower"
+  },
+  "atlas_cell": [
+   0,
+   0
+  ]
+ },
+ "1": {
+  "corners": {
+   "NW": "lower",
+   "NE": "lower",
+   "SW": "lower",
+   "SE": "upper"
+  },
+  "atlas_cell": [
+   1,
+   0
+  ]
+ },
+ "11": {
+  "corners": {
+   "NW": "upper",
+   "NE": "lower",
+   "SW": "upper",
+   "SE": "upper"
+  },
+  "atlas_cell": [
+   3,
+   2
+  ]
+ },
+ "3": {
+  "corners": {
+   "NW": "lower",
+   "NE": "lower",
+   "SW": "upper",
+   "SE": "upper"
+  },
+  "atlas_cell": [
+   3,
+   0
+  ]
+ },
+ "2": {
+  "corners": {
+   "NW": "lower",
+   "NE": "lower",
+   "SW": "upper",
+   "SE": "lower"
+  },
+  "atlas_cell": [
+   2,
+   0
+  ]
+ },
+ "5": {
+  "corners": {
+   "NW": "lower",
+   "NE": "upper",
+   "SW": "lower",
+   "SE": "upper"
+  },
+  "atlas_cell": [
+   1,
+   1
+  ]
+ },
+ "15": {
+  "corners": {
+   "NW": "upper",
+   "NE": "upper",
+   "SW": "upper",
+   "SE": "upper"
+  },
+  "atlas_cell": [
+   3,
+   3
+  ]
+ },
+ "14": {
+  "corners": {
+   "NW": "upper",
+   "NE": "upper",
+   "SW": "upper",
+   "SE": "lower"
+  },
+  "atlas_cell": [
+   2,
+   3
+  ]
+ },
+ "9": {
+  "corners": {
+   "NW": "upper",
+   "NE": "lower",
+   "SW": "lower",
+   "SE": "upper"
+  },
+  "atlas_cell": [
+   1,
+   2
+  ]
+ },
+ "7": {
+  "corners": {
+   "NW": "lower",
+   "NE": "upper",
+   "SW": "upper",
+   "SE": "upper"
+  },
+  "atlas_cell": [
+   3,
+   1
+  ]
+ }
+}

@@ -273,3 +273,67 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   (2) embarrassed about the panic, deflects with a joke about the
   paperwork; (3) never a repeat character beyond this one quest — no
   further appearances planned.
+
+## Grimalkin (wiki-verified 2026-07-07 corrections; promoted from staging
+## at 8e Phase A, 2026-07-12)
+- Canon: [Sinew Magus] L40+, Magic-Captain of Pallass, runs his own
+  fitness/combat academy. **CORRECTED from an earlier draft**: MASSIVE
+  Drake, **GREEN scales (not slate)**; canon attire is **TIGHT-FITTING
+  clothing he strains and bursts by flexing** — NOT a sleeveless robe.
+  Keep the ink-and-dumbbell props (his note-taking empiricism —
+  measures everything).
+- Silhouette contract (the 3 features the sprite must hold): (1) MASSIVE
+  hyper-muscled build — the single tallest, widest Drake shipped
+  (bigger than Relc); (2) green scales, distinct from Relc's teal-green,
+  Zevara's light-blue, Klbkch's dark-brown-chitin non-Drake read; (3)
+  clothing visibly straining over the muscle mass (the "bursts by
+  flexing" tell) + a small notebook/quill prop — the "scholar's
+  precision on a soldier's frame" register `docs/superpowers/plans/
+  2026-07-12-8e-pallass.md` names for [Sinew Magus].
+- Voice: fitness-empiricism — a drill-sergeant-on-steroids who
+  genuinely cares; lectures in numbered points; respects effort,
+  despises excuses.
+- v1 role: bureaucratic-quest examiner beat + a talk_pool presence
+  (8e v1 scope — full academy content deferred).
+- **Generation prompt** (PixelLab v2 `create-character-pro`, derived
+  verbatim from the silhouette contract above, `method:
+  create_with_style`, `template_id: mannequin`, `view: low top-down`,
+  132×132, `no_background: true`): "massive hyper-muscular Drake
+  warrior-scholar, bright green scales, enormous bulging muscles
+  straining and stretching a tight-fitting sleeveless training shirt
+  about to burst at the seams, holding a small notebook and quill pen
+  in one clawed hand, drill-sergeant physique, powerful wide stance,
+  top-down RPG game character sprite, hard black outline, 16-bit pixel
+  art". Character id + measured anchor/scale: see
+  `assets/LICENSES/pixellab-ai-generated-verdict.md` "8e Phase A" entry.
+
+## Tier clerk (ORIGINAL+flag; promoted from staging at 8e Phase A,
+## 2026-07-12)
+- OUR INVENTION (no canon figure) — the QUALIFY-verb bureaucrat who
+  staffs Pallass's stamp-desks (market-tier arrival checkpoint, forge-
+  tier permit/inspection chain). One rig reused at every desk (the
+  civic-uniformity tell — same convention as `market_stall_pallass`'s
+  identical stalls).
+- Silhouette contract: **DESK-SHAPED** — deliberately distinct from
+  every shipped Drake (Zevara: fitted Watch-captain armor; Olesm:
+  slight scholar build; Relc/Grimalkin: huge). Trim build, but the
+  READ is rigid and rectangular: a stiff, high-buttoned formal coat
+  (boxy, not form-fitting) over a straight upright desk-official
+  posture, a bronze guild sash across the chest, holding a stamp over
+  an open ledger — the coat's own straight lines are what make him
+  read as furniture-adjacent (a desk given legs), not a body type.
+- Voice: titles-and-precision — "state your business and your
+  sponsor"; warmth exists behind exact paperwork.
+- v1 role: the market-tier arrival stamp + the forge-tier permit chain
+  (8e v1 scope; no name — a civic role, not an individual, matching
+  the city-identity bible's "uniformed everything" population read).
+- **Generation prompt** (PixelLab v2 `create-character-pro`,
+  `method: create_with_style`, `template_id: mannequin`, `view:
+  low top-down`, 108×108, `no_background: true`): "trim Drake
+  bureaucrat clerk, slate-blue scales, wearing a stiff rectangular
+  formal coat buttoned high with a bronze guild sash across the chest,
+  upright rigid desk-official posture, holding a rubber stamp over an
+  open ledger book, neat precise paperwork official, top-down RPG game
+  character sprite, hard black outline, 16-bit pixel art". Character
+  id + measured anchor/scale: see
+  `assets/LICENSES/pixellab-ai-generated-verdict.md` "8e Phase A" entry.
