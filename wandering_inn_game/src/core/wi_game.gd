@@ -893,6 +893,30 @@ func interact() -> Dictionary:
 					var hint := String(target.get("item_hint_toast", "Empty hands won't do it. You'd need the right weapon in your pack."))
 					_emit(WIEvents.TOAST, {"text": hint})
 					return {"item_hint": req_family}
+				# Wage-scrutiny fix (#81 review carve-out): an
+				# on_interact_accomplishment prop may opt into a per-waking wage
+				# cap via `once_per_waking: true` -- the SAME `entity_first_use`
+				# dedup dict/reset-on-sleep contract `_check_trigger_radius`'s
+				# `sneaked_past_danger` guard and every dialogue-option
+				# `once_per_waking` requires key already share (cleared in
+				# `sleep()`), keyed `"serve:<id>"` so a repeat interact this
+				# waking is a genuine no-op (no accomplishment, no gold) instead
+				# of an unbounded free-money pump -- serving_tray's `+1g` wage
+				# was the ONE on_interact_accomplishment prop with a `gold`
+				# field and NEITHER a skill-competency gate (contrast
+				# dirty_table's `requires_skill`) NOR an item cost (contrast
+				# patron_serving.json's `{once_per_waking, item}` Serve option,
+				# the sibling "wage" this mirrors) NOR a one-shot `variants`
+				# guard (contrast frozen_cache) -- pure free money on repeat
+				# taps. Absent (every prop authored before this fix) skips this
+				# whole branch, byte-identical.
+				if bool(target.get("once_per_waking", false)):
+					var waking_key := "serve:%s" % String(target[WIKeys.ID])
+					if entity_first_use.has(waking_key):
+						var spent_toast := String(target.get("once_per_waking_toast", "Nothing more to carry out right now. Come back another day."))
+						_emit(WIEvents.TOAST, {"text": spent_toast})
+						return {"once_per_waking_spent": true}
+					entity_first_use[waking_key] = true
 				# 8d C1 (issue #14): a plain interact-reveal prop may carry a
 				# sibling `variants` list -- the SAME override seam
 				# `_resolve_skill_use_effect` already reads for on_skill_use
@@ -924,7 +948,11 @@ func interact() -> Dictionary:
 				# so a met-gate variant can zero it -- the one-shot-discovery
 				# guard (frozen_cache: pays on first find only; ice persists all
 				# waking, so an unresolved gold field was an unbounded pump).
-				# Variant-less props (serving_tray's repeatable wage) unchanged.
+				# serving_tray's own repeatable wage is now bounded by the
+				# `once_per_waking` gate just above (a DIFFERENT bound than
+				# frozen_cache's one-shot-EVER `variants` guard -- serving_tray
+				# is a renewable daily wage, matching patron_serving.json's
+				# `served_customer` Serve wage, not a one-time discovery).
 				if int(resolved.get("gold", 0)) != 0:
 					_apply_gold_effect(int(resolved["gold"]), String(target[WIKeys.ID]))
 				return {"accomplishment": accomplishment_id}

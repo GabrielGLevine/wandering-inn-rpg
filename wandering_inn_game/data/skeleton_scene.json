@@ -624,6 +624,7 @@
      ]
     },
     {
+     "_comment": "Wage-scrutiny fix (#81 review carve-out): pre-existing `gold: 1` wage was UNGATED -- no `requires_skill` (unlike dirty_table's basic_cleaning gate), no item cost (unlike patron_serving.json's `{once_per_waking, item}` Serve option, the sibling wage this now matches), no `variants` one-shot guard (unlike frozen_cache) -- a bare repeat interact paid unlimited free gold. `once_per_waking: true` caps it via wi_game.gd's new interact()-level gate (the SAME entity_first_use dict/sleep-reset contract the dialogue-option once_per_waking gate and `sneaked_past_danger` already share): one delivered_item + one gold per waking, renewed every sleep -- a renewable daily wage, not a one-time discovery, matching served_customer's own per-waking cap rather than frozen_cache's pay-once-ever shape.",
      "id": "serving_tray",
      "kind": "prop",
      "cell": [
@@ -635,6 +636,8 @@
      "render_scale": 0.5,
      "on_interact_accomplishment": "delivered_item",
      "gold": 1,
+     "once_per_waking": true,
+     "once_per_waking_toast": "The tables are covered. Nothing more to carry out until tomorrow.",
      "toast": "You carry the laden tray out to the tables."
     },
     {
