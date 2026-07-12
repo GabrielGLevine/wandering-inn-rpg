@@ -1,5 +1,5 @@
 {
- "_comment": "Full title-screen loop: boot at title, New Game, walk to the inn door (autosave beat, now floodplains-bound per the door retarget), Quit to Title with confirm, Continue, verify restored state. starts_at_title bypasses the harness title-skip so this script drives the gate/menu directly. Issue #43 re-pin: headless QA runs a DEBUG binary, so the new debug-only 'Playtest States' row IS visible here -- both ui_title_rendered waits now pin selectable_rows (the device-of-truth row count, read live off OS.is_debug_build()/Continue's own enabled state, not hardcoded) to prove the gate is live: 3 selectable rows before any save exists (New Game/Playtest States/Quit -- Continue skipped), 4 once the autosave lands (Continue newly selectable). Existing navigation (move down 1 to reach Continue on the second title render) is UNCHANGED -- Playtest States sits after Continue in ROWS, so it doesn't shift any prior step's cursor math.",
+ "_comment": "Full title-screen loop: boot at title, New Game, walk to the inn door (autosave beat, now floodplains-bound per the door retarget), Quit to Title with confirm, Continue, verify restored state. starts_at_title bypasses the harness title-skip so this script drives the gate/menu directly. Issue #43 re-pin: headless QA runs a DEBUG binary, so the new debug-only 'Playtest States' row IS visible here -- both ui_title_rendered waits now pin selectable_rows (the device-of-truth row count, read live off OS.is_debug_build()/Continue's own enabled state, not hardcoded) to prove the gate is live: 4 selectable rows before any save exists (New Game/Playtest States/Quit/Settings -- Continue skipped), 5 once the autosave lands (Continue newly selectable). Issue #77 re-pin: 'Settings' APPENDED at the end of ROWS bumped both counts by 1 (was 3/4) -- it's always selectable, so it rides along in every ui_title_rendered snapshot; appending (never inserting earlier) left every other row's INDEX and this script's own navigation (move down 1 to reach Continue, move down 6 to reach 'Quit to Title' inside the pause menu below) byte-unchanged.",
  "starts_at_title": true,
  "steps": [
   {
@@ -16,7 +16,7 @@
    "type": "ui_title_rendered",
    "payload_contains": {
     "continue_enabled": false,
-    "selectable_rows": 3
+    "selectable_rows": 4
    },
    "timeout_sec": 5
   },
@@ -105,7 +105,7 @@
    "type": "ui_title_rendered",
    "payload_contains": {
     "continue_enabled": true,
-    "selectable_rows": 4
+    "selectable_rows": 5
    },
    "timeout_sec": 5
   },

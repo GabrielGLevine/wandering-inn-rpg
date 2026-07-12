@@ -170,6 +170,16 @@ static func _reset_first_combat_hint(type: String, _payload: Dictionary) -> void
 		_first_combat_hint_shown = false
 
 
+## Issue #77: settings_panel.gd's "Replay Hints" action calls this directly
+## (via `WISettings.replay_hints()`'s dynamic `load(...).call("reset_hints")`
+## -- see that file's doc comment), mirroring message_layer.gd's identical
+## `reset_hints()` for the SAME reason: re-arm mid-sitting without a full
+## GAME_RESET. Static, script-bound -- callable with zero live CombatScreen
+## instance in the tree.
+static func reset_hints() -> void:
+	_first_combat_hint_shown = false
+
+
 func _ready() -> void:
 	_root = Control.new()
 	UIChrome.apply_theme(_root)

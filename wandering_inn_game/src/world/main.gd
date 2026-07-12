@@ -21,6 +21,7 @@ const CONSOLIDATION_PROMPT_SCRIPT := preload("res://src/ui/consolidation_prompt.
 const SLEEP_VEIL_SCRIPT := preload("res://src/ui/sleep_veil.gd")
 const TITLE_SCREEN_SCRIPT := preload("res://src/ui/title_screen.gd")
 const CHAR_CREATION_SCRIPT := preload("res://src/ui/char_creation.gd")
+const SETTINGS_PANEL_SCRIPT := preload("res://src/ui/settings_panel.gd")
 
 var _container: SubViewportContainer
 var _sub_viewport: SubViewport
@@ -38,6 +39,11 @@ var _field_hotbar: Node
 var _message_layer: Node
 var _title_screen: Node
 var _sleep_veil: Node
+## Issue #77: spawned in BOTH `_spawn_title()` and `_spawn_ui_layers()` (a
+## FRESH instance each swap, same as every other layer here) -- reachable
+## from title_screen.gd's and pause_menu.gd's own "Settings" row via
+## `settings_ref`, wired right after creation below.
+var _settings_panel: Node
 ## The combat HUD/mode-FSM screen (issue #57) -- kept here so mouse clicks
 ## can be routed to its board click-to-target handler alongside the world's
 ## own click-to-walk/interact handler (`_gui_input` below calls both; each
@@ -236,6 +242,7 @@ func _clear_ui_layers() -> void:
 	_world_labels = null
 	_combat_screen = null
 	_message_layer = null
+	_settings_panel = null
 
 
 func _spawn_title() -> void:
@@ -245,6 +252,17 @@ func _spawn_title() -> void:
 	# (injection idiom, matching combat_screen.main_ref) rather than scanning.
 	_title_screen.main_ref = self
 	add_child(_title_screen)
+	# Issue #77: added AFTER TitleScreen so it sits LATER in Main's child
+	# order -- the SAME "later child gets first refusal of unhandled_input"
+	# precedent pause_menu.gd's own file doc comment documents (world_ref) --
+	# so while settings_panel.gd's `open` is true, it consumes Cancel/Confirm/
+	# move before TitleScreen's own `_unhandled_input` ever sees them. No
+	# arbitration guard needed in title_screen.gd for the same reason
+	# pause_menu.gd needs none against journal/inventory's LATER siblings.
+	_settings_panel = SETTINGS_PANEL_SCRIPT.new()
+	_settings_panel.name = "SettingsPanel"
+	add_child(_settings_panel)
+	_title_screen.settings_ref = _settings_panel
 
 
 func _spawn_ui_layers() -> void:
@@ -307,6 +325,15 @@ func _spawn_ui_layers() -> void:
 	# spawn batch, so the assignment is safe here even though the prompt was
 	# added first.
 	consolidation_prompt.sleep_veil_ref = _sleep_veil
+	# Issue #77: added LAST (after pause_menu/sleep_veil/everything else) so
+	# it sits latest in Main's child order -- see `_spawn_title()`'s matching
+	# comment for the "later child processes unhandled_input first" mechanism
+	# this relies on for pause_menu.gd's own "Settings" row to work without a
+	# new arbitration guard in pause_menu.gd.
+	_settings_panel = SETTINGS_PANEL_SCRIPT.new()
+	_settings_panel.name = "SettingsPanel"
+	add_child(_settings_panel)
+	_pause_menu.settings_ref = _settings_panel
 
 
 func _spawn_world() -> void:

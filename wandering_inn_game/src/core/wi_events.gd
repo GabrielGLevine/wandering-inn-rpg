@@ -367,3 +367,24 @@ const UI_CHAR_CREATION_CONFIRMED := &"ui_char_creation_confirmed"
 ## Payload `{device: "kb"|"pad"}`. Presentation panels that render a keycap
 ## hint listen for this to re-render with the new device's glyphs.
 const INPUT_DEVICE_CHANGED := &"input_device_changed"
+
+# --- Settings / accessibility (src/ui/wi_settings.gd, src/ui/settings_panel.gd) ---
+## settings_panel.gd's confirmation that it opened -- reachable from BOTH
+## pause_menu.gd's and title_screen.gd's own "Settings" row (issue #77).
+const UI_SETTINGS_SHOWN := &"ui_settings_shown"
+const UI_SETTINGS_HIDDEN := &"ui_settings_hidden"
+## Fires on every settings_panel.gd `_refresh()` (open, cursor move, value
+## change -- the UI_INVENTORY_SELECTION_RENDERED idiom), carrying the FULL
+## live snapshot so QA can assert any control's current state without a
+## dedicated probe per field. Payload `{master:int, music:int, sfx:int,
+## fullscreen:bool, text_scale_step:int, reduce_motion:bool}`.
+const UI_SETTINGS_RENDERED := &"ui_settings_rendered"
+## settings_panel.gd's confirmation that the Controls reference sub-page
+## (keyboard/pad/mouse tables, reusing WIInputHints.LABELS) rendered.
+## Payload `{rows:int}` -- the action-row count shown.
+const UI_CONTROLS_RENDERED := &"ui_controls_rendered"
+## settings_panel.gd's confirmation that "Replay Hints" re-armed the
+## process-lifetime one-shot tutorial hints (WISettings.replay_hints() --
+## message_layer.gd's first-pickup hint, combat_screen.gd's first-combat
+## hint). Presentation-only re-arm, never touches accomplishment counters.
+const UI_HINTS_REPLAYED := &"ui_hints_replayed"

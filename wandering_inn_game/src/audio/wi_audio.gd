@@ -44,9 +44,20 @@ var _missing_stream_paths: Dictionary = {}
 
 
 func _ready() -> void:
+	# Issue #77 fix: bus-graph setup + settings load are cheap Server-side data
+	# ops (no AudioStreamPlayer/stream objects created) -- ZERO ObjectDB-leak
+	# risk, unlike playback itself. Un-gating them from `_is_headless()` is
+	# what makes the SFX-bus-ignores-slider fix (and every settings.cfg-driven
+	# volume) provable headless via a real `AudioServer.get_bus_volume_db`
+	# assertion (settings_loop's whole point) -- previously headless never
+	# created ANY bus beyond the engine's built-in "Master", so
+	# `AudioServer.get_bus_index("SFX")` was always -1 in every QA/CI run and
+	# `set_bus_volume`/`get_bus_volume` silently no-op'd. `_setup_music_players()`
+	# stays gated -- THAT'S the actual AudioStreamPlayer-object leak source
+	# `_is_headless()` was introduced to fix (see its own doc comment).
+	_setup_buses()
+	_load_settings()
 	if not _is_headless():
-		_setup_buses()
-		_load_settings()
 		_setup_music_players()
 	_load_audio_map()
 	_observable_bus = get_node_or_null("/root/ObservableBus")
@@ -92,6 +103,16 @@ func set_bus_volume(bus: String, value_0_to_10: float) -> void:
 	var linear := clamped / 10.0
 	AudioServer.set_bus_mute(index, linear <= 0.0)
 	AudioServer.set_bus_volume_db(index, linear_to_db(maxf(linear, 0.0001)))
+	# Reload-before-save: `wi_settings.gd` (WISettings autoload) persists its
+	# OWN video/accessibility sections into this SAME physical file via a
+	# SEPARATE ConfigFile object. Two independent ConfigFile objects targeting
+	# one file would otherwise clobber each other on `.save()` (each save
+	# serializes only the sections ITS OWN in-memory copy holds) -- reloading
+	# from disk immediately before mutating picks up whatever the other module
+	# last wrote, so this save is always a true read-modify-write union, never
+	# a stale overwrite. Cheap (small file, called only on an explicit slider
+	# move, never per-frame).
+	_settings.load(SETTINGS_PATH)
 	_settings.set_value("audio", bus, clamped)
 	_settings.save(SETTINGS_PATH)
 
@@ -102,6 +123,21 @@ func get_bus_volume(bus: String) -> float:
 	return 10.0
 
 
+## Issue #77 CONFIRMED-BUG fix: every non-Master bus used to send straight to
+## Master, including "UI" -- so the UI bus's own output was mixed into Master
+## UNATTENUATED by anything except the Master fader itself, and the SFX
+## slider (which only touches the "SFX" bus's own `volume_db`) had NO effect
+## on UI sound at all (a click/menu chime stayed at full volume no matter how
+## far down SFX was dragged -- the confirmed playtest bug). Fix: "UI" sends to
+## "SFX" instead, making it a CHILD bus in the mix graph -- Godot audio buses
+## attenuate their OWN signal via `volume_db` and then forward the RESULT to
+## their send target, so SFX's fader now attenuates UI's signal too (on top
+## of UI's own, still-independent fader), before the combined signal reaches
+## Master. `data/audio.json` carries 11 `"bus": "UI"` events (menu/hotbar/
+## dialogue chimes) that are the actual beneficiaries. Every other bus keeps
+## sending straight to Master, unchanged. Provable headless (no audio device
+## needed): `AudioServer.get_bus_send(AudioServer.get_bus_index("UI")) ==
+## "SFX"` -- settings_loop's own bus-routing assertion, not "by ear".
 func _setup_buses() -> void:
 	for bus: String in BUS_NAMES:
 		if AudioServer.get_bus_index(bus) != -1:
@@ -109,7 +145,9 @@ func _setup_buses() -> void:
 		AudioServer.add_bus(AudioServer.get_bus_count())
 		var index := AudioServer.get_bus_count() - 1
 		AudioServer.set_bus_name(index, bus)
-		if bus != "Master":
+		if bus == "UI":
+			AudioServer.set_bus_send(index, "SFX")
+		elif bus != "Master":
 			AudioServer.set_bus_send(index, "Master")
 
 

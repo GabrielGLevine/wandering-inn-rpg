@@ -289,6 +289,22 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_settings_row":
+			# Settings-panel row click (issue #77): resolves the LIVE
+			# SettingsPanel node's own `row_rect`, same lookup shape as
+			# `click_pause_row`/`click_title_row`.
+			var settings_row_n := int(step["row"])
+			var sp := get_tree().root.find_child("SettingsPanel", true, false)
+			if sp == null:
+				_fail("click_settings_row: SettingsPanel node not found")
+			else:
+				var rect: Rect2 = sp.call("row_rect", settings_row_n - 1)
+				if rect.size == Vector2.ZERO:
+					_fail("click_settings_row: row %d has no rendered rect" % settings_row_n)
+				else:
+					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"click_title_row":
 			# Title-screen top-level-menu row click (issue #84): resolves the
 			# LIVE TitleScreen node's own `row_rect`, same lookup shape as
@@ -358,6 +374,59 @@ func _execute(step: Dictionary) -> void:
 			var slot := String(step["slot"])
 			if not FileAccess.file_exists("user://saves/%s.json" % slot):
 				_fail("expected save slot to exist: " + slot)
+		"assert_settings_file_exists":
+			# Issue #77: settings.cfg lives under user:// (config-file idiom,
+			# NOT save data) -- proves WISettings/WIAudio actually wrote it.
+			if not FileAccess.file_exists("user://settings.cfg"):
+				_fail("expected user://settings.cfg to exist")
+		"assert_audio_bus_send":
+			# Issue #77: the SFX-ignores-UI-bus fix, proven by bus GRAPH
+			# structure (not by ear) -- `AudioServer.get_bus_send` is Server-side
+			# metadata, real headless (see wi_audio.gd's `_setup_buses` doc
+			# comment for why bus creation is no longer headless-gated).
+			var send_bus_name := String(step["bus"])
+			var send_idx := AudioServer.get_bus_index(send_bus_name)
+			if send_idx == -1:
+				_fail("assert_audio_bus_send: no such bus: " + send_bus_name)
+			else:
+				var got_send := AudioServer.get_bus_send(send_idx)
+				var expected_send := String(step["sends_to"])
+				if got_send != expected_send:
+					_fail("assert_audio_bus_send: bus %s sends to %s, expected %s" % [send_bus_name, got_send, expected_send])
+		"assert_audio_bus_volume":
+			# Issue #77: exact volume_db proof for a real slider move -- mirrors
+			# wi_audio.gd's own `set_bus_volume` formula (value_0_to_10 -> linear
+			# -> linear_to_db) via the SAME builtin the engine uses, so this can
+			# never drift from a hand-copied dB constant.
+			var vol_bus_name := String(step["bus"])
+			var vol_idx := AudioServer.get_bus_index(vol_bus_name)
+			if vol_idx == -1:
+				_fail("assert_audio_bus_volume: no such bus: " + vol_bus_name)
+			else:
+				var expected_linear := clampf(float(step["value_0_to_10"]), 0.0, 10.0) / 10.0
+				var expected_db := linear_to_db(maxf(expected_linear, 0.0001))
+				var got_db := AudioServer.get_bus_volume_db(vol_idx)
+				if not is_equal_approx(got_db, expected_db):
+					_fail("assert_audio_bus_volume: bus %s expected %.4f db, got %.4f db" % [vol_bus_name, expected_db, got_db])
+		"assert_settings_value":
+			# Issue #77: reads the LIVE WISettings autoload directly (the
+			# authoritative in-memory state -- proves reduce_motion/fullscreen/
+			# text_scale_step survive a save/load round-trip by construction:
+			# WISettings is never touched by Game.load_slot/WISave).
+			var settings_path := String(step["path"])
+			var settings_got: Variant
+			match settings_path:
+				"reduce_motion":
+					settings_got = WISettings.reduce_motion()
+				"fullscreen":
+					settings_got = WISettings.is_fullscreen()
+				"text_scale_step":
+					settings_got = WISettings.text_scale_step()
+				_:
+					_fail("assert_settings_value: unknown path " + settings_path)
+					settings_got = null
+			if settings_got != null and not _loosely_equal(settings_got, step["equals"]):
+				_fail("assert_settings_value: %s expected %s, got %s" % [settings_path, str(step["equals"]), str(settings_got)])
 		"assert_world_to_screen_camera_aware":
 			_assert_world_to_screen_camera_aware()
 		"assert_world_labels_in_view":
