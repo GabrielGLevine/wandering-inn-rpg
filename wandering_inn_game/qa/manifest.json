@@ -556,6 +556,12 @@
    "seed": 9,
    "fixture": "near_pallass",
    "note": "8e E1 (issue #16, the milestone's exit-criteria canonical): the LIVE end-to-end 'Papers for Pallass' + 'Clearance for the Forge Tier' route -- Selys sponsors (10g) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g) -> real travel to pallass_market's reconciled arrival cell (4,7) -- the negative lift-locked read pre-permit -- the checkpoint clerk's 2g stamp + the human race-variant read, completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file, Grimalkin's 8g exam voiced verbatim, 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT open, a real walk across the forge tier to grimalkin_station and the round trip back down; gold ledger exact at every spend (60->50->32->30->25->17->14); zero combat whole run"
+  },
+  {
+   "script": "pallass_race_peek",
+   "seed": 9,
+   "fixture": "near_pallass_drake",
+   "note": "8e E2 optional (debt-sweep item 5, Drake-line live coverage): teleport-based canonical pinning the DRAKE half of tier_clerk_market/market_stallkeeper's requires:{race:drake} text_variants live (pallass_walkthrough already proves the human half) -- the unit test proves the requires:{race} mechanism, this proves the shipped graphs render it. Deliberately does not bank pallass_entry_stamped (out of scope, pallass_walkthrough's own job); zero combat"
   }
  ]
 }

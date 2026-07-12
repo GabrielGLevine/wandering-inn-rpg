@@ -520,7 +520,7 @@ func _validate_option(
 		assert(_hide_when_gate_keys_allowed(option["hide_when"]), label + " hide_when must not carry once_per_waking (requires-only gate, Issue #23)")
 		_validate_requires(label + " hide_when", option["hide_when"], skill_ids, class_ids, item_ids)
 	for effect: Dictionary in option.get("effects", []):
-		_validate_effect(label, effect, quest_ids, class_ids, entity_ids, produced_accomplishments)
+		_validate_effect(label, effect, quest_ids, class_ids, item_ids, entity_ids, produced_accomplishments)
 
 
 ## Shared by both "requires" and "hide_when" -- both use the same condition
@@ -725,6 +725,7 @@ func _validate_effect(
 	effect: Dictionary,
 	quest_ids: Dictionary,
 	class_ids: Dictionary,
+	item_ids: Dictionary,
 	entity_ids: Dictionary,
 	produced_accomplishments: Dictionary
 ) -> void:
@@ -742,6 +743,14 @@ func _validate_effect(
 	if effect.has("class"):
 		var class_id: String = String(effect["class"])
 		assert(class_ids.has(class_id), label + " references unknown class: " + class_id)
+	if effect.has("item"):
+		# The effect-side twin of the requires{item} possession-gate
+		# check above -- a `{item: "<id>"}` effect grants (pickup()s, per
+		# wi_game.gd's dialogue_choose) the item at runtime; an uncatalogued
+		# id there was silently invisible to this validator (pre-existing gap
+		# -- requires{item} was checked, effect{item} never was).
+		var granted_item_id: String = String(effect["item"])
+		assert(item_ids.has(granted_item_id), label + " grants unknown item: " + granted_item_id)
 	if effect.has("bank_first_use"):
 		# The effect-side twin of the once_per_waking requires
 		# shape check above -- same "<verb>:<entity>" contract, its OWN

@@ -1,0 +1,211 @@
+{
+ "_comment": "GH-debt-sweep item 5 (Drake-line live coverage, the 8e E2 optional): boots the near_pallass_drake fixture (pc_race:drake, papers_for_pallass pre-banked through the attune stage, positioned at the Pallass arrival anchor's own approach cell) and teleports to BOTH race-variant-carrying NPCs -- tier_clerk_market (7,5) and market_stallkeeper (15,5), the exact pallass_peek approach cells -- pinning each one's `requires:{race:drake}` text_variants LIVE via a real dialogue_node event, not just test_content.gd's/the unit-level race-gate proof. pallass_walkthrough already proves the HUMAN variant of both lines live (its own manifest note says so explicitly); this closes the DRAKE half of that same coverage. Deliberately does NOT bank pallass_entry_stamped -- the checkpoint clerk's hub text_variants render on every open regardless of the stamp compound-gate underneath (identical shape to pallass_peek's own dismissal), so this script explicitly steps past the now-visible stamp option (pallass_attuned is pre-banked) to the always-available exit, keeping the QUALIFY transaction itself out of scope (pallass_walkthrough's own job). Zero combat.",
+ "fixture_save": "near_pallass_drake",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_market"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_race",
+   "equals": "drake"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [4, 7]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.pallass_attuned",
+   "equals": 1
+  },
+  {
+   "_comment": "== the checkpoint clerk (7,5) -- pallass_peek's own exact approach cell. Both the now-visible 2g stamp option (pallass_attuned met) and the always-available exit render, but this script only pins the hub's own race-variant TEXT, which resolves before either option is chosen -- move down 1 lands on 'Just looking.' (the exit, now row 1 since the stamp option is visible ahead of it) rather than risking the real transaction.",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [7, 6]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [7, 6]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_market_clerk",
+    "entity": "tier_clerk_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "text": "Papers, then, same as everyone through this gate. Sponsor's name, and don't waste my morning."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_tier_clerk_drake_line"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== the market-tier local (15,5) -- pallass_peek's own exact approach cell. One always-available option ('Morning.', end:true) -- straight confirm.",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [14, 5]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [15, 5]
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [14, 5]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_market_local",
+    "entity": "market_stallkeeper"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "text": "You'll want the second queue -- the first one's for out-of-towners. You know how it is."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_stallkeeper_drake_line"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pallass_entry_stamped"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
+ ]
+}

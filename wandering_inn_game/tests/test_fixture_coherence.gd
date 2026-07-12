@@ -104,6 +104,19 @@ const MAP_REQUIRES := {
 	"invrisil_boulevard": ["door_awakened", "invrisil_attuned"],
 	"mercantile_alleys": ["door_awakened", "invrisil_attuned"],
 	"brothers_parlor": ["door_awakened", "invrisil_attuned"],
+	# 8e Phase B/C (issue #16): pallass_market is the `pallass` portal row's
+	# own destination (data/portals.json), gated door_awakened +
+	# pallass_attuned like every other anchor-stone region above --
+	# MISSING here until the debt sweep's Drake-line coverage fixture
+	# (near_pallass_drake) put a fixture ON this map for the first time
+	# (near_pallass itself starts at the guild, before the chain, so this
+	# gap was never exercised). pallass_forge sits one further gate past
+	# it -- the Grand Lift (`grand_lift_market`/`grand_lift_forge`,
+	# door_when on `elevator_pass_stamped`, produced only at the market
+	# tier's own Permit Office) -- so it carries the market tier's own two
+	# reqs PLUS the stamp.
+	"pallass_market": ["door_awakened", "pallass_attuned"],
+	"pallass_forge": ["door_awakened", "pallass_attuned", "elevator_pass_stamped"],
 }
 
 ## Any of these present ⇒ the tutorial (spar -> sleep -> class_gained ->

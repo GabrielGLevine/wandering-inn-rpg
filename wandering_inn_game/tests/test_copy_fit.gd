@@ -57,7 +57,15 @@ extends SceneTree
 ##    cap) -- verified empirically (see report) that this already keeps
 ##    every shipped body text within a small per-page line count, so body
 ##    text gets a generous per-page sanity budget, not a truncation
-##    contract. OPTION text (`_rebuild_options`) is the real hard budget:
+##    contract. Corpus also includes skeleton_scene.json entity
+##    `board_rumors[].copy` (guild_board's rumor postings) -- `_interact_board`
+##    (wi_game.gd) folds these into the SAME code-built dialogue node `text`
+##    as the header/bounty-slate/observe footer, routed through the identical
+##    paginated body surface; `_check_skeleton_scene` below walks the same
+##    entities for TOAST_FIELDS/talk_pool/dialogue but never looked at
+##    `board_rumors` -- a validator that never SEES a string passes
+##    vacuously (the #65 review's finding, widened here). OPTION text
+##    (`_rebuild_options`) is the real hard budget:
 ##    rendered as a plain `Label` with NO `autowrap_mode` set (confirmed:
 ##    `UIChrome.make_label()`'s default is autowrap OFF) inside a
 ##    fixed-WIDTH-only panel (720px, "never widen" -- D2-7 #6, genuinely
@@ -99,11 +107,15 @@ const DIALOGUE_PANEL_TEXT_WIDTH := PANEL_SIZE_X - 56.0  # `_ready()`'s 28+28 mar
 ## Skeleton entity string fields that route to WIEvents.TOAST (traced via
 ## `grep -n "WIEvents.TOAST" src/core/*.gd`) -- the issue named the first 5;
 ## the rest were found the same way and are genuinely part of the same
-## render surface, so they're in-scope too.
+## render surface, so they're in-scope too. `item_hint_toast`/
+## `once_per_waking_toast` (GH#70's archery_butt gate / the #81 review's
+## serving_tray wage-scrutiny fix) were the same kind of miss this list
+## already exists to close -- added here rather than left to join
+## board_rumors as a second invisible-to-this-suite surface.
 const TOAST_FIELDS := [
 	"observe", "toast", "open_toast", "locked_toast", "sleep_toast",
 	"burn_toast", "friendly_line", "gate_closed_toast", "second_visit_toast",
-	"skill_hint_toast",
+	"skill_hint_toast", "item_hint_toast", "once_per_waking_toast",
 ]
 
 var _label: Label
@@ -126,6 +138,7 @@ func _init() -> void:
 	_check_dialogue_graphs()
 	_check_bounty_delivery_copy()
 	_check_bounty_delivery_titles()
+	_check_board_rumors()
 
 	print("copy_fit: %d strings measured across all surfaces" % _measured_count)
 	if not _failures.is_empty():
@@ -373,6 +386,33 @@ func _check_bounty_delivery_titles() -> void:
 		var dwidth := _single_line_width(drendered)
 		if dwidth > DIALOGUE_PANEL_TEXT_WIDTH:
 			_fail("DIALOGUE-PANEL/option", "data/deliveries.json[deliveries.%s]" % did, drendered, "single-line width %.0fpx > %.0fpx panel width (no autowrap on option rows)" % [dwidth, DIALOGUE_PANEL_TEXT_WIDTH])
+
+
+## ---- DIALOGUE-PANEL corpus, part 3: skeleton_scene.json board_rumors ----
+##
+## guild_board's `board_rumors[].copy` strings are NOT a static dialogue/*.json
+## node and NOT a bounties.json/deliveries.json row -- `_interact_board`
+## (wi_game.gd) joins the board's header + `board_bounties()` copy + every
+## `board_rumors[].copy` + the entity's own `observe` into ONE code-built
+## dialogue node's `text` (`_begin_code_dialogue`), rendered through the SAME
+## paginated dialogue-panel body surface `_check_dialogue_body` already
+## validates for bounty/delivery copy above. Mirrors that check's own
+## simplification: each rumor's `copy` is measured on its own, not re-joined
+## with the header/other rumors/observe text it ships alongside in the real
+## render -- `_check_skeleton_scene` above walks these same entities but only
+## looks at TOAST_FIELDS/talk_pool/dialogue, so `board_rumors` was invisible
+## to every corpus walk until this pass (a validator that never SEES a
+## string passes vacuously -- the #65 review's finding, widened here).
+func _check_board_rumors() -> void:
+	var scene := _load_json("res://data/skeleton_scene.json")
+	for map_id: String in scene.get("maps", {}):
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			var eid := String(entity.get("id", "?"))
+			for ri: int in (entity.get("board_rumors", []) as Array).size():
+				var rumor: Dictionary = entity["board_rumors"][ri]
+				if rumor.has("copy"):
+					_check_dialogue_body("data/skeleton_scene.json[maps.%s.entities.%s].board_rumors[%d].copy" % [map_id, eid, ri], String(rumor["copy"]))
 
 
 ## ---- Per-surface checks ----

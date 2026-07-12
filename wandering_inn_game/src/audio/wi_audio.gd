@@ -41,6 +41,17 @@ var _variant_index: Dictionary = {}
 ## Ducking re-entrancy depth: nested duck requests (e.g. dialogue opening
 ## twice in the same beat, defensively) share ONE duck -- only the request
 ## that brings the depth back to 0 actually restores the bus.
+## TRAP: this only moves via matched DIALOGUE_STARTED/DIALOGUE_ENDED pairs
+## (`_duck_music`/`_unduck_music`) -- a code path that opens a dialogue and
+## then tears down the world WITHOUT ever firing the matching
+## DIALOGUE_ENDED would leave this stuck positive forever, parking the Music
+## bus at MUSIC_DUCK_DB with no dialogue left alive to release it. Not
+## reachable via any current UI path (dialogue swallows the pause key, so a
+## mid-conversation GAME_LOADED/GAME_RESET can't fire today), but
+## `_reset_duck()` (called from `_on_domain_event` on GAME_RESET/
+## GAME_LOADED) is the belt-and-suspenders guard for the next code path that
+## bypasses WIDialogue's own end sequence -- keep it wired if this field's
+## write sites ever grow a new one.
 var _duck_depth := 0
 var _duck_tween: Tween
 
@@ -170,6 +181,28 @@ func _unduck_music() -> void:
 	_tween_music_bus_to(0.0)
 
 
+## Debt-sweep fix (#76 review's minor): `_duck_depth` only ever moves via
+## matched DIALOGUE_STARTED/DIALOGUE_ENDED pairs (`_duck_music`/
+## `_unduck_music` above) -- a teardown that skips the matching
+## DIALOGUE_ENDED (a defeat mid-conversation reaching a code path that never
+## closes the dialogue cleanly, or a future walker/skip mechanism that
+## bypasses WIDialogue's own end path) would leave the depth counter stuck
+## positive forever, with the Music bus parked at MUSIC_DUCK_DB and no live
+## dialogue left to ever release it. GAME_RESET (fresh world, title New
+## Game) and GAME_LOADED (Continue/pause-Load/defeat-reload) both land on a
+## world that starts with no dialogue open by construction -- zero the depth
+## and restore the bus unconditionally to whatever depth it was actually
+## stuck at, so a fresh/loaded world can never inherit a stale duck. No-op
+## (skips the bus write entirely) when depth is already 0, the overwhelming
+## common case -- byte-identical for every existing canonical, none of which
+## reaches this fix's own trigger condition today.
+func _reset_duck() -> void:
+	if _duck_depth == 0:
+		return
+	_duck_depth = 0
+	_tween_music_bus_to(0.0)
+
+
 ## Tweens the "Music" bus's volume_db to `offset_db` relative to the user's
 ## OWN slider setting (`get_bus_volume`, the settings.cfg source of truth) --
 ## NEVER relative to whatever the bus currently reads, so repeated duck/
@@ -276,7 +309,9 @@ func _load_audio_map() -> void:
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.AUDIO_PLAYED:
 		return  # re-entrancy guard: never let our own emission trigger another lookup
-	if type == WIEvents.DIALOGUE_STARTED:
+	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:
+		_reset_duck()
+	elif type == WIEvents.DIALOGUE_STARTED:
 		_duck_music()
 	elif type == WIEvents.DIALOGUE_ENDED:
 		_unduck_music()

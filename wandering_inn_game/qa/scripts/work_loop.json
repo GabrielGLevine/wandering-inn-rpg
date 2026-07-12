@@ -139,11 +139,11 @@
    "name": "00b_chest_pickup"
   },
   {
-   "_comment": "This is the FIRST item_gained of the run, so message_layer.gd queues the one-time 'Press I \u2014 your pack.' hint right behind this toast (see message_layer.gd's _first_pickup_hint_pending doc comment). Consume its qualified render here so the since-marker cursor clears it -- every later unqualified ui_toast_rendered wait below (stew_pot/dirty_table/tray/etc.) would otherwise match THIS toast's render instead of its own.",
+   "_comment": "This is the FIRST item_gained of the run, so message_layer.gd queues the one-time 'Press I — your pack.' hint right behind this toast (see message_layer.gd's _first_pickup_hint_pending doc comment). Consume its qualified render here so the since-marker cursor clears it -- every later unqualified ui_toast_rendered wait below (stew_pot/dirty_table/tray/etc.) would otherwise match THIS toast's render instead of its own.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "Press I \u2014 your pack."
+    "text": "Press I — your pack."
    },
    "timeout_sec": 5
   },
@@ -317,7 +317,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Basic Cleaning] \u2014 The table is spotless."
+    "text": "[Basic Cleaning] — The table is spotless."
    },
    "timeout_sec": 5
   },
@@ -414,6 +414,24 @@
     10,
     3
    ]
+  },
+  {
+   "_comment": "Beat 2b (debt-lane review tooth): a SECOND same-waking tray tap must REFUSE — the once_per_waking wage gate's farm-regression guard. Gold + counter unchanged, only the refusal toast.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The tables are covered. Nothing more to carry out until tomorrow."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.delivered_item",
+   "equals": 1
   },
   {
    "_comment": "Beat 3 (issue #59 rewrite): hungry_patron, EMPTY-HANDED -- no Helper class yet, so no hot_meal has ever been cooked. The Serve option now compound-gates on {once_per_waking, item}; once_per_waking is unmet-yet (visible per the vanishing-tease leg) but item is unmet too, so `_meets()`'s AND refuses it -- VISIBLE-LOCKED (GATING SPLIT: item possession is in-conversation-actionable, never hidden, unlike once_per_waking), greyed with the diegetic 'requires Hot Meal' string. This is the dish-fetch seam's own negative proof, replacing this beat's old job (proving once_per_waking alone) -- that job moves to Beat 6c below, where it can be proven ALONGSIDE a held dish (the interplay issue #59 cares about). TRAP: this beat must NOT choose the locked option (dialogue_panel.gd's _confirm refuses a locked cursor row outright) -- move the cursor to the dismiss row first.",
@@ -532,15 +550,15 @@
    "action": "assert_event_logged",
    "type": "toast",
    "payload_contains": {
-    "text": "Autosaved. (Esc \u2014 save/load anytime)"
+    "text": "Autosaved. (Esc — save/load anytime)"
    }
   },
   {
-   "_comment": "class_gained toasts now list the class's level-1 grants (spec \u00a74). Helper L1 grants [Basic Cooking] (the \u00a76 stew-pot swap), so the toast reads '[Helper] class gained! \u2014 [Basic Cooking]'. Toast matching is exact-equality (test_driver _loosely_equal), so the full O4 text is pinned here.",
+   "_comment": "class_gained toasts now list the class's level-1 grants (spec §4). Helper L1 grants [Basic Cooking] (the §6 stew-pot swap), so the toast reads '[Helper] class gained! — [Basic Cooking]'. Toast matching is exact-equality (test_driver _loosely_equal), so the full O4 text is pinned here.",
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Helper] class gained! \u2014 [Basic Cooking]"
+    "text": "[Helper] class gained! — [Basic Cooking]"
    },
    "timeout_sec": 5
   },
@@ -610,7 +628,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Basic Cooking] \u2014 The stew comes out rich and hot."
+    "text": "[Basic Cooking] — The stew comes out rich and hot."
    },
    "timeout_sec": 5
   },
