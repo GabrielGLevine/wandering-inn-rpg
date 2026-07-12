@@ -274,6 +274,31 @@ static func set_patch_texture(patch: NinePatchRect, texture: Texture2D) -> void:
 	patch.region_rect = _auto_region(texture)
 
 
+## Which entry in `controls` (Control nodes -- an Array[Label]/Array[Control],
+## untyped param so either passes straight through) contains `local_pos` -- the
+## caller's own `gui_input`/`mouse_entered` handler supplies `local_pos`
+## already relative to the SAME parent every entry's own `position` is
+## relative to (the exact Control whose `gui_input` fired), mirroring
+## WIHotbar._slot_index_at's rect-scan idiom (issue #57) one level generic: a
+## single filter+handler on the shared CONTAINER, not one filter per row (the
+## STOP-vs-wheel-scroll trap a per-row filter would risk inside a
+## ScrollContainer -- see inventory.gd's own item-row wiring). Skips a hidden
+## (`!visible`) entry -- a hidden row can never be clicked, same discipline
+## Godot's own input picking already applies on-screen. Returns -1 for no
+## match. Promoted here once issue #84 needed the SAME scan in four panels
+## (pause_menu.gd/dialogue_panel.gd/title_screen.gd/inventory.gd) --
+## WIHotbar's own original stays a per-file copy (untouched, zero regression
+## risk to the shipped #57 plumbing).
+static func control_index_at(controls: Array, local_pos: Vector2) -> int:
+	for i in controls.size():
+		var c := controls[i] as Control
+		if c == null or not c.visible:
+			continue
+		if Rect2(c.position, c.size).has_point(local_pos):
+			return i
+	return -1
+
+
 ## BBCode-escapes literal `[`/`]` (e.g. skill/combatant display names like
 ## "[Power Strike]") so they render as literal text instead of parsing as
 ## BBCode tags. MUST route through placeholder chars: the naive two-step

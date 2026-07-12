@@ -179,6 +179,17 @@ var _corner_lines_box: VBoxContainer
 var _corner_mech_line := ""
 var _item_ids: Array[String] = []
 var _cursor := 0
+## Parallel to `_item_ids` (same index order) -- populated fresh by every
+## `_rebuild_items()` call, issue #84's hover/click rect scan target
+## (`UIChrome.control_index_at`, WIHotbar's per-bar-not-per-row idiom: ONE
+## `gui_input` handler on `_items_box` itself, ANY manual wheel-scroll
+## handling included, rather than a filter per row -- a per-row STOP would
+## swallow wheel events before `_scroll` ever saw them).
+var _item_labels: Array[Label] = []
+## Mouse-wheel scroll step (px) for `_on_items_gui_input`'s manual
+## `_scroll.scroll_vertical` adjustment -- roughly 2-3 rows at this panel's
+## row pitch, a plain reasonable increment (no QA pins the exact value).
+const WHEEL_SCROLL_STEP := 48
 
 
 func _ready() -> void:
@@ -345,6 +356,11 @@ func _ready() -> void:
 	_items_box = VBoxContainer.new()
 	_items_box.add_theme_constant_override("separation", 4)
 	_items_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# Issue #84: ONE hover/click/wheel handler on the row container itself
+	# (see `_item_labels`' doc comment) -- individual row Labels stay
+	# `UIChrome.make_label`'s default IGNORE.
+	_items_box.mouse_filter = Control.MOUSE_FILTER_STOP
+	_items_box.gui_input.connect(_on_items_gui_input)
 	_scroll.add_child(_items_box)
 
 	# RIGHT: the detail column for whatever item the cursor is currently on
@@ -585,6 +601,90 @@ func _equipped_slot_for(item_id: String, kind: String) -> String:
 	return ""
 
 
+## The rendered text for carried-list row `i` -- "> "/"  " cursor mark + name
+## + "  [Equipped]" tag -- factored out of `_rebuild_items()`'s creation loop
+## (issue #84) so `_refresh_row_marks()` can recompute just the text of an
+## already-built Label without tearing it down (a hover shouldn't destroy the
+## very node the mouse is currently over).
+func _row_display_text(i: int) -> String:
+	var item_id := String(_item_ids[i])
+	var rec: Dictionary = Game.sim.item(item_id)
+	var name := String(rec.get("name", item_id))
+	var kind := String(rec.get("kind", ""))
+	# Was `String(Game.sim.equipped.get(kind, "")) == item_id`, which only
+	# ever matched weapon/armor (kind IS the slot name for those two) -- an
+	# equipped ACCESSORY never tagged "[Equipped]" since `equipped` has no
+	# "accessory" key at all, only accessory_1/_2/_3. `_equipped_slot_for`
+	# checks the real slot set.
+	var equipped_here := _equipped_slot_for(item_id, kind) != ""
+	var mark := "> " if i == _cursor else "  "
+	var tag := "  [Equipped]" if equipped_here else ""
+	return "%s%s%s" % [mark, name, tag]
+
+
+## Rewrites every row Label's text from the CURRENT `_cursor` -- no node is
+## freed/recreated (see `_row_display_text`'s doc comment).
+func _refresh_row_marks() -> void:
+	for i in _item_labels.size():
+		_item_labels[i].text = _row_display_text(i)
+
+
+## Issue #84: moves the cursor to `i` WITHOUT the full `_rebuild_items()`
+## teardown -- used by mouse hover (which must not destroy the row Control
+## currently under the cursor) and by a click just before it calls
+## `_confirm()` (so the corner/detail columns are in sync even on a fresh
+## click with no prior hover motion). Mirrors `_move_cursor`'s side effects
+## (clear the stale refusal echo, re-render detail/corner, emit the
+## selection-rendered event) minus the scroll-into-view call `_move_cursor`
+## needs for keyboard's non-local jumps -- a hovered/clicked row is already
+## on-screen by construction.
+func _hover_cursor(i: int) -> void:
+	if _item_ids.is_empty() or i < 0 or i >= _item_ids.size():
+		return
+	if i == _cursor:
+		return
+	_cursor = i
+	_status_label.text = ""
+	_refresh_row_marks()
+	_render_detail()
+	_render_corner()
+	_emit_selection()
+
+
+## Issue #84: hover highlights a row (`_hover_cursor`, the SAME `_cursor`
+## field keyboard Up/Down drives -- one selection state), wheel scrolls the
+## list, and a left-click routes through `_confirm()` -- the exact function
+## Enter calls. Manual wheel handling (not passthrough to `_scroll`): this
+## container is STOP so it can distinguish row clicks from bare list
+## scrolling; PASS-ing wheel through to whatever ancestor Control picks it up
+## next isn't guaranteed, so `_scroll.scroll_vertical` is adjusted directly.
+func _on_items_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		var hover_idx := UIChrome.control_index_at(_item_labels, (event as InputEventMouseMotion).position)
+		if hover_idx >= 0:
+			_hover_cursor(hover_idx)
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if not mb.pressed:
+		return
+	if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
+		_scroll.scroll_vertical = maxi(0, _scroll.scroll_vertical - WHEEL_SCROLL_STEP)
+		return
+	if mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+		_scroll.scroll_vertical += WHEEL_SCROLL_STEP
+		return
+	if mb.button_index != MOUSE_BUTTON_LEFT:
+		return
+	var idx := UIChrome.control_index_at(_item_labels, mb.position)
+	if idx < 0:
+		return
+	_hover_cursor(idx)
+	_cursor = idx
+	_confirm()
+
+
 ## Equips the selected item into its own kind's slot, or unequips it if it
 ## IS the item already equipped in that slot.
 func _confirm() -> void:
@@ -674,6 +774,7 @@ func _rebuild_items() -> void:
 	for child: Node in _items_box.get_children():
 		_items_box.remove_child(child)
 		child.queue_free()
+	_item_labels.clear()
 	_item_ids = Game.sim.inventory.duplicate()
 	if _cursor >= _item_ids.size():
 		_cursor = max(_item_ids.size() - 1, 0)
@@ -686,23 +787,12 @@ func _rebuild_items() -> void:
 		return
 	var cursor_row: Control = null
 	for i in _item_ids.size():
-		var item_id := String(_item_ids[i])
-		var rec: Dictionary = Game.sim.item(item_id)
-		var name := String(rec.get("name", item_id))
-		var kind := String(rec.get("kind", ""))
-		# Was `String(Game.sim.equipped.get(kind, "")) == item_id`, which
-		# only ever matched weapon/armor (kind IS the slot name for those
-		# two) -- an equipped ACCESSORY never tagged "[Equipped]" since
-		# `equipped` has no "accessory" key at all, only accessory_1/_2/_3.
-		# `_equipped_slot_for` checks the real slot set.
-		var equipped_here := _equipped_slot_for(item_id, kind) != ""
-		var mark := "> " if i == _cursor else "  "
-		var tag := "  [Equipped]" if equipped_here else ""
 		# Default dark-on-parchment Label, same reasoning as the slot rows
 		# above ("Menu" is a dark-panel variant). The "> " cursor mark stays
 		# legible as dark text on the light parchment.
-		var name_label := UIChrome.make_label("%s%s%s" % [mark, name, tag])
+		var name_label := UIChrome.make_label(_row_display_text(i))
 		_items_box.add_child(name_label)
+		_item_labels.append(name_label)
 		if i == _cursor:
 			cursor_row = name_label
 	_render_detail()

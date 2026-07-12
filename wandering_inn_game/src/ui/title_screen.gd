@@ -80,6 +80,11 @@ var _gesture_label: Label
 var _notice_label: Label
 var _menu_root: VBoxContainer
 var _row_labels: Array[Label] = []
+## Parallel to `_row_labels` (same index order) -- the chrome panel Control
+## per row (issue #84's click/hover target: the WHOLE pill, not just its
+## inner label, matching `_refresh_rows()`'s own texture-swap "selected"
+## render).
+var _row_panels: Array[Control] = []
 
 ## Playtest-state picker. `_fixture_entries` is lazily built on first open
 ## (`{name:String, summary:String}`, story-position ordered) and cached for
@@ -188,13 +193,19 @@ func _build_ui() -> void:
 
 	_menu_root = VBoxContainer.new()
 	_menu_root.add_theme_constant_override("separation", 8)
-	_menu_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Issue #84: STOP (was IGNORE) + ONE hover/click handler over the whole
+	# row list (`UIChrome.control_index_at` against `_row_panels`, WIHotbar's
+	# per-bar-not-per-row idiom) -- a row's own chrome panel stays default
+	# IGNORE, same as every other UIChrome-built Control.
+	_menu_root.mouse_filter = Control.MOUSE_FILTER_STOP
+	_menu_root.gui_input.connect(_on_menu_gui_input)
 	_menu_root.hide()
 	menu_anchor.add_child(_menu_root)
 	for i in ROWS.size():
 		var row_panel := UIChrome.make_chrome_panel(UIChrome.BLUE_BUTTON, UIChrome.PATCH_MARGIN)
 		row_panel.custom_minimum_size = Vector2(300.0, 44.0)
 		_menu_root.add_child(row_panel)
+		_row_panels.append(row_panel)
 		var row_margin := MarginContainer.new()
 		UIChrome.full_rect(row_margin)
 		UIChrome.add_margins(row_margin, 20, 8, 20, 8)
@@ -289,6 +300,13 @@ func _build_playtest_panel() -> void:
 	_playtest_page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stack.add_child(_playtest_page_label)
 
+	# Issue #84: same one-handler-on-the-container idiom as `_menu_root`
+	# above, over `_playtest_row_labels` -- `_playtest_global_index` maps the
+	# local (on-page) row index the rect scan returns to the GLOBAL fixture
+	# index `_playtest_cursor`/`_confirm_playtest_row` use.
+	stack.mouse_filter = Control.MOUSE_FILTER_STOP
+	stack.gui_input.connect(_on_playtest_gui_input)
+
 
 func _enter_menu() -> void:
 	_state = State.MENU
@@ -379,6 +397,46 @@ func _refresh_rows() -> void:
 				# follows the texture (the two button arts have different bboxes
 				# -- see UIChrome's BLUE_BUTTON_REGION doc comment).
 				UIChrome.set_patch_texture(child as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if i == _cursor else UIChrome.BLUE_BUTTON)
+
+
+## Issue #84: hover highlights a top-level menu row (sets `_cursor`, the SAME
+## field `_refresh_rows()`'s mark/color/pill-texture-swap all read -- one
+## selection state), a left-click routes through `_confirm()`, the exact
+## function Enter calls. Skips (both hover and click) a row that's hidden or
+## disabled -- `_row_selectable`, the SAME gate `_move_cursor` already skips
+## past for keyboard.
+func _on_menu_gui_input(event: InputEvent) -> void:
+	if _state != State.MENU:
+		return
+	if event is InputEventMouseMotion:
+		var idx := UIChrome.control_index_at(_row_panels, (event as InputEventMouseMotion).position)
+		if idx >= 0 and _row_selectable(idx) and idx != _cursor:
+			_cursor = idx
+			_refresh_rows()
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	var idx := UIChrome.control_index_at(_row_panels, mb.position)
+	if idx >= 0 and _row_selectable(idx):
+		_cursor = idx
+		_confirm()
+
+
+## Read-only rect accessor (issue #84, `WIHotbar.slot_rect`'s established
+## pattern) -- the on-screen rect of top-level menu row `i` (its WHOLE chrome
+## pill, matching the click/hover target above), for QA's `click_title_row`
+## step. Empty Rect2 when out of range, the row is hidden, or the state isn't
+## MENU (the picker/gesture beats have no such rows on screen).
+func row_rect(i: int) -> Rect2:
+	if _state != State.MENU or i < 0 or i >= _row_panels.size():
+		return Rect2()
+	var panel := _row_panels[i]
+	if panel == null or not panel.visible:
+		return Rect2()
+	return Rect2(panel.global_position, panel.size)
 
 
 func _confirm() -> void:
@@ -532,6 +590,48 @@ func _confirm_playtest_row() -> void:
 	var fixture := String(_fixture_entries[_playtest_cursor]["name"])
 	if not Game.install_fixture_save(fixture, "playtest") or not Game.load_slot("playtest"):
 		_show_notice("Could not load fixture: " + fixture)
+
+
+## Issue #84: hover/click over the playtest picker's rows, mirroring
+## `_on_menu_gui_input` -- hover moves `_playtest_cursor` (the SAME field
+## `_refresh_playtest()`'s mark/color reads), a click routes through
+## `_confirm_playtest_row()`, the exact function Enter calls.
+func _on_playtest_gui_input(event: InputEvent) -> void:
+	if _state != State.PLAYTEST_LIST:
+		return
+	if event is InputEventMouseMotion:
+		var local_idx := UIChrome.control_index_at(_playtest_row_labels, (event as InputEventMouseMotion).position)
+		var idx := _playtest_global_index(local_idx)
+		if idx >= 0 and idx != _playtest_cursor:
+			_playtest_cursor = idx
+			_refresh_playtest()
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	var local_idx := UIChrome.control_index_at(_playtest_row_labels, mb.position)
+	var idx := _playtest_global_index(local_idx)
+	if idx >= 0:
+		_playtest_cursor = idx
+		_confirm_playtest_row()
+
+
+## Maps a rect-scanned on-page row index (0..PLAYTEST_PAGE_SIZE-1) to the
+## GLOBAL `_fixture_entries` index `_playtest_cursor`/`_confirm_playtest_row`
+## use -- the same `page`/`start` derivation `_refresh_playtest()` uses to lay
+## the current page out. -1 for no local match or a blank row past the last
+## real entry on a partial final page.
+func _playtest_global_index(local_i: int) -> int:
+	if local_i < 0:
+		return -1
+	var page := _playtest_cursor / PLAYTEST_PAGE_SIZE
+	var start := page * PLAYTEST_PAGE_SIZE
+	var idx := start + local_i
+	if idx < 0 or idx >= _fixture_entries.size():
+		return -1
+	return idx
 
 
 func _playtest_page_count() -> int:

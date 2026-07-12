@@ -176,6 +176,16 @@ func _ready() -> void:
 	_body_label.scroll_active = true
 	_body_label.fit_content = false
 	_body_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	# Issue #84: `meta_underlined = false` keeps a skill row's `[url=]` wrapper
+	# (added in `_build_body_text` below) purely functional -- no automatic
+	# underline decoration layered on top of the EXISTING bold+"▶ " marker
+	# selection state (one selection state, not a second highlight system).
+	# Mouse wheel scroll needs no new code -- RichTextLabel's own `_gui_input`
+	# already scrolls `scroll_active` content on WHEEL_UP/DOWN.
+	_body_label.meta_underlined = false
+	_body_label.mouse_filter = Control.MOUSE_FILTER_STOP
+	_body_label.meta_hover_started.connect(_on_skill_row_hover_started)
+	_body_label.meta_clicked.connect(_on_skill_row_meta_clicked)
 	stack.add_child(_body_label)
 
 	# Bottom-foot "more below" cue, over the parchment (added after content so
@@ -422,6 +432,44 @@ func _toggle_cursor_skill() -> void:
 	})
 
 
+## Issue #84: hover moves `_cursor_index` to the hovered skill row (the SAME
+## field the keyboard Up/Down cursor drives, rendered via the bold+"▶ "
+## marker `_build_body_text` already composes -- one selection state) without
+## scrolling the panel (the hovered row is already on-screen; unlike keyboard
+## nav, which scrolls the NEW cursor row into view, a hover shouldn't yank the
+## view around under a stationary mouse). `meta` is the `[url=]` value
+## `_build_body_text` wrote -- always a plain int string, but read via
+## `String(meta).to_int()` defensively rather than assuming RichTextLabel
+## hands back an int Variant.
+func _on_skill_row_hover_started(meta: Variant) -> void:
+	var idx := String(meta).to_int()
+	if idx < 0 or idx >= _flat_skill_ids.size() or idx == _cursor_index:
+		return
+	_cursor_index = idx
+	_rebuild_body_no_scroll()
+
+
+## Issue #84: a click on a skill row moves the cursor there (if it hadn't
+## already, e.g. a click with no prior hover motion event) then calls
+## `_toggle_cursor_skill()` -- the EXACT function Enter calls on the cursored
+## row, so a click is indistinguishable in its effects from arrow-to-row +
+## Enter (one-dispatch-path discipline).
+func _on_skill_row_meta_clicked(meta: Variant) -> void:
+	var idx := String(meta).to_int()
+	if idx < 0 or idx >= _flat_skill_ids.size():
+		return
+	_cursor_index = idx
+	_toggle_cursor_skill()
+
+
+## Same rebuild `_rebuild_body_follow_cursor` performs, minus the
+## scroll-to-cursor-line/scroll-hint follow-up -- see
+## `_on_skill_row_hover_started`'s doc comment for why hover must NOT scroll.
+func _rebuild_body_no_scroll() -> void:
+	var built := _build_body_text(_open_act, _open_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels)
+	_body_label.text = String(built["text"])
+
+
 ## Rebuilds the body from this open session's cached inputs (see
 ## `_open_act`/etc.'s doc comment) at the CURRENT cursor position, and scrolls
 ## the cursor's row into view -- used by both cursor movement and the toggle
@@ -538,6 +586,14 @@ func _build_body_text(act: Dictionary, quest_lines: Array, skill_groups: Array, 
 			if flat_i == cursor_index:
 				cursor_line = parts.size()
 				line = "[b]▶ %s[/b]" % line
+			# Issue #84: wraps the WHOLE row (marker + bold/▶ when selected)
+			# in a `[url=<flat_i>]` meta region -- RichTextLabel's native
+			# hover/click detection for BBCode meta spans, so a hover/click
+			# needs no manual rect math over this single free-flowing text
+			# blob (contrast the per-row Control rects the OTHER four panels
+			# use). `flat_i` is the SAME index `_cursor_index`/
+			# `_flat_skill_ids` already use -- one index space, no translation.
+			line = "[url=%d]%s[/url]" % [flat_i, line]
 			parts.append(line)
 			flat_i += 1
 	if not seen_statuses.is_empty():

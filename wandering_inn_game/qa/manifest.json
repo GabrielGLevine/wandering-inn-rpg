@@ -193,7 +193,7 @@
    "script": "mouse_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "Issue #57: mouse support -- distant prop click walks to nearest approach cell and stops without interacting, hotbar slot CLICK fires the number-key-equivalent stream and disarms a Tab-primed cursor, adjacent click faces+interacts in one click, click-to-walk on open ground (exact per-step count), keyboard press mid-path cancels"
+   "note": "Issue #57/#84: mouse support -- distant prop click walks to nearest approach cell and stops without interacting, hotbar slot CLICK fires the number-key-equivalent stream and disarms a Tab-primed cursor, adjacent click faces+interacts in one click, click-to-walk on open ground (exact per-step count), keyboard press mid-path cancels, a title-row click reaches Continue, a pause-row click Resumes, dialogue-option clicks pin the exact keyboard-equivalent dialogue_choice payload"
   },
   {
    "script": "social_loop",
