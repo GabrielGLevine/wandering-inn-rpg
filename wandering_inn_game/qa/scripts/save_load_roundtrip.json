@@ -1,5 +1,5 @@
 {
- "_comment": "save/load persistence across the errand run. Inn: accept the_errand from Erin. Then the real cold-start crossing (old parley bypass dead): meet Relc -> spar -> sleep (Warrior L1) -> cross the goblin_encounter_1 proximity ambush (warrior+Relc) -> street. Street: deliver to Selys (package_delivered), pause-Save to manual, complete the quest (errand_decided), pause-Load the manual slot and assert the delivered/street state round-trips intact. Prologue cells reuse combat_walkthrough's proven from-floodplains arc. Seed 9.",
+ "_comment": "save/load persistence across the errand run. Inn: accept the_errand from Erin. Then the real cold-start crossing (old parley bypass dead): meet Relc -> spar -> sleep (Warrior L1) -> cross the goblin_encounter_1 proximity ambush (warrior+Relc) -> street. Street: deliver to Selys (package_delivered), pause-Save to manual, complete the quest (errand_decided), pause-Load the manual slot and assert the delivered/street state round-trips intact. Prologue cells reuse combat_walkthrough's proven from-floodplains arc. Seed 9. Issue #78: Save/Load now open a 3-slot picker (an extra Confirm each, defaulting to slot 1/'manual' -- byte-identical outcome to the old direct single-slot action) -- this script also asserts the picker's own metadata render (Empty before the first save, the real name/class/map summary once 'manual' holds this run's state).",
  "steps": [
   {
    "action": "wait_for_event",
@@ -270,7 +270,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -298,7 +301,10 @@
    "_comment": "== PART 2: cross the proximity ambush (warrior + Relc) ==. Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3'); resumes unchanged: right12+1 -> inn_door -> floodplains (7,6), right23->(30,6), down14->(30,20), down1 springs the ambush.",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 3]
+   "cell": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",
@@ -498,7 +504,10 @@
    "_comment": "Re-path: Selys relocated off the street into the Guild interior (real door: street guild_door -> guild map). Teleport (debug-only, bypasses doors; still calls the SAME Game.sim.transition() a real door does, so map_changed/mood/render events all fire for real) straight to her desk approach rather than re-deriving the street->guild_door->desk walk a Nth time -- that route is already proven end-to-end by gate_district_walkthrough and guild_interior_walkthrough. Lands at the guild's entry cell (8,10); the sidestep-around-(8,4) detour below is the exact proven step from guild_interior_walkthrough (playtest hotfix #5 -- the rug there now blocks), stopping blocked-adjacent to Selys (8,2) facing up. The pause-Save/Load below now captures/restores current_map:guild, not street -- that assertion is updated further down (disclosed in the DP1 report).",
    "action": "teleport",
    "map": "guild",
-   "cell": [8, 10]
+   "cell": [
+    8,
+    10
+   ]
   },
   {
    "action": "wait_for_event",
@@ -508,11 +517,31 @@
    },
    "timeout_sec": 5
   },
-  { "action": "move", "direction": "up", "steps": 5 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "move", "direction": "up", "steps": 2 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "move", "direction": "up", "steps": 1 },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
   {
    "action": "press",
    "name": "interact"
@@ -603,6 +632,38 @@
    "steps": 1
   },
   {
+   "_comment": "Issue #78: 'Save' (ROWS[1], unchanged index) now opens the 3-slot picker instead of saving immediately.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Nothing has ever been written to any manual slot yet this run (only the auto slot exists so far, asserted above) -- assert the picker's own metadata render shows all 3 slots Empty, the slot-metadata proof for the not-yet-written state.",
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save",
+    "slots": [
+     {
+      "slot": "manual",
+      "exists": false,
+      "summary": "Empty"
+     },
+     {
+      "slot": "manual_2",
+      "exists": false,
+      "summary": "Empty"
+     },
+     {
+      "slot": "manual_3",
+      "exists": false,
+      "summary": "Empty"
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Picker cursor defaults to row 0 ('manual', slot 1) -- a bare Confirm reproduces the OLD single-slot Save exactly.",
    "action": "press",
    "name": "confirm"
   },
@@ -720,8 +781,43 @@
    "steps": 2
   },
   {
+   "_comment": "Issue #78: 'Load' (ROWS[2], unchanged index) opens the same 3-slot picker.",
    "action": "press",
    "name": "confirm"
+  },
+  {
+   "_comment": "Slot 1 ('manual') holds the earlier Save's state. Loaded via MOUSE (click_pause_slot_row 0) -- the picker's click path gets its one automation tooth here; the keyboard picker path stays covered by board_loop/settings_loop/save_migration/consolidation_reload's own re-pins.",
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load",
+    "slots": [
+     {
+      "slot": "manual",
+      "exists": true,
+      "summary": "Traveler — Warrior Lv1 — Guild"
+     },
+     {
+      "slot": "manual_2",
+      "exists": false,
+      "summary": "Empty"
+     },
+     {
+      "slot": "manual_3",
+      "exists": false,
+      "summary": "Empty"
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "click_pause_slot_row",
+   "row": 1
   },
   {
    "action": "wait_for_event",

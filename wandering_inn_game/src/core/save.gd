@@ -168,6 +168,14 @@ extends RefCounted
 ## NO version bump. A save missing the key restores false (no meal was eaten
 ## before the feature existed, and the perk doesn't carry past a rest anyway);
 ## a present-but-non-bool value is rejected.
+## (issue #78, save-slot picker metadata): `metadata()` below is a NEW
+## PURE READ FUNCTION, not a new persisted field -- NO version bump, no
+## `_migrated`/`apply` change. It derives a display-only summary
+## (pc_name/top_class/top_level/map) from fields the save ALREADY carries
+## (pc_name, classes, current_map), tolerant of the same version drift
+## `_migrated` already handles. Slot pickers (title Continue, pause Save/
+## Load) call this via `Game.slot_metadata()` to render "who/what/where" per
+## slot WITHOUT applying the save onto a live WIGame.
 const VERSION := 5
 
 
@@ -266,6 +274,42 @@ static func _migrated(data: Dictionary) -> Dictionary:
 			cls["warrior"] = maxi(int(cls.get("warrior", 0)), int(cls["fighter"]))
 			cls.erase("fighter")
 	return out
+
+
+## Read-only display summary of a save file's contents (issue #78 slot
+## pickers) -- `_migrated()`-tolerant of the same version drift `apply()`
+## handles, but NEVER touches a WIGame and NEVER mutates `data`. Returns {}
+## for anything unusable as a slot preview (malformed JSON already filtered
+## by the caller, a still-rejected pre-v2 save, or a state shape too broken
+## to read `classes`/`pc_name`/`current_map` from) -- callers treat {} as
+## "no usable save here", the same signal a missing file gives.
+## Shape: {"pc_name":String, "top_class":String ("" if classless),
+## "top_level":int, "map":String}. `top_class`/`top_level` pick the
+## HIGHEST-level class only (a one-line summary, not the full roster --
+## the journal is where every class+level is listed in full).
+static func metadata(data: Dictionary) -> Dictionary:
+	var migrated := _migrated(data)
+	if int(migrated.get("version", -1)) != VERSION:
+		return {}
+	var raw_state: Variant = migrated.get("state")
+	if not (raw_state is Dictionary):
+		return {}
+	var s: Dictionary = raw_state
+	var top_class := ""
+	var top_level := 0
+	var classes_raw: Variant = s.get("classes", {})
+	if classes_raw is Dictionary:
+		for id: String in (classes_raw as Dictionary).keys():
+			var lvl := int((classes_raw as Dictionary)[id])
+			if lvl > top_level:
+				top_level = lvl
+				top_class = id
+	return {
+		"pc_name": String(s.get("pc_name", "Traveler")),
+		"top_class": top_class,
+		"top_level": top_level,
+		"map": String(s.get("current_map", "")),
+	}
 
 
 ## Applies a save Dictionary onto a freshly constructed WIGame. Returns false without mutation on invalid version or malformed state.

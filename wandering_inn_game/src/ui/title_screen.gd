@@ -8,8 +8,13 @@ extends CanvasLayer
 ##    fresh itch.io page load.
 ## 2. MENU — New Game / Continue / Playtest States (debug builds only) / Quit,
 ##    arrows to move, Enter to confirm. Continue is enabled iff a save exists
-##    (auto or manual, newest wins) and is skipped over (not selectable) while
-##    disabled.
+##    (auto or any of `Game.MANUAL_SLOTS`, newest wins) and is skipped over
+##    (not selectable) while disabled. Issue #78: a small caption under the
+##    menu previews what Continue will load (see `_refresh_continue_caption`)
+##    -- Continue's own load mechanics are unchanged (still direct, newest-
+##    wins, zero extra navigation); the interactive multi-slot PICKER lives
+##    in the pause menu's Save/Load rows instead (reachable in-game, where
+##    slot choice actually matters -- see pause_menu.gd).
 ##
 ## New Game calls Game.reset() and Continue calls Game.load_slot(...) only --
 ## both already emit "game_reset" / "game_loaded", which Main._on_domain_event()
@@ -87,6 +92,9 @@ var _continue_slot := ""
 var _root: Control
 var _gesture_label: Label
 var _notice_label: Label
+## Issue #78: the "autosave metadata line on Continue" caption -- see
+## `_refresh_continue_caption`.
+var _continue_caption_label: Label
 var _menu_root: VBoxContainer
 var _row_labels: Array[Label] = []
 ## Parallel to `_row_labels` (same index order) -- the chrome panel Control
@@ -517,14 +525,19 @@ func _skip_creation() -> bool:
 func _refresh_continue_state() -> void:
 	_continue_slot = _newest_save_slot()
 	_continue_enabled = not _continue_slot.is_empty()
+	_refresh_continue_caption()
 
 
-## Returns "auto" or "manual" (whichever save file was modified most recently),
-## or "" if neither exists.
+## Returns whichever of "auto"/`Game.MANUAL_SLOTS` was modified most
+## recently, or "" if none exist. Issue #78: widened from the old hardcoded
+## ["auto","manual"] pair to scan every manual slot, not just slot 1 -- a
+## player who only ever saves to "Slot 2" still gets picked up by Continue.
 func _newest_save_slot() -> String:
 	var best_slot := ""
 	var best_time := -1
-	for slot in ["auto", "manual"]:
+	var candidates: Array[String] = ["auto"]
+	candidates.append_array(Game.MANUAL_SLOTS)
+	for slot: String in candidates:
 		var path := "user://saves/%s.json" % slot
 		if FileAccess.file_exists(path):
 			var modified_time: int = FileAccess.get_modified_time(path)
@@ -532,6 +545,55 @@ func _newest_save_slot() -> String:
 				best_time = modified_time
 				best_slot = slot
 	return best_slot
+
+
+## Issue #78: "autosave metadata line on Continue" -- a small caption under
+## the menu showing WHAT Continue will load (name, top class+level, map),
+## read via `Game.slot_metadata` (a raw-file peek, never a live-sim read, so
+## this is safe to call every menu refresh). Continue's own MECHANICS are
+## unchanged (still a direct newest-wins load on Confirm/click, zero extra
+## navigation) -- this purely adds visibility into what that load will do.
+## Hidden whenever Continue itself is disabled (no readable save anywhere).
+func _refresh_continue_caption() -> void:
+	if _continue_caption_label == null:
+		_continue_caption_label = UIChrome.make_label("", "Small")
+		_continue_caption_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_continue_caption_label.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+		UIChrome.set_offsets(_continue_caption_label, -300.0, -92.0, 300.0, -68.0)
+		(_menu_root.get_parent() as Control).add_child(_continue_caption_label)
+	if not _continue_enabled:
+		_continue_caption_label.hide()
+		return
+	var meta := Game.slot_metadata(_continue_slot)
+	if meta.is_empty():
+		_continue_caption_label.hide()
+		return
+	# _first_sentence has no sentence terminator to find in this line (no
+	# periods), so it always falls through to its own word-boundary/char-
+	# budget cut -- exactly the truncation this caption needs, reused rather
+	# than duplicated (PLAYTEST_SUMMARY_CHAR_BUDGET=70, sized for THIS
+	# caption's own 600px-wide anchor, same margin-of-safety caveat as
+	# pause_menu.gd's SLOT_ROW_CHAR_BUDGET doc comment).
+	_continue_caption_label.text = _first_sentence(_format_slot_summary(meta))
+	_continue_caption_label.show()
+
+
+## "<name> — <TopClass> LvN — <Map>", the SAME shape pause_menu.gd's own
+## slot picker renders (kept as an independent copy per this codebase's
+## per-file component convention -- see e.g. `_class_display_name`
+## duplicated across files). Reuses `_display_fixture_name`'s underscore-
+## Title-Case transform for both the class id and the map id (verified
+## against every shipped class id's real classes.json display_name).
+func _format_slot_summary(meta: Dictionary) -> String:
+	var parts: Array[String] = [String(meta.get("pc_name", "Traveler"))]
+	var top_class := String(meta.get("top_class", ""))
+	if not top_class.is_empty():
+		parts.append("%s Lv%d" % [_display_fixture_name(top_class), int(meta.get("top_level", 0))])
+	var map_id := String(meta.get("map", ""))
+	if not map_id.is_empty():
+		parts.append(_display_fixture_name(map_id))
+	return " — ".join(parts)
+
 
 ## One-line feedback strip under the menu (e.g. incompatible-save notice).
 func _show_notice(text: String) -> void:
@@ -601,9 +663,11 @@ func _move_playtest_cursor(delta: int) -> void:
 ## NEVER "manual" -- installing over the manual slot would silently CLOBBER
 ## the user's own save, and the user is this feature's whole audience. The
 ## extra slot file is benign everywhere else (traced, not assumed):
-## `_newest_save_slot` scans only auto/manual, so Continue never offers it;
-## pause_menu's Load rows hardcode manual/auto; combat_screen's defeat path
-## hardcodes auto; nothing in src/ enumerates the saves dir. The first
+## `_newest_save_slot` scans only "auto" + `Game.MANUAL_SLOTS` (issue #78:
+## widened from a hardcoded auto/manual pair, but "playtest" was never a
+## member of either list, so it's STILL never offered); pause_menu's slot
+## picker iterates the SAME `Game.MANUAL_SLOTS` list; combat_screen's defeat
+## path hardcodes auto; nothing in src/ enumerates the saves dir. The first
 ## in-game autosave after booting a state writes "auto" as usual, which
 ## Continue then picks up. Failure (a bad hand-authored fixture rejected by
 ## WISave.apply) surfaces its own notice rather than riding

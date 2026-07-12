@@ -273,6 +273,22 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_pause_slot_row":
+			# Issue #78: the pause menu's Save/Load slot-picker row click --
+			# same lookup shape as `click_pause_row`, resolving PauseMenu's
+			# separate `slot_row_rect` (the picker's own rows, not ROWS).
+			var slot_row_n := int(step["row"])
+			var slot_pm := get_tree().root.find_child("PauseMenu", true, false)
+			if slot_pm == null:
+				_fail("click_pause_slot_row: PauseMenu node not found")
+			else:
+				var slot_rect: Rect2 = slot_pm.call("slot_row_rect", slot_row_n - 1)
+				if slot_rect.size == Vector2.ZERO:
+					_fail("click_pause_slot_row: row %d has no rendered rect" % slot_row_n)
+				else:
+					_inject_mouse_click(slot_rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"click_dialogue_option":
 			# Dialogue-option row click (issue #84): resolves the LIVE
 			# DialoguePanel node's own `option_rect`, same lookup shape as

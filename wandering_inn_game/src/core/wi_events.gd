@@ -264,6 +264,19 @@ const UI_INVENTORY_SELECTION_RENDERED := &"ui_inventory_selection_rendered"
 const UI_INVENTORY_HIDDEN := &"ui_inventory_hidden"
 const UI_PAUSE_SHOWN := &"ui_pause_shown"
 const UI_PAUSE_HIDDEN := &"ui_pause_hidden"
+## Issue #78: pause_menu.gd's/title_screen.gd's confirmation that a
+## save-slot picker (Save/Load at pause, Continue at title) opened. Payload
+## `{mode: "save"|"load"|"continue", slots: [{slot:String, exists:bool,
+## summary:String}, ...]}` -- `summary` is "Empty" for a slot with no save,
+## the same "<name> — <TopClass> LvN — <Map>" line the picker itself renders
+## (WISave.metadata()-derived, never a live sim read). Fired once per open
+## (the UI_PLAYTEST_LIST_RENDERED idiom), not on every cursor move.
+const UI_SLOT_PICKER_RENDERED := &"ui_slot_picker_rendered"
+## The picker closed WITHOUT necessarily closing its parent panel -- e.g.
+## Back/cancel from pause's Save picker returns to the main pause list
+## (`ui_pause_hidden` does NOT fire), while a slot selection closes the
+## whole pause menu too (both events fire, `ui_slot_picker_hidden` first).
+const UI_SLOT_PICKER_HIDDEN := &"ui_slot_picker_hidden"
 const UI_TITLE_RENDERED := &"ui_title_rendered"
 const UI_TITLE_GATE_RENDERED := &"ui_title_gate_rendered"
 const UI_TITLE_NOTICE_RENDERED := &"ui_title_notice_rendered"
@@ -362,6 +375,18 @@ const UI_GDI_OPENER_RENDERED := &"ui_gdi_opener_rendered"
 ## line count. The epilogue's completion banks `post_game` (its re-fire guard +
 ## the journal Act III completed beat), so this event never re-emits.
 const UI_GDI_EPILOGUE_RENDERED := &"ui_gdi_epilogue_rendered"
+## Issue #78: the veil's FOURTH mode -- the defeat interstitial. Emitted by
+## src/ui/sleep_veil.gd's play_defeat() once its "what happened / where you
+## are" lines are laid out, carrying {lines:int, map:String} where `map` is
+## the reloaded save's current_map (the same id UI_MAP_RENDERED carries) so
+## QA can assert WHICH location the orientation named without string-
+## matching the line text. Called by WIMain right after a defeat-reload's
+## fresh world spawns (Game.load_slot("auto", "defeat") ->
+## GAME_LOADED{reason:"defeat"} -> swap_to_world's defeat_reload arg) --
+## fires ONLY on that path, never on a voluntary Abandon/pause-Load/title-
+## Continue (see load_slot's own reason doc comment). Same QA/headless
+## collapse as every other veil mode (_is_qa()).
+const UI_DEFEAT_VEIL_RENDERED := &"ui_defeat_veil_rendered"
 ## Character creation: emitted by src/ui/char_creation.gd each time the
 ## creation screen (re)renders a step, carrying {step:String} where step is
 ## "pick" (the six-sprite grid) / "name" -- lets the char_creation QA script wait on the real
