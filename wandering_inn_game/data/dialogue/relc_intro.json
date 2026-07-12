@@ -6,6 +6,16 @@
    "text": "Oi. Hold up. Big spear, bored Drake, official business. That's me covered. You came off the inn hill. Name and errand.",
    "text_variants": [
     {
+     "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's hub consumer.",
+     "requires": {
+      "phase": [
+       "dusk",
+       "night"
+      ]
+     },
+     "text": "Dark road, same Drake. Goblins get bold once the sun's down — so do I."
+    },
+    {
      "requires": {
       "accomplishment": {
        "met_relc": 1

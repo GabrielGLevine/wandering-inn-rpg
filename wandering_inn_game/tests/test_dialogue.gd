@@ -502,6 +502,60 @@ func test_race_requires_on_option_stays_visible_locked() -> void:
 	assert(not d2.choose(0).is_empty(), "met race gate choosable")
 
 
+## Issue #80 (world reactivity wave): the phase-variant key, the race key's
+## own exact twin. text_variants gated on requires:{phase:["<id>",...]} render
+## differently per ctx phase, proven BOTH ways -- a met phase shows its OWN
+## variant, the OTHER phase's variant never leaks, and an untargeted phase
+## (day, when only dusk/night are authored) falls back to base text. Value
+## shape is an ARRAY (encounter_when/visual_states' own convention), not a
+## bare string like race -- also proves a variant naming BOTH dusk and night
+## renders for either.
+func test_phase_requires_gates_text_variants_both_ways() -> void:
+	_events.clear()
+	var graph := {"start": "hub", "nodes": {"hub": {
+		"speaker": "S",
+		"text": "base text",
+		"text_variants": [
+			{"requires": {"phase": ["dusk", "night"]}, "text": "dusk-or-night variant"},
+			{"requires": {"phase": ["night"]}, "text": "night-only variant"},
+		],
+		"options": [{"text": "leave", "end": true}],
+	}}}
+	var day := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "phase": "day"}, _sink)
+	day.begin()
+	assert(String(_events[0]["payload"]["text"]) == "base text", "an untargeted phase (day) falls back to base text -- neither variant matches")
+
+	_events.clear()
+	var dusk := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "phase": "dusk"}, _sink)
+	dusk.begin()
+	assert(String(_events[0]["payload"]["text"]) == "dusk-or-night variant", "requires:{phase:[dusk,night]} renders at dusk -- the multi-phase set matches")
+
+	_events.clear()
+	var night := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "phase": "night"}, _sink)
+	night.begin()
+	assert(String(_events[0]["payload"]["text"]) == "night-only variant", "at night the LATER-authored night-only variant wins over the earlier dusk-or-night variant (last match wins)")
+
+
+## The same key on an OPTION's requires: visible, locked when unmet,
+## choosable once met -- never hidden (phase is derived state, not progress,
+## same as race/skill/class's own precedent).
+func test_phase_requires_on_option_stays_visible_locked() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "night only", "requires": {"phase": ["night"]}, "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "phase": "day"}, Callable())
+	d.begin()
+	assert(d.current_options().size() == 2, "phase-gated option stays VISIBLE when unmet (not hidden -- phase is derived state, not progress)")
+	assert(bool(d.current_options()[0]["locked"]), "unmet phase gate locked")
+	assert(d.choose(0).is_empty(), "locked-via-phase choose refused")
+
+	var d2 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "phase": "night"}, Callable())
+	d2.begin()
+	assert(not bool(d2.current_options()[0]["locked"]), "met phase gate unlocked")
+	assert(not d2.choose(0).is_empty(), "met phase gate choosable")
+
+
 func _last_line_text() -> String:
 	for i in range(_events.size() - 1, -1, -1):
 		if String(_events[i]["type"]) == "dialogue_line":
@@ -660,6 +714,8 @@ func _init() -> void:
 	test_unrecognized_requires_key_stays_visible_and_locked()
 	test_race_requires_gates_text_variants_both_ways()
 	test_race_requires_on_option_stays_visible_locked()
+	test_phase_requires_gates_text_variants_both_ways()
+	test_phase_requires_on_option_stays_visible_locked()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)

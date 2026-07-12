@@ -7,6 +7,16 @@
    "text": "State your business and your sponsor.",
    "text_variants": [
     {
+     "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's hub consumer -- the Pallass region anchor. Inserted FIRST (lowest priority) so the race-variant lines below still win if both are met.",
+     "requires": {
+      "phase": [
+       "dusk",
+       "night"
+      ]
+     },
+     "text": "State your business. The tier doesn't sleep, and neither, apparently, do you."
+    },
+    {
      "_comment": "Race-variant line set: Human friction (Pallass reads Human presence as rare/noticed, per docs/design/city-identity-bible.md). PLACEHOLDER copy, D-phase replaces.",
      "requires": {
       "race": "human"

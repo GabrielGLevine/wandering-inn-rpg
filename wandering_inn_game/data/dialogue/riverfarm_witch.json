@@ -6,6 +6,7 @@
 			"speaker": "Eloise",
 			"text": "Sit. Tea first. Then we'll talk about whatever brought you all this way.",
 			"text_variants": [
+				{ "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's hub consumer.", "requires": { "phase": [ "dusk", "night" ] }, "text": "The craft listens better once the birds stop. Sit. Tea's still tea in the dark." },
 				{ "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "text": "You want the blight gone. I want what I'm owed. One of these is easy. Sit. Tea first. The craft has MANNERS." },
 				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "Paid, one way or another. I don't ask which. Sit if you like, or don't — I've got stock for coin now too, if that suits you better than favors." }
 			],

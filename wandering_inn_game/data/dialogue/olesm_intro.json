@@ -6,9 +6,11 @@
 			"speaker": "Olesm",
 			"text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?",
 			"text_variants": [
+				{ "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's hub consumer.", "requires": { "phase": [ "dusk", "night" ] }, "text": "Still counting, this late. Someone has to keep the ledger honest after the Council's gone to bed." },
 				{ "requires": { "class": { "tactician": 1 } }, "text": "Oh — hello. You have the look of someone who counts the exits on the way into a room. A [Tactician]? Truly? I so rarely get to talk shop. Sit, sit. Well. Stand. How can I help?" },
 				{ "requires": { "accomplishment": { "heard_olesm_briefing": 1 } }, "text": "Still up here? The gallery won't map itself, and I'd rather you were down there with a plan than up here with second thoughts. You have the map. Go." },
-				{ "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "text": "You climbed back out. I confess I ran the odds while you were down there and did not care for them. Tell me it's over. I have a column that badly wants a number in it." }
+				{ "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "text": "You climbed back out. I confess I ran the odds while you were down there and did not care for them. Tell me it's over. I have a column that badly wants a number in it." },
+				{ "_comment": "controller voice pass. Issue #80 (world reactivity wave, item 5 -- the news-travels line): seal_kept_report already closes the quest one-off; this is the PERSISTENT hub-greeting reaction (was missing -- only cleared_the_warren had one). Appended LAST (highest priority -- What the Seal Kept resolves chronologically after the raskghar warren).", "requires": { "accomplishment": { "seal_kept_reported": 1 } }, "text": "The gallery's sealed and the report is filed, which means my column finally has its number. I still don't care for a construct existing under my streets, but I care for it existing under control rather less badly. My thanks, again." }
 			],
 			"options": [
 				{ "text": "That board. You're playing yourself?", "goto": "chess" },

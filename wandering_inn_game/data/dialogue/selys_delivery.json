@@ -1,7 +1,10 @@
 {
 	"start": "hub",
 	"nodes": {
-		"hub": { "speaker": "Selys", "text": "Guild's closed for lunch. Unless you're here about the thing Erin won't stop signing her letters about?", "options": [
+		"hub": { "speaker": "Selys", "text": "Guild's closed for lunch. Unless you're here about the thing Erin won't stop signing her letters about?", "text_variants": [
+				{ "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's hub consumer.", "requires": { "phase": [ "dusk", "night" ] }, "text": "Guild's near closing. If you're here about paperwork, it can wait for daylight — I can't." },
+				{ "_comment": "controller voice pass. Issue #80 (world reactivity wave, item 5 -- the news-travels line): the quest's REPORT beat (cisterns_reported) is banked at Olesm's own hub, not here -- this is the CROSS-CHARACTER beat, Selys hearing it secondhand through the Guild's own paperwork once the case is fully closed, closing the 'deeds change nothing outside their quest bubble' gap. Appended LAST (highest priority -- a real report outranks the generic evening line above once both are met).", "requires": { "accomplishment": { "cisterns_reported": 1 } }, "text": "Heard the cisterns crawled with something. Heard it stopped crawling, too, and the file crossed my desk with your name on the referral. Don't let it go to your head — I still make you wait for good tea." }
+			], "options": [
 			{ "text": "Package for you, from Erin.", "requires": { "accomplishment": { "has_package": 1 } }, "hide_when": { "accomplishment": { "package_delivered": 1 } }, "effects": [ { "accomplishment": "package_delivered" } ], "goto": "delivered" },
 			{ "text": "Erin's package. I'll spare you the small talk. (Lyonette's advice)", "requires": { "accomplishment": { "lyonette_tip": 1 } }, "hide_when": { "accomplishment": { "package_delivered": 1 } }, "effects": [ { "accomplishment": "package_delivered" }, { "accomplishment": "selys_impressed" } ], "goto": "delivered_smooth" },
 			{ "text": "About that reward...", "requires": { "accomplishment": { "package_delivered": 1 } }, "hide_when": { "accomplishment": { "errand_decided": 1 } }, "goto": "delivered" },

@@ -1,5 +1,5 @@
 {
- "_comment": "(seed 9). Proves the phase clock + mood-grade wiring end-to-end: world_ready -> ui_mood_applied{inn,day} -> exactly 100 real actions (the dusk threshold, matching moods.json meta.phase_thresholds -- retuned 40->100) -> phase_changed{dusk} + ui_mood_applied{*,dusk} -> sleep at the bed -> phase_changed{day} + ui_mood_applied{inn,day}. No combat anywhere in the path (phase's PC-turn tick is proven by M7's own fold, not this script). Also proves the UI-ungraded claim: the journal opens/closes at the identity day grade with no visible interference (windowed screenshot is the real evidence -- see task-b1-report.md).",
+ "_comment": "(seed 9). Proves the phase clock + mood-grade wiring end-to-end: world_ready -> ui_mood_applied{inn,day} -> exactly 100 real actions (the dusk threshold, matching moods.json meta.phase_thresholds -- retuned 40->100) -> phase_changed{dusk} + ui_mood_applied{*,dusk} -> sleep at the bed -> phase_changed{day} + ui_mood_applied{inn,day}. No combat anywhere in the path (phase's PC-turn tick is proven by M7's own fold, not this script). Also proves the UI-ungraded claim: the journal opens/closes at the identity day grade with no visible interference (windowed screenshot is the real evidence -- see task-b1-report.md). Issue #80 (world reactivity wave) EXTENSION: the dusk crossing now also proves the ctx `phase` key's first dialogue consumer (Erin's dusk/night text_variant, live) before continuing on to a real NIGHT crossing and hungry_patron's `present_when` flip -- ABSENT at night (both sim-side, a real successful walk onto his now-open cell, and render-side, `ui_entities_rendered`'s inn sprite count dropping 16->15), PRESENT again once the sleep beat resets to day (both proofs reversed). No new fixture; still the same continuous day->dusk->night->day run.",
  "steps": [
   {
    "action": "wait_for_event",
@@ -31,6 +31,15 @@
    "payload_contains": {
     "map": "inn",
     "emitters": 1
+   }
+  },
+  {
+   "_comment": "Baseline entity count at day, before hungry_patron's present_when gate can ever refuse him -- 16 sprites/0 fallbacks, the SAME baseline inn_walkthrough pins. The night leg below diffs against this exact number.",
+   "action": "assert_event_logged",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 16,
+    "fallbacks": 0
    }
   },
   {
@@ -211,6 +220,286 @@
    "name": "01_dusk"
   },
   {
+   "_comment": "Issue #80 item 1's own live proof: the ctx `phase` key -> WIDialogue._meets's `phase` gate -> Erin's hub text_variant, at DUSK (inn_walkthrough's own bump-and-interact idiom, byte-identical fresh state: no has_package/cleaned_the_inn/errand_decided banked yet, so this is a pure phase-only read). (2,3) -> right5 -> (7,3) -> bump up (blocked, faces Erin at (7,2), zero-cost).",
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "First talk this waking absorbs Erin's rotating talk_pool line (unrelated to phase) before the graph opens.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Erin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "erin_errand"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE PHASE-GATED LINE PROOF: at dusk, Erin's hub renders the NEW requires:{phase:[dusk,night]} text_variant, not the base greeting -- dialogue.gd's `_meets` phase arm reading WIGame._build_dialogue_ctx's live `phase` key.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Erin",
+    "text": "Kitchen's slowing down for the night, but the door's not locked on you. Sit, stay warm, and don't let the wind convince you the walk back is a good idea."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Close out via the ungated exit. Fresh classless state carries basic_cleaning innately (inn_walkthrough's own later press_field_skill proves it's held from boot), so the hub's visible list is [0 take the package, 1 clean the table (skill, unlocked), 2 'Just passing through.'] -- move down 2, confirm picks the harmless exit (inn_walkthrough's own exact idiom, same fresh state).",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "_comment": "Continue on to a REAL night crossing (night_at=450). 13 more round trips of the same zero-net row y=3 walk (260 actions) -- comfortably clears 450 from wherever the Erin interlude left actions_since_sleep (movement/interact tick it, dialogue cursor navigation/confirm do not -- world.gd's _movement_gated() routes ALL input to the dialogue panel while Game.sim.dialogue != null, so the down/down/confirm sequence above cost nothing). Net displacement zero either way, so player_cell/actions_since_sleep stay predictable without needing the exact intermediate count.",
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "night"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "phase": "night"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01c_night"
+  },
+  {
+   "_comment": "THE PRESENCE FLIP, absent half (issue #80 item 3): hungry_patron carries present_when{phase:[day,dusk]}, so at night WIGame.entity_present(hungry_patron) reads false. Teleport to (5,5) (directly above his cell, open ground at every phase) -- transition() emits MAP_CHANGED unconditionally even for a same-map teleport, forcing world.gd's _rebuild_field to re-resolve entity_present for every entity, so ui_entities_rendered's inn count is the FIRST proof: 16 -> 15 (RENDER-side sync, not just a live sim read).",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    5,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 15,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The SIM-side proof, and the stronger one: hungry_patron's cell (5,6) is normally occupancy-blocked (entity_present gates is_cell_blocked) -- at night the move SUCCEEDS, landing the player ON his former cell. This is genuine structural absence (present_when's own contract), not merely a hidden sprite you could still walk into or talk to (visual_states' hidden -- deliberately NOT used here, see WIGame.entity_present's own doc comment).",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    6
+   ]
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     5,
+     6
+    ]
+   }
+  },
+  {
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the specific bed is incidental to this test -- the subject is the unconditional actions_since_sleep reset to 0 + phase_changed firing even day->day (M7 doc comment). Then interact triggers sleep(), and a return teleport to the inn re-renders the inn's own day mood grade so the ui_mood_applied{map:inn,phase:day} wait below still observes it.",
    "action": "teleport",
    "map": "inn_upstairs",
@@ -266,6 +555,47 @@
   {
    "action": "screenshot",
    "name": "02_after_sleep_day"
+  },
+  {
+   "_comment": "THE PRESENCE FLIP, present half (issue #80 item 3): sleep resets the phase clock to day, so hungry_patron's present_when gate is met again -- both proofs run in reverse. Teleport to (5,5) again (forces a fresh rebuild via the same same-map-teleport MAP_CHANGED mechanism).",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    5,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 16,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    5
+   ]
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     5,
+     6
+    ]
+   }
   }
  ]
 }

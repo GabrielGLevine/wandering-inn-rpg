@@ -337,6 +337,24 @@ func _meets(req: Dictionary) -> bool:
 		recognized = true
 		if String(_ctx.get("pc_race", "")) != String(req["race"]):
 			return false
+	if req.has("phase"):
+		# The EIGHTH sanctioned gate type -- read-only DERIVED
+		# state (WIGame.phase(), the same day/dusk/night clock
+		# encounter_when/visual_states already gate on), not progress. Issue
+		# #80 (world reactivity wave). Value shape mirrors
+		# encounter_when/visual_states' own `{"phase": [<phase strings>]}`
+		# array-membership convention (a variant author can gate on "dusk or
+		# night" in one entry), NOT race's single-string equality -- one
+		# shape for the phase family across the whole codebase. Deliberately
+		# NOT added to _progress_gated: a phase-gated OPTION stays
+		# VISIBLE-LOCKED like skill/class/race, never hidden -- there is no
+		# "progress" toward a later hour, so hiding would read as a content
+		# bug, not a tease. Shipped only on text_variants today (majors'
+		# dusk/night line pass); an OPTION gated on phase would work
+		# identically through this same arm if content ever needs one.
+		recognized = true
+		if not (req["phase"] as Array).has(String(_ctx.get("phase", ""))):
+			return false
 	return recognized
 
 
@@ -354,6 +372,8 @@ func _requirement_text(req: Dictionary) -> String:
 		return "requires %s" % String(items.get(String(req["item"]), {}).get("name", String(req["item"])))
 	if req.has("race"):
 		return "requires being %s" % String(req["race"])
+	if req.has("phase"):
+		return "requires the right time of day"
 	return "requires more progress"
 
 

@@ -6,6 +6,7 @@
 			"speaker": "Zevara",
 			"text": "Watch Captain Zevara. If this is a report, keep it short; if it's a complaint, keep it shorter. I've been on since before the gate opened and I'll be on after it shuts.",
 			"text_variants": [
+				{ "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's hub consumer.", "requires": { "phase": [ "dusk", "night" ] }, "text": "Gate doesn't close at dusk. Neither do I. Say your business and let one of us get some sleep eventually." },
 				{ "requires": { "accomplishment": { "resolved_the_cisterns": 1 } }, "text": "The thing under the market. I hear it's handled. Good. I sleep worse than you'd think over not knowing what's beneath my own streets. However you settled it, the Watch owes you a quiet night. Don't tell the others I said so." },
 				{ "requires": { "accomplishment": { "heard_the_deep_tremor": 1 } }, "text": "Still here? The hole in the ground isn't getting shallower. Take Olesm's map and take the spearmaster, and go find out what dug tunnels under my city." },
 				{ "requires": { "accomplishment": { "raskghar_sealed": 1 } }, "text": "The one who went down the tunnels and climbed back out. The gallery's bricked and the streets are quiet. I've a report with your name on it that I'll deny writing. Rest. You've earned a boring week. Take it before the next one." }

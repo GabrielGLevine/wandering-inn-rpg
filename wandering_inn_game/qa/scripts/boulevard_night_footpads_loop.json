@@ -1,0 +1,99 @@
+{
+ "_comment": "Issue #80 (world reactivity wave, item 4): the night-only canonical for `boulevard_night_footpads` (invrisil_boulevard), the river_wolf_pack precedent's third application. Loads boulevard_night_footpads_start (the full Act-III/awakening/Riverfarm/Invrisil backbone, T3 spellsword9 gear, invrisil_boulevard (13,13), actions_since_sleep already past night_at). Proves the chain live: phase()==night from load, encounter_when reads it, one real move into trigger_radius 1 fires start_combat for real (no interact -- boulevard has zero other encounters, so this is the first combat_started of the run), the fight resolves to a win (footpad_lookout/footpad_bruiser -- the SAME roster alley_footpads_a/b already field, this time at the region's own T3 tier, solo -- nobody's fielded on the open boulevard at night), and on_victory banks won_combat.",
+ "fixture_save": "boulevard_night_footpads_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Title's default row is New Game -- move down 1 to Continue (crab_cull_loop.json's own idiom), which loads the fixture-seeded manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "_comment": "(13,13) -> (13,14): Chebyshev distance to boulevard_night_footpads' own cell (13,15) drops from 2 to 1, inside trigger_radius 1 -- start_combat fires on this single successful move.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "won_combat"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  }
+ ]
+}

@@ -6,6 +6,16 @@
    "text": "Hrr. My crate. Gone from the storeroom three nights past. Sewers, I think. Scavengers do not knock first.",
    "text_variants": [
     {
+     "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's hub consumer.",
+     "requires": {
+      "phase": [
+       "dusk",
+       "night"
+      ]
+     },
+     "text": "Stall closes with the light. Come back at a decent hour, or knock loud enough I know it is not the wind."
+    },
+    {
      "requires": {
       "accomplishment": {
        "asked_about_crate": 1

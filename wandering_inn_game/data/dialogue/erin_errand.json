@@ -2,9 +2,11 @@
 	"start": "hub",
 	"nodes": {
 		"hub": { "speaker": "Erin", "text": "Oh good, someone with working legs! I've got a package for Selys at the Guild - mind running it over? Also the common room is a disaster, don't look at it.", "text_variants": [
+			{ "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's first hub consumer. Inserted FIRST (lowest narrative priority -- any progress-based variant below still wins at night, 'later match wins').", "requires": { "phase": [ "dusk", "night" ] }, "text": "Kitchen's slowing down for the night, but the door's not locked on you. Sit, stay warm, and don't let the wind convince you the walk back is a good idea." },
 			{ "requires": { "accomplishment": { "has_package": 1 } }, "text": "Selys is still waiting on that package, you know." },
 			{ "requires": { "accomplishment": { "errand_decided": 1 } }, "text": "Back already? The inn feels almost manageable since you sorted that delivery. Almost." },
-			{ "requires": { "accomplishment": { "won_combat": 1 } }, "text": "I know what the road is like. I'm not asking you to un-fight anything. I'm asking you to knock first at the idea that they're all the same. Sign stays up." }
+			{ "requires": { "accomplishment": { "won_combat": 1 } }, "text": "I know what the road is like. I'm not asking you to un-fight anything. I'm asking you to knock first at the idea that they're all the same. Sign stays up." },
+			{ "_comment": "controller voice pass. Issue #80 (world reactivity wave, item 5 -- the news-travels line): krshia_crate.json already reacts to resolved_wrong_order on Krshia's own side; this is Erin's OWN post-quest reaction on her own hub, the missing half. Appended LAST (highest priority).", "requires": { "accomplishment": { "wrong_order_reported": 1 } }, "text": "The order came in full, no thanks to whatever almost happened to it. Lyonette hasn't stopped humming since. Don't tell her I noticed." }
 		], "options": [
 			{ "text": "I'll take the package.", "hide_when": { "accomplishment": { "has_package": 1 } }, "effects": [ { "quest": "the_errand" }, { "accomplishment": "has_package" } ], "goto": "package" },
 			{ "text": "Let me deal with that table. ([Basic Cleaning])", "requires": { "skill": "basic_cleaning" }, "hide_when": { "accomplishment": { "cleaned_the_inn": 1 } }, "goto": "cleaning_directions" },
