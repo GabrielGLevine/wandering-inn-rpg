@@ -29,15 +29,18 @@ before/after `has_package`/`errand_decided`).
 ## `requires` / `hide_when` — ONE gate key (one sanctioned exception)
 `{"skill":"<id>"}` | `{"class":{"<id>":<level>}}` | `{"accomplishment":{"<id>":<count>}}`.
 `_meets` checks skill, then class, then accomplishment, returning on the
-first key present — **never combine two gate types in one dict** — EXCEPT the ONE sanctioned
-compound (Social II, 2026-07-07): `{gold, accomplishment}` on a shop-perk
-buy option, where the accomplishment leg HIDES until met and the gold leg
-greys-visible after (a broke player must never buy on credit; a pre-stage
-player must never see the perk). `_meets` evaluates a compound as AND;
-`_requirement_text` shows only the gold reason (correct: the
-accomplishment case is hidden, never locked). `test_content.gd`'s
-`_validate_requires` asserts one gate key OR exactly this pair — any
-other combination fails content validation.
+first key present — **never combine two gate types in one dict** — EXCEPT
+the FIVE sanctioned compounds (`test_content.gd`'s `_validate_requires`
+whitelists exactly these; anything else fails validation):
+`{gold, accomplishment}` (shop-perk buy: accomplishment leg HIDES until
+met, gold leg greys-visible after — a broke player never buys on credit,
+a pre-stage player never sees the perk), `{accomplishment,
+once_per_waking}`, `{accomplishment, class}` (kept sanctioned, currently
+no live user post-GH#64), `{once_per_waking, item}`, and
+`{accomplishment, skill}` (GH#64 — the common persuade-fork shape:
+stage-gated on the quest being open AND Skill-gated). `_meets` evaluates
+a compound as AND; `_requirement_text` shows the visible-locked reason
+only (hidden legs never render a reason).
 
 ## THE GATING SPLIT (playtest policy, M4)
 - `requires.accomplishment` options are **HIDDEN** until met — progress
@@ -49,6 +52,35 @@ other combination fails content validation.
   unrelated class gate reads as arbitrary. `goblin_parley.json`'s
   `{"class":{"warrior":1}}` intimidate line is an accepted in-fiction
   exception.
+
+## SKILL-GATES OVER CLASS-GATES (user policy 2026-07-11, GH#64)
+Gate persuade options behind a CLASS-ASSOCIATED SKILL, never the bare
+class, whenever a shipped Skill fits the social intent — `[Charming
+Smile]`/`[Calming Touch]` (Diplomat's own L1 grants) beat `(Diplomat)`
+for the same reason the verb-label policy exists: a bracket names a
+real, usable thing. Keep `requires.class` ONLY when no shipped Skill
+embodies the intent. Two accepted survivor shapes: (1) class-identity
+recognition — an NPC greeting/text_variant reacting to the PC BEING a
+class (Olesm's "you have the look of a Tactician"; Lyonette's held-a-
+line read at Warrior 2) — no Skill represents membership itself;
+(2) reputation/intimidation with no matching Skill in any shipped kit
+(`goblin_parley`'s Warrior threat — every Warrior grant is a mechanical
+combat effect). Flag every survivor with an in-file `_comment` reason.
+GRANT-LEVEL COUPLING TRAP: parity with the old class gates holds
+because these skills are granted at their class's L1 — moving a
+dialogue-gated skill's grant level in classes.json silently tightens
+every gate on it; re-check dialogue gates before any such rebalance
+(mirrored in wi-adding-a-class-or-skill).
+
+## ANTI-AUTO-WIN (finding 18, GH#64)
+A Skill-gated persuade must SKIP FRICTION, never the quest's SUBSTANCE.
+Before shipping any gate, trace the payoff: does the option resolve the
+whole quest in one click, or land on the quest's real middle beat?
+The witch mediation chain (hub → mediate_pitch → mediate_argue, report
+beat still pending) is the model — the Skill gets you INTO the
+negotiation; the negotiation still resolves; the report still follows.
+Multi-node persuade chains (pitch → argue → close) are the shipped
+idiom for a gate that feels earned inside the conversation itself.
 
 ## EVERY QUEST PATH PAYS A REAL COST (user ruling 2026-07-10, GH#50)
 A fork path with no Skill gate, gold cost, combat risk, or exploration

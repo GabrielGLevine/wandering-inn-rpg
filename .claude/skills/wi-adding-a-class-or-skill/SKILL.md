@@ -26,6 +26,14 @@ hand-roll leveling math elsewhere.
 its threshold; empty `requires_any` is never met (free-level guard). No
 key = unconditionally met.
 
+**DIALOGUE-GATE COUPLING TRAP (GH#64):** dialogue persuade options gate
+on `requires.skill` (charming_smile / calming_touch / observe today, all
+L1 grants). Moving a dialogue-gated skill's grant to a higher level
+silently tightens every conversation gate on it — before rebalancing any
+grant level, grep `data/dialogue/**` + `skeleton_scene.json` for
+`"skill":"<id>"` and re-adjudicate each gate (see
+wi-adding-dialogue-and-quests' SKILL-GATES section).
+
 ## `skills.json` record
 `id`/`display_name` (bracketed canon voice, `"[Power Strike]"`);
 `contexts` (`combat`/`exploration` — non-combat skills omit `ap_cost`/
