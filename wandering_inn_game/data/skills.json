@@ -592,6 +592,25 @@
 			"element": "fire",
 			"effect": { "type": "spell_damage", "range": 4 },
 			"description": "A guttering mote of flame flung hard and fast, spent before it can gutter out."
+		},
+		{
+			"_comment": "Class-foundation pass R4 (2026-07-12): [Innkeeper]'s L14 grant. Field-only (no `ap_cost`/`effect` -- this is by design, not an omission: the skill's REAL mechanical hook is a small wage bump wired directly at the ONE existing renewable-wage resolution site, src/core/wi_game.gd's interact()-level `once_per_waking` gold branch -- `known_skills().has('perfect_hospitality')` adds +1 gold to any once_per_waking wage prop (serving_tray today; any future one gets it for free), NEVER a one-shot discovery prop like frozen_cache (which carries no once_per_waking key and never reaches that branch). Reuses the EXISTING `_apply_gold_effect` router -- no new economy mechanism, the smallest wiring the plan asked for. CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect/P), no match for a bare hospitality-themed Skill. Iconless.",
+			"id": "perfect_hospitality",
+			"display_name": "[Perfect Hospitality]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Perfect Hospitality] — You straighten a chair, smooth a cloth, ready the room out of habit. There's no one here to welcome yet.",
+			"description": "Every guest finds exactly the welcome they didn't know they needed -- a warm room, a full glass, a seat that was somehow already theirs."
+		},
+		{
+			"_comment": "Class-foundation pass R4 (2026-07-12): [Ranger]'s L14 grant, the one genuinely new skill (dangersense is re-listed alongside it but structurally guaranteed already -- see the class's own _comment). MECHANICAL SUBSTITUTION, disclosed: the plan's own framing was 'bow damage_mult passive ~1.15', but `damage_mult` has NO PASSIVE shape in this catalog -- skill_effects.gd's own doc comment is explicit that `resolve_active`'s damage_mult case is ACTIVE-CAST-ONLY (spends AP via `spend_skill_costs`, requires a target); a 0-ap_cost damage_mult would let a player re-cast it for free unlimited times per turn, a real exploit, not a passive. `hit_bonus` (basic_swordwork's own type) is the nearest EXISTING passive currency -- genuinely a better thematic fit besides: 'steady' reads as precision/control, not raw power, so a to-hit bonus is arguably the more honest translation of the name, not just the mechanically-forced one. `weapon: bow` gates it through the SAME `weapon_gated_kit` filter every other weapon-tagged skill already uses, so it only ever contributes with a bow equipped -- the 'bow passive' framing holds exactly. CANON-VERDICT: family-attested -- no exact '[Steady Draw]' hit, but the '[Steady ___]' grammar IS attested ([Steady Feet]/[Steady Ground]/[Steady Hands]/[Steady Hooves]/[Steady Rhythm]/[Steady the Ship]), the SAME [Stealth]-precedent reasoning (an attested family, generalized to a new object). Iconless.",
+			"id": "steady_draw",
+			"display_name": "[Steady Draw]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"weapon": "bow",
+			"effect": { "type": "hit_bonus", "amount": 8 },
+			"description": "A drawn bow that never wavers -- the shot goes exactly where it was always going to."
 		}
 	]
 }

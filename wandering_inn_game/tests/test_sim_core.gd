@@ -2874,5 +2874,43 @@ func _init() -> void:
 	assert(_last_dialogue_text() == "I don't ask twice.", "the echo advances to the witch's NEW current line (index 1), un-driftable by construction")
 	assert(gEcho.accomplishment_count("chatted_with_echo_villager") == 2, "the villager's own dedup counter still advances independently")
 
+	# --- [Perfect Hospitality] wage bump (class-foundation pass R4,
+	# 2026-07-12): the interact()-level +1 gold hook on serving_tray's own
+	# once_per_waking wage (src/core/wi_game.gd), scoped to that renewable-
+	# wage shape only -- proves the WIRING, not just that the skill exists
+	# (the CLAUDE.md Gotchas rule: a test calling the mutation directly
+	# doesn't prove the real trigger calls it). Real skeleton_scene.json so
+	# serving_tray (inn, cell (10,2)) is a live entity. ---
+	var g_wage_base := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_wage_base.player_cell = Vector2i(10, 1)
+	g_wage_base.player_facing = Vector2i.DOWN
+	var gold_before_base := g_wage_base.gold
+	g_wage_base.interact()
+	assert(g_wage_base.gold == gold_before_base + 1, "serving_tray pays its base +1 gold wage without [Perfect Hospitality]")
+
+	var g_wage_hosp := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_wage_hosp.player_skills = ["perfect_hospitality"]
+	g_wage_hosp.player_cell = Vector2i(10, 1)
+	g_wage_hosp.player_facing = Vector2i.DOWN
+	var gold_before_hosp := g_wage_hosp.gold
+	g_wage_hosp.interact()
+	assert(g_wage_hosp.gold == gold_before_hosp + 2, "[Perfect Hospitality] bumps the SAME wage to +2 gold (the interact()-level hook)")
+
+	# A one-shot discovery prop (frozen_cache, floodplains -- no
+	# once_per_waking key) must NEVER be bumped -- the hook is scoped to
+	# renewable wage props only, not every on_interact_accomplishment prop
+	# that happens to carry a `gold` field.
+	var g_wage_cache := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_wage_cache.player_skills = ["perfect_hospitality"]
+	g_wage_cache.transition("floodplains", Vector2i(2, 3))
+	var cache_entity := g_wage_cache.find_entity("frozen_cache")
+	assert(not cache_entity.is_empty(), "frozen_cache exists on floodplains")
+	var cache_cell: Vector2i = cache_entity[WIKeys.CELL]
+	g_wage_cache.player_cell = cache_cell + Vector2i.DOWN
+	g_wage_cache.player_facing = Vector2i.UP
+	var gold_before_cache := g_wage_cache.gold
+	g_wage_cache.interact()
+	assert(g_wage_cache.gold == gold_before_cache + 5, "frozen_cache's one-shot 5g find is UNCHANGED by [Perfect Hospitality] -- the hook never reaches a non-once_per_waking prop")
+
 	print("PASS: sim core behaves correctly")
 	quit(0)

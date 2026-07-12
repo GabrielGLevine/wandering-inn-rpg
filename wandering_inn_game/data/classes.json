@@ -13,6 +13,28 @@
 			],
 			"min_parent_level": 10,
 			"min_combined_level": 21
+		},
+		{
+			"_comment": "Class-foundation pass R4 (2026-07-12): [Innkeeper] (helper + diplomat) -- the game's own heart. SAME gate shape as [Spellsword] (min_parent_level 10, min_combined_level 21, the R3-pinned values) -- new consolidations follow the SAME requires_any-parent-counter contract, not a bespoke gate. parent_lines follow the ⟦I7⟧ lineage convention (base id first, then evolution targets in canon order) exactly like spellsword's own warrior/mage lines.",
+			"id": "innkeeper",
+			"target": "innkeeper",
+			"parent_lines": [
+				["helper", "barmaid", "server"],
+				["diplomat", "emissary"]
+			],
+			"min_parent_level": 10,
+			"min_combined_level": 21
+		},
+		{
+			"_comment": "Class-foundation pass R4 (2026-07-12): [Ranger] (warrior + archer) -- wilderness canon. SAME gate shape as [Spellsword]/[Innkeeper] (min_parent_level 10, min_combined_level 21).",
+			"id": "ranger",
+			"target": "ranger",
+			"parent_lines": [
+				["warrior", "swordsman", "spearmaster"],
+				["archer", "sharpshooter"]
+			],
+			"min_parent_level": 10,
+			"min_combined_level": 21
 		}
 	],
 	"classes": [
@@ -185,6 +207,18 @@
 			]
 		},
 		{
+			"_comment": "Class-foundation pass R4 (2026-07-12): [Innkeeper] -- SPARSE TABLE (GH#54 convention), consolidation-only (never gained_by), the SAME shape as [Spellsword]. Floor derivation at the SAME thresholds (min_parent_level 10, min_combined_level 21): s_min=max(21,20)=21; level_a=10,level_b=11; merged=max(ceil(2*21/3),max(10,11))=max(14,11)=14. Floor=14. TOP-END: helper line ceiling = max(helper:10, barmaid:12, server:12) = 12; diplomat line ceiling = max(diplomat:10, emissary:10) = 10 (both post-R1 tables); merged_ceiling = max(ceil(2*22/3), max(12,10)) = max(15,12) = 15 -- table must reach 15, entries 14-15 below. CANON-VERDICT 2026-07-12: [Innkeeper] STRONGLY ATTESTED -- Erin Solstice's own starting class ('obtained the [Innkeeper] class after cleaning up an abandoned inn', wiki), exactly matching this pass's own framing ('the game's own heart'). `aspiration` [Magical Innkeeper] is also wiki-attested (Innkeeper's own real evolution chain: '[Innkeeper] can evolve into [Magical Innkeeper]'). `inherits` folds BOTH parents' full kits automatically (the spellsword precedent) -- L14's own grants list carries only the ONE new skill, `perfect_hospitality`. requires_any thresholds continue each parent's own curve (served_customer from helper's line, heard_gossip from diplomat's line -- hand-authored headroom past their own L10/L12 ceilings, the spellsword L9-16 precedent's own disclosed non-formulaic convention). stat_growth picks ONE representative stat per parent line (con from helper, int from diplomat), mirroring spellsword's own str-from-warrior/int-from-mage pick.",
+			"id": "innkeeper",
+			"display_name": "Innkeeper",
+			"stat_growth": { "con": 1, "int": 1 },
+			"inherits": ["helper", "diplomat"],
+			"aspiration": { "display_name": "Magical Innkeeper", "text": "An [Innkeeper] who learns to weave magic into the hearth and the welcome itself is, in time, named a [Magical Innkeeper]." },
+			"levels": [
+				{ "level": 14, "requires_any": { "served_customer": 70, "heard_gossip": 75 }, "grants": ["perfect_hospitality"] },
+				{ "level": 15, "requires_any": { "served_customer": 85, "heard_gossip": 90 }, "grants": [] }
+			]
+		},
+		{
 			"_comment": "Class-foundation pass R1 (#93/#95/#96, 2026-07-12): the stagnant trio's ladder -- Tactician was a dead-end (no evolution block, no grants past L1) despite `observed_things` already climbing to L12. `aspiration` (flavor-only, no mechanism) is REMOVED here because [Strategist] is now a REAL evolution target below, not a distant aspiration -- its own further aspiration ([Grandmaster Strategist], wiki-attested) moved onto the new `strategist` entry instead. L3 reuses the ALREADY-SHIPPED `dangersense` (warrior L5's own grant -- multiple classes granting the same skill id is precedented, e.g. `quick_movement` on both warrior L3 and helper L5): canon-fit (a Tactician who reads the field reads danger too), zero new content. L5/L7 are the two NEW grants (`directed_strike`/`flanking_step`, both WIEffectText-expressible -- see skills.json). Evolution: SINGLE-AXIS Replacement (`targets` carries exactly one key, `observed_things` -- the class's OWN leveling counter), deliberately NOT a multi-key fork: two keys mapping to the SAME target class would make `dominance_share`'s tie/under-60%-share math a spurious block (both keys resolve to the identical outcome regardless of split), the exact reachability-trap class this whole pass exists to close (#96). Mirrors archer/sharpshooter's own 'single-path Replacement, not a fork' precedent (see that class's own `_comment`) -- `min_uses` (12) clears trivially since `observed_things`'s own L10 threshold (55) is already far past it.",
 			"id": "tactician",
 			"display_name": "Tactician",
@@ -333,6 +367,19 @@
 				{ "level": 10, "requires": { "ranged_hit": 57 }, "grants": ["called_shot"] },
 				{ "level": 11, "requires": { "ranged_hit": 68 }, "grants": [] },
 				{ "level": 12, "requires": { "ranged_hit": 80 }, "grants": ["piercing_volley"] }
+			]
+		},
+		{
+			"_comment": "Class-foundation pass R4 (2026-07-12): [Ranger] (warrior + archer) -- SPARSE TABLE (GH#54 convention), consolidation-only, the SAME shape as [Spellsword]/[Innkeeper]. Floor=14 (identical derivation, same thresholds -- see spellsword's own _comment for the walked formula). TOP-END: warrior line ceiling = max(warrior:12, swordsman:12, spearmaster:12) = 12; archer line ceiling = max(archer:10, sharpshooter:12) = 12 (post-R1 table); merged_ceiling = max(ceil(2*24/3), max(12,12)) = max(16,12) = 16 -- table must reach 16, entries 14-16 below. CANON-VERDICT 2026-07-12: [Ranger] ATTESTED (wiki List_of_Classes/R -- holders Foliana/Quietstab), DISCLOSED MISMATCH: the wiki's own canon lineage reads '[Ranger], Specialized [Rogue]' -- NOT a Warrior+Archer hybrid. This game's mechanical parentage (warrior+archer, the wilderness melee-and-bow fighter fantasy) is a deliberate design choice diverging from that specific lineage, the SAME invented-but-canon-grounded-name convention already applied to archer->sharpshooter/tactician->strategist (the class NAME is real and attested; the specific EVOLUTION/CONSOLIDATION LINK is this game's own construction, disclosed rather than silently assumed canon). `aspiration` [Ranger of the Woods] is also wiki-attested (a real specialized Ranger variant). `dangersense` is re-listed in L14's grants for completeness/documentation even though it is STRUCTURALLY ALREADY GUARANTEED by this point -- every real Ranger's warrior-line parent has already passed level 5 (warrior's own dangersense grant) by the time min_parent_level (10) is met, so `granted_skills`' existing id-dedup (`out.has()`) makes this a guaranteed no-op in practice, matching the plan's own 'if unowned' framing without needing a new conditional-grant mechanism. `steady_draw` is the one genuinely NEW grant -- see its own skills.json _comment for why it reads `hit_bonus`, not `damage_mult` (the plan's literal framing has no PASSIVE shape in this sim's effect catalog; damage_mult is active-cast-only). requires_any thresholds continue melee_hit (warrior's own curve, IDENTICAL to spellsword's L14-16 values -- literally the same counter/source) and ranged_hit (archer's own curve, hand-continued past its L10 ceiling of 57). stat_growth picks ONE representative stat per parent line (str from warrior, dex from archer).",
+			"id": "ranger",
+			"display_name": "Ranger",
+			"stat_growth": { "str": 1, "dex": 1 },
+			"inherits": ["warrior", "archer"],
+			"aspiration": { "display_name": "Ranger of the Woods", "text": "Some who walk the wild longest are, in time, named [Ranger of the Woods] -- the wood answers them before it answers anyone else." },
+			"levels": [
+				{ "level": 14, "requires_any": { "melee_hit": 105, "ranged_hit": 80 }, "grants": ["dangersense", "steady_draw"] },
+				{ "level": 15, "requires_any": { "melee_hit": 119, "ranged_hit": 95 }, "grants": [] },
+				{ "level": 16, "requires_any": { "melee_hit": 134, "ranged_hit": 110 }, "grants": [] }
 			]
 		}
 	]

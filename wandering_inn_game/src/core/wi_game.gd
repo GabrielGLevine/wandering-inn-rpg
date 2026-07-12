@@ -958,7 +958,22 @@ func interact() -> Dictionary:
 				# is a renewable daily wage, matching patron_serving.json's
 				# `served_customer` Serve wage, not a one-time discovery).
 				if int(resolved.get("gold", 0)) != 0:
-					_apply_gold_effect(int(resolved["gold"]), String(target[WIKeys.ID]))
+					var wage := int(resolved["gold"])
+					# [Perfect Hospitality] (Innkeeper consolidation,
+					# class-foundation pass R4, 2026-07-12): the smallest honest
+					# hook into the inn's own wage economy -- scoped to the
+					# SAME `once_per_waking` renewable-wage props this branch
+					# already dedups above (serving_tray today; any future
+					# once_per_waking wage prop gets the same bump for free),
+					# never a one-shot discovery prop like frozen_cache (which
+					# carries no `once_per_waking` key and never reaches this
+					# gate). +1 gold per renewable wage tap, reusing the SAME
+					# `_apply_gold_effect` router -- no new economy mechanism.
+					# Absent the skill (every PC without [Perfect Hospitality]),
+					# byte-identical.
+					if bool(target.get("once_per_waking", false)) and known_skills().has("perfect_hospitality"):
+						wage += 1
+					_apply_gold_effect(wage, String(target[WIKeys.ID]))
 				return {"accomplishment": accomplishment_id}
 			# RULING (2026-07-10, repeals the interact/hotbar byte-parity
 			# contract): generic interact NEVER auto-casts a prop's required

@@ -245,6 +245,15 @@ const EXPECTED_SKILLS := {
 	# doesn't) -- die is the caster's own weapon_die per _caster_weapon_die's
 	# default (pc, 6), same source every other spell_damage line above reads.
 	"flame_dart": ["2 AP, 3 MP — damage 1d6 at range 4"],
+	# R4 ([Innkeeper]/[Ranger] consolidations): perfect_hospitality is
+	# field-only, no combat effect -- same empty card as measured_words/
+	# open_doors/find_trap/disarm_trap above (its real mechanism is the
+	# interact()-level wage bump, not a card-rendered effect).
+	"perfect_hospitality": [],
+	# steady_draw: hit_bonus, 0 ap_cost passive (the basic_swordwork/
+	# read_the_field phrasing) -- weapon-gated to bow, invisible to the
+	# card text (WIEffectText never renders `weapon`).
+	"steady_draw": ["+8 to hit"],
 }
 
 
