@@ -544,7 +544,7 @@
    "script": "crab_cull_loop",
    "seed": 9,
    "fixture": "crab_cull_loop_start",
-   "note": "Issue #24: bounty_crab_cull end to end -- accept at Selys's desk (guild), win the new rock_crab_nest fight (floodplains, interact-only, respawns:true) TWICE with a real sleep between them (delta-since-accept >= 2), turn in for the exact 5 gold payout"
+   "note": "Issue #24: bounty_crab_cull end to end -- accept at Selys's desk (guild), the crab_nest confirm conversation (armor-telegraph node pinned verbatim, [Back away.] negative proves no combat, then [Strike first.]), win the rock_crab_nest fight (floodplains, respawns:true) TWICE with a real sleep between them (delta-since-accept >= 2), turn in for the exact 5 gold payout"
   }
  ]
 }

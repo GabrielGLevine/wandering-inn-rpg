@@ -194,6 +194,14 @@ const ENCOUNTER_CELLS := [
 	## shield_spiders/awakened_boss/raskghar_scouts cells already use, not a
 	## new build. Solo (no ally yet) is recorded measured-only, the same
 	## hard-mode-frontier convention as every other solo cell in this file.
+	## relc_downed CONSTRAINT (review-wave L1, measured across ~30 stat
+	## combos at this exact gate): win<=0.95 AND relc_downed<=0.5 are jointly
+	## INFEASIBLE for any single-melee-enemy roster vs warrior2+relc -- the
+	## melee AI always focuses relc (lowest hp, 40 < pc's 44) and pc death is
+	## the only defeat, so in-band lethality REQUIRES chewing through relc
+	## first. Shipped compromise reads win=0.93/relc_downed=0.62 (down from
+	## the first-landed 0.83); the full frontier + the structural escape
+	## routes live in rock_crab's own combatants.json _comment.
 	{"name": "rock_crab_nest_t1_relc", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "rock_crab_nest_t1_solo", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": true},
 ]
