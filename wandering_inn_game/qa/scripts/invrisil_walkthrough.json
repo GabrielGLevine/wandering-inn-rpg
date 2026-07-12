@@ -51,7 +51,7 @@
    ]
   },
   {
-   "_comment": "== BEAT 1: portal arrival -- the awakened pantry_door offers TWO destinations this fixture (liscor_street, invrisil -- riverfarm_attuned is deliberately absent from near_invrisil's accomplishments, so Riverfarm never enters the filtered list); Invrisil is the SECOND option (index 1), 'Let it be.' third. ==",
+   "_comment": "== BEAT 1: portal arrival -- the awakened pantry_door offers THREE destinations this fixture (liscor_street, riverfarm, invrisil, catalog order): riverfarm_attuned rides along now that the chain is coherent (invrisil_attuned implies blight_lifted implies riverfarm_attuned -- the fixture's own _comment + test_fixture_coherence.gd's monotone arms), so Riverfarm genuinely enters the filtered list; Invrisil is the THIRD option (index 2), 'Let it be.' fourth. ==",
    "action": "press",
    "name": "interact"
   },
@@ -71,7 +71,7 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 1
+   "steps": 2
   },
   {
    "action": "press",

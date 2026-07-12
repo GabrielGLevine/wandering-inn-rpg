@@ -292,6 +292,21 @@ func _check_monotone_chains(name: String, game: WIGame) -> void:
 	for acc_id: String in accs:
 		if acc_id.ends_with("_attuned") and int(accs[acc_id]) >= 1 and int(accs.get("door_awakened", 0)) < 1:
 			_fail(name, "%s banked without door_awakened -- no anchor destination is reachable before the portal network wakes" % acc_id)
+	# invrisil_attuned banks ONLY from Eloise's stone purchase
+	# (riverfarm_witch.json's blight_lifted-gated 'shop' node), which grants
+	# invrisil_attunement_stone on the same option -- the stone is unsellable
+	# and has no removal path, so both travel with the flag forever.
+	if int(accs.get("invrisil_attuned", 0)) >= 1:
+		if int(accs.get("blight_lifted", 0)) < 1:
+			_fail(name, "invrisil_attuned banked without blight_lifted -- Eloise's stone (the only producer) sells from a shop node gated on it")
+		if not game.inventory.has("invrisil_attunement_stone"):
+			_fail(name, "invrisil_attuned banked without invrisil_attunement_stone in inventory -- the purchase grants both on one option and the stone is never removable")
+	# blight_lifted's three producers (the mediation dialogue, the true
+	# knot, the deep briar fight) all live on witch_hollow, reachable only
+	# through riverfarm_village's portal gate -- the flag implies the
+	# region's attunement.
+	if int(accs.get("blight_lifted", 0)) >= 1 and int(accs.get("riverfarm_attuned", 0)) < 1:
+		_fail(name, "blight_lifted banked without riverfarm_attuned -- every producer lives on the riverfarm-gated witch_hollow map")
 	if int(accs.get("garden_door_unlocked", 0)) >= 1:
 		if int(accs.get("reached_two_classes", 0)) < 1:
 			_fail(name, "garden_door_unlocked banked without reached_two_classes -- _garden_earn_met() requires Act III")
