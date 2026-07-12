@@ -3890,7 +3890,14 @@
      "observe": "Something square and man-made rests on the pond floor a stride out from the bank, furred with silt. Too far to reach across open water. But water can be made to bear weight, if you know the trick of cold.",
      "on_interact_accomplishment": "found_the_frozen_cache",
      "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, dry against all odds, a few keepsakes someone drowned here meant never to be found.",
-     "gold": 5
+     "gold": 5,
+     "variants": [
+      {
+       "when": { "found_the_frozen_cache": 1 },
+       "gold": 0,
+       "toast": "The strongbox sits open and empty now, holding nothing but pond-light."
+      }
+     ]
     },
     {
      "_comment": "`on_enter_accomplishment` banks `reached_liscor` on door travel INTO the street (the Act I gate's street-arrival counter). Fires ONLY on real door interaction (the `door` branch of interact()), never on QA teleport or save/load restore (those use bind_map_silent/transition without the entity), so a load can never spuriously advance the act. record_accomplishment is idempotent for gate purposes (>= 1). DISCLOSURE: every canonical script that walks floodplains -> liscor_gate -> street now carries reached_liscor:1 in its snapshot (additive counter; no script asserts an exact accomplishments dict).",
