@@ -1,5 +1,5 @@
 {
- "_comment": "Pinned losing seed: 1. A PASS means the fight was lost, defeat confirmed, and the auto slot reloaded.",
+ "_comment": "Pinned losing seed: 1. A PASS means the fight was lost, defeat confirmed, and the auto slot reloaded. Issue #78: the reload now carries reason:'defeat' (game_loaded payload) and the defeat interstitial (sleep_veil.gd's play_defeat()) fires once, collapsed to an instant coverage emit under QA -- neither changes WHERE the player lands (still floodplains, still no game_reset).",
  "steps": [
   {
    "action": "wait_for_event",
@@ -171,9 +171,21 @@
    "name": "confirm"
   },
   {
+   "_comment": "Issue #78: GAME_LOADED now carries reason:'defeat' on this exact path (combat_screen._close_banner's true-defeat branch, load_slot('auto','defeat')) -- distinct from a voluntary pause-Load/title-Continue/Abandon, none of which pass a reason.",
    "action": "wait_for_event",
    "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
    "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #78: the defeat interstitial's own coverage event -- QA/headless collapses its paced reveal+choice to an instant emit (sleep_veil.gd's play_defeat(), same _is_qa() collapse the opener/epilogue already use), so this run still lands back in the reloaded floodplains state below WITHOUT ever waiting on the interactive Continue/Title choice. `map` names the SAME location the reload just restored.",
+   "action": "assert_event_logged",
+   "type": "ui_defeat_veil_rendered",
+   "payload_contains": {
+    "map": "floodplains"
+   }
   },
   {
    "action": "assert_state",

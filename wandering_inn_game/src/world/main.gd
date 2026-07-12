@@ -182,8 +182,13 @@ func swap_to_char_creation() -> void:
 
 ## `new_game` is true ONLY on the GAME_RESET (fresh-world) path — it drives the
 ## GDI cold open. Continue/load (GAME_LOADED) passes false, so a loaded
-## save never replays the arrival sequence.
-func swap_to_world(new_game: bool = false) -> void:
+## save never replays the arrival sequence. `defeat_reload` (issue #78) is
+## true ONLY when the GAME_LOADED that triggered this swap carried
+## `reason:"defeat"` (Game.load_slot's new param, set only by
+## combat_screen.gd's true-defeat branch) -- a voluntary pause-Load/title-
+## Continue/Abandon never sets it, so this is a real "you lost" signal, not
+## "a save loaded."
+func swap_to_world(new_game: bool = false, defeat_reload: bool = false) -> void:
 	_clear_world_viewport()
 	_clear_ui_layers()
 	_spawn_ui_layers()
@@ -193,6 +198,8 @@ func swap_to_world(new_game: bool = false) -> void:
 	# never drawn uncovered before the cold open takes the screen.
 	if new_game and _sleep_veil != null:
 		_sleep_veil.play_opener()
+	elif defeat_reload and _sleep_veil != null:
+		_sleep_veil.play_defeat()
 
 
 func _ensure_viewport_nodes() -> void:
@@ -344,9 +351,13 @@ func _spawn_world() -> void:
 	_world = world
 
 
-func _on_domain_event(type: String, _payload: Dictionary) -> void:
+func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:
 		WIDataRegistry.reset()
 		# Only a New Game (GAME_RESET) plays the GDI cold open; a load restores
-		# straight into the world.
-		swap_to_world.bind(type == WIEvents.GAME_RESET).call_deferred()
+		# straight into the world -- UNLESS it's a true defeat-reload (issue
+		# #78), which plays the defeat interstitial instead. GAME_RESET never
+		# carries "reason" (Game.reset() doesn't emit it), so `is_defeat` is
+		# false on that branch by construction, not by an extra type check.
+		var is_defeat := String(payload.get("reason", "")) == "defeat"
+		swap_to_world.bind(type == WIEvents.GAME_RESET, is_defeat).call_deferred()

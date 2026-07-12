@@ -185,6 +185,16 @@ var _opener_advance := false
 var _epilogue_running := false
 var _epilogue_armed := false
 
+## Defeat-interstitial state (issue #78). Gates play_defeat()'s own
+## sequence, mirroring _opener_running/_epilogue_running. Its terminal beat
+## is a real CHOICE (not a skip) -- _defeat_choice_pending gates a dedicated
+## await loop in _unhandled_input (confirm=continue into the reloaded world,
+## cancel=title screen), deliberately NOT sharing _opener_advance (that flag
+## means "cut this hold short", not "pick between two different outcomes").
+var _defeat_running := false
+var _defeat_choice_pending := false
+var _defeat_choice_result := true
+
 
 func _ready() -> void:
 	layer = VEIL_LAYER
@@ -361,17 +371,17 @@ func _wait_or_advance(seconds: float) -> void:
 		await get_tree().process_frame
 
 
-## True while the cold-open or the epilogue holds the screen. world.gd's
-## `_movement_gated()` treats this as a modal (via
+## True while the cold-open, the epilogue, or the defeat interstitial holds
+## the screen. world.gd's `_movement_gated()` treats this as a modal (via
 ## WIMain.veil_modal_active()) -- on pad, `interact` and this veil's
 ## confirm-advance share button A, so without the gate a pad player
 ## advancing the opener text would simultaneously fire world interact()s
 ## at whatever the PC happens to face under the black. Never true under
-## QA/TestDriver: `play_opener()`/`play_epilogue()` collapse to an instant
-## coverage emit before ever setting these flags, so every canonical's
-## input timing is untouched by the new gate.
+## QA/TestDriver: `play_opener()`/`play_epilogue()`/`play_defeat()` collapse
+## to an instant coverage emit before ever setting these flags, so every
+## canonical's input timing is untouched by the new gate.
 func modal_active() -> bool:
-	return _opener_running or _epilogue_running
+	return _opener_running or _epilogue_running or _defeat_running
 
 
 ## The veil's ONLY interactive touch (the plain sleep path never intercepts
@@ -379,6 +389,16 @@ func modal_active() -> bool:
 ## current line and, past the last, skips straight to the fade. Swallows only
 ## those two actions so a replaying/finishing player is never held hostage.
 func _unhandled_input(event: InputEvent) -> void:
+	if _defeat_choice_pending:
+		if event.is_action_pressed("confirm"):
+			_defeat_choice_result = true
+			_defeat_choice_pending = false
+			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("cancel"):
+			_defeat_choice_result = false
+			_defeat_choice_pending = false
+			get_viewport().set_input_as_handled()
+		return
 	if not (_opener_running or _epilogue_running):
 		return
 	if event.is_action_pressed("confirm") or event.is_action_pressed("cancel"):
@@ -461,6 +481,123 @@ func _bank_post_game() -> void:
 
 func _emit_epilogue_rendered(count: int) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_GDI_EPILOGUE_RENDERED, {"lines": count})
+
+
+## Issue #78: the defeat interstitial (the veil's FOURTH mode). Called by
+## WIMain right after a defeat-reload's FRESH world has spawned (see
+## main.gd's swap_to_world(defeat_reload) arg, driven off
+## GAME_LOADED{reason:"defeat"}) -- PRESENTATION ONLY, over an
+## ALREADY-COMPLETE reload: combat_screen.gd's `_close_banner` has already
+## run `resolve_combat -> teardown_board -> Game.load_slot("auto", "defeat")`
+## by the time this fires, so this function reads the ALREADY-restored
+## `Game.sim.current_map` for its "where you are" line, never causes the
+## reload itself. Diegetic register (waking up after loss, not a "GAME
+## OVER" screen), per the project's tone. Two beats: (1) short GDI-voiced
+## lines (what happened + where the autosave returned you + a retry hint),
+## paced/skippable exactly like the opener; (2) a terminal CHOICE, not an
+## auto-fade -- Confirm dismisses into the reloaded world (you're already
+## standing there), Cancel returns to the title screen instead (e.g. to
+## pick a different save). QA/headless collapses to an instant coverage
+## emit with NEITHER beat run -- the collapsed path never shows or resolves
+## the choice, so defeat_reload's existing "confirm on the banner -> land
+## back in the reloaded world" flow is untouched by construction; a human
+## windowed playtest is what actually exercises the Confirm/Cancel branches
+## (same precedent as the opener/epilogue's own skip-ability, per this
+## file's header doc: "FEEL is therefore human-playtest-gated").
+func play_defeat() -> void:
+	if _running or _opener_running or _epilogue_running or _defeat_running:
+		return
+	if _is_qa():
+		_emit_defeat_rendered(_defeat_lines().size())
+		return
+	_defeat_running = true
+	_run_defeat.call_deferred()
+
+
+## GDI-voiced: blunt system readout, the reload location (title-cased from
+## `current_map`, the same underscore-split convention title_screen.gd's
+## fixture-name display uses), then a plain diegetic retry nudge -- no
+## stats, no "press X" imperative (the terminal choice's own labels carry
+## the actual button hints, see _add_choice_rows).
+func _defeat_lines() -> Array[String]:
+	return [
+		"[Defeat.]",
+		"You wake at %s, the fight undone." % _map_display_name(String(Game.sim.current_map)),
+		"Try again, or step more carefully.",
+	]
+
+
+func _map_display_name(map_id: String) -> String:
+	var words := map_id.split("_")
+	for i in words.size():
+		var w: String = words[i]
+		if not w.is_empty():
+			words[i] = w[0].to_upper() + w.substr(1)
+	return " ".join(words)
+
+
+func _run_defeat() -> void:
+	_black.modulate.a = 1.0
+	_black.show()
+	await _wait(HOLD_BEFORE_TEXT)
+	var lines := _defeat_lines()
+	for i in lines.size():
+		_add_line(String(lines[i]))
+		var last := i == lines.size() - 1
+		await _wait_or_advance(READ_HOLD if last else LINE_INTERVAL)
+	_emit_defeat_rendered(lines.size())
+	_add_choice_rows()
+	var continue_chosen := await _wait_for_defeat_choice()
+	await _fade(_black, 0.0)
+	_defeat_running = false
+	_finish()
+	if not continue_chosen:
+		var main := get_parent()
+		if main != null and main.has_method("swap_to_title"):
+			main.call_deferred("swap_to_title")
+
+
+## The terminal choice's two clickable rows (issue #84: keyboard-native via
+## confirm/cancel already, this adds mouse parity). Freed along with every
+## other line label by `_finish()`'s existing "clear _line_box's children"
+## sweep -- no separate teardown needed.
+func _add_choice_rows() -> void:
+	var continue_row := UIChrome.make_label("Continue — %s" % WIInputHints.label("confirm"), "Menu")
+	continue_row.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	continue_row.mouse_filter = Control.MOUSE_FILTER_STOP
+	continue_row.gui_input.connect(_on_choice_row_input.bind(true))
+	_line_box.add_child(continue_row)
+	var title_row := UIChrome.make_label("Title Screen — %s" % WIInputHints.label("cancel"), "Menu")
+	title_row.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title_row.mouse_filter = Control.MOUSE_FILTER_STOP
+	title_row.gui_input.connect(_on_choice_row_input.bind(false))
+	_line_box.add_child(title_row)
+
+
+func _on_choice_row_input(event: InputEvent, continue_chosen: bool) -> void:
+	if not _defeat_choice_pending:
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	_defeat_choice_result = continue_chosen
+	_defeat_choice_pending = false
+
+
+## Awaits the terminal choice, resolved either by `_unhandled_input`
+## (confirm/cancel) or `_on_choice_row_input` (a row click) -- both just
+## flip `_defeat_choice_pending` false and set `_defeat_choice_result`.
+func _wait_for_defeat_choice() -> bool:
+	_defeat_choice_pending = true
+	while _defeat_choice_pending:
+		await get_tree().process_frame
+	return _defeat_choice_result
+
+
+func _emit_defeat_rendered(count: int) -> void:
+	ObservableBus.emit_domain_event(WIEvents.UI_DEFEAT_VEIL_RENDERED, {"lines": count, "map": String(Game.sim.current_map)})
 
 
 ## Playtest hotfix #8: NO special case for a consolidation-offering sleep any

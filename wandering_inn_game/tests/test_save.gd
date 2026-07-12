@@ -710,5 +710,65 @@ func _init() -> void:
 	assert(int(ghost_game.classes.get("spellsword", 0)) == 11 and int(ghost_game.classes.get("helper", 0)) == 4,
 		"non-retired classes survive the sanitize untouched")
 
+	# --- Issue #78: WISave.metadata() -- the slot-picker read-only summary.
+	# NOT a new persisted field (no version bump): a pure derivation from
+	# fields already in `state` (pc_name/classes/current_map), tolerant of
+	# the SAME version drift `apply()` handles via `_migrated`. ---
+	var meta_game := _new_game()
+	meta_game.classes["warrior"] = 2
+	var meta_data := WISave.serialize(meta_game)
+	var meta := WISave.metadata(meta_data)
+	assert(not meta.is_empty(), "a current-version save yields metadata")
+	assert(String(meta["pc_name"]) == "Traveler", "everyman default pc_name surfaces in metadata")
+	assert(String(meta["top_class"]) == "warrior" and int(meta["top_level"]) == 2, "single-class metadata picks that class")
+	assert(String(meta["map"]) == "inn", "current_map surfaces in metadata")
+
+	# Multi-class: metadata picks the HIGHEST-level class, not insertion order.
+	var multi_game := _new_game()
+	multi_game.classes = {"warrior": 3, "mage": 7, "helper": 1}
+	var multi_meta := WISave.metadata(WISave.serialize(multi_game))
+	assert(String(multi_meta["top_class"]) == "mage" and int(multi_meta["top_level"]) == 7,
+		"metadata picks the HIGHEST-level class among several, not the first key")
+
+	# Classless: an empty classes dict yields an empty top_class/0 level, not
+	# a crash or a stale value -- the picker renders "Empty"-adjacent, never
+	# a fake class.
+	var classless_meta := WISave.metadata(WISave.serialize(_new_game()))
+	assert(String(classless_meta["top_class"]) == "" and int(classless_meta["top_level"]) == 0,
+		"a classless save's metadata carries no class")
+
+	# Migratable-version tolerance: a v2 save (pre-dormant_encounters,
+	# fighter-not-yet-renamed) still yields metadata, through the SAME
+	# _migrated() step apply() uses -- the fighter->warrior remap applies to
+	# metadata too, so a slot picker never shows a retired class id.
+	var meta_v2_data := {
+		"version": 2,
+		"state": {
+			"current_map": "inn", "player_cell": [2, 3], "player_facing": [0, 1],
+			"classes": {"fighter": 3}, "accomplishments": {}, "player_skills": [],
+			"removed_entities": [], "started_quests": [], "rng_state": "12345",
+			"inventory": [], "equipped": {}, "container_state": {}, "actions_since_sleep": 0,
+			"pc_name": "Bob",
+		},
+	}
+	var v2_meta := WISave.metadata(meta_v2_data)
+	assert(not v2_meta.is_empty(), "a migratable v2 save still yields metadata")
+	assert(String(v2_meta["top_class"]) == "warrior" and int(v2_meta["top_level"]) == 3,
+		"v2's fighter->warrior remap applies to metadata, not just apply()")
+	assert(String(v2_meta["pc_name"]) == "Bob", "pc_name surfaces from a migratable older save too")
+
+	# Unmigratable/malformed input yields {} -- the SAME "no usable save
+	# here" signal a missing file gives (callers never distinguish the two).
+	assert(WISave.metadata({"version": 1, "state": {}}).is_empty(), "a v1 save (still rejected) yields no metadata")
+	assert(WISave.metadata({"version": WISave.VERSION}).is_empty(), "a save with no state Dictionary yields no metadata")
+	assert(WISave.metadata({}).is_empty(), "an empty Dictionary yields no metadata")
+
+	# metadata() never mutates its input (a slot picker calls this on every
+	# refresh -- it must be side-effect-free, unlike apply()'s live-game write).
+	var mutate_check := WISave.serialize(_new_game())
+	var before_json := JSON.stringify(mutate_check)
+	WISave.metadata(mutate_check)
+	assert(JSON.stringify(mutate_check) == before_json, "metadata() never mutates its input Dictionary")
+
 	print("PASS: save round-trips the full sim including rng state")
 	quit(0)

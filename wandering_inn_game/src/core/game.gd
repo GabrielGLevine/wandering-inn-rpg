@@ -2,6 +2,15 @@ extends Node
 ## Autoload owning the sim instance; bridges sim domain events onto ObservableBus.
 
 const SAVE_DIR := "user://saves"
+## Issue #78: 3 manual slots (was 1). "manual" stays FIRST/index-0 on
+## purpose -- it is the pre-existing slot id every fixture-driven QA script's
+## `fixture_save` shorthand (a bare fixture-name string) and every hand-
+## written `assert_save_exists`/`install_fixture` step already targets by
+## default (qa/test_driver.gd's `_install_fixture_saves`), so keeping it as
+## slot 1 means the picker's default cursor (index 0) reproduces the OLD
+## single-manual-slot behavior exactly -- no test needed a slot-id rename,
+## only an extra confirm to land on the now-explicit picker row.
+const MANUAL_SLOTS: Array[String] = ["manual", "manual_2", "manual_3"]
 
 ## Pure simulation instance owned by the game autoload.
 var sim: WIGame
@@ -44,12 +53,15 @@ func save_auto() -> void:
 		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Autosaved. (%s — save/load anytime)" % WIInputHints.label("cancel")})
 
 
-## Writes the manual save slot unless a modal simulation is active.
-func save_manual() -> bool:
+## Writes a manual save slot (default "manual", slot 1 -- see MANUAL_SLOTS)
+## unless a modal simulation is active. `slot` is caller-supplied (the pause
+## menu's slot picker, issue #78) so any of MANUAL_SLOTS can be targeted, not
+## just slot 1.
+func save_manual(slot: String = "manual") -> bool:
 	if sim.combat != null or sim.dialogue != null or not sim.pending_consolidation.is_empty():
 		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot save right now."})
 		return false
-	_write_slot("manual")
+	_write_slot(slot)
 	ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Game saved."})
 	return true
 
@@ -61,7 +73,19 @@ func save_manual() -> bool:
 ## live game untouched rather than silently discarding it for a fresh one.
 ## (Callers wanting a fallback -- e.g. combat_screen's defeat path -- check the
 ## return value and reset() themselves; callers that don't get a safe no-op.)
-func load_slot(slot: String) -> bool:
+## `reason` (issue #78) rides GAME_LOADED's payload verbatim -- purely
+## informational, no branching here. Every pre-existing caller (pause Load/
+## Load Autosave, title Continue) omits it (default ""), so their emitted
+## payload is byte-identical in every OTHER key to before this task (only the
+## new "reason" key is additive -- payload_contains subset-matches, so no
+## existing `wait_for_event game_loaded` pin needs re-pinning). Only
+## combat_screen.gd's TRUE-DEFEAT branch of `_close_banner` passes "defeat"
+## -- the abandon path (`abandon_combat`) deliberately does NOT, since
+## Abandon already runs its own explicit Yes/No confirm and needs no further
+## orientation screen. Main._on_domain_event reads this to decide whether
+## swap_to_world plays the defeat interstitial (sleep_veil.gd's
+## play_defeat()) -- see that file.
+func load_slot(slot: String, reason: String = "") -> bool:
 	# Failure messaging is the CALLER's job (each has different UX: pause_menu
 	# surfaces a notice, the combat defeat path resets silently, title Continue
 	# refreshes) -- load_slot stays message-free so a single failure never
@@ -76,8 +100,27 @@ func load_slot(slot: String) -> bool:
 	if not WISave.apply(trial, parsed):
 		return false
 	sim = trial
-	ObservableBus.emit_domain_event(WIEvents.GAME_LOADED, {})
+	ObservableBus.emit_domain_event(WIEvents.GAME_LOADED, {"reason": reason})
 	return true
+
+
+## Read-only slot preview for the title/pause slot pickers (issue #78) --
+## parses the file directly and NEVER applies it (WISave.metadata is pure and
+## tolerant of version drift, same contract load_slot's own trial-apply
+## follows for the real load). {} when the slot has no readable save, so
+## callers can treat a missing file and an unreadable one identically ("Empty").
+func slot_metadata(slot: String) -> Dictionary:
+	var path := "%s/%s.json" % [SAVE_DIR, slot]
+	if not FileAccess.file_exists(path):
+		return {}
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (parsed is Dictionary):
+		return {}
+	var meta := WISave.metadata(parsed)
+	if meta.is_empty():
+		return {}
+	meta["mtime"] = FileAccess.get_modified_time(path)
+	return meta
 
 
 ## Copies a

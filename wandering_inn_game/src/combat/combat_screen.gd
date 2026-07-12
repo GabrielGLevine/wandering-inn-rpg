@@ -985,7 +985,13 @@ func _close_banner() -> void:
 	if not was_victory:
 		# Defeat returns the player to their last autosave (sleep/quest/map
 		# beats), not to a fresh game. Reset only when no autosave exists yet.
-		if not Game.load_slot("auto"):
+		# reason:"defeat" (issue #78) rides GAME_LOADED so Main plays the
+		# defeat interstitial (sleep_veil.gd's play_defeat()) instead of
+		# dropping the player silently into the reloaded world -- the
+		# no-autosave Game.reset() fallback is UNCHANGED (its own GDI cold
+		# open already orients a true from-zero restart; see that function's
+		# doc comment for why this near-impossible edge isn't also wired).
+		if not Game.load_slot("auto", "defeat"):
 			Game.reset()
 
 

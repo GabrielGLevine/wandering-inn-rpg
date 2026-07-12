@@ -1,5 +1,5 @@
 {
- "_comment": "save/load persistence across the errand run. Inn: accept the_errand from Erin. Then the real cold-start crossing (old parley bypass dead): meet Relc -> spar -> sleep (Warrior L1) -> cross the goblin_encounter_1 proximity ambush (warrior+Relc) -> street. Street: deliver to Selys (package_delivered), pause-Save to manual, complete the quest (errand_decided), pause-Load the manual slot and assert the delivered/street state round-trips intact. Prologue cells reuse combat_walkthrough's proven from-floodplains arc. Seed 9.",
+ "_comment": "save/load persistence across the errand run. Inn: accept the_errand from Erin. Then the real cold-start crossing (old parley bypass dead): meet Relc -> spar -> sleep (Warrior L1) -> cross the goblin_encounter_1 proximity ambush (warrior+Relc) -> street. Street: deliver to Selys (package_delivered), pause-Save to manual, complete the quest (errand_decided), pause-Load the manual slot and assert the delivered/street state round-trips intact. Prologue cells reuse combat_walkthrough's proven from-floodplains arc. Seed 9. Issue #78: Save/Load now open a 3-slot picker (an extra Confirm each, defaulting to slot 1/'manual' -- byte-identical outcome to the old direct single-slot action) -- this script also asserts the picker's own metadata render (Empty before the first save, the real name/class/map summary once 'manual' holds this run's state).",
  "steps": [
   {
    "action": "wait_for_event",
@@ -603,6 +603,26 @@
    "steps": 1
   },
   {
+   "_comment": "Issue #78: 'Save' (ROWS[1], unchanged index) now opens the 3-slot picker instead of saving immediately.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Nothing has ever been written to any manual slot yet this run (only the auto slot exists so far, asserted above) -- assert the picker's own metadata render shows all 3 slots Empty, the slot-metadata proof for the not-yet-written state.",
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save",
+    "slots": [
+     {"slot": "manual", "exists": false, "summary": "Empty"},
+     {"slot": "manual_2", "exists": false, "summary": "Empty"},
+     {"slot": "manual_3", "exists": false, "summary": "Empty"}
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Picker cursor defaults to row 0 ('manual', slot 1) -- a bare Confirm reproduces the OLD single-slot Save exactly.",
    "action": "press",
    "name": "confirm"
   },
@@ -718,6 +738,25 @@
    "action": "move",
    "direction": "down",
    "steps": 2
+  },
+  {
+   "_comment": "Issue #78: 'Load' (ROWS[2], unchanged index) opens the same 3-slot picker.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Slot 1 ('manual') now holds the save the earlier Save step wrote (classes.warrior:1, current_map:guild, everyman pc_name -- the state at THAT moment, unaffected by anything since) -- the picker's own metadata render is the slot-metadata proof for a real, non-empty save.",
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load",
+    "slots": [
+     {"slot": "manual", "exists": true, "summary": "Traveler — Warrior Lv1 — Guild"},
+     {"slot": "manual_2", "exists": false, "summary": "Empty"},
+     {"slot": "manual_3", "exists": false, "summary": "Empty"}
+    ]
+   },
+   "timeout_sec": 5
   },
   {
    "action": "press",
