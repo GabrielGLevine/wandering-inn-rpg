@@ -36,7 +36,7 @@ extends SceneTree
 ##   |      |                                             | possible at the tail)      | |
 ##   | T3   | Riverfarm + Invrisil (post-door unlocks)   | 8-10, often consolidated  | THE RETUNE SET (this task) -- BUILDS.t3_spellsword9/t3_warrior9 are the reference builds |
 ##   |      |                                             | (spellsword ~9)            | |
-##   | T4   | Dungeon (8d)                               | 10-12 + the Horns party    | bands derived WITH allies from day one; BUILDS.t4_spellsword11_party is the forward reference, unused until 8d |
+##   | T4   | Dungeon (8d)                               | 10-12 + the Horns party    | bands derived WITH allies from day one; PARTY_CELLS is the first 4-ally harness, measured-only (boss seed + over-tier calibration) |
 ##   | T5   | Pallass (8e)                               | 12-14                      | authored to table at build time, not retuned here |
 ## Off-tier cells (a build below or above its encounter's tier) stay
 ## MEASURED-only -- e.g. this file's own goblin_ambush/chieftains_raid matrix
@@ -403,15 +403,52 @@ const BUILDS := [
 	## this build is the comparison point, recorded so a retune never
 	## secretly depends on the mage-shield passive to clear.
 	{"name": "t3_warrior9", "classes": {"warrior": 9}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
-	## T4 forward reference (the dungeon, 8d) -- spellsword 11 on the SAME T3
-	## gear basis (no higher-tier gear exists in data/items.json yet; 8d's own
-	## content pass owns pricing a real T4 shop ceiling). UNUSED today -- no
-	## cell in this file references it (the spec directive: "8d C2 authors its
-	## cells against T4 from the start," and T4 bands are meant to be derived
-	## WITH allies/party math 8d itself lands, not guessed here). Defined now
-	## so 8d's own BUILDS lookup by name doesn't have to land the row and the
-	## cells in the same commit.
+	## T4 reference build (the dungeon) -- spellsword 11 on the SAME T3 gear
+	## basis (no higher-tier gear exists in data/items.json yet; a real T4
+	## shop ceiling is a separate content pass). Consumed by PARTY_CELLS below
+	## -- see that constant's own doc comment for why neither T4 cell is
+	## gated yet (a boss-stat seed awaiting its own tuning pass, and an
+	## over-tier calibration cross-check that is EXPECTED to read trivial).
 	{"name": "t4_spellsword11_party", "classes": {"spellsword": 11}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+]
+
+## The T4 dungeon party axis -- the FIRST 4-ally harness cells:
+## `t4_spellsword11_party` + all three Horns (ceria/yvlon/ksmvr,
+## combatants.json) fielded TOGETHER, matching the real delve roster shape
+## (three allies at once, not the one-ally pattern every other axis in this
+## file uses). `ally_requires` wiring for the real delve encounter is a
+## separate task -- this file only proves the combat DATA those ids resolve
+## to holds a sane, honestly-reported band.
+## Two rosters, `arena: deep_warren` (an EXISTING arena, reused -- the real
+## vault arena is a separate deliverable; this cell only needs a valid 12x8
+## grid to run seeded fights):
+##  (a) `vault_construct` -- the boss-stat SEED (see its own combatants.json
+##      `_comment`). MEASURED-only: the stats are an unfinished seed awaiting
+##      its own tuning pass once the telegraphed-windup mechanism lands, so a
+##      win-rate band gated NOW would just get re-derived the moment that
+##      data changes.
+##  (b) `raskghar_awakened` (the existing T2 boss, this file's own BOSS_CELLS
+##      0.6-0.75-vs-warrior2+relc cell) as a CALIBRATION CROSS-CHECK: the
+##      SAME roster, now faced by a full T4 party instead of a T2 build + 1
+##      ally. MEASURED-only, by the SAME "over-tier trivial is intended"
+##      convention this file's own header table states outright (a T2 boss
+##      vs. a T4 party is EXPECTED to read near-1.0, same as goblin_ambush
+##      vs. pure_warrior10) -- if it reads otherwise, the PARTY MATH itself
+##      is off, not just vault_construct's placeholder stats.
+## PC-DEATH-INSTANT-DEFEAT RE-CHECK (CLAUDE.md's own standing rule):
+## `_check_end` checks pc.alive FIRST, unconditionally, regardless of ally
+## count -- a 4-body party (3 living allies) cannot produce an "ally-carried
+## win" any more than the 1-ally case could, since a victory can only ever
+## be reached through the branch that requires pc alive. Asserted directly
+## in the loop below (never just trusted) since this is the first cell to
+## field 3 allies at once; `pc_alive_rate` is printed alongside each ally's
+## own downed rate (same convention as relc_downed_rate elsewhere in this
+## file) -- by construction pc_alive_rate must equal win_rate exactly, and
+## printing both is the re-check itself (a future divergence would mean the
+## instant-defeat rule broke).
+const PARTY_CELLS := [
+	{"name": "vault_construct_seed_t4_party", "arena": "deep_warren", "enemies": ["vault_construct"], "build": "t4_spellsword11_party"},
+	{"name": "raskghar_awakened_t4_party", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "t4_spellsword11_party"},
 ]
 
 
@@ -914,10 +951,68 @@ func _init() -> void:
 				any_failed = true
 				printerr("FAIL [invrisil / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
+	## The T4 party axis. Same shared _build_pc path as the main
+	## COMPOSITIONS loop/RIVERFARM_CELLS/INVRISIL_CELLS (gear-aware, T3/T4
+	## rows only), but fields THREE named allies (ceria/yvlon/ksmvr) instead
+	## of one -- the first multi-ally construction in this file. Every cell
+	## here is MEASURED-only -- see PARTY_CELLS' own doc comment for why
+	## neither roster is gated yet.
+	for cell: Dictionary in PARTY_CELLS:
+		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
+		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
+		var wins := 0
+		var rounds: Array[int] = []
+		var pc_alive_end := 0
+		var ally_downed := {"ceria": 0, "yvlon": 0, "ksmvr": 0}
+		for seed_v in range(1, RUNS_PER_CELL + 1):
+			var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
+			var cfgs: Array = [pc]
+			for ally_id: String in ["ceria", "yvlon", "ksmvr"]:
+				cfgs.append((by_id[ally_id] as Dictionary).duplicate(true))
+			for enemy_id: String in cell["enemies"]:
+				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
+			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			combat.begin()
+			var guard := 0
+			while not combat.finished and guard < 2000:
+				guard += 1
+				WICombatAI.take_turn(combat)
+			assert(combat.finished, "party %s fight %d did not terminate" % [cell["name"], seed_v])
+			# PC-death-instant-defeat re-check: wi_combat.gd's _check_end
+			# checks pc.alive FIRST, unconditionally, so a victory can never
+			# coincide with a dead pc -- asserted directly (not just assumed)
+			# since this is the first cell fielding 3 allies at once.
+			if combat.outcome["victory"]:
+				wins += 1
+				assert(bool(combat.combatants["pc"][WIKeys.ALIVE]), "party %s fight %d: victory recorded with pc dead -- instant-defeat rule broken" % [cell["name"], seed_v])
+			if bool(combat.combatants["pc"][WIKeys.ALIVE]):
+				pc_alive_end += 1
+			rounds.append(int(combat.outcome["rounds"]))
+			for ally_id: String in ally_downed:
+				if not bool(combat.combatants.get(ally_id, {}).get(WIKeys.ALIVE, true)):
+					ally_downed[ally_id] = int(ally_downed[ally_id]) + 1
+
+		rounds.sort()
+		var win_rate := float(wins) / float(RUNS_PER_CELL)
+		var median: int = rounds[RUNS_PER_CELL / 2]
+		var hist := {}
+		for r: int in rounds:
+			hist[r] = int(hist.get(r, 0)) + 1
+		print("[party / %s] arena=%s build=%s (measured) win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+			cell["name"], String(cell["arena"]), String(cell["build"]),
+			win_rate, median, rounds[0], rounds[-1],
+		])
+		print("  rounds histogram: ", hist)
+		# pc_alive_rate must equal win_rate exactly by construction (see this
+		# loop's own doc comment) -- printed as the re-check itself.
+		print("  pc_alive_rate=%.2f (%d/%d)" % [float(pc_alive_end) / float(RUNS_PER_CELL), pc_alive_end, RUNS_PER_CELL])
+		for ally_id: String in ["ceria", "yvlon", "ksmvr"]:
+			print("  %s_downed_rate=%.2f (%d/%d)" % [ally_id, float(ally_downed[ally_id]) / float(RUNS_PER_CELL), ally_downed[ally_id], RUNS_PER_CELL])
+
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:
 		# Asserts are stripped in release templates; keep the exit code honest there too.
 		quit(1)
 		return
-	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size(), RUNS_PER_CELL])
+	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size(), RUNS_PER_CELL])
 	quit(0)
