@@ -151,6 +151,26 @@
    ]
   },
   {
+   "_comment": "Issue #24 (HR-II forward-ref): the Rock Crab, a T1 floodplains renewable cull target (region-tiers.md/sim_combat_batch.gd's own tier table -- floodplains is T1, expected build warrior1-4). Design identity per the wiki-verified staging profile (character-profiles-staging.md Home-Region II): boulder-mimic, ARMORED and SLOW, not a swarm -- damage_reduction 8 is the identity stat and is LOCKED by controller ruling (this file's only other dr holder is vault_construct, a T4 boss, at 3; rock_crab is the first LOW-tier dr carrier), dex low models 'slow' (WICombat's hit_chance formula subtracts the TARGET's dex/4 from the attacker's roll -- low dex means genuinely easier to land a hit on, not flavor). str/weapon_die carry real crushing-pincer damage on the hits that DO land -- canon calls it dangerous enough that 'goblin hunting packs kill them WITH casualties'. No skills (a single armored brawler, not a caster/support). TUNING TRAP 1 (band): the first SOLO-single-enemy GATED cell below T4 -- a plain low-con/low-dr draft (con 7, dr 2) read 1.00 win_rate / 2 median rounds vs warrior2+relc, nowhere near band; dr 8 + real hp is what holds it. TUNING TRAP 2 (relc_downed -- the STRUCTURAL frontier, measured across ~30 candidate stat combos at the real 100-seed gate): for ANY single-melee-enemy roster vs warrior2+relc, win_rate<=0.95 and relc_downed<=0.5 are jointly INFEASIBLE -- PC death is the ONLY defeat (_check_end) and the melee AI always focuses the lowest-HP player-sider, which is ALWAYS relc (hp 40 < pc's 44), so a loss requires the crab to chew through relc FIRST and still kill the pc: every combo weak enough to spare relc most fights reads win 0.96-1.00 (out of band), every in-band combo downs relc >=~0.55. The whole measured frontier: win 0.91<->downed 0.60, 0.93<->0.62, 0.95<->0.59, 0.96<->0.53, 0.98<->0.50. Shipped point (the review-wave FIX-FIRST retune, offense DOWN from the first-landed str 16/die 10/con 20 whose relc_downed=0.83 was the harness's highest): str 14 (down 2), weapon_die 10 (held), con 16 (hp 36, down from 40) -- gate read win_rate=0.93 / median=4 / relc_downed=0.62 (from 0.83). A future pass wanting downed <=0.5 must change STRUCTURE, not stats: per-cell band floor-raise (the alley_footpads 0.75-0.98 low-lethality precedent) or a windup/slam cadence (halves swing count on declare rounds; the harness melee pc never dodges a telegraph, so spike lethality survives) -- both need a controller ruling. combat_scale 3.57 contains the field sprite's oversized render_scale (data/sprites.json rock_crab: render_scale 2.57 targets ~36px FIELD presence off a 14px crop; combat_scale multiplies the SAME crop to ~50px for the close-range arena read, canon's 'shell the size of a cart' -- the same per-combatant override mechanism relc/vault_construct/ruin_guardian use, REPLACING not stacking with render_scale, per board_renderer.gd's own contract).",
+   "id": "rock_crab",
+   "display_name": "Rock Crab",
+   "sprite": "rock_crab",
+   "combat_scale": 3.57,
+   "side": "enemy",
+   "stats": {
+    "str": 14,
+    "dex": 5,
+    "con": 16,
+    "int": 3,
+    "wis": 5,
+    "cha": 2
+   },
+   "weapon_die": 10,
+   "damage_reduction": 8,
+   "ai": "melee",
+   "skills": []
+  },
+  {
    "id": "training_dummy_a",
    "display_name": "Training Dummy",
    "sprite": "training_dummy",

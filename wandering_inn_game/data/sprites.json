@@ -3260,6 +3260,25 @@
    }
   }
  },
+ "rock_crab": {
+  "_comment": "Issue #24 (HR-II forward-ref, Rock Crab encounter bank). Licensed pick, Admurin Enemy_Galore_I/Crab/Crab_Idle.png -- a genuine crab sprite (checked docs/asset-index.md per the wi-art-and-sprites discipline before reaching for a cross-species reuse), non-directional (ADMURIN family, own encounter, same style-family precedent as river_wolf_idle above). The committed PNG is a baked RECOLOR toward the `boulder` prop's warm grey-stone palette (assets_manifest.json's own entry carries the exact multiply factors + rgb trace) -- sells the wiki-verified boulder-mimicry canon (character-profiles-staging.md Home-Region II: 'shell EXACTLY palette-matched to the boulder prop') in BOTH field and combat, since board_renderer.gd's combat sprite path has no per-combatant runtime tint hook. Sheet is 256x64 = FOUR 64x64 frames; figure crop measured via PIL alpha-bbox union across all 4 frames: x 19-41, y 34-48 (14px tall, 22px wide -- a small, low-slung crop, unlike a humanoid rig). Anchor from that crop: x-center 0.469, feet-bottom 0.75. render_scale 2.57 targets ~36px on-screen FIELD presence (bigger than the ~30px human standard -- canon calls the shell 'two persons stacked tall', so it should read unmistakably large on the map, short of arena-sprawl). combat_scale (combatants.json rock_crab record) scales further to ~50px for the close-range arena read, the SAME per-combatant override mechanism relc/vault_construct/ruin_guardian already use to contain an oversized rig -- see that record's own comment for the exact value.",
+  "anchor": [
+   0.469,
+   0.75
+  ],
+  "render_scale": 2.57,
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/admurin/Crab_Idle.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 4
+   }
+  }
+ },
  "riverfarm_witch_elder": {
   "_comment": "8b R1 owned PixelLab gen (potential_assets/pixellab_2026-07-08_witch/) -- the day-phase idle. Non-directional single facing (upgrade-queue precedent, relc/pisces/olesm/zevara pre-8b-upgrade shape). Swapped to riverfarm_witch_young by visual_states keyed on phase().",
   "anchor": [

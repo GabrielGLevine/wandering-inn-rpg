@@ -539,6 +539,12 @@
    "seed": 9,
    "fixture": "board_loop_start",
    "note": "Issue #81: 'Renn's Old Warhammer' end to end, POSTING-SEEDED, SAME-MAP shape (contrast missing_recruit_loop's cross-map one) -- the same board rumor read banks heard_about_lost_hammer, Renn's gated ask option starts the quest, renns_gear_stash (an always-present container) completes beat 1, and the item-gated turn-in option completes beat 2 + pays 3 gold (the lore-note thread's third find, note_old_dread, was relocated to the barracks post-dynamism-check -- barracks_walkthrough.json carries it)"
+  },
+  {
+   "script": "crab_cull_loop",
+   "seed": 9,
+   "fixture": "crab_cull_loop_start",
+   "note": "Issue #24: bounty_crab_cull end to end -- accept at Selys's desk (guild), the crab_nest confirm conversation (armor-telegraph node pinned verbatim, [Back away.] negative proves no combat, then [Strike first.]), win the rock_crab_nest fight (floodplains, respawns:true) TWICE with a real sleep between them (delta-since-accept >= 2), turn in for the exact 5 gold payout"
   }
  ]
 }

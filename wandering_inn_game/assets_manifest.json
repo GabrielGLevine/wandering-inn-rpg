@@ -80,6 +80,14 @@
    "fallback": "placeholder"
   },
   {
+   "path": "assets/props/admurin/Crab_Idle.png",
+   "source_pack": "Admurin's Freebies",
+   "verdict": "NEEDS-ATTESTATION",
+   "bundle": true,
+   "fallback": "placeholder",
+   "_comment": "Issue #24 (Rock Crab encounter bank, HR-II forward-ref): the genuine Enemy_Galore_I/Crab/Crab_Idle.png pick (idle, 4 frames @ 64x64) -- a real crab, not a cross-species reuse. The committed PNG is a RECOLOR of the source file (multiply ~[1.05, 3.0, 2.6] against the native red-brown shell, toward the `boulder` prop's own warm grey-stone palette -- rgb(115,104,93)/(63,53,44) sampled from assets/props/free_pack/Rocks.png) to sell the wiki-verified boulder-mimicry read; baked into the asset itself rather than a runtime tint because board_renderer.gd's combat sprite path has no per-combatant tint hook (only decor tint), so baking keeps field and combat appearance identical. Disclosed in docs/VISUAL-LOG.md. bundle-vN release for this path is OUTSTANDING as of this task -- game runs on the placeholder fallback until wi-shipping cuts a new bundle (scripts/make_asset_bundle.sh) carrying it; local dev/QA screenshots have it because it's copied into the working tree from potential_assets/ (gitignored, matches Canine_Gray_Idle.png's own precedent)."
+  },
+  {
    "path": "assets/props/cave/Props.png",
    "source_pack": "Pixel Crawler - Cave",
    "verdict": "FORBIDDEN",

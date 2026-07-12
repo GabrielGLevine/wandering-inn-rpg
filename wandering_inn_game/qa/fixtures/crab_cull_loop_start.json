@@ -1,0 +1,49 @@
+{
+ "_comment": "FIXTURE-FIRST start for crab_cull_loop (issue #24): the accept-fight-turnin loop for bounty_crab_cull is the subject, not the guild/street/floodplains walk (each already proven elsewhere: board_loop for the desk, combat_walkthrough/tutorial_flow for the floodplains door). Same honest post-onboarding base as board_loop_start, positioned INSIDE the guild at the exact same verified desk-approach cell (8,3) facing up, but warrior CLASS 2 (not 1) -- the harness's rock_crab_nest_t1_relc cell is tuned against a warrior2+relc build, and rusty_sword/no-armor (damage_mod 0, matches the harness's ungeared construction exactly, per LOADOUT_CELLS' own doc comment) keeps the real fight's stats byte-for-byte the harness's own tuning. times_slept 17 (board_last_seen_times_slept matched, so no 'slate rotated overnight' bark on the first desk visit) puts the pool window at indices [17,18,19] = [bounty_second_watch, bounty_pond_keepsakes, bounty_crab_cull] (data/bounties.json's own append order -- crab_cull is the newest, last entry) -- crab_cull visible as the picker's 3rd option without any extra sleeps. TRAP: rng_state is a properly-derived state (.seed=9, captured .state) -- WISave restores .state directly, never .seed. Verified against tests/sim_combat_batch.gd's own rock_crab stats (data/combatants.json) that seed=9's first TWO sequential rng.randi() draws (wi_game.gd's start_combat calls rng.randi() once per fight, in order -- no other rng consumer runs between them, loot is a separately-isolated stream) both resolve the rock_crab_nest fight as a win (rounds 3 and 5) -- the canonical needs BOTH the pre-sleep and post-sleep fight to win for the bounty's delta-2 condition to ever complete.",
+ "version": 5,
+ "state": {
+  "current_map": "guild",
+  "player_cell": [
+   8,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "won_combat": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "times_slept": 17,
+  "board_last_seen_times_slept": 17,
+  "gold": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

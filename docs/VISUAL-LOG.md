@@ -16,6 +16,22 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] SPRITE/FLOODPLAINS — `rock_crab` (issue #24) ships a BAKED recolor of
+  the Admurin crab (`assets/props/admurin/Crab_Idle.png`, multiply
+  ~[1.05, 3.0, 2.6] against the source's red-brown shell) targeting the
+  `boulder` prop's grey-stone palette (rgb ~(115,104,93)/(63,53,44) sampled
+  from `assets/props/free_pack/Rocks.png`) — the PIL preview landed WARM
+  BROWN-GREY, not a clean boulder grey, and no windowed screenshot has
+  verified the two side by side in-scene. The boulder-mimicry read (canon:
+  "shell EXACTLY palette-matched to the boulder prop" — the mimicry IS the
+  mechanic) depends on this match, and the entity sits Chebyshev 3 from a
+  real `boulder` decor at floodplains (24,19), so any mismatch is directly
+  visible. The recolor is baked into the asset (combat sprites have no
+  runtime tint hook), so a fix is a re-bake + bundle re-cut, not a data
+  tweak. First seen: issue #24 review wave, 2026-07-12. Fix: controller
+  windowed read of floodplains (21,16) beside the (24,19) boulder; re-bake
+  the multiply factors toward the sampled greys if the warm cast breaks
+  the read.
 - [ ] DUNGEON/TRAP TELLS — `dart_slit_a` (`trapped_halls`) reuses the
   registered `sewer_grate` sprite (tinted cool-dark) as a placeholder —
   the A3 pixellab `dart_slit.png` candidate drifted purple against the

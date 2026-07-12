@@ -366,6 +366,10 @@ func _build_expected_counts() -> Dictionary:
 	## not figure integrity; only a windowed read proves the wolf is whole.
 	counts["river_wolf_idle/idle"] = 4
 
+	## rock_crab -- Admurin Enemy_Galore_I/Crab/Crab_Idle.png, 256x64 sheet
+	## @ 64x64 frames = 4 frames (issue #24).
+	counts["rock_crab/idle"] = 4
+
 	## Riverfarm combat roster -- owned, single-frame PixelLab statics
 	## (briar_collector/briar_collector_deep/river_wolf), same shape as the
 	## training_dummy/memorial-hill entries above.
