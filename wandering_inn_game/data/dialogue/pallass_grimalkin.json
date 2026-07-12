@@ -1,0 +1,33 @@
+{
+ "_comment": "8e Phase C, the bureaucratic chain's examiner beat (issue #16, controller ruling 6: 'his v1 role is the bureaucratic quest's examiner beat + a talk_pool presence' -- this file wires the examiner beat only; a plain talk_pool presence, if any, is B/D's own entity-field decision, not authored here). DORMANT: no scene entity carries `conversation: \"pallass_grimalkin\"` yet -- Phase B's own parallel worktree lane owns pallass_forge's actual map/entity placement, forward-referenced in docs/design/pallass-staging/phase-c-forward-references.json. Sprite: `grimalkin` (8e Phase A rig, character-profiles.md 'Grimalkin' entry). PLACEHOLDER copy throughout (D-phase replaces with his real drill-sergeant-scholar register -- 'lectures in numbered points; respects effort not rank' -- before merge); gates/costs are real, not draft. Real cost: 8g fitness-read fee, spent at the hub option (paired with its own requires per the buy-contract convention) -- the exam node itself commits with NO partial-credit bail (no refund on backing out mid-trial), a deliberate disclosed choice matching his 'despises excuses' register, not a bug.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Grimalkin",
+   "text": "Stand up straight when you address me. I measure everything. Most people don't like what gets written down.",
+   "options": [
+    {
+     "_comment": "Bureaucratic-chain beat 2 entry, gated on forge_permit_filed (Stage 1 of THIS quest, filed at the forge-tier clerk) -- sanctioned {gold, accomplishment} compound. Fee spent HERE (not at the exam node) so the buy-contract's requires/effects pairing stays on one option.",
+     "text": "I'm here for the forge-tier fitness read. (8 gold)",
+     "requires": { "gold": 8, "accomplishment": { "forge_permit_filed": 1 } },
+     "hide_when": { "accomplishment": { "grimalkin_examination_passed": 1 } },
+     "effects": [ { "gold": -8 } ],
+     "goto": "exam"
+    },
+    { "text": "Just passing through.", "end": true }
+   ]
+  },
+  "exam": {
+   "speaker": "Grimalkin",
+   "text": "Grip, wind, and whether you quit before I do -- three measures, and you've cleared all three. Numbers don't lie, and neither do I. Effort, not rank. Remember that past this room.",
+   "options": [
+    {
+     "_comment": "Beat 2 real completion -- banks grimalkin_examination_passed. The 8g fee already spent at the hub option above, so this closing option carries no further cost.",
+     "text": "Understood.",
+     "effects": [ { "accomplishment": "grimalkin_examination_passed" } ],
+     "end": true
+    }
+   ]
+  }
+ }
+}

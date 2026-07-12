@@ -314,6 +314,29 @@ func _meets(req: Dictionary) -> bool:
 		recognized = true
 		if not (_ctx.get("inventory", []) as Array).has(String(req["item"])):
 			return false
+	if req.has("race"):
+		# The SEVENTH sanctioned gate type -- read-only COSMETIC
+		# state (pc_race, set once at char-creation, additive save field
+		# already shipped), not progress. 8e Phase C (issue #16), the ONE
+		# sanctioned sim addition for the Pallass milestone. Powers
+		# text_variants ONLY in shipped content today (a node's greeting
+		# reading differently for a Human vs a Drake PC, the
+		# "friction / assumed-local" register the city-identity bible
+		# calls for) -- _resolved_text already routes every text_variants
+		# entry through this same _meets, so no separate mechanism was
+		# needed. Deliberately NOT added to _progress_gated: a race-gated
+		# OPTION (unshipped today) stays VISIBLE-LOCKED like skill/class,
+		# never hidden -- there is no "progress" a player can make toward
+		# a different race, so hiding would read as a content bug, not a
+		# tease. `talk_pool` entries do NOT read this key -- WISocial's
+		# pool rotation is a separate mechanism from this walker's
+		# _meets, and extending it would touch social.gd + wi_game.gd's
+		# ctx-threading beyond this function (outside the sanctioned
+		# "~5 lines" scope); every shipped race-variant line rides
+		# text_variants instead.
+		recognized = true
+		if String(_ctx.get("pc_race", "")) != String(req["race"]):
+			return false
 	return recognized
 
 
@@ -329,6 +352,8 @@ func _requirement_text(req: Dictionary) -> String:
 	if req.has("item"):
 		var items: Dictionary = _ctx.get("items", {})
 		return "requires %s" % String(items.get(String(req["item"]), {}).get("name", String(req["item"])))
+	if req.has("race"):
+		return "requires being %s" % String(req["race"])
 	return "requires more progress"
 
 

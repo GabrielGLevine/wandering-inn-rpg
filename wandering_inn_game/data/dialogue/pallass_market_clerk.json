@@ -1,0 +1,40 @@
+{
+ "_comment": "8e Phase C 'Papers for Pallass' Stage 3 (issue #16, controller ruling 2) -- the market-tier arrival checkpoint. DORMANT: no scene entity carries `conversation: \"pallass_market_clerk\"` yet -- Phase B's own parallel worktree lane owns pallass_market's actual map/entity placement (this lane's ownership is quest/dialogue wiring only, per the phase plan's file-ownership split). Forward-reference table + entity/sprite notes: docs/design/pallass-staging/phase-c-forward-references.json. Sprite (once wired): `tier_clerk` (8e Phase A rig, 'one rig reused at every desk' per character-profiles.md). Race-variant line set (item 4 of the brief, 'the clerk'): text_variants gated on requires:{race:human}/{race:drake}, base text serves the gnoll fallback (ruling 3's own shape). Copy below is STRUCTURALLY COMPLETE PLACEHOLDER -- D-phase replaces with Grimalkin/clerk voice-pass copy before merge; gates/costs are real, not draft.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Tier Clerk",
+   "text": "State your business and your sponsor.",
+   "text_variants": [
+    {
+     "_comment": "Race-variant line set: Human friction (Pallass reads Human presence as rare/noticed, per docs/design/city-identity-bible.md). PLACEHOLDER copy, D-phase replaces.",
+     "requires": { "race": "human" },
+     "text": "A Human, this far in. State your business and your sponsor -- twice, if the first answer doesn't hold up."
+    },
+    {
+     "_comment": "Race-variant line set: Drake assumed-local -- the clerk assumes a Drake PC belongs here without asking why. PLACEHOLDER copy, D-phase replaces.",
+     "requires": { "race": "drake" },
+     "text": "Papers, then, same as everyone through this gate. Sponsor's name, and don't waste my morning."
+    }
+   ],
+   "options": [
+    {
+     "_comment": "The arrival stamp itself -- gated on pallass_attuned (Stage 2, Krshia's stone) so the clerk only stamps someone the Door actually recognizes. 2g fee, posted-prices register (docs/design/city-identity-bible.md: 'prices are POSTED... no haggling'). Banks pallass_entry_stamped, THE producer forge_tier_permit's own beat 1 waits on.",
+     "text": "Papers for Pallass, filed and attuned. (2 gold)",
+     "requires": { "gold": 2, "accomplishment": { "pallass_attuned": 1 } },
+     "hide_when": { "accomplishment": { "pallass_entry_stamped": 1 } },
+     "effects": [ { "gold": -2 }, { "accomplishment": "pallass_entry_stamped" } ],
+     "goto": "stamped"
+    },
+    { "text": "Just looking.", "end": true }
+   ]
+  },
+  "stamped": {
+   "speaker": "Tier Clerk",
+   "text": "Stamped. Market tier, until you've got cause for more. Mind the queues.",
+   "options": [
+    { "text": "My thanks.", "end": true }
+   ]
+  }
+ }
+}

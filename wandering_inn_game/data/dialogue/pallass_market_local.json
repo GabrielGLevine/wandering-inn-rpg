@@ -1,0 +1,25 @@
+{
+ "_comment": "8e Phase C, item 4 of the brief ('one market presence' gets requires:{race} variant lines). ORIGINAL walk-on, no proper name -- the Peddler/gate_guard precedent for unnamed civic-texture NPCs. DORMANT: no scene entity carries `conversation: \"pallass_market_local\"` yet -- Phase B's own parallel worktree lane owns pallass_market's actual map/entity placement (forward-reference table: docs/design/pallass-staging/phase-c-forward-references.json). Suggested sprite (once wired): a tinted pc_drake_m/pc_drake_f reuse, the Renn/Ilvo/Yelra walk-on precedent (character-profiles.md) -- no new art requested, Phase A already closed. Copy below is STRUCTURALLY COMPLETE PLACEHOLDER -- D-phase replaces with voice-pass copy before merge; the race gates are real, not draft.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Market-Tier Local",
+   "text": "Busy morning for the stalls. Mind the queues -- they move faster than they look.",
+   "text_variants": [
+    {
+     "_comment": "Race-variant line set: Human friction. PLACEHOLDER copy, D-phase replaces.",
+     "requires": { "race": "human" },
+     "text": "Don't see many of you up this tier. Nothing personal in the look -- just not a common one."
+    },
+    {
+     "_comment": "Race-variant line set: Drake assumed-local. PLACEHOLDER copy, D-phase replaces.",
+     "requires": { "race": "drake" },
+     "text": "You'll want the second queue -- the first one's for out-of-towners. You know how it is."
+    }
+   ],
+   "options": [
+    { "text": "Morning.", "end": true }
+   ]
+  }
+ }
+}

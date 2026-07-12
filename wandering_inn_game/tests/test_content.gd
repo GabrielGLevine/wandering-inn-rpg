@@ -586,6 +586,19 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		gate_keys += 1
 		var item_id: String = String(requires["item"])
 		assert(item_ids.has(item_id), label + " requires unknown item: " + item_id)
+	if requires.has("race"):
+		# The SEVENTH sanctioned single-key gate -- 8e Phase C
+		# (issue #16)'s race-variant key (WIDialogue._meets's `race` check
+		# against the read-only ctx `pc_race`). Value must be one of the
+		# char-creation race ids (WIGame.PC_RACES) -- a typo'd race id
+		# would silently never match any real pc_race, making the variant
+		# permanently dead content. Shipped only on text_variants today,
+		# but validated generically here (same shared function options
+		# and text_variants both route through), matching every other
+		# single-key gate's treatment.
+		gate_keys += 1
+		var race_id: String = String(requires["race"])
+		assert(["human", "drake", "gnoll"].has(race_id), label + " requires unknown race: " + race_id)
 	# The FIRST sanctioned COMPOUND exception --
 	# {gold, accomplishment} together (a stage-gated discount buy option,
 	# Krshia's `krshia_friend_of_the_silverfangs` perk). dialogue.gd's _meets()

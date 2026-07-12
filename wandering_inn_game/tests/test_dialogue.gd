@@ -450,6 +450,58 @@ func test_unrecognized_requires_key_stays_visible_and_locked() -> void:
 	assert(d.choose(0).is_empty(), "locked-via-unrecognized-key choose still refused")
 
 
+## 8e Phase C (issue #16): the race-variant key. text_variants gated on
+## requires:{race:"<id>"} render differently per pc_race in ctx, proven BOTH
+## ways -- a met race shows its OWN variant, the OTHER race's variant never
+## leaks, and an untargeted race (gnoll) falls back to base text (ruling 3's
+## "the gnoll case falls back to base" shape).
+func test_race_requires_gates_text_variants_both_ways() -> void:
+	_events.clear()
+	var graph := {"start": "hub", "nodes": {"hub": {
+		"speaker": "S",
+		"text": "base text",
+		"text_variants": [
+			{"requires": {"race": "human"}, "text": "human variant"},
+			{"requires": {"race": "drake"}, "text": "drake variant"},
+		],
+		"options": [{"text": "leave", "end": true}],
+	}}}
+	var human := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "pc_race": "human"}, _sink)
+	human.begin()
+	assert(String(_events[0]["payload"]["text"]) == "human variant", "requires:{race:human} renders for a Human pc_race")
+
+	_events.clear()
+	var drake := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "pc_race": "drake"}, _sink)
+	drake.begin()
+	assert(String(_events[0]["payload"]["text"]) == "drake variant", "requires:{race:drake} renders for a Drake pc_race -- the OTHER variant never leaks")
+
+	_events.clear()
+	var gnoll := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "pc_race": "gnoll"}, _sink)
+	gnoll.begin()
+	assert(String(_events[0]["payload"]["text"]) == "base text", "an untargeted race (gnoll) falls back to base text -- neither variant matches")
+
+
+## The same key on an OPTION's requires (unshipped in content today, but the
+## mechanism must behave like every other visible-locked single-key gate --
+## skill/class/item's own precedent): visible, locked when unmet, choosable
+## once met -- never hidden (race is cosmetic, not progress).
+func test_race_requires_on_option_stays_visible_locked() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "drakes only", "requires": {"race": "drake"}, "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "pc_race": "human"}, Callable())
+	d.begin()
+	assert(d.current_options().size() == 2, "race-gated option stays VISIBLE when unmet (not hidden -- race is cosmetic, not progress)")
+	assert(bool(d.current_options()[0]["locked"]), "unmet race gate locked")
+	assert(d.choose(0).is_empty(), "locked-via-race choose refused")
+
+	var d2 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "pc_race": "drake"}, Callable())
+	d2.begin()
+	assert(not bool(d2.current_options()[0]["locked"]), "met race gate unlocked")
+	assert(not d2.choose(0).is_empty(), "met race gate choosable")
+
+
 func _last_line_text() -> String:
 	for i in range(_events.size() - 1, -1, -1):
 		if String(_events[i]["type"]) == "dialogue_line":
@@ -606,6 +658,8 @@ func _init() -> void:
 	test_item_requires_falls_back_to_raw_id_when_uncatalogued()
 	test_item_requires_unlocks_after_real_pickup()
 	test_unrecognized_requires_key_stays_visible_and_locked()
+	test_race_requires_gates_text_variants_both_ways()
+	test_race_requires_on_option_stays_visible_locked()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)
