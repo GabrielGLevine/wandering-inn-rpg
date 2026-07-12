@@ -1134,17 +1134,30 @@ def load_manifest_paths(manifest_path: Path = ASSETS_MANIFEST_PATH) -> set[str]:
 	packs fetched)."""
 	with manifest_path.open() as f:
 		data = json.load(f)
-	return {entry["path"] for entry in data.get("assets", [])}
+	return {_norm_rel(entry["path"]) for entry in data.get("assets", [])}
 
 
-def guard_verdict(dst_rel: str, manifest_paths: set[str], force: bool) -> str:
+def _norm_rel(p: str) -> str:
+	"""Canonical form for guard comparisons: posix separators, no ./
+	segments, stripped whitespace. Both the manifest keys and every row
+	destination pass through this -- an equivalent-but-differently-spelled
+	path can never dodge the guard (review hardening)."""
+	from pathlib import PurePosixPath
+	return str(PurePosixPath(p.strip().replace("\\", "/")))
+
+
+def guard_verdict(dst_rel: str, manifest_paths: set[str], force) -> str:
 	"""'ALLOW' or a 'REFUSE: <reason>' string for a would-be copy
 	destination. Pure function over caller-supplied data -- no filesystem
 	access, so it's safe to call from --self-test without potential_assets/
-	present."""
-	if dst_rel not in manifest_paths:
+	present. `force` is False, True (blanket --force-manifest-write), or a
+	set of NORMALIZED paths (per-path --force-manifest-write=<path>,
+	repeatable -- the review's all-or-nothing hardening: re-curating one
+	overlay path no longer re-exposes the other 144)."""
+	key = _norm_rel(dst_rel)
+	if key not in manifest_paths:
 		return "ALLOW"
-	if force:
+	if force is True or (isinstance(force, set) and key in force):
 		return "ALLOW (--force-manifest-write override)"
 	return (
 		"REFUSE: manifest-overlay path (assets_manifest.json) -- ships ONLY "
@@ -1185,6 +1198,26 @@ def _self_test() -> None:
 	verdict_open = guard_verdict(non_manifest_path, manifest_paths, force=False)
 	assert verdict_open == "ALLOW", f"expected plain ALLOW, got: {verdict_open}"
 
+	# 3b. Normalization edge (review hardening): the same manifest path
+	#     spelled with ./-prefix must STILL be refused -- spelling variance
+	#     can never dodge the guard.
+	dodgy = "./" + manifest_path
+	verdict_dodgy = guard_verdict(dodgy, manifest_paths, force=False)
+	assert verdict_dodgy.startswith("REFUSE"), (
+		f"normalization dodge: {dodgy!r} got {verdict_dodgy}"
+	)
+
+	# 3c. Per-path force: overriding ONE path allows exactly that path and
+	#     keeps every other manifest path refused (the all-or-nothing fix).
+	one = guard_verdict(manifest_path, manifest_paths, force={_norm_rel(manifest_path)})
+	assert one.startswith("ALLOW"), f"per-path force failed: {one}"
+	other = "assets/sprites/citizen_f/Idle_Down-Sheet.png"
+	if other in manifest_paths:
+		still = guard_verdict(other, manifest_paths, force={_norm_rel(manifest_path)})
+		assert still.startswith("REFUSE"), (
+			f"per-path force leaked to an unrelated path: {still}"
+		)
+
 	# 4. Regression guard for THIS issue: no body_a row should ever be back
 	#    in MANIFEST, and at least one legitimate (audited-current, e.g.
 	#    goblin/bat/admurin pack) row should still be refused by default --
@@ -1218,7 +1251,12 @@ def main() -> None:
 		return
 
 	apply = "--apply" in sys.argv
-	force = "--force-manifest-write" in sys.argv
+	force_paths = {
+		_norm_rel(a.split("=", 1)[1])
+		for a in sys.argv
+		if a.startswith("--force-manifest-write=")
+	}
+	force = True if "--force-manifest-write" in sys.argv else (force_paths or False)
 	mode = "APPLY" if apply else "DRY-RUN"
 	manifest_paths = load_manifest_paths()
 	refused: list[str] = []
