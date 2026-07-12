@@ -190,6 +190,18 @@
    "copy": "A second standing order, same reasoning as the first: I would rather this city talked its way out of two more fights than swung its way through them. Two settled disputes, words only, both parties upright after. 9 gold -- more than the first, because it is harder work than it sounds, and I know exactly how hard. Z. Sunderscale.",
    "condition_mode": "absolute",
    "_trace": " MODE FIX (review MEDIUM): absolute -- persuaded_someone producers are all one-shot dialogue resolutions (~7 lifetime); a delta-2 posting can strand a player who spent all but one before accepting. One honest payout, then retired."
+  },
+  {
+   "_comment": "Issue #81 (exploration & optional content): retrofits frozen_cache (floodplains) to 'pay real', per the gap-analysis finding that it was the one discovery in the game rewarding nothing but a toast -- frozen_cache now ALSO grants gold directly (data/skeleton_scene.json), and this posting lets the finder report it for a small bonus. condition_mode absolute (the sewer-trio precedent): found_the_frozen_cache is a one-shot accomplishment a player can bank before ever seeing this posting (the freeze-the-pond secret has no other gate), so delta semantics would strand it forever for anyone who found it first. Giver: Redscar Vell, the SAME bronze-rank treasure-hunter voice already shipped on bounty_silk_line -- a natural fit (his own posting already brags about knowing where loot hides in the sewers; the pond cache is his kind of rumor).",
+   "id": "bounty_pond_keepsakes",
+   "pillar": "explore",
+   "giver": "Redscar Vell, Bronze-rank adventurer (misspelled-confident; the hand IS the character)",
+   "condition": {
+    "found_the_frozen_cache": 1
+   },
+   "condition_mode": "absolute",
+   "gold": 2,
+   "copy": "found somthing froze in the pond out past the inn once. a strongbox, silt an all. didnt open it myself, bad luck to rob the dead twice. if you already crakced it open, 2 gold for telling me you found it too. i like being right. REDSCAR VELL, bronze rank (almost silver)"
   }
  ]
 }

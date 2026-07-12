@@ -1,0 +1,11 @@
+{
+	"start": "hub",
+	"_comment": "Issue #81 'The Missing Recruit' (data/quests.json, the_missing_recruit): Recruit Pell's own graph, reached only once present_when (missing_recruit_started) has made this entity structurally exist (skeleton_scene.json's sewers map) -- no talk_pool needed, a bare `conversation` routes every interact straight here. Single option banks the beat-1 counter directly; safe to re-fire (idempotent record_accomplishment, no gold/item on this node) if the player talks to Pell twice before reporting to Dresk.",
+	"nodes": {
+		"hub": { "speaker": "Pell", "text": "Dead gods, an actual person. I heard scratching that wasn't rats, then I lost the ladder in the dark, and I've been down here just — you're not going to tell Ashgrave I panicked, are you?", "text_variants": [
+				{ "requires": { "accomplishment": { "found_missing_recruit": 1 } }, "text": "Made it back fine, thanks to you. Ashgrave's already got me on report-writing duty for it. Fair, honestly." }
+			], "options": [
+			{ "text": "Let's get you back to the barracks.", "effects": [ { "accomplishment": "found_missing_recruit" } ], "end": true }
+		] }
+	}
+}

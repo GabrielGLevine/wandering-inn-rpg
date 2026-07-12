@@ -1,0 +1,20 @@
+{
+	"start": "hub",
+	"_comment": "Issue #81 'Renn's Old Warhammer' (data/quests.json, renns_warhammer): Renn's REAL conversation graph, replacing the old repeated-forever dialogue[0] fallback (skeleton_scene.json's own comment on renn flagged him 'inert-adjacent by design' -- this is that v2). POSTING-SEEDED: the 'ask' option is hidden until guild_board's rumor_lost_hammer has been read (heard_about_lost_hammer). Two real beats, BOTH same-map as the giver (guild): 'search' (renns_gear_stash's on_open_accomplishment) and 'report' (the item-gated turn-in option here, requires:{item:renns_warhammer} -- the sixth sanctioned single-key gate, non-progress-gated so it stays visible/greyed rather than hidden, same as patron_serving's Serve option). Always-available exit: 'Just passing through.' carries neither requires nor hide_when.",
+	"nodes": {
+		"hub": { "speaker": "Renn", "text": "Still four silver. Still an insult.", "text_variants": [
+				{ "requires": { "accomplishment": { "hammer_quest_started": 1 } }, "text": "Still looking? It's a warhammer, not a needle. Back wall, I said." },
+				{ "requires": { "accomplishment": { "returned_the_warhammer": 1 } }, "text": "Got my hammer back and I'm still complaining about the board. Some things don't change." }
+			], "options": [
+			{ "text": "Just passing through.", "end": true },
+			{ "text": "I hear you're missing a warhammer.", "requires": { "accomplishment": { "heard_about_lost_hammer": 1 } }, "hide_when": { "accomplishment": { "hammer_quest_started": 1 } }, "effects": [ { "accomplishment": "hammer_quest_started" }, { "quest": "renns_warhammer" } ], "goto": "explain" },
+			{ "text": "Found this by the back wall. Yours?", "requires": { "item": "renns_warhammer" }, "effects": [ { "accomplishment": "returned_the_warhammer" }, { "remove_item": "renns_warhammer" }, { "gold": 3 } ], "goto": "thanks" }
+		] },
+		"explain": { "speaker": "Renn", "text": "Backup hammer. Left it propped against the back wall last time I hauled kit through here, and it's not there now, and Ilvo will not stop laughing about it.", "options": [
+			{ "text": "I'll keep an eye out.", "end": true }
+		] },
+		"thanks": { "speaker": "Renn", "text": "It WAS the back wall. I told him. Three gold, and don't tell Ilvo I paid for this — actually, tell him. It'll shut him up faster than the gold will.", "options": [
+			{ "text": "Your secret's safe.", "end": true }
+		] }
+	}
+}

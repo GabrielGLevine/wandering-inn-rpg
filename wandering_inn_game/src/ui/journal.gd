@@ -59,6 +59,7 @@ const _POSTING_TITLES := {
 	"bounty_guild_census": "Guild Headcount",
 	"bounty_alley_cull": "Clear the Boulevard Alleys",
 	"bounty_second_watch": "Settle Two More Quarrels",
+	"bounty_pond_keepsakes": "Report the Pond Cache",
 }
 
 ## `WIBounties._delivery_title`'s exact twin, same lockstep contract as
@@ -403,6 +404,7 @@ func _open() -> void:
 		"delivery_status": String(delivery.get("status", "")),
 		"delivery_gold": int(delivery.get("gold", 0)),
 		"delivery_detail": String(delivery.get("detail", "")),
+		"found_notes": _found_note_ids(),
 	})
 
 
@@ -722,6 +724,24 @@ func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines
 		parts.append("[b]Effects[/b]")
 		for status_id: Variant in seen_statuses:
 			parts.append(UIChrome.bb_escape(WIEffectText.status_line(String(status_id), Game.sim.skills.values())))
+	# Issue #81 (exploration & optional content): the found-note collectible
+	# thread's own section, OMITTED ENTIRELY when nothing is held yet -- the
+	# Effects section's own "no filler" precedent, not a "None yet" row. One
+	# line per held note, "<name> — <the note's own written text>" (the
+	# `lore` field carries the found text itself for this item kind; see
+	# items.json's note_* entries).
+	var found_notes := _found_note_ids()
+	if not found_notes.is_empty():
+		parts.append("")
+		parts.append("[b]Lore[/b]")
+		for note_id: String in found_notes:
+			var note_record: Dictionary = Game.sim.item(note_id)
+			var note_name := String(note_record.get("name", note_id))
+			var note_lore := String(note_record.get("lore", ""))
+			if note_lore != "":
+				parts.append(UIChrome.bb_escape("%s — %s" % [note_name, note_lore]))
+			else:
+				parts.append(UIChrome.bb_escape(note_name))
 	return {"text": "\n".join(parts), "cursor_line": cursor_line}
 
 
@@ -816,6 +836,21 @@ func _posting_title(id: String) -> String:
 ## `_posting_title`'s exact delivery twin, over `_DELIVERY_TITLES`.
 func _delivery_title(id: String) -> String:
 	return String(_DELIVERY_TITLES.get(id, id.trim_prefix("delivery_").capitalize()))
+
+
+## Every held inventory item id carrying the `note_` prefix -- the found-note
+## collectible convention (issue #81), mirroring this file's own `bounty_`/
+## `delivery_` id-prefix idiom (`_posting_title`/`_delivery_title`'s fallback
+## branch). Reads `Game.sim.inventory` directly (this file already reaches
+## into `Game.sim` freely, not purity-constrained) -- no new sim field, no
+## catalog needed beyond the existing `Game.sim.item()` accessor the Lore
+## section itself calls. In inventory order (insertion order, stable).
+func _found_note_ids() -> Array[String]:
+	var out: Array[String] = []
+	for id: String in Game.sim.inventory:
+		if id.begins_with("note_"):
+			out.append(id)
+	return out
 
 
 ## Finds the record with `id` in `pool` (a bounties.json/deliveries.json

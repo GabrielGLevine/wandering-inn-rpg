@@ -908,6 +908,7 @@ func interact() -> Dictionary:
 				var resolved := _resolve_skill_use_effect({
 					"accomplishment": target["on_interact_accomplishment"],
 					"toast": target.get("toast", ""),
+					"gold": target.get("gold", 0),
 					"variants": target.get("variants", []),
 				})
 				var accomplishment_id := String(resolved["accomplishment"])
@@ -919,8 +920,13 @@ func interact() -> Dictionary:
 				# serving_tray / patron serve) may carry a sibling optional
 				# `gold: N` wage (D2 content). Absent in all D1 data -> streams
 				# byte-identical; present in D2 it pays via the shared router.
-				if target.has("gold"):
-					_apply_gold_effect(int(target["gold"]), String(target[WIKeys.ID]))
+				# Gold rides the SAME variants resolution as toast/accomplishment,
+				# so a met-gate variant can zero it -- the one-shot-discovery
+				# guard (frozen_cache: pays on first find only; ice persists all
+				# waking, so an unresolved gold field was an unbounded pump).
+				# Variant-less props (serving_tray's repeatable wage) unchanged.
+				if int(resolved.get("gold", 0)) != 0:
+					_apply_gold_effect(int(resolved["gold"]), String(target[WIKeys.ID]))
 				return {"accomplishment": accomplishment_id}
 			# RULING (2026-07-10, repeals the interact/hotbar byte-parity
 			# contract): generic interact NEVER auto-casts a prop's required

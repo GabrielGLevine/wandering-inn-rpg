@@ -527,6 +527,18 @@
    "seed": 9,
    "fixture": "journal_history_start",
    "note": "Issue #79 (journal & progression communication wave): the journal's Completed section (chosen-path history line), Postings section detail view (accepted posting/slip's own authored copy text), and per-class aspiration identity line, all asserted structurally off one ui_journal_shown open; a trailing cursor move + toggle proves the pre-existing skill-row mechanism still works with the new sections rendered above it"
+  },
+  {
+   "script": "missing_recruit_loop",
+   "seed": 9,
+   "fixture": "near_missing_recruit",
+   "note": "Issue #81 (exploration & optional content): 'The Missing Recruit' end to end, POSTING-SEEDED -- a real guild_board rumor read banks heard_about_missing_recruit, Dresk's gated ask option starts the quest, recruit_pell (present_when-gated, structurally absent until the quest starts) is found in the sewers and completes beat 1, the journal's new Lore section picks up note_sewer_surveyor, and reporting back to Dresk completes beat 2 + pays 4 gold"
+  },
+  {
+   "script": "renns_warhammer_loop",
+   "seed": 9,
+   "fixture": "board_loop_start",
+   "note": "Issue #81: 'Renn's Old Warhammer' end to end, POSTING-SEEDED, SAME-MAP shape (contrast missing_recruit_loop's cross-map one) -- the same board rumor read banks heard_about_lost_hammer, Renn's gated ask option starts the quest, renns_gear_stash (an always-present container) completes beat 1, and the item-gated turn-in option completes beat 2 + pays 3 gold (the lore-note thread's third find, note_old_dread, was relocated to the barracks post-dynamism-check -- barracks_walkthrough.json carries it)"
   }
  ]
 }
