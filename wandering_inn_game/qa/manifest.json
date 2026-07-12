@@ -449,7 +449,7 @@
    "script": "invrisil_walkthrough",
    "seed": 9,
    "fixture": "near_invrisil",
-   "note": "8c Task C1 (issue #12): portal arrival (a new destination row, invrisil_attuned banked by the Guild-board letter beat) -- the crowd (a pool-less extra's static dialogue line) + Coyle's pre-quest talk_pool -- the alleys' bent route with BOTH sneak legs (NEGATIVE: a real LOW-lethality fight resolves; POSITIVE: assert_event_count pins combat_started at exactly 1 for the whole run) -- the fixer Cups' rumor-by-the-cup hub (one real gold-gated purchase) -- THE GUEST COUCH sleep site (last beat, phase-advancing)"
+   "note": "8c Task C1 (issue #12): portal arrival (a new destination row, invrisil_attuned pre-banked in the fixture -- real play banks it via Eloise's post-Riverfarm stone purchase, riverfarm_talk's own canonical) -- the crowd (a pool-less extra's static dialogue line) + Coyle's pre-quest talk_pool -- the alleys' bent route with BOTH sneak legs (NEGATIVE: a real LOW-lethality fight resolves; POSITIVE: assert_event_count pins combat_started at exactly 1 for the whole run) -- the fixer Cups' rumor-by-the-cup hub (one real gold-gated purchase) -- THE GUEST COUCH sleep site (last beat, phase-advancing)"
   },
   {
    "script": "invrisil_disagreement_stealth",

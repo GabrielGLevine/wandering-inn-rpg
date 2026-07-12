@@ -45,7 +45,7 @@
    ],
    "requires_accomplishment": "invrisil_attuned",
    "arrival_toast": "The light turns pale and cool, and the noise of a much bigger city rushes in to fill the silence. Invrisil, same as the letter promised.",
-   "_comment": "Invrisil 8c Task C1 (issue #12) -- the anchor-stone-per-region idiom's newest instance (zero code). invrisil_attuned banks from the Guild-board rumor beat (guild_board's own board_rumors list in skeleton_scene.json, the Brothers' letter -- locked shape 1), same convention as riverfarm_attuned. Arrival cell (4,8) sits one cell east of invrisil_anchor_stone (3,8) at the boulevard's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
+   "_comment": "The anchor-stone-per-region idiom's newest instance (zero code). invrisil_attuned banks from Eloise's stone purchase (riverfarm_witch.json's 'shop' node, post-blight_lifted) -- the Guild-board letter (guild_board's own board_rumors list in skeleton_scene.json) stays a signpost only, pointing at Riverfarm/Eloise rather than banking this flag itself. Arrival cell (4,8) sits one cell east of invrisil_anchor_stone (3,8) at the boulevard's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
   }
  ]
 }

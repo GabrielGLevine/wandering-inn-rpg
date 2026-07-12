@@ -591,6 +591,23 @@
 			"price": 16,
 			"description": "A river-smoothed stone, warded and strung on cord without ceremony.",
 			"lore": "She swears it's nothing special, the same way she swears the tea is just tea. It's warm to the touch a full week after you buy it, which is either coincidence or the second lie."
+		},
+		{
+			"_comment": "Post-Riverfarm attunement purchase (riverfarm_witch.json's 'shop' node, gated on blight_lifted): banks invrisil_attuned alongside the item grant -- dialogue effects compose as separate {gold},{item},{accomplishment} dicts on one option, the resonant_catalyst/bought_catalyst precedent (krshia_crate.json), no new effect machinery. unsellable:true for the same reason as resonant_catalyst: it carries a real price (so sellable_items() would otherwise catalog it) but the lore below already says it's a keepsake -- the 'bought, not found' shape, unlike the found-only anchor_stone (which has no price field at all).",
+			"id": "invrisil_attunement_stone",
+			"name": "Invrisil Attunement Stone",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 18,
+			"unsellable": true,
+			"description": "A plain grey stone, palm-sized, humming so faintly you'd miss it if you weren't listening.",
+			"lore": "Eloise's own stock, sold to those bound for the city rather than the hearth. It doesn't point the way so much as remember it. Carried, never worn or sold onward."
 		}
 	]
 }
