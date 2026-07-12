@@ -1,0 +1,713 @@
+{
+ "_comment": "GH#70 [Archer] canonical -- the rogue_earn_loop shape (bow bought+equipped -> archery_butt practice -> sleep -> class_gained -> kit fielded) PLUS the combat leg rogue_earn_loop doesn't need: a won ranged fight proving Attack resolves at distance >1 (the range+LoS seam, live). Loads near_barracks (post_tutorial_street's exact state + gold:25 -- the same fixture barracks_walkthrough uses): warrior L1, rusty_sword equipped, street (1,3), 25 gold. Route: (1) peddler's stall -> buy training_bow (8g, peddler_stall.json's appended index-2 option) -> equip it via the real inventory UI; (2) into the barracks -> the SAME (2,3)->(11,3) waypoints barracks_walkthrough's own cell_door leg already uses, then straight up 2 onto the new archery_butt prop (11,1) -- three interacts bank ranged_hit directly, no combat, no kill; (3) teleport to inn_upstairs's bed (the rogue_earn_loop bed-jump precedent -- the walk back isn't this script's subject) -> sleep -> class_gained{archer} + the kit toast; (4) teleport to floodplains beside Relc (the flame_pillar_loop/ice_floor_loop vantage) -> re-spar -> THE RANGE PROOF: move exactly one cell (chebyshev 4 to the target, nowhere near adjacent) -> Attack resolves at that distance -> combat_autoplay mops up the two inert dummies to victory. Seed 9 for convention; the dummies are 0-damage/inert (weapon_die 0, ai inert) so the fight's outcome never depends on rng.",
+ "fixture_save": "near_barracks",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 25
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.weapon",
+   "equals": "rusty_sword"
+  },
+  {
+   "_comment": "== (1) THE PEDDLER'S BOW == (1,3) right17 -> (18,3), up1 blocks on peddler (18,2) & faces it. No pool bark here (peddler carries no talk_pool, barracks_walkthrough's own identical interact already confirms straight-to-dialogue_started).",
+   "action": "move",
+   "direction": "right",
+   "steps": 17
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "peddler_stall"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_peddler_stall"
+  },
+  {
+   "_comment": "hub options: [0] gambeson (20g), [1] Just looking., [2] the bow (8g, GH#70's appended option). Down 2, confirm.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "payload_contains": {
+    "delta": -8,
+    "total": 17,
+    "source": "peddler_stall"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Paid 8 gold."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "training_bow"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Peddler",
+    "text": "Deposit's already paid, so don't ask where it came from. Wear it in good health."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_bought_bow"
+  },
+  {
+   "_comment": "'That's all.' (bought node index 1) closes the conversation.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== EQUIP THE BOW == Inventory is now [rusty_sword, relcs_spare_spear, training_bow] (bought item appended last, index 2); cursor resets to 0 on open -> two move_down presses select it.",
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {
+    "items": 3,
+    "item_effect_lines": [
+     [],
+     [
+      "+1 damage on melee hits"
+     ],
+     [
+      "Range 4",
+      "Worth 8 gold"
+     ]
+    ],
+    "selected_icon": true,
+    "mech_line": ""
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "_comment": "training_bow has no res://assets/icons/items/ asset (path-by-convention, no data field) -- selected_icon:false is the honest iconless-degrade read, same as any other unclaimed-art item.",
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "payload_contains": {
+    "cursor": 2,
+    "item": "training_bow",
+    "selected_icon": false,
+    "mech_line": "Range 4 | Worth 8 gold"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_bow_selected"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "payload_contains": {
+    "item": "training_bow",
+    "slot": "weapon"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_bow_equipped"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.weapon",
+   "equals": "training_bow"
+  },
+  {
+   "_comment": "== (2) INTO THE BARRACKS == (18,3) right3 -> (21,3), right1 -> (22,3) (open ground, issue #53 finding 13), up1 blocks on barracks_door (22,2) & faces it.",
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    21,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    22,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "barracks",
+    "cell": [
+     2,
+     6
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "barracks"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "barracks",
+    "floor_cells": 112,
+    "blocked_cells": 42
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 6,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "visited_barracks"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== ARCHERY BUTT == (2,6) up3 -> (2,3), right9 -> (11,3) (the SAME waypoints barracks_walkthrough's own cell_door leg uses), up1 -> (11,2), up1 blocks on archery_butt (11,1) & faces it. Three interacts bank ranged_hit 1/2/3 directly -- the practice-alone earn path, no combat.",
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 9
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "ranged_hit",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You put an arrow in the straw. Not bad, for someone who still flinches at the draw."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_archery_butt"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "ranged_hit",
+    "count": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "ranged_hit",
+    "count": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.ranged_hit",
+   "equals": 3
+  },
+  {
+   "_comment": "== (3) SLEEP -> [ARCHER] == teleport straight to the bed (rogue_earn_loop's own bed-jump precedent -- the walk back through barracks/street/floodplains isn't this script's subject). ranged_hit==3 already clears [Archer]'s gained_by threshold (OPAQUE-UNTIL-SLEEP: nothing renders progress-toward before this beat).",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "archer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.archer",
+   "equals": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Archer] class gained! — [Power Shot], [Keen Eye]"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "05_archer_gained"
+  },
+  {
+   "_comment": "== (4) THE RANGED FIGHT == teleport beside Relc (the flame_pillar_loop/ice_floor_loop vantage), re-spar (social_talked cleared by the sleep -- the pool-bark-then-graph two-interact pattern fires again).",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'meet' node, sparred_with_relc text_variant. Visible options (met_relc/sparred_with_relc/given_spear_by_relc all already true): [0] What's out here worth guarding?, [1] Got time to show me how to fight? (Spar), [2] Keep walking. Down 1, confirm.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Again? Fine. The dummies heal fast. Perk of being straw. Same rules: move, hit, no crying."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'spar_offer' node: default cursor (0) is 'Ready when you are.' -- accept.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.weapon_range",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.skills",
+   "contains": "power_shot"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.training_dummy_a.cell",
+   "equals": [
+    7,
+    3
+   ]
+  },
+  {
+   "_comment": "THE RANGE PROOF: one step right (chebyshev to training_dummy_a drops from 5 to 4 -- inside the bow's range 4, nowhere near adjacent), then Attack resolves at that distance.",
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     3,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    3,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "attack"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "attack_resolved",
+   "payload_contains": {
+    "attacker": "pc",
+    "target": "training_dummy_a"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_ranged_attack"
+  },
+  {
+   "_comment": "Mop-up: two inert 0-damage dummies, zero risk (the flame_pillar_loop/ice_floor_loop finish idiom) -- the range proof is already banked.",
+   "action": "combat_autoplay"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "_comment": "Review I-1 tooth: a won BOW fight must not advance melee_hit -- ranged_hit and melee_hit are mutually exclusive per hit (a bow hit feeding [Warrior] progression was the leak). (baseline zero -- the counter must never be recorded this run)",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "melee_hit"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "07_victory"
+  }
+ ]
+}

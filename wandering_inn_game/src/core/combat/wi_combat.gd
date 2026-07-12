@@ -120,6 +120,14 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 			WIKeys.MAX_HP: 20 + int(cfg[WIKeys.STATS]["con"]) + int(cfg.get(WIKeys.HP_MOD, 0)),
 			WIKeys.DAMAGE_MOD: int(cfg.get(WIKeys.DAMAGE_MOD, 0)),
 			WIKeys.DAMAGE_REDUCTION: int(cfg.get(WIKeys.DAMAGE_REDUCTION, 0)),
+			# GH#70 range+LoS seam: defaults to 1 (melee) for every combatant
+			# cfg that carries no WEAPON_RANGE key -- every enemy/ally template
+			# in data/combatants.json and every pre-GH#70 weapon item, so this
+			# is a no-op for all pre-existing content (byte-identical proof).
+			# Only wi_game.gd's `_build_player_combatant` ever writes a value
+			# other than the default (from the equipped weapon's items.json
+			# `range` field), so a ranged weapon is PC-only today.
+			WIKeys.WEAPON_RANGE: int(cfg.get(WIKeys.WEAPON_RANGE, 1)),
 			WIKeys.AP: 0,
 			WIKeys.MOVE_POOL: 0,
 			"statuses": {},
@@ -189,6 +197,28 @@ func is_adjacent(a_id: String, b_id: String) -> bool:
 func chebyshev(a_id: String, b_id: String) -> int:
 	var d: Vector2i = (combatants[a_id][WIKeys.CELL] as Vector2i) - (combatants[b_id][WIKeys.CELL] as Vector2i)
 	return maxi(absi(d.x), absi(d.y))
+
+
+## GH#70: the ONE range+LoS seam `attack()` and skill_effects.gd's
+## `damage_mult` resolver both route through -- "`attacker_id`'s weapon can
+## reach `target_id`". `weapon_range` defaults to 1 (melee) for any
+## combatant without a build-time override (see WEAPON_RANGE's own doc
+## comment). MELEE CASE (weapon_range <= 1) is special-cased to the bare
+## `is_adjacent` check -- the OLD gate, with NO has_los test -- rather than
+## folding it into the general `chebyshev <= range and has_los` formula
+## below: has_los's corner-cut rule (see that function's doc comment) can
+## refuse a DIAGONALLY-adjacent pair when both off-diagonal corner cells are
+## walled, which the old adjacency-only gate never checked. Folding melee
+## into the general formula would silently tighten every existing melee
+## matchup near a wall corner -- exactly the "harness diff non-empty on
+## pre-existing cells" STOP condition this seam must never trigger. The
+## byte-identical proof (sim_combat_batch.gd before/after) holds by
+## CONSTRUCTION here, not by luck of the shipped arena data.
+func in_weapon_range(attacker_id: String, target_id: String) -> bool:
+	var weapon_range := int(combatants[attacker_id].get(WIKeys.WEAPON_RANGE, 1))
+	if weapon_range <= 1:
+		return is_adjacent(attacker_id, target_id)
+	return chebyshev(attacker_id, target_id) <= weapon_range and has_los(attacker_id, target_id)
 
 
 ## Supercover cell walk from a's cell to b's cell. Blocked (wall) cells refuse
@@ -372,7 +402,7 @@ func attack(target_id: String) -> bool:
 	var t: Dictionary = combatants.get(target_id, {})
 	if t.is_empty() or not t[WIKeys.ALIVE] or String(t[WIKeys.SIDE]) == String(a[WIKeys.SIDE]):
 		return false
-	if int(a[WIKeys.AP]) < ATTACK_COST or not is_adjacent(attacker_id, target_id):
+	if int(a[WIKeys.AP]) < ATTACK_COST or not in_weapon_range(attacker_id, target_id):
 		return false
 	a[WIKeys.AP] = int(a[WIKeys.AP]) - ATTACK_COST
 	_emit(WIEvents.AP_CHANGED, {"id": attacker_id, "ap": a[WIKeys.AP]})
@@ -513,8 +543,24 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 			base_damage += int(a.get(WIKeys.DAMAGE_MOD, 0))
 		damage = maxi(1, base_damage)
 		target_hp = _deduct_hp(target_id, damage)
-		if melee:
+		# `melee` here means STR-physics (bows use it for damage math), so
+		# gate the PROGRESSION tally on actual weapon reach too -- a bow hit
+		# must feed ranged_hit ([Archer]) and never melee_hit ([Warrior]):
+		# doing [X] levels [X] (review I-1; the two counters are mutually
+		# exclusive per hit).
+		if melee and int(a.get(WIKeys.WEAPON_RANGE, 1)) <= 1:
 			_tally(attacker_id, "melee_hit")
+		# GH#70 [Archer] earn: `ranged_hit` tallies on every landed hit from
+		# a combatant whose weapon_range > 1 (a bow), UNCONDITIONAL on the
+		# `melee` flag above -- that flag is really "physical vs magical
+		# damage math" (see the comment just above), not spatial adjacency,
+		# so it stays true for a bow's basic Attack AND its damage_mult
+		# skills (Power Shot/Quick Nock) alike, while a line_damage skill
+		# (Piercing Shot) passes melee=false and still reaches this tally
+		# since it's a separate, unconditional check. No-op for every
+		# pre-existing combatant (weapon_range defaults to 1) -- byte-identical.
+		if int(a.get(WIKeys.WEAPON_RANGE, 1)) > 1:
+			_tally(attacker_id, "ranged_hit")
 	_emit(WIEvents.ATTACK_RESOLVED, {
 		"attacker": attacker_id, "target": target_id, "hit": hit,
 		"damage": damage, "target_hp": target_hp, "melee": melee,
@@ -781,6 +827,11 @@ func snapshot() -> Dictionary:
 			"move_pool": c[WIKeys.MOVE_POOL],
 			"alive": c[WIKeys.ALIVE], "side": c[WIKeys.SIDE],
 			"skills": (c[WIKeys.SKILLS] as Array).duplicate(),
+			# GH#70: exposed the same way max_mp was when MP shipped -- lets QA
+			# assert the range+LoS seam directly (`archer_earn_loop`) instead of
+			# only inferring it from attack_resolved's absence of a distance
+			# field. Defaults to 1 for every pre-GH#70 combatant.
+			"weapon_range": int(c.get(WIKeys.WEAPON_RANGE, 1)),
 		}
 	return {
 		"round": round_number, "active": get_active() if not turn_order.is_empty() else "",

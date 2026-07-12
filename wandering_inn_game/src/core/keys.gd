@@ -53,6 +53,15 @@ const MAX_MP := "max_mp"
 const SKILLS := "skills"
 const STATS := "stats"
 const WEAPON_DIE := "weapon_die"
+## GH#70: a combatant's live weapon range (Chebyshev cells), threaded onto
+## the runtime combatant dict at build time the SAME way WEAPON_DIE already
+## is -- see wi_combat.gd's `_init` (reads `cfg.get(WEAPON_RANGE, 1)`) and
+## wi_game.gd's `_build_player_combatant` (writes it from the equipped
+## weapon's items.json `range`, default 1). Absent on every pre-existing
+## combatant config (no enemy carries a ranged weapon; no pre-M-ARCHER
+## weapon item declares `range`), so this defaults to 1 (melee) everywhere
+## except a PC with a bow equipped -- the byte-identical guarantee.
+const WEAPON_RANGE := "weapon_range"
 const DAMAGE_MOD := "damage_mod"
 const DAMAGE_REDUCTION := "damage_reduction"
 const AP := "ap"

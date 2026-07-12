@@ -235,6 +235,44 @@
 				{ "level": 5, "requires": { "sneaked_past_danger": 10 }, "grants": [] },
 				{ "level": 6, "requires": { "sneaked_past_danger": 14 }, "grants": [] }
 			]
+		},
+		{
+			"_comment": "GH#70 [Archer]. CANON-VERDICT: ATTESTED, wiki List_of_Classes/A ('[Archer]', holders incl. Badarrow). EARN: `ranged_hit` (WICombat's new per-fight tally, banked on every landed hit from a weapon_range>1 combatant -- see wi_combat.gd's own doc comment) produced by (a) a bow's basic Attack in a real fight and (b) the barracks-yard archery-butt prop (`archery_butt`, skeleton_scene.json street map) via its `on_interact_accomplishment`, gated on carrying ANY bow (`requires_weapon_family: 'bow'`, wi_game.gd's new small parallel to the #59 dialogue item-gate for bare props). gained_by threshold (3) is deliberately LOW -- reachable at the practice butt alone, no kill required, matching the classless-start onboarding parity every other earned class already gives (spar-only for warrior, one conversation for mage/rogue/diplomat/tactician). L3+ thresholds reuse warrior's own melee_hit curve (6/12/18/25/32/40/48/57) verbatim -- same 'physical hit count' shape, no new pacing formula. stat_growth dex:1 -- finesse archetype, matches rogue's own dex-only growth (stats never shown to the player regardless). Evolution's `targets` dict carries exactly ONE counter (`bow_skill_used`, tallied for free by wi_combat.gd's existing `_tally_skill_use` off every archer skill's `weapon: bow` tag -- no new tally code) so dominance is met trivially once `min_uses` (12, matching warrior/mage's own bar) clears -- a single-path Replacement, not a fork. Deliberately NO aim-buff/hit-bonus status skill in this kit (would be a new STATUS-applies shape = new sim ground) -- parked per the controller spec.",
+			"id": "archer",
+			"display_name": "Archer",
+			"stat_growth": { "dex": 1 },
+			"gained_by": { "accomplishment": { "ranged_hit": 3 } },
+			"evolution": {
+				"at_level": 10,
+				"dominance_share": 0.6,
+				"min_uses": 12,
+				"targets": { "bow_skill_used": "sharpshooter" }
+			},
+			"levels": [
+				{ "level": 1, "requires": {}, "grants": ["power_shot", "keen_eye"] },
+				{ "level": 2, "requires": { "won_combat": 1 }, "grants": ["quick_nock"] },
+				{ "level": 3, "requires": { "ranged_hit": 6 }, "grants": [] },
+				{ "level": 4, "requires": { "ranged_hit": 12 }, "grants": ["piercing_shot"] },
+				{ "level": 5, "requires": { "ranged_hit": 18 }, "grants": [] },
+				{ "level": 6, "requires": { "ranged_hit": 25 }, "grants": [] },
+				{ "level": 7, "requires": { "ranged_hit": 32 }, "grants": [] },
+				{ "level": 8, "requires": { "ranged_hit": 40 }, "grants": [] },
+				{ "level": 9, "requires": { "ranged_hit": 48 }, "grants": [] },
+				{ "level": 10, "requires": { "ranged_hit": 57 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "SPARSE TABLE (GH#54 convention, applied to GH#70's new evolution). [Sharpshooter] is Replacement-only (never gained_by) -- archer's evolution carries the PARENT's HELD level directly into classes[sharpshooter] (check_evolutions/_resolve_evolutions), never counting up from level 1. Floor = archer's own evolution.at_level (10); archer's OWN table stops at 10 too (unlike warrior/mage, which keep leveling to 12 while 'Waiting' for dominance), so floor == archer's max and this table's single entry is already contiguous to its own max by construction -- no levels 11/12 to author. CANON-VERDICT: ATTESTED, wiki List_of_Classes/S -- '[Sharpshooter], Variant of [Sniper]?'. The wiki does not itself attest an Archer-to-Sharpshooter EVOLUTION LINK (only the bare class name + a tentative Sniper-variant reading) -- that specific lineage is this game's own mechanical design choice, the same kind of invented-but-canon-grounded linkage swordsman/spearmaster's own Warrior ancestry already is. Deliberately grants NOTHING new at floor level 10 -- the archer kit (Power Shot/Quick Nock/Piercing Shot/Keen Eye) is already complete per the controller spec's kit list; the evolution's payoff is the class identity itself (display_name/aspiration), not a fifth invented Skill.",
+			"id": "sharpshooter",
+			"display_name": "Sharpshooter",
+			"stat_growth": { "dex": 2 },
+			"aspiration": {
+				"display_name": "Sniper",
+				"text": "Some say a true [Sniper] never misses because the shot was already true before the string was ever drawn."
+			},
+			"levels": [
+				{ "level": 10, "requires": { "ranged_hit": 57 }, "grants": [] }
+			]
 		}
 	]
 }

@@ -39,6 +39,8 @@ const VALID_TIERS: Dictionary = {
 const VALID_WEAPON_FAMILIES: Dictionary = {
 	"sword": true,
 	"spear": true,
+	# GH#70 [Archer]: the ranged weapon family (training_bow/hunting_bow).
+	"bow": true,
 	"none": true,
 }
 

@@ -161,9 +161,18 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 	# sim would quietly no-op on. Extends the SAME adjacency filter Attack
 	# already used, rather than inventing a second gate.
 	var melee := _targeting_skill_id == "" or not effect.has("range")
+	# GH#70: the melee branch (Attack, or a damage_mult skill like
+	# power_strike/Power Shot -- neither declares effect.range) is filtered
+	# by the ACTOR own weapon range instead of bare adjacency. weapon_range
+	# defaults to 1 (every pre-GH#70 weapon), so chebyshev > weapon_range is
+	# byte-identical to the old not-is_adjacent check for every existing
+	# build; a bow (range 4) widens the candidate list to match
+	# WICombat.in_weapon_range exactly. has_los is still applied uniformly
+	# below (unchanged) -- this only widens/narrows the DISTANCE half.
+	var weapon_range := int((_view.combatant(me) as Dictionary).get("weapon_range", 1))
 	var in_range: Array = []
 	for foe: String in _view.alive_enemies_of(me):
-		if melee and not _view.is_adjacent(me, foe):
+		if melee and _view.chebyshev(me, foe) > weapon_range:
 			continue
 		if not melee and spell_range > 0 and _view.chebyshev(me, foe) > spell_range:
 			continue

@@ -43,14 +43,27 @@ const _STATUS_VERB := {
 
 
 ## Concrete effect lines for an inventory/shop item card, top to bottom:
-## combat mods (damage, HP, reduction), resonance if present, then the
+## combat mods (damage, range, HP, reduction), resonance if present, then the
 ## gold value. A plain item with no mods and no price yields an empty array —
 ## its card is name + description only.
+##
+## GH#70: `range` (items.json, absent/1 = melee) is now part of the
+## VISIBLE-CURRENCY set alongside dice/AP -- a weapon with `range > 1` (a bow)
+## gets its own "Range N" line, and its damage_mod line (if any) reads "ranged
+## hits" instead of "melee hits" so the card never claims a bow lands melee
+## damage. Every pre-GH#70 item omits `range` (defaults 0, not > 1), so this
+## is byte-identical for every shipped weapon but the two new bows.
 static func item_effect_lines(item: Dictionary) -> Array[String]:
 	var lines: Array[String] = []
 	var damage_mod := int(item.get(WIKeys.DAMAGE_MOD, 0))
+	var weapon_range := int(item.get(WIKeys.RANGE, 0))
 	if damage_mod > 0:
-		lines.append("+%d damage on melee hits" % damage_mod)
+		if weapon_range > 1:
+			lines.append("+%d damage on ranged hits" % damage_mod)
+		else:
+			lines.append("+%d damage on melee hits" % damage_mod)
+	if weapon_range > 1:
+		lines.append("Range %d" % weapon_range)
 	var hp_mod := int(item.get(WIKeys.HP_MOD, 0))
 	if hp_mod > 0:
 		lines.append("+%d HP" % hp_mod)

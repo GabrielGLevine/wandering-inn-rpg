@@ -67,7 +67,13 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 		"heal":
 			return _resolve_heal(combat, actor_id, a, target_id, skill, effect)
 		"damage_mult":
-			if not combat.is_adjacent(actor_id, target_id):
+			# GH#70: the SAME range+LoS seam attack() uses
+			# (WICombat.in_weapon_range) -- at weapon_range 1 (every
+			# pre-existing weapon) this is the exact `is_adjacent` check
+			# it replaces, byte-identical; a bow (range 4) lets Power
+			# Shot/Quick Nock resolve at range, gated the identical way
+			# a basic Attack now is.
+			if not combat.in_weapon_range(actor_id, target_id):
 				return false
 			combat.spend_skill_costs(a, skill)
 			combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": target_id})
