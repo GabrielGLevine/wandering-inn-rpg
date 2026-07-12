@@ -637,6 +637,83 @@ MANIFEST: list[tuple[str, str]] = [
 		"potential_assets/Minifantasy_Dungeon_SFX/_curated/save_chime.wav",
 		"assets/audio/sfx/save_chime.wav",
 	),
+	# Issue #76 (audio identity wave): further Minifantasy Dungeon SFX mining --
+	# same verdict/pipeline as A3 above (downmix mono 16-bit PCM 44.1kHz,
+	# peak-normalize to -1.0 dBFS via measured `ffmpeg -af volumedetect` gain).
+	# `door_transition.wav` REPLACES the A1 procedural placeholder at the same
+	# res:// path (map-transition door open/close, previously unmined per the
+	# asset-catalog sec.4 gap list); the other five are new ids.
+	(
+		"potential_assets/Minifantasy_Dungeon_SFX/_curated/door_transition.wav",
+		"assets/audio/sfx/door_transition.wav",
+	),
+	(
+		"potential_assets/Minifantasy_Dungeon_SFX/_curated/windup_declare.wav",
+		"assets/audio/sfx/windup_declare.wav",
+	),
+	(
+		"potential_assets/Minifantasy_Dungeon_SFX/_curated/footstep_2.wav",
+		"assets/audio/sfx/footstep_2.wav",
+	),
+	(
+		"potential_assets/Minifantasy_Dungeon_SFX/_curated/footstep_3.wav",
+		"assets/audio/sfx/footstep_3.wav",
+	),
+	(
+		"potential_assets/Minifantasy_Dungeon_SFX/_curated/quest_chime_beat.wav",
+		"assets/audio/sfx/quest_chime_beat.wav",
+	),
+	(
+		"potential_assets/Minifantasy_Dungeon_SFX/_curated/quest_chime_complete.wav",
+		"assets/audio/sfx/quest_chime_complete.wav",
+	),
+	(
+		"potential_assets/Minifantasy_Dungeon_SFX/_curated/field_skill_used.wav",
+		"assets/audio/sfx/field_skill_used.wav",
+	),
+	# Issue #76: Super Dialogue Audio Pack v1 (Dillon Becker, CC BY 4.0 --
+	# attribution in ATTRIBUTION.md) -- WORDLESS sets only, per the controller's
+	# AUDIO SCOPING ruling (spoken colloquial lines stay taste-gated). PC combat
+	# barks (male, Alex Brodie), same downmix/peak-normalize treatment as the
+	# Minifantasy SFX above.
+	(
+		"potential_assets/Super Dialogue Audio Pack v1/_curated/pc_hurt_1.wav",
+		"assets/audio/sfx/pc_hurt_1.wav",
+	),
+	(
+		"potential_assets/Super Dialogue Audio Pack v1/_curated/pc_hurt_2.wav",
+		"assets/audio/sfx/pc_hurt_2.wav",
+	),
+	(
+		"potential_assets/Super Dialogue Audio Pack v1/_curated/pc_hurt_3.wav",
+		"assets/audio/sfx/pc_hurt_3.wav",
+	),
+	(
+		"potential_assets/Super Dialogue Audio Pack v1/_curated/pc_death.wav",
+		"assets/audio/sfx/pc_death.wav",
+	),
+	# Issue #76: further xDeviruchi mining (verdict: assets/LICENSES/
+	# xdeviruchi-16-bit-fantasy-adventure-2025-verdict.md, SHIP-OK-WITH-
+	# ATTRIBUTION user-attested) -- signature stingers + the vault boss theme.
+	# Peaceful Night / Never Give Up are genuine one-shot jingles (their
+	# LOOPSTART/LOOPLENGTH tags are a stale copy-paste far past actual file
+	# length -- verified via ffprobe, not trimmed); straight re-encode.
+	# Decisive Battle 1 trimmed to its own LOOPSTART+LOOPLENGTH end (a near-
+	# no-op here, same "drop the tail" rule as title_theme/battle_1 in A2).
+	# assets_manifest.json marks all three FORBIDDEN/bundle:true like the
+	# existing 6 xDeviruchi entries (redistribution caution from the verdict).
+	(
+		"potential_assets/xDeviruchi - 16 bit Fantasy & Adventure (2025)/_curated/peaceful_night.ogg",
+		"assets/audio/music/peaceful_night.ogg",
+	),
+	(
+		"potential_assets/xDeviruchi - 16 bit Fantasy & Adventure (2025)/_curated/never_give_up.ogg",
+		"assets/audio/music/never_give_up.ogg",
+	),
+	(
+		"potential_assets/xDeviruchi - 16 bit Fantasy & Adventure (2025)/_curated/decisive_battle_1.ogg",
+		"assets/audio/music/decisive_battle_1.ogg",
+	),
 	# M5 H1: hotbar chrome (immersion-design.md sec.5) -- carved-wood slot
 	# frame + a button-styled panel swapped in for the selected-slot highlight
 	# (design doc: "pressed/hover button states from Buttons/ for the selected

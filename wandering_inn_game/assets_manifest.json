@@ -9,7 +9,28 @@
    "fallback": "silent"
   },
   {
+   "path": "assets/audio/music/decisive_battle_1.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy & Adventure (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
    "path": "assets/audio/music/definitely_our_town.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy & Adventure (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/never_give_up.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy & Adventure (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/peaceful_night.ogg",
    "source_pack": "xDeviruchi - 16-Bit Fantasy & Adventure (2025)",
    "verdict": "FORBIDDEN",
    "bundle": true,

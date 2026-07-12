@@ -14,11 +14,35 @@ const MUSIC_SILENCE_DB := -80.0
 ## with `return_to_field: true` resumes whichever of these last played.
 const FIELD_MUSIC_KIND := "field"
 
+## Issue #76 ducking. Sidechains the MUSIC BUS (not a per-player volume_db --
+## works uniformly regardless of which of the two crossfade players is
+## currently active, combat/field/sting alike) down while dialogue is on
+## screen, so a conversation plays over a lowered bed instead of fighting it.
+## Real headless: AudioServer bus volume_db is a Server-side float, the same
+## "cheap op, zero ObjectDB risk" class as _setup_buses/_load_settings above
+## (contrast _setup_music_players, which stays gated because IT creates
+## AudioStreamPlayer objects) -- so ducking runs unconditionally, provable via
+## a real AudioServer.get_bus_volume_db read in headless QA.
+const MUSIC_DUCK_DB := -6.0
+const MUSIC_DUCK_FADE_SEC := 0.2
+
 var _entries: Array[Dictionary] = []
 var _last_played_ms: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
 var _settings := ConfigFile.new()
 var _observable_bus: Node = null
+
+## Round-robin cursor for `variants`-bearing entries (footstep surfaces, PC
+## hurt barks, ...), keyed by entry id. Deterministic, presentation-side only
+## -- never reads from the sim's own RNG stream (see the `variants` doc
+## comment on `_play_entry` for why that matters).
+var _variant_index: Dictionary = {}
+
+## Ducking re-entrancy depth: nested duck requests (e.g. dialogue opening
+## twice in the same beat, defensively) share ONE duck -- only the request
+## that brings the depth back to 0 actually restores the bus.
+var _duck_depth := 0
+var _duck_tween: Tween
 
 var _music_entries: Array[Dictionary] = []
 var _music_players: Array[AudioStreamPlayer] = []
@@ -123,6 +147,68 @@ func get_bus_volume(bus: String) -> float:
 	return 10.0
 
 
+## Issue #76: raises the duck depth and (on the 0->1 edge) tweens the Music
+## bus down by MUSIC_DUCK_DB. A second/nested duck request while one is
+## already active just adds to the depth -- it does NOT stack the tween
+## (would over-duck to -12dB); see `_unduck_music`'s matching edge.
+func _duck_music() -> void:
+	_duck_depth += 1
+	if _duck_depth > 1:
+		return
+	_tween_music_bus_to(MUSIC_DUCK_DB)
+
+
+## Drops the duck depth and (on the 1->0 edge) restores the Music bus. A
+## release while depth is already 0 (e.g. a stray DIALOGUE_ENDED with no
+## matching start) is a safe no-op, not an underflow.
+func _unduck_music() -> void:
+	if _duck_depth <= 0:
+		return
+	_duck_depth -= 1
+	if _duck_depth > 0:
+		return
+	_tween_music_bus_to(0.0)
+
+
+## Tweens the "Music" bus's volume_db to `offset_db` relative to the user's
+## OWN slider setting (`get_bus_volume`, the settings.cfg source of truth) --
+## NEVER relative to whatever the bus currently reads, so repeated duck/
+## unduck cycles can't drift: the un-ducked target is always re-derived from
+## the same base a fresh `set_bus_volume` call would produce. Kills any
+## in-flight duck tween first (same double-trigger guard as
+## `_crossfade_to_music`) so a rapid duck-then-unduck (or vice versa) always
+## resolves to whichever call happened last, not a race between two tweens
+## animating the same bus.
+## Headless: sets the target dB DIRECTLY, no Tween -- headless frame deltas
+## are not wall-clock-paced (a `wait_frames` loop can burn hundreds of frames
+## in a fraction of MUSIC_DUCK_FADE_SEC), so a real Tween would settle at an
+## unpredictable partial value depending on how many frames a QA script
+## happens to wait, not a timing bug this file should paper over with a
+## longer fixed wait. The FINAL value is what QA asserts either way
+## (assert_audio_bus_volume_db) -- only the client-side smoothing is skipped.
+func _tween_music_bus_to(offset_db: float) -> void:
+	var index := AudioServer.get_bus_index("Music")
+	if index == -1:
+		return
+	if _duck_tween != null and _duck_tween.is_valid():
+		_duck_tween.kill()
+	var linear := clampf(get_bus_volume("Music"), 0.0, 10.0) / 10.0
+	var base_db := linear_to_db(maxf(linear, 0.0001))
+	var target_db := base_db + offset_db
+	if _is_headless():
+		_set_music_bus_db(target_db)
+		return
+	var start_db := AudioServer.get_bus_volume_db(index)
+	_duck_tween = create_tween()
+	_duck_tween.tween_method(_set_music_bus_db, start_db, target_db, MUSIC_DUCK_FADE_SEC)
+
+
+func _set_music_bus_db(db: float) -> void:
+	var index := AudioServer.get_bus_index("Music")
+	if index != -1:
+		AudioServer.set_bus_volume_db(index, db)
+
+
 ## Issue #77 CONFIRMED-BUG fix: every non-Master bus used to send straight to
 ## Master, including "UI" -- so the UI bus's own output was mixed into Master
 ## UNATTENUATED by anything except the Master fader itself, and the SFX
@@ -190,6 +276,10 @@ func _load_audio_map() -> void:
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.AUDIO_PLAYED:
 		return  # re-entrancy guard: never let our own emission trigger another lookup
+	if type == WIEvents.DIALOGUE_STARTED:
+		_duck_music()
+	elif type == WIEvents.DIALOGUE_ENDED:
+		_unduck_music()
 	for entry: Dictionary in _entries:
 		if String(entry.get("event", "")) != type:
 			continue
@@ -221,7 +311,20 @@ func _play_entry(entry: Dictionary) -> void:
 		return
 	_last_played_ms[id] = now_ms
 
+	## Issue #76: `variants` (footstep surfaces, PC hurt barks, ...) rotates
+	## through a fixed list one entry per play -- a presentation-side counter
+	## (`_variant_index`, keyed by id), deterministic and RNG-free by design:
+	## the sim stream's own seeded RNG must stay reproducible for QA/balance
+	## purposes, and audio variety is not gameplay, so it gets its own
+	## independent, order-only cursor instead of borrowing the sim's rolls.
+	## Falls back to plain `stream` when absent (every pre-#76 entry).
 	var stream_path := String(entry.get("stream", ""))
+	var variants: Variant = entry.get("variants", null)
+	if variants is Array and not (variants as Array).is_empty():
+		var variant_list: Array = variants
+		var idx := int(_variant_index.get(id, 0)) % variant_list.size()
+		stream_path = String(variant_list[idx])
+		_variant_index[id] = (idx + 1) % variant_list.size()
 	if stream_path.is_empty():
 		push_warning("WIAudio: bad/missing stream for id '%s': %s" % [id, stream_path])
 		return

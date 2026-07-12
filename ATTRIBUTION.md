@@ -13,6 +13,9 @@ project; setting, characters, and lore belong to pirateaba.
 ## Audio
 
 - **Super Dialogue Audio Pack** by **Dillon Becker** — CC BY 4.0.
+- **16-Bit Fantasy & Adventure OST** by **Marllon Silva (xDeviruchi)** — used
+  with permission; see his YouTube channel.
+- **Minifantasy Dungeon SFX / Dungeon Music** by **Leohpaz**.
 
 ## Repository media
 
