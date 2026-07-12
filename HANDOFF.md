@@ -1,5 +1,41 @@
 # Wandering Inn RPG Handoff
 
+## 🌊 WAVE 2 OF ULTRACODE SHIPPED (2026-07-12) — 6 more lanes landed
+
+ALL MERGED at 86/86 + ALL units green (every lane opus-reviewed; every
+FIX-FIRST applied + re-gated):
+- **#70 [Archer]**: the ranged class is live — weapon-range+LoS attack
+  seam (melee byte-identical), bow ladder (peddler 8g / Krshia 18g),
+  archery-butt earn (class earnable without a kill), kit on existing
+  effect types, [Sharpshooter] evolution. Review caught bow hits
+  double-feeding [Warrior]'s melee_hit — fixed + toothed.
+- **#84 mouse menus**: every panel clickable, one-dispatch verified.
+  OPEN for the QA-teeth follow-up (inventory/picker/journal clicks).
+- **8dC2 Horns combat**: Ceria/Yvlon/Ksmvr ally entries + construct
+  stat seed + the first 4-ally harness cells (PC-death assert). C3
+  spawn-ceiling trap written into the plan.
+- **dlgwave (#74+#17+#63)**: travel signposting standard (place-named
+  beats + validator + remind-me recaps + journal region suffix); the
+  full voice-fix set (Krshia Hrr at 3 corpus-wide, Pisces contraction-
+  free, Coyle eerily calm, 11 hub exits differentiated, 0 'Actually -
+  one more thing.' left); ELOISE live in Riverfarm (entity swap =
+  finding-19 scale fix) + Former Headman (placing line kept OBLIQUE —
+  review caught the lane naming Laken; restored to controller copy).
+- **#72 posting generator**: board 9→18 bounties, 5→10 deliveries via
+  the offline grammar; review caught alley_cull dead-ending after the
+  Wilovan quest close (mode→absolute) + the generator's kill rule now
+  scans dialogue remove_entity effects.
+- **#75 combat readability**: aim previews derived from the sim's own
+  functions (cannot lie), impact damage numbers, attack connection
+  (adjacency-gated lunge/projectile), status pips, active-unit marker,
+  duplicate-name dedup. LOW fast-follow: status-pip skip-desync arm.
+- Composition reds fixed en route: cups_debt_chit pin, stages_loop/
+  d2_shop_shot bow-row pin (a bad 3-way merge resolution — mine).
+
+**QUEUE:** #82 telegraphs + 8d C1/C3/D (the construct fight — C3 trap
+noted), #65 witch-stone, #64 skill-gates (last dialogue pass), #73
+scene-dynamism, #76-#81/#83 gap waves, #84 QA-teeth.
+
 ## 🚢 HUB SHIPPED (2026-07-11, pushed ab21ea3, CI GREEN) — 8 issues closed
 
 The 62W hub merge landed: all 13 world hotfixes (inn stairs in the
