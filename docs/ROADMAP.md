@@ -61,3 +61,11 @@ SLOT: behind the class-foundation queue (#96 → #93+#95+#98), interleaved
 where surfaces are free — #100 wants a content-lane-quiet window; #99/#101
 are lane-independent. TWO USER DECISIONS OPEN (spec §3, no defaults
 taken): localization posture; the demo boundary.
+
+## Context-economy directives (2026-07-12, user): #102 comment compression
+(caveman pass; .gd 40%->20%, data _comment 41%->15% chars; doctrine in
+the issue + the CLAUDE.md directive amended for NEW comments) + #103 doc
+rot (HANDOFF prune, staging stubs, executed-plan markers, DOC-MAP).
+SLOT: after v0.5.0 ships — #102's hot-file pass and #103's HANDOFF prune
+are content-quiet work; skeleton_scene's _comment pass rides #100's split
+window (one pass).
