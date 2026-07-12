@@ -59,6 +59,8 @@ that were never meant to show up here (uncounted, not a gap).
 
 | Scene | Region | Composite | c1 variety | c2 distinct | c3 composition | c4 utilization | c5 clutter | Verdict |
 |---|---|---|---|---|---|---|---|---|
+| pallass_market | pallass | 74.60 | 24.04 | 25.00 | 21.81 | 3.75 | 0.00 | dynamic |
+| pallass_forge | pallass | 73.79 | 24.06 | 25.00 | 21.40 | 3.33 | 0.00 | dynamic |
 | invrisil_boulevard | invrisil | 71.93 | 21.74 | 23.38 | 22.19 | 4.62 | 0.00 | dynamic |
 | street | liscor | 71.74 | 24.63 | 22.00 | 22.52 | 2.59 | 0.00 | dynamic |
 | mercantile_alleys | invrisil | 70.86 | 22.83 | 23.23 | 23.68 | 1.11 | 0.00 | dynamic |

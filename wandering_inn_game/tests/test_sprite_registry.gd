@@ -409,6 +409,15 @@ func _build_expected_counts() -> Dictionary:
 	counts["snare_coil/idle"] = 1
 	counts["illusory_floor_tell/idle"] = 1
 
+	## 8e Phase A/B (issue #16) -- Pallass landmark props, all owned PixelLab
+	## single-frame statics (never fallback-relaxed, owned art). great_lift
+	## 64x96, crystal_lamp 32x64, steam_vent 32x48, price_board 48x48,
+	## forge_station 48x64, market_stall_pallass 64x48, tier_wall 128x48 --
+	## idle-only (no walk anim), same convention as street_lamp/plaza_fountain.
+	for pallass_static: String in ["great_lift", "crystal_lamp", "steam_vent",
+			"price_board", "forge_station", "market_stall_pallass", "tier_wall"]:
+		counts["%s/idle" % pallass_static] = 1
+
 	return counts
 
 

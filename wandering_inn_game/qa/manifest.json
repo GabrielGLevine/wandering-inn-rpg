@@ -545,6 +545,11 @@
    "seed": 9,
    "fixture": "crab_cull_loop_start",
    "note": "Issue #24: bounty_crab_cull end to end -- accept at Selys's desk (guild), the crab_nest confirm conversation (armor-telegraph node pinned verbatim, [Back away.] negative proves no combat, then [Strike first.]), win the rock_crab_nest fight (floodplains, respawns:true) TWICE with a real sleep between them (delta-since-accept >= 2), turn in for the exact 5 gold payout"
+  },
+  {
+   "script": "pallass_peek",
+   "seed": 9,
+   "note": "8e Phase B (issue #16): teleport-based canonical for pallass_market/pallass_forge, the dungeon_peek precedent -- no live route exists until Phase C's arrival quest chain; bounds laps both maps' walkable shelf, the elevator's locked read on both sides, the landmark props (arrival anchor, tier clerk, price board, a market stall, Grimalkin, a forge station, the molten seam bump), whole-run combat_started absence"
   }
  ]
 }

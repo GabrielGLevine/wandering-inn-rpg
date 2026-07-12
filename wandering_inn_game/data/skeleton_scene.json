@@ -12670,6 +12670,833 @@
      ]
     }
    ]
+  },
+  "pallass_market": {
+   "_comment": "8e Phase B (issue #16, plan docs/superpowers/plans/2026-07-12-8e-pallass.md): Pallass market tier (T3), the QUALIFY-verb checkpoint + posted-price stalls. STACKED-BAND composition (8e Phase B, plan Task B1): the rising wall (y0-1, blocked segment, face=the atlas's own all-lower/void cell id0 [0,0] -- a monolithic dark mass read as the tier ABOVE's underside, per the shelf grammar) sits over 7 walkable floor rows (y2-8), a walkable parapet-rim row (y9, the Wang mixed-corner edge tile id12 [0,3] overlaid via floor_layers) and a final blocked void row (y10, biome.blocked paints it automatically -- same [0,0] tile as the wall band, deliberately: both dark bands read as 'the machine continues past your slice'). Grid height 11 * CELL16 = 176px <= the 320x180 viewport's 180px -- world.gd's _camera_axis centers content<=view UNCONDITIONALLY, so the full vertical stack (wall + floor + parapet + void) is on-screen together at every horizontal scroll position, satisfying the plan's single-screen stacked-band read. Width 26 pans horizontally as the player walks (same as invrisil_boulevard/street). Palette quarantine (tile-family-verdict.md PASS): forge-bronze-on-slate, steam-white crystal lamps (#E9EEF2, never amber/coin-gold) -- verified against this map's own mood card (moods.json pallass_market, cool day-graded). Landmark props placed via the A-phase verdict's MEASURED anchors (great_lift/crystal_lamp/steam_vent/price_board/market_stall_pallass/tier_wall, all sprites.json this task). Elevator gate `grand_lift_market` pairs with pallass_forge's `grand_lift_forge` at the SAME x=22 column in both maps (the direction card's 'crosses both bands at one x' continuity) -- door_when gates on `elevator_pass_stamped` (DORMANT: no producer wires it yet, Phase C's job), unmet read is the locked_toast (copy-fit checked, ~105 chars, well under shipped toast norms). `pallass_market_arrival_anchor` is a portal_menu-LESS anchor-stone prop (anchor_waystone, the street/riverfarm/invrisil precedent sprite) marking the future portals.json landing cell near the checkpoint -- Phase C wires the real portal row; this is deliberately inert (flavor read only, no portal_menu flag). `tier_clerk` NPC carries a PLACEHOLDER single-line dialogue (see its own _comment) -- Phase D/controller replaces with authored copy; present_when not needed, she lives here. Scatter deliberately NONE (direction.md: 'an engineered city sweeps its plazas' -- the absence is itself the distinctness tell vs Liscor).",
+   "biome": "pallass_market",
+   "grid": {
+    "width": 26,
+    "height": 11
+   },
+   "blocked": [
+    [
+     0,
+     10
+    ],
+    [
+     1,
+     10
+    ],
+    [
+     2,
+     10
+    ],
+    [
+     3,
+     10
+    ],
+    [
+     4,
+     10
+    ],
+    [
+     5,
+     10
+    ],
+    [
+     6,
+     10
+    ],
+    [
+     7,
+     10
+    ],
+    [
+     8,
+     10
+    ],
+    [
+     9,
+     10
+    ],
+    [
+     10,
+     10
+    ],
+    [
+     11,
+     10
+    ],
+    [
+     12,
+     10
+    ],
+    [
+     13,
+     10
+    ],
+    [
+     14,
+     10
+    ],
+    [
+     15,
+     10
+    ],
+    [
+     16,
+     10
+    ],
+    [
+     17,
+     10
+    ],
+    [
+     18,
+     10
+    ],
+    [
+     19,
+     10
+    ],
+    [
+     20,
+     10
+    ],
+    [
+     21,
+     10
+    ],
+    [
+     22,
+     10
+    ],
+    [
+     23,
+     10
+    ],
+    [
+     24,
+     10
+    ],
+    [
+     25,
+     10
+    ],
+    [
+     21,
+     6
+    ],
+    [
+     21,
+     7
+    ]
+   ],
+   "walls": {
+    "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+    "tile_px": 16,
+    "segments": [
+     {
+      "_comment": "The rising wall -- the tier above's underside. Full-width, 2 rows deep. face=the void/lower Wang cell (id0, dark) -- same engineered slab material as the floor, read as a monolithic wall mass, not a different substance (the bible's 'engineered, not laid' discipline).",
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       25,
+       1
+      ],
+      "face": [
+       0,
+       0
+      ]
+     }
+    ]
+   },
+   "floor_layers": [
+    {
+     "_comment": "The parapet rim -- the Wang mixed-corner edge tile (id12: NW/NE upper, SW/SE lower) overlaid on the base floor across the full south walkable row, reading as the bronze-trimmed rim where the shelf floor gives way to the void row (y10) just past it.",
+     "coords": [
+      0,
+      3
+     ],
+     "cells": {
+      "rect": [
+       0,
+       9,
+       26,
+       1
+      ]
+     }
+    },
+    {
+     "_comment": "The Grand Lift platform -- a distinct engineered floor material (Pixel Crawler Castle checker, licensed bundle-tier, already assets_manifest.json-registered from 8a; picks.md's blue-slate checker cell) marking the lift's boarding zone as mechanically separate from the plaza slab. Second tile family (dynamism c1 tile_fam_score).",
+     "sheet": "res://assets/tiles/castle/Tiles.png",
+     "tile_px": 16,
+     "coords": [
+      16,
+      18
+     ],
+     "cells": {
+      "rect": [
+       20,
+       6,
+       4,
+       3
+      ]
+     }
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "tier_wall",
+     "cell": [
+      4,
+      1
+     ]
+    },
+    {
+     "sprite": "tier_wall",
+     "cell": [
+      12,
+      1
+     ]
+    },
+    {
+     "sprite": "tier_wall",
+     "cell": [
+      20,
+      1
+     ]
+    },
+    {
+     "sprite": "crystal_lamp",
+     "cell": [
+      1,
+      2
+     ],
+     "light": {
+      "color": [
+       0.914,
+       0.933,
+       0.949
+      ],
+      "energy": 0.7,
+      "radius": 24,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "crystal_lamp",
+     "cell": [
+      7,
+      2
+     ],
+     "light": {
+      "color": [
+       0.914,
+       0.933,
+       0.949
+      ],
+      "energy": 0.7,
+      "radius": 24,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "crystal_lamp",
+     "cell": [
+      13,
+      2
+     ],
+     "light": {
+      "color": [
+       0.914,
+       0.933,
+       0.949
+      ],
+      "energy": 0.7,
+      "radius": 24,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "crystal_lamp",
+     "cell": [
+      19,
+      2
+     ],
+     "light": {
+      "color": [
+       0.914,
+       0.933,
+       0.949
+      ],
+      "energy": 0.7,
+      "radius": 24,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "crystal_lamp",
+     "cell": [
+      24,
+      2
+     ],
+     "light": {
+      "color": [
+       0.914,
+       0.933,
+       0.949
+      ],
+      "energy": 0.7,
+      "radius": 24,
+      "flicker": false
+     }
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "Portal-menu-LESS arrival anchor (plan Task B2): marks the future portals.json landing cell near the checkpoint. Phase C wires the real portal row once the arrival quest chain attunes it -- this entity stays a plain flavor prop until then (NO portal_menu, NO portal_menu_when). Sprite anchor_waystone is the shipped anchor-stone-per-region idiom (street_anchor_stone/riverfarm_anchor_stone/invrisil_anchor_stone).",
+     "id": "pallass_market_arrival_anchor",
+     "kind": "prop",
+     "cell": [
+      4,
+      6
+     ],
+     "display_name": "A Squared Plinth",
+     "sprite": "anchor_waystone",
+     "tint": [
+      0.6,
+      0.63,
+      0.68
+     ],
+     "observe": "A squared plinth of the same slab the whole tier is cut from, waiting on a rune nobody has carved yet. Whatever comes through here someday, it isn't ready for it now.",
+     "on_interact_accomplishment": "eyed_the_market_arrival_stone",
+     "toast": "Cold, precise stone. A blank waiting for its purpose."
+    },
+    {
+     "_comment": "PLACEHOLDER single-line dialogue -- Phase D/controller replaces with authored copy per the plan's clerk-conversation structure (Phase C builds the real graph). present_when not needed, she works this checkpoint. The market-tier half of the QUALIFY-verb clerk pair (Grimalkin examines the forge tier).",
+     "id": "tier_clerk_market",
+     "kind": "npc",
+     "cell": [
+      7,
+      5
+     ],
+     "display_name": "Tier Clerk",
+     "sprite": "tier_clerk",
+     "facing": "down",
+     "dialogue": [
+      {
+       "speaker": "Tier Clerk",
+       "text": "State your business and your sponsor. Everyone's business goes through this window eventually."
+      }
+     ]
+    },
+    {
+     "id": "price_board_market",
+     "kind": "prop",
+     "cell": [
+      9,
+      6
+     ],
+     "display_name": "The Posted Prices",
+     "sprite": "price_board",
+     "observe": "Rows of chalked figures, precise to the copper, refreshed each morning by a clerk with steadier hands than yours. Nobody haggles here. Nobody needs to.",
+     "on_interact_accomplishment": "read_the_posted_prices",
+     "toast": "Chalk and slate. The numbers don't move for anyone."
+    },
+    {
+     "_comment": "One of three IDENTICAL stalls (same sprite, same copy) -- uniformity is the QUALIFY tell (direction.md: 'do NOT reuse Liscor stall sprites'; deliberately not individually flavored).",
+     "id": "market_stall_a",
+     "kind": "prop",
+     "cell": [
+      12,
+      6
+     ],
+     "display_name": "Market Stall",
+     "sprite": "market_stall_pallass",
+     "observe": "A stall built to the same civic pattern as every other on this tier -- same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+     "on_interact_accomplishment": "browsed_posted_price_stall",
+     "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
+    },
+    {
+     "_comment": "Identical dressing to market_stall_a -- see that entity's own _comment.",
+     "id": "market_stall_b",
+     "kind": "prop",
+     "cell": [
+      15,
+      6
+     ],
+     "display_name": "Market Stall",
+     "sprite": "market_stall_pallass",
+     "observe": "A stall built to the same civic pattern as every other on this tier -- same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+     "on_interact_accomplishment": "browsed_posted_price_stall",
+     "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
+    },
+    {
+     "_comment": "Identical dressing to market_stall_a -- see that entity's own _comment.",
+     "id": "market_stall_c",
+     "kind": "prop",
+     "cell": [
+      18,
+      6
+     ],
+     "display_name": "Market Stall",
+     "sprite": "market_stall_pallass",
+     "observe": "A stall built to the same civic pattern as every other on this tier -- same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+     "on_interact_accomplishment": "browsed_posted_price_stall",
+     "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
+    },
+    {
+     "id": "steam_vent_market",
+     "kind": "prop",
+     "cell": [
+      24,
+      5
+     ],
+     "display_name": "Steam Vent",
+     "sprite": "steam_vent",
+     "observe": "A bronze grate exhales a slow white breath, steady as a held note. Somewhere below, something enormous is always working.",
+     "on_interact_accomplishment": "heard_the_machine_below",
+     "toast": "Warm, damp air. A rhythm underneath it, too even to be weather."
+    },
+    {
+     "_comment": "THE ELEVATOR PAIR (plan Task B2): pairs with pallass_forge's grand_lift_forge, SAME x=22 column in both maps. door_when gates on `elevator_pass_stamped` -- DORMANT, no producer wires it this phase (Phase C's bureaucratic chain does). Unmet gate has no on_interact_accomplishment, so interact() falls through to use_skill('', id)'s locked-prop path, which reads `locked_toast` (the door-shaped fallback seam -- see wi_game.gd interact()'s own doc comment on this exact mechanism, the sewer_debris precedent). Extra footprint (21,6)/(21,7) in `blocked` above reads as the cage's own bulk; approach from (23,7) facing left.",
+     "id": "grand_lift_market",
+     "kind": "prop",
+     "cell": [
+      22,
+      7
+     ],
+     "display_name": "The Grand Lift",
+     "sprite": "great_lift",
+     "observe": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight. This is how the tiers actually connect.",
+     "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
+     "door_when": {
+      "requires": {
+       "elevator_pass_stamped": 1
+      },
+      "to_map": "pallass_forge",
+      "to_cell": [
+       23,
+       7
+      ],
+      "open_toast": "The brass gate rises with a well-oiled clank, counterweights turning smooth in their track. The lift carries you up, into noise and heat and orange light."
+     }
+    }
+   ]
+  },
+  "pallass_forge": {
+   "_comment": "8e Phase B (issue #16, plan docs/superpowers/plans/2026-07-12-8e-pallass.md): Pallass forge tier (T4), industrial, Grimalkin's examiner post. STACKED-BAND composition (8e Phase B, plan Task B1): the rising wall (y0-1, blocked segment, face=the atlas's own all-lower/void cell id0 [0,0] -- a monolithic dark mass read as the tier ABOVE's underside, per the shelf grammar) sits over 7 walkable floor rows (y2-8), a walkable parapet-rim row (y9, the Wang mixed-corner edge tile id12 [0,3] overlaid via floor_layers) and a final blocked void row (y10, biome.blocked paints it automatically -- same [0,0] tile as the wall band, deliberately: both dark bands read as 'the machine continues past your slice'). Grid height 11 * CELL16 = 176px <= the 320x180 viewport's 180px -- world.gd's _camera_axis centers content<=view UNCONDITIONALLY, so the full vertical stack (wall + floor + parapet + void) is on-screen together at every horizontal scroll position, satisfying the plan's single-screen stacked-band read. Width 26 pans horizontally as the player walks (same as invrisil_boulevard/street). Same shelf grammar as pallass_market, brick_over_molten atlas instead of slate_over_void (the forge-tier tileset verdict KEEP, tile-family-verdict.md). Molten seam kept SPARING per the controller's density watch item: ONE 5-cell channel (13-17,5), well under the ratified 8%-of-walkable-view composition ceiling (direction.md's benchmark ruling) -- 'one dominant channel, darkness carrying the rest', not a wall-to-wall lava floor. `forge_station_a` carries the ONE furnace-glow PointLight2D (orange #F65510, flicker:true -- the single sanctioned flicker source per the bible: 'nothing flickers unless it's a forge', crystal lamps stay steady). Machine noise is implied by dressing only (steam_vent, the embers ambience over the molten seam) -- no new audio wiring this phase. Elevator gate `grand_lift_forge` pairs with pallass_market's `grand_lift_market` at the SAME x=22 column (continuity across the pair). `grimalkin` NPC carries a PLACEHOLDER single-line dialogue (see its own _comment) -- Phase D/controller replaces with authored copy; present_when not needed, this is his examiner post per character-profiles-staging.md. Scatter: forge tier permits sparse work-clutter only at stations per direction.md, but no bespoke ingot/tool-rack sprite is picked yet ('future picks') -- v1 ships without it rather than force an ill-fitting stand-in.",
+   "biome": "pallass_forge",
+   "grid": {
+    "width": 26,
+    "height": 11
+   },
+   "blocked": [
+    [
+     0,
+     10
+    ],
+    [
+     1,
+     10
+    ],
+    [
+     2,
+     10
+    ],
+    [
+     3,
+     10
+    ],
+    [
+     4,
+     10
+    ],
+    [
+     5,
+     10
+    ],
+    [
+     6,
+     10
+    ],
+    [
+     7,
+     10
+    ],
+    [
+     8,
+     10
+    ],
+    [
+     9,
+     10
+    ],
+    [
+     10,
+     10
+    ],
+    [
+     11,
+     10
+    ],
+    [
+     12,
+     10
+    ],
+    [
+     13,
+     10
+    ],
+    [
+     14,
+     10
+    ],
+    [
+     15,
+     10
+    ],
+    [
+     16,
+     10
+    ],
+    [
+     17,
+     10
+    ],
+    [
+     18,
+     10
+    ],
+    [
+     19,
+     10
+    ],
+    [
+     20,
+     10
+    ],
+    [
+     21,
+     10
+    ],
+    [
+     22,
+     10
+    ],
+    [
+     23,
+     10
+    ],
+    [
+     24,
+     10
+    ],
+    [
+     25,
+     10
+    ],
+    [
+     21,
+     6
+    ],
+    [
+     21,
+     7
+    ],
+    [
+     13,
+     5
+    ],
+    [
+     14,
+     5
+    ],
+    [
+     15,
+     5
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     17,
+     5
+    ]
+   ],
+   "walls": {
+    "sheet": "res://assets/tiles/pallass/tileset_brick_over_molten_atlas.png",
+    "tile_px": 16,
+    "segments": [
+     {
+      "_comment": "The rising wall -- the tier above's underside (canon: Pallass's forges sit high, floor 9 -- there IS a tier above the forge hall). face=this atlas's own void/lower Wang cell (id0), dark charcoal, stays in the cool slate field per the quarantine ruling (never warm).",
+      "from": [
+       0,
+       0
+      ],
+      "to": [
+       25,
+       1
+      ],
+      "face": [
+       0,
+       0
+      ]
+     }
+    ]
+   },
+   "floor_layers": [
+    {
+     "_comment": "The parapet rim -- same mixed-corner edge tile (id12 [0,3]) as pallass_market's own parapet, this atlas's Wang set shares the identical corner->atlas_cell scheme (tileset_brick_over_molten_meta.json verified byte-identical to tileset_slate_over_void_meta.json's id table).",
+     "coords": [
+      0,
+      3
+     ],
+     "cells": {
+      "rect": [
+       0,
+       9,
+       26,
+       1
+      ]
+     }
+    },
+    {
+     "_comment": "The Grand Lift platform -- same Castle checker accent as pallass_market's own lift zone (continuity across the pair; second tile family for dynamism c1).",
+     "sheet": "res://assets/tiles/castle/Tiles.png",
+     "tile_px": 16,
+     "coords": [
+      16,
+      18
+     ],
+     "cells": {
+      "rect": [
+       20,
+       6,
+       4,
+       3
+      ]
+     }
+    }
+   ],
+   "decor": [
+    {
+     "sprite": "tier_wall",
+     "cell": [
+      4,
+      1
+     ]
+    },
+    {
+     "sprite": "tier_wall",
+     "cell": [
+      12,
+      1
+     ]
+    },
+    {
+     "sprite": "tier_wall",
+     "cell": [
+      20,
+      1
+     ]
+    },
+    {
+     "sprite": "crystal_lamp",
+     "cell": [
+      1,
+      2
+     ],
+     "light": {
+      "color": [
+       0.914,
+       0.933,
+       0.949
+      ],
+      "energy": 0.7,
+      "radius": 24,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "crystal_lamp",
+     "cell": [
+      7,
+      2
+     ],
+     "light": {
+      "color": [
+       0.914,
+       0.933,
+       0.949
+      ],
+      "energy": 0.7,
+      "radius": 24,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "crystal_lamp",
+     "cell": [
+      13,
+      2
+     ],
+     "light": {
+      "color": [
+       0.914,
+       0.933,
+       0.949
+      ],
+      "energy": 0.7,
+      "radius": 24,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "crystal_lamp",
+     "cell": [
+      19,
+      2
+     ],
+     "light": {
+      "color": [
+       0.914,
+       0.933,
+       0.949
+      ],
+      "energy": 0.7,
+      "radius": 24,
+      "flicker": false
+     }
+    },
+    {
+     "sprite": "crystal_lamp",
+     "cell": [
+      24,
+      2
+     ],
+     "light": {
+      "color": [
+       0.914,
+       0.933,
+       0.949
+      ],
+      "energy": 0.7,
+      "radius": 24,
+      "flicker": false
+     }
+    }
+   ],
+   "ambience": [
+    {
+     "_comment": "Embers rising off the molten seam (13-17,5) -- the ONE always-on emitter this tier ships (no `phase` key: WIAtmosphere._set_emitter_state treats an empty phases array as always-emitting, matching the map's own time-invariant mood card).",
+     "preset": "embers",
+     "rect": [
+      13,
+      4,
+      5,
+      3
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "_comment": "PLACEHOLDER single-line dialogue -- Phase D/controller replaces with authored copy. Grimalkin's examiner post ([Sinew Magus], drill-sergeant scholar per character-profiles-staging.md's CORRECTED profile) -- present_when not needed, he works this hall.",
+     "id": "grimalkin",
+     "kind": "npc",
+     "cell": [
+      7,
+      5
+     ],
+     "display_name": "Grimalkin",
+     "sprite": "grimalkin",
+     "facing": "down",
+     "dialogue": [
+      {
+       "speaker": "Grimalkin",
+       "text": "Measure twice. I have measured everything in this hall at least three times, and I am still finding what I missed."
+      }
+     ]
+    },
+    {
+     "_comment": "The forge tier's public interactable ([Tactician]/[Engineer] observe content per the bible's 'inventions as interactables' dialect). Carries the ONE furnace-glow light this map ships (orange #F65510, flicker:true) -- the single sanctioned flicker source; every crystal_lamp on this map stays steady.",
+     "id": "forge_station_a",
+     "kind": "prop",
+     "cell": [
+      10,
+      6
+     ],
+     "display_name": "Forge Station",
+     "sprite": "forge_station",
+     "observe": "An anvil bolted to its own slab, a furnace mouth banked low beside it -- cold for now, but built to run hot for a working day at a time.",
+     "on_interact_accomplishment": "eyed_the_forge_station",
+     "toast": "The metal underfoot still holds the day's heat, hours after the last hammer fell.",
+     "light": {
+      "color": [
+       0.965,
+       0.333,
+       0.063
+      ],
+      "energy": 0.8,
+      "radius": 26,
+      "flicker": true
+     }
+    },
+    {
+     "id": "forge_station_b",
+     "kind": "prop",
+     "cell": [
+      17,
+      4
+     ],
+     "display_name": "Forge Station",
+     "sprite": "forge_station",
+     "observe": "A second bench, same pattern as the first -- built to the same civic spec as the market tier's stalls, just built for heat instead of trade.",
+     "on_interact_accomplishment": "eyed_the_forge_station",
+     "toast": "Tool racks, empty for the moment. Whoever works this bench keeps it orderly."
+    },
+    {
+     "id": "steam_vent_forge",
+     "kind": "prop",
+     "cell": [
+      5,
+      7
+     ],
+     "display_name": "Steam Vent",
+     "sprite": "steam_vent",
+     "observe": "A bronze grate exhales a slow white breath, steady as a held note. Somewhere below, something enormous is always working.",
+     "on_interact_accomplishment": "heard_the_machine_below",
+     "toast": "Warm, damp air. A rhythm underneath it, too even to be weather."
+    },
+    {
+     "_comment": "THE ELEVATOR PAIR (plan Task B2): pairs with pallass_market's grand_lift_market, SAME x=22 column. Same DORMANT door_when/locked_toast mechanism -- see that entity's own _comment for the full mechanism trace (interact()'s locked-prop fallback seam).",
+     "id": "grand_lift_forge",
+     "kind": "prop",
+     "cell": [
+      22,
+      7
+     ],
+     "display_name": "The Grand Lift",
+     "sprite": "great_lift",
+     "observe": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight. This is how the tiers actually connect.",
+     "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
+     "door_when": {
+      "requires": {
+       "elevator_pass_stamped": 1
+      },
+      "to_map": "pallass_market",
+      "to_cell": [
+       23,
+       7
+      ],
+      "open_toast": "The brass gate rises with a well-oiled clank, counterweights turning smooth in their track. The lift carries you down, into the ordered quiet of the market tier."
+     }
+    }
+   ]
   }
  }
 }

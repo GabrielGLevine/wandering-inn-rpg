@@ -223,5 +223,43 @@
    8,
    2
   ]
+ },
+ "pallass_market": {
+  "_comment": "8e Phase B (issue #16): base full-grid default (world.gd's _build_floor paints this across EVERY cell before floor_layers overlays run) -- floor=[3,3] the atlas's all-upper slab (id15), blocked=[0,0] the all-lower void (id0). Both floor_layers overlays (the parapet-rim edge tile + the Castle-checker lift accent) and the wall-band segment (also using [0,0]) paint OVER this base, per skeleton_scene.json's own map _comment.",
+  "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+  "tile_px": 16,
+  "floor": [
+   3,
+   3
+  ],
+  "blocked": [
+   0,
+   0
+  ],
+  "skirt_sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   0,
+   0
+  ]
+ },
+ "pallass_forge": {
+  "_comment": "8e Phase B (issue #16): base full-grid default, same mechanism as pallass_market above but the forge-tier atlas (brick_over_molten) -- floor=[3,3] dark charcoal-navy brick (id15), blocked=[0,0] the molten/void lower terrain (id0), consumed both by the auto-painted void row (y10) and the hand-authored molten-seam blocked cells (both read as the SAME impassable material -- a floor you can't walk on, whether it's the tier's edge or a channel running through it).",
+  "sheet": "res://assets/tiles/pallass/tileset_brick_over_molten_atlas.png",
+  "tile_px": 16,
+  "floor": [
+   3,
+   3
+  ],
+  "blocked": [
+   0,
+   0
+  ],
+  "skirt_sheet": "res://assets/tiles/pallass/tileset_brick_over_molten_atlas.png",
+  "skirt_tile_px": 16,
+  "skirt": [
+   0,
+   0
+  ]
  }
 }
