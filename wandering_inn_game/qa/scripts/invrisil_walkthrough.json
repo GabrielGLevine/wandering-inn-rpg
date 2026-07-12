@@ -617,10 +617,11 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "Issue #79: level-up toasts now also state their own felt HP/damage/MP payoff when the class's own growth produces one -- warrior's con growth here rounds to +1 Max HP (str's own /2-floor rounds to +0 damage at this exact span, so no damage clause).",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Warrior Level 3] \u2014 unlocked [Quick Movement]"
+    "text": "[Warrior Level 3] \u2014 unlocked [Quick Movement] (+1 Max HP)"
    },
    "timeout_sec": 5
   },

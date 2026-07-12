@@ -126,7 +126,7 @@
    "name": "01_chore_earn"
   },
   {
-   "_comment": "Coin line: open the I panel -- ui_inventory_shown now carries gold, so the payload proves the coin line renders the live total (Gold: 1) with the two carried items. Also pins item_effect_lines parallel to [rusty_sword, relcs_spare_spear]: rusty_sword's card is line-free ([]), the spear's card shows its generated +1 damage line.",
+   "_comment": "Coin line: open the I panel -- ui_inventory_shown now carries gold, so the payload proves the coin line renders the live total (Gold: 1) with the two carried items. Also pins item_effect_lines parallel to [rusty_sword, relcs_spare_spear]: both weapon cards carry issue #79's kit-family line (rusty_sword's damage mod is 0, so that's its ONLY line), the spear's card also shows its generated +1 damage line.",
    "action": "press",
    "name": "inventory"
   },
@@ -137,9 +137,12 @@
     "items": 2,
     "gold": 1,
     "item_effect_lines": [
-     [],
      [
-      "+1 damage on melee hits"
+      "Sword kit replaces other weapon Skills in combat"
+     ],
+     [
+      "+1 damage on melee hits",
+      "Spear kit replaces other weapon Skills in combat"
      ]
     ]
    },
@@ -388,7 +391,7 @@
    "name": "confirm"
   },
   {
-   "_comment": "BROKE (3 gold): EVERY buy greys -- the charm's own 'costs 5 gold' lock is the honest affordability-negative surface. Full options array pinned (test_driver array match is size-exact). each buy option now carries effect_lines (its item's generated combat line, price-stripped -- the price is already in the option text), so the greyed buys still answer 'what am I buying'; 'Nothing today.' grants no item so it has NO effect_lines key. 'Show me the charms.' is a plain ungated nav (no requires -> no gold gate -> no effect_lines key, same shape as 'Nothing today.'), appended after the 4 buys and before 'Nothing today.' -- the 4 buys keep their exact pre-G2 indices 0-3.",
+   "_comment": "BROKE (3 gold): EVERY buy greys -- the charm's own 'costs 5 gold' lock is the honest affordability-negative surface. Full options array pinned (test_driver array match is size-exact). each buy option now carries effect_lines (its item's generated combat line, price-stripped -- the price is already in the option text), so the greyed buys still answer 'what am I buying'; 'Nothing today.' grants no item so it has NO effect_lines key. 'Show me the charms.' is a plain ungated nav (no requires -> no gold gate -> no effect_lines key, same shape as 'Nothing today.'), appended after the 4 buys and before 'Nothing today.' -- the 4 buys keep their exact pre-G2 indices 0-3. Issue #79: both weapon options (hunting knife, hunting bow) now also carry their own kit-family line.",
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
@@ -408,7 +411,8 @@
       "locked": true,
       "requirement": "costs 15 gold",
       "effect_lines": [
-       "+1 damage on melee hits"
+       "+1 damage on melee hits",
+       "Sword kit replaces other weapon Skills in combat"
       ]
      },
      {
@@ -443,7 +447,8 @@
       "requirement": "costs 18 gold",
       "effect_lines": [
        "+1 damage on ranged hits",
-       "Range 4"
+       "Range 4",
+       "Bow kit replaces other weapon Skills in combat"
       ]
      }
     ]
@@ -637,7 +642,7 @@
    "name": "confirm"
   },
   {
-   "_comment": "AFFORDABLE now (5 gold): the charm ungreys (locked:false), the pricier three still grey. effect_lines ride each buy option regardless of the greyed state (the ungreyed charm shows '+2 HP' at full color, the rest greyed). 'Show me the charms.' nav stays ungated regardless of gold.",
+   "_comment": "AFFORDABLE now (5 gold): the charm ungreys (locked:false), the pricier three still grey. effect_lines ride each buy option regardless of the greyed state (the ungreyed charm shows '+2 HP' at full color, the rest greyed). 'Show me the charms.' nav stays ungated regardless of gold. Issue #79: both weapon options also carry their own kit-family line.",
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
@@ -657,7 +662,8 @@
       "locked": true,
       "requirement": "costs 15 gold",
       "effect_lines": [
-       "+1 damage on melee hits"
+       "+1 damage on melee hits",
+       "Sword kit replaces other weapon Skills in combat"
       ]
      },
      {
@@ -692,7 +698,8 @@
       "requirement": "costs 18 gold",
       "effect_lines": [
        "+1 damage on ranged hits",
-       "Range 4"
+       "Range 4",
+       "Bow kit replaces other weapon Skills in combat"
       ]
      }
     ]
@@ -768,7 +775,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== (6) I PANEL, payload gold asserted ==. Purse spent to 0, pack now holds 3 items (charm added). The coin line reads 'Gold: 0' and the ui_inventory_shown payload carries the decremented total -- proof the spend reached the panel. item_effect_lines parallel to [rusty_sword, relcs_spare_spear, traveler_charm] -- the just-bought charm's card shows its generated +2 HP and gold-value lines.",
+   "_comment": "== (6) I PANEL, payload gold asserted ==. Purse spent to 0, pack now holds 3 items (charm added). The coin line reads 'Gold: 0' and the ui_inventory_shown payload carries the decremented total -- proof the spend reached the panel. item_effect_lines parallel to [rusty_sword, relcs_spare_spear, traveler_charm] -- both weapon cards carry issue #79's kit-family line, the just-bought charm's card shows its generated +2 HP and gold-value lines (accessories are unaffected -- their weapon_family sentinel is 'none').",
    "action": "press",
    "name": "inventory"
   },
@@ -779,9 +786,12 @@
     "items": 3,
     "gold": 0,
     "item_effect_lines": [
-     [],
      [
-      "+1 damage on melee hits"
+      "Sword kit replaces other weapon Skills in combat"
+     ],
+     [
+      "+1 damage on melee hits",
+      "Spear kit replaces other weapon Skills in combat"
      ],
      [
       "+2 HP",
@@ -938,9 +948,12 @@
     "items": 2,
     "gold": 2,
     "item_effect_lines": [
-     [],
      [
-      "+1 damage on melee hits"
+      "Sword kit replaces other weapon Skills in combat"
+     ],
+     [
+      "+1 damage on melee hits",
+      "Spear kit replaces other weapon Skills in combat"
      ]
     ]
    },

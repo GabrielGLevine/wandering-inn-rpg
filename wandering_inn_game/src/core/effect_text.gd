@@ -43,9 +43,9 @@ const _STATUS_VERB := {
 
 
 ## Concrete effect lines for an inventory/shop item card, top to bottom:
-## combat mods (damage, range, HP, reduction), resonance if present, then the
-## gold value. A plain item with no mods and no price yields an empty array —
-## its card is name + description only.
+## combat mods (damage, range, weapon-kit family if any), HP/reduction,
+## resonance if present, then the gold value. A plain item with no mods and
+## no price yields an empty array — its card is name + description only.
 ##
 ## GH#70: `range` (items.json, absent/1 = melee) is now part of the
 ## VISIBLE-CURRENCY set alongside dice/AP -- a weapon with `range > 1` (a bow)
@@ -64,6 +64,21 @@ static func item_effect_lines(item: Dictionary) -> Array[String]:
 			lines.append("+%d damage on melee hits" % damage_mod)
 	if weapon_range > 1:
 		lines.append("Range %d" % weapon_range)
+	# Issue #79 (kit-consequence gap): a weapon's items.json `weapon_family`
+	# silently benches every OTHER weapon-tagged Skill in the held kit
+	# (combat_build.gd's `weapon_gated_kit` -- a Skill carrying skills.json's
+	# `weapon` tag fields ONLY when it matches the equipped family; a mixed
+	# kit, e.g. a Warrior who still holds both `power_strike` [sword] and
+	# `piercing_strikes` [spear] from the SAME level-1 grant, loses one or
+	# the other with no on-card warning). Generic ("other weapon Skills", not
+	# a hardcoded rival name) so this never needs updating if a new weapon
+	# family ships. Every non-weapon item (armor/accessories/tools/parcels)
+	# carries the literal sentinel `"none"` here, NOT an absent key (verified
+	# across the full catalog) -- both that sentinel and a genuinely absent
+	# key degrade to no line, byte-identical to before this task.
+	var weapon_family := String(item.get("weapon_family", ""))
+	if weapon_family != "" and weapon_family != "none":
+		lines.append("%s kit replaces other weapon Skills in combat" % weapon_family.capitalize())
 	var hp_mod := int(item.get(WIKeys.HP_MOD, 0))
 	if hp_mod > 0:
 		lines.append("+%d HP" % hp_mod)

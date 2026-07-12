@@ -359,6 +359,15 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "Issue #79: the sleep veil now names the fork RESULT with flavor -- lines:2 is the bracket proclamation ('[Warrior Class -> Swordsman Class!]') PLUS the new results-only flavor line ('Your hands have chosen the sword.'), structural proof it rendered (no OCR needed).",
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {
+    "lines": 2
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "timeout_sec": 5

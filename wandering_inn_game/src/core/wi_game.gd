@@ -2183,14 +2183,18 @@ func reprime_quests() -> void:
 	_quest_progress = WIQuests.evaluate(catalog, started_quests, accomplishments)
 
 
-## Renders started-quest progress as player-facing lines for the journal UI
-## (keeps the journal out of sim internals — UI only renders strings).
+## Renders started-and-ACTIVE (not yet completed) quest progress as
+## player-facing lines for the journal UI (keeps the journal out of sim
+## internals — UI only renders strings). Issue #79: completed quests moved
+## OUT of this list entirely, into their own `completed_quest_summary()`
+## HISTORY section — a finished quest no longer sits mixed into the active
+## list under a bare "Complete" line with no record of what happened.
 func quest_summary() -> Array:
 	var catalog: Dictionary = _combat_config.get("quests", {})
 	var out: Array = []
 	var ev := WIQuests.evaluate(catalog, started_quests, accomplishments)
 	for id: String in started_quests:
-		if not ev.has(id):
+		if not ev.has(id) or bool(ev[id]["completed"]):
 			continue
 		var title := _quest_title(id)
 		# Issue #74: an optional region suffix ("... (Riverfarm)") disambiguates
@@ -2199,7 +2203,36 @@ func quest_summary() -> Array:
 		var region := String(ev[id].get("region", ""))
 		if region != "":
 			title = "%s (%s)" % [title, region]
-		out.append("%s — %s" % [title, "Complete" if bool(ev[id]["completed"]) else String(ev[id]["beat_description"])])
+		out.append("%s — %s" % [title, String(ev[id]["beat_description"])])
+	return out
+
+
+## Issue #79 (journal history cluster): completed-quest HISTORY lines for
+## the journal's own "Completed" section — one line per FINISHED started
+## quest, "<title> — <chosen-path line>" (results-only: what already
+## happened, never a progress count — the opaque-until-sleep lock's own
+## discipline, unaffected here since quests never gate on sleep). Order
+## follows `started_quests`' own acceptance order (no completion timestamp
+## exists to sort by; matches `quest_summary()`'s pre-existing ordering
+## convention). A quest whose own `resolution_paths` catalog entry resolves
+## no text (missing data, or genuinely no fallback authored) degrades to a
+## bare "<title> — Complete." rather than a dangling dash.
+func completed_quest_summary() -> Array:
+	var catalog: Dictionary = _combat_config.get("quests", {})
+	var out: Array = []
+	var ev := WIQuests.evaluate(catalog, started_quests, accomplishments)
+	for id: String in started_quests:
+		if not ev.has(id) or not bool(ev[id]["completed"]):
+			continue
+		var title := _quest_title(id)
+		var region := String(ev[id].get("region", ""))
+		if region != "":
+			title = "%s (%s)" % [title, region]
+		var path := String(ev[id].get("path", ""))
+		if path != "":
+			out.append("%s — %s" % [title, path])
+		else:
+			out.append("%s — Complete." % title)
 	return out
 
 
@@ -2832,10 +2865,20 @@ func erase_entity_silent(id: String) -> void:
 ## sleep's accomplishment volume/dominance neither replaces it nor (mage
 ## only) grants the generalist kit. Exact canon-voice strings, no numbers
 ## or percentages (opacity rule). Only classes with an `evolution` block in
-## classes.json need an entry here (today: warrior, mage).
+## classes.json need an entry here (today: warrior, mage, helper).
+##
+## Issue #79: `helper` was MISSING here despite classes.json's Helper
+## carrying its own `evolution` block (barmaid/server targets) — the
+## `_resolve_evolutions` branch below is `elif ... and _EVOLUTION_WAITING_
+## TOASTS.has(class_id)`, so a Helper at its at-cap/undecided waiting
+## outcome fired NO toast at all (not merely a plain one — total silence,
+## indistinguishable from nothing happening that sleep, the cluster's own
+## "misleading" framing: the player has no signal their Helper is sitting
+## on an undecided fork).
 const _EVOLUTION_WAITING_TOASTS := {
 	"warrior": "Your hands haven't chosen sword or spear yet.",
 	"mage": "Your focus wavers between frost and flame.",
+	"helper": "You haven't settled into serving or running yet.",
 }
 
 
@@ -2942,19 +2985,60 @@ func sleep() -> void:
 		anything_happened = true
 		# Apply every earned level in order (class_level_up + skill_unlocked
 		# fire per level for QA/autosave), batching the announcement per class.
+		# `check_level_ups`' own doc comment guarantees `gains` is grouped
+		# consecutively by class (catalog class order, then ascending level
+		# WITHIN that class, never interleaved) -- this loop leans on that
+		# grouping to snapshot `WIProgression.derived_stat_bonuses` immediately
+		# BEFORE and AFTER each class's own consecutive run of levels, so a
+		# multi-class sleep isolates each class's OWN felt growth rather than
+		# crediting it with another class's SAME-sleep levels.
 		var order: Array[String] = []
 		var summaries: Dictionary = {}
-		for gain: Dictionary in gains:
-			var class_id := String(gain["class"])
-			if not summaries.has(class_id):
-				order.append(class_id)
-				summaries[class_id] = {"from": int(classes[class_id]), "to": 0, "names": []}
-			classes[class_id] = int(gain["level"])
-			(summaries[class_id] as Dictionary)["to"] = int(gain["level"])
-			_emit(WIEvents.CLASS_LEVEL_UP, {"class": class_id, "level": gain["level"]})
-			for sk: Variant in gain["grants"]:
-				_emit(WIEvents.SKILL_UNLOCKED, {"skill": String(sk)})
-				((summaries[class_id] as Dictionary)["names"] as Array).append(String(skills.get(String(sk), {}).get(WIKeys.DISPLAY_NAME, String(sk))))
+		var gi := 0
+		while gi < gains.size():
+			var class_id := String((gains[gi] as Dictionary)["class"])
+			var from_level := int(classes[class_id])
+			var before_bonuses := WIProgression.derived_stat_bonuses(classes, _combat_config["classes"])
+			var names: Array = []
+			while gi < gains.size() and String((gains[gi] as Dictionary)["class"]) == class_id:
+				var gain: Dictionary = gains[gi]
+				classes[class_id] = int(gain["level"])
+				_emit(WIEvents.CLASS_LEVEL_UP, {"class": class_id, "level": gain["level"]})
+				for sk: Variant in gain["grants"]:
+					_emit(WIEvents.SKILL_UNLOCKED, {"skill": String(sk)})
+					names.append(String(skills.get(String(sk), {}).get(WIKeys.DISPLAY_NAME, String(sk))))
+				gi += 1
+			var after_bonuses := WIProgression.derived_stat_bonuses(classes, _combat_config["classes"])
+			order.append(class_id)
+			summaries[class_id] = {
+				"from": from_level,
+				"to": int(classes[class_id]),
+				"names": names,
+				# Visible-currency growth deltas (HP/damage/MP are all already
+				# player-visible readouts, unlike the raw str/con/int/dex they
+				# derive from) -- the SAME "/2 floor" shape wi_combat.gd's own
+				# damage/MP formulas use (`stat/2 + weapon die`, `8 + int/2`),
+				# so this can never drift into a number combat wouldn't
+				# actually deal out. con -> HP is unconditional (max_hp = 20 +
+				# con always); str -> damage mirrors melee's own base-damage
+				# term (ranged/spell damage reads int instead, but the PC
+				# always has a melee basic Attack, so str is felt regardless
+				# of loadout).
+				"hp_delta": int(after_bonuses.get("con", 0)) - int(before_bonuses.get("con", 0)),
+				"dmg_delta": int(after_bonuses.get("str", 0)) / 2 - int(before_bonuses.get("str", 0)) / 2,
+				"mp_delta": int(after_bonuses.get("int", 0)) / 2 - int(before_bonuses.get("int", 0)) / 2,
+			}
+		# MP is a pooled resource gated on holding ANY mp_cost Skill at all
+		# (wi_combat.gd's own caster-only `MAX_MP` gate) -- checked ONCE,
+		# post-sleep, against the final kit: an int-growth class with no
+		# mp_cost Skill (e.g. a non-caster multiclassed with one) would
+		# otherwise announce MP the PC could never actually draw on in a
+		# fight, a felt line that lies.
+		var has_mp_skill := false
+		for sk_id: String in known_skills():
+			if (skills.get(sk_id, {}) as Dictionary).has(WIKeys.MP_COST):
+				has_mp_skill = true
+				break
 		for class_id: String in order:
 			var summary: Dictionary = summaries[class_id]
 			var cls_name := String(_class_display_name(class_id))
@@ -2964,6 +3048,24 @@ func sleep() -> void:
 			var names: Array = summary["names"]
 			if not names.is_empty():
 				text += " — unlocked %s" % ", ".join(names)
+			# A grant-less level (no new Skills that sleep -- most of every
+			# class's own ladder past its starting rungs) previously
+			# announced nothing felt at all beyond the bare bracket. Every
+			# level-up now states its own HP/damage/MP payoff too, whenever
+			# the class's own stat_growth produced one (a class growing ONLY
+			# dex, with no con/int/str this sleep, still degrades to the bare
+			# bracket -- dex's own combat read, hit-chance, has no
+			# non-percentage visible-currency form the opaque-until-sleep
+			# rule permits).
+			var growth: Array[String] = []
+			if int(summary["hp_delta"]) > 0:
+				growth.append("+%d Max HP" % int(summary["hp_delta"]))
+			if int(summary["dmg_delta"]) > 0:
+				growth.append("+%d damage" % int(summary["dmg_delta"]))
+			if int(summary["mp_delta"]) > 0 and has_mp_skill:
+				growth.append("+%d Max MP" % int(summary["mp_delta"]))
+			if not growth.is_empty():
+				text += " (%s)" % ", ".join(growth)
 			_emit(WIEvents.TOAST, {"text": text})
 
 	# Bank the monotonic "ever reached two classes" flag the moment

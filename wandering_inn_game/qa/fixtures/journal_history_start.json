@@ -1,0 +1,53 @@
+{
+ "_comment": "Issue #79 (journal & progression communication wave): FIXTURE-FIRST start proving the journal's THREE new results-only surfaces from real state in one open, no organic route needed (the route to reach each state independently is already proven elsewhere -- selys_delivery.json's reward choice, THE REQUEST BOARD's accept flow, the Runner's Guild's take-a-slip flow, mage_unlock_loop's [Mage] earn). `the_errand` is COMPLETE via the kept_reward fork (package_delivered + errand_decided + kept_reward all pre-banked) -- the journal's Completed section's own chosen-path line. `bounty_road_cull` is ACCEPTED with an empty (unmet, delta-mode) baseline -- the Postings section's detail-view line (the board's own `copy` text, reused verbatim). `delivery_krshia_wool` is likewise ACCEPTED (its own `slip_copy` text) with the real parcel item carried, mirroring what WIGame.accept_delivery grants on a live accept. `mage` is held at level 1 (bypassing the live learned_magic_from_pisces earn -- hand-authored fixtures skip organic earns per convention) so the Skills section's per-class aspiration line has a real class to attach to (Mage's own authored aspiration text). TRAP: rng_state is a properly-derived state (.seed=9, captured .state, the board_loop_start/dp2_fixwave_absolute_start precedent's exact value) -- this canonical never resolves a fight, so its value is cosmetic/inert for outcome purposes.",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   2,
+   3
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "mage": 1
+  },
+  "accomplishments": {
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "kept_reward": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "parcel_plains_wool"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481",
+  "times_slept": 0,
+  "accepted_bounty_id": "bounty_road_cull",
+  "accepted_bounty_baseline": {},
+  "board_last_seen_times_slept": 0,
+  "accepted_delivery_id": "delivery_krshia_wool",
+  "accepted_delivery_baseline": {},
+  "delivery_failed": false,
+  "delivery_last_seen_times_slept": 0
+ }
+}

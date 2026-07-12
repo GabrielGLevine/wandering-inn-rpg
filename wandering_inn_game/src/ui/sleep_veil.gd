@@ -148,6 +148,32 @@ const EPILOGUE_HOLD_BEFORE_TEXT := 0.8
 const EPILOGUE_LINE_HOLD := 1.6
 const EPILOGUE_READ_HOLD := 2.6
 
+## Issue #79 (evolution-fork visibility): a one-line RESULT flavor per
+## evolution TARGET class id, spoken as a second GDI line right after the
+## bare "[X Class -> Y Class!]" proclamation (CLASS_EVOLVED handler below).
+## Results-only, no pre-telegraph -- the opaque-until-sleep lock's own
+## discipline holds: this speaks ONLY once the fork has already resolved,
+## never a hint beforehand (`_EVOLUTION_WAITING_TOASTS` in wi_game.gd is the
+## PRE-resolution voice; this is its POST-resolution twin, deliberately
+## mirrored in the same "Your X have/hasn't Y" cadence). Presentation-only
+## (matches this whole file's own doc comment) -- lives here, not
+## wi_game.gd, since it's purely the veil's own re-voicing, never read by
+## the sim or the plain class_evolved toast (wi_game.gd's own "[X] has
+## become [Y]!" stays unchanged). Covers every shipped Replacement target
+## (warrior -> swordsman/spearmaster, mage -> ice_mage/fire_mage, helper ->
+## barmaid/server); archer -> sharpshooter is Replacement-only with a
+## SINGLE target (no real fork to voice, see that class's own _comment) so
+## it's deliberately absent -- `.get(..., "")` degrades a future fork-less
+## target to silence, not a crash.
+const _EVOLUTION_RESULT_FLAVOR := {
+	"swordsman": "Your hands have chosen the sword.",
+	"spearmaster": "Your hands have chosen the spear.",
+	"ice_mage": "Your focus has settled on frost.",
+	"fire_mage": "Your focus has settled on flame.",
+	"barmaid": "You've settled into serving the room.",
+	"server": "You've settled into running the city.",
+}
+
 ## Display-name maps loaded from data (presentation-only, exactly how content=
 ## data UI resolves labels): class ids -> raw names ("Warrior"), skill ids ->
 ## bracketed names ("[Basic Cleaning]"). Loaded once in _ready; independent of
@@ -243,7 +269,11 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_lines.append("[Skill – %s Obtained!]" % _skill_name(String(payload.get("skill", ""))))
 		WIEvents.CLASS_EVOLVED:
 			if _running:
-				_lines.append("[%s Class → %s Class!]" % [_class_name(String(payload.get("from", ""))), _class_name(String(payload.get("to", "")))])
+				var to_id := String(payload.get("to", ""))
+				_lines.append("[%s Class → %s Class!]" % [_class_name(String(payload.get("from", ""))), _class_name(to_id)])
+				var flavor := String(_EVOLUTION_RESULT_FLAVOR.get(to_id, ""))
+				if flavor != "":
+					_lines.append(flavor)
 		WIEvents.CONSOLIDATION_OFFERED:
 			# The GDI ANNOUNCES the offer under the veil (user ruling: the
 			# consolidation choice is delivered by the Grand Design during

@@ -11,11 +11,14 @@ extends SceneTree
 const _FORBIDDEN_ATTR := "(?i)\\b(str|dex|con|int|wis|cha)\\b"
 
 const EXPECTED_ITEMS := {
-	"rusty_sword": [],
-	"relcs_spare_spear": ["+1 damage on melee hits"],
-	"crude_blade": [],
-	"chipped_spear": [],
-	"solid_oak_spear": [],
+	# Issue #79: every weapon's own `weapon_family` now states the kit
+	# consequence ("<Family> kit replaces other weapon Skills in combat") --
+	# the same line for every weapon of that family, sword/spear/bow.
+	"rusty_sword": ["Sword kit replaces other weapon Skills in combat"],
+	"relcs_spare_spear": ["+1 damage on melee hits", "Spear kit replaces other weapon Skills in combat"],
+	"crude_blade": ["Sword kit replaces other weapon Skills in combat"],
+	"chipped_spear": ["Spear kit replaces other weapon Skills in combat"],
+	"solid_oak_spear": ["Spear kit replaces other weapon Skills in combat"],
 	"leather_jerkin": ["+4 HP", "Worth 24 gold"],
 	# Now priced (previously fixture/harness-only, no live buy
 	# path) -- sold at the new street `peddler_stall`.
@@ -25,7 +28,7 @@ const EXPECTED_ITEMS := {
 	# already wired) joins its card between the
 	# hp line and the price line.
 	"traveler_charm": ["+2 HP", "Resonance 1", "Worth 5 gold"],
-	"gnollish_hunting_knife": ["+1 damage on melee hits", "Worth 15 gold"],
+	"gnollish_hunting_knife": ["+1 damage on melee hits", "Sword kit replaces other weapon Skills in combat", "Worth 15 gold"],
 	"wool_lined_cloak": ["+3 HP", "Worth 18 gold"],
 	# The 9 new items (7 accessories, 2 tools).
 	"copper_luck_band": ["+1 HP", "Worth 4 gold"],
@@ -83,8 +86,8 @@ const EXPECTED_ITEMS := {
 	# GH#70 [Archer]: the two bows. `range` (4, > 1) earns the "Range 4" line;
 	# damage_mod (hunting_bow only) reads "ranged hits" instead of "melee
 	# hits" (effect_text.gd's own range-aware branch).
-	"training_bow": ["Range 4", "Worth 8 gold"],
-	"hunting_bow": ["+1 damage on ranged hits", "Range 4", "Worth 18 gold"],
+	"training_bow": ["Range 4", "Bow kit replaces other weapon Skills in combat", "Worth 8 gold"],
+	"hunting_bow": ["+1 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat", "Worth 18 gold"],
 	# 8d C1 (issue #14): the trapped_halls SKILL route's coin cost --
 	# priced tool, no combat fields, same shape as field_whetstone's card.
 	"trap_kit": ["Worth 3 gold"],
