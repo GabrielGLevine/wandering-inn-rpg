@@ -47,3 +47,7 @@ posting generator. Slots naturally WITH #90 (the new statuses/AI arms need
 carriers) and after #96/#93 (class balance first — fights are tuned against
 the class ladder). Suggested execution: #96 → #93+#95 → #90+#97 as one
 combat wave → the rest of gap-2.
+
+## Trader directive (2026-07-12, user): #98 [Trader]=>[Merchant] economy
+class line — joins the #93 class-foundation design pass (one pass);
+its sell-verb + discount math coordinate with #92 economy depth.
