@@ -906,6 +906,22 @@ func _render_corner() -> void:
 	_corner_mech_line = " | ".join(lines)
 
 
+## Read-only rect accessor (issue #84 QA-teeth, `pause_menu.gd`'s `row_rect`/
+## `dialogue_panel.gd`'s `option_rect` established pattern) -- the on-screen
+## rect of carried-list row `i` as of the last `_rebuild_items()`, for QA's
+## `click_inventory_row` step. Empty Rect2 when the panel is closed, the row
+## is out of range, or the list is currently empty (`_rebuild_items` swaps in
+## a single "Nothing carried." Label not tracked in `_item_labels` for that
+## case, so the array is simply empty then -- no special-case needed here).
+func item_row_rect(i: int) -> Rect2:
+	if not open or i < 0 or i >= _item_labels.size():
+		return Rect2()
+	var label := _item_labels[i]
+	if label == null or not is_instance_valid(label) or not label.visible:
+		return Rect2()
+	return Rect2(label.global_position, label.size)
+
+
 ## The selected item's corner icon texture, or null when the item has none
 ## carried -- PATH-BY-CONVENTION (`_icon_path_for`), never a data field, so a
 ## missing file is a graceful degrade: `ResourceLoader.exists` guards the

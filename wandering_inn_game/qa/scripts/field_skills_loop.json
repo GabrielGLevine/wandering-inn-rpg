@@ -90,6 +90,18 @@
   { "action": "wait_for_event", "type": "loadout_changed", "payload_contains": { "skill": "observe", "assigned": false, "loadout": [] }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3 }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_journal_loadout_rendered", "payload_contains": { "skill": "observe", "assigned": false, "cursor_index": 6 }, "timeout_sec": 5 },
+
+  { "_comment": "Issue #84 QA-teeth: the SAME assign toggle again, this time via CLICK (`click_journal_skill`, flat_index 6 = [Appraise Foe], the identical flattened index the 6-downs keyboard path above lands on) instead of move_down x6 + confirm -- fires the byte-identical loadout_changed/ui_field_hotbar_rendered/ui_journal_loadout_rendered triple as the keyboard assign at line 71-73 above (`_on_skill_row_meta_clicked` routes through the SAME `_toggle_cursor_skill()` Enter calls).", "action": "click_journal_skill", "flat_index": 6 },
+  { "action": "wait_for_event", "type": "loadout_changed", "payload_contains": { "skill": "observe", "assigned": true, "loadout": ["observe"] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "readout_lines": ["1  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_journal_loadout_rendered", "payload_contains": { "skill": "observe", "assigned": true, "cursor_index": 6 }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "06_journal_click_assign" },
+
+  { "_comment": "Click-driven UNASSIGN, same row, restoring the clean AUTO-loadout baseline this script ends on either way.", "action": "click_journal_skill", "flat_index": 6 },
+  { "action": "wait_for_event", "type": "loadout_changed", "payload_contains": { "skill": "observe", "assigned": false, "loadout": [] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_journal_loadout_rendered", "payload_contains": { "skill": "observe", "assigned": false, "cursor_index": 6 }, "timeout_sec": 5 },
+
   { "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 }
  ]

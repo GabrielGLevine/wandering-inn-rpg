@@ -47,8 +47,9 @@
    "timeout_sec": 5
   },
   {
-   "action": "press",
-   "name": "confirm"
+   "_comment": "Issue #84 QA-teeth: visible option 1 (1-based) via CLICK, not keyboard -- 'I'll take the package.' is the hub's only visible option at this authored slot 0 on a truly fresh conversation (has_package unbanked). Sets up the index-shift proof below: the SAME visible slot 1 resolves to a DIFFERENT option once has_package banks and this one hides itself.",
+   "action": "click_dialogue_option",
+   "option": 1
   },
   {
    "action": "wait_for_event",
@@ -81,8 +82,9 @@
    "timeout_sec": 5
   },
   {
-   "action": "press",
-   "name": "confirm"
+   "_comment": "Issue #84 QA-teeth, the index-shift trap made observable: visible option 1 (1-based) AGAIN via click -- the SAME slot the first click above hit -- but 'I'll take the package.' just hid itself (hide_when has_package:1, banked by that first click), so 'Let me deal with that table. ([Basic Cleaning])' (authored slot 1, previously visible slot 2) has slid up into slot 1. click_dialogue_option resolves option_rect(0) LIVE off the CURRENT render every call, so the identical click index correctly lands on the NEW occupant rather than a stale binding to whatever used to render there.",
+   "action": "click_dialogue_option",
+   "option": 1
   },
   {
    "action": "wait_for_event",
@@ -92,6 +94,12 @@
     "text": "Really? It's the horror show by the south wall. I owe you one - or the table does. [Basic Cleaning]'s already on your bar — number key, then go introduce yourself to it."
    },
    "timeout_sec": 5
+  },
+  {
+   "_comment": "Both hub-slot-1 clicks fired dialogue_choice{index:0} (same visible slot each time) yet resolved to two different authored options -- the FIRST reached 'package' (quest_started/has_package, waited above), THIS one reached 'cleaning_directions' ('Really?...', just waited) -- the two DIFFERENT dialogue_node texts are the proof the click is never stale-bound to whichever option first rendered in that slot, not a bare event count (a later same-run confirm on an unrelated node also happens to land on cursor 0, so counting index:0 occurrences whole-log would conflate unrelated clicks).",
+   "action": "assert_event_logged",
+   "type": "dialogue_choice",
+   "payload_contains": { "index": 0 }
   },
   {
    "action": "assert_event_absent",

@@ -606,6 +606,46 @@
    "name": "04_equip_moment"
   },
   {
+   "_comment": "Issue #84 QA-teeth: click-driven UNEQUIP -- relcs_spare_spear is still cursor row 3 (1-based; index 2, unchanged since the keyboard equip above). A click on an item ALREADY equipped in its own slot routes through `_equipped_slot_for` to Game.sim.unequip (the exact toggle-to-unequip grammar Enter uses), NOT a duplicate equip() call -- ITEM_UNEQUIPPED carries only {slot}, no item id, so the state assert below is the real proof this cleared the weapon slot specifically.",
+   "action": "click_inventory_row",
+   "row": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_unequipped",
+   "payload_contains": {
+    "slot": "weapon"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.weapon",
+   "equals": ""
+  },
+  {
+   "action": "screenshot",
+   "name": "04b_click_unequip"
+  },
+  {
+   "_comment": "Issue #84 QA-teeth: click-driven RE-EQUIP -- the SAME row, now showing unequipped, clicked again toggles back the other way (`_equipped_slot_for` now returns \"\" for this item, so `_confirm()` calls equip() instead) -- restores equipped.weapon for the rest of this script's own kit proof downstream, so nothing past this point needs to change.",
+   "action": "click_inventory_row",
+   "row": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "payload_contains": {
+    "item": "relcs_spare_spear",
+    "slot": "weapon"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04c_click_reequip"
+  },
+  {
    "action": "press",
    "name": "inventory"
   },
