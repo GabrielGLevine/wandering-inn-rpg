@@ -1,9 +1,39 @@
 #!/usr/bin/env python3
-"""Copy curated Pixel Crawler assets into the Godot project."""
+"""Copy curated Pixel Crawler (and PixelLab-adjacent) assets into the Godot
+project.
+
+Issue #86 manifest-overlay guard: assets_manifest.json enumerates every
+FORBIDDEN/NEEDS-ATTESTATION path that ships ONLY via the private asset
+bundle (scripts/fetch_private_assets.sh) -- a public checkout falls back to
+placeholder/silent art at those paths. Some of those paths (the Body_A PC
+class, pre-issue-#86) get their AUTHORITATIVE content from a source this
+tool has no row for at all (a PixelLab API generation, not a
+potential_assets/ pack file) -- copying this tool's stale row over the top
+silently regresses the curated bundle back to worse art with no error (the
+#76-review incident this guard fixes). Every copy this tool performs is now
+checked against assets_manifest.json first: a destination inside the
+manifest is REFUSED by default, loudly, whether or not this tool's row for
+it happens to still be correct today. `--force-manifest-write` is the
+documented, explicit escape hatch for the ONE legitimate case that still
+needs it -- wi-shipping's "adding a new licensed asset" workflow, where a
+human is deliberately (re)populating a manifest path from a pack they just
+verified.
+
+Usage:
+    python3 tools/sync_assets.py                      # dry run (default, SAFE)
+    python3 tools/sync_assets.py --apply               # perform the copies
+    python3 tools/sync_assets.py --apply --force-manifest-write  # + allow
+                                                         # writing manifest-
+                                                         # overlay paths
+    python3 tools/sync_assets.py --self-test            # guard unit checks
+                                                          # only, no file I/O
+"""
 
 from __future__ import annotations
 
+import json
 import shutil
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -11,6 +41,7 @@ from PIL import Image, ImageDraw
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+ASSETS_MANIFEST_PATH = PROJECT_ROOT / "assets_manifest.json"
 
 MANIFEST: list[tuple[str, str]] = [
 	(
@@ -21,66 +52,27 @@ MANIFEST: list[tuple[str, str]] = [
 		"potential_assets/Pixel Crawler - Cave/Pixel Crawler - Cave/Terms.txt",
 		"assets/LICENSES/pixel-crawler-cave-Terms.txt",
 	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Idle_Base/Idle_Down-Sheet.png",
-		"assets/sprites/body_a/Idle_Down-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Idle_Base/Idle_Side-Sheet.png",
-		"assets/sprites/body_a/Idle_Side-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Idle_Base/Idle_Up-Sheet.png",
-		"assets/sprites/body_a/Idle_Up-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Walk_Base/Walk_Down-Sheet.png",
-		"assets/sprites/body_a/Walk_Down-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Walk_Base/Walk_Side-Sheet.png",
-		"assets/sprites/body_a/Walk_Side-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Walk_Base/Walk_Up-Sheet.png",
-		"assets/sprites/body_a/Walk_Up-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Slice_Base/Slice_Down-Sheet.png",
-		"assets/sprites/body_a/Slice_Down-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Slice_Base/Slice_Side-Sheet.png",
-		"assets/sprites/body_a/Slice_Side-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Slice_Base/Slice_Up-Sheet.png",
-		"assets/sprites/body_a/Slice_Up-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Hit_Base/Hit_Down-Sheet.png",
-		"assets/sprites/body_a/Hit_Down-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Hit_Base/Hit_Side-Sheet.png",
-		"assets/sprites/body_a/Hit_Side-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Hit_Base/Hit_Up-Sheet.png",
-		"assets/sprites/body_a/Hit_Up-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Death_Base/Death_Down-Sheet.png",
-		"assets/sprites/body_a/Death_Down-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Death_Base/Death_Side-Sheet.png",
-		"assets/sprites/body_a/Death_Side-Sheet.png",
-	),
-	(
-		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Characters/Body_A/Animations/Death_Base/Death_Up-Sheet.png",
-		"assets/sprites/body_a/Death_Up-Sheet.png",
-	),
+	# Issue #86 AUDIT (2026-07-12): the 15 raw-pack Body_A rows that used to
+	# live here (Idle/Walk/Slice/Hit/Death x Down/Side/Up, 64px Pixel Crawler
+	# Free Pack 2.1 frames) are REMOVED, not retargeted -- Track F2
+	# (2026-07-06, see assets/LICENSES/pixellab-ai-generated-verdict.md)
+	# replaced the naked Body_A PC with a PixelLab v2-generated clothed
+	# traveler (104px frames, PLUS a Cast_{Down,Side,Up} animation this old
+	# row set never even knew about). body_a's current source is the
+	# PixelLab API (character id 35528619-54b4-4139-96eb-dbe2e6bf6e33,
+	# provenance in the gitignored potential_assets/pixellab_2026-07-06/),
+	# not a potential_assets pack file -- there is no valid src path to
+	# retarget these rows TO. The private bundle (fetch_private_assets.sh)
+	# is the only correct way to populate assets/sprites/body_a/** locally;
+	# re-adding a raw-pack row here would silently regress it back to the
+	# pre-F2 64px art (the exact #76-review incident this issue fixes).
+	# The manifest-overlay guard below refuses this class of mistake by
+	# construction even if a row like this is ever added back.
+	#
+	# citizen_f (6 rows, just below) was audited in the same pass and is
+	# CURRENT: no PixelLab supersession, still a live sprites.json entry,
+	# and its committed frames still measure the raw pack's native 64x64 --
+	# kept as-is.
 	(
 		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Npc's/Citizen_F/Tavern_A/Idle/Idle_Down-Sheet.png",
 		"assets/sprites/citizen_f/Idle_Down-Sheet.png",
@@ -1130,19 +1122,158 @@ def _draw_placeholder(shape: str, dst_rel: str, fill: tuple[int, int, int], outl
 	print(f"(generated) -> {dst_rel}")
 
 
+class ManifestOverlayGuardError(RuntimeError):
+	"""Raised by --apply when one or more copy destinations are refused by
+	the manifest-overlay guard (see the module docstring, issue #86)."""
+
+
+def load_manifest_paths(manifest_path: Path = ASSETS_MANIFEST_PATH) -> set[str]:
+	"""The set of `path` values from assets_manifest.json's `assets` list --
+	every destination that ships ONLY via the private bundle overlay. Pure
+	JSON read; never touches potential_assets/ (self-test-safe without the
+	packs fetched)."""
+	with manifest_path.open() as f:
+		data = json.load(f)
+	return {entry["path"] for entry in data.get("assets", [])}
+
+
+def guard_verdict(dst_rel: str, manifest_paths: set[str], force: bool) -> str:
+	"""'ALLOW' or a 'REFUSE: <reason>' string for a would-be copy
+	destination. Pure function over caller-supplied data -- no filesystem
+	access, so it's safe to call from --self-test without potential_assets/
+	present."""
+	if dst_rel not in manifest_paths:
+		return "ALLOW"
+	if force:
+		return "ALLOW (--force-manifest-write override)"
+	return (
+		"REFUSE: manifest-overlay path (assets_manifest.json) -- ships ONLY "
+		"via the private bundle (scripts/fetch_private_assets.sh); refusing "
+		"to silently overwrite it. Pass --force-manifest-write if you are "
+		"deliberately (re)curating this path from a verified pack source "
+		"(wi-shipping's 'adding a new licensed asset' workflow)."
+	)
+
+
+def _self_test() -> None:
+	"""--self-test: guard-logic checks only, no file I/O, no
+	potential_assets/ dependency (issue #86 verification requirement)."""
+	manifest_paths = load_manifest_paths()
+	assert manifest_paths, "assets_manifest.json produced an empty path set"
+
+	# 1. A real manifest path must be refused by default. body_a stays
+	#    listed in assets_manifest.json (the private bundle still owns it)
+	#    even though issue #86 removed this tool's (stale) rows for it --
+	#    that's exactly the case the guard exists to catch if a row like it
+	#    is ever added back.
+	manifest_path = "assets/sprites/body_a/Idle_Down-Sheet.png"
+	assert manifest_path in manifest_paths, (
+		f"fixture assumption broke: assets_manifest.json no longer lists {manifest_path}"
+	)
+	verdict = guard_verdict(manifest_path, manifest_paths, force=False)
+	assert verdict.startswith("REFUSE"), f"expected REFUSE, got: {verdict}"
+
+	# 2. The explicit override allows the same path.
+	verdict_forced = guard_verdict(manifest_path, manifest_paths, force=True)
+	assert verdict_forced.startswith("ALLOW"), f"expected ALLOW, got: {verdict_forced}"
+
+	# 3. A path outside the manifest is allowed without the override.
+	non_manifest_path = "assets/audio/sfx/__self_test_never_in_manifest__.wav"
+	assert non_manifest_path not in manifest_paths, (
+		"fixture collision: self-test's non-manifest path IS in the manifest"
+	)
+	verdict_open = guard_verdict(non_manifest_path, manifest_paths, force=False)
+	assert verdict_open == "ALLOW", f"expected plain ALLOW, got: {verdict_open}"
+
+	# 4. Regression guard for THIS issue: no body_a row should ever be back
+	#    in MANIFEST, and at least one legitimate (audited-current, e.g.
+	#    goblin/bat/admurin pack) row should still be refused by default --
+	#    proving the guard actually covers the tool's real row list, not
+	#    just synthetic fixtures.
+	refused_real = [
+		dst_rel for _src_rel, dst_rel in MANIFEST
+		if guard_verdict(dst_rel, manifest_paths, force=False).startswith("REFUSE")
+	]
+	assert not any("body_a" in dst_rel for dst_rel in refused_real), (
+		"a body_a row is back in MANIFEST -- issue #86 regression"
+	)
+	assert refused_real, (
+		"expected at least one legitimate manifest-path row (e.g. a goblin/"
+		"bat/admurin pack row) still in MANIFEST"
+	)
+	for _src_rel, dst_rel, _size in ICON_MANIFEST:
+		guard_verdict(dst_rel, manifest_paths, force=False)
+
+	print(
+		"--self-test: PASS -- manifest path refused by default, "
+		"--force-manifest-write allows it, non-manifest path allowed "
+		f"unconditionally, no body_a rows present, {len(refused_real)} "
+		"legitimate manifest-path row(s) still correctly refused by default."
+	)
+
+
 def main() -> None:
-	for src_rel, dst_rel in MANIFEST:
+	if "--self-test" in sys.argv:
+		_self_test()
+		return
+
+	apply = "--apply" in sys.argv
+	force = "--force-manifest-write" in sys.argv
+	mode = "APPLY" if apply else "DRY-RUN"
+	manifest_paths = load_manifest_paths()
+	refused: list[str] = []
+
+	def _copy_row(src_rel: str, dst_rel: str) -> None:
+		verdict = guard_verdict(dst_rel, manifest_paths, force)
+		print(f"[{mode}] {src_rel} -> {dst_rel}  [{verdict}]")
+		if verdict.startswith("REFUSE"):
+			refused.append(dst_rel)
+			return
+		if not apply:
+			return
 		src = REPO_ROOT / src_rel
 		dst = PROJECT_ROOT / dst_rel
 		if not src.is_file():
 			raise FileNotFoundError(src)
 		dst.parent.mkdir(parents=True, exist_ok=True)
 		shutil.copy2(src, dst)
-		print(f"{src_rel} -> {dst_rel}")
+
+	for src_rel, dst_rel in MANIFEST:
+		_copy_row(src_rel, dst_rel)
+
 	for src_rel, dst_rel, size in ICON_MANIFEST:
-		_resize_icon(src_rel, dst_rel, size)
+		verdict = guard_verdict(dst_rel, manifest_paths, force)
+		print(f"[{mode}] {src_rel} -> {dst_rel}  [{verdict}] (resize {size}x{size})")
+		if verdict.startswith("REFUSE"):
+			refused.append(dst_rel)
+			continue
+		if apply:
+			_resize_icon(src_rel, dst_rel, size)
+
+	# PLACEHOLDER_ICONS are code-drawn (no potential_assets/ source, no
+	# license exposure) and none of them target a manifest path (verified --
+	# see the module docstring's SHIP-OK note); still gated on --apply so a
+	# no-args run never writes anything at all.
 	for shape, dst_rel, fill, outline in PLACEHOLDER_ICONS:
-		_draw_placeholder(shape, dst_rel, fill, outline)
+		print(f"[{mode}] (generated:{shape}) -> {dst_rel}  [ALLOW]")
+		if apply:
+			_draw_placeholder(shape, dst_rel, fill, outline)
+
+	if refused:
+		print(f"\n{len(refused)} row(s) REFUSED by the manifest-overlay guard:")
+		for dst_rel in refused:
+			print(f"  - {dst_rel}")
+		if apply:
+			raise ManifestOverlayGuardError(
+				f"{len(refused)} manifest-overlay path(s) refused -- see the "
+				"list above. Re-run with --force-manifest-write if this is "
+				"the documented wi-shipping 'adding a new licensed asset' "
+				"workflow and the pack source is verified current."
+			)
+	elif apply:
+		print("\nAll copies applied; no manifest-overlay paths touched.")
+	else:
+		print("\nDry run only -- no files written. Re-run with --apply to perform this plan.")
 
 
 if __name__ == "__main__":
