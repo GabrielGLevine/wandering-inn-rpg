@@ -602,12 +602,48 @@
     {
      "text": "Back to the regular stall.",
      "goto": "shop"
+    },
+    {
+     "_comment": "8e Phase C 'Papers for Pallass' Stage 2 (issue #16, controller ruling 2, the GH#65 late-attuning precedent -- resonant_catalyst above is the exact buy-contract template, right down to the own-reaction-node choice). Gated on pallass_sponsored (Stage 1, Selys's sponsorship fee) so Krshia won't sell it to someone with no filed sponsorship -- sanctioned {gold, accomplishment} compound: the accomplishment leg alone controls hide-until-met, the gold leg alone controls greyed-when-broke once unlocked. Banks pallass_attuned, the gate on the new Pallass row in data/portals.json. Appended at array end (index-safety convention) -- no earlier charms option's visible index shifts.",
+     "text": "That stone with the Pallass stamp on the wrapping. (18 gold)",
+     "requires": {
+      "gold": 18,
+      "accomplishment": {
+       "pallass_sponsored": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -18
+      },
+      {
+       "item": "pallass_attunement_stone"
+      },
+      {
+       "accomplishment": "pallass_attuned"
+      }
+     ],
+     "goto": "pallass_stone_sold"
     }
    ]
   },
   "catalyst_sold": {
    "speaker": "Krshia",
    "text": "That one, I do not ask questions about. Silverfang trade brings stranger things than that through Liscor, and it always finds the buyer who was already looking for it. Yours now. Spend the rest of your coin on something that talks less.",
+   "options": [
+    {
+     "text": "Show me the stall again.",
+     "goto": "shop"
+    },
+    {
+     "text": "My thanks, Krshia.",
+     "end": true
+    }
+   ]
+  },
+  "pallass_stone_sold": {
+   "speaker": "Krshia",
+   "text": "Guild paper and a Silverfang stone, together -- the city won't ask twice. Keep both on you until the Door has done its work.",
    "options": [
     {
      "text": "Show me the stall again.",

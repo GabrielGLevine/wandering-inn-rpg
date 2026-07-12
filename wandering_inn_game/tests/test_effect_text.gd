@@ -90,6 +90,10 @@ const EXPECTED_ITEMS := {
 	# Issue #65: the post-Riverfarm Invrisil attunement purchase -- priced
 	# tool, no combat fields, same shape as resonant_catalyst's card.
 	"invrisil_attunement_stone": ["Worth 18 gold"],
+	# 8e Phase C (issue #16): the Pallass attunement purchase --
+	# invrisil_attunement_stone's exact twin, same priced-tool-no-combat-
+	# fields shape.
+	"pallass_attunement_stone": ["Worth 18 gold"],
 	# GH#70 [Archer]: the two bows. `range` (4, > 1) earns the "Range 4" line;
 	# damage_mod (hunting_bow only) reads "ranged hits" instead of "melee
 	# hits" (effect_text.gd's own range-aware branch).
