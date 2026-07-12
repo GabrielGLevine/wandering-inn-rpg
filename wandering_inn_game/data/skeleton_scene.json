@@ -3873,7 +3873,7 @@
      "observe": "The paint is newer than the post it hangs on. Somebody meant it, and means it still."
     },
     {
-     "_comment": "A lost cache on the pond floor at (10,18), inside the fishing-pond blocking rect and thus unreachable UNLESS the player frost-freezes the pond edge (10,17) and steps onto the ice to interact it (see the floodplains `freezable` list). Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast. Sits on an already-blocked pond cell, so it alters no route and no script reaches or asserts it. Sprite `crate` stands in for a silt-buried strongbox (VISUAL-LOG flag). A future economy pass can hang gold/an item off this discovery.",
+     "_comment": "A lost cache on the pond floor at (10,18), inside the fishing-pond blocking rect and thus unreachable UNLESS the player frost-freezes the pond edge (10,17) and steps onto the ice to interact it (see the floodplains `freezable` list). Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast. Sits on an already-blocked pond cell, so it alters no route and no script reaches or asserts it. Sprite `crate` stands in for a silt-buried strongbox (VISUAL-LOG flag). Issue #81 (exploration & optional content): the economy pass this comment used to flag -- 'a future economy pass can hang gold/an item off this discovery' -- lands here. `gold: 5` rides the SAME on_interact_accomplishment branch's existing optional `gold` field (wi_game.gd's interact(), the serving_tray/patron precedent), fired AFTER the atmospheric toast above (record_accomplishment -> toast -> gold -> its own 'Earned 5 gold.' toast) -- the flavor text is untouched, this is additive only. `bounty_pond_keepsakes` (data/bounties.json) now also reads found_the_frozen_cache for a small board bonus, so the one secret this game shipped that paid literally nothing now pays gold directly AND feeds a posting. Still 'No QA drives this' (the freeze-cross mechanic itself remains a deliberately disclosed gap, per the original note) -- this task did not add fixture/canonical coverage for the reward, consistent with that pre-existing, accepted scope.",
      "id": "frozen_cache",
      "kind": "prop",
      "cell": [
@@ -3889,7 +3889,8 @@
      ],
      "observe": "Something square and man-made rests on the pond floor a stride out from the bank, furred with silt. Too far to reach across open water. But water can be made to bear weight, if you know the trick of cold.",
      "on_interact_accomplishment": "found_the_frozen_cache",
-     "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, dry against all odds, a few keepsakes someone drowned here meant never to be found."
+     "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, dry against all odds, a few keepsakes someone drowned here meant never to be found.",
+     "gold": 5
     },
     {
      "_comment": "`on_enter_accomplishment` banks `reached_liscor` on door travel INTO the street (the Act I gate's street-arrival counter). Fires ONLY on real door interaction (the `door` branch of interact()), never on QA teleport or save/load restore (those use bind_map_silent/transition without the entity), so a load can never spuriously advance the act. record_accomplishment is idempotent for gate purposes (>= 1). DISCLOSURE: every canonical script that walks floodplains -> liscor_gate -> street now carries reached_liscor:1 in its snapshot (additive counter; no script asserts an exact accomplishments dict).",
@@ -4603,6 +4604,56 @@
       ],
       "open_toast": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above."
      }
+    },
+    {
+     "_comment": "Issue #81 lore-note collectible thread: found-note item (kind:parcel, data/items.json), container shape (contains). Placed at (9,1), the upper room above the y5 water-channel wall segment -- confirmed off every sewers-touching canonical's actual walked-cell set (sewers_walkthrough/cisterns_fight/cisterns_scout together only tread (15,9)/(15,11)/(2,2)/(1,2)/(3,4)/(3,5)/(5,2)/(6,2)/(16,10)/(18,10) in this map; cisterns_talk never physically enters sewers; deep_descent's fixture starts already adjacent to deep_fissure at (8,11) and never walks elsewhere). No gate -- an always-findable secondary discovery, like phosphor_moss/drainage_marker.",
+     "id": "note_sewer_surveyor",
+     "kind": "prop",
+     "cell": [
+      9,
+      1
+     ],
+     "display_name": "A Surveyor's Page",
+     "sprite": "dusty_scroll",
+     "tint": [
+      0.6,
+      0.68,
+      0.6
+     ],
+     "observe": "A single page, gone soft with damp, wedged where the old brick has cracked.",
+     "contains": [
+      "note_sewer_surveyor"
+     ],
+     "on_open_accomplishment": "found_sewer_surveyor_note"
+    },
+    {
+     "_comment": "Issue #81 'The Missing Recruit' mini-quest (data/quests.json, the_missing_recruit): the beat-1 discovery, a `present_when`-gated NPC (STRUCTURAL absence, not merely visual -- entity_present's own doc comment in wi_game.gd) so a player can never stumble on Pell before Dresk's barracks conversation has actually opened the quest. Gate: `missing_recruit_started` (Dresk's dresk_recruit.json 'ask' option, banked on the BARRACKS map) -- a DIFFERENT map than this entity's own (sewers), satisfying present_when's same-map-producer constraint. Placed at (11,3), the SAME upper room as note_sewer_surveyor above, off every sewers canonical's walked-cell set (see that entity's own comment) -- none of them bank missing_recruit_started, so Pell stays structurally absent in every pre-#81 sewers script, and their `ui_entities_rendered` sprite counts are untouched by this addition (unlike note_sewer_surveyor, which IS always-present and therefore DOES bump the raw entity count -- no pre-#81 sewers script asserts that count today, so nothing needed updating). No talk_pool (met once, present_when already keeps a random early explorer from ever reaching this node pre-quest) -- a bare `conversation` routes every interact straight to recruit_pell.json.",
+     "id": "recruit_pell",
+     "kind": "npc",
+     "cell": [
+      11,
+      3
+     ],
+     "display_name": "Recruit Pell",
+     "sprite": "royal_soldier",
+     "tint": [
+      0.6,
+      0.68,
+      0.62
+     ],
+     "facing": "down",
+     "present_when": {
+      "requires": {
+       "missing_recruit_started": 1
+      }
+     },
+     "conversation": "recruit_pell",
+     "dialogue": [
+      {
+       "speaker": "Pell",
+       "text": "I'm fine. Really. Just — turned around in the dark, that's all."
+      }
+     ]
     }
    ]
   },
@@ -5154,6 +5205,18 @@
        "id": "rumor_dungeon_survey",
        "banks_accomplishment": "heard_of_the_gallery_survey",
        "copy": "A WATCH NOTICE, freshly pinned. The reopened gallery under the old seal is to be surveyed properly before the Council calls it settled -- volunteers with Guild standing should see Olesm Swifttail at the frontage desk. Pay is Watch-scale. The notice does not say what 'properly' means, and nobody pinning notices ever does."
+      },
+      {
+       "_comment": "Issue #81 (exploration & optional content): POSTING-SEEDED hook for the_missing_recruit (data/quests.json) -- SIGNPOST only, the rumor_riverfarm/rumor_dungeon_survey idiom (browse-only, banks a flavor-only counter no gate reads). Points at Dresk/the barracks by name rather than naming a solution -- the real quest option lives on his own dresk_recruit.json conversation, gated on this same banked counter.",
+       "id": "rumor_missing_recruit",
+       "banks_accomplishment": "heard_about_missing_recruit",
+       "copy": "WATCH NOTICE, pinned by a hand in a hurry. Recruit Pell missed second muster running. Ashgrave's not calling it desertion, not yet. Anyone with eyes free, ask at the barracks."
+      },
+      {
+       "_comment": "Issue #81: POSTING-SEEDED hook for renns_warhammer (data/quests.json) -- SIGNPOST only, same idiom. Renn's own scrap tacked to the SAME board he complains about -- oblique enough that the guild_notice_wall's pre-existing 'Somebody wants a lost warhammer back' line (unchanged) now has a real notice behind it. Points at Renn by name; the real quest option lives on renn_hammer.json, gated on this same banked counter.",
+       "id": "rumor_lost_hammer",
+       "banks_accomplishment": "heard_about_lost_hammer",
+       "copy": "A SCRAP OF PARCHMENT, tacked low, easy to miss. 'LOST: one backup warhammer, plain steel, no love lost between us but I want it back. Ask for Renn. Reward for the honest sort.' The handwriting gets angrier toward the bottom."
       }
      ]
     },
@@ -5178,7 +5241,7 @@
      "observe": "Handbills and scraps overlapping the request board's edge. The Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only."
     },
     {
-     "_comment": "Renn Coldscale, Bronze-rank Drake, half of a bickering duo at the board -- profile in docs/design/character-profiles-staging.md. Reuses the `pc_drake_m` character-creation rig (ash-grey tint) rather than new art. talk_pool + a static dialogue fallback (no conversation graph -- inert-adjacent by design).",
+     "_comment": "Renn Coldscale, Bronze-rank Drake, half of a bickering duo at the board -- profile in docs/design/character-profiles-staging.md. Reuses the `pc_drake_m` character-creation rig (ash-grey tint) rather than new art. talk_pool fires first-talk-of-the-waking as before; a REAL `conversation` (issue #81, 'Renn's Old Warhammer') now backs every talk after that instead of the old repeated-forever fallback -- gated content only (the 'ask' option requires guild_board's rumor_lost_hammer having been read), so no pre-#81 canonical (which never re-talks to Renn in one waking) is affected.",
      "id": "renn",
      "kind": "npc",
      "cell": [
@@ -5197,6 +5260,7 @@
       "Four silver for a nest clear? Four? My arrows cost more than that if it goes badly.",
       "Every posting on that board is an insult with a wax seal. I'm taking it anyway. Don't look smug."
      ],
+     "conversation": "renn_hammer",
      "dialogue": [
       {
        "speaker": "Renn",
@@ -5257,6 +5321,27 @@
        "text": "Board's behind you, same as it was a minute ago."
       }
      ]
+    },
+    {
+     "_comment": "Issue #81 'Renn's Old Warhammer' mini-quest (data/quests.json, renns_warhammer): the beat-1 discovery, a container prop (contains, the inn_chest/ruin_stones precedent) granting `renns_warhammer` (kind:parcel, data/items.json). Placed at (14,1), the guild's own unused back-right corner -- confirmed off both guild canonicals' walked-cell sets (guild_interior_walkthrough/board_loop's combined routes stay within x<=12; neither steps past the yelra/table_brown(13,6) column). No gate -- findable independent of ever asking Renn (a sequence-break is harmless here: `returned_the_warhammer` only ever banks from Renn's own gated turn-in option, so an early find just sits in the pack until the player talks to him).",
+     "id": "renns_gear_stash",
+     "kind": "prop",
+     "cell": [
+      14,
+      1
+     ],
+     "display_name": "A Forgotten Gear Stash",
+     "sprite": "crate",
+     "tint": [
+      0.45,
+      0.38,
+      0.3
+     ],
+     "observe": "A crate shoved against the back wall, half-buried under someone else's forgotten kit.",
+     "contains": [
+      "renns_warhammer"
+     ],
+     "on_open_accomplishment": "found_the_warhammer"
     }
    ]
   },
@@ -5444,7 +5529,7 @@
      ]
     },
     {
-     "_comment": "Duty Sergeant Dresk Ashgrave -- the relocated watch_guard (see map comment above). talk_pool only (no conversation graph), inert-adjacent, matching Yelra/Renn/Ilvo's own precedent -- duty-mundane background presence, not a quest-giver v1.",
+     "_comment": "Duty Sergeant Dresk Ashgrave -- the relocated watch_guard (see map comment above). talk_pool fires first-talk-of-the-waking as before; a REAL `conversation` (issue #81) now backs every talk after that instead of the old repeated-forever dialogue[0] fallback -- gated content only (the 'Ask about the missing recruit.' option requires the guild_board's rumor_missing_recruit having been read), so this fixture's own pre-#81 canonicals (barracks_walkthrough, archer_earn_loop) stay byte-identical: neither re-talks to Dresk a second time in one waking.",
      "id": "duty_sergeant",
      "kind": "npc",
      "cell": [
@@ -5465,6 +5550,7 @@
       "Quiet shift. Kit's counted, slates are current, and the cell's empty. Write that down as a good day.",
       "Barracks business, filed here. Yours is filed at the gate."
      ],
+     "conversation": "dresk_recruit",
      "dialogue": [
       {
        "speaker": "Dresk",
@@ -5524,6 +5610,68 @@
      "item_hint_toast": "Nothing to shoot with. A bow in hand would do it.",
      "on_interact_accomplishment": "ranged_hit",
      "toast": "You put an arrow in the straw. Not bad, for someone who still flinches at the draw."
+    },
+    {
+     "_comment": "Issue #81 (exploration & optional content): a discovery prop that pays REAL (the gap-analysis finding -- 'exploration pays nothing'). Container shape (`contains`), the inn_chest/ruin_stones/anchor_stone_pedestal precedent -- grants `field_whetstone` via pickup() (its own 'Got: Field Whetstone' toast + ITEM_GAINED), which is ALREADY a purchasable Krshia item (data/dialogue/krshia_crate.json) whose own lore ('half the Watch loses theirs by spring') this find pays off directly -- zero new item catalog entry needed. Placed at (4,6), row y=6 -- confirmed UNWALKED by either barracks canonical (barracks_walkthrough/archer_earn_loop both stay within rows y=2-5 plus the x=2 exit column; row y=6 is untouched floor, no blocked cell, no decor). Sprite `crate` tinted worn-leather-brown, distinct from the room's own undertinted kit crate at (3,2) (decor, non-interactive).",
+     "id": "spare_kit_crate",
+     "kind": "prop",
+     "cell": [
+      4,
+      6
+     ],
+     "display_name": "An Overlooked Kit Crate",
+     "sprite": "crate",
+     "tint": [
+      0.5,
+      0.42,
+      0.3
+     ],
+     "observe": "A second kit crate, shoved into the corner and never reshelved. The sergeant's own tally probably missed it.",
+     "contains": [
+      "field_whetstone"
+     ]
+    },
+    {
+     "_comment": "Issue #81 lore-note collectible thread: found-note item (kind:parcel, data/items.json), container shape identical to spare_kit_crate above (same row, same UNWALKED-cell proof). `on_open_accomplishment` is pure flavor -- nothing gates on it.",
+     "id": "note_watch_veteran",
+     "kind": "prop",
+     "cell": [
+      9,
+      6
+     ],
+     "display_name": "A Watch Veteran's Letter",
+     "sprite": "dusty_scroll",
+     "tint": [
+      0.7,
+      0.65,
+      0.5
+     ],
+     "observe": "A folded half-letter, tucked behind a loose board. Someone started writing it and never finished.",
+     "contains": [
+      "note_watch_veteran"
+     ],
+     "on_open_accomplishment": "found_watch_veteran_note"
+    },
+    {
+     "_comment": "Issue #81 lore-note collectible thread: RELOCATED here from the guild (its first home) after the scene_dynamism tool's own family-spread signal flagged the guild map -- two new props sharing props/free_pack there net-diluted composite (64.66 -> 64.51 pre-edit vs. post, measured, a real STOP-trigger regression per this task's own brief) with no thematically-honest non-free_pack alternative available; a THIRD barracks prop re-measured net POSITIVE for both maps (barracks 65.38 -> 65.75, guild recovers to 64.89) since barracks had more density headroom. Container shape identical to spare_kit_crate/note_watch_veteran above (same row, same UNWALKED-cell proof -- (11,6) is a third distinct cell on the row neither barracks canonical ever treads).",
+     "id": "note_old_dread",
+     "kind": "prop",
+     "cell": [
+      11,
+      6
+     ],
+     "display_name": "A Ward-Charm Scrap",
+     "sprite": "dusty_scroll",
+     "tint": [
+      0.55,
+      0.5,
+      0.45
+     ],
+     "observe": "A scrap of paper pinned low, tucked behind a loose board same as the letter across the room.",
+     "contains": [
+      "note_old_dread"
+     ],
+     "on_open_accomplishment": "found_old_dread_note"
     }
    ]
   },

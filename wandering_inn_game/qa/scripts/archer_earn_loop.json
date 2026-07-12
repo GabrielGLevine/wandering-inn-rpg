@@ -320,10 +320,11 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "Issue #81 added three always-present barracks props (spare_kit_crate, note_watch_veteran, note_old_dread) -- 8 entities + PC = 9. recruit_pell (present_when-gated) stays structurally absent (missing_recruit_started never banks here).",
    "action": "wait_for_event",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 6,
+    "sprites": 9,
     "fallbacks": 0
    },
    "timeout_sec": 5

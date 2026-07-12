@@ -75,6 +75,24 @@
 				{ "id": "report", "description": "Tell Olesm what you found sealed behind the door.", "complete_when": { "seal_kept_reported": 1 } }
 			],
 			"region": "Liscor"
+		},
+		{
+			"_comment": "Issue #81 (exploration & optional content gap-analysis), first of two OPTIONAL mini-quests built to the 2-beat quest-stage floor (GH#68's own ruling: 'the quest-stage standard's floor for optional content can be 2'). POSTING-SEEDED: the hook is a guild_board `board_rumors` entry (`rumor_missing_recruit`, data/skeleton_scene.json) -- the SAME signpost idiom rumor_riverfarm/rumor_invrisil/rumor_dungeon_survey already use, banking a flavor-only `heard_about_missing_recruit` that is NOT itself a beat (heard_about_cisterns precedent) and only opens Dresk's own new `dresk_recruit` conversation option at the barracks. Beat 'search' (`found_missing_recruit`) is a REAL travel beat -- produced only on the sewers map (recruit_pell's own dialogue effect), a different map than the giver (barracks), so its description names the sewers landmark per `_validate_travel_beat_place_naming`. Beat 'report' (`recruit_reported_safe`) is Dresk's own closing beat, same map as the giver (no landmark needed). Single-path by design (no FIGHT/TALK/SKILL fork) -- an optional side-quest, not a main-quest beat; its real cost is the travel + the sewers' own existing danger (heard_about_cisterns gate, sewer_vermin encounter en route), not a Skill/gold toll.",
+			"id": "the_missing_recruit",
+			"title": "The Missing Recruit",
+			"beats": [
+				{ "id": "search", "description": "Find Recruit Pell -- last seen chasing a noise down in the sewers beneath the market -- before the Watch has to call it something worse.", "complete_when": { "found_missing_recruit": 1 } },
+				{ "id": "report", "description": "Walk Pell back to the barracks and tell Sergeant Ashgrave they're safe.", "complete_when": { "recruit_reported_safe": 1 } }
+			]
+		},
+		{
+			"_comment": "Issue #81, second OPTIONAL mini-quest, the 2-beat floor's same-map shape (contrast the_missing_recruit's cross-map one): both beats resolve on the SAME map as the giver (guild), the 'a gate opening / information re-gating a hub' state-change SKILL.md's stage definition sanctions instead of travel -- Renn's own explanation (the 'ask' option) is what makes the gear-stash prop's location legible, and holding the recovered item is what opens his turn-in option (a real gate, not a formality). POSTING-SEEDED: guild_board's `rumor_lost_hammer` board_rumors entry banks the flavor-only `heard_about_lost_hammer` hook (NOT a beat), pointing at Renn by name -- the SAME board that seeds the_missing_recruit, per THE REQUEST BOARD's own established convention of carrying several live rumors at once. Beat 'search' (`found_the_warhammer`) is banked by renns_gear_stash's `on_open_accomplishment` (a container prop, guild). Beat 'report' (`returned_the_warhammer`) is Renn's own turn-in option, gated on carrying the item (`requires: {item: renns_warhammer}`, the sixth sanctioned single-key gate).",
+			"id": "renns_warhammer",
+			"title": "Renn's Old Warhammer",
+			"beats": [
+				{ "id": "search", "description": "Track down Renn's backup warhammer somewhere in the Guild hall -- he swears he left it by the back wall.", "complete_when": { "found_the_warhammer": 1 } },
+				{ "id": "report", "description": "Return the warhammer to Renn, at the Guild.", "complete_when": { "returned_the_warhammer": 1 } }
+			]
 		}
 	]
 }

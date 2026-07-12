@@ -262,3 +262,14 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   FIRST-AID, not manipulation (the system's moral framing lives here).
   No dashes (caps carry the panic — the greet's triple-dash is a
   fix-lane item).
+
+## Recruit Pell (profile added 2026-07-12; issue #81 'The Missing Recruit')
+- OUR INVENTION (no canon figure) — a green Liscor Watch recruit,
+  Dresk Ashgrave's own posting-seeded optional side quest (present_when
+  entity, sewers, only exists once the quest starts). Sprite: `royal_soldier`
+  reused (the Dresk/watch_guard precedent), pale grey-green tint,
+  distinct from Dresk's rust-brown/Zevara's light-blue/Relc's teal-green.
+  Voice: (1) nervy run-on sentences under real relief at being found;
+  (2) embarrassed about the panic, deflects with a joke about the
+  paperwork; (3) never a repeat character beyond this one quest — no
+  further appearances planned.

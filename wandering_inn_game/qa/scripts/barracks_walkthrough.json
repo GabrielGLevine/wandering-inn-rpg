@@ -1,5 +1,5 @@
 {
- "_comment": "The Watch barracks + market-depth stalls, one continuous run. FIXTURE-FIRST (near_barracks -- post_tutorial_street's exact state plus gold:25, so the peddler's mini-buy is provable live without an in-script earn-grind; that mechanic is already proven elsewhere by economy_loop/inventory_loop). Proves, in order: (1) the new bread_stall (flavor/observe, pays off Pisces's pre-existing 'the bread stall raises its prices' line with a real entity); (2) the peddler's mini-buy (watch_issue_gambeson, 20g, krshia_crate's exact buy contract -- gold_changed/toast/item_gained in the same emission order economy_loop's Krshia buy already proved); (3) barracks_door's real transition (the former watch_guard flavor spot -- zero canonical QA touches confirmed by grep before this task, so removing him is a silent change; see the task report); (4) Duty Sergeant Dresk Ashgrave's talk_pool line; (5) Zevara's desk (flavor/observe -- she herself stays at the gate, zevara_intro untouched); (6) THE CELL (locked_toast, empty-v1 dressed, a quest-outcome surface for later -- same skill-less-locked-prop seam as inn_upstairs's lyonette_door); (7) the round-trip back to the street, landing clear and open. Seed 9 for convention; fixture rng_state governs (no combat in this script).",
+ "_comment": "The Watch barracks + market-depth stalls, one continuous run. FIXTURE-FIRST (near_barracks -- post_tutorial_street's exact state plus gold:25, so the peddler's mini-buy is provable live without an in-script earn-grind; that mechanic is already proven elsewhere by economy_loop/inventory_loop). Proves, in order: (1) the new bread_stall (flavor/observe, pays off Pisces's pre-existing 'the bread stall raises its prices' line with a real entity); (2) the peddler's mini-buy (watch_issue_gambeson, 20g, krshia_crate's exact buy contract -- gold_changed/toast/item_gained in the same emission order economy_loop's Krshia buy already proved); (3) barracks_door's real transition (the former watch_guard flavor spot -- zero canonical QA touches confirmed by grep before this task, so removing him is a silent change; see the task report); (4) Duty Sergeant Dresk Ashgrave's talk_pool line; (5) Zevara's desk (flavor/observe -- she herself stays at the gate, zevara_intro untouched); (6) THE CELL (locked_toast, empty-v1 dressed, a quest-outcome surface for later -- same skill-less-locked-prop seam as inn_upstairs's lyonette_door); (6b) issue #81's two row-y6 discovery props (note_watch_veteran, spare_kit_crate -- both approached from directly above at y5, since the two props sit on the SAME row and block a straight sideways walk between them); (6c) the journal's new Lore section reading the just-found note back; (7) the round-trip back to the street, landing clear and open. Seed 9 for convention; fixture rng_state governs (no combat in this script).",
  "fixture_save": "near_barracks",
  "starts_at_title": true,
  "steps": [
@@ -51,7 +51,7 @@
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "barracks", "cell": [2, 6] }, "timeout_sec": 5 },
   { "_comment": "Chronology mirrors guild_door/stairs_up: transition() fires map_changed synchronously, world.gd rebuilds the field (mood/map/entities) BEFORE wi_game.gd's interact() records on_enter_accomplishment -- visited_barracks asserted AFTER the render events.", "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "barracks" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": { "map": "barracks", "floor_cells": 112, "blocked_cells": 42 }, "timeout_sec": 5 },
-  { "_comment": "5 entities (barracks_exit, duty_sergeant, zevara_desk, cell_door, GH#70's archery_butt) + the PC's own sprite (world.gd's _count_visual(_player_visual, ...) call, the upstairs_walkthrough precedent) = 6. This walkthrough's own route never detours to the archery_butt (archer_earn_loop.json is its dedicated canonical) -- it still renders, so the count bumps regardless of whether this run visits it.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 6, "fallbacks": 0 }, "timeout_sec": 5 },
+  { "_comment": "8 entities (barracks_exit, duty_sergeant, zevara_desk, cell_door, GH#70's archery_butt, issue #81's spare_kit_crate + note_watch_veteran + note_old_dread) + the PC's own sprite = 9. All three new props are ALWAYS-present (no gate) -- recruit_pell (issue #81's present_when-gated fourth addition) stays structurally absent here (missing_recruit_started never banks in this script), so it does not add to this count. This walkthrough's own route never detours to the archery_butt (archer_earn_loop.json is its dedicated canonical) -- it still renders, so the count bumps regardless of whether this run visits it.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 9, "fallbacks": 0 }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "visited_barracks" }, "timeout_sec": 5 },
   { "_comment": "MOOD CARD SHOT: the cool-institutional 'stern' barracks grade against the plank floor + kit-rack/briefing-table/crate dressing.", "action": "screenshot", "name": "04_barracks_interior" },
 
@@ -87,17 +87,50 @@
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "screenshot", "name": "07_the_cell" },
 
-  { "_comment": "== (7) BACK TO THE STREET == (11,3) left9 -> (2,3), down3 -> (2,6), down1 blocks on barracks_exit (2,7) & faces it. Returns to street (21,3) -- open, clear of every entity (confirmed by this task's own blast-radius grep before placement).", "action": "move", "direction": "left", "steps": 9 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
+  { "_comment": "== (6b) ISSUE #81 DISCOVERY PROPS == (11,3) down3 -> (11,5) (the third down step blocks on note_old_dread at (11,6) & faces it -- all three new props sit on row y6, approached from directly above since they'd otherwise block a straight sideways walk between them). Container interact grants the note (kind:parcel) + banks the flavor-only found_old_dread_note. (Relocated here from an original guild placement -- see that entity's own skeleton_scene.json comment for the scene_dynamism re-derivation.)", "action": "move", "direction": "down", "steps": 3 },
+  { "action": "assert_state", "path": "player_cell", "equals": [11, 5] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "note_old_dread" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Got: A Ward-Charm Instruction, Copied Twice" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "found_old_dread_note" }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "07b_dread_note" },
+
+  { "_comment": "up1 -> (11,4), left2 -> (9,4), down2 -> (9,5) (the second down step blocks on note_watch_veteran at (9,6) & faces it).", "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [11, 4] },
+  { "action": "move", "direction": "left", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [9, 4] },
+  { "action": "move", "direction": "down", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [9, 5] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "note_watch_veteran" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Got: A Watch Veteran's Letter, Unfinished" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "found_watch_veteran_note" }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "08_watch_veteran_note" },
+
+  { "_comment": "left5 -> (4,5), down1 blocks on spare_kit_crate (4,6) & faces it. Grants field_whetstone -- ALREADY a purchasable Krshia item (krshia_crate.json), so no new item catalog entry backs the reward itself.", "action": "move", "direction": "left", "steps": 5 },
+  { "action": "assert_state", "path": "player_cell", "equals": [4, 5] },
   { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "field_whetstone" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Got: Field Whetstone" }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "09_spare_kit_crate" },
+
+  { "_comment": "== (6c) THE JOURNAL'S NEW LORE SECTION == reads back both found notes, in pickup order (note_old_dread then note_watch_veteran); field_whetstone is kind:tool, not a note, so it never appears here.", "action": "press", "name": "journal" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "found_notes": ["note_old_dread", "note_watch_veteran"] }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "10_journal_lore" },
+  { "action": "press", "name": "journal" },
+  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
+
+  { "_comment": "== (7) BACK TO THE STREET == (4,5) left2 -> (2,5), down2 -> (2,6) (the second down step blocks on barracks_exit (2,7) & faces it). Returns to street (21,3) -- open, clear of every entity (confirmed by this task's own blast-radius grep before placement).", "action": "move", "direction": "left", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 5] },
+  { "action": "move", "direction": "down", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street", "cell": [21, 3] }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": { "map": "street", "floor_cells": 640, "blocked_cells": 112 }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "street" },
   { "action": "assert_state", "path": "player_cell", "equals": [21, 3] },
-  { "action": "screenshot", "name": "08_back_on_street" }
+  { "action": "screenshot", "name": "11_back_on_street" }
  ]
 }

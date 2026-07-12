@@ -63,6 +63,13 @@ const EXPECTED_ITEMS := {
 	# no combat fields, no price (structurally unsellable), name +
 	# description only.
 	"cups_debt_chit": [],
+	# Issue #81 (exploration & optional content): Renn's carry-back-to-owner
+	# item + the lore-note collectible thread, all the SAME inert parcel
+	# shape (no combat fields, no price).
+	"renns_warhammer": [],
+	"note_watch_veteran": [],
+	"note_sewer_surveyor": [],
+	"note_old_dread": [],
 	# Krshia's attunement catalyst (priced tool, no combat fields).
 	"resonant_catalyst": ["Worth 35 gold"],
 	# The beat-3 recovery item -- inert

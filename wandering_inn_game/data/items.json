@@ -624,6 +624,66 @@
 			"price": 3,
 			"description": "Wax, wire, and a folding pick, wrapped in oilcloth. Cheap enough that adventurers buy three and lose two.",
 			"lore": "Every peddler within a day of Liscor stocks these now -- the Watch started recommending them after the gallery reopened, and word travels fast when word means coin."
+		},
+		{
+			"_comment": "Issue #81 (exploration & optional content), 'Renn's Old Warhammer' mini-quest: the carry-back-to-owner item, granted by the renns_gear_stash container prop (data/skeleton_scene.json, guild) and removed via renn_hammer.json's turn-in dialogue option (`remove_item`). kind:\"parcel\" reused verbatim (cups_debt_chit precedent): inert carried flavor, no price (never sold), no weapon_family so equip() structurally refuses it -- it is Renn's hammer, never the player's to wield.",
+			"id": "renns_warhammer",
+			"name": "Renn's Old Warhammer, Backup",
+			"kind": "parcel",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A plain steel warhammer, propped where somebody clearly forgot it.",
+			"lore": "Renn's backup, left leaning against the Guild's back wall on his last kit haul. Carried, never worn or sold; returned to him on handoff."
+		},
+		{
+			"_comment": "Issue #81 lore-note collectible thread: found-note items reuse the SAME inert kind:\"parcel\" shape as the delivery/quest carry-items above (never equipped, never sold, no price field) -- the ONE difference is they are never removed once found (no remove_item call site references a note_ id), so they accumulate permanently in `inventory` for src/ui/journal.gd's new Lore section to list (filtered by the `note_` id prefix, the bounty_/delivery_/parcel_ prefix convention this file already uses). Barracks find (spare_kit_crate's sibling prop, note_watch_veteran). Wiki grounding: the Liscor-Antinium war and the peace that followed it are Volume 1-2 background (Klbkch's own presence as a Watch Senior Guardsman is this game's existing proof of that peace, see docs/design/character-profiles.md) -- this note only echoes ALREADY-shipped, already-cited canon obliquely, introduces no new named character or fact.",
+			"id": "note_watch_veteran",
+			"name": "A Watch Veteran's Letter, Unfinished",
+			"kind": "parcel",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A half-finished letter on watch-issue paper, the ink gone brown with age.",
+			"lore": "\"...tell them the peace held, that's the whole of it some days. The Hive doesn't forget the war any easier than we do, and neither side started the remembering first. Strange to stand watch beside one of them now and mean it when I say I trust him.\" It stops there, unsigned."
+		},
+		{
+			"_comment": "Issue #81 lore-note collectible thread: sewers find (note_sewer_surveyor prop). Wiki grounding: general, non-spoiler Liscor civic background only (an aged Drake-built drainage system, a Council that keeps records) -- consistent with what this repo already establishes via the shipped drainage_marker prop ('An old Drake drainage marker... a map of channels two centuries dead') and Jeiss Sielmark's 'Liscor Councilmember' citation in character-profiles.md. No new canon claim, no named character.",
+			"id": "note_sewer_surveyor",
+			"name": "A Sewer Surveyor's Page, Water-Stained",
+			"kind": "parcel",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A single page, water-warped, in a Drake surveyor's hand.",
+			"lore": "\"Third cistern holds. Fourth won't, not another winter — the old stonework predates the Council records, which tells you something about who built it and didn't write it down. Recommend the grate crew stop calling it 'the crack' and start calling it a schedule.\" No follow-up was ever filed."
+		},
+		{
+			"_comment": "Issue #81 lore-note collectible thread: barracks find (note_old_dread prop, relocated from an original guild placement -- see that entity's own skeleton_scene.json comment for the scene_dynamism re-derivation). Wiki grounding: echoes this repo's OWN already-shipped Raskghar arc (wiki.wanderinginn.com/Raskghar, Volume 5 -- cited in character-profiles.md's Raskghar entry, and acts.json's Act III beat 'the_stirring': 'Something is moving in the dark beneath the city') diegetically, from a resident's superstition rather than omniscient narration. Introduces no new fact past what the game already ships.",
+			"id": "note_old_dread",
+			"name": "A Ward-Charm Instruction, Copied Twice",
+			"kind": "parcel",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"description": "A ward-charm instruction, copied out in two different hands.",
+			"lore": "\"Salt at the sill. Don't dig where the ground sounds hollow. If the dogs won't go, you don't go.\" A later hand added a line underneath, in different ink: \"They found something under the city once. They can find it again.\""
 		}
 	]
 }

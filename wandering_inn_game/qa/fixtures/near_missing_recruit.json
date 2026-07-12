@@ -1,0 +1,47 @@
+{
+ "_comment": "FIXTURE-FIRST start for missing_recruit_loop (issue #81) -- the same honest post-onboarding base as board_loop_start (guild, (8,3) facing up, the exact desk-approach cell guild_interior_walkthrough proved), PLUS heard_about_cisterns:1 so the sewer_grate's own door_when gate is already open when the script reaches it (the near_sewers fixture's own precedent for pre-banking this same flag -- the cisterns quest itself banks it for real elsewhere, e.g. sewers_walkthrough/cisterns_fight). No board/Selys/Dresk/quest accomplishments pre-banked -- the script proves the whole posting-seeded chain live, from a real guild_board read through to Dresk's report. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "version": 5,
+ "state": {
+  "current_map": "guild",
+  "player_cell": [
+   8,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "heard_about_cisterns": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}
