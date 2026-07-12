@@ -69,3 +69,10 @@ rot (HANDOFF prune, staging stubs, executed-plan markers, DOC-MAP).
 SLOT: after v0.5.0 ships — #102's hot-file pass and #103's HANDOFF prune
 are content-quiet work; skeleton_scene's _comment pass rides #100's split
 window (one pass).
+
+## Mobile web SCHEDULED (user-approved 2026-07-12): #105 (runner rework +
+audio smoke + touch DSL) first as the QA prerequisite, then #106 v1
+(combat tap-move/tap-target + virtual keyboard/name commit + rotate
+overlay + hit-target audit). Slot: immediately after the class-foundation
+wave lands; before/with the demo-boundary decision. The itch
+mobile-friendly flag = the user's final step.
