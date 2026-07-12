@@ -369,6 +369,26 @@ func alive_enemies_of(id: String) -> Array:
 	return out
 
 
+## The mirror of `alive_enemies_of`: every OTHER living combatant on `id`'s
+## own side (`id` itself excluded), sorted the SAME way (hp asc then id) for
+## deterministic selection. Pure derived read over `combatants` -- no new
+## stored state, so this carries zero risk to the byte-identity guarantee
+## every existing fight relies on. First consumer: combat_ai.gd's
+## guard/coward profiles (issue #83 gap-analysis).
+func alive_allies_of(id: String) -> Array:
+	var side := String(combatants[id][WIKeys.SIDE])
+	var out: Array = []
+	for other_id: String in combatants:
+		var o: Dictionary = combatants[other_id]
+		if other_id != id and o[WIKeys.ALIVE] and String(o[WIKeys.SIDE]) == side:
+			out.append(other_id)
+	out.sort_custom(func(a: String, b: String) -> bool:
+		if combatants[a][WIKeys.HP] != combatants[b][WIKeys.HP]:
+			return int(combatants[a][WIKeys.HP]) < int(combatants[b][WIKeys.HP])
+		return a < b)
+	return out
+
+
 func is_cell_free(cell: Vector2i) -> bool:
 	if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y:
 		return false

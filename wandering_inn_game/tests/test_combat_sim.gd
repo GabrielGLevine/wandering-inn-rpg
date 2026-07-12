@@ -1911,5 +1911,179 @@ func _init() -> void:
 	assert(int(c_floor.combatants["relc"][WIKeys.MAX_HP]) == 1, "over-large negative hp_mod floors max_hp at 1, never dead-at-build")
 	assert(bool(c_floor.combatants["relc"][WIKeys.ALIVE]), "the floored combatant is alive at round 1")
 
+	# --- Issue #83 gap-analysis: three new AI profiles composed from existing
+	# verbs (attack/move_active/dash/use_skill) -- no new effect types, no new
+	# WICombat state (alive_allies_of is a pure derived read, same shape as
+	# the pre-existing alive_enemies_of). ---
+
+	# "skirmisher": attacks with its full AP budget (2 attacks @ 2 AP = 4 AP,
+	# identical target-priority to melee), THEN spends leftover move_pool
+	# retreating instead of standing in melee range once it can no longer
+	# afford another swing.
+	var c100 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 5)
+	c100.begin()
+	c100.combatants["goblin_raider"][WIKeys.AI] = "skirmisher"
+	c100.combatants["pc"][WIKeys.CELL] = Vector2i(5, 3)
+	c100.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)  # adjacent, open room to retreat into
+	c100.active_index = c100.turn_order.find("goblin_raider")
+	c100._start_turn()
+	_events.clear()
+	WICombatAI.take_turn(c100)
+	assert(_events[0]["type"] != "combatant_moved", "skirmisher attacks IMMEDIATELY when adjacent with full AP -- no retreat step precedes its first attack")
+	assert(_count("attack_resolved") == 2, "spends its whole AP budget on attacks (2 @ 2 AP = 4 AP) before retreat ever becomes reachable")
+	assert(int(c100.combatants["goblin_raider"][WIKeys.AP]) == 0, "fixture: all AP spent")
+	assert(_count("combatant_moved") > 0, "once out of AP for another swing, retreats with its leftover move_pool instead of standing still")
+	var first_attack100 := -1
+	var first_move100 := -1
+	for i in _events.size():
+		if first_attack100 == -1 and _events[i]["type"] == "attack_resolved":
+			first_attack100 = i
+		if first_move100 == -1 and _events[i]["type"] == "combatant_moved":
+			first_move100 = i
+	assert(first_attack100 < first_move100, "attack-then-retreat ordering holds within the same turn")
+	assert(c100.chebyshev("goblin_raider", "pc") > 1, "retreated clear of adjacency")
+
+	# Not yet adjacent, full AP, and TOO FAR to close the gap this turn even
+	# with a dash (opposite grid corners, cheby 11 -- pool 3 + one lookahead
+	# dash's +3 can't reach adjacency, so the dash lookahead correctly
+	# refuses rather than burning AP on a futile partial dash): approaches
+	# exactly like melee, never retreats while it still has offensive
+	# capacity this turn, never attacks since it can't reach.
+	var c101 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 5)
+	c101.begin()
+	c101.combatants["goblin_raider"][WIKeys.AI] = "skirmisher"
+	c101.combatants["pc"][WIKeys.CELL] = Vector2i(0, 0)
+	c101.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(11, 7)
+	var start_dist101 := c101.chebyshev("goblin_raider", "pc")
+	c101.active_index = c101.turn_order.find("goblin_raider")
+	c101._start_turn()
+	_events.clear()
+	WICombatAI.take_turn(c101)
+	assert(_count("attack_resolved") == 0, "not adjacent yet, and too far to close the gap this turn -- no attack to make")
+	assert(_count("combatant_moved") > 0, "approaches toward pc")
+	assert(int(c101.combatants["goblin_raider"][WIKeys.AP]) == WICombat.MAX_AP, "approach spends move_pool only, never AP -- mirrors melee's own approach; the dash lookahead correctly refuses a futile partial dash at this distance")
+	assert(c101.chebyshev("goblin_raider", "pc") < start_dist101, "closed real distance toward pc")
+
+	# "guard": prioritizes standing beside its lowest-HP living ally over
+	# chasing the enemy -- picks the ward by HP NEED, not raw proximity (the
+	# shaman starts closer than the spider, but the spider is hurt worse).
+	var c102 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider", "goblin_shaman", "cave_spider"]), _load("res://data/skills.json"), _sink, 5)
+	c102.begin()
+	c102.combatants["goblin_raider"][WIKeys.AI] = "guard"
+	c102.combatants["pc"][WIKeys.CELL] = Vector2i(0, 0)  # sole foe, nowhere near adjacent
+	c102.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 4)
+	c102.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(9, 6)  # closer (cheby 3) but only lightly hurt
+	c102.combatants["cave_spider"][WIKeys.CELL] = Vector2i(2, 6)  # farther (cheby 4) but critically hurt
+	c102.combatants["goblin_shaman"][WIKeys.HP] = int(c102.combatants["goblin_shaman"][WIKeys.MAX_HP]) - 2
+	c102.combatants["cave_spider"][WIKeys.HP] = 1
+	c102.active_index = c102.turn_order.find("goblin_raider")
+	c102._start_turn()
+	_events.clear()
+	WICombatAI.take_turn(c102)
+	assert(_count("attack_resolved") == 0, "pc is nowhere near adjacent -- guard doesn't fight yet")
+	assert(_count("combatant_moved") > 0, "guard moves toward its ward instead of standing idle")
+	assert(c102.chebyshev("goblin_raider", "cave_spider") < 4, "closed distance toward the critically-hurt ally")
+	assert(c102.chebyshev("goblin_raider", "cave_spider") < c102.chebyshev("goblin_raider", "goblin_shaman"), "ends up nearer the WOUNDED ward than the untouched ally, despite starting farther from it -- HP need overrides raw proximity")
+
+	# Adjacent to a foe: guard fights exactly like melee, protecting whoever
+	# it's actually standing next to, even with a wounded ally elsewhere.
+	var c103 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider", "goblin_shaman"]), _load("res://data/skills.json"), _sink, 5)
+	c103.begin()
+	c103.combatants["goblin_raider"][WIKeys.AI] = "guard"
+	c103.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)
+	c103.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(5, 3)  # adjacent to pc
+	c103.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)  # far-off wounded ally
+	c103.combatants["goblin_shaman"][WIKeys.HP] = 1
+	c103.active_index = c103.turn_order.find("goblin_raider")
+	c103._start_turn()
+	_events.clear()
+	WICombatAI.take_turn(c103)
+	assert(_count("attack_resolved") >= 1, "guard fights whatever is adjacent to it right now, exactly like melee")
+
+	# No living ally at all: degrades to melee's own goal (chase the enemy).
+	var c104 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 5)
+	c104.begin()
+	c104.combatants["goblin_raider"][WIKeys.AI] = "guard"
+	c104.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
+	c104.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 1)
+	c104.active_index = c104.turn_order.find("goblin_raider")
+	c104._start_turn()
+	_events.clear()
+	WICombatAI.take_turn(c104)
+	assert(_count("combatant_moved") > 0, "solo guard (no living ally) still approaches the enemy like melee")
+	assert(c104.chebyshev("goblin_raider", "pc") < 5, "closed distance toward pc, degrading to melee's own approach goal")
+
+	# "coward": at/above the flee threshold, fights exactly like melee.
+	var c105 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 5)
+	c105.begin()
+	c105.combatants["goblin_raider"][WIKeys.AI] = "coward"
+	c105.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)
+	c105.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(5, 3)
+	c105.active_index = c105.turn_order.find("goblin_raider")
+	c105._start_turn()
+	_events.clear()
+	WICombatAI.take_turn(c105)
+	assert(_count("attack_resolved") >= 1, "coward at full HP fights exactly like melee -- fear only kicks in below the threshold")
+
+	# Below the flee threshold: never attacks, even while adjacent to a valid
+	# target -- retreats from the nearest foe instead.
+	var c106 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 5)
+	c106.begin()
+	c106.combatants["goblin_raider"][WIKeys.AI] = "coward"
+	c106.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)
+	c106.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(5, 3)  # adjacent -- a brave/melee AI would clearly attack
+	var max_hp106 := int(c106.combatants["goblin_raider"][WIKeys.MAX_HP])
+	c106.combatants["goblin_raider"][WIKeys.HP] = maxi(1, int(max_hp106 * 0.2))  # under WICombatAI.COWARD_FLEE_THRESHOLD (0.3)
+	c106.active_index = c106.turn_order.find("goblin_raider")
+	c106._start_turn()
+	_events.clear()
+	WICombatAI.take_turn(c106)
+	assert(_count("attack_resolved") == 0, "below the flee threshold, coward never attacks even while adjacent to a valid target")
+	assert(_count("combatant_moved") > 0, "flees instead")
+	assert(c106.chebyshev("goblin_raider", "pc") > 1, "retreated out of adjacency")
+
+	# Cornered (no retreat step increases distance from the nearest foe):
+	# rallies toward its nearest living ally instead of freezing in place.
+	var c107 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider", "goblin_shaman"]), _load("res://data/skills.json"), _sink, 5)
+	c107.begin()
+	c107.combatants["goblin_raider"][WIKeys.AI] = "coward"
+	c107.combatants["pc"][WIKeys.CELL] = Vector2i(11, 7)  # far corner -- raider is already maximally far
+	c107.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(0, 0)  # opposite corner: only RIGHT/DOWN are even legal steps, both REDUCE distance from pc
+	c107.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(3, 0)  # the rally target
+	c107.combatants["goblin_raider"][WIKeys.HP] = 1
+	c107.active_index = c107.turn_order.find("goblin_raider")
+	c107._start_turn()
+	_events.clear()
+	WICombatAI.take_turn(c107)
+	assert(_count("attack_resolved") == 0, "still never attacks while afraid, even cornered")
+	assert(_count("combatant_moved") > 0, "cornered coward (no retreat step improves distance) rallies toward its living ally instead of freezing")
+	assert(c107.chebyshev("goblin_raider", "goblin_shaman") < maxi(absi(0 - 3), absi(0 - 0)), "closed distance toward the rally ally")
+
+	# --- determinism holds through a full autoplay fight mixing all three new
+	# profiles at once (skirmisher/guard/coward together on one roster) ---
+	var stream_k: Array = []
+	var stream_l: Array = []
+	for stream: Array in [stream_k, stream_l]:
+		var ev := func(type: String, payload: Dictionary) -> void:
+			stream.append(JSON.stringify({"t": type, "p": payload}))
+		var cfgs := _cfgs(["pc", "goblin_raider", "goblin_shaman", "cave_spider"])
+		for cfg: Dictionary in cfgs:
+			match String(cfg[WIKeys.ID]):
+				"goblin_raider":
+					cfg[WIKeys.AI] = "coward"
+				"goblin_shaman":
+					cfg[WIKeys.AI] = "skirmisher"
+				"cave_spider":
+					cfg[WIKeys.AI] = "guard"
+		var c := WICombat.new(_load("res://data/arenas.json")["arenas"][0], cfgs, _load("res://data/skills.json"), ev, 21)
+		c.begin()
+		var guard_k := 0
+		while not c.finished and guard_k < 200:
+			guard_k += 1
+			WICombatAI.take_turn(c)
+		assert(c.finished, "mixed-new-profile autoplay fight terminates")
+	assert(stream_k.size() > 10, "mixed-new-profile autoplay run produced events")
+	assert(stream_k == stream_l, "same seed + same new-profile mix = identical event stream")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

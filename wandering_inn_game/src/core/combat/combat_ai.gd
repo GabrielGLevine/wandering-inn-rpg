@@ -62,6 +62,12 @@ static func _act_once(combat: WICombat, id: String) -> bool:
 			return _act_caster(combat, id, c, foes)
 		"inert":
 			return false
+		"skirmisher":
+			return _act_skirmisher(combat, id, c, foes)
+		"guard":
+			return _act_guard(combat, id, c, foes)
+		"coward":
+			return _act_coward(combat, id, c, foes)
 		_:
 			return _act_melee(combat, id, c, foes)
 
@@ -118,6 +124,133 @@ static func _act_melee(combat: WICombat, id: String, c: Dictionary, foes: Array)
 	if _should_dash(combat, c, goal, 1, WICombat.ATTACK_COST):
 		return combat.dash()
 	return false
+
+
+## Issue #83 gap-analysis: "skirmisher" -- a hit-and-run melee fighter. Attacks
+## exactly like the melee profile (same adjacency/afford checks, same target
+## priority -- foes is already hp-asc/id sorted) for as long as it still has
+## AP for another swing, then spends any leftover move_pool RETREATING from
+## the nearest foe instead of standing in melee range, which is what the
+## plain melee profile does by omission today. STATELESS "already attacked"
+## signal: `can_attack` (AP >= ATTACK_COST) is recomputed fresh every
+## `_act_once` call from CURRENT ap alone, no new combatant field -- a fresh
+## turn (AP == MAX_AP) always tries to close and swing first, and only falls
+## into retreat once genuinely out of attacks for the turn (0 or 1 AP left).
+## No power_strike branch: kept to the literal "attack" verb the spec names,
+## so a skirmisher never burns its whole turn on one 3-AP skill and skips the
+## retreat leg entirely.
+static func _act_skirmisher(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
+	var can_attack := int(c[WIKeys.AP]) >= WICombat.ATTACK_COST
+	for foe: String in foes:
+		if combat.is_adjacent(id, foe):
+			if can_attack:
+				return combat.attack(foe)
+			return _retreat_from_nearest(combat, id, c, foes)
+	if not can_attack:
+		return _retreat_from_nearest(combat, id, c, foes)
+	var goal: Vector2i = combat.combatants[String(foes[0])][WIKeys.CELL]
+	if int(c[WIKeys.MOVE_POOL]) >= WICombat.MOVE_COST:
+		var dir := _path_step(combat, c[WIKeys.CELL], goal, 1)
+		if dir == Vector2i.ZERO:
+			return false
+		return combat.move_active(dir)
+	if _should_dash(combat, c, goal, 1, WICombat.ATTACK_COST):
+		return combat.dash()
+	return false
+
+
+## Spends one MOVE_COST step directly away from the nearest living foe (ties
+## resolved by `_nearest`'s own deterministic rule). Shared by the skirmisher
+## profile's post-attack disengage and (indirectly, via its own extra rally
+## fallback) the coward profile's flee branch below. Returns false with no
+## side effect when the pool is empty or no step increases distance
+## (cornered/already maximally far) -- `take_turn`'s guard-bounded loop then
+## ends the turn, same as every other "nothing useful left to do" case here.
+static func _retreat_from_nearest(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
+	if int(c[WIKeys.MOVE_POOL]) < WICombat.MOVE_COST:
+		return false
+	return _step(combat, id, _nearest(combat, id, foes), false)
+
+
+## Nearest of `ids` (a list of living combatant ids, never empty when called)
+## to `id`, by Chebyshev distance. Ties keep whichever appears EARLIEST in
+## `ids` -- every caller passes an already hp-asc/id-sorted list
+## (`alive_enemies_of`/`alive_allies_of`'s own convention), so a tie resolves
+## the same deterministic way every other target-priority pick in this file
+## already does, never a fresh comparator of its own.
+static func _nearest(combat: WICombat, id: String, ids: Array) -> String:
+	var best := String(ids[0])
+	var best_dist := combat.chebyshev(id, best)
+	for other: String in ids:
+		var d := combat.chebyshev(id, other)
+		if d < best_dist:
+			best_dist = d
+			best = other
+	return best
+
+
+## Issue #83 gap-analysis: "guard" -- protects its lowest-HP living ally by
+## body-blocking adjacency. When nothing is already adjacent to it, its
+## movement GOAL is its ward's cell (`alive_allies_of`'s own hp-asc sort picks
+## the ward) rather than the nearest/weakest ENEMY the melee profile chases --
+## it plants itself beside whoever on its side is hurt worst instead of
+## rushing the fight. Once something IS adjacent (itself, or a foe drawn in by
+## its own positioning), it fights exactly like melee (same power_strike/
+## attack branch, verbatim). No windup arm -- today's only windup holder
+## (vault_construct) stays plain melee; a future guard-profile windup holder
+## would need this arm ported over explicitly, not inherited for free.
+## Degrades to melee's own goal (chase foes[0]) when it has no living ally to
+## guard -- a solo guard is just a fighter.
+static func _act_guard(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
+	for foe: String in foes:
+		if combat.is_adjacent(id, foe):
+			if (c[WIKeys.SKILLS] as Array).has("power_strike") and int(c[WIKeys.AP]) >= 3:
+				return combat.use_skill("power_strike", foe)
+			if int(c[WIKeys.AP]) >= WICombat.ATTACK_COST:
+				return combat.attack(foe)
+			return false
+	var allies := combat.alive_allies_of(id)
+	var goal: Vector2i = combat.combatants[String(allies[0])][WIKeys.CELL] if not allies.is_empty() \
+			else combat.combatants[String(foes[0])][WIKeys.CELL]
+	if int(c[WIKeys.MOVE_POOL]) >= WICombat.MOVE_COST:
+		var dir := _path_step(combat, c[WIKeys.CELL], goal, 1)
+		if dir == Vector2i.ZERO:
+			return false
+		return combat.move_active(dir)
+	if _should_dash(combat, c, goal, 1, WICombat.ATTACK_COST):
+		return combat.dash()
+	return false
+
+
+## Issue #83 gap-analysis: "coward" -- flees once wounded rather than fighting
+## to the death. At or above COWARD_FLEE_THRESHOLD of max_hp, behaves EXACTLY
+## like the melee profile (reused verbatim, including its windup arm --
+## "coward" is melee with one extra low-HP branch, not a separate fighter).
+## Below the threshold it NEVER attacks: first it spends its move retreating
+## from the nearest foe (`_retreat_from_nearest`, the skirmisher's own helper
+## -- same "step directly away" rule); once that stops improving distance
+## (cornered, or already maximally far) it rallies toward its nearest living
+## ally instead of standing frozen, "regroup with the group" rather than
+## "guard's" hp-need-based ward pick -- the two profiles deliberately use
+## DIFFERENT ally-selection heuristics (proximity here, need there).
+const COWARD_FLEE_THRESHOLD := 0.3
+
+static func _act_coward(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
+	var max_hp := maxf(1.0, float(c[WIKeys.MAX_HP]))
+	if float(c[WIKeys.HP]) / max_hp >= COWARD_FLEE_THRESHOLD:
+		return _act_melee(combat, id, c, foes)
+	if _retreat_from_nearest(combat, id, c, foes):
+		return true
+	if int(c[WIKeys.MOVE_POOL]) < WICombat.MOVE_COST:
+		return false
+	var allies := combat.alive_allies_of(id)
+	if allies.is_empty():
+		return false
+	var ally := _nearest(combat, id, allies)
+	var dir := _path_step(combat, c[WIKeys.CELL], combat.combatants[ally][WIKeys.CELL], 1)
+	if dir == Vector2i.ZERO:
+		return false
+	return combat.move_active(dir)
 
 
 static func _act_ranged(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
