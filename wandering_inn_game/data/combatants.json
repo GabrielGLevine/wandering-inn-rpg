@@ -619,6 +619,93 @@
     "counter_strike",
     "quick_movement"
    ]
+  },
+  {
+   "_comment": "CASTER ally (Ceria Springwalker, [Cryomancer]). `ai: \"caster\"` is REQUIRED, not decorative: WICombatAI's melee profile only ever calls attack/power_strike by name (combat_ai.gd), so an ally meant to actually cast a spell needs the caster profile -- same requirement raskghar_awakened's own record documents for a boss; caster falls through to melee when mana-dry, never stalls. Kit: `ice_shard` (2 AP/3 MP spell_damage) + `frost_bolt` (1 AP/2 MP spell_damage+slowed) + `mana_shield` (passive: wi_combat.gd's `_absorb_with_mana_shield` drains MP 1:1 against incoming damage whenever the DEFENDER's own skill list contains \"mana_shield\" -- no cast, no AP/MP cost of its own, always live once known). All three are SHIPPED skills, no new effect type. int18 -> max_mp = 8+9 = 17 (WICombat's own formula) -- spending MP on ice_shard/frost_bolt draws down the SAME pool mana_shield drains from, a real offense/defense tension by design. TRAP: this rig has NO cast/slice animation (sprites.json: idle+walk only) -- board_renderer.gd's `play_anim` fallback chain (\"cast_side\" -> \"cast\" -> \"idle_side\") resolves a spell-cast prefix to `idle_side` cleanly, no error; her combat read is the existing SKILL_RESOLVED spell flash + mana_shield's own REACTION_TRIGGERED shield flash, not a bespoke animation. `combat_scale`: NOT set -- render_scale 0.51 x figure crop 51/152px = 26.0px on screen (1.63 cells), under the ~30px 'Zevara/Klbkch-class standard human ally' bucket this file's un-overridden allies already sit at (see klbkch's own record) -- no containment needed.",
+   "id": "ceria",
+   "display_name": "Ceria Springwalker",
+   "sprite": "ceria",
+   "side": "player",
+   "stats": {
+    "str": 9,
+    "dex": 13,
+    "con": 18,
+    "int": 18,
+    "wis": 11,
+    "cha": 10
+   },
+   "weapon_die": 4,
+   "ai": "caster",
+   "skills": [
+    "ice_shard",
+    "frost_bolt",
+    "mana_shield"
+   ]
+  },
+  {
+   "_comment": "MELEE ally (Yvlon Byres), a silversteel-armed bruiser: con24 is deliberately ABOVE every other player-side melee ally in this file (relc con20, klbkch con18, wilovan con17) -- the bruiser identity is toughness over technique. `basic_swordwork` (baseline) + `keener_edge` (damage_mult 1.6, 2 AP, sword-flavored 'the edge sings') is KIT FLAVOR only -- WICombatAI's melee profile calls attack/power_strike BY NAME alone, never keener_edge, same known-non-AI-exercised precedent as klbkch's `quick_slash`/wilovan's own kit (see their records) -- no combat_ai.gd change. `combat_scale`: NOT set -- render_scale 0.386 x figure crop 83/176px = 32.0px on screen (2.0 cells), the SAME 'standard human ally' bucket klbkch's own 30.0px/1.875-cell no-override precedent already established (a 2px delta is not a meaningful bar-collision difference) -- not the Relc-class oversized-rig case (2.7+ cells) that actually needs containment.",
+   "id": "yvlon",
+   "display_name": "Yvlon Byres",
+   "sprite": "yvlon",
+   "side": "player",
+   "stats": {
+    "str": 15,
+    "dex": 10,
+    "con": 24,
+    "int": 8,
+    "wis": 8,
+    "cha": 9
+   },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": [
+    "basic_swordwork",
+    "keener_edge"
+   ]
+  },
+  {
+   "_comment": "MELEE-SKIRMISH ally (Ksmvr), dex-leaning like klbkch (dex17 > klbkch's 16) with a lighter frame (con15, below every other player-side ally in this file) -- the skirmisher trades HP for evasion (WICombat's hit_chance formula subtracts the TARGET's dex/4 from the attacker's roll, so higher dex is a real harder-to-hit effect, not flavor). `basic_swordwork` + `quick_slash` mirrors klbkch's exact kit shape -- flavor only, never AI-called by name (see klbkch's own record). `damage_reduction: 1` is the buckler, BAKED DIRECTLY onto the combatant record rather than routed through a gear system: allies carry no `equipped`/inventory (that machinery is PC-only, wi_game.gd's `_build_player_combatant`) -- WICombat._init already reads `damage_reduction` off ANY combatant cfg via a tolerant `.get(key, 0)` (see its own doc comment: the two runtime sites that consume it, `_resolve_hit`'s melee damage and `_deduct_hp`'s incoming-damage floor), so a hand-authored non-PC record populating this field is the SAME runtime path the PC's own armor already uses -- zero new code, first non-PC record to use it. `combat_scale`: NOT set -- render_scale 0.483 x figure crop 58/128px = 28.0px on screen (1.75 cells), the same standard-ally bucket as klbkch/yvlon above.",
+   "id": "ksmvr",
+   "display_name": "Ksmvr",
+   "sprite": "ksmvr",
+   "side": "player",
+   "stats": {
+    "str": 11,
+    "dex": 17,
+    "con": 15,
+    "int": 8,
+    "wis": 9,
+    "cha": 6
+   },
+   "weapon_die": 5,
+   "damage_reduction": 1,
+   "ai": "melee",
+   "skills": [
+    "basic_swordwork",
+    "quick_slash"
+   ]
+  },
+  {
+   "_comment": "Boss-stat SEED, data-only: no encounter references this id yet (test_combat_data.gd's own combatant-validation loop has no consumer requirement -- confirmed against its source before adding this unreferenced), and sim_combat_batch.gd's PARTY_CELLS fields it only as a measured harness placeholder. Final tuning + the telegraphed-windup MECHANISM itself are issue #82's job, not built here -- 'slow, heavy, high con, telegraphed AP spikes' is realized with ZERO new mechanism: dex5 (slow) + con55 (the highest in this file by design -- a T4 boss should out-tank raskghar_awakened's con30) + `tough_body` (existing hp_bonus +10 skill, the SAME 'construct durability' flavor ruin_guardian already carries) for the heavy/tanky read. The 'AP spike' is `power_strike` (ap_cost 3 of the turn's 4, damage_mult 2.0) -- NOT a bigger damage_mult skill like devastating_slash/spellbound_strike, because WICombatAI's melee profile only EVER calls power_strike by name (combat_ai.gd's own doc comment); any other damage_mult skill granted here would be inert flavor never actually exercised by AI-vs-AI play, and a harness SEED needs to be measurable, not just thematically named. `combat_scale` 0.36 CONTAINS an oversized rig: the 220px frame at render_scale 0.444 is ~98px of raw texture, and even the alpha-opaque FIGURE crop alone (90px of 220) scales to ~40px (2.5 cells) at that render_scale -- both readings exceed the ~30px 'standard ally' bucket AND the boss-loom ceiling this file already established (raskghar_awakened's own combat_scale 0.4839 -> ~32px, its own record's 'loom ~2 cells' language). 0.36 lands the figure crop at 90*0.36=32.4px (~2 cells), matching that SAME boss-loom ceiling -- sub-Relc-arena-sprawl, per sprites.json's own note on this rig.",
+   "id": "vault_construct",
+   "display_name": "Guardian Construct",
+   "sprite": "vault_construct",
+   "combat_scale": 0.36,
+   "side": "enemy",
+   "stats": {
+    "str": 20,
+    "dex": 5,
+    "con": 55,
+    "int": 4,
+    "wis": 6,
+    "cha": 2
+   },
+   "weapon_die": 8,
+   "ai": "melee",
+   "skills": [
+    "power_strike",
+    "tough_body"
+   ]
   }
  ]
 }
