@@ -321,6 +321,38 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_journal_skill":
+			# Journal skill-row click (issue #84 QA-teeth): routes through the
+			# LIVE Journal node's own `click_skill_row(flat_i)` -- see that
+			# method's doc comment for why this targets by logical flat-index
+			# rather than resolving a screen rect the way the other click_*
+			# steps do (RichTextLabel BBCode meta spans expose no such rect).
+			var jn := get_tree().root.find_child("Journal", true, false)
+			if jn == null:
+				_fail("click_journal_skill: Journal node not found")
+			else:
+				jn.call("click_skill_row", int(step["flat_index"]))
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_inventory_row":
+			# Inventory carried-list row click (issue #84 QA-teeth): resolves
+			# the LIVE Inventory node's own `item_row_rect`, same lookup shape
+			# as `click_pause_row`/`click_settings_row` -- the click handler
+			# itself (`_on_items_gui_input` -> `_hover_cursor` + `_confirm()`)
+			# shipped with inventory.gd's original mouse-support wave; only
+			# this QA-facing rect accessor was missing.
+			var inv_row_n := int(step["row"])
+			var inv := get_tree().root.find_child("Inventory", true, false)
+			if inv == null:
+				_fail("click_inventory_row: Inventory node not found")
+			else:
+				var rect: Rect2 = inv.call("item_row_rect", inv_row_n - 1)
+				if rect.size == Vector2.ZERO:
+					_fail("click_inventory_row: row %d has no rendered rect" % inv_row_n)
+				else:
+					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"move_diag":
 			# A genuine simultaneous-key-hold diagonal, through the REAL input
 			# pipeline -- world.gd's

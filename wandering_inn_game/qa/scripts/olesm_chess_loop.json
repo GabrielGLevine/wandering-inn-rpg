@@ -28,8 +28,13 @@
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "action": "screenshot", "name": "00_broke_greyed_not_hidden" },
 
-  { "_comment": "Close out via 'I'll leave you to your tally.' (visible index 3).", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "press", "name": "confirm" },
+  { "_comment": "Issue #84 QA-teeth: a CLICK on a LOCKED option must be a no-op -- 'Set the board, Olesm.' is visible option 7 (1-based; the greyed gold:2 lock from (1) above). dialogue_panel.gd's _confirm() checks `locked` before ever calling Game.sim.dialogue_choose, so the click moves the hover cursor onto the row (cosmetic) but produces NO dialogue_choice, NO node advance, NO gold change -- zero dialogue_choice events have fired anywhere in this run yet (this is the conversation's very first hub visit), so a whole-log absence check is unambiguous.", "action": "click_dialogue_option", "option": 7 },
+  { "action": "wait_frames", "frames": 2 },
+  { "action": "assert_event_absent", "type": "dialogue_choice" },
+  { "action": "assert_state", "path": "gold", "equals": 1 },
+  { "action": "screenshot", "name": "00b_locked_click_noop" },
+
+  { "_comment": "Close out via a CLICK on 'I'll leave you to your tally.' (visible option 4, 1-based) -- option_rect resolves live off the CURRENT render, so this reaches the right row regardless of the locked click above having moved the hover cursor to option 7 first (no stale-cursor dependency, unlike the keyboard 'move down N' idiom this replaces).", "action": "click_dialogue_option", "option": 4 },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
 
   { "_comment": "== (2) EARN THE SHORTFALL == a real Serve at the Hungry Patron (inn, 5,6) -- existing content, +2 gold, no new mechanism. player_facing stays up the whole run (teleport never touches it, and only combat/field moves would) -- (5,7) facing up already targets (5,6). Issue #59: Serve now compound-gates on {once_per_waking, item}; the fixture pre-carries the `hot_meal` this beat spends (unused this waking, so the option is visible+unlocked from the fixture's very first load, no different from before this issue).", "action": "teleport", "map": "inn", "cell": [5, 7] },

@@ -476,6 +476,21 @@ func _on_skill_row_meta_clicked(meta: Variant) -> void:
 	_toggle_cursor_skill()
 
 
+## QA-only entry point (issue #84 QA-teeth, `click_journal_skill` DSL step):
+## fires the EXACT SAME dispatch a real click on skill row `flat_i`'s
+## rendered glyphs would (`_on_skill_row_meta_clicked` above). RichTextLabel's
+## BBCode `[url=]` meta spans expose no public per-region screen rect (unlike
+## the per-row Control lists `pause_menu.gd`'s `row_rect`/`dialogue_panel.gd`'s
+## `option_rect`/`inventory.gd`'s `item_row_rect` resolve against for their
+## own click_* steps), so this targets by the SAME logical flat-index
+## `_flat_skill_ids`/`_cursor_index` already use rather than raw pixel
+## coordinates -- mirrors `test_driver.gd`'s pre-existing `press_field_skill`
+## precedent ("target by logical identity" when an on-screen position isn't
+## reliably queryable).
+func click_skill_row(flat_i: int) -> void:
+	_on_skill_row_meta_clicked(str(flat_i))
+
+
 ## Same rebuild `_rebuild_body_follow_cursor` performs, minus the
 ## scroll-to-cursor-line/scroll-hint follow-up -- see
 ## `_on_skill_row_hover_started`'s doc comment for why hover must NOT scroll.
