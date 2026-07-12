@@ -41,6 +41,16 @@ Read `qa_output/<script>/result.json` for pass/failures; `events.jsonl` for
 the event log; `*.png` (windowed) for what a player sees.
 
 ## Iron rules
+- **A "pre-existing failure" claim needs a HEALTHY-OVERLAY proof, never a
+  git-stash proof.** Overlay assets (the manifest's 174 licensed paths) are
+  gitignored — `git stash` is structurally blind to them, so "stashed my
+  changes, still fails, therefore pre-existing" is invalid whenever the
+  failing test reads assets. Proven wrong in practice (2026-07-12): a lane's
+  own sync_assets.py run corrupted its tree's body_a overlay; the stash
+  "proof" blamed main, but main passed. Correct proof: run the failing test
+  on MAIN's tree (or restore the overlay from main's copies) before claiming
+  pre-existing. Corollary: after running ANY asset-writing tool in a
+  worktree, md5-census the overlay against main before trusting the tree.
 - **Seed check after combat-data changes:** fights are deterministic per seed;
   changing combat data can flip canonical outcomes. Re-run every combat script
   at its pinned seed (table in CLAUDE.md). A failed script may need a seed
