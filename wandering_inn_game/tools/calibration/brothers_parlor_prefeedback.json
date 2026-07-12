@@ -1,0 +1,279 @@
+{
+ "_comment": "Invrisil 8c Task C1 (issue #12) -- ~14x10 Brothers' parlor (hideout interior, 'borrowed elegance': shabby-genteel, one absurdly good rug, warm low light over the card table). biome brothers_parlor (see biomes.json's own _comment for the already-present-asset picks). Border blocked on every edge except the single door gap at (0,4) (the door entity's own cell is never double-counted in `blocked` -- entity occupancy alone suffices, the liscor_gate/garden_door precedent verified against this exact codebase before writing this). THE GUEST COUCH sits at (2,7), Wilovan greets at (6,3), the card table + rug anchor the room's center (6,5)/(6,6) -- see each entity/decor entry's own _comment for the render-bbox math.",
+ "biome": "brothers_parlor_prefeedback",
+ "grid": {
+  "width": 14,
+  "height": 10
+ },
+ "blocked": [
+  [
+   0,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   7,
+   0
+  ],
+  [
+   8,
+   0
+  ],
+  [
+   9,
+   0
+  ],
+  [
+   10,
+   0
+  ],
+  [
+   11,
+   0
+  ],
+  [
+   12,
+   0
+  ],
+  [
+   13,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   13,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   13,
+   2
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   13,
+   3
+  ],
+  [
+   13,
+   4
+  ],
+  [
+   0,
+   5
+  ],
+  [
+   6,
+   5
+  ],
+  [
+   13,
+   5
+  ],
+  [
+   0,
+   6
+  ],
+  [
+   13,
+   6
+  ],
+  [
+   0,
+   7
+  ],
+  [
+   13,
+   7
+  ],
+  [
+   0,
+   8
+  ],
+  [
+   13,
+   8
+  ],
+  [
+   0,
+   9
+  ],
+  [
+   1,
+   9
+  ],
+  [
+   2,
+   9
+  ],
+  [
+   3,
+   9
+  ],
+  [
+   4,
+   9
+  ],
+  [
+   5,
+   9
+  ],
+  [
+   6,
+   9
+  ],
+  [
+   7,
+   9
+  ],
+  [
+   8,
+   9
+  ],
+  [
+   9,
+   9
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   11,
+   9
+  ],
+  [
+   12,
+   9
+  ],
+  [
+   13,
+   9
+  ]
+ ],
+ "decor": [
+  {
+   "sprite": "table_brown",
+   "cell": [
+    6,
+    5
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.85,
+     0.6
+    ],
+    "energy": 0.9,
+    "radius": 30,
+    "flicker": false
+   }
+  },
+  {
+   "sprite": "rug_tan",
+   "cell": [
+    6,
+    6
+   ],
+   "tint": [
+    0.55,
+    0.15,
+    0.3
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "_comment": "Round-trip pair with alleys_to_parlor (mercantile_alleys cell 19,12). This is the parlor's ONLY exit -- a dead-end hideout interior, matching witch_hollow's own single-purpose-room shape one map further in.",
+   "id": "parlor_to_alleys",
+   "kind": "door",
+   "cell": [
+    0,
+    4
+   ],
+   "display_name": "Out to the Alley",
+   "sprite": "door",
+   "to_map": "mercantile_alleys",
+   "to_cell": [
+    18,
+    12
+   ]
+  },
+  {
+   "_comment": "Invrisil 8c Task C1 -- Wilovan, CANON (wiki.wanderinginn.com/Wilovan, WIKI-VERIFIED 2026-07-08, same verification C2's combatant record already banked): a Gnoll [Thug] of the Brothers of Serendipitous Meetings, brick-built, dapper vest/leggings/tall hat, gentlemanly courtesy -- 'perfect gentlemen. Until the hats come off.' The plan's User-ratified shape 1 (WILOVAN fronts the Brothers, supersedes the dialogue-drafts lane's ORIGINAL 'Mister Sable' -- that draft's register informs a background Brother, never fronts). talk_pool + static dialogue fallback ONLY, NO `conversation` key: the commission/ways/marker quest graph (docs/design/dialogue-drafts/invrisil/brothers_lieutenant.json, recast Sable->Wilovan at wiring time) is Task C3's own deliverable (it starts the `a_gentlemans_disagreement` quest, which does not exist in quests.json yet -- wiring it now would fail test_content's quest_ids assert). Sprite: reused `pc_gnoll_m` rig tinted dapper vest/hat colors (dark green + brass), zero new generation -- the hats-off violence tell is staged at CONTENT time (C3), not art time.",
+   "id": "wilovan",
+   "kind": "npc",
+   "cell": [
+    6,
+    3
+   ],
+   "display_name": "Wilovan",
+   "sprite": "pc_gnoll_m",
+   "tint": [
+    0.42,
+    0.5,
+    0.4
+   ],
+   "facing": "down",
+   "observe": "A Gnoll in a vest cut sharper than his manners need to be, tall hat squared like it's holding a rank. He watches the room's exits before he watches you.",
+   "friendly_line": "He inclines the hat half an inch \u2014 a genuine courtesy, not a performance of one. \"A pleasure,\" he says, and seems to mean it.",
+   "talk_pool": [
+    "Evening. Might I say, sir, you carry yourself like a person things happen to. We collect a few of those.",
+    "Manners cost nothing and buy everything, in my experience. Mind the rug \u2014 Normen fusses over it more than he'll admit.",
+    "You'll notice the hat stays on. Best we keep it that way, between friends.",
+    "We don't steal, whatever you've heard. We RECOVER. It's a finer distinction than it sounds, and it's the whole of our business."
+   ],
+   "dialogue": [
+    {
+     "speaker": "Wilovan",
+     "text": "Evening, sir. Fine weather for good behavior."
+    }
+   ]
+  },
+  {
+   "_comment": "THE BED RULE (standing, plan's user-ratified shape 3): the parlor's guest couch, sleep:true, unconditional once the parlor is reachable (no quest gate -- reaching this room already required the door chain: portal -> boulevard -> alleys door -> parlor door, no shortcut exists). Reuses the EXISTING `bed` sprite verbatim (Interior_Props_01.png, frame 34x44, render_scale 0.375, default anchor [0.5,1.0]) -- the SAME already-shipped asset the inn's own bed uses, not a new pick: rendered footprint is ~12.75px wide / ~16.5px tall, i.e. it overhangs its OWN cell's north edge by well under 1px and stays fully inside its own cell on every other axis (measured against CELL=16px) -- functionally self-contained, the lowest-risk placement shape available, chosen specifically to satisfy the render-bbox placement discipline (the Riverfarm cot lesson) without a windowed check. Cell (2,7) is deep interior (open per the border-blocked computation above), 4 cells from Wilovan (6,3) and 4 cells from the table (6,5) -- no neighbor decor shares (2,6)/(2,8)/(1,7)/(3,7), so the sub-1px north overhang lands on bare floor.",
+   "id": "brothers_guest_couch",
+   "kind": "prop",
+   "cell": [
+    2,
+    7
+   ],
+   "display_name": "The Guest Couch",
+   "sprite": "bed",
+   "sleep": true,
+   "sleep_toast": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality."
+  }
+ ]
+}
