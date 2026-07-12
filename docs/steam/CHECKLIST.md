@@ -115,13 +115,28 @@ GitHub Actions can't read in an `if:` condition pre-job).
 ## 7. Store page content (non-CI, also user actions)
 
 - [ ] Capsule art: `docs/steam/capsules/` has all four exact sizes already
-      assembled (460×215, 231×87, 616×353, 1232×706) — upload as-is, or
-      regenerate via `python3 docs/steam/make_capsules.py` once real
-      licensed art is wired in (today's source is placeholder-fallback
-      game art, per issue #19 scope).
-- [ ] Screenshots: `docs/steam/screenshots/` has 5 at 1280×720 (inn,
-      combat, dialogue, night street, guild board) — upload as-is or swap
-      for freshly captured ones once real art lands.
+      assembled (460×215, 231×87, 616×353, 1232×706), composed from the
+      real licensed-asset overlay (not placeholder fallback) — upload
+      as-is, or regenerate via `python3 docs/steam/make_capsules.py`
+      whenever `screenshots/01_inn.png` is refreshed.
+- [ ] Screenshots: `docs/steam/screenshots/` has 5 at 1280×720, refreshed
+      2026-07-12 against current content — inn hearth (`01_inn.png`,
+      `inn_walkthrough`), Riverfarm village (`02_riverfarm_village.png`,
+      `riverfarm_walkthrough`), a combat moment (`03_combat.png`, the
+      briar-collectors fight from `riverfarm_fight`), the Garden of
+      Sanctuary (`04_garden.png`, `garden_walkthrough`), and a dialogue
+      moment (`05_dialogue.png`, Erin's inn-errand prompt). **Disclosed
+      substitution**: the brief asked for a dungeon-fight shot with the
+      windup danger-tell overlay (`delve_fight`'s vault boss) if
+      stageable — captured, but the `trapped_halls`/vault interior reads
+      as near-black at this monitor's gamma (the same dark-legibility
+      finding already on the WAVE-5-era user playtest checklist in
+      `HANDOFF.md`'s 8d section, not something to paper over with an
+      illegible store shot); substituted the Garden + a Riverfarm combat
+      instead. Once that lighting pass lands, re-capture and swap it back
+      in — a lit windup-tell shot would sell the boss mechanic well.
+      Upload as-is or swap for freshly captured ones as content keeps
+      changing.
 - [ ] Store description / short description / tags — not scoped to this
       issue; write these directly in the partner site when ready.
 - [ ] Age rating questionnaire (mild fantasy violence, per the M-STEAM

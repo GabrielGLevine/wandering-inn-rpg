@@ -6,6 +6,38 @@
 wi-usage-guard skill. Check before every dispatch. QUIESCE = commit WIP
 seams + HANDOFF update + wait-for-reset (session) or hard stop (weekly).
 
+## 🔀 lane-19 landed (2026-07-12) — #19 was ALREADY DONE 07-07; this pass closed the real gaps
+
+**Controller note for merge**: before building anything, this lane discovered
+issue #19's substance already shipped 2026-07-07 (`7ab18c1`/`27676fe`, "M-STEAM
+lane #18/#19" — export presets, `release.yml`'s `desktop-exports` +
+`steampipe-upload` skeleton, `docs/steam/` capsules+screenshots) and is an
+ancestor of `main`. **The GH issue was just never closed** — recommend
+`gh issue close 19` with a pointer to `7ab18c1`/`27676fe` plus this commit.
+Re-verified rather than re-built: macOS export (`export_presets.cfg`'s
+`macos` preset) smoke-tested clean locally (templates were installed) —
+exported `.app` boots `--headless --quit` with zero SCRIPT ERROR/Parse
+Error/WARNING; import + `load_gate` + `combat_walkthrough` (seed 9) all
+clean before and after this lane's edits.
+**Two real gaps closed**: (1) `docs/SECRETS-SETUP.md` had NO Steam section
+at all (the 07-07 lane put everything in `docs/steam/CHECKLIST.md` only) —
+added the summary + pointer, matching the existing `BUTLER_API_KEY` entry's
+style. (2) The capsule/screenshot set was 5 days stale — captured BEFORE
+Riverfarm (`e1446cb`, 07-08), the Garden (`f37804a`, 07-07 later same day),
+and the whole 8d dungeon/vault-boss arc (07-12, today) existed. Refreshed
+both sets from real-overlay windowed QA runs against current content: inn
+hearth, Riverfarm village, a `riverfarm_fight` combat moment, the Garden of
+Sanctuary, and an Erin dialogue beat (`docs/steam/screenshots/`,
+`docs/steam/capsules/` regenerated via `make_capsules.py`). **Disclosed, not
+papered over**: tried the brief's suggested dungeon-fight-with-windup-overlay
+shot (`delve_fight`'s vault boss) — the `trapped_halls`/vault interior reads
+near-black, the SAME dark-legibility finding already on the 8d user-playtest
+checklist below — substituted Garden + Riverfarm combat instead; swap it back
+in once that lighting pass lands. USER-SESSION items unchanged from before:
+Steam build-account secrets (`docs/SECRETS-SETUP.md`/`docs/steam/CHECKLIST.md`
+§5), the capsule/screenshot picks, the trailer decision (§8, scoped-not-built,
+unchanged this pass).
+
 ## 🌊 WAVE 3 SHIPPED (2026-07-12, pushed 0d1a010, CI GREEN) — closed #64 #65 #73 #77 #82
 
 Five lanes, every one opus-reviewed (two FIX-FIRST cycles adjudicated + re-reviewed), composed gates: import + ALL 21 units + harness (73 cells) + full 87-script sweep, zero grep hits.
