@@ -399,7 +399,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			_defeat_choice_pending = false
 			get_viewport().set_input_as_handled()
 		return
-	if not (_opener_running or _epilogue_running):
+	if not (_opener_running or _epilogue_running or _defeat_running):
 		return
 	if event.is_action_pressed("confirm") or event.is_action_pressed("cancel"):
 		_opener_advance = true
