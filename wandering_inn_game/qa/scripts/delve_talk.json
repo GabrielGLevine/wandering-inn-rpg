@@ -38,6 +38,8 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
   { "action": "assert_state", "path": "combat.combatants.pc.alive", "equals": true },
+  { "_comment": "THE TALK-route cost has teeth: guided_ksmvr_through_plates is banked, so vault_boss_slot's ally_hp_penalty applies -- Ksmvr's max_hp is 17 (con15 -> 20+15=35 base, -18 penalty), not the unguided 35. The defeat_ally_alive hp-pin idiom applied to max_hp.", "action": "assert_state", "path": "combat.combatants.ksmvr.max_hp", "equals": 17 },
+  { "action": "assert_state", "path": "combat.combatants.ksmvr.hp", "equals": 17 },
   { "action": "screenshot", "name": "02_vault_gate_opened" }
  ]
 }

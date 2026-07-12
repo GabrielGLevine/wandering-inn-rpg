@@ -1898,5 +1898,18 @@ func _init() -> void:
 	assert(int(combat87.combatants["pc"][WIKeys.HP]) < pc87_hp_before, "pc took real damage")
 	assert(int(combat87.combatants["relc"][WIKeys.HP]) < relc87_hp_before, "the bystander ally took real damage")
 
+	# hp_mod build-time fold (8d C4 ally_hp_penalty): a NEGATIVE hp_mod
+	# reduces max_hp at build, and the maxi(...,1) floor guarantees a
+	# penalty bigger than the whole base pool spawns a 1-HP combatant,
+	# never a dead-or-negative one (turn order and _check_end both assume
+	# no corpse exists at round 1).
+	var c_pen := _make_custom(5, _sink, {"relc": {WIKeys.HP_MOD: -18}})
+	var relc_base_hp := 20 + int(_cfgs(["relc"])[0][WIKeys.STATS]["con"])
+	assert(int(c_pen.combatants["relc"][WIKeys.MAX_HP]) == relc_base_hp - 18, "negative hp_mod folds into max_hp at build")
+	assert(int(c_pen.combatants["relc"][WIKeys.HP]) == relc_base_hp - 18, "starting hp matches the penalized max")
+	var c_floor := _make_custom(5, _sink, {"relc": {WIKeys.HP_MOD: -9999}})
+	assert(int(c_floor.combatants["relc"][WIKeys.MAX_HP]) == 1, "over-large negative hp_mod floors max_hp at 1, never dead-at-build")
+	assert(bool(c_floor.combatants["relc"][WIKeys.ALIVE]), "the floored combatant is alive at round 1")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

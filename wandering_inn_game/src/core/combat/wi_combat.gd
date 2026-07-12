@@ -127,14 +127,19 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 			WIKeys.AI: String(cfg.get(WIKeys.AI, "")),
 			WIKeys.SKILLS: [],
 			"hit_bonus": 0,
-			# M7 §2 combat build injection (WIGame._build_player_combatant is
-			# the only caller that ever sets these on a real cfg today; every
-			# other combatant defaults to 0, unaffected): armor's hp_mod folds
-			# into max_hp here at build time. damage_mod/damage_reduction ride
-			# along on the combatant dict for the two runtime sites that use
-			# them (_resolve_hit's melee damage, _deduct_hp's incoming-damage
-			# floor) -- see those functions' own doc comments.
-			WIKeys.MAX_HP: 20 + int(cfg[WIKeys.STATS]["con"]) + int(cfg.get(WIKeys.HP_MOD, 0)),
+			# M7 §2 combat build injection: armor's hp_mod folds into max_hp
+			# here at build time (WIGame._build_player_combatant for the PC's
+			# gear; start_combat's ally_hp_penalty arm for a pre-damaged
+			# ally). damage_mod/damage_reduction ride along on the combatant
+			# dict for the two runtime sites that use them (_resolve_hit's
+			# melee damage, _deduct_hp's incoming-damage floor). FLOOR AT 1:
+			# hp_mod can now be NEGATIVE (ally_hp_penalty, first shipped by
+			# the 8d C4 plates beat at -18 vs Ksmvr's 35) -- a penalty bigger
+			# than the base pool must spawn a combatant at 1 HP, never
+			# dead-or-negative (a dead-at-build combatant would corrupt turn
+			# order and the _check_end scan, neither of which expects a
+			# corpse at round 1).
+			WIKeys.MAX_HP: maxi(20 + int(cfg[WIKeys.STATS]["con"]) + int(cfg.get(WIKeys.HP_MOD, 0)), 1),
 			WIKeys.DAMAGE_MOD: int(cfg.get(WIKeys.DAMAGE_MOD, 0)),
 			WIKeys.DAMAGE_REDUCTION: int(cfg.get(WIKeys.DAMAGE_REDUCTION, 0)),
 			# GH#70 range+LoS seam: defaults to 1 (melee) for every combatant

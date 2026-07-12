@@ -63,7 +63,8 @@ func _init() -> void:
 	_validate_class_level_tables(classes)
 	_validate_props(scene)
 	_validate_talk_pool_stages_ascending(scene)
-	_validate_encounter_when(scene)
+	_validate_encounter_when(scene, produced_accomplishments)
+	_validate_encounter_gate_counters(scene, produced_accomplishments)
 	_validate_visual_states_phase(scene)
 	_validate_talk_pool_echo_of(scene, entity_ids)
 	_validate_effect_text_opacity()
@@ -305,9 +306,11 @@ const VALID_PHASES := ["day", "dusk", "night"]
 ## sanctioned: `{"phase": [...]}`, every listed value a real phase string
 ## (locked shape 2's own original), and `{"requires": {...}}` (8d C1, issue
 ## #14 -- the accomplishment-gate shape, same `requires` key name/semantics
-## as door_when/contains_when, just a plain Dictionary so no further
-## structural check beyond the type is needed here).
-func _validate_encounter_when(scene: Dictionary) -> void:
+## as door_when/contains_when). Every `requires` counter id is
+## EXISTENCE-CHECKED against produced accomplishments (the requires.skill
+## existence idiom) -- a typo'd/unproduced id would make the encounter
+## permanently inert, silently.
+func _validate_encounter_when(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
@@ -322,6 +325,39 @@ func _validate_encounter_when(scene: Dictionary) -> void:
 					assert(VALID_PHASES.has(String(p)), "entity %s encounter_when references unknown phase: %s" % [entity_id, p])
 			if when.has("requires"):
 				assert(when["requires"] is Dictionary, "entity %s encounter_when.requires must be a Dictionary" % entity_id)
+				for acc_id: String in (when["requires"] as Dictionary):
+					assert(
+						produced_accomplishments.has(acc_id),
+						"entity %s encounter_when.requires waits on unproduced accomplishment: %s" % [entity_id, acc_id]
+					)
+
+
+## 8d C1 review tooth: an encounter entity's OTHER two accomplishment-keyed
+## gates -- `ally_requires` (start_combat's roster gate, shipped since M-ARC)
+## and `ally_hp_penalty.<ally>.when` (the 8d C4 pre-damaged-ally arm) -- get
+## the SAME existence check as encounter_when.requires above. A typo'd id in
+## ally_requires silently fields NO ally forever; in ally_hp_penalty.when it
+## silently never applies the cost. Both are `_accomplishment_gate_met`
+## readers, so the produced-set is the right existence universe.
+func _validate_encounter_gate_counters(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			var entity_id: String = String(entity.get("id", "?"))
+			for acc_id: String in (entity.get("ally_requires", {}) as Dictionary):
+				assert(
+					produced_accomplishments.has(acc_id),
+					"entity %s ally_requires waits on unproduced accomplishment: %s" % [entity_id, acc_id]
+				)
+			var penalties: Dictionary = entity.get("ally_hp_penalty", {})
+			for ally_id: String in penalties:
+				var arm: Dictionary = penalties[ally_id]
+				assert(arm.has("hp_mod"), "entity %s ally_hp_penalty.%s missing hp_mod" % [entity_id, ally_id])
+				for acc_id: String in (arm.get("when", {}) as Dictionary):
+					assert(
+						produced_accomplishments.has(acc_id),
+						"entity %s ally_hp_penalty.%s.when waits on unproduced accomplishment: %s" % [entity_id, ally_id, acc_id]
+					)
 
 
 ## 8b R1 (issue #10), locked shape 4 -- `visual_states`' new `phase` `when`
