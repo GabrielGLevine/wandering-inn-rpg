@@ -1,0 +1,39 @@
+{
+ "_comment": "8e E1 (issue #16, the milestone's exit-criteria canonical) FIXTURE-FIRST start for pallass_walkthrough: an invrisil_attuned-era position with 'Papers for Pallass' NOT yet started (pallass_sponsored/pallass_attuned/pallass_entry_stamped/forge_permit_filed/grimalkin_examination_passed/elevator_pass_stamped all absent, started_quests empty). Extends the near_invrisil family (SAME door-chain + riverfarm + invrisil attunement chain -- door_awakened implies door_understood/recovered_anchor_stone/bought_catalyst/door_study_sleeps==3; invrisil_attuned implies blight_lifted + invrisil_attunement_stone in inventory; blight_lifted implies riverfarm_attuned -- test_fixture_coherence.gd's monotone arms enforce exactly this implication set, verbatim to near_invrisil.json's own derivation) but repositioned INSIDE the guild at Selys's own desk-approach cell (8,3) facing up -- the EXACT board_loop_start/near_guild precedent ('the street->guild walk is not the subject under test'): this canonical's subject is the Pallass QUALIFY route, not Liscor street pathing, so the fixture skips straight to Selys the same way board_loop_start skips straight to her desk. NOT locked to any combat-tuning band (unlike near_invrisil's own classes:{warrior:2}, pinned to the alley_footpads win-rate baseline) -- the whole Pallass route is a bureaucratic/travel chain with zero combat, so classes:{warrior:2} here is plain narrative plausibility only, freely re-tunable without a combat-harness re-measure. Deliberately OMITS post_game (and therefore the full Act-III backbone check) -- narratively this is a position BEFORE the deep-descent/Horns arc (8d), consistent with the roadmap's own 8b/8c-before-8d content order: a player who just banked invrisil_attuned and is about to chase the Pallass sponsorship has not necessarily cleared the Warrens yet. Also omits the crate/wrong-order early-Liscor flags (asked_about_crate/crate_returned/heard_wrong_order) -- matching door_chain_fight_start's own accepted precedent (that late-game fixture carries the SAME gap); Krshia's hub option 0 ('I'll look into it.') stays visible but unselected, the script simply skips past it via one cursor move, exactly as door_chain_fight.json's own script does. gold:60 covers the full documented chain (10+18+2+5+8+3=46g) with a 14g margin. rng_state reuses the repo's own canonical seed=9 derived value (the SAME literal every other seed-9 fixture carries) -- this route resolves zero combat, so seed stability is trivial and no fresh derivation was needed.",
+ "version": 5,
+ "state": {
+  "current_map": "guild",
+  "player_cell": [8, 3],
+  "player_facing": [0, -1],
+  "classes": {"warrior": 2},
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "riverfarm_attuned": 1,
+   "blight_lifted": 1,
+   "invrisil_attuned": 1
+  },
+  "gold": 60,
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword", "relcs_spare_spear", "invrisil_attunement_stone"],
+  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}
