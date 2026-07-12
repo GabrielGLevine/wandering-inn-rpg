@@ -25,7 +25,7 @@ Full arc live: dungeon maps + traps → Horns recruit → three-cost halls route
 - **lane-79** #79 journal communication (opaque-until-sleep binds everything; WIEffectText routes all mechanical lines).
 - **lane-81** #81 exploration/optional content (existing seams only; wiki-grounded lore; dynamism-score gate on map edits; owns skeleton_scene this wave).
 - **lane-84** #84 QA-teeth (click coverage: inventory/pickers/journal-as-shipped/locked-option no-op/settings row; QA-only, production bugs disclosed not fixed).
-- **#76 audio HELD** for a controller asset-scoping pass (in-hand packs census before any lane).
+- **lane-76** #76 audio — dispatched after the controller scoping pass (census posted as the binding asset contract on the issue). CHOICES 21: **wordless-voice-only ruling** — the Dillon Becker spoken colloquial lines are deferred as a taste-gate even for Erin (canon-plausible for her, but spoken English clips under a text-dialogue game is a build-level taste call, yours); wordless hurt/death/shout sets sanctioned for all combatants (CC BY 4.0 — credit line required if shipped).
 
 ## (superseded wave-3b notes below)
 
