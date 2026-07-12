@@ -60,6 +60,7 @@ const _POSTING_TITLES := {
 	"bounty_alley_cull": "Clear the Boulevard Alleys",
 	"bounty_second_watch": "Settle Two More Quarrels",
 	"bounty_pond_keepsakes": "Report the Pond Cache",
+	"bounty_crab_cull": "Rock Crab Cull, East Hills",
 }
 
 ## `WIBounties._delivery_title`'s exact twin, same lockstep contract as

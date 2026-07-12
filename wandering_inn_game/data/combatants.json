@@ -151,6 +151,26 @@
    ]
   },
   {
+   "_comment": "Issue #24 (HR-II forward-ref): the Rock Crab, a T1 floodplains renewable cull target (region-tiers.md/sim_combat_batch.gd's own tier table -- floodplains is T1, expected build warrior1-4). Design identity per the wiki-verified staging profile (character-profiles-staging.md Home-Region II): boulder-mimic, ARMORED and SLOW, not a swarm -- damage_reduction is the identity stat (this file's only other dr holder before this task was vault_construct, a T4 boss; rock_crab is the first LOW-tier dr carrier), dex low models 'slow' (WICombat's hit_chance formula subtracts the TARGET's dex/4 from the attacker's roll -- low dex means genuinely easier to land a hit on, not flavor). str/weapon_die carry real crushing-pincer damage on the hits that DO land, so the fight isn't a foregone conclusion despite the dr leaning as hard as it does -- canon explicitly calls it dangerous enough that 'goblin hunting packs kill them WITH casualties'. No skills (a single armored brawler, not a caster/support). TUNING TRAP: this is the first SOLO-single-enemy GATED cell below T4 (every other gated boss/nest cell in this file fields 2-3 enemies, splitting the party's action economy across targets) -- a plain low-con/low-dr first draft (con 7, dr 2) read 1.00 win_rate / 2 median rounds against warrior2+relc, nowhere close to band; con had to climb into boss-adjacent territory (hp 20+con) OR dr had to carry more of the weight before the numbers held. Landed on the dr-heavy side per the design intent above: con 20 (hp 40, still below raskghar_awakened's 50 and well below vault_construct's 210) + damage_reduction 8 (the highest in the catalog, more than double vault_construct's 3) -- tuned against tests/sim_combat_batch.gd's rock_crab_nest_t1_relc cell (warrior2 + relc, the SAME representative-early-level convention ENCOUNTER_CELLS already uses) to win_rate=0.82/median=4 rounds at the real 100-seed gate, comfortable margin inside the generic 0.55-0.95 / 3-12 band. combat_scale 3.57 contains the field sprite's oversized render_scale (data/sprites.json rock_crab: render_scale 2.57 targets ~36px FIELD presence off a 14px crop; combat_scale multiplies the SAME crop to ~50px for the close-range arena read, canon's 'shell the size of a cart' -- the same per-combatant override mechanism relc/vault_construct/ruin_guardian use, REPLACING not stacking with render_scale, per board_renderer.gd's own contract).",
+   "id": "rock_crab",
+   "display_name": "Rock Crab",
+   "sprite": "rock_crab",
+   "combat_scale": 3.57,
+   "side": "enemy",
+   "stats": {
+    "str": 16,
+    "dex": 5,
+    "con": 20,
+    "int": 3,
+    "wis": 5,
+    "cha": 2
+   },
+   "weapon_die": 10,
+   "damage_reduction": 8,
+   "ai": "melee",
+   "skills": []
+  },
+  {
    "id": "training_dummy_a",
    "display_name": "Training Dummy",
    "sprite": "training_dummy",

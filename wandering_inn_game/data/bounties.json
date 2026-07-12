@@ -202,6 +202,17 @@
    "condition_mode": "absolute",
    "gold": 2,
    "copy": "found somthing froze in the pond out past the inn once. a strongbox, silt an all. didnt open it myself, bad luck to rob the dead twice. if you already crakced it open, 2 gold for telling me you found it too. i like being right. REDSCAR VELL, bronze rank (almost silver)"
+  },
+  {
+   "_comment": "Issue #24: HR-II landed the Rock Crab encounter this task (rock_crab_nest, floodplains, respawns:true -- data/skeleton_scene.json), so this posting graduates out of the held-out staging pool per the staged entry's own instruction ('Keep this entry OUT of the live pool until HR-II lands'). Copy/giver/gold carried verbatim from docs/archive/staging/board-staging/guild-bounties.json's bounty_crab_cull entry; the ONLY change is the condition key, which the staging entry itself flagged as a placeholder (`_NEEDS_NEW_BANK_rock_crabs_culled`) -- now the real bank rock_crab_nest's on_victory produces. No condition_mode (defaults to delta, this file's own top comment): rock_crabs_culled is a REPEATABLE counter (the encounter respawns), matching the staging doc's binding design note that repeatable counters must snapshot-and-diff, never read absolute -- the SAME shape as bounty_road_cull's won_combat, not the sewer-trio's one-shot absolute mode.",
+   "id": "bounty_crab_cull",
+   "pillar": "fight",
+   "giver": "Beshta of the hunt camp (Gnoll hunter hand: short lines, hunt-family plural, one warning)",
+   "condition": {
+    "rock_crabs_culled": 2
+   },
+   "gold": 5,
+   "copy": "Hunt notice. Rock Crabs wake with the rains, and a shell the size of a cart does not care that your leg was in the way. Two culled from the east hills, shown by shell-plate. 5 gold, pooled by the hunt families. Do not trouble the Corusdeer herd. Antlers freely shed only. Beshta, for the camp."
   }
  ]
 }

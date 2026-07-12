@@ -186,6 +186,16 @@ const ENCOUNTER_CELLS := [
 	{"name": "crate_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "crate_scavengers_w1_klbkch", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": false, "ally": "klbkch"},
 	{"name": "supplier_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
+	## Issue #24 (HR-II forward-ref): the Rock Crab cull, floodplains'
+	## own renewable T1 fight (region-tiers.md: floodplains is T1, expected
+	## build warrior1-4). GATED to the generic band (0.55-0.95 win rate,
+	## `check_rounds` true for 3-12 median) at `warrior2` + relc -- the SAME
+	## "representative early level" build convention this file's own
+	## shield_spiders/awakened_boss/raskghar_scouts cells already use, not a
+	## new build. Solo (no ally yet) is recorded measured-only, the same
+	## hard-mode-frontier convention as every other solo cell in this file.
+	{"name": "rock_crab_nest_t1_relc", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "rock_crab_nest_t1_solo", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": true},
 ]
 
 ## The Awakened Raskghar BOSS band (spec §2 / plan A2 item 4). Unlike
@@ -749,11 +759,16 @@ func _init() -> void:
 		if has_relc:
 			print("  relc_downed_rate=%.2f (%d/%d)" % [float(relc_downed) / float(RUNS_PER_CELL), relc_downed, RUNS_PER_CELL])
 
-	## Sewers encounter axis. Measured-only -- mirrors the main
-	## loop's construction (build pc from the named BUILDS entry's classes,
-	## an optional ally, enemies) with the cell's own inline arena/enemies.
-	## `ally_id` (issue #69) defaults to "relc" so every pre-#69 cell's
-	## construction and print label are byte-identical to before.
+	## Sewers encounter axis. Mirrors the main loop's construction
+	## (build pc from the named BUILDS entry's classes, an optional ally,
+	## enemies) with the cell's own inline arena/enemies. `ally_id` (issue
+	## #69) defaults to "relc" so every pre-#69 cell's construction and print
+	## label are byte-identical to before. GATING (issue #24): a cell carrying
+	## `win_lo`/`win_hi` is bounded to that band (+ optional `check_rounds`,
+	## the SAME per-cell opt-in shape BOSS_CELLS/RUIN_CELLS/RIVERFARM_CELLS
+	## already use) -- every cell predating this task lacks those keys, so
+	## `gated` is false for all of them and both the printed "(measured)" tag
+	## and the loop's pass/fail behavior stay byte-identical.
 	for cell: Dictionary in ENCOUNTER_CELLS:
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
@@ -791,13 +806,23 @@ func _init() -> void:
 		var hist := {}
 		for r: int in rounds:
 			hist[r] = int(hist.get(r, 0)) + 1
-		print("[encounter / %s] arena=%s build=%s%s (measured) win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+		var gated := cell.has("win_lo")
+		print("[encounter / %s] arena=%s build=%s%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
 			cell["name"], String(cell["arena"]), String(cell["build"]),
-			"" if has_ally else " solo", win_rate, median, rounds[0], rounds[-1],
+			"" if has_ally else " solo", "" if gated else " (measured)", win_rate, median, rounds[0], rounds[-1],
 		])
 		print("  rounds histogram: ", hist)
 		if has_ally:
 			print("  %s_downed_rate=%.2f (%d/%d)" % [ally_id, float(ally_downed) / float(RUNS_PER_CELL), ally_downed, RUNS_PER_CELL])
+		if gated:
+			var lo := float(cell["win_lo"])
+			var hi := float(cell["win_hi"])
+			if win_rate < lo or win_rate > hi:
+				any_failed = true
+				printerr("FAIL [encounter / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
+				any_failed = true
+				printerr("FAIL [encounter / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
 	## The Awakened Raskghar boss axis. Same construction as the
 	## ENCOUNTER loop (build pc from the named BUILDS entry, optional Relc, the

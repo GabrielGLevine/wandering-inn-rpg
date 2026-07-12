@@ -113,6 +113,7 @@ static func _posting_title(bounty_id: String) -> String:
 		"bounty_alley_cull": "Clear the Boulevard Alleys",
 		"bounty_second_watch": "Settle Two More Quarrels",
 		"bounty_pond_keepsakes": "Report the Pond Cache",
+		"bounty_crab_cull": "Rock Crab Cull, East Hills",
 	}
 	return String(titles.get(bounty_id, bounty_id.trim_prefix("bounty_").capitalize()))
 
