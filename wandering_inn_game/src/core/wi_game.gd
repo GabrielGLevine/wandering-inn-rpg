@@ -1299,6 +1299,12 @@ func _door_gate_met(door_when: Dictionary) -> bool:
 ## except `hide_sprite`, only toggling `.visible` for a `hidden` state) --
 ## insufficient here because a gated NPC must be genuinely absent, not a
 ## invisible wall a player can walk into or talk to.
+## CONSTRAINT: the gate's producer must bank on a DIFFERENT map than the
+## entity lives on. Sim reads (`is_cell_blocked`/`entity_at`) are live, but
+## the visual only builds on map entry (`_build_entities` runs on
+## MAP_CHANGED) -- a same-map producer yields a sim-present but INVISIBLE
+## entity until re-entry. Every current producer (seal_kept_reported: the
+## street) satisfies this; keep it true for new present_when consumers.
 func entity_present(ent: Dictionary) -> bool:
 	if not ent.has("present_when"):
 		return true

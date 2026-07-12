@@ -379,6 +379,10 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				continue
 			var entity_id: String = String(entity["id"])
 			var when: Dictionary = entity["present_when"]
+			assert(
+				String(entity.get("kind", "")) != "encounter",
+				"entity %s: present_when is forbidden on kind:encounter -- _check_trigger_radius never consults presence, so a present_when encounter would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
+			)
 			assert(when.has("requires"), "entity %s present_when has no recognized shape (only 'requires' is sanctioned)" % entity_id)
 			assert(when["requires"] is Dictionary, "entity %s present_when.requires must be a Dictionary" % entity_id)
 			for acc_id: String in (when["requires"] as Dictionary):
