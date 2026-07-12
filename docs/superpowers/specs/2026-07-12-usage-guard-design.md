@@ -124,9 +124,10 @@ claude -p /usage ──parse──> cache (rolling samples, ~/.claude/)
 
 ## Error handling
 
-- Any failure in query/parse → tier `UNKNOWN`, exit 0, one-time notify;
-  never blocks work. UNKNOWN persisting > 1h is itself worth surfacing
-  in HANDOFF.
+- Any failure in query/parse → tier `UNKNOWN`, exit 0; never blocks
+  work. Explicit status checks print `UNKNOWN`; the hook stays SILENT on
+  UNKNOWN (notifying would spam fresh machines with no cache). UNKNOWN
+  persisting > 1h is itself worth surfacing in HANDOFF.
 - Concurrent cache writes (multiple sessions/subagents): write via
   temp-file + atomic `mv`.
 - Subagents fire the same hook; the per-session stamp keeps
