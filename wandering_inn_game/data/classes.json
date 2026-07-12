@@ -189,19 +189,25 @@
 			]
 		},
 		{
+			"_comment": "Class-foundation pass R1 (#93/#95/#96, 2026-07-12): the stagnant trio's ladder -- Tactician was a dead-end (no evolution block, no grants past L1) despite `observed_things` already climbing to L12. `aspiration` (flavor-only, no mechanism) is REMOVED here because [Strategist] is now a REAL evolution target below, not a distant aspiration -- its own further aspiration ([Grandmaster Strategist], wiki-attested) moved onto the new `strategist` entry instead. L3 reuses the ALREADY-SHIPPED `dangersense` (warrior L5's own grant -- multiple classes granting the same skill id is precedented, e.g. `quick_movement` on both warrior L3 and helper L5): canon-fit (a Tactician who reads the field reads danger too), zero new content. L5/L7 are the two NEW grants (`directed_strike`/`flanking_step`, both WIEffectText-expressible -- see skills.json). Evolution: SINGLE-AXIS Replacement (`targets` carries exactly one key, `observed_things` -- the class's OWN leveling counter), deliberately NOT a multi-key fork: two keys mapping to the SAME target class would make `dominance_share`'s tie/under-60%-share math a spurious block (both keys resolve to the identical outcome regardless of split), the exact reachability-trap class this whole pass exists to close (#96). Mirrors archer/sharpshooter's own 'single-path Replacement, not a fork' precedent (see that class's own `_comment`) -- `min_uses` (12) clears trivially since `observed_things`'s own L10 threshold (55) is already far past it.",
 			"id": "tactician",
 			"display_name": "Tactician",
 			"stat_growth": { "int": 1 },
 			"gained_by": { "accomplishment": { "chess_with_olesm": 1 } },
-			"aspiration": { "display_name": "Strategist", "text": "Those who learn to move armies as easily as pieces are one day named [Strategists]." },
+			"evolution": {
+				"at_level": 10,
+				"dominance_share": 0.6,
+				"min_uses": 12,
+				"targets": { "observed_things": "strategist" }
+			},
 			"levels": [
 				{ "level": 1, "requires": {}, "grants": ["observe", "battlefield_awareness"] },
 				{ "level": 2, "requires": { "observed_things": 3 }, "grants": [] },
-				{ "level": 3, "requires": { "observed_things": 6 }, "grants": [] },
+				{ "level": 3, "requires": { "observed_things": 6 }, "grants": ["dangersense"] },
 				{ "level": 4, "requires": { "observed_things": 10 }, "grants": [] },
-				{ "level": 5, "requires": { "observed_things": 15 }, "grants": [] },
+				{ "level": 5, "requires": { "observed_things": 15 }, "grants": ["directed_strike"] },
 				{ "level": 6, "requires": { "observed_things": 21 }, "grants": [] },
-				{ "level": 7, "requires": { "observed_things": 28 }, "grants": [] },
+				{ "level": 7, "requires": { "observed_things": 28 }, "grants": ["flanking_step"] },
 				{ "level": 8, "requires": { "observed_things": 36 }, "grants": [] },
 				{ "level": 9, "requires": { "observed_things": 45 }, "grants": [] },
 				{ "level": 10, "requires": { "observed_things": 55 }, "grants": [] },
@@ -210,17 +216,51 @@
 			]
 		},
 		{
+			"_comment": "SPARSE TABLE (GH#54 convention). [Strategist] is Replacement-only (never gained_by) -- tactician's evolution carries the PARENT's HELD level directly in. Floor = tactician's own evolution.at_level (10); tactician's OWN table stops at 12, so entries 10-12 stay contiguous to that max (the warrior/mage precedent, not archer's stop-at-floor shape, since tactician keeps leveling past 10 while 'Waiting'). CANON-VERDICT 2026-07-12: [Strategist] ATTESTED (wiki List_of_Classes/S + the Olesm Swifttail page -- Olesm Swifttail himself IS a [Strategist], and Tactician->Strategist is his own attested arc, matching this class's existing gained_by flavor `chess_with_olesm`). The wiki's own canon numbers (Level 30 [Tactician], or Level 20 + a military rank) are NOT reused verbatim -- same invented-but-canon-grounded mechanical threshold this game already applies to swordsman/spearmaster/sharpshooter's own evolution levels, disclosed here rather than silently mismatched. `read_the_field`'s design trace (L10 grant): the plan's first option (\"reuse the observe effect shape at wider radius\") was REJECTED -- `observe`/[Appraise Foe] has no radius/effect field at all (a single faced-cell field dispatch, see field_skills.gd), so a radius widening would mean inventing a new field-skill scan mechanism, real new sim ground outside this pass's `reuse existing effect types` discipline. The plan's fallback (\"a second dangersense-family passive\") was ALSO rejected -- `dangersense` is a confirmed opaque no-card effect type (effect_text.gd's own doc comment), and this pass's binding COMMIT-1 rule requires every NEW skill's effect to be WIEffectText-expressible (visible currency). Picked instead: `hit_bonus` (basic_swordwork's own effect type, already expressible as \"+N to hit\") -- a strategist who has read the whole board guides every strike true, a clean capstone reading distinct from L5's single-target damage_mult and L7's move_pool_bonus. Name `[Read the Field]`: wiki-checked, no exact or close match found (Skills Effect index, letter R) -- CANON-VERDICT: ORIGINAL, canon-plausible flag (mirrors [Battlefield Awareness]'s own unflagged precedent, the class's L1 grant already in this exact idiom). `aspiration` [Grandmaster Strategist] is wiki-attested (same Strategist search result: \"[Strategist] can further advance to [Grandmaster Strategist]\") -- the flavor-only further-aspiration slot vacated by tactician's own aspiration field above.",
+			"id": "strategist",
+			"display_name": "Strategist",
+			"stat_growth": { "int": 2 },
+			"inherits": "tactician",
+			"aspiration": { "display_name": "Grandmaster Strategist", "text": "Those who master the whole board -- every piece, every player, every war before it starts -- are in time named [Grandmaster Strategists]." },
+			"levels": [
+				{ "level": 10, "requires": { "observed_things": 55 }, "grants": ["read_the_field"] },
+				{ "level": 11, "requires": { "observed_things": 66 }, "grants": [] },
+				{ "level": 12, "requires": { "observed_things": 78 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "Class-foundation pass R1 (2026-07-12): Diplomat's ladder, extended L7-L10 to give the class an evolution (previously a hard 6-level dead end). L3/L5/L7 continue the existing requires_any heard_gossip/befriended_moments curve (hand-authored headroom past L6, same disclosed-not-formulaic convention spellsword's own L9-16 table uses) with three NEW grants: `measured_words` (field-only, no combat effect -- the social pillar's own USE surface is future persuade-fork gates, not a mechanical effect); `soothing_presence` (combat heal, `ally_target: true` -- see skills.json/skill_effects.gd for the widened-but-byte-identical-for-second_wind heal resolver); `open_doors` (field-only passive flavor + a future vendor-perk hook, `charming_smile` stays the L1 dialogue-gate skill, untouched per the dialogue-gate coupling trap). Evolution: SINGLE-AXIS Replacement on `heard_gossip` alone (tactician's own precedent above -- a 2-key fork onto the SAME single target class would spuriously block on dominance_share for no reason, since both keys would resolve identically).",
 			"id": "diplomat",
 			"display_name": "Diplomat",
 			"stat_growth": { "int": 1 },
 			"gained_by": { "accomplishment": { "persuaded_someone": 1, "heard_gossip": 3 } },
+			"evolution": {
+				"at_level": 10,
+				"dominance_share": 0.6,
+				"min_uses": 12,
+				"targets": { "heard_gossip": "emissary" }
+			},
 			"levels": [
 				{ "level": 1, "requires": {}, "grants": ["charming_smile", "calming_touch"] },
 				{ "level": 2, "requires_any": { "heard_gossip": 5, "befriended_moments": 2 }, "grants": [] },
-				{ "level": 3, "requires_any": { "heard_gossip": 8, "befriended_moments": 4 }, "grants": [] },
+				{ "level": 3, "requires_any": { "heard_gossip": 8, "befriended_moments": 4 }, "grants": ["measured_words"] },
 				{ "level": 4, "requires_any": { "heard_gossip": 12, "befriended_moments": 7 }, "grants": [] },
-				{ "level": 5, "requires_any": { "heard_gossip": 17, "befriended_moments": 10 }, "grants": [] },
-				{ "level": 6, "requires_any": { "heard_gossip": 23, "befriended_moments": 14 }, "grants": [] }
+				{ "level": 5, "requires_any": { "heard_gossip": 17, "befriended_moments": 10 }, "grants": ["soothing_presence"] },
+				{ "level": 6, "requires_any": { "heard_gossip": 23, "befriended_moments": 14 }, "grants": [] },
+				{ "level": 7, "requires_any": { "heard_gossip": 30, "befriended_moments": 18 }, "grants": ["open_doors"] },
+				{ "level": 8, "requires_any": { "heard_gossip": 38, "befriended_moments": 23 }, "grants": [] },
+				{ "level": 9, "requires_any": { "heard_gossip": 47, "befriended_moments": 29 }, "grants": [] },
+				{ "level": 10, "requires_any": { "heard_gossip": 57, "befriended_moments": 36 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "SPARSE TABLE (GH#54 convention). [Emissary] is Replacement-only (never gained_by) -- diplomat's evolution carries the PARENT's HELD level directly in. Floor = diplomat's own evolution.at_level (10); diplomat's OWN table now stops at 10 (mirrors archer/sharpshooter's stop-at-floor shape, not warrior/mage's past-floor padding), so this table's single entry is already contiguous to its own max by construction -- no L11/12 to author. CANON-VERDICT 2026-07-12: [Emissary] ATTESTED (wiki List_of_Classes/E -- holder Xorespe). The wiki does not itself attest a Diplomat-to-Emissary EVOLUTION LINK (only the bare class name) -- that specific lineage is this game's own mechanical design choice, the same invented-but-canon-grounded linkage sharpshooter's own `_comment` already discloses for archer->sharpshooter. Deliberately grants NOTHING new at floor level 10 (the sharpshooter precedent: the diplomat kit -- charming_smile/calming_touch/measured_words/soothing_presence/open_doors -- is already complete per the controller spec's kit list; the evolution's payoff is the class identity itself).",
+			"id": "emissary",
+			"display_name": "Emissary",
+			"stat_growth": { "int": 2 },
+			"inherits": "diplomat",
+			"levels": [
+				{ "level": 10, "requires_any": { "heard_gossip": 57, "befriended_moments": 36 }, "grants": [] }
 			]
 		},
 		{
@@ -229,13 +269,33 @@
 			"display_name": "Rogue",
 			"stat_growth": { "dex": 1 },
 			"gained_by": { "accomplishment": { "recovered_crate_watch": 1 } },
+			"evolution": {
+				"at_level": 10,
+				"dominance_share": 0.6,
+				"min_uses": 12,
+				"targets": { "sneaked_past_danger": "infiltrator" }
+			},
 			"levels": [
 				{ "level": 1, "requires": {}, "grants": ["sneak"] },
 				{ "level": 2, "requires": { "sneaked_past_danger": 2 }, "grants": [] },
-				{ "level": 3, "requires": { "sneaked_past_danger": 4 }, "grants": [] },
+				{ "level": 3, "requires": { "sneaked_past_danger": 4 }, "grants": ["find_trap"] },
 				{ "level": 4, "requires": { "sneaked_past_danger": 7 }, "grants": [] },
-				{ "level": 5, "requires": { "sneaked_past_danger": 10 }, "grants": [] },
-				{ "level": 6, "requires": { "sneaked_past_danger": 14 }, "grants": [] }
+				{ "level": 5, "requires": { "sneaked_past_danger": 10 }, "grants": ["disarm_trap"] },
+				{ "level": 6, "requires": { "sneaked_past_danger": 14 }, "grants": [] },
+				{ "level": 7, "requires": { "sneaked_past_danger": 18 }, "grants": ["sudden_strike"] },
+				{ "level": 8, "requires": { "sneaked_past_danger": 23 }, "grants": [] },
+				{ "level": 9, "requires": { "sneaked_past_danger": 29 }, "grants": [] },
+				{ "level": 10, "requires": { "sneaked_past_danger": 36 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "SPARSE TABLE (GH#54 convention). [Infiltrator] is Replacement-only (never gained_by) -- rogue's evolution carries the PARENT's HELD level directly in. Floor = rogue's own evolution.at_level (10); rogue's OWN table now stops at 10 (archer/sharpshooter's stop-at-floor shape), so this table's single entry is already contiguous to its own max. CANON-VERDICT 2026-07-12: [Infiltrator] ATTESTED (wiki's Crime in Innworld page -- grouped with [Informant]/[Saboteur]/[Spy]/[Spymaster] as a covert/undercover-operations class). Evolution axis is SINGLE-KEY on `sneaked_past_danger` (rogue's own core leveling counter, the class's L1 signature grant), deliberately NOT `trap_disarmed` (the new R6 counter banked by future trap placements, Lane B) -- `trap_disarmed` is genuinely rogue-flavored content (produced only via the `disarm_trap` skill this pass grants), but wiring it into a SECOND targets key pointing at the same `infiltrator` target would reproduce the exact 2-keys-1-target dominance-share trap this pass's own tactician/diplomat `_comment`s call out (a lopsided-but-substantial split across two keys resolving to the identical class could spuriously read as 'waiting' even past min_uses). `trap_disarmed` also cannot structurally exist yet in a fresh Lane-A-only worktree (R6's placements are Lane B's parallel-lane job) -- keying evolution on it would be a reachability regression until the lanes reconcile, the opposite of this pass's whole purpose. Deliberately grants NOTHING new at floor level 10 (the sharpshooter/emissary precedent -- kit is already complete: sneak/find_trap/disarm_trap/sudden_strike).",
+			"id": "infiltrator",
+			"display_name": "Infiltrator",
+			"stat_growth": { "dex": 2 },
+			"inherits": "rogue",
+			"levels": [
+				{ "level": 10, "requires": { "sneaked_past_danger": 36 }, "grants": [] }
 			]
 		},
 		{
@@ -264,16 +324,19 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54 convention, applied to GH#70's new evolution). [Sharpshooter] is Replacement-only (never gained_by) -- archer's evolution carries the PARENT's HELD level directly into classes[sharpshooter] (check_evolutions/_resolve_evolutions), never counting up from level 1. Floor = archer's own evolution.at_level (10); archer's OWN table stops at 10 too (unlike warrior/mage, which keep leveling to 12 while 'Waiting' for dominance), so floor == archer's max and this table's single entry is already contiguous to its own max by construction -- no levels 11/12 to author. CANON-VERDICT: ATTESTED, wiki List_of_Classes/S -- '[Sharpshooter], Variant of [Sniper]?'. The wiki does not itself attest an Archer-to-Sharpshooter EVOLUTION LINK (only the bare class name + a tentative Sniper-variant reading) -- that specific lineage is this game's own mechanical design choice, the same kind of invented-but-canon-grounded linkage swordsman/spearmaster's own Warrior ancestry already is. Deliberately grants NOTHING new at floor level 10 -- the archer kit (Power Shot/Quick Nock/Piercing Shot/Keen Eye) is already complete per the controller spec's kit list; the evolution's payoff is the class identity itself (display_name/aspiration), not a fifth invented Skill.",
+			"_comment": "SPARSE TABLE (GH#54 convention, applied to GH#70's new evolution). [Sharpshooter] is Replacement-only (never gained_by) -- archer's evolution carries the PARENT's HELD level directly into classes[sharpshooter] (check_evolutions/_resolve_evolutions), never counting up from level 1. Floor = archer's own evolution.at_level (10); archer's OWN table stops at 10 too (unlike warrior/mage, which keep leveling to 12 while 'Waiting' for dominance), so floor == archer's max, EXCEPT this class-foundation pass (R1, 2026-07-12) extends the table to 12 to fit L12's new grant (rule (b)'s contiguity requirement forces 11 to exist too, even though it grants nothing). CANON-VERDICT: ATTESTED, wiki List_of_Classes/S -- '[Sharpshooter], Variant of [Sniper]?'. The wiki does not itself attest an Archer-to-Sharpshooter EVOLUTION LINK (only the bare class name + a tentative Sniper-variant reading) -- that specific lineage is this game's own mechanical design choice, the same kind of invented-but-canon-grounded linkage swordsman/spearmaster's own Warrior ancestry already is. BUG FIX (R1, found while wiring this ruling): this entry SHIPPED WITHOUT an `inherits: \"archer\"` key -- every other Replacement-only evolution target (swordsman/spearmaster->warrior, ice_mage/fire_mage->mage, barmaid/server->helper, strategist/emissary/infiltrator->their own parents above) carries one; sharpshooter alone did not, so `WIProgression.granted_skills({\"sharpshooter\": 10}, catalog)` empirically returned `[]` (verified before this fix) -- a player evolving to [Sharpshooter] lost the ENTIRE archer kit (Power Shot/Quick Nock/Piercing Shot/Keen Eye) and gained nothing. Added `inherits` below; the class's own aspiration/kit-list prose (\"the archer kit is already complete\") was written as if this worked, so this was a data-typo, not a design decision. R1's own two new grants (`called_shot` L10, `piercing_volley` L12) now compose correctly ON TOP of the restored inherited kit.",
 			"id": "sharpshooter",
 			"display_name": "Sharpshooter",
 			"stat_growth": { "dex": 2 },
+			"inherits": "archer",
 			"aspiration": {
 				"display_name": "Sniper",
 				"text": "Some say a true [Sniper] never misses because the shot was already true before the string was ever drawn."
 			},
 			"levels": [
-				{ "level": 10, "requires": { "ranged_hit": 57 }, "grants": [] }
+				{ "level": 10, "requires": { "ranged_hit": 57 }, "grants": ["called_shot"] },
+				{ "level": 11, "requires": { "ranged_hit": 68 }, "grants": [] },
+				{ "level": 12, "requires": { "ranged_hit": 80 }, "grants": ["piercing_volley"] }
 			]
 		}
 	]

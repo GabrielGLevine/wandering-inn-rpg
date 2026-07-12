@@ -143,27 +143,35 @@ static func _resolve_invisibility(combat: WICombat, actor_id: String, a: Diction
 	return true
 
 
-## second_wind's real heal resolver. `target_id` has already cleared
+## second_wind's real heal resolver, WIDENED (class-foundation pass R1,
+## 2026-07-12) for [Soothing Presence]'s ally-targeting -- exactly the
+## follow-up this doc comment used to flag. `target_id` has already cleared
 ## resolve_active's type-keyed same-side gate above (heal requires the SAME
-## side), but this is SELF-ONLY tonight -- ally-targeting would need
-## targeting_controller.gd to grow an ally-cycling filter arm beyond the
-## small self-target addition this task shipped (see that file's `enter()`
-## doc comment), so the shipped card is honestly "restore N HP to yourself"
-## (effect_text.gd) and the sim enforces exactly that here: a same-side
-## target that ISN'T the actor itself (a living ally) still refuses. Widen
-## this gate and the card together when ally-targeting lands -- never one
-## without the other. Restores `effect.amount` HP capped at max_hp (a
-## fully-topped-off actor can still spend the cost for zero net healing,
-## same as dash() never refusing for "already fast enough" -- no existing
-## skill in this sim gates an active cast on "would this even help").
+## side: self or an ally). `effect.ally_target` (absent/false on every
+## pre-existing heal skill -- second_wind never sets it) is the ONLY new key
+## this widening reads: default (false) keeps the EXACT self-only refusal
+## second_wind has always had (`target_id != actor_id` -> refuse),
+## BYTE-IDENTICAL for every existing heal skill and its own card text
+## ("restore N HP to yourself" -- `tests/test_combat_sim.gd`'s c66 "refuses
+## an ally target" case still passes unchanged); `ally_target: true`
+## (soothing_presence only) accepts any living same-side target
+## resolve_active already cleared (self OR an ally). Card text
+## (effect_text.gd) reads the SAME flag so the two can never drift apart --
+## "widen this gate and the card together when ally-targeting lands", now
+## done. Restores `effect.amount` HP to the TARGET (not hardcoded to the
+## actor anymore), capped at the target's own max_hp (a fully-topped-off
+## target can still be cast on for zero net healing, same as dash() never
+## refusing for "already fast enough" -- no existing skill in this sim gates
+## an active cast on "would this even help").
 static func _resolve_heal(combat: WICombat, actor_id: String, a: Dictionary, target_id: String, skill: Dictionary, effect: Dictionary) -> bool:
-	if target_id != actor_id:
+	if target_id != actor_id and not bool(effect.get("ally_target", false)):
 		return false
+	var target: Dictionary = combat.combatants[target_id]
 	combat.spend_skill_costs(a, skill)
-	var missing := int(a[WIKeys.MAX_HP]) - int(a[WIKeys.HP])
+	var missing := int(target[WIKeys.MAX_HP]) - int(target[WIKeys.HP])
 	var healed := clampi(int(effect.get(WIKeys.AMOUNT, 0)), 0, missing)
-	a[WIKeys.HP] = int(a[WIKeys.HP]) + healed
-	combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": actor_id, "healed": healed})
+	target[WIKeys.HP] = int(target[WIKeys.HP]) + healed
+	combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": target_id, "healed": healed})
 	return true
 
 

@@ -113,6 +113,16 @@ static func skill_effect_lines(skill: Dictionary, combatants_catalog: Array = []
 		# The status shorthand is its own sentence: end the effect clause with a
 		# period first (unless the phrase already punctuated itself).
 		line += (" " if line.ends_with(".") else ". ") + suffix
+	# Class-foundation pass R1 (2026-07-12): `skill.once_per_fight` is a
+	# SKILL-level flag (WIKeys.ONCE_PER_FIGHT), not an effect-level one --
+	# read from `skill` directly, unlike every other suffix above (which read
+	# `effect`). Visible-currency discipline: the restriction is a real
+	# mechanical constraint (WICombat.use_skill's own gate), so it must be
+	# on the card, not just in the sim -- a silently-refused second cast with
+	# no on-card warning would read as a bug. First (and today only)
+	# consumer: [Sudden Strike].
+	if bool(skill.get(WIKeys.ONCE_PER_FIGHT, false)):
+		line += (" " if line.ends_with(".") else ". ") + "Once per fight."
 	var lines: Array[String] = []
 	lines.append(line)
 	return lines
@@ -172,11 +182,16 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 		"heal":
 			# WIRED -- `WISkillEffects.resolve_active`
 			# (src/core/combat/skill_effects.gd) gained a real heal resolver,
-			# so the line is no longer a promise-only lie. SELF-ONLY tonight
-			# (the sim resolver refuses any target other than the actor's
-			# own id -- see its doc comment for the ally-targeting follow-up),
-			# so the card says exactly what the sim does: "yourself", not
-			# "an ally". Widen this phrase the same task ally-targeting lands.
+			# so the line is no longer a promise-only lie. SELF-ONLY by
+			# default (the sim resolver refuses any target other than the
+			# actor's own id UNLESS `effect.ally_target` is set), so the card
+			# says exactly what the sim does: "yourself" for second_wind (no
+			# `ally_target` key, byte-identical card). Class-foundation pass
+			# R1 (2026-07-12), [Soothing Presence]: `ally_target: true` widens
+			# both the sim gate and this phrase TOGETHER (the doc comment
+			# this replaces asked for exactly that).
+			if bool(effect.get("ally_target", false)):
+				return "restore %d HP to an ally, or yourself" % int(effect.get(WIKeys.AMOUNT, 0))
 			return "restore %d HP to yourself" % int(effect.get(WIKeys.AMOUNT, 0))
 		"icy_floor":
 			# WIRED -- `WISkillEffects.resolve_active` (skill_effects.gd)

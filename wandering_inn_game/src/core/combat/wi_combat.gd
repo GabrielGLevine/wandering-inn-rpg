@@ -464,6 +464,12 @@ func use_skill(skill_id: String, target_id: String) -> bool:
 	var skill: Dictionary = skills.get(skill_id, {})
 	if not (skill.get(WIKeys.CONTEXTS, []) as Array).has("combat"):
 		return false
+	# Class-foundation pass R1 (2026-07-12), [Sudden Strike]'s ONCE-per-fight
+	# gate: reuses the EXISTING `used_skills_tally` per-actor set (see
+	# WIKeys.ONCE_PER_FIGHT's own doc comment) -- a repeat cast this fight is
+	# refused before any spend, same discipline as the MP/AP gates below.
+	if bool(skill.get(WIKeys.ONCE_PER_FIGHT, false)) and (used_skills_tally.get(actor_id, {}) as Dictionary).has(skill_id):
+		return false
 	# Both gates run BEFORE any spend: a refused cast costs neither MP nor AP.
 	if int(a.get(WIKeys.MP, 0)) < int(skill.get(WIKeys.MP_COST, 0)):
 		return false

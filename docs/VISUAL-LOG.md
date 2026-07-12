@@ -16,6 +16,22 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+- [ ] SKILL ICONS — class-foundation pass (#93/#95/#96, R1, 2026-07-12) added
+  11 new player-facing skills (`directed_strike`/[Chosen Blow],
+  `flanking_step`, `read_the_field`, `measured_words`, `soothing_presence`,
+  `open_doors`, `find_trap`, `disarm_trap`, `sudden_strike`/[Sneak Attack],
+  `called_shot`, `piercing_volley`) and ALL 11 ship iconless — every id in
+  `data/sprites.json`'s `icon_*` set is already claimed by a shipped skill
+  (checked: 30/30 claimed, `icon_attack`/`icon_dash` reserved for the innate
+  hotbar slots), so none had an unclaimed icon to reuse (the #94 pattern:
+  icon if any unclaimed fits, else iconless + this log line). Each degrades
+  gracefully (hotbar/combat_hud/field_hotbar all already tolerate a missing
+  icon id, per the dozen pre-existing iconless skills — mana_shield,
+  dangersense, power_shot, flame_pillar, etc.) — disclosed here as a GROWING
+  art-pass gap (#94 was "19/50 skills iconless"; this pass alone adds 11
+  more, before R2-R5's own new skills), not a blocker for this pass's own
+  exit criteria. Needs a real icon-commissioning pass (PixelLab or hand
+  pack) sized to the new total once the whole class-foundation pass lands.
 - [ ] SPRITE/FLOODPLAINS — `rock_crab` (issue #24) ships a BAKED recolor of
   the Admurin crab (`assets/props/admurin/Crab_Idle.png`, multiply
   ~[1.05, 3.0, 2.6] against the source's red-brown shell) targeting the

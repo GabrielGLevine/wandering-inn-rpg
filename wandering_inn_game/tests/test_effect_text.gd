@@ -215,6 +215,31 @@ const EXPECTED_SKILLS := {
 	# [Keen Eye]: field-only, no combat effect -- same empty card as
 	# basic_cleaning/observe above.
 	"keen_eye": [],
+	# Class-foundation pass R1 (2026-07-12): the stagnant trio's ladders +
+	# Sharpshooter's grants. See each skill's own _comment in skills.json for
+	# the wiki-verification trace.
+	"directed_strike": ["2 AP — ×1.6 damage"],
+	# Passive, 0 ap_cost -- the STANDING per-turn phrasing (same branch as
+	# quick_movement/battlefield_awareness above).
+	"flanking_step": ["+1 move cell every turn"],
+	"read_the_field": ["+10 to hit"],
+	# Field-only, no combat effect -- same empty card as measured_words'
+	# own field siblings (charming_smile/observe/keen_eye above).
+	"measured_words": [],
+	# WIRED -- WISkillEffects._resolve_heal widened for `effect.ally_target`
+	# (see that function's own doc comment); the phrase reads "an ally, or
+	# yourself" instead of second_wind's "yourself" alone.
+	"soothing_presence": ["2 AP, 3 MP — restore 6 HP to an ally, or yourself"],
+	"open_doors": [],
+	"find_trap": [],
+	"disarm_trap": [],
+	# ONCE per fight (WIKeys.ONCE_PER_FIGHT) -- the trailing sentence is the
+	# skill-level suffix `skill_effect_lines` appends (distinct from
+	# `_status_suffix`, which reads the EFFECT dict; see that function's own
+	# comment).
+	"sudden_strike": ["2 AP — ×1.8 damage. Once per fight."],
+	"called_shot": ["3 AP — ×2.2 damage"],
+	"piercing_volley": ["4 AP — damage everything in a line 5 cells long"],
 }
 
 
