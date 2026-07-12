@@ -130,6 +130,40 @@
       }
      },
      "goto": "door_attune"
+    },
+    {
+     "_comment": "8d D1 (issue #14): the Pisces bridge beat -- gated on `seal_kept_found` (the dungeon's own FIND beat, trapped_halls), hide_when a one-shot flavor counter so it doesn't repeat forever once heard. Contraction-free per Pisces's own voice contract (character-profiles.md), HELD verbatim in the bound line below. Appended LAST for the same numbering-safety convention every option above uses.",
+     "text": "I found a second door down in that dungeon. Same runes as our pantry door.",
+     "requires": {
+      "accomplishment": {
+       "seal_kept_found": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "heard_pisces_second_door": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "heard_pisces_second_door"
+      }
+     ],
+     "goto": "second_door_bridge"
+    }
+   ]
+  },
+  "second_door_bridge": {
+   "speaker": "Pisces",
+   "text": "You found a second door. With the same runes. That is not a coincidence; that is a pattern, and patterns are the only honest language the dead leave behind. I should very much like to see it — after you have slept. Some findings deserve a rested mind.",
+   "options": [
+    {
+     "text": "Back to the top.",
+     "goto": "greet"
+    },
+    {
+     "text": "I'll let you get back to it.",
+     "end": true
     }
    ]
   },

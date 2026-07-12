@@ -1,0 +1,26 @@
+{
+	"_comment": "8d C1/D1 (issue #14/#15) 'What the Seal Kept' -- Ceria Springwalker, waiting at dungeon_approach once the gallery reopens. Canon (wiki.wanderinginn.com/Ceria_Springwalker): half-Elf [Cryomancer], leads the Horns of Hammerad, dry/professional register (character-profiles.md voice notes). Two-node recruit sequence (hub greeting -> rules briefing) ending in `horns_party_formed` on 'Let's go.' -- the ally_requires gate `vault_boss_slot`'s encounter (trapped_halls) reads, and the quest's own beat-1 completion counter (`what_the_seal_kept`, data/quests.json). hub's own text_variants then carry the party-formed line and, later, the post-victory line -- ascending order, LAST-satisfied-wins, so `vault_construct_downed` overrides `horns_party_formed` once both are true. Softlock guard: hub keeps 'Understood.' fully ungated once 'Go on.' hides.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Ceria",
+			"text": "You're the one Olesm's paying to poke the gallery? Good. We're the ones the Guild's paying to make sure you come back out. Ceria Springwalker — Horns of Hammerad.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "horns_party_formed": 1 } }, "text": "All right. Four of us, one of you. Try to keep up." },
+				{ "requires": { "accomplishment": { "vault_construct_downed": 1 } }, "text": "It was guarding a door. Wonderful. I hate doors that need guarding." }
+			],
+			"options": [
+				{ "text": "Go on.", "hide_when": { "accomplishment": { "horns_party_formed": 1 } }, "goto": "rules" },
+				{ "text": "Understood.", "end": true }
+			]
+		},
+		"rules": {
+			"speaker": "Ceria",
+			"text": "Rules are simple. Traps kill more adventurers than monsters do, so nobody touches anything shiny. That includes you.",
+			"options": [
+				{ "text": "Let's go.", "effects": [ { "accomplishment": "horns_party_formed" } ], "goto": "hub" },
+				{ "text": "Give me a moment.", "end": true }
+			]
+		}
+	}
+}

@@ -63,6 +63,18 @@
 				{ "id": "report", "description": "Tell Wilovan it's done.", "complete_when": { "brothers_job_done": 1 } }
 			],
 			"region": "Invrisil"
+		},
+		{
+			"_comment": "8d C1 (issue #14) 'What the Seal Kept' -- the Liscor dungeon (dungeon_approach/trapped_halls, gated behind the reopened M-ARC gallery). FOUR real stages, not the cisterns/wrong_order two-beat shape: this is a genuine dungeon, not a posting. Beat 'delve' (`horns_party_formed`) is Ceria's own recruit-conversation at dungeon_approach, the ally_requires gate for the vault fight -- the option that starts this quest at Olesm's desk (`horns_delve_started`, olesm_intro.json) is NOT itself a beat (heard_about_cisterns precedent), it only opens the gallery door (B3's door_when) and banks the stipend's ADVANCE half. Beat 'halls' (`halls_cleared`) is the SHARED three-pillar convergence counter in trapped_halls: FIGHT (the promoted snare_nest_slot encounter's on_victory), SKILL (dart_slit_a's on_skill_use, trap_kit consumed), TALK (Ksmvr's plates-guidance option, `ksmvr_plates.json` -- ALSO banks `guided_ksmvr_through_plates`, the real cost `ally_hp_penalty` reads at the vault fight). Beat 'vault' (`seal_kept_found`) folds the boss victory (`vault_construct_downed`, `ally_requires: horns_party_formed`) and the FIND beat (the deeper rune-door prop, `contains_when`-shaped gate on the SAME victory counter) into one journal row -- finding the door is impossible without the victory, so a separate row would never show independently. Beat 'report' (`seal_kept_reported`) is Olesm's own closing beat, same map as the giver (no travel-signposting requirement per issue #74's own same-map exemption). heard_of_the_gallery_survey (the guild_board rumor) is NOT a beat, flavor-only signpost.",
+			"id": "what_the_seal_kept",
+			"title": "What the Seal Kept",
+			"beats": [
+				{ "id": "delve", "description": "Reach the reopened gallery in the dungeon beneath Liscor and find Ceria Springwalker's team waiting.", "complete_when": { "horns_party_formed": 1 } },
+				{ "id": "halls", "description": "Get the Horns of Hammerad through the trapped halls -- fight, disarm the traps, or talk your way past.", "complete_when": { "halls_cleared": 1 } },
+				{ "id": "vault", "description": "Clear whatever the Horns are guarding against, deep past the trapped halls, and see what lies beyond it.", "complete_when": { "seal_kept_found": 1 } },
+				{ "id": "report", "description": "Tell Olesm what you found sealed behind the door.", "complete_when": { "seal_kept_reported": 1 } }
+			],
+			"region": "Liscor"
 		}
 	]
 }

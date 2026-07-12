@@ -425,6 +425,25 @@
     0.15
    ],
    "vignette": 0.56
+  },
+  "trapped_halls_snare": {
+   "_comment": "8d C1 (issue #14): the FIGHT route's snare skirmish inherits the SAME 'old dark' grade as vault/dungeon_approach/trapped_halls -- a side chamber off the same trap gauntlet, no reason to read any different.",
+   "day": [
+    0.21,
+    0.22,
+    0.19
+   ],
+   "dusk": [
+    0.21,
+    0.22,
+    0.19
+   ],
+   "night": [
+    0.17,
+    0.18,
+    0.15
+   ],
+   "vignette": 0.56
   }
  }
 }

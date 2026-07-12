@@ -458,7 +458,42 @@ const BUILDS := [
 ## new failure mode, only a new, more frequent path to the same rule.
 const PARTY_CELLS := [
 	{"name": "vault_construct_t4_party", "arena": "vault", "enemies": ["vault_construct"], "build": "t4_spellsword11_party", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	## The TALK-route (guided-plates) variant: the SAME vault roster with
+	## ksmvr entering at the ally_hp_penalty the live encounter applies
+	## (`ally_hp_mods`, an optional per-cell dict the loop below folds onto
+	## the named ally's cfg exactly like start_combat's own arm -- hp_mod
+	## -18, max_hp 35 -> 17). MEASURED-only: the gated contract is the
+	## unpenalized cell above; this row documents what the TALK route's
+	## cost actually does to the band, never gates it.
+	{"name": "vault_construct_t4_party_guided", "arena": "vault", "enemies": ["vault_construct"], "build": "t4_spellsword11_party", "ally_hp_mods": {"ksmvr": -18}},
 	{"name": "raskghar_awakened_t4_party", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "t4_spellsword11_party"},
+]
+
+## The dungeon FIGHT-route axis (8d C1, issue #14): trapped_halls' promoted
+## `snare_nest_slot` fights in the NEW `trapped_halls_snare` arena, solo
+## (the FIGHT route is paid BEFORE the party forms at dungeon_approach).
+## Gear-aware `t4_spellsword11_party` build (the SAME T4 reference
+## PARTY_CELLS' own vault cell uses). ROSTER derivation (8d C1 review,
+## FIGHT-route-cost ruling -- fix by roster only, no stat changes to any
+## shipped combatant): the original 2-ward roster measured 0.99/2r
+## (illusory cost); candidates measured at this exact build/arena:
+##   wards2+ruin_guardian 0.38/3r (too hard), wards3 0.96/3r (over band),
+##   wards2+rift_vermin_a 0.88/3r (in band), wards2+raskghar_scout 0.93/2r
+##   (median under floor), wards2+rift_vermin_c 0.69/3r (PICKED -- mid-band
+##   with margin both directions, and the ember-touched caster adds a
+##   ranged threat to an otherwise pure melee rush).
+## rift_vermin_c ('Ember-Touched Vermin', combatants.json) is
+## canon-plausible here: Magical Rats are drawn to leaking ambient magic
+## (that combatant's own wiki cite), and an ancient sealed dungeon full of
+## wardwork is exactly that draw -- vermin nesting behind a snare matches
+## the entity's own 'something in the dark past it' flavor. GATED to the
+## generic 0.55-0.95 band + 3-12 median (a skirmish contract, not a boss
+## capstone). TRAP fixed en route: trapped_halls_snare originally authored
+## only 2 enemy_spawns -- the 3rd enemy index-overflowed WICombat._init
+## (the SAME spawn-ceiling trap the vault's own C2 review named,
+## enemy-side); the arena now carries 4.
+const DUNGEON_CELLS := [
+	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["ruin_ward_a", "ruin_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 
@@ -979,7 +1014,14 @@ func _init() -> void:
 			var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
 			var cfgs: Array = [pc]
 			for ally_id: String in ["ceria", "yvlon", "ksmvr"]:
-				cfgs.append((by_id[ally_id] as Dictionary).duplicate(true))
+				var ally_cfg: Dictionary = (by_id[ally_id] as Dictionary).duplicate(true)
+				# Optional per-cell ally_hp_mods (the guided-plates cell):
+				# folds hp_mod onto the named ally's cfg, the exact
+				# start_combat ally_hp_penalty arm this file mirrors.
+				var hp_mods: Dictionary = cell.get("ally_hp_mods", {})
+				if hp_mods.has(ally_id):
+					ally_cfg[WIKeys.HP_MOD] = int(ally_cfg.get(WIKeys.HP_MOD, 0)) + int(hp_mods[ally_id])
+				cfgs.append(ally_cfg)
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
 			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
@@ -1030,10 +1072,57 @@ func _init() -> void:
 				any_failed = true
 				printerr("FAIL [party / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
+	## The dungeon axis. Same gear-aware _build_pc path as RIVERFARM_CELLS/
+	## INVRISIL_CELLS/PARTY_CELLS above -- every DUNGEON_CELLS row is solo
+	## (the FIGHT route's own skirmish, no ally), so this loop skips the
+	## has-ally branch those loops carry.
+	for cell: Dictionary in DUNGEON_CELLS:
+		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
+		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
+		var wins := 0
+		var rounds: Array[int] = []
+		for seed_v in range(1, RUNS_PER_CELL + 1):
+			var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
+			var cfgs: Array = [pc]
+			for enemy_id: String in cell["enemies"]:
+				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
+			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			combat.begin()
+			var guard := 0
+			while not combat.finished and guard < 2000:
+				guard += 1
+				WICombatAI.take_turn(combat)
+			assert(combat.finished, "dungeon %s fight %d did not terminate" % [cell["name"], seed_v])
+			if combat.outcome["victory"]:
+				wins += 1
+			rounds.append(int(combat.outcome["rounds"]))
+
+		rounds.sort()
+		var win_rate := float(wins) / float(RUNS_PER_CELL)
+		var median: int = rounds[RUNS_PER_CELL / 2]
+		var hist := {}
+		for r: int in rounds:
+			hist[r] = int(hist.get(r, 0)) + 1
+		var gated := cell.has("win_lo")
+		print("[dungeon / %s] arena=%s build=%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+			cell["name"], String(cell["arena"]), String(cell["build"]), "" if gated else " (measured)",
+			win_rate, median, rounds[0], rounds[-1],
+		])
+		print("  rounds histogram: ", hist)
+		if gated:
+			var lo := float(cell["win_lo"])
+			var hi := float(cell["win_hi"])
+			if win_rate < lo or win_rate > hi:
+				any_failed = true
+				printerr("FAIL [dungeon / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
+				any_failed = true
+				printerr("FAIL [dungeon / %s]: median rounds %d outside 3-12" % [cell["name"], median])
+
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:
 		# Asserts are stripped in release templates; keep the exit code honest there too.
 		quit(1)
 		return
-	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size(), RUNS_PER_CELL])
+	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size(), RUNS_PER_CELL])
 	quit(0)
