@@ -16,7 +16,7 @@
     },
     {
      "_comment": "Standing recap while waiting on Grimalkin's own beat (issue #74 precedent) -- non-banking, goto only.",
-     "text": "Any word from the gymnasium?",
+     "text": "Any word from the exam floor?",
      "requires": { "accomplishment": { "forge_permit_filed": 1 } },
      "hide_when": { "accomplishment": { "grimalkin_examination_passed": 1 } },
      "goto": "permit_status"
@@ -33,7 +33,7 @@
   },
   "permit_intro": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Five gold, filed same-day, no exceptions and no discounts -- that's the posted price. Grimalkin reads your fitness after, at the gymnasium; I only handle paper.",
+   "text": "Five gold, filed same-day, no exceptions and no discounts -- that's the posted price. Grimalkin reads your fitness after, at the exam floor on the far end of this office; I only handle paper.",
    "options": [
     {
      "_comment": "Beat 1 real completion -- banks forge_permit_filed. Plain gold gate, posted-prices register (no haggling, docs/design/city-identity-bible.md).",
@@ -47,14 +47,14 @@
   },
   "permit_filed_reaction": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Filed. Grimalkin's at the gymnasium -- go see him before you come back asking about a stamp.",
+   "text": "Filed. Grimalkin's at the exam floor, far end of this office -- see him before you come back asking about a stamp.",
    "options": [
     { "text": "Understood.", "end": true }
    ]
   },
   "permit_status": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Filed and pending. Grimalkin reads the fitness, not me -- find him at the gymnasium. I stamp once he signs off, not before.",
+   "text": "Filed and pending. Grimalkin reads the fitness, not me -- he's at the exam floor, far end of this office. I stamp once he signs off, not before.",
    "options": [
     { "text": "Understood.", "end": true }
    ]
