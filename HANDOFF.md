@@ -6,7 +6,13 @@
 wi-usage-guard skill. Check before every dispatch. QUIESCE = commit WIP
 seams + HANDOFF update + wait-for-reset (session) or hard stop (weekly).
 
-## 🔄 WAVE 3 IN FLIGHT (2026-07-12) — 4 lanes dispatched
+## 🔄 WAVE 3 IN FLIGHT (2026-07-12) — rolling status
+
+**MERGED to main (LOCAL, unpushed):** lane-73 (#73 dynamism tool + skill/VISUAL-LOG fold-in), lane-65 (#65 witch-stone; FIX-FIRST applied, re-review MERGE), lane-77 (#77 settings+accessibility; review MERGE, 2 LOW notes → CHOICES 16). Targeted composed re-gates green after each merge (main-tree import passes run for the new-.gd merges). Push closes #65 #73 #77.
+**8dC3 reviewed MERGE + F1 design ruling applied as a fix wave (RUNNING):** windup mechanism to spec, RNG byte-identity REPRODUCED by reviewer (72/73 cells identical), PC-death routes through slam. F1: caster now excluded from windup resolution + re-tune (CHOICES 15). F3 overlay-clear taken; F2 (player-cast windup live-arm gap) = trap comment, latent/unreachable.
+**RUNNING implementers:** lane-64 (skill-gates audit — dispatched after 65 landed).
+**MERGE-TIME WATCH (8dc3 × 77 composition):** both touched board_renderer/combat_screen — at 8dc3's merge verify the windup caster flash's relationship to 77's reduce-motion gate matches CHOICES 16a (turn-cue pulses stay ungated), and re-run test_combat_visuals + test_settings on the composed tree.
+**Usage:** landings only this cycle. ONE full composed gate (all units + full sweep) before the batched push.
 
 - **lane-65 (/tmp/wi-65)**: #65 witch-stone — invrisil_attuned banking moves from the Guild-board letter beat (stays as signpost) to an Eloise-sold anchor stone, post-blight_lifted vendor stock, 15-20g band. QA: portal menu excludes Invrisil pre-purchase / includes post.
 - **lane-8dc3 (/tmp/wi-8dc3)**: 8d C3 — the #82 windup mechanism per the controller sim spec (issue comment = binding), vault arena (>= 4 player spawns — the plan's spawn-ceiling trap), vault_construct slam tuned to a GATED T4-party cell. Encounter may land DORMANT (C1 wires the gate) — disclosed split sanctioned in the brief.
@@ -183,6 +189,8 @@ say the word and any flips.
     (62W lane picks guild vs runners and comments why).
 13. **Wave-3 priority order (2026-07-12): #73 + #77 dispatched ahead of #76/#78-#81/#83** — picked for file-disjointness against the live 65/8dC3 lanes (#83 collides with C3's combat-AI arm, #81 with C3's skeleton_scene edits, #64 with 65's dialogue files; #80 is taste-gated). Audio (#76) deferred as controller-asset-pick-heavy.
 14. **"What the Seal Kept" quest structure (drafted, lands post-C3)**: stipend SPLIT 5g advance / 15g on report (abandon has real cost); three-pillar halls routes each pay a real cost (FIGHT = HP, SKILL = a 3g trap_kit consumable, TALK = Ksmvr enters the vault fight weakened — fallback to a time cost if the hp-penalty isn't expressible on existing machinery); the C3 vault encounter gates on `horns_delve_started` (banked at Olesm's accept), party fields via `horns_party_formed` (Ceria's intro).
+15. **Windup self-hit ruling (8dC3 review F1)**: the construct self-hit on 100% of slams (geometric certainty; 0.86 win rate leaned on ~15-33% self-damage; feed printed "Guardian Construct strikes Guardian Construct"). RULED: windup resolution excludes the CASTER (by actor id, not cell) + re-tune to band; allies in the blast still get hit. Deliberate asymmetry vs player-cast blast_damage (which keeps caster-cell friendly fire as a chosen risk) — documented in the doc comment. Flip = re-tune again.
+16. **#77 taste-queue notes (review LOWs, accepted)**: (a) the active-unit brightness pulse (_highlight_actor) is NOT reduce-motion gated — it doubles as the whose-turn cue; gate it if you disagree. (b) At the 130% max text-scale step the combat readout can ride the parchment fold by ~1 line (bounded cosmetic overflow, crash-free) — inherent to keeping pixel rects unscaled; tighten the max step if it bothers.
 
 ## Commands
 
