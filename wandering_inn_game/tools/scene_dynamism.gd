@@ -164,6 +164,7 @@ const REGION_GROUPS := {
 	"riverfarm_village": "riverfarm", "riverfarm_longhouse": "riverfarm", "witch_hollow": "riverfarm",
 	"invrisil_boulevard": "invrisil", "mercantile_alleys": "invrisil", "brothers_parlor": "invrisil",
 	"dungeon_approach": "dungeon", "trapped_halls": "dungeon",
+	"pallass_market": "pallass", "pallass_forge": "pallass",
 }
 
 ## moods.json keys the map name verbatim except this one mismatch.

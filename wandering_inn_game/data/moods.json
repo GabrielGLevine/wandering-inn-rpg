@@ -348,6 +348,44 @@
     0.15
    ],
    "vignette": 0.56
+  },
+  "pallass_market": {
+   "_comment": "8e Phase B (issue #16): 'cool engineered daylight' (direction.md's mood-card DRAFT, values carried verbatim; the draft's per-phase vignette values were a schema slip -- this file's real shape is ONE vignette float per map, not per-phase, so 0.34 is chosen as the mid-point of the draft's 0.30/0.35/0.38 spread). Day/dusk/night graded like street/inn (real daylight reaches the plaza), just cooler and flatter -- slate stays cold at every phase. Crystal lamps (steady white #E9EEF2 PointLight2D per-entity) carry the after-dark read; NEVER amber (the standing quarantine check every future screenshot of this map must pass).",
+   "day": [
+    0.92,
+    0.97,
+    1.06
+   ],
+   "dusk": [
+    0.85,
+    0.88,
+    1.02
+   ],
+   "night": [
+    0.62,
+    0.68,
+    0.88
+   ],
+   "vignette": 0.34
+  },
+  "pallass_forge": {
+   "_comment": "8e Phase B (issue #16): TIME-INVARIANT (sewers/inn_upstairs/barracks/dungeon precedent -- a forge hall works day and night, no daylight reaches floor 9 either way). Warm-dark field (direction.md's mood-card DRAFT, values carried verbatim) so the molten seam + forge_station_a's own furnace-glow PointLight2D (#F65510, the map's one flicker source) do the actual lighting -- the mood grade itself never flickers.",
+   "day": [
+    1.02,
+    0.86,
+    0.78
+   ],
+   "dusk": [
+    1.02,
+    0.86,
+    0.78
+   ],
+   "night": [
+    1.02,
+    0.86,
+    0.78
+   ],
+   "vignette": 0.42
   }
  },
  "arena_moods": {

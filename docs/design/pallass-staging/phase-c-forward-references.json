@@ -1,0 +1,65 @@
+{
+  "_purpose": "8e Phase C (issue #16) hand-off doc: the DORMANT-content forward-references this lane's quest/dialogue/portal wiring leaves for Phase B (maps) and the controller to reconcile at merge, per the phase plan's file-ownership split (C owns quests.json/portals.json/data/dialogue/*, B owns skeleton_scene.json new map keys). Mirrors the 8dC3/8dC1 dormant-encounter precedent (HANDOFF.md: 'Vault encounter DORMANT pending C1... disclosed split sanctioned in the brief').",
+
+  "entities_needed": [
+    {
+      "suggested_entity_id": "pallass_market_clerk",
+      "map": "pallass_market",
+      "conversation": "pallass_market_clerk",
+      "sprite": "tier_clerk",
+      "role": "The market-tier arrival checkpoint (Papers for Pallass Stage 3). Should sit at/near the Door's arrival point on pallass_market so a fresh arrival can reach it without crossing any further gate.",
+      "reads": ["pallass_attuned (gate)", "pallass_entry_stamped (produces)"]
+    },
+    {
+      "suggested_entity_id": "pallass_market_local",
+      "map": "pallass_market",
+      "conversation": "pallass_market_local",
+      "sprite": "reuse a tinted pc_drake_m or pc_drake_f (Renn/Ilvo/Yelra walk-on precedent) -- no new art requested, Phase A already closed",
+      "role": "Flavor walk-on carrying the SECOND race-variant line set (item 4 of the brief). No mechanical gates -- pure presence."
+    },
+    {
+      "suggested_entity_id": "pallass_forge_clerk",
+      "map": "pallass_forge",
+      "conversation": "pallass_forge_clerk",
+      "sprite": "tier_clerk",
+      "role": "The forge-tier permit desk (bureaucratic chain beats 1 + 3). REACHABILITY CONSTRAINT: must be placed where it is reachable WITHOUT crossing the elevator gate (the elevator's own door_when reads elevator_pass_stamped, which THIS clerk's own beat 3 produces -- a circular gate if placed past the lift). A ground-level forge-tier office/window reachable from the market side, or from the pallass_forge map's own pre-lift landing, satisfies this.",
+      "reads": ["pallass_entry_stamped (gate)", "forge_permit_filed (produces)", "grimalkin_examination_passed (gate)", "elevator_pass_stamped (produces)"]
+    },
+    {
+      "suggested_entity_id": "grimalkin",
+      "map": "pallass_forge",
+      "conversation": "pallass_grimalkin",
+      "sprite": "grimalkin",
+      "role": "The examiner beat (bureaucratic chain beat 2), at his gymnasium/academy. Ruling 6 also calls for 'a talk_pool presence' -- this lane wires the conversation graph only; whether the entity ALSO carries a plain (non-gated) talk_pool array for casual chatter outside the exam flow is B/D's own entity-authoring call (talk_pool copy is a content/voice task, not sim wiring).",
+      "reads": ["forge_permit_filed (gate)", "grimalkin_examination_passed (produces)"]
+    }
+  ],
+
+  "elevator_door_pair": {
+    "_comment": "Controller ruling 1: 'The elevator is a door pair whose door_when requires elevator_pass_stamped -- banked at the forge-tier clerk after sponsorship + fee. NO door-side fee machinery.' This lane produces elevator_pass_stamped (pallass_forge_clerk.json's collect_stamp node); B/D wire the actual door pair.",
+    "suggested_shape": {
+      "door_when": {
+        "requires": { "elevator_pass_stamped": 1 }
+      }
+    },
+    "note": "Standard door_when accomplishment-gate shape, identical to every other shipped gated door (e.g. ruin_door, guild_door) -- no new sim needed on the door side."
+  },
+
+  "portals_row_reconciliation": {
+    "file": "data/portals.json",
+    "row_id": "pallass",
+    "current_forward_reference": { "map": "pallass_market", "cell": [10, 10] },
+    "action_needed": "Replace [10, 10] with the real walkable arrival cell on B's finished pallass_market map, per the DP3 discipline (off every blocked/decor/entity cell, blast-radius checked, positioned near pallass_market_clerk above)."
+  },
+
+  "parked_completed_postings_gate": {
+    "_comment": "Controller ruling 2 offered TWO real-cost paths for Papers for Pallass Stage 1 ('sponsor'): '10g filing fee OR a completed-postings record gate'. Only the 10g fee path is LIVE (data/dialogue/selys_delivery.json's pallass_sponsor node). The alternate is PARKED, not implemented -- STOP-trigger condition per the phase brief.",
+    "why_parked": "Traced every existing 'completed a posting' producer in the sim: WIGame.turn_in_bounty banks completed_bounty_<id>, WIGame.turn_in_delivery banks completed_delivery_<id> -- both PER-ID counters, keyed to one specific bounty/delivery. No aggregate 'total postings completed' counter exists anywhere (accomplishment_count() only reads exact-match keys, no wildcard/prefix summing helper). WIQuests.QUEST_COMPLETED is an event only, never banked as an accomplishment counter either.",
+    "why_not_added_here": "Adding an aggregate counter (e.g. incrementing a new postings_completed key inside turn_in_bounty/turn_in_delivery) would be a SECOND new-sim addition beyond the plan's own ONE sanctioned addition (the race-variant key, ruling 3). The phase brief's own STOP trigger names this exact scenario: 'the completed-postings counter doesn't exist and would need new tracking.'",
+    "options_for_controller": [
+      "Sanction the small aggregate-counter addition (2 call sites in wi_game.gd: turn_in_bounty/turn_in_delivery each gain one extra record_accomplishment('postings_completed') line) as a follow-up task, then wire the alternate sponsorship path against it.",
+      "Retire the alternate path from the plan -- ship Papers for Pallass Stage 1 as the single 10g-fee path (already live), since EVERY quest-path-cost rule (wi-adding-dialogue-and-quests SKILL.md) only requires ONE real cost per stage, not two alternate ones.",
+      "Repurpose an EXISTING single counter as a narrower proxy (e.g. gate on one specific high-visibility bounty's completed_bounty_<id>) -- rejected here as a worse fit than either option above (doesn't represent 'a record of postings' generically, and privileges one arbitrary posting)."
+    ]
+  }
+}

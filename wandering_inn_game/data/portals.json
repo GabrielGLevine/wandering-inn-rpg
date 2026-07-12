@@ -46,6 +46,18 @@
    "requires_accomplishment": "invrisil_attuned",
    "arrival_toast": "The light turns pale and cool, and the noise of a much bigger city rushes in to fill the silence. Invrisil, same as the letter promised.",
    "_comment": "The anchor-stone-per-region idiom's newest instance (zero code). invrisil_attuned banks from Eloise's stone purchase (riverfarm_witch.json's 'shop' node, post-blight_lifted) -- the Guild-board letter (guild_board's own board_rumors list in skeleton_scene.json) stays a signpost only, pointing at Riverfarm/Eloise rather than banking this flag itself. Arrival cell (4,8) sits one cell east of invrisil_anchor_stone (3,8) at the boulevard's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
+  },
+  {
+   "id": "pallass",
+   "display_name": "Pallass — the Market Tier",
+   "map": "pallass_market",
+   "cell": [
+    4,
+    7
+   ],
+   "requires_accomplishment": "pallass_attuned",
+   "arrival_toast": "The light sharpens and the air turns to hot metal and stone dust. Pallass, tier on tier, rising past where you can see the top.",
+   "_comment": "8e Phase C ('Papers for Pallass' Stage 2, controller ruling 2, the GH#65 late-attuning precedent -- invrisil's own row above is the template). pallass_attuned banks from Krshia's attunement-stone purchase (data/dialogue/krshia_crate.json's 'charms' node, gated on pallass_sponsored), the SAME late-attuning shape as invrisil_attuned. requires_accomplishment gates this row structurally inert (WIPortals.attuned_destinations excludes it) until pallass_attuned banks -- no canonical QA run selects this row today (the quest chain's own future canonical will). ARRIVAL CELL RECONCILED (B lane, replacing C's forward-referenced (10,10) placeholder -- which sat on the map's blocked void row): (4,7) is the open cell directly south of `pallass_market_arrival_anchor` (4,6), off every blocked/decor/entity cell, zero trigger_radius encounters on the map (blast-radius trivially clear), with the arrival checkpoint clerk (7,5) three cells east -- the DP3 discipline."
   }
  ]
 }

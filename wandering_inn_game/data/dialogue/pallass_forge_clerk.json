@@ -1,0 +1,84 @@
+{
+ "_comment": "8e Phase C, the bureaucratic chain (issue #16, controller ruling 1/6) -- the forge-tier permit clerk, beats 'apply' and 'stamped' of quests.json's forge_tier_permit. DORMANT: no scene entity carries `conversation: \"pallass_forge_clerk\"` yet -- Phase B's own parallel worktree lane owns pallass_forge's actual map/entity placement; this clerk's OWN reachability constraint (must be reachable from the market tier, pre-elevator -- the elevator door pair's door_when gates on THIS quest's own completion, so the clerk who starts the chain can't sit behind the very gate the chain unlocks) is forward-referenced for B/D's reconciliation, see docs/design/pallass-staging/phase-c-forward-references.json. Sprite (once wired): `tier_clerk` (8e Phase A rig, same 'one rig reused at every desk' civic-uniformity tell as pallass_market_clerk -- a DIFFERENT desk, same actor convention). Copy below is STRUCTURALLY COMPLETE PLACEHOLDER -- D-phase replaces with clerk voice-pass copy before merge; gates/costs are real, not draft.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "State your business and your sponsor, or stand aside for the next in line.",
+   "options": [
+    {
+     "_comment": "Quest-start (forge_tier_permit) -- HIDDEN until pallass_entry_stamped (Papers for Pallass Stage 3, real arrival in Pallass) so this chain can't even be asked about before the player has actually stepped through. forge_tier_permit_asked is a non-beat signpost (heard_about_cisterns precedent) -- beat 1's own producer is permit_intro's 'File it.' option below, kept separate per the quest-start-is-never-a-beat convention.",
+     "text": "I need clearance for the forge tier.",
+     "requires": { "accomplishment": { "pallass_entry_stamped": 1 } },
+     "hide_when": { "accomplishment": { "forge_permit_filed": 1 } },
+     "effects": [ { "quest": "forge_tier_permit" }, { "accomplishment": "forge_tier_permit_asked" } ],
+     "goto": "permit_intro"
+    },
+    {
+     "_comment": "Standing recap while waiting on Grimalkin's own beat (issue #74 precedent) -- non-banking, goto only.",
+     "text": "Any word from the gymnasium?",
+     "requires": { "accomplishment": { "forge_permit_filed": 1 } },
+     "hide_when": { "accomplishment": { "grimalkin_examination_passed": 1 } },
+     "goto": "permit_status"
+    },
+    {
+     "_comment": "Beat 3 entry, gated on Grimalkin's own examiner beat (grimalkin_examination_passed, data/dialogue/pallass_grimalkin.json).",
+     "text": "The exam's done. About that stamp.",
+     "requires": { "accomplishment": { "grimalkin_examination_passed": 1 } },
+     "hide_when": { "accomplishment": { "elevator_pass_stamped": 1 } },
+     "goto": "collect_stamp"
+    },
+    { "text": "Not now.", "end": true }
+   ]
+  },
+  "permit_intro": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "Five gold, filed same-day, no exceptions and no discounts -- that's the posted price. Grimalkin reads your fitness after, at the gymnasium; I only handle paper.",
+   "options": [
+    {
+     "_comment": "Beat 1 real completion -- banks forge_permit_filed. Plain gold gate, posted-prices register (no haggling, docs/design/city-identity-bible.md).",
+     "text": "File it. (5 gold)",
+     "requires": { "gold": 5 },
+     "effects": [ { "gold": -5 }, { "accomplishment": "forge_permit_filed" } ],
+     "goto": "permit_filed_reaction"
+    },
+    { "text": "Not now.", "end": true }
+   ]
+  },
+  "permit_filed_reaction": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "Filed. Grimalkin's at the gymnasium -- go see him before you come back asking about a stamp.",
+   "options": [
+    { "text": "Understood.", "end": true }
+   ]
+  },
+  "permit_status": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "Filed and pending. Grimalkin reads the fitness, not me -- find him at the gymnasium. I stamp once he signs off, not before.",
+   "options": [
+    { "text": "Understood.", "end": true }
+   ]
+  },
+  "collect_stamp": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "Grimalkin's mark is on the file. Three gold for the stamp itself -- posted price, same as the filing.",
+   "options": [
+    {
+     "_comment": "Beat 3 real completion -- banks elevator_pass_stamped, THE producer B's elevator door pair's door_when gate waits on (controller ruling 1).",
+     "text": "Collect the stamped pass. (3 gold)",
+     "requires": { "gold": 3 },
+     "effects": [ { "gold": -3 }, { "accomplishment": "elevator_pass_stamped" } ],
+     "goto": "stamp_reaction"
+    },
+    { "text": "Not yet.", "end": true }
+   ]
+  },
+  "stamp_reaction": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "Stamped. The lift answers to it now -- don't lose the paper, I don't file duplicates.",
+   "options": [
+    { "text": "My thanks.", "end": true }
+   ]
+  }
+ }
+}

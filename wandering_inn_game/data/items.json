@@ -610,6 +610,23 @@
 			"lore": "Eloise's own stock, sold to those bound for the city rather than the hearth. It doesn't point the way so much as remember it. Carried, never worn or sold onward."
 		},
 		{
+			"_comment": "8e Phase C 'Papers for Pallass' Stage 2 (controller ruling 2, the GH#65 late-attuning precedent): invrisil_attunement_stone's exact buy-contract shape -- gated on pallass_sponsored (Stage 1, Selys's sponsorship fee) at Krshia's stall (data/dialogue/krshia_crate.json's 'charms' node), banking pallass_attuned alongside the item grant. unsellable:true for the same reason as invrisil_attunement_stone: a real price but the lore below calls it a keepsake.",
+			"id": "pallass_attunement_stone",
+			"name": "Pallass Attunement Stone",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 18,
+			"unsellable": true,
+			"description": "A dense grey-black stone, heavier than its size, faintly warm at the core the way a forge stays warm long after the fire's banked.",
+			"lore": "Krshia's own stock, sold to those bound for the machine city rather than the hearth. It doesn't point the way so much as remember it. Carried, never worn or sold onward."
+		},
+		{
 			"_comment": "8d C1 (issue #14) 'What the Seal Kept', the SKILL route's real cost: consumed via a dialogue-side `remove_item` on the dart_slit_a disarm (trapped_halls), the hungry-patron hot_meal precedent (issue #59) applied to a field prop's `on_skill_use` instead of a conversation option -- same remove_item() seam, same possession-gate shape (a plain requires:{item:...} leg). Stocked at the peddler's stall pre-quest (peddler_stall.json) for 3g, the cheapest priced tool in the catalog on purpose (a coin cost, not a wall).",
 			"id": "trap_kit",
 			"name": "Trap Kit",

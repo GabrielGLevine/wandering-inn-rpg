@@ -1492,7 +1492,13 @@ func _build_dialogue_ctx() -> Dictionary:
 	# WIDialogue._meets's `item` gate checks possession against THIS key,
 	# never against `items` (a catalog membership check would be
 	# meaningless -- every item is always "in" the catalog).
-	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "inventory": inventory.duplicate(), "board_accepted": accepted_bounty_id != "", "delivery_accepted": accepted_delivery_id != "", "entity_first_use": entity_first_use.duplicate(true)}
+	# `pc_race` is the SEVENTH sanctioned ctx extension (8e Phase C,
+	# issue #16) -- read-only COSMETIC identity (set once at char-creation,
+	# never mutated after), not progress. Powers WIDialogue._meets's `race`
+	# gate, which lets a text_variants entry render differently per PC race
+	# (the Pallass "Human friction / Drake assumed-local" register) without
+	# any new mechanism beyond the existing text_variants->'_meets' path.
+	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "inventory": inventory.duplicate(), "board_accepted": accepted_bounty_id != "", "delivery_accepted": accepted_delivery_id != "", "entity_first_use": entity_first_use.duplicate(true), "pc_race": pc_race}
 
 
 ## Starts a conversation graph if no other modal sim is active.

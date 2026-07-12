@@ -3825,5 +3825,157 @@
    0.7286
   ],
   "shadow": true
+ },
+ "anchor_waystone_slate": {
+  "_comment": "8e Phase B (issue #16): Pallass's own waystone -- a MODEST PIL RECOLOR of the owned `anchor_waystone` sheet (hue 55-170 mossy-green band rotated to the ratified slate 213deg at 0.55x saturation, luminance preserved; greys + the blue opening-glow pass through untouched) so the arrival plinth reads as Pallass slate, not Liscor moss (controller windowed finding). Same 64x80 geometry as the base sheet, so anchor/scale carry verbatim.",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.95
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/anchor_waystone_slate/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     80
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "great_lift": {
+  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab landmark, the Grand Lift -- bronze-riveted cage tower spanning both Pallass tier maps at the SAME x=22 column (skeleton_scene.json's grand_lift_market/grand_lift_forge). Native 64x96, anchor MEASURED (tile-family-verdict.md's PIL alpha-bbox pass, bbox (8,9,56,87) -- an 8px margin below the cage, not full-bleed). render_scale 1.0 (native size -- the tallest landmark this task ships, 6 cells, deliberately rises from the floor band up into the wall band above it).",
+  "render_scale": 1.0,
+  "shadow": true,
+  "anchor": [
+   0.5,
+   0.9062
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/great_lift/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     96
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "crystal_lamp": {
+  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab lamp-row signature -- steady white PointLight2D per-instance (#E9EEF2), NEVER flicker (bible: 'nothing flickers unless it's a forge'; the single sanctioned exception is forge_station_a's own furnace-glow light). Native 32x64, anchor MEASURED (bbox (9,1,23,62), a 2px margin below the post base). render_scale 0.5.",
+  "render_scale": 0.5,
+  "shadow": true,
+  "anchor": [
+   0.5,
+   0.9688
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/crystal_lamp/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "steam_vent": {
+  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab ambience anchor -- a bronze grate, machine-noise implied by dressing + observe copy (no live particle emitter this pass -- 'steam' isn't a shipped WIAmbience preset; adding one is out of this lane's charter, direction.md's own 'baked puff is fine at mockup' fallback). Native 32x48, anchor MEASURED (bbox (0,0,32,46), 2px margin). render_scale 0.5.",
+  "render_scale": 0.5,
+  "shadow": false,
+  "anchor": [
+   0.5,
+   0.9583
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/steam_vent/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "price_board": {
+  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab landmark -- the posted-prices tell (the anti-Invrisil: 'prices are POSTED', no haggling). Native 48x48, anchor MEASURED (bbox (11,3,37,45), 3px margin below the stand). render_scale 0.5.",
+  "render_scale": 0.5,
+  "shadow": true,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/price_board/Idle-Sheet.png",
+    "frame_size": [
+     48,
+     48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "forge_station": {
+  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab landmark -- the forge tier's public interactable ([Tactician]/[Engineer] observe content). Native 48x64, anchor MEASURED (bbox (1,0,46,62), near-centered x, 2px margin). render_scale 0.6.",
+  "render_scale": 0.6,
+  "shadow": true,
+  "anchor": [
+   0.4896,
+   0.9688
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/forge_station/Idle-Sheet.png",
+    "frame_size": [
+     48,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "market_stall_pallass": {
+  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab landmark -- the uniform civic market stall (deliberately placed IDENTICAL in rows, same copy across every instance -- uniformity IS the QUALIFY tell; never reuse Liscor's stall sprites here or vice versa). Native 64x48, anchor MEASURED (bbox (5,1,54,46), slight x offset, 2px margin). render_scale 0.75.",
+  "render_scale": 0.75,
+  "shadow": true,
+  "anchor": [
+   0.4609,
+   0.9583
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_pallass/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "tier_wall": {
+  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab facade strip -- the rising-wall/parapet bronze-pilaster texture, tiled as non-blocking DECOR over the real blocking wall-band segment (skeleton_scene.json's walls.segments already blocks those cells; this is visual dressing only, per the 'decor never carries its own blocking' contract). Native 128x48, default anchor kept (a facade band tiled as a strip, not a footed object -- tile-family-verdict.md's own note). render_scale 0.5 (the mockup-precedent 24px strip, fits inside the 2-row wall band).",
+  "render_scale": 0.5,
+  "shadow": false,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/tier_wall/Idle-Sheet.png",
+    "frame_size": [
+     128,
+     48
+    ],
+    "fps": 1
+   }
+  }
  }
 }

@@ -138,6 +138,28 @@
 				{ "id": "search", "description": "Track down Renn's backup warhammer somewhere in the Guild hall -- he swears he left it by the back wall.", "complete_when": { "found_the_warhammer": 1 } },
 				{ "id": "report", "description": "Return the warhammer to Renn, at the Guild.", "complete_when": { "returned_the_warhammer": 1 } }
 			]
+		},
+		{
+			"_comment": "8e Phase C 'Papers for Pallass' (issue #16, controller ruling 2: arrival is a quest, never casual entry). Three REAL stages. 'sponsor' (Selys files the sponsorship at the Guild, data/dialogue/selys_delivery.json's new pallass_sponsor node, HIDDEN until invrisil_attuned -- a light chronological gate matching the region-tier ordering -- 10g filing fee) banks pallass_sponsored. LIVE path only: the plan's own alternate (a completed-postings record gate) is PARKED, not implemented -- no aggregate 'completed postings' counter exists anywhere in the sim today (only per-id completed_bounty_<id>/completed_delivery_<id> counters, WIGame.turn_in_bounty/turn_in_delivery), and inventing one would be a SECOND new-sim addition beyond the plan's ONE sanctioned addition (the race-variant key) -- flagged for controller ruling, see docs/design/pallass-staging/phase-c-forward-references.json. 'attune' (Krshia's attunement-stone purchase at her market stall, data/dialogue/krshia_crate.json's 'charms' node, gated on pallass_sponsored, 18g -- the GH#65 late-attuning precedent, invrisil_attunement_stone's own buy-contract shape verbatim) banks pallass_attuned, which also gates the new Pallass row in data/portals.json. 'arrive' (the market-tier clerk's stamp, data/dialogue/pallass_market_clerk.json -- DORMANT, no entity wired yet; Phase B's own parallel worktree lane owns pallass_market's actual map/entity placement, forward-referenced here per the 8dC3/8dC1 dormant-content precedent, see HANDOFF.md) banks pallass_entry_stamped, 2g fee.",
+			"id": "papers_for_pallass",
+			"title": "Papers for Pallass",
+			"region": "Pallass",
+			"beats": [
+				{ "id": "sponsor", "description": "Get Selys to sponsor your Pallass application, at the Guild.", "complete_when": { "pallass_sponsored": 1 } },
+				{ "id": "attune", "description": "Buy Krshia's attunement stone at her market stall so the Door can reach Pallass.", "complete_when": { "pallass_attuned": 1 } },
+				{ "id": "arrive", "description": "Present yourself to the stamp clerk once you step through into Pallass.", "complete_when": { "pallass_entry_stamped": 1 } }
+			]
+		},
+		{
+			"_comment": "8e Phase C, the bureaucratic chain (controller ruling 6: Grimalkin's examiner-beat role). Three stages, all DORMANT (no entities wired -- data/dialogue/pallass_forge_clerk.json and pallass_grimalkin.json, both forward-referenced for Phase B's map lane; the 8dC3-style dormant-content split, disclosed here and in docs/design/pallass-staging/phase-c-forward-references.json). 'apply' (pallass_forge_clerk.json's permit_intro node, HIDDEN until pallass_entry_stamped so this chain can't even be asked about before real arrival in Pallass, 5g filing fee) banks forge_permit_filed. 'examined' (pallass_grimalkin.json, gated on forge_permit_filed, 8g fitness-read fee -- PLACEHOLDER copy, D-phase replaces before merge, structure/gates real) banks grimalkin_examination_passed. 'stamped' (pallass_forge_clerk.json's collect_stamp node, 3g stamp fee) banks elevator_pass_stamped -- THE producer B's elevator door pair's door_when gate waits on (controller ruling 1: 'the elevator is a door pair whose door_when requires elevator_pass_stamped'). Every stage prices a real posted fee (Pallass's own no-haggling register, docs/design/city-identity-bible.md) -- 5g/8g/3g, no discounts, no haggling.",
+			"id": "forge_tier_permit",
+			"title": "Clearance for the Forge Tier",
+			"region": "Pallass",
+			"beats": [
+				{ "id": "apply", "description": "File your permit application at the permit office by the Grand Lift, on Pallass's market tier.", "complete_when": { "forge_permit_filed": 1 } },
+				{ "id": "examined", "description": "Pass Grimalkin's fitness examination at the permit office by the Grand Lift.", "complete_when": { "grimalkin_examination_passed": 1 } },
+				{ "id": "stamped", "description": "Return to the forge-tier clerk and collect your stamped elevator pass.", "complete_when": { "elevator_pass_stamped": 1 } }
+			]
 		}
 	]
 }
