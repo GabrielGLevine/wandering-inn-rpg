@@ -289,6 +289,38 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(slot_rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_consolidation_row":
+			# Consolidation-prompt row click: resolves the LIVE
+			# ConsolidationPrompt node's own `row_rect`, same lookup shape as
+			# `click_pause_row` above.
+			var cons_row_n := int(step["row"])
+			var cp := get_tree().root.find_child("ConsolidationPrompt", true, false)
+			if cp == null:
+				_fail("click_consolidation_row: ConsolidationPrompt node not found")
+			else:
+				var cons_rect: Rect2 = cp.call("row_rect", cons_row_n - 1)
+				if cons_rect.size == Vector2.ZERO:
+					_fail("click_consolidation_row: row %d has no rendered rect" % cons_row_n)
+				else:
+					_inject_mouse_click(cons_rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_char_creation_card":
+			# Character-creation sprite-grid card click: resolves the LIVE
+			# CharCreation node's own `card_rect`, same lookup shape as
+			# `click_pause_row` above.
+			var card_n := int(step["card"])
+			var cc := get_tree().root.find_child("CharCreation", true, false)
+			if cc == null:
+				_fail("click_char_creation_card: CharCreation node not found")
+			else:
+				var card_rect: Rect2 = cc.call("card_rect", card_n - 1)
+				if card_rect.size == Vector2.ZERO:
+					_fail("click_char_creation_card: card %d has no rendered rect" % card_n)
+				else:
+					_inject_mouse_click(card_rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"click_dialogue_option":
 			# Dialogue-option row click (issue #84): resolves the LIVE
 			# DialoguePanel node's own `option_rect`, same lookup shape as
