@@ -51,3 +51,13 @@ combat wave → the rest of gap-2.
 ## Trader directive (2026-07-12, user): #98 [Trader]=>[Merchant] economy
 class line — joins the #93 class-foundation design pass (one pass);
 its sell-verb + discount math coordinate with #92 economy depth.
+
+## Full-game architecture track (2026-07-12, user-approved) — spec:
+docs/superpowers/specs/2026-07-12-full-game-architecture.md
+#99 shipped-ids freeze (S — must exist before the first public demo save),
+#100 skeleton_scene split (M — kills the standing merge hotspot),
+#101 QA tiering (M — before the sweep crosses ~20 min).
+SLOT: behind the class-foundation queue (#96 → #93+#95+#98), interleaved
+where surfaces are free — #100 wants a content-lane-quiet window; #99/#101
+are lane-independent. TWO USER DECISIONS OPEN (spec §3, no defaults
+taken): localization posture; the demo boundary.
