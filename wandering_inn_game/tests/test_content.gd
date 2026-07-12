@@ -507,15 +507,20 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# is itself a vanishing gate, so there is no "greyed" state to preserve.
 		# adds a THIRD sanctioned compound -- {accomplishment, class}
 		# together (a persuade-fork resolution that is BOTH progress-gated on
-		# the quest having been opened AND locked behind a class, e.g.
-		# watch_crate's "asked_about_crate" + "diplomat" or krshia_crate's
-		# "heard_wrong_order" + "diplomat"). Same mechanism as the gold
-		# compound: _meets_progress() reads ONLY the accomplishment leg for
+		# the quest having been opened AND locked behind a class -- the
+		# goblin_parley-style in-fiction class-gate exception, SKILL.md's
+		# "unrelated class gate reads as arbitrary" carve-out, composed with a
+		# stage gate). GH#64 re-gated its 3 prior live examples (watch_crate's
+		# "asked_about_crate"+"diplomat", krshia_crate's "heard_wrong_order"+
+		# "diplomat", invrisil_fixer's "returned_cups_debt"+"diplomat") to the
+		# FIFTH compound below -- this shape currently has no live user, kept
+		# sanctioned for a future genuine class-only exception (no shipped
+		# Skill fitting the social intent), same rationale as goblin_parley's
+		# single-key class survivor. Same mechanism as the gold compound:
+		# _meets_progress() reads ONLY the accomplishment leg for
 		# hide-until-met visibility, so the option stays fully hidden before
 		# the quest stage, then shows VISIBLE-LOCKED (never vanished) once the
-		# stage is reached but the class isn't held -- the witch-precedent
-		# idiom, extended to options that also need a stage gate (the witch's
-		# own mediate option needed no stage gate, so it never needed this).
+		# stage is reached but the class isn't held.
 		# Issue #59 adds a FOURTH sanctioned compound --
 		# {once_per_waking, item} together (the hungry patron's Serve option,
 		# patron_serving.json): possession-gated AND per-waking-gated in the
@@ -528,6 +533,17 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# same as gold's precedent) -- so a fresh dish cooked AFTER the
 		# option's already retired this waking still can't bring it back;
 		# only sleep does.
+		# GH#64 adds a FIFTH sanctioned compound -- {accomplishment, skill}
+		# together, the skill-gate twin of the THIRD compound above (a
+		# persuade-fork resolution progress-gated on the quest stage AND
+		# locked behind a Skill instead of a class -- watch_crate's
+		# "asked_about_crate"+"charming_smile", krshia_crate's
+		# "heard_wrong_order"+"charming_smile", invrisil_fixer's
+		# "returned_cups_debt"+"charming_smile"). Same mechanism: skill is
+		# not in _progress_gated, so _meets_progress() reads ONLY the
+		# accomplishment leg for hide-until-met visibility -- fully hidden
+		# before the stage, VISIBLE-LOCKED once the stage is reached but the
+		# Skill isn't known.
 		# Every OTHER combination (skill+class, class+gold, gold+once_per_waking,
 		# gold+item, three-or-more keys, etc.) is still rejected -- these are
 		# narrow, disclosed carve-outs, not a general compound-gate license.
@@ -535,7 +551,8 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		var sanctioned_stage_once := requires.has("accomplishment") and requires.has("once_per_waking")
 		var sanctioned_stage_class := requires.has("accomplishment") and requires.has("class")
 		var sanctioned_once_item := requires.has("once_per_waking") and requires.has("item")
-		assert(sanctioned_gold_accomplishment or sanctioned_stage_once or sanctioned_stage_class or sanctioned_once_item, label + " the only sanctioned compound requires are {gold, accomplishment}, {accomplishment, once_per_waking}, {accomplishment, class}, and {once_per_waking, item}")
+		var sanctioned_stage_skill := requires.has("accomplishment") and requires.has("skill")
+		assert(sanctioned_gold_accomplishment or sanctioned_stage_once or sanctioned_stage_class or sanctioned_once_item or sanctioned_stage_skill, label + " the only sanctioned compound requires are {gold, accomplishment}, {accomplishment, once_per_waking}, {accomplishment, class}, {once_per_waking, item}, and {accomplishment, skill}")
 		return
 	assert(gate_keys == 1, label + " requires must use exactly one gate type")
 

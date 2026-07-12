@@ -14,11 +14,11 @@
   { "action": "assert_state", "path": "player_cell", "equals": [29, 4] },
   { "action": "assert_state", "path": "gold", "equals": 1 },
 
-  { "_comment": "== (1) BROKE GREY == social_talked already carries {olesm:true}, so this first interact opens the real hub directly. Fixture pins cisterns_reported:1 + chatted_with_olesm:3 (stage 3 met) with every other accomplishment unmet, so the visible list is exactly 7 entries: [0] chess flavor topic [1] [Tactician] weak-point (class-gated, visible-locked regardless of gold) [2] cisterns worry topic [3] I'll leave you to your tally. [4] stage-2 doubt topic [5] stage-3 ambition topic [6] Set the board, Olesm. -- LOCKED (gold:1 < the compound's gold:2 leg) even though its accomplishment leg is fully met.", "action": "press", "name": "interact" },
+  { "_comment": "== (1) BROKE GREY == social_talked already carries {olesm:true}, so this first interact opens the real hub directly. Fixture pins cisterns_reported:1 + chatted_with_olesm:3 (stage 3 met) with every other accomplishment unmet, so the visible list is exactly 7 entries: [0] chess flavor topic [1] [Appraise Foe] weak-point (GH#64: skill-gated, was class-gated Tactician -- visible-locked regardless of gold since the fixture holds neither the class nor the skill yet) [2] cisterns worry topic [3] I'll leave you to your tally. [4] stage-2 doubt topic [5] stage-3 ambition topic [6] Set the board, Olesm. -- LOCKED (gold:1 < the compound's gold:2 leg) even though its accomplishment leg is fully met.", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
   { "_comment": "dialogue_node fires from WIDialogue._enter BEFORE the UI layer's own ui_dialogue_shown confirmation -- the domain-event-then-ui-confirmation order, not the reverse (krshia_stage3_pre's exact ordering for a fresh open whose hub content is under test).", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?", "options": [
    { "text": "That board. You're playing yourself?", "locked": false, "requirement": "" },
-   { "text": "[Tactician] What's the city's real weak point?", "locked": true, "requirement": "requires Tactician 1" },
+   { "text": "[Appraise Foe] What's the city's real weak point?", "locked": true, "requirement": "requires [Appraise Foe]" },
    { "text": "You look worried about something.", "locked": false, "requirement": "" },
    { "text": "I'll leave you to your tally.", "locked": false, "requirement": "" },
    { "text": "You run half this city from that desk. You know that, right?", "locked": false, "requirement": "" },
@@ -51,7 +51,7 @@
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?", "options": [
    { "text": "That board. You're playing yourself?", "locked": false, "requirement": "" },
-   { "text": "[Tactician] What's the city's real weak point?", "locked": true, "requirement": "requires Tactician 1" },
+   { "text": "[Appraise Foe] What's the city's real weak point?", "locked": true, "requirement": "requires [Appraise Foe]" },
    { "text": "You look worried about something.", "locked": false, "requirement": "" },
    { "text": "I'll leave you to your tally.", "locked": false, "requirement": "" },
    { "text": "You run half this city from that desk. You know that, right?", "locked": false, "requirement": "" },
@@ -112,7 +112,7 @@
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?", "options": [
    { "text": "That board. You're playing yourself?", "locked": false, "requirement": "" },
-   { "text": "[Tactician] What's the city's real weak point?", "locked": true, "requirement": "requires Tactician 1" },
+   { "text": "[Appraise Foe] What's the city's real weak point?", "locked": true, "requirement": "requires [Appraise Foe]" },
    { "text": "You look worried about something.", "locked": false, "requirement": "" },
    { "text": "I'll leave you to your tally.", "locked": false, "requirement": "" },
    { "text": "You run half this city from that desk. You know that, right?", "locked": false, "requirement": "" },
@@ -140,11 +140,11 @@
   { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_olesm", "count": 4 } },
   { "action": "screenshot", "name": "03_residue_pool_line" },
 
-  { "_comment": "Second interact this same new waking opens the real hub -- the retired option stays gone (still exactly 6 entries), proving the retirement survives a sleep, not just the rest of the original waking. The [Tactician] weak-point option is now UNLOCKED: the chess win banked chess_with_olesm, and the beat-6 sleep granted the class from it (the class is earned at Olesm's own board).", "action": "press", "name": "interact" },
+  { "_comment": "Second interact this same new waking opens the real hub -- the retired option stays gone (still exactly 6 entries), proving the retirement survives a sleep, not just the rest of the original waking. The [Appraise Foe] weak-point option is now UNLOCKED: the chess win banked chess_with_olesm, and the beat-6 sleep granted the class from it, which grants the skill (the class is earned at Olesm's own board).", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_intro" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "options": [
    { "text": "That board. You're playing yourself?", "locked": false, "requirement": "" },
-   { "text": "[Tactician] What's the city's real weak point?", "locked": false, "requirement": "" },
+   { "text": "[Appraise Foe] What's the city's real weak point?", "locked": false, "requirement": "" },
    { "text": "You look worried about something.", "locked": false, "requirement": "" },
    { "text": "I'll leave you to your tally.", "locked": false, "requirement": "" },
    { "text": "You run half this city from that desk. You know that, right?", "locked": false, "requirement": "" },

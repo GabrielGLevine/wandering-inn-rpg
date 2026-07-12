@@ -1,5 +1,5 @@
 {
- "_comment": "'The Missing Crate' WATCH (talk) path -- NO combat_started anywhere (the ambush is skipped via the street fixture). The old inn->floodplains->goblin_parley-bypass->gate crossing is dead post-onboarding (the ambush is corridor-free/warrior-gated), so this loads the post_tutorial_street FIXTURE (warrior L1, at the street gate cell 1,3, honest post-onboarding state) via title Continue and runs its STREET content directly. Seed via fixture rng_state (overrides --seed). re-pricing: the Watch Sergeant's persuade is now [Diplomat]-gated; this fixture carries no Diplomat (deliberately, so this script proves BOTH the visible-but-locked idiom on the free branch AND the non-Diplomat 2-gold alternate resolving the quest fork without banking persuaded_someone -- the fixture's gold was raised 0->2 to cover it, inert for crate_fight's own combat which shares this fixture). cisterns_talk/wrong_order_talk/invrisil_disagreement_talk/door_chain_talk instead pre-hold [Diplomat] and prove the free branch firing (alongside riverfarm_talk).",
+ "_comment": "'The Missing Crate' WATCH (talk) path -- NO combat_started anywhere (the ambush is skipped via the street fixture). The old inn->floodplains->goblin_parley-bypass->gate crossing is dead post-onboarding (the ambush is corridor-free/warrior-gated), so this loads the post_tutorial_street FIXTURE (warrior L1, at the street gate cell 1,3, honest post-onboarding state) via title Continue and runs its STREET content directly. Seed via fixture rng_state (overrides --seed). re-pricing: the Watch Sergeant's persuade is now [Charming Smile]-gated (GH#64: was class-gated Diplomat); this fixture carries no Diplomat/[Charming Smile] (deliberately, so this script proves BOTH the visible-but-locked idiom on the free branch AND the non-Diplomat 2-gold alternate resolving the quest fork without banking persuaded_someone -- the fixture's gold was raised 0->2 to cover it, inert for crate_fight's own combat which shares this fixture). cisterns_talk/wrong_order_talk/invrisil_disagreement_talk/door_chain_talk instead pre-hold [Diplomat] (so [Charming Smile] is known) and prove the free branch firing (alongside riverfarm_talk).",
  "fixture_save": "post_tutorial_street",
  "starts_at_title": true,
  "steps": [
@@ -165,13 +165,13 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "LOCKED RENDER PROOF (issue #50): dialogue_node fires from WIDialogue._enter BEFORE ui_dialogue_shown (olesm_chess_loop precedent) -- asked_about_crate is banked so all 3 options are visible, but this fixture holds no [Diplomat] -- index 0 renders visible-but-locked (the witch-precedent idiom), index 2 (the 2-gold alternate) is affordable and unlocked at this fixture's gold.",
+   "_comment": "LOCKED RENDER PROOF (issue #50): dialogue_node fires from WIDialogue._enter BEFORE ui_dialogue_shown (olesm_chess_loop precedent) -- asked_about_crate is banked so all 3 options are visible, but this fixture holds no [Charming Smile] (GH#64: was no Diplomat) -- index 0 renders visible-but-locked (the witch-precedent idiom), index 2 (the 2-gold alternate) is affordable and unlocked at this fixture's gold.",
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Watch Sergeant",
     "options": [
-     { "text": "Point them at the scavengers. (Diplomat)", "locked": true, "requirement": "requires Diplomat 1" },
+     { "text": "Point them at the scavengers. [Charming Smile]", "locked": true, "requirement": "requires [Charming Smile]" },
      { "text": "Just passing through.", "locked": false, "requirement": "" },
      { "text": "Grease a few palms instead. (2 gold)", "locked": false, "requirement": "" }
     ]
@@ -184,7 +184,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "The Diplomat option is locked (asked_about_crate is already banked so it's visible, but no class to choose it); move down 2 to the 2-gold alternate.",
+   "_comment": "The [Charming Smile] option is locked (asked_about_crate is already banked so it's visible, but no skill to choose it); move down 2 to the 2-gold alternate.",
    "action": "move",
    "direction": "down",
    "steps": 2

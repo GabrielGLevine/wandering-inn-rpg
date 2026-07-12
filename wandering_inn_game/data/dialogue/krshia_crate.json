@@ -101,15 +101,13 @@
      "goto": "thanks"
     },
     {
-     "_comment": "Q2 TALK path: the smooth-over. Progress-gated on heard_wrong_order (HIDDEN until Lyonette gives the quest), hidden once resolved -- so it never appears to crate_talk/social_loop/gate_district (which never bank heard_wrong_order). Banks the shared resolved_wrong_order (beat 1) + smoothed_with_krshia (Lyonette's TALK report gate) + persuaded_someone (the [Diplomat] identity feed, now a THIRD producer alongside watch_crate + zevara). class-gated (Diplomat) per the ratified persuade-fork rule; the ratified verb-label policy strips (Persuade) in favor of the class hint.",
-     "text": "The inn's order ran short. Extend it, for Lyonette's sake. (Diplomat)",
+     "_comment": "Q2 TALK path: the smooth-over. Progress-gated on heard_wrong_order (HIDDEN until Lyonette gives the quest), hidden once resolved -- so it never appears to crate_talk/social_loop/gate_district (which never bank heard_wrong_order). Banks the shared resolved_wrong_order (beat 1) + smoothed_with_krshia (Lyonette's TALK report gate) + persuaded_someone (the social identity feed, now a THIRD producer alongside watch_crate + zevara). GH#64: skill-gated (was class-gated Diplomat) -- [Charming Smile] fits winning Krshia over better than the bare class; sanctioned {accomplishment, skill} compound.",
+     "text": "The inn's order ran short. Extend it, for Lyonette's sake. [Charming Smile]",
      "requires": {
       "accomplishment": {
        "heard_wrong_order": 1
       },
-      "class": {
-       "diplomat": 1
-      }
+      "skill": "charming_smile"
      },
      "hide_when": {
       "accomplishment": {

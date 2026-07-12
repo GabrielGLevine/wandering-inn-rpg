@@ -1,5 +1,5 @@
 {
-	"_comment": "8b R3 (issue #11) the Witch's real graph. §4 voice key verbatim as the hub's own quest-active variant. TALK path lives here: a [Diplomat]-gated mediation chain (hub -> mediate_pitch -> mediate_argue) banking the shared blight_lifted convergence + persuaded_someone (the existing [Diplomat] feed). The class gate stays visible-locked ALONE (goblin_parley's warrior-intimidate precedent) -- requires/hide_when never combine two gate TYPES in one dict, so the quest-active state rides hide_when (blight_lifted retires it) rather than a second requires key. 'shop' node is the vendor surface (Krshia/peddler_stall buy-option contract verbatim), gated open by blight_lifted. hub keeps the always-ungated exit ('Just tea, then.') per the softlock guard.",
+	"_comment": "8b R3 (issue #11) the Witch's real graph. §4 voice key verbatim as the hub's own quest-active variant. TALK path lives here: a skill-gated mediation chain (hub -> mediate_pitch -> mediate_argue) banking the shared blight_lifted convergence + persuaded_someone (the social identity feed). GH#64: re-gated from class (Diplomat) to [Calming Touch] -- de-escalating 'let's not make this ugly' fits the calming register better than the charm register. The gate stays visible-locked ALONE (goblin_parley's warrior-intimidate precedent) -- requires/hide_when never combine two gate TYPES in one dict, so the quest-active state rides hide_when (blight_lifted retires it) rather than a second requires key. 'shop' node is the vendor surface (Krshia/peddler_stall buy-option contract verbatim), gated open by blight_lifted. hub keeps the always-ungated exit ('Just tea, then.') per the softlock guard.",
 	"start": "hub",
 	"nodes": {
 		"hub": {
@@ -11,7 +11,7 @@
 			],
 			"options": [
 				{ "text": "What's this blight really about?", "goto": "truth" },
-				{ "text": "Let's not make this ugly. I'll broker fair terms. (Diplomat)", "requires": { "class": { "diplomat": 1 } }, "hide_when": { "accomplishment": { "blight_lifted": 1 } }, "goto": "mediate_pitch" },
+				{ "text": "Let's not make this ugly. I'll broker fair terms. [Calming Touch]", "requires": { "skill": "calming_touch" }, "hide_when": { "accomplishment": { "blight_lifted": 1 } }, "goto": "mediate_pitch" },
 				{ "text": "What have you got, for coin instead of favors?", "requires": { "accomplishment": { "blight_lifted": 1 } }, "goto": "shop" },
 				{ "text": "Just tea, then.", "end": true }
 			]
