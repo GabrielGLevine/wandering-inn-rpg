@@ -192,7 +192,10 @@ def refresh():
     except Exception:
         sample = None
     if sample:
-        save_cache(load_cache() + [sample])
+        try:
+            save_cache(load_cache() + [sample])
+        except Exception:
+            pass  # fail-soft: unpersisted sample still serves this run
     return sample
 
 
@@ -202,18 +205,21 @@ def fake_sample():
     raw = os.environ.get("USAGE_GUARD_FAKE")
     if not raw:
         return None
-    kv = dict(p.split("=", 1) for p in raw.split())
-    t = now_ts()
-    return {
-        "ts": t,
-        "session_pct": int(kv.get("session", 0)),
-        "week_pct": int(kv.get("week", 0)),
-        "fable_pct": int(kv.get("fable", 0)),
-        "session_reset_ts": (t + float(kv["mins_to_reset"]) * 60
-                             if "mins_to_reset" in kv else None),
-        "week_reset_ts": None,
-        "_fake_rate": float(kv["rate"]) if "rate" in kv else None,
-    }
+    try:
+        kv = dict(p.split("=", 1) for p in raw.split())
+        t = now_ts()
+        return {
+            "ts": t,
+            "session_pct": int(kv.get("session", 0)),
+            "week_pct": int(kv.get("week", 0)),
+            "fable_pct": int(kv.get("fable", 0)),
+            "session_reset_ts": (t + float(kv["mins_to_reset"]) * 60
+                                 if "mins_to_reset" in kv else None),
+            "week_reset_ts": None,
+            "_fake_rate": float(kv["rate"]) if "rate" in kv else None,
+        }
+    except Exception:
+        return None
 
 
 def assemble(sample, samples, stale_secs=0):
