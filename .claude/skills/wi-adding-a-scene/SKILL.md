@@ -80,16 +80,24 @@ the scene-assembly docs together.
    "blocked_cells": 55}}` (paired with a `ui_entities_rendered` sprite-count
    check) — the standard render-confirmation idiom to reuse.
 3. Verify any new/moved door's landing cell by hand.
-4. Windowed screenshot, read by you — per `wi-verifying-changes`.
+4. Score the scene: `godot --headless --path wandering_inn_game --script
+   res://tools/scene_dynamism.gd` (issue #73). New scenes target composite
+   >=50; the component breakdown says WHAT to add — low c1 (internal variety)
+   means pull decor from more than one asset-pack family, not more of the
+   same; low c3 (composition) means an off-center focal light/prop + dress
+   the border band; low c2 (distinctiveness) means the biome/sprite picks
+   either read like a different region or share too little language with the
+   region's siblings. <30 prints a loud advisory — near-certain brown box,
+   fix before spending a windowed shot. The score is advisory, NOT a gate,
+   and it is blind to palette clash inside a family (see the report's
+   'What this metric cannot see') — the windowed read stays final authority.
+5. Windowed screenshot, read by you — per `wi-verifying-changes`.
 
-## Editor-driven design iteration (godot-ai MCP)
-For visual layout work — placing/tuning props, judging composition, reading
-the scene live — the godot-ai MCP (run game + screenshot + input probes) is
-sanctioned and often better than blind JSON iteration. Operational loop +
-limits: **wi-godot-mcp**; policy: wi-running-the-machine. Maps are still
-DATA: the deliverable is `skeleton_scene.json`, never a hand-edited `.tscn`;
-and the verification gates + the final windowed-screenshot read remain per
-`wi-verifying-changes`.
+## Editor-driven design iteration
+The godot-ai MCP is RETIRED (2026-07-06, see wi-running-the-machine).
+Visual layout iteration = the dynamism tool for structure + windowed QA
+screenshots read by the controller for taste. Maps are still DATA: the
+deliverable is `skeleton_scene.json`, never a hand-edited `.tscn`.
 
 ## Save-compat forward hazard (M7 final-review lesson)
 A NEW blocking entity (container, prop, NPC) placed on a cell that was

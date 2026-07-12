@@ -1238,3 +1238,7 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   the #63 canon pass (named witch profile first).
 - [Flame Pillar] ships ICONLESS (every flame icon claimed) — needs a
   dedicated blast icon; hotbar degrades to text label gracefully.
+- ruin_surface scores 50.77 on the #73 dynamism metric — BELOW the
+  pre-feedback Brothers' Hideout brown box (54.58). Genuinely
+  under-dressed 5-item exterior; wants a dressing pass (multi-family
+  decor + off-center focal + border band).
