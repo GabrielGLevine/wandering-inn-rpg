@@ -1,0 +1,66 @@
+{
+  "_purpose": "Lane B (R6, class-foundation pass, docs/superpowers/plans/2026-07-12-class-foundation.md) hand-off doc: the forward-reference this lane's 6 new trap placements leave for Lane A's R1 Rogue ladder (find_trap L3 / disarm_trap L5) and the controller to reconcile at merge. Mirrors docs/design/pallass-staging/phase-c-forward-references.json's shape (the 8e precedent).",
+
+  "why_parked": "R1 pins disarm_trap as the GENERALIZED disarm verb every trap-class prop should re-point to, with the existing requires_skill=observe shape staying live as the no-Rogue fallback. On lane-cfB's own tree, data/skills.json has no disarm_trap entry (Lane A owns skills.json/classes.json, serialized after Lane B in the merge order) -- setting a new prop's requires_skill to \"disarm_trap\" today would NOT fail tests/test_content.gd (_validate_props does not cross-reference requires_skill against the skill catalog), but it WOULD make the disarm branch structurally unreachable: known_skills().has(\"disarm_trap\") is always false until the skill exists, so every player gets the generic locked fallback forever, trap_disarmed never banks, and the new trap_canonical QA script (qa/scripts/trap_canonical.json) could not prove a live disarm leg. Shipping requires_skill=\"observe\" now keeps the disarm mechanically live and test-provable today, matching the plan's own instruction: \"the observe-based fallback stays live either way.\"",
+
+  "swap_table": [
+    {
+      "map": "sewers",
+      "entity_id": "sewer_nest_snag",
+      "cell": [7, 3],
+      "file": "data/skeleton_scene.json",
+      "field": "requires_skill",
+      "current_value": "observe",
+      "target_value": "disarm_trap"
+    },
+    {
+      "map": "sewers",
+      "entity_id": "sewer_drain_snare",
+      "cell": [13, 12],
+      "file": "data/skeleton_scene.json",
+      "field": "requires_skill",
+      "current_value": "observe",
+      "target_value": "disarm_trap"
+    },
+    {
+      "map": "mercantile_alleys",
+      "entity_id": "alley_footpad_snag_a",
+      "cell": [9, 8],
+      "file": "data/skeleton_scene.json",
+      "field": "requires_skill",
+      "current_value": "observe",
+      "target_value": "disarm_trap"
+    },
+    {
+      "map": "mercantile_alleys",
+      "entity_id": "alley_footpad_snag_b",
+      "cell": [12, 12],
+      "file": "data/skeleton_scene.json",
+      "field": "requires_skill",
+      "current_value": "observe",
+      "target_value": "disarm_trap"
+    },
+    {
+      "map": "deep_tunnels",
+      "entity_id": "warren_side_snare",
+      "cell": [9, 8],
+      "file": "data/skeleton_scene.json",
+      "field": "requires_skill",
+      "current_value": "observe",
+      "target_value": "disarm_trap"
+    },
+    {
+      "map": "witch_hollow",
+      "entity_id": "hollow_briar_snare",
+      "cell": [10, 7],
+      "file": "data/skeleton_scene.json",
+      "field": "requires_skill",
+      "current_value": "observe",
+      "target_value": "disarm_trap"
+    }
+  ],
+
+  "open_question_for_controller": "R1's own text says the EXISTING dart_slit_a-style disarm should keep observe as a 'no-Rogue fallback' once disarm_trap ships -- but a single requires_skill field only holds one skill id, so a straight swap (as tabulated above) would REMOVE the observe path entirely for these 6 new props, not fall back to it. Two shapes resolve this, controller's call: (a) generalize requires_skill to accept an array (checked via `known_skills().has(any of req_skill)`, first-known-wins for hint copy) -- one small wi_game.gd/field_skills.gd change, touches every requires_skill site; (b) leave these 6 AS-IS on observe permanently (they were never dart_slit-class dungeon content gated behind a trap_kit item, just world flavor -- observe-only may simply be the right final state for them, and disarm_trap stays reserved for higher-stakes placements like trapped_halls' own dart_slit_a). Recommend (b) unless Lane A's own R1 work already generalizes the field for trapped_halls' dart_slit_a -- if it does, apply the swap_table above in the same pass for consistency.",
+
+  "trap_disarmed_producer_note": "trap_disarmed is banked LIVE today by all 6 placements' on_skill_use (via the observe fallback) -- a produced-but-unconsumed accomplishment counter, verified legal (test_content.gd has no producer-needs-a-consumer check; only the reverse, a required accomplishment needs a producer). Whatever Lane A's Rogue ladder gates on this counter (e.g. a gained_by/level threshold) will start reading real data the moment a player disarms any of these 6 -- no re-wiring needed on this side."
+}

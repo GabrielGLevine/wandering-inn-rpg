@@ -4740,6 +4740,44 @@
        "text": "I'm fine. Really. Just — turned around in the dark, that's all."
       }
      ]
+    },
+    {
+     "_comment": "R6 (#95) trap placement 1/2: sewer_vermin nest approach snag. Shape = requires_skill disarm (dart_slit_a precedent) -- E-interact always shows the tell (skill_hint_toast/locked_toast) regardless of disarm ability. Cell (7,3) verified off every sewers canonical's real walked-cell set: sewers_walkthrough treads (1-6,2)+(3,3-5); missing_recruit_loop treads row y4 x2-9 + col x9 y2-4 + (10,3); cisterns_scout/cisterns_fight tread col x2 y2-11 + row y11; deep_descent only touches (8,11) -- re-run all five after this edit, zero re-pin needed. requires_skill=observe LIVE (disarm_trap PARKED pending Rogue L5 -- docs/design/class-foundation-staging/trap-disarm-swap.json). Avoidable: single-cell prop on open floor (sewers has no `blocked` list, only wall segments + entity occupancy), adjacent cells (6,3)/(8,3)/(7,4) all clear -- trap_canonical proves the walk-around. Disarm banks shared `trap_disarmed` (Rogue axis feeder, produced-but-unconsumed today, verified legal) + 1g salvage.",
+     "id": "sewer_nest_snag",
+     "kind": "prop",
+     "cell": [
+      7,
+      3
+     ],
+     "display_name": "A Snagged Tripwire",
+     "sprite": "snare_coil",
+     "requires_skill": "observe",
+     "skill_hint_toast": "Wire, taut and low, strung off a rusted stanchion. Something in the nest rigged this. Careful hands could clear it.",
+     "locked_toast": "A length of wire runs low across the passage, pinned to a rusted stanchion. Whatever it's meant to catch, you can't tell how to spring it safe.",
+     "on_skill_use": {
+      "accomplishment": "trap_disarmed",
+      "toast": "You ease the wire off its catch and coil it loose. A few scavenged links clatter free, worth a coin or two melted down.",
+      "gold": 1
+     }
+    },
+    {
+     "_comment": "R6 (#95) trap placement 2/2: shield_spiders/nest_ledge approach snag, south flank away from the y11 walkway cisterns_scout/cisterns_fight both walk edge to edge. Cell (13,12) verified off every sewers canonical's walked-cell set (same trace as sewer_nest_snag above) -- y12 is untouched except (18,12), no entity sits at (13,12). requires_skill=observe LIVE (disarm_trap PARKED, same staging doc). Avoidable: single-cell prop, (12,12)/(14,12)/(13,11) all clear. Disarm banks shared trap_disarmed + 1g.",
+     "id": "sewer_drain_snare",
+     "kind": "prop",
+     "cell": [
+      13,
+      12
+     ],
+     "display_name": "A Bone-Wire Snare",
+     "sprite": "snare_coil",
+     "requires_skill": "observe",
+     "skill_hint_toast": "Bone and wire, tangled at the drain mouth, rigged for something bigger than rats. A steady hand could clear it.",
+     "locked_toast": "Bone and wire, tangled at the drain mouth. It has the shape of a trap. You can't read it well enough to touch it.",
+     "on_skill_use": {
+      "accomplishment": "trap_disarmed",
+      "toast": "You work the bone pins loose and unwind the wire. A few coins sit wedged in the silt beneath it, dropped by whoever it once caught.",
+      "gold": 1
+     }
     }
    ]
   },
@@ -4983,6 +5021,25 @@
      "on_victory": [
       "cleared_the_warren"
      ]
+    },
+    {
+     "_comment": "R6 (#95) warren-approach trap. Cell (9,8) verified off deep_descent's real walked-cell set: (2,2)/(2,3)/(2,4)/(3,4)/(4,4)/(4,3)/(5,3)/(6,3)/(7,3)/(8,3)/(9,3)/(9,4)/(9,5)/(10,5)/(11,5)/(11,6)/(12,6) -- the canonical route never leaves the y3-6 open mid-band this map's own _comment names; (9,8) is the untouched south gallery below it, clear of the fallen column (x4,y7-9). requires_skill=observe LIVE (disarm_trap PARKED -- docs/design/class-foundation-staging/trap-disarm-swap.json). Avoidable: single-cell prop, open floor on every side. Disarm banks shared trap_disarmed + 2g.",
+     "id": "warren_side_snare",
+     "kind": "prop",
+     "cell": [
+      9,
+      8
+     ],
+     "display_name": "A Raskghar Snare",
+     "sprite": "snare_coil",
+     "requires_skill": "observe",
+     "skill_hint_toast": "Sinew and bone hooks, strung low across the gallery floor. Whatever set it hunts down here, same as you.",
+     "locked_toast": "Sinew and bone hooks, strung low across the gallery floor. It has the shape of something meant to catch. You don't know how to spring it safely.",
+     "on_skill_use": {
+      "accomplishment": "trap_disarmed",
+      "toast": "You work the hooks free of the sinew line and let it fall slack. Wedged in the rig: a couple of coins, old and green with tarnish.",
+      "gold": 2
+     }
     }
    ]
   },
@@ -9074,6 +9131,25 @@
       11
      ],
      "observe": "The trees thin out this way. Open fields past the last few trunks."
+    },
+    {
+     "_comment": "R6 (#95) trap placement: a briar-snare east of briar_collectors' nest (9,6). Cell (10,7) verified off every riverfarm_* canonical's real walked-cell set inside witch_hollow: every reposition rides `teleport` (never treads intermediate cells) with only 1-step facing bumps at the teleport targets themselves -- {(3,9),(10,11),(6,6),(6,5),(2,8),(4,8),(4,9),(4,10),(8,11),(9,7),(4,12)} is the full real-move set across riverfarm_walkthrough/talk/skill/fight. (10,7) is not in that set, not blocked (witch_hollow's blocked list only closes the y5-6 x1-5 band + the 3 standing-stone cells), and not any entity's cell. requires_skill=observe LIVE (disarm_trap PARKED -- docs/design/class-foundation-staging/trap-disarm-swap.json). Avoidable: single-cell prop, open floor on every side. Disarm banks shared trap_disarmed + 1g.",
+     "id": "hollow_briar_snare",
+     "kind": "prop",
+     "cell": [
+      10,
+      7
+     ],
+     "display_name": "A Briar Snare",
+     "sprite": "snare_coil",
+     "requires_skill": "observe",
+     "skill_hint_toast": "Brambles knotted into a tight loop, low against the undergrowth. Nothing grows that way on its own.",
+     "locked_toast": "The brambles here twist into a tight loop, low to the ground. It doesn't look natural. You can't tell how to clear it without setting it off.",
+     "on_skill_use": {
+      "accomplishment": "trap_disarmed",
+      "toast": "You work the knot loose one bramble at a time, careful of the thorns. Snagged in the weave: a coin, tarnished green from the damp.",
+      "gold": 1
+     }
     }
    ]
   },
@@ -11927,6 +12003,44 @@
      },
      "on_victory": "forced_confession",
      "observe": "Three men in burgundy-and-brass doublets, clubs and knives held like men who've used them before. Merchant-livery, not Watch steel — Coyle's, all the way down to the stitching."
+    },
+    {
+     "_comment": "R6 (#95) trap placement 1/2: alley_footpads_a leftover, the footpad-era's remnant danger post-safe-passage. Cell (9,8) verified off every mercantile_alleys canonical's real walked-cell set: invrisil_walkthrough treads (1-7,7)+(3-10,6)+col x10 y7-11+(11-18,11)+(18,12); the 3 invrisil_disagreement_* scripts reposition almost entirely via teleport (never treads intermediate cells) with only 1-step facing bumps at their own teleport targets. (9,8) sits in the open x8-10 connector corridor (blocked list only closes x0-7/x11-19 at y8, leaving x8-10 clear either side of this prop) -- alley_footpads_a itself occupies (9,9) one cell south. requires_skill=observe LIVE (disarm_trap PARKED -- docs/design/class-foundation-staging/trap-disarm-swap.json). Avoidable: (8,8)/(10,8) both clear, corridor stays 2-wide passable. Disarm banks shared trap_disarmed + 2g.",
+     "id": "alley_footpad_snag_a",
+     "kind": "prop",
+     "cell": [
+      9,
+      8
+     ],
+     "display_name": "A Cutpurse's Snag-Line",
+     "sprite": "snare_coil",
+     "requires_skill": "observe",
+     "skill_hint_toast": "A snag-line at ankle height, tied crate to drainpipe. Old footpad work, the kind meant to trip a running mark. Worth clearing.",
+     "locked_toast": "A taut line crosses the alley at ankle height, tied off crate to drainpipe. It's clearly meant to trip someone. You can't see how to clear it safely.",
+     "on_skill_use": {
+      "accomplishment": "trap_disarmed",
+      "toast": "You unhook the line and coil it loose. A couple of coins sit tucked in the crate it was tied to, payment nobody came back to collect.",
+      "gold": 2
+     }
+    },
+    {
+     "_comment": "R6 (#95) trap placement 2/2: alley_footpads_b/counting-house leftover. Cell (12,12) verified off the same walked-cell set (see alley_footpad_snag_a above) -- y12 walk only touches (18,12); no entity sits at (12,12) (alley_footpads_b is (14,12), counting_house_watch (15,12), counting_house_ledger (16,12), hired_blades (17,12)). requires_skill=observe LIVE (disarm_trap PARKED, same staging doc). Avoidable: (11,12)/(13,12) both clear (y12 blocks only x0-7). Disarm banks shared trap_disarmed + 2g.",
+     "id": "alley_footpad_snag_b",
+     "kind": "prop",
+     "cell": [
+      12,
+      12
+     ],
+     "display_name": "A Rigged Crate Stack",
+     "sprite": "crate",
+     "requires_skill": "observe",
+     "skill_hint_toast": "A stack of crates wedged just wrong, top-heavy and set to come down on whoever pulls from the bottom. Old footpad mischief.",
+     "locked_toast": "The crate stack looks ordinary until you notice the angle: top-heavy, wedged to fall. Pulling from the bottom feels like a very bad idea.",
+     "on_skill_use": {
+      "accomplishment": "trap_disarmed",
+      "toast": "You brace the stack and ease the wedge free by hand. Behind the bottom crate: a couple of coins someone forgot to collect.",
+      "gold": 2
+     }
     }
    ]
   },

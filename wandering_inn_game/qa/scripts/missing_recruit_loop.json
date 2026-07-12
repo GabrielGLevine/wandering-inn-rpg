@@ -50,7 +50,7 @@
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
 
-  { "_comment": "== (3) THE SEWERS, FOR REAL == teleport beside the sewer_grate (15,9), then a REAL door_when interact (heard_about_cisterns is pre-banked in the fixture) descends to sewers (2,2), the sewers_walkthrough precedent. recruit_pell now EXISTS (present_when: missing_recruit_started, banked on the barracks map above -- a DIFFERENT map than sewers, satisfying entity_present's own constraint) -- 12 entities (the pre-#81 10 + note_sewer_surveyor + recruit_pell) + PC = 13.", "action": "teleport", "map": "street", "cell": [15, 9] },
+  { "_comment": "== (3) THE SEWERS, FOR REAL == teleport beside the sewer_grate (15,9), then a REAL door_when interact (heard_about_cisterns is pre-banked in the fixture) descends to sewers (2,2), the sewers_walkthrough precedent. recruit_pell now EXISTS (present_when: missing_recruit_started, banked on the barracks map above -- a DIFFERENT map than sewers, satisfying entity_present's own constraint) -- 14 entities (the pre-#81 10 + note_sewer_surveyor + recruit_pell + R6's (#95) sewer_nest_snag/sewer_drain_snare trap placements) + PC = 15. RE-PINNED (class-foundation R6): was 13 before the 2 new trap props landed off this canonical's own walked-cell set (no route change, count only).", "action": "teleport", "map": "street", "cell": [15, 9] },
   { "action": "move", "direction": "down", "steps": 2 },
   { "action": "assert_state", "path": "player_cell", "equals": [15, 11] },
   { "action": "move", "direction": "right", "steps": 1 },
@@ -58,7 +58,7 @@
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You set your shoulder to the grate. The rust gives with a shriek, and cold air breathes up out of the dark. Down you go." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "sewers", "cell": [2, 2] }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": { "map": "sewers" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 13, "fallbacks": 0 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 15, "fallbacks": 0 }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "04_sewers_landing" },
 
   { "_comment": "== NOTE SURVEYOR PAGE == (2,2) down2 -> (2,4) (row y2 is a dead end this leg avoids entirely -- sewer_vermin (7,2) blocks straight through it, sewers_walkthrough's own route fights it there; row y4 is clear), right7 -> (9,4), up3 -> (9,2) (the third up step blocks on note_sewer_surveyor (9,1) & faces it).", "action": "move", "direction": "down", "steps": 2 },

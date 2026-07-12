@@ -574,6 +574,12 @@
    "seed": 9,
    "fixture": "boulevard_night_footpads_start",
    "note": "Issue #80 (world reactivity wave): Invrisil boulevard's own night-only encounter slot, the river_wolf_pack precedent's third application -- fixture starts past night_at (T3 spellsword9 gear), one real move into trigger_radius 1 fires start_combat live (footpad_lookout/footpad_bruiser, solo), win banks won_combat"
+  },
+  {
+   "script": "trap_canonical",
+   "seed": 9,
+   "fixture": "near_sewers_trap",
+   "note": "R6 (#95, class-foundation pass): sewer_nest_snag trap proof -- observe tell, the avoidable-path counterplay, the LIVE observe-fallback disarm leg banking shared trap_disarmed + 1g salvage (disarm_trap PARKED, docs/design/class-foundation-staging/trap-disarm-swap.json)"
   }
  ]
 }
