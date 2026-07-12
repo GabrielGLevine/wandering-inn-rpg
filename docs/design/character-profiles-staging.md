@@ -77,17 +77,9 @@ Wiki-verify canon entries at generation/writing time.
 - **Citizen extras batch** (6-8 walk-ons): fashion-variance pack,
   pool-less. The crowd IS the message.
 
-## Pallass (8e — generate LAST, needs the new tile family context)
-- **Grimalkin** (canon; WIKI-VERIFIED 2026-07-07 — corrections):
-  [Sinew Magus] L40+, Magic-Captain of Pallass + runs his own academy.
-  MASSIVE Drake, GREEN scales (not slate); canon attire is TIGHT-FITTING
-  clothing he bursts by flexing (not a sleeveless robe — keep the
-  ink-and-dumbbell props, they match his note-taking empiricism). Voice:
-  fitness-empiricism · drill-sergeant-on-steroids who genuinely cares ·
-  lectures in numbered points · respects effort, despises excuses.
-- **Tier clerk** (ORIGINAL+flag): trim Drake, guild sash, stamp-desk.
-  Voice: titles-and-precision · "state your business and your
-  sponsor" · warmth exists behind exact paperwork.
+## Pallass (8e) — PROMOTED to character-profiles.md at 8e Phase A
+## (2026-07-12). See that file's "Grimalkin" / "Tier clerk" entries —
+## this section intentionally left empty, not re-duplicated here.
 
 ## Liscor Dungeon (8d)
 - **Ceria Springwalker** (canon): half-Elf, circlet, winter-blue

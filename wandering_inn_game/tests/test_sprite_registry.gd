@@ -213,6 +213,14 @@ func _build_expected_counts() -> Dictionary:
 	counts["eloise/idle"] = 4
 	counts["eloise/walk"] = 6
 
+	## Grimalkin ([Sinew Magus], Pallass 8e Phase A) + the tier-clerk rig
+	## (132x132 / 108x108 frames, down/side/up). idle=breathing-idle(4),
+	## walk=walking(6). Neither fields in combat v1 -- idle+walk only.
+	counts["grimalkin/idle"] = 4
+	counts["grimalkin/walk"] = 6
+	counts["tier_clerk/idle"] = 4
+	counts["tier_clerk/walk"] = 6
+
 	## The vault guardian construct (8d C3 boss; 220x220).
 	counts["vault_construct/idle"] = 4
 	counts["vault_construct/walk"] = 6
