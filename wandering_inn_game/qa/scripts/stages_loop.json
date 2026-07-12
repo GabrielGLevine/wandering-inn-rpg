@@ -324,6 +324,15 @@
       "text": "Nothing today.",
       "locked": false,
       "requirement": ""
+     },
+     {
+      "text": "The hunting bow, then. Gnoll-strung, proper draw. (18 gold)",
+      "locked": true,
+      "requirement": "costs 18 gold",
+      "effect_lines": [
+       "+1 damage on ranged hits",
+       "Range 4"
+      ]
      }
     ]
    },
@@ -336,15 +345,6 @@
     "options": [
      {
       "text": "The old charm-cord, friend's price. (4 gold)"
-     },
-     {
-      "text": "The hunting bow, then. Gnoll-strung, proper draw. (18 gold)",
-      "locked": true,
-      "requirement": "costs 18 gold",
-      "effect_lines": [
-       "+1 damage on ranged hits",
-       "Range 4"
-      ]
      }
     ]
    }
