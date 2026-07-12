@@ -1071,6 +1071,15 @@ func _build_entities() -> Array[Node2D]:
 		# than the sprite it replaces.
 		if bool(ent.get("hide_sprite", false)):
 			continue
+		# `present_when`-gated entity (8d D2): structurally absent while its
+		# gate is unmet -- skipped before a visual is even built, so it never
+		# reaches `_entity_visuals` and never counts toward the
+		# UI_ENTITIES_RENDERED sprite/fallback totals below. Contrast
+		# `visual_states`' `hidden` state (still built, just `.visible =
+		# false`) -- that stays render-only on purpose; this is the seam that
+		# actually moves the count.
+		if not Game.sim.entity_present(ent):
+			continue
 		var color := NPC_COLOR if String(ent["kind"]) == "npc" else PROP_COLOR
 		var render := _resolve_entity_render(ent)
 		var visual := _make_entity_visual(
@@ -1850,11 +1859,14 @@ func _face_cell(cell: Vector2i) -> void:
 ## Every entity's occupied cell on the current map -- the pathfinder's
 ## "don't route through/onto an NPC or prop" set (mirrors `is_cell_blocked`'s
 ## own wall/terrain gate, which this is layered on top of, never a
-## replacement for).
+## replacement for). A `present_when`-gated entity whose gate is unmet
+## (8d D2) is skipped, matching `is_cell_blocked`/`entity_at` -- its cell
+## reads as open floor, not a phantom click-to-walk obstacle.
 func _occupied_cells() -> Dictionary:
 	var occ := {}
 	for ent: Dictionary in Game.sim.entities.values():
-		occ[ent["cell"] as Vector2i] = true
+		if Game.sim.entity_present(ent):
+			occ[ent["cell"] as Vector2i] = true
 	return occ
 
 

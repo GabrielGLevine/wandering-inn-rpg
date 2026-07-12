@@ -824,6 +824,90 @@
       ],
       "open_toast": "The vines part like a curtain, and the light beyond doesn't flicker."
      }
+    },
+    {
+     "_comment": "8d D2 (issue #14/#15): Ceria Springwalker takes inn residence -- present ONLY once `what_the_seal_kept` completes (`present_when.requires.seal_kept_reported`, the quest's own report-beat counter banked by olesm_intro.json's closing option; WIGame.entity_present's new structural gate -- absent, not merely hidden, pre-quest: excluded from occupancy/entity_at/render+count, `inn_walkthrough`'s pre-quest ui_entities_rendered count stays unchanged). Pool presence only v1 (Social II talk_pool_stages explicitly deferred, per the plan). Distinct entity id from dungeon_approach's `ceria` (the recruit sighting) -- same character, second placement, the `ksmvr_plates` precedent for a second sighting under its own id. Placed at a common-room table (8,6), adjacent to the table_brown/food_bread at (7,6), facing it; clear of every blocked/decor/entity cell on this map. Reuses the `ceria` sprite shipped 8dA verbatim, no new art. talk_pool + a static dialogue fallback (no conversation graph, the Renn/Ilvo/Yelra pool-presence idiom).",
+     "id": "ceria_inn",
+     "kind": "npc",
+     "cell": [
+      8,
+      6
+     ],
+     "display_name": "Ceria Springwalker",
+     "sprite": "ceria",
+     "facing": "left",
+     "present_when": {
+      "requires": {
+       "seal_kept_reported": 1
+      }
+     },
+     "talk_pool": [
+      "The couch by the fire is Yvlon's now. Territorial, armswomen.",
+      "Pisces keeps asking about the vault door. I told him to bring his own rope this time.",
+      "Silver-rank pay, Gold-rank stonework down there. Somebody's math is off, and it isn't mine."
+     ],
+     "dialogue": [
+      {
+       "speaker": "Ceria Springwalker",
+       "text": "Ask me about the vault again and I'll start charging Pisces rent."
+      }
+     ]
+    },
+    {
+     "_comment": "8d D2 (issue #14/#15): Yvlon Byres takes inn residence, same `present_when.requires.seal_kept_reported` gate as `ceria_inn` (see that entity's own _comment for the mechanism). Placed near the hearth (2,1) at (2,2), directly in front of it, facing up into the firelight -- her own talk_pool line names 'the couch by the fire' as hers now, this cell is that claim made literal. Reuses the `yvlon` sprite shipped 8dA verbatim.",
+     "id": "yvlon_inn",
+     "kind": "npc",
+     "cell": [
+      2,
+      2
+     ],
+     "display_name": "Yvlon Byres",
+     "sprite": "yvlon",
+     "facing": "up",
+     "present_when": {
+      "requires": {
+       "seal_kept_reported": 1
+      }
+     },
+     "talk_pool": [
+      "The inn's quieter than the Guild hall. I'm starting to see why you like it.",
+      "My arm's fine. Stop looking.",
+      "If the door down there opens, I want to be standing in front of it. That's not bravery — it's just where I stand."
+     ],
+     "dialogue": [
+      {
+       "speaker": "Yvlon Byres",
+       "text": "My arm's still fine."
+      }
+     ]
+    },
+    {
+     "_comment": "8d D2 (issue #14/#15): Ksmvr takes inn residence, same `present_when.requires.seal_kept_reported` gate (see `ceria_inn`'s own _comment for the mechanism). Placed deliberately odd-but-polite (per the plan's own framing) beside the pantry door at (14,7), one cell south of `pantry_door` (14,6), facing up -- watching it, not blocking the door's own documented (13,6)-facing-right approach. Distinct entity id from dungeon_approach's `ksmvr` and trapped_halls' `ksmvr_plates` -- a third sighting of the same character, same second-sighting-gets-its-own-id precedent. Reuses the `ksmvr` sprite shipped 8dA verbatim.",
+     "id": "ksmvr_inn",
+     "kind": "npc",
+     "cell": [
+      14,
+      7
+     ],
+     "display_name": "Ksmvr",
+     "sprite": "ksmvr",
+     "facing": "up",
+     "present_when": {
+      "requires": {
+       "seal_kept_reported": 1
+      }
+     },
+     "talk_pool": [
+      "I have been given a mug of blue fruit juice. I did not ask for it. Erin says this is called 'hospitality.' I am recording it as an asset.",
+      "This inn does not have traps. I checked all the floors. Twice.",
+      "Captain Ceria says I may sit anywhere. I have chosen the corner with two exits."
+     ],
+     "dialogue": [
+      {
+       "speaker": "Ksmvr",
+       "text": "I am still counting exits. There are still two."
+      }
+     ]
     }
    ]
   },

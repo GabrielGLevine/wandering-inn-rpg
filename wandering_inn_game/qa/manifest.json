@@ -515,6 +515,12 @@
    "seed": 1,
    "fixture": "delve_talk_start",
    "note": "8d C4 (issue #14) TALK route: talk Ksmvr through the trapped_halls pressure plates (ksmvr_plates.json, gated on horns_party_formed) -- banks guided_ksmvr_through_plates (the real cost, vault_boss_slot's ally_hp_penalty reads it) and halls_cleared directly; proves the vault's encounter_when gate flips open without a second full boss fight"
+  },
+  {
+   "script": "horns_residence",
+   "seed": 1,
+   "fixture": "horns_residence_start",
+   "note": "8d D2 (issue #14/#15): the Horns of Hammerad's post-delve inn residence -- pool presences only v1 (Social II talk_pool_stages explicitly deferred). Walks to Ceria (common-room table)/Yvlon (by the hearth)/Ksmvr (beside the pantry door), pins one talk_pool line each via ui_dialogue_rendered, and proves entity presence via ui_entities_rendered's inn sprite count (16 -> 19); inn_walkthrough's own unmodified pre-quest run is this canonical's negative half"
   }
  ]
 }

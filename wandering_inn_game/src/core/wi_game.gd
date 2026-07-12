@@ -515,7 +515,7 @@ func is_cell_blocked(cell: Vector2i) -> bool:
 	if _map_blocked.has(cell) and not _is_frozen(cell):
 		return true
 	for ent: Dictionary in entities.values():
-		if ent[WIKeys.CELL] == cell:
+		if ent[WIKeys.CELL] == cell and entity_present(ent):
 			return true
 	return false
 
@@ -564,7 +564,7 @@ func set_frozen_cells_json(data: Dictionary) -> void:
 
 func entity_at(cell: Vector2i) -> Dictionary:
 	for ent: Dictionary in entities.values():
-		if ent[WIKeys.CELL] == cell:
+		if ent[WIKeys.CELL] == cell and entity_present(ent):
 			return ent
 	return {}
 
@@ -1276,6 +1276,39 @@ func _apply_gold_effect(amount: int, source: String) -> void:
 ## change, no events.
 func _door_gate_met(door_when: Dictionary) -> bool:
 	return _accomplishment_gate_met(door_when.get("requires", {}))
+
+
+## True when an entity's optional `present_when` gate is satisfied -- the
+## door_when-family extension for STRUCTURAL entity presence (8d D2, issue
+## #14/#15: the Horns of Hammerad taking inn residence only once
+## `what_the_seal_kept` completes). Reuses `_door_gate_met` verbatim (same
+## `{"requires": {...}}` shape/semantics as door_when/contains_when) -- an
+## absent `present_when` reads as "always present" (every pre-existing
+## entity, byte-identical). PUBLIC (not `_`-prefixed) because world.gd's
+## `_build_entities` is a real external caller, the same reason
+## `accomplishment_count`/`phase` are public reader methods.
+## Checked at every call site that can OBSERVE an entity's existence:
+## `is_cell_blocked` (movement occupancy), `entity_at` (interact/lookup --
+## an absent entity reads as "nothing here", INTERACT_NOTHING, zero new
+## dispatch logic), and world.gd's `_build_entities` (render + the
+## `ui_entities_rendered` sprite/fallback count). This is deliberately
+## NOT `visual_states`' `hidden` state (river_wolf_pack's own precedent):
+## `hidden` is render-only -- the entity still blocks its cell, still
+## resolves via `entity_at`, and still counts toward `ui_entities_rendered`
+## (`_build_entities` builds every entity's visual node unconditionally
+## except `hide_sprite`, only toggling `.visible` for a `hidden` state) --
+## insufficient here because a gated NPC must be genuinely absent, not a
+## invisible wall a player can walk into or talk to.
+## CONSTRAINT: the gate's producer must bank on a DIFFERENT map than the
+## entity lives on. Sim reads (`is_cell_blocked`/`entity_at`) are live, but
+## the visual only builds on map entry (`_build_entities` runs on
+## MAP_CHANGED) -- a same-map producer yields a sim-present but INVISIBLE
+## entity until re-entry. Every current producer (seal_kept_reported: the
+## street) satisfies this; keep it true for new present_when consumers.
+func entity_present(ent: Dictionary) -> bool:
+	if not ent.has("present_when"):
+		return true
+	return _door_gate_met(ent["present_when"] as Dictionary)
 
 
 ## True when an `encounter` entity's optional `encounter_when` gate is

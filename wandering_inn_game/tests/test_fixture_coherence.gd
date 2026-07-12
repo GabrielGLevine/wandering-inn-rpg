@@ -314,6 +314,14 @@ func _check_monotone_chains(name: String, game: WIGame) -> void:
 	# region's attunement.
 	if int(accs.get("blight_lifted", 0)) >= 1 and int(accs.get("riverfarm_attuned", 0)) < 1:
 		_fail(name, "blight_lifted banked without riverfarm_attuned -- every producer lives on the riverfarm-gated witch_hollow map")
+	# 'What the Seal Kept' chain head (8d): the report requires the find,
+	# the find requires the downed construct. Below vault_construct_downed
+	# the chain forks (halls_cleared has three route-dependent producers),
+	# so a full linear arm would over-constrain -- head only.
+	if int(accs.get("seal_kept_reported", 0)) >= 1 and int(accs.get("seal_kept_found", 0)) < 1:
+		_fail(name, "seal_kept_reported banked without seal_kept_found -- Olesm's report option is gated on the find beat")
+	if int(accs.get("seal_kept_found", 0)) >= 1 and int(accs.get("vault_construct_downed", 0)) < 1:
+		_fail(name, "seal_kept_found banked without vault_construct_downed -- the deeper door only opens past the guardian")
 	if int(accs.get("garden_door_unlocked", 0)) >= 1:
 		if int(accs.get("reached_two_classes", 0)) < 1:
 			_fail(name, "garden_door_unlocked banked without reached_two_classes -- _garden_earn_met() requires Act III")
