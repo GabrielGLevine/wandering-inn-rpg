@@ -543,7 +543,12 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 			base_damage += int(a.get(WIKeys.DAMAGE_MOD, 0))
 		damage = maxi(1, base_damage)
 		target_hp = _deduct_hp(target_id, damage)
-		if melee:
+		# `melee` here means STR-physics (bows use it for damage math), so
+		# gate the PROGRESSION tally on actual weapon reach too -- a bow hit
+		# must feed ranged_hit ([Archer]) and never melee_hit ([Warrior]):
+		# doing [X] levels [X] (review I-1; the two counters are mutually
+		# exclusive per hit).
+		if melee and int(a.get(WIKeys.WEAPON_RANGE, 1)) <= 1:
 			_tally(attacker_id, "melee_hit")
 		# GH#70 [Archer] earn: `ranged_hit` tallies on every landed hit from
 		# a combatant whose weapon_range > 1 (a bow), UNCONDITIONAL on the
