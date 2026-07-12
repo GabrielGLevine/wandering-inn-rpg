@@ -307,7 +307,10 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 	for id: String in view.order():
 		var mark := "> " if id == view.active_id() else ""
 		if view.alive(id):
-			order_bits.append(mark + String(view.combatant(id)["display_name"]))
+			# Issue #75 item 5b: `view.display_name` (not the raw
+			# combatant dict) so a duplicate-name roster reads "Footpad A" /
+			# "Footpad B" on the strip, matching the feed/readout.
+			order_bits.append(mark + view.display_name(id))
 	# "Turn:" + a bare space read as glued to the first name at a glance
 	# (playtest report: "Turn: Relc | > Traveler" misreads as possessive --
 	# "Turn's Relc"). An em dash is an unambiguous label/content break, same
@@ -454,8 +457,10 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 	var mp_bit := ""
 	if int(c.get("max_mp", 0)) > 0:
 		mp_bit = "  MP %d/%d" % [int(c["mp"]), int(c["max_mp"])]
+	# Issue #75 item 5b: view.display_name, not the raw dict field -- the
+	# active combatant may itself be one of a duplicate-name pair.
 	var head := "%s  AP %s  Move %s%s" % [
-		UIChrome.bb_escape(String(c["display_name"])), "●".repeat(int(c["ap"])), "○".repeat(int(c["move_pool"])), mp_bit,
+		UIChrome.bb_escape(view.display_name(view.active_id())), "●".repeat(int(c["ap"])), "○".repeat(int(c["move_pool"])), mp_bit,
 	]
 	# RAW (un-escaped) -- `_compose_readout` measures/fits this against the
 	# panel's true wrap width, then escapes only the FITTED result. The event
@@ -485,10 +490,12 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 		elif bool(targeting_state.get("out_of_range", false)):
 			note = "  (out of range)"
 		return _compose_readout(head, "No target in reach (%s)" % cancel_glyph + note, info_line)
-	var t: Dictionary = view.combatant(String(targets[int(targeting_state.get("index", 0))]))
+	var target_id := String(targets[int(targeting_state.get("index", 0))])
+	var t: Dictionary = view.combatant(target_id)
+	# Issue #75 item 5b: view.display_name for the target name.
 	return _compose_readout(
 		head,
-		"Target: %s (%d/%d) (%s cycles, %s confirms)" % [UIChrome.bb_escape(String(t["display_name"])), int(t["hp"]), int(t["max_hp"]), cycle_glyph, confirm_glyph],
+		"Target: %s (%d/%d) (%s cycles, %s confirms)" % [UIChrome.bb_escape(view.display_name(target_id)), int(t["hp"]), int(t["max_hp"]), cycle_glyph, confirm_glyph],
 		info_line
 	)
 
@@ -603,6 +610,17 @@ func _slot_info_line(d: Dictionary) -> String:
 ## self-collision bug the placeholder-char technique fixes.
 
 
+## Issue #75 item 5b: every feed-line name read routes through this instead
+## of the raw `combat.combatants[id]["display_name"]` -- `view` (when given;
+## see `feed_line_for_event`'s own doc comment) owns the per-encounter A/B/C
+## dedup, so a duplicate-name roster reads disambiguated on the feed exactly
+## like the turn strip/readout.
+func _display_name(combat: WICombat, view: RefCounted, id: String) -> String:
+	if view != null:
+		return view.display_name(id)
+	return String(combat.combatants[id]["display_name"])
+
+
 func show_banner(text: String) -> void:
 	_banner_label.text = text
 
@@ -660,20 +678,25 @@ func push_feed(payload: Dictionary) -> void:
 ## indexing (`combat.combatants.has(...)`/`combat.skills.has(...)`), so it
 ## reads the raw dictionaries directly, exactly as before. `WICombat` is a
 ## plain `class_name` (sim-purity rule: no autoload refs), so this static
-## type annotation is compile-safe.
-func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat) -> String:
+## type annotation is compile-safe. `view` (issue #75 item 5b, optional --
+## every REAL call site passes `combat_screen.gd`'s own `_view`, populated in
+## lockstep with `_combat_or_null()`; `null` only matters for API safety) owns
+## the per-encounter A/B/C dedup (`WICombatView.display_name`), threaded
+## through so a duplicate-name roster reads disambiguated on the feed too,
+## matching the turn strip/readout.
+func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, view: RefCounted = null) -> String:
 	var line := ""
 	match type:
 		WIEvents.ATTACK_RESOLVED:
 			if combat == null or not combat.combatants.has(String(payload["attacker"])) or not combat.combatants.has(String(payload["target"])):
 				return ""
-			var attacker := String(combat.combatants[payload["attacker"]]["display_name"])
-			var target := String(combat.combatants[payload["target"]]["display_name"])
+			var attacker := _display_name(combat, view, String(payload["attacker"]))
+			var target := _display_name(combat, view, String(payload["target"]))
 			line = ("%s strikes %s for %d!" % [attacker, target, int(payload["damage"])]) if bool(payload["hit"]) else "%s misses %s." % [attacker, target]
 		WIEvents.REACTION_TRIGGERED:
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
-			var reactor_name := String(combat.combatants[payload["id"]]["display_name"])
+			var reactor_name := _display_name(combat, view, String(payload["id"]))
 			if String(payload["skill"]) == "mana_shield":
 				line = "%s's shield drinks the blow (%d)." % [reactor_name, int(payload["absorbed"])]
 			else:
@@ -683,7 +706,7 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat) ->
 		WIEvents.SKILL_RESOLVED:
 			if combat == null or not combat.combatants.has(String(payload["actor"])) or not combat.skills.has(String(payload["skill"])):
 				return ""
-			var actor_name := String(combat.combatants[payload["actor"]]["display_name"])
+			var actor_name := _display_name(combat, view, String(payload["actor"]))
 			var used_skill: Dictionary = combat.skills[payload["skill"]]
 			var is_line := String((used_skill.get("effect", {}) as Dictionary).get("type", "")) == "line_damage"
 			line = ("%s's %s roars down the line!" % [actor_name, String(used_skill["display_name"])]) if is_line \
@@ -691,15 +714,15 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat) ->
 		WIEvents.COMBATANT_DOWNED:
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
-			line = "%s falls!" % String(combat.combatants[payload["id"]]["display_name"])
+			line = "%s falls!" % _display_name(combat, view, String(payload["id"]))
 		WIEvents.DASHED:
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
-			line = "%s surges forward!" % String(combat.combatants[payload["id"]]["display_name"])
+			line = "%s surges forward!" % _display_name(combat, view, String(payload["id"]))
 		WIEvents.STATUS_APPLIED:
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
-			line = "%s is %s!" % [String(combat.combatants[payload["id"]]["display_name"]), String(payload["status"])]
+			line = "%s is %s!" % [_display_name(combat, view, String(payload["id"])), String(payload["status"])]
 			# The first-encounter surface. TRACED before
 			# choosing this surface over a TOAST: combat_hud's own "disjoint
 			# opaque bands" doc comment (build(), above) places the readout
@@ -723,11 +746,11 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat) ->
 		WIEvents.STATUS_EXPIRED:
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
-			line = "%s shakes it off." % String(combat.combatants[payload["id"]]["display_name"])
+			line = "%s shakes it off." % _display_name(combat, view, String(payload["id"]))
 		WIEvents.ACTION_REFUSED:
 			if combat == null or not combat.combatants.has(String(payload["actor"])):
 				return ""
-			var refused := String(combat.combatants[payload["actor"]]["display_name"])
+			var refused := _display_name(combat, view, String(payload["actor"]))
 			var why := String(payload.get("reason", ""))
 			var why_text := "no clear line of sight" if why == "no_los" else ("out of range" if why == "out_of_range" else why.replace("_", " "))
 			line = "%s hesitates — %s." % [refused, why_text]

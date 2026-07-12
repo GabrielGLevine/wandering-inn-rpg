@@ -136,6 +136,22 @@ var _info_slot_index := 0
 ## autoload-referencing main.gd into that compile.
 var main_ref: Node
 
+## Issue #75 item 3: which skill (if any) is CURRENTLY resolving, purely for
+## the ranged/spell projectile's element tint -- ATTACK_RESOLVED itself
+## carries no skill id (spell_damage/line_damage/blast_damage/damage_mult
+## hits all reuse it verbatim via `_resolve_hit`, per this file's own doc
+## comment above), so this is set the instant a damage-capable SKILL_RESOLVED
+## is seen and consumed by that SAME cast's own ATTACK_RESOLVED hit(s) moments
+## later. Reset at the START of every action: AP_CHANGED fires first for
+## EVERY combat command (attack/dash/spend_skill_costs), so a plain ranged
+## Attack (no skill, melee=false for a bow's own math) always renders
+## TRANSPARENT (the neutral PROJECTILE_DEFAULT_COLOR) -- correct, since it
+## isn't elemental. Ordering holds identically live and under paced AI
+## playback: both render events in strict capture/emission order, and a
+## multi-hit blast/line's own SKILL_RESOLVED always precedes every one of its
+## hits with no other SKILL_RESOLVED interleaved before they're all applied.
+var _acting_skill_flash_color: Color = Color.TRANSPARENT
+
 ## Issue #60 item 1: a one-time "your hotbar is class+weapon-derived" feed
 ## line on the FIRST combat of a sitting -- there is no loadout editor for
 ## combat skills, so the player just needs to be told. `static var` (not an
@@ -321,7 +337,7 @@ func _announce_allies() -> void:
 		if id == "pc":
 			continue
 		if String(_view.combatant(id).get("side", "")) == "player":
-			names.append(String(_view.combatant(id)["display_name"]))
+			names.append(_view.display_name(id))
 	if names.is_empty():
 		return
 	var verb := "wades" if names.size() == 1 else "wade"
@@ -385,6 +401,12 @@ func _refresh() -> void:
 		targeting_state = _targeting.state()
 		if bool(targeting_state.get("line_mode", false)):
 			targeting_state["line_text"] = _targeting.line_target_text(hints["cycle"], hints["confirm"])
+		# Issue #75 item 1: aim preview tracks the SAME in_targeting gate the
+		# readout/hotbar already use -- clears on every other mode (cancel/
+		# confirm/mode-exit all route through this same _refresh() call).
+		_board_renderer.render_aim_preview(_targeting.aim_preview())
+	else:
+		_board_renderer.clear_aim_preview()
 	_hud.refresh(_view, bar_active, in_targeting, _mode == Mode.BANNER, targeting_state, _bar_slots, _bar_index, _info_slot_index, _mode == Mode.DASH_CONFIRM, hints)
 
 
@@ -440,7 +462,10 @@ func _capture_playback_event(type: String, payload: Dictionary) -> Dictionary:
 func _feed_line_for_event(type: String, payload: Dictionary) -> String:
 	if _hud == null:
 		_hud = load("res://src/combat/combat_hud.gd").new(_root, main_ref, self)
-	return _hud.feed_line_for_event(type, payload, _combat_or_null())
+	# Issue #75 item 5b: `_view` threads the per-encounter A/B/C dedup
+	# (`WICombatView.display_name`) into the feed, so a duplicate-name
+	# roster reads disambiguated there too, not just the turn strip/readout.
+	return _hud.feed_line_for_event(type, payload, _combat_or_null(), _view)
 
 
 func _push_feed(payload: Dictionary) -> void:
@@ -497,6 +522,13 @@ func _pc_has_any_class() -> bool:
 func _play_event_visual(type: String, payload: Dictionary) -> void:
 	var ui: Dictionary = payload.get("_ui", {})
 	match type:
+		WIEvents.AP_CHANGED:
+			# Issue #75 item 3: AP_CHANGED fires first for EVERY combat
+			# command (attack/dash/spend_skill_costs) -- reset the
+			# projectile-tint tracker at the start of every action so a
+			# plain ranged Attack (no preceding SKILL_RESOLVED) never
+			# inherits a PREVIOUS skill's leftover element color.
+			_acting_skill_flash_color = Color.TRANSPARENT
 		WIEvents.ATTACK_RESOLVED:
 			var attacker_id := String(payload["attacker"])
 			var target_id := String(payload["target"])
@@ -506,6 +538,20 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 			# animation, NOT the sword swing (VISUAL-LOG common-sense fix).
 			var attack_anim := "slice" if bool(payload.get("melee", true)) else "cast"
 			_play_combatant_anim(attacker_id, attack_anim, ui.get("attacker_flip_h", null))
+			var attacker_cell: Array = ui.get("attacker_cell", [])
+			var target_cell: Array = ui.get("target_cell", [])
+			# Issue #75 item 3: attack connection, gated on SPATIAL adjacency
+			# from the captured cells -- NOT the `melee` payload flag, which
+			# means STR-vs-INT damage math (wi_combat.gd's own doc comment),
+			# not physical reach: a bow's basic Attack passes melee=true for
+			# its damage math while the attacker stands several cells away,
+			# and lunging the holder that far would be a visible glitch, not
+			# a swing. Plays regardless of hit/miss -- a swing still swings,
+			# a shot still travels, even when it doesn't land.
+			if _cells_chebyshev(attacker_cell, target_cell) <= 1:
+				_board_renderer.micro_lunge(attacker_id, target_cell)
+			else:
+				_board_renderer.spawn_projectile(attacker_cell, target_cell, _acting_skill_flash_color)
 			if bool(payload.get("hit", false)):
 				# Combat feel (all no-ops under QA/headless via the
 				# renderer's `_juice_enabled` gate). The struck-combatant reaction
@@ -524,9 +570,25 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 					_board_renderer.impact_flash(target_id)
 				else:
 					_board_renderer.flash_chip(target_id)
-				_board_renderer.spawn_hit_sparks(ui.get("target_cell", []))
+				_board_renderer.spawn_hit_sparks(target_cell)
+				# Issue #75 item 2: the at-the-action damage read (the corner
+				# feed prose stays -- that's the log). A LIVE side read is
+				# safe even under paced AI playback: this dispatcher only
+				# ever runs while combat is live, and side never changes
+				# over a fight (only hp/position move) -- see WICombat._init's
+				# own doc comment (a combatant's side is fixed at roster
+				# build). Color reuses the SAME ALLY_HP_COLOR/ENEMY_HP_COLOR
+				# hue the struck combatant's own HP bar already shows.
+				var combat_ref := _combat_or_null()
+				if combat_ref != null and combat_ref.combatants.has(target_id):
+					_board_renderer.spawn_damage_number(target_cell, int(payload.get("damage", 0)), String(combat_ref.combatants[target_id].get("side", "")))
 				if target_id == "pc" or int(payload.get("damage", 0)) >= HEAVY_HIT_DAMAGE:
 					_board_renderer.shake_board(3.0 if target_id == "pc" else 4.0)
+			else:
+				# Issue #75 item 2: distinct miss feedback at the target
+				# (the feed already prints "X misses Y." -- this is the
+				# at-the-action read).
+				_board_renderer.spawn_miss_indicator(target_cell)
 		WIEvents.COMBATANT_DOWNED:
 			var downed_id := String(payload["id"])
 			_board_renderer.mark_death_visible(downed_id)
@@ -540,14 +602,31 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 			# the whole read lives in feed text only (the "logically correct
 			# but never visible" class CLAUDE.md flags). Presentation keys on
 			# the status id -- per-status visuals are presentation data, same
-			# as `slowed`'s ice-cell paint.
-			if String(payload.get("status", "")) == "invisible":
+			# as `slowed`'s ice-cell paint. Issue #75 item 4: any OTHER
+			# status_id routes to the DATA-DRIVEN pip map instead
+			# (board_renderer.gd's STATUS_PIP_COLORS) -- a future status
+			# entry added there gets a pip with zero new dispatch code here.
+			var applied_status := String(payload.get("status", ""))
+			if applied_status == "invisible":
 				_board_renderer.set_combatant_alpha(String(payload["id"]), 0.35)
+			else:
+				_board_renderer.set_status_pip(String(payload["id"]), applied_status, true)
 		WIEvents.STATUS_EXPIRED:
-			if String(payload.get("status", "")) == "invisible":
+			var expired_status := String(payload.get("status", ""))
+			if expired_status == "invisible":
 				_board_renderer.set_combatant_alpha(String(payload["id"]), 1.0)
+			else:
+				_board_renderer.set_status_pip(String(payload["id"]), expired_status, false)
 		WIEvents.SKILL_RESOLVED:
 			var color: Color = ui.get("flash_color", Color.TRANSPARENT)
+			# Issue #75 item 3: stashed for this SAME cast's own
+			# ATTACK_RESOLVED hit(s), moments later -- see
+			# `_acting_skill_flash_color`'s own doc comment for the full
+			# ordering contract. Set unconditionally (even TRANSPARENT for a
+			# non-damage skill like Dash/Stealth) so a stale color from an
+			# EARLIER cast this same turn can never leak into a later
+			# non-elemental action.
+			_acting_skill_flash_color = color
 			if color.a > 0.0:
 				# _cells_from_payload lives on WICombatPlayback --
 				# called cross-object since this dispatcher stays screen-side.
@@ -636,6 +715,21 @@ func _skill_flash_cells(payload: Dictionary, allow_live_fallback: bool = false) 
 ## `tests/test_combat_visuals.gd`'s `has_method` check.
 func _flash_cells(cells: Array[Vector2i], color: Color) -> void:
 	_board_renderer.flash_cells(cells, color)
+
+
+## Presentation-only Chebyshev distance between two captured `[x,y]` cell
+## arrays (issue #75 item 3's lunge-vs-projectile gate) -- pure geometry (the
+## same maxi(|dx|,|dy|) shape `WICombat.chebyshev`/`is_adjacent` already
+## compute off real combatant ids), not a duplicated game-rule derivation.
+## Reads off the enqueue-time CAPTURED cells (`ui.attacker_cell`/
+## `ui.target_cell`), never a live combat re-read, so it stays dequeue-safe
+## under paced AI playback. Returns a large sentinel for a malformed/missing
+## cell so the caller falls through to the projectile branch, which
+## board_renderer.gd's own size<2 guards no-op either way.
+func _cells_chebyshev(a: Array, b: Array) -> int:
+	if a.size() < 2 or b.size() < 2:
+		return 999
+	return maxi(absi(int(a[0]) - int(b[0])), absi(int(a[1]) - int(b[1])))
 
 
 func _active_combatant() -> Dictionary:
@@ -777,6 +871,11 @@ func handle_board_click(world_pos: Vector2) -> void:
 
 func _apply_turn_started(id: String) -> void:
 	var combat := _combat()
+	# Issue #75 item 5a: the ONE call site both the live path
+	# (_on_domain_event's TURN_STARTED arm) and paced AI playback
+	# (combat_playback.gd's TURN_STARTED dequeue arm) funnel through, so a
+	# single call here moves the marker correctly on both paths.
+	_board_renderer.set_active_marker(id)
 	var c: Dictionary = combat.combatants[id]
 	if String(c["side"]) == "enemy" or String(c["ai"]) != "":
 		_mode = Mode.WAIT_AI
