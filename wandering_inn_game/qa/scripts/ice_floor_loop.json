@@ -75,6 +75,7 @@
 
   { "_comment": "Second cast, SAME turn, position unchanged, NO cycle at all before confirm -- if the picker still reset to 'up' on every fresh entry (the pre-#60 behavior) this would resolve target:'up'; it resolves 'down' again instead, proving the per-combat memory. A fresh WICombatTargeting is constructed per encounter (combat_screen.gd._show_combat()), so this memory needs no explicit reset anywhere -- a LATER combat starts a brand new instance back at 'up'.", "action": "press", "name": "hotbar_6" },
   { "action": "wait_for_event", "type": "ui_targeting_shown", "payload_contains": { "mode": "skill", "skill": "flame_jet" }, "timeout_sec": 5 },
+  { "_comment": "Issue #75 item 1: the aim preview's LINE path -- WICombatTargeting.aim_preview() -> _view.line_cells(), the exact cells the confirmed cast walks (asserted below via skill_resolved). Entry already defaults to 'down' (the remembered direction, no cycle needed this time), so the preview shows the SAME 4-cell path the cast is about to resolve -- the direction-memory fix and the aim preview agreeing is the point.", "action": "wait_for_event", "type": "ui_aim_preview_rendered", "payload_contains": { "kind": "line", "cells": [[6, 4], [6, 5], [6, 6], [6, 7]] }, "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "skill_resolved", "payload_contains": { "actor": "pc", "skill": "flame_jet", "target": "down", "cells": [[6, 4], [6, 5], [6, 6], [6, 7]] }, "timeout_sec": 5 },
 

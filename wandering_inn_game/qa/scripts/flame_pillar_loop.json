@@ -31,6 +31,7 @@
   { "action": "assert_state", "path": "combat.combatants.pc.cell", "equals": [2, 3] },
   { "action": "assert_state", "path": "combat.combatants.pc.skills", "contains": "flame_pillar" },
   { "_comment": "Kit order flame_scythe/flare_burst/flame_pillar/frost_bolt/flame_jet/invisibility (all contexts:combat + ap_cost>0) -- Attack(1)/Dash(2)/flame_scythe(3)/flare_burst(4)/flame_pillar(5)/frost_bolt(6)/flame_jet(7)/invisibility(8)/End Turn = 8 numbered slots, 9 total.", "action": "assert_event_logged", "type": "ui_hotbar_rendered", "payload_contains": { "slots": 9 } },
+  { "_comment": "Issue #75 item 5a: THE active-unit marker read -- a persistent chevron over the pc's holder at turn_started, before any input this fight. Windowed-verified alongside the aim-preview-over-blast shot below.", "action": "screenshot", "name": "00_active_marker" },
 
   { "_comment": "Dash first: pool 3 -> 6, AP 4 -> 3. Needed so this SAME turn can close all the way onto (6,3), inside flame_pillar's own future blast radius (the self-hit proof).", "action": "press", "name": "hotbar_2" },
   { "action": "wait_for_event", "type": "ui_slot_info_rendered", "payload_contains": { "slot": 1 }, "timeout_sec": 5 },
@@ -43,6 +44,8 @@
 
   { "action": "press", "name": "hotbar_5" },
   { "action": "wait_for_event", "type": "ui_targeting_shown", "payload_contains": { "mode": "skill", "skill": "flame_pillar" }, "timeout_sec": 5 },
+  { "_comment": "Issue #75 item 1: the aim preview's BLAST footprint over the default target's cell (7,3) -- board_renderer.gd's render_aim_preview, derived by WICombatTargeting.aim_preview() through WICombatView.radius_area() -> WISkillEffects._radius_area, the SAME function the real cast's own skill_resolved cells below come from. Same 9-cell sorted list either way -- the preview cannot lie.", "action": "wait_for_event", "type": "ui_aim_preview_rendered", "payload_contains": { "kind": "blast", "cells": [[6, 2], [6, 3], [6, 4], [7, 2], [7, 3], [7, 4], [8, 2], [8, 3], [8, 4]] }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "00a_aim_preview_blast" },
   { "_comment": "Default target is the lowest-hp-then-id enemy -- both dummies start at equal hp, so training_dummy_a (alphabetically first) is targeted with no cycle needed.", "action": "press", "name": "confirm" },
   { "_comment": "Radius-1 blast around (7,3): x[6,8] y[2,4], no walls/bounds to clip in this arena -- the exact 9-cell sorted list. hit_ids: pc's own cell (6,3), training_dummy_a (the cast target, 7,3), and training_dummy_b (the second enemy, adjacent at 7,4) all land inside -- friendly fire across enemy+enemy+self, one cast.", "action": "wait_for_event", "type": "skill_resolved", "payload_contains": { "actor": "pc", "skill": "flame_pillar", "target": "training_dummy_a", "cells": [[6, 2], [6, 3], [6, 4], [7, 2], [7, 3], [7, 4], [8, 2], [8, 3], [8, 4]], "hit_ids": ["pc", "training_dummy_a", "training_dummy_b"] }, "timeout_sec": 5 },
   { "_comment": "No terrain, no status -- instant damage only (the contrast with icy_floor's own canonical).", "action": "assert_state", "path": "combat.terrain", "equals": {} },

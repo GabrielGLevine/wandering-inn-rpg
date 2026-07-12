@@ -309,7 +309,7 @@ func line_target_text(cycle_glyph: String = "Tab", confirm_glyph: String = "Ente
 		for id: String in ids:
 			var occ: Dictionary = _view.combatant(id)
 			if bool(occ["alive"]) and (occ["cell"] as Vector2i) == cell:
-				var nm := UIChrome.bb_escape(String(occ["display_name"]))
+				var nm := UIChrome.bb_escape(_view.display_name(id))
 				if String(occ["side"]) == my_side:
 					nm = _grey(nm)
 				names.append(nm)
@@ -319,3 +319,68 @@ func line_target_text(cycle_glyph: String = "Tab", confirm_glyph: String = "Ente
 
 func _grey(text: String) -> String:
 	return "[color=#%s]%s[/color]" % [LOCKED_COLOR.to_html(false), text]
+
+
+## Board-space aim-preview derivation (issue #75 item 1) -- every cell
+## returned here traces to a real sim read, so the paint `board_renderer.gd`
+## draws from it can never lie:
+##  - `line_cells`: `_view.line_cells()` verbatim, the exact cells a confirmed
+##    line-skill cast will walk.
+##  - `blast_cells`: `_view.radius_area()` (a passthrough to
+##    `WISkillEffects._radius_area`), centered on the CURRENTLY SELECTED
+##    candidate's cell -- the SAME function icy_floor/blast_damage use to
+##    build their real area.
+##  - `ring_cell`: the currently selected candidate's cell, drawn ONLY from
+##    `_targets` -- a list `enter()` already filtered through
+##    `_view.chebyshev`/weapon_range/`_view.has_los` above, so the ring can
+##    never mark a cell the sim itself wouldn't also honor as a legal target.
+##  - `range_cells`: the one approximate piece -- also `_view.radius_area()`,
+##    but around the ACTOR's own cell at the actor's weapon/skill range. Like
+##    every other `_radius_area` caller (icy_floor/blast_damage's own hit
+##    area), this is a flat Chebyshev clip, not per-empty-cell wall
+##    shadow-casting -- it can never disagree with the sim about REACH
+##    (distance + blocked-cell exclusion), only about whether one specific
+##    far cell is independently walled off, the same disclosed limitation
+##    `_radius_area`'s own doc comment already carries. Excluded for a
+##    self-only cast (heal/invisibility/sneak-class skills): there is nothing
+##    to "reach", the target is fixed to the caster.
+## Called every `combat_screen.gd._refresh()` while ATTACK/SKILL_TARGET is
+## armed; callers clear the paint (`board_renderer.clear_aim_preview()`)
+## whenever this isn't -- see that file's own doc comment.
+func aim_preview() -> Dictionary:
+	var me: String = _view.active_id()
+	var origin: Vector2i = _view.cell(me)
+	if _line_mode:
+		var dir_token := String(LINE_DIRS[_line_dir_index])
+		var dir_vec: Vector2i = LINE_DIR_VECTORS[dir_token]
+		var skill: Dictionary = _view.skill(_targeting_skill_id)
+		var length := int((skill.get("effect", {}) as Dictionary).get("length", 1))
+		return {
+			"kind": "line", "ring_cell": null, "range_cells": [],
+			"line_cells": _view.line_cells(origin, dir_vec, length), "blast_cells": [],
+		}
+	var is_self_cast := _targeting_skill_id != "" and _targets.size() == 1 and String(_targets[0]) == me
+	var kind := "attack" if _targeting_skill_id == "" else "skill"
+	var ring_cell: Variant = null
+	var blast_cells: Array = []
+	if not _targets.is_empty():
+		var target_id := String(_targets[_target_index])
+		ring_cell = _view.cell(target_id)
+		if _targeting_skill_id != "":
+			var skill: Dictionary = _view.skill(_targeting_skill_id)
+			var effect: Dictionary = skill.get("effect", {})
+			var effect_type := String(effect.get("type", ""))
+			if effect_type in ["icy_floor", "blast_damage"]:
+				kind = "blast"
+				blast_cells = _view.radius_area(ring_cell, int(effect.get("radius", 0)))
+	var range_cells: Array = []
+	if not is_self_cast:
+		var effect2: Dictionary = {}
+		if _targeting_skill_id != "":
+			effect2 = (_view.skill(_targeting_skill_id) as Dictionary).get("effect", {}) as Dictionary
+		var melee := _targeting_skill_id == "" or not effect2.has("range")
+		var range_n := int((_view.combatant(me) as Dictionary).get("weapon_range", 1)) if melee else int(effect2.get("range", 0))
+		if range_n > 0:
+			range_cells = _view.radius_area(origin, range_n)
+			range_cells.erase(origin)
+	return {"kind": kind, "ring_cell": ring_cell, "range_cells": range_cells, "line_cells": [], "blast_cells": blast_cells}

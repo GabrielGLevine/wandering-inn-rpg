@@ -140,6 +140,22 @@ func _init() -> void:
 	assert(board_renderer_source.find("_world_labels()") != -1, "board renderer must publish combat labels through WorldLabels")
 	assert(board_renderer_source.find("rebuild_context") != -1, "board renderer must publish labels via WIWorldLabels.rebuild_context")
 
+	# Issue #75: the new render-primitive surface, one per item. board_renderer.gd
+	# references ObservableBus/TestDriver directly (same as combat_screen.gd),
+	# so it stays raw-source-checked, not load()+instantiate'd, matching every
+	# other assertion in this block.
+	assert(board_renderer_source.find("func render_aim_preview") != -1, "board renderer must define render_aim_preview (item 1)")
+	assert(board_renderer_source.find("func clear_aim_preview") != -1, "board renderer must define clear_aim_preview (item 1)")
+	assert(board_renderer_source.find("func spawn_damage_number") != -1, "board renderer must define spawn_damage_number (item 2)")
+	assert(board_renderer_source.find("func spawn_miss_indicator") != -1, "board renderer must define spawn_miss_indicator (item 2)")
+	assert(board_renderer_source.find("func micro_lunge") != -1, "board renderer must define micro_lunge (item 3)")
+	assert(board_renderer_source.find("func spawn_projectile") != -1, "board renderer must define spawn_projectile (item 3)")
+	assert(board_renderer_source.find("func set_status_pip") != -1, "board renderer must define set_status_pip (item 4)")
+	var pip_colors_block := board_renderer_source.get_slice("const STATUS_PIP_COLORS := {", 1).get_slice("}", 0)
+	assert(not pip_colors_block.contains("invisible"), "STATUS_PIP_COLORS must not carry an 'invisible' entry -- it already has its own alpha-fade tell (set_combatant_alpha)")
+	assert(pip_colors_block.contains("slowed"), "STATUS_PIP_COLORS must map 'slowed' to a pip color")
+	assert(board_renderer_source.find("func set_active_marker") != -1, "board renderer must define set_active_marker (item 5a)")
+
 	# targeting_controller.gd/combat_hud.gd carry ZERO bare autoload
 	# identifiers by design (same idiom D3 established for combat_playback.gd)
 	# -- unlike combat_screen.gd/board_renderer.gd, they can be load()+
@@ -254,12 +270,91 @@ func _init() -> void:
 	var sel_action: Dictionary = sel_targeting.confirm()
 	assert(String(sel_action["target_id"]) == "goblin_raider_2", "a click must re-point confirm() at the CLICKED combatant, not enter()'s default ordering")
 	assert(not sel_targeting.select_at_cell(Vector2i(99, 99)), "a click on a cell with no candidate must return false")
+
+	# Issue #75 item 1 (aim_preview, attack shape) + item 5b (display_name
+	# dedup) -- reuses the SAME duplicate-"Goblin Raider" roster
+	# select_at_cell just proved above (goblin_raider/goblin_raider_2 at
+	# (6,5)/(4,5), pc at (5,5)); the click already re-pointed `_target_index`
+	# at goblin_raider_2.
+	var preview: Dictionary = sel_targeting.aim_preview()
+	assert(String(preview["kind"]) == "attack", "aim_preview() kind must be 'attack' for a bare Attack (no skill_id)")
+	assert((preview["ring_cell"] as Vector2i) == Vector2i(4, 5), "aim_preview() ring_cell must track the CURRENTLY selected candidate (post select_at_cell), never enter()'s default")
+	assert((preview["blast_cells"] as Array).is_empty() and (preview["line_cells"] as Array).is_empty(), "a bare Attack has no AoE/line footprint")
+	var preview_range: Array = preview["range_cells"]
+	assert(preview_range.has(Vector2i(6, 5)) and preview_range.has(Vector2i(4, 5)), "the range tint must cover both adjacent candidate cells at weapon_range 1 (WICombatView.radius_area around the ACTOR's own cell)")
+	assert(not preview_range.has(Vector2i(5, 5)), "the range tint must exclude the actor's OWN cell")
+
+	# Issue #75 item 5b: "Goblin Raider" fields TWICE in this roster -- both
+	# ids must resolve to A/B-suffixed labels (sorted by combatant id, the
+	# same stable tie-break line_target_text() already uses); a non-duplicate
+	# name (the pc's own "Traveler") stays untouched (identity mapping --
+	# byte-identical to every pre-#75 fight with no duplicate-name roster).
+	assert(sel_view.display_name("goblin_raider") == "Goblin Raider A", "the first (lower-sorted id) of a duplicate-name pair gets the A suffix")
+	assert(sel_view.display_name("goblin_raider_2") == "Goblin Raider B", "the second gets the B suffix")
+	assert(sel_view.display_name("pc") == "Traveler", "a non-duplicate display_name is untouched (identity mapping)")
 	stub_screen.free()
+
+	# Issue #75 item 1 (aim_preview, blast/line/self-cast shapes): a fresh
+	# combat with icy_floor (radius) and flame_jet (line) granted directly --
+	# both derivations must be BYTE-IDENTICAL to the real
+	# WICombatView.radius_area()/line_cells() calls, never a hand-duplicated
+	# formula (the "preview cannot lie" contract).
+	var ap_pc_cfg: Dictionary = (_combatant_config(tc_combatants, "pc") as Dictionary).duplicate(true)
+	ap_pc_cfg["skills"] = ["icy_floor", "flame_jet"]
+	var ap_goblin_cfg: Dictionary = (_combatant_config(tc_combatants, "goblin_raider") as Dictionary).duplicate(true)
+	var ap_combat := WICombat.new(tc_arena, [ap_pc_cfg, ap_goblin_cfg], tc_skills, func(_t: String, _p: Dictionary) -> void: pass, 9)
+	ap_combat.begin()
+	ap_combat.active_index = ap_combat.turn_order.find("pc")
+	ap_combat._start_turn()
+	ap_combat.combatants["pc"][WIKeys.CELL] = Vector2i(2, 2)
+	ap_combat.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(3, 2)
+	var ap_view := WICombatView.new(ap_combat)
+	var ap_stub_screen_script := GDScript.new()
+	ap_stub_screen_script.source_code = "extends Node\nfunc _emit_targeting_shown_event(_mode_text: String, _skill_id: String, _target_count: int) -> void:\n\tpass\n"
+	assert(ap_stub_screen_script.reload() == OK, "stub aim-preview screen failed to compile")
+	var ap_stub_screen: Node = ap_stub_screen_script.new()
+
+	var blast_targeting: RefCounted = targeting_script.new(ap_view, ap_stub_screen)
+	blast_targeting.enter(0, "icy_floor")
+	var blast_preview: Dictionary = blast_targeting.aim_preview()
+	assert(String(blast_preview["kind"]) == "blast", "aim_preview() kind must be 'blast' for icy_floor/blast_damage")
+	assert((blast_preview["ring_cell"] as Vector2i) == Vector2i(3, 2), "blast ring_cell must land on the default (adjacent goblin) candidate")
+	var expected_blast: Array = ap_view.radius_area(Vector2i(3, 2), 1)
+	assert((blast_preview["blast_cells"] as Array) == expected_blast, "blast_cells must be BYTE-IDENTICAL to WICombatView.radius_area() around the target's cell -- the SAME function icy_floor's own real cast uses (WISkillEffects._radius_area)")
+
+	var line_targeting: RefCounted = targeting_script.new(ap_view, ap_stub_screen)
+	line_targeting.enter(0, "flame_jet")
+	var line_preview: Dictionary = line_targeting.aim_preview()
+	assert(String(line_preview["kind"]) == "line", "aim_preview() kind must be 'line' while a line_damage skill is armed")
+	var expected_line: Array = ap_view.line_cells(Vector2i(2, 2), Vector2i.UP, 4)
+	assert((line_preview["line_cells"] as Array) == expected_line, "line_cells must be BYTE-IDENTICAL to WICombatView.line_cells() -- the exact cells a confirmed cast would walk")
+	assert((line_preview["range_cells"] as Array).is_empty() and (line_preview["blast_cells"] as Array).is_empty(), "line mode paints ONLY the line path -- no range tint/blast overlap")
+
+	var sneak_preview_targeting: RefCounted = targeting_script.new(tc_view, ap_stub_screen)
+	sneak_preview_targeting.enter(0, "sneak")
+	var sneak_preview: Dictionary = sneak_preview_targeting.aim_preview()
+	assert((sneak_preview["ring_cell"] as Vector2i) == tc_view.cell("pc"), "a self-cast skill's ring_cell must land on the caster's OWN cell")
+	assert((sneak_preview["range_cells"] as Array).is_empty(), "a self-cast skill has no 'reach' concept -- range tint must be excluded, not a misleading melee-range ring around the caster")
+	ap_stub_screen.free()
 
 	var hud_script := load("res://src/combat/combat_hud.gd") as Script
 	assert(hud_script != null and hud_script.can_instantiate(), "combat_hud.gd must compile standalone (zero bare autoload identifiers)")
 	for method_name: String in ["build", "refresh", "rebuild_slots", "render_bar_slots", "feed_push", "feed_line_for_event", "reset_tutor_lines", "match_tutor_line", "render_tutor_line", "show_banner", "clear_feed"]:
 		assert(hud_script.new(null, null, null).has_method(method_name), "combat HUD missing method: " + method_name)
+
+	# Issue #75 item 5b: feed_line_for_event's threaded `view` param must
+	# disambiguate a duplicate-name roster on the FEED too, not just the
+	# targeting-controller/turn-strip surfaces checked above -- reuses the
+	# SAME duplicate-"Goblin Raider" `sel_combat`/`sel_view` built earlier.
+	var dedup_hud: RefCounted = hud_script.new(null, null, null)
+	var dedup_line: String = dedup_hud.feed_line_for_event(WIEvents.ATTACK_RESOLVED, {
+		"attacker": "goblin_raider", "target": "goblin_raider_2", "hit": true, "damage": 3,
+	}, sel_combat, sel_view)
+	assert(dedup_line == "Goblin Raider A strikes Goblin Raider B for 3!", "feed_line_for_event must render A/B-disambiguated names when given the view param")
+	var undeduped_line: String = dedup_hud.feed_line_for_event(WIEvents.ATTACK_RESOLVED, {
+		"attacker": "goblin_raider", "target": "goblin_raider_2", "hit": true, "damage": 3,
+	}, sel_combat, null)
+	assert(undeduped_line == "Goblin Raider strikes Goblin Raider for 3!", "a null view (API-safety fallback) must render the raw undeduped display_name, matching the pre-#75 behavior")
 	# Real behavioral check of the tutor-line matcher (the counting half)
 	# -- moved verbatim from combat_screen.gd, still must fire on its declared
 	# event and never re-fire once matched.

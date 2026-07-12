@@ -214,6 +214,19 @@ const UI_SLOT_INFO_RENDERED := &"ui_slot_info_rendered"
 ## Payload `{kind:String, cells:[[x,y],...]}`, same shape as the domain
 ## event it confirms -- the ui_*_rendered idiom (UI_ARENA_RENDERED et al.).
 const UI_TERRAIN_RENDERED := &"ui_terrain_rendered"
+## Issue #75 item 1: board_renderer.gd's confirmation that the board-space aim
+## preview (target ring, range tint, line/blast footprint) redrew while
+## ATTACK/SKILL_TARGET is armed -- fires on `enter()`/cycle/direction-change/
+## click-reselect (every `combat_screen.gd._refresh()` while in_targeting),
+## deduped so an unchanged preview doesn't re-fire. AIM STATE, not juice --
+## unlike the shake/spark/flash effects, this is NOT QA-collapsed (it must
+## render and confirm identically headless and windowed). Payload
+## `{kind: "attack"|"skill"|"line"|"blast", cells: [[x,y],...]}` -- `cells` is
+## the PRIMARY sim-derived footprint for `kind` (the line path for "line", the
+## radius_area for "blast", the single selected candidate's cell for
+## "attack"/"skill"; the faint range-reach tint is paint-only, not asserted
+## here).
+const UI_AIM_PREVIEW_RENDERED := &"ui_aim_preview_rendered"
 const UI_AI_PLAYBACK_DONE := &"ui_ai_playback_done"
 const UI_DIALOGUE_SHOWN := &"ui_dialogue_shown"
 const UI_DIALOGUE_HIDDEN := &"ui_dialogue_hidden"

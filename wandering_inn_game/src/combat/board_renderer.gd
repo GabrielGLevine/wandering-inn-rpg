@@ -59,6 +59,61 @@ const COMBATANT_Z := 1
 const MOVE_TWEEN_SECONDS := 0.12
 const BUMP_PIXELS := 3.0
 const BUMP_TWEEN_SECONDS := 0.06
+## Issue #75 item 1 (aim preview): board-space paint while ATTACK/SKILL_TARGET
+## is armed. Renders in the SAME z_index band as terrain (0, below
+## COMBATANT_Z) but added to `_board` AFTER it every `render_aim_preview()`
+## call, so tree order draws it above any live terrain overlay -- same
+## "z_index ties break on add order" convention `add_terrain`'s own doc
+## comment relies on. RANGE tint is deliberately faint (a reach affordance,
+## not a hit guarantee); the AOE tint (line/blast footprint) is brighter --
+## those cells WILL be hit if confirmed; the ring is brightest, marking the
+## exact currently-selected candidate.
+const AIM_RANGE_TINT := Color(1.0, 1.0, 1.0, 0.10)
+const AIM_AOE_TINT := Color(1.0, 0.82, 0.25, 0.32)
+const AIM_RING_COLOR := Color(1.0, 0.95, 0.25, 0.95)
+const AIM_RING_THICKNESS := 2.0
+## Impact damage numbers (item 2) -- a floating world-space label at the
+## struck cell, brief rise-fade, juice-gated like every other combat-feel
+## effect (`_juice_enabled` -> `_presentation_delay`, zero under TestDriver/
+## headless -- byte-identical event stream). Colors reuse the SAME
+## ALLY_HP_COLOR/ENEMY_HP_COLOR hues the struck combatant's own HP bar
+## already uses for "who got hit", so the player never has to learn a second
+## palette. `MISS_COLOR` is neutral -- a miss must never read as "0 damage".
+const DAMAGE_NUMBER_RISE_PX := 10.0
+const DAMAGE_NUMBER_SECONDS := 0.6
+const MISS_COLOR := Color(0.85, 0.85, 0.85, 0.95)
+## Attack connection (item 3). `LUNGE_PIXELS` is deliberately bigger than
+## `BUMP_PIXELS` (3px, a "your move was refused" nudge) -- this is a
+## deliberate strike, not a blocked-move bump, so it reads distinctly.
+## `PROJECTILE_DEFAULT_COLOR` is the neutral tint for a plain ranged Attack
+## (a bow -- no element to tint by); an active skill cast passes its OWN
+## element color in instead (the exact FROST_FLASH/FLAME_FLASH combat_screen.
+## gd already computes for cast-flash cells).
+const LUNGE_PIXELS := 5.0
+const LUNGE_TWEEN_SECONDS := 0.07
+const PROJECTILE_SECONDS := 0.12
+const PROJECTILE_THICKNESS := 3.0
+const PROJECTILE_DEFAULT_COLOR := Color(0.92, 0.92, 0.85, 0.9)
+## Status pips (item 4): a small per-status dot over a combatant's holder,
+## top-right corner (HP/MP bars already own the bottom edge). DATA-DRIVEN --
+## keyed by status id off STATUS_APPLIED/STATUS_EXPIRED's own payload, never
+## a skill name, so a future status entry added to this map rides the same
+## dispatch for free. `invisible` is deliberately absent -- it already has
+## its own alpha-fade tell (`set_combatant_alpha`); a pip on top would be
+## redundant.
+const STATUS_PIP_COLORS := {
+	"slowed": Color(0.55, 0.85, 1.0, 0.95),
+}
+const STATUS_PIP_SIZE := Vector2(4.0, 4.0)
+## Turn clarity (item 5a): a small chevron floating just above the CURRENT
+## turn's combatant's cell (a fixed cell-relative offset, not sprite-height-
+## aware -- same simplification the HP/MP bars already accept). Moved on
+## every TURN_STARTED via the ONE function both the live and paced-AI-
+## playback paths funnel through (`combat_screen.gd._apply_turn_started`).
+const ACTIVE_MARKER_COLOR := Color(1.0, 0.95, 0.3, 1.0)
+const ACTIVE_MARKER_TIP_Y := -6.0
+const ACTIVE_MARKER_BASE_Y := -12.0
+const ACTIVE_MARKER_HALF_WIDTH := 4.0
 ## Combat-feel tuning (presentation-only, all QA-collapsed via
 ## `_juice_enabled` -> `_presentation_delay`, zero under TestDriver/headless).
 const HIT_FLASH_COLOR := Color(2.4, 2.4, 2.4, 1.0)  # white-hot pulse on the struck sprite
@@ -172,6 +227,20 @@ var _main_ref: Node
 ## comment for the z-order contract that keeps them under combatant
 ## visuals).
 var _terrain_overlays: Dictionary = {}
+## Issue #75 item 1: transient aim-preview paint nodes (range tint, AOE tint,
+## ring), rebuilt wholesale by every `render_aim_preview()` call -- see that
+## function's doc comment. `_last_aim_preview_key` dedupes the additive
+## ui_aim_preview_rendered confirmation so an unchanged preview doesn't spam
+## the bus every `_refresh()`.
+var _aim_preview_nodes: Array = []
+var _last_aim_preview_key := ""
+## Issue #75 item 4: id -> {status_id: ColorRect}, mirrors `_hp_bars`'/
+## `_mp_bars`' per-combatant tracking-dict shape.
+var _status_pips: Dictionary = {}
+## Issue #75 item 5a: the single active-unit marker (only one combatant's
+## turn is ever active at a time) and the id it currently marks.
+var _active_marker: Node2D
+var _active_marker_id := ""
 
 ## GH #28 DARK-ARENAS: this build()'s combatant-legibility self_modulate
 ## floor (see the const block above) -- (1,1,1,1) identity for any arena
@@ -221,6 +290,15 @@ func build(view: WICombatView, main_ref: Node) -> void:
 	# encounter's terrain overlay nodes (they're `_board` children); this just
 	# drops the now-stale tracking dict so a fresh combat starts with none.
 	_terrain_overlays.clear()
+	# Same reasoning for issue #75's new per-encounter trackers: the wholesale
+	# free above already frees the aim-preview/status-pip/active-marker nodes
+	# (children of `_board` or of a combatant holder under it) -- this just
+	# drops the now-stale references/dedup key so a fresh combat starts clean.
+	_aim_preview_nodes.clear()
+	_last_aim_preview_key = ""
+	_status_pips.clear()
+	_active_marker = null
+	_active_marker_id = ""
 	world.enter_combat_camera(view.grid_size())
 	_board.visible = true
 	_legibility_boost = _legibility_modulate(view)
@@ -265,6 +343,11 @@ func clear() -> void:
 	# Drop the tracking dict defensively (see build()'s matching
 	# comment) -- the next build() frees the actual overlay nodes wholesale.
 	_terrain_overlays.clear()
+	_aim_preview_nodes.clear()
+	_last_aim_preview_key = ""
+	_status_pips.clear()
+	_active_marker = null
+	_active_marker_id = ""
 
 
 ## Playtest fix (props-over-tiles): renders `combat.blocked` cells as biome-
@@ -855,6 +938,267 @@ func expire_terrain(kind: String, cells: Array) -> void:
 				rect.queue_free()
 			by_kind.erase(cell)
 	_terrain_overlays[kind] = by_kind
+
+
+## Board-space aim-preview paint (issue #75 item 1) -- `state` is
+## `WICombatTargeting.aim_preview()`'s return shape (`kind`, `ring_cell`,
+## `range_cells`, `line_cells`, `blast_cells`); this function only PAINTS, it
+## derives nothing (see that function's own doc comment for the "cannot lie"
+## derivation contract). Called every `combat_screen.gd._refresh()` while
+## ATTACK/SKILL_TARGET is armed; `clear_aim_preview()` on every other mode --
+## cancel/confirm/mode-exit all route through the SAME `_refresh()`
+## in_targeting branch there, so no separate teardown call is needed for
+## those. Deliberately NOT gated behind `_juice_enabled()` -- this is aim
+## STATE, not transient combat feel, so it (and its ui_aim_preview_rendered
+## confirmation) must render identically under headless QA and real play.
+func render_aim_preview(state: Dictionary) -> void:
+	_clear_aim_preview_nodes()
+	if _board == null or state.is_empty():
+		return
+	var kind := String(state.get("kind", ""))
+	for cell: Vector2i in (state.get("range_cells", []) as Array):
+		_aim_preview_nodes.append(_add_aim_tint(cell, AIM_RANGE_TINT))
+	var line_cells: Array = state.get("line_cells", [])
+	var blast_cells: Array = state.get("blast_cells", [])
+	var aoe_cells: Array = line_cells if not line_cells.is_empty() else blast_cells
+	for cell: Vector2i in aoe_cells:
+		_aim_preview_nodes.append(_add_aim_tint(cell, AIM_AOE_TINT))
+	var ring_cell: Variant = state.get("ring_cell", null)
+	if ring_cell is Vector2i:
+		_aim_preview_nodes.append(_add_aim_ring(ring_cell as Vector2i))
+	var primary_cells: Array = aoe_cells if not aoe_cells.is_empty() else ([ring_cell] if ring_cell is Vector2i else [])
+	_emit_aim_preview_event(kind, primary_cells)
+
+
+## Clears the aim-preview paint -- called whenever targeting is NOT active
+## (combat_screen.gd's `_refresh()`), and defensively from `build()`/`clear()`
+## at encounter boundaries (see those functions' own doc comments).
+func clear_aim_preview() -> void:
+	_clear_aim_preview_nodes()
+	_last_aim_preview_key = ""
+
+
+func _clear_aim_preview_nodes() -> void:
+	for node: Node in _aim_preview_nodes:
+		if is_instance_valid(node):
+			node.queue_free()
+	_aim_preview_nodes.clear()
+
+
+func _add_aim_tint(cell: Vector2i, color: Color) -> ColorRect:
+	var rect := ColorRect.new()
+	rect.name = "AimTint"
+	rect.color = color
+	rect.position = Vector2(cell) * CELL
+	rect.size = Vector2(CELL, CELL)
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_board.add_child(rect)
+	return rect
+
+
+## Hollow border (4 thin ColorRects forming a square outline) rather than a
+## filled square -- reads as a RING distinct from the filled AOE/range tints
+## painted underneath it.
+func _add_aim_ring(cell: Vector2i) -> Node2D:
+	var holder := Node2D.new()
+	holder.name = "AimRing"
+	var origin := Vector2(cell) * CELL
+	var t := AIM_RING_THICKNESS
+	var edges: Array[Rect2] = [
+		Rect2(origin, Vector2(CELL, t)),
+		Rect2(origin + Vector2(0.0, CELL - t), Vector2(CELL, t)),
+		Rect2(origin, Vector2(t, CELL)),
+		Rect2(origin + Vector2(CELL - t, 0.0), Vector2(t, CELL)),
+	]
+	for edge: Rect2 in edges:
+		var rect := ColorRect.new()
+		rect.color = AIM_RING_COLOR
+		rect.position = edge.position
+		rect.size = edge.size
+		rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		holder.add_child(rect)
+	_board.add_child(holder)
+	return holder
+
+
+## Additive QA confirmation (issue #75 item 1) -- deduped so an unchanged
+## preview (e.g. a `_refresh()` triggered by something unrelated while still
+## aiming the same candidate) doesn't spam the bus; a genuinely new kind or
+## cell set always fires.
+func _emit_aim_preview_event(kind: String, cells: Array) -> void:
+	var cells_payload: Array = []
+	for cell: Vector2i in cells:
+		cells_payload.append([cell.x, cell.y])
+	var key := "%s:%s" % [kind, str(cells_payload)]
+	if key == _last_aim_preview_key:
+		return
+	_last_aim_preview_key = key
+	ObservableBus.emit_domain_event(WIEvents.UI_AIM_PREVIEW_RENDERED, {"kind": kind, "cells": cells_payload})
+
+
+## Floating damage numeral at the struck cell (issue #75 item 2) -- brief
+## rise-fade, juice-gated (no-op headless/TestDriver -- byte-identical event
+## stream). `side` picks the SAME ALLY_HP_COLOR/ENEMY_HP_COLOR hue the struck
+## combatant's own HP bar already uses for "who got hit".
+func spawn_damage_number(cell_xy: Array, amount: int, side: String) -> void:
+	if not _juice_enabled() or _board == null or cell_xy.size() < 2:
+		return
+	var color := ALLY_HP_COLOR if side == "player" else ENEMY_HP_COLOR
+	_spawn_floating_text(cell_xy, str(amount), color)
+
+
+## Distinct miss feedback at the target cell (issue #75 item 2) -- same
+## floating-text primitive as the damage numeral, neutral grey so a miss
+## never reads as "0 damage dealt".
+func spawn_miss_indicator(cell_xy: Array) -> void:
+	if not _juice_enabled() or _board == null or cell_xy.size() < 2:
+		return
+	_spawn_floating_text(cell_xy, "Miss", MISS_COLOR)
+
+
+func _spawn_floating_text(cell_xy: Array, text: String, color: Color) -> void:
+	var label := UIChrome.make_label(text, "Small")
+	# `_board` lives inside the world SubViewport, outside any themed Control
+	# ancestor (the HUD's own theme lives on combat_screen.gd's separate
+	# CanvasLayer `_root`) -- set the theme directly on this instance so the
+	# numeral still renders in the game's real font/size instead of falling
+	# back to the engine default.
+	label.theme = UIChrome.THEME
+	label.modulate = color
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.z_index = 25
+	label.custom_minimum_size = Vector2(CELL * 2.0, 14.0)
+	label.size = label.custom_minimum_size
+	var origin := Vector2(int(cell_xy[0]), int(cell_xy[1])) * CELL
+	label.position = origin + Vector2(CELL * 0.5 - label.custom_minimum_size.x * 0.5, -label.custom_minimum_size.y)
+	_board.add_child(label)
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(label, "position:y", label.position.y - DAMAGE_NUMBER_RISE_PX, DAMAGE_NUMBER_SECONDS)
+	tw.tween_property(label, "modulate:a", 0.0, DAMAGE_NUMBER_SECONDS)
+	tw.set_parallel(false)
+	tw.tween_callback(label.queue_free)
+
+
+## Melee "attack connection" (issue #75 item 3) -- the SAME bump-tween
+## primitive `bump()` uses for blocked-move feedback, pointed at the TARGET's
+## cell instead of an input direction: a brief lunge toward it then back.
+## Juice-gated -- headless/QA never observes the holder's position move even
+## transiently.
+func micro_lunge(id: String, target_cell: Array) -> void:
+	if not _juice_enabled() or target_cell.size() < 2:
+		return
+	var visual := visual_for(id)
+	if visual == null:
+		return
+	var to := Vector2(int(target_cell[0]), int(target_cell[1])) * CELL
+	var dir := to - visual.position
+	if dir == Vector2.ZERO:
+		return
+	dir = dir.normalized()
+	_kill_combat_tween(id)
+	var home := visual.position
+	var tw := create_tween()
+	tw.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(visual, "position", home + dir * LUNGE_PIXELS, LUNGE_TWEEN_SECONDS)
+	tw.tween_property(visual, "position", home, LUNGE_TWEEN_SECONDS)
+	_combat_tweens[id] = tw
+
+
+## Ranged/spell "attack connection" (issue #75 item 3) -- a fast streak
+## (fade in, hold, fade out over one short tween) from the attacker's cell
+## center to the target's, tinted by `color` (the caster's element --
+## FROST_FLASH/FLAME_FLASH, passed in by combat_screen.gd) or, when `color`
+## is transparent (a plain non-elemental ranged Attack -- a bow, no skill
+## cast), the neutral PROJECTILE_DEFAULT_COLOR resolved HERE so callers never
+## need this file's own const. Juice-gated.
+func spawn_projectile(from_cell: Array, to_cell: Array, color: Color) -> void:
+	if not _juice_enabled() or _board == null or from_cell.size() < 2 or to_cell.size() < 2:
+		return
+	var half_cell := Vector2(CELL, CELL) * 0.5
+	var from := Vector2(int(from_cell[0]), int(from_cell[1])) * CELL + half_cell
+	var to := Vector2(int(to_cell[0]), int(to_cell[1])) * CELL + half_cell
+	if from.is_equal_approx(to):
+		return
+	var streak := Line2D.new()
+	streak.name = "ProjectileStreak"
+	streak.width = PROJECTILE_THICKNESS
+	streak.default_color = color if color.a > 0.0 else PROJECTILE_DEFAULT_COLOR
+	streak.z_index = 22
+	streak.add_point(from)
+	streak.add_point(to)
+	_board.add_child(streak)
+	var tw := create_tween()
+	tw.tween_property(streak, "modulate:a", 0.0, PROJECTILE_SECONDS)
+	tw.tween_callback(streak.queue_free)
+
+
+## Per-status pip over a combatant's holder (issue #75 item 4) -- DATA-DRIVEN
+## off `STATUS_PIP_COLORS`: an unlisted status_id (including "invisible",
+## which already has its own alpha tell) is a silent no-op, so a future
+## status entry added to that map gets a pip for free with zero new dispatch
+## code at the call site.
+func set_status_pip(id: String, status_id: String, active: bool) -> void:
+	if not STATUS_PIP_COLORS.has(status_id):
+		return
+	var visual := visual_for(id)
+	if visual == null:
+		return
+	var pips: Dictionary = _status_pips.get(id, {})
+	if active:
+		var existing: Variant = pips.get(status_id)
+		if existing != null and is_instance_valid(existing):
+			return
+		var dot := ColorRect.new()
+		dot.name = "StatusPip_%s" % status_id
+		dot.color = STATUS_PIP_COLORS[status_id]
+		dot.size = STATUS_PIP_SIZE
+		dot.position = Vector2(CELL - STATUS_PIP_SIZE.x - 1.0, 1.0)
+		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		visual.add_child(dot)
+		pips[status_id] = dot
+	else:
+		var dot: Variant = pips.get(status_id)
+		if dot != null and is_instance_valid(dot):
+			(dot as Node).queue_free()
+		pips.erase(status_id)
+	_status_pips[id] = pips
+
+
+## Persistent active-unit marker (issue #75 item 5a) -- a small chevron just
+## above the CURRENT turn's combatant's cell, moved on every TURN_STARTED via
+## the ONE function both the live and paced-AI-playback paths funnel through
+## (combat_screen.gd's `_apply_turn_started`). Fixed cell-relative offset,
+## not sprite-height-aware -- the same simplification the HP/MP bars already
+## accept (see their own `position` literals).
+func set_active_marker(id: String) -> void:
+	if _active_marker != null and is_instance_valid(_active_marker):
+		_active_marker.queue_free()
+	_active_marker = null
+	_active_marker_id = id
+	var visual := visual_for(id)
+	if visual == null:
+		return
+	var marker := Polygon2D.new()
+	marker.name = "ActiveMarker"
+	marker.color = ACTIVE_MARKER_COLOR
+	marker.polygon = PackedVector2Array([
+		Vector2(CELL * 0.5 - ACTIVE_MARKER_HALF_WIDTH, ACTIVE_MARKER_BASE_Y),
+		Vector2(CELL * 0.5 + ACTIVE_MARKER_HALF_WIDTH, ACTIVE_MARKER_BASE_Y),
+		Vector2(CELL * 0.5, ACTIVE_MARKER_TIP_Y),
+	])
+	visual.add_child(marker)
+	_active_marker = marker
+
+
+## Defensive teardown -- not on the encounter's hot path (build()/clear()
+## already reset the tracking var, see those functions' own doc comments),
+## kept for symmetry with `clear_aim_preview()`.
+func clear_active_marker() -> void:
+	if _active_marker != null and is_instance_valid(_active_marker):
+		_active_marker.queue_free()
+	_active_marker = null
+	_active_marker_id = ""
 
 
 ## Juice gate: true only in real play (windowed non-QA / native). Reuses

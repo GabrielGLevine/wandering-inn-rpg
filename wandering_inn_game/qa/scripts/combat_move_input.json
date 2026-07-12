@@ -153,6 +153,32 @@
    }
   },
   {
+   "_comment": "Issue #75 item 1: THE attack-aim pin -- entering Attack targeting (hotbar_1) must paint/confirm the board-space aim preview through the real input path, kind 'attack'. No enemy is adjacent at the opening cell (the goblins are far east per this script's own route comment), so `cells` is empty (no ring candidate) -- that's still a real, asserted render (the range tint still paints around the pc). A bare Esc cancel right after costs no AP/pool and leaves every later cell/state assertion in this script unaffected.",
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": { "mode": "attack" },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_aim_preview_rendered",
+   "payload_contains": { "kind": "attack" },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
    "_comment": "ONBOARDING O5 re-route: relc (ally) reliably holds its (2,4) spawn (turn order puts it after the pc, so it never vacates), so the pc's manual demo now goes NORTH/WEST -- (2,3)->up(2,2)->left(1,2)->up(1,1) -- all clear of relc and of the eastbound goblins. Direct arrow movement: one pool point per step, no Move mode.",
    "action": "press",
    "name": "move_up"
