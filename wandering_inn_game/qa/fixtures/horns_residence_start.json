@@ -1,0 +1,74 @@
+{
+ "_comment": "8d D2 (issue #14/#15) horns_residence canonical's start -- 'What the Seal Kept' fully complete (the FIGHT-route continuation of delve_fight_start: same Act III backbone + T4 gear, advanced past both live fights it resolves -- horns_delve_started/horns_party_formed/halls_cleared/vault_construct_downed/seal_kept_found/seal_kept_reported all banked, the full stipend paid (40g base + 5g accept + 15g report = 60g)), positioned back at the inn (10,6), open common-room floor, facing down -- clear of every blocked/decor/entity cell and of the three new present_when-gated NPCs (ceria_inn 8,6 / yvlon_inn 2,2 / ksmvr_inn 14,7). This is the ONE fixture that proves `present_when.requires.seal_kept_reported` reads MET: WIGame.entity_present gates the three inn-residence sightings open here, the exact positive half of horns_residence's own canonical (the negative half is inn_walkthrough's unrelated pre-quest run staying byte-identical).",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   10,
+   6
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "spellsword": 11
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
+   "post_game": 1,
+   "horns_delve_started": 1,
+   "horns_party_formed": 1,
+   "halls_cleared": 1,
+   "vault_construct_downed": 1,
+   "seal_kept_found": 1,
+   "seal_kept_reported": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
+   "what_the_seal_kept"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "gold": 60,
+  "actions_since_sleep": 0,
+  "times_slept": 12,
+  "rng_state": "-1966449618399012673"
+ }
+}

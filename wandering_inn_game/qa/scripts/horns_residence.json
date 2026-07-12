@@ -1,0 +1,53 @@
+{
+ "_comment": "8d D2 (issue #14/#15): the Horns of Hammerad's post-delve inn residence -- pool presences only v1 (Social II talk_pool_stages explicitly deferred). Loads `horns_residence_start` ('What the Seal Kept' fully complete, seal_kept_reported banked) via title Continue, positioned at (10,6). THE POSITIVE presence proof: ui_entities_rendered's inn sprite count reads 19 (the pre-existing 16 + ceria_inn/yvlon_inn/ksmvr_inn, all three resolving to registered sprite art, zero fallbacks) -- `inn_walkthrough` (unrelated PRE-quest run, unmodified) is this canonical's own negative half, staying pinned at 16/0 since its fixture never banks seal_kept_reported. Walks to each of the three new sightings in turn (Ceria at her common-room table 8,6 / Yvlon by the hearth 2,2 / Ksmvr beside the pantry door 14,7) and pins ONE talk_pool line each via dialogue_line + ui_dialogue_rendered (rotation index 0, the first-talk-this-waking guarantee -- chatted_with_<id> is unbanked in the fixture).",
+ "starts_at_title": true,
+ "fixture_save": "horns_residence_start",
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "assert_state", "path": "current_map", "equals": "inn"},
+  {"action": "assert_state", "path": "player_cell", "equals": [10, 6]},
+  {"action": "assert_state", "path": "accomplishments.seal_kept_reported", "equals": 1},
+  {"_comment": "THE POSITIVE presence proof -- pre-existing inn baseline is 16 sprites/0 fallbacks (inn_walkthrough's own pinned pre-quest count); the three present_when-gated Horns sightings, all resolving to registered sprite art, bump it to 19/0.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": {"sprites": 19, "fallbacks": 0}},
+
+  {"_comment": "== CERIA, at the common-room table (8,6) == route around rift_vermin_leak (9,7) via row8: down2 -> (10,8), left2 -> (8,8), up1 -> (8,7) facing up, directly south of Ceria.", "action": "move", "direction": "down", "steps": 2},
+  {"action": "move", "direction": "left", "steps": 2},
+  {"action": "move", "direction": "up", "steps": 1},
+  {"action": "assert_state", "path": "player_cell", "equals": [8, 7]},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Ceria Springwalker", "text": "The couch by the fire is Yvlon's now. Territorial, armswomen."}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": {"text": "Ceria Springwalker: The couch by the fire is Yvlon's now. Territorial, armswomen."}, "timeout_sec": 5},
+  {"action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": {"id": "chatted_with_ceria_inn", "count": 1}},
+  {"action": "screenshot", "name": "01_ceria_at_table"},
+
+  {"_comment": "== YVLON, by the hearth (2,2) == left2/up2/left4/up2 threads row6-7's open floor, ending at (2,3) facing up, directly south of the hearth cell she's claimed.", "action": "move", "direction": "left", "steps": 2},
+  {"action": "move", "direction": "up", "steps": 2},
+  {"action": "move", "direction": "left", "steps": 4},
+  {"action": "move", "direction": "up", "steps": 2},
+  {"action": "assert_state", "path": "player_cell", "equals": [2, 3]},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Yvlon Byres", "text": "The inn's quieter than the Guild hall. I'm starting to see why you like it."}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": {"text": "Yvlon Byres: The inn's quieter than the Guild hall. I'm starting to see why you like it."}, "timeout_sec": 5},
+  {"action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": {"id": "chatted_with_yvlon_inn", "count": 1}},
+  {"action": "screenshot", "name": "02_yvlon_by_hearth"},
+
+  {"_comment": "== KSMVR, beside the pantry door (14,7) == down4/right2/down1 threads back to row8's open corridor (x1/x3 blocked, x4-14 clear), right10 crosses the whole common room, up1 BUMPS on Ksmvr's own cell (14,7) -- the bump-and-interact idiom (pantry_door_runes' own precedent): player_cell stays (14,8), facing turns up.", "action": "move", "direction": "down", "steps": 4},
+  {"action": "move", "direction": "right", "steps": 2},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "move", "direction": "right", "steps": 10},
+  {"action": "move", "direction": "up", "steps": 1},
+  {"action": "assert_state", "path": "player_cell", "equals": [14, 8]},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Ksmvr", "text": "I have been given a mug of blue fruit juice. I did not ask for it. Erin says this is called 'hospitality.' I am recording it as an asset."}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": {"text": "Ksmvr: I have been given a mug of blue fruit juice. I did not ask for it. Erin says this is called 'hospitality.' I am recording it as an asset."}, "timeout_sec": 5},
+  {"action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": {"id": "chatted_with_ksmvr_inn", "count": 1}},
+  {"action": "screenshot", "name": "03_ksmvr_by_pantry_door"},
+
+  {"action": "assert_event_absent", "type": "combat_started"}
+ ]
+}
