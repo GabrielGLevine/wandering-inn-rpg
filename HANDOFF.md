@@ -51,6 +51,10 @@ Five lanes, every one opus-reviewed (two FIX-FIRST cycles adjudicated + re-revie
 
 Full arc live: dungeon maps + traps → Horns recruit → three-cost halls routes → windup-telegraph vault boss → FIND beat → report → inn residence. E2 whole-branch review SHIP; machine playtest read by controller eyes (Yvlon/bench fix, dark-edge + overlay findings actioned); AI-variety profiles landed with the snare ward-id split. User playtest checklist + CHOICES 18-20 below.
 
+## 🔊 ITCH AUDIO REPORT ADJUDICATED (2026-07-12)
+
+User reported total silence on the itch build. Verdict after a full trace: THE SHIPPED BUILD IS HEALTHY — the local repro was a runner artifact (Playwright route interception starves AudioWorklet fetches in EVERY version; #105 filed to fix the runner + add a real-server audio smoke). Against a real server the v0.5.0 build initializes audio cleanly and the PCK carries all files. User-side checks handed over: the itch embed's own mute toggle (persists per user), a hard refresh (butler in-place updates vs cached index.js), then browser-console errors if still silent. Web QA asserts audio EVENTS only — audible output currently untested by automation (disclosed).
+
 ## 🚢 v0.5.0 SHIPPED TO ITCH (2026-07-12, local butler path)
 
 Pushed at the planned seam (post lanes 96+80, pre class-foundation/architecture). The composed release gate: ALL 21 units + the 80-cell harness + the full 100-script sweep, CI green on 43a0132. Leak check clean; bundle-v6 = the Latest badge.
