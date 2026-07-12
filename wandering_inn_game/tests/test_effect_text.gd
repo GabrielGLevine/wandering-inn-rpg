@@ -240,6 +240,11 @@ const EXPECTED_SKILLS := {
 	"sudden_strike": ["2 AP — ×1.8 damage. Once per fight."],
 	"called_shot": ["3 AP — ×2.2 damage"],
 	"piercing_volley": ["4 AP — damage everything in a line 5 cells long"],
+	# R2 (issue #96's own content-gap fix): frost_bolt's fire twin, same
+	# spell_damage phrase shape, no `applies` rider (frost_bolt slows, this
+	# doesn't) -- die is the caster's own weapon_die per _caster_weapon_die's
+	# default (pc, 6), same source every other spell_damage line above reads.
+	"flame_dart": ["2 AP, 3 MP — damage 1d6 at range 4"],
 }
 
 

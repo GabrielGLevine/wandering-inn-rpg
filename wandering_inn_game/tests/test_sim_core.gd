@@ -802,8 +802,10 @@ func _init() -> void:
 			mage_toast = String(e["payload"]["text"])
 	# Issue #79: mage's int growth (1->2, warrior held@9 throughout) yields
 	# +1 Max MP -- the PC already holds an mp_cost Skill (frost_bolt, mage's
-	# own level-1 grant), so the MP line is never withheld here.
-	assert(mage_toast == "[Mage Level 2] — unlocked [Flame Jet], [Mana Shield] (+1 Max MP)", "single level keeps the plain shape + felt growth")
+	# own level-1 grant), so the MP line is never withheld here. Class-
+	# foundation pass R2 (2026-07-12): L2 also grants flame_dart now (see
+	# classes.json's own mage _comment) -- the toast lists all three.
+	assert(mage_toast == "[Mage Level 2] — unlocked [Flame Jet], [Mana Shield], [Flame Dart] (+1 Max MP)", "single level keeps the plain shape + felt growth")
 
 	# --- Respawning encounters (the counter volume valve) ---
 	# Victory over a `respawns: true` encounter leaves it on the map but
