@@ -1,0 +1,21 @@
+{
+ "_comment": "Invrisil 8c Task C1 (issue #12) -- the Brothers' parlor ('borrowed elegance'). Floor: Library Tiles.png warm wood floor cell (23,4) (picks.md sec.3, already-present manifest path assets/tiles/library/Tiles.png -- a wealthy-interior candidate, numerically flat #8c5934, windowed check still owed per picks.md's own discipline, VISUAL-LOG'd). Blocked DELIBERATELY reuses the 'inn' biome's own already-shipped, already-verified Wall_Tiles [2,2] warm-toned stone (picks.md flagged this exact cell as the WRONG temperature for the boulevard's cool exterior -- but a warm interior wall is precisely right for a candlelit hideout, and reusing an already-screenshot-verified pick means zero new windowed-check risk for this lane). Skirt mirrors the floor (interior room, no meaningful 'past the edge' read).",
+ "sheet": "res://assets/tiles/library/Tiles.png",
+ "tile_px": 16,
+ "floor": [
+  23,
+  4
+ ],
+ "blocked_sheet": "res://assets/tiles/free_pack/Wall_Tiles.png",
+ "blocked": [
+  2,
+  2
+ ],
+ "blocked_tile_px": 16,
+ "skirt_sheet": "res://assets/tiles/library/Tiles.png",
+ "skirt_tile_px": 16,
+ "skirt": [
+  23,
+  4
+ ]
+}
