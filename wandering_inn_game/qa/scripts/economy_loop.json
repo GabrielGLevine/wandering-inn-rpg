@@ -829,7 +829,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Krshia",
-    "text": "Hrr. Let me see what you're carrying.",
+    "text": "Let me see what you're carrying.",
     "options": [
      {
       "text": "Sell: Traveler's Charm. (+2 gold)",
@@ -886,7 +886,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Krshia",
-    "text": "Hrr. Half its worth, paid straight -- I don't forget a fair trade any more than an unfair one. Sold."
+    "text": "Half its worth, paid straight — I don't forget a fair trade any more than an unfair one. Sold."
    },
    "timeout_sec": 5
   },

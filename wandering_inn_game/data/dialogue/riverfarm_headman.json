@@ -1,23 +1,25 @@
 {
-	"_comment": "8b R3 (issue #11) quest-giver graph for 'The Price of a Favor'. Gives price_of_a_favor (heard_price_of_a_favor, NOT itself a beat -- heard_about_cisterns/heard_wrong_order precedent), closes beat 2 (price_of_a_favor_reported) on ANY path once blight_lifted lands. Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway. hub keeps the always-ungated exit ('Just passing through.') per the softlock guard, since two options below are gated.",
+	"_comment": "8b R3 (issue #11) quest-giver graph for 'The Price of a Favor'. Gives price_of_a_favor (heard_price_of_a_favor, NOT itself a beat -- heard_about_cisterns/heard_wrong_order precedent), closes beat 2 (price_of_a_favor_reported) on ANY path once blight_lifted lands. Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway. hub keeps the always-ungated exit ('Just passing through.') per the softlock guard, since options below are gated. #63 canon pass: display_name/speaker renamed The Headman -> Former Headman (canon Riverfarm answers to Emperor Laken's Unseen Empire, wiki-verified -- see authority_topic below for the placing line); the entity ID (riverfarm_headman) and conversation graph id are UNCHANGED, only the player-facing name moved.",
 	"start": "hub",
 	"nodes": {
 		"hub": {
-			"speaker": "The Headman",
+			"speaker": "Former Headman",
 			"text": "Village's had a bad run. Crops came up wrong two seasons straight, animals spooked for no cause, and the ledger won't add up no matter how many times I recount it. Something's collecting on us, and I mean to know what.",
 			"text_variants": [
-				{ "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "text": "Whatever you find out there, I want to hear it plain. No riddles, and no half-truths either. The witch keeps to the hollow -- west, past my fields, where the trees break." },
+				{ "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "text": "Whatever you find out there, I want to hear it plain. No riddles, and no half-truths either. The witch keeps to the hollow — west, past my fields, where the trees break." },
 				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "Whatever you did, the air's changed. I can feel it in my knees, and I trust my knees more than most people." }
 			],
 			"options": [
 				{ "text": "Tell me about the blight.", "hide_when": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "effects": [ { "quest": "price_of_a_favor" }, { "accomplishment": "heard_price_of_a_favor" } ], "goto": "brief" },
 				{ "text": "It's handled. The blight's lifted.", "requires": { "accomplishment": { "blight_lifted": 1 } }, "hide_when": { "accomplishment": { "price_of_a_favor_reported": 1 } }, "effects": [ { "accomplishment": "price_of_a_favor_reported" } ], "goto": "reported" },
 				{ "text": "You said you don't truck with witches.", "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "goto": "witches_topic" },
-				{ "text": "Just passing through.", "end": true }
+				{ "text": "Just passing through.", "end": true },
+				{ "_comment": "#63 canon pass: the placing line -- WHY he's 'Former' now (Laken Godart's Unseen Empire absorbed Riverfarm, wiki-verified, in-window). Never names Laken as a speaking NPC (controller call: reframe, not depict) -- one grounding line, then back to farm business. Appended at array end (index-safety convention).", "text": "Not much of a headman anymore, is there?", "goto": "authority_topic" },
+				{ "_comment": "Issue #74: standing non-banking recap, requires-active (heard_price_of_a_favor)/hide_when-resolved (price_of_a_favor_reported), place-named. Appended at array end (index-safety convention) -- never shifts an earlier option's visible index.", "text": "Remind me what needs doing about the witch?", "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "hide_when": { "accomplishment": { "price_of_a_favor_reported": 1 } }, "goto": "favor_recap" }
 			]
 		},
 		"brief": {
-			"speaker": "The Headman",
+			"speaker": "Former Headman",
 			"text": "We don't truck with witches here. Didn't used to, anyway. But there's one in the old hollow past the fields, and half the village is pretending not to know it. Crops fail, stock spooks, and one of my own stands there mumbling like her mouth belongs to someone else. Find out what she wants, and end it. However you have to.",
 			"options": [
 				{ "text": "I'll see to it.", "end": true },
@@ -25,7 +27,7 @@
 			]
 		},
 		"witches_topic": {
-			"speaker": "The Headman",
+			"speaker": "Former Headman",
 			"text": "We didn't USE to truck with witches, I mean. Things change when the harvest doesn't. Everyone's something these days, I suppose. Even me, apparently, since I sent someone door to door instead of walking out there myself.",
 			"options": [
 				{ "text": "Back to it.", "goto": "hub" },
@@ -33,10 +35,31 @@
 			]
 		},
 		"reported": {
-			"speaker": "The Headman",
-			"text": "Handled. Good. I won't ask how -- a man learns when not to ask, running a village long enough. Whatever you did, thank you. Truly.",
+			"speaker": "Former Headman",
+			"text": "Handled. Good. I won't ask how — a man learns when not to ask, running a village long enough. Whatever you did, thank you. Truly.",
 			"options": [
 				{ "text": "Glad to help.", "end": true }
+			]
+		},
+		"authority_topic": {
+			"_comment": "#63 canon pass placing line. Wiki-verified: an avalanche buried the old village and Laken Godart -- newly arrived, later the blind [Emperor] of the Unseen Empire -- claimed Riverfarm to direct the rescue; the village answers to him now, Prost Surehand as his [Steward]. This entry stays deliberately at arm's length from that (no Laken dialogue, no Steward name-check) -- just placing OUR OC relative to the Empire.",
+			"speaker": "Former Headman",
+			"text": "Headman's just what folks still call me out of habit. Village answers to the Empire now, officially — to Laken himself, if you want the whole title. He's got a whole Empire to run, though, and I've still got fields that don't plant themselves. So: Former Headman. Same work, less of the title.",
+			"options": [
+				{ "text": "Back to it.", "goto": "hub" },
+				{ "text": "Fair enough.", "end": true }
+			]
+		},
+		"favor_recap": {
+			"_comment": "Issue #74: replays the CURRENT beat only -- never re-banks heard_price_of_a_favor/blight_lifted/price_of_a_favor_reported (goto only, no effects on this node or its options).",
+			"speaker": "Former Headman",
+			"text": "The witch keeps to the hollow, west past my own fields, where the trees give out. Whatever she's owed, you'll have to settle it out there.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "Sounds like it's already settled, out at the hollow. Come say so plain, then, so I know to stop chewing on it." }
+			],
+			"options": [
+				{ "text": "Back to it.", "goto": "hub" },
+				{ "text": "Understood.", "end": true }
 			]
 		}
 	}

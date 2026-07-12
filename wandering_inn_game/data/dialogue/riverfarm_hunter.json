@@ -15,7 +15,7 @@
 		},
 		"agreed": {
 			"speaker": "The Hunter",
-			"text": "Figured. Bring your own bandages -- I've got enough of my own to worry about.",
+			"text": "Figured. Bring your own bandages — I've got enough of my own to worry about.",
 			"options": [
 				{ "text": "Deal.", "effects": [ { "accomplishment": "hunter_will_come" } ], "end": true }
 			]
