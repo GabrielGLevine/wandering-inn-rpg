@@ -133,6 +133,18 @@ conversation.
 starts a fight — **only legal on a conversation-ending option**
 (`"end": true`).
 
+## EVENT-ORDER TRAP: effects + end:true fire DIALOGUE_ENDED FIRST
+`WIDialogue.choose()` emits `DIALOGUE_ENDED` synchronously INSIDE
+`choose()` on an `end: true` option — BEFORE `WIGame.dialogue_choose()`
+applies the option's `effects` array. So an option carrying both
+`effects` and `end: true` fires `dialogue_ended`/`ui_dialogue_hidden`
+before its accomplishment/quest/gold events — the OPPOSITE order from a
+`goto` option (effects first, end later). Benign in the sim (effects
+still apply); bites QA authoring: wait for `dialogue_ended` THEN the
+effect events on a single-option close, or the effect wait times out
+staring at an already-ended conversation (cost a real debug cycle,
+GH#81's recruit_pell).
+
 ## Hubs and always-available exits (softlock guard)
 Any node with a `hide_when` option OR an accomplishment-`requires` option
 must keep at least one option with NEITHER key — a fully ungated exit.

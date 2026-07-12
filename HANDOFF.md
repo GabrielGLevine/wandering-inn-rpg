@@ -19,7 +19,11 @@ Five lanes, every one opus-reviewed (two FIX-FIRST cycles adjudicated + re-revie
 
 Full arc live: dungeon maps + traps → Horns recruit → three-cost halls routes → windup-telegraph vault boss → FIND beat → report → inn residence. E2 whole-branch review SHIP; machine playtest read by controller eyes (Yvlon/bench fix, dark-edge + overlay findings actioned); AI-variety profiles landed with the snare ward-id split. User playtest checklist + CHOICES 18-20 below.
 
-## 🔄 WAVE 4 IN FLIGHT (2026-07-12) — 4 lanes dispatched
+## 🌊 WAVE 4 LANDED LOCAL (2026-07-12) — all 5 lanes merged; final sweep running pre-push
+
+Push closes #78 #79 #81 #84 (#76 stays open for ambient beds). Every lane opus-reviewed; FIX-FIRST cycles on 81 (the frozen-cache unbounded gold pump — gold now rides the variants resolver so the met-gate variant zeroes a one-shot discovery; Pell walks home on report; Drake curse fixed) and fixes-taken on 78 (defeat reveal skippable + the 1-based click DSL tooth) and 79 (the even-base-stat trap comment). Notable: 81's dynamism tool caught a real placement regression mid-lane and forced a relocation — the #73 metric earning its keep on its first content wave. New follow-ups: #85 (mouse for consolidation prompt + char-creation grid), #86 (sync_assets raw-pack landmine + Super Dialogue verdict file). Skill-library additions this wave: the overlay-blindness iron rule (wi-verifying-changes) + the DIALOGUE_ENDED event-order trap (wi-adding-dialogue-and-quests). CHOICES 21 (wordless-voice-only) recorded.
+
+## 🔄 WAVE 4 dispatch notes (superseded)
 
 - **lane-78** #78 save/defeat UX (metadata prefer-derivation, defeat interstitial over the existing flow, index-pin discipline).
 - **lane-79** #79 journal communication (opaque-until-sleep binds everything; WIEffectText routes all mechanical lines).
