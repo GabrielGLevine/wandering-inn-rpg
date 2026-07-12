@@ -124,6 +124,8 @@ func _init() -> void:
 	_check_arena_tutor_lines()
 	_check_skill_toasts()
 	_check_dialogue_graphs()
+	_check_bounty_delivery_copy()
+	_check_bounty_delivery_titles()
 
 	print("copy_fit: %d strings measured across all surfaces" % _measured_count)
 	if not _failures.is_empty():
@@ -312,6 +314,65 @@ func _check_dialogue_graphs() -> void:
 			for oi: int in (node.get("options", []) as Array).size():
 				var opt: Dictionary = node["options"][oi]
 				_check_dialogue_option("%s.options[%d]" % [loc, oi], opt, oi)
+
+
+## ---- DIALOGUE-PANEL corpus, part 2 (issue #72): data/bounties.json /
+## data/deliveries.json copy ----
+##
+## THE REQUEST BOARD / DELIVERY BOARD render their `copy`/`slip_copy`
+## strings into the SAME code-built dialogue-panel body surface a static
+## data/dialogue/*.json node's `text` renders into (WIBounties.
+## build_picker_graph/build_delivery_picker_graph compose the hub node's
+## `text` from these fields, paginated via the SAME `_paginate` this file
+## already mirrors) -- `_check_dialogue_graphs` above can't see it (these
+## graphs are built at runtime from bounties.json/deliveries.json, never
+## registered under DIALOGUE_DIR, exactly the reason test_content.gd's own
+## cross-reference sweep skips them too, per bounties.gd's doc comment).
+## This closes that gap: every `copy`/`slip_copy` string runs through the
+## SAME `_check_dialogue_body` budget check a static node's `text` gets.
+func _check_bounty_delivery_copy() -> void:
+	var bounties := _load_json("res://data/bounties.json")
+	for bounty: Dictionary in bounties.get("bounties", []):
+		_check_dialogue_body("data/bounties.json[bounties.%s].copy" % String(bounty.get("id", "?")), String(bounty.get("copy", "")))
+	var deliveries := _load_json("res://data/deliveries.json")
+	for delivery: Dictionary in deliveries.get("deliveries", []):
+		_check_dialogue_body("data/deliveries.json[deliveries.%s].slip_copy" % String(delivery.get("id", "?")), String(delivery.get("slip_copy", "")))
+
+
+## DIALOGUE-PANEL/option corpus, part 2 (issue #72): the picker's OPTION
+## rows. `WIBounties.build_picker_graph`/`build_delivery_picker_graph`
+## render each slate entry as `"Take: %s. (%d gold)" % [title, gold]` on the
+## SAME no-autowrap option Label `_check_dialogue_option` above checks --
+## bounties.gd's own doc comment on `build_picker_graph` records a REAL
+## windowed-screenshot bug this exact shape caused once (a full copy
+## paragraph on an option row ran off the panel edge); this is the
+## automated version of the "re-measure windowed if a longer title is ever
+## added" warning that comment leaves as a manual TODO. Calls the REAL
+## `WIBounties._posting_title`/`_delivery_title` formatters directly
+## (static funcs, callable despite the underscore -- GDScript doesn't
+## enforce privacy) rather than approximating them, so this is an EXACT
+## match to what the picker renders, not a mirror that can drift. The
+## slate index digit is always 1 (options 1-4, since `WIBounties.
+## active_slate` never exceeds 3 live entries + "Never mind.") regardless
+## of a posting's real position in the full pool, so "> 1. " is the correct
+## constant-width prefix to check against for every id.
+func _check_bounty_delivery_titles() -> void:
+	var bounties := _load_json("res://data/bounties.json")
+	for bounty: Dictionary in bounties.get("bounties", []):
+		var id := String(bounty.get("id", "?"))
+		var rendered := "> 1. Take: %s. (%d gold)" % [WIBounties._posting_title(id), int(bounty.get("gold", 0))]
+		_measured_count += 1
+		var width := _single_line_width(rendered)
+		if width > DIALOGUE_PANEL_TEXT_WIDTH:
+			_fail("DIALOGUE-PANEL/option", "data/bounties.json[bounties.%s]" % id, rendered, "single-line width %.0fpx > %.0fpx panel width (no autowrap on option rows)" % [width, DIALOGUE_PANEL_TEXT_WIDTH])
+	var deliveries := _load_json("res://data/deliveries.json")
+	for delivery: Dictionary in deliveries.get("deliveries", []):
+		var did := String(delivery.get("id", "?"))
+		var drendered := "> 1. Take: %s. (%d gold)" % [WIBounties._delivery_title(did), int(delivery.get("gold", 0))]
+		_measured_count += 1
+		var dwidth := _single_line_width(drendered)
+		if dwidth > DIALOGUE_PANEL_TEXT_WIDTH:
+			_fail("DIALOGUE-PANEL/option", "data/deliveries.json[deliveries.%s]" % did, drendered, "single-line width %.0fpx > %.0fpx panel width (no autowrap on option rows)" % [dwidth, DIALOGUE_PANEL_TEXT_WIDTH])
 
 
 ## ---- Per-surface checks ----

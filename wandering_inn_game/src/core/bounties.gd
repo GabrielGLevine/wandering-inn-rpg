@@ -103,6 +103,15 @@ static func _posting_title(bounty_id: String) -> String:
 		"bounty_inn_hands": "Extra Hands at the Inn",
 		"bounty_evening_stew": "Evening Stew Shift",
 		"bounty_vermin_grate": "Vermin Under the Grate",
+		"bounty_lamp_upkeep": "Keep the Common Room Lit",
+		"bounty_tavern_tables": "Wipe the Tables Down",
+		"bounty_market_watch": "Watch the Market Stalls",
+		"bounty_barracks_checkin": "Check In at the Barracks",
+		"bounty_charm_offensive": "A Friendly Word or Three",
+		"bounty_bow_practice": "Archery Butt Practice",
+		"bounty_guild_census": "Guild Headcount",
+		"bounty_alley_cull": "Clear the Boulevard Alleys",
+		"bounty_second_watch": "Settle Two More Quarrels",
 	}
 	return String(titles.get(bounty_id, bounty_id.trim_prefix("bounty_").capitalize()))
 
@@ -116,6 +125,11 @@ static func _delivery_title(delivery_id: String) -> String:
 		"delivery_gate_dispatch": "Dispatches to the Gate",
 		"delivery_grate_phials": "Glass Phials to the Grate",
 		"delivery_inn_hamper": "Fruit Hamper to the Inn",
+		"delivery_barracks_gear": "Gambesons to the Barracks",
+		"delivery_guild_ledger": "Sealed Ledger to the Guild Desk",
+		"delivery_tactics_brief": "Tactics Brief to Olesm",
+		"delivery_boulevard_letter": "Sealed Letter to the Boulevard",
+		"delivery_riverfarm_seed": "Seed Grain to Riverfarm",
 	}
 	return String(titles.get(delivery_id, delivery_id.trim_prefix("delivery_").capitalize()))
 

@@ -194,7 +194,7 @@
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
 
-  { "_comment": "== (9) POSITIVE + NEGATIVE: THE PLAIN ROTATION BARK + RETIREMENT STILL HOLDING == a SECOND sleep, holding no slip this time (accepted_delivery_id is '' -- step 6's clean turn-in, never re-accepted since the pisces failure) -- rotates the slate again with delivery_failed staying false throughout, proving the plain rotation bark is its OWN signpost rather than a byproduct of the failure bark. Same debug teleport-to-your_bed idiom as step 7 (the inn walk is proven elsewhere; the subject here is the bark). Window over the SAME 4-item retirement-filtered pool at times_slept 2: [grate_phials, inn_hamper, pisces_parcel] -- krshia_wool STILL absent (the retirement re-pin from step 8), and pisces_parcel rotates back into view on its own merits (it was never completed, only failed -- failed deliveries are NOT retired, only completed ones).", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3] },
+  { "_comment": "== (9) POSITIVE + NEGATIVE: THE PLAIN ROTATION BARK + RETIREMENT STILL HOLDING == a SECOND sleep, holding no slip this time (accepted_delivery_id is '' -- step 6's clean turn-in, never re-accepted since the pisces failure) -- rotates the slate again with delivery_failed staying false throughout, proving the plain rotation bark is its OWN signpost rather than a byproduct of the failure bark. Same debug teleport-to-your_bed idiom as step 7 (the inn walk is proven elsewhere; the subject here is the bark). RE-PINNED (issue #72, the generated delivery-pool growth): the retirement-filtered pool grew from 4 items to 9 (5 new slips appended AFTER the original 5, krshia_wool still excluded) -- times_slept 2's window is `remaining[(2+i)%9]`, which no longer WRAPS past the pool's own end the way it did at size 4 (2+2=4 was the old pool's own size, hence the old wrap back to pisces_parcel at index 0). At size 9 the same window lands on [grate_phials, inn_hamper, delivery_barracks_gear] instead -- the FIRST of the 5 appended slips, landing in view purely because the pool got longer, not because anything about it changed. pisces_parcel (still un-retired, only failed) rotates back into view on ITS OWN merits at a LATER times_slept once the window reaches back around -- not exercised by this script, which stops at times_slept 2.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3] },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn_upstairs", "cell": [9, 3] }, "timeout_sec": 5 },
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [9, 2] },
@@ -202,7 +202,7 @@
   { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
   { "action": "assert_state", "path": "times_slept", "equals": 2 },
   { "action": "assert_state", "path": "delivery_failed", "equals": false },
-  { "action": "assert_state", "path": "board_active_deliveries", "equals": ["delivery_grate_phials", "delivery_inn_hamper", "delivery_pisces_parcel"] },
+  { "action": "assert_state", "path": "board_active_deliveries", "equals": ["delivery_grate_phials", "delivery_inn_hamper", "delivery_barracks_gear"] },
 
   { "action": "teleport", "map": "runners_guild", "cell": [5, 4] },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "runners_guild", "cell": [5, 4] }, "timeout_sec": 5 },

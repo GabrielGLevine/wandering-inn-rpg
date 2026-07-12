@@ -32,6 +32,8 @@ func _init() -> void:
 	var skills: Dictionary = _load_json("res://data/skills.json")
 	var classes: Dictionary = _load_json("res://data/classes.json")
 	var items: Dictionary = _load_json("res://data/items.json")
+	var bounties: Dictionary = _load_json("res://data/bounties.json")
+	var deliveries: Dictionary = _load_json("res://data/deliveries.json")
 
 	var skill_ids: Dictionary = _ids_from_catalog(skills, "skills")
 	var class_ids: Dictionary = _ids_from_catalog(classes, "classes")
@@ -41,9 +43,21 @@ func _init() -> void:
 	var produced_accomplishments: Dictionary = {}
 
 	_collect_scene_accomplishments(scene, produced_accomplishments)
+	# Accomplishments the SIM ENGINE produces structurally off ANY faced
+	# entity (WIFieldSkills.dispatch's generic [Appraise Foe]/[Charming
+	# Smile] arms, keyed on the SKILL's own id, not a per-entity data field)
+	# -- not traceable by scanning skeleton_scene.json's fields the way
+	# on_victory/on_skill_use/on_interact_accomplishment are above, so
+	# hardcoded here the same way heard_gossip/chatted_with_<id> are
+	# hardcoded into _collect_scene_accomplishments (real, structural,
+	# always-live producers, not a scan gap).
+	produced_accomplishments["observed_things"] = true
+	produced_accomplishments["befriended_moments"] = true
 	_validate_conversations(scene, graphs)
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)
+	_validate_bounties(bounties, produced_accomplishments)
+	_validate_deliveries(deliveries, produced_accomplishments)
 	_validate_hide_when_nodes_have_always_available_exit(graphs)
 	_validate_class_gains(classes, produced_accomplishments)
 	_validate_class_level_tables(classes)
@@ -203,6 +217,13 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 			# is a producer too, same shape as on_interact_accomplishment above.
 			if entity.has("on_open_accomplishment"):
 				produced[String(entity["on_open_accomplishment"])] = true
+			# A door's optional `on_enter_accomplishment`
+			# (WIGame.interact()'s "door" branch) banks on every REAL door
+			# transit -- re-banked each time, not a one-shot (issue #72's
+			# bounty_guild_census is the first content to key on one of these;
+			# added here rather than left an undiscovered scan gap).
+			if entity.has("on_enter_accomplishment"):
+				produced[String(entity["on_enter_accomplishment"])] = true
 			# A non-empty talk_pool makes the sim's
 			# _talk_pool_line bank heard_gossip (+1) and chatted_with_<id> (+1) on
 			# the first talk of each waking. The bank happens in the sim, not a
@@ -818,6 +839,47 @@ func _validate_quests(quests: Dictionary, produced_accomplishments: Dictionary) 
 					produced_accomplishments.has(accomplishment_id),
 					"quest %s beat %s waits on unproduced accomplishment: %s" % [String(quest["id"]), String(beat["id"]), accomplishment_id]
 				)
+
+
+## Issue #72 (the posting generator, "Validation is the product"): every
+## bounty's `condition` key must be a REAL, traced producer -- mirrors
+## _validate_quests/_validate_class_gains above (this cross-reference did
+## NOT exist before this task; data/bounties.json's condition keys were
+## never checked against produced_accomplishments at all). `condition_mode`
+## (delta vs absolute) doesn't matter here -- both read the SAME underlying
+## counter, this only checks the counter is ever banked by something.
+func _validate_bounties(bounties: Dictionary, produced_accomplishments: Dictionary) -> void:
+	for bounty: Dictionary in bounties.get("bounties", []):
+		var condition: Dictionary = bounty.get("condition", {})
+		for accomplishment_id: String in condition:
+			assert(
+				produced_accomplishments.has(accomplishment_id),
+				"bounty %s condition waits on unproduced accomplishment: %s" % [String(bounty["id"]), accomplishment_id]
+			)
+
+
+## `_validate_bounties`'s delivery twin. Every delivery in the pool
+## structurally produces `delivered_<its own id>` via
+## WIGame._check_delivery_arrival (keyed generically off whichever id is
+## currently accepted, not scannable from skeleton_scene.json/dialogue like
+## every other producer this file traces -- see that function's own doc
+## comment) -- seeded here, scoped to a LOCAL copy of
+## produced_accomplishments (never mutating the shared dict other
+## validators read), before checking each delivery's `condition` keys
+## resolve. This proves the real structural guarantee rather than false-
+## failing on every shipped slip; it would still catch a genuine typo (a
+## condition key that doesn't match its own delivery's id).
+func _validate_deliveries(deliveries: Dictionary, produced_accomplishments: Dictionary) -> void:
+	var produced := produced_accomplishments.duplicate()
+	for delivery: Dictionary in deliveries.get("deliveries", []):
+		produced["delivered_%s" % String(delivery["id"])] = true
+	for delivery: Dictionary in deliveries.get("deliveries", []):
+		var condition: Dictionary = delivery.get("condition", {})
+		for accomplishment_id: String in condition:
+			assert(
+				produced.has(accomplishment_id),
+				"delivery %s condition waits on unproduced accomplishment: %s" % [String(delivery["id"]), accomplishment_id]
+			)
 
 
 func _validate_props(scene: Dictionary) -> void:

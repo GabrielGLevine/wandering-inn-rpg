@@ -1,0 +1,310 @@
+{
+ "_comment": "STAGING ONLY -- issue #72 tier-1 offline generator output. Not read by the game. A human curation pass hand-polishes ACCEPTED entries' prose and copies them (stripped of every annotation field, the G2 discipline) into data/bounties.json / data/deliveries.json / data/items.json.",
+ "verb_registry": {
+  "kill": {
+   "trace": "on_victory counters, RESPAWNING encounters only (data/skeleton_scene.json entity.on_victory, entity.respawns == true)",
+   "repeatable": true
+  },
+  "carry": {
+   "trace": "the delivery seam (WIGame._check_delivery_arrival) -- routes to deliveries.json growth, never a bounty condition (double-pay hazard)",
+   "repeatable": true
+  },
+  "gather_work": {
+   "trace": "on_interact_accomplishment / on_skill_use producers (WIGame.interact()'s prop branch / use_skill()) -- both re-bank on every call, no dedup",
+   "repeatable": true
+  },
+  "social_soft": {
+   "trace": "heard_gossip / chatted_with_<id> (WISocial.talk_pool_line) or befriended_moments (WIFieldSkills.dispatch's [Charming Smile] arm) -- generic, freely repeatable",
+   "repeatable": true
+  },
+  "social_hard": {
+   "trace": "persuaded_someone -- banked only by specific one-off dialogue-effect resolutions (grep across data/dialogue/*.json); bounded, not freely farmable",
+   "repeatable": true
+  },
+  "survey": {
+   "trace": "observed_things (WIFieldSkills.dispatch's [Appraise Foe] arm, generic) or visited_<map>/reached_<place> (door on_enter_accomplishment, re-banked every real transit)",
+   "repeatable": true
+  }
+ },
+ "pay_formula": {
+  "pillar_base_gold_per_unit": {
+   "fight": 2.0,
+   "work": 0.75,
+   "social_soft": 0.667,
+   "social_hard": 3.0,
+   "explore": 1.0
+  },
+  "tier_gold_mult": {
+   "T1": 1.0,
+   "T2": 1.5,
+   "T3": 2.0,
+   "T4": 2.5,
+   "T5": 3.0
+  },
+  "band_gold": {
+   "same-map short": 1,
+   "same-map long": 2,
+   "same-map + care": 2,
+   "cross-map": 2,
+   "cross-map, short": 2,
+   "cross-region": 4
+  }
+ },
+ "bounties": [
+  {
+   "id": "bounty_lamp_upkeep",
+   "verb": "gather_work",
+   "pillar": "work",
+   "tier": "T1",
+   "condition": {
+    "lit_the_common_room": 2
+   },
+   "producer_trace": "data/skeleton_scene.json inn.unlit_lantern.on_skill_use.accomplishment ([Light]) -- use_skill() re-banks every cast, no dedup",
+   "giver": "Lyonette du Marquin",
+   "review": "ACCEPT",
+   "computed_pay": 2
+  },
+  {
+   "id": "bounty_tavern_tables",
+   "verb": "gather_work",
+   "pillar": "work",
+   "tier": "T1",
+   "condition": {
+    "cleaned_the_inn": 3
+   },
+   "producer_trace": "data/skeleton_scene.json inn.dirty_table.on_skill_use.accomplishment ([Basic Cleaning]) -- re-banks every clean (already pays 1g/use itself; the bounty pay is separate, on top)",
+   "giver": "Erin Solstice",
+   "review": "ACCEPT",
+   "computed_pay": 2
+  },
+  {
+   "id": "bounty_market_watch",
+   "verb": "gather_work",
+   "pillar": "work",
+   "tier": "T1",
+   "condition": {
+    "browsed_market": 2,
+    "browsed_bread_stall": 1
+   },
+   "producer_trace": "data/skeleton_scene.json street.krshia_stall/bread_stall.on_interact_accomplishment",
+   "giver": "Watch Guard (gate_guard, generic Watch hand)",
+   "review": "ACCEPT",
+   "computed_pay": 2
+  },
+  {
+   "id": "bounty_barracks_checkin",
+   "verb": "social_soft",
+   "pillar": "social",
+   "tier": "T1",
+   "condition": {
+    "chatted_with_duty_sergeant": 2
+   },
+   "producer_trace": "WISocial.talk_pool_line over data/skeleton_scene.json barracks.duty_sergeant.talk_pool",
+   "giver": "Duty Sergeant Dresk Ashgrave",
+   "review": "ACCEPT",
+   "computed_pay": 1
+  },
+  {
+   "id": "bounty_charm_offensive",
+   "verb": "social_soft",
+   "pillar": "social",
+   "tier": "T1",
+   "condition": {
+    "befriended_moments": 3
+   },
+   "producer_trace": "WIFieldSkills.dispatch's [Charming Smile] arm (skills.json id charming_smile, field:true) -- generic over any faced entity",
+   "giver": "Krshia Silverfang",
+   "review": "ACCEPT",
+   "computed_pay": 2
+  },
+  {
+   "id": "bounty_bow_practice",
+   "verb": "gather_work",
+   "pillar": "work",
+   "tier": "T1",
+   "condition": {
+    "ranged_hit": 3
+   },
+   "producer_trace": "data/skeleton_scene.json barracks.archery_butt.on_interact_accomplishment (GH#70's own [Archer]-earn producer -- reused here as an ALSO-a-bounty target, same double-dip shape as won_combat feeding both combat bounties and class level-ups elsewhere)",
+   "giver": "Duty Sergeant Dresk Ashgrave",
+   "review": "ACCEPT",
+   "computed_pay": 2
+  },
+  {
+   "id": "bounty_guild_census",
+   "verb": "survey",
+   "pillar": "explore",
+   "tier": "T1",
+   "condition": {
+    "visited_guild": 3
+   },
+   "producer_trace": "data/skeleton_scene.json street.guild_door.on_enter_accomplishment -- re-banks on every real door transit (confirmed against wi_game.gd's door branch)",
+   "giver": "Olesm Swifttail",
+   "review": "ACCEPT",
+   "computed_pay": 3
+  },
+  {
+   "id": "bounty_alley_cull",
+   "verb": "kill",
+   "pillar": "fight",
+   "tier": "T3",
+   "condition": {
+    "cleared_footpads_a": 1,
+    "cleared_footpads_b": 1
+   },
+   "producer_trace": "data/skeleton_scene.json mercantile_alleys.alley_footpads_a/b -- respawns:true, on_victory cleared_footpads_a/b",
+   "giver": "Master Coyle",
+   "review": "ACCEPT",
+   "computed_pay": 8
+  },
+  {
+   "id": "bounty_second_watch",
+   "verb": "social_hard",
+   "pillar": "social",
+   "tier": "T2",
+   "condition": {
+    "persuaded_someone": 2
+   },
+   "producer_trace": "persuaded_someone -- multiple one-off dialogue-effect resolutions across data/dialogue/*.json (drayman_dispute, watch_crate[Diplomat], zevara_intro[Diplomat], krshia_crate, pisces_magic, goblin_parley[Warrior], riverfarm_witch) -- same bounded-but-real counter bounty_settle_dispute already rides at threshold 1",
+   "giver": "Watch Captain Zevara Sunderscale",
+   "review": "ACCEPT",
+   "computed_pay": 9
+  },
+  {
+   "id": "bounty_carry_reuse_REJECTED",
+   "verb": "carry",
+   "pillar": "fight",
+   "tier": "T1",
+   "condition": {
+    "completed_delivery_delivery_krshia_wool": 1
+   },
+   "producer_trace": "completed_delivery_<id> (WIGame.turn_in_delivery) -- a REAL producer, but",
+   "giver": "n/a",
+   "review": "REJECT: double-pay hazard. This accomplishment already pays out via the Delivery Board; a bounty keyed on the SAME id pays a second time for one action. Exactly the hazard deliveries.json's own _comment flags for delivery_hermit_antlers (\"HR-II must reconcile... never both untouched\"). The carry verb routes to deliveries.json growth instead -- never a bounty condition."
+  },
+  {
+   "id": "bounty_warehouse_crew_REJECTED",
+   "verb": "kill",
+   "pillar": "fight",
+   "tier": "T3",
+   "condition": {
+    "forced_confession": 2
+   },
+   "producer_trace": "data/skeleton_scene.json mercantile_alleys.hired_blades.on_victory -- respawns:false",
+   "giver": "n/a",
+   "review": "REJECT: hired_blades is a ONE-SHOT encounter (respawns:false, persistent:false) tied to the invrisil_disagreement_fight quest chain -- removed after its single win. A delta-mode repeatable bounty referencing it would dead-end after the quest resolves (the exact kill-verb rule this task's own scope line states: respawning encounters only). Not shippable as a repeatable board job."
+  },
+  {
+   "id": "bounty_short_order_REJECTED",
+   "verb": "gather_work",
+   "pillar": "work",
+   "tier": "T1",
+   "condition": {
+    "stretched_the_order": 2
+   },
+   "producer_trace": "data/skeleton_scene.json inn.short_order.on_skill_use.accomplishment",
+   "giver": "n/a",
+   "review": "REJECT: short_order's own _comment states this accomplishment is deliberately isolated from the shared stew_pot/cooked_meal counter for the Wrong Order quest chain (\"this pattern is reserved for quest-scoped cooking that must NOT feed this shared counter\"). Reusing it for a generic repeatable board bounty risks exactly the cross-feed the quest content was written to avoid. Dropped."
+  },
+  {
+   "id": "bounty_deep_fissure_REJECTED",
+   "verb": "survey",
+   "pillar": "explore",
+   "tier": "T2",
+   "condition": {
+    "found_the_fissure": 1,
+    "found_cold_hearth": 1
+   },
+   "producer_trace": "data/skeleton_scene.json deep_tunnels/sewers one-shot discovery props, no respawn/re-trigger safety",
+   "giver": "n/a",
+   "review": "REJECT: one-shot discovery counters with no condition_mode:absolute safety net authored in this batch (unlike the sewer trio precedent) -- a player who found these before ever visiting the board would soft-lock under delta mode. Could ship safely as absolute-mode, but deep_tunnels is deep midgame content the curation pass judged tonally too far from the Liscor request-board's voice for THIS batch. Parked, not permanently dropped."
+  }
+ ],
+ "deliveries": [
+  {
+   "id": "delivery_barracks_gear",
+   "parcel_id": "parcel_gambeson_bundle",
+   "parcel_name": "Bundled Gambesons",
+   "parcel_flavor": "Watch-issue gambesons, three of them, bundled tight and none too soft.",
+   "destination_map": "barracks",
+   "destination_cell": [
+    6,
+    4
+   ],
+   "anchor_entity": "duty_sergeant",
+   "band": "cross-map, short",
+   "tier": "T1",
+   "review": "ACCEPT",
+   "computed_gold": 2,
+   "anchor_exists_in_scene": true
+  },
+  {
+   "id": "delivery_guild_ledger",
+   "parcel_id": "parcel_ledger_transfer",
+   "parcel_name": "Sealed Ledger Transfer",
+   "parcel_flavor": "A ledger, sealed, Guild business written on the outside and nothing else.",
+   "destination_map": "guild",
+   "destination_cell": [
+    8,
+    2
+   ],
+   "anchor_entity": "selys",
+   "band": "cross-map",
+   "tier": "T1",
+   "review": "ACCEPT",
+   "computed_gold": 2,
+   "anchor_exists_in_scene": true
+  },
+  {
+   "id": "delivery_tactics_brief",
+   "parcel_id": "parcel_tactics_brief",
+   "parcel_name": "Rolled Tactics Brief",
+   "parcel_flavor": "A brief, rolled and string-tied, the ink still faintly damp at the edges.",
+   "destination_map": "street",
+   "destination_cell": [
+    29,
+    3
+   ],
+   "anchor_entity": "olesm",
+   "band": "same-map long",
+   "tier": "T1",
+   "review": "ACCEPT",
+   "computed_gold": 2,
+   "anchor_exists_in_scene": true
+  },
+  {
+   "id": "delivery_boulevard_letter",
+   "parcel_id": "parcel_sealed_letter",
+   "parcel_name": "A Sealed Letter",
+   "parcel_flavor": "A letter, wax-sealed, no return address, the kind that pays for its own silence.",
+   "destination_map": "invrisil_boulevard",
+   "destination_cell": [
+    24,
+    6
+   ],
+   "anchor_entity": "master_coyle",
+   "band": "cross-region",
+   "tier": "T3",
+   "review": "ACCEPT",
+   "computed_gold": 4,
+   "anchor_exists_in_scene": true
+  },
+  {
+   "id": "delivery_riverfarm_seed",
+   "parcel_id": "parcel_seed_grain",
+   "parcel_name": "A Sack of Seed Grain",
+   "parcel_flavor": "A sack of seed grain, dense and dry, tied at the neck against damp roads.",
+   "destination_map": "riverfarm_village",
+   "destination_cell": [
+    11,
+    9
+   ],
+   "anchor_entity": "riverfarm_headman",
+   "band": "cross-region",
+   "tier": "T3",
+   "review": "ACCEPT",
+   "computed_gold": 4,
+   "anchor_exists_in_scene": true
+  }
+ ]
+}

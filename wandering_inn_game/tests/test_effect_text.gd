@@ -48,6 +48,13 @@ const EXPECTED_ITEMS := {
 	"parcel_watch_dispatch": [],
 	"parcel_lamp_phials": [],
 	"parcel_bluefruit_hamper": [],
+	# 5 more Runner's Guild delivery parcels (issue #72's generated
+	# delivery-pool growth) -- same inert-carried shape as the 5 above.
+	"parcel_gambeson_bundle": [],
+	"parcel_ledger_transfer": [],
+	"parcel_tactics_brief": [],
+	"parcel_sealed_letter": [],
+	"parcel_seed_grain": [],
 	# The kitchen's dish (issue #59) -- same inert-carried shape as the
 	# parcels: no combat fields, deliberately NO price (structurally
 	# unsellable), so name + description only.
