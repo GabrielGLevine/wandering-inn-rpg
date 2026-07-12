@@ -23,6 +23,8 @@ name) is a frozen read-only archive.
    — each issue body is a dispatch-grade brief (goal/sources/scope/danger
    list/verification/exit). `docs/ROADMAP.md` is a pointer + history. `docs/HANDOVER-FABLE-TO-OPUS.md` §1/§8
    — operating model + hard-won lessons.
+5. `scripts/usage_status.sh` — usage tier BEFORE planning dispatch scale
+   (wi-usage-guard has the tier protocol; CAUTION+ changes the plan).
 
 ## Project identity (non-negotiable)
 - **QA-first:** every player-visible feature ships with a bus event, a

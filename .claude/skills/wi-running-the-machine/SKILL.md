@@ -76,6 +76,12 @@ The session has a fixed usage budget. Default the top model to orchestration
 burning fast → throttle top-model work, delegate more; budget to spare near
 session end → upshift to higher-tier models and spend it. Same-file work is
 still single-implementer: never run two agents on one file concurrently.
+**Hard tiers (2026-07-12): run `scripts/usage_status.sh` before EVERY
+lane/workflow/wave dispatch and at merge points — wi-usage-guard has the
+tier checklists (CAUTION = no new dispatch, WINDDOWN = drain + commit
+seams, QUIESCE = state-saving only, then wait-for-reset or weekly hard
+stop). The PostToolUse hook injects tier CHANGES mid-flight; act on them
+immediately.**
 **Controller shell discipline: never `cd` into a lane worktree.** Build
 review packages and inspect lanes via `git -C <worktree>`; every mutating
 command (commit/merge/ledger append) runs from the repo root explicitly.

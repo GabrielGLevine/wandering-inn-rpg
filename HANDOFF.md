@@ -1,5 +1,11 @@
 # Wandering Inn RPG Handoff
 
+## 🛡️ USAGE GUARD LIVE (2026-07-12)
+`scripts/usage_status.sh` = tier check (OK/CAUTION/WINDDOWN/QUIESCE, exit
+0/10/20/30); PostToolUse hook injects tier CHANGES mid-flight; protocol in
+wi-usage-guard skill. Check before every dispatch. QUIESCE = commit WIP
+seams + HANDOFF update + wait-for-reset (session) or hard stop (weekly).
+
 ## 🌊 WAVE 2 OF ULTRACODE SHIPPED (2026-07-12) — 6 more lanes landed
 
 ALL MERGED at 86/86 + ALL units green (every lane opus-reviewed; every
