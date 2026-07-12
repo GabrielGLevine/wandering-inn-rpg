@@ -106,6 +106,15 @@ func _ready() -> void:
 		_row_labels.append(row)
 		stack.add_child(row)
 
+	# ONE hover/click handler on the shared row container (WIHotbar's
+	# per-container-not-per-row idiom, `UIChrome.control_index_at`) -- a row
+	# Label stays default IGNORE. Hover moves `_cursor` (the same field
+	# `_refresh()`'s "> " mark reads); a click routes through
+	# `_select_current()`, the exact function the keyboard confirm branch
+	# calls -- one dispatch path either way.
+	stack.mouse_filter = Control.MOUSE_FILTER_STOP
+	stack.gui_input.connect(_on_row_gui_input)
+
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 	# A save taken mid-offer restores Game.sim.pending_consolidation but re-emits
@@ -164,11 +173,56 @@ func _unhandled_input(event: InputEvent) -> void:
 		_refresh()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("confirm"):
-		_choose(_cursor == 0)
+		_select_current()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("cancel"):
 		_choose(false)
 		get_viewport().set_input_as_handled()
+
+
+## The cursored row's own activation -- factored out of the keyboard confirm
+## branch above so a mouse click routes through the SAME function, never a
+## parallel activation path.
+func _select_current() -> void:
+	_choose(_cursor == 0)
+
+
+## Hover moves `_cursor` (the same field `_refresh()`'s "> " mark reads --
+## one selection state, not a second highlight); a left-click sets `_cursor`
+## then calls `_select_current()`, the exact function Enter's confirm branch
+## calls. No-op while the prompt isn't open (`stack` has no meaningful rect
+## to hit anyway once hidden).
+func _on_row_gui_input(event: InputEvent) -> void:
+	if not open:
+		return
+	if event is InputEventMouseMotion:
+		var idx := UIChrome.control_index_at(_row_labels, (event as InputEventMouseMotion).position)
+		if idx >= 0 and idx != _cursor:
+			_cursor = idx
+			_refresh()
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	var idx := UIChrome.control_index_at(_row_labels, mb.position)
+	if idx >= 0:
+		_cursor = idx
+		_select_current()
+
+
+## Read-only rect accessor (the pause_menu.gd `row_rect` idiom) -- the
+## on-screen rect of row `i` as of the last `_refresh()`, for QA's
+## `click_consolidation_row` step. Empty Rect2 when the prompt is closed or
+## the row is out of range.
+func row_rect(i: int) -> Rect2:
+	if not open or i < 0 or i >= _row_labels.size():
+		return Rect2()
+	var label := _row_labels[i]
+	if label == null or not label.visible:
+		return Rect2()
+	return Rect2(label.global_position, label.size)
 
 
 func _choose(accepted: bool) -> void:

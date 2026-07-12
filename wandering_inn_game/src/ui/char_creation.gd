@@ -191,7 +191,13 @@ func _build_picker_grid() -> void:
 	grid.columns = GRID_COLS
 	grid.add_theme_constant_override("h_separation", int(CARD_GAP.x))
 	grid.add_theme_constant_override("v_separation", int(CARD_GAP.y))
-	grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# ONE hover/click handler on the grid itself (title_screen.gd's
+	# `_menu_root` idiom: the IGNORE ancestors above -- `_root`, `_grid_anchor`
+	# -- don't block a STOP descendant from being hit-tested; only THIS
+	# container needs to flip). A card's own chrome panel stays default
+	# IGNORE.
+	grid.mouse_filter = Control.MOUSE_FILTER_STOP
+	grid.gui_input.connect(_on_grid_gui_input)
 	_grid_anchor.add_child(grid)
 
 	for opt: Dictionary in PC_OPTIONS:
@@ -215,6 +221,11 @@ func _build_picker_grid() -> void:
 		_cards.append(card)
 
 
+## NAME step has no clickable confirm control: `_name_edit` is a
+## non-editable display surface (typing is captured by `_unhandled_input`,
+## not GUI focus -- see the file doc comment), and no separate "OK" button
+## exists to wire a click onto. Enter/confirm stays the only way to commit a
+## name; nothing to add here without inventing a new on-screen affordance.
 func _render_step() -> void:
 	_prompt_label.text = String(STEP_PROMPT[_step])
 	var is_name := _step == Step.NAME
@@ -263,6 +274,46 @@ func _step_name() -> String:
 	match _step:
 		Step.PICK: return "pick"
 		_: return "name"
+
+
+## Hover moves `_cursor` (the same field `_refresh_card`'s texture swap
+## reads -- one selection state, not a second highlight); a left-click sets
+## `_cursor` then calls `_confirm()`, the exact function Enter calls on the
+## PICK step -- picking a card by mouse is the SAME race+gender commit plus
+## step advance a keyboard arrow-to-card-then-Enter would produce, just
+## without the intermediate per-step hover renders. No-op off the PICK step
+## (the grid is hidden on NAME, but a stale motion event could still land
+## here before Godot re-picks the topmost Control).
+func _on_grid_gui_input(event: InputEvent) -> void:
+	if _step != Step.PICK:
+		return
+	if event is InputEventMouseMotion:
+		var idx := UIChrome.control_index_at(_cards, (event as InputEventMouseMotion).position)
+		if idx >= 0 and idx != _cursor:
+			_cursor = idx
+			_render_step()
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	var idx := UIChrome.control_index_at(_cards, mb.position)
+	if idx >= 0:
+		_cursor = idx
+		_confirm()
+
+
+## Read-only rect accessor (the pause_menu.gd/title_screen.gd `row_rect`
+## idiom), for QA's `click_char_creation_card` step. Empty Rect2 off the PICK
+## step or the index out of range.
+func card_rect(i: int) -> Rect2:
+	if _step != Step.PICK or i < 0 or i >= _cards.size():
+		return Rect2()
+	var card := _cards[i]
+	if card == null or not card.visible:
+		return Rect2()
+	return Rect2(card.global_position, card.size)
 
 
 func _unhandled_input(event: InputEvent) -> void:
