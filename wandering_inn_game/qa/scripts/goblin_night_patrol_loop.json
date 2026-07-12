@@ -1,0 +1,99 @@
+{
+ "_comment": "Issue #80 (world reactivity wave, item 4): the night-only canonical for `goblin_night_patrol` (floodplains), the river_wolf_pack precedent's second application. Loads goblin_night_patrol_start (post-tutorial cold-start position, floodplains (10,23), actions_since_sleep already past night_at). Proves the whole night-texture chain live: phase()==night from load, encounter_when reads it, one real move into trigger_radius 1 fires start_combat for real (no interact), the fight resolves to a win (relc fielded, met_relc banked -- the SAME roster/arena/ally as goblin_encounter_2, just at a different hour), and on_victory banks won_combat.",
+ "fixture_save": "goblin_night_patrol_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Title's default row is New Game -- move down 1 to Continue (crab_cull_loop.json's own idiom), which loads the fixture-seeded manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "_comment": "(10,23) -> (10,22): Chebyshev distance to goblin_night_patrol's own cell (10,21) drops from 2 to 1, inside trigger_radius 1 -- start_combat fires on this single successful move, the encounter_when gate already reading night.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "won_combat"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  }
+ ]
+}

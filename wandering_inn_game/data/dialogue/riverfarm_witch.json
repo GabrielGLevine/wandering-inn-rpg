@@ -1,81 +1,252 @@
 {
-	"_comment": "8b R3 (issue #11) the Witch's real graph. §4 voice key verbatim as the hub's own quest-active variant. TALK path lives here: a skill-gated mediation chain (hub -> mediate_pitch -> mediate_argue) banking the shared blight_lifted convergence + persuaded_someone (the social identity feed). GH#64: re-gated from class (Diplomat) to [Calming Touch] -- de-escalating 'let's not make this ugly' fits the calming register better than the charm register. The gate stays visible-locked ALONE (goblin_parley's warrior-intimidate precedent) -- requires/hide_when never combine two gate TYPES in one dict, so the quest-active state rides hide_when (blight_lifted retires it) rather than a second requires key. 'shop' node is the vendor surface (Krshia/peddler_stall buy-option contract verbatim), gated open by blight_lifted. hub keeps the always-ungated exit ('Just tea, then.') per the softlock guard.",
-	"start": "hub",
-	"nodes": {
-		"hub": {
-			"speaker": "Eloise",
-			"text": "Sit. Tea first. Then we'll talk about whatever brought you all this way.",
-			"text_variants": [
-				{ "requires": { "accomplishment": { "heard_price_of_a_favor": 1 } }, "text": "You want the blight gone. I want what I'm owed. One of these is easy. Sit. Tea first. The craft has MANNERS." },
-				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "Paid, one way or another. I don't ask which. Sit if you like, or don't — I've got stock for coin now too, if that suits you better than favors." }
-			],
-			"options": [
-				{ "text": "What's this blight really about?", "goto": "truth" },
-				{ "text": "Let's not make this ugly. I'll broker fair terms. [Calming Touch]", "requires": { "skill": "calming_touch" }, "hide_when": { "accomplishment": { "blight_lifted": 1 } }, "goto": "mediate_pitch" },
-				{ "text": "What have you got, for coin instead of favors?", "requires": { "accomplishment": { "blight_lifted": 1 } }, "goto": "shop" },
-				{ "text": "Just tea, then.", "end": true }
-			]
-		},
-		"truth": {
-			"speaker": "Eloise",
-			"text": "No blight. A bargain, unpaid. Someone in that village asked me for a favor and got exactly what they asked for. The price was always the second half of the deal, and they're pretending they forgot that part. The craft doesn't forget. It collects.",
-			"options": [
-				{ "text": "Back to it.", "goto": "hub" },
-				{ "text": "I see.", "end": true }
-			]
-		},
-		"mediate_pitch": {
-			"speaker": "Eloise",
-			"text": "Broker. That's a word for it. Go on, then, make your pitch. I'm not unreasonable. I'm owed, which isn't the same thing.",
-			"options": [
-				{ "text": "Take a year of hearth-tending instead of whatever you were owed.", "goto": "mediate_argue" },
-				{ "text": "Never mind.", "goto": "hub" }
-			]
-		},
-		"mediate_argue": {
-			"speaker": "Eloise",
-			"text": "A year, tending my hearth. Not nothing, and not the debt I was owed either.",
-			"_comment": "Effects live here (goto, not end) so dialogue_ended fires only on 'mediated's OWN end option, after the effects -- same shape as krshia_crate.json's smoothed-over TALK resolution (effects on a non-ending option, a separate reaction node closes the conversation).",
-			"options": [
-				{ "text": "It's settled, then.", "effects": [ { "accomplishment": "blight_lifted" }, { "accomplishment": "mediated_the_debt" }, { "accomplishment": "persuaded_someone" } ], "goto": "mediated" }
-			]
-		},
-		"mediated": {
-			"speaker": "Eloise",
-			"text": "Fine. Tea first, and then it's settled — a year's honest work is worth more to me than a favor nobody meant to keep.",
-			"options": [
-				{ "text": "Fair enough.", "end": true }
-			]
-		},
-		"shop": {
-			"speaker": "Eloise",
-			"text": "Coin, then. Fine — not everyone wants to owe me something bigger. Take what you need and go.",
-			"_comment": "Buy-option contract verbatim (peddler_stall/krshia_crate): requires:{gold:price} + effects:[{gold:-price},{item:id}], price named in the option text. Four herb-craft consumables, 4-16g (data/items.json), plus the attunement stone below (a distinct category -- issue #65's re-route: invrisil_attuned no longer banks from the Guild-board letter, it banks HERE, composed on the buy option exactly like krshia_crate.json's resonant_catalyst/bought_catalyst pair). No extra gate on the stone row beyond this node's own hub-level blight_lifted requirement -- the whole 'shop' node is already unreachable before it, so the vendor-unlock gate composes for free.",
-			"options": [
-				{ "text": "The yarrow bundle. (4 gold)", "requires": { "gold": 4 }, "effects": [ { "gold": -4 }, { "item": "dried_yarrow_bundle" } ], "goto": "bought" },
-				{ "text": "The sleeproot draught. (5 gold)", "requires": { "gold": 5 }, "effects": [ { "gold": -5 }, { "item": "sleeproot_draught" } ], "goto": "bought" },
-				{ "text": "The herb sachet, sewn shut. (6 gold)", "requires": { "gold": 6 }, "effects": [ { "gold": -6 }, { "item": "hollow_herb_sachet" } ], "goto": "bought" },
-				{ "text": "That warded bead you're not selling. (16 gold)", "requires": { "gold": 16 }, "effects": [ { "gold": -16 }, { "item": "witch_wardstone_bead" } ], "goto": "bought" },
-				{ "text": "The travel-stone, under the cloth. (18 gold)", "requires": { "gold": 18 }, "hide_when": { "accomplishment": { "invrisil_attuned": 1 } }, "effects": [ { "gold": -18 }, { "item": "invrisil_attunement_stone" }, { "accomplishment": "invrisil_attuned" } ], "goto": "stone_sold" },
-				{ "text": "Nothing today.", "goto": "hub" }
-			]
-		},
-		"bought": {
-			"speaker": "Eloise",
-			"text": "Sold. Don't come back asking for a refund because it didn't work the way you hoped. Nothing ever works the way anyone hopes.",
-			"options": [
-				{ "text": "Show me again.", "goto": "shop" },
-				{ "text": "My thanks.", "end": true }
-			]
-		},
-		"stone_sold": {
-			"speaker": "Eloise",
-			"text": "Distance is just another kindness, if you carry the right stone. This one already knows the road to Invrisil. Don't lose it before you get there.",
-			"_comment": "Own reaction node (not the generic 'bought' text) -- same rationale as krshia_crate.json's catalyst_sold: a carried attunement stone isn't 'worn or used' the way a bead/sachet is, and this is the sale moment's one chance to carry the portal-lore weight (kindness/doors/distance aphorism + the transaction, per Eloise's shipped register).",
-			"options": [
-				{ "text": "Show me again.", "goto": "shop" },
-				{ "text": "My thanks.", "end": true }
-			]
-		}
-	}
+ "_comment": "8b R3 (issue #11) the Witch's real graph. §4 voice key verbatim as the hub's own quest-active variant. TALK path lives here: a skill-gated mediation chain (hub -> mediate_pitch -> mediate_argue) banking the shared blight_lifted convergence + persuaded_someone (the social identity feed). GH#64: re-gated from class (Diplomat) to [Calming Touch] -- de-escalating 'let's not make this ugly' fits the calming register better than the charm register. The gate stays visible-locked ALONE (goblin_parley's warrior-intimidate precedent) -- requires/hide_when never combine two gate TYPES in one dict, so the quest-active state rides hide_when (blight_lifted retires it) rather than a second requires key. 'shop' node is the vendor surface (Krshia/peddler_stall buy-option contract verbatim), gated open by blight_lifted. hub keeps the always-ungated exit ('Just tea, then.') per the softlock guard.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Eloise",
+   "text": "Sit. Tea first. Then we'll talk about whatever brought you all this way.",
+   "text_variants": [
+    {
+     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
+     "requires": {
+      "phase": [
+       "dusk",
+       "night"
+      ]
+     },
+     "text": "The craft listens better once the birds stop. Sit. Tea's still tea in the dark."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "heard_price_of_a_favor": 1
+      }
+     },
+     "text": "You want the blight gone. I want what I'm owed. One of these is easy. Sit. Tea first. The craft has MANNERS."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "blight_lifted": 1
+      }
+     },
+     "text": "Paid, one way or another. I don't ask which. Sit if you like, or don't — I've got stock for coin now too, if that suits you better than favors."
+    }
+   ],
+   "options": [
+    {
+     "text": "What's this blight really about?",
+     "goto": "truth"
+    },
+    {
+     "text": "Let's not make this ugly. I'll broker fair terms. [Calming Touch]",
+     "requires": {
+      "skill": "calming_touch"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "blight_lifted": 1
+      }
+     },
+     "goto": "mediate_pitch"
+    },
+    {
+     "text": "What have you got, for coin instead of favors?",
+     "requires": {
+      "accomplishment": {
+       "blight_lifted": 1
+      }
+     },
+     "goto": "shop"
+    },
+    {
+     "text": "Just tea, then.",
+     "end": true
+    }
+   ]
+  },
+  "truth": {
+   "speaker": "Eloise",
+   "text": "No blight. A bargain, unpaid. Someone in that village asked me for a favor and got exactly what they asked for. The price was always the second half of the deal, and they're pretending they forgot that part. The craft doesn't forget. It collects.",
+   "options": [
+    {
+     "text": "Back to it.",
+     "goto": "hub"
+    },
+    {
+     "text": "I see.",
+     "end": true
+    }
+   ]
+  },
+  "mediate_pitch": {
+   "speaker": "Eloise",
+   "text": "Broker. That's a word for it. Go on, then, make your pitch. I'm not unreasonable. I'm owed, which isn't the same thing.",
+   "options": [
+    {
+     "text": "Take a year of hearth-tending instead of whatever you were owed.",
+     "goto": "mediate_argue"
+    },
+    {
+     "text": "Never mind.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "mediate_argue": {
+   "speaker": "Eloise",
+   "text": "A year, tending my hearth. Not nothing, and not the debt I was owed either.",
+   "_comment": "Effects live here (goto, not end) so dialogue_ended fires only on 'mediated's OWN end option, after the effects -- same shape as krshia_crate.json's smoothed-over TALK resolution (effects on a non-ending option, a separate reaction node closes the conversation).",
+   "options": [
+    {
+     "text": "It's settled, then.",
+     "effects": [
+      {
+       "accomplishment": "blight_lifted"
+      },
+      {
+       "accomplishment": "mediated_the_debt"
+      },
+      {
+       "accomplishment": "persuaded_someone"
+      }
+     ],
+     "goto": "mediated"
+    }
+   ]
+  },
+  "mediated": {
+   "speaker": "Eloise",
+   "text": "Fine. Tea first, and then it's settled — a year's honest work is worth more to me than a favor nobody meant to keep.",
+   "options": [
+    {
+     "text": "Fair enough.",
+     "end": true
+    }
+   ]
+  },
+  "shop": {
+   "speaker": "Eloise",
+   "text": "Coin, then. Fine — not everyone wants to owe me something bigger. Take what you need and go.",
+   "_comment": "Buy-option contract verbatim (peddler_stall/krshia_crate): requires:{gold:price} + effects:[{gold:-price},{item:id}], price named in the option text. Four herb-craft consumables, 4-16g (data/items.json), plus the attunement stone below (a distinct category -- issue #65's re-route: invrisil_attuned no longer banks from the Guild-board letter, it banks HERE, composed on the buy option exactly like krshia_crate.json's resonant_catalyst/bought_catalyst pair). No extra gate on the stone row beyond this node's own hub-level blight_lifted requirement -- the whole 'shop' node is already unreachable before it, so the vendor-unlock gate composes for free.",
+   "options": [
+    {
+     "text": "The yarrow bundle. (4 gold)",
+     "requires": {
+      "gold": 4
+     },
+     "effects": [
+      {
+       "gold": -4
+      },
+      {
+       "item": "dried_yarrow_bundle"
+      }
+     ],
+     "goto": "bought"
+    },
+    {
+     "text": "The sleeproot draught. (5 gold)",
+     "requires": {
+      "gold": 5
+     },
+     "effects": [
+      {
+       "gold": -5
+      },
+      {
+       "item": "sleeproot_draught"
+      }
+     ],
+     "goto": "bought"
+    },
+    {
+     "text": "The herb sachet, sewn shut. (6 gold)",
+     "requires": {
+      "gold": 6
+     },
+     "effects": [
+      {
+       "gold": -6
+      },
+      {
+       "item": "hollow_herb_sachet"
+      }
+     ],
+     "goto": "bought"
+    },
+    {
+     "text": "That warded bead you're not selling. (16 gold)",
+     "requires": {
+      "gold": 16
+     },
+     "effects": [
+      {
+       "gold": -16
+      },
+      {
+       "item": "witch_wardstone_bead"
+      }
+     ],
+     "goto": "bought"
+    },
+    {
+     "text": "The travel-stone, under the cloth. (18 gold)",
+     "requires": {
+      "gold": 18
+     },
+     "hide_when": {
+      "accomplishment": {
+       "invrisil_attuned": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -18
+      },
+      {
+       "item": "invrisil_attunement_stone"
+      },
+      {
+       "accomplishment": "invrisil_attuned"
+      }
+     ],
+     "goto": "stone_sold"
+    },
+    {
+     "text": "Nothing today.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "bought": {
+   "speaker": "Eloise",
+   "text": "Sold. Don't come back asking for a refund because it didn't work the way you hoped. Nothing ever works the way anyone hopes.",
+   "options": [
+    {
+     "text": "Show me again.",
+     "goto": "shop"
+    },
+    {
+     "text": "My thanks.",
+     "end": true
+    }
+   ]
+  },
+  "stone_sold": {
+   "speaker": "Eloise",
+   "text": "Distance is just another kindness, if you carry the right stone. This one already knows the road to Invrisil. Don't lose it before you get there.",
+   "_comment": "Own reaction node (not the generic 'bought' text) -- same rationale as krshia_crate.json's catalyst_sold: a carried attunement stone isn't 'worn or used' the way a bead/sachet is, and this is the sale moment's one chance to carry the portal-lore weight (kindness/doors/distance aphorism + the transaction, per Eloise's shipped register).",
+   "options": [
+    {
+     "text": "Show me again.",
+     "goto": "shop"
+    },
+    {
+     "text": "My thanks.",
+     "end": true
+    }
+   ]
+  }
+ }
 }

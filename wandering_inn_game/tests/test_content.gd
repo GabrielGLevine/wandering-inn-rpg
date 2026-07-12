@@ -366,11 +366,14 @@ func _validate_encounter_gate_counters(scene: Dictionary, produced_accomplishmen
 ## unlike `encounter_when` (interact/trigger reachability only, kind:
 ## encounter-scoped), `present_when` gates the entity's very existence --
 ## occupancy (`is_cell_blocked`), lookup (`entity_at`), and render/count
-## (`_build_entities`) -- for ANY entity kind. Only shape sanctioned:
+## (`_build_entities`) -- for ANY entity kind. Two shapes sanctioned:
 ## `{"requires": {...}}` (the door_when/contains_when shape, reused verbatim
-## via `_door_gate_met`). Every `requires` counter id is EXISTENCE-CHECKED
-## against produced accomplishments, same as encounter_when.requires above --
-## a typo'd/unproduced id would make the entity permanently absent, silently.
+## via `_accomplishment_gate_met`) and, since issue #80's `_present_gate_met`,
+## `{"phase": [...]}` (encounter_when's own shape, copied verbatim -- the
+## SAME two-shape validation as _validate_encounter_when above, one phase
+## family). Every `requires` counter id is EXISTENCE-CHECKED against produced
+## accomplishments, same as encounter_when.requires above -- a
+## typo'd/unproduced id would make the entity permanently absent, silently.
 func _validate_present_when(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
@@ -383,13 +386,17 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				String(entity.get("kind", "")) != "encounter",
 				"entity %s: present_when is forbidden on kind:encounter -- _check_trigger_radius never consults presence, so a present_when encounter would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
 			)
-			assert(when.has("requires"), "entity %s present_when has no recognized shape (only 'requires' is sanctioned)" % entity_id)
-			assert(when["requires"] is Dictionary, "entity %s present_when.requires must be a Dictionary" % entity_id)
-			for acc_id: String in (when["requires"] as Dictionary):
-				assert(
-					produced_accomplishments.has(acc_id),
-					"entity %s present_when.requires waits on unproduced accomplishment: %s" % [entity_id, acc_id]
-				)
+			assert(when.has("requires") or when.has("phase"), "entity %s present_when has no recognized shape (only 'requires'/'phase' are sanctioned)" % entity_id)
+			if when.has("phase"):
+				for p: Variant in when["phase"]:
+					assert(VALID_PHASES.has(String(p)), "entity %s present_when references unknown phase: %s" % [entity_id, p])
+			if when.has("requires"):
+				assert(when["requires"] is Dictionary, "entity %s present_when.requires must be a Dictionary" % entity_id)
+				for acc_id: String in (when["requires"] as Dictionary):
+					assert(
+						produced_accomplishments.has(acc_id),
+						"entity %s present_when.requires waits on unproduced accomplishment: %s" % [entity_id, acc_id]
+					)
 
 
 ## 8b R1 (issue #10), locked shape 4 -- `visual_states`' new `phase` `when`
@@ -599,6 +606,22 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		gate_keys += 1
 		var race_id: String = String(requires["race"])
 		assert(["human", "drake", "gnoll"].has(race_id), label + " requires unknown race: " + race_id)
+	if requires.has("phase"):
+		# The EIGHTH sanctioned single-key gate -- issue #80's
+		# phase-variant key (WIDialogue._meets's `phase` check against the
+		# read-only ctx `phase`, WIGame.phase()'s own day/dusk/night clock).
+		# Value must be a non-empty Array of valid phase ids (the SAME
+		# array-membership shape encounter_when/visual_states already use,
+		# not race's single-string shape) -- a typo'd or empty phase id
+		# would silently never match any real phase(), making the variant
+		# permanently dead content. Shipped only on text_variants today, but
+		# validated generically here like every other single-key gate.
+		gate_keys += 1
+		assert(requires["phase"] is Array, label + " requires.phase must be an array")
+		var phase_ids: Array = requires["phase"]
+		assert(not phase_ids.is_empty(), label + " requires.phase must not be empty")
+		for phase_id: Variant in phase_ids:
+			assert(["day", "dusk", "night"].has(String(phase_id)), label + " requires unknown phase: " + String(phase_id))
 	# The FIRST sanctioned COMPOUND exception --
 	# {gold, accomplishment} together (a stage-gated discount buy option,
 	# Krshia's `krshia_friend_of_the_silverfangs` perk). dialogue.gd's _meets()

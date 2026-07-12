@@ -1343,10 +1343,49 @@ func _door_gate_met(door_when: Dictionary) -> bool:
 ## MAP_CHANGED) -- a same-map producer yields a sim-present but INVISIBLE
 ## entity until re-entry. Every current producer (seal_kept_reported: the
 ## street) satisfies this; keep it true for new present_when consumers.
+## Issue #80 (world reactivity wave, item 3 -- flavor-NPC night presence):
+## `_present_gate_met` below ADDS a `{"phase": [<phase strings>]}` shape
+## (`_encounter_gate_met`'s own two-shape design, NOT folded into
+## `_door_gate_met` itself -- door_when/contains_when/portal_menu_when stay
+## `requires`-only, byte-unchanged; giving THEM phase capability too would be
+## a second, undiscussed design decision this task never asked for). THE
+## SAME-MAP CONSTRAINT ABOVE IS VIOLATED BY DESIGN for a phase producer:
+## `_tick_action` (the phase clock) advances on ordinary field actions on
+## WHATEVER map the PC currently stands on, which is very often the SAME map
+## an entity like `hungry_patron` lives on. Checked and accepted: a
+## present_when-gated entity whose ONLY visit this waking crosses a phase
+## threshold WHILE the player is standing on its map will sim-flip
+## immediately (is_cell_blocked/entity_at update live, so a fresh
+## interact/movement attempt is always correct) but its RENDERED sprite
+## (`world.gd`'s `_entity_visuals`) will not add/remove until the next
+## `_rebuild_field()` (a MAP_CHANGED, i.e. leaving and re-entering) -- a
+## same-map "ghost" mirroring the pre-existing same-map ghost this doc
+## already discloses, not a new failure mode. Deliberately not engineered
+## around (no live add/remove-on-PHASE_CHANGED reconciler was added,
+## contrast `_refresh_entities_watching_phase`'s LOOK-only refresh of
+## already-built visuals): every phase-gated present_when producer this wave
+## ships (hungry_patron/ilvo/resting_runner) is pure flavor, self-heals on
+## the next map entry, and costs nothing mechanical while stale.
 func entity_present(ent: Dictionary) -> bool:
 	if not ent.has("present_when"):
 		return true
-	return _door_gate_met(ent["present_when"] as Dictionary)
+	return _present_gate_met(ent["present_when"] as Dictionary)
+
+
+## `present_when`'s own gate reader -- `_door_gate_met`'s `{"requires": {...}}`
+## shape (door_when/contains_when/portal_menu_when's shared convention,
+## untouched) PLUS `_encounter_gate_met`'s `{"phase": [...]}` shape, copied
+## verbatim (one phase-family shape, three consumers now: encounter_when,
+## visual_states, present_when). An empty/absent dict reads as "always
+## present" (matches `_door_gate_met`'s own empty-dict convention).
+func _present_gate_met(when: Dictionary) -> bool:
+	if when.is_empty():
+		return true
+	if when.has("phase"):
+		return (when["phase"] as Array).has(phase())
+	if when.has("requires"):
+		return _accomplishment_gate_met(when["requires"] as Dictionary)
+	return true
 
 
 ## True when an `encounter` entity's optional `encounter_when` gate is
@@ -1530,7 +1569,24 @@ func _build_dialogue_ctx() -> Dictionary:
 	# gate, which lets a text_variants entry render differently per PC race
 	# (the Pallass "Human friction / Drake assumed-local" register) without
 	# any new mechanism beyond the existing text_variants->'_meets' path.
-	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "inventory": inventory.duplicate(), "board_accepted": accepted_bounty_id != "", "delivery_accepted": accepted_delivery_id != "", "entity_first_use": entity_first_use.duplicate(true), "pc_race": pc_race}
+	# `phase` is the EIGHTH sanctioned ctx extension (issue #80, world
+	# reactivity wave) -- read-only derived state (the SAME `phase()` public
+	# reader world.gd's atmosphere/encounter_when/visual_states machinery
+	# already calls, not a new clock), not progress. Powers WIDialogue._meets's
+	# `phase` gate, which lets a text_variants entry render differently by
+	# time of day. Value shape matches encounter_when/visual_states' own
+	# `{"phase": [<phase strings>]}` array-membership convention (ONE phase
+	# family, one shape) rather than pc_race's single-string equality -- a
+	# variant author can gate on "dusk or night" in one entry. TRAP: a
+	# conversation's ctx is a SNAPSHOT taken at start_dialogue/set_ctx time;
+	# phase only advances via _tick_action (move_player/interact/a PC combat
+	# turn), and starting or continuing a conversation never calls it, so
+	# phase cannot change mid-conversation -- a node entered while a
+	# phase-gated variant is showing will show the SAME variant for the
+	# whole conversation, even one long enough to script hundreds of
+	# in-fiction lines (verified: dialogue_choose/_begin_code_dialogue never
+	# touch actions_since_sleep).
+	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "inventory": inventory.duplicate(), "board_accepted": accepted_bounty_id != "", "delivery_accepted": accepted_delivery_id != "", "entity_first_use": entity_first_use.duplicate(true), "pc_race": pc_race, "phase": phase()}
 
 
 ## Starts a conversation graph if no other modal sim is active.

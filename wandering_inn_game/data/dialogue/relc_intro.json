@@ -6,6 +6,16 @@
    "text": "Oi. Hold up. Big spear, bored Drake, official business. That's me covered. You came off the inn hill. Name and errand.",
    "text_variants": [
     {
+     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
+     "requires": {
+      "phase": [
+       "dusk",
+       "night"
+      ]
+     },
+     "text": "Dark road, same Drake. Goblins get bold once the sun's down — so do I."
+    },
+    {
      "requires": {
       "accomplishment": {
        "met_relc": 1

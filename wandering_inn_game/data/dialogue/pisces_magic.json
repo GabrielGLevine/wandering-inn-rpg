@@ -6,6 +6,16 @@
    "text": "A [Necromancer], yes — and before your hand drifts to that sword, no, nothing in this square has been raised. I merely occupy the cheapest air the Guild permits. Pisces Jealnv. You reek of a body that has never once held mana. Curious. You want something.",
    "text_variants": [
     {
+     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
+     "requires": {
+      "phase": [
+       "dusk",
+       "night"
+      ]
+     },
+     "text": "Fewer eyes on me after dark. I prefer it that way — no one flinches until I am mid-sentence."
+    },
+    {
      "requires": {
       "accomplishment": {
        "learned_magic_from_pisces": 1

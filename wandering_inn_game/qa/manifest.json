@@ -175,7 +175,7 @@
   {
    "script": "atmosphere_check",
    "seed": 9,
-   "note": "mood-grade/phase-clock proof; day->dusk->day cycle"
+   "note": "mood-grade/phase-clock proof; day->dusk->night->day cycle; issue #80: Erin's phase-gated line at dusk + hungry_patron's present_when day<->night flip (sim- and render-side)"
   },
   {
    "script": "field_skills_loop",
@@ -562,6 +562,18 @@
    "seed": 9,
    "fixture": "near_pallass_drake",
    "note": "8e E2 optional (debt-sweep item 5, Drake-line live coverage): teleport-based canonical pinning the DRAKE half of tier_clerk_market/market_stallkeeper's requires:{race:drake} text_variants live (pallass_walkthrough already proves the human half) -- the unit test proves the requires:{race} mechanism, this proves the shipped graphs render it. Deliberately does not bank pallass_entry_stamped (out of scope, pallass_walkthrough's own job); zero combat"
+  },
+  {
+   "script": "goblin_night_patrol_loop",
+   "seed": 9,
+   "fixture": "goblin_night_patrol_start",
+   "note": "Issue #80 (world reactivity wave): floodplains' own night-only encounter slot, the river_wolf_pack precedent -- fixture starts past night_at, one real move into trigger_radius 1 fires start_combat live (goblin_raider/goblin_shaman, relc fielded), win banks won_combat"
+  },
+  {
+   "script": "boulevard_night_footpads_loop",
+   "seed": 9,
+   "fixture": "boulevard_night_footpads_start",
+   "note": "Issue #80 (world reactivity wave): Invrisil boulevard's own night-only encounter slot, the river_wolf_pack precedent's third application -- fixture starts past night_at (T3 spellsword9 gear), one real move into trigger_radius 1 fires start_combat live (footpad_lookout/footpad_bruiser, solo), win banks won_combat"
   }
  ]
 }

@@ -1,155 +1,496 @@
 {
-	"_comment": "Zevara Sunderscale, Oldblood Drake Watch Captain of Liscor, posted at the gate. Canon (wiki.wanderinginn.com/Zevara): light-blue scales, a scar down the left of her jaw, tall; dry, perpetually overworked, rigidly procedural, refuses bribes, no personal life (six weeks' leave in ten years); her Senior Guardsmen are Relc (a [Spearmaster]) and Klbkch (an Antinium). C3: the old generic persuade branch is now the Q1 'Something in the Cisterns' TALK path -- a Watch-sweep persuade CHAIN (sweep_pitch -> sweep_argue -> swept), gated VISIBLE once heard_about_cisterns is banked (the quest is open) and HIDDEN once watch_swept_cisterns is banked (per the sergeant precedent). The winning option banks persuaded_someone (the social identity feed, same as watch_crate) + watch_swept_cisterns + resolved_the_cisterns (Q1 beat-1 convergence) and remove_entity shield_spiders (the Watch clears the nest -- remove_entity precedent). The hub gains a post-completion WITNESS text_variant gated on resolved_the_cisterns (any path). The spec's 'gate_guard defers to her' beat stays on ZEVARA'S side (the 'authority' node) rather than editing gate_guard, which gate_district_walkthrough + social_loop assert VERBATIM. NO canonical script asserted this graph before C3 (C2's probe was deleted); cisterns_talk is its first canonical coverage. Opacity rule: class NAME only, no stats, no counter numerals. both quest-reward items attach to EXISTING options (no new options, no index moves) via the same effects-array item grant precedent as Relc's spear gift. sweep_argue's winning option now also grants watch_token (the cisterns TALK-path proof of the Watch acting on the player's word); the hub's 'It's done...' seal option (gated cleared_the_warren) now also grants moon_bone_amulet (the Act III capstone reward, landing in the surface epilogue rather than mid-dungeon loot -- staged recommendation). Both fire item_gained + a 'Got: <Name>' toast synchronously after their accomplishment effects (dialogue_choose applies effects array-order); cisterns_talk/climax_seal/arc_flow gained explicit waits for both new events.",
-	"start": "hub",
-	"nodes": {
-		"hub": {
-			"speaker": "Zevara",
-			"text": "Watch Captain Zevara. If this is a report, keep it short; if it's a complaint, keep it shorter. I've been on since before the gate opened and I'll be on after it shuts.",
-			"text_variants": [
-				{ "requires": { "accomplishment": { "resolved_the_cisterns": 1 } }, "text": "The thing under the market. I hear it's handled. Good. I sleep worse than you'd think over not knowing what's beneath my own streets. However you settled it, the Watch owes you a quiet night. Don't tell the others I said so." },
-				{ "requires": { "accomplishment": { "heard_the_deep_tremor": 1 } }, "text": "Still here? The hole in the ground isn't getting shallower. Take Olesm's map and take the spearmaster, and go find out what dug tunnels under my city." },
-				{ "requires": { "accomplishment": { "raskghar_sealed": 1 } }, "text": "The one who went down the tunnels and climbed back out. The gallery's bricked and the streets are quiet. I've a report with your name on it that I'll deny writing. Rest. You've earned a boring week. Take it before the next one." }
-			],
-			"options": [
-				{ "text": "Long shift?", "goto": "shift" },
-				{ "text": "I need the Watch to sweep the cisterns under the market.", "requires": { "accomplishment": { "heard_about_cisterns": 1 } }, "hide_when": { "accomplishment": { "watch_swept_cisterns": 1 } }, "goto": "sweep_pitch" },
-				{ "text": "You sent a runner for me?", "requires": { "accomplishment": { "watch_runner_pointed": 1 } }, "hide_when": { "accomplishment": { "heard_the_deep_tremor": 1 } }, "goto": "summons" },
-				{ "text": "It's done. The thing under the city won't be climbing up.", "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "hide_when": { "accomplishment": { "raskghar_sealed": 1 } }, "effects": [ { "accomplishment": "raskghar_sealed" }, { "item": "moon_bone_amulet" } ], "goto": "seal" },
-				{ "text": "Just getting my bearings.", "end": true },
-				{ "_comment": "stage-2 hub topics, lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag stripped). Appended AFTER 'Just getting my bearings.' (array end) so they can never shift an earlier option's visible index.", "text": "I heard you can breathe fire.", "requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } }, "goto": "zevara_oldblood" },
-				{ "_comment": "CANON ⚑ mild -- the Eresc story obliqued: no predecessor named, no Antinium named ('the kind the city didn't mourn'). User gates naming.", "text": "Why'd you take this job? It's eating you.", "requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } }, "goto": "zevara_oath" },
-				{ "_comment": "PERK surface (watch-bounty access, spec default, authorable now -- see zevara_bounties below).", "text": "About that bounty work.", "requires": { "accomplishment": { "resolved_the_cisterns": 1, "chatted_with_zevara": 2 } }, "goto": "zevara_bounties" },
-				{ "_comment": "Issue #74: standing non-banking recap, requires-active (heard_about_cisterns)/hide_when-resolved (cisterns_reported), place-named. Appended at array end (index-safety convention).", "text": "Remind me what's happening with the cisterns?", "requires": { "accomplishment": { "heard_about_cisterns": 1 } }, "hide_when": { "accomplishment": { "cisterns_reported": 1 } }, "goto": "cisterns_recap" }
-			]
-		},
-		"zevara_oldblood": {
-			"speaker": "Zevara",
-			"text": "Oldblood, yes. Fire, technically. Ten seconds of it, no air in my lungs the whole time, and a day of sounding like a gravel cart after. It's a weapon you pay for using, so I file it where I file all last resorts. You want fire that works, requisition a mage.",
-			"options": [
-				{ "text": "Back a step.", "goto": "hub" },
-				{ "text": "Noted, Captain.", "end": true }
-			]
-		},
-		"zevara_oath": {
-			"speaker": "Zevara",
-			"text": "Somebody before me let things slide. Reports that went nowhere, as long as the dead were the kind the city didn't mourn. I wrote it up. Command found the paperwork inconvenient and the facts worse — and then the chair was mine. So no, I don't sleep much. I know exactly what this office looks like when its captain does.",
-			"options": [
-				{ "text": "The city's lucky it was you.", "goto": "zevara_oath_two" },
-				{ "text": "Back a step.", "goto": "hub" },
-				{ "text": "Understood, Captain.", "end": true }
-			]
-		},
-		"zevara_oath_two": {
-			"speaker": "Zevara",
-			"text": "Luck is what people call other people's overtime. But — thank you. File that under 'said once'. Now get out of my gatehouse before I find you a shift.",
-			"options": [
-				{ "text": "Back a step.", "goto": "hub" },
-				{ "text": "Yes, Captain.", "end": true }
-			]
-		},
-		"zevara_bounties": {
-			"speaker": "Zevara",
-			"text": "Good. The Watch posts standing bounties on anything that made a file cross my desk. You clear it, you claim it here, I sign it. Keep the receipts honest and this arrangement outlives both our patience.",
-			"options": [
-				{ "text": "The scavengers off Market Street are dealt with.", "requires": { "accomplishment": { "found_the_crate": 1 } }, "hide_when": { "accomplishment": { "claimed_bounty_crate": 1 } }, "effects": [ { "accomplishment": "claimed_bounty_crate" }, { "gold": 3 } ], "goto": "zevara_bounty_paid" },
-				{ "text": "The cistern nest is gone. You know that one firsthand.", "requires": { "accomplishment": { "resolved_the_cisterns": 1 } }, "hide_when": { "accomplishment": { "claimed_bounty_cisterns": 1 } }, "effects": [ { "accomplishment": "claimed_bounty_cisterns" }, { "gold": 4 } ], "goto": "zevara_bounty_paid" },
-				{ "text": "The thing under the city. The big one.", "requires": { "accomplishment": { "cleared_the_warren": 1 } }, "hide_when": { "accomplishment": { "claimed_bounty_warren": 1 } }, "effects": [ { "accomplishment": "claimed_bounty_warren" }, { "gold": 10 } ], "goto": "zevara_bounty_paid" },
-				{ "text": "Nothing to claim yet.", "goto": "hub" }
-			]
-		},
-		"zevara_bounty_paid": {
-			"speaker": "Zevara",
-			"text": "Signed. Spend it somewhere that doesn't generate paperwork.",
-			"options": [
-				{ "text": "Anything else on the books?", "goto": "zevara_bounties" },
-				{ "text": "Captain.", "end": true }
-			]
-		},
-		"summons": {
-			"speaker": "Zevara",
-			"text": "There you are. The cisterns crew found something under the new grates: tunnels nobody dug, going DOWN. Olesm's maps say they shouldn't exist. You've been down there; you're going again. This time for the Watch.",
-			"options": [
-				{ "text": "Then I'll go down.", "effects": [ { "accomplishment": "heard_the_deep_tremor" } ], "goto": "summons_send" },
-				{ "text": "Give me a day to ready myself.", "goto": "hub" }
-			]
-		},
-		"summons_send": {
-			"speaker": "Zevara",
-			"text": "Good. See Olesm before you climb down. He's been up since the second bell drawing what shouldn't be there, and he'll want you carrying it. And take Relc. That's not the suggestion it sounds like.",
-			"options": [
-				{ "text": "Understood, Captain.", "goto": "hub" },
-				{ "text": "On it.", "end": true }
-			]
-		},
-		"seal": {
-			"speaker": "Zevara",
-			"text": "Gone? Good. Dead? Better. The Watch is bricking that gallery before sundown — 'for now,' before you say it. Things under Liscor have a way of minding being sealed. …Good work. I mean it. Don't make me say it twice.",
-			"options": [
-				{ "text": "For now.", "goto": "hub" },
-				{ "text": "Captain.", "end": true }
-			]
-		},
-		"shift": {
-			"speaker": "Zevara",
-			"text": "Ten years of long shifts. Six weeks of leave across all of them. Do the arithmetic and then don't ask why I look like this. My Senior Guardsmen are a spearmaster who won't stop talking and an Antinium who won't start, and the wall stands in spite of both of them. Don't tell either of them the streak's holding. They'll take the credit.",
-			"options": [
-				{ "text": "The guard on the gate speaks well of you.", "goto": "authority" },
-				{ "text": "Back a step.", "goto": "hub" },
-				{ "text": "I'll let you get back to it.", "end": true }
-			]
-		},
-		"authority": {
-			"speaker": "Zevara",
-			"text": "He should. I signed his posting and I read his reports: both of them, the real one and the one where nothing happened. Liscor's Watch runs on people who'd rather stand a boring gate than let an interesting one through. Long may it bore us.",
-			"options": [
-				{ "text": "Back a step.", "goto": "hub" },
-				{ "text": "Understood, Captain.", "end": true }
-			]
-		},
-		"sweep_pitch": {
-			"speaker": "Zevara",
-			"text": "Sweep the cisterns. You know what a sweep costs? Six Watchmen off the wall, lanterns, a healer on standby, and a form in triplicate explaining to the Council why the wall was six thin. Give me one reason worth the ink.",
-			"options": [
-				{ "text": "If it's under the city and moving, it's Watch business — before it's an emergency, not a form.", "goto": "sweep_argue" },
-				{ "text": "Forget I asked.", "end": true }
-			]
-		},
-		"sweep_argue": {
-			"speaker": "Zevara",
-			"text": "...Before it's an emergency. Hm. You argue like someone who's read a casualty report. Fine. Make it plain. What am I actually sending them into?",
-			"options": [
-				{ "_comment": "GH#64: skill-gated (was class-gated Diplomat) -- [Charming Smile] fits winning the skeptical Captain over.", "text": "A nest. Silver-backed spiders, up from the Dungeon. [Charming Smile]", "requires": { "skill": "charming_smile" }, "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "watch_swept_cisterns" }, { "accomplishment": "resolved_the_cisterns" }, { "remove_entity": "shield_spiders" }, { "item": "watch_token" } ], "goto": "swept" },
-				{ "text": "Actually — never mind.", "end": true },
-				{ "_comment": "re-pricing: the non-Diplomat alternate. Zevara refuses BRIBES (this file's own top _comment) so this is framed as covering the sweep's OPERATIONAL cost (the lanterns/healer/overtime she just itemized in sweep_pitch), never a personal payoff -- routes to its own swept_paid reaction so that framing stays honest rather than reusing the persuaded 'swept' text. persuaded_someone deliberately absent (paying isn't persuading).", "text": "Here — three gold for the lanterns and the healer. Budget problem solved, at least. (3 gold)", "requires": { "gold": 3 }, "effects": [ { "gold": -3 }, { "accomplishment": "watch_swept_cisterns" }, { "accomplishment": "resolved_the_cisterns" }, { "remove_entity": "shield_spiders" }, { "item": "watch_token" } ], "goto": "swept_paid" }
-			]
-		},
-		"swept": {
-			"speaker": "Zevara",
-			"text": "Spiders from the Dungeon. Wonderful. That's exactly the small-now-large-later I'd rather pay for in overtime than in funerals. Consider it swept. I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing it to me clean, before it had teeth. Go tell whoever set you on this that the Watch has it. And, good work. That's rarer from my side of the gate than you'd think.",
-			"options": [
-				{ "text": "That's all I ask, Captain.", "goto": "hub" },
-				{ "text": "Appreciated.", "end": true }
-			]
-		},
-		"swept_paid": {
-			"speaker": "Zevara",
-			"text": "Funding, not evidence. Fine — my ledger doesn't much care which. I'll pull a squad at dusk and burn the silk out, whatever's actually down there. Paperwork's cleaner when someone else already covered the bill.",
-			"options": [
-				{ "text": "That's all I ask, Captain.", "goto": "hub" },
-				{ "text": "Appreciated.", "end": true }
-			]
-		},
-		"cisterns_recap": {
-			"_comment": "Issue #74: replays the CURRENT beat only -- never re-banks heard_about_cisterns/resolved_the_cisterns/cisterns_reported (goto only, no effects on this node or its options).",
-			"speaker": "Zevara",
-			"text": "Whatever's nested in the cisterns under the market is still down there, last I heard. Same grate, south of here.",
-			"text_variants": [
-				{ "requires": { "accomplishment": { "resolved_the_cisterns": 1 } }, "text": "It's cleared, is it? Then go tell Olesm at the Guild — he's the one keeping the tally, not me." }
-			],
-			"options": [
-				{ "text": "Back a step.", "goto": "hub" },
-				{ "text": "Understood, Captain.", "end": true }
-			]
-		}
-	}
+ "_comment": "Zevara Sunderscale, Oldblood Drake Watch Captain of Liscor, posted at the gate. Canon (wiki.wanderinginn.com/Zevara): light-blue scales, a scar down the left of her jaw, tall; dry, perpetually overworked, rigidly procedural, refuses bribes, no personal life (six weeks' leave in ten years); her Senior Guardsmen are Relc (a [Spearmaster]) and Klbkch (an Antinium). C3: the old generic persuade branch is now the Q1 'Something in the Cisterns' TALK path -- a Watch-sweep persuade CHAIN (sweep_pitch -> sweep_argue -> swept), gated VISIBLE once heard_about_cisterns is banked (the quest is open) and HIDDEN once watch_swept_cisterns is banked (per the sergeant precedent). The winning option banks persuaded_someone (the social identity feed, same as watch_crate) + watch_swept_cisterns + resolved_the_cisterns (Q1 beat-1 convergence) and remove_entity shield_spiders (the Watch clears the nest -- remove_entity precedent). The hub gains a post-completion WITNESS text_variant gated on resolved_the_cisterns (any path). The spec's 'gate_guard defers to her' beat stays on ZEVARA'S side (the 'authority' node) rather than editing gate_guard, which gate_district_walkthrough + social_loop assert VERBATIM. NO canonical script asserted this graph before C3 (C2's probe was deleted); cisterns_talk is its first canonical coverage. Opacity rule: class NAME only, no stats, no counter numerals. both quest-reward items attach to EXISTING options (no new options, no index moves) via the same effects-array item grant precedent as Relc's spear gift. sweep_argue's winning option now also grants watch_token (the cisterns TALK-path proof of the Watch acting on the player's word); the hub's 'It's done...' seal option (gated cleared_the_warren) now also grants moon_bone_amulet (the Act III capstone reward, landing in the surface epilogue rather than mid-dungeon loot -- staged recommendation). Both fire item_gained + a 'Got: <Name>' toast synchronously after their accomplishment effects (dialogue_choose applies effects array-order); cisterns_talk/climax_seal/arc_flow gained explicit waits for both new events.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Zevara",
+   "text": "Watch Captain Zevara. If this is a report, keep it short; if it's a complaint, keep it shorter. I've been on since before the gate opened and I'll be on after it shuts.",
+   "text_variants": [
+    {
+     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
+     "requires": {
+      "phase": [
+       "dusk",
+       "night"
+      ]
+     },
+     "text": "Gate doesn't close at dusk. Neither do I. Say your business and let one of us get some sleep eventually."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "resolved_the_cisterns": 1
+      }
+     },
+     "text": "The thing under the market. I hear it's handled. Good. I sleep worse than you'd think over not knowing what's beneath my own streets. However you settled it, the Watch owes you a quiet night. Don't tell the others I said so."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "heard_the_deep_tremor": 1
+      }
+     },
+     "text": "Still here? The hole in the ground isn't getting shallower. Take Olesm's map and take the spearmaster, and go find out what dug tunnels under my city."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "raskghar_sealed": 1
+      }
+     },
+     "text": "The one who went down the tunnels and climbed back out. The gallery's bricked and the streets are quiet. I've a report with your name on it that I'll deny writing. Rest. You've earned a boring week. Take it before the next one."
+    }
+   ],
+   "options": [
+    {
+     "text": "Long shift?",
+     "goto": "shift"
+    },
+    {
+     "text": "I need the Watch to sweep the cisterns under the market.",
+     "requires": {
+      "accomplishment": {
+       "heard_about_cisterns": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "watch_swept_cisterns": 1
+      }
+     },
+     "goto": "sweep_pitch"
+    },
+    {
+     "text": "You sent a runner for me?",
+     "requires": {
+      "accomplishment": {
+       "watch_runner_pointed": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "heard_the_deep_tremor": 1
+      }
+     },
+     "goto": "summons"
+    },
+    {
+     "text": "It's done. The thing under the city won't be climbing up.",
+     "requires": {
+      "accomplishment": {
+       "cleared_the_warren": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "raskghar_sealed": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "raskghar_sealed"
+      },
+      {
+       "item": "moon_bone_amulet"
+      }
+     ],
+     "goto": "seal"
+    },
+    {
+     "text": "Just getting my bearings.",
+     "end": true
+    },
+    {
+     "_comment": "stage-2 hub topics, lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag stripped). Appended AFTER 'Just getting my bearings.' (array end) so they can never shift an earlier option's visible index.",
+     "text": "I heard you can breathe fire.",
+     "requires": {
+      "accomplishment": {
+       "resolved_the_cisterns": 1,
+       "chatted_with_zevara": 2
+      }
+     },
+     "goto": "zevara_oldblood"
+    },
+    {
+     "_comment": "CANON ⚑ mild -- the Eresc story obliqued: no predecessor named, no Antinium named ('the kind the city didn't mourn'). User gates naming.",
+     "text": "Why'd you take this job? It's eating you.",
+     "requires": {
+      "accomplishment": {
+       "resolved_the_cisterns": 1,
+       "chatted_with_zevara": 2
+      }
+     },
+     "goto": "zevara_oath"
+    },
+    {
+     "_comment": "PERK surface (watch-bounty access, spec default, authorable now -- see zevara_bounties below).",
+     "text": "About that bounty work.",
+     "requires": {
+      "accomplishment": {
+       "resolved_the_cisterns": 1,
+       "chatted_with_zevara": 2
+      }
+     },
+     "goto": "zevara_bounties"
+    },
+    {
+     "_comment": "Issue #74: standing non-banking recap, requires-active (heard_about_cisterns)/hide_when-resolved (cisterns_reported), place-named. Appended at array end (index-safety convention).",
+     "text": "Remind me what's happening with the cisterns?",
+     "requires": {
+      "accomplishment": {
+       "heard_about_cisterns": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "cisterns_reported": 1
+      }
+     },
+     "goto": "cisterns_recap"
+    }
+   ]
+  },
+  "zevara_oldblood": {
+   "speaker": "Zevara",
+   "text": "Oldblood, yes. Fire, technically. Ten seconds of it, no air in my lungs the whole time, and a day of sounding like a gravel cart after. It's a weapon you pay for using, so I file it where I file all last resorts. You want fire that works, requisition a mage.",
+   "options": [
+    {
+     "text": "Back a step.",
+     "goto": "hub"
+    },
+    {
+     "text": "Noted, Captain.",
+     "end": true
+    }
+   ]
+  },
+  "zevara_oath": {
+   "speaker": "Zevara",
+   "text": "Somebody before me let things slide. Reports that went nowhere, as long as the dead were the kind the city didn't mourn. I wrote it up. Command found the paperwork inconvenient and the facts worse — and then the chair was mine. So no, I don't sleep much. I know exactly what this office looks like when its captain does.",
+   "options": [
+    {
+     "text": "The city's lucky it was you.",
+     "goto": "zevara_oath_two"
+    },
+    {
+     "text": "Back a step.",
+     "goto": "hub"
+    },
+    {
+     "text": "Understood, Captain.",
+     "end": true
+    }
+   ]
+  },
+  "zevara_oath_two": {
+   "speaker": "Zevara",
+   "text": "Luck is what people call other people's overtime. But — thank you. File that under 'said once'. Now get out of my gatehouse before I find you a shift.",
+   "options": [
+    {
+     "text": "Back a step.",
+     "goto": "hub"
+    },
+    {
+     "text": "Yes, Captain.",
+     "end": true
+    }
+   ]
+  },
+  "zevara_bounties": {
+   "speaker": "Zevara",
+   "text": "Good. The Watch posts standing bounties on anything that made a file cross my desk. You clear it, you claim it here, I sign it. Keep the receipts honest and this arrangement outlives both our patience.",
+   "options": [
+    {
+     "text": "The scavengers off Market Street are dealt with.",
+     "requires": {
+      "accomplishment": {
+       "found_the_crate": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "claimed_bounty_crate": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "claimed_bounty_crate"
+      },
+      {
+       "gold": 3
+      }
+     ],
+     "goto": "zevara_bounty_paid"
+    },
+    {
+     "text": "The cistern nest is gone. You know that one firsthand.",
+     "requires": {
+      "accomplishment": {
+       "resolved_the_cisterns": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "claimed_bounty_cisterns": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "claimed_bounty_cisterns"
+      },
+      {
+       "gold": 4
+      }
+     ],
+     "goto": "zevara_bounty_paid"
+    },
+    {
+     "text": "The thing under the city. The big one.",
+     "requires": {
+      "accomplishment": {
+       "cleared_the_warren": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "claimed_bounty_warren": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "claimed_bounty_warren"
+      },
+      {
+       "gold": 10
+      }
+     ],
+     "goto": "zevara_bounty_paid"
+    },
+    {
+     "text": "Nothing to claim yet.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "zevara_bounty_paid": {
+   "speaker": "Zevara",
+   "text": "Signed. Spend it somewhere that doesn't generate paperwork.",
+   "options": [
+    {
+     "text": "Anything else on the books?",
+     "goto": "zevara_bounties"
+    },
+    {
+     "text": "Captain.",
+     "end": true
+    }
+   ]
+  },
+  "summons": {
+   "speaker": "Zevara",
+   "text": "There you are. The cisterns crew found something under the new grates: tunnels nobody dug, going DOWN. Olesm's maps say they shouldn't exist. You've been down there; you're going again. This time for the Watch.",
+   "options": [
+    {
+     "text": "Then I'll go down.",
+     "effects": [
+      {
+       "accomplishment": "heard_the_deep_tremor"
+      }
+     ],
+     "goto": "summons_send"
+    },
+    {
+     "text": "Give me a day to ready myself.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "summons_send": {
+   "speaker": "Zevara",
+   "text": "Good. See Olesm before you climb down. He's been up since the second bell drawing what shouldn't be there, and he'll want you carrying it. And take Relc. That's not the suggestion it sounds like.",
+   "options": [
+    {
+     "text": "Understood, Captain.",
+     "goto": "hub"
+    },
+    {
+     "text": "On it.",
+     "end": true
+    }
+   ]
+  },
+  "seal": {
+   "speaker": "Zevara",
+   "text": "Gone? Good. Dead? Better. The Watch is bricking that gallery before sundown — 'for now,' before you say it. Things under Liscor have a way of minding being sealed. …Good work. I mean it. Don't make me say it twice.",
+   "options": [
+    {
+     "text": "For now.",
+     "goto": "hub"
+    },
+    {
+     "text": "Captain.",
+     "end": true
+    }
+   ]
+  },
+  "shift": {
+   "speaker": "Zevara",
+   "text": "Ten years of long shifts. Six weeks of leave across all of them. Do the arithmetic and then don't ask why I look like this. My Senior Guardsmen are a spearmaster who won't stop talking and an Antinium who won't start, and the wall stands in spite of both of them. Don't tell either of them the streak's holding. They'll take the credit.",
+   "options": [
+    {
+     "text": "The guard on the gate speaks well of you.",
+     "goto": "authority"
+    },
+    {
+     "text": "Back a step.",
+     "goto": "hub"
+    },
+    {
+     "text": "I'll let you get back to it.",
+     "end": true
+    }
+   ]
+  },
+  "authority": {
+   "speaker": "Zevara",
+   "text": "He should. I signed his posting and I read his reports: both of them, the real one and the one where nothing happened. Liscor's Watch runs on people who'd rather stand a boring gate than let an interesting one through. Long may it bore us.",
+   "options": [
+    {
+     "text": "Back a step.",
+     "goto": "hub"
+    },
+    {
+     "text": "Understood, Captain.",
+     "end": true
+    }
+   ]
+  },
+  "sweep_pitch": {
+   "speaker": "Zevara",
+   "text": "Sweep the cisterns. You know what a sweep costs? Six Watchmen off the wall, lanterns, a healer on standby, and a form in triplicate explaining to the Council why the wall was six thin. Give me one reason worth the ink.",
+   "options": [
+    {
+     "text": "If it's under the city and moving, it's Watch business — before it's an emergency, not a form.",
+     "goto": "sweep_argue"
+    },
+    {
+     "text": "Forget I asked.",
+     "end": true
+    }
+   ]
+  },
+  "sweep_argue": {
+   "speaker": "Zevara",
+   "text": "...Before it's an emergency. Hm. You argue like someone who's read a casualty report. Fine. Make it plain. What am I actually sending them into?",
+   "options": [
+    {
+     "_comment": "GH#64: skill-gated (was class-gated Diplomat) -- [Charming Smile] fits winning the skeptical Captain over.",
+     "text": "A nest. Silver-backed spiders, up from the Dungeon. [Charming Smile]",
+     "requires": {
+      "skill": "charming_smile"
+     },
+     "effects": [
+      {
+       "accomplishment": "persuaded_someone"
+      },
+      {
+       "accomplishment": "watch_swept_cisterns"
+      },
+      {
+       "accomplishment": "resolved_the_cisterns"
+      },
+      {
+       "remove_entity": "shield_spiders"
+      },
+      {
+       "item": "watch_token"
+      }
+     ],
+     "goto": "swept"
+    },
+    {
+     "text": "Actually — never mind.",
+     "end": true
+    },
+    {
+     "_comment": "re-pricing: the non-Diplomat alternate. Zevara refuses BRIBES (this file's own top _comment) so this is framed as covering the sweep's OPERATIONAL cost (the lanterns/healer/overtime she just itemized in sweep_pitch), never a personal payoff -- routes to its own swept_paid reaction so that framing stays honest rather than reusing the persuaded 'swept' text. persuaded_someone deliberately absent (paying isn't persuading).",
+     "text": "Here — three gold for the lanterns and the healer. Budget problem solved, at least. (3 gold)",
+     "requires": {
+      "gold": 3
+     },
+     "effects": [
+      {
+       "gold": -3
+      },
+      {
+       "accomplishment": "watch_swept_cisterns"
+      },
+      {
+       "accomplishment": "resolved_the_cisterns"
+      },
+      {
+       "remove_entity": "shield_spiders"
+      },
+      {
+       "item": "watch_token"
+      }
+     ],
+     "goto": "swept_paid"
+    }
+   ]
+  },
+  "swept": {
+   "speaker": "Zevara",
+   "text": "Spiders from the Dungeon. Wonderful. That's exactly the small-now-large-later I'd rather pay for in overtime than in funerals. Consider it swept. I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing it to me clean, before it had teeth. Go tell whoever set you on this that the Watch has it. And, good work. That's rarer from my side of the gate than you'd think.",
+   "options": [
+    {
+     "text": "That's all I ask, Captain.",
+     "goto": "hub"
+    },
+    {
+     "text": "Appreciated.",
+     "end": true
+    }
+   ]
+  },
+  "swept_paid": {
+   "speaker": "Zevara",
+   "text": "Funding, not evidence. Fine — my ledger doesn't much care which. I'll pull a squad at dusk and burn the silk out, whatever's actually down there. Paperwork's cleaner when someone else already covered the bill.",
+   "options": [
+    {
+     "text": "That's all I ask, Captain.",
+     "goto": "hub"
+    },
+    {
+     "text": "Appreciated.",
+     "end": true
+    }
+   ]
+  },
+  "cisterns_recap": {
+   "_comment": "Issue #74: replays the CURRENT beat only -- never re-banks heard_about_cisterns/resolved_the_cisterns/cisterns_reported (goto only, no effects on this node or its options).",
+   "speaker": "Zevara",
+   "text": "Whatever's nested in the cisterns under the market is still down there, last I heard. Same grate, south of here.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "resolved_the_cisterns": 1
+      }
+     },
+     "text": "It's cleared, is it? Then go tell Olesm at the Guild — he's the one keeping the tally, not me."
+    }
+   ],
+   "options": [
+    {
+     "text": "Back a step.",
+     "goto": "hub"
+    },
+    {
+     "text": "Understood, Captain.",
+     "end": true
+    }
+   ]
+  }
+ }
 }

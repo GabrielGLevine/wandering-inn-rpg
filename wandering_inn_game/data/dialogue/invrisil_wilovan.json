@@ -7,6 +7,16 @@
    "text": "Begging your pardon, sir, a moment of your evening. We don't steal, whatever you've heard. We RECOVER. Occasionally we recover things that were never lost. Tonight we'd like to recover a man's good name — his, and by unfortunate arithmetic, ours.",
    "text_variants": [
     {
+     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
+     "requires": {
+      "phase": [
+       "dusk",
+       "night"
+      ]
+     },
+     "text": "Evening proper now, sir. The Brothers keep gentler hours after dark, present company excepted."
+    },
+    {
      "requires": {
       "accomplishment": {
        "took_brothers_job": 1

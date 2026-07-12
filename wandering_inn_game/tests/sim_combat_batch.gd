@@ -204,6 +204,17 @@ const ENCOUNTER_CELLS := [
 	## routes live in rock_crab's own combatants.json _comment.
 	{"name": "rock_crab_nest_t1_relc", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "rock_crab_nest_t1_solo", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": true},
+	## Issue #80 (world reactivity wave, item 4): `goblin_night_patrol`,
+	## floodplains' own night-only encounter slot (skeleton_scene.json --
+	## the river_wolf_pack precedent applied to Liscor's own approach road).
+	## STAYS MEASURED-ONLY, same design note as river_wolf_pack itself: it's a
+	## NIGHT AMBUSH by design, not a win-rate contract, and no
+	## ambush/surprise mechanic exists in the sim to gate against. Same
+	## roster/arena/ally as goblin_encounter_2 (warrior2 + relc, floodplains'
+	## own T1 representative build) -- this is the SAME matchup at a
+	## different hour, not a new difficulty tier.
+	{"name": "goblin_night_patrol_t1_relc", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "warrior2", "solo": false},
+	{"name": "goblin_night_patrol_t1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "warrior2", "solo": true},
 ]
 
 ## The Awakened Raskghar BOSS band (spec §2 / plan A2 item 4). Unlike
@@ -366,6 +377,19 @@ const INVRISIL_CELLS := [
 	{"name": "hired_blades_t3_spellsword9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": false, "win_lo": 0.6, "win_hi": 0.8, "check_rounds": true},
 	{"name": "hired_blades_t3_warrior9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior9", "solo": false},
 	{"name": "hired_blades_t3_spellsword9_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": true},
+	## Issue #80 (world reactivity wave, item 4): `boulevard_night_footpads`,
+	## Invrisil's own night-only slot (skeleton_scene.json, invrisil_boulevard --
+	## the river_wolf_pack precedent's second application). STAYS
+	## MEASURED-ONLY (same rationale as river_wolf_pack/goblin_night_patrol
+	## above -- a night ambush, not a win-rate contract). Same
+	## footpad_lookout/footpad_bruiser roster as alley_footpads_a/b, but at
+	## the region's real T3 build (t3_spellsword9, GEARED) rather than the
+	## deliberately-low-lethality warrior2 those two are pinned to -- this is
+	## a genuine night danger on open ground, not a failed-stealth safety
+	## net, so it reads at Invrisil's own tier like hired_blades does. No
+	## ally (matches alley_footpads_a/b's own solo convention -- nobody's
+	## fielded on the boulevard at night).
+	{"name": "boulevard_night_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
 ]
 
 const BUILDS := [

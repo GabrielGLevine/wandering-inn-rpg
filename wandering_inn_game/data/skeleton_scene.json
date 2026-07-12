@@ -606,6 +606,7 @@
      ]
     },
     {
+     "_comment": "Issue #80 (world reactivity wave, item 3 -- FLAVOR presence only, taste-gate 2026-07-12): present_when{phase:[day,dusk]} -- he goes home at night, same mechanism river_wolf_pack's encounter_when already ships (WIGame._present_gate_met). Never a quest-giver/vendor (the Serve mini-loop is a repeatable chore, not a quest); absence at night is diegetically correct (an empty-stomach patron isn't waiting on a closed kitchen past dark) and structurally correct too (present_when's own genuinely-absent semantics, not visual_states' hidden -- can't Serve an NPC who isn't there).",
      "id": "hungry_patron",
      "kind": "npc",
      "cell": [
@@ -616,6 +617,12 @@
      "sprite": "drake_patron",
      "facing": "left",
      "conversation": "patron_serving",
+     "present_when": {
+      "phase": [
+       "day",
+       "dusk"
+      ]
+     },
      "dialogue": [
       {
        "speaker": "Hungry Patron",
@@ -4171,6 +4178,50 @@
      "respawns": true,
      "observe": "Three boulders sit too evenly spaced for the hillside's own tumble, and one of them, you'd swear, just shifted.",
      "on_victory": "rock_crabs_culled"
+    },
+    {
+     "_comment": "Issue #80 (world reactivity wave, item 4 -- night texture, taste-gate 2026-07-12: ONE night-only slot per outdoor region, the river_wolf_pack precedent applied to Liscor's own approach road). EXISTING combatants only (goblin_raider/goblin_shaman -- goblin_encounter_2's own roster) on the EXISTING goblin_ambush arena; ally relc gated met_relc, matching every other floodplains fight. encounter_when{phase:[night]} + trigger_radius 1 (river_wolf_pack's own tightest radius, not goblin_encounter_1's old radius-2 -- smallest honest footprint) + respawns:true (a recurring night danger, not a one-time ambush -- river_wolf_pack's exact shape, NOT goblin_encounter_1/2's now-retired one-shot shape, issue #62 finding 8). visual_states hides the field marker outside night (river_wolf_pack's own fix for a marker standing in daylight beside its own gone-with-the-light toast). PLACEMENT: (10,21), the empty y20-22 band -- checked Chebyshev distance against every floodplains coordinate any qa/scripts/*.json or qa/fixtures/*.json touches (grep sweep across all 39 floodplains-touching scripts, plus a full entity/blocked-cell distance scan): the nearest OTHER entity on the map is frozen_cache (10,18), Chebyshev 3, but it's a pond-locked prop no shipped canonical visits (reached only via the [Ice Floor] freeze-a-crossing side path) and still clear of this entity's own trigger_radius 1; nearest blocked cell is (17,7), Chebyshev 14; nearest REAL route is gate_district_walkthrough's own x=30 goblin-ambush/gate corridor, Chebyshev 20+. No canonical's pinned walk enters this band.",
+     "id": "goblin_night_patrol",
+     "kind": "encounter",
+     "cell": [
+      10,
+      21
+     ],
+     "display_name": "Raiders in the Dark",
+     "sprite": "goblin_base",
+     "arena": "goblin_ambush",
+     "enemies": [
+      "goblin_raider",
+      "goblin_shaman"
+     ],
+     "allies": [
+      "relc"
+     ],
+     "ally_requires": {
+      "met_relc": 1
+     },
+     "respawns": true,
+     "encounter_when": {
+      "phase": [
+       "night"
+      ]
+     },
+     "trigger_radius": 1,
+     "observe": "A patrol slipping the boulder line, quiet until they're not. Only after dark.",
+     "gate_closed_toast": "Nothing moving out there. Whatever it was keeps day hours, same as everyone sane.",
+     "visual_states": [
+      {
+       "_comment": "Marker visible ONLY while the night encounter_when gate can fire -- river_wolf_pack's own fix, applied verbatim.",
+       "when": {
+        "phase": [
+         "day",
+         "dusk"
+        ]
+       },
+       "hidden": true
+      }
+     ],
+     "on_victory": "won_combat"
     }
    ],
    "cover_skip": [
@@ -5304,7 +5355,7 @@
      ]
     },
     {
-     "_comment": "Ilvo Brackenhide, Bronze-rank Drake, the reasonable half of the duo. Reuses `pc_drake_f` (moss-green tint).",
+     "_comment": "Ilvo Brackenhide, Bronze-rank Drake, the reasonable half of the duo. Reuses `pc_drake_f` (moss-green tint). Issue #80 (world reactivity wave, item 3 -- FLAVOR presence only, taste-gate 2026-07-12): present_when{phase:[day,dusk]} -- a pure talk_pool walk-on (no conversation graph, no quest/board tie -- Renn, the guild's OTHER bickering-duo half, is EXCLUDED from this wave, he's a quest-giver now via renns_warhammer), heads out with the rest of the Bronze-rank crowd once the board stops moving for the night.",
      "id": "ilvo",
      "kind": "npc",
      "cell": [
@@ -5319,6 +5370,12 @@
       0.35
      ],
      "facing": "left",
+     "present_when": {
+      "phase": [
+       "day",
+       "dusk"
+      ]
+     },
      "talk_pool": [
       "He says that about every posting. Then he takes it. Then he complains the whole walk there.",
       "The pay's fair for Bronze work. Renn just likes the sound of his own complaining."
@@ -5932,7 +5989,7 @@
      "observe": "Couriers are made, not hired. Start with the market run. — the counter"
     },
     {
-     "_comment": "The resting runner walk-on (board-copy.md's proposal), title-only per THE PEDDLER precedent (an unnamed, purely ambient flavor NPC) -- staged in docs/design/character-profiles-staging.md, not promoted to the shipped file (matching Yelra/Renn/Ilvo, which also stayed staging-only; Vess is the one NAMED, mechanically-load-bearing NPC this task ships to the shipped profiles). talk_pool-only, no conversation graph, inert-adjacent. Rests near a `stool` (no bench sprite in the catalog -- disclosed, VISUAL-LOG'd) by the door.",
+     "_comment": "The resting runner walk-on (board-copy.md's proposal), title-only per THE PEDDLER precedent (an unnamed, purely ambient flavor NPC) -- staged in docs/design/character-profiles-staging.md, not promoted to the shipped file (matching Yelra/Renn/Ilvo, which also stayed staging-only; Vess is the one NAMED, mechanically-load-bearing NPC this task ships to the shipped profiles). talk_pool-only, no conversation graph, inert-adjacent. Rests near a `stool` (no bench sprite in the catalog -- disclosed, VISUAL-LOG'd) by the door. Issue #80 (world reactivity wave, item 3 -- FLAVOR presence only, taste-gate 2026-07-12): present_when{phase:[day,dusk]} -- an on-call runner waiting between jobs, off-shift at night; Vess (the counter clerk, mechanically load-bearing) stays put, only the flavor extra steps away.",
      "id": "resting_runner",
      "kind": "npc",
      "cell": [
@@ -5947,6 +6004,12 @@
       0.4
      ],
      "facing": "left",
+     "present_when": {
+      "phase": [
+       "day",
+       "dusk"
+      ]
+     },
      "observe": "A Gnoll runner, propped against the wall by the stool, legs out, boots still laced. Not asleep. Not far from it.",
      "talk_pool": [
       "Floodplains double, both legs mud. Wake me for a fire or a Courier."
@@ -10169,6 +10232,45 @@
      "observe": "A runner ducks out Coyle's side door with a ledger under one arm, moving with the particular haste of someone who'd rather not be noticed leaving.",
      "on_interact_accomplishment": "spotted_the_runner",
      "toast": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back -- just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end."
+    },
+    {
+     "_comment": "Issue #80 (world reactivity wave, item 4 -- night texture, taste-gate 2026-07-12): Invrisil's own night-only slot -- 'Invrisil boulevard night footpads', the brief's own suggestion, NOT the mercantile_alleys footpads (alley_footpads_a/b + hired_blades are already-live quest/stealth-lesson encounters on a heavily pinned map; adding a fourth random trigger there risks collision -- the boulevard is open ground with zero existing encounters). EXISTING combatants only (footpad_lookout/footpad_bruiser -- the SAME low-lethality pair alley_footpads_a/b already field) on the EXISTING mercantile_alley arena (no new arena). No ally (matches alley_footpads_a/b's own solo convention -- nobody's fielded on the open boulevard at night). encounter_when{phase:[night]} + trigger_radius 1 + respawns:true, river_wolf_pack's exact shape. visual_states hides the marker outside night. PLACEMENT: (13,15) in the boulevard's south band (y14-15), the ONE stretch of this heavily-trafficked map (invrisil_walkthrough/invrisil_disagreement_*'s pinned routes/teleports/the y=2 phase-grind sweep all stay within y2-13) verified empty of every entity/pinned coordinate those canonicals touch -- Chebyshev distance to the nearest real entity (coyle_runner_trail, 20,13) is 7; nothing on this map's own row y14/y15 is ever walked or teleported to by any shipped script.",
+     "id": "boulevard_night_footpads",
+     "kind": "encounter",
+     "cell": [
+      13,
+      15
+     ],
+     "display_name": "Footpads in the Dark",
+     "sprite": "human_laborer",
+     "arena": "mercantile_alley",
+     "enemies": [
+      "footpad_lookout",
+      "footpad_bruiser"
+     ],
+     "allies": [],
+     "respawns": true,
+     "encounter_when": {
+      "phase": [
+       "night"
+      ]
+     },
+     "trigger_radius": 1,
+     "observe": "Two shapes peel off the shadowed colonnade, unhurried, the way people move when they've done this before. Only after dark.",
+     "gate_closed_toast": "Nothing under the colonnade but shadow. Whoever works this corner keeps night hours only.",
+     "visual_states": [
+      {
+       "_comment": "Marker visible ONLY while the night encounter_when gate can fire -- river_wolf_pack's own fix, applied verbatim.",
+       "when": {
+        "phase": [
+         "day",
+         "dusk"
+        ]
+       },
+       "hidden": true
+      }
+     ],
+     "on_victory": "won_combat"
     }
    ],
    "cover_skip": [

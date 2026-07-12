@@ -7,6 +7,16 @@
    "text": "State your business and your sponsor.",
    "text_variants": [
     {
+     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
+     "requires": {
+      "phase": [
+       "dusk",
+       "night"
+      ]
+     },
+     "text": "State your business. The tier doesn't sleep, and neither, apparently, do you."
+    },
+    {
      "_comment": "Race-variant line set: Human friction (Pallass reads Human presence as rare/noticed, per docs/design/city-identity-bible.md). PLACEHOLDER copy, D-phase replaces.",
      "requires": {
       "race": "human"
