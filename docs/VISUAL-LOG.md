@@ -1242,3 +1242,11 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   pre-feedback Brothers' Hideout brown box (54.58). Genuinely
   under-dressed 5-item exterior; wants a dressing pass (multi-family
   decor + off-center focal + border band).
+- trapped_halls sits at the dark-legibility EDGE (8d E2 machine
+  playtest): trap tells + toasts read when adjacent, but the wide shot
+  is near-black (delve_fight 04/05 shots). The user's night-dimness
+  taste (batch-2 finding 22) suggests lifting the grade ~10-15%; the
+  windup danger overlay was already brightened for it. USER-EYES item.
+- dungeon trap-tell art still on same-family placeholders
+  (dart_slit = tinted sewer_grate; illusory_floor = Cemetery debris
+  crop) — carried from 8dB; PixelLab candidates palette-drifted.
