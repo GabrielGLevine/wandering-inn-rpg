@@ -15,7 +15,19 @@ Five lanes, every one opus-reviewed (two FIX-FIRST cycles adjudicated + re-revie
 - **#64 skill-gates**: 6 persuades re-gated to [Charming Smile]/[Calming Touch]/[Appraise Foe] (acquisition bar proven identical), 3 principled survivors, anti-auto-win adjudicated all-honest; {accomplishment,skill} = 5th sanctioned compound; skill-library doctrine sections written.
 - **#82 windup + 8d C3**: the telegraph mechanism (declare → frozen cells → next-turn-start resolution; [Dangersense] overlay — grant confirmed player-reachable at Warrior L5), vault arena + construct GATED 0.86/6r (max 9), 72/73 harness cells byte-identical to pre-wave main. CHOICES 15: caster excluded from own windup. Vault encounter DORMANT pending C1.
 
-## 🔄 WAVE 3b IN FLIGHT (2026-07-12)
+## 🌊 8d MILESTONE SHIPPED (2026-07-12, pushed 1e51bf8, CI GREEN) — closed #14 #15 #83
+
+Full arc live: dungeon maps + traps → Horns recruit → three-cost halls routes → windup-telegraph vault boss → FIND beat → report → inn residence. E2 whole-branch review SHIP; machine playtest read by controller eyes (Yvlon/bench fix, dark-edge + overlay findings actioned); AI-variety profiles landed with the snare ward-id split. User playtest checklist + CHOICES 18-20 below.
+
+## 🔄 WAVE 4 IN FLIGHT (2026-07-12) — 4 lanes dispatched
+
+- **lane-78** #78 save/defeat UX (metadata prefer-derivation, defeat interstitial over the existing flow, index-pin discipline).
+- **lane-79** #79 journal communication (opaque-until-sleep binds everything; WIEffectText routes all mechanical lines).
+- **lane-81** #81 exploration/optional content (existing seams only; wiki-grounded lore; dynamism-score gate on map edits; owns skeleton_scene this wave).
+- **lane-84** #84 QA-teeth (click coverage: inventory/pickers/journal-as-shipped/locked-option no-op/settings row; QA-only, production bugs disclosed not fixed).
+- **#76 audio HELD** for a controller asset-scoping pass (in-hand packs census before any lane).
+
+## (superseded wave-3b notes below)
 
 **8dC1 SHIPPED (pushed 5012eb0, CI watch running):** quest "What the Seal Kept" live end-to-end + C4 plates beat + D1 Horns dialogue (controller copy verbatim) + delve_fight/skill/talk canonicals — 90-script sweep, ALL units, 75-cell harness on the composed tree. 3-dimension review workflow + adversarial verify; both confirmed Importants fixed (solo-vault ordering accident → diegetic party gate; Ksmvr penalty pinned max_hp==17), snare re-rostered GATED 0.69/3r (CHOICES 17), hp_mod fold floored, counter-id existence validator, guided-plates cell 0.78/6r measured, enemy-side spawn-ceiling trap caught+fixed. #15 stays OPEN for D2 (residence pools) — closes at milestone E2.
 **8d REMAINING for milestone close:** D2 Horns inn-residence pools (small, controller copy), E1 leftovers (dungeon_walkthrough canonical? delve_* cover the routes — adjudicate at E2), E2 whole-branch opus review + VISUAL-LOG drain (ruin_surface dressing + dart_slit/illusory_floor art flags + flame-blast icon) + machine-playtest rotation incl. BOTH dark maps + HANDOFF playtest checklist for the user. Close #14 #15 there.
