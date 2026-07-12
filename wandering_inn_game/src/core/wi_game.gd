@@ -3024,6 +3024,11 @@ func sleep() -> void:
 				# term (ranged/spell damage reads int instead, but the PC
 				# always has a melee basic Attack, so str is felt regardless
 				# of loadout).
+				# TRAP: floor(bonus/2) here equals combat's floor((base+bonus)/2)
+				# delta ONLY because the PC's base str/int are EVEN
+				# (combatants.json pc: str 12, int 8). An odd base would drift
+				# this toast by +-1 vs the real combat delta -- re-derive both
+				# clauses if a base stat edit ever lands.
 				"hp_delta": int(after_bonuses.get("con", 0)) - int(before_bonuses.get("con", 0)),
 				"dmg_delta": int(after_bonuses.get("str", 0)) / 2 - int(before_bonuses.get("str", 0)) / 2,
 				"mp_delta": int(after_bonuses.get("int", 0)) / 2 - int(before_bonuses.get("int", 0)) / 2,
