@@ -1,0 +1,1316 @@
+{
+ "_comment": "8e E1 (issue #16, the milestone's exit-criteria canonical) THE pallass_walkthrough proof: the LIVE end-to-end 'Papers for Pallass' + 'Clearance for the Forge Tier' route from a near_pallass fixture (invrisil_attuned-era, quest NOT started). Selys sponsors (10g, pallass_sponsored) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g, pallass_attuned + the item) -> real travel through the Magical Door to pallass_market's reconciled arrival cell (4,7) -- the FIRST live proof of the has_map-guarded portals row -- the NEGATIVE lift-locked read BEFORE any permit progress -- the market-tier checkpoint clerk's 2g stamp AND the race-variant read (pc_race defaults 'human', the QA everyman, so the HUMAN FRICTION line is the live pin), completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file -> Grimalkin's 8g exam, his voiced register pinned verbatim -> the 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT now open, a REAL continuous walk (not a re-teleport) across the forge tier's own floor to Grimalkin's old bench (eyed_grimalkins_bench) -- the round trip back down. Gold ledger exact at every spend (60 -> 50 -> 32 -> 30 -> 25 -> 17 -> 14, matching the documented 10+18+2+5+8+3=46g chain with a 14g margin). Zero combat anywhere (assert_event_absent, whole run) -- the route is bureaucratic/travel only, so seed stability is trivial; rng_state is the repo's own canonical seed=9 derived value, inert for outcome purposes here. LIVE-SEAM FINDING (disclosed, no fix needed): the portals.json `pallass` row's arrival cell is (4,7), NOT the (5,6)/(10,10) guesses floated pre-reconciliation -- this canonical is the first LIVE (non-teleport) proof that (4,7) is correct (open, off every blocked/decor/entity cell, exactly south of pallass_market_arrival_anchor).",
+ "starts_at_title": true,
+ "fixture_save": "near_pallass",
+ "steps": [
+  {
+   "_comment": "== Boot from the fixture (FIXTURE-FIRST), near_pallass: invrisil_attuned-era, papers_for_pallass NOT started, standing at Selys's own desk-approach cell (8,3) facing up (board_loop_start/near_guild precedent -- the street->guild walk is not the subject under test). ==",
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "guild"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 60
+  },
+  {
+   "_comment": "== BEAT 1: Selys's sponsorship (Stage 1 of 'Papers for Pallass'). First interact = her talk_pool line (fresh waking), second opens selys_delivery. Fresh-state visible hub options: 0 'Just looking around.', 1 'How does the board work?', 2 'Take on a posting.', 3 'About papers for Pallass.' (requires invrisil_attuned, HELD) -- move down 3. Selecting it banks quest_started + pallass_sponsorship_asked, lands on pallass_sponsor. 'File it. (10 gold)' is row 0 -- confirm immediately. ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "selys_delivery",
+    "entity": "selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "papers_for_pallass"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pallass_sponsorship_asked"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys",
+    "text": "Pallass. Guild's got the standing arrangement -- I file the sponsorship, you cover the clerk's fee, and it goes through same-day. Ten gold, paid to the Guild, not to me."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_selys_sponsorship"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pallass_sponsored"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "papers_for_pallass",
+    "beat": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 50
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BEAT 2: the #65 exclude/include idiom, EXCLUDE half. Teleport to the inn's pantry_door approach (13,6), bump right to face it (14,6), open the portal menu BEFORE any Pallass attunement -- pallass_attuned is still 0, so the menu offers exactly Liscor/Riverfarm/Invrisil (riverfarm_attuned+invrisil_attuned both pre-banked in the fixture) + 'Let it be.', Pallass absent. Close without traveling (row 3, 'Let it be.'). ==",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "portal_menu"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "options": [
+     {
+      "text": "Liscor — the Gate District",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Riverfarm",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Invrisil — the City of Adventurers",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Let it be.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "_comment": "== BEAT 3: Krshia's stall (13,2) on the street, Stage 2. Teleport to (13,3), bump up to face her. First interact = talk_pool line, second opens krshia_crate (start node 'hub'). Fresh-state visible hub options (this fixture never asked about the crate): 0 'I'll look into it.', 1 'What's on the stall today?', 2 'Just visiting.', 3 'I've a few things I don't need. Buying?' -- move down 1 to 'What's on the stall today?' (goto shop), confirm. shop's visible options: 0-3 the four full-price rows, 4 'Show me the charms.', 5 'Nothing today.', 6 the hunting bow -- move down 4, confirm. charms' visible options (0-8, none accomplishment-hidden): the new Pallass-stamped stone is LAST, index 8 (requires gold:18 + accomplishment pallass_sponsored:1, HELD) -- move down 8, confirm. ==",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    13,
+    3
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_crate",
+    "entity": "krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "Silverfang goods. Best in Liscor, and I will hear no argument on it. Cheapest at the front, the good stock where a browsing hand drifts. Coin on the counter and it is yours. No discounts, no haggling. I remember faces."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "The charmed stock costs more because it does more. Wear too much of it at once and it starts to argue with itself, so choose with sense. Coin on the counter, same as the rest."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_krshia_charms"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "pallass_attunement_stone"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pallass_attuned"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "papers_for_pallass",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 32
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BEAT 4: the #65 idiom's INCLUDE half + the actual travel. Back to the pantry_door -- the SAME anchor now offers Pallass, index 3 (Liscor/Riverfarm/Invrisil/Pallass/'Let it be.'). Select it: map_changed to pallass_market, the arrival toast, landing at (4,7) -- the B-lane-reconciled cell (the portals.json row's own _comment discloses this replaced a stale (10,10) forward-reference; VERIFIED live here). ==",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "portal_menu"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "options": [
+     {
+      "text": "Liscor — the Gate District",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Riverfarm",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Invrisil — the City of Adventurers",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Pallass — the Market Tier",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Let it be.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_portal_menu_now_includes_pallass"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The light sharpens and the air turns to hot metal and stone dust. Pallass, tier on tier, rising past where you can see the top."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_market"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_pallass_market_arrival"
+  },
+  {
+   "_comment": "== BEAT 5: NEGATIVE TEETH -- the Grand Lift (22,7) is locked before elevator_pass_stamped banks (bounds discipline: no route around the Permit Office). Approach from (24,7): left 1 to the open cell (23,7), left 1 bumps the occupied gate cell (22,7), interact reads the exact locked_toast. current_map stays pallass_market (no transition). ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    24,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     7
+    ]
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_market"
+  },
+  {
+   "_comment": "== BEAT 6: the market-tier checkpoint clerk (7,5), Stage 3 -- the arrival stamp AND the race-variant read (item 4 of the brief). tier_clerk_market carries no talk_pool -- one interact opens pallass_market_clerk directly. pc_race defaults 'human' (no fixture override, the QA everyman) -- the hub's resolved text_variants line is the HUMAN FRICTION read, pinned exact. Row 0 is the 2g stamp (requires gold:2 + accomplishment pallass_attuned:1, both HELD) -- confirm immediately. Banks pallass_entry_stamped, completes beat 'arrive' (index 2, the quest's LAST beat), fires quest_completed for papers_for_pallass. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_market_clerk",
+    "entity": "tier_clerk_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Tier Clerk",
+    "text": "A Human, this far in. State your business and your sponsor -- twice, if the first answer doesn't hold up."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_tier_clerk_human_friction"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pallass_entry_stamped"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "papers_for_pallass",
+    "beat": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "papers_for_pallass"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BEAT 7: THE PERMIT OFFICE, forge_permit_clerk (20,4) -- beat 'apply' of 'Clearance for the Forge Tier'. Fresh-state visible hub options: 0 'I need clearance for the forge tier.' (requires pallass_entry_stamped, HELD), 1 'Not now.' -- confirm row 0. Starts forge_tier_permit, lands on permit_intro. 'File it. (5 gold)' is row 0. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    20,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    20,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_forge_clerk",
+    "entity": "forge_permit_clerk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "forge_tier_permit"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "forge_tier_permit_asked"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Clerk",
+    "text": "Five gold, filed same-day, no exceptions and no discounts -- that's the posted price. Grimalkin reads your fitness after, at the exam floor on the far end of this office; I only handle paper."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_permit_office_file"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "forge_permit_filed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "forge_tier_permit",
+    "beat": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 25
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BEAT 8: Grimalkin (18,3) -- beat 'examined'. Fresh-visible hub: 0 'I'm here for the forge-tier fitness read. (8 gold)' (requires gold:8 + accomplishment forge_permit_filed:1, HELD) -- confirm row 0. The 8g fee spends on THIS option; the exam node's own text is his voiced register, pinned exact. 'Understood.' (row 0) banks grimalkin_examination_passed and ends. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    18,
+    4
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_grimalkin",
+    "entity": "grimalkin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "Grip, wind, and whether you quit before I do — three measures. You cleared all three. Barely, on the second. Numbers don't lie, and neither do I: you'll survive the forge tier. The file will say 'adequate.' From me, that is not an insult."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 17
+  },
+  {
+   "action": "screenshot",
+   "name": "06_grimalkin_exam"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "grimalkin_examination_passed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "forge_tier_permit",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BEAT 9: back to forge_permit_clerk (20,4) for the stamp -- beat 'stamped', THE producer the elevator's door_when waits on. Now that forge_permit_filed+grimalkin_examination_passed are both held, options 0/1 hide -- 'The exam's done. About that stamp.' is row 0 of the hub -- confirm to reach collect_stamp. 'Collect the stamped pass. (3 gold)' is row 0 there. Banks elevator_pass_stamped, completes beat 'stamped' (index 2, LAST beat), fires quest_completed for forge_tier_permit. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    20,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    20,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_forge_clerk",
+    "entity": "forge_permit_clerk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Clerk",
+    "text": "Grimalkin's mark is on the file. Three gold for the stamp itself -- posted price, same as the filing."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "elevator_pass_stamped"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "forge_tier_permit",
+    "beat": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "forge_tier_permit"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 14
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BEAT 10: THE LIFT, now unlocked -- door_when's requires (elevator_pass_stamped) is met. Same approach as the negative check (24,7) -> left 1 -> left 1 bump-facing the gate -- interact now transitions instead of refusing: the open_toast fires BEFORE map_changed (interact()'s door_when-prop branch order), landing at pallass_forge's own (23,7). ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    24,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     7
+    ]
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "The sewer_grate/deep_fissure precedent (sewers_walkthrough.json, garden_walkthrough.json's own citation of it): a door_when-prop's open_toast fires BEFORE transition() rebuilds the field (interact()'s door_when-prop branch order, the OPPOSITE of _travel_to_portal's toast-AFTER-transition shape) -- the UI confirmation for a toast queued immediately before a map rebuild never actually renders (traced live in this canonical's own run), so only the DOMAIN toast is asserted here, not ui_toast_rendered -- the correct, precedented assertion shape, not a downgrade.",
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The brass gate rises with a well-oiled clank, counterweights turning smooth in their track. The lift carries you up, into noise and heat and orange light."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_forge"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "07_forge_tier_arrival"
+  },
+  {
+   "_comment": "== BEAT 11: THE FIRST LIVE CROSSING of the forge tier's own floor -- a real continuous walk from the lift landing to Grimalkin's old bench (7,5), NOT a re-teleport (pallass_peek only ever teleported to each beat separately). The lift's cage bulk blocks (21,6)/(21,7)/(22,7) on THIS map too (mirrors pallass_market's own blocked list), so a straight left walk along y=7 would just re-bump the gate -- detour down to the open parapet-rim row y=9 first: down 2 to (23,9), left 16 to (7,9) [clear of the molten seam at y=5 x13-17 entirely, clear of every entity on this row], up 3 to (7,6), bump-facing the bench. Interact reads eyed_grimalkins_bench, the exact pointer toast. ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "eyed_grimalkins_bench"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Every tool squared to the bench edge. You decide against touching anything."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "08_grimalkin_station_forge_tier"
+  },
+  {
+   "_comment": "== BEAT 12: THE ROUND TRIP -- walk back to the lift (retracing the SAME detour: down 3, right 16, up 2) and take it back down. elevator_pass_stamped is still banked (never unset), so this side's gate is open too -- open_toast fires before map_changed, landing back at pallass_market's own (23,7). ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     7
+    ]
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "Same precedent as the ascent above (BEAT 10's own comment) -- domain toast only, no ui_toast_rendered.",
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The brass gate rises with a well-oiled clank, counterweights turning smooth in their track. The lift carries you down, into the ordered quiet of the market tier."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_market"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "09_market_tier_return"
+  },
+  {
+   "_comment": "Scope guard: the whole 'Papers for Pallass' + 'Clearance for the Forge Tier' route is bureaucratic/travel only -- zero combat anywhere in the run.",
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
+ ]
+}

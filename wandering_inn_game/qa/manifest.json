@@ -550,6 +550,12 @@
    "script": "pallass_peek",
    "seed": 9,
    "note": "8e Phase B+reconciliation (issue #16): teleport-based canonical for pallass_market/pallass_forge, the dungeon_peek precedent -- no live route exists at default boot (portals row gates on pallass_attuned); band-hardened bounds laps (up-bump y1 + down-bump y10, both maps), THE PERMIT OFFICE (forge_permit_clerk + the moved Grimalkin, C's graphs opened/closed at conversation-id level), the stallkeeper + checkpoint-clerk conversations, the elevator's locked read on both sides, the landmark props, the molten seam bump, whole-run combat_started absence"
+  },
+  {
+   "script": "pallass_walkthrough",
+   "seed": 9,
+   "fixture": "near_pallass",
+   "note": "8e E1 (issue #16, the milestone's exit-criteria canonical): the LIVE end-to-end 'Papers for Pallass' + 'Clearance for the Forge Tier' route -- Selys sponsors (10g) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g) -> real travel to pallass_market's reconciled arrival cell (4,7) -- the negative lift-locked read pre-permit -- the checkpoint clerk's 2g stamp + the human race-variant read, completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file, Grimalkin's 8g exam voiced verbatim, 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT open, a real walk across the forge tier to grimalkin_station and the round trip back down; gold ledger exact at every spend (60->50->32->30->25->17->14); zero combat whole run"
   }
  ]
 }
