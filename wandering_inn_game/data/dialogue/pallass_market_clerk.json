@@ -7,7 +7,7 @@
    "text": "State your business and your sponsor.",
    "text_variants": [
     {
-     "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's hub consumer -- the Pallass region anchor. Inserted FIRST (lowest priority) so the race-variant lines below still win if both are met.",
+     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
      "requires": {
       "phase": [
        "dusk",

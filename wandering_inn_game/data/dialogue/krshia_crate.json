@@ -6,7 +6,7 @@
    "text": "Hrr. My crate. Gone from the storeroom three nights past. Sewers, I think. Scavengers do not knock first.",
    "text_variants": [
     {
-     "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's hub consumer.",
+     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
      "requires": {
       "phase": [
        "dusk",

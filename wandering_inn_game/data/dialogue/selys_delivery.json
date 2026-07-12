@@ -1,56 +1,399 @@
 {
-	"start": "hub",
-	"nodes": {
-		"hub": { "speaker": "Selys", "text": "Guild's closed for lunch. Unless you're here about the thing Erin won't stop signing her letters about?", "text_variants": [
-				{ "_comment": "controller voice pass. Issue #80 (world reactivity wave): the ctx phase key's hub consumer.", "requires": { "phase": [ "dusk", "night" ] }, "text": "Guild's near closing. If you're here about paperwork, it can wait for daylight — I can't." },
-				{ "_comment": "controller voice pass. Issue #80 (world reactivity wave, item 5 -- the news-travels line): the quest's REPORT beat (cisterns_reported) is banked at Olesm's own hub, not here -- this is the CROSS-CHARACTER beat, Selys hearing it secondhand through the Guild's own paperwork once the case is fully closed, closing the 'deeds change nothing outside their quest bubble' gap. Appended LAST (highest priority -- a real report outranks the generic evening line above once both are met).", "requires": { "accomplishment": { "cisterns_reported": 1 } }, "text": "Heard the cisterns crawled with something. Heard it stopped crawling, too, and the file crossed my desk with your name on the referral. Don't let it go to your head — I still make you wait for good tea." }
-			], "options": [
-			{ "text": "Package for you, from Erin.", "requires": { "accomplishment": { "has_package": 1 } }, "hide_when": { "accomplishment": { "package_delivered": 1 } }, "effects": [ { "accomplishment": "package_delivered" } ], "goto": "delivered" },
-			{ "text": "Erin's package. I'll spare you the small talk. (Lyonette's advice)", "requires": { "accomplishment": { "lyonette_tip": 1 } }, "hide_when": { "accomplishment": { "package_delivered": 1 } }, "effects": [ { "accomplishment": "package_delivered" }, { "accomplishment": "selys_impressed" } ], "goto": "delivered_smooth" },
-			{ "text": "About that reward...", "requires": { "accomplishment": { "package_delivered": 1 } }, "hide_when": { "accomplishment": { "errand_decided": 1 } }, "goto": "delivered" },
-			{ "text": "Just looking around.", "end": true },
-			{ "_comment": "stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/selys_stages.json. Appended AFTER 'Just looking around.' (array end) so it can never shift an earlier option's visible index.", "text": "Shivertail. Any relation to the Guildmistress?", "requires": { "accomplishment": { "errand_decided": 1, "chatted_with_selys": 2 } }, "goto": "selys_gran" },
-			{ "_comment": "Selys' perk (selys_past_the_counter stage) -- REPEATABLE (issue #32 ruling, supersedes the shipped ONE-TIME v1): the stage-2 accomplishment leg still gates unlock, but the retire mechanic is now the once_per_waking seam (issue #23's {accomplishment, once_per_waking} sanctioned compound, same idiom as Erin's meal / Relc's wager) instead of a permanent claimed_board_pick hide_when -- sleep clears entity_first_use, so a fresh vetted-job pointer + 5g is available again every waking. bank_first_use lives on selys_board_pick's own closing option (effects on options, never nodes -- house shape), same pattern as Krshia's/Zevara's perks.", "text": "Anything on the board worth my time?", "requires": { "accomplishment": { "errand_decided": 1, "chatted_with_selys": 2 }, "once_per_waking": "board_pick:selys" }, "goto": "selys_board_pick" },
-			{ "_comment": "desk-context line, lifted VERBATIM from docs/design/board-staging/board-copy.md sec.2 (the board is now a physical prop in the guild interior behind her desk). Ungated orientation flavor -- appended at array end so no earlier option's visible index shifts. The other 5 sec.2 lines (accept/road-cull-steer/turn-in-met/turn-in-unmet/slate-rotated) were DP2-conditioned in DP1; DP2 wires them below.", "text": "How does the board work?", "goto": "selys_board_context" },
-			{ "_comment": "Opens the board's live accept picker (built at runtime from data/bounties.json's current active slate -- see bounties.gd; the picker itself is code, not a static node here, which is why this option's effect is a signal, not a goto into more authored content). Hidden once a posting is already accepted -- v1 simplification, one job at a time (disclosed in the DP2 report): Selys won't log a second slip while one's outstanding. Appended at array end so no earlier option's visible index shifts.", "text": "Take on a posting.", "hide_when": { "board_accepted": true }, "effects": [ { "open_board_picker": true } ], "end": true },
-			{ "_comment": "Resolves a turn-in attempt against whichever posting is currently accepted (WIGame.turn_in_bounty -- gold + a completed_bounty_<id> accomplishment on a MET condition, opaque-safe refusal line on an unmet one; no progress numbers either way). Hidden until a posting is accepted (the mirror gate of 'Take on a posting.' above).", "text": "Turn in my posting.", "requires": { "board_accepted": true }, "effects": [ { "open_board_turnin": true } ], "end": true },
-			{ "_comment": "The abandon path -- the one-shot soft-lock (bounty_sewer_survey/bounty_silk_line/bounty_vermin_grate keying on accomplishments a player can bank BEFORE accepting) needed both an absolute-mode condition fix (bounties.gd/data/bounties.json) AND an exit so accepted_bounty_id never gets permanently stuck for any future unfulfillable posting. Same requires gate as 'Turn in my posting.' above (visible only while a posting is outstanding) -- WIGame.abandon_bounty clears the slip with no pay, no penalty; Selys's line lives in the code-built result graph (WIBounties.build_abandon_graph), same home as her accept/turn-in reaction lines. Appended at array end so no earlier option's visible index shifts.", "text": "Hand the posting back.", "requires": { "board_accepted": true }, "effects": [ { "open_board_abandon": true } ], "end": true },
-			{ "_comment": "8e Phase C 'Papers for Pallass' Stage 1 quest-start (issue #16) -- HIDDEN until invrisil_attuned (a light chronological gate matching the region-tier ordering: sponsorship for the machine city is a step past proven city travel) and hidden again once pallass_sponsored (the sponsorship itself is a one-shot ask, matching the heard_about_cisterns/heard_wrong_order precedent of a non-beat signpost paired with quest-start -- pallass_sponsorship_asked is NOT a beat; the real beat-1 completion is pallass_sponsor's own 'File it.' option below). Re-clicking before paying is harmless (start_quest is idempotent, WIGame.start_quest). Appended at array end so no earlier option's visible index shifts. PARKED per docs/design/pallass-staging/phase-c-forward-references.json: the plan's own alternate sponsorship path (a completed-postings record gate) is NOT implemented here -- no aggregate 'completed postings' counter exists in the sim (only per-id completed_bounty_<id>/completed_delivery_<id>), and adding one would be a second new-sim addition beyond the plan's ONE sanctioned addition (the race key).", "text": "About papers for Pallass.", "requires": { "accomplishment": { "invrisil_attuned": 1 } }, "hide_when": { "accomplishment": { "pallass_sponsored": 1 } }, "effects": [ { "quest": "papers_for_pallass" }, { "accomplishment": "pallass_sponsorship_asked" } ], "goto": "pallass_sponsor" }
-		] },
-		"selys_board_context": { "speaker": "Selys", "text": "The board's behind you. Reading it is free. Taking a posting means telling me, so I can log it and not have to chase you across Liscor.", "options": [
-			{ "text": "Might as well ask.", "goto": "hub" },
-			{ "text": "Good to know.", "end": true }
-		] },
-		"selys_gran": { "speaker": "Selys", "text": "Grandmother. Yes, THE Tekshia Shivertail. Yes, she still throws a spear better than half the Silver-ranks. No, I will not introduce you when she's in a mood, which is always. I wanted to be her when I was small. Then I noticed the paperwork ran in the family and picked the desk with better hours.", "options": [
-			{ "text": "You wanted to be a hero?", "goto": "selys_gran_two" },
-			{ "text": "Might as well ask.", "goto": "hub" },
-			{ "text": "The desk suits you.", "end": true }
-		] },
-		"selys_gran_two": { "speaker": "Selys", "text": "Everyone behind this counter did, once. Then you log your first casualty report. The desk keeps more people alive than a sword does. That took me years to believe, so you don't have to believe it today. Now stop making me sincere during business hours.", "options": [
-			{ "text": "Might as well ask.", "goto": "hub" },
-			{ "text": "Wouldn't dream of it.", "end": true }
-		] },
-		"selys_board_pick": { "speaker": "Selys", "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt and I'll square you from the Guild's own purse, not the client's excuse for one.", "options": [
-			{ "text": "I'll take it.", "effects": [ { "bank_first_use": "board_pick:selys" }, { "gold": 5 } ], "end": true }
-		] },
-		"delivered": { "speaker": "Selys", "text": "Finally. Here - she overpaid the courier fee, as always. Take it back or keep it, I honestly don't care which.", "options": [
-			{ "text": "I'll keep it. Courier's fee.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "kept_reward" }, { "accomplishment": "errand_decided" }, { "gold": 4 } ], "goto": "delivered" },
-			{ "text": "Send it back to Erin.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "gave_reward" }, { "accomplishment": "errand_decided" }, { "gold": 3 } ], "goto": "delivered" },
-			{ "text": "Might as well ask.", "goto": "hub" },
-			{ "text": "I'll think about it.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "end": true }
-		] },
-		"delivered_smooth": { "speaker": "Selys", "text": "Hm. Someone's been talking to Lyonette. Fine - here's the fee Erin overpaid, and tell that barmaid she's wasted on pouring drinks.", "options": [
-			{ "text": "I'll keep it. Courier's fee.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "kept_reward" }, { "accomplishment": "errand_decided" }, { "gold": 4 } ], "goto": "delivered_smooth" },
-			{ "text": "Send it back to Erin.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "gave_reward" }, { "accomplishment": "errand_decided" }, { "gold": 3 } ], "goto": "delivered_smooth" },
-			{ "text": "Might as well ask.", "goto": "hub" },
-			{ "text": "I'll think about it.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "end": true }
-		] },
-		"pallass_sponsor": { "speaker": "Selys", "text": "Pallass. Guild's got the standing arrangement -- I file the sponsorship, you cover the clerk's fee, and it goes through same-day. Ten gold, paid to the Guild, not to me.", "options": [
-			{ "_comment": "8e Phase C 'Papers for Pallass' Stage 1 real completion (banks pallass_sponsored, the quest's own beat 1). Plain gold gate, no accomplishment leg -- greys VISIBLE when broke, never hides (window-shopping is content, same as every other buy-contract option).", "text": "File it. (10 gold)", "requires": { "gold": 10 }, "effects": [ { "gold": -10 }, { "accomplishment": "pallass_sponsored" } ], "goto": "pallass_sponsored_reaction" },
-			{ "text": "Not today.", "end": true }
-		] },
-		"pallass_sponsored_reaction": { "speaker": "Selys", "text": "Filed. Give it a day or so to clear the Guild's own desk before you go looking for the Door to answer for it -- paperwork moves at paperwork speed, even here.", "options": [
-			{ "text": "My thanks, Selys.", "end": true }
-		] }
-	}
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Selys",
+   "text": "Guild's closed for lunch. Unless you're here about the thing Erin won't stop signing her letters about?",
+   "text_variants": [
+    {
+     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
+     "requires": {
+      "phase": [
+       "dusk",
+       "night"
+      ]
+     },
+     "text": "Guild's near closing. If you're here about paperwork, it can wait for daylight — I can't."
+    },
+    {
+     "_comment": "controller voice pass. Issue #80 (world reactivity wave, item 5 -- the news-travels line): the quest's REPORT beat (cisterns_reported) is banked at Olesm's own hub, not here -- this is the CROSS-CHARACTER beat, Selys hearing it secondhand through the Guild's own paperwork once the case is fully closed, closing the 'deeds change nothing outside their quest bubble' gap. Appended LAST (highest priority -- a real report outranks the generic evening line above once both are met).",
+     "requires": {
+      "accomplishment": {
+       "cisterns_reported": 1
+      }
+     },
+     "text": "Heard the cisterns crawled with something. Heard it stopped crawling, too, and the file crossed my desk with your name on the referral. Don't let it go to your head — I still make you wait for good tea."
+    }
+   ],
+   "options": [
+    {
+     "text": "Package for you, from Erin.",
+     "requires": {
+      "accomplishment": {
+       "has_package": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "package_delivered": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "package_delivered"
+      }
+     ],
+     "goto": "delivered"
+    },
+    {
+     "text": "Erin's package. I'll spare you the small talk. (Lyonette's advice)",
+     "requires": {
+      "accomplishment": {
+       "lyonette_tip": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "package_delivered": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "package_delivered"
+      },
+      {
+       "accomplishment": "selys_impressed"
+      }
+     ],
+     "goto": "delivered_smooth"
+    },
+    {
+     "text": "About that reward...",
+     "requires": {
+      "accomplishment": {
+       "package_delivered": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "errand_decided": 1
+      }
+     },
+     "goto": "delivered"
+    },
+    {
+     "text": "Just looking around.",
+     "end": true
+    },
+    {
+     "_comment": "stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/selys_stages.json. Appended AFTER 'Just looking around.' (array end) so it can never shift an earlier option's visible index.",
+     "text": "Shivertail. Any relation to the Guildmistress?",
+     "requires": {
+      "accomplishment": {
+       "errand_decided": 1,
+       "chatted_with_selys": 2
+      }
+     },
+     "goto": "selys_gran"
+    },
+    {
+     "_comment": "Selys' perk (selys_past_the_counter stage) -- REPEATABLE (issue #32 ruling, supersedes the shipped ONE-TIME v1): the stage-2 accomplishment leg still gates unlock, but the retire mechanic is now the once_per_waking seam (issue #23's {accomplishment, once_per_waking} sanctioned compound, same idiom as Erin's meal / Relc's wager) instead of a permanent claimed_board_pick hide_when -- sleep clears entity_first_use, so a fresh vetted-job pointer + 5g is available again every waking. bank_first_use lives on selys_board_pick's own closing option (effects on options, never nodes -- house shape), same pattern as Krshia's/Zevara's perks.",
+     "text": "Anything on the board worth my time?",
+     "requires": {
+      "accomplishment": {
+       "errand_decided": 1,
+       "chatted_with_selys": 2
+      },
+      "once_per_waking": "board_pick:selys"
+     },
+     "goto": "selys_board_pick"
+    },
+    {
+     "_comment": "desk-context line, lifted VERBATIM from docs/design/board-staging/board-copy.md sec.2 (the board is now a physical prop in the guild interior behind her desk). Ungated orientation flavor -- appended at array end so no earlier option's visible index shifts. The other 5 sec.2 lines (accept/road-cull-steer/turn-in-met/turn-in-unmet/slate-rotated) were DP2-conditioned in DP1; DP2 wires them below.",
+     "text": "How does the board work?",
+     "goto": "selys_board_context"
+    },
+    {
+     "_comment": "Opens the board's live accept picker (built at runtime from data/bounties.json's current active slate -- see bounties.gd; the picker itself is code, not a static node here, which is why this option's effect is a signal, not a goto into more authored content). Hidden once a posting is already accepted -- v1 simplification, one job at a time (disclosed in the DP2 report): Selys won't log a second slip while one's outstanding. Appended at array end so no earlier option's visible index shifts.",
+     "text": "Take on a posting.",
+     "hide_when": {
+      "board_accepted": true
+     },
+     "effects": [
+      {
+       "open_board_picker": true
+      }
+     ],
+     "end": true
+    },
+    {
+     "_comment": "Resolves a turn-in attempt against whichever posting is currently accepted (WIGame.turn_in_bounty -- gold + a completed_bounty_<id> accomplishment on a MET condition, opaque-safe refusal line on an unmet one; no progress numbers either way). Hidden until a posting is accepted (the mirror gate of 'Take on a posting.' above).",
+     "text": "Turn in my posting.",
+     "requires": {
+      "board_accepted": true
+     },
+     "effects": [
+      {
+       "open_board_turnin": true
+      }
+     ],
+     "end": true
+    },
+    {
+     "_comment": "The abandon path -- the one-shot soft-lock (bounty_sewer_survey/bounty_silk_line/bounty_vermin_grate keying on accomplishments a player can bank BEFORE accepting) needed both an absolute-mode condition fix (bounties.gd/data/bounties.json) AND an exit so accepted_bounty_id never gets permanently stuck for any future unfulfillable posting. Same requires gate as 'Turn in my posting.' above (visible only while a posting is outstanding) -- WIGame.abandon_bounty clears the slip with no pay, no penalty; Selys's line lives in the code-built result graph (WIBounties.build_abandon_graph), same home as her accept/turn-in reaction lines. Appended at array end so no earlier option's visible index shifts.",
+     "text": "Hand the posting back.",
+     "requires": {
+      "board_accepted": true
+     },
+     "effects": [
+      {
+       "open_board_abandon": true
+      }
+     ],
+     "end": true
+    },
+    {
+     "_comment": "8e Phase C 'Papers for Pallass' Stage 1 quest-start (issue #16) -- HIDDEN until invrisil_attuned (a light chronological gate matching the region-tier ordering: sponsorship for the machine city is a step past proven city travel) and hidden again once pallass_sponsored (the sponsorship itself is a one-shot ask, matching the heard_about_cisterns/heard_wrong_order precedent of a non-beat signpost paired with quest-start -- pallass_sponsorship_asked is NOT a beat; the real beat-1 completion is pallass_sponsor's own 'File it.' option below). Re-clicking before paying is harmless (start_quest is idempotent, WIGame.start_quest). Appended at array end so no earlier option's visible index shifts. PARKED per docs/design/pallass-staging/phase-c-forward-references.json: the plan's own alternate sponsorship path (a completed-postings record gate) is NOT implemented here -- no aggregate 'completed postings' counter exists in the sim (only per-id completed_bounty_<id>/completed_delivery_<id>), and adding one would be a second new-sim addition beyond the plan's ONE sanctioned addition (the race key).",
+     "text": "About papers for Pallass.",
+     "requires": {
+      "accomplishment": {
+       "invrisil_attuned": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "pallass_sponsored": 1
+      }
+     },
+     "effects": [
+      {
+       "quest": "papers_for_pallass"
+      },
+      {
+       "accomplishment": "pallass_sponsorship_asked"
+      }
+     ],
+     "goto": "pallass_sponsor"
+    }
+   ]
+  },
+  "selys_board_context": {
+   "speaker": "Selys",
+   "text": "The board's behind you. Reading it is free. Taking a posting means telling me, so I can log it and not have to chase you across Liscor.",
+   "options": [
+    {
+     "text": "Might as well ask.",
+     "goto": "hub"
+    },
+    {
+     "text": "Good to know.",
+     "end": true
+    }
+   ]
+  },
+  "selys_gran": {
+   "speaker": "Selys",
+   "text": "Grandmother. Yes, THE Tekshia Shivertail. Yes, she still throws a spear better than half the Silver-ranks. No, I will not introduce you when she's in a mood, which is always. I wanted to be her when I was small. Then I noticed the paperwork ran in the family and picked the desk with better hours.",
+   "options": [
+    {
+     "text": "You wanted to be a hero?",
+     "goto": "selys_gran_two"
+    },
+    {
+     "text": "Might as well ask.",
+     "goto": "hub"
+    },
+    {
+     "text": "The desk suits you.",
+     "end": true
+    }
+   ]
+  },
+  "selys_gran_two": {
+   "speaker": "Selys",
+   "text": "Everyone behind this counter did, once. Then you log your first casualty report. The desk keeps more people alive than a sword does. That took me years to believe, so you don't have to believe it today. Now stop making me sincere during business hours.",
+   "options": [
+    {
+     "text": "Might as well ask.",
+     "goto": "hub"
+    },
+    {
+     "text": "Wouldn't dream of it.",
+     "end": true
+    }
+   ]
+  },
+  "selys_board_pick": {
+   "speaker": "Selys",
+   "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt and I'll square you from the Guild's own purse, not the client's excuse for one.",
+   "options": [
+    {
+     "text": "I'll take it.",
+     "effects": [
+      {
+       "bank_first_use": "board_pick:selys"
+      },
+      {
+       "gold": 5
+      }
+     ],
+     "end": true
+    }
+   ]
+  },
+  "delivered": {
+   "speaker": "Selys",
+   "text": "Finally. Here - she overpaid the courier fee, as always. Take it back or keep it, I honestly don't care which.",
+   "options": [
+    {
+     "text": "I'll keep it. Courier's fee.",
+     "hide_when": {
+      "accomplishment": {
+       "errand_decided": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "kept_reward"
+      },
+      {
+       "accomplishment": "errand_decided"
+      },
+      {
+       "gold": 4
+      }
+     ],
+     "goto": "delivered"
+    },
+    {
+     "text": "Send it back to Erin.",
+     "hide_when": {
+      "accomplishment": {
+       "errand_decided": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "gave_reward"
+      },
+      {
+       "accomplishment": "errand_decided"
+      },
+      {
+       "gold": 3
+      }
+     ],
+     "goto": "delivered"
+    },
+    {
+     "text": "Might as well ask.",
+     "goto": "hub"
+    },
+    {
+     "text": "I'll think about it.",
+     "hide_when": {
+      "accomplishment": {
+       "errand_decided": 1
+      }
+     },
+     "end": true
+    }
+   ]
+  },
+  "delivered_smooth": {
+   "speaker": "Selys",
+   "text": "Hm. Someone's been talking to Lyonette. Fine - here's the fee Erin overpaid, and tell that barmaid she's wasted on pouring drinks.",
+   "options": [
+    {
+     "text": "I'll keep it. Courier's fee.",
+     "hide_when": {
+      "accomplishment": {
+       "errand_decided": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "kept_reward"
+      },
+      {
+       "accomplishment": "errand_decided"
+      },
+      {
+       "gold": 4
+      }
+     ],
+     "goto": "delivered_smooth"
+    },
+    {
+     "text": "Send it back to Erin.",
+     "hide_when": {
+      "accomplishment": {
+       "errand_decided": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "gave_reward"
+      },
+      {
+       "accomplishment": "errand_decided"
+      },
+      {
+       "gold": 3
+      }
+     ],
+     "goto": "delivered_smooth"
+    },
+    {
+     "text": "Might as well ask.",
+     "goto": "hub"
+    },
+    {
+     "text": "I'll think about it.",
+     "hide_when": {
+      "accomplishment": {
+       "errand_decided": 1
+      }
+     },
+     "end": true
+    }
+   ]
+  },
+  "pallass_sponsor": {
+   "speaker": "Selys",
+   "text": "Pallass. Guild's got the standing arrangement -- I file the sponsorship, you cover the clerk's fee, and it goes through same-day. Ten gold, paid to the Guild, not to me.",
+   "options": [
+    {
+     "_comment": "8e Phase C 'Papers for Pallass' Stage 1 real completion (banks pallass_sponsored, the quest's own beat 1). Plain gold gate, no accomplishment leg -- greys VISIBLE when broke, never hides (window-shopping is content, same as every other buy-contract option).",
+     "text": "File it. (10 gold)",
+     "requires": {
+      "gold": 10
+     },
+     "effects": [
+      {
+       "gold": -10
+      },
+      {
+       "accomplishment": "pallass_sponsored"
+      }
+     ],
+     "goto": "pallass_sponsored_reaction"
+    },
+    {
+     "text": "Not today.",
+     "end": true
+    }
+   ]
+  },
+  "pallass_sponsored_reaction": {
+   "speaker": "Selys",
+   "text": "Filed. Give it a day or so to clear the Guild's own desk before you go looking for the Door to answer for it -- paperwork moves at paperwork speed, even here.",
+   "options": [
+    {
+     "text": "My thanks, Selys.",
+     "end": true
+    }
+   ]
+  }
+ }
 }
