@@ -18,15 +18,15 @@
 			{ "_comment": "(spec §1 beat 1 / §5.4: 'no Erin gate on the chain -- she reacts via existing pool lines, gates nothing'; this OPTION is the beat-1 trigger itself, not a gate on anything downstream) Gated on post_game (the GDI epilogue's own completion marker, banked by sleep_veil.gd once -- 'post-epilogue sleep' per spec §1), so the flicker beat can only start after Act III's own ending. Appended AFTER every existing option (index-safety convention -- this option is hidden pre-post_game for every earlier canonical, so appending here never shifts any prior visible index). Starts the quest AND banks door_chain_started in one option, matching the_errand/missing_crate's own quest-start shape.", "text": "Something wrong with the pantry door?", "requires": { "accomplishment": { "post_game": 1 } }, "hide_when": { "accomplishment": { "door_chain_started": 1 } }, "effects": [ { "quest": "door_that_goes_elsewhere" }, { "accomplishment": "door_chain_started" } ], "goto": "erin_door_flicker" }
 		] },
 		"package": { "speaker": "Erin", "text": "You're a lifesaver! Selys is out the door, past the... goblin situation. She's the Drake who looks like she's already done with your nonsense.", "options": [
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Wait, one more thing!", "goto": "hub" },
 			{ "text": "On my way.", "end": true }
 		] },
 		"cleaning_directions": { "speaker": "Erin", "text": "Really? It's the horror show by the south wall. I owe you one - or the table does. [Basic Cleaning]'s already on your bar — number key, then go introduce yourself to it.", "options": [
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Wait, one more thing!", "goto": "hub" },
 			{ "text": "On it.", "end": true }
 		] },
 		"cleaned": { "speaker": "Erin", "text": "Whoa. That was - the table's actually reflective now. Skills are so unfair.", "options": [
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Wait, one more thing!", "goto": "hub" },
 			{ "text": "All part of the service.", "end": true }
 		] },
 		"epilogue_gave": { "speaker": "Erin", "text": "Selys sent the whole reward back with you? That Drake pretends she's all scales. Free breakfast for a week, I mean it.", "options": [ { "text": "Happy to help.", "end": true } ] },
@@ -55,7 +55,7 @@
 		] },
 		"erin_door_flicker": { "_comment": "(spec §3 Erin key, quoted verbatim)", "speaker": "Erin", "text": "It went somewhere COLD this morning. Doors shouldn't have moods. …Can you look? If it eats you, yell.", "options": [
 			{ "text": "I'll take a look.", "end": true },
-			{ "text": "Actually - one more thing.", "goto": "hub" }
+			{ "text": "Wait, one more thing!", "goto": "hub" }
 		] }
 	}
 }

@@ -14,16 +14,16 @@
 			{ "_comment": "The abandon path -- the one-shot soft-lock (bounty_sewer_survey/bounty_silk_line/bounty_vermin_grate keying on accomplishments a player can bank BEFORE accepting) needed both an absolute-mode condition fix (bounties.gd/data/bounties.json) AND an exit so accepted_bounty_id never gets permanently stuck for any future unfulfillable posting. Same requires gate as 'Turn in my posting.' above (visible only while a posting is outstanding) -- WIGame.abandon_bounty clears the slip with no pay, no penalty; Selys's line lives in the code-built result graph (WIBounties.build_abandon_graph), same home as her accept/turn-in reaction lines. Appended at array end so no earlier option's visible index shifts.", "text": "Hand the posting back.", "requires": { "board_accepted": true }, "effects": [ { "open_board_abandon": true } ], "end": true }
 		] },
 		"selys_board_context": { "speaker": "Selys", "text": "The board's behind you. Reading it is free. Taking a posting means telling me, so I can log it and not have to chase you across Liscor.", "options": [
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Might as well ask.", "goto": "hub" },
 			{ "text": "Good to know.", "end": true }
 		] },
 		"selys_gran": { "speaker": "Selys", "text": "Grandmother. Yes, THE Tekshia Shivertail. Yes, she still throws a spear better than half the Silver-ranks. No, I will not introduce you when she's in a mood, which is always. I wanted to be her when I was small. Then I noticed the paperwork ran in the family and picked the desk with better hours.", "options": [
 			{ "text": "You wanted to be a hero?", "goto": "selys_gran_two" },
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Might as well ask.", "goto": "hub" },
 			{ "text": "The desk suits you.", "end": true }
 		] },
 		"selys_gran_two": { "speaker": "Selys", "text": "Everyone behind this counter did, once. Then you log your first casualty report. The desk keeps more people alive than a sword does. That took me years to believe, so you don't have to believe it today. Now stop making me sincere during business hours.", "options": [
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Might as well ask.", "goto": "hub" },
 			{ "text": "Wouldn't dream of it.", "end": true }
 		] },
 		"selys_board_pick": { "speaker": "Selys", "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt and I'll square you from the Guild's own purse, not the client's excuse for one.", "options": [
@@ -32,13 +32,13 @@
 		"delivered": { "speaker": "Selys", "text": "Finally. Here - she overpaid the courier fee, as always. Take it back or keep it, I honestly don't care which.", "options": [
 			{ "text": "I'll keep it. Courier's fee.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "kept_reward" }, { "accomplishment": "errand_decided" }, { "gold": 4 } ], "goto": "delivered" },
 			{ "text": "Send it back to Erin.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "gave_reward" }, { "accomplishment": "errand_decided" }, { "gold": 3 } ], "goto": "delivered" },
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Might as well ask.", "goto": "hub" },
 			{ "text": "I'll think about it.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "end": true }
 		] },
 		"delivered_smooth": { "speaker": "Selys", "text": "Hm. Someone's been talking to Lyonette. Fine - here's the fee Erin overpaid, and tell that barmaid she's wasted on pouring drinks.", "options": [
 			{ "text": "I'll keep it. Courier's fee.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "kept_reward" }, { "accomplishment": "errand_decided" }, { "gold": 4 } ], "goto": "delivered_smooth" },
 			{ "text": "Send it back to Erin.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "effects": [ { "accomplishment": "gave_reward" }, { "accomplishment": "errand_decided" }, { "gold": 3 } ], "goto": "delivered_smooth" },
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "Might as well ask.", "goto": "hub" },
 			{ "text": "I'll think about it.", "hide_when": { "accomplishment": { "errand_decided": 1 } }, "end": true }
 		] }
 	}

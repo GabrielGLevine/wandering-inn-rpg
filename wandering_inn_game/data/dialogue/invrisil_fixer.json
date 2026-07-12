@@ -64,7 +64,7 @@
 		"balk": {
 			"_comment": "GH#68 (quest-stage rework): the trust-arc gate. Base text (default, returned_cups_debt unmet) is the NEW diegetic hold -- Cups won't risk her face until the favor's settled; the text_variant restores the ORIGINAL 'different water' speech once the favor is done. Both real options below extend their requires with the same accomplishment leg (sanctioned compounds: {accomplishment, class} for the Diplomat branch, {gold, accomplishment} for the paid branch -- test_content.gd's own two pre-existing sanctioned shapes, just with returned_cups_debt standing in), so a player who rushes here still sees ONLY the ungated 'Fair. Forget I asked.' exit until the trust arc is actually walked.",
 			"speaker": "Cups",
-			"text": "Not for cups of tea, friend. You want my FACE on this, you've got to be worth the risk first -- and 'worth it' isn't free, is it, given what a hat can turn into round here.",
+			"text": "Not for cups of tea, friend. You want my FACE on this, you've got to be worth the risk first — and 'worth it' isn't free, is it, given what a hat can turn into round here.",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "returned_cups_debt": 1 } }, "text": "Swearing's different water, friend. A rumor's a bird — nobody knows whose window it flew from. Testimony has my FACE on it, and Coyle prices faces. Some of them stop being worn." }
 			],
@@ -77,7 +77,7 @@
 		"cups_favor": {
 			"_comment": "GH#68 (quest-stage rework, TALK path Stage 2): the favor beat itself -- grants the carry item (#59 item-gate/remove_item seam), returned at invrisil_wilovan.json's hub. Single ungated option (the arranged/just_tea precedent) satisfies the softlock guard trivially.",
 			"speaker": "Cups",
-			"text": "Here's the third thing, then, since you keep buying the first two. I owe the Brothers a debt I've been quietly not paying -- a chit, is all, but it's got Wilovan's own mark on it and I'd rather it went back through a friendly hand than a collecting one. Carry it to the parlor, quiet as you came by it, and we'll talk about faces.",
+			"text": "Here's the third thing, then, since you keep buying the first two. I owe the Brothers a debt I've been quietly not paying — a chit, is all, but it's got Wilovan's own mark on it and I'd rather it went back through a friendly hand than a collecting one. Carry it to the parlor, quiet as you came by it, and we'll talk about faces.",
 			"options": [
 				{ "text": "I'll see it done.", "effects": [ { "item": "cups_debt_chit" }, { "accomplishment": "cups_favor_requested" } ], "goto": "hub" }
 			]

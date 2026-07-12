@@ -23,7 +23,7 @@
 			{ "text": "Back to business.", "goto": "hub" },
 			{ "text": "It suits you.", "end": true }
 		] },
-		"krshia_tribe_two": { "speaker": "Krshia", "text": "Hrr. Ask me when you have known me longer than one crate. A promise spoken cheap gets spent cheap. This is true of coin and truer of words.", "options": [
+		"krshia_tribe_two": { "speaker": "Krshia", "text": "Ask me when you have known me longer than one crate. A promise spoken cheap gets spent cheap. This is true of coin and truer of words.", "options": [
 			{ "text": "Back to business.", "goto": "hub" },
 			{ "text": "Then I'll keep coming back.", "end": true }
 		] },
@@ -48,7 +48,7 @@
 			{ "text": "The wool-lined cloak, friend's price. (16 gold)", "requires": { "gold": 16, "accomplishment": { "chatted_with_krshia": 4, "crate_returned": 1, "heard_krshia_plans": 1 } }, "effects": [ { "gold": -16 }, { "item": "wool_lined_cloak" } ], "goto": "bought" },
 			{ "text": "The boiled-leather jerkin, friend's price. (22 gold)", "requires": { "gold": 22, "accomplishment": { "chatted_with_krshia": 4, "crate_returned": 1, "heard_krshia_plans": 1 } }, "effects": [ { "gold": -22 }, { "item": "leather_jerkin" } ], "goto": "bought" }
 		] },
-		"charms": { "speaker": "Krshia", "text": "Hrr. The charmed stock costs more because it does more. Wear too much of it at once and it starts to argue with itself, so choose with sense. Coin on the counter, same as the rest.", "_comment": "HAZARD 1: the 6 new accessories/tools that would have overflowed 'shop' past its grown-panel bound. Same buy contract as 'shop' (requires:{gold:price} + effects:[{gold:-price},{item:id}]), cheapest-first ordering matching the shop's own convention, price named in each option's own text (the L5 dedup in dialogue.gd's _item_effect_lines strips WIEffectText's 'Worth N gold' line from the rendered effect_lines because the price is already spelled here). 'Back to the regular stall.' is the required fully-ungated exit (no requires/hide_when) back to 'shop'.", "options": [
+		"charms": { "speaker": "Krshia", "text": "The charmed stock costs more because it does more. Wear too much of it at once and it starts to argue with itself, so choose with sense. Coin on the counter, same as the rest.", "_comment": "HAZARD 1: the 6 new accessories/tools that would have overflowed 'shop' past its grown-panel bound. Same buy contract as 'shop' (requires:{gold:price} + effects:[{gold:-price},{item:id}]), cheapest-first ordering matching the shop's own convention, price named in each option's own text (the L5 dedup in dialogue.gd's _item_effect_lines strips WIEffectText's 'Worth N gold' line from the rendered effect_lines because the price is already spelled here). 'Back to the regular stall.' is the required fully-ungated exit (no requires/hide_when) back to 'shop'.", "options": [
 			{ "text": "That copper ring. Can't hurt. (4 gold)", "requires": { "gold": 4 }, "effects": [ { "gold": -4 }, { "item": "copper_luck_band" } ], "goto": "bought" },
 			{ "text": "The handline, for the pond. (4 gold)", "requires": { "gold": 4 }, "effects": [ { "gold": -4 }, { "item": "fishers_handline" } ], "goto": "bought" },
 			{ "text": "The whetstone. (5 gold)", "requires": { "gold": 5 }, "effects": [ { "gold": -5 }, { "item": "field_whetstone" } ], "goto": "bought" },
@@ -58,7 +58,7 @@
 			{ "_comment": "The attunement catalyst, 18g -- the ratified price band moved to 15-20g (a first playthrough reached this purchase with 19g; the chain must flow without board-grinding, boards stay OPTIONAL income), superseding the old 30-40g band. Do not tune elsewhere. Same buy-contract shape as every other charm (requires:{gold:price} + effects:[{gold:-price},{item:id}]) plus one extra effect banking bought_catalyst (the chain's locked id) on purchase. No door_chain_started gate -- Krshia sells it to anyone asking; harmless if bought before the chain even starts, the recover beat just waits on it. Own reaction node (catalyst_sold) rather than the generic 'bought' text, since 'wear it, use it' reads wrong for a carried macguffin.", "text": "That piece under the far cloth. What is it? (18 gold)", "requires": { "gold": 18 }, "effects": [ { "gold": -18 }, { "item": "resonant_catalyst" }, { "accomplishment": "bought_catalyst" } ], "goto": "catalyst_sold" },
 			{ "text": "Back to the regular stall.", "goto": "shop" }
 		] },
-		"catalyst_sold": { "speaker": "Krshia", "text": "Hrr. That one, I do not ask questions about. Silverfang trade brings stranger things than that through Liscor, and it always finds the buyer who was already looking for it. Yours now. Spend the rest of your coin on something that talks less.", "options": [
+		"catalyst_sold": { "speaker": "Krshia", "text": "That one, I do not ask questions about. Silverfang trade brings stranger things than that through Liscor, and it always finds the buyer who was already looking for it. Yours now. Spend the rest of your coin on something that talks less.", "options": [
 			{ "text": "Show me the stall again.", "goto": "shop" },
 			{ "text": "My thanks, Krshia.", "end": true }
 		] },
@@ -67,16 +67,16 @@
 			{ "text": "That's all. My thanks, Krshia.", "end": true }
 		] },
 		"accepted": { "speaker": "Krshia", "text": "Good. Sewer grates, south of here. Start there. Careful of teeth.", "options": [
-			{ "text": "Actually - one more thing.", "goto": "hub" },
+			{ "text": "There's more.", "goto": "hub" },
 			{ "text": "I'll find it.", "end": true }
 		] },
-		"thanks": { "speaker": "Krshia", "text": "Hrr. Yes. This is mine. My thanks. Do not expect a discount, but my thanks.", "options": [
+		"thanks": { "speaker": "Krshia", "text": "Yes. This is mine. My thanks. Do not expect a discount, but my thanks.", "options": [
 			{ "text": "Glad to help.", "end": true }
 		] },
-		"smoothed": { "speaker": "Krshia", "text": "Hrr. For the barmaid, then. She is prickly, that one, but she works. I have watched her learn it. The order goes out full, and no word of the shortfall reaches Erin from my stall. You speak plainly and you speak for a friend. That, I respect.", "options": [
+		"smoothed": { "speaker": "Krshia", "text": "For the barmaid, then. She is prickly, that one, but she works. I have watched her learn it. The order goes out full, and no word of the shortfall reaches Erin from my stall. You speak plainly and you speak for a friend. That, I respect.", "options": [
 			{ "text": "Thank you, Krshia.", "end": true }
 		] },
-		"smoothed_paid": { "speaker": "Krshia", "text": "Hrr. Coin instead of words. Simpler, some days. The order goes out full and Erin hears nothing of the shortfall. We are square, you and I.", "options": [
+		"smoothed_paid": { "speaker": "Krshia", "text": "Coin instead of words. Simpler, some days. The order goes out full and Erin hears nothing of the shortfall. We are square, you and I.", "options": [
 			{ "text": "Thank you, Krshia.", "end": true }
 		] }
 	}

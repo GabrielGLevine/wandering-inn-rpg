@@ -4,12 +4,12 @@
  "nodes": {
   "greet": {
    "speaker": "A Frazzled Drayman",
-   "text": "Half a day! Half a day stuck behind the market row and now the axle-pin's walked off somewhere and the Watch says MOVE ALONG -- move along WHERE, exactly? Nobody -- NOBODY -- is listening.",
+   "text": "Half a day! Half a day stuck behind the market row and now the axle-pin's walked off somewhere and the Watch says MOVE ALONG. Move along WHERE, exactly? Nobody. NOBODY is listening.",
    "text_variants": [
-    { "requires": { "accomplishment": { "soothed_the_drayman": 1 } }, "text": "Found the pin. Right where you said to look -- under the whole mess, not in it. Cart's rolling before dusk. I owe you a quiet word, and that's worth more than it sounds on this street." }
+    { "requires": { "accomplishment": { "soothed_the_drayman": 1 } }, "text": "Found the pin. Right where you said to look — under the whole mess, not in it. Cart's rolling before dusk. I owe you a quiet word, and that's worth more than it sounds on this street." }
    ],
    "options": [
-    { "text": "Breathe. Start at the axle-pin -- walk me through it once, slow.", "hide_when": { "accomplishment": { "soothed_the_drayman": 1 } }, "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "soothed_the_drayman" } ], "goto": "calmed" },
+    { "text": "Breathe. Start at the axle-pin — walk me through it once, slow.", "hide_when": { "accomplishment": { "soothed_the_drayman": 1 } }, "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "soothed_the_drayman" } ], "goto": "calmed" },
     { "text": "Not my cart, not my problem.", "end": true }
    ]
   },

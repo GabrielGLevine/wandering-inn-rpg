@@ -101,7 +101,7 @@
     },
     {
      "_comment": "Sequence-break rescue + recap: the ruin pointer used to live ONLY inside the three consult responses -- a player who cleared rift_vermin_leak BEFORE consulting (its on_victory banks door_understood, hiding both consult options) never heard where the anchor stone is and stalled. Gated on the understanding existing, retired once the stone is recovered; APPENDED LAST so existing visible-option numbering (QA scripts press numbers) is untouched.",
-     "text": "About the pantry door -- I understand what it is now. Where does that leave me?",
+     "text": "About the pantry door — I understand what it is now. Where does that leave me?",
      "requires": {
       "accomplishment": {
        "door_chain_started": 1,
@@ -135,7 +135,7 @@
   },
   "door_consult": {
    "speaker": "Pisces",
-   "text": "A door that changes its mind about where it goes. How very like this city -- even the fixtures have moods. Three ways to satisfy my curiosity: bleed for it, talk me into caring, or prove you can read a ward without my help. Choose, and don't waste my morning.",
+   "text": "A door that changes its mind about where it goes. How very like this city — even the fixtures have moods. Three ways to satisfy my curiosity: bleed for it, talk me into caring, or prove you can read a ward without my help. Choose, and do not waste my morning.",
    "options": [
     {
      "text": "I'll clear whatever's coming through myself.",
@@ -153,7 +153,7 @@
   },
   "consult_fight_response": {
    "speaker": "Pisces",
-   "text": "Bleeding it is. Predictable, but effective. Go on, then. I'll be here, dry and uninjured, exactly as planned.",
+   "text": "Bleeding it is. Predictable, but effective. Go on, then. I shall be here, dry and uninjured, exactly as planned.",
    "options": [
     {
      "text": "Wish me luck.",
@@ -163,7 +163,7 @@
   },
   "consult_talk_pitch": {
    "speaker": "Pisces",
-   "text": "You want me to walk into someone's pantry and grope at a wild ward with my bare senses. No. I have wards of my own I'd rather keep.",
+   "text": "You want me to walk into someone's pantry and grope at a wild ward with my bare senses. No. I have wards of my own I would rather keep.",
    "options": [
     {
      "text": "It's not asking much. You'd know in a glance.",
@@ -205,7 +205,7 @@
      "end": true
     },
     {
-     "text": "Then it's settled -- I'll cover your time instead. (5 gold)",
+     "text": "Then it's settled — I'll cover your time instead. (5 gold)",
      "requires": {
       "gold": 5
      },
@@ -237,7 +237,7 @@
   },
   "consult_skill_response": {
    "speaker": "Pisces",
-   "text": "Read it yourself, then. [Observe] the frame close, and mind that the pattern doesn't repeat the same way twice. Report back if you actually understand what you saw. I'll judge whether you do.",
+   "text": "Read it yourself, then. [Observe] the frame close, and mind that the pattern does not repeat the same way twice. Report back if you actually understand what you saw. I shall judge whether you do.",
    "options": [
     {
      "text": "I'll take a look.",
@@ -247,7 +247,7 @@
   },
   "consult_skill_report": {
    "speaker": "Pisces",
-   "text": "...Correct. Aggravatingly correct. You have the eye, if not the training. Don't let it go to your head. The training is where the real work is.",
+   "text": "...Correct. Aggravatingly correct. You have the eye, if not the training. Do not let it go to your head. The training is where the real work is.",
    "options": [
     {
      "text": "I'll take the compliment anyway.",
@@ -351,7 +351,7 @@
   },
   "door_recap": {
    "speaker": "Pisces",
-   "text": "Then attend, because I dislike repeating myself. The door remembers being elsewhere; it wants an anchor to remember BY. East across the floodplains, well past the gate road, there is a seam of old dressed stone in the open grass -- a ruin, collapsed and rude, but its plinth still cradles an anchor stone. Retrieve it. Krshia's resonant catalyst will attune the pairing. And do try not to die somewhere so architecturally disappointing.",
+   "text": "Then attend, because I dislike repeating myself. The door remembers being elsewhere; it wants an anchor to remember BY. East across the floodplains, well past the gate road, there is a seam of old dressed stone in the open grass — a ruin, collapsed and rude, but its plinth still cradles an anchor stone. Retrieve it. Krshia's resonant catalyst will attune the pairing. And do try not to die somewhere so architecturally disappointing.",
    "options": [
     {
      "text": "East past the gate road. Understood.",
@@ -375,7 +375,7 @@
   },
   "door_attune": {
    "speaker": "Pisces",
-   "text": "Then the scholarship is done and the tedium begins. Keep both near the door and REST. Attunement is not a lever, it is a residency -- the frame learns the stone the way a house learns its family: overnight, and more than once. Sleep. Let the inn do the part no [Mage] can rush.",
+   "text": "Then the scholarship is done and the tedium begins. Keep both near the door and REST. Attunement is not a lever, it is a residency — the frame learns the stone the way a house learns its family: overnight, and more than once. Sleep. Let the inn do the part no [Mage] can rush.",
    "options": [
     {
      "text": "Sleep on it. Literally. Got it.",

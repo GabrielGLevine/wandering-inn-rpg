@@ -55,6 +55,8 @@ func _init() -> void:
 	_validate_effect_text_opacity()
 	_validate_player_string_vocab()
 	_validate_once_per_waking_shape_cases()
+	_validate_travel_beat_place_naming(quests, scene, graphs)
+	_validate_place_naming_shape_cases()
 
 	print("PASS: errand content is fully cross-referenced")
 	quit(0)
@@ -818,6 +820,227 @@ func _validate_quests(quests: Dictionary, produced_accomplishments: Dictionary) 
 					produced_accomplishments.has(accomplishment_id),
 					"quest %s beat %s waits on unproduced accomplishment: %s" % [String(quest["id"]), String(beat["id"]), accomplishment_id]
 				)
+
+
+## Issue #74 (travel signposting). Colloquial landmark words a player would
+## recognize for each map id, lowercase, substring-matched against a beat's
+## `description`. Deliberately loose (a handful of synonyms per map, not an
+## exhaustive gazetteer) -- the check only needs ONE hit to pass. A map with
+## no entry here can never satisfy `_beat_needs_place_name` for a beat that
+## requires one (see the assert in `_validate_travel_beat_place_naming`),
+## which is the intended fail-loud behavior for a new travel destination that
+## forgot to register its landmark words, not a silent pass.
+const LANDMARK_TOKENS := {
+	"inn": ["inn"],
+	"inn_upstairs": ["upstairs"],
+	"street": ["market", "square"],
+	"floodplains": ["floodplains"],
+	"sewers": ["sewer", "cistern"],
+	"deep_tunnels": ["deep tunnels", "tunnels"],
+	"guild": ["guild"],
+	"barracks": ["barracks"],
+	"runners_guild": ["runner"],
+	# "ruin" alone is deliberately NOT a token here: the pre-fix beat text
+	# already said "the ruin" and a real user still hard-stalled on it (issue
+	# #74) -- naming the THING isn't signposting, naming WHERE it is, is.
+	"ruin_surface": ["floodplains"],
+	"garden_sanctuary": ["garden"],
+	"riverfarm_village": ["riverfarm"],
+	"riverfarm_longhouse": ["longhouse"],
+	"witch_hollow": ["hollow"],
+	"invrisil_boulevard": ["boulevard", "invrisil"],
+	"mercantile_alleys": ["alleys", "counting house"],
+	"brothers_parlor": ["parlor"],
+	"dungeon_approach": ["dungeon"],
+	"trapped_halls": ["trapped halls", "halls"],
+}
+
+
+## conversation graph id -> the set of map ids that own an entity carrying
+## that `conversation` field. Almost always exactly one map (an entity is
+## placed on one map); kept as a set rather than a single String so a
+## conversation reachable from two placed entities (none ship today) degrades
+## to "any of its maps counts as reachable", never a crash.
+func _conversation_maps(scene: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			if entity.has("conversation"):
+				var conv_id: String = String(entity["conversation"])
+				if not out.has(conv_id):
+					out[conv_id] = {}
+				out[conv_id][map_id] = true
+	return out
+
+
+## accomplishment id -> the set of map ids where it can be PRODUCED (an effect
+## grants it), merging two source shapes: (1) scene-direct producers
+## (on_victory, on_skill_use.accomplishment, on_interact_accomplishment,
+## on_open_accomplishment -- the same fields `_collect_scene_accomplishments`
+## already reads, re-walked here to attach a map id instead of a bare bool);
+## (2) dialogue-option effects (`{"accomplishment": id}`), attributed to
+## every map in `conversation_maps[graph_id]`. An accomplishment produced by
+## more than one route (e.g. a 3-path quest convergence counter) carries the
+## UNION of every route's map -- this is what lets a beat resolvable via a
+## same-map route skip the place-naming requirement below, even when an
+## ALTERNATE route requires travel.
+func _accomplishment_producer_maps(scene: Dictionary, graphs: Dictionary, conversation_maps: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			var victory: Variant = entity.get("on_victory", [])
+			var victory_ids: Array = victory if victory is Array else [victory] if victory is String else []
+			for id: Variant in victory_ids:
+				_mark_producer(out, String(id), map_id)
+			if entity.has("on_skill_use") and (entity["on_skill_use"] as Dictionary).has("accomplishment"):
+				_mark_producer(out, String((entity["on_skill_use"] as Dictionary)["accomplishment"]), map_id)
+			if entity.has("on_interact_accomplishment"):
+				_mark_producer(out, String(entity["on_interact_accomplishment"]), map_id)
+			if entity.has("on_open_accomplishment"):
+				_mark_producer(out, String(entity["on_open_accomplishment"]), map_id)
+			for rumor: Dictionary in (entity.get("board_rumors", []) as Array):
+				_mark_producer(out, String(rumor["banks_accomplishment"]), map_id)
+	for graph_id: String in graphs:
+		var maps_for_graph: Dictionary = conversation_maps.get(graph_id, {})
+		if maps_for_graph.is_empty():
+			continue
+		var nodes: Dictionary = graphs[graph_id]["nodes"]
+		for node_id: String in nodes:
+			for option: Dictionary in (nodes[node_id].get("options", []) as Array):
+				for effect: Dictionary in (option.get("effects", []) as Array):
+					if effect.has("accomplishment"):
+						for map_id: String in maps_for_graph:
+							_mark_producer(out, String(effect["accomplishment"]), map_id)
+	return out
+
+
+func _mark_producer(producer_maps: Dictionary, accomplishment_id: String, map_id: String) -> void:
+	if not producer_maps.has(accomplishment_id):
+		producer_maps[accomplishment_id] = {}
+	producer_maps[accomplishment_id][map_id] = true
+
+
+## quest id -> the set of map ids where an `{"effects": [{"quest": id}]}`
+## dialogue option lives -- "where the player STANDS when this quest starts",
+## i.e. the quest-giver's own map (Erin/inn, Krshia/street, the headman/
+## riverfarm_village, etc.). A quest with no such option anywhere (content
+## bug -- WIGame can never start it) yields an empty set, which
+## `_beat_needs_place_name` treats as "cannot confirm same-map, so require
+## naming" (fail loud, never silently skip the quest's beats).
+func _quest_giver_maps(graphs: Dictionary, conversation_maps: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	for graph_id: String in graphs:
+		var maps_for_graph: Dictionary = conversation_maps.get(graph_id, {})
+		if maps_for_graph.is_empty():
+			continue
+		var nodes: Dictionary = graphs[graph_id]["nodes"]
+		for node_id: String in nodes:
+			for option: Dictionary in (nodes[node_id].get("options", []) as Array):
+				for effect: Dictionary in (option.get("effects", []) as Array):
+					if effect.has("quest"):
+						var quest_id: String = String(effect["quest"])
+						if not out.has(quest_id):
+							out[quest_id] = {}
+						for map_id: String in maps_for_graph:
+							out[quest_id][map_id] = true
+	return out
+
+
+## TRUE iff `beat_maps` (every map that could produce this beat's
+## complete_when counters) shares NO map with `giver_maps` (the quest-giver's
+## own map) -- i.e. every route to this beat requires leaving wherever the
+## quest was handed out, so the description must name a landmark. A beat with
+## even ONE same-map route (a non-Diplomat SKILL/TALK leg that never leaves
+## the giver's own map, e.g. wrong_order's kitchen-stretch leg) does NOT need
+## naming -- the player is never FORCED to travel to finish it. Empty
+## `beat_maps` (defensive; `_validate_quests` already asserts every
+## complete_when id is produced somewhere) is treated as "not required" --
+## nothing to cross-check.
+func _beat_needs_place_name(beat_maps: Dictionary, giver_maps: Dictionary) -> bool:
+	if beat_maps.is_empty():
+		return false
+	for map_id: String in beat_maps:
+		if giver_maps.has(map_id):
+			return false
+	return true
+
+
+## Case-insensitive substring match: does `description` mention ANY of
+## `tokens`? Pure (no assert) so both accept and reject cases are directly
+## unit-testable -- see `_validate_place_naming_shape_cases`.
+func _description_names_place(description: String, tokens: Array) -> bool:
+	var lower := description.to_lower()
+	for token: String in tokens:
+		if lower.contains(String(token).to_lower()):
+			return true
+	return false
+
+
+## Issue #74: every quest beat whose completion counters ALL require leaving
+## the quest-giver's own map must name a landmark in its `description` (the
+## door-chain 'recover' beat -- "the ruin" with no location -- was the
+## confirmed real-user hard-stall this rule exists to catch structurally,
+## not just by one-off audit). Walks every beat independently against its
+## OWN quest's giver map -- deliberately NOT chain-aware across a quest's own
+## prior beats (a later beat converging back on the SAME foreign map a prior
+## beat already named still needs its own mention; repeating a short landmark
+## clause is cheap and the audit fix for `a_gentlemans_disagreement`'s
+## `resolve` beat leans on exactly this).
+func _validate_travel_beat_place_naming(quests: Dictionary, scene: Dictionary, graphs: Dictionary) -> void:
+	var conversation_maps: Dictionary = _conversation_maps(scene)
+	var producer_maps: Dictionary = _accomplishment_producer_maps(scene, graphs, conversation_maps)
+	var giver_maps: Dictionary = _quest_giver_maps(graphs, conversation_maps)
+	for quest: Dictionary in quests.get("quests", []):
+		var quest_id := String(quest["id"])
+		var quest_giver_maps: Dictionary = giver_maps.get(quest_id, {})
+		for beat: Dictionary in quest.get("beats", []):
+			var complete_when: Dictionary = beat.get("complete_when", {})
+			var beat_maps: Dictionary = {}
+			for accomplishment_id: String in complete_when:
+				for map_id: String in (producer_maps.get(accomplishment_id, {}) as Dictionary):
+					beat_maps[map_id] = true
+			if not _beat_needs_place_name(beat_maps, quest_giver_maps):
+				continue
+			var tokens: Array = []
+			for map_id: String in beat_maps:
+				assert(LANDMARK_TOKENS.has(map_id), "quest %s beat %s needs a travel landmark on map %s, which has no LANDMARK_TOKENS entry" % [quest_id, String(beat["id"]), map_id])
+				tokens.append_array(LANDMARK_TOKENS[map_id])
+			var description := String(beat.get("description", ""))
+			assert(
+				_description_names_place(description, tokens),
+				"quest %s beat %s is a travel-only beat (giver map(s) %s, producer map(s) %s) but its description names no landmark from %s: %s" % [quest_id, String(beat["id"]), quest_giver_maps.keys(), beat_maps.keys(), tokens, description]
+			)
+
+
+## Acceptance + rejection coverage for `_beat_needs_place_name` and
+## `_description_names_place`, mirroring `_validate_once_per_waking_shape_
+## cases`'s idiom. The rejection cases are literally the PRE-FIX quests.json
+## sentences (the door-chain 'recover' beat, the_errand's 'decide' beat,
+## a_gentlemans_disagreement's 'scout'/'resolve' beats) -- proof the fixed
+## validator would have caught every one of them, not just that the current
+## (already-fixed) text happens to pass.
+func _validate_place_naming_shape_cases() -> void:
+	assert(not _beat_needs_place_name({"inn": true}, {"inn": true}), "same-map beat needs no landmark")
+	assert(_beat_needs_place_name({"guild": true}, {"inn": true}), "guild-only beat, inn-given quest, needs a landmark")
+	assert(not _beat_needs_place_name({"inn": true, "street": true}, {"inn": true}), "a beat with ANY same-map route needs no landmark, even with a foreign alternate route")
+	assert(not _beat_needs_place_name({}, {"inn": true}), "no known producer map -- nothing to cross-check, not this check's business")
+	assert(_beat_needs_place_name({"guild": true}, {}), "an unresolvable quest-giver map (empty set) can share no map with anything -- fails loud (requires naming) rather than silently skipping the beat")
+
+	var ruin_tokens: Array = LANDMARK_TOKENS["ruin_surface"] + LANDMARK_TOKENS["street"]
+	assert(_description_names_place("Recover the anchor stone from the ruin east past the gate road, on the floodplains, and buy Krshia's catalyst to attune it.", ruin_tokens), "fixed recover beat names the ruin/floodplains")
+	assert(not _description_names_place("Recover the anchor stone from the ruin and buy Krshia's catalyst to attune it.", ruin_tokens), "NEGATIVE CONTROL: the pre-fix recover beat names no landmark")
+
+	var guild_tokens: Array = LANDMARK_TOKENS["guild"]
+	assert(_description_names_place("Decide what to do with Selys's reward, there at the Guild.", guild_tokens), "fixed decide beat names the Guild")
+	assert(not _description_names_place("Decide what to do with Selys's reward.", guild_tokens), "NEGATIVE CONTROL: the pre-fix decide beat names no landmark")
+
+	var boulevard_tokens: Array = LANDMARK_TOKENS["invrisil_boulevard"]
+	assert(_description_names_place("Find out exactly where Coyle's operation actually runs, along the boulevard, before you make a move on him.", boulevard_tokens), "fixed scout beat names the boulevard")
+	assert(not _description_names_place("Find out exactly where Coyle's operation actually runs, before you make a move on him.", boulevard_tokens), "NEGATIVE CONTROL: the pre-fix scout beat names no landmark")
+	assert(_description_names_place("Clear Farley's name — corner Master Coyle, back on the boulevard, however you see fit.", boulevard_tokens), "fixed resolve beat names the boulevard")
+	assert(not _description_names_place("Clear Farley's name — corner Master Coyle however you see fit.", boulevard_tokens), "NEGATIVE CONTROL: the pre-fix resolve beat names no landmark")
 
 
 func _validate_props(scene: Dictionary) -> void:

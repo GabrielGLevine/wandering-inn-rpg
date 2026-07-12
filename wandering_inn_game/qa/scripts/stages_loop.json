@@ -42,8 +42,8 @@
   { "_comment": "Teleport back to Krshia's column and re-approach exactly as the fixture originally placed the player.", "action": "teleport", "map": "street", "cell": [13, 3] },
   { "action": "move", "direction": "up", "steps": 1 },
   { "_comment": "sleep() cleared social_talked, so this NEW waking's first talk plays the pool. The stage gate reads BEFORE this call's own counter bump: chatted_with_krshia is STILL 3 at gate-check time, so stage 1 (krshia_fair_weight) wins, idx 3%%3=0 -- the exact staged line. This same call then bumps the counter to 4.", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Krshia", "text": "Hrr. The crate-finder. Sit, look, touch even. You have earned handling privileges." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": { "text": "Krshia: Hrr. The crate-finder. Sit, look, touch even. You have earned handling privileges." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Krshia", "text": "The crate-finder. Sit, look, touch even. You have earned handling privileges." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": { "text": "Krshia: The crate-finder. Sit, look, touch even. You have earned handling privileges." }, "timeout_sec": 5 },
   { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_krshia", "count": 4 } },
   { "action": "screenshot", "name": "01_stage_swap_pool_line" },
 
