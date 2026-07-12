@@ -257,6 +257,54 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_pause_row":
+			# Pause-menu row click (issue #84): resolves the LIVE PauseMenu
+			# node's own `row_rect` (mirrors `click_slot`'s hotbar lookup) --
+			# never a hardcoded row pixel offset.
+			var row_n := int(step["row"])
+			var pm := get_tree().root.find_child("PauseMenu", true, false)
+			if pm == null:
+				_fail("click_pause_row: PauseMenu node not found")
+			else:
+				var rect: Rect2 = pm.call("row_rect", row_n - 1)
+				if rect.size == Vector2.ZERO:
+					_fail("click_pause_row: row %d has no rendered rect" % row_n)
+				else:
+					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_dialogue_option":
+			# Dialogue-option row click (issue #84): resolves the LIVE
+			# DialoguePanel node's own `option_rect`, same lookup shape as
+			# `click_pause_row` above.
+			var opt_n := int(step["option"])
+			var dp := get_tree().root.find_child("DialoguePanel", true, false)
+			if dp == null:
+				_fail("click_dialogue_option: DialoguePanel node not found")
+			else:
+				var rect: Rect2 = dp.call("option_rect", opt_n - 1)
+				if rect.size == Vector2.ZERO:
+					_fail("click_dialogue_option: option %d has no rendered rect" % opt_n)
+				else:
+					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_title_row":
+			# Title-screen top-level-menu row click (issue #84): resolves the
+			# LIVE TitleScreen node's own `row_rect`, same lookup shape as
+			# `click_pause_row`/`click_dialogue_option` above.
+			var title_row_n := int(step["row"])
+			var ts := get_tree().root.find_child("TitleScreen", true, false)
+			if ts == null:
+				_fail("click_title_row: TitleScreen node not found")
+			else:
+				var rect: Rect2 = ts.call("row_rect", title_row_n - 1)
+				if rect.size == Vector2.ZERO:
+					_fail("click_title_row: row %d has no rendered rect" % title_row_n)
+				else:
+					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"move_diag":
 			# A genuine simultaneous-key-hold diagonal, through the REAL input
 			# pipeline -- world.gd's

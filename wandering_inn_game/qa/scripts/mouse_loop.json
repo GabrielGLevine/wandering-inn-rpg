@@ -1,13 +1,12 @@
 {
- "_comment": "Issue #57: mouse support canonical. Same near_tactician fixture/opening as hotbar_tab_loop (inn, warrior L1, [Basic Cleaning] innate 1-slot bar, player at (2,3)) so the click-driven proofs below are directly comparable to that script's key-driven ones. Proves: (A) a DISTANT click on dirty_table (5,4) -- Chebyshev distance 3 from (2,3) -- walks to its nearest open approach cell and STOPS, never interacting (exact per-step count + actions_since_sleep in lockstep, never a teleport). (B) Tab-priming the bar THEN clicking slot 1 fires the SAME skill_used/accomplishment/toast stream hotbar_tab_loop's confirm press does, AND the click disarms the primed cursor (index:-1 selection event) -- the field-bar-click-disarms-Tab-primed-cursor ruling. (C) an ADJACENT click on Erin faces her + interacts in one click (dialogue_line bark) -- click-interact never needs a prior move. (D) a click on open, unoccupied ground walks there with the exact per-step count pinned. (E) a keyboard press mid-path cancels the path -- player_cell pinned short of the clicked target.",
+ "_comment": "Issue #57/#84: mouse support canonical. Same near_tactician fixture/opening as hotbar_tab_loop (inn, warrior L1, [Basic Cleaning] innate 1-slot bar, player at (2,3)) so the click-driven proofs below are directly comparable to that script's key-driven ones. Proves: (title) a title-screen row CLICK reaches Continue instead of the keyboard move+confirm -- title_flow's own shape covers the keyboard path exhaustively, this is the cheap mouse variant of the identical outcome. (A) a DISTANT click on dirty_table (5,4) -- Chebyshev distance 3 from (2,3) -- walks to its nearest open approach cell and STOPS, never interacting (exact per-step count + actions_since_sleep in lockstep, never a teleport). (B) Tab-priming the bar THEN clicking slot 1 fires the SAME skill_used/accomplishment/toast stream hotbar_tab_loop's confirm press does, AND the click disarms the primed cursor (index:-1 selection event) -- the field-bar-click-disarms-Tab-primed-cursor ruling. (C) an ADJACENT click on Erin faces her + interacts in one click (dialogue_line bark) -- click-interact never needs a prior move. (D) a click on open, unoccupied ground walks there with the exact per-step count pinned. (E) a keyboard press mid-path cancels the path -- player_cell pinned short of the clicked target. (F, issue #84) Esc opens the field pause menu (full ROWS, not combat_abandon's reduced COMBAT_ROWS), a CLICK on Resume closes it via the exact `_confirm()` dispatch Enter uses. (G, issue #84) a second click on Erin (social_talked[erin] already true from C's bark) opens the REAL erin_errand conversation; clicking its options pins the EXACT SAME `dialogue_choice` payload a keyboard arrow-to-N + Enter would emit -- byte-identical dispatch, not a parallel activation path.",
  "fixture_save": "near_tactician",
  "starts_at_title": true,
  "steps": [
   { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
+  { "_comment": "Issue #84: reach Continue (ROWS[1]) via a mouse CLICK instead of move+confirm -- same outcome (loads the near_tactician fixture via Continue), proven through the click dispatch instead of the keyboard one.", "action": "click_title_row", "row": 2 },
   { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "inn" },
@@ -60,6 +59,29 @@
   { "_comment": "The click-path headless continuation advances exactly one real step per engine frame (see world.gd's _advance_click_path doc comment) -- by the time the injected move_up press lands, the path has taken 3 of its 10 planned steps (12,3)->(11,3)->(10,3)->(9,3); move_up itself is refused ((9,2) is an explicit blocked cell, skeleton_scene.json's inn.blocked list) but that is incidental -- what matters is player_cell is pinned SHORT of [2,3], never teleported there.", "action": "assert_state", "path": "player_cell", "equals": [9, 3] },
   { "action": "assert_event_count", "type": "player_moved", "count": 13 },
   { "action": "assert_state", "path": "actions_since_sleep", "equals": 15 },
-  { "action": "screenshot", "name": "04_keyboard_cancels_mid_path" }
+  { "action": "screenshot", "name": "04_keyboard_cancels_mid_path" },
+
+  { "_comment": "== F (issue #84): pause-ROW CLICK == Esc opens the field pause menu (full ROWS, combat_abandon already covers the reduced mid-fight COMBAT_ROWS set with keyboard), then a CLICK on Resume (row_rect(0), the SAME Label `_refresh()`'s '> ' mark reads) closes it through the identical `_confirm()` dispatch Enter uses -- player_cell/actions_since_sleep untouched by Resume.", "action": "press", "name": "cancel" },
+  { "action": "wait_for_event", "type": "ui_pause_shown", "timeout_sec": 5 },
+  { "action": "click_pause_row", "row": 1 },
+  { "action": "wait_for_event", "type": "ui_pause_hidden", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "player_cell", "equals": [9, 3] },
+  { "action": "assert_state", "path": "actions_since_sleep", "equals": 15 },
+  { "action": "screenshot", "name": "05_pause_row_click_resume" },
+
+  { "_comment": "== G (issue #84): dialogue-option CLICK, byte-identical to arrow-to-N + Enter == back onto (7,3) (Erin's adjacent cell from phase C), a second click on her opens the REAL erin_errand hub this time (social_talked[erin] is already true from C's own bark, so this interact skips the pool line) -- cleaned_the_inn:1 (phase B) hides the [Basic Cleaning] offer, so the visible options are [0] 'I'll take the package.' [1] 'The table situation is handled.' [2] 'Just passing through.'. Clicking option 2 (1-based; index 1) must pin dialogue_choice{index:1} -- the EXACT payload Game.sim.dialogue_choose(_cursor) emits for a keyboard confirm at cursor 1, never a parallel activation.", "action": "move", "direction": "left", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [7, 3] },
+  { "action": "click", "cell": [7, 2] },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "erin_errand" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "action": "wait_frames", "frames": 2 },
+  { "action": "click_dialogue_option", "option": 2 },
+  { "action": "wait_for_event", "type": "dialogue_choice", "payload_contains": { "index": 1 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "timeout_sec": 5 },
+  { "_comment": "'cleaned' node: [0] 'Actually - one more thing.' (goto hub) [1] 'All part of the service.' (end:true) -- option 2 (1-based; index 1) ends the conversation cleanly. WIDialogue.choose() emits DIALOGUE_ENDED from INSIDE itself, before wi_game.gd's dialogue_choose() gets to emit DIALOGUE_CHOICE right after -- true for an ENDING pick regardless of keyboard or mouse (pre-existing sim ordering, not a click artifact), so dialogue_ended is waited FIRST and dialogue_choice is confirmed via the whole-log assert (order-independent) rather than a second sequential wait.", "action": "wait_frames", "frames": 2 },
+  { "action": "click_dialogue_option", "option": 2 },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+  { "action": "assert_event_count", "type": "dialogue_choice", "payload_contains": { "index": 1 }, "count": 2 },
+  { "action": "screenshot", "name": "06_dialogue_option_click" }
  ]
 }

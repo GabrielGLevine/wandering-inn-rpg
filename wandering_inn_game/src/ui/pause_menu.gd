@@ -107,6 +107,15 @@ func _ready() -> void:
 		row.custom_minimum_size = Vector2(220.0, 24.0)
 		menu_stack.add_child(row)
 		_row_labels.append(row)
+	# Issue #84: ONE hover/click handler on the shared row container (mirrors
+	# WIHotbar's per-bar-not-per-slot idiom via UIChrome.control_index_at),
+	# not one filter per row -- a row Label stays default IGNORE. Hover moves
+	# `_cursor` (the SAME field `_refresh()`'s "> " mark already reads, so
+	# hover highlight and keyboard selection are ONE state, never a second
+	# highlight system); a click sets `_cursor` then calls `_confirm()`, the
+	# exact function Enter calls -- one dispatch path either way.
+	menu_stack.mouse_filter = Control.MOUSE_FILTER_STOP
+	menu_stack.gui_input.connect(_on_menu_gui_input)
 
 	_confirm_root = Control.new()
 	UIChrome.apply_theme(_confirm_root)
@@ -134,6 +143,11 @@ func _ready() -> void:
 		var row := UIChrome.make_label("", "Menu")
 		confirm_stack.add_child(row)
 		_confirm_option_labels.append(row)
+	# Issue #84: same one-handler-on-the-container idiom as `menu_stack` above,
+	# for the No/Yes confirm rows (the abandon-combat confirm is explicitly
+	# in scope per the issue's constraints).
+	confirm_stack.mouse_filter = Control.MOUSE_FILTER_STOP
+	confirm_stack.gui_input.connect(_on_confirm_gui_input)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -185,18 +199,91 @@ func _handle_confirm_input(event: InputEvent, vp: Viewport) -> void:
 		_refresh_confirm()
 		vp.set_input_as_handled()
 	elif event.is_action_pressed("confirm"):
-		var choice := String(CONFIRM_ROWS[_confirm_cursor])
-		if choice == "Yes":
-			var action := _confirm_action
-			_close()
-			if action == "abandon":
-				if combat_ref != null and combat_ref.has_method("abandon_combat"):
-					combat_ref.call("abandon_combat")
-			else:
-				_quit_to_title()
-		else:
-			_exit_confirm_quit()
+		_select_confirm_choice()
 		vp.set_input_as_handled()
+
+
+## The confirm-panel's own "activate the cursored row" dispatch -- factored
+## out of `_handle_confirm_input`'s keyboard `confirm` branch (issue #84) so
+## `_on_confirm_gui_input`'s mouse click routes through this SAME function,
+## never a parallel activation.
+func _select_confirm_choice() -> void:
+	var choice := String(CONFIRM_ROWS[_confirm_cursor])
+	if choice == "Yes":
+		var action := _confirm_action
+		_close()
+		if action == "abandon":
+			if combat_ref != null and combat_ref.has_method("abandon_combat"):
+				combat_ref.call("abandon_combat")
+		else:
+			_quit_to_title()
+	else:
+		_exit_confirm_quit()
+
+
+## Issue #84: hover highlights a main-menu row (sets `_cursor`, same field
+## `_refresh()`'s "> " mark reads -- one selection state, not a second
+## highlight), a left-click activates it through `_confirm()`, the exact
+## function Enter calls. No-op while the confirm sub-panel is up (that has
+## its own handler below) or the panel isn't open (menu_stack has no rect to
+## hit anyway once hidden, but `_active_rows()` would be meaningless mid-close).
+func _on_menu_gui_input(event: InputEvent) -> void:
+	if not open or _confirming_quit:
+		return
+	if event is InputEventMouseMotion:
+		var idx := UIChrome.control_index_at(_row_labels, (event as InputEventMouseMotion).position)
+		if idx >= 0 and idx < _active_rows().size() and idx != _cursor:
+			_cursor = idx
+			_refresh()
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	var idx := UIChrome.control_index_at(_row_labels, mb.position)
+	if idx >= 0 and idx < _active_rows().size():
+		_cursor = idx
+		_confirm()
+
+
+## Issue #84: the confirm sub-panel's own hover/click, mirroring
+## `_on_menu_gui_input` -- hover sets `_confirm_cursor` (the same field
+## `_refresh_confirm()`'s mark reads), click routes through
+## `_select_confirm_choice()`, the SAME function Enter calls.
+func _on_confirm_gui_input(event: InputEvent) -> void:
+	if not _confirming_quit:
+		return
+	if event is InputEventMouseMotion:
+		var idx := UIChrome.control_index_at(_confirm_option_labels, (event as InputEventMouseMotion).position)
+		if idx >= 0 and idx != _confirm_cursor:
+			_confirm_cursor = idx
+			_refresh_confirm()
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	var idx := UIChrome.control_index_at(_confirm_option_labels, mb.position)
+	if idx >= 0:
+		_confirm_cursor = idx
+		_select_confirm_choice()
+
+
+## Read-only rect accessor (issue #84, `WIHotbar.slot_rect`'s established
+## pattern) -- the on-screen rect of main-menu row `i` as of the last
+## `_refresh()`, for QA's `click_pause_row` step. Empty Rect2 when the panel
+## is closed, the row is out of range, or the row isn't part of the CURRENT
+## active set (`_active_rows()` -- COMBAT_ROWS mid-fight has fewer rows than
+## the full label array; a label beyond that count is hidden by `_refresh()`).
+func row_rect(i: int) -> Rect2:
+	if not open or i < 0 or i >= _row_labels.size():
+		return Rect2()
+	var label := _row_labels[i]
+	if label == null or not label.visible:
+		return Rect2()
+	return Rect2(label.global_position, label.size)
 
 
 func _can_open() -> bool:

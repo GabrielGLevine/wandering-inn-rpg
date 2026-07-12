@@ -117,6 +117,15 @@ func _ready() -> void:
 	_options_box = VBoxContainer.new()
 	_options_box.add_theme_constant_override("separation", 1)
 	stack.add_child(_options_box)
+	# Issue #84: ONE hover/click handler on the shared options container
+	# (UIChrome.control_index_at over `_option_labels`, WIHotbar's
+	# per-bar-not-per-row idiom) -- hover moves `_cursor` (the SAME field
+	# `_refresh_cursor()`'s "> " mark reads, one selection state), a click
+	# sets `_cursor` then calls `_confirm()`, the EXACT function Enter calls
+	# -- a click on option N is indistinguishable in the event stream from
+	# arrow-to-N + Enter (one-dispatch-path discipline).
+	_options_box.mouse_filter = Control.MOUSE_FILTER_STOP
+	_options_box.gui_input.connect(_on_options_gui_input)
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
@@ -365,3 +374,43 @@ func _confirm() -> void:
 	if bool((_options[_cursor] as Dictionary).get("locked", false)):
 		return
 	Game.sim.dialogue_choose(_cursor)
+
+
+## Issue #84: hover highlights an option (sets `_cursor`, same field
+## `_refresh_cursor()`'s "> " mark reads), a left-click routes through
+## `_confirm()` -- the exact function Enter calls, so a click on option N
+## produces the identical `dialogue_choice` event a keyboard arrow-to-N +
+## Enter would. `_options_box` is hidden entirely on a non-final page (see
+## `_render_page()`), so no gui_input ever fires there -- the `_on_last_page()`
+## guard below is defensive, matching `_unhandled_input`'s own keyboard gate.
+func _on_options_gui_input(event: InputEvent) -> void:
+	if _options.is_empty() or not _on_last_page():
+		return
+	if event is InputEventMouseMotion:
+		var idx := UIChrome.control_index_at(_option_labels, (event as InputEventMouseMotion).position)
+		if idx >= 0 and idx != _cursor:
+			_cursor = idx
+			_refresh_cursor()
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	var idx := UIChrome.control_index_at(_option_labels, mb.position)
+	if idx >= 0:
+		_cursor = idx
+		_confirm()
+
+
+## Read-only rect accessor (issue #84, `WIHotbar.slot_rect`'s established
+## pattern) -- the on-screen rect of option row `i` as of the last
+## `_rebuild_options()`, for QA's `click_dialogue_option` step. Empty Rect2
+## when out of range or the option list isn't currently shown (non-final page).
+func option_rect(i: int) -> Rect2:
+	if i < 0 or i >= _option_labels.size():
+		return Rect2()
+	var label := _option_labels[i]
+	if label == null or not is_instance_valid(label) or not label.visible:
+		return Rect2()
+	return Rect2(label.global_position, label.size)
