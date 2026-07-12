@@ -33,3 +33,11 @@ judge, all claims repo-verified) filed #87-#94, ranked by value/effort:
 5. #91 endgame loop  6. #92 economy depth  7. #93 class progression fill
 8. #94 visual/audio polish (capability-split: no-new-art / windowed / PixelLab / sourcing / trailer-taste-gate)
 Recommended order = the ranking; #87+#88 are the cheapest-highest first pair.
+
+## USER CLASS DIRECTIVES (2026-07-12) — reorder the queue
+#96 evolution-reachability audit FIRST (cheap; its table feeds the design),
+then #93-expanded (full ladders for Diplomat/Rogue/Tactician, more
+consolidations, absorbs #95's [Rogue] trap kit as one design pass), with
+#95's game-wide trap-placement pass following. The gap-2 ranking resumes
+after (#87 pacing, #88 save safety, ...). Rationale: the user names
+Class+Skill progression as the basis the rest of the game balances around.
