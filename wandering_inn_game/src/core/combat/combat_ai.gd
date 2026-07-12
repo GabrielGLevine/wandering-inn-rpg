@@ -190,12 +190,12 @@ static func _nearest(combat: WICombat, id: String, ids: Array) -> String:
 
 
 ## Issue #83 gap-analysis: "guard" -- protects its lowest-HP living ally by
-## body-blocking adjacency. When nothing is already adjacent to it, its
+## body-blocking adjacency. When no FOE is adjacent to it, its
 ## movement GOAL is its ward's cell (`alive_allies_of`'s own hp-asc sort picks
 ## the ward) rather than the nearest/weakest ENEMY the melee profile chases --
 ## it plants itself beside whoever on its side is hurt worst instead of
-## rushing the fight. Once something IS adjacent (itself, or a foe drawn in by
-## its own positioning), it fights exactly like melee (same power_strike/
+## rushing the fight. Once a foe IS adjacent (drawn in by its positioning, or
+## closing on its own), it fights exactly like melee (same power_strike/
 ## attack branch, verbatim). No windup arm -- today's only windup holder
 ## (vault_construct) stays plain melee; a future guard-profile windup holder
 ## would need this arm ported over explicitly, not inherited for free.

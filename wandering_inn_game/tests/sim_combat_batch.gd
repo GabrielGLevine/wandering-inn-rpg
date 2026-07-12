@@ -232,9 +232,11 @@ const BOSS_CELLS := [
 ## just BELOW its tighter 0.55-0.8 floor (the wards clustering near their
 ## wounded side instead of rushing individually reads as a harder fight) --
 ## restored to 0.59 by nerfing `ruin_guardian`'s OWN con (28 -> 24, see its
-## combatants.json _comment), never the shared wards (ruin_ward is also
-## DUNGEON_CELLS' trapped_halls_snare_t4_solo, already reading near ITS OWN
-## 0.95 ceiling post-adoption -- see that const's own doc comment).
+## combatants.json _comment), never the wards. The `guard` wards serve ONLY
+## this roster now: the trapped_halls snare originally shared ruin_ward_a/b
+## by id and inherited the guard profile with them, which eroded ITS gated
+## cell the opposite way -- fixed by splitting that roster onto the melee-ai
+## `snare_ward_a/b` clones (see DUNGEON_CELLS' own doc comment).
 const RUIN_CELLS := [
 	{"name": "rift_vermin_leak_w8_relc", "arena": "inn_cellar", "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.95},
 	{"name": "rift_vermin_leak_w8_solo", "arena": "inn_cellar", "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"], "build": "warrior5_mage5", "solo": true},
@@ -512,21 +514,24 @@ const PARTY_CELLS := [
 ## only 2 enemy_spawns -- the 3rd enemy index-overflowed WICombat._init
 ## (the SAME spawn-ceiling trap the vault's own C2 review named,
 ## enemy-side); the arena now carries 4.
-## ISSUE #83 ADOPTION: ruin_ward_a/b (shared with RUIN_CELLS' ruin_guardian
-## roster) carry the new `guard` profile here too -- in THIS roster (no
-## ruin_guardian to cluster around, just each other + the ranged
-## rift_vermin_c) the effect cuts the OTHER way, making the skirmish
-## noticeably EASIER: win_rate 0.69 -> 0.94, median unchanged at 3r (still
-## in the 3-12 band). Still holds its 0.55-0.95 floor/ceiling, but with real
-## margin only on the floor side -- deliberately NOT re-tuned further:
-## nerfing ruin_ward here (con/str) would risk dragging
-## RUIN_CELLS' own ruin_guardian_w8_relc cell (0.55-0.8, already re-tuned
-## once for this same adoption) back out of band the other way, since the
-## two gated cells now pull in opposite directions off the SAME shared
-## combatant. Re-verified via delve_fight (the live QA canonical for this
-## exact fight).
+## ISSUE #83 FIX (the FIGHT-route-cost erosion, second occurrence): when
+## ruin_ward_a/b first adopted the `guard` profile, THIS roster inherited it
+## by id-sharing -- and with no boss to escort here (just each other + the
+## ranged rift_vermin_c) the guard wards clustered instead of engaging,
+## eroding the skirmish to 0.94 win_rate: technically still inside the
+## 0.55-0.95 ceiling, but the exact illusory-cost failure the 8d C1
+## roster-only ruling above fixed once already. No per-encounter AI override
+## exists, so the fix is the SAME roster-only pattern: the roster now fields
+## `snare_ward_a`/`snare_ward_b` (combatants.json), stat CLONES of
+## ruin_ward_a/b with plain melee ai -- a distinct id IS the override.
+## Behaviorally identical to the pre-#83 wards in this arena (same stats,
+## same profile, same relative id sort order), so the cell re-derives to its
+## pre-adoption 0.69/3r; RUIN_CELLS' ruin_guardian_w8_relc keeps its
+## guard-ward roster (and its own #83 con retune) untouched -- the two gated
+## cells no longer pull in opposite directions off one shared combatant.
+## Re-verified via delve_fight (the live QA canonical for this exact fight).
 const DUNGEON_CELLS := [
-	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["ruin_ward_a", "ruin_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["snare_ward_a", "snare_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 

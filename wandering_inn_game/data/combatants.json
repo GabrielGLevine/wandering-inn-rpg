@@ -317,7 +317,7 @@
    ]
   },
   {
-   "_comment": "Ruin_guardian -- the anchor-stone pedestal's warden (beat-3 recovery run; the entity lives in ruin_surface, the pedestal gate is wired separately). CANON-CITE, wiki.wanderinginn.com/Chapter_3.07_H (+ wiki.wanderinginn.com/Thresk): the Ruins of Albez house a guardian construct/Golem the Horns of Hammerad fought at Warmage Thresk's treasury door -- 'a White-Hot Flame Golem', humanoid, animate flame with a mana-stone core, immensely dangerous at Horns' (much higher) power level. THIS combatant is NOT that same already-narratively-resolved construct (it was destroyed on-page; reusing it verbatim would also be far too strong for a ~L10 recovery-run gate) -- it's CANON-PLAUSIBLE: Albez is described as 'a breeding ground for Monsters' riddled with 'several dungeons' on a leyline, so a lesser ward-construct of the same animate-guardian family, sentineling a DIFFERENT anchor-stone pedestal elsewhere in the ruins, is a direct, non-colliding extrapolation of the same lore (construct/undead-class per the plan brief -- realized construct-side, no new mechanic). `ai: melee` (no new skill needed -- `tough_body`, an EXISTING skill, supplies the construct's durability flavor as flat +10 hp). SPRITE STAND-IN: `training_dummy` (an already-animate humanoid-shaped combat prop reads as a plausible guardian effigy without colliding with any established character's sprite -- reusing raskghar_awakened's or a goblin's sprite here was explicitly avoided per CLAUDE.md's stray-sprite-reuse gotcha). combat_scale looms it slightly above the escort wards. Balance: sim_combat_batch.gd RUIN_CELLS, adjudicated win_lo/win_hi like deep_descent's raskghar_awakened (Relc-escorted cell explicitly banded, solo cell measured-only hard-mode frontier). ISSUE #83 RE-BAND: `con` 28 -> 24 (max_hp -4) -- its own escort wards (ruin_ward_a/b) adopted the new `guard` profile, which clusters them near whichever of their side is hurt worst instead of rushing the party individually; against THIS roster the effect made the fight measurably harder (`ruin_guardian_w8_relc` win_rate 0.69 -> 0.54, dropping the gated 0.55-0.8 floor by 0.01). Shortening the guardian's OWN hp (not the wards' -- ruin_ward is shared with trapped_halls_snare_t4_solo's own gated cell, already reading near its 0.95 ceiling post-adoption, so nerfing the wards there would risk blowing that band the other way) restores `ruin_guardian_w8_relc` to 0.59, back in band with real margin; ruin_guardian_w8_solo (measured) moved 0.01 -> 0.09 alongside it. Re-verified via sim_combat_batch.gd.",
+   "_comment": "Ruin_guardian -- the anchor-stone pedestal's warden (beat-3 recovery run; the entity lives in ruin_surface, the pedestal gate is wired separately). CANON-CITE, wiki.wanderinginn.com/Chapter_3.07_H (+ wiki.wanderinginn.com/Thresk): the Ruins of Albez house a guardian construct/Golem the Horns of Hammerad fought at Warmage Thresk's treasury door -- 'a White-Hot Flame Golem', humanoid, animate flame with a mana-stone core, immensely dangerous at Horns' (much higher) power level. THIS combatant is NOT that same already-narratively-resolved construct (it was destroyed on-page; reusing it verbatim would also be far too strong for a ~L10 recovery-run gate) -- it's CANON-PLAUSIBLE: Albez is described as 'a breeding ground for Monsters' riddled with 'several dungeons' on a leyline, so a lesser ward-construct of the same animate-guardian family, sentineling a DIFFERENT anchor-stone pedestal elsewhere in the ruins, is a direct, non-colliding extrapolation of the same lore (construct/undead-class per the plan brief -- realized construct-side, no new mechanic). `ai: melee` (no new skill needed -- `tough_body`, an EXISTING skill, supplies the construct's durability flavor as flat +10 hp). SPRITE STAND-IN: `training_dummy` (an already-animate humanoid-shaped combat prop reads as a plausible guardian effigy without colliding with any established character's sprite -- reusing raskghar_awakened's or a goblin's sprite here was explicitly avoided per CLAUDE.md's stray-sprite-reuse gotcha). combat_scale looms it slightly above the escort wards. Balance: sim_combat_batch.gd RUIN_CELLS, adjudicated win_lo/win_hi like deep_descent's raskghar_awakened (Relc-escorted cell explicitly banded, solo cell measured-only hard-mode frontier). ISSUE #83 RE-BAND: `con` 28 -> 24 (max_hp -4) -- its own escort wards (ruin_ward_a/b) adopted the new `guard` profile, which clusters them near whichever of their side is hurt worst instead of rushing the party individually; against THIS roster the effect made the fight measurably harder (`ruin_guardian_w8_relc` win_rate 0.69 -> 0.54, dropping the gated 0.55-0.8 floor by 0.01). Shortening the guardian's OWN hp (not the wards') restores `ruin_guardian_w8_relc` to 0.59, back in band with real margin; ruin_guardian_w8_solo (measured) moved 0.01 -> 0.09 alongside it. Re-verified via sim_combat_batch.gd. (The trapped_halls snare no longer shares ruin_ward_a/b at all -- it fields the melee-ai `snare_ward_a/b` clones, see snare_ward_a's own comment -- so this record's stats now serve exactly ONE gated cell.)",
    "id": "ruin_guardian",
    "display_name": "Ruin Warden",
    "sprite": "training_dummy",
@@ -338,7 +338,7 @@
    ]
   },
   {
-   "_comment": "Ruin_guardian's first escort ward -- see ruin_guardian's _comment for the full canon cite. A lesser attendant construct (deep_warren boss+2-scouts structure precedent), given its OWN id (not repeated) per the distinct-id convention documented on rift_vermin_a. ISSUE #83 ADOPTION: `ai` changed melee -> `guard` -- an attendant construct body-blocking for whichever of its own (ruin_guardian/its sibling ward/trapped_halls' rift_vermin_c, depending which roster it's fielded in) is hurt worst is the direct mechanical reading of 'escort ward'. Fielded in TWO rosters (ruin_guardian, RUIN_CELLS' GATED 0.55-0.8 relc cell; trapped_halls_snare, DUNGEON_CELLS' GATED 0.55-0.95+3-12-median cell, also delve_fight's canonical) -- both re-derived in-band, before/after logged on sim_combat_batch.gd's own comment blocks.",
+   "_comment": "Ruin_guardian's first escort ward -- see ruin_guardian's _comment for the full canon cite. A lesser attendant construct (deep_warren boss+2-scouts structure precedent), given its OWN id (not repeated) per the distinct-id convention documented on rift_vermin_a. ISSUE #83 ADOPTION: `ai` changed melee -> `guard` -- an attendant construct body-blocking for whichever of its own side (the guardian, or its sibling ward) is hurt worst is the direct mechanical reading of 'escort ward'. Fielded ONLY in the ruin_guardian roster (RUIN_CELLS' GATED 0.55-0.8 relc cell, re-derived in-band -- see sim_combat_batch.gd's own comment block): the trapped_halls snare originally reused this id too, but the guard profile has no boss to escort there (the wards clustered around each other/rift_vermin_c instead of engaging, eroding the FIGHT route's cost to 0.94 -- the SAME illusory-cost failure the 8d C1 review's roster-only ruling fixed once already), so the snare now fields `snare_ward_a`/`snare_ward_b` (below): stat clones of this record with plain melee ai. TRAP: one shared combatant id cannot serve two contexts wanting different behavior -- there is no per-encounter AI override, and the two gated cells were edge-pinned in OPPOSITE directions off this one id.",
    "id": "ruin_ward_a",
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
@@ -373,6 +373,44 @@
    },
    "weapon_die": 5,
    "ai": "guard",
+   "skills": []
+  },
+  {
+   "_comment": "The trapped_halls snare's ward, a stat CLONE of ruin_ward_a with plain `melee` ai instead of ruin_ward_a's issue-#83 `guard` profile. WHY A SEPARATE ID EXISTS (the ONLY difference is the ai field): one shared combatant id cannot serve both the guardian-escort context (which wants `guard` -- body-block the boss) and the snare context (which wants ENGAGEMENT -- no boss to escort there, so guard-profile wards clustered around each other/rift_vermin_c instead of fighting, eroding the FIGHT route's cost from 0.69 to 0.94 win_rate, the exact illusory-cost failure the 8d C1 review's roster-only ruling fixed once already) -- and the two gated cells (RUIN_CELLS' ruin_guardian_w8_relc 0.55-0.8, DUNGEON_CELLS' trapped_halls_snare_t4_solo 0.55-0.95) were edge-pinned in OPPOSITE directions off that one shared id. There is no per-encounter AI override mechanism; a distinct id IS the override, same roster-only pattern. Same 'Lesser Ward' display_name/sprite -- players see the identical construct, the split is internal bookkeeping. Any future ruin_ward_a stat retune must be mirrored here BY HAND (drift trap: no inheritance exists in this catalog).",
+   "id": "snare_ward_a",
+   "display_name": "Lesser Ward",
+   "sprite": "training_dummy",
+   "combat_scale": 0.85,
+   "side": "enemy",
+   "stats": {
+    "str": 11,
+    "dex": 10,
+    "con": 14,
+    "int": 6,
+    "wis": 6,
+    "cha": 2
+   },
+   "weapon_die": 5,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "The trapped_halls snare's second ward -- identical template to snare_ward_a (a matched pair, same as the ruin_ward_a/b pairing it clones), given its own id per the distinct-id convention documented on rift_vermin_a. See snare_ward_a's own comment for why these clones exist at all.",
+   "id": "snare_ward_b",
+   "display_name": "Lesser Ward",
+   "sprite": "training_dummy",
+   "combat_scale": 0.85,
+   "side": "enemy",
+   "stats": {
+    "str": 11,
+    "dex": 10,
+    "con": 14,
+    "int": 6,
+    "wis": 6,
+    "cha": 2
+   },
+   "weapon_die": 5,
+   "ai": "melee",
    "skills": []
   },
   {
