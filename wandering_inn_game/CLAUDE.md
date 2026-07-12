@@ -68,9 +68,59 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 	# Fully headless web QA (zero windows): exports, serves, drives under headless Chromium
 	wandering_inn_game/qa/web/run_web_qa.sh inn_walkthrough              # add --skip-export to reuse last build
 	wandering_inn_game/qa/web/run_web_qa.sh combat_walkthrough 9         # seed is threaded through window.__WI_QA__ -> JavaScriptBridge (M3 T8)
+	wandering_inn_game/qa/web/run_web_qa.sh mouse_loop 9 --touch         # touch-context mode (issue #105) — see below
 	# Output: qa_output/web_<script>/result.json + *.png
 	# NOTE: load_gate is native-only — DirAccess cannot enumerate the packed res:// in the
 	# web export, and the gate fails loud ("scanned zero resources") rather than false-passing.
+	# Real server (issue #105): run_web_qa.mjs serves build/web/ via a REAL local
+	# node http server (random free port, correct MIME per extension — .js
+	# text/javascript, .wasm application/wasm) rather than Playwright route
+	# interception. Route interception is gone entirely, not kept for anything: it
+	# used to be needed for nothing real (window.__WI_QA__ is set via
+	# addInitScript, __WI_QA_SHOT__/__WI_RESULT__ are read via page.evaluate,
+	# screenshots via page.screenshot — none of that is network traffic), and it
+	# actively broke audio — AudioWorklet module fetches run in a separate worklet
+	# execution context whose requests bypass Chromium page-level request routing,
+	# so under interception every web QA run silently failed to load the
+	# AudioWorklet and ran audio-silent, in every version, undetected because
+	# nothing asserted on it. Every web run now permanently captures console
+	# errors and page errors (not just QA_-prefixed progress lines) and runs an
+	# audio smoke after the QA script's own result: (a) fails loud if any
+	# 'Failed to create PositionWorklet' / 'Unable to load a worklet' line
+	# appeared anywhere in the run: (b) fails loud unless both worklet module
+	# files (*.audio.worklet.js, *.audio.position.worklet.js) were requested and
+	# returned 200 — tracked via the HTTP SERVER's own request log, NOT
+	# Playwright's page.on('response')/CDP Network domain: verified empirically
+	# that AudioWorklet module fetches are invisible to every Playwright/CDP
+	# network event in headless Chromium (page.on('request'/'response'), a raw
+	# CDP Network.enable session, and page.on('requestfailed') were all tried) —
+	# they demonstrably reach the server (confirmed via the server's own access
+	# log, 200 status) but never surface as a page-level network event, so the
+	# server log is the only reliable source. The runner's exit code now reflects
+	# BOTH the QA script's own result AND the audio smoke — a script can PASS its
+	# own assertions while the run still fails loud on broken audio.
+	# --touch mode (issue #105, the #106 prerequisite): runs the same DSL script
+	# through a Playwright browser context configured with hasTouch:true, plus
+	# one real page.touchscreen.tap() smoke after the script's own result is
+	# captured (so it can't perturb assertions), proving Chromium accepts a real
+	# touch dispatch on the real-server-hosted canvas with no page/console error.
+	# This is groundwork only, not a new DSL tier: qa/test_driver.gd's click_*
+	# actions (`_inject_mouse_click`) push InputEventMouseButton directly into the
+	# SceneTree root's viewport — an engine-internal call that never touches the
+	# browser/DOM, identically whether --touch is set or not — so no existing
+	# script exercises the browser's real touch pipeline yet. What --touch mode
+	# establishes: the harness can stand up a genuine touch-capable context
+	# against the real-server build with zero regressions (`mouse_loop` is the
+	# canonical proof — every click_* action still passes, driven engine-internal
+	# as always), and that project.godot carries no `emulate_mouse_from_touch`
+	# override (confirmed absent — Godot's default `true` applies), so a real
+	# device touch auto-emulates a mouse event the SAME mouse-consuming code
+	# (world.gd, hotbar, etc.) already handles — the "touch → mouse is free" win
+	# the mobile-web exploration spec (docs/superpowers/specs/2026-07-12-mobile-
+	# web-exploration.md) banks on. Issue #106 builds the actual `touch_*` DSL
+	# tier (real per-step page.touchscreen.tap calls at live element coordinates)
+	# on top of this. Runner-side only — no new manifest entries, no new scripts,
+	# `--touch` is a plain runner flag threaded run_web_qa.sh -> run_web_qa.mjs.
 
 Fresh project, ZERO known-harmless warnings. Any SCRIPT ERROR, Parse Error, or WARNING in any run = regression.
 
