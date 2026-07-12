@@ -56,8 +56,13 @@ const ICY_FLOOR_COLOR := Color(0.5, 0.8, 1.0, 0.35)
 ## kind). Warm red, distinct from the frost-blue `ICY_FLOOR_COLOR` and the
 ## amber `AIM_AOE_TINT` (that one is the PLAYER's own aim, this is an
 ## INCOMING threat) -- a strong enough alpha to read as "leave this cell",
-## not a decorative tint.
-const WINDUP_DANGER_COLOR := Color(0.9, 0.15, 0.1, 0.4)
+## not a decorative tint. CONSTRAINT: this overlay must survive the DARKEST
+## arena grade (the vault's CanvasModulate ~[0.21,0.22,0.19] multiplies it) --
+## at the original (0.9,0.15,0.1,0.4) the post-grade delta over the floor was
+## ~13/255, near-invisible exactly where the [Dangersense] payoff matters
+## most. Bright base + high alpha is deliberate: a danger telegraph should
+## be loud on every grade.
+const WINDUP_DANGER_COLOR := Color(1.0, 0.25, 0.2, 0.7)
 ## z-index split: terrain overlays render at COMBATANT_Z - 1 so they
 ## always sit ABOVE the floor/decor (both default z_index 0) but BELOW every
 ## combatant visual, regardless of scene-tree add order -- `add_terrain` is

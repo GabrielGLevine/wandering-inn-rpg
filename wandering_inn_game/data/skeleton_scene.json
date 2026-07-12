@@ -215,6 +215,11 @@
     ]
    },
    "decor": [
+     {
+      "_comment": "The hearth bench (8d E2 playtest fix): makes Ceria's 'couch by the fire' residence line literally true; bench sprite = the parlor guest-couch precedent. Decor (non-blocking, uncounted) like every stool.",
+      "sprite": "bench",
+      "cell": [1, 3]
+     },
     {
      "sprite": "hearth",
      "cell": [
@@ -854,12 +859,12 @@
      ]
     },
     {
-     "_comment": "8d D2 (issue #14/#15): Yvlon Byres takes inn residence, same `present_when.requires.seal_kept_reported` gate as `ceria_inn` (see that entity's own _comment for the mechanism). Placed near the hearth (2,1) at (2,2), directly in front of it, facing up into the firelight -- her own talk_pool line names 'the couch by the fire' as hers now, this cell is that claim made literal. Reuses the `yvlon` sprite shipped 8dA verbatim.",
+     "_comment": "8d D2 (issue #14/#15): Yvlon Byres takes inn residence, same `present_when.requires.seal_kept_reported` gate as `ceria_inn` (see that entity's own _comment for the mechanism). Placed at (2,3) on the COMMON-ROOM side beside the hearth bench at (1,3) (review fix: (2,2) sat inside the kitchen row between the cook-pots), facing up into the firelight -- her own talk_pool line names 'the couch by the fire' as hers now, this cell is that claim made literal. Reuses the `yvlon` sprite shipped 8dA verbatim.",
      "id": "yvlon_inn",
      "kind": "npc",
      "cell": [
       2,
-      2
+      3
      ],
      "display_name": "Yvlon Byres",
      "sprite": "yvlon",
@@ -4789,6 +4794,18 @@
      "sprite": "boulder",
      "observe": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den, and where the big one waits, breathing slow in the black.",
      "on_interact_accomplishment": "reached_the_warren",
+				"variants": [
+					{
+						"when": { "cleared_the_warren": 1 },
+						"toast": "The gallery is silent now. The pacing tracks are old and dust-softened; nothing breathes in the dark ahead. Past the emptied den, the stone the Watch sealed stands unbroken."
+					}
+				],
+				"visual_states": [
+					{
+						"when": { "counter": "cleared_the_warren", "at": 1 },
+						"observe": "Claw-gouges score the pillars, going quiet toward the back. The den is empty \u2014 cleared, then sealed. Whatever the warren was, it is a grave and a door now."
+					}
+				],
      "toast": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren.",
      "door_when": {
       "requires": {
