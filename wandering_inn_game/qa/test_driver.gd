@@ -456,6 +456,20 @@ func _execute(step: Dictionary) -> void:
 				var got_db := AudioServer.get_bus_volume_db(vol_idx)
 				if not is_equal_approx(got_db, expected_db):
 					_fail("assert_audio_bus_volume: bus %s expected %.4f db, got %.4f db" % [vol_bus_name, expected_db, got_db])
+		"assert_audio_bus_volume_db":
+			# Issue #76: a RAW dB target, direct AudioServer.get_bus_volume_db read
+			# -- the ducking proof (dialogue sidechains the Music bus by
+			# WIAudio.MUSIC_DUCK_DB), which has no 0-10 slider formula to derive
+			# an expected value from, unlike assert_audio_bus_volume above.
+			var db_bus_name := String(step["bus"])
+			var db_idx := AudioServer.get_bus_index(db_bus_name)
+			if db_idx == -1:
+				_fail("assert_audio_bus_volume_db: no such bus: " + db_bus_name)
+			else:
+				var expected_db_raw := float(step["expected_db"])
+				var got_db_raw := AudioServer.get_bus_volume_db(db_idx)
+				if not is_equal_approx(got_db_raw, expected_db_raw):
+					_fail("assert_audio_bus_volume_db: bus %s expected %.4f db, got %.4f db" % [db_bus_name, expected_db_raw, got_db_raw])
 		"assert_settings_value":
 			# Issue #77: reads the LIVE WISettings autoload directly (the
 			# authoritative in-memory state -- proves reduce_motion/fullscreen/

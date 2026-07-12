@@ -22,6 +22,7 @@ const KNOWN_EVENTS: Dictionary = {
 	"combat_started": true,
 	"dashed": true,
 	"dialogue_choice": true,
+	"dialogue_ended": true,
 	"dialogue_started": true,
 	"game_loaded": true,
 	"game_reset": true,
@@ -42,9 +43,11 @@ const KNOWN_EVENTS: Dictionary = {
 	"ui_dialogue_shown": true,
 	"ui_pause_hidden": true,
 	"ui_pause_shown": true,
+	"ui_sleep_veil_rendered": true,
 	"ui_title_rendered": true,
 	"ui_toast_rendered": true,
 	"unit_downed": true,
+	"windup_declared": true,
 }
 
 const REQUIRED_IDS: Array[String] = [
@@ -73,6 +76,10 @@ const REQUIRED_IDS: Array[String] = [
 	"item_equip",
 	"ui_open",
 	"ui_close",
+	"skill_windup_tell",
+	"field_skill_used",
+	"pc_hurt",
+	"pc_death",
 ]
 
 ## `context` is a human label (title / map id / combat / victory); `kind`
@@ -91,6 +98,9 @@ const REQUIRED_MUSIC_IDS: Array[String] = [
 	"music_street",
 	"music_combat",
 	"music_victory",
+	"music_combat_vault",
+	"music_defeat",
+	"music_sleep_beat",
 ]
 
 
@@ -166,6 +176,28 @@ func _init() -> void:
 			_fail("audio stream must be WAV or OGG: %s" % stream)
 		if not _stream_ok(stream):
 			_fail("missing audio stream for %s: %s" % [id, stream])
+
+		## Issue #76: `variants` (deterministic round-robin, see wi_audio.gd's
+		## `_play_entry` doc comment) -- every candidate gets the SAME stream
+		## checks as `stream` above, and `stream` itself must equal variants[0]
+		## so it can never drift into a stale duplicate of the real first pick.
+		if entry.has("variants"):
+			var variants_variant: Variant = entry["variants"]
+			if not variants_variant is Array:
+				_fail("variants must be an array for %s" % id)
+			var variant_list: Array = variants_variant
+			if variant_list.size() < 2:
+				_fail("variants must have at least 2 entries for %s" % id)
+			if String(variant_list[0]) != stream:
+				_fail("stream must equal variants[0] for %s (drift tripwire)" % id)
+			for variant: Variant in variant_list:
+				var variant_path := String(variant)
+				if not variant_path.begins_with("res://assets/audio/"):
+					_fail("audio variant stream outside assets/audio: %s" % variant_path)
+				if not (variant_path.ends_with(".wav") or variant_path.ends_with(".ogg")):
+					_fail("audio variant stream must be WAV or OGG: %s" % variant_path)
+				if not _stream_ok(variant_path):
+					_fail("missing audio variant stream for %s: %s" % [id, variant_path])
 
 		var cooldown := int(entry.get("cooldown_ms", 0))
 		if cooldown < 0:

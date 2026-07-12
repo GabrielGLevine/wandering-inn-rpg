@@ -86,12 +86,14 @@
   { "action": "assert_state", "path": "player_cell", "equals": [17, 6] },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
+  { "_comment": "Issue #76: the arena-keyed music seam (data/audio.json's music_combat_vault, `combat_started`/{arena:vault}, first-match-wins ahead of the generic music_combat fallback) -- proves the vault boss actually gets its own escalated track, not the plain field-fight loop.", "action": "wait_for_event", "type": "audio_played", "payload_contains": { "id": "music_combat_vault" }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "combat.combatants.ceria.alive", "equals": true },
   { "action": "assert_state", "path": "combat.combatants.yvlon.alive", "equals": true },
   { "action": "assert_state", "path": "combat.combatants.ksmvr.alive", "equals": true },
   { "action": "combat_autoplay", "max_turns": 300 },
   { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 30 },
   { "action": "assert_event_logged", "type": "windup_declared" },
+  { "_comment": "Issue #76: the windup mechanism's audio half -- skill_windup_tell fires alongside every windup_declared (slam is the only current grant), a distinct telegraph tell from the resolve-impact sound.", "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "skill_windup_tell" } },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "vault_construct_downed" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
@@ -125,6 +127,7 @@
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "06_reported" }
+  { "action": "screenshot", "name": "06_reported" },
+  { "_comment": "Issue #76: this canonical's two real fights land at least one PC hit (empirically confirmed: rift_vermin_c/snare_ward_a connect on the T4 build) -- whole-run scan for the PC hurt bark (pc_hurt, Voice bus), the same coverage-map idiom inventory_loop uses for its own audio_played proofs.", "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "pc_hurt" } }
  ]
 }

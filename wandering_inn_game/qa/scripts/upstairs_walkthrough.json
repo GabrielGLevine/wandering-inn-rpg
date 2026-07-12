@@ -314,6 +314,14 @@
    "equals": 1
   },
   {
+   "_comment": "Issue #76 signature stinger: music_sleep_beat (xDeviruchi 'Peaceful Night', ui_sleep_veil_rendered) fires as part of THIS sleep -- assert_event_logged (whole-run scan) rather than wait_for_event since the veil's own reveal timing relative to the toast stream isn't pinned here, only that it happened.",
+   "action": "assert_event_logged",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "music_sleep_beat"
+   }
+  },
+  {
    "_comment": "Issue #62 finding 4: == BACK DOWNSTAIRS: (9,2) left7 -> (2,2) (stairs_down itself now blocks (1,2), so the old direct left8 no longer reaches it), up1 -> (2,1), left1 -> (1,1), down1 blocks on stairs_down (1,2) & faces it, interact -> lands back at (1,7) in the inn (matching the relocated stairs_up's own approach cell), round-trip integrity.",
    "action": "move",
    "direction": "left",

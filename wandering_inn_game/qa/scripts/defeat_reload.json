@@ -74,6 +74,16 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "Issue #76 ducking proof: dialogue_started sidechains the Music bus by WIAudio.MUSIC_DUCK_DB (-6dB) relative to the untouched default slider (0dB, no settings.cfg in this isolated QA run) -- wait_frames lets the MUSIC_DUCK_FADE_SEC (0.2s) tween settle before the raw-dB read (assert_audio_bus_volume_db, distinct from assert_audio_bus_volume's slider-formula variant).",
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "assert_audio_bus_volume_db",
+   "bus": "Music",
+   "expected_db": -6.0
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
@@ -98,6 +108,16 @@
    "action": "wait_for_event",
    "type": "dialogue_ended",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #76 ducking proof (release half): dialogue_ended restores the Music bus to the SAME pre-duck base (re-derived from get_bus_volume, never from whatever the bus happened to read -- see _tween_music_bus_to's doc comment), not just 'louder than ducked'.",
+   "action": "wait_frames",
+   "frames": 30
+  },
+  {
+   "action": "assert_audio_bus_volume_db",
+   "bus": "Music",
+   "expected_db": 0.0
   },
   {
    "action": "wait_for_event",
@@ -165,6 +185,21 @@
     "victory": false
    },
    "timeout_sec": 10
+  },
+  {
+   "_comment": "Issue #76: the defeat stinger (data/audio.json's music_defeat, xDeviruchi 'Never Give Up', combat_finished/{victory:false}) and the PC death bark (pc_death, combatant_downed/{id:pc}) -- this pinned losing seed guarantees both actually fire, not just that combat_finished carries victory:false.",
+   "action": "assert_event_logged",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "music_defeat"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "pc_death"
+   }
   },
   {
    "action": "press",

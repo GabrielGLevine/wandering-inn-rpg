@@ -26,8 +26,14 @@ docs/*_api_key.txt
 # regenerate this block with scripts/gen_asset_ignores.sh when assets_manifest.json changes.
 /wandering_inn_game/assets/audio/music/battle_1.ogg
 /wandering_inn_game/assets/audio/music/battle_1.ogg.import
+/wandering_inn_game/assets/audio/music/decisive_battle_1.ogg
+/wandering_inn_game/assets/audio/music/decisive_battle_1.ogg.import
 /wandering_inn_game/assets/audio/music/definitely_our_town.ogg
 /wandering_inn_game/assets/audio/music/definitely_our_town.ogg.import
+/wandering_inn_game/assets/audio/music/never_give_up.ogg
+/wandering_inn_game/assets/audio/music/never_give_up.ogg.import
+/wandering_inn_game/assets/audio/music/peaceful_night.ogg
+/wandering_inn_game/assets/audio/music/peaceful_night.ogg.import
 /wandering_inn_game/assets/audio/music/port_town.ogg
 /wandering_inn_game/assets/audio/music/port_town.ogg.import
 /wandering_inn_game/assets/audio/music/silent_forest.ogg
