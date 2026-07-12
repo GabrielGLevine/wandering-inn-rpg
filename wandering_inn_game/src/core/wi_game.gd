@@ -916,6 +916,10 @@ func interact() -> Dictionary:
 						var spent_toast := String(target.get("once_per_waking_toast", "Nothing more to carry out right now. Come back another day."))
 						_emit(WIEvents.TOAST, {"text": spent_toast})
 						return {"once_per_waking_spent": true}
+					# TRAP: the waking key banks BEFORE _resolve_skill_use_effect runs --
+					# a future prop combining once_per_waking with a met-gate variants
+					# locked-read would burn its daily wage on the flavor read. Resolve
+					# variants first if that combination ever ships.
 					entity_first_use[waking_key] = true
 				# 8d C1 (issue #14): a plain interact-reveal prop may carry a
 				# sibling `variants` list -- the SAME override seam
