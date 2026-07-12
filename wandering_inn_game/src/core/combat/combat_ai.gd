@@ -80,7 +80,28 @@ static func _act_caster(combat: WICombat, id: String, c: Dictionary, foes: Array
 	return _act_melee(combat, id, c, foes)
 
 
+## Issue #82's WINDUP SIM SPEC: the melee profile's ONE new arm -- if the
+## combatant holds a `windup_rounds`-carrying skill, this is a cadence round
+## for it (`combat.round_number % windup_cadence == 0`), it's ADJACENT to a
+## foe (every shipped windup skill has `effect.range == 1`, so this reuses the
+## exact same adjacency check the plain-attack loop below already makes,
+## rather than a separate range/LoS lookahead), and it can afford the cost:
+## DECLARE, taking priority over the plain attack/power_strike branch below.
+## No re-declare guard is needed: `_start_turn` always resolves (and erases)
+## any pending windup before the AI ever gets a turn, and every shipped
+## windup skill's `ap_cost` fully drains the turn's AP in one declare, so a
+## second `_act_once` pass this same turn fails the affordability check here
+## and falls through to the plain-attack branch (which then also fails on 0
+## AP) -- the existing AP economy is what "ends the action" for free.
 static func _act_melee(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
+	var windup_id := _windup_skill_id(combat, c)
+	if windup_id != "":
+		var skill: Dictionary = combat.skills[windup_id]
+		var cadence := int(skill.get(WIKeys.WINDUP_CADENCE, 3))
+		if cadence > 0 and combat.round_number % cadence == 0 and _can_afford(combat, c, skill):
+			for foe: String in foes:
+				if combat.is_adjacent(id, foe):
+					return combat.use_skill(windup_id, foe)
 	for foe: String in foes:
 		if combat.is_adjacent(id, foe):
 			if (c[WIKeys.SKILLS] as Array).has("power_strike") and int(c[WIKeys.AP]) >= 3:
@@ -143,6 +164,18 @@ static func _act_ranged(combat: WICombat, id: String, c: Dictionary, foes: Array
 			if _should_dash(combat, c, goal, spell_range, combat.effective_ap_cost(c, s)):
 				return combat.dash()
 	return false
+
+
+## The first known skill carrying `effect.windup_rounds > 0`, or "" if `c`
+## holds none. Every OTHER profile (ranged/caster/inert) ignores this --
+## windup is a melee-profile-only arm today (the one shipped holder,
+## `vault_construct`, is melee).
+static func _windup_skill_id(combat: WICombat, c: Dictionary) -> String:
+	for sk: String in (c[WIKeys.SKILLS] as Array):
+		var s: Dictionary = combat.skills.get(sk, {})
+		if int((s.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.WINDUP_ROUNDS, 0)) > 0:
+			return sk
+	return ""
 
 
 ## Affordability for AI skill selection: AP (quick_cast-discounted) and MP.

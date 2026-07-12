@@ -333,6 +333,43 @@ static func _radius_area(combat: WICombat, center: Vector2i, radius: int) -> Arr
 	return cells
 
 
+## Issue #82's WINDUP SIM SPEC: the DECLARATION resolver for any skill
+## carrying `effect.windup_rounds > 0` (dispatched from `WICombat.use_skill`,
+## BEFORE `resolve_active` -- a windup skill never reaches that table's normal
+## instant-resolve match). Gates BEFORE spend, mirroring blast_damage/
+## icy_floor exactly (range then LoS then same-side -- a refused declare costs
+## neither AP nor MP): `target_id` must be a living ENEMY, in range, with a
+## clear line of sight. On success: freezes the target cell set via
+## `_radius_area` -- the SAME Chebyshev-radius derivation blast_damage/
+## icy_floor already share, called VERBATIM (only a blast-shaped windup exists
+## today; a future line-shaped windup would freeze `combat.line_cells(...)`
+## here the same way) -- onto `combat.windups[actor_id]`, spends the skill's
+## cost, and emits WINDUP_DECLARED. Deliberately does NOT deal damage or touch
+## `combat.terrain` -- resolution is a SEPARATE later event
+## (`WICombat._resolve_windup`, at the caster's own next turn start), not
+## anything this function does.
+static func declare_windup(combat: WICombat, actor_id: String, target_id: String, skill: Dictionary) -> bool:
+	var effect: Dictionary = skill.get(WIKeys.EFFECT, {})
+	var a: Dictionary = combat.combatants[actor_id]
+	var t: Dictionary = combat.combatants.get(target_id, {})
+	if t.is_empty() or not bool(t.get(WIKeys.ALIVE, false)) or String(t[WIKeys.SIDE]) == String(a[WIKeys.SIDE]):
+		return false
+	if combat.chebyshev(actor_id, target_id) > int(effect.get(WIKeys.RANGE, 0)):
+		return false
+	if not combat.has_los(actor_id, target_id):
+		combat._emit(WIEvents.ACTION_REFUSED, {"actor": actor_id, "reason": "no_los", "target": target_id})
+		return false
+	combat.spend_skill_costs(a, skill)
+	var center: Vector2i = combat.combatants[target_id][WIKeys.CELL]
+	var cells := _radius_area(combat, center, int(effect.get(WIKeys.RADIUS, 0)))
+	var cells_payload: Array = []
+	for cell: Vector2i in cells:
+		cells_payload.append([cell.x, cell.y])
+	combat.windups[actor_id] = {"skill_id": String(skill[WIKeys.ID]), "cells": cells}
+	combat._emit(WIEvents.WINDUP_DECLARED, {"id": actor_id, "skill": String(skill[WIKeys.ID]), "cells": cells_payload})
+	return true
+
+
 ## Applies a post-hit status from a skill's "applies" dict (e.g. frost_bolt's
 ## slowed) onto the victim's statuses. Only fires when the hit actually
 ## landed and the victim is still alive; emits status_applied per status.

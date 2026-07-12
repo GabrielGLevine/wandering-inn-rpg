@@ -189,8 +189,16 @@ static func _effect_phrase(effect: Dictionary, combatants_catalog: Array = [], a
 			# effect applies no status) -- spelled out here since friendly fire on
 			# an AoE is the one property a player must not have to infer.
 			var blast_side := int(effect.get(WIKeys.RADIUS, 0)) * 2 + 1
-			return "blast a %d×%d area around the target for 1d%d. Hits friend and foe." % [
-				blast_side, blast_side, _caster_weapon_die(combatants_catalog),
+			# Issue #82's WINDUP SIM SPEC: a `windup_rounds`-carrying blast
+			# (today only `slam`) inserts the literal timing clause BEFORE the
+			# period, not as a trailing `_status_suffix`-style sentence --
+			# "blast...for 1dN after a round's gathering. Hits friend and foe."
+			# reads as one honest beat (gather, THEN it lands), not a bolt-on
+			# afterthought. Absent (0) on flame_pillar, its only OTHER
+			# blast_damage grant, so that card is untouched -- byte-identical.
+			var windup_timing := " after a round's gathering" if int(effect.get(WIKeys.WINDUP_ROUNDS, 0)) > 0 else ""
+			return "blast a %d×%d area around the target for 1d%d%s. Hits friend and foe." % [
+				blast_side, blast_side, _caster_weapon_die(combatants_catalog), windup_timing,
 			]
 		"move_pool_bonus":
 			# UN-SUPPRESSED for an actively-cast skill

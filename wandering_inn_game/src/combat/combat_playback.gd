@@ -148,7 +148,38 @@ func _capture_event_ui(type: String, payload: Dictionary) -> Dictionary:
 				ui["flash_color"] = _screen.SHIELD_FLASH
 		WIEvents.COMBATANT_DOWNED:
 			ui["stats"] = _capture_combatant_stats(combat, [String(payload.get("id", ""))])
+			# F3 (issue #82): a downed windup-CASTER's pending declare never
+			# resolves (the sim's downed-clears contract), so nothing would
+			# ever expire its dangersense overlay -- capture the parked cells
+			# NOW (the sim leaves `combat.windups` populated for a dead
+			# caster; enqueue-time read, this function's whole contract) so
+			# the dequeue/live render path can clear the overlay at the down
+			# beat. Absent/empty for every non-caster down -- a no-op key.
+			var downed_id := String(payload.get("id", ""))
+			if combat != null and combat.windups.has(downed_id):
+				ui["windup_cells"] = _cells_payload(combat.windups[downed_id]["cells"])
+		WIEvents.WINDUP_DECLARED:
+			# Issue #82's WINDUP SIM SPEC / [Dangersense] payoff: captured at
+			# ENQUEUE time (this function's whole contract -- read live combat
+			# state NOW, never at dequeue), so a PC that gains/loses the skill
+			# mid-fight (impossible today, no skill is ever un-granted
+			# mid-combat, but the read stays honest regardless) can't leak a
+			# stale verdict into a beat captured before the change.
+			ui["dangersense"] = _pc_holds_dangersense(combat)
 	return ui
+
+
+## [Dangersense] payoff (issue #82): true iff the PC's own combatant record
+## currently knows the skill. Reads the LIVE "pc" combatant off `combat`
+## directly (own-knowledge is a party-wide read for a party-wide payoff --
+## unlike an ally's kit, which never varies run-to-run, the PC's known skills
+## are genuinely player-chosen) rather than any static catalog -- a PC that
+## never leveled to [Dangersense] (Warrior L5) sees the feed line/caster flash
+## only, same as everyone else.
+func _pc_holds_dangersense(combat: WICombat) -> bool:
+	if combat == null or not combat.combatants.has("pc"):
+		return false
+	return (combat.combatants["pc"].get("skills", []) as Array).has("dangersense")
 
 
 ## Snapshots hp/max_hp/mp/max_mp for each given combatant id, read from live
@@ -323,6 +354,34 @@ func _apply_playback_event(event: Dictionary, with_visuals: bool) -> void:
 	# dequeue never re-matches against live state, only replays the stashed
 	# `{}`-or-`{id,line}` verdict.
 	var tutor: Dictionary = (payload.get("_ui", {}) as Dictionary).get("tutor", {})
+	# Issue #82's WINDUP SIM SPEC: a SKILL_RESOLVED for a `windup_rounds`-
+	# carrying skill is a windup RESOLVING (WICombat._resolve_windup emits
+	# this exact shape) -- clear the "windup_danger" overlay WINDUP_DECLARED
+	# may have drawn, for the SAME reason TERRAIN_ADDED/EXPIRED route outside
+	# `with_visuals` below: persistent renderer state has no post-drain resync,
+	# so a skip must still clear it. Checked BEFORE the match (not a dedicated
+	# case) so SKILL_RESOLVED's own existing dispatch (default branch below,
+	# same as every other skill) is otherwise untouched -- this only adds a
+	# side-effect, never changes SKILL_RESOLVED's own render path.
+	if type == WIEvents.SKILL_RESOLVED:
+		var resolved_combat := _screen._combat_or_null() as WICombat
+		var resolved_skill: Dictionary = resolved_combat.skills.get(String(payload.get("skill", "")), {}) if resolved_combat != null else {}
+		if int((resolved_skill.get("effect", {}) as Dictionary).get("windup_rounds", 0)) > 0:
+			_renderer.expire_terrain("windup_danger", _cells_from_payload(payload.get("cells", [])))
+	# F3 (issue #82): the OTHER way a declared windup ends -- its caster goes
+	# down before resolving (no posthumous resolution, so no SKILL_RESOLVED
+	# will ever fire to clear the overlay). `_capture_event_ui` stashed the
+	# dead caster's parked cells at enqueue time (`_ui.windup_cells`, absent
+	# for every ordinary down); same pre-match/unconditional placement as the
+	# SKILL_RESOLVED clear above, for the same skip-path reason. NOTE both
+	# clears also run redundantly from `_play_event_visual`'s own arms on the
+	# paced/live paths -- expire_terrain no-ops on already-cleared cells, and
+	# the redundancy is what covers the LIVE path (a resolution/down arriving
+	# outside AI playback never passes through this function at all).
+	if type == WIEvents.COMBATANT_DOWNED:
+		var downed_windup_cells: Array = (payload.get("_ui", {}) as Dictionary).get("windup_cells", [])
+		if not downed_windup_cells.is_empty():
+			_renderer.expire_terrain("windup_danger", _cells_from_payload(downed_windup_cells))
 	match type:
 		WIEvents.TURN_STARTED:
 			_screen._render_tutor_line(tutor)
@@ -357,6 +416,28 @@ func _apply_playback_event(event: Dictionary, with_visuals: bool) -> void:
 			# here too, not left to the `_:` default -- this is the same trap
 			# class as combat_screen.gd's AI_PLAYBACK_TYPES TRAP comment.
 			_screen._play_event_visual(type, payload)
+			if with_visuals:
+				_highlight_actor(event)
+			_screen._push_feed(payload)
+			_screen._render_tutor_line(tutor)
+			_screen._refresh()
+		WIEvents.WINDUP_DECLARED:
+			# Issue #82's WINDUP SIM SPEC / [Dangersense] payoff: the cell
+			# overlay ("windup_danger", board_renderer.gd's `add_terrain`
+			# reused under a new kind -- pure rendering, no coupling to the
+			# SIM's own `WICombat.terrain` dict) is PERSISTENT renderer state,
+			# the SAME trap class as TERRAIN_ADDED/EXPIRED just above -- applied
+			# UNCONDITIONALLY, outside `with_visuals`, gated only on whether the
+			# PC holds [Dangersense] (`_capture_event_ui`'s enqueue-time read).
+			# The universal tell (feed line + caster flash) stays
+			# `with_visuals`-gated like every other transient beat --
+			# `_highlight_actor` below already IS the caster flash (a brief
+			# bright pulse on the caster's own holder, `ui.actor_id` resolves to
+			# the caster via `_actor_id_for_event`'s default `payload["id"]`
+			# fallback), reused for free -- no new flash mechanism needed.
+			var windup_ui: Dictionary = payload.get("_ui", {})
+			if bool(windup_ui.get("dangersense", false)):
+				_renderer.add_terrain("windup_danger", _cells_from_payload(payload.get("cells", [])))
 			if with_visuals:
 				_highlight_actor(event)
 			_screen._push_feed(payload)

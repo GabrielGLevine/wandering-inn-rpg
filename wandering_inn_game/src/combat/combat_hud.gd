@@ -747,6 +747,15 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
 			line = "%s shakes it off." % _display_name(combat, view, String(payload["id"]))
+		WIEvents.WINDUP_DECLARED:
+			# Issue #82's WINDUP SIM SPEC: the universal DECLARE tell -- every
+			# player sees this line regardless of [Dangersense] (only the
+			# board's cell OVERLAY is dangersense-gated, board_renderer.gd's
+			# own concern via combat_playback.gd's capture).
+			if combat == null or not combat.combatants.has(String(payload["id"])) or not combat.skills.has(String(payload["skill"])):
+				return ""
+			var windup_caster := _display_name(combat, view, String(payload["id"]))
+			line = "%s gathers itself for %s..." % [windup_caster, String(combat.skills[payload["skill"]]["display_name"])]
 		WIEvents.ACTION_REFUSED:
 			if combat == null or not combat.combatants.has(String(payload["actor"])):
 				return ""

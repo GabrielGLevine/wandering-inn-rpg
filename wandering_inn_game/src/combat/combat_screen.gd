@@ -66,6 +66,12 @@ const AI_PLAYBACK_TYPES := [
 	# doc comments) but is listed alongside it for symmetry and so a future
 	# enemy-cast icy_floor doesn't silently reopen the same desync.
 	WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED,
+	# Issue #82's WINDUP SIM SPEC: WINDUP_DECLARED fires mid-AI-turn (today's
+	# only holder, `slam`, is enemy-only) -- exactly the class this const
+	# exists to catch. Without this entry it would fall through to the live
+	# `_on_domain_event` arm and render against END-of-turn state instead of
+	# the moment it actually declared.
+	WIEvents.WINDUP_DECLARED,
 ]
 
 ## SKILL_PICK is gone -- the hotbar puts combat skills directly on
@@ -268,6 +274,13 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if _mode != Mode.INACTIVE:
 				_render_tutor_line(tutor)
 				_apply_combat_finished(payload)
+		# TRAP (issue #82): WINDUP_DECLARED is deliberately ABSENT from this
+		# live-match list -- it can only fire from inside an AI turn today
+		# (`slam` is enemy-only; declares happen inside WICombatAI.take_turn,
+		# always captured). A future PLAYER-castable windup skill fires it on
+		# the live path where it would match nothing and render nothing --
+		# wire a live arm (feed line + dangersense overlay) AND a targeting
+		# tell before shipping such a skill.
 		WIEvents.COMBATANT_MOVED, WIEvents.AP_CHANGED, WIEvents.COMBATANT_DOWNED, \
 		WIEvents.ATTACK_RESOLVED, WIEvents.SKILL_RESOLVED, WIEvents.REACTION_TRIGGERED, \
 		WIEvents.DASHED, WIEvents.STATUS_APPLIED, WIEvents.STATUS_EXPIRED, WIEvents.ACTION_REFUSED, \
@@ -606,6 +619,17 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 				_play_combatant_anim(downed_id, "death")
 			else:
 				_board_renderer.fade_chip(downed_id)
+			# F3 (issue #82): a downed windup-CASTER's declare never resolves,
+			# so no SKILL_RESOLVED will ever clear its dangersense overlay --
+			# the capture stage stashed the parked cells (`_ui.windup_cells`,
+			# absent for every ordinary down; both the live path and paced
+			# playback route payloads through that capture). This arm covers
+			# LIVE and paced renders; the skip path is covered by
+			# `combat_playback.gd`'s pre-match unconditional clear (redundant
+			# double-clear on the paced path is a no-op).
+			var downed_windup_cells: Array = ui.get("windup_cells", [])
+			if not downed_windup_cells.is_empty():
+				_board_renderer.expire_terrain("windup_danger", _ai_playback._cells_from_payload(downed_windup_cells))
 		WIEvents.STATUS_APPLIED:
 			# The combat twin of the field's sneak_visual translucency:
 			# without this, an invisible combatant renders fully opaque and
@@ -641,6 +665,21 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 				# _cells_from_payload lives on WICombatPlayback --
 				# called cross-object since this dispatcher stays screen-side.
 				_flash_cells(_ai_playback._cells_from_payload(ui.get("flash_cells", [])), color)
+			# Issue #82: a windup RESOLUTION (SKILL_RESOLVED for a
+			# `windup_rounds`-carrying skill) clears the dangersense overlay
+			# its own WINDUP_DECLARED drew. LIVE-PATH LOAD-BEARING, not just a
+			# paced-path redundancy: the resolution fires from the caster's
+			# `_start_turn`, which runs synchronously inside whoever ended the
+			# PREVIOUS turn -- when that was the PLAYER's own end_turn, the
+			# event arrives here live, never passing through combat_playback's
+			# pre-match clear at all. Static skills-catalog lookup (never
+			# mutates mid-fight), so this is dequeue-safe under paced playback
+			# too, where it runs redundantly (expire_terrain no-ops).
+			var resolved_combat := _combat_or_null()
+			if resolved_combat != null:
+				var resolved_skill: Dictionary = resolved_combat.skills.get(String(payload.get("skill", "")), {})
+				if int((resolved_skill.get("effect", {}) as Dictionary).get("windup_rounds", 0)) > 0:
+					_board_renderer.expire_terrain("windup_danger", _ai_playback._cells_from_payload(payload.get("cells", [])))
 		WIEvents.REACTION_TRIGGERED:
 			if String(payload.get("skill", "")) == "mana_shield":
 				_flash_cells(_ai_playback._cells_from_payload(ui.get("flash_cells", [])), SHIELD_FLASH)

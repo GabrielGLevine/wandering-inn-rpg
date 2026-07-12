@@ -1,5 +1,5 @@
 {
- "_comment": "8d Phase B canonical: teleport-based walkthrough of the two new dungeon maps (dungeon_approach, trapped_halls) -- NEITHER map is reachable from any existing live map this phase (no door edits into either; the M-ARC gallery reopen is B3/controller's own excluded task), so this script is the sole proof they render and work at all, exactly like street_peek/floodplains_peek's own teleport-only precedent, but a real CANONICAL (assert-verified, not a screenshot-only utility). Loads cisterns_scout_start (warrior L1 + [Tactician]/[Appraise Foe] already known -- FIXTURE-FIRST POLICY; both new requires_skill:'observe' traps need it) via title Continue, then teleports in. dungeon_approach: a full perimeter lap proves bounds (every edge cell open -- none of the map's obstacles sit on the border), then each of its 3 entities in turn (the gallery-seal anchor, the dormant-guardian foreshadow, and the REAL new door to trapped_halls -- not the excluded gallery-door edit, a brand-new pairing between these two brand-new maps). trapped_halls: all 4 trap classes in turn -- pressure_plate_a's real [Appraise Foe] reveal + its plain-interact trigger (visual_states tint swap, screenshotted), dart_slit_a's 2026-07-10 nudge-then-hotbar-disarm sequence (requires_skill, disarm-only shape), illusory_floor_a's literal PLAYER_BLOCKED bump (the 'floor that isn't' blocking movement with zero new sim -- entity occupancy alone) followed by its own nudge-then-hotbar-reveal, and the snare_nest_slot placement-only placeholder's flavor interact -- then a real door round-trip back to dungeon_approach. Whole-run negative: combat_started never fires (both new dormant/placeholder slots carry no combat data yet, C-phase's job).",
+ "_comment": "8d Phase B canonical: teleport-based walkthrough of the two new dungeon maps (dungeon_approach, trapped_halls) -- NEITHER map is reachable from any existing live map this phase (no door edits into either; the M-ARC gallery reopen is B3/controller's own excluded task), so this script is the sole proof they render and work at all, exactly like street_peek/floodplains_peek's own teleport-only precedent, but a real CANONICAL (assert-verified, not a screenshot-only utility). Loads cisterns_scout_start (warrior L1 + [Tactician]/[Appraise Foe] already known -- FIXTURE-FIRST POLICY; both new requires_skill:'observe' traps need it) via title Continue, then teleports in. dungeon_approach: a full perimeter lap proves bounds (every edge cell open -- none of the map's obstacles sit on the border), then each of its 3 entities in turn (the gallery-seal anchor, the dormant-guardian foreshadow, and the REAL new door to trapped_halls -- not the excluded gallery-door edit, a brand-new pairing between these two brand-new maps). trapped_halls: all 4 trap classes in turn -- pressure_plate_a's real [Appraise Foe] reveal + its plain-interact trigger (visual_states tint swap, screenshotted), dart_slit_a's 2026-07-10 nudge-then-hotbar-disarm sequence (requires_skill, disarm-only shape), illusory_floor_a's literal PLAYER_BLOCKED bump (the 'floor that isn't' blocking movement with zero new sim -- entity occupancy alone) followed by its own nudge-then-hotbar-reveal, the snare_nest_slot placement-only placeholder's flavor interact, and (8d C3, issue #82) vault_boss_slot's own flavor interact -- the SECOND, closer sighting of the guardian dormant_guardian_marker foreshadowed, still dormant (kind:prop) though the arena/boss DATA it will eventually fight against is real this lane (data/arenas.json's `vault`, the tuned `vault_construct` + `slam`) -- then a real door round-trip back to dungeon_approach. Whole-run negative: combat_started never fires (all three new dormant/placeholder slots carry no LIVE combat trigger yet -- vault_boss_slot's own arena+boss data exists but its skeleton_scene wiring stays kind:prop until C1 lands the quest gate).",
  "fixture_save": "cisterns_scout_start",
  "starts_at_title": true,
  "steps": [
@@ -60,7 +60,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "trapped_halls" },
   { "action": "assert_state", "path": "player_cell", "equals": [2, 7] },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "trapped_halls", "floor_cells": 280, "blocked_cells": 6 } },
-  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 6, "fallbacks": 0 } },
+  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 7, "fallbacks": 0 } },
   { "action": "screenshot", "name": "04_trapped_halls_landing" },
 
   { "_comment": "== TRAP CLASS 1: pressure plate (6,7) -- a real [Appraise Foe] reveal, then a plain interact TRIGGER.", "action": "move", "direction": "right", "steps": 3 },
@@ -112,6 +112,20 @@
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "screenshot", "name": "08_snare_slot" },
 
+  { "_comment": "== THE VAULT (18,6) -- 8d C3's dormant boss-encounter SLOT, the SECOND, closer sighting of the same guardian dormant_guardian_marker foreshadowed. Detours around snare_nest_slot's own blocked cell (17,8) via row 6, then returns to the (16,8) waypoint the pre-existing exit sequence below already expects.", "action": "move", "direction": "up", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [16, 6] },
+  { "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [17, 6] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "found_the_vault" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Whatever waits beyond this arch is not ready for you yet, and you are not ready for it. You step back." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "08b_vault_threshold" },
+  { "action": "move", "direction": "left", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [16, 6] },
+  { "action": "move", "direction": "down", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [16, 8] },
+
   { "_comment": "== EXIT via the real return door (1,7), landing back at dungeon_approach (13,6) -- one cell west of the outbound door's own (14,6) cell.", "action": "move", "direction": "down", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [16, 9] },
   { "action": "move", "direction": "left", "steps": 15 },
@@ -124,6 +138,6 @@
   { "action": "assert_state", "path": "player_cell", "equals": [13, 6] },
   { "action": "screenshot", "name": "09_back_in_dungeon_approach" },
 
-  { "_comment": "Scope guard: neither new dormant slot (dormant_guardian_marker/snare_nest_slot) carries combat data yet -- whole-run negative proof, C-phase's own job to arm.", "action": "assert_event_absent", "type": "combat_started" }
+  { "_comment": "Scope guard: none of the three dormant slots (dormant_guardian_marker/snare_nest_slot/vault_boss_slot) carries a LIVE combat trigger yet -- whole-run negative proof, C1's own job to arm the gate.", "action": "assert_event_absent", "type": "combat_started" }
  ]
 }

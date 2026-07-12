@@ -1734,5 +1734,169 @@ func _init() -> void:
 	assert(int(c83.combatants["pc"][WIKeys.HP]) < hp83_before, "line damage still lands on the invisible occupant standing in the line")
 	assert((c83.combatants["pc"]["statuses"] as Dictionary).has("invisible"), "being HIT (not dealing damage) never breaks invisibility -- pc is still invisible after")
 
+	# --- Issue #82's WINDUP SIM SPEC: `slam` (vault_construct, data/skills.json)
+	# is the first `windup_rounds` skill. The blocks below prove the whole
+	# contract against the REAL shipped data (no synthetic stand-in skill):
+	# declare freezes cells + spends ALL 4 AP; move-out whiffs the target;
+	# standing-still eats the hit; downing the caster before its next turn
+	# means no posthumous resolution; the caster is EXCLUDED from its own
+	# resolution while a same-blast bystander is NOT (the F1 controller
+	# ruling -- see _resolve_windup's own doc comment for the deliberate
+	# asymmetry vs blast_damage). arenas[0] (goblin_ambush) reused for a
+	# plain open 12x8 grid -- the vault arena's own shape is C3's content
+	# deliverable, not needed to prove the MECHANISM. ---
+
+	# Block A: declare -> move-out -> whiff. The caster relocating same-turn
+	# also proves declare spends AP but never touches move_pool (the boss CAN
+	# reposition after declaring -- counterplay-relevant); with the pc moving
+	# out too, resolution finds every frozen cell empty: a total whiff.
+	var c84 := _cfgs(["pc", "vault_construct"])
+	var combat84 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], c84, _load("res://data/skills.json"), _sink, 5)
+	combat84.begin()
+	combat84.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
+	combat84.combatants["vault_construct"][WIKeys.CELL] = Vector2i(2, 1)
+	combat84.active_index = combat84.turn_order.find("vault_construct")
+	combat84._start_turn()
+	_events.clear()
+	assert(combat84.use_skill("slam", "pc"), "vault_construct declares slam on pc (adjacent, affordable)")
+	assert(int(combat84.combatants["vault_construct"][WIKeys.AP]) == 0, "slam's ap_cost (4) fully drains the turn's AP -- the telegraphed AP spike")
+	assert(combat84.windups.has("vault_construct"), "declared windup is parked on the caster")
+	var frozen84: Array = combat84.windups["vault_construct"]["cells"]
+	assert(Vector2i(1, 1) in frozen84, "frozen cells include pc's cell at declaration (radius 1 around the target)")
+	assert(_count("windup_declared") == 1, "exactly one windup_declared emitted")
+	var declared84: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "windup_declared":
+			declared84 = e["payload"]
+	assert(declared84.get("id", "") == "vault_construct" and declared84.get("skill", "") == "slam", "windup_declared reports caster + skill")
+	assert(_count("skill_resolved") == 0 and _count("attack_resolved") == 0, "a declare resolves NOTHING on cast -- no damage yet")
+	# The caster relocates same-turn (move_pool untouched by the AP spend).
+	assert(combat84.move_active(Vector2i.RIGHT) and combat84.move_active(Vector2i.RIGHT) and combat84.move_active(Vector2i.RIGHT), "caster steps 3 cells right, clear of its own frozen blast")
+	assert(combat84.combatants["vault_construct"][WIKeys.CELL] == Vector2i(5, 1), "caster now well outside the radius-1 box around (1,1)")
+	combat84.end_turn()
+	assert(combat84.get_active() == "pc", "pc's turn")
+	assert(combat84.move_active(Vector2i.DOWN) and combat84.move_active(Vector2i.DOWN) and combat84.move_active(Vector2i.DOWN), "pc steps 3 cells down, clear of the frozen blast")
+	assert(combat84.combatants["pc"][WIKeys.CELL] == Vector2i(1, 4), "pc now well outside the radius-1 box around (1,1)")
+	var hp84_before := int(combat84.combatants["pc"][WIKeys.HP])
+	_events.clear()
+	combat84.end_turn()  # wraps back to vault_construct -- _start_turn resolves the windup FIRST
+	assert(combat84.get_active() == "vault_construct", "cycled back to the caster's own next turn")
+	assert(not combat84.windups.has("vault_construct"), "resolved windup is erased from the pending dict")
+	assert(_count("skill_resolved") == 1, "resolution still emits SKILL_RESOLVED even on a total whiff")
+	var resolved84: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			resolved84 = e["payload"]
+	assert((resolved84.get("hit_ids", []) as Array).is_empty(), "nobody occupies the frozen cells anymore -- zero hits")
+	assert(_count("attack_resolved") == 0, "a whiff resolves no hits at all")
+	assert(int(combat84.combatants["pc"][WIKeys.HP]) == hp84_before, "pc took no damage -- the counterplay (moving out) worked")
+
+	# Block B: declare -> stand -> hit. Neither occupant moves; the frozen
+	# cells still contain pc at resolution, so the windup lands for real.
+	var c85 := _cfgs(["pc", "vault_construct"])
+	var combat85 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], c85, _load("res://data/skills.json"), _sink, 5)
+	combat85.begin()
+	combat85.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
+	combat85.combatants["vault_construct"][WIKeys.CELL] = Vector2i(2, 1)
+	combat85.active_index = combat85.turn_order.find("vault_construct")
+	combat85._start_turn()
+	assert(combat85.use_skill("slam", "pc"), "vault_construct declares slam on pc")
+	combat85.end_turn()
+	assert(combat85.get_active() == "pc", "pc's turn -- does nothing, stands its ground")
+	var hp85_before := int(combat85.combatants["pc"][WIKeys.HP])
+	_events.clear()
+	combat85.end_turn()  # wraps back to vault_construct -- resolves against the SAME frozen cells
+	assert(not combat85.windups.has("vault_construct"), "resolved and cleared")
+	var resolved85: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			resolved85 = e["payload"]
+	assert((resolved85.get("hit_ids", []) as Array).has("pc"), "pc, still standing in the frozen cell, is among the hits")
+	assert(_count("attack_resolved") >= 1, "at least one real hit resolution fired")
+	assert(int(combat85.combatants["pc"][WIKeys.HP]) < hp85_before, "pc took real damage from the resolved slam")
+
+	# Block C: declare -> down-the-caster -> no posthumous resolution. A THIRD
+	# combatant (a second enemy) is required so downing vault_construct alone
+	# doesn't end the whole fight before the "next turn that never comes" can
+	# be proven. `apply_damage` is the same public HP-application entry point
+	# `_resolve_hit` itself calls internally.
+	var c86 := _cfgs(["pc", "vault_construct", "goblin_raider"])
+	var combat86 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], c86, _load("res://data/skills.json"), _sink, 5)
+	combat86.begin()
+	combat86.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
+	combat86.combatants["vault_construct"][WIKeys.CELL] = Vector2i(2, 1)
+	combat86.active_index = combat86.turn_order.find("vault_construct")
+	combat86._start_turn()
+	assert(combat86.use_skill("slam", "pc"), "vault_construct declares slam on pc")
+	assert(combat86.windups.has("vault_construct"), "fixture: windup is pending")
+	combat86.apply_damage("vault_construct", 9999, "pc", true)
+	assert(not bool(combat86.combatants["vault_construct"][WIKeys.ALIVE]), "vault_construct is downed before its next turn")
+	assert(not combat86.finished, "goblin_raider still stands -- the fight continues")
+	assert(combat86.windups.has("vault_construct"), "the pending windup is left parked (not eagerly cleared) -- it simply never gets a chance to resolve")
+	var hp86_before := int(combat86.combatants["pc"][WIKeys.HP])
+	_events.clear()
+	var guard86 := 0
+	while guard86 < 8 and _count("skill_resolved") == 0:
+		combat86.end_turn()
+		guard86 += 1
+	# A downed combatant's turn is skipped entirely by _advance_turn
+	# (`if combatants[get_active()][ALIVE]`) -- _start_turn, and therefore
+	# _resolve_windup, is never called for vault_construct again. Cycling
+	# several turns (more than one full round) must never produce the
+	# resolution event.
+	assert(_count("skill_resolved") == 0, "the downed caster's windup never resolves -- no posthumous damage")
+	assert(int(combat86.combatants["pc"][WIKeys.HP]) == hp86_before, "pc took no damage from a windup whose caster died first")
+
+	# Block D: the F1 caster-exclusion ruling. The caster stands INSIDE its
+	# own frozen radius-1 blast (adjacent declare, never moves) alongside a
+	# bystander ally (relc, also inside the blast): at resolution the caster
+	# takes ZERO damage and is absent from hit_ids, while BOTH the target (pc)
+	# and the bystander (relc) are hit -- ally-side friendly fire stays real,
+	# only the caster's self-tax is removed. pc's HP is inflated so the pc hit
+	# (sorted first in hit_ids) can never end the fight by instant defeat
+	# before relc's own hit lands; hit_bonus 1000 makes both hits land
+	# deterministically at any seed (the c83 idiom above).
+	var c87 := _cfgs(["pc", "relc", "vault_construct"])
+	var combat87 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], c87, _load("res://data/skills.json"), _sink, 5)
+	combat87.begin()
+	combat87.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
+	combat87.combatants["relc"][WIKeys.CELL] = Vector2i(2, 2)
+	combat87.combatants["vault_construct"][WIKeys.CELL] = Vector2i(2, 1)
+	combat87.combatants["pc"][WIKeys.MAX_HP] = 500
+	combat87.combatants["pc"][WIKeys.HP] = 500
+	combat87.combatants["relc"][WIKeys.MAX_HP] = 500
+	combat87.combatants["relc"][WIKeys.HP] = 500
+	combat87.combatants["vault_construct"]["hit_bonus"] = 1000
+	combat87.active_index = combat87.turn_order.find("vault_construct")
+	combat87._start_turn()
+	assert(combat87.use_skill("slam", "pc"), "vault_construct declares slam on pc")
+	var frozen87: Array = combat87.windups["vault_construct"]["cells"]
+	assert(Vector2i(2, 1) in frozen87, "fixture: the caster's OWN cell is inside its frozen blast (adjacent declare, radius 1)")
+	assert(Vector2i(2, 2) in frozen87, "fixture: the bystander ally's cell is inside the frozen blast too")
+	# HP snapshots BEFORE the turn cycling: nothing in the loop below deals
+	# damage except the resolution itself (pc/relc "act" via bare end_turn),
+	# so pre-loop reads are the honest pre-resolution values.
+	var construct87_hp_before := int(combat87.combatants["vault_construct"][WIKeys.HP])
+	var pc87_hp_before := int(combat87.combatants["pc"][WIKeys.HP])
+	var relc87_hp_before := int(combat87.combatants["relc"][WIKeys.HP])
+	_events.clear()
+	# Cycle bare end_turns (pc and relc stand their ground) until the wrap
+	# back to the caster fires the resolution from its own _start_turn.
+	var guard87 := 0
+	while _count("skill_resolved") == 0 and guard87 < 8:
+		combat87.end_turn()
+		guard87 += 1
+	assert(_count("skill_resolved") == 1, "the windup resolved exactly once on the caster's next turn")
+	var resolved87: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			resolved87 = e["payload"]
+	var hit_ids87: Array = resolved87.get("hit_ids", [])
+	assert(not hit_ids87.has("vault_construct"), "the caster is EXCLUDED from its own resolution's hit_ids -- never self-hit (F1 ruling)")
+	assert(hit_ids87.has("pc") and hit_ids87.has("relc"), "the target AND the same-blast bystander ally are both hit -- friendly fire stays real for everyone but the caster")
+	assert(int(combat87.combatants["vault_construct"][WIKeys.HP]) == construct87_hp_before, "the caster's HP is untouched by its own resolution")
+	assert(int(combat87.combatants["pc"][WIKeys.HP]) < pc87_hp_before, "pc took real damage")
+	assert(int(combat87.combatants["relc"][WIKeys.HP]) < relc87_hp_before, "the bystander ally took real damage")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

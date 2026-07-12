@@ -12216,6 +12216,25 @@
      "observe": "A coil of taut wire lies strung ankle-height between two stones, near-invisible against the dust. Whatever it is rigged to is worse than a stubbed toe.",
      "on_interact_accomplishment": "spotted_the_snare_nest",
      "toast": "You give the wire a wide berth. Something in the dark past it has not noticed you yet."
+    },
+    {
+     "_comment": "8d C3 (issue #14/#82): THE VAULT -- dormant encounter SLOT, placement only (rift_vermin_leak/snare_nest_slot D1 precedent exactly: kind:prop, never kind:encounter, until C1 wires the real gate -- test_content's produced-accomplishment validator would hard-fail an encounter's ally_requires/requires against a counter no content banks yet: `horns_delve_started` is C1's future producer, the quest that hasn't landed in this lane). UNLIKE the earlier slots, the ARENA + BOSS DATA this lane fights against are REAL and validated: data/arenas.json's `vault` (12x8, >= 4 player_spawns -- the C2 review's SPAWN-CEILING TRAP), data/combatants.json's tuned `vault_construct` (gains `slam`, the windup mechanism's first user), sim_combat_batch.gd's PARTY_CELLS GATED T4 party win-rate/median-rounds band -- only this FIELD PLACEMENT stays dormant. The second, closer sighting of the same guardian `dormant_guardian_marker` (dungeon_approach) foreshadowed -- same reused vault_construct sprite, same dormant tint, now filling the far doorway rather than crouched against a distant wall. C1 promotes: swap kind to 'encounter', arena:'vault', enemies:['vault_construct'], allies:['ceria','yvlon','ksmvr'] gated via ally_requires on `horns_delve_started` (>=1, the party-counter C1's quest banks), on_victory + trigger_radius (~2, the snare_nest_slot/alley_footpads precedent), drop the flavor on_interact_accomplishment/toast pair below.",
+     "id": "vault_boss_slot",
+     "kind": "prop",
+     "cell": [
+      18,
+      6
+     ],
+     "display_name": "The Vault Threshold",
+     "sprite": "vault_construct",
+     "tint": [
+      0.4,
+      0.4,
+      0.42
+     ],
+     "observe": "The hall ends in a sealed archway, and beyond it something vast fills the dark almost completely -- the same shape you glimpsed crouched near the entrance, closer now, utterly still. It is not still the way a statue is still.",
+     "on_interact_accomplishment": "found_the_vault",
+     "toast": "Whatever waits beyond this arch is not ready for you yet, and you are not ready for it. You step back."
     }
    ]
   }

@@ -419,22 +419,28 @@ const BUILDS := [
 ## file uses). `ally_requires` wiring for the real delve encounter is a
 ## separate task -- this file only proves the combat DATA those ids resolve
 ## to holds a sane, honestly-reported band.
-## Two rosters, `arena: deep_warren` (an EXISTING arena, reused -- the real
-## vault arena is a separate deliverable; this cell only needs a valid 12x8
-## grid to run seeded fights):
-##  (a) `vault_construct` -- the boss-stat SEED (see its own combatants.json
-##      `_comment`). MEASURED-only: the stats are an unfinished seed awaiting
-##      its own tuning pass once the telegraphed-windup mechanism lands, so a
-##      win-rate band gated NOW would just get re-derived the moment that
-##      data changes.
-##  (b) `raskghar_awakened` (the existing T2 boss, this file's own BOSS_CELLS
-##      0.6-0.75-vs-warrior2+relc cell) as a CALIBRATION CROSS-CHECK: the
-##      SAME roster, now faced by a full T4 party instead of a T2 build + 1
-##      ally. MEASURED-only, by the SAME "over-tier trivial is intended"
-##      convention this file's own header table states outright (a T2 boss
-##      vs. a T4 party is EXPECTED to read near-1.0, same as goblin_ambush
-##      vs. pure_warrior10) -- if it reads otherwise, the PARTY MATH itself
-##      is off, not just vault_construct's placeholder stats.
+## Two rosters:
+##  (a) `vault_construct_t4_party` -- 8d C3 (issue #82): the windup MECHANISM
+##      + FINAL TUNING landed (data/combatants.json's own `_comment`), so this
+##      cell is no longer a placeholder seed. `arena` switched from the
+##      deep_warren stand-in to the REAL `vault` arena this lane also shipped
+##      (data/arenas.json). GATED per-cell (`win_lo`/`win_hi` 0.55-0.95,
+##      `check_rounds` true for the 3-12 median band) -- the SAME `gated :=
+##      cell.has("win_lo")` idiom BOSS_CELLS/RUIN_CELLS/RIVERFARM_CELLS/
+##      INVRISIL_CELLS already use, extended to this loop below (previously
+##      every PARTY_CELLS row was hardcoded measured-only).
+##  (b) `raskghar_awakened_t4_party` -- the existing T2 boss (this file's own
+##      BOSS_CELLS 0.6-0.75-vs-warrior2+relc cell) as a CALIBRATION
+##      CROSS-CHECK: the SAME roster, now faced by a full T4 party instead of
+##      a T2 build + 1 ally. UNCHANGED, still `arena: deep_warren`, still
+##      MEASURED-only, by the SAME "over-tier trivial is intended" convention
+##      this file's own header table states outright (a T2 boss vs. a T4
+##      party is EXPECTED to read near-1.0, same as goblin_ambush vs.
+##      pure_warrior10) -- if it reads otherwise, the PARTY MATH itself is
+##      off, not just vault_construct's tuning. NOT part of this lane's
+##      re-tune (byte-identical construction; only its printed win_rate can
+##      shift, and shouldn't, since vault_construct's data changes don't touch
+##      raskghar_awakened's own stats).
 ## PC-DEATH-INSTANT-DEFEAT RE-CHECK (CLAUDE.md's own standing rule):
 ## `_check_end` checks pc.alive FIRST, unconditionally, regardless of ally
 ## count -- a 4-body party (3 living allies) cannot produce an "ally-carried
@@ -445,9 +451,13 @@ const BUILDS := [
 ## own downed rate (same convention as relc_downed_rate elsewhere in this
 ## file) -- by construction pc_alive_rate must equal win_rate exactly, and
 ## printing both is the re-check itself (a future divergence would mean the
-## instant-defeat rule broke).
+## instant-defeat rule broke). RE-VERIFIED for `vault_construct_t4_party`
+## specifically: `slam`'s windup resolution can down a combatant via the SAME
+## `_resolve_hit`/`_post_damage`/`_check_end` chain a basic Attack does (a
+## multi-target blast is just more chances to trigger it), so this is not a
+## new failure mode, only a new, more frequent path to the same rule.
 const PARTY_CELLS := [
-	{"name": "vault_construct_seed_t4_party", "arena": "deep_warren", "enemies": ["vault_construct"], "build": "t4_spellsword11_party"},
+	{"name": "vault_construct_t4_party", "arena": "vault", "enemies": ["vault_construct"], "build": "t4_spellsword11_party", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "raskghar_awakened_t4_party", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "t4_spellsword11_party"},
 ]
 
@@ -954,9 +964,10 @@ func _init() -> void:
 	## The T4 party axis. Same shared _build_pc path as the main
 	## COMPOSITIONS loop/RIVERFARM_CELLS/INVRISIL_CELLS (gear-aware, T3/T4
 	## rows only), but fields THREE named allies (ceria/yvlon/ksmvr) instead
-	## of one -- the first multi-ally construction in this file. Every cell
-	## here is MEASURED-only -- see PARTY_CELLS' own doc comment for why
-	## neither roster is gated yet.
+	## of one -- the first multi-ally construction in this file. Per-cell
+	## gating (`gated := cell.has("win_lo")`, the BOSS_CELLS/RUIN_CELLS/
+	## RIVERFARM_CELLS/INVRISIL_CELLS idiom) -- see PARTY_CELLS' own doc
+	## comment for which roster is gated and why the other stays measured.
 	for cell: Dictionary in PARTY_CELLS:
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
@@ -998,8 +1009,9 @@ func _init() -> void:
 		var hist := {}
 		for r: int in rounds:
 			hist[r] = int(hist.get(r, 0)) + 1
-		print("[party / %s] arena=%s build=%s (measured) win_rate=%.2f median_rounds=%d min=%d max=%d" % [
-			cell["name"], String(cell["arena"]), String(cell["build"]),
+		var gated := cell.has("win_lo")
+		print("[party / %s] arena=%s build=%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+			cell["name"], String(cell["arena"]), String(cell["build"]), "" if gated else " (measured)",
 			win_rate, median, rounds[0], rounds[-1],
 		])
 		print("  rounds histogram: ", hist)
@@ -1008,6 +1020,15 @@ func _init() -> void:
 		print("  pc_alive_rate=%.2f (%d/%d)" % [float(pc_alive_end) / float(RUNS_PER_CELL), pc_alive_end, RUNS_PER_CELL])
 		for ally_id: String in ["ceria", "yvlon", "ksmvr"]:
 			print("  %s_downed_rate=%.2f (%d/%d)" % [ally_id, float(ally_downed[ally_id]) / float(RUNS_PER_CELL), ally_downed[ally_id], RUNS_PER_CELL])
+		if gated:
+			var lo := float(cell["win_lo"])
+			var hi := float(cell["win_hi"])
+			if win_rate < lo or win_rate > hi:
+				any_failed = true
+				printerr("FAIL [party / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
+				any_failed = true
+				printerr("FAIL [party / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:

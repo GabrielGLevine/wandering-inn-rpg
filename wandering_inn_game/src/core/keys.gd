@@ -77,6 +77,13 @@ const MP_COST := "mp_cost"
 const CONTEXTS := "contexts"
 const FIELD := "field"
 const WEAPON := "weapon"
+## Skill-level (not effect-level) pacing knob for combat_ai.gd's melee-profile
+## windup arm: a windup-carrying skill only gets DECLARED on rounds where
+## `combat.round_number % windup_cadence == 0`, so the AI doesn't lead with it
+## every single turn it's in range. Read only by that one arm -- absent on
+## every skill without a windup (defaults to 3 where read, per that call
+## site's own doc comment).
+const WINDUP_CADENCE := "windup_cadence"
 
 # --- Effect record ---
 const TYPE := "type"
@@ -91,6 +98,15 @@ const APPLIES := "applies"
 ## icy (icy_floor only -- blast_damage writes no duration).
 const RADIUS := "radius"
 const DURATION_ROUNDS := "duration_rounds"
+## Issue #82's WINDUP SIM SPEC: a positive value means the skill never
+## resolves on cast -- it DECLARES (freezes the target cell set, spends its
+## cost, ends the action) and resolves at the caster's own NEXT turn start
+## instead. Only 1 is supported v1 (WICombat._resolve_windup/WISkillEffects.
+## declare_windup both assume "the very next turn", not N turns out). Absent
+## (0) on every pre-existing skill, so any code path gating on this defaults
+## to the old immediate-resolve behavior -- byte-identical for everything
+## that isn't `slam`.
+const WINDUP_ROUNDS := "windup_rounds"
 
 # --- Item record ---
 # ID, DAMAGE_MOD, DAMAGE_REDUCTION shared with combatant record above.

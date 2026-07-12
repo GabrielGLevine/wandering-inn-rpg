@@ -49,6 +49,15 @@ const ENEMY_HP_COLOR := Color(0.95, 0.45, 0.05)
 ## dispatch owner; this file owns rendering primitives), so the RGB is
 ## restated here verbatim -- keep in sync if FROST_FLASH ever changes.
 const ICY_FLOOR_COLOR := Color(0.5, 0.8, 1.0, 0.35)
+## Issue #82's WINDUP SIM SPEC / [Dangersense] payoff: the frozen-cell overlay
+## for a declared windup, rendered ONLY for a [Dangersense] holder
+## (combat_playback.gd's `_capture_event_ui` gates the `add_terrain` call
+## itself -- this file draws whatever it's told, same as every other overlay
+## kind). Warm red, distinct from the frost-blue `ICY_FLOOR_COLOR` and the
+## amber `AIM_AOE_TINT` (that one is the PLAYER's own aim, this is an
+## INCOMING threat) -- a strong enough alpha to read as "leave this cell",
+## not a decorative tint.
+const WINDUP_DANGER_COLOR := Color(0.9, 0.15, 0.1, 0.4)
 ## z-index split: terrain overlays render at COMBATANT_Z - 1 so they
 ## always sit ABOVE the floor/decor (both default z_index 0) but BELOW every
 ## combatant visual, regardless of scene-tree add order -- `add_terrain` is
@@ -907,7 +916,11 @@ func add_terrain(kind: String, cells: Array) -> void:
 	if _board == null:
 		return
 	var by_kind: Dictionary = _terrain_overlays.get(kind, {})
-	var color := ICY_FLOOR_COLOR if kind == "icy_floor" else Color(1.0, 1.0, 1.0, 0.35)
+	var color := Color(1.0, 1.0, 1.0, 0.35)
+	if kind == "icy_floor":
+		color = ICY_FLOOR_COLOR
+	elif kind == "windup_danger":
+		color = WINDUP_DANGER_COLOR
 	var cells_payload: Array = []
 	for cell: Vector2i in cells:
 		if by_kind.has(cell):

@@ -686,26 +686,28 @@
    ]
   },
   {
-   "_comment": "Boss-stat SEED, data-only: no encounter references this id yet (test_combat_data.gd's own combatant-validation loop has no consumer requirement -- confirmed against its source before adding this unreferenced), and sim_combat_batch.gd's PARTY_CELLS fields it only as a measured harness placeholder. Final tuning + the telegraphed-windup MECHANISM itself are issue #82's job, not built here -- 'slow, heavy, high con, telegraphed AP spikes' is realized with ZERO new mechanism: dex5 (slow) + con55 (the highest in this file by design -- a T4 boss should out-tank raskghar_awakened's con30) + `tough_body` (existing hp_bonus +10 skill, the SAME 'construct durability' flavor ruin_guardian already carries) for the heavy/tanky read. The 'AP spike' is `power_strike` (ap_cost 3 of the turn's 4, damage_mult 2.0) -- NOT a bigger damage_mult skill like devastating_slash/spellbound_strike, because WICombatAI's melee profile only EVER calls power_strike by name (combat_ai.gd's own doc comment); any other damage_mult skill granted here would be inert flavor never actually exercised by AI-vs-AI play, and a harness SEED needs to be measurable, not just thematically named. `combat_scale` 0.36 CONTAINS an oversized rig: the 220px frame at render_scale 0.444 is ~98px of raw texture, and even the alpha-opaque FIGURE crop alone (90px of 220) scales to ~40px (2.5 cells) at that render_scale -- both readings exceed the ~30px 'standard ally' bucket AND the boss-loom ceiling this file already established (raskghar_awakened's boss-loom read (~32px on screen; NOTE its own comment/field pair is stale — field is 0.81, reconcile separately), its own record's 'loom ~2 cells' language). 0.36 lands the figure crop at 90*0.36=32.4px (~2 cells), matching that SAME boss-loom ceiling -- sub-Relc-arena-sprawl, per sprites.json's own note on this rig.",
+   "_comment": "8d C3 (issue #82): the windup MECHANISM + FINAL TUNING land here -- the C2 seed's own comment said 'final tuning + the telegraphed-windup MECHANISM itself are issue #82's job, not built here', done now. Gains `slam` (blast_damage + windup_rounds:1, radius 1, ap_cost 4 -- a real AP spike: a slam-round turn spends the WHOLE turn declaring, nothing else; windup_cadence:2, skills.json's own field) on top of the unchanged power_strike/tough_body kit. THE CASTER IS EXCLUDED from slam's own resolution (WICombat._resolve_windup, the F1 controller ruling -- an adjacent range-1 declare geometrically always contained the caster's own cell and the melee AI never repositions, so pre-ruling EVERY resolution self-hit; allies in the blast are still hit). The C2 seed measured 1.00 win rate (trivial, no slam existed and con was 55) against the T4 Horns party (sim_combat_batch.gd's PARTY_CELLS); retuned via the harness, not by feel: con 55->190 (HP 20+con+tough_body's +10 -- survive long enough for slam to matter at all; was 245 under pre-F1 caster-inclusion, softened when removing the self-tax hardened the fight to a fragile 0.60), str 20->36 and weapon_die 8->15 (the 'big die' the windup spec called for -- shared by power_strike/basic Attack too, not slam-exclusive, since weapon_die is a single per-combatant stat -- real offense, not just a bigger HP bar), damage_reduction 0->3 (new field, flat mitigation against a 4-attacker focus-fire beatdown). Re-measured GATED at win_rate=0.86 / median_rounds=6 / rounds min 5 max 9 (inside the 0.55-0.95 / 3-12 contract with real margin both directions, no >12 tail). PC-death-instant-defeat re-verified (the SAME `_check_end` rule, now exercised against a caster whose slam can down an ALLY via friendly fire too, not just its basic attack) -- pc_alive_rate=0.86, exactly matching win_rate by construction. combat_scale 0.36 UNCHANGED (art-fit only, no balance link -- see C2's own scale derivation, still holds).",
    "id": "vault_construct",
    "display_name": "Guardian Construct",
    "sprite": "vault_construct",
    "combat_scale": 0.36,
    "side": "enemy",
    "stats": {
-    "str": 20,
+    "str": 36,
     "dex": 5,
-    "con": 55,
+    "con": 190,
     "int": 4,
     "wis": 6,
     "cha": 2
    },
-   "weapon_die": 8,
+   "weapon_die": 15,
    "ai": "melee",
    "skills": [
     "power_strike",
-    "tough_body"
-   ]
+    "tough_body",
+    "slam"
+   ],
+   "damage_reduction": 3
   }
  ]
 }

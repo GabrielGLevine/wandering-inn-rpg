@@ -150,6 +150,14 @@ const EXPECTED_SKILLS := {
 	# "Slows."-style suffix -- the friendly-fire sentence is baked into the
 	# phrase itself instead.
 	"flame_pillar": ["3 AP, 5 MP — blast a 3×3 area around the target for 1d6. Hits friend and foe."],
+	# Issue #82's WINDUP SIM SPEC: the first `windup_rounds`-carrying skill --
+	# same blast_damage phrase shape as flame_pillar above, PLUS the literal
+	# timing clause (`effect.windup_rounds > 0`) inserted before the period.
+	# Die still reads the "pc" default (6) -- vault_construct is enemy-only
+	# and this card never renders in any live UI, the SAME disclosed
+	# raskghar_maul/calming_touch caster-attribution gap noted above (no
+	# per-caster threading exists in this formatter).
+	"slam": ["4 AP — blast a 3×3 area around the target for 1d6 after a round's gathering. Hits friend and foe."],
 	"keener_edge": ["2 AP — ×1.6 damage"],
 	# GH#61: [Spellsword] L16 capstone (INVENTED name, flagged -- see the
 	# skill's own _comment in skills.json for the wiki-verification trace).
