@@ -423,3 +423,10 @@ const UI_CONTROLS_RENDERED := &"ui_controls_rendered"
 ## message_layer.gd's first-pickup hint, combat_screen.gd's first-combat
 ## hint). Presentation-only re-arm, never touches accomplishment counters.
 const UI_HINTS_REPLAYED := &"ui_hints_replayed"
+## settings_panel.gd's confirmation that the Help reference sub-page
+## (issue #107 -- data/help_content.json's authored sections: classes/
+## levels, skills+hotbar, the boards, sleep, saving, a Controls pointer)
+## rendered. Payload `{sections:int, sample:String}` -- section count plus
+## one exact section line, the SAME "count + one pinned string" shape
+## UI_CONTROLS_RENDERED/UI_SETTINGS_RENDERED already use for QA to assert on.
+const UI_HELP_RENDERED := &"ui_help_rendered"

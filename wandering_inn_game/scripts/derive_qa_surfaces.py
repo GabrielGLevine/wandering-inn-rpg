@@ -23,6 +23,7 @@ Usage:
 """
 from __future__ import annotations
 
+import glob
 import json
 import os
 import re
@@ -34,7 +35,8 @@ MANIFEST_PATH = os.path.join(GAME_ROOT, "qa", "manifest.json")
 SCRIPTS_DIR = os.path.join(GAME_ROOT, "qa", "scripts")
 FIXTURES_DIR = os.path.join(GAME_ROOT, "qa", "fixtures")
 DIALOGUE_DIR = os.path.join(GAME_ROOT, "data", "dialogue")
-SKELETON_PATH = os.path.join(GAME_ROOT, "data", "skeleton_scene.json")
+MAPS_DIR = os.path.join(GAME_ROOT, "data", "maps")
+SCENE_ROOT_PATH = os.path.join(GAME_ROOT, "data", "scene_root.json")
 SKILLS_PATH = os.path.join(GAME_ROOT, "data", "skills.json")
 
 # Authored once: maps a signal token (action name / event type / payload
@@ -102,8 +104,19 @@ def _load(path: str) -> dict:
 		return json.load(f)
 
 
+# Issue #100: data/skeleton_scene.json was split into
+# data/maps/<region>/<map>.json + data/scene_root.json. Same sorted-glob
+# composition contract as generate_postings.py's load_scene() (the Python
+# mirror of src/core/scene_catalog.gd's WISceneCatalog.compose()): map key
+# = file stem, region dir is organizational only, dup key = ValueError.
 def _known_maps() -> set[str]:
-	return set(_load(SKELETON_PATH)["maps"].keys())
+	maps: set[str] = set()
+	for map_path in sorted(glob.glob(os.path.join(MAPS_DIR, "*", "*.json"))):
+		map_id = os.path.splitext(os.path.basename(map_path))[0]
+		if map_id in maps:
+			raise ValueError(f"duplicate map key '{map_id}' ({map_path})")
+		maps.add(map_id)
+	return maps
 
 
 def _known_skills() -> tuple[set[str], dict[str, list[str]]]:
@@ -265,6 +278,7 @@ def cmd_touching(paths_arg: str) -> int:
 	known_skills, _ = _known_skills()
 	known_dialogue = _known_dialogue_ids()
 
+	all_scripts = False
 	for raw in paths_arg.split(","):
 		p = raw.strip()
 		if not p:
@@ -282,21 +296,42 @@ def cmd_touching(paths_arg: str) -> int:
 			if stem in known_dialogue:
 				touched_tags.add(("dialogue", stem))
 			continue
+		# data/maps/<region>/<map>.json (issue #100 split layout): the map
+		# key is the file STEM -- the region dir level is organizational
+		# only (WISceneCatalog.compose() / generate_postings.py load_scene()
+		# both key by stem across the sorted */*.json glob).
+		if "/data/maps/" in norm or norm.startswith("data/maps/"):
+			if stem in known_maps:
+				touched_tags.add(("maps", stem))
+			continue
+		# data/scene_root.json (start_map + the player template): consumed
+		# at EVERY world boot, before any map composes on top -- there is no
+		# narrower honest mapping than "every canonical" (even load_gate
+		# loads it as a resource). DECISION: scene_root.json crosses ALL
+		# scripts, i.e. --touching it = the full sweep, stated loudly.
+		# Same treatment for a stale reference to the deleted pre-split
+		# monolith (its diff-deletion "touched" everything too).
+		if base in ("scene_root.json", "skeleton_scene.json"):
+			all_scripts = True
+			print(f"derive_qa_surfaces: NOTE -- {base} affects every world boot; "
+				"crossing = ALL canonical scripts (full sweep).", file=sys.stderr)
+			continue
 		if stem in known_maps:
 			touched_tags.add(("maps", stem))
 		if stem in known_skills:
 			touched_tags.add(("skills", stem))
-		# data/skeleton_scene.json / data/skills.json (whole-catalog files,
-		# not yet split per-map/per-skill): conservative fallback -- touch
-		# EVERY map/skill surface tag that exists across the whole manifest,
-		# since the changed line inside a monolithic file can't be
-		# attributed to one map/skill from the path alone.
-		if base == "skeleton_scene.json":
-			for s in surfaces_by_script.values():
-				touched_tags.update(("maps", m) for m in s["maps"])
+		# data/skills.json (whole-catalog file, not split per-skill):
+		# conservative fallback -- touch EVERY skill surface tag that exists
+		# across the whole manifest, since the changed line inside a
+		# monolithic file can't be attributed to one skill from the path.
 		if base == "skills.json":
 			for s in surfaces_by_script.values():
 				touched_tags.update(("skills", sk) for sk in s["skills"])
+
+	if all_scripts:
+		for name in sorted(surfaces_by_script):
+			print(name)
+		return 0
 
 	crossing = set(touched_script_names)
 	for name, surf in surfaces_by_script.items():

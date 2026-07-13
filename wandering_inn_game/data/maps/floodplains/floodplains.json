@@ -1,0 +1,1523 @@
+{
+ "biome": "floodplains",
+ "grid": {
+  "width": 40,
+  "height": 26
+ },
+ "_comment_freezable": "(10,17) is the north edge of the fishing-pond blocking rect (x7-13, y17-21 walls.segments). It is already impassable water, so unfrozen it changes NOTHING for any floodplains route (every ambush/Relc/gate lane is unchanged -- confirmed off the pond). Approaching from the open floor at (10,16) and casting [Snap Freeze] freezes it into walkable ice; stepping onto it and facing down reaches the `frozen_cache` prop at (10,18) (pond interior, otherwise unreachable). The 'secret' is that only a cold-caster can cross the water to it. Ice thaws at sleep. No QA drives this (the seam is proven by sewers_walkthrough); it ships as reachable content.",
+ "freezable": [
+  [
+   10,
+   17
+  ]
+ ],
+ "_comment": "World environment. Reachable via the walkable inn_door route (inn_door -> floodplains (7,6); floodplains_peek was retired once this route landed, see CLAUDE.md). POI anchors: fishing-pond (13,18), ruin-stones interact (31,7). `goblin_encounter_1` sits at (30,23) with `trigger_radius: 2` -- the wall `segments` at y=25 block every column except x=31 (`liscor_gate`'s own cell), so (31,24) is the UNIQUE open cell from which the gate can be reached/interacted -- and (31,24) sits inside the 5x5 Chebyshev-2 square around (30,23) (x:[28,32], y:[21,25]). Any 4-directional path from outside that square to (31,24) (which lies inside it) must enter the square before arriving, so no route to `liscor_gate` avoids the ambush (BFS-proven). `goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
+ "blocked": [
+  [
+   4,
+   2
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   6,
+   2
+  ],
+  [
+   7,
+   2
+  ],
+  [
+   8,
+   2
+  ],
+  [
+   9,
+   2
+  ],
+  [
+   10,
+   2
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   6,
+   3
+  ],
+  [
+   7,
+   3
+  ],
+  [
+   8,
+   3
+  ],
+  [
+   9,
+   3
+  ],
+  [
+   10,
+   3
+  ],
+  [
+   4,
+   4
+  ],
+  [
+   5,
+   4
+  ],
+  [
+   6,
+   4
+  ],
+  [
+   7,
+   4
+  ],
+  [
+   8,
+   4
+  ],
+  [
+   9,
+   4
+  ],
+  [
+   10,
+   4
+  ],
+  [
+   4,
+   5
+  ],
+  [
+   5,
+   5
+  ],
+  [
+   6,
+   5
+  ],
+  [
+   8,
+   5
+  ],
+  [
+   9,
+   5
+  ],
+  [
+   10,
+   5
+  ],
+  [
+   30,
+   4
+  ],
+  [
+   31,
+   4
+  ],
+  [
+   32,
+   4
+  ],
+  [
+   30,
+   5
+  ],
+  [
+   31,
+   5
+  ],
+  [
+   32,
+   5
+  ],
+  [
+   31,
+   6
+  ],
+  [
+   17,
+   7
+  ],
+  [
+   24,
+   19
+  ]
+ ],
+ "floor_layers": [
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     3,
+     2,
+     9,
+     7
+    ]
+   },
+   "_pick": "hill plateau tone"
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "list": [
+     [
+      3,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      3,
+      5
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      3,
+      7
+     ],
+     [
+      3,
+      8
+     ],
+     [
+      4,
+      8
+     ],
+     [
+      5,
+      8
+     ],
+     [
+      6,
+      8
+     ],
+     [
+      7,
+      8
+     ],
+     [
+      8,
+      8
+     ],
+     [
+      9,
+      8
+     ],
+     [
+      10,
+      8
+     ],
+     [
+      11,
+      8
+     ],
+     [
+      11,
+      7
+     ],
+     [
+      11,
+      6
+     ],
+     [
+      11,
+      5
+     ],
+     [
+      11,
+      4
+     ],
+     [
+      11,
+      3
+     ]
+    ]
+   },
+   "_pick": "dry earthen hill brow; the later road layers cut through its south edge"
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     17,
+     2,
+     9,
+     6
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/grass_02.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     21,
+     17,
+     7,
+     5
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/grass_03.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     2,
+     11,
+     5,
+     4
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/grass_03.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     33,
+     9,
+     6,
+     6
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     5,
+     15,
+     11,
+     9
+    ]
+   },
+   "_pick": "wet lowland mud sheet"
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "list": [
+     [
+      16,
+      16
+     ],
+     [
+      16,
+      17
+     ],
+     [
+      17,
+      17
+     ],
+     [
+      15,
+      14
+     ],
+     [
+      14,
+      14
+     ],
+     [
+      6,
+      14
+     ],
+     [
+      7,
+      14
+     ],
+     [
+      4,
+      17
+     ],
+     [
+      4,
+      18
+     ],
+     [
+      3,
+      19
+     ]
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     16,
+     19,
+     4,
+     3
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/transition_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     2,
+     21,
+     3,
+     3
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     6,
+     6,
+     3,
+     2
+    ]
+   },
+   "_pick": "road: inn apron"
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     6,
+     7,
+     2,
+     6
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     7,
+     13,
+     10,
+     2
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     16,
+     14,
+     8,
+     2
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     23,
+     15,
+     6,
+     2
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     28,
+     16,
+     2,
+     5
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     29,
+     20,
+     2,
+     3
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "rect": [
+     30,
+     22,
+     2,
+     4
+    ]
+   }
+  },
+  {
+   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
+   "tile_px": 540,
+   "coords": [
+    0,
+    0
+   ],
+   "cells": {
+    "list": [
+     [
+      21,
+      12
+     ],
+     [
+      22,
+      12
+     ],
+     [
+      20,
+      12
+     ],
+     [
+      22,
+      13
+     ]
+    ]
+   },
+   "_pick": "POI-A shoulder"
+  }
+ ],
+ "_comment_walls": "Liscor wall SE margin (castle picks, iterate) + flood pond as water segments (cap [1,7] = the verified still-water pick from Water_tiles; [3,3] looks right but is island rim, not still water).",
+ "walls": {
+  "sheet": "res://assets/tiles/castle/Tiles.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     20,
+     25
+    ],
+    "to": [
+     30,
+     25
+    ],
+    "cap": [
+     2,
+     11
+    ],
+    "face": [
+     2,
+     13
+    ]
+   },
+   {
+    "from": [
+     32,
+     25
+    ],
+    "to": [
+     39,
+     25
+    ],
+    "cap": [
+     2,
+     11
+    ],
+    "face": [
+     2,
+     13
+    ]
+   },
+   {
+    "from": [
+     9,
+     17
+    ],
+    "to": [
+     11,
+     17
+    ],
+    "cap": [
+     1,
+     5
+    ],
+    "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+    "tile_px": 16
+   },
+   {
+    "from": [
+     8,
+     18
+    ],
+    "to": [
+     12,
+     18
+    ],
+    "cap": [
+     1,
+     5
+    ],
+    "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+    "tile_px": 16
+   },
+   {
+    "from": [
+     7,
+     19
+    ],
+    "to": [
+     13,
+     19
+    ],
+    "cap": [
+     1,
+     5
+    ],
+    "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+    "tile_px": 16
+   },
+   {
+    "from": [
+     8,
+     20
+    ],
+    "to": [
+     12,
+     20
+    ],
+    "cap": [
+     1,
+     5
+    ],
+    "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+    "tile_px": 16
+   },
+   {
+    "from": [
+     9,
+     21
+    ],
+    "to": [
+     11,
+     21
+    ],
+    "cap": [
+     1,
+     5
+    ],
+    "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+    "tile_px": 16
+   }
+  ]
+ },
+ "decor": [
+  {
+   "_comment": "The 120x73 feet-anchored facade renders from x=3.75..11.25 and y=1.44..6.0 at this cell. Its blocked footprint is x=4..10/y=2..5 with the door gap at (7,5); the full y=6 arrival apron stays open. The warm glow is registered here so the shared atmosphere multiplier keeps it off by day and on at dusk/night; with Relc's fire this map has 2 of the allowed 8 lights.",
+   "sprite": "wandering_inn_facade",
+   "cell": [
+    7,
+    5
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.58,
+     0.24
+    ],
+    "energy": 1.15,
+    "radius": 56,
+    "flicker": false
+   }
+  },
+  {
+   "sprite": "grass_tuft",
+   "cell": [
+    4,
+    8
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "grass_tuft",
+   "cell": [
+    10,
+    8
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "campfire",
+   "cell": [
+    11,
+    14
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.5,
+     0.2
+    ],
+    "energy": 1.4,
+    "radius": 48,
+    "flicker": true
+   },
+   "_comment": "Relc's fire — moved beside him (12,13) per pilot verdict: it must READ as his."
+  },
+  {
+   "sprite": "tree_big",
+   "cell": [
+    1,
+    10
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "tree_big",
+   "cell": [
+    16,
+    4
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "tree_big",
+   "cell": [
+    25,
+    3
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "tree_big",
+   "cell": [
+    36,
+    10
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "tree_big",
+   "cell": [
+    3,
+    15
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "tree_round",
+   "cell": [
+    12,
+    10
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "tree_round",
+   "cell": [
+    22,
+    18
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "tree_round",
+   "cell": [
+    35,
+    15
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "tree_big",
+   "cell": [
+    -2,
+    5
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "tree_big",
+   "cell": [
+    18,
+    -2
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "tree_round",
+   "cell": [
+    41,
+    7
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "boulder",
+   "cell": [
+    30,
+    4
+   ]
+  },
+  {
+   "sprite": "boulder",
+   "cell": [
+    32,
+    5
+   ]
+  },
+  {
+   "sprite": "boulder",
+   "cell": [
+    31,
+    5
+   ]
+  },
+  {
+   "sprite": "boulder",
+   "cell": [
+    17,
+    7
+   ]
+  },
+  {
+   "sprite": "boulder",
+   "cell": [
+    24,
+    19
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    20,
+    12
+   ]
+  },
+  {
+   "sprite": "bush_green",
+   "cell": [
+    8,
+    15
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "bush_green",
+   "cell": [
+    9,
+    16
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "bush_green",
+   "cell": [
+    6,
+    18
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "bush_green",
+   "cell": [
+    13,
+    17
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "bush_green",
+   "cell": [
+    14,
+    20
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "bush_green",
+   "cell": [
+    27,
+    8
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "bush_green",
+   "cell": [
+    28,
+    7
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "bush_green",
+   "cell": [
+    34,
+    21
+   ],
+   "sway": true
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    29,
+    24
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    33,
+    24
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    34,
+    23
+   ]
+  }
+ ],
+ "scatter": [
+  {
+   "_comment": "Sway tagged on the whole spec (not split by sprite id) to avoid re-seeding the scatter presence hash, which would move WHICH cells host which prop and break the day-shot 'all else identical' contract -- the pebble instances in this mixed pool also get the shader at the shared subtle default amplitude, imperceptible in practice (see world.gd's _build_scatter comment / task-b3-report.md).",
+   "pool": [
+    "grass_tuft",
+    "pebble",
+    "flower_tiny"
+   ],
+   "density": 0.06,
+   "cluster": 0.7,
+   "seed": 21,
+   "sway": true
+  },
+  {
+   "pool": [
+    "flower_purple"
+   ],
+   "density": 0.015,
+   "cluster": 0.9,
+   "seed": 22,
+   "sway": true
+  }
+ ],
+ "_comment_ambience": "Fireflies + pond_glints share the same rect -- a bounding box over the pond's water-segment cells (walls.segments rows y=17-21, x=7-13, see the walls block above) plus one cell of margin so fireflies read as hovering around/above the water, not clipped to exactly the water tiles.",
+ "ambience": [
+  {
+   "preset": "fireflies",
+   "rect": [
+    6,
+    16,
+    8,
+    6
+   ],
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  },
+  {
+   "preset": "pond_glints",
+   "rect": [
+    6,
+    16,
+    8,
+    6
+   ],
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "floodplains_inn_door",
+   "kind": "door",
+   "cell": [
+    7,
+    5
+   ],
+   "display_name": "The Wandering Inn",
+   "sprite": "door",
+   "to_map": "inn",
+   "to_cell": [
+    14,
+    3
+   ],
+   "hide_sprite": true,
+   "_hide_comment": "Render-only: the wandering_inn_facade decor paints the entrance at this cell; the generic plank door drew ON TOP of it (2026-07-08 review Medium). Door function (interact/to_map) unchanged."
+  },
+  {
+   "_comment": "The inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: a bespoke PixelLab signpost (a text-free wooden post + hanging plank, `assets/sprites/inn_sign/Idle-Sheet.png`) -- the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text). Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
+   "id": "inn_sign",
+   "kind": "prop",
+   "cell": [
+    6,
+    6
+   ],
+   "display_name": "Inn Sign",
+   "sprite": "inn_sign",
+   "on_interact_accomplishment": "read_the_inn_sign",
+   "toast": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN — NO KILLING GOBLINS.",
+   "observe": "The paint is newer than the post it hangs on. Somebody meant it, and means it still."
+  },
+  {
+   "_comment": "A lost cache on the pond floor at (10,18), inside the fishing-pond blocking rect and thus unreachable UNLESS the player frost-freezes the pond edge (10,17) and steps onto the ice to interact it (see the floodplains `freezable` list). Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast. Sits on an already-blocked pond cell, so it alters no route and no script reaches or asserts it. Sprite `crate` stands in for a silt-buried strongbox (VISUAL-LOG flag). Issue #81 (exploration & optional content): the economy pass this comment used to flag -- 'a future economy pass can hang gold/an item off this discovery' -- lands here. `gold: 5` rides the SAME on_interact_accomplishment branch's existing optional `gold` field (wi_game.gd's interact(), the serving_tray/patron precedent), fired AFTER the atmospheric toast above (record_accomplishment -> toast -> gold -> its own 'Earned 5 gold.' toast) -- the flavor text is untouched, this is additive only. `bounty_pond_keepsakes` (data/bounties.json) now also reads found_the_frozen_cache for a small board bonus, so the one secret this game shipped that paid literally nothing now pays gold directly AND feeds a posting. Still 'No QA drives this' (the freeze-cross mechanic itself remains a deliberately disclosed gap, per the original note) -- this task did not add fixture/canonical coverage for the reward, consistent with that pre-existing, accepted scope.",
+   "id": "frozen_cache",
+   "kind": "prop",
+   "cell": [
+    10,
+    18
+   ],
+   "display_name": "Sunken Cache",
+   "sprite": "crate",
+   "tint": [
+    0.62,
+    0.78,
+    0.9
+   ],
+   "observe": "Something square and man-made rests on the pond floor a stride out from the bank, furred with silt. Too far to reach across open water. But water can be made to bear weight, if you know the trick of cold.",
+   "on_interact_accomplishment": "found_the_frozen_cache",
+   "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, dry against all odds, a few keepsakes someone drowned here meant never to be found.",
+   "gold": 5,
+   "variants": [
+    {
+     "when": {
+      "found_the_frozen_cache": 1
+     },
+     "gold": 0,
+     "toast": "The strongbox sits open and empty now, holding nothing but pond-light."
+    }
+   ]
+  },
+  {
+   "_comment": "`on_enter_accomplishment` banks `reached_liscor` on door travel INTO the street (the Act I gate's street-arrival counter). Fires ONLY on real door interaction (the `door` branch of interact()), never on QA teleport or save/load restore (those use bind_map_silent/transition without the entity), so a load can never spuriously advance the act. record_accomplishment is idempotent for gate purposes (>= 1). DISCLOSURE: every canonical script that walks floodplains -> liscor_gate -> street now carries reached_liscor:1 in its snapshot (additive counter; no script asserts an exact accomplishments dict).",
+   "id": "liscor_gate",
+   "kind": "door",
+   "cell": [
+    31,
+    25
+   ],
+   "display_name": "To Liscor",
+   "sprite": "door",
+   "to_map": "street",
+   "to_cell": [
+    1,
+    3
+   ],
+   "on_enter_accomplishment": "reached_liscor"
+  },
+  {
+   "id": "goblin_encounter_1",
+   "kind": "encounter",
+   "cell": [
+    30,
+    23
+   ],
+   "trigger_radius": 2,
+   "display_name": "Goblin Ambush",
+   "sprite": "goblin_base",
+   "arena": "goblin_ambush_tutorial",
+   "enemies": [
+    "goblin_raider",
+    "goblin_shaman"
+   ],
+   "allies": [
+    "relc"
+   ],
+   "ally_requires": {
+    "met_relc": 1
+   },
+   "_comment": "Issue #62 finding 8: RETIRED to one-shot -- `respawns: true` used to leave this armed forever (dormant-until-next-sleep, re-arming every waking), so the same ambush kept springing on every trip past the gate, sleep after sleep, long after the tutorial beat it exists for was long over. `respawns` (and its now-dead `repeat_arena`/`tutorial_seen_when` pair, which only ever mattered for a POST-dormancy re-arm) are gone outright: resolve_combat's existing `elif not persistent: remove_entity(...)` arm (already shipped, no new sim mechanism) now fires on this entity's first victory, same as any ordinary one-shot encounter -- it is gone from the map for good afterward, exactly like goblin_encounter_2. riverfarm's river_wolf_pack pair keeps `respawns: true` (deliberate, unrelated -- a night-only recurring danger, not a one-time tutorial beat). This arena's own tutor_lines close on road_clear's sign line (\"See the sign? Her inn, her rule. The road's the road. Teeth are teeth out here. But under her roof? Don't.\") -- the shipped resolution moment for holding the inn's no-killing-goblins rule on the road; sign_defended (below) still banks once, satisfying the Garden gate's K-of-4 read (`accomplishment_count` >=1, unaffected by this fight now being unrepeatable).",
+   "on_victory": [
+    "won_combat",
+    "sign_defended"
+   ],
+   "loot": [
+    {
+     "item": "crude_blade",
+     "chance": 0.25
+    },
+    {
+     "gold": 2,
+     "chance": 0.5
+    }
+   ]
+  },
+  {
+   "id": "goblin_encounter_2",
+   "kind": "encounter",
+   "cell": [
+    28,
+    18
+   ],
+   "display_name": "Goblin Warband",
+   "sprite": "goblin_base",
+   "arena": "goblin_ambush",
+   "enemies": [
+    "goblin_raider",
+    "goblin_shaman"
+   ],
+   "allies": [
+    "relc"
+   ],
+   "ally_requires": {
+    "met_relc": 1
+   },
+   "conversation": "goblin_parley",
+   "on_victory": [
+    "won_combat",
+    "street_cleared"
+   ],
+   "loot": [
+    {
+     "item": "chipped_spear",
+     "chance": 0.25
+    },
+    {
+     "gold": 2,
+     "chance": 0.5
+    }
+   ]
+  },
+  {
+   "id": "chieftains_raid",
+   "kind": "encounter",
+   "cell": [
+    31,
+    7
+   ],
+   "display_name": "Chieftain's Raid",
+   "sprite": "goblin_sword",
+   "arena": "cave_mouth",
+   "enemies": [
+    "goblin_chieftain",
+    "goblin_raider",
+    "cave_spider"
+   ],
+   "allies": [
+    "relc"
+   ],
+   "ally_requires": {
+    "met_relc": 1
+   },
+   "on_victory": [
+    "won_combat"
+   ],
+   "loot": [
+    {
+     "item": "chipped_spear",
+     "chance": 0.5
+    },
+    {
+     "gold": 5,
+     "chance": 0.75
+    }
+   ]
+  },
+  {
+   "id": "relc",
+   "kind": "npc",
+   "cell": [
+    12,
+    13
+   ],
+   "display_name": "Relc",
+   "sprite": "relc",
+   "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it. Including you, now.",
+   "friendly_line": "Heh. Alright, alright - I like you. You've got the look of someone who buys a guy a drink after. We're good, you and me. Best guardsman in Liscor says so.",
+   "facing": "left",
+   "_comment_stages": "Talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the relc_intro.json meet-topic unlocks (relc_army/relc_after) lifted verbatim from docs/design/social-2-staging/relc_stages.json after the re-path wave went green. relc_after's daughter/Embria reveal stays OUT (V5 canon, hard rail -- the staged oblique 'people I left in it' copy is what ships). Stage 3's spar-wager perk refinement stays UNBUILT/flagged (status quo: relc_spar already re-offers).",
+   "talk_pool": [
+    "Heh. You walk like nobody's ever hit you properly. We should fix that sometime - for fun.",
+    "Road's boring today. I keep hoping something stupid charges the gate so I can try out the old Relc Headbutt.",
+    "You gonna eat that? ...No? Shame. Guarding's hungry work, and I'm the best there is at it.",
+    "Stand up straight, kid. Best guardsman in Liscor is watching this road. That's me. Obviously.",
+    "You met Klb yet? Senior Guardsman, four arms, does paperwork like it's a Skill. Best partner in the Watch. Tell him he owes me a drink — he'll say ants don't drink. He's lying."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "relc_sparring_partner",
+     "requires_accomplishment": {
+      "sparred_with_relc": 1,
+      "chatted_with_relc": 2
+     },
+     "lines": [
+      "Hah! There's my favorite punching bag. Kidding. The dummies are my favorite. You're a close third after lunch.",
+      "You're standing straighter. See that? That's me. I'm basically a [Teacher]. Don't tell the Watch, they'll dock my pay for moonlighting.",
+      "Quiet shift. If anything with teeth shows up, you'll hear me laughing before you hear the bell."
+     ]
+    },
+    {
+     "id": "relc_brother_in_arms",
+     "requires_accomplishment": {
+      "cleared_the_warren": 1,
+      "chatted_with_relc": 3
+     },
+     "lines": [
+      "There they are. You know what I like about you? You went DOWN the creepy hole. Most people file a report about the hole. From upstairs.",
+      "Zevara smiled this week. Actual smile. The warren's sealed and the city's still standing. I'm taking full credit and handing you most of it.",
+      "Next time something ugly crawls out of the ground, I'm not even worried. That's new for me. Don't make it weird."
+     ]
+    }
+   ],
+   "conversation": "relc_intro",
+   "dialogue": [
+    {
+     "speaker": "Relc",
+     "text": "Road's watched. You're welcome."
+    }
+   ]
+  },
+  {
+   "id": "relc_spar",
+   "kind": "encounter",
+   "cell": [
+    13,
+    12
+   ],
+   "display_name": "Training Dummies",
+   "sprite": "training_dummy",
+   "observe": "Straw and burlap lashed to posts, hacked half to ribbons. Someone drills here often, and hard. The stitching tells you where a real guard would break.",
+   "arena": "training_yard",
+   "enemies": [
+    "training_dummy_a",
+    "training_dummy_b"
+   ],
+   "allies": [],
+   "trivial": true,
+   "persistent": true,
+   "on_victory": [
+    "sparred_with_relc"
+   ],
+   "conversation": "dummies_note"
+  },
+  {
+   "id": "ruin_stones",
+   "kind": "prop",
+   "cell": [
+    3,
+    8
+   ],
+   "display_name": "Ruin Stones",
+   "sprite": "boulder",
+   "contains": [
+    "traveler_charm"
+   ]
+  },
+  {
+   "_comment": "The recovery run lives in a small DEDICATED ruin map family. LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the `ruin_surface` map below, the inside half). Gate `door_when.requires: {door_chain_started: 1}` (Erin's dialogue banks it at beat 1) -- until then interact falls through to the on_interact_accomplishment/toast branch below, the sewer_grate/deep_fissure pre-gate precedent (byte-identical fallback, no route change for any existing script). Placed at floodplains (38,11), inside the open grass_03 patch (33-38,9-14) -- confirmed off EVERY canonical floodplains route: a full replay of every qa/scripts/*.json's move/press/teleport sequence (blocked-cell-aware, starting from each script's real entry -- its fixture start where one exists, else the universal (7,6) door-arrival cell) showed every route that crosses the chieftains_raid/liscor_gate corridor caps out at x<=31 (tutorial_flow's 'right 18' from (12,6) lands x=30; quest_errand_fight/gate_district_walkthrough/combat_walkthrough/economy_loop all share that same capped-at-x31 shape) -- x=38 is walked and faced by nothing today. Well clear of the tree_big(36,10)/tree_round(35,15) decor and every other floodplains entity (chieftains_raid 31,7 / goblin_encounter_2 28,18 / relc 12,13 / relc_spar 13,12 / frozen_cache 10,18 / ruin_stones 3,8 / inn_sign 6,6). Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate VISUAL-LOG precedent for a not-yet-bespoke gated-entrance prop -- a real ruin-entrance crop is lane γ's job).",
+   "id": "ruin_door",
+   "kind": "prop",
+   "cell": [
+    38,
+    11
+   ],
+   "display_name": "A Cracked Seam",
+   "sprite": "boulder",
+   "tint": [
+    0.55,
+    0.6,
+    0.68
+   ],
+   "observe": "A hairline crack runs through old, dressed stone half-swallowed by turf -- not natural rock, something built. Cold air breathes up out of it, and it smells of somewhere else.",
+   "on_interact_accomplishment": "found_the_rift_seam",
+   "toast": "A cold seam splits the earth here, sealed by old stone. It doesn't feel like it goes anywhere. Yet.",
+   "door_when": {
+    "requires": {
+     "door_chain_started": 1
+    },
+    "to_map": "ruin_surface",
+    "to_cell": [
+     2,
+     2
+    ],
+    "open_toast": "The seam splits wider at your touch, cold air breathing out of the dark beneath. You step through, into somewhere else."
+   }
+  },
+  {
+   "_comment": "Issue #24 (HR-II forward-ref): bounty_crab_cull's own encounter bank. NO trigger_radius -- the ambush-one-shot lesson (goblin_encounter_1/river_wolf_pack) doesn't apply here: this is a renewable cull target a player CHOOSES to pick a fight with, not a proximity danger sprung on them. Interact opens the `crab_nest` confirm conversation (review-wave M1 controller ruling, the awakened_boss/relc_descent confirm shape: the node text telegraphs the armor, [Strike first.] fires the fight via a start_combat dialogue effect, [Back away.] leaves it live and re-interactable -- informed consent for a fresh classless player; see data/dialogue/crab_nest.json's own TRAP note for the dormant-re-interact edge). respawns:true (staging note's own recommendation, docs/archive/staging/board-staging/guild-bounties.json's bounty_crab_cull _notes -- a rotating bounty that can only complete once is a design smell) -- the entity goes dormant until the next sleep re-arms it, same mechanism river_wolf_pack/alley_footpads already use, just without their trigger_radius half. `allies`/`ally_requires` mirror every other floodplains fight (goblin_encounter_1/2, chieftains_raid): Relc fields once met_relc is banked, solo before that. Placed at (21,16) -- verified off every canonical floodplains route the same way ruin_door's own placement comment documents: replayed every qa/scripts/*.json crossing this map (move/assert_state/teleport-aware simulator, entry cells (7,6)/(31,24)/(37,11) per the three floodplains doors) and confirmed the nearest walked cell is Chebyshev 7 away (class_evolution_loop's own x=28 corridor); nearest existing entity is goblin_encounter_2 at (28,18), Chebyshev 7; nearest blocked cell is the (24,19) boulder at Chebyshev 3 -- close enough to read as the SAME boulder field without colliding with it. Sprite `rock_crab` (data/sprites.json) is a genuine crab pick (Admurin Enemy_Galore_I/Crab), pre-tinted stone-grey in the shipped asset itself (see assets_manifest.json's own trace) rather than an entity-level `tint` override, since the fight needs the SAME palette in both field and combat and combat sprites have no runtime tint hook. NO `loot` table (unlike goblin_encounter_1/2) -- deliberate: the bounty's OWN turn-in payout is the canonical proof surface (`crab_cull_loop`'s gold-exact assertion), and fight loot rolls off an isolated per-encounter rng stream keyed to the QA CLI `--seed` (independent of the fixture's own combat rng_state) -- adding a chance-based gold drop here would make that assertion seed-dependent for no gameplay reason (river_wolf_pack, the other respawns:true precedent, carries no loot table either).",
+   "id": "rock_crab_nest",
+   "kind": "encounter",
+   "cell": [
+    21,
+    16
+   ],
+   "display_name": "Boulder Shapes",
+   "sprite": "rock_crab",
+   "arena": "boulder_flats",
+   "conversation": "crab_nest",
+   "enemies": [
+    "rock_crab"
+   ],
+   "allies": [
+    "relc"
+   ],
+   "ally_requires": {
+    "met_relc": 1
+   },
+   "respawns": true,
+   "observe": "Three boulders sit too evenly spaced for the hillside's own tumble, and one of them, you'd swear, just shifted.",
+   "on_victory": "rock_crabs_culled"
+  },
+  {
+   "_comment": "Issue #80 (world reactivity wave, item 4 -- night texture, taste-gate 2026-07-12: ONE night-only slot per outdoor region, the river_wolf_pack precedent applied to Liscor's own approach road). EXISTING combatants only (goblin_raider/goblin_shaman -- goblin_encounter_2's own roster) on the EXISTING goblin_ambush arena; ally relc gated met_relc, matching every other floodplains fight. encounter_when{phase:[night]} + trigger_radius 1 (river_wolf_pack's own tightest radius, not goblin_encounter_1's old radius-2 -- smallest honest footprint) + respawns:true (a recurring night danger, not a one-time ambush -- river_wolf_pack's exact shape, NOT goblin_encounter_1/2's now-retired one-shot shape, issue #62 finding 8). visual_states hides the field marker outside night (river_wolf_pack's own fix for a marker standing in daylight beside its own gone-with-the-light toast). PLACEMENT: (10,21), the empty y20-22 band -- checked Chebyshev distance against every floodplains coordinate any qa/scripts/*.json or qa/fixtures/*.json touches (grep sweep across all 39 floodplains-touching scripts, plus a full entity/blocked-cell distance scan): the nearest OTHER entity on the map is frozen_cache (10,18), Chebyshev 3, but it's a pond-locked prop no shipped canonical visits (reached only via the [Ice Floor] freeze-a-crossing side path) and still clear of this entity's own trigger_radius 1; nearest blocked cell is (17,7), Chebyshev 14; nearest REAL route is gate_district_walkthrough's own x=30 goblin-ambush/gate corridor, Chebyshev 20+. No canonical's pinned walk enters this band.",
+   "id": "goblin_night_patrol",
+   "kind": "encounter",
+   "cell": [
+    10,
+    21
+   ],
+   "display_name": "Raiders in the Dark",
+   "sprite": "goblin_base",
+   "arena": "goblin_ambush",
+   "enemies": [
+    "goblin_raider",
+    "goblin_shaman"
+   ],
+   "allies": [
+    "relc"
+   ],
+   "ally_requires": {
+    "met_relc": 1
+   },
+   "respawns": true,
+   "encounter_when": {
+    "phase": [
+     "night"
+    ]
+   },
+   "trigger_radius": 1,
+   "observe": "A patrol slipping the boulder line, quiet until they're not. Only after dark.",
+   "gate_closed_toast": "Nothing moving out there. Whatever it was keeps day hours, same as everyone sane.",
+   "visual_states": [
+    {
+     "_comment": "Marker visible ONLY while the night encounter_when gate can fire -- river_wolf_pack's own fix, applied verbatim.",
+     "when": {
+      "phase": [
+       "day",
+       "dusk"
+      ]
+     },
+     "hidden": true
+    }
+   ],
+   "on_victory": "won_combat"
+  }
+ ],
+ "cover_skip": [
+  [
+   4,
+   2
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   4,
+   4
+  ],
+  [
+   4,
+   5
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   5,
+   4
+  ],
+  [
+   5,
+   5
+  ],
+  [
+   6,
+   2
+  ],
+  [
+   6,
+   3
+  ],
+  [
+   6,
+   4
+  ],
+  [
+   6,
+   5
+  ],
+  [
+   7,
+   2
+  ],
+  [
+   7,
+   3
+  ],
+  [
+   7,
+   4
+  ],
+  [
+   8,
+   2
+  ],
+  [
+   8,
+   3
+  ],
+  [
+   8,
+   4
+  ],
+  [
+   8,
+   5
+  ],
+  [
+   9,
+   2
+  ],
+  [
+   9,
+   3
+  ],
+  [
+   9,
+   4
+  ],
+  [
+   9,
+   5
+  ],
+  [
+   10,
+   2
+  ],
+  [
+   10,
+   3
+  ],
+  [
+   10,
+   4
+  ],
+  [
+   10,
+   5
+  ]
+ ],
+ "_cover_skip_comment": "Render-only (world.gd's blocked layer): the wandering_inn_facade sprite visually owns these 27 blocked cells; the generic cover tile would show through the sprite's transparent regions (the roofline gap the 2026-07-08 windowed read caught). Sim blocking unchanged. If the facade sprite or its cell moves, move this list WITH it."
+}

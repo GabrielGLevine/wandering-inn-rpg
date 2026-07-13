@@ -28,7 +28,7 @@ extends SceneTree
 ## (earn/level toasts built from short templates). If any of those surfaces
 ## ever gains a fixed-width no-wrap row, add its corpus here.
 ##
-## FOUR budgeted surfaces (mirrored from their real source consts, each with
+## FIVE budgeted surfaces (mirrored from their real source consts, each with
 ## a drift-tripwire regex assertion below so a future const edit there fails
 ## THIS suite loudly instead of silently invalidating the mirrored budget):
 ##  - AMBIENT-BARK: message_layer.gd's `_dialogue_panel`/`_dialogue_label`
@@ -73,6 +73,18 @@ extends SceneTree
 ##    ONE line at the panel's real text width draws PAST the parchment art's
 ##    edge, a true, currently-reproducible overflow. This is the check that
 ##    actually flags real corpus lines (see report for measurements).
+##  - HELP (issue #107): settings_panel.gd's Help reference sub-page
+##    (`_build_help_panel`) -- the Controls sub-page's idiom, a FIXED
+##    (HELP_PANEL_SIZE), NON-scrolling panel, so unlike TOAST/DIALOGUE-PANEL
+##    there is no auto-grow safety net: a section that wraps past
+##    HELP_SECTION_LINE_CAP lines draws past the panel's own fixed bottom
+##    edge, a real overflow (the same class DIALOGUE-PANEL/option's
+##    "never widen" width check catches, just on the vertical axis, because
+##    this panel deliberately has no ScrollContainer -- see settings_panel.gd's
+##    `_build_help_panel` doc comment). Corpus: `data/help_content.json`'s
+##    `sections[].heading`/`.body`, rendered together as ONE wrapped Label
+##    per section (`"%s — %s" % [heading, body]`, settings_panel.gd's
+##    `_help_line`).
 ##
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_copy_fit.gd
 
@@ -102,6 +114,17 @@ const PANEL_SIZE_Y := 232.0
 const PAGE_CHAR_BUDGET := 200
 const SENTENCE_BOUNDARY_WINDOW_FRACTION := 0.2
 const DIALOGUE_PANEL_TEXT_WIDTH := PANEL_SIZE_X - 56.0  # `_ready()`'s 28+28 margin
+
+# settings_panel.gd -- issue #107, Help reference sub-page. HELP_PANEL_WIDTH
+# mirrors HELP_PANEL_SIZE.x (620.0); HELP_TEXT_WIDTH subtracts `_build_help_
+# panel`'s 26+26 MarginContainer margins, same derivation the real const uses.
+# HELP_SECTION_LINE_CAP (3) is the sizing pass's measured ceiling (the
+# longest section, "The Boards", wraps to exactly 3 lines at this width;
+# every other section wraps to 2) -- a future edit growing any body past 3
+# lines would draw past HELP_PANEL_SIZE's fixed bottom edge (no ScrollContainer).
+const HELP_PANEL_WIDTH := 620.0
+const HELP_TEXT_WIDTH := HELP_PANEL_WIDTH - 52.0
+const HELP_SECTION_LINE_CAP := 3
 
 
 ## Skeleton entity string fields that route to WIEvents.TOAST (traced via
@@ -139,6 +162,7 @@ func _init() -> void:
 	_check_bounty_delivery_copy()
 	_check_bounty_delivery_titles()
 	_check_board_rumors()
+	_check_help_content()
 
 	print("copy_fit: %d strings measured across all surfaces" % _measured_count)
 	if not _failures.is_empty():
@@ -170,6 +194,12 @@ func _check_drift_tripwires() -> void:
 	# Vector2 literal form doesn't fit the simple `NAME := VALUE` regex above.
 	var src := FileAccess.get_file_as_string("res://src/ui/dialogue_panel.gd")
 	assert(src.contains("Vector2(720.0, 232.0)"), "dialogue_panel.gd's PANEL_SIZE literal drifted from the mirrored PANEL_SIZE_X/Y (720.0, 232.0) -- update this test's mirrored consts")
+	# HELP_PANEL_SIZE/HELP_TEXT_WIDTH (issue #107) -- same substring-literal
+	# reasoning (a Vector2 const + a derived-expression const, neither fits
+	# the simple `NAME := VALUE` scalar regex above).
+	var settings_src := FileAccess.get_file_as_string("res://src/ui/settings_panel.gd")
+	assert(settings_src.contains("const HELP_PANEL_SIZE := Vector2(620.0, 470.0)"), "settings_panel.gd's HELP_PANEL_SIZE literal drifted from the mirrored HELP_PANEL_WIDTH (620.0) -- update this test's mirrored consts")
+	assert(settings_src.contains("const HELP_TEXT_WIDTH := HELP_PANEL_SIZE.x - 52.0"), "settings_panel.gd's HELP_TEXT_WIDTH derivation drifted from the mirrored HELP_TEXT_WIDTH (HELP_PANEL_WIDTH - 52.0) -- update this test's mirrored const")
 
 
 func _assert_const_matches(path: String, const_name: String, expected_value: String) -> void:
@@ -243,7 +273,7 @@ func _fail(surface: String, path: String, text: String, detail: String) -> void:
 ## ---- AMBIENT-BARK + TOAST corpus: skeleton_scene.json ----
 
 func _check_skeleton_scene() -> void:
-	var scene := _load_json("res://data/skeleton_scene.json")
+	var scene := WISceneCatalog.compose()
 	for map_id: String in scene.get("maps", {}):
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
@@ -404,7 +434,7 @@ func _check_bounty_delivery_titles() -> void:
 ## to every corpus walk until this pass (a validator that never SEES a
 ## string passes vacuously -- the #65 review's finding, widened here).
 func _check_board_rumors() -> void:
-	var scene := _load_json("res://data/skeleton_scene.json")
+	var scene := WISceneCatalog.compose()
 	for map_id: String in scene.get("maps", {}):
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
@@ -413,6 +443,29 @@ func _check_board_rumors() -> void:
 				var rumor: Dictionary = entity["board_rumors"][ri]
 				if rumor.has("copy"):
 					_check_dialogue_body("data/skeleton_scene.json[maps.%s.entities.%s].board_rumors[%d].copy" % [map_id, eid, ri], String(rumor["copy"]))
+
+
+## ---- HELP corpus: data/help_content.json (issue #107) ----
+##
+## Mirrors `settings_panel.gd`'s `_help_line` EXACTLY (`"%s — %s" % [heading,
+## body]`) so this measures the same string the panel actually renders, one
+## Label per section, HELP_TEXT_WIDTH wide -- see the HELP budgeted-surface
+## doc comment above for why this is a hard line-cap check (no ScrollContainer,
+## no auto-grow) rather than TOAST/DIALOGUE-PANEL's generous-cap treatment.
+func _check_help_content() -> void:
+	var data := _load_json("res://data/help_content.json")
+	var sections: Array = data.get("sections", [])
+	for i in sections.size():
+		var section: Dictionary = sections[i]
+		var loc := "data/help_content.json[sections[%d]]" % i
+		var line := "%s — %s" % [String(section.get("heading", "")), String(section.get("body", ""))]
+		_measured_count += 1
+		if _has_unsplittable_word(line, HELP_TEXT_WIDTH):
+			_fail("HELP", loc, line, "contains a single word wider than the %dpx Help-panel width" % int(HELP_TEXT_WIDTH))
+			continue
+		var lines := _wrapped_line_count(line, HELP_TEXT_WIDTH)
+		if lines > HELP_SECTION_LINE_CAP:
+			_fail("HELP", loc, line, "%d wrapped lines > %d-line fixed-panel budget (HELP_PANEL_SIZE has no ScrollContainer)" % [lines, HELP_SECTION_LINE_CAP])
 
 
 ## ---- Per-surface checks ----

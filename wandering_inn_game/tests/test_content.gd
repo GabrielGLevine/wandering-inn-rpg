@@ -9,14 +9,15 @@ const DIALOGUE_DIR := "res://data/dialogue"
 ## walked separately below, via the same DIALOGUE_DIR enumeration
 ## `_load_dialogue_graphs` uses). Deliberately excludes files with NO player
 ## text (biomes/moods/audio/sprites.json -- asset paths + dev `_comment`s
-## only, confirmed by hand before this list was written).
+## only, confirmed by hand before this list was written). The scene/map
+## catalog (data/maps/<region>/<map>.json, issue #100) is walked separately
+## via WISceneCatalog.compose(), not listed here -- it's no longer one file.
 const PLAYER_STRING_FILES := [
 	"res://data/items.json",
 	"res://data/skills.json",
 	"res://data/quests.json",
 	"res://data/acts.json",
 	"res://data/classes.json",
-	"res://data/skeleton_scene.json",
 	"res://data/combatants.json",
 	"res://data/arenas.json",
 	"res://data/bounties.json",
@@ -28,7 +29,7 @@ func _init() -> void:
 	WITestWatchdog.arm(self)
 	var graphs: Dictionary = _load_dialogue_graphs()
 	var quests: Dictionary = _load_json("res://data/quests.json")
-	var scene: Dictionary = _load_json("res://data/skeleton_scene.json")
+	var scene: Dictionary = WISceneCatalog.compose()
 	var skills: Dictionary = _load_json("res://data/skills.json")
 	var classes: Dictionary = _load_json("res://data/classes.json")
 	var items: Dictionary = _load_json("res://data/items.json")
@@ -148,6 +149,7 @@ func _validate_player_string_vocab() -> void:
 	provenance.compile("(?i)Task [A-Z]?\\d+|issue #\\d+")
 	for path: String in PLAYER_STRING_FILES:
 		_scan_player_strings(_load_json(path), path, attr, provenance)
+	_scan_player_strings(WISceneCatalog.compose(), "res://data/maps/** (composed)", attr, provenance)
 	var dir: DirAccess = DirAccess.open(DIALOGUE_DIR)
 	for file_name: String in dir.get_files():
 		if file_name.ends_with(".json"):

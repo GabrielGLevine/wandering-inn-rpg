@@ -73,7 +73,7 @@ func _land_pc_hit(g: WIGame) -> void:
 
 func _init() -> void:
 	WITestWatchdog.arm(self)
-	var scene_config := _load_json("res://data/skeleton_scene.json")
+	var scene_config := WISceneCatalog.compose()
 	var skill_config := _load_json("res://data/skills.json")
 	var game := WIGame.new(scene_config, skill_config, _sink, 12345)
 
@@ -196,7 +196,7 @@ func _init() -> void:
 		"items": _load_json("res://data/items.json"),
 	}
 	_events.clear()
-	var g := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	# The scene config seeds no starting class (classless start --
 	# player.classes is {}). This fixture's intent is combat-handoff/
 	# sleep-leveling machinery, not the classless-start behavior itself
@@ -263,7 +263,7 @@ func _init() -> void:
 	var cc_parley: Dictionary = combat_config.duplicate(true)
 	cc_parley["dialogue"] = {"goblin_parley": goblin_parley_graph}
 
-	var gsp1 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_parley)
+	var gsp1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_parley)
 	gsp1.classes = {"warrior": 1}
 	gsp1.transition("floodplains", Vector2i(27, 18))
 	assert(gsp1.start_dialogue("goblin_parley", "goblin_encounter_2"), "parley starts")
@@ -273,7 +273,7 @@ func _init() -> void:
 	assert(gsp1.combat == null, "no fight on the bypass")
 	assert(not gsp1.entities.has("goblin_encounter_2"), "encounter removed by the bypass")
 
-	var gsp2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_parley)
+	var gsp2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_parley)
 	gsp2.classes = {"warrior": 1}
 	gsp2.transition("floodplains", Vector2i(27, 18))
 	assert(gsp2.start_dialogue("goblin_parley", "goblin_encounter_2"), "parley starts")
@@ -286,7 +286,7 @@ func _init() -> void:
 	assert(gsp2.accomplishment_count("won_combat") == 1 and gsp2.accomplishment_count("street_cleared") == 1, "fight path still banks its own pair")
 	assert(gsp2.accomplishment_count("goblins_spared") == 0, "a won fight never banks goblins_spared")
 
-	var gsp3 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_parley)
+	var gsp3 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_parley)
 	gsp3.classes = {"warrior": 1}
 	gsp3.transition("floodplains", Vector2i(27, 18))
 	assert(gsp3.start_dialogue("goblin_parley", "goblin_encounter_2"), "parley starts")
@@ -297,7 +297,7 @@ func _init() -> void:
 	assert(gsp3.entities.has("goblin_encounter_2"), "declining leaves the encounter in place")
 
 	# --- multi-map + doors ---
-	var g2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(g2.current_map == "inn", "starts on start_map")
 	assert(g2.entities.has("erin") and not g2.entities.has("selys"), "entities are per-map")
 	# Door transition: walk to face inn_door at [15,3] from [14,3]
@@ -335,7 +335,7 @@ func _init() -> void:
 	}
 	var cc2: Dictionary = combat_config.duplicate(true)
 	cc2["dialogue"] = {"test_conv": dlg_graph}
-	var g4 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc2)
+	var g4 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc2)
 	# Classless start means g4 has no class grants by default; this
 	# fixture's intent is proving known_skills() folds innate + class
 	# grants together, so seed Warrior 1 explicitly.
@@ -370,7 +370,7 @@ func _init() -> void:
 	]}]}
 	var cc4: Dictionary = cc2.duplicate(true)
 	cc4["quests"] = quest_catalog
-	var g6 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc4)
+	var g6 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc4)
 	_events.clear()
 	g6.start_quest("the_errand")
 	assert(_count("quest_started") == 1 and _count("toast") == 1, "start_quest emits event + toast")
@@ -388,7 +388,7 @@ func _init() -> void:
 	var cc5: Dictionary = combat_config.duplicate(true)
 	cc5["dialogue"] = {"edge_conv": edge_graph}
 	cc5["quests"] = quest_catalog
-	var g7 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc5)
+	var g7 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc5)
 	assert(g7.start_dialogue("edge_conv", "erin"), "edge dialogue starts")
 	_events.clear()
 	assert(g7.dialogue_choose(0), "accomplishment before quest effect is accepted")
@@ -402,7 +402,7 @@ func _init() -> void:
 		"n2": {"speaker": "X", "text": "t2", "options": [{"text": "bye", "end": true}]}}}
 	var cc3: Dictionary = combat_config.duplicate(true)
 	cc3["dialogue"] = {"conv2": dlg_graph2}
-	var g5 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc3)
+	var g5 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc3)
 	g5.start_dialogue("conv2", "erin")
 	_events.clear()
 	assert(g5.dialogue_choose(0), "choice itself succeeds")
@@ -414,7 +414,7 @@ func _init() -> void:
 	# and grants NO class. [Mage] is earned from Pisces' lesson
 	# (learned_magic_from_pisces) + the sleep beat.
 	_events.clear()
-	var g8 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g8 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g8.player_cell = Vector2i(12, 6)
 	g8.player_facing = Vector2i.DOWN
 	g8.interact()
@@ -443,7 +443,7 @@ func _init() -> void:
 	assert(gain_toast["type"] == "toast" and gain_toast["payload"]["text"] == "[Mage] class gained! — [Frost Bolt], [Quick Cast], [Light]", "O4 grants-listing gain toast text")
 
 	# Same-sleep composition: gain + immediate level when thresholds already met
-	var g9 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g9 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	for i in 3:
 		g9.record_accomplishment("won_combat")
 	g9.record_accomplishment("learned_magic_from_pisces")
@@ -566,7 +566,7 @@ func _init() -> void:
 	# --- Victory banks the PC's action tally into accomplishments ---
 	# (liveness is the `trivial: true` DATA flag only; no round-count or
 	# damage heuristic exists. Defeat banks nothing.)
-	var g11 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g11 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g11.transition("street", Vector2i(4, 3))
 	assert(g11.start_combat("goblin_encounter_2"), "tally-bank combat starts")
 	var cb11 := g11.combat
@@ -615,7 +615,7 @@ func _init() -> void:
 	assert(melee_events == 1, "one accomplishment_recorded per banked counter")
 
 	# --- seen_statuses once-only + cross-fight persistence ---
-	var gStatus := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 777, combat_config)
+	var gStatus := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 777, combat_config)
 	gStatus.record_accomplishment("met_relc")
 	gStatus.transition("floodplains", Vector2i(27, 18))
 	assert(gStatus.start_combat("goblin_encounter_2"), "status test: fight 1 starts")
@@ -678,7 +678,7 @@ func _init() -> void:
 
 	# `trivial: true` on the ENCOUNTER banks nothing, silently; the fight
 	# still resolves normally (on_victory records, entity removed).
-	var g12 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g12 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g12.find_entity("goblin_encounter_2")["trivial"] = true
 	# goblin_encounter_2 lives on "floodplains" -- transition there so the
 	# entities.has() check below reads the map that actually owns it.
@@ -703,7 +703,7 @@ func _init() -> void:
 	assert(not g12.entities.has("goblin_encounter_2"), "trivial fight still removes the encounter")
 
 	# `trivial: true` on the ARENA config also suppresses the bank.
-	var g13 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g13 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g13.transition("street", Vector2i(4, 3))
 	assert(g13.start_combat("goblin_encounter_2"), "arena-trivial combat starts")
 	g13.combat.arena_config["trivial"] = true
@@ -716,7 +716,7 @@ func _init() -> void:
 
 	# Defeat banks NOTHING — defeat reloads the autosave, so lost tallies are
 	# consistent with the reload.
-	var g14 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g14 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	# This block damages "relc" directly, so the ally_requires gate must be
 	# met before the encounter starts or relc is never fielded.
 	g14.record_accomplishment("met_relc")
@@ -734,7 +734,7 @@ func _init() -> void:
 	# --- use_skill gates on the FULL known-skills set ---
 	# Class-granted exploration skills ([Light], mage L1) fire props without
 	# ever entering innate player_skills.
-	var g15 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g15 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	_events.clear()
 	assert(g15.use_skill("light", "unlit_lantern").is_empty(), "ungranted class skill is still unknown")
 	assert(_count("skill_unknown") == 1, "unknown-skill event fires pre-grant")
@@ -752,7 +752,7 @@ func _init() -> void:
 	# --- Multi-level sleeps ---
 	# One sleep resolves ALL earned level-ups in order, announced as ONE
 	# batched toast per class (results only — no progress-toward text).
-	var g16 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g16 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g16.classes["warrior"] = 2
 	g16.classes["mage"] = 1
 	g16.record_accomplishment("melee_hit", 18)
@@ -810,7 +810,7 @@ func _init() -> void:
 	# --- Respawning encounters (the counter volume valve) ---
 	# Victory over a `respawns: true` encounter leaves it on the map but
 	# dormant; the next sleep re-arms it and it fights (and banks) again.
-	var g17 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g17 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g17.find_entity("goblin_encounter_2")["respawns"] = true
 	# goblin_encounter_2 lives on "floodplains" -- transition there so the
 	# entities.has() check below reads the map that actually owns it.
@@ -841,7 +841,7 @@ func _init() -> void:
 	# --- `persistent` encounters (rewarding a repeatable spar) ---
 	# Victory over a `persistent: true` (and non-respawning) encounter leaves
 	# it live and immediately re-fightable -- no dormancy detour, no removal.
-	var gp1 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gp1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gp1.find_entity("goblin_encounter_2")["persistent"] = true
 	# goblin_encounter_2 lives on "floodplains" -- transition there so the
 	# entities.has() check below reads the map that actually owns it.
@@ -862,7 +862,7 @@ func _init() -> void:
 	# g-persist-2: a non-persistent (and non-respawning) encounter is removed
 	# exactly as before -- the persistent flag adds a branch, it doesn't
 	# change the default.
-	var gp2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gp2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	# goblin_encounter_2 lives on "floodplains" -- transition there so the
 	# entities.has() checks below read the map that actually owns it.
 	gp2.transition("floodplains", Vector2i(27, 18))
@@ -879,14 +879,14 @@ func _init() -> void:
 	# --- `ally_requires` roster gate ---
 	# g-ally-1: the accomplishment counter isn't met -> the allies list is
 	# gated empty even though the entity still declares `allies`.
-	var ga1 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var ga1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	ga1.find_entity("goblin_encounter_2")["ally_requires"] = {"met_relc": 1}
 	ga1.transition("street", Vector2i(4, 3))
 	assert(ga1.start_combat("goblin_encounter_2"), "combat starts without the ally requirement met")
 	assert(not ga1.combat.combatants.has("relc"), "ungated allies stay off the roster when the requirement isn't met")
 
 	# g-ally-2: same encounter, requirement satisfied -> relc is fielded.
-	var ga2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var ga2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	ga2.find_entity("goblin_encounter_2")["ally_requires"] = {"met_relc": 1}
 	ga2.record_accomplishment("met_relc")
 	ga2.transition("street", Vector2i(4, 3))
@@ -900,7 +900,7 @@ func _init() -> void:
 	# passive) are wired for real; dangersense remains a confirmed,
 	# intentional no-op (no clean currency read -- see effect_text.gd's
 	# `_effect_phrase` doc comment).
-	var g18 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g18 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g18.classes["warrior"] = 5
 	g18.transition("street", Vector2i(4, 3))
 	assert(g18.start_combat("goblin_encounter_2"), "combat builds with a mixed wired/unresolved-effect kit")
@@ -928,7 +928,7 @@ func _init() -> void:
 	# A sleep that fires an offer emits consolidation_offered, stores the
 	# pending offer, and STOPS before evolutions resolve -- the "You sleep
 	# soundly." fallback must not fire on a sleep that produced one.
-	var g19 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g19 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g19.classes = {"warrior": 11, "mage": 10}
 	g19.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	_events.clear()
@@ -969,7 +969,7 @@ func _init() -> void:
 	# decline_consolidation: emits consolidation_declined, then runs evolutions
 	# EXACTLY as an un-offered sleep would (recomputed from CURRENT counters
 	# at answer time -- not stashed derived results from the offering sleep).
-	var g20 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g20 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g20.classes = {"warrior": 11, "mage": 10}
 	g20.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	_events.clear()
@@ -999,7 +999,7 @@ func _init() -> void:
 	# still falls through to the plain "You sleep soundly." fallback,
 	# exactly as before -- just via the DIRECT (non-offering, non-deferred)
 	# sleep() path now, since no offer is even generated to decline.
-	var g20b := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g20b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g20b.classes = {"warrior": 6, "mage": 7}
 	_events.clear()
 	g20b.sleep()
@@ -1010,7 +1010,7 @@ func _init() -> void:
 	# Decline -> re-offered at every future qualifying sleep (no decline-memory
 	# suppression). Simulate: rebuild the same pre-evolution state and sleep
 	# again; the offer must fire again identically.
-	var g21 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g21 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g21.classes = {"warrior": 11, "mage": 10}
 	g21.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	g21.sleep()
@@ -1027,7 +1027,7 @@ func _init() -> void:
 	# recompute at answer time: a decline that happens after counters CHANGED
 	# between offer and answer must evolve based on CURRENT counters, not
 	# stashed derived results from the offering sleep.
-	var g22 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g22 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g22.classes = {"warrior": 11, "mage": 10}
 	g22.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	g22.sleep()
@@ -1041,7 +1041,7 @@ func _init() -> void:
 	assert(not g22.classes.has("swordsman"), "the stale sword-dominant outcome from offer time is NOT applied")
 
 	# no-pending no-op safety on a game that never had ANY offer at all.
-	var g23 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g23 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	_events.clear()
 	g23.accept_consolidation()
 	g23.decline_consolidation()
@@ -1064,7 +1064,7 @@ func _init() -> void:
 		{WIKeys.ID: "q_b", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qb_done": 1}}]},
 		{WIKeys.ID: "q_c", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qc_done": 1}}]},
 	]}
-	var arc := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_arc)
+	var arc := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_arc)
 	# Act II complete: warrior+mage at the consolidation threshold (11/10,
 	# sum 21 -- class-foundation pass R3, 2026-07-12: min_parent_level 10/
 	# min_combined_level 21, up from 6/13), 3 quests done, reached_liscor --
@@ -1116,7 +1116,7 @@ func _init() -> void:
 		{WIKeys.ID: "q_b", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qb_done": 1}}]},
 		{WIKeys.ID: "q_c", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qc_done": 1}}]},
 	]}
-	var gg := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_garden)
+	var gg := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_garden)
 	gg.classes = {"warrior": 1}
 	gg.started_quests.assign(["q_a", "q_b", "q_c"])
 	gg.accomplishments = {"reached_liscor": 1, "qa_done": 1, "qb_done": 1, "qc_done": 1}
@@ -1177,7 +1177,7 @@ func _init() -> void:
 	# on the garden map, before even looking up the entity (proven by passing
 	# an entity id that exists on a DIFFERENT map -- the guard must fire on
 	# current_map alone, not "entity not found on this map").
-	var gGuard := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gGuard := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gGuard.bind_map_silent("garden_sanctuary", Vector2i(1, 1))
 	assert(not gGuard.start_combat("goblin_encounter_2"), "garden sim guard: start_combat refuses on the garden map")
 	assert(gGuard.combat == null, "garden sim guard: no combat instance is ever built")
@@ -1193,7 +1193,7 @@ func _init() -> void:
 	# the claimed statue's own results-only remembrance line after -- the SAME
 	# `{counter, at}` when-shape/ascending-order convention world.gd's
 	# `_resolve_entity_render` already established for sprite/tint/light.
-	var gMem := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345)
+	var gMem := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345)
 	gMem.player_skills.append("observe")
 	assert(gMem.known_skills().has("observe"), "memorial observe test: [Appraise Foe] known")
 	gMem.bind_map_silent("garden_sanctuary", Vector2i(6, 2))
@@ -1227,7 +1227,7 @@ func _init() -> void:
 	# Regression guard: a visual_states prop with NO `observe` key in its
 	# states (dirty_table -- sprite/tint only) must be completely unaffected
 	# by this seam -- the generic [Appraise Foe] fallback string still reads.
-	var gReg := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345)
+	var gReg := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345)
 	gReg.player_skills.append("observe")
 	gReg.player_cell = Vector2i(6, 4)
 	gReg.player_facing = Vector2i.LEFT  # faces dirty_table at (5,4)
@@ -1238,7 +1238,7 @@ func _init() -> void:
 	# --- Equipment state, API, combat-build injection ---
 	# Default start state (skeleton_scene.json player block, same idiom as
 	# player.skills): the starter sword is BOTH equipped AND possessed.
-	var e1 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(e1.inventory.has("rusty_sword"), "PC starts carrying the starter sword")
 	assert(String(e1.equipped.get(WIKeys.WEAPON, "")) == "rusty_sword", "PC starts with the starter sword equipped")
 	assert(String(e1.equipped.get("armor", "")) == "", "PC starts with no armor equipped")
@@ -1295,7 +1295,7 @@ func _init() -> void:
 	# combat != null, so the picker can never even open mid-fight), but a
 	# dedicated instance keeps this block's inventory/gold assertions
 	# independent of e1's ongoing equipment story either way.
-	var eSell := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var eSell := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(eSell.sell_price(24) == 12, "sell_price halves worth (leather_jerkin's 24 -> 12, trade_bonus 0)")
 	assert(eSell.sell_price(5) == 2, "sell_price rounds DOWN on an odd worth (traveler_charm's 5 -> floor(2.5) = 2)")
 	assert(eSell.sell_price(1) == 0, "sell_price rounds a worth of 1 down to 0 (floor(0.5) = 0)")
@@ -1368,7 +1368,7 @@ func _init() -> void:
 	# future skills.json entry would land into, without touching skills.json
 	# itself). Written directly into a scratch instance's own `skills`/
 	# `player_skills` so nothing here leaks into any other test's catalog.
-	var eBonus := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var eBonus := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(eBonus.sell_price(24) == 12, "fixture baseline: no trade_bonus known yet")
 	eBonus.skills["test_trader_instinct"] = {"id": "test_trader_instinct", "trade_bonus": 0.1}
 	eBonus.player_skills.append("test_trader_instinct")
@@ -1404,7 +1404,7 @@ func _init() -> void:
 		{WIKeys.ID: "test_blade_res1b", WIKeys.KIND: "weapon", "weapon_family": "sword", WIKeys.RESONANCE: 1},
 	])
 	cc_g1["items"] = {"items": g1_items}
-	var gAcc := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_g1)
+	var gAcc := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_g1)
 	for fixture_id: String in ["test_charm_hp", "test_charm_dmg", "test_charm_reduc", "test_charm_over", "test_charm_extra", "test_ring_res1", "test_blade_res1", "test_blade_res1b"]:
 		gAcc.pickup(fixture_id, "test_fixture")
 
@@ -1498,7 +1498,7 @@ func _init() -> void:
 	# keep a bare "hp_mod" key on the combatant dict -- the e4/e4b precedent
 	# below asserts the same way), damage_mod/damage_reduction each
 	# attributable to exactly one charm (isolated above).
-	var gAccBase := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_g1)
+	var gAccBase := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_g1)
 	gAccBase.transition("floodplains", Vector2i(27, 18))
 	gAccBase.record_accomplishment("met_relc")
 	assert(gAccBase.start_combat("goblin_encounter_2"), "baseline (no accessories) combat starts")
@@ -1523,7 +1523,7 @@ func _init() -> void:
 	# Default rusty_sword (sword family): the base warrior kit at L1 grants
 	# BOTH power_strike (sword) and piercing_strikes (spear); sword-equipped
 	# fields power_strike, excludes piercing_strikes.
-	var e2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	# Classless start -- this sub-case's whole intent is the weapon-family
 	# kit gate on a WARRIOR build, so seed it explicitly.
 	e2.classes = {"warrior": 1}
@@ -1538,7 +1538,7 @@ func _init() -> void:
 	assert(int(e2.combat.combatants["pc"][WIKeys.DAMAGE_REDUCTION]) == 0, "no armor equipped -> damage_reduction 0")
 
 	# Spear-equipped warrior loses the sword-tagged grant, gains the spear one.
-	var e2b := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e2b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	# Classless start -- seed Warrior 1 explicitly (same reason as e2 above).
 	e2b.classes = {"warrior": 1}
 	e2b.transition("floodplains", Vector2i(27, 18))
@@ -1552,7 +1552,7 @@ func _init() -> void:
 
 	# Unarmed (deliberate unequip): only untagged skills field, neither
 	# weapon-tagged grant is present.
-	var e2c := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e2c := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	# Classless start -- seed Warrior 1 explicitly (same reason as e2 above).
 	e2c.classes = {"warrior": 1}
 	e2c.transition("floodplains", Vector2i(27, 18))
@@ -1567,7 +1567,7 @@ func _init() -> void:
 	# Mage spells are always fieldable regardless of the equipped weapon
 	# (no spell carries a weapon tag) -- reuses g9's earned
 	# mage build (frost_bolt/quick_cast/flame_jet/mana_shield all untagged).
-	var e3 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e3 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	# Classless start -- this sub-case's intent is a mage/warrior SPLIT
 	# build (line 859 below asserts the warrior half of the kit still gates
 	# on the equipped weapon), so seed Warrior 1 explicitly; the mage half
@@ -1589,12 +1589,12 @@ func _init() -> void:
 
 	# Armor injection: hp_mod adds to max_hp, damage_reduction rides the
 	# build -- again one fresh instance per sub-case (same non-reuse reason).
-	var e4 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e4 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	e4.transition("street", Vector2i(4, 3))
 	assert(e4.start_combat("goblin_encounter_2"), "baseline (no armor) combat starts")
 	var base_max_hp := int(e4.combat.combatants["pc"][WIKeys.MAX_HP])
 
-	var e4b := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e4b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	e4b.transition("street", Vector2i(4, 3))
 	e4b.pickup("leather_jerkin", "test")
 	assert(e4b.equip("leather_jerkin"), "equip the jerkin")
@@ -1603,7 +1603,7 @@ func _init() -> void:
 	assert(int(e4b.combat.combatants["pc"][WIKeys.HP]) == int(e4b.combat.combatants["pc"][WIKeys.MAX_HP]), "starting hp is the boosted max_hp")
 	assert(int(e4b.combat.combatants["pc"][WIKeys.DAMAGE_REDUCTION]) == 0, "leather_jerkin carries no damage_reduction")
 
-	var e4c := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e4c := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	e4c.transition("street", Vector2i(4, 3))
 	e4c.pickup("watch_issue_gambeson", "test")
 	assert(e4c.equip("watch_issue_gambeson"), "equip the gambeson")
@@ -1612,7 +1612,7 @@ func _init() -> void:
 	assert(int(e4c.combat.combatants["pc"][WIKeys.MAX_HP]) == base_max_hp, "watch_issue_gambeson carries no hp_mod")
 
 	# Weapon damage_mod injection: relcs_spare_spear (+1) rides the build.
-	var e5 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e5 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	e5.pickup("relcs_spare_spear", "relc_intro")
 	assert(e5.equip("relcs_spare_spear"), "equip Relc's spare spear")
 	e5.transition("street", Vector2i(4, 3))
@@ -1623,14 +1623,14 @@ func _init() -> void:
 	# build-injection seam armor's hp_mod rides (e4b above) -- field HP has no
 	# standalone concept, so the perk rides the next combat build instead.
 	# Additive alongside armor's own hp_mod (no interaction/override).
-	var wf6 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var wf6 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	wf6.transition("street", Vector2i(4, 3))
 	wf6.well_fed = true
 	assert(wf6.start_combat("goblin_encounter_2"), "well_fed combat starts")
 	assert(int(wf6.combat.combatants["pc"][WIKeys.MAX_HP]) == base_max_hp + 2, "well_fed's +2 hp_mod rides the combat build")
 	assert(int(wf6.combat.combatants["pc"][WIKeys.HP]) == int(wf6.combat.combatants["pc"][WIKeys.MAX_HP]), "starting hp is the boosted max_hp")
 
-	var wf6b := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var wf6b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	wf6b.transition("street", Vector2i(4, 3))
 	wf6b.well_fed = true
 	wf6b.pickup("leather_jerkin", "test")
@@ -1647,7 +1647,7 @@ func _init() -> void:
 	}
 	var cc6: Dictionary = combat_config.duplicate(true)
 	cc6["dialogue"] = {"gift_conv": item_graph}
-	var e6 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc6)
+	var e6 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc6)
 	assert(e6.start_dialogue("gift_conv", "relc"), "gift dialogue starts")
 	assert(not e6.inventory.has("relcs_spare_spear"), "spare spear not carried before the gift is accepted")
 	_events.clear()
@@ -1661,7 +1661,7 @@ func _init() -> void:
 	assert(dlg_item_payload.get("item", "") == "relcs_spare_spear" and dlg_item_payload.get("source", "") == "gift_conv", "dialogue item-gift's pickup source is the conversation id")
 
 	# --- actions_since_sleep + phase() ---
-	var e7 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e7 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(e7.actions_since_sleep == 0, "fresh game starts with a zeroed action clock")
 	assert(e7.phase() == "day", "fresh game starts in phase day")
 	var rng_before_ticks := e7.rng.state
@@ -1731,7 +1731,7 @@ func _init() -> void:
 	# _land_pc_hit does elsewhere in this file (initiative order for this
 	# seed doesn't guarantee "pc" goes first, so the check can't just read
 	# the clock right after start_combat()).
-	var e8 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var e8 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(e8.actions_since_sleep == 0, "fresh game, zeroed clock")
 	e8.transition("street", Vector2i(4, 3))
 	assert(e8.start_combat("goblin_encounter_2"), "combat starts")
@@ -1749,7 +1749,7 @@ func _init() -> void:
 	#
 	# Same run seed + same encounter id -> IDENTICAL drop outcome across two
 	# fully independent instances (no shared state besides the seed).
-	var L1a := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 777, combat_config)
+	var L1a := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 777, combat_config)
 	L1a.record_accomplishment("met_relc")
 	L1a.transition("floodplains", Vector2i(20, 12))
 	assert(L1a.start_combat("goblin_encounter_1"), "loot determinism: instance A starts encounter_1")
@@ -1758,7 +1758,7 @@ func _init() -> void:
 	L1a.resolve_combat()
 	var l1a_dropped := L1a.inventory.has("crude_blade")
 
-	var L1b := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 777, combat_config)
+	var L1b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 777, combat_config)
 	L1b.record_accomplishment("met_relc")
 	L1b.transition("floodplains", Vector2i(20, 12))
 	assert(L1b.start_combat("goblin_encounter_1"), "loot determinism: instance B starts encounter_1")
@@ -1773,7 +1773,7 @@ func _init() -> void:
 	# deterministic roll (same run seed) relative to a standalone instance
 	# that only ever fights goblin_encounter_2 -- a real proof of stream
 	# isolation between encounters, not a coincidence check.
-	var L2both := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 777, combat_config)
+	var L2both := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 777, combat_config)
 	L2both.record_accomplishment("met_relc")
 	L2both.transition("floodplains", Vector2i(20, 12))
 	assert(L2both.start_combat("goblin_encounter_1"), "loot independence: both-fights instance starts encounter_1")
@@ -1787,7 +1787,7 @@ func _init() -> void:
 	L2both.resolve_combat()
 	var both_e2_dropped := L2both.inventory.has("chipped_spear")
 
-	var L2solo := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 777, combat_config)
+	var L2solo := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 777, combat_config)
 	L2solo.record_accomplishment("met_relc")
 	L2solo.transition("floodplains", Vector2i(27, 18))
 	assert(L2solo.start_combat("goblin_encounter_2"), "loot independence: solo instance starts encounter_2 directly")
@@ -1801,7 +1801,7 @@ func _init() -> void:
 	# after start_combat (the one legitimate draw, seeding WICombat) equals
 	# rng.state right after resolve_combat (post loot roll) -- the loot roll
 	# uses its OWN brand-new RandomNumberGenerator, never `self.rng`.
-	var L3 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 777, combat_config)
+	var L3 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 777, combat_config)
 	L3.record_accomplishment("met_relc")
 	L3.transition("floodplains", Vector2i(20, 12))
 	assert(L3.start_combat("goblin_encounter_1"), "loot rng isolation: instance starts combat")
@@ -1818,7 +1818,7 @@ func _init() -> void:
 	# needed for this unit test) landing at (9,2) -- the same cell every real
 	# gameplay route already lands at for `your_bed` -- then two steps down
 	# (9,4) faces the chest at (9,5) directly south.
-	var gC := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gC := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(not gC.inventory.has("leather_jerkin"), "inn_chest's contents not carried before opening")
 	gC.transition("inn_upstairs", Vector2i(9, 2))
 	for i in 2:
@@ -1854,7 +1854,7 @@ func _init() -> void:
 	# IDENTICALLY to a live re-interact on its very first live interact --
 	# proof the interact-side logic reads `container_state` directly rather
 	# than re-deriving "already opened" some other way that a load could miss.
-	var gC2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gC2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gC2.container_state["inn_chest"] = true
 	gC2.transition("inn_upstairs", Vector2i(9, 2))
 	for i in 2:
@@ -1875,7 +1875,7 @@ func _init() -> void:
 
 	# Case 1: trigger fires on entry -- one step from Chebyshev distance 3
 	# (outside) to distance 2 (inside) starts the fight with no interact.
-	var gT1 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gT1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gT1.transition("floodplains", Vector2i(30, 20))
 	assert(gT1.combat == null, "fixture: starts outside the trigger zone (dist 3)")
 	_events.clear()
@@ -1887,7 +1887,7 @@ func _init() -> void:
 
 	# Case 2: no trigger adjacent-outside -- one step to dist 3 (still
 	# outside a radius-2 zone) must NOT start combat.
-	var gT2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gT2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gT2.transition("floodplains", Vector2i(30, 19))
 	assert(gT2.move_player(Vector2i.DOWN), "step succeeds (open cell)")
 	assert(gT2.player_cell == Vector2i(30, 20), "player lands at dist 3 -- adjacent-outside the zone")
@@ -1896,7 +1896,7 @@ func _init() -> void:
 	# Case 3: dormant respawner does not trigger. Force the encounter
 	# already-dormant (as if just beaten), then walk into the zone -- no
 	# fight, matching start_combat's own dormant refusal (interact-parity).
-	var gT3 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gT3 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gT3.dormant_encounters.append("goblin_encounter_1")
 	gT3.transition("floodplains", Vector2i(30, 20))
 	gT3.move_player(Vector2i.DOWN)  # (30,21), dist 2
@@ -1923,7 +1923,7 @@ func _init() -> void:
 	# landed INSIDE the zone via `transition` (the same sim call QA's
 	# `teleport` step uses, see qa/test_driver.gd) must NOT start combat --
 	# only `move_player` calls `_check_trigger_radius`.
-	var gT4 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gT4 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	_events.clear()
 	gT4.transition("floodplains", Vector2i(30, 22))  # dist 1, well inside the zone
 	assert(gT4.combat == null, "transition (teleport/door/load-restore) never triggers the ambush")
@@ -1941,7 +1941,7 @@ func _init() -> void:
 	var tag_skills_raw: Dictionary = _load_json("res://data/skills.json")
 	var tagged_skill_list: Array = (tag_skills_raw[WIKeys.SKILLS] as Array).duplicate(true)
 	tagged_skill_list.append({WIKeys.ID: "stealth_ritual", WIKeys.DISPLAY_NAME: "[Stealth Ritual]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "sneaks": true})
-	var gTagK2 := WIGame.new(_load_json("res://data/skeleton_scene.json"), {WIKeys.SKILLS: tagged_skill_list}, _sink, 12345, combat_config)
+	var gTagK2 := WIGame.new(WISceneCatalog.compose(), {WIKeys.SKILLS: tagged_skill_list}, _sink, 12345, combat_config)
 	gTagK2.player_skills.append("stealth_ritual")
 	assert(not gTagK2.sneaking, "fixture: not sneaking at start")
 	_events.clear()
@@ -1961,7 +1961,7 @@ func _init() -> void:
 	# [Invisibility] then [Stealth] toggles ON then OFF, exactly as pressing
 	# the SAME skill twice would -- one stance, two keys, documented in both
 	# skills' own _comment.
-	var gTwoVerbs := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gTwoVerbs := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gTwoVerbs.player_skills.append("sneak")
 	gTwoVerbs.player_skills.append("invisibility")
 	assert(not gTwoVerbs.sneaking, "fixture: not sneaking at start")
@@ -1977,7 +1977,7 @@ func _init() -> void:
 
 	# Toggle via the REAL shipped [Stealth] skill: on/off, skill_used + journal
 	# reveal, sneaking reflected in snapshot().
-	var gSneak := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gSneak := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gSneak.player_skills.append("sneak")
 	_events.clear()
 	var sneak_on := gSneak.use_skill_field("sneak")
@@ -2014,7 +2014,7 @@ func _init() -> void:
 	# 1. interact() reaching a real prop response breaks it (dirty_table,
 	# the same requires_skill/on_skill_use prop the P1 byte-parity test below
 	# uses) -- BEFORE the prop's own emits (off-toast reads first).
-	var gBreakProp := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gBreakProp := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gBreakProp.player_skills.append("sneak")
 	gBreakProp.use_skill_field("sneak")
 	assert(gBreakProp.sneaking, "fixture: sneaking before the interact")
@@ -2028,7 +2028,7 @@ func _init() -> void:
 
 	# 2. A door does NOT break it ("crossing a door quietly is the point") --
 	# inn_door (inn [15,3]) is a real `door` entity.
-	var gBreakDoor := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gBreakDoor := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gBreakDoor.player_skills.append("sneak")
 	gBreakDoor.use_skill_field("sneak")
 	gBreakDoor.player_cell = Vector2i(14, 3)
@@ -2041,7 +2041,7 @@ func _init() -> void:
 
 	# 3. interact() with NOTHING faced does not break it either (no response
 	# reached at all -- distinct from the door case, which IS a response).
-	var gBreakNothing := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gBreakNothing := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gBreakNothing.player_skills.append("sneak")
 	gBreakNothing.use_skill_field("sneak")
 	gBreakNothing.player_cell = Vector2i(2, 3)
@@ -2052,7 +2052,7 @@ func _init() -> void:
 	# 4. A successful field-skill use ON A TARGET breaks it (basic_cleaning on
 	# dirty_table); the SAME skill's field_ambient no-op (no qualifying faced
 	# entity) does NOT ("a whiffed flourish isn't a commitment").
-	var gBreakFieldTarget := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gBreakFieldTarget := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gBreakFieldTarget.player_skills.append("sneak")
 	gBreakFieldTarget.use_skill_field("sneak")
 	gBreakFieldTarget.player_cell = Vector2i(6, 4)
@@ -2060,7 +2060,7 @@ func _init() -> void:
 	gBreakFieldTarget.use_skill_field("basic_cleaning")
 	assert(not gBreakFieldTarget.sneaking, "a field-skill use that resolves on a real target breaks sneaking")
 
-	var gBreakAmbient := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gBreakAmbient := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gBreakAmbient.player_skills.append("sneak")
 	gBreakAmbient.use_skill_field("sneak")
 	gBreakAmbient.player_cell = Vector2i(2, 3)
@@ -2073,7 +2073,7 @@ func _init() -> void:
 	# other real caller besides interact()'s encounter branch, already
 	# covered above by the trigger-radius block's own combat_started proof).
 	# A REFUSED start_combat (dormant encounter) must NOT break it.
-	var gBreakCombat := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gBreakCombat := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gBreakCombat.player_skills.append("sneak")
 	gBreakCombat.record_accomplishment("met_relc")
 	# goblin_encounter_2 lives on floodplains -- find_entity/start_combat
@@ -2091,7 +2091,7 @@ func _init() -> void:
 	# --- NOT SAVED (round-trip honesty; the dedicated test_save.gd assertion
 	# is the canonical proof -- this is the sim-level companion): sleep also
 	# clears it silently, "with everything else". ---
-	var gSleepClear := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gSleepClear := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gSleepClear.player_skills.append("sneak")
 	gSleepClear.use_skill_field("sneak")
 	assert(gSleepClear.sneaking, "fixture: sneaking before sleep")
@@ -2107,7 +2107,7 @@ func _init() -> void:
 	# yields a nudge toast + skill_hint shape and NO cast; use_skill_field
 	# on the same faced prop performs the real cast. Proven on the inn's
 	# dirty_table (requires_skill=basic_cleaning, innate) from [6,4] facing LEFT.
-	var scene_p1 := _load_json("res://data/skeleton_scene.json")
+	var scene_p1 := WISceneCatalog.compose()
 	var skills_p1 := _load_json("res://data/skills.json")
 
 	var g_interact := WIGame.new(scene_p1, skills_p1, _sink, 12345)
@@ -2498,7 +2498,7 @@ func _init() -> void:
 	# Pre-quest (gate UNMET) the street sewer_grate interact must be
 	# byte-identical to a plain on_interact_accomplishment prop; once the gate
 	# accomplishment is banked it transitions to the sewers instead.
-	var gGrate := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gGrate := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gGrate.transition("street", Vector2i(15, 11))
 	gGrate.player_facing = Vector2i.RIGHT  # faces the sewer_grate at (16,11)
 	assert(gGrate.entity_at(Vector2i(16, 11)).get(WIKeys.ID, "") == "sewer_grate", "grate is at (16,11) facing cell")
@@ -2531,7 +2531,7 @@ func _init() -> void:
 	assert(gGrate.current_map == "street" and gGrate.player_cell == Vector2i(15, 11), "ladder returns to the street grate")
 
 	# --- Gold seam (earn/spend/refusal + loot-gold) ---
-	var gGold := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gGold := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(gGold.gold == 0, "fresh purse starts at 0")
 	# earn round-trip: purse grows, gold_changed {delta,total,source} + toast.
 	_events.clear()
@@ -2561,15 +2561,15 @@ func _init() -> void:
 	# gains gold). Same run seed + encounter id -> identical coin roll across two
 	# fully independent instances, off the ISOLATED per-encounter loot_rng.
 	var loot_entity := {WIKeys.ID: "econ_test_encounter", "loot": [{"gold": 7, "chance": 0.5}, {"gold": 3, "chance": 0.5}]}
-	var GldA := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
+	var GldA := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
 	GldA._roll_loot(loot_entity)
-	var GldB := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
+	var GldB := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
 	GldB._roll_loot(loot_entity)
 	assert(GldA.gold == GldB.gold, "same run_seed + encounter id -> identical loot-gold roll across independent instances")
 	# A guaranteed coin drop (chance 1.0) routes through earn_gold: loot_dropped
 	# {gold} matches the earned total, one gold_changed, no items key.
 	var sure_loot := {WIKeys.ID: "econ_sure_encounter", "loot": [{"gold": 7, "chance": 1.0}]}
-	var GldC := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
+	var GldC := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 4242, combat_config)
 	_events.clear()
 	GldC._roll_loot(sure_loot)
 	assert(GldC.gold == 7, "guaranteed coin drop earns exactly the listed gold")
@@ -2583,7 +2583,7 @@ func _init() -> void:
 	assert(not econ_ld.has("items"), "pure-coin loot payload omits the items key (item-only stream stays byte-identical)")
 
 	# --- Hotbar loadout (AUTO parity + apply_loadout + toggle) ---
-	var gLoad := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var gLoad := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gLoad.classes = {"warrior": 1, "tactician": 1, "helper": 1}
 	assert(gLoad.hotbar_loadout.is_empty(), "fresh game starts in AUTO mode (empty loadout)")
 	# AUTO-default byte-parity: field_hotbar_loadout() must equal the manual
@@ -2890,14 +2890,14 @@ func _init() -> void:
 	# (the CLAUDE.md Gotchas rule: a test calling the mutation directly
 	# doesn't prove the real trigger calls it). Real skeleton_scene.json so
 	# serving_tray (inn, cell (10,2)) is a live entity. ---
-	var g_wage_base := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g_wage_base := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g_wage_base.player_cell = Vector2i(10, 1)
 	g_wage_base.player_facing = Vector2i.DOWN
 	var gold_before_base := g_wage_base.gold
 	g_wage_base.interact()
 	assert(g_wage_base.gold == gold_before_base + 1, "serving_tray pays its base +1 gold wage without [Perfect Hospitality]")
 
-	var g_wage_hosp := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g_wage_hosp := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g_wage_hosp.player_skills = ["perfect_hospitality"]
 	g_wage_hosp.player_cell = Vector2i(10, 1)
 	g_wage_hosp.player_facing = Vector2i.DOWN
@@ -2909,7 +2909,7 @@ func _init() -> void:
 	# once_per_waking key) must NEVER be bumped -- the hook is scoped to
 	# renewable wage props only, not every on_interact_accomplishment prop
 	# that happens to carry a `gold` field.
-	var g_wage_cache := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var g_wage_cache := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g_wage_cache.player_skills = ["perfect_hospitality"]
 	g_wage_cache.transition("floodplains", Vector2i(2, 3))
 	var cache_entity := g_wage_cache.find_entity("frozen_cache")

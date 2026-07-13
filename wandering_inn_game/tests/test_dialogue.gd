@@ -30,7 +30,7 @@ func _make_game_with_dialogue(graph: Dictionary) -> WIGame:
 		"arenas": _load_json("res://data/arenas.json"),
 		"dialogue": {"test_conv": graph},
 	}
-	return WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	return WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 
 
 func test_accomplishment_requires_hides_until_met() -> void:
@@ -637,7 +637,7 @@ func _find_entity(scene: Dictionary, map_id: String, id: String) -> Dictionary:
 func test_talk_pool_post_grows_pool_after_gate() -> void:
 	_events.clear()
 	var game := _make_game_with_dialogue({})
-	var scene := _load_json("res://data/skeleton_scene.json")
+	var scene := WISceneCatalog.compose()
 	var lyo := _find_entity(scene, "inn", "lyonette")
 	var base_pool: Array = lyo["talk_pool"]
 	var post_lines: Array = ((lyo["talk_pool_stages"] as Array)[0] as Dictionary)["lines"]
