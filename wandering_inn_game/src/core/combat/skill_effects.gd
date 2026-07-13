@@ -408,6 +408,13 @@ static func _apply_status_from_effect(combat: WICombat, target_id: String, effec
 		# bolt/icy_floor/calming_touch/raskghar_maul) carries no
 		# `duration_rounds` key -- no-op, still consumed one-shot at the
 		# holder's own next `_start_turn`, byte-identical.
+		# ROUND-LATTICE SEAM: a CHECKED status at duration_rounds 1
+		# (weakened/guarded/rooted -- read only at the holder's own
+		# action/turn) covers "the rest of THIS round": a victim whose turn
+		# already passed this round is never checked before the rollover
+		# purge and feels nothing. Burning is the exception -- its EOT tick
+		# runs AT the rollover, BEFORE the purge (_tick_burning_statuses's
+		# tick-then-purge pin), so even a 1-round burn always lands once.
 		if entry.has(WIKeys.DURATION_ROUNDS):
 			entry["expires_after_round"] = combat.round_number + int(entry[WIKeys.DURATION_ROUNDS]) - 1
 		(t["statuses"] as Dictionary)[status_id] = entry

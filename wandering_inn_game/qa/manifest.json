@@ -2884,6 +2884,32 @@
    }
   },
   {
+   "script": "shaman_zone_loop",
+   "seed": 9,
+   "fixture": "goblin_night_patrol_start",
+   "note": "GH#90: THE LIVE PROOF of combat_ai.gd's area_skill arm -- goblin_shaman (real shipped kit) casts [Ice Floor] as an ENEMY zone; combat_set_cells forces the >=2-no-ally geometry by construction at the pc's turn, then pins skill_resolved{actor:goblin_shaman,skill:icy_floor} + terrain_added + the exact 9-cell terrain snapshot + ui_terrain_rendered (the mid-AI-turn TERRAIN_ADDED render); windowed captures the zoning shot; autoplay wins (won_combat)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "goblin_night_patrol_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "icy_floor"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "boulevard_night_footpads_loop",
    "seed": 9,
    "fixture": "boulevard_night_footpads_start",

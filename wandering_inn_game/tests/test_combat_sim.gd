@@ -2246,9 +2246,18 @@ func _init() -> void:
 	(c120.combatants["pc"]["statuses"] as Dictionary)["rooted"] = {"duration_rounds": 1}
 	c120._start_turn()
 	assert(int(c120.combatants["pc"][WIKeys.MOVE_POOL]) == 0, "move_pool reads 0 the moment _start_turn runs on a rooted holder")
+	_events.clear()
 	assert(not c120.move_active(Vector2i.RIGHT), "movement refuses at 0 pool")
+	# GH#90 M4 rooted-refusal legibility: both refused verbs name WHY on the
+	# bus (the no_los refusal-emit precedent) -- combat_hud's existing
+	# ACTION_REFUSED arm renders "X hesitates -- rooted." from these.
+	assert(_count("action_refused") == 1, "a rooted holder's refused move emits ACTION_REFUSED")
 	var ap120_before := int(c120.combatants["pc"][WIKeys.AP])
 	assert(not c120.dash(), "Dash refuses outright while rooted")
+	assert(_count("action_refused") == 2, "a rooted holder's refused dash emits ACTION_REFUSED too")
+	for e120: Dictionary in _events:
+		if e120["type"] == "action_refused":
+			assert(String(e120["payload"].get("actor", "")) == "pc" and String(e120["payload"].get("reason", "")) == "rooted", "the refusal names the actor + reason 'rooted'")
 	assert(int(c120.combatants["pc"][WIKeys.AP]) == ap120_before, "the refused dash spends no AP")
 	assert(int(c120.combatants["pc"][WIKeys.MOVE_POOL]) == 0, "the refused dash grants no pool either")
 

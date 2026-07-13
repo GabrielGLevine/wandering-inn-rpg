@@ -61,10 +61,10 @@ const AI_PLAYBACK_TYPES := [
 	WIEvents.TURN_ENDED,
 	# TERRAIN_EXPIRED fires at round rollover, which happens MID an
 	# AI turn (inside _advance_turn) -- exactly the desync class this const's
-	# TRAP comment warns about. TERRAIN_ADDED is only ever player-cast today
-	# (AI never selects icy_floor -- see skill_effects.gd/wi_combat_ai.gd
-	# doc comments) but is listed alongside it for symmetry and so a future
-	# enemy-cast icy_floor doesn't silently reopen the same desync.
+	# TRAP comment warns about. TERRAIN_ADDED fires mid-AI-turn too since
+	# GH#90: combat_ai.gd's area_skill arm casts icy_floor for real
+	# (goblin_shaman's live kit; `shaman_zone_loop` = the canonical), so
+	# this entry is load-bearing, not symmetry.
 	WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED,
 	# Issue #82's WINDUP SIM SPEC: WINDUP_DECLARED fires mid-AI-turn (today's
 	# only holder, `slam`, is enemy-only) -- exactly the class this const

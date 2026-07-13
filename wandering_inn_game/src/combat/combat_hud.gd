@@ -845,11 +845,15 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 		WIEvents.STATUS_TICKED:
 			# GH#90 [burning]'s EOT tick. Status-keyed verb ("burning" is the
 			# only ticking status today); the generic fallback keeps a future
-			# ticking status from rendering a silent tick.
+			# ticking status from rendering a silent tick. A fully-absorbed
+			# tick (damage 0 -- mana_shield drank it) renders NO line ("X
+			# burns for 0." reads as a bug); the event itself still fires.
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
-			var ticked_name := _display_name(combat, view, String(payload["id"]))
 			var ticked_damage := int(payload.get("damage", 0))
+			if ticked_damage <= 0:
+				return ""
+			var ticked_name := _display_name(combat, view, String(payload["id"]))
 			if String(payload.get("status", "")) == "burning":
 				line = "%s burns for %d." % [ticked_name, ticked_damage]
 			else:

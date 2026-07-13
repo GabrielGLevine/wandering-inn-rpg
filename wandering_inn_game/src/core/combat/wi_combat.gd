@@ -19,10 +19,15 @@ const DASH_GAIN := 3
 ## outgoing damage, `guarded` shrinks the HOLDER's own incoming damage.
 ## Compose multiplicatively -- with the skill's own `mult` (folded into the
 ## dice sub-formula already, upstream of these) and with EACH OTHER (a
-## weakened attacker hitting a guarded defender applies both, in this
-## order: attacker-side first, defender-side second -- commutative under
-## pure multiplication, pinned only so the trace reads the same every
-## time). See `_apply_status_damage_mods`.
+## weakened attacker hitting a guarded defender applies both). ORDER IS
+## LOAD-BEARING, not cosmetic: `_apply_status_damage_mods` int-truncates
+## and re-floors at 1 BETWEEN the two multipliers, which is NOT
+## commutative for unequal mults (e.g. 10 dmg at x0.5 then x0.75 -> 3, but
+## x0.75 then x0.5 -> 3 vs 10*0.375=3.75 -- the intermediate rounding
+## decides). Equal at today's 0.75/0.75 by luck of the values; the pinned
+## order (attacker-side weakened FIRST, defender-side guarded SECOND) is
+## what keeps damage identical if either const ever diverges. Unit-pinned
+## in test_combat_sim's compose case.
 const WEAKENED_MULT := 0.75
 const GUARDED_MULT := 0.75
 
@@ -417,6 +422,12 @@ func move_active(dir: Vector2i) -> bool:
 		return false
 	var c: Dictionary = combatants[get_active()]
 	if int(c[WIKeys.MOVE_POOL]) < MOVE_COST:
+		# Rooted-refusal legibility (GH#90 M4): a rooted holder's refused
+		# step names WHY (the pool is 0 BECAUSE of the root) -- without this
+		# the player only gets the generic pool-empty bump. AI never
+		# reaches it (its own pool check precedes any move_active call).
+		if _is_rooted(get_active()):
+			_emit_rooted_refusal(get_active())
 		return false
 	var target: Vector2i = (c[WIKeys.CELL] as Vector2i) + dir
 	if absi(dir.x) + absi(dir.y) != 1 or not is_cell_free(target):
@@ -437,6 +448,15 @@ func _is_rooted(id: String) -> bool:
 	return (combatants[id]["statuses"] as Dictionary).has("rooted")
 
 
+## The `no_los` refusal-emit precedent applied to rooted (GH#90 M4):
+## combat_hud's existing ACTION_REFUSED arm renders "X hesitates --
+## rooted." from this, no new presentation code. An AI dash attempt while
+## rooted (`_should_dash` doesn't check the status) emits honestly
+## mid-turn, riding ACTION_REFUSED's existing AI_PLAYBACK_TYPES entry.
+func _emit_rooted_refusal(id: String) -> void:
+	_emit(WIEvents.ACTION_REFUSED, {"actor": id, "reason": "rooted"})
+
+
 ## Spends 1 AP for +DASH_GAIN move pool. Repeatable while AP lasts.
 func dash() -> bool:
 	if finished:
@@ -444,6 +464,7 @@ func dash() -> bool:
 	if not bool(combatants[get_active()][WIKeys.ALIVE]):
 		return false
 	if _is_rooted(get_active()):
+		_emit_rooted_refusal(get_active())
 		return false
 	var c: Dictionary = combatants[get_active()]
 	if int(c[WIKeys.AP]) < DASH_COST:

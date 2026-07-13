@@ -566,6 +566,32 @@ func _execute(step: Dictionary) -> void:
 			Game.sim.transition(String(step["map"]), Vector2i(int(step["cell"][0]), int(step["cell"][1])))
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"combat_set_cells":
+			# Debug affordance (GH#90 forcing canonical) -- `teleport`'s combat
+			# twin: pre-places LIVE combatants at named cells so a geometry-
+			# dependent AI arm (area_skill's >=2-no-ally gate) is forced by
+			# CONSTRUCTION instead of seed-hunted. Emits the sim's own
+			# COMBATANT_MOVED per placement so presentation re-syncs through
+			# the SAME render arm a real move uses (no parallel visual path).
+			# Never touches rng -- combat determinism unaffected. Fails loud
+			# on no live combat, an unknown id, or a non-free cell.
+			var live_combat: WICombat = Game.sim.combat
+			if live_combat == null:
+				_fail("combat_set_cells: no live combat")
+			else:
+				for cid: String in (step["cells"] as Dictionary):
+					if not live_combat.combatants.has(cid):
+						_fail("combat_set_cells: unknown combatant id: " + cid)
+						break
+					var want: Array = step["cells"][cid]
+					var want_cell := Vector2i(int(want[0]), int(want[1]))
+					if not live_combat.is_cell_free(want_cell):
+						_fail("combat_set_cells: cell %s not free for %s" % [str(want_cell), cid])
+						break
+					live_combat.combatants[cid][WIKeys.CELL] = want_cell
+					live_combat._emit(WIEvents.COMBATANT_MOVED, {"id": cid, "cell": [want_cell.x, want_cell.y]})
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"install_fixture":
 			# Re-seeds a fixture into a save slot MID-RUN (same copy path as the
 			# top-level `fixture_save` affordance, just deferred to a step).

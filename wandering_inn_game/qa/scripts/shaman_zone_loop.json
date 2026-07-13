@@ -1,0 +1,144 @@
+{
+ "_comment": "GH#90 (combat mechanical variety): THE LIVE PROOF of combat_ai.gd's area_skill arm -- an ENEMY (goblin_shaman, real shipped kit flame_bolt+icy_floor) zoning the board with [Ice Floor]. Reuses goblin_night_patrol_start (the night-patrol fight, same roster/arena as goblin_night_patrol_loop) and FORCES the >=2-no-ally geometry by construction via the combat_set_cells debug affordance (teleport's combat twin, test_driver.gd) at the PC's own turn: pc(2,2)+relc(3,2) adjacent, within icy_floor range 3 of the shaman(2,5) with clear LoS, raider(4,2) adjacent to relc (so both melee AIs pin each other in place, attacking not moving) but OUTSIDE the pc-centered 3x3 blast. The shaman's next turn: _act_ranged's area arm sees 2 enemies / 0 allies in the blast and casts -- pinned via skill_resolved{actor:goblin_shaman}, terrain_added, the exact 9-cell terrain snapshot, and ui_terrain_rendered (the mid-AI-turn TERRAIN_ADDED render path). Windowed runs capture the zone screenshot. Autoplay then finishes the fight to victory (won_combat banked, the sibling canonical's own tail).",
+ "fixture_save": "goblin_night_patrol_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "(10,23) -> (10,22): into goblin_night_patrol's trigger_radius 1 -- the sibling canonical's own opening.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "THE FORCING BEAT: pc+relc adjacent pair, shaman at Chebyshev 3 from pc (icy_floor range 3, LoS clear down column x=2), raider pinned adjacent to relc yet outside the pc-centered blast (Chebyshev 2 from pc). None of these cells are blocked in goblin_ambush ((5,3),(6,4),(3,5),(8,2)).",
+   "action": "combat_set_cells",
+   "cells": {
+    "pc": [2, 2],
+    "relc": [3, 2],
+    "goblin_raider": [4, 2],
+    "goblin_shaman": [2, 5]
+   }
+  },
+  {
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "_comment": "The exit-criterion pin: the ENEMY casts the zone. Every wait below tolerates the intervening raider/relc turns (subset match).",
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "goblin_shaman",
+    "skill": "icy_floor"
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "terrain_added",
+   "payload_contains": {
+    "kind": "icy_floor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The exact 3x3 blast around pc(2,2), x-then-y sorted -- the shaman's hp-asc foe sort makes pc the guaranteed center (pc 33 max_hp < relc 40).",
+   "action": "assert_state",
+   "path": "combat.terrain.icy_floor",
+   "equals": [[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]]
+  },
+  {
+   "_comment": "The zone RENDER path -- board_renderer's confirmation, reached through the mid-AI-turn TERRAIN_ADDED playback arm (AI_PLAYBACK_TYPES).",
+   "action": "wait_for_event",
+   "type": "ui_terrain_rendered",
+   "payload_contains": {
+    "kind": "icy_floor"
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "screenshot",
+   "name": "01_enemy_zone_cast"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "won_combat"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  }
+ ]
+}
