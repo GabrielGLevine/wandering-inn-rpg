@@ -547,6 +547,8 @@ func _execute(step: Dictionary) -> void:
 					settings_got = WISettings.is_fullscreen()
 				"text_scale_step":
 					settings_got = WISettings.text_scale_step()
+				"combat_speed_step":
+					settings_got = WISettings.combat_speed_step()
 				_:
 					_fail("assert_settings_value: unknown path " + settings_path)
 					settings_got = null
