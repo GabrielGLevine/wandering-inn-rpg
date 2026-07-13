@@ -1,0 +1,146 @@
+# GitHub Pages web deploy (issue #108, user-directed 2026-07-13).
+#
+# THE ONE SAFE SHAPE: actions/deploy-pages artifact flow ONLY — never a
+# gh-pages branch. The built .pck bakes the licensed bundle-tier assets;
+# a branch deploy would commit them into the PUBLIC repo's permanent git
+# history (the exact discipline that keeps the frozen archive private).
+# The artifact flow serves the site without anything entering history —
+# the same distribution posture as the itch build.
+#
+# Trigger: workflow_dispatch ONLY (user-budgeted Actions; no per-push
+# burns; secrets never reachable from fork PRs by construction).
+# Secrets: PRIVATE_ASSETS_TOKEN (same PAT release.yml uses).
+# Gate: import + smoke boot + the smoke QA tier with real assets —
+# lighter than release.yml's full gate (Pages mirrors an already-gated
+# main; the full gate ran locally before every push).
+
+name: Deploy to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  GODOT_BIN: "Godot_v4.7-stable_linux.x86_64"
+  GODOT_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip"
+  GODOT_SUMS_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/SHA512-SUMS.txt"
+  GODOT_TEMPLATES_URL: "https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz"
+
+jobs:
+  build:
+    name: Build web (real assets)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Install pinned web export templates
+        run: |
+          set -euo pipefail
+          curl -fsSL -o templates.tpz "$GODOT_TEMPLATES_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  Godot_v4.7-stable_export_templates.tpz$" SHA512-SUMS.txt | sed "s#  Godot_v4.7-stable_export_templates.tpz#  templates.tpz#" | sha512sum -c -
+          unzip -q templates.tpz
+          dest="$HOME/.local/share/godot/export_templates/4.7.stable"
+          mkdir -p "$dest"
+          mv templates/* "$dest/"
+
+      - name: Fetch private asset bundle
+        env:
+          GH_TOKEN: ${{ secrets.PRIVATE_ASSETS_TOKEN }}
+          PRIVATE_ASSETS_REPO: "GabrielGLevine/wandering-inn-rpg-assets"
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::PRIVATE_ASSETS_TOKEN secret is not set — a Pages deploy must build with the real assets, same as release.yml."
+            exit 1
+          fi
+          mkdir -p bundle
+          gh release download --repo "$PRIVATE_ASSETS_REPO" \
+            --pattern '*.tar.gz' --dir bundle
+          count=$(ls -1 bundle/*.tar.gz 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$count" -eq 0 ]; then
+            echo "::error::No *.tar.gz bundle in the latest release of $PRIVATE_ASSETS_REPO."
+            exit 1
+          fi
+
+      - name: Overlay real assets
+        run: |
+          set -euo pipefail
+          tarball="$(ls -1 bundle/*.tar.gz | head -n1)"
+          tar -xzf "$tarball" -C .
+          if [ -z "$(find wandering_inn_game/assets -type f 2>/dev/null | head -n1)" ]; then
+            echo "::error::assets/ empty after overlay."
+            exit 1
+          fi
+
+      - name: Import pass
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 300; exec @ARGV' \
+            godot --headless --path wandering_inn_game --import
+
+      - name: Headless smoke (--quit)
+        run: |
+          set -euo pipefail
+          log=smoke.log
+          perl -e 'alarm 120; exec @ARGV' \
+            godot --headless --path wandering_inn_game --quit >"$log" 2>&1 || rc=$?
+          cat "$log"
+          if grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$log"; then
+            echo "::error::smoke boot tripped the error grep"
+            exit 1
+          fi
+          exit "${rc:-0}"
+
+      - name: Smoke QA tier (real assets)
+        run: |
+          set -euo pipefail
+          bash wandering_inn_game/qa/ci_sweep.sh --tier smoke
+
+      - name: Export wasm build
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 600; exec @ARGV' \
+            bash wandering_inn_game/qa/web/export_web.sh
+          if [ ! -f wandering_inn_game/build/web/index.html ]; then
+            echo "::error::export produced no index.html"
+            exit 1
+          fi
+          ls -la wandering_inn_game/build/web
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: wandering_inn_game/build/web
+
+  deploy:
+    name: Deploy to Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
