@@ -355,6 +355,35 @@
    }
   },
   {
+   "script": "relc_descent_rewind",
+   "seed": 1,
+   "fixture": "relc_descent_rewind_start",
+   "note": "issue #88 fix wave: THE pre_combat_choice canonical -- a dialogue-committed fight's defeat rewinds the committing choice too (lose [Go together.] -> relc_joined_descent GONE, [I go alone.] re-choice fields NO relc)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels",
+     "sewers"
+    ],
+    "fixtures": [
+     "relc_descent_rewind_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "relc_descent"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "defeat_ally_alive",
    "seed": 3,
    "fixture": "near_defeat",
