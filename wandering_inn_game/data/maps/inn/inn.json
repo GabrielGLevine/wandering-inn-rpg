@@ -842,6 +842,21 @@
     "Pisces keeps asking about the vault door. I told him to bring his own rope this time.",
     "Silver-rank pay, Gold-rank stonework down there. Somebody's math is off, and it isn't mine."
    ],
+   "_comment_stages": "Issue #89 (gap-2, Horns Social II): the deferred talk_pool_stages payoff, the krshia/olesm precedent (street.json). Gate is chatted_with_ceria_inn:3 (sustained relationship, matching Krshia's own stage-2 threshold) PLUS door_awakened:1 (a banked quest counter, per the brief) -- she's had time to settle in AND the wider Door plot has moved. Stage-2 topic (wiki-verified, character-profiles.md 'Ceria Springwalker'): oblique formal-training nod ONLY -- no Wistram name, no cause, no deaths, no Az'kerash (the pisces_stages.md hard rail: 'the Ceria history... do not cross at this timeline, any surface' binds here too, even though this is HER own line, not Pisces's). Perk line is flavor-only (a genuine kindness, zero mechanical effect) -- no new sim system.",
+   "talk_pool_stages": [
+    {
+     "id": "ceria_inn_settled",
+     "requires_accomplishment": {
+      "chatted_with_ceria_inn": 3,
+      "door_awakened": 1
+     },
+     "lines": [
+      "I trained formal, once. Robes, theory, the whole overpriced show. Doesn't come up much anymore, and I like it that way.",
+      "You want a tip that's actually useful? Watch the ice before you stand on it. I learned that one the expensive way.",
+      "Yvlon says I've gone soft since the inn. I say I've gone SMART. There's a difference, and it involves not getting frostbite on purpose anymore."
+     ]
+    }
+   ],
    "dialogue": [
     {
      "speaker": "Ceria Springwalker",
@@ -870,6 +885,21 @@
     "My arm's fine. Stop looking.",
     "If the door down there opens, I want to be standing in front of it. That's not bravery — it's just where I stand."
    ],
+   "_comment_stages": "Issue #89 (gap-2, Horns Social II): same gate shape as ceria_inn's own stage (chatted_with_yvlon_inn:3 + door_awakened:1). Stage-2 topic (wiki-verified, character-profiles.md 'Yvlon Byres'): the arms -- plate fused to flesh from V3, shapeable silver-steel from V6 (the Adult Creler fight), both in-window canon, no gap beyond the eye-color flag already disclosed in the profile. Deliberate arc against her base pool's own deflection ('My arm's fine. Stop looking.') -- this stage is her choosing to actually answer. Perk line is flavor-only.",
+   "talk_pool_stages": [
+    {
+     "id": "yvlon_inn_settled",
+     "requires_accomplishment": {
+      "chatted_with_yvlon_inn": 3,
+      "door_awakened": 1
+     },
+     "lines": [
+      "Ask about the arms all you like, now. Silver-steel, shapeable, better grip than flesh ever gave me. I've stopped flinching from the question, so you don't have to either.",
+      "Keep your guard up on your off-hand side. Most people forget it exists until something reminds them, and I'd rather you learn it from me than the hard way.",
+      "The couch by the fire really is mine. Ceria just likes saying otherwise."
+     ]
+    }
+   ],
    "dialogue": [
     {
      "speaker": "Yvlon Byres",
@@ -897,6 +927,21 @@
     "I have been given a mug of blue fruit juice. I did not ask for it. Erin says this is called 'hospitality.' I am recording it as an asset.",
     "This inn does not have traps. I checked all the floors. Twice.",
     "Captain Ceria says I may sit anywhere. I have chosen the corner with two exits."
+   ],
+   "_comment_stages": "Issue #89 (gap-2, Horns Social II): same gate shape as ceria_inn/yvlon_inn's own stages (chatted_with_ksmvr_inn:3 + door_awakened:1). Stage-2 topic (wiki-verified, character-profiles.md 'Ksmvr'): former PROGNUGATOR, elite command caste of the Free Hive, 'exiled as a failure' for disciplined bearing over Worker docility -- ALREADY the profile's own wording, no new canon claim. Perk line is flavor-only (a genuinely useful piece of information, zero mechanical effect), matching his own literal/practical voice.",
+   "talk_pool_stages": [
+    {
+     "id": "ksmvr_inn_settled",
+     "requires_accomplishment": {
+      "chatted_with_ksmvr_inn": 3,
+      "door_awakened": 1
+     },
+     "lines": [
+      "I was Prognugator, once. Command caste. I was exiled, is the word Klbkch uses. 'Reassigned' is the word I prefer. Neither changes what happened.",
+      "I have counted every safe path between here and the pantry door. If you ever need the fastest one, comrade, ask. I keep the count current.",
+      "Erin gave me a name for the corner I sit in. She calls it 'Ksmvr's Post.' I have accepted the designation. It is efficient."
+     ]
+    }
    ],
    "dialogue": [
     {
