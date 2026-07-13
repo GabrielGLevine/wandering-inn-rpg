@@ -1,0 +1,20 @@
+{
+ "_comment": "Issue #97: screenshot-only utility (the title_peek/street_peek precedent -- excluded from the canonical seed table, not registered in qa/manifest.json). Field-view shots of the two new combatants NOT otherwise captured by a real canonical's own combat screenshot (razorbeak_nest, forge_calibration_golem -- corusdeer/mothbear/kingslayer_spider/watchgolem all get a combat-view shot from their own accept-fight-turnin canonical). Default boot, teleport-only, no combat driven.",
+ "steps": [
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 10 },
+
+  { "_comment": "== razorbeak_nest (floodplains, 5,20) -- approach from 2 north, stop 1 short (blocked).", "action": "teleport", "map": "floodplains", "cell": [5, 18] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [5, 19] },
+  { "action": "wait_frames", "frames": 10 },
+  { "action": "screenshot", "name": "razorbeak_nest_field" },
+
+  { "_comment": "== forge_calibration_golem (pallass_forge, 20,8) -- approach from 2 west, stop 1 short (blocked).", "action": "teleport", "map": "pallass_forge", "cell": [18, 8] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "pallass_forge" }, "timeout_sec": 5 },
+  { "action": "move", "direction": "right", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [19, 8] },
+  { "action": "wait_frames", "frames": 10 },
+  { "action": "screenshot", "name": "forge_calibration_golem_field" }
+ ]
+}

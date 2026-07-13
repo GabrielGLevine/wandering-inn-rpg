@@ -2966,6 +2966,133 @@
      "traps"
     ]
    }
+  },
+  {
+   "script": "floodplains_bestiary_loop",
+   "seed": 9,
+   "fixture": "floodplains_bestiary_loop_start",
+   "note": "Issue #97: bounty_corusdeer_cull end to end -- accept at Selys's desk (guild), the corusdeer_range confirm conversation (armor/heat telegraph node pinned verbatim, [Back away.] negative proves no combat, then [Strike first.]), win the corusdeer_range fight (floodplains, respawns:true) TWICE with a real sleep between them (delta-since-accept >= 2), turn in for the exact 4 gold payout",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "floodplains_bestiary_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "corusdeer_range",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_mothbear_loop",
+   "seed": 9,
+   "fixture": "invrisil_mothbear_loop_start",
+   "note": "Issue #97: bounty_mothbear_cull end to end -- accept at Selys's desk (guild), teleport to invrisil_boulevard at NIGHT (actions_since_sleep pre-set), a real move into trigger_radius 1 springs boulevard_mothbears live, win it ONCE (single-kill by design), turn in for the exact 4 gold payout",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild",
+     "invrisil_boulevard"
+    ],
+    "fixtures": [
+     "invrisil_mothbear_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "dungeon_kingslayer_loop",
+   "seed": 9,
+   "fixture": "dungeon_kingslayer_loop_start",
+   "note": "Issue #97: bounty_kingslayer_cull end to end -- accept at Selys's desk (guild), the kingslayer_den confirm conversation (apex-predator telegraph node pinned verbatim, [Back away.] negative proves no combat, then [Strike first.]), win the kingslayer_den fight (dungeon_approach, respawns:true) ONCE (single-kill by design), turn in for the exact 5 gold payout",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "dungeon_approach",
+     "guild"
+    ],
+    "fixtures": [
+     "dungeon_kingslayer_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "kingslayer_den",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "pallass_watchgolem_loop",
+   "seed": 9,
+   "fixture": "pallass_watchgolem_loop_start",
+   "note": "Issue #97: bounty_watchgolem_cull end to end -- accept at Selys's desk (guild), teleport to pallass_market (Pallass's second combat encounter this task), the market_watchgolems confirm conversation (armor telegraph node pinned verbatim, [Back away.] negative proves no combat, then [Strike first.]), win the fight (respawns:true) TWICE with a real sleep between them (delta-since-accept >= 2, showcasing the new guard AI profile), turn in for the exact 12 gold payout",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild",
+     "inn_upstairs",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_watchgolem_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "market_watchgolems",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
   }
  ]
 }

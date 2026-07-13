@@ -1,0 +1,33 @@
+{
+ "_comment": "Issue #97: FIXTURE-FIRST start for floodplains_bestiary_loop -- the accept-fight-turnin loop for bounty_corusdeer_cull. SAME base as crab_cull_loop_start (guild desk-approach cell (8,3) facing up, warrior2/rusty_sword -- byte-for-byte the harness's corusdeer_range_t1_solo cell construction). times_slept 20 (== board_last_seen_times_slept, no rotation bark) puts the pool window at indices [20,21,22] = [bounty_corusdeer_cull, bounty_razorbeak_cull, bounty_mothbear_cull] (data/bounties.json's own append order) -- corusdeer_cull visible as the picker's 1st option. rng_state derived from seed=1 (tests/_derive_rng_state.gd method): verified against tests/sim_combat_batch.gd's own corusdeer stats that seed=1's first TWO sequential rng.randi() draws both resolve the corusdeer_range fight as a win -- the canonical needs BOTH the pre-sleep and post-sleep fight to win for the bounty's delta-2 condition to complete.",
+ "version": 5,
+ "state": {
+  "current_map": "guild",
+  "player_cell": [8, 3],
+  "player_facing": [0, -1],
+  "classes": {"warrior": 2},
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "won_combat": 1
+  },
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword", "relcs_spare_spear"],
+  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "times_slept": 20,
+  "board_last_seen_times_slept": 20,
+  "gold": 0,
+  "rng_state": "2753005457729874301"
+ }
+}
