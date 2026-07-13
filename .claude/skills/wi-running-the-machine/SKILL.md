@@ -175,3 +175,23 @@ re-evaluate fresh — do not resurrect the old setup from history.
   the moment the copy landed. Corollary: a lane's "full sweep green"
   claim attaches to ITS tree state — the controller re-runs the gate on
   the MERGED tree (the K1×L1 tripwire red was only visible there).
+
+## Two landing-time red flags (2026-07-12, both bit the same day)
+- **A landing commit whose message describes more than its diffstat
+  shows** — 93af9cd claimed six files of reconciliation work and
+  contained two deletions; the real edits sat unstaged while the gate's
+  green attached to the working tree, and main carried invalid JSON in
+  qa/manifest.json until a later lane tripped over it. Discipline: after
+  EVERY landing commit, `git status` must show zero tracked
+  modifications before push, and read the commit's own `--stat` against
+  what the message claims. Corollary: push CI's sweep + web-parity jobs
+  are `[ci-full]` OPT-IN — "CI: success" on a push is NOT sweep
+  evidence; any push whose only sweep evidence is local gets `[ci-full]`
+  in the head-commit message.
+- **Removing a lane worktree/branch without `git cherry main <branch>`
+  first** — lane-8ec's final review-fix commit (the portal map-existence
+  guard + a journal-text fix) sat unmerged for days after 8e "shipped";
+  the merge had taken an earlier lane tip. `git cherry` on every lane
+  branch BEFORE deletion; a stranded commit gets triaged piece-by-piece
+  against current main (some pieces land, some are superseded — a7c6a7d
+  split 2/5 ported, 3/5 superseded).
