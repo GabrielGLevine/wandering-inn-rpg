@@ -255,6 +255,12 @@
    "gate_closed_toast": "You give the wire a wide berth. Something in the dark past it has not noticed you yet.",
    "on_victory": [
     "halls_cleared"
+   ],
+   "loot": [
+    {
+     "item": "warded_coil_charm",
+     "chance": 1.0
+    }
    ]
   },
   {
@@ -302,6 +308,12 @@
    "gate_closed_toast": "Whatever waits beyond this arch, you are not walking into it yet — not with the halls still armed, not without the Horns at your back.",
    "on_victory": [
     "vault_construct_downed"
+   ],
+   "loot": [
+    {
+     "item": "construct_core_shard",
+     "chance": 1.0
+    }
    ]
   },
   {
