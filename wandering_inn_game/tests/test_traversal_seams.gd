@@ -35,7 +35,7 @@ func _combat_config() -> Dictionary:
 ## are exploration-only, so adding them to player_skills is fight-neutral (the
 ## near_sewers fixture grants them the same way).
 func _new_game() -> WIGame:
-	var g := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 4242, _combat_config())
+	var g := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 4242, _combat_config())
 	g.player_skills.append("frost_touch")
 	g.player_skills.append("kindle")
 	return g

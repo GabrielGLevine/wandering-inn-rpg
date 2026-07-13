@@ -86,6 +86,25 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text())
 
 
+# Issue #100: data/skeleton_scene.json was split into
+# data/maps/<region>/<map>.json + data/scene_root.json. Python-side mirror
+# of src/core/scene_catalog.gd's WISceneCatalog.compose() -- same
+# sorted-path composition, same {start_map, player, maps} shape. Kept in
+# sync by hand (no shared source between GDScript and Python); the
+# GDScript loader is canonical (WIGame consumes it), this is a read-only
+# offline tool.
+def load_scene() -> dict:
+    root = load_json(DATA / "scene_root.json")
+    maps = {}
+    for map_path in sorted((DATA / "maps").glob("*/*.json")):
+        map_id = map_path.stem
+        if map_id in maps:
+            raise ValueError(f"duplicate map key '{map_id}' ({map_path})")
+        maps[map_id] = load_json(map_path)
+    root["maps"] = maps
+    return root
+
+
 # ---------------------------------------------------------------------------
 # VERB REGISTRY -- real, traced producers only. Each entry cites the exact
 # file/field it was traced against (mirrors data/bounties.json's own _comment
@@ -316,7 +335,7 @@ BAND_GOLD = {
 
 
 def build_candidates() -> dict:
-    scene = load_json(DATA / "skeleton_scene.json")
+    scene = load_scene()
     entity_ids = set()
     for map_data in scene["maps"].values():
         for ent in map_data.get("entities", []):

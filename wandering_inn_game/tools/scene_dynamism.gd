@@ -190,7 +190,7 @@ func _init() -> void:
 	var project_root := ProjectSettings.globalize_path("res://").trim_suffix("/")
 	repo_root = project_root.get_base_dir()
 
-	skeleton_data = _load_json_res("res://data/skeleton_scene.json")
+	skeleton_data = WISceneCatalog.compose()
 	sprites_data = _load_json_res("res://data/sprites.json")
 	moods_data = _load_json_res("res://data/moods.json")
 	biomes_data = _load_json_res("res://data/biomes.json")
