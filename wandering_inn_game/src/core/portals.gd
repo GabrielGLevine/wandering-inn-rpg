@@ -59,9 +59,22 @@ const NEVER_MIND := "Let it be."
 ## `accomplishment_count_cb` is Callable(id: String) -> int, forwarding to
 ## WIGame.accomplishment_count -- injected rather than read directly,
 ## keeping this class pure (the WIBounties.condition_met precedent).
-static func attuned_destinations(rows: Array, accomplishment_count_cb: Callable) -> Array:
+## `has_map_cb` is Callable(map_id: String) -> bool (WIGame.has_map) -- a
+## row whose `map` doesn't exist in this build's content is INERT: never
+## listed, whatever its attunement gate says. This is what makes a
+## FORWARD-REFERENCED portals row (a region milestone's quest lane landing
+## its row before the parallel maps lane lands the map -- 8e Phase C's
+## pallass row is the first) safe to ship: the attunement accomplishment
+## can be genuinely earnable through live content while the destination
+## stays unlisted until the map arrives, instead of listing a menu option
+## whose pick would crash `_bind_map` on the missing map key. An invalid
+## (default) Callable skips the check -- for bare pure-unit callers that
+## own no map set; WIGame's own wrapper ALWAYS injects has_map.
+static func attuned_destinations(rows: Array, accomplishment_count_cb: Callable, has_map_cb: Callable = Callable()) -> Array:
 	var out: Array = []
 	for row: Dictionary in rows:
+		if has_map_cb.is_valid() and not bool(has_map_cb.call(String(row.get("map", "")))):
+			continue
 		var req := String(row.get("requires_accomplishment", ""))
 		if req == "" or int(accomplishment_count_cb.call(req)) >= 1:
 			out.append(row)

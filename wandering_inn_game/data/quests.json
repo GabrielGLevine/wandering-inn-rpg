@@ -158,7 +158,7 @@
 			"beats": [
 				{ "id": "apply", "description": "File your permit application at the permit office by the Grand Lift, on Pallass's market tier.", "complete_when": { "forge_permit_filed": 1 } },
 				{ "id": "examined", "description": "Pass Grimalkin's fitness examination at the permit office by the Grand Lift.", "complete_when": { "grimalkin_examination_passed": 1 } },
-				{ "id": "stamped", "description": "Return to the forge-tier clerk and collect your stamped elevator pass.", "complete_when": { "elevator_pass_stamped": 1 } }
+				{ "id": "stamped", "description": "Collect your stamped lift pass at the permit office window, back beside the Grand Lift.", "complete_when": { "elevator_pass_stamped": 1 } }
 			]
 		}
 	]

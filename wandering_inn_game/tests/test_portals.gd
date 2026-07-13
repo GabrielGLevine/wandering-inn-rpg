@@ -181,5 +181,36 @@ func _init() -> void:
 	assert(restored.door_study_sleeps() == 2, "door_study_sleeps round-trips through the ordinary accomplishments save path")
 	assert(restored.accomplishment_count("door_awakened") == 0, "door_awakened has NOT banked yet on the restored save (only 2 of 3 sleeps taken)")
 
-	print("PASS: WIPortals gating/graph construction + the study-sleeps hook + portal-menu travel (the O2 rule)")
+	# --- Forward-referenced row guard (8e Phase C, ported from the stranded
+	# lane-8ec review-fix commit): a catalog row whose map doesn't exist in
+	# this build is INERT -- never listed by attuned_destinations (whatever
+	# its attunement gate says) and refused cleanly by _travel_to_portal.
+	# The bug class this kills: a region milestone's quest lane lands its
+	# portals row + a LIVE attunement chain before the parallel maps lane
+	# lands the map, and picking the row off the menu crashes _bind_map on
+	# the missing map key.
+	var fwd_rows: Array = [
+		{"id": "real_dest", "display_name": "Real", "map": "inn", "cell": [1, 1]},
+		{"id": "ghost_dest", "display_name": "Ghost", "map": "map_not_landed_yet", "cell": [10, 10]},
+	]
+	var fwd_counter := func(_id: String) -> int: return 1
+	var fwd_has_map := func(map_id: String) -> bool: return map_id == "inn"
+	var fwd_attuned: Array = WIPortals.attuned_destinations(fwd_rows, fwd_counter, fwd_has_map)
+	assert(fwd_attuned.size() == 1 and String(fwd_attuned[0]["id"]) == "real_dest", "attuned_destinations excludes a row whose map doesn't exist, even with its gate met")
+	assert(WIPortals.attuned_destinations(fwd_rows, fwd_counter).size() == 2, "an omitted has_map_cb (bare pure-unit caller) skips the map-existence filter -- both rows pass")
+	var fwd_game := _new_game()
+	assert(not fwd_game.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"])).has("pallass"), "sanity: pallass stays gate-locked without pallass_attuned")
+	# (No unattuned-travel refusal assert: _travel_to_portal deliberately
+	# checks id + map existence ONLY -- attunement gating lives entirely in
+	# the menu that produces the travel_to option, per the O2 rule.)
+	# The catalog row this guard shipped FOR (pallass, forward-referenced
+	# while pallass_market was a different lane's unlanded map) is LIVE now
+	# the map exists -- prove the pattern's payoff end-to-end: banking the
+	# attunement lists the row with zero further wiring, and travel works.
+	fwd_game.record_accomplishment("pallass_attuned")
+	assert(fwd_game.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"])).has("pallass"), "the once-forward-referenced pallass row lists normally now its map exists (the guard's zero-further-wiring payoff)")
+	fwd_game._travel_to_portal("pallass")
+	assert(fwd_game.current_map == "pallass_market", "travel to the now-landed map succeeds through the same guard")
+
+	print("PASS: WIPortals gating/graph construction + the study-sleeps hook + portal-menu travel (the O2 rule) + the forward-referenced-row map guard")
 	quit(0)

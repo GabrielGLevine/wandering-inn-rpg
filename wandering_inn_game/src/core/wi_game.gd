@@ -2245,9 +2245,13 @@ func _portal_rows() -> Array:
 
 ## The PC's currently attuned portal destinations (WIPortals.attuned_
 ## destinations over the injected catalog) -- read-only; QA/tests can call
-## this directly to prove the gate without opening the menu.
+## this directly to prove the gate without opening the menu. `has_map` is
+## ALWAYS injected here (never omitted): a forward-referenced catalog row
+## whose map hasn't landed yet must be INERT (unlisted), or picking it off
+## the menu would crash `_bind_map` on the missing map key -- see
+## WIPortals.attuned_destinations' own doc comment.
 func attuned_destinations() -> Array:
-	return WIPortals.attuned_destinations(_portal_rows(), Callable(self, "accomplishment_count"))
+	return WIPortals.attuned_destinations(_portal_rows(), Callable(self, "accomplishment_count"), Callable(self, "has_map"))
 
 
 ## Opens the fast-travel destination picker at the CURRENT anchor
@@ -2264,10 +2268,19 @@ func _interact_portal_menu() -> Dictionary:
 ## the door-arrival helpers can never fire on a portal arrival (the
 ## `portal_menu` canonical asserts no trigger/combat event fires on
 ## arrival). A missing/unknown destination id is a silent no-op (defensive;
-## every shipped option's `travel_to` id resolves to a real row).
+## every shipped option's `travel_to` id resolves to a real row). A row
+## whose `map` doesn't exist in this build refuses the same way (the
+## has_map rejection WISave.apply uses for a stale save's current_map,
+## applied to travel) -- belt-and-suspenders under attuned_destinations'
+## own has_map filter, which already keeps such a row off the menu: the
+## sim must refuse cleanly even if a caller reaches this with a
+## forward-referenced id directly, never crash `_bind_map` on the missing
+## map key.
 func _travel_to_portal(id: String) -> void:
 	var dest := WIPortals.destination_by_id(_portal_rows(), id)
 	if dest.is_empty():
+		return
+	if not has_map(String(dest.get("map", ""))):
 		return
 	transition(String(dest["map"]), Vector2i(int((dest[WIKeys.CELL] as Array)[0]), int((dest[WIKeys.CELL] as Array)[1])))
 	var arrival_toast := String(dest.get("arrival_toast", ""))
