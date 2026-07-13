@@ -30,6 +30,15 @@
       }
      },
      "text": "Back again. Either you are braver than the Watch or you have reconsidered your ignorance. Which is it?"
+    },
+    {
+     "_comment": "Issue #89 (gap-2), the text_variants marker-node pattern: sensed_something_deeper (trapped_halls.json's seal_kept_door, its BASE on_interact_accomplishment -- the pre-victory read, distinct from the same prop's GATED variant that banks seal_kept_found after vault_construct_downed) was a genuine sequence-break-only orphan: a player who walks past that door before finishing the delve banks this and nothing else. Appended LAST (highest priority) so it always surfaces when true, even over met_pisces/learned_magic_from_pisces. Accepted minor staleness: once heard_pisces_second_door later fires (the fuller report, its own hub option), this greeting keeps reading as the premonition rather than reverting -- a narrow edge case, flavor-only, never load-bearing.",
+     "requires": {
+      "accomplishment": {
+       "sensed_something_deeper": 1
+      }
+     },
+     "text": "You have the look of someone who felt something they cannot name. I get that look often, usually right before someone asks me to explain it for free. Go on, then. Tell me what you sensed."
     }
    ],
    "options": [
