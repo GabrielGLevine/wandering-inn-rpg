@@ -501,7 +501,7 @@
   {
    "script": "settings_loop",
    "seed": null,
-   "note": "issue #77: the settings + accessibility surface -- bus-routing fix (UI sends to SFX, provable via AudioServer.get_bus_send), a real SFX slider move asserted via AudioServer.get_bus_volume_db, fullscreen toggle, text-scale step + a copy-fit-sensitive TOAST re-render post-scale, reduce_motion surviving a full Save->Load UI-layer rebuild, the Controls reference sub-page, Replay Hints re-arming the two one-shot session hints, settings.cfg written -- opened from BOTH the title screen and the in-game pause menu"
+   "note": "issue #77: the settings + accessibility surface -- bus-routing fix (UI sends to SFX, provable via AudioServer.get_bus_send), a real SFX slider move asserted via AudioServer.get_bus_volume_db, fullscreen toggle, text-scale step + a copy-fit-sensitive TOAST re-render post-scale, reduce_motion surviving a full Save->Load UI-layer rebuild, the Controls reference sub-page, Replay Hints re-arming the two one-shot session hints, settings.cfg written -- opened from BOTH the title screen and the in-game pause menu. Issue #107: the Help reference sub-page (data/help_content.json's 6 sections) appended before 'Back', opened via BOTH a keyboard leg (pause-menu entry) and a click leg (title-screen entry), each pinning ui_help_rendered's section count + the 'Saving' section's exact line; the windowed run's 01_settings_help_panel screenshot is the open-panel proof"
   },
   {
    "script": "delve_fight",

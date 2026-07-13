@@ -121,9 +121,36 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== Back (MOUSE path): row 9 = 'Back' (index 8, last row).",
+   "_comment": "== Help reference (MOUSE path, issue #107): row 9 = 'Help...' (index 8, appended before 'Back' -- the SAME slot 'Controls...'/'Replay Hints' occupy, 'Back' stays the fixed last row). Pins the rendered event's section count + the 'Saving' section's exact line.",
    "action": "click_settings_row",
    "row": 9
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_help_rendered",
+   "payload_contains": {
+    "sections": 6,
+    "sample": "Saving — Save and Load live in the pause menu — three manual slots, plus an autosave after fights, level-ups, and doors."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_settings_help_panel"
+  },
+  {
+   "_comment": "Exit Help back to ROWS (cancel -- the Controls sub-page's own exit idiom, no click on the panel's internal '> Back' label needed since the OPEN leg already exercised the mouse path).",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "_comment": "== Back (MOUSE path): row 10 = 'Back' (index 9, now the last row -- shifted by 'Help...' being appended before it).",
+   "action": "click_settings_row",
+   "row": 10
   },
   {
    "action": "wait_for_event",
@@ -272,7 +299,34 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== Close settings (KEYBOARD path): down x1 -> 'Back' (index 8), Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
+   "_comment": "== Help reference (KEYBOARD path, issue #107): down x1 from 'Replay Hints' -> 'Help...' (index 8), Confirm opens it -- re-pins the SAME rendered event/section string as the title-side click leg above, proving the sub-page renders identically from the in-game pause entry point too (the fresh-instance-per-swap contract every other sub-page here already carries).",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_help_rendered",
+   "payload_contains": {
+    "sections": 6,
+    "sample": "Saving — Save and Load live in the pause menu — three manual slots, plus an autosave after fights, level-ups, and doors."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "_comment": "== Close settings (KEYBOARD path): down x1 from 'Help...' -> 'Back' (index 9, now the last row -- shifted by 'Help...' being appended before it), Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
    "action": "move",
    "direction": "down",
    "steps": 1

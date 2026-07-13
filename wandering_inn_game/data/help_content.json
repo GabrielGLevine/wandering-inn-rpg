@@ -1,0 +1,29 @@
+{
+ "_comment": "Issue #107: Help reference sub-page (settings_panel.gd). DATA not code -- content = data + code convention (CLAUDE.md). Each section renders as ONE wrapped Label, \"heading -- body\", the combined-line layout the sizing pass (issue #107) measured against HELP_TEXT_WIDTH/HELP_SECTION_LINE_CAP in tests/test_copy_fit.gd. Locks bind every body string: VERBS not formulas, no stats, no progress-toward numbers, no thresholds (opaque-until-sleep). First-draft copy -- controller voice-passes at merge (issue text).",
+ "sections": [
+  {
+   "heading": "Classes & Levels",
+   "body": "The Design tallies what you do; it writes classes and levels while you sleep — keep doing what you want to become."
+  },
+  {
+   "heading": "Skills & the Hotbar",
+   "body": "Skills never trigger themselves. Toggle learned skills onto the hotbar, then use them yourself — in the field or a fight."
+  },
+  {
+   "heading": "The Boards",
+   "body": "The Request Board and the Runner's Guild board post bounties and deliveries — accept first, then only what you do after counts. The Notice Wall just posts rumors and leads."
+  },
+  {
+   "heading": "Sleep",
+   "body": "Sleep is when it lands — classes, level-ups, and evolutions resolve overnight. The boards can turn over, and the day begins again."
+  },
+  {
+   "heading": "Saving",
+   "body": "Save and Load live in the pause menu — three manual slots, plus an autosave after fights, level-ups, and doors."
+  },
+  {
+   "heading": "Controls",
+   "body": "For the full key, pad, and mouse layout, see Controls... on this same menu."
+  }
+ ]
+}
