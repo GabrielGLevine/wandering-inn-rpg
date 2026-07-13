@@ -8,6 +8,7 @@ const VALID_BUSES: Dictionary = {
 	"SFX": true,
 	"UI": true,
 	"Voice": true,
+	"Ambience": true,
 }
 
 const KNOWN_EVENTS: Dictionary = {
@@ -101,6 +102,17 @@ const REQUIRED_MUSIC_IDS: Array[String] = [
 	"music_combat_vault",
 	"music_defeat",
 	"music_sleep_beat",
+]
+
+## Issue #76 remainder: the five highest-dwell maps' beds. CC0-sourced, so
+## the streams live in the PUBLIC tree (assets/audio/ambience/) -- a missing
+## file here is a real regression, never a licensed-overlay gap.
+const REQUIRED_AMBIENCE_IDS: Array[String] = [
+	"ambience_inn",
+	"ambience_street",
+	"ambience_floodplains",
+	"ambience_sewers",
+	"ambience_trapped_halls",
 ]
 
 
@@ -256,6 +268,60 @@ func _init() -> void:
 	for required_id: String in REQUIRED_MUSIC_IDS:
 		if not ids.has(required_id):
 			_fail("missing required music id: " + required_id)
+
+	## Issue #76 remainder: the `ambience` kind. Rows mirror the field-music
+	## shape but are pinned harder: map_changed-keyed only (beds are map-scoped
+	## by definition), Ambience bus only, payload.map must equal `context` (the
+	## drift tripwire keeping the human label and the actual match in lockstep),
+	## and no sting machinery (`return_to_field` forbidden -- beds always loop).
+	if not config.has("ambience"):
+		_fail("audio.json missing ambience")
+	if not config["ambience"] is Array:
+		_fail("audio.json ambience must be an array")
+
+	for entry: Dictionary in config["ambience"]:
+		for key: String in ["id", "kind", "context", "event", "payload", "stream", "bus"]:
+			if not entry.has(key):
+				_fail("ambience entry missing %s: %s" % [key, JSON.stringify(entry)])
+
+		var id := String(entry["id"])
+		var kind := String(entry["kind"])
+		var event_type := String(entry["event"])
+		var stream := String(entry["stream"])
+		var bus := String(entry["bus"])
+		if ids.has(id):
+			_fail("duplicate audio id: " + id)
+		ids[id] = true
+
+		if kind != "ambience":
+			_fail("ambience entry kind must be 'ambience': %s for %s" % [kind, id])
+		if event_type != "map_changed":
+			_fail("ambience entry must be map_changed-keyed: %s for %s" % [event_type, id])
+		if bus != "Ambience":
+			_fail("ambience entry must ride the Ambience bus: %s for %s" % [bus, id])
+		if not entry["payload"] is Dictionary:
+			_fail("ambience payload must be a dict for %s" % id)
+		var ambience_payload: Dictionary = entry["payload"]
+		if String(ambience_payload.get("map", "")) != String(entry["context"]):
+			_fail("ambience payload.map must equal context (drift tripwire) for %s" % id)
+		if not stream.begins_with("res://assets/audio/ambience/"):
+			_fail("ambience stream outside assets/audio/ambience: %s" % stream)
+		if not stream.ends_with(".ogg"):
+			_fail("ambience stream must be OGG: %s" % stream)
+		if not FileAccess.file_exists(stream):
+			_fail("missing ambience stream for %s: %s (CC0/public tier -- the manifest relaxation does NOT apply)" % [id, stream])
+
+		var ambience_volume_db := float(entry.get("volume_db", 0.0))
+		if ambience_volume_db < -80.0 or ambience_volume_db > 12.0:
+			_fail("volume_db out of range for %s" % id)
+		if entry.has("loop") and typeof(entry["loop"]) != TYPE_BOOL:
+			_fail("ambience loop must be a bool for %s" % id)
+		if entry.has("return_to_field"):
+			_fail("ambience entries never return_to_field (beds are loops, not stings): %s" % id)
+
+	for required_id: String in REQUIRED_AMBIENCE_IDS:
+		if not ids.has(required_id):
+			_fail("missing required ambience id: " + required_id)
 
 	print("PASS: audio data is well-formed and cross-referenced")
 	quit(0)

@@ -16,6 +16,9 @@ project; setting, characters, and lore belong to pirateaba.
 - **16-Bit Fantasy & Adventure OST** by **Marllon Silva (xDeviruchi)** — used
   with permission; see his YouTube channel.
 - **Minifantasy Dungeon SFX / Dungeon Music** by **Leohpaz**.
+- **Ambient beds** by **Breviceps** (freesound.org), **Thimras**,
+  **JaggedStone**, **Independent.nu** (opengameart.org) — CC0; see
+  `wandering_inn_game/assets/LICENSES/ambience-beds-cc0-verdict.md`.
 
 ## Repository media
 
