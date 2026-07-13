@@ -154,6 +154,13 @@ func _build_expected_counts() -> Dictionary:
 	counts["icon_sneak/idle"] = 1
 	counts["icon_invisibility/idle"] = 1
 
+	## GH#94 icon drain: 6 code-drawn skill icons (single-frame), same
+	## policy as every icon above -- power_shot/keen_eye/quick_nock/
+	## piercing_shot ([Archer] kit), spellbound_strike ([Spellsword] L16),
+	## sudden_strike ([Sneak Attack], Rogue L7).
+	for icon_id: String in ["icon_power_shot", "icon_keen_eye", "icon_quick_nock", "icon_piercing_shot", "icon_spellbound_strike", "icon_sudden_strike"]:
+		counts[icon_id + "/idle"] = 1
+
 	## Library/sewer/dummy statics (1-frame regions);
 	## royal_soldier single-facing battler idle 256/64 = 4;
 	## a_hunter directional idle 256/64 = 4, walk maps the Run sheets 384/64 = 6.

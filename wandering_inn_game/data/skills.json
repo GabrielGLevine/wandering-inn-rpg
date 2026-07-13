@@ -271,9 +271,10 @@
 			"description": "Mana runs down the blade until the edge sings."
 		},
 		{
-			"_comment": "GH#61: [Spellsword]'s L16 capstone (classes.json's own _comment on that class carries the full provenance trace). CANON-VERDICT: INVENTED, flagged -- [Spellsword] itself is attested canon (Pisces's 'dubiously qualified' hybrids; the wiki names Edward/Requiel as holders, both within the Book-17 bar) but no single clean canon Skill name/effect for the class survived wiki verification, so a restrained name matching the class fantasy (magic bound into a weapon strike) was used instead. Rides the EXISTING damage_mult type -- NO new effect type. Deliberately carries NO `weapon` key (unlike keener_edge's sword-only gate): combat_build.gd's `weapon_gated_kit` only filters skills that DECLARE a `weapon` tag, so an untagged skill fields for every equipped weapon family -- this is the one grant every real consolidated spellsword gets regardless of which parent line (swordsman/spearmaster) they came from. `mp_cost` alongside `ap_cost` is new for a damage_mult skill in this catalog (every other one only spends AP) -- a genuine capstone tax on both halves of the class's resource pool, mechanically inert elsewhere (WISkillEffects.resolve_active's damage_mult arm already calls the generic `spend_skill_costs`, which deducts MP whenever `mp_cost` > 0 regardless of effect type -- see that function's own doc comment). No `icon` -- same disclosed ICON GAP as flame_pillar/a dozen other shipped skills, degrades gracefully. Structurally unreachable by `sim_combat_batch.gd` (spellsword is never assigned in the harness's BUILDS array, same as fire_mage/ice_mage precedent) -- no balance-harness re-run needed.",
+			"_comment": "GH#61: [Spellsword]'s L16 capstone (classes.json's own _comment on that class carries the full provenance trace). CANON-VERDICT: INVENTED, flagged -- [Spellsword] itself is attested canon (Pisces's 'dubiously qualified' hybrids; the wiki names Edward/Requiel as holders, both within the Book-17 bar) but no single clean canon Skill name/effect for the class survived wiki verification, so a restrained name matching the class fantasy (magic bound into a weapon strike) was used instead. Rides the EXISTING damage_mult type -- NO new effect type. Deliberately carries NO `weapon` key (unlike keener_edge's sword-only gate): combat_build.gd's `weapon_gated_kit` only filters skills that DECLARE a `weapon` tag, so an untagged skill fields for every equipped weapon family -- this is the one grant every real consolidated spellsword gets regardless of which parent line (swordsman/spearmaster) they came from. `mp_cost` alongside `ap_cost` is new for a damage_mult skill in this catalog (every other one only spends AP) -- a genuine capstone tax on both halves of the class's resource pool, mechanically inert elsewhere (WISkillEffects.resolve_active's damage_mult arm already calls the generic `spend_skill_costs`, which deducts MP whenever `mp_cost` > 0 regardless of effect type -- see that function's own doc comment). GH#94 icon drain: icon_spellbound_strike added (code-drawn steel-blade+mana-glow glyph). Structurally unreachable by `sim_combat_batch.gd` (spellsword is never assigned in the harness's BUILDS array, same as fire_mage/ice_mage precedent) -- no balance-harness re-run needed.",
 			"id": "spellbound_strike",
 			"display_name": "[Spellbound Strike]",
+			"icon": "icon_spellbound_strike",
 			"contexts": ["combat"],
 			"ap_cost": 4,
 			"mp_cost": 3,
@@ -432,9 +433,10 @@
 			"description": "A working that bends the light around you until even a careful eye finds nothing worth watching."
 		},
 		{
-			"_comment": "GH#70 [Archer]. The power_strike twin, weapon-gated to bow instead of sword -- SAME effect type (damage_mult), SAME resolver (skill_effects.gd's damage_mult case), now range+LoS-aware via WICombat.in_weapon_range so this actually fires at a bow's range 4 instead of only adjacent. No icon: assets/ui/icons/ has no unclaimed bow/arrow art (checked against every skills.json `icon` usage before writing this -- icon_attack/icon_dash are the only two unclaimed ids, and both are reserved for the innate hotbar slots, not a Skill); degrades gracefully like flame_pillar/mana_shield/counter_strike and a dozen other shipped iconless skills -- disclosed as an art-pass gap, not a blocker.",
+			"_comment": "GH#70 [Archer]. The power_strike twin, weapon-gated to bow instead of sword -- SAME effect type (damage_mult), SAME resolver (skill_effects.gd's damage_mult case), now range+LoS-aware via WICombat.in_weapon_range so this actually fires at a bow's range 4 instead of only adjacent. GH#94 icon drain: icon_power_shot added (code-drawn fletched-arrow glyph, tools/sync_assets.py::_draw_placeholder shape 'arrow_power').",
 			"id": "power_shot",
 			"display_name": "[Power Shot]",
+			"icon": "icon_power_shot",
 			"contexts": ["combat"],
 			"ap_cost": 3,
 			"weapon": "bow",
@@ -442,9 +444,10 @@
 			"description": "A full draw, held a breath too long, loosed dead center."
 		},
 		{
-			"_comment": "GH#70 [Archer]. The quick_slash twin, weapon-gated to bow. Same damage_mult resolver/range-aware seam as Power Shot above.",
+			"_comment": "GH#70 [Archer]. The quick_slash twin, weapon-gated to bow. Same damage_mult resolver/range-aware seam as Power Shot above. GH#94 icon drain: icon_quick_nock added (code-drawn arrow+speed-lines glyph).",
 			"id": "quick_nock",
 			"display_name": "[Quick Nock]",
+			"icon": "icon_quick_nock",
 			"contexts": ["combat"],
 			"ap_cost": 1,
 			"weapon": "bow",
@@ -452,9 +455,10 @@
 			"description": "Nock, draw, loose -- before the first arrow lands, the second is already gone."
 		},
 		{
-			"_comment": "GH#70 [Archer]. Reuses line_damage VERBATIM (flame_jet's own effect type/resolver, WISkillEffects._resolve_line_damage) -- an arrow that overpenetrates instead of a jet of fire, weapon-gated to bow instead of element-gated. NO new effect type. Friendly fire is real on this type by design (every occupant of the walked cells is hit, same as flame_jet) -- canon-fun for a piercing shaft down a corridor. Costed like triple_thrust (3 AP, no MP -- archers carry no mana pool; giving this an mp_cost would incidentally grant [Archer] a max_mp pool, which nothing in this class wants) rather than flame_jet's 2 AP/4 MP, since MP can't do any of the power-gating work here.",
+			"_comment": "GH#70 [Archer]. Reuses line_damage VERBATIM (flame_jet's own effect type/resolver, WISkillEffects._resolve_line_damage) -- an arrow that overpenetrates instead of a jet of fire, weapon-gated to bow instead of element-gated. NO new effect type. Friendly fire is real on this type by design (every occupant of the walked cells is hit, same as flame_jet) -- canon-fun for a piercing shaft down a corridor. Costed like triple_thrust (3 AP, no MP -- archers carry no mana pool; giving this an mp_cost would incidentally grant [Archer] a max_mp pool, which nothing in this class wants) rather than flame_jet's 2 AP/4 MP, since MP can't do any of the power-gating work here. GH#94 icon drain: icon_piercing_shot added (code-drawn full-height arrow glyph).",
 			"id": "piercing_shot",
 			"display_name": "[Piercing Shot]",
+			"icon": "icon_piercing_shot",
 			"contexts": ["combat"],
 			"ap_cost": 3,
 			"weapon": "bow",
@@ -462,9 +466,10 @@
 			"description": "One arrow, and everything in its path pays the same price."
 		},
 		{
-			"_comment": "GH#70 [Archer]'s field-flavor grant, the observe-family shape ([Appraise Foe]'s own field/field_ambient contract) reused for the archer's own read of a room -- the third-pillar (non-combat) presence every earned class carries (mage has [Light], rogue/warrior lean on their combat kit alone, but archer gets a bespoke flavor skill matching mage's precedent). Deliberately NOT the same skill id as `observe` (a distinct grant, not a re-grant of Tactician's [Appraise Foe]) -- no combat effect, exploration-only, contexts/field/field_ambient shape copied from `observe` verbatim.",
+			"_comment": "GH#70 [Archer]'s field-flavor grant, the observe-family shape ([Appraise Foe]'s own field/field_ambient contract) reused for the archer's own read of a room -- the third-pillar (non-combat) presence every earned class carries (mage has [Light], rogue/warrior lean on their combat kit alone, but archer gets a bespoke flavor skill matching mage's precedent). Deliberately NOT the same skill id as `observe` (a distinct grant, not a re-grant of Tactician's [Appraise Foe]) -- no combat effect, exploration-only, contexts/field/field_ambient shape copied from `observe` verbatim. GH#94 icon drain: icon_keen_eye added (code-drawn scope-reticle glyph, observe's own vision-blue palette).",
 			"id": "keen_eye",
 			"display_name": "[Keen Eye]",
+			"icon": "icon_keen_eye",
 			"contexts": ["exploration"],
 			"field": true,
 			"field_ambient": "[Keen Eye] — You read the room the way you'd read a stand of trees for game: what moved, what didn't, what's worth a second look. Nothing here needs tracking.",
@@ -563,9 +568,10 @@
 			"description": "Steady hands and a thief's patience: whatever waits to spring, waits a little longer."
 		},
 		{
-			"_comment": "Class-foundation pass R1: Rogue L7. ONCE-per-fight (WIKeys.ONCE_PER_FIGHT, WICombat.use_skill's own gate -- reuses the EXISTING used_skills_tally per-actor/per-fight set, see that const's doc comment; genuinely expressible on existing state, so the plan's disclosed higher-AP fallback was NOT needed). CANON-VERDICT: display name SUBSTITUTED to an ATTESTED exact match -- wiki-checked (Skills Effect/S), '[Sneak Attack]' is a real attested Skill and a strong thematic fit for a Rogue's own ambush strike (pairs naturally with the class's L1 [Stealth] grant). Id `sudden_strike` is PINNED and unchanged -- only display_name substitutes. Untagged (no `weapon` key, unlike sword/spear/bow damage_mult skills) -- an ambush strike works with whatever is in hand, matching spellbound_strike's own deliberate no-weapon-gate precedent. Iconless.",
+			"_comment": "Class-foundation pass R1: Rogue L7. ONCE-per-fight (WIKeys.ONCE_PER_FIGHT, WICombat.use_skill's own gate -- reuses the EXISTING used_skills_tally per-actor/per-fight set, see that const's doc comment; genuinely expressible on existing state, so the plan's disclosed higher-AP fallback was NOT needed). CANON-VERDICT: display name SUBSTITUTED to an ATTESTED exact match -- wiki-checked (Skills Effect/S), '[Sneak Attack]' is a real attested Skill and a strong thematic fit for a Rogue's own ambush strike (pairs naturally with the class's L1 [Stealth] grant). Id `sudden_strike` is PINNED and unchanged -- only display_name substitutes. Untagged (no `weapon` key, unlike sword/spear/bow damage_mult skills) -- an ambush strike works with whatever is in hand, matching spellbound_strike's own deliberate no-weapon-gate precedent. GH#94 icon drain: icon_sudden_strike added (code-drawn dagger+shadow-streak glyph, icon_sneak's slate palette).",
 			"id": "sudden_strike",
 			"display_name": "[Sneak Attack]",
+			"icon": "icon_sudden_strike",
 			"contexts": ["combat"],
 			"ap_cost": 2,
 			"once_per_fight": true,

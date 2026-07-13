@@ -1129,6 +1129,84 @@
    }
   }
  },
+ "icon_power_shot": {
+  "_comment": "GH#94 icon drain: code-drawn arrow glyph, tools/sync_assets.py::_draw_placeholder shape 'arrow_power'.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_power_shot.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_keen_eye": {
+  "_comment": "GH#94 icon drain: code-drawn scope-reticle glyph, tools/sync_assets.py::_draw_placeholder shape 'reticle'.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_keen_eye.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_quick_nock": {
+  "_comment": "GH#94 icon drain: code-drawn arrow+speed-lines glyph, tools/sync_assets.py::_draw_placeholder shape 'arrow_quick'.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_quick_nock.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_piercing_shot": {
+  "_comment": "GH#94 icon drain: code-drawn full-height arrow glyph, tools/sync_assets.py::_draw_placeholder shape 'arrow_pierce'.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_piercing_shot.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_spellbound_strike": {
+  "_comment": "GH#94 icon drain: code-drawn steel-blade+mana-glow glyph, tools/sync_assets.py::_draw_placeholder shape 'bound_blade'.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_spellbound_strike.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_sudden_strike": {
+  "_comment": "GH#94 icon drain: code-drawn dagger+shadow-streak glyph, tools/sync_assets.py::_draw_placeholder shape 'backstab'.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_sudden_strike.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
  "hearth": {
   "render_scale": 0.5,
   "animations": {
