@@ -20,7 +20,10 @@ extends CanvasLayer
 ## also hides its own root while settings is up (belt-and-braces, not
 ## load-bearing for visibility).
 
-const PANEL_SIZE := Vector2(320.0, 340.0)
+## Issue #106: grown 340->420 (+80) for ROWS' widened 30px row height (was
+## 22px, see `_build_rows_panel`'s row loop) -- same 9-slice-tolerates-resize
+## reasoning as pause_menu.gd's identical PANEL_SIZE fix.
+const PANEL_SIZE := Vector2(320.0, 420.0)
 const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
 
 ## Row list. "Settings" is reached from a LATER-appended row on both
@@ -110,7 +113,11 @@ func _build_rows_panel() -> void:
 
 	for i in ROWS.size():
 		var row := UIChrome.make_label("", "Small")
-		row.custom_minimum_size = Vector2(260.0, 22.0)
+		# Issue #106 hit-target audit: 22px design height, one of the worst-
+		# measured surfaces (tied with pause_menu.gd's slot-picker rows).
+		# Widened to 30 (INPUT region only -- width/text untouched); PANEL_SIZE
+		# grown above to match.
+		row.custom_minimum_size = Vector2(260.0, 30.0)
 		stack.add_child(row)
 		_row_labels.append(row)
 

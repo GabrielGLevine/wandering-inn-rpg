@@ -305,6 +305,37 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(cons_rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_confirm_chip":
+			# Issue #106: combat's tap-confirm chip -- resolves the LIVE
+			# CombatScreen node's own `confirm_chip_rect()`, same lookup shape
+			# as `click_slot`/`click_pause_row`. Empty rect (chip not armed/
+			# visible) fails loud, same contract as every other click_* step.
+			var cs := get_tree().root.find_child("CombatScreen", true, false)
+			if cs == null:
+				_fail("click_confirm_chip: CombatScreen node not found")
+			else:
+				var chip_rect: Rect2 = cs.call("confirm_chip_rect")
+				if chip_rect.size == Vector2.ZERO:
+					_fail("click_confirm_chip: chip has no rendered rect (not armed?)")
+				else:
+					_inject_mouse_click(chip_rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_char_creation_begin":
+			# Issue #106: the NAME step's tappable Begin control -- resolves
+			# the LIVE CharCreation node's own `begin_button_rect()`, same
+			# lookup shape as `click_char_creation_card`.
+			var ccb := get_tree().root.find_child("CharCreation", true, false)
+			if ccb == null:
+				_fail("click_char_creation_begin: CharCreation node not found")
+			else:
+				var begin_rect: Rect2 = ccb.call("begin_button_rect")
+				if begin_rect.size == Vector2.ZERO:
+					_fail("click_char_creation_begin: Begin button has no rendered rect")
+				else:
+					_inject_mouse_click(begin_rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"click_char_creation_card":
 			# Character-creation sprite-grid card click: resolves the LIVE
 			# CharCreation node's own `card_rect`, same lookup shape as

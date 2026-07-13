@@ -29,6 +29,25 @@ extends CanvasLayer
 ## surface only (placeholder + text), driven from `_name`. The char_creation QA
 ## script types via TestDriver's `type_text` step, which injects unicode key
 ## events that land here exactly like a real keystroke.
+##
+## Issue #106 (mobile web v1): `_name_edit` is now `editable = true` so a real
+## TAP on it can gain focus and (with the export preset's
+## `html/experimental_virtual_keyboard` flag on) summon the OS virtual
+## keyboard -- Godot only shows that keyboard for a FOCUSED, EDITABLE
+## LineEdit (verified against engine source: `show_virtual_keyboard()` fires
+## from `NOTIFICATION_FOCUS_ENTER` and from a mouse click handler gated on
+## `editable`), so `editable=false` would have made the export flag a no-op.
+## This does NOT disturb the `_unhandled_input` path above: nothing in this
+## file ever calls `grab_focus()`, so the field stays unfocused (and
+## `_unhandled_input` keeps seeing every keystroke exactly as before) unless
+## a real player explicitly clicks/taps it -- true for every existing QA
+## script (`type_text` never clicks the field) and every keyboard-only
+## desktop session. ONLY a real click/tap routes typing through the LineEdit's
+## own native edit pipeline instead; `_on_name_edit_text_changed`/
+## `_on_name_edit_text_submitted` keep `_name` (the single source of truth
+## `_begin_game` reads) in lockstep with that path, applying the SAME
+## `_is_name_char` charset filter `_handle_name_input` already enforced
+## per-keystroke.
 
 enum Step { PICK, NAME }
 
@@ -36,6 +55,9 @@ const NATIVE_SIZE := Vector2(1280.0, 720.0)
 const BACKDROP_COLOR := Color(0.08, 0.06, 0.05)
 const HINT_COLOR := Color(0.72, 0.68, 0.58)
 const NAME_MAX := 16
+## Issue #106: the NAME step's tappable Begin control -- see `_build_ui`'s
+## doc comment for the #85 gap this closes.
+const BEGIN_BUTTON_SIZE := Vector2(200.0, 48.0)
 
 ## The six PC sprite variants, in GridContainer fill order (row-major: top
 ## row is Male across the three races, bottom row is Female) so a plain
@@ -87,6 +109,7 @@ var _grid_anchor: Control
 var _cards: Array[Control] = []
 var _portraits: Array[AnimatedSprite2D] = []
 var _name_edit: LineEdit
+var _begin_button: Control
 
 
 func _ready() -> void:
@@ -149,7 +172,12 @@ func _build_ui() -> void:
 	_name_edit = LineEdit.new()
 	UIChrome.apply_theme(_name_edit)
 	_name_edit.placeholder_text = "Traveler"
-	_name_edit.editable = false  # text is driven from `_name`, not native editing
+	# Issue #106: editable=true so a real tap can focus it (see the file doc
+	# comment for why the virtual keyboard requires this and why it's safe --
+	# nothing here ever calls grab_focus(), so `_unhandled_input` still sees
+	# every keystroke unless a player actually clicks/taps the field).
+	_name_edit.editable = true
+	_name_edit.max_length = NAME_MAX
 	_name_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_name_edit.context_menu_enabled = false
 	_name_edit.set_anchors_preset(Control.PRESET_CENTER)
@@ -157,7 +185,31 @@ func _build_ui() -> void:
 	_name_edit.size = Vector2(360.0, 48.0)
 	UIChrome.set_offsets(_name_edit, -180.0, -24.0, 180.0, 24.0)
 	_name_edit.hide()
+	_name_edit.text_changed.connect(_on_name_edit_text_changed)
+	_name_edit.text_submitted.connect(_on_name_edit_text_submitted)
+	_name_edit.focus_entered.connect(_on_name_edit_focus_entered)
 	_root.add_child(_name_edit)
+
+	# Issue #106 (the #85-documented gap): a tappable Begin control -- the
+	# NAME step previously had NO clickable confirm, only Enter (see
+	# `_render_step`'s old doc comment, now superseded below). Positioned
+	# under the name field; visibility toggles with the field itself in
+	# `_render_step`. Calls the EXACT SAME `_confirm()` Enter calls -- a tap
+	# and a keypress commit the identical `UI_CHAR_CREATION_CONFIRMED` +
+	# `Game.reset(creation)` sequence.
+	_begin_button = UIChrome.make_chrome_panel(UIChrome.BLUE_BUTTON, UIChrome.PATCH_MARGIN)
+	_begin_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	_begin_button.set_anchors_preset(Control.PRESET_CENTER)
+	_begin_button.custom_minimum_size = BEGIN_BUTTON_SIZE
+	_begin_button.size = BEGIN_BUTTON_SIZE
+	UIChrome.set_offsets(_begin_button, -BEGIN_BUTTON_SIZE.x * 0.5, 40.0, BEGIN_BUTTON_SIZE.x * 0.5, 40.0 + BEGIN_BUTTON_SIZE.y)
+	_begin_button.gui_input.connect(_on_begin_button_gui_input)
+	_begin_button.hide()
+	var begin_label := UIChrome.make_label("Begin", "")
+	begin_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	begin_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_begin_button.add_child(begin_label)
+	_root.add_child(_begin_button)
 
 	# Hint strip under the content. Lowered from the original y-90/-54
 	# (playtest hotfix #3): reclaims room above for the larger picker grid.
@@ -221,15 +273,16 @@ func _build_picker_grid() -> void:
 		_cards.append(card)
 
 
-## NAME step has no clickable confirm control: `_name_edit` is a
-## non-editable display surface (typing is captured by `_unhandled_input`,
-## not GUI focus -- see the file doc comment), and no separate "OK" button
-## exists to wire a click onto. Enter/confirm stays the only way to commit a
-## name; nothing to add here without inventing a new on-screen affordance.
+## Issue #106: the NAME step now has a clickable confirm control
+## (`_begin_button`, toggled alongside `_name_edit` below) -- `_name_edit`
+## itself stays a non-editable display surface (typing is captured by
+## `_unhandled_input`, not GUI focus -- see the file doc comment); the button
+## calls the SAME `_confirm()` Enter does.
 func _render_step() -> void:
 	_prompt_label.text = String(STEP_PROMPT[_step])
 	var is_name := _step == Step.NAME
 	_name_edit.visible = is_name
+	_begin_button.visible = is_name
 	_grid_anchor.visible = not is_name
 	if is_name:
 		# `_name` (the source of truth for typing/backspace/`_begin_game`'s
@@ -316,6 +369,30 @@ func card_rect(i: int) -> Rect2:
 	return Rect2(card.global_position, card.size)
 
 
+## Issue #106: the Begin button's real on-screen rect, for
+## `qa/test_driver.gd`'s `click_char_creation_begin` step -- empty Rect2 off
+## the NAME step, same not-visible contract as `card_rect` above.
+func begin_button_rect() -> Rect2:
+	if _step != Step.NAME or _begin_button == null or not _begin_button.visible:
+		return Rect2()
+	return Rect2(_begin_button.global_position, _begin_button.size)
+
+
+## A tap anywhere on the Begin control commits the name, byte-identical to
+## an Enter press on the NAME step (`_confirm()` is the SAME function both
+## call). No hover/highlight state to track (unlike the picker cards) --
+## this is a single always-or-never-visible button, not a cycled list.
+func _on_begin_button_gui_input(event: InputEvent) -> void:
+	if _step != Step.NAME:
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	_confirm()
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if _step == Step.NAME:
 		_handle_name_input(event)
@@ -367,6 +444,53 @@ func _handle_name_input(event: InputEvent) -> void:
 		_name += ch
 		_name_edit.text = _name
 		get_viewport().set_input_as_handled()
+
+
+## Issue #106: fires only when a real click/tap gave `_name_edit` native GUI
+## focus (see the file doc comment) -- keeps `_name` (the single source of
+## truth `_begin_game` reads) in lockstep with the LineEdit's own edit
+## pipeline, applying the SAME `_is_name_char` charset filter the keyboard
+## path enforces per-keystroke. Reassigning `.text` here does NOT re-trigger
+## this signal (Godot only emits `text_changed` from interactive edits, never
+## from the `text` property setter) -- and even if it somehow did, filtering
+## already-filtered text is idempotent, so there is no loop risk either way.
+func _on_name_edit_text_changed(new_text: String) -> void:
+	var filtered := ""
+	for i in new_text.length():
+		if _is_name_char(new_text[i]):
+			filtered += new_text[i]
+	filtered = filtered.left(NAME_MAX)
+	_name = filtered
+	if filtered != new_text:
+		_name_edit.text = filtered
+		_name_edit.caret_column = filtered.length()
+
+
+## Issue #106: fires when a real tap/click gives the field native focus. The
+## displayed text at that moment may still be the cosmetic "Traveler"
+## default (`_render_step`'s doc comment) with `_name` genuinely empty --
+## without this, a mobile player tapping in to type would land mid-word in
+## "Traveler" (native LineEdit editing operates on whatever text is already
+## there) instead of a clean field, unlike the keyboard path (`_handle_name_
+## input` always overwrites `_name_edit.text` wholesale from `_name`, never
+## appending). Clearing ONLY when `_name` is still empty preserves the
+## opposite intent (a pad-only player who never types sees "Traveler"
+## sitting ready to confirm) -- a player who already typed something and
+## re-focuses (e.g. tap away, tap back) keeps their in-progress text.
+func _on_name_edit_focus_entered() -> void:
+	if _name.is_empty() and _name_edit.text != "":
+		_name_edit.text = ""
+
+
+## Issue #106: LineEdit's own Enter-submits signal, fired only while it holds
+## native focus -- a focused, editable LineEdit consumes/accepts the Enter
+## keypress itself (`ui_text_submit`) before this screen's own
+## `_unhandled_input`/`_handle_name_input` ever sees it, so this is the ONLY
+## way Enter reaches `_confirm()` while the field is focused. Byte-identical
+## destination as every other confirm path (Enter via `_unhandled_input`, a
+## tap on `_begin_button`).
+func _on_name_edit_text_submitted(_new_text: String) -> void:
+	_confirm()
 
 
 ## Sensible name charset: letters, digits, space, hyphen, apostrophe. Filters out

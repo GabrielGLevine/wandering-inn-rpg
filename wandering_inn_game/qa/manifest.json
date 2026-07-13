@@ -90,6 +90,11 @@
    "note": "movement-first arrows + Dash refill via real input"
   },
   {
+   "script": "combat_touch_input",
+   "seed": 9,
+   "note": "Issue #106 (mobile web v1): combat touch event parity -- adjacent-cell tap = arrow-move equivalent (incl. diagonal/far/pool-empty no-ops), Dash armed then a tap on the confirm chip fires it (dashed{move_pool:3}, byte-identical to Enter), Attack targeting opened then a tap missing every candidate cancels (Esc-equivalent, AP unspent), reopened Attack + a tap on training_dummy_b (not the default candidate) re-points the aim then a confirm-chip tap fires ON DUMMY_B specifically"
+  },
+  {
    "script": "combat_abandon",
    "seed": 9,
    "fixture": "post_tutorial",
@@ -252,7 +257,7 @@
   {
    "script": "char_creation",
    "seed": null,
-   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name)"
+   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof)"
   },
   {
    "script": "deep_descent",

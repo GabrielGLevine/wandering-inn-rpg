@@ -122,8 +122,10 @@ func screen_to_world(screen_pos: Vector2) -> Vector2:
 ## (`_combat_screen`) click handlers are called unconditionally and each is
 ## independently gated by its OWN mode (`_world.handle_world_click`'s
 ## `_movement_gated()` no-ops during combat; `_combat_screen.handle_board_click`
-## no-ops outside ATTACK/SKILL_TARGET) -- so this file never needs to know
-## which screen currently owns the moment.
+## dispatches per combat mode -- HOTBAR tap-move, ATTACK/SKILL_TARGET
+## select-or-cancel, DASH_CONFIRM cancel, issue #106 -- and no-ops only in
+## WAIT_AI/BANNER/INACTIVE) -- so this file never needs to know which screen
+## currently owns the moment.
 func _gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton):
 		return

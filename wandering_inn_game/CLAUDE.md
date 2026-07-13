@@ -184,6 +184,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `title_flow` | 9 | title screen flow; no combat |
 | `playtest_boot` | none | Issue #43: debug-only title 'Playtest States' picker -- boots `near_garden` via the real fixture-copy-then-Continue path |
 | `combat_move_input` | 9 (fixture `post_tutorial`) | movement-first arrows + Dash refill via real input |
+| `combat_touch_input` | 9 | Issue #106 (mobile web v1): combat touch event parity -- adjacent-cell tap = arrow-move equivalent (incl. diagonal/far/pool-empty no-ops), Dash armed then a confirm-chip tap fires it (byte-identical to Enter), Attack targeting opened then a tap missing every candidate cancels (Esc-equivalent, AP unspent), reopened Attack + a tap on the non-default candidate (training_dummy_b) re-points the aim then a confirm-chip tap fires on it specifically |
 | `combat_abandon` | 9 (fixture `post_tutorial`) | pause opens mid-fight (HOTBAR resting mode), Abandon returns to last autosave; combat_resolved never fires |
 | `class_evolution_loop` | 9 (fixture `near_evolution`) | grind → sleep → `class_evolved` + evolved kit |
 | `consolidation_flow` | 9 (fixture `near_consolidation`) | offer/decline/re-offer/accept → [Spellsword] |
@@ -211,7 +212,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `wrong_order_talk` | 9 (fixture) | "The Wrong Order" TALK path (Krshia smooth-over, no combat) |
 | `wrong_order_fight` | 9 (fixture) | "The Wrong Order" FIGHT path (clear `supplier_scavengers`) |
 | `economy_loop` | 9 (fixture `economy_loop_start`) | the coin arc: chore earn → loot → shop → spend |
-| `char_creation` | none | THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name) |
+| `char_creation` | none | THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof) |
 | `deep_descent` | 9 (fixture `deep_descent_start`) | the Raskghar descent + JOIN-Relc boss victory |
 | `climax_chain` | 9 (fixture `climax_surface_start`) | the tremor beat + Zevara summons + Olesm briefing |
 | `climax_seal` | 9 (fixture `climax_sealed_start`) | the seal beat + journal Act III advance |

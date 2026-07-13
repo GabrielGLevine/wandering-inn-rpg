@@ -208,6 +208,10 @@ func _ready() -> void:
 	# Issue #57: a hotbar slot CLICK routes through the exact same
 	# `_activate_bar_slot` dispatch the numbered hotbar_N keys use.
 	_hud.hotbar_node().slot_clicked.connect(_on_hotbar_slot_clicked)
+	# Issue #106: the tap-confirm chip (a small always-off-board HUD widget,
+	# shown whenever DASH_CONFIRM is armed or a target is actively aimed) --
+	# see `_on_confirm_chip_tapped`'s own doc comment.
+	_hud.confirm_tapped.connect(_on_confirm_chip_tapped)
 	_board_renderer = load("res://src/combat/board_renderer.gd").new()
 	_board_renderer.name = "BoardRenderer"
 	add_child(_board_renderer)
@@ -903,19 +907,96 @@ func _switch_bar_slot(index: int) -> void:
 	_activate_bar_slot(index)
 
 
-## Click-to-select-target on the arena board (issue #57, controller ruling:
-## movement stays keys-only; a click only re-points the aim, confirm stays
-## Enter). `world_pos` is world/pixel space (Main.gd's `_gui_input` already
-## ran it through `screen_to_world` -- the arena renders into the SAME
-## SubViewport/camera as the field, so the identical transform applies). A
-## no-op outside ATTACK/SKILL_TARGET (nothing to aim), and `select_at_cell`
-## itself no-ops on the line-mode/self-cast target lists.
+## Board tap dispatch (issue #57's click-to-select-target, widened by issue
+## #106 for full combat touch). `world_pos` is world/pixel space (Main.gd's
+## `_gui_input` already ran it through `screen_to_world` -- the arena renders
+## into the SAME SubViewport/camera as the field, so the identical transform
+## applies). Per-mode:
+## - HOTBAR: `_tap_move` -- an orthogonally-adjacent-cell tap is the arrow-key
+##   move equivalent (issue #106 item 1's "tap-a-cell to move"); anything else
+##   is a silent no-op (HOTBAR is the resting state, nothing to cancel).
+## - ATTACK/SKILL_TARGET: a tap on a currently-selectable candidate cell
+##   re-points the aim (`select_at_cell`, unchanged since #57 -- movement
+##   stays keys/taps-only, a tap here never confirms by itself); a tap that
+##   MISSES every candidate is "elsewhere" -- cancels exactly like Esc
+##   (`_cancel_targeting`). Re-tapping the SAME already-aimed candidate is
+##   just another `select_at_cell` hit (index unchanged, `_refresh()` still
+##   runs) -- the actual "confirm" gesture is the confirm chip
+##   (`combat_hud.gd`'s tappable widget, shown once `has_valid_target()`),
+##   not a second tap on the board -- see that file's doc comment for why the
+##   confirm affordance had to move off the board entirely (the readout/feed
+##   HUD panels are click-transparent and visually overlap the board's lower
+##   rows, so a board-space "tap the ring to confirm" gesture would silently
+##   swallow taps on whichever candidate cells happen to sit behind that
+##   chrome).
+## - DASH_CONFIRM: no board cell has any meaning (Dash has no target) -- ANY
+##   board tap while armed is "elsewhere" (`_cancel_dash`); the confirm chip
+##   is the only way to confirm.
+## - WAIT_AI/BANNER/INACTIVE: unchanged no-op.
 func handle_board_click(world_pos: Vector2) -> void:
-	if _mode != Mode.ATTACK and _mode != Mode.SKILL_TARGET:
-		return
 	var cell := Vector2i(floori(world_pos.x / CELL), floori(world_pos.y / CELL))
-	if _targeting.select_at_cell(cell):
-		_refresh()
+	match _mode:
+		Mode.HOTBAR:
+			_tap_move(cell)
+		Mode.ATTACK, Mode.SKILL_TARGET:
+			if not _targeting.select_at_cell(cell):
+				_cancel_targeting()
+		Mode.DASH_CONFIRM:
+			_cancel_dash()
+		_:
+			return
+	_refresh()
+
+
+## Issue #106 item 1: tap an orthogonally-adjacent cell to the active
+## combatant = the arrow-key move equivalent for that direction -- calls the
+## EXACT SAME `_move_active_or_bump` `_input_hotbar`'s arrow branches call,
+## so a tap produces a byte-identical COMBATANT_MOVED/AP_CHANGED/bump stream
+## to the keyboard press it mirrors. Diagonal-adjacent cells (both dx and dy
+## nonzero) and any non-adjacent cell are a silent no-op: combat movement has
+## no diagonal (`move_active` only accepts the 4 cardinal `Vector2i`
+## directions, unlike world.gd's field click-to-walk, which BFS-paths and is
+## cardinal-only for a different reason -- see that file's own doc comment);
+## a far cell within the move pool deliberately does NOT auto-path here
+## (the plan's own "simplest honest mapping" ruling -- adjacent-tap only,
+## not a second pathing system layered on top of the sim's per-step economy).
+func _tap_move(cell: Vector2i) -> void:
+	var active_cell: Vector2i = _combat().combatants[_combat().get_active()]["cell"]
+	var delta := cell - active_cell
+	if delta != Vector2i.UP and delta != Vector2i.DOWN and delta != Vector2i.LEFT and delta != Vector2i.RIGHT:
+		return
+	_move_active_or_bump(delta)
+
+
+## Issue #106: the tap-confirm chip (`combat_hud.gd`'s small always-off-board
+## widget) -- routes through the EXACT SAME helpers Enter calls
+## (`_confirm_dash_action`/`_confirm_targeted_action`), guaranteeing event
+## parity between a tap and a keypress. The chip is only ever VISIBLE during
+## DASH_CONFIRM or a targeting mode with a valid target (`combat_hud.gd`'s own
+## `_confirm_armed` gate, mirrored here defensively) -- and `is_resting()`
+## (pause_menu.gd's own open-gate) only allows pause during HOTBAR, so the
+## chip can structurally never be visible while paused; the `pause_open()`
+## check below is defensive parity with `_on_hotbar_slot_clicked`'s identical
+## check, not a reachable path today.
+func _on_confirm_chip_tapped() -> void:
+	if main_ref != null and main_ref.pause_open():
+		return
+	match _mode:
+		Mode.DASH_CONFIRM:
+			_confirm_dash_action()
+		Mode.ATTACK, Mode.SKILL_TARGET:
+			if _targeting.has_valid_target():
+				_confirm_targeted_action()
+		_:
+			return
+	_refresh()
+
+
+## Read-only accessor (issue #106, the `click_slot`/`click_pause_row` idiom):
+## passthrough to `_hud`'s own `confirm_chip_rect()` for `qa/test_driver.gd`'s
+## `click_confirm_chip` step -- never a hardcoded pixel offset.
+func confirm_chip_rect() -> Rect2:
+	return _hud.confirm_chip_rect()
 
 
 func _apply_turn_started(id: String) -> void:
@@ -1107,31 +1188,22 @@ func _move_active_or_bump(dir: Vector2i) -> void:
 ## `confirm()`'s returned action is executed HERE (command surface stays at
 ## the composition root, per the plan): `combat.attack()`/`combat.use_skill()`
 ## are the only two command calls this function issues.
+## Issue #106: the confirm/cancel BODIES are extracted to
+## `_confirm_targeted_action`/`_cancel_targeting` so `handle_board_click`'s
+## tap-confirm/tap-cancel legs (a candidate re-tap and a miss-tap,
+## respectively) and the confirm-chip tap (`_on_confirm_chip_tapped`) call the
+## EXACT SAME code Enter/Esc do here -- one implementation, never a parallel
+## one, so a tap and a keypress produce a byte-identical event stream (the
+## #84 event-parity discipline this whole file already follows).
 func _input_target(event: InputEvent) -> void:
 	if event.is_action_pressed("cancel"):
-		_targeting.cancel()
-		_mode = Mode.HOTBAR
-		_bar_index = -1
+		_cancel_targeting()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("cycle") and _targeting.has_valid_target():
 		_targeting.cycle(1)
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("confirm") and _targeting.has_valid_target():
-		var action: Dictionary = _targeting.confirm()
-		var combat := _combat()
-		match String(action["kind"]):
-			"attack":
-				combat.attack(String(action["target_id"]))
-			"line_skill":
-				combat.use_skill(String(action["skill_id"]), String(action["direction"]))
-			"skill":
-				combat.use_skill(String(action["skill_id"]), String(action["target_id"]))
-		# The sim call can synchronously advance the turn or finish combat
-		# (dead-active auto-advance); _on_domain_event may already have moved
-		# _mode to WAIT_AI/BANNER — only fall back to HOTBAR if it didn't.
-		if _mode in [Mode.ATTACK, Mode.SKILL_TARGET]:
-			_mode = Mode.HOTBAR
-			_bar_index = -1
+		_confirm_targeted_action()
 		get_viewport().set_input_as_handled()
 	else:
 		# Issue #62 Lane U item 7, keyboard/pad half: a numbered hotbar_N
@@ -1145,21 +1217,54 @@ func _input_target(event: InputEvent) -> void:
 	_refresh()
 
 
+## Executes `_targeting.confirm()`'s returned action -- verbatim body of the
+## old `_input_target` confirm branch, extracted (issue #106) so a tap on the
+## confirm chip / a re-tap of the already-aimed candidate cell can call it
+## too. Caller must already know `_targeting.has_valid_target()` is true.
+func _confirm_targeted_action() -> void:
+	var action: Dictionary = _targeting.confirm()
+	var combat := _combat()
+	match String(action["kind"]):
+		"attack":
+			combat.attack(String(action["target_id"]))
+		"line_skill":
+			combat.use_skill(String(action["skill_id"]), String(action["direction"]))
+		"skill":
+			combat.use_skill(String(action["skill_id"]), String(action["target_id"]))
+	# The sim call can synchronously advance the turn or finish combat
+	# (dead-active auto-advance); _on_domain_event may already have moved
+	# _mode to WAIT_AI/BANNER — only fall back to HOTBAR if it didn't.
+	if _mode in [Mode.ATTACK, Mode.SKILL_TARGET]:
+		_mode = Mode.HOTBAR
+		_bar_index = -1
+
+
+## Verbatim body of the old `_input_target` cancel branch, extracted (issue
+## #106) so a board tap that misses every candidate cell (`handle_board_click`
+## -- "tap elsewhere" per the plan) cancels through the exact same path Esc
+## does.
+func _cancel_targeting() -> void:
+	_targeting.cancel()
+	_mode = Mode.HOTBAR
+	_bar_index = -1
+
+
 ## Dash's confirm gate. No target to cycle (Tab is inert
 ## here, unlike ATTACK/SKILL_TARGET) — Enter spends the AP via `combat.dash()`
 ## (the only new command-surface call this mode issues; still one of the 4
 ## sanctioned combat commands), Esc cancels back to HOTBAR with no sim call
-## at all (selecting Dash costs nothing until confirmed).
+## at all (selecting Dash costs nothing until confirmed). Issue #106: bodies
+## extracted to `_confirm_dash_action`/`_cancel_dash`, same reasoning as
+## `_input_target`'s own doc comment above (DASH_CONFIRM has no board target
+## at all, so EVERY board tap while armed is "elsewhere" -- `handle_board_click`
+## routes it straight to `_cancel_dash`, the confirm chip to `_confirm_dash_action`).
 func _input_dash_confirm(event: InputEvent) -> void:
 	if event.is_action_pressed("cancel"):
-		_mode = Mode.HOTBAR
-		_bar_index = -1
+		_cancel_dash()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("confirm"):
-		_mode = Mode.HOTBAR
-		_bar_index = -1
+		_confirm_dash_action()
 		get_viewport().set_input_as_handled()
-		_combat().dash()
 	else:
 		# Issue #62 Lane U item 7, keyboard/pad parity -- see `_input_target`'s
 		# identical else-arm doc comment; DASH_CONFIRM has no targeting
@@ -1169,3 +1274,14 @@ func _input_dash_confirm(event: InputEvent) -> void:
 			_switch_bar_slot(numbered)
 			get_viewport().set_input_as_handled()
 	_refresh()
+
+
+func _confirm_dash_action() -> void:
+	_mode = Mode.HOTBAR
+	_bar_index = -1
+	_combat().dash()
+
+
+func _cancel_dash() -> void:
+	_mode = Mode.HOTBAR
+	_bar_index = -1
