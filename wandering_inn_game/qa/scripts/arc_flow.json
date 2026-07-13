@@ -1,5 +1,5 @@
 {
- "_comment": "THE WHOLE-ARC PROOF, fixture-accelerated. Loads near_act3 (inn bed, Act II complete: Warrior 5 + Diplomat 1, 3 quests; no Act III keys) via title Continue and drives the ENTIRE Act III arc live: (1) tremor sleep pointer; (2) Zevara summons (banks heard_the_deep_tremor); (3) Olesm briefing; (4) THE DESCENT -- teleport to the deep_tunnels landing (the surface arc consumes ZERO rng, so the fights sit at the SAME deterministic rng deep_descent wins at; deep_descent still PASSES with warrior5+diplomat1, so this splice of its winning nav wins here too) -> Cold Hearth -> raskghar_scouts route-fight -> Gnawed Bones -> Warren Mouth -> the Relc JOIN veto -> boss VICTORY (Relc fielded) -> cleared_the_warren; (5) Zevara seal -> raskghar_sealed; (6) THE GDI EPILOGUE EVENT (ui_gdi_epilogue_rendered{lines:7}) fired by the seal dialogue_ended -> post_game banked; (7) journal advances into Act IV (issue #89: act_iii's raskghar_sealed advance_when is no longer defined-but-unreachable, so this fixture -- holding none of Act IV's own five region/door beats -- lands there as the new current act the instant sealing banks); (8) post-game Zevara greeting variant (also proves no epilogue re-fire on re-entry); (9) free-play sanity (move + plain sleep + the epilogue rendered EXACTLY once). This is the arc's END-TO-END seam; the piecewise beats stay covered by climax_chain/deep_descent/climax_seal.",
+ "_comment": "THE WHOLE-ARC PROOF, fixture-accelerated. Loads near_act3 (inn bed, Act II complete: Warrior 5 + Diplomat 1, 3 quests; no Act III keys) via title Continue and drives the ENTIRE Act III arc live: (1) tremor sleep pointer; (2) Zevara summons (banks heard_the_deep_tremor); (3) Olesm briefing; (4) THE DESCENT -- teleport to the deep_tunnels landing (the surface arc consumes ZERO rng, so the fights sit at the SAME deterministic rng deep_descent wins at; deep_descent still PASSES with warrior5+diplomat1, so this splice of its winning nav wins here too) -> Cold Hearth -> raskghar_scouts route-fight -> Gnawed Bones -> Warren Mouth -> the Relc JOIN veto -> boss VICTORY (Relc fielded) -> cleared_the_warren; (5) Zevara seal -> raskghar_sealed; (6) THE GDI EPILOGUE EVENT (ui_gdi_epilogue_rendered{lines:7}) fired by the seal dialogue_ended -> post_game banked; (7) journal Act III completed beat; (8) post-game Zevara greeting variant (also proves no epilogue re-fire on re-entry); (9) free-play sanity (move + plain sleep + the epilogue rendered EXACTLY once). This is the arc's END-TO-END seam; the piecewise beats stay covered by climax_chain/deep_descent/climax_seal.",
  "fixture_save": "near_act3",
  "starts_at_title": true,
  "steps": [
@@ -812,7 +812,7 @@
    "type": "ui_journal_shown",
    "timeout_sec": 5,
    "payload_contains": {
-    "act_id": "act_iv"
+    "act_id": "act_iii"
    }
   },
   {

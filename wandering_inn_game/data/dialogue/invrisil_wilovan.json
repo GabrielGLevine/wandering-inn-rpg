@@ -133,7 +133,7 @@
      "goto": "cups_favor_returned"
     },
     {
-     "_comment": "Issue #89 (gap-2): the fence, paying off marker_terms' own literal promise ('a man can find you things the shops pretend not to stock -- recovered things, sir, of impeccable provenance'). The krshia_crate.json 'charms' shop-node shape: a gated buy node reachable from the hub, real posted price, own reaction node. Gate is a compound of BOTH quest-close flags (brothers_marker AND cleared_brothers_name -- they co-bank on the SAME 'Coyle's answered for it' option above, so this is one honest consumption of both previously-orphaned ids, not an arbitrary pick). HAGGLE RULE (wi-adding-dialogue-and-quests): no `haggle` flag -- Wilovan is a gentleman, and his own courtesy-as-menace register (sir/miss, apology-before-threat) doesn't extend to a markdown; full price, disclosed here rather than left implicit.",
+     "_comment": "Issue #89 (gap-2): the fence, paying off marker_terms' own literal promise ('a man can find you things the shops pretend not to stock -- recovered things, sir, of impeccable provenance'). The krshia_crate.json 'charms' shop-node shape: a gated buy node reachable from the hub, real posted price, own reaction node. Gate is a compound of BOTH quest-close flags (brothers_marker AND cleared_brothers_name -- they co-bank on the SAME 'Coyle's answered for it' option above, so this is one honest consumption of both previously-orphaned ids, not an arbitrary pick). HAGGLE RULE (wi-adding-dialogue-and-quests): no `haggle` flag -- Wilovan is a gentleman, and his own courtesy-as-menace register (sir/miss, apology-before-threat) doesn't extend to a markdown; full price, disclosed here rather than left implicit. RETIREMENT (review fix): the pendant is one-off stock ('one piece came through'), so its buy option banks `bought_phosphor_pendant` and hide_whens on it -- the riverfarm_witch.json stone-row shape (invrisil_attuned's own buy-then-retire pair), counter named per the bought_catalyst precedent; the fence node's text_variant swaps to the sold-out read on the same counter. This hub entry itself stays visible (he is a fence permanently; future stock appends new options to the fence node).",
      "text": "Anything come through lately? (Show the marker.)",
      "requires": {
       "accomplishment": {
@@ -148,11 +148,26 @@
   "fence": {
    "speaker": "Wilovan",
    "text": "For a marker-holder, sir, always. One piece worth mentioning came through recently — sewer work, but HONEST sewer work, if you follow. No questions asked on either side of the counter.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "bought_phosphor_pendant": 1
+      }
+     },
+     "text": "Nothing new on the shelf since your pendant, sir. Good stock finds us slowly, which is rather the point of it. Do check back."
+    }
+   ],
    "options": [
     {
      "text": "That phosphor pendant, then. (20 gold)",
      "requires": {
       "gold": 20
+     },
+     "hide_when": {
+      "accomplishment": {
+       "bought_phosphor_pendant": 1
+      }
      },
      "effects": [
       {
@@ -160,6 +175,9 @@
       },
       {
        "item": "phosphor_pendant"
+      },
+      {
+       "accomplishment": "bought_phosphor_pendant"
       }
      ],
      "goto": "fence_bought"

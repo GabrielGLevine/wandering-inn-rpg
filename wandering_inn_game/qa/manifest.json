@@ -2327,7 +2327,7 @@
    "script": "invrisil_disagreement_talk",
    "seed": 9,
    "fixture": "near_invrisil_talk",
-   "note": "8c Task C3 (issue #13) 'A Gentleman's Disagreement' TALK path -> EXTORT fork: Cups' testimony chain via the free Persuade branch (banks fixer_will_testify + persuaded_someone -> secured_testimony, C1's invrisil_fixer.json's first real coverage) -- accuse Coyle with the testimony, corner him, EXTORT (merchant_extorted + merchant_fate_decided + 40 gold, quest beat 1) -- report to Wilovan (quest beat 2 + quest_completed + the shared brothers_marker + safe-passage reward) -- proves the fork's OTHER ending + the economy-sink gold effect",
+   "note": "8c Task C3 (issue #13) 'A Gentleman's Disagreement' TALK path -> EXTORT fork: Cups' testimony chain via the free Persuade branch (banks fixer_will_testify + persuaded_someone -> secured_testimony, C1's invrisil_fixer.json's first real coverage) -- accuse Coyle with the testimony, corner him, EXTORT (merchant_extorted + merchant_fate_decided + 40 gold, quest beat 1) -- report to Wilovan (quest beat 2 + quest_completed + the shared brothers_marker + safe-passage reward) -- proves the fork's OTHER ending + the economy-sink gold effect -- plus the issue #89 fence leg: buy phosphor_pendant at the marker-gated fence (gold 40->20 exact), re-entry proves the sold-out variant + the retired buy option (exact-once counts)",
    "tiers": [
     "full"
    ],

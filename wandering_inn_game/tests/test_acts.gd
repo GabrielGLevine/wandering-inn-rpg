@@ -69,12 +69,23 @@ func _init() -> void:
 	var into_iii := WIActs.evaluate(catalog, _ctx(1, 3, {"reached_liscor": 1, "reached_two_classes": 1}))
 	assert(into_iii["id"] == "act_iii" and into_iii["index"] == 2, "reached_two_classes + 3 quests => Act III (even at classes_count 1)")
 
-	# A save with raskghar_sealed advances into Act IV (issue #89) -- no
-	# further region beats banked yet, so every Act IV beat reads pending.
-	var into_iv := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1}))
-	assert(into_iv["id"] == "act_iv" and into_iv["index"] == 3, "raskghar_sealed advances into Act IV, the new last act")
+	# raskghar_sealed ALONE stays Act III (issue #89 review fix): act_iii's
+	# advance gate requires door_awakened too, so the seal's own epilogue
+	# beats (the_stirring/seal_holds) stay the CURRENT act's visible payoff
+	# for a player who sealed the warren but never woke the Door --
+	# climax_seal/arc_flow's act_iii journal pins depend on exactly this.
+	var sealed_only := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1}))
+	assert(sealed_only["id"] == "act_iii" and sealed_only["index"] == 2, "raskghar_sealed without door_awakened stays Act III (seal_holds must render)")
+
+	# raskghar_sealed + door_awakened together advance into Act IV -- only
+	# the door beat reads achieved on entry, the four region beats pending.
+	var into_iv := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1, "door_awakened": 1}))
+	assert(into_iv["id"] == "act_iv" and into_iv["index"] == 3, "raskghar_sealed + door_awakened advances into Act IV, the new last act")
 	for beat: Dictionary in into_iv["beats"]:
-		assert(not bool(beat["achieved"]), "fresh Act IV beats all pending")
+		if String(beat["id"]) == "the_door_opens":
+			assert(bool(beat["achieved"]), "the door beat reads achieved on entry (door_awakened is part of the entry gate)")
+		else:
+			assert(not bool(beat["achieved"]), "the four region beats all pending on Act IV entry")
 
 	# A save with EVERYTHING (every Act IV region beat banked too) caps at
 	# the last act -- there is no Act V to advance into.

@@ -1,5 +1,5 @@
 {
- "_comment": "The seal beat (the climax chain's POST-victory arc). Loads climax_sealed_start (street, Act II done + cleared_the_warren banked, raskghar_sealed NOT). Proves: (1) ZEVARA'S SEAL beat (gated on cleared_the_warren) banks raskghar_sealed -- the Act III advance key (acts.json); victory != sealed, the seal is a separate surface beat AFTER the return, per the acts-data trace; (2) the journal act-line advances to ACT IV once sealed (issue #89: act_iii's own raskghar_sealed advance_when is no longer defined-but-unreachable -- Act IV is the new current act the instant it banks, since this fixture holds none of Act IV's own five region/door beats); (3) OLESM'S RESOLUTION (gated on cleared_the_warren) banks heard_olesm_resolution. This is a separate stream from deep_descent because it is a distinct game-time state (post-victory return). No combat -- fixture rng_state governs.",
+ "_comment": "The seal beat (the climax chain's POST-victory arc). Loads climax_sealed_start (street, Act II done + cleared_the_warren banked, raskghar_sealed NOT). Proves: (1) ZEVARA'S SEAL beat (gated on cleared_the_warren) banks raskghar_sealed -- the Act III advance key (acts.json); victory != sealed, the seal is a separate surface beat AFTER the return, per the acts-data trace; (2) the journal act-line advances to ACT III once sealed; (3) OLESM'S RESOLUTION (gated on cleared_the_warren) banks heard_olesm_resolution. This is a separate stream from deep_descent because it is a distinct game-time state (post-victory return). No combat -- fixture rng_state governs.",
  "fixture_save": "climax_sealed_start",
  "starts_at_title": true,
  "steps": [
@@ -148,7 +148,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== JOURNAL: Act IV ==. raskghar_sealed advances WIActs past Act II's gate to Act III, and act_iii's own raskghar_sealed advance_when (issue #89) advances it straight on into Act IV in the SAME evaluate() call (the fixture already satisfies Act I+II+III gates) -- the journal act-line header reads Act IV, not Act III (WIActs shows only the CURRENT act's beats, so act_iii's own 'seal_holds' beat is superseded the instant Act IV becomes current, the same mechanism that already retires Act I/II beats on their own advances).",
+   "_comment": "== JOURNAL: Act III ==. raskghar_sealed advances WIActs past Act II's gate to Act III (the fixture already satisfies Act I+II gates). The journal act-line header reads Act III.",
    "action": "press",
    "name": "journal"
   },
@@ -156,13 +156,13 @@
    "action": "wait_for_event",
    "type": "ui_journal_shown",
    "payload_contains": {
-    "act_id": "act_iv"
+    "act_id": "act_iii"
    },
    "timeout_sec": 5
   },
   {
    "action": "screenshot",
-   "name": "02_journal_act4"
+   "name": "02_journal_act3"
   },
   {
    "action": "press",
