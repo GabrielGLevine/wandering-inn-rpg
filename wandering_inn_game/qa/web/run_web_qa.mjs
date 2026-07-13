@@ -175,6 +175,34 @@ await page.addInitScript(
 	},
 	{ name: scriptName, seed: seedArg ?? "" },
 );
+
+// Output-level audio probe (silence diagnosis 2026-07-13): taps every
+// AudioNode.connect() into an AnalyserNode wherever the target is the
+// context destination, so the run can measure REAL rendered samples --
+// the worklet-fetch smoke proves loading, this proves OUTPUT. Headless
+// Chromium still processes the WebAudio graph (null sink), so RMS > 0
+// here means genuinely audible in a real browser.
+await page.addInitScript(() => {
+	window.__WI_AUDIO_TAPS__ = [];
+	window.__WI_CTX_STATES__ = [];
+	const origConnect = AudioNode.prototype.connect;
+	AudioNode.prototype.connect = function (...args) {
+		try {
+			const target = args[0];
+			const ctx = this.context;
+			if (target === ctx.destination) {
+				const analyser = ctx.createAnalyser();
+				analyser.fftSize = 2048;
+				origConnect.call(this, analyser);
+				origConnect.call(analyser, ctx.destination);
+				window.__WI_AUDIO_TAPS__.push({ analyser, node: this.constructor.name });
+				window.__WI_CTX_STATES__.push(() => ctx.state);
+				return target;
+			}
+		} catch (e) { /* fall through to the untapped connect */ }
+		return origConnect.apply(this, args);
+	};
+});
 await page.goto(`${BASE_URL}index.html`);
 
 const deadline = Date.now() + TIMEOUT_MS;
@@ -190,6 +218,59 @@ while (Date.now() < deadline) {
 	result = await page.evaluate(() => window.__WI_RESULT__ ?? null);
 	if (result) break;
 	await new Promise((ok) => setTimeout(ok, 100));
+}
+
+// Output-level audio measurement (silence diagnosis): sample every tap's
+// time-domain buffer a few times across ~2s and report peak RMS + context
+// state. Runs on every invocation -- cheap, and the numbers land in the log.
+const audioProbe = await page.evaluate(async () => {
+	const taps = window.__WI_AUDIO_TAPS__ || [];
+	const states = (window.__WI_CTX_STATES__ || []).map((f) => { try { return f(); } catch { return "?"; } });
+	let peakRms = 0;
+	const buf = new Float32Array(2048);
+	for (let round = 0; round < 10; round++) {
+		for (const t of taps) {
+			t.analyser.getFloatTimeDomainData(buf);
+			let sum = 0;
+			for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+			peakRms = Math.max(peakRms, Math.sqrt(sum / buf.length));
+		}
+		await new Promise((ok) => setTimeout(ok, 200));
+	}
+	// CONTROL: a plain oscillator through the same tap machinery -- if THIS
+	// reads zero too, the headless context renders nothing and the game
+	// numbers above are inconclusive; if it registers, the game graph is
+	// genuinely silent.
+	let controlRms = 0;
+	try {
+		const taps0 = window.__WI_AUDIO_TAPS__.length;
+		const ctx2 = new AudioContext();
+		const osc = ctx2.createOscillator();
+		osc.connect(ctx2.destination); // patched: inserts a tap
+		osc.start();
+		await ctx2.resume();
+		await new Promise((ok) => setTimeout(ok, 400));
+		const tap = window.__WI_AUDIO_TAPS__[taps0];
+		if (tap) {
+			const b2 = new Float32Array(2048);
+			tap.analyser.getFloatTimeDomainData(b2);
+			let sum2 = 0;
+			for (let i = 0; i < b2.length; i++) sum2 += b2[i] * b2[i];
+			controlRms = Math.sqrt(sum2 / b2.length);
+		}
+		osc.stop(); await ctx2.close();
+	} catch (e) { controlRms = -1; }
+	return { taps: taps.length, tapNodes: taps.map((t) => t.node), states, peakRms, controlRms };
+});
+console.log(`audio OUTPUT probe: taps=${audioProbe.taps} [${audioProbe.tapNodes}] ctxStates=[${audioProbe.states}] peakRMS=${audioProbe.peakRms.toFixed(6)} oscillatorControlRMS=${audioProbe.controlRms.toFixed(6)} => ${audioProbe.peakRms > 0.0001 ? "OUTPUT PRESENT" : "SILENT GRAPH"}`);
+// THE TOOTH (web-silence root cause, 2026-07-13): with WI_REQUIRE_AUDIO_OUTPUT=1
+// a silent graph is a HARD FAIL when the tap machinery itself is proven live
+// (oscillator control > 0). Set for scripts that always play audio
+// (combat_walkthrough boots into field music) -- this is the assert that would
+// have caught the runtime-bus silence the day it shipped.
+if (process.env.WI_REQUIRE_AUDIO_OUTPUT === "1" && audioProbe.controlRms > 0.0001 && audioProbe.peakRms <= 0.0001) {
+	console.error("audio OUTPUT probe: REQUIRED output missing (graph silent while control oscillator renders) -- the runtime-bus silence class");
+	globalThis.__requiredAudioOutputMissing = true;
 }
 
 // --touch groundwork smoke (see the hasTouch comment above): one real,
@@ -255,5 +336,9 @@ console.log(`audio smoke: ${audioSmokePassed ? "PASS" : "FAIL"}`);
 const overallPassed = result.passed && audioSmokePassed;
 if (!audioSmokePassed) {
 	console.error("FAIL: audio smoke failed (see above) -- web audio is broken even if the QA script itself passed.");
+}
+if (globalThis.__requiredAudioOutputMissing) {
+	console.error("FAIL: required audio OUTPUT missing (WI_REQUIRE_AUDIO_OUTPUT=1) -- the runtime-bus silence class.");
+	process.exit(1);
 }
 process.exit(overallPassed ? 0 : 1);

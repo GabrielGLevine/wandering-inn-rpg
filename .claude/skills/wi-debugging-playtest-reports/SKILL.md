@@ -56,3 +56,11 @@ func _j(p: String) -> Dictionary: return JSON.parse_string(FileAccess.get_file_a
   fix, then the real anchor-offset root cause).
 - Ledger the lesson + add the missing gap class to this table when you find a
   new one.
+
+## Engine behavior in question? Read the source (user-sanctioned 2026-07-13)
+When a bug hinges on what the ENGINE does (input ordering, PCK
+enumeration, export flags, Control focus semantics), don't infer from
+docs or probe blindly: `git clone --depth 1 --branch 4.7
+https://github.com/godotengine/godot /tmp/godot-src`, grep the module,
+cite file:line. Pin to the 4.7 branch — the installed engine is 4.7
+stable.
