@@ -213,6 +213,72 @@
    },
    "gold": 5,
    "copy": "Hunt notice. Rock Crabs wake with the rains, and a shell the size of a cart does not care that your leg was in the way. Two culled from the east hills, shown by shell-plate. 5 gold, pooled by the hunt families. Do not trouble the Corusdeer herd. Antlers freely shed only. Beshta, for the camp."
+  },
+  {
+   "_comment": "Issue #97 (bestiary expansion, THE PAYOFF): the stray Corusdeer's own renewable cull -- same hunt-camp voice/giver as bounty_crab_cull (Beshta), same east-hills floodplains territory. Pay via scripts/generate_postings.py's own recovered formula: fight pillar 2.0g/unit * 2 units * T1 mult 1.0 = 4g. Producer: corusdeer_range's on_victory (data/maps/floodplains/floodplains.json), respawns:true -- delta-mode (default), the SAME repeatable-counter shape bounty_crab_cull/bounty_road_cull already use.",
+   "id": "bounty_corusdeer_cull",
+   "pillar": "fight",
+   "giver": "Beshta of the hunt camp (Gnoll hunter hand: short lines, hunt-family plural, one warning)",
+   "condition": {
+    "corusdeer_culled": 2
+   },
+   "gold": 4,
+   "copy": "Hunt notice. A stray buck's broken from the herd, east hills, antlers hot enough to start a grass fire if you let it stand too long. Two culled, shown by an antler each. 4 gold, pooled by the hunt families. The HERD stays off this notice -- one stray only. Beshta, for the camp."
+  },
+  {
+   "_comment": "Issue #97: the razorbeak nest's own renewable cull -- same Beshta hunt-camp voice, same floodplains territory. Pay: 2.0g/unit * 2 units * T1 1.0 = 4g. Producer: razorbeak_nest's on_victory, respawns:true, delta-mode.",
+   "id": "bounty_razorbeak_cull",
+   "pillar": "fight",
+   "giver": "Beshta of the hunt camp (Gnoll hunter hand: short lines, hunt-family plural, one warning)",
+   "condition": {
+    "razorbeaks_culled": 2
+   },
+   "gold": 4,
+   "copy": "Hunt notice. Dino-birds nesting loud again, west scrape. Bold in pairs, nothing alone. Two culled, shown by a wing each. 4 gold, pooled by the hunt families. Beshta, for the camp."
+  },
+  {
+   "_comment": "Issue #97: the boulevard Mothbears' own renewable cull -- same Master Coyle voice as bounty_alley_cull (Invrisil's own established fight-pillar giver). Pay: 2.0g/unit * 1 unit * T3 2.0 = 4g. Single-kill by design (matches kingslayer_cull's own reasoning) -- the night-gated respawn cycle (dormant until next sleep AND until the next night phase) makes a 2-kill delta a genuinely awkward ask for a canonical to prove cleanly; the bounty itself reads fine at 1.",
+   "id": "bounty_mothbear_cull",
+   "pillar": "fight",
+   "giver": "Master Coyle",
+   "condition": {
+    "mothbears_culled": 1
+   },
+   "gold": 4,
+   "copy": "The lantern-line draws them after dark -- moth-winged bears, heavy enough to crack a cart axle. One culled, after dark, shown by Guild attestation. 4 gold on turn-in. Coyle."
+  },
+  {
+   "_comment": "Issue #97: the Kingslayer Spider's own renewable cull -- deliberately a single-kill posting (an apex predator, not a farming grind; the harness cell kingslayer_den_t4_solo is MEASURED-only, not a comfortable-band contract). Giver: Selys (the Guild's own desk, already the board's central voice). Pay: 2.0g/unit * 1 unit * T4 2.5 = 5g. Producer: kingslayer_den's on_victory (data/maps/dungeon/dungeon_approach.json), respawns:true, delta-mode.",
+   "id": "bounty_kingslayer_cull",
+   "pillar": "fight",
+   "giver": "Selys Sharpear",
+   "condition": {
+    "kingslayer_spiders_culled": 1
+   },
+   "gold": 5,
+   "copy": "Guild notice, Silver-rank and up. Something's nesting in the approach galleries again -- black-and-silver, big, not shy about it. One confirmed kill, shell-plate as proof. 5 gold. Ask twice before you go alone. Selys, for the Guild."
+  },
+  {
+   "_comment": "Issue #97: the Forge's own miscalibrated-golem cull -- Pallass's FIRST live combat posting. Giver: Grimalkin (the forge tier's own established voice, pallass_forge.json). Pay: 2.0g/unit * 2 units * T5 3.0 = 12g. Producer: forge_calibration_golem's on_victory (data/maps/pallass/pallass_forge.json), respawns:true, delta-mode.",
+   "id": "bounty_forge_golem_cull",
+   "pillar": "fight",
+   "giver": "Grimalkin",
+   "condition": {
+    "forge_golems_culled": 2
+   },
+   "gold": 12,
+   "copy": "Forge-tier notice. Command spells drift, and a drifted golem doesn't know a shipment from a person. Two put down properly, cores intact for the smiths. 12 gold. Grimalkin."
+  },
+  {
+   "_comment": "Issue #97: the Market's own watchgolem cull -- Pallass's SECOND live combat posting. Giver: market_stallkeeper (the market tier's own established voice, pallass_market.json). Pay: 2.0g/unit * 2 units * T5 3.0 = 12g. Producer: market_watchgolems' on_victory (data/maps/pallass/pallass_market.json), respawns:true, delta-mode.",
+   "id": "bounty_watchgolem_cull",
+   "pillar": "fight",
+   "giver": "The Market Stallkeepers (pooled)",
+   "condition": {
+    "watchgolems_culled": 2
+   },
+   "gold": 12,
+   "copy": "Stallholders' notice. Two of the watch-golems by the empty stalls have stopped answering to anyone. Two put down, plating returned. 12 gold, pooled by the row."
   }
  ]
 }

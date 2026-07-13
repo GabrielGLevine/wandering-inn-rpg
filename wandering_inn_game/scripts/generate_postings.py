@@ -235,6 +235,55 @@ BOUNTY_CANDIDATES = [
         "giver": "Master Coyle",
         "review": "ACCEPT",
     },
+    # --- Issue #97 (bestiary expansion, THE PAYOFF): 6 new kill-verb candidates
+    # against the new banks, one per new respawning encounter. Producer-traced
+    # against data/maps/<region>/<map>.json (the issue #100 split -- these six
+    # entries postdate that split, unlike the skeleton_scene.json-era ones
+    # above). Already curated + shipped verbatim into data/bounties.json
+    # (this generator run is the retroactive staging record + formula
+    # cross-check, not a fresh proposal awaiting a separate curation pass).
+    {
+        "id": "bounty_corusdeer_cull", "verb": "kill", "pillar": "fight", "tier": "T1",
+        "condition": {"corusdeer_culled": 2},
+        "producer_trace": "data/maps/floodplains/floodplains.json corusdeer_range -- respawns:true, on_victory corusdeer_culled",
+        "giver": "Beshta of the hunt camp (Gnoll hunter hand: short lines, hunt-family plural, one warning)",
+        "review": "ACCEPT",
+    },
+    {
+        "id": "bounty_razorbeak_cull", "verb": "kill", "pillar": "fight", "tier": "T1",
+        "condition": {"razorbeaks_culled": 2},
+        "producer_trace": "data/maps/floodplains/floodplains.json razorbeak_nest -- respawns:true, on_victory razorbeaks_culled",
+        "giver": "Beshta of the hunt camp (Gnoll hunter hand: short lines, hunt-family plural, one warning)",
+        "review": "ACCEPT",
+    },
+    {
+        "id": "bounty_mothbear_cull", "verb": "kill", "pillar": "fight", "tier": "T3",
+        "condition": {"mothbears_culled": 1},
+        "producer_trace": "data/maps/invrisil/invrisil_boulevard.json boulevard_mothbears -- respawns:true, NIGHT-ONLY encounter_when, on_victory mothbears_culled -- single-kill by design (a night+sleep dormancy double-gate makes a 2-kill delta awkward to prove)",
+        "giver": "Master Coyle",
+        "review": "ACCEPT",
+    },
+    {
+        "id": "bounty_kingslayer_cull", "verb": "kill", "pillar": "fight", "tier": "T4",
+        "condition": {"kingslayer_spiders_culled": 1},
+        "producer_trace": "data/maps/dungeon/dungeon_approach.json kingslayer_den -- respawns:true, on_victory kingslayer_spiders_culled -- single-kill by design, an apex predator not a farming grind",
+        "giver": "Selys Sharpear",
+        "review": "ACCEPT",
+    },
+    {
+        "id": "bounty_forge_golem_cull", "verb": "kill", "pillar": "fight", "tier": "T5",
+        "condition": {"forge_golems_culled": 2},
+        "producer_trace": "data/maps/pallass/pallass_forge.json forge_calibration_golem -- respawns:true, on_victory forge_golems_culled -- Pallass's first combat producer",
+        "giver": "Grimalkin",
+        "review": "ACCEPT",
+    },
+    {
+        "id": "bounty_watchgolem_cull", "verb": "kill", "pillar": "fight", "tier": "T5",
+        "condition": {"watchgolems_culled": 2},
+        "producer_trace": "data/maps/pallass/pallass_market.json market_watchgolems -- respawns:true, on_victory watchgolems_culled",
+        "giver": "The Market Stallkeepers (pooled)",
+        "review": "ACCEPT",
+    },
     {
         "id": "bounty_second_watch", "verb": "social_hard", "pillar": "social", "tier": "T2",
         "condition": {"persuaded_someone": 2},
