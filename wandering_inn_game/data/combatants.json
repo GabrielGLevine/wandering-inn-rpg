@@ -766,6 +766,182 @@
     "slam"
    ],
    "damage_reduction": 3
+  },
+  {
+   "_comment": "Issue #97 (bestiary expansion): the stray Corusdeer, T1 floodplains renewable-cull target. Canon-cite: wiki.wanderinginn.com/Corusdeer (WIKI-VERIFIED 2026-07-12) -- magical deer, ~2x normal size, twin antlers oaken-brown at the base shading to glowing cherry-red at the tips, mana-fueled heat that 'vaporises bone'; pre-staged in docs/design/character-profiles-staging.md Home-Region II ('a lone stray male is the Silver-rank encounter shape' -- herds are Gold-rank and off-limits, per bounty_crab_cull's own copy: 'Do not trouble the Corusdeer herd. Antlers freely shed only.'). `ai:ranged` realizes the heat-blast antlers via the EXISTING `flame_bolt` skill (goblin_shaman's own spell_damage bolt, no new skills.json entry) rather than an invented breath weapon. FORWARD-REFERENCE (#90 lane, docs/superpowers/plans/2026-07-12-combat-wave.md): if cwA's sibling lane adds a `burning` applies-rider to `flame_bolt`, this heat-blast inherits it automatically at merge (a heat vaporizing bone should burn) -- INERT today (this lane owns no skills.json write), band measured rider-inert.",
+   "id": "corusdeer",
+   "display_name": "Stray Corusdeer",
+   "sprite": "corusdeer",
+   "side": "enemy",
+   "stats": {
+    "str": 12,
+    "dex": 9,
+    "con": 24,
+    "int": 14,
+    "wis": 9,
+    "cha": 6
+   },
+   "weapon_die": 5,
+   "ai": "ranged",
+   "skills": [
+    "flame_bolt"
+   ]
+  },
+  {
+   "_comment": "Razorbeaks, T1 floodplains pack encounter (`razorbeak_nest`). Canon-cite: wiki.wanderinginn.com/Razorbeaks (WIKI-VERIFIED 2026-07-12) -- large leathery-winged pterosaur-like birds nesting on the ground in Liscor's floodplains, beak longer than a human arm; canon-COWARDLY alone (flees when disturbed) but aggressive and swarms wounded prey in a group -- direct citation for `ai:coward` (a pack that scatters once hurt, then regroups toward a living packmate, matches the wiki's own 'cowardly alone, dangerous in numbers' behavior exactly). Erin's own nickname: 'Dino Birds'. Matched pair, own id per the distinct-id convention documented on rift_vermin_a.",
+   "id": "razorbeak_a",
+   "display_name": "Razorbeak",
+   "sprite": "razorbeak",
+   "side": "enemy",
+   "stats": {
+    "str": 9,
+    "dex": 13,
+    "con": 10,
+    "int": 4,
+    "wis": 6,
+    "cha": 4
+   },
+   "weapon_die": 5,
+   "ai": "coward",
+   "skills": []
+  },
+  {
+   "_comment": "Razorbeak nest's second member -- see razorbeak_a's own _comment for the canon cite + the `coward` profile rationale. Identical stat template (a matched pair), own id per the distinct-id convention.",
+   "id": "razorbeak_b",
+   "display_name": "Razorbeak",
+   "sprite": "razorbeak",
+   "side": "enemy",
+   "stats": {
+    "str": 9,
+    "dex": 13,
+    "con": 10,
+    "int": 4,
+    "wis": 6,
+    "cha": 4
+   },
+   "weapon_die": 5,
+   "ai": "coward",
+   "skills": []
+  },
+  {
+   "_comment": "Mothbear, T3 Invrisil-boulevard NIGHT-ONLY pack encounter (`boulevard_mothbears`, drawn to the boulevard's lanterns). Canon-cite: wiki.wanderinginn.com/Mothbears (WIKI-VERIFIED 2026-07-12) -- flying-bear/moth hybrids with antennae and claws, hunt in groups, ATTRACTED TO BRIGHT LIGHTS (direct citation for why this pack is drawn onto a lit city boulevard specifically), attack by jumping on prey; Bronze-rank-dangerous, Silver-rank-manageable, matching this encounter's T3 tier. Plain `ai:melee` (a jump-attack predator, no ranged/support kit). Pack alpha carries `power_strike` (the heavier landing pounce), matching the river_wolf_c/goblin_chieftain asymmetric-pair convention.",
+   "id": "mothbear_a",
+   "display_name": "Mothbear",
+   "sprite": "mothbear",
+   "side": "enemy",
+   "stats": {
+    "str": 15,
+    "dex": 10,
+    "con": 22,
+    "int": 4,
+    "wis": 8,
+    "cha": 4
+   },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "Boulevard_mothbears' pack alpha -- see mothbear_a's own _comment for the canon cite. Carries `power_strike` (EXISTING skill, no new skills.json entry) for the heavier landing pounce, the asymmetric-pair convention river_wolf_c/goblin_chieftain already establish; slightly higher stats across the board.",
+   "id": "mothbear_b",
+   "display_name": "Mothbear",
+   "sprite": "mothbear",
+   "side": "enemy",
+   "stats": {
+    "str": 16,
+    "dex": 10,
+    "con": 24,
+    "int": 4,
+    "wis": 8,
+    "cha": 5
+   },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": [
+    "power_strike"
+   ]
+  },
+  {
+   "_comment": "Kingslayer Spider, T4 dungeon_approach solo apex-predator encounter (`kingslayer_den`) -- the 'shield-spider variant' the plan named as a candidate. Canon-cite: wiki.wanderinginn.com/Kingslayer_Spiders (WIKI-VERIFIED 2026-07-12) -- large monstrous Izril arachnids that 'resemble Shield Spiders from a distance, though distinct creatures'; named for killing a King while he was out hunting -- an apex predator, deliberately dangerous by design (MEASURED-only harness cell, the river_wolf_pack/boulevard_mothbears precedent, not a comfortable-band contract). FIXES a long-standing project gap: docs/asset-catalog.md flags arachnids as a 'HARD GAP (no arachnid in any pack)' (cave_spider/shield_spider both stand in with `bat`) -- this is the first genuine spider silhouette in the tree. `ai:windup` (EXISTING `slam` skill, blast_damage + windup_rounds:1, vault_construct's own kit -- no new skills.json entry) realizes a rearing killing lunge, matching the 'king-killer' reputation with a real telegraphed spike rather than flavor text alone. damage_reduction 2 models the armored carapace (lighter than rock_crab's 8 -- an ambush hunter, not a slow tank). FORWARD-REFERENCE (#90 lane): if cwA's sibling lane adds a `rooted` applies-rider to `slam` (a web-wrapped, pinned-in-place read fits a spider's own kill move at least as well as vault_construct's physical slam), this combatant's kit inherits it automatically at merge -- INERT today, band measured rider-inert.",
+   "id": "kingslayer_spider",
+   "display_name": "Kingslayer Spider",
+   "sprite": "kingslayer_spider",
+   "side": "enemy",
+   "stats": {
+    "str": 20,
+    "dex": 14,
+    "con": 75,
+    "int": 4,
+    "wis": 8,
+    "cha": 3
+   },
+   "weapon_die": 12,
+   "damage_reduction": 2,
+   "ai": "windup",
+   "skills": [
+    "slam"
+   ]
+  },
+  {
+   "_comment": "The Pallass Forge's own construct guardian (T4/T5 Pallass-adjacent solo encounter, `forge_calibration_golem` -- Pallass's FIRST live combat encounter; every prior Pallass QA canonical is explicitly zero-combat). Canon-cite: wiki.wanderinginn.com/Golems (WIKI-VERIFIED 2026-07-12) -- artificial golems built from a shell + command spells + a mana-stone Golem Heart, over 40 named variants incl. Stone Golem/Flame Golem; Pallass's forge tier is a molten-seam artifice hall (data/maps/pallass/pallass_forge.json), a direct, canon-plausible home for a forge-tempered construct that occasionally miscalibrates and must be put down for pay (golems are 'neither alive nor dead' -- a recurring maintenance job, not a story kill). `ai:caster` (EXISTING `flame_bolt` skill reflavored as a superheated forge-bolt, no new skills.json entry) is REQUIRED, not decorative -- the melee profile never casts (the documented autoplay gotcha). damage_reduction 4 models solid stone plating.",
+   "id": "forge_golem",
+   "display_name": "Forge Calibration Golem",
+   "sprite": "forge_golem",
+   "side": "enemy",
+   "stats": {
+    "str": 16,
+    "dex": 6,
+    "con": 46,
+    "int": 12,
+    "wis": 8,
+    "cha": 2
+   },
+   "weapon_die": 8,
+   "damage_reduction": 4,
+   "ai": "caster",
+   "skills": [
+    "flame_bolt"
+   ]
+  },
+  {
+   "_comment": "The Pallass Market's own construct guard pair (T4/T5 Pallass-adjacent encounter, `market_watchgolems`) -- plain Stone Golems distinct from forge_golem's molten-cracked caster (canon explicitly supports many golems of the same named type, wiki.wanderinginn.com/Golems, WIKI-VERIFIED 2026-07-12). `ai:guard` realizes the documented 'follows orders, autonomous within commands' golem-tier behavior -- a pair so the profile is actually exercised (combat_ai.gd's own doc comment: 'a solo guard is just a fighter', degrading to plain melee with no ally to protect); watchgolem_a is the ward, watchgolem_b the escort. FORWARD-REFERENCE (#90 lane): if cwA adds a `guarded` applies-rider to a support/protect-flavored EXISTING skill this pair could plausibly hold later, the thematic parallel (a golem literally named for guarding, carrying the status named `guarded`) is a natural adoption target for a future wave -- not wired here (no skill in this pair's kit carries `applies` today, so this is a documented opportunity, not a live forward-reference).",
+   "id": "watchgolem_a",
+   "display_name": "Market Watchgolem",
+   "sprite": "watchgolem",
+   "side": "enemy",
+   "stats": {
+    "str": 14,
+    "dex": 6,
+    "con": 30,
+    "int": 4,
+    "wis": 8,
+    "cha": 2
+   },
+   "weapon_die": 6,
+   "damage_reduction": 3,
+   "ai": "guard",
+   "skills": []
+  },
+  {
+   "_comment": "Market_watchgolems' escort half -- see watchgolem_a's own _comment for the canon cite + the paired-guard rationale. Carries `power_strike` (EXISTING skill) for a heavier stone haymaker, slightly higher stats -- the asymmetric-pair convention.",
+   "id": "watchgolem_b",
+   "display_name": "Market Watchgolem",
+   "sprite": "watchgolem",
+   "side": "enemy",
+   "stats": {
+    "str": 15,
+    "dex": 6,
+    "con": 32,
+    "int": 4,
+    "wis": 8,
+    "cha": 2
+   },
+   "weapon_die": 6,
+   "damage_reduction": 3,
+   "ai": "guard",
+   "skills": [
+    "power_strike"
+   ]
   }
  ]
 }
