@@ -2558,7 +2558,7 @@
   }
  },
  "pedestal": {
-  "_comment": "Placeholder-fallback region for `anchor_stone_pedestal` (ruin_surface) -- no matching real crop exists in any in-hand pack yet (VISUAL-LOG flag), so this is a bookkeeping region against the Interior_Props_01 sheet (the same family `chest` crops from) for lane γ to replace with a real plinth/altar pick.",
+  "_comment": "Placeholder-fallback region for `anchor_stone_pedestal` (ruin_surface) -- no matching real crop exists in any in-hand pack yet (VISUAL-LOG flag), so this is a bookkeeping region against the Interior_Props_01 sheet (the same family `chest` crops from) for lane \u03b3 to replace with a real plinth/altar pick.",
   "render_scale": 0.6,
   "shadow": true,
   "animations": {
@@ -2628,7 +2628,7 @@
   }
  },
  "garden_fountain_basin": {
-  "_comment": "The garden's fountain centerpiece, basin half (picks.md §2 fountain composite). LICENSED Pixel Crawler -- Garden Environment pack, manifest-tracked already (assets_manifest.json: assets/tiles/garden/Tiles.png, FORBIDDEN/bundle:true/fallback:placeholder) -- renders as a flat placeholder color in this public checkout, real art via the private bundle. PIL alpha-bbox confirms the [320,80,80,78] region is a fully opaque rect (no transparent padding), so the default anchor [0.5,1.0] is correct as-is.",
+  "_comment": "The garden's fountain centerpiece, basin half (picks.md \u00a72 fountain composite). LICENSED Pixel Crawler -- Garden Environment pack, manifest-tracked already (assets_manifest.json: assets/tiles/garden/Tiles.png, FORBIDDEN/bundle:true/fallback:placeholder) -- renders as a flat placeholder color in this public checkout, real art via the private bundle. PIL alpha-bbox confirms the [320,80,80,78] region is a fully opaque rect (no transparent padding), so the default anchor [0.5,1.0] is correct as-is.",
   "render_scale": 0.4,
   "animations": {
    "idle": {
@@ -2648,7 +2648,7 @@
   }
  },
  "garden_fountain_statue": {
-  "_comment": "The garden's fountain centerpiece, the statue half (picks.md §2 -- \"pasted centered on the basin's upper water edge\"; paired with garden_fountain_basin in skeleton_scene.json's decor list, basin FIRST so the statue draws on top at the same cell). LICENSED Pixel Crawler pack, manifest entry NEEDED (assets/props/garden/Feminine-Idle-Sheet.png -- NOT yet in assets_manifest.json, listed in the G1 report for the controller) -- placeholder-renders until landed. PIL-confirmed: frame-0 figure crop [24,34,16,30] alpha bbox is the FULL crop (0,0,16,30) and the full 64px frame's own alpha bbox bottom is exactly 64 -- feet sit at the frame edge, zero under-feet padding, so render_scale 1.0 / default anchor [0.5,1.0] (picks.md §4's own measured values) are correct as-is.",
+  "_comment": "The garden's fountain centerpiece, the statue half (picks.md \u00a72 -- \"pasted centered on the basin's upper water edge\"; paired with garden_fountain_basin in skeleton_scene.json's decor list, basin FIRST so the statue draws on top at the same cell). LICENSED Pixel Crawler pack, manifest entry NEEDED (assets/props/garden/Feminine-Idle-Sheet.png -- NOT yet in assets_manifest.json, listed in the G1 report for the controller) -- placeholder-renders until landed. PIL-confirmed: frame-0 figure crop [24,34,16,30] alpha bbox is the FULL crop (0,0,16,30) and the full 64px frame's own alpha bbox bottom is exactly 64 -- feet sit at the frame edge, zero under-feet padding, so render_scale 1.0 / default anchor [0.5,1.0] (picks.md \u00a74's own measured values) are correct as-is.",
   "render_scale": 1.0,
   "animations": {
    "idle": {
@@ -3483,7 +3483,7 @@
   "shadow": true
  },
  "ceria": {
-  "_comment": "8d A2: Ceria Springwalker (PixelLab pro char 0f4f644e; profile in character-profiles.md — half-Elf, blue robes, wand, bone hand GLOVED v1, NO circlet [Vol-8+ spoiler catch]). render_scale targets ~26px (canonically short; figure 51px of 152). anchor feet-plane 101/152.",
+  "_comment": "8d A2: Ceria Springwalker (PixelLab pro char 0f4f644e; profile in character-profiles.md \u2014 half-Elf, blue robes, wand, bone hand GLOVED v1, NO circlet [Vol-8+ spoiler catch]). render_scale targets ~26px (canonically short; figure 51px of 152). anchor feet-plane 101/152.",
   "directional": true,
   "render_scale": 0.51,
   "animations": {
@@ -3515,7 +3515,7 @@
   "shadow": true
  },
  "yvlon": {
-  "_comment": "8d A2: Yvlon Byres (pro char ec33c32c — silver plate, golden hair, silversteel arms V6-canon-honest). ~32px tall (figure 83px of 176). anchor 129/176. slice = jab_attack (fields as delve ally).",
+  "_comment": "8d A2: Yvlon Byres (pro char ec33c32c \u2014 silver plate, golden hair, silversteel arms V6-canon-honest). ~32px tall (figure 83px of 176). anchor 129/176. slice = jab_attack (fields as delve ally).",
   "directional": true,
   "render_scale": 0.386,
   "animations": {
@@ -3557,7 +3557,7 @@
   "shadow": true
  },
  "ksmvr": {
-  "_comment": "8d A2: Ksmvr (pro char 3dc39703 — the worker four-arm kernel + gear harness/crossbow/buckler; all four arms READ in the lineup, better than Klbkch's). ~28px (figure 58px of 128). anchor 92/128. slice = jab_attack (delve ally). Sub-arm 1x legibility: same user flag as Klbkch.",
+  "_comment": "8d A2: Ksmvr (pro char 3dc39703 \u2014 the worker four-arm kernel + gear harness/crossbow/buckler; all four arms READ in the lineup, better than Klbkch's). ~28px (figure 58px of 128). anchor 92/128. slice = jab_attack (delve ally). Sub-arm 1x legibility: same user flag as Klbkch.",
   "directional": true,
   "render_scale": 0.483,
   "animations": {
@@ -3641,7 +3641,7 @@
   "shadow": true
  },
  "eloise": {
-  "_comment": "#63 canon pass: Eloise du Havin, [Tea Witch] (pro char 717c7f2a; wiki-verified profile in character-profiles.md — grey floral hat = the one wiki-sourced silhouette anchor; teacup prop + sage/mauve = flagged inventions-within-gap). Elderly-short: ~24px on-screen (figure 74px of 148). anchor feet-plane 109/148. REPLACES the oversize generic witch (playtest finding 19) — the skeleton swap lands with the #63 dialogue pass.",
+  "_comment": "#63 canon pass: Eloise du Havin, [Tea Witch] (pro char 717c7f2a; wiki-verified profile in character-profiles.md \u2014 grey floral hat = the one wiki-sourced silhouette anchor; teacup prop + sage/mauve = flagged inventions-within-gap). Elderly-short: ~24px on-screen (figure 74px of 148). anchor feet-plane 109/148. REPLACES the oversize generic witch (playtest finding 19) \u2014 the skeleton swap lands with the #63 dialogue pass.",
   "directional": true,
   "render_scale": 0.324,
   "animations": {
@@ -3973,6 +3973,120 @@
     "frame_size": [
      128,
      48
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "corusdeer": {
+  "_comment": "Issue #97 (bestiary expansion): the stray Corusdeer, T1 floodplains renewable-cull target. Canon-cite: wiki.wanderinginn.com/Corusdeer (WIKI-VERIFIED 2026-07-12) -- magical deer, ~2x normal deer size, twin antlers oaken-brown at the base shading to glowing cherry-red at the tips, mana-fueled heat that 'vaporises bone'; a lone stray male is the Silver-rank encounter shape (herds are Gold-rank and explicitly off-limits -- bounty_crab_cull's own copy already warns 'Do not trouble the Corusdeer herd'). Pre-staged in docs/design/character-profiles-staging.md Home-Region II. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down (the briar_collector/river_wolf non-humanoid- creature recipe, not the v2 8-direction character pipeline -- reserved for humanoid NPCs per the skill's own directive) -- avoids the manifest/bundle dance entirely, TIER-PUBLIC. PIL alpha-bbox anchor measured (fig y 3-60 of 64) -- render_scale/anchor pending windowed-shot verification per wi-art-and-sprites.",
+  "render_scale": 0.7,
+  "anchor": [
+   0.4844,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/corusdeer/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "razorbeak": {
+  "_comment": "Issue #97: Razorbeaks, T1 floodplains pack encounter. Canon-cite: wiki.wanderinginn.com/Razorbeaks (WIKI-VERIFIED 2026-07-12) -- large leathery-winged pterosaur-like birds, light green skin with red markings, beak longer than a human arm; canon-cowardly ALONE (flees when disturbed) but aggressive and swarms wounded prey in a group -- direct citation for this combatant's `coward` AI profile (see combatants.json). Erin's own nickname: 'Dino Birds'. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC, sidesteps the manifest/bundle dance.",
+  "render_scale": 0.75,
+  "anchor": [
+   0.4922,
+   0.7969
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/razorbeak/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "mothbear": {
+  "_comment": "Issue #97: Mothbear, T3 Invrisil-boulevard night-only pack encounter (drawn to the boulevard's lanterns -- canon-cited below). Canon-cite: wiki.wanderinginn.com/Mothbears (WIKI-VERIFIED 2026-07-12) -- flying-bear/moth hybrids with antennae and claws, hunt in groups, attracted to bright lights, attack by jumping on prey; Bronze-rank-dangerous, Silver-rank-manageable (matches this encounter's T3 tier). OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC.",
+  "render_scale": 0.65,
+  "anchor": [
+   0.5703,
+   0.8906
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/mothbear/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "kingslayer_spider": {
+  "_comment": "Issue #97: Kingslayer Spider, T4 dungeon solo apex-predator encounter (the 'shield-spider variant' the plan named as a candidate). Canon-cite: wiki.wanderinginn.com/Kingslayer_Spiders (WIKI-VERIFIED 2026-07-12) -- large monstrous Izril arachnids that 'resemble Shield Spiders from a distance, though distinct creatures'; named for killing a King while he was out hunting. FIXES a long-standing project gap -- docs/asset-catalog.md flags arachnids as a 'HARD GAP (no arachnid in any pack)' (cave_spider/shield_spider both stand in with `bat`); this is the first genuine spider silhouette in the tree. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC.",
+  "render_scale": 0.85,
+  "anchor": [
+   0.4922,
+   0.8281
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/kingslayer_spider/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "forge_golem": {
+  "_comment": "Issue #97: the Pallass Forge's own construct guardian (T4/T5 Pallass-adjacent solo encounter, `ai:caster`). Canon-cite: wiki.wanderinginn.com/Golems (WIKI-VERIFIED 2026-07-12) -- artificial golems built from a shell + command spells + a mana-stone Golem Heart, over 40 named variants incl. Stone Golem/Flame Golem; Pallass's forge tier is a molten-seam artifice hall (pallass_forge.json), a direct, canon-plausible home for a forge-tempered construct. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC (sidesteps whether Pixel Crawler Forge 1.2's own in-hand Stone-Golem sheet would need the bundle/manifest dance; not yet vetted in assets/LICENSES, so generated instead of risking a bundle-tier pick).",
+  "render_scale": 0.6,
+  "anchor": [
+   0.4922,
+   0.9219
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/forge_golem/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "watchgolem": {
+  "_comment": "Issue #97: the Pallass Market's own construct guardian (T4/T5 Pallass-adjacent solo encounter, `ai:guard`) -- a second, plain Stone Golem individual distinct from `forge_golem`'s molten-cracked caster (canon explicitly supports many golems of the same named type, wiki.wanderinginn.com/Golems). Guards merchant stock, matching Golems' documented 'follows orders' puppet/autonomous tiers. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC, same reasoning as forge_golem's own comment.",
+  "render_scale": 0.6,
+  "anchor": [
+   0.4922,
+   0.9219
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/watchgolem/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
     ],
     "fps": 1
    }
