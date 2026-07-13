@@ -274,6 +274,7 @@
   }
  },
  "bed": {
+  "_comment": "GH#94 (occlusion-family y-sort bias, VISUAL-LOG's consolidated bed/lyonette_door/bread_stall/garden_bed item): this sprite's ~13x16px on-screen footprint (render_scale 0.375 on a 34x44 frame) sits entirely inside its own cell, but the tall player rig approaching from one cell south (every sleep interaction's own convention: stand south, face north) visually overhangs into the bed's row -- plain row-based y-sort drew the SOUTH player (the larger position.y key) over the bed, hiding it completely (DP3 windowed finding). field_y_sort_bias_px 20.0 (one cell + margin, inn_roof's own magnitude) pulls this sprite's Y-SORT KEY 20px SOUTH -- past a directly-adjacent south neighbor's own key -- with the render position compensated back out (net zero visual shift, world.gd's `_make_entity_visual`), so the bed now draws AFTER (over) a player standing one cell south. Scoped to `bed` only, not `door`/`food_basket` (lyonette_door/bread_stall's own sprites) -- those are shared by 29/6 OTHER entities repo-wide and the schema is PER-SPRITE, not per-entity, so biasing them would risk flipping an unrelated correct ordering elsewhere; `bed` has exactly 3 consumers (your_bed, garden_bed, riverfarm_guest_cot), all the same 'sleep prop approached from due south, nothing else nearby' geometry (checked all 3 maps' neighboring cells), so this one sprite-level bias is safe for all of them. Left lyonette_door/bread_stall open (need a per-entity override the current schema doesn't have, or a bigger crop).",
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
@@ -291,7 +292,8 @@
    }
   },
   "render_scale": 0.375,
-  "shadow": true
+  "shadow": true,
+  "field_y_sort_bias_px": 20.0
  },
  "door": {
   "render_scale": 0.5,
