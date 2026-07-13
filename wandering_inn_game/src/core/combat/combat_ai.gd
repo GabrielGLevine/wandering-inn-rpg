@@ -201,7 +201,26 @@ static func _nearest(combat: WICombat, id: String, ids: Array) -> String:
 ## would need this arm ported over explicitly, not inherited for free.
 ## Degrades to melee's own goal (chase foes[0]) when it has no living ally to
 ## guard -- a solo guard is just a fighter.
+## Issue #90 support_skill arm: BEFORE the melee logic below, a guard
+## holding a known, affordable heal-type skill checks its ward (`alive_
+## allies_of`'s own hp-asc sort, the SAME "whoever's hurt worst" pick the
+## movement goal below already uses) -- if that ward is missing HP, cast on
+## them instead of fighting this action. Priority over engaging a foe: a
+## guard's whole identity is protecting its side, so covering support comes
+## first when it's available and useful, the same precedence "guard the
+## ward" already has over "chase the nearest enemy" in the movement branch
+## below. `mana_shield` is deliberately NOT part of this arm -- it has no
+## resolver (skill_effects.gd's own header comment: reactions can't be
+## actively cast), so a support-profile holder that knows it already
+## benefits passively, no selection needed.
 static func _act_guard(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
+	var support_id := _support_skill(combat, c)
+	if support_id != "":
+		var support_allies := combat.alive_allies_of(id)
+		if not support_allies.is_empty():
+			var ward := String(support_allies[0])
+			if int(combat.combatants[ward][WIKeys.HP]) < int(combat.combatants[ward][WIKeys.MAX_HP]):
+				return combat.use_skill(support_id, ward)
 	for foe: String in foes:
 		if combat.is_adjacent(id, foe):
 			if (c[WIKeys.SKILLS] as Array).has("power_strike") and int(c[WIKeys.AP]) >= 3:
@@ -259,6 +278,7 @@ static func _act_ranged(combat: WICombat, id: String, c: Dictionary, foes: Array
 	# instead of stalling on a cast that use_skill would refuse.
 	var line_id := ""
 	var spell_id := ""
+	var area_id := ""
 	for sk: String in c[WIKeys.SKILLS]:
 		var s: Dictionary = combat.skills.get(sk, {})
 		if not _can_afford(combat, c, s):
@@ -268,7 +288,15 @@ static func _act_ranged(combat: WICombat, id: String, c: Dictionary, foes: Array
 			line_id = sk
 		elif effect_type == "spell_damage" and spell_id == "":
 			spell_id = sk
+		# Issue #90 area_skill arm: icy_floor/blast_damage, tracked in its own
+		# slot (never competes with spell_id -- a caster holding both a
+		# single-target spell and an area skill can genuinely use either,
+		# unlike line_id/spell_id which are mutually exclusive per skill).
+		elif (effect_type == "icy_floor" or effect_type == "blast_damage") and area_id == "":
+			area_id = sk
 	if line_id != "" and _act_line(combat, id, c, line_id):
+		return true
+	if area_id != "" and _act_area(combat, id, c, area_id, foes):
 		return true
 	# LoS-filter ranged spell candidates: never pick/cast a target with no LoS.
 	var los_foes: Array = []
@@ -307,6 +335,18 @@ static func _windup_skill_id(combat: WICombat, c: Dictionary) -> String:
 	for sk: String in (c[WIKeys.SKILLS] as Array):
 		var s: Dictionary = combat.skills.get(sk, {})
 		if int((s.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.WINDUP_ROUNDS, 0)) > 0:
+			return sk
+	return ""
+
+
+## Issue #90: the first known, affordable heal-type skill, or "" if `c`
+## holds none -- `_windup_skill_id`'s own "first known skill of a shape"
+## pattern, reused verbatim. Guard-profile-only today (`_act_guard`'s new
+## support_skill arm); every other profile ignores this.
+static func _support_skill(combat: WICombat, c: Dictionary) -> String:
+	for sk: String in (c[WIKeys.SKILLS] as Array):
+		var s: Dictionary = combat.skills.get(sk, {})
+		if String((s.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.TYPE, "")) == "heal" and _can_afford(combat, c, s):
 			return sk
 	return ""
 
@@ -358,6 +398,53 @@ static func _act_line(combat: WICombat, id: String, c: Dictionary, line_id: Stri
 				enemies_hit += 1
 		if enemies_hit >= 2 and not hits_ally:
 			return combat.use_skill(line_id, String(token_by_dir[dir]))
+	return false
+
+
+## Issue #90 area_skill arm: the icy_floor/blast_damage twin of `_act_line`
+## above -- same >=2-living-enemies-hit-and-zero-allies-hit gate, same
+## untargetable-exclusion-from-the-COUNT contract (an invisible occupant
+## never counts toward the threshold, but the resolver still hits it
+## unconditionally if the cast goes through via other qualifying
+## occupants), reused VERBATIM rather than a parallel rule. The one real
+## difference from `_act_line`: area skills target a CANDIDATE ENEMY id
+## (the existing icy_floor/flame_pillar targeting mode -- no new UI/target
+## concept), not a cardinal direction, so this walks `foes` (already
+## hp-asc/id sorted, already untargetable-filtered by `_act_once`) instead
+## of DIRS, deriving the blast off each candidate's own cell via
+## `WISkillEffects._radius_area` -- the SAME area-derivation icy_floor/
+## blast_damage/windup declare all already share, called verbatim, never
+## re-implemented here.
+static func _act_area(combat: WICombat, id: String, c: Dictionary, area_id: String, foes: Array) -> bool:
+	var s: Dictionary = combat.skills[area_id]
+	if not _can_afford(combat, c, s):
+		return false
+	var effect: Dictionary = s.get(WIKeys.EFFECT, {})
+	var range_val := int(effect.get(WIKeys.RANGE, 0))
+	var side := String(c[WIKeys.SIDE])
+	for foe: String in foes:
+		if combat.chebyshev(id, foe) > range_val:
+			continue
+		if not combat.has_los(id, foe):
+			continue
+		var center: Vector2i = combat.combatants[foe][WIKeys.CELL]
+		var cells := WISkillEffects._radius_area(combat, center, int(effect.get(WIKeys.RADIUS, 0)))
+		var enemies_hit := 0
+		var hits_ally := false
+		for other_id: String in combat.combatants:
+			if other_id == id:
+				continue
+			var other: Dictionary = combat.combatants[other_id]
+			if not bool(other[WIKeys.ALIVE]):
+				continue
+			if not ((other[WIKeys.CELL] as Vector2i) in cells):
+				continue
+			if String(other[WIKeys.SIDE]) == side:
+				hits_ally = true
+			elif not _is_untargetable(combat, other_id):
+				enemies_hit += 1
+		if enemies_hit >= 2 and not hits_ally:
+			return combat.use_skill(area_id, foe)
 	return false
 
 

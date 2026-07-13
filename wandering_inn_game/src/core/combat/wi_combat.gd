@@ -15,6 +15,16 @@ const ROUND_CAP := 30
 const MOVE_POOL := 3
 const DASH_COST := 1
 const DASH_GAIN := 3
+## Issue #90 status multipliers: `weakened` shrinks the HOLDER's own
+## outgoing damage, `guarded` shrinks the HOLDER's own incoming damage.
+## Compose multiplicatively -- with the skill's own `mult` (folded into the
+## dice sub-formula already, upstream of these) and with EACH OTHER (a
+## weakened attacker hitting a guarded defender applies both, in this
+## order: attacker-side first, defender-side second -- commutative under
+## pure multiplication, pinned only so the trace reads the same every
+## time). See `_apply_status_damage_mods`.
+const WEAKENED_MULT := 0.75
+const GUARDED_MULT := 0.75
 
 var grid_size: Vector2i
 var blocked: Dictionary = {}
@@ -418,11 +428,22 @@ func move_active(dir: Vector2i) -> bool:
 	return true
 
 
+## True iff `id` currently holds "rooted" (issue #90: move_pool reads 0
+## while active -- enforced at `_start_turn`'s final pool assignment --
+## and Dash refuses outright here, since dash() itself never checks
+## move_pool and would otherwise let a rooted holder pump the pool up mid-
+## turn and immediately move on the SAME turn, defeating the lockdown).
+func _is_rooted(id: String) -> bool:
+	return (combatants[id]["statuses"] as Dictionary).has("rooted")
+
+
 ## Spends 1 AP for +DASH_GAIN move pool. Repeatable while AP lasts.
 func dash() -> bool:
 	if finished:
 		return false
 	if not bool(combatants[get_active()][WIKeys.ALIVE]):
+		return false
+	if _is_rooted(get_active()):
 		return false
 	var c: Dictionary = combatants[get_active()]
 	if int(c[WIKeys.AP]) < DASH_COST:
@@ -598,6 +619,7 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 		if melee:
 			base_damage += int(a.get(WIKeys.DAMAGE_MOD, 0))
 		damage = maxi(1, base_damage)
+		damage = _apply_status_damage_mods(a, t, damage)
 		target_hp = _deduct_hp(target_id, damage)
 		# `melee` here means STR-physics (bows use it for damage math), so
 		# gate the PROGRESSION tally on actual weapon reach too -- a bow hit
@@ -643,6 +665,22 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 		_resolve_hit(target_id, attacker_id, riposte_mult, true, false)
 
 
+## Issue #90: applies weakened(attacker)/guarded(defender) as POST-multipliers
+## on an already-fully-computed landed hit -- run AFTER the maxi(1, ...) floor
+## above, BEFORE `_deduct_hp` (armor's flat reduction / mana_shield's MP-drain
+## still act on the ALREADY-shrunk number: these two statuses shrink the BLOW
+## itself, the target's own defenses reduce what actually gets through it).
+## Re-floored at 1 after EACH multiplier -- neither status can zero a landed
+## hit. Bypassed entirely by `_tick_burning_statuses` (a DoT tick has no
+## attacker/defender pair to read either status off of).
+func _apply_status_damage_mods(attacker: Dictionary, defender: Dictionary, amount: int) -> int:
+	if (attacker["statuses"] as Dictionary).has("weakened"):
+		amount = maxi(1, int(amount * WEAKENED_MULT))
+	if (defender["statuses"] as Dictionary).has("guarded"):
+		amount = maxi(1, int(amount * GUARDED_MULT))
+	return amount
+
+
 ## Clears any status on `id` carrying `untargetable: true` (today only
 ## invisibility's `invisible` entry) and emits STATUS_EXPIRED per cleared
 ## entry -- the break-on-damage half of the untargetable contract (the
@@ -676,6 +714,50 @@ func end_turn() -> void:
 	_advance_turn()
 
 
+## Issue #90 [burning]: EOT tick, fired once per ROUND at the SAME
+## round-rollover site `_purge_expired_terrain`/`_purge_expired_statuses`
+## already use, BEFORE the statuses purge -- TICK THEN PURGE, pinned: a
+## status whose `expires_after_round` matches the round just entered still
+## gets its tick here before `_purge_expired_statuses` erases it a few
+## lines later; purging first would silently skip that final tick (a
+## status that expires the round it's applied without ever ticking is the
+## bug class this ordering exists to avoid). Deals `tick_damage` (read off
+## the status entry itself, the `pool_penalty`/slowed idiom -- data-driven,
+## not a WICombat const) to every ALIVE holder (sorted ids, deterministic
+## event order), routed through `_deduct_hp` (armor reduction/mana_shield
+## absorb apply exactly like any other hit) then the SAME down-check/
+## `_check_end` chain `_post_damage` uses -- MINUS its "auto re-advance if
+## active" branch, deliberately: this runs from INSIDE `_advance_turn`'s
+## own round-rollover branch, whose enclosing while-loop already re-scans
+## for the next living combatant once this returns, so a second
+## `_advance_turn()` call here would double-advance/desync `active_index`
+## (the SAME class of bug `_start_turn`'s windup guard comment calls out).
+## No riposte, no kill-credit (a DoT tick has no attacker id) -- `_on_kill`
+## is never called. Bypasses `_resolve_hit` entirely, so weakened/guarded
+## (which describe an attacker/defender PAIR) never touch a burning tick
+## either way -- a deliberate scope limit, not an oversight.
+func _tick_burning_statuses() -> void:
+	var ids := combatants.keys()
+	ids.sort()
+	for id: String in ids:
+		var c: Dictionary = combatants[id]
+		if not bool(c[WIKeys.ALIVE]):
+			continue
+		var statuses: Dictionary = c["statuses"]
+		if not statuses.has("burning"):
+			continue
+		var tick_damage := int((statuses["burning"] as Dictionary).get("tick_damage", 2))
+		var hp_before := int(c[WIKeys.HP])
+		var hp_after := _deduct_hp(id, tick_damage)
+		_emit(WIEvents.STATUS_TICKED, {"id": id, "status": "burning", "damage": hp_before - hp_after, "hp": hp_after})
+		if hp_after == 0:
+			c[WIKeys.ALIVE] = false
+			_emit(WIEvents.COMBATANT_DOWNED, {"id": id})
+			_check_end()
+			if finished:
+				return
+
+
 func _advance_turn() -> void:
 	var tries := 0
 	while tries < turn_order.size() + 1:
@@ -688,6 +770,9 @@ func _advance_turn() -> void:
 				_finish(false, true)
 				return
 			_emit(WIEvents.ROUND_STARTED, {"round": round_number})
+			_tick_burning_statuses()
+			if finished:
+				return
 			_purge_expired_terrain()
 			_purge_expired_statuses()
 		if combatants[get_active()][WIKeys.ALIVE]:
@@ -738,6 +823,14 @@ func _start_turn() -> void:
 		statuses.erase("slowed")
 		_emit(WIEvents.STATUS_EXPIRED, {"id": c[WIKeys.ID], "status": "slowed"})
 	pool += _move_pool_bonus_total(c)
+	# Issue #90 rooted: move_pool READS 0 while active -- checked LAST so it
+	# overrides slowed's penalty and any passive bonus unconditionally (a
+	# root is an absolute lock, not a further reduction on top of a smaller
+	# pool). Multi-round persistent (expires_after_round/
+	# _purge_expired_statuses, unlike slowed's one-shot consume-and-erase
+	# above), so every `_start_turn` while still rooted re-zeroes it.
+	if statuses.has("rooted"):
+		pool = 0
 	c[WIKeys.MOVE_POOL] = pool
 	_emit(WIEvents.TURN_STARTED, {"id": c[WIKeys.ID], "ap": MAX_AP, "move_pool": pool})
 
@@ -778,6 +871,11 @@ func _resolve_windup(c: Dictionary) -> void:
 	var w: Dictionary = windups[actor_id]
 	windups.erase(actor_id)
 	var skill_id := String(w["skill_id"])
+	# Issue #90: read once, up front -- `_apply_status_from_effect` needs the
+	# skill's own effect dict (for its `applies` rider, e.g. slam's rooted).
+	# Absent (empty dict) for a windup skill with no rider -- every windup
+	# holder before slam's rider shipped, no-op, byte-identical.
+	var effect: Dictionary = (skills.get(skill_id, {}) as Dictionary).get(WIKeys.EFFECT, {})
 	var cells: Array = w["cells"]
 	var hit_ids: Array = []
 	for id: String in combatants:
@@ -801,9 +899,17 @@ func _resolve_windup(c: Dictionary) -> void:
 	for id: String in hit_ids:
 		if not bool(combatants[id][WIKeys.ALIVE]):
 			continue  # an earlier hit in this same resolution may have already downed them
+		var hp_before := int(combatants[id][WIKeys.HP])
 		_resolve_hit(actor_id, id, 1.0, true, false)
 		if finished:
 			return
+		# Issue #90: apply the windup skill's own `applies` rider (slam's
+		# rooted) only on a hit that actually landed damage -- mirrors
+		# spell_damage's own conditional gate in skill_effects.gd, applied
+		# here since `_resolve_windup` bypasses that resolver entirely (its
+		# own bespoke multi-hit loop, not `_resolve_blast_damage`).
+		if int(combatants.get(id, {}).get(WIKeys.HP, hp_before)) < hp_before:
+			WISkillEffects._apply_status_from_effect(self, id, effect)
 
 
 ## The two PRE-EXISTING 0-cost move_pool_bonus skills

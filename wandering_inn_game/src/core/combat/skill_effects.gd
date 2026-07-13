@@ -172,6 +172,13 @@ static func _resolve_heal(combat: WICombat, actor_id: String, a: Dictionary, tar
 	var healed := clampi(int(effect.get(WIKeys.AMOUNT, 0)), 0, missing)
 	target[WIKeys.HP] = int(target[WIKeys.HP]) + healed
 	combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": target_id, "healed": healed})
+	# Issue #90 [Guarding Ward]: a heal-type skill can ALSO carry an
+	# `applies` rider (e.g. guarded) -- unconditional on a successful cast,
+	# unlike spell_damage's own conditional-on-damage-dealt gate below (a
+	# heal always "connects", there's no miss roll to gate behind). No-op
+	# for every pre-existing heal skill (second_wind/soothing_presence carry
+	# no `applies` key) -- byte-identical.
+	_apply_status_from_effect(combat, target_id, effect)
 	return true
 
 
@@ -392,5 +399,16 @@ static func _apply_status_from_effect(combat: WICombat, target_id: String, effec
 		# Flat refresh, not a stack: a second application of the same status_id
 		# overwrites the dict entry in place, so re-slowing an already-slowed
 		# victim still yields exactly one status entry/penalty/expiry.
-		(t["statuses"] as Dictionary)[status_id] = (applies[status_id] as Dictionary).duplicate(true)
+		var entry: Dictionary = (applies[status_id] as Dictionary).duplicate(true)
+		# Issue #90: a status entry carrying its OWN `duration_rounds`
+		# (weakened/guarded/rooted/burning) stamps `expires_after_round` here
+		# -- the icy_floor/invisibility idiom, generalized to this shared
+		# applicator so every multi-round status purges via the SAME
+		# `_purge_expired_statuses` round-rollover sweep. `slowed` (frost_
+		# bolt/icy_floor/calming_touch/raskghar_maul) carries no
+		# `duration_rounds` key -- no-op, still consumed one-shot at the
+		# holder's own next `_start_turn`, byte-identical.
+		if entry.has(WIKeys.DURATION_ROUNDS):
+			entry["expires_after_round"] = combat.round_number + int(entry[WIKeys.DURATION_ROUNDS]) - 1
+		(t["statuses"] as Dictionary)[status_id] = entry
 		combat._emit(WIEvents.STATUS_APPLIED, {"id": target_id, "status": status_id})

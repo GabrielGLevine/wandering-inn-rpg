@@ -96,6 +96,7 @@
    "skills": []
   },
   {
+   "_comment": "GH#90 area_skill AI-arm adoption: gains `icy_floor` (EXISTING skill, unmodified -- a shaman's second hex, not just fire) alongside flame_bolt (now `applies.burning`, see skills.json). `_act_ranged`'s area_id scan is a SEPARATE slot from spell_id, so both skills stay live: icy_floor when >=2 targets qualify for the blast, flame_bolt otherwise. goblin_ambush comp is UNGATED for warrior2 (sim_combat_batch.gd, `ungated_comps`) and every OTHER build vs this comp is `gated:false` -- MEASURED-only, zero win-rate contract, the low-risk pick for this arm's live demonstration.",
    "id": "goblin_shaman",
    "display_name": "Goblin Shaman",
    "sprite": "goblin_female",
@@ -111,7 +112,8 @@
    "weapon_die": 4,
    "ai": "ranged",
    "skills": [
-    "flame_bolt"
+    "flame_bolt",
+    "icy_floor"
    ]
   },
   {
@@ -317,7 +319,7 @@
    "skills": []
   },
   {
-   "_comment": "Rift_vermin_leak's ranged member -- the canon 'fire breath' power (wiki.wanderinginn.com/Magical_Rats) realized via the EXISTING `flame_bolt` skill (goblin_shaman's spell_damage/range-4 bolt, no new skill.json entry -- flame is flame regardless of caster). `ai: ranged` so combat_ai.gd's ranged profile actually fires it (see wi-adding-an-encounter's autoplay gotcha: a melee-profile combatant never casts).",
+   "_comment": "Rift_vermin_leak's ranged member -- the canon 'fire breath' power (wiki.wanderinginn.com/Magical_Rats) realized via the EXISTING `flame_bolt` skill (goblin_shaman's spell_damage/range-4 bolt, no new skill.json entry -- flame is flame regardless of caster). `ai: ranged` so combat_ai.gd's ranged profile actually fires it (see wi-adding-an-encounter's autoplay gotcha: a melee-profile combatant never casts). GH#90: flame_bolt now carries `applies.burning` (skills.json) -- a magical rat's fire-breath catching alight is the direct read. AI-arm adoption: gains `flame_pillar` (EXISTING skill, unmodified, class-shared with Mage but unmodified-skill grants carry zero player-balance leakage -- only a skill's own DEFINITION change would) -- the area_skill arm's live demonstration, `_act_ranged`'s SEPARATE area_id slot means both flame_bolt (single target) and flame_pillar (>=2 targets, ally-safe) stay reachable, never dead code. Fields in RUIN_CELLS' rift_vermin_leak_w8_relc (GATED wide 0.55-0.95) and DUNGEON_CELLS' trapped_halls_snare_t4_solo (GATED 0.55-0.95) -- both re-verified in-band.",
    "id": "rift_vermin_c",
    "display_name": "Ember-Touched Vermin",
    "sprite": "bat",
@@ -333,7 +335,8 @@
    "weapon_die": 4,
    "ai": "ranged",
    "skills": [
-    "flame_bolt"
+    "flame_bolt",
+    "flame_pillar"
    ]
   },
   {
@@ -377,7 +380,7 @@
    "skills": []
   },
   {
-   "_comment": "Ruin_guardian's second escort ward -- identical template to ruin_ward_a (a matched pair), given its own id per the distinct-id convention documented on rift_vermin_a; carries the SAME issue #83 `guard` adoption, see ruin_ward_a's own comment.",
+   "_comment": "Ruin_guardian's second escort ward -- same stat template as ruin_ward_a (a matched pair), given its own id per the distinct-id convention documented on rift_vermin_a; carries the SAME issue #83 `guard` adoption, see ruin_ward_a's own comment. GH#90 support_skill AI-arm adoption: gains `guarding_ward` (a small ally heal + `applies.guarded`) -- ONLY this ward, not ruin_ward_a, the SAME asymmetric-pair precedent river_wolf_a/b vs c and briar_collector_deep_a vs b already establish. `_act_guard`'s new support_skill arm picks it generically (any known, affordable heal-type skill) whenever its ward is missing HP, ahead of the melee branch. Fields ONLY in RUIN_CELLS' ruin_guardian_w8_relc (GATED 0.55-0.8, already re-verified in-band once by #83's own con retune) -- re-verified again here.",
    "id": "ruin_ward_b",
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
@@ -393,7 +396,9 @@
    },
    "weapon_die": 5,
    "ai": "guard",
-   "skills": []
+   "skills": [
+    "guarding_ward"
+   ]
   },
   {
    "_comment": "The trapped_halls snare's ward, a stat CLONE of ruin_ward_a with plain `melee` ai instead of ruin_ward_a's issue-#83 `guard` profile. WHY A SEPARATE ID EXISTS (the ONLY difference is the ai field): one shared combatant id cannot serve both the guardian-escort context (which wants `guard` -- body-block the boss) and the snare context (which wants ENGAGEMENT -- no boss to escort there, so guard-profile wards clustered around each other/rift_vermin_c instead of fighting, eroding the FIGHT route's cost from 0.69 to 0.94 win_rate, the exact illusory-cost failure the 8d C1 review's roster-only ruling fixed once already) -- and the two gated cells (RUIN_CELLS' ruin_guardian_w8_relc 0.55-0.8, DUNGEON_CELLS' trapped_halls_snare_t4_solo 0.55-0.95) were edge-pinned in OPPOSITE directions off that one shared id. There is no per-encounter AI override mechanism; a distinct id IS the override, same roster-only pattern. Same 'Lesser Ward' display_name/sprite -- players see the identical construct, the split is internal bookkeeping. Any future ruin_ward_a stat retune must be mirrored here BY HAND (drift trap: no inheritance exists in this catalog).",

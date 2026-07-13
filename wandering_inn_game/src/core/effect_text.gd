@@ -39,6 +39,10 @@ const PRICE_LINE_PREFIX := "Worth "
 ## lives in `status_line`; this is only the card-side shorthand.
 const _STATUS_VERB := {
 	"slowed": "Slows.",
+	"weakened": "Weakens.",
+	"guarded": "Guards.",
+	"rooted": "Roots.",
+	"burning": "Burns.",
 }
 
 
@@ -142,6 +146,27 @@ static func status_line(status_id: String, skills_catalog: Array = []) -> String
 		"invisible":
 			var duration := _invisibility_duration(skills_catalog)
 			return "Invisible — enemies can't choose you as a target; breaks if you deal damage, or fades after %d rounds." % duration
+		# Issue #90: the four new statuses. `weakened`/`guarded` read their
+		# multiplier straight off WICombat's own consts (the sim code that
+		# actually applies them, not a re-typed literal here — no data file
+		# carries the number, so there's nothing to inject/tripwire-derive
+		# the way `_slowed_penalty` does); `duration_rounds`/`tick_damage`
+		# still derive from wherever the status is DEFINED (skills.json's
+		# `applies` riders), same idiom as `_slowed_penalty`/
+		# `_invisibility_duration` above.
+		"weakened":
+			var rounds := _status_duration(status_id, skills_catalog)
+			return "Weakened — deals ×%s damage for %d rounds." % [_fmt_mult(WICombat.WEAKENED_MULT), rounds]
+		"guarded":
+			var rounds := _status_duration(status_id, skills_catalog)
+			return "Guarded — takes ×%s damage for %d rounds." % [_fmt_mult(WICombat.GUARDED_MULT), rounds]
+		"rooted":
+			var rounds := _status_duration(status_id, skills_catalog)
+			return "Rooted — can't move or Dash for %d round%s." % [rounds, "" if rounds == 1 else "s"]
+		"burning":
+			var rounds := _status_duration(status_id, skills_catalog)
+			var tick := _burning_tick_damage(skills_catalog)
+			return "Burning — takes %d damage at the end of each round for %d rounds." % [tick, rounds]
 	return ""
 
 
@@ -320,6 +345,36 @@ static func _invisibility_duration(skills_catalog: Array) -> int:
 		if String(effect.get(WIKeys.TYPE, "")) == "invisibility":
 			return int(effect.get(WIKeys.DURATION_ROUNDS, 3))
 	return 3
+
+
+## Issue #90: reads a hit-applied status's own `duration_rounds` (the first
+## skill whose `applies[status_id]` carries it) -- the SAME derive-from-
+## where-it's-defined idiom `_slowed_penalty`/`_invisibility_duration`
+## already use, generalized to any status id riding the applies dict
+## (weakened/guarded/rooted/burning). Falls back to 2 only if the catalog
+## holds no applier at all.
+static func _status_duration(status_id: String, skills_catalog: Array) -> int:
+	var catalog := skills_catalog
+	if catalog.is_empty():
+		catalog = _load_skills()
+	for skill: Dictionary in catalog:
+		var applies: Dictionary = (skill.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.APPLIES, {})
+		if applies.has(status_id):
+			return int((applies[status_id] as Dictionary).get(WIKeys.DURATION_ROUNDS, 2))
+	return 2
+
+
+## Issue #90: reads burning's own `tick_damage` (the first skill whose
+## `applies.burning` carries it) -- same idiom as `_status_duration`.
+static func _burning_tick_damage(skills_catalog: Array) -> int:
+	var catalog := skills_catalog
+	if catalog.is_empty():
+		catalog = _load_skills()
+	for skill: Dictionary in catalog:
+		var applies: Dictionary = (skill.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.APPLIES, {})
+		if applies.has("burning"):
+			return int((applies["burning"] as Dictionary).get("tick_damage", 2))
+	return 2
 
 
 static func _load_skills() -> Array:

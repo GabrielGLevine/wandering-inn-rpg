@@ -161,6 +161,14 @@ const AP_CHANGED := &"ap_changed"
 const MP_CHANGED := &"mp_changed"
 const STATUS_APPLIED := &"status_applied"
 const STATUS_EXPIRED := &"status_expired"
+## Issue #90 [burning]: emitted by `WICombat._tick_burning_statuses`, once
+## per ALIVE holder per round-rollover (never for a dead one -- `_deduct_hp`
+## already no-ops there, but the loop skips dead combatants before calling
+## it at all). Payload `{id:String, status:"burning", damage:int, hp:int}`
+## -- `damage` is the ACTUAL HP lost this tick (post armor/mana_shield,
+## same "amount that landed" convention ATTACK_RESOLVED's own `damage`
+## field uses), `hp` is the holder's HP after the tick.
+const STATUS_TICKED := &"status_ticked"
 ## Emitted by WISkillEffects.
 ## resolve_active's icy_floor resolver the moment cells are registered into
 ## WICombat.terrain. Payload `{kind:"icy_floor", cells:[[x,y],...] sorted,

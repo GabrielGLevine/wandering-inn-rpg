@@ -115,7 +115,8 @@ const EXPECTED_SKILLS := {
 	"power_strike": ["3 AP — ×2 damage"],
 	"counter_strike": ["Strike back for ×0.8 damage when hit in melee."],
 	"battle_momentum": ["+1 AP when you down a foe"],
-	"flame_bolt": ["2 AP — damage 1d6 at range 4"],
+	# GH#90 rider: `applies.burning` -- the "Burns." verb suffix (`_STATUS_VERB`).
+	"flame_bolt": ["2 AP — damage 1d6 at range 4. Burns."],
 	"flame_jet": ["2 AP, 4 MP — damage everything in a line 4 cells long"],
 	"frost_bolt": ["1 AP, 2 MP — damage 1d6 at range 4. Slows."],
 	"mana_shield": ["Spend MP to absorb incoming damage."],
@@ -178,7 +179,9 @@ const EXPECTED_SKILLS := {
 	# and this card never renders in any live UI, the SAME disclosed
 	# raskghar_maul/calming_touch caster-attribution gap noted above (no
 	# per-caster threading exists in this formatter).
-	"slam": ["4 AP — blast a 3×3 area around the target for 1d6 after a round's gathering. Hits friend and foe."],
+	# GH#90 rider: `applies.rooted` -- the "Roots." verb suffix, appended
+	# after the friendly-fire sentence (line already ends with ".").
+	"slam": ["4 AP — blast a 3×3 area around the target for 1d6 after a round's gathering. Hits friend and foe. Roots."],
 	"keener_edge": ["2 AP — ×1.6 damage"],
 	# GH#61: [Spellsword] L16 capstone (INVENTED name, flagged -- see the
 	# skill's own _comment in skills.json for the wiki-verification trace).
@@ -208,7 +211,9 @@ const EXPECTED_SKILLS := {
 	# further (would need real caster-threading, out of this task's data-only
 	# scope).
 	"calming_touch": ["2 AP — damage 1d6 at range 1. Slows."],
-	"raskghar_maul": ["3 AP — damage 1d6 at range 2. Slows."],
+	# GH#90 rider: `applies.weakened` added alongside slowed -- `_status_suffix`
+	# joins BOTH verbs, dict insertion order (slowed first, weakened second).
+	"raskghar_maul": ["3 AP — damage 1d6 at range 2. Slows. Weakens."],
 	# GH#70 [Archer] kit -- all three existing effect TYPES (damage_mult twice,
 	# line_damage once), zero new resolvers, so the phrasing matches their
 	# sword/spear twins exactly (power_strike/quick_slash/triple_thrust's own
@@ -234,6 +239,10 @@ const EXPECTED_SKILLS := {
 	# (see that function's own doc comment); the phrase reads "an ally, or
 	# yourself" instead of second_wind's "yourself" alone.
 	"soothing_presence": ["2 AP, 3 MP — restore 6 HP to an ally, or yourself"],
+	# GH#90 support_skill carrier + guarded rider: heal's `applies` widening
+	# (skill_effects.gd's `_resolve_heal`) appends "Guards." exactly like a
+	# damage skill's own `_status_suffix` would -- the same shared function.
+	"guarding_ward": ["2 AP — restore 4 HP to an ally, or yourself. Guards."],
 	"open_doors": [],
 	"find_trap": [],
 	"disarm_trap": [],
@@ -333,6 +342,28 @@ func _test_status_exact() -> void:
 		WIEffectText.status_line("invisible") == "Invisible — enemies can't choose you as a target; breaks if you deal damage, or fades after 3 rounds.",
 		"invisible glossary line: got %s" % WIEffectText.status_line("invisible")
 	)
+	# GH#90: the four new statuses -- single-arg form reads the SHIPPED
+	# skills.json riders (raskghar_maul's weakened duration_rounds=2,
+	# guarding_ward's guarded duration_rounds=2, slam's rooted
+	# duration_rounds=1, flame_bolt's burning tick_damage=2/duration_rounds=3).
+	# The ×0.75 multiplier reads straight off WICombat's own const, not a
+	# re-typed literal.
+	_check(
+		WIEffectText.status_line("weakened") == "Weakened — deals ×0.75 damage for 2 rounds.",
+		"weakened glossary line: got %s" % WIEffectText.status_line("weakened")
+	)
+	_check(
+		WIEffectText.status_line("guarded") == "Guarded — takes ×0.75 damage for 2 rounds.",
+		"guarded glossary line: got %s" % WIEffectText.status_line("guarded")
+	)
+	_check(
+		WIEffectText.status_line("rooted") == "Rooted — can't move or Dash for 1 round.",
+		"rooted glossary line: got %s" % WIEffectText.status_line("rooted")
+	)
+	_check(
+		WIEffectText.status_line("burning") == "Burning — takes 2 damage at the end of each round for 3 rounds.",
+		"burning glossary line: got %s" % WIEffectText.status_line("burning")
+	)
 
 
 func _test_tripwires() -> void:
@@ -409,6 +440,30 @@ func _test_tripwires() -> void:
 		"invisible status tripwire: duration follows the catalog"
 	)
 
+	# GH#90: the four new statuses' duration/tick numbers are READ from the
+	# injected catalog, not hardcoded (the slowed/invisible tripwire pattern
+	# above, generalized).
+	var weak_catalog := [{"id": "x", "effect": {"type": "spell_damage", "applies": {"weakened": {"duration_rounds": 4}}}}]
+	_check(
+		WIEffectText.status_line("weakened", weak_catalog) == "Weakened — deals ×0.75 damage for 4 rounds.",
+		"weakened status tripwire: duration follows the catalog"
+	)
+	var guard_catalog := [{"id": "x", "effect": {"type": "heal", "applies": {"guarded": {"duration_rounds": 5}}}}]
+	_check(
+		WIEffectText.status_line("guarded", guard_catalog) == "Guarded — takes ×0.75 damage for 5 rounds.",
+		"guarded status tripwire: duration follows the catalog"
+	)
+	var root_catalog := [{"id": "x", "effect": {"type": "blast_damage", "applies": {"rooted": {"duration_rounds": 3}}}}]
+	_check(
+		WIEffectText.status_line("rooted", root_catalog) == "Rooted — can't move or Dash for 3 rounds.",
+		"rooted status tripwire: duration follows the catalog, plural rounds"
+	)
+	var burn_catalog := [{"id": "x", "effect": {"type": "spell_damage", "applies": {"burning": {"tick_damage": 5, "duration_rounds": 2}}}}]
+	_check(
+		WIEffectText.status_line("burning", burn_catalog) == "Burning — takes 5 damage at the end of each round for 2 rounds.",
+		"burning status tripwire: tick_damage and duration follow the catalog"
+	)
+
 
 func _test_forbidden_vocab() -> void:
 	var attr := RegEx.new()
@@ -420,6 +475,11 @@ func _test_forbidden_vocab() -> void:
 		lines.append_array(WIEffectText.skill_effect_lines(skill))
 	lines.append(WIEffectText.status_line("slowed"))
 	lines.append(WIEffectText.status_line("invisible"))
+	# GH#90: the four new statuses join the same grep.
+	lines.append(WIEffectText.status_line("weakened"))
+	lines.append(WIEffectText.status_line("guarded"))
+	lines.append(WIEffectText.status_line("rooted"))
+	lines.append(WIEffectText.status_line("burning"))
 	for line: String in lines:
 		_check(attr.search(line) == null, "forbidden attribute token in generated line: %s" % line)
 		_check(not line.contains("%"), "forbidden percent-toward token in generated line: %s" % line)

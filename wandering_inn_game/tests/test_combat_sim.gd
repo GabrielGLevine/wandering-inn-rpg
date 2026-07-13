@@ -749,7 +749,12 @@ func _init() -> void:
 	c30.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(1, 1)
 	c30.combatants["pc"][WIKeys.CELL] = Vector2i(3, 1)
 	c30.combatants["goblin_shaman"][WIKeys.SKILLS] = ["frost_bolt"]
-	# Built with flame_bolt (no mp_cost) so mp/max_mp are 0: frost_bolt is unaffordable.
+	# GH#90: goblin_shaman's REAL catalog kit now also carries icy_floor
+	# (mp_cost 4), so build-time max_mp is no longer 0 -- force it explicitly
+	# here so this fixture's "cannot afford" gate stays genuine regardless of
+	# what the shipped catalog's own kit happens to carry.
+	c30.combatants["goblin_shaman"][WIKeys.MP] = 0
+	c30.combatants["goblin_shaman"][WIKeys.MAX_MP] = 0
 	assert(int(c30.combatants["goblin_shaman"][WIKeys.MP]) == 0, "fixture: shaman has no MP")
 	c30.active_index = c30.turn_order.find("goblin_shaman")
 	c30._start_turn()
@@ -2163,6 +2168,291 @@ func _init() -> void:
 	c112._start_turn()
 	_events.clear()
 	assert(c112.use_skill("sudden_strike", "goblin_raider"), "sudden_strike resolves again in a NEW fight -- the once-per-fight gate is per-WICombat-instance, not persistent")
+
+	# --- Issue #90: weakened/guarded compose multiplicatively on landed
+	# damage. Same seed + same scripted intent across four fights isolates
+	# the multiplier: the underlying hit/damage-die rolls are byte-identical
+	# (nothing here consumes rng differently), only `_apply_status_damage_
+	# mods` changes the reported number. ---
+	var c119a := _make(11, _sink)
+	c119a.combatants["pc"][WIKeys.CELL] = Vector2i(3, 3)
+	c119a.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(4, 3)
+	c119a.active_index = c119a.turn_order.find("pc")
+	c119a._start_turn()
+	c119a.combatants["pc"]["hit_bonus"] = 1000
+	_events.clear()
+	assert(c119a.attack("goblin_raider"), "baseline attack lands")
+	var baseline_damage119 := 0
+	for e: Dictionary in _events:
+		if e["type"] == "attack_resolved":
+			baseline_damage119 = int(e["payload"]["damage"])
+	assert(baseline_damage119 > 0, "fixture: baseline attack dealt real damage")
+
+	var c119b := _make(11, _sink)
+	c119b.combatants["pc"][WIKeys.CELL] = Vector2i(3, 3)
+	c119b.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(4, 3)
+	c119b.active_index = c119b.turn_order.find("pc")
+	c119b._start_turn()
+	c119b.combatants["pc"]["hit_bonus"] = 1000
+	(c119b.combatants["pc"]["statuses"] as Dictionary)["weakened"] = {"duration_rounds": 2}
+	_events.clear()
+	assert(c119b.attack("goblin_raider"), "weakened attack lands (same seed, same hit roll)")
+	var weakened_damage119 := 0
+	for e: Dictionary in _events:
+		if e["type"] == "attack_resolved":
+			weakened_damage119 = int(e["payload"]["damage"])
+	assert(weakened_damage119 == maxi(1, int(baseline_damage119 * WICombat.WEAKENED_MULT)), "weakened shrinks the ATTACKER's own outgoing damage to floor(base*0.75)")
+
+	var c119c := _make(11, _sink)
+	c119c.combatants["pc"][WIKeys.CELL] = Vector2i(3, 3)
+	c119c.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(4, 3)
+	c119c.active_index = c119c.turn_order.find("pc")
+	c119c._start_turn()
+	c119c.combatants["pc"]["hit_bonus"] = 1000
+	(c119c.combatants["goblin_raider"]["statuses"] as Dictionary)["guarded"] = {"duration_rounds": 2}
+	_events.clear()
+	assert(c119c.attack("goblin_raider"), "attack into a guarded defender lands")
+	var guarded_damage119 := 0
+	for e: Dictionary in _events:
+		if e["type"] == "attack_resolved":
+			guarded_damage119 = int(e["payload"]["damage"])
+	assert(guarded_damage119 == maxi(1, int(baseline_damage119 * WICombat.GUARDED_MULT)), "guarded shrinks the DEFENDER's own incoming damage to floor(base*0.75)")
+
+	var c119d := _make(11, _sink)
+	c119d.combatants["pc"][WIKeys.CELL] = Vector2i(3, 3)
+	c119d.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(4, 3)
+	c119d.active_index = c119d.turn_order.find("pc")
+	c119d._start_turn()
+	c119d.combatants["pc"]["hit_bonus"] = 1000
+	(c119d.combatants["pc"]["statuses"] as Dictionary)["weakened"] = {"duration_rounds": 2}
+	(c119d.combatants["goblin_raider"]["statuses"] as Dictionary)["guarded"] = {"duration_rounds": 2}
+	_events.clear()
+	assert(c119d.attack("goblin_raider"), "attack with BOTH statuses lands")
+	var both_damage119 := 0
+	for e: Dictionary in _events:
+		if e["type"] == "attack_resolved":
+			both_damage119 = int(e["payload"]["damage"])
+	assert(
+		both_damage119 == maxi(1, int(maxi(1, int(baseline_damage119 * WICombat.WEAKENED_MULT)) * WICombat.GUARDED_MULT)),
+		"weakened and guarded compose MULTIPLICATIVELY on the same hit -- pinned order: attacker-side (weakened) first, defender-side (guarded) second"
+	)
+
+	# --- Issue #90 rooted: move_pool reads 0 the instant _start_turn runs on
+	# a rooted holder, and Dash refuses outright (not merely inert against a
+	# 0 pool -- without this, dashing would top the REAL stored pool up and
+	# let a rooted holder move on the SAME turn). ---
+	var c120 := _make(11, _sink)
+	c120.active_index = c120.turn_order.find("pc")
+	(c120.combatants["pc"]["statuses"] as Dictionary)["rooted"] = {"duration_rounds": 1}
+	c120._start_turn()
+	assert(int(c120.combatants["pc"][WIKeys.MOVE_POOL]) == 0, "move_pool reads 0 the moment _start_turn runs on a rooted holder")
+	assert(not c120.move_active(Vector2i.RIGHT), "movement refuses at 0 pool")
+	var ap120_before := int(c120.combatants["pc"][WIKeys.AP])
+	assert(not c120.dash(), "Dash refuses outright while rooted")
+	assert(int(c120.combatants["pc"][WIKeys.AP]) == ap120_before, "the refused dash spends no AP")
+	assert(int(c120.combatants["pc"][WIKeys.MOVE_POOL]) == 0, "the refused dash grants no pool either")
+
+	# `_apply_status_from_effect` stamps expires_after_round from a status's
+	# own duration_rounds (N+D-1, the icy_floor/invisibility idiom
+	# generalized) -- rooted rides the SAME mechanism weakened/guarded/
+	# burning do.
+	var c120b := _make(11, _sink)
+	c120b.round_number = 5
+	WISkillEffects._apply_status_from_effect(c120b, "pc", {"applies": {"rooted": {"duration_rounds": 1}}})
+	var rooted_entry120b: Dictionary = (c120b.combatants["pc"]["statuses"] as Dictionary)["rooted"]
+	assert(int(rooted_entry120b.get("expires_after_round", -1)) == 5, "duration_rounds:1 applied at round 5 stamps expires_after_round=5 (N+D-1)")
+
+	# --- Issue #90 burning: EOT tick fires BEFORE the round-rollover purge --
+	# a 1-round duration still gets its tick before being purged, the exact
+	# bug class ("expires the round it's applied without ever ticking") the
+	# tick-then-purge ordering exists to avoid. ---
+	var c121 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 11)
+	c121.begin()
+	WISkillEffects._apply_status_from_effect(c121, "goblin_raider", {"applies": {"burning": {"tick_damage": 5, "duration_rounds": 1}}})
+	assert((c121.combatants["goblin_raider"]["statuses"] as Dictionary).has("burning"), "fixture: raider is burning")
+	var raider_hp121_before := int(c121.combatants["goblin_raider"][WIKeys.HP])
+	_events.clear()
+	var guard121 := 0
+	while c121.round_number == 1 and guard121 < 8:
+		c121.end_turn()
+		guard121 += 1
+	assert(c121.round_number == 2, "advanced into round 2 (the rollover that ticks + purges)")
+	var tick_index121 := -1
+	var expire_index121 := -1
+	var tick_damage121 := 0
+	for i in _events.size():
+		var e: Dictionary = _events[i]
+		if e["type"] == "status_ticked" and String(e["payload"].get("id", "")) == "goblin_raider":
+			tick_index121 = i
+			tick_damage121 = int(e["payload"].get("damage", 0))
+		if e["type"] == "status_expired" and String(e["payload"].get("id", "")) == "goblin_raider" and String(e["payload"].get("status", "")) == "burning":
+			expire_index121 = i
+	assert(tick_index121 >= 0, "burning ticks at the round-rollover it's still active for, even a 1-round duration")
+	assert(tick_damage121 == 5, "tick damage matches the status entry's own tick_damage")
+	assert(int(c121.combatants["goblin_raider"][WIKeys.HP]) == raider_hp121_before - 5, "the tick actually deducted HP")
+	assert(expire_index121 >= 0, "burning is purged once its expires_after_round has passed")
+	assert(tick_index121 < expire_index121, "TICK fires before PURGE in the SAME rollover -- purging first would silently skip this final tick")
+	assert(not (c121.combatants["goblin_raider"]["statuses"] as Dictionary).has("burning"), "burning is gone from the raider's statuses after the rollover")
+
+	# Refresh, not stack: a second application overwrites the entry in place.
+	var c122 := _make(11, _sink)
+	WISkillEffects._apply_status_from_effect(c122, "goblin_raider", {"applies": {"burning": {"tick_damage": 2, "duration_rounds": 3}}})
+	WISkillEffects._apply_status_from_effect(c122, "goblin_raider", {"applies": {"burning": {"tick_damage": 7, "duration_rounds": 3}}})
+	var statuses122: Dictionary = c122.combatants["goblin_raider"]["statuses"]
+	assert(int((statuses122["burning"] as Dictionary).get("tick_damage", -1)) == 7, "re-application REFRESHES (overwrites) the entry -- the second cast's tick_damage wins, never summed with the first")
+
+	# A burning tick that downs the PC is an instant DEFEAT, the SAME rule
+	# every other damage source obeys -- and fires combat_finished exactly
+	# once (no double-advance/desync from the tick's own down-check, the
+	# class of bug `_tick_burning_statuses`'s doc comment guards against).
+	var c123 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 11)
+	c123.begin()
+	c123.combatants["pc"][WIKeys.HP] = 3
+	WISkillEffects._apply_status_from_effect(c123, "pc", {"applies": {"burning": {"tick_damage": 99, "duration_rounds": 3}}})
+	_events.clear()
+	var guard123 := 0
+	while not c123.finished and guard123 < 16:
+		c123.end_turn()
+		guard123 += 1
+	assert(c123.finished, "the burning tick eventually ends the fight")
+	assert(not bool(c123.outcome.get("victory", true)), "PC downed by a burning tick is a DEFEAT, the same instant-defeat rule as any other damage source")
+	assert(_count("combat_finished") == 1, "combat_finished fires exactly once -- no double-advance/desync from the tick's own down-check")
+
+	# --- Issue #90 area_skill arm: prefers icy_floor (blast) when >=2
+	# living enemies cluster with zero allies caught -- goblin_shaman's REAL
+	# shipped kit now carries both icy_floor and flame_bolt. ---
+	var c113 := _make(11, _sink)
+	_events.clear()
+	c113.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
+	c113.combatants["pc"][WIKeys.CELL] = Vector2i(2, 0)
+	c113.combatants["relc"][WIKeys.CELL] = Vector2i(3, 0)  # inside icy_floor's radius-1 blast around pc's cell
+	c113.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(7, 7)  # the shaman's own ally, well clear of the blast
+	c113.active_index = c113.turn_order.find("goblin_shaman")
+	c113._start_turn()
+	WICombatAI.take_turn(c113)
+	# Not pinned to exactly 1: the shaman has AP/MP for a SECOND icy_floor
+	# cast this same turn (4 AP/13 MP vs 2 AP/4 MP per cast), and take_turn's
+	# multi-action loop keeps acting while it still can -- >=1 is the actual
+	# behavior; the FIRST-skill check right below is what proves priority.
+	assert(_count("terrain_added") >= 1, "AI casts icy_floor when its blast catches >=2 living enemies with zero allies caught")
+	var first_skill113 := ""
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved" and first_skill113 == "":
+			first_skill113 = String(e["payload"]["skill"])
+	assert(first_skill113 == "icy_floor", "area_skill wins priority over the single-target spell (flame_bolt) when it qualifies")
+
+	# Single enemy in range: the multi-hit gate fails, AI falls through to
+	# the single-target spell instead of burning MP on one victim.
+	var c114 := _make(11, _sink)
+	_events.clear()
+	c114.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
+	c114.combatants["pc"][WIKeys.CELL] = Vector2i(2, 0)
+	c114.combatants["relc"][WIKeys.CELL] = Vector2i(11, 7)  # far outside the blast -- control
+	c114.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(7, 7)
+	c114.active_index = c114.turn_order.find("goblin_shaman")
+	c114._start_turn()
+	WICombatAI.take_turn(c114)
+	assert(_count("terrain_added") == 0, "AI does not cast icy_floor when only one enemy would be caught")
+	var first_skill114 := ""
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved" and first_skill114 == "":
+			first_skill114 = String(e["payload"]["skill"])
+	assert(first_skill114 == "flame_bolt", "AI falls through to the single-target spell when the area gate fails")
+
+	# Ally-safety: two enemies would be hit, but so would the shaman's own
+	# ally -- refuses the area cast entirely (mirrors _act_line's own gate).
+	# Placed so BOTH candidate centers (pc or relc, adjacent to each other)
+	# would otherwise pass the >=2 gate, but the shaman's own ally sits in
+	# the geometric overlap of both blasts -- no safe center exists.
+	var c115 := _make(11, _sink)
+	_events.clear()
+	c115.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
+	c115.combatants["pc"][WIKeys.CELL] = Vector2i(2, 0)
+	c115.combatants["relc"][WIKeys.CELL] = Vector2i(3, 0)
+	c115.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(2, 1)  # the shaman's own ally, inside BOTH candidate blasts
+	c115.active_index = c115.turn_order.find("goblin_shaman")
+	c115._start_turn()
+	WICombatAI.take_turn(c115)
+	assert(_count("terrain_added") == 0, "AI refuses icy_floor when its own ally would be caught in the blast, off every candidate center")
+
+	# Regression tooth: an invisible occupant never counts toward the
+	# area_skill's multi-hit gate, and no action this turn ever targets it
+	# -- mirrors the melee-AI/line-skill exclusion contract already proven
+	# above (c81), extended to the NEW area arm.
+	var cfgs116 := _cfgs(["pc", "relc", "goblin_raider", "goblin_shaman"])
+	for cfg: Dictionary in cfgs116:
+		if String(cfg[WIKeys.ID]) == "pc":
+			cfg[WIKeys.SKILLS] = ["invisibility"]
+	var c116 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], cfgs116, _load("res://data/skills.json"), _sink, 11)
+	c116.begin()
+	c116.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
+	c116.combatants["pc"][WIKeys.CELL] = Vector2i(2, 0)
+	c116.combatants["relc"][WIKeys.CELL] = Vector2i(3, 0)
+	c116.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(7, 7)
+	c116.active_index = c116.turn_order.find("pc")
+	c116._start_turn()
+	_events.clear()
+	assert(c116.use_skill("invisibility", "pc"), "pc casts invisibility before the shaman's turn")
+	c116.end_turn()
+	var guard116 := 0
+	while c116.get_active() != "goblin_shaman" and guard116 < 8:
+		c116.end_turn()
+		guard116 += 1
+	assert(c116.get_active() == "goblin_shaman", "cycled to the shaman's turn")
+	_events.clear()
+	WICombatAI.take_turn(c116)
+	assert(_count("terrain_added") == 0, "an invisible pc does not count toward the area_skill's >=2 gate -- only relc counts, one short")
+	var any_targeted_pc116 := false
+	for e: Dictionary in _events:
+		if (e["type"] == "skill_resolved" or e["type"] == "attack_resolved") and String(e["payload"].get("target", "")) == "pc":
+			any_targeted_pc116 = true
+	assert(not any_targeted_pc116, "no action this turn ever targets the invisible pc -- neither the area cast nor its single-target fallback")
+
+	# --- Issue #90 support_skill arm: a guard-profile holder casts its
+	# heal-type skill on its hurt ally, ahead of the melee branch. ---
+	var c117 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "ruin_ward_b", "ruin_guardian"]), _load("res://data/skills.json"), _sink, 11)
+	c117.begin()
+	assert(String(c117.combatants["ruin_ward_b"][WIKeys.AI]) == "guard", "fixture: ruin_ward_b carries the guard AI profile")
+	assert((c117.combatants["ruin_ward_b"][WIKeys.SKILLS] as Array).has("guarding_ward"), "fixture: ruin_ward_b knows guarding_ward")
+	c117.combatants["pc"][WIKeys.CELL] = Vector2i(0, 0)  # far from both -- no foe adjacent, support_skill is the only live choice
+	c117.combatants["ruin_ward_b"][WIKeys.CELL] = Vector2i(6, 4)
+	c117.combatants["ruin_guardian"][WIKeys.CELL] = Vector2i(7, 4)
+	var guardian117: Dictionary = c117.combatants["ruin_guardian"]
+	guardian117[WIKeys.HP] = int(guardian117[WIKeys.MAX_HP]) - 10
+	var guardian_hp117_before := int(guardian117[WIKeys.HP])
+	c117.active_index = c117.turn_order.find("ruin_ward_b")
+	c117._start_turn()
+	_events.clear()
+	WICombatAI.take_turn(c117)
+	var support_skill_used117 := ""
+	var total_healed117 := 0
+	# The ward can afford more than one cast this same turn (4 AP / 2 AP each)
+	# -- take_turn's multi-action loop keeps casting while HP is still
+	# missing and AP remains, so sum every heal this turn, don't pin count.
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved" and String(e["payload"].get("skill", "")) == "guarding_ward":
+			support_skill_used117 = "guarding_ward"
+			total_healed117 += int(e["payload"].get("healed", 0))
+	assert(support_skill_used117 == "guarding_ward", "guard casts guarding_ward on its hurt ally instead of idling/chasing")
+	assert(total_healed117 > 0, "a real heal amount was reported")
+	assert(int(guardian117[WIKeys.HP]) == guardian_hp117_before + total_healed117, "the ward's HP actually increased by the total reported heal amount across every cast this turn")
+
+	# A ward already at full HP is never cast on -- the support_skill arm is
+	# opportunistic, not a wasted-AP reflex.
+	var c118 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "ruin_ward_b", "ruin_guardian"]), _load("res://data/skills.json"), _sink, 11)
+	c118.begin()
+	c118.combatants["pc"][WIKeys.CELL] = Vector2i(0, 0)
+	c118.combatants["ruin_ward_b"][WIKeys.CELL] = Vector2i(6, 4)
+	c118.combatants["ruin_guardian"][WIKeys.CELL] = Vector2i(7, 4)
+	c118.active_index = c118.turn_order.find("ruin_ward_b")
+	c118._start_turn()
+	_events.clear()
+	WICombatAI.take_turn(c118)
+	var used_support118 := false
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved" and String(e["payload"].get("skill", "")) == "guarding_ward":
+			used_support118 = true
+	assert(not used_support118, "guard never casts its support skill on a ward already at full HP")
 
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

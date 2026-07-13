@@ -117,6 +117,14 @@ const PROJECTILE_DEFAULT_COLOR := Color(0.92, 0.92, 0.85, 0.9)
 ## redundant.
 const STATUS_PIP_COLORS := {
 	"slowed": Color(0.55, 0.85, 1.0, 0.95),
+	# Issue #90: distinct hues per status, no dispatch code needed (see this
+	# const's own doc comment above) -- weakened (dulled violet, a
+	# strength-sapped read), guarded (warm gold, a wardlike read), rooted
+	# (dark umber, an earth/binding read), burning (hot orange).
+	"weakened": Color(0.75, 0.55, 0.85, 0.95),
+	"guarded": Color(0.85, 0.75, 0.35, 0.95),
+	"rooted": Color(0.55, 0.4, 0.25, 0.95),
+	"burning": Color(1.0, 0.45, 0.2, 0.95),
 }
 const STATUS_PIP_SIZE := Vector2(4.0, 4.0)
 ## Turn clarity (item 5a): a small chevron floating just above the CURRENT

@@ -52,13 +52,14 @@
 			"description": "A felled foe quickens the blood."
 		},
 		{
+			"_comment": "GH#90 rider: `applies.burning` (2 dmg/round tick, 3 rounds) -- a fire bolt catching cloth/fur alight is the direct fictional read, no reach needed. Enemy-exclusive skill (goblin_shaman T1 floodplains, rift_vermin_c T2/T4 rift_vermin_leak+trapped_halls_snare) -- no class grants flame_bolt, so this never touches player balance.",
 			"id": "flame_bolt",
 			"display_name": "[Flame Bolt]",
 			"contexts": ["combat"],
 			"ap_cost": 2,
 			"element": "fire",
 			"icon": "icon_flame_bolt",
-			"effect": { "type": "spell_damage", "range": 4 },
+			"effect": { "type": "spell_damage", "range": 4, "applies": { "burning": { "tick_damage": 2, "duration_rounds": 3 } } },
 			"description": "A hissing dart of goblin fire."
 		},
 		{
@@ -373,12 +374,12 @@
 			"description": "A steadying word and a calming hand; the fight drains out of a foe, and their guard turns slow and uncertain."
 		},
 		{
-			"_comment": "The Awakened Raskghar's signature (enemy-only; no class grants it). A REACHING heavy swing realized on the EXISTING frost_bolt/[Calming Touch] applies-rider machinery -- spell_damage + the same `slowed` pool_penalty rider, NO new effect type. range 2 (a hulking bear-lion's reach) is deliberate: it is the only value that lets the boss's `caster` AI actually FIRE the slow under the shipped combat_ai.gd -- a range-1 swing makes the ranged AI kite-then-never-cast, a range-2 swing makes it maintain reach and land the maul every turn (task-a2 report AI-fit analysis). die/ap_cost balance-tuned via sim_combat_batch.gd BOSS_CELLS to hold the 0.6-0.75 Relc band; slowed pool_penalty is the shared status (WICombat._start_turn expiry, identical to frost_bolt).",
+			"_comment": "The Awakened Raskghar's signature (enemy-only; no class grants it). A REACHING heavy swing realized on the EXISTING frost_bolt/[Calming Touch] applies-rider machinery -- spell_damage + the same `slowed` pool_penalty rider, NO new effect type. range 2 (a hulking bear-lion's reach) is deliberate: it is the only value that lets the boss's `caster` AI actually FIRE the slow under the shipped combat_ai.gd -- a range-1 swing makes the ranged AI kite-then-never-cast, a range-2 swing makes it maintain reach and land the maul every turn (task-a2 report AI-fit analysis). die/ap_cost balance-tuned via sim_combat_batch.gd BOSS_CELLS to hold the 0.6-0.75 Relc band; slowed pool_penalty is the shared status (WICombat._start_turn expiry, identical to frost_bolt). GH#90 rider: `applies.weakened` (2 rounds) added alongside slowed -- the maul batters the legs (slowed) AND saps the strength for the follow-up swing (weakened), a single heavy hit warranting two consequences. raskghar_awakened's ONLY skill, so the AI (`_act_ranged`'s spell_id scan) always picks it -- guaranteed real, no dead-code risk. Re-verified in-band, sim_combat_batch.gd BOSS_CELLS.",
 			"id": "raskghar_maul",
 			"display_name": "[Raskghar Maul]",
 			"contexts": ["combat"],
 			"ap_cost": 3,
-			"effect": { "type": "spell_damage", "range": 2, "applies": { "slowed": { "pool_penalty": 2 } } },
+			"effect": { "type": "spell_damage", "range": 2, "applies": { "slowed": { "pool_penalty": 2 }, "weakened": { "duration_rounds": 2 } } },
 			"description": "A sweeping, reaching swipe of claw and forearm that batters the legs out from under you and leaves them slow to answer."
 		},
 		{
@@ -470,13 +471,13 @@
 			"description": "A hunter's habit of noticing: the broken twig, the wrong shadow, the one thing that doesn't belong."
 		},
 		{
-			"_comment": "issue #82's WINDUP SIM SPEC: the first `windup_rounds` skill. Declares on cast (WISkillEffects.declare_windup freezes the blast_damage-shaped target cells verbatim off _radius_area, spends ALL 4 AP -- the 'telegraphed AP spike' the original gap-analysis issue named), resolves at the caster's OWN next turn start (WICombat._resolve_windup) against whoever stands in the frozen cells then, not on cast -- EXCEPT the caster itself, excluded by id (F1 controller ruling: an adjacent range-1 declare always contains the caster's own cell and the melee AI never repositions, so inclusion was a guaranteed self-tax; allies in the blast are still hit). melee=true damage math there (STR-based, matching a construct's own basic Attack/power_strike) -- deliberately NOT blast_damage's own resolve_active resolver (that stays melee=false/INT-based, correct for flame_pillar, its only other grant). `windup_cadence` paces how often combat_ai.gd's melee-profile windup arm escalates to this over a plain attack. Enemy-only (vault_construct, data/combatants.json) -- no class grants it.",
+			"_comment": "issue #82's WINDUP SIM SPEC: the first `windup_rounds` skill. Declares on cast (WISkillEffects.declare_windup freezes the blast_damage-shaped target cells verbatim off _radius_area, spends ALL 4 AP -- the 'telegraphed AP spike' the original gap-analysis issue named), resolves at the caster's OWN next turn start (WICombat._resolve_windup) against whoever stands in the frozen cells then, not on cast -- EXCEPT the caster itself, excluded by id (F1 controller ruling: an adjacent range-1 declare always contains the caster's own cell and the melee AI never repositions, so inclusion was a guaranteed self-tax; allies in the blast are still hit). melee=true damage math there (STR-based, matching a construct's own basic Attack/power_strike) -- deliberately NOT blast_damage's own resolve_active resolver (that stays melee=false/INT-based, correct for flame_pillar, its only other grant). `windup_cadence` paces how often combat_ai.gd's melee-profile windup arm escalates to this over a plain attack. Enemy-only (vault_construct, data/combatants.json) -- no class grants it. GH#90 rider: `applies.rooted` (1 round) -- 'the floor itself seems to brace' already promises a ground-shattering effect; rubble pinning everyone caught in the blast for a round is the direct fictional payoff. `WICombat._resolve_windup` (its own bespoke hit loop, not `_resolve_blast_damage`) applies this on any hit that lands damage.",
 			"id": "slam",
 			"display_name": "[Slam]",
 			"contexts": ["combat"],
 			"ap_cost": 4,
 			"windup_cadence": 2,
-			"effect": { "type": "blast_damage", "range": 1, "radius": 1, "windup_rounds": 1 },
+			"effect": { "type": "blast_damage", "range": 1, "radius": 1, "windup_rounds": 1, "applies": { "rooted": { "duration_rounds": 1 } } },
 			"description": "A vast fist draws back, and the floor itself seems to brace."
 		},
 		{
@@ -524,6 +525,15 @@
 			"mp_cost": 3,
 			"effect": { "type": "heal", "amount": 6, "ally_target": true },
 			"description": "A calm that isn't performed -- it settles over the room, and over a hurting friend, the same way."
+		},
+		{
+			"_comment": "GH#90 support_skill arm carrier + guarded rider. Enemy-only (no class grants it) -- an escort-construct twin of [Soothing Presence]'s ally_target heal shape (WISkillEffects._resolve_heal, unchanged resolver), `applies.guarded` riding the SAME heal-applies widening this task added. AP-only (no mp_cost, a construct's ward isn't a spell) -- a small mend plus a defensive ward is the direct read for an escort construct covering its hurt sibling/boss. combat_ai.gd's NEW support_skill arm (`_act_guard`'s `_support_skill` scan) picks any known, affordable heal-type skill generically -- no name-specific wiring needed. First (and today only) holder: ruin_ward_b (data/combatants.json), asymmetric with its sibling ruin_ward_a (which stays skill-less, same asymmetric-pair precedent as river_wolf_a/b vs c).",
+			"id": "guarding_ward",
+			"display_name": "[Guarding Ward]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"effect": { "type": "heal", "amount": 4, "ally_target": true, "applies": { "guarded": { "duration_rounds": 2 } } },
+			"description": "A muttered ward and a steadying hand -- the hurt eases, and the next blow lands a little softer."
 		},
 		{
 			"_comment": "Class-foundation pass R1: Diplomat L7, field-only flavor + a future vendor-perk hook (per the plan) -- `charming_smile` STAYS the L1 dialogue-gate skill, untouched. CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (an [Open Says Me] door-opening spell IS attested, but its canon function is a literal magic word that opens a door/gate, not a social-capital idiom; misusing it here would be the same mistake [Owl's Vision] was rejected for on [Appraise Foe]'s own rename). Iconless.",
