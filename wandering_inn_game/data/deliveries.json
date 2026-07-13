@@ -101,6 +101,40 @@
 			"band": "cross-region",
 			"condition": { "delivered_delivery_riverfarm_seed": 1 },
 			"slip_copy": "TO: the Headman, Riverfarm village. One sack, seed grain, keep it dry and keep it whole -- a torn sack halfway there pays nobody. Four gold, long leg."
+		},
+		{
+			"_comment": "STANDING routes (issue #91, indices [10..12], pure append): `standing: true` = delivery_board_deliveries() never retires the id (contrast every one-off slip above) and accept_delivery() accepts a completed id again -- default delta mode makes each re-acceptance demand a FRESH arrival (baseline snapshots the prior delivered_<id> count). Parcels REUSE shipped items.json ids (one-slip-at-a-time makes reuse safe; _check_delivery_arrival keys on the ACCEPTED slip's own record). ROTATION: appends shift only wrap-zone windows (old pool 10, wrap zone = old_size-2 = 8: slates at times_slept 8/9 pre-wrapped and now reach the tail); no shipped fixture/canonical occupies one (delivery_loop pins ts 0/1/2).",
+			"id": "delivery_standing_dispatch_run",
+			"type": "delivery",
+			"standing": true,
+			"parcel": { "item_id": "parcel_watch_dispatch", "display_name": "Watch Dispatches", "flavor": "Watch dispatches, string-tied, sealed thrice. The third seal is the Captain's habit, not protocol." },
+			"destination": { "map": "street", "cell": [1, 6], "anchor_entity": "zevara" },
+			"gold": 2,
+			"band": "same-map long, standing",
+			"condition": { "delivered_delivery_standing_dispatch_run": 1 },
+			"slip_copy": "STANDING CONTRACT: the morning dispatches, Guild counter to Watch Captain Sunderscale, the gate. The Watch cuts them fresh every shift, so this slip never comes down. Same waking, every waking somebody takes it."
+		},
+		{
+			"id": "delivery_standing_inn_hamper",
+			"type": "delivery",
+			"standing": true,
+			"parcel": { "item_id": "parcel_bluefruit_hamper", "display_name": "Amentus Fruit Hamper", "flavor": "A hamper of Amentus blue fruit, straw-packed, the poison cores already cut out. You were told twice." },
+			"destination": { "map": "inn", "cell": [7, 3], "anchor_entity": "erin" },
+			"gold": 3,
+			"band": "cross-map, standing",
+			"condition": { "delivered_delivery_standing_inn_hamper": 1 },
+			"slip_copy": "STANDING CONTRACT: The Wandering Inn's fruit order, the hill past the gate. The [Innkeeper] put it on permanent rotation after the third runner asked why it wasn't. One hamper, cores cut, road has goblins. Pays every run."
+		},
+		{
+			"id": "delivery_standing_barracks_kit",
+			"type": "delivery",
+			"standing": true,
+			"parcel": { "item_id": "parcel_gambeson_bundle", "display_name": "Bundled Gambesons", "flavor": "Watch-issue gambesons, three of them, bundled tight and none too soft." },
+			"destination": { "map": "barracks", "cell": [6, 4], "anchor_entity": "duty_sergeant" },
+			"gold": 2,
+			"band": "cross-map short, standing",
+			"condition": { "delivered_delivery_standing_barracks_kit": 1 },
+			"slip_copy": "STANDING CONTRACT: barracks kit rotation, Guild counter to Duty Sergeant Dresk. Gambesons out, worn ones back on the next slip. The Watch mends faster than it marches. Count them before he does."
 		}
 	]
 }

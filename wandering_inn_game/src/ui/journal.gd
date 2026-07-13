@@ -78,6 +78,9 @@ const _DELIVERY_TITLES := {
 	"delivery_tactics_brief": "Tactics Brief to Olesm",
 	"delivery_boulevard_letter": "Sealed Letter to the Boulevard",
 	"delivery_riverfarm_seed": "Seed Grain to Riverfarm",
+	"delivery_standing_dispatch_run": "The Morning Dispatch Run",
+	"delivery_standing_inn_hamper": "The Inn's Standing Order",
+	"delivery_standing_barracks_kit": "The Barracks Kit Rotation",
 }
 
 ## True while the journal panel is visible; world.gd and pause_menu.gd gate on this.

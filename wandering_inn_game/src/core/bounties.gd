@@ -132,6 +132,9 @@ static func _delivery_title(delivery_id: String) -> String:
 		"delivery_tactics_brief": "Tactics Brief to Olesm",
 		"delivery_boulevard_letter": "Sealed Letter to the Boulevard",
 		"delivery_riverfarm_seed": "Seed Grain to Riverfarm",
+		"delivery_standing_dispatch_run": "The Morning Dispatch Run",
+		"delivery_standing_inn_hamper": "The Inn's Standing Order",
+		"delivery_standing_barracks_kit": "The Barracks Kit Rotation",
 	}
 	return String(titles.get(delivery_id, delivery_id.trim_prefix("delivery_").capitalize()))
 
