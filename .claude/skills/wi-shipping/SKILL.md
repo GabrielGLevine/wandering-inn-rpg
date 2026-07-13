@@ -39,6 +39,14 @@ order, BEFORE the sprite/data commit that references it.
 5. Import pass, then the full gate per wi-verifying-changes.
 
 ## The deploy (tag-driven, unchanged mechanics)
+0. **Regenerate the shipped-ids freeze list (issue #99, EVERY public
+   release — itch or Steam, tagged or local-butler):** bump `RELEASE`
+   in `wandering_inn_game/scripts/generate_shipped_ids.py` to the
+   version being cut, run it, commit `data/shipped_ids.json` BEFORE
+   the release build. Ids introduced since the last cut become
+   permanent API at this moment; `tests/test_shipped_ids.gd` only
+   protects what's in the list. Skipping this step = new ids ship
+   unfrozen and a later rename escapes the validator silently.
 1. If protected assets changed: `scripts/make_asset_bundle.sh` →
    `gh release create bundle-vN ... -R GabrielGLevine/wandering-inn-rpg-assets`.
 2. `git tag v0.x.y && git push origin v0.x.y` (same repo now).

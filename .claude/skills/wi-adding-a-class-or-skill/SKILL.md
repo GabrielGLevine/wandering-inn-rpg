@@ -30,7 +30,7 @@ key = unconditionally met.
 on `requires.skill` (charming_smile / calming_touch / observe today, all
 L1 grants). Moving a dialogue-gated skill's grant to a higher level
 silently tightens every conversation gate on it — before rebalancing any
-grant level, grep `data/dialogue/**` + `skeleton_scene.json` for
+grant level, grep `data/dialogue/**` + `data/maps/**` for
 `"skill":"<id>"` and re-adjudicate each gate (see
 wi-adding-dialogue-and-quests' SKILL-GATES section).
 
@@ -118,3 +118,15 @@ the balance harness and canonical combat QA seeds.
 `wi-verifying-changes` (gates), `wi-art-and-sprites` (icon entries),
 `wi-adding-dialogue-and-quests` (class-gated options read the same
 `classes` dict).
+
+## Shipped-id freeze (issue #99, 2026-07-12)
+Once an id ships in a public release (frozen in
+`wandering_inn_game/data/shipped_ids.json`), it is permanent API — a
+class or skill id already frozen must NEVER be renamed or
+re-semanticized. To retire one, add an entry to `WISave.DEPRECATED_IDS`
+(`src/core/save.gd`) mapping old→new instead of deleting/renaming in
+place; `tests/test_shipped_ids.gd` fails loud otherwise, and a mapped
+class outside `MIGRATABLE_ID_CLASSES` fails until its remap arm exists
+(green means handled, never advertised). A NEW id is free to be
+renamed/reworked until the next `scripts/generate_shipped_ids.py` cut
+(wi-shipping deploy step 0).

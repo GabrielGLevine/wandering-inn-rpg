@@ -7,7 +7,7 @@ description: Use when adding a new enemy/combatant, arena, or encounter entity, 
 
 Combat data lives in `data/combatants.json` (roster), `data/arenas.json`
 (battlefields), and an `encounter` entity on a map
-(`data/skeleton_scene.json`) that ties a roster subset to an arena. Tune
+(`data/maps/<region>/<map>.json`, issue #100 split) that ties a roster subset to an arena. Tune
 these DATA files — never the sim (`src/core/combat/*`) — to change balance.
 
 ## Combatant record (`data/combatants.json`)

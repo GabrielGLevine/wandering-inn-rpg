@@ -151,7 +151,7 @@ func phase_now() -> String:
 
 ## Sets this CanvasModulate's color from data/moods.json for (map_id, phase)
 ## and emits UI_MOOD_APPLIED {map, phase}. An unknown map or phase falls back
-## to identity ([1,1,1]) instead of erroring -- every map in skeleton_scene.json
+## to identity ([1,1,1]) instead of erroring -- every map in data/maps/**
 ## ships an identity entry this task, so the fallback only guards a future
 ## map added there before its moods.json entry lands. Also re-applies every
 ## registered light's energy for the (possibly new) phase -- see
@@ -232,7 +232,7 @@ func clear_lights() -> void:
 ## data and immediately sets its energy for the CURRENT phase, so a light
 ## spawned mid-dusk (e.g. right after a map change) does not sit dark until
 ## the next `phase_changed`. `base_energy` is the light's data-authored
-## value (data/skeleton_scene.json's `light.energy`); the live `.energy` is
+## value (the map's own `light.energy` in data/maps/**); the live `.energy` is
 ## always `base_energy * light_multiplier(phase)` (times a flicker wobble
 ## for flicker lights -- see `_process`).
 func register_light(node: PointLight2D, base_energy: float, flicker: bool) -> void:

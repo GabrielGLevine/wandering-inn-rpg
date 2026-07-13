@@ -18,7 +18,7 @@ var player_facing := Vector2i.RIGHT
 ## defaults (see save.gd). NO sim rule ever branches on these.
 ##   pc_name   -- replaces "Traveler" on every player-facing surface (combat
 ##                turn strip/readout, dialogue speaker, field label). Default
-##                "Traveler" (the skeleton_scene player display_name).
+##                "Traveler" (data/scene_root.json player display_name).
 ##   pc_race   -- "human"/"drake"/"gnoll"; branches the GDI opener copy and
 ##                (with pc_gender) resolves the PC sprite-variant registry key.
 ##   pc_gender -- "m"/"f"; sprite variant only.

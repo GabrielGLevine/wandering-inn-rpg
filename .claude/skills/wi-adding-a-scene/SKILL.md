@@ -1,14 +1,26 @@
 ---
 name: wi-adding-a-scene
-description: Use when adding a new map/room to data/skeleton_scene.json, adding doors/furniture/props to an existing map, or reviewing a map edit for blocking/reachability correctness.
+description: Use when adding a new map/room under data/maps/<region>/, adding doors/furniture/props to an existing map, or reviewing a map edit for blocking/reachability correctness.
 ---
 
 # Adding a Scene (map)
 
-Maps are data (`data/skeleton_scene.json`, keyed under `maps`); `world.gd`
+Maps are data — one file per map at `data/maps/<region>/<map>.json`
+(issue #100 split; composed by `WISceneCatalog.compose()` in
+`src/core/scene_catalog.gd`, sorted-path, duplicate-key-asserted;
+`start_map`/`player` live in `data/scene_root.json`); `world.gd`
 renders them, `WIGame` (`src/core/wi_game.gd`) only reads `grid`, `blocked`,
 `walls.segments`, and `entities` for sim purposes — `floor_layers`, `decor`,
 and `scatter` are presentation-only passthrough the sim never touches.
+
+## Region files = disjoint lane surfaces (issue #100)
+A new map's region is whichever existing dir (`inn`, `garden`, `liscor`,
+`floodplains`, `sewers`, `ruin`, `riverfarm`, `invrisil`, `dungeon`,
+`pallass`) it narratively belongs to, or a NEW region dir for a genuinely
+new area — never wedge a map into an unrelated region to avoid a new
+directory. Two lanes touching different region dirs no longer conflict on
+file ownership; only same-region map edits still serialize. The composer
+FATALs on duplicate map keys across files.
 
 ## Map record anatomy
 | Field | Shape | Meaning |
@@ -97,7 +109,7 @@ the scene-assembly docs together.
 The godot-ai MCP is RETIRED (2026-07-06, see wi-running-the-machine).
 Visual layout iteration = the dynamism tool for structure + windowed QA
 screenshots read by the controller for taste. Maps are still DATA: the
-deliverable is `skeleton_scene.json`, never a hand-edited `.tscn`.
+deliverable is the map's own `data/maps/` file, never a hand-edited `.tscn`.
 
 ## Save-compat forward hazard (M7 final-review lesson)
 A NEW blocking entity (container, prop, NPC) placed on a cell that was

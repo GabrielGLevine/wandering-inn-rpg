@@ -260,7 +260,7 @@ task reviewer's standing hunt), against the character's profile voice:
   docs/archive/staging/emdash-reduction-staging.md); hold every NEW line to this
   bar. Label-separator dashes (keybind hints, `[Skill] — body` builders)
   are convention, EXEMPT from the budget.
-- **Em-dashes hide as `—` escapes** (skeleton_scene.json + some QA
+- **Em-dashes hide as `—` escapes** (data/maps/** + some QA
   scripts mix literal and escaped in the SAME file): any corpus grep for
   dash abuse — or for a pinned string containing one — must sweep BOTH
   forms, or it silently misses sites (7 pin sites survived the staging
@@ -275,3 +275,14 @@ task reviewer's standing hunt), against the character's profile voice:
 - The FULL VOICE PASS (chain step: after all content delivers) audits
   every player-facing string against this + profiles; guards reduce
   its findings, they don't replace it.
+
+## Shipped-id freeze (issue #99, 2026-07-12)
+Accomplishment counter ids, quest ids, item ids, and map keys that have
+shipped in a public release (frozen in
+`wandering_inn_game/data/shipped_ids.json`) are permanent API — never
+rename or re-semanticize one (a shipped save may carry it forever). To
+retire one: `WISave.DEPRECATED_IDS` in `src/core/save.gd` (deprecate-
+and-map; `tests/test_shipped_ids.gd` enforces). New counters follow the
+prefix conventions (`completed_bounty_<id>`, `chatted_with_<entity>`,
+quest-beat verbs) — they freeze at the next release cut, so name them
+right the FIRST time (wi-shipping deploy step 0).

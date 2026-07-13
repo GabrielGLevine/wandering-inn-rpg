@@ -51,6 +51,10 @@ Five lanes, every one opus-reviewed (two FIX-FIRST cycles adjudicated + re-revie
 
 Full arc live: dungeon maps + traps → Horns recruit → three-cost halls routes → windup-telegraph vault boss → FIND beat → report → inn residence. E2 whole-branch review SHIP; machine playtest read by controller eyes (Yvlon/bench fix, dark-edge + overlay findings actioned); AI-variety profiles landed with the snare ward-id split. User playtest checklist + CHOICES 18-20 below.
 
+## 🍎 QUEUED (user directive 2026-07-12): next stable macOS export
+
+At the architecture-wave seam (lanes 99/100/101/107 merged, composed gate + CI `[ci-full]` green): cut a fresh macOS runnable (preset name `macos`, lowercase), boot-smoke, deliver via SendUserFile. Includes the Help pane — good playtest build.
+
 ## 🚢 v0.5.1 LIVE ON ITCH (2026-07-12, local butler; build #1791931, version 0.5.1)
 
 Carries everything since v0.5.0: the full class-foundation wave (trio ladders, [Flame Dart], consolidation retune, [Innkeeper]/[Ranger], the [Trader]⇒[Merchant] line + sell + [Bargain], the Rogue trap kit with the disarm swap applied), #106 mobile web v1, the #105 web-runner rework, and the ported portal map-existence guard. Release gate: CI `[ci-full]` FULL GREEN twice (4a595bd, 75b6c63 — sweep + web-parity jobs genuinely ran), fresh export re-verified live (web combat_walkthrough + audio smoke on the exact shipped build; rotate overlay + virtual-keyboard flag confirmed in the html). Butler diff: 1.1 MiB patch. **USER ACTIONS NOW: (1) tick the itch dashboard's "mobile friendly" flag — the live build earns it as of this push; (2) hard-refresh and run the itch-audio checks from the adjudication section (mute toggle / console) on 0.5.1.** itch release notes: the v0.5.0 notes block below still covers the page copy; add one line for mobile: "Playable on phones in landscape — tap to move, tap to aim, tap to strike."

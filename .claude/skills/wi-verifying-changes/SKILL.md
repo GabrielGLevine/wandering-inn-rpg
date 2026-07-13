@@ -16,7 +16,7 @@ run is a regression (the project has no known-harmless warnings).
 | Any `.gd` / any code | `load_gate` + smoke + the QA scripts touching that surface |
 | `src/core/**` (sim) | ALL unit suites (16 as of M-GEAR close -- count `tests/test_*.gd`, never trust a hardcoded number) + FULL canonical QA sweep |
 | `data/combatants.json` / `skills.json` / `classes.json` / arenas | balance harness + full sweep + **seed check** (below) |
-| `data/skeleton_scene.json` (maps) | full sweep + re-derive any path-walking scripts you broke |
+| `data/maps/<region>/<map>.json` (maps) | selective sweep (`ci_sweep.sh --touching <path>`) minimum, full sweep + re-derive any path-walking scripts you broke |
 | `data/sprites.json` / new sprite assets / icon gen | **`test_sprite_registry` MINIMUM** (it pins per-animation frame counts — new entries need expected-count rows) + windowed read. `ci_sweep.sh` runs QA scripts, NOT units — a sprites.json add can leave this suite silently red for days (PF-wave incident 2026-07-06, caught by the public repo's first CI run, not locally) |
 | Anything player-visible (UI, sprites, text) | the above + **windowed screenshot you READ yourself** |
 | QA scripts / fixtures / test_driver | `load_gate` + the edited scripts + one untouched script (harness regression) |

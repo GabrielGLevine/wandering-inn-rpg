@@ -69,7 +69,7 @@ const AMBIENCE_BUDGET := 6
 ## material across every swaying sprite is both correct and free (see
 ## foliage_sway.gdshader's doc comment).
 const SWAY_SHADER := preload("res://src/world/shaders/foliage_sway.gdshader")
-## The floodplains pond's wall-segment sheet (data/skeleton_scene.json's
+## The floodplains pond's wall-segment sheet (data/maps/floodplains'
 ## `walls.segments`, cap-only water entries) -- `_build_water_shimmer`
 ## matches segments by this sheet path to re-derive which cells need the
 ## shimmer overlay (see water_shimmer.gdshader's doc comment for why an
@@ -929,7 +929,7 @@ func _biome_for_current_map() -> Dictionary:
 	return biomes[biome_id]
 
 
-## Raw current-map config from skeleton_scene.json (the same source
+## Raw current-map config from the composed map catalog (the same source
 ## `_biome_for_current_map` reads its biome id from) -- used to read the
 ## passthrough fields (`floor_layers`/`walls`/`decor`) that `WIGame`
 ## never touches.

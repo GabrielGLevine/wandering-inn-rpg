@@ -40,7 +40,7 @@ extends SceneTree  # tests/probe_x.gd; run with --script, alarm-wrapped
 func _initialize() -> void:
     var cfg := {"combatants": _j("res://data/combatants.json"), "classes": _j("res://data/classes.json"),
         "arenas": _j("res://data/arenas.json"), "quests": _j("res://data/quests.json"), "dialogue": {}}
-    var g := WIGame.new(_j("res://data/skeleton_scene.json"), _j("res://data/skills.json"),
+    var g := WIGame.new(WISceneCatalog.compose(), _j("res://data/skills.json"),
         func(t, p): pass, 0, cfg)
     # drive g.move_player(...) / g.interact() / print(g.player_cell) here
     quit(0)

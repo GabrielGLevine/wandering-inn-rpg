@@ -82,7 +82,7 @@ Catalog → pick pack/entity → index for exact path/dims → add a
 `sprites.json` entry (`sheet`, `region`, `frame_size`, `render_scale` if
 oversized, `shadow: true` if taller than 1 cell — see `barrel`/`crate`/
 `boulder`) → wire into a map's `entities`/`decor`/`scatter` in
-`skeleton_scene.json` → `run_qa.sh <script> windowed` and READ the
+the map's `data/maps/<region>/<map>.json` → `run_qa.sh <script> windowed` and READ the
 screenshot before calling it done.
 
 ## Common mistakes

@@ -1,7 +1,7 @@
 class_name WITileBoardBuilder
 ## Shared static tile/board painters. Both world.gd
 ## (field maps) and combat_screen.gd (arenas) painted near-identical
-## TileMapLayer stacks from the same `data/skeleton_scene.json` /
+## TileMapLayer stacks from the same `data/maps/<region>/<map>.json` /
 ## `data/arenas.json` schema -- this class is the single source for that
 ## logic. Every function is static and takes every dependency as an explicit
 ## param (parent Node2D to add layers under, a biome/config Dictionary, and
@@ -58,7 +58,7 @@ static func make_tile_layer(parent: Node2D, sheet_path: String, tile_px: int, re
 	return layer
 
 
-## Renders `floor_layers` entries (data/skeleton_scene.json / data/arenas.json
+## Renders `floor_layers` entries (data/maps/** / data/arenas.json
 ## schema): each entry paints either a fixed `coords` tile or a
 ## position-hashed pick from `variants` over the cells selected by `cells`
 ## ("all" | {"rect":[x,y,w,h]} | {"list":[[x,y],...]}). One TileMapLayer per

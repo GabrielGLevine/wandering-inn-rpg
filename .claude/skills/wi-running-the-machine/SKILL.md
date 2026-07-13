@@ -195,3 +195,13 @@ re-evaluate fresh — do not resurrect the old setup from history.
   branch BEFORE deletion; a stranded commit gets triaged piece-by-piece
   against current main (some pieces land, some are superseded — a7c6a7d
   split 2/5 ported, 3/5 superseded).
+
+## Selective re-gates (issue #101, 2026-07-12)
+`qa/ci_sweep.sh --tier smoke` (13 scripts, ~25s) on every push via CI;
+`--touching <path>[,<path>]` maps changed data/qa files to the crossing
+canonicals for lane re-gates. CAVEAT: `--touching` keys ONLY on content
+paths (maps/fixtures/dialogue/skills) — a `src/**` change falls through
+every branch and yields ZERO scripts (false-safe). Lanes changing
+engine/sim code use `--tier smoke` minimum + the affected canonicals,
+never `--touching` alone. The full sweep stays the pre-push composed
+gate.
