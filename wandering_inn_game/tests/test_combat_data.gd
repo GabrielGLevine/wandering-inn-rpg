@@ -3,6 +3,39 @@ extends SceneTree
 ## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_combat_data.gd
 
 
+## GH#94 (no-new-art icon drain): a field:true/ap_cost>0 skill with no icon
+## falls back to WIHotbar's overflowing raw-bracket text label (the only 3
+## icon consumers -- field_hotbar.gd/hotbar.gd/combat_hud.gd -- are all
+## player-hotbar surfaces). Class-foundation R1-R5 shipped 18+ more iconless
+## skills past #94's own "19/50" baseline (docs/VISUAL-LOG.md's SKILL ICONS
+## entry) -- too large to close in one no-new-art pass, so this is a DRIFT
+## TRIPWIRE, not a completeness assert: KNOWN_ICONLESS_SKILLS pins today's
+## exact disclosed debt (every enemy-exclusive id here -- guarding_ward/
+## raskghar_maul/slam -- is never actually rendered, since nothing but a
+## player's own hotbar ever reads an icon, but still tracked so the set
+## stays literally true). Checked BOTH directions (test_effect_text.gd's
+## EXPECTED_* idiom): a hotbar-visible skill OUTSIDE this set with no icon
+## fails LOUD (a silent new gap); an id INSIDE this set that has since
+## gained an icon also fails LOUD (shrink the allowlist, never let it rot).
+const KNOWN_ICONLESS_SKILLS := {
+	"appraise_goods": true,
+	"called_shot": true,
+	"directed_strike": true,
+	"disarm_trap": true,
+	"find_trap": true,
+	"flame_dart": true,
+	"flame_pillar": true,
+	"guarding_ward": true,
+	"measured_words": true,
+	"open_doors": true,
+	"perfect_hospitality": true,
+	"piercing_volley": true,
+	"raskghar_maul": true,
+	"slam": true,
+	"soothing_presence": true,
+}
+
+
 func _load(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	assert(parsed is Dictionary, "invalid JSON: " + path)
@@ -39,11 +72,19 @@ func _init() -> void:
 	var scene := WISceneCatalog.compose()
 
 	var skill_ids := {}
+	var iconless_seen := {}
 	for s: Dictionary in skills[WIKeys.SKILLS]:
-		skill_ids[String(s[WIKeys.ID])] = true
-		assert(s.has(WIKeys.CONTEXTS) and s.has(WIKeys.DISPLAY_NAME), "skill missing fields: " + String(s[WIKeys.ID]))
+		var sid := String(s[WIKeys.ID])
+		skill_ids[sid] = true
+		assert(s.has(WIKeys.CONTEXTS) and s.has(WIKeys.DISPLAY_NAME), "skill missing fields: " + sid)
 		if (s[WIKeys.CONTEXTS] as Array).has("combat"):
-			assert(s.has(WIKeys.AP_COST) and s.has(WIKeys.EFFECT), "combat skill missing ap_cost/effect: " + String(s[WIKeys.ID]))
+			assert(s.has(WIKeys.AP_COST) and s.has(WIKeys.EFFECT), "combat skill missing ap_cost/effect: " + sid)
+		var hotbar_visible := bool(s.get(WIKeys.FIELD, false)) or float(s.get(WIKeys.AP_COST, 0)) > 0.0
+		if hotbar_visible and not s.has("icon"):
+			iconless_seen[sid] = true
+			assert(KNOWN_ICONLESS_SKILLS.has(sid), "skill %s is hotbar-visible (field/ap_cost) but ships with no icon -- add icon_%s or track it in KNOWN_ICONLESS_SKILLS" % [sid, sid])
+	for known_sid: String in KNOWN_ICONLESS_SKILLS:
+		assert(iconless_seen.has(known_sid), "KNOWN_ICONLESS_SKILLS lists %s but it now carries an icon -- shrink the allowlist" % known_sid)
 
 	var combatant_ids := {}
 	for c: Dictionary in combatants["combatants"]:

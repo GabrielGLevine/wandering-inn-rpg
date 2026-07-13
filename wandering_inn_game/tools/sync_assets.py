@@ -997,6 +997,39 @@ PLACEHOLDER_ICONS: list[tuple[str, str, tuple[int, int, int], tuple[int, int, in
 	# slate/shadow-grey -- deliberately desaturated vs. every other field icon's
 	# bright hue, reads as "quiet/shadow" at a glance.
 	("boot", "assets/ui/icons/icon_sneak.png", (95, 100, 120), (40, 40, 55)),
+	# --- GH#94 (no-new-art icon drain): the [Archer] kit (verified in-tree
+	# 34 player-reachable skills iconless after R1-R5's class-foundation pass
+	# ballooned the debt well past #94's own "19/50" baseline -- see
+	# docs/VISUAL-LOG.md's SKILL ICONS entry) plus the pass's next two most
+	# player-visible remaining actives. #90's own new/enriched skills
+	# (guarding_ward/raskghar_maul/slam) turned out to be ENEMY-EXCLUSIVE
+	# (never granted by any class in classes.json, checked) -- an icon there
+	# would never render anywhere (WIHotbar/field_hotbar/combat_hud are the
+	# only 3 icon consumers, all player-hotbar-only) -- so spellbound_strike
+	# (named in #94's own baseline text) and sudden_strike/[Sneak Attack]
+	# (Rogue's marquee L7 grant) were picked instead. Same code-drawn glyph
+	# policy as every icon above. Archer family: warm fletched-wood palette,
+	# distinct from the spear family's more saturated bronze.
+	# power_shot: a heavy full-draw fletched arrow, straight up.
+	("arrow_power", "assets/ui/icons/icon_power_shot.png", (178, 128, 68), (80, 48, 18)),
+	# keen_eye (field): a scope reticle (ring + tick marks + center dot) --
+	# reuses observe's exact pale-blue vision-family palette (same
+	# perception archetype), distinct in SHAPE from observe's plain almond
+	# eye and unerring_aim's solid bullseye.
+	("reticle", "assets/ui/icons/icon_keen_eye.png", (205, 225, 245), (60, 90, 130)),
+	# quick_nock: a smaller arrow + two trailing speed-lines (the fast re-nock).
+	("arrow_quick", "assets/ui/icons/icon_quick_nock.png", (178, 128, 68), (80, 48, 18)),
+	# piercing_shot: a long thin bodkin-point arrow spanning full height,
+	# a dark crossbar marking the drive-through point.
+	("arrow_pierce", "assets/ui/icons/icon_piercing_shot.png", (178, 128, 68), (80, 48, 18)),
+	# spellbound_strike (Spellsword L16): a steel blade (sword family's
+	# silver, matching quick_slash/flash_cut/devastating_slash) with a
+	# mana-blue glow orb at the tip -- the class's two halves in one glyph.
+	("bound_blade", "assets/ui/icons/icon_spellbound_strike.png", (200, 205, 215), (70, 75, 90)),
+	# sudden_strike / [Sneak Attack] (Rogue L7): an angled dagger blade + a
+	# trailing shadow streak, icon_sneak's exact muted slate palette (the
+	# stealth family).
+	("backstab", "assets/ui/icons/icon_sudden_strike.png", (95, 100, 120), (40, 40, 55)),
 ]
 
 
@@ -1114,6 +1147,30 @@ def _draw_placeholder(shape: str, dst_rel: str, fill: tuple[int, int, int], outl
 			fill=fill, outline=outline,
 		)
 		draw.rectangle([1, 12, 14, 13], fill=outline)
+	elif shape == "arrow_power":
+		draw.polygon([(8, 1), (13, 7), (9, 7), (9, 15), (7, 15), (7, 7), (3, 7)], fill=fill, outline=outline)
+	elif shape == "reticle":
+		draw.ellipse([2, 2, 13, 13], fill=None, outline=fill, width=2)
+		draw.line([(7, 0), (7, 3)], fill=fill, width=1)
+		draw.line([(7, 12), (7, 15)], fill=fill, width=1)
+		draw.line([(0, 7), (3, 7)], fill=fill, width=1)
+		draw.line([(12, 7), (15, 7)], fill=fill, width=1)
+		draw.ellipse([6, 6, 9, 9], fill=outline, outline=outline)
+	elif shape == "arrow_quick":
+		draw.polygon([(8, 3), (12, 8), (9, 8), (9, 14), (7, 14), (7, 8), (4, 8)], fill=fill, outline=outline)
+		draw.line([(1, 12), (5, 9)], fill=outline, width=1)
+		draw.line([(1, 15), (6, 11)], fill=outline, width=1)
+	elif shape == "arrow_pierce":
+		draw.polygon([(8, 0), (11, 4), (9, 4), (9, 15), (7, 15), (7, 4), (5, 4)], fill=fill, outline=outline)
+		draw.rectangle([4, 9, 11, 10], fill=outline)
+	elif shape == "bound_blade":
+		draw.polygon([(8, 1), (10, 4), (10, 11), (6, 11), (6, 4)], fill=fill, outline=outline)
+		draw.rectangle([4, 11, 12, 12], fill=outline)
+		draw.rectangle([7, 12, 9, 15], fill=outline)
+		draw.ellipse([6, 0, 10, 4], fill=(120, 180, 255), outline=(40, 80, 160))
+	elif shape == "backstab":
+		draw.polygon([(3, 13), (11, 5), (13, 7), (5, 15)], fill=fill, outline=outline)
+		draw.polygon([(1, 15), (5, 11), (7, 13), (3, 15)], fill=outline, outline=outline)
 	else:
 		raise ValueError(f"unknown placeholder shape: {shape}")
 	dst = PROJECT_ROOT / dst_rel

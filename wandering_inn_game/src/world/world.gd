@@ -1246,6 +1246,63 @@ func _refresh_entities_watching_phase() -> void:
 				break
 
 
+## GH#104 follow-up to #80: `_refresh_entities_watching_phase` above is
+## LOOK-only (re-renders sprite/tint on an already-built visual) -- a
+## `present_when` entity's EXISTENCE flip (hungry_patron/ilvo/resting_runner
+## today) needs its visual actually freed/built, which nothing did before
+## this, leaving the same-map ghost `entity_present`'s doc comment used to
+## disclose (sim always correct, render stale until the next MAP_CHANGED).
+## Diffs `Game.sim.entities` (current-map only -- `entities =
+## _maps[map_id]["entities"]` on load) against `_entity_visuals`'s live key
+## set: newly-absent frees the visual (with `_refresh_entity_visual`'s
+## light-unregister discipline -- see the free arm's own comment);
+## newly-present builds one via `_make_entity_visual`, same construction
+## (and `hide_sprite` guard) `_build_entities` uses. Only `present_when`
+## entities are ever candidates.
+## Re-emits `UI_ENTITIES_RENDERED` iff the count changed, so a same-map
+## PHASE_CHANGED (no MAP_CHANGED) still surfaces the new totals live.
+func _reconcile_entity_presence() -> void:
+	var changed := false
+	for id: String in Game.sim.entities.keys():
+		var ent: Dictionary = Game.sim.entities[id]
+		# hide_sprite guard matches _build_entities': a visual-less entity
+		# must never gain a phantom twin on a phase flip.
+		if not ent.has("present_when") or bool(ent.get("hide_sprite", false)):
+			continue
+		var present := Game.sim.entity_present(ent)
+		if present == _entity_visuals.has(id):
+			continue
+		changed = true
+		if present:
+			var color := NPC_COLOR if String(ent["kind"]) == "npc" else PROP_COLOR
+			var render := _resolve_entity_render(ent)
+			var visual := _make_entity_visual(ent["cell"], String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"])
+			visual.visible = not bool(render["hidden"])
+			_entity_visuals[id] = visual
+		else:
+			var old_visual := _entity_visuals[id] as Node2D
+			# _refresh_entity_visual's light discipline, mirrored: unregister
+			# any PointLight2D child from _atmosphere AND decrement
+			# _light_count BEFORE the free -- skipping it leaks one stale
+			# registry entry per flip cycle and ratchets _light_count toward
+			# the LIGHT_BUDGET assert (a failed assert HANGS headless).
+			# Latent today (no shipped present_when entity carries a light);
+			# wiring-tripwired by test_world_visuals.gd.
+			for child: Node in old_visual.get_children():
+				if child is PointLight2D:
+					_atmosphere.unregister_light(child as PointLight2D)
+					_light_count -= 1
+			old_visual.queue_free()
+			_entity_visuals.erase(id)
+	if changed:
+		assert(_light_count <= LIGHT_BUDGET,
+			"map %s exceeds the %d-light budget (%d) after a presence reconcile -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
+		var render_counts := {"sprites": 0, "fallbacks": 0}
+		_count_visual(_entity_visuals.values(), render_counts)
+		_count_visual(_player_visual, render_counts)
+		ObservableBus.emit_domain_event(WIEvents.UI_ENTITIES_RENDERED, render_counts)
+
+
 ## After combat ends and the field re-shows (UI_COMBAT_HIDDEN,
 ## which does NOT rebuild the map), re-render any on-map entity whose
 ## `visual_states` watch the `dormant` flag -- a just-defeated `respawns: true`
@@ -1636,6 +1693,11 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# never stale after a map reload OR mid-waking (danger list: "must
 		# not fight atmosphere.gd's phase clock").
 		_refresh_entities_watching_phase()
+		# GH#104: the EXISTENCE half of the same reconciliation --
+		# free/build present_when-gated visuals whose gate just
+		# flipped, same-map, no MAP_CHANGED required (the ghost
+		# `entity_present`'s doc comment used to disclose).
+		_reconcile_entity_presence()
 	elif type == WIEvents.TERRAIN_CHANGED:
 		# A cell changed its traversable look. Only act on the
 		# CURRENT map (a stale cross-map event can't happen today -- both seams emit

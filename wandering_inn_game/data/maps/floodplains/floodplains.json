@@ -1429,7 +1429,7 @@
    "on_victory": "corusdeer_culled"
   },
   {
-   "_comment": "Issue #97: the razorbeak nest, T1 renewable-cull pack encounter -- the crab_nest informed-consent shape (data/dialogue/razorbeak_nest.json). respawns:true. Placed at (5,20), the map's SW quadrant -- Chebyshev distance to goblin_night_patrol (10,21) is 5, to frozen_cache (10,18) is 5, to ruin_stones (3,8) is 12; clear of the door/goblin/relc/rock_crab cluster. `enemies` fields the matched pair (razorbeak_a/b, combatants.json) -- canon-cited `coward` AI means the pair scatters once hurt rather than fighting to the death. No `allies`.",
+   "_comment": "Issue #97: the razorbeak nest, T1 renewable-cull pack encounter -- the crab_nest informed-consent shape (data/dialogue/razorbeak_nest.json). respawns:true. Placed at (5,20), the map's SW quadrant -- Chebyshev distance to goblin_night_patrol (10,21) is 5, to frozen_cache (10,18) is 5, to ruin_stones (3,8) is 12; clear of the door/goblin/relc/rock_crab cluster. `enemies` fields the matched pair (razorbeak_a/b, combatants.json) -- canon-cited `coward` AI means the pair scatters once hurt rather than fighting to the death. No `allies`. GH#94 (VISUAL-LOG re-point, 2026-07-13): arena was `training_yard` -- a wild-fauna pack fight resolving among training dummies/pells read wrong (fiction mismatch). Re-pointed to `boulder_flats` (issue #24's own arena, SAME floodplains biome this encounter's field placement already lives in, open grass + scattered boulder cover -- the fiction-right open-ground arena). BANKING FLIP, disclosed: training_yard carries `trivial: true` (the spar arena's no-progression flag), inherited here by mistake at #97 -- razorbeak kills banked NO action tally (WIGame._bank_action_tally suppresses on an arena-level trivial; the on_victory `razorbeaks_culled` bounty counter was never gated and always banked). boulder_flats carries no trivial flag, so wild culls now feed class progression -- the fiction-correct direction.",
    "id": "razorbeak_nest",
    "kind": "encounter",
    "cell": [
@@ -1438,7 +1438,7 @@
    ],
    "display_name": "Razorbeak Nest",
    "sprite": "razorbeak",
-   "arena": "training_yard",
+   "arena": "boulder_flats",
    "conversation": "razorbeak_nest",
    "enemies": [
     "razorbeak_a",

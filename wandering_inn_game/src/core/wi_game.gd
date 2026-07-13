@@ -1372,24 +1372,28 @@ func _door_gate_met(door_when: Dictionary) -> bool:
 ## (`_encounter_gate_met`'s own two-shape design, NOT folded into
 ## `_door_gate_met` itself -- door_when/contains_when/portal_menu_when stay
 ## `requires`-only, byte-unchanged; giving THEM phase capability too would be
-## a second, undiscussed design decision this task never asked for). THE
-## SAME-MAP CONSTRAINT ABOVE IS VIOLATED BY DESIGN for a phase producer:
-## `_tick_action` (the phase clock) advances on ordinary field actions on
-## WHATEVER map the PC currently stands on, which is very often the SAME map
-## an entity like `hungry_patron` lives on. Checked and accepted: a
-## present_when-gated entity whose ONLY visit this waking crosses a phase
-## threshold WHILE the player is standing on its map will sim-flip
-## immediately (is_cell_blocked/entity_at update live, so a fresh
-## interact/movement attempt is always correct) but its RENDERED sprite
-## (`world.gd`'s `_entity_visuals`) will not add/remove until the next
-## `_rebuild_field()` (a MAP_CHANGED, i.e. leaving and re-entering) -- a
-## same-map "ghost" mirroring the pre-existing same-map ghost this doc
-## already discloses, not a new failure mode. Deliberately not engineered
-## around (no live add/remove-on-PHASE_CHANGED reconciler was added,
-## contrast `_refresh_entities_watching_phase`'s LOOK-only refresh of
-## already-built visuals): every phase-gated present_when producer this wave
-## ships (hungry_patron/ilvo/resting_runner) is pure flavor, self-heals on
-## the next map entry, and costs nothing mechanical while stale.
+## a second, undiscussed design decision this task never asked for). A phase
+## producer VIOLATES the same-map constraint above BY DESIGN: `_tick_action`
+## (the phase clock) advances on ordinary field actions on WHATEVER map the
+## PC currently stands on, which is very often the SAME map an entity like
+## `hungry_patron` lives on -- a present_when-gated entity's ONLY visit this
+## waking crossing a phase threshold WHILE the player stood on its map used
+## to sim-flip immediately (is_cell_blocked/entity_at are always live) but
+## leave a stale RENDERED sprite (or a stale gap) until the next
+## `_rebuild_field()` (a real MAP_CHANGED). **GH#104 (follow-up to #80)
+## closed that render lag**: `world.gd`'s `PHASE_CHANGED` handler now also
+## calls `_reconcile_entity_presence()`, which diffs every on-map
+## `present_when` entity's live gate against `_entity_visuals` and frees/
+## builds the visual in place, no MAP_CHANGED required -- a same-map phase
+## crossing now updates the sprite the same beat the sim-side occupancy
+## flips. `_refresh_entities_watching_phase` (LOOK-only, re-renders sprite/
+## tint on an already-built visual, e.g. the witch's elder/young swap) and
+## `_reconcile_entity_presence` (EXISTENCE-only, frees/builds the visual
+## itself) are deliberately two functions fired from the same hook -- distinct
+## concerns, never merged. A `requires`-gated producer (ceria_inn et al.)
+## still needs its accomplishment banked on a DIFFERENT map than the entity
+## lives on, per the CONSTRAINT paragraph above -- GH#104 only closes the
+## phase-shape's same-map case; no reconciler runs on ACCOMPLISHMENT_RECORDED.
 func entity_present(ent: Dictionary) -> bool:
 	if not ent.has("present_when"):
 		return true
