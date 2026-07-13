@@ -257,7 +257,7 @@
   {
    "script": "char_creation",
    "seed": null,
-   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name)"
+   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof)"
   },
   {
    "script": "deep_descent",

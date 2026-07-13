@@ -75,7 +75,7 @@ const READOUT_TEXT_HEIGHT := 64.0
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
 ## Issue #106: the tap-confirm chip's fixed rect (TOP_RIGHT anchor,
 ## `UIChrome.set_offsets` order left/top/right/bottom relative to that
-## corner) -- x spans [1060,1260] at native 1280 width, comfortably clear of
+## corner) -- x spans [1100,1260] at native 1280 width, comfortably clear of
 ## the arena board's own worst-case footprint (12x8 grid * 16px CELL * 4x
 ## WORLD_SCALE = 768px wide, camera-centered in the 1280-wide viewport ->
 ## board x in [256,1024]) so the chip can NEVER shadow a board cell the
@@ -84,7 +84,11 @@ const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
 ## `MOUSE_FILTER_IGNORE`, over the board's own lower rows -- see
 ## `combat_screen.gd`'s `handle_board_click` doc comment) -- this widget MUST
 ## be the one thing that reliably intercepts a tap regardless of board
-## framing, so it lives in dead space instead.
+## framing, so it lives in dead space instead. One measured exception: the
+## chip's y[56,96] overlaps the order strip PANEL's y[10,66] band by ~10px --
+## accepted, the overlap lands on the strip's empty lower-right parchment
+## corner (its text is biased UP via the margin_bottom override in build()),
+## the chip is added after the strip so it draws on top, no text covered.
 const CONFIRM_CHIP_SIZE := Vector2(160.0, 40.0)
 const CONFIRM_CHIP_OFFSETS := Vector4(-180.0, 56.0, -20.0, 96.0)
 ## Default keycap glyphs for the readout
@@ -212,12 +216,16 @@ func _init(root: Control, main_ref: Node, screen: Node) -> void:
 func build() -> void:
 	# Combat HUD bands (keep these DISJOINT; both
 	# parchment panels are opaque, so any overlap hides one under the other):
-	#   order strip   CENTER_TOP     x[32,1248]  y[10,52]
+	#   order strip   CENTER_TOP     x[32,1248]  y[10,66]
 	#   feed          BOTTOM_LEFT    x[28,320]   y[514,636]  (left column)
 	#   readout       CENTER_BOTTOM  x[330,950]  y[530,642]  (grown upward, M6
 	#                 slot-info line -- see _readout_text/_slot_info_line;
 	#                 nothing else occupies this x-range above y[636])
 	#   hotbar        CENTER_BOTTOM  y[658,710]  (see hotbar.gd BOTTOM_MARGIN)
+	#   confirm chip  TOP_RIGHT      x[1100,1260] y[56,96] -- the ONE sanctioned
+	#                 band overlap (~10px into the strip's empty lower-right
+	#                 parchment corner; chip added last, draws on top, no text
+	#                 covered -- see CONFIRM_CHIP_OFFSETS' doc comment)
 	# PF VISUAL-LOG drain (turn-banner top graze): the old 42px height was too
 	# short for PARCHMENT_STRIP's 20px-margin 9-slice -- the strip art filled
 	# only a ~18px band in the panel's upper portion (the transparent-margin
