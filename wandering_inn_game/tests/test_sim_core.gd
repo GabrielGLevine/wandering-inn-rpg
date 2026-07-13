@@ -2764,6 +2764,76 @@ func _init() -> void:
 	assert(gDel.turn_in_delivery() and gDel.gold == 2, "pay collects fine on a later waking")
 	assert(gDel.accomplishment_count("completed_delivery_delivery_pisces_parcel") == 1, "second delivery completes too")
 
+	# --- STANDING routes (issue #91): standing:true skips the retire filter ---
+	# The full loop TWICE on one standing slip: accept -> carry -> pay, then
+	# the re-accept (refused for every one-off id -- krshia_wool above) works,
+	# and default delta demands a FRESH arrival before the second pay.
+	gDel.accept_delivery("delivery_standing_dispatch_run")
+	assert(gDel.accepted_delivery_id == "delivery_standing_dispatch_run", "a standing slip accepts normally")
+	assert(gDel.accepted_delivery_baseline == {"delivered_delivery_standing_dispatch_run": 0}, "first accept baselines at zero")
+	assert(gDel.inventory.has("parcel_watch_dispatch"), "standing slip grants its (reused-id) parcel")
+	gDel.transition("street", Vector2i(3, 5))
+	assert(gDel.move_player(Vector2i.DOWN), "step to (3,6), adjacent to zevara (2,6)")
+	assert(gDel.accomplishment_count("delivered_delivery_standing_dispatch_run") == 1, "arrival banks delivered_<id> (anchor override reads zevara's LIVE cell, not the [1,6] fallback)")
+	assert(gDel.turn_in_delivery() and gDel.gold == 4, "standing leg pays its 2g band")
+	assert(gDel.accomplishment_count("completed_delivery_delivery_standing_dispatch_run") == 1, "completion banks normally")
+	# The retire-filter skip, behaviorally: the SAME completed id re-accepts.
+	gDel.accept_delivery("delivery_standing_dispatch_run")
+	assert(gDel.accepted_delivery_id == "delivery_standing_dispatch_run", "a completed STANDING slip re-accepts (a one-off id is refused here)")
+	assert(gDel.accepted_delivery_baseline == {"delivered_delivery_standing_dispatch_run": 1}, "re-accept baselines at the PRIOR delivered count -- delta demands a fresh arrival")
+	assert(gDel.inventory.has("parcel_watch_dispatch"), "parcel granted again")
+	assert(not gDel.turn_in_delivery(), "no pay off the FIRST carry's mark -- the delta honesty property")
+	# A real move while adjacent-with-parcel IS a fresh arrival (arrival is
+	# move_player-keyed, not stand-still-keyed): (3,6) -> (3,7) stays Chebyshev
+	# 1 to zevara, so this single step re-delivers.
+	assert(gDel.move_player(Vector2i.DOWN), "step to (3,7), still adjacent")
+	assert(gDel.accomplishment_count("delivered_delivery_standing_dispatch_run") == 2, "fresh arrival banks the second delivered_<id>")
+	assert(gDel.turn_in_delivery() and gDel.gold == 6, "the standing route pays AGAIN -- the loop's whole point")
+	assert(gDel.accomplishment_count("completed_delivery_delivery_standing_dispatch_run") == 2, "second completion tallies")
+	# Rotation over the remaining pool still OFFERS a completed standing id:
+	# retired = krshia_wool + pisces_parcel (one-offs), remaining 11 of 13;
+	# window [8..10] of that filtered pool = the three standing rows exactly.
+	while gDel.times_slept < 8:
+		gDel.sleep()
+	var standing_slate: Array = gDel.delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"]))
+	assert(standing_slate == ["delivery_standing_dispatch_run", "delivery_standing_inn_hamper", "delivery_standing_barracks_kit"], "a completed standing id keeps rotating -- never retired")
+
+	# --- Issue #91: post_game standing orders (the `requires` pool gate) ---
+	# Pool 29 (26 pre-#91 + 3 gated). Pre-post_game the gate filters all
+	# three out (26 remain), so ts 26 wraps back to window [0..2] -- the
+	# byte-identical-pre-gate contract. Post_game the SAME ts reads the tail:
+	# the three standing orders exactly.
+	var bounty_cc := {
+		"combatants": _load_json("res://data/combatants.json"),
+		"classes": _load_json("res://data/classes.json"),
+		"arenas": _load_json("res://data/arenas.json"),
+		"items": _load_json("res://data/items.json"),
+		"bounties": _load_json("res://data/bounties.json"),
+	}
+	var gB := WIGame.new(scene_config, skill_config, _sink, 7, bounty_cc)
+	var pre_ids: Array = gB.board_bounties().map(func(b: Dictionary) -> String: return String(b["id"]))
+	assert(pre_ids == ["bounty_road_cull", "bounty_settle_dispute", "bounty_gossip_tea"], "ts-0 window unchanged by the gated appends")
+	gB.times_slept = 26
+	var wrap_pre: Array = gB.board_bounties().map(func(b: Dictionary) -> String: return String(b["id"]))
+	assert(wrap_pre == ["bounty_road_cull", "bounty_settle_dispute", "bounty_gossip_tea"], "pre-post_game the 26-entry pool wraps ts 26 to [0..2] -- gated rows invisible to rotation")
+	gB.record_accomplishment("post_game")
+	var wrap_post: Array = gB.board_bounties().map(func(b: Dictionary) -> String: return String(b["id"]))
+	assert(wrap_post == ["bounty_standing_den_watch", "bounty_standing_lantern_line", "bounty_standing_road_order"], "post_game grows the pool to 29 and ts 26 reads the standing orders")
+	# Delta-repeatable off respawning producers: accept -> culls -> pay ->
+	# re-accept -> the fresh baseline demands FRESH culls.
+	gB.accept_bounty("bounty_standing_den_watch")
+	assert(gB.accepted_bounty_id == "bounty_standing_den_watch", "a standing order accepts")
+	assert(gB.accepted_bounty_baseline == {"kingslayer_spiders_culled": 0}, "delta baseline snapshotted")
+	assert(not gB.turn_in_bounty(), "no pay before the culls")
+	gB.record_accomplishment("kingslayer_spiders_culled")
+	gB.record_accomplishment("kingslayer_spiders_culled")
+	assert(gB.turn_in_bounty() and gB.gold == 10, "two culls pay the T4 band (10g)")
+	gB.accept_bounty("bounty_standing_den_watch")
+	assert(gB.accepted_bounty_id == "bounty_standing_den_watch", "the SAME posting re-accepts -- repeatable (delta mode, never one-shot-retired)")
+	assert(gB.accepted_bounty_baseline == {"kingslayer_spiders_culled": 2}, "re-accept baselines at the prior count")
+	assert(not gB.turn_in_bounty(), "prior culls never pay twice")
+	gB.abandon_bounty()
+
 	# --- 8b R1 (issue #10): the encounter_when phase gate (locked shape 2) ---
 	# Two synthetic encounters against the REAL combat catalog (goblin_ambush
 	# arena + training_dummy_a, both already shipped) so a gate-open combat

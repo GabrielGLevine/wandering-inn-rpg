@@ -1877,6 +1877,11 @@ func board_bounties() -> Array:
 		var one_shot := String(bounty.get("condition_mode", "delta")) == "absolute"
 		if one_shot and accomplishment_count("completed_bounty_%s" % String(bounty[WIKeys.ID])) >= 1:
 			continue
+		# Issue #91 post_game standing orders: `requires`-gated rows join the
+		# pool only once their gate banks (WIBounties.requires_met's own TRAP
+		# comment carries the rotation-window contract).
+		if not WIBounties.requires_met(bounty, Callable(self, "accomplishment_count")):
+			continue
 		remaining.append(bounty)
 	return WIBounties.active_slate(remaining, times_slept)
 
@@ -2087,10 +2092,14 @@ func _delivery_by_id(id: String) -> Dictionary:
 ## an empty input; build_delivery_picker_graph's own empty-slate branch
 ## (see bounties.gd) is the new piece that keeps that state from rendering
 ## as a bare, contentless picker.
+## STANDING EXCEPTION (issue #91): `standing: true` rows skip retirement
+## forever -- a permanent route, not a named one-off favor. Default delta
+## mode already forces a FRESH arrival per re-acceptance (baseline snapshots
+## the prior delivered_<id> count), so standing can never double-pay a carry.
 func delivery_board_deliveries() -> Array:
 	var remaining: Array = []
 	for delivery: Dictionary in _delivery_pool():
-		if accomplishment_count("completed_delivery_%s" % String(delivery[WIKeys.ID])) < 1:
+		if bool(delivery.get("standing", false)) or accomplishment_count("completed_delivery_%s" % String(delivery[WIKeys.ID])) < 1:
 			remaining.append(delivery)
 	return WIBounties.active_slate(remaining, times_slept)
 
@@ -2107,14 +2116,15 @@ func delivery_board_deliveries() -> Array:
 ## the id doesn't resolve, or if `id` is a retired (already-completed) slip
 ## (defensive second line for `delivery_board_deliveries()`'s own filter
 ## above -- the real picker can never offer a retired id, since it's built
-## from that same filtered slate).
+## from that same filtered slate; a `standing: true` row is exempt from
+## BOTH lines, matching that filter's own standing exception).
 func accept_delivery(id: String) -> void:
 	if accepted_delivery_id != "":
 		return
 	var delivery := _delivery_by_id(id)
 	if delivery.is_empty():
 		return
-	if accomplishment_count("completed_delivery_%s" % id) >= 1:
+	if not bool(delivery.get("standing", false)) and accomplishment_count("completed_delivery_%s" % id) >= 1:
 		return
 	accepted_delivery_id = id
 	var baseline: Dictionary = {}

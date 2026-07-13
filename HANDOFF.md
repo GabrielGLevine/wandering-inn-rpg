@@ -1,5 +1,26 @@
 # Wandering Inn RPG Handoff
 
+## 📦 #91 LANE (lane-91): pieces 1+2 LANDED, pieces 3+4 PARKED (2026-07-13 budget drain)
+Landed on lane-91 (d21fb44 + 8cd3549, verified, NOT pushed/merged):
+standing delivery routes (`standing:true` skips the retire filter; 3
+routes at 2/3/2g, parcels reuse shipped items.json ids) and post_game
+standing-order postings (`requires:{post_game:1}` pool gate via
+`WIBounties.requires_met`; 10/8/6g formula pay). DISCLOSED for merge:
+board_bounties() gained a 2-line requires-filter arm — one function past
+the granted delivery-filter wi_game.gd exception; reconcile with L92's
+wi_game.gd lane at merge. PARKED (next session, the rest of #91's brief):
+(a) 3-4 fixed-tier T3-T4 `respawns:true` encounters — reopened dungeon
+gallery slots (gate on `halls_cleared`; riverfarm has ZERO respawn slots
+today, the clearest gap; invrisil consent-shape like `rock_crab_nest`) +
+GATED harness cells at the tier reference builds (region-tiers.md);
+postings keyed to their on_victory counters then append behind the same
+post_game gate. (b) The Chronicle — results-only run card via
+settings.cfg (survives New Game; NEVER save.gd — a STOP trigger), journal
+end-page + title card; prove title_flow's pins before touching title
+rows. (c) The accept→respawn-fight→sleep→re-fight→turn-in canonical + a
+Chronicle render leg + manifest/CLAUDE.md rows (the shipped pieces ride
+existing canonicals + test_sim_core coverage instead).
+
 ## 🛡️ USAGE GUARD LIVE (2026-07-12)
 `scripts/usage_status.sh` = tier check (OK/CAUTION/WINDDOWN/QUIESCE, exit
 0/10/20/30); PostToolUse hook injects tier CHANGES mid-flight; protocol in

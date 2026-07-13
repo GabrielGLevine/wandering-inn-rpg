@@ -81,6 +81,23 @@ static func condition_met(condition: Dictionary, baseline: Dictionary, accomplis
 	return true
 
 
+## Gate reader for a posting's optional `requires` field (issue #91's
+## post_game standing orders): every {accomplishment_id: min_count} key must
+## clear. Rows without the field always pass. `accomplishment_count_cb` is
+## the SAME injected Callable shape condition_met uses (purity rule).
+## TRAP: this is a POOL filter (board_bounties() applies it BEFORE
+## active_slate), so a `requires` row is invisible to rotation math until
+## its gate banks -- pre-gate windows stay byte-identical by construction;
+## post-gate the filtered pool GROWS and wrap-zone windows shift (disclosed
+## per-append in data/bounties.json's own _comment).
+static func requires_met(bounty: Dictionary, accomplishment_count_cb: Callable) -> bool:
+	var requires: Dictionary = bounty.get("requires", {})
+	for key: String in requires:
+		if int(accomplishment_count_cb.call(key)) < int(requires[key]):
+			return false
+	return true
+
+
 ## Short board-title per posting id, for the picker's OPTION row (the body
 ## text above already carries the full numbered copy paragraph -- the option
 ## itself only needs a name a player can recognize at a glance, not a second
@@ -114,6 +131,9 @@ static func _posting_title(bounty_id: String) -> String:
 		"bounty_second_watch": "Settle Two More Quarrels",
 		"bounty_pond_keepsakes": "Report the Pond Cache",
 		"bounty_crab_cull": "Rock Crab Cull, East Hills",
+		"bounty_standing_den_watch": "Standing Order: the Approach Den",
+		"bounty_standing_lantern_line": "Standing Order: the Lantern-Line",
+		"bounty_standing_road_order": "Standing Order: the Roads",
 	}
 	return String(titles.get(bounty_id, bounty_id.trim_prefix("bounty_").capitalize()))
 
@@ -132,6 +152,9 @@ static func _delivery_title(delivery_id: String) -> String:
 		"delivery_tactics_brief": "Tactics Brief to Olesm",
 		"delivery_boulevard_letter": "Sealed Letter to the Boulevard",
 		"delivery_riverfarm_seed": "Seed Grain to Riverfarm",
+		"delivery_standing_dispatch_run": "The Morning Dispatch Run",
+		"delivery_standing_inn_hamper": "The Inn's Standing Order",
+		"delivery_standing_barracks_kit": "The Barracks Kit Rotation",
 	}
 	return String(titles.get(delivery_id, delivery_id.trim_prefix("delivery_").capitalize()))
 

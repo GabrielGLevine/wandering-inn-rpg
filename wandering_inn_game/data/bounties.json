@@ -279,6 +279,46 @@
    },
    "gold": 12,
    "copy": "Stallholders' notice. Two of the stone golems posted by the empty stalls have stopped answering to anyone. Two put down, plating returned. 12 gold, pooled by the row."
+  },
+  {
+   "_comment": "Issue #91 (the hour-4 spine), indices [26..28], pure append: POST_GAME STANDING ORDERS -- `requires: {post_game: 1}` (WIBounties.requires_met, board_bounties()'s pool filter) keeps all three OUT of the pool until the epilogue banks post_game, so every pre-post_game rotation window stays BYTE-IDENTICAL (incl. the wrap zone: pallass_watchgolem_loop's ts-25 window still reads [25,0,1] over the 26-entry pre-gate pool); no shipped post_game fixture sits at ts >= 24, so no live window shifts post-gate either. All delta-mode (repeatable, on_victory-keyed producers all respawns:true). Pay via generate_postings.py's recovered formula: den 2.0*2*T4 2.5 = 10g; lantern-line 2.0*2*T3 2.0 = 8g; road order 2.0*3*T1 1.0 = 6g (won_combat's CHEAPEST producers are T1 road fights -- priced to the floor tier so the posting can't out-pay its easiest grind).",
+   "id": "bounty_standing_den_watch",
+   "pillar": "fight",
+   "giver": "Selys Sharpear",
+   "requires": {
+    "post_game": 1
+   },
+   "condition": {
+    "kingslayer_spiders_culled": 2
+   },
+   "gold": 10,
+   "copy": "Guild standing order, Silver-rank and up. The approach galleries do not stay swept -- whatever nests in that seam nests DEEP, and it recruits. Two confirmed kills per rotation, shell-plate as proof, 10 gold. This notice does not come down. Selys, for the Guild."
+  },
+  {
+   "id": "bounty_standing_lantern_line",
+   "pillar": "fight",
+   "giver": "Master Coyle",
+   "requires": {
+    "post_game": 1
+   },
+   "condition": {
+    "mothbears_culled": 2
+   },
+   "gold": 8,
+   "copy": "A standing arrangement, for professionals. The lantern-line draws the moth-winged bears every dark season and my carters have families. Two culled per settlement of the account, after dark, Guild-attested. 8 gold, paid without commentary. Coyle."
+  },
+  {
+   "id": "bounty_standing_road_order",
+   "pillar": "fight",
+   "giver": "Watch Captain Zevara Sunderscale (dry, overworked, duty-first)",
+   "requires": {
+    "post_game": 1
+   },
+   "condition": {
+    "won_combat": 3
+   },
+   "gold": 6,
+   "copy": "Standing order of the Watch, posted for whoever keeps ending up in the reports. The roads out of this city do not police themselves and my roster says we cannot either. Three engagements won, anywhere the Watch's writ runs, confirmed by attestation. 6 gold per settlement. I would rather pay you than bury patrols. Z. Sunderscale."
   }
  ]
 }

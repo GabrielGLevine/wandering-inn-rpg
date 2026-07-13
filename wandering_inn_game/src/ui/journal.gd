@@ -61,6 +61,9 @@ const _POSTING_TITLES := {
 	"bounty_second_watch": "Settle Two More Quarrels",
 	"bounty_pond_keepsakes": "Report the Pond Cache",
 	"bounty_crab_cull": "Rock Crab Cull, East Hills",
+	"bounty_standing_den_watch": "Standing Order: the Approach Den",
+	"bounty_standing_lantern_line": "Standing Order: the Lantern-Line",
+	"bounty_standing_road_order": "Standing Order: the Roads",
 }
 
 ## `WIBounties._delivery_title`'s exact twin, same lockstep contract as
@@ -78,6 +81,9 @@ const _DELIVERY_TITLES := {
 	"delivery_tactics_brief": "Tactics Brief to Olesm",
 	"delivery_boulevard_letter": "Sealed Letter to the Boulevard",
 	"delivery_riverfarm_seed": "Seed Grain to Riverfarm",
+	"delivery_standing_dispatch_run": "The Morning Dispatch Run",
+	"delivery_standing_inn_hamper": "The Inn's Standing Order",
+	"delivery_standing_barracks_kit": "The Barracks Kit Rotation",
 }
 
 ## True while the journal panel is visible; world.gd and pause_menu.gd gate on this.
