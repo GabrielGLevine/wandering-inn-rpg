@@ -216,6 +216,26 @@
     2,
     7
    ]
+  },
+  {
+   "_comment": "Issue #97: kingslayer_den, T4 dungeon_approach solo apex-predator encounter -- the crab_nest informed-consent shape (data/dialogue/kingslayer_den.json). respawns:true (MEASURED-only in the harness -- a deliberately dangerous apex predator, not a comfortable-band cull, see sim_combat_batch.gd DUNGEON_CELLS). Placed at (12,10), the map's south edge -- clear of the ceria/yvlon/ksmvr npc row (y5), the two props (1,6)/(8,9), and dungeon_depths_door (14,6); Chebyshev distance to dormant_guardian_marker (8,9) is 4, to dungeon_depths_door is 4. `dungeon_peek`'s own teleport-based route stays unaffected (it never walks this cell).",
+   "id": "kingslayer_den",
+   "kind": "encounter",
+   "cell": [
+    12,
+    10
+   ],
+   "display_name": "Something in the Dark",
+   "sprite": "kingslayer_spider",
+   "arena": "spider_den",
+   "conversation": "kingslayer_den",
+   "enemies": [
+    "kingslayer_spider"
+   ],
+   "allies": [],
+   "respawns": true,
+   "observe": "Silk threads catch the light along the gallery's south wall, thick as rope, all leading back to one dark seam in the stone.",
+   "on_victory": "kingslayer_spiders_culled"
   }
  ]
 }

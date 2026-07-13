@@ -763,7 +763,7 @@
     "radius": 48,
     "flicker": true
    },
-   "_comment": "Relc's fire — moved beside him (12,13) per pilot verdict: it must READ as his."
+   "_comment": "Relc's fire \u2014 moved beside him (12,13) per pilot verdict: it must READ as his."
   },
   {
    "sprite": "tree_big",
@@ -1052,7 +1052,7 @@
    "_hide_comment": "Render-only: the wandering_inn_facade decor paints the entrance at this cell; the generic plank door drew ON TOP of it (2026-07-08 review Medium). Door function (interact/to_map) unchanged."
   },
   {
-   "_comment": "The inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: a bespoke PixelLab signpost (a text-free wooden post + hanging plank, `assets/sprites/inn_sign/Idle-Sheet.png`) -- the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text). Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
+   "_comment": "The inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN \u2014 NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: a bespoke PixelLab signpost (a text-free wooden post + hanging plank, `assets/sprites/inn_sign/Idle-Sheet.png`) -- the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text). Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
    "id": "inn_sign",
    "kind": "prop",
    "cell": [
@@ -1062,7 +1062,7 @@
    "display_name": "Inn Sign",
    "sprite": "inn_sign",
    "on_interact_accomplishment": "read_the_inn_sign",
-   "toast": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN — NO KILLING GOBLINS.",
+   "toast": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN \u2014 NO KILLING GOBLINS.",
    "observe": "The paint is newer than the post it hangs on. Somebody meant it, and means it still."
   },
   {
@@ -1237,7 +1237,7 @@
     "Road's boring today. I keep hoping something stupid charges the gate so I can try out the old Relc Headbutt.",
     "You gonna eat that? ...No? Shame. Guarding's hungry work, and I'm the best there is at it.",
     "Stand up straight, kid. Best guardsman in Liscor is watching this road. That's me. Obviously.",
-    "You met Klb yet? Senior Guardsman, four arms, does paperwork like it's a Skill. Best partner in the Watch. Tell him he owes me a drink — he'll say ants don't drink. He's lying."
+    "You met Klb yet? Senior Guardsman, four arms, does paperwork like it's a Skill. Best partner in the Watch. Tell him he owes me a drink \u2014 he'll say ants don't drink. He's lying."
    ],
    "talk_pool_stages": [
     {
@@ -1310,7 +1310,7 @@
    ]
   },
   {
-   "_comment": "The recovery run lives in a small DEDICATED ruin map family. LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the `ruin_surface` map below, the inside half). Gate `door_when.requires: {door_chain_started: 1}` (Erin's dialogue banks it at beat 1) -- until then interact falls through to the on_interact_accomplishment/toast branch below, the sewer_grate/deep_fissure pre-gate precedent (byte-identical fallback, no route change for any existing script). Placed at floodplains (38,11), inside the open grass_03 patch (33-38,9-14) -- confirmed off EVERY canonical floodplains route: a full replay of every qa/scripts/*.json's move/press/teleport sequence (blocked-cell-aware, starting from each script's real entry -- its fixture start where one exists, else the universal (7,6) door-arrival cell) showed every route that crosses the chieftains_raid/liscor_gate corridor caps out at x<=31 (tutorial_flow's 'right 18' from (12,6) lands x=30; quest_errand_fight/gate_district_walkthrough/combat_walkthrough/economy_loop all share that same capped-at-x31 shape) -- x=38 is walked and faced by nothing today. Well clear of the tree_big(36,10)/tree_round(35,15) decor and every other floodplains entity (chieftains_raid 31,7 / goblin_encounter_2 28,18 / relc 12,13 / relc_spar 13,12 / frozen_cache 10,18 / ruin_stones 3,8 / inn_sign 6,6). Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate VISUAL-LOG precedent for a not-yet-bespoke gated-entrance prop -- a real ruin-entrance crop is lane γ's job).",
+   "_comment": "The recovery run lives in a small DEDICATED ruin map family. LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the `ruin_surface` map below, the inside half). Gate `door_when.requires: {door_chain_started: 1}` (Erin's dialogue banks it at beat 1) -- until then interact falls through to the on_interact_accomplishment/toast branch below, the sewer_grate/deep_fissure pre-gate precedent (byte-identical fallback, no route change for any existing script). Placed at floodplains (38,11), inside the open grass_03 patch (33-38,9-14) -- confirmed off EVERY canonical floodplains route: a full replay of every qa/scripts/*.json's move/press/teleport sequence (blocked-cell-aware, starting from each script's real entry -- its fixture start where one exists, else the universal (7,6) door-arrival cell) showed every route that crosses the chieftains_raid/liscor_gate corridor caps out at x<=31 (tutorial_flow's 'right 18' from (12,6) lands x=30; quest_errand_fight/gate_district_walkthrough/combat_walkthrough/economy_loop all share that same capped-at-x31 shape) -- x=38 is walked and faced by nothing today. Well clear of the tree_big(36,10)/tree_round(35,15) decor and every other floodplains entity (chieftains_raid 31,7 / goblin_encounter_2 28,18 / relc 12,13 / relc_spar 13,12 / frozen_cache 10,18 / ruin_stones 3,8 / inn_sign 6,6). Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate VISUAL-LOG precedent for a not-yet-bespoke gated-entrance prop -- a real ruin-entrance crop is lane \u03b3's job).",
    "id": "ruin_door",
    "kind": "prop",
    "cell": [
@@ -1407,6 +1407,47 @@
     }
    ],
    "on_victory": "won_combat"
+  },
+  {
+   "_comment": "Issue #97 (bestiary expansion): the stray Corusdeer, T1 renewable-cull target -- the crab_nest informed-consent shape (interact opens a confirm conversation before combat, data/dialogue/corusdeer_range.json). respawns:true (dormant until the next sleep, the rock_crab_nest/river_wolf_pack mechanism). Placed at (36,6), the map's NE quadrant -- Chebyshev distance to the nearest real entity (chieftains_raid, 31,7) is 5, to ruin_door (38,11) is 5; clear of every canonical door/entity cluster (floodplains_inn_door 7,5; liscor_gate 31,25; the goblin/relc/rock_crab cluster all sit y7-23 x3-31). No `allies` (a solo apex read, matches its own Silver-rank-stray canon framing -- see combatants.json's own corusdeer _comment) so no ally_requires gate is needed.",
+   "id": "corusdeer_range",
+   "kind": "encounter",
+   "cell": [
+    36,
+    6
+   ],
+   "display_name": "Stray Corusdeer",
+   "sprite": "corusdeer",
+   "arena": "boulder_flats",
+   "conversation": "corusdeer_range",
+   "enemies": [
+    "corusdeer"
+   ],
+   "allies": [],
+   "respawns": true,
+   "observe": "A shape stands too still at the treeline, antlers catching a warmth that isn't sunlight.",
+   "on_victory": "corusdeer_culled"
+  },
+  {
+   "_comment": "Issue #97: the razorbeak nest, T1 renewable-cull pack encounter -- the crab_nest informed-consent shape (data/dialogue/razorbeak_nest.json). respawns:true. Placed at (5,20), the map's SW quadrant -- Chebyshev distance to goblin_night_patrol (10,21) is 5, to frozen_cache (10,18) is 5, to ruin_stones (3,8) is 12; clear of the door/goblin/relc/rock_crab cluster. `enemies` fields the matched pair (razorbeak_a/b, combatants.json) -- canon-cited `coward` AI means the pair scatters once hurt rather than fighting to the death. No `allies`.",
+   "id": "razorbeak_nest",
+   "kind": "encounter",
+   "cell": [
+    5,
+    20
+   ],
+   "display_name": "Razorbeak Nest",
+   "sprite": "razorbeak",
+   "arena": "training_yard",
+   "conversation": "razorbeak_nest",
+   "enemies": [
+    "razorbeak_a",
+    "razorbeak_b"
+   ],
+   "allies": [],
+   "respawns": true,
+   "observe": "A scrape of trampled grass, two long-beaked shapes hunched low over it, watching you watch them.",
+   "on_victory": "razorbeaks_culled"
   }
  ],
  "cover_skip": [

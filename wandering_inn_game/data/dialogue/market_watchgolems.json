@@ -1,0 +1,25 @@
+{
+	"_comment": "Issue #97: market_watchgolems' own confirm conversation -- the crab_nest informed-consent shape, Pallass's second combat encounter (a matched guard pair, ai:guard). [Strike first.] fires start_combat (self-reference, legal only on an ending option). [Back away.] plainly ends, no combat, the encounter stays live and re-interactable.",
+	"start": "confront",
+	"nodes": {
+		"confront": {
+			"speaker": "Market Watchgolems",
+			"text": "Two grey shapes flank a stall of unclaimed crates, carved plating catching the tier's flat light. Neither has moved in the time you've watched. Both turn to face you at once.",
+			"options": [
+				{
+					"text": "[Strike first.]",
+					"effects": [
+						{
+							"start_combat": "market_watchgolems"
+						}
+					],
+					"end": true
+				},
+				{
+					"text": "[Back away.]",
+					"end": true
+				}
+			]
+		}
+	}
+}

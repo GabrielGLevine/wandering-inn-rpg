@@ -1,0 +1,25 @@
+{
+	"_comment": "Issue #97: forge_calibration_golem's own confirm conversation -- the crab_nest informed-consent shape, Pallass's first combat encounter. [Strike first.] fires start_combat (self-reference, legal only on an ending option). [Back away.] plainly ends, no combat, the encounter stays live and re-interactable.",
+	"start": "confront",
+	"nodes": {
+		"confront": {
+			"speaker": "Miscalibrated Golem",
+			"text": "A stone shape at the edge of the forge-heat turns too fast, cracks glowing brighter along its arms — one of the tier's own constructs, off its command spells again. It hasn't been told you're not a shipment.",
+			"options": [
+				{
+					"text": "[Strike first.]",
+					"effects": [
+						{
+							"start_combat": "forge_calibration_golem"
+						}
+					],
+					"end": true
+				},
+				{
+					"text": "[Back away.]",
+					"end": true
+				}
+			]
+		}
+	}
+}

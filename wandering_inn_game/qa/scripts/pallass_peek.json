@@ -8,7 +8,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "pallass_market" },
   { "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "pallass_market" } },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "pallass_market", "floor_cells": 286, "blocked_cells": 80 } },
-  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 13, "fallbacks": 0 } },
+  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 14, "fallbacks": 0 } },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "00_pallass_market_arrival_corner" },
 
@@ -120,7 +120,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "pallass_forge" },
   { "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "pallass_forge" } },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "pallass_forge", "floor_cells": 286, "blocked_cells": 85 } },
-  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 6, "fallbacks": 0 } },
+  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 7, "fallbacks": 0 } },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "10_pallass_forge_arrival_corner" },
 

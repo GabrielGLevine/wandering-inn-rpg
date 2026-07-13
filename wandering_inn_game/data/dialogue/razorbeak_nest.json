@@ -1,0 +1,25 @@
+{
+	"_comment": "Issue #97: razorbeak_nest's own confirm conversation -- the crab_nest informed-consent shape. [Strike first.] fires start_combat (self-reference, legal only on an ending option). [Back away.] plainly ends, no combat, the encounter stays live and re-interactable.",
+	"start": "confront",
+	"nodes": {
+		"confront": {
+			"speaker": "Razorbeak Nest",
+			"text": "Two long-beaked shapes shuffle up from a scrape of trampled grass, wings half-spread, screeching thin and high. Alone, they'd already be running. There are two of them.",
+			"options": [
+				{
+					"text": "[Strike first.]",
+					"effects": [
+						{
+							"start_combat": "razorbeak_nest"
+						}
+					],
+					"end": true
+				},
+				{
+					"text": "[Back away.]",
+					"end": true
+				}
+			]
+		}
+	}
+}
