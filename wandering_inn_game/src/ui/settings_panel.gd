@@ -22,17 +22,35 @@ extends CanvasLayer
 
 ## Issue #106: grown 340->420 (+80) for ROWS' widened 30px row height (was
 ## 22px, see `_build_rows_panel`'s row loop) -- same 9-slice-tolerates-resize
-## reasoning as pause_menu.gd's identical PANEL_SIZE fix.
-const PANEL_SIZE := Vector2(320.0, 420.0)
+## reasoning as pause_menu.gd's identical PANEL_SIZE fix. Issue #107: grown
+## again 420->456 (+36 = one more 30px row + its 6px stack separation) for
+## "Help..." appended to ROWS below.
+const PANEL_SIZE := Vector2(320.0, 456.0)
 const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
+## Issue #107: sized from a real headless layout pass (not eyeballed) --
+## `data/help_content.json`'s 6 sections, each rendered as ONE wrapped Label
+## at HELP_TEXT_WIDTH, measured a 447px minimum (`Font.get_multiline_string_
+## size`, same method test_copy_fit.gd uses) -- 470 leaves ~23px slack,
+## comfortably under VIEWPORT_HEIGHT (720, test_copy_fit.gd's own const) with
+## the panel centered. Width matches CONTROLS_PANEL_SIZE.x (620) for visual
+## parity between the two reference sub-pages.
+const HELP_PANEL_SIZE := Vector2(620.0, 470.0)
+## Margins mirror `_build_help_panel`'s MarginContainer (26 left + 26 right) --
+## drift-tripwire checked against that call site by test_copy_fit.gd.
+const HELP_TEXT_WIDTH := HELP_PANEL_SIZE.x - 52.0
+const HELP_CONTENT_PATH := "res://data/help_content.json"
 
 ## Row list. "Settings" is reached from a LATER-appended row on both
 ## pause_menu.gd's ROWS and title_screen.gd's ROWS (never inserted earlier --
-## preserves every existing hardcoded row index in qa/scripts/*.json).
+## preserves every existing hardcoded row index in qa/scripts/*.json). Issue
+## #107: "Help..." appended BEFORE "Back" (the SAME slot "Controls..."/
+## "Replay Hints" both occupy -- "Back" stays the fixed last row, the real
+## append-only contract here; the only pins that reference this array's
+## indices live in qa/scripts/settings_loop.json itself, updated alongside).
 const ROWS := [
 	"Master volume", "Music volume", "SFX volume",
 	"Fullscreen", "Text Scale", "Reduce Motion",
-	"Controls...", "Replay Hints", "Back",
+	"Controls...", "Replay Hints", "Help...", "Back",
 ]
 ## Row key -> WIAudio bus name, for the three volume rows (left/right or
 ## confirm/click nudges by 1, matching pause_menu.gd's own `_adjust_volume_row`
@@ -51,7 +69,7 @@ const MOUSE_LABELS := {
 	"hotbar": "Click a hotbar slot",
 }
 
-enum State { ROWS, CONTROLS }
+enum State { ROWS, CONTROLS, HELP }
 
 ## True while this panel is visible -- world.gd/pause_menu.gd/title_screen.gd
 ## don't currently gate on this (see file doc comment: the caller hides its
@@ -74,6 +92,14 @@ var _row_labels: Array[Label] = []
 var _controls_root: Control
 var _controls_back_label: Label
 
+## Issue #107: Help reference sub-page. `_help_sections` is loaded once at
+## `_build_help_panel()` time (data/help_content.json -- content is DATA, this
+## file only renders) and reused by `_enter_help()` for the rendered event's
+## `sections` count, rather than re-reading the file on every open.
+var _help_root: Control
+var _help_back_label: Label
+var _help_sections: Array = []
+
 
 func _ready() -> void:
 	# Above the default-layer (1) UI stack every other panel here uses (see
@@ -82,6 +108,7 @@ func _ready() -> void:
 	layer = 2
 	_build_rows_panel()
 	_build_controls_panel()
+	_build_help_panel()
 
 
 func _build_rows_panel() -> void:
@@ -190,6 +217,84 @@ func _format_action_name(action: String) -> String:
 	return " ".join(words)
 
 
+## Issue #107: the Help reference sub-page -- the Controls sub-page's exact
+## idiom (own root Control, carved-panel patch, MarginContainer, one VBox
+## stack, a clickable "> Back" row), swapped from a GridContainer to a plain
+## wrapped Label per section since the content is authored prose, not a
+## small fixed data table. NOT scrollable -- deliberately sized (HELP_PANEL_
+## SIZE) to fit every section without a ScrollContainer (the STOP trigger
+## this task carried: reach for new widget machinery only if the fixed-size
+## idiom can't host the content, and the sizing pass proved it can).
+func _build_help_panel() -> void:
+	_help_root = Control.new()
+	UIChrome.apply_theme(_help_root)
+	_help_root.set_anchors_preset(Control.PRESET_CENTER)
+	_help_root.custom_minimum_size = HELP_PANEL_SIZE
+	_help_root.size = HELP_PANEL_SIZE
+	UIChrome.set_offsets(_help_root, -HELP_PANEL_SIZE.x * 0.5, -HELP_PANEL_SIZE.y * 0.5, HELP_PANEL_SIZE.x * 0.5, HELP_PANEL_SIZE.y * 0.5)
+	_help_root.mouse_filter = Control.MOUSE_FILTER_STOP
+	_help_root.hide()
+	add_child(_help_root)
+	_help_root.add_child(UIChrome.make_patch(UIChrome.CARVED_PANEL))
+
+	var margin := MarginContainer.new()
+	UIChrome.full_rect(margin)
+	UIChrome.add_margins(margin, 26, 20, 26, 20)
+	_help_root.add_child(margin)
+
+	var stack := VBoxContainer.new()
+	stack.add_theme_constant_override("separation", 8)
+	margin.add_child(stack)
+
+	var title := UIChrome.make_label("Help", "Menu")
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stack.add_child(title)
+
+	_help_sections = _load_help_sections()
+	for section: Dictionary in _help_sections:
+		var body := UIChrome.make_label(_help_line(section))
+		body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		body.custom_minimum_size = Vector2(HELP_TEXT_WIDTH, 0.0)
+		stack.add_child(body)
+
+	var spacer := Control.new()
+	spacer.custom_minimum_size = Vector2(0.0, 10.0)
+	stack.add_child(spacer)
+
+	_help_back_label = UIChrome.make_label("> Back", "Menu")
+	stack.add_child(_help_back_label)
+	_help_back_label.mouse_filter = Control.MOUSE_FILTER_STOP
+	_help_back_label.gui_input.connect(_on_help_back_gui_input)
+
+
+## `data/help_content.json` -- content is DATA, this file only renders (CLAUDE.md
+## convention). `{"sections": [{"heading":String, "body":String}, ...]}`;
+## malformed/missing file degrades to an empty panel rather than a load-time
+## crash (same graceful-degrade contract UIChrome.chrome_texture uses for a
+## missing asset).
+func _load_help_sections() -> Array:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(HELP_CONTENT_PATH))
+	if parsed is Dictionary and (parsed as Dictionary).get("sections") is Array:
+		return (parsed as Dictionary)["sections"]
+	return []
+
+
+## One section's rendered line -- "Heading -- body", the single wrapped Label
+## test_copy_fit.gd measures per section (HELP_TEXT_WIDTH/HELP_SECTION_LINE_CAP).
+func _help_line(section: Dictionary) -> String:
+	return "%s — %s" % [String(section.get("heading", "")), String(section.get("body", ""))]
+
+
+## Empty string if no loaded section carries that heading (never crashes on a
+## content edit that renames/removes it -- `_enter_help`'s sample just goes
+## empty, loudly wrong in QA rather than a hard failure).
+func _help_line_by_heading(heading: String) -> String:
+	for section: Dictionary in _help_sections:
+		if String(section.get("heading", "")) == heading:
+			return _help_line(section)
+	return ""
+
+
 ## `on_close` fires once, when this panel closes back out (Back/Cancel from
 ## the ROWS state) -- the caller (pause_menu.gd/title_screen.gd) passes a
 ## Callable that re-shows its OWN hidden root. Re-entrant safe: calling
@@ -201,6 +306,7 @@ func open(on_close: Callable = Callable()) -> void:
 	_state = State.ROWS
 	_cursor = 0
 	_controls_root.hide()
+	_help_root.hide()
 	_root.show()
 	# SHOWN before the first RENDERED (unlike pause_menu.gd's `_open()`,
 	# whose own `_refresh()` is silent -- this one's own `_refresh()` emits
@@ -214,6 +320,7 @@ func _close() -> void:
 	is_open = false
 	_root.hide()
 	_controls_root.hide()
+	_help_root.hide()
 	_state = State.ROWS
 	ObservableBus.emit_domain_event(WIEvents.UI_SETTINGS_HIDDEN, {})
 	if _on_close.is_valid():
@@ -227,6 +334,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _state == State.CONTROLS:
 		if event.is_action_pressed("cancel") or event.is_action_pressed("confirm"):
 			_exit_controls()
+			vp.set_input_as_handled()
+		return
+	if _state == State.HELP:
+		if event.is_action_pressed("cancel") or event.is_action_pressed("confirm"):
+			_exit_help()
 			vp.set_input_as_handled()
 		return
 	if event.is_action_pressed("cancel"):
@@ -285,6 +397,16 @@ func _on_controls_back_gui_input(event: InputEvent) -> void:
 		_exit_controls()
 
 
+func _on_help_back_gui_input(event: InputEvent) -> void:
+	if _state != State.HELP:
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed:
+		_exit_help()
+
+
 ## Read-only rect accessor (WIHotbar.slot_rect/pause_menu.row_rect's
 ## established pattern) for QA's `click_settings_row` step.
 func row_rect(i: int) -> Rect2:
@@ -306,6 +428,26 @@ func _enter_controls() -> void:
 func _exit_controls() -> void:
 	_state = State.ROWS
 	_controls_root.hide()
+	_root.show()
+	_refresh()
+
+
+## Payload's `sample` pins the "Saving" section's exact rendered line --
+## short, purely mechanical, least likely to churn under the issue's own
+## planned voice-pass -- QA's one-section-string pin per the task brief.
+## Looked up by heading (not a bare index) so reordering `help_content.json`
+## can't silently re-point the pin at a different section's text.
+func _enter_help() -> void:
+	_state = State.HELP
+	_root.hide()
+	_help_root.show()
+	var sample := _help_line_by_heading("Saving")
+	ObservableBus.emit_domain_event(WIEvents.UI_HELP_RENDERED, {"sections": _help_sections.size(), "sample": sample})
+
+
+func _exit_help() -> void:
+	_state = State.ROWS
+	_help_root.hide()
 	_root.show()
 	_refresh()
 
@@ -375,5 +517,7 @@ func _activate_row() -> void:
 			WISettings.replay_hints()
 			ObservableBus.emit_domain_event(WIEvents.UI_HINTS_REPLAYED, {})
 			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Tutorial hints will show again."})
+		"Help...":
+			_enter_help()
 		"Back":
 			_close()
