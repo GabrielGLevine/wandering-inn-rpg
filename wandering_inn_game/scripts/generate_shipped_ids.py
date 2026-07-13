@@ -27,7 +27,7 @@ FIVE ID CLASSES, and what "disappeared" means for each (spec §2.1's own
         set -- a save standing on a removed map is UNLOADABLE, not just
         content-broken). "Disappeared" = the map key removed from the file.
     accomplishments -- NOT a catalog entry anywhere (they are free-form
-        counter ids referenced inline across data/*.json and src/core/*.gd).
+        counter ids referenced inline across data/*.json and src/**).
         "Disappeared" = no longer produced by ANY live path this script
         traces (see CENSUS below) -- the exact same shape test_content.gd's
         own produced_accomplishments dict already validates authored
@@ -41,8 +41,10 @@ producer (mirrors test_content.gd's _collect_scene_accomplishments /
 _validate_effect discipline, extended past its scope -- see the class
 docstring above):
   1. STRUCTURAL_LITERALS -- bare `record_accomplishment("literal")` /
-     WICombat._tally(actor, "literal") call sites in src/core/**, traced by
-     hand (not derivable from any data/*.json scan). KEEP IN SYNC with
+     WICombat._tally(actor, "literal") call sites across src/** (NOT just
+     src/core/**: `post_game`'s producer is src/ui/sleep_veil.gd's
+     epilogue beat, via Game.sim.record_accomplishment), traced by hand
+     (not derivable from any data/*.json scan). KEEP IN SYNC with
      tests/test_shipped_ids.gd's own STRUCTURAL_LITERALS constant -- a new
      bare-literal call site anywhere needs an entry added to BOTH.
   2. Combat action-tally DYNAMIC counters (WICombat._tally_skill_use):

@@ -770,5 +770,32 @@ func _init() -> void:
 	WISave.metadata(mutate_check)
 	assert(JSON.stringify(mutate_check) == before_json, "metadata() never mutates its input Dictionary")
 
+	# --- Issue #99: the class-id remap covers EVERY class-id carrier, not
+	# just the levels dict -- a DEPRECATED_IDS["classes"] entry must also
+	# rewrite generalist_classes and pending_consolidation's parents/target,
+	# or a rename strands a dead id there. Exercised via _migrated() directly
+	# (pure static; the underscore-call precedent test_fixture_coherence.gd's
+	# game._quests_completed_count() set) with a fictional-but-shaped v2 save
+	# carrying "fighter" in all four carrier positions. No shipped save has
+	# fighter outside the classes dict, so this synthetic state is the ONLY
+	# thing exercising the carrier arms.
+	var carrier_data := {
+		"version": 2,
+		"state": {
+			"classes": {"fighter": 3},
+			"generalist_classes": ["fighter", "helper"],
+			"pending_consolidation": {"parents": ["fighter", "mage"], "target": "fighter", "level": 9},
+		},
+	}
+	var carrier_state: Dictionary = (WISave._migrated(carrier_data) as Dictionary)["state"]
+	assert(int((carrier_state["classes"] as Dictionary).get("warrior", 0)) == 3 and not (carrier_state["classes"] as Dictionary).has("fighter"), "carrier remap: classes dict remaps fighter->warrior")
+	assert(Array(carrier_state["generalist_classes"]) == ["warrior", "helper"], "carrier remap: generalist_classes rewritten in place, other ids untouched")
+	assert(Array((carrier_state["pending_consolidation"] as Dictionary)["parents"]) == ["warrior", "mage"], "carrier remap: pending_consolidation.parents rewritten")
+	assert(String((carrier_state["pending_consolidation"] as Dictionary)["target"]) == "warrior", "carrier remap: pending_consolidation.target rewritten")
+	# _migrated returns a COPY for migratable versions -- the input's own
+	# carriers stay untouched (the duplicate(true) contract).
+	var carrier_in_state: Dictionary = carrier_data["state"]
+	assert(Array(carrier_in_state["generalist_classes"]) == ["fighter", "helper"], "_migrated leaves the input's generalist_classes untouched")
+
 	print("PASS: save round-trips the full sim including rng state")
 	quit(0)

@@ -55,6 +55,18 @@ func _init() -> void:
 		"accomplishments": _produced_accomplishments(scene, graphs, skills, bounties, deliveries),
 	}
 
+	# Structural coverage guard (issue #99 review): a populated
+	# DEPRECATED_IDS entry outside WISave.MIGRATABLE_ID_CLASSES is
+	# advertised-but-unhandled -- it would turn the freeze check below green
+	# while real saves keep the dead id in their state carriers (skills:
+	# player_skills/hotbar_loadout/used_skills; items: inventory/equipped;
+	# maps: current_map; accomplishments: the accomplishments dict). Checked
+	# FIRST so the failure names the missing remap arm, not the frozen id.
+	for id_class: String in (WISave.DEPRECATED_IDS as Dictionary):
+		if not ((WISave.DEPRECATED_IDS as Dictionary)[id_class] as Dictionary).is_empty() \
+				and not (WISave.MIGRATABLE_ID_CLASSES as Array).has(id_class):
+			_errors.append("%s: WISave.DEPRECATED_IDS[\"%s\"] has entries but WISave._migrated() has no remap arm for this id class (absent from MIGRATABLE_ID_CLASSES) -- a mapping only counts once migration code rewrites the save-state carriers; add the remap arm AND extend MIGRATABLE_ID_CLASSES together (see that const's doc comment in save.gd)" % [id_class, id_class])
+
 	var total := 0
 	for id_class: String in ["classes", "skills", "items", "maps", "accomplishments"]:
 		var frozen_ids: Array = frozen.get(id_class, [])

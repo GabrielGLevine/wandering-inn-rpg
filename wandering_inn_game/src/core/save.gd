@@ -191,11 +191,10 @@ const VERSION := 5
 ## -- the fighter->warrior rename, which PRE-DATES this const (folded in
 ## here so the remap below is data-driven, not a one-off hand-coded
 ## `if cls.has("fighter")` block); the other four classes are empty until a
-## real deprecation needs them. A future deprecation of any class/skill/
-## item/map/accomplishment id adds ONE entry to the relevant sub-dict here
-## -- no new remap code, unless that id class has never been migrated
-## before (see the "classes" arm in `_migrated` below for the pattern to
-## copy).
+## real deprecation needs them. TRAP: a mapping entry only MEANS anything
+## once `_migrated()` carries a remap arm rewriting that id class's actual
+## save-state carriers -- see MIGRATABLE_ID_CLASSES below for the
+## enforcement.
 const DEPRECATED_IDS := {
 	"classes": {"fighter": "warrior"},
 	"skills": {},
@@ -203,6 +202,20 @@ const DEPRECATED_IDS := {
 	"maps": {},
 	"accomplishments": {},
 }
+
+## The id classes `_migrated()` actually carries remap code for today
+## (structural coverage guard, issue #99 review). A populated
+## DEPRECATED_IDS entry outside this list would turn test_shipped_ids.gd
+## green while real saves keep the dead id in their state carriers --
+## so that validator FAILS LOUD on any such entry: green must mean
+## handled, never advertised. A first skills/items/maps/accomplishments
+## deprecation therefore adds THREE things together: the DEPRECATED_IDS
+## entry, a `_migrated()` remap arm rewriting that id class's carriers
+## (skills: player_skills/hotbar_loadout/used_skills; items:
+## inventory/equipped; maps: current_map + frozen_cells keys;
+## accomplishments: the accomplishments dict's keys), and this list's
+## extension.
+const MIGRATABLE_ID_CLASSES := ["classes"]
 
 
 ## Serializes the full persistent WIGame state into a JSON-safe Dictionary.
@@ -290,22 +303,47 @@ static func _migrated(data: Dictionary) -> Dictionary:
 		state["actions_since_sleep"] = 0
 		version = VERSION
 	out["version"] = version
-	# Typed-assignment guard: a malformed save can carry a non-Dictionary
-	# "classes" (apply() rejects it later) -- fetching it into a typed var
-	# here threw a SCRIPT ERROR before rejection.
+	# Class-id remap (DEPRECATED_IDS["classes"]; today just fighter->warrior)
+	# across EVERY class-id carrier the save state holds -- a rename must not
+	# strand a dead id in ANY of them:
+	#   `classes` (the levels dict) -- max(), not add: a class's LEVEL is
+	#   held state, not an incrementing counter, so a save that somehow
+	#   carried both old and new id keeps the higher one, never double-counts.
+	#   `generalist_classes` (Array of class ids) and `pending_consolidation`'s
+	#   `parents` (Array of class ids) / `target` (String, a class id too) --
+	#   plain in-place id substitution.
+	# Typed-assignment guards throughout: a malformed save can carry a
+	# wrong-typed value (apply() rejects it later) -- fetching it into a
+	# typed var here threw a SCRIPT ERROR before rejection.
+	var class_map: Dictionary = DEPRECATED_IDS["classes"]
 	var cls_raw: Variant = state.get("classes", {})
 	if cls_raw is Dictionary:
 		var cls: Dictionary = cls_raw
-		# Composes every DEPRECATED_IDS["classes"] remap (today just
-		# fighter->warrior, see that const's own doc comment) -- max(), not
-		# add: a class's LEVEL is held state, not an incrementing counter,
-		# so a save that somehow carried both the old and new id keeps the
-		# higher one, never double-counts.
-		for old_id: String in (DEPRECATED_IDS["classes"] as Dictionary):
+		for old_id: String in class_map:
 			if cls.has(old_id):
-				var new_id: String = String(DEPRECATED_IDS["classes"][old_id])
+				var new_id: String = String(class_map[old_id])
 				cls[new_id] = maxi(int(cls.get(new_id, 0)), int(cls[old_id]))
 				cls.erase(old_id)
+	var gen_raw: Variant = state.get("generalist_classes", [])
+	if gen_raw is Array:
+		var gen: Array = gen_raw
+		for i: int in gen.size():
+			var gen_id := String(gen[i])
+			if class_map.has(gen_id):
+				gen[i] = String(class_map[gen_id])
+	var pending_raw: Variant = state.get("pending_consolidation", {})
+	if pending_raw is Dictionary:
+		var pending: Dictionary = pending_raw
+		var parents_raw: Variant = pending.get("parents", [])
+		if parents_raw is Array:
+			var parents: Array = parents_raw
+			for i: int in parents.size():
+				var parent_id := String(parents[i])
+				if class_map.has(parent_id):
+					parents[i] = String(class_map[parent_id])
+		var target_id := String(pending.get("target", ""))
+		if class_map.has(target_id):
+			pending["target"] = String(class_map[target_id])
 	return out
 
 
