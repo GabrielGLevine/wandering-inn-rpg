@@ -6,6 +6,68 @@
 wi-usage-guard skill. Check before every dispatch. QUIESCE = commit WIP
 seams + HANDOFF update + wait-for-reset (session) or hard stop (weekly).
 
+## ⏱️ lane-87 IN PROGRESS (2026-07-13) — issue #87, drained scope, NOT closed
+
+Fresh dispatch after a prior agent stalled 3x with zero commits (worktree
+`/tmp/wi-87`, branch `lane-87`, uncommitted/unpushed). Coordinator drain
+order narrowed #87's 4-item brief to the 2 highest-value fixes; the other 2
+are PARKED below, not built.
+
+**Shipped (4 commits, all verified, presentation-only, zero sim change):**
+1. **Combat Speed setting** (Normal/Fast/Instant) — `WISettings.combat_speed_step()`
+   (config-file idiom, mirrors text-scale exactly), a new "Combat Speed" row
+   in `settings_panel.gd` (APPEND-ONLY before "Back", ROWS now 11, PANEL_SIZE
+   456->492), and real wiring: `combat_playback.gd`'s `beat_delay()` scales
+   `combat_screen.gd`'s `AI_BEAT_SECONDS` via a new `_current_beat_seconds()`
+   screen wrapper (keeps combat_playback.gd's own "zero bare autoload
+   identifiers" contract intact). Instant (0.0x) lands on the exact
+   zero-delay branch QA/headless already collapses to — no new code path for
+   that step. Pin proof: `settings_loop.json` gained a mouse leg (title-side,
+   0->1 Fast) + a keyboard leg (pause-side, 1->2 Instant) + a persistence
+   check surviving the same Save->Load round trip `reduce_motion` already
+   proves; every shifted row index ("Back" 10->11) updated alongside.
+2. **Plain-sleep skip** — `sleep_veil.gd`'s `_run_sequence` (the most-repeated
+   veil beat) now routes its per-line + final-read hold through the
+   opener's own `_wait_or_advance` seam; `_unhandled_input`/`modal_active()`
+   widened to cover the plain-sleep `_running` flag. GUARDED: a sleep that
+   offered a consolidation (`_sleep_has_consolidation`, armed by
+   CONSOLIDATION_OFFERED, reset every `_begin_sleep`) stays fully
+   unskippable (`_wait()`, never `_wait_or_advance()`) for its whole reveal
+   — a player's habitual confirm-mash through routine level-up sleeps can
+   never also fast-forward past the one line informing a permanent choice.
+   Trace + pin: new `tests/test_sleep_veil.gd` (raw-source structural test —
+   this feature is human-playtest-gated exactly like the opener/epilogue,
+   collapses to instant under `_is_qa()`, so no headless DSL script can
+   exercise the real branch's timing) proves the guard's wiring; verified it
+   actually catches a regression (broke the arm site, watched it fail,
+   restored).
+
+**PARKED (not built this pass — still open on #87):**
+3. **Toast rhythm** — `message_layer.gd` queue-aware hold cap (~1.6s while
+   queue non-empty) + folding chore-wage `earn_gold` into the `on_skill_use`
+   toast (keeping `gold_changed` firing). Untouched.
+4. **Map-transition fade** — `world.gd`/`main.gd` ~0.25s black fade wrapping
+   `MAP_CHANGED`. Untouched.
+   Also not built from item 1's original brief: the `AP_CHANGED`/`TURN_ENDED`/
+   consecutive-`COMBATANT_MOVED` beat COALESCING, and surfacing the existing
+   per-turn AI-playback skip through a `WIInputHints` hint affordance — both
+   still open, no code written.
+
+**Verified**: full unit sweep clean (24 test files incl. the new one, 0
+SCRIPT ERROR/Parse Error/WARNING) except one PRE-EXISTING unrelated failure
+(`test_effect_text.gd`'s phosphor_pendant line — confirmed present before
+this branch via `git stash`, not touched here); `combat_walkthrough`
+(seed 9) byte-identical; every `sleep_veil.gd`-touching canonical
+(`consolidation_flow`/`consolidation_reload`/`door_awakening`/
+`tutorial_flow`/`class_evolution_loop`/`arc_flow`/`upstairs_walkthrough`)
+byte-identical; `qa/ci_sweep.sh --tier smoke` (13 scripts incl.
+`settings_loop`) green at `WI_SWEEP_JOBS=2`. Full 100+-script sweep NOT run
+(budget-drained per coordinator directive — smoke tier + the specific
+touching canonicals above is the verification bar that was set).
+**Next**: controller merges lane-87 into main (still on `/tmp/wi-87`,
+unpushed), re-gates, and either resumes #87 for items 3/4 in a future pass
+or closes the issue with items 3/4 spun into a follow-up.
+
 ## 🔀 lane-19 landed (2026-07-12) — #19 was ALREADY DONE 07-07; this pass closed the real gaps
 
 **Controller note for merge**: before building anything, this lane discovered
