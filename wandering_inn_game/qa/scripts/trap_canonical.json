@@ -1,0 +1,216 @@
+{
+ "_comment": "R6 (#95) canonical: the sewer_nest_snag trap placement (sewers, 7,3), proving the shipped requires_skill disarm shape live on a NEW world-flavor trap. Loads near_sewers_trap (tactician:1 for observe, positioned at 2,4). Flow: approach -> plain E-interact shows the observe TELL (skill_hint_toast, since the PC already knows [Observe]) -> THE AVOIDABLE PATH proof (walk past the trap's column without disarming, zero side effects) -> return and cast [Appraise Foe] via the field hotbar, the LIVE disarm leg (disarm_trap is PARKED, not yet on this tree -- docs/design/class-foundation-staging/trap-disarm-swap.json), banking the shared trap_disarmed counter + 1g salvage. No combat in this script; rng_state is cosmetic (fixture's own TRAP comment).",
+ "fixture_save": "near_sewers_trap",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down 1 selects Continue, confirm loads the near_sewers_trap fixture.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "sewers"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    4
+   ]
+  },
+  {
+   "_comment": "== APPROACH == row y4 (missing_recruit_loop's own clear corridor), right 5 to (7,4), facing the trap at (7,3).",
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    4
+   ]
+  },
+  {
+   "_comment": "Up 1 bumps the trap's own occupied cell (7,3) -- stays at (7,4), now facing it.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    4
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "00_trap_field_read"
+  },
+  {
+   "_comment": "== THE OBSERVE TELL == plain E-interact. The PC knows [Observe] (tactician:1), so interact()'s requires_skill branch takes the KNOWN arm: a narrative nudge toast (skill_hint_toast), never an auto-disarm (the explicit-hotbar ruling).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Wire, taut and low, strung off a rusted stanchion. Something in the nest rigged this. Careful hands could clear it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE AVOIDABLE PATH == the informed-consent counterplay: walk past the trap's own column without ever disarming it. Right 1 to (8,4) -- open floor, no block, no side effect. Zero accomplishment/gold change from this leg.",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "screenshot",
+   "name": "01_avoidable_path"
+  },
+  {
+   "_comment": "== RETURN TO DISARM == left 1 back to (7,4), up 1 re-bumps the trap (still facing it, no move).",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    4
+   ]
+  },
+  {
+   "_comment": "== THE DISARM LEG (observe fallback, LIVE) == field-cast [Appraise Foe]/[Observe] via the hotbar -- WIFieldSkills.dispatch's case-1 branch (requires_skill==observe AND on_skill_use present) routes straight to use_skill(), banking the shared trap_disarmed counter + the 1g salvage. This is the fallback leg the plan sanctions when disarm_trap hasn't landed (docs/design/class-foundation-staging/trap-disarm-swap.json) -- the Rogue-specific leg is parked there, not exercised here.",
+   "action": "press_field_skill",
+   "skill": "observe"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "context": "exploration",
+    "target": "sewer_nest_snag"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "trap_disarmed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You ease the wire off its catch and coil it loose. A few scavenged links clatter free, worth a coin or two melted down."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "payload_contains": {
+    "delta": 1,
+    "total": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Earned 1 gold."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.trap_disarmed",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "02_trap_disarmed"
+  }
+ ]
+}

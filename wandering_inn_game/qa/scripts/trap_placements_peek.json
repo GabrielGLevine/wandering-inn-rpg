@@ -1,0 +1,86 @@
+{
+ "_comment": "AD-HOC windowed peek, not a canonical (mirrors street_peek/dungeon_peek's teleport-based shape, excluded from qa/manifest.json). One controller-read screenshot per R6 (#95) trap placement not already covered by trap_canonical's own 3-shot sequence (sewer_nest_snag). No fixture -- fresh boot, teleport straight to each approach cell.",
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "sewers",
+   "cell": [13, 11]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": { "map": "sewers" },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_sewer_drain_snare"
+  },
+  {
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [8, 8]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": { "map": "mercantile_alleys" },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02_alley_footpad_snag_a"
+  },
+  {
+   "action": "teleport",
+   "map": "deep_tunnels",
+   "cell": [9, 7]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": { "map": "deep_tunnels" },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_warren_side_snare"
+  },
+  {
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [10, 8]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": { "map": "witch_hollow" },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "04_hollow_briar_snare"
+  }
+ ]
+}
