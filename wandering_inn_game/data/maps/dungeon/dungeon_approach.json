@@ -1,0 +1,221 @@
+{
+ "_comment": "8d Phase B1 (issue #14): the dungeon's entrance chamber -- the sealed M-ARC gallery (`warren_mouth`, data/skeleton_scene.json's `deep_tunnels` map, the 'widened-gallery marker' the Raskghar seal-beat's 'for now' hook left standing) REOPENS into this room. B3/the controller carries the actual door edit into `warren_mouth` -- explicitly OUT of this lane's charter. `gallery_seal_anchor` below is THIS map's own clearly-commented landing anchor: once the gallery-side door lands, convert this entity (or a wall-embedded twin at the same cell) into a real `door` back to `deep_tunnels`. UNREACHABLE BY DESIGN this phase (no door routes here from any live map -- matches the ruin/floodplains reachability-note convention) -- `dungeon_peek` proves it via `teleport` only. Biome `dungeon` (data/biomes.json, Cemetery 0.4 family). One dormant-encounter PLACEHOLDER (`dormant_guardian_marker`, kind:prop -- NOT kind:encounter, matching the rift_vermin_leak D1 precedent exactly: no combat data exists yet, C-phase promotes it) foreshadows the ratified GUARDIAN CONSTRUCT boss pick via the reused `vault_construct` sprite, tinted dormant. Statue (CASTLE 0.3) + rubble (CAVE) dressing per the family recipe, decor+blocked pairs (the ruin_surface boulder convention). Grid-bound clipping alone stops movement at the map edge (sewers/ruin_surface precedent) -- no perimeter walls.segments; one short interior segment (a fallen lintel) for texture only.",
+ "biome": "dungeon",
+ "grid": {
+  "width": 16,
+  "height": 12
+ },
+ "blocked": [
+  [
+   4,
+   2
+  ],
+  [
+   11,
+   2
+  ],
+  [
+   3,
+   9
+  ],
+  [
+   12,
+   9
+  ]
+ ],
+ "walls": {
+  "sheet": "res://assets/tiles/cemetery/Walls.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "_comment": "A fallen lintel span, interior texture only (ruin_surface's own minimal from/to-only precedent) -- clear of every entity/decor cell on this map.",
+    "from": [
+     6,
+     4
+    ],
+    "to": [
+     7,
+     4
+    ]
+   }
+  ]
+ },
+ "floor_layers": [
+  {
+   "_pick": "Cemetery-floor variation reusing the dungeon biome's own verified floor-tile neighborhood (2,2)/(3,7) plus the genuinely darker worn variant (2,11) for real wear texture.",
+   "variants": [
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     7
+    ],
+    [
+     2,
+     11
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
+ "decor": [
+  {
+   "_comment": "CASTLE 0.3 statue dressing, blocked-pair (THE BLOCKING CONTRACT).",
+   "sprite": "dungeon_statue",
+   "cell": [
+    4,
+    2
+   ],
+   "tint": [
+    0.75,
+    0.75,
+    0.78
+   ]
+  },
+  {
+   "sprite": "dungeon_statue",
+   "cell": [
+    11,
+    2
+   ],
+   "tint": [
+    0.7,
+    0.7,
+    0.74
+   ]
+  },
+  {
+   "_comment": "CAVE rubble dressing (a collapse band), blocked-pair.",
+   "sprite": "dungeon_rubble",
+   "cell": [
+    3,
+    9
+   ],
+   "tint": [
+    0.85,
+    0.82,
+    0.85
+   ]
+  },
+  {
+   "sprite": "dungeon_rubble",
+   "cell": [
+    12,
+    9
+   ],
+   "tint": [
+    0.85,
+    0.82,
+    0.85
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "_comment": "B3 ANCHOR CELL, wired live (8d C1, issue #14): `door_when` gated on `horns_delve_started` (the Olesm-stipend accept beat, NOT the arc-epilogue counter alone -- a player who has merely finished the epilogue but never taken the survey job still finds this sealed, matching 'diegetic locked read pre-quest'). Unmet, this stays the exact pre-existing inert rubble prop (on_interact_accomplishment/toast below, byte-identical -- dungeon_peek's own pinned assertions on this entity are untouched). Met, it becomes a real door to `deep_tunnels`, landing at (13,5) -- one cell east of warren_mouth's own (12,5), the 'never land on the door's own cell' convention (dungeon_approach_return/dungeon_depths_door precedent).",
+   "id": "gallery_seal_anchor",
+   "kind": "prop",
+   "cell": [
+    1,
+    6
+   ],
+   "display_name": "Choked Passage",
+   "sprite": "dungeon_rubble",
+   "tint": [
+    0.5,
+    0.48,
+    0.5
+   ],
+   "observe": "Rubble and worked stone choke a passage that clearly led somewhere once. Someone sealed this side deliberately, and not long ago either.",
+   "on_interact_accomplishment": "found_the_sealed_passage",
+   "toast": "The stone doesn't budge. Whatever's on the other side stays sealed. For now.",
+   "door_when": {
+    "requires": {
+     "horns_delve_started": 1
+    },
+    "to_map": "deep_tunnels",
+    "to_cell": [
+     13,
+     5
+    ],
+    "open_toast": "The rubble gives at your push -- someone's already cleared a path through. The old gallery beyond is dark, but it is open."
+   }
+  },
+  {
+   "_comment": "Dormant-encounter SLOT, placement only (rift_vermin_leak D1 precedent: kind:prop, never kind:encounter, until C-phase lands real combatants/arena data -- test_combat_data would hard-fail against absent data otherwise). Foreshadows the RATIFIED guardian-construct boss pick (vault_construct sprite, already in the registry from Phase A2) sitting dormant near the entrance before the real one deeper in. C-phase promotes: swap kind to 'encounter', add arena/enemies/trigger_radius, drop the flavor on_interact_accomplishment/toast pair.",
+   "id": "dormant_guardian_marker",
+   "kind": "prop",
+   "cell": [
+    8,
+    9
+   ],
+   "display_name": "A Still Shape",
+   "sprite": "vault_construct",
+   "tint": [
+    0.4,
+    0.4,
+    0.42
+   ],
+   "observe": "A carved shape crouches against the far wall, limbs folded, its eyeless face turned to the floor. It has not moved since you noticed it. That is the only reason you are still standing here.",
+   "on_interact_accomplishment": "eyed_the_dormant_guardian",
+   "toast": "You keep your distance. Whatever wakes it, you would rather not be the one who finds out."
+  },
+  {
+   "_comment": "8d C1/D1 (issue #14/#15) THE HORNS OF HAMMERAD -- Ceria Springwalker, waiting at the reopened gallery. Her own graph (ceria_intro.json) is the recruit conversation: it ends in `horns_party_formed`, the ally_requires gate `vault_boss_slot` reads. Canon (wiki.wanderinginn.com/Ceria_Springwalker): half-Elf [Cryomancer], leads the Horns of Hammerad, dry/professional register with real warmth underneath -- circlet, blue robes, the skeletal hand kept HIDDEN v1 per the spec's own canon-sensitive flag. Grouped with Yvlon/Ksmvr at (7,5)-(9,5), open floor clear of every blocked/decor/entity cell on this map.",
+   "id": "ceria",
+   "kind": "npc",
+   "cell": [
+    7,
+    5
+   ],
+   "display_name": "Ceria Springwalker",
+   "sprite": "ceria",
+   "facing": "down",
+   "conversation": "ceria_intro"
+  },
+  {
+   "_comment": "8d C1/D1 (issue #14/#15) Yvlon Byres. Canon (wiki.wanderinginn.com/Yvlon_Byres): silver-armed [Armsmistress]-line warrior (a sword-and-armor fighter, NOT a mage class), blunt-kind register -- protective without sentiment. Own graph (yvlon_intro.json): a hub whose default/text_variants carry the pool bark / halls-anticipating line / post-victory line, no gate of her own (Ceria owns the party-formed beat).",
+   "id": "yvlon",
+   "kind": "npc",
+   "cell": [
+    8,
+    5
+   ],
+   "display_name": "Yvlon Byres",
+   "sprite": "yvlon",
+   "facing": "down",
+   "conversation": "yvlon_intro"
+  },
+  {
+   "_comment": "8d C1/C4/D1 (issue #14/#15) Ksmvr. Canon (wiki.wanderinginn.com/Ksmvr): Antinium [Vector Slayer?]/Horns member, earnest-literal register, counts things, learns idioms deliberately. Own graph (ksmvr_intro.json) is pool + post-victory only -- the PLATES beat itself lives on a second sighting of this same character in trapped_halls (`ksmvr_plates`, near pressure_plate_a), a distinct entity id.",
+   "id": "ksmvr",
+   "kind": "npc",
+   "cell": [
+    9,
+    5
+   ],
+   "display_name": "Ksmvr",
+   "sprite": "ksmvr",
+   "facing": "down",
+   "conversation": "ksmvr_intro"
+  },
+  {
+   "_comment": "The real, brand-new door pairing to trapped_halls (both maps are new this phase -- linking them to EACH OTHER is not the excluded B3 gallery-door edit, which is the deep_tunnels/warren_mouth pairing). to_cell (2,7) lands one cell east of the return door's own (1,7) cell in trapped_halls.",
+   "id": "dungeon_depths_door",
+   "kind": "door",
+   "cell": [
+    14,
+    6
+   ],
+   "display_name": "Deeper In",
+   "sprite": "door",
+   "to_map": "trapped_halls",
+   "to_cell": [
+    2,
+    7
+   ]
+  }
+ ]
+}

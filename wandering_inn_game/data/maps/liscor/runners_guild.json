@@ -1,0 +1,256 @@
+{
+ "_comment": "The Runner's Guild (10x8), reached via runners_guild_door on the street (20,17). Reuses the 'inn' biome (every interior in this game differentiates via moods.json's grade + dressing, not new tile assets). Counter dressed via the Guild's OWN counter_left/counter_right precedent (Selys's exact convention -- Vess stands in the gap, no separate desk entity needed since she IS the counter-person, unlike Zevara's own desk, which needed its own prop because Zevara herself stays elsewhere). THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one. Vess (npc, conversation vess_counter) owns accept/turn-in, mirroring Selys's desk. The resting runner walk-on rests near a real `bench` prop (previously a `stool` stand-in, VISUAL-LOG'd; the delivery board itself stays on the `inn_sign` art -- no bespoke delivery-board asset exists yet).",
+ "biome": "inn",
+ "grid": {
+  "width": 10,
+  "height": 8
+ },
+ "blocked": [
+  [
+   4,
+   2
+  ],
+  [
+   6,
+   2
+  ]
+ ],
+ "floor_layers": [
+  {
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     1,
+     21
+    ],
+    [
+     2,
+     21
+    ],
+    [
+     1,
+     22
+    ],
+    [
+     2,
+     22
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
+ "walls": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     9,
+     0
+    ],
+    "cap": [
+     10,
+     6
+    ],
+    "face": [
+     10,
+     7
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     7
+    ],
+    "cap": [
+     10,
+     6
+    ]
+   },
+   {
+    "from": [
+     9,
+     1
+    ],
+    "to": [
+     9,
+     7
+    ],
+    "cap": [
+     10,
+     6
+    ]
+   },
+   {
+    "_comment": "South wall, gapped at x=5 for runners_guild_exit.",
+    "from": [
+     1,
+     7
+    ],
+    "to": [
+     4,
+     7
+    ],
+    "cap": [
+     10,
+     6
+    ]
+   },
+   {
+    "from": [
+     6,
+     7
+    ],
+    "to": [
+     8,
+     7
+    ],
+    "cap": [
+     10,
+     6
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "counter_left",
+   "cell": [
+    4,
+    2
+   ]
+  },
+  {
+   "sprite": "counter_right",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "sprite": "bench",
+   "cell": [
+    1,
+    5
+   ]
+  }
+ ],
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all",
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "runners_guild_exit",
+   "kind": "door",
+   "cell": [
+    5,
+    7
+   ],
+   "display_name": "Liscor Street",
+   "sprite": "door",
+   "to_map": "street",
+   "to_cell": [
+    19,
+    17
+   ]
+  },
+  {
+   "_comment": "Vess, the Street Runner clerk -- profile in docs/design/character-profiles.md. Stands in the counter's own gap cell (5,2), between counter_left (4,2) and counter_right (6,2) -- the exact Selys/guild counter precedent (an NPC standing in a counter's pass-through, no separate desk entity). talk_pool fires her 'First approach' bark (board-copy.md sec.3) before the real conversation graph (vess_counter.json) on the first talk of a waking.",
+   "id": "vess",
+   "kind": "npc",
+   "cell": [
+    5,
+    2
+   ],
+   "display_name": "Vess",
+   "sprite": "pc_drake_f",
+   "tint": [
+    0.5,
+    0.55,
+    0.58
+   ],
+   "facing": "down",
+   "observe": "A teenage Drake, wiry, a strap-scarred satchel worn even behind the counter -- she never fully sat down, she just stopped moving for a second. Slate-grey scales, a sweat-band she does not need indoors and wears anyway.",
+   "talk_pool": [
+    "Runner's Guild! Board's live. Take a slip, show me, go. It's yours until it's theirs — sleep on a run, you carry the shame instead."
+   ],
+   "conversation": "vess_counter",
+   "dialogue": [
+    {
+     "speaker": "Vess",
+     "text": "Runner's Guild. Counter's open."
+    }
+   ]
+  },
+  {
+   "_comment": "THE DELIVERY BOARD -- browse-only (WIGame._interact_delivery_board), the delivery-loop's twin of THE REQUEST BOARD (guild_board), same header/second_visit/footer shape, distinct delivery_board:true flag so interact()'s prop dispatch routes to the right board. Copy composed in staging register (board-copy.md sec.3 has no second-visit line; this one is ORIGINAL) sec.3.",
+   "id": "runner_board",
+   "kind": "prop",
+   "cell": [
+    8,
+    3
+   ],
+   "display_name": "The Delivery Board",
+   "sprite": "inn_sign",
+   "tint": [
+    0.65,
+    0.72,
+    0.8
+   ],
+   "facing": "left",
+   "delivery_board": true,
+   "toast": "THE DELIVERY BOARD. Legs and ledgers. Gold by distance, paid on the mark, same-waking terms. Slips at the counter.",
+   "second_visit_toast": "THE DELIVERY BOARD. Your slip's still logged at the counter. Legs and ledgers don't care how it's going either.",
+   "observe": "Couriers are made, not hired. Start with the market run. — the counter"
+  },
+  {
+   "_comment": "The resting runner walk-on (board-copy.md's proposal), title-only per THE PEDDLER precedent (an unnamed, purely ambient flavor NPC) -- staged in docs/design/character-profiles-staging.md, not promoted to the shipped file (matching Yelra/Renn/Ilvo, which also stayed staging-only; Vess is the one NAMED, mechanically-load-bearing NPC this task ships to the shipped profiles). talk_pool-only, no conversation graph, inert-adjacent. Rests near a `stool` (no bench sprite in the catalog -- disclosed, VISUAL-LOG'd) by the door. Issue #80 (world reactivity wave, item 3 -- FLAVOR presence only, taste-gate 2026-07-12): present_when{phase:[day,dusk]} -- an on-call runner waiting between jobs, off-shift at night; Vess (the counter clerk, mechanically load-bearing) stays put, only the flavor extra steps away.",
+   "id": "resting_runner",
+   "kind": "npc",
+   "cell": [
+    2,
+    5
+   ],
+   "display_name": "Resting Runner",
+   "sprite": "pc_gnoll_m",
+   "tint": [
+    0.5,
+    0.46,
+    0.4
+   ],
+   "facing": "left",
+   "present_when": {
+    "phase": [
+     "day",
+     "dusk"
+    ]
+   },
+   "observe": "A Gnoll runner, propped against the wall by the stool, legs out, boots still laced. Not asleep. Not far from it.",
+   "talk_pool": [
+    "Floodplains double, both legs mud. Wake me for a fire or a Courier."
+   ],
+   "dialogue": [
+    {
+     "speaker": "Resting Runner",
+     "text": "...five more minutes."
+    }
+   ]
+  }
+ ]
+}

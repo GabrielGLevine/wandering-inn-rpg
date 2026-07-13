@@ -1,0 +1,267 @@
+{
+ "_comment": "The Raskghar descent -- a small (14x10) cave-biome map BELOW the sewers, entered from the sewers `deep_fissure` prop once A3 banks `heard_the_deep_tremor` (see the fissure's door_when seam). DARKEST pin in the game (data/moods.json deep_tunnels, vignette 0.55). A single interact-only scout route-fight (`raskghar_scouts`) blocks the way; two flavor props (cold_hearth = old fires, gnaw_pile = bones) + the `warren_mouth` widened-gallery marker (the 'warren door' deep_descent reaches) dress the escalation. The BOSS encounter (Awakened Raskghar in the deep_warren arena) is A3's climax chain -- A2 ships the map, the scouts, the threshold, and the deep_warren arena/harness band; A3 wires the boss entity at/beyond warren_mouth + the Relc party/veto. Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable.",
+ "biome": "cave",
+ "grid": {
+  "width": 14,
+  "height": 10
+ },
+ "blocked": [],
+ "floor_layers": [
+  {
+   "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood (same picks as sewers/cave_mouth).",
+   "variants": [
+    [
+     8,
+     13
+    ],
+    [
+     9,
+     13
+    ],
+    [
+     10,
+     13
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
+ "walls": {
+  "sheet": "res://assets/tiles/cave/Tiles.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "_comment": "A stalactite rubble column hanging from the ceiling (top), x7 y0-2 -- narrows the gallery without touching the open mid-band.",
+    "from": [
+     7,
+     0
+    ],
+    "to": [
+     7,
+     2
+    ]
+   },
+   {
+    "_comment": "A fallen column rising from the floor (bottom), x4 y7-9.",
+    "from": [
+     4,
+     7
+    ],
+    "to": [
+     4,
+     9
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "boulder",
+   "cell": [
+    10,
+    2
+   ]
+  },
+  {
+   "sprite": "mushroom_purple_m",
+   "cell": [
+    3,
+    3
+   ]
+  },
+  {
+   "sprite": "mushroom_purple_s",
+   "cell": [
+    11,
+    7
+   ]
+  },
+  {
+   "sprite": "boulder",
+   "cell": [
+    6,
+    8
+   ]
+  }
+ ],
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all"
+  }
+ ],
+ "entities": [
+  {
+   "_comment": "The way back up to the sewers, beside where the fissure drops you (lands at 2,2).",
+   "id": "tunnel_up",
+   "kind": "door",
+   "cell": [
+    2,
+    1
+   ],
+   "display_name": "Fissure Up",
+   "sprite": "door",
+   "to_map": "sewers",
+   "to_cell": [
+    8,
+    12
+   ],
+   "light": {
+    "color": [
+     0.7,
+     0.8,
+     0.95
+    ],
+    "energy": 0.4,
+    "radius": 20,
+    "flicker": false
+   }
+  },
+  {
+   "id": "cold_hearth",
+   "kind": "prop",
+   "cell": [
+    5,
+    4
+   ],
+   "display_name": "Cold Hearth",
+   "sprite": "boulder",
+   "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Something sat here in the dark and knew how to keep a fire — or learned how, the way they say these things learn, when the moon is full and their minds come clear.",
+   "on_interact_accomplishment": "found_cold_hearth",
+   "toast": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark, and left gnawed bones banked around the edge, cracked for their marrow.",
+   "light": {
+    "color": [
+     0.9,
+     0.45,
+     0.25
+    ],
+    "energy": 0.3,
+    "radius": 12,
+    "flicker": true
+   }
+  },
+  {
+   "id": "gnaw_pile",
+   "kind": "prop",
+   "cell": [
+    9,
+    6
+   ],
+   "display_name": "Gnawed Bones",
+   "sprite": "boulder",
+   "observe": "A midden of cracked bones, marrow sucked clean. Gnoll, most of them. A few too large to name. They have been sorted, almost stacked, as though something down here counts its meals and keeps the score.",
+   "on_interact_accomplishment": "found_gnaw_pile",
+   "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered. And that is worse than if they had been."
+  },
+  {
+   "_comment": "The deep_tunnels route-fight -- a Raskghar scout PAIR barring the way to the warren. Interact-only (no trigger_radius) so QA/A3 control the start; deep_descent clears it via combat_autoplay. Fought in cave_mouth (the generic cave arena); the deep_warren arena is reserved for A3's boss. on_victory banks cleared_raskghar_scouts.",
+   "id": "raskghar_scouts",
+   "kind": "encounter",
+   "cell": [
+    8,
+    4
+   ],
+   "display_name": "Raskghar Scouts",
+   "sprite": "raskghar_scout",
+   "observe": "Two of them crouch where the tunnel narrows, moon-grey and mountain-shouldered, knuckles to the stone. Their small eyes track you without blinking. Between you and the deeper dark, they are the door — and the lock.",
+   "arena": "cave_mouth",
+   "enemies": [
+    "raskghar_scout",
+    "raskghar_scout"
+   ],
+   "allies": [],
+   "on_victory": [
+    "cleared_raskghar_scouts"
+   ]
+  },
+  {
+   "_comment": "The widened-gallery marker -- the 'warren door' deep_descent reaches (its terminal beat). A flavor threshold prop in A2; A3 wired the Awakened Raskghar boss encounter (deep_warren arena) here / just beyond it, plus the Relc party/veto beat. 8d C1 (issue #14) B3 wiring: `door_when` gated on `horns_delve_started` -- the SAME counter/mirror-cell as dungeon_approach's `gallery_seal_anchor`, this entity's own reopened-gallery pair. Structurally safe: `horns_delve_started` requires `post_game` to even be offered (Olesm's stipend option), and `post_game` implies the full Act III backbone including `cleared_the_warren`/`raskghar_sealed` (test_fixture_coherence.gd's own POST_GAME_BACKBONE) -- so this door_when can never intercept a FIRST-time arrival here; the one-time `reached_the_warren` flavor beat below (deep_descent's own canonical) always already fired before the gate could ever be met.",
+   "id": "warren_mouth",
+   "kind": "prop",
+   "cell": [
+    12,
+    5
+   ],
+   "display_name": "Warren Mouth",
+   "sprite": "boulder",
+   "observe": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den, and where the big one waits, breathing slow in the black.",
+   "on_interact_accomplishment": "reached_the_warren",
+   "variants": [
+    {
+     "when": {
+      "cleared_the_warren": 1
+     },
+     "toast": "The gallery is silent now. The pacing tracks are old and dust-softened; nothing breathes in the dark ahead. Past the emptied den, the stone the Watch sealed stands unbroken."
+    }
+   ],
+   "visual_states": [
+    {
+     "when": {
+      "counter": "cleared_the_warren",
+      "at": 1
+     },
+     "observe": "Claw-gouges score the pillars, going quiet toward the back. The den is empty — cleared, then sealed. Whatever the warren was, it is a grave and a door now."
+    }
+   ],
+   "toast": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren.",
+   "door_when": {
+    "requires": {
+     "horns_delve_started": 1
+    },
+    "to_map": "dungeon_approach",
+    "to_cell": [
+     2,
+     6
+    ],
+    "open_toast": "The gallery floor slopes down past where the den used to be, into a chamber someone else has clearly been surveying."
+   }
+  },
+  {
+   "_comment": "THE BOSS encounter -- the Awakened Raskghar + 2 scout adds, fought in the deep_warren arena. Interact-triggered (no trigger_radius, so QA/the player choose to engage; it sits just past the warren_mouth threshold at (12,7), reachable by standing at (12,6) facing down). Carries a `conversation` (relc_descent = the Relc join/veto beat, the interact.encounter branch runs it before combat): the [Go together.] branch banks `relc_joined_descent`, satisfying THIS entity's `ally_requires` so Relc fields as an ally; the [I go alone.] branch banks `went_alone` and NEVER banks relc_joined_descent, so the roster fields no ally (the honest, measured 0.04 solo cell -- the player chose it). Both branches end on a `start_combat: awakened_boss` effect (self-reference). on_victory banks `cleared_the_warren`; the seal-beat resolutions (Zevara/Olesm) consume that and bank the Act III advance key `raskghar_sealed` after the player returns to the surface (NOT here -- victory != sealed, per the acts data trace). respawns:false + no persistent flag => the boss is removed for good on victory (no re-fight). Balance: sim_combat_batch.gd BOSS_CELLS (gated 0.6-0.75 vs warrior2+Relc, measured solo).",
+   "id": "awakened_boss",
+   "kind": "encounter",
+   "cell": [
+    12,
+    7
+   ],
+   "display_name": "Awakened Raskghar",
+   "sprite": "raskghar_awakened",
+   "observe": "It fills the gallery mouth like a landslide that learned to breathe: upright, moon-grey, a pale mane over shoulders wider than a doorway. Old scars cross its hide, and a Gnoll's picked bones lie stacked at its feet. Its eyes hold on you with something worse than hunger: thought.",
+   "conversation": "relc_descent",
+   "arena": "deep_warren",
+   "enemies": [
+    "raskghar_awakened",
+    "raskghar_scout",
+    "raskghar_scout"
+   ],
+   "allies": [
+    "relc"
+   ],
+   "ally_requires": {
+    "relc_joined_descent": 1
+   },
+   "on_victory": [
+    "cleared_the_warren"
+   ]
+  },
+  {
+   "_comment": "R6 (#95) warren-approach trap. Cell (9,8) verified off deep_descent's real walked-cell set: (2,2)/(2,3)/(2,4)/(3,4)/(4,4)/(4,3)/(5,3)/(6,3)/(7,3)/(8,3)/(9,3)/(9,4)/(9,5)/(10,5)/(11,5)/(11,6)/(12,6) -- the canonical route never leaves the y3-6 open mid-band this map's own _comment names; (9,8) is the untouched south gallery below it, clear of the fallen column (x4,y7-9). requires_skill=observe LIVE (disarm_trap PARKED -- docs/design/class-foundation-staging/trap-disarm-swap.json). Avoidable: single-cell prop, open floor on every side. Disarm banks shared trap_disarmed + 2g.",
+   "id": "warren_side_snare",
+   "kind": "prop",
+   "cell": [
+    9,
+    8
+   ],
+   "display_name": "A Raskghar Snare",
+   "sprite": "snare_coil",
+   "requires_skill": "disarm_trap",
+   "skill_hint_toast": "Sinew and bone hooks, strung low across the gallery floor. Whatever set it hunts down here, same as you.",
+   "locked_toast": "Sinew and bone hooks, strung low across the gallery floor. It has the shape of something meant to catch. You don't know how to spring it safely.",
+   "on_skill_use": {
+    "accomplishment": "trap_disarmed",
+    "toast": "You work the hooks free of the sinew line and let it fall slack. Wedged in the rig: a couple of coins, old and green with tarnish.",
+    "gold": 2
+   }
+  }
+ ]
+}
