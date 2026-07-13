@@ -681,9 +681,14 @@ const DUNGEON_CELLS := [
 ## flame_bolt users dropped -- corusdeer 0.77->0.65, forge_golem 0.67->0.49
 ## (t4 under-tier) / 0.81->0.71 (at-tier sw14). All still MEASURED-only;
 ## the others were re-read byte-identical at merge.
+## GH#94 (VISUAL-LOG re-point, 2026-07-13): razorbeak_nest's arena
+## re-pointed `training_yard` -> `boulder_flats` (fiction-right open-ground,
+## same as corusdeer_range's own row above) -- arena is presentation-only
+## (never read by `WICombat`'s own rules), so this re-derive is a pure
+## sanity re-measure, not expected to move the win rate/rounds.
 const BESTIARY_CELLS := [
 	{"name": "corusdeer_range_t1_solo", "arena": "boulder_flats", "enemies": ["corusdeer"], "build": "warrior2", "solo": true},
-	{"name": "razorbeak_nest_t1_solo", "arena": "training_yard", "enemies": ["razorbeak_a", "razorbeak_b"], "build": "warrior2", "solo": true},
+	{"name": "razorbeak_nest_t1_solo", "arena": "boulder_flats", "enemies": ["razorbeak_a", "razorbeak_b"], "build": "warrior2", "solo": true},
 	{"name": "boulevard_mothbears_t3_solo", "arena": "mercantile_alley", "enemies": ["mothbear_a", "mothbear_b"], "build": "t3_warrior10", "solo": true},
 	{"name": "kingslayer_den_t4_solo", "arena": "spider_den", "enemies": ["kingslayer_spider"], "build": "t4_spellsword11_party", "solo": true},
 	{"name": "forge_calibration_golem_t4_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword11_party", "solo": true},
