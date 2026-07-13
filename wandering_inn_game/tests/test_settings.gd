@@ -174,7 +174,11 @@ func _check_static_flag_reset(path: String, extends_line: String, flag_name: Str
 	var raw := FileAccess.get_file_as_string(path)
 	assert(raw.begins_with(extends_line), "%s: expected first line '%s'" % [path, extends_line])
 	var first_nl := raw.find("\n")
-	var stub := "\n\nvar Game: Variant = null\nvar ObservableBus: Variant = null\nvar TestDriver: Variant = null\nvar WIInputHints: Variant = null"
+	# WISettings joins the stub list (issue #87: combat_screen.gd's
+	# _current_beat_seconds() references it as a bare identifier) -- harmless
+	# unused var on message_layer.gd's own patched copy, which never
+	# references it.
+	var stub := "\n\nvar Game: Variant = null\nvar ObservableBus: Variant = null\nvar TestDriver: Variant = null\nvar WIInputHints: Variant = null\nvar WISettings: Variant = null"
 	var patched := raw.substr(0, first_nl) + stub + raw.substr(first_nl)
 	var script := GDScript.new()
 	script.source_code = patched

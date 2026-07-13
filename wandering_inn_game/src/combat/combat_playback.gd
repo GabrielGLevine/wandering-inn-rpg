@@ -305,10 +305,17 @@ func _hit_stop_hold(event: Dictionary) -> float:
 	return 0.0
 
 
+## Issue #87: the AI-pacing seconds, scaled by the player's Combat Speed pick
+## via `_screen._current_beat_seconds()` -- a THIRD `_screen` wrapper (the
+## SAME "no bare autoload identifiers in this file" reason `_test_driver_
+## active()`/`_emit_ai_playback_done()` exist, see the file doc comment
+## above). Zero-delay QA/headless is checked FIRST and unconditionally, so
+## Instant speed (multiplier 0.0) never opens a new code path -- it lands on
+## the exact same already-proven-safe zero-delay branch.
 func beat_delay() -> float:
 	if _screen._test_driver_active() or DisplayServer.get_name() == "headless":
 		return 0.0
-	return _screen.AI_BEAT_SECONDS
+	return _screen._current_beat_seconds()
 
 
 ## Pops and applies one queued AI-turn event per beat, pacing by beat_delay()

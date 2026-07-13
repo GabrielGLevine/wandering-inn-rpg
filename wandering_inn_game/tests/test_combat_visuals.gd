@@ -81,9 +81,12 @@ func _init() -> void:
 	# combat_screen.gd is the composition
 	# root for keycap hints too now (WIInputHints.label() calls in _refresh()/
 	# _apply_combat_finished()) -- stub it alongside the other three autoloads.
+	# Issue #87: WISettings joins the stub list too -- `_current_beat_seconds()`
+	# (the wrapper combat_playback.gd's beat_delay() calls) references it as a
+	# bare identifier, same as every other autoload here.
 	var patched_source := raw_source.replace(
 		"extends CanvasLayer",
-		"extends CanvasLayer\n\nvar ObservableBus: Variant = null\nvar Game: Variant = null\nvar TestDriver: Variant = null\nvar WIInputHints: Variant = null",
+		"extends CanvasLayer\n\nvar ObservableBus: Variant = null\nvar Game: Variant = null\nvar TestDriver: Variant = null\nvar WIInputHints: Variant = null\nvar WISettings: Variant = null",
 	)
 	var patched_script := GDScript.new()
 	patched_script.source_code = patched_source
