@@ -42,7 +42,7 @@ func _init() -> void:
 	var classes: Dictionary = _load_json("res://data/classes.json")
 	var skills: Dictionary = _load_json("res://data/skills.json")
 	var items: Dictionary = _load_json("res://data/items.json")
-	var scene: Dictionary = _load_json("res://data/skeleton_scene.json")
+	var scene: Dictionary = WISceneCatalog.compose()
 	var bounties: Dictionary = _load_json("res://data/bounties.json")
 	var deliveries: Dictionary = _load_json("res://data/deliveries.json")
 	var graphs: Dictionary = _load_dialogue_graphs()

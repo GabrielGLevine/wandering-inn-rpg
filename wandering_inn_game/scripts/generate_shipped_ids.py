@@ -22,7 +22,7 @@ FIVE ID CLASSES, and what "disappeared" means for each (spec §2.1's own
     classes / skills / items -- a frozen id must still be a key in
         data/classes.json / data/skills.json / data/items.json's own id
         list. "Disappeared" = removed from that catalog file entirely.
-    maps -- a frozen id must still be a key of data/skeleton_scene.json's
+    maps -- a frozen id must still be a key of the composed data/maps/**
         "maps" dict (WISave.apply's own game.has_map() gate reads this same
         set -- a save standing on a removed map is UNLOADABLE, not just
         content-broken). "Disappeared" = the map key removed from the file.
@@ -53,7 +53,7 @@ docstring above):
      not hardcoded (a new weapon/element tag value automatically grows this
      set; the freeze list only cares about ids DISAPPEARING, so a NEW tag
      value showing up later is a non-event for the validator).
-  3. Scene-derived (data/skeleton_scene.json entities): on_victory (or the
+  3. Scene-derived (data/maps/** entities): on_victory (or the
      "won_combat" structural default WIGame.resolve_combat falls back to
      for a kind:encounter entity with no authored on_victory -- explicit in
      every shipped entity today, defensive for tomorrow),
@@ -73,7 +73,7 @@ docstring above):
 NOT covered (STOP-trigger discipline, disclosed rather than silently
 skipped): free-form ids typed directly into a fixture/save file's
 `accomplishments` dict that no live code path produces would already be
-dead weight before this task; none exist in data/skeleton_scene.json's own
+dead weight before this task; none exist in the composed map catalog's own
 _comment-documented content as of this cut.
 """
 
@@ -175,11 +175,27 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
     return sorted(out)
 
 
+def load_scene() -> dict:
+    """Composed scene catalog -- mirrors generate_postings.py's load_scene()
+    contract exactly (issue #100 split: data/maps/<region>/<map>.json, sorted
+    glob, map key = file stem, duplicate key = ValueError; start_map/player
+    from data/scene_root.json)."""
+    root = load_json(DATA / "scene_root.json")
+    maps = {}
+    for map_path in sorted((DATA / "maps").glob("*/*.json")):
+        map_id = map_path.stem
+        if map_id in maps:
+            raise ValueError(f"duplicate map key '{map_id}' ({map_path})")
+        maps[map_id] = load_json(map_path)
+    root["maps"] = maps
+    return root
+
+
 def build_payload() -> dict:
     classes = load_json(DATA / "classes.json")
     skills = load_json(DATA / "skills.json")
     items = load_json(DATA / "items.json")
-    scene = load_json(DATA / "skeleton_scene.json")
+    scene = load_scene()
     bounties = load_json(DATA / "bounties.json")
     deliveries = load_json(DATA / "deliveries.json")
     graphs = load_dialogue_graphs()
