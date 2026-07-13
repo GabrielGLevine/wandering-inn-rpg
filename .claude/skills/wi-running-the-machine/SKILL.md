@@ -205,3 +205,13 @@ every branch and yields ZERO scripts (false-safe). Lanes changing
 engine/sim code use `--tier smoke` minimum + the affected canonicals,
 never `--touching` alone. The full sweep stays the pre-push composed
 gate.
+
+## The shared-data-source seam rule (2026-07-12, third occurrence)
+Before merging a wave, enumerate every pair of lanes where one lane's
+tool/validator READS a file another lane RESTRUCTURES — not just the
+pairs flagged at dispatch. The 99×100 seam (a freeze generator reading
+the monolith a split lane deleted) passed BOTH per-lane reviews clean
+and broke only on the composed tree. Mechanical check at merge time:
+for each file a lane deletes/moves, grep every OTHER lane's diff for
+that path before the composed gate, and grep MAIN for it after — the
+composed-tree unit run is the backstop, not the detector.

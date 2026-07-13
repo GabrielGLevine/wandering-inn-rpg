@@ -34,7 +34,7 @@ const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
 ## comfortably under VIEWPORT_HEIGHT (720, test_copy_fit.gd's own const) with
 ## the panel centered. Width matches CONTROLS_PANEL_SIZE.x (620) for visual
 ## parity between the two reference sub-pages.
-const HELP_PANEL_SIZE := Vector2(620.0, 470.0)
+const HELP_PANEL_SIZE := Vector2(620.0, 530.0)
 ## Margins mirror `_build_help_panel`'s MarginContainer (26 left + 26 right) --
 ## drift-tripwire checked against that call site by test_copy_fit.gd.
 const HELP_TEXT_WIDTH := HELP_PANEL_SIZE.x - 52.0
