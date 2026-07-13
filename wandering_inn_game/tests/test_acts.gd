@@ -69,10 +69,26 @@ func _init() -> void:
 	var into_iii := WIActs.evaluate(catalog, _ctx(1, 3, {"reached_liscor": 1, "reached_two_classes": 1}))
 	assert(into_iii["id"] == "act_iii" and into_iii["index"] == 2, "reached_two_classes + 3 quests => Act III (even at classes_count 1)")
 
-	# A save with EVERYTHING (incl. the not-yet-reachable raskghar_sealed) caps
-	# at the last act -- there is no Act IV to advance into.
-	var maxed := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1}))
-	assert(maxed["id"] == "act_iii" and maxed["index"] == 2, "maxed save caps at the last act")
+	# A save with raskghar_sealed advances into Act IV (issue #89) -- no
+	# further region beats banked yet, so every Act IV beat reads pending.
+	var into_iv := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1}))
+	assert(into_iv["id"] == "act_iv" and into_iv["index"] == 3, "raskghar_sealed advances into Act IV, the new last act")
+	for beat: Dictionary in into_iv["beats"]:
+		assert(not bool(beat["achieved"]), "fresh Act IV beats all pending")
+
+	# A save with EVERYTHING (every Act IV region beat banked too) caps at
+	# the last act -- there is no Act V to advance into.
+	var maxed := WIActs.evaluate(catalog, _ctx(6, 4, {
+		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
+		"door_awakened": 1, "price_of_a_favor_reported": 1, "brothers_job_done": 1,
+		"elevator_pass_stamped": 1, "seal_kept_reported": 1,
+	}))
+	assert(maxed["id"] == "act_iv" and maxed["index"] == 3, "maxed save caps at the last act (Act IV)")
+	var maxed_achieved: Array = []
+	for beat: Dictionary in maxed["beats"]:
+		if bool(beat["achieved"]):
+			maxed_achieved.append(beat["id"])
+	assert(maxed_achieved.size() == 5, "every Act IV beat reads achieved on a fully maxed save")
 
 	# TOLERANT of a sparse/old save shape: ctx with only accomplishments (no
 	# classes_count/quests_completed keys) reads them as 0 without erroring.
