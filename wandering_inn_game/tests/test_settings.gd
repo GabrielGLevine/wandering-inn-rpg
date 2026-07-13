@@ -133,6 +133,8 @@ func _check_audio_bus_routing() -> void:
 	assert(sfx_idx != -1 and AudioServer.get_bus_send(sfx_idx) == "Master", "SFX bus must still send straight to Master (unaffected by the fix)")
 	assert(music_idx != -1 and AudioServer.get_bus_send(music_idx) == "Master", "Music bus must still send straight to Master")
 	assert(voice_idx != -1 and AudioServer.get_bus_send(voice_idx) == "Master", "Voice bus must still send straight to Master")
+	var ambience_idx := AudioServer.get_bus_index("Ambience")
+	assert(ambience_idx != -1 and AudioServer.get_bus_send(ambience_idx) == "Master", "Ambience bus (issue #76 beds) must send straight to Master -- bed volume rides the Master slider only (no settings row)")
 	inst.free()
 
 

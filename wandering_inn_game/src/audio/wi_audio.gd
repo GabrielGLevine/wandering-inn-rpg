@@ -2,7 +2,7 @@ extends Node
 ## Presentation-side audio router. Register as autoload `WIAudio`.
 
 const SETTINGS_PATH := "user://settings.cfg"
-const BUS_NAMES: Array[String] = ["Master", "Music", "SFX", "UI", "Voice"]
+const BUS_NAMES: Array[String] = ["Master", "Music", "SFX", "UI", "Voice", "Ambience"]
 
 ## Music-layer constants. Two dedicated AudioStreamPlayer nodes (never drawn
 ## from the SFX `_players` pool) ping-pong as the active/incoming track so a
@@ -64,6 +64,26 @@ var _field_context_id := ""
 ## (see `_crossfade_to_music`'s doc comment for the double-trigger ordering
 ## trap this guards).
 var _music_tween: Tween
+
+## Issue #76 remainder: per-map ambient beds (crowd murmur, drips, hum) on a
+## dedicated "Ambience" bus -- a LAYOUT bus (default_bus_layout.tres, the
+## web-silence lesson: a runtime AudioServer.add_bus is invisible to the web
+## sample-playback path, ee5cc61), sending straight to Master, so bed volume
+## is governed by the Master slider only (the settings panel's rows are
+## pinned -- no per-bed slider this wave, disclosed). The machinery below is
+## a deliberate MIRROR of the music layer (own entry list from audio.json's
+## `ambience` array, own crossfade player pair, own current-id guard) --
+## never merged into it, because the two layers PLAY SIMULTANEOUSLY (a bed
+## loops under the field track) and music's first-match-wins dispatch
+## `return`s after one hit per event. One asymmetry with the field-music
+## layer: most maps carry NO bed, and entering one must fade the previous
+## map's bed OUT (`_stop_ambience`) instead of letting it bleed -- field
+## music has a row for every map, so it never needed that arm.
+var _ambience_entries: Array[Dictionary] = []
+var _ambience_players: Array[AudioStreamPlayer] = []
+var _active_ambience_index := 0
+var _current_ambience_id := ""
+var _ambience_tween: Tween
 
 ## Fallback-art contract (audio half). A PUBLIC checkout is
 ## missing the protected music/SFX packs (see assets_manifest.json). A stream
@@ -272,7 +292,8 @@ func _setup_buses() -> void:
 
 ## Two persistent Music-bus players used as crossfade partners. Never headless
 ## (guarded by the `_ready` caller) -- there is no AudioServer/device work to
-## do without a real audio backend.
+## do without a real audio backend. The Ambience pair mirrors them exactly
+## (see the `_ambience_*` field block's doc comment).
 func _setup_music_players() -> void:
 	for _i in 2:
 		var player := AudioStreamPlayer.new()
@@ -280,6 +301,12 @@ func _setup_music_players() -> void:
 		player.volume_db = MUSIC_SILENCE_DB
 		add_child(player)
 		_music_players.append(player)
+	for _i in 2:
+		var player := AudioStreamPlayer.new()
+		player.bus = "Ambience"
+		player.volume_db = MUSIC_SILENCE_DB
+		add_child(player)
+		_ambience_players.append(player)
 
 
 func _load_settings() -> void:
@@ -305,6 +332,12 @@ func _load_audio_map() -> void:
 			if raw_entry is Dictionary:
 				_music_entries.append(raw_entry)
 
+	var raw_ambience: Variant = parsed.get("ambience", [])
+	if raw_ambience is Array:
+		for raw_entry: Variant in raw_ambience:
+			if raw_entry is Dictionary:
+				_ambience_entries.append(raw_entry)
+
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.AUDIO_PLAYED:
@@ -322,6 +355,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			continue
 		_play_entry(entry)
 	_dispatch_music_event(type, payload)
+	_dispatch_ambience_event(type, payload)
 
 
 func _payload_matches(payload: Dictionary, expected_variant: Variant) -> bool:
@@ -576,3 +610,143 @@ func _on_music_sting_finished() -> void:
 		if String(entry.get("id", "")) == _field_context_id:
 			_play_music_entry(entry)
 			return
+
+
+## Ambience dispatch (issue #76 remainder). Mirror of `_dispatch_music_event`
+## with the one honest asymmetry: a MAP_CHANGED that matches NO bed row fades
+## the current bed out (`_stop_ambience`) -- most maps have no bed, and the
+## previous map's crowd murmur bleeding into a silent map would be a bug, not
+## atmosphere. Only WORLD_READY and MAP_CHANGED are context re-evaluations;
+## every other event type is ignored (a bed never reacts to combat/sting
+## events -- the field bed keeps looping under a fight entered from its map,
+## the same free inheritance the mood grade uses).
+func _dispatch_ambience_event(type: String, payload: Dictionary) -> void:
+	if type == WIEvents.WORLD_READY:
+		_sync_ambience_to_current_map()
+		return
+	if type != WIEvents.MAP_CHANGED:
+		return
+	for entry: Dictionary in _ambience_entries:
+		if String(entry.get("event", "")) != type:
+			continue
+		if not _payload_matches(payload, entry.get("payload", {})):
+			continue
+		_play_ambience_entry(entry)
+		return
+	_stop_ambience()
+
+
+## Boot/post-load bed resolution -- the same "world_ready carries no map
+## payload" seam `_sync_field_music_to_current_map` documents, read from
+## `Game.sim.current_map` directly. A current map with no bed row stops any
+## bed a previous world/save might have left running.
+func _sync_ambience_to_current_map() -> void:
+	var game := get_node_or_null("/root/Game")
+	if game == null or not ("sim" in game) or game.sim == null:
+		return
+	var map_id := String(game.sim.current_map)
+	for entry: Dictionary in _ambience_entries:
+		if String(entry.get("context", "")) != map_id:
+			continue
+		_play_ambience_entry(entry)
+		return
+	_stop_ambience()
+
+
+## Mirror of `_play_music_entry` for the bed layer: same id guard, same
+## missing-file fallback contract (silent no-op that STILL emits
+## `audio_played`), same headless "mapping validated + would have played"
+## short-circuit, same runtime `loop` application for OGG streams.
+func _play_ambience_entry(entry: Dictionary) -> void:
+	var id := String(entry.get("id", ""))
+	if id.is_empty() or id == _current_ambience_id:
+		return
+	var stream_path := String(entry.get("stream", ""))
+	if stream_path.is_empty():
+		push_warning("WIAudio: bad/missing ambience stream for id '%s': %s" % [id, stream_path])
+		return
+	var missing := not ResourceLoader.exists(stream_path)
+	if missing:
+		_log_missing_stream(stream_path)
+	var bus := String(entry.get("bus", "Ambience"))
+	if not BUS_NAMES.has(bus):
+		push_warning("WIAudio: unknown ambience bus '%s' for id '%s'" % [bus, id])
+		return
+
+	_current_ambience_id = id
+
+	if missing or _is_headless():
+		_emit_audio_played(id, bus)
+		return
+
+	if AudioServer.get_bus_index(bus) == -1:
+		push_warning("WIAudio: bus '%s' not present on AudioServer for id '%s'" % [bus, id])
+		return
+	var stream := load(stream_path) as AudioStream
+	if stream == null:
+		push_warning("WIAudio: failed to load ambience stream for id '%s': %s" % [id, stream_path])
+		return
+
+	if stream is AudioStreamOggVorbis:
+		var ogg := stream as AudioStreamOggVorbis
+		ogg.loop = bool(entry.get("loop", true))
+
+	_crossfade_to_ambience(stream, bus, float(entry.get("volume_db", -10.0)))
+	_emit_audio_played(id, bus)
+
+
+## Fades the current bed to silence (entering a bed-less map). Clears the
+## current-id guard FIRST so re-entering the bed's map restarts it even if
+## the fade is still running. Headless: state-clear only -- no players exist.
+## No `audio_played` is emitted (mirror: the music layer has no stop event
+## either), so a bed STOP is not headless-observable -- disclosed in the
+## audio block's doc rather than papered over with a fake "silence" id.
+func _stop_ambience() -> void:
+	if _current_ambience_id.is_empty():
+		return
+	_current_ambience_id = ""
+	if _is_headless() or _ambience_players.size() < 2:
+		return
+	if _ambience_tween != null and _ambience_tween.is_valid():
+		_ambience_tween.kill()
+	var tween := create_tween()
+	tween.set_parallel(true)
+	for player: AudioStreamPlayer in _ambience_players:
+		if player.playing:
+			tween.tween_property(player, "volume_db", MUSIC_SILENCE_DB, MUSIC_CROSSFADE_SEC)
+	tween.chain().tween_callback(func() -> void:
+		for player: AudioStreamPlayer in _ambience_players:
+			if player.playing:
+				player.stop()
+	)
+	_ambience_tween = tween
+
+
+## Verbatim shape of `_crossfade_to_music` (same kill-the-in-flight-tween
+## double-trigger guard, same ping-pong pair) minus the sting/return-to-field
+## arm -- beds are always loops, never one-shots.
+func _crossfade_to_ambience(stream: AudioStream, bus: String, target_db: float) -> void:
+	if _ambience_players.size() < 2:
+		return
+	if _ambience_tween != null and _ambience_tween.is_valid():
+		_ambience_tween.kill()
+	var old_player := _ambience_players[_active_ambience_index]
+	var new_index := 1 - _active_ambience_index
+	var new_player := _ambience_players[new_index]
+
+	new_player.stream = stream
+	new_player.bus = bus
+	new_player.volume_db = MUSIC_SILENCE_DB
+	new_player.play()
+
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(new_player, "volume_db", target_db, MUSIC_CROSSFADE_SEC)
+	if old_player != new_player and old_player.playing:
+		tween.tween_property(old_player, "volume_db", MUSIC_SILENCE_DB, MUSIC_CROSSFADE_SEC)
+	tween.chain().tween_callback(func() -> void:
+		if old_player != new_player and old_player.playing:
+			old_player.stop()
+	)
+	_ambience_tween = tween
+	_active_ambience_index = new_index

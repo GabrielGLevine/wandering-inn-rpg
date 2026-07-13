@@ -841,5 +841,63 @@
    "loop": true
   }
  ],
- "_comment_music_order": "TRAP (wi_audio._dispatch_music_event is FIRST-MATCH-WINS then returns): arena-keyed combat variants MUST precede the generic music_combat entry, or they never play. Field entries match map_changed payload {map}; sync-on-load matches kind=field + context==current_map. Sewers/deep_tunnels/cave maps are deliberately TRACKLESS -- silence is the dark-map mood; [Light] and the fights carry the audio there. All junkala_* tracks are CC0 (assets/LICENSES/junkala-cc0-music-verdict.md) and authored as seamless loops."
+ "_comment_music_order": "TRAP (wi_audio._dispatch_music_event is FIRST-MATCH-WINS then returns): arena-keyed combat variants MUST precede the generic music_combat entry, or they never play. Field entries match map_changed payload {map}; sync-on-load matches kind=field + context==current_map. Sewers/deep_tunnels/cave maps are deliberately TRACKLESS -- silence is the dark-map mood; [Light] and the fights carry the audio there. All junkala_* tracks are CC0 (assets/LICENSES/junkala-cc0-music-verdict.md) and authored as seamless loops.",
+ "ambience": [
+  {
+   "_comment": "Issue #76 remainder: per-map loop beds for the 5 highest-dwell maps, CC0-sourced (assets/LICENSES/ambience-beds-cc0-verdict.md) so committed to the PUBLIC tree, no bundle dance. Rows mirror the field-music shape; WIAudio's ambience layer (own Ambience layout bus -> Master, own crossfade pair) plays them UNDER the field track and fades the bed out on entering any map with no row here. Sewers/trapped_halls stay music-TRACKLESS per _comment_music_order -- the bed is atmosphere, not a track, and preserves that mood while un-deadening the map.",
+   "id": "ambience_inn",
+   "kind": "ambience",
+   "context": "inn",
+   "event": "map_changed",
+   "payload": { "map": "inn" },
+   "stream": "res://assets/audio/ambience/inn_crowd_murmur.ogg",
+   "bus": "Ambience",
+   "volume_db": -10.0,
+   "loop": true
+  },
+  {
+   "id": "ambience_street",
+   "kind": "ambience",
+   "context": "street",
+   "event": "map_changed",
+   "payload": { "map": "street" },
+   "stream": "res://assets/audio/ambience/street_town_bed.ogg",
+   "bus": "Ambience",
+   "volume_db": -10.0,
+   "loop": true
+  },
+  {
+   "id": "ambience_floodplains",
+   "kind": "ambience",
+   "context": "floodplains",
+   "event": "map_changed",
+   "payload": { "map": "floodplains" },
+   "stream": "res://assets/audio/ambience/floodplains_river_bed.ogg",
+   "bus": "Ambience",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "ambience_sewers",
+   "kind": "ambience",
+   "context": "sewers",
+   "event": "map_changed",
+   "payload": { "map": "sewers" },
+   "stream": "res://assets/audio/ambience/sewers_drip.ogg",
+   "bus": "Ambience",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "ambience_trapped_halls",
+   "kind": "ambience",
+   "context": "trapped_halls",
+   "event": "map_changed",
+   "payload": { "map": "trapped_halls" },
+   "stream": "res://assets/audio/ambience/dungeon_hum.ogg",
+   "bus": "Ambience",
+   "volume_db": -8.0,
+   "loop": true
+  }
+ ]
 }
