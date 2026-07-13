@@ -72,8 +72,9 @@ SYSTEM_MARKERS: dict[str, set[str]] = {
 	},
 	"settings": {
 		"ui_settings_rendered", "ui_settings_shown", "ui_settings_hidden",
-		"ui_controls_rendered", "ui_hints_replayed", "click_settings_row",
-		"assert_settings_file_exists", "assert_settings_value",
+		"ui_controls_rendered", "ui_help_rendered", "ui_hints_replayed",
+		"click_settings_row", "assert_settings_file_exists",
+		"assert_settings_value",
 	},
 	"economy": {
 		"gold_changed", "item_gained", "item_lost", "loot_dropped",
