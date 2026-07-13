@@ -40,6 +40,15 @@
      "text": "I know what the road is like. I'm not asking you to un-fight anything. I'm asking you to knock first at the idea that they're all the same. Sign stays up."
     },
     {
+     "_comment": "Issue #89 (gap-2), the text_variants marker-node pattern: goblins_spared (goblin_parley.json's 'Stand aside' option, the sole reachable nonviolent goblin resolution, also a Garden K-of-4 leg) previously had zero NARRATIVE consumer -- Erin's own won_combat variant above reacts to the violent read; this is its peaceful counterpart, the missing half of the same theme. Inserted BEFORE wrong_order_reported (which is documented as appended-last/highest-priority) so that line still wins if both are true.",
+     "requires": {
+      "accomplishment": {
+       "goblins_spared": 1
+      }
+     },
+     "text": "Heard you talked the goblins into just... leaving. Actual talking, not begging, not bribing. I don't know how you managed it and I don't want the details, I just want it to keep working."
+    },
+    {
      "_comment": "controller voice pass. Issue #80 (world reactivity wave, item 5 -- the news-travels line): krshia_crate.json already reacts to resolved_wrong_order on Krshia's own side; this is Erin's OWN post-quest reaction on her own hub, the missing half. Appended LAST (highest priority).",
      "requires": {
       "accomplishment": {

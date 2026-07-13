@@ -6,7 +6,8 @@
 			"speaker": "The Hunter",
 			"text": "Hollow's not safe alone. Hasn't been for weeks.",
 			"text_variants": [
-				{ "requires": { "accomplishment": { "hunter_will_come": 1 } }, "text": "Still headed that way? Say when. I'm not doing anything the fields need me for today." }
+				{ "requires": { "accomplishment": { "hunter_will_come": 1 } }, "text": "Still headed that way? Say when. I'm not doing anything the fields need me for today." },
+				{ "_comment": "Issue #89 (gap-2), the text_variants marker-node pattern: survived_wolf_night (river_wolf_pack's on_victory, riverfarm_village.json) previously had zero consumers. Appended LAST (highest priority) so it wins over the plain hunter_will_come line once the night fight is behind them both.", "requires": { "accomplishment": { "survived_wolf_night": 1 } }, "text": "Didn't figure we'd both still be standing after that. Hollow's not the only thing that gets ugly once the sun's down out here, and now you've seen it firsthand." }
 			],
 			"options": [
 				{ "text": "[Ask him to come with you.]", "hide_when": { "accomplishment": { "hunter_will_come": 1 } }, "goto": "agreed" },

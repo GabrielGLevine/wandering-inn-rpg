@@ -32,6 +32,34 @@
      "text": "Crate is home. You, I will remember. Yes."
     },
     {
+     "_comment": "Issue #89 (gap-2), the text_variants marker-node pattern: the three mutually-exclusive crate-recovery method flags (missing_crate's own beat-1 producers -- crate_scavengers on_victory / watch_crate.json's persuade+pay branches / this file's own guile option) always co-bank alongside crate_returned, so exactly one of the three below matches whenever this generic line would have. Appended AFTER the generic crate_returned line (later match wins) so a save that somehow lacks all three (e.g. a hand-authored fixture pre-banking crate_returned alone) still falls back to it, unchanged.",
+     "requires": {
+      "accomplishment": {
+       "crate_returned": 1,
+       "recovered_crate_force": 1
+      }
+     },
+     "text": "Fists first, questions after. Not subtle, but the crate came home. I do not complain about method, only results."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "crate_returned": 1,
+       "recovered_crate_guile": 1
+      }
+     },
+     "text": "You found it with your own eyes, not your knuckles. That is sharper than most bring me. I notice sharper."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "crate_returned": 1,
+       "recovered_crate_watch": 1
+      }
+     },
+     "text": "You sent the Watch to do it for you. Sensible. I respect sensible almost as much as I respect a paid debt."
+    },
+    {
      "requires": {
       "accomplishment": {
        "heard_wrong_order": 1

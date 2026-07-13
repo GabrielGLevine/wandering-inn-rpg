@@ -21,6 +21,25 @@
       }
      },
      "text": "Whatever you did, the air's changed. I can feel it in my knees, and I trust my knees more than most people."
+    },
+    {
+     "_comment": "Issue #89 (gap-2), the text_variants marker-node pattern: drove_off_collectors (witch_hollow.json's briar_collectors[_deep] on_victory) and mediated_the_debt (riverfarm_witch.json's mediate_argue close) are the FIGHT/TALK paths' own memory flags, both previously orphaned (never a `requires` consumer anywhere). Appended AFTER the generic blight_lifted line (later match wins) so the SKILL path -- which banks blight_lifted alone, no marker -- still reads the generic reaction, unchanged.",
+     "requires": {
+      "accomplishment": {
+       "blight_lifted": 1,
+       "drove_off_collectors": 1
+      }
+     },
+     "text": "Word's got round about a fight at the hollow. Briars don't walk off on their own account, whatever spooked them into it worked. I've stopped asking how you people manage these things."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "blight_lifted": 1,
+       "mediated_the_debt": 1
+      }
+     },
+     "text": "Talked her to terms, they tell me. Didn't figure that witch for a bargaining sort, but the fields don't seem to mind however you settled it."
     }
    ],
    "options": [

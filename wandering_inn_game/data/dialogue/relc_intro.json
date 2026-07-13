@@ -30,6 +30,15 @@
       }
      },
      "text": "There's the dummy-slayer. Straw fears you. Come here. I owe you something for the show."
+    },
+    {
+     "_comment": "Issue #89 (gap-2, the flagship marker-node payoff): went_alone banks ONLY from relc_descent.json's [I go alone.] branch (the deep_tunnels awakened_boss veto, sim_combat_batch.gd's own 0.04 solo cell) -- Relc offered to come, was turned down, and the player won anyway. Distinct in register from relc_after's own cleared_the_warren-gated pride (that fires regardless of join/alone); this one is specifically about the solo choice. Appended LAST (highest priority in this array) so it wins over met_relc/sparred_with_relc once reached.",
+     "requires": {
+      "accomplishment": {
+       "went_alone": 1
+      }
+     },
+     "text": "You went down there ALONE. Into that thing's own hole, no backup, and I offered. I've replayed it a dozen ways and every version ends with a body bag. Instead you're standing here being smug at me about it. I don't know whether to buy you a drink or write you up for reckless conduct."
     }
    ],
    "options": [
