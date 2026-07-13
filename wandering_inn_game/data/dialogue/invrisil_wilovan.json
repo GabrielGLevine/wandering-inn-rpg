@@ -131,6 +131,52 @@
       }
      ],
      "goto": "cups_favor_returned"
+    },
+    {
+     "_comment": "Issue #89 (gap-2): the fence, paying off marker_terms' own literal promise ('a man can find you things the shops pretend not to stock -- recovered things, sir, of impeccable provenance'). The krshia_crate.json 'charms' shop-node shape: a gated buy node reachable from the hub, real posted price, own reaction node. Gate is a compound of BOTH quest-close flags (brothers_marker AND cleared_brothers_name -- they co-bank on the SAME 'Coyle's answered for it' option above, so this is one honest consumption of both previously-orphaned ids, not an arbitrary pick). HAGGLE RULE (wi-adding-dialogue-and-quests): no `haggle` flag -- Wilovan is a gentleman, and his own courtesy-as-menace register (sir/miss, apology-before-threat) doesn't extend to a markdown; full price, disclosed here rather than left implicit.",
+     "text": "Anything come through lately? (Show the marker.)",
+     "requires": {
+      "accomplishment": {
+       "brothers_marker": 1,
+       "cleared_brothers_name": 1
+      }
+     },
+     "goto": "fence"
+    }
+   ]
+  },
+  "fence": {
+   "speaker": "Wilovan",
+   "text": "For a marker-holder, sir, always. One piece worth mentioning came through recently — sewer work, but HONEST sewer work, if you follow. No questions asked on either side of the counter.",
+   "options": [
+    {
+     "text": "That phosphor pendant, then. (20 gold)",
+     "requires": {
+      "gold": 20
+     },
+     "effects": [
+      {
+       "gold": -20
+      },
+      {
+       "item": "phosphor_pendant"
+      }
+     ],
+     "goto": "fence_bought"
+    },
+    {
+     "text": "Nothing today.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "fence_bought": {
+   "speaker": "Wilovan",
+   "text": "Sold, sir, and quietly. Wear it in good health, and do let us know if the light draws questions — we can always find you a story to go with it.",
+   "options": [
+    {
+     "text": "My thanks, Wilovan.",
+     "end": true
     }
    ]
   },

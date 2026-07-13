@@ -226,6 +226,7 @@
 			"lore": "The silver fang is the Silverfang mark, and the stall caps a good trophy in it for a hunter who asks. Krshia will tell you whose kill this was if you ask, and the story runs longer than the cord."
 		},
 		{
+			"_comment": "Issue #89 (gap-2): this record shipped complete (hp_mod/resonance/tier) with no vendor -- an orphaned item. Priced here (20g, between hedge_ward_charm's 9g/hp_mod2 and witch_wardstone_bead's 16g/hp_mod2 -- this carries hp_mod3, the highest of that hp-only tier) and wired as Wilovan's fence stock (invrisil_wilovan.json's 'fence' node): its own lore ('somebody paid them for it, neither name made it back up to the street') is a near-literal match for a fenced good of murky provenance.",
 			"id": "phosphor_pendant",
 			"name": "Phosphor Pendant",
 			"kind": "accessory",
@@ -236,6 +237,7 @@
 			"resonance": 1,
 			"tier": "enchanted",
 			"abilities": [],
+			"price": 20,
 			"description": "A glass bead of sewer phosphor that never quite goes out. Brighter than it has any right to be, and it smells faintly of where it came from.",
 			"lore": "Somebody down in the drains learned to seal the glowing moss in glass, and somebody else paid them for it. Neither name made it back up to the street."
 		},
