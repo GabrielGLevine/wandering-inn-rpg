@@ -676,6 +676,11 @@ const DUNGEON_CELLS := [
 ## real-consolidation-floor build, inside T5's own 12-14 window -- the
 ## honest at-tier read). Both MEASURED, no gate: Pallass had ZERO prior
 ## combat content, so there is no established band to hold yet.
+## COMPOSED-TREE NOTE (#90x#97 merge): the lane measured these rider-inert;
+## on the merged tree flame_bolt carries #90's burning rider, so the two
+## flame_bolt users dropped -- corusdeer 0.77->0.65, forge_golem 0.67->0.49
+## (t4 under-tier) / 0.81->0.71 (at-tier sw14). All still MEASURED-only;
+## the others were re-read byte-identical at merge.
 const BESTIARY_CELLS := [
 	{"name": "corusdeer_range_t1_solo", "arena": "boulder_flats", "enemies": ["corusdeer"], "build": "warrior2", "solo": true},
 	{"name": "razorbeak_nest_t1_solo", "arena": "training_yard", "enemies": ["razorbeak_a", "razorbeak_b"], "build": "warrior2", "solo": true},
