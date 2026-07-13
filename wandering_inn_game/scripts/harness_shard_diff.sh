@@ -79,6 +79,14 @@ cleanup() { git -C "$REPO_ROOT" worktree remove --force "$BASE_WT" >/dev/null 2>
 trap cleanup EXIT
 BASE_PROJ="$BASE_WT/wandering_inn_game"
 
+# A fresh worktree has no .godot import cache -- class_name globals
+# (WICombat, WIKeys, ...) fail to resolve without one run first (the same
+# "Import pass" step every ci.yml job runs). The current tree usually
+# already has a cache from prior dev/CI work, but importing it too is
+# cheap and makes this script correct from a bare checkout.
+perl -e 'alarm 300; exec @ARGV' "$GODOT" --headless --path "$HERE" --import >/dev/null 2>&1
+perl -e 'alarm 300; exec @ARGV' "$GODOT" --headless --path "$BASE_PROJ" --import >/dev/null 2>&1
+
 BASE_TOTAL="$(cell_count "$BASE_PROJ")"
 if [ -z "$BASE_TOTAL" ]; then
 	echo "harness_shard_diff: FATAL -- baseline ref '$BASELINE_REF' has no WI_CELL_COUNT_ONLY support" >&2
@@ -120,11 +128,19 @@ for i in $(seq 0 $((SHARDS - 1))); do
 		echo "FAIL  shard $i -- baseline tree exit $BASE_RC (crash/timeout, not a normal PASS/FAIL)"
 		FAILURES=$((FAILURES + 1)); continue
 	fi
-	if diff -q "$BASE_LOG" "$CUR_LOG" >/dev/null; then
+	# [fallback_art] lines (src/ui/ui_chrome.gd, src/world/sprite_registry.gd)
+	# are a plain print(), not part of the grep-discipline WARNING vocabulary
+	# -- a fresh baseline worktree only ever checks out TRACKED files, so it
+	# never has the gitignored licensed-asset overlay the caller's own
+	# working tree may have fetched (scripts/fetch_private_assets.sh),
+	# printing this line for every sheet it substitutes a placeholder for.
+	# Environmental noise, unrelated to combat balance -- filtered from the
+	# comparison so the diff stays a real regression signal.
+	if diff -q <(grep -v '^\[fallback_art\]' "$BASE_LOG") <(grep -v '^\[fallback_art\]' "$CUR_LOG") >/dev/null; then
 		echo "same  shard $i"
 	else
 		echo "DIFF  shard $i -- current tree differs from '$BASELINE_REF':"
-		diff -u "$BASE_LOG" "$CUR_LOG" | sed 's/^/    /'
+		diff -u <(grep -v '^\[fallback_art\]' "$BASE_LOG") <(grep -v '^\[fallback_art\]' "$CUR_LOG") | sed 's/^/    /'
 		FAILURES=$((FAILURES + 1))
 	fi
 done
