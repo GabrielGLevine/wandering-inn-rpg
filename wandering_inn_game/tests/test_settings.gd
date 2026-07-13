@@ -26,6 +26,7 @@ func _init() -> void:
 	_check_text_scale_math()
 	_check_text_scale_drift_tripwire()
 	_check_settings_persistence()
+	_check_combat_speed_math()
 	_check_audio_bus_routing()
 	_check_hint_reset_functions()
 	_check_reduce_motion_gate_sites()
@@ -97,9 +98,11 @@ func _check_settings_persistence() -> void:
 	a.call("set_fullscreen", true)
 	a.call("set_text_scale_step", 2)
 	a.call("set_reduce_motion", true)
+	a.call("set_combat_speed_step", 2)
 	assert(bool(a.call("is_fullscreen")) == true, "set_fullscreen(true) must read back true")
 	assert(int(a.call("text_scale_step")) == 2, "set_text_scale_step(2) must read back 2")
 	assert(bool(a.call("reduce_motion")) == true, "set_reduce_motion(true) must read back true")
+	assert(int(a.call("combat_speed_step")) == 2, "set_combat_speed_step(2) must read back 2")
 	a.free()
 
 	# A FRESH instance loading from disk must see the SAME persisted values --
@@ -109,12 +112,28 @@ func _check_settings_persistence() -> void:
 	assert(bool(b.call("is_fullscreen")) == true, "a fresh instance must load the persisted fullscreen=true")
 	assert(int(b.call("text_scale_step")) == 2, "a fresh instance must load the persisted text_scale_step=2")
 	assert(bool(b.call("reduce_motion")) == true, "a fresh instance must load the persisted reduce_motion=true")
+	assert(int(b.call("combat_speed_step")) == 2, "a fresh instance must load the persisted combat_speed_step=2")
 
 	# Reset to defaults -- idempotent across repeated test runs.
 	b.call("set_fullscreen", false)
 	b.call("set_text_scale_step", 0)
 	b.call("set_reduce_motion", false)
+	b.call("set_combat_speed_step", 0)
 	b.free()
+
+
+## Issue #87: `beat_seconds_for_step` is what `combat_playback.gd`'s
+## `beat_delay()` scales `combat_screen.gd`'s `AI_BEAT_SECONDS` (0.5) by --
+## Normal must be byte-identical to the pre-issue-#87 pacing (no silent
+## regression for the default), Fast strictly faster, Instant exactly zero
+## (the SAME zero-delay QA/headless already collapses to, so picking it opens
+## no new code path).
+func _check_combat_speed_math() -> void:
+	var settings_script := load("res://src/ui/wi_settings.gd")
+	var base := 0.5
+	assert(is_equal_approx(float(settings_script.call("beat_seconds_for_step", 0, base)), base), "combat speed step 0 (Normal) must leave AI_BEAT_SECONDS unchanged")
+	assert(is_equal_approx(float(settings_script.call("beat_seconds_for_step", 1, base)), base * 0.5), "combat speed step 1 (Fast) must halve AI_BEAT_SECONDS")
+	assert(is_equal_approx(float(settings_script.call("beat_seconds_for_step", 2, base)), 0.0), "combat speed step 2 (Instant) must zero AI_BEAT_SECONDS")
 
 
 ## THE bus-routing bug fix, proven directly: a real `_setup_buses()` call

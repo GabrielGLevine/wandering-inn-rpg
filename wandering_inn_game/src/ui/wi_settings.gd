@@ -32,6 +32,17 @@ const SETTINGS_PATH := "user://settings.cfg"
 const TEXT_SCALE_STEPS: Array[float] = [1.0, 1.15, 1.30]
 const TEXT_SCALE_LABELS: Array[String] = ["100%", "115%", "130%"]
 
+## Combat speed steps (issue #87, gap-2): index -> AI-beat-pacing multiplier /
+## display label. Applied to `combat_screen.gd`'s `AI_BEAT_SECONDS` const by
+## `combat_playback.gd`'s `beat_delay()` (via a `_screen` wrapper -- that file
+## stays autoload-reference-free, see its own doc comment); Instant (0.0)
+## collapses AI pacing to the SAME zero-delay QA already exercises via
+## `TestDriver.active()`/headless, so a player who picks it gets a real, already
+## fully-proven-safe code path, not a new one. Purely a presentation pacing
+## knob -- never touches WICombat/the sim's own turn order or RNG draws.
+const COMBAT_SPEED_STEPS: Array[float] = [1.0, 0.5, 0.0]
+const COMBAT_SPEED_LABELS: Array[String] = ["Normal", "Fast", "Instant"]
+
 ## Base (100%) font sizes -- MUST mirror assets/ui/chrome/wi_ui_theme.tres
 ## exactly (tests/test_settings.gd drift-tripwires these against the real
 ## .tres, same discipline test_copy_fit.gd's own mirrored consts use).
@@ -49,6 +60,7 @@ var _settings := ConfigFile.new()
 var _fullscreen := false
 var _text_scale_step := 0
 var _reduce_motion := false
+var _combat_speed_step := 0
 
 
 func _ready() -> void:
@@ -66,6 +78,7 @@ func _load_settings() -> void:
 	_fullscreen = bool(_settings.get_value("video", "fullscreen", false))
 	_text_scale_step = clampi(int(_settings.get_value("accessibility", "text_scale_step", 0)), 0, TEXT_SCALE_STEPS.size() - 1)
 	_reduce_motion = bool(_settings.get_value("accessibility", "reduce_motion", false))
+	_combat_speed_step = clampi(int(_settings.get_value("combat", "speed_step", 0)), 0, COMBAT_SPEED_STEPS.size() - 1)
 
 
 ## Read-modify-write: `wi_audio.gd`'s own ConfigFile targets this SAME
@@ -187,6 +200,33 @@ func set_reduce_motion(value: bool) -> void:
 
 func toggle_reduce_motion() -> void:
 	set_reduce_motion(not _reduce_motion)
+
+
+# --- Combat speed (issue #87) ---------------------------------------------------
+
+func combat_speed_step() -> int:
+	return _combat_speed_step
+
+
+func combat_speed_label() -> String:
+	return COMBAT_SPEED_LABELS[_combat_speed_step]
+
+
+func set_combat_speed_step(step: int) -> void:
+	_combat_speed_step = clampi(step, 0, COMBAT_SPEED_STEPS.size() - 1)
+	_persist("combat", "speed_step", _combat_speed_step)
+
+
+func cycle_combat_speed() -> void:
+	set_combat_speed_step(wrapi(_combat_speed_step + 1, 0, COMBAT_SPEED_STEPS.size()))
+
+
+## Pure: `base` (an AI-beat-pacing seconds const) scaled by `step`'s multiplier
+## -- same always-derive-from-the-input-const discipline as `scaled_default_
+## font_size`, so `combat_playback.gd`'s `beat_delay()` (via its `_screen`
+## wrapper) never drifts from combat_screen.gd's own `AI_BEAT_SECONDS`.
+static func beat_seconds_for_step(step: int, base: float) -> float:
+	return base * COMBAT_SPEED_STEPS[clampi(step, 0, COMBAT_SPEED_STEPS.size() - 1)]
 
 
 # --- Tutorial hints (replay) ---------------------------------------------------
