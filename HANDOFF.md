@@ -144,6 +144,7 @@ Four parallel lanes, each opus-reviewed (MERGE) with fix waves: **#99** shipped-
 
 **PARKED on lane branches + notes (the next-session queue, in value order):**
 1. **#92 use_item verb + consumables + relic abilities + res-capacity growth** — the design notes in lane-92's drain report are load-bearing: items NEVER STACK (pickup() no-ops on duplicates) so repeatable item sinks are structurally impossible before the verb; test_items hard-asserts abilities stay empty (update in lockstep); riverfarm_talk exact-array-pins the witch's shop node.
+1b. **#92 IS FULLY TEED UP** — the pinned design (R1-R5) is on issue #92 as a comment (2026-07-13); a Sonnet lane can execute it against that spec through wi-running-the-machine with per-commit opus review, no further Fable design needed. Attempted pickup this session but the weekly Fable band hit 96% (QUIESCE) before dispatch — the review chain is Fable-side, so running it needs a fresh Fable window OR a reviewer-covered Sonnet run. Worktree/overlay recipe is standard; the ONLY blocker is budget, not readiness.
 2. **#91 T3-T4 respawn encounters + the Chronicle** — survey findings recorded (riverfarm has zero respawn slots; halls_cleared gates gallery slots; crab-nest consent shape binds).
 3. **#87 toast rhythm + map fade + beat coalescing + skip affordance** — the two shipped pieces were the highest-felt.
 4. **#76 footstep floor-families + ambience ducking** (the bed layer ships; ducking needs _tween_music_bus_to parameterized over both buses).
