@@ -28,7 +28,12 @@ extends CanvasLayer
 ## duck-typed via `has_method()`, mirroring main.gd's own
 ## `world.has_method("inject_ui_refs")` pattern for the same reason.
 
-const PANEL_SIZE := Vector2(280.0, 300.0)
+## Issue #106: grown 300->390 (+90) to fit ROWS' rows at their widened 36px
+## height (was 24px, see the row-build loop below) without overflowing the
+## fixed CARVED_PANEL chrome -- 9-slice art, tolerates the resize (same
+## precedent `dialogue_panel.gd`'s dynamic `_fit_panel_height` already banks
+## on). COMBAT_ROWS (fewer rows) fits with slack, unchanged shape.
+const PANEL_SIZE := Vector2(280.0, 390.0)
 ## "Music"/"SFX" double as `WIAudio` bus names, so `_row_text()` and
 ## `_adjust_volume_row()` can use the row key directly as the bus arg.
 ## "Settings" is APPENDED at the end (issue #77) -- never inserted earlier --
@@ -69,7 +74,10 @@ const CONFIRM_ROWS := ["No", "Yes"]
 ## pause_menu row) -- verified against every shipped class/map id's
 ## title-cased length; re-check with a windowed screenshot if a
 ## dramatically longer id is ever added.
-const SLOT_PICKER_PANEL_SIZE := Vector2(460.0, 210.0)
+## Issue #106: grown 210->250 (+40) for the slot rows' widened 32px height
+## (was 22px, see `_slot_rows()`'s build loop) -- same 9-slice-tolerates-resize
+## reasoning as PANEL_SIZE above.
+const SLOT_PICKER_PANEL_SIZE := Vector2(460.0, 250.0)
 ## Sane truncation budget (chars) for a rendered row -- a 16-char player-typed
 ## name (PC_NAME_MAX) plus the longest shipped map id ("Riverfarm Longhouse")
 ## can exceed the panel's real content width; `_truncate_row` below cuts at a
@@ -163,7 +171,14 @@ func _ready() -> void:
 	menu_margin.add_child(menu_stack)
 	for i in ROWS.size():
 		var row := UIChrome.make_label("", "Menu")
-		row.custom_minimum_size = Vector2(220.0, 24.0)
+		# Issue #106 hit-target audit: 24px design height read as ~7px
+		# effective on a 390-CSS-px-wide phone (0.305 scale) -- well under the
+		# ~40px touch guideline, the worst-measured surface in the audit.
+		# Widened to 36 (INPUT region only -- the row's WIDTH/text/wrap is
+		# untouched, so no copy-fit budget moves); PANEL_SIZE grown below to
+		# match, same "panel is the floor, chrome is 9-slice and tolerates it"
+		# precedent `dialogue_panel.gd`'s `_fit_panel_height` already banks on.
+		row.custom_minimum_size = Vector2(220.0, 36.0)
 		menu_stack.add_child(row)
 		_row_labels.append(row)
 	# Issue #84: ONE hover/click handler on the shared row container (mirrors
@@ -235,7 +250,10 @@ func _ready() -> void:
 	slot_stack.add_child(slot_spacer)
 	for i in _slot_rows().size():
 		var row := UIChrome.make_label("", "Menu")
-		row.custom_minimum_size = Vector2(412.0, 22.0)
+		# Issue #106 hit-target audit: 22px design height, one of the worst-
+		# measured surfaces. Widened to 32 (INPUT region only -- width/text
+		# untouched); SLOT_PICKER_PANEL_SIZE grown above to match.
+		row.custom_minimum_size = Vector2(412.0, 32.0)
 		slot_stack.add_child(row)
 		_slot_labels.append(row)
 	# Issue #84: same one-handler-on-the-container idiom as `menu_stack`/

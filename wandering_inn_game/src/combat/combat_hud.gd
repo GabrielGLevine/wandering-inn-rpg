@@ -73,6 +73,20 @@ const FEED_TEXT_WIDTH := 248.0
 const READOUT_TEXT_WIDTH := 576.0
 const READOUT_TEXT_HEIGHT := 64.0
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
+## Issue #106: the tap-confirm chip's fixed rect (TOP_RIGHT anchor,
+## `UIChrome.set_offsets` order left/top/right/bottom relative to that
+## corner) -- x spans [1060,1260] at native 1280 width, comfortably clear of
+## the arena board's own worst-case footprint (12x8 grid * 16px CELL * 4x
+## WORLD_SCALE = 768px wide, camera-centered in the 1280-wide viewport ->
+## board x in [256,1024]) so the chip can NEVER shadow a board cell the
+## player might otherwise tap, at any camera framing. Deliberately NOT placed
+## near the readout/hotbar bands (both BOTTOM_* and both click-transparent,
+## `MOUSE_FILTER_IGNORE`, over the board's own lower rows -- see
+## `combat_screen.gd`'s `handle_board_click` doc comment) -- this widget MUST
+## be the one thing that reliably intercepts a tap regardless of board
+## framing, so it lives in dead space instead.
+const CONFIRM_CHIP_SIZE := Vector2(160.0, 40.0)
+const CONFIRM_CHIP_OFFSETS := Vector4(-180.0, 56.0, -20.0, 96.0)
 ## Default keycap glyphs for the readout
 ## hint strip, byte-identical to the old hardcoded literals. This file
 ## carries ZERO bare autoload identifiers by contract (`tests/
@@ -146,6 +160,11 @@ const FEED_OFFSET_BOTTOM := -84.0
 ## data/arenas.json today (4 lines) with room to spare for a 5th.
 const FEED_PANEL_MAX_HEIGHT := 220.0
 
+## Issue #106: tapping the confirm chip while armed. `combat_screen.gd`
+## connects this once in `_ready()` (`_hud.confirm_tapped.connect(...)`),
+## mirroring the pre-existing `hotbar_node().slot_clicked` wiring precedent.
+signal confirm_tapped
+
 var _root: Control
 var _main_ref: Node
 var _screen: Node
@@ -157,6 +176,12 @@ var _banner_label: Label
 var _readout_panel: Control
 var _banner_panel: Control
 var _hotbar: WIHotbar
+## Issue #106: the tap-confirm widget + its armed state, recomputed every
+## `refresh()` call from the SAME `dash_confirm`/`in_targeting`/
+## `targeting_state` params the readout hint text already derives its own
+## "(confirms)/(cancels)" wording from -- see `refresh()`'s own doc comment.
+var _confirm_chip: Control
+var _confirm_armed := false
 var _feed: Array = []
 ## Current feed panel height, grown (never
 ## shrunk mid-encounter) by `_grow_feed_panel_for_tutor` when a tutor beat
@@ -251,6 +276,26 @@ func build() -> void:
 	_hotbar = HOTBAR_SCRIPT.new()
 	_hotbar.name = "Hotbar"
 	_root.add_child(_hotbar)
+	# Issue #106: the tap-confirm chip. `make_texture_panel` defaults every
+	# panel to `MOUSE_FILTER_IGNORE` (click-transparent, the readout/feed/
+	# banner/order convention) -- this ONE panel is deliberately flipped to
+	# STOP right after construction, since catching the tap IS its whole job
+	# (see CONFIRM_CHIP_OFFSETS' doc comment for why it lives in dead space
+	# rather than reusing the readout panel's own real estate). Hidden by
+	# default; `refresh()` toggles visibility with `_confirm_armed`.
+	_confirm_chip = UIChrome.make_texture_panel(UIChrome.BLUE_BUTTON)
+	_confirm_chip.mouse_filter = Control.MOUSE_FILTER_STOP
+	_confirm_chip.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_confirm_chip.custom_minimum_size = CONFIRM_CHIP_SIZE
+	_confirm_chip.size = CONFIRM_CHIP_SIZE
+	UIChrome.set_offsets(_confirm_chip, CONFIRM_CHIP_OFFSETS.x, CONFIRM_CHIP_OFFSETS.y, CONFIRM_CHIP_OFFSETS.z, CONFIRM_CHIP_OFFSETS.w)
+	_confirm_chip.gui_input.connect(_on_confirm_chip_gui_input)
+	_confirm_chip.hide()
+	var chip_label := UIChrome.make_label("Confirm", "Small")
+	chip_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	chip_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_confirm_chip.add_child(chip_label)
+	_root.add_child(_confirm_chip)
 
 
 ## Read-only accessor (issue #57): the real `WIHotbar` node, for
@@ -259,6 +304,38 @@ func build() -> void:
 ## `click_slot` step to read its rendered `slot_rect` geometry.
 func hotbar_node() -> WIHotbar:
 	return _hotbar
+
+
+## Issue #106: real `InputEventMouseButton` handler on the confirm chip's own
+## STOP-filtered Control -- gated on `_confirm_armed` (recomputed every
+## `refresh()`) so a stray tap while the chip happens to still be VISIBLE
+## from a stale frame (there shouldn't be one -- `refresh()` hides it in the
+## same call that disarms) can never fire a confirm the screen isn't
+## expecting. Only emits; `combat_screen.gd`'s `_on_confirm_chip_tapped`
+## dispatches into the real `_confirm_dash_action`/`_confirm_targeted_action`
+## calls (mode ownership stays on the screen, same composition-root
+## convention `hotbar_node().slot_clicked` already follows).
+func _on_confirm_chip_gui_input(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	if not _confirm_armed:
+		return
+	confirm_tapped.emit()
+
+
+## Read-only accessor (issue #106, the `hotbar_node`/`card_rect` idiom): the
+## chip's real on-screen rect for `qa/test_driver.gd`'s `click_confirm_chip`
+## step -- empty `Rect2` while not armed/visible (`_inject_mouse_click` on an
+## empty rect's center would land at the viewport origin and hit nothing,
+## same fail-loud-via-`_fail` contract every other `click_*` step already
+## follows when its target rect is empty).
+func confirm_chip_rect() -> Rect2:
+	if _confirm_chip == null or not _confirm_chip.visible:
+		return Rect2()
+	return Rect2(_confirm_chip.global_position, _confirm_chip.size)
 
 
 func _make_panel(texture: Texture2D, preset: int, min_size: Vector2, offsets: Vector4) -> Control:
@@ -328,6 +405,16 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 		var rendered_slots := render_bar_slots(view, bar_slots)
 		_readout_label.text = _readout_text(view, in_targeting, targeting_state, rendered_slots, info_slot_index, dash_confirm, hints)
 		_hotbar.render(rendered_slots, bar_index)
+	# Issue #106: armed whenever Enter would currently DO something --
+	# DASH_CONFIRM (no target list at all) or a targeting mode that already
+	# has a valid target (line_mode has no candidate list either, so it reads
+	# off `has_valid_target()`'s own `_line_mode or not _targets.is_empty()`
+	# condition, mirrored here from `targeting_state`'s two relevant keys
+	# rather than re-deriving through `_screen`/`_targeting` -- this file
+	# stays a pure function of the state handed to it each call, same as
+	# every other `refresh()` computation).
+	_confirm_armed = dash_confirm or (in_targeting and (bool(targeting_state.get("line_mode", false)) or not (targeting_state.get("targets", []) as Array).is_empty()))
+	_confirm_chip.visible = bar_active and _confirm_armed
 
 
 ## Builds the ordered slot list for the hotbar -- Attack, Dash, then

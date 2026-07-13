@@ -90,6 +90,11 @@
    "note": "movement-first arrows + Dash refill via real input"
   },
   {
+   "script": "combat_touch_input",
+   "seed": 9,
+   "note": "Issue #106 (mobile web v1): combat touch event parity -- adjacent-cell tap = arrow-move equivalent (incl. diagonal/far/pool-empty no-ops), Dash armed then a tap on the confirm chip fires it (dashed{move_pool:3}, byte-identical to Enter), Attack targeting opened then a tap missing every candidate cancels (Esc-equivalent, AP unspent), reopened Attack + a tap on training_dummy_b (not the default candidate) re-points the aim then a confirm-chip tap fires ON DUMMY_B specifically"
+  },
+  {
    "script": "combat_abandon",
    "seed": 9,
    "fixture": "post_tutorial",
@@ -580,8 +585,10 @@
    "seed": 9,
    "fixture": "near_trader",
    "note": "Class-foundation pass R5 (issue #98, 2026-07-12): [Trader]'s full earn-to-kit loop -- a real sale at the Pallass market_stallkeeper banks the 5th deliberate_commerce (a sell pinned, exact gold delta) -> sleep -> class_gained{trader} -> a [Bargain]-discounted buy at Eloise's (the game's only haggle:true node -- baked prices render REWRITTEN to the discounted figures and the no-baked-price option appends/charges the discounted 6 gold, not the base 7, pinned exact; display==charge) -> the Pallass tier_clerk_market's own haggle-refusal line (pinned). Zero combat"
-   "note": "Issue #80 (world reactivity wave): Invrisil boulevard's own night-only encounter slot, the river_wolf_pack precedent's third application -- fixture starts past night_at (T3 spellsword9 gear), one real move into trigger_radius 1 fires start_combat live (footpad_lookout/footpad_bruiser, solo), win banks won_combat"
+  },
+  {
    "script": "trap_canonical",
+   "seed": 9,
    "fixture": "near_sewers_trap",
    "note": "R6 (#95, class-foundation pass): sewer_nest_snag trap proof -- observe tell, the avoidable-path counterplay, the LIVE observe-fallback disarm leg banking shared trap_disarmed + 1g salvage (disarm_trap PARKED, docs/design/class-foundation-staging/trap-disarm-swap.json)"
   }

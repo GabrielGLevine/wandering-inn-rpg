@@ -281,6 +281,17 @@ func _rebuild_options() -> void:
 			text = "%s%d. %s" % [mark, i + 1, String(opt["text"])]
 		var l := UIChrome.make_label()
 		l.text = text
+		# Issue #106 hit-target audit: option rows previously carried NO
+		# explicit min-height at all (font-natural, ~18px) -- the worst-
+		# measured surface in the audit (no deliberate sizing whatsoever).
+		# A FLOOR only (INPUT region, not the art -- width/text untouched):
+		# `_fit_panel_height` (called via `_rebuild_options`'s caller) already
+		# grows the whole panel dynamically to fit whatever the stack's
+		# combined minimum size needs, so this can never clip -- a label
+		# whose natural content already exceeds this floor (a locked option's
+		# longer requirement-suffixed text) reports its own real (larger)
+		# height unaffected; only short rows get padded up to the floor.
+		l.custom_minimum_size = Vector2(0.0, 30.0)
 		if locked:
 			l.add_theme_color_override("font_color", LOCKED_COLOR)
 		_options_box.add_child(l)
