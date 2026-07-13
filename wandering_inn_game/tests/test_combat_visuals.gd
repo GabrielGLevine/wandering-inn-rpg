@@ -393,6 +393,32 @@ func _init() -> void:
 	assert(String(matched.get("line", "")) == "Begin!", "an ungated tutor entry must render its plain line untouched")
 	no_class_screen.free()
 	has_class_screen.free()
+	# Issue #88 (gap-2): `requires_ally`/`solo_fallback_line` second-level
+	# split -- classless + ally ABSENT must render `solo_fallback_line`
+	# (not `fallback_line`, which would falsely voice the absent ally);
+	# classless + ally PRESENT must still render the plain `fallback_line`,
+	# byte-identical to the pre-#88 contract proven above.
+	var ally_stub_script := GDScript.new()
+	ally_stub_script.source_code = "extends Node\nvar has_ally: bool = false\nfunc _pc_has_any_class() -> bool:\n\treturn false\nfunc _pc_has_ally(_id: String) -> bool:\n\treturn has_ally\n"
+	assert(ally_stub_script.reload() == OK, "ally-gate stub screen failed to compile")
+	var solo_entry := {
+		"id": "real_ones", "on": {"event": "combat_started"}, "requires_any_class": true, "requires_ally": "relc",
+		"line": "Relc: you slept.", "fallback_line": "Relc: stay behind me.", "solo_fallback_line": "The Design tallies what you do.",
+	}
+	var no_ally_screen: Node = ally_stub_script.new()
+	no_ally_screen.has_ally = false
+	var gated_hud_no_ally: RefCounted = hud_script.new(null, null, no_ally_screen)
+	gated_hud_no_ally.reset_tutor_lines({"tutor_lines": [solo_entry]})
+	var no_ally_match: Dictionary = gated_hud_no_ally.match_tutor_line("combat_started", {})
+	assert(String(no_ally_match.get("line", "")) == "The Design tallies what you do.", "requires_ally gate must render solo_fallback_line when classless AND the ally is structurally absent")
+	var has_ally_screen: Node = ally_stub_script.new()
+	has_ally_screen.has_ally = true
+	var gated_hud_has_ally: RefCounted = hud_script.new(null, null, has_ally_screen)
+	gated_hud_has_ally.reset_tutor_lines({"tutor_lines": [solo_entry]})
+	var has_ally_match: Dictionary = gated_hud_has_ally.match_tutor_line("combat_started", {})
+	assert(String(has_ally_match.get("line", "")) == "Relc: stay behind me.", "classless but ally PRESENT must still render the plain fallback_line, not solo_fallback_line")
+	no_ally_screen.free()
+	has_ally_screen.free()
 	# Real behavioral check that build() actually instantiates the hotbar
 	# under a real Control root (the direct replacement for the old
 	# raw-source "HOTBAR_SCRIPT" substring check against combat_screen.gd --

@@ -1029,8 +1029,20 @@ func match_tutor_line(type: String, payload: Dictionary) -> Dictionary:
 ## wrapper's own doc comment for why this isn't an accomplishment-counter
 ## gate like `ally_requires`/`door_when` elsewhere in this repo) --
 ## presentation reads sim state here, never mutates it.
+## Issue #88 (gap-2): a SECOND-LEVEL split inside the fallback branch --
+## `requires_ally` (a combatant id) + `solo_fallback_line` are BOTH optional,
+## checked only once `requires_any_class` has already failed. A line voiced
+## as that ally speaking (`fallback_line`, e.g. goblin_ambush_tutorial's
+## "real_ones") must not render when the ally is structurally absent from
+## THIS fight (`ally_requires` unmet) -- `solo_fallback_line` renders
+## instead. An entry with no `requires_ally`/`solo_fallback_line` keys
+## (every pre-#88 entry) always falls through to the plain `fallback_line`
+## branch, byte-identical to before.
 func _tutor_line_text(entry: Dictionary) -> String:
 	if bool(entry.get("requires_any_class", false)) and not _screen._pc_has_any_class():
+		var required_ally := String(entry.get("requires_ally", ""))
+		if required_ally != "" and entry.has("solo_fallback_line") and not _screen._pc_has_ally(required_ally):
+			return String(entry["solo_fallback_line"])
 		return String(entry.get("fallback_line", entry.get("line", "")))
 	return String(entry.get("line", ""))
 

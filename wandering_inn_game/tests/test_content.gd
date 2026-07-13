@@ -84,6 +84,7 @@ func _init() -> void:
 	_validate_once_per_waking_shape_cases()
 	_validate_travel_beat_place_naming(quests, scene, graphs)
 	_validate_place_naming_shape_cases()
+	_validate_tutor_line_help_consistency()
 
 	print("PASS: errand content is fully cross-referenced")
 	quit(0)
@@ -1403,3 +1404,32 @@ func _validate_props(scene: Dictionary) -> void:
 					not (has_sleep and has_accomplishment),
 					"prop %s cannot combine sleep with on_interact_accomplishment" % entity_id
 				)
+
+
+## Issue #88 (gap-2): `goblin_ambush_tutorial`'s `real_ones` tutor entry
+## (data/arenas.json) reuses help_content.json's "Classes & Levels" body
+## VERBATIM in its `solo_fallback_line` (the issue's own consistency
+## requirement -- the #107 Help pane shipped this exact phrasing first).
+## Drift tripwire: the two copies can never diverge silently.
+func _validate_tutor_line_help_consistency() -> void:
+	var arenas: Dictionary = _load_json("res://data/arenas.json")
+	var help: Dictionary = _load_json("res://data/help_content.json")
+	var classes_body := ""
+	for section: Dictionary in (help.get("sections", []) as Array):
+		if String(section.get("heading", "")) == "Classes & Levels":
+			classes_body = String(section.get("body", ""))
+	assert(not classes_body.is_empty(), "help_content.json missing its 'Classes & Levels' section")
+	var found := false
+	for arena: Dictionary in (arenas.get("arenas", []) as Array):
+		if String(arena.get("id", "")) != "goblin_ambush_tutorial":
+			continue
+		for entry: Dictionary in (arena.get("tutor_lines", []) as Array):
+			if String(entry.get("id", "")) != "real_ones":
+				continue
+			found = true
+			var solo_line := String(entry.get("solo_fallback_line", ""))
+			assert(
+				solo_line == classes_body,
+				"real_ones.solo_fallback_line has drifted from help_content.json's Classes & Levels wording"
+			)
+	assert(found, "goblin_ambush_tutorial's real_ones tutor line is missing (arenas.json)")
