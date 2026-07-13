@@ -215,3 +215,12 @@ and broke only on the composed tree. Mechanical check at merge time:
 for each file a lane deletes/moves, grep every OTHER lane's diff for
 that path before the composed gate, and grep MAIN for it after — the
 composed-tree unit run is the backstop, not the detector.
+
+## Plan docs COMMIT BEFORE dispatch (2026-07-13, cost three lane stalls)
+A lane brief referencing a plan/spec file only works if the file is IN
+the commit the worktree branched from (or copied into the worktree).
+The depth-wave plan sat uncommitted in main's working tree; every lane
+chased a ghost path — one burned three stalled runs before a fresh
+agent diagnosed it. Discipline: `git add + commit` the plan doc BEFORE
+`git worktree add`, and the worktree-setup step verifies every
+brief-referenced path exists inside the worktree.
