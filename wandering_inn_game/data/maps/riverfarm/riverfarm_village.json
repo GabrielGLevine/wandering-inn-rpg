@@ -902,12 +902,12 @@
    }
   },
   {
-   "_pick": "The river -- Free Pack Water_tiles.png flat fill (picks.md sec.2, col2/row7), same floor_layers mechanism as the wheat band above (handoff open-question 2: static bank row, no animation seam this task).",
+   "_pick": "The river -- Free Pack Water_tiles.png (picks.md sec.2 col2/row7 was PIXEL-FLAT, 1 unique color across the whole 16x16 region, PIL-verified; VISUAL-LOG's issue #30 ART/WATER fix already proved col1/row5 genuinely textured, 5 distinct blue shades, near-identical hue -- reused verbatim here instead of introducing a third variant), same floor_layers mechanism as the wheat band above (handoff open-question 2: static bank row, no animation seam this task; the shimmer OVERLAY -- world.gd's water_shimmer, keyed to walls-segment water only -- is a separate, still-open mechanism decision, not this pick).",
    "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
    "tile_px": 16,
    "coords": [
-    2,
-    7
+    1,
+    5
    ],
    "cells": {
     "rect": [
