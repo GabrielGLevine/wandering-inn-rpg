@@ -1066,6 +1066,20 @@ func _test_driver_active() -> bool:
 	return TestDriver != null and TestDriver.active()
 
 
+## Issue #87 (Combat speed setting): `AI_BEAT_SECONDS` scaled by the player's
+## WISettings combat-speed pick (Normal/Fast/Instant) -- reached through this
+## wrapper, not a bare `WISettings` reference in combat_playback.gd itself,
+## for the SAME "stay free of bare autoload identifiers" reason
+## `_test_driver_active()` above exists (see that file's own doc comment).
+## `WISettings != null` guards the same autoload-stubbed --script-mode
+## compile context `_test_driver_active()`'s `TestDriver != null` guards --
+## never false during a real game boot.
+func _current_beat_seconds() -> float:
+	if WISettings == null:
+		return AI_BEAT_SECONDS
+	return WISettings.beat_seconds_for_step(WISettings.combat_speed_step(), AI_BEAT_SECONDS)
+
+
 func _emit_ai_playback_done(beats: int) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_AI_PLAYBACK_DONE, {"beats": beats})
 

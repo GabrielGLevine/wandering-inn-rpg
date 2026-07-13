@@ -51,9 +51,27 @@ extends CanvasLayer
 ## skip. The modal sits ready beneath the whole time; it only becomes VISIBLE
 ## once the veil fades back to transparent at the end of the sequence, so the
 ## offer surfaces with/after the level-up toasts, never before the player has
-## seen "you slept." No deadlock risk: the veil never consumes input (see the
-## file doc comment above), so the modal's own input handling is unaffected by
-## how long the veil holds first.
+## seen "you slept."
+##
+## PLAIN-SLEEP SKIP (issue #87, gap-2): unlike the opener/epilogue/defeat,
+## `_run_sequence`'s ordinary reveal used to intercept NO input at all (see
+## the file doc comment's old "the sleep path above still intercepts no input
+## at all" claim, now corrected) -- the most-repeated beat in the whole game
+## was the one hold-out a player could never speed through. It now routes its
+## per-line + final hold through the SAME `_wait_or_advance` seam the
+## opener/epilogue already use, gated by `_running` in `_unhandled_input`
+## (consuming confirm/cancel exactly like every other veil mode). GUARD: a
+## sleep that offered a consolidation (`_sleep_has_consolidation`, set by the
+## CONSOLIDATION_OFFERED handler below, reset every `_begin_sleep`) stays
+## FULLY UNSKIPPABLE -- `_wait()`, never `_wait_or_advance()`, for its whole
+## reveal -- so a player's habitual confirm-mash through routine level-up
+## sleeps can never also fast-forward past the one line that actually informs
+## a permanent choice (the modal itself only unlocks input on
+## UI_SLEEP_VEIL_FINISHED, but a player who never READ "The Design offers: X"
+## because they spammed through it would still be choosing blind the instant
+## it appears). No deadlock risk either way: every branch below still reaches
+## `_finish()`/`_emit_finished()` on its own, so the modal's own input
+## handling is unaffected by how long the veil holds first.
 
 ## Layer above every other UI (journal/inventory are 10; message_layer/dialogue/
 ## consolidation are the default 1) so the darkness covers the whole screen.
@@ -198,6 +216,11 @@ var _running := false
 ## a second reveal for the same sleep.
 var _reveal_queued := false
 var _lines: Array[String] = []
+## Issue #87: true iff THIS sleep's collection window saw a
+## CONSOLIDATION_OFFERED (set below, reset every `_begin_sleep`) -- makes
+## `_run_sequence`'s real-play reveal fully unskippable for that one sleep
+## (see the file doc comment's PLAIN-SLEEP SKIP guard).
+var _sleep_has_consolidation := false
 
 ## Opener state. _opener_running gates its own input/sequence; _opener_advance
 ## is set by a confirm/cancel press to cut the current line's hold short.
@@ -291,9 +314,11 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			# idiom as every other reveal. The CHOICE itself still happens in
 			# consolidation_prompt.gd's modal AFTER the veil completes: the
 			# input-dead-until-UI_SLEEP_VEIL_FINISHED contract (the
-			# prompt-held rework) is untouched -- the veil only speaks, it
-			# never takes input.
+			# prompt-held rework) is untouched. Issue #87: also arms
+			# `_sleep_has_consolidation`, forcing this sleep's whole reveal
+			# unskippable (see the PLAIN-SLEEP SKIP guard doc comment).
 			if _running:
+				_sleep_has_consolidation = true
 				var parents: Array = payload.get("parents", [])
 				if parents.size() == 2:
 					_lines.append("[%s and %s pull toward one another. The Design offers: %s.]" % [
@@ -347,6 +372,7 @@ func _begin_sleep() -> void:
 		return
 	_running = true
 	_lines = []
+	_sleep_has_consolidation = false
 	if not _reveal_queued:
 		_reveal_queued = true
 		_run_sequence.call_deferred()
@@ -401,17 +427,21 @@ func _wait_or_advance(seconds: float) -> void:
 		await get_tree().process_frame
 
 
-## True while the cold-open, the epilogue, or the defeat interstitial holds
-## the screen. world.gd's `_movement_gated()` treats this as a modal (via
-## WIMain.veil_modal_active()) -- on pad, `interact` and this veil's
-## confirm-advance share button A, so without the gate a pad player
-## advancing the opener text would simultaneously fire world interact()s
-## at whatever the PC happens to face under the black. Never true under
-## QA/TestDriver: `play_opener()`/`play_epilogue()`/`play_defeat()` collapse
-## to an instant coverage emit before ever setting these flags, so every
-## canonical's input timing is untouched by the new gate.
+## True while the cold-open, the epilogue, the defeat interstitial, or (issue
+## #87) the plain-sleep reveal holds the screen. world.gd's `_movement_
+## gated()` treats this as a modal (via WIMain.veil_modal_active()) -- on
+## pad, `interact` and this veil's confirm-advance share button A, so
+## without the gate a pad player advancing the reveal text would
+## simultaneously fire world interact()s at whatever the PC happens to face
+## under the black. Never observably true under QA/TestDriver:
+## `play_opener()`/`play_epilogue()`/`play_defeat()` collapse to an instant
+## coverage emit before ever setting their own running flags, and
+## `_begin_sleep()`'s `_running = true` is undone by `_run_sequence`'s own
+## `_is_qa()` branch (`_finish()`, synchronously inside the same deferred
+## call, no `await` reached) before any later frame's input can observe it
+## -- every canonical's input timing is untouched by the new gate.
 func modal_active() -> bool:
-	return _opener_running or _epilogue_running or _defeat_running
+	return _running or _opener_running or _epilogue_running or _defeat_running
 
 
 ## The veil's ONLY interactive touch (the plain sleep path never intercepts
@@ -429,7 +459,13 @@ func _unhandled_input(event: InputEvent) -> void:
 			_defeat_choice_pending = false
 			get_viewport().set_input_as_handled()
 		return
-	if not (_opener_running or _epilogue_running or _defeat_running):
+	# Issue #87: `_running` (the plain-sleep reveal) joins the other three
+	# veil modes -- consumed unconditionally, even during a consolidation-
+	# guarded sleep (`_sleep_has_consolidation`), where `_wait()` (not
+	# `_wait_or_advance()`) simply ignores the resulting `_opener_advance`
+	# flag; consuming the input either way still stops it leaking through to
+	# world.gd underneath, same as every other veil mode.
+	if not (_running or _opener_running or _epilogue_running or _defeat_running):
 		return
 	if event.is_action_pressed("confirm") or event.is_action_pressed("cancel"):
 		_opener_advance = true
@@ -657,11 +693,24 @@ func _run_sequence() -> void:
 	await _fade(_black, 1.0)
 
 	await _wait(HOLD_BEFORE_TEXT)
+	# Issue #87: skippable via the opener's own _wait_or_advance seam UNLESS
+	# this sleep offered a consolidation -- see the PLAIN-SLEEP SKIP guard
+	# doc comment. Every line still gets its own _add_line() call either way
+	# (only the HOLD between lines is ever cut short), so the consolidation
+	# line itself is never dropped -- it just can't be rushed past.
+	var skippable := not _sleep_has_consolidation
 	for line: String in lines:
 		_add_line(line)
-		await _wait(LINE_INTERVAL)
+		if skippable:
+			await _wait_or_advance(LINE_INTERVAL)
+		else:
+			await _wait(LINE_INTERVAL)
 	_emit_rendered(lines.size())
-	await _wait(READ_HOLD if not lines.is_empty() else EMPTY_HOLD)
+	var final_hold := READ_HOLD if not lines.is_empty() else EMPTY_HOLD
+	if skippable:
+		await _wait_or_advance(final_hold)
+	else:
+		await _wait(final_hold)
 	await _fade(_black, 0.0)
 	_finish()
 	# The "screen is the player's again" moment. CONSTRAINT: after _finish()

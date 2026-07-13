@@ -24,8 +24,9 @@ extends CanvasLayer
 ## 22px, see `_build_rows_panel`'s row loop) -- same 9-slice-tolerates-resize
 ## reasoning as pause_menu.gd's identical PANEL_SIZE fix. Issue #107: grown
 ## again 420->456 (+36 = one more 30px row + its 6px stack separation) for
-## "Help..." appended to ROWS below.
-const PANEL_SIZE := Vector2(320.0, 456.0)
+## "Help..." appended to ROWS below. Issue #87: grown again 456->492 (+36,
+## same one-row-plus-separation math) for "Combat Speed".
+const PANEL_SIZE := Vector2(320.0, 492.0)
 const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
 ## Issue #107: sized from a real headless layout pass (not eyeballed) --
 ## `data/help_content.json`'s 6 sections, each rendered as ONE wrapped Label
@@ -47,10 +48,12 @@ const HELP_CONTENT_PATH := "res://data/help_content.json"
 ## "Replay Hints" both occupy -- "Back" stays the fixed last row, the real
 ## append-only contract here; the only pins that reference this array's
 ## indices live in qa/scripts/settings_loop.json itself, updated alongside).
+## Issue #87: "Combat Speed" appended the SAME way, one more slot before
+## "Back" -- the append-only discipline holds again.
 const ROWS := [
 	"Master volume", "Music volume", "SFX volume",
 	"Fullscreen", "Text Scale", "Reduce Motion",
-	"Controls...", "Replay Hints", "Help...", "Back",
+	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Back",
 ]
 ## Row key -> WIAudio bus name, for the three volume rows (left/right or
 ## confirm/click nudges by 1, matching pause_menu.gd's own `_adjust_volume_row`
@@ -463,6 +466,8 @@ func _row_text(i: int) -> String:
 			return "Text Scale: %s" % WISettings.text_scale_label()
 		"Reduce Motion":
 			return "Reduce Motion: %s" % ("On" if WISettings.reduce_motion() else "Off")
+		"Combat Speed":
+			return "Combat Speed: %s" % WISettings.combat_speed_label()
 		_:
 			return key
 
@@ -479,6 +484,7 @@ func _refresh() -> void:
 		"fullscreen": WISettings.is_fullscreen(),
 		"text_scale_step": WISettings.text_scale_step(),
 		"reduce_motion": WISettings.reduce_motion(),
+		"combat_speed_step": WISettings.combat_speed_step(),
 	})
 
 
@@ -494,6 +500,9 @@ func _adjust_row(delta: int) -> void:
 	elif key == "Text Scale":
 		WISettings.set_text_scale_step(wrapi(WISettings.text_scale_step() + delta, 0, WISettings.TEXT_SCALE_STEPS.size()))
 		_refresh()
+	elif key == "Combat Speed":
+		WISettings.set_combat_speed_step(wrapi(WISettings.combat_speed_step() + delta, 0, WISettings.COMBAT_SPEED_STEPS.size()))
+		_refresh()
 
 
 ## Confirm/click dispatch. Volume rows and Text Scale step forward by ONE
@@ -501,7 +510,7 @@ func _adjust_row(delta: int) -> void:
 ## without a drag-slider widget; Left/Right stay the fine per-step control.
 func _activate_row() -> void:
 	var key := String(ROWS[_cursor])
-	if AUDIO_ROWS.has(key) or key == "Text Scale":
+	if AUDIO_ROWS.has(key) or key == "Text Scale" or key == "Combat Speed":
 		_adjust_row(1)
 		return
 	match key:
