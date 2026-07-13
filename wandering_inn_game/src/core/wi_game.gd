@@ -2301,6 +2301,14 @@ func door_study_sleeps() -> int:
 	return accomplishment_count("door_study_sleeps")
 
 
+## Issue #89 (gap-2, second-door mini-arc): the twin of `door_study_sleeps()`
+## above, same plain-accomplishment-counter idiom (Pisces's OWN
+## talk_pool_stages reads it, street.json). See `sleep()`'s own hook for
+## where this increments.
+func second_door_study_sleeps() -> int:
+	return accomplishment_count("second_door_study_sleeps")
+
+
 ## Starts a quest idempotently and emits a quest_started domain event.
 func start_quest(id: String) -> void:
 	if started_quests.has(id):
@@ -3313,6 +3321,30 @@ func sleep() -> void:
 			record_accomplishment("door_awakened")
 			anything_happened = true
 
+	# Issue #89 (gap-2, second-door mini-arc): the MIRRORED sleep hook,
+	# `second_door_study_sleeps` twinning `door_study_sleeps` above exactly
+	# (same opaque-until-sleep contract, same "only Pisces's own
+	# talk_pool_stages lines shift" discipline -- street.json gains a THIRD
+	# stage). Guarded on `heard_pisces_second_door` (banked by
+	# pisces_magic.json's own 'I found a second door...' option, itself
+	# gated on the dungeon's `seal_kept_found` -- What the Seal Kept's own
+	# FIND beat) AND on `door_awakened` already being banked -- the
+	# monotone-chain rule every OTHER `_attuned` id in this file obeys
+	# (test_fixture_coherence.gd's `_check_monotone_chains`: any id ending
+	# `_attuned` implies `door_awakened`), and fictionally sound besides:
+	# Pisces is comparing the second door's wardwork against the FIRST
+	# door's now-fully-understood pattern, not merely its early reading.
+	# A SHORTER mirror (N=2, not N=3) -- a genuine mini-arc, not a second
+	# full awakening ceremony; no veil cameo (this beat is Pisces's own
+	# scholarship, not the door's own milestone voice). At N=2,
+	# `dungeon_attuned` banks once -- the gate `data/portals.json`'s new
+	# dungeon-approach row reads.
+	if accomplishment_count("door_awakened") >= 1 and accomplishment_count("heard_pisces_second_door") >= 1 and accomplishment_count("dungeon_attuned") < 1:
+		record_accomplishment("second_door_study_sleeps")
+		if accomplishment_count("second_door_study_sleeps") >= 2:
+			record_accomplishment("dungeon_attuned")
+			anything_happened = true
+
 	# The Garden earn condition (spec §5: "act >= III AND K-of-N inn accomplishments";
 	# ratified K=2 of 4). Runs AFTER every progression resolution above (same
 	# position as the D4 door-study hook) -- additive only. Erin's garden door
@@ -3644,6 +3676,7 @@ func snapshot() -> Dictionary:
 		"delivery_failed": delivery_failed,
 		"board_active_deliveries": delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"])),
 		"door_study_sleeps": door_study_sleeps(),
+		"second_door_study_sleeps": second_door_study_sleeps(),
 		"attuned_destinations": attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"])),
 	}
 

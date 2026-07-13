@@ -58,6 +58,18 @@
    "requires_accomplishment": "pallass_attuned",
    "arrival_toast": "The light sharpens and the air turns to hot metal and stone dust. Pallass, tier on tier, rising past where you can see the top.",
    "_comment": "8e Phase C ('Papers for Pallass' Stage 2, controller ruling 2, the GH#65 late-attuning precedent -- invrisil's own row above is the template). pallass_attuned banks from Krshia's attunement-stone purchase (data/dialogue/krshia_crate.json's 'charms' node, gated on pallass_sponsored), the SAME late-attuning shape as invrisil_attuned. requires_accomplishment gates this row structurally inert (WIPortals.attuned_destinations excludes it) until pallass_attuned banks -- no canonical QA run selects this row today (the quest chain's own future canonical will). ARRIVAL CELL RECONCILED (B lane, replacing C's forward-referenced (10,10) placeholder -- which sat on the map's blocked void row): (4,7) is the open cell directly south of `pallass_market_arrival_anchor` (4,6), off every blocked/decor/entity cell, zero trigger_radius encounters on the map (blast-radius trivially clear), with the arrival checkpoint clerk (7,5) three cells east -- the DP3 discipline."
+  },
+  {
+   "id": "dungeon_depths",
+   "display_name": "The Dungeon — Beneath Liscor",
+   "map": "dungeon_approach",
+   "cell": [
+    2,
+    6
+   ],
+   "requires_accomplishment": "dungeon_attuned",
+   "arrival_toast": "The light dims into torchlit stone, and the deep hush of the dungeon closes back around you. You know this quiet.",
+   "_comment": "Issue #89 (gap-2, second-door mini-arc): the dungeon anchor, NOT a new region's own attunement (contrast riverfarm/invrisil/pallass above) -- dungeon_attuned banks from wi_game.gd's sleep() hook (second_door_study_sleeps reaching 2, itself guarded on door_awakened already banked -- the monotone-chain rule test_fixture_coherence.gd's _check_monotone_chains enforces for every id ending `_attuned`), so this row is inert until BOTH the pantry-door network is awake AND Pisces has finished studying the second door found in trapped_halls. MAP-EXISTENCE GUARD (the 8e forward-reference lesson): dungeon_approach ships live already (8d C1, issue #14/#15 -- Ceria/Yvlon/Ksmvr's recruit-sighting map, WIPortals.attuned_destinations' has_map check would otherwise leave a forward-referenced row silently inert). Arrival cell (2,6) sits one cell east of `gallery_seal_anchor` (1,6, the dormant/promoted deep_tunnels return door), open, clear of every blocked cell ([4,2]/[11,2]/[3,9]/[12,9]) and every entity cell on this map (ceria/yvlon/ksmvr sit at row y5, dormant_guardian_marker at (8,9), dungeon_depths_door at (14,6), kingslayer_den at (12,10) -- interact-only, no trigger_radius, so portal arrival's transition()-only O2 rule never risks springing it regardless)."
   }
  ]
 }

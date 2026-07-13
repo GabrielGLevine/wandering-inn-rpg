@@ -22,6 +22,7 @@ const PLAYER_STRING_FILES := [
 	"res://data/arenas.json",
 	"res://data/bounties.json",
 	"res://data/deliveries.json",
+	"res://data/portals.json",
 ]
 
 

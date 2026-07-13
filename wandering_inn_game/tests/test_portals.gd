@@ -119,6 +119,50 @@ func _init() -> void:
 	assert(game.door_study_sleeps() == 3, "door_study_sleeps stops advancing once door_awakened is banked")
 	assert(game.accomplishment_count("door_awakened") == 1, "door_awakened stays banked exactly once")
 
+	# --- Issue #89 (gap-2, second-door mini-arc): the MIRRORED study-sleeps
+	# hook (second_door_study_sleeps/dungeon_attuned) + the new
+	# dungeon-anchor portal row it gates. A SEPARATE game instance -- `game`
+	# above is reused below for the pantry_door portal-menu assertions,
+	# which pin an EXACT option count a live dungeon_depths row would
+	# perturb.
+	var door2_game := _new_game()
+	_bank_beat3(door2_game)
+	door2_game.sleep()
+	door2_game.sleep()
+	door2_game.sleep()
+	assert(door2_game.accomplishment_count("door_awakened") == 1, "sanity: door_awakened banked (3 qualifying sleeps)")
+
+	door2_game.record_accomplishment("heard_pisces_second_door")
+	door2_game.sleep()
+	assert(door2_game.second_door_study_sleeps() == 1, "the first sleep after heard_pisces_second_door (door_awakened already banked) advances second_door_study_sleeps to 1")
+	assert(door2_game.accomplishment_count("dungeon_attuned") == 0, "not yet attuned at N=1")
+
+	door2_game.sleep()
+	assert(door2_game.second_door_study_sleeps() == 2, "a second qualifying sleep advances to 2")
+	assert(door2_game.accomplishment_count("dungeon_attuned") == 1, "N=2 banks dungeon_attuned")
+
+	# Idempotent past N=2, the door_study_sleeps precedent above.
+	door2_game.sleep()
+	assert(door2_game.second_door_study_sleeps() == 2, "second_door_study_sleeps stops advancing once dungeon_attuned is banked")
+
+	# The gate order: heard_pisces_second_door alone, without door_awakened,
+	# must NOT advance the counter -- the monotone-chain rule
+	# (test_fixture_coherence.gd's _check_monotone_chains) requires every
+	# id ending `_attuned` to imply door_awakened.
+	var door2_gate_game := _new_game()
+	door2_gate_game.record_accomplishment("heard_pisces_second_door")
+	door2_gate_game.sleep()
+	assert(door2_gate_game.second_door_study_sleeps() == 0, "second_door_study_sleeps never advances before door_awakened is banked")
+
+	# The new portal row: inert until dungeon_attuned, live once banked.
+	var dest_ids: Array = door2_game.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"]))
+	assert(dest_ids.has("dungeon_depths"), "dungeon_depths lists once dungeon_attuned is banked")
+	var fresh_dest_ids: Array = _new_game().attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"]))
+	assert(not fresh_dest_ids.has("dungeon_depths"), "dungeon_depths stays gate-locked on a fresh game")
+	door2_game._travel_to_portal("dungeon_depths")
+	assert(door2_game.current_map == "dungeon_approach", "travel to the dungeon anchor lands on dungeon_approach")
+	assert(door2_game.player_cell == Vector2i(2, 6), "travel lands on the portals.json-authored arrival cell")
+
 	# --- attuned_destinations() / interact() / travel_to end-to-end (the
 	# O2 rule: transition() only, no move_player/trigger_radius) ---
 	var attuned_ids2: Array = game.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"]))
@@ -212,5 +256,5 @@ func _init() -> void:
 	fwd_game._travel_to_portal("pallass")
 	assert(fwd_game.current_map == "pallass_market", "travel to the now-landed map succeeds through the same guard")
 
-	print("PASS: WIPortals gating/graph construction + the study-sleeps hook + portal-menu travel (the O2 rule) + the forward-referenced-row map guard")
+	print("PASS: WIPortals gating/graph construction + the study-sleeps hook (both the door and its second-door mirror) + portal-menu travel (the O2 rule) + the forward-referenced-row map guard")
 	quit(0)
