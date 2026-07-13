@@ -683,9 +683,15 @@ const DUNGEON_CELLS := [
 ## the others were re-read byte-identical at merge.
 ## GH#94 (VISUAL-LOG re-point, 2026-07-13): razorbeak_nest's arena
 ## re-pointed `training_yard` -> `boulder_flats` (fiction-right open-ground,
-## same as corusdeer_range's own row above) -- arena is presentation-only
-## (never read by `WICombat`'s own rules), so this re-derive is a pure
-## sanity re-measure, not expected to move the win rate/rounds.
+## same as corusdeer_range's own row above). TRAP -- an arena is NOT
+## presentation-only, two sim-facing reads: (1) `blocked` cells feed combat
+## walls/LoS (training_yard has zero, boulder_flats has 4 cover boulders --
+## real geometry change, re-measured 1.00/4r); (2) an arena-level
+## `trivial: true` suppresses `WIGame._bank_action_tally` (the
+## class-progression deed feed) -- training_yard carries it (the spar
+## arena), so razorbeak kills banked ZERO action tally until this re-point
+## flipped banking on. See the encounter's own _comment (floodplains.json)
+## for the banking-flip disclosure.
 const BESTIARY_CELLS := [
 	{"name": "corusdeer_range_t1_solo", "arena": "boulder_flats", "enemies": ["corusdeer"], "build": "warrior2", "solo": true},
 	{"name": "razorbeak_nest_t1_solo", "arena": "boulder_flats", "enemies": ["razorbeak_a", "razorbeak_b"], "build": "warrior2", "solo": true},

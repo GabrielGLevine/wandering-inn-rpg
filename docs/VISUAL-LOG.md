@@ -1320,8 +1320,16 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   floodplains.json`) -- same floodplains biome the encounter's field
   placement already lives in, open grass + scattered boulder cover, zero
   training dummies. `sim_combat_batch.gd`'s `razorbeak_nest_t1_solo`
-  MEASURED cell re-pointed + re-run clean (win_rate=1.00, arena is
-  presentation-only so no rule-level change was expected). Windowed-
-  verified via a throwaway teleport+autoplay probe (deleted): the pair
-  now fights on open grass among boulders, no dummies/pells anywhere in
-  frame.
+  MEASURED cell re-pointed + re-run clean (win_rate=1.00). REVIEW
+  CORRECTION (same day): an arena is NOT presentation-only — two
+  sim-facing reads. (1) `blocked` cells feed combat walls/LoS
+  (training_yard 0 → boulder_flats 4 cover boulders, real geometry, held
+  at 1.00 anyway). (2) training_yard carries `trivial: true` (the spar
+  arena's no-progression flag, inherited here by mistake at #97), which
+  suppressed ALL action-tally banking on razorbeak kills — the re-point
+  FLIPPED class-progression banking ON for wild culls (fiction-correct;
+  the bounty's own `on_victory` counter was never gated either way).
+  Disclosed in the encounter's `_comment` + the harness doc block.
+  Windowed-verified via a throwaway teleport+autoplay probe (deleted):
+  the pair now fights on open grass among boulders, no dummies/pells
+  anywhere in frame.
