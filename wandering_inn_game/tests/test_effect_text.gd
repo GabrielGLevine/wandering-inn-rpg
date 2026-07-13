@@ -348,12 +348,15 @@ func _test_status_exact() -> void:
 	# duration_rounds=1, flame_bolt's burning tick_damage=2/duration_rounds=3).
 	# The ×0.75 multiplier reads straight off WICombat's own const, not a
 	# re-typed literal.
+	# GH#90 TUNING: both riders' duration_rounds are floored at 1 (the
+	# round-purge floor -- raskghar_maul's/guarding_ward's own TUNING notes
+	# in skills.json), hence the singular "round".
 	_check(
-		WIEffectText.status_line("weakened") == "Weakened — deals ×0.75 damage for 2 rounds.",
+		WIEffectText.status_line("weakened") == "Weakened — deals ×0.75 damage for 1 round.",
 		"weakened glossary line: got %s" % WIEffectText.status_line("weakened")
 	)
 	_check(
-		WIEffectText.status_line("guarded") == "Guarded — takes ×0.75 damage for 2 rounds.",
+		WIEffectText.status_line("guarded") == "Guarded — takes ×0.75 damage for 1 round.",
 		"guarded glossary line: got %s" % WIEffectText.status_line("guarded")
 	)
 	_check(

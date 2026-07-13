@@ -156,17 +156,17 @@ static func status_line(status_id: String, skills_catalog: Array = []) -> String
 		# `_invisibility_duration` above.
 		"weakened":
 			var rounds := _status_duration(status_id, skills_catalog)
-			return "Weakened — deals ×%s damage for %d rounds." % [_fmt_mult(WICombat.WEAKENED_MULT), rounds]
+			return "Weakened — deals ×%s damage for %d round%s." % [_fmt_mult(WICombat.WEAKENED_MULT), rounds, "" if rounds == 1 else "s"]
 		"guarded":
 			var rounds := _status_duration(status_id, skills_catalog)
-			return "Guarded — takes ×%s damage for %d rounds." % [_fmt_mult(WICombat.GUARDED_MULT), rounds]
+			return "Guarded — takes ×%s damage for %d round%s." % [_fmt_mult(WICombat.GUARDED_MULT), rounds, "" if rounds == 1 else "s"]
 		"rooted":
 			var rounds := _status_duration(status_id, skills_catalog)
 			return "Rooted — can't move or Dash for %d round%s." % [rounds, "" if rounds == 1 else "s"]
 		"burning":
 			var rounds := _status_duration(status_id, skills_catalog)
 			var tick := _burning_tick_damage(skills_catalog)
-			return "Burning — takes %d damage at the end of each round for %d rounds." % [tick, rounds]
+			return "Burning — takes %d damage at the end of each round for %d round%s." % [tick, rounds, "" if rounds == 1 else "s"]
 	return ""
 
 
