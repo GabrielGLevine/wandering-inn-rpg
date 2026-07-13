@@ -383,7 +383,7 @@
    ],
    "display_name": "The Magus's Bench",
    "sprite": "library_desk",
-   "observe": "A workbench of calipers, weights, and chalk lines \u2014 every tool squared to the bench edge. The Magus is up at the office when he is not down here.",
+   "observe": "A workbench of calipers, weights, and chalk lines — every tool squared to the bench edge. The Magus is up at the office when he is not down here.",
    "on_interact_accomplishment": "eyed_grimalkins_bench",
    "toast": "Every tool squared to the bench edge. You decide against touching anything."
   },

@@ -667,19 +667,24 @@ const DUNGEON_CELLS := [
 ## encounter's own region tier (region-tiers.md): T1 floodplains ->
 ## `warrior2` (rock_crab_nest_t1_solo's own build); T3 Invrisil ->
 ## `t3_warrior10` (boulevard_night_footpads' own build, the night-ambush
-## precedent this Mothbear slot is a second application of); T4 dungeon /
-## T4-T5 Pallass-adjacent -> `t4_spellsword11_party` solo (no established
-## Pallass-tier build exists yet -- Pallass had ZERO prior combat content,
-## see forge_calibration_golem/market_watchgolems' own combatants.json
-## _comment -- the T4 reference is the closest real anchor, disclosed as a
-## first-of-region choice, not a retuned contract).
+## precedent this Mothbear slot is a second application of); the dungeon
+## den -> `t4_spellsword11_party` solo (the T4 tier's pinned reference).
+## PALLASS IS T5 (region-tiers.md pins expected build 12-14): the two
+## golem fights are measured at BOTH `t4_spellsword11_party` (the shipped
+## T4 reference -- a gate-adjacent anchor, an UNDER-tier read for a T5
+## region, expected to skew hard) AND `t4_spellsword14_party` (the R3
+## real-consolidation-floor build, inside T5's own 12-14 window -- the
+## honest at-tier read). Both MEASURED, no gate: Pallass had ZERO prior
+## combat content, so there is no established band to hold yet.
 const BESTIARY_CELLS := [
 	{"name": "corusdeer_range_t1_solo", "arena": "boulder_flats", "enemies": ["corusdeer"], "build": "warrior2", "solo": true},
 	{"name": "razorbeak_nest_t1_solo", "arena": "training_yard", "enemies": ["razorbeak_a", "razorbeak_b"], "build": "warrior2", "solo": true},
 	{"name": "boulevard_mothbears_t3_solo", "arena": "mercantile_alley", "enemies": ["mothbear_a", "mothbear_b"], "build": "t3_warrior10", "solo": true},
 	{"name": "kingslayer_den_t4_solo", "arena": "spider_den", "enemies": ["kingslayer_spider"], "build": "t4_spellsword11_party", "solo": true},
 	{"name": "forge_calibration_golem_t4_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword11_party", "solo": true},
+	{"name": "forge_calibration_golem_t5_sw14_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword14_party", "solo": true},
 	{"name": "market_watchgolems_t4_solo", "arena": "market_watch", "enemies": ["watchgolem_a", "watchgolem_b"], "build": "t4_spellsword11_party", "solo": true},
+	{"name": "market_watchgolems_t5_sw14_solo", "arena": "market_watch", "enemies": ["watchgolem_a", "watchgolem_b"], "build": "t4_spellsword14_party", "solo": true},
 ]
 
 

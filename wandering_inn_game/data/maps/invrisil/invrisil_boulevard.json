@@ -886,7 +886,7 @@
  ],
  "entities": [
   {
-   "_comment": "Invrisil 8c Task C1 (issue #12) -- the anchor-stone-per-region idiom's newest end (data/portals.json's new 'invrisil' row). Playtest hotfix #6: sprite swapped `boulder` -> `anchor_waystone` (a bespoke waystone-archway silhouette, not a rock) -- the entity's OWN toast copy already foreshadowed this ('the frame of light waiting just under the surface'), so the swap makes the art match the text that was already there. CONSTRAINT: NO new `light` here -- this map's 8 `street_lamp` decor entries already sit at the hard 8-light-per-map budget (WIWorld._rebuild_field's assertion, spec \u00a75); a 9th light hard-fails the map build. Every other anchor site got a stronger/steady light; this one gets the sprite-only fix. If a future pass wants the glow here too, it has to trade off one of the 8 lamps first, not just add a 9th light.",
+   "_comment": "Invrisil 8c Task C1 (issue #12) -- the anchor-stone-per-region idiom's newest end (data/portals.json's new 'invrisil' row). Playtest hotfix #6: sprite swapped `boulder` -> `anchor_waystone` (a bespoke waystone-archway silhouette, not a rock) -- the entity's OWN toast copy already foreshadowed this ('the frame of light waiting just under the surface'), so the swap makes the art match the text that was already there. CONSTRAINT: NO new `light` here -- this map's 8 `street_lamp` decor entries already sit at the hard 8-light-per-map budget (WIWorld._rebuild_field's assertion, spec §5); a 9th light hard-fails the map build. Every other anchor site got a stronger/steady light; this one gets the sprite-only fix. If a future pass wants the glow here too, it has to trade off one of the 8 lamps first, not just add a 9th light.",
    "id": "invrisil_anchor_stone",
    "kind": "prop",
    "cell": [
@@ -940,10 +940,10 @@
     0.55
    ],
    "facing": "left",
-   "observe": "Coin-gold trim on a merchant's collar, rings enough to case a fist. He totals you before you've said a word \u2014 cheaply, by the look on his face.",
+   "observe": "Coin-gold trim on a merchant's collar, rings enough to case a fist. He totals you before you've said a word — cheaply, by the look on his face.",
    "friendly_line": "He offers a smile with the price tag still visible on the underside. \"Charming,\" he allows, in the tone of a man crossing an item off a ledger.",
    "talk_pool": [
-    "New face. I do like a new face \u2014 they're cheap, and occasionally they appreciate into something useful.",
+    "New face. I do like a new face — they're cheap, and occasionally they appreciate into something useful.",
     "Everything has a price. The trick, which so few of you learn, is finding out whose.",
     "Do step out of the doorway. You're blocking a view I paid a great deal to own."
    ],
@@ -1155,7 +1155,7 @@
    "toast": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back -- just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end."
   },
   {
-   "_comment": "Issue #80 (world reactivity wave, item 4 -- night texture, taste-gate 2026-07-12): Invrisil's own night-only slot -- 'Invrisil boulevard night footpads', the brief's own suggestion, NOT the mercantile_alleys footpads (alley_footpads_a/b + hired_blades are already-live quest/stealth-lesson encounters on a heavily pinned map; adding a fourth random trigger there risks collision -- the boulevard is open ground with zero existing encounters). EXISTING combatants only (footpad_lookout/footpad_bruiser -- the SAME low-lethality pair alley_footpads_a/b already field) on the EXISTING mercantile_alley arena (no new arena). No ally (matches alley_footpads_a/b's own solo convention -- nobody's fielded on the open boulevard at night). encounter_when{phase:[night]} + trigger_radius 1 + respawns:true, river_wolf_pack's exact shape. visual_states hides the marker outside night. PLACEMENT: (13,15) in the boulevard's south band (y14-15), the ONE stretch of this heavily-trafficked map (invrisil_walkthrough/invrisil_disagreement_*'s pinned routes/teleports/the y=2 phase-grind sweep all stay within y2-13) verified empty of every entity/pinned coordinate those canonicals touch -- Chebyshev distance to the nearest real entity (coyle_runner_trail, 20,13) is 7; nothing on this map's own row y14/y15 is ever walked or teleported to by any shipped script.",
+   "_comment": "Issue #80 (world reactivity wave, item 4 -- night texture, taste-gate 2026-07-12): Invrisil's own night-only slot -- 'Invrisil boulevard night footpads', the brief's own suggestion, NOT the mercantile_alleys footpads (alley_footpads_a/b + hired_blades are already-live quest/stealth-lesson encounters on a heavily pinned map; adding a fourth random trigger there risks collision -- the boulevard was open ground with zero encounters when this slot landed; issue #97's boulevard_mothbears (5,15) now shares the map -- Chebyshev 8 apart, both in the untrafficked y14-15 south band, canonical routes disjoint). EXISTING combatants only (footpad_lookout/footpad_bruiser -- the SAME low-lethality pair alley_footpads_a/b already field) on the EXISTING mercantile_alley arena (no new arena). No ally (matches alley_footpads_a/b's own solo convention -- nobody's fielded on the open boulevard at night). encounter_when{phase:[night]} + trigger_radius 1 + respawns:true, river_wolf_pack's exact shape. visual_states hides the marker outside night. PLACEMENT: (13,15) in the boulevard's south band (y14-15), the ONE stretch of this heavily-trafficked map (invrisil_walkthrough/invrisil_disagreement_*'s pinned routes/teleports/the y=2 phase-grind sweep all stay within y2-13) verified empty of every entity/pinned coordinate those canonicals touch -- Chebyshev distance to the nearest real entity (coyle_runner_trail, 20,13) is 7; nothing on this map's own row y14/y15 is ever walked or teleported to by any shipped script.",
    "id": "boulevard_night_footpads",
    "kind": "encounter",
    "cell": [

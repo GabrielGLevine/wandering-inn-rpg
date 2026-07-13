@@ -883,9 +883,9 @@
    ]
   },
   {
-   "_comment": "The Pallass Forge's own construct guardian (T4/T5 Pallass-adjacent solo encounter, `forge_calibration_golem` -- Pallass's FIRST live combat encounter; every prior Pallass QA canonical is explicitly zero-combat). Canon-cite: wiki.wanderinginn.com/Golems (WIKI-VERIFIED 2026-07-12) -- artificial golems built from a shell + command spells + a mana-stone Golem Heart, over 40 named variants incl. Stone Golem/Flame Golem; Pallass's forge tier is a molten-seam artifice hall (data/maps/pallass/pallass_forge.json), a direct, canon-plausible home for a forge-tempered construct that occasionally miscalibrates and must be put down for pay (golems are 'neither alive nor dead' -- a recurring maintenance job, not a story kill). `ai:caster` (EXISTING `flame_bolt` skill reflavored as a superheated forge-bolt, no new skills.json entry) is REQUIRED, not decorative -- the melee profile never casts (the documented autoplay gotcha). damage_reduction 4 models solid stone plating.",
+   "_comment": "The Pallass Forge's own construct guardian (T4/T5 Pallass-adjacent solo encounter, `forge_calibration_golem` (field name 'Miscalibrated Golem', a descriptor not a species; combat display_name is the ATTESTED 'Stone Golem' per the controller naming ruling) -- Pallass's FIRST live combat encounter; every prior Pallass QA canonical is explicitly zero-combat). Canon-cite: wiki.wanderinginn.com/Golems (WIKI-VERIFIED 2026-07-12) -- artificial golems built from a shell + command spells + a mana-stone Golem Heart, over 40 named variants incl. Stone Golem/Flame Golem; Pallass's forge tier is a molten-seam artifice hall (data/maps/pallass/pallass_forge.json), a direct, canon-plausible home for a forge-tempered construct that occasionally miscalibrates and must be put down for pay (golems are 'neither alive nor dead' -- a recurring maintenance job, not a story kill). `ai:caster` (EXISTING `flame_bolt` skill reflavored as a superheated forge-bolt, no new skills.json entry) is REQUIRED, not decorative -- the melee profile never casts (the documented autoplay gotcha). damage_reduction 4 models solid stone plating.",
    "id": "forge_golem",
-   "display_name": "Forge Calibration Golem",
+   "display_name": "Stone Golem",
    "sprite": "forge_golem",
    "side": "enemy",
    "stats": {
@@ -904,9 +904,9 @@
    ]
   },
   {
-   "_comment": "The Pallass Market's own construct guard pair (T4/T5 Pallass-adjacent encounter, `market_watchgolems`) -- plain Stone Golems distinct from forge_golem's molten-cracked caster (canon explicitly supports many golems of the same named type, wiki.wanderinginn.com/Golems, WIKI-VERIFIED 2026-07-12). `ai:guard` realizes the documented 'follows orders, autonomous within commands' golem-tier behavior -- a pair so the profile is actually exercised (combat_ai.gd's own doc comment: 'a solo guard is just a fighter', degrading to plain melee with no ally to protect); watchgolem_a is the ward, watchgolem_b the escort. FORWARD-REFERENCE (#90 lane): if cwA adds a `guarded` applies-rider to a support/protect-flavored EXISTING skill this pair could plausibly hold later, the thematic parallel (a golem literally named for guarding, carrying the status named `guarded`) is a natural adoption target for a future wave -- not wired here (no skill in this pair's kit carries `applies` today, so this is a documented opportunity, not a live forward-reference).",
+   "_comment": "The Pallass Market's own construct guard pair (T4/T5 Pallass-adjacent encounter, `market_watchgolems` -- field name 'Stone Golems', combat display_name the ATTESTED 'Stone Golem' per the controller naming ruling; the turn bar's duplicate-name A/B suffixing disambiguates the pair) -- plain Stone Golems distinct from forge_golem's molten-cracked caster (canon explicitly supports many golems of the same named type, wiki.wanderinginn.com/Golems, WIKI-VERIFIED 2026-07-12). `ai:guard` realizes the documented 'follows orders, autonomous within commands' golem-tier behavior -- a pair so the profile is actually exercised (combat_ai.gd's own doc comment: 'a solo guard is just a fighter', degrading to plain melee with no ally to protect); watchgolem_a is the ward, watchgolem_b the escort. FORWARD-REFERENCE (#90 lane): if cwA adds a `guarded` applies-rider to a support/protect-flavored EXISTING skill this pair could plausibly hold later, the thematic parallel (a guard-profile golem carrying the status named `guarded`) is a natural adoption target for a future wave -- not wired here (no skill in this pair's kit carries `applies` today, so this is a documented opportunity, not a live forward-reference).",
    "id": "watchgolem_a",
-   "display_name": "Market Watchgolem",
+   "display_name": "Stone Golem",
    "sprite": "watchgolem",
    "side": "enemy",
    "stats": {
@@ -923,9 +923,9 @@
    "skills": []
   },
   {
-   "_comment": "Market_watchgolems' escort half -- see watchgolem_a's own _comment for the canon cite + the paired-guard rationale. Carries `power_strike` (EXISTING skill) for a heavier stone haymaker, slightly higher stats -- the asymmetric-pair convention.",
+   "_comment": "The market guard pair's escort half -- see watchgolem_a's own _comment for the canon cite + the paired-guard rationale. Carries `power_strike` (EXISTING skill) for a heavier stone haymaker, slightly higher stats -- the asymmetric-pair convention.",
    "id": "watchgolem_b",
-   "display_name": "Market Watchgolem",
+   "display_name": "Stone Golem",
    "sprite": "watchgolem",
    "side": "enemy",
    "stats": {
