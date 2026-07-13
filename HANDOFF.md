@@ -55,9 +55,13 @@ Full arc live: dungeon maps + traps → Horns recruit → three-cost halls route
 
 Four parallel lanes, each opus-reviewed (MERGE) with fix waves: **#99** shipped-ids freeze (460 ids frozen at 0.5.1 across 5 classes; deprecate-and-map via WISave.DEPRECATED_IDS with HONEST coverage — a mapped class without a real remap arm fails loud; the class remap now rewrites all four carriers; wi-shipping deploy step 0 = regenerate at every release). **#100** skeleton split (data/maps/<region>/<map>.json × 21 + WISceneCatalog composer + data/scene_root.json; deep-equal proven; sweep byte-green before/after; the reviewer ran a REAL web export proving pck enumeration — the one surface editor-mode sweeps can't see; region dirs = permanent content-lane parallelism). **#101** QA tiering (13-script smoke tier ~22s; `--tier`/`--touching` on ci_sweep.sh; surfaces auto-derived + drift-FATAL; always-on sweep-smoke CI job — would have caught this week's manifest incident by construction; harness sharding via WI_CELL_RANGE + harness_shard_diff.sh; CAVEAT: `--touching` is content-paths-only, src/** changes fall through to zero scripts — use --tier smoke minimum). **#107** Help pane (six sections via the Controls idiom, locks-clean, voice-passed; settings_loop pins updated with proof only it indexes those rows). **Two cross-lane seams caught at composition, neither by per-lane review**: 101's surfaces generator and 99's maps census both read the monolith 100 deleted — fixed by repointing to the composed catalog (shipped_ids.json byte-identical across the repoint). Lesson recorded: the reconciliation rehearsal must cover EVERY lane pair sharing a data source, not just pairs flagged at dispatch.
 
-## 🍎 QUEUED (user directive 2026-07-12): next stable macOS export
+## 🍎 macOS EXPORT DELIVERED (2026-07-12, the architecture-wave build)
 
-At the architecture-wave seam (lanes 99/100/101/107 merged, composed gate + CI `[ci-full]` green): cut a fresh macOS runnable (preset name `macos`, lowercase), boot-smoke, deliver via SendUserFile. Includes the Help pane — good playtest build.
+WanderingInnRPG-archwave-macos.zip cut off c1a198b, boot-smoked, delivered. Codesign = Built-in ad-hoc (user directive: no Apple Developer ID — preset `codesign/codesign=1` was already set; recipient right-clicks → Open on first launch to pass Gatekeeper).
+
+## 🚨 GITHUB ACTIONS BILLING DEAD (2026-07-12) — USER ACTION
+
+The wave push (c1a198b) went ALL-RED with zero steps run: "The job was not started because recent account payments have failed or your spending limit needs to be increased." EVERY push shows red CI until Billing & plans is fixed — including the new always-on smoke job, so push CI protects nothing right now. The wave itself is verified by the full local composed gate (22/22 units, 91-cell harness, 103-script sweep with the new drift gates, web parity, windowed reads) — main is healthy; the red is billing, not code.
 
 ## 🚢 v0.5.1 LIVE ON ITCH (2026-07-12, local butler; build #1791931, version 0.5.1)
 
