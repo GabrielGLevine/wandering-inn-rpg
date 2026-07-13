@@ -1,5 +1,5 @@
 {
- "_comment": "Pinned losing seed: 1. A PASS means the fight was lost, defeat confirmed, and the auto slot reloaded. Issue #78: the reload now carries reason:'defeat' (game_loaded payload) and the defeat interstitial (sleep_veil.gd's play_defeat()) fires once, collapsed to an instant coverage emit under QA -- neither changes WHERE the player lands (still floodplains, still no game_reset).",
+ "_comment": "Pinned losing seed: 1. A PASS means the fight was lost, defeat confirmed, and the pre-combat snapshot reloaded. Issue #78: the reload now carries reason:'defeat' (game_loaded payload) and the defeat interstitial (sleep_veil.gd's play_defeat()) fires once, collapsed to an instant coverage emit under QA -- neither changes WHERE the player lands (still floodplains, still no game_reset). Issue #88 (gap-2): defeat now reloads game.gd's dedicated 'auto_pre_combat' snapshot (written the instant a fight's own combat_started fired) instead of the general 'auto' checkpoint -- makes sleep_veil.gd's 'the fight undone' copy literally true. A FIRST leg below (before Relc is ever met) proves this for a PROXIMITY-triggered encounter (goblin_encounter_1) -- the classless_solo matchup (sim_combat_batch.gd) -- and that the reload landing squarely inside its still-live trigger_radius can never insta-refire it; the script then returns to (7,6) and continues unchanged into the original interact-triggered chieftains_raid leg (Relc met + fielded, WITH-ally defeat).",
  "steps": [
   {
    "action": "wait_for_event",
@@ -31,6 +31,106 @@
   {
    "action": "assert_save_exists",
    "slot": "auto"
+  },
+  {
+   "_comment": "Issue #88 (gap-2) QA teeth: goblin_encounter_1 (trigger_radius 2, floodplains' own mandatory pre-Liscor ambush) -- the ONE PROXIMITY-triggered danger reachable before Relc is ever met (unlike chieftains_raid below, which is interact-only, no trigger_radius, and requires met_relc for its own ally to field). Still classless (no sleep yet) AND solo (met_relc unbanked) -- sim_combat_batch.gd's new classless_solo cell is this EXACT matchup, measured 7% win rate, so seed 1 is expected to lose it. Route: save_load_roundtrip.json's own proven vertical corridor, (7,6)->right23->(30,6)->down14->(30,20)->down1 springs it at Chebyshev 2.",
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [30, 20]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE insta-refire teeth. `_check_trigger_radius` (wi_game.gd) runs ONLY from `move_player` -- `load_slot`'s restore never calls it (the doc comment's own guarantee: 'a QA teleport step or a load-slot restore can never ambush the player') -- so the reload landing squarely back inside goblin_encounter_1's trigger_radius must NOT itself spring a second fight. assert_event_count (whole-run, not cursor-scoped) is the precise proof: exactly 1 combat_started so far -- a SECOND would mean the reload alone re-triggered the ambush.",
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "_comment": "The pre-combat snapshot's player_cell: move_player sets player_cell to the target BEFORE _check_trigger_radius runs, so goblin_encounter_1's own combat_started fired with the player already standing at (30,21) -- Chebyshev 2 from (30,23), exactly the trigger boundary -- and that is exactly where the reload restores them: structurally inside the radius, proven harmless above.",
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [30, 21]
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "game_reset"
+  },
+  {
+   "_comment": "Walk back to (7,6) -- the reverse of the corridor above -- so the ORIGINAL script below (Meet Relc, then the interact-triggered chieftains_raid leg) resumes from its own proven starting cell, byte-unchanged.",
+   "action": "move",
+   "direction": "up",
+   "steps": 15
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 23
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [7, 6]
   },
   {
    "_comment": "Meet Relc (12,13) before the ally_requires-gated chieftains_raid fight.",
@@ -206,7 +306,7 @@
    "name": "confirm"
   },
   {
-   "_comment": "Issue #78: GAME_LOADED now carries reason:'defeat' on this exact path (combat_screen._close_banner's true-defeat branch, load_slot('auto','defeat')) -- distinct from a voluntary pause-Load/title-Continue/Abandon, none of which pass a reason.",
+   "_comment": "Issue #78: GAME_LOADED now carries reason:'defeat' on this exact path (combat_screen._close_banner's true-defeat branch, load_slot('auto_pre_combat','defeat') since issue #88) -- distinct from a voluntary pause-Load/title-Continue/Abandon, none of which pass a reason.",
    "action": "wait_for_event",
    "type": "game_loaded",
    "payload_contains": {
@@ -228,6 +328,12 @@
    "equals": "floodplains"
   },
   {
+   "_comment": "Issue #88 (gap-2): the pre-combat snapshot for THIS fight was written at chieftains_raid's own combat_started, player_cell (30,7) (the cell interacted FROM, adjacent to the entity at (31,7)) -- distinct from goblin_encounter_1's leg above, proving the mechanism re-derives fresh per fight rather than reusing a stale snapshot.",
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [30, 7]
+  },
+  {
    "action": "assert_state",
    "path": "removed_entities",
    "equals": []
@@ -235,6 +341,11 @@
   {
    "action": "assert_event_absent",
    "type": "game_reset"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 2
   }
  ]
 }

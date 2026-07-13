@@ -595,13 +595,16 @@ func _execute(step: Dictionary) -> void:
 		"install_fixture":
 			# Re-seeds a fixture into a save slot MID-RUN (same copy path as the
 			# top-level `fixture_save` affordance, just deferred to a step).
-			# save_migration uses this for its defeat-reload proof: reaching a
-			# fightable encounter autosaves a fresh, VALID save over the auto
-			# slot (map_changed autosave), so the only way to hold a
-			# stale/incompatible auto slot at defeat time is to overwrite auto
-			# with the old-version fixture after that autosave but before the
-			# loss. Writes a file only; never touches the sim or its rng, so
-			# combat determinism is unaffected.
+			# save_migration uses this TWICE: once against "auto" (a
+			# map_changed autosave already wrote a fresh valid save there; the
+			# only way to hold a stale/incompatible "auto" for the LATER
+			# pause-menu "Load Autosave" rejection proof is to overwrite it
+			# after that autosave), and once against "auto_pre_combat" (issue
+			# #88 -- combat_started already wrote a fresh valid pre-combat
+			# snapshot there; overwriting it after that write but before the
+			# loss is what makes combat_screen's defeat-load fallback proof
+			# reachable). Writes a file only; never touches the sim or its
+			# rng, so combat determinism is unaffected either way.
 			_install_fixture_saves([{"fixture": String(step["fixture"]), "slot": String(step.get("slot", "auto"))}])
 			await get_tree().process_frame
 		_:

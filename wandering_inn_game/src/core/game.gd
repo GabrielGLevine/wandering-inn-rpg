@@ -15,6 +15,15 @@ const MANUAL_SLOTS: Array[String] = ["manual", "manual_2", "manual_3"]
 ## Pure simulation instance owned by the game autoload.
 var sim: WIGame
 var _autosave_announced := false
+## Issue #88 (gap-2): true for exactly the FIRST save_auto() call after a
+## New Game reset -- consumed (and cleared) there, which rotates the OLD
+## "auto" slot to "auto_prev" before this run's own first autosave clobbers
+## it. Danger this closes: the single shared "auto" slot silently destroyed
+## a finished run's last checkpoint the moment New Game's fresh world hit
+## its first MAP_CHANGED/etc. trigger -- title_screen.gd's own overwrite
+## confirm (see that file) warns BEFORE reset; this is the safety net for
+## the case the player confirms (or a fresh boot with no confirm needed).
+var _rotate_auto_pending := false
 
 
 func _ready() -> void:
@@ -30,20 +39,45 @@ func _ready() -> void:
 ## from the save).
 func reset(creation: Dictionary = {}) -> void:
 	_build_sim(creation)
+	_rotate_auto_pending = true
 	ObservableBus.emit_domain_event(WIEvents.GAME_RESET, {})
 
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
+	# Issue #88 (gap-2): a pre-combat snapshot, written the instant a fight
+	# begins -- WISave never serializes `combat` (save.gd), so writing here
+	# (COMBAT_STARTED fires from WICombat.begin(), AFTER `sim.combat` is
+	# already assigned but before anything else could possibly mutate)
+	# captures exactly the pre-fight world state, equivalent in every
+	# observable way to a snapshot taken strictly before `sim.combat` was
+	# built. Dedicated slot, NEVER "auto" itself: Abandon/"Load Autosave"
+	# (pause_menu.gd) must keep reading the general last-checkpoint
+	# semantics unchanged (combat_abandon.json's own pin on landing back at
+	# the last ordinary autosave, not the fight's own entry cell) -- only
+	# the DEFEAT path (combat_screen.gd's `_close_banner`) reads this slot.
+	if type == WIEvents.COMBAT_STARTED:
+		_write_slot("auto_pre_combat")
 	if type in [
 		WIEvents.COMBAT_RESOLVED, WIEvents.CLASS_LEVEL_UP, WIEvents.QUEST_BEAT_COMPLETED,
 		WIEvents.MAP_CHANGED, WIEvents.CLASS_GAINED, WIEvents.CLASS_EVOLVED,
 		WIEvents.CONSOLIDATION_ACCEPTED,
+		# Issue #88 (gap-2): PHASE_CHANGED fires unconditionally on EVERY
+		# sleep (wi_game.gd's sleep()), even a grant-less one -- closes the
+		# "slept, banked nothing level-shaped, then died and lost the whole
+		# waking" gap the old trigger list left open. It ALSO fires on an
+		# ordinary day/dusk/night crossing mid-exploration (wi_game.gd's
+		# _tick_action) -- harmless (a strictly fresher checkpoint), not
+		# worth gating out.
+		WIEvents.PHASE_CHANGED,
 	]:
 		save_auto()
 
 
 ## Writes the autosave slot and announces the first autosave to the player.
 func save_auto() -> void:
+	if _rotate_auto_pending:
+		_rotate_auto_pending = false
+		_rotate_slot("auto", "auto_prev")
 	_write_slot("auto")
 	if not _autosave_announced:
 		_autosave_announced = true
@@ -224,6 +258,25 @@ func _write_slot(slot: String) -> void:
 		return
 	file.store_string(JSON.stringify(WISave.serialize(sim)))
 	file.close()
+
+
+## Byte-copies `<from>.json` to `<to>.json` (the `install_fixture_save` copy
+## shape) -- a silent no-op when `from` has never been written (e.g. this
+## process's very first save_auto ever, cold boot with no prior "auto").
+## Neither slot is ever offered by `_newest_save_slot`/pause's slot picker
+## (the "playtest" slot's own precedent, title_screen.gd) -- "auto_prev" is
+## a pure safety-net copy, not a player-facing save.
+func _rotate_slot(from: String, to: String) -> void:
+	var src_path := "%s/%s.json" % [SAVE_DIR, from]
+	if not FileAccess.file_exists(src_path):
+		return
+	var contents := FileAccess.get_file_as_string(src_path)
+	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
+	var dst := FileAccess.open("%s/%s.json" % [SAVE_DIR, to], FileAccess.WRITE)
+	if dst == null:
+		return
+	dst.store_string(contents)
+	dst.close()
 
 
 func _load_json(path: String) -> Dictionary:
