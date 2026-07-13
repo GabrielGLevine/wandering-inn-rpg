@@ -23,7 +23,7 @@
    ],
    "options": [
     {
-     "_comment": "Class-foundation pass R5 (2026-07-12): the Pallass sell surface -- this ORIGINAL walk-on (hosted by market_stallkeeper, pallass_market) doubles as 'the Pallass market clerk-adjacent stallkeeper' (the plan's own framing -- adjacent to tier_clerk_market's checkpoint, a casual stall rather than the civic fee, so deliberately NOT no_haggle: nothing in this NPC's own voice claims a posted-price policy the way the clerk's or Krshia's own lines do). Generalized WIShop.build_sell_graph (shop.gd's own doc comment) via open_sell_picker's vendor-id'd value.",
+     "_comment": "Class-foundation pass R5 (2026-07-12): the Pallass sell surface -- this ORIGINAL walk-on (hosted by market_stallkeeper, pallass_market) doubles as 'the Pallass market clerk-adjacent stallkeeper' (the plan's own framing -- adjacent to tier_clerk_market's checkpoint, a casual stall rather than the civic fee). Review wave: haggling went OPT-IN game-wide, and this hub carries no `haggle` flag -- no discounting here by default (Pallass never haggles, controller ruling); moot for the sell verb anyway ([Bargain]'s price_mod only ever touches BUY prices, never sell_price's own formula). Generalized WIShop.build_sell_graph (shop.gd's own doc comment) via open_sell_picker's vendor-id'd value.",
      "text": "Anything on you worth my coin?",
      "effects": [
       {

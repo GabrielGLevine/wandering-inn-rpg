@@ -429,15 +429,25 @@ func _simulate_combat_profile(name: String, seed_classes: Dictionary, target_cla
 	}
 
 
-## Non-combat variant for Helper (served_customer/delivered_item/
-## cleaned_the_inn are exploration/economy accomplishments, not combat
-## tallies). `per_waking` adds a fixed accomplishment delta each waking --
-## grounded in the REAL `once_per_waking` cap on Serve (`patron_serving.json`)
-## and the delivery wage (`skeleton_scene.json`'s `on_interact_accomplishment:
-## "delivered_item"`, also `once_per_waking`): at most 1 of each per waking in
-## real play, so 1/waking here is the TRUE ceiling, not a guess.
-func _simulate_chore_profile(name: String, target_class_id: String, per_waking: Callable, max_wakings: int) -> Dictionary:
-	var classes := {"helper": 1}
+## Non-combat variant for the chore-counter ladders (Helper's serve/deliver/
+## clean, and -- class-foundation review wave, 2026-07-12 -- the four new
+## ladders: Tactician/Diplomat/Rogue/Trader, whose leveling counters are all
+## exploration/social/economy accomplishments, not combat tallies).
+## `per_waking` adds a fixed accomplishment delta each waking -- grounded in
+## the REAL `once_per_waking` cap on Serve (`patron_serving.json`) and the
+## delivery wage (`skeleton_scene.json`'s `on_interact_accomplishment:
+## "delivered_item"`, also `once_per_waking`): at most 1 of each per waking
+## in real play, so 1/waking here is the TRUE ceiling for Helper and a
+## CONSERVATIVE floor for the new ladders (observed_things/heard_gossip/
+## sneaked_past_danger/deliberate_commerce can each bank more than once a
+## waking through multiple sites, so real play only reaches these wakings
+## SOONER). `seed_classes` seeds the held classes ({"helper": 1} shape for a
+## class already earned); an EMPTY dict lets `_resolve_sleep`'s own
+## `check_class_gains` earn the class mid-run from the banked counters --
+## the Trader profile uses that to model its gained_by (deliberate_commerce
+## 5) honestly instead of skipping it.
+func _simulate_chore_profile(name: String, target_class_id: String, per_waking: Callable, max_wakings: int, seed_classes: Dictionary = {"helper": 1}) -> Dictionary:
+	var classes := seed_classes.duplicate(true)
 	var accomplishments := {}
 	var generalist_classes: Array = []
 	for waking in range(1, max_wakings + 1):
@@ -499,7 +509,18 @@ func _init() -> void:
 	# --- Mage: ice/fire Replacement + Generalist ---------------------------
 	var pol_builtin: Callable = func(_w: int) -> Callable: return _policy_builtin
 	var pol_mono_ice: Callable = func(_w: int) -> Callable: return _policy_force_spell.bind("frost_bolt")
-	var pol_mono_fire: Callable = func(_w: int) -> Callable: return _policy_force_line.bind("flame_jet")
+	# Class-foundation R2 (#93, 2026-07-12) added [Flame Dart] (single-target
+	# spell_damage, fire) to mage L2 PRECISELY to close the fire earn-surface
+	# gap this audit's original mono_fire row measured (flame_jet's line
+	# geometry under-banks fire_cast so badly the row read NEVER) -- the
+	# mono-fire player now forces flame_dart, the same _policy_force_spell
+	# shape mono_ice uses for frost_bolt, so the two elements are measured on
+	# EQUAL casting terms (the doc's 'fire ~= ice' exit criterion). The
+	# BALANCED and mixed_mage_warrior profiles below deliberately KEEP
+	# flame_jet: they model the pre-R2 shipped kit shape and their measured
+	# rows anchor R3's committed inversion proof -- re-pointing them would
+	# silently re-derive that evidence.
+	var pol_mono_fire: Callable = func(_w: int) -> Callable: return _policy_force_spell.bind("flame_dart")
 	var pol_mage_balanced: Callable = func(w: int) -> Callable:
 		return _policy_force_spell.bind("frost_bolt") if w % 2 == 0 else _policy_force_line.bind("flame_jet")
 
@@ -557,6 +578,37 @@ func _init() -> void:
 		_simulate_chore_profile("helper_deliberate_balanced", "helper", chore_balanced, 150)))
 	rows.append(_fmt_result("helper_cleaner_only (levels via cleaned_the_inn, never serves/delivers)", "helper",
 		_simulate_chore_profile("helper_cleaner_only", "helper", chore_cleaner, 150)))
+
+	# --- The class-foundation ladders (R1/R5, review-wave audit rows):
+	# tactician/diplomat/rogue/trader are chore-counter ladders like Helper
+	# (their leveling/evolution counters bank from field/social/economy
+	# beats, not combat tallies), so the chore harness at 1/waking -- a
+	# conservative floor, see _simulate_chore_profile's doc comment -- is
+	# the honest model. Each is SINGLE-AXIS Replacement (one targets key,
+	# the class's own leveling counter), so the expected shape is
+	# REPLACEMENT at the L10 threshold's waking, never a dominance stall.
+	var chore_observe: Callable = func(acc: Dictionary, _w: int) -> void:
+		acc["observed_things"] = int(acc.get("observed_things", 0)) + 1
+	# Diplomat's table compound-gates every level on BOTH heard_gossip AND
+	# befriended_moments (requires, not requires_any) -- the chore banks
+	# both, 1/waking each, the same two-surface social waking a real
+	# Diplomat player walks (a pool-line chat + a befriending beat).
+	var chore_diplomacy: Callable = func(acc: Dictionary, _w: int) -> void:
+		acc["heard_gossip"] = int(acc.get("heard_gossip", 0)) + 1
+		acc["befriended_moments"] = int(acc.get("befriended_moments", 0)) + 1
+	var chore_sneak: Callable = func(acc: Dictionary, _w: int) -> void:
+		acc["sneaked_past_danger"] = int(acc.get("sneaked_past_danger", 0)) + 1
+	var chore_commerce: Callable = func(acc: Dictionary, _w: int) -> void:
+		acc["deliberate_commerce"] = int(acc.get("deliberate_commerce", 0)) + 1
+
+	rows.append(_fmt_result("tactician_observer (1 observed_things/waking)", "tactician",
+		_simulate_chore_profile("tactician_observer", "tactician", chore_observe, 150, {"tactician": 1})))
+	rows.append(_fmt_result("diplomat_social (1 gossip + 1 befriend/waking)", "diplomat",
+		_simulate_chore_profile("diplomat_social", "diplomat", chore_diplomacy, 150, {"diplomat": 1})))
+	rows.append(_fmt_result("rogue_sneak (1 sneaked_past_danger/waking)", "rogue",
+		_simulate_chore_profile("rogue_sneak", "rogue", chore_sneak, 150, {"rogue": 1})))
+	rows.append(_fmt_result("trader_commerce (1 deliberate_commerce/waking, class EARNED mid-run at 5)", "trader",
+		_simulate_chore_profile("trader_commerce", "trader", chore_commerce, 150, {})))
 
 	# --- THE user's profile: mixed mage+warrior -> consolidation ------------
 	# waking%4 pattern: 2 of every 4 wakings warrior-focused (power_strike),

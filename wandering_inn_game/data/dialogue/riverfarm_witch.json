@@ -143,7 +143,8 @@
   "shop": {
    "speaker": "Eloise",
    "text": "Coin, then. Fine — not everyone wants to owe me something bigger. Take what you need and go.",
-   "_comment": "Buy-option contract verbatim (peddler_stall/krshia_crate): requires:{gold:price} + effects:[{gold:-price},{item:id}], price named in the option text. Four herb-craft consumables, 4-16g (data/items.json), plus the attunement stone below (a distinct category -- issue #65's re-route: invrisil_attuned no longer banks from the Guild-board letter, it banks HERE, composed on the buy option exactly like krshia_crate.json's resonant_catalyst/bought_catalyst pair). No extra gate on the stone row beyond this node's own hub-level blight_lifted requirement -- the whole 'shop' node is already unreachable before it, so the vendor-unlock gate composes for free.",
+   "haggle": true,
+   "_comment": "Buy-option contract verbatim (peddler_stall/krshia_crate): requires:{gold:price} + effects:[{gold:-price},{item:id}], price named in the option text. Four herb-craft consumables, 4-16g (data/items.json), plus the attunement stone below (a distinct category -- issue #65's re-route: invrisil_attuned no longer banks from the Guild-board letter, it banks HERE, composed on the buy option exactly like krshia_crate.json's resonant_catalyst/bought_catalyst pair). No extra gate on the stone row beyond this node's own hub-level blight_lifted requirement -- the whole 'shop' node is already unreachable before it, so the vendor-unlock gate composes for free. CLASS-FOUNDATION REVIEW WAVE (controller ruling, 2026-07-12): `haggle: true` -- THE v1 haggle carrier, the only node in the game where [Bargain]'s price_mod applies (haggling went OPT-IN game-wide; dialogue.gd's `_priced_gold` defaults to no discount). Eloise fits the register: an informal hedge-witch stall trading favors as readily as coin, the opposite of Krshia's 'no discounts' counter or Pallass's posted civic rates. A [Bargain] holder sees AND pays the discounted figure on every row here (`_priced_text` rewrites the baked '(N gold)' in-place -- display==charge, the binding rule); #92's vendor wave expands the carrier list.",
    "options": [
     {
      "text": "The yarrow bundle. (4 gold)",
@@ -229,7 +230,7 @@
      "goto": "stone_sold"
     },
     {
-     "_comment": "Class-foundation pass R5 (2026-07-12): the [Bargain] price_mod's own real, dynamic-priced buy option -- text is authored WITHOUT a baked-in price (dialogue.gd's `_priced_text` appends '(N gold)' live from `requires.gold`, price-mod'd when the buyer holds [Bargain]) rather than retrofitting one of the four options above (which qa/scripts/riverfarm_talk.json exact-array pins). No no_haggle here (unlike Krshia's shop, whose own hub text says 'no discounts, no haggling' -- Eloise's never does).",
+     "_comment": "Class-foundation pass R5 (2026-07-12): the [Bargain] price_mod's own real, dynamic-priced buy option -- text is authored WITHOUT a baked-in price (dialogue.gd's `_priced_text` appends '(N gold)' live from `requires.gold`, price-mod'd when the buyer holds [Bargain] since this node carries `haggle: true`, the review wave's opt-in carrier flag) rather than retrofitting one of the four options above (which qa/scripts/riverfarm_talk.json exact-array pins for a NON-Bargain buyer; a [Bargain] holder sees those four rewritten to their discounted figures -- qa/scripts/trader_earn_loop.json pins that side).",
      "text": "That pinch of warding salt, for the threshold.",
      "requires": {
       "gold": 7

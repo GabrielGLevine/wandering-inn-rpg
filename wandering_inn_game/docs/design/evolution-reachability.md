@@ -68,7 +68,7 @@ waking number by the same multiple without changing which finding is true.
 |---|---|---|---|---|---|
 | `mage_default_caster` (un-optimized, shipped "caster" AI) | mage | REPLACEMENT → [Ice Mage] | 11 (L10) | — | won_combat 11, spell_cast 47, **ice_cast 47, fire_cast 0** |
 | `mage_mono_ice` (deliberate frost_bolt) | mage | REPLACEMENT → [Ice Mage] | 11 (L10) | — | spell_cast 46, ice_cast 46, melee_hit 4 |
-| `mage_mono_fire` (deliberate flame_jet) | mage | **NEVER** (150 wakings) | stuck at L6 | — | won_combat 115, melee_hit 293, spell_cast 22, fire_cast 22 |
+| `mage_mono_fire` (deliberate flame_jet) | mage | **NEVER** (150 wakings) — **since CLOSED by R2's flame_dart, re-measured REPLACEMENT at waking 31; see "Content gap CLOSED" below** | stuck at L6 | — | won_combat 115, melee_hit 293, spell_cast 22, fire_cast 22 |
 | `mage_deliberate_balanced` (frost/flame alternating **intent**, 50/50) | mage | REPLACEMENT → [Ice Mage] | 26 (L10) | — | spell_cast 45, ice_cast 42, fire_cast 3 (93% ice despite 50/50 intent) |
 | `warrior_sword` (shipped "melee" AI) | warrior | REPLACEMENT → [Swordsman] | 23 (L10) | — | sword_skill_used 44, melee_hit 57 |
 | `warrior_spear` (deliberate piercing_strikes) | warrior | REPLACEMENT → [Spearmaster] | 24 (L10) | — | spear_skill_used 61, melee_hit 58 |
@@ -323,33 +323,84 @@ re-triggers a real per-class "Waiting" outcome for each — two toasts,
 not the old fixture's "You sleep soundly." fallback, since that
 class-below-at_level shortcut no longer applies to either parent).
 
-## Content gap reported (not retuned): Fire Mage's earn surface
+## Content gap CLOSED: Fire Mage's earn surface (R2 executed, #93 —
+## measured 2026-07-12, review wave)
 
-Per "Structural finding 2" above: Fire Mage is not blocked by a threshold,
-it's blocked by `flame_jet` being the only pre-evolution fire skill and a
-line-shaped one, landing at ~1/28th the rate of `frost_bolt` even under
-maximally deliberate play. Two design directions exist, both #93/#97-owned
-(this task's STOP boundary — either would need progression-sim-adjacent
-skill-shape judgment, not a data value):
+Per "Structural finding 2" above, Fire Mage was never blocked by a
+threshold — it was blocked by `flame_jet` (the only pre-evolution fire
+active) being line-shaped, landing at ~1/28th `frost_bolt`'s rate even
+under maximally deliberate play. The class-foundation pass's R2 ruling
+executed design direction 1 from this page's original report: **[Flame
+Dart]** (`flame_dart`, single-target `spell_damage`, fire, range 4) on
+mage's L2 grants — frost_bolt's fire twin, at a disclosed cost premium
+(2 AP / 3 MP vs frost_bolt's 1 AP / 2 MP; see the skill's own
+`skills.json` `_comment`). The audit tool's `mage_mono_fire` policy now
+forces `flame_dart` (the same `_policy_force_spell` shape `mono_ice`
+uses for `frost_bolt` — equal casting terms), and **the measured row
+inverted from NEVER to a clean Replacement**:
 
-1. Give fire an EARLIER single-target option symmetric to `frost_bolt`
-   (a new skill, canon-checked — `flame_bolt` is explicitly goblin-only
-   flavor and cannot simply be reassigned to the player).
-2. Add more multi-enemy encounters to the T1 rotation so `flame_jet`'s
-   actual multi-hit niche has real opportunities to land (an earn-surface
-   /region-content gap, not a skill-shape one).
+| profile | outcome | waking (level) | final banked tally |
+|---|---|---|---|
+| `mage_mono_fire` (deliberate flame_dart) — **was NEVER, stuck L6** | REPLACEMENT → **[Fire Mage]** | **31** (L10) | won_combat 24, melee_hit 44, spell_cast 45, **fire_cast 45** |
+| `mage_mono_ice` (unchanged, for comparison) | REPLACEMENT → [Ice Mage] | 11 (L10) | spell_cast 46, ice_cast 46, melee_hit 4 |
+
+**The "fire ≈ ice" exit criterion, with numbers:** at evolution, the
+mono-fire tally is **45 fire_cast / 45 spell_cast** — cast-for-cast
+parity with mono-ice's 46/46. The earn-surface hole is closed: every
+deliberate fire cast now banks, exactly as ice always did. The remaining
+waking gap (31 vs 11) is NOT residual earn-surface asymmetry but two
+priced-in, disclosed structural differences: (a) `flame_dart` is a mage
+**L2** grant while `frost_bolt` is L1 — mage L2 gates on `won_combat: 3`,
+so the fire purist melees the first ~3 wakings before the kit arrives;
+(b) flame_dart's deliberate AP/MP premium buys fewer casts per fight on
+a low-level MP pool. Both were explicit R2 design choices (fire as the
+slightly-later, slightly-pricier element), not bugs — and the dominance/
+min_uses math treats the two axes identically from the first cast.
+The `mage_deliberate_balanced` and `mixed_mage_warrior` profiles
+deliberately still cast `flame_jet` for their fire share: they model the
+pre-R2 shipped-kit shape, and their measured rows anchor the R3
+inversion proof above — re-pointing them would silently re-derive that
+committed evidence (their rows re-ran byte-identical in this wave's
+re-run, confirming the mono_fire change touched nothing else).
 
 ## Every evolution/consolidation target audited
 
-`mage` (Replacement×2 + Generalist), `warrior` (Replacement×2),
-`archer` (Replacement, single-axis — confirmed trivially reachable, no
-fork, matching its own `_comment`'s "not a fork" design note), `helper`
-(Replacement×2 + Generalist, the fix above), and the one consolidation
-(`spellsword`) are the full set — `rogue`/`tactician`/`diplomat`/
+Post-R1/R4/R5 (class-foundation pass), the evolution-carrying set grew:
+`mage` (Replacement×2 + Generalist), `warrior` (Replacement×2), `archer`
+(Replacement, single-axis), `helper` (Replacement×2 + Generalist, the
+fix above), **`tactician`/`diplomat`/`rogue` (R1) and `trader` (R5) —
+each single-axis Replacement onto its own leveling counter** — plus the
+consolidations (`spellsword`, and R4's `innkeeper`/`ranger`).
 `sharpshooter`/`swordsman`/`spearmaster`/`ice_mage`/`fire_mage`/
-`barmaid`/`server` carry no `evolution`/`consolidations` block of their
-own (terminal or evolution-only targets), confirmed by a full scan of
-`data/classes.json`.
+`barmaid`/`server`/`strategist`/`emissary`/`infiltrator`/`merchant`
+carry no `evolution`/`consolidations` block of their own (terminal or
+evolution-only targets), confirmed by a full scan of `data/classes.json`.
+
+**The four new ladders, audited (review wave 2026-07-12 — chore-style
+profiles at 1 counter/waking, a conservative floor since every one of
+these counters can bank more than once per waking in real play; see
+`_simulate_chore_profile`'s doc comment):**
+
+| profile | target | outcome | waking (level) | final banked tally |
+|---|---|---|---|---|
+| `tactician_observer` (1 observed_things/waking) | tactician | REPLACEMENT → [Strategist] | 55 (L10) | observed_things 55 |
+| `diplomat_social` (1 gossip + 1 befriend/waking) | diplomat | REPLACEMENT → [Emissary] | 36 (L10) | heard_gossip 36, befriended_moments 36 |
+| `rogue_sneak` (1 sneaked_past_danger/waking) | rogue | REPLACEMENT → [Infiltrator] | 36 (L10) | sneaked_past_danger 36 |
+| `trader_commerce` (1/waking, class EARNED mid-run at counter 5) | trader | REPLACEMENT → [Merchant] | 68 (L10) | deliberate_commerce 68 |
+
+All four resolve as clean single-axis Replacements — no dominance
+stalls, no NEVER rows (each `targets` key IS the class's own leveling
+counter, so reaching L10 structurally implies min_uses meta-satisfied;
+the 2-keys-1-target trap this pass designed around never arises). The
+diplomat row is notable: its level table compound-gates on BOTH
+`heard_gossip` AND `befriended_moments`, so the profile banks both — a
+one-counter diplomat stalls on the OTHER counter's level gate, which is
+the authored intent (a Diplomat who never befriends anyone isn't one),
+not a reachability bug: `heard_gossip` alone still drives the evolution
+axis once levels arrive. Trader's row includes its own `gained_by` walk
+(class earned mid-run at deliberate_commerce 5, wakings 1-4 classless) —
+the only profile in the audit that models class ACQUISITION, not just
+the ladder.
 
 ## Re-verification (original, Helper-fix-only — see "R3 EXECUTED" above
 ## for the later, larger re-verification)

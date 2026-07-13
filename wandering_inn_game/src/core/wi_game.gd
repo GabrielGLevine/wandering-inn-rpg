@@ -2727,10 +2727,16 @@ func _trade_bonus() -> float:
 	return bonus
 
 
-## Krshia's buyback rate (RATIFIED): floor(worth * 0.5 * (1 + trade_bonus)),
-## `worth` being an item's own `price` field -- the SAME number
-## WIEffectText's "Worth N gold" card line already reads, no separate worth
-## concept invented for this. Pure arithmetic.
+## The buyback rate, vendor-generic since R5's sell generalization
+## (RATIFIED TWICE): floor(worth * 0.5 * (1 + trade_bonus)), `worth` being
+## an item's own `price` field -- the SAME number WIEffectText's "Worth N
+## gold" card line already reads, no separate worth concept invented for
+## this. Pure arithmetic. THE 50% BASE RATE STANDS -- controller ruling,
+## class-foundation review wave 2026-07-12: it's the pre-existing shipped
+## rate (Krshia's original buyback), the class-foundation plan's own '~40%'
+## was a guess written before the existing mechanism was found, and
+## re-tuning a live economy number for no functional reason is churn;
+## issue #92's vendor wave rebalances the economy holistically instead.
 func sell_price(worth: int) -> int:
 	return int(floor(float(worth) * 0.5 * (1.0 + _trade_bonus())))
 

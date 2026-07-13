@@ -552,6 +552,16 @@ func _validate_option(
 		for effect: Dictionary in option.get("effects", []):
 			if effect.has("gold"):
 				assert(int(effect["gold"]) == -gold_requirement, "%s requires.gold (%d) has a mismatched effects.gold (%d) -- WIDialogue.choose()'s [Bargain] price_mod can only discount an effect matching -requires.gold exactly" % [label, gold_requirement, int(effect["gold"])])
+		# Review-wave display fix (2026-07-12): WIDialogue._priced_text
+		# REWRITES a baked-in price by replacing the exact substring
+		# "(requires.gold gold)" -- so any option text that names a gold
+		# figure at all must spell it in exactly that form with exactly
+		# that number, or the rewrite would silently miss and the rendered
+		# price could diverge from the charged one (the display!=charge
+		# bug class this validator exists to make unshippable).
+		var option_text := String(option.get("text", ""))
+		if option_text.contains("gold)"):
+			assert(option_text.contains("(%d gold)" % gold_requirement), "%s bakes a price into its text but not as '(%d gold)' (requires.gold) -- WIDialogue._priced_text's discount rewrite would miss it and the display could contradict the charge" % [label, gold_requirement])
 
 
 ## Shared by both "requires" and "hide_when" -- both use the same condition

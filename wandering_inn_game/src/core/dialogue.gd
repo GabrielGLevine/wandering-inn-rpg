@@ -248,51 +248,65 @@ func _is_priced_purchase(opt: Dictionary, base: int) -> bool:
 	return false
 
 
-## [Bargain] price_mod's one resolution function (class-foundation pass R5).
-## `base` is the AUTHORED price (a `requires.gold` value, never touched at
-## rest in data). Pallass shop nodes REFUSE haggling diegetically
-## (`no_haggle: true` on the CURRENT node -- docs/design/city-identity-
-## bible.md's posted-prices register) and skip the mod entirely, checked
-## FIRST so it wins even for a Trader who holds [Bargain]. Otherwise, a
-## buyer whose known skills include "bargain" pays `floor(base * (1 -
-## BARGAIN_PRICE_MOD))` -- every OTHER caller (no skill, a no_haggle node, or
-## (GH#98-followup) a non-purchase gold gate with no matching spend effect)
-## reads `base` back unchanged, byte-identical to every option this pass
-## didn't touch.
+## [Bargain] price_mod's one resolution function (class-foundation pass R5;
+## haggle-carrier polarity INVERTED by controller ruling, review wave
+## 2026-07-12). `base` is the AUTHORED price (a `requires.gold` value, never
+## touched at rest in data). Haggling is OPT-IN: the discount only ever
+## applies on a node that carries `haggle: true` (the vendor visibly
+## entertains it) -- the DEFAULT for every node in the game is NO discount,
+## so new civic/shop content can never silently discount by omission
+## (docs/design/city-identity-bible.md's posted-prices register is the
+## default posture, haggling the authored exception). v1 carriers: Eloise's
+## shop node only (riverfarm_witch.json) -- Krshia's own line says "no
+## discounts, no haggling" (honored everywhere including her charms node,
+## now by default), Pallass civic fees never haggle, and #92's vendor wave
+## expands the carrier list. A buyer whose known skills include "bargain"
+## pays `floor(base * (1 - BARGAIN_PRICE_MOD))` on a haggle node; every
+## OTHER caller (no skill, a default node, or a non-purchase gold gate with
+## no matching spend effect) reads `base` back unchanged.
 func _priced_gold(base: int, opt: Dictionary = {}) -> int:
 	if not _is_priced_purchase(opt, base):
 		return base
-	if bool(_node().get("no_haggle", false)):
+	if not bool(_node().get("haggle", false)):
 		return base
 	if not (_ctx.get(WIKeys.SKILLS, []) as Array).has("bargain"):
 		return base
 	return int(floor(float(base) * (1.0 - BARGAIN_PRICE_MOD)))
 
 
-## The DISPLAYED option text, price-mod-aware (class-foundation pass R5).
-## Every PRE-EXISTING gold-gated option already bakes its price into the
-## authored `text` string verbatim ("Buy the leather jerkin. (24 gold)") --
-## detected by the substring check below (mirrors the price-dedup fix
-## `dialogue_panel.gd`'s own `_requirement_suffix` already uses for the
-## locked-case suffix: "skip when the text already names the price") and
-## left BYTE-IDENTICAL, since retrofitting every shipped shop's copy is out
-## of scope and risks the existing exact-string QA pins. A NEW option
-## authored WITHOUT a baked-in number (no "gold)" substring) gets the price
-## APPENDED here, computed live from `_priced_gold` -- the SAME number the
-## gate and the actual deduction (choose(), below) use, so gate/effect/
-## display can never drift (the plan's own "validator-checked consistency"
-## is structural: one function, three callers). GH#98-followup: gated on
-## `_is_priced_purchase` FIRST -- a non-purchase gold gate (Olesm's chess
-## wager) is returned completely untouched, never decorated.
+## The DISPLAYED option text, price-mod-aware (class-foundation pass R5;
+## display-rewrite fix, review wave 2026-07-12). THE BINDING RULE: the
+## rendered price and the charged price are the SAME number, always --
+## both come from `_priced_gold`, the one resolution site. Two authoring
+## shapes exist: (a) a baked-in price in the authored `text` ("The yarrow
+## bundle. (4 gold)") -- when a discount applies, the baked "(4 gold)"
+## substring is REWRITTEN in-place to the discounted figure (the original
+## early-return-on-"gold)" shape showed the authored price while gate/
+## charge used the discounted one, a real display!=charge lie the review
+## caught live: yarrow displayed 4g and charged 3g); when NO discount
+## applies (no [Bargain], a default non-haggle node, or a non-purchase
+## gate) the text is returned byte-identical, so every pre-existing pin
+## outside a haggle node still holds. test_content.gd validates that a
+## baked price always spells exactly "(requires.gold gold)", so the
+## rewrite's substring match cannot silently miss. (b) NO baked number --
+## the discounted-or-base price is APPENDED live, same source. The locked-
+## case suffix agrees for free: dialogue_panel.gd's `_requirement_suffix`
+## dedups against `_requirement_text`'s "costs N gold", and both N's are
+## `_priced_gold`'s -- the "(4 gold) (costs 3 gold)" contradiction is
+## structurally impossible once display and gate share the one function.
 func _priced_text(opt: Dictionary, req: Dictionary) -> String:
 	var text := String(opt["text"])
 	if not req.has("gold"):
 		return text
-	if not _is_priced_purchase(opt, int(req["gold"])):
+	var base := int(req["gold"])
+	if not _is_priced_purchase(opt, base):
 		return text
+	var priced := _priced_gold(base, opt)
 	if text.contains("gold)"):
-		return text
-	return "%s (%d gold)" % [text, _priced_gold(int(req["gold"]), opt)]
+		if priced == base:
+			return text
+		return text.replace("(%d gold)" % base, "(%d gold)" % priced)
+	return "%s (%d gold)" % [text, priced]
 
 
 func _node() -> Dictionary:

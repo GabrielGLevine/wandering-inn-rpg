@@ -610,14 +610,14 @@
 			"ap_cost": 0,
 			"weapon": "bow",
 			"effect": { "type": "hit_bonus", "amount": 8 },
-			"description": "A drawn bow that never wavers -- the shot goes exactly where it was always going to."
+			"description": "Breath out, string back, and the point of aim simply stops drifting -- a drawn bow held as still as a nail in a beam."
 		},
 		{
-			"_comment": "Class-foundation pass R5 (issue #98, 2026-07-12): [Trader] L1's gate skill (the mandatory-first-grant convention every earned class uses -- mage/warrior/diplomat/tactician/rogue/archer all grant their signature skill at L1). Deliberately carries NEITHER `ap_cost`/`effect` NOR `field: true` -- a pure passive identity trait, the SAME shape lesser_stamina/lesser_strength already ship (flavor-only, never castable). The REAL mechanism lives entirely in src/core/dialogue.gd's `_priced_gold` (the ONE resolution site the gate/display/actual-deduction all share), checked by this id directly against the ctx skill list -- see that function's own doc comment for the full price_mod design (~10% off, floor-rounded, skipped on a `no_haggle: true` node regardless of skill). CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect/B), no bare bargaining/haggling Skill attested ('[Basic Negotiator]' exists but is general diplomacy, not price-specific -- a misuse to rename onto).",
+			"_comment": "Class-foundation pass R5 (issue #98, 2026-07-12): [Trader] L1's gate skill (the mandatory-first-grant convention every earned class uses -- mage/warrior/diplomat/tactician/rogue/archer all grant their signature skill at L1). Deliberately carries NEITHER `ap_cost`/`effect` NOR `field: true` -- a pure passive identity trait, the SAME shape lesser_stamina/lesser_strength already ship (flavor-only, never castable). The REAL mechanism lives entirely in src/core/dialogue.gd's `_priced_gold` (the ONE resolution site the gate/display/actual-deduction all share), checked by this id directly against the ctx skill list -- see that function's own doc comment for the full price_mod design (~10% off, floor-rounded). REVIEW-WAVE CONTROLLER RULING (2026-07-12): haggling is OPT-IN -- the discount only applies on a node carrying `haggle: true` (the vendor visibly entertains it); the game-wide DEFAULT is no discount, so new civic/shop content can never silently discount by omission. v1 carrier surface is deliberately THIN (Eloise's shop node only -- Krshia's own line refuses haggling everywhere, Pallass civic fees never haggle) and ACCEPTED as such: issue #92's vendor wave expands the carrier list. CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect/B), no bare bargaining/haggling Skill attested ('[Basic Negotiator]' exists but is general diplomacy, not price-specific -- a misuse to rename onto).",
 			"id": "bargain",
 			"display_name": "[Bargain]",
 			"contexts": ["exploration"],
-			"description": "An instinct for what a price is REALLY worth, and the nerve to say so out loud."
+			"description": "An instinct for what a price is REALLY worth, and the nerve to say so out loud. Where haggling is welcome, the asking price comes down for you."
 		},
 		{
 			"_comment": "Class-foundation pass R5: [Trader] L5, the field read (an item's provenance/value flavor line) -- the observe/keen_eye field-flavor shape verbatim (field:true, field_ambient, no combat effect). CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match.",

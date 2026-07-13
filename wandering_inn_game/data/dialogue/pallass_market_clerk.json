@@ -1,11 +1,10 @@
 {
- "_comment": "The market-tier checkpoint clerk (entity tier_clerk_market, pallass_market). The arrival QUALIFY beat: papers_for_pallass stage 3 -- the 2g entry stamp (compound {gold, accomplishment} gate). Race text_variants carry the city's profiling register (Human friction / Drake assumed-local; gnoll falls back to base -- the base line must stay load-bearing on its own). Forward-reference table: docs/design/pallass-staging/phase-c-forward-references.json. CLASS-FOUNDATION PASS R5 (2026-07-12): `no_haggle: true` on the hub node -- the entry stamp is a CIVIC fee, the posted-prices register's own load-bearing example (this file's own pre-existing comment on the stamp option below already cites it); [Bargain]'s price_mod (dialogue.gd's `_priced_gold`) is skipped here regardless of who's asking. A dedicated text_variant (gated on holding [Bargain], ordered LAST so it wins over the phase/race lines per the established 'later match wins, most-specific overrides' convention) gives the clerk's own refusal line -- 'a clerk line when a Trader tries', the plan's own framing.",
+ "_comment": "The market-tier checkpoint clerk (entity tier_clerk_market, pallass_market). The arrival QUALIFY beat: papers_for_pallass stage 3 -- the 2g entry stamp (compound {gold, accomplishment} gate). Race text_variants carry the city's profiling register (Human friction / Drake assumed-local; gnoll falls back to base -- the base line must stay load-bearing on its own). Forward-reference table: docs/design/pallass-staging/phase-c-forward-references.json. CLASS-FOUNDATION REVIEW WAVE (controller ruling, 2026-07-12): haggling is now OPT-IN game-wide (dialogue.gd's `_priced_gold` defaults to NO discount; only a `haggle: true` node ever discounts), so R5's earlier `no_haggle: true` flag here is REMOVED as redundant -- the entry stamp is a CIVIC fee, the posted-prices register's own load-bearing example (this file's own pre-existing comment on the stamp option below already cites it), and civic fees never carry `haggle`. The dedicated text_variant (gated on holding [Bargain], ordered LAST so it wins over the phase/race lines per the established 'later match wins, most-specific overrides' convention) stays: the clerk's own diegetic refusal line -- 'a clerk line when a Trader tries', the plan's own framing.",
  "start": "hub",
  "nodes": {
   "hub": {
    "speaker": "Tier Clerk",
    "text": "State your business and your sponsor.",
-   "no_haggle": true,
    "text_variants": [
     {
      "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
@@ -32,7 +31,7 @@
      "text": "Papers, then, same as everyone through this gate. Sponsor's name, and don't waste my morning."
     },
     {
-     "_comment": "Class-foundation pass R5 (2026-07-12): the Pallass no_haggle refusal's own diegetic line -- ordered LAST (wins over phase/race). Posted prices, no exceptions.",
+     "_comment": "Class-foundation pass R5 (2026-07-12): the Pallass haggle-refusal's own diegetic line -- ordered LAST (wins over phase/race). Posted prices, no exceptions (mechanically the game-wide default since the review wave's opt-in inversion; this line is the civic register saying so out loud).",
      "requires": {
       "skill": "bargain"
      },

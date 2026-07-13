@@ -1,5 +1,5 @@
 {
- "_comment": "Class-foundation pass R5 (issue #98, 2026-07-12): [Trader]'s own earn-to-consolidated-kit canonical. Loads near_trader (deliberate_commerce:4, positioned at the Pallass arrival anchor's own approach cell, the pallass_peek precedent). FULL LOOP: (1) EARN -- a real sale at the Pallass market_stallkeeper (the generalized WIShop.build_sell_graph, see shop.gd's own doc comment) banks the 5th deliberate_commerce AND is itself 'a sell pinned' (exact gold delta); (2) SLEEP -- class_gained{trader}, [Bargain] fielded; (3) A BARGAIN-DISCOUNTED BUY, pinned -- Eloise's shop (witch_hollow), the NEW warding_salt_pinch option (authored with no baked-in price, dialogue.gd's `_priced_text`/`_priced_gold` render+charge the discounted floor(7*0.9)=6 gold, not the base 7); (4) THE PALLASS REFUSAL, pinned -- back at tier_clerk_market, the hub's own [Bargain]-gated text_variant renders the diegetic no-haggle line regardless of holding the skill (no_haggle:true skips price_mod structurally; this pins the disclosed 'clerk line when a Trader tries' half). Zero combat anywhere.",
+ "_comment": "Class-foundation pass R5 (issue #98, 2026-07-12): [Trader]'s own earn-to-consolidated-kit canonical. Loads near_trader (deliberate_commerce:4, positioned at the Pallass arrival anchor's own approach cell, the pallass_peek precedent). FULL LOOP: (1) EARN -- a real sale at the Pallass market_stallkeeper (the generalized WIShop.build_sell_graph, see shop.gd's own doc comment) banks the 5th deliberate_commerce AND is itself 'a sell pinned' (exact gold delta); (2) SLEEP -- class_gained{trader}, [Bargain] fielded; (3) A BARGAIN-DISCOUNTED BUY, pinned -- Eloise's shop (witch_hollow, the game's ONLY `haggle: true` node post-review-wave): the four baked-price rows render REWRITTEN to their discounted figures AND the NEW warding_salt_pinch option (no baked-in price) appends the same discounted floor(7*0.9)=6 gold it charges -- display==charge, the binding rule, both authoring shapes pinned at once; (4) THE PALLASS REFUSAL, pinned -- back at tier_clerk_market, the hub's own [Bargain]-gated text_variant renders the diegetic haggle-refusal line (haggling is OPT-IN game-wide now; this civic hub carries no `haggle`, so price_mod is structurally off here -- this pins the disclosed 'clerk line when a Trader tries' half). Zero combat anywhere.",
  "fixture_save": "near_trader",
  "starts_at_title": true,
  "steps": [
@@ -56,14 +56,14 @@
   {"action": "move", "direction": "down", "steps": 1},
   {"action": "press", "name": "confirm"},
   {"action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Eloise", "text": "Coin, then. Fine — not everyone wants to owe me something bigger. Take what you need and go.", "options": [
-   {"text": "The yarrow bundle. (4 gold)", "locked": false, "requirement": ""},
-   {"text": "The sleeproot draught. (5 gold)", "locked": false, "requirement": ""},
-   {"text": "The herb sachet, sewn shut. (6 gold)", "locked": false, "requirement": "", "effect_lines": ["+1 HP"]},
-   {"text": "That warded bead you're not selling. (16 gold)", "locked": false, "requirement": "", "effect_lines": ["+2 HP", "Resonance 1"]},
+   {"text": "The yarrow bundle. (3 gold)", "locked": false, "requirement": ""},
+   {"text": "The sleeproot draught. (4 gold)", "locked": false, "requirement": ""},
+   {"text": "The herb sachet, sewn shut. (5 gold)", "locked": false, "requirement": "", "effect_lines": ["+1 HP"]},
+   {"text": "That warded bead you're not selling. (14 gold)", "locked": false, "requirement": "", "effect_lines": ["+2 HP", "Resonance 1"]},
    {"text": "That pinch of warding salt, for the threshold. (6 gold)", "locked": false, "requirement": ""},
    {"text": "Nothing today.", "locked": false, "requirement": ""}
   ]}, "timeout_sec": 5},
-  {"_comment": "THE PIN: 6 gold, not the base 7 -- dialogue.gd's `_priced_gold` discounted BOTH the displayed text (`_priced_text`, appended live since the option is authored with no baked-in number) and the gate, matching [Bargain]'s ~10% floor-rounded cut. Take index 4 (warding_salt_pinch).", "action": "screenshot", "name": "02_eloise_shop_bargain_discount"},
+  {"_comment": "THE PIN, both authoring shapes at once (review-wave display fix: rendered price == charged price, always): the four BAKED-price rows above render REWRITTEN to their discounted figures (4->3, 5->4, 6->5, 16->14 -- `_priced_text` replaces the baked '(N gold)' in-place on this haggle:true node; the pre-fix early-return showed the authored price while the gate/charge used the discounted one, the review's display!=charge catch), and the no-baked-number warding-salt row APPENDS the same source's 6, not the base 7. Take index 4 (warding_salt_pinch).", "action": "screenshot", "name": "02_eloise_shop_bargain_discount"},
   {"action": "move", "direction": "down", "steps": 4},
   {"action": "press", "name": "confirm"},
   {"action": "wait_for_event", "type": "gold_changed", "payload_contains": {"delta": -6, "total": 16, "source": "riverfarm_witch"}, "timeout_sec": 5},
@@ -75,7 +75,7 @@
   {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
   {"action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5},
 
-  {"_comment": "== (4) THE PALLASS REFUSAL: tier_clerk_market (7,5), pallass_walkthrough's own exact approach cell (7,6). Now holding [Bargain] -- the hub's own no_haggle:true node still renders its dedicated Bargain-gated refusal line (ordered last, wins over phase/race). ==", "action": "teleport", "map": "pallass_market", "cell": [7, 6]},
+  {"_comment": "== (4) THE PALLASS REFUSAL: tier_clerk_market (7,5), pallass_walkthrough's own exact approach cell (7,6). Now holding [Bargain] -- the hub (no `haggle` flag: the opt-in default, price_mod off) still renders its dedicated Bargain-gated refusal line (ordered last, wins over phase/race). ==", "action": "teleport", "map": "pallass_market", "cell": [7, 6]},
   {"action": "wait_frames", "frames": 5},
   {"action": "move", "direction": "up", "steps": 1},
   {"action": "assert_state", "path": "player_cell", "equals": [7, 6]},
