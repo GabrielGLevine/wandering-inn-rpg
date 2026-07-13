@@ -166,6 +166,15 @@ func _capture_event_ui(type: String, payload: Dictionary) -> Dictionary:
 			# mid-combat, but the read stays honest regardless) can't leak a
 			# stale verdict into a beat captured before the change.
 			ui["dangersense"] = _pc_holds_dangersense(combat)
+		WIEvents.STATUS_TICKED:
+			# GH#90 [burning]: the tick's own beat needs the holder's cell
+			# (damage number placement), side (numeral hue), and post-tick
+			# HP (bar drop paced to the tick, not the turn's end state).
+			var ticked_id := String(payload.get("id", ""))
+			ui["target_cell"] = _cell_payload(_combatant_cell(combat, ticked_id))
+			if combat != null and combat.combatants.has(ticked_id):
+				ui["side"] = String(combat.combatants[ticked_id].get("side", ""))
+			ui["stats"] = _capture_combatant_stats(combat, [ticked_id])
 	return ui
 
 

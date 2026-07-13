@@ -842,6 +842,18 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
 			line = "%s shakes it off." % _display_name(combat, view, String(payload["id"]))
+		WIEvents.STATUS_TICKED:
+			# GH#90 [burning]'s EOT tick. Status-keyed verb ("burning" is the
+			# only ticking status today); the generic fallback keeps a future
+			# ticking status from rendering a silent tick.
+			if combat == null or not combat.combatants.has(String(payload["id"])):
+				return ""
+			var ticked_name := _display_name(combat, view, String(payload["id"]))
+			var ticked_damage := int(payload.get("damage", 0))
+			if String(payload.get("status", "")) == "burning":
+				line = "%s burns for %d." % [ticked_name, ticked_damage]
+			else:
+				line = "%s takes %d from %s." % [ticked_name, ticked_damage, String(payload.get("status", "")).replace("_", " ")]
 		WIEvents.WINDUP_DECLARED:
 			# Issue #82's WINDUP SIM SPEC: the universal DECLARE tell -- every
 			# player sees this line regardless of [Dangersense] (only the

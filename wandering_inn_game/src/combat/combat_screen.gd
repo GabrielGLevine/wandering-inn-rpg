@@ -72,6 +72,11 @@ const AI_PLAYBACK_TYPES := [
 	# `_on_domain_event` arm and render against END-of-turn state instead of
 	# the moment it actually declared.
 	WIEvents.WINDUP_DECLARED,
+	# GH#90 [burning]: STATUS_TICKED fires at round rollover, inside
+	# `_advance_turn` -- MID an AI turn whenever an AI combatant's end_turn
+	# wraps the order (the TERRAIN_EXPIRED class exactly). Also reaches the
+	# live arm when the PLAYER's own end_turn wraps the order instead.
+	WIEvents.STATUS_TICKED,
 ]
 
 ## SKILL_PICK is gone -- the hotbar puts combat skills directly on
@@ -287,8 +292,8 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# tell before shipping such a skill.
 		WIEvents.COMBATANT_MOVED, WIEvents.AP_CHANGED, WIEvents.COMBATANT_DOWNED, \
 		WIEvents.ATTACK_RESOLVED, WIEvents.SKILL_RESOLVED, WIEvents.REACTION_TRIGGERED, \
-		WIEvents.DASHED, WIEvents.STATUS_APPLIED, WIEvents.STATUS_EXPIRED, WIEvents.ACTION_REFUSED, \
-		WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED:
+		WIEvents.DASHED, WIEvents.STATUS_APPLIED, WIEvents.STATUS_EXPIRED, WIEvents.STATUS_TICKED, \
+		WIEvents.ACTION_REFUSED, WIEvents.TERRAIN_ADDED, WIEvents.TERRAIN_EXPIRED:
 			if _mode != Mode.INACTIVE:
 				var event := _capture_playback_event(type, payload)
 				_play_event_visual(type, event["payload"])
@@ -655,6 +660,17 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 				_board_renderer.set_combatant_alpha(String(payload["id"]), 1.0)
 			else:
 				_board_renderer.set_status_pip(String(payload["id"]), expired_status, false)
+		WIEvents.STATUS_TICKED:
+			# GH#90 [burning]'s at-the-action damage read -- the SAME
+			# spawn_damage_number surface ATTACK_RESOLVED uses (a tick that
+			# only ever appeared in feed prose would be the "logically
+			# correct but never visible" class). Cell + side both come from
+			# the enqueue-captured `_ui` block (combat_playback.gd's
+			# STATUS_TICKED capture arm), dequeue-safe under paced playback.
+			var ticked_cell: Array = ui.get("target_cell", [])
+			var ticked_damage := int(payload.get("damage", 0))
+			if not ticked_cell.is_empty() and ticked_damage > 0:
+				_board_renderer.spawn_damage_number(ticked_cell, ticked_damage, String(ui.get("side", "")))
 		WIEvents.SKILL_RESOLVED:
 			var color: Color = ui.get("flash_color", Color.TRANSPARENT)
 			# Issue #75 item 3: stashed for this SAME cast's own
