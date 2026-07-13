@@ -318,6 +318,10 @@ func _check_arena_tutor_lines() -> void:
 				_check_feed(loc + ".line", String(entry["line"]))
 			if entry.has("fallback_line"):
 				_check_feed(loc + ".fallback_line", String(entry["fallback_line"]))
+			if entry.has("solo_fallback_line"):
+				# Issue #88: the requires_ally split's third renderable string
+				# (combat_hud.gd's _tutor_line_text) -- same feed budget.
+				_check_feed(loc + ".solo_fallback_line", String(entry["solo_fallback_line"]))
 
 
 ## ---- TOAST corpus: data/skills.json field_ambient/freeze_toast ----

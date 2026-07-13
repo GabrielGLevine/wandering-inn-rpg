@@ -332,7 +332,7 @@
   {
    "script": "defeat_reload",
    "seed": 1,
-   "note": "losing seed; defeat loads auto slot, no game_reset",
+   "note": "losing seed; defeat loads the pre-combat snapshot, no game_reset; issue #88: proximity-triggered goblin_encounter_1 leg proves reload-inside-trigger_radius doesn't insta-refire, then the original interact-triggered chieftains_raid leg",
    "tiers": [
     "smoke",
     "full"
@@ -351,6 +351,35 @@
      "combat",
      "dialogue",
      "save"
+    ]
+   }
+  },
+  {
+   "script": "relc_descent_rewind",
+   "seed": 1,
+   "fixture": "relc_descent_rewind_start",
+   "note": "issue #88 fix wave: THE pre_combat_choice canonical -- a dialogue-committed fight's defeat rewinds the committing choice too (lose [Go together.] -> relc_joined_descent GONE, [I go alone.] re-choice fields NO relc)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels",
+     "sewers"
+    ],
+    "fixtures": [
+     "relc_descent_rewind_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "relc_descent"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
     ]
    }
   },
@@ -389,7 +418,7 @@
   {
    "script": "title_flow",
    "seed": 9,
-   "note": "title screen flow; no combat",
+   "note": "title screen flow; no combat; issue #88: a second New Game (once auto exists) pins the overwrite-confirm's coverage event, TestDriver's collapse-bypass, and the auto_prev rotation",
    "tiers": [
     "full"
    ],

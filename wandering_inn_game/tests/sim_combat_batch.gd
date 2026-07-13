@@ -450,6 +450,25 @@ const BUILDS := [
 	## bar is "not trivially easy, wants Relc's advice", not a win-rate
 	## contract) keeps the real risk visible whenever goblin_ambush data moves.
 	{"name": "warrior1_tutorial_solo", "classes": {"warrior": 1}, "gated": false, "solo": true},
+	## Issue #88 (gap-2 onboarding & save safety): the classless_solo floor --
+	## zero classes (`WIProgression.granted_skills({}, ...)` grants nothing;
+	## bare Attack/Dash/End, 3 hotbar slots, defeat_reload.json's own
+	## classless-PC pin) crossed with THIS build's own `solo: true` (no
+	## Relc) -- the STRICTLY WORST reachable first-20-min matchup.
+	## `goblin_encounter_1`'s own roster IS this file's `goblin_ambush`
+	## composition, and `_check_trigger_radius`'s doc comment (wi_game.gd)
+	## already traces that a player who walks straight past Relc without
+	## talking to him hits this ambush exactly this way (its own
+	## `ally_requires{met_relc:1}` unmet). MEASURED, never gated -- same
+	## "not a win-rate contract, visibility into the true floor" convention
+	## as `warrior1_tutorial_solo` above. Standalone build, not folded into
+	## an ENCOUNTER_CELLS-style cell: the shared COMPOSITIONS x BUILDS matrix
+	## already produces the wanted `[goblin_ambush / classless_solo]` cell
+	## for free (plus a harmless `[chieftains_raid / classless_solo]`
+	## measured companion -- chieftains_raid isn't reachable in the first 20
+	## minutes, but an extra measured data point costs nothing and gates
+	## nothing).
+	{"name": "classless_solo", "classes": {}, "gated": false, "solo": true},
 	## goblin_ambush/warrior2
 	## is UN-GATED (per-cell, via `ungated_comps` -- the build stays gated for
 	## chieftains_raid). Relc is a high-level [Spearmaster] (canon) escorting

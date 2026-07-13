@@ -546,6 +546,22 @@ func _pc_has_any_class() -> bool:
 	return not Game.sim.classes.is_empty()
 
 
+## Read-only combat-roster query, same wrapper contract as
+## `_pc_has_any_class()` above (a sim read, never a mutation) -- whether `id`
+## is fielded on the PC's OWN side THIS fight (an `ally_requires`-gated
+## combatant that failed its gate is never added to `combat.combatants` at
+## all, see wi_game.gd's `start_combat`). Issue #88 (gap-2): lets
+## combat_hud.gd's `_tutor_line_text` split a tutor line's fallback text on
+## ally presence -- a line voiced as that ally speaking must not render when
+## the ally structurally isn't in the fight.
+func _pc_has_ally(id: String) -> bool:
+	var combat := _combat()
+	if combat == null:
+		return false
+	var c: Dictionary = combat.combatants.get(id, {})
+	return not c.is_empty() and String(c.get("side", "")) == "player"
+
+
 ## Render dispatcher, shared by the live event path
 ## (_on_domain_event) and paced AI playback (_apply_playback_event) -- stays
 ## on the screen (VFX-flash dispatch, not HUD's readout/feed/tutor domain),
@@ -1080,15 +1096,19 @@ func _close_banner() -> void:
 	Game.sim.resolve_combat()
 	_teardown_board()
 	if not was_victory:
-		# Defeat returns the player to their last autosave (sleep/quest/map
-		# beats), not to a fresh game. Reset only when no autosave exists yet.
-		# reason:"defeat" (issue #78) rides GAME_LOADED so Main plays the
-		# defeat interstitial (sleep_veil.gd's play_defeat()) instead of
-		# dropping the player silently into the reloaded world -- the
-		# no-autosave Game.reset() fallback is UNCHANGED (its own GDI cold
-		# open already orients a true from-zero restart; see that function's
-		# doc comment for why this near-impossible edge isn't also wired).
-		if not Game.load_slot("auto", "defeat"):
+		# Issue #88 (gap-2): defeat returns the player to the PRE-COMBAT
+		# snapshot (game.gd writes "auto_pre_combat" the instant THIS fight
+		# began, COMBAT_STARTED), not the general "auto" checkpoint -- makes
+		# "the fight undone" (sleep_veil.gd's defeat copy) literally true
+		# instead of rewinding to whatever unrelated map-change/sleep/etc.
+		# last hit "auto". Reset only when no pre-combat snapshot exists,
+		# which cannot happen on any real defeat (a fight can only resolve
+		# after start_combat fired, which always writes this slot first) --
+		# the no-snapshot Game.reset() fallback is UNCHANGED (its own GDI
+		# cold open already orients a true from-zero restart; see that
+		# function's doc comment for why this near-impossible edge isn't
+		# also wired).
+		if not Game.load_slot("auto_pre_combat", "defeat"):
 			Game.reset()
 
 

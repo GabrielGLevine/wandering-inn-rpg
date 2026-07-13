@@ -87,6 +87,19 @@ const DIALOGUE_LINE := &"dialogue_line"
 const DIALOGUE_CHOICE := &"dialogue_choice"
 const DIALOGUE_ENDED := &"dialogue_ended"
 const DIALOGUE_EFFECT_FAILED := &"dialogue_effect_failed"
+## Issue #88 (gap-2 fix wave): emitted by `WIGame.dialogue_choose` BEFORE the
+## chosen option's effects loop runs, iff that option's effects include a
+## `start_combat` verb. Payload `{encounter:String}` (the effect's target
+## entity id). THE PRE-EFFECTS SNAPSHOT SIGNAL: game.gd writes the
+## `auto_pre_combat` slot on this instead of on the later COMBAT_STARTED for
+## dialogue-committed fights, so a defeat-rewind undoes the committing
+## choice's own side effects too (relc_descent's `relc_joined_descent`/
+## `went_alone` land INSIDE the rewind -- a re-choice after a loss is clean,
+## never double-banked). Always followed SYNCHRONOUSLY (same dialogue_choose
+## call) by exactly one of COMBAT_STARTED (the fight began) or
+## DIALOGUE_EFFECT_FAILED{effect:"start_combat"} (the deferred start was
+## refused) -- game.gd's double-write guard consumes it on either.
+const PRE_COMBAT_CHOICE := &"pre_combat_choice"
 
 # --- Quests (wi_game.gd) ---
 const QUEST_STARTED := &"quest_started"
@@ -288,6 +301,15 @@ const UI_SLOT_PICKER_HIDDEN := &"ui_slot_picker_hidden"
 const UI_TITLE_RENDERED := &"ui_title_rendered"
 const UI_TITLE_GATE_RENDERED := &"ui_title_gate_rendered"
 const UI_TITLE_NOTICE_RENDERED := &"ui_title_notice_rendered"
+## Issue #88 (gap-2): title_screen.gd's confirmation that the New-Game
+## overwrite-confirm panel opened -- shown only when picking "New Game"
+## would overwrite an existing save (`_newest_save_slot()` non-empty), never
+## on a genuinely-fresh boot with no save anywhere. Payload
+## `{summary:String}` -- the SAME `_format_slot_summary` line the Continue
+## caption already renders, so QA can assert content without OCR-ing a
+## screenshot. TestDriver bypasses this panel by default (see
+## `qa/test_driver.gd`'s `wants_new_game_confirm`).
+const UI_NEW_GAME_CONFIRM_RENDERED := &"ui_new_game_confirm_rendered"
 ## title_screen.gd's confirmation that the
 ## debug-only "Playtest States" picker opened. Payload `{count:int, pages:int}`
 ## -- `count` is the total fixture entries discovered under `qa/fixtures/`,

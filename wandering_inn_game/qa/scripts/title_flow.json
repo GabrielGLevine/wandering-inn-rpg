@@ -127,6 +127,116 @@
    "action": "assert_state",
    "path": "current_map",
    "equals": "floodplains"
+  },
+  {
+   "_comment": "Issue #88 (gap-2) QA teeth: New Game a SECOND time, now that 'auto' holds a finished (well, classless-but-real) run -- pins the overwrite-confirm panel's coverage event AND that TestDriver's collapse (title_screen.gd's `_is_qa()`, the sleep_veil.gd precedent) never hangs: no step here drives the interactive Confirm/Cancel choice, exactly like every other veil mode's own QA contract (a human windowed playtest exercises that; see title_screen.gd's `_enter_new_game_confirm` doc comment).",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "payload_contains": {
+    "continue_enabled": true,
+    "selectable_rows": 5
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Cursor already sits on row 0 ('New Game', always selectable, see `_enter_menu`'s own `_row_selectable(0)` precedence) -- a bare Confirm reproduces the exact same keypress every pre-#88 canonical's FIRST New Game already used, only THIS time an existing save makes the new gate live.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "The prompt's own pin: `_format_slot_summary` on the 'auto' slot's metadata -- classless (no sleep occurred anywhere in this run) so top_class stays empty, pc_name defaults 'Traveler', map is wherever 'auto' was last written ('floodplains', the door-crossing autosave earlier in this script).",
+   "action": "wait_for_event",
+   "type": "ui_new_game_confirm_rendered",
+   "payload_contains": {
+    "summary": "Traveler — Floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE bypass teeth: game_reset follows immediately, with no interactive wait in between (the collapse auto-resolves to 'Yes' the same beat _enter_new_game_confirm emits the coverage event above) -- if TestDriver ever stopped bypassing this panel, this wait would time out.",
+   "action": "wait_for_event",
+   "type": "game_reset",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_gdi_opener_rendered",
+   "payload_contains": {
+    "lines": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The auto_prev rotation teeth: game.gd's `_rotate_auto_pending` (armed by THIS New Game's reset()) fires on the FIRST save_auto below -- the door-crossing autosave, same trigger the first New Game used to seed 'auto' originally -- copying the OLD 'auto' (the just-quit run's own Traveler/Floodplains state) to 'auto_prev' BEFORE this fresh run's own state overwrites 'auto'.",
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_save_exists",
+   "slot": "auto"
+  },
+  {
+   "action": "assert_save_exists",
+   "slot": "auto_prev"
   }
  ]
 }
