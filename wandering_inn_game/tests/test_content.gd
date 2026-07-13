@@ -780,6 +780,19 @@ func _validate_once_per_waking_shape_cases() -> void:
 	assert(_hide_when_gate_keys_allowed({}), "empty hide_when accepted (never authored, but not this rule's business)")
 
 
+## Every dialogue-effect verb `wi_game.gd`'s `dialogue_choose` elif chain
+## recognizes -- `_validate_effect`'s exactly-one-verb check reads this list.
+## Extending dialogue_choose with a new verb = extend this list too (the
+## check fails loud on the unknown key otherwise, which is the point).
+const DIALOGUE_EFFECT_VERBS := [
+	"accomplishment", "quest", "remove_entity", "item", "gold",
+	"bank_first_use", "remove_item", "well_fed", "start_combat", "travel_to",
+	"accept_bounty", "accept_delivery", "sell_item", "open_board_picker",
+	"open_board_turnin", "open_board_abandon", "open_delivery_picker",
+	"open_delivery_turnin", "open_sell_picker",
+]
+
+
 func _validate_effect(
 	label: String,
 	effect: Dictionary,
@@ -789,6 +802,21 @@ func _validate_effect(
 	entity_ids: Dictionary,
 	produced_accomplishments: Dictionary
 ) -> void:
+	# Issue #88 (gap-2 fix wave): EXACTLY-ONE-VERB invariant, now enforced
+	# (was convention -- full-corpus scan confirmed zero violations).
+	# dialogue_choose's elif chain silently applies only a multi-verb dict's
+	# first-matching arm, AND its new PRE_COMBAT_CHOICE pre-scan matches
+	# `start_combat` with a bare has() -- only equivalent to the elif chain
+	# under this invariant. `class` is legacy-recognized below but has no
+	# dialogue_choose arm, so it counts as a verb here without joining the
+	# canonical list.
+	var verb_count := 0
+	for key: String in effect:
+		if key == "_comment":
+			continue
+		assert(DIALOGUE_EFFECT_VERBS.has(key) or key == "class", label + " carries unrecognized effect key: " + key)
+		verb_count += 1
+	assert(verb_count == 1, label + " effect dict must carry exactly ONE verb (got %d): %s" % [verb_count, str(effect.keys())])
 	if effect.has("accomplishment"):
 		produced_accomplishments[String(effect["accomplishment"])] = true
 	if effect.has("quest"):

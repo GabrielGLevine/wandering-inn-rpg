@@ -1,0 +1,263 @@
+{
+ "_comment": "Issue #88 fix wave: THE PRE_COMBAT_CHOICE canonical -- the relc_descent geometry the review flagged (cross-lane with #89's went_alone dialogue payoff). A dialogue-committed fight's defeat must rewind the COMMITTING CHOICE too: [Go together.] banks relc_joined_descent in the SAME option that starts the boss fight, so a post-effects snapshot would leak it through a loss -- the next [I go alone.] would bank went_alone AND still field Relc (ally_requires met by the leaked key), making #89's solo-praise variant a lie. Route: Continue into the classless relc_descent_rewind_start fixture -> teleport to the warren mouth (12,6) (skips the scouts route-fight; dungeon_peek's teleport-canonical precedent) -> face the boss -> [Go together.] -> Relc fielded (roster assert) -> LOSE (classless PC dies; rng_state-pinned) -> defeat rewind -> the WHOLE accomplishments dict equals the fixture's exact 8 keys (relc_joined_descent GONE -- the state assert) -> re-interact, [I go alone.] -> [I'm sure. Wait here.] -> went_alone banks and combat_started's exact initiative order carries NO relc (the behavioral absence proof). Script deliberately ends mid-fight (the seen_statuses precedent: a script may end mid-fight by design).",
+ "seed_comment": "Seed 1 nominal; the fixture's pinned rng_state (-1966449618399012673, .seed=1-derived) governs both fights and OVERRIDES --seed. The classless build makes the JOIN fight a near-certain loss at almost any state, so a future re-derivation has easy pickings.",
+ "fixture_save": "relc_descent_rewind_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down 1 selects Continue, confirm loads the relc_descent_rewind_start fixture.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "sewers"
+  },
+  {
+   "_comment": "Straight to the warren mouth -- the descent walk + scouts route-fight are deep_descent's own proven scope, not this canonical's subject.",
+   "action": "teleport",
+   "map": "deep_tunnels",
+   "cell": [12, 6]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "deep_tunnels"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Bump down onto the boss (12,7, blocked) -- sets facing without moving.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [12, 6]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_descent"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "JOIN: confirm on cursor 0 = [Go together.]. The PRE_COMBAT_CHOICE snapshot writes HERE, before the option's effects -- relc_joined_descent banks a beat later, OUTSIDE the snapshot.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "pre_combat_choice",
+   "payload_contains": {
+    "encounter": "awakened_boss"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "JOIN roster positive: Relc IS fielded this fight (relc_joined_descent banked live a moment ago).",
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "_comment": "The classless PC dies (PC death = instant defeat even with Relc alive).",
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": false
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "payload_contains": {
+    "reason": "defeat"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "deep_tunnels"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [12, 6]
+  },
+  {
+   "_comment": "THE STATE ASSERT the review demanded: the WHOLE accomplishments dict equals the fixture's exact 8 keys -- relc_joined_descent is GONE (the pre-effects snapshot never held it), and nothing else leaked in either.",
+   "action": "assert_state",
+   "path": "accomplishments",
+   "equals": {
+    "reached_liscor": 1,
+    "met_relc": 1,
+    "sparred_with_relc": 1,
+    "given_spear_by_relc": 1,
+    "heard_the_sewers": 1,
+    "heard_about_cisterns": 1,
+    "resolved_the_cisterns": 1,
+    "heard_the_deep_tremor": 1
+   }
+  },
+  {
+   "_comment": "RE-CHOICE IS CLEAN: the snapshot restored facing too (the bump preceded the interact), so a bare re-interact reopens the same conversation from its start node.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_descent"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down 1 = [I go alone.] (goto alone_confirm, no effects yet).",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Alone? Ha! You're either very brave or very— actually, no. Just the one thing. I'll hang back at the mouth, then, and let the professional wait by the door for once. Shout if you find teeth. ...You sure about this?"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Confirm on cursor 0 = [I'm sure. Wait here.] -> a SECOND pre_combat_choice snapshot (fresh, per-fight), went_alone banks, the solo fight starts.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "went_alone"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE #89 COMPOSITION GUARD: went_alone banked AND relc_joined_descent still absent -- ally_requires unmet, roster genuinely solo. assert_state cannot express key-absence, so the roster proof is the EXACT 4-combatant initiative order (rng_state-pinned, _loosely_equal arrays are exact element-wise): boss + 2 scouts + pc, NO relc -- contrast the JOIN fight's 5-slot order above.",
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "payload_contains": {
+    "order": ["raskghar_awakened", "raskghar_scout", "raskghar_scout_2", "pc"]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.went_alone",
+   "equals": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "pre_combat_choice",
+   "count": 2
+  },
+  {
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "relc_joined_descent"
+   },
+   "count": 1
+  }
+ ]
+}

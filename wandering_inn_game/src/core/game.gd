@@ -24,6 +24,14 @@ var _autosave_announced := false
 ## confirm (see that file) warns BEFORE reset; this is the safety net for
 ## the case the player confirms (or a fresh boot with no confirm needed).
 var _rotate_auto_pending := false
+## Issue #88 fix wave: armed by PRE_COMBAT_CHOICE (a dialogue-committed
+## fight's pre-effects snapshot just wrote `auto_pre_combat`), consumed by
+## the SAME dialogue_choose call's synchronous follow-up -- COMBAT_STARTED
+## (skip the post-effects write, which would resurrect the choice-leak bug)
+## or DIALOGUE_EFFECT_FAILED{start_combat} (disarm; no fight happened).
+## Never survives across frames -- wi_events.gd's PRE_COMBAT_CHOICE doc pins
+## the exactly-one-synchronous-follow-up contract this relies on.
+var _choice_snapshot_armed := false
 
 
 func _ready() -> void:
@@ -43,20 +51,50 @@ func reset(creation: Dictionary = {}) -> void:
 	ObservableBus.emit_domain_event(WIEvents.GAME_RESET, {})
 
 
-func _on_domain_event(type: String, _payload: Dictionary) -> void:
+func _on_domain_event(type: String, payload: Dictionary) -> void:
+	# Issue #88 fix wave: a DIALOGUE-COMMITTED fight's snapshot fires here,
+	# BEFORE the chosen option's effects apply (wi_game.gd emits
+	# PRE_COMBAT_CHOICE ahead of its effects loop) -- so the committing
+	# choice's own accomplishments land INSIDE the rewind (relc_descent:
+	# lose [Go together.] -> reload -> relc_joined_descent is GONE, a
+	# re-choice of [I go alone.] can't produce the #89-lane contradiction
+	# "went_alone banked but Relc fielded anyway"). rng_state here is
+	# PRE-DRAW (start_combat's combat-seed randi hasn't run yet), so an
+	# identical re-choice replays the SAME fight seed -- chosen behavior;
+	# contrast the COMBAT_STARTED arm below.
+	if type == WIEvents.PRE_COMBAT_CHOICE:
+		_choice_snapshot_armed = true
+		_write_slot("auto_pre_combat")
+	# The deferred start_combat was refused (no fight) -- disarm so the next
+	# NON-dialogue fight's COMBAT_STARTED write isn't wrongly skipped.
+	if type == WIEvents.DIALOGUE_EFFECT_FAILED and String(payload.get("effect", "")) == "start_combat":
+		_choice_snapshot_armed = false
 	# Issue #88 (gap-2): a pre-combat snapshot, written the instant a fight
 	# begins -- WISave never serializes `combat` (save.gd), so writing here
 	# (COMBAT_STARTED fires from WICombat.begin(), AFTER `sim.combat` is
 	# already assigned but before anything else could possibly mutate)
 	# captures exactly the pre-fight world state, equivalent in every
 	# observable way to a snapshot taken strictly before `sim.combat` was
-	# built. Dedicated slot, NEVER "auto" itself: Abandon/"Load Autosave"
+	# built -- EXCEPT rng_state, which is ONE DRAW PAST pre-combat
+	# (start_combat's own combat-seed `rng.randi()` already consumed):
+	# a defeat-reload retry that re-triggers the same encounter draws a
+	# FRESH combat seed, REROLLING the fight rather than replaying the
+	# identical loss. CHOSEN behavior (a retry shouldn't be doomed to the
+	# same beats), asymmetric with the pre-draw PRE_COMBAT_CHOICE snapshot
+	# above by construction (the draw happens between the two).
+	# Dedicated slot, NEVER "auto" itself: Abandon/"Load Autosave"
 	# (pause_menu.gd) must keep reading the general last-checkpoint
 	# semantics unchanged (combat_abandon.json's own pin on landing back at
 	# the last ordinary autosave, not the fight's own entry cell) -- only
 	# the DEFEAT path (combat_screen.gd's `_close_banner`) reads this slot.
+	# A dialogue-committed fight SKIPS this write: its PRE_COMBAT_CHOICE
+	# snapshot (pre-effects) already holds the honest rewind point, and a
+	# post-effects overwrite here would resurrect the exact leak.
 	if type == WIEvents.COMBAT_STARTED:
-		_write_slot("auto_pre_combat")
+		if _choice_snapshot_armed:
+			_choice_snapshot_armed = false
+		else:
+			_write_slot("auto_pre_combat")
 	if type in [
 		WIEvents.COMBAT_RESOLVED, WIEvents.CLASS_LEVEL_UP, WIEvents.QUEST_BEAT_COMPLETED,
 		WIEvents.MAP_CHANGED, WIEvents.CLASS_GAINED, WIEvents.CLASS_EVOLVED,

@@ -1665,6 +1665,21 @@ func dialogue_choose(index: int) -> bool:
 	var pending_board_action := ""
 	var pending_travel := ""
 	var pending_sell_vendor := ""
+	# Issue #88 (gap-2 fix wave): the pre-effects combat-choice signal --
+	# scanned and emitted BEFORE any effect applies, so game.gd's
+	# `auto_pre_combat` snapshot captures the state WITHOUT this option's own
+	# accomplishments/items/gold (a defeat-rewind undoes the committing
+	# choice too; relc_descent's relc_joined_descent/went_alone land inside
+	# the rewind). Bare `has("start_combat")` deliberately mirrors the elif
+	# arm below under the authored-content invariant that every dialogue
+	# effect dict is single-verb (test_content.gd's `_validate_effect`
+	# validates each effect against exactly one recognized verb); the
+	# emit-then-apply gap is safe because _emit is synchronous -- game.gd's
+	# write completes before the first effect runs.
+	for effect: Dictionary in result["effects"]:
+		if effect.has("start_combat"):
+			_emit(WIEvents.PRE_COMBAT_CHOICE, {"encounter": String(effect["start_combat"])})
+			break
 	for effect: Dictionary in result["effects"]:
 		if effect.has("accomplishment"):
 			record_accomplishment(String(effect["accomplishment"]))
