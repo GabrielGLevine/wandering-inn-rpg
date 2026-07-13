@@ -171,8 +171,4 @@ hotbar_prime={
 
 [rendering]
 
-; ETC2 ASTC import required for the macOS "universal" (x86_64+arm64)
-; export architecture — Godot refuses that export target otherwise
-; (issue #19, desktop presets). Import-only toggle; does not change the
-; runtime texture format used elsewhere (BPTC/S3TC stay the desktop path).
 textures/vram_compression/import_etc2_astc=true

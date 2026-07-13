@@ -13,7 +13,8 @@
   ],
   "classes": {
    "warrior": 1,
-   "tactician": 1
+   "tactician": 1,
+   "rogue": 5
   },
   "accomplishments": {
    "reached_liscor": 1,
@@ -22,7 +23,8 @@
    "given_spear_by_relc": 1,
    "heard_the_sewers": 1,
    "heard_about_cisterns": 1,
-   "chess_with_olesm": 1
+   "chess_with_olesm": 1,
+   "recovered_crate_watch": 1
   },
   "player_skills": [
    "basic_cleaning"
@@ -43,6 +45,10 @@
   },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "-1966449618399012673"
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": [
+   "observe",
+   "disarm_trap"
+  ]
  }
 }

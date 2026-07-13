@@ -1,5 +1,5 @@
 {
- "_comment": "R6 (#95) canonical: the sewer_nest_snag trap placement (sewers, 7,3), proving the shipped requires_skill disarm shape live on a NEW world-flavor trap. Loads near_sewers_trap (tactician:1 for observe, positioned at 2,4). Flow: approach -> plain E-interact shows the observe TELL (skill_hint_toast, since the PC already knows [Observe]) -> THE AVOIDABLE PATH proof (walk past the trap's column without disarming, zero side effects) -> return and cast [Appraise Foe] via the field hotbar, the LIVE disarm leg (disarm_trap is PARKED, not yet on this tree -- docs/design/class-foundation-staging/trap-disarm-swap.json), banking the shared trap_disarmed counter + 1g salvage. No combat in this script; rng_state is cosmetic (fixture's own TRAP comment).",
+ "_comment": "R6 (#95) canonical: the sewer_nest_snag trap placement (sewers, 7,3), proving the shipped requires_skill disarm shape live on a NEW world-flavor trap. Loads near_sewers_trap (tactician:1 for the observe tell + rogue:5 for the disarm, positioned at 2,4). Flow: approach -> plain E-interact shows the observe TELL (skill_hint_toast, since the PC already knows [Observe]) -> THE AVOIDABLE PATH proof (walk past the trap's column without disarming, zero side effects) -> return and cast [Appraise Foe] via the field hotbar, the LIVE disarm leg (the merge applied the disarm_trap swap; fixture carries rogue:5 for the leg), banking the shared trap_disarmed counter + 1g salvage. No combat in this script; rng_state is cosmetic (fixture's own TRAP comment).",
  "fixture_save": "near_sewers_trap",
  "starts_at_title": true,
  "steps": [
@@ -151,15 +151,15 @@
    ]
   },
   {
-   "_comment": "== THE DISARM LEG (observe fallback, LIVE) == field-cast [Appraise Foe]/[Observe] via the hotbar -- WIFieldSkills.dispatch's case-1 branch (requires_skill==observe AND on_skill_use present) routes straight to use_skill(), banking the shared trap_disarmed counter + the 1g salvage. This is the fallback leg the plan sanctions when disarm_trap hasn't landed (docs/design/class-foundation-staging/trap-disarm-swap.json) -- the Rogue-specific leg is parked there, not exercised here.",
+   "_comment": "== THE DISARM LEG ([Disarm Trap], LIVE post-merge) == field-cast disarm_trap via the hotbar (fixture carries rogue:5); routes through the generic requires_skill dispatch, banking trap_disarmed + the 1g salvage. Non-Rogues route around (the avoidable-path leg above) -- the merge-time swap per the controller ruling; the staging swap doc is retired.",
    "action": "press_field_skill",
-   "skill": "observe"
+   "skill": "disarm_trap"
   },
   {
    "action": "wait_for_event",
    "type": "skill_used",
    "payload_contains": {
-    "skill": "observe",
+    "skill": "disarm_trap",
     "context": "exploration",
     "target": "sewer_nest_snag"
    },
