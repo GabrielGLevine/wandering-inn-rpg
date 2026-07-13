@@ -3,30 +3,159 @@
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
-  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
-  {"_comment": "New Game -> creation screen (creation_ui opt-in).", "action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "pick"}, "timeout_sec": 5},
-  {"_comment": "Cursor 0(human_m) -> col 1(drake) in the top (male) row.", "action": "move", "direction": "right", "steps": 1},
-  {"_comment": "-> row 1(female), same column -> drake_f.", "action": "move", "direction": "down", "steps": 1},
-  {"_comment": "2026-07-08 hotfix wave item 6: the picker grid itself had no canonical visual coverage before this (only the post-creation inn did) -- windowed-only no-op under headless (test_driver.gd's _screenshot early-returns for DisplayServer 'headless'), same established precedent as every other screenshot step in this suite.", "action": "screenshot", "name": "00_picker_grid_drake_f_selected"},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "name"}, "timeout_sec": 5},
-  {"_comment": "Mouse-click round trip: Esc backs up to PICK, re-highlighting the same card just confirmed (_option_index() resolves drake/f back to cursor 4); a click on that SAME card (card_rect(4), 1-based 'card':5) re-confirms it, pinning the IDENTICAL step:'name' payload the keyboard confirm above just produced -- click-confirm dispatch parity for the exact selection a real player would have made, not a parallel activation path.", "action": "press", "name": "cancel"},
-  {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "pick"}, "timeout_sec": 5},
-  {"action": "click_char_creation_card", "card": 5},
-  {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "name"}, "timeout_sec": 5},
-  {"action": "type_text", "text": "Sella"},
-  {"_comment": "Issue #106: the name commit goes through the tappable Begin control (click_char_creation_begin resolves the LIVE begin_button_rect, the click_char_creation_card idiom) instead of the keyboard confirm -- the button's gui_input calls the SAME _confirm() Enter's _handle_name_input branch does, and every downstream pin below (the ui_char_creation_confirmed payload, world_ready, the GDI opener, the sim identity asserts, the rendered variant binding) is held VERBATIM from the keyboard-commit era of this script, so the click path proving them is the equivalence proof. Only one commit is possible per run (Game.reset tears this screen down), so the keyboard NAME-commit dispatch itself is covered by this screen's PICK-step confirm above (same _unhandled_input -> _confirm() route) + char_creation_peek's keyboard commit.", "action": "click_char_creation_begin"},
-  {"action": "wait_for_event", "type": "ui_char_creation_confirmed", "payload_contains": {"pc_name": "Sella", "pc_race": "drake", "pc_gender": "f"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
-  {"_comment": "GDI opener (2026-07-07 rewrite: one race-neutral system-readout opener, no more Drake/Human/Gnoll branch) -- lines still 4; race stays in the payload cosmetically (Game.sim.pc_race is unchanged, so this pin still holds).", "action": "wait_for_event", "type": "ui_gdi_opener_rendered", "payload_contains": {"lines": 4, "race": "drake"}, "timeout_sec": 5},
-  {"_comment": "Sim identity fields in the snapshot (art-independent).", "action": "assert_state", "path": "pc_name", "equals": "Sella"},
-  {"action": "assert_state", "path": "pc_race", "equals": "drake"},
-  {"action": "assert_state", "path": "pc_gender", "equals": "f"},
-  {"_comment": "The sim's variant key (presentation resolves this to the pc_drake_f sprite at both bind sites).", "action": "assert_state", "path": "pc_sprite", "equals": "pc_drake_f"},
-  {"_comment": "The RENDERED field binding: world.gd resolved the PC visual to the drake/f variant art.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": {"pc_sprite": "pc_drake_f"}, "from_start": true, "timeout_sec": 5},
-  {"action": "screenshot", "name": "char_creation_drake_f_inn"}
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "New Game -> creation screen (creation_ui opt-in).",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Cursor 0(human_m) -> col 1(drake) in the top (male) row.",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "_comment": "-> row 1(female), same column -> drake_f.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "_comment": "2026-07-08 hotfix wave item 6: the picker grid itself had no canonical visual coverage before this (only the post-creation inn did) -- windowed-only no-op under headless (test_driver.gd's _screenshot early-returns for DisplayServer 'headless'), same established precedent as every other screenshot step in this suite.",
+   "action": "screenshot",
+   "name": "00_picker_grid_drake_f_selected"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Mouse-click round trip: Esc backs up to PICK, re-highlighting the same card just confirmed (_option_index() resolves drake/f back to cursor 4); a click on that SAME card (card_rect(4), 1-based 'card':5) re-confirms it, pinning the IDENTICAL step:'name' payload the keyboard confirm above just produced -- click-confirm dispatch parity for the exact selection a real player would have made, not a parallel activation path.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_char_creation_card",
+   "card": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "type_text",
+   "text": "Sella"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_name_step_begin_control"
+  },
+  {
+   "_comment": "Issue #106: the name commit goes through the tappable Begin control (click_char_creation_begin resolves the LIVE begin_button_rect, the click_char_creation_card idiom) instead of the keyboard confirm -- the button's gui_input calls the SAME _confirm() Enter's _handle_name_input branch does, and every downstream pin below (the ui_char_creation_confirmed payload, world_ready, the GDI opener, the sim identity asserts, the rendered variant binding) is held VERBATIM from the keyboard-commit era of this script, so the click path proving them is the equivalence proof. Only one commit is possible per run (Game.reset tears this screen down), so the keyboard NAME-commit dispatch itself is covered by this screen's PICK-step confirm above (same _unhandled_input -> _confirm() route) + char_creation_peek's keyboard commit.",
+   "action": "click_char_creation_begin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_confirmed",
+   "payload_contains": {
+    "pc_name": "Sella",
+    "pc_race": "drake",
+    "pc_gender": "f"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "GDI opener (2026-07-07 rewrite: one race-neutral system-readout opener, no more Drake/Human/Gnoll branch) -- lines still 4; race stays in the payload cosmetically (Game.sim.pc_race is unchanged, so this pin still holds).",
+   "action": "wait_for_event",
+   "type": "ui_gdi_opener_rendered",
+   "payload_contains": {
+    "lines": 4,
+    "race": "drake"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Sim identity fields in the snapshot (art-independent).",
+   "action": "assert_state",
+   "path": "pc_name",
+   "equals": "Sella"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_race",
+   "equals": "drake"
+  },
+  {
+   "action": "assert_state",
+   "path": "pc_gender",
+   "equals": "f"
+  },
+  {
+   "_comment": "The sim's variant key (presentation resolves this to the pc_drake_f sprite at both bind sites).",
+   "action": "assert_state",
+   "path": "pc_sprite",
+   "equals": "pc_drake_f"
+  },
+  {
+   "_comment": "The RENDERED field binding: world.gd resolved the PC visual to the drake/f variant art.",
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "pc_sprite": "pc_drake_f"
+   },
+   "from_start": true,
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "char_creation_drake_f_inn"
+  }
  ]
 }
