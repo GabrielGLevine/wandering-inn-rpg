@@ -1407,6 +1407,47 @@
     }
    ],
    "on_victory": "won_combat"
+  },
+  {
+   "_comment": "Issue #97 (bestiary expansion): the stray Corusdeer, T1 renewable-cull target -- the crab_nest informed-consent shape (interact opens a confirm conversation before combat, data/dialogue/corusdeer_range.json). respawns:true (dormant until the next sleep, the rock_crab_nest/river_wolf_pack mechanism). Placed at (36,6), the map's NE quadrant -- Chebyshev distance to the nearest real entity (chieftains_raid, 31,7) is 5, to ruin_door (38,11) is 5; clear of every canonical door/entity cluster (floodplains_inn_door 7,5; liscor_gate 31,25; the goblin/relc/rock_crab cluster all sit y7-23 x3-31). No `allies` (a solo apex read, matches its own Silver-rank-stray canon framing -- see combatants.json's own corusdeer _comment) so no ally_requires gate is needed.",
+   "id": "corusdeer_range",
+   "kind": "encounter",
+   "cell": [
+    36,
+    6
+   ],
+   "display_name": "Stray Corusdeer",
+   "sprite": "corusdeer",
+   "arena": "boulder_flats",
+   "conversation": "corusdeer_range",
+   "enemies": [
+    "corusdeer"
+   ],
+   "allies": [],
+   "respawns": true,
+   "observe": "A shape stands too still at the treeline, antlers catching a warmth that isn't sunlight.",
+   "on_victory": "corusdeer_culled"
+  },
+  {
+   "_comment": "Issue #97: the razorbeak nest, T1 renewable-cull pack encounter -- the crab_nest informed-consent shape (data/dialogue/razorbeak_nest.json). respawns:true. Placed at (5,20), the map's SW quadrant -- Chebyshev distance to goblin_night_patrol (10,21) is 5, to frozen_cache (10,18) is 5, to ruin_stones (3,8) is 12; clear of the door/goblin/relc/rock_crab cluster. `enemies` fields the matched pair (razorbeak_a/b, combatants.json) -- canon-cited `coward` AI means the pair scatters once hurt rather than fighting to the death. No `allies`.",
+   "id": "razorbeak_nest",
+   "kind": "encounter",
+   "cell": [
+    5,
+    20
+   ],
+   "display_name": "Razorbeak Nest",
+   "sprite": "razorbeak",
+   "arena": "training_yard",
+   "conversation": "razorbeak_nest",
+   "enemies": [
+    "razorbeak_a",
+    "razorbeak_b"
+   ],
+   "allies": [],
+   "respawns": true,
+   "observe": "A scrape of trampled grass, two long-beaked shapes hunched low over it, watching you watch them.",
+   "on_victory": "razorbeaks_culled"
   }
  ],
  "cover_skip": [

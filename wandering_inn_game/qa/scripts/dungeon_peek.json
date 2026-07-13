@@ -18,7 +18,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "dungeon_approach" },
   { "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "dungeon_approach" } },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "dungeon_approach", "floor_cells": 192, "blocked_cells": 6 } },
-  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 7, "fallbacks": 0 } },
+  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 8, "fallbacks": 0 } },
   { "action": "screenshot", "name": "00_dungeon_approach_corner" },
 
   { "_comment": "== bounds lap: the full perimeter is clear (no obstacle sits on the border) -- right 15, down 11, left 15, up 11 returns to (0,0) with zero blocked bumps.", "action": "move", "direction": "right", "steps": 15 },

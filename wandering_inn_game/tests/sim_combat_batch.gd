@@ -657,6 +657,36 @@ const DUNGEON_CELLS := [
 	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["snare_ward_a", "snare_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
+## Issue #97 (bestiary expansion): every new placement is ally-less by
+## design (`allies: []` on every map entity this cell mirrors -- no
+## ally_requires gate exists for any of these six), so every row here is
+## solo-only, same loop shape as DUNGEON_CELLS above. ALL MEASURED-only per
+## the plan's own instruction ("GATED for quest-grade, MEASURED for
+## renewable culls" -- none of these six gate a quest, every one is a
+## standalone respawning posting-pool producer). Build picked per the
+## encounter's own region tier (region-tiers.md): T1 floodplains ->
+## `warrior2` (rock_crab_nest_t1_solo's own build); T3 Invrisil ->
+## `t3_warrior10` (boulevard_night_footpads' own build, the night-ambush
+## precedent this Mothbear slot is a second application of); the dungeon
+## den -> `t4_spellsword11_party` solo (the T4 tier's pinned reference).
+## PALLASS IS T5 (region-tiers.md pins expected build 12-14): the two
+## golem fights are measured at BOTH `t4_spellsword11_party` (the shipped
+## T4 reference -- a gate-adjacent anchor, an UNDER-tier read for a T5
+## region, expected to skew hard) AND `t4_spellsword14_party` (the R3
+## real-consolidation-floor build, inside T5's own 12-14 window -- the
+## honest at-tier read). Both MEASURED, no gate: Pallass had ZERO prior
+## combat content, so there is no established band to hold yet.
+const BESTIARY_CELLS := [
+	{"name": "corusdeer_range_t1_solo", "arena": "boulder_flats", "enemies": ["corusdeer"], "build": "warrior2", "solo": true},
+	{"name": "razorbeak_nest_t1_solo", "arena": "training_yard", "enemies": ["razorbeak_a", "razorbeak_b"], "build": "warrior2", "solo": true},
+	{"name": "boulevard_mothbears_t3_solo", "arena": "mercantile_alley", "enemies": ["mothbear_a", "mothbear_b"], "build": "t3_warrior10", "solo": true},
+	{"name": "kingslayer_den_t4_solo", "arena": "spider_den", "enemies": ["kingslayer_spider"], "build": "t4_spellsword11_party", "solo": true},
+	{"name": "forge_calibration_golem_t4_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword11_party", "solo": true},
+	{"name": "forge_calibration_golem_t5_sw14_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword14_party", "solo": true},
+	{"name": "market_watchgolems_t4_solo", "arena": "market_watch", "enemies": ["watchgolem_a", "watchgolem_b"], "build": "t4_spellsword11_party", "solo": true},
+	{"name": "market_watchgolems_t5_sw14_solo", "arena": "market_watch", "enemies": ["watchgolem_a", "watchgolem_b"], "build": "t4_spellsword14_party", "solo": true},
+]
+
 
 func _load(path: String) -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -707,7 +737,7 @@ func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dict
 
 
 func _init() -> void:
-	var total_cells := COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size()
+	var total_cells := COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size() + BESTIARY_CELLS.size()
 	if OS.get_environment("WI_CELL_COUNT_ONLY") != "":
 		print("WI_CELL_COUNT: %d" % total_cells)
 		quit(0)
@@ -1315,6 +1345,63 @@ func _init() -> void:
 			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
 				any_failed = true
 				printerr("FAIL [dungeon / %s]: median rounds %d outside 3-12" % [cell["name"], median])
+
+	## Issue #97 (bestiary expansion) -- see BESTIARY_CELLS' own doc comment
+	## for the build/tier rationale. Every row is solo (ally-less by design),
+	## same loop shape as DUNGEON_CELLS above, MEASURED-only throughout (no
+	## `win_lo`/`win_hi` on any row, so the gated branch below never fires --
+	## kept for shape-parity with every other loop in this file, not because
+	## these cells carry a band). pc_alive_end re-checks the PC-death-is-
+	## instant-defeat rule (wi-adding-an-encounter's own binding gotcha) --
+	## must equal win_rate exactly by construction, same re-check PARTY_CELLS
+	## already performs.
+	for cell: Dictionary in BESTIARY_CELLS:
+		if not _cell_in_range(): continue
+		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
+		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
+		var wins := 0
+		var pc_alive_end := 0
+		var rounds: Array[int] = []
+		for seed_v in range(1, RUNS_PER_CELL + 1):
+			var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
+			var cfgs: Array = [pc]
+			for enemy_id: String in cell["enemies"]:
+				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
+			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			combat.begin()
+			var guard := 0
+			while not combat.finished and guard < 2000:
+				guard += 1
+				WICombatAI.take_turn(combat)
+			assert(combat.finished, "bestiary %s fight %d did not terminate" % [cell["name"], seed_v])
+			if combat.outcome["victory"]:
+				wins += 1
+			if bool(combat.combatants["pc"]["alive"]):
+				pc_alive_end += 1
+			rounds.append(int(combat.outcome["rounds"]))
+
+		rounds.sort()
+		var win_rate := float(wins) / float(RUNS_PER_CELL)
+		var median: int = rounds[RUNS_PER_CELL / 2]
+		var hist := {}
+		for r: int in rounds:
+			hist[r] = int(hist.get(r, 0)) + 1
+		var gated := cell.has("win_lo")
+		print("[bestiary / %s] arena=%s build=%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+			cell["name"], String(cell["arena"]), String(cell["build"]), "" if gated else " (measured)",
+			win_rate, median, rounds[0], rounds[-1],
+		])
+		print("  rounds histogram: ", hist)
+		print("  pc_alive_rate=%.2f (%d/%d)" % [float(pc_alive_end) / float(RUNS_PER_CELL), pc_alive_end, RUNS_PER_CELL])
+		if gated:
+			var lo := float(cell["win_lo"])
+			var hi := float(cell["win_hi"])
+			if win_rate < lo or win_rate > hi:
+				any_failed = true
+				printerr("FAIL [bestiary / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
+				any_failed = true
+				printerr("FAIL [bestiary / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:

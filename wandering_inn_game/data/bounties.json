@@ -1,5 +1,5 @@
 {
- "_comment": "THE REQUEST BOARD's live posting pool. Assembled VERBATIM from docs/design/board-staging/guild-bounties.json -- copy/giver/condition/gold carried over unchanged, _notes/_comment_* annotations stripped per the G2 discipline. Pool order is LOAD-BEARING (WIBounties.active_slate: rotation index = times_slept % pool.size(), zero rng) -- do not reorder without re-deriving every canonical seed that touches the board. `bounty_crab_cull` (the staging doc's 10th entry) is PARKED, not shipped: its condition names a bank (`rock_crabs_culled`) that doesn't exist until HR-II lands a Rock Crab encounter -- the staging doc itself flags 'keep OUT of the live pool until HR-II lands', so this file ships the 9 bounties that ride REAL, already-produced accomplishment counters (won_combat/persuaded_someone/heard_gossip/observed_things/found_phosphor_moss+read_drainage_marker/found_spider_silk/served_customer/cooked_meal/cleared_sewer_vermin -- every one cross-checked against a real on_victory/on_skill_use/on_interact_accomplishment/talk_pool producer in skeleton_scene.json before this file was written). Conditions use the quests.json complete_when dict shape (multi-key = AND). Evaluation mode is PER-BOUNTY via an OPTIONAL `condition_mode` field (default \"delta\" when absent -- WIGame.accept_bounty snapshots each condition key's accomplishment_count as a baseline; WIBounties.condition_met compares CURRENT - BASELINE against the threshold, the staging doc's own binding design note, so a mid-game player can never insta-complete a ROTATING/repeatable bounty off counters banked before they took the posting). ONE-SHOT SOFT-LOCK GUARD: `bounty_sewer_survey`/`bounty_silk_line`/`bounty_vermin_grate` key on ONE-SHOT accomplishments (found_phosphor_moss+read_drainage_marker/found_spider_silk/cleared_sewer_vermin) a player can bank BEFORE ever accepting the posting -- under delta semantics that makes them permanently unfulfillable once already done, with no way to un-stick the slip. These three carry `condition_mode: \"absolute\"`: condition_met reads the counter directly (current >= threshold, baseline ignored, no baseline even snapshotted at accept) -- work already done is honest board pay, and because the underlying accomplishments are one-shot, this can't be gamed into a repeatable grind. APPEND (issue #72, the generated posting batch): 9 more bounties, indices [9..17], appended AFTER the original 9 -- pure append, nothing above reordered, so every existing rotation window (times_slept 0/1, board_loop.json/test_sim_core.gd) stays byte-identical (small early indices never reach the new tail before wrapping past a MUCH larger pool.size()). Grammar/producer trace + pay-formula derivation + REJECTED alternates: docs/design/board-staging/generated-candidates.json (scripts/generate_postings.py). Every condition key here is cross-checked against a real producer by test_content.gd's _validate_bounties (new, this task).",
+ "_comment": "THE REQUEST BOARD's live posting pool. Assembled VERBATIM from docs/design/board-staging/guild-bounties.json -- copy/giver/condition/gold carried over unchanged, _notes/_comment_* annotations stripped per the G2 discipline. Pool order is LOAD-BEARING (WIBounties.active_slate: rotation index = times_slept % pool.size(), zero rng) -- do not reorder without re-deriving every canonical seed that touches the board. `bounty_crab_cull` (the staging doc's 10th entry) is PARKED, not shipped: its condition names a bank (`rock_crabs_culled`) that doesn't exist until HR-II lands a Rock Crab encounter -- the staging doc itself flags 'keep OUT of the live pool until HR-II lands', so this file ships the 9 bounties that ride REAL, already-produced accomplishment counters (won_combat/persuaded_someone/heard_gossip/observed_things/found_phosphor_moss+read_drainage_marker/found_spider_silk/served_customer/cooked_meal/cleared_sewer_vermin -- every one cross-checked against a real on_victory/on_skill_use/on_interact_accomplishment/talk_pool producer in skeleton_scene.json before this file was written). Conditions use the quests.json complete_when dict shape (multi-key = AND). Evaluation mode is PER-BOUNTY via an OPTIONAL `condition_mode` field (default \"delta\" when absent -- WIGame.accept_bounty snapshots each condition key's accomplishment_count as a baseline; WIBounties.condition_met compares CURRENT - BASELINE against the threshold, the staging doc's own binding design note, so a mid-game player can never insta-complete a ROTATING/repeatable bounty off counters banked before they took the posting). ONE-SHOT SOFT-LOCK GUARD: `bounty_sewer_survey`/`bounty_silk_line`/`bounty_vermin_grate` key on ONE-SHOT accomplishments (found_phosphor_moss+read_drainage_marker/found_spider_silk/cleared_sewer_vermin) a player can bank BEFORE ever accepting the posting -- under delta semantics that makes them permanently unfulfillable once already done, with no way to un-stick the slip. These three carry `condition_mode: \"absolute\"`: condition_met reads the counter directly (current >= threshold, baseline ignored, no baseline even snapshotted at accept) -- work already done is honest board pay, and because the underlying accomplishments are one-shot, this can't be gamed into a repeatable grind. APPEND (issue #72, the generated posting batch): 9 more bounties, indices [9..17], appended AFTER the original 9 -- pure append, nothing above reordered, so every existing rotation window (times_slept 0/1, board_loop.json/test_sim_core.gd) stays byte-identical (small early indices never reach the new tail before wrapping past a MUCH larger pool.size()). Grammar/producer trace + pay-formula derivation + REJECTED alternates: docs/design/board-staging/generated-candidates.json (scripts/generate_postings.py). Every condition key here is cross-checked against a real producer by test_content.gd's _validate_bounties (new, this task). APPEND (issue #97, the bestiary batch): 6 more kill-verb bounties, indices [20..25], pure append. ROTATION NOTE, stated precisely: pure append leaves every window that previously showed [i, i+1, i+2] without wrapping unchanged, but windows that WRAPPED under the old pool size (20) now reach the new tail instead -- the wrap zone starts at old_size-2 = 18, so a slate derived at times_slept ≡ 18 or 19 (mod pool size) changes from [18,19,0]/[19,0,1] to [18,19,20]/[19,20,21]. Concretely: crab_cull_loop's fixture starts at times_slept 17 (pre-state window [17,18,19], unchanged) but its own mid-run sleep moves it to 18, so the LIVE post-sleep window now includes new index 20 (bounty_corusdeer_cull) -- harmless (that canonical asserts the slate only at pre-state; re-verified green), disclosed rather than claimed away.",
  "bounties": [
   {
    "id": "bounty_road_cull",
@@ -213,6 +213,72 @@
    },
    "gold": 5,
    "copy": "Hunt notice. Rock Crabs wake with the rains, and a shell the size of a cart does not care that your leg was in the way. Two culled from the east hills, shown by shell-plate. 5 gold, pooled by the hunt families. Do not trouble the Corusdeer herd. Antlers freely shed only. Beshta, for the camp."
+  },
+  {
+   "_comment": "Issue #97 (bestiary expansion, THE PAYOFF): the stray Corusdeer's own renewable cull -- same hunt-camp voice/giver as bounty_crab_cull (Beshta), same east-hills floodplains territory. Pay via scripts/generate_postings.py's own recovered formula: fight pillar 2.0g/unit * 2 units * T1 mult 1.0 = 4g. Producer: corusdeer_range's on_victory (data/maps/floodplains/floodplains.json), respawns:true -- delta-mode (default), the SAME repeatable-counter shape bounty_crab_cull/bounty_road_cull already use.",
+   "id": "bounty_corusdeer_cull",
+   "pillar": "fight",
+   "giver": "Beshta of the hunt camp (Gnoll hunter hand: short lines, hunt-family plural, one warning)",
+   "condition": {
+    "corusdeer_culled": 2
+   },
+   "gold": 4,
+   "copy": "Hunt notice. A stray buck's broken from the herd, east hills, antlers hot enough to start a grass fire if you let it stand too long. Two culled, shown by an antler each. 4 gold, pooled by the hunt families. The HERD stays off this notice -- one stray only. Beshta, for the camp."
+  },
+  {
+   "_comment": "Issue #97: the razorbeak nest's own renewable cull -- same Beshta hunt-camp voice, same floodplains territory. Pay: 2.0g/unit * 2 units * T1 1.0 = 4g. Producer: razorbeak_nest's on_victory, respawns:true, delta-mode.",
+   "id": "bounty_razorbeak_cull",
+   "pillar": "fight",
+   "giver": "Beshta of the hunt camp (Gnoll hunter hand: short lines, hunt-family plural, one warning)",
+   "condition": {
+    "razorbeaks_culled": 2
+   },
+   "gold": 4,
+   "copy": "Hunt notice. Dino-birds nesting loud again, west scrape. Bold in pairs, nothing alone. Two culled, shown by a wing each. 4 gold, pooled by the hunt families. Beshta, for the camp."
+  },
+  {
+   "_comment": "Issue #97: the boulevard Mothbears' own renewable cull -- same Master Coyle voice as bounty_alley_cull (Invrisil's own established fight-pillar giver). Pay: 2.0g/unit * 1 unit * T3 2.0 = 4g. Single-kill by design (matches kingslayer_cull's own reasoning) -- the night-gated respawn cycle (dormant until next sleep AND until the next night phase) makes a 2-kill delta a genuinely awkward ask for a canonical to prove cleanly; the bounty itself reads fine at 1.",
+   "id": "bounty_mothbear_cull",
+   "pillar": "fight",
+   "giver": "Master Coyle",
+   "condition": {
+    "mothbears_culled": 1
+   },
+   "gold": 4,
+   "copy": "The lantern-line draws them after dark -- moth-winged bears, heavy enough to crack a cart axle. One culled, after dark, shown by Guild attestation. 4 gold on turn-in. Coyle."
+  },
+  {
+   "_comment": "Issue #97: the Kingslayer Spider's own renewable cull -- deliberately a single-kill posting (an apex predator, not a farming grind; the harness cell kingslayer_den_t4_solo is MEASURED-only, not a comfortable-band contract). Giver: Selys (the Guild's own desk, already the board's central voice). Pay: 2.0g/unit * 1 unit * T4 2.5 = 5g. Producer: kingslayer_den's on_victory (data/maps/dungeon/dungeon_approach.json), respawns:true, delta-mode.",
+   "id": "bounty_kingslayer_cull",
+   "pillar": "fight",
+   "giver": "Selys Sharpear",
+   "condition": {
+    "kingslayer_spiders_culled": 1
+   },
+   "gold": 5,
+   "copy": "Guild notice, Silver-rank and up. Something's nesting in the approach galleries again -- black-and-silver, big, not shy about it. One confirmed kill, shell-plate as proof. 5 gold. Ask twice before you go alone. Selys, for the Guild."
+  },
+  {
+   "_comment": "Issue #97: the Forge's own miscalibrated-golem cull -- Pallass's FIRST live combat posting. Giver: Grimalkin (the forge tier's own established voice, pallass_forge.json). Pay: 2.0g/unit * 2 units * T5 3.0 = 12g. Producer: forge_calibration_golem's on_victory (data/maps/pallass/pallass_forge.json), respawns:true, delta-mode.",
+   "id": "bounty_forge_golem_cull",
+   "pillar": "fight",
+   "giver": "Grimalkin",
+   "condition": {
+    "forge_golems_culled": 2
+   },
+   "gold": 12,
+   "copy": "Forge-tier notice. Command spells drift, and a drifted golem doesn't know a shipment from a person. Two put down properly, cores intact for the smiths. 12 gold. Grimalkin."
+  },
+  {
+   "_comment": "Issue #97: the Market's own stone-golem cull (id keeps `watchgolem` -- ids are not player-facing; every player-facing surface says 'Stone Golem(s)' per the controller naming ruling) -- Pallass's SECOND live combat posting. Giver: market_stallkeeper (the market tier's own established voice, pallass_market.json). Pay: 2.0g/unit * 2 units * T5 3.0 = 12g. Producer: market_watchgolems' on_victory (data/maps/pallass/pallass_market.json), respawns:true, delta-mode.",
+   "id": "bounty_watchgolem_cull",
+   "pillar": "fight",
+   "giver": "The Market Stallkeepers (pooled)",
+   "condition": {
+    "watchgolems_culled": 2
+   },
+   "gold": 12,
+   "copy": "Stallholders' notice. Two of the stone golems posted by the empty stalls have stopped answering to anyone. Two put down, plating returned. 12 gold, pooled by the row."
   }
  ]
 }

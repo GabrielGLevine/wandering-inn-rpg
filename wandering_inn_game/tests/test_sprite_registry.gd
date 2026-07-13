@@ -385,6 +385,15 @@ func _build_expected_counts() -> Dictionary:
 	counts["briar_collector_deep/idle"] = 1
 	counts["river_wolf/idle"] = 1
 
+	## Issue #97 (bestiary expansion) -- owned, single-frame PixelLab statics,
+	## same shape as briar_collector/river_wolf above.
+	counts["corusdeer/idle"] = 1
+	counts["razorbeak/idle"] = 1
+	counts["mothbear/idle"] = 1
+	counts["kingslayer_spider/idle"] = 1
+	counts["forge_golem/idle"] = 1
+	counts["watchgolem/idle"] = 1
+
 	## Invrisil 8c Task C2 -- hired_blade, DIRECTIONAL + animated (v2
 	## create-character-with-8-directions + animate-character template,
 	## 148x148 native frame). idle=breathing-idle(4), walk=walking(6), same

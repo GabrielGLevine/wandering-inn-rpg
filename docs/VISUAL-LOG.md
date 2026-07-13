@@ -1282,3 +1282,20 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 - dungeon trap-tell art still on same-family placeholders
   (dart_slit = tinted sewer_grate; illusory_floor = Cemetery debris
   crop) — carried from 8dB; PixelLab candidates palette-drifted.
+
+## 2026-07-13 (#97 bestiary review wave)
+- watchgolem + mothbear large-sprite ADJACENCY OVERLAP: when the enemy
+  pair fights in adjacent columns/rows, the rear unit is partially
+  occluded by the front one and the HP readouts float over each other
+  (pallass_watchgolem_loop watchgolems_combat + invrisil_mothbear_loop
+  mothbears_combat shots). Candidates: nudge render_scale down a step
+  (~0.55), or a combat_scale override per the contained-bar rule
+  (wi-art-and-sprites). Windowed-judged, controller call.
+- razorbeak SOFT SEMANTIC READ: the generated sprite reads lizard-like
+  (green body, ambiguous folded wings) more than "leathery-winged
+  toothed bird"; passable as Erin's "Dino Bird" nickname but a regen
+  pass with wing/beak emphasis is worth one more candidate batch.
+- razorbeak_nest resolves in the TRAINING_YARD arena — a wild-fauna
+  fight among training dummies/pells reads wrong. Re-point to
+  boulder_flats or a dedicated grass-scrape arena later (data-only,
+  one field).

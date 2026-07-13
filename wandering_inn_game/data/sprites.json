@@ -3977,5 +3977,119 @@
     "fps": 1
    }
   }
+ },
+ "corusdeer": {
+  "_comment": "Issue #97 (bestiary expansion): the stray Corusdeer, T1 floodplains renewable-cull target. Canon-cite: wiki.wanderinginn.com/Corusdeer (WIKI-VERIFIED 2026-07-12) -- magical deer, ~2x normal deer size, twin antlers oaken-brown at the base shading to glowing cherry-red at the tips, mana-fueled heat that 'vaporises bone'; a lone stray male is the Silver-rank encounter shape (herds are Gold-rank and explicitly off-limits -- bounty_crab_cull's own copy already warns 'Do not trouble the Corusdeer herd'). Pre-staged in docs/design/character-profiles-staging.md Home-Region II. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down (the briar_collector/river_wolf non-humanoid- creature recipe, not the v2 8-direction character pipeline -- reserved for humanoid NPCs per the skill's own directive) -- avoids the manifest/bundle dance entirely, TIER-PUBLIC. PIL alpha-bbox anchor measured (fig y 3-60 of 64); render_scale 0.7 / anchor [0.4844,0.9375] VERIFIED by windowed screenshot (floodplains_bestiary_loop's corusdeer_combat shot, 2026-07-13 review wave: figure legible on the boulder_flats board, feet on cell, cherry-red antler tips read at combat scale, HP bar clear of the sprite).",
+  "render_scale": 0.7,
+  "anchor": [
+   0.4844,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/corusdeer/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "razorbeak": {
+  "_comment": "Issue #97: Razorbeaks, T1 floodplains pack encounter. Canon-cite: wiki.wanderinginn.com/Razorbeaks (WIKI-VERIFIED 2026-07-12) -- large leathery-winged pterosaur-like birds, light green skin with red markings, beak longer than a human arm; canon-cowardly ALONE (flees when disturbed) but aggressive and swarms wounded prey in a group -- direct citation for this combatant's `coward` AI profile (see combatants.json). Erin's own nickname: 'Dino Birds'. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC, sidesteps the manifest/bundle dance.",
+  "render_scale": 0.75,
+  "anchor": [
+   0.4922,
+   0.7969
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/razorbeak/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "mothbear": {
+  "_comment": "Issue #97: Mothbear, T3 Invrisil-boulevard night-only pack encounter (drawn to the boulevard's lanterns -- canon-cited below). Canon-cite: wiki.wanderinginn.com/Mothbears (WIKI-VERIFIED 2026-07-12) -- flying-bear/moth hybrids with antennae and claws, hunt in groups, attracted to bright lights, attack by jumping on prey; Bronze-rank-dangerous, Silver-rank-manageable (matches this encounter's T3 tier). OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC.",
+  "render_scale": 0.65,
+  "anchor": [
+   0.5703,
+   0.8906
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/mothbear/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "kingslayer_spider": {
+  "_comment": "Issue #97: Kingslayer Spider, T4 dungeon solo apex-predator encounter (the 'shield-spider variant' the plan named as a candidate). Canon-cite: wiki.wanderinginn.com/Kingslayer_Spiders (WIKI-VERIFIED 2026-07-12) -- large monstrous Izril arachnids that 'resemble Shield Spiders from a distance, though distinct creatures'; named for killing a King while he was out hunting. FIXES a long-standing project gap -- docs/asset-catalog.md flags arachnids as a 'HARD GAP (no arachnid in any pack)' (cave_spider/shield_spider both stand in with `bat`); this is the first genuine spider silhouette in the tree. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC.",
+  "render_scale": 0.85,
+  "anchor": [
+   0.4922,
+   0.8281
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/kingslayer_spider/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "forge_golem": {
+  "_comment": "Issue #97: the Pallass Forge's own construct guardian (T4/T5 Pallass-adjacent solo encounter, `ai:caster`). Canon-cite: wiki.wanderinginn.com/Golems (WIKI-VERIFIED 2026-07-12) -- artificial golems built from a shell + command spells + a mana-stone Golem Heart, over 40 named variants incl. Stone Golem/Flame Golem; Pallass's forge tier is a molten-seam artifice hall (pallass_forge.json), a direct, canon-plausible home for a forge-tempered construct. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC (sidesteps whether Pixel Crawler Forge 1.2's own in-hand Stone-Golem sheet would need the bundle/manifest dance; not yet vetted in assets/LICENSES, so generated instead of risking a bundle-tier pick).",
+  "render_scale": 0.6,
+  "anchor": [
+   0.4922,
+   0.9219
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/forge_golem/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "watchgolem": {
+  "_comment": "Issue #97: the Pallass Market's own construct guard pair (T4/T5 Pallass-adjacent encounter `market_watchgolems`, `ai:guard`; player-facing name 'Stone Golem(s)' per the controller naming ruling -- the sprite id keeps `watchgolem`, ids are not player-facing) -- plain Stone Golem individuals distinct from `forge_golem`'s molten-cracked caster (canon explicitly supports many golems of the same named type, wiki.wanderinginn.com/Golems). Guards merchant stock, matching Golems' documented 'follows orders' puppet/autonomous tiers. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC, same reasoning as forge_golem's own comment.",
+  "render_scale": 0.6,
+  "anchor": [
+   0.4922,
+   0.9219
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/watchgolem/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
  }
 }

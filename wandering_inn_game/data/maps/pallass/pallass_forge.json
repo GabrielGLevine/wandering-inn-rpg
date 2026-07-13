@@ -460,6 +460,26 @@
     ],
     "open_toast": "The brass gate rises with a well-oiled clank, counterweights turning smooth in their track. The lift carries you down, into the ordered quiet of the market tier."
    }
+  },
+  {
+   "_comment": "Issue #97: forge_calibration_golem, T4/T5 Pallass-adjacent solo encounter -- Pallass's FIRST live combat encounter (every prior Pallass QA canonical is explicitly zero-combat, see pallass_walkthrough/pallass_peek's own notes). The crab_nest informed-consent shape (data/dialogue/forge_calibration_golem.json). respawns:true, MEASURED-only in the harness (a first-of-its-kind region, no established band to hold). Placed at (20,8), the map's south edge (RELOCATED off (24,2) after the `pallass_peek` review-wave finding: (24,2) sat exactly on that canonical's own bounds-lap sweep row y=2, x0-25, blocking it mid-walk) -- clear of the forge_station_a/b (10,6)/(17,4), grimalkin_station (7,5), steam_vent_forge (5,7), grand_lift_forge (22,7), and every `pallass_peek`/`pallass_walkthrough` teleport waypoint; Chebyshev distance to grand_lift_forge is 2, to the nearest bounds-lap row (y=9) is 1 (never walked -- only y=2/y=9 exact rows + x=0/x=25 exact columns are, per pallass_peek's own bounds-lap shape).",
+   "id": "forge_calibration_golem",
+   "kind": "encounter",
+   "cell": [
+    20,
+    8
+   ],
+   "display_name": "Miscalibrated Golem",
+   "sprite": "forge_golem",
+   "arena": "forge_hall",
+   "conversation": "forge_calibration_golem",
+   "enemies": [
+    "forge_golem"
+   ],
+   "allies": [],
+   "respawns": true,
+   "observe": "A stone shape stands too near the tier's own edge, cracks along its arms glowing a shade too bright for the forge-heat alone.",
+   "on_victory": "forge_golems_culled"
   }
  ]
 }

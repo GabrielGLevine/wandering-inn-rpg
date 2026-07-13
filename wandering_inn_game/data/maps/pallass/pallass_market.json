@@ -478,6 +478,27 @@
     ],
     "open_toast": "The brass gate rises with a well-oiled clank, counterweights turning smooth in their track. The lift carries you up, into noise and heat and orange light."
    }
+  },
+  {
+   "_comment": "Issue #97: market_watchgolems, T4/T5 Pallass-adjacent pair encounter -- Pallass's SECOND live combat encounter. The crab_nest informed-consent shape (data/dialogue/market_watchgolems.json). respawns:true, MEASURED-only in the harness (same first-of-its-kind-region reasoning as forge_calibration_golem). Placed at (2,8), near the arrival corner but off every walked cell (RELOCATED off (16,9) after the `pallass_peek` review-wave finding: (16,9) sat exactly on that canonical's own bounds-lap sweep row y=9, x0-25, blocking it mid-walk) -- clear of the y3-7 clerk/stall/permit-office/lift corridor pallass_walkthrough's live route and pallass_peek's teleport-based route both walk, and off the y=2/y=9 exact bounds-lap rows and x=0/x=25 exact columns.",
+   "id": "market_watchgolems",
+   "kind": "encounter",
+   "cell": [
+    2,
+    8
+   ],
+   "display_name": "Stone Golems",
+   "sprite": "watchgolem",
+   "arena": "market_watch",
+   "conversation": "market_watchgolems",
+   "enemies": [
+    "watchgolem_a",
+    "watchgolem_b"
+   ],
+   "allies": [],
+   "respawns": true,
+   "observe": "Two grey shapes stand either side of an unclaimed stall, carved plating catching the tier's flat light, neither one moving.",
+   "on_victory": "watchgolems_culled"
   }
  ]
 }
