@@ -46,6 +46,29 @@ extends SceneTree
 
 const RUNS_PER_CELL := 100
 
+## Sharding hooks (scripts/harness_shard_diff.sh) -- OFF by default (both
+## env vars unset), in which case every cell runs and output is
+## byte-identical to before these existed. WI_CELL_COUNT_ONLY=1 prints the
+## total cell count and quits before any fight runs (cheap: no data load
+## needed, the CELLS consts are known at compile time). WI_CELL_RANGE=LO:HI
+## (0-based, inclusive, global index across every "for cell in ..." loop IN
+## RUN ORDER, including the COMPOSITIONS x BUILDS matrix) skips any cell
+## outside the range -- _cell_idx always advances so shard boundaries stay
+## stable regardless of which shard is asked to run. Per-cell seeds (1..
+## RUNS_PER_CELL) are always LOCAL to that cell's own loop, never a shared
+## stream across cells, so a skipped cell can never perturb a run cell's
+## RNG -- this is what makes shard N's output byte-identical to the same
+## cell's slice of an unsharded run.
+var _cell_idx := -1
+var _range_lo := -1
+var _range_hi := -1
+
+func _cell_in_range() -> bool:
+	_cell_idx += 1
+	if _range_lo < 0:
+		return true
+	return _cell_idx >= _range_lo and _cell_idx <= _range_hi
+
 const COMPOSITIONS := [
 	{"name": "goblin_ambush", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"]},
 	{"name": "chieftains_raid", "arena": "cave_mouth", "enemies": ["goblin_chieftain", "goblin_raider", "cave_spider"]},
@@ -684,6 +707,18 @@ func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dict
 
 
 func _init() -> void:
+	var total_cells := COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size()
+	if OS.get_environment("WI_CELL_COUNT_ONLY") != "":
+		print("WI_CELL_COUNT: %d" % total_cells)
+		quit(0)
+		return
+	var range_env := OS.get_environment("WI_CELL_RANGE")
+	if range_env != "":
+		var parts := range_env.split(":")
+		assert(parts.size() == 2, "WI_CELL_RANGE must be LO:HI (0-based, inclusive)")
+		_range_lo = int(parts[0])
+		_range_hi = int(parts[1])
+
 	WITestWatchdog.arm(self)
 	var arenas_by_id := {}
 	for a: Dictionary in _load("res://data/arenas.json")["arenas"]:
@@ -711,6 +746,7 @@ func _init() -> void:
 	for comp: Dictionary in COMPOSITIONS:
 		var arena: Dictionary = arenas_by_id[String(comp["arena"])]
 		for build: Dictionary in BUILDS:
+			if not _cell_in_range(): continue
 			var wins := 0
 			var rounds: Array[int] = []
 			var relc_downed := 0
@@ -781,6 +817,7 @@ func _init() -> void:
 	## promoted off two hand-mirrored copies) before
 	## constructing the SAME WICombat class the main loop above uses.
 	for cell: Dictionary in LOADOUT_CELLS:
+		if not _cell_in_range(): continue
 		var comp: Dictionary = _find_by_name(COMPOSITIONS, String(cell["comp"]))
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(comp["arena"])]
@@ -860,6 +897,7 @@ func _init() -> void:
 	## `gated` is false for all of them and both the printed "(measured)" tag
 	## and the loop's pass/fail behavior stay byte-identical.
 	for cell: Dictionary in ENCOUNTER_CELLS:
+		if not _cell_in_range(): continue
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
 		var wins := 0
@@ -921,6 +959,7 @@ func _init() -> void:
 	## a cell without them is measured-only (the solo veto frontier). This is the
 	## only gate in the file with a non-default band, by design.
 	for cell: Dictionary in BOSS_CELLS:
+		if not _cell_in_range(): continue
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
 		var wins := 0
@@ -977,6 +1016,7 @@ func _init() -> void:
 	## measured-only) -- see RUIN_CELLS' own doc comment for the per-cell band
 	## rationale.
 	for cell: Dictionary in RUIN_CELLS:
+		if not _cell_in_range(): continue
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
 		var wins := 0
@@ -1034,6 +1074,7 @@ func _init() -> void:
 	## per-cell band rationale (the wolf pack is deliberately ungated) and
 	## for why the ally combatant is `riverfarm_hunter`, not `relc`.
 	for cell: Dictionary in RIVERFARM_CELLS:
+		if not _cell_in_range(): continue
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
 		var wins := 0
@@ -1096,6 +1137,7 @@ func _init() -> void:
 	## the gated-ally-band precedent) and for why the ally combatant is
 	## `wilovan`, not `relc`/`riverfarm_hunter`.
 	for cell: Dictionary in INVRISIL_CELLS:
+		if not _cell_in_range(): continue
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
 		var wins := 0
@@ -1157,6 +1199,7 @@ func _init() -> void:
 	## RIVERFARM_CELLS/INVRISIL_CELLS idiom) -- see PARTY_CELLS' own doc
 	## comment for which roster is gated and why the other stays measured.
 	for cell: Dictionary in PARTY_CELLS:
+		if not _cell_in_range(): continue
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
 		var wins := 0
@@ -1230,6 +1273,7 @@ func _init() -> void:
 	## (the FIGHT route's own skirmish, no ally), so this loop skips the
 	## has-ally branch those loops carry.
 	for cell: Dictionary in DUNGEON_CELLS:
+		if not _cell_in_range(): continue
 		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
 		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
 		var wins := 0
@@ -1277,5 +1321,5 @@ func _init() -> void:
 		# Asserts are stripped in release templates; keep the exit code honest there too.
 		quit(1)
 		return
-	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size(), RUNS_PER_CELL])
+	print("PASS: balance harness terminated cleanly over %d cells x %d seeded runs" % [total_cells, RUNS_PER_CELL])
 	quit(0)

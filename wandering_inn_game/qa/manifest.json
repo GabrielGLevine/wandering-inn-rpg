@@ -1,596 +1,2971 @@
 {
- "_comment": "The ONE source of truth for the canonical QA sweep. ci_sweep.sh parses this (python3) to build its run list; the CLAUDE.md canonical seed table is generated FROM it and ci_sweep.sh's startup drift-checks the table against this file on every run. Add/rename/reorder a script HERE first, then re-render the CLAUDE.md table row to match -- ci_sweep.sh will hard-fail the sweep if they disagree. seed:null means the script takes no --seed (load_gate, char_creation). fixture is the fixture_save this script's own qa/scripts/<name>.json loads via title Continue (its rng_state overrides --seed when present) -- informational, not consumed by ci_sweep.sh's invocation. note is the one-line purpose column.",
+ "_comment": "The ONE source of truth for the canonical QA sweep. ci_sweep.sh parses this (python3) to build its run list; the CLAUDE.md canonical seed table is generated FROM it and ci_sweep.sh's startup drift-checks the table against this file on every run. Add/rename/reorder a script HERE first, then re-render the CLAUDE.md table row to match -- ci_sweep.sh will hard-fail the sweep if they disagree. seed:null means the script takes no --seed (load_gate, char_creation). fixture is the fixture_save this script's own qa/scripts/<name>.json loads via title Continue (its rng_state overrides --seed when present) -- informational, not consumed by ci_sweep.sh's invocation. note is the one-line purpose column. tiers: hand-curated membership, every entry >=1 of smoke/full, smoke subset of full (ci_sweep.sh drift-checks both facts). smoke = load_gate + one canonical per subsystem, <3min, runs every push. full = everything (unchanged). surfaces: GENERATED ONLY by scripts/derive_qa_surfaces.py from the script+fixture+data files themselves (maps/fixtures/skills/systems referenced) -- never hand-edit; ci_sweep.sh --touching <path> maps changed paths to surface tags to crossing scripts; the drift check re-runs the generator and fails on any mismatch (stale tags = FATAL).",
  "scripts": [
   {
    "script": "load_gate",
    "seed": null,
-   "note": "native-only resource compile/load gate"
+   "note": "native-only resource compile/load gate",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": []
+   }
   },
   {
    "script": "inn_walkthrough",
    "seed": 9,
-   "note": "full inn journey, no screenshots in headless; issue #40's canonical diagonal leg (move_diag out-and-back, net zero) opens it"
+   "note": "full inn journey, no screenshots in headless; issue #40's canonical diagonal leg (move_diag out-and-back, net zero) opens it",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "erin_errand"
+    ],
+    "systems": [
+     "audio",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "dialogue_walkthrough",
    "seed": 9,
-   "note": "Erin/Selys story path (meets Relc, then goblin_encounter_2)"
+   "note": "Erin/Selys story path (meets Relc, then goblin_encounter_2)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "erin_errand",
+     "goblin_parley",
+     "lyonette_tip",
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "dialogue_hub_loop",
    "seed": 9,
-   "note": "conversation hub loop-backs + hide_when sweep"
+   "note": "conversation hub loop-backs + hide_when sweep",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "erin_errand",
+     "relc_intro",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "input",
+     "quests"
+    ]
+   }
   },
   {
    "script": "quest_errand_fight",
    "seed": 9,
-   "note": "errand path with a goblin fight"
+   "note": "errand path with a goblin fight",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "erin_errand",
+     "relc_intro",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "quests"
+    ]
+   }
   },
   {
    "script": "quest_errand_parley",
    "seed": 9,
-   "note": "errand path through parley"
+   "note": "errand path through parley",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "erin_errand",
+     "relc_intro",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "quests"
+    ]
+   }
   },
   {
    "script": "save_load_roundtrip",
    "seed": 9,
-   "note": "save/load persistence path"
+   "note": "save/load persistence path",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "erin_errand",
+     "relc_intro",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "input",
+     "quests",
+     "save"
+    ]
+   }
   },
   {
    "script": "combat_walkthrough",
    "seed": 9,
-   "note": "core combat proof; ally_requires roster gate negative-then-positive"
+   "note": "core combat proof; ally_requires roster gate negative-then-positive",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "audio",
+     "combat",
+     "dialogue"
+    ]
+   }
   },
   {
    "script": "tutorial_flow",
    "seed": 9,
-   "note": "the onboarding's own end-to-end proof (spar -> gift -> ambush -> street)"
+   "note": "the onboarding's own end-to-end proof (spar -> gift -> ambush -> street)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy"
+    ]
+   }
   },
   {
    "script": "level_up_loop",
    "seed": 9,
    "fixture": "post_tutorial",
-   "note": "level-up loop; fight 2 tests riposte"
+   "note": "level-up loop; fight 2 tests riposte",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "post_tutorial"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "counter_strike"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "mage_unlock_loop",
    "seed": 9,
-   "note": "[Mage] earned from Pisces; full cold-start arc + mage kit fielded"
+   "note": "[Mage] earned from Pisces; full cold-start arc + mage kit fielded",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "goblin_parley",
+     "pisces_magic",
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue"
+    ]
+   }
   },
   {
    "script": "line_of_sight_denial",
    "seed": 9,
-   "note": "wall-aware ranged AI proof (positive has_los gate)"
+   "note": "wall-aware ranged AI proof (positive has_los gate)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [],
+    "skills": [
+     "flame_bolt"
+    ],
+    "dialogue": [
+     "goblin_parley",
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue"
+    ]
+   }
   },
   {
    "script": "defeat_reload",
    "seed": 1,
-   "note": "losing seed; defeat loads auto slot, no game_reset"
+   "note": "losing seed; defeat loads auto slot, no game_reset",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "audio",
+     "combat",
+     "dialogue",
+     "save"
+    ]
+   }
   },
   {
    "script": "defeat_ally_alive",
    "seed": 3,
    "fixture": "near_defeat",
-   "note": "THE canonical proof of the PC-death-is-instant-defeat rule"
+   "note": "THE canonical proof of the PC-death-is-instant-defeat rule",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_defeat"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "counter_strike"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "save"
+    ]
+   }
   },
   {
    "script": "title_flow",
    "seed": 9,
-   "note": "title screen flow; no combat"
+   "note": "title screen flow; no combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "save"
+    ]
+   }
   },
   {
    "script": "playtest_boot",
    "seed": null,
-   "note": "Issue #43: debug-only title 'Playtest States' picker -- boots near_garden via the real fixture-copy-then-Continue path"
+   "note": "Issue #43: debug-only title 'Playtest States' picker -- boots near_garden via the real fixture-copy-then-Continue path",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "save"
+    ]
+   }
   },
   {
    "script": "combat_move_input",
    "seed": 9,
    "fixture": "post_tutorial",
-   "note": "movement-first arrows + Dash refill via real input"
+   "note": "movement-first arrows + Dash refill via real input",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "post_tutorial"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "combat_touch_input",
    "seed": 9,
-   "note": "Issue #106 (mobile web v1): combat touch event parity -- adjacent-cell tap = arrow-move equivalent (incl. diagonal/far/pool-empty no-ops), Dash armed then a tap on the confirm chip fires it (dashed{move_pool:3}, byte-identical to Enter), Attack targeting opened then a tap missing every candidate cancels (Esc-equivalent, AP unspent), reopened Attack + a tap on training_dummy_b (not the default candidate) re-points the aim then a confirm-chip tap fires ON DUMMY_B specifically"
+   "note": "Issue #106 (mobile web v1): combat touch event parity -- adjacent-cell tap = arrow-move equivalent (incl. diagonal/far/pool-empty no-ops), Dash armed then a tap on the confirm chip fires it (dashed{move_pool:3}, byte-identical to Enter), Attack targeting opened then a tap missing every candidate cancels (Esc-equivalent, AP unspent), reopened Attack + a tap on training_dummy_b (not the default candidate) re-points the aim then a confirm-chip tap fires ON DUMMY_B specifically",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "input"
+    ]
+   }
   },
   {
    "script": "combat_abandon",
    "seed": 9,
    "fixture": "post_tutorial",
-   "note": "pause opens mid-fight (HOTBAR resting mode), Abandon returns to last autosave; combat_resolved never fires"
+   "note": "pause opens mid-fight (HOTBAR resting mode), Abandon returns to last autosave; combat_resolved never fires",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn"
+    ],
+    "fixtures": [
+     "post_tutorial"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "save"
+    ]
+   }
   },
   {
    "script": "class_evolution_loop",
    "seed": 9,
    "fixture": "near_evolution",
-   "note": "grind -> sleep -> class_evolved + evolved kit"
+   "note": "grind -> sleep -> class_evolved + evolved kit",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_evolution"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "goblin_parley",
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "consolidation_flow",
    "seed": 9,
    "fixture": "near_consolidation",
-   "note": "offer/decline/re-offer/accept -> [Spellsword]"
+   "note": "offer/decline/re-offer/accept -> [Spellsword]",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_consolidation"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_bolt"
+    ],
+    "dialogue": [
+     "goblin_parley",
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "save_migration",
    "seed": 1,
    "fixture": "v2_format",
-   "note": "v2->v3 migration + v1 pause-load rejection + stale-slot defeat-reload"
+   "note": "v2->v3 migration + v1 pause-load rejection + stale-slot defeat-reload",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "street"
+    ],
+    "fixtures": [
+     "v2_format"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "save"
+    ]
+   }
   },
   {
    "script": "consolidation_reload",
    "seed": 9,
    "fixture": "pending_offer",
-   "note": "pause-load reconstructs the consolidation prompt mid-offer"
+   "note": "pause-load reconstructs the consolidation prompt mid-offer",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "pending_offer"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_bolt"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "input",
+     "save"
+    ]
+   }
   },
   {
    "script": "generalist_loop",
    "seed": 9,
    "fixture": "near_generalist",
-   "note": "Generalist evolution path + balanced-mastery grants"
+   "note": "Generalist evolution path + balanced-mastery grants",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_generalist"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "flare_burst",
+     "ice_shard"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "lantern_check",
    "seed": 9,
-   "note": "[Light] lit_the_common_room payoff, after the Pisces mage arc"
+   "note": "[Light] lit_the_common_room payoff, after the Pisces mage arc",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [
+     "light"
+    ],
+    "dialogue": [
+     "pisces_magic",
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "gate_district_walkthrough",
    "seed": 9,
-   "note": "enters street for real via liscor_gate; gate NPCs + Selys"
+   "note": "enters street for real via liscor_gate; gate NPCs + Selys",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "drayman_dispute",
+     "relc_intro"
+    ],
+    "systems": [
+     "audio",
+     "combat",
+     "dialogue"
+    ]
+   }
   },
   {
    "script": "relc_tutorial",
    "seed": 9,
-   "note": "full relc_spar tutor_lines beats + opacity/persistence teeth"
+   "note": "full relc_spar tutor_lines beats + opacity/persistence teeth",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy"
+    ]
+   }
   },
   {
    "script": "work_loop",
    "seed": 9,
-   "note": "inn work-loop, Helper leg (chores -> class_gained -> level 2)"
+   "note": "inn work-loop, Helper leg (chores -> class_gained -> level 2)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [
+     "patron_serving"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "crate_fight",
    "seed": 9,
    "fixture": "post_tutorial_street",
-   "note": "Missing Crate FORCE path"
+   "note": "Missing Crate FORCE path",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "post_tutorial_street"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "crate_talk",
    "seed": 9,
    "fixture": "post_tutorial_street",
-   "note": "Missing Crate WATCH path (no combat)"
+   "note": "Missing Crate WATCH path (no combat)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "post_tutorial_street"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "watch_crate"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "crate_light",
    "seed": 9,
-   "note": "Missing Crate SKILL path ([Light]-studies cellar_door)"
+   "note": "Missing Crate SKILL path ([Light]-studies cellar_door)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [],
+    "skills": [
+     "light"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "pisces_magic",
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "journal_skills",
    "seed": 9,
-   "note": "journal skills-by-class panel; pre/post-first-use reveal"
+   "note": "journal skills-by-class panel; pre/post-first-use reveal",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [],
+    "fixtures": [],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
   },
   {
    "script": "inventory_loop",
    "seed": 9,
-   "note": "THE inventory/equipment loop; weapon-gated kit proof"
+   "note": "THE inventory/equipment loop; weapon-gated kit proof",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "audio",
+     "combat",
+     "dialogue",
+     "economy",
+     "input"
+    ]
+   }
   },
   {
    "script": "atmosphere_check",
    "seed": 9,
-   "note": "mood-grade/phase-clock proof; day->dusk->night->day cycle; issue #80: Erin's phase-gated line at dusk + hungry_patron's present_when day<->night flip (sim- and render-side)"
+   "note": "mood-grade/phase-clock proof; day->dusk->night->day cycle; issue #80: Erin's phase-gated line at dusk + hungry_patron's present_when day<->night flip (sim- and render-side)",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "erin_errand"
+    ],
+    "systems": [
+     "dialogue",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "field_skills_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); K2b loadout assign/unassign + remapped-slot proof"
+   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); K2b loadout assign/unassign + remapped-slot proof",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_tactician"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "input"
+    ]
+   }
   },
   {
    "script": "hotbar_tab_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "Issue #58: Tab-primed field-hotbar select -- prime/re-prime, wrap-in-place move_right with player_cell unchanged (arrows captured while primed), Esc disarm, confirm fires the number-key-equivalent stream"
+   "note": "Issue #58: Tab-primed field-hotbar select -- prime/re-prime, wrap-in-place move_right with player_cell unchanged (arrows captured while primed), Esc disarm, confirm fires the number-key-equivalent stream",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "near_tactician"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "erin_errand"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "mouse_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "Issue #57/#84: mouse support -- distant prop click walks to nearest approach cell and stops without interacting, hotbar slot CLICK fires the number-key-equivalent stream and disarms a Tab-primed cursor, adjacent click faces+interacts in one click, click-to-walk on open ground (exact per-step count), keyboard press mid-path cancels, a title-row click reaches Continue, a pause-row click Resumes, dialogue-option clicks pin the exact keyboard-equivalent dialogue_choice payload"
+   "note": "Issue #57/#84: mouse support -- distant prop click walks to nearest approach cell and stops without interacting, hotbar slot CLICK fires the number-key-equivalent stream and disarms a Tab-primed cursor, adjacent click faces+interacts in one click, click-to-walk on open ground (exact per-step count), keyboard press mid-path cancels, a title-row click reaches Continue, a pause-row click Resumes, dialogue-option clicks pin the exact keyboard-equivalent dialogue_choice payload",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "near_tactician"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "erin_errand"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "input",
+     "save"
+    ]
+   }
   },
   {
    "script": "social_loop",
    "seed": 9,
    "fixture": "post_tutorial_street",
-   "note": "Social Pillar v1 proof; rotating talk pools -> [Diplomat]"
+   "note": "Social Pillar v1 proof; rotating talk pools -> [Diplomat]",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [
+     "social_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "charming_smile"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "watch_crate"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "night_phase",
+     "quests"
+    ]
+   }
   },
   {
    "script": "sewers_walkthrough",
    "seed": 9,
    "fixture": "near_sewers",
-   "note": "Liscor sewers proof; grate-gate seam + vermin fight"
+   "note": "Liscor sewers proof; grate-gate seam + vermin fight",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "sewers",
+     "street"
+    ],
+    "fixtures": [
+     "near_sewers"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_touch",
+     "kindle",
+     "light"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "cisterns_fight",
    "seed": 9,
    "fixture": "cisterns_fight_start",
-   "note": "Quest 1 FIGHT path (clear shield_spiders nest)"
+   "note": "Quest 1 FIGHT path (clear shield_spiders nest)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "sewers",
+     "street"
+    ],
+    "fixtures": [
+     "cisterns_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "olesm_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "cisterns_talk",
    "seed": 9,
    "fixture": "cisterns_talk_start",
-   "note": "Quest 1 TALK path (persuade Zevara, no combat)"
+   "note": "Quest 1 TALK path (persuade Zevara, no combat)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "cisterns_talk_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "olesm_intro",
+     "zevara_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "cisterns_scout",
    "seed": 9,
    "fixture": "cisterns_scout_start",
-   "note": "Quest 1 SKILL path ([Appraise Foe] the nest_ledge)"
+   "note": "Quest 1 SKILL path ([Appraise Foe] the nest_ledge)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "sewers",
+     "street"
+    ],
+    "fixtures": [
+     "cisterns_scout_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [
+     "olesm_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "wrong_order_loop",
    "seed": 9,
    "fixture": "wrong_order_loop_start",
-   "note": "The Wrong Order inn-local give->cook->report loop"
+   "note": "The Wrong Order inn-local give->cook->report loop",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "wrong_order_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [
+     "lyonette_tip"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "night_phase",
+     "quests"
+    ]
+   }
   },
   {
    "script": "wrong_order_talk",
    "seed": 9,
    "fixture": "wrong_order_talk_start",
-   "note": "The Wrong Order TALK path (Krshia smooth-over, no combat)"
+   "note": "The Wrong Order TALK path (Krshia smooth-over, no combat)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "wrong_order_talk_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "wrong_order_fight",
    "seed": 9,
    "fixture": "wrong_order_fight_start",
-   "note": "The Wrong Order FIGHT path (clear supplier_scavengers)"
+   "note": "The Wrong Order FIGHT path (clear supplier_scavengers)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "wrong_order_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "economy_loop",
    "seed": 9,
    "fixture": "economy_loop_start",
-   "note": "the coin arc: chore earn -> loot -> shop -> spend"
+   "note": "the coin arc: chore earn -> loot -> shop -> spend",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn",
+     "street"
+    ],
+    "fixtures": [
+     "economy_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "char_creation",
    "seed": null,
-   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof)"
+   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof)",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "char_creation",
+     "input"
+    ]
+   }
   },
   {
    "script": "deep_descent",
    "seed": 9,
    "fixture": "deep_descent_start",
-   "note": "the Raskghar descent + JOIN-Relc boss victory"
+   "note": "the Raskghar descent + JOIN-Relc boss victory",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels",
+     "sewers"
+    ],
+    "fixtures": [
+     "deep_descent_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "light"
+    ],
+    "dialogue": [
+     "relc_descent"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "climax_chain",
    "seed": 9,
    "fixture": "climax_surface_start",
-   "note": "the tremor beat + Zevara summons + Olesm briefing"
+   "note": "the tremor beat + Zevara summons + Olesm briefing",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [
+     "climax_surface_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "olesm_intro",
+     "zevara_intro"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "climax_seal",
    "seed": 9,
    "fixture": "climax_sealed_start",
-   "note": "the seal beat + journal Act III advance"
+   "note": "the seal beat + journal Act III advance",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "climax_sealed_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "olesm_intro",
+     "zevara_intro"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "arc_flow",
    "seed": 9,
    "fixture": "near_act3",
-   "note": "THE WHOLE ACT III ARC PROOF, tremor through epilogue"
+   "note": "THE WHOLE ACT III ARC PROOF, tremor through epilogue",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [
+     "near_act3"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "olesm_intro",
+     "relc_descent",
+     "zevara_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "status_first_encounter",
    "seed": 9,
    "fixture": "near_mage_cast",
-   "note": "status glossary + first-encounter combat-feed surface"
+   "note": "status glossary + first-encounter combat-feed surface",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_mage_cast"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_bolt"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "ice_floor_loop",
    "seed": 9,
    "fixture": "near_ice_floor",
-   "note": "GH#21: [Ice Floor] area terrain effect -- cast/friendly-fire/standing-slow/expiry, live"
+   "note": "GH#21: [Ice Floor] area terrain effect -- cast/friendly-fire/standing-slow/expiry, live",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_ice_floor"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "flame_jet",
+     "icy_floor"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "gear_loop",
    "seed": 9,
    "fixture": "gear_loop_start",
-   "note": "resonance-gear UI proof (accessory rows, capacity refusal)"
+   "note": "resonance-gear UI proof (accessory rows, capacity refusal)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "gear_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "stealth_loop",
    "seed": 9,
    "fixture": "near_ambush_sneak",
-   "note": "the [Stealth] seam: skip an ambush, break it, positive control"
+   "note": "the [Stealth] seam: skip an ambush, break it, positive control",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_ambush_sneak"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe",
+     "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "rogue_earn_loop",
    "seed": 9,
    "fixture": "near_rogue",
-   "note": "K3 [Rogue] earn: recovered_crate_watch -> sleep -> class_gained -> [Stealth] fielded"
+   "note": "K3 [Rogue] earn: recovered_crate_watch -> sleep -> class_gained -> [Stealth] fielded",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_rogue"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "mage_invisibility_loop",
    "seed": 9,
    "fixture": "near_mage_invisibility",
-   "note": "Issue #22: the Mage's [Invisibility] seam -- distinct visual, skip an ambush, break it with the OTHER sneaks-tagged skill ([Stealth]), positive control"
+   "note": "Issue #22: the Mage's [Invisibility] seam -- distinct visual, skip an ambush, break it with the OTHER sneaks-tagged skill ([Stealth]), positive control",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_mage_invisibility"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "invisibility",
+     "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "stages_loop",
    "seed": 9,
    "fixture": "krshia_stage3_pre",
-   "note": "Social Pillar II: talk_pool_stages base->final (Krshia), unlocked hub topic + shop discount perk surface"
+   "note": "Social Pillar II: talk_pool_stages base->final (Krshia), unlocked hub topic + shop discount perk surface",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [
+     "krshia_stage3_pre"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "guild_interior_walkthrough",
    "seed": 9,
    "fixture": "near_guild",
-   "note": "M-DEPTH DP1: guild_door real-door round-trip, Selys-behind-the-desk (pool + graph incl. desk-context node), board/notice-wall dressed props, Renn/Ilvo/Yelra walk-on pool lines"
+   "note": "M-DEPTH DP1: guild_door real-door round-trip, Selys-behind-the-desk (pool + graph incl. desk-context node), board/notice-wall dressed props, Renn/Ilvo/Yelra walk-on pool lines",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild",
+     "street"
+    ],
+    "fixtures": [
+     "near_guild"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "selys_delivery"
+    ],
+    "systems": [
+     "boards",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "board_loop",
    "seed": 9,
    "fixture": "board_loop_start",
-   "note": "M-DEPTH DP2: THE REQUEST BOARD goes live -- browse/accept/fulfill/turn-in at Selys's desk (delta-since-accept, gold payout), slate rotation across a sleep + the 'slate rotated overnight' line"
+   "note": "M-DEPTH DP2: THE REQUEST BOARD goes live -- browse/accept/fulfill/turn-in at Selys's desk (delta-since-accept, gold payout), slate rotation across a sleep + the 'slate rotated overnight' line",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "board_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "selys_delivery"
+    ],
+    "systems": [
+     "boards",
+     "dialogue",
+     "economy",
+     "exploration",
+     "night_phase",
+     "save"
+    ]
+   }
   },
   {
    "script": "upstairs_walkthrough",
    "seed": 9,
-   "note": "M-DEPTH DP3: the inn's upstairs -- stairs door pair, Lyonette's locked door (observe+locked_toast), sleep-beat parity proven live at the PC's own bed (same events, one extra flavor toast)"
+   "note": "M-DEPTH DP3: the inn's upstairs -- stairs door pair, Lyonette's locked door (observe+locked_toast), sleep-beat parity proven live at the PC's own bed (same events, one extra flavor toast)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "audio",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "barracks_walkthrough",
    "seed": 9,
    "fixture": "near_barracks",
-   "note": "M-DEPTH DP4: the Watch barracks + market-depth stalls -- bread_stall (flavor/observe) + peddler's mini-buy (watch_issue_gambeson, 20g), barracks_door real-door round-trip (the relocated watch_guard, zero prior QA touches), Duty Sergeant Dresk Ashgrave's talk_pool, Zevara's desk (she stays at the gate), THE CELL (locked_toast, empty-v1 dressed)"
+   "note": "M-DEPTH DP4: the Watch barracks + market-depth stalls -- bread_stall (flavor/observe) + peddler's mini-buy (watch_issue_gambeson, 20g), barracks_door real-door round-trip (the relocated watch_guard, zero prior QA touches), Duty Sergeant Dresk Ashgrave's talk_pool, Zevara's desk (she stays at the gate), THE CELL (locked_toast, empty-v1 dressed)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "barracks",
+     "street"
+    ],
+    "fixtures": [
+     "near_barracks"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "peddler_stall"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "delivery_loop",
    "seed": 9,
    "fixture": "near_runners_guild",
-   "note": "M-DEPTH DP5: the Runner's Guild delivery loop -- runners_guild_door round-trip, Vess's counter (talk_pool + vess_counter graph), THE DELIVERY BOARD browse, take slip -> real walked carry -> Chebyshev-1 arrival handoff at krshia_stall -> turn-in pay (1g exact), sleep-fail negative (parcel returns, no pay, delivery_failed armed) + slate rotation + the one-shot night-ledger bark; GH#27: a second, failure-free sleep proves Vess's OWN plain-rotation bark fires once per rotation and not twice in the same waking"
+   "note": "M-DEPTH DP5: the Runner's Guild delivery loop -- runners_guild_door round-trip, Vess's counter (talk_pool + vess_counter graph), THE DELIVERY BOARD browse, take slip -> real walked carry -> Chebyshev-1 arrival handoff at krshia_stall -> turn-in pay (1g exact), sleep-fail negative (parcel returns, no pay, delivery_failed armed) + slate rotation + the one-shot night-ledger bark; GH#27: a second, failure-free sleep proves Vess's OWN plain-rotation bark fires once per rotation and not twice in the same waking",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "runners_guild",
+     "street"
+    ],
+    "fixtures": [
+     "near_runners_guild"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "vess_counter"
+    ],
+    "systems": [
+     "boards",
+     "dialogue",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "stage3_perks_loop",
    "seed": 9,
    "fixture": "stage3_perks_pre",
-   "note": "Issue #23: the once_per_waking dialogue seam's own proof -- Erin's daily meal (well_fed + hp_mod) and Relc's spar wager (+1g), both live: eat/win -> option gone same waking -> sleep clears well_fed + the bank -> both options back"
+   "note": "Issue #23: the once_per_waking dialogue seam's own proof -- Erin's daily meal (well_fed + hp_mod) and Relc's spar wager (+1g), both live: eat/win -> option gone same waking -> sleep clears well_fed + the bank -> both options back",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "stage3_perks_pre"
+    ],
+    "skills": [],
+    "dialogue": [
+     "erin_errand",
+     "relc_intro",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "ruin_walkthrough",
    "seed": 9,
    "fixture": "near_ruin",
-   "note": "Magical Door plan Task D1 (issue #8): enter the gated ruin via a fixture with door_chain_started, real ruin_door door_when transition, walk the new ruin_surface map's bounds, read the pedestal-locked toast (anchor_stone_pedestal), round-trip exit via ruin_exit -- routes AROUND both new dormant encounters (rift_vermin_leak/ruin_guardian have no combat data yet, D2's job)"
+   "note": "Magical Door plan Task D1 (issue #8): enter the gated ruin via a fixture with door_chain_started, real ruin_door door_when transition, walk the new ruin_surface map's bounds, read the pedestal-locked toast (anchor_stone_pedestal), round-trip exit via ruin_exit -- routes AROUND both new dormant encounters (rift_vermin_leak/ruin_guardian have no combat data yet, D2's job)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "ruin_surface"
+    ],
+    "fixtures": [
+     "near_ruin"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "door_chain_fight",
    "seed": 9,
    "fixture": "door_chain_fight_start",
-   "note": "Magical Door plan Task D3 (issue #8): the FIGHT leg + full end-to-end chain -- Erin's beat-1 flicker line live, Pisces sends the player to clear rift_vermin_leak (inn), the ruin recovery run (ruin_guardian fight + anchor_stone_pedestal opens), Krshia's resonant_catalyst purchase -- both quest beats complete"
+   "note": "Magical Door plan Task D3 (issue #8): the FIGHT leg + full end-to-end chain -- Erin's beat-1 flicker line live, Pisces sends the player to clear rift_vermin_leak (inn), the ruin recovery run (ruin_guardian fight + anchor_stone_pedestal opens), Krshia's resonant_catalyst purchase -- both quest beats complete",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "ruin_surface",
+     "street"
+    ],
+    "fixtures": [
+     "door_chain_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "erin_errand",
+     "krshia_crate",
+     "pisces_magic"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "door_chain_talk",
    "seed": 9,
    "fixture": "door_chain_talk_start",
-   "note": "Magical Door plan Task D3 (issue #8): the TALK leg -- persuades Pisces (zero combat), banks the SAME door_understood as the FIGHT leg, then opens anchor_stone_pedestal WITHOUT ever fighting ruin_guardian (the pedestal's contains_when OR-gate proof from a non-FIGHT producer)"
+   "note": "Magical Door plan Task D3 (issue #8): the TALK leg -- persuades Pisces (zero combat), banks the SAME door_understood as the FIGHT leg, then opens anchor_stone_pedestal WITHOUT ever fighting ruin_guardian (the pedestal's contains_when OR-gate proof from a non-FIGHT producer)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "ruin_surface",
+     "street"
+    ],
+    "fixtures": [
+     "door_chain_talk_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pisces_magic"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "door_chain_scout",
    "seed": 9,
    "fixture": "door_chain_scout_start",
-   "note": "Magical Door plan Task D3 (issue #8): the SKILL leg -- [Observe]s pantry_door_runes, reports to Pisces (banks the SAME door_understood), then buys Krshia's resonant_catalyst (bought_catalyst)"
+   "note": "Magical Door plan Task D3 (issue #8): the SKILL leg -- [Observe]s pantry_door_runes, reports to Pisces (banks the SAME door_understood), then buys Krshia's resonant_catalyst (bought_catalyst)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "street"
+    ],
+    "fixtures": [
+     "door_chain_scout_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "pisces_magic"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "door_chain_sequence_break",
    "seed": 9,
    "fixture": "door_chain_sequence_break_start",
-   "note": "the sequence-break canonical: fights rift_vermin_leak BEFORE ever consulting Pisces (door_chain_started pre-banked, met_pisces still 0) -- proves the finding-50 recap option ('About the pantry door -- I understand what it is now...') surfaces and its door_recap node renders from a REAL fight-first run, then completes the chain (ruin recovery + Krshia's catalyst) exactly like door_chain_fight's own tail"
+   "note": "the sequence-break canonical: fights rift_vermin_leak BEFORE ever consulting Pisces (door_chain_started pre-banked, met_pisces still 0) -- proves the finding-50 recap option ('About the pantry door -- I understand what it is now...') surfaces and its door_recap node renders from a REAL fight-first run, then completes the chain (ruin recovery + Krshia's catalyst) exactly like door_chain_fight's own tail",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "ruin_surface",
+     "street"
+    ],
+    "fixtures": [
+     "door_chain_sequence_break_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "pisces_magic"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "door_awakening",
    "seed": 9,
    "fixture": "door_awakening_start",
-   "note": "Magical Door plan Task D4 (issue #8): the full awakening chain from a beat-3-ready fixture through 3 real sleeps -- 2 silent study beats then door_awakened banks + the GDI line queues under the sleep veil -- to the awakened pantry_door's interact rewire (opens the portal menu, not the flavor toast)"
+   "note": "Magical Door plan Task D4 (issue #8): the full awakening chain from a beat-3-ready fixture through 3 real sleeps -- 2 silent study beats then door_awakened banks + the GDI line queues under the sleep veil -- to the awakened pantry_door's interact rewire (opens the portal menu, not the flavor toast)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "door_awakening_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "night_phase",
+     "portals"
+    ]
+   }
   },
   {
    "script": "portal_menu",
    "seed": 9,
    "fixture": "portal_menu_start",
-   "note": "Magical Door plan Task D4 (issue #8, the O2 rule): fast-travel round-trip -- menu at the inn anchor -> street arrival -> menu at the street anchor -> return to the inn -- pins the map_changed pair in order and asserts no combat_started/player_moved/player_blocked fires anywhere in the run (portal travel is transition() only)"
+   "note": "Magical Door plan Task D4 (issue #8, the O2 rule): fast-travel round-trip -- menu at the inn anchor -> street arrival -> menu at the street anchor -> return to the inn -- pins the map_changed pair in order and asserts no combat_started/player_moved/player_blocked fires anywhere in the run (portal travel is transition() only)",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "street"
+    ],
+    "fixtures": [
+     "portal_menu_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "portals"
+    ]
+   }
   },
   {
    "script": "garden_walkthrough",
    "seed": 9,
    "fixture": "near_garden",
-   "note": "Issue #9 Task G1 (spec Sec5 RATIFIED): the Garden of Sanctuary unlock-to-rest loop -- the qualifying sleep silently banks garden_door_unlocked (act >= III AND K=2 of 4 ratified legs), Erin's talk_pool_stages acknowledgment, garden_door opens for real at the inn, day-bright identity + fountain + misted-rise clearing live on garden_sanctuary, rest-bed sleep parity at garden_bed, round-trip exit -- plus a whole-run no-violence sim-guard cross-check (combat_started never fires)"
+   "note": "Issue #9 Task G1 (spec Sec5 RATIFIED): the Garden of Sanctuary unlock-to-rest loop -- the qualifying sleep silently banks garden_door_unlocked (act >= III AND K=2 of 4 ratified legs), Erin's talk_pool_stages acknowledgment, garden_door opens for real at the inn, day-bright identity + fountain + misted-rise clearing live on garden_sanctuary, rest-bed sleep parity at garden_bed, round-trip exit -- plus a whole-run no-violence sim-guard cross-check (combat_started never fires)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "garden_sanctuary",
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_garden"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "garden_unlocked_entry",
    "seed": 9,
    "fixture": "garden_unlocked",
-   "note": "Issue #48 Part 5b: smoke canonical for the NEW garden_unlocked fixture (the position immediately after the reveal, garden_door_unlocked already banked) -- one interact from (3,7) steps straight into garden_sanctuary (arrival (7,10), facing carried over unchanged since transition() never touches it) and the very next interact is a clean round-trip back to the inn via garden_exit (7,11), directly south; garden_walkthrough already covers the Garden's own content end-to-end from a fresh chore+sleep run, this script only proves the new fixture itself boots into a working position"
+   "note": "Issue #48 Part 5b: smoke canonical for the NEW garden_unlocked fixture (the position immediately after the reveal, garden_door_unlocked already banked) -- one interact from (3,7) steps straight into garden_sanctuary (arrival (7,10), facing carried over unchanged since transition() never touches it) and the very next interact is a clean round-trip back to the inn via garden_exit (7,11), directly south; garden_walkthrough already covers the Garden's own content end-to-end from a fresh chore+sleep run, this script only proves the new fixture itself boots into a working position",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "garden_sanctuary",
+     "inn"
+    ],
+    "fixtures": [
+     "garden_unlocked"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "riverfarm_walkthrough",
    "seed": 9,
    "fixture": "near_riverfarm",
-   "note": "8b Task R1 (issue #10): door arrival via the portal contract's first exercise (locked shape 1) -- village walk (headman talk_pool + the charmed villager's echo_of tell, locked shape 3) -- the night wolf gate NEGATIVE at day (encounter_when, locked shape 2, canonical-pinned) -- the hollow round-trip -- the witch's two-form read across a REAL live mid-waking phase crossing (no sleep, locked shape 4) -- routes around briar_collectors/briar_collectors_deep (live encounters post-R2 merge; interact-only, never faced -- combat_started absent whole-run)"
+   "note": "8b Task R1 (issue #10): door arrival via the portal contract's first exercise (locked shape 1) -- village walk (headman talk_pool + the charmed villager's echo_of tell, locked shape 3) -- the night wolf gate NEGATIVE at day (encounter_when, locked shape 2, canonical-pinned) -- the hollow round-trip -- the witch's two-form read across a REAL live mid-waking phase crossing (no sleep, locked shape 4) -- routes around briar_collectors/briar_collectors_deep (live encounters post-R2 merge; interact-only, never faced -- combat_started absent whole-run)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "near_riverfarm"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "night_phase",
+     "portals"
+    ]
+   }
   },
   {
    "script": "riverfarm_fight",
    "seed": 9,
    "fixture": "riverfarm_fight_start",
-   "note": "8b Task R3 (issue #11) 'The Price of a Favor' FIGHT path: give -> clear briar_collectors (shallow) -> clear briar_collectors_deep (the escalation R2 tuned, banks the shared blight_lifted convergence) -> report -> completion, plus the night-wolf POSITIVE leg (a real actions_since_sleep burst to night, river_wolf_pack's trigger_radius fires and is won). Fixture rng_state=1 governs all three live fights (seed-searched against the real start_combat draw order)."
+   "note": "8b Task R3 (issue #11) 'The Price of a Favor' FIGHT path: give -> clear briar_collectors (shallow) -> clear briar_collectors_deep (the escalation R2 tuned, banks the shared blight_lifted convergence) -> report -> completion, plus the night-wolf POSITIVE leg (a real actions_since_sleep burst to night, river_wolf_pack's trigger_radius fires and is won). Fixture rng_state=1 governs all three live fights (seed-searched against the real start_combat draw order).",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "riverfarm_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_headman",
+     "riverfarm_hunter"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "riverfarm_talk",
    "seed": 9,
    "fixture": "riverfarm_talk_start",
-   "note": "8b Task R3 (issue #11) 'The Price of a Favor' TALK path -- no combat: give -> the witch's [Diplomat]-gated mediation (a renegotiated year of hearth-tending, banks blight_lifted) -> report -> completion, PLUS the shared post-conditions every path converges on: the village visual_states brighten, the charmed villager's echo retirement (talk_pool_stages swap), and the witch-cottage vendor unlock (a real buy)."
+   "note": "8b Task R3 (issue #11) 'The Price of a Favor' TALK path -- no combat: give -> the witch's [Diplomat]-gated mediation (a renegotiated year of hearth-tending, banks blight_lifted) -> report -> completion, PLUS the shared post-conditions every path converges on: the village visual_states brighten, the charmed villager's echo retirement (talk_pool_stages swap), and the witch-cottage vendor unlock (a real buy).",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "riverfarm_talk_start"
+    ],
+    "skills": [],
+    "dialogue": [
+     "riverfarm_headman",
+     "riverfarm_witch"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "portals",
+     "quests"
+    ]
+   }
   },
   {
    "script": "riverfarm_skill",
    "seed": 9,
    "fixture": "riverfarm_skill_start",
-   "note": "8b Task R3 (issue #11) 'The Price of a Favor' SKILL path -- no combat: give -> the gauntlet in sequence (basic_cooking the offering -> [Light] the threshold candles -> [Observe] the true knot, the existing requires_skill/on_skill_use field-skill seam) -- the last step banks blight_lifted directly, no separate report needed -- then report -> completion."
+   "note": "8b Task R3 (issue #11) 'The Price of a Favor' SKILL path -- no combat: give -> the gauntlet in sequence (basic_cooking the offering -> [Light] the threshold candles -> [Observe] the true knot, the existing requires_skill/on_skill_use field-skill seam) -- the last step banks blight_lifted directly, no separate report needed -- then report -> completion.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "riverfarm_skill_start"
+    ],
+    "skills": [
+     "basic_cooking",
+     "light",
+     "observe"
+    ],
+    "dialogue": [
+     "riverfarm_headman"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "longhouse_walkthrough",
    "seed": 9,
    "fixture": "near_riverfarm",
-   "note": "Riverfarm depth: the longhouse's real interior -- longhouse_door round-trip (walked around the building's own footprint), the headman's-corner ledger prop, sleep-beat parity at the relocated riverfarm_guest_cot (same event stream + the flavor toast held verbatim from the old open-lawn cot)."
+   "note": "Riverfarm depth: the longhouse's real interior -- longhouse_door round-trip (walked around the building's own footprint), the headman's-corner ledger prop, sleep-beat parity at the relocated riverfarm_guest_cot (same event stream + the flavor toast held verbatim from the old open-lawn cot).",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "riverfarm_longhouse",
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "near_riverfarm"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "night_phase",
+     "portals"
+    ]
+   }
   },
   {
    "script": "olesm_chess_loop",
    "seed": 9,
    "fixture": "olesm_chess_pre",
-   "note": "Issue #25: Olesm's chess-match payoff -- the stage-3 hub option is visible but GREYED while 2g-short (gold-gate honesty, never a debt); a real Serve earns the shortfall; the honest counter-move beat (a wrong-move loop proven, then the correct move) banks chess_with_olesm + the +2g win side of the wager; the hub option retires for good (hide_when) and the shorter rematch talk_pool_stages line stands in its place after a sleep"
+   "note": "Issue #25: Olesm's chess-match payoff -- the stage-3 hub option is visible but GREYED while 2g-short (gold-gate honesty, never a debt); a real Serve earns the shortfall; the honest counter-move beat (a wrong-move loop proven, then the correct move) banks chess_with_olesm + the +2g win side of the wager; the hub option retires for good (hide_when) and the shorter rematch talk_pool_stages line stands in its place after a sleep",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [
+     "olesm_chess_pre"
+    ],
+    "skills": [],
+    "dialogue": [
+     "olesm_intro",
+     "patron_serving"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "input",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "invrisil_walkthrough",
    "seed": 9,
    "fixture": "near_invrisil",
-   "note": "8c Task C1 (issue #12): portal arrival (a new destination row, invrisil_attuned pre-banked in the fixture -- real play banks it via Eloise's post-Riverfarm stone purchase, riverfarm_talk's own canonical) -- the crowd (a pool-less extra's static dialogue line) + Coyle's pre-quest talk_pool -- the alleys' bent route with BOTH sneak legs (NEGATIVE: a real LOW-lethality fight resolves; POSITIVE: assert_event_count pins combat_started at exactly 1 for the whole run) -- the fixer Cups' rumor-by-the-cup hub (one real gold-gated purchase) -- THE GUEST COUCH sleep site (last beat, phase-advancing)"
+   "note": "8c Task C1 (issue #12): portal arrival (a new destination row, invrisil_attuned pre-banked in the fixture -- real play banks it via Eloise's post-Riverfarm stone purchase, riverfarm_talk's own canonical) -- the crowd (a pool-less extra's static dialogue line) + Coyle's pre-quest talk_pool -- the alleys' bent route with BOTH sneak legs (NEGATIVE: a real LOW-lethality fight resolves; POSITIVE: assert_event_count pins combat_started at exactly 1 for the whole run) -- the fixer Cups' rumor-by-the-cup hub (one real gold-gated purchase) -- THE GUEST COUCH sleep site (last beat, phase-advancing)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "brothers_parlor",
+     "inn",
+     "invrisil_boulevard",
+     "mercantile_alleys"
+    ],
+    "fixtures": [
+     "near_invrisil"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe",
+     "quick_movement",
+     "sneak"
+    ],
+    "dialogue": [
+     "invrisil_fixer"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "night_phase",
+     "portals"
+    ]
+   }
   },
   {
    "script": "invrisil_disagreement_stealth",
    "seed": 9,
    "fixture": "near_invrisil_stealth",
-   "note": "8c Task C3 (issue #13) 'A Gentleman's Disagreement' STEALTH/SKILL path -> EXPOSE fork: the counting_house_ledger prop's [Appraise Foe] beat (banks lifted_true_ledger) -- accuse Coyle with the ledger, corner him, EXPOSE (merchant_exposed + merchant_fate_decided, quest beat 1, no gold) -- report to Wilovan (brothers_job_done + cleared_brothers_name + the shared brothers_marker item/accomplishment, quest beat 2 + quest_completed) -- THE SAFE-PASSAGE REWARD proven (entity_removed on both alley footpads) -- zero combat the whole run"
+   "note": "8c Task C3 (issue #13) 'A Gentleman's Disagreement' STEALTH/SKILL path -> EXPOSE fork: the counting_house_ledger prop's [Appraise Foe] beat (banks lifted_true_ledger) -- accuse Coyle with the ledger, corner him, EXPOSE (merchant_exposed + merchant_fate_decided, quest beat 1, no gold) -- report to Wilovan (brothers_job_done + cleared_brothers_name + the shared brothers_marker item/accomplishment, quest beat 2 + quest_completed) -- THE SAFE-PASSAGE REWARD proven (entity_removed on both alley footpads) -- zero combat the whole run",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "brothers_parlor",
+     "invrisil_boulevard",
+     "mercantile_alleys"
+    ],
+    "fixtures": [
+     "near_invrisil_stealth"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [
+     "invrisil_merchant_prince",
+     "invrisil_wilovan"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "invrisil_disagreement_talk",
    "seed": 9,
    "fixture": "near_invrisil_talk",
-   "note": "8c Task C3 (issue #13) 'A Gentleman's Disagreement' TALK path -> EXTORT fork: Cups' testimony chain via the free Persuade branch (banks fixer_will_testify + persuaded_someone -> secured_testimony, C1's invrisil_fixer.json's first real coverage) -- accuse Coyle with the testimony, corner him, EXTORT (merchant_extorted + merchant_fate_decided + 40 gold, quest beat 1) -- report to Wilovan (quest beat 2 + quest_completed + the shared brothers_marker + safe-passage reward) -- proves the fork's OTHER ending + the economy-sink gold effect"
+   "note": "8c Task C3 (issue #13) 'A Gentleman's Disagreement' TALK path -> EXTORT fork: Cups' testimony chain via the free Persuade branch (banks fixer_will_testify + persuaded_someone -> secured_testimony, C1's invrisil_fixer.json's first real coverage) -- accuse Coyle with the testimony, corner him, EXTORT (merchant_extorted + merchant_fate_decided + 40 gold, quest beat 1) -- report to Wilovan (quest beat 2 + quest_completed + the shared brothers_marker + safe-passage reward) -- proves the fork's OTHER ending + the economy-sink gold effect",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "brothers_parlor",
+     "invrisil_boulevard",
+     "mercantile_alleys"
+    ],
+    "fixtures": [
+     "near_invrisil_talk"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "invrisil_fixer",
+     "invrisil_merchant_prince",
+     "invrisil_wilovan"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "invrisil_disagreement_fight",
    "seed": 9,
    "fixture": "near_invrisil_fight",
-   "note": "8c Task C3 (issue #13) 'A Gentleman's Disagreement' FIGHT path -> EXPOSE fork: the come-along ask LIVE (Wilovan's hub -> ways -> fists_door -> 'Come with me.' banks wilovan_will_fight, this lane's own new ally-gate wiring) -- win the hired_blades warehouse fight with Wilovan fielded as the gated ally (banks forced_confession) -- confront Coyle via the post-fight hub entry, proving `cornered`'s own forced_confession 'beaten register' text_variant -- EXPOSE, report, quest_completed + safe-passage reward -- the only one of the 3 scripts fielding a real combat ally"
+   "note": "8c Task C3 (issue #13) 'A Gentleman's Disagreement' FIGHT path -> EXPOSE fork: the come-along ask LIVE (Wilovan's hub -> ways -> fists_door -> 'Come with me.' banks wilovan_will_fight, this lane's own new ally-gate wiring) -- win the hired_blades warehouse fight with Wilovan fielded as the gated ally (banks forced_confession) -- confront Coyle via the post-fight hub entry, proving `cornered`'s own forced_confession 'beaten register' text_variant -- EXPOSE, report, quest_completed + safe-passage reward -- the only one of the 3 scripts fielding a real combat ally",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "brothers_parlor",
+     "invrisil_boulevard",
+     "mercantile_alleys"
+    ],
+    "fixtures": [
+     "near_invrisil_fight"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "invrisil_merchant_prince",
+     "invrisil_wilovan"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "invisibility_combat_loop",
    "seed": 9,
    "fixture": "near_invisibility_combat",
-   "note": "Issue #46: [Invisibility]'s combat read -- self-cast untargetable status live, solo pc vs goblin_raider/goblin_shaman (no ally, exactly one valid target): enemy turn passes without targeting the invisible pc, pc's own Attack breaks it, the next enemy turn can target pc again"
+   "note": "Issue #46: [Invisibility]'s combat read -- self-cast untargetable status live, solo pc vs goblin_raider/goblin_shaman (no ally, exactly one valid target): enemy turn passes without targeting the invisible pc, pc's own Attack breaks it, the next enemy turn can target pc again",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_invisibility_combat"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "invisibility"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "flame_pillar_loop",
    "seed": 9,
    "fixture": "near_flame_pillar",
-   "note": "GH#71: [Flame Pillar] blast_damage effect, live -- a single cast hits an enemy adjacent to a second enemy AND the caster's own cell (friendly fire across enemy+enemy+self), walls excluded from the blast radius (icy_floor's own shape, reused), no terrain/status write"
+   "note": "GH#71: [Flame Pillar] blast_damage effect, live -- a single cast hits an enemy adjacent to a second enemy AND the caster's own cell (friendly fire across enemy+enemy+self), walls excluded from the blast radius (icy_floor's own shape, reused), no terrain/status write",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_flame_pillar"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "flame_pillar"
+    ],
+    "dialogue": [
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "dungeon_peek",
    "seed": 9,
    "fixture": "cisterns_scout_start",
-   "note": "8d Phase B/C1 (issue #14): teleport-based canonical for dungeon_approach + trapped_halls, independent of the quest -- bounds lap, gallery-seal anchor, dormant-guardian foreshadow, the new door pair, all 4 trap classes (pressure plate trigger, dart-slit nudge + the requires_item gate refusing without trap_kit, illusory-floor block+reveal, snare/vault now REAL kind:encounter entities correctly gate-closed at this fixture's unmet state), round-trip exit, whole-run combat_started absence"
+   "note": "8d Phase B/C1 (issue #14): teleport-based canonical for dungeon_approach + trapped_halls, independent of the quest -- bounds lap, gallery-seal anchor, dormant-guardian foreshadow, the new door pair, all 4 trap classes (pressure plate trigger, dart-slit nudge + the requires_item gate refusing without trap_kit, illusory-floor block+reveal, snare/vault now REAL kind:encounter entities correctly gate-closed at this fixture's unmet state), round-trip exit, whole-run combat_started absence",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "dungeon_approach",
+     "street",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "cisterns_scout_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "archer_earn_loop",
    "seed": 9,
    "fixture": "near_barracks",
-   "note": "GH#70 [Archer] earn: bow bought+equipped -> archery_butt practice (ranged_hit x3, no combat) -> sleep -> class_gained -> a won ranged fight proving Attack resolves at distance >1 (the range+LoS seam, live)"
+   "note": "GH#70 [Archer] earn: bow bought+equipped -> archery_butt practice (ranged_hit x3, no combat) -> sleep -> class_gained -> a won ranged fight proving Attack resolves at distance >1 (the range+LoS seam, live)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "barracks",
+     "floodplains",
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [
+     "near_barracks"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "peddler_stall",
+     "relc_intro"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "settings_loop",
    "seed": null,
-   "note": "issue #77: the settings + accessibility surface -- bus-routing fix (UI sends to SFX, provable via AudioServer.get_bus_send), a real SFX slider move asserted via AudioServer.get_bus_volume_db, fullscreen toggle, text-scale step + a copy-fit-sensitive TOAST re-render post-scale, reduce_motion surviving a full Save->Load UI-layer rebuild, the Controls reference sub-page, Replay Hints re-arming the two one-shot session hints, settings.cfg written -- opened from BOTH the title screen and the in-game pause menu"
+   "note": "issue #77: the settings + accessibility surface -- bus-routing fix (UI sends to SFX, provable via AudioServer.get_bus_send), a real SFX slider move asserted via AudioServer.get_bus_volume_db, fullscreen toggle, text-scale step + a copy-fit-sensitive TOAST re-render post-scale, reduce_motion surviving a full Save->Load UI-layer rebuild, the Controls reference sub-page, Replay Hints re-arming the two one-shot session hints, settings.cfg written -- opened from BOTH the title screen and the in-game pause menu",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "audio",
+     "input",
+     "save",
+     "settings"
+    ]
+   }
   },
   {
    "script": "delve_fight",
    "seed": 1,
    "fixture": "delve_fight_start",
-   "note": "8d C1/C4/D1 (issue #14) 'What the Seal Kept' FULL CHAIN: accept the stipend at Olesm -> the reopened gallery (B3 door_when live) -> recruit Ceria/Yvlon/Ksmvr (horns_party_formed) -> FIGHT the promoted snare (trapped_halls_snare arena, solo T4) -> the vault boss (4-ally party, windup_declared live, GATED PARTY_CELLS band) -> the FIND beat (seal_kept_door's gated variant) -> report, quest_completed, 15g paid"
+   "note": "8d C1/C4/D1 (issue #14) 'What the Seal Kept' FULL CHAIN: accept the stipend at Olesm -> the reopened gallery (B3 door_when live) -> recruit Ceria/Yvlon/Ksmvr (horns_party_formed) -> FIGHT the promoted snare (trapped_halls_snare arena, solo T4) -> the vault boss (4-ally party, windup_declared live, GATED PARTY_CELLS band) -> the FIND beat (seal_kept_door's gated variant) -> report, quest_completed, 15g paid",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels",
+     "dungeon_approach",
+     "street",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "delve_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "audio",
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "delve_skill",
    "seed": 1,
    "fixture": "delve_skill_start",
-   "note": "8d C1/C4 (issue #14) SKILL route: dart_slit_a's disarm now gates on carrying trap_kit (requires_item, item_hint_toast when unheld) -- the real hotbar disarm consumes it (item_lost) and banks halls_cleared directly; proves the vault's encounter_when gate flips open (combat_started fires) without a second full boss fight"
+   "note": "8d C1/C4 (issue #14) SKILL route: dart_slit_a's disarm now gates on carrying trap_kit (requires_item, item_hint_toast when unheld) -- the real hotbar disarm consumes it (item_lost) and banks halls_cleared directly; proves the vault's encounter_when gate flips open (combat_started fires) without a second full boss fight",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "delve_skill_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration",
+     "traps"
+    ]
+   }
   },
   {
    "script": "delve_talk",
    "seed": 1,
    "fixture": "delve_talk_start",
-   "note": "8d C4 (issue #14) TALK route: talk Ksmvr through the trapped_halls pressure plates (ksmvr_plates.json, gated on horns_party_formed) -- banks guided_ksmvr_through_plates (the real cost, vault_boss_slot's ally_hp_penalty reads it) and halls_cleared directly; proves the vault's encounter_when gate flips open without a second full boss fight"
+   "note": "8d C4 (issue #14) TALK route: talk Ksmvr through the trapped_halls pressure plates (ksmvr_plates.json, gated on horns_party_formed) -- banks guided_ksmvr_through_plates (the real cost, vault_boss_slot's ally_hp_penalty reads it) and halls_cleared directly; proves the vault's encounter_when gate flips open without a second full boss fight",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "delve_talk_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "horns_residence",
    "seed": 1,
    "fixture": "horns_residence_start",
-   "note": "8d D2 (issue #14/#15): the Horns of Hammerad's post-delve inn residence -- pool presences only v1 (Social II talk_pool_stages explicitly deferred). Walks to Ceria (common-room table)/Yvlon (by the hearth)/Ksmvr (beside the pantry door), pins one talk_pool line each via ui_dialogue_rendered, and proves entity presence via ui_entities_rendered's inn sprite count (16 -> 19); inn_walkthrough's own unmodified pre-quest run is this canonical's negative half"
+   "note": "8d D2 (issue #14/#15): the Horns of Hammerad's post-delve inn residence -- pool presences only v1 (Social II talk_pool_stages explicitly deferred). Walks to Ceria (common-room table)/Yvlon (by the hearth)/Ksmvr (beside the pantry door), pins one talk_pool line each via ui_dialogue_rendered, and proves entity presence via ui_entities_rendered's inn sprite count (16 -> 19); inn_walkthrough's own unmodified pre-quest run is this canonical's negative half",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "horns_residence_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "input"
+    ]
+   }
   },
   {
    "script": "journal_history",
    "seed": 9,
    "fixture": "journal_history_start",
-   "note": "Issue #79 (journal & progression communication wave): the journal's Completed section (chosen-path history line), Postings section detail view (accepted posting/slip's own authored copy text), and per-class aspiration identity line, all asserted structurally off one ui_journal_shown open; a trailing cursor move + toggle proves the pre-existing skill-row mechanism still works with the new sections rendered above it"
+   "note": "Issue #79 (journal & progression communication wave): the journal's Completed section (chosen-path history line), Postings section detail view (accepted posting/slip's own authored copy text), and per-class aspiration identity line, all asserted structurally off one ui_journal_shown open; a trailing cursor move + toggle proves the pre-existing skill-row mechanism still works with the new sections rendered above it",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "journal_history_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_bolt"
+    ],
+    "dialogue": [],
+    "systems": [
+     "boards",
+     "combat",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "missing_recruit_loop",
    "seed": 9,
    "fixture": "near_missing_recruit",
-   "note": "Issue #81 (exploration & optional content): 'The Missing Recruit' end to end, POSTING-SEEDED -- a real guild_board rumor read banks heard_about_missing_recruit, Dresk's gated ask option starts the quest, recruit_pell (present_when-gated, structurally absent until the quest starts) is found in the sewers and completes beat 1, the journal's new Lore section picks up note_sewer_surveyor, and reporting back to Dresk completes beat 2 + pays 4 gold"
+   "note": "Issue #81 (exploration & optional content): 'The Missing Recruit' end to end, POSTING-SEEDED -- a real guild_board rumor read banks heard_about_missing_recruit, Dresk's gated ask option starts the quest, recruit_pell (present_when-gated, structurally absent until the quest starts) is found in the sewers and completes beat 1, the journal's new Lore section picks up note_sewer_surveyor, and reporting back to Dresk completes beat 2 + pays 4 gold",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "barracks",
+     "guild",
+     "sewers",
+     "street"
+    ],
+    "fixtures": [
+     "near_missing_recruit"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "dresk_recruit",
+     "recruit_pell"
+    ],
+    "systems": [
+     "boards",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "renns_warhammer_loop",
    "seed": 9,
    "fixture": "board_loop_start",
-   "note": "Issue #81: 'Renn's Old Warhammer' end to end, POSTING-SEEDED, SAME-MAP shape (contrast missing_recruit_loop's cross-map one) -- the same board rumor read banks heard_about_lost_hammer, Renn's gated ask option starts the quest, renns_gear_stash (an always-present container) completes beat 1, and the item-gated turn-in option completes beat 2 + pays 3 gold (the lore-note thread's third find, note_old_dread, was relocated to the barracks post-dynamism-check -- barracks_walkthrough.json carries it)"
+   "note": "Issue #81: 'Renn's Old Warhammer' end to end, POSTING-SEEDED, SAME-MAP shape (contrast missing_recruit_loop's cross-map one) -- the same board rumor read banks heard_about_lost_hammer, Renn's gated ask option starts the quest, renns_gear_stash (an always-present container) completes beat 1, and the item-gated turn-in option completes beat 2 + pays 3 gold (the lore-note thread's third find, note_old_dread, was relocated to the barracks post-dynamism-check -- barracks_walkthrough.json carries it)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild"
+    ],
+    "fixtures": [
+     "board_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "renn_hammer"
+    ],
+    "systems": [
+     "boards",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
   },
   {
    "script": "crab_cull_loop",
    "seed": 9,
    "fixture": "crab_cull_loop_start",
-   "note": "Issue #24: bounty_crab_cull end to end -- accept at Selys's desk (guild), the crab_nest confirm conversation (armor-telegraph node pinned verbatim, [Back away.] negative proves no combat, then [Strike first.]), win the rock_crab_nest fight (floodplains, respawns:true) TWICE with a real sleep between them (delta-since-accept >= 2), turn in for the exact 5 gold payout"
+   "note": "Issue #24: bounty_crab_cull end to end -- accept at Selys's desk (guild), the crab_nest confirm conversation (armor-telegraph node pinned verbatim, [Back away.] negative proves no combat, then [Strike first.]), win the rock_crab_nest fight (floodplains, respawns:true) TWICE with a real sleep between them (delta-since-accept >= 2), turn in for the exact 5 gold payout",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "guild",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "crab_cull_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "crab_nest",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
   },
   {
    "script": "pallass_peek",
    "seed": 9,
-   "note": "8e Phase B+reconciliation (issue #16): teleport-based canonical for pallass_market/pallass_forge, the dungeon_peek precedent -- no live route exists at default boot (portals row gates on pallass_attuned); band-hardened bounds laps (up-bump y1 + down-bump y10, both maps), THE PERMIT OFFICE (forge_permit_clerk + the moved Grimalkin, C's graphs opened/closed at conversation-id level), the stallkeeper + checkpoint-clerk conversations, the elevator's locked read on both sides, the landmark props, the molten seam bump, whole-run combat_started absence"
+   "note": "8e Phase B+reconciliation (issue #16): teleport-based canonical for pallass_market/pallass_forge, the dungeon_peek precedent -- no live route exists at default boot (portals row gates on pallass_attuned); band-hardened bounds laps (up-bump y1 + down-bump y10, both maps), THE PERMIT OFFICE (forge_permit_clerk + the moved Grimalkin, C's graphs opened/closed at conversation-id level), the stallkeeper + checkpoint-clerk conversations, the elevator's locked read on both sides, the landmark props, the molten seam bump, whole-run combat_started absence",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_forge",
+     "pallass_market"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "pallass_market_local"
+    ],
+    "systems": [
+     "combat",
+     "dialogue"
+    ]
+   }
   },
   {
    "script": "pallass_walkthrough",
    "seed": 9,
    "fixture": "near_pallass",
-   "note": "8e E1 (issue #16, the milestone's exit-criteria canonical): the LIVE end-to-end 'Papers for Pallass' + 'Clearance for the Forge Tier' route -- Selys sponsors (10g) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g) -> real travel to pallass_market's reconciled arrival cell (4,7) -- the negative lift-locked read pre-permit -- the checkpoint clerk's 2g stamp + the human race-variant read, completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file, Grimalkin's 8g exam voiced verbatim, 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT open, a real walk across the forge tier to grimalkin_station and the round trip back down; gold ledger exact at every spend (60->50->32->30->25->17->14); zero combat whole run"
+   "note": "8e E1 (issue #16, the milestone's exit-criteria canonical): the LIVE end-to-end 'Papers for Pallass' + 'Clearance for the Forge Tier' route -- Selys sponsors (10g) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g) -> real travel to pallass_market's reconciled arrival cell (4,7) -- the negative lift-locked read pre-permit -- the checkpoint clerk's 2g stamp + the human race-variant read, completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file, Grimalkin's 8g exam voiced verbatim, 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT open, a real walk across the forge tier to grimalkin_station and the round trip back down; gold ledger exact at every spend (60->50->32->30->25->17->14); zero combat whole run",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild",
+     "inn",
+     "pallass_forge",
+     "pallass_market",
+     "street"
+    ],
+    "fixtures": [
+     "near_pallass"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "pallass_forge_clerk",
+     "pallass_grimalkin",
+     "pallass_market_clerk",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "portals",
+     "quests"
+    ]
+   }
   },
   {
    "script": "pallass_race_peek",
    "seed": 9,
    "fixture": "near_pallass_drake",
-   "note": "8e E2 optional (debt-sweep item 5, Drake-line live coverage): teleport-based canonical pinning the DRAKE half of tier_clerk_market/market_stallkeeper's requires:{race:drake} text_variants live (pallass_walkthrough already proves the human half) -- the unit test proves the requires:{race} mechanism, this proves the shipped graphs render it. Deliberately does not bank pallass_entry_stamped (out of scope, pallass_walkthrough's own job); zero combat"
+   "note": "8e E2 optional (debt-sweep item 5, Drake-line live coverage): teleport-based canonical pinning the DRAKE half of tier_clerk_market/market_stallkeeper's requires:{race:drake} text_variants live (pallass_walkthrough already proves the human half) -- the unit test proves the requires:{race} mechanism, this proves the shipped graphs render it. Deliberately does not bank pallass_entry_stamped (out of scope, pallass_walkthrough's own job); zero combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_market"
+    ],
+    "fixtures": [
+     "near_pallass_drake"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_market_clerk",
+     "pallass_market_local"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "goblin_night_patrol_loop",
    "seed": 9,
    "fixture": "goblin_night_patrol_start",
-   "note": "Issue #80 (world reactivity wave): floodplains' own night-only encounter slot, the river_wolf_pack precedent -- fixture starts past night_at, one real move into trigger_radius 1 fires start_combat live (goblin_raider/goblin_shaman, relc fielded), win banks won_combat"
+   "note": "Issue #80 (world reactivity wave): floodplains' own night-only encounter slot, the river_wolf_pack precedent -- fixture starts past night_at, one real move into trigger_radius 1 fires start_combat live (goblin_raider/goblin_shaman, relc fielded), win banks won_combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "goblin_night_patrol_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "boulevard_night_footpads_loop",
    "seed": 9,
    "fixture": "boulevard_night_footpads_start",
-   "note": "Issue #80 (world reactivity wave): Invrisil boulevard's own night-only encounter slot, the river_wolf_pack precedent's third application -- fixture starts past night_at (T3 warrior10 gear, R3 2026-07-12), one real move into trigger_radius 1 fires start_combat live (footpad_lookout/footpad_bruiser, solo), win banks won_combat"
+   "note": "Issue #80 (world reactivity wave): Invrisil boulevard's own night-only encounter slot, the river_wolf_pack precedent's third application -- fixture starts past night_at (T3 warrior10 gear, R3 2026-07-12), one real move into trigger_radius 1 fires start_combat live (footpad_lookout/footpad_bruiser, solo), win banks won_combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "invrisil_boulevard"
+    ],
+    "fixtures": [
+     "boulevard_night_footpads_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "trader_earn_loop",
    "seed": 9,
    "fixture": "near_trader",
-   "note": "Class-foundation pass R5 (issue #98, 2026-07-12): [Trader]'s full earn-to-kit loop -- a real sale at the Pallass market_stallkeeper banks the 5th deliberate_commerce (a sell pinned, exact gold delta) -> sleep -> class_gained{trader} -> a [Bargain]-discounted buy at Eloise's (the game's only haggle:true node -- baked prices render REWRITTEN to the discounted figures and the no-baked-price option appends/charges the discounted 6 gold, not the base 7, pinned exact; display==charge) -> the Pallass tier_clerk_market's own haggle-refusal line (pinned). Zero combat"
+   "note": "Class-foundation pass R5 (issue #98, 2026-07-12): [Trader]'s full earn-to-kit loop -- a real sale at the Pallass market_stallkeeper banks the 5th deliberate_commerce (a sell pinned, exact gold delta) -> sleep -> class_gained{trader} -> a [Bargain]-discounted buy at Eloise's (the game's only haggle:true node -- baked prices render REWRITTEN to the discounted figures and the no-baked-price option appends/charges the discounted 6 gold, not the base 7, pinned exact; display==charge) -> the Pallass tier_clerk_market's own haggle-refusal line (pinned). Zero combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "pallass_market",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "near_trader"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_market_clerk",
+     "pallass_market_local",
+     "riverfarm_witch"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
   },
   {
    "script": "trap_canonical",
    "seed": 9,
    "fixture": "near_sewers_trap",
-   "note": "R6 (#95, class-foundation pass): sewer_nest_snag trap proof -- observe tell, the avoidable-path counterplay, the LIVE observe-fallback disarm leg banking shared trap_disarmed + 1g salvage (disarm_trap applied at merge: requires_skill disarm_trap on all six placements, non-Rogues route around; the dungeon's observe+kit path stays its own)"
+   "note": "R6 (#95, class-foundation pass): sewer_nest_snag trap proof -- observe tell, the avoidable-path counterplay, the LIVE observe-fallback disarm leg banking shared trap_disarmed + 1g salvage (disarm_trap applied at merge: requires_skill disarm_trap on all six placements, non-Rogues route around; the dungeon's observe+kit path stays its own)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "sewers"
+    ],
+    "fixtures": [
+     "near_sewers_trap"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "disarm_trap"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration",
+     "traps"
+    ]
+   }
   }
  ]
 }

@@ -49,6 +49,12 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 
 	# Balance harness — 200 seeded AI-vs-AI fights; THE authority on combat data tuning
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
+	# Sharded (ARCH-1): partitions cells across N parallel godot processes and
+	# diffs each shard vs a baseline git ref (formalizes the manual git-stash
+	# byte-identity method). WI_CELL_RANGE=LO:HI / WI_CELL_COUNT_ONLY=1 are the
+	# underlying env-var hooks sim_combat_batch.gd itself honors (both unset =
+	# unchanged single-process behavior, proven byte-identical).
+	wandering_inn_game/scripts/harness_shard_diff.sh --shards 4 --baseline-ref main
 
 	# QA scripts isolate user:// by default via HOME=.godot_home/qa-<script>-<pid>.
 	# Use --user-dir DIR after the mode to choose a stable isolated HOME explicitly.
@@ -59,7 +65,16 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 
 	# QA playtest scripts (THE verification tool — prefer this over manual reasoning)
 	# Full canonical sweep in one command (what CI runs — .github/workflows/ci.yml):
-	wandering_inn_game/qa/ci_sweep.sh                           # all 49 at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
+	wandering_inn_game/qa/ci_sweep.sh                           # all at pinned seeds + grep discipline; --only a,b,c to restrict; list MIRRORS the seed table below — keep in sync
+	# QA tiering (ARCH-1, docs/superpowers/specs/2026-07-12-full-game-architecture.md
+	# §2.3): qa/manifest.json's per-script "tiers" (smoke/full, smoke subset of
+	# full, drift-checked every invocation) and "surfaces" (maps/fixtures/
+	# skills/systems, GENERATED ONLY by scripts/derive_qa_surfaces.py — never
+	# hand-edit, drift-checked every invocation via --check).
+	wandering_inn_game/qa/ci_sweep.sh --tier smoke               # load_gate + one canonical per subsystem, <3min, runs on every CI push
+	wandering_inn_game/qa/ci_sweep.sh --touching <path>[,<path>] # maps changed paths -> surface tags -> the crossing canonicals (lane re-gates)
+	wandering_inn_game/scripts/derive_qa_surfaces.py             # regenerate qa/manifest.json's surfaces after adding/editing a QA script or fixture
+	wandering_inn_game/scripts/derive_qa_surfaces.py --check      # verify surfaces aren't stale (what the drift check runs)
 	wandering_inn_game/qa/run_qa.sh load_gate headless          # loads every .gd/.tscn/.tres; catches parse/compile errors. NATIVE-ONLY (see below)
 	wandering_inn_game/qa/run_qa.sh inn_walkthrough headless   # full inn journey, no screenshots
 	wandering_inn_game/qa/run_qa.sh inn_walkthrough windowed   # same + screenshots (a window opens briefly)

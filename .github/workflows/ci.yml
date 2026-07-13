@@ -5,8 +5,9 @@
 # build, so it is safe to run on fork PRs. All deploy/secret work lives in
 # release.yml (M-RELEASE Task R3), which is tag-triggered only.
 #
-# The QA suite IS the CI: a smoke boot, the unit suites, the full canonical
-# QA sweep (qa/ci_sweep.sh), and a web-parity run.
+# The QA suite IS the CI: a smoke boot, the unit suites, the smoke-tier QA
+# sweep (always on), the full canonical QA sweep (qa/ci_sweep.sh, PR/[ci-
+# full]/nightly), and a web-parity run.
 #
 # Engine integrity: pinned by exact release URL + verified at run time
 # against the official SHA512-SUMS.txt from the SAME release tag — no
@@ -161,6 +162,41 @@ jobs:
             echo "::error::sim_combat_batch tripped the error/warning grep"; exit 1
           fi
           exit "${rc:-0}"
+
+  # ------------------------------------------------------------- sweep-smoke
+  # Always-on, every push AND every PR (no [ci-full]/schedule gate — this is
+  # the point). Closes a real incident: a broken qa/manifest.json rode two
+  # pushes to green CI because neither smoke nor unit parses the manifest.
+  # ~13 scripts (load_gate + one canonical per subsystem), <3 min budget —
+  # ARCH-1 QA-tiering task (docs/superpowers/specs/2026-07-12-full-game-
+  # architecture.md §2.3).
+  sweep-smoke:
+    name: Smoke QA sweep
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pinned Godot 4.7
+        run: |
+          set -euo pipefail
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -o SHA512-SUMS.txt "$GODOT_SUMS_URL"
+          grep "  ${GODOT_BIN}.zip$" SHA512-SUMS.txt | sed "s#  ${GODOT_BIN}.zip#  godot.zip#" | sha512sum -c -
+          unzip -q godot.zip
+          sudo install -m 0755 "$GODOT_BIN" /usr/local/bin/godot
+          godot --version
+
+      - name: Import pass
+        run: |
+          set -euo pipefail
+          perl -e 'alarm 300; exec @ARGV' \
+            godot --headless --path wandering_inn_game --import
+
+      - name: Smoke canonical sweep (qa/ci_sweep.sh --tier smoke)
+        run: |
+          set -euo pipefail
+          bash wandering_inn_game/qa/ci_sweep.sh --tier smoke
 
   # ------------------------------------------------------------------ sweep
   sweep:
