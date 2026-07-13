@@ -67,7 +67,7 @@
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "browsed_posted_price_stall" }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "05_market_stall" },
 
-  { "_comment": "== the stallkeeper (15,5), behind stall_b -- hosts C's pallass_market_local graph (the race-variant walk-on). Approach from (14,5): the sideways bump faces her, then interact opens the conversation; its hub has exactly one option at any state.", "action": "teleport", "map": "pallass_market", "cell": [14, 5] },
+  { "_comment": "== the stallkeeper (15,5), behind stall_b -- hosts C's pallass_market_local graph (the race-variant walk-on). Approach from (14,5): the sideways bump faces her, then interact opens the conversation. Class-foundation pass R5 (2026-07-12) added the sell surface as row 0 ('Anything on you worth my coin?', trader_earn_loop's own job) -- row 1 ('Morning.') is now the plain dismissal this peek wants, unchanged.", "action": "teleport", "map": "pallass_market", "cell": [14, 5] },
   { "action": "wait_frames", "frames": 10 },
   { "action": "move", "direction": "right", "steps": 1 },
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [15, 5] } },
@@ -76,6 +76,7 @@
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pallass_market_local", "entity": "market_stallkeeper" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "action": "screenshot", "name": "06_market_stallkeeper" },
+  { "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
 

@@ -116,19 +116,33 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 		# resolver, never the enemy-gated match.
 		#
 		# SAME plumbing, same
-		# reasoning -- a heal cast needs no enemy either. SELF-ONLY tonight
-		# (skill_effects.gd's `_resolve_heal` refuses any target_id other
-		# than the actor's own; see its doc comment for the ally-targeting
-		# follow-up this narrower gate defers) -- widen both together when
-		# ally-targeting lands.
+		# reasoning -- a heal cast needs no enemy either. SELF-ONLY by
+		# default (skill_effects.gd's `_resolve_heal` refuses any target_id
+		# other than the actor's own UNLESS `effect.ally_target` is set) --
+		# second_wind (no `ally_target` key) stays exactly this self-only
+		# branch, byte-identical.
 		# [Invisibility]'s combat read is
 		# ALSO self-only (`_resolve_invisibility` never even looks at
 		# target_id -- it is dispatched before resolve_active's target
 		# lookup at all, same as move_pool_bonus), same plumbing again.
+		var heal_ally_target := effect_type == "heal" and bool(skill_effect.get("ally_target", false))
 		var is_self_cast := (effect_type == "move_pool_bonus" and int(skill.get("ap_cost", 0)) > 0) \
-				or effect_type == "heal" or effect_type == "invisibility"
+				or (effect_type == "heal" and not heal_ally_target) or effect_type == "invisibility"
 		if not _line_mode and is_self_cast:
 			_targets = [me]
+			_target_index = 0
+			_emit_targeting_shown(mode)
+			return state()
+		# Class-foundation pass R1 (2026-07-12), [Soothing Presence]:
+		# `effect.ally_target` widens the candidate list to the actor's OWN
+		# id plus every living ally (`alive_allies_of`, the `alive_enemies_
+		# of` mirror) -- Tab/cycle and click-to-select reuse the SAME
+		# `_targets`/`confirm()` plumbing as the enemy-cycling branch below,
+		# no new targeting mode. `me` is listed FIRST so a fresh cast
+		# defaults to self (matching the self-only skills' own default)
+		# while still letting the player cycle onto a hurt ally.
+		if not _line_mode and heal_ally_target:
+			_targets = [me] + _view.alive_allies_of(me)
 			_target_index = 0
 			_emit_targeting_shown(mode)
 			return state()

@@ -84,6 +84,18 @@ const WEAPON := "weapon"
 ## every skill without a windup (defaults to 3 where read, per that call
 ## site's own doc comment).
 const WINDUP_CADENCE := "windup_cadence"
+## Class-foundation pass R1 (2026-07-12), [Sudden Strike]'s ONCE-per-fight
+## gate. Checked in `WICombat.use_skill` against the ALREADY-EXISTING
+## `used_skills_tally` per-actor/per-fight set (`_mark_skill_used`, populated
+## by every skill's own `spend_skill_costs` call -- see that var's doc
+## comment: it resets every fight by construction, journal_skills' lifetime
+## reveal set lives on WIGame instead, merged in at `resolve_combat`). Reused
+## state, not new sim ground: a refused repeat cast costs neither AP nor MP
+## (checked before the affordability gates, matching the file's existing "a
+## refused cast costs nothing" contract). Absent (false) on every
+## pre-existing skill -- byte-identical for everything that isn't
+## `sudden_strike`.
+const ONCE_PER_FIGHT := "once_per_fight"
 
 # --- Effect record ---
 const TYPE := "type"

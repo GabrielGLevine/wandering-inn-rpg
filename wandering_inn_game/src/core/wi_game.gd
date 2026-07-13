@@ -958,7 +958,22 @@ func interact() -> Dictionary:
 				# is a renewable daily wage, matching patron_serving.json's
 				# `served_customer` Serve wage, not a one-time discovery).
 				if int(resolved.get("gold", 0)) != 0:
-					_apply_gold_effect(int(resolved["gold"]), String(target[WIKeys.ID]))
+					var wage := int(resolved["gold"])
+					# [Perfect Hospitality] (Innkeeper consolidation,
+					# class-foundation pass R4, 2026-07-12): the smallest honest
+					# hook into the inn's own wage economy -- scoped to the
+					# SAME `once_per_waking` renewable-wage props this branch
+					# already dedups above (serving_tray today; any future
+					# once_per_waking wage prop gets the same bump for free),
+					# never a one-shot discovery prop like frozen_cache (which
+					# carries no `once_per_waking` key and never reaches this
+					# gate). +1 gold per renewable wage tap, reusing the SAME
+					# `_apply_gold_effect` router -- no new economy mechanism.
+					# Absent the skill (every PC without [Perfect Hospitality]),
+					# byte-identical.
+					if bool(target.get("once_per_waking", false)) and known_skills().has("perfect_hospitality"):
+						wage += 1
+					_apply_gold_effect(wage, String(target[WIKeys.ID]))
 				return {"accomplishment": accomplishment_id}
 			# RULING (2026-07-10, repeals the interact/hotbar byte-parity
 			# contract): generic interact NEVER auto-casts a prop's required
@@ -1306,6 +1321,15 @@ func spend_gold(amount: int, source: String) -> bool:
 ## guarantees the spend can't refuse while the item is still granted.
 func _apply_gold_effect(amount: int, source: String) -> void:
 	gold = _economy.apply_gold_effect(gold, amount, source)
+	# [Trader]'s earn axis (class-foundation pass R5, 2026-07-12): a genuine
+	# shop purchase >= 5g banks deliberate_commerce -- the third of three
+	# sanctioned sources (alongside a real sale and a completed delivery
+	# turn-in). Scoped to SPENDS (amount < 0) of at least 5 gold, so a 1-2g
+	# rumor buy (invrisil_fixer.json) never banks it, and a POSITIVE gold
+	# effect (a bounty/quest payout riding this SAME dialogue-effect arm)
+	# never does either -- only a real, deliberate purchase counts.
+	if amount <= -5:
+		record_accomplishment("deliberate_commerce", 1)
 
 
 ## True when every accomplishment threshold in a `door_when`
@@ -1640,6 +1664,7 @@ func dialogue_choose(index: int) -> bool:
 	var pending_combat := ""
 	var pending_board_action := ""
 	var pending_travel := ""
+	var pending_sell_vendor := ""
 	for effect: Dictionary in result["effects"]:
 		if effect.has("accomplishment"):
 			record_accomplishment(String(effect["accomplishment"]))
@@ -1755,12 +1780,20 @@ func dialogue_choose(index: int) -> bool:
 			# swap shape as open_board_turnin above.
 			pending_board_action = "delivery_turnin"
 		elif effect.has("open_sell_picker"):
-			# Fired from Krshia's static hub option (krshia_crate.json,
-			# "I've a few things I don't need. Buying?"). Same deferred-swap
-			# shape as open_board_picker above -- the hub option always ends
-			# its own conversation first, so the swap to the code-built sell
-			# graph never collides with walker.advance below.
+			# Fired from a vendor's static hub option (krshia_crate.json's
+			# "I've a few things I don't need. Buying?" and, class-foundation
+			# pass R5's generalization, riverfarm_witch.json's/
+			# pallass_market_local.json's own sell options). Same
+			# deferred-swap shape as open_board_picker above -- the hub
+			# option always ends its own conversation first, so the swap to
+			# the code-built sell graph never collides with walker.advance
+			# below. The effect's VALUE is now the vendor id (was a bare
+			# `true` when Krshia was the only vendor) -- shop.gd's VOICES
+			# table selects which voice renders; an absent/empty value falls
+			# back to "krshia" (WIShop.build_sell_graph's own default),
+			# byte-identical for the one pre-existing caller.
 			pending_board_action = "sell_picker"
+			pending_sell_vendor = String(effect["open_sell_picker"]) if effect["open_sell_picker"] is String else "krshia"
 	if not bool(result["ended"]):
 		walker.set_ctx(_build_dialogue_ctx())
 		walker.advance(String(result["next"]))
@@ -1778,7 +1811,7 @@ func dialogue_choose(index: int) -> bool:
 	elif pending_board_action == "delivery_turnin":
 		_open_delivery_turnin_dialogue()
 	elif pending_board_action == "sell_picker":
-		_open_sell_dialogue()
+		_open_sell_dialogue(pending_sell_vendor)
 	if pending_travel != "":
 		_travel_to_portal(pending_travel)
 	return true
@@ -2101,6 +2134,11 @@ func turn_in_delivery() -> bool:
 	var id := accepted_delivery_id
 	earn_gold(int(delivery.get("gold", 0)), "delivery_%s" % id)
 	record_accomplishment("completed_delivery_%s" % id)
+	# [Trader]'s earn axis (class-foundation pass R5, 2026-07-12): a
+	# completed delivery turn-in is one of the three sanctioned
+	# deliberate_commerce sources (alongside a real sale and a >=5g shop
+	# purchase) -- a real commercial transaction, not a favor.
+	record_accomplishment("deliberate_commerce", 1)
 	accepted_delivery_id = ""
 	accepted_delivery_baseline = {}
 	return true
@@ -2172,22 +2210,29 @@ func _open_delivery_turnin_dialogue() -> void:
 	_begin_code_dialogue(WIBounties.build_delivery_turnin_graph(met), "delivery_turnin", "vess")
 
 
-## Opens Krshia's sell picker (fired by her hub's new "I've a few things I
-## don't need. Buying?" option, krshia_crate.json). Builds {id, name, price}
+## Opens a vendor's sell picker (fired by that vendor's own hub option --
+## krshia_crate.json's "I've a few things I don't need. Buying?" and, class-
+## foundation pass R5's generalization, riverfarm_witch.json's/
+## pallass_market_local.json's own sell options). Builds {id, name, price}
 ## records fresh from the CURRENT sellable_items() every open (same
 ## "code-built from live state" contract as _open_board_picker_dialogue --
 ## a sale in one visit is never stale in the next) -- shop.gd's
-## build_sell_graph turns the plain records into the actual conversation.
-## Always opens (no board_accepted-style gate): an empty sellable list still
-## yields a valid graph (Krshia's own flavor line), so the hub option itself
-## needs no requires/hide_when either.
-func _open_sell_dialogue() -> void:
+## build_sell_graph turns the plain records into the actual conversation,
+## voiced per `vendor_id` (WIShop.VOICES). Always opens (no board_accepted-
+## style gate): an empty sellable list still yields a valid graph (the
+## vendor's own flavor line), so the hub option itself needs no
+## requires/hide_when either. The conversation id/speaker-entity are BOTH
+## `vendor_id`-derived (was the bare literals "krshia_sell"/"krshia") so
+## `_dialogue_conversation_id` (sell_item's own source tag, see that
+## function's doc comment) and any UI speaker-lookup key off the REAL
+## vendor, not always Krshia.
+func _open_sell_dialogue(vendor_id: String) -> void:
 	var records: Array = []
 	for raw_id: Variant in sellable_items():
 		var id := String(raw_id)
 		var rec := item(id)
 		records.append({"id": id, "name": String(rec.get("name", id)), "price": sell_price(int(rec.get(WIKeys.PRICE, 0)))})
-	_begin_code_dialogue(WIShop.build_sell_graph(records), "krshia_sell", "krshia")
+	_begin_code_dialogue(WIShop.build_sell_graph(records, vendor_id), "%s_sell" % vendor_id, vendor_id)
 
 
 ## The portal catalog, injected the same
@@ -2682,10 +2727,16 @@ func _trade_bonus() -> float:
 	return bonus
 
 
-## Krshia's buyback rate (RATIFIED): floor(worth * 0.5 * (1 + trade_bonus)),
-## `worth` being an item's own `price` field -- the SAME number
-## WIEffectText's "Worth N gold" card line already reads, no separate worth
-## concept invented for this. Pure arithmetic.
+## The buyback rate, vendor-generic since R5's sell generalization
+## (RATIFIED TWICE): floor(worth * 0.5 * (1 + trade_bonus)), `worth` being
+## an item's own `price` field -- the SAME number WIEffectText's "Worth N
+## gold" card line already reads, no separate worth concept invented for
+## this. Pure arithmetic. THE 50% BASE RATE STANDS -- controller ruling,
+## class-foundation review wave 2026-07-12: it's the pre-existing shipped
+## rate (Krshia's original buyback), the class-foundation plan's own '~40%'
+## was a guess written before the existing mechanism was found, and
+## re-tuning a live economy number for no functional reason is churn;
+## issue #92's vendor wave rebalances the economy holistically instead.
 func sell_price(worth: int) -> int:
 	return int(floor(float(worth) * 0.5 * (1.0 + _trade_bonus())))
 
@@ -2725,7 +2776,7 @@ func sellable_items() -> Array:
 	return out
 
 
-## Resolves a Krshia buyback sale -- fired from WITHIN the sell picker's own
+## Resolves a vendor buyback sale -- fired from WITHIN the sell picker's own
 ## options (see shop.gd's build_sell_graph). Removes `item_id` from
 ## inventory (via `remove_item` -- refuses on equipped/not-carried, pure
 ## defense-in-depth: `sellable_items()` already excludes both cases, so a
@@ -2734,7 +2785,15 @@ func sellable_items() -> Array:
 ## gold_changed/toast machinery every other reward uses -- "Earned N gold."
 ## fires here exactly like a bounty payout or loot gold). A no-op (false,
 ## no state change) on an uncatalogued/unsellable/zero-worth item --
-## defensive; the real picker never offers one.
+## defensive; the real picker never offers one. GENERALIZED (class-
+## foundation pass R5, 2026-07-12): the source tag was hardcoded
+## "krshia_sell" -- now `_dialogue_conversation_id`, which `_begin_code_
+## dialogue` already stamps to "<vendor_id>_sell" for whichever vendor's
+## picker is actually open (see _open_sell_dialogue), so a sale to Eloise
+## or the Pallass stallkeeper tags correctly instead of always crediting
+## Krshia. [Trader]'s own earn axis (deliberate_commerce, one of the three
+## sanctioned sources alongside a completed delivery turn-in and a >=5g
+## shop purchase) banks HERE, on every real sale.
 func sell_item(item_id: String) -> bool:
 	var rec := item(item_id)
 	if rec.is_empty() or bool(rec.get("unsellable", false)):
@@ -2742,9 +2801,10 @@ func sell_item(item_id: String) -> bool:
 	var worth := int(rec.get(WIKeys.PRICE, 0))
 	if worth <= 0:
 		return false
-	if not remove_item(item_id, "krshia_sell"):
+	if not remove_item(item_id, _dialogue_conversation_id):
 		return false
-	earn_gold(sell_price(worth), "krshia_sell")
+	earn_gold(sell_price(worth), _dialogue_conversation_id)
+	record_accomplishment("deliberate_commerce", 1)
 	return true
 
 

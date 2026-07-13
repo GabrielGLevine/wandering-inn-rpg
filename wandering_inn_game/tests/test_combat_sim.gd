@@ -2085,5 +2085,84 @@ func _init() -> void:
 	assert(stream_k.size() > 10, "mixed-new-profile autoplay run produced events")
 	assert(stream_k == stream_l, "same seed + same new-profile mix = identical event stream")
 
+	# --- Class-foundation pass R1 (2026-07-12): [Soothing Presence]'s
+	# ally-targeted heal (`effect.ally_target: true` widening of
+	# `_resolve_heal` -- see that function's own doc comment). ---
+	var c108 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["soothing_presence"]}})
+	c108.active_index = c108.turn_order.find("pc")
+	c108._start_turn()
+	var relc108: Dictionary = c108.combatants["relc"]
+	relc108[WIKeys.HP] = int(relc108[WIKeys.MAX_HP]) - 10
+	var relc_hp108_before := int(relc108[WIKeys.HP])
+	var pc108_before: Dictionary = c108.combatants["pc"]
+	var ap108_before := int(pc108_before[WIKeys.AP])
+	var mp108_before := int(pc108_before[WIKeys.MP])
+	_events.clear()
+	assert(c108.use_skill("soothing_presence", "relc"), "soothing_presence resolves against a living ally (ally_target: true widens the self-only gate)")
+	assert(int(relc108[WIKeys.HP]) == relc_hp108_before + 6, "soothing_presence restores exactly effect.amount (6) HP to the ALLY target, not the caster")
+	assert(int(pc108_before[WIKeys.AP]) == ap108_before - 2, "soothing_presence costs exactly 2 AP")
+	assert(int(pc108_before[WIKeys.MP]) == mp108_before - 3, "soothing_presence costs exactly 3 MP")
+	var heal_payload108: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved":
+			heal_payload108 = e["payload"]
+	assert(heal_payload108.get("actor", "") == "pc" and heal_payload108.get("target", "") == "relc", "skill_resolved reports the ALLY as the target, unlike second_wind's self-only report")
+	assert(int(heal_payload108.get("healed", -1)) == 6, "skill_resolved reports the actual amount healed")
+
+	# Self-cast still works (target_id == actor_id) -- ally_target widens the
+	# gate, it doesn't remove the self option.
+	var c109 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["soothing_presence"]}})
+	c109.active_index = c109.turn_order.find("pc")
+	c109._start_turn()
+	var pc109: Dictionary = c109.combatants["pc"]
+	pc109[WIKeys.HP] = int(pc109[WIKeys.MAX_HP]) - 10
+	_events.clear()
+	assert(c109.use_skill("soothing_presence", "pc"), "soothing_presence still resolves as a self-cast")
+	assert(int(pc109[WIKeys.HP]) == int(pc109[WIKeys.MAX_HP]) - 10 + 6, "self-cast heals the caster")
+
+	# An enemy target still refuses (heal's type-keyed same-side gate is
+	# UNCHANGED by ally_target -- it only widens WHICH same-side target is
+	# valid, never crosses to the enemy side).
+	var c110 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["soothing_presence"]}})
+	c110.active_index = c110.turn_order.find("pc")
+	c110._start_turn()
+	var ap110_before := int(c110.combatants["pc"][WIKeys.AP])
+	_events.clear()
+	assert(not c110.use_skill("soothing_presence", "goblin_raider"), "soothing_presence still refuses an enemy target")
+	assert(int(c110.combatants["pc"][WIKeys.AP]) == ap110_before, "refused enemy-target heal spends nothing")
+	assert(_count("skill_resolved") == 0, "refused enemy-target heal never resolves")
+
+	# --- [Sneak Attack] (`sudden_strike`): ONCE per fight
+	# (WIKeys.ONCE_PER_FIGHT, WICombat.use_skill's own gate over the
+	# pre-existing used_skills_tally set). ---
+	var c111 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["sudden_strike"]}})
+	c111.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)  # teleport adjacent, the c4 precedent (damage_mult needs in_weapon_range)
+	c111.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
+	c111.active_index = c111.turn_order.find("pc")
+	c111._start_turn()
+	var pc111: Dictionary = c111.combatants["pc"]
+	pc111[WIKeys.AP] = 8  # headroom for two casts' worth of AP within one turn
+	var ap111_before := int(pc111[WIKeys.AP])
+	_events.clear()
+	assert(c111.use_skill("sudden_strike", "goblin_raider"), "sudden_strike resolves the first time this fight")
+	assert(int(pc111[WIKeys.AP]) == ap111_before - 2, "sudden_strike costs exactly 2 AP on its one real cast")
+	assert(_count("skill_resolved") == 1, "exactly one resolution from the first cast")
+	var ap111_after_first := int(pc111[WIKeys.AP])
+	_events.clear()
+	assert(not c111.use_skill("sudden_strike", "goblin_raider"), "a second sudden_strike cast in the SAME fight is refused -- once per fight")
+	assert(int(pc111[WIKeys.AP]) == ap111_after_first, "the refused repeat cast spends neither AP nor MP -- checked before any spend, same discipline as every other refusal gate")
+	assert(_count("skill_resolved") == 0, "the refused repeat cast never resolves")
+
+	# A FRESH fight (new WICombat instance -- used_skills_tally resets by
+	# construction, the exact per-fight scope journal_skills' own doc
+	# comment describes) allows sudden_strike again.
+	var c112 := _make_custom(12, _sink, {"pc": {WIKeys.SKILLS: ["sudden_strike"]}})
+	c112.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
+	c112.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
+	c112.active_index = c112.turn_order.find("pc")
+	c112._start_turn()
+	_events.clear()
+	assert(c112.use_skill("sudden_strike", "goblin_raider"), "sudden_strike resolves again in a NEW fight -- the once-per-fight gate is per-WICombat-instance, not persistent")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

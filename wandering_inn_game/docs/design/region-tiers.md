@@ -28,8 +28,8 @@ frontier build (finding 28 — Riverfarm/Invrisil read trivial at
 |---|---|---|---|
 | T1 | Inn / Liscor / floodplains (tutorial + the 3 starter quests) | warrior 1-4 | Existing `goblin_ambush`/`chieftains_raid` cells already band here. |
 | T2 | Sewers, the descent, the door chain | 4-7 (first consolidation possible at the tail) | Existing `ENCOUNTER_CELLS`/`BOSS_CELLS`/`RUIN_CELLS` bands roughly hold — reverified by this task, left untouched. |
-| T3 | Riverfarm + Invrisil (post-door unlocks) | 8-10, often consolidated (spellsword ~9) | THE RETUNE SET (issue #66) — `BUILDS.t3_spellsword9` / `BUILDS.t3_warrior9` are the reference builds. |
-| T4 | The dungeon (8d) | 10-12 + the Horns party | Bands are derived WITH allies from day one (the 4-ally math) — `BUILDS.t4_spellsword11_party` + `PARTY_CELLS` (`sim_combat_batch.gd`) are the first 4-ally harness cells. 8d C3 (issue #82) landed the windup mechanism + the boss's final tuning: `vault_construct_t4_party` is now GATED (0.55-0.95 win rate, 3-12 median rounds — measured 0.86 / 6); `raskghar_awakened_t4_party` stays the over-tier calibration cross-check, MEASURED-only (a T2 boss vs. a T4 party reads near-1.0, as expected). |
+| T3 | Riverfarm + Invrisil (post-door unlocks) | 8-10, MONO — consolidation no longer reachable here | RE-RETUNED (class-foundation pass R3, issue #96, 2026-07-12) — the earlier "spellsword ~9" reference (issue #66) is now structurally unreachable: [Spellsword]'s consolidation floor moved to level 14 (`min_parent_level` 6→10, `min_combined_level` 13→21, data/classes.json), closing the reachability gap #96 diagnosed (consolidation used to arrive well before either parent's own evolution could resolve). New GATING reference: `BUILDS.t3_warrior10` (warrior 10, the SAME T3 gear basis `t3_warrior9`/`t3_spellsword9` already established) — `briar_collectors_t3_warrior10_hunter`/`briar_collectors_deep_t3_warrior10_hunter`/`hired_blades_t3_warrior10_wilovan` re-derived GATED at this build, landing cleanly inside their EXISTING bands (0.93/0.73/0.75 respectively) with ZERO roster retuning needed. `t3_spellsword9`/`t3_warrior9`-referencing cells are NOT deleted — see "Off-tier baselines" below. |
+| T4 | The dungeon (8d) | 10-12 + the Horns party | Bands are derived WITH allies from day one (the 4-ally math) — `BUILDS.t4_spellsword11_party` + `PARTY_CELLS` (`sim_combat_batch.gd`) are the first 4-ally harness cells. 8d C3 (issue #82) landed the windup mechanism + the boss's final tuning: `vault_construct_t4_party` is now GATED (0.55-0.95 win rate, 3-12 median rounds — measured 0.86 / 6); `raskghar_awakened_t4_party` stays the over-tier calibration cross-check, MEASURED-only (a T2 boss vs. a T4 party reads near-1.0, as expected). R3 NOTE: spellsword 11 is ALSO now below the new consolidation floor (14) — same unreachability T3's build faced — but the shipped GATED vault cell stays PINNED to `t4_spellsword11_party` per this pass's own ruling (a working, tuned boss fight isn't re-tuned over a reachability-only floor change). `BUILDS.t4_spellsword14_party` (the genuinely-reachable floor) was added as a MEASURED-only companion (`vault_construct_t4_spellsword14_party`, reads 0.91/5 — the gate still holds comfortably at the real floor too, just not re-gated to it). |
 | T5 | Pallass (8e) | 12-14 | Authored to this table at build time — not retuned by this task. |
 
 ## What "geared to the tier" means
@@ -37,7 +37,9 @@ frontier build (finding 28 — Riverfarm/Invrisil read trivial at
 A tier's "expected build" is a level distribution **plus** the gear a
 player can plausibly own by the time they first arrive there — a level-9
 PC with an empty inventory is not the same fight as a level-9 PC who
-spent gold along the way. `BUILDS.t3_spellsword9`/`t3_warrior9` carry
+spent gold along the way. `BUILDS.t3_spellsword9`/`t3_warrior9`/`t3_warrior10`
+(the last is R3's current GATING reference; the first two are measured
+historical baselines) all carry the SAME gear basis:
 `gnollish_hunting_knife` (sword-family, so `[Power Strike]` stays
 weapon-gated in — a spear would silently swap it for `[Piercing
 Strikes]`, which the melee AI profile never calls by name) +

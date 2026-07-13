@@ -478,6 +478,163 @@
 			"windup_cadence": 2,
 			"effect": { "type": "blast_damage", "range": 1, "radius": 1, "windup_rounds": 1 },
 			"description": "A vast fist draws back, and the floor itself seems to brace."
+		},
+		{
+			"_comment": "Class-foundation pass R1 (#93/#95/#96, 2026-07-12): Tactician L5. CANON-VERDICT: display name SUBSTITUTED to an ATTESTED near-match -- wiki-checked (Skills Effect index) as '[Directed Strike]' first, no exact/close hit; the nearest attested candidate found is [Chosen Blow] ('The User can chose the angle and location of where their next blow attack hits, even if it's located around 30 feet away from them') -- a strong semantic fit for 'the tactician lands the opening he read'. Id `directed_strike` is PINNED (Lane B builds against it) and unchanged -- only display_name substitutes, the same id-stable/display-swap convention sneak->[Stealth]/observe->[Appraise Foe] already established. WIEffectText-expressible: damage_mult (basic_swordwork/power_strike's own type), no new resolver. Iconless (every sprites.json icon id is already claimed -- checked before writing this; see docs/VISUAL-LOG.md's new class-foundation entry).",
+			"id": "directed_strike",
+			"display_name": "[Chosen Blow]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"effect": { "type": "damage_mult", "mult": 1.6 },
+			"description": "You read the opening before it's there, and the blow lands exactly where it was always going to."
+		},
+		{
+			"_comment": "Class-foundation pass R1: Tactician L7, a passive move_pool_bonus twin of quick_movement/battlefield_awareness (0 ap_cost -- the STANDING per-turn bonus phrasing, WIRED via WICombat._start_turn's existing `_move_pool_bonus_total` consumer, no new resolver). CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect index, no exact/close match for 'Flanking Step'; 'flanking' IS used narratively as a real battle tactic in the story, and the positioning-skill grammar ([Steady Feet]/[Steady Ground] etc.) is attested, just not this exact phrase). Iconless.",
+			"id": "flanking_step",
+			"display_name": "[Flanking Step]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "move_pool_bonus", "amount": 1 },
+			"description": "A half-step that puts you exactly where the fight isn't looking."
+		},
+		{
+			"_comment": "Class-foundation pass R1: [Strategist]'s L10 capstone (classes.json's own `strategist` _comment carries the full design trace: the plan's 'wider-radius observe' option was rejected as new sim ground, the 'dangersense-family passive' fallback was rejected as non-expressible -- this pass's own binding rule requires visible currency). `hit_bonus` (basic_swordwork's own type) reads '+10 to hit', a clean capstone distinct from L5's damage_mult and L7's move_pool_bonus. CANON-VERDICT: ORIGINAL, canon-plausible flag -- no wiki match found; mirrors [Battlefield Awareness]'s own unflagged precedent (Tactician's L1 grant, same idiom). Iconless.",
+			"id": "read_the_field",
+			"display_name": "[Read the Field]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "hit_bonus", "amount": 10 },
+			"description": "The whole board resolves at once -- every gap in a guard, every foot planted wrong."
+		},
+		{
+			"_comment": "Class-foundation pass R1: Diplomat L3, field-only -- deliberately NO combat effect (the plan's own framing: 'its USE surface = the persuade-fork gates', i.e. future dialogue options may `requires`/`hide_when` gate on this id, the SAME `requires.skill` seam charming_smile/calming_touch/observe already use -- see wi-adding-a-class-or-skill's DIALOGUE-GATE COUPLING TRAP note for why this is granted at L3, not moved later, without re-auditing every gate on it). CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match. Iconless.",
+			"id": "measured_words",
+			"display_name": "[Measured Words]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Measured Words] — You turn a careful phrase to no one in particular. It lands, as it always does, on empty air.",
+			"description": "Every word chosen and weighed before it leaves the mouth -- the kind of care that opens doors a blunt tongue never finds."
+		},
+		{
+			"_comment": "Class-foundation pass R1: Diplomat L5, the pacifist's real combat contribution -- ally-targetable heal. CANON-VERDICT: ATTESTED (Palt Fenrisol's own spell list names [Soothing Presence] directly). `effect.ally_target: true` widens WISkillEffects._resolve_heal (skill_effects.gd) + targeting_controller.gd's candidate list (self + alive_allies_of) + this card's phrase, ALL THREE together (see each file's own doc comment on the flag) -- second_wind (no `ally_target` key) is BYTE-IDENTICAL, still self-only. Costs MP unlike second_wind (a genuine resource tax distinguishing the two self/ally heals) and heals less (6 vs second_wind's 8) since it can reach a second body. Iconless.",
+			"id": "soothing_presence",
+			"display_name": "[Soothing Presence]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"mp_cost": 3,
+			"effect": { "type": "heal", "amount": 6, "ally_target": true },
+			"description": "A calm that isn't performed -- it settles over the room, and over a hurting friend, the same way."
+		},
+		{
+			"_comment": "Class-foundation pass R1: Diplomat L7, field-only flavor + a future vendor-perk hook (per the plan) -- `charming_smile` STAYS the L1 dialogue-gate skill, untouched. CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (an [Open Says Me] door-opening spell IS attested, but its canon function is a literal magic word that opens a door/gate, not a social-capital idiom; misusing it here would be the same mistake [Owl's Vision] was rejected for on [Appraise Foe]'s own rename). Iconless.",
+			"id": "open_doors",
+			"display_name": "[Open Doors]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Open Doors] — You offer the easy, practiced warmth that opens rooms. There is no room here to open.",
+			"description": "Doors that would stay shut for anyone else swing open at your approach -- goodwill has its own kind of key."
+		},
+		{
+			"_comment": "Class-foundation pass R1: Rogue L3. Field-only, reuses the SAME requires_skill+on_skill_use per-prop reveal seam observe/basic_cooking/basic_cleaning already use (no new field_skills.gd dispatch code -- 'radius 2' in the plan's own framing is flavor prose for a per-prop reveal, not a new area-scan mechanism, which would be real new sim ground outside this pass's scope). GENERALIZED per the plan: future trap-class props (R6, Lane B's parallel placements) point their reveal's `requires_skill` at this id; the EXISTING dart_slit_a/illusory_floor_a (8d, shipped) stay on `requires_skill: observe` UNCHANGED -- re-pointing already-shipped traps would REGRESS every non-Rogue player's existing ability to reveal them (observe is a Tactician L1 grant, reachable without Rogue at all), which is exactly the 'observe-based disarms stay as the no-Rogue fallback' clause in the plan. Id PINNED (Lane B builds against it). CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect index), no match for a bare trap-sense Skill. Iconless.",
+			"id": "find_trap",
+			"display_name": "[Find Trap]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Find Trap] — You scan the ground and walls out of old habit. Nothing here is rigged.",
+			"description": "A practiced eye for the telltale signs of a trap: a loose stone, a taut wire, a floor that doesn't quite match."
+		},
+		{
+			"_comment": "Class-foundation pass R1: Rogue L5, the GENERALIZED trap-disarm verb (see find_trap's own _comment for the full 'existing dart_slit_a stays on observe, future R6 placements use this id' trace -- identical reasoning, not re-derived twice). Field-only, same requires_skill+on_skill_use seam, no new sim code. CANON-VERDICT: family-attested -- no exact '[Disarm Trap]' match, but the '[Disarm ___]' grammar IS attested ([Disarm the Foe], [Disarming Attack]/[Disarming Parry]/[Disarming Strike]) -- generalizing the object from foe/weapon to trap is the SAME reasoning [Stealth]'s own _comment already applies (an attested family establishes the grammar; the specific combination doesn't need its own independent citation). Id PINNED. Iconless.",
+			"id": "disarm_trap",
+			"display_name": "[Disarm Trap]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Disarm Trap] — Your fingers twitch through the motions of a disarm. There is nothing here to still.",
+			"description": "Steady hands and a thief's patience: whatever waits to spring, waits a little longer."
+		},
+		{
+			"_comment": "Class-foundation pass R1: Rogue L7. ONCE-per-fight (WIKeys.ONCE_PER_FIGHT, WICombat.use_skill's own gate -- reuses the EXISTING used_skills_tally per-actor/per-fight set, see that const's doc comment; genuinely expressible on existing state, so the plan's disclosed higher-AP fallback was NOT needed). CANON-VERDICT: display name SUBSTITUTED to an ATTESTED exact match -- wiki-checked (Skills Effect/S), '[Sneak Attack]' is a real attested Skill and a strong thematic fit for a Rogue's own ambush strike (pairs naturally with the class's L1 [Stealth] grant). Id `sudden_strike` is PINNED and unchanged -- only display_name substitutes. Untagged (no `weapon` key, unlike sword/spear/bow damage_mult skills) -- an ambush strike works with whatever is in hand, matching spellbound_strike's own deliberate no-weapon-gate precedent. Iconless.",
+			"id": "sudden_strike",
+			"display_name": "[Sneak Attack]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"once_per_fight": true,
+			"effect": { "type": "damage_mult", "mult": 1.8 },
+			"description": "One chance, taken before the fight knows to expect it."
+		},
+		{
+			"_comment": "Class-foundation pass R1: [Sharpshooter] L10 -- the power_shot/piercing_shot twin, weapon-gated to bow, no new effect type. CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect/C, no exact match; [Chosen Blow] was already used for directed_strike above and reusing the same display name for a second, different skill would be confusing, so it was not substituted here), matches power_shot/quick_nock's own unflagged archery-invention precedent (this catalog's established norm for archer-kit skills that predate the canon-pass sweep). Id PINNED. Iconless.",
+			"id": "called_shot",
+			"display_name": "[Called Shot]",
+			"contexts": ["combat"],
+			"ap_cost": 3,
+			"weapon": "bow",
+			"effect": { "type": "damage_mult", "mult": 2.2 },
+			"description": "A shot picked out in advance, and placed exactly there."
+		},
+		{
+			"_comment": "Class-foundation pass R1: [Sharpshooter] L12 -- reuses line_damage VERBATIM (piercing_shot's own effect type/resolver), weapon-gated to bow, one cell longer + one more AP than piercing_shot (the evolution-tier escalation every other Replacement-target capstone applies, e.g. devastating_slash vs power_strike). CANON-VERDICT: family-attested/ORIGINAL blend -- the '___ Volley' grammar is attested ([Weapon Art -- Aggregate Volley], a multi-shot crossbow skill), and 'Piercing' is already this game's own established archer-kit prefix (piercing_strikes/piercing_shot); wiki-checked, no exact '[Piercing Volley]' hit. Id PINNED. Iconless.",
+			"id": "piercing_volley",
+			"display_name": "[Piercing Volley]",
+			"contexts": ["combat"],
+			"ap_cost": 4,
+			"weapon": "bow",
+			"effect": { "type": "line_damage", "length": 5 },
+			"description": "A punishing volley loosed down the line, arrow after arrow finding the same seam."
+		},
+		{
+			"_comment": "Class-foundation pass R2 (issue #96's own reported content gap, 2026-07-12): frost_bolt's fire twin -- the earn-surface fix for Fire Mage's structural under-40x throughput vs Ice (see docs/design/evolution-reachability.md's 'Structural finding 2'). flame_jet stays untouched (still the only line-shaped fire skill); this is the practical EARLY single-target active fire lacked entirely. WIEffectText-expressible: `spell_damage`, the same type/resolver frost_bolt/ice_shard/flame_bolt/flare_burst/flame_scythe already use -- zero new resolver. `element: fire` tallies BOTH `spell_cast` and `fire_cast` for free (wi_combat.gd's existing `_tally_skill_use`, keyed off the tag, not this skill's id) -- the exact counter mage's evolution.targets already reads, so this closes the gap STRUCTURALLY (a real, castable early fire option any player can reach for), not by retuning a threshold. DIE HONESTY: the plan's own framing ('slightly weaker die') cannot be a literal mechanical difference -- `effect.die` is VESTIGIAL (wi_combat.gd's `_resolve_hit` always rolls the CASTER's own weapon_die, never a per-skill die; see effect_text.gd's own doc comment on `spell_damage`'s phrase). The honest 'slightly weaker' reading is COST: 2 AP/3 MP vs frost_bolt's 1 AP/2 MP for the SAME range/die and no `applies` rider (frost_bolt also slows) -- flame_dart is a real, always-available fire option, genuinely a notch worse per-cast than frost_bolt, cheaper than flame_jet (2 AP/4 MP). CANON-VERDICT: family-attested -- no exact '[Flame Dart]'/'[Fire Dart]' hit on the wiki, but the '[___ Dart]' spell family IS attested ([Bone Dart], [Stone Dart], and directly relevant, [Ice Dart] on Ceria Springwalker's own spell list -- frost_bolt's exact real-world sibling), so generalizing the element from ice/bone/stone to fire is the SAME reasoning [Stealth]'s own _comment already applies to an attested family. Id PINNED (Lane B builds against it). Iconless (icon_flame_bolt/icon_flame_jet/icon_flame_scythe/icon_flare_burst are all already claimed by shipped fire skills, and no spare fire-bolt art exists) -- disclosed in docs/VISUAL-LOG.md's class-foundation entry.",
+			"id": "flame_dart",
+			"display_name": "[Flame Dart]",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"mp_cost": 3,
+			"element": "fire",
+			"effect": { "type": "spell_damage", "range": 4 },
+			"description": "A guttering mote of flame flung hard and fast, spent before it can gutter out."
+		},
+		{
+			"_comment": "Class-foundation pass R4 (2026-07-12): [Innkeeper]'s L14 grant. Field-only (no `ap_cost`/`effect` -- this is by design, not an omission: the skill's REAL mechanical hook is a small wage bump wired directly at the ONE existing renewable-wage resolution site, src/core/wi_game.gd's interact()-level `once_per_waking` gold branch -- `known_skills().has('perfect_hospitality')` adds +1 gold to any once_per_waking wage prop (serving_tray today; any future one gets it for free), NEVER a one-shot discovery prop like frozen_cache (which carries no once_per_waking key and never reaches that branch). Reuses the EXISTING `_apply_gold_effect` router -- no new economy mechanism, the smallest wiring the plan asked for. CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect/P), no match for a bare hospitality-themed Skill. Iconless.",
+			"id": "perfect_hospitality",
+			"display_name": "[Perfect Hospitality]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Perfect Hospitality] — You straighten a chair, smooth a cloth, ready the room out of habit. There's no one here to welcome yet.",
+			"description": "Every guest finds exactly the welcome they didn't know they needed -- a warm room, a full glass, a seat that was somehow already theirs."
+		},
+		{
+			"_comment": "Class-foundation pass R4 (2026-07-12): [Ranger]'s L14 grant, the one genuinely new skill (dangersense is re-listed alongside it but structurally guaranteed already -- see the class's own _comment). MECHANICAL SUBSTITUTION, disclosed: the plan's own framing was 'bow damage_mult passive ~1.15', but `damage_mult` has NO PASSIVE shape in this catalog -- skill_effects.gd's own doc comment is explicit that `resolve_active`'s damage_mult case is ACTIVE-CAST-ONLY (spends AP via `spend_skill_costs`, requires a target); a 0-ap_cost damage_mult would let a player re-cast it for free unlimited times per turn, a real exploit, not a passive. `hit_bonus` (basic_swordwork's own type) is the nearest EXISTING passive currency -- genuinely a better thematic fit besides: 'steady' reads as precision/control, not raw power, so a to-hit bonus is arguably the more honest translation of the name, not just the mechanically-forced one. `weapon: bow` gates it through the SAME `weapon_gated_kit` filter every other weapon-tagged skill already uses, so it only ever contributes with a bow equipped -- the 'bow passive' framing holds exactly. CANON-VERDICT: family-attested -- no exact '[Steady Draw]' hit, but the '[Steady ___]' grammar IS attested ([Steady Feet]/[Steady Ground]/[Steady Hands]/[Steady Hooves]/[Steady Rhythm]/[Steady the Ship]), the SAME [Stealth]-precedent reasoning (an attested family, generalized to a new object). Iconless.",
+			"id": "steady_draw",
+			"display_name": "[Steady Draw]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"weapon": "bow",
+			"effect": { "type": "hit_bonus", "amount": 8 },
+			"description": "Breath out, string back, and the point of aim simply stops drifting -- a drawn bow held as still as a nail in a beam."
+		},
+		{
+			"_comment": "Class-foundation pass R5 (issue #98, 2026-07-12): [Trader] L1's gate skill (the mandatory-first-grant convention every earned class uses -- mage/warrior/diplomat/tactician/rogue/archer all grant their signature skill at L1). Deliberately carries NEITHER `ap_cost`/`effect` NOR `field: true` -- a pure passive identity trait, the SAME shape lesser_stamina/lesser_strength already ship (flavor-only, never castable). The REAL mechanism lives entirely in src/core/dialogue.gd's `_priced_gold` (the ONE resolution site the gate/display/actual-deduction all share), checked by this id directly against the ctx skill list -- see that function's own doc comment for the full price_mod design (~10% off, floor-rounded). REVIEW-WAVE CONTROLLER RULING (2026-07-12): haggling is OPT-IN -- the discount only applies on a node carrying `haggle: true` (the vendor visibly entertains it); the game-wide DEFAULT is no discount, so new civic/shop content can never silently discount by omission. v1 carrier surface is deliberately THIN (Eloise's shop node only -- Krshia's own line refuses haggling everywhere, Pallass civic fees never haggle) and ACCEPTED as such: issue #92's vendor wave expands the carrier list. CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect/B), no bare bargaining/haggling Skill attested ('[Basic Negotiator]' exists but is general diplomacy, not price-specific -- a misuse to rename onto).",
+			"id": "bargain",
+			"display_name": "[Bargain]",
+			"contexts": ["exploration"],
+			"description": "An instinct for what a price is REALLY worth, and the nerve to say so out loud. Where haggling is welcome, the asking price comes down for you."
+		},
+		{
+			"_comment": "Class-foundation pass R5: [Trader] L5, the field read (an item's provenance/value flavor line) -- the observe/keen_eye field-flavor shape verbatim (field:true, field_ambient, no combat effect). CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match.",
+			"id": "appraise_goods",
+			"display_name": "[Appraise Goods]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Appraise Goods] — You turn an imagined item over in your hands out of habit, weighing a price that isn't there.",
+			"description": "A trader's eye: where a thing came from, what it's really worth, and whether the asking price is honest."
+		},
+		{
+			"_comment": "Class-foundation pass R5: [Merchant]'s floor grant ('sell prices improve', the plan's own framing). Rides the ALREADY-BUILT `trade_bonus` seam (src/core/wi_game.gd's `_trade_bonus()`, its own doc comment naming this EXACT example before this pass ever wrote it: 'a future entry ({\"trade_bonus\": 0.1}) needs zero code once known_skills() surfaces it') -- `trade_bonus` is a TOP-LEVEL skill field (not nested in `effect`; _trade_bonus() reads it directly off the catalog record), summed into WIGame.sell_price's existing `floor(worth * 0.5 * (1 + trade_bonus))` formula. ECONOMY GUARD: the shipped sell_price formula's own base rate is 0.5 (50% of buy price) -- RATIFIED, shipped, tested content (item.gd's own doc comment) -- NOT retroactively changed to the plan's guessed '~40%' baseline (written before the existing mechanism was found; changing an already-live economy number for no functional reason would be pure churn, and risks unbalancing other already-tuned content that assumes 50%). bulk_terms adds +0.1 on top (55% effective), a real, modest, disclosed improvement. No `ap_cost`/`effect`/`field` -- same passive-identity shape as bargain above. CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match.",
+			"id": "bulk_terms",
+			"display_name": "[Bulk Terms]",
+			"contexts": ["exploration"],
+			"trade_bonus": 0.1,
+			"description": "Wholesale eyes on a retail world -- goods move through you in bulk, and the numbers favor the one who moves them."
 		}
 	]
 }

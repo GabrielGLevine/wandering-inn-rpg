@@ -211,6 +211,62 @@ func test_compound_gold_accomplishment_gate() -> void:
 	assert(not bool(opts[0]["locked"]), "both legs met -> unlocked")
 
 
+## [Bargain]'s price_mod contract at the pure-walker level (class-foundation
+## R5 + the review wave's two rulings, 2026-07-12): (1) haggling is OPT-IN --
+## only a `haggle: true` node ever discounts, the default is the authored
+## price everywhere; (2) THE BINDING DISPLAY RULE -- the rendered price and
+## the charged price are the same number, whether the price was baked into
+## the authored text (rewritten in-place) or absent (appended live); (3) a
+## non-purchase gold gate (requires.gold with no matching spend effect --
+## Olesm's wager shape) is never decorated and never discounted.
+func test_bargain_price_mod_haggle_optin_display_equals_charge() -> void:
+	var mk_nodes := func(haggle: bool) -> Dictionary:
+		var node := {"speaker": "Eloise", "text": "t", "options": [
+			{"text": "The yarrow bundle. (4 gold)", "requires": {"gold": 4}, "effects": [{"gold": -4}, {"item": "dried_yarrow_bundle"}], "end": true},
+			{"text": "That pinch of warding salt.", "requires": {"gold": 7}, "effects": [{"gold": -7}, {"item": "warding_salt_pinch"}], "end": true},
+			{"text": "Set the board.", "requires": {"gold": 2}, "end": true},
+		]}
+		if haggle:
+			node["haggle"] = true
+		return {"start": "shop", "nodes": {"shop": node}}
+	var rich_ctx := {"skills": ["bargain"], "classes": {}, "accomplishments": {}, "names": {}, "gold": 100}
+
+	# (1)+(2): [Bargain] holder ON the haggle node -- baked price REWRITTEN
+	# (4 -> 3), bare price APPENDED discounted (7 -> 6), wager untouched.
+	var d := WIDialogue.new(mk_nodes.call(true), rich_ctx.duplicate(true), Callable())
+	d.begin()
+	var rows: Array = d.current_options()
+	assert(String(rows[0]["text"]) == "The yarrow bundle. (3 gold)", "haggle node + [Bargain]: baked-in price rewritten to the discounted figure")
+	assert(String(rows[1]["text"]) == "That pinch of warding salt. (6 gold)", "haggle node + [Bargain]: appended price is the discounted figure")
+	assert(String(rows[2]["text"]) == "Set the board.", "non-purchase gold gate never decorated with a price")
+	var chosen: Dictionary = d.choose(0)
+	assert(int((chosen["effects"] as Array)[0]["gold"]) == -3, "the CHARGE equals the rendered price -- the binding display==charge rule")
+
+	# (2) gate side: gold exactly 3 affords the discounted yarrow on the
+	# haggle node (gate reads the same _priced_gold the display showed).
+	var broke_ctx := {"skills": ["bargain"], "classes": {}, "accomplishments": {}, "names": {}, "gold": 3}
+	var d2 := WIDialogue.new(mk_nodes.call(true), broke_ctx, Callable())
+	d2.begin()
+	assert(not bool(d2.current_options()[0]["locked"]), "gate unlocks at the discounted price, matching the rewritten display")
+	assert(bool(d2.current_options()[1]["locked"]), "salt (discounted 6) still locked at 3 gold")
+	assert(String(d2.current_options()[1]["requirement"]) == "costs 6 gold", "locked requirement text names the SAME discounted figure the display would")
+
+	# (1) inversion: the SAME buyer on a DEFAULT node (no haggle flag) --
+	# authored price everywhere, byte-identical text, full charge.
+	var d3 := WIDialogue.new(mk_nodes.call(false), rich_ctx.duplicate(true), Callable())
+	d3.begin()
+	rows = d3.current_options()
+	assert(String(rows[0]["text"]) == "The yarrow bundle. (4 gold)", "default node: no discount even for a [Bargain] holder (opt-in inversion)")
+	assert(String(rows[1]["text"]) == "That pinch of warding salt. (7 gold)", "default node: appended price is the authored base")
+	assert(int((d3.choose(0)["effects"] as Array)[0]["gold"]) == -4, "default node charges the authored price")
+
+	# No [Bargain]: haggle node changes nothing either.
+	var plain_ctx := {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "gold": 100}
+	var d4 := WIDialogue.new(mk_nodes.call(true), plain_ctx, Callable())
+	d4.begin()
+	assert(String(d4.current_options()[0]["text"]) == "The yarrow bundle. (4 gold)", "haggle node without [Bargain]: authored price, untouched")
+
+
 ## The once_per_waking gate at the pure-walker level, mirroring
 ## test_accomplishment_requires_hides_until_met above -- HIDDEN (vanishing),
 ## not greyed, keyed off the ctx's `entity_first_use` dict rather than
@@ -703,6 +759,7 @@ func _init() -> void:
 	test_well_fed_effect_verb_applies_through_dialogue_choose()
 	test_gold_affordability_greys_when_broke()
 	test_compound_gold_accomplishment_gate()
+	test_bargain_price_mod_haggle_optin_display_equals_charge()
 	test_once_per_waking_requires_hides_until_used()
 	test_once_per_waking_refused_in_hide_when()
 	test_once_per_waking_gate_lifecycle_through_bank_first_use()

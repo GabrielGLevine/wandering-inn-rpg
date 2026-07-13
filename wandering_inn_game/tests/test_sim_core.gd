@@ -802,8 +802,10 @@ func _init() -> void:
 			mage_toast = String(e["payload"]["text"])
 	# Issue #79: mage's int growth (1->2, warrior held@9 throughout) yields
 	# +1 Max MP -- the PC already holds an mp_cost Skill (frost_bolt, mage's
-	# own level-1 grant), so the MP line is never withheld here.
-	assert(mage_toast == "[Mage Level 2] — unlocked [Flame Jet], [Mana Shield] (+1 Max MP)", "single level keeps the plain shape + felt growth")
+	# own level-1 grant), so the MP line is never withheld here. Class-
+	# foundation pass R2 (2026-07-12): L2 also grants flame_dart now (see
+	# classes.json's own mage _comment) -- the toast lists all three.
+	assert(mage_toast == "[Mage Level 2] — unlocked [Flame Jet], [Mana Shield], [Flame Dart] (+1 Max MP)", "single level keeps the plain shape + felt growth")
 
 	# --- Respawning encounters (the counter volume valve) ---
 	# Victory over a `respawns: true` encounter leaves it on the map but
@@ -927,7 +929,7 @@ func _init() -> void:
 	# pending offer, and STOPS before evolutions resolve -- the "You sleep
 	# soundly." fallback must not fire on a sleep that produced one.
 	var g19 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g19.classes = {"warrior": 10, "mage": 10}
+	g19.classes = {"warrior": 11, "mage": 10}
 	g19.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	_events.clear()
 	g19.sleep()
@@ -938,7 +940,7 @@ func _init() -> void:
 			offered_payload = e["payload"]
 	assert((offered_payload["parents"] as Array) == ["warrior", "mage"], "offer payload carries parents")
 	assert(offered_payload["target"] == "spellsword", "offer payload carries target")
-	assert(int(offered_payload["level"]) == 14, "offer payload carries merged level (10,10) -> 14")
+	assert(int(offered_payload["level"]) == 14, "offer payload carries merged level (11,10) -> 14")
 	assert(_count("class_evolved") == 0, "evolutions are DEFERRED, not resolved, on the offering sleep")
 	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "the soundly-sleep fallback never fires on an offering sleep")
 	assert(g19.classes.has("warrior") and g19.classes.has("mage"), "parents are untouched until the offer resolves")
@@ -968,7 +970,7 @@ func _init() -> void:
 	# EXACTLY as an un-offered sleep would (recomputed from CURRENT counters
 	# at answer time -- not stashed derived results from the offering sleep).
 	var g20 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g20.classes = {"warrior": 10, "mage": 10}
+	g20.classes = {"warrior": 11, "mage": 10}
 	g20.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	_events.clear()
 	g20.sleep()
@@ -986,25 +988,30 @@ func _init() -> void:
 	g20.decline_consolidation()
 	assert(_events.is_empty(), "decline with no pending offer emits nothing")
 
-	# Decline where the evolution stage produces NO outcome at all (neither
-	# parent at its evolution at_level yet) still falls through to the
-	# "You sleep soundly." fallback -- decline's evolution stage behaves
-	# exactly like a normal non-offering sleep, including that fallback.
+	# Class-foundation pass R3 (2026-07-12): under the NEW consolidation
+	# thresholds (min_parent_level 10 == each parent's own evolution.
+	# at_level), it is now STRUCTURALLY IMPOSSIBLE for an offer to fire
+	# while a parent is still below its own evolution eligibility -- the
+	# exact invariant the retune was FOR (the old test here proved the
+	# OPPOSITE, pre-retune: "warrior 6 / mage 7 still triggers the offer
+	# below evolution's at_level 10", which was precisely the reachability
+	# bug #96 diagnosed). A sleep with neither class evolution-eligible
+	# still falls through to the plain "You sleep soundly." fallback,
+	# exactly as before -- just via the DIRECT (non-offering, non-deferred)
+	# sleep() path now, since no offer is even generated to decline.
 	var g20b := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g20b.classes = {"warrior": 6, "mage": 7}
 	_events.clear()
 	g20b.sleep()
-	assert(g20b.pending_consolidation.get("target", "") == "spellsword", "warrior 6 / mage 7 (sum 13) still triggers the offer below evolution's at_level 10")
-	_events.clear()
-	g20b.decline_consolidation()
+	assert(g20b.pending_consolidation.is_empty(), "warrior 6 / mage 7 (sum 13, both below min_parent_level 10) no longer triggers an offer -- the retune's own invariant")
 	assert(_count("class_evolved") == 0, "neither class is at its evolution at_level yet -- no outcome at all")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "decline with zero evolution outcomes still falls through to the soundly-sleep fallback")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "a sleep with no offer and no evolution outcome still falls through to the soundly-sleep fallback")
 
 	# Decline -> re-offered at every future qualifying sleep (no decline-memory
 	# suppression). Simulate: rebuild the same pre-evolution state and sleep
 	# again; the offer must fire again identically.
 	var g21 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g21.classes = {"warrior": 10, "mage": 10}
+	g21.classes = {"warrior": 11, "mage": 10}
 	g21.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	g21.sleep()
 	_events.clear()
@@ -1012,7 +1019,7 @@ func _init() -> void:
 	# Nothing else changed; re-arm the same qualifying state (evolutions already
 	# consumed warrior/mage on decline, so re-create the parents to prove
 	# re-offer works on a FRESH qualifying instance, not the same evolved one).
-	g21.classes = {"warrior": 10, "mage": 10}
+	g21.classes = {"warrior": 11, "mage": 10}
 	_events.clear()
 	g21.sleep()
 	assert(_count("consolidation_offered") == 1, "decline does not suppress future offers -- re-offered at the next qualifying sleep")
@@ -1021,7 +1028,7 @@ func _init() -> void:
 	# between offer and answer must evolve based on CURRENT counters, not
 	# stashed derived results from the offering sleep.
 	var g22 := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	g22.classes = {"warrior": 10, "mage": 10}
+	g22.classes = {"warrior": 11, "mage": 10}
 	g22.accomplishments = {"sword_skill_used": 12, "spear_skill_used": 2, "ice_cast": 13, "fire_cast": 1}
 	g22.sleep()
 	assert(g22.pending_consolidation.get("target", "") == "spellsword", "offer pending")
@@ -1058,10 +1065,12 @@ func _init() -> void:
 		{WIKeys.ID: "q_c", "beats": [{WIKeys.ID: "b", "description": "", "complete_when": {"qc_done": 1}}]},
 	]}
 	var arc := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, cc_arc)
-	# Act II complete: warrior+mage at the consolidation threshold (6/7, sum 13),
-	# 3 quests done, reached_liscor -- but reached_two_classes NOT yet banked
-	# (this game never loaded a save), no Act III keys.
-	arc.classes = {"warrior": 6, "mage": 7}
+	# Act II complete: warrior+mage at the consolidation threshold (11/10,
+	# sum 21 -- class-foundation pass R3, 2026-07-12: min_parent_level 10/
+	# min_combined_level 21, up from 6/13), 3 quests done, reached_liscor --
+	# but reached_two_classes NOT yet banked (this game never loaded a
+	# save), no Act III keys.
+	arc.classes = {"warrior": 11, "mage": 10}
 	arc.started_quests.assign(["q_a", "q_b", "q_c"])
 	arc.accomplishments = {"reached_liscor": 1, "qa_done": 1, "qb_done": 1, "qc_done": 1}
 	arc.reprime_quests()
@@ -1310,7 +1319,16 @@ func _init() -> void:
 
 	# The real sale: gold_changed + toast ride the SAME earn_gold router every
 	# other reward uses; item_lost is remove_item's existing event, no new
-	# event type introduced.
+	# event type introduced. Class-foundation pass R5 (2026-07-12):
+	# sell_item's source tag generalized from the hardcoded literal
+	# "krshia_sell" to `_dialogue_conversation_id` (stamped by
+	# _begin_code_dialogue/_open_sell_dialogue to "<vendor_id>_sell" for
+	# whichever vendor's picker is actually open) -- this test calls
+	# sell_item() directly, bypassing the real dialogue-open flow, so it
+	# sets the internal field itself to simulate "opened via Krshia's own
+	# sell picker" (the exact string _open_sell_dialogue("krshia") would
+	# stamp), keeping this assertion's expected source unchanged.
+	eSell._dialogue_conversation_id = "krshia_sell"
 	_events.clear()
 	assert(eSell.sell_item("leather_jerkin"), "sell_item succeeds on a sellable, carried, unequipped item")
 	assert(not eSell.inventory.has("leather_jerkin"), "sold item leaves the inventory")
@@ -2864,6 +2882,44 @@ func _init() -> void:
 	var ev1 := gEcho.interact()
 	assert(_last_dialogue_text() == "I don't ask twice.", "the echo advances to the witch's NEW current line (index 1), un-driftable by construction")
 	assert(gEcho.accomplishment_count("chatted_with_echo_villager") == 2, "the villager's own dedup counter still advances independently")
+
+	# --- [Perfect Hospitality] wage bump (class-foundation pass R4,
+	# 2026-07-12): the interact()-level +1 gold hook on serving_tray's own
+	# once_per_waking wage (src/core/wi_game.gd), scoped to that renewable-
+	# wage shape only -- proves the WIRING, not just that the skill exists
+	# (the CLAUDE.md Gotchas rule: a test calling the mutation directly
+	# doesn't prove the real trigger calls it). Real skeleton_scene.json so
+	# serving_tray (inn, cell (10,2)) is a live entity. ---
+	var g_wage_base := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_wage_base.player_cell = Vector2i(10, 1)
+	g_wage_base.player_facing = Vector2i.DOWN
+	var gold_before_base := g_wage_base.gold
+	g_wage_base.interact()
+	assert(g_wage_base.gold == gold_before_base + 1, "serving_tray pays its base +1 gold wage without [Perfect Hospitality]")
+
+	var g_wage_hosp := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_wage_hosp.player_skills = ["perfect_hospitality"]
+	g_wage_hosp.player_cell = Vector2i(10, 1)
+	g_wage_hosp.player_facing = Vector2i.DOWN
+	var gold_before_hosp := g_wage_hosp.gold
+	g_wage_hosp.interact()
+	assert(g_wage_hosp.gold == gold_before_hosp + 2, "[Perfect Hospitality] bumps the SAME wage to +2 gold (the interact()-level hook)")
+
+	# A one-shot discovery prop (frozen_cache, floodplains -- no
+	# once_per_waking key) must NEVER be bumped -- the hook is scoped to
+	# renewable wage props only, not every on_interact_accomplishment prop
+	# that happens to carry a `gold` field.
+	var g_wage_cache := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_wage_cache.player_skills = ["perfect_hospitality"]
+	g_wage_cache.transition("floodplains", Vector2i(2, 3))
+	var cache_entity := g_wage_cache.find_entity("frozen_cache")
+	assert(not cache_entity.is_empty(), "frozen_cache exists on floodplains")
+	var cache_cell: Vector2i = cache_entity[WIKeys.CELL]
+	g_wage_cache.player_cell = cache_cell + Vector2i.DOWN
+	g_wage_cache.player_facing = Vector2i.UP
+	var gold_before_cache := g_wage_cache.gold
+	g_wage_cache.interact()
+	assert(g_wage_cache.gold == gold_before_cache + 5, "frozen_cache's one-shot 5g find is UNCHANGED by [Perfect Hospitality] -- the hook never reaches a non-once_per_waking prop")
 
 	print("PASS: sim core behaves correctly")
 	quit(0)

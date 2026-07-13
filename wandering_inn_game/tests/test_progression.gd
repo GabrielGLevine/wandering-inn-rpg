@@ -104,18 +104,21 @@ func _init() -> void:
 
 	# requires_any (spellsword): a level is met when EITHER counter reaches
 	# its threshold — canon "levels via either parent's counters" (spec §2.5).
-	# GH#54 SPARSE TABLE: spellsword's table now starts at its real floor (9,
-	# the minimum merge level — see the class's own `_comment`), so these
-	# probe from held=9 (L10/L11 thresholds) rather than the old held=1 (L2/L3)
-	# — level 1-8 entries no longer exist, held=1 would find no L2 to walk to.
-	var sw_melee := WIProgression.check_level_ups({"spellsword": 9}, {"melee_hit": 57}, catalog)
-	assert(sw_melee.size() == 1 and sw_melee[0]["level"] == 10, "spellsword L10 via the melee arm")
-	var sw_spell := WIProgression.check_level_ups({"spellsword": 9}, {"spell_cast": 45}, catalog)
-	assert(sw_spell.size() == 1 and sw_spell[0]["level"] == 10, "spellsword L10 via the spell arm")
-	assert(WIProgression.check_level_ups({"spellsword": 9}, {"melee_hit": 56, "spell_cast": 44}, catalog).is_empty(), "neither arm met = no level (requires_any is not vacuously true)")
-	var sw_mixed := WIProgression.check_level_ups({"spellsword": 9}, {"melee_hit": 57, "spell_cast": 54}, catalog)
-	assert(sw_mixed.size() == 2 and int(sw_mixed[1]["level"]) == 11, "each level may be met by a DIFFERENT arm (L10 melee, L11 spell)")
-	assert((sw_mixed[0]["grants"] as Array).is_empty(), "spellsword L10 grants nothing (keener_edge migrated to the L9 floor entry)")
+	# GH#54 SPARSE TABLE: spellsword's table starts at its real floor. Class-
+	# foundation pass R3 (2026-07-12) re-derived the floor at the new
+	# consolidation thresholds (min_parent_level 10, min_combined_level 21) --
+	# 9 -> 14 (see the class's own `_comment` for the exact formula walk), so
+	# these probe from held=14 (L15/L16 thresholds) rather than the old
+	# held=9 (L10/L11) — levels 9-13 no longer exist, held=9 would find no
+	# L10 to walk to.
+	var sw_melee := WIProgression.check_level_ups({"spellsword": 14}, {"melee_hit": 119}, catalog)
+	assert(sw_melee.size() == 1 and sw_melee[0]["level"] == 15, "spellsword L15 via the melee arm")
+	var sw_spell := WIProgression.check_level_ups({"spellsword": 14}, {"spell_cast": 100}, catalog)
+	assert(sw_spell.size() == 1 and sw_spell[0]["level"] == 15, "spellsword L15 via the spell arm")
+	assert(WIProgression.check_level_ups({"spellsword": 14}, {"melee_hit": 118, "spell_cast": 99}, catalog).is_empty(), "neither arm met = no level (requires_any is not vacuously true)")
+	var sw_mixed := WIProgression.check_level_ups({"spellsword": 14}, {"melee_hit": 119, "spell_cast": 114}, catalog)
+	assert(sw_mixed.size() == 2 and int(sw_mixed[1]["level"]) == 16, "each level may be met by a DIFFERENT arm (L15 melee, L16 spell)")
+	assert((sw_mixed[0]["grants"] as Array).is_empty(), "spellsword L15 grants nothing (keener_edge migrated to the L14 floor entry)")
 
 	# --- granted_skills resolves `inherits` (spec §2.6 ⟦B5⟧) ---
 	# (a) held Swordsman 10 yields the warrior grants it grew out of PLUS its
@@ -128,12 +131,12 @@ func _init() -> void:
 	assert(not swordsman10.has("frost_bolt"), "swordsman does not inherit mage")
 
 	# (b) held Spellsword yields warrior ∪ mage ∪ its own (multi-parent inherits).
-	# GH#54: probed at held=9 (spellsword's real floor) — keener_edge now lives
-	# on the L9 floor entry, not a since-removed L1.
-	var spellsword9 := WIProgression.granted_skills({"spellsword": 9}, catalog)
-	assert(spellsword9.has("basic_swordwork"), "spellsword 9 inherits warrior L1")
-	assert(spellsword9.has("frost_bolt") and spellsword9.has("quick_cast") and spellsword9.has("light"), "spellsword 9 inherits mage L1")
-	assert(spellsword9.has("keener_edge"), "spellsword 9 keeps its own signature grant (migrated to the floor entry)")
+	# R3: probed at held=14 (spellsword's new real floor) — keener_edge now
+	# lives on the L14 floor entry, not the since-removed L9.
+	var spellsword14 := WIProgression.granted_skills({"spellsword": 14}, catalog)
+	assert(spellsword14.has("basic_swordwork"), "spellsword 14 inherits warrior L1")
+	assert(spellsword14.has("frost_bolt") and spellsword14.has("quick_cast") and spellsword14.has("light"), "spellsword 14 inherits mage L1")
+	assert(spellsword14.has("keener_edge"), "spellsword 14 keeps its own signature grant (migrated to the floor entry)")
 
 	# (c) a hand-built cyclic catalog terminates and returns a finite set —
 	# never infinite-loops, never crashes.
@@ -311,22 +314,25 @@ func _init() -> void:
 
 	# --- check_consolidation (spec §2.5 REV 2) ---
 	# Pinned math: merged = max(ceil(2*(L_a+L_b)/3), max(L_a, L_b)), INTEGER
-	# arithmetic only. Trigger: both parents >= min_parent_level (6) AND
-	# sum >= min_combined_level (13).
-	var offer_9_12 := WIProgression.check_consolidation({"warrior": 9, "mage": 12}, catalog)
-	assert(not offer_9_12.is_empty(), "warrior 9 / mage 12 both meet the trigger")
-	assert((offer_9_12["parents"] as Array) == ["warrior", "mage"], "parents reported in catalog order")
-	assert(offer_9_12["target"] == "spellsword", "target is spellsword")
-	assert(int(offer_9_12["level"]) == 14, "(9,12) -> 14 (the vision example)")
+	# arithmetic only. Trigger: both parents >= min_parent_level (10) AND
+	# sum >= min_combined_level (21) -- class-foundation pass R3 (2026-07-12)
+	# retuned BOTH thresholds up from (6, 13) (classes.json's own
+	# consolidations[0] `_comment` carries the full derivation trace): the
+	# offer now fires only once BOTH parents have independently cleared their
+	# own evolution.at_level (10), inverting the old race.
+	var offer_11_10 := WIProgression.check_consolidation({"warrior": 11, "mage": 10}, catalog)
+	assert(not offer_11_10.is_empty(), "warrior 11 / mage 10 both meet the new trigger (the near_consolidation fixture's own shape)")
+	assert((offer_11_10["parents"] as Array) == ["warrior", "mage"], "parents reported in catalog order")
+	assert(offer_11_10["target"] == "spellsword", "target is spellsword")
+	assert(int(offer_11_10["level"]) == 14, "(11,10) -> 14 (the new floor)")
 
-	assert(int(WIProgression.check_consolidation({"warrior": 6, "mage": 7}, catalog)["level"]) == 9, "(6,7) -> 9")
-	assert(int(WIProgression.check_consolidation({"warrior": 10, "mage": 10}, catalog)["level"]) == 14, "(10,10) -> 14")
-	assert(int(WIProgression.check_consolidation({"warrior": 20, "mage": 8}, catalog)["level"]) == 20, "(20,8) -> 20 (max() clamp, never drops below the higher parent)")
+	assert(int(WIProgression.check_consolidation({"warrior": 10, "mage": 11}, catalog)["level"]) == 14, "(10,11) -> 14, the same total split the other way")
+	assert(int(WIProgression.check_consolidation({"warrior": 25, "mage": 10}, catalog)["level"]) == 25, "(25,10) -> 25 (max() clamp, never drops below the higher parent: two_thirds=24 < 25)")
 
-	# Trigger boundary: both parents must be >= 6 AND sum >= 13.
-	assert(WIProgression.check_consolidation({"warrior": 5, "mage": 8}, catalog).is_empty(), "one parent below min_parent_level (6) -> no offer")
-	assert(WIProgression.check_consolidation({"warrior": 6, "mage": 6}, catalog).is_empty(), "both parents at min_parent_level but sum 12 < 13 -> no offer")
-	assert(not WIProgression.check_consolidation({"warrior": 6, "mage": 7}, catalog).is_empty(), "both >=6 and sum ==13 -> offer fires (boundary inclusive)")
+	# Trigger boundary: both parents must be >= 10 AND sum >= 21.
+	assert(WIProgression.check_consolidation({"warrior": 9, "mage": 12}, catalog).is_empty(), "one parent below min_parent_level (10) -> no offer")
+	assert(WIProgression.check_consolidation({"warrior": 10, "mage": 10}, catalog).is_empty(), "both parents at min_parent_level but sum 20 < 21 -> no offer")
+	assert(not WIProgression.check_consolidation({"warrior": 10, "mage": 11}, catalog).is_empty(), "both >=10 and sum ==21 -> offer fires (boundary inclusive)")
 
 	# Only one parent held -> no offer (need BOTH lines).
 	assert(WIProgression.check_consolidation({"warrior": 12}, catalog).is_empty(), "only one parent line held -> no offer")
@@ -341,21 +347,21 @@ func _init() -> void:
 	# --- Lineage (⟦I7⟧): evolved classes remain valid parents. ---
 	# [Swordsman]+[Ice Mage] still offer [Spellsword] -- a held class counts
 	# for a parent line if it IS the base id or an evolution target of that line.
-	var evolved_offer := WIProgression.check_consolidation({"swordsman": 9, "ice_mage": 12}, catalog)
+	var evolved_offer := WIProgression.check_consolidation({"swordsman": 11, "ice_mage": 10}, catalog)
 	assert(not evolved_offer.is_empty(), "evolved parents (swordsman + ice_mage) still trigger the offer")
 	assert((evolved_offer["parents"] as Array) == ["swordsman", "ice_mage"], "parents reported by their HELD (evolved) ids, not the base line id")
 	assert(evolved_offer["target"] == "spellsword", "evolved parents still target spellsword")
-	assert(int(evolved_offer["level"]) == 14, "evolved-parent math uses the SAME formula (9,12) -> 14")
+	assert(int(evolved_offer["level"]) == 14, "evolved-parent math uses the SAME formula (11,10) -> 14")
 
-	var mixed_evolved := WIProgression.check_consolidation({"spearmaster": 10, "fire_mage": 10}, catalog)
-	assert(not mixed_evolved.is_empty() and int(mixed_evolved["level"]) == 14, "spearmaster + fire_mage (10,10) -> 14")
+	var mixed_evolved := WIProgression.check_consolidation({"spearmaster": 11, "fire_mage": 10}, catalog)
+	assert(not mixed_evolved.is_empty() and int(mixed_evolved["level"]) == 14, "spearmaster + fire_mage (11,10) -> 14")
 
 	# Two held classes from the SAME line (shouldn't normally happen in real
 	# play -- evolution erases the base id -- but the function must not crash
 	# on a hand-built dict that holds both) -- picks the HIGHEST-level
 	# candidate from that line, never double-counts a line.
-	var same_line := WIProgression.check_consolidation({"warrior": 3, "swordsman": 9, "mage": 12}, catalog)
-	assert(not same_line.is_empty(), "the higher-level candidate (swordsman 9) qualifies even though warrior 3 (same line, sub-threshold) is also held")
+	var same_line := WIProgression.check_consolidation({"warrior": 3, "swordsman": 11, "mage": 12}, catalog)
+	assert(not same_line.is_empty(), "the higher-level candidate (swordsman 11) qualifies even though warrior 3 (same line, sub-threshold) is also held")
 	assert((same_line["parents"] as Array) == ["swordsman", "mage"], "the best (highest-level) candidate per line is reported, not the first-listed id")
 
 	# Retired-line rule: once a consolidation

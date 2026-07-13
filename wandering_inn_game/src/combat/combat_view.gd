@@ -126,6 +126,15 @@ func alive_enemies_of(id: String) -> Array:
 	return _combat.alive_enemies_of(id)
 
 
+## Class-foundation pass R1 (2026-07-12), [Soothing Presence]'s ally-cycling
+## target list -- the `alive_enemies_of` wrapper's own mirror, thin pass-
+## through to `WICombat.alive_allies_of` (already exists, first consumer was
+## combat_ai.gd's guard/coward profiles; `id` itself is excluded, same as
+## that function's own contract).
+func alive_allies_of(id: String) -> Array:
+	return _combat.alive_allies_of(id)
+
+
 func is_adjacent(a: String, b: String) -> bool:
 	return _combat.is_adjacent(a, b)
 

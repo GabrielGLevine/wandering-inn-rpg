@@ -13,6 +13,15 @@ var _graph: Dictionary
 var _ctx: Dictionary
 var _event_sink: Callable
 
+## [Bargain] price_mod (class-foundation pass R5, 2026-07-12): a shop price
+## a [Bargain]-holding buyer pays/needs is cut by this fraction (~10%),
+## floor-rounded (player-favorable). ONE constant, read from the ONE
+## resolution site (_priced_gold) that the gate (_meets), the displayed
+## price (current_options'/`_requirement_text`'s callers), and the actual
+## gold deduction (choose()) all share -- gate/effect/display can never
+## drift apart because there is only one number.
+const BARGAIN_PRICE_MOD := 0.1
+
 
 func _init(graph: Dictionary, ctx: Dictionary, event_sink: Callable) -> void:
 	_graph = graph
@@ -31,8 +40,8 @@ func current_options() -> Array:
 	for entry: Dictionary in _visible_options():
 		var opt: Dictionary = entry["option"]
 		var req: Dictionary = opt.get("requires", {})
-		var locked := not _meets(req)
-		var row: Dictionary = {"text": String(opt["text"]), "locked": locked, "requirement": _requirement_text(req) if locked else ""}
+		var locked := not _meets(req, opt)
+		var row: Dictionary = {"text": _priced_text(opt, req), "locked": locked, "requirement": _requirement_text(req, opt) if locked else ""}
 		# An option that grants an item (a shop buy, or Relc's
 		# spear gift) carries the item's mechanical effect line(s) so the panel
 		# answers "what am I buying/getting" in-place. GENERATED from the item
@@ -84,9 +93,23 @@ func choose(index: int) -> Dictionary:
 	if index < 0 or index >= visible.size():
 		return {}
 	var opt: Dictionary = visible[index]["option"]
-	if not _meets(opt.get("requires", {})):
+	var req: Dictionary = opt.get("requires", {})
+	if not _meets(req, opt):
 		return {}
 	var effects: Array = (opt.get("effects", []) as Array).duplicate(true)
+	# [Bargain] price_mod (class-foundation pass R5, 2026-07-12): the
+	# ACTUAL gold deduction is price-mod'd the SAME way the gate/display
+	# already were (req.gold -> _priced_gold) -- ONE resolution site, so
+	# a purchase can never charge the un-discounted amount after passing
+	# a discounted gate. Only touches an effect matching the EXISTING
+	# authoring convention (requires{gold:N} + effects{gold:-N}, test_
+	# content.gd-validated) -- a plain payout option (positive gold, no
+	# matching negative effect) is never touched.
+	if req.has("gold"):
+		var discounted := _priced_gold(int(req["gold"]), opt)
+		for effect: Dictionary in effects:
+			if effect.has("gold") and int(effect["gold"]) == -int(req["gold"]):
+				effect["gold"] = -discounted
 	var ended := bool(opt.get("end", false))
 	if ended:
 		finished = true
@@ -204,6 +227,88 @@ func _meets_hide_when(hide_when: Dictionary) -> bool:
 	return not cleaned.is_empty() and _meets(cleaned)
 
 
+## GH#98-followup (found live during the R1-R5 sweep, class-foundation pass):
+## [Bargain] must only touch genuine PURCHASE options -- ones that actually
+## spend gold via a matching `effects{gold: -requires.gold}` pair (the same
+## shape test_content.gd's validator checks). A `requires.gold` gate can also
+## exist WITHOUT a purchase (Olesm's chess wager: `requires.gold` is a pure
+## solvency check -- "you must be able to cover a hypothetical loss" -- with
+## no `effects` at all; the actual gold only ever moves on the win node).
+## Un-scoped, `_priced_gold`/`_priced_text` discounted/decorated that wager
+## too, appending a spurious "(2 gold)" onto "Set the board, Olesm." for
+## EVERY player (not just [Bargain] holders -- the append was unconditional
+## on the option's OWN text, not on holding the skill), breaking the
+## authored copy. `opt` defaults to `{}` for callers with no option context
+## (hide_when/text_variant `_meets` checks) -- an empty opt never matches a
+## purchase, so those paths stay fully unaffected (raw, undiscounted gold).
+func _is_priced_purchase(opt: Dictionary, base: int) -> bool:
+	for effect: Dictionary in opt.get("effects", []):
+		if effect.has("gold") and int(effect["gold"]) == -base:
+			return true
+	return false
+
+
+## [Bargain] price_mod's one resolution function (class-foundation pass R5;
+## haggle-carrier polarity INVERTED by controller ruling, review wave
+## 2026-07-12). `base` is the AUTHORED price (a `requires.gold` value, never
+## touched at rest in data). Haggling is OPT-IN: the discount only ever
+## applies on a node that carries `haggle: true` (the vendor visibly
+## entertains it) -- the DEFAULT for every node in the game is NO discount,
+## so new civic/shop content can never silently discount by omission
+## (docs/design/city-identity-bible.md's posted-prices register is the
+## default posture, haggling the authored exception). v1 carriers: Eloise's
+## shop node only (riverfarm_witch.json) -- Krshia's own line says "no
+## discounts, no haggling" (honored everywhere including her charms node,
+## now by default), Pallass civic fees never haggle, and #92's vendor wave
+## expands the carrier list. A buyer whose known skills include "bargain"
+## pays `floor(base * (1 - BARGAIN_PRICE_MOD))` on a haggle node; every
+## OTHER caller (no skill, a default node, or a non-purchase gold gate with
+## no matching spend effect) reads `base` back unchanged.
+func _priced_gold(base: int, opt: Dictionary = {}) -> int:
+	if not _is_priced_purchase(opt, base):
+		return base
+	if not bool(_node().get("haggle", false)):
+		return base
+	if not (_ctx.get(WIKeys.SKILLS, []) as Array).has("bargain"):
+		return base
+	return int(floor(float(base) * (1.0 - BARGAIN_PRICE_MOD)))
+
+
+## The DISPLAYED option text, price-mod-aware (class-foundation pass R5;
+## display-rewrite fix, review wave 2026-07-12). THE BINDING RULE: the
+## rendered price and the charged price are the SAME number, always --
+## both come from `_priced_gold`, the one resolution site. Two authoring
+## shapes exist: (a) a baked-in price in the authored `text` ("The yarrow
+## bundle. (4 gold)") -- when a discount applies, the baked "(4 gold)"
+## substring is REWRITTEN in-place to the discounted figure (the original
+## early-return-on-"gold)" shape showed the authored price while gate/
+## charge used the discounted one, a real display!=charge lie the review
+## caught live: yarrow displayed 4g and charged 3g); when NO discount
+## applies (no [Bargain], a default non-haggle node, or a non-purchase
+## gate) the text is returned byte-identical, so every pre-existing pin
+## outside a haggle node still holds. test_content.gd validates that a
+## baked price always spells exactly "(requires.gold gold)", so the
+## rewrite's substring match cannot silently miss. (b) NO baked number --
+## the discounted-or-base price is APPENDED live, same source. The locked-
+## case suffix agrees for free: dialogue_panel.gd's `_requirement_suffix`
+## dedups against `_requirement_text`'s "costs N gold", and both N's are
+## `_priced_gold`'s -- the "(4 gold) (costs 3 gold)" contradiction is
+## structurally impossible once display and gate share the one function.
+func _priced_text(opt: Dictionary, req: Dictionary) -> String:
+	var text := String(opt["text"])
+	if not req.has("gold"):
+		return text
+	var base := int(req["gold"])
+	if not _is_priced_purchase(opt, base):
+		return text
+	var priced := _priced_gold(base, opt)
+	if text.contains("gold)"):
+		if priced == base:
+			return text
+		return text.replace("(%d gold)" % base, "(%d gold)" % priced)
+	return "%s (%d gold)" % [text, priced]
+
+
 func _node() -> Dictionary:
 	return (_graph["nodes"] as Dictionary)[current_id]
 
@@ -244,7 +349,7 @@ func _resolved_text(node: Dictionary) -> String:
 ## first-checked key's branch ever ran). `recognized` preserves the old
 ## fallback: a requires dict carrying none of the four known keys still
 ## refuses (same as the old trailing `return false`).
-func _meets(req: Dictionary) -> bool:
+func _meets(req: Dictionary, opt: Dictionary = {}) -> bool:
 	if req.is_empty():
 		return true
 	var recognized := false
@@ -266,7 +371,7 @@ func _meets(req: Dictionary) -> bool:
 		# `accomplishment` key), so an unaffordable buy stays VISIBLE-locked/
 		# greyed, never hidden: window-shopping is content (spec §3).
 		recognized = true
-		if int(_ctx.get("gold", 0)) < int(req["gold"]):
+		if int(_ctx.get("gold", 0)) < _priced_gold(int(req["gold"]), opt):
 			return false
 	if req.has("accomplishment"):
 		recognized = true
@@ -358,7 +463,7 @@ func _meets(req: Dictionary) -> bool:
 	return recognized
 
 
-func _requirement_text(req: Dictionary) -> String:
+func _requirement_text(req: Dictionary, opt: Dictionary = {}) -> String:
 	var names: Dictionary = _ctx.get("names", {})
 	if req.has("skill"):
 		return "requires %s" % String(names.get(String(req["skill"]), String(req["skill"])))
@@ -366,7 +471,7 @@ func _requirement_text(req: Dictionary) -> String:
 		for id: String in req["class"]:
 			return "requires %s %d" % [String(names.get(id, id)), int(req["class"][id])]
 	if req.has("gold"):
-		return "costs %d gold" % int(req["gold"])
+		return "costs %d gold" % _priced_gold(int(req["gold"]), opt)
 	if req.has("item"):
 		var items: Dictionary = _ctx.get("items", {})
 		return "requires %s" % String(items.get(String(req["item"]), {}).get("name", String(req["item"])))

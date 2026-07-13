@@ -102,6 +102,10 @@ const EXPECTED_ITEMS := {
 	# 8d C1 (issue #14): the trapped_halls SKILL route's coin cost --
 	# priced tool, no combat fields, same shape as field_whetstone's card.
 	"trap_kit": ["Worth 3 gold"],
+	# Class-foundation pass R5 (2026-07-12): the [Bargain] price_mod's own
+	# real dynamic-priced buy option at Eloise's shop -- all-zero mods, same
+	# priced-tool-no-combat-fields shape as field_whetstone/fishers_handline.
+	"warding_salt_pinch": ["Worth 7 gold"],
 }
 
 const EXPECTED_SKILLS := {
@@ -215,6 +219,52 @@ const EXPECTED_SKILLS := {
 	# [Keen Eye]: field-only, no combat effect -- same empty card as
 	# basic_cleaning/observe above.
 	"keen_eye": [],
+	# Class-foundation pass R1 (2026-07-12): the stagnant trio's ladders +
+	# Sharpshooter's grants. See each skill's own _comment in skills.json for
+	# the wiki-verification trace.
+	"directed_strike": ["2 AP — ×1.6 damage"],
+	# Passive, 0 ap_cost -- the STANDING per-turn phrasing (same branch as
+	# quick_movement/battlefield_awareness above).
+	"flanking_step": ["+1 move cell every turn"],
+	"read_the_field": ["+10 to hit"],
+	# Field-only, no combat effect -- same empty card as measured_words'
+	# own field siblings (charming_smile/observe/keen_eye above).
+	"measured_words": [],
+	# WIRED -- WISkillEffects._resolve_heal widened for `effect.ally_target`
+	# (see that function's own doc comment); the phrase reads "an ally, or
+	# yourself" instead of second_wind's "yourself" alone.
+	"soothing_presence": ["2 AP, 3 MP — restore 6 HP to an ally, or yourself"],
+	"open_doors": [],
+	"find_trap": [],
+	"disarm_trap": [],
+	# ONCE per fight (WIKeys.ONCE_PER_FIGHT) -- the trailing sentence is the
+	# skill-level suffix `skill_effect_lines` appends (distinct from
+	# `_status_suffix`, which reads the EFFECT dict; see that function's own
+	# comment).
+	"sudden_strike": ["2 AP — ×1.8 damage. Once per fight."],
+	"called_shot": ["3 AP — ×2.2 damage"],
+	"piercing_volley": ["4 AP — damage everything in a line 5 cells long"],
+	# R2 (issue #96's own content-gap fix): frost_bolt's fire twin, same
+	# spell_damage phrase shape, no `applies` rider (frost_bolt slows, this
+	# doesn't) -- die is the caster's own weapon_die per _caster_weapon_die's
+	# default (pc, 6), same source every other spell_damage line above reads.
+	"flame_dart": ["2 AP, 3 MP — damage 1d6 at range 4"],
+	# R4 ([Innkeeper]/[Ranger] consolidations): perfect_hospitality is
+	# field-only, no combat effect -- same empty card as measured_words/
+	# open_doors/find_trap/disarm_trap above (its real mechanism is the
+	# interact()-level wage bump, not a card-rendered effect).
+	"perfect_hospitality": [],
+	# steady_draw: hit_bonus, 0 ap_cost passive (the basic_swordwork/
+	# read_the_field phrasing) -- weapon-gated to bow, invisible to the
+	# card text (WIEffectText never renders `weapon`).
+	"steady_draw": ["+8 to hit"],
+	# R5 ([Trader]/[Merchant]): bargain/bulk_terms are pure passive identity
+	# traits (no `effect` key at all -- same empty card as lesser_stamina/
+	# lesser_strength above); appraise_goods is field-only, no combat
+	# effect (same empty card as keen_eye/observe).
+	"bargain": [],
+	"appraise_goods": [],
+	"bulk_terms": [],
 }
 
 

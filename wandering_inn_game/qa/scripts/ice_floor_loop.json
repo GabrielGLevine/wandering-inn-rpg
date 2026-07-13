@@ -30,7 +30,7 @@
   { "action": "assert_state", "path": "combat.active", "equals": "pc" },
   { "action": "assert_state", "path": "combat.combatants.pc.cell", "equals": [2, 3] },
   { "action": "assert_state", "path": "combat.combatants.pc.skills", "contains": "icy_floor" },
-  { "_comment": "Kit order ice_shard/icy_floor/frost_bolt/flame_jet, then invisibility (all contexts:combat + ap_cost>0 -- issue #46 gave [Invisibility] a real combat read, so it now occupies a numbered slot too, inherited from mage L5 the same as frost_bolt/flame_jet) -- Attack(1)/Dash(2)/ice_shard(3)/icy_floor(4)/frost_bolt(5)/flame_jet(6)/invisibility(7)/End Turn = 7 numbered slots, 8 total.", "action": "assert_event_logged", "type": "ui_hotbar_rendered", "payload_contains": { "slots": 8 } },
+  { "_comment": "Kit order ice_shard/icy_floor/frost_bolt/flame_jet/flame_dart, then invisibility (all contexts:combat + ap_cost>0 -- issue #46 gave [Invisibility] a real combat read, inherited from mage L5; class-foundation R2 (#93) added [Flame Dart] to mage L2's grants, right after flame_jet, ahead of invisibility) -- Attack(1)/Dash(2)/ice_shard(3)/icy_floor(4)/frost_bolt(5)/flame_jet(6)/flame_dart(7)/invisibility(8)/End Turn = 8 numbered slots, 9 total.", "action": "assert_event_logged", "type": "ui_hotbar_rendered", "payload_contains": { "slots": 9 } },
 
   { "_comment": "Dash first: pool 3 -> 6, AP 4 -> 3. Needed so this SAME turn can both close into icy_floor's range 3 and step onto the freshly-cast ice afterward.", "action": "press", "name": "hotbar_2" },
   { "action": "wait_for_event", "type": "ui_slot_info_rendered", "payload_contains": { "slot": 1 }, "timeout_sec": 5 },
