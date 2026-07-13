@@ -408,6 +408,37 @@ func _init() -> void:
 	assert(g5.dialogue_choose(0), "choice itself succeeds")
 	assert(g5.combat == null, "combat not started mid-dialogue")
 	assert(_count("dialogue_effect_failed") == 1, "failure surfaced as event")
+	# Issue #88 fix wave: the pre-scan emits pre_combat_choice even when the
+	# deferred start_combat is later REFUSED -- game.gd's arm/disarm pair
+	# (PRE_COMBAT_CHOICE arms, DIALOGUE_EFFECT_FAILED{start_combat} disarms)
+	# depends on both halves firing in this exact refusal case.
+	assert(_count("pre_combat_choice") == 1, "pre_combat_choice fires even for a later-refused start_combat (the disarm case)")
+
+	# Issue #88 fix wave: PRE-EFFECTS ORDER -- a committing option's
+	# pre_combat_choice must precede its OWN accomplishment (the relc_descent
+	# [Go together.] shape: game.gd's snapshot on the first event must not
+	# contain the second's bank). Also proves the payload carries the target
+	# encounter id and the fight genuinely starts.
+	var dlg_graph3 := {"start": "n1", "nodes": {"n1": {"speaker": "X", "text": "t", "options": [
+		{"text": "commit", "effects": [{"accomplishment": "relc_joined_descent"}, {"start_combat": "goblin_encounter_1"}], "end": true}]}}}
+	var cc_pcc: Dictionary = combat_config.duplicate(true)
+	cc_pcc["dialogue"] = {"conv3": dlg_graph3}
+	var g5b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_pcc)
+	g5b.start_dialogue("conv3", "erin")
+	_events.clear()
+	assert(g5b.dialogue_choose(0), "committing choice succeeds")
+	assert(g5b.combat != null, "ending start_combat effect starts the fight")
+	var pcc_idx := -1
+	var acc_idx := -1
+	for ei: int in _events.size():
+		var ev: Dictionary = _events[ei]
+		if ev["type"] == "pre_combat_choice" and pcc_idx == -1:
+			pcc_idx = ei
+			assert(String((ev["payload"] as Dictionary).get("encounter", "")) == "goblin_encounter_1", "pre_combat_choice carries the start_combat target id")
+		if ev["type"] == "accomplishment_recorded" and String((ev["payload"] as Dictionary).get("id", "")) == "relc_joined_descent" and acc_idx == -1:
+			acc_idx = ei
+	assert(pcc_idx >= 0 and acc_idx >= 0, "both pre_combat_choice and the choice's accomplishment emitted")
+	assert(pcc_idx < acc_idx, "pre_combat_choice fires BEFORE the committing option's own accomplishment (the pre-effects snapshot contract)")
 
 	# --- Earned multiclass ([Mage] via Pisces) ---
 	# The Dusty Scroll is flavor-only: interacting it banks read_dusty_scroll
