@@ -235,7 +235,13 @@
    "allies": [],
    "respawns": true,
    "observe": "Silk threads catch the light along the gallery's south wall, thick as rope, all leading back to one dark seam in the stone.",
-   "on_victory": "kingslayer_spiders_culled"
+   "on_victory": "kingslayer_spiders_culled",
+   "loot": [
+    {
+     "item": "kingslayer_fang",
+     "chance": 0.3
+    }
+   ]
   }
  ]
 }

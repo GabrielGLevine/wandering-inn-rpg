@@ -719,6 +719,51 @@
 			"abilities": [],
 			"description": "A ward-charm instruction, copied out in two different hands.",
 			"lore": "\"Salt at the sill. Don't dig where the ground sounds hollow. If the dogs won't go, you don't go.\" A later hand added a line underneath, in different ink: \"They found something under the city once. They can find it again.\""
+		},
+		{
+			"_comment": "Issue #92 (economy depth): boss-unique drop, THE VAULT (vault_boss_slot, data/maps/dungeon/trapped_halls.json, one-time -- no `respawns` key), via `WIEconomy.roll_loot` (isolated hash(run_seed,encounter_id) rng, never the live combat stream). Existing accessory shape verbatim (moon_bone_amulet's own dr+hp+resonance-2 curve, no new fields); no `price` (loot-only, no established vendor worth -- the moon_bone_amulet/watch_token precedent for a one-of-a-kind find).",
+			"id": "construct_core_shard",
+			"name": "Construct Core Shard",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 3,
+			"damage_reduction": 1,
+			"resonance": 2,
+			"tier": "enchanted",
+			"abilities": [],
+			"description": "A fist-sized shard of the Vault Construct's own core, still faintly warm, its inner light gone dim but not dark.",
+			"lore": "Warmage Thresk's vault work outlived the war it was built for, and so, it turns out, did the thing built to guard it. Whatever kept it standing three centuries in the dark keeps standing a while longer in a pocket."
+		},
+		{
+			"_comment": "Issue #92: boss-unique drop, the trapped-halls snare fight (snare_nest_slot, same map, one-time -- no `respawns` key). Existing accessory shape, hedge_ward_charm's own hp+resonance-1 curve (mid-tier, matches the fight's mid-delve placement between the mundane starter loot and the Vault's own capstone drop above).",
+			"id": "warded_coil_charm",
+			"name": "Warded Coil Charm",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 2,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"abilities": [],
+			"description": "A twist of warding-wire salvaged from the snare itself, the working still humming faint and wrongly patient.",
+			"lore": "The wards down here were never meant to be worn -- somebody unwound one anyway and found the working held. It still expects a trespasser. It will have to make do with you."
+		},
+		{
+			"_comment": "Issue #92: boss-unique drop, kingslayer_den (data/maps/dungeon/dungeon_approach.json, `respawns:true` apex-predator cull -- chance-gated in the map's own loot table, unlike the two guaranteed one-time drops above, matching the crude_blade/chipped_spear repeatable-farm precedent). Existing accessory shape, hunters_fang_talisman's own dmg+resonance-1 curve widened by +1 hp_mod (apex-tier differentiation from that mundane-region trophy).",
+			"id": "kingslayer_fang",
+			"name": "Kingslayer Fang",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 1,
+			"hp_mod": 1,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"abilities": [],
+			"description": "A single fang, longer than a hand, drawn from the dark the gallery's silk led back to. The point is still sharp enough to matter.",
+			"lore": "Whatever nests south of the gallery has fangs enough to spare one and never notice. Krshia would call this Silverfang-caliber trophy work, if Krshia had ever seen the thing it came from."
 		}
 	]
 }
