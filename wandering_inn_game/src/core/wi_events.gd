@@ -288,6 +288,15 @@ const UI_SLOT_PICKER_HIDDEN := &"ui_slot_picker_hidden"
 const UI_TITLE_RENDERED := &"ui_title_rendered"
 const UI_TITLE_GATE_RENDERED := &"ui_title_gate_rendered"
 const UI_TITLE_NOTICE_RENDERED := &"ui_title_notice_rendered"
+## Issue #88 (gap-2): title_screen.gd's confirmation that the New-Game
+## overwrite-confirm panel opened -- shown only when picking "New Game"
+## would overwrite an existing save (`_newest_save_slot()` non-empty), never
+## on a genuinely-fresh boot with no save anywhere. Payload
+## `{summary:String}` -- the SAME `_format_slot_summary` line the Continue
+## caption already renders, so QA can assert content without OCR-ing a
+## screenshot. TestDriver bypasses this panel by default (see
+## `qa/test_driver.gd`'s `wants_new_game_confirm`).
+const UI_NEW_GAME_CONFIRM_RENDERED := &"ui_new_game_confirm_rendered"
 ## title_screen.gd's confirmation that the
 ## debug-only "Playtest States" picker opened. Payload `{count:int, pages:int}`
 ## -- `count` is the total fixture entries discovered under `qa/fixtures/`,

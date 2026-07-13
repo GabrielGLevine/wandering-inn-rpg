@@ -36,7 +36,7 @@ extends CanvasLayer
 ## so the user's own save is never clobbered) and loads it via the same
 ## slot-generic `Game.load_slot` Continue uses -- zero new sim machinery.
 
-enum State { GESTURE, MENU, PLAYTEST_LIST }
+enum State { GESTURE, MENU, PLAYTEST_LIST, NEW_GAME_CONFIRM }
 
 ## "Settings" is APPENDED at the end (issue #77) -- never inserted earlier --
 ## so every existing index-based/count-based QA reference (mouse_loop.json's
@@ -65,6 +65,13 @@ const PLAYTEST_FIXTURE_ORDER: Array[String] = [
 	"climax_surface_start", "climax_sealed_start", "near_act3",
 ]
 const PLAYTEST_PAGE_SIZE := 10
+## Issue #88 (gap-2): the New-Game overwrite-confirm panel -- pause_menu.gd's
+## `_confirm_root`/`CONFIRM_ROWS` idiom (a plain parchment Yes/No panel),
+## independent copy per this codebase's per-file component convention (the
+## SAME convention `_format_slot_summary` itself already follows). Cursor
+## defaults to "No" (index 0) -- the action IS destructive.
+const NEW_GAME_CONFIRM_ROWS := ["No", "Yes"]
+const NEW_GAME_CONFIRM_PANEL_SIZE := Vector2(360.0, 170.0)
 const PLAYTEST_CAUTION := "QA states — counters may be odd. Loads its own slot; your saves are safe."
 ## Sane truncation budget for a fixture's `_comment` first-sentence summary.
 const PLAYTEST_SUMMARY_CHAR_BUDGET := 70
@@ -115,6 +122,12 @@ var _playtest_page_label: Label
 var _fixture_entries: Array[Dictionary] = []
 var _playtest_cursor := 0
 
+## Issue #88 (gap-2): the New-Game overwrite-confirm panel state.
+var _new_game_confirm_root: Control
+var _new_game_confirm_label: Label
+var _new_game_confirm_option_labels: Array[Label] = []
+var _new_game_confirm_cursor := 0
+
 
 func _ready() -> void:
 	_build_ui()
@@ -128,6 +141,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if _state == State.PLAYTEST_LIST:
 		_handle_playtest_input(event)
+		return
+	if _state == State.NEW_GAME_CONFIRM:
+		_handle_new_game_confirm_input(event)
 		return
 	if event.is_action_pressed("move_up"):
 		_move_cursor(-1)
@@ -234,6 +250,7 @@ func _build_ui() -> void:
 		_row_labels.append(row)
 
 	_build_playtest_panel()
+	_build_new_game_confirm_panel()
 
 	# End of the gate beat's render (backdrop + title + "press any key" +
 	# the menu skeleton, still hidden pending the gesture). Zero-payload --
@@ -323,6 +340,40 @@ func _build_playtest_panel() -> void:
 	# index `_playtest_cursor`/`_confirm_playtest_row` use.
 	stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	stack.gui_input.connect(_on_playtest_gui_input)
+
+
+## Issue #88 (gap-2): builds the (hidden-until-opened) New-Game overwrite-
+## confirm panel -- pause_menu.gd's `_confirm_root` idiom verbatim (a
+## parchment panel, a wrapping label, then the No/Yes rows), independent
+## copy per this file's own component convention.
+func _build_new_game_confirm_panel() -> void:
+	_new_game_confirm_root = Control.new()
+	UIChrome.apply_theme(_new_game_confirm_root)
+	_new_game_confirm_root.set_anchors_preset(Control.PRESET_CENTER)
+	_new_game_confirm_root.custom_minimum_size = NEW_GAME_CONFIRM_PANEL_SIZE
+	_new_game_confirm_root.size = NEW_GAME_CONFIRM_PANEL_SIZE
+	UIChrome.set_offsets(_new_game_confirm_root, -NEW_GAME_CONFIRM_PANEL_SIZE.x * 0.5, -NEW_GAME_CONFIRM_PANEL_SIZE.y * 0.5, NEW_GAME_CONFIRM_PANEL_SIZE.x * 0.5, NEW_GAME_CONFIRM_PANEL_SIZE.y * 0.5)
+	_new_game_confirm_root.mouse_filter = Control.MOUSE_FILTER_STOP
+	_new_game_confirm_root.hide()
+	_root.add_child(_new_game_confirm_root)
+	_new_game_confirm_root.add_child(UIChrome.make_patch(UIChrome.PARCHMENT_PANEL))
+	var confirm_margin := MarginContainer.new()
+	UIChrome.full_rect(confirm_margin)
+	UIChrome.add_margins(confirm_margin, 28, 26, 28, 24)
+	_new_game_confirm_root.add_child(confirm_margin)
+	var confirm_stack := VBoxContainer.new()
+	confirm_stack.add_theme_constant_override("separation", 8)
+	confirm_margin.add_child(confirm_stack)
+	_new_game_confirm_label = UIChrome.make_label()
+	_new_game_confirm_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	confirm_stack.add_child(_new_game_confirm_label)
+	for i in NEW_GAME_CONFIRM_ROWS.size():
+		var row := UIChrome.make_label("", "Menu")
+		confirm_stack.add_child(row)
+		_new_game_confirm_option_labels.append(row)
+	# Issue #84 hover/click idiom, same as every other panel in this file.
+	confirm_stack.mouse_filter = Control.MOUSE_FILTER_STOP
+	confirm_stack.gui_input.connect(_on_new_game_confirm_gui_input)
 
 
 func _enter_menu() -> void:
@@ -470,21 +521,7 @@ func _confirm() -> void:
 		return
 	match ROWS[_cursor]:
 		"New Game":
-			# Real play (and a QA script opting in via `creation_ui`) routes
-			# through the character-creation screen; every OTHER New Game path
-			# -- the default TestDriver skip -- calls Game.reset() straight
-			# through, byte-identical to before this feature (the creation
-			# screen is never even spawned), so every existing canonical is
-			# untouched.
-			if _skip_creation():
-				Game.reset()
-			elif main_ref != null:
-				# Deferred so this input handler (and its trailing
-				# set_input_as_handled) finishes before the swap frees this title
-				# out of the tree -- same reason Game.reset()'s swap is deferred.
-				main_ref.swap_to_char_creation.call_deferred()
-			else:
-				Game.reset()
+			_handle_new_game_row()
 		"Continue":
 			_load_slot_or_notice(_continue_slot)
 		"Playtest States":
@@ -498,6 +535,120 @@ func _confirm() -> void:
 			if settings_ref != null:
 				_menu_root.hide()
 				settings_ref.call("open", Callable(self, "_reopen_after_settings"))
+
+
+## Issue #88 (gap-2): New Game used to call Game.reset() (or open character
+## creation) UNCONDITIONALLY -- the single shared "auto" slot then silently
+## clobbered a finished run's last checkpoint the moment the fresh game's
+## first autosave-triggering event fired (game.gd's `_rotate_auto_pending`
+## safety net preserves ONE hop of that history as "auto_prev", but warning
+## the player BEFORE the reset is the honest fix). Skips the confirm
+## entirely when there is nothing to lose (`_newest_save_slot()` empty --
+## every genuinely-fresh boot, including every existing canonical's FIRST
+## New Game).
+func _handle_new_game_row() -> void:
+	if _newest_save_slot().is_empty():
+		_start_new_game()
+		return
+	_enter_new_game_confirm()
+
+
+## The actual New Game dispatch -- moved verbatim out of the old "New Game"
+## match arm so both the bypass path and the confirm panel's "Yes" choice
+## route through the exact same logic.
+func _start_new_game() -> void:
+	# Real play (and a QA script opting in via `creation_ui`) routes
+	# through the character-creation screen; every OTHER New Game path --
+	# the default TestDriver skip -- calls Game.reset() straight through,
+	# byte-identical to before this feature (the creation screen is never
+	# even spawned), so every existing canonical is untouched.
+	if _skip_creation():
+		Game.reset()
+	elif main_ref != null:
+		# Deferred so this input handler (and its trailing
+		# set_input_as_handled) finishes before the swap frees this title
+		# out of the tree -- same reason Game.reset()'s swap is deferred.
+		main_ref.swap_to_char_creation.call_deferred()
+	else:
+		Game.reset()
+
+
+func _enter_new_game_confirm() -> void:
+	_state = State.NEW_GAME_CONFIRM
+	_new_game_confirm_cursor = 0
+	var summary := _format_slot_summary(Game.slot_metadata(_newest_save_slot()))
+	_new_game_confirm_label.text = "Starting a New Game will overwrite:\n%s\n\nThis cannot be undone." % summary
+	_menu_root.hide()
+	_new_game_confirm_root.show()
+	_refresh_new_game_confirm()
+	ObservableBus.emit_domain_event(WIEvents.UI_NEW_GAME_CONFIRM_RENDERED, {"summary": summary})
+	if _is_qa():
+		# Same collapse contract as sleep_veil.gd's `_is_qa()` (opener/
+		# epilogue/defeat): every existing canonical's New Game must keep
+		# working unconditionally -- the coverage event above still fires
+		# (title_flow.json pins its exact summary), but the interactive
+		# Yes/No hold is skipped, auto-resolving to "Yes" the same beat. A
+		# human windowed playtest is what actually exercises Confirm/Cancel,
+		# same precedent as every other veil mode's own doc comment.
+		_exit_new_game_confirm()
+		_start_new_game()
+
+
+func _exit_new_game_confirm() -> void:
+	_state = State.MENU
+	_new_game_confirm_root.hide()
+	_menu_root.show()
+	_refresh_rows()
+
+
+func _handle_new_game_confirm_input(event: InputEvent) -> void:
+	if event.is_action_pressed("cancel"):
+		_exit_new_game_confirm()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("move_up") or event.is_action_pressed("move_down"):
+		_new_game_confirm_cursor = wrapi(_new_game_confirm_cursor + 1, 0, NEW_GAME_CONFIRM_ROWS.size())
+		_refresh_new_game_confirm()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("confirm"):
+		_select_new_game_confirm_choice()
+		get_viewport().set_input_as_handled()
+
+
+## The confirm panel's own "activate the cursored row" dispatch (pause_menu.
+## gd's `_select_confirm_choice` idiom) -- factored out so the mouse-click
+## handler below routes through the SAME function keyboard confirm calls.
+func _select_new_game_confirm_choice() -> void:
+	var choice := String(NEW_GAME_CONFIRM_ROWS[_new_game_confirm_cursor])
+	_exit_new_game_confirm()
+	if choice == "Yes":
+		_start_new_game()
+
+
+func _refresh_new_game_confirm() -> void:
+	for i in NEW_GAME_CONFIRM_ROWS.size():
+		var mark := "> " if i == _new_game_confirm_cursor else "  "
+		_new_game_confirm_option_labels[i].text = mark + String(NEW_GAME_CONFIRM_ROWS[i])
+
+
+## Issue #84 hover/click parity, mirroring `_on_menu_gui_input` verbatim.
+func _on_new_game_confirm_gui_input(event: InputEvent) -> void:
+	if _state != State.NEW_GAME_CONFIRM:
+		return
+	if event is InputEventMouseMotion:
+		var idx := UIChrome.control_index_at(_new_game_confirm_option_labels, (event as InputEventMouseMotion).position)
+		if idx >= 0 and idx != _new_game_confirm_cursor:
+			_new_game_confirm_cursor = idx
+			_refresh_new_game_confirm()
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	var idx := UIChrome.control_index_at(_new_game_confirm_option_labels, mb.position)
+	if idx >= 0:
+		_new_game_confirm_cursor = idx
+		_select_new_game_confirm_choice()
 
 
 ## `load_slot` returns false on a corrupt or older-version save (WISave.
@@ -520,6 +671,16 @@ func _load_slot_or_notice(slot: String) -> void:
 ## script sets top-level `creation_ui: true` to take the real path instead.
 func _skip_creation() -> bool:
 	return TestDriver != null and TestDriver.active() and not TestDriver.wants_creation_ui()
+
+
+## Issue #88 (gap-2): sleep_veil.gd's `_is_qa()` idiom, independent copy per
+## this codebase's per-file component convention (`_format_slot_summary`/
+## `_display_fixture_name`'s own precedent) -- gates the New-Game
+## overwrite-confirm's interactive Yes/No hold, same contract as every veil
+## mode (opener/epilogue/defeat): collapse under ANY QA run (native or web,
+## headless or windowed) or a bare headless boot, never under real play.
+func _is_qa() -> bool:
+	return (TestDriver != null and TestDriver.active()) or DisplayServer.get_name() == "headless"
 
 
 func _refresh_continue_state() -> void:
