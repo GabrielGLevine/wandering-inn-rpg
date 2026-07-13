@@ -1,0 +1,909 @@
+{
+ "biome": "inn",
+ "grid": {
+  "width": 16,
+  "height": 10
+ },
+ "blocked": [
+  [
+   7,
+   6
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   6,
+   2
+  ],
+  [
+   8,
+   2
+  ],
+  [
+   9,
+   2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   3,
+   1
+  ]
+ ],
+ "_comment_dressing": "Immersion pass (docs/superpowers/specs/2026-07-02-environment-ui-immersion-design.md sec.2). floor_layers/walls/decor are sim-passthrough only (WIGame never reads them; world.gd renders them). ALL coords below are UNVERIFIED screenshot-pending picks -- see .superpowers/sdd/m5-r4-report.md pick table.",
+ "floor_layers": [
+  {
+   "_pick": "E3 L1 hall planks: position-hashed variants from the light plank swatch",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     1,
+     21
+    ],
+    [
+     2,
+     21
+    ],
+    [
+     1,
+     22
+    ],
+    [
+     2,
+     22
+    ]
+   ],
+   "cells": "all"
+  },
+  {
+   "_pick": "E3 L1 kitchen zone: grey cobble swatch",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     9,
+     22
+    ],
+    [
+     9,
+     23
+    ]
+   ],
+   "cells": {
+    "rect": [
+     1,
+     1,
+     4,
+     2
+    ]
+   }
+  },
+  {
+   "_pick": "E3 L1 bedroom corner: herringbone swatch",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     21
+    ],
+    [
+     17,
+     21
+    ]
+   ],
+   "cells": {
+    "rect": [
+     1,
+     6,
+     3,
+     3
+    ]
+   }
+  }
+ ],
+ "_comment_walls": "Full 4-side perimeter via walls-v2 segments; north face+cap, sides/south cap-only; east gap at [15,3] for the door. Same Interior_Walls_01 tiles the wall band uses (screenshot-verified).",
+ "walls": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     15,
+     0
+    ],
+    "cap": [
+     14,
+     6
+    ],
+    "face": [
+     14,
+     7
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     9
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     15,
+     1
+    ],
+    "to": [
+     15,
+     2
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     15,
+     4
+    ],
+    "to": [
+     15,
+     9
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     1,
+     9
+    ],
+    "to": [
+     14,
+     9
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "_comment": "The hearth bench (8d E2 playtest fix): makes Ceria's 'couch by the fire' residence line literally true; bench sprite = the parlor guest-couch precedent. Decor (non-blocking, uncounted) like every stool.",
+   "sprite": "bench",
+   "cell": [
+    1,
+    3
+   ]
+  },
+  {
+   "sprite": "hearth",
+   "cell": [
+    2,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.62,
+     0.32
+    ],
+    "energy": 1.1,
+    "radius": 40,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "grill",
+   "cell": [
+    3,
+    2
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.58,
+     0.28
+    ],
+    "energy": 0.75,
+    "radius": 26,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "counter_left",
+   "cell": [
+    5,
+    2
+   ]
+  },
+  {
+   "sprite": "counter_mid",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "sprite": "counter_mid",
+   "cell": [
+    8,
+    2
+   ]
+  },
+  {
+   "sprite": "counter_right",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    5,
+    1
+   ]
+  },
+  {
+   "sprite": "shelf_bottles",
+   "cell": [
+    6,
+    1
+   ]
+  },
+  {
+   "sprite": "shelf_bottles",
+   "cell": [
+    8,
+    1
+   ]
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    9,
+    1
+   ]
+  },
+  {
+   "sprite": "stool",
+   "cell": [
+    6,
+    3
+   ]
+  },
+  {
+   "sprite": "stool",
+   "cell": [
+    8,
+    3
+   ]
+  },
+  {
+   "sprite": "food_basket",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "sprite": "table_brown",
+   "cell": [
+    7,
+    6
+   ]
+  },
+  {
+   "sprite": "food_bread",
+   "cell": [
+    7,
+    6
+   ]
+  },
+  {
+   "sprite": "food_ham",
+   "cell": [
+    5,
+    4
+   ]
+  },
+  {
+   "sprite": "plant_pot",
+   "cell": [
+    14,
+    4
+   ]
+  },
+  {
+   "sprite": "window_blue",
+   "cell": [
+    5,
+    9
+   ]
+  },
+  {
+   "sprite": "window_blue",
+   "cell": [
+    10,
+    9
+   ]
+  },
+  {
+   "sprite": "table_brown",
+   "cell": [
+    12,
+    7
+   ]
+  }
+ ],
+ "_comment_ambience": "Dust motes ship dusk/night-only for now (plan B3 judgment call -- day is the one ambience case explicitly deferred; a future pilot/rollout task decides whether they should also show at day).",
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all",
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "erin",
+   "kind": "npc",
+   "cell": [
+    7,
+    2
+   ],
+   "display_name": "Erin",
+   "sprite": "citizen_f",
+   "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
+   "friendly_line": "Oh - hi! You've got a good face, you know that? Come in, sit down. I'll find you something warm - on the house, probably. Don't tell Lyonette I said that.",
+   "_comment_stages": "Talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the erin_errand.json hub-topic unlocks (erin_chess/erin_home) lifted verbatim from docs/design/social-2-staging/erin_stages.json after the re-path wave went green. Stage 3's erin_daily_meal perk stays UNBUILT/flagged (needs the entity_first_use per-waking dialogue seam, not built this task).",
+   "talk_pool": [
+    "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
+    "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
+    "Everything okay? You've got a look. I know that look - I make that look in mirrors.",
+    "If you hear yelling about a door later, that's just the inn being the inn. Don't worry about it."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "erin_regular",
+     "requires_accomplishment": {
+      "errand_decided": 1,
+      "chatted_with_erin": 2
+     },
+     "lines": [
+      "Hey, you! Good timing. I just invented a new way to burn soup. Kidding. Mostly. Sit, sit.",
+      "You know you don't have to hover by the door anymore, right? You're basically furniture now. Nice furniture.",
+      "Selys asked about you the other day. I said nice things. You owe me one truthful compliment about my pasta."
+     ]
+    },
+    {
+     "id": "erin_friend_of_the_inn",
+     "requires_accomplishment": {
+      "resolved_wrong_order": 1,
+      "chatted_with_erin": 4
+     },
+     "lines": [
+      "There you are! Sit down, I'm testing a recipe on you. That came out wrong. WITH you. Testing it with you.",
+      "Lyonette hums when she scrubs now. She'd deny it under oath, so don't tell her I said anything. That was you, by the way.",
+      "Some days this place is a lot. Then somebody walks in and it's less a lot. You're one of the less-a-lot ones."
+     ]
+    },
+    {
+     "_comment": "One Erin pool-line acknowledging garden_door_unlocked -- she owns the Skill, the PC witnesses. Gated on the SAME `garden_door_unlocked` flag wi_game.gd's sleep() beat banks (last-met-wins ordering: appended AFTER erin_friend_of_the_inn since the K-of-N gate structurally implies resolved_wrong_order is very often already met by the time this fires, though not required -- garden_door_unlocked can also land via cleaned_the_inn+goblins_spared/sign_defended once those get producers). ONE line (the one-entry-array = a landmark-acknowledgment stage convention, same idiom as lyonette_thawed) -- no mechanics readout, no counter numerals, no Skill name (spoiler cutoff: never 'the Magical Door'-class Vol-9 naming for Erin's own Skill either). CONSTRAINT: this stage deliberately repeats every waking until the residue stage below takes over -- it is the game's only signpost toward the new door, so it must keep firing until the player has actually acted on it, never for a fixed number of hearings.",
+     "id": "erin_garden_open",
+     "requires_accomplishment": {
+      "garden_door_unlocked": 1
+     },
+     "lines": [
+      "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit."
+     ]
+    },
+    {
+     "_comment": "The reveal's residue stage (the olesm_after_the_match idiom: once the landmark beat has been acted on, the NPC demotes to normal callback chatter instead of repeating the reveal verbatim forever). Gated on `visited_the_garden` -- the EXISTING resolution accomplishment `garden_exit` banks via on_enter_accomplishment the first time the player walks through the vine door and back out -- rather than a heard-it-once marker, so the reveal keeps signposting until the player has actually SEEN the garden; a player who wanders in without ever talking to Erin also correctly skips straight to this stage (the reveal would be stale for them). Array-order-wins: authored last, wins the moment the gate is met.",
+     "id": "erin_garden_shared",
+     "requires_accomplishment": {
+      "visited_the_garden": 1
+     },
+     "lines": [
+      "Still there this morning. I checked before breakfast. Okay, during. I checked during breakfast.",
+      "Take whoever needs it in there sometime. That's what it's for. I think that's what it's for."
+     ]
+    }
+   ],
+   "conversation": "erin_errand",
+   "dialogue": [
+    {
+     "speaker": "Erin",
+     "text": "Welcome to The Wandering Inn! Mind giving that table a wipe?"
+    }
+   ],
+   "facing": "down"
+  },
+  {
+   "id": "lyonette",
+   "kind": "npc",
+   "cell": [
+    9,
+    5
+   ],
+   "display_name": "Lyonette",
+   "sprite": "lyonette",
+   "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
+   "friendly_line": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot.",
+   "_comment_pool": "Lyonette's base talk_pool (wounded-pride-thawing, warmth-arc SEED; C4/Q2 grows it post-quest -- spec 2.2/3.Q2). She is the game's ONLY pre-existing QA-covered NPC to gain a pool, so dialogue_walkthrough (the sole script that interacts with her -- twice, once per waking across its two sleeps) was re-pathed to ABSORB the first-talk pool DIALOGUE_LINE at idx 0 (waking 1) and idx 1 (waking 3, chatted_with_lyonette then =1) before opening lyonette_tip, mirroring the S4 pooled-NPC re-path pattern. Zero rng, so seed 9 holds.",
+   "talk_pool": [
+    "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
+    "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
+    "...You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
+   ],
+   "_comment_stages": "The one-shot `talk_pool_post` migrated verbatim into the new `talk_pool_stages` seam (social.gd's talk_pool_line, ORDERED array, last-met-wins) -- a RENAME, not a rewrite; ZERO copy changes. One-entry array = stage 2 (`lyonette_thawed`), the shipped thaw: once `resolved_wrong_order` is banked (The Wrong Order settled by any path), her rotating small-talk REPLACES `talk_pool` with these warmer lines. Rotation still keys on chatted_with_lyonette % lines.size(), zero rng. Ships PERK-LESS (stage-tables.md's optional home-topic unlock + optional short-rest perk are both ⚑ user-gated, default OUT -- see HANDOFF).",
+   "talk_pool_stages": [
+    {
+     "id": "lyonette_thawed",
+     "requires_accomplishment": {
+      "resolved_wrong_order": 1
+     },
+     "lines": [
+      "You covered for me. With the order, I mean. You didn't have to, and you didn't make it a story to tell later. That is... rare. Thank you.",
+      "Sit anywhere you like. The good chair by the fire, even. No, I insist — I'm allowed to insist, it's practically my inn too.",
+      "I used to think kindness was something people spent on you to get something back. You keep not doing that. It's unsettling. In a good way. Mostly."
+     ]
+    }
+   ],
+   "conversation": "lyonette_tip",
+   "dialogue": [
+    {
+     "speaker": "Lyonette",
+     "text": "Mind the floors, they're just done."
+    }
+   ],
+   "facing": "left"
+  },
+  {
+   "id": "dirty_table",
+   "kind": "prop",
+   "cell": [
+    5,
+    4
+   ],
+   "display_name": "Dirty Table",
+   "sprite": "dirty_table",
+   "requires_skill": "basic_cleaning",
+   "skill_hint_toast": "The table's a mess of rings and crumbs. It wants a proper wipe-down.",
+   "on_skill_use": {
+    "accomplishment": "cleaned_the_inn",
+    "gold": 1,
+    "toast": "[Basic Cleaning] — The table is spotless."
+   },
+   "visual_states": [
+    {
+     "when": {
+      "counter": "cleaned_the_inn",
+      "at": 1
+     },
+     "sprite": "table_brown",
+     "tint": [
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "inn_door",
+   "kind": "door",
+   "cell": [
+    15,
+    3
+   ],
+   "display_name": "To the Floodplains",
+   "sprite": "door",
+   "to_map": "floodplains",
+   "to_cell": [
+    7,
+    6
+   ]
+  },
+  {
+   "id": "dusty_scroll",
+   "kind": "prop",
+   "cell": [
+    12,
+    7
+   ],
+   "display_name": "Dusty Scroll",
+   "sprite": "dusty_scroll",
+   "_comment": "RETIRED as the mage trigger. It no longer banks used_magic and grants no class -- [Mage] is now earned from Pisces (learned_magic_from_pisces). Kept as pure flavor: banks read_dusty_scroll (referenced nowhere as a gate) and toasts a hint that magic exists and is learnable from someone who knows it.",
+   "on_interact_accomplishment": "read_dusty_scroll",
+   "toast": "Faded arcane script. You can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must."
+  },
+  {
+   "id": "unlit_lantern",
+   "kind": "prop",
+   "cell": [
+    13,
+    1
+   ],
+   "display_name": "Unlit Lantern",
+   "sprite": "unlit_lantern",
+   "requires_skill": "light",
+   "skill_hint_toast": "The wick's dry and ready. All it wants is a light that doesn't need a match.",
+   "on_skill_use": {
+    "accomplishment": "lit_the_common_room",
+    "toast": "[Light] — A steady white orb settles into the lantern's glass."
+   },
+   "visual_states": [
+    {
+     "when": {
+      "counter": "lit_the_common_room",
+      "at": 1
+     },
+     "tint": [
+      1.4,
+      1.25,
+      0.75
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.5
+      ],
+      "energy": 0.55,
+      "radius": 14,
+      "flicker": true
+     }
+    }
+   ]
+  },
+  {
+   "_comment": "Issue #80 (world reactivity wave, item 3 -- FLAVOR presence only, taste-gate 2026-07-12): present_when{phase:[day,dusk]} -- he goes home at night, same mechanism river_wolf_pack's encounter_when already ships (WIGame._present_gate_met). Never a quest-giver/vendor (the Serve mini-loop is a repeatable chore, not a quest); absence at night is diegetically correct (an empty-stomach patron isn't waiting on a closed kitchen past dark) and structurally correct too (present_when's own genuinely-absent semantics, not visual_states' hidden -- can't Serve an NPC who isn't there).",
+   "id": "hungry_patron",
+   "kind": "npc",
+   "cell": [
+    5,
+    6
+   ],
+   "display_name": "Hungry Patron",
+   "sprite": "drake_patron",
+   "facing": "left",
+   "conversation": "patron_serving",
+   "present_when": {
+    "phase": [
+     "day",
+     "dusk"
+    ]
+   },
+   "dialogue": [
+    {
+     "speaker": "Hungry Patron",
+     "text": "Innkeeper! Anyone?"
+    }
+   ]
+  },
+  {
+   "_comment": "Wage-scrutiny fix (#81 review carve-out): pre-existing `gold: 1` wage was UNGATED -- no `requires_skill` (unlike dirty_table's basic_cleaning gate), no item cost (unlike patron_serving.json's `{once_per_waking, item}` Serve option, the sibling wage this now matches), no `variants` one-shot guard (unlike frozen_cache) -- a bare repeat interact paid unlimited free gold. `once_per_waking: true` caps it via wi_game.gd's new interact()-level gate (the SAME entity_first_use dict/sleep-reset contract the dialogue-option once_per_waking gate and `sneaked_past_danger` already share): one delivered_item + one gold per waking, renewed every sleep -- a renewable daily wage, not a one-time discovery, matching served_customer's own per-waking cap rather than frozen_cache's pay-once-ever shape.",
+   "id": "serving_tray",
+   "kind": "prop",
+   "cell": [
+    10,
+    2
+   ],
+   "display_name": "Laden Tray",
+   "sprite": "table_brown",
+   "render_scale": 0.5,
+   "on_interact_accomplishment": "delivered_item",
+   "gold": 1,
+   "once_per_waking": true,
+   "once_per_waking_toast": "The tables are covered. Nothing more to carry out until tomorrow.",
+   "toast": "You carry the laden tray out to the tables."
+  },
+  {
+   "_comment": "Issue #59 (the dish-item seam): on_skill_use now ALSO grants a carryable `hot_meal` item (WIGame.use_skill's new optional `item` field, mirroring the pre-existing optional `gold` field used elsewhere on this same seam) alongside the `cooked_meal` accomplishment it already banked -- the hungry patron's Serve option (patron_serving.json) now gates on actually HOLDING this dish, not just once_per_waking. Deliberately the SAME prop/accomplishment work_loop.json already exercises, not a bespoke second pot (that pattern is reserved for quest-scoped cooking that must NOT feed this shared counter -- see short_order's own comment below).",
+   "id": "stew_pot",
+   "kind": "prop",
+   "cell": [
+    4,
+    1
+   ],
+   "display_name": "Stew Pot",
+   "sprite": "cauldron",
+   "requires_skill": "basic_cooking",
+   "skill_hint_toast": "The stew's at the turn. Someone who knows a pot could bring it home.",
+   "locked_toast": "You don't know your way around a stew pot. Yet.",
+   "on_skill_use": {
+    "accomplishment": "cooked_meal",
+    "item": "hot_meal",
+    "toast": "[Basic Cooking] — The stew comes out rich and hot."
+   }
+  },
+  {
+   "_comment": "The short-order prep pot -- a bespoke quest cooking station (cellar_door/nest_ledge precedent) so cooking here banks `stretched_the_order` WITHOUT mutating the shared stew_pot (which work_loop asserts banks `cooked_meal`). requires_skill basic_cooking gates it gracefully behind Helper: pre-Helper the field/interact use refuses with locked_toast + skill_unknown and banks nothing (no skill-name leak). Placed at the far kitchen corner (1,1), approached from (1,2), off every canonical inn route (the [1,1]/[1,2] refs in scripts are combat-GRID cells, not this overworld). Reuses the registered `cauldron` sprite (no test_sprite_registry row; ui_entities_rendered inn count 12->13, disclosed in inn_walkthrough + work_loop).",
+   "id": "short_order",
+   "kind": "prop",
+   "cell": [
+    1,
+    1
+   ],
+   "display_name": "Short-Order Pot",
+   "sprite": "cauldron",
+   "requires_skill": "basic_cooking",
+   "skill_hint_toast": "Three plates, one order, no sense. Someone who can cook could untangle it.",
+   "locked_toast": "The order's a mess and you haven't the first idea how to stretch it. Not yet.",
+   "on_skill_use": {
+    "accomplishment": "stretched_the_order",
+    "toast": "[Basic Cooking] — You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
+   }
+  },
+  {
+   "_comment": "Issue #62 finding 4: RELOCATED to the bottom-left corner -- the herringbone 'bedroom corner' floor swatch (floor_layers rect [1,6,3,3], x1-3/y6-8) was the map's own differently-tinted region and had no real purpose beyond dressing; the stairs now anchor it. Sits exactly where `inn_chest` used to be (that prop moved upstairs, see inn_upstairs' own inn_chest entity) -- same cell, same north-approach-facing-down convention, zero new blocked-cell math. to_cell shifted to (1,1): inn_upstairs' own `stairs_down` shifted up one tile flush into ITS corner (1,3 -> 1,2) as the matching half of this move, so the landing moves with it (one row further north, same north-of-the-door relative offset preserved). ui_entities_rendered inn count UNCHANGED (16, still swapping one entity for another at this cell -- inn_chest is simply gone from the ground floor now, net -1 there; inn_upstairs gains it, net +1 there) -- inn_walkthrough/work_loop/upstairs_walkthrough all re-pinned.",
+   "id": "stairs_up",
+   "kind": "door",
+   "cell": [
+    1,
+    8
+   ],
+   "display_name": "Stairs Up",
+   "sprite": "stairs_up",
+   "to_map": "inn_upstairs",
+   "to_cell": [
+    1,
+    1
+   ],
+   "on_enter_accomplishment": "visited_own_room"
+  },
+  {
+   "_comment": "The pantry door prop, the LOCKED interface anchor for the whole chain -- 3 visual_states keyed on the chain's accomplishment counters (default / flicker once door_chain_started / awakened once door_awakened). Placed at (14,6), against the east wall (the x=15 wall segment covers y=4-9) per the against-a-wall placement rule (playtest hotfix #2) -- CONSTRAINT: the free approach cell is (13,6), facing right; pantry_door_runes sits at (14,5) directly north, approached from (14,4) facing down. ui_entities_rendered inn count 14->16 (this entity + rift_vermin_leak below) -- inn_walkthrough/work_loop/upstairs_walkthrough updated. Interact copy is STATIC (same flavor toast regardless of counter state); the counter-aware beat-1 flicker line (Erin's dialogue banks door_chain_started) and any interact-copy differentiation are wired elsewhere -- the door prop itself NEVER speaks (only the GDI voices chain milestones, on the sleep-beat hook). Sprite states use `anchor_waystone` (the same portal-anchor arch every region's anchor stone uses -- user directive 2026-07-09: the Magical Door reads as the SAME prop family everywhere), tint-differentiated per state (flicker = cool blue, awakened = warm gold + light). This retired the `pantry_door_glow` placeholder and its missing-sheet fallback warning.",
+   "id": "pantry_door",
+   "kind": "prop",
+   "cell": [
+    14,
+    6
+   ],
+   "display_name": "The Pantry Door",
+   "sprite": "door",
+   "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
+   "_comment_d4": "The awakened interact rewire. `portal_menu`/`portal_menu_when` are checked BEFORE `on_interact_accomplishment` in wi_game.gd's interact() (the contains_when/door_when precedent, same file) -- once `door_awakened` is banked, every future interact opens WIPortals' fast-travel picker (src/core/portals.gd) instead of the flavor toast below, which stays the byte-identical PRE-awakening fallback (D1/D3 unchanged, gate unmet falls straight through).",
+   "portal_menu": true,
+   "portal_menu_when": {
+    "requires": {
+     "door_awakened": 1
+    }
+   },
+   "on_interact_accomplishment": "observed_the_pantry_door",
+   "toast": "Onions, a sack of soft potatoes, a shelf of jarred somethings gone dusty. The pantry door, same as it's always been.",
+   "visual_states": [
+    {
+     "_comment": "The FLICKER state used to swap in the anchor_waystone arch -- the same portal-anchor sprite the AWAKENED state below uses -- which read as the door having already become the portal mid-quest, far too early. No `sprite` key here now: it stays the plain pantry door, only the cool-blue tint (the flicker tell) applied. AWAKENED (below) keeps its own sprite+light swap untouched -- that IS the moment the door becomes the anchor.",
+     "when": {
+      "counter": "door_chain_started",
+      "at": 1
+     },
+     "tint": [
+      0.7,
+      0.85,
+      1.05
+     ]
+    },
+    {
+     "when": {
+      "counter": "door_awakened",
+      "at": 1
+     },
+     "sprite": "anchor_waystone",
+     "tint": [
+      1.15,
+      0.92,
+      0.55
+     ],
+     "light": {
+      "color": [
+       0.85,
+       0.7,
+       1.0
+      ],
+      "energy": 0.95,
+      "radius": 24,
+      "flicker": true
+     }
+    }
+   ]
+  },
+  {
+   "_comment": "PROMOTED from D1's kind:\"prop\" placeholder (test_combat_data would have hard-failed against D2's absent combat data at D1's merge time; D2 has since landed rift_vermin_a/b/c in data/combatants.json + the inn_cellar arena in data/arenas.json, both confirmed present in this worktree) to the real `kind: \"encounter\"` shape. Locked ids per the plan's interface: arena `inn_cellar`, enemies EXACTLY [\"rift_vermin_a\",\"rift_vermin_b\",\"rift_vermin_c\"], on_victory banks `cleared_the_leak` (D2's own locked id) alongside the door-chain's shared `door_understood` (identity-locked convergence counter, banked identically by all 3 mage-consult legs -- pisces_magic.json's TALK/SKILL legs) and `pedestal_unsealed` (a D3-internal convergence counter gating anchor_stone_pedestal's `contains_when`, banked by this fight, `ruin_guardian`'s own on_victory below, AND both of Pisces's TALK/SKILL legs -- their consult knowledge doubles as safe-passage insight past the ruin guardian, same as fighting through him directly). `allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. Interact-only, NO trigger_radius (unchanged from D1's placement) -- Pisces's FIGHT branch (pisces_magic.json's `door_consult`) sends the player here by flavor text alone, no dialogue-side start_combat wiring (the crate/cisterns FIGHT-leg precedent: the fight lives on its own map, reached by the player's own feet). `on_interact_accomplishment`/`toast` DROPPED (dead fields on an encounter -- interact()'s \"encounter\" match arm never reads them); `observe` KEPT (the generic ANY-entity [Appraise Foe] fallback read works regardless of kind, inn_sign/shield_spiders precedent). `found_the_leak` (D1's now-orphaned flavor counter) was never referenced by any dialogue/quest gate or QA script (grepped clean) -- dropping its sole producer is harmless.",
+   "id": "rift_vermin_leak",
+   "kind": "encounter",
+   "cell": [
+    9,
+    7
+   ],
+   "display_name": "A Leak in the Wall",
+   "sprite": "bat",
+   "tint": [
+    0.55,
+    0.5,
+    0.42
+   ],
+   "observe": "A hairline crack seams the plaster here, and the draft through it is colder than a pantry has any right to be. Something small moves on the other side of it, and doesn't like being watched back.",
+   "arena": "inn_cellar",
+   "enemies": [
+    "rift_vermin_a",
+    "rift_vermin_b",
+    "rift_vermin_c"
+   ],
+   "allies": [
+    "relc"
+   ],
+   "ally_requires": {
+    "met_relc": 1
+   },
+   "on_victory": [
+    "cleared_the_leak",
+    "door_understood",
+    "pedestal_unsealed"
+   ]
+  },
+  {
+   "_comment": "The doorframe's own worked stone, north of pantry_door (14,6) at (14,5) -- the field-skill first-use idiom (cellar_door/nest_ledge precedent), `requires_skill: observe` (the Tactician L1 grant, matching nest_ledge/cisterns_scout) + `on_skill_use` banks `read_the_door_runes` (an intermediate counter, zero rng) deterministically. Reporting the finding to Pisces (pisces_magic.json's hub report option, gated on this counter) banks the shared `door_understood` + `pedestal_unsealed` together -- the cisterns_scout/wrong_order 'SKILL alone only banks the intermediate counter, reporting to the consult NPC banks the convergence counters' precedent (Olesm/Lyonette's role there is Pisces's role here -- no olesm_intro.json touch needed, out of this task's file charter). Reuses the registered `dusty_scroll` sprite (the retired [Light]-study prop, thematically apt for 'something to read with a skill') tinted, no test_sprite_registry row needed (reused sprite id). Approach from (14,4) facing down.",
+   "id": "pantry_door_runes",
+   "kind": "prop",
+   "cell": [
+    14,
+    5
+   ],
+   "display_name": "The Doorframe's Grain",
+   "sprite": "dusty_scroll",
+   "tint": [
+    0.8,
+    0.8,
+    0.9
+   ],
+   "requires_skill": "observe",
+   "skill_hint_toast": "The grain of the frame almost makes a pattern, if the right eye looked at it properly.",
+   "on_skill_use": {
+    "accomplishment": "read_the_door_runes",
+    "toast": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
+   },
+   "locked_toast": "The doorframe's old wood is carved with something under the paint, faint and worn. Whatever it says isn't for an untrained eye."
+  },
+  {
+   "_comment": "Erin's OWN summoned garden door, at the inn -- NOT the portal menu (a deliberate departure from the Magical Door/pantry_door precedent right above: this door is Erin's Skill, not an attuned destination). `door_when.requires: {garden_door_unlocked: 1}` reads ONE monotonic flag wi_game.gd's sleep() beat banks once `_garden_earn_met()` (act >= III AND K=2 of 4 ratified legs) goes true -- see that function's doc comment for the full K-of-N gate-shape reasoning (a bespoke sleep-beat computation feeding the EXISTING door_when/_accomplishment_gate_met ALL-of reader unchanged, not a new gate shape in the shared validator). Until banked, interact falls through to on_interact_accomplishment/toast below -- BYTE-IDENTICAL pre-unlock fallback, the sewer_grate/deep_fissure/ruin_door precedent -- so every existing inn canonical is unaffected: this entity is a normal always-present prop that just reads as bare wall until the flag lands. Placed at (3,8), against the south wall (the y=9 wall segment covers x=1-14) per the against-a-wall placement rule (playtest hotfix #2) -- CONSTRAINT: the free approach cell is (3,7), facing down (same column as before, shifted onto the wall). `garden_door_inner` (owned PixelLab art) is the SAME door sprite `garden_exit` uses on the far side -- one physical door, two faces.",
+   "id": "garden_door",
+   "kind": "prop",
+   "cell": [
+    3,
+    8
+   ],
+   "display_name": "A Door of Vines",
+   "sprite": "garden_door_inner",
+   "observe": "Plaster, old and thin, and a nail with nothing hung on it. If something is meant to be here, it isn't yet.",
+   "on_interact_accomplishment": "noticed_the_bare_wall",
+   "toast": "Bare wall. A nail with nothing hung on it.",
+   "door_when": {
+    "requires": {
+     "garden_door_unlocked": 1
+    },
+    "to_map": "garden_sanctuary",
+    "to_cell": [
+     7,
+     10
+    ],
+    "open_toast": "The vines part like a curtain, and the light beyond doesn't flicker."
+   }
+  },
+  {
+   "_comment": "8d D2 (issue #14/#15): Ceria Springwalker takes inn residence -- present ONLY once `what_the_seal_kept` completes (`present_when.requires.seal_kept_reported`, the quest's own report-beat counter banked by olesm_intro.json's closing option; WIGame.entity_present's new structural gate -- absent, not merely hidden, pre-quest: excluded from occupancy/entity_at/render+count, `inn_walkthrough`'s pre-quest ui_entities_rendered count stays unchanged). Pool presence only v1 (Social II talk_pool_stages explicitly deferred, per the plan). Distinct entity id from dungeon_approach's `ceria` (the recruit sighting) -- same character, second placement, the `ksmvr_plates` precedent for a second sighting under its own id. Placed at a common-room table (8,6), adjacent to the table_brown/food_bread at (7,6), facing it; clear of every blocked/decor/entity cell on this map. Reuses the `ceria` sprite shipped 8dA verbatim, no new art. talk_pool + a static dialogue fallback (no conversation graph, the Renn/Ilvo/Yelra pool-presence idiom).",
+   "id": "ceria_inn",
+   "kind": "npc",
+   "cell": [
+    8,
+    6
+   ],
+   "display_name": "Ceria Springwalker",
+   "sprite": "ceria",
+   "facing": "left",
+   "present_when": {
+    "requires": {
+     "seal_kept_reported": 1
+    }
+   },
+   "talk_pool": [
+    "The couch by the fire is Yvlon's now. Territorial, armswomen.",
+    "Pisces keeps asking about the vault door. I told him to bring his own rope this time.",
+    "Silver-rank pay, Gold-rank stonework down there. Somebody's math is off, and it isn't mine."
+   ],
+   "dialogue": [
+    {
+     "speaker": "Ceria Springwalker",
+     "text": "Ask me about the vault again and I'll start charging Pisces rent."
+    }
+   ]
+  },
+  {
+   "_comment": "8d D2 (issue #14/#15): Yvlon Byres takes inn residence, same `present_when.requires.seal_kept_reported` gate as `ceria_inn` (see that entity's own _comment for the mechanism). Placed at (2,3) on the COMMON-ROOM side beside the hearth bench at (1,3) (review fix: (2,2) sat inside the kitchen row between the cook-pots), facing up into the firelight -- her own talk_pool line names 'the couch by the fire' as hers now, this cell is that claim made literal. Reuses the `yvlon` sprite shipped 8dA verbatim.",
+   "id": "yvlon_inn",
+   "kind": "npc",
+   "cell": [
+    2,
+    3
+   ],
+   "display_name": "Yvlon Byres",
+   "sprite": "yvlon",
+   "facing": "up",
+   "present_when": {
+    "requires": {
+     "seal_kept_reported": 1
+    }
+   },
+   "talk_pool": [
+    "The inn's quieter than the Guild hall. I'm starting to see why you like it.",
+    "My arm's fine. Stop looking.",
+    "If the door down there opens, I want to be standing in front of it. That's not bravery — it's just where I stand."
+   ],
+   "dialogue": [
+    {
+     "speaker": "Yvlon Byres",
+     "text": "My arm's still fine."
+    }
+   ]
+  },
+  {
+   "_comment": "8d D2 (issue #14/#15): Ksmvr takes inn residence, same `present_when.requires.seal_kept_reported` gate (see `ceria_inn`'s own _comment for the mechanism). Placed deliberately odd-but-polite (per the plan's own framing) beside the pantry door at (14,7), one cell south of `pantry_door` (14,6), facing up -- watching it, not blocking the door's own documented (13,6)-facing-right approach. Distinct entity id from dungeon_approach's `ksmvr` and trapped_halls' `ksmvr_plates` -- a third sighting of the same character, same second-sighting-gets-its-own-id precedent. Reuses the `ksmvr` sprite shipped 8dA verbatim.",
+   "id": "ksmvr_inn",
+   "kind": "npc",
+   "cell": [
+    14,
+    7
+   ],
+   "display_name": "Ksmvr",
+   "sprite": "ksmvr",
+   "facing": "up",
+   "present_when": {
+    "requires": {
+     "seal_kept_reported": 1
+    }
+   },
+   "talk_pool": [
+    "I have been given a mug of blue fruit juice. I did not ask for it. Erin says this is called 'hospitality.' I am recording it as an asset.",
+    "This inn does not have traps. I checked all the floors. Twice.",
+    "Captain Ceria says I may sit anywhere. I have chosen the corner with two exits."
+   ],
+   "dialogue": [
+    {
+     "speaker": "Ksmvr",
+     "text": "I am still counting exits. There are still two."
+    }
+   ]
+  }
+ ]
+}

@@ -219,7 +219,7 @@ func _init() -> void:
 	var evo_events: Array = []
 	var sink := func(type: String, payload: Dictionary) -> void:
 		evo_events.append({"type": type, "payload": payload})
-	var scene_cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skeleton_scene.json"))
+	var scene_cfg: Dictionary = WISceneCatalog.compose()
 	var skill_cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills.json"))
 	var game := WIGame.new(scene_cfg, skill_cfg, sink, 42, {"classes": catalog})
 	game.classes = {"warrior": 10}

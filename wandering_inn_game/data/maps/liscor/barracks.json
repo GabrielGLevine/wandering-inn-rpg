@@ -1,0 +1,330 @@
+{
+ "_comment": "The Watch barracks (14x8), reached via barracks_door on the street (22,3 -- the former watch_guard flavor NPC's spot, now a real door; the Watch post facade decor at (22,1)/(22,2) already implied a doorway here). Duty Sergeant Dresk Ashgrave (profile in docs/design/character-profiles.md) is that RELOCATED watch_guard, given a name/voice/tint -- zero canonical QA touches on watch_guard were found (grepped before the move), so this is a silent relocation, unlike Selys's own heavily-repathed relocation. Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched) -- the barracks holds only her DESK (zevara_desk, flavor/observe, she is rarely at it). THE CELL (cell_door) is empty-v1, dressed, a quest-outcome surface for later -- same locked-prop idiom as inn_upstairs's lyonette_door (flush against a wall, no interior room modeled behind it, no requires_skill so a plain interact reads the locked_toast). Reuses the 'inn' biome (Interior_Walls_01.png) like guild/inn_upstairs -- every interior in this game differentiates via moods.json's grade + dressing, not new tile assets; moods.json's 'barracks' card supplies the 'stern'/cool-institutional grade. Kit racks (shelf_bottles) + a briefing table (table_brown) + a kit crate (all ADDED to `blocked`, THE BLOCKING CONTRACT) + a stool (intentionally walkable, matching the guild/inn precedent) dress the room duty-mundane, per the canon note that the barracks is a SETTING, not a bounty source (watch-flavored bounties still post at the Guild board, per the ratified spec).",
+ "biome": "inn",
+ "grid": {
+  "width": 14,
+  "height": 8
+ },
+ "blocked": [
+  [
+   6,
+   2
+  ],
+  [
+   9,
+   2
+  ],
+  [
+   3,
+   2
+  ]
+ ],
+ "floor_layers": [
+  {
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     1,
+     21
+    ],
+    [
+     2,
+     21
+    ],
+    [
+     1,
+     22
+    ],
+    [
+     2,
+     22
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
+ "walls": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     13,
+     0
+    ],
+    "cap": [
+     14,
+     6
+    ],
+    "face": [
+     14,
+     7
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     13,
+     1
+    ],
+    "to": [
+     13,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "_comment": "South wall, gapped at x=2 for barracks_exit.",
+    "from": [
+     1,
+     7
+    ],
+    "to": [
+     1,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     3,
+     7
+    ],
+    "to": [
+     12,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "table_brown",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "sprite": "shelf_bottles",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    3,
+    2
+   ]
+  },
+  {
+   "sprite": "stool",
+   "cell": [
+    7,
+    2
+   ]
+  }
+ ],
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all",
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "barracks_exit",
+   "kind": "door",
+   "cell": [
+    2,
+    7
+   ],
+   "display_name": "Liscor Street",
+   "sprite": "door",
+   "to_map": "street",
+   "to_cell": [
+    21,
+    3
+   ]
+  },
+  {
+   "_comment": "Duty Sergeant Dresk Ashgrave -- the relocated watch_guard (see map comment above). talk_pool fires first-talk-of-the-waking as before; a REAL `conversation` (issue #81) now backs every talk after that instead of the old repeated-forever dialogue[0] fallback -- gated content only (the 'Ask about the missing recruit.' option requires the guild_board's rumor_missing_recruit having been read), so this fixture's own pre-#81 canonicals (barracks_walkthrough, archer_earn_loop) stay byte-identical: neither re-talks to Dresk a second time in one waking.",
+   "id": "duty_sergeant",
+   "kind": "npc",
+   "cell": [
+    6,
+    4
+   ],
+   "display_name": "Dresk",
+   "sprite": "royal_soldier",
+   "tint": [
+    0.55,
+    0.35,
+    0.3
+   ],
+   "observe": "A belt-slate at his hip, chalk stub worn to a nub, already a line into today's tally. Rust-brown scales, no plate for a desk posting — he'd rather be finishing the count than talking to you.",
+   "facing": "down",
+   "talk_pool": [
+    "Sergeant Ashgrave. If you're here to report something, the slate's on the wall. Write it plain.",
+    "Quiet shift. Kit's counted, slates are current, and the cell's empty. Write that down as a good day.",
+    "Barracks business, filed here. Yours is filed at the gate."
+   ],
+   "conversation": "dresk_recruit",
+   "dialogue": [
+    {
+     "speaker": "Dresk",
+     "text": "Barracks is Watch business only. State yours."
+    }
+   ]
+  },
+  {
+   "_comment": "Zevara's desk -- she stays at the gate (zevara_intro unchanged); this is flavor/observe only, the barracks holding her paperwork rather than her person.",
+   "id": "zevara_desk",
+   "kind": "prop",
+   "cell": [
+    10,
+    5
+   ],
+   "display_name": "Zevara's Desk",
+   "sprite": "library_desk",
+   "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it. The gate keeps her busier than her own office does.",
+   "on_interact_accomplishment": "saw_zevaras_desk",
+   "toast": "Watch Captain's desk. Empty, same as every other time you've walked past it."
+  },
+  {
+   "_comment": "THE CELL, empty v1 and dressed -- a quest-outcome surface for later. Flush against the east wall, same idiom as inn_upstairs's lyonette_door (a locked prop, not a real door -- no room modeled behind it). No requires_skill, so a plain interact reads the locked_toast (the sewer_debris/lyonette_door seam).",
+   "id": "cell_door",
+   "kind": "prop",
+   "cell": [
+    12,
+    3
+   ],
+   "display_name": "The Cell",
+   "sprite": "door",
+   "tint": [
+    0.5,
+    0.5,
+    0.55
+   ],
+   "locked_toast": "Barred, and empty behind the bars. You can tell by the quiet. Whatever ends up in here hasn't happened yet.",
+   "observe": "A single holding cell, iron-barred, straw swept into one corner. Duty-mundane, like everything else in this building — until it isn't."
+  },
+  {
+   "_comment": "GH#70 [Archer]'s earn seam: the practice archery butt, item-gated on carrying any bow (`requires_weapon_family`, wi_game.gd's interact() gate -- the small parallel to the #59 conversation item-gate for a bare prop, checked against the CARRIED inventory, not the equipped slot). Each successful interact banks `ranged_hit` DIRECTLY (the SAME counter a bow's basic Attack tallies in a real fight -- see wi_combat.gd's _resolve_hit doc comment) -- repeatable (nothing marks it consumed), so 3 practice shots alone clear [Archer]'s gained_by threshold with zero combat required, matching the classless-start onboarding parity every other earned class already gives (warrior=spar, mage/rogue/diplomat=one conversation). Reuses the `training_dummy` sprite (relc_spar's own straw-target art on a DIFFERENT map -- floodplains training_yard's Relc-run dummies vs this barracks butt, never on screen together) tinted straw-tan so it reads as a fixed range target rather than a hackable melee dummy. Placed at (11,1) against the north wall (the established 'against a wall' placement rule), approached from (11,2) -- reachable via the SAME (2,3)->(11,3) waypoints barracks_walkthrough's own cell_door leg already uses, then straight up 2, clear of every blocked/decor cell in the room (table_brown/shelf_bottles/crate all sit on row y=2 at x=3/6/9, never touched by this column-11 approach).",
+   "id": "archery_butt",
+   "kind": "prop",
+   "cell": [
+    11,
+    1
+   ],
+   "display_name": "Archery Butt",
+   "sprite": "training_dummy",
+   "tint": [
+    0.85,
+    0.75,
+    0.45
+   ],
+   "observe": "A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster, more or less -- somebody here takes the drills seriously.",
+   "requires_weapon_family": "bow",
+   "item_hint_toast": "Nothing to shoot with. A bow in hand would do it.",
+   "on_interact_accomplishment": "ranged_hit",
+   "toast": "You put an arrow in the straw. Not bad, for someone who still flinches at the draw."
+  },
+  {
+   "_comment": "Issue #81 (exploration & optional content): a discovery prop that pays REAL (the gap-analysis finding -- 'exploration pays nothing'). Container shape (`contains`), the inn_chest/ruin_stones/anchor_stone_pedestal precedent -- grants `field_whetstone` via pickup() (its own 'Got: Field Whetstone' toast + ITEM_GAINED), which is ALREADY a purchasable Krshia item (data/dialogue/krshia_crate.json) whose own lore ('half the Watch loses theirs by spring') this find pays off directly -- zero new item catalog entry needed. Placed at (4,6), row y=6 -- confirmed UNWALKED by either barracks canonical (barracks_walkthrough/archer_earn_loop both stay within rows y=2-5 plus the x=2 exit column; row y=6 is untouched floor, no blocked cell, no decor). Sprite `crate` tinted worn-leather-brown, distinct from the room's own undertinted kit crate at (3,2) (decor, non-interactive).",
+   "id": "spare_kit_crate",
+   "kind": "prop",
+   "cell": [
+    4,
+    6
+   ],
+   "display_name": "An Overlooked Kit Crate",
+   "sprite": "crate",
+   "tint": [
+    0.5,
+    0.42,
+    0.3
+   ],
+   "observe": "A second kit crate, shoved into the corner and never reshelved. The sergeant's own tally probably missed it.",
+   "contains": [
+    "field_whetstone"
+   ]
+  },
+  {
+   "_comment": "Issue #81 lore-note collectible thread: found-note item (kind:parcel, data/items.json), container shape identical to spare_kit_crate above (same row, same UNWALKED-cell proof). `on_open_accomplishment` is pure flavor -- nothing gates on it.",
+   "id": "note_watch_veteran",
+   "kind": "prop",
+   "cell": [
+    9,
+    6
+   ],
+   "display_name": "A Watch Veteran's Letter",
+   "sprite": "dusty_scroll",
+   "tint": [
+    0.7,
+    0.65,
+    0.5
+   ],
+   "observe": "A folded half-letter, tucked behind a loose board. Someone started writing it and never finished.",
+   "contains": [
+    "note_watch_veteran"
+   ],
+   "on_open_accomplishment": "found_watch_veteran_note"
+  },
+  {
+   "_comment": "Issue #81 lore-note collectible thread: RELOCATED here from the guild (its first home) after the scene_dynamism tool's own family-spread signal flagged the guild map -- two new props sharing props/free_pack there net-diluted composite (64.66 -> 64.51 pre-edit vs. post, measured, a real STOP-trigger regression per this task's own brief) with no thematically-honest non-free_pack alternative available; a THIRD barracks prop re-measured net POSITIVE for both maps (barracks 65.38 -> 65.75, guild recovers to 64.89) since barracks had more density headroom. Container shape identical to spare_kit_crate/note_watch_veteran above (same row, same UNWALKED-cell proof -- (11,6) is a third distinct cell on the row neither barracks canonical ever treads).",
+   "id": "note_old_dread",
+   "kind": "prop",
+   "cell": [
+    11,
+    6
+   ],
+   "display_name": "A Ward-Charm Scrap",
+   "sprite": "dusty_scroll",
+   "tint": [
+    0.55,
+    0.5,
+    0.45
+   ],
+   "observe": "A scrap of paper pinned low, tucked behind a loose board same as the letter across the room.",
+   "contains": [
+    "note_old_dread"
+   ],
+   "on_open_accomplishment": "found_old_dread_note"
+  }
+ ]
+}

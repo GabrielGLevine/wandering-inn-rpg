@@ -156,7 +156,7 @@ var _checked := 0
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var combat_config := _combat_config()
-	var scene: Dictionary = _load_json("res://data/skeleton_scene.json")
+	var scene: Dictionary = WISceneCatalog.compose()
 	var skills: Dictionary = _load_json("res://data/skills.json")
 
 	var names := _fixture_names()

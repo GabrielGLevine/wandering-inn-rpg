@@ -1,0 +1,22 @@
+{
+ "start_map": "inn",
+ "player": {
+  "cell": [
+   2,
+   3
+  ],
+  "display_name": "Traveler",
+  "sprite": "body_a",
+  "skills": [
+   "basic_cleaning"
+  ],
+  "classes": {},
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  }
+ }
+}

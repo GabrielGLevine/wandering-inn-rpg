@@ -1,0 +1,1243 @@
+{
+ "_comment": "Invrisil 8c Task C1 (issue #12) -- ~20x14 mercantile alleys, the stealth playground (locked shape: bent routes, stacked crates, 2-3 SNEAKABLE trigger_radius footpad placements). biome invrisil_alley (FIX WAVE: same wang paving floor as the boulevard per direction.md's 'same stone, meaner hour', but its OWN blocked+skirt -- the darker textured masonry band picks.md sec.2 flagged for alley walls -- after the controller's windowed read caught the shared-street version rendering as corridors floating on void; see biomes.json's invrisil_alley _comment). Sparse sconce lantern pools on wall cells (decor below) + the night mood card carry the 'lantern maze' read -- direction doc open-question 4's own fence-less fallback. The open path is a bent L: a west corridor (y6-7) -> a north-south connector (x8-10) -> an east corridor (y11-12) to the parlor door, matching the design doc's 'bent routes' literally, not just in flavor -- footpads sit IN the turn and just past it. Crate/barrel decor dresses the corridor's blocked-adjacent cells (the 'CLIMBABLE flavor, not literal climbing' note -- stacked goods, not scatter).",
+ "biome": "invrisil_alley",
+ "grid": {
+  "width": 20,
+  "height": 14
+ },
+ "blocked": [
+  [
+   0,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   7,
+   0
+  ],
+  [
+   8,
+   0
+  ],
+  [
+   9,
+   0
+  ],
+  [
+   10,
+   0
+  ],
+  [
+   11,
+   0
+  ],
+  [
+   12,
+   0
+  ],
+  [
+   13,
+   0
+  ],
+  [
+   14,
+   0
+  ],
+  [
+   15,
+   0
+  ],
+  [
+   16,
+   0
+  ],
+  [
+   17,
+   0
+  ],
+  [
+   18,
+   0
+  ],
+  [
+   19,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   6,
+   1
+  ],
+  [
+   7,
+   1
+  ],
+  [
+   8,
+   1
+  ],
+  [
+   9,
+   1
+  ],
+  [
+   10,
+   1
+  ],
+  [
+   11,
+   1
+  ],
+  [
+   12,
+   1
+  ],
+  [
+   13,
+   1
+  ],
+  [
+   14,
+   1
+  ],
+  [
+   15,
+   1
+  ],
+  [
+   16,
+   1
+  ],
+  [
+   17,
+   1
+  ],
+  [
+   18,
+   1
+  ],
+  [
+   19,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   6,
+   2
+  ],
+  [
+   7,
+   2
+  ],
+  [
+   8,
+   2
+  ],
+  [
+   9,
+   2
+  ],
+  [
+   10,
+   2
+  ],
+  [
+   11,
+   2
+  ],
+  [
+   12,
+   2
+  ],
+  [
+   13,
+   2
+  ],
+  [
+   14,
+   2
+  ],
+  [
+   15,
+   2
+  ],
+  [
+   16,
+   2
+  ],
+  [
+   17,
+   2
+  ],
+  [
+   18,
+   2
+  ],
+  [
+   19,
+   2
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   6,
+   3
+  ],
+  [
+   7,
+   3
+  ],
+  [
+   8,
+   3
+  ],
+  [
+   9,
+   3
+  ],
+  [
+   10,
+   3
+  ],
+  [
+   11,
+   3
+  ],
+  [
+   12,
+   3
+  ],
+  [
+   13,
+   3
+  ],
+  [
+   14,
+   3
+  ],
+  [
+   15,
+   3
+  ],
+  [
+   16,
+   3
+  ],
+  [
+   17,
+   3
+  ],
+  [
+   18,
+   3
+  ],
+  [
+   19,
+   3
+  ],
+  [
+   0,
+   4
+  ],
+  [
+   1,
+   4
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   4,
+   4
+  ],
+  [
+   5,
+   4
+  ],
+  [
+   6,
+   4
+  ],
+  [
+   7,
+   4
+  ],
+  [
+   8,
+   4
+  ],
+  [
+   9,
+   4
+  ],
+  [
+   10,
+   4
+  ],
+  [
+   11,
+   4
+  ],
+  [
+   12,
+   4
+  ],
+  [
+   13,
+   4
+  ],
+  [
+   14,
+   4
+  ],
+  [
+   15,
+   4
+  ],
+  [
+   16,
+   4
+  ],
+  [
+   17,
+   4
+  ],
+  [
+   18,
+   4
+  ],
+  [
+   19,
+   4
+  ],
+  [
+   0,
+   5
+  ],
+  [
+   1,
+   5
+  ],
+  [
+   2,
+   5
+  ],
+  [
+   3,
+   5
+  ],
+  [
+   4,
+   5
+  ],
+  [
+   5,
+   5
+  ],
+  [
+   6,
+   5
+  ],
+  [
+   7,
+   5
+  ],
+  [
+   8,
+   5
+  ],
+  [
+   9,
+   5
+  ],
+  [
+   10,
+   5
+  ],
+  [
+   11,
+   5
+  ],
+  [
+   12,
+   5
+  ],
+  [
+   13,
+   5
+  ],
+  [
+   14,
+   5
+  ],
+  [
+   15,
+   5
+  ],
+  [
+   16,
+   5
+  ],
+  [
+   17,
+   5
+  ],
+  [
+   18,
+   5
+  ],
+  [
+   19,
+   5
+  ],
+  [
+   11,
+   6
+  ],
+  [
+   12,
+   6
+  ],
+  [
+   13,
+   6
+  ],
+  [
+   14,
+   6
+  ],
+  [
+   15,
+   6
+  ],
+  [
+   16,
+   6
+  ],
+  [
+   17,
+   6
+  ],
+  [
+   18,
+   6
+  ],
+  [
+   19,
+   6
+  ],
+  [
+   11,
+   7
+  ],
+  [
+   12,
+   7
+  ],
+  [
+   13,
+   7
+  ],
+  [
+   14,
+   7
+  ],
+  [
+   15,
+   7
+  ],
+  [
+   16,
+   7
+  ],
+  [
+   17,
+   7
+  ],
+  [
+   18,
+   7
+  ],
+  [
+   19,
+   7
+  ],
+  [
+   0,
+   8
+  ],
+  [
+   1,
+   8
+  ],
+  [
+   2,
+   8
+  ],
+  [
+   3,
+   8
+  ],
+  [
+   4,
+   8
+  ],
+  [
+   5,
+   8
+  ],
+  [
+   6,
+   8
+  ],
+  [
+   7,
+   8
+  ],
+  [
+   11,
+   8
+  ],
+  [
+   12,
+   8
+  ],
+  [
+   13,
+   8
+  ],
+  [
+   14,
+   8
+  ],
+  [
+   15,
+   8
+  ],
+  [
+   16,
+   8
+  ],
+  [
+   17,
+   8
+  ],
+  [
+   18,
+   8
+  ],
+  [
+   19,
+   8
+  ],
+  [
+   0,
+   9
+  ],
+  [
+   1,
+   9
+  ],
+  [
+   2,
+   9
+  ],
+  [
+   3,
+   9
+  ],
+  [
+   4,
+   9
+  ],
+  [
+   5,
+   9
+  ],
+  [
+   6,
+   9
+  ],
+  [
+   7,
+   9
+  ],
+  [
+   11,
+   9
+  ],
+  [
+   12,
+   9
+  ],
+  [
+   13,
+   9
+  ],
+  [
+   14,
+   9
+  ],
+  [
+   15,
+   9
+  ],
+  [
+   16,
+   9
+  ],
+  [
+   17,
+   9
+  ],
+  [
+   18,
+   9
+  ],
+  [
+   19,
+   9
+  ],
+  [
+   0,
+   10
+  ],
+  [
+   1,
+   10
+  ],
+  [
+   2,
+   10
+  ],
+  [
+   3,
+   10
+  ],
+  [
+   4,
+   10
+  ],
+  [
+   5,
+   10
+  ],
+  [
+   6,
+   10
+  ],
+  [
+   7,
+   10
+  ],
+  [
+   11,
+   10
+  ],
+  [
+   12,
+   10
+  ],
+  [
+   13,
+   10
+  ],
+  [
+   14,
+   10
+  ],
+  [
+   15,
+   10
+  ],
+  [
+   16,
+   10
+  ],
+  [
+   17,
+   10
+  ],
+  [
+   18,
+   10
+  ],
+  [
+   19,
+   10
+  ],
+  [
+   0,
+   11
+  ],
+  [
+   1,
+   11
+  ],
+  [
+   2,
+   11
+  ],
+  [
+   3,
+   11
+  ],
+  [
+   4,
+   11
+  ],
+  [
+   5,
+   11
+  ],
+  [
+   6,
+   11
+  ],
+  [
+   7,
+   11
+  ],
+  [
+   0,
+   12
+  ],
+  [
+   1,
+   12
+  ],
+  [
+   2,
+   12
+  ],
+  [
+   3,
+   12
+  ],
+  [
+   4,
+   12
+  ],
+  [
+   5,
+   12
+  ],
+  [
+   6,
+   12
+  ],
+  [
+   7,
+   12
+  ],
+  [
+   0,
+   13
+  ],
+  [
+   1,
+   13
+  ],
+  [
+   2,
+   13
+  ],
+  [
+   3,
+   13
+  ],
+  [
+   4,
+   13
+  ],
+  [
+   5,
+   13
+  ],
+  [
+   6,
+   13
+  ],
+  [
+   7,
+   13
+  ],
+  [
+   8,
+   13
+  ],
+  [
+   9,
+   13
+  ],
+  [
+   10,
+   13
+  ],
+  [
+   11,
+   13
+  ],
+  [
+   12,
+   13
+  ],
+  [
+   13,
+   13
+  ],
+  [
+   14,
+   13
+  ],
+  [
+   15,
+   13
+  ],
+  [
+   16,
+   13
+  ],
+  [
+   17,
+   13
+  ],
+  [
+   18,
+   13
+  ],
+  [
+   19,
+   13
+  ]
+ ],
+ "decor": [
+  {
+   "sprite": "crate",
+   "cell": [
+    5,
+    8
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    7,
+    8
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    12,
+    9
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    15,
+    10
+   ]
+  },
+  {
+   "_comment": "FIX WAVE lantern pools (direction.md alleys card: 'sparse fence-lantern anchors, wider gaps between pools than the boulevard's serviced rhythm'). Reuses the existing `sconce` sprite (the inn's own wall lamp -- zero new assets, the direction doc's own 'consider owned/wired art instead of the speculative sewer lantern pick' note) on wall cells adjacent to the corridors. Four pools over three corridor legs vs the boulevard's eight -- the sparser rhythm IS the card. Non-flicker per the direction card's Invrisil-wide rule (serviced city lamps; flicker reads poor).",
+   "sprite": "sconce",
+   "cell": [
+    3,
+    5
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.78,
+     0.45
+    ],
+    "energy": 0.8,
+    "radius": 22,
+    "flicker": false
+   }
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    7,
+    8
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.78,
+     0.45
+    ],
+    "energy": 0.8,
+    "radius": 22,
+    "flicker": false
+   }
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    11,
+    10
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.78,
+     0.45
+    ],
+    "energy": 0.8,
+    "radius": 22,
+    "flicker": false
+   }
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    16,
+    13
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.78,
+     0.45
+    ],
+    "energy": 0.8,
+    "radius": 22,
+    "flicker": false
+   }
+  }
+ ],
+ "entities": [
+  {
+   "_comment": "Round-trip pair with boulevard_to_alleys (invrisil_boulevard cell 26,8). Landing (25,8) on the boulevard side is the open mid-street cell immediately west of that door.",
+   "id": "alleys_to_boulevard",
+   "kind": "door",
+   "cell": [
+    0,
+    7
+   ],
+   "display_name": "Back to the Boulevard",
+   "sprite": "door",
+   "to_map": "invrisil_boulevard",
+   "to_cell": [
+    25,
+    8
+   ]
+  },
+  {
+   "_comment": "Round-trip pair with parlor_to_alleys (brothers_parlor cell 0,4). Landing (1,4) on the parlor side is the open interior cell immediately east of that door.",
+   "id": "alleys_to_parlor",
+   "kind": "door",
+   "cell": [
+    19,
+    12
+   ],
+   "display_name": "A Plain Door, Better Locks Than It Looks",
+   "sprite": "door",
+   "to_map": "brothers_parlor",
+   "to_cell": [
+    1,
+    4
+   ]
+  },
+  {
+   "_comment": "Invrisil 8c Task C1 -- the street fixer, 'Cups' (docs/superpowers/specs/2026-07-06-invrisil-design.md sec.2/sec.4: 'sells rumors by the CUP -- tea-house pricing bit'). FULL conversation graph wired now (data/dialogue/invrisil_fixer.json) -- unlike Wilovan/Coyle, none of her effects reference a quest id or a start_combat entity C1 doesn't own (gold/accomplishment only), so the rumor-vending hub + the TALK-path testimony chain's *shape* are safe to ship now; the testimony options stay naturally hidden (requires took_brothers_job/fixer_will_testify, both absent==0) until Task C3 lands the quest that banks them -- a forward reference, same convention as C2's Wilovan combatant record. Sprite: reused `citizen_f` rig tinted muted teal-grey (a shawl-and-tea-tray read), zero new generation.",
+   "id": "cups",
+   "kind": "npc",
+   "cell": [
+    2,
+    6
+   ],
+   "display_name": "Cups",
+   "sprite": "citizen_f",
+   "tint": [
+    0.55,
+    0.6,
+    0.6
+   ],
+   "facing": "right",
+   "observe": "A tea-tray harness worn shiny at the left shoulder — she pours right-handed and listens left-eared. The cups are chipped. The ears are not.",
+   "friendly_line": "She pours you a cup without being asked. \"On the house,\" she says, \"which is the only kind of trade I ever regret.\"",
+   "conversation": "invrisil_fixer",
+   "dialogue": [
+    {
+     "speaker": "Cups",
+     "text": "Tea's free. Rumor's a gold the cup."
+    }
+   ]
+  },
+  {
+   "_comment": "LOCKED interface (8c plan) -- `alley_footpads_a`, one of 2-3 sneakable trigger_radius encounters (the K2 payoff: traced _check_trigger_radius before placing -- `sneaking` skips the ambush entirely and instead banks sneaked_past_danger, silently, per that function's own doc comment; walking it WITHOUT sneaking fires start_combat for real). Arena `mercantile_alley`, roster `footpad_lookout`/`footpad_bruiser` (lane beta/C2's combat data, tuned LOW-lethality by design so a failed sneak never walls the player). Sits inside the vertical connector (the bent route's turn), the corridor's narrowest point.",
+   "id": "alley_footpads_a",
+   "kind": "encounter",
+   "cell": [
+    9,
+    9
+   ],
+   "trigger_radius": 2,
+   "display_name": "Footpads in the Turn",
+   "sprite": "human_laborer",
+   "arena": "mercantile_alley",
+   "enemies": [
+    "footpad_lookout",
+    "footpad_bruiser"
+   ],
+   "on_victory": "cleared_footpads_a",
+   "observe": "Two figures loitering with the specific stillness of people about to stop pretending they're not waiting for you.",
+   "allies": [],
+   "respawns": true
+  },
+  {
+   "_comment": "LOCKED interface -- `alley_footpads_b`, the pair's second placement (east corridor, toward the parlor door). Chebyshev distance from alley_footpads_a's own radius-2 zone is 5 (dx5/dy3) -- deliberately non-overlapping, so a canonical script can sneak past BOTH independently without _check_trigger_radius's single-fire-per-move loop masking one behind the other.",
+   "id": "alley_footpads_b",
+   "kind": "encounter",
+   "cell": [
+    14,
+    12
+   ],
+   "trigger_radius": 2,
+   "display_name": "Footpads by the Cheese-Propped Door",
+   "sprite": "human_laborer",
+   "arena": "mercantile_alley",
+   "enemies": [
+    "footpad_lookout",
+    "footpad_bruiser"
+   ],
+   "on_victory": "cleared_footpads_b",
+   "observe": "The second pair, closer to the counting-house door — same trick, same stillness, better light to see it by.",
+   "allies": [],
+   "respawns": true
+  },
+  {
+   "_comment": "Invrisil 8c Task C3 (issue #13) -- the STEALTH/SKILL path's own beat: 'the [Observe] true-books + keen-eye hidden-safe beat' (spec sec.3), through the propped yard-side door Cups' rumor already named (invrisil_fixer.json's rumor_counting_house: 'the clerk with the inky cuffs... props it with a cheese wedge'). Mirrors the shield-spider `nest_ledge`/pantry-doorframe SKILL-prop shape EXACTLY: `requires_skill: observe` (the [Appraise Foe] Tactician grant -- NOTE the 2026-07-07 canon rename [Observe]->[Appraise Foe], id `observe` unchanged; the spec/plan's own prose still says '[Observe]', which now reads STALE against the shipped skill catalog -- toast copy below uses the CURRENT display name, not the plan's) + `on_skill_use` banks `lifted_true_ledger` deterministically (zero rng), matching the number/date accusation.json's own accusation-node option quotes verbatim (forty gold, dated the night before). The hidden-safe beat is folded into the SAME single reveal rather than a second prop -- the ledger drawer's own false back is where the safe sits (an honest scope collapse for a single-cell abstraction of 'the counting-house', which this map doesn't model as a separate interior; flagged for controller review). PLACEMENT FIX (this lane's own regression catch, same class as hired_blades' own note below): originally (17,11) sat DIRECTLY on invrisil_walkthrough's own pinned sneak-positive route (right 8 from (10,11) to (18,11), walked BOTH directions including the epilogue) -- entity occupancy silently blocked that shipped C1 canonical. Relocated to (16,12), east corridor floor between alley_footpads_b (14,12) and the parlor door (19,12) -- a cell that script's own asserted route never steps on (it drops straight from (18,11) to (18,12), never touching x15-17 on row 12). Chebyshev distance 2 from alley_footpads_b's own trigger_radius-2 zone is irrelevant here (my own canonical script reaches this prop via `teleport` + a stationary `interact`, never a `move` step near it, and `_check_trigger_radius` only ever runs from `move_player`). Sprite `dusty_scroll` reused (the retired [Light]-study prop, thematically apt for 'something to read with a skill' -- the doorframe-runes precedent), zero new generation. GH#68 (quest-stage rework) GATE ADDED: the real evidence now needs `assessed_guard_pattern` banked first (`counting_house_watch`, this map's own new prop, below) -- reuses the on_skill_use `variants` seam verbatim (the cellar_door precedent, wi_game.gd's `_resolve_skill_use_effect`), no new sim code. Base effect fires on an [Appraise Foe] attempt made before the guard pattern is known (bank a real, harmless, disclosed flavor counter -- `noticed_the_clean_ledger` -- never the true ledger); the variant overrides both `accomplishment` and `toast` once `assessed_guard_pattern` is already banked. `locked_toast` (skill UNKNOWN case) is untouched.",
+   "id": "counting_house_ledger",
+   "kind": "prop",
+   "cell": [
+    16,
+    12
+   ],
+   "display_name": "The Counting-House Desk",
+   "sprite": "dusty_scroll",
+   "requires_skill": "observe",
+   "skill_hint_toast": "The clean ledger is the tell. Sizing up what is really here takes a practiced read.",
+   "on_skill_use": {
+    "accomplishment": "noticed_the_clean_ledger",
+    "toast": "The desk's own ledger reads clean -- too clean, the kind of clean a man pays for. Whatever's real is hidden better than this. You'll want to know how this place is watched before you go digging further.",
+    "variants": [
+     {
+      "when": {
+       "assessed_guard_pattern": 1
+      },
+      "accomplishment": "lifted_true_ledger",
+      "toast": "[Appraise Foe] — Now you know the gap in the watch, the true ledger comes easy: tucked behind a false-backed drawer no honest desk needs. Forty gold to a 'removal man,' dated the night before Coyle's own theft: his hand, his numbers, his mistake. The drawer's second catch gives up a shallow hidden safe behind it, empty now but scored where something heavier than coin sat until recently."
+     }
+    ]
+   },
+   "locked_toast": "The desk's own ledger reads clean, which is exactly the kind of clean a man pays for. You don't have the eye to find the real one. Not yet."
+  },
+  {
+   "_comment": "GH#68 (Invrisil quest-stage rework): the SKILL path's Stage 2 gate -- the counting-house's guard rotation, watched from a shadowed nook before ever trying the desk itself. Ungated [Appraise Foe] use (single interaction -- the guard-pattern/ledger PAIR is the 'two interactions, two locations' the stage map calls for; this prop itself needs no prerequisite). Sprite `dusty_scroll` reused (same 'something to read with a skill' idiom as the ledger it gates), tint distinguishes it from the ledger's own sprite use. Cell (15,12): free floor, adjacent to counting_house_ledger (16,12) and alley_footpads_b (14,12) -- off invrisil_walkthrough's own pinned route (that script never steps on (15,12), only (18,11)/(18,12) on this stretch), reached via teleport by the SKILL canonical (never a walked `move` step near footpads_b's trigger_radius).",
+   "id": "counting_house_watch",
+   "kind": "prop",
+   "cell": [
+    15,
+    12
+   ],
+   "display_name": "A Shadowed Nook",
+   "sprite": "dusty_scroll",
+   "tint": [
+    0.5,
+    0.5,
+    0.55
+   ],
+   "requires_skill": "observe",
+   "skill_hint_toast": "Two men keep the counting-house door. Sizing up their rhythm takes a practiced read.",
+   "on_skill_use": {
+    "accomplishment": "assessed_guard_pattern",
+    "toast": "[Appraise Foe] — Two men on the counting-house door, and they're sloppier than they think: the same slow circuit, the same gap while both backs are turned, near enough on the bell to set a watch by. Time it right and the desk inside is yours for a minute, maybe two."
+   },
+   "locked_toast": "Two men on the door, pacing something. You don't have the eye to time it yet."
+  },
+  {
+   "_comment": "GH#68 (Invrisil quest-stage rework): the FIGHT path's Stage 2 tailing chain, second leg (pairs with `coyle_runner_trail`, invrisil_boulevard). Plain on_interact_accomplishment, no skill gate (a fighter-built PC must never need [Appraise Foe] to reach a fight). Banks the counter invrisil_wilovan.json's `fists_door` come-along ask gates on. Cell (19,11): free floor, off invrisil_walkthrough's own pinned route (that script's sneak leg touches (18,11)/(18,12), never (19,11)) and off both footpad trigger_radius zones. FIGHT-path-only, reached via teleport in near_invrisil_fight/invrisil_disagreement_fight -- never walked by the shared invrisil_walkthrough canonical.",
+   "id": "warehouse_approach",
+   "kind": "prop",
+   "cell": [
+    19,
+    11
+   ],
+   "display_name": "A Side Door, Watched",
+   "sprite": "food_basket",
+   "tint": [
+    0.45,
+    0.4,
+    0.4
+   ],
+   "observe": "The runner's trail ends at a side door with fresh boot-scuff on the sill and burgundy-and-brass livery moving past the gap in the shutters. Coyle's crew, and no mistaking the building now.",
+   "on_interact_accomplishment": "warehouse_located",
+   "toast": "The runner ducks inside, and you finally see the whole of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. Wherever the come-along ends, it ends here."
+  },
+  {
+   "_comment": "Invrisil 8c Task C3 (issue #13) -- `hired_blades`, the LOCKED interface id (plan's lane map: arena `merchant_warehouse`, on_victory banking the confrontation flag) for the quest's FIGHT path: Coyle's warehouse crew. Interact-only (no trigger_radius), the crate/cisterns/rift_vermin_leak FIGHT-leg precedent -- 'the fight lives on its own map, reached by the player's own feet', no dialogue-side start_combat wiring required (though invrisil_merchant_prince.json's accusation node ALSO offers a second, reactive entry into this SAME entity id via its '(Draw steel.)' option -- both routes converge on one start_combat(id) call, per wi_game.gd's own single-choke-point design). `allies: [\"wilovan\"]` + `ally_requires: {wilovan_will_fight: 1}` is the come-along gate, banked ONLY by data/dialogue/invrisil_wilovan.json's `fists_door` ask (no teleporting allies, the riverfarm_hunter/relc_descent precedent) -- matches combatants.json's own wilovan record + sim_combat_batch.gd's `hired_blades_w10_wilovan`/`hired_blades_w10_solo` harness cells (gated 0.6-0.8 with the ally, measured-only solo). `on_victory: forced_confession` is the accomplishment invrisil_merchant_prince.json's hub/cornered nodes both key on -- kept as the DRAFT dialogue's literal wired string (the plan's own lane-map prose paraphrases this 'forced_the_confession'; using the draft's exact string keeps data and dialogue internally consistent, flagged for controller review same as the wilovan file's own note). PLACEMENT FIX (this lane's own regression catch): originally placed at (6,7) in the west corridor, which sits DIRECTLY on invrisil_walkthrough's own pinned sneak-negative route (right 6 from (1,7) to (7,7)) -- entity occupancy blocks movement, so that placement silently broke the shipped C1 canonical (caught by re-running it, not by test_content, which has no route-collision check). Relocated to (17,12), east corridor, south of the new counting_house_ledger prop (17,11) and Chebyshev distance 3 from alley_footpads_b (14,12) -- outside its trigger_radius-2 zone -- and NOT on any cell invrisil_walkthrough's script asserts or steps through (it drops straight from (18,11) to (18,12) without ever touching x15-17 on row 12). Sprite `hired_blade` (C2's owned PixelLab rig) -- ANCHOR RULE machine-playtest verification still owed per combatants.json's own comment (a windowed check, out of this headless lane's verification scope; flagged for the controller).",
+   "id": "hired_blades",
+   "kind": "encounter",
+   "cell": [
+    17,
+    12
+   ],
+   "display_name": "Coyle's Warehouse Crew",
+   "sprite": "hired_blade",
+   "arena": "merchant_warehouse",
+   "enemies": [
+    "hired_blade_leader",
+    "hired_blade_knife_a",
+    "hired_blade_knife_b"
+   ],
+   "allies": [
+    "wilovan"
+   ],
+   "ally_requires": {
+    "wilovan_will_fight": 1
+   },
+   "on_victory": "forced_confession",
+   "observe": "Three men in burgundy-and-brass doublets, clubs and knives held like men who've used them before. Merchant-livery, not Watch steel — Coyle's, all the way down to the stitching."
+  },
+  {
+   "_comment": "R6 (#95) trap placement 1/2: alley_footpads_a leftover, the footpad-era's remnant danger post-safe-passage. Cell (9,8) verified off every mercantile_alleys canonical's real walked-cell set: invrisil_walkthrough treads (1-7,7)+(3-10,6)+col x10 y7-11+(11-18,11)+(18,12); the 3 invrisil_disagreement_* scripts reposition almost entirely via teleport (never treads intermediate cells) with only 1-step facing bumps at their own teleport targets. (9,8) sits in the open x8-10 connector corridor (blocked list only closes x0-7/x11-19 at y8, leaving x8-10 clear either side of this prop) -- alley_footpads_a itself occupies (9,9) one cell south. requires_skill=observe LIVE (disarm_trap PARKED -- docs/design/class-foundation-staging/trap-disarm-swap.json). Avoidable: (8,8)/(10,8) both clear, corridor stays 2-wide passable. Disarm banks shared trap_disarmed + 2g.",
+   "id": "alley_footpad_snag_a",
+   "kind": "prop",
+   "cell": [
+    9,
+    8
+   ],
+   "display_name": "A Cutpurse's Snag-Line",
+   "sprite": "snare_coil",
+   "requires_skill": "disarm_trap",
+   "skill_hint_toast": "A snag-line at ankle height, tied crate to drainpipe. Old footpad work, the kind meant to trip a running mark. Worth clearing.",
+   "locked_toast": "A taut line crosses the alley at ankle height, tied off crate to drainpipe. It's clearly meant to trip someone. You can't see how to clear it safely.",
+   "on_skill_use": {
+    "accomplishment": "trap_disarmed",
+    "toast": "You unhook the line and coil it loose. A couple of coins sit tucked in the crate it was tied to, payment nobody came back to collect.",
+    "gold": 2
+   }
+  },
+  {
+   "_comment": "R6 (#95) trap placement 2/2: alley_footpads_b/counting-house leftover. Cell (12,12) verified off the same walked-cell set (see alley_footpad_snag_a above) -- y12 walk only touches (18,12); no entity sits at (12,12) (alley_footpads_b is (14,12), counting_house_watch (15,12), counting_house_ledger (16,12), hired_blades (17,12)). requires_skill=observe LIVE (disarm_trap PARKED, same staging doc). Avoidable: (11,12)/(13,12) both clear (y12 blocks only x0-7). Disarm banks shared trap_disarmed + 2g.",
+   "id": "alley_footpad_snag_b",
+   "kind": "prop",
+   "cell": [
+    12,
+    12
+   ],
+   "display_name": "A Rigged Crate Stack",
+   "sprite": "crate",
+   "requires_skill": "disarm_trap",
+   "skill_hint_toast": "A stack of crates wedged just wrong, top-heavy and set to come down on whoever pulls from the bottom. Old footpad mischief.",
+   "locked_toast": "The crate stack looks ordinary until you notice the angle: top-heavy, wedged to fall. Pulling from the bottom feels like a very bad idea.",
+   "on_skill_use": {
+    "accomplishment": "trap_disarmed",
+    "toast": "You brace the stack and ease the wedge free by hand. Behind the bottom crate: a couple of coins someone forgot to collect.",
+    "gold": 2
+   }
+  }
+ ]
+}

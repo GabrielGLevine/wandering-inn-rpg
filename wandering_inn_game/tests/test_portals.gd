@@ -29,7 +29,7 @@ func _combat_config() -> Dictionary:
 
 
 func _new_game() -> WIGame:
-	return WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, _combat_config())
+	return WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, _combat_config())
 
 
 ## Everything the door-study hook cares about, PLUS a pedestal-open path to

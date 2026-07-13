@@ -157,7 +157,7 @@ func _build_sim(creation: Dictionary = {}) -> void:
 ## dict for a New Game; empty ({}) for a load trial and every cold boot, which
 ## lands WIGame's tolerant identity defaults.
 func _make_sim(creation: Dictionary = {}) -> WIGame:
-	var scene_config: Dictionary = _load_json("res://data/skeleton_scene.json")
+	var scene_config: Dictionary = WISceneCatalog.compose()
 	var skill_config: Dictionary = _load_json("res://data/skills.json")
 	var combat_config := {
 		"combatants": _load_json("res://data/combatants.json"),

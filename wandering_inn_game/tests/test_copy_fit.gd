@@ -273,7 +273,7 @@ func _fail(surface: String, path: String, text: String, detail: String) -> void:
 ## ---- AMBIENT-BARK + TOAST corpus: skeleton_scene.json ----
 
 func _check_skeleton_scene() -> void:
-	var scene := _load_json("res://data/skeleton_scene.json")
+	var scene := WISceneCatalog.compose()
 	for map_id: String in scene.get("maps", {}):
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
@@ -434,7 +434,7 @@ func _check_bounty_delivery_titles() -> void:
 ## to every corpus walk until this pass (a validator that never SEES a
 ## string passes vacuously -- the #65 review's finding, widened here).
 func _check_board_rumors() -> void:
-	var scene := _load_json("res://data/skeleton_scene.json")
+	var scene := WISceneCatalog.compose()
 	for map_id: String in scene.get("maps", {}):
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):

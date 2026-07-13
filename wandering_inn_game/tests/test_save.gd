@@ -29,7 +29,7 @@ func _combat_config() -> Dictionary:
 
 
 func _new_game() -> WIGame:
-	return WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, _combat_config())
+	return WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, _combat_config())
 
 
 func _init() -> void:
@@ -600,7 +600,7 @@ func _init() -> void:
 	var acc_items: Array = ((acc_cc["items"] as Dictionary)["items"] as Array).duplicate(true)
 	acc_items.append({"id": "test_g1_charm", "kind": "accessory", "resonance": 0})
 	acc_cc["items"] = {"items": acc_items}
-	var old_shape_acc_target := WIGame.new(_load_json("res://data/skeleton_scene.json"), _load_json("res://data/skills.json"), _sink, 12345, acc_cc)
+	var old_shape_acc_target := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, acc_cc)
 	assert(WISave.apply(old_shape_acc_target, old_shape_data), "2-key equipped shape applies onto an instance with an accessory-catalogued item too")
 	old_shape_acc_target.pickup("test_g1_charm", "test")
 	assert(old_shape_acc_target.equip("test_g1_charm"), "accessory equip succeeds from a tolerant-loaded 2-key equipped shape")

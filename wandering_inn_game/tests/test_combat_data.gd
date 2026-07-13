@@ -36,7 +36,7 @@ func _init() -> void:
 	var combatants := _load("res://data/combatants.json")
 	var classes := _load("res://data/classes.json")
 	var arenas := _load("res://data/arenas.json")
-	var scene := _load("res://data/skeleton_scene.json")
+	var scene := WISceneCatalog.compose()
 
 	var skill_ids := {}
 	for s: Dictionary in skills[WIKeys.SKILLS]:

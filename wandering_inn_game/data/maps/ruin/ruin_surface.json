@@ -1,0 +1,172 @@
+{
+ "_comment": "A small dedicated ruin map (Albez-flavored surface ruin), sized identically to `sewers` (20x14, biome `cave` reused as the stone-floor default -- data/biomes.json is not touched here, so every new map must reuse an existing biome id; `cave` gives the rocky/rubble read an Albez ruin wants). Entered ONLY from floodplains' `ruin_door` (door_when-gated); the sole exit is `ruin_exit` below, landing back at floodplains (37,11) -- one cell west of `ruin_door`'s own (38,11) cell, the sewer_exit/deep_fissure 'never land on the door's own cell' convention. Reachability: (2,2) [the door_when to_cell] -> open floor the whole way east to the guardian alcove at (16-18,5-7); two decorative rubble piles (5,4)/(13,9) sit off that direct line and off any reasonable perimeter walk. `anchor_stone_pedestal` (17,6) is reachable from all four neighbor cells; `ruin_guardian` (17,8) stands one cell south of the pedestal's own south neighbor, 'guarding' it in the fiction without physically sealing any approach (see that entity's own _comment for the sprite-fusion fix that placed it there). The pedestal ships LOCKED-FLAVOR (see that prop's own _comment for the full container-gating rationale) rather than the `contains` shape wired once the alternate TALK/SKILL gates land. Mood card `ruin_surface` (data/moods.json) is a tuned cold-daylight/dusty grade, day/dusk/night graded (a SURFACE ruin sees real weather, unlike the sewers/deep_tunnels time-invariant pins).",
+ "biome": "cave",
+ "grid": {
+  "width": 20,
+  "height": 14
+ },
+ "blocked": [
+  [
+   5,
+   4
+  ],
+  [
+   13,
+   9
+  ]
+ ],
+ "walls": {
+  "_comment": "Every other cave-biome map (sewers/deep_tunnels) carries interior obstacle dressing via walls.segments even with NO perimeter enclosure (grid-bound clipping alone stops movement at the map edge; segments here are INTERIOR texture/blocking, matching deep_tunnels' stalactite-rubble/fallen-column precedent -- from/to only, no cap/face, same minimal shape). Both segments sit in the untouched middle of the room (x6-11, y8-11), clear of ruin_walkthrough's own leg-by-leg cell audit (top row y=2 x2-17; column x=17 y2-5; row y=5 x2-17; column x=2 y5-13; bottom row y=13 x2-19; column x=19 y1-13; row y=1 x3-19) and both existing `blocked` singletons (5,4)/(13,9) -- no re-derivation of that script's route needed; re-verified live (ruin_walkthrough passes unchanged).",
+  "sheet": "res://assets/tiles/cave/Tiles.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "_comment": "A fallen ceiling rubble column, Albez-ruin dressing.",
+    "from": [
+     7,
+     9
+    ],
+    "to": [
+     7,
+     11
+    ]
+   },
+   {
+    "_comment": "A broken lintel span.",
+    "from": [
+     10,
+     8
+    ],
+    "to": [
+     11,
+     8
+    ]
+   }
+  ]
+ },
+ "floor_layers": [
+  {
+   "_pick": "ruin floor, reusing the verified cave-floor tile neighborhood (Albez-flavored rubble/stone read).",
+   "variants": [
+    [
+     8,
+     13
+    ],
+    [
+     9,
+     13
+    ],
+    [
+     10,
+     13
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
+ "decor": [
+  {
+   "sprite": "boulder",
+   "cell": [
+    5,
+    4
+   ],
+   "tint": [
+    0.62,
+    0.6,
+    0.56
+   ]
+  },
+  {
+   "sprite": "boulder",
+   "cell": [
+    13,
+    9
+   ],
+   "tint": [
+    0.62,
+    0.6,
+    0.56
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "_comment": "The way back up -- returns to floodplains beside `ruin_door` (38,11); see that entity's own _comment for the full placement/blast-radius disclosure. Landing cell (2,2) is one cell south of this door, matching the sewer_exit/deep_fissure 'the way back up' convention.",
+   "id": "ruin_exit",
+   "kind": "door",
+   "cell": [
+    2,
+    1
+   ],
+   "display_name": "Cracked Daylight",
+   "sprite": "door",
+   "to_map": "floodplains",
+   "to_cell": [
+    37,
+    11
+   ]
+  },
+  {
+   "_comment": "The beat-3 recovery target. Gated by src/core/wi_game.gd's interact()/_interact_container (the door_when-style `contains_when: {requires: {...}}` gate, reusing `_door_gate_met` verbatim, no separate gate logic). Gated on `pedestal_unsealed` (an internal convergence counter): banked by EITHER `cleared_ruin_guardian` (fight him right here) OR any of Pisces's TALK/SKILL mage-consult legs (their examination doubles as safe-passage insight -- the FIGHT-at-beat-2 leg, having sent the player to clear `rift_vermin_leak` in the inn instead, does NOT bank it, so THOSE players still have to clear the guardian in person; see that entity's own _comment below). `on_interact_accomplishment`/`toast` KEPT verbatim as the unmet-gate fallback (interact()'s new contains_when check falls through to this exact branch when unmet -- ruin_walkthrough's fixture has door_chain_started but neither pedestal_unsealed producer, so its locked-toast assertion is untouched, byte-identical). `on_open_accomplishment: recovered_anchor_stone` (the chain's locked id) fires once, on the SAME interact that grants the item, the first time the gate is met.",
+   "id": "anchor_stone_pedestal",
+   "kind": "prop",
+   "cell": [
+    17,
+    6
+   ],
+   "display_name": "A Cracked Plinth",
+   "sprite": "pedestal",
+   "tint": [
+    0.7,
+    0.7,
+    0.75
+   ],
+   "observe": "A stone rests in a shallow cradle atop the plinth, held there by nothing you can see. Something older than the dust stands close enough to notice you noticing.",
+   "contains": [
+    "anchor_stone"
+   ],
+   "contains_when": {
+    "requires": {
+     "pedestal_unsealed": 1
+    }
+   },
+   "on_open_accomplishment": "recovered_anchor_stone",
+   "on_interact_accomplishment": "found_the_pedestal",
+   "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea."
+  },
+  {
+   "_comment": "The real `kind: \"encounter\"` shape (ruin_guardian/ruin_ward_a/ruin_ward_b in data/combatants.json, the `ruin_court` arena in data/arenas.json). Locked ids: arena `ruin_court`, enemies EXACTLY [\"ruin_guardian\",\"ruin_ward_a\",\"ruin_ward_b\"] (the entity id and the first enemy combatant id are both `ruin_guardian` by design -- separate registries, entities vs. combatants, no collision), on_victory banks `cleared_ruin_guardian` + the shared `pedestal_unsealed` convergence counter (see `anchor_stone_pedestal`'s own _comment for the full OR-gate rationale). `allies:[\"relc\"]`/`ally_requires:{met_relc:1}` matches the harness's gated cell (`ruin_guardian_w8_relc`, the tuned 0.55-0.8 band) over the harder ungated `_solo` variant. `on_interact_accomplishment`/`toast` are dead fields on an encounter and stay unset; `observe` is kept. Placed at (17,8), one row south of the pedestal's immediate south approach -- keeps clear of a PC/guardian sprite-fusion bug at the canonical 2-cell viewing distance (`ruin_walkthrough`'s `01_pedestal_locked.png`, PC at (17,5)); the pedestal's 4 neighbor cells are all open floor, and the guardian still visibly stands in the same alcove, still the last thing between the player and the stone, just not a hard physical block on that one approach cell. CONTRACT: `door_chain_fight.json`'s teleport target must stay in sync at (16,8), the west-adjacent cell.",
+   "id": "ruin_guardian",
+   "kind": "encounter",
+   "cell": [
+    17,
+    8
+   ],
+   "display_name": "The Ruin Guardian",
+   "sprite": "raskghar_awakened",
+   "tint": [
+    0.55,
+    0.55,
+    0.6
+   ],
+   "observe": "Stone shaped like a soldier, or close enough that the difference doesn't help you. It hasn't moved since you stepped into this room. That is not the same as harmless.",
+   "arena": "ruin_court",
+   "enemies": [
+    "ruin_guardian",
+    "ruin_ward_a",
+    "ruin_ward_b"
+   ],
+   "allies": [
+    "relc"
+   ],
+   "ally_requires": {
+    "met_relc": 1
+   },
+   "on_victory": [
+    "cleared_ruin_guardian",
+    "pedestal_unsealed"
+   ]
+  }
+ ]
+}

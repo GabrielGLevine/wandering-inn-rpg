@@ -1,0 +1,313 @@
+{
+ "_comment": "Interior behind `longhouse_door` (riverfarm_village) -- small communal hall, 10x7. FUNCTION: gives the village's one guest bed a real room (retires the open-lawn sleep-site read) and gives the headman's ledger a physical anchor. biome 'inn' reused (same wood-hall plank family as guild/inn_upstairs, not a new tileset). CONSTRAINT: south wall gapped at x=5 for `longhouse_exit`; arrival from the village lands one cell north of it (5,5), matching the guild_door/guild_exit offset convention. Hearth + 2 sconces = 3 lights total, well under the 8/map budget. TRAP: hearth/long-table/headman-table are added to `blocked` manually (decor never auto-blocks movement) -- stools/barrels/crate/sconces stay walkable, matching guild's own furniture-blocking split (counters/tables blocked, stools/rugs not).",
+ "biome": "inn",
+ "grid": {
+  "width": 10,
+  "height": 7
+ },
+ "blocked": [
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   8,
+   1
+  ]
+ ],
+ "floor_layers": [
+  {
+   "_pick": "Same plank variant set as guild/inn_upstairs (Interior_Walls_01.png) -- every wood building in Liscor's orbit reads as the same hall material.",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     1,
+     21
+    ],
+    [
+     2,
+     21
+    ],
+    [
+     1,
+     22
+    ],
+    [
+     2,
+     22
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
+ "walls": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     9,
+     0
+    ],
+    "cap": [
+     14,
+     6
+    ],
+    "face": [
+     14,
+     7
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     6
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     9,
+     1
+    ],
+    "to": [
+     9,
+     6
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "_comment": "South wall, gapped at x=5 for longhouse_exit.",
+    "from": [
+     1,
+     6
+    ],
+    "to": [
+     4,
+     6
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     6,
+     6
+    ],
+    "to": [
+     8,
+     6
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "hearth",
+   "cell": [
+    2,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.62,
+     0.32
+    ],
+    "energy": 1.1,
+    "radius": 40,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "table_brown",
+   "cell": [
+    2,
+    3
+   ]
+  },
+  {
+   "sprite": "table_brown",
+   "cell": [
+    3,
+    3
+   ]
+  },
+  {
+   "sprite": "stool",
+   "cell": [
+    2,
+    2
+   ]
+  },
+  {
+   "sprite": "stool",
+   "cell": [
+    3,
+    2
+   ]
+  },
+  {
+   "sprite": "stool",
+   "cell": [
+    2,
+    4
+   ]
+  },
+  {
+   "sprite": "stool",
+   "cell": [
+    3,
+    4
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    1,
+    2
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    1,
+    4
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    1,
+    3
+   ]
+  },
+  {
+   "sprite": "table_brown",
+   "cell": [
+    8,
+    1
+   ]
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    6,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.75,
+     0.4
+    ],
+    "energy": 0.6,
+    "radius": 18,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    7,
+    4
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.75,
+     0.4
+    ],
+    "energy": 0.6,
+    "radius": 18,
+    "flicker": true
+   }
+  }
+ ],
+ "_comment_ambience": "Same dusk/night dust-motes pattern as every other wood interior (guild/inn_upstairs precedent).",
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all",
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "_comment": "Return door -- to_cell (11,8) is the SAME open cell the player stood on outside to approach longhouse_door in the first place (the guild_exit/guild_door offset convention).",
+   "id": "longhouse_exit",
+   "kind": "door",
+   "cell": [
+    5,
+    6
+   ],
+   "display_name": "Outside",
+   "sprite": "door",
+   "to_map": "riverfarm_village",
+   "to_cell": [
+    11,
+    8
+   ]
+  },
+  {
+   "_comment": "The village's sleep site, relocated off the open lawn into a real room. Mechanically identical to every other sleep prop (sleep: true, checked first in interact()'s prop match) -- sleep_toast text held verbatim across the move. Placed against the east wall (col 9), footprint clear of the approach column (col 8, rows 3/5 open on both sides).",
+   "id": "riverfarm_guest_cot",
+   "kind": "prop",
+   "cell": [
+    8,
+    4
+   ],
+   "display_name": "A Guest Cot",
+   "sprite": "bed",
+   "observe": "A straw-tick pallet against the wall, blanket already turned down for whoever needs it.",
+   "sleep": true,
+   "sleep_toast": "Straw tick, borrowed blanket — Riverfarm always finds room for one more."
+  },
+  {
+   "_comment": "Flavor-only (on_interact_accomplishment + toast, same shape as guild_notice_wall) -- the headman's own ledger, left on his corner table. No gate, no quest tie.",
+   "id": "riverfarm_headman_ledger",
+   "kind": "prop",
+   "cell": [
+    8,
+    2
+   ],
+   "display_name": "The Headman's Ledger",
+   "sprite": "dusty_scroll",
+   "observe": "A ledger left open on the corner table, the same one he carries everywhere else. Columns re-summed in three different inks -- he never trusts the first count, or the second.",
+   "on_interact_accomplishment": "observed_headman_ledger",
+   "toast": "Grain against debts, and the debts keep winning most years. Best not to read it over his shoulder."
+  }
+ ]
+}

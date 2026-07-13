@@ -1,0 +1,1655 @@
+{
+ "biome": "street",
+ "grid": {
+  "width": 32,
+  "height": 20
+ },
+ "blocked": [
+  [
+   10,
+   1
+  ],
+  [
+   11,
+   1
+  ],
+  [
+   12,
+   1
+  ],
+  [
+   13,
+   1
+  ],
+  [
+   14,
+   1
+  ],
+  [
+   15,
+   1
+  ],
+  [
+   16,
+   1
+  ],
+  [
+   17,
+   1
+  ],
+  [
+   18,
+   1
+  ],
+  [
+   21,
+   1
+  ],
+  [
+   22,
+   1
+  ],
+  [
+   23,
+   1
+  ],
+  [
+   24,
+   1
+  ],
+  [
+   21,
+   2
+  ],
+  [
+   22,
+   2
+  ],
+  [
+   23,
+   2
+  ],
+  [
+   24,
+   2
+  ],
+  [
+   26,
+   1
+  ],
+  [
+   27,
+   1
+  ],
+  [
+   28,
+   1
+  ],
+  [
+   29,
+   1
+  ],
+  [
+   30,
+   1
+  ],
+  [
+   26,
+   2
+  ],
+  [
+   27,
+   2
+  ],
+  [
+   28,
+   2
+  ],
+  [
+   29,
+   2
+  ],
+  [
+   30,
+   2
+  ],
+  [
+   26,
+   3
+  ],
+  [
+   9,
+   8
+  ],
+  [
+   10,
+   8
+  ],
+  [
+   11,
+   8
+  ],
+  [
+   12,
+   8
+  ],
+  [
+   9,
+   9
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   11,
+   9
+  ],
+  [
+   12,
+   9
+  ],
+  [
+   18,
+   8
+  ],
+  [
+   19,
+   8
+  ],
+  [
+   20,
+   8
+  ],
+  [
+   18,
+   9
+  ],
+  [
+   19,
+   9
+  ],
+  [
+   20,
+   9
+  ],
+  [
+   11,
+   14
+  ],
+  [
+   12,
+   14
+  ],
+  [
+   13,
+   14
+  ],
+  [
+   11,
+   15
+  ],
+  [
+   12,
+   15
+  ],
+  [
+   13,
+   15
+  ],
+  [
+   18,
+   15
+  ],
+  [
+   19,
+   15
+  ],
+  [
+   20,
+   15
+  ],
+  [
+   21,
+   15
+  ],
+  [
+   18,
+   16
+  ],
+  [
+   19,
+   16
+  ],
+  [
+   20,
+   16
+  ],
+  [
+   21,
+   16
+  ],
+  [
+   11,
+   17
+  ],
+  [
+   31,
+   7
+  ],
+  [
+   31,
+   14
+  ],
+  [
+   6,
+   19
+  ],
+  [
+   15,
+   19
+  ],
+  [
+   24,
+   19
+  ]
+ ],
+ "_comment": "Liscor gate district, grown from the 10x6 street (per accepted Floodplains sec.5). Zones: gate plaza W, main street y2-4, market row y1 x10-19, Watch post x21-24, Adventurer's Guild x26-30 (XL anchor), dirt side street x14-15 south, sewer-grate POI (16,11). All goblin encounters migrated to floodplains POI anchors. Row y4 is the clear transit lane. Floor-vs-wall contrast: facade_plaster carries a brighten/warm tint (1.28,1.14,0.9 -- avg color moves from (142,119,98), barely distinguishable from the cobble floor's (116,106,95), to a clearly brighter (182,136,88), still warm/amber not neutral gray -- both measured by direct pixel sample) against the untouched floor tile. `inn_roof`'s saturated teal (avg (43,138,100)) is retinted to a warm terracotta (2.6,0.5,0.45) -- CONSTRAINT: STREET-ONLY, inn_roof has no other map consumer. The three market-row NPCs (Krshia/Peddler/Watch Sergeant) each carry their own directional sprite (pc_gnoll_f/pc_human_m/pc_drake_m respectively) matching their own copy's canon/pronouns, no shared tint-differentiated sprite between them. TRAP: the gate plaza (W) and the main street's y2-4 transit lane are large open cells but ARE load-bearing (the plaza is the multi-destination hub; y4 is the clear transit lane) -- deliberate breathing room, not dead space to dress.",
+ "floor_layers": [
+  {
+   "_pick": "Main street cobble band, full width (existing street pick, extended)",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ],
+   "cells": {
+    "rect": [
+     0,
+     2,
+     32,
+     3
+    ]
+   }
+  },
+  {
+   "_pick": "Gate plaza slab: the goblin_ambush arena's VERIFIED cobble neighborhood, distinct tone from the street band",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     2
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "cells": {
+    "rect": [
+     1,
+     1,
+     8,
+     5
+    ]
+   }
+  },
+  {
+   "_pick": "Guild forecourt slab, same verified neighborhood",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     2
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "cells": {
+    "rect": [
+     24,
+     1,
+     8,
+     5
+    ]
+   }
+  },
+  {
+   "_pick": "P4 wear-edge jitter: broken cobble cells along the band's south lip",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     17,
+     1
+    ]
+   ],
+   "cells": {
+    "list": [
+     [
+      9,
+      5
+     ],
+     [
+      11,
+      5
+     ],
+     [
+      12,
+      5
+     ],
+     [
+      16,
+      5
+     ],
+     [
+      19,
+      5
+     ],
+     [
+      21,
+      5
+     ],
+     [
+      23,
+      5
+     ],
+     [
+      10,
+      1
+     ],
+     [
+      19,
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "_pick": "South-district square where the side street widens",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     2
+    ]
+   ],
+   "cells": {
+    "rect": [
+     12,
+     10,
+     5,
+     3
+    ]
+   }
+  }
+ ],
+ "_comment_walls": "City wall interior-side: full north run (cap+face, same castle picks as the floodplains south wall -- it IS that wall's inside face) + west runs with the gate gap at y=3. Cap-only on verticals, matching the inn's side-wall precedent. East/south edges open: Liscor continues off-map.",
+ "walls": {
+  "sheet": "res://assets/tiles/castle/Tiles.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     31,
+     0
+    ],
+    "cap": [
+     2,
+     11
+    ],
+    "face": [
+     2,
+     13
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     2
+    ],
+    "cap": [
+     2,
+     11
+    ]
+   },
+   {
+    "from": [
+     0,
+     4
+    ],
+    "to": [
+     0,
+     19
+    ],
+    "cap": [
+     2,
+     11
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "_comment": "Same fix as the (13,10) campfire below -- was unlit, read as a second fake sewer_grate near the gate plaza.",
+   "sprite": "campfire",
+   "cell": [
+    3,
+    5
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.55,
+     0.25
+    ],
+    "energy": 1.0,
+    "radius": 34,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    1,
+    5
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    2,
+    1
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    7,
+    1
+   ]
+  },
+  {
+   "sprite": "library_desk",
+   "cell": [
+    10,
+    1
+   ]
+  },
+  {
+   "sprite": "library_desk",
+   "cell": [
+    11,
+    1
+   ]
+  },
+  {
+   "sprite": "library_shelf",
+   "cell": [
+    12,
+    1
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    13,
+    1
+   ]
+  },
+  {
+   "sprite": "library_desk",
+   "cell": [
+    14,
+    1
+   ]
+  },
+  {
+   "sprite": "library_desk",
+   "cell": [
+    15,
+    1
+   ]
+  },
+  {
+   "sprite": "library_shelf",
+   "cell": [
+    16,
+    1
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    17,
+    1
+   ]
+  },
+  {
+   "sprite": "library_desk",
+   "cell": [
+    18,
+    1
+   ]
+  },
+  {
+   "sprite": "food_basket",
+   "cell": [
+    10,
+    1
+   ]
+  },
+  {
+   "sprite": "food_bread",
+   "cell": [
+    14,
+    1
+   ]
+  },
+  {
+   "sprite": "food_ham",
+   "cell": [
+    15,
+    1
+   ]
+  },
+  {
+   "sprite": "food_basket",
+   "cell": [
+    18,
+    1
+   ]
+  },
+  {
+   "sprite": "inn_roof",
+   "cell": [
+    22,
+    1
+   ],
+   "tint": [
+    2.6,
+    0.5,
+    0.45
+   ]
+  },
+  {
+   "sprite": "facade_plaster",
+   "cell": [
+    22,
+    2
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "sprite": "inn_roof",
+   "cell": [
+    27,
+    1
+   ],
+   "tint": [
+    2.6,
+    0.5,
+    0.45
+   ]
+  },
+  {
+   "sprite": "inn_roof",
+   "cell": [
+    29,
+    1
+   ],
+   "tint": [
+    2.6,
+    0.5,
+    0.45
+   ]
+  },
+  {
+   "sprite": "facade_plaster",
+   "cell": [
+    27,
+    2
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "sprite": "facade_plaster",
+   "cell": [
+    29,
+    2
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "sprite": "library_desk",
+   "cell": [
+    26,
+    3
+   ]
+  },
+  {
+   "sprite": "inn_roof",
+   "cell": [
+    10,
+    8
+   ],
+   "tint": [
+    2.6,
+    0.5,
+    0.45
+   ]
+  },
+  {
+   "sprite": "facade_plaster",
+   "cell": [
+    10,
+    9
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "sprite": "inn_roof",
+   "cell": [
+    19,
+    8
+   ],
+   "tint": [
+    2.6,
+    0.5,
+    0.45
+   ]
+  },
+  {
+   "sprite": "facade_plaster",
+   "cell": [
+    19,
+    9
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "sprite": "inn_roof",
+   "cell": [
+    12,
+    14
+   ],
+   "tint": [
+    2.6,
+    0.5,
+    0.45
+   ]
+  },
+  {
+   "sprite": "facade_plaster",
+   "cell": [
+    12,
+    15
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "sprite": "inn_roof",
+   "cell": [
+    19,
+    15
+   ],
+   "tint": [
+    2.6,
+    0.5,
+    0.45
+   ]
+  },
+  {
+   "sprite": "inn_roof",
+   "cell": [
+    21,
+    15
+   ],
+   "tint": [
+    2.6,
+    0.5,
+    0.45
+   ]
+  },
+  {
+   "_comment": "This building's block is 4 wide (18-21,15-16) with TWO inn_roof pieces (19,15)/(21,15) but the facade below was a single tile at an unaligned x=20 -- neither roof lined up with a wall beneath it (VISUAL-LOG 'roofs misaligned'). Realigned to the guild building's own precedent (26-30,1-3: two roof/facade pairs at matching x, spaced 2 apart) -- one facade directly under each roof.",
+   "sprite": "facade_plaster",
+   "cell": [
+    19,
+    16
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "sprite": "facade_plaster",
+   "cell": [
+    21,
+    16
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "sprite": "campfire",
+   "cell": [
+    13,
+    10
+   ],
+   "_comment": "Was unlit street dressing -- the same stone-ring-with-red-center art as sewer_grate's placeholder rock art, so dark/unlit it read as a second fake sewer grate in the south square (VISUAL-LOG). Lighting it (matching the other street/inn campfire anchors' warm palette) both fixes the lookalike confusion (a flickering warm glow reads unmistakably as fire, not a cold iron grate) and gives the gate district a second torch-pool anchor per the mood card brief.",
+   "light": {
+    "color": [
+     1.0,
+     0.55,
+     0.25
+    ],
+    "energy": 1.0,
+    "radius": 34,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    14,
+    7
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.68,
+     0.35
+    ],
+    "energy": 0.9,
+    "radius": 30,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    15,
+    12
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.68,
+     0.35
+    ],
+    "energy": 0.9,
+    "radius": 30,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    14,
+    17
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.68,
+     0.35
+    ],
+    "energy": 0.9,
+    "radius": 30,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "tree_round",
+   "cell": [
+    23,
+    12
+   ]
+  },
+  {
+   "sprite": "tree_round",
+   "cell": [
+    6,
+    13
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    5,
+    10
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    6,
+    10
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    25,
+    8
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    8,
+    17
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    24,
+    18
+   ]
+  },
+  {
+   "sprite": "boulder",
+   "cell": [
+    3,
+    16
+   ]
+  },
+  {
+   "_comment": "Was authored at y=20 -- one past the last valid row of this 20-tall grid (y:0-19), the same off-by-one authoring mistake as the (31,7)/(31,14) x=32 segments below. Structurally unreachable (out of grid bounds) but the sprite still rendered there, bleeding onto the real (6,19) beside it. Repositioned to the valid (6,19) and added to `blocked` (wall-family, same facade_plaster-is-a-wall contract).",
+   "sprite": "facade_plaster",
+   "cell": [
+    6,
+    19
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "_comment": "Same fix as the (6,19) segment above -- was y=20 (one past the grid's last valid row), repositioned to (15,19) and blocked.",
+   "sprite": "facade_plaster",
+   "cell": [
+    15,
+    19
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "_comment": "Same fix as the (6,19)/(15,19) segments above -- was y=20 (one past the grid's last valid row), repositioned to (24,19) and blocked.",
+   "sprite": "facade_plaster",
+   "cell": [
+    24,
+    19
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "_comment": "Was authored at x=32 -- one past the last valid column of this 32-wide grid (x:0-31) -- so the cell itself was structurally unreachable (is_cell_blocked's own bounds check refuses cell.x >= grid_size.x) but the sprite still RENDERED at that position, its footprint bleeding onto the real, unblocked (31,7) beside it -- a wall the player could see and walk straight through. Repositioned to the valid (31,7) and added to `blocked` below (a wall face, same facade_plaster-is-a-wall contract every other freestanding segment on this map follows).",
+   "sprite": "facade_plaster",
+   "cell": [
+    31,
+    7
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "_comment": "Same fix as the (31,7) segment above -- was x=32 (one past the grid's last valid column), repositioned to (31,14) and blocked.",
+   "sprite": "facade_plaster",
+   "cell": [
+    31,
+    14
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  },
+  {
+   "_comment": "Cellar_door (entity, street 10,17) rendered freestanding with nothing behind it (VISUAL-LOG). crate_light.json's route walks down column x=13 then x=10 and stops at (10,16) facing down into the door -- moving the door's own cell would desync that script's hardcoded step counts, so per the brief this dresses AROUND the existing cell instead: one facade_plaster tile immediately east of the door, same row (11,17), never a cell the approach path crosses (path only touches x=10 southbound and x=10..13 at y=13), so it reads as the building wall the cellar is set into without the player ever visually overlapping it. TRAP: that reasoning covered the SCRIPTED route only -- a free-roaming player could walk straight through this wall tile (it was never added to `blocked`, unlike every other freestanding facade_plaster segment on this map). Added below; still off every canonical route (same cell, same reasoning, just genuinely solid now).",
+   "sprite": "facade_plaster",
+   "cell": [
+    11,
+    17
+   ],
+   "tint": [
+    1.28,
+    1.14,
+    0.9
+   ]
+  }
+ ],
+ "scatter": [
+  {
+   "pool": [
+    "grass_tuft",
+    "pebble",
+    "flower_tiny"
+   ],
+   "density": 0.06,
+   "cluster": 0.7,
+   "seed": 5
+  },
+  {
+   "pool": [
+    "flower_purple"
+   ],
+   "density": 0.012,
+   "cluster": 0.9,
+   "seed": 11
+  }
+ ],
+ "entities": [
+  {
+   "id": "street_door",
+   "kind": "door",
+   "cell": [
+    0,
+    3
+   ],
+   "display_name": "To the Floodplains",
+   "sprite": "door",
+   "to_map": "floodplains",
+   "to_cell": [
+    31,
+    24
+   ]
+  },
+  {
+   "id": "gate_guard",
+   "kind": "npc",
+   "cell": [
+    1,
+    5
+   ],
+   "display_name": "Watch Guard",
+   "sprite": "royal_soldier",
+   "observe": "Watch armor, kept. He stands the post properly: weight even, eyes on the gap in the wall. Bored, but the boredom is a discipline, not a lapse.",
+   "friendly_line": "The guard's mouth twitches toward a smile despite himself. Hah. You seem decent enough. Go on through easy - I'll remember the friendly one.",
+   "facing": "up",
+   "talk_pool": [
+    "Gate's clear. Keep it that way and we'll get on fine.",
+    "Move along or stand aside. The post is not a meeting spot.",
+    "Watch business is Watch business. Yours is likely somewhere else.",
+    "Long shift, nothing's happened. That's the shift going well - for the record."
+   ],
+   "dialogue": [
+    {
+     "speaker": "Watch Guard",
+     "text": "Keep the gate clear. And if you're headed out, the road's got goblins on it lately. Watch knows. Watch is dealing with it."
+    }
+   ]
+  },
+  {
+   "_comment": "Zevara Sunderscale, Drake Watch Captain, just inside the gate below the guard. Cell (2,6) sits BELOW the three gate corridors every street-route walks -- y3 (entry/forecourt), y4 (transit lane), and crate_light's y5 PHASE-D return (left-28 to (2,5)) -- verified against the passing event logs of gate_district_walkthrough/crate_talk/crate_fight/social_loop and crate_light's intended path; she blocks no walked cell. NPCs are NOT in the sim blocked set (WIGame builds blocked_cells from static `blocked`+wall segments only), so she does NOT shift gate_district_walkthrough's blocked_cells:106 assert. sprite `zevara` is a PixelLab pixflux gen (armored light-blue Drake Watch officer) -- see sprites.json + VISUAL-LOG.",
+   "id": "zevara",
+   "kind": "npc",
+   "cell": [
+    2,
+    6
+   ],
+   "display_name": "Zevara",
+   "sprite": "zevara",
+   "observe": "Oldblood Drake, light scales, a scar down the left of her jaw she's long past explaining. She reads the gate the way a clerk reads a ledger: every figure accounted for, and every one of them a suspect.",
+   "friendly_line": "Zevara's shoulders come down a fraction. Huh. Civil, and no bribe. You would not believe how short that list is. Go on through. And, thank you. Genuinely.",
+   "facing": "left",
+   "talk_pool": [
+    "If you're here to report a crime, the form's on the left. If you're here to commit one, don't. I've had a day.",
+    "Ten years running this Watch. Six weeks of leave, total. That's the whole personality, if you were wondering.",
+    "Relc's off being enormous at someone. Klbkch is... Klbkch. The gate still stands. Don't jinx it."
+   ],
+   "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag annotations stripped). Two stages -- she does not do three degrees of warmth on duty. Perk (watch-bounty access) is the dialogue_unlocks wired into zevara_intro.json's hub + new claimed_bounty_{crate,cisterns,warren} counters, each banked on the CLAIM option (effects live on options, never nodes).",
+   "talk_pool_stages": [
+    {
+     "id": "zevara_trusted_irregular",
+     "requires_accomplishment": {
+      "resolved_the_cisterns": 1,
+      "chatted_with_zevara": 2
+     },
+     "lines": [
+      "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
+      "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
+      "If you're between jobs, see me about bounty work. The Watch pays slow, but it pays. And I sign faster for people who don't invoice me for heroics."
+     ]
+    }
+   ],
+   "conversation": "zevara_intro",
+   "dialogue": [
+    {
+     "speaker": "Zevara",
+     "text": "The gate's my problem, so keep it dull and we'll get along fine."
+    }
+   ]
+  },
+  {
+   "_comment": "Issue #51: Klbkch the Slayer -- Antinium Senior Guardsman, Relc's patrol partner (wiki-verified profile in docs/design/character-profiles.md; our-era 4-arm form, twin swords). Stationed at the gate plaza beside Zevara, at (4,6): OFF both the y4 transit lane and the y5 corridor ((3,5) blocked the mage_unlock/lantern/crate_light left-walk to (2,5) -- corner-pick lesson: grep DESTINATION cells and the lanes crossing them): the Watch's public face is exactly where the city's one visible Antinium belongs. Voice contract: precise, courteous, unfailingly calm, dry understatement -- NEVER jokey. Stage line keys on the same resolved_the_cisterns counter Zevara's trusted-irregular stage uses (one Watch ledger, two readers of it). PLACEMENT TRAP: street NPC cells must be grepped against every script's DESTINATION cells AND the walk-lanes crossing them (y4 transit, y5 corridor) -- (3,5) broke three canonicals' left-walk.",
+   "id": "klbkch",
+   "kind": "npc",
+   "cell": [
+    4,
+    6
+   ],
+   "display_name": "Klbkch",
+   "sprite": "klbkch",
+   "facing": "left",
+   "observe": "An Antinium of Liscor's Watch — dark chitin, four arms, antennae, twin swords worn at the hips like a closed argument. He stands still the way patient things do.",
+   "talk_pool": [
+    "Guardsman Klbkch, Liscor Watch. If you have business, state it plainly. If you have none, the plaza is pleasant and I am content to stand here with you.",
+    "You are staring. That is common. Take whatever time you require; I am on duty until nightfall regardless.",
+    "Relc is my partner. He is loud, occasionally literal, and the finest spear in the city. I file our reports. The arrangement suits us both.",
+    "The city grows. More carts, more disputes, more forms. I have four hands and still the paperwork accumulates. There is a lesson in that, though I decline to learn it."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "klbkch_ledger_regard",
+     "requires_accomplishment": {
+      "resolved_the_cisterns": 1
+     },
+     "lines": [
+      "The cistern matter reached the Watch ledger with your name beside it. I remember names. It is most of my job.",
+      "Zevara speaks well of you, which she does for almost no one. I mention it because she will not."
+     ]
+    }
+   ]
+  },
+  {
+   "_comment": "Olesm Swifttail, Drake [Tactician]/council clerk, at the Guild frontage. Cell (29,3) is tucked by the Guild building, clear of gate_district_walkthrough's forecourt cells (25,4)/(25,5)/(26,5)/(27,5)/(27,4)/(27,3) and of crate_light's y5 pisces approach -- verified off every street-route path, and NPCs are excluded from the blocked_cells count. sprite `olesm` is a PixelLab pixflux gen (slim sky-blue Drake holding a rolled map) -- see sprites.json + VISUAL-LOG.",
+   "id": "olesm",
+   "kind": "npc",
+   "cell": [
+    29,
+    3
+   ],
+   "display_name": "Olesm",
+   "sprite": "olesm",
+   "observe": "Thin, sky-blue scales, ink drying on three of his claws. A chess board waits at his elbow mid-game, played against himself, to feel how the other side thinks. His eyes are a wild, patterned blue, the one soft thing about a man who counts exits.",
+   "friendly_line": "Olesm brightens like a lamp. Oh! A friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you... that is... care to see the board sometime? No pressure. A little pressure.",
+   "facing": "down",
+   "talk_pool": [
+    "Three reports due by dawn and the ink is winning. If anyone asks, the [Tactician] of Liscor is 'strategizing'.",
+    "Three reports due by dusk and two clerks who can't count past a company. I'll manage. I always manage.",
+    "Supply lines, sightlines, morale: a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak.",
+    "Selys works the desk inside now, board and all. I still find reasons to linger out here more than the job requires. The paperwork doesn't ask why."
+   ],
+   "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/olesm_stages.json (staging_note/_flag annotations stripped). The chess-beat perk (stage 3, olesm_board_partner) shipped option+frame only for one wave; issue #25 built the real match (olesm_intro.json's olesm_chess_invite chain) and added the THIRD stage below as its residue -- once chess_with_olesm banks, the one-time hub option retires (hide_when) and this shorter rematch pool takes over. New key only (chess_with_olesm), so the ascending-threshold validator has nothing to compare it against on the shared keys.",
+   "talk_pool_stages": [
+    {
+     "id": "olesm_worth_interrupting_a_tally",
+     "requires_accomplishment": {
+      "cisterns_reported": 1
+     },
+     "lines": [
+      "Oh — you! No no, the tally can wait. The tally is wrong anyway; it will still be wrong in an hour.",
+      "I put your cistern business in my report. With your name spelled correctly and everything. In this office that is practically a parade.",
+      "I've started leaving the second chair out. Statistically you keep existing near my desk, so — efficiency."
+     ]
+    },
+    {
+     "id": "olesm_board_partner",
+     "requires_accomplishment": {
+      "cisterns_reported": 1,
+      "chatted_with_olesm": 3
+     },
+     "lines": [
+      "I set the board up when the bells go quiet now, on the chance you wander past. That isn't pathetic, that's PREPARED.",
+      "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
+      "You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
+     ]
+    },
+    {
+     "id": "olesm_after_the_match",
+     "requires_accomplishment": {
+      "chess_with_olesm": 1
+     },
+     "lines": [
+      "Rematch, someday. Not today; I need my dignity back first.",
+      "I still replay our game some nights. I win in my head. It isn't the same."
+     ]
+    }
+   ],
+   "conversation": "olesm_intro",
+   "dialogue": [
+    {
+     "speaker": "Olesm",
+     "text": "One moment; three columns into a tally. Say hello properly and I'll lose my place gladly."
+    }
+   ]
+  },
+  {
+   "_comment": "The Watch post facade (roof/facade decor already at (22,1)/(22,2)) becomes a REAL door -- the barracks interior is now enterable. The old flavor NPC that stood here (`watch_guard`, display_name 'Watch Guard', a static single-line dialogue with ZERO canonical QA touches -- confirmed by grep before this change) is RELOCATED into the barracks interior as the profiled Duty Sergeant (`duty_sergeant`, docs/design/character-profiles.md), a zero-risk silent move (no re-pathing needed anywhere, unlike Selys's own relocation). Zevara Sunderscale herself stays at the gate (2,6) -- zevara_intro's own framing is unchanged; only her DESK lives in the barracks now. to_cell (2,6) lands one cell north of barracks_exit (2,7), same offset convention as guild_door/guild_exit. moved from (22,3) to (22,2), flush into the facade_plaster tile at that SAME cell (this building has only one wall segment, no gap like guild/runners_guild's twin-facade blocks -- the door renders on top of the wall tile since `_build_decor` runs before `_build_entities` in world.gd's `_rebuild_field`, so equal-y-sort ties resolve entity-after-decor) instead of floating a full cell out in the open street. (22,3) is now open ground (only the door entity ever occupied it; the static `blocked` list never listed it) -- approach shifts from bumping east at (21,3) to walking onto (22,3) then bumping north; re-pinned in barracks_walkthrough.json. (22,2) was already in the street's static `blocked` list (the facade's own wall cell), so floor_cells/blocked_cells counts are unchanged.",
+   "id": "barracks_door",
+   "kind": "door",
+   "cell": [
+    22,
+    2
+   ],
+   "display_name": "Watch Barracks",
+   "sprite": "door",
+   "to_map": "barracks",
+   "to_cell": [
+    2,
+    6
+   ],
+   "on_enter_accomplishment": "visited_barracks"
+  },
+  {
+   "_comment": "Market-depth stall 1 of 2, flavor/observe only (no buy) -- pays off Pisces's existing street line ('The bread stall raises its prices after the fourth bell. Buy before.') with an actual entity, rather than leaving that a dangling reference to nothing on the map. Placed in the market row (x10-19,y1-2 per the street's own zone comment), west of krshia_stall/krshia so the row reads as a continuous market rather than one shopkeeper's island. Sprite is `food_basket` (the SAME base sprite krshia_stall already uses -- confirmed by a windowed read that `food_bread`'s own anchor ([0.5,1.5] in sprites.json) is authored for TABLETOP dressing paired with a table_brown decor cell, e.g. the inn's (7,6), never a lone floor-standing entity; using it directly here rendered wrong), differentiated by a warm wheat-gold `tint` -- the exact frozen_cache/sewer_debris precedent (both reuse `crate`, told apart by tint alone).",
+   "id": "bread_stall",
+   "kind": "prop",
+   "cell": [
+    11,
+    2
+   ],
+   "display_name": "Bread Stall",
+   "sprite": "food_basket",
+   "tint": [
+    0.9,
+    0.75,
+    0.4
+   ],
+   "observe": "Loaves stacked in a pyramid that will not survive the lunch rush. A chalked board promises today's price, then a second, higher price scratched in for after the fourth bell.",
+   "on_interact_accomplishment": "browsed_bread_stall",
+   "toast": "Warm bread smell over the whole row. No one's minding the stall this exact moment. The loaves aren't going anywhere without a fight."
+  },
+  {
+   "_comment": "Market-depth stall 2 of 2, the mini-buy surface -- an unnamed Peddler (title only, matching the gate_guard/watch_guard convention, profile in docs/design/character-profiles-staging.md) selling ONE item, watch_issue_gambeson (now priced 20g -- see items.json _comment_price), via conversation graph data/dialogue/peddler_stall.json (krshia_crate.json's exact buy contract). Placed at the east end of the market row, close to the Watch post/barracks -- thematically apt for Watch-surplus gear. Sprite is `pc_human_m`, matching this entity's own copy ('he'/'his' throughout); no tint. De-twinned from Krshia -- the two no longer share one sprite differentiated by tint alone.",
+   "id": "peddler",
+   "kind": "npc",
+   "cell": [
+    18,
+    2
+   ],
+   "display_name": "Peddler",
+   "sprite": "pc_human_m",
+   "observe": "A cart of odds and ends, half of it Watch-stamped. He's not saying how he came by that, and you're not asking.",
+   "facing": "down",
+   "conversation": "peddler_stall",
+   "dialogue": [
+    {
+     "speaker": "Peddler",
+     "text": "Watch gear, mostly honest."
+    }
+   ]
+  },
+  {
+   "id": "krshia_stall",
+   "kind": "prop",
+   "cell": [
+    14,
+    2
+   ],
+   "display_name": "Krshia's Stall",
+   "sprite": "food_basket",
+   "observe": "Silverfang goods laid out with a trap's care: cheapest at the front, the good stock where a browsing hand drifts. A note warns that the seller remembers faces.",
+   "on_interact_accomplishment": "browsed_market",
+   "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere. A sign says she remembers faces, and debts."
+  },
+  {
+   "_comment": "Guild_door converts from a toast prop to a REAL door -- the Guild interior is now enterable. The old toast (\"The Guild hall is packed with adventurers arguing over a bounty board. Selys handles the counter work outside today.\") is RETIRED (the player now walks in and sees the real hall; gate_district_walkthrough's pin moved from a toast-wait to the map_changed/ui_map_rendered transition -- see its _comment). door_when is NOT needed (the Guild is public, per plan). on_enter_accomplishment keeps the SAME accomplishment id (visited_guild) so every script asserting it still passes unchanged. to_cell (8,10) lands just inside, facing up into the hall, one cell north of the guild_exit door (8,11) -- never lands ON the exit door's own occupied cell. moved from (28,3) to (28,2) -- the gap cell between the twin facade_plaster tiles at (27,2)/(29,2), flush into the facade line instead of floating a full cell out in the street (no decor sprite occupies (28,2) itself, so this is a clean placement, no sprite-stack). (28,3) is now open ground (only the door entity ever occupied it); approach shifts from bumping east at (27,3) to walking onto (28,3) then bumping north -- re-pinned in gate_district_walkthrough.json, guild_interior_walkthrough.json (incl. its near_guild fixture's start position/facing), and disclosed for delivery_loop/quest_errand_fight/quest_errand_parley/save_load_roundtrip/social_loop/dialogue_hub_loop (all of which reach the guild via a debug `teleport` straight to the interior desk approach, never walking this street cell -- unaffected, confirmed by grep before this edit). (28,2) was already in the street's static `blocked` list (the gap between the two wall cells), so floor_cells/blocked_cells counts are unchanged.",
+   "id": "guild_door",
+   "kind": "door",
+   "cell": [
+    28,
+    2
+   ],
+   "display_name": "Adventurer's Guild",
+   "sprite": "door",
+   "to_map": "guild",
+   "to_cell": [
+    8,
+    10
+   ],
+   "on_enter_accomplishment": "visited_guild"
+  },
+  {
+   "_comment": "Runners_guild_door converts a previously-decorative background building (roof/facade at (19,15)/(21,15)/(19,16)/(21,16), the SAME aligned-roof-pair convention the guild's own facade already uses) into a real door -- the Runner's Guild is now enterable. Matching guild_door's own midpoint-between-two-roofs placement (28 between 27/29). Blast radius checked clear: no canonical script's street route touches x=18-21/y=15-17 (the crate-quest detour only ever walks x=10-13 at y13-16; watch_sergeant/crate_scavengers/supplier_scavengers all sit west of x=17). to_cell (5,6) lands one cell north of runners_guild_exit (5,7), the same offset convention as guild_door/barracks_door. moved from (20,17) to (20,16) -- the gap cell between the twin facade_plaster tiles at (19,16)/(21,16), flush into the facade line (the guild_door precedent) instead of floating a full cell south in the street. (20,17) is now open ground (only the door entity ever occupied it); approach shifts from bumping east at (19,17) to walking onto (20,17) then bumping north -- re-pinned in delivery_loop.json at BOTH crossings (the outbound entry and the same-waking turn-in return). (20,16) was already in the street's static `blocked` list (the gap between the two wall cells), so floor_cells/blocked_cells counts are unchanged.",
+   "id": "runners_guild_door",
+   "kind": "door",
+   "cell": [
+    20,
+    16
+   ],
+   "display_name": "Runner's Guild",
+   "sprite": "door",
+   "to_map": "runners_guild",
+   "to_cell": [
+    5,
+    6
+   ],
+   "on_enter_accomplishment": "visited_runners_guild"
+  },
+  {
+   "_comment": "Pisces Jealnv (Human [Necromancer], canon -- Horns of Hammerad). Guild frontage (30,4), east of guild_door (28,3), clear of gate_district_walkthrough's forecourt approach cells (27,3/27,4/27,5/26,5/25,5). Bespoke PixelLab sprite (hooded young human in immaculate white robes with faded trim + sash), replacing the earlier citizen_f cool-white-tint stand-in. Teaches magic via the pisces_magic graph; mage.gained_by keys to its learned_magic_from_pisces bank.",
+   "id": "pisces",
+   "kind": "npc",
+   "cell": [
+    30,
+    4
+   ],
+   "display_name": "Pisces",
+   "sprite": "pisces",
+   "observe": "Thin, immaculate, hungry in a way food will not fix. He holds himself like a duelist and watches hands, not faces. Whatever he studies, it is not small.",
+   "friendly_line": "A sniff - though a fractionally warmer one. You are... tolerable company. Rarer praise than you comprehend. I shall permit you to remain within conversational range.",
+   "facing": "left",
+   "talk_pool": [
+    "You linger. Either you have a question of substance or you are another gawker. I shall assume the former. Generously.",
+    "Magic is not the wand-waving the market storytellers sell. It is discipline. Precision. Neither, I observe, is common here.",
+    "Yes, a [Necromancer]. No, I will not apologize for a competence others lack the wit to appreciate.",
+    "Do continue standing there. I find the silence rather more edifying than most conversation."
+   ],
+   "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/pisces_stages.json (staging_note/_flag annotations stripped). Two stages -- he only ever thaws to 'tolerable'. NO spec-default perk (the staging doc explicitly says build nothing -- the duelist's-drill/gift proposal ships as an open flag, not code) -- only the stage row + the hard-railed hub topic unlock ship.",
+   "talk_pool_stages": [
+    {
+     "id": "pisces_tolerable_company",
+     "requires_accomplishment": {
+      "learned_magic_from_pisces": 1,
+      "chatted_with_pisces": 3
+     },
+     "lines": [
+      "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
+      "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
+      "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
+     ]
+    },
+    {
+     "_comment": "Pisces studies at the inn over N sleeps -- opaque-until-sleep: his talk-pool stages shift, zero progress text. TWO stages, gated on the hidden `door_study_sleeps` counter (wi_game.gd's sleep()-beat hook, banked once the ruin-recovery chain's beat-3 counters are held) -- the talk_pool_stages idiom itself (social.gd walks the array in AUTHORED order, last-met-wins), appended AFTER pisces_tolerable_company so an active study period reads as the more current topic even for a player who already reached 'tolerable company'. Zero numbers, zero fractions -- opacity holds.",
+     "id": "pisces_door_study_1",
+     "requires_accomplishment": {
+      "door_study_sleeps": 1
+     },
+     "lines": [
+      "I have had that stone of yours on my desk every night since. It resists categorization. Aggravating. I approve."
+     ]
+    },
+    {
+     "id": "pisces_door_study_2",
+     "requires_accomplishment": {
+      "door_study_sleeps": 2
+     },
+     "lines": [
+      "Closer. Whatever your door remembers being, it has stopped fighting me about it."
+     ]
+    }
+   ],
+   "conversation": "pisces_magic",
+   "dialogue": [
+    {
+     "speaker": "Pisces",
+     "text": "Yes, I am a [Necromancer]. No, I did not raise anything in this square. Move along, or ask me something worth my time."
+    }
+   ]
+  },
+  {
+   "id": "sewer_grate",
+   "kind": "prop",
+   "cell": [
+    16,
+    11
+   ],
+   "display_name": "Sewer Grate",
+   "sprite": "sewer_grate",
+   "observe": "Rust holds the bars, not a lock. The draft is steady — a tunnel, not a pit. The skittering keeps its distance. Something down there has learned to avoid shadows.",
+   "on_interact_accomplishment": "heard_the_sewers",
+   "toast": "A heavy iron grate, rusted shut. Cold air rises from below, and something in the dark skitters away from your shadow.",
+   "_comment_door_when": "The grate-gate seam. Until `heard_about_cisterns` is banked (from Olesm), door_when's gate is UNMET and interact falls through to the on_interact_accomplishment branch above -- BYTE-IDENTICAL to the pre-quest behavior asserted by gate_district_walkthrough (heard_the_sewers + the exact toast). Once banked, the same interact hauls the grate open and descends: emits the `open_toast`, then transitions to the sewers landing. See wi_game.gd interact()'s prop branch + `_door_gate_met`.",
+   "door_when": {
+    "requires": {
+     "heard_about_cisterns": 1
+    },
+    "to_map": "sewers",
+    "to_cell": [
+     2,
+     2
+    ],
+    "open_toast": "You set your shoulder to the grate. The rust gives with a shriek, and cold air breathes up out of the dark. Down you go."
+   },
+   "light": {
+    "color": [
+     0.35,
+     0.85,
+     0.5
+    ],
+    "energy": 0.35,
+    "radius": 18,
+    "flicker": false
+   }
+  },
+  {
+   "_comment": "Sprite is `pc_gnoll_f` (a real directional Gnoll sprite, matching this entity's own copy -- 'A Gnoll with a merchant's smile', canon 'Hrr.' speech tic); no tint. De-twinned from the Peddler, who no longer shares this sprite.",
+   "id": "krshia",
+   "kind": "npc",
+   "cell": [
+    13,
+    2
+   ],
+   "display_name": "Krshia",
+   "sprite": "pc_gnoll_f",
+   "observe": "A Gnoll with a merchant's smile and a soldier's eyes. She prices you the moment you approach, and remembers the number.",
+   "friendly_line": "You have a warm way about you, and warmth I can trade with. Come - for you, I will call it a fair price, and I will mean it. This is not nothing, from me.",
+   "facing": "right",
+   "talk_pool": [
+    "You look, you do not buy. This is fine. Looking is its own kind of respect.",
+    "Silverfang goods - fair weight, fair price. I do not haggle down, and I do not forget a face.",
+    "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
+    "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
+   ],
+   "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/krshia_stages.json (staging_note/_flag annotations stripped). Three stages -- crate_returned accrues TODAY (pool shipped), so stage 2 goes live the moment the seam lands. Stage 3's shop-discount perk is wired into krshia_crate.json's 'shop' node (4 stage-gated duplicate buy options + hide_when-retired full-price rows); the necklace-reveal hub topic (krshia_plans) is the OBLIQUE canon version -- never says 'spellbook' (user gate, see HANDOFF).",
+   "talk_pool_stages": [
+    {
+     "id": "krshia_fair_weight",
+     "requires_accomplishment": {
+      "crate_returned": 1
+     },
+     "lines": [
+      "The crate-finder. Sit, look, touch even. You have earned handling privileges.",
+      "You did a thing for me and did not name a price after. I remember this the way I remember debts. Better, even.",
+      "The stall does well today. When the stall does well, the tribe does well. That is all the economics you need."
+     ]
+    },
+    {
+     "id": "krshia_friend_of_the_silverfangs",
+     "requires_accomplishment": {
+      "crate_returned": 1,
+      "chatted_with_krshia": 4
+     },
+     "lines": [
+      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
+      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
+      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week."
+     ]
+    }
+   ],
+   "conversation": "krshia_crate",
+   "dialogue": [
+    {
+     "speaker": "Krshia",
+     "text": "Busy, yes? Come back when you can talk."
+    }
+   ]
+  },
+  {
+   "_comment": "Issue #69: Klbkch fields here (the crate quest's FORCE path), NOT Relc -- this is a WATCH-context street fight, Klbkch's own alternation slot (crate_scavengers/shield_spiders vs. Relc's tutorial/road/inn fights + the descent). Was `allies: []` before this lane (no ally ever fielded here) -- no swap needed, this is a net-new gate. `ally_requires: {chatted_with_klbkch: 1}` is banked ONLY by talking to Klbkch at the gate (#51's talk_pool, `data/skeleton_scene.json`'s own `klbkch` entity) -- a player who never talked to him fights this alone (companions are earned by relationship, the riverfarm_hunter/relc_descent precedent). Balance: sim_combat_batch.gd ENCOUNTER_CELLS `crate_scavengers_w1_klbkch` (measured-only, same rationale as the pre-existing `_w1_solo` sibling -- crate_fight's own pinned fixture rng_state is the real content proof, not a win-rate contract).",
+   "id": "crate_scavengers",
+   "kind": "encounter",
+   "cell": [
+    12,
+    16
+   ],
+   "display_name": "Crate Scavengers",
+   "sprite": "goblin_base",
+   "arena": "goblin_ambush",
+   "enemies": [
+    "goblin_raider",
+    "goblin_raider"
+   ],
+   "allies": [
+    "klbkch"
+   ],
+   "ally_requires": {
+    "chatted_with_klbkch": 1
+   },
+   "on_victory": [
+    "recovered_crate_force",
+    "found_the_crate"
+   ],
+   "loot": [
+    {
+     "gold": 2,
+     "chance": 0.5
+    }
+   ]
+  },
+  {
+   "_comment": "The supplier's scavenger problem -- a NEW street encounter reusing the goblin_raider pair + goblin_ambush arena EXACTLY like crate_scavengers (crate precedent), so no new balance-harness cells are needed (identical, already-measured composition). Interact-only (no trigger_radius), placed at the far south-west market corner (5,16) clear of the crate cluster (crate_scavengers 12,16 / cellar_door 10,17 / watch_sergeant 17,12) and off gate_district's y2-5 lanes. Clearing it banks `strongarmed_the_supplier` + the shared `resolved_wrong_order` (beat 1 fires in combat). Encounters are excluded from blocked_cells (static+segments only) and no street script asserts a street entity count, so this is a silent street add.",
+   "id": "supplier_scavengers",
+   "kind": "encounter",
+   "cell": [
+    5,
+    16
+   ],
+   "display_name": "Supplier's Scavengers",
+   "sprite": "goblin_base",
+   "arena": "goblin_ambush",
+   "enemies": [
+    "goblin_raider",
+    "goblin_raider"
+   ],
+   "allies": [],
+   "on_victory": [
+    "strongarmed_the_supplier",
+    "resolved_wrong_order"
+   ],
+   "loot": [
+    {
+     "gold": 2,
+     "chance": 0.5
+    }
+   ]
+  },
+  {
+   "id": "cellar_door",
+   "kind": "prop",
+   "cell": [
+    10,
+    17
+   ],
+   "display_name": "Dark Cellar",
+   "sprite": "door",
+   "observe": "A plain door with dark behind it. The dust on the sill is scuffed one way. Something was dragged in, and not dragged out.",
+   "requires_skill": "light",
+   "skill_hint_toast": "Pitch black past the first step. You'd need a light that travels with you.",
+   "locked_toast": "Too dark to see anything.",
+   "_comment_on_skill_use": "Re-casting [Light] here after the crate is already back with Krshia used to repeat the 'There: Krshia's crate' find every time -- the crate isn't there anymore, it's been returned. `variants` (use_skill()'s new minimal data-driven seam, wi_game.gd) overrides `toast` once `crate_returned` (the quest's own recovered/returned counter, banked by krshia_crate.json's guile/skill report options) is banked -- latest-satisfied-wins over the base entry, the same convention visual_states already uses. `accomplishment` still banks unconditionally either cast (harmless repeat count, its only consumer is a >=1 gate).",
+   "on_skill_use": {
+    "accomplishment": "studied_the_cellar",
+    "toast": "[Light] — The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf.",
+    "variants": [
+     {
+      "when": {
+       "crate_returned": 1
+      },
+      "toast": "[Light] — The orb drifts down the stairs. Just an empty cellar now, and a scuff in the dust where the crate used to sit."
+     }
+    ]
+   }
+  },
+  {
+   "_comment": "The free social persuade beat: ungated one-shot persuaded_someone producer so [Diplomat]'s entry never hangs on goblin_parley's single missable branch. Non-quest BY DESIGN -- the fork-pricing rule covers quest resolutions; ordinary street persuasion stays free (it is how a player discovers the class). Cell (19,14): off every canonical route (crate columns x10/x13 + the y13 row, gate lane y6, market row y2, runners door (20,17)), 2 cells from watch_sergeant (17,12) -- a scene unfolding in the sergeant's earshot, which the calmed node's own copy leans on.",
+   "id": "frazzled_drayman",
+   "kind": "npc",
+   "cell": [
+    19,
+    14
+   ],
+   "facing": "left",
+   "display_name": "A Frazzled Drayman",
+   "sprite": "human_laborer",
+   "conversation": "drayman_dispute",
+   "observe": "A dray cart, a missing axle-pin, and a man about one shout from tipping the whole day over."
+  },
+  {
+   "_comment": "Sprite is `pc_drake_m`, matching this entity's own copy ('He would send...') and Zevara's established Drake Watch-officer precedent (the gate).",
+   "id": "watch_sergeant",
+   "kind": "npc",
+   "cell": [
+    17,
+    12
+   ],
+   "display_name": "Watch Sergeant",
+   "sprite": "pc_drake_m",
+   "observe": "Stripes on the sleeve, ink on the fingers. He would send the crate problem down the chain if the chain had not already sent it back up to him.",
+   "facing": "down",
+   "conversation": "watch_crate",
+   "dialogue": [
+    {
+     "speaker": "Watch Sergeant",
+     "text": "Sewers, scavengers, paperwork. Pick one."
+    }
+   ]
+  },
+  {
+   "_comment": "Liscor's OWN end of the fast-travel pair, pairing with the inn's `pantry_door`. Placed at (30,10) -- the open mid-street cell east of the guild/Pisces cluster (26-30,1-4), well clear of every `blocked` cell, wall segment (all 3 sit near x0/y0 borders), decor, and entity cell on this map (cross-checked against the full street entity/decor/blocked/walls listing before placement, same blast-radius discipline as pantry_door). Ships default + awakened `visual_states` ONLY -- no flicker/chain-started state, unlike pantry_door: v1's Liscor pair is the player's EXISTING home region (the door awakening attunes both ends of ITS OWN connection at once), not a NEW region earning its own attunement beat -- the anchor-stone-per-region idiom's first genuinely NEW instance is a future region milestone's job (#10/#12/#16), which pairs a fresh anchor with its OWN attunement accomplishment in data/portals.json, zero code. Playtest hotfix #6: sprite swapped `boulder` -> `anchor_waystone` (a bespoke waystone-archway silhouette, not a rock) with the SAME amber awakened tint as pantry_door (spec §2: 'Liscor amber' is the only live destination color v1 ships). The awakened light is stronger and STEADY now (energy 0.6->0.9, radius 16->22, flicker off) -- the #8 rune-glow rejection stands (target too small for legible runes), so this glow carries the whole portal read pre-interact.",
+   "id": "street_anchor_stone",
+   "kind": "prop",
+   "cell": [
+    30,
+    10
+   ],
+   "display_name": "The Weathered Stone",
+   "sprite": "anchor_waystone",
+   "tint": [
+    0.55,
+    0.58,
+    0.62
+   ],
+   "observe": "A worn marker stone, older than the buildings that grew up around it. Nobody living remembers who set it, or why it sits exactly here.",
+   "portal_menu": true,
+   "portal_menu_when": {
+    "requires": {
+     "door_awakened": 1
+    }
+   },
+   "on_interact_accomplishment": "observed_street_anchor_stone",
+   "toast": "Cold, plain stone. Whatever it was for, it isn't for anything now.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "door_awakened",
+      "at": 1
+     },
+     "sprite": "anchor_waystone",
+     "tint": [
+      1.05,
+      0.9,
+      0.6
+     ],
+     "light": {
+      "color": [
+       0.85,
+       0.7,
+       1.0
+      ],
+      "energy": 0.9,
+      "radius": 22,
+      "flicker": false
+     }
+    }
+   ]
+  },
+  {
+   "_comment": "Issue #51 ambient Antinium: pool-less extra (the Invrisil crowd-extra precedent) -- one static line, no talk_pool, no conversation. Identical rigs across Workers are DIEGETIC (canon uniformity), the one sanctioned sprite-reuse.",
+   "id": "antinium_worker_a",
+   "kind": "npc",
+   "cell": [
+    24,
+    3
+   ],
+   "display_name": "Antinium Worker",
+   "sprite": "antinium_worker",
+   "facing": "down",
+   "observe": "An Antinium Worker — dark chitin, four arms, a crate balanced with unreasonable precision. It does not fidget. It does not need to.",
+   "dialogue": [
+    {
+     "speaker": "Antinium Worker",
+     "text": "The Worker pauses mid-errand and inclines its head. \"This one is carrying goods for the market row. It is good work. Good day.\" It resumes, precisely."
+    }
+   ]
+  },
+  {
+   "_comment": "Issue #51 ambient Antinium: pool-less extra (the Invrisil crowd-extra precedent) -- one static line, no talk_pool, no conversation. Identical rigs across Workers are DIEGETIC (canon uniformity), the one sanctioned sprite-reuse.",
+   "id": "antinium_worker_b",
+   "kind": "npc",
+   "cell": [
+    8,
+    16
+   ],
+   "display_name": "Antinium Worker",
+   "sprite": "antinium_worker",
+   "facing": "up",
+   "observe": "Another Worker, identical to the first in the way coins from one mint are identical. It sweeps the same three cobbles until they answer for something.",
+   "dialogue": [
+    {
+     "speaker": "Antinium Worker",
+     "text": "The Worker stops sweeping. \"This one was told the square must be clean. The square will be clean.\" It says it like a fact about tomorrow's weather."
+    }
+   ]
+  }
+ ]
+}
