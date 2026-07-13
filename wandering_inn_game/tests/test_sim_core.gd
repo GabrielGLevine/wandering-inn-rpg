@@ -2798,6 +2798,42 @@ func _init() -> void:
 	var standing_slate: Array = gDel.delivery_board_deliveries().map(func(d: Dictionary) -> String: return String(d["id"]))
 	assert(standing_slate == ["delivery_standing_dispatch_run", "delivery_standing_inn_hamper", "delivery_standing_barracks_kit"], "a completed standing id keeps rotating -- never retired")
 
+	# --- Issue #91: post_game standing orders (the `requires` pool gate) ---
+	# Pool 29 (26 pre-#91 + 3 gated). Pre-post_game the gate filters all
+	# three out (26 remain), so ts 26 wraps back to window [0..2] -- the
+	# byte-identical-pre-gate contract. Post_game the SAME ts reads the tail:
+	# the three standing orders exactly.
+	var bounty_cc := {
+		"combatants": _load_json("res://data/combatants.json"),
+		"classes": _load_json("res://data/classes.json"),
+		"arenas": _load_json("res://data/arenas.json"),
+		"items": _load_json("res://data/items.json"),
+		"bounties": _load_json("res://data/bounties.json"),
+	}
+	var gB := WIGame.new(scene_config, skill_config, _sink, 7, bounty_cc)
+	var pre_ids: Array = gB.board_bounties().map(func(b: Dictionary) -> String: return String(b["id"]))
+	assert(pre_ids == ["bounty_road_cull", "bounty_settle_dispute", "bounty_gossip_tea"], "ts-0 window unchanged by the gated appends")
+	gB.times_slept = 26
+	var wrap_pre: Array = gB.board_bounties().map(func(b: Dictionary) -> String: return String(b["id"]))
+	assert(wrap_pre == ["bounty_road_cull", "bounty_settle_dispute", "bounty_gossip_tea"], "pre-post_game the 26-entry pool wraps ts 26 to [0..2] -- gated rows invisible to rotation")
+	gB.record_accomplishment("post_game")
+	var wrap_post: Array = gB.board_bounties().map(func(b: Dictionary) -> String: return String(b["id"]))
+	assert(wrap_post == ["bounty_standing_den_watch", "bounty_standing_lantern_line", "bounty_standing_road_order"], "post_game grows the pool to 29 and ts 26 reads the standing orders")
+	# Delta-repeatable off respawning producers: accept -> culls -> pay ->
+	# re-accept -> the fresh baseline demands FRESH culls.
+	gB.accept_bounty("bounty_standing_den_watch")
+	assert(gB.accepted_bounty_id == "bounty_standing_den_watch", "a standing order accepts")
+	assert(gB.accepted_bounty_baseline == {"kingslayer_spiders_culled": 0}, "delta baseline snapshotted")
+	assert(not gB.turn_in_bounty(), "no pay before the culls")
+	gB.record_accomplishment("kingslayer_spiders_culled")
+	gB.record_accomplishment("kingslayer_spiders_culled")
+	assert(gB.turn_in_bounty() and gB.gold == 10, "two culls pay the T4 band (10g)")
+	gB.accept_bounty("bounty_standing_den_watch")
+	assert(gB.accepted_bounty_id == "bounty_standing_den_watch", "the SAME posting re-accepts -- repeatable (delta mode, never one-shot-retired)")
+	assert(gB.accepted_bounty_baseline == {"kingslayer_spiders_culled": 2}, "re-accept baselines at the prior count")
+	assert(not gB.turn_in_bounty(), "prior culls never pay twice")
+	gB.abandon_bounty()
+
 	# --- 8b R1 (issue #10): the encounter_when phase gate (locked shape 2) ---
 	# Two synthetic encounters against the REAL combat catalog (goblin_ambush
 	# arena + training_dummy_a, both already shipped) so a gate-open combat

@@ -1877,6 +1877,11 @@ func board_bounties() -> Array:
 		var one_shot := String(bounty.get("condition_mode", "delta")) == "absolute"
 		if one_shot and accomplishment_count("completed_bounty_%s" % String(bounty[WIKeys.ID])) >= 1:
 			continue
+		# Issue #91 post_game standing orders: `requires`-gated rows join the
+		# pool only once their gate banks (WIBounties.requires_met's own TRAP
+		# comment carries the rotation-window contract).
+		if not WIBounties.requires_met(bounty, Callable(self, "accomplishment_count")):
+			continue
 		remaining.append(bounty)
 	return WIBounties.active_slate(remaining, times_slept)
 
