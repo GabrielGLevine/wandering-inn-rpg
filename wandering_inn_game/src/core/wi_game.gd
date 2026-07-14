@@ -1525,13 +1525,22 @@ static func apply_loadout(candidates: Array, loadout: Array) -> Array:
 ## (the sim, not the UI, owns the filter -- "sim owns state + filters"),
 ## passed through `apply_loadout` against the shared `hotbar_loadout`. AUTO
 ## when the loadout is empty -- byte-identical to the unfiltered order.
+## `item:` tokens are stripped BEFORE apply_loadout, mirroring the combat
+## hud's own strip: an item-only loadout must stay AUTO here, never a
+## non-empty loadout with zero skill matches (which returns [] and blanks
+## the overworld bar -- the exact R2 guarantee "toggling an item never
+## blanks an un-curated skill kit").
 func field_hotbar_loadout() -> Array:
 	var candidates: Array = []
 	for raw: Variant in known_skills():
 		var id := String(raw)
 		if bool((skills.get(id, {}) as Dictionary).get("field", false)):
 			candidates.append(id)
-	return WIGame.apply_loadout(candidates, hotbar_loadout)
+	var skill_loadout: Array = []
+	for raw: Variant in hotbar_loadout:
+		if not String(raw).begins_with("item:"):
+			skill_loadout.append(raw)
+	return WIGame.apply_loadout(candidates, skill_loadout)
 
 
 ## Assigns `skill_id` onto the shared loadout if it

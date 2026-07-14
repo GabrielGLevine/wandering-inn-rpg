@@ -2757,6 +2757,19 @@ func _init() -> void:
 	gLoad.loadout_toggle("basic_cleaning")
 	assert(gLoad.hotbar_loadout.is_empty(), "unassigning the last entry returns to AUTO (empty loadout)")
 	assert(gLoad.field_hotbar_loadout() == manual_field, "back to AUTO once the loadout empties out again -- exact parity with the original derivation")
+	# GH#92 R2 regression (lane-92 review, Important): an ITEM-ONLY loadout
+	# must read as AUTO on the field bar -- item: tokens are stripped BEFORE
+	# apply_loadout, so the loadout the field bar sees is empty, never a
+	# non-empty loadout with zero skill matches (which returned [] and
+	# blanked the overworld bar).
+	gLoad.loadout_toggle("item:mending_draught")
+	assert(gLoad.hotbar_loadout == ["item:mending_draught"], "item token assigns onto the shared loadout")
+	assert(gLoad.field_hotbar_loadout() == manual_field, "an item-only loadout leaves the field bar AUTO (item: tokens stripped, never a blank bar)")
+	gLoad.loadout_toggle("observe")
+	assert(gLoad.field_hotbar_loadout() == ["observe"], "item token + one skill: field bar carries the skill only, loadout order preserved")
+	gLoad.loadout_toggle("observe")
+	gLoad.loadout_toggle("item:mending_draught")
+	assert(gLoad.hotbar_loadout.is_empty() and gLoad.field_hotbar_loadout() == manual_field, "untoggling both restores AUTO exactly")
 
 	# Invalid-id filter (a save carrying a renamed/removed skill id): the write
 	# side doesn't gate on known-ness (loadout_toggle has no such guard -- see
