@@ -21,7 +21,7 @@ broken the game.
    wandering_inn_game/qa/ci_sweep.sh
    ```
    Seeds matter: each script runs at its pinned seed (see
-   `wandering_inn_game/CLAUDE.md` for the table).
+   `wandering_inn_game/AGENTS.md` for the table).
 
 Don't see the real art? The repository ships **fallback art** for a subset
 of assets whose licenses don't allow redistribution. The game is fully
@@ -62,6 +62,10 @@ want to help replace them with original work.
   happy to point at an example.
 - Maintainer review and merge are handled by the project owner. Releases
   are cut by version tag, so your merged change may ship in a batch.
+- Disclose AI assistance in the PR description, including the provider(s)
+  used. Commit authorship and `Co-Authored-By` trailers must describe the
+  humans and tools that actually produced the commit; do not add a model
+  identity by convention when it did not contribute.
 
 ## Non-code contributions
 

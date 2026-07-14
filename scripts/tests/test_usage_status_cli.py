@@ -20,6 +20,11 @@ def run_status(env_extra, args=()):
 
 
 class TestStatusCLI(unittest.TestCase):
+    def test_codex_never_reads_claude_usage(self):
+        r = run_status({"CODEX_CI": "1", "USAGE_GUARD_FAKE": "session=99 week=99"})
+        self.assertEqual(r.returncode, 0)
+        self.assertTrue(r.stdout.startswith("N/A provider=codex"), r.stdout)
+
     def test_fake_winddown_exit_20(self):
         r = run_status({"USAGE_GUARD_FAKE": "session=90 week=10"})
         self.assertEqual(r.returncode, 20)

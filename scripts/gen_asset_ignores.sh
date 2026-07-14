@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # gen_asset_ignores.sh — regenerate the GENERATED gitignore block from
 # wandering_inn_game/assets_manifest.json (the unified-repo licensed-asset
-# discipline; see wi-shipping skill + CLAUDE.md "Licensed assets & secrets").
+# discipline; see wi-shipping skill + AGENTS.md "Licensed assets & secrets").
 #
 # The block is delimited by:
 #   # === GENERATED: licensed asset overlay (unified-repo transition 2026-07-07) ===

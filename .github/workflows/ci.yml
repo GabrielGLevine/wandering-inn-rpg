@@ -66,6 +66,9 @@ jobs:
       - name: Run leak check
         run: bash scripts/leak_check.sh
 
+      - name: Check model-neutral guidance mirrors
+        run: python3 scripts/sync_agent_guidance.py
+
   # ------------------------------------------------------------------ smoke
   smoke:
     name: Smoke (headless boot)

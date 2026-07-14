@@ -3,7 +3,7 @@
 
 Official source: `claude -p /usage` (works in print mode). A rolling
 sample cache enables burn-rate projection. Tier ladder: OK -> CAUTION ->
-WINDDOWN -> QUIESCE. Protocol: .claude/skills/wi-usage-guard/SKILL.md.
+WINDDOWN -> QUIESCE. Protocol: .agents/skills/wi-usage-guard/SKILL.md.
 Spec: docs/superpowers/specs/2026-07-12-usage-guard-design.md
 """
 import json

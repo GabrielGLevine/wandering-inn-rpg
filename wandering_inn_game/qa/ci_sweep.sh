@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ci_sweep.sh — run every canonical QA playtest at its pinned seed and fail on
 # ANY red run OR any SCRIPT ERROR / Parse Error / WARNING in a run's log.
-# This is the grep discipline (wandering_inn_game/CLAUDE.md: "ZERO
+# This is the grep discipline (wandering_inn_game/AGENTS.md: "ZERO
 # known-harmless warnings") enforced IN CI, not just by convention.
 #
 # Usage:
@@ -24,9 +24,9 @@
 # --- CANONICAL LIST (ARCH-1) -------------------------------------------------
 # qa/manifest.json is the ONE source of truth (script/seed/fixture/note per
 # entry). This script parses it (python3) instead of carrying a hardcoded
-# array. wandering_inn_game/CLAUDE.md's "Canonical QA seed table" is generated
+# array. wandering_inn_game/AGENTS.md's "Canonical QA seed table" is generated
 # FROM the manifest for human reading — the drift check below (startup, every
-# invocation) parses that table back out of CLAUDE.md and hard-fails the sweep
+# invocation) parses that table back out of AGENTS.md and hard-fails the sweep
 # if its script/seed set disagrees with the manifest, so the two can never
 # silently drift apart again (consultant finding 4). Peek-only utilities
 # (title_peek, street_peek) are intentionally excluded from both. A seed of
@@ -39,7 +39,7 @@ SCRIPTS_DIR="$HERE/scripts"
 LOGDIR="$HERE/../qa_output/ci_sweep_logs"
 PER_SCRIPT_TIMEOUT="${CI_SWEEP_TIMEOUT:-240}"
 MANIFEST="$HERE/manifest.json"
-CLAUDE_MD="$HERE/../CLAUDE.md"
+AGENTS_MD="$HERE/../AGENTS.md"
 
 # A full sweep regenerates every artifact anyway — start from a clean slate
 # so qa_output/.godot_home never balloon across sessions (the regular flush
@@ -107,16 +107,16 @@ if [ "${#CANON[@]}" -eq 0 ]; then
 	exit 1
 fi
 
-# --- Drift check: CLAUDE.md's canonical seed table must agree with the
+# --- Drift check: AGENTS.md's canonical seed table must agree with the
 # manifest (script + seed set) or the sweep hard-fails with the diff printed.
 # This is the "two hand-synced sources of truth" gap (consultant finding 4) —
-# the manifest is authoritative; CLAUDE.md's table is documentation generated
+# the manifest is authoritative; AGENTS.md's table is documentation generated
 # from it, and this check is what keeps it honest going forward.
-DRIFT_OUTPUT="$(MANIFEST_PATH="$MANIFEST" CLAUDE_MD_PATH="$CLAUDE_MD" python3 - <<'PY'
+DRIFT_OUTPUT="$(MANIFEST_PATH="$MANIFEST" AGENTS_MD_PATH="$AGENTS_MD" python3 - <<'PY'
 import json, os, re, sys
 
 manifest_path = os.environ["MANIFEST_PATH"]
-claude_md_path = os.environ["CLAUDE_MD_PATH"]
+agents_md_path = os.environ["AGENTS_MD_PATH"]
 
 with open(manifest_path) as f:
 	manifest = json.load(f)
@@ -125,11 +125,11 @@ for entry in manifest["scripts"]:
 	seed = entry["seed"]
 	manifest_pairs.add((entry["script"], "none" if seed is None else str(seed)))
 
-if not os.path.isfile(claude_md_path):
-	print(f"ci_sweep: FATAL — CLAUDE.md not found at {claude_md_path}", file=sys.stderr)
+if not os.path.isfile(agents_md_path):
+	print(f"ci_sweep: FATAL — AGENTS.md not found at {agents_md_path}", file=sys.stderr)
 	sys.exit(1)
 
-with open(claude_md_path) as f:
+with open(agents_md_path) as f:
 	lines = f.readlines()
 
 table_pairs = set()
@@ -155,19 +155,19 @@ for line in lines:
 	table_pairs.add((name, seed_token))
 
 if not table_pairs:
-	print("ci_sweep: FATAL — could not locate/parse CLAUDE.md's canonical seed table", file=sys.stderr)
+	print("ci_sweep: FATAL — could not locate/parse AGENTS.md's canonical seed table", file=sys.stderr)
 	sys.exit(1)
 
 only_manifest = sorted(manifest_pairs - table_pairs)
 only_table = sorted(table_pairs - manifest_pairs)
 if only_manifest or only_table:
-	print("ci_sweep: FATAL — qa/manifest.json and CLAUDE.md's canonical seed table have DRIFTED:", file=sys.stderr)
+	print("ci_sweep: FATAL — qa/manifest.json and AGENTS.md's canonical seed table have DRIFTED:", file=sys.stderr)
 	if only_manifest:
-		print("  in manifest.json but not (or mismatched seed in) CLAUDE.md table:", file=sys.stderr)
+		print("  in manifest.json but not (or mismatched seed in) AGENTS.md table:", file=sys.stderr)
 		for name, seed in only_manifest:
 			print(f"    {name}:{seed}", file=sys.stderr)
 	if only_table:
-		print("  in CLAUDE.md table but not (or mismatched seed in) manifest.json:", file=sys.stderr)
+		print("  in AGENTS.md table but not (or mismatched seed in) manifest.json:", file=sys.stderr)
 		for name, seed in only_table:
 			print(f"    {name}:{seed}", file=sys.stderr)
 	sys.exit(1)
@@ -183,7 +183,7 @@ fi
 
 # --- Tier drift check: every entry >=1 tier, every tier name known, smoke
 # is a structural SUBSET of full (never a script tagged smoke-not-full).
-# Runs on every invocation, same as the manifest/CLAUDE.md check above —
+# Runs on every invocation, same as the manifest/AGENTS.md check above —
 # tiering must never silently drift once curated (ARCH-1 QA-tiering task).
 TIER_PAIRS="$(MANIFEST_PATH="$MANIFEST" python3 - <<'PY'
 import json, os, sys

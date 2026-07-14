@@ -2,10 +2,9 @@
 
 ## 🚢 v0.7.0 RELEASING (2026-07-13) — the user-override wave
 
-**User directives this session:** deliver #92; fix the two mobile input
-blockers (filed → #109); override the usage guard (weekly resets
-tomorrow), scale to the remaining budget, ship the release before the
-Fable band hits 95%.
+**User directives for the release:** deliver #92; fix the two mobile input
+blockers (filed → #109); ship the release within the active provider's
+capacity window.
 
 **Shipped in v0.7.0 (four lanes, every one opus/sonnet-reviewed with
 fix waves, sequenced merges, full composed gate):**
@@ -66,9 +65,10 @@ parked pieces.
    world.gd/main.gd, now uncontested).
 3. **#76 remainder** — footstep floor-families + ambience ducking
    (_tween_music_bus_to parameterized over both buses).
-4. **#110 agent portability** (user-filed; findings verified +
-   refinements posted 2026-07-13; sequenced explicitly AFTER the
-   v0.7.0 tag per its own danger list).
+4. **#110 agent portability — COMPLETE locally:** `.agents/skills/` is
+   canonical; Claude adapters/mirror, CI drift check, provider-scoped usage,
+   neutral roles/handoffs, and truthful AI disclosure are verified. Closing
+   commit is the clean provider-switch boundary. No gameplay surfaces touched.
 5. #102/#103 context economy; #19 Steam secrets (USER).
 
 ## 👀 TASTE QUEUE (new this wave, user review)
@@ -164,7 +164,7 @@ say the word and any flips.
 /usr/local/bin/godot --path wandering_inn_game
 
 # Agent verification (primary)
-wandering_inn_game/qa/run_qa.sh <script> headless --seed=<N>   # seed table in v4 CLAUDE.md
+wandering_inn_game/qa/run_qa.sh <script> headless --seed=<N>   # seed table in wandering_inn_game/AGENTS.md
 /usr/local/bin/godot --headless --path wandering_inn_game --quit   # smoke; zero warnings tolerated
 ```
 
@@ -182,7 +182,11 @@ wandering_inn_game/qa/run_qa.sh <script> headless --seed=<N>   # seed table in v
 - Godot **4.7.stable** at `/usr/local/bin/godot` (homebrew, user-approved upgrade); 4.6.2 preserved at `/Applications/Godot4.6.app` for frozen v2 only.
 - Web QA one-time deps installed: export templates (`~/Library/Application Support/Godot/export_templates/4.7.stable/`), Playwright chromium-headless-shell, `qa/web/node_modules/` (gitignored).
 - `potential_assets/` is gitignored (asset licenses forbid redistribution) — never commit it.
-- Subagent lane: Codex sandbox cannot write `.git` or open windows — Codex implements + verifies headless, controller verifies on real env and commits. zsh does NOT word-split unquoted vars — pass QA-script args explicitly. macOS has no `timeout` command.
+- Every handoff records role, branch/base SHA, owned files, verification,
+  conflicts, Git/windowed-QA operator, and next action. Provider sandbox
+  capabilities are discovered per session; never infer them from a model name.
+  zsh does NOT word-split unquoted vars — pass QA-script args explicitly.
+  macOS has no `timeout` command.
 - **Godot 4.7 rarely SIGABRTs at process shutdown** (macOS crash-report notifications; ~3 occurrences across hundreds of headless runs 2026-07-01→02, incl. one overnight pre-M4). Results/exit codes unaffected so far; user notified, cosmetic. If phantom QA FAILs ever appear with clean QA_RESULT lines, suspect this first (crash-at-exit → exit 134).
 
 *(Older closed-milestone narrative — M0 through M6.5, M-FP, Onboarding O1-O5
