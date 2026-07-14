@@ -342,6 +342,33 @@
      "toast": "The runes are the same. Not similar — the same hand, the same order, as the door in the inn's pantry."
     }
    ]
+  },
+  {
+   "_comment": "Issue #91 (hour-4 spine): `gallery_vermin_nest` -- the reopened-gallery respawns:true slot the drain report flagged (the dungeon's own repeatable post-clear content, distinct from kingslayer_den's dungeon_approach placement). `encounter_when: {requires: {halls_cleared: 1}}` (the SAME `_encounter_gate_met`/`requires` shape snare_nest_slot/vault_boss_slot already use, no new sim seam) -- dormant/inert (gate_closed_toast) until the trap gauntlet is actually cleared by ANY route (FIGHT/SKILL/TALK all bank halls_cleared directly), matching the 'reopened gallery' framing: the side passages stay sealed by rubble/wards until the main halls are safe to work in. The crab_nest informed-consent shape (data/dialogue/gallery_vermin_nest.json) -- interact-only, no trigger_radius. Roster: rift_vermin_a + rift_vermin_c (two of the three rift_vermin_leak/trapped_halls_snare regulars, combatants.json -- 'magic-drawn vermin resurging once the seal cracked further' extends that entity's own established canon-cite, no new species). respawns:true (dormant until the next sleep, the rock_crab_nest/kingslayer_den mechanism). Placed at (12,11), the map's open south band -- clear of the (9,10)-(9,11) rubble-column wall segment and the (4,11)/(16,11) blocked decor; Chebyshev distance to snare_nest_slot (17,8) is 5, to illusory_floor_a (14,7) is 4, to vault_boss_slot (18,6) is 6, to seal_kept_door (19,7) is 7 -- clear of every entity/blocked cell, and off the row-8/row-6 lanes delve_fight/delve_talk/delve_skill actually walk (verified against all three scripts' own move sequences).",
+   "id": "gallery_vermin_nest",
+   "kind": "encounter",
+   "cell": [
+    12,
+    11
+   ],
+   "display_name": "A Sealed Side-Gallery",
+   "sprite": "bat",
+   "arena": "trapped_halls_snare",
+   "conversation": "gallery_vermin_nest",
+   "enemies": [
+    "rift_vermin_a",
+    "rift_vermin_c"
+   ],
+   "allies": [],
+   "respawns": true,
+   "encounter_when": {
+    "requires": {
+     "halls_cleared": 1
+    }
+   },
+   "gate_closed_toast": "Rubble and old wardwork still choke this side passage. Whatever's back there can wait until the main halls are actually safe.",
+   "observe": "A narrower passage breaks off from the gauntlet proper, half-choked with fallen stone. Small shapes move in the dark past the rubble -- more than one.",
+   "on_victory": "gallery_vermin_culled"
   }
  ]
 }

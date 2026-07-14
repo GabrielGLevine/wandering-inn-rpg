@@ -1464,6 +1464,27 @@
    "ally_requires": {
     "hunter_will_come": 1
    }
+  },
+  {
+   "_comment": "Issue #91 (hour-4 spine): `riverfarm_thicket_patch` -- Riverfarm's FIRST respawns:true renewable-cull slot (survey finding: the region had ZERO before this -- river_wolf_pack is the only recurring encounter and it's a night-phase-gated ambush, not an interact-choice cull). The crab_nest informed-consent shape (data/dialogue/riverfarm_thicket_patch.json) -- interact-only, no trigger_radius, no encounter_when gate (always available, matching corusdeer_range/razorbeak_nest's own unconditional shape). Roster: `thicket_remnant_a/b` (combatants.json, a toned-down briar_collector stat clone -- 'Eloise's own hedge-craft gone feral, a stray offshoot that broke free of the hollow', distinct id per the rift_vermin_a precedent since the full-strength briar_collector pair reads too hard solo and a single copy reads trivial). Placed at (17,13), the village's open south-east ground -- clear of every blocked cell and every other entity (riverfarm_hunter 13,10; riverfarm_well 11,11; riverfarm_cottage_b 18,9; riverfarm_dock 20,6; river_wolf_pack 2,14); Chebyshev distance to riverfarm_cottage_b is 4, to river_wolf_pack is 15 -- clear of every teleport/move cell riverfarm_walkthrough/riverfarm_fight/riverfarm_talk/riverfarm_skill/longhouse_walkthrough/social_loop/trader_earn_loop actually touch (grep-verified against all seven scripts' own move sequences).",
+   "id": "riverfarm_thicket_patch",
+   "kind": "encounter",
+   "cell": [
+    17,
+    13
+   ],
+   "display_name": "A Creeping Thicket",
+   "sprite": "briar_collector",
+   "arena": "witch_hollow",
+   "conversation": "riverfarm_thicket_patch",
+   "enemies": [
+    "thicket_remnant_a",
+    "thicket_remnant_b"
+   ],
+   "allies": [],
+   "respawns": true,
+   "observe": "Vines thicker than they should be creep across open ground here, twitching against a wind that isn't blowing.",
+   "on_victory": "thicket_remnants_culled"
   }
  ]
 }

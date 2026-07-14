@@ -364,6 +364,23 @@ const RIVERFARM_CELLS := [
 	## numbers reflect what a real player actually holds at Riverfarm arrival.
 	{"name": "river_wolf_pack_t3_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": false},
 	{"name": "river_wolf_pack_t3_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": true},
+	## Issue #91 (hour-4 spine): `riverfarm_thicket_patch` -- the FIRST
+	## respawns:true slot Riverfarm ever fielded (survey finding: zero
+	## existed pre-#91, river_wolf_pack is the region's only recurring
+	## encounter and it's night-phase-gated, not a renewable interact-choice
+	## cull). The crab_nest informed-consent shape (data/dialogue/
+	## riverfarm_thicket_patch.json). Roster: `thicket_remnant_a/b`
+	## (combatants.json, a toned-down briar_collector stat clone -- reusing
+	## briar_collector_a/b verbatim at this build read 0.36 SOLO [too hard]
+	## or 1.00 at a single copy [too easy]; neither lands in band, hence the
+	## distinct-id clone, the rift_vermin_a precedent). GATED 0.55-0.95 at
+	## `t3_warrior10` SOLO (no hunter ally -- a renewable cull, not the
+	## witch_hollow quest fight) -- measured 0.74/2r (a distinct-id clone of
+	## an identically-stated scratch pair read 0.81 during tuning; the id
+	## string itself perturbs initiative-tie RNG draw order, a real but
+	## harmless drift -- both reads sit comfortably in-band). Postings:
+	## `bounty_standing_thicket_watch` keys off `thicket_remnants_culled`.
+	{"name": "riverfarm_thicket_patch_t3_solo", "arena": "witch_hollow", "enemies": ["thicket_remnant_a", "thicket_remnant_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
 ]
 
 ## Invrisil 8c Task C2 (issues #12/#13) axis. The alley footpads
@@ -433,6 +450,20 @@ const INVRISIL_CELLS := [
 	## t3_warrior10 (the old t3_spellsword9 cell stays below as a baseline).
 	{"name": "boulevard_night_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
 	{"name": "boulevard_night_footpads_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_warrior10", "solo": true},
+	## Issue #91 (hour-4 spine): `boulevard_duel_ring` -- Invrisil's own
+	## crab_nest-shape consent encounter (data/dialogue/boulevard_duel_ring.
+	## json), Master Coyle's sparring racket (same voice already established
+	## on bounty_alley_cull/bounty_mothbear_cull). Roster: `hired_blade_
+	## knife_a/b` (the warehouse quest's two generic knife-thugs, reused
+	## verbatim at a NEW placement -- the footpad_lookout/footpad_bruiser
+	## precedent, id reuse across placements is established convention; the
+	## full 3-member hired_blades roster measured 0.05 SOLO here [too hard],
+	## leader+one-knife measured 0.56 [too tight a margin], leader-alone
+	## measured 0.99 [too easy] -- the two knife-thugs alone read the best
+	## band). GATED 0.55-0.95 at `t3_warrior10` SOLO -- measured 0.92/2r.
+	## Postings: `bounty_standing_boulevard_duels` keys off `boulevard_
+	## duels_won`.
+	{"name": "boulevard_duel_ring_t3_solo", "arena": "mercantile_alley", "enemies": ["hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
 ]
 
 const BUILDS := [
@@ -674,6 +705,21 @@ const PARTY_CELLS := [
 ## Re-verified via delve_fight (the live QA canonical for this exact fight).
 const DUNGEON_CELLS := [
 	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["snare_ward_a", "snare_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	## Issue #91 (hour-4 spine): `gallery_vermin_nest`, the reopened-gallery
+	## respawns:true slot (trapped_halls.json, gated `encounter_when.requires.
+	## halls_cleared:1` -- the SAME `_encounter_gate_met`/`requires` shape
+	## snare_nest_slot/vault_boss_slot already use, no new sim seam). Roster:
+	## rift_vermin_a + rift_vermin_c (two of the three rift_vermin_leak/
+	## trapped_halls_snare regulars -- see rift_vermin_a's own combatants.json
+	## _comment for the canon cite; "magic-drawn vermin resurging once the
+	## seal cracked further" is a direct extension of that entity's own
+	## established flavor, no new species). GATED to the generic 0.55-0.95
+	## band at `t4_spellsword11_party` SOLO (the SAME reference build
+	## trapped_halls_snare_t4_solo above uses) -- measured 0.84/3r, real
+	## margin both directions. Postings: `bounty_standing_gallery_watch`
+	## (data/bounties.json, requires:{post_game:1}) keys off this cell's
+	## on_victory (`gallery_vermin_culled`).
+	{"name": "gallery_vermin_nest_t4_solo", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 ## Issue #97 (bestiary expansion): every new placement is ally-less by
