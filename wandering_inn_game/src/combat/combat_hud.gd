@@ -320,7 +320,7 @@ func hotbar_node() -> WIHotbar:
 ## from a stale frame (there shouldn't be one -- `refresh()` hides it in the
 ## same call that disarms) can never fire a confirm the screen isn't
 ## expecting. Only emits; `combat_screen.gd`'s `_on_confirm_chip_tapped`
-## dispatches into the real `_confirm_dash_action`/`_confirm_targeted_action`
+## dispatches into the real `_confirm_bar_action`/`_confirm_targeted_action`
 ## calls (mode ownership stays on the screen, same composition-root
 ## convention `hotbar_node().slot_clicked` already follows).
 func _on_confirm_chip_gui_input(event: InputEvent) -> void:
@@ -443,7 +443,25 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 ## calling it here is safe under the zero-bare-autoload-identifier contract
 ## the same way `WICombat`/`WIHotbar` already are). AUTO (loadout empty)
 ## returns the kit run in its original skills.json-derived order, unchanged.
-func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = []) -> Array:
+## `usable_items` (issue #92 R2, default `[]` -- every pre-#92 call site
+## stays byte-identical) is `Game.sim`'s currently-CARRIED combat-usable
+## consumable records (a `use_effect.heal` shape only -- a `next_fight` meal
+## is field-only, never a combat hotbar candidate), threaded in by
+## `combat_screen.gd` the same way `loadout` is. UNLIKE skills, an item
+## NEVER auto-populates in AUTO mode -- it surfaces ONLY when its own
+## `item:<id>` token is explicitly present in `loadout` (R2's own "a
+## hotbar_loadout entry item:<id>" phrasing), regardless of whether the
+## SKILL portion of the bar is AUTO or curated: item tokens are stripped
+## out of the array fed to `WIGame.apply_loadout` for the skill run above,
+## so toggling an item on/off can never blank a player's un-curated skill
+## kit (an open-ended, economy-grown item catalog auto-showing every
+## carried consumable would otherwise reflow/renumber the skill slots
+## unpredictably every time inventory changes -- the exact churn "explicit
+## opt-in" is meant to prevent). Items always render AFTER every kit-skill
+## slot (two separate passes, not a single chronological interleave) --
+## still "assignment order is the order" for each domain individually, just
+## not merged across domains.
+func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usable_items: Array = []) -> Array:
 	var c: Dictionary = view.combatant(actor_id)
 	var slots: Array = [
 		{"type": "attack", "label": "Attack", "icon": "icon_attack", "key_hint": "1"},
@@ -454,8 +472,12 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = []) -> A
 		var sk: Dictionary = view.skill(sk_id)
 		if (sk.get("contexts", []) as Array).has("combat") and int(sk.get("ap_cost", 0)) > 0:
 			kit_ids.append(sk_id)
+	var skill_loadout: Array = []
+	for raw: Variant in loadout:
+		if not String(raw).begins_with("item:"):
+			skill_loadout.append(raw)
 	var number := 3
-	for sk_id: String in WIGame.apply_loadout(kit_ids, loadout):
+	for sk_id: String in WIGame.apply_loadout(kit_ids, skill_loadout):
 		var sk: Dictionary = view.skill(sk_id)
 		slots.append({
 			"type": "skill", "id": sk_id, "label": String(sk.get("display_name", sk_id)),
@@ -466,6 +488,26 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = []) -> A
 			# `WIEffectText.skill_effect_lines` -- the generated mechanical
 			# line, never hand-composed here.
 			"effect": sk.get("effect", {}),
+		})
+		number += 1
+	var usable_by_id: Dictionary = {}
+	for rec: Dictionary in usable_items:
+		usable_by_id[String(rec.get("id", ""))] = rec
+	for raw: Variant in loadout:
+		var token := String(raw)
+		if not token.begins_with("item:"):
+			continue
+		var item_id := token.substr(5)
+		if not usable_by_id.has(item_id):
+			continue
+		var rec: Dictionary = usable_by_id[item_id]
+		slots.append({
+			"type": "item", "id": item_id, "label": String(rec.get("name", item_id)),
+			"icon": String(rec.get("icon", "")), "key_hint": str(number),
+			"description": String(rec.get("description", "")),
+			# Carried through untouched so `_slot_info_line` can hand it to
+			# WIEffectText, mirroring the skill "effect" field just above.
+			"use_effect": rec.get("use_effect", {}),
 		})
 		number += 1
 	slots.append({"type": "end_turn", "label": "End\nTurn", "icon": "", "key_hint": "E", "end_turn_gap": true})
@@ -500,6 +542,12 @@ func render_bar_slots(view: RefCounted, bar_slots: Array) -> Array:
 				d["affordable"] = skill_affordable(c, skill_id, view)
 				d["ap_cost"] = view.effective_ap_cost(view.active_id(), skill_id)
 				d["mp_cost"] = int(sk.get("mp_cost", 0))
+			"item":
+				# Issue #92 R2: flat WIItems.FLAT_AP_COST regardless of the
+				# item's own (nonexistent) ap_cost field -- see that const's
+				# own doc comment. No MP concept for an item use.
+				d["affordable"] = int(c["ap"]) >= WIItems.FLAT_AP_COST
+				d["ap_cost"] = WIItems.FLAT_AP_COST
 			"end_turn":
 				d["affordable"] = true
 		out.append(d)
@@ -692,6 +740,28 @@ func _slot_info_line(d: Dictionary) -> String:
 			if effect_lines.is_empty():
 				return "%s — %s" % [skill_name, desc]
 			return "%s — %s — %s" % [skill_name, effect_lines[0], desc]
+		"item":
+			# Issue #92 R2: the SAME "name — effect — description" shape as
+			# "skill" above, reusing WIEffectText.skill_effect_lines verbatim
+			# via a synthetic skill-shaped record (WIItems' own resolve_use
+			# precedent) -- today only the "heal" use_effect shape ever
+			# reaches this bar (a next_fight meal is field-only, never a
+			# combat hotbar candidate), so this only ever needs to describe
+			# a heal.
+			var item_name := String(d.get("label", ""))
+			var item_desc := String(d.get("description", ""))
+			var use_effect: Dictionary = d.get("use_effect", {})
+			var item_lines: Array[String] = []
+			if use_effect.has("heal"):
+				item_lines = WIEffectText.skill_effect_lines({
+					"ap_cost": d.get("ap_cost", WIItems.FLAT_AP_COST), "mp_cost": 0,
+					"effect": {"type": "heal", "amount": int(use_effect["heal"])},
+				})
+			if item_desc == "":
+				return item_name if item_lines.is_empty() else "%s — %s" % [item_name, item_lines[0]]
+			if item_lines.is_empty():
+				return "%s — %s" % [item_name, item_desc]
+			return "%s — %s — %s" % [item_name, item_lines[0], item_desc]
 		_:
 			return ""
 

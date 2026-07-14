@@ -95,7 +95,11 @@ const AI_PLAYBACK_TYPES := [
 ## SKILL_TARGET's `_targeting`-driven flow — Dash has no target to cycle, so
 ## `_input_dash_confirm` handles it directly at the composition-root level
 ## (same "command surface stays on the screen" contract the targeting
-## flow follows).
+## flow follows). Issue #92 R2: DASH_CONFIRM is now Dash's mode AND a
+## consumable item-use's mode -- both are niladic (no target to cycle), so
+## the SAME gate/enum value covers either; `_confirm_bar_action` branches on
+## which one is actually armed. The enum's name stays historical (Dash was
+## first) rather than a repo-wide rename for a two-command generalization.
 enum Mode { INACTIVE, HOTBAR, ATTACK, SKILL_TARGET, DASH_CONFIRM, WAIT_AI, BANNER }
 
 var _mode: int = Mode.INACTIVE
@@ -874,6 +878,17 @@ func _activate_bar_slot(index: int) -> void:
 				_bar_index = index
 				_info_slot_index = index
 				_mode = Mode.DASH_CONFIRM
+		"item":
+			# Issue #92 R2: a consumable is ALWAYS self-target with no
+			# candidate to cycle -- Dash's own no-target confirm gate
+			# (Mode.DASH_CONFIRM, generalized: see `_confirm_bar_action`/
+			# `_cancel_bar_action`'s own doc comments) fits it exactly,
+			# rather than wiring a whole new targeting mode for a cast that
+			# never has a target to aim.
+			if int(c["ap"]) >= WIItems.FLAT_AP_COST:
+				_bar_index = index
+				_info_slot_index = index
+				_mode = Mode.DASH_CONFIRM
 		"skill":
 			var skill_id := String(slot["id"])
 			if _hud.skill_affordable(c, skill_id, _view):
@@ -962,7 +977,7 @@ func _switch_bar_slot(index: int) -> void:
 ##   swallow taps on whichever candidate cells happen to sit behind that
 ##   chrome).
 ## - DASH_CONFIRM: no board cell has any meaning (Dash has no target) -- ANY
-##   board tap while armed is "elsewhere" (`_cancel_dash`); the confirm chip
+##   board tap while armed is "elsewhere" (`_cancel_bar_action`); the confirm chip
 ##   is the only way to confirm.
 ## - WAIT_AI/BANNER/INACTIVE: unchanged no-op.
 func handle_board_click(world_pos: Vector2) -> void:
@@ -974,7 +989,7 @@ func handle_board_click(world_pos: Vector2) -> void:
 			if not _targeting.select_at_cell(cell):
 				_cancel_targeting()
 		Mode.DASH_CONFIRM:
-			_cancel_dash()
+			_cancel_bar_action()
 		_:
 			return
 	_refresh()
@@ -1002,7 +1017,7 @@ func _tap_move(cell: Vector2i) -> void:
 
 ## Issue #106: the tap-confirm chip (`combat_hud.gd`'s small always-off-board
 ## widget) -- routes through the EXACT SAME helpers Enter calls
-## (`_confirm_dash_action`/`_confirm_targeted_action`), guaranteeing event
+## (`_confirm_bar_action`/`_confirm_targeted_action`), guaranteeing event
 ## parity between a tap and a keypress. The chip is only ever VISIBLE during
 ## DASH_CONFIRM or a targeting mode with a valid target (`combat_hud.gd`'s own
 ## `_confirm_armed` gate, mirrored here defensively) -- and `is_resting()`
@@ -1015,7 +1030,7 @@ func _on_confirm_chip_tapped() -> void:
 		return
 	match _mode:
 		Mode.DASH_CONFIRM:
-			_confirm_dash_action()
+			_confirm_bar_action()
 		Mode.ATTACK, Mode.SKILL_TARGET:
 			if _targeting.has_valid_target():
 				_confirm_targeted_action()
@@ -1052,11 +1067,28 @@ func _apply_turn_started(id: String) -> void:
 		# the bar's order is free to pick for readability rather than being
 		# pinned by test coupling.
 		# Threads the PC's shared loadout in (see rebuild_slots' own doc comment).
-		_bar_slots = _hud.rebuild_slots(_view, id, Game.sim.hotbar_loadout)
+		_bar_slots = _hud.rebuild_slots(_view, id, Game.sim.hotbar_loadout, _usable_combat_items())
 		_bar_index = -1
 		_info_slot_index = 0  # Attack, per the "slot 1's info at turn start" playtest fix
 		ObservableBus.emit_domain_event(WIEvents.UI_HOTBAR_RENDERED, {"slots": _bar_slots.size()})
 		_refresh()
+
+
+## Issue #92 R2: the PC's currently-carried combat-usable consumable
+## records (a `use_effect.heal` shape only -- a `next_fight` meal never
+## belongs on this bar, see `rebuild_slots`' own doc comment) -- threaded
+## into `_hud.rebuild_slots` above the SAME way `Game.sim.hotbar_loadout`
+## already is (this file freely references `Game.sim`; combat_hud.gd itself
+## stays autoload-free). Recomputed fresh every turn start, matching
+## `hotbar_loadout` itself never being cached either.
+func _usable_combat_items() -> Array:
+	var out: Array = []
+	for raw_id: Variant in Game.sim.inventory:
+		var id := String(raw_id)
+		var rec: Dictionary = Game.sim.item(id)
+		if (rec.get("use_effect", {}) as Dictionary).has("heal"):
+			out.append(rec)
+	return out
 
 
 ## `WICombatPlayback` calls these instead of touching `TestDriver`/
@@ -1299,21 +1331,24 @@ func _cancel_targeting() -> void:
 	_bar_index = -1
 
 
-## Dash's confirm gate. No target to cycle (Tab is inert
-## here, unlike ATTACK/SKILL_TARGET) — Enter spends the AP via `combat.dash()`
-## (the only new command-surface call this mode issues; still one of the 4
-## sanctioned combat commands), Esc cancels back to HOTBAR with no sim call
-## at all (selecting Dash costs nothing until confirmed). Issue #106: bodies
-## extracted to `_confirm_dash_action`/`_cancel_dash`, same reasoning as
-## `_input_target`'s own doc comment above (DASH_CONFIRM has no board target
-## at all, so EVERY board tap while armed is "elsewhere" -- `handle_board_click`
-## routes it straight to `_cancel_dash`, the confirm chip to `_confirm_dash_action`).
+## DASH_CONFIRM's no-target confirm gate -- Dash's own original purpose,
+## widened (issue #92 R2) to also arm a consumable's item-use confirm (the
+## SAME mode: an item, like Dash, has no candidate to cycle -- Tab is inert
+## here, unlike ATTACK/SKILL_TARGET). Enter fires the armed slot's command
+## via `_confirm_bar_action` (`combat.dash()` or `Game.sim.combat_use_item`,
+## branching on `_bar_slots[_bar_index]`'s own "type"), Esc cancels back to
+## HOTBAR with no sim call at all (arming either costs nothing until
+## confirmed). Issue #106: bodies extracted to `_confirm_bar_action`/
+## `_cancel_bar_action`, same reasoning as `_input_target`'s own doc comment
+## above (DASH_CONFIRM has no board target at all, so EVERY board tap while
+## armed is "elsewhere" -- `handle_board_click` routes it straight to
+## `_cancel_bar_action`, the confirm chip to `_confirm_bar_action`).
 func _input_dash_confirm(event: InputEvent) -> void:
 	if event.is_action_pressed("cancel"):
-		_cancel_dash()
+		_cancel_bar_action()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("confirm"):
-		_confirm_dash_action()
+		_confirm_bar_action()
 		get_viewport().set_input_as_handled()
 	else:
 		# Issue #62 Lane U item 7, keyboard/pad parity -- see `_input_target`'s
@@ -1326,12 +1361,22 @@ func _input_dash_confirm(event: InputEvent) -> void:
 	_refresh()
 
 
-func _confirm_dash_action() -> void:
+## Issue #92 R2: generalized from a Dash-only body to branch on the armed
+## slot's own "type" -- Dash and an item-use are the two (today, only two)
+## commands DASH_CONFIRM ever arms, both niladic (no target to thread
+## through). `_bar_index` still points at the armed slot exactly as it did
+## before this widening.
+func _confirm_bar_action() -> void:
+	var slot: Dictionary = _bar_slots[_bar_index] if _bar_index >= 0 and _bar_index < _bar_slots.size() else {}
 	_mode = Mode.HOTBAR
 	_bar_index = -1
-	_combat().dash()
+	match String(slot.get("type", "dash")):
+		"item":
+			Game.sim.combat_use_item(String(slot.get("id", "")))
+		_:
+			_combat().dash()
 
 
-func _cancel_dash() -> void:
+func _cancel_bar_action() -> void:
 	_mode = Mode.HOTBAR
 	_bar_index = -1
