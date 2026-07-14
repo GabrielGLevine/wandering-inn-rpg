@@ -647,9 +647,11 @@ func _is_gold_toast(text: String) -> bool:
 ## construction, a toast fired in the SAME synchronous action as the one
 ## currently displaying has already been appended to `_toast_queue` by the
 ## time that first frame boundary resolves (no real frame elapses between the
-## two emits; see `_show()`'s own call site comment), so checking the queue
-## at that exact moment can never fold in a toast from a LATER, unrelated
-## action (which hasn't fired yet, so isn't in the queue to find). This is
+## two emits; see `_show()`'s own call site comment). That same-beat guarantee
+## holds strictly only for the FIRST toast of a drain: a toast shown after a
+## hold during which new toasts arrived can fold a gold toast from a later
+## beat at the queue front (gold is still never lost -- it renders inside the
+## merged panel; the merge is just cross-beat in that narrow case). This is
 ## what turns the old "chore (~2s) + 2 stacked ~3.75s toasts" drift (e.g.
 ## dirty_table's clean-then-wage pair, serving_tray's carry-then-wage pair)
 ## into a single toast for a single action -- presentation ONLY: the sim
