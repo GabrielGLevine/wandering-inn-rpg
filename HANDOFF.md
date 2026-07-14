@@ -20,7 +20,9 @@ QA notes are a CI-checked manifest-derived inventory. No gameplay changed.
 3. **#76 remainder** — footstep floor-families + ambience ducking
    (_tween_music_bus_to parameterized over both buses).
 4. **#102 context economy:** comment compression after this doc pass.
-5. **#19 Steam:** user-secret provisioning remains user-gated.
+5. **#111 safe project rename:** keep `config/name="Wandering Inn RPG v4"`
+   until native + web save migration is deliberately designed and tested.
+6. **#19 Steam:** user-secret provisioning remains user-gated.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 
