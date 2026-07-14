@@ -345,6 +345,22 @@ func _init() -> void:
 	for method_name: String in ["build", "refresh", "rebuild_slots", "render_bar_slots", "feed_push", "feed_line_for_event", "reset_tutor_lines", "match_tutor_line", "render_tutor_line", "show_banner", "clear_feed"]:
 		assert(hud_script.new(null, null, null).has_method(method_name), "combat HUD missing method: " + method_name)
 
+	# Issue #87 (skip affordance): _ai_skip_hint_text is a pure function of
+	# `hints` (never touches a Control), so it's callable directly on a
+	# bare `null`-root instance -- same idiom as `feed_line_for_event` below,
+	# without needing `build()`/a live readout panel.
+	var skip_hint_hud: RefCounted = hud_script.new(null, null, null)
+	var kb_skip_hint: String = skip_hint_hud._ai_skip_hint_text({"confirm": "Enter", "cancel": "Esc"})
+	assert(kb_skip_hint == "Enter / Esc — skip", "kb AI-skip hint must compose from the confirm/cancel glyphs handed in, got: " + kb_skip_hint)
+	var pad_skip_hint: String = skip_hint_hud._ai_skip_hint_text({"confirm": "A", "cancel": "B"})
+	assert(pad_skip_hint == "A / B — skip", "pad AI-skip hint must compose from the confirm/cancel glyphs handed in, got: " + pad_skip_hint)
+	# No new input action: the hint is built purely from the SAME confirm/
+	# cancel glyphs the existing DASH_CONFIRM readout hint already threads
+	# through `hints` -- never a bare "skip" LABELS entry. An empty `hints`
+	# dict (the default-arg shape) falls back to combat_hud.gd's own
+	# DEFAULT_HINTS, same as every other hint composer in this file.
+	assert(skip_hint_hud._ai_skip_hint_text({}) == "Enter / Esc — skip", "must fall back to DEFAULT_HINTS' own confirm/cancel when hints is missing a key")
+
 	# Issue #75 item 5b: feed_line_for_event's threaded `view` param must
 	# disambiguate a duplicate-name roster on the FEED too, not just the
 	# targeting-controller/turn-strip surfaces checked above -- reuses the

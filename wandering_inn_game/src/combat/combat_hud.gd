@@ -384,10 +384,12 @@ func _make_panel_label(
 ## top when `line_mode` is true), `bar_slots`/`bar_index`/`info_slot_index`
 ## are the screen-owned hotbar data. Order-strip/feed/banner update
 ## unconditionally; readout+hotbar only while `bar_active` -- matches the
-## original `_refresh()`'s split exactly.
+## original `_refresh()`'s split exactly. `ai_skip_hint` (issue #87) is its
+## own third readout state, alongside `bar_active`/`dash_confirm` -- see
+## `_ai_skip_hint_text`'s own doc comment.
 func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: bool,
 		targeting_state: Dictionary, bar_slots: Array, bar_index: int, info_slot_index: int,
-		dash_confirm: bool = false, hints: Dictionary = DEFAULT_HINTS) -> void:
+		dash_confirm: bool = false, hints: Dictionary = DEFAULT_HINTS, ai_skip_hint: bool = false) -> void:
 	var order_bits: Array = []
 	for id: String in view.order():
 		var mark := "> " if id == view.active_id() else ""
@@ -407,12 +409,17 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 	_banner_panel.visible = is_banner
 	# The hotbar + its readout/hint strip share one visibility gate: every
 	# mode where the player is actively choosing/aiming an action this turn.
-	_readout_panel.visible = bar_active
+	# Issue #87: the readout strip ALSO shows (hotbar stays hidden -- there is
+	# no player action bar during an AI turn) while `ai_skip_hint` is true, so
+	# the existing per-turn AI-playback skip has an on-screen affordance.
+	_readout_panel.visible = bar_active or ai_skip_hint
 	_hotbar.visible = bar_active
 	if bar_active:
 		var rendered_slots := render_bar_slots(view, bar_slots)
 		_readout_label.text = _readout_text(view, in_targeting, targeting_state, rendered_slots, info_slot_index, dash_confirm, hints)
 		_hotbar.render(rendered_slots, bar_index)
+	elif ai_skip_hint:
+		_readout_label.text = _ai_skip_hint_text(hints)
 	# Issue #106: armed whenever Enter would currently DO something --
 	# DASH_CONFIRM (no target list at all) or a targeting mode that already
 	# has a valid target (line_mode has no candidate list either, so it reads
@@ -530,6 +537,24 @@ func skill_affordable(c: Dictionary, skill_id: String, view: RefCounted) -> bool
 	var skill: Dictionary = view.skill(skill_id)
 	return int(c.get("mp", 0)) >= int(skill.get("mp_cost", 0)) \
 			and int(c["ap"]) >= view.effective_ap_cost(view.active_id(), skill_id)
+
+
+## Issue #87 (skip affordance): the EXISTING per-turn AI-playback skip
+## (`combat_screen.gd`'s confirm/cancel-consumes-`request_skip()` gate, armed
+## whenever `_mode == WAIT_AI and _ai_playback.is_playing()`) had ZERO
+## on-screen affordance -- nothing told the player confirm/cancel does
+## anything while an AI turn is animating. Surfaced on the SAME readout/hint
+## strip the player's own turn already uses (this file's own doc comment
+## below calls it "the hint strip"), composed from the SAME confirm/cancel
+## glyphs every other readout hint already threads through `hints`
+## (`WIInputHints.label()`, resolved once at the composition root --
+## `combat_screen.gd._refresh()` -- never referenced as a bare autoload here,
+## same contract as `_readout_text` below). No new input action, no new
+## mechanism -- this only advertises the one that already exists.
+func _ai_skip_hint_text(hints: Dictionary = DEFAULT_HINTS) -> String:
+	var confirm_glyph := String(hints.get("confirm", DEFAULT_HINTS["confirm"]))
+	var cancel_glyph := String(hints.get("cancel", DEFAULT_HINTS["cancel"]))
+	return "%s / %s — skip" % [confirm_glyph, cancel_glyph]
 
 
 ## The readout/hint strip that sits directly above the hotbar. `in_targeting`
