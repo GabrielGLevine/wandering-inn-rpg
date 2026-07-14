@@ -36,6 +36,19 @@ const QA_TOAST_HOLD_SECONDS := 0.4
 ## `from_start` on the class-toast render wait makes that script robust to
 ## EITHER emission order regardless.
 const QA_TOAST_HOLD_HEADLESS_SECONDS := 0.05
+## Issue #87 (toast rhythm): while another toast is still queued behind the
+## one currently showing, cap ITS hold at ~1.6s (well under TOAST_SECONDS)
+## instead of the full read-hold -- a multi-toast beat (a dual-class level-up,
+## several loot pickups) used to make the player wait through a full 3.75s
+## hold on EVERY toast but the last, piling up real wall-clock for a single
+## action. The LAST toast in the queue still gets the full TOAST_SECONDS hold
+## (nothing left behind it to rush for). Applied in `_show()` via `minf`
+## against whatever hold `_hold_seconds` already computed, so it only ever
+## SHORTENS a hold, never lengthens one. Already dwarfed by both QA hold
+## floors above (0.4s windowed / 0.05s headless) whenever `collapse_under_qa`
+## applies, so this is a real-play-only change -- no QA/canonical timing is
+## affected by it.
+const TOAST_QUEUE_HOLD_CAP_SECONDS := 1.6
 ## Base real-seconds hold for a 1-line bark. Scales UP per extra wrapped
 ## line via DIALOGUE_SECONDS_PER_EXTRA_LINE (see `_dialogue_hold_seconds`):
 ## a bark using the panel's full DIALOGUE_LINE_CAPACITY (2 lines) has more
@@ -616,6 +629,40 @@ func _drain_toasts() -> void:
 	_toast_draining = false
 
 
+## Issue #87 (toast rhythm): true for the router's own two success toasts
+## ("Earned N gold."/"Paid N gold.", `economy.gd`'s `earn`/`spend`) -- the
+## exact strings `_fold_gold_toast` below folds into whatever action toast
+## queued immediately before them in the SAME synchronous beat. Deliberately
+## excludes the refusal toast ("Not enough gold.") -- that one never follows
+## an action toast in the same beat (a shop option is `requires`-gated on
+## affordability, so the refusal is effectively unreachable through normal
+## play, but even if it fired it reads correctly standing alone).
+func _is_gold_toast(text: String) -> bool:
+	return text.begins_with("Earned ") or text.begins_with("Paid ")
+
+
+## Folds every gold-router toast ALREADY sitting at the front of `_toast_queue`
+## into `text` (space-joined), consuming each one it merges. Called from
+## `_show()` right after its first `await tree.process_frame` -- by
+## construction, a toast fired in the SAME synchronous action as the one
+## currently displaying has already been appended to `_toast_queue` by the
+## time that first frame boundary resolves (no real frame elapses between the
+## two emits; see `_show()`'s own call site comment), so checking the queue
+## at that exact moment can never fold in a toast from a LATER, unrelated
+## action (which hasn't fired yet, so isn't in the queue to find). This is
+## what turns the old "chore (~2s) + 2 stacked ~3.75s toasts" drift (e.g.
+## dirty_table's clean-then-wage pair, serving_tray's carry-then-wage pair)
+## into a single toast for a single action -- presentation ONLY: the sim
+## still emits both `TOAST` bus events, `gold_changed`, and every other event
+## completely unchanged; only how many separate PANELS render, and what each
+## one says, changes.
+func _fold_gold_toast(text: String) -> String:
+	var merged := text
+	while not _toast_queue.is_empty() and _is_gold_toast(_toast_queue[0]):
+		merged += " " + _toast_queue.pop_front()
+	return merged
+
+
 ## Collapses a presentation hold under QA (same TestDriver.active()/headless
 ## detection as combat_screen.gd's `_beat_delay`/`_presentation_delay` and
 ## world.gd's `_presentation_delay`) so a queue of several toasts drains
@@ -673,8 +720,25 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 	await tree.process_frame
 	if not is_inside_tree():
 		return
+	# Issue #87 (toast rhythm): fold any gold-router toast that arrived in the
+	# SAME synchronous beat as this one -- toast-panel only (`panel ==
+	# _toast_panel`; the dialogue bark never earns gold, so it never folds).
+	# See `_fold_gold_toast`'s own doc comment for why this exact point (right
+	# after the first frame-boundary await) is the correct, race-free check.
+	if panel == _toast_panel:
+		var folded := _fold_gold_toast(text)
+		if folded != text:
+			text = folded
+			label.text = text
+			_resize_toast_panel(text)
 	ObservableBus.emit_domain_event(rendered_event, {"text": text})
 	var hold := _hold_seconds(seconds) if collapse_under_qa else seconds
+	# Issue #87 (toast rhythm): while more toasts are still queued behind this
+	# one (post-fold -- a folded gold toast is no longer "still queued"), cap
+	# the hold so the pile drains without a full read-hold on every toast but
+	# the last. See TOAST_QUEUE_HOLD_CAP_SECONDS' own doc comment.
+	if panel == _toast_panel and not _toast_queue.is_empty():
+		hold = minf(hold, TOAST_QUEUE_HOLD_CAP_SECONDS)
 	if hold > 0.0:
 		if interruptible:
 			_toast_skip_requested = false

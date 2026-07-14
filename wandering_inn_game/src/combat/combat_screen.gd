@@ -417,6 +417,11 @@ func _refresh() -> void:
 		_refresh_combatants()
 	var bar_active := _mode in [Mode.HOTBAR, Mode.ATTACK, Mode.SKILL_TARGET, Mode.DASH_CONFIRM]
 	var in_targeting := _mode in [Mode.ATTACK, Mode.SKILL_TARGET]
+	# Issue #87 (skip affordance): mirrors `_unhandled_input`'s own
+	# `_mode == Mode.WAIT_AI and _ai_playback.is_playing()` skip-consuming
+	# gate exactly, so the hint is on screen precisely when (and only when)
+	# confirm/cancel would actually do something.
+	var ai_skip_hint: bool = _mode == Mode.WAIT_AI and _ai_playback.is_playing()
 	var targeting_state := {}
 	# The composition root is the ONLY
 	# place `targeting_controller.gd`/`combat_hud.gd` may be hinted with real
@@ -439,7 +444,7 @@ func _refresh() -> void:
 		_board_renderer.render_aim_preview(_targeting.aim_preview())
 	else:
 		_board_renderer.clear_aim_preview()
-	_hud.refresh(_view, bar_active, in_targeting, _mode == Mode.BANNER, targeting_state, _bar_slots, _bar_index, _info_slot_index, _mode == Mode.DASH_CONFIRM, hints)
+	_hud.refresh(_view, bar_active, in_targeting, _mode == Mode.BANNER, targeting_state, _bar_slots, _bar_index, _info_slot_index, _mode == Mode.DASH_CONFIRM, hints, ai_skip_hint)
 
 
 ## Per-combatant board position, visibility, and HP/MP bars/labels, sourced
