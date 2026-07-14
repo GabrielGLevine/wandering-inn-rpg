@@ -1858,13 +1858,17 @@ func _on_move_tween_finished() -> void:
 ## Mouse click into the field (issue #57), in WORLD/pixel space -- Main.gd's
 ## `_gui_input` computes this via `screen_to_world` (the real transform
 ## chain, not a hardcoded /4) before calling. Three outcomes:
-## - clicked cell hosts an entity AND the player is already Chebyshev-1
-##   adjacent to it -> face it (facing DERIVED from the click direction, not
-##   from a move) + interact -- `interact()` itself is untouched (no skill
-##   ever auto-fires; explicit-hotbar doctrine).
-## - clicked cell hosts an entity but the player is NOT adjacent -> walk to
-##   its nearest open Chebyshev-1 approach cell and STOP (never
-##   auto-interact on arrival -- no accidental skill-prop nudges).
+## - clicked cell hosts an entity AND the player is already CARDINAL-adjacent
+##   to it (issue #109 -- was any Chebyshev-1 neighbor, diagonals included) ->
+##   face it (facing DERIVED from the click direction, not from a move) +
+##   interact -- `interact()` itself is untouched (no skill ever auto-fires;
+##   explicit-hotbar doctrine).
+## - clicked cell hosts an entity but the player is NOT cardinal-adjacent
+##   (either genuinely distant, OR issue #109's diagonally-adjacent case) ->
+##   walk to its nearest open CARDINAL approach cell and STOP (never
+##   auto-interact on arrival -- no accidental skill-prop nudges). A second
+##   click, now cardinal-adjacent, is what actually interacts -- same as any
+##   distant-click approach, never a new auto-fire path.
 ## - clicked cell is empty, unblocked ground -> click-to-walk there.
 ## Anything else (off-grid, a blocked non-entity cell) is a silent no-op.
 func handle_world_click(world_pos: Vector2) -> void:
@@ -1876,7 +1880,7 @@ func handle_world_click(world_pos: Vector2) -> void:
 		return
 	var target: Dictionary = Game.sim.entity_at(cell)
 	if not target.is_empty():
-		if _chebyshev(Game.sim.player_cell, cell) <= 1:
+		if _is_cardinal_adjacent(Game.sim.player_cell, cell):
 			_click_path.clear()
 			_face_cell(cell)
 			_notify_action_taken()
@@ -1891,6 +1895,19 @@ func handle_world_click(world_pos: Vector2) -> void:
 
 static func _chebyshev(a: Vector2i, b: Vector2i) -> int:
 	return maxi(absi(a.x - b.x), absi(a.y - b.y))
+
+
+## True iff `b` is exactly one CARDINAL step from `a` -- the only relative
+## position `interact()` can ever resolve (`WIGame.interact()` targets
+## `player_cell + player_facing`, and `player_facing` is always one of the
+## four cardinal unit vectors; see `_facing_from_delta`, also cardinal-only).
+## A diagonal neighbor has Chebyshev distance 1 too but is NOT cardinal --
+## issue #109's whole bug was `handle_world_click` treating Chebyshev-1 as
+## "close enough to interact" when a diagonal Chebyshev-1 neighbor can never
+## actually resolve through `interact()`'s facing-offset lookup.
+static func _is_cardinal_adjacent(a: Vector2i, b: Vector2i) -> bool:
+	var delta := b - a
+	return (absi(delta.x) == 1 and delta.y == 0) or (absi(delta.y) == 1 and delta.x == 0)
 
 
 ## Derives a single cardinal facing from an arbitrary click delta (dominant
@@ -1989,32 +2006,35 @@ func _start_click_path(cell: Vector2i) -> void:
 	_begin_click_path(_reconstruct_path(came_from, Game.sim.player_cell, cell))
 
 
-## Click-to-walk to the NEAREST open Chebyshev-1 approach cell of a distant
-## entity (`handle_world_click`'s second branch -- the "walk up, then stop,
-## never auto-interact" ruling). Tries all 8 neighbors of the entity's cell,
-## keeping the reachable one whose BFS path is shortest; a tie keeps
-## whichever neighbor was tried first (stable, not meaningfully different by
-## eye). No-op (empty path, `_begin_click_path` swallows it) if every
-## neighbor is blocked/occupied/unreachable.
+## Click-to-walk to the NEAREST open CARDINAL approach cell of an entity
+## (`handle_world_click`'s non-cardinal-adjacent branch -- covers both a
+## genuinely distant click and issue #109's diagonally-adjacent one -- the
+## "walk up, then stop, never auto-interact" ruling). Tries only the 4
+## CARDINAL neighbors of the entity's cell (issue #109: used to try all 8,
+## including diagonals -- but a diagonal approach cell can never actually
+## interact, see `_is_cardinal_adjacent`'s doc comment, so offering one as a
+## "reached" destination was itself doomed), keeping the reachable one whose
+## BFS path is shortest; a tie keeps whichever neighbor was tried first
+## (UP/DOWN/LEFT/RIGHT order, matching `_bfs_from`'s own `dirs`). No-op
+## (empty path, `_begin_click_path` swallows it) if every cardinal neighbor
+## is blocked/occupied/unreachable.
 func _start_click_path_to_adjacent(entity_cell: Vector2i) -> void:
 	var came_from := _bfs_from(Game.sim.player_cell)
 	var occupied := _occupied_cells()
 	var grid_size := Game.sim.grid_size
 	var best_path: Array = []
-	for dy in range(-1, 2):
-		for dx in range(-1, 2):
-			if dx == 0 and dy == 0:
-				continue
-			var cand := entity_cell + Vector2i(dx, dy)
-			if cand.x < 0 or cand.y < 0 or cand.x >= grid_size.x or cand.y >= grid_size.y:
-				continue
-			if Game.sim.is_cell_blocked(cand) or occupied.has(cand):
-				continue
-			if not came_from.has(cand):
-				continue
-			var path := _reconstruct_path(came_from, Game.sim.player_cell, cand)
-			if best_path.is_empty() or path.size() < best_path.size():
-				best_path = path
+	var dirs := [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
+	for d: Vector2i in dirs:
+		var cand := entity_cell + d
+		if cand.x < 0 or cand.y < 0 or cand.x >= grid_size.x or cand.y >= grid_size.y:
+			continue
+		if Game.sim.is_cell_blocked(cand) or occupied.has(cand):
+			continue
+		if not came_from.has(cand):
+			continue
+		var path := _reconstruct_path(came_from, Game.sim.player_cell, cand)
+		if best_path.is_empty() or path.size() < best_path.size():
+			best_path = path
 	_begin_click_path(best_path)
 
 

@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #57/#84: mouse support canonical. Same near_tactician fixture/opening as hotbar_tab_loop (inn, warrior L1, [Basic Cleaning] innate 1-slot bar, player at (2,3)) so the click-driven proofs below are directly comparable to that script's key-driven ones. Proves: (title) a title-screen row CLICK reaches Continue instead of the keyboard move+confirm -- title_flow's own shape covers the keyboard path exhaustively, this is the cheap mouse variant of the identical outcome. (A) a DISTANT click on dirty_table (5,4) -- Chebyshev distance 3 from (2,3) -- walks to its nearest open approach cell and STOPS, never interacting (exact per-step count + actions_since_sleep in lockstep, never a teleport). (B) Tab-priming the bar THEN clicking slot 1 fires the SAME skill_used/accomplishment/toast stream hotbar_tab_loop's confirm press does, AND the click disarms the primed cursor (index:-1 selection event) -- the field-bar-click-disarms-Tab-primed-cursor ruling. (C) an ADJACENT click on Erin faces her + interacts in one click (dialogue_line bark) -- click-interact never needs a prior move. (D) a click on open, unoccupied ground walks there with the exact per-step count pinned. (E) a keyboard press mid-path cancels the path -- player_cell pinned short of the clicked target. (F, issue #84) Esc opens the field pause menu (full ROWS, not combat_abandon's reduced COMBAT_ROWS), a CLICK on Resume closes it via the exact `_confirm()` dispatch Enter uses. (G, issue #84) a second click on Erin (social_talked[erin] already true from C's bark) opens the REAL erin_errand conversation; clicking its options pins the EXACT SAME `dialogue_choice` payload a keyboard arrow-to-N + Enter would emit -- byte-identical dispatch, not a parallel activation path.",
+ "_comment": "Issue #57/#84/#109: mouse support canonical. Same near_tactician fixture/opening as hotbar_tab_loop (inn, warrior L1, [Basic Cleaning] innate 1-slot bar, player at (2,3)) so the click-driven proofs below are directly comparable to that script's key-driven ones. Proves: (title) a title-screen row CLICK reaches Continue instead of the keyboard move+confirm -- title_flow's own shape covers the keyboard path exhaustively, this is the cheap mouse variant of the identical outcome. (A) a DISTANT click on dirty_table (5,4) -- Chebyshev distance 3 from (2,3) -- walks to its nearest open CARDINAL approach cell and STOPS, never interacting (exact per-step count + actions_since_sleep in lockstep, never a teleport; issue #109 narrowed the candidate set from 8 neighbors to 4, so this now lands on (5,3) rather than the pre-fix (4,3) -- see that phase's own comment). (B) Tab-priming the bar THEN clicking slot 1 fires the SAME skill_used/accomplishment/toast stream hotbar_tab_loop's confirm press does, AND the click disarms the primed cursor (index:-1 selection event) -- the field-bar-click-disarms-Tab-primed-cursor ruling. (C) an ADJACENT click on Erin faces her + interacts in one click (dialogue_line bark) -- click-interact never needs a prior move. (D) a click on open, unoccupied ground walks there with the exact per-step count pinned. (E) a keyboard press mid-path cancels the path -- player_cell pinned short of the clicked target. (F, issue #84) Esc opens the field pause menu (full ROWS, not combat_abandon's reduced COMBAT_ROWS), a CLICK on Resume closes it via the exact `_confirm()` dispatch Enter uses. (G, issue #84) a second click on Erin (social_talked[erin] already true from C's bark) opens the REAL erin_errand conversation; clicking its options pins the EXACT SAME `dialogue_choice` payload a keyboard arrow-to-N + Enter would emit -- byte-identical dispatch, not a parallel activation path. (H, issue #109) THE DIAGONAL CLICK-TO-INTERACT REPRO: one step off Erin's cardinal neighbor onto a cell that is Chebyshev-1 but DIAGONALLY adjacent to her -- pre-fix, `handle_world_click`'s bare `chebyshev <= 1` gate treated this as 'close enough' and fired `_face_cell`+`interact()` directly, but `interact()`'s `player_cell + player_facing` lookup is cardinal-only and can never resolve a diagonal cell, so the click silently no-opped (repeatable forever, the issue's own presenting symptom). Post-fix, the SAME click instead routes through `_start_click_path_to_adjacent` (now cardinal-neighbor-only): one real step lands back on Erin's cardinal south neighbor, no interact fires on that arrival (the pre-existing 'walk up, stop, never auto-interact' convention every approach-click already proves) -- a SECOND click, now genuinely cardinal-adjacent, is the unchanged branch and is what actually fires the interaction (`dialogue_started` count 1->2, whole-run, since the since-cursor already passed G's own copy of this event).",
  "fixture_save": "near_tactician",
  "starts_at_title": true,
  "steps": [
@@ -15,19 +15,18 @@
   { "action": "assert_state", "path": "actions_since_sleep", "equals": 0 },
   { "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1 } },
 
-  { "_comment": "== A: DISTANT prop click stops WITHOUT interacting == dirty_table sits at (5,4); Chebyshev dist from (2,3) is max(3,1)=3, so this is the non-adjacent branch -- BFS's nearest open Chebyshev-1 approach cell is (4,3) (2 straight-right steps beats (5,3)'s 3), so the walk stops there, never interacting.", "action": "click", "cell": [5, 4] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [4, 3] }, "timeout_sec": 5 },
+  { "_comment": "== A: DISTANT prop click stops WITHOUT interacting == dirty_table sits at (5,4); Chebyshev dist from (2,3) is max(3,1)=3, so this is the non-adjacent branch -- issue #109 narrowed the approach-cell candidates to dirty_table's 4 CARDINAL neighbors only ((4,4)/(6,4)/(5,3)/(5,5) -- the pre-fix search also tried the 4 diagonal neighbors and picked (4,3) at 2 steps; that neighbor is gone from the candidate set now, so BFS's nearest open CARDINAL approach cell is (5,3) (3 straight-right steps), and the walk stops there, never interacting.", "action": "click", "cell": [5, 4] },
+  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [5, 3] }, "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 3] },
-  { "action": "assert_state", "path": "actions_since_sleep", "equals": 2 },
-  { "action": "assert_event_count", "type": "player_moved", "count": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
+  { "action": "assert_state", "path": "actions_since_sleep", "equals": 3 },
+  { "action": "assert_event_count", "type": "player_moved", "count": 3 },
   { "action": "assert_event_absent", "type": "skill_used" },
   { "action": "assert_event_absent", "type": "dialogue_started" },
   { "action": "assert_event_absent", "type": "interact_nothing" },
   { "action": "screenshot", "name": "00_distant_prop_click_stops" },
 
-  { "_comment": "== B: hotbar CLICK == number key, AND disarms a Tab-primed cursor == step onto the table's straight-south neighbor (5,3), face it (blocked down-press turns facing, same idiom hotbar_tab_loop uses), Tab-prime the bar, then CLICK slot 1 instead of pressing confirm.", "action": "move", "direction": "right", "steps": 1 },
-  { "action": "move", "direction": "down", "steps": 1 },
+  { "_comment": "== B: hotbar CLICK == number key, AND disarms a Tab-primed cursor == phase A's own cardinal-only approach walk already lands squarely on the table's straight-south neighbor (5,3) now (issue #109) -- only the facing bump remains here (blocked down-press turns facing, same idiom hotbar_tab_loop uses), then Tab-prime the bar and CLICK slot 1 instead of pressing confirm.", "action": "move", "direction": "down", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
   { "action": "press", "name": "hotbar_prime" },
   { "action": "wait_for_event", "type": "ui_field_hotbar_selection_rendered", "payload_contains": { "index": 0, "skill": "basic_cleaning", "label": "[Basic Cleaning]" }, "timeout_sec": 5 },
@@ -82,6 +81,25 @@
   { "action": "click_dialogue_option", "option": 2 },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "assert_event_count", "type": "dialogue_choice", "payload_contains": { "index": 1 }, "count": 2 },
-  { "action": "screenshot", "name": "06_dialogue_option_click" }
+  { "action": "screenshot", "name": "06_dialogue_option_click" },
+
+  { "_comment": "== H (issue #109): DIAGONAL click-to-interact repro == step off Erin's cardinal south neighbor onto (6,3) -- Chebyshev-1 from Erin (7,2) but DIAGONALLY (dx=1,dy=-1 from the player's own view), the exact shape that used to silently no-op forever (the bare `chebyshev<=1` gate fired `_face_cell`+`interact()` straight from here, but `interact()`'s cardinal-only `player_cell+player_facing` lookup can never resolve a diagonal cell). Clicking Erin from here now routes through `_start_click_path_to_adjacent` (cardinal-neighbor-only since #109's fix): the only reachable cardinal neighbor of (7,2) is (7,3) itself (both (6,2)/(8,2) sit in the map's own static `blocked` list, and (7,1) is far around them) -- one real step east lands there, and NO interact fires on that arrival (dialogue_started count stays at its phase-G value of 1, whole-run).", "action": "move", "direction": "left", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [6, 3] },
+  { "action": "click", "cell": [7, 2] },
+  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [7, 3] }, "timeout_sec": 5 },
+  { "action": "wait_frames", "frames": 3 },
+  { "action": "assert_state", "path": "player_cell", "equals": [7, 3] },
+  { "action": "assert_event_count", "type": "dialogue_started", "payload_contains": { "conversation": "erin_errand" }, "count": 1 },
+  { "action": "screenshot", "name": "07_diagonal_click_paths_to_cardinal" },
+
+  { "_comment": "THE PROOF: a second click on Erin, now genuinely cardinal-adjacent, is the unchanged branch -- it fires the real interaction (dialogue_started count 1->2), closing the repro: the diagonal-adjacent click no longer no-ops forever, it resolves in exactly two clicks (path, then interact) instead of hanging on the doomed one-click attempt.", "action": "click", "cell": [7, 2] },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "erin_errand" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "action": "assert_event_count", "type": "dialogue_started", "payload_contains": { "conversation": "erin_errand" }, "count": 2 },
+  { "action": "wait_frames", "frames": 2 },
+  { "_comment": "'hub' node reopened: phase G's own 'The table situation is handled.' pick already banked reported_cleaning (its own effects array), so THAT option's hide_when now retires it -- visible is down to [0] 'I'll take the package.' [1] 'Just passing through.' (end:true). Option 2 (1-based; index 1) ends immediately in one click; dialogue_choice{index:1} was already logged twice in phase G (its own hub pick AND the 'cleaned' node's own index-1 exit happened to share the same index), so this is the third.", "action": "click_dialogue_option", "option": 2 },
+  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
+  { "action": "assert_event_count", "type": "dialogue_choice", "payload_contains": { "index": 1 }, "count": 3 },
+  { "action": "screenshot", "name": "08_diagonal_repro_interact_fires" }
  ]
 }
