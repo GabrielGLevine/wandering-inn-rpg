@@ -342,13 +342,12 @@
    "timeout_sec": 5
   },
   {
-   "action": "wait_for_event",
+   "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 7,
+    "sprites": 8,
     "fallbacks": 0
-   },
-   "timeout_sec": 5
+   }
   },
   {
    "action": "screenshot",

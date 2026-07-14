@@ -37,6 +37,13 @@ func _load_json(path: String) -> Dictionary:
 	return parsed
 
 
+func _int_cell(value: Variant) -> Array:
+	var arr := value as Array
+	if arr == null or arr.size() != 2:
+		return []
+	return [int(arr[0]), int(arr[1])]
+
+
 func _entity_by_id(records: Array, id: String) -> Dictionary:
 	for record: Dictionary in records:
 		if String(record.get("id", "")) == id:
@@ -70,23 +77,23 @@ func _init() -> void:
 
 	var witch_map: Dictionary = scene_config["maps"]["witch_hollow"]
 	var witch := _entity_by_id(witch_map["entities"], "riverfarm_witch")
-	assert(witch.get("cell", []) == [5, 8] and String(witch.get("facing", "")) == "down",
+	assert(_int_cell(witch.get("cell", [])) == [5, 8] and String(witch.get("facing", "")) == "down",
 		"Eloise must stand two cells clear of the cottage and face the approach")
 	for neighbor: Array in [[4, 8], [6, 8], [5, 7], [5, 9]]:
-		assert(not (witch_map["blocked"] as Array).has(neighbor),
+		assert(not (witch_map["blocked"] as Array).any(func(b: Variant) -> bool: return _int_cell(b) == neighbor),
 			"Eloise needs four statically open cardinal neighbors: %s" % [neighbor])
 
 	var deep_map: Dictionary = scene_config["maps"]["deep_tunnels"]
 	var cameo := _entity_by_id(deep_map["entities"], "relc_descent_cameo")
 	var boss := _entity_by_id(deep_map["entities"], "awakened_boss")
-	assert(cameo.get("cell", []) == [13, 5] and String(cameo.get("sprite", "")) == "relc",
+	assert(_int_cell(cameo.get("cell", [])) == [13, 5] and String(cameo.get("sprite", "")) == "relc",
 		"Relc's descent cameo must occupy the planned warren-mouth cell")
 	assert(cameo.get("present_when", {}).get("requires", {}).get("reached_the_warren", 0) == 1,
 		"Relc's cameo must be gated by reaching the warren")
 	assert(cameo.get("conversation", null) == null and cameo.get("arena", null) == null,
 		"Relc's field cameo must not replace the boss conversation or combat wiring")
-	assert(cameo.get("cell", []) != boss.get("cell", []), "Relc's cameo and awakened boss must remain separate entities")
-	var presence_game := WIGame.new(scene_config, skill_config, _sink, 77)
+	assert(_int_cell(cameo.get("cell", [])) != _int_cell(boss.get("cell", [])), "Relc's cameo and awakened boss must remain separate entities")
+	var presence_game := WIGame.new(scene_config, skill_config, func(_type: String, _payload: Dictionary) -> void: pass, 77)
 	presence_game.transition("deep_tunnels", Vector2i(11, 5))
 	var live_cameo := presence_game.entities["relc_descent_cameo"] as Dictionary
 	assert(not presence_game.entity_present(live_cameo), "Relc's cameo must be absent before reached_the_warren")
@@ -99,17 +106,17 @@ func _init() -> void:
 		"bread_stall needs its entity-scoped sort override")
 	assert(float(_entity_by_id(upstairs_map["entities"], "lyonette_door").get("field_y_sort_bias_px", 0.0)) == 20.0,
 		"lyonette_door needs its entity-scoped sort override")
-	assert((upstairs_map["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "rug_tan" and d.get("cell", []) == [6, 2]),
+	assert((upstairs_map["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "rug_tan" and _int_cell(d.get("cell", [])) == [6, 2]),
 		"Lyonette's threshold needs the bounded rug zoning cue")
 
 	var ruin_map: Dictionary = scene_config["maps"]["ruin_surface"]
 	var statue := _entity_by_id(ruin_map["entities"], "ruin_court_statue")
-	assert(statue.get("cell", []) == [14, 4] and String(statue.get("sprite", "")) == "dungeon_statue",
+	assert(_int_cell(statue.get("cell", [])) == [14, 4] and String(statue.get("sprite", "")) == "dungeon_statue",
 		"the canonical ruin route needs a solid interactive statue at [14,4]")
-	assert((ruin_map["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "dungeon_rubble" and d.get("cell", []) == [10, 4]),
+	assert((ruin_map["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "dungeon_rubble" and _int_cell(d.get("cell", [])) == [10, 4]),
 		"the canonical ruin route needs low rubble at [10,4]")
 	for forbidden: Array in [[2, 2], [17, 6], [17, 8], [14, 5], [10, 5]]:
-		assert(statue.get("cell", []) != forbidden and [10, 4] != forbidden,
+		assert(_int_cell(statue.get("cell", [])) != forbidden and [10, 4] != forbidden,
 			"new ruin staging must avoid door landings, encounters, and route cells")
 
 	assert(game.grid_size == Vector2i(16, 10), "grid size from config")
