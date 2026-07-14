@@ -57,9 +57,11 @@ Fable 95% (85% as of this update).
 **New debt logged this wave:** witch_cottage_prop (witch_hollow 3,7)
 has zero free cardinal neighbors — its on_interact accomplishment is
 unreachable by mouse AND keyboard (pre-existing, surfaced by the #109
-review's map spot-check; content backlog). Stray untracked AGENTS.md +
-.agents/ appeared in the repo root (Codex-plugin mirror artifact, not
-staged — user call whether to keep or delete).
+review's map spot-check; content backlog). The untracked AGENTS.md +
+.agents/ in the repo root are #110's subject (agent portability,
+user-filed) — findings verified + refinements posted on the issue
+2026-07-13; execution sequenced AFTER the v0.7.0 tag per its own
+danger list; files stay untracked until then.
 
 ## 🛡️ USAGE GUARD LIVE (2026-07-12)
 `scripts/usage_status.sh` = tier check (OK/CAUTION/WINDDOWN/QUIESCE, exit
