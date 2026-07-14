@@ -1,25 +1,65 @@
 # Wandering Inn RPG Handoff
 
-## 📦 #91 LANE (lane-91): pieces 1+2 LANDED, pieces 3+4 PARKED (2026-07-13 budget drain)
-Landed on lane-91 (d21fb44 + 8cd3549, verified, NOT pushed/merged):
-standing delivery routes (`standing:true` skips the retire filter; 3
-routes at 2/3/2g, parcels reuse shipped items.json ids) and post_game
-standing-order postings (`requires:{post_game:1}` pool gate via
-`WIBounties.requires_met`; 10/8/6g formula pay). DISCLOSED for merge:
-board_bounties() gained a 2-line requires-filter arm — one function past
-the granted delivery-filter wi_game.gd exception; reconcile with L92's
-wi_game.gd lane at merge. PARKED (next session, the rest of #91's brief):
-(a) 3-4 fixed-tier T3-T4 `respawns:true` encounters — reopened dungeon
-gallery slots (gate on `halls_cleared`; riverfarm has ZERO respawn slots
-today, the clearest gap; invrisil consent-shape like `rock_crab_nest`) +
-GATED harness cells at the tier reference builds (region-tiers.md);
-postings keyed to their on_victory counters then append behind the same
-post_game gate. (b) The Chronicle — results-only run card via
-settings.cfg (survives New Game; NEVER save.gd — a STOP trigger), journal
-end-page + title card; prove title_flow's pins before touching title
-rows. (c) The accept→respawn-fight→sleep→re-fight→turn-in canonical + a
-Chronicle render leg + manifest/CLAUDE.md rows (the shipped pieces ride
-existing canonicals + test_sim_core coverage instead).
+## 🔥 v0.7.0 WAVE RUNNING (2026-07-13) — USER OVERRIDE of usage guard
+
+User directives this session: (1) deliver #92; (2) mobile playtest found
+two input blockers → filed #109; (3) OVERRIDE usage guard — weekly resets
+tomorrow, scale to exhaust remaining budget, NO halfway code on main,
+**deliver the next release before the Fable band hits 95%** (was 80% at
+dispatch). Controller = Fable (thin); implementers = Sonnet lanes;
+reviewers = opus per commit.
+
+**FOUR LANES LIVE (all branched off 2b95419, real overlay copied in):**
+- **lane-92** `/tmp/wi-92` — #92 R1-R5 per the pinned design on the issue
+  (use_item verb → hotbar consumables → sinks → relic abilities →
+  res-capacity growth). Owns src/core items/hotbar surface + journal
+  loadout toggle + riverfarm_talk witch node.
+- **lane-mobile2** `/tmp/wi-mobile` — #109 (cardinal click-to-interact
+  approach + field launcher chips for pause/journal/inventory). Owns
+  src/world/world.gd + main-scene wiring + new chip UI.
+- **lane-91b** `/tmp/wi-91b` — #91 remainder MINUS Chronicle (T3-T4
+  respawns:true encounters incl. riverfarm + invrisil consent-shape,
+  post_game postings on their counters, repeat-loop canonical). Owns
+  region map data + combatants + bounties + harness cells.
+- **lane-87b** `/tmp/wi-87b` — #87 remainder MINUS map fade (toast
+  rhythm in message_layer, playback beat coalescing, skip-affordance
+  hint). Owns message_layer.gd + combat_playback.gd + input_hints.gd.
+
+**PARKED to kill cross-lane file collisions:** the Chronicle (#91 —
+journal.gd/title collide with lane-92's R2) and the map-transition fade
+(#87 — world.gd collides with lane-mobile2). Both stay open on their
+issues.
+
+**MERGED so far (all reviewed + re-gated green on the composed tree):**
+87b (f66a73b, review MERGE, zero blocking; doc fixes applied dde0d73),
+91b (884d59b, review MERGE — reviewer re-ran the 104-cell harness), and
+mobile2 (e3b5ac0, review MERGE; its Important finding — pause-chip
+sub-mode routing — plus a veil defense-in-depth gate FIXED on-lane
+a99e143 and re-verified; manifest conflict union-resolved, 111 scripts,
+surfaces --check OK). Main-side debt fixed pre-merge: 58485eb pins the
+three v0.6.0 boss drops + phosphor price line in test_effect_text
+(main carried 2 FAILs + a live SCRIPT ERROR since the v0.6.0 landing).
+Composed-tree gates so far: 104-cell harness PASS, smoke 13/13, six
+crossing canonicals green, combat_walkthrough seed-9 green.
+
+**RUNNING: lane-92c** (continuation in /tmp/wi-92) — R1/R2/R5 landed on
+lane-92 (45f228e/ff8f3e6/e244a82, lane-verified); R3 WIP scaffold
+2a819b7 (inert; its commit message = authoritative resume plan); 92c
+completes R3+R4, told the usage-guard override stands (predecessor
+stopped itself on a QUIESCE notice the user had overridden).
+
+**Then:** opus review of the full lane-92 range → merge (expect
+test_effect_text + manifest/CLAUDE.md conflicts vs today's main —
+object-level resolution) → composed gate (units + harness + FULL
+111-script sweep) → **wi-shipping v0.7.0 to itch + Pages** before
+Fable 95% (85% as of this update).
+
+**New debt logged this wave:** witch_cottage_prop (witch_hollow 3,7)
+has zero free cardinal neighbors — its on_interact accomplishment is
+unreachable by mouse AND keyboard (pre-existing, surfaced by the #109
+review's map spot-check; content backlog). Stray untracked AGENTS.md +
+.agents/ appeared in the repo root (Codex-plugin mirror artifact, not
+staged — user call whether to keep or delete).
 
 ## 🛡️ USAGE GUARD LIVE (2026-07-12)
 `scripts/usage_status.sh` = tier check (OK/CAUTION/WINDDOWN/QUIESCE, exit
