@@ -6,8 +6,8 @@
 User direction: the project has been building toward a very robust DEMO;
 this spec captures what expanding to the FULL GAME requires — what scales
 as-is, what strains, the genuinely new workstreams, and the ordered first
-moves. Companion issues: the shipped-ids freeze, the skeleton split, QA
-tiering (filed the same day; numbers in ROADMAP.md).
+moves. Companion issues: #99 (shipped-ids freeze), #100 (skeleton split),
+and #101 (QA tiering), all filed the same day.
 
 ## 1. Holds at full scale — do not touch
 

@@ -7,7 +7,6 @@ board), not here. These docs are references, records, and state.
 | Doc | What |
 |---|---|
 | `DOC-MAP.md` | Agent-facing documentation ownership, status, and authority map |
-| `ROADMAP.md` | Pointer to the GitHub board + label taxonomy |
 | `VISUAL-LOG.md` | Standing visual-defect log — every milestone drains it |
 | `TRIAGE.md` | Community-issue triage flow (local, no CI secrets) |
 | `SECRETS-SETUP.md` | Fresh-machine key/secret provisioning |
@@ -20,7 +19,7 @@ canon verdicts (`k3-canon-verdicts.md`), and the **binding spoiler cutoff**
 pointer stub. Only the Home-Region II and shared-pool dialogue drafts remain
 live; shipped Riverfarm/Invrisil copy and art-direction staging are archived.
 
-## `superpowers/` — the design record (append-only)
+## `superpowers/` — the design record
 Specs and implementation plans per milestone, named
 `YYYY-MM-DD-<topic>.md`. Plans carry an explicit `DONE` or `ACTIVE` header;
 checkboxes inside executed plans are historical instructions, not open work.
@@ -29,12 +28,10 @@ Issues cite specs as design authority; never delete one an open issue references
 ## `archive/` — shipped design and consumed-copy provenance
 Superseded art direction plus staged dialogue/copy corpora that already
 shipped into `data/` (kept because they answer "where did this come from").
-The retired Fable→Opus operating manual also lives here; `AGENTS.md` and the
-`wi-*` skills supersede its provider-specific workflow and ownership rules.
-Session-lifecycle
-artifacts (morning summaries, night goals, old handoff bodies) are NOT
-kept here — they live in git history and the frozen-archive repo
-(`GabrielGLevine/wandering_inn_rpg`, private).
+Session-lifecycle artifacts, retired operating manuals, completed dispatch
+briefs, and obsolete roadmaps are not retained as files: git history is their
+archive. This directory keeps only design and content provenance that still
+answers where shipped work came from.
 
 ## Generated docs — do NOT commit
 Session-generated artifacts are gitignored by pattern: root

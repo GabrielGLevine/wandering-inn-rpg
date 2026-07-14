@@ -1,9 +1,8 @@
 # Community Submission Triage — local procedure
 
-The triage workflow (`.github/workflows/triage.yml`) self-skips because
-this project runs on a Claude subscription, not an API key. Triage
-happens in a local Claude Code session instead. Same contract, same
-prompt.
+The triage workflow (`.github/workflows/triage.yml`) self-skips when its
+API credential is unavailable. In that case, a maintainer or controller
+runs the same contract locally with the available tooling.
 
 ## Procedure (maintainer or a session the maintainer starts)
 
@@ -17,5 +16,5 @@ prompt.
 5. Remove the label so the queue stays clean:
    `gh issue edit <n> --remove-label triage`
 
-If an `ANTHROPIC_API_KEY` secret is ever added, the Action lights up
-with zero changes and this document becomes the fallback.
+If the workflow credential is provisioned, the Action handles this procedure
+and this document remains the local fallback.

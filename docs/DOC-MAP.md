@@ -12,7 +12,6 @@ contracts, decisions, or history; a plan file never reopens completed work.
 | `CLAUDE.md`, `wandering_inn_game/CLAUDE.md` | Claude Code discovery adapters | Generated policy: small pointers only |
 | `HANDOFF.md` | Live queue, taste gates, unresolved choices, environment notes | Current-state only; shipped narrative belongs in git history |
 | `docs/README.md` | Documentation directory guide | Current |
-| `docs/ROADMAP.md` | Board and label pointers | Current; GitHub owns priority/state |
 | `docs/VISUAL-LOG.md` | Open visual debt and taste observations | Current; prune resolved entries |
 | `docs/design/character-profiles.md` | Shipped character voice/art contract | Current writing authority |
 | `docs/design/character-profiles-staging.md` | Compatibility pointer to live profiles and archived expansion source | Pointer stub; never add profiles here |
@@ -23,10 +22,10 @@ contracts, decisions, or history; a plan file never reopens completed work.
 | `docs/superpowers/plans/` | Execution instructions | Header says `DONE` or `ACTIVE`; only ACTIVE is open work |
 | `docs/archive/design/` | Shipped/superseded art and assembly direction | Archive; do not execute as current instructions |
 | `docs/archive/staging/` | Consumed copy, profiles, and generated-candidate provenance | Archive; shipped data is authoritative |
-| `docs/archive/HANDOVER-FABLE-TO-OPUS-2026-07-02.md` | Retired provider-era operating manual | Archive; superseded by `AGENTS.md` and `wi-*` skills |
-| `docs/FULL-GAME-PLAYTEST.md` | Human playtest route for the v0.4.1 candidate | Historical route; re-audit before using against a later release |
 | `wandering_inn_game/docs/ARCHITECTURE-HISTORY.md` | Detailed mechanism history and rationale | Historical; current summary lives in game `AGENTS.md` |
 | `wandering_inn_game/docs/QA-SCRIPT-NOTES.md` | Generated canonical QA inventory | Generated from `qa/manifest.json`; exact routes live in `qa/scripts/` |
+| `wandering_inn_game/qa/MACHINE-PLAYTEST.md` | Player-eyes screenshot playtest protocol | Current QA procedure |
+| `wandering_inn_game/qa/playtest_saves/` | Organic player-save regression snapshots | Retained QA evidence; not canonical fixtures |
 | `docs/reports/`, `.superpowers/` | Generated reports, ledgers, screenshots | Gitignored; never bootstrap authority |
 
 ## Drift checks
@@ -35,5 +34,6 @@ contracts, decisions, or history; a plan file never reopens completed work.
   `.agents/skills/` → `.claude/skills/` mirror.
 - `python3 scripts/render_qa_notes.py` checks the complete QA inventory against
   `wandering_inn_game/qa/manifest.json`.
-- `python3 scripts/check_doc_drift.py` checks this map, plan status headers,
-  and the character-profile staging stub. CI runs all three.
+- `python3 scripts/check_doc_drift.py` checks this map, retired-file absence,
+  README demo link, plan status headers, and the character-profile staging
+  stub. CI runs all three.

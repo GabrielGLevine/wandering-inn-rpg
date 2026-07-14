@@ -21,8 +21,8 @@ name) is a frozen read-only archive.
 4. **GitHub Issues/Milestones = the plan** (transitioned 2026-07-07):
    `gh issue list -R GabrielGLevine/wandering-inn-rpg --milestone <name>`
    — each issue body is a dispatch-grade brief (goal/sources/scope/danger
-   list/verification/exit). `docs/ROADMAP.md` is a pointer + history.
-   `docs/DOC-MAP.md` maps current authority versus archived design records.
+   list/verification/exit). `docs/DOC-MAP.md` maps current authority versus
+   retained design and provenance records; git history holds retired plans.
 5. Run `scripts/usage_status.sh`; it queries and caches the active provider's
    own capacity (Claude CLI or Codex app-server), failing soft when unavailable.
    All providers keep the shared lane and integration discipline.

@@ -1,8 +1,8 @@
 # User playtest save archive — 2026-07-09, Stage 6+ (v0.4.x playtest)
 
-Snapshot of the live save slots taken mid-playtest (through FULL-GAME-PLAYTEST
-Stage 6, garden reached), preserved so this exact position can be rebuilt
-after future fixes.
+Snapshot of the live save slots taken after reaching the Garden during the
+v0.4.x human playtest, preserved so this exact position can be rebuilt after
+future fixes.
 
 | file | slot | note |
 |---|---|---|
@@ -15,7 +15,7 @@ after future fixes.
 Copy the wanted slot back and Continue (or load from the pause menu):
 
 ```bash
-cp playtest_saves/2026-07-09-user-stage6/auto.json \
+cp wandering_inn_game/qa/playtest_saves/2026-07-09-user-stage6/auto.json \
   "$HOME/Library/Application Support/Godot/app_userdata/Wandering Inn RPG v4/saves/auto.json"
 ```
 
@@ -25,5 +25,6 @@ ghosts — restoring this archive after any future fix is expected to Just
 Work. If a future save-format change ever breaks the chain, this README +
 the versioned JSON here are the rebuild spec.
 
-NOT a QA fixture: lives outside `qa/fixtures/` on purpose (the fixture
-coherence validator's standards don't apply to an organic play save).
+NOT a canonical QA fixture: it lives under `qa/playtest_saves/`, outside
+`qa/fixtures/`, because fixture-coherence standards do not apply to an
+organic player save.
