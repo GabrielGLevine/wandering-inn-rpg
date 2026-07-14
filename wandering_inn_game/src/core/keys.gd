@@ -134,6 +134,13 @@ const LORE := "lore"
 ## mutually exclusive with an equippable `kind` (weapon/armor/accessory),
 ## enforced by tests/test_items.gd.
 const USE_EFFECT := "use_effect"
+## Issue #92 R3: an accessory's combat-only skill grant, `[skill_id, ...]` --
+## folded onto the kit at `_build_player_combatant`'s equipment-mods merge
+## point (start_combat only, via `WICombatBuild.fold_abilities`), never
+## `player_skills` (no leak into field/persistence). Empty on every pre-#92
+## item (tests/test_items.gd's own "abilities must be empty" tripwire,
+## retired in lockstep with R3's first real grant, moon_bone_amulet).
+const ABILITIES := "abilities"
 
 # --- Entity record ---
 # ID shared with combatant record above.
