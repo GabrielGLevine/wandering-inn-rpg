@@ -108,7 +108,7 @@
    ]
   },
   {
-   "_comment": "The beat-3 recovery target. Gated by src/core/wi_game.gd's interact()/_interact_container (the door_when-style `contains_when: {requires: {...}}` gate, reusing `_door_gate_met` verbatim, no separate gate logic). Gated on `pedestal_unsealed` (an internal convergence counter): banked by EITHER `cleared_ruin_guardian` (fight him right here) OR any of Pisces's TALK/SKILL mage-consult legs (their examination doubles as safe-passage insight -- the FIGHT-at-beat-2 leg, having sent the player to clear `rift_vermin_leak` in the inn instead, does NOT bank it, so THOSE players still have to clear the guardian in person; see that entity's own _comment below). `on_interact_accomplishment`/`toast` KEPT verbatim as the unmet-gate fallback (interact()'s new contains_when check falls through to this exact branch when unmet -- ruin_walkthrough's fixture has door_chain_started but neither pedestal_unsealed producer, so its locked-toast assertion is untouched, byte-identical). `on_open_accomplishment: recovered_anchor_stone` (the chain's locked id) fires once, on the SAME interact that grants the item, the first time the gate is met.",
+   "_comment": "The beat-3 recovery target. Gated by src/core/wi_game.gd's interact()/_interact_container (the door_when-style `contains_when: {requires: {...}}` gate, reusing `_door_gate_met` verbatim, no separate gate logic). Gated on `pedestal_unsealed` (an internal convergence counter): banked by EITHER `cleared_ruin_guardian` (fight him right here) OR any of Pisces's TALK/SKILL mage-consult legs (their examination doubles as safe-passage insight -- the FIGHT-at-beat-2 leg, having sent the player to clear `rift_vermin_leak` in the inn instead, does NOT bank it, so THOSE players still have to clear the guardian in person; see that entity's own _comment below). `on_interact_accomplishment`/`toast` KEPT verbatim as the unmet-gate fallback (interact()'s new contains_when check falls through to this exact branch when unmet -- ruin_walkthrough's fixture has door_chain_started but neither pedestal_unsealed producer, so its locked-toast assertion is untouched, byte-identical). `on_open_accomplishment: recovered_anchor_stone` (the chain's locked id) fires once, on the SAME interact that grants the item, the first time the gate is met. Issue #92 R4: `anchor_sliver` now rides the SAME open (a second `contains` entry -- `_interact_container` loops the whole list, granting both via two separate `pickup()` calls/item_gained events, same first-open-only/idempotent shape) -- structurally reachable well before resonance_capacity can ever hit the 3 this accessory costs (that growth is sleeps away, gated on door_awakened, itself gated on recovering THIS stone), so it's carried and refused, then later equippable, never the other way round. door_chain_fight/door_chain_talk/door_chain_sequence_break's own `item_gained{item:\"anchor_stone\",...}`/`inventory contains anchor_stone` assertions are `payload_contains`/subset checks, unperturbed by the second grant.",
    "id": "anchor_stone_pedestal",
    "kind": "prop",
    "cell": [
@@ -124,7 +124,8 @@
    ],
    "observe": "A stone rests in a shallow cradle atop the plinth, held there by nothing you can see. Something older than the dust stands close enough to notice you noticing.",
    "contains": [
-    "anchor_stone"
+    "anchor_stone",
+    "anchor_sliver"
    ],
    "contains_when": {
     "requires": {

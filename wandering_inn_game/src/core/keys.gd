@@ -127,6 +127,20 @@ const PRICE := "price"
 const RESONANCE := "resonance"
 const HP_MOD := "hp_mod"
 const LORE := "lore"
+## Issue #92 R1: an item's consumable-use payload, e.g. `{"heal": 8}` or
+## `{"next_fight": {"damage_mod": 1}}` -- see WIItems.resolve_use's own doc
+## comment for the full sanctioned-shape list. Absent on every pre-#92 item
+## (every existing item is either equippable or plain-carried flavor) --
+## mutually exclusive with an equippable `kind` (weapon/armor/accessory),
+## enforced by tests/test_items.gd.
+const USE_EFFECT := "use_effect"
+## Issue #92 R3: an accessory's combat-only skill grant, `[skill_id, ...]` --
+## folded onto the kit at `_build_player_combatant`'s equipment-mods merge
+## point (start_combat only, via `WICombatBuild.fold_abilities`), never
+## `player_skills` (no leak into field/persistence). Empty on every pre-#92
+## item (tests/test_items.gd's own "abilities must be empty" tripwire,
+## retired in lockstep with R3's first real grant, moon_bone_amulet).
+const ABILITIES := "abilities"
 
 # --- Entity record ---
 # ID shared with combatant record above.

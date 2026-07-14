@@ -633,7 +633,17 @@ func _row_display_text(i: int) -> String:
 	# checks the real slot set.
 	var equipped_here := _equipped_slot_for(item_id, kind) != ""
 	var mark := "> " if i == _cursor else "  "
-	var tag := "  [Equipped]" if equipped_here else ""
+	var tag := ""
+	if equipped_here:
+		tag = "  [Equipped]"
+	elif (rec.get("use_effect", {}) as Dictionary).has("heal") and Game.sim.hotbar_loadout.has("item:%s" % item_id):
+		# Issue #92 R2: the SAME "[Equipped]" visible-tag idiom -- confirming
+		# a heal-shaped consumable toggles its combat-hotbar loadout
+		# membership rather than equipping it (see `_confirm`'s own doc
+		# comment), so this tag is the row's only feedback that the toggle
+		# actually did something (mirrors equip()'s own no-toast-on-success
+		# convention).
+		tag = "  [On Hotbar]"
 	return "%s%s%s" % [mark, name, tag]
 
 
@@ -701,34 +711,50 @@ func _on_items_gui_input(event: InputEvent) -> void:
 
 
 ## Equips the selected item into its own kind's slot, or unequips it if it
-## IS the item already equipped in that slot.
+## IS the item already equipped in that slot. Issue #92 R2/R1: a carried
+## item that isn't equippable but DOES carry a `use_effect` gets its own
+## dedicated confirm behavior instead of falling to the generic "can't
+## equip" toast below -- a heal-shaped consumable (combat-only) TOGGLES its
+## combat-hotbar loadout membership (the journal skill-toggle's exact
+## mirror, R2's own phrasing), a next_fight-shaped one (field-only) is
+## CONSUMED immediately (this panel can never be open mid-combat, see
+## `_can_open`, so `Game.sim.use_item`'s field-only guard is never the
+## refusal path here).
 func _confirm() -> void:
 	if _item_ids.is_empty():
 		return
 	var item_id := String(_item_ids[_cursor])
 	var rec: Dictionary = Game.sim.item(item_id)
 	var kind := String(rec.get("kind", ""))
-	if kind != "weapon" and kind != "armor" and kind != "accessory":
-		# Carryable non-equippable kinds (e.g. tools) reach here --
-		# Game.sim.equip() would silently refuse (invalid kind, no toast of
-		# its own) with no player feedback at all, so the panel owns this
-		# one neutral message. Every OTHER equip()/unequip() false return
-		# below already carries its own diegetic toast from WIGame, or is
-		# prevented entirely by routing an already-equipped item to
-		# unequip() instead of a duplicate equip() attempt (the helper
-		# above) -- this is the only reachable "no toast yet" case left.
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "That isn't something you can equip."})
+	if kind == "weapon" or kind == "armor" or kind == "accessory":
+		var equipped_slot := _equipped_slot_for(item_id, kind)
+		var ok: bool = Game.sim.unequip(equipped_slot) if equipped_slot != "" else Game.sim.equip(item_id)
+		if not ok:
+			# Defensive only (see above) -- a real refusal already emitted its own
+			# diegetic toast (mirrored into `_status_label` by `_on_domain_event`,
+			# kept belt-and-braces per that var's doc comment); nothing left to
+			# surface here, and emitting a second generic toast on top would
+			# double up on the sim's own message.
+			return
+		_refresh()
 		return
-	var equipped_slot := _equipped_slot_for(item_id, kind)
-	var ok: bool = Game.sim.unequip(equipped_slot) if equipped_slot != "" else Game.sim.equip(item_id)
-	if not ok:
-		# Defensive only (see above) -- a real refusal already emitted its own
-		# diegetic toast (mirrored into `_status_label` by `_on_domain_event`,
-		# kept belt-and-braces per that var's doc comment); nothing left to
-		# surface here, and emitting a second generic toast on top would
-		# double up on the sim's own message.
+	var use_effect: Dictionary = rec.get("use_effect", {})
+	if use_effect.has("heal"):
+		Game.sim.loadout_toggle("item:%s" % item_id)
+		_refresh_row_marks()
 		return
-	_refresh()
+	if use_effect.has("next_fight"):
+		# A refusal here is unreachable in real play (see this func's own
+		# doc comment) -- no belt-and-braces toast needed beyond
+		# use_item's own ITEM_USED+TOAST on success.
+		if Game.sim.use_item(item_id):
+			_refresh()
+		return
+	# Carryable non-equippable, non-consumable kinds (parcels, tools with no
+	# use_effect) reach here -- Game.sim.equip() would silently refuse
+	# (invalid kind, no toast of its own) with no player feedback at all, so
+	# the panel owns this one neutral message.
+	ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "That isn't something you can equip."})
 
 
 func _refresh() -> void:

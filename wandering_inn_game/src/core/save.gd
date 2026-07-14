@@ -168,6 +168,13 @@ extends RefCounted
 ## NO version bump. A save missing the key restores false (no meal was eaten
 ## before the feature existed, and the perk doesn't carry past a rest anyway);
 ## a present-but-non-bool value is rejected.
+## `pending_meal` (Dictionary) is added (issue #92 R1) the SAME additive-
+## optional way as `frozen_cells`/`social_talked` above -- NOT in `required`,
+## NO version bump. A save missing the key restores {} (no meal was pending
+## before the feature existed); a present-but-non-Dictionary value is
+## rejected. UNLIKE `well_fed`, this never clears at `sleep()` -- it's
+## one-shot at the next `start_combat` build instead (see that field's own
+## doc comment on WIGame).
 ## (issue #78, save-slot picker metadata): `metadata()` below is a NEW
 ## PURE READ FUNCTION, not a new persisted field -- NO version bump, no
 ## `_migrated`/`apply` change. It derives a display-only summary
@@ -244,6 +251,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"resonance_capacity": game.resonance_capacity,
 		"light_active": game.light_active,
 		"well_fed": game.well_fed,
+		"pending_meal": game.pending_meal.duplicate(true),
 		"frozen_cells": game.frozen_cells_json(),
 		"hotbar_loadout": game.hotbar_loadout.duplicate(),
 		"pc_name": game.pc_name,
@@ -448,6 +456,12 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	# present-but-non-bool. No version bump.
 	if s.has("well_fed") and not (s["well_fed"] is bool):
 		return false
+	# pending_meal (issue #92 R1, a cooked meal's banked next_fight buff)
+	# follows the SAME additive-optional pattern -- default {} when absent
+	# (no meal pending before the feature existed), rejected if present-but-
+	# non-Dictionary. No version bump.
+	if s.has("pending_meal") and not (s["pending_meal"] is Dictionary):
+		return false
 	# frozen_cells follows the SAME additive-optional
 	# pattern -- default {} when absent (no ice before the feature), rejected if
 	# present-but-non-Dictionary; malformed inner cell lists are skipped on
@@ -579,6 +593,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.resonance_capacity = int(s.get("resonance_capacity", 2))
 	game.light_active = bool(s.get("light_active", false))
 	game.well_fed = bool(s.get("well_fed", false))
+	game.pending_meal = (s.get("pending_meal", {}) as Dictionary).duplicate(true)
 	game.set_frozen_cells_json(s.get("frozen_cells", {}))
 	game.hotbar_loadout.clear()
 	game.hotbar_loadout.assign(s.get("hotbar_loadout", []))

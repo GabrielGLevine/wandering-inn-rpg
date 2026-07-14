@@ -51,3 +51,27 @@ static func equipment_mods(weapon: Dictionary, armor: Dictionary, accessories: A
 		hp_mod += int(acc.get(WIKeys.HP_MOD, 0))
 		dmg_reduction += int(acc.get(WIKeys.DAMAGE_REDUCTION, 0))
 	return {WIKeys.DAMAGE_MOD: dmg_mod, WIKeys.HP_MOD: hp_mod, WIKeys.DAMAGE_REDUCTION: dmg_reduction}
+
+
+## Issue #92 R3: folds every equipped accessory's `abilities` (a relic's
+## combat-only skill grant, `[skill_id, ...]`) onto the ALREADY-weapon-gated
+## kit -- called AFTER `weapon_gated_kit` above, never before (a granted
+## ability is never itself weapon-gate-filtered; a relic's grant is
+## unconditional on what's in the other hand). Deduped against the kit a
+## relic re-grants a skill the wearer already knows is a harmless no-op, not
+## a double entry. Combat-ONLY by construction: this never touches
+## `player_skills`/`known_skills()` (both stay build-injection-blind, exactly
+## like `weapon_gated_kit`/`equipment_mods` above) -- the grant lives and
+## dies with the single `WICombat` instance this kit gets built for, so it
+## can never leak into field skill availability, the journal's skills-by-
+## class panel, or a save file (nothing here is a WIGame field). Every item
+## missing `abilities` (every pre-#92 item) contributes nothing -- inert
+## until a relic ships one.
+static func fold_abilities(kit: Array, accessories: Array) -> Array:
+	var out: Array = kit.duplicate()
+	for acc: Dictionary in accessories:
+		for raw: Variant in (acc.get(WIKeys.ABILITIES, []) as Array):
+			var ability_id := String(raw)
+			if not out.has(ability_id):
+				out.append(ability_id)
+	return out

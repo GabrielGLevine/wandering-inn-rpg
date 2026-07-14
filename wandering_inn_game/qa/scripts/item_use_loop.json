@@ -1,0 +1,100 @@
+{
+ "_comment": "Issue #92 R2: the combat-hotbar consumable-toggle + real combat item-use canonical. Loads item_use_loop_start (post_tutorial's exact twin + a carried mending_draught, the R1 heal-shaped item -- no vendor wires it yet, R5's job; this fixture grants it directly). Opens the inventory panel and confirms the mending_draught row: R2's own 'journal toggle mirrors skill toggling' -- this TOGGLES its combat-hotbar loadout membership (item:mending_draught appended to the shared hotbar_loadout, the SAME LOADOUT_CHANGED event journal.gd's skill toggle emits) rather than trying to equip it, and the row's own '[On Hotbar]' tag renders. Toggling the item does NOT blank the un-curated Warrior kit (power_strike stays AUTO-visible -- item tokens are filtered out of the array fed to the skill side's own apply_loadout, see combat_hud.gd's rebuild_slots doc comment) -- the SAME deterministic walk to goblin_encounter_2 combat_move_input.json already proves out (identical fixture position/rng_state) now renders a 5th hotbar slot: Attack(1)/Dash(2)/[Power Strike](3)/Mending Draught(4)/End Turn. Selecting slot 4 arms the SAME no-target confirm gate Dash uses (Mode.DASH_CONFIRM, generalized); confirming spends exactly 1 AP (flat, independent of any per-item field), fires WIGame.combat_use_item, erases the item from inventory (consumption = inventory.erase, items never stack -- a genuine repeatable sink once R5 wires a vendor to it), and emits item_used + a toast (the mandated visible card). The PC is at full HP at turn start (no prior damage this fight), so the heal clamps to 0 -- a deliberate simplification (tests/test_combat_sim.gd's c119 block already pins the nonzero-heal/clamp/AP-refusal arithmetic against hand-built dicts); this script's own job is proving the REAL wiring end-to-end, not re-deriving numbers a unit test already owns. Ends mid-combat on purpose, mirroring combat_move_input.json's own precedent -- no victory assert needed.",
+ "fixture_save": "item_use_loop_start",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "_comment": "Move down to the 'Continue' row, confirm loads the item_use_loop_start manual slot.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "floodplains" },
+  { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
+  { "action": "assert_state", "path": "inventory", "equals": ["rusty_sword", "relcs_spare_spear", "mending_draught"] },
+
+  { "_comment": "== THE TOGGLE: open inventory, cursor starts at index 0 (rusty_sword) -- move_down x2 selects mending_draught (index 2). ui_inventory_shown's item_effect_lines pins the draught's own visible card: 'Heals 8 HP (single use)' generated from the SAME use_effect field WIItems.resolve_use dispatches on, plus its price line. ==", "action": "press", "name": "inventory" },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {
+    "items": 3,
+    "item_effect_lines": [
+     ["Sword kit replaces other weapon Skills in combat"],
+     ["+1 damage on melee hits", "Spear kit replaces other weapon Skills in combat"],
+     ["Heals 8 HP (single use)", "Worth 10 gold"]
+    ]
+   },
+   "timeout_sec": 5
+  },
+  { "action": "press", "name": "move_down" },
+  { "action": "press", "name": "move_down" },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "payload_contains": { "cursor": 2, "item": "mending_draught" },
+   "timeout_sec": 5
+  },
+  { "action": "press", "name": "confirm" },
+  {
+   "action": "wait_for_event",
+   "type": "loadout_changed",
+   "payload_contains": { "skill": "item:mending_draught", "assigned": true },
+   "timeout_sec": 5
+  },
+  { "action": "assert_state", "path": "hotbar_loadout", "equals": ["item:mending_draught"] },
+  { "action": "press", "name": "inventory" },
+  { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 },
+
+  { "_comment": "(7,6) -> goblin_encounter_2 (28,18): the SAME route combat_move_input.json walks from this exact fixture position/rng_state.", "action": "move", "direction": "right", "steps": 21 },
+  { "action": "move", "direction": "down", "steps": 11 },
+  { "action": "assert_state", "path": "player_cell", "equals": [28, 17] },
+  { "action": "press", "name": "interact" },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": { "conversation": "goblin_parley" },
+   "timeout_sec": 5
+  },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "_comment": "goblin_parley hub option 0 'Draw steel.' -> start_combat.", "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
+  { "action": "wait_frames", "frames": 5 },
+  { "action": "assert_state", "path": "combat.active", "equals": "pc" },
+  { "action": "assert_state", "path": "combat.combatants.pc.ap", "equals": 4 },
+  {
+   "_comment": "THE 5th SLOT: the toggled item renders alongside the un-curated Warrior kit (power_strike still AUTO-visible -- the item token never blanks the skill side).",
+   "action": "assert_event_logged",
+   "type": "ui_hotbar_rendered",
+   "payload_contains": { "slots": 5 }
+  },
+  { "action": "press", "name": "hotbar_4" },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_info_rendered",
+   "payload_contains": {
+    "slot": 3,
+    "text": "Mending Draught — 1 AP — restore 8 HP to yourself — A corked vial of something dark red, thick as syrup, that smells faintly of yarrow and copper."
+   },
+   "timeout_sec": 5
+  },
+  { "action": "wait_frames", "frames": 2 },
+  { "_comment": "Confirm-gate proof (Dash's own precedent, generalized): selecting the item must not spend AP or fire the use until Enter.", "action": "assert_event_absent", "type": "item_used" },
+  { "action": "assert_state", "path": "combat.combatants.pc.ap", "equals": 4 },
+  { "action": "assert_state", "path": "inventory", "equals": ["rusty_sword", "relcs_spare_spear", "mending_draught"] },
+  { "action": "press", "name": "confirm" },
+  {
+   "action": "wait_for_event",
+   "type": "item_used",
+   "payload_contains": { "item": "mending_draught", "healed": 0 },
+   "timeout_sec": 5
+  },
+  { "_comment": "Consumption = inventory.erase (items never stack) -- the draught is gone, repurchasable once R5 wires a vendor to it.", "action": "assert_state", "path": "inventory", "equals": ["rusty_sword", "relcs_spare_spear"] },
+  { "action": "assert_state", "path": "combat.combatants.pc.ap", "equals": 3 },
+  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "Used: Mending Draught. Healed 0 HP." } }
+ ]
+}

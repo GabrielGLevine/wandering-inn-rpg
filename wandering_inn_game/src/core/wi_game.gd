@@ -107,9 +107,11 @@ var equipped: Dictionary = {WIKeys.WEAPON: "", "armor": "", "accessory_1": "", "
 ## whatever `item()` reports). Every item currently in the catalog is uncatalogued for
 ## `resonance` and counts 0 (`item(id).get(WIKeys.RESONANCE, 0)`), so this budget
 ## is inert until an item ships with a real nonzero
-## value. Default 2. Capacity GROWTH is a later beat -- this field exists and
-## round-trips (additive-optional save field, tolerant default 2, NO version
-## bump) but nothing currently mutates it.
+## value. Default 2. Issue #92 R4: capacity GROWTH has landed -- `sleep()`'s
+## own resonance-growth hook (mirroring `door_study_sleeps`' shape, gated on
+## `door_awakened`) bumps this 2->3 exactly once, still the SAME additive-
+## optional save field (tolerant default 2, NO version bump -- this field
+## already round-tripped an arbitrary int before R4 ever mutated it live).
 var resonance_capacity: int = 2
 ## Container entity id -> true once its `contains` list has been emptied by
 ## an interact. Additive save field (v5).
@@ -247,6 +249,20 @@ var light_active := false
 ## folds this flag into `hp_mod` (+2) at the NEXT combat build, the same
 ## build-injection seam armor's hp_mod already rides.
 var well_fed := false
+## Issue #92 R1: a cooked meal's `next_fight` buff dict (e.g.
+## `{"damage_mod": 1}`), banked by `use_item` (the field entry point --
+## meals are field-only, see WIItems.resolve_use's own doc comment) and
+## folded into `_build_player_combatant`'s build at the VERY NEXT
+## `start_combat` -- the SAME equipment-mods merge point `well_fed`'s own
+## +2 hp_mod rides, generalized from one hardcoded key/bonus to any of
+## damage_mod/hp_mod/damage_reduction. UNLIKE `well_fed` (which persists
+## until `sleep()`), this is ONE-SHOT: `_build_player_combatant` clears it
+## back to {} the instant it reads it, so exactly one fight ever sees a
+## given meal's bonus, matching "consumed at next start_combat" literally.
+## Additive-optional save field (default {}, see save.gd), NO version bump
+## -- combat state itself is never save-serialized, so a pending meal banked
+## mid-waking survives a save/load exactly like `well_fed` does.
+var pending_meal: Dictionary = {}
 ## The set of freezable water cells
 ## the PC has frost-cast into walkable ice this waking, keyed by map id ->
 ## Dictionary of Vector2i -> true. A freezable cell (declared per-map in
@@ -1509,13 +1525,22 @@ static func apply_loadout(candidates: Array, loadout: Array) -> Array:
 ## (the sim, not the UI, owns the filter -- "sim owns state + filters"),
 ## passed through `apply_loadout` against the shared `hotbar_loadout`. AUTO
 ## when the loadout is empty -- byte-identical to the unfiltered order.
+## `item:` tokens are stripped BEFORE apply_loadout, mirroring the combat
+## hud's own strip: an item-only loadout must stay AUTO here, never a
+## non-empty loadout with zero skill matches (which returns [] and blanks
+## the overworld bar -- the exact R2 guarantee "toggling an item never
+## blanks an un-curated skill kit").
 func field_hotbar_loadout() -> Array:
 	var candidates: Array = []
 	for raw: Variant in known_skills():
 		var id := String(raw)
 		if bool((skills.get(id, {}) as Dictionary).get("field", false)):
 			candidates.append(id)
-	return WIGame.apply_loadout(candidates, hotbar_loadout)
+	var skill_loadout: Array = []
+	for raw: Variant in hotbar_loadout:
+		if not String(raw).begins_with("item:"):
+			skill_loadout.append(raw)
+	return WIGame.apply_loadout(candidates, skill_loadout)
 
 
 ## Assigns `skill_id` onto the shared loadout if it
@@ -2690,16 +2715,29 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	var accessories: Array = []
 	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
 		accessories.append(item(String(equipped.get(slot_name, ""))))
+	# Issue #92 R3: folds every equipped accessory's `abilities` grant onto
+	# the already weapon-gated kit -- AFTER weapon_gated_kit (an ability
+	# grant is never itself weapon-gate-filtered), BEFORE the mods merge
+	# just below (WICombatBuild.fold_abilities's own doc comment has the
+	# full combat-only/no-persistence-leak rationale).
+	pc[WIKeys.SKILLS] = WICombatBuild.fold_abilities(pc[WIKeys.SKILLS] as Array, accessories)
 	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
-	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
+	# Issue #92 R1: pending_meal's next_fight buff folds in HERE, at the
+	# SAME equipment-mods merge point well_fed's own +2 hp_mod rides just
+	# below -- then is cleared IMMEDIATELY (snapshotted to a local first),
+	# one-shot unlike well_fed's persist-until-sleep lifecycle. See
+	# pending_meal's own doc comment for why this is the one and only read.
+	var meal_bonus: Dictionary = pending_meal
+	pending_meal = {}
+	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD] + int(meal_bonus.get(WIKeys.DAMAGE_MOD, 0))
 	# Field HP does not exist as a standalone
 	# concept (HP is per-combat only, see this file's `well_fed` doc comment),
 	# so the staged "small HP restore" rides this SAME build-injection seam
 	# armor/accessories use just above -- +2 folded into hp_mod while the
 	# flag is true, summed alongside the equipment contribution, no new
 	# combat field, no change to wi_combat.gd's read side.
-	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD] + (2 if well_fed else 0)
-	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION]
+	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD] + (2 if well_fed else 0) + int(meal_bonus.get(WIKeys.HP_MOD, 0))
+	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION] + int(meal_bonus.get(WIKeys.DAMAGE_REDUCTION, 0))
 	return pc
 
 
@@ -2761,6 +2799,62 @@ func remove_item(item_id: String, source_id: String) -> bool:
 			return false
 	inventory.erase(item_id)
 	_emit(WIEvents.ITEM_LOST, {"item": item_id, "source": source_id})
+	return true
+
+
+## Issue #92 R1: the FIELD entry point for a consumable's use_effect -- a
+## cooked meal's `next_fight` buff (the only field-resolvable shape;
+## WIItems.resolve_use refuses `heal` outside combat -- there is no
+## standalone field HP to heal, see `well_fed`'s own doc comment). Field-
+## only (mirrors `equip()`'s own combat-active guard) -- refuses outright
+## mid-fight, though that's never actually reachable: inventory.gd (the
+## only call site) can't even open while `combat != null`.
+## CONSUMPTION = `inventory.erase(id)` (items never stack, `pickup()` no-ops
+## on a duplicate -- the load-bearing rule that makes a vendor restock a
+## REAL repeatable sink): bought -> carried (one) -> used -> gone ->
+## repurchasable. Emits ITEM_USED + a TOAST on success (R1's mandated
+## visible card); a false return means nothing happened, no partial state.
+func use_item(item_id: String) -> bool:
+	if combat != null:
+		return false
+	if not inventory.has(item_id):
+		return false
+	var rec := item(item_id)
+	if rec.is_empty():
+		return false
+	var result := WIItems.resolve_use(rec, null)
+	if not bool(result.get("ok", false)):
+		return false
+	pending_meal = (result.get("pending_meal", {}) as Dictionary).duplicate(true)
+	inventory.erase(item_id)
+	_emit(WIEvents.ITEM_USED, {"item": item_id})
+	_emit(WIEvents.TOAST, {"text": "Used: %s." % String(rec.get("name", item_id))})
+	return true
+
+
+## Issue #92 R1: the COMBAT entry point for a consumable's use_effect -- the
+## hotbar's `{"use_item": item_id}` action dispatches here at the EXACT same
+## AP-spend point `use_skill` occupies (combat_screen.gd's
+## `_activate_bar_slot`'s "item" case), never a second verb surface. Only a
+## `use_effect.heal` shape resolves in combat (WIItems.resolve_use's own
+## context gate refuses `next_fight` here) -- draughts, not meals, are the
+## mid-fight consumable. Same CONSUMPTION/emission contract as `use_item`
+## above (erase + ITEM_USED + TOAST on success only).
+func combat_use_item(item_id: String) -> bool:
+	if combat == null:
+		return false
+	if not inventory.has(item_id):
+		return false
+	var rec := item(item_id)
+	if rec.is_empty():
+		return false
+	var result := WIItems.resolve_use(rec, combat)
+	if not bool(result.get("ok", false)):
+		return false
+	inventory.erase(item_id)
+	var healed := int(result.get("healed", 0))
+	_emit(WIEvents.ITEM_USED, {"item": item_id, "healed": healed})
+	_emit(WIEvents.TOAST, {"text": "Used: %s. Healed %d HP." % [String(rec.get("name", item_id)), healed]})
 	return true
 
 
@@ -3372,6 +3466,47 @@ func sleep() -> void:
 		record_accomplishment("second_door_study_sleeps")
 		if accomplishment_count("second_door_study_sleeps") >= 2:
 			record_accomplishment("dungeon_attuned")
+			anything_happened = true
+
+	# Issue #92 R4 (resonance growth): a THIRD mirror of door_study_sleeps'
+	# own shape (opaque per-sleep counter -> one-time bank at a fixed count),
+	# alongside second_door_study_sleeps just above -- but gated on
+	# door_awakened ALREADY being banked, not on the three beat-3 counters
+	# directly. This is deliberate, not incidental: door_awakening.json's own
+	# canonical exact-pins the awakening sleep's own veil line count at
+	# `lines:1` (door_awakened's single GDI line, asserted end to end) --
+	# gating this hook on the SAME three counters door_study_sleeps reads
+	# would let it ALSO complete on that exact sleep (both hooks would start
+	# counting from the same trigger and share the same N), adding a second
+	# line and breaking that pin. Gating on door_awakened>=1 means this
+	# hook's FIRST possible increment IS the awakening sleep itself
+	# (harmless -- it only takes this hook's FIRST of N=2 counts; one
+	# further sleep still stands between that and the bank), so its own
+	# reveal can only ever land on a LATER, separate sleep -- the exact same
+	# "AFTER, not alongside" shape
+	# second_door_study_sleeps already established for its own reason
+	# (a genuinely later mini-arc) two paragraphs up. A SHORTER mirror (N=2,
+	# matching second_door_study_sleeps' own precedent for a lighter-weight
+	# secondary payoff, not a second full awakening ceremony) banks
+	# `resonance_grown` once and bumps `resonance_capacity` 2->3 -- the
+	# res-3 tradeoff item (anchor_sliver, already carried since the ruin
+	# recovery beat -- see its own items.json _comment) becomes legally
+	# equippable from this sleep on. OPAQUE-UNTIL-SLEEP: banks silently, no
+	# toast, no progress text; sleep_veil.gd's own catch on `resonance_grown`
+	# supplies the single reveal line (the veil's sixth cameo). `resonance_
+	# grown` is its own independent one-time flag, NOT derived from door_
+	# study_sleeps'/second_door_study_sleeps' own counts -- an OLD save that
+	# already had door_awakened banked before this feature shipped still
+	# earns the growth over its own next 2 qualifying sleeps, no special
+	# migration (resonance_capacity is already a plain additive-optional
+	# save field with NO version bump, round-tripping an arbitrary int since
+	# before this hook ever mutated it live -- see that field's own doc
+	# comment).
+	if accomplishment_count("door_awakened") >= 1 and accomplishment_count("resonance_grown") < 1:
+		record_accomplishment("catalyst_attunement_sleeps")
+		if accomplishment_count("catalyst_attunement_sleeps") >= 2:
+			record_accomplishment("resonance_grown")
+			resonance_capacity += 1
 			anything_happened = true
 
 	# The Garden earn condition (spec §5: "act >= III AND K-of-N inn accomplishments";

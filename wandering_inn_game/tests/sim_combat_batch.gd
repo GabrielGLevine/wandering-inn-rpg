@@ -148,13 +148,30 @@ const LOADOUT_CELLS := [
 	## weapon equipped" with the accessory hp-stack read this cell wants
 	## isolated. No armor, so hp+5 is entirely the accessories' contribution.
 	## (5) `moon_bone_solo`: moon_bone_amulet's resonance was lowered so the
-	## resonance 3 -> 2 (it was unequippable the moment it was awarded --
-	## resonance_capacity never grows past its default 2 anywhere in this
-	## codebase). Equal to capacity is legal (`equip()` refuses only
-	## STRICTLY over capacity), so this is now a REAL fieldable solo kit, not
-	## the capacity-unreachable measured-only curiosity it used to be --
+	## resonance 3 -> 2 (it was unequippable the moment it was awarded -- at
+	## the time, resonance_capacity never grew past its default 2 anywhere in
+	## this codebase; issue #92 R4 later adds a one-time 2->3 growth payoff,
+	## unrelated to this cell). Equal to capacity is legal (`equip()` refuses
+	## only STRICTLY over capacity), so this is now a REAL fieldable solo kit,
+	## not the capacity-unreachable measured-only curiosity it used to be --
 	## renamed from `moon_bone_capacity_unreachable` and the `capacity_unreachable`
 	## print-label flag dropped accordingly.
+	## Issue #92 R3: moon_bone_amulet's first real `abilities` grant
+	## (["invisibility"]) now folds into this cell's kit too
+	## (WICombatBuild.fold_abilities, wired into this loop's own PC-build
+	## site). MEASURED result: BYTE-IDENTICAL before/after
+	## (win_rate=0.99, median_rounds=3, min=2, max=5, both -- confirmed via
+	## `scripts/harness_shard_diff.sh --shards 4 --baseline-ref e244a82`, all
+	## 4 shards clean) -- this cell's PC autoplay is the `melee` AI profile,
+	## which never casts ANY spell (see invisibility's own skills.json
+	## _comment: "PC autoplay is melee-profile... so sim_combat_batch.gd stays
+	## byte-identical despite the new live effect", the exact same
+	## already-established precedent from when this skill first shipped).
+	## The granted MP pool (max_mp > 0 now, off invisibility's own mp_cost)
+	## is likewise never spent -- melee's decision tree branches on neither
+	## the skills list nor MP, so the RNG draw sequence -- and therefore the
+	## whole fight -- is unperturbed. Recorded here per this file's own
+	## shard-diff-disclosure convention, not because anything shifted.
 	{"name": "warrior2_max_legal_kit", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin", "accessories": ["copper_luck_band", "hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "warrior1_tutorial_solo_max_legal_kit", "comp": "goblin_ambush", "build": "warrior1_tutorial_solo", WIKeys.WEAPON: "rusty_sword", "armor": "leather_jerkin", "accessories": ["copper_luck_band", "hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "warrior2_mage2_stonescale_dr2", "comp": "chieftains_raid", "build": "warrior2_mage2", WIKeys.WEAPON: "rusty_sword", "armor": "watch_issue_gambeson", "accessories": ["stonescale_talisman"]},
@@ -808,6 +825,12 @@ func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dict
 		for acc_id_v: Variant in (build.get("accessories", []) as Array):
 			accessories.append(items_by_id.get(String(acc_id_v), {}))
 		pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
+		# Issue #92 R3: SAME fold_abilities call wi_game.gd's
+		# _build_player_combatant makes at its own equivalent point -- a
+		# relic's abilities grant must shift the harness's own measured kit
+		# too, or the harness silently measures a different game than shipped
+		# (this file's own doc comment's "scariest drift class").
+		pc[WIKeys.SKILLS] = WICombatBuild.fold_abilities(pc[WIKeys.SKILLS] as Array, accessories)
 		var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
 		pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
 		pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD]
@@ -951,6 +974,11 @@ func _init() -> void:
 			pc[WIKeys.STATS] = WIProgression.apply_stat_bonuses(pc[WIKeys.STATS], build["classes"], classes)
 			var kit: Array = WIProgression.granted_skills(build["classes"], classes)
 			pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
+			# Issue #92 R3: SAME fold_abilities call wi_game.gd's
+			# _build_player_combatant makes at its own equivalent point --
+			# moon_bone_solo's own cell (accessories:["moon_bone_amulet"])
+			# now measures the relic's invisibility grant for real.
+			pc[WIKeys.SKILLS] = WICombatBuild.fold_abilities(pc[WIKeys.SKILLS] as Array, accessories)
 			# Calls the SAME shared function wi_game.gd's
 			# `_build_player_combatant` calls -- weapon/armor contribute first,
 			# then each equipped accessory's own damage_mod/hp_mod/

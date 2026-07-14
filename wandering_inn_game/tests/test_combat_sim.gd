@@ -2463,5 +2463,56 @@ func _init() -> void:
 			used_support118 = true
 	assert(not used_support118, "guard never casts its support skill on a ward already at full HP")
 
+	# --- Issue #92 R1: WIItems.resolve_use -- the item-use resolver arms.
+	# Hand-built item dicts throughout (no shipped catalog item carries
+	# use_effect yet -- R5's vendor wave is what wires real ones), proving
+	# the resolver's own context/shape gates independent of any content. ---
+	var c119 := _make(5, _sink)
+	c119.active_index = c119.turn_order.find("pc")
+	c119._start_turn()
+	var pc119: Dictionary = c119.combatants["pc"]
+	pc119[WIKeys.HP] = int(pc119[WIKeys.MAX_HP]) - 10
+	var ap119_before := int(pc119[WIKeys.AP])
+	var draught119 := {"id": "test_draught", "use_effect": {"heal": 8}}
+	var result119 := WIItems.resolve_use(draught119, c119)
+	assert(bool(result119.get("ok", false)), "a heal-shaped item resolves in combat")
+	assert(int(result119.get("healed", -1)) == 8, "healed the full nominal amount (well under max_hp)")
+	assert(int(pc119[WIKeys.HP]) == int(pc119[WIKeys.MAX_HP]) - 2, "hp actually increased by the healed amount")
+	assert(int(pc119[WIKeys.AP]) == ap119_before - 1, "combat item-use spends exactly 1 AP, flat -- independent of any per-item field (items carry none)")
+
+	# Healing at/above full HP still resolves (matches second_wind's own
+	# no-waste-guard precedent, WISkillEffects._resolve_heal) but clamps the
+	# reported healed amount to 0 -- and still spends the AP (a wasted use is
+	# still a use).
+	pc119[WIKeys.HP] = int(pc119[WIKeys.MAX_HP])
+	var ap119_before_b := int(pc119[WIKeys.AP])
+	var result119b := WIItems.resolve_use(draught119, c119)
+	assert(bool(result119b.get("ok", false)), "a heal-shaped item still resolves at full HP")
+	assert(int(result119b.get("healed", -1)) == 0, "healed clamps to 0 at full HP")
+	assert(int(pc119[WIKeys.AP]) == ap119_before_b - 1, "AP is still spent even on a 0-heal use")
+
+	# Refused with insufficient AP -- costs nothing (no HP change, no AP change).
+	pc119[WIKeys.AP] = 0
+	var hp119_before_refusal := int(pc119[WIKeys.HP])
+	var result119c := WIItems.resolve_use(draught119, c119)
+	assert(not bool(result119c.get("ok", true)), "a heal-shaped item refuses with 0 AP")
+	assert(int(pc119[WIKeys.HP]) == hp119_before_refusal, "a refused use costs nothing -- hp untouched")
+
+	# Context mismatches: heal never resolves in the field (combat == null,
+	# no standalone field HP to heal -- see well_fed's own doc comment);
+	# next_fight never resolves mid-combat (there's no "next fight" from
+	# inside the current one).
+	assert(not bool(WIItems.resolve_use(draught119, null).get("ok", true)), "a heal-shaped item refuses outside combat")
+	var meal119 := {"id": "test_meal", "use_effect": {"next_fight": {"damage_mod": 1}}}
+	assert(not bool(WIItems.resolve_use(meal119, c119).get("ok", true)), "a next_fight-shaped item refuses mid-combat")
+	var meal_result119 := WIItems.resolve_use(meal119, null)
+	assert(bool(meal_result119.get("ok", false)), "a next_fight-shaped item resolves in the field")
+	assert(int((meal_result119.get("pending_meal", {}) as Dictionary).get("damage_mod", 0)) == 1, "the next_fight buff dict rides back verbatim")
+
+	# An item with no recognized use_effect key at all never resolves in
+	# either context.
+	assert(not bool(WIItems.resolve_use({"id": "test_inert", "use_effect": {}}, c119).get("ok", true)), "an item with no recognized use_effect key never resolves in combat")
+	assert(not bool(WIItems.resolve_use({"id": "test_inert", "use_effect": {}}, null).get("ok", true)), "an item with no recognized use_effect key never resolves in the field")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

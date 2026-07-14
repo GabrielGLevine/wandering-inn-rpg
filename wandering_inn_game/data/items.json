@@ -257,7 +257,7 @@
 			"lore": "Shed scales with stone in them turn up in the southern hills, and enchanters pay well for the rare one that takes a binding. Drakes find wearing another Drake's scale distasteful; the stall keeps this one under the counter."
 		},
 		{
-			"_comment": "Resonance lowered 3 -> 2 (mod values kept). resonance_capacity never grows anywhere in this codebase (fixed default 2, wi_game.gd -- no quest/progression seam mutates it), so a quest-awarded accessory with resonance 3 was structurally unequippable the moment it was granted. The honest minimal fix is capping it at the budget it's actually awarded into, not inventing a capacity-growth mechanic this milestone doesn't have; it still spends the WHOLE budget alone (a deliberate Act-III-capstone trade-off, not a bug).",
+			"_comment": "Resonance lowered 3 -> 2 (mod values kept) -- at the time, resonance_capacity never grew anywhere in this codebase (fixed default 2, wi_game.gd), so a quest-awarded accessory with resonance 3 was structurally unequippable the moment it was granted; capping it at the budget it's actually awarded into was the honest minimal fix, not inventing a capacity-growth mechanic that milestone didn't have. It still spends the WHOLE budget alone (a deliberate Act-III-capstone trade-off, not a bug). Issue #92 R3: first real `abilities` grant -- [Invisibility] folds into the wearer's combat kit at start_combat (WICombatBuild.fold_abilities), combat-only, never player_skills/persistence; the MP pool this costs (3 MP) composes for free (WICombat._init grants max_mp off ANY mp_cost-carrying skill in the assembled kit, invisibility included -- no separate caster-flag plumbing needed). Issue #92 R4 later ships the res-3 tradeoff item (anchor_sliver) once resonance_capacity can reach 3 -- see that item's own _comment; this amulet's own resonance stays 2, untouched.",
 			"id": "moon_bone_amulet",
 			"name": "Moon-Bone Amulet",
 			"kind": "accessory",
@@ -267,7 +267,7 @@
 			"damage_reduction": 0,
 			"resonance": 2,
 			"tier": "enchanted",
-			"abilities": [],
+			"abilities": ["invisibility"],
 			"description": "Carved bone on a sinew cord, worn smooth wherever a thumb would rest. Under moonlight the carving is a moon; under anything else it is just circles.",
 			"lore": "Raskghar work, cut in the deep warrens by hands that are only clever some nights. Whatever the amulet waits for, it waits patiently."
 		},
@@ -611,6 +611,40 @@
 			"lore": "Thrown across a threshold, it settles whatever's inclined to cross it uninvited. Not much good against anything that was already invited in."
 		},
 		{
+			"_comment": "Issue #92 R1/R2/R5: the FIRST real use_effect-carrying item (a combat-only heal draught, WIItems.resolve_use's 'heal' arm -- see that file's own doc comment). R2 landed it inert-but-purchasable-eventually (a QA fixture granted it directly, no shop wiring yet); R5 wires it into riverfarm_witch.json's 'shop' node (appended after the existing options, per that file's own _comment) -- Eloise's real repeatable sink now that use_item makes a bought consumable genuinely consumed. kind:\"tool\" (not equippable -- use_effect and an equip slot are mutually exclusive, tests/test_items.gd's own new validator arm). Heal amount (8) matches second_wind's own self-heal skill for a consistent 'a solid partial heal' feel across the two surfaces. Priced in the witch's own herb-craft band (dried_yarrow_bundle 4g .. witch_wardstone_bead 16g).",
+			"id": "mending_draught",
+			"name": "Mending Draught",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 10,
+			"use_effect": { "heal": 8 },
+			"description": "A corked vial of something dark red, thick as syrup, that smells faintly of yarrow and copper.",
+			"lore": "The witch keeps a shelf of these behind the tea things -- not magic, she says, just knowing which roots do what. Drink it mid-fight and the wound closes slower than a real healer's work, but it closes."
+		},
+		{
+			"_comment": "Issue #92 R5: the forge tier's own commission stock -- a posted-price consumable (NO haggle:true flag anywhere in this file, matching the civic no-discount register the file's own header comment already cites: docs/design/city-identity-bible.md's 'prices are POSTED... no haggling'), Pallass's own repeatable sink now that use_item makes a bought consumable genuinely consumed (R1). A next_fight-shaped buff (field-only, WIItems.resolve_use's other sanctioned shape) rather than a heal -- a forge-tempered edge is a pre-fight preparation, not a battlefield medical draught, so it never competes with mending_draught's combat-hotbar slot; it banks WIGame.pending_meal and folds into the VERY NEXT start_combat build the same way well_fed's own +2 hp_mod does. kind:\"tool\" (not equippable). Priced above mending_draught's 10g (a permanent-fight-prep edge reads as worth slightly more than a single heal) but well under the T2 weapons (15-18g).",
+			"id": "tempering_oil",
+			"name": "Tempering Oil",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 12,
+			"use_effect": { "next_fight": { "damage_mod": 1 } },
+			"description": "A small stoppered flask of dark oil, faintly warm, smelling of quenched iron.",
+			"lore": "Forge-tier stock, sold to anyone bound for the floor below -- work an edge with it the night before and the steel bites truer the first time it matters. One coat, one fight; the tier doesn't sell the recipe, only the flask."
+		},
+		{
 			"_comment": "Post-Riverfarm attunement purchase (riverfarm_witch.json's 'shop' node, gated on blight_lifted): banks invrisil_attuned alongside the item grant -- dialogue effects compose as separate {gold},{item},{accomplishment} dicts on one option, the resonant_catalyst/bought_catalyst precedent (krshia_crate.json), no new effect machinery. unsellable:true for the same reason as resonant_catalyst: it carries a real price (so sellable_items() would otherwise catalog it) but the lore below already says it's a keepsake -- the 'bought, not found' shape, unlike the found-only anchor_stone (which has no price field at all).",
 			"id": "invrisil_attunement_stone",
 			"name": "Invrisil Attunement Stone",
@@ -764,6 +798,21 @@
 			"abilities": [],
 			"description": "A single fang, longer than a hand, drawn from the dark the gallery's silk led back to. The point is still sharp enough to matter.",
 			"lore": "Whatever nests south of the gallery has fangs enough to spare one and never notice. Krshia would call this Silverfang-caliber trophy work, if Krshia had ever seen the thing it came from."
+		},
+		{
+			"_comment": "Issue #92 R4: the res-3 tradeoff item, reachable the moment resonance_capacity can hit 3 (wi_game.gd's sleep() growth hook, gated on door_awakened) -- resonance 3 is the validator's own hard ceiling (tests/test_items.gd), the SAME 'spends the WHOLE budget alone' shape moon_bone_amulet established at capacity 2, one tier up: wear this alone, or spread the new third point across smaller charms instead -- a real choice, not a strict upgrade. Granted alongside anchor_stone itself (data/maps/ruin/ruin_surface.json's anchor_stone_pedestal `contains` list -- a stone that size doesn't come free of its cradle without shedding a piece), so it's carried well before the capacity to wear it exists (the SAME 'earned early, usable later' shape watch_token/brothers_marker already establish for a gate-token accessory) -- door_awakening.json's own canonical proves the refusal-then-acceptance arc end to end. No `price` (loot-only, no established vendor worth -- the moon_bone_amulet/construct_core_shard precedent).",
+			"id": "anchor_sliver",
+			"name": "Anchor Sliver",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 4,
+			"damage_reduction": 1,
+			"resonance": 3,
+			"tier": "enchanted",
+			"abilities": [],
+			"description": "A sliver worked loose from the anchor stone once it finally settled, warm as the whole and small enough to wear.",
+			"lore": "Warmage Thresk's stonework doesn't split so much as it agrees to share the load. What's left fits a chain, a wrist, a coat lining -- wherever you decide it belongs, it decides too."
 		}
 	]
 }

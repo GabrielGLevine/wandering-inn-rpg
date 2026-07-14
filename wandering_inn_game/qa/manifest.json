@@ -2008,6 +2008,7 @@
     "dialogue": [],
     "systems": [
      "dialogue",
+     "economy",
      "exploration",
      "night_phase",
      "portals"
@@ -3146,6 +3147,35 @@
      "economy",
      "exploration",
      "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "item_use_loop",
+   "seed": 9,
+   "fixture": "item_use_loop_start",
+   "note": "Issue #92 R2: the combat-hotbar consumable toggle + real item-use canonical -- inventory-panel toggle (item:<id> onto the shared hotbar_loadout, LOADOUT_CHANGED), the toggled item's 5th hotbar slot renders alongside the un-curated Warrior kit, confirm-gated use spends 1 AP flat, erases the item (consumption = inventory.erase), item_used + a toast fire",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "item_use_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
     ]
    }
   },

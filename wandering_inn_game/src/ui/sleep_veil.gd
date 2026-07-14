@@ -352,6 +352,16 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			# (talk_pool_stages) remains the daylight half of the beat.
 			if _running and String(payload.get("id", "")) == "garden_door_unlocked":
 				_lines.append("[A door opens that no one built. The Garden of Sanctuary remembers how to wait.]")
+			# Issue #92 R4 (resonance growth): the veil's SIXTH cameo (after
+			# class/level/evolution toasts, the opener, the epilogue, door_
+			# awakened, and garden_door_unlocked). resonance_grown banks
+			# INSIDE wi_game.gd's sleep() (gated on door_awakened already
+			# being true, so this can only ever land on a LATER sleep than
+			# the awakening's own -- see that hook's own doc comment for why
+			# that gating exists), same synchronous-burst idiom as every
+			# cameo above.
+			if _running and String(payload.get("id", "")) == "resonance_grown":
+				_lines.append("[The anchor stone gives up a sliver of itself. You have room for it now.]")
 		WIEvents.DIALOGUE_ENDED:
 			# A4: the armed epilogue plays as the seal conversation clears.
 			if _epilogue_armed:
