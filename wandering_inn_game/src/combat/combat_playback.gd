@@ -336,7 +336,7 @@ func drain() -> void:
 		var event: Dictionary = _playback.pop_front()
 		_apply_playback_event(event, true)
 		beats += 1
-		var delay := beat_delay()
+		var delay := _coalesced_delay(event, beat_delay())
 		if delay > 0.0:
 			delay += _hit_stop_hold(event)
 		if delay > 0.0 and not _playback.is_empty():
@@ -350,6 +350,44 @@ func drain() -> void:
 	_playing = false
 	_screen._refresh()
 	_screen._emit_ai_playback_done(beats)
+
+
+## Issue #87 (beat coalescing): AP_CHANGED and TURN_ENDED carry no
+## hold-worthy visual of their own -- AP_CHANGED's own `_play_event_visual`
+## arm only resets the projectile-tint tracker (a bookkeeping side effect,
+## never a rendered change); TURN_ENDED renders nothing but an already-
+## decided tutor-line check (`_apply_playback_event`'s default `_:` branch,
+## whose only OTHER visible effect is `_highlight_actor`'s brief flash, which
+## fires synchronously before this function ever runs and keeps playing
+## regardless of whether the beat holds afterward). Pacing a full
+## `beat_delay()` after either type just adds dead air around the beats that
+## DO matter, so both collapse to zero delay unconditionally, folding into
+## whichever beat follows.
+##
+## A run of consecutive COMBATANT_MOVED beats (a multi-cell walk, one event
+## per step -- `board_renderer.move_visual`'s own MOVE_TWEEN_SECONDS=0.12s
+## tween paces the visual slide) also collapses to zero delay between STEPS:
+## peeks `_playback[0]` (never pops it -- the queue's actual event order and
+## every event still gets applied via `drain()`'s own pop/apply loop) to
+## check whether the NEXT queued beat is ALSO a move, and if so skips the
+## pacing gap so the walk reads as one continuous glide instead of a
+## stutter-step. Only the LAST COMBATANT_MOVED in a run (next queued event is
+## something else, or the queue drains) keeps the real `beat_delay()`, same
+## pacing as before between the walk and whatever follows it.
+##
+## Zero-delay QA/headless/Instant speed is a strict no-op either way: `delay
+## <= 0.0` short-circuits before any type check runs, so this can never OPEN
+## a new delay where `beat_delay()` itself already collapsed to zero -- see
+## that function's own "checked first, unconditionally" doc comment.
+func _coalesced_delay(event: Dictionary, delay: float) -> float:
+	if delay <= 0.0:
+		return delay
+	var type := String(event.get("type", ""))
+	if type == WIEvents.AP_CHANGED or type == WIEvents.TURN_ENDED:
+		return 0.0
+	if type == WIEvents.COMBATANT_MOVED and not _playback.is_empty() and String((_playback[0] as Dictionary).get("type", "")) == WIEvents.COMBATANT_MOVED:
+		return 0.0
+	return delay
 
 
 ## Renders one dequeued playback event. `with_visuals` gates only the cosmetic

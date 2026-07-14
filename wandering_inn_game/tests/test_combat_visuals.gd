@@ -539,6 +539,31 @@ func _init() -> void:
 	# on the skip path -- the fix must not have widened the gate wholesale.
 	playback._apply_playback_event({"type": "skill_resolved", "payload": {"actor": "pc", "skill": "frost_bolt", "target": "goblin_raider", "_ui": {}}}, false)
 	assert(recorder.visual_calls == ["terrain_expired", "terrain_added"], "VFX-class events (skill_resolved) stay gated behind with_visuals on the skip path -- the terrain fix is surgical, not a wholesale gate removal")
+
+	# Issue #87 (beat coalescing): `_coalesced_delay` is a pure function of
+	# (event, base_delay) -- deliberately NOT wired through `beat_delay()`
+	# itself, which always returns 0 in this --script/headless test process
+	# (the same reason the sleep_veil plain-sleep skip needed its own
+	# raw-source structural test: the real paced branch is unobservable under
+	# any headless DSL run). Exercised directly against the SAME real
+	# WICombatPlayback instance used above.
+	assert(playback._coalesced_delay({"type": "ap_changed"}, 0.5) == 0.0, "AP_CHANGED must never hold its own beat -- it renders nothing but a bookkeeping reset")
+	assert(playback._coalesced_delay({"type": "turn_ended"}, 0.5) == 0.0, "TURN_ENDED must never hold its own beat -- it renders nothing but an already-decided tutor line")
+	assert(playback._coalesced_delay({"type": "attack_resolved"}, 0.5) == 0.5, "an ordinary beat (attack_resolved) keeps its own base delay untouched")
+	playback.enqueue({"type": "combatant_moved", "payload": {}})
+	assert(playback._coalesced_delay({"type": "combatant_moved"}, 0.5) == 0.0, "a COMBATANT_MOVED immediately followed by another COMBATANT_MOVED coalesces into one continuous glide")
+	assert(playback._playback.size() == 1, "coalescing PEEKS the next queued event to decide -- it must never pop/consume it")
+	playback._playback.clear()
+	playback.enqueue({"type": "attack_resolved", "payload": {}})
+	assert(playback._coalesced_delay({"type": "combatant_moved"}, 0.5) == 0.5, "a COMBATANT_MOVED NOT immediately followed by another one keeps its full beat delay")
+	playback._playback.clear()
+	assert(playback._coalesced_delay({"type": "combatant_moved"}, 0.5) == 0.5, "a COMBATANT_MOVED with an EMPTY queue behind it (the last beat) also keeps its full beat delay")
+	# Zero base delay (QA/headless/Instant speed, `beat_delay()`'s own
+	# already-collapsed contract) must never be OPENED by the type override --
+	# every branch short-circuits on `delay <= 0.0` before touching `type`.
+	assert(playback._coalesced_delay({"type": "ap_changed"}, 0.0) == 0.0, "zero base delay stays zero for AP_CHANGED")
+	assert(playback._coalesced_delay({"type": "combatant_moved"}, 0.0) == 0.0, "zero base delay stays zero for COMBATANT_MOVED regardless of queue contents")
+
 	recorder.free()
 
 	# Issue #82's WINDUP SIM SPEC / [Dangersense] payoff: WINDUP_DECLARED's cell
