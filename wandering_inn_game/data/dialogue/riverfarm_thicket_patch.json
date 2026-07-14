@@ -1,0 +1,25 @@
+{
+	"_comment": "Issue #91 (hour-4 spine): riverfarm_thicket_patch's confirm conversation -- the crab_nest informed-consent shape applied to Riverfarm's first respawns:true renewable-cull slot. Run by the riverfarm_village `riverfarm_thicket_patch` encounter's `conversation` field (interact.encounter branch fires dialogue BEFORE combat). [Strike first.] ends the conversation and fires `start_combat: riverfarm_thicket_patch` (self-reference; legal ONLY on an ending option). [Back away.] plainly ends -- no combat, the encounter stays live and re-interactable. TRAP (dormant re-interact): respawns:true, so a same-waking re-interact after a victory falls to start_combat's dormant refusal (DIALOGUE_EFFECT_FAILED, no crash) -- the next sleep re-arms it. No requires/hide_when on any option.",
+	"start": "confront",
+	"nodes": {
+		"confront": {
+			"speaker": "The Creeping Thicket",
+			"text": "The vines shift again, closer this time, thorns catching the light like drawn wire. Whatever Eloise's craft left in them, it never quite went back to sleep.",
+			"options": [
+				{
+					"text": "[Strike first.]",
+					"effects": [
+						{
+							"start_combat": "riverfarm_thicket_patch"
+						}
+					],
+					"end": true
+				},
+				{
+					"text": "[Back away.]",
+					"end": true
+				}
+			]
+		}
+	}
+}

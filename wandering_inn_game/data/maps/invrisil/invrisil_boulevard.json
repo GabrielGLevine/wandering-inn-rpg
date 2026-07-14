@@ -1231,6 +1231,27 @@
     }
    ],
    "on_victory": "mothbears_culled"
+  },
+  {
+   "_comment": "Issue #91 (hour-4 spine): `boulevard_duel_ring` -- Invrisil's own crab_nest-shape consent encounter (data/dialogue/boulevard_duel_ring.json), interact-only, no trigger_radius, no encounter_when gate (always available -- a sparring racket, not a proximity ambush). Master Coyle's own voice (already the region's established fight-pillar giver, bounty_alley_cull/bounty_mothbear_cull) frames it: a paid sparring match against his hired knife-thugs, an INFORMED-CONSENT duel by design (fits the shape better than an ambush would). Roster: `hired_blade_knife_a/b` (the merchant_warehouse quest's two generic knife-thugs, REUSED verbatim at this new placement -- the footpad_lookout/footpad_bruiser precedent, id reuse across placements is established convention; the full 3-member roster or leader-inclusive pairs all measured outside a usable 0.55-0.95 band solo, the two knife-thugs alone read the best). Placed at (24,15), the SAME empty south y14-15 band boulevard_night_footpads/boulevard_mothbears' own placement comments verified clear of every canonical route -- Chebyshev distance to boulevard_night_footpads (13,15) is 11, to boulevard_mothbears (5,15) is 19, to coyle_runner_trail (20,13) is 4; no shipped script (invrisil_walkthrough/invrisil_disagreement_*/invrisil_mothbear_loop) ever teleports or walks past x=23 on this map.",
+   "id": "boulevard_duel_ring",
+   "kind": "encounter",
+   "cell": [
+    24,
+    15
+   ],
+   "display_name": "Coyle's Sparring Ring",
+   "sprite": "human_laborer",
+   "arena": "mercantile_alley",
+   "conversation": "boulevard_duel_ring",
+   "enemies": [
+    "hired_blade_knife_a",
+    "hired_blade_knife_b"
+   ],
+   "allies": [],
+   "respawns": true,
+   "observe": "A chalked ring on the cobbles, two of Coyle's regulars leaning against the wall beside it, already sizing you up.",
+   "on_victory": "boulevard_duels_won"
   }
  ],
  "cover_skip": [

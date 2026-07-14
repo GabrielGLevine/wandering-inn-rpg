@@ -1,0 +1,25 @@
+{
+	"_comment": "Issue #91 (hour-4 spine): gallery_vermin_nest's confirm conversation -- the crab_nest informed-consent shape applied to the dungeon's reopened side-gallery. Run by the trapped_halls `gallery_vermin_nest` encounter's `conversation` field (interact.encounter branch fires dialogue BEFORE combat, gated behind encounter_when.requires.halls_cleared -- this graph is unreachable until the trap gauntlet is actually cleared). [Strike first.] ends the conversation and fires `start_combat: gallery_vermin_nest` (self-reference; legal ONLY on an ending option). [Back away.] plainly ends -- no combat, the encounter stays live and re-interactable. TRAP (dormant re-interact): gallery_vermin_nest is respawns:true; interact() dispatches to dialogue WITHOUT a dormancy check, so a player who re-interacts the same waking after a victory re-opens this conversation and [Strike first.] falls to start_combat's dormant refusal -- DIALOGUE_EFFECT_FAILED fires, no combat, no crash (the sanctioned failure path; the next sleep re-arms the fight for real). No requires/hide_when on any option (no progress leak).",
+	"start": "confront",
+	"nodes": {
+		"confront": {
+			"speaker": "Small Shapes in the Dark",
+			"text": "Past the rubble, eyes catch what little light reaches this far -- more than a few, low to the ground, unhurried. Whatever draws them here hasn't stopped leaking since the seal cracked.",
+			"options": [
+				{
+					"text": "[Strike first.]",
+					"effects": [
+						{
+							"start_combat": "gallery_vermin_nest"
+						}
+					],
+					"end": true
+				},
+				{
+					"text": "[Back away.]",
+					"end": true
+				}
+			]
+		}
+	}
+}

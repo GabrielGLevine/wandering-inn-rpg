@@ -1,0 +1,25 @@
+{
+	"_comment": "Issue #91 (hour-4 spine): boulevard_duel_ring's confirm conversation -- the crab_nest informed-consent shape applied to a paid sparring match (Coyle's racket) instead of a wild cull. Run by the invrisil_boulevard `boulevard_duel_ring` encounter's `conversation` field (interact.encounter branch fires dialogue BEFORE combat). [Strike first.] ends the conversation and fires `start_combat: boulevard_duel_ring` (self-reference; legal ONLY on an ending option). [Back away.] plainly ends -- no combat, the encounter stays live and re-interactable. TRAP (dormant re-interact): respawns:true, so a same-waking re-interact after a win falls to start_combat's dormant refusal (DIALOGUE_EFFECT_FAILED, no crash) -- the next sleep re-arms it. No requires/hide_when on any option.",
+	"start": "confront",
+	"nodes": {
+		"confront": {
+			"speaker": "Coyle's Regulars",
+			"text": "One of them cracks his knuckles, unbothered. \"Coyle pays for a good show. You in, or just looking?\"",
+			"options": [
+				{
+					"text": "[Strike first.]",
+					"effects": [
+						{
+							"start_combat": "boulevard_duel_ring"
+						}
+					],
+					"end": true
+				},
+				{
+					"text": "[Back away.]",
+					"end": true
+				}
+			]
+		}
+	}
+}

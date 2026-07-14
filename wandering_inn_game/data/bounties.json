@@ -319,6 +319,46 @@
    },
    "gold": 6,
    "copy": "Standing order of the Watch, posted for whoever keeps ending up in the reports. The roads out of this city do not police themselves and my roster says we cannot either. Three engagements won, anywhere the Watch's writ runs, confirmed by attestation. 6 gold per settlement. I would rather pay you than bury patrols. Z. Sunderscale."
+  },
+  {
+   "_comment": "Issue #91 (hour-4 spine), indices [29..31], pure append: three MORE post_game standing orders, keyed to the three NEW respawns:true encounters this task added (gallery_vermin_nest/riverfarm_thicket_patch/boulevard_duel_ring, sim_combat_batch.gd's DUNGEON_CELLS/RIVERFARM_CELLS/INVRISIL_CELLS). Same `requires: {post_game: 1}` gate as [26..28] above -- byte-identical pre-post_game (the filtered pool stays 26 entries; post-post_game it grows 29->32). All delta-mode (repeatable, on_victory-keyed, all three producers respawns:true), 2-unit convention (the crab_cull/corusdeer_cull/razorbeak_cull/forge_golem_cull/watchgolem_cull precedent, not the 1-unit 'apex predator' shape). Pay via generate_postings.py's recovered formula: gallery watch 2.0*2*T4 2.5 = 10g; thicket watch 2.0*2*T3 2.0 = 8g; boulevard duels 2.0*2*T3 2.0 = 8g. Givers reuse each region's own already-established fight-pillar voice: Selys (T4 dungeon, matching bounty_standing_den_watch/bounty_kingslayer_cull), Eloise (Riverfarm's own witch, the thicket's actual source), Master Coyle (Invrisil, matching bounty_alley_cull/bounty_mothbear_cull/bounty_standing_lantern_line).",
+   "id": "bounty_standing_gallery_watch",
+   "pillar": "fight",
+   "giver": "Selys Sharpear",
+   "requires": {
+    "post_game": 1
+   },
+   "condition": {
+    "gallery_vermin_culled": 2
+   },
+   "gold": 10,
+   "copy": "Guild standing order, Silver-rank and up. The reopened side-galleries past the trap gauntlet never stay swept either -- the same leak that fed the vermin nest the first time still feeds it. Two confirmed kills per rotation, shell-plate as proof, 10 gold. This notice does not come down. Selys, for the Guild."
+  },
+  {
+   "id": "bounty_standing_thicket_watch",
+   "pillar": "fight",
+   "giver": "Eloise",
+   "requires": {
+    "post_game": 1
+   },
+   "condition": {
+    "thicket_remnants_culled": 2
+   },
+   "gold": 8,
+   "copy": "A standing arrangement, small enough to be honest about. My own hedge-craft sheds offshoots I don't always catch in time, and a stray thicket-remnant is still thorn enough to open a leg to the bone. Two cleared per settlement, no questions about method. 8 gold. Eloise."
+  },
+  {
+   "id": "bounty_standing_boulevard_duels",
+   "pillar": "fight",
+   "giver": "Master Coyle",
+   "requires": {
+    "post_game": 1
+   },
+   "condition": {
+    "boulevard_duels_won": 2
+   },
+   "gold": 8,
+   "copy": "Standing arrangement, for regulars. My ring pays out same as always -- two rounds won against whoever's leaning on the wall that day, Guild-attested, 8 gold per settlement. Coyle."
   }
  ]
 }

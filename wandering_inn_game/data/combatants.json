@@ -947,6 +947,28 @@
    "skills": [
     "power_strike"
    ]
+  },
+  {
+   "_comment": "Issue #91 (hour-4 spine): the Riverfarm thicket-remnant, `riverfarm_thicket_patch`'s own roster -- SAME canon-cite as briar_collector_a (wiki.wanderinginn.com/Plants, Birevine: 'vines stronger than steel rope, covered in razor-sharp thorns', the witch's craft animating it into a debt-collecting construct) but a LESSER working: a stray hedge-offshoot that broke free of Eloise's own hollow rather than a deliberately-fielded collector, so it carries reduced str/con off briar_collector_a's own template (19/30 -> 17/24) rather than sharing that id outright -- a distinct id per the rift_vermin_a precedent (this context wants a T3 solo renewable-cull band, not the quest fight's own gated hunter-carried number, and the two gated cells would otherwise pull in opposite directions off one shared id, the exact ruin_ward/snare_ward trap). Matched pair, own id per the same convention. Balance: sim_combat_batch.gd RIVERFARM_CELLS' `riverfarm_thicket_patch_t3_solo`, GATED 0.55-0.95 at `t3_warrior10` (measured 0.81 -- solo, no hunter ally, the renewable-cull's own design point).",
+   "id": "thicket_remnant_a",
+   "display_name": "Thicket Remnant",
+   "sprite": "briar_collector",
+   "side": "enemy",
+   "stats": { "str": 17, "dex": 10, "con": 24, "int": 2, "wis": 6, "cha": 2 },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "Riverfarm_thicket_patch's second remnant -- see thicket_remnant_a's own _comment for the full canon cite + distinct-id rationale. Identical stat template (a matched pair, same convention as rift_vermin_a/b), given its own id per that convention.",
+   "id": "thicket_remnant_b",
+   "display_name": "Thicket Remnant",
+   "sprite": "briar_collector",
+   "side": "enemy",
+   "stats": { "str": 17, "dex": 10, "con": 24, "int": 2, "wis": 6, "cha": 2 },
+   "weapon_die": 6,
+   "ai": "melee",
+   "skills": []
   }
  ]
 }
