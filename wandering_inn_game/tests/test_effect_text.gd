@@ -34,9 +34,14 @@ const EXPECTED_ITEMS := {
 	"copper_luck_band": ["+1 HP", "Worth 4 gold"],
 	"hedge_ward_charm": ["+2 HP", "Resonance 1", "Worth 9 gold"],
 	"hunters_fang_talisman": ["+1 damage on melee hits", "Resonance 1", "Worth 14 gold"],
-	"phosphor_pendant": ["+3 HP", "Resonance 1"],
+	"phosphor_pendant": ["+3 HP", "Resonance 1", "Worth 20 gold"],
 	"stonescale_talisman": ["Reduces every hit taken by 1", "Resonance 2", "Worth 35 gold"],
 	"moon_bone_amulet": ["+1 damage on melee hits", "+3 HP", "Resonance 2"],
+	# The three v0.6.0 boss-unique drops -- loot-only accessories, no price,
+	# so no "Worth" line on any of them.
+	"construct_core_shard": ["+3 HP", "Reduces every hit taken by 1", "Resonance 2"],
+	"warded_coil_charm": ["+2 HP", "Resonance 1"],
+	"kingslayer_fang": ["+1 damage on melee hits", "+1 HP", "Resonance 1"],
 	"watch_token": [],
 	# brothers_marker: watch_token precedent shape verbatim (mundane
 	# accessory, zero stat fields -- items.json's own _comment).
