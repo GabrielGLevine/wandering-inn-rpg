@@ -3148,6 +3148,39 @@
      "night_phase"
     ]
    }
+  },
+  {
+   "script": "thicket_cull_loop",
+   "seed": 9,
+   "fixture": "thicket_cull_loop_start",
+   "note": "Issue #91 (hour-4 spine): bounty_standing_thicket_watch end to end -- accept at Selys's desk (guild), the crab_nest-shape confirm conversation ([Back away.] negative proves no combat, then [Strike first.]), win the riverfarm_thicket_patch fight (riverfarm_village, respawns:true) TWICE with a real sleep between them (delta-since-accept >= 2), turn in for the exact 8 gold payout -- THE repeatable-loop canonical for the hour-4 spine's new respawns:true content",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild",
+     "inn_upstairs",
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "thicket_cull_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_thicket_patch",
+     "selys_delivery"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
   }
  ]
 }
