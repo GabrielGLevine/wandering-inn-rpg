@@ -3871,7 +3871,7 @@ connected-component bbox extraction for prop sheets) — no image was ever
 rendered/viewed, per the wi-art-and-sprites "never browse pack PNGs into
 context" rule. Full per-candidate region/scale/anchor table (with the
 downstream `sprites.json`-shaped picks) lives in
-`docs/design/8a-asset-assembly.md`; this entry is the raw scan summary.
+`docs/archive/design/8a-asset-assembly.md`; this entry is the raw scan summary.
 
 - **Pixel Crawler - Cemetery 0.4 — Environment/TileSets/Floor.png (400x400,
   25x25 @16px):** content occupies only cols 0-5, rows 0-11 (rest empty

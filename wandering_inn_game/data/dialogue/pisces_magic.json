@@ -70,7 +70,7 @@
      "end": true
     },
     {
-     "_comment": "stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/pisces_stages.json (staging_note/_flag stripped). CANON tread-light: father a [Fencer] is staged (mild); the sold-rapier line is an OBLIQUE Wistram-era nod. HARD RAILS (absolute, per the companion doc): no expulsion cause, no deaths, no Az'kerash, no Ceria specifics. Appended AFTER 'Never mind.' (array end) so it can never shift an earlier option's visible index.",
+     "_comment": "stage-2 hub topic, lifted verbatim from docs/archive/staging/social-2-staging/pisces_stages.json (staging_note/_flag stripped). CANON tread-light: father a [Fencer] is staged (mild); the sold-rapier line is an OBLIQUE Wistram-era nod. HARD RAILS (absolute, per the companion doc): no expulsion cause, no deaths, no Az'kerash, no Ceria specifics. Appended AFTER 'Never mind.' (array end) so it can never shift an earlier option's visible index.",
      "text": "You hold yourself like a swordsman, not a scholar.",
      "requires": {
       "accomplishment": {

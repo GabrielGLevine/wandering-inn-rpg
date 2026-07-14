@@ -1,5 +1,7 @@
 # Combat wave (#90 + #97) — plan (2026-07-12)
 
+> Status: **DONE** — executed; retained as a design record.
+
 Issues carry the scope; this doc pins the controller rulings, the lane
 split, and the seam map (the architecture wave's lesson applied at
 design time: enumerate every shared data source BEFORE dispatch).
@@ -42,7 +44,7 @@ forward-references them)
   via the asset workflow (PixelLab v2 outputs are TIER-PUBLIC; any
   bundle-tier pack use = STOP and report for the manifest/bundle
   dance), NEW harness cells in sim_combat_batch.gd, new canonicals +
-  manifest entries, docs/design/board-staging + generate_postings.py
+  manifest entries, docs/archive/staging/board-staging + generate_postings.py
   pool + regeneration.
 - **SHARED FILES (object-level merge, controller reconciles):**
   data/combatants.json (cwA edits existing, cwB appends new),

@@ -1,5 +1,7 @@
 # Wandering Inn M3 — Combat Depth Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Free move pool + Dash, line-of-sight + the Flame Jet line (friendly fire real), [Mage] earned multiclass with a visible MP pool and the core-four spells, two new enemies with a full harness rebalance, and web QA seed threading.

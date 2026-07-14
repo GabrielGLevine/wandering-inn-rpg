@@ -1,5 +1,7 @@
 # Riverfarm (issues #10 + #11, milestone 8b) — Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** dispatch-grade tasks per repo convention;
 > wi-running-the-machine governs. Comment style per CLAUDE.md conventions
 > (function/constraints/traps — no provenance).
@@ -9,7 +11,7 @@ NPCs, and "The Price of a Favor" 3-path quest, arriving via the FIRST real
 use of `data/portals.json`'s anchor-stone-per-region contract.
 
 **Design authority:** `docs/superpowers/specs/2026-07-06-riverfarm-design.md`
-(all §) + `docs/design/riverfarm-art/{direction,picks,handoff}.md` (art) +
+(all §) + `docs/archive/design/riverfarm-art/{direction,picks,handoff}.md` (art) +
 `docs/design/character-profiles-staging.md` "Riverfarm (8b)" (profiles) +
 issues #10/#11 (briefs; their danger lists bind).
 

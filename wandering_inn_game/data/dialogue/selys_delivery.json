@@ -86,7 +86,7 @@
      "end": true
     },
     {
-     "_comment": "stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/selys_stages.json. Appended AFTER 'Just looking around.' (array end) so it can never shift an earlier option's visible index.",
+     "_comment": "stage-2 hub topic, lifted verbatim from docs/archive/staging/social-2-staging/selys_stages.json. Appended AFTER 'Just looking around.' (array end) so it can never shift an earlier option's visible index.",
      "text": "Shivertail. Any relation to the Guildmistress?",
      "requires": {
       "accomplishment": {
@@ -109,7 +109,7 @@
      "goto": "selys_board_pick"
     },
     {
-     "_comment": "desk-context line, lifted VERBATIM from docs/design/board-staging/board-copy.md sec.2 (the board is now a physical prop in the guild interior behind her desk). Ungated orientation flavor -- appended at array end so no earlier option's visible index shifts. The other 5 sec.2 lines (accept/road-cull-steer/turn-in-met/turn-in-unmet/slate-rotated) were DP2-conditioned in DP1; DP2 wires them below.",
+     "_comment": "desk-context line, lifted VERBATIM from docs/archive/staging/board-staging/board-copy.md sec.2 (the board is now a physical prop in the guild interior behind her desk). Ungated orientation flavor -- appended at array end so no earlier option's visible index shifts. The other 5 sec.2 lines (accept/road-cull-steer/turn-in-met/turn-in-unmet/slate-rotated) were DP2-conditioned in DP1; DP2 wires them below.",
      "text": "How does the board work?",
      "goto": "selys_board_context"
     },
@@ -153,7 +153,7 @@
      "end": true
     },
     {
-     "_comment": "8e Phase C 'Papers for Pallass' Stage 1 quest-start (issue #16) -- HIDDEN until invrisil_attuned (a light chronological gate matching the region-tier ordering: sponsorship for the machine city is a step past proven city travel) and hidden again once pallass_sponsored (the sponsorship itself is a one-shot ask, matching the heard_about_cisterns/heard_wrong_order precedent of a non-beat signpost paired with quest-start -- pallass_sponsorship_asked is NOT a beat; the real beat-1 completion is pallass_sponsor's own 'File it.' option below). Re-clicking before paying is harmless (start_quest is idempotent, WIGame.start_quest). Appended at array end so no earlier option's visible index shifts. PARKED per docs/design/pallass-staging/phase-c-forward-references.json: the plan's own alternate sponsorship path (a completed-postings record gate) is NOT implemented here -- no aggregate 'completed postings' counter exists in the sim (only per-id completed_bounty_<id>/completed_delivery_<id>), and adding one would be a second new-sim addition beyond the plan's ONE sanctioned addition (the race key).",
+     "_comment": "8e Phase C 'Papers for Pallass' Stage 1 quest-start (issue #16) -- HIDDEN until invrisil_attuned (a light chronological gate matching the region-tier ordering: sponsorship for the machine city is a step past proven city travel) and hidden again once pallass_sponsored (the sponsorship itself is a one-shot ask, matching the heard_about_cisterns/heard_wrong_order precedent of a non-beat signpost paired with quest-start -- pallass_sponsorship_asked is NOT a beat; the real beat-1 completion is pallass_sponsor's own 'File it.' option below). Re-clicking before paying is harmless (start_quest is idempotent, WIGame.start_quest). Appended at array end so no earlier option's visible index shifts. PARKED per docs/archive/staging/pallass-staging/phase-c-forward-references.json: the plan's own alternate sponsorship path (a completed-postings record gate) is NOT implemented here -- no aggregate 'completed postings' counter exists in the sim (only per-id completed_bounty_<id>/completed_delivery_<id>), and adding one would be a second new-sim addition beyond the plan's ONE sanctioned addition (the race key).",
      "text": "About papers for Pallass.",
      "requires": {
       "accomplishment": {

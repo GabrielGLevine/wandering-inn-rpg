@@ -101,7 +101,7 @@
      "end": true
     },
     {
-     "_comment": "stage-2 hub topics, lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag stripped). Appended AFTER 'Just getting my bearings.' (array end) so they can never shift an earlier option's visible index.",
+     "_comment": "stage-2 hub topics, lifted verbatim from docs/archive/staging/social-2-staging/zevara_stages.json (staging_note/_flag stripped). Appended AFTER 'Just getting my bearings.' (array end) so they can never shift an earlier option's visible index.",
      "text": "I heard you can breathe fire.",
      "requires": {
       "accomplishment": {

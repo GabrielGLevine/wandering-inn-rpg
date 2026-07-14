@@ -21,6 +21,9 @@
 > 2026-07-07 morning, no longer maintained) has been archived verbatim to
 > `the frozen-archive repo at docs/archive/ROADMAP-archive-2026-07.md`.
 
+Everything below this line is a dated decision log, not a live queue. The
+GitHub board above is authoritative for current issue state and ordering.
+
 
 
 ## Gap-analysis round 2 (2026-07-12) — the post-8e board

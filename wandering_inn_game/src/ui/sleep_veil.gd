@@ -99,7 +99,7 @@ const LINE_FONT_SIZE := 24
 ## opener swallows ONLY confirm/cancel while it holds; the sleep path
 ## above still intercepts no input at all.
 ##
-## COPY — final, user-approved (docs/design/gdi-copy-staging.md), no open
+## COPY — final, user-approved (docs/archive/staging/gdi-copy-staging.md), no open
 ## taste flag remains. A cold system-readout opener, ONE version for every
 ## race (the former Human/Drake/Gnoll branch read as an unearned canon
 ## distinction — dropped per user ruling; race-neutral by construction). 4
@@ -145,7 +145,7 @@ const OPENER_READ_HOLD := 2.2
 ## fully independent by construction (no shared trigger moment to
 ## arbitrate).
 ##
-## COPY — final, user-approved (docs/design/gdi-copy-staging.md), no open
+## COPY — final, user-approved (docs/archive/staging/gdi-copy-staging.md), no open
 ## taste flag remains. Ledger-voiced understatement replacing the old
 ## framing's announced sentiment ("Now Liscor knows your name", "The world
 ## keeps counting" read as aphorism/cheese) — the System states facts and

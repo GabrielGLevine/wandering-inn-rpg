@@ -1,61 +1,15 @@
 # Wandering Inn RPG Handoff
 
-## 🚢 v0.7.0 RELEASING (2026-07-13) — the user-override wave
+## Current release
 
-**User directives for the release:** deliver #92; fix the two mobile input
-blockers (filed → #109); ship the release within the active provider's
-capacity window.
+**v0.7.0 shipped 2026-07-13:** #92 and #109 closed; the composed 112-script
+gate, release workflow, itch deploy, and Pages deploy were green. Detailed
+wave notes live in this file's git history; #87 and #91 retain only the open
+remainders below.
 
-**Shipped in v0.7.0 (four lanes, every one opus/sonnet-reviewed with
-fix waves, sequenced merges, full composed gate):**
-- **#92 economy depth (CLOSED)** — the full pinned R1-R5 design:
-  `WIGame.use_item` + combat `use_item` action converging on
-  `WIItems.resolve_use` (heal via existing resolver arm; `pending_meal`
-  consumed at next `start_combat`); consumption = `inventory.erase`
-  (the repeatable-sink unlock); combat-hotbar `item:` tokens with the
-  loadout strip on BOTH bars (review caught the field-bar blanking);
-  witch + forge consumable sinks (`mending_draught` 10g,
-  `tempering_oil` 12g gated `pallass_entry_stamped`); relic abilities
-  kit-fold (first relic: moon_bone_amulet grants [Invisibility] in
-  combat); sleep-gated resonance 2→3 bump (`door_awakened`-gated, N=2,
-  veil line) + `anchor_sliver` res-3 tradeoff item. New canonicals:
-  item_use_loop; door_awakening extended with the res-bump legs.
-- **#109 mobile input round 2 (CLOSED)** — cardinal-only
-  click-to-interact approach (diagonal arrival could NEVER interact:
-  sim interact() is facing-based, facing cardinal-only) + field HUD
-  launcher chips (pause/journal/inventory, #106 chip idiom, panels'
-  own toggle branches; pause chip honors quit-confirm/slot-picker
-  sub-modes per review fix). New canonical: field_chips_loop.
-- **#91 hour-4 spine remainder** — three `respawns:true` T3-T4
-  encounters (gallery_vermin_nest gated `halls_cleared`;
-  riverfarm_thicket_patch — Riverfarm's first respawn slot;
-  boulevard_duel_ring), all consent-conversation guarded (crab-nest
-  precedent), post_game postings on their on_victory counters,
-  thicket_cull_loop = the repeatable-loop canonical. Chronicle still
-  PARKED on #91 (journal.gd collision avoidance this wave).
-- **#87 pacing remainder** — queue-aware toast hold cap + same-beat
-  gold-toast fold, playback beat coalescing (AP_CHANGED/TURN_ENDED/
-  consecutive moves), AI-turn skip hint. Map-transition fade still
-  PARKED on #87.
-- **Main-side debt fixed:** test_effect_text carried 2 FAILs + a live
-  SCRIPT ERROR since the v0.6.0 boss-drop landing (3 unpinned items) —
-  pinned. Stat-grammar rule softened to a tripwire-enforced default
-  (user directive, commit 186366f).
-
-**Composed gate (this tree):** import clean; 24/24 unit suites;
-104-cell harness PASS; **full 112-script sweep — one red caught and
-fixed** (garden_walkthrough's bare double toast-drain vs the #87 fold;
-re-pinned to the merged-text contract, non-vacuous), re-run green;
-surfaces --check 112/112. Freeze cut at 0.7.0 (22/68/54/21/345 —
-mending_draught/tempering_oil/anchor_sliver + 9 accomplishments join
-the frozen API).
-
-**Deploy CONFIRMED:** release.yml run 29299861966 GREEN (tag v0.7.0 →
-overlay → full QA gate → wasm → butler to itch html5); [ci-full] push
-CI GREEN (29299853716); Pages redeploy dispatched (29300197642). Lane
-worktrees/branches cleaned after `git cherry` showed 0 unmerged on all
-four. Issues #92/#109 closed at push; #87/#91 stay open for their
-parked pieces.
+**#103 documentation rot complete:** current/history authority is mapped in
+`docs/DOC-MAP.md`; shipped staging is archived; all plans say DONE/ACTIVE;
+QA notes are a CI-checked manifest-derived inventory. No gameplay changed.
 
 ## 📋 QUEUE (value order)
 
@@ -65,12 +19,8 @@ parked pieces.
    world.gd/main.gd, now uncontested).
 3. **#76 remainder** — footstep floor-families + ambience ducking
    (_tween_music_bus_to parameterized over both buses).
-4. **#110 agent portability — FOLLOW-UP COMPLETE:** Codex provider usage reads
-   app-server rate limits (never `codex exec /usage`), classifies windows by
-   duration, caches/fails soft, and emits tier transitions through a tracked,
-   trusted, Git-root-safe hook. Concurrency/deadline/malformed/expired-window
-   regressions are pinned; independent review approved. No gameplay touched.
-5. #102/#103 context economy; #19 Steam secrets (USER).
+4. **#102 context economy:** comment compression after this doc pass.
+5. **#19 Steam:** user-secret provisioning remains user-gated.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 

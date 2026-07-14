@@ -6,7 +6,7 @@ A decomposition grammar over a VERB REGISTRY, in the style of de Lima et al.
 ONLY (offline generation of DATA; no runtime planner, per the issue's own
 ratified scope line). This script is the AUTHORING TOOL: it emits
 candidates with a REVIEW verdict to
-docs/design/board-staging/generated-candidates.json. A human (the curation
+docs/archive/staging/board-staging/generated-candidates.json. A human (the curation
 pass) then hand-polishes the ACCEPTED entries' prose and copies them,
 stripped of every annotation field (the G2 discipline), into
 data/bounties.json / data/deliveries.json / data/items.json verbatim. This
@@ -72,8 +72,9 @@ import re
 from pathlib import Path
 
 GAME_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = GAME_ROOT.parent
 DATA = GAME_ROOT / "data"
-STAGING_DIR = GAME_ROOT / "docs" / "design" / "board-staging"
+STAGING_DIR = REPO_ROOT / "docs" / "archive" / "staging" / "board-staging"
 STAGING_OUT = STAGING_DIR / "generated-candidates.json"
 
 
@@ -451,7 +452,7 @@ def main() -> None:
     accepted_b = sum(1 for b in payload["bounties"] if b["review"] == "ACCEPT")
     rejected_b = sum(1 for b in payload["bounties"] if b["review"] != "ACCEPT")
     accepted_d = sum(1 for d in payload["deliveries"] if d["review"] == "ACCEPT")
-    print(f"wrote {STAGING_OUT.relative_to(GAME_ROOT)}")
+    print(f"wrote {STAGING_OUT.relative_to(REPO_ROOT)}")
     print(f"bounty candidates: {accepted_b} ACCEPT, {rejected_b} REJECT")
     print(f"delivery candidates: {accepted_d} ACCEPT")
 

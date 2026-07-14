@@ -1,4 +1,7 @@
-# Mobile-compatible web release — exploration (2026-07-12, NOT scheduled)
+# Mobile-compatible web release — exploration (2026-07-12)
+
+> Status: **IMPLEMENTED** by issues #105 and #106; retained as the exploration
+> record. Current controls and QA commands live in `wandering_inn_game/AGENTS.md`.
 
 User direction: explore, do not implement. Grounded in the shipped state
 (mouse waves #57/#84/#85, the single-threaded web export, itch html5).

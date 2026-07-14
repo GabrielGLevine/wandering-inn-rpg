@@ -36,7 +36,7 @@ against the three candidate industrial/engineered packs already in hand
 - **Conclusion: no in-hand pack offers a full engineered bronze-slate
   masonry family** (floor + rising wall + parapet edge + matching
   props). Confirmed independently, matches the 2026-07-07 pallass-art
-  lane's own finding (`docs/design/pallass-art/picks.md` role note:
+  lane's own finding (`docs/archive/design/pallass-art/picks.md` role note:
   "Drake-scale industrial masonry doesn't exist in any in-hand pack").
   In-hand packs genuinely fail — `/create-tileset` is warranted.
 
@@ -47,7 +47,7 @@ a third attempt needs a materially different prompt strategy") does
 **not** describe Pallass's own history. Pallass's `/create-tileset` was
 run exactly twice by the 2026-07-07 pallass-art direction lane, and
 **both succeeded with a KEEP verdict**
-(`docs/design/pallass-art/pixellab-batch.md` #1 and #6):
+(`docs/archive/design/pallass-art/pixellab-batch.md` #1 and #6):
 
 | Candidate | Tier | Verdict |
 |---|---|---|
@@ -58,7 +58,7 @@ This is exactly the plan's "cap at 2 candidates" — already spent, both
 kept. **No third `/create-tileset` attempt is warranted or needed.**
 Visual re-confirmation this pass (mockup + atlas PNGs viewed directly,
 not text-guessed): the composed two-tier mockup
-(`docs/design/pallass-art/mockup_owned_pallass_two_tiers_4x.png`) reads
+(`docs/archive/design/pallass-art/mockup_owned_pallass_two_tiers_4x.png`) reads
 as an engineered vertical machine — blue-grey slab plaza, bronze
 riveted elevator tower spanning both bands, steady white crystal lamps,
 an orange furnace-glow band overhead. Zero amber, zero coin-gold

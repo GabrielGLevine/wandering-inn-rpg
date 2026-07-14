@@ -1,5 +1,7 @@
 # Wandering Inn M2 — Story Spine Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Combat-polish opener (HP/damage numbers, AP costs, skill descriptions), then the story spine: pure dialogue system with visible possession-gated [Skill] checks, counter-derived quests, save/load with RNG-state fidelity, two maps with door transitions, and "The Errand" quest (Erin/Lyonette/Selys) with a non-combat resolution path — all QA-scripted.

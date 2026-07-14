@@ -1,5 +1,7 @@
 # [Garden of Sanctuary] (issue #9, milestone 8a part 2) — Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** dispatch-grade tasks per repo convention;
 > wi-running-the-machine governs execution.
 
@@ -11,7 +13,7 @@ the memorial hill that grows with story beats.
 ONE map with no darkness) + §5 (RATIFIED: act ≥ III AND K-of-N inn
 accomplishments; Erin's own summoned door at the INN — NOT the portal menu;
 no-violence = sim guard) + issue #9's superseding comment (the "expansion
-key" framing is DEAD) + `docs/design/garden-art/` (direction.md, picks.md,
+key" framing is DEAD) + `docs/archive/design/garden-art/` (direction.md, picks.md,
 handoff.md — the staged biome fragments, the memorial statue vocabulary,
 stoneify.py, the Old Tree conditional).
 

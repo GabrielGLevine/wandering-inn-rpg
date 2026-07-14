@@ -1,5 +1,8 @@
 # Full-game architecture: what comes online past the demo (2026-07-12)
 
+> Status: **ACTIVE DIRECTION**; foundation issues #99–#101 are implemented.
+> The GitHub board owns remaining scheduling.
+
 User direction: the project has been building toward a very robust DEMO;
 this spec captures what expanding to the FULL GAME requires — what scales
 as-is, what strains, the genuinely new workstreams, and the ordered first

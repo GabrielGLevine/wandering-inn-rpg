@@ -1,5 +1,7 @@
 # Skills Wave Implementation Plan (chain step 5)
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Skills READ-ONLY for subagents. Controller commits per green task, explicit paths. FOREGROUND-ONLY verification in every brief.
 
 **Goal:** Spec §3+§4 of `2026-07-06-systems-depth-priorities.md`, user-ratified incl. the stealth model (2026-07-06): overworld-impact effects across existing kits + new capability-first Skills, movement and stealth as the priority verbs, every new Skill carrying a combat AND overworld read where sensible.

@@ -1,5 +1,8 @@
 # Usage Guard — usage-aware graceful wind-down (design)
 
+> Status: **IMPLEMENTED**; issue #110 added model-neutral guidance and the
+> Codex app-server adapter. Provider behavior is current in `wi-usage-guard`.
+
 **Date:** 2026-07-12
 **Status:** Approved design (brainstormed with user)
 

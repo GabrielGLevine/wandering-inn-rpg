@@ -1,5 +1,7 @@
 # M4 — Playtest Fixes + Asset Integration Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Fix every 2026-07-02 human-playtest directive (dialogue gating, cleaning-quest rewire, hubs, defeat QA, discoverability, greying, paced AI turns, overlap) and put real Pixel Crawler art on screen (tiles + sprites) inside the data→codegen architecture.

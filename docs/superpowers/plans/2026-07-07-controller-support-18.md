@@ -1,5 +1,7 @@
 # Controller Support (issue #18, M-STEAM) — Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development
 > via wi-running-the-machine. Dispatch-grade tasks (repo convention).
 
@@ -105,7 +107,7 @@ windowed shot of a combat hint line (controller reads kb-mode rendering).
 
 ### Task S4 — the manual pad pass + close
 
-**Files:** NEW `docs/design/pad-playtest-checklist.md` (boot-to-victory with
+**Files:** NEW `wandering_inn_game/docs/design/pad-playtest-checklist.md` (boot-to-victory with
 NO keyboard: title gesture, char creation accept-default, walk/interact/
 dialogue cursor, inventory/journal, shop buy, combat full turn incl. slot
 select + targeting cycle + dash confirm gate + line-skill direction pick,

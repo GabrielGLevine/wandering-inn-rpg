@@ -1,14 +1,17 @@
 # Architecture History
 
+> Historical design record, last audited **2026-07-13**. It explains why;
+> it is not the current work queue or the current-state authority.
+
 This is the detailed, verbatim per-milestone architecture record for
-`wandering_inn_game/`. `../CLAUDE.md` keeps only a short, current-state
+`wandering_inn_game/`. `../AGENTS.md` keeps one current-state
 summary paragraph per live system, each pointing here for the full
 mechanism writeup, rollout narrative, and the reasoning behind design
 decisions. Read this when you need the "why" behind a system, not just
-the "what" — for day-to-day work, `../CLAUDE.md` alone should suffice.
+the "what" — for day-to-day work, `../AGENTS.md` alone should suffice.
 
 Sections are in roughly chronological (milestone) order. A `[RESOLVED ...]`
-or similar bracketed note inside a block means the 2026-07-07 CLAUDE.md
+or similar bracketed note inside a block means the 2026-07-07 guidance
 accuracy audit found and fixed a stale claim in that block; the rest of
 each block is preserved as originally written, including author framing,
 task names, and self-references to "this task"/"this block".
@@ -1157,7 +1160,7 @@ mechanics per the plan's own scope note ("a new data seam... zero new UI").
 
 - **Data**: `data/bounties.json` — a pool of postings (`id`, `pillar`,
   `giver`, `condition`, `gold`, `copy`), assembled verbatim from the writer
-  lane's staging doc (`docs/design/board-staging/guild-bounties.json`),
+  lane's staging doc (`docs/archive/staging/board-staging/guild-bounties.json`),
   annotations stripped. 9 of the staging doc's 10 entries shipped live;
   `bounty_crab_cull` stays parked (its condition names a bank,
   `rock_crabs_culled`, that doesn't exist until a future Rock Crab
@@ -1236,7 +1239,7 @@ The seam RIDES DP2's bounty machinery — extended, never forked:
   (`id`, `gold`, `condition`, copy) plus the delivery-specific fields
   (`type: "delivery"`, `parcel` {item_id, display_name, flavor},
   `destination` {map, cell, anchor_entity}, `band`, optional `fragile`),
-  assembled verbatim from `docs/design/board-staging/runner-deliveries.json`
+  assembled verbatim from `docs/archive/staging/board-staging/runner-deliveries.json`
   (5 of 6 entries; `delivery_hermit_antlers` stays parked until HR-II —
   its staged double-pay hazard vs `hermit_antler_order.json` is resolved
   by shipping NEITHER surface; the reconciliation note travels in the

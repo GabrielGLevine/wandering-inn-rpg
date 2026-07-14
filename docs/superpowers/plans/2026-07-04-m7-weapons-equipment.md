@@ -1,5 +1,7 @@
 # M7 Weapons & Equipment Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax. Project skills (`.claude/skills/wi-*`) are READ-ONLY and govern process/verification.
 
 **Goal:** Weapons gate skill families (wielded weapon → fieldable tagged skills → counters → evolution identity) + two equip slots + acquisition (loot/containers/gift) + inventory UI — per the user-approved spec `docs/superpowers/specs/2026-07-03-wandering-inn-m7-weapons-equipment-design.md` (its §0 decisions are LOCKED).

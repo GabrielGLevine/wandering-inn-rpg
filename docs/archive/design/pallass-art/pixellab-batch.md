@@ -55,7 +55,7 @@ shared concurrency cap — no generations consumed; logged in
 
 ## Mockups
 
-- `docs/design/pallass-art/mockup_owned_pallass_two_tiers.png`
+- `docs/archive/design/pallass-art/mockup_owned_pallass_two_tiers.png`
   (320×180 native) + `_4x.png` — composed PURELY from the PixelLab
   outputs above (committable; the charter's licensed-mockup rule
   doesn't apply). No licensed-pack mockup was composed — the owned

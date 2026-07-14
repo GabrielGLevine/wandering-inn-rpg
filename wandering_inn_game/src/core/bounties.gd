@@ -11,7 +11,7 @@ extends RefCounted
 ##   1. Rotation + condition math (active_slate/condition_met) -- the
 ##      talk-pool rotation idiom (social.gd's chatted_with_<id> % pool.size(),
 ##      zero rng) applied at POOL-WINDOW granularity, plus the plan's binding
-##      delta-since-accept semantics (docs/design/board-staging/
+##      delta-since-accept semantics (docs/archive/staging/board-staging/
 ##      guild-bounties.json's design note): a bounty's condition is evaluated
 ##      as (current counter - counter AT ACCEPT) >= threshold, never an
 ##      absolute read, so a mid-game player can't insta-complete a rotating

@@ -1,5 +1,7 @@
 # Three Pillars / World-Skills Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Project skills READ-ONLY for subagents. Controller commits per green task.
 
 **Goal:** The approved Three Pillars v1 (spec `docs/superpowers/specs/2026-07-04-three-pillars-world-skills-design.md` §2-§6): the overworld hotbar (field skills, facing-cell + ambient), [Tactician] as the cerebral earned multiclass, and the carried content debts — non-combat play becomes a first-class pillar.

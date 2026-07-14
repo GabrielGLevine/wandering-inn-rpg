@@ -1,5 +1,7 @@
 # Wandering Inn v4 — Agent-QA Foundation (M0 Spike) Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Fresh Godot 4.7 project `wandering_inn_game_v4/` containing an agent-driven QA harness (ObservableBus event log, in-engine TestDriver, script-load gate, Playwright web-export rig) proven against a walking-skeleton game (move → talk to NPC → use a [Skill] on a prop → toast).

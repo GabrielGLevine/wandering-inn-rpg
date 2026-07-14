@@ -1,5 +1,7 @@
 # Usage Guard Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Usage-aware graceful wind-down: a status script reading official `claude -p /usage` percentages with burn-rate projection, an escalation-only PostToolUse hook, and a `wi-usage-guard` skill so sessions drain to quiescence instead of dying mid-flight at usage cutoffs.

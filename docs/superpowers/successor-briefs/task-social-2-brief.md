@@ -9,7 +9,7 @@ THE COPY IS ALREADY WRITTEN, VOICE-LINTED, AND CANON-CHECKED — assemble it
 verbatim; do not rewrite it (the G2 assembly precedent).
 
 ## Single source of content
-`/Users/gabriel/wandering_inn_rpg/docs/design/social-2-staging/`:
+`/Users/gabriel/wandering_inn_rpg/docs/archive/staging/social-2-staging/`:
 - `stage-tables.md` — the master per-NPC tables (conditions, pools,
   unlocks, perks) + the machinery note + the ⚑ roll-up. READ IT FIRST.
 - `{erin,relc,krshia,selys,pisces,olesm,zevara}_stages.json` — real

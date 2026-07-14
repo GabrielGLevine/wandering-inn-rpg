@@ -1,5 +1,7 @@
 # Playtest-Content Slice Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax. Every implementer routes work through the project skills (`.claude/skills/wi-*`) — READ-ONLY.
 
 **Goal:** Make leveling variety humanly playtestable NOW: a repeatable inn work-loop that gains and levels [Helper], plus one gate-district quest with three solution paths (fight/talk/skill) banking different counters — all on existing engine seams.

@@ -1,5 +1,7 @@
 # Social Pillar v1 Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Project skills READ-ONLY for subagents. Controller commits per green task. Implementer briefs carry the FOREGROUND-ONLY verification mandate verbatim.
 
 **Goal:** The ratified Social Pillar v1 (spec `docs/superpowers/specs/2026-07-05-social-pillar-design.md`): rotating talk pools re-armed by sleep, the shared per-waking first-use dedup seam (resolves TP review M1 for [Observe] too), and [Diplomat] with a 2-skill kit.

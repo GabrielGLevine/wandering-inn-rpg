@@ -1,5 +1,7 @@
 # M6 — Action-Driven Classes Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** progression by deed — action counters level classes, focus evolves them at 10, split builds pay ~20–25%, [Spellsword] consolidation offered at sleep; all opaque-until-sleep.

@@ -1,5 +1,7 @@
 # M-BEAUTY Atmosphere Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Steps use checkbox syntax. Project skills READ-ONLY for subagents (`wi-godot-mcp` governs any MCP use — controller-only this milestone).
 
 **Goal:** The approved atmosphere systems (spec `docs/superpowers/specs/2026-07-04-beauty-atmosphere-design.md`, §0 decisions LOCKED) + the floodplains-dusk pilot. USER VERDICT on pilot shots gates rollout to other maps — rollout tasks are LISTED but not dispatched until the verdict.

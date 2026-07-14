@@ -57,7 +57,7 @@ actions, not Skills. The user's exemplar is **[Owl's Vision] — VERIFY it
   (e.g. `/Skills`, `/Classes`, character pages). The Skills/Classes list
   pages are the fastest attestation check; character pages confirm usage.
 - Annotate every claim the way
-  `docs/design/gear-staging/item-lore-and-accessory-roster.md` does:
+  `docs/archive/staging/gear-staging/item-lore-and-accessory-roster.md` does:
   inline `[CANON-VERDICT <date>: CONFIRMED/REWRITTEN/ORIGINAL-kept — <what
   the wiki actually says>]`. Misses/ambiguities escalate as ⚑ flags with a
   recommendation; never silently invent a canon-sounding name.

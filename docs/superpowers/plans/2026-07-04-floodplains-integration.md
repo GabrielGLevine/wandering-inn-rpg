@@ -1,5 +1,7 @@
 # Floodplains Integration (Gate District + Relc Tutorial) Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax. Every implementer MUST route work through the project skills (`.claude/skills/wi-*`) — wi-adding-a-scene, wi-adding-an-encounter, wi-adding-dialogue-and-quests, wi-art-and-sprites, wi-writing-qa-scripts, wi-verifying-changes. Skills are READ-ONLY.
 
 **Goal:** Make the Floodplains the live overworld between inn and Liscor: inn→floodplains→gate-district topology, street grown to the 32×20 Liscor gate district, all goblin encounters migrated onto the road, Relc introduced (met_relc ally gating) with his repeatable combat tutorial.

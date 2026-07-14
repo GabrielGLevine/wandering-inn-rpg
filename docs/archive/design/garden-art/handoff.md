@@ -137,5 +137,5 @@ recommend east wing, facing the rise (a bed under the open sky is the
 - Licensed mockups (NEVER commit): same dir, `mockups/
   mockup_licensed_garden_320.png` + `_4x.png` — the user's taste-review
   surface for the full scene.
-- Committed owned mockup: `docs/design/garden-art/
+- Committed owned mockup: `docs/archive/design/garden-art/
   mockup_owned_memorial_vocab.png` (memorial vocabulary + roster).

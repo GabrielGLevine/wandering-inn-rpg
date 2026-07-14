@@ -115,7 +115,7 @@ lamplight amber. PASS.
 - **Decor (licensed, picks.md §2):** the fountain composite (large
   octagonal basin + Feminine statue centerpiece — composed this pass
   from PIL region scans, resolving the deferral in
-  `docs/design/8a-asset-assembly.md` §5), three flowerbed colors,
+  `docs/archive/design/8a-asset-assembly.md` §5), three flowerbed colors,
   two topiary cypresses, wooden bench, small round basin (birdbath),
   lily-pad + water-rock pond accent, pack "Old" statue as a garden
   dressing statue.

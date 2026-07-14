@@ -674,7 +674,7 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
   or add a screenshot beat through the rubble-column area so the existing
   dressing is at least visible to QA/players who walk there, or (b)
   relocate some of that dressing (or add ruin-specific floor variety, per
-  `docs/design/8a-asset-assembly.md` sec. 1's Cemetery-pack candidates,
+  `docs/archive/design/8a-asset-assembly.md` sec. 1's Cemetery-pack candidates,
   never wired) along the edge-hugging route players actually walk. Not
   implemented here — DF's charter is fixes, not new map-dressing content;
   flagging for a future content pass. **#31 drain (2026-07-08): reviewed,

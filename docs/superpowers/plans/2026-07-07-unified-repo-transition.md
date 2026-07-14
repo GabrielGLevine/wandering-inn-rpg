@@ -1,5 +1,7 @@
 # Unified-Repo Transition (user-directed 2026-07-07)
 
+> Status: **DONE** — executed; retained as a design record.
+
 **Goal:** the public repo `GabrielGLevine/wandering-inn-rpg` becomes THE
 working repo. The private repo freezes as a history archive. A fresh
 agent session in the new repo prompted "Continue project work" must be

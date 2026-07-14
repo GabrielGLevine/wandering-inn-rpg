@@ -115,7 +115,7 @@
      "end": true
     },
     {
-     "_comment": "stage-2 hub topic, lifted verbatim from docs/design/social-2-staging/olesm_stages.json. Appended AFTER 'I'll leave you to your tally.' (array end) so it can never shift an earlier option's visible index.",
+     "_comment": "stage-2 hub topic, lifted verbatim from docs/archive/staging/social-2-staging/olesm_stages.json. Appended AFTER 'I'll leave you to your tally.' (array end) so it can never shift an earlier option's visible index.",
      "text": "You run half this city from that desk. You know that, right?",
      "requires": {
       "accomplishment": {

@@ -409,7 +409,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["hired_blade/walk"] = 6
 
 	## Invrisil 8c Task C1 -- the four owned PixelLab boulevard-signature
-	## props (docs/design/invrisil-art/handoff.md's staged fragment,
+	## props (docs/archive/design/invrisil-art/handoff.md's staged fragment,
 	## committed verbatim this task), all single-frame statics, never
 	## fallback-relaxed (owned art, not a licensed manifest entry).
 	for invrisil_owned_static: String in ["plaza_fountain", "street_lamp", "coin_shop_sign", "guild_banner"]:

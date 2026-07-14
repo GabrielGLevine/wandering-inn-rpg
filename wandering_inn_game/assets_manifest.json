@@ -100,7 +100,7 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder",
-   "_comment": "8a A1: alt pedestal/monument candidate (tall standing-slab blob at native px 132,114,24,78 -- see docs/design/8a-asset-assembly.md)."
+   "_comment": "8a A1: alt pedestal/monument candidate (tall standing-slab blob at native px 132,114,24,78 -- see docs/archive/design/8a-asset-assembly.md)."
   },
   {
    "path": "assets/props/cemetery/Props.png",
@@ -108,7 +108,7 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder",
-   "_comment": "8a A1: anchor_stone_pedestal + rubble-scatter candidates (region table in docs/design/8a-asset-assembly.md)."
+   "_comment": "8a A1: anchor_stone_pedestal + rubble-scatter candidates (region table in docs/archive/design/8a-asset-assembly.md)."
   },
   {
    "path": "assets/props/fairy_forest/Props.png",
@@ -116,7 +116,7 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder",
-   "_comment": "8b Task R1 (issue #10): witch_hollow glow-stones/mushroom/stump scatter (region table docs/design/riverfarm-art/picks.md sec.5)."
+   "_comment": "8b Task R1 (issue #10): witch_hollow glow-stones/mushroom/stump scatter (region table docs/archive/design/riverfarm-art/picks.md sec.5)."
   },
   {
    "path": "assets/props/fairy_forest/Tree.png",
@@ -124,7 +124,7 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder",
-   "_comment": "8b Task R1 (issue #10): witch_hollow canopy enclosure (deep-shade y457 row, docs/design/riverfarm-art/picks.md sec.5)."
+   "_comment": "8b Task R1 (issue #10): witch_hollow canopy enclosure (deep-shade y457 row, docs/archive/design/riverfarm-art/picks.md sec.5)."
   },
   {
    "path": "assets/props/free_pack/Bonfire_01-Sheet.png",
@@ -174,7 +174,7 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder",
-   "_comment": "8b Task R1 (issue #10): riverfarm_village crop rows + farm-prop dressing (region table docs/design/riverfarm-art/picks.md sec.3)."
+   "_comment": "8b Task R1 (issue #10): riverfarm_village crop rows + farm-prop dressing (region table docs/archive/design/riverfarm-art/picks.md sec.3)."
   },
   {
    "path": "assets/props/free_pack/Furnace.png",
@@ -1085,7 +1085,7 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder",
-   "_comment": "8a A1: ruin floor-tile candidate (region table in docs/design/8a-asset-assembly.md)."
+   "_comment": "8a A1: ruin floor-tile candidate (region table in docs/archive/design/8a-asset-assembly.md)."
   },
   {
    "path": "assets/tiles/cemetery/Walls.png",
@@ -1093,7 +1093,7 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder",
-   "_comment": "8a A1: ruin wall-tile candidate (region table in docs/design/8a-asset-assembly.md)."
+   "_comment": "8a A1: ruin wall-tile candidate (region table in docs/archive/design/8a-asset-assembly.md)."
   },
   {
    "path": "assets/tiles/fairy_forest/Tiles.png",
@@ -1101,7 +1101,7 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder",
-   "_comment": "8b Task R1 (issue #10): witch_hollow floor/path/pond (region table docs/design/riverfarm-art/picks.md sec.5)."
+   "_comment": "8b Task R1 (issue #10): witch_hollow floor/path/pond (region table docs/archive/design/riverfarm-art/picks.md sec.5)."
   },
   {
    "path": "assets/tiles/floor_tiles_12/dirt_01.png",
@@ -1172,7 +1172,7 @@
    "verdict": "FORBIDDEN",
    "bundle": true,
    "fallback": "placeholder",
-   "_comment": "8a A1 (issue #9 pre-work): garden hedge/fountain/petal-swatch candidates (region table in docs/design/8a-asset-assembly.md)."
+   "_comment": "8a A1 (issue #9 pre-work): garden hedge/fountain/petal-swatch candidates (region table in docs/archive/design/8a-asset-assembly.md)."
   },
   {
    "path": "assets/tiles/library/Tiles.png",

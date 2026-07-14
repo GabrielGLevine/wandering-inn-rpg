@@ -1,5 +1,9 @@
 # Fable → Opus Handover Plan
 
+> **ARCHIVED 2026-07-13:** provider-era operating record. Do not execute its
+> workflow or skill-ownership rules; current authority is root `AGENTS.md`,
+> `docs/DOC-MAP.md`, and `.agents/skills/wi-*`.
+
 **Written 2026-07-02 by the Fable project lead; Fable access ends ~2026-07-09.** This is
 the long-term operating plan the user asked Fable to set so Opus can continue as project
 lead afterward. It complements — never replaces — the living docs: `HANDOFF.md` (session

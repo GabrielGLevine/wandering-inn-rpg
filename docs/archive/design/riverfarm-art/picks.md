@@ -1,7 +1,7 @@
 # Riverfarm — licensed-pack picks (PIL-measured region tables)
 
 **8b art-director lane, 2026-07-07.** Format matches
-`docs/design/8a-asset-assembly.md` (PIL-measured regions, feet-plane
+`docs/archive/design/8a-asset-assembly.md` (PIL-measured regions, feet-plane
 anchors). **Method note (binding, wi-art-and-sprites discipline):** every
 region below comes from a numeric PIL scan — 16px-cell mean-RGB +
 luminance-std grid clustering for tile sheets, alpha connected-component

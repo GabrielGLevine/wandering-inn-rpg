@@ -1,5 +1,7 @@
 # M5 — Demo Feel Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** title-screen-to-demo experience — window-filling 16px pixel world with smooth movement, sound, icon hotbar combat, and a save/continue loop.

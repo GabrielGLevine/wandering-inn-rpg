@@ -69,6 +69,11 @@ jobs:
       - name: Check model-neutral guidance mirrors
         run: python3 scripts/sync_agent_guidance.py
 
+      - name: Check documentation drift
+        run: |
+          python3 scripts/render_qa_notes.py
+          python3 scripts/check_doc_drift.py
+
   # ------------------------------------------------------------------ smoke
   smoke:
     name: Smoke (headless boot)

@@ -1,5 +1,7 @@
 # M-LEGIBILITY Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Project skills READ-ONLY for subagents (propose via HANDOFF). Controller commits per green task, EXPLICIT paths while lanes live. FOREGROUND-ONLY verification in every brief.
 
 **Goal:** The ratified §2 of `docs/superpowers/specs/2026-07-06-systems-depth-priorities.md`: every item, Skill, and status becomes mechanically legible in the game's VISIBLE currencies (HP/MP/AP/damage/moves/gold/resonance-later) — no raw attributes, no progress-toward, ever.

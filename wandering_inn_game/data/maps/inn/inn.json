@@ -385,7 +385,7 @@
    "sprite": "citizen_f",
    "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
    "friendly_line": "Oh - hi! You've got a good face, you know that? Come in, sit down. I'll find you something warm - on the house, probably. Don't tell Lyonette I said that.",
-   "_comment_stages": "Talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the erin_errand.json hub-topic unlocks (erin_chess/erin_home) lifted verbatim from docs/design/social-2-staging/erin_stages.json after the re-path wave went green. Stage 3's erin_daily_meal perk stays UNBUILT/flagged (needs the entity_first_use per-waking dialogue seam, not built this task).",
+   "_comment_stages": "Talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the erin_errand.json hub-topic unlocks (erin_chess/erin_home) lifted verbatim from docs/archive/staging/social-2-staging/erin_stages.json after the re-path wave went green. Stage 3's erin_daily_meal perk stays UNBUILT/flagged (needs the entity_first_use per-waking dialogue seam, not built this task).",
    "talk_pool": [
     "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
     "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",

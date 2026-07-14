@@ -1075,7 +1075,7 @@
     "Ten years running this Watch. Six weeks of leave, total. That's the whole personality, if you were wondering.",
     "Relc's off being enormous at someone. Klbkch is... Klbkch. The gate still stands. Don't jinx it."
    ],
-   "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/zevara_stages.json (staging_note/_flag annotations stripped). Two stages -- she does not do three degrees of warmth on duty. Perk (watch-bounty access) is the dialogue_unlocks wired into zevara_intro.json's hub + new claimed_bounty_{crate,cisterns,warren} counters, each banked on the CLAIM option (effects live on options, never nodes).",
+   "_comment_stages": "Lifted verbatim from docs/archive/staging/social-2-staging/zevara_stages.json (staging_note/_flag annotations stripped). Two stages -- she does not do three degrees of warmth on duty. Perk (watch-bounty access) is the dialogue_unlocks wired into zevara_intro.json's hub + new claimed_bounty_{crate,cisterns,warren} counters, each banked on the CLAIM option (effects live on options, never nodes).",
    "talk_pool_stages": [
     {
      "id": "zevara_trusted_irregular",
@@ -1148,7 +1148,7 @@
     "Supply lines, sightlines, morale: a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak.",
     "Selys works the desk inside now, board and all. I still find reasons to linger out here more than the job requires. The paperwork doesn't ask why."
    ],
-   "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/olesm_stages.json (staging_note/_flag annotations stripped). The chess-beat perk (stage 3, olesm_board_partner) shipped option+frame only for one wave; issue #25 built the real match (olesm_intro.json's olesm_chess_invite chain) and added the THIRD stage below as its residue -- once chess_with_olesm banks, the one-time hub option retires (hide_when) and this shorter rematch pool takes over. New key only (chess_with_olesm), so the ascending-threshold validator has nothing to compare it against on the shared keys.",
+   "_comment_stages": "Lifted verbatim from docs/archive/staging/social-2-staging/olesm_stages.json (staging_note/_flag annotations stripped). The chess-beat perk (stage 3, olesm_board_partner) shipped option+frame only for one wave; issue #25 built the real match (olesm_intro.json's olesm_chess_invite chain) and added the THIRD stage below as its residue -- once chess_with_olesm banks, the one-time hub option retires (hide_when) and this shorter rematch pool takes over. New key only (chess_with_olesm), so the ascending-threshold validator has nothing to compare it against on the shared keys.",
    "talk_pool_stages": [
     {
      "id": "olesm_worth_interrupting_a_tally",
@@ -1314,7 +1314,7 @@
     "Yes, a [Necromancer]. No, I will not apologize for a competence others lack the wit to appreciate.",
     "Do continue standing there. I find the silence rather more edifying than most conversation."
    ],
-   "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/pisces_stages.json (staging_note/_flag annotations stripped). Two stages -- he only ever thaws to 'tolerable'. NO spec-default perk (the staging doc explicitly says build nothing -- the duelist's-drill/gift proposal ships as an open flag, not code) -- only the stage row + the hard-railed hub topic unlock ship.",
+   "_comment_stages": "Lifted verbatim from docs/archive/staging/social-2-staging/pisces_stages.json (staging_note/_flag annotations stripped). Two stages -- he only ever thaws to 'tolerable'. NO spec-default perk (the staging doc explicitly says build nothing -- the duelist's-drill/gift proposal ships as an open flag, not code) -- only the stage row + the hard-railed hub topic unlock ship.",
    "talk_pool_stages": [
     {
      "id": "pisces_tolerable_company",
@@ -1429,7 +1429,7 @@
     "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
     "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
    ],
-   "_comment_stages": "Lifted verbatim from docs/design/social-2-staging/krshia_stages.json (staging_note/_flag annotations stripped). Three stages -- crate_returned accrues TODAY (pool shipped), so stage 2 goes live the moment the seam lands. Stage 3's shop-discount perk is wired into krshia_crate.json's 'shop' node (4 stage-gated duplicate buy options + hide_when-retired full-price rows); the necklace-reveal hub topic (krshia_plans) is the OBLIQUE canon version -- never says 'spellbook' (user gate, see HANDOFF).",
+   "_comment_stages": "Lifted verbatim from docs/archive/staging/social-2-staging/krshia_stages.json (staging_note/_flag annotations stripped). Three stages -- crate_returned accrues TODAY (pool shipped), so stage 2 goes live the moment the seam lands. Stage 3's shop-discount perk is wired into krshia_crate.json's 'shop' node (4 stage-gated duplicate buy options + hide_when-retired full-price rows); the necklace-reveal hub topic (krshia_plans) is the OBLIQUE canon version -- never says 'spellbook' (user gate, see HANDOFF).",
    "talk_pool_stages": [
     {
      "id": "krshia_fair_weight",

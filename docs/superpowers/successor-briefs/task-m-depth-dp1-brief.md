@@ -30,7 +30,7 @@ scripts (disclosed set — quest_errand_* end at Selys!); windowed reads.
 - Suite count per CLAUDE.md at execution.
 
 ## Staged content you consume (do NOT re-write what's staged)
-`docs/design/board-staging/board-copy.md`:
+`docs/archive/staging/board-staging/board-copy.md`:
 - §2 "Selys — board-adjacent desk lines" — her desk-context graph
   extensions, voice-linted, lift VERBATIM (register: dry, competent,
   secretly soft-hearted).
@@ -168,7 +168,7 @@ their seed; anything reaching combat needs the pinned-seed re-check).
 
 ## After DP1 (pointer — the rest of M-DEPTH follows the plan)
 DP2 (THE REQUEST BOARD — the mechanical payoff; staged data READY at
-`docs/design/board-staging/guild-bounties.json` incl. a BINDING
+`docs/archive/staging/board-staging/guild-bounties.json` incl. a BINDING
 delta-since-accept condition-semantics note in its `_comment`, + board
 framing copy §1) → DP3 (inn upstairs + your room) → DP4 (Watch barracks +
 market depth) → DP5 (Runner's Guild; staged

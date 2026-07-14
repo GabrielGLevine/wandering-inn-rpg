@@ -189,7 +189,7 @@ Failure is an acceptable outcome; Relc-as-chip remains shippable.
 
 ## 7. Fable spike (parallel, no repo file conflicts)
 
-TWI wiki research → `docs/superpowers/specs/2026-07-0X-m6-canon-class-taxonomy.md`:
+TWI wiki research → `docs/superpowers/specs/2026-07-02-m6-canon-class-taxonomy.md`:
 curated ~8–12 playable class tree (canon names/evolution lines/consolidation targets),
 canon [Skills] mapped to the locked M6 mechanics (action counters, evolution thresholds,
 ~20–25% split friction, offered-at-sleep consolidation), NPC-flavor-only class list,

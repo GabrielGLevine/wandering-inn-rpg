@@ -1,7 +1,9 @@
 # Class foundation pass (#93 + #95 + #98) — one design pass (2026-07-12)
 
+> Status: **DONE** — executed; retained as a design record.
+
 User framing (binding): the rest of the game balances around Class +
-Skill progression. Inputs: docs/design/evolution-reachability.md (#96's
+Skill progression. Inputs: wandering_inn_game/docs/design/evolution-reachability.md (#96's
 table + pinned retune), the gap-2 judgment (#93), the user directives
 (#95 trap kit, #98 Trader line). Product locks bind throughout: stats
 hidden, opaque-until-sleep, wiki canon (Book-17 bar), visible-currency

@@ -1,5 +1,7 @@
 # 8d — The Liscor Dungeon + the Horns of Hammerad (IMPLEMENTATION PLAN)
 
+> Status: **DONE** — executed; retained as a design record.
+
 Spec: `docs/superpowers/specs/2026-07-06-liscor-dungeon-design.md` (design
 authority). Issues: #14 (dungeon maps + traps + vault), #15 (Horns party
 content). One milestone, five phases; A runs background from day one.

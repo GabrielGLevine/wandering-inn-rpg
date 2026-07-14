@@ -765,7 +765,7 @@ Separator-convention lines (⚑A, bodies verified dash-free, unchanged): inn `en
 GDI opener/epilogue proclamations are already dash-free. `EPILOGUE_LINK_LINE`
 (`"— The story continues at wanderinginn.com —"`, line 135) uses paired framing
 dashes as typography (a "— fin —" frame, not prose) and is user-approved verbatim
-copy from `docs/design/gdi-copy-staging.md` (2026-07-07, same day as this ruling).
+copy from `docs/archive/staging/gdi-copy-staging.md` (2026-07-07, same day as this ruling).
 KEPT; listed as ⚑D pro forma. (The file's other dashes are code comments — out of scope.)
 
 ## src — player-facing string literals (addendum; found via pin-trace, same corpus family)

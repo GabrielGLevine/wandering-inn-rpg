@@ -1,5 +1,7 @@
 # The Magical Door (issue #8, milestone 8a) — Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development
 > via the repo's wi-running-the-machine cycle. Tasks below are dispatch-grade
 > briefs (repo convention — the M-DEPTH DP1-DP5 shape), not 2-minute steps:
@@ -43,7 +45,7 @@ catalyst).
   (user-corrected 2026-07-07; the usd-balance probe was the wrong metric).
   v1 glow still ships via tint `visual_states` + a phase-gated PointLight2D
   (A1 verified zero new art needed); the rune-glow inpaint spec in
-  docs/design/8a-asset-assembly.md MAY be generated at DF if wanted.
+  docs/archive/design/8a-asset-assembly.md MAY be generated at DF if wanted.
 - Canon from the wiki; Albez flavor for the ruin (Warmage Thresk's door).
 
 ## Lane map (parallelism, file-ownership-disjoint)
@@ -210,7 +212,7 @@ PixelLab rune-glow item if balance still $0) + HANDOFF playtest checklist
 **Files:** `docs/asset-catalog.md`/`asset-index.md` additions (ruin picks
 from Pixel Crawler Castle/Cemetery/Cave packs; garden picks from Pixel
 Crawler Garden Environment — #9 pre-work, its "obvious casting" per the
-catalog), a NEW `docs/design/8a-asset-assembly.md` (region/scale/anchor
+catalog), a NEW `docs/archive/design/8a-asset-assembly.md` (region/scale/anchor
 table for: ruin floor+wall tiles, pedestal, rubble scatter, pantry-door
 awakened frame candidates, garden hedge/fountain/petals for #9),
 `wandering_inn_game/assets_manifest.json` entries + ignore-block regen

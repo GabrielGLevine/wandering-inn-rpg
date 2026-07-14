@@ -1,5 +1,7 @@
 # M-RELEASE Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Project skills READ-ONLY for subagents. Controller commits per green task.
 
 **Goal:** The ratified M-RELEASE design (spec `docs/superpowers/specs/2026-07-05-release-community-design.md` §1–§8): public MIT repo with fallback-art contract, private asset bundle, tag-driven itch.io wasm deploy, DCO, and the three community lanes.

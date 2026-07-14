@@ -663,7 +663,7 @@ in section 2:
 ## 3b. 8a Magical Door — ruin + garden pixel-level pass (2026-07-07)
 
 **Task A1 (lane γ, issue #8 milestone 8a).** Full region/scale/anchor table
-lives in `docs/design/8a-asset-assembly.md`; this section is the qualitative
+lives in `docs/archive/design/8a-asset-assembly.md`; this section is the qualitative
 summary + pack-choice reasoning, per the standing division of labor (sec.
 "Companion documents" above). Method: PIL alpha-channel + mean-color/
 texture-variance grid scans and connected-component bbox scans (never a

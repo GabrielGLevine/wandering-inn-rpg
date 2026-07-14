@@ -1,5 +1,7 @@
 # Onboarding Rev Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Project skills READ-ONLY for subagents. Controller commits per green task.
 
 **Goal:** The approved onboarding redesign (spec `docs/superpowers/specs/2026-07-04-onboarding-rev-design.md` §1-§9, user-approved + playtest addendum): classless start, Relc arms and TEACHES you, inert dummies, the ambush becomes a mandatory proximity-triggered tutorial part 2, Pisces teaches magic, every system gets its explaining beat.

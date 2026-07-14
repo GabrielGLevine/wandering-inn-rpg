@@ -1,5 +1,7 @@
 # Content Wave v1 Implementation Plan (night Track C)
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:subagent-driven-development. Project skills READ-ONLY for subagents. Controller commits per green task. FOREGROUND-ONLY verification in every brief.
 
 **Goal:** The pinned Content Wave spec (`docs/superpowers/specs/2026-07-05-content-wave-design.md` §1-§5): the Liscor Sewers map, Olesm/Lyonette/Zevara, two three-path quests.

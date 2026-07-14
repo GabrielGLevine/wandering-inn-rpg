@@ -1,5 +1,7 @@
 # Wandering Inn M1 — Tactical Combat + Progression Spine Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Tactical AP-pool combat (pure `WICombat` sim, skill-effect registry, role AI), data-driven progression (`WIProgression`, sleep-beat leveling), a 200-run balance harness, functional-minimal combat UI, and QA playtest scripts — delivering the loop: fight → win → sleep → Fighter 2 → Counter Strike live in fight 2.

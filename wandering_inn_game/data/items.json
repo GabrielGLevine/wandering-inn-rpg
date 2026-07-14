@@ -286,7 +286,7 @@
 			"lore": "Zevara signs maybe ten of these a year, and she remembers every one. Losing it is a worse conversation than never having earned it."
 		},
 		{
-			"_comment": "Invrisil 8c Task C3 (issue #13) -- `brothers_marker`, the plan's locked shape 5 vendor/perk gate token (docs/design/dialogue-drafts/invrisil/brothers_lieutenant.json's wiring notes: 'Wood and tin, and worth rather more than its materials'). Granted alongside the accomplishment of the same id (data/dialogue/invrisil_wilovan.json's report option) -- the item is the physical/flavor half, the accomplishment is the gate-checkable half (this game's `requires` gate vocabulary is skill/class/accomplishment/gold only, no item-presence gate, so future fence/vendor content must key off the accomplishment, not this item's inventory presence). watch_token precedent shape verbatim (mundane accessory, zero stat fields).",
+			"_comment": "Invrisil 8c Task C3 (issue #13) -- `brothers_marker`, the plan's locked shape 5 vendor/perk gate token (docs/archive/staging/dialogue-drafts/invrisil/brothers_lieutenant.json's wiring notes: 'Wood and tin, and worth rather more than its materials'). Granted alongside the accomplishment of the same id (data/dialogue/invrisil_wilovan.json's report option) -- the item is the physical/flavor half, the accomplishment is the gate-checkable half (this game's `requires` gate vocabulary is skill/class/accomplishment/gold only, no item-presence gate, so future fence/vendor content must key off the accomplishment, not this item's inventory presence). watch_token precedent shape verbatim (mundane accessory, zero stat fields).",
 			"id": "brothers_marker",
 			"name": "Brother's Marker",
 			"kind": "accessory",
@@ -361,7 +361,7 @@
 			"lore": "Every fixer owes somebody for the corner they work. Cups' somebody wears a hat."
 		},
 		{
-			"_comment": "5 parcel items, one per LIVE delivery (docs/design/board-staging/runner-deliveries.json's 6th entry, delivery_hermit_antlers, is a FORWARD-REF -- kept out of data/deliveries.json until HR-II places its destination, so no parcel item ships for it either). kind:\"parcel\" is INERT carried flavor per the staging doc's own note: no price (never sold -- no sell surface exists in this game), no combat fields, and no weapon/armor/accessory kind means WIGame.equip() structurally refuses it (falls to inventory.gd's generic 'not equippable' toast) with zero new code. Granted by WIGame.accept_delivery via the existing pickup() seam and removed by the new remove_item() seam (on handoff or a sleep-fail return) -- never stacked, matching every other item in this catalog.",
+			"_comment": "5 parcel items, one per LIVE delivery (docs/archive/staging/board-staging/runner-deliveries.json's 6th entry, delivery_hermit_antlers, is a FORWARD-REF -- kept out of data/deliveries.json until HR-II places its destination, so no parcel item ships for it either). kind:\"parcel\" is INERT carried flavor per the staging doc's own note: no price (never sold -- no sell surface exists in this game), no combat fields, and no weapon/armor/accessory kind means WIGame.equip() structurally refuses it (falls to inventory.gd's generic 'not equippable' toast) with zero new code. Granted by WIGame.accept_delivery via the existing pickup() seam and removed by the new remove_item() seam (on handoff or a sleep-fail return) -- never stacked, matching every other item in this catalog.",
 			"id": "parcel_plains_wool",
 			"name": "Plains-Wool Bolt",
 			"kind": "parcel",
@@ -432,7 +432,7 @@
 			"lore": "Runner's Guild delivery parcel (delivery_inn_hamper) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
-			"_comment": "5 more parcel items, issue #72's generated delivery-pool growth (docs/design/board-staging/generated-candidates.json) -- same inert-carried kind:\"parcel\" shape as the 5 above, one per new LIVE delivery in data/deliveries.json.",
+			"_comment": "5 more parcel items, issue #72's generated delivery-pool growth (docs/archive/staging/board-staging/generated-candidates.json) -- same inert-carried kind:\"parcel\" shape as the 5 above, one per new LIVE delivery in data/deliveries.json.",
 			"id": "parcel_gambeson_bundle",
 			"name": "Bundled Gambesons",
 			"kind": "parcel",

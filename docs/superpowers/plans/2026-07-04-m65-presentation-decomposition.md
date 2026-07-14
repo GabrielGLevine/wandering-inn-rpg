@@ -1,5 +1,7 @@
 # M6.5 Presentation Decomposition Implementation Plan
 
+> Status: **DONE** — executed; retained as a design record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax. Project skills (`.claude/skills/wi-*`) are READ-ONLY and govern verification.
 
 **Goal:** Split the `combat_screen.gd` god-file (2062 lines, 6 tangled regions) into four focused components + a shared tile builder, with ZERO behavior change — every canonical QA script stays green at its pinned seed after every task.

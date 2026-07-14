@@ -404,7 +404,7 @@
    "toast": "Warm, damp air. A rhythm underneath it, too even to be weather."
   },
   {
-   "_comment": "THE PERMIT OFFICE (cross-lane reconciliation, controller design ruling): the service window where the forge-tier bureaucratic chain actually transacts -- placed on the MARKET tier between the stalls and the Grand Lift so every beat of `forge_tier_permit` is reachable WITHOUT crossing the elevator gate the chain itself unlocks (C's forward-references reachability constraint, docs/design/pallass-staging/phase-c-forward-references.json). This counter is the office's window-ledge dressing (sprite `bar_counter`, free_pack -- an in-hand service-counter read); the clerk (20,4) and Grimalkin (21,4) sit in a row behind it.",
+   "_comment": "THE PERMIT OFFICE (cross-lane reconciliation, controller design ruling): the service window where the forge-tier bureaucratic chain actually transacts -- placed on the MARKET tier between the stalls and the Grand Lift so every beat of `forge_tier_permit` is reachable WITHOUT crossing the elevator gate the chain itself unlocks (C's forward-references reachability constraint, docs/archive/staging/pallass-staging/phase-c-forward-references.json). This counter is the office's window-ledge dressing (sprite `bar_counter`, free_pack -- an in-hand service-counter read); the clerk (20,4) and Grimalkin (21,4) sit in a row behind it.",
    "id": "permit_office_counter",
    "kind": "prop",
    "cell": [
