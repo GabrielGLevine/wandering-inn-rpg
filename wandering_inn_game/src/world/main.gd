@@ -17,6 +17,7 @@ const JOURNAL_SCRIPT := preload("res://src/ui/journal.gd")
 const PAUSE_MENU_SCRIPT := preload("res://src/ui/pause_menu.gd")
 const INVENTORY_SCRIPT := preload("res://src/ui/inventory.gd")
 const FIELD_HOTBAR_SCRIPT := preload("res://src/ui/field_hotbar.gd")
+const FIELD_CHIPS_SCRIPT := preload("res://src/ui/field_chips.gd")
 const CONSOLIDATION_PROMPT_SCRIPT := preload("res://src/ui/consolidation_prompt.gd")
 const SLEEP_VEIL_SCRIPT := preload("res://src/ui/sleep_veil.gd")
 const TITLE_SCREEN_SCRIPT := preload("res://src/ui/title_screen.gd")
@@ -31,6 +32,7 @@ var _journal: Node
 var _pause_menu: Node
 var _inventory: Node
 var _field_hotbar: Node
+var _field_chips: Node
 ## Issue #62 Lane U item 6: world.gd reaches this (via its own `_main` ref)
 ## to call `dismiss_current_toast_early()` on an interact press -- the same
 ## injection-root idiom `world_labels()` below already follows, except this
@@ -246,6 +248,7 @@ func _clear_ui_layers() -> void:
 	_pause_menu = null
 	_inventory = null
 	_field_hotbar = null
+	_field_chips = null
 	_title_screen = null
 	_sleep_veil = null
 	_world_labels = null
@@ -323,6 +326,17 @@ func _spawn_ui_layers() -> void:
 	_field_hotbar = FIELD_HOTBAR_SCRIPT.new()
 	_field_hotbar.name = "FieldHotbar"
 	add_child(_field_hotbar)
+	# Issue #109: the field-mode HUD launcher chips (pause/journal/inventory) --
+	# spawned right after the three panels above so their refs are already
+	# live to wire in. Add-order here only needs to be AFTER those three (so
+	# this layer's own _apply_visibility() first-call reads real ref state,
+	# not nulls); it does not need to precede/follow field_hotbar.
+	_field_chips = FIELD_CHIPS_SCRIPT.new()
+	_field_chips.name = "FieldChips"
+	_field_chips.pause_menu_ref = _pause_menu
+	_field_chips.journal_ref = _journal
+	_field_chips.inventory_ref = _inventory
+	add_child(_field_chips)
 	# The GDI sleep veil (fade-to-black + centered night
 	# announcements). Layer 30, above every other UI so the darkness covers the
 	# screen; a pure renderer keyed on the sleep phase_changed. Torn down with

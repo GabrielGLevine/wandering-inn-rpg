@@ -1,0 +1,46 @@
+{
+ "_comment": "Issue #109: the field-mode HUD launcher chips canonical. Same near_tactician fixture/opening as mouse_loop/hotbar_tab_loop (inn, warrior L1, player at (2,3)) so the chip-driven proofs below are directly comparable to those scripts' keyboard/click ones. Proves: (title) a title-row CLICK reaches Continue (the mouse_loop precedent, cheap re-derivation here since this script needs its own boot anyway). (A) the journal chip opens/closes the journal via its new public toggle_open() entry -- the EXACT ui_journal_shown/ui_journal_hidden pair the 'journal' keyboard action already fires, with player_cell/actions_since_sleep UNCHANGED by the tap (a chip tap is presentation-only, never a sim action). (B) the inventory chip does the same for ui_inventory_shown/ui_inventory_hidden. (C) the pause chip opens the pause menu (ui_pause_shown), a CLICK on the already-clickable 'Settings' row (issue #84, row 8) opens Settings for real (ui_settings_shown + ui_settings_rendered logged -- Settings needs no chip of its own per the issue, only the pause chip), 'Back' returns to the pause list, and Resume closes it (ui_pause_hidden) -- player_cell/actions_since_sleep still untouched by the WHOLE chip-driven detour.",
+ "fixture_save": "near_tactician",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "click_title_row", "row": 2 },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "inn" },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
+  { "action": "assert_state", "path": "actions_since_sleep", "equals": 0 },
+
+  { "_comment": "== A: journal chip == opens via the new toggle_open() entry (field_chips.gd calling journal.gd's public wrapper around its own _open()/_can_open() gate), then closes the SAME way (the chip is a toggle, matching the 'journal' key's own behavior).", "action": "click_field_chip", "chip": "journal" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
+  { "action": "assert_state", "path": "actions_since_sleep", "equals": 0 },
+  { "action": "screenshot", "name": "00_journal_chip_opens" },
+  { "action": "click_field_chip", "chip": "journal" },
+  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
+
+  { "_comment": "== B: inventory chip == same open/close toggle proof via inventory.gd's own new toggle_open() entry.", "action": "click_field_chip", "chip": "inventory" },
+  { "action": "wait_for_event", "type": "ui_inventory_shown", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "01_inventory_chip_opens" },
+  { "action": "click_field_chip", "chip": "inventory" },
+  { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 },
+
+  { "_comment": "== C: pause chip -> the ALREADY-clickable Settings row (issue #84) -> Settings actually opens == Settings needs no chip of its own per the issue brief; the pause chip is the one new launcher it needs.", "action": "click_field_chip", "chip": "pause" },
+  { "action": "wait_for_event", "type": "ui_pause_shown", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "02_pause_chip_opens" },
+  { "action": "click_pause_row", "row": 8 },
+  { "action": "wait_for_event", "type": "ui_settings_shown", "timeout_sec": 5 },
+  { "_comment": "assert_event_logged (whole-log scan), not wait_for_event: settings_loop.json's own precedent -- the all-defaults ui_settings_rendered snapshot fires as part of open() itself, BEFORE ui_settings_shown, so it is already behind the forward-only wait cursor by the time ui_settings_shown resolves.", "action": "assert_event_logged", "type": "ui_settings_rendered" },
+  { "action": "screenshot", "name": "03_pause_chip_to_settings" },
+  { "action": "click_settings_row", "row": 11 },
+  { "action": "wait_for_event", "type": "ui_settings_hidden", "timeout_sec": 5 },
+  { "action": "wait_frames", "frames": 2 },
+  { "action": "click_pause_row", "row": 1 },
+  { "action": "wait_for_event", "type": "ui_pause_hidden", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
+  { "action": "assert_state", "path": "actions_since_sleep", "equals": 0 },
+  { "action": "screenshot", "name": "04_pause_chip_closed" }
+ ]
+}

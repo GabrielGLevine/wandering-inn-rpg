@@ -3148,6 +3148,33 @@
      "night_phase"
     ]
    }
+  },
+  {
+   "script": "field_chips_loop",
+   "seed": 9,
+   "fixture": "near_tactician",
+   "note": "Issue #109: the field-mode HUD launcher chips -- journal/inventory chips toggle_open()/toggle_close their panels (ui_journal_shown+hidden, ui_inventory_shown+hidden), the pause chip opens pause (ui_pause_shown) then the already-clickable 'Settings' row (issue #84) opens Settings for real (ui_settings_shown + ui_settings_rendered), Back + Resume close back out -- player_cell/actions_since_sleep untouched by the whole chip-driven detour (presentation-only, no sim call).",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "near_tactician"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration",
+     "input",
+     "settings"
+    ]
+   }
   }
  ]
 }

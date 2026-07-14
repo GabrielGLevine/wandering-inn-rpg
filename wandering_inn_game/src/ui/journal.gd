@@ -423,6 +423,22 @@ func _close() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_HIDDEN, {})
 
 
+## Field chip tap (issue #109): the SAME open/close/`_can_open()` gate the
+## `journal` action key's own branch runs above -- exposed as a public entry
+## point so `field_chips.gd`'s journal chip can invoke it without a parallel
+## activation path. No-op (returns false, no state change) if the panel is
+## closed and `_can_open()` refuses, mirroring the keyboard branch's own
+## early return.
+func toggle_open() -> bool:
+	if not open and not _can_open():
+		return false
+	if open:
+		_close()
+	else:
+		_open()
+	return true
+
+
 ## Every known skill id, in the SAME order `_build_body_text` renders its
 ## rows (Innate group first, then one group per held class in catalog
 ## order) -- see `_flat_skill_ids`' own doc comment.
