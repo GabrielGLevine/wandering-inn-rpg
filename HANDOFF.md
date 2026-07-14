@@ -51,9 +51,12 @@ surfaces --check 112/112. Freeze cut at 0.7.0 (22/68/54/21/345 —
 mending_draught/tempering_oil/anchor_sliver + 9 accomplishments join
 the frozen API).
 
-**Deploy:** tag-driven release.yml (Actions billing fixed 2026-07-13) →
-itch html5; then Pages redeploy (`gh workflow run pages.yml`). This
-commit carries [ci-full].
+**Deploy CONFIRMED:** release.yml run 29299861966 GREEN (tag v0.7.0 →
+overlay → full QA gate → wasm → butler to itch html5); [ci-full] push
+CI GREEN (29299853716); Pages redeploy dispatched (29300197642). Lane
+worktrees/branches cleaned after `git cherry` showed 0 unmerged on all
+four. Issues #92/#109 closed at push; #87/#91 stay open for their
+parked pieces.
 
 ## 📋 QUEUE (value order)
 
