@@ -97,14 +97,12 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Drain BOTH queued toasts (the clean line + the chore's own gold payout) before moving on, so neither is still mid-render (message_layer.gd's toast queue) when the qualifying sleep's own 'You sleep soundly.' toast is asserted a few steps below -- the work_loop.json precedent for this exact dirty_table beat.",
+   "_comment": "Issue #87 (toast rhythm): the chore's same-beat gold payout now FOLDS into the clean-line toast (message_layer.gd's _fold_gold_toast), so this beat renders exactly ONE merged panel -- the payload pin below proves the fold, and one drain leaves nothing mid-render when the qualifying sleep's own 'You sleep soundly.' toast is asserted a few steps down. (Was two bare drains pre-#87; the composed v0.7.0 sweep caught the stale pin.)",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Basic Cleaning] — The table is spotless. Earned 1 gold."
+   },
    "timeout_sec": 5
   },
   {
