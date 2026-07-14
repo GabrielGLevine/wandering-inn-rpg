@@ -432,6 +432,25 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_field_chip":
+			# Field-mode HUD launcher chip click (issue #109): resolves the
+			# LIVE FieldChips node's own `chip_rect(name)`, same lookup shape
+			# as `click_slot`/`click_pause_row`/`click_confirm_chip`. Empty
+			# rect (chip hidden -- combat/dialogue/a pending consolidation
+			# offer, or the panel it opens already open) fails loud, same
+			# contract as every other click_* step.
+			var chip_name := String(step["chip"])
+			var fc := get_tree().root.find_child("FieldChips", true, false)
+			if fc == null:
+				_fail("click_field_chip: FieldChips node not found")
+			else:
+				var chip_rect: Rect2 = fc.call("chip_rect", chip_name)
+				if chip_rect.size == Vector2.ZERO:
+					_fail("click_field_chip: chip '%s' has no rendered rect" % chip_name)
+				else:
+					_inject_mouse_click(chip_rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"move_diag":
 			# A genuine simultaneous-key-hold diagonal, through the REAL input
 			# pipeline -- world.gd's

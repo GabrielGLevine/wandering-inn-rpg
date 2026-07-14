@@ -562,6 +562,21 @@ func _close() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_HIDDEN, {})
 
 
+## Field chip tap (issue #109): the SAME open/`_can_open()` gate the
+## `inventory` action key's own branch runs in `_unhandled_input` above --
+## exposed as a public entry point so `field_chips.gd`'s inventory chip can
+## invoke it without a parallel activation path. No-op (returns false, no
+## state change) if the panel is closed and `_can_open()` refuses.
+func toggle_open() -> bool:
+	if not open:
+		if not _can_open():
+			return false
+		_open()
+		return true
+	_close()
+	return true
+
+
 func _move_cursor(delta: int) -> void:
 	if _item_ids.is_empty():
 		return

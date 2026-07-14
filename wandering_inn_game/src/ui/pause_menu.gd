@@ -447,6 +447,32 @@ func _close() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_PAUSE_HIDDEN, {})
 
 
+## Field chip tap (issue #109): the SAME open/close/`_can_open()` gate the
+## `cancel` action's own branch runs in `_unhandled_input` above -- exposed
+## as a public entry point so `field_chips.gd`'s pause chip can invoke it
+## without a parallel activation path. No-op (returns false, no state
+## change) if the panel is closed and `_can_open()` refuses. The
+## already-open branch mirrors the `cancel` action's own routing exactly:
+## the pause chip stays visible while this panel is open (it is the only
+## close affordance a keyboard-less session has), so a live sub-mode
+## (`_confirming_quit`/`_picking_slot`) steps BACK to the row list first
+## -- same as keyboard Cancel -- and only the plain row list closes.
+func toggle_open() -> bool:
+	if not open:
+		if not _can_open():
+			return false
+		_open()
+		return true
+	if _confirming_quit:
+		_exit_confirm_quit()
+		return true
+	if _picking_slot:
+		_exit_slot_picker()
+		return true
+	_close()
+	return true
+
+
 ## settings_panel.gd's `on_close` callback (issue #77) -- re-shows this
 ## panel's own root once Settings closes back out. `open`/`_cursor` were
 ## never touched while Settings was up, so the row list re-appears exactly
