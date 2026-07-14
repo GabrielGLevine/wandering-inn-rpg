@@ -342,8 +342,20 @@
    "timeout_sec": 5
   },
   {
+   "action": "assert_event_logged",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 8,
+    "fallbacks": 0
+   }
+  },
+  {
    "action": "screenshot",
    "name": "03_warren_mouth"
+  },
+  {
+   "action": "screenshot",
+   "name": "03b_relc_at_warren_mouth"
   },
   {
    "_comment": "== THE BOSS (JOIN path) ==. Past the threshold to the awakened_boss encounter (12,7). From (11,5) facing right: down 1 to (11,6), right 1 to (12,6), down 1 bumps the boss (12,7, blocked) -> face it without moving.",

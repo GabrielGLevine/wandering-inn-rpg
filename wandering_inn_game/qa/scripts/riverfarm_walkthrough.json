@@ -275,7 +275,7 @@
    "action": "teleport",
    "map": "witch_hollow",
    "cell": [
-    3,
+    5,
     9
    ]
   },
@@ -2210,7 +2210,7 @@
    "action": "teleport",
    "map": "witch_hollow",
    "cell": [
-    3,
+    5,
     9
    ]
   },

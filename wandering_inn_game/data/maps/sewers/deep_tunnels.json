@@ -204,6 +204,29 @@
    }
   },
   {
+   "_comment": "Conditional field cameo only; the awakened_boss entity retains the Relc join/veto conversation and ally gate.",
+   "id": "relc_descent_cameo",
+   "kind": "npc",
+   "cell": [
+    13,
+    5
+   ],
+   "facing": "left",
+   "display_name": "Relc",
+   "sprite": "relc",
+   "present_when": {
+    "requires": {
+     "reached_the_warren": 1
+    }
+   },
+   "dialogue": [
+    {
+     "speaker": "Relc",
+     "text": "There it is. Big one first. Questions after."
+    }
+   ]
+  },
+  {
    "_comment": "Conversation precedes combat. Join alone banks relc_joined_descent for ally_requires; solo never does. Victory banks cleared_the_warren, not raskghar_sealed; respawns=false. Balance: BOSS_CELLS gates warrior2+Relc 0.6-0.75; solo measured.",
    "id": "awakened_boss",
    "kind": "encounter",

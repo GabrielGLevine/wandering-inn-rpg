@@ -85,6 +85,13 @@
     0.6,
     0.56
    ]
+  },
+  {
+   "sprite": "dungeon_rubble",
+   "cell": [
+    10,
+    4
+   ]
   }
  ],
  "entities": [
@@ -103,6 +110,18 @@
     37,
     11
    ]
+  },
+  {
+   "id": "ruin_court_statue",
+   "kind": "prop",
+   "cell": [
+    14,
+    4
+   ],
+   "display_name": "Weathered Sentinel",
+   "sprite": "dungeon_statue",
+   "observe": "A faceless stone sentinel leans over the court, its shield worn smooth by grit and years. The stance still points toward the cracked plinth.",
+   "toast": "The sentinel's face is gone, but its posture survives: shield toward the court, warning anyone who follows its gaze."
   },
   {
    "_comment": "OR convergence: guardian or Pisces TALK/SKILL banks pedestal_unsealed; door-chain FIGHT alone does not. Unmet contains_when falls through to locked toast. First open atomically grants anchor_stone + anchor_sliver + recovered_anchor_stone; repeat is idempotent.",

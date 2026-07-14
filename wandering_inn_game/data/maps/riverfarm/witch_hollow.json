@@ -508,10 +508,10 @@
    "id": "riverfarm_witch",
    "kind": "npc",
    "cell": [
-    3,
+    5,
     8
    ],
-   "facing": "up",
+   "facing": "down",
    "display_name": "Eloise",
    "sprite": "eloise",
    "talk_pool": [

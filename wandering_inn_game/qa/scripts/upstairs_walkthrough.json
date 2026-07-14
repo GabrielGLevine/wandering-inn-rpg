@@ -149,6 +149,10 @@
    ]
   },
   {
+   "action": "screenshot",
+   "name": "01c_lyonette_threshold"
+  },
+  {
    "action": "move",
    "direction": "up",
    "steps": 1

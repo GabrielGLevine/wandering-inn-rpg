@@ -4,6 +4,29 @@ extends SceneTree
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var combatants: Dictionary = _load_json("res://data/combatants.json")
+	var arena_catalog: Dictionary = _load_json("res://data/arenas.json")
+	for arena_id: String in ["sewers_nest", "ruin_court"]:
+		var arena: Dictionary = {}
+		for candidate: Dictionary in arena_catalog["arenas"]:
+			if String(candidate.get("id", "")) == arena_id:
+				arena = candidate
+				break
+		assert(not arena.is_empty(), "missing VISUAL-LOG arena: " + arena_id)
+		var grid := Vector2i(int(arena["grid"]["width"]), int(arena["grid"]["height"]))
+		for decor: Dictionary in arena.get("decor", []):
+			var cell := Vector2i(int(decor["cell"][0]), int(decor["cell"][1]))
+			assert(cell.x < 0 or cell.y < 0 or cell.x >= grid.x or cell.y >= grid.y,
+				"%s dressing must remain off the tactical grid: %s" % [arena_id, cell])
+			assert(WISpriteRegistry.has_sprite(String(decor.get("sprite", ""))),
+				"%s dressing uses an unknown sprite: %s" % [arena_id, decor.get("sprite", "")])
+		if arena_id == "sewers_nest":
+			assert(not (arena["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "mushroom_purple_m"),
+				"the purple mushroom competes with live sewer-creature silhouettes")
+		else:
+			assert((arena["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "dungeon_statue"),
+				"ruin_court needs off-grid ruin architecture")
+			assert((arena["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "dungeon_rubble"),
+				"ruin_court needs off-grid rubble dressing")
 	var pc_cfg := _combatant_config(combatants, "pc")
 	assert(String(pc_cfg.get("sprite", "")) == "body_a", "pc combatant declares Body_A sprite")
 

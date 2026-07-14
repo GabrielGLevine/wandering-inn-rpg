@@ -701,7 +701,9 @@ func _build_entities() -> Array[Node2D]:
 			render["tint"],
 			color,
 			String(ent.get("facing", "")),
-			render["light"]
+			render["light"],
+			false,
+			ent.get("field_y_sort_bias_px", null)
 		)
 		visual.visible = not bool(render["hidden"])
 		_entity_visuals[String(ent["id"])] = visual
@@ -775,7 +777,7 @@ func _refresh_entity_visual(id: String) -> void:
 			_atmosphere.unregister_light(child as PointLight2D)
 			_light_count -= 1
 	old_visual.queue_free()
-	var new_visual := _make_entity_visual(cell, String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"])
+	var new_visual := _make_entity_visual(cell, String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"], false, ent.get("field_y_sort_bias_px", null))
 	new_visual.visible = not bool(render["hidden"])
 	_entity_visuals[id] = new_visual
 	assert(_light_count <= LIGHT_BUDGET,
@@ -822,7 +824,7 @@ func _reconcile_entity_presence() -> void:
 		if present:
 			var color := NPC_COLOR if String(ent["kind"]) == "npc" else PROP_COLOR
 			var render := _resolve_entity_render(ent)
-			var visual := _make_entity_visual(ent["cell"], String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"])
+			var visual := _make_entity_visual(ent["cell"], String(render["sprite"]), render["tint"], color, String(ent.get("facing", "")), render["light"], false, ent.get("field_y_sort_bias_px", null))
 			visual.visible = not bool(render["hidden"])
 			_entity_visuals[id] = visual
 		else:
@@ -866,7 +868,16 @@ func _pc_variant_sprite(default_id: String) -> String:
 	return key if WISpriteRegistry.has_sprite(key) else default_id
 
 
-func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallback_color: Color = PROP_COLOR, facing: String = "", light: Dictionary = {}, sway: bool = false) -> Node2D:
+func _make_entity_visual(
+	cell: Vector2i,
+	sprite_id: String,
+	tint: Variant,
+	fallback_color: Color = PROP_COLOR,
+	facing: String = "",
+	light: Dictionary = {},
+	sway: bool = false,
+	field_y_sort_bias_override: Variant = null,
+) -> Node2D:
 	var holder := Node2D.new()
 	holder.position = Vector2(cell) * CELL
 	var uses_sprite := false
@@ -903,7 +914,11 @@ func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallb
 		# TILES too, since those default to z_index 0, making it vanish
 		# outright rather than just tuck behind the PC. Bias must stay
 		# WITHIN the y-sort comparison, hence the position trick.)
-		var y_sort_bias := float(catalog_entry.get("field_y_sort_bias_px", 0.0))
+		var y_sort_bias := (
+			float(field_y_sort_bias_override)
+			if field_y_sort_bias_override is float or field_y_sort_bias_override is int
+			else float(catalog_entry.get("field_y_sort_bias_px", 0.0))
+		)
 		holder.position.y += y_sort_bias
 		var frame_tex := spr.sprite_frames.get_frame_texture(anim, 0)
 		var frame_size := frame_tex.get_size() if frame_tex != null else Vector2(CELL, CELL)
@@ -1106,6 +1121,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_refresh_entities_watching_dormant()
 	elif type == WIEvents.ACCOMPLISHMENT_RECORDED:
 		_refresh_entities_watching_counter(String(payload.get("id", "")))
+		_reconcile_entity_presence()
 	elif type == WIEvents.ITEM_GAINED:
 		var source_id := String(payload.get("source", ""))
 		if source_id != "":
