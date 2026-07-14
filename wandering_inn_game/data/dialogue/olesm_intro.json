@@ -1,5 +1,4 @@
 {
- "_comment": "Olesm Swifttail, Drake [Tactician] / council clerk at the Liscor Guild frontage. Canon (wiki.wanderinginn.com/Olesm_Swifttail): thin, sky-blue-scaled Drake with wildly-patterned blue eyes; earnest, slightly awkward, chess-obsessed, free of the usual Drake prejudices, meticulous with maps and counts; a human once surpassed him at chess and it delighted rather than angered him. The 'resonance' branch is the game's FIRST class-recognition beat -- the hub greeting text_variant gates on classes.tactician (WIDialogue._meets reads _ctx['classes'], id->level; a class gate is visible-but-locked, so a non-Tactician sees the option greyed as a deliberate tease). GH#64: the entry OPTION itself is now skill-gated (`observe`/[Appraise Foe], which Tactician grants at L1) rather than class-gated -- the greeting text_variant stays class-gated on purpose (it recognizes the PC BEING a Tactician, not a skill USE; flagged survivor in the GH#64 audit). C3: the 'cisterns' node is now the Q1 'Something in the Cisterns' GIVER + three-path REPORT hub. The accept option banks heard_about_cisterns (opens the C1 sewer-grate door_when) + starts the `cisterns` quest; cisterns_brief is the explaining beat (what/where/how per onboarding S9). Three report options gate on the path counters (cleared_the_nest / watch_swept_cisterns / scouted_the_nest); the SKILL report ALSO banks resolved_the_cisterns (the other two banked it at resolution time). All bank cisterns_reported + commended_by_olesm (standing) AND pay {gold: 6} -- Olesm the meticulous clerk pays for a finished job / a proper survey ('a map is as good as a corpse to me, and cheaper in bandages'); a coin purse reads right where a physical loot-drop from a clerk would read oddly, so the dialogue {item} effect stays deliberately unused here. Opacity rule: no stats shown; class NAME only; report/quest text carries no counter numerals.",
  "start": "hub",
  "nodes": {
   "hub": {
@@ -7,7 +6,6 @@
    "text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?",
    "text_variants": [
     {
-     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
      "requires": {
       "phase": [
        "dusk",
@@ -41,7 +39,6 @@
      "text": "You climbed back out. I confess I ran the odds while you were down there and did not care for them. Tell me it's over. I have a column that badly wants a number in it."
     },
     {
-     "_comment": "controller voice pass. Issue #80 (world reactivity wave, item 5 -- the news-travels line): seal_kept_report already closes the quest one-off; this is the PERSISTENT hub-greeting reaction (was missing -- only cleared_the_warren had one). Appended LAST (highest priority -- What the Seal Kept resolves chronologically after the raskghar warren).",
      "requires": {
       "accomplishment": {
        "seal_kept_reported": 1
@@ -56,7 +53,6 @@
      "goto": "chess"
     },
     {
-     "_comment": "GH#64: skill-gated (was class-gated Tactician) -- [Appraise Foe] (a measuring look that reads a room/person/problem) fits reading the city's weak point better than the bare class; Tactician grants it at L1 so every Tactician still opens this branch. The greeting text_variant above stays class-gated deliberately -- it recognizes the PC BEING a Tactician (silhouette/reputation), not a skill USE, so no Skill fits it (flagged survivor, GH#64 audit).",
      "text": "[Appraise Foe] What's the city's real weak point?",
      "requires": {
       "skill": "observe"
@@ -115,7 +111,6 @@
      "end": true
     },
     {
-     "_comment": "stage-2 hub topic, lifted verbatim from docs/archive/staging/social-2-staging/olesm_stages.json. Appended AFTER 'I'll leave you to your tally.' (array end) so it can never shift an earlier option's visible index.",
      "text": "You run half this city from that desk. You know that, right?",
      "requires": {
       "accomplishment": {
@@ -125,7 +120,6 @@
      "goto": "olesm_doubt"
     },
     {
-     "_comment": "stage-3 hub topic (⚑ mild canon -- [Strategist] ambition is safe early canon; the letters beat is a proto-newsletter nod kept oblique, never says 'newsletter'). Same array-end index safety.",
      "text": "What's next for you, Olesm?",
      "requires": {
       "accomplishment": {
@@ -136,7 +130,6 @@
      "goto": "olesm_ambition"
     },
     {
-     "_comment": "Issue #25: the chess perk's real payoff (was option+frame only). requires ADDS gold:2 to the existing stage-3 accomplishment leg -- the sanctioned {gold, accomplishment} compound (dialogue.gd's _meets ANDs both; _meets_progress reads only the accomplishment leg, so a met stage with <2 gold shows GREYED, never vanished -- a player who cannot cover the wager's loss side must never be walked into it). hide_when retires the option for good once chess_with_olesm banks (the scene is one-time authored, not a repeatable perk) -- the shorter rematch line in talk_pool_stages is the residue.",
      "text": "Set the board, Olesm.",
      "requires": {
       "gold": 2,
@@ -153,7 +146,6 @@
      "goto": "olesm_chess_invite"
     },
     {
-     "_comment": "FUNCTION: signpost for the bounty_sewer_survey board posting -- its copy (data/bounties.json) names the giver only as 'L. Swifttail, purveyor' and points at 'the east gallery'/'the first junction' with no entrance named, so Olesm (the giver's nephew per that file's giver field) names the sewer-grate entrance in his own voice. Gates ride the bounty lifecycle's real counters: requires accepted_bounty_<id> (WIGame.accept_bounty banks it), hide_when completed_bounty_<id> (WIGame.turn_in_bounty banks it) -- the option exists exactly while the slip is live. Appended at array end so it never shifts an earlier option's visible index.",
      "text": "Your uncle's board notice — the gallery he means?",
      "requires": {
       "accomplishment": {
@@ -168,7 +160,6 @@
      "goto": "lism_errand"
     },
     {
-     "_comment": "FUNCTION: the mid-quest re-entry into the cisterns node -- 'You look worried about something.' (above) hides once heard_about_cisterns banks, and this follow-up (requires that same counter, hide_when cisterns_reported) takes over until the report closes the quest; the cisterns node's own text_variants render the correct in-progress/resolved state. CONSTRAINT: dialogue.gd has no text_variants on OPTIONS (node-only), so a state-reflecting hub label must be this multi-option split (briefing/resolution above are the same shape), never a variant on one option. TRAP: QA scripts navigate this hub by cursor index -- cisterns_fight/talk/scout's report phase counts on 'worried' being hidden and this option sitting after the tally exit; re-derive their cursor paths if any gate here changes. Appended at array end for the same index-safety.",
      "text": "Any word on the cisterns?",
      "requires": {
       "accomplishment": {
@@ -183,7 +174,6 @@
      "goto": "cisterns"
     },
     {
-     "_comment": "8d C1 (issue #14) 'What the Seal Kept' STAGE 1: the stipend accept. Gated on `post_game` (the arc-epilogue completion counter, sleep_veil.gd's own 'ending was witnessed' bank -- the SAME gate erin_errand.json's door-chain beat 1 uses for post-epilogue content) rather than the board rumor above, which is flavor-only; hide_when retires it once accepted (quest completes only via the report option below, never by re-picking this one). Banks the party-counter `horns_delve_started` (the ally_requires gate `warren_mouth`/`gallery_seal_anchor`'s own door_when reads, B3) ALONGSIDE the ADVANCE half of the stipend (5g now, 15g on report -- see `seal_kept_report` below). Appended at array end for the same index-safety every prior hub addition here uses.",
      "text": "That Watch notice — the gallery survey. I'll take it.",
      "requires": {
       "accomplishment": {
@@ -209,7 +199,6 @@
      "goto": "seal_survey_offer"
     },
     {
-     "_comment": "8d C1 (issue #14) 'What the Seal Kept' report beat: gated on `seal_kept_found` (the vault's own post-victory FIND beat), hide_when the completion counter it banks here so re-entry never re-pays. Pays the report half of the stipend (15g) and completes the quest (WIQuests.beat_index reaches beats.size() once seal_kept_reported >= 1). Appended at array end.",
      "text": "The gallery. It's done — and it's stranger than anyone thought.",
      "requires": {
       "accomplishment": {

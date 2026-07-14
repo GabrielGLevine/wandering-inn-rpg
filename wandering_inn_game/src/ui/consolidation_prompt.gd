@@ -1,52 +1,10 @@
 extends CanvasLayer
-## Consolidation offer prompt. The sim's sleep beat DEFERS before
-## evolutions when a consolidation is available (spec §2.5 REV 2), emitting
-## `consolidation_offered` and stashing `pending_consolidation`. This prompt
-## renders that choice; the player's answer drives Game.sim.accept_consolidation
-## / decline_consolidation, which resume the deferred beat. Modeled on the
-## journal panel + the pause menu's two-row confirm (M5 UI style).
-##
-## Opaque-until-sleep is user-locked: the prompt names the two parent classes
-## and the consolidated class, but NEVER the merged level -- a number would leak
-## progression math the design keeps hidden (T5 review constraint).
-##
-## Input arbitration: while an offer is pending (Game.sim.pending_consolidation
-## non-empty) world / journal / pause all decline input, so this prompt owns the
-## keyboard until the choice is made. Cancel maps to decline (always safe -- the
-## offer is re-presented at the next qualifying sleep) and consuming cancel here
-## also stops the pause menu opening over the modal.
-##
-## VEIL GATE (playtest hotfix #8, fix-first rev): consolidation_offered fires
-## SYNCHRONOUSLY inside wi_game.gd's sleep() -- showing the modal on that
-## event put it on screen BEFORE the sleep veil's own sequence (which only
-## starts via call_deferred) did anything, and left it answerable blind
-## during the black hold (this node's _unhandled_input gates only on `open`).
-## Now: on the offer event, if the veil's SLEEP sequence is running/queued
-## (`sleep_veil_ref.sleep_sequence_active()` -- true by then for every real
-## sleep, since sleep()'s unconditional phase_changed has already run the
-## veil's _begin_sleep), the offer is STASHED and the modal stays hidden with
-## `open` false (input dead) until UI_SLEEP_VEIL_FINISHED -- the veil's
-## "screen is the player's again" emit -- then shows and THEN emits
-## UI_CONSOLIDATION_PROMPT_RENDERED, so that event fires at the TRUE visual
-## moment (bus events are ground truth; an event that lies is a defect).
-## NO-VEIL PATHS show immediately: (a) reload-mid-offer -- the _ready()
-## reconstruction below; a load re-emits no phase_changed, so no veil ever
-## runs and the offer surfaces immediately on load (the DOCUMENTED choice for
-## the reload edge; consolidation_reload pins it) -- and (b) the rare
-## sleep-while-opener/epilogue race, where the veil's _begin_sleep guard
-## blocked the sequence and a finished emit would never come.
 
 const PANEL_SIZE := Vector2(600.0, 300.0)
 const ROWS := ["Consolidate", "Keep them apart"]
 
-## True while the prompt is visible. Kept for parity with journal/pause; the
-## world/journal/pause input gates key off Game.sim.pending_consolidation.
 var open := false
 
-## Set by main.gd's _spawn_ui_layers (the journal<->pause mutual-ref idiom,
-## same untyped-Node + duck-call convention as journal.gd's pause_menu_ref).
-## Queried ONLY at the offer event; a null ref degrades to show-immediately
-## (the pre-fix behavior), never a hang.
 var sleep_veil_ref: Node = null
 
 var _root: Control
@@ -68,8 +26,6 @@ func _ready() -> void:
 	_root.custom_minimum_size = PANEL_SIZE
 	_root.size = PANEL_SIZE
 	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -PANEL_SIZE.y * 0.5, PANEL_SIZE.x * 0.5, PANEL_SIZE.y * 0.5)
-	# STOP (mouse-filter audit, issue #57): see journal.gd's identical fix's
-	# doc comment.
 	_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.hide()
 	add_child(_root)
@@ -106,20 +62,11 @@ func _ready() -> void:
 		_row_labels.append(row)
 		stack.add_child(row)
 
-	# ONE hover/click handler on the shared row container (WIHotbar's
-	# per-container-not-per-row idiom, `UIChrome.control_index_at`) -- a row
-	# Label stays default IGNORE. Hover moves `_cursor` (the same field
-	# `_refresh()`'s "> " mark reads); a click routes through
-	# `_select_current()`, the exact function the keyboard confirm branch
-	# calls -- one dispatch path either way.
 	stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	stack.gui_input.connect(_on_row_gui_input)
 
 	ObservableBus.domain_event.connect(_on_domain_event)
 
-	# A save taken mid-offer restores Game.sim.pending_consolidation but re-emits
-	# no consolidation_offered event, so reconstruct the prompt from sim state on
-	# spawn (this node is rebuilt fresh on every world swap -- see main.gd).
 	# RELOAD-MID-OFFER CONTRACT (the documented choice for the veil-gate edge):
 	# a load re-emits no phase_changed, so no sleep veil ever runs on this
 	# path -- the offer surfaces IMMEDIATELY on load, unheld. This is the
@@ -133,9 +80,6 @@ func _ready() -> void:
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.CONSOLIDATION_OFFERED:
-		# See the VEIL GATE doc comment: hold hidden until the veil's sleep
-		# sequence completes; show immediately only on a genuinely veil-less
-		# path (null ref / blocked-veil race).
 		if sleep_veil_ref != null and bool(sleep_veil_ref.call("sleep_sequence_active")):
 			_held_offer = payload
 		else:
@@ -157,7 +101,6 @@ func _show_offer(offer: Dictionary) -> void:
 	_refresh()
 	open = true
 	_root.show()
-	# Emit the class id (not the display name) so QA matches consolidation_offered's `target`.
 	ObservableBus.emit_domain_event(WIEvents.UI_CONSOLIDATION_PROMPT_RENDERED, {"target": String(offer.get("target", ""))})
 
 
@@ -180,18 +123,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-## The cursored row's own activation -- factored out of the keyboard confirm
-## branch above so a mouse click routes through the SAME function, never a
-## parallel activation path.
 func _select_current() -> void:
 	_choose(_cursor == 0)
 
 
-## Hover moves `_cursor` (the same field `_refresh()`'s "> " mark reads --
-## one selection state, not a second highlight); a left-click sets `_cursor`
-## then calls `_select_current()`, the exact function Enter's confirm branch
-## calls. No-op while the prompt isn't open (`stack` has no meaningful rect
-## to hit anyway once hidden).
 func _on_row_gui_input(event: InputEvent) -> void:
 	if not open:
 		return
@@ -212,10 +147,6 @@ func _on_row_gui_input(event: InputEvent) -> void:
 		_select_current()
 
 
-## Read-only rect accessor (the pause_menu.gd `row_rect` idiom) -- the
-## on-screen rect of row `i` as of the last `_refresh()`, for QA's
-## `click_consolidation_row` step. Empty Rect2 when the prompt is closed or
-## the row is out of range.
 func row_rect(i: int) -> Rect2:
 	if not open or i < 0 or i >= _row_labels.size():
 		return Rect2()

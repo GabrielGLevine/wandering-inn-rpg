@@ -1,22 +1,6 @@
 extends SceneTree
-## Validates combat data shapes and cross-references.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_combat_data.gd
 
 
-## GH#94 (no-new-art icon drain): a field:true/ap_cost>0 skill with no icon
-## falls back to WIHotbar's overflowing raw-bracket text label (the only 3
-## icon consumers -- field_hotbar.gd/hotbar.gd/combat_hud.gd -- are all
-## player-hotbar surfaces). Class-foundation R1-R5 shipped 18+ more iconless
-## skills past #94's own "19/50" baseline (docs/VISUAL-LOG.md's SKILL ICONS
-## entry) -- too large to close in one no-new-art pass, so this is a DRIFT
-## TRIPWIRE, not a completeness assert: KNOWN_ICONLESS_SKILLS pins today's
-## exact disclosed debt (every enemy-exclusive id here -- guarding_ward/
-## raskghar_maul/slam -- is never actually rendered, since nothing but a
-## player's own hotbar ever reads an icon, but still tracked so the set
-## stays literally true). Checked BOTH directions (test_effect_text.gd's
-## EXPECTED_* idiom): a hotbar-visible skill OUTSIDE this set with no icon
-## fails LOUD (a silent new gap); an id INSIDE this set that has since
-## gained an icon also fails LOUD (shrink the allowlist, never let it rot).
 const KNOWN_ICONLESS_SKILLS := {
 	"appraise_goods": true,
 	"called_shot": true,
@@ -42,10 +26,6 @@ func _load(path: String) -> Dictionary:
 	return parsed
 
 
-## BFS flood-fill from `start` over non-blocked, in-bounds cells. Returns the
-## set of reachable cells (as a Dictionary used like a Set) — pure, 4-directional,
-## deterministic (no rng), used to prove every arena spawn can path to every
-## other spawn (the sim's BFS-based approach AI depends on this holding).
 func _reachable_from(start: Vector2i, w: int, h: int, blocked: Dictionary) -> Dictionary:
 	var seen := {start: true}
 	var queue: Array[Vector2i] = [start]
@@ -97,14 +77,6 @@ func _init() -> void:
 			assert(skill_ids.has(String(sk)), "combatant %s references unknown skill %s" % [c[WIKeys.ID], sk])
 
 	for cls: Dictionary in classes["classes"]:
-		# GH#54 sparse-table convention: evolution-only classes start at a
-		# derived floor, not 1 -- this file only asserts contiguity from the
-		# FIRST entry; the floor itself (and no-sub-floor padding) is
-		# test_content.gd's _validate_class_level_tables, which derives it
-		# from the evolution/consolidation data. TRAP: these two validators
-		# overlap -- the old contiguous-from-1 assert here went CI-red the
-		# moment #54's trim landed (the lane verified test_content, the
-		# sweep never runs unit suites). Change one, grep for the other.
 		var prev_level := -1
 		for lv: Dictionary in cls["levels"]:
 			assert(prev_level == -1 or int(lv["level"]) == prev_level + 1, "class %s levels must be contiguous (gap before %d)" % [String(cls.get("id", "?")), int(lv["level"])])
@@ -123,9 +95,6 @@ func _init() -> void:
 			assert(int(cell[0]) >= 0 and int(cell[0]) < w and int(cell[1]) >= 0 and int(cell[1]) < h, "cell out of bounds")
 		assert((a["player_spawns"] as Array).size() >= 4, "need 4 player spawns (design-for-4)")
 
-		# Spawn reachability: every player/enemy spawn cell must sit on the
-		# same connected component of non-blocked cells, since combat_ai's
-		# BFS approach logic assumes a spawn can always path toward any foe.
 		var blocked := {}
 		for cell: Array in a["blocked"]:
 			blocked[Vector2i(int(cell[0]), int(cell[1]))] = true
@@ -158,16 +127,6 @@ func _init() -> void:
 	print("PASS: combat data is well-formed and cross-referenced")
 
 
-## The party-veto's ROSTER proof at unit level -- the
-## dedicated canonical script was cut; the 0.04 solo cell (sim_combat_batch.gd
-## BOSS_CELLS) already documents the difficulty, so all that remains to prove is
-## the WIRING: declining fields NO ally. Builds a real WIGame twice against the
-## `awakened_boss` encounter (find_entity searches all maps, so no player
-## position is needed) and checks the live combat roster: DECLINE (went_alone
-## banked, relc_joined_descent NOT) -> ally_requires unmet -> no Relc; JOIN
-## (relc_joined_descent banked) -> Relc fielded. This exercises the SAME generic
-## ally_requires gate start_combat runs for every allied encounter, bound to the
-## A3-specific keys the relc_descent dialogue banks.
 func _check_boss_veto_roster(scene: Dictionary, skills: Dictionary, combatants: Dictionary, classes: Dictionary, arenas: Dictionary) -> void:
 	var sink := func(_t: String, _p: Dictionary) -> void: pass
 	var cfg := {
@@ -175,14 +134,12 @@ func _check_boss_veto_roster(scene: Dictionary, skills: Dictionary, combatants: 
 		"items": _load("res://data/items.json"), "quests": _load("res://data/quests.json"),
 		"acts": _load("res://data/acts.json"), "dialogue": {},
 	}
-	# DECLINE / solo: went_alone banked, relc_joined_descent absent.
 	var g_solo := WIGame.new(scene, skills, sink, 1, cfg)
 	g_solo.record_accomplishment("went_alone")
 	assert(g_solo.start_combat("awakened_boss"), "solo start_combat(awakened_boss) failed")
 	var solo: Dictionary = g_solo.combat.snapshot()["combatants"]
 	assert(solo.has("pc") and solo.has("raskghar_awakened"), "solo roster missing pc/boss")
 	assert(not solo.has("relc"), "VETO path must field NO ally, but Relc is in the roster")
-	# JOIN: relc_joined_descent banked -> Relc fielded (ally_requires met).
 	var g_join := WIGame.new(scene, skills, sink, 1, cfg)
 	g_join.record_accomplishment("relc_joined_descent")
 	assert(g_join.start_combat("awakened_boss"), "join start_combat(awakened_boss) failed")

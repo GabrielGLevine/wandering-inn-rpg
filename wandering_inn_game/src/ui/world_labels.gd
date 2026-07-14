@@ -1,7 +1,5 @@
 class_name WIWorldLabels
 extends CanvasLayer
-## Native-resolution HP/MP stat readouts anchored to world-space positions.
-##
 ## Field name tags ("You"/"Erin"/etc.) and combat name tags are RETIRED
 ## entirely (interactables must read from their sprite, not a floating
 ## name). This class is now COMBAT-ONLY and STATS-ONLY: board_renderer.gd's
@@ -159,8 +157,6 @@ func _main() -> Node:
 	return get_parent()
 
 
-## QA-only introspection for anchor-relative label assertions. Each record
-## contains the visible panel rect and the projected 64px holder cell rect.
 func panel_projections(context: String) -> Array:
 	_update_labels()
 	var main := _main()

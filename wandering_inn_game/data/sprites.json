@@ -274,7 +274,7 @@
   }
  },
  "bed": {
-  "_comment": "GH#94 (occlusion-family y-sort bias, VISUAL-LOG's consolidated bed/lyonette_door/bread_stall/garden_bed item): this sprite's ~13x16px on-screen footprint (render_scale 0.375 on a 34x44 frame) sits entirely inside its own cell, but the tall player rig approaching from one cell south (every sleep interaction's own convention: stand south, face north) visually overhangs into the bed's row -- plain row-based y-sort drew the SOUTH player (the larger position.y key) over the bed, hiding it completely (DP3 windowed finding). field_y_sort_bias_px 20.0 (one cell + margin, inn_roof's own magnitude) pulls this sprite's Y-SORT KEY 20px SOUTH -- past a directly-adjacent south neighbor's own key -- with the render position compensated back out (net zero visual shift, world.gd's `_make_entity_visual`), so the bed now draws AFTER (over) a player standing one cell south. Scoped to `bed` only, not `door`/`food_basket` (lyonette_door/bread_stall's own sprites) -- those are shared by 29/6 OTHER entities repo-wide and the schema is PER-SPRITE, not per-entity, so biasing them would risk flipping an unrelated correct ordering elsewhere; `bed` has exactly 3 consumers (your_bed, garden_bed, riverfarm_guest_cot), all the same 'sleep prop approached from due south, nothing else nearby' geometry (checked all 3 maps' neighboring cells), so this one sprite-level bias is safe for all of them. Left lyonette_door/bread_stall open (need a per-entity override the current schema doesn't have, or a bigger crop).",
+  "_comment": "Left lyonette_door/bread_stall open (need a per-entity override the current schema doesn't have, or a bigger crop).",
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
@@ -1543,7 +1543,7 @@
   }
  },
  "boulder": {
-  "_comment": "Grey rock column of Rocks.png (x96 family) -- the x0 column is the same silhouette in BROWN, which read as a mud smear on grass and muddied every downstream tint (ruin_door's cold grey-blue). Same 32x43 shape, so all consumers keep geometry.",
+  "_comment": "Same 32x43 shape, so all consumers keep geometry.",
   "render_scale": 0.5,
   "animations": {
    "idle": {
@@ -1564,7 +1564,7 @@
   "shadow": true
  },
  "anchor_waystone": {
-  "_comment": "Playtest hotfix #6: THE portal-anchor sprite, one entry reused at every anchor-stone-per-region site (data/portals.json's contract -- street_anchor_stone/riverfarm_anchor_stone/invrisil_anchor_stone all swap their `sprite` field to this id, replacing `boulder`). Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a small freestanding stone waystone archway/doorframe silhouette with a faint painted glow in the opening -- reads as a portal, not a rock. CONSTRAINT: no runes/carvings baked into the art (the #8 rune-glow rejection stands -- target too small for legible runes; silhouette + glow carries the read, and each entity's own `light`/`visual_states` layer the runtime glow on top). Static, 64x80, 1 frame. Anchor `[0.5, 0.95]` (PIL alpha-bbox measured, bottom row 76 of 80). Per-site `tint` fields on the entities are unchanged -- the base art is neutral stone/grey-green so existing tints (cold grey-blue / weathered grey / coin-gold) still read correctly over it.",
+  "_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a small freestanding stone waystone archway/doorframe silhouette with a faint painted glow in the opening -- reads as a portal, not a rock.",
   "render_scale": 0.4,
   "anchor": [
    0.5,
@@ -1661,7 +1661,7 @@
   }
  },
  "inn_roof": {
-  "_comment": "street's roof/facade pairing is always roof at row Y, facade at row Y+1, one cell south -- inn_roof's own render (frame 128x72, render_scale 0.5 -> 64x36, default anchor [0.5,1.0]) overhangs 20px above its feet-anchored row, spilling 8px INTO the facade tile's own visual band below it. Plain row-based y-sort drew the facade (holder.position.y = (Y+1)*CELL, the larger key) over that overlap band, cutting off the roof's bottom edge/eaves -- the exact 'fronts draw over roofs' defect. field_y_sort_bias_px (world.gd's `_make_entity_visual`, shared by decor via `_build_decor`) pulls this sprite's Y-SORT KEY 20px SOUTH (past the paired facade's own key, one cell/16px below) with the render position compensated back out (net zero visual shift) -- roof now draws AFTER (over) the facade in the shared 8px band. Consumers: the street's 8 inn_roof decor entries (STREET-ONLY per this sprite's other callers), so the bias also sorts the roof OVER the doors moved into the facade rows -- guild/runners doors sit in transparent roof bands (clean); barracks_door sits under the gable center, a ~3px eave overhang over the door arch (windowed-adjudicated acceptable as a natural eave).",
+  "_comment": "Plain row-based y-sort drew the facade (holder.position.y = (Y+1)*CELL, the larger key) over that overlap band, cutting off the roof's bottom edge/eaves -- the exact 'fronts draw over roofs' defect.",
   "render_scale": 0.5,
   "field_y_sort_bias_px": 20.0,
   "animations": {
@@ -1858,7 +1858,7 @@
   ]
  },
  "wilovan": {
-  "_comment": "Wilovan's combat rig: an alias of pc_gnoll_m's sheets (his map NPC uses the same rig, tinted at the entity level -- combat has no tint seam, so the fight shows the untinted rig). CONSTRAINT: combatants.json's wilovan record keys on THIS id; swap a bespoke rig in here, never by editing the combatant.",
+  "_comment": "CONSTRAINT: combatants.json's wilovan record keys on THIS id; swap a bespoke rig in here, never by editing the combatant.",
   "directional": true,
   "render_scale": 0.5926,
   "animations": {
@@ -1929,7 +1929,7 @@
   ]
  },
  "relc": {
-  "_comment": "PixelLab v2 create-character-pro (mannequin, low top-down, 8 facings) -> animate-character templates -> directional down/side/up (side mirrors west). render_scale preserves the approved on-screen figure height (43.4px); anchor feet-plane-measured (93/124).",
+  "_comment": "render_scale preserves the approved on-screen figure height (43.4px); anchor feet-plane-measured (93/124).",
   "directional": true,
   "render_scale": 0.6781,
   "animations": {
@@ -1970,7 +1970,7 @@
   ]
  },
  "pisces": {
-  "_comment": "PixelLab v2 create-character-pro (mannequin, low top-down, 8 facings) -> animate-character templates -> directional down/side/up (side mirrors west). render_scale preserves the approved on-screen figure height (30.0px); anchor feet-plane-measured (81/108).",
+  "_comment": "render_scale preserves the approved on-screen figure height (30.0px); anchor feet-plane-measured (81/108).",
   "directional": true,
   "render_scale": 0.5556,
   "animations": {
@@ -2001,7 +2001,7 @@
   ]
  },
  "olesm": {
-  "_comment": "PixelLab v2 create-character-pro (mannequin, low top-down, 8 facings) -> animate-character templates -> directional down/side/up (side mirrors west). render_scale preserves the approved on-screen figure height (28.0px); anchor feet-plane-measured (84/112).",
+  "_comment": "render_scale preserves the approved on-screen figure height (28.0px); anchor feet-plane-measured (84/112).",
   "directional": true,
   "render_scale": 0.5283,
   "animations": {
@@ -2032,7 +2032,7 @@
   ]
  },
  "zevara": {
-  "_comment": "PixelLab v2 create-character-pro (mannequin, low top-down, 8 facings) -> animate-character templates -> directional down/side/up (side mirrors west). render_scale preserves the approved on-screen figure height (33.6px); anchor feet-plane-measured (87/112).",
+  "_comment": "render_scale preserves the approved on-screen figure height (33.6px); anchor feet-plane-measured (87/112).",
   "directional": true,
   "render_scale": 0.5895,
   "animations": {
@@ -2501,7 +2501,7 @@
   ]
  },
  "raskghar_scout": {
-  "_comment": "Raskghar via PixelLab v2 create-character-pro (mannequin, low top-down, 8 facings) -> animate-character idle/walk/slice -> directional down/side/up (side mirrors west). Canon bear-lion, moon-grey. render_scale = field figure 44.0px (towers over Gnolls); anchor feet-plane 94/124. combat_scale contains it at ~26.5px (Relc lesson).",
+  "_comment": "render_scale = field figure 44.0px (towers over Gnolls); anchor feet-plane 94/124.",
   "directional": true,
   "render_scale": 0.7458,
   "animations": {
@@ -2542,7 +2542,7 @@
   ]
  },
  "raskghar_awakened": {
-  "_comment": "Raskghar via PixelLab v2 create-character-pro (mannequin, low top-down, 8 facings) -> animate-character idle/walk/slice -> directional down/side/up (side mirrors west). Canon bear-lion, moon-grey. render_scale = field figure 50.0px (towers over Gnolls); combat_scale contains it at ~30.0px (Relc lesson). TRAP: measure the anchor from a PIL alpha-channel scan of Idle_Down-Sheet.png's own frame 0 (the animation this field entity actually renders, per world.gd's idle_down default), not from a differently-posed frame -- a wrong feet-plane here drags the whole figure upward off its own cell and, at 2-cell range, into the PC's sprite (head-on-torso fusion). Anchor.y below (0.7016, feet at 87/124) is the PIL-verified value; keep it in sync with `ruin_guardian`'s cell placement in skeleton_scene.json, which is positioned to stay clear of this sprite at the canonical 2-cell viewing distance while preserving the intentionally-larger-than-Gnoll render_scale. `field_y_sort_bias_px` (2026-07-08 hotfix): even with the anchor above corrected, this render_scale makes the figure's TOP reach several rows above its own feet cell -- a PC standing just ONE row north (the `awakened_boss` reveal beat's own approach distance) still sat behind that overhang under plain row-based y-sort, hiding the PC completely (playtest evidence: arc_flow's dd_04/dd_05). -32px (2 cells) pulls this sprite's Y-SORT KEY north of any directly-adjacent (N/S/E/W) combatant's own key, so it always draws BEHIND a normal-sized figure standing next to it, with zero visual position change (world.gd's `_make_entity_visual` compensates the sprite/shadow offset back out) -- see that function's doc comment for why this must be a position bias, not a raw z_index (z_index is canvas-layer-global and drew the boss behind the floor tiles too on the first attempt).",
+  "_comment": "Canon bear-lion, moon-grey.",
   "directional": true,
   "render_scale": 0.8065,
   "field_y_sort_bias_px": -32.0,
@@ -2638,7 +2638,6 @@
   }
  },
  "pedestal": {
-  "_comment": "Placeholder-fallback region for `anchor_stone_pedestal` (ruin_surface) -- no matching real crop exists in any in-hand pack yet (VISUAL-LOG flag), so this is a bookkeeping region against the Interior_Props_01 sheet (the same family `chest` crops from) for lane γ to replace with a real plinth/altar pick.",
   "render_scale": 0.6,
   "shadow": true,
   "animations": {
@@ -2659,7 +2658,7 @@
   }
  },
  "stairs_up": {
-  "_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): interior wooden staircase with railing -- THE door affordance for floor-change doors (first use: the inn's upstairs door, which wore the plain `door` sprite and read as just another room). Full-bleed 64x64 single frame (art reaches y63 of 64, default bottom anchor fine).",
+  "_comment": "Full-bleed 64x64 single frame (art reaches y63 of 64, default bottom anchor fine).",
   "render_scale": 0.5,
   "shadow": true,
   "animations": {
@@ -2674,7 +2673,6 @@
   }
  },
  "trail_gap": {
-  "_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a worn-footpath forest-trail entrance framed by two bent trunks -- THE door affordance for tree-line map exits (first use: riverfarm_hollow_path, which previously wore the plain hollow_small_tree sprite and was indistinguishable from ordinary forest edge -- the v0.4.0 playtest's 'can't find the witch's hollow' report). Full-bleed 64x64 single frame.",
   "render_scale": 0.6,
   "shadow": true,
   "animations": {
@@ -2689,7 +2687,7 @@
   }
  },
  "garden_door_inner": {
-  "_comment": "Erin's own garden door (the inn side), owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md). Anchor PIL-measured: alpha bbox rows 7-41 of 48 (feet plane 42/48=0.875) -- NOT the default frame-bottom 1.0 (some transparent padding below the figure, the ANCHOR RULE). render_scale 0.5 matches the shipped `door` prop at a near-identical native frame size (34x44/34x48).",
+  "_comment": "Erin's own garden door (the inn side), owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md).",
   "render_scale": 0.5,
   "anchor": [
    0.5,
@@ -2708,7 +2706,7 @@
   }
  },
  "garden_fountain_basin": {
-  "_comment": "The garden's fountain centerpiece, basin half (picks.md §2 fountain composite). LICENSED Pixel Crawler -- Garden Environment pack, manifest-tracked already (assets_manifest.json: assets/tiles/garden/Tiles.png, FORBIDDEN/bundle:true/fallback:placeholder) -- renders as a flat placeholder color in this public checkout, real art via the private bundle. PIL alpha-bbox confirms the [320,80,80,78] region is a fully opaque rect (no transparent padding), so the default anchor [0.5,1.0] is correct as-is.",
+  "_comment": "PIL alpha-bbox confirms the [320,80,80,78] region is a fully opaque rect (no transparent padding), so the default anchor [0.5,1.0] is correct as-is.",
   "render_scale": 0.4,
   "animations": {
    "idle": {
@@ -2728,7 +2726,6 @@
   }
  },
  "garden_fountain_statue": {
-  "_comment": "The garden's fountain centerpiece, the statue half (picks.md §2 -- \"pasted centered on the basin's upper water edge\"; paired with garden_fountain_basin in skeleton_scene.json's decor list, basin FIRST so the statue draws on top at the same cell). LICENSED Pixel Crawler pack, manifest entry NEEDED (assets/props/garden/Feminine-Idle-Sheet.png -- NOT yet in assets_manifest.json, listed in the G1 report for the controller) -- placeholder-renders until landed. PIL-confirmed: frame-0 figure crop [24,34,16,30] alpha bbox is the FULL crop (0,0,16,30) and the full 64px frame's own alpha bbox bottom is exactly 64 -- feet sit at the frame edge, zero under-feet padding, so render_scale 1.0 / default anchor [0.5,1.0] (picks.md §4's own measured values) are correct as-is.",
   "render_scale": 1.0,
   "animations": {
    "idle": {
@@ -2748,7 +2745,7 @@
   }
  },
  "memorial_plinth": {
-  "_comment": "The memorial hill's waiting plinth (direction.md's memorial vocabulary: 'the hill always waits' -- the base/default sprite for every memorial plot before its accomplishment counter is met). Owned PixelLab art, stone-ified in post via the deterministic ramp recolor (potential_assets/pixellab_2026-07-07_garden/stoneify.py -- alpha-preserving luminance->4-step-ramp keyed to the pack statues' beige; the generation was `plinth_empty` raw, stone-ify fixed a colorized-mist artifact per pixellab-batch.md item 5). PIL alpha bbox: (4,7)-(27,23) of 32x32 -- feet plane 24/32=0.75 (NOT the frame bottom -- real transparent padding below the plinth's own small base shadow), anchor set accordingly per the ANCHOR RULE.",
+  "_comment": "PIL alpha bbox: (4,7)-(27,23) of 32x32 -- feet plane 24/32=0.75 (NOT the frame bottom -- real transparent padding below the plinth's own small base shadow), anchor set accordingly per the ANCHOR RULE.",
   "render_scale": 0.6,
   "anchor": [
    0.5,
@@ -2766,7 +2763,7 @@
   }
  },
  "memorial_statue_human": {
-  "_comment": "Memorial roster, human figure (apron + offering bowl -- pixellab-batch.md item 4, `statue_human` raw -> stone-ified). Owned PixelLab art, same stoneify.py provenance as memorial_plinth. PIL alpha bbox: (3,2)-(28,46) of 32x48 -- feet plane 47/48=0.979, anchor measured (not default 1.0 -- a hair of padding below the figure's base).",
+  "_comment": "PIL alpha bbox: (3,2)-(28,46) of 32x48 -- feet plane 47/48=0.979, anchor measured (not default 1.0 -- a hair of padding below the figure's base).",
   "render_scale": 0.5,
   "anchor": [
    0.5,
@@ -2785,7 +2782,7 @@
   }
  },
  "memorial_statue_gnoll": {
-  "_comment": "Memorial roster, gnoll figure (sword point-down, canine head/snout/ears -- pixellab-batch.md item 13, the WINNING `statue_gnoll_v4` pass after 3 rejected attempts -> stone-ified; v1/v2/v3 raw+stone sources kept in the cache as rejects, NOT wired). Owned PixelLab art, same stoneify.py provenance. PIL alpha bbox: (2,3)-(27,44) of 32x48 -- feet plane 45/48=0.938, anchor measured.",
+  "_comment": "PIL alpha bbox: (2,3)-(27,44) of 32x48 -- feet plane 45/48=0.938, anchor measured.",
   "render_scale": 0.5,
   "anchor": [
    0.5,
@@ -2804,7 +2801,7 @@
   }
  },
  "memorial_statue_drake": {
-  "_comment": "Memorial roster, drake figure (soldier, spear + shield -- pixellab-batch.md item 2, `statue_drake` raw -> stone-ified). Owned PixelLab art, same stoneify.py provenance. PIL alpha bbox: (4,2)-(27,47) of 32x48 -- feet plane 48/48=1.0, the default anchor is exactly correct (measured, not assumed -- the ANCHOR RULE requires checking even when the answer turns out to be the default).",
+  "_comment": "PIL alpha bbox: (4,2)-(27,47) of 32x48 -- feet plane 48/48=1.0, the default anchor is exactly correct (measured, not assumed -- the ANCHOR RULE requires checking even when the answer turns out to be the default).",
   "render_scale": 0.5,
   "anchor": [
    0.5,
@@ -2823,7 +2820,7 @@
   }
  },
  "memorial_statue_goblin": {
-  "_comment": "Memorial roster, goblin figure ('figure fills the frame' -- pixellab-batch.md item 9, the WINNING `statue_goblin_v2` pass after 1 rejected attempt -> stone-ified). Owned PixelLab art, same stoneify.py provenance. Backs the `goblins_spared` plot (K-of-4 leg; live producer via `goblin_parley`'s 'Stand aside' bypass); this plot renders as `memorial_plinth` for any save that never took that branch, swapping the instant `goblins_spared` reads >= 1, same forward-compat property as the door gate's own leg. PIL alpha bbox: (4,1)-(27,42) of 32x44 -- feet plane 43/44=0.977, anchor measured.",
+  "_comment": "PIL alpha bbox: (4,1)-(27,42) of 32x44 -- feet plane 43/44=0.977, anchor measured.",
   "render_scale": 0.5,
   "anchor": [
    0.5,
@@ -2842,7 +2839,7 @@
   }
  },
  "briar_collector": {
-  "_comment": "Plant-class combatant, `briar_collectors` encounter roster. Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this sprite realizes an animate collector-construct of that plant, witch-craft-bound, not a new invented species. PixelLab v1 pixflux, 64x64, no_background, low top-down. PIL alpha bbox feet row 61/64 -- anchor measured; render_scale/anchor VERIFIED by windowed screenshot (riverfarm_fight's 01_briar_collectors_with_hunter: thorny silhouette legible on the witch_hollow board, feet on cell, HP bar clear of the sprite).",
+  "_comment": "Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this sprite realizes an animate collector-construct of that plant, witch-craft-bound, not a new invented species.",
   "render_scale": 0.35,
   "anchor": [
    0.5,
@@ -2861,7 +2858,7 @@
   }
  },
  "briar_collector_deep": {
-  "_comment": "Plant-class combatant, `briar_collectors_deep` encounter roster (the escalated second wave of the same hollow fight -- see `briar_collector`'s _comment for the shared canon-cite). Distinct sprite (darker, denser thorns/berries, taller) so the escalation reads visually, not just in stat sheets. PIL alpha bbox feet row 61/64 -- anchor measured; render_scale/anchor VERIFIED by windowed screenshot (riverfarm_fight's 02_briar_deep_wave: reads darker/denser than the shallow variant beside the same PC/ally scale, feet on cell).",
+  "_comment": "PIL alpha bbox feet row 61/64 -- anchor measured; render_scale/anchor VERIFIED by windowed screenshot .",
   "render_scale": 0.4,
   "anchor": [
    0.5,
@@ -2880,7 +2877,7 @@
   }
  },
  "river_wolf": {
-  "_comment": "Mundane-fauna combatant, `river_wolf_pack` (night-gated village-edge encounter) roster. Canon-cite: wiki.wanderinginn.com/Monsters -- Wilwolf (attested wiki monster, fur harvested as a crafting material per Chapter_8.06_RT, i.e. an ordinary huntable wild predator, not a named/tamed subspecies like Carn Wolf) -- realized as a plain grey pack wolf threatening farmland at night. OWNED PixelLab generation (v1 pixflux, 64x64, no_background, low top-down) chosen over the licensed Admurin Canine candidate (docs/archive/design/riverfarm-art/picks.md sec.6) to avoid touching assets_manifest.json/the bundle for this sprite entirely -- swapping to the Admurin pack later is a sprites.json edit, not a data change. PIL alpha bbox feet row 46/64 -- anchor measured; render_scale/anchor VERIFIED by windowed screenshot (riverfarm_fight's 03_night_wolf_arena: grey wolf silhouettes legible against the deep-blue night grade, HP numerals full-bright).",
+  "_comment": "Owned public-tier PixelLab sprite avoids the licensed bundle. Wolf behavior and stats live in combatants; this entry owns only presentation geometry.",
   "render_scale": 0.32,
   "anchor": [
    0.5,
@@ -2899,7 +2896,6 @@
   }
  },
  "cottage_thatch_a": {
-  "_comment": "8b R1 owned PixelLab village set (potential_assets/pixellab_2026-07-07_riverfarm/). Native 16px density, 4x4 cells; PIL alpha-scan anchor.",
   "render_scale": 1.0,
   "shadow": true,
   "anchor": [
@@ -2936,7 +2932,7 @@
   }
  },
  "riverfarm_longhouse": {
-  "_comment": "The communal longhouse (quest-giver anchor). 7x4 cells; door reads centered (bbox x-center 0.522).",
+  "_comment": "7x4 cells; door reads centered (bbox x-center 0.522).",
   "render_scale": 1.0,
   "shadow": true,
   "anchor": [
@@ -2955,7 +2951,6 @@
   }
  },
  "riverfarm_windmill": {
-  "_comment": "Anchor.y is the base masonry (alpha-scan bottom), not frame bottom -- sails overhang above.",
   "render_scale": 1.0,
   "shadow": true,
   "anchor": [
@@ -3111,7 +3106,6 @@
   }
  },
  "witch_cottage": {
-  "_comment": "The witch's own cottage -- pairs with ONE warm PointLight2D (phase-gated) at wiring time per handoff.",
   "render_scale": 1.0,
   "shadow": true,
   "anchor": [
@@ -3130,7 +3124,7 @@
   }
  },
  "crop_row_orange": {
-  "_comment": "Licensed pick, Free Pack Farm.png. TRAP: Farm.png's x0-64 columns are ICON-LABELLED SEED SACKS (white produce icons baked into the art) -- picking there renders the field as jerry-can stacks (shipped v0.4.0 playtest bug). Real planted rows live at x32-176 in 32px-tall bands (y16 carrots, y80 leafy, y176 dark herbs); regions below cut at measured inter-plant gap columns so no plant is sliced mid-leaf.",
+  "_comment": "Licensed pick, Free Pack Farm.png.",
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Farm.png",
@@ -3167,7 +3161,6 @@
   }
  },
  "crop_row_dark_green": {
-  "_comment": "The hollow's own herb-garden variant of the same crop-row family.",
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Farm.png",
@@ -3264,7 +3257,6 @@
   }
  },
  "hollow_canopy_tree": {
-  "_comment": "The enclosure workhorse -- rings the hollow's blocked perimeter (Fairy Forest Tree.png deep-shade y457 row).",
   "render_scale": 0.38,
   "shadow": true,
   "animations": {
@@ -3304,7 +3296,7 @@
   }
  },
  "hollow_bent_tree": {
-  "_comment": "hollow_small_tree's exact region at COMBAT-COVER scale: in-grid blocked-cell props must stay ~1 cell wide (16px effective; oversized cover floats over neighbors' HP bars -- the mushroom_purple_l lesson on board_renderer.gd's BLOCKED_PROPS_BY_BIOME). 0.32 lands 16x28.8 -- a slim bent-tree silhouette that overhangs upward like boulder does, never sideways. Keep in sync with hollow_small_tree's region if that pick ever moves.",
+  "_comment": "0.32 lands 16x28.8 -- a slim bent-tree silhouette that overhangs upward like boulder does, never sideways.",
   "render_scale": 0.32,
   "animations": {
    "idle": {
@@ -3324,7 +3316,7 @@
   }
  },
  "river_wolf_idle": {
-  "_comment": "Licensed pick, Admurin Canine_Gray_Idle.png -- non-directional (ADMURIN family, own encounter, per style-family discipline). TRAP: the sheet is 192x32 = FOUR 48x32 frames, NOT 32x32 -- a 32px frame_size slices every wolf into head/torso chunks (shipped dismembered-strobe bug, v0.4.0 playtest). Anchor x from measured figure bbox (x 4-39 of 48, feet flush at frame bottom).",
+  "_comment": "Licensed Admurin sheet is 192x32: four 48x32 frames. Using 32x32 slices dismembers the wolf.",
   "anchor": [
    0.443,
    1.0
@@ -3341,7 +3333,7 @@
   }
  },
  "rock_crab": {
-  "_comment": "Issue #24 (HR-II forward-ref, Rock Crab encounter bank). Licensed pick, Admurin Enemy_Galore_I/Crab/Crab_Idle.png -- a genuine crab sprite (checked docs/asset-index.md per the wi-art-and-sprites discipline before reaching for a cross-species reuse), non-directional (ADMURIN family, own encounter, same style-family precedent as river_wolf_idle above). The committed PNG is a baked RECOLOR toward the `boulder` prop's warm grey-stone palette (assets_manifest.json's own entry carries the exact multiply factors + rgb trace) -- sells the wiki-verified boulder-mimicry canon (character-profiles-staging.md Home-Region II: 'shell EXACTLY palette-matched to the boulder prop') in BOTH field and combat, since board_renderer.gd's combat sprite path has no per-combatant runtime tint hook. Sheet is 256x64 = FOUR 64x64 frames; figure crop measured via PIL alpha-bbox union across all 4 frames: x 19-41, y 34-48 (14px tall, 22px wide -- a small, low-slung crop, unlike a humanoid rig). Anchor from that crop: x-center 0.469, feet-bottom 0.75. render_scale 2.57 targets ~36px on-screen FIELD presence (bigger than the ~30px human standard -- canon calls the shell 'two persons stacked tall', so it should read unmistakably large on the map, short of arena-sprawl). combat_scale (combatants.json rock_crab record) scales further to ~50px for the close-range arena read, the SAME per-combatant override mechanism relc/vault_construct/ruin_guardian already use to contain an oversized rig -- see that record's own comment for the exact value.",
+  "_comment": "render_scale 2.57 targets ~36px on-screen FIELD presence (bigger than the ~30px human standard -- canon calls the shell 'two persons stacked tall', so it should read unmistakably large on the map, short of arena-sprawl).",
   "anchor": [
    0.469,
    0.75
@@ -3360,7 +3352,7 @@
   }
  },
  "riverfarm_witch_elder": {
-  "_comment": "8b R1 owned PixelLab gen (potential_assets/pixellab_2026-07-08_witch/) -- the day-phase idle. Non-directional single facing (upgrade-queue precedent, relc/pisces/olesm/zevara pre-8b-upgrade shape). Swapped to riverfarm_witch_young by visual_states keyed on phase().",
+  "_comment": "Non-directional single facing (upgrade-queue precedent, relc/pisces/olesm/zevara pre-8b-upgrade shape).",
   "anchor": [
    0.477,
    0.953
@@ -3377,7 +3369,7 @@
   }
  },
  "riverfarm_witch_young": {
-  "_comment": "The dusk/night idle -- same silhouette line, straight-backed. The visual_states swap IS the witch's two-form tell (spec sec.2).",
+  "_comment": "The visual_states swap IS the witch's two-form tell (spec sec.2).",
   "anchor": [
    0.5,
    0.938
@@ -3394,7 +3386,7 @@
   }
  },
  "hired_blade": {
-  "_comment": "Invrisil 8c Task C2 -- the `hired_blades` warehouse-fight roster (all 3 members share this one rig, distinguished only by combatants.json stats/skills, same convention as briar_collector/river_wolf). Owned PixelLab v2 character-pipeline generation (create-character-with-8-directions standard + animate-character template, 7 gens total; assets/LICENSES/pixellab-ai-generated-verdict.md has the full provenance + prompt). Burgundy/brass merchant-livery doublet, deliberately quarantined from royal_soldier's cool steel-armor Watch read (spec sec.2/sec.5's NOT-Watch-alike rule). Native frame 148x148 (the create-8-directions job padded beyond the requested 104x104); render_scale 0.4324 = 64/148, matching the shipped 64px apparent footprint other directional characters use. anchor PIL alpha-bbox measured (feet plane 126-131 of 148 across idle/walk/all 3 directions) -- NOT windowed-screenshot-verified (this is a combat-data-only lane, no skeleton_scene placement in scope; flagged for the encounter-wiring task's machine-playtest pass per the ANCHOR RULE). No `slice`/attack animation generated -- board_renderer.gd's play_anim falls back to idle_side gracefully when an attack anim is absent (same as any sprite lacking one).",
+  "_comment": "Owned PixelLab v2 character-pipeline generation (create-character-with-8-directions standard + animate-character template, 7 gens total; assets/LICENSES/pixellab-ai-generated-verdict.md has the full provenance + prompt).",
   "directional": true,
   "render_scale": 0.4324,
   "anchor": [
@@ -3425,7 +3417,7 @@
   }
  },
  "plaza_fountain": {
-  "_comment": "Invrisil 8c Task C1 (issue #12) -- OWNED PixelLab landmark (docs/archive/design/invrisil-art/handoff.md's staged fragment, committed verbatim this task at assets/sprites/invrisil/fountain_v2.png; anchor/scale as specified there, PIL alpha-bbox measured). 'The Adventurer's Fountain' -- ORIGINAL, canon-ALIGNED with Invrisil's 'City of Adventurers' epithet (wiki lists no named plaza fountain); see handoff.md's canon-flags section.",
+  "_comment": "'The Adventurer's Fountain' -- ORIGINAL, canon-ALIGNED with Invrisil's 'City of Adventurers' epithet (wiki lists no named plaza fountain); see handoff.md's canon-flags section.",
   "render_scale": 0.6,
   "shadow": true,
   "anchor": [
@@ -3444,7 +3436,6 @@
   }
  },
  "street_lamp": {
-  "_comment": "Invrisil 8c Task C1 -- OWNED PixelLab lamp-row signature (handoff.md staged fragment). Non-flicker gold PointLight2D per-instance (direction.md: 'city lamps are SERVICED, unlike Liscor's flickering hearths').",
   "render_scale": 0.6,
   "shadow": true,
   "anchor": [
@@ -3463,7 +3454,6 @@
   }
  },
  "coin_shop_sign": {
-  "_comment": "Invrisil 8c Task C1 -- OWNED PixelLab ornament (handoff.md staged fragment). Mounted on facade blocked cells (no separate blocking needed).",
   "render_scale": 0.75,
   "anchor": [
    0.4688,
@@ -3481,7 +3471,6 @@
   }
  },
  "guild_banner": {
-  "_comment": "Invrisil 8c Task C1 -- OWNED PixelLab ornament (handoff.md staged fragment). Cream+gold vertical banner, mounted on facade blocked cells.",
   "render_scale": 0.5,
   "anchor": [
    0.5,
@@ -3499,7 +3488,7 @@
   }
  },
  "klbkch": {
-  "_comment": "PixelLab v2 create-character-with-8-directions (char 085b8d4f) -> animate-character (breathing-idle, walking) -> directional down/side/up (side = east frames, world.gd flips for west). render_scale targets ~30px on-screen figure (Zevara-class height; figure 69px of 92). anchor feet-plane-measured (78/92). slice = lead-jab (GH#69: fields as the alternating early companion).",
+  "_comment": "anchor feet-plane-measured (78/92).",
   "directional": true,
   "render_scale": 0.4348,
   "animations": {
@@ -3541,7 +3530,7 @@
   "shadow": true
  },
  "antinium_worker": {
-  "_comment": "PixelLab v2 create-character-pro (char c46d1038, 'four-armed ant man drone') -> animate-character breathing-idle -> directional idle down/side/up (side = east frames, world.gd flips for west). IDLE-ONLY by design: Workers are stationed ambient extras (the Invrisil crowd-extra precedent); identical rigs across all Worker instances are diegetic (canon: Workers are visually uniform). render_scale targets ~27px on-screen (hunched drone, a head below Klbkch's 30; figure 49px of 116). anchor feet-plane-measured (81/116).",
+  "_comment": "IDLE-ONLY by design: Workers are stationed ambient extras (the Invrisil crowd-extra precedent); identical rigs across all Worker instances are diegetic (canon: Workers are visually uniform).",
   "directional": true,
   "render_scale": 0.551,
   "animations": {
@@ -3563,7 +3552,7 @@
   "shadow": true
  },
  "ceria": {
-  "_comment": "8d A2: Ceria Springwalker (PixelLab pro char 0f4f644e; profile in character-profiles.md — half-Elf, blue robes, wand, bone hand GLOVED v1, NO circlet [Vol-8+ spoiler catch]). render_scale targets ~26px (canonically short; figure 51px of 152). anchor feet-plane 101/152.",
+  "_comment": "anchor feet-plane 101/152.",
   "directional": true,
   "render_scale": 0.51,
   "animations": {
@@ -3595,7 +3584,7 @@
   "shadow": true
  },
  "yvlon": {
-  "_comment": "8d A2: Yvlon Byres (pro char ec33c32c — silver plate, golden hair, silversteel arms V6-canon-honest). ~32px tall (figure 83px of 176). anchor 129/176. slice = jab_attack (fields as delve ally).",
+  "_comment": "anchor 129/176.",
   "directional": true,
   "render_scale": 0.386,
   "animations": {
@@ -3637,7 +3626,7 @@
   "shadow": true
  },
  "ksmvr": {
-  "_comment": "8d A2: Ksmvr (pro char 3dc39703 — the worker four-arm kernel + gear harness/crossbow/buckler; all four arms READ in the lineup, better than Klbkch's). ~28px (figure 58px of 128). anchor 92/128. slice = jab_attack (delve ally). Sub-arm 1x legibility: same user flag as Klbkch.",
+  "_comment": "anchor 92/128.",
   "directional": true,
   "render_scale": 0.483,
   "animations": {
@@ -3679,7 +3668,7 @@
   "shadow": true
  },
  "vault_construct": {
-  "_comment": "8d C3 boss (RATIFIED: guardian construct). Pro char 367edfed v2 ('headless, chest rune-eye, full-frame' -- v1 head-clipped, parked). Figure 90px of 220; render_scale targets ~40px on-screen (boss presence, sub-Relc-arena-sprawl -- C3 sets combat_scale per the contained-bar rule when the combatant entry lands). anchor feet-plane 156/220. Slow fps by design: a trap that fights back moves like architecture.",
+  "_comment": "anchor feet-plane 156/220.",
   "directional": true,
   "render_scale": 0.444,
   "animations": {
@@ -3721,7 +3710,7 @@
   "shadow": true
  },
  "eloise": {
-  "_comment": "#63 canon pass: Eloise du Havin, [Tea Witch] (pro char 717c7f2a; wiki-verified profile in character-profiles.md — grey floral hat = the one wiki-sourced silhouette anchor; teacup prop + sage/mauve = flagged inventions-within-gap). Elderly-short: ~24px on-screen (figure 74px of 148). anchor feet-plane 109/148. REPLACES the oversize generic witch (playtest finding 19) — the skeleton swap lands with the #63 dialogue pass.",
+  "_comment": "#63 canon pass: Eloise du Havin, [Tea Witch] (pro char 717c7f2a; wiki-verified profile in character-profiles.md — grey floral hat = the one wiki-sourced silhouette anchor; teacup prop + sage/mauve = flagged inventions-within-gap).",
   "directional": true,
   "render_scale": 0.324,
   "animations": {
@@ -3753,7 +3742,7 @@
   "shadow": true
  },
  "dungeon_statue": {
-  "_comment": "8d Phase B dressing FIX (windowed-read caught the original pick wrong -- it was Castle's own window/archway art, not a statue; both candidate blobs in the same size class rendered as arched glass panes, confirmed against a full-sheet crop before this correction, no PNG-into-context violation for anything past this one verification pass). CASTLE 0.3's REAL statue/bust family: a 3x2 grid of stone busts-on-plinths (Assets/Tiles.png, no separate Props.png -- furniture lives embedded in the tileset). PIL connected-component blob scan on that grid specifically: bbox (279,75,18,32), a bearded-elder bust, warm-grey stone rgb~(91,83,77). render_scale raised to 0.85 (native crop is narrower than the boulder/rubble family) so it reads clearly at 1 cell wide, ~1.7 cells tall. ANCHOR RULE: alpha-bbox-derived crop, default anchor [0.5,1.0] correct, no override.",
+  "_comment": "PIL connected-component blob scan on that grid specifically: bbox (279,75,18,32), a bearded-elder bust, warm-grey stone rgb~(91,83,77).",
   "render_scale": 0.85,
   "shadow": true,
   "animations": {
@@ -3774,7 +3763,7 @@
   }
  },
  "dungeon_rubble": {
-  "_comment": "8d Phase B dressing FIX (windowed-read caught the original pick wrong -- Cave Props.png turned out to be entirely purple mushroom-cap art, confirmed against a full-sheet crop; no rock content on that sheet at all). Re-sourced from the CAVE BIOME's own Tiles.png (already the exact sheet cave/sewers/ruin_surface's floor+blocked tiles come from -- no new manifest entry) instead: a small column of plain grey round boulders (3 sizes) sits beside the tileset's spike-rock formations. PIL connected-component blob scan, greyish-only filter (low channel saturation, mid-tone): bbox (194,83,11,9), the largest of the three, rgb~(80,83,69) -- a muted grey-olive that already sits close to the dungeon floor's own cast. render_scale raised to 1.4 (native crop is a small pebble, boulder/statue's own 0.5 would render it near-invisible) so it reads as a real rubble chunk, roughly 1 cell across. ANCHOR RULE: alpha-bbox-derived crop, default anchor [0.5,1.0] correct, no override.",
+  "_comment": "PIL connected-component blob scan, greyish-only filter (low channel saturation, mid-tone): bbox (194,83,11,9), the largest of the three, rgb~(80,83,69) -- a muted grey-olive that already sits close to the dungeon floor's own cast.",
   "render_scale": 1.4,
   "shadow": true,
   "animations": {
@@ -3795,7 +3784,7 @@
   }
  },
  "pressure_plate": {
-  "_comment": "8d Phase B trap tell (A3 parked candidate, INTEGRATED -- 'reads' verdict held at B2 against the real Cemetery floor). Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a worked-stone floor tile with a subtly raised/cracked-border square plate at center. Static, 32x32, full-bleed (PIL alpha bbox scan: content fills 0-31 on both axes, zero transparent padding -- ANCHOR RULE check done, default anchor [0.5,1.0] correct, no override needed). render_scale 0.5 -> displays at exactly one 16px cell (a floor-flush decal, so no `shadow`).",
+  "_comment": "Owned PixelLab art (assets/LICENSES/pixellab-ai-generated-verdict.md): a worked-stone floor tile with a subtly raised/cracked-border square plate at center.",
   "render_scale": 0.5,
   "animations": {
    "idle": {
@@ -3809,7 +3798,7 @@
   }
  },
  "snare_coil": {
-  "_comment": "8d Phase B trap tell (A3 parked candidate, INTEGRATED -- 'reads' verdict held at B2). Owned PixelLab art: a coil of taut wire/rope strung across a worn floor patch. Static, 32x32, full-bleed (PIL alpha bbox: 0-31 both axes, ANCHOR RULE check done, default anchor correct). render_scale 0.5 -> one 16px cell, no `shadow` (floor-flush).",
+  "_comment": "Static, 32x32, full-bleed (PIL alpha bbox: 0-31 both axes, ANCHOR RULE check done, default anchor correct).",
   "render_scale": 0.5,
   "animations": {
    "idle": {
@@ -3823,7 +3812,7 @@
   }
  },
  "illusory_floor_tell": {
-  "_comment": "8d Phase B trap tell, PLACEHOLDER-BEST-FIT (controller art-pass flag): the A3 pixellab `illusory_floor.png` candidate was judged against the real Cemetery floor at B2 and rejected -- its dark blue-navy palette clashes hard with the family's olive-grey-green (the SAME palette-drift concern A3 already flagged for dart_slit, unretuned since; see this task's report). Substituted with a same-PACK crop so the palette is guaranteed to match: Cemetery Props.png bbox (96,64,31,16), PIL connected-component scan, a low floor-hugging debris/crack cluster rgb~(53,38,27), fill 0.65. Represents 'a patch of floor that reads slightly wrong', not the floor tile itself (the props-over-tiles rule's concern is disguising a real OBJECT as terrain out of laziness; this is the opposite -- a deliberate floor-illusion prop that must read as floor-ish by design, a documented exception). Entity-level `tint` nudges it toward the dungeon floor's olive cast; `visual_states` swaps to a warning tint on the reveal accomplishment. ANCHOR RULE: alpha-bbox-derived crop, default anchor correct. render_scale 0.5, no `shadow` (floor-flush, matches rug_tan/rug_green's un-shadowed floor-covering precedent).",
+  "_comment": "Substituted with a same-PACK crop so the palette is guaranteed to match: Cemetery Props.png bbox (96,64,31,16), PIL connected-component scan, a low floor-hugging debris/crack cluster rgb~(53,38,27), fill 0.65.",
   "render_scale": 0.5,
   "animations": {
    "idle": {
@@ -3843,7 +3832,7 @@
   }
  },
  "grimalkin": {
-  "_comment": "PixelLab v2 create-character-pro (char 82cb307c-2a38-42df-8a7e-f35f352fd182, mannequin, low top-down, 132x132) -> animate-character breathing-idle(4)+walking(6), south/east/north only (side mirrors west, diagonals parked). Prompt derived verbatim from character-profiles.md's Grimalkin silhouette contract (MASSIVE green-scale Drake, tight clothing straining, notebook+quill). render_scale targets ~50.0px on-screen (the tallest shipped Drake, above Relc's 43.4px; figure 108px of 224). anchor feet-plane-measured (bottom row 164/224). Idle-only combat-adjacent (no combat entries -- Grimalkin doesn't fight v1).",
+  "_comment": "PixelLab v2 create-character-pro (char 82cb307c-2a38-42df-8a7e-f35f352fd182, mannequin, low top-down, 132x132) -> animate-character breathing-idle(4)+walking(6), south/east/north only (side mirrors west, diagonals parked).",
   "directional": true,
   "render_scale": 0.463,
   "animations": {
@@ -3875,7 +3864,7 @@
   "shadow": true
  },
  "tier_clerk": {
-  "_comment": "PixelLab v2 create-character-pro (char 77b48a16-cadc-496a-9b47-fbd36bfd91a7, mannequin, low top-down, 108x108) -> animate-character breathing-idle(4)+walking(6), south/east/north only (side mirrors west, diagonals parked). ORIGINAL+flag civic role (no canon figure) -- the QUALIFY-verb stamp-desk clerk, one rig reused at every Pallass desk. DESK-SHAPED silhouette (stiff rectangular formal coat, upright posture, stamp+ledger) deliberately distinct from Zevara/Olesm/Relc. render_scale targets ~29.0px on-screen (trim -- just under Pisces' 30.0px; figure 66px of 140). anchor feet-plane-measured (bottom row 102/140).",
+  "_comment": "PixelLab v2 create-character-pro (char 77b48a16-cadc-496a-9b47-fbd36bfd91a7, mannequin, low top-down, 108x108) -> animate-character breathing-idle(4)+walking(6), south/east/north only (side mirrors west, diagonals parked).",
   "directional": true,
   "render_scale": 0.4394,
   "animations": {
@@ -3907,7 +3896,7 @@
   "shadow": true
  },
  "anchor_waystone_slate": {
-  "_comment": "8e Phase B (issue #16): Pallass's own waystone -- a MODEST PIL RECOLOR of the owned `anchor_waystone` sheet (hue 55-170 mossy-green band rotated to the ratified slate 213deg at 0.55x saturation, luminance preserved; greys + the blue opening-glow pass through untouched) so the arrival plinth reads as Pallass slate, not Liscor moss (controller windowed finding). Same 64x80 geometry as the base sheet, so anchor/scale carry verbatim.",
+  "_comment": "Same 64x80 geometry as the base sheet, so anchor/scale carry verbatim.",
   "render_scale": 0.4,
   "anchor": [
    0.5,
@@ -3926,7 +3915,7 @@
   }
  },
  "great_lift": {
-  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab landmark, the Grand Lift -- bronze-riveted cage tower spanning both Pallass tier maps at the SAME x=22 column (skeleton_scene.json's grand_lift_market/grand_lift_forge). Native 64x96, anchor MEASURED (tile-family-verdict.md's PIL alpha-bbox pass, bbox (8,9,56,87) -- an 8px margin below the cage, not full-bleed). render_scale 1.0 (native size -- the tallest landmark this task ships, 6 cells, deliberately rises from the floor band up into the wall band above it).",
+  "_comment": "Native 64x96, anchor MEASURED (tile-family-verdict.md's PIL alpha-bbox pass, bbox (8,9,56,87) -- an 8px margin below the cage, not full-bleed).",
   "render_scale": 1.0,
   "shadow": true,
   "anchor": [
@@ -3945,7 +3934,7 @@
   }
  },
  "crystal_lamp": {
-  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab lamp-row signature -- steady white PointLight2D per-instance (#E9EEF2), NEVER flicker (bible: 'nothing flickers unless it's a forge'; the single sanctioned exception is forge_station_a's own furnace-glow light). Native 32x64, anchor MEASURED (bbox (9,1,23,62), a 2px margin below the post base). render_scale 0.5.",
+  "_comment": "Native 32x64, anchor MEASURED (bbox (9,1,23,62), a 2px margin below the post base).",
   "render_scale": 0.5,
   "shadow": true,
   "anchor": [
@@ -3964,7 +3953,7 @@
   }
  },
  "steam_vent": {
-  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab ambience anchor -- a bronze grate, machine-noise implied by dressing + observe copy (no live particle emitter this pass -- 'steam' isn't a shipped WIAmbience preset; adding one is out of this lane's charter, direction.md's own 'baked puff is fine at mockup' fallback). Native 32x48, anchor MEASURED (bbox (0,0,32,46), 2px margin). render_scale 0.5.",
+  "_comment": "Native 32x48, anchor MEASURED (bbox (0,0,32,46), 2px margin).",
   "render_scale": 0.5,
   "shadow": false,
   "anchor": [
@@ -3983,7 +3972,7 @@
   }
  },
  "price_board": {
-  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab landmark -- the posted-prices tell (the anti-Invrisil: 'prices are POSTED', no haggling). Native 48x48, anchor MEASURED (bbox (11,3,37,45), 3px margin below the stand). render_scale 0.5.",
+  "_comment": "Native 48x48, anchor MEASURED (bbox (11,3,37,45), 3px margin below the stand).",
   "render_scale": 0.5,
   "shadow": true,
   "anchor": [
@@ -4002,7 +3991,7 @@
   }
  },
  "forge_station": {
-  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab landmark -- the forge tier's public interactable ([Tactician]/[Engineer] observe content). Native 48x64, anchor MEASURED (bbox (1,0,46,62), near-centered x, 2px margin). render_scale 0.6.",
+  "_comment": "Native 48x64, anchor MEASURED (bbox (1,0,46,62), near-centered x, 2px margin).",
   "render_scale": 0.6,
   "shadow": true,
   "anchor": [
@@ -4021,7 +4010,7 @@
   }
  },
  "market_stall_pallass": {
-  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab landmark -- the uniform civic market stall (deliberately placed IDENTICAL in rows, same copy across every instance -- uniformity IS the QUALIFY tell; never reuse Liscor's stall sprites here or vice versa). Native 64x48, anchor MEASURED (bbox (5,1,54,46), slight x offset, 2px margin). render_scale 0.75.",
+  "_comment": "Native 64x48, anchor MEASURED (bbox (5,1,54,46), slight x offset, 2px margin).",
   "render_scale": 0.75,
   "shadow": true,
   "anchor": [
@@ -4040,7 +4029,7 @@
   }
  },
  "tier_wall": {
-  "_comment": "8e Phase A/B (issue #16): OWNED PixelLab facade strip -- the rising-wall/parapet bronze-pilaster texture, tiled as non-blocking DECOR over the real blocking wall-band segment (skeleton_scene.json's walls.segments already blocks those cells; this is visual dressing only, per the 'decor never carries its own blocking' contract). Native 128x48, default anchor kept (a facade band tiled as a strip, not a footed object -- tile-family-verdict.md's own note). render_scale 0.5 (the mockup-precedent 24px strip, fits inside the 2-row wall band).",
+  "_comment": "Owned public-tier facade is visual-only decor. Collision comes from map walls.segments; decor never blocks.",
   "render_scale": 0.5,
   "shadow": false,
   "anchor": [
@@ -4059,8 +4048,8 @@
   }
  },
  "corusdeer": {
-  "_comment": "Issue #97 (bestiary expansion): the stray Corusdeer, T1 floodplains renewable-cull target. Canon-cite: wiki.wanderinginn.com/Corusdeer (WIKI-VERIFIED 2026-07-12) -- magical deer, ~2x normal deer size, twin antlers oaken-brown at the base shading to glowing cherry-red at the tips, mana-fueled heat that 'vaporises bone'; a lone stray male is the Silver-rank encounter shape (herds are Gold-rank and explicitly off-limits -- bounty_crab_cull's own copy already warns 'Do not trouble the Corusdeer herd'). Pre-staged in docs/design/character-profiles-staging.md Home-Region II. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down (the briar_collector/river_wolf non-humanoid- creature recipe, not the v2 8-direction character pipeline -- reserved for humanoid NPCs per the skill's own directive) -- avoids the manifest/bundle dance entirely, TIER-PUBLIC. PIL alpha-bbox anchor measured (fig y 3-60 of 64); render_scale 0.7 / anchor [0.4844,0.9375] VERIFIED by windowed screenshot (floodplains_bestiary_loop's corusdeer_combat shot, 2026-07-13 review wave: figure legible on the boulder_flats board, feet on cell, cherry-red antler tips read at combat scale, HP bar clear of the sprite).",
-  "render_scale": 0.7,
+  "_comment": "Owned public-tier PixelLab sprite. Corusdeer behavior and stats live in combatants; this entry owns only presentation geometry.",
+"render_scale": 0.7,
   "anchor": [
    0.4844,
    0.9375
@@ -4078,7 +4067,7 @@
   }
  },
  "razorbeak": {
-  "_comment": "Issue #97: Razorbeaks, T1 floodplains pack encounter. Canon-cite: wiki.wanderinginn.com/Razorbeaks (WIKI-VERIFIED 2026-07-12) -- large leathery-winged pterosaur-like birds, light green skin with red markings, beak longer than a human arm; canon-cowardly ALONE (flees when disturbed) but aggressive and swarms wounded prey in a group -- direct citation for this combatant's `coward` AI profile (see combatants.json). Erin's own nickname: 'Dino Birds'. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC, sidesteps the manifest/bundle dance.",
+  "_comment": "OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC, sidesteps the manifest/bundle dance.",
   "render_scale": 0.75,
   "anchor": [
    0.4922,
@@ -4097,7 +4086,7 @@
   }
  },
  "mothbear": {
-  "_comment": "Issue #97: Mothbear, T3 Invrisil-boulevard night-only pack encounter (drawn to the boulevard's lanterns -- canon-cited below). Canon-cite: wiki.wanderinginn.com/Mothbears (WIKI-VERIFIED 2026-07-12) -- flying-bear/moth hybrids with antennae and claws, hunt in groups, attracted to bright lights, attack by jumping on prey; Bronze-rank-dangerous, Silver-rank-manageable (matches this encounter's T3 tier). OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC.",
+  "_comment": "OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC.",
   "render_scale": 0.65,
   "anchor": [
    0.5703,
@@ -4116,7 +4105,7 @@
   }
  },
  "kingslayer_spider": {
-  "_comment": "Issue #97: Kingslayer Spider, T4 dungeon solo apex-predator encounter (the 'shield-spider variant' the plan named as a candidate). Canon-cite: wiki.wanderinginn.com/Kingslayer_Spiders (WIKI-VERIFIED 2026-07-12) -- large monstrous Izril arachnids that 'resemble Shield Spiders from a distance, though distinct creatures'; named for killing a King while he was out hunting. FIXES a long-standing project gap -- docs/asset-catalog.md flags arachnids as a 'HARD GAP (no arachnid in any pack)' (cave_spider/shield_spider both stand in with `bat`); this is the first genuine spider silhouette in the tree. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC.",
+  "_comment": "OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC.",
   "render_scale": 0.85,
   "anchor": [
    0.4922,
@@ -4135,7 +4124,7 @@
   }
  },
  "forge_golem": {
-  "_comment": "Issue #97: the Pallass Forge's own construct guardian (T4/T5 Pallass-adjacent solo encounter, `ai:caster`). Canon-cite: wiki.wanderinginn.com/Golems (WIKI-VERIFIED 2026-07-12) -- artificial golems built from a shell + command spells + a mana-stone Golem Heart, over 40 named variants incl. Stone Golem/Flame Golem; Pallass's forge tier is a molten-seam artifice hall (pallass_forge.json), a direct, canon-plausible home for a forge-tempered construct. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC (sidesteps whether Pixel Crawler Forge 1.2's own in-hand Stone-Golem sheet would need the bundle/manifest dance; not yet vetted in assets/LICENSES, so generated instead of risking a bundle-tier pick).",
+  "_comment": "Stone Golem/Flame Golem; Pallass's forge tier is a molten-seam artifice hall (pallass_forge.json), a direct, canon-plausible home for a forge-tempered construct.",
   "render_scale": 0.6,
   "anchor": [
    0.4922,
@@ -4154,7 +4143,7 @@
   }
  },
  "watchgolem": {
-  "_comment": "Issue #97: the Pallass Market's own construct guard pair (T4/T5 Pallass-adjacent encounter `market_watchgolems`, `ai:guard`; player-facing name 'Stone Golem(s)' per the controller naming ruling -- the sprite id keeps `watchgolem`, ids are not player-facing) -- plain Stone Golem individuals distinct from `forge_golem`'s molten-cracked caster (canon explicitly supports many golems of the same named type, wiki.wanderinginn.com/Golems). Guards merchant stock, matching Golems' documented 'follows orders' puppet/autonomous tiers. OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC, same reasoning as forge_golem's own comment.",
+  "_comment": "OWNED PixelLab v1 pixflux generation, 64x64, no_background, low top-down -- TIER-PUBLIC, same reasoning as forge_golem's own comment.",
   "render_scale": 0.6,
   "anchor": [
    0.4922,

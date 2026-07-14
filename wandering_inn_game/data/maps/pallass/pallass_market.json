@@ -1,5 +1,5 @@
 {
- "_comment": "8e Phase B (issue #16, plan docs/superpowers/plans/2026-07-12-8e-pallass.md): Pallass market tier (T3), the QUALIFY-verb checkpoint + posted-price stalls + THE PERMIT OFFICE. STACKED-BAND composition (plan Task B1): the rising wall (y0-1, blocked segment, face=the atlas's own all-lower/void cell id0 [0,0] -- a monolithic dark mass read as the tier ABOVE's underside, per the shelf grammar) sits over 7 walkable floor rows (y2-8), a walkable parapet-rim row (y9, the Wang mixed-corner edge tile id12 [0,3] overlaid via floor_layers) and a final blocked void row (y10, biome.blocked paints it automatically -- same [0,0] tile as the wall band, deliberately: both dark bands read as 'the machine continues past your slice'). Grid height 11 * CELL16 = 176px <= the 320x180 viewport's 180px -- world.gd's _camera_axis centers content<=view UNCONDITIONALLY, so the full vertical stack is on-screen together at every horizontal scroll position. Width 26 pans horizontally (invrisil_boulevard/street precedent). Palette quarantine (tile-family-verdict.md PASS): forge-bronze-on-slate, steam-white crystal lamps (#E9EEF2, never amber/coin-gold), moods.json pallass_market cool day-graded. Landmark props via the A-phase verdict's MEASURED anchors. THE PERMIT OFFICE (x19-21, y4 -- cross-lane reconciliation, controller ruling): the forge-tier bureaucratic chain's whole service surface sits HERE, between the stalls and the Grand Lift, so every beat (5g filing -> Grimalkin's 8g exam -> the 3g stamp banking elevator_pass_stamped) is reachable WITHOUT crossing the lift gate the chain unlocks (C's forward-references reachability constraint). Elevator gate `grand_lift_market` pairs with pallass_forge's `grand_lift_forge` at the SAME x=22 column (the direction card's 'crosses both bands at one x' continuity) -- door_when on `elevator_pass_stamped`, produced at this map's own office; unmet read is the locked_toast (copy-fit checked). `pallass_market_arrival_anchor` (4,6) is a portal_menu-LESS anchor-stone prop; the portals.json `pallass` row lands at (4,7), its south approach cell (reconciled this lane). Conversation-hosting NPCs (tier_clerk_market/forge_permit_clerk/grimalkin/market_stallkeeper) host C-phase graphs whose COPY is D-phase-replaceable placeholder -- gates/costs real. Scatter deliberately NONE (direction.md: 'an engineered city sweeps its plazas' -- the absence is itself the distinctness tell vs Liscor).",
+ "_comment": "Palette quarantine (tile-family-verdict.md PASS): forge-bronze-on-slate, steam-white crystal lamps (#E9EEF2, never amber/coin-gold), moods.json pallass_market cool day-graded.",
  "biome": "pallass_market",
  "grid": {
   "width": 26,
@@ -124,7 +124,6 @@
   "tile_px": 16,
   "segments": [
    {
-    "_comment": "The rising wall -- the tier above's underside. Full-width, 2 rows deep. face=the void/lower Wang cell (id0, dark) -- same engineered slab material as the floor, read as a monolithic wall mass, not a different substance (the bible's 'engineered, not laid' discipline).",
     "from": [
      0,
      0
@@ -142,7 +141,6 @@
  },
  "floor_layers": [
   {
-   "_comment": "The parapet rim -- the Wang mixed-corner edge tile (id12: NW/NE upper, SW/SE lower) overlaid on the base floor across the full south walkable row, reading as the bronze-trimmed rim where the shelf floor gives way to the void row (y10) just past it.",
    "coords": [
     0,
     3
@@ -157,7 +155,6 @@
    }
   },
   {
-   "_comment": "The Grand Lift platform -- a distinct engineered floor material (Pixel Crawler Castle checker, licensed bundle-tier, already assets_manifest.json-registered from 8a; picks.md's blue-slate checker cell) marking the lift's boarding zone as mechanically separate from the plaza slab. Second tile family (dynamism c1 tile_fam_score).",
    "sheet": "res://assets/tiles/castle/Tiles.png",
    "tile_px": 16,
    "coords": [
@@ -284,7 +281,6 @@
  ],
  "entities": [
   {
-   "_comment": "Portal-menu-LESS arrival anchor (plan Task B2): marks the portals.json `pallass` row's landing cell ((4,7), the open cell directly south -- reconciled into that row this lane, replacing C's forward-referenced placeholder). Stays a plain flavor prop v1 (NO portal_menu, NO portal_menu_when -- arrival is one-way via the Door until a future milestone pairs the anchor with its own menu). Sprite `anchor_waystone_slate` is the base waystone's slate PIL recolor (controller windowed finding: the mossy-green base sheet read as Liscor family, a quarantine drift) -- no entity tint needed, the palette lives in the art now.",
    "id": "pallass_market_arrival_anchor",
    "kind": "prop",
    "cell": [
@@ -298,7 +294,7 @@
    "toast": "Cold, precise stone. A blank waiting for its purpose."
   },
   {
-   "_comment": "The market-tier arrival checkpoint (Papers for Pallass Stage 3) -- hosts C-phase's `pallass_market_clerk` graph (the 2g entry-stamp beat + race-variant hub lines; graph copy is D-phase-replaceable PLACEHOLDER, gates real). The static `dialogue` line below is the no-graph FALLBACK only (interact()'s npc branch falls through to it if start_dialogue ever misses). present_when not needed, she works this checkpoint.",
+   "_comment": "The static `dialogue` line below is the no-graph FALLBACK only (interact()'s npc branch falls through to it if start_dialogue ever misses).",
    "id": "tier_clerk_market",
    "kind": "npc",
    "cell": [
@@ -330,7 +326,6 @@
    "toast": "Chalk and slate. The numbers don't move for anyone."
   },
   {
-   "_comment": "One of three IDENTICAL stalls (same sprite, same copy) -- uniformity is the QUALIFY tell (direction.md: 'do NOT reuse Liscor stall sprites'; deliberately not individually flavored).",
    "id": "market_stall_a",
    "kind": "prop",
    "cell": [
@@ -344,7 +339,6 @@
    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
   },
   {
-   "_comment": "Identical dressing to market_stall_a -- see that entity's own _comment.",
    "id": "market_stall_b",
    "kind": "prop",
    "cell": [
@@ -358,7 +352,6 @@
    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
   },
   {
-   "_comment": "Identical dressing to market_stall_a -- see that entity's own _comment.",
    "id": "market_stall_c",
    "kind": "prop",
    "cell": [
@@ -372,7 +365,7 @@
    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
   },
   {
-   "_comment": "Hosts C-phase's `pallass_market_local` graph (the walk-on race-variant line set -- Human friction / Drake assumed-local; graph copy D-phase-replaceable). A Drake stallkeeper standing BEHIND stall_b (15,6), facing down over her own counter -- sprite `drake_patron` (the shipped ambient-Drake rig, deliberately a DIFFERENT silhouette from the tier_clerk's stiff formal coat so the civic-uniform clerks and the market's own population read as two castes). Static `dialogue` = no-graph fallback only.",
+   "_comment": "Static `dialogue` = no-graph fallback only.",
    "id": "market_stallkeeper",
    "kind": "npc",
    "cell": [
@@ -404,7 +397,6 @@
    "toast": "Warm, damp air. A rhythm underneath it, too even to be weather."
   },
   {
-   "_comment": "THE PERMIT OFFICE (cross-lane reconciliation, controller design ruling): the service window where the forge-tier bureaucratic chain actually transacts -- placed on the MARKET tier between the stalls and the Grand Lift so every beat of `forge_tier_permit` is reachable WITHOUT crossing the elevator gate the chain itself unlocks (C's forward-references reachability constraint, docs/archive/staging/pallass-staging/phase-c-forward-references.json). This counter is the office's window-ledge dressing (sprite `bar_counter`, free_pack -- an in-hand service-counter read); the clerk (20,4) and Grimalkin (21,4) sit in a row behind it.",
    "id": "permit_office_counter",
    "kind": "prop",
    "cell": [
@@ -418,7 +410,7 @@
    "toast": "Forms, inkwells, and a bell that has clearly been rung far too many times."
   },
   {
-   "_comment": "THE PERMIT OFFICE's clerk -- hosts C-phase's `pallass_forge_clerk` graph (beats 1+3 of forge_tier_permit: the 5g filing, the 3g stamp that banks `elevator_pass_stamped`, THE producer both Grand Lift gates wait on; graph copy D-phase-replaceable, gates real). Same `tier_clerk` rig as the arrival checkpoint (the 'one rig reused at every desk' civic-uniformity tell, sprites.json's own contract). Static `dialogue` = no-graph fallback only.",
+   "_comment": "Static `dialogue` = no-graph fallback only.",
    "id": "forge_permit_clerk",
    "kind": "npc",
    "cell": [
@@ -437,7 +429,7 @@
    ]
   },
   {
-   "_comment": "Grimalkin, MOVED from pallass_forge (7,5) by the cross-lane reconciliation (controller ruling: he examines applicants BEFORE they descend -- his old post sat BEHIND the very lift gate his exam unlocks, a deadlock). Hosts C-phase's `pallass_grimalkin` graph (the 8g fitness-read exam, beat 2 of forge_tier_permit; graph copy D-phase-replaceable). CELL CONSTRAINT: (18,3), one row ABOVE and west of the clerk's own (20,4) row -- his ~104px-wide rig visually swallows anything sharing his feet row (the first office cut sat him at (21,4) beside the clerk and the windowed read showed the clerk + counter fully occluded, a same-row y-sort tie); at y3 the y4 clerk/counter row draws OVER him, so he looms against the wall band behind the window instead of covering it. His forge-tier workbench remains as the `grimalkin_station` dressing prop on pallass_forge. Static `dialogue` = the Phase-B placeholder line, now the no-graph fallback only.",
+   "_comment": "his ~104px-wide rig visually swallows anything sharing his feet row (the first office cut sat him at (21,4) beside the clerk and the windowed read showed the clerk + counter fully occluded, a same-row y-sort tie)",
    "id": "grimalkin",
    "kind": "npc",
    "cell": [
@@ -456,7 +448,7 @@
    ]
   },
   {
-   "_comment": "THE ELEVATOR PAIR (plan Task B2): pairs with pallass_forge's grand_lift_forge, SAME x=22 column in both maps. door_when gates on `elevator_pass_stamped` -- produced by the Permit Office's own `pallass_forge_clerk` graph (collect_stamp node, 3g), reachable at (19-21,4) WITHOUT crossing this gate. Unmet gate has no on_interact_accomplishment, so interact() falls through to use_skill('', id)'s locked-prop path, which reads `locked_toast` (the door-shaped fallback seam -- see wi_game.gd interact()'s own doc comment on this exact mechanism, the sewer_debris precedent); the toast's 'The clerk's window is open.' points at that office for real. Extra footprint (21,6)/(21,7) in `blocked` above reads as the cage's own bulk; approach from (23,7) facing left.",
+   "_comment": "Extra footprint (21,6)/(21,7) in `blocked` above reads as the cage's own bulk",
    "id": "grand_lift_market",
    "kind": "prop",
    "cell": [
@@ -480,7 +472,7 @@
    }
   },
   {
-   "_comment": "Issue #97: market_watchgolems, T4/T5 Pallass-adjacent pair encounter -- Pallass's SECOND live combat encounter. The crab_nest informed-consent shape (data/dialogue/market_watchgolems.json). respawns:true, MEASURED-only in the harness (same first-of-its-kind-region reasoning as forge_calibration_golem). Placed at (2,8), near the arrival corner but off every walked cell (RELOCATED off (16,9) after the `pallass_peek` review-wave finding: (16,9) sat exactly on that canonical's own bounds-lap sweep row y=9, x0-25, blocking it mid-walk) -- clear of the y3-7 clerk/stall/permit-office/lift corridor pallass_walkthrough's live route and pallass_peek's teleport-based route both walk, and off the y=2/y=9 exact bounds-lap rows and x=0/x=25 exact columns.",
+   "_comment": "respawns:true, MEASURED-only in the harness (same first-of-its-kind-region reasoning as forge_calibration_golem).",
    "id": "market_watchgolems",
    "kind": "encounter",
    "cell": [

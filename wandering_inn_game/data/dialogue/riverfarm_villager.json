@@ -1,5 +1,4 @@
 {
-	"_comment": "8b R3 (issue #11) the charmed villager's own graph -- reached on a SECOND same-waking talk (talk_pool's echo_of tell plays first). Purely reactive: no effects fire here, the real retirement is the entity's own talk_pool_stages swap (skeleton_scene.json). hub keeps the always-ungated exit ('Take care of yourself.') per the softlock guard.",
 	"start": "hub",
 	"nodes": {
 		"hub": {

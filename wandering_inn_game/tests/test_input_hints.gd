@@ -1,22 +1,4 @@
 extends SceneTree
-## Coverage for WIInputHints
-## (src/ui/input_hints.gd) -- the device classifier + keycap-hint composer.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_input_hints.gd
-##
-## `input_hints.gd` extends Node and references the ObservableBus autoload
-## directly (in `_input()`), so a bare `load()` fails to COMPILE under
-## --script mode -- the same "autoloads don't resolve as bare identifiers"
-## gotcha `tests/test_combat_visuals.gd` already works around. Same fix:
-## compile an in-memory patched copy that stubs ObservableBus as an inert
-## instance var. `WIEvents` is a plain `class_name` (not an autoload), so it
-## resolves fine even under --script and needs no stub.
-##
-## Scope (matches the plan's verification bar): the label table in both
-## device modes, and device CLASSIFICATION (`_classify`) including the
-## deadzone edge. The live bus-emission path (`_input()` calling
-## `ObservableBus.emit_domain_event`) is proven by the real QA/windowed pass
-## instead -- exercising it here would mean actually firing the stubbed-null
-## ObservableBus, which would crash the moment device state changes.
 
 
 func _init() -> void:
@@ -44,10 +26,6 @@ func _build_instance() -> Node:
 	return patched_script.new()
 
 
-## The label table (both kb and pad) for every action WIInputHints.LABELS
-## carries -- pins BOTH modes and, for kb, byte-matches the pre-S3 hardcoded
-## literals the swapped call sites used to carry verbatim (see each call
-## site's own doc comment for why this makes those swaps zero-re-pin).
 func _check_labels(instance: Node) -> void:
 	var kb_expected := {
 		"move": "Arrows", "interact": "E", "confirm": "Enter", "cancel": "Esc",
@@ -67,18 +45,9 @@ func _check_labels(instance: Node) -> void:
 	for action: String in pad_expected:
 		var got: String = instance.label(action)
 		assert(got == pad_expected[action], "pad label(%s) == %s, got %s" % [action, pad_expected[action], got])
-	# Unrecognized action degrades to the action string itself (never crashes
-	# a typo'd caller -- same graceful-degrade spirit as InputMap.has_action
-	# guards elsewhere in this codebase).
 	assert(instance.label("not_a_real_action") == "not_a_real_action", "label() must fall back to the action name for an unknown key")
 
 
-## `_classify` is pure (no ObservableBus touch), so it's safe to call
-## directly even on the stubbed instance. Covers every event class the file
-## doc comment claims, plus the deadzone edge (S1's InputMap uses 0.5 on
-## every action -- WIInputHints.MOTION_DEADZONE must agree with it, or "the
-## player is on a pad" classification and actual action activation would
-## disagree about what counts as a deliberate stick push).
 func _check_classification(instance: Node) -> void:
 	var key_event := InputEventKey.new()
 	key_event.pressed = true

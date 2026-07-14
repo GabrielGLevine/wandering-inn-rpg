@@ -1,5 +1,5 @@
 {
- "_comment": "8e Phase B (issue #16, plan docs/superpowers/plans/2026-07-12-8e-pallass.md): Pallass forge tier (T4), industrial. STACKED-BAND composition: same shelf grammar as pallass_market -- and the SAME BAND MATERIAL: the rising wall (y0-1 segment), parapet rim (y9 floor_layers edge tile), void row (y10, biome.blocked) and skirt all paint from the slate_over_void atlas's dark cells (controller windowed ruling: the first cut used this map's own brick_over_molten atlas for the bands, whose LOWER terrain is MOLTEN -- the map read ~40% orange, drifting toward the amber-adjacent read the quarantine forbids; the tier bands are the machine's own dark slate mass on EVERY tier, only the shelf floor differs). Molten appears ONLY at the mid-floor seam (13-17,5): those 5 blocked cells are `cover_skip`-listed so the generic dark blocked overlay skips them, and a floor_layers entry paints the brick_over_molten atlas's molten cell [0,0] there instead -- ONE dominant channel, well under the ratified 8%-of-walkable-view ceiling (direction.md benchmark ruling), darkness carrying the rest. `forge_station_a` carries the ONE furnace-glow PointLight2D (orange #F65510, flicker:true -- the single sanctioned flicker source; crystal lamps stay steady). Machine noise implied by dressing only (steam_vent, embers over the seam) -- no new audio wiring this phase. Grid height 11 keeps the full stack in the 320x180 view (see pallass_market's own _comment for the camera math). Elevator gate `grand_lift_forge` pairs with pallass_market's `grand_lift_market` at the SAME x=22 column; its `elevator_pass_stamped` producer is the MARKET tier's Permit Office (cross-lane reconciliation -- Grimalkin moved there too; his old (7,5) post remains as the `grimalkin_station` dressing prop below). Scatter: sparse work-clutter only at stations per direction.md, but no bespoke ingot/tool-rack sprite is picked yet ('future picks') -- v1 ships without it rather than force an ill-fitting stand-in.",
+ "_comment": "Scatter: sparse work-clutter only at stations per direction.md, but no bespoke ingot/tool-rack sprite is picked yet ('future picks')",
  "biome": "pallass_forge",
  "grid": {
   "width": 26,
@@ -161,13 +161,12 @@
    5
   ]
  ],
- "_comment_cover_skip": "The molten seam's 5 blocked cells -- skipped by the generic (dark slate) blocked overlay so the floor_layers molten tile below shows through instead. Sim blocking untouched (the cells stay in `blocked`); this is the ONE place molten renders on this map (the seams-sparing ruling).",
+ "_comment_cover_skip": "cover_skip exposes the molten seam art; the five cells remain blocked.",
  "walls": {
   "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
   "tile_px": 16,
   "segments": [
    {
-    "_comment": "The rising wall -- the tier above's underside (canon: Pallass's forges sit high, floor 9 -- there IS a tier above the forge hall). face=the slate_over_void atlas's dark lower/void Wang cell (id0) -- the SAME band material as pallass_market's wall (controller windowed ruling: tier bands are dark slate mass on EVERY tier; this map's own brick_over_molten atlas has MOLTEN as its lower terrain and must never paint a band).",
     "from": [
      0,
      0
@@ -185,7 +184,6 @@
  },
  "floor_layers": [
   {
-   "_comment": "The parapet rim -- the SAME slate_over_void mixed-corner edge tile (id12 [0,3]) as pallass_market's own parapet (band-material continuity across the pair; the brick atlas's own [0,3] has molten in its lower corners -- the 'caution strip' the controller's windowed read flagged -- and must not be used here).",
    "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
    "tile_px": 16,
    "coords": [
@@ -202,7 +200,7 @@
    }
   },
   {
-   "_comment": "The molten seam itself -- the brick_over_molten atlas's all-lower molten cell (id0 [0,0]) painted ONLY at the 5 seam cells (paired with `cover_skip` above so the dark blocked overlay skips them). This entry is the map's whole molten budget.",
+   "_comment": "the brick_over_molten atlas's all-lower molten cell (id0 [0,0]) painted ONLY at the 5 seam cells (paired with `cover_skip` above so the dark blocked overlay skips them).",
    "sheet": "res://assets/tiles/pallass/tileset_brick_over_molten_atlas.png",
    "tile_px": 16,
    "coords": [
@@ -235,7 +233,6 @@
    }
   },
   {
-   "_comment": "The Grand Lift platform -- same Castle checker accent as pallass_market's own lift zone (continuity across the pair; second tile family for dynamism c1).",
    "sheet": "res://assets/tiles/castle/Tiles.png",
    "tile_px": 16,
    "coords": [
@@ -362,7 +359,6 @@
  ],
  "ambience": [
   {
-   "_comment": "Embers rising off the molten seam (13-17,5) -- the ONE always-on emitter this tier ships (no `phase` key: WIAtmosphere._set_emitter_state treats an empty phases array as always-emitting, matching the map's own time-invariant mood card).",
    "preset": "embers",
    "rect": [
     13,
@@ -374,7 +370,7 @@
  ],
  "entities": [
   {
-   "_comment": "Grimalkin's forge-tier workbench, DRESSING only -- the man himself moved to pallass_market's Permit Office (cross-lane reconciliation: his exam is beat 2 of the chain that unlocks the lift, so he must examine applicants BEFORE they descend, not from behind the very gate his sign-off opens). Sprite `library_desk` is the closest in-hand instrumented-bench read (free_pack; a bespoke calipers-and-weights bench is a future art pick).",
+   "_comment": "Grimalkin's forge-tier workbench, DRESSING only",
    "id": "grimalkin_station",
    "kind": "prop",
    "cell": [
@@ -388,7 +384,6 @@
    "toast": "Every tool squared to the bench edge. You decide against touching anything."
   },
   {
-   "_comment": "The forge tier's public interactable ([Tactician]/[Engineer] observe content per the bible's 'inventions as interactables' dialect). Carries the ONE furnace-glow light this map ships (orange #F65510, flicker:true) -- the single sanctioned flicker source; every crystal_lamp on this map stays steady.",
    "id": "forge_station_a",
    "kind": "prop",
    "cell": [
@@ -438,7 +433,6 @@
    "toast": "Warm, damp air. A rhythm underneath it, too even to be weather."
   },
   {
-   "_comment": "THE ELEVATOR PAIR (plan Task B2): pairs with pallass_market's grand_lift_market, SAME x=22 column. Same DORMANT door_when/locked_toast mechanism -- see that entity's own _comment for the full mechanism trace (interact()'s locked-prop fallback seam).",
    "id": "grand_lift_forge",
    "kind": "prop",
    "cell": [
@@ -462,7 +456,7 @@
    }
   },
   {
-   "_comment": "Issue #97: forge_calibration_golem, T4/T5 Pallass-adjacent solo encounter -- Pallass's FIRST live combat encounter (every prior Pallass QA canonical is explicitly zero-combat, see pallass_walkthrough/pallass_peek's own notes). The crab_nest informed-consent shape (data/dialogue/forge_calibration_golem.json). respawns:true, MEASURED-only in the harness (a first-of-its-kind region, no established band to hold). Placed at (20,8), the map's south edge (RELOCATED off (24,2) after the `pallass_peek` review-wave finding: (24,2) sat exactly on that canonical's own bounds-lap sweep row y=2, x0-25, blocking it mid-walk) -- clear of the forge_station_a/b (10,6)/(17,4), grimalkin_station (7,5), steam_vent_forge (5,7), grand_lift_forge (22,7), and every `pallass_peek`/`pallass_walkthrough` teleport waypoint; Chebyshev distance to grand_lift_forge is 2, to the nearest bounds-lap row (y=9) is 1 (never walked -- only y=2/y=9 exact rows + x=0/x=25 exact columns are, per pallass_peek's own bounds-lap shape).",
+   "_comment": "respawns:true, MEASURED-only in the harness (a first-of-its-kind region, no established band to hold).",
    "id": "forge_calibration_golem",
    "kind": "encounter",
    "cell": [

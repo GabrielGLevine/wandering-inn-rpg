@@ -1,5 +1,5 @@
 {
- "_comment": "(spec \u00a75.5 the anchor-stone-per-region idiom -- the #10/#12/#16 contract) Each row is one fast-travel DESTINATION: {id, display_name, map, cell, requires_accomplishment, arrival_toast}. `requires_accomplishment` gates the row at >= 1 (the door_when/contains_when >= semantics); a future region milestone appends a row keyed on ITS OWN attunement accomplishment, zero code (src/core/portals.gd's WIPortals.attuned_destinations/build_portal_graph read this list generically). v1 ships the Liscor pair: the inn's pantry_door <-> the street's street_anchor_stone, both gated on door_awakened (they attune together -- the SAME beat-4 awakening opens both ends of the player's own home-region connection). Arrival cells are blast-radius-checked walkable + off every canonical route (the DP3 discipline): inn (13,6) is the free interior cell immediately west of pantry_door (14,6, moved against the east wall by playtest hotfix #2 -- was (10,6)/(9,6)); street (29,10) is the open mid-street cell immediately west of the new street_anchor_stone (30,10), clear of every blocked/decor/entity cell on that map.",
+ "_comment": "(spec §5.5 the anchor-stone-per-region idiom -- the #10/#12/#16 contract) Each row is one fast-travel DESTINATION: {id, display_name, map, cell, requires_accomplishment, arrival_toast}.",
  "portals": [
   {
    "id": "liscor_street",
@@ -33,7 +33,7 @@
    ],
    "requires_accomplishment": "riverfarm_attuned",
    "arrival_toast": "The light warms and the air smells of wheat and river water before you've taken a step. Riverfarm, same as the rumor said.",
-   "_comment": "8b R1 (issue #10) -- the anchor-stone-per-region idiom's first genuinely NEW instance (zero code, per this file's own top-level comment). riverfarm_attuned banks from the Guild-board rumor beat (guild_board's own board_rumors list in skeleton_scene.json, read at THE REQUEST BOARD -- deliberately NOT a bounties.json posting, since that pool's size is load-bearing for every canonical seed's rotation window), not from any door-awakening beat -- a new region earns its OWN attunement, distinct from the Liscor pair's shared door_awakened. Arrival cell (13,5) sits one cell east of riverfarm_anchor_stone (12,5) at the village's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
+   "_comment": "Arrival cell (13,5) sits one cell east of riverfarm_anchor_stone (12,5) at the village's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
   },
   {
    "id": "invrisil",
@@ -45,7 +45,7 @@
    ],
    "requires_accomplishment": "invrisil_attuned",
    "arrival_toast": "The light turns pale and cool, and the noise of a much bigger city rushes in to fill the silence. Invrisil, same as the letter promised.",
-   "_comment": "The anchor-stone-per-region idiom's newest instance (zero code). invrisil_attuned banks from Eloise's stone purchase (riverfarm_witch.json's 'shop' node, post-blight_lifted) -- the Guild-board letter (guild_board's own board_rumors list in skeleton_scene.json) stays a signpost only, pointing at Riverfarm/Eloise rather than banking this flag itself. Arrival cell (4,8) sits one cell east of invrisil_anchor_stone (3,8) at the boulevard's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
+   "_comment": "Arrival cell (4,8) sits one cell east of invrisil_anchor_stone (3,8) at the boulevard's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
   },
   {
    "id": "pallass",
@@ -57,7 +57,7 @@
    ],
    "requires_accomplishment": "pallass_attuned",
    "arrival_toast": "The light sharpens and the air turns to hot metal and stone dust. Pallass, tier on tier, rising past where you can see the top.",
-   "_comment": "8e Phase C ('Papers for Pallass' Stage 2, controller ruling 2, the GH#65 late-attuning precedent -- invrisil's own row above is the template). pallass_attuned banks from Krshia's attunement-stone purchase (data/dialogue/krshia_crate.json's 'charms' node, gated on pallass_sponsored), the SAME late-attuning shape as invrisil_attuned. requires_accomplishment gates this row structurally inert (WIPortals.attuned_destinations excludes it) until pallass_attuned banks -- no canonical QA run selects this row today (the quest chain's own future canonical will). ARRIVAL CELL RECONCILED (B lane, replacing C's forward-referenced (10,10) placeholder -- which sat on the map's blocked void row): (4,7) is the open cell directly south of `pallass_market_arrival_anchor` (4,6), off every blocked/decor/entity cell, zero trigger_radius encounters on the map (blast-radius trivially clear), with the arrival checkpoint clerk (7,5) three cells east -- the DP3 discipline."
+   "_comment": "pallass_attuned banks from Krshia's attunement-stone purchase (data/dialogue/krshia_crate.json's 'charms' node, gated on pallass_sponsored), the SAME late-attuning shape as invrisil_attuned."
   },
   {
    "id": "dungeon_depths",
@@ -68,8 +68,7 @@
     6
    ],
    "requires_accomplishment": "dungeon_attuned",
-   "arrival_toast": "The light dims into torchlit stone, and the deep hush of the dungeon closes back around you. You know this quiet.",
-   "_comment": "Issue #89 (gap-2, second-door mini-arc): the dungeon anchor, NOT a new region's own attunement (contrast riverfarm/invrisil/pallass above) -- dungeon_attuned banks from wi_game.gd's sleep() hook (second_door_study_sleeps reaching 2, itself guarded on door_awakened already banked -- the monotone-chain rule test_fixture_coherence.gd's _check_monotone_chains enforces for every id ending `_attuned`), so this row is inert until BOTH the pantry-door network is awake AND Pisces has finished studying the second door found in trapped_halls. MAP-EXISTENCE GUARD (the 8e forward-reference lesson): dungeon_approach ships live already (8d C1, issue #14/#15 -- Ceria/Yvlon/Ksmvr's recruit-sighting map, WIPortals.attuned_destinations' has_map check would otherwise leave a forward-referenced row silently inert). Arrival cell (2,6) sits one cell east of `gallery_seal_anchor` (1,6, the dormant/promoted deep_tunnels return door), open, clear of every blocked cell ([4,2]/[11,2]/[3,9]/[12,9]) and every entity cell on this map (ceria/yvlon/ksmvr sit at row y5, dormant_guardian_marker at (8,9), dungeon_depths_door at (14,6), kingslayer_den at (12,10) -- interact-only, no trigger_radius, so portal arrival's transition()-only O2 rule never risks springing it regardless)."
+   "arrival_toast": "The light dims into torchlit stone, and the deep hush of the dungeon closes back around you. You know this quiet."
   }
  ]
 }

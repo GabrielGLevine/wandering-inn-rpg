@@ -1,14 +1,5 @@
 class_name WICombatView
 extends RefCounted
-## Thin read facade bounding combat-presentation reads of a live
-## `WICombat`. Constructed fresh per encounter by `combat_screen.gd`'s
-## `_show_combat()` (`_view = WICombatView.new(_combat())`) and handed down to
-## `WICombatBoardRenderer.build()` plus whichever of the screen's own
-## refresh-path functions were trivial to route through it this task (see the
-## D2 task report for the exact coverage list -- some direct
-## `combat.`/`Game.sim.combat` reads remain in combat_screen.gd, left for
-## D3/D4's own extractions rather than balloon this task's diff).
-##
 ## Every getter body below is the exact direct read the call site used to
 ## perform inline against `WICombat`, moved here VERBATIM -- no caching, no
 ## derived logic, no behavior change. `combatant()`/`blocked()`/`arena_id()`
@@ -20,16 +11,6 @@ extends RefCounted
 ## one-line-passthrough pattern as every other getter here.
 
 var _combat: WICombat
-## Issue #75 item 5b: id -> presentation LABEL, computed ONCE here (per-
-## encounter "build time", matching `_view`'s own per-combat lifetime) so
-## every combat-presentation surface that names a combatant (turn strip, feed
-## lines, readout target line, friendly-fire line-skill preview) agrees. Sim
-## state (`_combat.combatants[id]["display_name"]`) is left untouched by
-## design -- wi_combat.gd's own doc comment on the same-catalog-id runtime-id
-## suffix ("players see [name] twice, the suffix is internal bookkeeping
-## only") is about the ID collision, not display text; this is the
-## presentation-side fix for the TEXT half, kept out of sim per the sim-
-## purity rule.
 var _display_names: Dictionary = {}
 
 
@@ -38,7 +19,6 @@ func _init(combat: WICombat) -> void:
 	_display_names = _build_display_names()
 
 
-## Groups combatants by their raw `display_name`, then appends " A"/" B"/...
 ## to every group with more than one member (deterministic order: sorted by
 ## combatant id, the same stable tie-break `line_target_text()` already uses
 ## for its own name list). A roster with no duplicate name at all yields the
@@ -64,18 +44,10 @@ func _build_display_names() -> Dictionary:
 	return out
 
 
-## A/B/C.../Z, then falls back to a plain 1-based number past 26 (no shipped
-## roster fields that many same-name combatants, but this keeps the mapping
-## total instead of colliding on an out-of-range chr() call).
 static func _letter(i: int) -> String:
 	return String.chr(65 + i) if i < 26 else str(i + 1)
 
 
-## The deduped presentation label for `id` -- every combat surface that shows
-## a combatant's name reads through this instead of the raw
-## `combatant(id)["display_name"]`, so a duplicate-name roster (e.g. two
-## "Footpad"s) can never show the ambiguous text on one surface and the
-## disambiguated one on another (issue #75 item 5b).
 func display_name(id: String) -> String:
 	if _display_names.has(id):
 		return String(_display_names[id])
@@ -155,10 +127,6 @@ func arena_config() -> Dictionary:
 	return _combat.arena_config
 
 
-## Full per-combatant dict (side/display_name/hp/mp/cell/skills/...) -- the
-## board renderer's combatant-visual/label builders index straight into this
-## the same way combat_screen.gd used to index `combat.combatants[id]`
-## directly; see this file's doc comment for why this getter exists.
 func combatant(id: String) -> Dictionary:
 	return _combat.combatants[id]
 

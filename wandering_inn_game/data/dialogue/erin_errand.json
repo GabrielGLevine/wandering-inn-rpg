@@ -6,7 +6,6 @@
    "text": "Oh good, someone with working legs! I've got a package for Selys at the Guild - mind running it over? Also the common room is a disaster, don't look at it.",
    "text_variants": [
     {
-     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
      "requires": {
       "phase": [
        "dusk",
@@ -40,7 +39,6 @@
      "text": "I know what the road is like. I'm not asking you to un-fight anything. I'm asking you to knock first at the idea that they're all the same. Sign stays up."
     },
     {
-     "_comment": "Issue #89 (gap-2), the text_variants marker-node pattern: goblins_spared (goblin_parley.json's 'Stand aside' option, the sole reachable nonviolent goblin resolution, also a Garden K-of-4 leg) previously had zero NARRATIVE consumer -- Erin's own won_combat variant above reacts to the violent read; this is its peaceful counterpart, the missing half of the same theme. Inserted BEFORE wrong_order_reported (which is documented as appended-last/highest-priority) so that line still wins if both are true.",
      "requires": {
       "accomplishment": {
        "goblins_spared": 1
@@ -49,7 +47,6 @@
      "text": "Heard you talked the goblins into just... leaving. Actual talking, not begging, not bribing. I don't know how you managed it and I don't want the details, I just want it to keep working."
     },
     {
-     "_comment": "controller voice pass. Issue #80 (world reactivity wave, item 5 -- the news-travels line): krshia_crate.json already reacts to resolved_wrong_order on Krshia's own side; this is Erin's OWN post-quest reaction on her own hub, the missing half. Appended LAST (highest priority).",
      "requires": {
       "accomplishment": {
        "wrong_order_reported": 1
@@ -108,7 +105,6 @@
      "goto": "cleaned"
     },
     {
-     "_comment": "One-hearing errand epilogue. FUNCTION: this option and its keep-the-tip twin below share the reward_acknowledged flag (gave_reward/kept_reward are mutually exclusive per selys_delivery.json, so ONE flag covers both) -- banked on first pick, hide_when retires both afterward, same shape as cleaned_the_inn/reported_cleaning above. TRAP: without the hide_when, Erin's one-off reaction replays on every hub re-entry forever.",
      "text": "You sent it back!",
      "requires": {
       "accomplishment": {
@@ -171,7 +167,6 @@
      "goto": "erin_home"
     },
     {
-     "_comment": "stage-3 perk, once per waking. Gate combines the SAME accomplishment stage-gate erin_home uses with the new once_per_waking seam (dialogue.gd's second sanctioned {accomplishment, once_per_waking} compound) -- meal:erin banked by bank_first_use, cleared at sleep(). well_fed:true folds into hp_mod at the next combat build (field HP has no direct target).",
      "text": "Sit, eat. Cook's orders.",
      "requires": {
       "accomplishment": {
@@ -191,7 +186,6 @@
      "goto": "erin_meal"
     },
     {
-     "_comment": "(spec §1 beat 1 / §5.4: 'no Erin gate on the chain -- she reacts via existing pool lines, gates nothing'; this OPTION is the beat-1 trigger itself, not a gate on anything downstream) Gated on post_game (the GDI epilogue's own completion marker, banked by sleep_veil.gd once -- 'post-epilogue sleep' per spec §1), so the flicker beat can only start after Act III's own ending. Appended AFTER every existing option (index-safety convention -- this option is hidden pre-post_game for every earlier canonical, so appending here never shifts any prior visible index). Starts the quest AND banks door_chain_started in one option, matching the_errand/missing_crate's own quest-start shape.",
      "text": "Something wrong with the pantry door?",
      "requires": {
       "accomplishment": {
@@ -214,7 +208,6 @@
      "goto": "erin_door_flicker"
     },
     {
-     "_comment": "Issue #74: standing non-banking recap, requires-active (has_package)/hide_when-resolved (errand_decided), place-named. Appended at array end (index-safety convention).",
      "text": "Remind me where Selys needs me?",
      "requires": {
       "accomplishment": {
@@ -371,7 +364,6 @@
    ]
   },
   "erin_door_flicker": {
-   "_comment": "(spec §3 Erin key, quoted verbatim)",
    "speaker": "Erin",
    "text": "It went somewhere COLD this morning. Doors shouldn't have moods. …Can you look? If it eats you, yell.",
    "options": [
@@ -386,7 +378,6 @@
    ]
   },
   "errand_recap": {
-   "_comment": "Issue #74: replays the CURRENT beat only -- never re-banks has_package/package_delivered/errand_decided (goto only, no effects on this node or its options).",
    "speaker": "Erin",
    "text": "Selys is still waiting on that package — the Adventurer's Guild, same as it ever was.",
    "text_variants": [

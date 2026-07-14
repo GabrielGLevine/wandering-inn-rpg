@@ -1,7 +1,5 @@
 class_name WISpriteRegistry
 extends RefCounted
-## Builds and caches SpriteFrames from the data/sprites.json catalog.
-## Presentation-side only (uses ResourceLoader) -- never referenced from src/core.
 
 static var _catalog: Dictionary = {}
 static var _cache: Dictionary = {}
@@ -14,9 +12,6 @@ static var _tile_sources: Dictionary = {}
 ## placeholder texture -- a flat muted colour derived deterministically from
 ## the sheet path plus a 1px border -- so all downstream region/frame_size
 ## math still resolves and the game boots + passes QA with placeholder art.
-## ZERO behavior change when assets are present (the null branch is unreached).
-## A missing sprites.json ENTRY is still an assert (malformed catalog data,
-## not a missing file) -- same convention as _load_catalog / the B2 note.
 static var _placeholder_cache: Dictionary = {}
 static var _missing_sheet_logged: Dictionary = {}
 
@@ -33,20 +28,11 @@ static func has_sprite(sprite_id: String) -> bool:
 	return _catalog.has(sprite_id)
 
 
-## Returns the raw catalog entry for a sprite id (e.g. to read optional
-## top-level fields like "render_scale"), or an empty Dictionary if unknown.
 static func entry_for(sprite_id: String) -> Dictionary:
 	_load_catalog()
 	return _catalog.get(sprite_id, {})
 
 
-## Fractional anchor point within a sprite's frame that should align to a
-## cell's bottom-center (16px native tile size). Optional per-entry
-## "anchor": [x, y] in data/sprites.json; defaults to [0.5, 1.0] (feet/base
-## centered at the cell's bottom edge) -- the correct convention for both
-## character sprites (which overhang the cell above, by design, at 16px) and
-## floor-standing props. Consumed by the field (world.gd) and combat
-## (combat_screen.gd) visual builders.
 static func anchor_for(sprite_id: String) -> Vector2:
 	var entry := entry_for(sprite_id)
 	var raw: Variant = entry.get("anchor", [0.5, 1.0])
@@ -55,11 +41,6 @@ static func anchor_for(sprite_id: String) -> Vector2:
 	return Vector2(0.5, 1.0)
 
 
-## Deterministic position-seeded index into a variants array (floor_layers schema, docs/superpowers/specs/2026-07-02-environment-ui-
-## immersion-design.md sec.1) -- a pure function of the cell coordinate, no
-## RNG stream touched, so the same cell always renders the same variant
-## across saves/replays/QA runs. Shared by world.gd (field) and
-## combat_screen.gd (arena board) so both pick variants the same way.
 static func cell_variant_index(cell: Vector2i, count: int) -> int:
 	if count <= 0:
 		return 0
@@ -69,10 +50,6 @@ static func cell_variant_index(cell: Vector2i, count: int) -> int:
 	return int(abs(h)) % count
 
 
-## Shared contact-shadow texture (scene-assembly-guide P5): one cached
-## soft black ellipse rendered under any sprite whose catalog entry sets
-## "shadow": true. Generated, not an asset -- pack Shadows.png sheets can
-## replace it per-prop later if the ellipse reads poorly.
 static func shadow_texture() -> Texture2D:
 	if _cache.has("__shadow__"):
 		return _cache["__shadow__"]
@@ -87,7 +64,6 @@ static func shadow_texture() -> Texture2D:
 			var dy := (y - cy) / (h * 0.5)
 			var d := dx * dx + dy * dy
 			if d < 1.0:
-				# soft edge: fade alpha toward the rim
 				img.set_pixel(x, y, Color(0, 0, 0, 0.35 * clampf(1.0 - d, 0.0, 1.0)))
 	var tex := ImageTexture.create_from_image(img)
 	_cache["__shadow__"] = tex
@@ -122,8 +98,6 @@ static func frames_for(sprite_id: String) -> SpriteFrames:
 	return frames
 
 
-## Cached TileSetAtlasSource for a sheet, gridded at tile_px. Each distinct
-## sheet gets one TileSet the callers share via source id 0.
 static func tile_set_for(sheet_path: String, tile_px: int) -> TileSet:
 	var key := "%s@%d" % [sheet_path, tile_px]
 	if _tile_sources.has(key):
@@ -193,12 +167,7 @@ static func is_fallback_sheet(path: String) -> bool:
 	return _missing_sheet_logged.has(path)
 
 
-## --- R2 fallback-art placeholder synthesis -----------------------------------
 
-## Placeholder for a missing sprite SHEET. Sized to contain the requested
-## region (so region_data crops stay in-bounds) or a single frame when no
-## region is given -- either way >= one frame, so `_add_strip`'s frame math
-## yields count >= 1.
 static func _placeholder_strip_texture(sheet_path: String, frame_size: Vector2i, region_data: Variant) -> Texture2D:
 	var w := frame_size.x
 	var h := frame_size.y
@@ -209,18 +178,12 @@ static func _placeholder_strip_texture(sheet_path: String, frame_size: Vector2i,
 	return _placeholder_texture(sheet_path, maxi(w, 1), maxi(h, 1))
 
 
-## Placeholder for a missing TILE sheet. Extent is inversely proportional to
-## tile_px and capped at 32 tiles/axis, so a fine 16px sheet gets a generous
-## grid (covers every atlas coord the maps reference, max ~[14,21]) while a
-## whole-image 540px "tile" stays a cheap 1x1.
 static func _placeholder_tile_texture(sheet_path: String, tile_px: int) -> Texture2D:
 	var span: int = clampi(int(round(512.0 / float(maxi(tile_px, 1)))), 1, 32)
 	var px := span * maxi(tile_px, 1)
 	return _placeholder_texture(sheet_path, px, px)
 
 
-## Deterministic flat muted colour (from the path hash) with a 1px darker
-## border. Cached per path+size so repeated builds reuse one ImageTexture.
 static func _placeholder_texture(seed_path: String, w: int, h: int) -> Texture2D:
 	_log_missing_sheet(seed_path)
 	var key := "%s@%dx%d" % [seed_path, w, h]
@@ -243,17 +206,12 @@ static func _placeholder_texture(seed_path: String, w: int, h: int) -> Texture2D
 
 static func _placeholder_color(seed_path: String) -> Color:
 	var hv: int = abs(hash(seed_path))
-	# Muted mid-tones (0.32..0.66) so a chip reads as a distinct solid block
-	# without glaring; each pack/sheet gets its own stable hue.
 	var r := 0.32 + float(hv & 0xFF) / 255.0 * 0.34
 	var g := 0.32 + float((hv >> 8) & 0xFF) / 255.0 * 0.34
 	var b := 0.32 + float((hv >> 16) & 0xFF) / 255.0 * 0.34
 	return Color(r, g, b, 1.0)
 
 
-## One `[fallback_art]` line per unique missing sheet per run. A plain print
-## (NOT push_warning) so the grep discipline (SCRIPT ERROR|Parse Error|WARNING)
-## is not tripped -- check_fallback_boot.sh additionally expects these lines.
 static func _log_missing_sheet(path: String) -> void:
 	if _missing_sheet_logged.has(path):
 		return

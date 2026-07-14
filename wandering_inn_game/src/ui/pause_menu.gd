@@ -1,107 +1,23 @@
 extends CanvasLayer
-## Pause menu — Resume / Save / Load / Load Autosave / Music / SFX /
-## Quit to Title. Toggled by `cancel` (Esc) when the field is idle.
-##
-## Issue #78: "Save"/"Load" now open a SUB-PICKER (see `_enter_slot_picker`)
-## listing `Game.MANUAL_SLOTS` (3 slots, "manual" first) with a metadata
-## summary line each, instead of acting on the single "manual" slot
-## directly -- ROWS/COMBAT_ROWS/their indices are UNCHANGED (append-only-or-
-## sub-menu rule), only what pressing Confirm on "Save"/"Load" DOES changed.
-## "Load Autosave" stays a single direct action (only one autosave slot
-## exists, nothing to pick).
-##
-## Input arbitration (repo-wide precedence: combat > dialogue > pause >
-## journal > inventory > world): pause only toggles/consumes input when
-## no dialogue is open and BOTH the journal and the inventory are closed;
-## during combat it opens ONLY from the HOTBAR resting mode (see
-## `_can_open`/`combat_ref`) with the reduced COMBAT_ROWS set, whose one
-## extra verb is Abandon-to-last-autosave — world.gd wires `journal_ref`/
-## `inventory_ref` after creating all three components so this check does
-## not need a scene-tree lookup; world.gd itself checks `pause_menu.open`
-## before handling movement/interact.
-##
-## Reaching Main: this node is instantiated as a DIRECT CHILD of the
-## `Main` node itself (`main.gd`'s `_spawn_ui_layers()` calls
-## `add_child(_pause_menu)` on `self`), so `get_parent()` is Main — no
-## scene-tree search needed. Main isn't preloaded here (that would create a
-## preload cycle: main.gd already preloads this script) so the call is
-## duck-typed via `has_method()`, mirroring main.gd's own
-## `world.has_method("inject_ui_refs")` pattern for the same reason.
 
-## Issue #106: grown 300->390 (+90) to fit ROWS' rows at their widened 36px
-## height (was 24px, see the row-build loop below) without overflowing the
-## fixed CARVED_PANEL chrome -- 9-slice art, tolerates the resize (same
-## precedent `dialogue_panel.gd`'s dynamic `_fit_panel_height` already banks
-## on). COMBAT_ROWS (fewer rows) fits with slack, unchanged shape.
 const PANEL_SIZE := Vector2(280.0, 390.0)
-## "Music"/"SFX" double as `WIAudio` bus names, so `_row_text()` and
-## `_adjust_volume_row()` can use the row key directly as the bus arg.
-## "Settings" is APPENDED at the end (issue #77) -- never inserted earlier --
-## so every existing index-based QA reference (mouse_loop.json's
-## `click_pause_row row:1` = Resume, the "move down N" navigations in
-## board_loop/consolidation_reload/save_migration/save_load_roundtrip) keeps
-## the exact same target row. Issue #78: those same 4 scripts' Save/Load
-## steps each gained ONE extra Confirm (selecting slot "manual", the
-## picker's default cursor 0) since Confirm on "Save"/"Load" now opens the
-## sub-picker instead of acting immediately -- the ROW index itself never moved.
 const ROWS := ["Resume", "Save", "Load", "Load Autosave", "Music", "SFX", "Quit to Title", "Settings"]
-## The reduced row set while a fight is live (combat_ref.is_resting() gates
-## opening at all). No Save/Load rows: combat state is never serialized, so a
-## mid-fight save would silently drop the fight — Abandon is the honest verb
-## (returns to the last autosave, same slot the defeat path loads). No
-## Settings row either -- deliberately unreachable mid-combat (keeps
-## combat_abandon.json's canonical COMBAT_ROWS shape untouched).
 const COMBAT_ROWS := ["Resume", "Abandon to Last Save", "Music", "SFX", "Quit to Title"]
 const VOLUME_ROWS := ["Music", "SFX"]
 
 const CONFIRM_PANEL_SIZE := Vector2(340.0, 158.0)
 const CONFIRM_TEXT := "Unsaved progress since the\nlast autosave is lost. Quit?"
 const ABANDON_CONFIRM_TEXT := "Abandon the fight? You return\nto your last autosave."
-## Cursor defaults to "No" (index 0) on entry — both confirmed actions are
-## destructive.
 const CONFIRM_ROWS := ["No", "Yes"]
 
-## Issue #78: the Save/Load slot-picker sub-panel. "Save"/"Load" (ROWS
-## indices 1/2, UNCHANGED -- see the class doc comment's index-pin note)
-## open this instead of acting directly; picking a row here is what
-## actually saves/loads. "Back" is the mouse-clickable equivalent of Esc
-## (the settings_panel.gd "Back" row precedent) -- every other UIChrome
-## sub-panel with a Cancel affordance also offers a clickable row, not just
-## a keyboard-only escape.
-## Wide enough for the longest real summary line ("Slot N — <name> —
-## <Class> LvNN — <Map>") at the theme's default 14px font without wrapping
-## (Label rows below render with autowrap OFF, matching every other
-## pause_menu row) -- verified against every shipped class/map id's
-## title-cased length; re-check with a windowed screenshot if a
-## dramatically longer id is ever added.
-## Issue #106: grown 210->250 (+40) for the slot rows' widened 32px height
-## (was 22px, see `_slot_rows()`'s build loop) -- same 9-slice-tolerates-resize
-## reasoning as PANEL_SIZE above.
 const SLOT_PICKER_PANEL_SIZE := Vector2(460.0, 250.0)
-## Sane truncation budget (chars) for a rendered row -- a 16-char player-typed
-## name (PC_NAME_MAX) plus the longest shipped map id ("Riverfarm Longhouse")
-## can exceed the panel's real content width; `_truncate_row` below cuts at a
-## word boundary, same shape as title_screen.gd's `_first_sentence` fallback.
-## Deliberately generous (the common case -- short name/class/map -- never
-## gets near it): a text-scale increase (WISettings, up to 130%) shrinks the
-## real safety margin at a FIXED char budget, unlike this codebase's px-
-## measured panels (message_layer.gd/combat_hud.gd) -- flagged as a
-## follow-up to convert to a real Font.get_string_size measurement if a
-## windowed check at 130% ever shows overflow.
 const SLOT_ROW_CHAR_BUDGET := 50
 const SLOT_PICKER_BACK := "Back"
 
-## True while the pause panel is visible; world.gd and journal.gd gate on this.
 var open := false
 
-## Set by world.gd right after both components are instantiated.
 var journal_ref: Node = null
-## Set by world.gd/main.gd alongside journal_ref (three-way mutual
-## exclusion -- see inventory.gd's file doc comment).
 var inventory_ref: Node = null
-## Set by main.gd (the combat screen instance). Gates in-combat opening to
-## the HOTBAR resting mode (is_resting()) and owns the abandon teardown
-## (abandon_combat()) -- the menu never touches combat internals itself.
 var combat_ref: Node = null
 ## Set by world.gd's `inject_ui_refs` to `self` (a same-file self-ref, not a
 ## cross-script preload -- world.gd already owns this assignment, no new
@@ -112,8 +28,6 @@ var combat_ref: Node = null
 ## otherwise open the pause menu INSTEAD of ever reaching world.gd's own
 ## cancel-disarm branch.
 var world_ref: Node = null
-## Set by main.gd alongside the other refs (issue #77) -- the shared
-## settings_panel.gd instance, opened by the new "Settings" row.
 var settings_ref: Node = null
 
 var _root: Control
@@ -124,15 +38,9 @@ var _confirm_label: Label
 var _confirm_root: Control
 var _confirm_option_labels: Array[Label] = []
 var _confirming_quit := false
-## Which destructive action the shared No/Yes panel is confirming:
-## "quit" (title) or "abandon" (combat -> last autosave).
 var _confirm_action := "quit"
 var _confirm_cursor := 0
 
-## Issue #78 slot-picker state. `_slot_mode` is "save" or "load" (set by
-## `_enter_slot_picker`); `_slot_rows()` is `Game.MANUAL_SLOTS` + the
-## trailing "Back" row, so `_slot_labels`/`_slot_cursor` always index the
-## SAME list `_refresh_slots()` renders from.
 var _picking_slot := false
 var _slot_mode := "save"
 var _slot_cursor := 0
@@ -141,9 +49,6 @@ var _slot_title_label: Label
 var _slot_labels: Array[Label] = []
 
 
-## The live row set: the reduced COMBAT_ROWS while a fight is up, the full
-## set otherwise. Everything cursor/refresh/confirm reads goes through this
-## so the two sets can never drift from the rendered labels.
 func _active_rows() -> Array:
 	return COMBAT_ROWS if Game.sim.combat != null else ROWS
 
@@ -155,9 +60,6 @@ func _ready() -> void:
 	_root.custom_minimum_size = PANEL_SIZE
 	_root.size = PANEL_SIZE
 	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -PANEL_SIZE.y * 0.5, PANEL_SIZE.x * 0.5, PANEL_SIZE.y * 0.5)
-	# STOP (mouse-filter audit, issue #57): see journal.gd's identical fix's
-	# doc comment -- swallows a click on the open panel instead of leaking to
-	# the world/board underneath. `.hide()`/`.show()` gate visibility.
 	_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.hide()
 	add_child(_root)
@@ -171,23 +73,9 @@ func _ready() -> void:
 	menu_margin.add_child(menu_stack)
 	for i in ROWS.size():
 		var row := UIChrome.make_label("", "Menu")
-		# Issue #106 hit-target audit: 24px design height read as ~7px
-		# effective on a 390-CSS-px-wide phone (0.305 scale) -- well under the
-		# ~40px touch guideline, the worst-measured surface in the audit.
-		# Widened to 36 (INPUT region only -- the row's WIDTH/text/wrap is
-		# untouched, so no copy-fit budget moves); PANEL_SIZE grown below to
-		# match, same "panel is the floor, chrome is 9-slice and tolerates it"
-		# precedent `dialogue_panel.gd`'s `_fit_panel_height` already banks on.
 		row.custom_minimum_size = Vector2(220.0, 36.0)
 		menu_stack.add_child(row)
 		_row_labels.append(row)
-	# Issue #84: ONE hover/click handler on the shared row container (mirrors
-	# WIHotbar's per-bar-not-per-slot idiom via UIChrome.control_index_at),
-	# not one filter per row -- a row Label stays default IGNORE. Hover moves
-	# `_cursor` (the SAME field `_refresh()`'s "> " mark already reads, so
-	# hover highlight and keyboard selection are ONE state, never a second
-	# highlight system); a click sets `_cursor` then calls `_confirm()`, the
-	# exact function Enter calls -- one dispatch path either way.
 	menu_stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	menu_stack.gui_input.connect(_on_menu_gui_input)
 
@@ -197,7 +85,6 @@ func _ready() -> void:
 	_confirm_root.custom_minimum_size = CONFIRM_PANEL_SIZE
 	_confirm_root.size = CONFIRM_PANEL_SIZE
 	UIChrome.set_offsets(_confirm_root, -CONFIRM_PANEL_SIZE.x * 0.5, -CONFIRM_PANEL_SIZE.y * 0.5, CONFIRM_PANEL_SIZE.x * 0.5, CONFIRM_PANEL_SIZE.y * 0.5)
-	# STOP (mouse-filter audit, issue #57): same fix as `_root` above.
 	_confirm_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_confirm_root.hide()
 	add_child(_confirm_root)
@@ -217,15 +104,9 @@ func _ready() -> void:
 		var row := UIChrome.make_label("", "Menu")
 		confirm_stack.add_child(row)
 		_confirm_option_labels.append(row)
-	# Issue #84: same one-handler-on-the-container idiom as `menu_stack` above,
-	# for the No/Yes confirm rows (the abandon-combat confirm is explicitly
-	# in scope per the issue's constraints).
 	confirm_stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	confirm_stack.gui_input.connect(_on_confirm_gui_input)
 
-	# Issue #78: the Save/Load slot picker -- same chrome idiom as
-	# `_confirm_root` above (a plain Label list on a carved panel), sized for
-	# MANUAL_SLOTS.size() rows + the trailing "Back" row.
 	_slot_root = Control.new()
 	UIChrome.apply_theme(_slot_root)
 	_slot_root.set_anchors_preset(Control.PRESET_CENTER)
@@ -250,14 +131,9 @@ func _ready() -> void:
 	slot_stack.add_child(slot_spacer)
 	for i in _slot_rows().size():
 		var row := UIChrome.make_label("", "Menu")
-		# Issue #106 hit-target audit: 22px design height, one of the worst-
-		# measured surfaces. Widened to 32 (INPUT region only -- width/text
-		# untouched); SLOT_PICKER_PANEL_SIZE grown above to match.
 		row.custom_minimum_size = Vector2(412.0, 32.0)
 		slot_stack.add_child(row)
 		_slot_labels.append(row)
-	# Issue #84: same one-handler-on-the-container idiom as `menu_stack`/
-	# `confirm_stack` above.
 	slot_stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	slot_stack.gui_input.connect(_on_slot_gui_input)
 
@@ -318,10 +194,6 @@ func _handle_confirm_input(event: InputEvent, vp: Viewport) -> void:
 		vp.set_input_as_handled()
 
 
-## The confirm-panel's own "activate the cursored row" dispatch -- factored
-## out of `_handle_confirm_input`'s keyboard `confirm` branch (issue #84) so
-## `_on_confirm_gui_input`'s mouse click routes through this SAME function,
-## never a parallel activation.
 func _select_confirm_choice() -> void:
 	var choice := String(CONFIRM_ROWS[_confirm_cursor])
 	if choice == "Yes":
@@ -336,12 +208,6 @@ func _select_confirm_choice() -> void:
 		_exit_confirm_quit()
 
 
-## Issue #84: hover highlights a main-menu row (sets `_cursor`, same field
-## `_refresh()`'s "> " mark reads -- one selection state, not a second
-## highlight), a left-click activates it through `_confirm()`, the exact
-## function Enter calls. No-op while the confirm sub-panel is up (that has
-## its own handler below) or the panel isn't open (menu_stack has no rect to
-## hit anyway once hidden, but `_active_rows()` would be meaningless mid-close).
 func _on_menu_gui_input(event: InputEvent) -> void:
 	if not open or _confirming_quit:
 		return
@@ -362,10 +228,6 @@ func _on_menu_gui_input(event: InputEvent) -> void:
 		_confirm()
 
 
-## Issue #84: the confirm sub-panel's own hover/click, mirroring
-## `_on_menu_gui_input` -- hover sets `_confirm_cursor` (the same field
-## `_refresh_confirm()`'s mark reads), click routes through
-## `_select_confirm_choice()`, the SAME function Enter calls.
 func _on_confirm_gui_input(event: InputEvent) -> void:
 	if not _confirming_quit:
 		return
@@ -386,12 +248,6 @@ func _on_confirm_gui_input(event: InputEvent) -> void:
 		_select_confirm_choice()
 
 
-## Read-only rect accessor (issue #84, `WIHotbar.slot_rect`'s established
-## pattern) -- the on-screen rect of main-menu row `i` as of the last
-## `_refresh()`, for QA's `click_pause_row` step. Empty Rect2 when the panel
-## is closed, the row is out of range, or the row isn't part of the CURRENT
-## active set (`_active_rows()` -- COMBAT_ROWS mid-fight has fewer rows than
-## the full label array; a label beyond that count is hidden by `_refresh()`).
 func row_rect(i: int) -> Rect2:
 	if not open or i < 0 or i >= _row_labels.size():
 		return Rect2()
@@ -418,8 +274,6 @@ func _can_open() -> bool:
 		return false
 	if inventory_ref != null and bool(inventory_ref.get("open")):
 		return false
-	# See `world_ref`'s own doc comment -- an armed field-hotbar cursor wants
-	# THIS cancel press for itself (disarm), not a pause-menu open.
 	if world_ref != null and world_ref.has_method("field_slot_armed") and bool(world_ref.call("field_slot_armed")):
 		return false
 	return true
@@ -447,16 +301,6 @@ func _close() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_PAUSE_HIDDEN, {})
 
 
-## Field chip tap (issue #109): the SAME open/close/`_can_open()` gate the
-## `cancel` action's own branch runs in `_unhandled_input` above -- exposed
-## as a public entry point so `field_chips.gd`'s pause chip can invoke it
-## without a parallel activation path. No-op (returns false, no state
-## change) if the panel is closed and `_can_open()` refuses. The
-## already-open branch mirrors the `cancel` action's own routing exactly:
-## the pause chip stays visible while this panel is open (it is the only
-## close affordance a keyboard-less session has), so a live sub-mode
-## (`_confirming_quit`/`_picking_slot`) steps BACK to the row list first
-## -- same as keyboard Cancel -- and only the plain row list closes.
 func toggle_open() -> bool:
 	if not open:
 		if not _can_open():
@@ -473,12 +317,6 @@ func toggle_open() -> bool:
 	return true
 
 
-## settings_panel.gd's `on_close` callback (issue #77) -- re-shows this
-## panel's own root once Settings closes back out. `open`/`_cursor` were
-## never touched while Settings was up, so the row list re-appears exactly
-## where the player left it (no `_open()` re-call -- that would reset the
-## cursor to 0 and re-fire ui_pause_shown, which this is NOT: it's a resume,
-## not a fresh open).
 func _reopen_after_settings() -> void:
 	if open:
 		_root.show()
@@ -522,9 +360,6 @@ func _enter_slot_picker(mode: String) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_SLOT_PICKER_RENDERED, {"mode": mode, "slots": _slot_summaries()})
 
 
-## Esc/cancel or the "Back" row -- returns to the main pause list WITHOUT
-## saving/loading anything (`open` stays true throughout, the Settings-panel
-## "stays logically open" precedent).
 func _exit_slot_picker() -> void:
 	_picking_slot = false
 	_slot_root.hide()
@@ -560,10 +395,6 @@ func _slot_rows() -> Array[String]:
 	return rows
 
 
-## The cursored row's activation -- "Back" behaves exactly like Esc; any
-## other row saves (mode "save") or loads (mode "load") that slot, then
-## closes the WHOLE pause menu (matching the old direct Save/Load's own
-## close-then-act behavior, not just the sub-picker).
 func _select_slot() -> void:
 	var rows := _slot_rows()
 	var choice := String(rows[_slot_cursor])
@@ -615,11 +446,6 @@ func _truncate_row(line: String) -> String:
 	return budgeted.strip_edges() + "…"
 
 
-## "<name> — <TopClass> LvN — <Map>" (class/map segments omitted when a save
-## predates any class / carries no map, though every real save always has a
-## map). Names/levels are exactly what the journal already shows (product
-## rule: race/class/level/skills/HP/MP/gear are player-visible, raw stats
-## never are -- this line carries none).
 func _format_slot_summary(meta: Dictionary) -> String:
 	var parts: Array[String] = [String(meta.get("pc_name", "Traveler"))]
 	var top_class := String(meta.get("top_class", ""))
@@ -631,9 +457,6 @@ func _format_slot_summary(meta: Dictionary) -> String:
 	return " — ".join(parts)
 
 
-## Underscore-id -> "Title Case With Spaces" (matches every class id's real
-## classes.json display_name AND title_screen.gd's fixture-name display
-## convention exactly -- verified against every shipped class id).
 func _title_case(id: String) -> String:
 	var words := id.split("_")
 	for i in words.size():
@@ -653,10 +476,6 @@ func _slot_summaries() -> Array[Dictionary]:
 	return out
 
 
-## Issue #84: hover/click over the slot picker's rows, mirroring
-## `_on_menu_gui_input`/`_on_confirm_gui_input` -- hover sets `_slot_cursor`
-## (the SAME field `_refresh_slots()`'s mark reads), a click routes through
-## `_select_slot()`, the exact function Enter calls.
 func _on_slot_gui_input(event: InputEvent) -> void:
 	if not _picking_slot:
 		return
@@ -677,9 +496,6 @@ func _on_slot_gui_input(event: InputEvent) -> void:
 		_select_slot()
 
 
-## Read-only rect accessor (the `row_rect`/`slot_row_rect` idiom), for QA's
-## `click_pause_slot_row` step. Empty Rect2 when the picker isn't open or
-## the row is out of range.
 func slot_row_rect(i: int) -> Rect2:
 	if not _picking_slot or i < 0 or i >= _slot_labels.size():
 		return Rect2()
@@ -689,15 +505,6 @@ func slot_row_rect(i: int) -> Rect2:
 	return Rect2(label.global_position, label.size)
 
 
-## Duck-typed reach to Main — see the class doc comment above for why this
-## isn't a typed reference. No autosave here by design (spec: explicit
-## testing surface) — Main.swap_to_title() only tears down/rebuilds the UI
-## and world layers, it never touches save files. Deferred for the same
-## reason Main._on_domain_event() defers swap_to_world() on game_loaded/
-## game_reset (see the comment in _unhandled_input): this call happens from
-## inside this node's own input-handling stack, and swap_to_title() would
-## otherwise remove/queue_free this node (and its CanvasLayer siblings)
-## before that stack unwinds.
 func _quit_to_title() -> void:
 	var main := get_parent()
 	if main != null and main.has_method("swap_to_title"):
@@ -727,7 +534,6 @@ func _refresh_confirm() -> void:
 		(_confirm_option_labels[i] as Label).text = mark + String(CONFIRM_ROWS[i])
 
 
-## Only Music/SFX rows respond; harmless no-op otherwise.
 func _adjust_volume_row(delta: int) -> void:
 	var key := String(_active_rows()[_cursor])
 	if not VOLUME_ROWS.has(key):
@@ -753,10 +559,6 @@ func _confirm() -> void:
 		"Quit to Title":
 			_enter_confirm("quit")
 		"Settings":
-			# Hides this panel (stays logically `open` throughout -- see
-			# `_reopen_after_settings`) and hands settings_panel.gd a callback
-			# to re-show it on Back/Cancel. Never reachable mid-combat
-			# (COMBAT_ROWS has no "Settings" row).
 			if settings_ref != null:
 				_root.hide()
 				settings_ref.call("open", Callable(self, "_reopen_after_settings"))

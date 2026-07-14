@@ -1,5 +1,5 @@
 {
- "_comment": "8d Phase B1 (issue #14): the dungeon's entrance chamber -- the sealed M-ARC gallery (`warren_mouth`, data/skeleton_scene.json's `deep_tunnels` map, the 'widened-gallery marker' the Raskghar seal-beat's 'for now' hook left standing) REOPENS into this room. B3/the controller carries the actual door edit into `warren_mouth` -- explicitly OUT of this lane's charter. `gallery_seal_anchor` below is THIS map's own clearly-commented landing anchor: once the gallery-side door lands, convert this entity (or a wall-embedded twin at the same cell) into a real `door` back to `deep_tunnels`. UNREACHABLE BY DESIGN this phase (no door routes here from any live map -- matches the ruin/floodplains reachability-note convention) -- `dungeon_peek` proves it via `teleport` only. Biome `dungeon` (data/biomes.json, Cemetery 0.4 family). One dormant-encounter PLACEHOLDER (`dormant_guardian_marker`, kind:prop -- NOT kind:encounter, matching the rift_vermin_leak D1 precedent exactly: no combat data exists yet, C-phase promotes it) foreshadows the ratified GUARDIAN CONSTRUCT boss pick via the reused `vault_construct` sprite, tinted dormant. Statue (CASTLE 0.3) + rubble (CAVE) dressing per the family recipe, decor+blocked pairs (the ruin_surface boulder convention). Grid-bound clipping alone stops movement at the map edge (sewers/ruin_surface precedent) -- no perimeter walls.segments; one short interior segment (a fallen lintel) for texture only.",
+ "_comment": "Statue (CASTLE 0.3) + rubble (CAVE) dressing per the family recipe, decor+blocked pairs (the ruin_surface boulder convention).",
  "biome": "dungeon",
  "grid": {
   "width": 16,
@@ -28,7 +28,7 @@
   "tile_px": 16,
   "segments": [
    {
-    "_comment": "A fallen lintel span, interior texture only (ruin_surface's own minimal from/to-only precedent) -- clear of every entity/decor cell on this map.",
+    "_comment": "A fallen lintel span, interior texture only (ruin_surface's own minimal from/to-only precedent)",
     "from": [
      6,
      4
@@ -114,7 +114,7 @@
  ],
  "entities": [
   {
-   "_comment": "B3 ANCHOR CELL, wired live (8d C1, issue #14): `door_when` gated on `horns_delve_started` (the Olesm-stipend accept beat, NOT the arc-epilogue counter alone -- a player who has merely finished the epilogue but never taken the survey job still finds this sealed, matching 'diegetic locked read pre-quest'). Unmet, this stays the exact pre-existing inert rubble prop (on_interact_accomplishment/toast below, byte-identical -- dungeon_peek's own pinned assertions on this entity are untouched). Met, it becomes a real door to `deep_tunnels`, landing at (13,5) -- one cell east of warren_mouth's own (12,5), the 'never land on the door's own cell' convention (dungeon_approach_return/dungeon_depths_door precedent).",
+   "_comment": "Met, it becomes a real door to `deep_tunnels`, landing at (13,5)",
    "id": "gallery_seal_anchor",
    "kind": "prop",
    "cell": [
@@ -144,7 +144,6 @@
    }
   },
   {
-   "_comment": "Dormant-encounter SLOT, placement only (rift_vermin_leak D1 precedent: kind:prop, never kind:encounter, until C-phase lands real combatants/arena data -- test_combat_data would hard-fail against absent data otherwise). Foreshadows the RATIFIED guardian-construct boss pick (vault_construct sprite, already in the registry from Phase A2) sitting dormant near the entrance before the real one deeper in. C-phase promotes: swap kind to 'encounter', add arena/enemies/trigger_radius, drop the flavor on_interact_accomplishment/toast pair.",
    "id": "dormant_guardian_marker",
    "kind": "prop",
    "cell": [
@@ -163,7 +162,7 @@
    "toast": "You keep your distance. Whatever wakes it, you would rather not be the one who finds out."
   },
   {
-   "_comment": "8d C1/D1 (issue #14/#15) THE HORNS OF HAMMERAD -- Ceria Springwalker, waiting at the reopened gallery. Her own graph (ceria_intro.json) is the recruit conversation: it ends in `horns_party_formed`, the ally_requires gate `vault_boss_slot` reads. Canon (wiki.wanderinginn.com/Ceria_Springwalker): half-Elf [Cryomancer], leads the Horns of Hammerad, dry/professional register with real warmth underneath -- circlet, blue robes, the skeletal hand kept HIDDEN v1 per the spec's own canon-sensitive flag. Grouped with Yvlon/Ksmvr at (7,5)-(9,5), open floor clear of every blocked/decor/entity cell on this map.",
+   "_comment": "Grouped with Yvlon/Ksmvr at (7,5)-(9,5), open floor clear of every blocked/decor/entity cell on this map.",
    "id": "ceria",
    "kind": "npc",
    "cell": [
@@ -176,7 +175,7 @@
    "conversation": "ceria_intro"
   },
   {
-   "_comment": "8d C1/D1 (issue #14/#15) Yvlon Byres. Canon (wiki.wanderinginn.com/Yvlon_Byres): silver-armed [Armsmistress]-line warrior (a sword-and-armor fighter, NOT a mage class), blunt-kind register -- protective without sentiment. Own graph (yvlon_intro.json): a hub whose default/text_variants carry the pool bark / halls-anticipating line / post-victory line, no gate of her own (Ceria owns the party-formed beat).",
+   "_comment": "Own graph (yvlon_intro.json): a hub whose default/text_variants carry the pool bark / halls-anticipating line / post-victory line, no gate of her own (Ceria owns the party-formed beat).",
    "id": "yvlon",
    "kind": "npc",
    "cell": [
@@ -189,7 +188,7 @@
    "conversation": "yvlon_intro"
   },
   {
-   "_comment": "8d C1/C4/D1 (issue #14/#15) Ksmvr. Canon (wiki.wanderinginn.com/Ksmvr): Antinium [Vector Slayer?]/Horns member, earnest-literal register, counts things, learns idioms deliberately. Own graph (ksmvr_intro.json) is pool + post-victory only -- the PLATES beat itself lives on a second sighting of this same character in trapped_halls (`ksmvr_plates`, near pressure_plate_a), a distinct entity id.",
+   "_comment": "Own graph (ksmvr_intro.json) is pool + post-victory only",
    "id": "ksmvr",
    "kind": "npc",
    "cell": [
@@ -202,7 +201,6 @@
    "conversation": "ksmvr_intro"
   },
   {
-   "_comment": "The real, brand-new door pairing to trapped_halls (both maps are new this phase -- linking them to EACH OTHER is not the excluded B3 gallery-door edit, which is the deep_tunnels/warren_mouth pairing). to_cell (2,7) lands one cell east of the return door's own (1,7) cell in trapped_halls.",
    "id": "dungeon_depths_door",
    "kind": "door",
    "cell": [
@@ -218,7 +216,7 @@
    ]
   },
   {
-   "_comment": "Issue #97: kingslayer_den, T4 dungeon_approach solo apex-predator encounter -- the crab_nest informed-consent shape (data/dialogue/kingslayer_den.json). respawns:true (MEASURED-only in the harness -- a deliberately dangerous apex predator, not a comfortable-band cull, see sim_combat_batch.gd DUNGEON_CELLS). Placed at (12,10), the map's south edge -- clear of the ceria/yvlon/ksmvr npc row (y5), the two props (1,6)/(8,9), and dungeon_depths_door (14,6); Chebyshev distance to dormant_guardian_marker (8,9) is 4, to dungeon_depths_door is 4. `dungeon_peek`'s own teleport-based route stays unaffected (it never walks this cell).",
+   "_comment": "`dungeon_peek`'s own teleport-based route stays unaffected (it never walks this cell).",
    "id": "kingslayer_den",
    "kind": "encounter",
    "cell": [

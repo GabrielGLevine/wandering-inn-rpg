@@ -1,11 +1,4 @@
 extends SceneTree
-## Headless coverage for the freezable-water + burnable-prop
-## traversal seams (pure sim). Covers: freeze walkability flip, freeze/thaw
-## round-trip (sleep clears the ice), the freeze save round-trip (additive
-## frozen_cells set + its absent-key default), burn permanence (removed_entities,
-## survives sleep AND save/load), and the two "safety" refusals (a non-freezable
-## cell / a non-burnable prop fall through to field_ambient, never mutating).
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_traversal_seams.gd
 
 var _events: Array = []
 
@@ -31,9 +24,6 @@ func _combat_config() -> Dictionary:
 	}
 
 
-## A fresh sim with the two K1 field skills known (the frost/fire casters). They
-## are exploration-only, so adding them to player_skills is fight-neutral (the
-## near_sewers fixture grants them the same way).
 func _new_game() -> WIGame:
 	var g := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 4242, _combat_config())
 	g.player_skills.append("frost_touch")
@@ -58,9 +48,7 @@ func _last_event(type: String) -> Dictionary:
 func _init() -> void:
 	WITestWatchdog.arm(self)
 
-	# ============ FREEZE: walkability flip + terrain_changed + toast ============
 	var g := _new_game()
-	# The authored sewers freeze crossing: (3,5) is a freezable channel-A cell.
 	g.transition("sewers", Vector2i(3, 4))
 	g.player_facing = Vector2i.DOWN  # faces (3,5)
 	assert(g.is_cell_blocked(Vector2i(3, 5)), "the freezable channel cell is impassable water before freezing")
@@ -73,11 +61,9 @@ func _init() -> void:
 	assert(String(tc.get("to", "")) == "ice" and tc.get("cell", []) == [3, 5] and String(tc.get("map", "")) == "sewers", "terrain_changed carries {map:sewers, cell:[3,5], to:ice}")
 	assert(_has_event("skill_used"), "freeze emits skill_used (journal reveal)")
 	assert(g.used_skills.has("frost_touch"), "frost_touch is marked used")
-	# The PC can now actually step onto the ice.
 	assert(g.move_player(Vector2i.DOWN), "the PC crosses onto the frozen cell")
 	assert(g.player_cell == Vector2i(3, 5), "the PC stands on the ice")
 
-	# A second freeze of the same cell does NOT re-emit (idempotent set add).
 	g.player_cell = Vector2i(3, 4)
 	g.player_facing = Vector2i.DOWN
 	_events.clear()
@@ -85,12 +71,10 @@ func _init() -> void:
 	assert(not refreeze.has("frozen"), "re-freezing an already-frozen cell falls through (no second freeze)")
 	assert(not _has_event("terrain_changed"), "re-freeze emits no terrain_changed")
 
-	# ============ THAW: sleep clears the whole ice set ============
 	g.sleep()
 	assert(g.frozen_cells.is_empty(), "sleep thaws every frozen cell")
 	assert(g.is_cell_blocked(Vector2i(3, 5)), "the thawed cell is impassable water again")
 
-	# ============ FREEZE refusal: a non-freezable faced cell is inert ============
 	var g2 := _new_game()
 	g2.transition("sewers", Vector2i(2, 3))
 	g2.player_facing = Vector2i.UP  # faces (2,2), open floor, not freezable
@@ -100,9 +84,7 @@ func _init() -> void:
 	assert(g2.frozen_cells.is_empty(), "no cell was frozen by the ambient cast")
 	assert(not _has_event("terrain_changed"), "an ambient frost cast emits no terrain_changed")
 
-	# ============ BURN: permanence + terrain_changed(scorched) + counter ============
 	var g3 := _new_game()
-	# The authored sewers burnable: sewer_debris at (1,2).
 	g3.transition("sewers", Vector2i(2, 2))
 	g3.player_facing = Vector2i.LEFT  # faces (1,2) = the debris
 	assert(g3.is_cell_blocked(Vector2i(1, 2)), "the burnable debris blocks its cell before burning")
@@ -118,13 +100,10 @@ func _init() -> void:
 	var bc := _last_event("terrain_changed")
 	assert(String(bc.get("to", "")) == "scorched" and bc.get("cell", []) == [1, 2], "burn emits terrain_changed{to:scorched, cell:[1,2]}")
 	assert(g3.used_skills.has("kindle"), "kindle is marked used")
-	# Permanence survives a sleep (removed_entities is not a per-waking set).
 	g3.sleep()
 	assert(g3.find_entity("sewer_debris").is_empty(), "the burned prop stays gone after sleep")
 
-	# ============ BURN refusal: a non-burnable prop is NOT destroyed ============
 	var g4 := _new_game()
-	# drainage_marker at (5,3) has NO burnable tag (a quest/flavor prop analogue).
 	g4.transition("sewers", Vector2i(5, 2))
 	g4.player_facing = Vector2i.DOWN  # faces (5,3) = the marker
 	_events.clear()
@@ -133,7 +112,6 @@ func _init() -> void:
 	assert(not g4.find_entity("drainage_marker").is_empty(), "a non-burnable prop is never destroyed (quest-prop safety)")
 	assert(not g4.removed_entities.has("drainage_marker"), "the non-burnable prop is not recorded removed")
 
-	# ============ SAVE ROUND-TRIP: frozen_cells persist; absent-key defaults ============
 	var g5 := _new_game()
 	g5.transition("sewers", Vector2i(3, 4))
 	g5.player_facing = Vector2i.DOWN
@@ -154,13 +132,11 @@ func _init() -> void:
 	assert(not restored.is_cell_blocked(Vector2i(3, 5)), "restored ice is walkable at (3,5)")
 	assert(not restored.is_cell_blocked(Vector2i(3, 9)), "restored ice is walkable at (3,9)")
 
-	# Additive-optional: a save with no frozen_cells key restores an empty set.
 	var no_ice: Dictionary = (data["state"] as Dictionary).duplicate(true)
 	no_ice.erase("frozen_cells")
 	var ice_target := _new_game()
 	assert(WISave.apply(ice_target, {"version": WISave.VERSION, "state": no_ice}), "a save without frozen_cells still applies")
 	assert(ice_target.frozen_cells.is_empty(), "absent frozen_cells defaults to an empty set")
-	# A present-but-wrong-typed frozen_cells is rejected as malformed.
 	var bad_ice: Dictionary = (data["state"] as Dictionary).duplicate(true)
 	bad_ice["frozen_cells"] = "solid"
 	assert(not WISave.apply(_new_game(), {"version": WISave.VERSION, "state": bad_ice}), "non-Dictionary frozen_cells rejected")

@@ -1,5 +1,5 @@
 {
- "_comment": "Invrisil 8c Task C3 (issue #13) -- Wilovan's full quest graph: the commission give-beat, the three-door signpost, the FIGHT door's come-along ask, and the marker/report close. RECAST from docs/archive/staging/dialogue-drafts/invrisil/brothers_lieutenant.json (speaker 'Mister Sable' -> Wilovan, per the plan's User-ratified shape 1 -- Wilovan fronts the Brothers, superseding the draft's ORIGINAL placeholder; the courtesy-as-menace register carries over untouched, it fits Wilovan's own canon 'perfect gentlemen. Until the hats come off' at least as well). Voice contract: character-profiles-staging.md 'Brothers lieutenant' entry (now Wilovan's) -- sir/miss, apologizes before the threat, 'recover' never 'steal'. FORK CONTRACT accomplishment names NORMALIZED to the plan's literal locked shape 5 wording (`merchant_exposed`/`merchant_extorted`), not the draft's `exposed_merchant_prince`/`extorted_merchant_prince` -- see invrisil_merchant_prince.json's own _comment for the same rename. `cleared_brothers_name`/`forced_confession` kept as the DRAFT's literal wired strings (the plan's own prose paraphrases these with an inserted 'the' -- 'cleared_the_brothers_name'/'forced_the_confession' -- but the drafts are the thing we were told to lift verbatim, and a naming mismatch between dialogue and encounter data would be a real bug; flagged for controller review in the report). THE HATS-OFF BEAT (locked, load-bearing): `marker`'s two text_variants now stage WILOVAN physically removing HIS OWN hat at quest close -- the canon violence tell, subverted into a genuine respect gesture, distinct wording per fork per the brief. THE COME-ALONG BEAT (new, this lane's own wiring -- the draft's `ways` node gestured at 'a man would be honored to attend' but never banked a flag): `ways` gained a third, hidden-once-answered option routing to `fists_door`, which banks `wilovan_will_fight` -- the EXACT key data/skeleton_scene.json's `hired_blades` encounter reads via `ally_requires` (no teleporting allies, the riverfarm_hunter/relc_descent precedent). SAFE-PASSAGE REWARD (locked shape 3): the report option (`hub`'s 'Coyle's answered for it' -> `marker`) now also banks `brothers_marker` (accomplishment, the vendor/perk gate) and fires `remove_entity` on BOTH alley footpads -- completing the quest, on ANY path/either fork, retires them permanently (the existing `remove_entity` effect verb, same as goblin_parley/watch_crate/zevara_intro's shield_spiders precedent; no new sim machinery, per the brief's own data-driven constraint). Wiring notes: resolution gates on `merchant_fate_decided` (banked at invrisil_merchant_prince.json's fork, EITHER ending), so the report path works for all 3 quest paths + both fates identically; per-fate flavor lives entirely in `marker`'s text_variants.",
+ "_comment": "Contract: append new hub options last to preserve QA-visible indexes. The fence gold requirement stays visible-locked, while accomplishment gates remain hidden.",
  "start": "hub",
  "nodes": {
   "hub": {
@@ -7,7 +7,6 @@
    "text": "Begging your pardon, sir, a moment of your evening. We don't steal, whatever you've heard. We RECOVER. Occasionally we recover things that were never lost. Tonight we'd like to recover a man's good name — his, and by unfortunate arithmetic, ours.",
    "text_variants": [
     {
-     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
      "requires": {
       "phase": [
        "dusk",
@@ -59,7 +58,6 @@
      "goto": "ways"
     },
     {
-     "_comment": "GH#68 (quest-stage rework): the diegetic gate for a player who's taken the job but hasn't scouted Coyle's operation yet -- Wilovan won't lay out doors on a target nobody's placed. Hidden the instant coyle_operation_found banks (the option above takes over); the only other visible route out of the hub in this window is 'Evening.'",
      "text": "Where do I even start with him?",
      "requires": {
       "accomplishment": {
@@ -112,7 +110,6 @@
      "end": true
     },
     {
-     "_comment": "GH#68 (quest-stage rework, TALK path Stage 2 favor beat): the item-possession gate + remove_item pair (issue #59 seam, patron_serving.json precedent), Cups' side reached via invrisil_fixer.json's cups_favor node. Item gate is NOT progress-gated (dialogue.gd's _progress_gated), so this shows visible-locked to every path/player who never met Cups -- same as any other item-gated option elsewhere (the Serve option's own precedent). Appended LAST in the array (after the always-visible 'Evening.') so its presence never shifts the authored-index-derived visible-index of any option ABOVE it -- the option-index discipline every existing invrisil_disagreement_* canonical presses by number.",
      "text": "Cups asked me to see something back to you.",
      "requires": {
       "item": "cups_debt_chit"
@@ -133,7 +130,6 @@
      "goto": "cups_favor_returned"
     },
     {
-     "_comment": "Issue #89 (gap-2): the fence, paying off marker_terms' own literal promise ('a man can find you things the shops pretend not to stock -- recovered things, sir, of impeccable provenance'). The krshia_crate.json 'charms' shop-node shape: a gated buy node reachable from the hub, real posted price, own reaction node. Gate is a compound of BOTH quest-close flags (brothers_marker AND cleared_brothers_name -- they co-bank on the SAME 'Coyle's answered for it' option above, so this is one honest consumption of both previously-orphaned ids, not an arbitrary pick). HAGGLE RULE (wi-adding-dialogue-and-quests): no `haggle` flag -- Wilovan is a gentleman, and his own courtesy-as-menace register (sir/miss, apology-before-threat) doesn't extend to a markdown; full price, disclosed here rather than left implicit. RETIREMENT (review fix): the pendant is one-off stock ('one piece came through'), so its buy option banks `bought_phosphor_pendant` and hide_whens on it -- the riverfarm_witch.json stone-row shape (invrisil_attuned's own buy-then-retire pair), counter named per the bought_catalyst precedent; the fence node's text_variant swaps to the sold-out read on the same counter. This hub entry itself stays visible (he is a fence permanently; future stock appends new options to the fence node).",
      "text": "Anything come through lately? (Show the marker.)",
      "requires": {
       "accomplishment": {
@@ -290,7 +286,6 @@
    ]
   },
   "fists_door": {
-   "_comment": "GH#68 (quest-stage rework): the FIGHT path's Stage 2 gate. Base text is the diegetic hold -- Wilovan won't commit to a building nobody's found yet; the text_variant (warehouse_located met) restores the ORIGINAL come-along speech verbatim. 'Come with me.' itself gates on the same counter (single sanctioned accomplishment key, HIDDEN until met -- Gating Split policy), so a player who hasn't walked the tailing chain (coyle_runner_trail on invrisil_boulevard -> warehouse_approach in mercantile_alleys) sees only 'I'll go alone.', the pre-existing ungated fallback.",
    "speaker": "Wilovan",
    "text": "Sir, I'd come gladly — once we know precisely which building we're walking into. A Brother doesn't blunder in blind, whatever the invitation. Find the place first.",
    "text_variants": [

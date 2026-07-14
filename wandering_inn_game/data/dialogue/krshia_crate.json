@@ -6,7 +6,6 @@
    "text": "Hrr. My crate. Gone from the storeroom three nights past. Sewers, I think. Scavengers do not knock first.",
    "text_variants": [
     {
-     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
      "requires": {
       "phase": [
        "dusk",
@@ -32,7 +31,6 @@
      "text": "Crate is home. You, I will remember. Yes."
     },
     {
-     "_comment": "Issue #89 (gap-2), the text_variants marker-node pattern: the three mutually-exclusive crate-recovery method flags (missing_crate's own beat-1 producers -- crate_scavengers on_victory / watch_crate.json's persuade+pay branches / this file's own guile option) always co-bank alongside crate_returned, so exactly one of the three below matches whenever this generic line would have. Appended AFTER the generic crate_returned line (later match wins) so a save that somehow lacks all three (e.g. a hand-authored fixture pre-banking crate_returned alone) still falls back to it, unchanged.",
      "requires": {
       "accomplishment": {
        "crate_returned": 1,
@@ -139,7 +137,6 @@
      "goto": "thanks"
     },
     {
-     "_comment": "Q2 TALK path: the smooth-over. Progress-gated on heard_wrong_order (HIDDEN until Lyonette gives the quest), hidden once resolved -- so it never appears to crate_talk/social_loop/gate_district (which never bank heard_wrong_order). Banks the shared resolved_wrong_order (beat 1) + smoothed_with_krshia (Lyonette's TALK report gate) + persuaded_someone (the social identity feed, now a THIRD producer alongside watch_crate + zevara). GH#64: skill-gated (was class-gated Diplomat) -- [Charming Smile] fits winning Krshia over better than the bare class; sanctioned {accomplishment, skill} compound.",
      "text": "The inn's order ran short. Extend it, for Lyonette's sake. [Charming Smile]",
      "requires": {
       "accomplishment": {
@@ -166,7 +163,6 @@
      "goto": "smoothed"
     },
     {
-     "_comment": "re-pricing: the non-Diplomat alternate, same progress-gate scope as the Diplomat branch above. Own reaction node (smoothed_paid) so the persuaded branch's 'you speak plainly and you speak for a friend' line never gets misapplied to a plain cash make-good. persuaded_someone deliberately absent (paying isn't persuading).",
      "text": "Just cover the shortfall myself. (2 gold)",
      "requires": {
       "accomplishment": {
@@ -193,7 +189,6 @@
      "goto": "smoothed_paid"
     },
     {
-     "_comment": "Krshia's shop entry. ALWAYS-visible, ALWAYS-unlocked navigation option (window-shopping is content); no gold requires, so it never greys. Placed at array index 5 (issue #50 inserted a paid alternate before it) -- AFTER the pitch/guile/report/smooth options so the first-visible option (pitch fresh / report post-fight / smooth for wrong_order) stays at visible position 0 for every confirm-at-0 script. The buy options with their gold gate live in the 'shop' node.",
      "text": "What's on the stall today?",
      "goto": "shop"
     },
@@ -202,7 +197,6 @@
      "end": true
     },
     {
-     "_comment": "stage-2 hub topic, requires-ONLY (progress-gated, hidden until crate_returned). Appended AFTER 'Just visiting.' (array end) so it can never shift the visible index of any earlier option in any canonical script -- it only ever appears LAST in the visible list.",
      "text": "Silverfang. That's your tribe?",
      "requires": {
       "accomplishment": {
@@ -212,7 +206,6 @@
      "goto": "krshia_tribe"
     },
     {
-     "_comment": "stage-3 hub topic (the OBLIQUE necklace reveal -- never says 'spellbook', user gate per stage-tables.md). Also appended at array end for the same index-safety reason. heard_krshia_plans is a NEW counter banked on THIS option (effects live on options, never nodes).",
      "text": "You said the necklace was a promise.",
      "requires": {
       "accomplishment": {
@@ -233,7 +226,6 @@
      "goto": "krshia_plans"
     },
     {
-     "_comment": "The sell picker's entry point (ratified selling mechanic). ALWAYS-visible, ALWAYS-unlocked (no requires/hide_when -- window-shopping is content, same as 'What's on the stall today?' above): the picker itself (WIShop.build_sell_graph, opened via the open_sell_picker effect signal, same deferred-swap shape as the Request Board's 'Take on a posting.') handles the zero-sellable-items case with its own Krshia-flavored line, so this option never needs to hide for an empty pack. Appended at array end so no earlier option's visible index shifts (same index-safety reason as the two stage-gated topics above). CLASS-FOUNDATION PASS R5 (2026-07-12): open_sell_picker's value is now the vendor id (\"krshia\", was a bare `true`) -- WIShop.VOICES generalization, see shop.gd's own doc comment; byte-identical rendered conversation for Krshia.",
      "text": "I've a few things I don't need. Buying?",
      "effects": [
       {
@@ -243,7 +235,6 @@
      "end": true
     },
     {
-     "_comment": "Issue #74: standing non-banking recap, requires-active (heard_wrong_order)/hide_when-resolved (wrong_order_reported), place-named. Appended at array end (index-safety convention).",
      "text": "What's the story with the inn's order?",
      "requires": {
       "accomplishment": {
@@ -326,7 +317,6 @@
   "shop": {
    "speaker": "Krshia",
    "text": "Silverfang goods. Best in Liscor, and I will hear no argument on it. Cheapest at the front, the good stock where a browsing hand drifts. Coin on the counter and it is yours. No discounts, no haggling. I remember faces.",
-   "_comment": "Shop node. Each buy option pairs requires:{gold:price} (greys VISIBLE when broke -- the numeric affordability gate, never hidden) WITH effects:[{gold:-price},{item:id}] (the buy contract: the requires gate is what guarantees the unconditional effect-list spend can never refuse while still granting the item). Gear/tool items only -- no consumable machinery. Prices in items.json; price bar (design 2026-07-05 s2/s5): a day's honest inn work (~4 gold) buys the entry charm in a day or two; the jerkin takes several. Price numerals in option text are diegetic (gold is a countable object per the ratified design, NOT a hidden stat -- opacity forbids STR/DEX, not coin). CLASS-FOUNDATION REVIEW WAVE (controller ruling, 2026-07-12): haggling is now OPT-IN game-wide (`haggle: true` marks the nodes where a vendor entertains it; dialogue.gd's `_priced_gold` defaults to NO discount) -- this node's earlier `no_haggle: true` flag is REMOVED as redundant: Krshia's own shipped voice line ('No discounts, no haggling. I remember faces.') is now simply the diegetic voice of the game's default posture, honored across ALL her nodes (this shop AND the charms node) with zero flags. Do not add `haggle` to any Krshia node -- her line is blanket phrasing, every buyer, including a [Bargain]-holding Trader.",
    "options": [
     {
      "text": "The old charm-cord, then. (5 gold)",
@@ -425,7 +415,6 @@
      "goto": "hub"
     },
     {
-     "_comment": "Krshia's shop discount perk (krshia_friend_of_the_silverfangs stage), DIEGETIC-FIRST (issue #33 ruling): the accomplishment leg now ALSO requires heard_krshia_plans, so the discount waits for her 'front-of-stall price is the back-of-stall price' grant line (krshia_plans_two) to actually fire, not just the stage count. Requires COMBINES an accomplishment stage-gate with a gold affordability check in one dict (dialogue.gd's _meets is now a compound AND across recognized keys) -- the accomplishment leg alone controls hidden-until-met (via _meets_progress), so a broke-but-unlocked player sees these GREYED, never vanished (window-shopping is content). Complementary hide_when on the 4 full-price options above carries the SAME heard_krshia_plans leg, so full price stays visible through the stage-4-chat/crate-returned window until the grant line fires, then exactly one of each pair is ever visible. Prices per stage-tables.md/krshia_stages.json: charm 5->4, knife 15->13, cloak 18->16, jerkin 24->22.",
      "text": "The old charm-cord, friend's price. (4 gold)",
      "requires": {
       "gold": 4,
@@ -506,7 +495,6 @@
      "goto": "bought"
     },
     {
-     "_comment": "GH#70 [Archer]: the T2 bow, Krshia's own stock (items.json's own _comment: 'Sold at Krshia's stall, alongside the hunting knife'). APPENDED at array end (index 10) -- no hide_when/friend-price twin of its own, so it stays visible at every chatted_with_krshia stage without shifting any of the 10 existing options' indices (economy_loop/d2_shop_shot/stages_loop's own exact-array pins on this node all assert PREFIXES of this array, untouched by an append).",
      "text": "The hunting bow, then. Gnoll-strung, proper draw. (18 gold)",
      "requires": {
       "gold": 18
@@ -526,7 +514,6 @@
   "charms": {
    "speaker": "Krshia",
    "text": "The charmed stock costs more because it does more. Wear too much of it at once and it starts to argue with itself, so choose with sense. Coin on the counter, same as the rest.",
-   "_comment": "HAZARD 1: the 6 new accessories/tools that would have overflowed 'shop' past its grown-panel bound. Same buy contract as 'shop' (requires:{gold:price} + effects:[{gold:-price},{item:id}]), cheapest-first ordering matching the shop's own convention, price named in each option's own text (the L5 dedup in dialogue.gd's _item_effect_lines strips WIEffectText's 'Worth N gold' line from the rendered effect_lines because the price is already spelled here). 'Back to the regular stall.' is the required fully-ungated exit (no requires/hide_when) back to 'shop'.",
    "options": [
     {
      "text": "That copper ring. Can't hurt. (4 gold)",
@@ -619,7 +606,6 @@
      "goto": "bought"
     },
     {
-     "_comment": "The attunement catalyst, 18g -- the ratified price band moved to 15-20g (a first playthrough reached this purchase with 19g; the chain must flow without board-grinding, boards stay OPTIONAL income), superseding the old 30-40g band. Do not tune elsewhere. Same buy-contract shape as every other charm (requires:{gold:price} + effects:[{gold:-price},{item:id}]) plus one extra effect banking bought_catalyst (the chain's locked id) on purchase. No door_chain_started gate -- Krshia sells it to anyone asking; harmless if bought before the chain even starts, the recover beat just waits on it. Own reaction node (catalyst_sold) rather than the generic 'bought' text, since 'wear it, use it' reads wrong for a carried macguffin.",
      "text": "That piece under the far cloth. What is it? (18 gold)",
      "requires": {
       "gold": 18
@@ -642,7 +628,6 @@
      "goto": "shop"
     },
     {
-     "_comment": "8e Phase C 'Papers for Pallass' Stage 2 (issue #16, controller ruling 2, the GH#65 late-attuning precedent -- resonant_catalyst above is the exact buy-contract template, right down to the own-reaction-node choice). Gated on pallass_sponsored (Stage 1, Selys's sponsorship fee) so Krshia won't sell it to someone with no filed sponsorship -- sanctioned {gold, accomplishment} compound: the accomplishment leg alone controls hide-until-met, the gold leg alone controls greyed-when-broke once unlocked. Banks pallass_attuned, the gate on the new Pallass row in data/portals.json. Appended at array end (index-safety convention) -- no earlier charms option's visible index shifts.",
      "text": "That stone with the Pallass stamp on the wrapping. (18 gold)",
      "requires": {
       "gold": 18,
@@ -752,7 +737,6 @@
    ]
   },
   "wrong_order_recap": {
-   "_comment": "Issue #74: replays the CURRENT beat only -- never re-banks heard_wrong_order/resolved_wrong_order/wrong_order_reported (goto only, no effects on this node or its options).",
    "speaker": "Krshia",
    "text": "The inn's shortfall, yes. Smooth it here at my stall, or settle it your own way. Either gets Lyonette her full order.",
    "text_variants": [

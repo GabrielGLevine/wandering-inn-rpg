@@ -1,5 +1,4 @@
 {
- "_comment": "Invrisil 8c Task C1 (issue #12) -- ~20x14 mercantile alleys, the stealth playground (locked shape: bent routes, stacked crates, 2-3 SNEAKABLE trigger_radius footpad placements). biome invrisil_alley (FIX WAVE: same wang paving floor as the boulevard per direction.md's 'same stone, meaner hour', but its OWN blocked+skirt -- the darker textured masonry band picks.md sec.2 flagged for alley walls -- after the controller's windowed read caught the shared-street version rendering as corridors floating on void; see biomes.json's invrisil_alley _comment). Sparse sconce lantern pools on wall cells (decor below) + the night mood card carry the 'lantern maze' read -- direction doc open-question 4's own fence-less fallback. The open path is a bent L: a west corridor (y6-7) -> a north-south connector (x8-10) -> an east corridor (y11-12) to the parlor door, matching the design doc's 'bent routes' literally, not just in flavor -- footpads sit IN the turn and just past it. Crate/barrel decor dresses the corridor's blocked-adjacent cells (the 'CLIMBABLE flavor, not literal climbing' note -- stacked goods, not scatter).",
  "biome": "invrisil_alley",
  "grid": {
   "width": 20,
@@ -937,7 +936,6 @@
    ]
   },
   {
-   "_comment": "FIX WAVE lantern pools (direction.md alleys card: 'sparse fence-lantern anchors, wider gaps between pools than the boulevard's serviced rhythm'). Reuses the existing `sconce` sprite (the inn's own wall lamp -- zero new assets, the direction doc's own 'consider owned/wired art instead of the speculative sewer lantern pick' note) on wall cells adjacent to the corridors. Four pools over three corridor legs vs the boulevard's eight -- the sparser rhythm IS the card. Non-flicker per the direction card's Invrisil-wide rule (serviced city lamps; flicker reads poor).",
    "sprite": "sconce",
    "cell": [
     3,
@@ -1008,7 +1006,7 @@
  ],
  "entities": [
   {
-   "_comment": "Round-trip pair with boulevard_to_alleys (invrisil_boulevard cell 26,8). Landing (25,8) on the boulevard side is the open mid-street cell immediately west of that door.",
+   "_comment": "Round-trip pair with boulevard_to_alleys (invrisil_boulevard cell 26,8).",
    "id": "alleys_to_boulevard",
    "kind": "door",
    "cell": [
@@ -1024,7 +1022,7 @@
    ]
   },
   {
-   "_comment": "Round-trip pair with parlor_to_alleys (brothers_parlor cell 0,4). Landing (1,4) on the parlor side is the open interior cell immediately east of that door.",
+   "_comment": "Round-trip pair with parlor_to_alleys (brothers_parlor cell 0,4).",
    "id": "alleys_to_parlor",
    "kind": "door",
    "cell": [
@@ -1040,7 +1038,7 @@
    ]
   },
   {
-   "_comment": "Invrisil 8c Task C1 -- the street fixer, 'Cups' (docs/superpowers/specs/2026-07-06-invrisil-design.md sec.2/sec.4: 'sells rumors by the CUP -- tea-house pricing bit'). FULL conversation graph wired now (data/dialogue/invrisil_fixer.json) -- unlike Wilovan/Coyle, none of her effects reference a quest id or a start_combat entity C1 doesn't own (gold/accomplishment only), so the rumor-vending hub + the TALK-path testimony chain's *shape* are safe to ship now; the testimony options stay naturally hidden (requires took_brothers_job/fixer_will_testify, both absent==0) until Task C3 lands the quest that banks them -- a forward reference, same convention as C2's Wilovan combatant record. Sprite: reused `citizen_f` rig tinted muted teal-grey (a shawl-and-tea-tray read), zero new generation.",
+   "_comment": "unlike Wilovan/Coyle, none of her effects reference a quest id or a start_combat entity C1 doesn't own (gold/accomplishment only), so the rumor-vending hub + the TALK-path testimony chain's *shape* are safe to ship now",
    "id": "cups",
    "kind": "npc",
    "cell": [
@@ -1066,7 +1064,6 @@
    ]
   },
   {
-   "_comment": "LOCKED interface (8c plan) -- `alley_footpads_a`, one of 2-3 sneakable trigger_radius encounters (the K2 payoff: traced _check_trigger_radius before placing -- `sneaking` skips the ambush entirely and instead banks sneaked_past_danger, silently, per that function's own doc comment; walking it WITHOUT sneaking fires start_combat for real). Arena `mercantile_alley`, roster `footpad_lookout`/`footpad_bruiser` (lane beta/C2's combat data, tuned LOW-lethality by design so a failed sneak never walls the player). Sits inside the vertical connector (the bent route's turn), the corridor's narrowest point.",
    "id": "alley_footpads_a",
    "kind": "encounter",
    "cell": [
@@ -1087,7 +1084,7 @@
    "respawns": true
   },
   {
-   "_comment": "LOCKED interface -- `alley_footpads_b`, the pair's second placement (east corridor, toward the parlor door). Chebyshev distance from alley_footpads_a's own radius-2 zone is 5 (dx5/dy3) -- deliberately non-overlapping, so a canonical script can sneak past BOTH independently without _check_trigger_radius's single-fire-per-move loop masking one behind the other.",
+   "_comment": "`alley_footpads_b`, the pair's second placement (east corridor, toward the parlor door).",
    "id": "alley_footpads_b",
    "kind": "encounter",
    "cell": [
@@ -1108,7 +1105,6 @@
    "respawns": true
   },
   {
-   "_comment": "Invrisil 8c Task C3 (issue #13) -- the STEALTH/SKILL path's own beat: 'the [Observe] true-books + keen-eye hidden-safe beat' (spec sec.3), through the propped yard-side door Cups' rumor already named (invrisil_fixer.json's rumor_counting_house: 'the clerk with the inky cuffs... props it with a cheese wedge'). Mirrors the shield-spider `nest_ledge`/pantry-doorframe SKILL-prop shape EXACTLY: `requires_skill: observe` (the [Appraise Foe] Tactician grant -- NOTE the 2026-07-07 canon rename [Observe]->[Appraise Foe], id `observe` unchanged; the spec/plan's own prose still says '[Observe]', which now reads STALE against the shipped skill catalog -- toast copy below uses the CURRENT display name, not the plan's) + `on_skill_use` banks `lifted_true_ledger` deterministically (zero rng), matching the number/date accusation.json's own accusation-node option quotes verbatim (forty gold, dated the night before). The hidden-safe beat is folded into the SAME single reveal rather than a second prop -- the ledger drawer's own false back is where the safe sits (an honest scope collapse for a single-cell abstraction of 'the counting-house', which this map doesn't model as a separate interior; flagged for controller review). PLACEMENT FIX (this lane's own regression catch, same class as hired_blades' own note below): originally (17,11) sat DIRECTLY on invrisil_walkthrough's own pinned sneak-positive route (right 8 from (10,11) to (18,11), walked BOTH directions including the epilogue) -- entity occupancy silently blocked that shipped C1 canonical. Relocated to (16,12), east corridor floor between alley_footpads_b (14,12) and the parlor door (19,12) -- a cell that script's own asserted route never steps on (it drops straight from (18,11) to (18,12), never touching x15-17 on row 12). Chebyshev distance 2 from alley_footpads_b's own trigger_radius-2 zone is irrelevant here (my own canonical script reaches this prop via `teleport` + a stationary `interact`, never a `move` step near it, and `_check_trigger_radius` only ever runs from `move_player`). Sprite `dusty_scroll` reused (the retired [Light]-study prop, thematically apt for 'something to read with a skill' -- the doorframe-runes precedent), zero new generation. GH#68 (quest-stage rework) GATE ADDED: the real evidence now needs `assessed_guard_pattern` banked first (`counting_house_watch`, this map's own new prop, below) -- reuses the on_skill_use `variants` seam verbatim (the cellar_door precedent, wi_game.gd's `_resolve_skill_use_effect`), no new sim code. Base effect fires on an [Appraise Foe] attempt made before the guard pattern is known (bank a real, harmless, disclosed flavor counter -- `noticed_the_clean_ledger` -- never the true ledger); the variant overrides both `accomplishment` and `toast` once `assessed_guard_pattern` is already banked. `locked_toast` (skill UNKNOWN case) is untouched.",
    "id": "counting_house_ledger",
    "kind": "prop",
    "cell": [
@@ -1135,7 +1131,7 @@
    "locked_toast": "The desk's own ledger reads clean, which is exactly the kind of clean a man pays for. You don't have the eye to find the real one. Not yet."
   },
   {
-   "_comment": "GH#68 (Invrisil quest-stage rework): the SKILL path's Stage 2 gate -- the counting-house's guard rotation, watched from a shadowed nook before ever trying the desk itself. Ungated [Appraise Foe] use (single interaction -- the guard-pattern/ledger PAIR is the 'two interactions, two locations' the stage map calls for; this prop itself needs no prerequisite). Sprite `dusty_scroll` reused (same 'something to read with a skill' idiom as the ledger it gates), tint distinguishes it from the ledger's own sprite use. Cell (15,12): free floor, adjacent to counting_house_ledger (16,12) and alley_footpads_b (14,12) -- off invrisil_walkthrough's own pinned route (that script never steps on (15,12), only (18,11)/(18,12) on this stretch), reached via teleport by the SKILL canonical (never a walked `move` step near footpads_b's trigger_radius).",
+   "_comment": "GH#68 (Invrisil quest-stage rework): the SKILL path's Stage 2 gate",
    "id": "counting_house_watch",
    "kind": "prop",
    "cell": [
@@ -1158,7 +1154,7 @@
    "locked_toast": "Two men on the door, pacing something. You don't have the eye to time it yet."
   },
   {
-   "_comment": "GH#68 (Invrisil quest-stage rework): the FIGHT path's Stage 2 tailing chain, second leg (pairs with `coyle_runner_trail`, invrisil_boulevard). Plain on_interact_accomplishment, no skill gate (a fighter-built PC must never need [Appraise Foe] to reach a fight). Banks the counter invrisil_wilovan.json's `fists_door` come-along ask gates on. Cell (19,11): free floor, off invrisil_walkthrough's own pinned route (that script's sneak leg touches (18,11)/(18,12), never (19,11)) and off both footpad trigger_radius zones. FIGHT-path-only, reached via teleport in near_invrisil_fight/invrisil_disagreement_fight -- never walked by the shared invrisil_walkthrough canonical.",
+   "_comment": "Plain on_interact_accomplishment, no skill gate (a fighter-built PC must never need [Appraise Foe] to reach a fight).",
    "id": "warehouse_approach",
    "kind": "prop",
    "cell": [
@@ -1177,7 +1173,7 @@
    "toast": "The runner ducks inside, and you finally see the whole of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. Wherever the come-along ends, it ends here."
   },
   {
-   "_comment": "Invrisil 8c Task C3 (issue #13) -- `hired_blades`, the LOCKED interface id (plan's lane map: arena `merchant_warehouse`, on_victory banking the confrontation flag) for the quest's FIGHT path: Coyle's warehouse crew. Interact-only (no trigger_radius), the crate/cisterns/rift_vermin_leak FIGHT-leg precedent -- 'the fight lives on its own map, reached by the player's own feet', no dialogue-side start_combat wiring required (though invrisil_merchant_prince.json's accusation node ALSO offers a second, reactive entry into this SAME entity id via its '(Draw steel.)' option -- both routes converge on one start_combat(id) call, per wi_game.gd's own single-choke-point design). `allies: [\"wilovan\"]` + `ally_requires: {wilovan_will_fight: 1}` is the come-along gate, banked ONLY by data/dialogue/invrisil_wilovan.json's `fists_door` ask (no teleporting allies, the riverfarm_hunter/relc_descent precedent) -- matches combatants.json's own wilovan record + sim_combat_batch.gd's `hired_blades_w10_wilovan`/`hired_blades_w10_solo` harness cells (gated 0.6-0.8 with the ally, measured-only solo). `on_victory: forced_confession` is the accomplishment invrisil_merchant_prince.json's hub/cornered nodes both key on -- kept as the DRAFT dialogue's literal wired string (the plan's own lane-map prose paraphrases this 'forced_the_confession'; using the draft's exact string keeps data and dialogue internally consistent, flagged for controller review same as the wilovan file's own note). PLACEMENT FIX (this lane's own regression catch): originally placed at (6,7) in the west corridor, which sits DIRECTLY on invrisil_walkthrough's own pinned sneak-negative route (right 6 from (1,7) to (7,7)) -- entity occupancy blocks movement, so that placement silently broke the shipped C1 canonical (caught by re-running it, not by test_content, which has no route-collision check). Relocated to (17,12), east corridor, south of the new counting_house_ledger prop (17,11) and Chebyshev distance 3 from alley_footpads_b (14,12) -- outside its trigger_radius-2 zone -- and NOT on any cell invrisil_walkthrough's script asserts or steps through (it drops straight from (18,11) to (18,12) without ever touching x15-17 on row 12). Sprite `hired_blade` (C2's owned PixelLab rig) -- ANCHOR RULE machine-playtest verification still owed per combatants.json's own comment (a windowed check, out of this headless lane's verification scope; flagged for the controller).",
+   "_comment": "matches combatants.json's own wilovan record + sim_combat_batch.gd's `hired_blades_w10_wilovan`/`hired_blades_w10_solo` harness cells (gated 0.6-0.8 with the ally, measured-only solo).",
    "id": "hired_blades",
    "kind": "encounter",
    "cell": [
@@ -1202,7 +1198,7 @@
    "observe": "Three men in burgundy-and-brass doublets, clubs and knives held like men who've used them before. Merchant-livery, not Watch steel — Coyle's, all the way down to the stitching."
   },
   {
-   "_comment": "R6 (#95) trap placement 1/2: alley_footpads_a leftover, the footpad-era's remnant danger post-safe-passage. Cell (9,8) verified off every mercantile_alleys canonical's real walked-cell set: invrisil_walkthrough treads (1-7,7)+(3-10,6)+col x10 y7-11+(11-18,11)+(18,12); the 3 invrisil_disagreement_* scripts reposition almost entirely via teleport (never treads intermediate cells) with only 1-step facing bumps at their own teleport targets. (9,8) sits in the open x8-10 connector corridor (blocked list only closes x0-7/x11-19 at y8, leaving x8-10 clear either side of this prop) -- alley_footpads_a itself occupies (9,9) one cell south. requires_skill=observe LIVE (disarm_trap PARKED -- docs/design/class-foundation-staging/trap-disarm-swap.json). Avoidable: (8,8)/(10,8) both clear, corridor stays 2-wide passable. Disarm banks shared trap_disarmed + 2g.",
+   "_comment": "R6 (#95) trap placement 1/2: alley_footpads_a leftover, the footpad-era's remnant danger post-safe-passage.",
    "id": "alley_footpad_snag_a",
    "kind": "prop",
    "cell": [
@@ -1221,7 +1217,7 @@
    }
   },
   {
-   "_comment": "R6 (#95) trap placement 2/2: alley_footpads_b/counting-house leftover. Cell (12,12) verified off the same walked-cell set (see alley_footpad_snag_a above) -- y12 walk only touches (18,12); no entity sits at (12,12) (alley_footpads_b is (14,12), counting_house_watch (15,12), counting_house_ledger (16,12), hired_blades (17,12)). requires_skill=observe LIVE (disarm_trap PARKED, same staging doc). Avoidable: (11,12)/(13,12) both clear (y12 blocks only x0-7). Disarm banks shared trap_disarmed + 2g.",
+   "_comment": "Avoidable: (11,12)/(13,12) both clear (y12 blocks only x0-7).",
    "id": "alley_footpad_snag_b",
    "kind": "prop",
    "cell": [

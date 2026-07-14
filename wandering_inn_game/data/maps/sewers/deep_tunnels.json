@@ -1,5 +1,5 @@
 {
- "_comment": "The Raskghar descent -- a small (14x10) cave-biome map BELOW the sewers, entered from the sewers `deep_fissure` prop once A3 banks `heard_the_deep_tremor` (see the fissure's door_when seam). DARKEST pin in the game (data/moods.json deep_tunnels, vignette 0.55). A single interact-only scout route-fight (`raskghar_scouts`) blocks the way; two flavor props (cold_hearth = old fires, gnaw_pile = bones) + the `warren_mouth` widened-gallery marker (the 'warren door' deep_descent reaches) dress the escalation. The BOSS encounter (Awakened Raskghar in the deep_warren arena) is A3's climax chain -- A2 ships the map, the scouts, the threshold, and the deep_warren arena/harness band; A3 wires the boss entity at/beyond warren_mouth + the Relc party/veto. Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable.",
+ "_comment": "Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable.",
  "biome": "cave",
  "grid": {
   "width": 14,
@@ -31,7 +31,6 @@
   "tile_px": 16,
   "segments": [
    {
-    "_comment": "A stalactite rubble column hanging from the ceiling (top), x7 y0-2 -- narrows the gallery without touching the open mid-band.",
     "from": [
      7,
      0
@@ -42,7 +41,6 @@
     ]
    },
    {
-    "_comment": "A fallen column rising from the floor (bottom), x4 y7-9.",
     "from": [
      4,
      7
@@ -92,7 +90,6 @@
  ],
  "entities": [
   {
-   "_comment": "The way back up to the sewers, beside where the fissure drops you (lands at 2,2).",
    "id": "tunnel_up",
    "kind": "door",
    "cell": [
@@ -154,7 +151,7 @@
    "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered. And that is worse than if they had been."
   },
   {
-   "_comment": "The deep_tunnels route-fight -- a Raskghar scout PAIR barring the way to the warren. Interact-only (no trigger_radius) so QA/A3 control the start; deep_descent clears it via combat_autoplay. Fought in cave_mouth (the generic cave arena); the deep_warren arena is reserved for A3's boss. on_victory banks cleared_raskghar_scouts.",
+   "_comment": "a Raskghar scout PAIR barring the way to the warren.",
    "id": "raskghar_scouts",
    "kind": "encounter",
    "cell": [
@@ -175,7 +172,7 @@
    ]
   },
   {
-   "_comment": "The widened-gallery marker -- the 'warren door' deep_descent reaches (its terminal beat). A flavor threshold prop in A2; A3 wired the Awakened Raskghar boss encounter (deep_warren arena) here / just beyond it, plus the Relc party/veto beat. 8d C1 (issue #14) B3 wiring: `door_when` gated on `horns_delve_started` -- the SAME counter/mirror-cell as dungeon_approach's `gallery_seal_anchor`, this entity's own reopened-gallery pair. Structurally safe: `horns_delve_started` requires `post_game` to even be offered (Olesm's stipend option), and `post_game` implies the full Act III backbone including `cleared_the_warren`/`raskghar_sealed` (test_fixture_coherence.gd's own POST_GAME_BACKBONE) -- so this door_when can never intercept a FIRST-time arrival here; the one-time `reached_the_warren` flavor beat below (deep_descent's own canonical) always already fired before the gate could ever be met.",
+   "_comment": "Reopened-gallery pair with dungeon_approach.gallery_seal_anchor. horns_delve_started requires post_game, whose backbone already includes cleared_the_warren/raskghar_sealed; this door cannot intercept first arrival or reached_the_warren.",
    "id": "warren_mouth",
    "kind": "prop",
    "cell": [
@@ -217,7 +214,7 @@
    }
   },
   {
-   "_comment": "THE BOSS encounter -- the Awakened Raskghar + 2 scout adds, fought in the deep_warren arena. Interact-triggered (no trigger_radius, so QA/the player choose to engage; it sits just past the warren_mouth threshold at (12,7), reachable by standing at (12,6) facing down). Carries a `conversation` (relc_descent = the Relc join/veto beat, the interact.encounter branch runs it before combat): the [Go together.] branch banks `relc_joined_descent`, satisfying THIS entity's `ally_requires` so Relc fields as an ally; the [I go alone.] branch banks `went_alone` and NEVER banks relc_joined_descent, so the roster fields no ally (the honest, measured 0.04 solo cell -- the player chose it). Both branches end on a `start_combat: awakened_boss` effect (self-reference). on_victory banks `cleared_the_warren`; the seal-beat resolutions (Zevara/Olesm) consume that and bank the Act III advance key `raskghar_sealed` after the player returns to the surface (NOT here -- victory != sealed, per the acts data trace). respawns:false + no persistent flag => the boss is removed for good on victory (no re-fight). Balance: sim_combat_batch.gd BOSS_CELLS (gated 0.6-0.75 vs warrior2+Relc, measured solo).",
+   "_comment": "Conversation precedes combat. Join alone banks relc_joined_descent for ally_requires; solo never does. Victory banks cleared_the_warren, not raskghar_sealed; respawns=false. Balance: BOSS_CELLS gates warrior2+Relc 0.6-0.75; solo measured.",
    "id": "awakened_boss",
    "kind": "encounter",
    "cell": [
@@ -245,7 +242,6 @@
    ]
   },
   {
-   "_comment": "R6 (#95) warren-approach trap. Cell (9,8) verified off deep_descent's real walked-cell set: (2,2)/(2,3)/(2,4)/(3,4)/(4,4)/(4,3)/(5,3)/(6,3)/(7,3)/(8,3)/(9,3)/(9,4)/(9,5)/(10,5)/(11,5)/(11,6)/(12,6) -- the canonical route never leaves the y3-6 open mid-band this map's own _comment names; (9,8) is the untouched south gallery below it, clear of the fallen column (x4,y7-9). requires_skill=observe LIVE (disarm_trap PARKED -- docs/design/class-foundation-staging/trap-disarm-swap.json). Avoidable: single-cell prop, open floor on every side. Disarm banks shared trap_disarmed + 2g.",
    "id": "warren_side_snare",
    "kind": "prop",
    "cell": [

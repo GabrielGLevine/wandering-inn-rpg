@@ -1,5 +1,4 @@
 {
- "_comment": "8d Phase B2 (issue #14): the trap gauntlet, the SKILL pillar's showcase map -- identity is TRAPS, not monsters. Four trap classes as DATA PROPS on existing machinery (no new sim): pressure_plate_a (plain on_interact_accomplishment/toast trigger + the generic ANY-entity observe fallback reveal -- no requires_skill needed), dart_slit_a and illusory_floor_a (both requires_skill:'observe' + on_skill_use -- the DISARM-ONLY shape: a dash-through timing window was traced and does not exist anywhere in this sim [no field-movement timing/i-frame mechanism, combat's own Dash is a separate AP-economy system], so per the icy_floor escalate-don't-force-fit lesson this ships disarm-only, not flagged as a gap), snare_nest_slot (a trigger_radius ENCOUNTER SLOT, placement-only prop per the rift_vermin_leak D1 precedent -- no combat data, C-phase promotes). Biome `dungeon`. Connects to dungeon_approach via a real new door pair (dungeon_approach_return); UNREACHABLE from any EXISTING live map this phase, `dungeon_peek` teleports in. Grid-bound clipping stops movement at the edge (no perimeter walls); one interior rubble-column segment for texture.",
  "biome": "dungeon",
  "grid": {
   "width": 20,
@@ -28,7 +27,7 @@
   "tile_px": 16,
   "segments": [
    {
-    "_comment": "A collapsed rubble column, interior texture only -- clear of every entity/decor/blocked cell.",
+    "_comment": "clear of every entity/decor/blocked cell.",
     "from": [
      9,
      10
@@ -112,7 +111,7 @@
  ],
  "entities": [
   {
-   "_comment": "Return leg of the new dungeon_approach<->trapped_halls door pair. to_cell (13,6) sits one cell west of dungeon_depths_door's own (14,6) cell (the sewer_exit/deep_fissure 'never land on the door's own cell' convention).",
+   "_comment": "Return leg of the new dungeon_approach<->trapped_halls door pair.",
    "id": "dungeon_approach_return",
    "kind": "door",
    "cell": [
@@ -128,7 +127,6 @@
    ]
   },
   {
-   "_comment": "TRAP CLASS 1: pressure plate. Plain prop shape -- on_interact_accomplishment/toast fires the TRIGGER on any plain E-interact (no skill gate; a real player can blunder into it), the generic ANY-entity `observe` fallback ([Appraise Foe], no requires_skill needed) is the REVEAL. visual_states swaps to a warning tint once triggered (live re-render, ACCOMPLISHMENT_RECORDED).",
    "id": "pressure_plate_a",
    "kind": "prop",
    "cell": [
@@ -155,7 +153,7 @@
    ]
   },
   {
-   "_comment": "8d C1/C4 (issue #14): the TALK route -- Ksmvr, standing beside the plate (7,7), a second sighting of the same character now placed at dungeon_approach (the vault_boss_slot/dormant_guardian_marker 'closer sighting' idiom applied to an ally instead of the boss). Own graph (ksmvr_plates.json): the guide option is the real beat, gated on `horns_party_formed` (the party must exist to guide) -- see that file's own _comment for the full node walk.",
+   "_comment": "Own graph (ksmvr_plates.json): the guide option is the real beat, gated on `horns_party_formed` (the party must exist to guide)",
    "id": "ksmvr_plates",
    "kind": "npc",
    "cell": [
@@ -168,7 +166,6 @@
    "conversation": "ksmvr_plates"
   },
   {
-   "_comment": "TRAP CLASS 2: dart line. DISARM-ONLY shape (see map _comment for the traced dash-through-window verdict). requires_skill:'observe' + on_skill_use is the real disarm (field-hotbar [Appraise Foe] faced at this entity). A plain E-interact with the skill KNOWN reads the 2026-07-10 nudge ruling (skill_hint_toast, never auto-disarms); with the skill UNKNOWN it falls to use_skill()'s skill_unknown + locked_toast refusal (already covered generically elsewhere in the QA corpus -- barracks_walkthrough/upstairs_walkthrough/wrong_order_loop/work_loop). Placeholder art: A3's own pixellab dart_slit.png candidate drifted purple against the Cemetery family's olive-warm-grey palette (A3's own flagged concern, unretuned) -- NOT integrated; reuses the registered `sewer_grate` sprite (a wall-vent silhouette, thematically apt) tinted cool-dark. Flagged for the controller's art pass: regen dart_slit against this real floor family. 8d C1 (issue #14) SKILL route wiring: `requires_item: 'trap_kit'` (use_skill()'s new item-possession gate, the archery_butt precedent's twin) is the real coin cost -- skill known + trap_kit NOT carried nudges `item_hint_toast` (never auto-refuses to a locked_toast, the skill genuinely IS known); trap_kit carried consumes it (`on_skill_use.remove_item`, the hungry-patron `remove_item` verb's use_skill() twin) and banks `halls_cleared` DIRECTLY as the disarm's own accomplishment (the price_of_a_favor `hollow_true_knot` precedent -- an on_skill_use prop banking the SHARED convergence counter itself, no separate report needed; disarming THIS specific trap and 'the halls are clear' are the same beat, so the old flavor-only `disarmed_dart_line` id is retired, never referenced anywhere else).",
    "id": "dart_slit_a",
    "kind": "prop",
    "cell": [
@@ -194,7 +191,6 @@
    }
   },
   {
-   "_comment": "TRAP CLASS 3: illusory floor. VERIFIED the existing visual_states seam covers 'floor that isn't' -- no new sim needed: this is a plain kind:prop entity, and any entity's occupied cell already blocks movement (is_cell_blocked's occupancy check, src/core/wi_game.gd) regardless of `blocked`/`kind` -- so a player who tries to walk straight across gets a real PLAYER_BLOCKED bump, exactly the 'the floor visibly continues but something refuses to let you cross' read, zero new mechanism. requires_skill:'observe' + on_skill_use is the reveal (a bespoke per-prop accomplishment, not the shared observed_things counter); visual_states swaps to a warning tint once spotted. Placeholder art: A3's own pixellab illusory_floor.png candidate was already flagged 'too uniform' at A3 AND drifts navy-blue against the Cemetery family (unretuned, same palette-drift class as dart_slit) -- NOT integrated; substituted with a same-PACK Cemetery Props.png debris crop (guaranteed palette match, see sprites.json's illusory_floor_tell entry for the full rationale) tinted toward this map's floor. Flagged for the controller's art pass: regen illusory_floor against this real floor family, retuned shimmer edge per A3's own note. MOUSE TELL-LEAK (v1, accepted): #57 click-to-walk paths AROUND entity cells, so a mouse player sees the path bend before any [Observe] -- the keyboard bump read is the primary experience; no cheap fix without breaking the pathfinder's move_player-parity invariant.",
    "id": "illusory_floor_a",
    "kind": "prop",
    "cell": [
@@ -230,7 +226,6 @@
    ]
   },
   {
-   "_comment": "TRAP CLASS 4: snare, PROMOTED to a live encounter (8d C1, issue #14) -- the FIGHT route's real cost, HP not coin. Roster: `snare_ward_a`/`snare_ward_b` ('Lesser Ward' constructs -- stat clones of ruin_ward_a/b with plain melee ai; see snare_ward_a's combatants.json _comment for why a separate id exists: ruin_ward's issue-#83 `guard` profile has no boss to escort HERE, so guard wards clustered instead of engaging and eroded this fight to 0.94, the same illusory-cost failure fixed below once already) + `rift_vermin_c` ('Ember-Touched Vermin', the flame_bolt caster -- Magical Rats are drawn to leaking ambient magic per that combatant's own wiki cite, and vermin nesting behind a snare IS this entity's 'something in the dark past it' flavor) -- no invented species, no stat changes (the 8d C1 review's roster-only ruling: the original 2-ward roster measured 0.99/2r at the T4 build, an illusory cost; this roster measures 0.69/3r, GATED 0.55-0.95/3-12 in sim_combat_batch.gd's DUNGEON_CELLS). Own arena `trapped_halls_snare` (data/arenas.json, 4 enemy_spawns -- the 3-enemy roster hit the enemy-side spawn-ceiling trap at the original 2). Solo (no allies -- the party hasn't formed a fighting line here, this is the player's own trap to spring). INTERACT-ONLY, no trigger_radius: the vault-approach route passes within Chebyshev 2 of this cell regardless of which pillar the player chose, so a proximity trigger would force EVERY route through this fight -- interact-only keeps FIGHT a genuine choice, the rift_vermin_leak/ruin_guardian precedent. `encounter_when` gated on `horns_delve_started` -- dormant/inert (gate_closed_toast reuses the pre-promotion flavor toast verbatim) until the quest is actually accepted, so `dungeon_peek`'s teleport-only probe still walks past it inert. on_victory banks `halls_cleared` DIRECTLY (the SAME shared convergence counter the SKILL/TALK routes bank -- any producer opens the vault's own `encounter_when` gate, which ALSO requires the party formed).",
    "id": "snare_nest_slot",
    "kind": "encounter",
    "cell": [
@@ -264,7 +259,7 @@
    ]
   },
   {
-   "_comment": "8d C1 (issue #14/#82): THE VAULT, PROMOTED to a live encounter. Arena `vault` (12x8, >= 4 player_spawns -- the C2 review's SPAWN-CEILING TRAP, exactly consumed by the 4-body pc+ceria+yvlon+ksmvr roster below), enemies `vault_construct` (tuned, gains `slam`, sim_combat_batch.gd's PARTY_CELLS `vault_construct_t4_party` GATED 0.55-0.95/3-12-round band). `ally_requires: {horns_party_formed: 1}` -- Ceria's OWN recruit-conversation counter (dungeon_approach), not the bare accept counter `horns_delve_started` her earlier C3-authored placeholder comment floated: the roster should field only once the party has genuinely formed, mirroring `relc_descent`'s `met_relc`-adjacent precedent (a real recruit beat, not merely 'quest started'). `ally_hp_penalty.ksmvr` is the TALK route's real cost (8d C4): gated on `guided_ksmvr_through_plates` (banked only by `ksmvr_plates.json`'s guide option, trapped_halls), it reduces Ksmvr's `hp_mod` by 18 (con15 -> base max_hp 35, enters this fight at 17) -- reuses the GENERIC `hp_mod` field wi_combat.gd already reads off every combatant cfg (well_fed's own +2 precedent), zero new sim mechanism. `encounter_when: {requires: {halls_cleared: 1, horns_party_formed: 1}}` is BOTH the trap-gauntlet gate AND the solo-lockout (`_encounter_gate_met`'s 'requires' shape, two keys ANDed): without the party leg, a player who accepted the quest, walked PAST Ceria, and cleared the halls via FIGHT/SKILL could interact here and `start_combat`'s unmet ally_requires would silently EMPTY the ally list -- a solo fight against a boss tuned 0.55-0.95 for a 4-body party, no refusal, no signpost. The party leg refuses that interact instead; the gate_closed_toast below signposts BOTH legs diegetically (halls + Horns) since one toast serves every unmet combination. INTERACT-ONLY, no trigger_radius (a build-time reversal of the snare_nest_slot precedent this entity's own earlier comment floated): a proximity trigger at radius 2 fires the instant the player's approach cell (17,6) comes within Chebyshev 2 of (18,6) -- discovered live, it collapses the deliberate 'step up and choose to engage' threshold-crossing read into an unavoidable ambush, and every approach vector this map's own geometry allows sits inside that radius anyway. Matches rift_vermin_leak/ruin_guardian/awakened_boss's own interact-only convention for a boss the player consciously commits to, not an environmental ambush. on_victory banks `vault_construct_downed`; the deeper `seal_kept_door` FIND prop (below) reads it.",
+   "_comment": "Matches rift_vermin_leak/ruin_guardian/awakened_boss's own interact-only convention for a boss the player consciously commits to, not an environmental ambush.",
    "id": "vault_boss_slot",
    "kind": "encounter",
    "cell": [
@@ -317,7 +312,6 @@
    ]
   },
   {
-   "_comment": "8d C1 (issue #14): the FIND beat -- the deeper rune-door, past where the construct fell. Plain interact-reveal prop with a GATED `variants` override (the new on_interact_accomplishment reuse of `_resolve_skill_use_effect`): the base (default) reading is a harmless pre-victory flavor line (this cell is reachable by walking row 7 around vault_boss_slot's own occupied cell, so a sequence-break must read as inert, not a spoiler); the variant, gated on `vault_construct_downed`, is the real find -- banks `seal_kept_found` with the BINDING toast verbatim. Placed at (19,7), approached from (18,7) facing right -- clear of vault_boss_slot's own (18,6) cell.",
    "id": "seal_kept_door",
    "kind": "prop",
    "cell": [
@@ -344,7 +338,7 @@
    ]
   },
   {
-   "_comment": "Issue #91 (hour-4 spine): `gallery_vermin_nest` -- the reopened-gallery respawns:true slot the drain report flagged (the dungeon's own repeatable post-clear content, distinct from kingslayer_den's dungeon_approach placement). `encounter_when: {requires: {halls_cleared: 1}}` (the SAME `_encounter_gate_met`/`requires` shape snare_nest_slot/vault_boss_slot already use, no new sim seam) -- dormant/inert (gate_closed_toast) until the trap gauntlet is actually cleared by ANY route (FIGHT/SKILL/TALK all bank halls_cleared directly), matching the 'reopened gallery' framing: the side passages stay sealed by rubble/wards until the main halls are safe to work in. The crab_nest informed-consent shape (data/dialogue/gallery_vermin_nest.json) -- interact-only, no trigger_radius. Roster: rift_vermin_a + rift_vermin_c (two of the three rift_vermin_leak/trapped_halls_snare regulars, combatants.json -- 'magic-drawn vermin resurging once the seal cracked further' extends that entity's own established canon-cite, no new species). respawns:true (dormant until the next sleep, the rock_crab_nest/kingslayer_den mechanism). Placed at (12,11), the map's open south band -- clear of the (9,10)-(9,11) rubble-column wall segment and the (4,11)/(16,11) blocked decor; Chebyshev distance to snare_nest_slot (17,8) is 5, to illusory_floor_a (14,7) is 4, to vault_boss_slot (18,6) is 6, to seal_kept_door (19,7) is 7 -- clear of every entity/blocked cell, and off the row-8/row-6 lanes delve_fight/delve_talk/delve_skill actually walk (verified against all three scripts' own move sequences).",
+   "_comment": "respawns:true (dormant until the next sleep, the rock_crab_nest/kingslayer_den mechanism).",
    "id": "gallery_vermin_nest",
    "kind": "encounter",
    "cell": [

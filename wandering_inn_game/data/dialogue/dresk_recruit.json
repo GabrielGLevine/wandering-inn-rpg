@@ -1,6 +1,5 @@
 {
 	"start": "hub",
-	"_comment": "Issue #81 (exploration & optional content): Dresk's REAL conversation graph, replacing the old repeated-forever dialogue[0] fallback (skeleton_scene.json's own comment on duty_sergeant flagged him 'not a quest-giver v1' -- this is that v2). POSTING-SEEDED: the 'ask' option is hidden until guild_board's rumor_missing_recruit has been read (heard_about_missing_recruit). Two real beats: 'search' (banked on the sewers map, recruit_pell.json) and 'report' (banked here, same map as the giver -- no travel-signposting requirement). Always-available exit: 'Just checking in.' carries neither requires nor hide_when.",
 	"nodes": {
 		"hub": { "speaker": "Dresk", "text": "Sergeant Ashgrave. If you're here to report something, the slate's on the wall. Write it plain.", "text_variants": [
 				{ "requires": { "accomplishment": { "missing_recruit_started": 1 } }, "text": "Still no word from Pell. Kit's counted twice over on account of it. Slate stays open till someone finds them." },

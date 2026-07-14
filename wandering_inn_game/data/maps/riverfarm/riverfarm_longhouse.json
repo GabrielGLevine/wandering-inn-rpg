@@ -1,5 +1,5 @@
 {
- "_comment": "Interior behind `longhouse_door` (riverfarm_village) -- small communal hall, 10x7. FUNCTION: gives the village's one guest bed a real room (retires the open-lawn sleep-site read) and gives the headman's ledger a physical anchor. biome 'inn' reused (same wood-hall plank family as guild/inn_upstairs, not a new tileset). CONSTRAINT: south wall gapped at x=5 for `longhouse_exit`; arrival from the village lands one cell north of it (5,5), matching the guild_door/guild_exit offset convention. Hearth + 2 sconces = 3 lights total, well under the 8/map budget. TRAP: hearth/long-table/headman-table are added to `blocked` manually (decor never auto-blocks movement) -- stools/barrels/crate/sconces stay walkable, matching guild's own furniture-blocking split (counters/tables blocked, stools/rugs not).",
+ "_comment": "TRAP: hearth/long-table/headman-table are added to `blocked` manually (decor never auto-blocks movement)",
  "biome": "inn",
  "grid": {
   "width": 10,
@@ -100,7 +100,6 @@
     ]
    },
    {
-    "_comment": "South wall, gapped at x=5 for longhouse_exit.",
     "from": [
      1,
      6
@@ -253,7 +252,6 @@
    }
   }
  ],
- "_comment_ambience": "Same dusk/night dust-motes pattern as every other wood interior (guild/inn_upstairs precedent).",
  "ambience": [
   {
    "preset": "dust_motes",
@@ -266,7 +264,7 @@
  ],
  "entities": [
   {
-   "_comment": "Return door -- to_cell (11,8) is the SAME open cell the player stood on outside to approach longhouse_door in the first place (the guild_exit/guild_door offset convention).",
+   "_comment": "to_cell (11,8) is the SAME open cell the player stood on outside to approach longhouse_door in the first place (the guild_exit/guild_door offset convention).",
    "id": "longhouse_exit",
    "kind": "door",
    "cell": [
@@ -282,7 +280,7 @@
    ]
   },
   {
-   "_comment": "The village's sleep site, relocated off the open lawn into a real room. Mechanically identical to every other sleep prop (sleep: true, checked first in interact()'s prop match) -- sleep_toast text held verbatim across the move. Placed against the east wall (col 9), footprint clear of the approach column (col 8, rows 3/5 open on both sides).",
+   "_comment": "Mechanically identical to every other sleep prop (sleep: true, checked first in interact()'s prop match)",
    "id": "riverfarm_guest_cot",
    "kind": "prop",
    "cell": [
@@ -296,7 +294,6 @@
    "sleep_toast": "Straw tick, borrowed blanket — Riverfarm always finds room for one more."
   },
   {
-   "_comment": "Flavor-only (on_interact_accomplishment + toast, same shape as guild_notice_wall) -- the headman's own ledger, left on his corner table. No gate, no quest tie.",
    "id": "riverfarm_headman_ledger",
    "kind": "prop",
    "cell": [

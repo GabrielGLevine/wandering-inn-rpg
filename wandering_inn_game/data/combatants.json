@@ -38,7 +38,7 @@
    ]
   },
   {
-   "_comment": "Klbkch the Slayer -- Antinium Senior Guardsman, Relc's patrol partner (issue #69: fields as the ALTERNATE early companion in the WATCH-context fights -- crate_scavengers' FORCE path and shield_spiders' cisterns FIGHT path -- while Relc keeps the tutorial/road/inn fights + the deep_tunnels descent, his own arc; no fight fields both). Voice/canon precedent: the #51 gate NPC (data/skeleton_scene.json's `klbkch` entity, whose talk_pool is precise/courteous/dry, never jokey) -- twin shortswords. Stats banded like relc's own record, a notch different in CHARACTER (the harness decides the final numbers, sim_combat_batch.gd ENCOUNTER_CELLS below): dex 16 (>relc's 12) reads as faster/more evasive -- WICombat._resolve_hit's hit_chance formula subtracts the TARGET's dex/4 from the attacker's roll, so a higher-dex ally is genuinely harder for enemies to land a hit on, not mere flavor. str 12 (<relc's 14) and weapon_die 5 (<relc's 6) together read as slightly less raw damage per landed hit (damage = str/2 + roll(weapon_die)) -- lighter twin shortswords vs. a spear. con 18 (<relc's 20) is a notch less bulky than a Drake spearmaster (max_hp = 20+con). `quick_slash` (damage_mult 0.7, 1 AP -- existing skill shape, NO new effect type) is the dual-shortsword flavor grant alongside the shared `basic_swordwork` baseline (same idiom as wilovan's own kit, this file's own record); WICombatAI's melee profile only ever calls power_strike BY NAME (never quick_slash), so this is known-kit flavor, not an AI-exercised skill -- matches the precedent exactly. NO `combat_scale` override: klbkch's field render_scale (data/sprites.json: 0.4348 on a 92px frame, figure crop 69px) already puts his on-screen figure at 69*0.4348=30.0px -- the SAME ~30px standard the Relc containment fix (combat_scale 0.61 on his bespoke 124px Drake frame) exists to force an OVERSIZED rig down to. Klbkch's rig is already standard-sized (Zevara-class per its own sprites.json comment), so no override is needed -- the riverfarm_hunter/antinium_worker precedent (only canon-tall rigs carry combat_scale).",
+   "_comment": "Voice/canon precedent: the #51 gate NPC (data/skeleton_scene.json's `klbkch` entity, whose talk_pool is precise/courteous/dry, never jokey) -- twin shortswords.",
    "id": "klbkch",
    "display_name": "Klbkch",
    "sprite": "klbkch",
@@ -59,7 +59,7 @@
    ]
   },
   {
-   "_comment": "Riverfarm's own ally, `river_wolf_pack`/`briar_collectors`/`briar_collectors_deep` roster (issue #10/#11 FIX-FIRST: Relc has no fictional basis at Riverfarm -- reached solely via a SOLO Door arrival, Liscor's own Watch guardsman, no come-along beat, no locality; see wi-adding-an-encounter's ally precedent). CANON-GROUNDED, ORIGINAL+flag (docs/design/character-profiles-staging.md): wiki.wanderinginn.com/Riverfarm attests a [Hunter] class among the village's defenders (Califfy, Thel Grasse) -- this combatant realizes that attested profession, not an invented one. Stats/weapon_die/ai/skills are an EXACT clone of `relc`'s block (same numbers, only id/display_name/sprite differ) -- R2/R3's tuned harness bands (sim_combat_batch.gd RIVERFARM_CELLS, gated 0.55-0.95/0.55-0.85, measured 0.84) were tuned against this exact stat block under the old id; changing any stat here invalidates them. No `combat_scale` override (unlike relc's 0.61, which contains his bespoke 124px Drake frame) -- the `a_hunter` sprite is a plain 64px human frame, same convention as every other human-sized combatant. Fields only when `hunter_will_come` is banked (data/dialogue/riverfarm_hunter.json's own come-along beat, at the village) -- never on `met_relc` alone.",
+   "_comment": "Fields only when `hunter_will_come` is banked (data/dialogue/riverfarm_hunter.json's own come-along beat, at the village) -- never on `met_relc` alone.",
    "id": "riverfarm_hunter",
    "display_name": "The Hunter",
    "sprite": "a_hunter",
@@ -96,7 +96,7 @@
    "skills": []
   },
   {
-   "_comment": "GH#90 area_skill AI-arm adoption: gains `icy_floor` (EXISTING skill, unmodified -- a shaman's second hex, not just fire) alongside flame_bolt (now `applies.burning`, see skills.json). `_act_ranged`'s area_id scan is a SEPARATE slot from spell_id, so both skills stay live: icy_floor when >=2 targets qualify for the blast, flame_bolt otherwise. goblin_ambush comp is UNGATED for warrior2 (sim_combat_batch.gd, `ungated_comps`) and every OTHER build vs this comp is `gated:false` -- MEASURED-only, zero win-rate contract, the low-risk pick for this arm's live demonstration.",
+   "_comment": "GH#90 area_skill AI-arm adoption: gains `icy_floor` (EXISTING skill, unmodified -- a shaman's second hex, not just fire) alongside flame_bolt (now `applies.burning`, see skills.json).",
    "id": "goblin_shaman",
    "display_name": "Goblin Shaman",
    "sprite": "goblin_female",
@@ -153,7 +153,7 @@
    ]
   },
   {
-   "_comment": "Issue #24 (HR-II forward-ref): the Rock Crab, a T1 floodplains renewable cull target (region-tiers.md/sim_combat_batch.gd's own tier table -- floodplains is T1, expected build warrior1-4). Design identity per the wiki-verified staging profile (character-profiles-staging.md Home-Region II): boulder-mimic, ARMORED and SLOW, not a swarm -- damage_reduction 8 is the identity stat and is LOCKED by controller ruling (this file's only other dr holder is vault_construct, a T4 boss, at 3; rock_crab is the first LOW-tier dr carrier), dex low models 'slow' (WICombat's hit_chance formula subtracts the TARGET's dex/4 from the attacker's roll -- low dex means genuinely easier to land a hit on, not flavor). str/weapon_die carry real crushing-pincer damage on the hits that DO land -- canon calls it dangerous enough that 'goblin hunting packs kill them WITH casualties'. No skills (a single armored brawler, not a caster/support). TUNING TRAP 1 (band): the first SOLO-single-enemy GATED cell below T4 -- a plain low-con/low-dr draft (con 7, dr 2) read 1.00 win_rate / 2 median rounds vs warrior2+relc, nowhere near band; dr 8 + real hp is what holds it. TUNING TRAP 2 (relc_downed -- the STRUCTURAL frontier, measured across ~30 candidate stat combos at the real 100-seed gate): for ANY single-melee-enemy roster vs warrior2+relc, win_rate<=0.95 and relc_downed<=0.5 are jointly INFEASIBLE -- PC death is the ONLY defeat (_check_end) and the melee AI always focuses the lowest-HP player-sider, which is ALWAYS relc (hp 40 < pc's 44), so a loss requires the crab to chew through relc FIRST and still kill the pc: every combo weak enough to spare relc most fights reads win 0.96-1.00 (out of band), every in-band combo downs relc >=~0.55. The whole measured frontier: win 0.91<->downed 0.60, 0.93<->0.62, 0.95<->0.59, 0.96<->0.53, 0.98<->0.50. Shipped point (the review-wave FIX-FIRST retune, offense DOWN from the first-landed str 16/die 10/con 20 whose relc_downed=0.83 was the harness's highest): str 14 (down 2), weapon_die 10 (held), con 16 (hp 36, down from 40) -- gate read win_rate=0.93 / median=4 / relc_downed=0.62 (from 0.83). A future pass wanting downed <=0.5 must change STRUCTURE, not stats: per-cell band floor-raise (the alley_footpads 0.75-0.98 low-lethality precedent) or a windup/slam cadence (halves swing count on declare rounds; the harness melee pc never dodges a telegraph, so spike lethality survives) -- both need a controller ruling. combat_scale 3.57 contains the field sprite's oversized render_scale (data/sprites.json rock_crab: render_scale 2.57 targets ~36px FIELD presence off a 14px crop; combat_scale multiplies the SAME crop to ~50px for the close-range arena read, canon's 'shell the size of a cart' -- the same per-combatant override mechanism relc/vault_construct/ruin_guardian use, REPLACING not stacking with render_scale, per board_renderer.gd's own contract).",
+   "_comment": "str/weapon_die carry real crushing-pincer damage on the hits that DO land -- canon calls it dangerous enough that 'goblin hunting packs kill them WITH casualties'.",
    "id": "rock_crab",
    "display_name": "Rock Crab",
    "sprite": "rock_crab",
@@ -207,7 +207,7 @@
    "skills": []
   },
   {
-   "_comment": "Canon Liscor-area ambush predator (wiki.wanderinginn.com/Shield_Spiders -- black-and-silver armored carapace, Silver-rank individually, nest under Liscor's Dungeon). A goblin_raider-class melee reskin nudged toward the carapace fantasy: +con (armored back), +dex (ambusher), lower int/cha. SPRITE STAND-IN: uses `bat` (the only dark cave-creature sheet in-tree) -- flagged in docs/VISUAL-LOG.md for a real arachnid sprite (Track B / PixelLab). str/weapon_die tuned down from an earlier reading: the nest's ['shield_spider','shield_spider'] roster now correctly fields TWO distinct combatants (WICombat._init dedups same-catalog-id rosters at build time) instead of silently collapsing to one, so `cisterns_fight`'s warrior-L1-SOLO clear is a genuine 2-spider fight -- these numbers keep that findable (real risk, not free) without trivializing the ally-backed/level-2 approaches. Balance is MEASURED-only in sim_combat_batch.gd's ENCOUNTER_CELLS (see report).",
+   "_comment": "SPRITE STAND-IN: uses `bat` (the only dark cave-creature sheet in-tree) -- flagged in docs/VISUAL-LOG.md for a real arachnid sprite (Track B / PixelLab).",
    "id": "shield_spider",
    "display_name": "Shield Spider",
    "sprite": "bat",
@@ -225,7 +225,7 @@
    "skills": []
   },
   {
-   "_comment": "The sewers' weak trash pack. Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, same as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, flagged generic-diegetic per the spec. Deliberately fragile (low con/weapon_die) so the sewers_walkthrough autoplay clears it fast.",
+   "_comment": "Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, same as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, flagged generic-diegetic per the spec.",
    "id": "sewer_vermin",
    "display_name": "Sewer Bat",
    "sprite": "bat",
@@ -243,7 +243,7 @@
    "skills": []
   },
   {
-   "_comment": "Raskghar scout -- canon nocturnal cave predator (wiki.wanderinginn.com/Raskghar): a cross between an upright bear and a lion, towers over Gnolls, tracks and ambushes prey. FICTION FLOOR (binding on any future retune): an elite Raskghar must STRICTLY dominate a plain goblin_raider on every combat axis -- currently str 11>10, con 14>9, weapon_die 5>4. If the boss band ever needs this fight easier, cut the BOSS's own numbers (see raskghar_awakened), never below raider-dominance here. A bruiser-class melee pair, low int/cha. Serves DOUBLE duty -- the deep_tunnels route-fight pair AND the 2 scout adds in the Awakened's boss roster (its ['raskghar_scout','raskghar_scout'] entry now correctly fields TWO distinct combatants -- WICombat._init dedups same-catalog-id rosters at build time). Down from the earlier str 15/con 20/die 7 reading: those values were calibrated while the boss roster silently fielded only ONE scout, so each scout carried double weight; with the pair real, awakened_boss_w2_relc's 0.6-0.75 band splits its difficulty budget across three bodies -- the bulk of the cut went to the boss's own HP/die, the remainder here, keeping raider-dominance intact. The route-fight cells (measured-only, no band) read easier than under the old inflated statline, which is fine. combat_scale 0.4492 contains the hulking 124px frame at the feet (the Relc containment lesson); sprite is a real directional PixelLab v2 idle/walk/slice set. Balance MEASURED-only in sim_combat_batch.gd SCOUT_CELLS; GATED via BOSS_CELLS (see raskghar_awakened's own comment).",
+   "_comment": "FICTION FLOOR (binding on any future retune): an elite Raskghar must STRICTLY dominate a plain goblin_raider on every combat axis -- currently str 11>10, con 14>9, weapon_die 5>4.",
    "id": "raskghar_scout",
    "display_name": "Raskghar Scout",
    "sprite": "raskghar_scout",
@@ -262,7 +262,7 @@
    "skills": []
   },
   {
-   "_comment": "The Awakened Raskghar BOSS -- canon (a Raskghar that ate a Gnoll's heart, permanently smarter, matches a Level-20 warrior). High-HP bruiser (con 30 -> 50 max_hp). Its signature [Raskghar Maul] is a reaching slowed-rider swing on the EXISTING spell_damage+applies machinery (NO new effect type). `ai: caster` is REQUIRED, not decorative: the melee AI only fires attack/power_strike by name, so a `caster` boss (leads with the range-2 maul, falls through to claws) is the only shipped profile that actually LANDS the slow without a combat_ai.gd change. combat_scale 0.4839 lets it loom ~2 cells while HP bars stay readable. Balance: sim_combat_batch.gd BOSS_CELLS -- GATED 0.6-0.75 vs warrior2+Relc, measured solo. The boss ENCOUNTER entity (party/veto beat) is separate from this combatant + arena + harness band. con/weapon_die carry the bulk of the band's difficulty budget by design: the two scout adds have a fiction FLOOR (must dominate a goblin_raider -- see raskghar_scout), so when the band needs the 3-vs-2 fight easier the boss's own HP/die move first. The earlier con 44/die 9 reading was calibrated while the roster silently fielded only ONE scout add; with both real, this record returned to its original design point and the band re-verified at 0.68. GH#90 RETUNE: raskghar_maul's new `weakened` rider (skills.json) is a real player-side DPS cut (25% less outgoing damage for a round after every landed maul, and it lands almost every turn) -- awakened_boss_w2_relc dropped 0.68->0.50, and the rider's own duration was already floored at 1 round (see raskghar_maul's TUNING TRAP note) before this record moved. weapon_die 5->4 (con UNCHANGED -- the boss's own HP stays the shipped design point) restored the band: 0.64, inside 0.6-0.75 with real margin both directions.",
+   "_comment": "The Awakened Raskghar BOSS -- canon (a Raskghar that ate a Gnoll's heart, permanently smarter, matches a Level-20 warrior).",
    "id": "raskghar_awakened",
    "display_name": "Awakened Raskghar",
    "sprite": "raskghar_awakened",
@@ -283,7 +283,7 @@
    ]
   },
   {
-   "_comment": "The rift_vermin_leak trash swarm (beat-2, inn-cellar-adjacent; the entity placement lives in skeleton_scene.json). CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient/leaking magic ('any place with magic'), display diverse powers incl. fire breath -- the anchor-stone's residual rift-link leaking mana into the cellar is exactly the draw the wiki describes, so this is a direct thematic fit realized generic-diegetically (no single named subspecies is attested for a plain magic-drawn rat swarm). Two 'coward' twins (rift_vermin_a/b, letter-suffix convention per training_dummy_a/b) + one ranged 'ember-touched' caster (rift_vermin_c, EXISTING flame_bolt skill -- the canon fire-breath power, no new skill.json entry). SPRITE STAND-IN: reuses `bat` (same convention as cave_spider/sewer_vermin, VISUAL-LOG flagged for a real rodent sheet). Given DISTINCT ids rather than repeating one id 2-3x in an encounter's `enemies` array -- a duplicate-id roster now fields every listed combatant correctly (WICombat._init dedups same-catalog-id entries with a runtime suffix), but hand-authored distinct ids stay the clearer convention for a new multi-enemy roster: no suffix ever shows up in an event/snapshot id stream, and each individual can carry its own kit (rift_vermin_c's flame_bolt) without a shared-template constraint. Balance: sim_combat_batch.gd RUIN_CELLS, GATED 0.55-0.95 at the warrior5_mage5 (~L10, 'L8-12 kit') representative build. ISSUE #83 ADOPTION: `ai` changed melee -> `coward` -- a swarm-rat scattering once hurt (flees under 30% hp, regroups toward its nest-mates) is the natural read for 'vermin', and rift_vermin_leak's wide GENERIC 0.55-0.95 band (see sim_combat_batch.gd's own header table) gives real margin to absorb the behavior shift; re-derived in-band, before/after logged on sim_combat_batch.gd's PARTY/RUIN_CELLS comment block.",
+   "_comment": "CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient/leaking magic ('any place with magic'), display diverse powers incl.",
    "id": "rift_vermin_a",
    "display_name": "Rift Vermin",
    "sprite": "bat",
@@ -301,7 +301,6 @@
    "skills": []
   },
   {
-   "_comment": "Rift_vermin_leak's second twin -- see rift_vermin_a's _comment for the full canon cite + distinct-id rationale + the issue #83 `coward` adoption. Identical stat template (a matched pair), given its own id per that convention (not required for a correct fielding anymore, but keeps ids suffix-free and each individual independently reskinnable).",
    "id": "rift_vermin_b",
    "display_name": "Rift Vermin",
    "sprite": "bat",
@@ -319,7 +318,7 @@
    "skills": []
   },
   {
-   "_comment": "Rift_vermin_leak's ranged member -- the canon 'fire breath' power (wiki.wanderinginn.com/Magical_Rats) realized via the EXISTING `flame_bolt` skill (goblin_shaman's spell_damage/range-4 bolt, no new skill.json entry -- flame is flame regardless of caster). `ai: ranged` so combat_ai.gd's ranged profile actually fires it (see wi-adding-an-encounter's autoplay gotcha: a melee-profile combatant never casts). GH#90: flame_bolt now carries `applies.burning` (skills.json) -- a magical rat's fire-breath catching alight is the direct read. AI-arm adoption: gains `flame_pillar` (EXISTING skill, unmodified, class-shared with Mage but unmodified-skill grants carry zero player-balance leakage -- only a skill's own DEFINITION change would) -- the area_skill arm's live demonstration, `_act_ranged`'s SEPARATE area_id slot means both flame_bolt (single target) and flame_pillar (>=2 targets, ally-safe) stay reachable, never dead code. Fields in RUIN_CELLS' rift_vermin_leak_w8_relc (GATED wide 0.55-0.95) and DUNGEON_CELLS' trapped_halls_snare_t4_solo (GATED 0.55-0.95) -- both re-verified in-band.",
+   "_comment": "`ai: ranged` so combat_ai.gd's ranged profile actually fires it (see wi-adding-an-encounter's autoplay gotcha: a melee-profile combatant never casts).",
    "id": "rift_vermin_c",
    "display_name": "Ember-Touched Vermin",
    "sprite": "bat",
@@ -340,7 +339,7 @@
    ]
   },
   {
-   "_comment": "Ruin_guardian -- the anchor-stone pedestal's warden (beat-3 recovery run; the entity lives in ruin_surface, the pedestal gate is wired separately). CANON-CITE, wiki.wanderinginn.com/Chapter_3.07_H (+ wiki.wanderinginn.com/Thresk): the Ruins of Albez house a guardian construct/Golem the Horns of Hammerad fought at Warmage Thresk's treasury door -- 'a White-Hot Flame Golem', humanoid, animate flame with a mana-stone core, immensely dangerous at Horns' (much higher) power level. THIS combatant is NOT that same already-narratively-resolved construct (it was destroyed on-page; reusing it verbatim would also be far too strong for a ~L10 recovery-run gate) -- it's CANON-PLAUSIBLE: Albez is described as 'a breeding ground for Monsters' riddled with 'several dungeons' on a leyline, so a lesser ward-construct of the same animate-guardian family, sentineling a DIFFERENT anchor-stone pedestal elsewhere in the ruins, is a direct, non-colliding extrapolation of the same lore (construct/undead-class per the plan brief -- realized construct-side, no new mechanic). `ai: melee` (no new skill needed -- `tough_body`, an EXISTING skill, supplies the construct's durability flavor as flat +10 hp). SPRITE STAND-IN: `training_dummy` (an already-animate humanoid-shaped combat prop reads as a plausible guardian effigy without colliding with any established character's sprite -- reusing raskghar_awakened's or a goblin's sprite here was explicitly avoided per CLAUDE.md's stray-sprite-reuse gotcha). combat_scale looms it slightly above the escort wards. Balance: sim_combat_batch.gd RUIN_CELLS, adjudicated win_lo/win_hi like deep_descent's raskghar_awakened (Relc-escorted cell explicitly banded, solo cell measured-only hard-mode frontier). ISSUE #83 RE-BAND: `con` 28 -> 24 (max_hp -4) -- its own escort wards (ruin_ward_a/b) adopted the new `guard` profile, which clusters them near whichever of their side is hurt worst instead of rushing the party individually; against THIS roster the effect made the fight measurably harder (`ruin_guardian_w8_relc` win_rate 0.69 -> 0.54, dropping the gated 0.55-0.8 floor by 0.01). Shortening the guardian's OWN hp (not the wards') restores `ruin_guardian_w8_relc` to 0.59, back in band with real margin; ruin_guardian_w8_solo (measured) moved 0.01 -> 0.09 alongside it. Re-verified via sim_combat_batch.gd. (The trapped_halls snare no longer shares ruin_ward_a/b at all -- it fields the melee-ai `snare_ward_a/b` clones, see snare_ward_a's own comment -- so this record's stats now serve exactly ONE gated cell.) GH#90 RE-RETUNE: ruin_ward_b's new `guarding_ward` skill (heal + `guarded` rider, its own _comment) extends the roster's survivability again -- `ruin_guardian_w8_relc` dropped 0.59->0.51 (guarded's own duration was already floored at 1 round before this record moved -- see guarding_ward's TUNING note). `con` 24->20 (max_hp -4, the SAME lever this file already used once) restores the band: 0.60, back inside 0.55-0.8.",
+   "_comment": "Ruin_guardian -- the anchor-stone pedestal's warden (beat-3 recovery run; the entity lives in ruin_surface, the pedestal gate is wired separately).",
    "id": "ruin_guardian",
    "display_name": "Ruin Warden",
    "sprite": "training_dummy",
@@ -361,7 +360,7 @@
    ]
   },
   {
-   "_comment": "Ruin_guardian's first escort ward -- see ruin_guardian's _comment for the full canon cite. A lesser attendant construct (deep_warren boss+2-scouts structure precedent), given its OWN id (not repeated) per the distinct-id convention documented on rift_vermin_a. ISSUE #83 ADOPTION: `ai` changed melee -> `guard` -- an attendant construct body-blocking for whichever of its own side (the guardian, or its sibling ward) is hurt worst is the direct mechanical reading of 'escort ward'. Fielded ONLY in the ruin_guardian roster (RUIN_CELLS' GATED 0.55-0.8 relc cell, re-derived in-band -- see sim_combat_batch.gd's own comment block): the trapped_halls snare originally reused this id too, but the guard profile has no boss to escort there (the wards clustered around each other/rift_vermin_c instead of engaging, eroding the FIGHT route's cost to 0.94 -- the SAME illusory-cost failure the 8d C1 review's roster-only ruling fixed once already), so the snare now fields `snare_ward_a`/`snare_ward_b` (below): stat clones of this record with plain melee ai. TRAP: one shared combatant id cannot serve two contexts wanting different behavior -- there is no per-encounter AI override, and the two gated cells were edge-pinned in OPPOSITE directions off this one id.",
+   "_comment": "TRAP: one shared combatant id cannot serve two contexts wanting different behavior -- there is no per-encounter AI override, and the two gated cells were edge-pinned in OPPOSITE directions off this one id.",
    "id": "ruin_ward_a",
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
@@ -380,7 +379,7 @@
    "skills": []
   },
   {
-   "_comment": "Ruin_guardian's second escort ward -- same stat template as ruin_ward_a (a matched pair), given its own id per the distinct-id convention documented on rift_vermin_a; carries the SAME issue #83 `guard` adoption, see ruin_ward_a's own comment. GH#90 support_skill AI-arm adoption: gains `guarding_ward` (a small ally heal + `applies.guarded`) -- ONLY this ward, not ruin_ward_a, the SAME asymmetric-pair precedent river_wolf_a/b vs c and briar_collector_deep_a vs b already establish. `_act_guard`'s new support_skill arm picks it generically (any known, affordable heal-type skill) whenever its ward is missing HP, ahead of the melee branch. Fields ONLY in RUIN_CELLS' ruin_guardian_w8_relc (GATED 0.55-0.8, already re-verified in-band once by #83's own con retune) -- re-verified again here.",
+   "_comment": "GH#90 support_skill AI-arm adoption: gains `guarding_ward` (a small ally heal + `applies.guarded`) -- ONLY this ward, not ruin_ward_a, the SAME asymmetric-pair precedent river_wolf_a/b vs c and briar_collector_deep_a vs b already establish.",
    "id": "ruin_ward_b",
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
@@ -401,7 +400,7 @@
    ]
   },
   {
-   "_comment": "The trapped_halls snare's ward, a stat CLONE of ruin_ward_a with plain `melee` ai instead of ruin_ward_a's issue-#83 `guard` profile. WHY A SEPARATE ID EXISTS (the ONLY difference is the ai field): one shared combatant id cannot serve both the guardian-escort context (which wants `guard` -- body-block the boss) and the snare context (which wants ENGAGEMENT -- no boss to escort there, so guard-profile wards clustered around each other/rift_vermin_c instead of fighting, eroding the FIGHT route's cost from 0.69 to 0.94 win_rate, the exact illusory-cost failure the 8d C1 review's roster-only ruling fixed once already) -- and the two gated cells (RUIN_CELLS' ruin_guardian_w8_relc 0.55-0.8, DUNGEON_CELLS' trapped_halls_snare_t4_solo 0.55-0.95) were edge-pinned in OPPOSITE directions off that one shared id. There is no per-encounter AI override mechanism; a distinct id IS the override, same roster-only pattern. Same 'Lesser Ward' display_name/sprite -- players see the identical construct, the split is internal bookkeeping. Any future ruin_ward_a stat retune must be mirrored here BY HAND (drift trap: no inheritance exists in this catalog).",
+   "_comment": "There is no per-encounter AI override mechanism; a distinct id IS the override, same roster-only pattern.",
    "id": "snare_ward_a",
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
@@ -420,7 +419,6 @@
    "skills": []
   },
   {
-   "_comment": "The trapped_halls snare's second ward -- identical template to snare_ward_a (a matched pair, same as the ruin_ward_a/b pairing it clones), given its own id per the distinct-id convention documented on rift_vermin_a. See snare_ward_a's own comment for why these clones exist at all.",
    "id": "snare_ward_b",
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
@@ -439,7 +437,7 @@
    "skills": []
   },
   {
-   "_comment": "Briar collector, `briar_collectors` encounter roster (the hollow's shallow wave). Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this roster is the witch's craft animating that plant into a debt-collecting construct, not an invented species. High con/moderate str (woody, grabs and squeezes), low dex (rooted, doesn't dodge) and minimal int/wis/cha (mindless while animate). No skills -- a plain thorn-lash `attack()`, escalation is `briar_collector_deep`'s job. Own sprite (`briar_collector`, plant-flavored) rather than a cross-species reuse.",
+   "_comment": "Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this roster is the witch's craft animating that plant into a debt-collecting construct, not an invented species.",
    "id": "briar_collector_a",
    "display_name": "Briar Collector",
    "sprite": "briar_collector",
@@ -457,7 +455,7 @@
    "skills": []
   },
   {
-   "_comment": "Briar_collectors' second member -- see briar_collector_a's _comment for the full canon cite. Identical stat template (a matched pair, same convention as rift_vermin_a/b), given its own id per the distinct-id convention documented there.",
+   "_comment": "Briar_collectors' second member -- see briar_collector_a's _comment for the full canon cite.",
    "id": "briar_collector_b",
    "display_name": "Briar Collector",
    "sprite": "briar_collector",
@@ -475,7 +473,6 @@
    "skills": []
   },
   {
-   "_comment": "Deep briar collector, `briar_collectors_deep` encounter roster (the escalated second wave of the same hollow fight, arena `witch_hollow` shared with `briar_collectors` -- same canon-cite as briar_collector_a). Tougher template: higher con/str and `power_strike` (a heavier constricting grab, the EXISTING skill goblin_chieftain already uses -- no new skill.json entry) so the wave reads as a genuine step up rather than a reskinned repeat. Own sprite (`briar_collector_deep`, deliberately darker/taller) carries the escalation visually too. ISSUE #66 (region tiers): con raised (a/b: 24/26 -> 38/40) so `briar_collectors_deep_t3_spellsword9_hunter` (sim_combat_batch.gd RIVERFARM_CELLS, GATED 0.55-0.85 against the T3 reference build) holds its band -- `briar_collectors_w10_hunter`'s old `warrior5_mage5` cell is now the measured pre-tier baseline; see docs/design/region-tiers.md.",
    "id": "briar_collector_deep_a",
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
@@ -495,7 +492,7 @@
    ]
   },
   {
-   "_comment": "Briar_collectors_deep's second member -- see briar_collector_deep_a's _comment for the canon cite + escalation rationale. Plain (no power_strike, slightly higher con instead) so the wave isn't two simultaneous 2x-multiplier hitters -- one heavy striker plus one bulkier grappler, same asymmetric-pair shape as goblin_ambush's raider+shaman. Given its own id per the distinct-id convention documented on rift_vermin_a.",
+   "_comment": "Briar_collectors_deep's second member -- see briar_collector_deep_a's _comment for the canon cite + escalation rationale.",
    "id": "briar_collector_deep_b",
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
@@ -513,7 +510,7 @@
    "skills": []
   },
   {
-   "_comment": "River wolf, `river_wolf_pack` roster (arena `village_edge_night`, spawns only under the night phase gate -- unreachable at day by design). Canon-cite: wiki.wanderinginn.com/Monsters -- Wilwolf (an attested wild-wolf monster whose fur is harvested as a crafting material, i.e. ordinary huntable wildlife, not the goblin-tamed Carn Wolf subspecies). Faster/leaner than the briar collectors (higher dex, lower con) -- a pack hunter that closes quickly rather than a rooted grappler. No skills; river_wolf_c (the pack's alpha) carries the roster's only power_strike. ISSUE #83 ADOPTION: `ai` changed melee -> `skirmisher` on the two flanking wolves (river_wolf_a/b) -- a fast pack hunter nipping in for a bite then darting clear before the target can retaliate is the same 'closes quickly' read this comment already establishes, just extended to the retreat half; the alpha (river_wolf_c) stays plain `melee` (holds the line, doesn't disengage), so the pack now mixes two profiles instead of three identical fighters. `river_wolf_pack` is MEASURED-only in sim_combat_batch.gd (RIVERFARM_CELLS, no win-rate contract to hold) -- re-measured, not re-gated; before/after logged there.",
+   "_comment": "River wolf, `river_wolf_pack` roster (arena `village_edge_night`, spawns only under the night phase gate -- unreachable at day by design).",
    "id": "river_wolf_a",
    "display_name": "River Wolf",
    "sprite": "river_wolf",
@@ -531,7 +528,6 @@
    "skills": []
   },
   {
-   "_comment": "River_wolf_pack's second flanker -- see river_wolf_a's _comment for the canon cite + the issue #83 `skirmisher` adoption. Identical stat template (a matched pack pair), given its own id per the distinct-id convention documented on rift_vermin_a.",
    "id": "river_wolf_b",
    "display_name": "River Wolf",
    "sprite": "river_wolf",
@@ -549,7 +545,7 @@
    "skills": []
   },
   {
-   "_comment": "River_wolf_pack's third member, the pack's alpha -- see river_wolf_a's _comment for the canon cite. Slightly higher stats across the board plus `power_strike` (the pack leader's harder bite) so a 3-wolf night ambush has real teeth without every wolf carrying the same multiplier hit. Stays plain `melee` (issue #83): the alpha holds the line while its two flankers (river_wolf_a/b) skirmish around it.",
+   "_comment": "River_wolf_pack's third member, the pack's alpha -- see river_wolf_a's _comment for the canon cite.",
    "id": "river_wolf_c",
    "display_name": "River Wolf Alpha",
    "sprite": "river_wolf",
@@ -569,7 +565,6 @@
    ]
   },
   {
-   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `alley_footpads_a`/`alley_footpads_b`'s roster (lane alpha wires the two sneakable trigger_radius entities into mercantile_alleys; this lane owns only the combat data they resolve to). ORIGINAL, canon-plausible generic street crime -- the wiki (wiki.wanderinginn.com/Invrisil) attests Invrisil as the huge, wealthy 'City of Adventurers'; no single named petty-mugger gang is on-page distinct from the Brothers themselves, so a plain opportunistic footpad duo is a direct, non-colliding extrapolation (same convention as sewer_vermin/crate_scavengers' generic-diegetic stand-ins). DESIGN CONTRACT (spec sec.5 + the controller's design notes): footpads are SNEAK TARGETS, tuned LOW-lethality by design -- a player who fails the K2 [Stealth] check and gets ambushed must not be walled by a fight, so this pair sits BELOW goblin_raider (str10/con9/die4) on every axis, closer to sewer_vermin's fragile trash-tier. `footpad_lookout` is the leaner, dex-leaning half of the pair (a purse-snatcher, not a brawler). No skills -- a plain shove/grab, not a real weapon technique. Harness: sim_combat_batch.gd INVRISIL_CELLS, gated favoring the floor (0.75-0.98, above the generic 0.55 floor) at warrior2 SOLO (no ally structurally present when sneaking the alleys alone) -- the low-lethality intent as an explicit contract, not a vibe.",
    "id": "footpad_lookout",
    "display_name": "Footpad",
    "sprite": "human_laborer",
@@ -587,7 +582,7 @@
    "skills": []
   },
   {
-   "_comment": "Alley_footpads' second member -- see footpad_lookout's own _comment for the canon-plausibility cite + the LOW-lethality design contract. `footpad_bruiser` is the pair's slightly sturdier half (a cudgel-swinger, still deliberately weaker than goblin_raider on every axis) -- an asymmetric-pair shape (lean+sturdy) matching goblin_ambush's raider+shaman and briar_collector_deep's own convention, without escalating overall lethality. Both `alley_footpads_a` and `alley_footpads_b` field this SAME two-combatant pair (lane alpha's two encounter placements, not two different rosters) -- distinct ids per member per the #38 convention, reused verbatim across both encounter entities.",
+   "_comment": "Alley_footpads' second member -- see footpad_lookout's own _comment for the canon-plausibility cite + the LOW-lethality design contract.",
    "id": "footpad_bruiser",
    "display_name": "Footpad",
    "sprite": "human_laborer",
@@ -605,7 +600,7 @@
    "skills": []
   },
   {
-   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `hired_blades`, the merchant-prince's warehouse roster (lane alpha/C3 wires the encounter entity + the Wilovan come-along beat separately; this lane owns the combat data + arena). The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'. The merchant-prince himself is ORIGINAL+flag (docs/design/character-profiles-staging.md 'Invrisil (8c)'); his hired muscle inherits that same ORIGINAL+flag status -- a respectable merchant paying for thuggery is generic and canon-plausible, not an invented named entity. `hired_blade_leader` is the pair's heavy -- a club-swinging foreman who leads with `power_strike` (the EXISTING skill goblin_chieftain/river_wolf_c already use for a 'pack leader hits harder' read; no new effect type), higher con than the two knife-thugs. Sprite `hired_blade` (owned PixelLab rig, burgundy/brass merchant-livery doublet -- see data/sprites.json's own _comment + assets/LICENSES/pixellab-ai-generated-verdict.md for the full NOT-Watch-alike palette-quarantine rationale) is shared by all 3 roster members, same convention as briar_collector/river_wolf/ruin_ward. Harness: sim_combat_batch.gd INVRISIL_CELLS, GATED 0.6-0.8 with the `wilovan` ally (the deep_descent/ruin_guardian boss-cell precedent for a gated-ally band); the solo cell (declined the come-along beat) is measured-only, the hard-mode frontier, same convention as awakened_boss_w2_solo/ruin_guardian_w8_solo. ISSUE #66 (region tiers): the gating build moved from `warrior5_mage5` to the T3 reference build `t3_spellsword9` (`hired_blades_t3_spellsword9_wilovan`, same 0.6-0.8 band) -- `warrior5_mage5`'s own cell (`hired_blades_w10_wilovan`) is now the measured pre-tier baseline. con raised on all three roster members (leader 18->32, knife_a/knife_b 12->23 each) to hold the 0.6-0.8 band against t3_spellsword9's much higher str; see docs/design/region-tiers.md.",
+   "_comment": "The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'.",
    "id": "hired_blade_leader",
    "display_name": "Hired Blade",
    "sprite": "hired_blade",
@@ -625,7 +620,7 @@
    ]
   },
   {
-   "_comment": "Hired_blades' first knife-thug -- see hired_blade_leader's own _comment for the canon-plausibility cite + the first-all-human-family design contract. Leaner/quicker than the leader (higher dex, lower con), no skill -- a plain knife-thrust, not a technique. Matched pair with hired_blade_knife_b (river_wolf_a/b convention). #49: sprite varied off the leader's rig -- `citizen_f` (ALREADY-registered directional human rig, idle+walk, same animation-coverage shape as goblin_base/hired_blade itself) is UNCLAIMED by any other combatant entry (grepped data/combatants.json before picking) and human (preserves the all-human-family contract), so a warehouse roster of 3 doesn't read as one man cloned twice. board_renderer.gd's `_combatant_sprite_id` keys off `template_id` (this entry's own `id`), not the shared `display_name`/roster grouping, so this is a pure data-field change -- no code touched.",
+   "_comment": "Hired_blades' first knife-thug -- see hired_blade_leader's own _comment for the canon-plausibility cite + the first-all-human-family design contract.",
    "id": "hired_blade_knife_a",
    "display_name": "Hired Blade",
    "sprite": "citizen_f",
@@ -643,7 +638,7 @@
    "skills": []
   },
   {
-   "_comment": "Hired_blades' second knife-thug -- identical template to hired_blade_knife_a (a matched pair), given its own id per the distinct-id convention documented on rift_vermin_a/river_wolf_a. #49: sprite varied to `human_laborer` (ALREADY-registered directional human rig, idle+walk) so all 3 roster members read distinctly (leader keeps `hired_blade`, thug A is `citizen_f`, thug B is `human_laborer`). CAVEAT flagged for the controller's own windowed judgment: `human_laborer` is ALSO `footpad_lookout`/`footpad_bruiser`'s sprite (data/combatants.json, the SAME Invrisil region's alley_footpads roster) -- a soft region-level reuse (footpads and hired_blades are alternate quest-resolution paths, not usually faced back-to-back in one run, per invrisil_disagreement_*'s own fork structure), not a hard collision, but worth a look if a playthrough ever faces both.",
+   "_comment": "#49: sprite varied to `human_laborer` (ALREADY-registered directional human rig, idle+walk) so all 3 roster members read distinctly (leader keeps `hired_blade`, thug A is `citizen_f`, thug B is `human_laborer`).",
    "id": "hired_blade_knife_b",
    "display_name": "Hired Blade",
    "sprite": "human_laborer",
@@ -661,7 +656,7 @@
    "skills": []
   },
   {
-   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- Wilovan, the Brothers' front (the plan's user-ratified shape 1: 'WILOVAN fronts the Brothers'). CANON, WIKI-VERIFIED 2026-07-08 (wiki.wanderinginn.com/Wilovan): a Gnoll [Thug], member of the Brothers of Serendipitous Meetings, known with his partner Ratici as the 'Gentlemen Callers' -- brick-built physique, dapper vest/leggings/tall hat, gentlemanly courtesy, self-educated and articulate. Fields ONLY via `ally_requires` on a real come-along beat (lane alpha/C3's dialogue, the 8b `riverfarm_hunter`/deep_descent `relc_descent` precedent -- no teleporting allies; this lane does not wire that gate, only the combatant record it resolves to). KIT: canon [Thug] has no class entry in this game's classes.json (out of this task's scope -- he is an ally-only combatant, never a player-selectable class), so his 'courtesy-as-menace, hats-off-then-violence' register is realized entirely with EXISTING skills (no new effect types per the plan brief): `basic_swordwork` (steadier hands with any blade -- a gentleman's cane-sword, not armor), `quick_slash` ('a cut loosed before the guard can rise' -- nimble, precise, fits a Thug who is fast and thoughtful before he is brutal), `counter_strike` (riposte -- 'the next blade that finds you meets an answer', a fencer's measured reply, not a berserker's), `quick_movement` (nimble feet). con17 reflects his canon 'brick-like physique' AND is a harness-derived ceiling, not an arbitrary pick: below ~14 he goes down in 90%+ of hired_blades fights (too fragile for a come-along ally to feel like a real participant). ISSUE #66 UPDATE: the gating authority for hired_blades moved from `warrior5_mage5` (now `hired_blades_w10_wilovan`, measured-only, win_rate=0.44) to the T3 reference build `t3_spellsword9` (`hired_blades_t3_spellsword9_wilovan`, GATED 0.6-0.8, win_rate=0.76) -- the RETUNE target was the ENEMY roster (hired_blade_leader/knife_a/knife_b con raised, see their own `_comment`), wilovan's own con17 untouched by this task. wilovan_downed_rate is now 0.93 (93/100) on the gated T3 cell -- HIGHER than the pre-retune 0.86 (a tougher enemy roster downs the ally more often at the same ally toughness, unsurprising) and still well above relc/hunter's own 0.63-0.76 downed rates on comparable 3-body fights; the raising-con-lifts-win_rate-over-the-gate-ceiling BAND-BOXED relationship documented here still holds (verified against the retuned roster, con17 kept as the highest toughness that doesn't breach 0.6-0.8). The downed-rate gap vs. relc/hunter remains a live, unresolved taste flag -- any future retune of hired_blades' own stats (or of wilovan) must re-check the SAME win-rate ceiling against whichever build is that encounter's current gating authority, not assume con17 is free headroom. Sprite `wilovan` is lane alpha's own cast art (docs/superpowers/plans/2026-07-08-invrisil-8c.md Task C1 owns Wilovan's profile/pools/sprite) -- NOT generated by this lane; this record is a forward reference lane alpha's sprites.json entry must satisfy before any windowed QA of the FIGHT path. Harness: sim_combat_batch.gd INVRISIL_CELLS' hired_blades_t3_spellsword9_wilovan cell fields him as the ally (mirrors relc/riverfarm_hunter's role in their own cells).",
+   "_comment": "con17 reflects his canon 'brick-like physique' AND is a harness-derived ceiling, not an arbitrary pick: below ~14 he goes down in 90%+ of hired_blades fights (too fragile for a come-along ally to feel like a real participant).",
    "id": "wilovan",
    "display_name": "Wilovan",
    "sprite": "wilovan",
@@ -684,7 +679,7 @@
    ]
   },
   {
-   "_comment": "CASTER ally (Ceria Springwalker, [Cryomancer]). `ai: \"caster\"` is REQUIRED, not decorative: WICombatAI's melee profile only ever calls attack/power_strike by name (combat_ai.gd), so an ally meant to actually cast a spell needs the caster profile -- same requirement raskghar_awakened's own record documents for a boss; caster falls through to melee when mana-dry, never stalls. Kit: `ice_shard` (2 AP/3 MP spell_damage) + `frost_bolt` (1 AP/2 MP spell_damage+slowed) + `mana_shield` (passive: wi_combat.gd's `_absorb_with_mana_shield` drains MP 1:1 against incoming damage whenever the DEFENDER's own skill list contains \"mana_shield\" -- no cast, no AP/MP cost of its own, always live once known). All three are SHIPPED skills, no new effect type. int18 -> max_mp = 8+9 = 17 (WICombat's own formula) -- spending MP on ice_shard/frost_bolt draws down the SAME pool mana_shield drains from, a real offense/defense tension by design. TRAP: this rig has NO cast/slice animation (sprites.json: idle+walk only) -- board_renderer.gd's `play_anim` fallback chain (\"cast_side\" -> \"cast\" -> \"idle_side\") resolves a spell-cast prefix to `idle_side` cleanly, no error; her combat read is the existing SKILL_RESOLVED spell flash + mana_shield's own REACTION_TRIGGERED shield flash, not a bespoke animation. `combat_scale`: NOT set -- render_scale 0.51 x figure crop 51/152px = 26.0px on screen (1.63 cells), under the ~30px 'Zevara/Klbkch-class standard human ally' bucket this file's un-overridden allies already sit at (see klbkch's own record) -- no containment needed.",
+   "_comment": "int18 -> max_mp = 8+9 = 17 (WICombat's own formula) -- spending MP on ice_shard/frost_bolt draws down the SAME pool mana_shield drains from, a real offense/defense tension by design.",
    "id": "ceria",
    "display_name": "Ceria Springwalker",
    "sprite": "ceria",
@@ -706,7 +701,6 @@
    ]
   },
   {
-   "_comment": "MELEE ally (Yvlon Byres), a silversteel-armed bruiser: con24 is deliberately ABOVE every other player-side melee ally in this file (relc con20, klbkch con18, wilovan con17) -- the bruiser identity is toughness over technique. `basic_swordwork` (baseline) + `keener_edge` (damage_mult 1.6, 2 AP, sword-flavored 'the edge sings') is KIT FLAVOR only -- WICombatAI's melee profile calls attack/power_strike BY NAME alone, never keener_edge, same known-non-AI-exercised precedent as klbkch's `quick_slash`/wilovan's own kit (see their records) -- no combat_ai.gd change. `combat_scale`: NOT set -- render_scale 0.386 x figure crop 83/176px = 32.0px on screen (2.0 cells), the SAME 'standard human ally' bucket klbkch's own 30.0px/1.875-cell no-override precedent already established (a 2px delta is not a meaningful bar-collision difference) -- not the Relc-class oversized-rig case (2.7+ cells) that actually needs containment.",
    "id": "yvlon",
    "display_name": "Yvlon Byres",
    "sprite": "yvlon",
@@ -727,7 +721,7 @@
    ]
   },
   {
-   "_comment": "MELEE-SKIRMISH ally (Ksmvr), dex-leaning like klbkch (dex17 > klbkch's 16) with a lighter frame (con15, below every other player-side ally in this file) -- the skirmisher trades HP for evasion (WICombat's hit_chance formula subtracts the TARGET's dex/4 from the attacker's roll, so higher dex is a real harder-to-hit effect, not flavor). `basic_swordwork` + `quick_slash` mirrors klbkch's exact kit shape -- flavor only, never AI-called by name (see klbkch's own record). `damage_reduction: 1` is the buckler, BAKED DIRECTLY onto the combatant record rather than routed through a gear system: allies carry no `equipped`/inventory (that machinery is PC-only, wi_game.gd's `_build_player_combatant`) -- WICombat._init already reads `damage_reduction` off ANY combatant cfg via a tolerant `.get(key, 0)` (see its own doc comment: the two runtime sites that consume it, `_resolve_hit`'s melee damage and `_deduct_hp`'s incoming-damage floor), so a hand-authored non-PC record populating this field is the SAME runtime path the PC's own armor already uses -- zero new code, first non-PC record to use it. `combat_scale`: NOT set -- render_scale 0.483 x figure crop 58/128px = 28.0px on screen (1.75 cells), the same standard-ally bucket as klbkch/yvlon above.",
+   "_comment": "`basic_swordwork` + `quick_slash` mirrors klbkch's exact kit shape -- flavor only, never AI-called by name (see klbkch's own record).",
    "id": "ksmvr",
    "display_name": "Ksmvr",
    "sprite": "ksmvr",
@@ -749,7 +743,7 @@
    ]
   },
   {
-   "_comment": "8d C3 (issue #82): the windup MECHANISM + FINAL TUNING land here -- the C2 seed's own comment said 'final tuning + the telegraphed-windup MECHANISM itself are issue #82's job, not built here', done now. Gains `slam` (blast_damage + windup_rounds:1, radius 1, ap_cost 4 -- a real AP spike: a slam-round turn spends the WHOLE turn declaring, nothing else; windup_cadence:2, skills.json's own field) on top of the unchanged power_strike/tough_body kit. THE CASTER IS EXCLUDED from slam's own resolution (WICombat._resolve_windup, the F1 controller ruling -- an adjacent range-1 declare geometrically always contained the caster's own cell and the melee AI never repositions, so pre-ruling EVERY resolution self-hit; allies in the blast are still hit). The C2 seed measured 1.00 win rate (trivial, no slam existed and con was 55) against the T4 Horns party (sim_combat_batch.gd's PARTY_CELLS); retuned via the harness, not by feel: con 55->190 (HP 20+con+tough_body's +10 -- survive long enough for slam to matter at all; was 245 under pre-F1 caster-inclusion, softened when removing the self-tax hardened the fight to a fragile 0.60), str 20->36 and weapon_die 8->15 (the 'big die' the windup spec called for -- shared by power_strike/basic Attack too, not slam-exclusive, since weapon_die is a single per-combatant stat -- real offense, not just a bigger HP bar), damage_reduction 0->3 (new field, flat mitigation against a 4-attacker focus-fire beatdown). Re-measured GATED at win_rate=0.86 / median_rounds=6 / rounds min 5 max 9 (inside the 0.55-0.95 / 3-12 contract with real margin both directions, no >12 tail). PC-death-instant-defeat re-verified (the SAME `_check_end` rule, now exercised against a caster whose slam can down an ALLY via friendly fire too, not just its basic attack) -- pc_alive_rate=0.86, exactly matching win_rate by construction. combat_scale 0.36 UNCHANGED (art-fit only, no balance link -- see C2's own scale derivation, still holds).",
+   "_comment": "Re-measured GATED at win_rate=0.86 / median_rounds=6 / rounds min 5 max 9 (inside the 0.55-0.95 / 3-12 contract with real margin both directions, no >12 tail).",
    "id": "vault_construct",
    "display_name": "Guardian Construct",
    "sprite": "vault_construct",
@@ -773,7 +767,7 @@
    "damage_reduction": 3
   },
   {
-   "_comment": "Issue #97 (bestiary expansion): the stray Corusdeer, T1 floodplains renewable-cull target. Canon-cite: wiki.wanderinginn.com/Corusdeer (WIKI-VERIFIED 2026-07-12) -- magical deer, ~2x normal size, twin antlers oaken-brown at the base shading to glowing cherry-red at the tips, mana-fueled heat that 'vaporises bone'; pre-staged in docs/design/character-profiles-staging.md Home-Region II ('a lone stray male is the Silver-rank encounter shape' -- herds are Gold-rank and off-limits, per bounty_crab_cull's own copy: 'Do not trouble the Corusdeer herd. Antlers freely shed only.'). `ai:ranged` realizes the heat-blast antlers via the EXISTING `flame_bolt` skill (goblin_shaman's own spell_damage bolt, no new skills.json entry) rather than an invented breath weapon. FORWARD-REFERENCE (#90 lane, docs/superpowers/plans/2026-07-12-combat-wave.md): if cwA's sibling lane adds a `burning` applies-rider to `flame_bolt`, this heat-blast inherits it automatically at merge (a heat vaporizing bone should burn) -- INERT today (this lane owns no skills.json write), band measured rider-inert.",
+   "_comment": "`ai:ranged` realizes the heat-blast antlers via the EXISTING `flame_bolt` skill (goblin_shaman's own spell_damage bolt, no new skills.json entry) rather than an invented breath weapon.",
    "id": "corusdeer",
    "display_name": "Stray Corusdeer",
    "sprite": "corusdeer",
@@ -793,7 +787,6 @@
    ]
   },
   {
-   "_comment": "Razorbeaks, T1 floodplains pack encounter (`razorbeak_nest`). Canon-cite: wiki.wanderinginn.com/Razorbeaks (WIKI-VERIFIED 2026-07-12) -- large leathery-winged pterosaur-like birds nesting on the ground in Liscor's floodplains, beak longer than a human arm; canon-COWARDLY alone (flees when disturbed) but aggressive and swarms wounded prey in a group -- direct citation for `ai:coward` (a pack that scatters once hurt, then regroups toward a living packmate, matches the wiki's own 'cowardly alone, dangerous in numbers' behavior exactly). Erin's own nickname: 'Dino Birds'. Matched pair, own id per the distinct-id convention documented on rift_vermin_a.",
    "id": "razorbeak_a",
    "display_name": "Razorbeak",
    "sprite": "razorbeak",
@@ -811,7 +804,7 @@
    "skills": []
   },
   {
-   "_comment": "Razorbeak nest's second member -- see razorbeak_a's own _comment for the canon cite + the `coward` profile rationale. Identical stat template (a matched pair), own id per the distinct-id convention.",
+   "_comment": "Razorbeak nest's second member -- see razorbeak_a's own _comment for the canon cite + the `coward` profile rationale.",
    "id": "razorbeak_b",
    "display_name": "Razorbeak",
    "sprite": "razorbeak",
@@ -829,7 +822,7 @@
    "skills": []
   },
   {
-   "_comment": "Mothbear, T3 Invrisil-boulevard NIGHT-ONLY pack encounter (`boulevard_mothbears`, drawn to the boulevard's lanterns). Canon-cite: wiki.wanderinginn.com/Mothbears (WIKI-VERIFIED 2026-07-12) -- flying-bear/moth hybrids with antennae and claws, hunt in groups, ATTRACTED TO BRIGHT LIGHTS (direct citation for why this pack is drawn onto a lit city boulevard specifically), attack by jumping on prey; Bronze-rank-dangerous, Silver-rank-manageable, matching this encounter's T3 tier. Plain `ai:melee` (a jump-attack predator, no ranged/support kit). Pack alpha carries `power_strike` (the heavier landing pounce), matching the river_wolf_c/goblin_chieftain asymmetric-pair convention.",
+   "_comment": "Mothbear, T3 Invrisil-boulevard NIGHT-ONLY pack encounter (`boulevard_mothbears`, drawn to the boulevard's lanterns).",
    "id": "mothbear_a",
    "display_name": "Mothbear",
    "sprite": "mothbear",
@@ -847,7 +840,7 @@
    "skills": []
   },
   {
-   "_comment": "Boulevard_mothbears' pack alpha -- see mothbear_a's own _comment for the canon cite. Carries `power_strike` (EXISTING skill, no new skills.json entry) for the heavier landing pounce, the asymmetric-pair convention river_wolf_c/goblin_chieftain already establish; slightly higher stats across the board.",
+   "_comment": "Boulevard_mothbears' pack alpha -- see mothbear_a's own _comment for the canon cite.",
    "id": "mothbear_b",
    "display_name": "Mothbear",
    "sprite": "mothbear",
@@ -867,7 +860,7 @@
    ]
   },
   {
-   "_comment": "Kingslayer Spider, T4 dungeon_approach solo apex-predator encounter (`kingslayer_den`) -- the 'shield-spider variant' the plan named as a candidate. Canon-cite: wiki.wanderinginn.com/Kingslayer_Spiders (WIKI-VERIFIED 2026-07-12) -- large monstrous Izril arachnids that 'resemble Shield Spiders from a distance, though distinct creatures'; named for killing a King while he was out hunting -- an apex predator, deliberately dangerous by design (MEASURED-only harness cell, the river_wolf_pack/boulevard_mothbears precedent, not a comfortable-band contract). FIXES a long-standing project gap: docs/asset-catalog.md flags arachnids as a 'HARD GAP (no arachnid in any pack)' (cave_spider/shield_spider both stand in with `bat`) -- this is the first genuine spider silhouette in the tree. `ai:windup` (EXISTING `slam` skill, blast_damage + windup_rounds:1, vault_construct's own kit -- no new skills.json entry) realizes a rearing killing lunge, matching the 'king-killer' reputation with a real telegraphed spike rather than flavor text alone. damage_reduction 2 models the armored carapace (lighter than rock_crab's 8 -- an ambush hunter, not a slow tank). FORWARD-REFERENCE (#90 lane): if cwA's sibling lane adds a `rooted` applies-rider to `slam` (a web-wrapped, pinned-in-place read fits a spider's own kill move at least as well as vault_construct's physical slam), this combatant's kit inherits it automatically at merge -- INERT today, band measured rider-inert.",
+   "_comment": "damage_reduction 2 models the armored carapace (lighter than rock_crab's 8 -- an ambush hunter, not a slow tank).",
    "id": "kingslayer_spider",
    "display_name": "Kingslayer Spider",
    "sprite": "kingslayer_spider",
@@ -888,7 +881,7 @@
    ]
   },
   {
-   "_comment": "The Pallass Forge's own construct guardian (T4/T5 Pallass-adjacent solo encounter, `forge_calibration_golem` (field name 'Miscalibrated Golem', a descriptor not a species; combat display_name is the ATTESTED 'Stone Golem' per the controller naming ruling) -- Pallass's FIRST live combat encounter; every prior Pallass QA canonical is explicitly zero-combat). Canon-cite: wiki.wanderinginn.com/Golems (WIKI-VERIFIED 2026-07-12) -- artificial golems built from a shell + command spells + a mana-stone Golem Heart, over 40 named variants incl. Stone Golem/Flame Golem; Pallass's forge tier is a molten-seam artifice hall (data/maps/pallass/pallass_forge.json), a direct, canon-plausible home for a forge-tempered construct that occasionally miscalibrates and must be put down for pay (golems are 'neither alive nor dead' -- a recurring maintenance job, not a story kill). `ai:caster` (EXISTING `flame_bolt` skill reflavored as a superheated forge-bolt, no new skills.json entry) is REQUIRED, not decorative -- the melee profile never casts (the documented autoplay gotcha). damage_reduction 4 models solid stone plating.",
+   "_comment": "`ai:caster` (EXISTING `flame_bolt` skill reflavored as a superheated forge-bolt, no new skills.json entry) is REQUIRED, not decorative -- the melee profile never casts (the documented autoplay gotcha).",
    "id": "forge_golem",
    "display_name": "Stone Golem",
    "sprite": "forge_golem",
@@ -909,7 +902,6 @@
    ]
   },
   {
-   "_comment": "The Pallass Market's own construct guard pair (T4/T5 Pallass-adjacent encounter, `market_watchgolems` -- field name 'Stone Golems', combat display_name the ATTESTED 'Stone Golem' per the controller naming ruling; the turn bar's duplicate-name A/B suffixing disambiguates the pair) -- plain Stone Golems distinct from forge_golem's molten-cracked caster (canon explicitly supports many golems of the same named type, wiki.wanderinginn.com/Golems, WIKI-VERIFIED 2026-07-12). `ai:guard` realizes the documented 'follows orders, autonomous within commands' golem-tier behavior -- a pair so the profile is actually exercised (combat_ai.gd's own doc comment: 'a solo guard is just a fighter', degrading to plain melee with no ally to protect); watchgolem_a is the ward, watchgolem_b the escort. FORWARD-REFERENCE (#90 lane): if cwA adds a `guarded` applies-rider to a support/protect-flavored EXISTING skill this pair could plausibly hold later, the thematic parallel (a guard-profile golem carrying the status named `guarded`) is a natural adoption target for a future wave -- not wired here (no skill in this pair's kit carries `applies` today, so this is a documented opportunity, not a live forward-reference).",
    "id": "watchgolem_a",
    "display_name": "Stone Golem",
    "sprite": "watchgolem",
@@ -928,7 +920,7 @@
    "skills": []
   },
   {
-   "_comment": "The market guard pair's escort half -- see watchgolem_a's own _comment for the canon cite + the paired-guard rationale. Carries `power_strike` (EXISTING skill) for a heavier stone haymaker, slightly higher stats -- the asymmetric-pair convention.",
+   "_comment": "The market guard pair's escort half -- see watchgolem_a's own _comment for the canon cite + the paired-guard rationale.",
    "id": "watchgolem_b",
    "display_name": "Stone Golem",
    "sprite": "watchgolem",
@@ -949,7 +941,7 @@
    ]
   },
   {
-   "_comment": "Issue #91 (hour-4 spine): the Riverfarm thicket-remnant, `riverfarm_thicket_patch`'s own roster -- SAME canon-cite as briar_collector_a (wiki.wanderinginn.com/Plants, Birevine: 'vines stronger than steel rope, covered in razor-sharp thorns', the witch's craft animating it into a debt-collecting construct) but a LESSER working: a stray hedge-offshoot that broke free of Eloise's own hollow rather than a deliberately-fielded collector, so it carries reduced str/con off briar_collector_a's own template (19/30 -> 17/24) rather than sharing that id outright -- a distinct id per the rift_vermin_a precedent (this context wants a T3 solo renewable-cull band, not the quest fight's own gated hunter-carried number, and the two gated cells would otherwise pull in opposite directions off one shared id, the exact ruin_ward/snare_ward trap). Matched pair, own id per the same convention. Balance: sim_combat_batch.gd RIVERFARM_CELLS' `riverfarm_thicket_patch_t3_solo`, GATED 0.55-0.95 at `t3_warrior10` (measured 0.81 -- solo, no hunter ally, the renewable-cull's own design point).",
+   "_comment": "Balance: sim_combat_batch.gd RIVERFARM_CELLS' `riverfarm_thicket_patch_t3_solo`, GATED 0.55-0.95 at `t3_warrior10` (measured 0.81 -- solo, no hunter ally, the renewable-cull's own design point).",
    "id": "thicket_remnant_a",
    "display_name": "Thicket Remnant",
    "sprite": "briar_collector",
@@ -960,7 +952,7 @@
    "skills": []
   },
   {
-   "_comment": "Riverfarm_thicket_patch's second remnant -- see thicket_remnant_a's own _comment for the full canon cite + distinct-id rationale. Identical stat template (a matched pair, same convention as rift_vermin_a/b), given its own id per that convention.",
+   "_comment": "Riverfarm_thicket_patch's second remnant -- see thicket_remnant_a's own _comment for the full canon cite + distinct-id rationale.",
    "id": "thicket_remnant_b",
    "display_name": "Thicket Remnant",
    "sprite": "briar_collector",

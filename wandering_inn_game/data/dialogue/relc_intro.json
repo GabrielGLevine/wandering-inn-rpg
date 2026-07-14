@@ -6,7 +6,6 @@
    "text": "Oi. Hold up. Big spear, bored Drake, official business. That's me covered. You came off the inn hill. Name and errand.",
    "text_variants": [
     {
-     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
      "requires": {
       "phase": [
        "dusk",
@@ -32,7 +31,6 @@
      "text": "There's the dummy-slayer. Straw fears you. Come here. I owe you something for the show."
     },
     {
-     "_comment": "Issue #89 (gap-2, the flagship marker-node payoff): went_alone banks ONLY from relc_descent.json's [I go alone.] branch (the deep_tunnels awakened_boss veto, sim_combat_batch.gd's own 0.04 solo cell) -- Relc offered to come, was turned down, and the player won anyway. Distinct in register from relc_after's own cleared_the_warren-gated pride (that fires regardless of join/alone); this one is specifically about the solo choice. Appended LAST (highest priority in this array) so it wins over met_relc/sparred_with_relc once reached.",
      "requires": {
       "accomplishment": {
        "went_alone": 1
@@ -121,7 +119,6 @@
      "goto": "relc_after"
     },
     {
-     "_comment": "stage-3 refinement, once per waking. Status quo (relc_spar already re-offers) is unaffected -- this is a SEPARATE payoff option, gated on the SAME stage-3 accomplishment leg as relc_after plus the new once_per_waking seam (the second sanctioned {accomplishment, once_per_waking} compound). No combat-victory-to-dialogue bridge: resolve_combat's victory branch has no dialogue hook to ride (traced -- it banks on_victory accomplishments/loot and returns straight to the field), so the payoff rides the EXISTING next-talk-with-Relc idiom instead, the same shape the gift option above already uses to react to sparred_with_relc.",
      "text": "Wasn't that spar worth something?",
      "requires": {
       "accomplishment": {

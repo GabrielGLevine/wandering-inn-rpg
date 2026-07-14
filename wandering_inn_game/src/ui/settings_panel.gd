@@ -1,43 +1,8 @@
 extends CanvasLayer
-## Settings + accessibility surface (issue #77) -- Audio (Master/Music/SFX),
-## Video (fullscreen), Text Scale, Reduce Motion, a Controls reference
-## sub-page, and a "Replay Hints" action. Reachable from BOTH pause_menu.gd
-## and title_screen.gd (each spawns/owns its OWN instance -- see main.gd's
-## `_spawn_title`/`_spawn_ui_layers`, mirroring how every other UI layer is
-## rebuilt fresh on every title/world swap). Same shared-panel idiom as
-## pause_menu.gd: one VBox row list, ONE hover/click handler over the whole
-## container (`UIChrome.control_index_at`), row activation routes keyboard
-## Confirm and mouse click through the SAME function (issue #84 standard).
-##
-## Persistence lives in WISettings (video/text-scale/accessibility) and
-## WIAudio (Master/Music/SFX volume) -- this file only reads/writes through
-## those two autoloads, never owns state itself, so it can be freely
-## torn down and rebuilt (title/world swap) with zero state loss.
-##
-## Layer 2 -- above the default-layer (1) UI stack (pause_menu/journal/
-## inventory/message_layer/title_screen all use the CanvasLayer default) so
-## it draws on top of whichever menu opened it, though `open()`'s caller
-## also hides its own root while settings is up (belt-and-braces, not
-## load-bearing for visibility).
 
-## Issue #106: grown 340->420 (+80) for ROWS' widened 30px row height (was
-## 22px, see `_build_rows_panel`'s row loop) -- same 9-slice-tolerates-resize
-## reasoning as pause_menu.gd's identical PANEL_SIZE fix. Issue #107: grown
-## again 420->456 (+36 = one more 30px row + its 6px stack separation) for
-## "Help..." appended to ROWS below. Issue #87: grown again 456->492 (+36,
-## same one-row-plus-separation math) for "Combat Speed".
 const PANEL_SIZE := Vector2(320.0, 492.0)
 const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
-## Issue #107: sized from a real headless layout pass (not eyeballed) --
-## `data/help_content.json`'s 6 sections, each rendered as ONE wrapped Label
-## at HELP_TEXT_WIDTH, measured a 447px minimum (`Font.get_multiline_string_
-## size`, same method test_copy_fit.gd uses) -- 470 leaves ~23px slack,
-## comfortably under VIEWPORT_HEIGHT (720, test_copy_fit.gd's own const) with
-## the panel centered. Width matches CONTROLS_PANEL_SIZE.x (620) for visual
-## parity between the two reference sub-pages.
 const HELP_PANEL_SIZE := Vector2(620.0, 530.0)
-## Margins mirror `_build_help_panel`'s MarginContainer (26 left + 26 right) --
-## drift-tripwire checked against that call site by test_copy_fit.gd.
 const HELP_TEXT_WIDTH := HELP_PANEL_SIZE.x - 52.0
 const HELP_CONTENT_PATH := "res://data/help_content.json"
 
@@ -48,23 +13,13 @@ const HELP_CONTENT_PATH := "res://data/help_content.json"
 ## "Replay Hints" both occupy -- "Back" stays the fixed last row, the real
 ## append-only contract here; the only pins that reference this array's
 ## indices live in qa/scripts/settings_loop.json itself, updated alongside).
-## Issue #87: "Combat Speed" appended the SAME way, one more slot before
-## "Back" -- the append-only discipline holds again.
 const ROWS := [
 	"Master volume", "Music volume", "SFX volume",
 	"Fullscreen", "Text Scale", "Reduce Motion",
 	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Back",
 ]
-## Row key -> WIAudio bus name, for the three volume rows (left/right or
-## confirm/click nudges by 1, matching pause_menu.gd's own `_adjust_volume_row`
-## semantics, extended to Master).
 const AUDIO_ROWS := {"Master volume": "Master", "Music volume": "Music", "SFX volume": "SFX"}
 
-## Controls reference: the mouse column has no InputMap-action analog (mouse
-## folds into WIInputHints' "kb" device classification), so it's a small
-## local reference table instead of a WIInputHints lookup. Keyed by the SAME
-## action names WIInputHints.LABELS carries -- an action with no mouse
-## affordance in this game (journal/inventory/cycle/end_turn) renders "--".
 const MOUSE_LABELS := {
 	"move": "Click ground to walk",
 	"interact": "Click adjacent target",
@@ -78,11 +33,6 @@ enum State { ROWS, CONTROLS, HELP }
 ## don't currently gate on this (see file doc comment: the caller hides its
 ## own root instead), but exposed for parity with every other panel's `open`
 ## field (pause_menu.gd/journal.gd/inventory.gd all expose one the same way).
-## Named `is_open` (not bare `open`) because `open` is this panel's own
-## PUBLIC entry-point function name (pause_menu.gd/title_screen.gd call
-## `settings_ref.call("open", ...)` from outside, unlike every other panel's
-## private `_open()`) -- GDScript refuses a function and a var sharing one
-## name.
 var is_open := false
 
 var _state: int = State.ROWS
@@ -95,10 +45,6 @@ var _row_labels: Array[Label] = []
 var _controls_root: Control
 var _controls_back_label: Label
 
-## Issue #107: Help reference sub-page. `_help_sections` is loaded once at
-## `_build_help_panel()` time (data/help_content.json -- content is DATA, this
-## file only renders) and reused by `_enter_help()` for the rendered event's
-## `sections` count, rather than re-reading the file on every open.
 var _help_root: Control
 var _help_back_label: Label
 var _help_sections: Array = []
@@ -121,8 +67,6 @@ func _build_rows_panel() -> void:
 	_root.custom_minimum_size = PANEL_SIZE
 	_root.size = PANEL_SIZE
 	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -PANEL_SIZE.y * 0.5, PANEL_SIZE.x * 0.5, PANEL_SIZE.y * 0.5)
-	# STOP (mouse-filter audit, issue #57/#84 discipline): swallows a click on
-	# the open panel instead of leaking to whatever's underneath.
 	_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.hide()
 	add_child(_root)
@@ -143,16 +87,10 @@ func _build_rows_panel() -> void:
 
 	for i in ROWS.size():
 		var row := UIChrome.make_label("", "Small")
-		# Issue #106 hit-target audit: 22px design height, one of the worst-
-		# measured surfaces (tied with pause_menu.gd's slot-picker rows).
-		# Widened to 30 (INPUT region only -- width/text untouched); PANEL_SIZE
-		# grown above to match.
 		row.custom_minimum_size = Vector2(260.0, 30.0)
 		stack.add_child(row)
 		_row_labels.append(row)
 
-	# Issue #84: ONE hover/click handler over the shared row container --
-	# pause_menu.gd's/title_screen.gd's exact idiom.
 	stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	stack.gui_input.connect(_on_rows_gui_input)
 
@@ -182,8 +120,6 @@ func _build_controls_panel() -> void:
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stack.add_child(title)
 
-	# Data-driven from WIInputHints.LABELS -- can never drift from the real
-	# glyph table test_input_hints.gd pins (never a hand-copied action list).
 	var grid := GridContainer.new()
 	grid.columns = 4
 	grid.add_theme_constant_override("h_separation", 20)
@@ -209,8 +145,6 @@ func _build_controls_panel() -> void:
 	_controls_back_label.gui_input.connect(_on_controls_back_gui_input)
 
 
-## Underscore-separated action id -> "Title Case With Spaces" (mirrors
-## title_screen.gd's `_display_fixture_name`).
 func _format_action_name(action: String) -> String:
 	var words := action.split("_")
 	for i in words.size():
@@ -220,14 +154,6 @@ func _format_action_name(action: String) -> String:
 	return " ".join(words)
 
 
-## Issue #107: the Help reference sub-page -- the Controls sub-page's exact
-## idiom (own root Control, carved-panel patch, MarginContainer, one VBox
-## stack, a clickable "> Back" row), swapped from a GridContainer to a plain
-## wrapped Label per section since the content is authored prose, not a
-## small fixed data table. NOT scrollable -- deliberately sized (HELP_PANEL_
-## SIZE) to fit every section without a ScrollContainer (the STOP trigger
-## this task carried: reach for new widget machinery only if the fixed-size
-## idiom can't host the content, and the sizing pass proved it can).
 func _build_help_panel() -> void:
 	_help_root = Control.new()
 	UIChrome.apply_theme(_help_root)
@@ -282,15 +208,10 @@ func _load_help_sections() -> Array:
 	return []
 
 
-## One section's rendered line -- "Heading -- body", the single wrapped Label
-## test_copy_fit.gd measures per section (HELP_TEXT_WIDTH/HELP_SECTION_LINE_CAP).
 func _help_line(section: Dictionary) -> String:
 	return "%s — %s" % [String(section.get("heading", "")), String(section.get("body", ""))]
 
 
-## Empty string if no loaded section carries that heading (never crashes on a
-## content edit that renames/removes it -- `_enter_help`'s sample just goes
-## empty, loudly wrong in QA rather than a hard failure).
 func _help_line_by_heading(heading: String) -> String:
 	for section: Dictionary in _help_sections:
 		if String(section.get("heading", "")) == heading:
@@ -298,11 +219,6 @@ func _help_line_by_heading(heading: String) -> String:
 	return ""
 
 
-## `on_close` fires once, when this panel closes back out (Back/Cancel from
-## the ROWS state) -- the caller (pause_menu.gd/title_screen.gd) passes a
-## Callable that re-shows its OWN hidden root. Re-entrant safe: calling
-## `open()` again while already open just resets the cursor/state, same as
-## every other panel's `_open()`.
 func open(on_close: Callable = Callable()) -> void:
 	is_open = true
 	_on_close = on_close
@@ -366,10 +282,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		vp.set_input_as_handled()
 
 
-## Issue #84: hover highlights a row (sets `_cursor`, the SAME field
-## `_refresh()`'s "> " mark reads), a left-click activates it through
-## `_activate_row()`, the exact function Confirm calls -- one dispatch path
-## either way, pause_menu.gd's/title_screen.gd's exact idiom.
 func _on_rows_gui_input(event: InputEvent) -> void:
 	if not is_open or _state != State.ROWS:
 		return
@@ -410,8 +322,6 @@ func _on_help_back_gui_input(event: InputEvent) -> void:
 		_exit_help()
 
 
-## Read-only rect accessor (WIHotbar.slot_rect/pause_menu.row_rect's
-## established pattern) for QA's `click_settings_row` step.
 func row_rect(i: int) -> Rect2:
 	if not is_open or _state != State.ROWS or i < 0 or i >= _row_labels.size():
 		return Rect2()
@@ -438,8 +348,6 @@ func _exit_controls() -> void:
 ## Payload's `sample` pins the "Saving" section's exact rendered line --
 ## short, purely mechanical, least likely to churn under the issue's own
 ## planned voice-pass -- QA's one-section-string pin per the task brief.
-## Looked up by heading (not a bare index) so reordering `help_content.json`
-## can't silently re-point the pin at a different section's text.
 func _enter_help() -> void:
 	_state = State.HELP
 	_root.hide()
@@ -488,9 +396,6 @@ func _refresh() -> void:
 	})
 
 
-## Left/right fine-adjust for the volume rows (extends pause_menu.gd's
-## `_adjust_volume_row` to Master) and the Text Scale step (wraps).
-## Harmless no-op on every other row.
 func _adjust_row(delta: int) -> void:
 	var key := String(ROWS[_cursor])
 	if AUDIO_ROWS.has(key):
@@ -505,9 +410,6 @@ func _adjust_row(delta: int) -> void:
 		_refresh()
 
 
-## Confirm/click dispatch. Volume rows and Text Scale step forward by ONE
-## (same as a single Right press) -- gives mouse-only play a working lever
-## without a drag-slider widget; Left/Right stay the fine per-step control.
 func _activate_row() -> void:
 	var key := String(ROWS[_cursor])
 	if AUDIO_ROWS.has(key) or key == "Text Scale" or key == "Combat Speed":

@@ -1,5 +1,4 @@
 {
-	"_comment": "8d C1/D1 (issue #14/#15) Yvlon Byres, standing with Ceria/Ksmvr at dungeon_approach. Canon (wiki.wanderinginn.com/Yvlon_Byres): silver-armed [Armsmistress]-line warrior (a sword-and-armor fighter, NOT a mage class), blunt-kind register -- protective without sentiment (character-profiles.md). No gate of her own (Ceria owns the party-formed beat) -- a single hub whose text_variants carry the pool bark (default), the halls-anticipating bark (once the party has formed and the trap gauntlet is the next real step), and the post-victory line, ascending order, LAST-satisfied-wins.",
 	"start": "hub",
 	"nodes": {
 		"hub": {

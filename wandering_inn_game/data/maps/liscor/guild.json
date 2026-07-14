@@ -1,5 +1,4 @@
 {
- "_comment": "The Adventurer's Guild interior (16x12), reached via guild_door on the street (28,3; now a real door, not a toast). Selys RELOCATES here from the street (26,4) -- same entity id, her ENTIRE existing surface unchanged (talk_pool/talk_pool_stages/conversation graph), now standing behind a real desk (counter_left/mid/right at (6,2)/(7,2)/(9,2)/(10,2), gap at (8,2) for her -- same desk-gap convention as Erin's inn counter). Reuses the `inn` biome (Interior_Walls_01.png wood-hall look) rather than a new tileset -- both are wood buildings in Liscor; moods.json's `guild` card (warm bureaucratic) supplies the grade. THE REQUEST BOARD (guild_board) and a second guild_notice_wall prop are DRESSED-ONLY (on_interact_accomplishment + toast/observe, board copy lifted verbatim from docs/archive/staging/board-staging/board-copy.md sec.1) -- the real repeatable-posting mechanics live in THE REQUEST BOARD system, fed from guild-bounties.json (not touched here). Two Bronze-rank Drakes (Renn+Ilvo) bicker at the board -- a canon callback to the OLD guild_door toast's \"adventurers arguing over a bounty board\" -- plus a Gnoll archer (Yelra) at a side table; all three are talk_pool-only, inert-adjacent walk-ons (no quests/graphs v1), profiles in docs/design/character-profiles-staging.md. guild_exit (8,11) is the south-wall return door; guild_door's to_cell (8,10) lands one cell north of it (an entity's own cell is never a valid door landing -- the is_cell_blocked contract), facing up into the hall; guild_exit returns to street (27,3), the same open cell gate_district_walkthrough already stood on to approach the old guild_door prop, verified unaffected by Selys's removal.",
  "biome": "inn",
  "grid": {
   "width": 16,
@@ -108,7 +107,6 @@
     ]
    },
    {
-    "_comment": "South wall, gapped at x=8 for guild_exit.",
     "from": [
      1,
      11
@@ -168,7 +166,6 @@
    ]
   },
   {
-   "_comment": "Hotfix #5's own (8,4) block (rug_tan's real footprint, 80x72 @0.4 render_scale = 32x28.8px, ~2x2 cells, bigger than its single decor cell) turned out to crowd the ONLY straight approach to Selys's desk -- a real player reported a prop blocking the path behind her counter. UNBLOCKED again: the minor visual occlusion hotfix #5 traded against is the lesser cost versus genuinely obstructing an NPC approach; rug_tan is now non-blocking set-dressing like every other floor rug in this codebase (the window_blue flush-decor precedent). guild_interior_walkthrough/board_loop's own routes, which used to detour around this cell, now walk straight through it for real (positive proof the block is gone).",
    "sprite": "rug_tan",
    "cell": [
     8,
@@ -197,7 +194,6 @@
    ]
   }
  ],
- "_comment_ambience": "Same dusk/night-only dust-motes pattern as the inn hall (a deliberate judgment call, not an oversight).",
  "ambience": [
   {
    "preset": "dust_motes",
@@ -247,7 +243,6 @@
     "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
     "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
    ],
-   "_comment_stages": "Lifted verbatim from docs/archive/staging/social-2-staging/selys_stages.json (staging_note annotation stripped). Two stages only. Board perk (⚑ first pick at the board) is FLAGGED unbuilt this wave (a repeatable board is new machinery, out of v1 scope per the staging doc) -- only the stage row + hub topic unlock ship.",
    "talk_pool_stages": [
     {
      "id": "selys_past_the_counter",
@@ -271,7 +266,7 @@
    ]
   },
   {
-   "_comment": "THE REQUEST BOARD goes live -- `board: true` routes interact() to WIGame._interact_board (a browse-only, code-built dialogue: header + the CURRENT active slate's copy from data/bounties.json + footer). Toast is the DEFAULT header (board-copy.md sec.1's header line); second_visit_toast is the NEW variant shown whenever a posting is outstanding (sec.1's second header line). observe still carries the footer/standing-notice line verbatim (the S.S. signature -- Selys Shivertail; Tekshia the Guildmistress stays OFFSTAGE, a signature only, per the staged canon note) -- reused directly by _interact_board, not duplicated. Accept/turn-in live at Selys's desk (selys_delivery.json), per the copy's own framing (\"taking a posting means telling me\"); the board itself never mutates state. Sprite: bespoke `request_board` art (previously shipped on an `inn_sign` reuse, VISUAL-LOG flagged pending a real corkboard asset -- now closed).",
+   "_comment": "the board itself never mutates state.",
    "id": "guild_board",
    "kind": "prop",
    "cell": [
@@ -287,31 +282,31 @@
    "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. — S.S.",
    "board_rumors": [
     {
-     "_comment": "8b R1 (issue #10) -- locked shape 1's Guild-board rumor beat. A DISTINCT, non-rotating list from bounties.json's pool (pool.size() is load-bearing for every canonical seed's times_slept modulo -- appending a live posting there would shift every existing board rotation window; a rumor is read, not accepted/turned-in, so it needs no picker/turn-in surface at Selys's desk at all). Shown on every board browse; _interact_board banks banks_accomplishment idempotently (record_accomplishment's own >=1 gate semantics, same as read_the_board's own every-visit bank). Future region milestones (#12/#16) append their own entry here, zero rotation risk.",
+     "_comment": "_interact_board banks banks_accomplishment idempotently (record_accomplishment's own >=1 gate semantics, same as read_the_board's own every-visit bank).",
      "id": "rumor_riverfarm",
      "banks_accomplishment": "riverfarm_attuned",
      "copy": "TRAVELER'S NOTE, pinned crooked. Village called Riverfarm, downriver a fair walk, farming folk, growing fast under some new lord. They've got witch trouble, or so the last one through here said -- crops going bad, nobody saying why out loud. No bounty on it, just word passed along. Ask the Guild about the road if you're curious."
     },
     {
-     "_comment": "Locked shape 1's Guild-board letter beat, same idiom as rumor_riverfarm (a DISTINCT board_rumors entry, not a bounties.json posting -- that pool's size stays load-bearing for canonical rotation windows). Stays a SIGNPOST only: banks heard_of_invrisil idempotently on every board browse (_interact_board's existing >=1 semantics), a flavor-only counter no gate reads. The real invrisil_attuned banks from Eloise's stone purchase instead (riverfarm_witch.json's 'shop' node, gated on blight_lifted) -- the letter's own added clause points the player there, so the chain reads letter -> Riverfarm's quest -> Eloise -> Invrisil.",
+     "_comment": "Stays a SIGNPOST only: banks heard_of_invrisil idempotently on every board browse (_interact_board's existing >=1 semantics), a flavor-only counter no gate reads.",
      "id": "rumor_invrisil",
      "banks_accomplishment": "heard_of_invrisil",
      "copy": "A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor -- and a professional one -- if a stranger to the city might look into it. The witch at Riverfarm keeps the stones, should the distance prove an obstacle. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself the strangest part."
     },
     {
-     "_comment": "8d C1 (issue #14) 'What the Seal Kept' seeding beat -- SIGNPOST only, same idiom as rumor_riverfarm/rumor_invrisil (browse-only, banks a flavor-only counter no gate reads). Points the reader at Olesm by name (the stipend is HIS option, in olesm_intro.json, gated separately on post_game) rather than naming a location a player could act on directly from the board itself.",
+     "_comment": "Points the reader at Olesm by name (the stipend is HIS option, in olesm_intro.json, gated separately on post_game) rather than naming a location a player could act on directly from the board itself.",
      "id": "rumor_dungeon_survey",
      "banks_accomplishment": "heard_of_the_gallery_survey",
      "copy": "A WATCH NOTICE, freshly pinned. The reopened gallery under the old seal is to be surveyed properly before the Council calls it settled -- volunteers with Guild standing should see Olesm Swifttail at the frontage desk. Pay is Watch-scale. The notice does not say what 'properly' means, and nobody pinning notices ever does."
     },
     {
-     "_comment": "Issue #81 (exploration & optional content): POSTING-SEEDED hook for the_missing_recruit (data/quests.json) -- SIGNPOST only, the rumor_riverfarm/rumor_dungeon_survey idiom (browse-only, banks a flavor-only counter no gate reads). Points at Dresk/the barracks by name rather than naming a solution -- the real quest option lives on his own dresk_recruit.json conversation, gated on this same banked counter.",
+     "_comment": "the real quest option lives on his own dresk_recruit.json conversation, gated on this same banked counter.",
      "id": "rumor_missing_recruit",
      "banks_accomplishment": "heard_about_missing_recruit",
      "copy": "WATCH NOTICE, pinned by a hand in a hurry. Recruit Pell missed second muster running. Ashgrave's not calling it desertion, not yet. Anyone with eyes free, ask at the barracks."
     },
     {
-     "_comment": "Issue #81: POSTING-SEEDED hook for renns_warhammer (data/quests.json) -- SIGNPOST only, same idiom. Renn's own scrap tacked to the SAME board he complains about -- oblique enough that the guild_notice_wall's pre-existing 'Somebody wants a lost warhammer back' line (unchanged) now has a real notice behind it. Points at Renn by name; the real quest option lives on renn_hammer.json, gated on this same banked counter.",
+     "_comment": "the real quest option lives on renn_hammer.json, gated on this same banked counter.",
      "id": "rumor_lost_hammer",
      "banks_accomplishment": "heard_about_lost_hammer",
      "copy": "A SCRAP OF PARCHMENT, tacked low, easy to miss. 'LOST: one backup warhammer, plain steel, no love lost between us but I want it back. Ask for Renn. Reward for the honest sort.' The handwriting gets angrier toward the bottom."
@@ -319,7 +314,6 @@
    ]
   },
   {
-   "_comment": "A second, smaller notice surface (city/personal notices, distinct from the Guild's own bounty board) -- ORIGINAL flavor copy, canon-safe (no invented named characters), voice-linted. Sprite: reuses `library_shelf` (a tall wood-shelf silhouette, tinted parchment) as a stand-in for a wall unit stacked with handbills -- VISUAL-LOG flagged pending a real asset.",
    "id": "guild_notice_wall",
    "kind": "prop",
    "cell": [
@@ -339,7 +333,7 @@
    "observe": "Handbills and scraps overlapping the request board's edge. The Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only."
   },
   {
-   "_comment": "Renn Coldscale, Bronze-rank Drake, half of a bickering duo at the board -- profile in docs/design/character-profiles-staging.md. Reuses the `pc_drake_m` character-creation rig (ash-grey tint) rather than new art. talk_pool fires first-talk-of-the-waking as before; a REAL `conversation` (issue #81, 'Renn's Old Warhammer') now backs every talk after that instead of the old repeated-forever fallback -- gated content only (the 'ask' option requires guild_board's rumor_lost_hammer having been read), so no pre-#81 canonical (which never re-talks to Renn in one waking) is affected.",
+   "_comment": "talk_pool fires first-talk-of-the-waking as before",
    "id": "renn",
    "kind": "npc",
    "cell": [
@@ -367,7 +361,6 @@
    ]
   },
   {
-   "_comment": "Ilvo Brackenhide, Bronze-rank Drake, the reasonable half of the duo. Reuses `pc_drake_f` (moss-green tint). Issue #80 (world reactivity wave, item 3 -- FLAVOR presence only, taste-gate 2026-07-12): present_when{phase:[day,dusk]} -- a pure talk_pool walk-on (no conversation graph, no quest/board tie -- Renn, the guild's OTHER bickering-duo half, is EXCLUDED from this wave, he's a quest-giver now via renns_warhammer), heads out with the rest of the Bronze-rank crowd once the board stops moving for the night.",
    "id": "ilvo",
    "kind": "npc",
    "cell": [
@@ -400,7 +393,6 @@
    ]
   },
   {
-   "_comment": "Yelra, Bronze-rank Gnoll archer, waiting at a side table. Reuses `pc_gnoll_f` (tan-brown tint).",
    "id": "yelra",
    "kind": "npc",
    "cell": [
@@ -427,7 +419,6 @@
    ]
   },
   {
-   "_comment": "Issue #81 'Renn's Old Warhammer' mini-quest (data/quests.json, renns_warhammer): the beat-1 discovery, a container prop (contains, the inn_chest/ruin_stones precedent) granting `renns_warhammer` (kind:parcel, data/items.json). Placed at (14,1), the guild's own unused back-right corner -- confirmed off both guild canonicals' walked-cell sets (guild_interior_walkthrough/board_loop's combined routes stay within x<=12; neither steps past the yelra/table_brown(13,6) column). No gate -- findable independent of ever asking Renn (a sequence-break is harmless here: `returned_the_warhammer` only ever banks from Renn's own gated turn-in option, so an early find just sits in the pack until the player talks to him).",
    "id": "renns_gear_stash",
    "kind": "prop",
    "cell": [

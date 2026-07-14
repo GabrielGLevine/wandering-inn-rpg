@@ -1,7 +1,4 @@
 extends SceneTree
-## WIPortals pure tests + the
-## wi_game.gd study-sleeps hook + portal-menu interact/travel wiring.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_portals.gd
 
 var _events: Array = []
 
@@ -32,10 +29,6 @@ func _new_game() -> WIGame:
 	return WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, _combat_config())
 
 
-## Everything the door-study hook cares about, PLUS a pedestal-open path to
-## door_understood -- bought_catalyst/recovered_anchor_stone are plain
-## accomplishment counters, banked directly here (no need to walk the full
-## D3 dialogue/fight chain just to prove D4's own hook math).
 func _bank_beat3(game: WIGame) -> void:
 	game.record_accomplishment("door_understood")
 	game.record_accomplishment("recovered_anchor_stone")
@@ -45,8 +38,6 @@ func _bank_beat3(game: WIGame) -> void:
 func _init() -> void:
 	WITestWatchdog.arm(self)
 
-	# --- WIPortals.attuned_destinations: pure gating over an injected
-	# accomplishment-count reader ---
 	var rows: Array = [
 		{"id": "a", "display_name": "Destination A", "map": "inn", "cell": [1, 1], "requires_accomplishment": "flag_a"},
 		{"id": "b", "display_name": "Destination B", "map": "street", "cell": [2, 2], "requires_accomplishment": "flag_b"},
@@ -61,8 +52,6 @@ func _init() -> void:
 	counts["flag_b"] = 1
 	assert(WIPortals.attuned_destinations(rows, counter_cb).size() == 3, "attuned_destinations: raising the gate re-includes the row")
 
-	# --- WIPortals.build_portal_graph: excludes current_map, always keeps
-	# the fallback option, wires travel_to effects ---
 	var graph: Dictionary = WIPortals.build_portal_graph(attuned, "inn")
 	var hub: Dictionary = (graph["nodes"] as Dictionary)[String(graph["start"])]
 	var opts: Array = hub["options"]
@@ -82,21 +71,17 @@ func _init() -> void:
 	var empty_opts: Array = ((empty_graph["nodes"] as Dictionary)[String(empty_graph["start"])] as Dictionary)["options"]
 	assert(empty_opts.size() == 1, "zero attuned destinations still yields a valid one-option (fallback-only) graph, never empty options")
 
-	# --- WIPortals.destination_by_id ---
 	assert(String(WIPortals.destination_by_id(rows, "b")["map"]) == "street", "destination_by_id finds a row by id")
 	assert(WIPortals.destination_by_id(rows, "nonexistent").is_empty(), "destination_by_id returns {} for an unknown id")
 
-	# --- The study-sleeps hook: counters-banked-mid-waking edge ---
 	var game := _new_game()
 	game.record_accomplishment("door_understood")
 	game.record_accomplishment("bought_catalyst")
-	# recovered_anchor_stone still missing -- only 2 of 3 beat-3 counters.
 	game.sleep()
 	assert(game.door_study_sleeps() == 0, "a sleep with only 2 of 3 beat-3 counters banked does not advance door_study_sleeps")
 	assert(game.accomplishment_count("door_awakened") == 0, "door_awakened has not banked")
 
 	game.record_accomplishment("recovered_anchor_stone")
-	# NOW all three are banked -- this sleep is the FIRST that counts.
 	game.sleep()
 	assert(game.door_study_sleeps() == 1, "the first sleep after all 3 beat-3 counters land advances door_study_sleeps to 1")
 	assert(game.accomplishment_count("door_awakened") == 0, "not yet awakened at N=1")
@@ -112,19 +97,10 @@ func _init() -> void:
 	var awakened_events: Array = _events.filter(func(e: Dictionary) -> bool: return String(e["type"]) == "accomplishment_recorded" and String(e["payload"].get("id", "")) == "door_awakened")
 	assert(awakened_events.size() == 1, "door_awakened fires accomplishment_recorded exactly once (the sleep_veil.gd GDI-line hook's own trigger)")
 
-	# Idempotent past N=3: a further qualifying sleep must not re-increment
-	# or re-bank (record_accomplishment is a plain incrementing counter, but
-	# the hook's own door_awakened<1 guard must stop it from firing again).
 	game.sleep()
 	assert(game.door_study_sleeps() == 3, "door_study_sleeps stops advancing once door_awakened is banked")
 	assert(game.accomplishment_count("door_awakened") == 1, "door_awakened stays banked exactly once")
 
-	# --- Issue #89 (gap-2, second-door mini-arc): the MIRRORED study-sleeps
-	# hook (second_door_study_sleeps/dungeon_attuned) + the new
-	# dungeon-anchor portal row it gates. A SEPARATE game instance -- `game`
-	# above is reused below for the pantry_door portal-menu assertions,
-	# which pin an EXACT option count a live dungeon_depths row would
-	# perturb.
 	var door2_game := _new_game()
 	_bank_beat3(door2_game)
 	door2_game.sleep()
@@ -141,20 +117,14 @@ func _init() -> void:
 	assert(door2_game.second_door_study_sleeps() == 2, "a second qualifying sleep advances to 2")
 	assert(door2_game.accomplishment_count("dungeon_attuned") == 1, "N=2 banks dungeon_attuned")
 
-	# Idempotent past N=2, the door_study_sleeps precedent above.
 	door2_game.sleep()
 	assert(door2_game.second_door_study_sleeps() == 2, "second_door_study_sleeps stops advancing once dungeon_attuned is banked")
 
-	# The gate order: heard_pisces_second_door alone, without door_awakened,
-	# must NOT advance the counter -- the monotone-chain rule
-	# (test_fixture_coherence.gd's _check_monotone_chains) requires every
-	# id ending `_attuned` to imply door_awakened.
 	var door2_gate_game := _new_game()
 	door2_gate_game.record_accomplishment("heard_pisces_second_door")
 	door2_gate_game.sleep()
 	assert(door2_gate_game.second_door_study_sleeps() == 0, "second_door_study_sleeps never advances before door_awakened is banked")
 
-	# The new portal row: inert until dungeon_attuned, live once banked.
 	var dest_ids: Array = door2_game.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"]))
 	assert(dest_ids.has("dungeon_depths"), "dungeon_depths lists once dungeon_attuned is banked")
 	var fresh_dest_ids: Array = _new_game().attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"]))
@@ -163,13 +133,9 @@ func _init() -> void:
 	assert(door2_game.current_map == "dungeon_approach", "travel to the dungeon anchor lands on dungeon_approach")
 	assert(door2_game.player_cell == Vector2i(2, 6), "travel lands on the portals.json-authored arrival cell")
 
-	# --- attuned_destinations() / interact() / travel_to end-to-end (the
-	# O2 rule: transition() only, no move_player/trigger_radius) ---
 	var attuned_ids2: Array = game.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"]))
 	assert(attuned_ids2.has("liscor_street") and attuned_ids2.has("the_wandering_inn"), "both portals.json rows are attuned once door_awakened is banked")
 
-	# Playtest hotfix #2 moved pantry_door (10,6)->(14,6), against the east
-	# wall -- the free approach cell moved with it, (9,6)->(13,6).
 	game.bind_map_silent("inn", Vector2i(13, 6))
 	game.player_facing = Vector2i.RIGHT
 	_events.clear()
@@ -186,14 +152,9 @@ func _init() -> void:
 	assert(game.player_cell == Vector2i(29, 10), "transition() landed the PC on the portals.json-authored arrival cell")
 	var map_changed: Array = _events.filter(func(e: Dictionary) -> bool: return String(e["type"]) == "map_changed")
 	assert(map_changed.size() == 1 and String(map_changed[0]["payload"].get("map", "")) == "street", "map_changed fired exactly once, to street")
-	# The O2 rule, asserted structurally: portal travel calls transition()
-	# directly, never move_player -- so NEITHER a player_moved/player_blocked
-	# event NOR a combat/trigger event can appear in this burst.
 	for e: Dictionary in _events:
 		assert(String(e["type"]) not in ["player_moved", "player_blocked", "combat_started"], "no move/trigger/combat event fires on a portal arrival (O2 rule): saw %s" % String(e["type"]))
 
-	# Return trip: from the street anchor, the menu must exclude
-	# liscor_street (current map) and offer only the_wandering_inn.
 	game.bind_map_silent("street", Vector2i(29, 10))
 	game.player_facing = Vector2i.RIGHT
 	game.interact()
@@ -203,17 +164,12 @@ func _init() -> void:
 	assert(game.current_map == "inn", "the return trip lands back on the inn")
 	assert(game.player_cell == Vector2i(13, 6), "the return trip lands on the inn's authored arrival cell")
 
-	# --- Pre-awakening fallback: an UNMET portal_menu_when gate still shows
-	# pantry_door's ordinary flavor toast (D1/D3 byte-identical fallback) ---
 	var fresh := _new_game()
 	fresh.bind_map_silent("inn", Vector2i(13, 6))
 	fresh.player_facing = Vector2i.RIGHT
 	var fresh_result := fresh.interact()
 	assert(fresh_result.get("accomplishment", "") == "observed_the_pantry_door", "before door_awakened, pantry_door still falls through to its plain flavor toast, not the portal menu")
 
-	# --- Save round-trip of door_study_sleeps (via the generic
-	# accomplishments dict -- see door_study_sleeps()'s own doc comment for
-	# why this is deliberately NOT a dedicated save.gd field) ---
 	var partial := _new_game()
 	_bank_beat3(partial)
 	partial.sleep()
@@ -225,14 +181,6 @@ func _init() -> void:
 	assert(restored.door_study_sleeps() == 2, "door_study_sleeps round-trips through the ordinary accomplishments save path")
 	assert(restored.accomplishment_count("door_awakened") == 0, "door_awakened has NOT banked yet on the restored save (only 2 of 3 sleeps taken)")
 
-	# --- Forward-referenced row guard (8e Phase C, ported from the stranded
-	# lane-8ec review-fix commit): a catalog row whose map doesn't exist in
-	# this build is INERT -- never listed by attuned_destinations (whatever
-	# its attunement gate says) and refused cleanly by _travel_to_portal.
-	# The bug class this kills: a region milestone's quest lane lands its
-	# portals row + a LIVE attunement chain before the parallel maps lane
-	# lands the map, and picking the row off the menu crashes _bind_map on
-	# the missing map key.
 	var fwd_rows: Array = [
 		{"id": "real_dest", "display_name": "Real", "map": "inn", "cell": [1, 1]},
 		{"id": "ghost_dest", "display_name": "Ghost", "map": "map_not_landed_yet", "cell": [10, 10]},
@@ -244,13 +192,6 @@ func _init() -> void:
 	assert(WIPortals.attuned_destinations(fwd_rows, fwd_counter).size() == 2, "an omitted has_map_cb (bare pure-unit caller) skips the map-existence filter -- both rows pass")
 	var fwd_game := _new_game()
 	assert(not fwd_game.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"])).has("pallass"), "sanity: pallass stays gate-locked without pallass_attuned")
-	# (No unattuned-travel refusal assert: _travel_to_portal deliberately
-	# checks id + map existence ONLY -- attunement gating lives entirely in
-	# the menu that produces the travel_to option, per the O2 rule.)
-	# The catalog row this guard shipped FOR (pallass, forward-referenced
-	# while pallass_market was a different lane's unlanded map) is LIVE now
-	# the map exists -- prove the pattern's payoff end-to-end: banking the
-	# attunement lists the row with zero further wiring, and travel works.
 	fwd_game.record_accomplishment("pallass_attuned")
 	assert(fwd_game.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"])).has("pallass"), "the once-forward-referenced pallass row lists normally now its map exists (the guard's zero-further-wiring payoff)")
 	fwd_game._travel_to_portal("pallass")

@@ -1,49 +1,9 @@
 extends CanvasLayer
-## Title screen. Boots as the game's first screen (Main.swap_to_title()).
-##
-## Two beats, per spec I9 (browser audio-gesture / iframe-focus requirement):
-## 1. GESTURE — "Press any key" placeholder; any keypress or click advances to
-##    the menu. This doubles as the web AudioContext unlock gesture and the
-##    iframe focus-grabber, so title/game audio is never silently dead on a
-##    fresh itch.io page load.
-## 2. MENU — New Game / Continue / Playtest States (debug builds only) / Quit,
-##    arrows to move, Enter to confirm. Continue is enabled iff a save exists
-##    (auto or any of `Game.MANUAL_SLOTS`, newest wins) and is skipped over
-##    (not selectable) while disabled. Issue #78: a small caption under the
-##    menu previews what Continue will load (see `_refresh_continue_caption`)
-##    -- Continue's own load mechanics are unchanged (still direct, newest-
-##    wins, zero extra navigation); the interactive multi-slot PICKER lives
-##    in the pause menu's Save/Load rows instead (reachable in-game, where
-##    slot choice actually matters -- see pause_menu.gd).
-##
-## New Game calls Game.reset() and Continue calls Game.load_slot(...) only --
-## both already emit "game_reset" / "game_loaded", which Main._on_domain_event()
-## already handles by re-instantiating the world (swap_to_world.call_deferred()).
 ## This screen must NOT call Main.swap_to_world() itself or the world would be
 ## built twice.
-##
-## "Playtest States" is a THIRD top-level state (PLAYTEST_LIST) hung off
-## MENU, gated at build time by `OS.is_debug_build()` (see `_row_visible`)
-## so it can never render in a release export (itch/Steam ship
-## `--export-release`, which the engine itself flips `is_debug_build()`
-## false for -- see qa/web/export_web.sh, the same command release.yml
-## runs). It lists `qa/fixtures/*.json` (name + a `_comment`-derived
-## one-line summary), story-position-ordered by `PLAYTEST_FIXTURE_ORDER`
-## with any unlisted fixture appended via raw dirlist fallback. Confirming
-## a row copies that fixture into a DEDICATED "playtest" save slot
-## (`Game.install_fixture_save`, the same byte-for-byte copy
-## qa/test_driver.gd's `_install_fixture_saves` performs -- never "manual",
-## so the user's own save is never clobbered) and loads it via the same
-## slot-generic `Game.load_slot` Continue uses -- zero new sim machinery.
 
 enum State { GESTURE, MENU, PLAYTEST_LIST, NEW_GAME_CONFIRM }
 
-## "Settings" is APPENDED at the end (issue #77) -- never inserted earlier --
-## so every existing index-based/count-based QA reference (mouse_loop.json's
-## `click_title_row row:2` = Continue, title_flow.json's "move down 1" to
-## reach Continue) keeps the exact same target row. title_flow.json's
-## `selectable_rows` counts DO bump by 1 (a real new always-selectable row),
-## re-pinned there.
 const ROWS: Array[String] = ["New Game", "Continue", "Playtest States", "Quit", "Settings"]
 ## Story-position ordering for the playtest-state picker. Any
 ## `qa/fixtures/*.json` NOT listed here (save-format-migration test fixtures
@@ -65,30 +25,17 @@ const PLAYTEST_FIXTURE_ORDER: Array[String] = [
 	"climax_surface_start", "climax_sealed_start", "near_act3",
 ]
 const PLAYTEST_PAGE_SIZE := 10
-## Issue #88 (gap-2): the New-Game overwrite-confirm panel -- pause_menu.gd's
-## `_confirm_root`/`CONFIRM_ROWS` idiom (a plain parchment Yes/No panel),
-## independent copy per this codebase's per-file component convention (the
-## SAME convention `_format_slot_summary` itself already follows). Cursor
-## defaults to "No" (index 0) -- the action IS destructive.
 const NEW_GAME_CONFIRM_ROWS := ["No", "Yes"]
 const NEW_GAME_CONFIRM_PANEL_SIZE := Vector2(360.0, 170.0)
 const PLAYTEST_CAUTION := "QA states — counters may be odd. Loads its own slot; your saves are safe."
-## Sane truncation budget for a fixture's `_comment` first-sentence summary.
 const PLAYTEST_SUMMARY_CHAR_BUDGET := 70
 const ENABLED_COLOR := Color(0.95, 0.88, 0.66)
 const DISABLED_COLOR := Color(0.5, 0.47, 0.4)
 const GESTURE_COLOR := Color(0.85, 0.8, 0.68)
 const BACKDROP_COLOR := Color(0.08, 0.06, 0.05)
-## Native window size (project.godot's window/size/viewport_* -- this screen
-## lives entirely outside the 320x180 world SubViewport, per the header doc,
-## so it uses the real window's own pixel space, not the world's).
 const NATIVE_SIZE := Vector2(1280.0, 720.0)
 
-## Injected by WIMain._spawn_title so New Game can open character creation.
-## The injection idiom (not a tree scan) matches combat_screen.
 var main_ref: WIMain
-## Set by main.gd alongside main_ref (issue #77) -- the shared
-## settings_panel.gd instance, opened by the new "Settings" row.
 var settings_ref: Node = null
 
 var _state: int = State.GESTURE
@@ -99,8 +46,6 @@ var _continue_slot := ""
 var _root: Control
 var _gesture_label: Label
 var _notice_label: Label
-## Issue #78: the "autosave metadata line on Continue" caption -- see
-## `_refresh_continue_caption`.
 var _continue_caption_label: Label
 var _menu_root: VBoxContainer
 var _row_labels: Array[Label] = []
@@ -110,19 +55,12 @@ var _row_labels: Array[Label] = []
 ## render).
 var _row_panels: Array[Control] = []
 
-## Playtest-state picker. `_fixture_entries` is lazily built on first open
-## (`{name:String, summary:String}`, story-position ordered) and cached for
-## the rest of the process -- `qa/fixtures/*.json` never changes mid-run.
-## `_playtest_cursor` is a GLOBAL index into `_fixture_entries` (not a
-## per-page index); the displayed page is derived from it
-## (`_playtest_cursor / PLAYTEST_PAGE_SIZE`), so Up/Down auto-paginates.
 var _playtest_root: Control
 var _playtest_row_labels: Array[Label] = []
 var _playtest_page_label: Label
 var _fixture_entries: Array[Dictionary] = []
 var _playtest_cursor := 0
 
-## Issue #88 (gap-2): the New-Game overwrite-confirm panel state.
 var _new_game_confirm_root: Control
 var _new_game_confirm_label: Label
 var _new_game_confirm_option_labels: Array[Label] = []
@@ -136,6 +74,8 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if _state == State.GESTURE:
 		if _is_gesture_event(event):
+			# GESTURE is functional: it unlocks the browser AudioContext and
+			# gives an embedded iframe keyboard focus before menu input begins.
 			_enter_menu()
 			get_viewport().set_input_as_handled()
 		return
@@ -161,13 +101,6 @@ func _is_gesture_event(event: InputEvent) -> bool:
 		return event.pressed and not event.echo
 	if event is InputEventMouseButton:
 		return event.pressed
-	# A pad-only player never touches a key/mouse, so without this the
-	# GESTURE beat is an unbeatable wall for them. InputEventJoypadButton
-	# only -- InputEventJoypadMotion is deliberately EXCLUDED, or stick
-	# drift past the deadzone (a pad resting in a player's lap, no
-	# deliberate press) would silently skip the beat, defeating its whole
-	# purpose (the web AudioContext-unlock / iframe-focus gesture, per the
-	# file header doc).
 	if event is InputEventJoypadButton:
 		return event.pressed
 	return false
@@ -187,9 +120,6 @@ func _build_ui() -> void:
 
 	_build_embers()
 
-	# make_texture_panel gives the ribbon its asymmetric X/Y patch margins —
-	# the same helper path dialogue_panel.gd/journal.gd use (a symmetric 36
-	# stretched the ribbon's short top/bottom border).
 	var title_panel := UIChrome.make_texture_panel(UIChrome.BLUE_RIBBON)
 	title_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	title_panel.custom_minimum_size = Vector2(640.0, 92.0)
@@ -226,10 +156,6 @@ func _build_ui() -> void:
 
 	_menu_root = VBoxContainer.new()
 	_menu_root.add_theme_constant_override("separation", 8)
-	# Issue #84: STOP (was IGNORE) + ONE hover/click handler over the whole
-	# row list (`UIChrome.control_index_at` against `_row_panels`, WIHotbar's
-	# per-bar-not-per-row idiom) -- a row's own chrome panel stays default
-	# IGNORE, same as every other UIChrome-built Control.
 	_menu_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_menu_root.gui_input.connect(_on_menu_gui_input)
 	_menu_root.hide()
@@ -284,12 +210,6 @@ func _build_embers() -> void:
 	_root.add_child(embers)
 
 
-## Builds the (hidden-until-opened) playtest-state picker panel -- a
-## title, the fixed caution line, PLAYTEST_PAGE_SIZE row labels (blanked
-## when a page has fewer entries than the page size), and a page-position
-## label. Same chrome idiom as `_menu_root`'s rows, minus the per-row
-## NinePatch (a plain Label list, matching pause_menu.gd's simpler picker
-## style -- this panel is denser than the 3/4-row title menu).
 func _build_playtest_panel() -> void:
 	_playtest_root = Control.new()
 	UIChrome.apply_theme(_playtest_root)
@@ -334,18 +254,10 @@ func _build_playtest_panel() -> void:
 	_playtest_page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stack.add_child(_playtest_page_label)
 
-	# Issue #84: same one-handler-on-the-container idiom as `_menu_root`
-	# above, over `_playtest_row_labels` -- `_playtest_global_index` maps the
-	# local (on-page) row index the rect scan returns to the GLOBAL fixture
-	# index `_playtest_cursor`/`_confirm_playtest_row` use.
 	stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	stack.gui_input.connect(_on_playtest_gui_input)
 
 
-## Issue #88 (gap-2): builds the (hidden-until-opened) New-Game overwrite-
-## confirm panel -- pause_menu.gd's `_confirm_root` idiom verbatim (a
-## parchment panel, a wrapping label, then the No/Yes rows), independent
-## copy per this file's own component convention.
 func _build_new_game_confirm_panel() -> void:
 	_new_game_confirm_root = Control.new()
 	UIChrome.apply_theme(_new_game_confirm_root)
@@ -371,7 +283,6 @@ func _build_new_game_confirm_panel() -> void:
 		var row := UIChrome.make_label("", "Menu")
 		confirm_stack.add_child(row)
 		_new_game_confirm_option_labels.append(row)
-	# Issue #84 hover/click idiom, same as every other panel in this file.
 	confirm_stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	confirm_stack.gui_input.connect(_on_new_game_confirm_gui_input)
 
@@ -391,10 +302,6 @@ func _enter_menu() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_RENDERED, {"continue_enabled": _continue_enabled, "selectable_rows": _selectable_row_count()})
 
 
-## settings_panel.gd's `on_close` callback (issue #77) -- re-shows the
-## top-level menu once Settings closes back out, matching pause_menu.gd's
-## `_reopen_after_settings` precedent (a resume, not a fresh `_enter_menu()`
-## -- no cursor reset, no re-fired ui_title_rendered).
 func _reopen_after_settings() -> void:
 	if _state == State.MENU:
 		_menu_root.show()
@@ -407,18 +314,6 @@ func _first_selectable_row() -> int:
 	return 0
 
 
-## Web builds have no OS process for Quit to close -- there is nothing for it
-## to do in a browser tab, so it's hidden outright rather than shown-disabled
-## (cleanest: no dead row a player can highlight and wonder about).
-##
-## "Playtest States" is hidden outright (not shown-disabled) unless
-## `OS.is_debug_build()` -- the same engine call every Godot release export
-## template bakes to `false` at compile time (a debug export template /
-## editor-run / bare `--headless` run all bake it `true`). itch/Steam ship
-## via `--export-release` (qa/web/export_web.sh, the exact command
-## release.yml's export job runs) which uses the RELEASE template, so this
-## row is provably absent from every shipped build -- see this file's
-## header doc for the full mechanism note.
 func _row_visible(i: int) -> bool:
 	if ROWS[i] == "Quit" and OS.has_feature("web"):
 		return false
@@ -435,10 +330,6 @@ func _row_selectable(i: int) -> bool:
 	return _row_visible(i) and _row_enabled(i)
 
 
-## How many top-level menu rows are actually reachable by the cursor right
-## now, on THIS binary -- title_flow's canonical "device-of-truth" proof
-## that the debug gate (and Continue's own enabled/disabled state) is
-## live, not assumed.
 func _selectable_row_count() -> int:
 	var n := 0
 	for i in ROWS.size():
@@ -470,18 +361,9 @@ func _refresh_rows() -> void:
 		var panel := label.get_parent().get_parent() as Control
 		for child: Node in panel.get_children():
 			if child is NinePatchRect:
-				# Swap through set_patch_texture so the measured art-bbox region
-				# follows the texture (the two button arts have different bboxes
-				# -- see UIChrome's BLUE_BUTTON_REGION doc comment).
 				UIChrome.set_patch_texture(child as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if i == _cursor else UIChrome.BLUE_BUTTON)
 
 
-## Issue #84: hover highlights a top-level menu row (sets `_cursor`, the SAME
-## field `_refresh_rows()`'s mark/color/pill-texture-swap all read -- one
-## selection state), a left-click routes through `_confirm()`, the exact
-## function Enter calls. Skips (both hover and click) a row that's hidden or
-## disabled -- `_row_selectable`, the SAME gate `_move_cursor` already skips
-## past for keyboard.
 func _on_menu_gui_input(event: InputEvent) -> void:
 	if _state != State.MENU:
 		return
@@ -502,11 +384,6 @@ func _on_menu_gui_input(event: InputEvent) -> void:
 		_confirm()
 
 
-## Read-only rect accessor (issue #84, `WIHotbar.slot_rect`'s established
-## pattern) -- the on-screen rect of top-level menu row `i` (its WHOLE chrome
-## pill, matching the click/hover target above), for QA's `click_title_row`
-## step. Empty Rect2 when out of range, the row is hidden, or the state isn't
-## MENU (the picker/gesture beats have no such rows on screen).
 func row_rect(i: int) -> Rect2:
 	if _state != State.MENU or i < 0 or i >= _row_panels.size():
 		return Rect2()
@@ -529,23 +406,11 @@ func _confirm() -> void:
 		"Quit":
 			get_tree().quit()
 		"Settings":
-			# Hides the top-level menu (state stays MENU throughout -- see
-			# `_reopen_after_settings`) and hands settings_panel.gd a callback
-			# to re-show it on Back/Cancel.
 			if settings_ref != null:
 				_menu_root.hide()
 				settings_ref.call("open", Callable(self, "_reopen_after_settings"))
 
 
-## Issue #88 (gap-2): New Game used to call Game.reset() (or open character
-## creation) UNCONDITIONALLY -- the single shared "auto" slot then silently
-## clobbered a finished run's last checkpoint the moment the fresh game's
-## first autosave-triggering event fired (game.gd's `_rotate_auto_pending`
-## safety net preserves ONE hop of that history as "auto_prev", but warning
-## the player BEFORE the reset is the honest fix). Skips the confirm
-## entirely when there is nothing to lose (`_newest_save_slot()` empty --
-## every genuinely-fresh boot, including every existing canonical's FIRST
-## New Game).
 func _handle_new_game_row() -> void:
 	if _newest_save_slot().is_empty():
 		_start_new_game()
@@ -553,15 +418,7 @@ func _handle_new_game_row() -> void:
 	_enter_new_game_confirm()
 
 
-## The actual New Game dispatch -- moved verbatim out of the old "New Game"
-## match arm so both the bypass path and the confirm panel's "Yes" choice
-## route through the exact same logic.
 func _start_new_game() -> void:
-	# Real play (and a QA script opting in via `creation_ui`) routes
-	# through the character-creation screen; every OTHER New Game path --
-	# the default TestDriver skip -- calls Game.reset() straight through,
-	# byte-identical to before this feature (the creation screen is never
-	# even spawned), so every existing canonical is untouched.
 	if _skip_creation():
 		Game.reset()
 	elif main_ref != null:
@@ -614,9 +471,6 @@ func _handle_new_game_confirm_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-## The confirm panel's own "activate the cursored row" dispatch (pause_menu.
-## gd's `_select_confirm_choice` idiom) -- factored out so the mouse-click
-## handler below routes through the SAME function keyboard confirm calls.
 func _select_new_game_confirm_choice() -> void:
 	var choice := String(NEW_GAME_CONFIRM_ROWS[_new_game_confirm_cursor])
 	_exit_new_game_confirm()
@@ -630,7 +484,6 @@ func _refresh_new_game_confirm() -> void:
 		_new_game_confirm_option_labels[i].text = mark + String(NEW_GAME_CONFIRM_ROWS[i])
 
 
-## Issue #84 hover/click parity, mirroring `_on_menu_gui_input` verbatim.
 func _on_new_game_confirm_gui_input(event: InputEvent) -> void:
 	if _state != State.NEW_GAME_CONFIRM:
 		return
@@ -651,7 +504,6 @@ func _on_new_game_confirm_gui_input(event: InputEvent) -> void:
 		_select_new_game_confirm_choice()
 
 
-## `load_slot` returns false on a corrupt or older-version save (WISave.
 ## apply rejects mismatched VERSION). Without feedback the title screen
 ## silently does nothing -- surface it and grey the Continue row so New
 ## Game is the obvious path. (Continue-only: the playtest picker loads its
@@ -665,10 +517,6 @@ func _load_slot_or_notice(slot: String) -> void:
 		_show_notice("Save is from an older version. Start a New Game")
 
 
-## True when a QA run is driving and has NOT opted into the real creation UI --
-## the default TestDriver New Game skips creation and resets with the everyman
-## defaults, keeping every existing canonical byte-unchanged. A char_creation QA
-## script sets top-level `creation_ui: true` to take the real path instead.
 func _skip_creation() -> bool:
 	return TestDriver != null and TestDriver.active() and not TestDriver.wants_creation_ui()
 
@@ -689,10 +537,6 @@ func _refresh_continue_state() -> void:
 	_refresh_continue_caption()
 
 
-## Returns whichever of "auto"/`Game.MANUAL_SLOTS` was modified most
-## recently, or "" if none exist. Issue #78: widened from the old hardcoded
-## ["auto","manual"] pair to scan every manual slot, not just slot 1 -- a
-## player who only ever saves to "Slot 2" still gets picked up by Continue.
 func _newest_save_slot() -> String:
 	var best_slot := ""
 	var best_time := -1
@@ -708,13 +552,6 @@ func _newest_save_slot() -> String:
 	return best_slot
 
 
-## Issue #78: "autosave metadata line on Continue" -- a small caption under
-## the menu showing WHAT Continue will load (name, top class+level, map),
-## read via `Game.slot_metadata` (a raw-file peek, never a live-sim read, so
-## this is safe to call every menu refresh). Continue's own MECHANICS are
-## unchanged (still a direct newest-wins load on Confirm/click, zero extra
-## navigation) -- this purely adds visibility into what that load will do.
-## Hidden whenever Continue itself is disabled (no readable save anywhere).
 func _refresh_continue_caption() -> void:
 	if _continue_caption_label == null:
 		_continue_caption_label = UIChrome.make_label("", "Small")
@@ -729,22 +566,10 @@ func _refresh_continue_caption() -> void:
 	if meta.is_empty():
 		_continue_caption_label.hide()
 		return
-	# _first_sentence has no sentence terminator to find in this line (no
-	# periods), so it always falls through to its own word-boundary/char-
-	# budget cut -- exactly the truncation this caption needs, reused rather
-	# than duplicated (PLAYTEST_SUMMARY_CHAR_BUDGET=70, sized for THIS
-	# caption's own 600px-wide anchor, same margin-of-safety caveat as
-	# pause_menu.gd's SLOT_ROW_CHAR_BUDGET doc comment).
 	_continue_caption_label.text = _first_sentence(_format_slot_summary(meta))
 	_continue_caption_label.show()
 
 
-## "<name> — <TopClass> LvN — <Map>", the SAME shape pause_menu.gd's own
-## slot picker renders (kept as an independent copy per this codebase's
-## per-file component convention -- see e.g. `_class_display_name`
-## duplicated across files). Reuses `_display_fixture_name`'s underscore-
-## Title-Case transform for both the class id and the map id (verified
-## against every shipped class id's real classes.json display_name).
 func _format_slot_summary(meta: Dictionary) -> String:
 	var parts: Array[String] = [String(meta.get("pc_name", "Traveler"))]
 	var top_class := String(meta.get("top_class", ""))
@@ -756,7 +581,6 @@ func _format_slot_summary(meta: Dictionary) -> String:
 	return " — ".join(parts)
 
 
-## One-line feedback strip under the menu (e.g. incompatible-save notice).
 func _show_notice(text: String) -> void:
 	if _notice_label == null:
 		_notice_label = UIChrome.make_label("", "Small")
@@ -768,7 +592,6 @@ func _show_notice(text: String) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_NOTICE_RENDERED, {"text": text})
 
 
-# --- Playtest-state picker -------------------------------------------------
 
 func _handle_playtest_input(event: InputEvent) -> void:
 	var vp := get_viewport()
@@ -842,10 +665,6 @@ func _confirm_playtest_row() -> void:
 		_show_notice("Could not load fixture: " + fixture)
 
 
-## Issue #84: hover/click over the playtest picker's rows, mirroring
-## `_on_menu_gui_input` -- hover moves `_playtest_cursor` (the SAME field
-## `_refresh_playtest()`'s mark/color reads), a click routes through
-## `_confirm_playtest_row()`, the exact function Enter calls.
 func _on_playtest_gui_input(event: InputEvent) -> void:
 	if _state != State.PLAYTEST_LIST:
 		return
@@ -868,11 +687,6 @@ func _on_playtest_gui_input(event: InputEvent) -> void:
 		_confirm_playtest_row()
 
 
-## Maps a rect-scanned on-page row index (0..PLAYTEST_PAGE_SIZE-1) to the
-## GLOBAL `_fixture_entries` index `_playtest_cursor`/`_confirm_playtest_row`
-## use -- the same `page`/`start` derivation `_refresh_playtest()` uses to lay
-## the current page out. -1 for no local match or a blank row past the last
-## real entry on a partial final page.
 func _playtest_global_index(local_i: int) -> int:
 	if local_i < 0:
 		return -1
@@ -908,8 +722,6 @@ func _refresh_playtest() -> void:
 	_playtest_page_label.text = "Page %d / %d" % [page + 1, _playtest_page_count()]
 
 
-## Underscore-separated fixture basename -> "Title Case With Spaces" for
-## display (e.g. "post_tutorial_street" -> "Post Tutorial Street").
 func _display_fixture_name(fixture: String) -> String:
 	var words := fixture.split("_")
 	for i in words.size():
@@ -919,9 +731,6 @@ func _display_fixture_name(fixture: String) -> String:
 	return " ".join(words)
 
 
-## Scans `qa/fixtures/*.json` for every fixture, ordered per
-## PLAYTEST_FIXTURE_ORDER with unlisted fixtures appended alphabetically
-## (raw dirlist fallback), each paired with a `_comment`-derived summary.
 func _load_fixture_entries() -> Array[Dictionary]:
 	var names: Array[String] = []
 	var dir := DirAccess.open("res://qa/fixtures")
@@ -943,10 +752,6 @@ func _load_fixture_entries() -> Array[Dictionary]:
 	return entries
 
 
-## First-sentence (or char-budget-truncated) summary of a fixture's
-## `_comment` field, "" if the fixture has none (several hand-authored
-## fixtures predate the `_comment` convention -- the row falls back to
-## the display name alone, still fully usable via `_display_fixture_name`).
 func _fixture_summary(fixture: String) -> String:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://qa/fixtures/%s.json" % fixture))
 	if not (parsed is Dictionary):
@@ -954,15 +759,6 @@ func _fixture_summary(fixture: String) -> String:
 	return _first_sentence(String((parsed as Dictionary).get("_comment", "")))
 
 
-## Sane truncation: prefer the first sentence break ("able to."/"?"/"!"
-## followed by a space or end of string); fall back to a hard char budget
-## with an ellipsis when no early sentence break exists (some `_comment`s
-## run long before their first period, e.g. abbreviations like "M-ARC A3").
-## The fallback cuts at the last WORD boundary at-or-before the budget, not
-## a raw char index (VISUAL-LOG: "...the ambus…" mid-word truncation) --
-## only a single unbroken run longer than the whole budget (no space
-## anywhere in the first PLAYTEST_SUMMARY_CHAR_BUDGET chars) falls back to
-## the raw char cut, so short real words are never split.
 func _first_sentence(text: String) -> String:
 	if text.is_empty():
 		return ""

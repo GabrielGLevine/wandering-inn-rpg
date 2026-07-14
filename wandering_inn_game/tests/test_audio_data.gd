@@ -1,6 +1,4 @@
 extends SceneTree
-## Validates the audio event map.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_audio_data.gd
 
 const VALID_BUSES: Dictionary = {
 	"Master": true,
@@ -83,9 +81,6 @@ const REQUIRED_IDS: Array[String] = [
 	"pc_death",
 ]
 
-## `context` is a human label (title / map id / combat / victory); `kind`
-## drives WIAudio's runtime behavior (field-context tracking, sting
-## return-to-field wiring) and must be one of these.
 const VALID_MUSIC_KINDS: Dictionary = {
 	"title": true,
 	"field": true,
@@ -104,9 +99,6 @@ const REQUIRED_MUSIC_IDS: Array[String] = [
 	"music_sleep_beat",
 ]
 
-## Issue #76 remainder: the five highest-dwell maps' beds. CC0-sourced, so
-## the streams live in the PUBLIC tree (assets/audio/ambience/) -- a missing
-## file here is a real regression, never a licensed-overlay gap.
 const REQUIRED_AMBIENCE_IDS: Array[String] = [
 	"ambience_inn",
 	"ambience_street",
@@ -126,20 +118,10 @@ func _load(path: String) -> Dictionary:
 
 
 func _fail(message: String) -> void:
-	# TRAP: quit(1) only SCHEDULES exit -- _init keeps executing to its
-	# final `print PASS; quit(0)`, which overrode the failure exit code and
-	# let a red validation print green (caught live: a missing music
-	# stream ERROR'd and still PASSed). assert halts the frame HERE and
-	# trips the ^PASS output contract + the SCRIPT ERROR grep.
 	push_error(message)
 	assert(false, message)
 
 
-## Licensed-overlay contract (mirrors test_sprite_registry's public-checkout
-## relaxation): a stream that is ABSENT on disk is still valid when its path
-## is listed in assets_manifest.json -- public checkouts lack the private
-## bundle and WIAudio degrades to silence for exactly those files. A missing
-## stream NOT in the manifest is a real typo/regression and still fails.
 var _manifest_paths := {}
 
 
@@ -189,10 +171,6 @@ func _init() -> void:
 		if not _stream_ok(stream):
 			_fail("missing audio stream for %s: %s" % [id, stream])
 
-		## Issue #76: `variants` (deterministic round-robin, see wi_audio.gd's
-		## `_play_entry` doc comment) -- every candidate gets the SAME stream
-		## checks as `stream` above, and `stream` itself must equal variants[0]
-		## so it can never drift into a stale duplicate of the real first pick.
 		if entry.has("variants"):
 			var variants_variant: Variant = entry["variants"]
 			if not variants_variant is Array:
@@ -269,11 +247,6 @@ func _init() -> void:
 		if not ids.has(required_id):
 			_fail("missing required music id: " + required_id)
 
-	## Issue #76 remainder: the `ambience` kind. Rows mirror the field-music
-	## shape but are pinned harder: map_changed-keyed only (beds are map-scoped
-	## by definition), Ambience bus only, payload.map must equal `context` (the
-	## drift tripwire keeping the human label and the actual match in lockstep),
-	## and no sting machinery (`return_to_field` forbidden -- beds always loop).
 	if not config.has("ambience"):
 		_fail("audio.json missing ambience")
 	if not config["ambience"] is Array:

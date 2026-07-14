@@ -1,25 +1,5 @@
 class_name WITileBoardBuilder
-## Shared static tile/board painters. Both world.gd
-## (field maps) and combat_screen.gd (arenas) painted near-identical
-## TileMapLayer stacks from the same `data/maps/<region>/<map>.json` /
-## `data/arenas.json` schema -- this class is the single source for that
-## logic. Every function is static and takes every dependency as an explicit
-## param (parent Node2D to add layers under, a biome/config Dictionary, and
-## the sprite registry) so there are no scene refs and no hidden state.
-##
-## `build_walls` is the SUPERSET form (world.gd's band+segments variant,
-## world.gd:298 pre-extraction): arena configs never carry a `segments` key
-## (verified against data/arenas.json -- none of the three shipped
-## arenas, goblin_ambush/cave_mouth/training_yard, has a top-level `walls`
-## key at all today), so combat_screen's band-only (or entirely absent)
-## walls behavior falls out of this same code path unchanged; the
-## covered-cells return is consumed only by world.gd's blocked-tile skip
-## optimization, and is safe for combat_screen to ignore (GDScript permits
-## discarding a non-void return as a bare statement).
 
-## Both source callers (world.gd's field CELL, combat_screen.gd's arena CELL)
-## define this same value independently; the builder needs its own copy
-## since it has no scene/owner ref to read either off of.
 const CELL := 16
 
 
@@ -94,14 +74,6 @@ static func build_floor_layers(parent: Node2D, layers_cfg: Array, grid: Vector2i
 			tile_layer.queue_free()
 
 
-## Fills the margin outside `grid`, from the grid edge out to `margin` cells
-## past it on every side, with the biome's skirt tile -- exit bar for the
-## original B1 skirt requirement (no grey void inside the viewport). Drawn
-## first (bottom of the floor stack) so the real floor/walls/blocked layers
-## always draw over it inside the grid. `margin` parameterizes the one
-## difference between world.gd's field skirt (SKIRT_MARGIN_CELLS, 20) and
-## combat_screen.gd's arena skirt (a local `margin := 20`) -- both callers
-## pass 20 today, so behavior is unchanged for either.
 static func build_skirt(parent: Node2D, grid: Vector2i, margin: int, biome_cfg: Dictionary, registry) -> void:
 	if not biome_cfg.has("skirt"):
 		return
@@ -117,25 +89,6 @@ static func build_skirt(parent: Node2D, grid: Vector2i, margin: int, biome_cfg: 
 	parent.add_child(layer)
 
 
-## Renders the `walls` entry. Band schema: a `band_rows`-deep band
-## painted in the margin directly ABOVE row 0 (y = -band_rows..-1) spanning
-## the grid's width -- never touches a playable/blocked cell, purely visual.
-## The single topmost row uses `top_coords` (stone cap); remaining rows use
-## `base_coords` (wainscot/facade).
-##
-## Walls-v2: optional `segments` list -- blocking wall runs anywhere in the
-## grid (perimeter + interior partitions, the showcase-bar "rooms read as
-## rooms" requirement). Each segment covers WIGame.segment_cells(seg) (the
-## sim merges the same cells into blocked_cells -- single source of truth).
-## Art: `face` (if given) paints at each covered cell with `cap` painted one
-## cell above it (skipped where the above cell is itself covered, so runs
-## stack cleanly); with no `face`, `cap` paints at every covered cell
-## (vertical/solid runs seen top-down). Per-segment `sheet`/`tile_px`
-## override the walls-level values. Returns the covered-cell set so a
-## generic blocked-tile painter can skip those cells (world.gd's blocked-cell
-## skip optimization; combat_screen.gd has no such consumer and may discard
-## the return -- arena configs carry no `segments` today, so this is a no-op
-## band-only or fully-empty call for every shipped arena).
 static func build_walls(parent: Node2D, walls_cfg: Dictionary, grid: Vector2i, biome_cfg: Dictionary, registry) -> Dictionary:
 	var covered := {}
 	if walls_cfg.is_empty():

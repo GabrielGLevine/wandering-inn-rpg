@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #107: Help reference sub-page (settings_panel.gd). DATA not code -- content = data + code convention (CLAUDE.md). Each section renders as ONE wrapped Label, \"heading -- body\", the combined-line layout the sizing pass (issue #107) measured against HELP_TEXT_WIDTH/HELP_SECTION_LINE_CAP in tests/test_copy_fit.gd. Locks bind every body string: VERBS not formulas, no stats, no progress-toward numbers, no thresholds (opaque-until-sleep). First-draft copy -- controller voice-passes at merge (issue text).",
+ "_comment": "DATA not code -- content = data + code convention (CLAUDE.md).",
  "sections": [
   {
    "heading": "Classes & Levels",

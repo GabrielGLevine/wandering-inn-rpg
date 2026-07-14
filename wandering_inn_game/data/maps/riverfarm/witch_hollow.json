@@ -1,5 +1,5 @@
 {
- "_comment": "8b R1 (issue #10). ~12x14 forest pocket (art direction: 'green shade'; spec sec.1: bent trees, a cottage, herb rows, a ritual clearing). biome witch_hollow (data/biomes.json): floor = flat underwood green, enclosure via hollow_canopy_tree PROPS on the ring's blocked cells (top/bottom/left edges + entrance-adjacent), not a wall tile family -- 'a forest pocket, not a room' (handoff's staged fragment). Reachable only via riverfarm_village's riverfarm_hollow_path door (round-trip pair: hollow_village_path here).",
+ "_comment": "Reachable only via riverfarm_village's riverfarm_hollow_path door (round-trip pair: hollow_village_path here).",
  "biome": "witch_hollow",
  "grid": {
   "width": 12,
@@ -363,7 +363,7 @@
    "observe": "A tree grown crooked, leaning in over the path like it's listening."
   },
   {
-   "_comment": "The witch's cottage -- the ONE warm window inside a cool green-dark frame (spec sec.1's landmark read 6, 'the contrast IS the storytelling'). 5x5 sprite, block ~5x3 at its base. Carries the map's single warm PointLight2D, always-on (a lived-in cottage keeps its hearth lit day and night, unlike the phase-gated street/pantry lanterns) -- stays within the ≤8/map light budget (the only light this map ships).",
+   "_comment": "stays within the ≤8/map light budget (the only light this map ships).",
    "id": "witch_cottage_prop",
    "kind": "prop",
    "cell": [
@@ -425,7 +425,7 @@
    "observe": "Another of the ring-stones, humming faintly if you hold still."
   },
   {
-   "_comment": "R3 (issue #11) SKILL gauntlet, prop 1 of 3: 'cook the offering' (basic_cooking). Field-skill first-use idiom (stew_pot/cellar_door precedent) -- requires_skill + on_skill_use, unordered relative to the other two props (no sequencing gate exists in this seam; the QA canonical performs them in narrative order). Reuses the registered `cauldron` sprite (stew_pot's own sprite), west of the cottage door.",
+   "_comment": "Field-skill first-use idiom (stew_pot/cellar_door precedent)",
    "id": "hollow_offering_pot",
    "kind": "prop",
    "cell": [
@@ -444,7 +444,7 @@
    "observe": "An iron pot set by the cottage door, empty and waiting. Someone means for it to be used."
   },
   {
-   "_comment": "SKILL gauntlet, prop 2 of 3: 'light the threshold candles' ([Light]). Reuses the registered `unlit_lantern` sprite (the [Light] skill's own established prop), east of the cottage door -- the other flank of the threshold from hollow_offering_pot. The `visual_states` lit swap is REQUIRED, not decoration: the on_skill_use toast narrates the candles catching, and a toast promising a visible change with no sprite/tint change is the exact 'logically correct but never rendered' gotcha class -- same warm tint + flickering light as the inn's own unlit_lantern (the precedent), keyed on this prop's own accomplishment. Light budget: witch_hollow carries 1 base light (witch_cottage_prop) before this, well under the 8/map cap.",
+   "_comment": "Light budget: witch_hollow carries 1 base light (witch_cottage_prop) before this, well under the 8/map cap.",
    "id": "hollow_threshold_candles",
    "kind": "prop",
    "cell": [
@@ -486,7 +486,7 @@
    ]
   },
   {
-   "_comment": "R3 (issue #11) SKILL gauntlet, prop 3 of 3: 'observe the true knot' ([Observe]). Placed in the empty center of the standing-stone triangle (hollow_glow_1/2/3's own cells) -- the ritual clearing the spec calls out. THIS is the SKILL path's convergence bank: completing the gauntlet yourself IS the resolution, no separate report needed (unlike the cisterns_scout/wrong_order precedent, whose single skill action needed a consult-NPC report to close the loop) -- reuses the registered `hollow_mushroom_cluster` sprite (previously decor-only) as a distinct interactive tangle, visually apart from the standing stones themselves.",
+   "_comment": "reuses the registered `hollow_mushroom_cluster` sprite (previously decor-only) as a distinct interactive tangle, visually apart from the standing stones themselves.",
    "id": "hollow_true_knot",
    "kind": "prop",
    "cell": [
@@ -505,7 +505,6 @@
    "observe": "A snarl of root and briar at the center of the standing stones, tied in a knot that doesn't look like it grew that way."
   },
   {
-   "_comment": "#63 canon pass: entity swapped from a generic witch to Eloise (wiki-verified, character-profiles.md). This ALSO resolves the #17 audit's coin-vs-favors finding -- the generic witch trading for coin (shop node) while also collecting a debt-in-favors (mediate/blight_lifted) read as two contradictory roles on one invented character. Eloise is canonically a travelling trader of sorts as well as a [Tea Witch], so coin-for-goods and favor-for-service are both native to HER, not a role clash; the contradiction dies with the generic witch it was about.",
    "id": "riverfarm_witch",
    "kind": "npc",
    "cell": [
@@ -540,7 +539,7 @@
      "text": "Tea's still hot. The offer doesn't get warmer with asking twice."
     }
    ],
-   "_comment_visual_states": "TWO entries, phase-split on purpose: dusk swaps the sprite only (dusk grade [0.4,0.58,0.5] leaves the young form readable bare), while night ALSO lifts her with a self-tint -- witch_hollow's night grade [0.2,0.34,0.3] crushes sprite detail to near-silhouette, and the two-form swap IS the tell (it must survive the grade; the dark-arena combat brightness-floor precedent, applied entity-side since field NPCs get no combat _legibility_boost). Uniform 2.0 lands her at ~[0.4,0.68,0.6] final under the night grade -- clearly readable, still night-cast, and diegetically right (the young form reading faintly luminous after dark). Entries are order-sensitive: later satisfied entries override, and each phase matches exactly one here.",
+   "_comment_visual_states": "Visual states are order-sensitive: later satisfied entries override; dusk swaps sprite, while night also applies the legibility tint.",
    "visual_states": [
     {
      "when": {
@@ -566,7 +565,7 @@
    ]
   },
   {
-   "_comment": "LOCKED interface: arena witch_hollow, on_victory drove_off_collectors (lane beta/R2). The 'shallow' variant, near the entrance path. The ally is `riverfarm_hunter` (a local -- see river_wolf_pack's own _comment for why not Relc): sim_combat_batch.gd's briar_collectors_w10_hunter cell is the harness's OWN gated band (0.55-0.95, measured 0.71) -- the _solo sibling is explicitly ungated and measures 0.10, structurally unfit for a real FIGHT-path leg. `ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's come-along ask, at the village.",
+   "_comment": "`ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's come-along ask, at the village.",
    "id": "briar_collectors",
    "kind": "encounter",
    "cell": [
@@ -590,7 +589,6 @@
    }
   },
   {
-   "_comment": "LOCKED interface: same arena as the shallow briar_collectors (both fights share the witch_hollow arena template, lane beta/R2). The 'deep' variant, further from the entrance, past the cottage -- the escalation R2 tuned (briar_collectors_deep_w10_hunter: 0.55-0.85 gated, measured 0.74). R3 (issue #11): on_victory now banks blight_lifted ALONGSIDE drove_off_collectors -- clearing the deeper wave (the craft's real source, per spec sec.3) is the FIGHT path's convergence, same shared flag TALK/SKILL bank via their own routes. allies/ally_requires mirrors the shallow wave's hunter wiring (see river_wolf_pack's own _comment for why the ally isn't Relc).",
    "id": "briar_collectors_deep",
    "kind": "encounter",
    "cell": [
@@ -633,7 +631,7 @@
    "observe": "The trees thin out this way. Open fields past the last few trunks."
   },
   {
-   "_comment": "R6 (#95) trap placement: a briar-snare east of briar_collectors' nest (9,6). Cell (10,7) verified off every riverfarm_* canonical's real walked-cell set inside witch_hollow: every reposition rides `teleport` (never treads intermediate cells) with only 1-step facing bumps at the teleport targets themselves -- {(3,9),(10,11),(6,6),(6,5),(2,8),(4,8),(4,9),(4,10),(8,11),(9,7),(4,12)} is the full real-move set across riverfarm_walkthrough/talk/skill/fight. (10,7) is not in that set, not blocked (witch_hollow's blocked list only closes the y5-6 x1-5 band + the 3 standing-stone cells), and not any entity's cell. requires_skill=observe LIVE (disarm_trap PARKED -- docs/design/class-foundation-staging/trap-disarm-swap.json). Avoidable: single-cell prop, open floor on every side. Disarm banks shared trap_disarmed + 1g.",
+   "_comment": "R6 (#95) trap placement: a briar-snare east of briar_collectors' nest (9,6).",
    "id": "hollow_briar_snare",
    "kind": "prop",
    "cell": [

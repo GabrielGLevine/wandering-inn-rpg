@@ -1,17 +1,7 @@
 extends SceneTree
-## Cross-reference validation for authored content.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_content.gd
 
 const DIALOGUE_DIR := "res://data/dialogue"
 
-## Every data file that carries player-facing strings, for
-## `_validate_player_string_vocab`'s recursive sweep (dialogue/*.json is
-## walked separately below, via the same DIALOGUE_DIR enumeration
-## `_load_dialogue_graphs` uses). Deliberately excludes files with NO player
-## text (biomes/moods/audio/sprites.json -- asset paths + dev `_comment`s
-## only, confirmed by hand before this list was written). The scene/map
-## catalog (data/maps/<region>/<map>.json, issue #100) is walked separately
-## via WISceneCatalog.compose(), not listed here -- it's no longer one file.
 const PLAYER_STRING_FILES := [
 	"res://data/items.json",
 	"res://data/skills.json",
@@ -45,23 +35,8 @@ func _init() -> void:
 	var produced_accomplishments: Dictionary = {}
 
 	_collect_scene_accomplishments(scene, produced_accomplishments)
-	# Accomplishments the SIM ENGINE produces structurally off ANY faced
-	# entity (WIFieldSkills.dispatch's generic [Appraise Foe]/[Charming
-	# Smile] arms, keyed on the SKILL's own id, not a per-entity data field)
-	# -- not traceable by scanning skeleton_scene.json's fields the way
-	# on_victory/on_skill_use/on_interact_accomplishment are above, so
-	# hardcoded here the same way heard_gossip/chatted_with_<id> are
-	# hardcoded into _collect_scene_accomplishments (real, structural,
-	# always-live producers, not a scan gap).
 	produced_accomplishments["observed_things"] = true
 	produced_accomplishments["befriended_moments"] = true
-	# [Trader]'s earn axis (class-foundation pass R5, 2026-07-12): banked
-	# by THREE structural sim code paths, none of them a scannable
-	# `{"accomplishment": "..."}` data literal -- WIGame.sell_item (a real
-	# vendor sale), WIGame.turn_in_delivery (a completed Runner's Guild
-	# turn-in), and WIGame._apply_gold_effect (any dialogue-effect spend of
-	# >=5 gold). Same hardcode-not-scan-gap reasoning as observed_things/
-	# befriended_moments above.
 	produced_accomplishments["deliberate_commerce"] = true
 	_validate_conversations(scene, graphs)
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
@@ -91,12 +66,6 @@ func _init() -> void:
 	quit(0)
 
 
-## The FORBIDDEN-vocabulary grep over WIEffectText's output
-## across the FULL item + Skill + status catalogs. No generated player line may
-## carry a raw attribute (STR/DEX/CON/INT/WIS/CHA as a whole word) or a
-## percentage-toward ('%'). This runs the real formatter over the shipped data,
-## so it also catches a new item/skill whose fields would render a forbidden
-## token. (Exact-string coverage + drift tripwires live in test_effect_text.gd.)
 func _validate_effect_text_opacity() -> void:
 	var attr := RegEx.new()
 	attr.compile("(?i)\\b(str|dex|con|int|wis|cha)\\b")
@@ -105,7 +74,6 @@ func _validate_effect_text_opacity() -> void:
 		lines.append_array(WIEffectText.item_effect_lines(item))
 	for skill: Dictionary in _load_json("res://data/skills.json").get("skills", []):
 		lines.append_array(WIEffectText.skill_effect_lines(skill))
-	# Every status a shipped Skill can apply, glossary-rendered.
 	var status_ids: Dictionary = {}
 	for skill: Dictionary in _load_json("res://data/skills.json").get("skills", []):
 		var applies: Dictionary = (skill.get("effect", {}) as Dictionary).get("applies", {})
@@ -118,35 +86,9 @@ func _validate_effect_text_opacity() -> void:
 		assert(not line.contains("%"), "effect_text emits a forbidden percent-toward token: " + line)
 
 
-## forbidden-vocab sweep over every player-string FIELD in
-## content data, not just WIEffectText's GENERATED lines (that narrower sweep
-## is `_validate_effect_text_opacity`, above, which exercises the formatter
-## itself and stays separate). BEFORE this task the grep only ever reached
-## effect_text's output; AFTER, it recurses through every raw string value in
-## PLAYER_STRING_FILES (item/skill names+descriptions+field_ambient+
-## freeze_toast, quest/act titles+beat text, class aspiration text,
-## skeleton_scene toasts/talk_pools/talk_pool_post/dialogue/friendly_line/
-## observed_line, combatant display_names, arena tutor_lines) plus every
-## dialogue graph (node/option text, text_variants) in DIALOGUE_DIR -- the
-## full candidate list the task brief named. Recursion (not a hand-enumerated
-## field list) means a NEW field added anywhere in these files is covered
-## automatically, with no second place to keep in sync. Dict keys prefixed
-## "_" (the "_comment"/"_comment_pool" dev-annotation convention used
-## throughout data/*.json) are skipped -- they are never rendered to a
-## player. Verified empirically before wiring this in: a dry-run scan (skip
-## "_"-prefixed keys) over every listed file found zero forbidden tokens
-## today, so this sweep starts green, not red.
 func _validate_player_string_vocab() -> void:
 	var attr := RegEx.new()
 	attr.compile("(?i)\\b(str|dex|con|int|wis|cha)\\b")
-	# Issue #62 finding 12: a dev-provenance citation ("Magical Door plan Task
-	# D1 (issue #8 spec §5.3)") shipped straight into a player-visible item
-	# lore field (anchor_stone) undetected -- this sweep only ever checked
-	# the attribute/percent vocab, never provenance leaks. Deliberately NOT
-	# a bare "plan" check (too common a word -- Olesm's own hub line "down
-	# there with a plan" is real, in-voice content, not a leak); scoped to
-	# the two shapes that are ALWAYS a leak: "Task <letter><digits>" and
-	# "issue #<digits>".
 	var provenance := RegEx.new()
 	provenance.compile("(?i)Task [A-Z]?\\d+|issue #\\d+")
 	for path: String in PLAYER_STRING_FILES:
@@ -159,12 +101,6 @@ func _validate_player_string_vocab() -> void:
 			_scan_player_strings(_load_json(full_path), full_path, attr, provenance)
 
 
-## Recurses through an arbitrary parsed-JSON value, applying the forbidden-
-## attribute regex + a literal-percent check + a dev-provenance-leak check to
-## every String leaf. Dictionary keys starting with "_" are skipped entirely
-## (dev comments, never player-facing) -- their VALUES are never visited, so
-## a `_comment` field can freely discuss STR/DEX/percentages/Task IDs as
-## design notes without tripping the sweep.
 func _scan_player_strings(node: Variant, path: String, attr: RegEx, provenance: RegEx) -> void:
 	if node is Dictionary:
 		for key: String in (node as Dictionary):
@@ -228,69 +164,25 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 				var skill_use: Dictionary = entity["on_skill_use"]
 				if skill_use.has("accomplishment"):
 					produced[String(skill_use["accomplishment"])] = true
-				# A `variants` entry (the cellar_door override seam,
-				# WIGame._resolve_skill_use_effect) may override `accomplishment`
-				# itself, not just `toast` -- a second producer for the SAME
-				# prop, gated differently. No shipped on_skill_use variant does
-				# this yet, but the shape is real (accomplishment is just
-				# another key `_resolve_skill_use_effect` can override), so it's
-				# scanned defensively alongside the plain on_interact_accomplishment
-				# case below, which does have a real consumer (8d C1's
-				# `seal_kept_door`).
 				for variant: Dictionary in (skill_use.get("variants", []) as Array):
 					if variant.has("accomplishment"):
 						produced[String(variant["accomplishment"])] = true
 			if entity.has("on_interact_accomplishment"):
 				produced[String(entity["on_interact_accomplishment"])] = true
-				# 8d C1 (issue #14): a plain on_interact_accomplishment prop may
-				# ALSO carry a sibling `variants` list (WIGame's new reuse of
-				# `_resolve_skill_use_effect` at this second call site) --
-				# `seal_kept_door`'s real find (`seal_kept_found`) lives ONLY in
-				# a variant, never the base field, so it must be scanned here
-				# too or every gate reading it looks unproduced.
 				for variant: Dictionary in (entity.get("variants", []) as Array):
 					if variant.has("accomplishment"):
 						produced[String(variant["accomplishment"])] = true
-			# A container's optional
-			# `on_open_accomplishment` (src/core/wi_game.gd's _interact_container)
-			# is a producer too, same shape as on_interact_accomplishment above.
 			if entity.has("on_open_accomplishment"):
 				produced[String(entity["on_open_accomplishment"])] = true
-			# A door's optional `on_enter_accomplishment`
-			# (WIGame.interact()'s "door" branch) banks on every REAL door
-			# transit -- re-banked each time, not a one-shot (issue #72's
-			# bounty_guild_census is the first content to key on one of these;
-			# added here rather than left an undiscovered scan gap).
 			if entity.has("on_enter_accomplishment"):
 				produced[String(entity["on_enter_accomplishment"])] = true
-			# A non-empty talk_pool makes the sim's
-			# _talk_pool_line bank heard_gossip (+1) and chatted_with_<id> (+1) on
-			# the first talk of each waking. The bank happens in the sim, not a
-			# scanned data field, so record it here as genuinely content-produced
-			# -- this is what lets a [Diplomat]-style gained_by / threshold keyed on
-			# heard_gossip cross-reference cleanly (see _validate_class_gains).
 			if entity.has("talk_pool") and not (entity["talk_pool"] as Array).is_empty():
 				produced["heard_gossip"] = true
 				produced["chatted_with_%s" % String(entity["id"])] = true
-			# 8b R1 (issue #10): a `board` prop's own `board_rumors` list
-			# (the Guild-board rumor beat, locked shape 1) -- each entry's
-			# `banks_accomplishment` is produced on every board browse
-			# (WIGame._interact_board), same idiom as on_interact_accomplishment.
 			for rumor: Dictionary in (entity.get("board_rumors", []) as Array):
 				produced[String(rumor["banks_accomplishment"])] = true
 
 
-## `talk_pool_stages` authoring must be ASCENDING
-## (the visual_states/classes.json level-table convention social.gd's
-## talk_pool_line relies on -- it walks the array in AUTHORED order and lets
-## the LAST entry whose gate is met win; it does NOT sort by difficulty).
-## Misordered content would silently behave as "whichever stage is authored
-## LAST", not "whichever stage's condition is hardest" -- REJECTED here at
-## content-validation time rather than tolerated at runtime, per the design's
-## "rejected or normalized (disclose which)" unit requirement. Ascending is
-## checked per shared accomplishment key: for every key that appears in more
-## than one stage's requires_accomplishment, its threshold must never
-## DECREASE from one stage to the next.
 func _validate_talk_pool_stages_ascending(scene: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
@@ -308,23 +200,9 @@ func _validate_talk_pool_stages_ascending(scene: Dictionary) -> void:
 					seen[key] = threshold
 
 
-## The set of phase() ever returns (wi_game.gd's phase()) -- the shared
-## vocabulary both `encounter_when` and `visual_states`' `phase` shape are
-## checked against below (locked shape 2/4, ONE design, two consumers).
 const VALID_PHASES := ["day", "dusk", "night"]
 
 
-## 8b R1 (issue #10), locked shape 2 -- `encounter_when` validator arm. Only
-## `kind: "encounter"` entities may carry it (the gate lives in
-## WIGame._encounter_gate_met, read from interact()'s encounter branch and
-## _check_trigger_radius, both `kind == "encounter"`-scoped). Two shapes
-## sanctioned: `{"phase": [...]}`, every listed value a real phase string
-## (locked shape 2's own original), and `{"requires": {...}}` (8d C1, issue
-## #14 -- the accomplishment-gate shape, same `requires` key name/semantics
-## as door_when/contains_when). Every `requires` counter id is
-## EXISTENCE-CHECKED against produced accomplishments (the requires.skill
-## existence idiom) -- a typo'd/unproduced id would make the encounter
-## permanently inert, silently.
 func _validate_encounter_when(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
@@ -347,13 +225,6 @@ func _validate_encounter_when(scene: Dictionary, produced_accomplishments: Dicti
 					)
 
 
-## 8d C1 review tooth: an encounter entity's OTHER two accomplishment-keyed
-## gates -- `ally_requires` (start_combat's roster gate, shipped since M-ARC)
-## and `ally_hp_penalty.<ally>.when` (the 8d C4 pre-damaged-ally arm) -- get
-## the SAME existence check as encounter_when.requires above. A typo'd id in
-## ally_requires silently fields NO ally forever; in ally_hp_penalty.when it
-## silently never applies the cost. Both are `_accomplishment_gate_met`
-## readers, so the produced-set is the right existence universe.
 func _validate_encounter_gate_counters(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
@@ -375,19 +246,6 @@ func _validate_encounter_gate_counters(scene: Dictionary, produced_accomplishmen
 					)
 
 
-## 8d D2 (issue #14/#15) -- `present_when` validator arm, the door_when-
-## family extension for STRUCTURAL entity presence (WIGame.entity_present):
-## unlike `encounter_when` (interact/trigger reachability only, kind:
-## encounter-scoped), `present_when` gates the entity's very existence --
-## occupancy (`is_cell_blocked`), lookup (`entity_at`), and render/count
-## (`_build_entities`) -- for ANY entity kind. Two shapes sanctioned:
-## `{"requires": {...}}` (the door_when/contains_when shape, reused verbatim
-## via `_accomplishment_gate_met`) and, since issue #80's `_present_gate_met`,
-## `{"phase": [...]}` (encounter_when's own shape, copied verbatim -- the
-## SAME two-shape validation as _validate_encounter_when above, one phase
-## family). Every `requires` counter id is EXISTENCE-CHECKED against produced
-## accomplishments, same as encounter_when.requires above -- a
-## typo'd/unproduced id would make the entity permanently absent, silently.
 func _validate_present_when(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
@@ -413,10 +271,6 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 					)
 
 
-## 8b R1 (issue #10), locked shape 4 -- `visual_states`' new `phase` `when`
-## shape gets the SAME phase-vocabulary check as encounter_when above (shared
-## design). Every visual_states entry across every entity is scanned, not
-## just encounters -- the witch (an npc) is this shape's first live consumer.
 func _validate_visual_states_phase(scene: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
@@ -431,11 +285,6 @@ func _validate_visual_states_phase(scene: Dictionary) -> void:
 					assert(VALID_PHASES.has(String(p)), "entity %s visual_states references unknown phase: %s" % [String(entity["id"]), p])
 
 
-## 8b R1 (issue #10), locked shape 3 -- `echo_of` validator arm. A `talk_pool`
-## entry shaped `{"echo_of": id}` must reference a REAL entity id that itself
-## carries a non-empty talk_pool of PLAIN STRINGS (social.gd's
-## `_resolve_pool_line` recurses one level only, per its own doc comment --
-## an echo-of-an-echo would silently resolve to an empty string at runtime).
 func _validate_talk_pool_echo_of(scene: Dictionary, entity_ids: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
@@ -532,50 +381,20 @@ func _validate_option(
 	if option.has("requires"):
 		_validate_requires(label, option["requires"], skill_ids, class_ids, item_ids)
 	if option.has("hide_when"):
-		# once_per_waking is a
-		# REQUIRES-ONLY gate -- its "met" polarity ("not yet used this
-		# waking") is inverted relative to every shipped hide_when key's
-		# ("the tracked state is now true"), so a hide_when carrying it is a
-		# content ERROR rejected loudly here, not just a runtime refusal
-		# (WIDialogue._meets_hide_when is the belt-and-suspenders half).
 		assert(_hide_when_gate_keys_allowed(option["hide_when"]), label + " hide_when must not carry once_per_waking (requires-only gate, Issue #23)")
 		_validate_requires(label + " hide_when", option["hide_when"], skill_ids, class_ids, item_ids)
 	for effect: Dictionary in option.get("effects", []):
 		_validate_effect(label, effect, quest_ids, class_ids, item_ids, entity_ids, produced_accomplishments)
-	# [Bargain] price_mod (class-foundation pass R5, 2026-07-12):
-	# WIDialogue.choose()'s discount logic identifies the gold-spend effect
-	# to price-mod by matching `effect.gold == -requires.gold` EXACTLY --
-	# so every gold-gated buy option's authored pair must actually hold
-	# that shape, or a real purchase would silently charge the FULL
-	# (un-discounted) price to a [Bargain] holder even though the gate/
-	# display both read the discounted number. Content-time, not just
-	# runtime: catches an authoring slip (mismatched requires/effects gold
-	# values) before it ships.
 	if option.has("requires") and (option["requires"] as Dictionary).has("gold"):
 		var gold_requirement := int((option["requires"] as Dictionary)["gold"])
 		for effect: Dictionary in option.get("effects", []):
 			if effect.has("gold"):
 				assert(int(effect["gold"]) == -gold_requirement, "%s requires.gold (%d) has a mismatched effects.gold (%d) -- WIDialogue.choose()'s [Bargain] price_mod can only discount an effect matching -requires.gold exactly" % [label, gold_requirement, int(effect["gold"])])
-		# Review-wave display fix (2026-07-12): WIDialogue._priced_text
-		# REWRITES a baked-in price by replacing the exact substring
-		# "(requires.gold gold)" -- so any option text that names a gold
-		# figure at all must spell it in exactly that form with exactly
-		# that number, or the rewrite would silently miss and the rendered
-		# price could diverge from the charged one (the display!=charge
-		# bug class this validator exists to make unshippable).
 		var option_text := String(option.get("text", ""))
 		if option_text.contains("gold)"):
 			assert(option_text.contains("(%d gold)" % gold_requirement), "%s bakes a price into its text but not as '(%d gold)' (requires.gold) -- WIDialogue._priced_text's discount rewrite would miss it and the display could contradict the charge" % [label, gold_requirement])
 
 
-## Shared by both "requires" and "hide_when" -- both use the same condition
-## forms ({skill}|{class: {id: min}}|{accomplishment: {id: min}}), so both are
-## validated against the same known-id catalogs. Accomplishment ids are not
-## checked against a catalog here (they're free-form, cross-referenced instead
-## via produced_accomplishments in _validate_quests). EXCEPTION (Issue #23 fix
-## `once_per_waking` is requires-only -- _validate_option rejects it in
-## a hide_when dict BEFORE this shared body runs (see
-## _hide_when_gate_keys_allowed).
 func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictionary, class_ids: Dictionary, item_ids: Dictionary) -> void:
 	var gate_keys := 0
 	if requires.has("skill"):
@@ -590,133 +409,33 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 	if requires.has("accomplishment"):
 		gate_keys += 1
 	if requires.has("board_accepted"):
-		# The THIRD sanctioned single-key gate (after
-		# accomplishment/gold) -- WIDialogue._meets/_progress_gated's
-		# board_accepted ctx-flag check (Selys's "Take on a posting."/"Turn in
-		# my posting." hub options, selys_delivery.json). Bool value only; it
-		# is never combined with another gate type in authored content.
 		gate_keys += 1
 		assert(requires["board_accepted"] is bool, label + " board_accepted must be a bool")
 	if requires.has("delivery_accepted"):
-		# The FOURTH sanctioned single-key gate --
-		# board_accepted's exact twin for the Runner's Guild slip (Vess's
-		# "Take a slip."/"Turn in a slip." hub options, vess_counter.json).
 		gate_keys += 1
 		assert(requires["delivery_accepted"] is bool, label + " delivery_accepted must be a bool")
 	if requires.has("gold"):
-		# The affordability gate (Krshia's shop buy options).
-		# `requires: {gold: price}` is the D1-sanctioned numeric extension of the
-		# M4 greying ctx (skill/class/accomplishment were the only prior gate
-		# types). It greys a buy option VISIBLE when broke (never hidden --
-		# gold is not progress-gated), so it is a valid single gate type here.
 		gate_keys += 1
 		assert(int(requires["gold"]) > 0, label + " gold requirement must be a positive price")
 	if requires.has("once_per_waking"):
-		# The FIFTH sanctioned single-key gate -- its OWN validator
-		# arm, not a silent reuse of any other key's shape.
-		# WIDialogue._meets/_progress_gated's once_per_waking check against
-		# the shared `entity_first_use` dict (Erin's meal / Relc's wager hub
-		# options). Value must be a "<verb>:<entity>" string with both
-		# segments non-empty -- see _is_valid_verb_entity_key (shared with
-		# the `bank_first_use` effect shape below, same string contract).
 		gate_keys += 1
 		assert(_is_valid_verb_entity_key(requires["once_per_waking"]), label + " once_per_waking must be a \"<verb>:<entity>\" string with both segments non-empty")
 	if requires.has("item"):
-		# The SIXTH sanctioned single-key gate -- possession
-		# (WIDialogue._meets's `item` check against the ctx's `inventory`,
-		# distinct from the read-only `items` catalog key). Mirrors gold's
-		# visible-locked precedent, not accomplishment's: NOT progress-gated
-		# (_progress_gated deliberately omits it), so an option gated on an
-		# unheld item stays visible/greyed rather than vanishing.
 		gate_keys += 1
 		var item_id: String = String(requires["item"])
 		assert(item_ids.has(item_id), label + " requires unknown item: " + item_id)
 	if requires.has("race"):
-		# The SEVENTH sanctioned single-key gate -- 8e Phase C
-		# (issue #16)'s race-variant key (WIDialogue._meets's `race` check
-		# against the read-only ctx `pc_race`). Value must be one of the
-		# char-creation race ids (WIGame.PC_RACES) -- a typo'd race id
-		# would silently never match any real pc_race, making the variant
-		# permanently dead content. Shipped only on text_variants today,
-		# but validated generically here (same shared function options
-		# and text_variants both route through), matching every other
-		# single-key gate's treatment.
 		gate_keys += 1
 		var race_id: String = String(requires["race"])
 		assert(["human", "drake", "gnoll"].has(race_id), label + " requires unknown race: " + race_id)
 	if requires.has("phase"):
-		# The EIGHTH sanctioned single-key gate -- issue #80's
-		# phase-variant key (WIDialogue._meets's `phase` check against the
-		# read-only ctx `phase`, WIGame.phase()'s own day/dusk/night clock).
-		# Value must be a non-empty Array of valid phase ids (the SAME
-		# array-membership shape encounter_when/visual_states already use,
-		# not race's single-string shape) -- a typo'd or empty phase id
-		# would silently never match any real phase(), making the variant
-		# permanently dead content. Shipped only on text_variants today, but
-		# validated generically here like every other single-key gate.
 		gate_keys += 1
 		assert(requires["phase"] is Array, label + " requires.phase must be an array")
 		var phase_ids: Array = requires["phase"]
 		assert(not phase_ids.is_empty(), label + " requires.phase must not be empty")
 		for phase_id: Variant in phase_ids:
 			assert(["day", "dusk", "night"].has(String(phase_id)), label + " requires unknown phase: " + String(phase_id))
-	# The FIRST sanctioned COMPOUND exception --
-	# {gold, accomplishment} together (a stage-gated discount buy option,
-	# Krshia's `krshia_friend_of_the_silverfangs` perk). dialogue.gd's _meets()
-	# ANDs both legs; _meets_progress() reads ONLY the accomplishment leg for
-	# hide-until-met visibility, so a met stage-gate with insufficient gold
-	# shows GREYED, never vanished (window-shopping is content).
 	if gate_keys == 2:
-		# Issue #23 adds a SECOND sanctioned compound -- {accomplishment,
-		# once_per_waking} together (Erin's meal / Relc's wager, both
-		# stage-gated AND per-waking-gated in the same requires dict). Its own
-		# check, not a silent fold into the {gold, accomplishment} case above:
-		# dialogue.gd's _meets() ANDs both legs here too; _meets_progress()
-		# reads BOTH legs (accomplishment AND once_per_waking) for
-		# hide-until-met visibility -- unlike the gold compound, once_per_waking
-		# is itself a vanishing gate, so there is no "greyed" state to preserve.
-		# adds a THIRD sanctioned compound -- {accomplishment, class}
-		# together (a persuade-fork resolution that is BOTH progress-gated on
-		# the quest having been opened AND locked behind a class -- the
-		# goblin_parley-style in-fiction class-gate exception, SKILL.md's
-		# "unrelated class gate reads as arbitrary" carve-out, composed with a
-		# stage gate). GH#64 re-gated its 3 prior live examples (watch_crate's
-		# "asked_about_crate"+"diplomat", krshia_crate's "heard_wrong_order"+
-		# "diplomat", invrisil_fixer's "returned_cups_debt"+"diplomat") to the
-		# FIFTH compound below -- this shape currently has no live user, kept
-		# sanctioned for a future genuine class-only exception (no shipped
-		# Skill fitting the social intent), same rationale as goblin_parley's
-		# single-key class survivor. Same mechanism as the gold compound:
-		# _meets_progress() reads ONLY the accomplishment leg for
-		# hide-until-met visibility, so the option stays fully hidden before
-		# the quest stage, then shows VISIBLE-LOCKED (never vanished) once the
-		# stage is reached but the class isn't held.
-		# Issue #59 adds a FOURTH sanctioned compound --
-		# {once_per_waking, item} together (the hungry patron's Serve option,
-		# patron_serving.json): possession-gated AND per-waking-gated in the
-		# same requires dict, the dish-fetch seam's own compound. Same GATING
-		# SPLIT as the {accomplishment, once_per_waking} compound above, with
-		# `item` standing in for `accomplishment`: dialogue.gd's _meets() ANDs
-		# both legs for the lock/choose decision; _meets_progress() reads ONLY
-		# the once_per_waking leg for hide-until-met visibility (item is NOT
-		# progress-gated -- an unheld dish greys the option, never hides it,
-		# same as gold's precedent) -- so a fresh dish cooked AFTER the
-		# option's already retired this waking still can't bring it back;
-		# only sleep does.
-		# GH#64 adds a FIFTH sanctioned compound -- {accomplishment, skill}
-		# together, the skill-gate twin of the THIRD compound above (a
-		# persuade-fork resolution progress-gated on the quest stage AND
-		# locked behind a Skill instead of a class -- watch_crate's
-		# "asked_about_crate"+"charming_smile", krshia_crate's
-		# "heard_wrong_order"+"charming_smile", invrisil_fixer's
-		# "returned_cups_debt"+"charming_smile"). Same mechanism: skill is
-		# not in _progress_gated, so _meets_progress() reads ONLY the
-		# accomplishment leg for hide-until-met visibility -- fully hidden
-		# before the stage, VISIBLE-LOCKED once the stage is reached but the
-		# Skill isn't known.
-		# Every OTHER combination (skill+class, class+gold, gold+once_per_waking,
-		# gold+item, three-or-more keys, etc.) is still rejected -- these are
-		# narrow, disclosed carve-outs, not a general compound-gate license.
 		var sanctioned_gold_accomplishment := requires.has("gold") and requires.has("accomplishment")
 		var sanctioned_stage_once := requires.has("accomplishment") and requires.has("once_per_waking")
 		var sanctioned_stage_class := requires.has("accomplishment") and requires.has("class")
@@ -727,14 +446,6 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 	assert(gate_keys == 1, label + " requires must use exactly one gate type")
 
 
-## The shared "<verb>:<entity>" shape check for BOTH the
-## `once_per_waking` requires gate value (requires-ONLY -- see
-## _hide_when_gate_keys_allowed below) and the `bank_first_use` effect value
-## (same contract on both sides of the seam, see dialogue.gd's
-## _meets/_progress_gated and WIGame.dialogue_choose's effect router). Pure
-## (no assert) so it is unit-testable for acceptance AND rejection without
-## crashing this SceneTree script on the rejection case -- see
-## _validate_once_per_waking_shape_cases below.
 func _is_valid_verb_entity_key(value: Variant) -> bool:
 	if not (value is String):
 		return false
@@ -742,20 +453,10 @@ func _is_valid_verb_entity_key(value: Variant) -> bool:
 	return parts.size() == 2 and not parts[0].is_empty() and not parts[1].is_empty()
 
 
-## True iff this hide_when dict is
-## free of requires-only gate keys. `once_per_waking` may never appear in a
-## hide_when: its "met" polarity ("not yet used this waking") is the inverse
-## of every shipped hide_when key's, so the retire idiom an author would
-## expect ("hide once used") is exactly what a shared-_meets evaluation would
-## NOT deliver. Pure (no assert), so the rejection case is unit-testable --
-## see _validate_once_per_waking_shape_cases.
 func _hide_when_gate_keys_allowed(hide_when: Dictionary) -> bool:
 	return not hide_when.has("once_per_waking")
 
 
-## Acceptance + rejection coverage for _is_valid_verb_entity_key,
-## called directly (not through the assert-based validators above, which
-## would abort this SceneTree script on a deliberately-malformed shape).
 func _validate_once_per_waking_shape_cases() -> void:
 	assert(_is_valid_verb_entity_key("meal:erin"), "verb:entity accepted (Erin's meal)")
 	assert(_is_valid_verb_entity_key("wager:relc"), "verb:entity accepted (Relc's wager)")
@@ -767,13 +468,7 @@ func _validate_once_per_waking_shape_cases() -> void:
 	assert(not _is_valid_verb_entity_key(true), "non-string bool value rejected")
 	assert(not _is_valid_verb_entity_key(5), "non-string numeric value rejected")
 	assert(not _is_valid_verb_entity_key(["meal", "erin"]), "non-string array value rejected")
-	# A value with more than one colon keeps only the FIRST split (entity ids
-	# never carry colons in this codebase, but the shape check must not choke
-	# on one) -- "meal:erin:extra" is still two non-empty segments post-split.
 	assert(_is_valid_verb_entity_key("meal:erin:extra"), "extra colon still splits into two non-empty segments")
-	# once_per_waking is requires-only
-	# -- a hide_when dict carrying it is a content ERROR (rejection case), any
-	# other hide_when key set stays valid (acceptance cases).
 	assert(not _hide_when_gate_keys_allowed({"once_per_waking": "meal:erin"}), "hide_when carrying once_per_waking rejected (requires-only gate)")
 	assert(not _hide_when_gate_keys_allowed({"accomplishment": {"x": 1}, "once_per_waking": "meal:erin"}), "hide_when carrying once_per_waking alongside another key still rejected")
 	assert(_hide_when_gate_keys_allowed({"accomplishment": {"has_package": 1}}), "accomplishment hide_when still accepted")
@@ -781,10 +476,6 @@ func _validate_once_per_waking_shape_cases() -> void:
 	assert(_hide_when_gate_keys_allowed({}), "empty hide_when accepted (never authored, but not this rule's business)")
 
 
-## Every dialogue-effect verb `wi_game.gd`'s `dialogue_choose` elif chain
-## recognizes -- `_validate_effect`'s exactly-one-verb check reads this list.
-## Extending dialogue_choose with a new verb = extend this list too (the
-## check fails loud on the unknown key otherwise, which is the point).
 const DIALOGUE_EFFECT_VERBS := [
 	"accomplishment", "quest", "remove_entity", "item", "gold",
 	"bank_first_use", "remove_item", "well_fed", "start_combat", "travel_to",
@@ -803,14 +494,6 @@ func _validate_effect(
 	entity_ids: Dictionary,
 	produced_accomplishments: Dictionary
 ) -> void:
-	# Issue #88 (gap-2 fix wave): EXACTLY-ONE-VERB invariant, now enforced
-	# (was convention -- full-corpus scan confirmed zero violations).
-	# dialogue_choose's elif chain silently applies only a multi-verb dict's
-	# first-matching arm, AND its new PRE_COMBAT_CHOICE pre-scan matches
-	# `start_combat` with a bare has() -- only equivalent to the elif chain
-	# under this invariant. `class` is legacy-recognized below but has no
-	# dialogue_choose arm, so it counts as a verb here without joining the
-	# canonical list.
 	var verb_count := 0
 	for key: String in effect:
 		if key == "_comment":
@@ -833,33 +516,12 @@ func _validate_effect(
 		var class_id: String = String(effect["class"])
 		assert(class_ids.has(class_id), label + " references unknown class: " + class_id)
 	if effect.has("item"):
-		# The effect-side twin of the requires{item} possession-gate
-		# check above -- a `{item: "<id>"}` effect grants (pickup()s, per
-		# wi_game.gd's dialogue_choose) the item at runtime; an uncatalogued
-		# id there was silently invisible to this validator (pre-existing gap
-		# -- requires{item} was checked, effect{item} never was).
 		var granted_item_id: String = String(effect["item"])
 		assert(item_ids.has(granted_item_id), label + " grants unknown item: " + granted_item_id)
 	if effect.has("bank_first_use"):
-		# The effect-side twin of the once_per_waking requires
-		# shape check above -- same "<verb>:<entity>" contract, its OWN
-		# validator arm (not a silent fall-through), shared helper.
 		assert(_is_valid_verb_entity_key(effect["bank_first_use"]), label + " bank_first_use must be a \"<verb>:<entity>\" string with both segments non-empty")
 
 
-## Reachability sanity check for this bug class: a node whose every option
-## carries a requires and/or hide_when can end up with zero visible options
-## for some reachable state (the softlock this fix exists to prevent, see the
-## amendment). Generalized over every dialogue node in every graph that has
-## at least one hide_when option OR at least one accomplishment-gated
-## (progress-gated) requires option -- not just the selys hub this check
-## originated on. Both are "vanishing" mechanisms that can empty a node out
-## over time (M4: progress-gated requires.accomplishment options are HIDDEN,
-## not greyed, exactly like hide_when -- see WIDialogue._progress_gated), so
-## any node using either needs an always-available exit: an option that is
-## completely ungated (fully usable in all states), with NO requires key and
-## NO hide_when key. Options with any requires (even skill/class only) are
-## locked-but-visible and not exits, so they cannot prevent softlock.
 func _validate_hide_when_nodes_have_always_available_exit(graphs: Dictionary) -> void:
 	for graph_id: String in graphs:
 		var nodes: Dictionary = graphs[graph_id]["nodes"]
@@ -868,16 +530,6 @@ func _validate_hide_when_nodes_have_always_available_exit(graphs: Dictionary) ->
 			var options: Array = node.get("options", [])
 			var has_vanishing_option := false
 			for option: Dictionary in options:
-				# board_accepted is the SECOND recognized progress-gate
-				# key (see WIDialogue._progress_gated) -- included here so a future
-				# board_accepted-only node (none ship today; the hub already has an
-				# always-available exit regardless) gets the same softlock check.
-				# delivery_accepted, its twin (vess_counter.json's hub
-				# -- which does carry an ungated "Just passing through." exit).
-				# once_per_waking, the FIFTH -- Erin's "Sit, eat.
-				# Cook's orders." and Relc's wager option both already sit in
-				# hubs with an ungated exit, but this check must catch a future
-				# once_per_waking-only node the same way.
 				var opt_requires: Dictionary = option.get("requires", {})
 				if option.has("hide_when") or opt_requires.has("accomplishment") or opt_requires.has("board_accepted") or opt_requires.has("delivery_accepted") or opt_requires.has("once_per_waking"):
 					has_vanishing_option = true
@@ -892,8 +544,6 @@ func _validate_hide_when_nodes_have_always_available_exit(graphs: Dictionary) ->
 			assert(has_always_available, "%s.%s has hide_when/progress-gated options but no always-available option -- risk of softlock" % [graph_id, node_id])
 
 
-## Every accomplishment a class's gained_by condition waits on must actually
-## be produced somewhere in content (mirrors _validate_quests below).
 func _validate_class_gains(classes: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for cls: Dictionary in classes.get("classes", []):
 		if not cls.has("gained_by"):
@@ -906,59 +556,9 @@ func _validate_class_gains(classes: Dictionary, produced_accomplishments: Dictio
 			)
 
 
-## GH#54 sparse-level-table convention. A class reached ONLY through an
-## evolution Replacement (`evolution.targets` values) or a consolidation
-## (`consolidations[].target`) is never assigned a level via check_level_ups
-## counting up from 1 -- `_resolve_evolutions`/`accept_consolidation`
-## (wi_game.gd) both write `classes[target] = level` directly, carrying the
-## PARENT's held level (Replacement) or the merged level (consolidation)
-## straight in. So such a class has a real FLOOR below which it can never be
-## held, and any `levels` entry below that floor is dead, easily-regressed
-## padding (see the class's own `_comment` for the derivation, but this
-## validator re-derives it independently from the SAME evolution/
-## consolidation data every real code path reads -- never a hardcoded class
-## list, so a new evolution-only class added later is covered automatically
-## without a second place to update). Normally-gained classes (gained_by, or
-## simply never targeted by any evolution/consolidation) keep the old
-## expectation: contiguous from level 1.
-##
-## Three rules enforced per class:
-##   (a) no levels entry authored below the derived floor (padding regression
-##       guard -- a sub-floor entry can never be read at runtime, so its
-##       presence only invites bit rot / accidental re-padding);
-##   (b) entries are CONTIGUOUS from the floor up to the class's own max level
-##       (no holes -- check_level_ups' by_level.has(next) walk would silently
-##       stop at a hole, capping the class short of its authored ceiling);
-##   (c) an evolution-only class's minimum authored level is EXACTLY its
-##       derived floor (not just >= it -- catches an author leaving a gap
-##       between the true floor and the first entry, which (a)+(b) alone
-##       would not catch since there'd be no entry AT the floor to be "below").
-##   (d) TOP-END (GH#61): for every consolidation target, the table's own MAX
-##       level is >= the merge formula's LARGEST possible output -- derived
-##       the same data-driven way as the floor, but from the OTHER end: both
-##       parent lines pushed to their own table max (never a literal), fed
-##       through the same WIProgression._consolidation_merged_level pinned
-##       formula the floor derivation and the real sim both use. A player who
-##       levels both parent lines to their real ceiling before consolidating
-##       is assigned the merged level directly (accept_consolidation, no
-##       counting-up walk to stop short at) -- if that level has no table
-##       entry, HP/MP growth and grants silently stop (GH#61's exact,
-##       non-crashing bug). Replacement targets have no such gap: a held
-##       level over `evolution.at_level` just carries straight across, and
-##       (b)'s contiguity rule already forces the target's table to cover
-##       every level up through the SOURCE class's own max (see e.g.
-##       swordsman/ice_mage's floor comments, "12, matching warrior's/mage's
-##       own max"). Consolidation is the only shape where TWO independent
-##       source ceilings compress through a formula that can overshoot both.
 func _validate_class_level_tables(classes: Dictionary) -> void:
 	var catalog_list: Array = classes.get("classes", [])
 
-	# id -> Array[int]: every floor this id could be assigned at, read from
-	# the same fields check_evolutions/check_consolidation read (at_level for
-	# Replacement targets, the merge-math boundary for consolidation targets).
-	# More than one candidate is possible in principle (two different source
-	# classes both targeting the same id); the true floor is the MINIMUM
-	# across all reachable paths.
 	var floor_candidates: Dictionary = {}
 
 	for cls: Dictionary in catalog_list:
@@ -977,11 +577,7 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 		var target_id := String(entry.get("target", ""))
 		var min_parent_level := int(entry.get("min_parent_level", 0))
 		var min_combined_level := int(entry.get("min_combined_level", 0))
-		# Minimum sum honoring BOTH gates (check_consolidation's trigger: both
-		# parents >= min_parent_level AND combined >= min_combined_level).
 		var s_min := maxi(min_combined_level, 2 * min_parent_level)
-		# For a fixed sum, the merge formula's max(La,Lb) term is minimized by
-		# the most-balanced split -- so the floor is reached there.
 		var level_a := s_min / 2
 		var level_b := s_min - level_a
 		var merged := WIProgression._consolidation_merged_level(level_a, level_b)
@@ -989,9 +585,6 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 			floor_candidates[target_id] = []
 		(floor_candidates[target_id] as Array).append(merged)
 
-	# id -> that class's OWN table max level (rule (d) reads this to derive
-	# each consolidation parent line's real ceiling below -- same
-	# never-hardcoded spirit as floor_candidates above).
 	var class_table_max: Dictionary = {}
 
 	for cls: Dictionary in catalog_list:
@@ -1028,15 +621,6 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 		if is_evolution_only:
 			assert(min_level == floor_level, "class %s (evolution-only, reachable only via Replacement/consolidation) must start EXACTLY at its derived floor %d, found its lowest authored entry at %d" % [id, floor_level, min_level])
 
-	# Rule (d), TOP-END reachability (GH#61): for each consolidation entry,
-	# the gate-legal maximum is BOTH parent lines held at their own table
-	# max (the same "push every knob to its ceiling" reading the floor
-	# derivation above uses at the OTHER end, min_parent_level/
-	# min_combined_level pushed to their minimum). A parent LINE's own
-	# ceiling is the highest table max across every id in that line (a
-	# player can hold any one of them -- base or evolved -- see
-	# `_held_line_candidate`'s own doc comment for why evolved ids remain
-	# valid parents).
 	for entry: Dictionary in classes.get("consolidations", []):
 		var target_id := String(entry.get("target", ""))
 		var lines: Array = entry.get("parent_lines", [])
@@ -1056,23 +640,6 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 		)
 
 
-## Class-foundation pass (2026-07-12), COMMIT 0 -- the #96 review's own
-## reported gap: `classes.json` grant lists were NEVER cross-referenced
-## against `skills.json` anywhere in this file (grep-confirmed before this
-## task: `skill_ids` was built at the top of `_init` and used for dialogue
-## `requires`/`hide_when` checks only). A typo'd or since-renamed skill id in
-## either grant surface below would silently produce a ghost grant --
-## `WIProgression.granted_skills`/`_own_grants_at_level` just never match it
-## against anything, so the class's own `_comment` can claim a skill is
-## wired while the player's real kit quietly never contains it. Two grant
-## surfaces, per class:
-##   (1) `levels[].grants` -- every level-up/evolution/consolidation-target
-##       class's own kit lives here (SPARSE TABLE classes like spellsword,
-##       and R4's innkeeper/ranger, are ordinary `classes.classes[]` entries
-##       too, so this single walk covers "consolidation grants" as well --
-##       no second code path needed, per the task brief's naming).
-##   (2) `evolution.balanced_grants` -- the Generalist path's kit (mage,
-##       helper, and any future balanced-grants class).
 func _missing_class_skill_grant_ids(classes: Dictionary, skill_ids: Dictionary) -> Array:
 	var missing: Array = []
 	for cls: Dictionary in classes.get("classes", []):
@@ -1096,10 +663,6 @@ func _validate_class_skill_grant_ids(classes: Dictionary, skill_ids: Dictionary)
 	assert(missing.is_empty(), "class grant(s) reference unknown skill id(s) -- ghost grants (#96 hardening): " + ", ".join(missing))
 
 
-## Negative probe: a hand-built catalog with a typo'd `levels[].grants` id
-## AND a typo'd `evolution.balanced_grants` id must both be caught -- proof
-## the validator catches the exact failure class this task closes, not just
-## that the current (already-clean) shipped data happens to pass.
 func _validate_class_skill_grant_ids_shape_cases() -> void:
 	var skill_ids: Dictionary = {"real_skill": true}
 
@@ -1135,14 +698,6 @@ func _validate_quests(quests: Dictionary, produced_accomplishments: Dictionary) 
 				)
 
 
-## Issue #74 (travel signposting). Colloquial landmark words a player would
-## recognize for each map id, lowercase, substring-matched against a beat's
-## `description`. Deliberately loose (a handful of synonyms per map, not an
-## exhaustive gazetteer) -- the check only needs ONE hit to pass. A map with
-## no entry here can never satisfy `_beat_needs_place_name` for a beat that
-## requires one (see the assert in `_validate_travel_beat_place_naming`),
-## which is the intended fail-loud behavior for a new travel destination that
-## forgot to register its landmark words, not a silent pass.
 const LANDMARK_TOKENS := {
 	"inn": ["inn"],
 	"inn_upstairs": ["upstairs"],
@@ -1153,9 +708,6 @@ const LANDMARK_TOKENS := {
 	"guild": ["guild"],
 	"barracks": ["barracks"],
 	"runners_guild": ["runner"],
-	# "ruin" alone is deliberately NOT a token here: the pre-fix beat text
-	# already said "the ruin" and a real user still hard-stalled on it (issue
-	# #74) -- naming the THING isn't signposting, naming WHERE it is, is.
 	"ruin_surface": ["floodplains"],
 	"garden_sanctuary": ["garden"],
 	"riverfarm_village": ["riverfarm"],
@@ -1166,21 +718,11 @@ const LANDMARK_TOKENS := {
 	"brothers_parlor": ["parlor"],
 	"dungeon_approach": ["dungeon"],
 	"trapped_halls": ["trapped halls", "halls"],
-	# Two-tier city: "pallass" alone is a valid landmark for the market tier
-	# (the arrival tier -- "into Pallass" IS the place), but deliberately NOT
-	# for the forge tier, whose beats must name the tier or the lift (naming
-	# the city wouldn't disambiguate WHICH tier when a gated lift separates
-	# them -- the same naming-WHERE-not-WHAT rule as ruin_surface above).
 	"pallass_market": ["pallass", "market tier"],
 	"pallass_forge": ["forge tier", "grand lift"],
 }
 
 
-## conversation graph id -> the set of map ids that own an entity carrying
-## that `conversation` field. Almost always exactly one map (an entity is
-## placed on one map); kept as a set rather than a single String so a
-## conversation reachable from two placed entities (none ship today) degrades
-## to "any of its maps counts as reachable", never a crash.
 func _conversation_maps(scene: Dictionary) -> Dictionary:
 	var out: Dictionary = {}
 	for map_id: String in scene["maps"]:
@@ -1194,17 +736,6 @@ func _conversation_maps(scene: Dictionary) -> Dictionary:
 	return out
 
 
-## accomplishment id -> the set of map ids where it can be PRODUCED (an effect
-## grants it), merging two source shapes: (1) scene-direct producers
-## (on_victory, on_skill_use.accomplishment, on_interact_accomplishment,
-## on_open_accomplishment -- the same fields `_collect_scene_accomplishments`
-## already reads, re-walked here to attach a map id instead of a bare bool);
-## (2) dialogue-option effects (`{"accomplishment": id}`), attributed to
-## every map in `conversation_maps[graph_id]`. An accomplishment produced by
-## more than one route (e.g. a 3-path quest convergence counter) carries the
-## UNION of every route's map -- this is what lets a beat resolvable via a
-## same-map route skip the place-naming requirement below, even when an
-## ALTERNATE route requires travel.
 func _accomplishment_producer_maps(scene: Dictionary, graphs: Dictionary, conversation_maps: Dictionary) -> Dictionary:
 	var out: Dictionary = {}
 	for map_id: String in scene["maps"]:
@@ -1221,10 +752,6 @@ func _accomplishment_producer_maps(scene: Dictionary, graphs: Dictionary, conver
 					_mark_producer(out, String(su_variant["accomplishment"]), map_id)
 			if entity.has("on_interact_accomplishment"):
 				_mark_producer(out, String(entity["on_interact_accomplishment"]), map_id)
-			# 8d C1 (issue #14): a plain on_interact_accomplishment prop's
-			# sibling `variants` override (same reuse as _collect_scene_
-			# accomplishments above) -- `seal_kept_found` (`seal_kept_door`)
-			# is produced on trapped_halls, not the base flavor id's map alone.
 			for variant: Dictionary in (entity.get("variants", []) as Array):
 				if variant.has("accomplishment"):
 					_mark_producer(out, String(variant["accomplishment"]), map_id)
@@ -1252,13 +779,6 @@ func _mark_producer(producer_maps: Dictionary, accomplishment_id: String, map_id
 	producer_maps[accomplishment_id][map_id] = true
 
 
-## quest id -> the set of map ids where an `{"effects": [{"quest": id}]}`
-## dialogue option lives -- "where the player STANDS when this quest starts",
-## i.e. the quest-giver's own map (Erin/inn, Krshia/street, the headman/
-## riverfarm_village, etc.). A quest with no such option anywhere (content
-## bug -- WIGame can never start it) yields an empty set, which
-## `_beat_needs_place_name` treats as "cannot confirm same-map, so require
-## naming" (fail loud, never silently skip the quest's beats).
 func _quest_giver_maps(graphs: Dictionary, conversation_maps: Dictionary) -> Dictionary:
 	var out: Dictionary = {}
 	for graph_id: String in graphs:
@@ -1278,16 +798,6 @@ func _quest_giver_maps(graphs: Dictionary, conversation_maps: Dictionary) -> Dic
 	return out
 
 
-## TRUE iff `beat_maps` (every map that could produce this beat's
-## complete_when counters) shares NO map with `giver_maps` (the quest-giver's
-## own map) -- i.e. every route to this beat requires leaving wherever the
-## quest was handed out, so the description must name a landmark. A beat with
-## even ONE same-map route (a non-Diplomat SKILL/TALK leg that never leaves
-## the giver's own map, e.g. wrong_order's kitchen-stretch leg) does NOT need
-## naming -- the player is never FORCED to travel to finish it. Empty
-## `beat_maps` (defensive; `_validate_quests` already asserts every
-## complete_when id is produced somewhere) is treated as "not required" --
-## nothing to cross-check.
 func _beat_needs_place_name(beat_maps: Dictionary, giver_maps: Dictionary) -> bool:
 	if beat_maps.is_empty():
 		return false
@@ -1297,9 +807,6 @@ func _beat_needs_place_name(beat_maps: Dictionary, giver_maps: Dictionary) -> bo
 	return true
 
 
-## Case-insensitive substring match: does `description` mention ANY of
-## `tokens`? Pure (no assert) so both accept and reject cases are directly
-## unit-testable -- see `_validate_place_naming_shape_cases`.
 func _description_names_place(description: String, tokens: Array) -> bool:
 	var lower := description.to_lower()
 	for token: String in tokens:
@@ -1308,16 +815,6 @@ func _description_names_place(description: String, tokens: Array) -> bool:
 	return false
 
 
-## Issue #74: every quest beat whose completion counters ALL require leaving
-## the quest-giver's own map must name a landmark in its `description` (the
-## door-chain 'recover' beat -- "the ruin" with no location -- was the
-## confirmed real-user hard-stall this rule exists to catch structurally,
-## not just by one-off audit). Walks every beat independently against its
-## OWN quest's giver map -- deliberately NOT chain-aware across a quest's own
-## prior beats (a later beat converging back on the SAME foreign map a prior
-## beat already named still needs its own mention; repeating a short landmark
-## clause is cheap and the audit fix for `a_gentlemans_disagreement`'s
-## `resolve` beat leans on exactly this).
 func _validate_travel_beat_place_naming(quests: Dictionary, scene: Dictionary, graphs: Dictionary) -> void:
 	var conversation_maps: Dictionary = _conversation_maps(scene)
 	var producer_maps: Dictionary = _accomplishment_producer_maps(scene, graphs, conversation_maps)
@@ -1344,13 +841,6 @@ func _validate_travel_beat_place_naming(quests: Dictionary, scene: Dictionary, g
 			)
 
 
-## Acceptance + rejection coverage for `_beat_needs_place_name` and
-## `_description_names_place`, mirroring `_validate_once_per_waking_shape_
-## cases`'s idiom. The rejection cases are literally the PRE-FIX quests.json
-## sentences (the door-chain 'recover' beat, the_errand's 'decide' beat,
-## a_gentlemans_disagreement's 'scout'/'resolve' beats) -- proof the fixed
-## validator would have caught every one of them, not just that the current
-## (already-fixed) text happens to pass.
 func _validate_place_naming_shape_cases() -> void:
 	assert(not _beat_needs_place_name({"inn": true}, {"inn": true}), "same-map beat needs no landmark")
 	assert(_beat_needs_place_name({"guild": true}, {"inn": true}), "guild-only beat, inn-given quest, needs a landmark")
@@ -1372,13 +862,6 @@ func _validate_place_naming_shape_cases() -> void:
 	assert(_description_names_place("Clear Farley's name — corner Master Coyle, back on the boulevard, however you see fit.", boulevard_tokens), "fixed resolve beat names the boulevard")
 	assert(not _description_names_place("Clear Farley's name — corner Master Coyle however you see fit.", boulevard_tokens), "NEGATIVE CONTROL: the pre-fix resolve beat names no landmark")
 
-## Issue #72 (the posting generator, "Validation is the product"): every
-## bounty's `condition` key must be a REAL, traced producer -- mirrors
-## _validate_quests/_validate_class_gains above (this cross-reference did
-## NOT exist before this task; data/bounties.json's condition keys were
-## never checked against produced_accomplishments at all). `condition_mode`
-## (delta vs absolute) doesn't matter here -- both read the SAME underlying
-## counter, this only checks the counter is ever banked by something.
 func _validate_bounties(bounties: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for bounty: Dictionary in bounties.get("bounties", []):
 		var condition: Dictionary = bounty.get("condition", {})
@@ -1389,17 +872,6 @@ func _validate_bounties(bounties: Dictionary, produced_accomplishments: Dictiona
 			)
 
 
-## `_validate_bounties`'s delivery twin. Every delivery in the pool
-## structurally produces `delivered_<its own id>` via
-## WIGame._check_delivery_arrival (keyed generically off whichever id is
-## currently accepted, not scannable from skeleton_scene.json/dialogue like
-## every other producer this file traces -- see that function's own doc
-## comment) -- seeded here, scoped to a LOCAL copy of
-## produced_accomplishments (never mutating the shared dict other
-## validators read), before checking each delivery's `condition` keys
-## resolve. This proves the real structural guarantee rather than false-
-## failing on every shipped slip; it would still catch a genuine typo (a
-## condition key that doesn't match its own delivery's id).
 func _validate_deliveries(deliveries: Dictionary, produced_accomplishments: Dictionary) -> void:
 	var produced := produced_accomplishments.duplicate()
 	for delivery: Dictionary in deliveries.get("deliveries", []):
@@ -1418,14 +890,12 @@ func _validate_props(scene: Dictionary) -> void:
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
 			var entity_id: String = String(entity["id"])
-			# Every entity with on_interact_accomplishment must have a non-empty toast
 			if entity.has("on_interact_accomplishment"):
 				var toast: String = String(entity.get("toast", ""))
 				assert(
 					not toast.is_empty(),
 					"entity %s has on_interact_accomplishment but empty or missing toast" % entity_id
 				)
-			# No prop can combine sleep with on_interact_accomplishment
 			if String(entity.get("kind", "")) == "prop":
 				var has_sleep: bool = bool(entity.get("sleep", false))
 				var has_accomplishment: bool = entity.has("on_interact_accomplishment")
@@ -1435,11 +905,6 @@ func _validate_props(scene: Dictionary) -> void:
 				)
 
 
-## Issue #88 (gap-2): `goblin_ambush_tutorial`'s `real_ones` tutor entry
-## (data/arenas.json) reuses help_content.json's "Classes & Levels" body
-## VERBATIM in its `solo_fallback_line` (the issue's own consistency
-## requirement -- the #107 Help pane shipped this exact phrasing first).
-## Drift tripwire: the two copies can never diverge silently.
 func _validate_tutor_line_help_consistency() -> void:
 	var arenas: Dictionary = _load_json("res://data/arenas.json")
 	var help: Dictionary = _load_json("res://data/help_content.json")

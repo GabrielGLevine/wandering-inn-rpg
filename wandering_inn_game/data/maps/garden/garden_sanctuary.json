@@ -1,5 +1,5 @@
 {
- "_comment": "Erin's Garden of Sanctuary -- the ONE map with no darkness, no walls, no violence. Formal south-to-north axis per the direction card: `garden_exit` (the vine door, the only way in or out) -> the sandstone path -> the statue-fountain centerpiece -> the misted rise (an open band at the north end -- populating it with memorial plinths/statues via visual_states is a future task's job; this ships the CLEARING only, no memorial entities yet). `biome: garden` (data/biomes.json) supplies the olive-grass floor + the hedge-hem `blocked` tile + the owned PixelLab sky-mist skirt (the impossible bright sky beyond the hedge). 14x12: small and serene by design, 'a small serene map off the inn'. Reachability: `garden_exit` (7,11) is the sole hedge gap; every other perimeter cell is hedge-blocked. The fountain (7,6) sits ON the path axis and is the map's only interior obstacle -- a 1-cell detour left/right (both open floor) routes around it, matching a real garden path splitting around a centerpiece; no BFS pinch point exists (confirmed: the only blocked cells are the perimeter ring + this one center cell). `garden_bed` (11,4, east wing) is the rest-anywhere-equivalent bed, 'facing the rise' per handoff.md's own recommendation -- a literal bed under the open sky is the map's 'rest anywhere' read, not a mismatch. Mood: data/moods.json's `garden` card (identity-at-every-phase, vignette 0.0 -- the ONLY such card in the game). No `arena_moods` entry (combat impossible here, the sim guard in wi_game.gd's start_combat) and no `walls` field at all (the Garden ships NO wall family by design -- sanctuary is the absence of architecture; the hedge hem is expressed entirely via `blocked` + the biome's own hedge tile, the exact same mechanism inn/floodplains/etc use for their `blocked` cells, just with zero `walls.segments` on top).",
+ "_comment": "every other perimeter cell is hedge-blocked.",
  "biome": "garden",
  "grid": {
   "width": 14,
@@ -201,7 +201,6 @@
  ],
  "floor_layers": [
   {
-   "_comment": "The formal north-south path axis (direction.md: 'one straight line of meaning'). Sandstone family per picks.md §1b, position-hashed variants (the inn plank-floor idiom). Skips (7,6) -- the fountain's own cell, painted by the base grass floor underneath its decor sprite instead.",
    "sheet": "res://assets/tiles/garden/Tiles.png",
    "tile_px": 16,
    "variants": [
@@ -260,7 +259,6 @@
    }
   },
   {
-   "_comment": "The misted rise (direction.md: 'an arc of colorless statues standing in a band of white mist at the axis head'). G1 ships the CLEARING only -- a lighter grass variant marking the band, no statues/plinths yet (G2's memorial seam). One row south of the north hedge so a future plinth row has open floor to stand on.",
    "sheet": "res://assets/tiles/garden/Tiles.png",
    "tile_px": 16,
    "variants": [
@@ -325,7 +323,6 @@
  ],
  "decor": [
   {
-   "_comment": "The statue-fountain composite (picks.md §2, resolving the 8a §5 deferral): basin FIRST, statue SECOND -- both licensed Pixel Crawler crops (placeholder-rendering until the controller lands the assets/props/garden/Feminine-Idle-Sheet.png manifest entry; see the G1 report). THE BLOCKING CONTRACT: (7,6) is in this map's own `blocked` list above (the boulder/ruin_surface precedent -- a decor-only 'solid' object is a real bug).",
    "sprite": "garden_fountain_basin",
    "cell": [
     7,
@@ -342,7 +339,7 @@
  ],
  "entities": [
   {
-   "_comment": "The way back to the inn -- pairs with `garden_door` (inn map, cell 3,6). Landing (3,7) is one cell south of that door, the sewer_exit/deep_fissure/ruin_exit 'never land on the door's own cell' convention. `garden_door_inner` reused verbatim (one physical door, two faces). Ungated (a real `door`, always open from this side -- the K-of-N gate lives entirely on the inn-side prop).",
+   "_comment": "pairs with `garden_door` (inn map, cell 3,6).",
    "id": "garden_exit",
    "kind": "door",
    "cell": [
@@ -359,7 +356,7 @@
    "on_enter_accomplishment": "visited_the_garden"
   },
   {
-   "_comment": "The rest-anywhere-equivalent bed (spec §5's mechanical surface list). Same `sleep()` call, same progression/toast machinery as every other bed (the inn_upstairs your_bed precedent) -- the ONE authored difference is `sleep_toast`, an additional flavor line emitted BEFORE sleep()'s own stream, never replacing it.",
+   "_comment": "the ONE authored difference is `sleep_toast`, an additional flavor line emitted BEFORE sleep()'s own stream, never replacing it.",
    "id": "garden_bed",
    "kind": "prop",
    "cell": [
@@ -373,7 +370,7 @@
    "sleep_toast": "Somewhere, a door shuts softly. The garden doesn't dim."
   },
   {
-   "_comment": "The memorial hill -- four plots on the misted-rise band (y=1, direction.md/handoff.md's memorial vocabulary), one per owned stone-ified statue in the roster (human/gnoll/drake/goblin, pixellab-batch.md), spaced at x=4/6/8/10 flanking the path axis (x=7, left open as the arc's own center per direction.md landmark 3). Canon: the sacred hill of statues Ch. 7.11 ('but for color they could have turned and greeted you') -- game simplification per handoff.md open question 2, one shared roster rather than per-viewer. Each plot is the dirty_table/unlit_lantern visual_states idiom EXACTLY (base sprite `memorial_plinth`, a single `{counter,at:1}` state swapping to its statue) with ONE addition this task needed and wi_game.gd now carries (`_resolve_observe_text`, doc-commented there): the SAME visual_states list also carries an optional `observe` override, so [Appraise Foe]'s existing single-string read shows the base plinth's 'waiting' flavor before the beat and the statue's own results-only remembrance line after -- proven live by garden_walkthrough (one plot pre-banked via the fixture's own resolved_wrong_order leg, present; one plot's counter genuinely unbanked, absent -- the negative tooth). Spoiler cutoff: every remembrance line stays Vol 1-7, no character named, deeds only -- the roster itself is deliberately race-generic (direction.md vocabulary point 5), the remembrance TEXT carries the specific memory, never the sprite. Memorial statues NEVER reuse a living NPC's colored sprite (the repo's known indistinguishable-prop failure mode) -- every one of these four is the ONE stoneify.py ramp, guaranteeing colorless memorial stone regardless of source figure.",
+   "_comment": "Memorial statues NEVER reuse a living NPC's colored sprite (the repo's known indistinguishable-prop failure mode)",
    "id": "memorial_plot_warren",
    "kind": "prop",
    "cell": [
@@ -395,7 +392,6 @@
    ]
   },
   {
-   "_comment": "The seal beat's own counter -- Zevara's 'It's done. The thing under the city won't be climbing up.' hub option (zevara_intro.json), gated on `cleared_the_warren` and banking `raskghar_sealed` (the Act III advance key, traced from data, not assumed) -- a DISTINCT beat from the boss victory itself (this plot's neighbor), the political/civic resolution rather than the fight.",
    "id": "memorial_plot_seal",
    "kind": "prop",
    "cell": [
@@ -417,7 +413,7 @@
    ]
   },
   {
-   "_comment": "The Wrong Order's shared convergence counter (quests.json beat 'resolve') -- ALSO one of `near_garden`'s own two pre-banked K-of-4 legs (wi_game.gd's `_garden_earn_met`), so this plot ships PRESENT from the fixture's own load in garden_walkthrough, no extra live-banking needed to prove the swap (the counter genuinely met, read live through the exact same visual_states/`_resolve_observe_text` seam as every other plot).",
+   "_comment": "The Wrong Order's shared convergence counter (quests.json beat 'resolve')",
    "id": "memorial_plot_wrong_order",
    "kind": "prop",
    "cell": [
@@ -439,7 +435,7 @@
    ]
   },
   {
-   "_comment": "The fourth plot -- `goblins_spared` (#26) is now live, banked by `goblin_parley`'s 'Stand aside' bypass; this plot renders as the waiting plinth for any save that never took that branch and swaps to `memorial_statue_goblin` once the counter is >= 1, zero further code/data changes needed here. Doubles as direction.md's 'the hill always waits' promise: even once all three OTHER plots claim their statues, the arc never reads as full for a save that fought every goblin.",
+   "_comment": "Doubles as direction.md's 'the hill always waits' promise: even once all three OTHER plots claim their statues, the arc never reads as full for a save that fought every goblin.",
    "id": "memorial_plot_reserved",
    "kind": "prop",
    "cell": [

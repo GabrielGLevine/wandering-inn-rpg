@@ -1,5 +1,4 @@
 {
- "_comment": "8b R3 (issue #11) the Witch's real graph. §4 voice key verbatim as the hub's own quest-active variant. TALK path lives here: a skill-gated mediation chain (hub -> mediate_pitch -> mediate_argue) banking the shared blight_lifted convergence + persuaded_someone (the social identity feed). GH#64: re-gated from class (Diplomat) to [Calming Touch] -- de-escalating 'let's not make this ugly' fits the calming register better than the charm register. The gate stays visible-locked ALONE (goblin_parley's warrior-intimidate precedent) -- requires/hide_when never combine two gate TYPES in one dict, so the quest-active state rides hide_when (blight_lifted retires it) rather than a second requires key. 'shop' node is the vendor surface (Krshia/peddler_stall buy-option contract verbatim), gated open by blight_lifted. hub keeps the always-ungated exit ('Just tea, then.') per the softlock guard.",
  "start": "hub",
  "nodes": {
   "hub": {
@@ -7,7 +6,6 @@
    "text": "Sit. Tea first. Then we'll talk about whatever brought you all this way.",
    "text_variants": [
     {
-     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
      "requires": {
       "phase": [
        "dusk",
@@ -60,7 +58,6 @@
      "goto": "shop"
     },
     {
-     "_comment": "Class-foundation pass R5 (2026-07-12): the SELL surface -- generalized WIShop.build_sell_graph (see shop.gd's own doc comment; was Krshia-only) opened via open_sell_picker's now-vendor-id'd value. Same gate as the buy option above (coin-dealing opens at blight_lifted together, not separately).",
      "text": "I've got a few things I don't need, myself. Buying?",
      "requires": {
       "accomplishment": {
@@ -111,7 +108,6 @@
   "mediate_argue": {
    "speaker": "Eloise",
    "text": "A year, tending my hearth. Not nothing, and not the debt I was owed either.",
-   "_comment": "Effects live here (goto, not end) so dialogue_ended fires only on 'mediated's OWN end option, after the effects -- same shape as krshia_crate.json's smoothed-over TALK resolution (effects on a non-ending option, a separate reaction node closes the conversation).",
    "options": [
     {
      "text": "It's settled, then.",
@@ -144,7 +140,6 @@
    "speaker": "Eloise",
    "text": "Coin, then. Fine — not everyone wants to owe me something bigger. Take what you need and go.",
    "haggle": true,
-   "_comment": "Buy-option contract verbatim (peddler_stall/krshia_crate): requires:{gold:price} + effects:[{gold:-price},{item:id}], price named in the option text. Four herb-craft consumables, 4-16g (data/items.json), plus the attunement stone below (a distinct category -- issue #65's re-route: invrisil_attuned no longer banks from the Guild-board letter, it banks HERE, composed on the buy option exactly like krshia_crate.json's resonant_catalyst/bought_catalyst pair). No extra gate on the stone row beyond this node's own hub-level blight_lifted requirement -- the whole 'shop' node is already unreachable before it, so the vendor-unlock gate composes for free. CLASS-FOUNDATION REVIEW WAVE (controller ruling, 2026-07-12): `haggle: true` -- THE v1 haggle carrier, the only node in the game where [Bargain]'s price_mod applies (haggling went OPT-IN game-wide; dialogue.gd's `_priced_gold` defaults to no discount). Eloise fits the register: an informal hedge-witch stall trading favors as readily as coin, the opposite of Krshia's 'no discounts' counter or Pallass's posted civic rates. A [Bargain] holder sees AND pays the discounted figure on every row here (`_priced_text` rewrites the baked '(N gold)' in-place -- display==charge, the binding rule); #92's vendor wave expands the carrier list.",
    "options": [
     {
      "text": "The yarrow bundle. (4 gold)",
@@ -230,7 +225,6 @@
      "goto": "stone_sold"
     },
     {
-     "_comment": "Class-foundation pass R5 (2026-07-12): the [Bargain] price_mod's own real, dynamic-priced buy option -- text is authored WITHOUT a baked-in price (dialogue.gd's `_priced_text` appends '(N gold)' live from `requires.gold`, price-mod'd when the buyer holds [Bargain] since this node carries `haggle: true`, the review wave's opt-in carrier flag) rather than retrofitting one of the four options above (which qa/scripts/riverfarm_talk.json exact-array pins for a NON-Bargain buyer; a [Bargain] holder sees those four rewritten to their discounted figures -- qa/scripts/trader_earn_loop.json pins that side).",
      "text": "That pinch of warding salt, for the threshold.",
      "requires": {
       "gold": 7
@@ -246,7 +240,6 @@
      "goto": "bought"
     },
     {
-     "_comment": "Issue #92 R5: the witch's own repeatable combat consumable -- mending_draught (WIItems.resolve_use's 'heal' arm, R1) is now a REAL sink (bought -> carried -> used -> gone -> repurchasable, since items never stack, R1's own load-bearing rule). Baked-in price text (the ORIGINAL 4-option style: yarrow/sleeproot/sachet/wardstone_bead above), not the dynamic haggle-text convention warding_salt_pinch demos just above -- dialogue.gd's `_priced_text` still rewrites this baked '(N gold)' in place for a [Bargain] holder exactly like those original four (this node's own `haggle: true` applies uniformly, not per-option). Appended AFTER every existing option per this file's own precedent (see warding_salt_pinch's identical placement note) -- qa/scripts/riverfarm_talk.json's exact-array pin re-derived in the same commit.",
      "text": "That dark red draught, for the road. (10 gold)",
      "requires": {
       "gold": 10
@@ -284,7 +277,6 @@
   "stone_sold": {
    "speaker": "Eloise",
    "text": "Distance is just another kindness, if you carry the right stone. This one already knows the road to Invrisil. Don't lose it before you get there.",
-   "_comment": "Own reaction node (not the generic 'bought' text) -- same rationale as krshia_crate.json's catalyst_sold: a carried attunement stone isn't 'worn or used' the way a bead/sachet is, and this is the sale moment's one chance to carry the portal-lore weight (kindness/doors/distance aphorism + the transaction, per Eloise's shipped register).",
    "options": [
     {
      "text": "Show me again.",

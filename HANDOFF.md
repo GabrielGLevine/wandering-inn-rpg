@@ -11,6 +11,10 @@ remainders below.
 `docs/DOC-MAP.md`; shipped staging is archived; all plans say DONE/ACTIVE;
 QA notes are a CI-checked manifest-derived inventory. No gameplay changed.
 
+**#102 complete:** comment economy is CI-enforced at 20% GDScript / 15% data;
+the repository is at 9.2% / 7.5%. Executable GDScript and non-annotation JSON
+semantics are unchanged; unit, balance, and all 112 QA scripts passed.
+
 ## 📋 QUEUE (value order)
 
 1. **#91 Chronicle** (results-only run card via settings.cfg — NEVER
@@ -19,10 +23,9 @@ QA notes are a CI-checked manifest-derived inventory. No gameplay changed.
    world.gd/main.gd, now uncontested).
 3. **#76 remainder** — footstep floor-families + ambience ducking
    (_tween_music_bus_to parameterized over both buses).
-4. **#102 context economy:** comment compression after this doc pass.
-5. **#111 safe project rename:** keep `config/name="Wandering Inn RPG v4"`
+4. **#111 safe project rename:** keep `config/name="Wandering Inn RPG v4"`
    until native + web save migration is deliberately designed and tested.
-6. **#19 Steam:** user-secret provisioning remains user-gated.
+5. **#19 Steam:** user-secret provisioning remains user-gated.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 

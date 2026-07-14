@@ -1,30 +1,8 @@
 extends SceneTree
-## Shipped-ids freeze validator (issue #99, full-game-architecture spec
-## §2.1): FAILS LOUD when a frozen id (data/shipped_ids.json) has vanished
-## from its live catalog with no covering WISave.DEPRECATED_IDS entry (the
-## deprecate-and-map hook, src/core/save.gd) -- the "never rename, only
-## deprecate-and-map" policy enforced mechanically. Run:
-## /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_shipped_ids.gd
-##
-## CENSUS DUPLICATION (deliberate, same tradeoff test_fixture_coherence.gd's
-## own SKIP const documents against title_screen.gd): this file re-derives
-## the SAME accomplishment-counter census scripts/generate_shipped_ids.py
-## computes in Python, independently, in GDScript -- the generator can't
-## call GDScript and this bare --script idiom can't cheaply import another
-## SceneTree-extending script's instance methods without re-running its own
-## _init(). KEEP IN SYNC: STRUCTURAL_LITERALS below mirrors the Python
-## script's constant of the same name; the scene/dialogue/board/delivery
-## scan mirrors its produced_accomplishments() function line for line. A new
-## bare `record_accomplishment("literal")` call site, or a new accomplishment
-## producer shape, needs an entry added to BOTH files or this validator can
-## silently diverge from the freeze list's own generation logic.
 
 const SHIPPED_IDS_PATH := "res://data/shipped_ids.json"
 const DIALOGUE_DIR := "res://data/dialogue"
 
-## KEEP IN SYNC with scripts/generate_shipped_ids.py's STRUCTURAL_LITERALS
-## (see that file's module docstring, census source 1, for the full trace of
-## every bare record_accomplishment()/WICombat._tally() literal call site).
 const STRUCTURAL_LITERALS := [
 	"observed_things", "befriended_moments", "deliberate_commerce",
 	"burned_the_debris", "sneaked_past_danger", "read_the_board",
@@ -55,13 +33,6 @@ func _init() -> void:
 		"accomplishments": _produced_accomplishments(scene, graphs, skills, bounties, deliveries),
 	}
 
-	# Structural coverage guard (issue #99 review): a populated
-	# DEPRECATED_IDS entry outside WISave.MIGRATABLE_ID_CLASSES is
-	# advertised-but-unhandled -- it would turn the freeze check below green
-	# while real saves keep the dead id in their state carriers (skills:
-	# player_skills/hotbar_loadout/used_skills; items: inventory/equipped;
-	# maps: current_map; accomplishments: the accomplishments dict). Checked
-	# FIRST so the failure names the missing remap arm, not the frozen id.
 	for id_class: String in (WISave.DEPRECATED_IDS as Dictionary):
 		if not ((WISave.DEPRECATED_IDS as Dictionary)[id_class] as Dictionary).is_empty() \
 				and not (WISave.MIGRATABLE_ID_CLASSES as Array).has(id_class):
@@ -74,8 +45,6 @@ func _init() -> void:
 		_check_class(id_class, frozen_ids, live[id_class] as Dictionary)
 
 	if _errors.is_empty():
-		# CONTRACT: every suite's success line must start with "PASS" -- CI's
-		# unit gate greps ^PASS (see test_fixture_coherence.gd's own note).
 		print("PASS: shipped-ids freeze -- %d frozen ids across 5 classes still covered (release %s)" % [total, String(frozen.get("release", "?"))])
 	else:
 		print("test_shipped_ids: %d failures across %d frozen ids:" % [_errors.size(), total])
@@ -85,10 +54,6 @@ func _init() -> void:
 	quit()
 
 
-## A frozen id "disappeared" iff it is absent from the live catalog set AND
-## uncovered by WISave.DEPRECATED_IDS[id_class] -- the deprecate-and-map
-## hook. A covering entry must itself point at a LIVE id (a mapping to
-## another vanished id is not a real migration).
 func _check_class(id_class: String, frozen_ids: Array, live_ids: Dictionary) -> void:
 	var deprecated: Dictionary = (WISave.DEPRECATED_IDS as Dictionary).get(id_class, {})
 	for raw_id: Variant in frozen_ids:
@@ -134,27 +99,17 @@ func _map_ids(scene: Dictionary) -> Dictionary:
 	return out
 
 
-## Mirrors scripts/generate_shipped_ids.py's produced_accomplishments()
-## exactly (see this file's own header doc for the KEEP IN SYNC contract).
 func _produced_accomplishments(scene: Dictionary, graphs: Dictionary, skills: Dictionary, bounties: Dictionary, deliveries: Dictionary) -> Dictionary:
 	var out: Dictionary = {}
 	for lit: String in STRUCTURAL_LITERALS:
 		out[lit] = true
 
-	# Combat action-tally dynamic counters (WICombat._tally_skill_use):
-	# "<weapon>_skill_used" per distinct skills.json `weapon` tag,
-	# "<element>_cast" per distinct `element` tag.
 	for skill: Dictionary in skills.get("skills", []):
 		if skill.has("weapon"):
 			out["%s_skill_used" % String(skill["weapon"])] = true
 		if skill.has("element"):
 			out["%s_cast" % String(skill["element"])] = true
 
-	# Scene-derived producers (mirrors test_content.gd's
-	# _collect_scene_accomplishments, plus the won_combat structural default
-	# WIGame.resolve_combat falls back to for a kind:encounter entity with
-	# no authored on_victory -- explicit in every shipped entity today,
-	# defensive for tomorrow).
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
@@ -185,7 +140,6 @@ func _produced_accomplishments(scene: Dictionary, graphs: Dictionary, skills: Di
 			for rumor: Dictionary in (entity.get("board_rumors", []) as Array):
 				out[String(rumor["banks_accomplishment"])] = true
 
-	# Dialogue-effect producers.
 	for graph_id: String in graphs:
 		var nodes: Dictionary = graphs[graph_id]["nodes"]
 		for node_id: String in nodes:
@@ -194,9 +148,6 @@ func _produced_accomplishments(scene: Dictionary, graphs: Dictionary, skills: Di
 					if effect.has("accomplishment"):
 						out[String(effect["accomplishment"])] = true
 
-	# Board/delivery id-derived producers (WIGame.accept_bounty/
-	# turn_in_bounty and their Runner's Guild twins bank on the ACCEPTED id,
-	# not scannable from any per-entry data field).
 	for bounty: Dictionary in bounties.get("bounties", []):
 		var bid: String = String(bounty["id"])
 		out["accepted_bounty_%s" % bid] = true

@@ -9,67 +9,9 @@ extends RefCounted
 ## `_info_slot_index` all STAY on combat_screen.gd (mode-FSM + bar-data
 ## ownership, per the plan) -- this file only ever RENDERS from state handed
 ## to it each call, never reaches back into the screen for sim state.
-##
-## Constructed ONCE by `combat_screen.gd._ready()` (like `_board_renderer`/
-## `_ai_playback`), reused across encounters: `_hud = load("res://src/combat/
-## combat_hud.gd").new(_root, main_ref, self); _hud.build()`. `build()` is a
-## separate explicit call (not run from `_init`) so this file stays
-## constructible with a null `root` -- see the next paragraph.
-##
-## `_root`/`_main_ref`/`_screen` are loosely typed (`Control`/`Node`/`Node`,
-## not the screen's own class), and `_init` is a pure store with no side
-## effects -- this is REQUIRED, not stylistic: `combat_screen.gd`'s
-## `_feed_line_for_event` compat shim (kept because `combat_playback.gd`'s
-## `_capture_event_ui` calls it on every captured event, live gameplay and
-## `tests/test_combat_visuals.gd`'s direct `_capture_playback_event(...)` call
-## alike) lazily constructs `_hud` the same way D3's `_capture_playback_event`
-## shim lazily constructs `_ai_playback` -- and that lazy construction must
-## succeed even inside the test's hostile `--script`-mode process, where
-## `_root`/`main_ref` are null (the patched screen instance never ran
-## `_ready()`). `feed_line_for_event()` (the one method that lazy path
-## actually calls) never touches `_root`, so a null `_root` is harmless there.
-##
-## This file carries ZERO bare autoload identifiers (`ObservableBus`/`Game`/
-## `TestDriver`/`WIAudio` -- the only 4 real autoloads in this project, per
-## project.godot; `UIChrome`/`WIEvents`/`WICombat`/`WIHotbar` etc. are plain
-## `class_name` scripts and resolve fine anywhere, same as combat_playback.gd
-## already established) -- REQUIRED for the same reason `combat_playback.gd`
-## needed it: `load("res://src/combat/combat_hud.gd")` must actually COMPILE
-## when the `_feed_line_for_event` shim calls it inside the hostile test
-## process (confirmed empirically by D3: a `load()`'d script with ANY
-## unresolved bare autoload identifier anywhere in its body -- even inside a
-## method never called that run -- returns `can_instantiate() == false`).
-## The two spots this file's moved logic used to touch `ObservableBus`
-## directly (`ui_slot_info_rendered`, `ui_tutor_line_rendered`) now call back
-## through `_screen._emit_slot_info(...)`/`_screen._emit_tutor_rendered(...)`.
 
-## Feed panel interior text box width (panel width 292 minus the 22px
-## left+right content margins -- see `build()`). The USABLE text HEIGHT is
-## deliberately NOT a const (see `_feed_text_capacity_height`): it tracks
-## `_feed_panel_height`, which can grow past the base size for a long tutor
-## beat.
 const FEED_TEXT_WIDTH := 248.0
 
-## Readout panel interior text box (panel-class fix
-## flagged after L4's windowed shot: `.superpowers/sdd/fp-handoff/l4-shots/
-## 01_first_encounter_feed.png` showed frost_bolt's full 3-segment slot-info
-## line ("[Frost Bolt] — 1 AP, 2 MP — damage 1d6 at range 4. Slows. — A dart
-## of biting cold that clings to the legs.") wrap to a 2nd line, pushing the
-## readout's total to 4 wrapped lines (head + hint + 2 info lines); the 4th
-## rode the parchment's bottom fold, same repo-wide "Control rect > art-safe
-## band" class the feed panel was already fixed for (see the Gotchas
-## entry "Message panels budget WRAPPED LINES, not entries"). WIDTH mirrors
-## the readout MarginContainer's interior (panel width 620 minus its 22px
-## left+right margins, see build()). This panel has no separately-measured
-## print-safe pixel height the way the feed does; rather than guess one,
-## HEIGHT is picked to yield a LINE CAPACITY of exactly 3 (head + hint/target
-## + slot-info) at the CombatReadout RichTextLabel's real font pitch --
-## confirmed via a headless theme probe: font height 20px, `line_separation`
-## 0px for this unstyled variation, so pitch=20 and capacity=3 needs a height
-## in [60,79]; 64 leaves a little headroom. 3 lines is the empirically
-## observed safe boundary (every OTHER shipped slot-info line, one line long,
-## already renders fine inside this panel) -- windowed-reverified after this
-## fix (see the L5 report).
 const READOUT_TEXT_WIDTH := 576.0
 const READOUT_TEXT_HEIGHT := 64.0
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
@@ -116,7 +58,6 @@ const TUTOR_SUPPORTED_EVENTS := [
 	WIEvents.STATUS_EXPIRED, WIEvents.ACTION_REFUSED, WIEvents.UI_TARGETING_SHOWN,
 ]
 
-## Fold-pin for the feed panel's PARCHMENT_STRIP chrome (Banner_Horizontal.
 ## png, shared with message_layer.gd's toast/dialogue-bark panels). TRAP:
 ## at the default STRIP_PATCH_MARGIN (20), only 9 of the fold art's 29
 ## source px sit in the 9-patch's UNSTRETCHED bottom band -- the rest live
@@ -137,21 +78,8 @@ const TUTOR_SUPPORTED_EVENTS := [
 ## (this label is TOP-aligned, not centered like the toast's, so only the
 ## bottom needs budgeting, not doubled).
 const FEED_STRIP_FOLD_PATCH_BOTTOM := 32
-## Danger-zone depth from the panel's own bottom edge once the fold is
-## pinned into the unstretched bottom patch -- mirrors message_layer.gd's
-## TOAST_FOLD_DANGER_PX (30, same source art, 1px slack over the 29px
-## measured fold depth).
 const FEED_FOLD_DANGER_PX := 30.0
-## The feed label's own top content margin (`_make_panel_label`'s
-## `UIChrome.add_margins(margin, 22, 8, 22, 8)` call for this panel) --
-## text starts this far below the panel's top edge, so it factors into both
-## the base capacity and the tutor-grow formula below.
 const FEED_CONTENT_MARGIN_TOP := 8.0
-## Extra print-safety margin stacked on top of FEED_FOLD_DANGER_PX when
-## GROWING the panel for a long tutor beat (never applied to the base,
-## already-measured-safe capacity) -- errs generous since a tutor beat is a
-## rare, story-critical line worth a few extra px of headroom, not spammy
-## combat-log noise.
 const TUTOR_SAFETY_BUFFER_PX := 12.0
 const FEED_PANEL_BASE_SIZE := Vector2(292.0, 122.0)
 const FEED_OFFSET_LEFT := 28.0
@@ -164,9 +92,6 @@ const FEED_OFFSET_BOTTOM := -84.0
 ## data/arenas.json today (4 lines) with room to spare for a 5th.
 const FEED_PANEL_MAX_HEIGHT := 220.0
 
-## Issue #106: tapping the confirm chip while armed. `combat_screen.gd`
-## connects this once in `_ready()` (`_hud.confirm_tapped.connect(...)`),
-## mirroring the pre-existing `hotbar_node().slot_clicked` wiring precedent.
 signal confirm_tapped
 
 var _root: Control
@@ -180,24 +105,12 @@ var _banner_label: Label
 var _readout_panel: Control
 var _banner_panel: Control
 var _hotbar: WIHotbar
-## Issue #106: the tap-confirm widget + its armed state, recomputed every
-## `refresh()` call from the SAME `dash_confirm`/`in_targeting`/
-## `targeting_state` params the readout hint text already derives its own
-## "(confirms)/(cancels)" wording from -- see `refresh()`'s own doc comment.
 var _confirm_chip: Control
 var _confirm_armed := false
 var _feed: Array = []
-## Current feed panel height, grown (never
-## shrunk mid-encounter) by `_grow_feed_panel_for_tutor` when a tutor beat
-## needs more room than FEED_PANEL_BASE_SIZE.y safely provides. Reset to
-## base on every fresh `reset_tutor_lines` call (combat_started).
 var _feed_panel_height := FEED_PANEL_BASE_SIZE.y
-## Dedup guard so `ui_slot_info_rendered` fires only when the rendered slot
-## index or its text actually changes -- see `_render_slot_info_line`.
 var _last_slot_info_index := -999
 var _last_slot_info_text := ""
-## Floodplains P1: reloaded fresh per combat instance by `reset_tutor_lines`
-## (called on `combat_started`) -- see `match_tutor_line`.
 var _tutor_lines: Array = []
 var _tutor_fired: Dictionary = {}
 var _tutor_match_counts: Dictionary = {}
@@ -240,29 +153,12 @@ func build() -> void:
 		Vector2(1216.0, 56.0), Vector4(-608.0, 10.0, 608.0, 66.0), true
 	)
 	_order_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	# The strip art seats its parchment slightly high in the panel, so bias the
-	# text up (bigger bottom margin) to sit it on the parchment's centre rather
-	# than at its lower lip -- measured against a windowed turn-banner read.
 	(_order_label.get_parent() as MarginContainer).add_theme_constant_override("margin_bottom", 24)
-	# Feed: PARCHMENT_STRIP (landscape banner) -- the portrait scroll squashed
-	# to a wide rect read wrong (H3 review minor). "Small" text; capacity is
-	# budgeted in WRAPPED lines, not entry count (see FEED_TEXT_WIDTH and
-	# feed_push) -- a long tutor line can consume more of the budget and
-	# evict older entries sooner.
 	_feed_label = _make_panel_label(
 		UIChrome.PARCHMENT_STRIP, Control.PRESET_BOTTOM_LEFT,
 		Vector2(292.0, 122.0), Vector4(28.0, -206.0, 320.0, -84.0), false, "Small"
 	)
-	# Pin the fold into the unstretched bottom patch (see
-	# FEED_STRIP_FOLD_PATCH_BOTTOM's doc comment) -- `_make_panel_label` ->
-	# `_make_panel` -> `UIChrome.make_texture_panel` already built this
-	# panel's NinePatchRect as child 0 with the default STRIP_PATCH_MARGIN on
-	# all four sides; only the bottom margin needs widening here.
 	(_feed_label.get_parent().get_parent().get_child(0) as NinePatchRect).patch_margin_bottom = FEED_STRIP_FOLD_PATCH_BOTTOM
-	# Height grown from 62/70px to 104/112px (M6 playtest fix) to fit the new
-	# third slot-info line (name + costs + description) without truncation --
-	# see _readout_text/_slot_info_line. Grown upward only (top offset), so
-	# the hotbar's y[658,710] band directly below stays untouched.
 	_readout_panel = _make_panel(UIChrome.PARCHMENT_STRIP, Control.PRESET_CENTER_BOTTOM, Vector2(620.0, 104.0), Vector4(-310.0, -190.0, 310.0, -78.0))
 	_readout_label = UIChrome.make_rich_label("CombatReadout")
 	var readout_margin := MarginContainer.new()
@@ -306,23 +202,10 @@ func build() -> void:
 	_root.add_child(_confirm_chip)
 
 
-## Read-only accessor (issue #57): the real `WIHotbar` node, for
-## `combat_screen.gd` to connect its `slot_clicked` signal (same dispatch as
-## a `hotbar_N` key -- `_activate_bar_slot`) and for `qa/test_driver.gd`'s
-## `click_slot` step to read its rendered `slot_rect` geometry.
 func hotbar_node() -> WIHotbar:
 	return _hotbar
 
 
-## Issue #106: real `InputEventMouseButton` handler on the confirm chip's own
-## STOP-filtered Control -- gated on `_confirm_armed` (recomputed every
-## `refresh()`) so a stray tap while the chip happens to still be VISIBLE
-## from a stale frame (there shouldn't be one -- `refresh()` hides it in the
-## same call that disarms) can never fire a confirm the screen isn't
-## expecting. Only emits; `combat_screen.gd`'s `_on_confirm_chip_tapped`
-## dispatches into the real `_confirm_bar_action`/`_confirm_targeted_action`
-## calls (mode ownership stays on the screen, same composition-root
-## convention `hotbar_node().slot_clicked` already follows).
 func _on_confirm_chip_gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton):
 		return
@@ -347,8 +230,6 @@ func confirm_chip_rect() -> Rect2:
 
 
 func _make_panel(texture: Texture2D, preset: int, min_size: Vector2, offsets: Vector4) -> Control:
-	# make_texture_panel threads texture-appropriate patch margins (ribbon
-	# asymmetric, strip narrow, panel default) -- H3 review Important 2.
 	var panel := UIChrome.make_texture_panel(texture)
 	panel.set_anchors_preset(preset)
 	panel.custom_minimum_size = min_size
@@ -394,24 +275,11 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 	for id: String in view.order():
 		var mark := "> " if id == view.active_id() else ""
 		if view.alive(id):
-			# Issue #75 item 5b: `view.display_name` (not the raw
-			# combatant dict) so a duplicate-name roster reads "Footpad A" /
-			# "Footpad B" on the strip, matching the feed/readout.
 			order_bits.append(mark + view.display_name(id))
-	# "Turn:" + a bare space read as glued to the first name at a glance
-	# (playtest report: "Turn: Relc | > Traveler" misreads as possessive --
-	# "Turn's Relc"). An em dash is an unambiguous label/content break, same
-	# grammar as the readout's own "AP ●●●●  Move ○○○○" spaced segments.
 	_order_label.text = "Turn — " + "  |  ".join(order_bits)
 	_feed_label.text = "\n".join(_feed)
-	# Empty feed = no floating empty parchment (E3 merge windowed pass).
 	_feed_label.get_parent().get_parent().visible = not _feed.is_empty()
 	_banner_panel.visible = is_banner
-	# The hotbar + its readout/hint strip share one visibility gate: every
-	# mode where the player is actively choosing/aiming an action this turn.
-	# Issue #87: the readout strip ALSO shows (hotbar stays hidden -- there is
-	# no player action bar during an AI turn) while `ai_skip_hint` is true, so
-	# the existing per-turn AI-playback skip has an on-screen affordance.
 	_readout_panel.visible = bar_active or ai_skip_hint
 	_hotbar.visible = bar_active
 	if bar_active:
@@ -420,14 +288,6 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 		_hotbar.render(rendered_slots, bar_index)
 	elif ai_skip_hint:
 		_readout_label.text = _ai_skip_hint_text(hints)
-	# Issue #106: armed whenever Enter would currently DO something --
-	# DASH_CONFIRM (no target list at all) or a targeting mode that already
-	# has a valid target (line_mode has no candidate list either, so it reads
-	# off `has_valid_target()`'s own `_line_mode or not _targets.is_empty()`
-	# condition, mirrored here from `targeting_state`'s two relevant keys
-	# rather than re-deriving through `_screen`/`_targeting` -- this file
-	# stays a pure function of the state handed to it each call, same as
-	# every other `refresh()` computation).
 	_confirm_armed = dash_confirm or (in_targeting and (bool(targeting_state.get("line_mode", false)) or not (targeting_state.get("targets", []) as Array).is_empty()))
 	_confirm_chip.visible = bar_active and _confirm_armed
 
@@ -436,38 +296,6 @@ func refresh(view: RefCounted, bar_active: bool, in_targeting: bool, is_banner: 
 ## `actor_id`'s combat skills with an AP cost (skills.json order), then End
 ## Turn. Rebuilt fresh every time a player turn starts (`combat_screen.gd`'s
 ## `_apply_turn_started`, which stores the result in its own `_bar_slots`).
-## Static display data only (icon id, label, key hint) -- affordability and
-## live AP-cost numbers are computed fresh every `refresh()` by
-## `render_bar_slots`, not baked in here.
-## `loadout` (default `[]` -- every pre-K2b call site,
-## including this file's own unit test, stays byte-identical) is
-## `Game.sim.hotbar_loadout`, threaded in by `combat_screen.gd` (the actual
-## screen, which already references `Game.sim` freely -- this file itself
-## stays at ZERO bare autoload identifiers, see the file doc comment).
-## Attack/Dash stay HARD-PINNED at slots 1/2 regardless of the loadout -- the
-## loadout only ever governs the kit-skill run from slot 3 on, filtered
-## through `WIGame.apply_loadout` (a plain `class_name`, not an autoload, so
-## calling it here is safe under the zero-bare-autoload-identifier contract
-## the same way `WICombat`/`WIHotbar` already are). AUTO (loadout empty)
-## returns the kit run in its original skills.json-derived order, unchanged.
-## `usable_items` (issue #92 R2, default `[]` -- every pre-#92 call site
-## stays byte-identical) is `Game.sim`'s currently-CARRIED combat-usable
-## consumable records (a `use_effect.heal` shape only -- a `next_fight` meal
-## is field-only, never a combat hotbar candidate), threaded in by
-## `combat_screen.gd` the same way `loadout` is. UNLIKE skills, an item
-## NEVER auto-populates in AUTO mode -- it surfaces ONLY when its own
-## `item:<id>` token is explicitly present in `loadout` (R2's own "a
-## hotbar_loadout entry item:<id>" phrasing), regardless of whether the
-## SKILL portion of the bar is AUTO or curated: item tokens are stripped
-## out of the array fed to `WIGame.apply_loadout` for the skill run above,
-## so toggling an item on/off can never blank a player's un-curated skill
-## kit (an open-ended, economy-grown item catalog auto-showing every
-## carried consumable would otherwise reflow/renumber the skill slots
-## unpredictably every time inventory changes -- the exact churn "explicit
-## opt-in" is meant to prevent). Items always render AFTER every kit-skill
-## slot (two separate passes, not a single chronological interleave) --
-## still "assignment order is the order" for each domain individually, just
-## not merged across domains.
 func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usable_items: Array = []) -> Array:
 	var c: Dictionary = view.combatant(actor_id)
 	var slots: Array = [
@@ -490,10 +318,6 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 			"type": "skill", "id": sk_id, "label": String(sk.get("display_name", sk_id)),
 			"icon": String(sk.get("icon", "")), "key_hint": str(number),
 			"description": String(sk.get("description", "")),
-			# Carried through untouched by render_bar_slots'
-			# duplicate() so `_slot_info_line` can hand it to
-			# `WIEffectText.skill_effect_lines` -- the generated mechanical
-			# line, never hand-composed here.
 			"effect": sk.get("effect", {}),
 		})
 		number += 1
@@ -512,8 +336,6 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 			"type": "item", "id": item_id, "label": String(rec.get("name", item_id)),
 			"icon": String(rec.get("icon", "")), "key_hint": str(number),
 			"description": String(rec.get("description", "")),
-			# Carried through untouched so `_slot_info_line` can hand it to
-			# WIEffectText, mirroring the skill "effect" field just above.
 			"use_effect": rec.get("use_effect", {}),
 		})
 		number += 1
@@ -521,12 +343,6 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 	return slots
 
 
-## Adds the per-render-frame bits `rebuild_slots` deliberately leaves out
-## (affordability + live ap/mp cost numbers) to a copy of `bar_slots`, ready
-## for `Hotbar.render`. Public (not just `refresh()`'s internal use) so
-## `combat_screen.gd`'s dead `_render_bar_slots` compat shim (kept for
-## `tests/test_combat_visuals.gd`'s has_method check) can call the one real
-## implementation.
 func render_bar_slots(view: RefCounted, bar_slots: Array) -> Array:
 	var c: Dictionary = view.combatant(view.active_id())
 	var out: Array = []
@@ -536,9 +352,6 @@ func render_bar_slots(view: RefCounted, bar_slots: Array) -> Array:
 			"attack":
 				d["affordable"] = bar_action_affordable("Attack", c)
 				d["ap_cost"] = WICombat.ATTACK_COST
-				# GH#70: carried through so _slot_info_line can branch its text --
-				# see that function own comment. weapon_range defaults to 1 for
-				# every pre-GH#70 combatant.
 				d["weapon_range"] = int(c.get("weapon_range", 1))
 			"dash":
 				d["affordable"] = bar_action_affordable("Dash", c)
@@ -550,9 +363,6 @@ func render_bar_slots(view: RefCounted, bar_slots: Array) -> Array:
 				d["ap_cost"] = view.effective_ap_cost(view.active_id(), skill_id)
 				d["mp_cost"] = int(sk.get("mp_cost", 0))
 			"item":
-				# Issue #92 R2: flat WIItems.FLAT_AP_COST regardless of the
-				# item's own (nonexistent) ap_cost field -- see that const's
-				# own doc comment. No MP concept for an item use.
 				d["affordable"] = int(c["ap"]) >= WIItems.FLAT_AP_COST
 				d["ap_cost"] = WIItems.FLAT_AP_COST
 			"end_turn":
@@ -561,10 +371,6 @@ func render_bar_slots(view: RefCounted, bar_slots: Array) -> Array:
 	return out
 
 
-## Whether a fixed bar action (Attack/Dash) is currently actionable -- mirrors
-## the AP gates the sim would enforce, purely for greying + activate-refusal.
-## Public: also called directly by `combat_screen.gd`'s `_activate_bar_slot`
-## (the command-issuing gate, which stays screen-side).
 func bar_action_affordable(action: String, c: Dictionary) -> bool:
 	match action:
 		"Attack":
@@ -575,12 +381,6 @@ func bar_action_affordable(action: String, c: Dictionary) -> bool:
 			return true
 
 
-## Whether `c` (always the active combatant in every real call site) can
-## currently afford to cast `skill_id` -- the same AP/MP gate WICombat.
-## use_skill checks internally, mirrored here purely for greying unaffordable
-## rows. Uses `view.effective_ap_cost` so a quick_cast discount shows up in
-## both the cost readout and the affordability check. Public: also called
-## directly by `combat_screen.gd`'s `_activate_bar_slot`.
 func skill_affordable(c: Dictionary, skill_id: String, view: RefCounted) -> bool:
 	var skill: Dictionary = view.skill(skill_id)
 	return int(c.get("mp", 0)) >= int(skill.get("mp_cost", 0)) \
@@ -605,13 +405,6 @@ func _ai_skip_hint_text(hints: Dictionary = DEFAULT_HINTS) -> String:
 	return "%s / %s — skip" % [confirm_glyph, cancel_glyph]
 
 
-## The readout/hint strip that sits directly above the hotbar. `in_targeting`
-## distinguishes the HOTBAR resting-state hint from the ATTACK/SKILL_TARGET
-## aiming hint (the original matched on `_mode` directly; see the file doc
-## comment on why that enum can't be referenced from here). `dash_confirm`
-## is its own third hint state -- Dash has no target list,
-## so it is NOT folded into `in_targeting`. `rendered_slots` is this same
-## call's already-computed `render_bar_slots()` array.
 func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictionary,
 		rendered_slots: Array, info_slot_index: int, dash_confirm: bool = false,
 		hints: Dictionary = DEFAULT_HINTS) -> String:
@@ -625,22 +418,11 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 	var mp_bit := ""
 	if int(c.get("max_mp", 0)) > 0:
 		mp_bit = "  MP %d/%d" % [int(c["mp"]), int(c["max_mp"])]
-	# Issue #75 item 5b: view.display_name, not the raw dict field -- the
-	# active combatant may itself be one of a duplicate-name pair.
 	var head := "%s  AP %s  Move %s%s" % [
 		UIChrome.bb_escape(view.display_name(view.active_id())), "●".repeat(int(c["ap"])), "○".repeat(int(c["move_pool"])), mp_bit,
 	]
-	# RAW (un-escaped) -- `_compose_readout` measures/fits this against the
-	# panel's true wrap width, then escapes only the FITTED result. The event
-	# `_render_slot_info_line` fires (ui_slot_info_rendered) still carries the
-	# FULL escaped line regardless of what's rendered here.
 	var info_line := _render_slot_info_line(rendered_slots, info_slot_index)
 	if dash_confirm:
-		# Dedupe: the confirm hint REPLACES the plain
-		# slot-info line rather than stacking above it — while the gate is
-		# armed, `info_slot_index` always points at the Dash slot, so both
-		# lines would start "Dash — 1 AP: ...". `_render_slot_info_line` is
-		# still called above so `ui_slot_info_rendered` (QA-asserted) fires.
 		return _compose_readout(head, "", info_line + " (%s confirms, %s cancels)" % [confirm_glyph, cancel_glyph])
 	if not in_targeting:
 		if int(c["move_pool"]) <= 0 and bar_action_affordable("Dash", c):
@@ -660,7 +442,6 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 		return _compose_readout(head, "No target in reach (%s)" % cancel_glyph + note, info_line)
 	var target_id := String(targets[int(targeting_state.get("index", 0))])
 	var t: Dictionary = view.combatant(target_id)
-	# Issue #75 item 5b: view.display_name for the target name.
 	return _compose_readout(
 		head,
 		"Target: %s (%d/%d) (%s cycles, %s confirms)" % [UIChrome.bb_escape(view.display_name(target_id)), int(t["hp"]), int(t["max_hp"]), cycle_glyph, confirm_glyph],
@@ -668,17 +449,6 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 	)
 
 
-## Assembles the readout's on-screen text -- head / hint-or-target / slot-info
-## -- fitting ONLY the variable-length `info` segment to whatever WRAPPED-LINE
-## budget remains in the panel's art-safe capacity after `head` and `hint`
-## (design D2-7 #6: cut words, never widen; same discipline `feed_push`
-## already applies, generalized to this panel --
-## see READOUT_TEXT_WIDTH/HEIGHT's doc comment above for the reproduction and
-## the capacity derivation). `head`/`hint` are always render-ready (already
-## bb-escaped by their callers above); `info` is the RAW slot-info line --
-## escaped here, AFTER fitting, so the fit measures true visible width rather
-## than the "[lb]"/"[rb]" escape placeholders' inflated one. `hint` is "" only
-## for the dash_confirm caller (whose whole hint lives in `info`'s suffix).
 func _compose_readout(head: String, hint: String, info: String) -> String:
 	var used := _rtl_wrapped_line_count(_readout_label, head, READOUT_TEXT_WIDTH)
 	if hint != "":
@@ -692,15 +462,6 @@ func _compose_readout(head: String, hint: String, info: String) -> String:
 	return "\n".join(lines)
 
 
-## Builds the "what does this button do" line for `info_slot_index` from
-## `rendered_slots` (live cost data) and emits `ui_slot_info_rendered` the
-## first time this exact (index, text) pair renders (dedup-guard). Returns
-## the RAW (un-bb-escaped) line -- `ui_slot_info_rendered` gets the escaped
-## form at the emit site (`_readout_text`'s wrap-fit needs
-## the true visible width, which the "[lb]"/"[rb]" escape placeholders would
-## inflate; QA's exact pin on the ESCAPED text, e.g.
-## combat_move_input.json's "[lb]Power Strike[rb] — 3 AP — …", is unchanged
-## since the emitted string is still escaped, just later).
 func _render_slot_info_line(rendered_slots: Array, info_slot_index: int) -> String:
 	var index := info_slot_index
 	if index < 0 or index >= rendered_slots.size():
@@ -713,8 +474,6 @@ func _render_slot_info_line(rendered_slots: Array, info_slot_index: int) -> Stri
 	return line
 
 
-## Name + costs + one-line canon-voiced description for a single rendered bar
-## slot (`d` is one entry of `render_bar_slots()`'s output).
 ## The skill arm's cost/effect segment is GENERATED by
 ## `WIEffectText.skill_effect_lines` from `d`'s own `ap_cost`/`mp_cost`/
 ## `effect` fields (`ap_cost` is the LIVE effective cost, quick_cast discount
@@ -727,17 +486,9 @@ func _render_slot_info_line(rendered_slots: Array, info_slot_index: int) -> Stri
 ## never empty in practice; the empty-array branch (name + description only,
 ## no dangling dash) mirrors the item-card degrade for a Skill the formatter
 ## can't yet phrase -- report that gap, don't hand-compose around it.
-## RAW (un-bb-escaped) return value -- escaping belongs to
-## each caller (`_render_slot_info_line`'s emit site, `_compose_readout`'s
-## post-fit render site) so the wrap-fit measurement below sees the true
-## visible width, not the "[lb]"/"[rb]" placeholder-inflated one.
 func _slot_info_line(d: Dictionary) -> String:
 	match String(d.get("type", "")):
 		"attack":
-			# GH#70: a bow (weapon_range > 1) reads its live range instead of
-			# the melee-only phrasing -- gated strictly on > 1 so every
-			# pre-GH#70 combatant (weapon_range defaults to 1) keeps the exact
-			# original string, byte-identical.
 			var attack_range := int(d.get("weapon_range", 1))
 			if attack_range > 1:
 				return "Attack — strike a target within range %d" % attack_range
@@ -755,24 +506,12 @@ func _slot_info_line(d: Dictionary) -> String:
 				"effect": d.get("effect", {}),
 			}
 			var effect_lines := WIEffectText.skill_effect_lines(record)
-			# Guard the trailing-dash case
-			# in BOTH branches (desc empty) -- unreachable today (every
-			# shipped active combat skill has a non-empty description) but
-			# matching journal.gd's/field_hotbar.gd's identical guard so a
-			# future no-description combat skill can't regress this either.
 			if desc == "":
 				return skill_name if effect_lines.is_empty() else "%s — %s" % [skill_name, effect_lines[0]]
 			if effect_lines.is_empty():
 				return "%s — %s" % [skill_name, desc]
 			return "%s — %s — %s" % [skill_name, effect_lines[0], desc]
 		"item":
-			# Issue #92 R2: the SAME "name — effect — description" shape as
-			# "skill" above, reusing WIEffectText.skill_effect_lines verbatim
-			# via a synthetic skill-shaped record (WIItems' own resolve_use
-			# precedent) -- today only the "heal" use_effect shape ever
-			# reaches this bar (a next_fight meal is field-only, never a
-			# combat hotbar candidate), so this only ever needs to describe
-			# a heal.
 			var item_name := String(d.get("label", ""))
 			var item_desc := String(d.get("description", ""))
 			var use_effect: Dictionary = d.get("use_effect", {})
@@ -791,20 +530,8 @@ func _slot_info_line(d: Dictionary) -> String:
 			return ""
 
 
-## BBCode-escaping (skill display_names like "[Power Strike]") is now
-## `UIChrome.bb_escape` (promoted off a per-file copy
-## here/journal.gd/targeting_controller.gd -- the M6.5 zero-cross-dependency
-## idiom, amended for this one case since this file already references
-## UIChrome for its panel chrome, so calling `bb_escape` too adds no new
-## dependency). `UIChrome.bb_escape`'s own doc comment covers the
-## self-collision bug the placeholder-char technique fixes.
 
 
-## Issue #75 item 5b: every feed-line name read routes through this instead
-## of the raw `combat.combatants[id]["display_name"]` -- `view` (when given;
-## see `feed_line_for_event`'s own doc comment) owns the per-encounter A/B/C
-## dedup, so a duplicate-name roster reads disambiguated on the feed exactly
-## like the turn strip/readout.
 func _display_name(combat: WICombat, view: RefCounted, id: String) -> String:
 	if view != null:
 		return view.display_name(id)
@@ -833,10 +560,6 @@ func _feed_text_capacity_height() -> float:
 	return maxf(_feed_panel_height - FEED_CONTENT_MARGIN_TOP - FEED_FOLD_DANGER_PX, 0.0)
 
 
-## Appends `line` to the feed and evicts the OLDEST entries (list-front, per
-## design D2-7 #6) until the TOTAL WRAPPED line count fits the panel's real
-## capacity -- never raw entry count. A single entry longer than the whole
-## panel is truncated with an ellipsis instead of evicting every other entry.
 func feed_push(line: String) -> void:
 	if line == "":
 		return
@@ -860,20 +583,6 @@ func push_feed(payload: Dictionary) -> void:
 	feed_push(String((payload.get("_ui", {}) as Dictionary).get("feed_line", "")))
 
 
-## Verbatim move of `_feed_line_for_event`, taking the raw `combat: WICombat`
-## as a parameter (the original derived it internally via
-## `_combat_or_null()`) instead of routing through `WICombatView` -- `view`
-## has no `.has(id)`-style existence check for a combatant/skill id, and this
-## function's every arm defensively guards against a missing id/skill before
-## indexing (`combat.combatants.has(...)`/`combat.skills.has(...)`), so it
-## reads the raw dictionaries directly, exactly as before. `WICombat` is a
-## plain `class_name` (sim-purity rule: no autoload refs), so this static
-## type annotation is compile-safe. `view` (issue #75 item 5b, optional --
-## every REAL call site passes `combat_screen.gd`'s own `_view`, populated in
-## lockstep with `_combat_or_null()`; `null` only matters for API safety) owns
-## the per-encounter A/B/C dedup (`WICombatView.display_name`), threaded
-## through so a duplicate-name roster reads disambiguated on the feed too,
-## matching the turn strip/readout.
 func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, view: RefCounted = null) -> String:
 	var line := ""
 	match type:
@@ -913,24 +622,6 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
 			line = "%s is %s!" % [_display_name(combat, view, String(payload["id"])), String(payload["status"])]
-			# The first-encounter surface. TRACED before
-			# choosing this surface over a TOAST: combat_hud's own "disjoint
-			# opaque bands" doc comment (build(), above) places the readout
-			# panel at x[330,950] y[530,642]; message_layer's toast panel is
-			# PRESET_BOTTOM_RIGHT with TOAST_OFFSETS_DEFAULT (-472,-130,-24,-34)
-			# on a 1280x720 viewport, i.e. x[808,1256] y[590,686] — the two
-			# rects genuinely intersect (x[808,950] × y[590,642]), and
-			# both parchment panels are opaque, and combat_screen's CanvasLayer
-			# is added to the tree AFTER message_layer's (main.gd
-			# `_spawn_ui_layers`), so a TOAST fired mid-combat would render
-			# behind the readout panel, invisible to the player. The combat
-			# feed is the honest surface: WIGame's `_combat_event_relay`
-			# enriches this exact event with `first_seen`/`status_text`
-			# (generated by L1's `WIEffectText.status_line`, never hand-
-			# composed) the moment a status is banked into `seen_statuses`
-			# for the first time ever — appended here as a second sentence,
-			# once, on top of the terse repeat-application line every future
-			# application still gets.
 			if bool(payload.get("first_seen", false)):
 				line += " " + String(payload.get("status_text", ""))
 		WIEvents.STATUS_EXPIRED:
@@ -938,11 +629,6 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 				return ""
 			line = "%s shakes it off." % _display_name(combat, view, String(payload["id"]))
 		WIEvents.STATUS_TICKED:
-			# GH#90 [burning]'s EOT tick. Status-keyed verb ("burning" is the
-			# only ticking status today); the generic fallback keeps a future
-			# ticking status from rendering a silent tick. A fully-absorbed
-			# tick (damage 0 -- mana_shield drank it) renders NO line ("X
-			# burns for 0." reads as a bug); the event itself still fires.
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
 			var ticked_damage := int(payload.get("damage", 0))
@@ -954,10 +640,6 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 			else:
 				line = "%s takes %d from %s." % [ticked_name, ticked_damage, String(payload.get("status", "")).replace("_", " ")]
 		WIEvents.WINDUP_DECLARED:
-			# Issue #82's WINDUP SIM SPEC: the universal DECLARE tell -- every
-			# player sees this line regardless of [Dangersense] (only the
-			# board's cell OVERLAY is dangersense-gated, board_renderer.gd's
-			# own concern via combat_playback.gd's capture).
 			if combat == null or not combat.combatants.has(String(payload["id"])) or not combat.skills.has(String(payload["skill"])):
 				return ""
 			var windup_caster := _display_name(combat, view, String(payload["id"]))
@@ -972,9 +654,6 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 	return line
 
 
-## Wrapped-line count for `text` at `width` using `label`'s resolved theme
-## font/size -- the same TextServer word-wrap layout Label uses under the
-## hood (`Font.get_multiline_string_size`), not a guessed character count.
 func _wrapped_line_count(label: Label, text: String, width: float) -> int:
 	if text == "":
 		return 0
@@ -987,10 +666,6 @@ func _wrapped_line_count(label: Label, text: String, width: float) -> int:
 	return max(int(round(size.y / line_height)), 1)
 
 
-## How many wrapped lines `label` actually fits at `height`, from real font
-## metrics. Uses the FULL line pitch (font height + the theme's
-## `line_spacing` constant) -- see combat_screen.gd's original doc comment
-## (moved verbatim) for the windowed-verified regression this fixed.
 func _line_capacity(label: Label, height: float) -> int:
 	var font := label.get_theme_font("font")
 	var font_size := label.get_theme_font_size("font_size")
@@ -1002,9 +677,6 @@ func _line_capacity(label: Label, height: float) -> int:
 	return max(int((height + line_spacing) / pitch), 1)
 
 
-## Cuts whole words (design D2-7 #6: cut words, never widen the UI) and
-## appends an ellipsis until `text` fits within `max_lines` wrapped lines at
-## `width`. Returns `text` unchanged if it already fits.
 func _fit_to_lines(label: Label, text: String, width: float, max_lines: int) -> String:
 	if _wrapped_line_count(label, text, width) <= max_lines:
 		return text
@@ -1112,18 +784,6 @@ func match_tutor_line(type: String, payload: Dictionary) -> Dictionary:
 	return chosen
 
 
-## Resolves the RENDERED line for a tutor entry: `line` unconditionally,
-## UNLESS the entry carries the optional `requires_any_class` gate and the
-## gate reads false -- then `fallback_line` renders instead, if the entry
-## has one. The gate exists for lines whose content presumes progression
-## state (e.g. "check your new skill slots") on an arena also reachable
-## before that state exists -- the entry's `_comment` in data/arenas.json
-## carries the per-line rationale. Entries with no `requires_any_class` key
-## always take the plain-`line` branch, unchanged. CONSTRAINTS:
-## `_screen._pc_has_any_class()` is a read-only sim query (see that
-## wrapper's own doc comment for why this isn't an accomplishment-counter
-## gate like `ally_requires`/`door_when` elsewhere in this repo) --
-## presentation reads sim state here, never mutates it.
 ## Issue #88 (gap-2): a SECOND-LEVEL split inside the fallback branch --
 ## `requires_ally` (a combatant id) + `solo_fallback_line` are BOTH optional,
 ## checked only once `requires_any_class` has already failed. A line voiced
@@ -1152,7 +812,6 @@ func _tutor_payload_contains(payload: Dictionary, subset: Dictionary) -> bool:
 	return true
 
 
-## Duplicated from qa/test_driver.gd's `_loosely_equal`.
 func _tutor_loosely_equal(a: Variant, b: Variant) -> bool:
 	if (a is int or a is float) and (b is int or b is float):
 		return is_equal_approx(float(a), float(b))
@@ -1173,12 +832,6 @@ func _tutor_loosely_equal(a: Variant, b: Variant) -> bool:
 	return a == b
 
 
-## Renders an already-decided tutor-line match (see `match_tutor_line`):
-## pushes `tutor.line` into the feed and emits `ui_tutor_line_rendered
-## {beat: id}` via the screen wrapper. `tutor` is `{}` for "no match this
-## event" (no-op). Grows the feed panel FIRST (see
-## `_grow_feed_panel_for_tutor`) so a long beat never has to fall back to
-## feed_push's ordinary cut-with-ellipsis discipline.
 func render_tutor_line(tutor: Dictionary) -> void:
 	if tutor.is_empty():
 		return
@@ -1187,18 +840,6 @@ func render_tutor_line(tutor: Dictionary) -> void:
 	_screen._emit_tutor_rendered(String(tutor.get("id", "")))
 
 
-## Grows the feed panel (never shrinks -- see `_feed_panel_height`'s doc
-## comment) so `text`'s own wrapped-line count clears the parchment fold with
-## TUTOR_SAFETY_BUFFER_PX to spare. Fixed-pixel model (needed = text block +
-## top content margin + fold danger zone + safety buffer), not the old
-## proportional ~70%-of-height fraction -- valid now that FEED_STRIP_FOLD_
-## PATCH_BOTTOM pins the fold at a TRUE CONSTANT depth from the panel's own
-## bottom edge regardless of how tall the panel grows (see that const's doc
-## comment for why the old fraction could still ride the fold on a long
-## beat). No-op if `_feed_label` is null (hud built via `hud_script.new(null,
-## null,null)` with no `build()` call -- test_combat_visuals.gd's direct
-## `reset_tutor_lines`/matcher check exercises exactly that path) or if the
-## computed need already fits the panel's current height.
 func _grow_feed_panel_for_tutor(text: String) -> void:
 	if _feed_label == null:
 		return
@@ -1214,10 +855,6 @@ func _grow_feed_panel_for_tutor(text: String) -> void:
 		_resize_feed_panel(needed)
 
 
-## Applies a feed panel height: LEFT/RIGHT/BOTTOM stay fixed (FEED_OFFSET_*),
-## TOP is derived so growth always reads upward (same idiom as message_
-## layer.gd's toast panel and dialogue_panel.gd's `_fit_panel_height`). No-op
-## if `_feed_label` is null (see `_grow_feed_panel_for_tutor`'s doc comment).
 func _resize_feed_panel(height: float) -> void:
 	if _feed_label == null:
 		return

@@ -4,14 +4,14 @@
   "width": 40,
   "height": 26
  },
- "_comment_freezable": "(10,17) is the north edge of the fishing-pond blocking rect (x7-13, y17-21 walls.segments). It is already impassable water, so unfrozen it changes NOTHING for any floodplains route (every ambush/Relc/gate lane is unchanged -- confirmed off the pond). Approaching from the open floor at (10,16) and casting [Snap Freeze] freezes it into walkable ice; stepping onto it and facing down reaches the `frozen_cache` prop at (10,18) (pond interior, otherwise unreachable). The 'secret' is that only a cold-caster can cross the water to it. Ice thaws at sleep. No QA drives this (the seam is proven by sewers_walkthrough); it ships as reachable content.",
+ "_comment_freezable": "Freezing (10,17) makes the blocked pond edge walkable, reaching the otherwise inaccessible cache at (10,18); sleep thaws it.",
  "freezable": [
   [
    10,
    17
   ]
  ],
- "_comment": "World environment. Reachable via the walkable inn_door route (inn_door -> floodplains (7,6); floodplains_peek was retired once this route landed, see CLAUDE.md). POI anchors: fishing-pond (13,18), ruin-stones interact (31,7). `goblin_encounter_1` sits at (30,23) with `trigger_radius: 2` -- the wall `segments` at y=25 block every column except x=31 (`liscor_gate`'s own cell), so (31,24) is the UNIQUE open cell from which the gate can be reached/interacted -- and (31,24) sits inside the 5x5 Chebyshev-2 square around (30,23) (x:[28,32], y:[21,25]). Any 4-directional path from outside that square to (31,24) (which lies inside it) must enter the square before arriving, so no route to `liscor_gate` avoids the ambush (BFS-proven). `goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
+ "_comment": "`goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
  "blocked": [
   [
    4,
@@ -589,7 +589,6 @@
    "_pick": "POI-A shoulder"
   }
  ],
- "_comment_walls": "Liscor wall SE margin (castle picks, iterate) + flood pond as water segments (cap [1,7] = the verified still-water pick from Water_tiles; [3,3] looks right but is island rim, not still water).",
  "walls": {
   "sheet": "res://assets/tiles/castle/Tiles.png",
   "tile_px": 16,
@@ -714,7 +713,6 @@
  },
  "decor": [
   {
-   "_comment": "The 120x73 feet-anchored facade renders from x=3.75..11.25 and y=1.44..6.0 at this cell. Its blocked footprint is x=4..10/y=2..5 with the door gap at (7,5); the full y=6 arrival apron stays open. The warm glow is registered here so the shared atmosphere multiplier keeps it off by day and on at dusk/night; with Relc's fire this map has 2 of the allowed 8 lights.",
    "sprite": "wandering_inn_facade",
    "cell": [
     7,
@@ -762,8 +760,7 @@
     "energy": 1.4,
     "radius": 48,
     "flicker": true
-   },
-   "_comment": "Relc's fire — moved beside him (12,13) per pilot verdict: it must READ as his."
+   }
   },
   {
    "sprite": "tree_big",
@@ -983,7 +980,6 @@
  ],
  "scatter": [
   {
-   "_comment": "Sway tagged on the whole spec (not split by sprite id) to avoid re-seeding the scatter presence hash, which would move WHICH cells host which prop and break the day-shot 'all else identical' contract -- the pebble instances in this mixed pool also get the shader at the shared subtle default amplitude, imperceptible in practice (see world.gd's _build_scatter comment / task-b3-report.md).",
    "pool": [
     "grass_tuft",
     "pebble",
@@ -1004,7 +1000,6 @@
    "sway": true
   }
  ],
- "_comment_ambience": "Fireflies + pond_glints share the same rect -- a bounding box over the pond's water-segment cells (walls.segments rows y=17-21, x=7-13, see the walls block above) plus one cell of margin so fireflies read as hovering around/above the water, not clipped to exactly the water tiles.",
  "ambience": [
   {
    "preset": "fireflies",
@@ -1049,10 +1044,10 @@
     3
    ],
    "hide_sprite": true,
-   "_hide_comment": "Render-only: the wandering_inn_facade decor paints the entrance at this cell; the generic plank door drew ON TOP of it (2026-07-08 review Medium). Door function (interact/to_map) unchanged."
+   "_hide_comment": "Hide the generic door sprite because facade decor owns this cell; door interaction is unchanged."
   },
   {
-   "_comment": "The inn's iconic sign, canon-fixed wording (ch. 1.18) -- \"THE WANDERING INN — NO KILLING GOBLINS\", posted \"on a sign right in front of the inn, by the door\" (the exact-wording loophole ch. 4.33 is part of its character, not implemented here). Placed at (6,6), one cell WEST of the universal floodplains arrival cell (7,6) every door-transition script lands on -- confirmed by grep across every qa/scripts/*.json that reaches floodplains: every one of them moves right/down from (7,6), none ever moves west, so this occupies genuinely untouched ground beside the door (7,5) without shifting any existing route/pin. Sprite: a bespoke PixelLab signpost (a text-free wooden post + hanging plank, `assets/sprites/inn_sign/Idle-Sheet.png`) -- the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text). Interact toast reads the sign (on_interact_accomplishment + toast, the dusty_scroll precedent -- no skill gate, copy verbatim); the plain `observe` field (the generic ANY-entity fallback seam [Appraise Foe] reads, distinct from cellar_door/nest_ledge's requires_skill+on_skill_use gated seam, since this prop has no skill gate) holds the observe copy verbatim.",
+   "_comment": "the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text).",
    "id": "inn_sign",
    "kind": "prop",
    "cell": [
@@ -1066,7 +1061,7 @@
    "observe": "The paint is newer than the post it hangs on. Somebody meant it, and means it still."
   },
   {
-   "_comment": "A lost cache on the pond floor at (10,18), inside the fishing-pond blocking rect and thus unreachable UNLESS the player frost-freezes the pond edge (10,17) and steps onto the ice to interact it (see the floodplains `freezable` list). Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast. Sits on an already-blocked pond cell, so it alters no route and no script reaches or asserts it. Sprite `crate` stands in for a silt-buried strongbox (VISUAL-LOG flag). Issue #81 (exploration & optional content): the economy pass this comment used to flag -- 'a future economy pass can hang gold/an item off this discovery' -- lands here. `gold: 5` rides the SAME on_interact_accomplishment branch's existing optional `gold` field (wi_game.gd's interact(), the serving_tray/patron precedent), fired AFTER the atmospheric toast above (record_accomplishment -> toast -> gold -> its own 'Earned 5 gold.' toast) -- the flavor text is untouched, this is additive only. `bounty_pond_keepsakes` (data/bounties.json) now also reads found_the_frozen_cache for a small board bonus, so the one secret this game shipped that paid literally nothing now pays gold directly AND feeds a posting. Still 'No QA drives this' (the freeze-cross mechanic itself remains a deliberately disclosed gap, per the original note) -- this task did not add fixture/canonical coverage for the reward, consistent with that pre-existing, accepted scope.",
+   "_comment": "Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast.",
    "id": "frozen_cache",
    "kind": "prop",
    "cell": [
@@ -1095,7 +1090,7 @@
    ]
   },
   {
-   "_comment": "`on_enter_accomplishment` banks `reached_liscor` on door travel INTO the street (the Act I gate's street-arrival counter). Fires ONLY on real door interaction (the `door` branch of interact()), never on QA teleport or save/load restore (those use bind_map_silent/transition without the entity), so a load can never spuriously advance the act. record_accomplishment is idempotent for gate purposes (>= 1). DISCLOSURE: every canonical script that walks floodplains -> liscor_gate -> street now carries reached_liscor:1 in its snapshot (additive counter; no script asserts an exact accomplishments dict).",
+   "_comment": "record_accomplishment is idempotent for gate purposes (>= 1).",
    "id": "liscor_gate",
    "kind": "door",
    "cell": [
@@ -1132,7 +1127,6 @@
    "ally_requires": {
     "met_relc": 1
    },
-   "_comment": "Issue #62 finding 8: RETIRED to one-shot -- `respawns: true` used to leave this armed forever (dormant-until-next-sleep, re-arming every waking), so the same ambush kept springing on every trip past the gate, sleep after sleep, long after the tutorial beat it exists for was long over. `respawns` (and its now-dead `repeat_arena`/`tutorial_seen_when` pair, which only ever mattered for a POST-dormancy re-arm) are gone outright: resolve_combat's existing `elif not persistent: remove_entity(...)` arm (already shipped, no new sim mechanism) now fires on this entity's first victory, same as any ordinary one-shot encounter -- it is gone from the map for good afterward, exactly like goblin_encounter_2. riverfarm's river_wolf_pack pair keeps `respawns: true` (deliberate, unrelated -- a night-only recurring danger, not a one-time tutorial beat). This arena's own tutor_lines close on road_clear's sign line (\"See the sign? Her inn, her rule. The road's the road. Teeth are teeth out here. But under her roof? Don't.\") -- the shipped resolution moment for holding the inn's no-killing-goblins rule on the road; sign_defended (below) still banks once, satisfying the Garden gate's K-of-4 read (`accomplishment_count` >=1, unaffected by this fight now being unrepeatable).",
    "on_victory": [
     "won_combat",
     "sign_defended"
@@ -1231,7 +1225,6 @@
    "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it. Including you, now.",
    "friendly_line": "Heh. Alright, alright - I like you. You've got the look of someone who buys a guy a drink after. We're good, you and me. Best guardsman in Liscor says so.",
    "facing": "left",
-   "_comment_stages": "Talk_pool lifted verbatim from the S2 dropped-but-authored copy (.superpowers/sdd/fp-handoff/task-s2-social-report.md, Dropped-but-authored). talk_pool_stages + the relc_intro.json meet-topic unlocks (relc_army/relc_after) lifted verbatim from docs/archive/staging/social-2-staging/relc_stages.json after the re-path wave went green. relc_after's daughter/Embria reveal stays OUT (V5 canon, hard rail -- the staged oblique 'people I left in it' copy is what ships). Stage 3's spar-wager perk refinement stays UNBUILT/flagged (status quo: relc_spar already re-offers).",
    "talk_pool": [
     "Heh. You walk like nobody's ever hit you properly. We should fix that sometime - for fun.",
     "Road's boring today. I keep hoping something stupid charges the gate so I can try out the old Relc Headbutt.",
@@ -1310,7 +1303,7 @@
    ]
   },
   {
-   "_comment": "The recovery run lives in a small DEDICATED ruin map family. LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the `ruin_surface` map below, the inside half). Gate `door_when.requires: {door_chain_started: 1}` (Erin's dialogue banks it at beat 1) -- until then interact falls through to the on_interact_accomplishment/toast branch below, the sewer_grate/deep_fissure pre-gate precedent (byte-identical fallback, no route change for any existing script). Placed at floodplains (38,11), inside the open grass_03 patch (33-38,9-14) -- confirmed off EVERY canonical floodplains route: a full replay of every qa/scripts/*.json's move/press/teleport sequence (blocked-cell-aware, starting from each script's real entry -- its fixture start where one exists, else the universal (7,6) door-arrival cell) showed every route that crosses the chieftains_raid/liscor_gate corridor caps out at x<=31 (tutorial_flow's 'right 18' from (12,6) lands x=30; quest_errand_fight/gate_district_walkthrough/combat_walkthrough/economy_loop all share that same capped-at-x31 shape) -- x=38 is walked and faced by nothing today. Well clear of the tree_big(36,10)/tree_round(35,15) decor and every other floodplains entity (chieftains_raid 31,7 / goblin_encounter_2 28,18 / relc 12,13 / relc_spar 13,12 / frozen_cache 10,18 / ruin_stones 3,8 / inn_sign 6,6). Sprite reuses `boulder` tinted cold grey-blue (the deep_fissure/sewer_grate VISUAL-LOG precedent for a not-yet-bespoke gated-entrance prop -- a real ruin-entrance crop is lane γ's job).",
+   "_comment": "LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the `ruin_surface` map below, the inside half).",
    "id": "ruin_door",
    "kind": "prop",
    "cell": [
@@ -1340,7 +1333,7 @@
    }
   },
   {
-   "_comment": "Issue #24 (HR-II forward-ref): bounty_crab_cull's own encounter bank. NO trigger_radius -- the ambush-one-shot lesson (goblin_encounter_1/river_wolf_pack) doesn't apply here: this is a renewable cull target a player CHOOSES to pick a fight with, not a proximity danger sprung on them. Interact opens the `crab_nest` confirm conversation (review-wave M1 controller ruling, the awakened_boss/relc_descent confirm shape: the node text telegraphs the armor, [Strike first.] fires the fight via a start_combat dialogue effect, [Back away.] leaves it live and re-interactable -- informed consent for a fresh classless player; see data/dialogue/crab_nest.json's own TRAP note for the dormant-re-interact edge). respawns:true (staging note's own recommendation, docs/archive/staging/board-staging/guild-bounties.json's bounty_crab_cull _notes -- a rotating bounty that can only complete once is a design smell) -- the entity goes dormant until the next sleep re-arms it, same mechanism river_wolf_pack/alley_footpads already use, just without their trigger_radius half. `allies`/`ally_requires` mirror every other floodplains fight (goblin_encounter_1/2, chieftains_raid): Relc fields once met_relc is banked, solo before that. Placed at (21,16) -- verified off every canonical floodplains route the same way ruin_door's own placement comment documents: replayed every qa/scripts/*.json crossing this map (move/assert_state/teleport-aware simulator, entry cells (7,6)/(31,24)/(37,11) per the three floodplains doors) and confirmed the nearest walked cell is Chebyshev 7 away (class_evolution_loop's own x=28 corridor); nearest existing entity is goblin_encounter_2 at (28,18), Chebyshev 7; nearest blocked cell is the (24,19) boulder at Chebyshev 3 -- close enough to read as the SAME boulder field without colliding with it. Sprite `rock_crab` (data/sprites.json) is a genuine crab pick (Admurin Enemy_Galore_I/Crab), pre-tinted stone-grey in the shipped asset itself (see assets_manifest.json's own trace) rather than an entity-level `tint` override, since the fight needs the SAME palette in both field and combat and combat sprites have no runtime tint hook. NO `loot` table (unlike goblin_encounter_1/2) -- deliberate: the bounty's OWN turn-in payout is the canonical proof surface (`crab_cull_loop`'s gold-exact assertion), and fight loot rolls off an isolated per-encounter rng stream keyed to the QA CLI `--seed` (independent of the fixture's own combat rng_state) -- adding a chance-based gold drop here would make that assertion seed-dependent for no gameplay reason (river_wolf_pack, the other respawns:true precedent, carries no loot table either).",
+   "_comment": "`allies`/`ally_requires` mirror every other floodplains fight (goblin_encounter_1/2, chieftains_raid): Relc fields once met_relc is banked, solo before that.",
    "id": "rock_crab_nest",
    "kind": "encounter",
    "cell": [
@@ -1365,7 +1358,6 @@
    "on_victory": "rock_crabs_culled"
   },
   {
-   "_comment": "Issue #80 (world reactivity wave, item 4 -- night texture, taste-gate 2026-07-12: ONE night-only slot per outdoor region, the river_wolf_pack precedent applied to Liscor's own approach road). EXISTING combatants only (goblin_raider/goblin_shaman -- goblin_encounter_2's own roster) on the EXISTING goblin_ambush arena; ally relc gated met_relc, matching every other floodplains fight. encounter_when{phase:[night]} + trigger_radius 1 (river_wolf_pack's own tightest radius, not goblin_encounter_1's old radius-2 -- smallest honest footprint) + respawns:true (a recurring night danger, not a one-time ambush -- river_wolf_pack's exact shape, NOT goblin_encounter_1/2's now-retired one-shot shape, issue #62 finding 8). visual_states hides the field marker outside night (river_wolf_pack's own fix for a marker standing in daylight beside its own gone-with-the-light toast). PLACEMENT: (10,21), the empty y20-22 band -- checked Chebyshev distance against every floodplains coordinate any qa/scripts/*.json or qa/fixtures/*.json touches (grep sweep across all 39 floodplains-touching scripts, plus a full entity/blocked-cell distance scan): the nearest OTHER entity on the map is frozen_cache (10,18), Chebyshev 3, but it's a pond-locked prop no shipped canonical visits (reached only via the [Ice Floor] freeze-a-crossing side path) and still clear of this entity's own trigger_radius 1; nearest blocked cell is (17,7), Chebyshev 14; nearest REAL route is gate_district_walkthrough's own x=30 goblin-ambush/gate corridor, Chebyshev 20+. No canonical's pinned walk enters this band.",
    "id": "goblin_night_patrol",
    "kind": "encounter",
    "cell": [
@@ -1396,7 +1388,7 @@
    "gate_closed_toast": "Nothing moving out there. Whatever it was keeps day hours, same as everyone sane.",
    "visual_states": [
     {
-     "_comment": "Marker visible ONLY while the night encounter_when gate can fire -- river_wolf_pack's own fix, applied verbatim.",
+     "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
      "when": {
       "phase": [
        "day",
@@ -1409,7 +1401,7 @@
    "on_victory": "won_combat"
   },
   {
-   "_comment": "Issue #97 (bestiary expansion): the stray Corusdeer, T1 renewable-cull target -- the crab_nest informed-consent shape (interact opens a confirm conversation before combat, data/dialogue/corusdeer_range.json). respawns:true (dormant until the next sleep, the rock_crab_nest/river_wolf_pack mechanism). Placed at (36,6), the map's NE quadrant -- Chebyshev distance to the nearest real entity (chieftains_raid, 31,7) is 5, to ruin_door (38,11) is 5; clear of every canonical door/entity cluster (floodplains_inn_door 7,5; liscor_gate 31,25; the goblin/relc/rock_crab cluster all sit y7-23 x3-31). No `allies` (a solo apex read, matches its own Silver-rank-stray canon framing -- see combatants.json's own corusdeer _comment) so no ally_requires gate is needed.",
+   "_comment": "respawns:true (dormant until the next sleep, the rock_crab_nest/river_wolf_pack mechanism).",
    "id": "corusdeer_range",
    "kind": "encounter",
    "cell": [
@@ -1429,7 +1421,6 @@
    "on_victory": "corusdeer_culled"
   },
   {
-   "_comment": "Issue #97: the razorbeak nest, T1 renewable-cull pack encounter -- the crab_nest informed-consent shape (data/dialogue/razorbeak_nest.json). respawns:true. Placed at (5,20), the map's SW quadrant -- Chebyshev distance to goblin_night_patrol (10,21) is 5, to frozen_cache (10,18) is 5, to ruin_stones (3,8) is 12; clear of the door/goblin/relc/rock_crab cluster. `enemies` fields the matched pair (razorbeak_a/b, combatants.json) -- canon-cited `coward` AI means the pair scatters once hurt rather than fighting to the death. No `allies`. GH#94 (VISUAL-LOG re-point, 2026-07-13): arena was `training_yard` -- a wild-fauna pack fight resolving among training dummies/pells read wrong (fiction mismatch). Re-pointed to `boulder_flats` (issue #24's own arena, SAME floodplains biome this encounter's field placement already lives in, open grass + scattered boulder cover -- the fiction-right open-ground arena). BANKING FLIP, disclosed: training_yard carries `trivial: true` (the spar arena's no-progression flag), inherited here by mistake at #97 -- razorbeak kills banked NO action tally (WIGame._bank_action_tally suppresses on an arena-level trivial; the on_victory `razorbeaks_culled` bounty counter was never gated and always banked). boulder_flats carries no trivial flag, so wild culls now feed class progression -- the fiction-correct direction.",
    "id": "razorbeak_nest",
    "kind": "encounter",
    "cell": [
@@ -1560,5 +1551,5 @@
    5
   ]
  ],
- "_cover_skip_comment": "Render-only (world.gd's blocked layer): the wandering_inn_facade sprite visually owns these 27 blocked cells; the generic cover tile would show through the sprite's transparent regions (the roofline gap the 2026-07-08 windowed read caught). Sim blocking unchanged. If the facade sprite or its cell moves, move this list WITH it."
+ "_cover_skip_comment": "cover_skip must move with the inn facade; it prevents generic blocked tiles showing through transparent roofline pixels."
 }

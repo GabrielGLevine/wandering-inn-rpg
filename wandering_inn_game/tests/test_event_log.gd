@@ -1,17 +1,13 @@
 extends SceneTree
-## Headless test for WIEventLog and QAPaths (pure classes, no autoloads).
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_event_log.gd
 
 
 func _init() -> void:
 	WITestWatchdog.arm(self)
-	# QAPaths.parse_args
 	var args := QAPaths.parse_args(PackedStringArray(["--qa-script=res://qa/x.json", "--seed=42", "loose"]))
 	assert(args["qa-script"] == "res://qa/x.json", "parses --key=value")
 	assert(args["seed"] == "42", "parses numeric value as string")
 	assert(not args.has("loose"), "ignores args without --key= form")
 
-	# WIEventLog round-trip
 	var path := OS.get_user_data_dir().path_join("test_qa/events.jsonl")
 	var log := WIEventLog.new(path)
 	log.append("toast", {"text": "hello"})

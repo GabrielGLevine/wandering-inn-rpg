@@ -1,6 +1,4 @@
 extends SceneTree
-## Validates the presentation sprite catalog can build SpriteFrames resources.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_sprite_registry.gd
 
 
 func _init() -> void:
@@ -24,10 +22,6 @@ func _init() -> void:
 				var expected: int = expected_counts.get("%s/%s" % [sprite_id, anim_name], -1)
 				assert(expected >= 0, "no expected frame count for %s/%s" % [sprite_id, anim_name])
 				var actual: int = frames.get_frame_count(full_name)
-				## Public-checkout (fallback-art) runs: a missing sheet's
-				## placeholder can't know the real sheet's frame count (the
-				## PNG width carried it) -- relax to >=1 for exactly those
-				## sheets; asset-present runs keep the exact pin.
 				var anim_rec: Dictionary = entry["animations"][anim_name]
 				var sheet_key: String = "sheet_%s" % facing if facing != "" else "sheet"
 				if WISpriteRegistry.is_fallback_sheet(String(anim_rec[sheet_key])):
@@ -42,11 +36,6 @@ func _init() -> void:
 	quit(0)
 
 
-## Fallback-art contract: a nonexistent sheet path must yield a
-## valid frame-sized placeholder (never assert/crash) so a public checkout
-## without the private asset bundle still boots. Exercises BOTH the tile path
-## (tile_set_for) and the sprite-strip path (_add_strip), including a region
-## crop against a missing sheet (must stay in-bounds).
 func _assert_missing_sheet_fallback() -> void:
 	var bogus_tile := "res://assets/__nonexistent_tile__.png"
 	var ts: TileSet = WISpriteRegistry.tile_set_for(bogus_tile, 16)
@@ -57,7 +46,6 @@ func _assert_missing_sheet_fallback() -> void:
 	assert(src.texture != null, "placeholder TileSet source needs a texture")
 	assert(src.has_tile(Vector2i(0, 0)), "placeholder TileSet must have at least tile (0,0)")
 
-	## Sprite-strip path: no region -> a single frame-sized placeholder frame.
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
 	WISpriteRegistry._add_strip(frames, "walk", "res://assets/__nonexistent_sprite__.png", Vector2i(16, 16), 6.0, [])
@@ -67,8 +55,6 @@ func _assert_missing_sheet_fallback() -> void:
 	assert(tex != null, "placeholder frame texture must be non-null")
 	assert(tex.get_width() >= 16 and tex.get_height() >= 16, "placeholder frame must be at least frame-sized")
 
-	## Region crop against a missing sheet must stay in-bounds and yield the
-	## region_w/frame_w frame count (64/16 = 4), never an out-of-range error.
 	var frames2 := SpriteFrames.new()
 	frames2.remove_animation("default")
 	WISpriteRegistry._add_strip(frames2, "idle", "res://assets/__nonexistent_region__.png", Vector2i(16, 16), 6.0, [0, 0, 64, 16])
@@ -81,15 +67,9 @@ func _load_json(path: String) -> Dictionary:
 	return parsed
 
 
-## Builds a map of expected frame counts: "sprite_id/anim_name" -> count.
-## Counts derived from PNG widths in asset-index.md divided by frame_size.
-## body_a (F2 outfit rebuild, 104px frames): idle=4, walk=6, slice=3, hit=6,
-## death=7, cast=6; citizen_f: idle=4, walk=6.
 func _build_expected_counts() -> Dictionary:
 	var counts: Dictionary = {}
 
-	## body_a frame counts (F2: PixelLab v2 clothed-traveler character,
-	## 104x104 frame size, per-anim counts from the mannequin templates)
 	counts["body_a/idle"] = 4      ## 416 / 104 (breathing-idle)
 	counts["body_a/walk"] = 6      ## 624 / 104 (walking)
 	counts["body_a/slice"] = 3     ## 312 / 104 (lead-jab)
@@ -97,10 +77,6 @@ func _build_expected_counts() -> Dictionary:
 	counts["body_a/hit"] = 6       ## 624 / 104 (taking-punch)
 	counts["body_a/death"] = 7     ## 728 / 104 (falling-back-death)
 
-	## PC creation variants (6 = 3 races x 2 genders, all the SAME F2
-	## mannequin-template anim set, so counts match body_a exactly; per-variant
-	## frame_size/render_scale/anchor differ, but frame COUNTS are template-fixed).
-	## pc_human_m reuses body_a's sheets verbatim (the Human base).
 	for variant in ["pc_human_m", "pc_human_f", "pc_drake_m", "pc_drake_f", "pc_gnoll_m", "pc_gnoll_f"]:
 		counts["%s/idle" % variant] = 4
 		counts["%s/walk" % variant] = 6
@@ -109,27 +85,18 @@ func _build_expected_counts() -> Dictionary:
 		counts["%s/hit" % variant] = 6
 		counts["%s/death" % variant] = 7
 
-	## citizen_f frame counts (all 64x64 frame size)
 	counts["citizen_f/idle"] = 4   ## 256 / 64
 	counts["citizen_f/walk"] = 6   ## 384 / 64
 
-	## static field prop entries (single 64x64 region)
 	counts["dusty_scroll/idle"] = 1
-	## PixelLab prop batch -- dirty_table (cluttered pre-clean look),
-	## cauldron (stew_pot), training_dummy (straw pell) are all single 64x64
-	## PixelLab sheets, 1 frame each.
 	counts["dirty_table/idle"] = 1
 	counts["cauldron/idle"] = 1
 	counts["bed/idle"] = 1
 	counts["door/idle"] = 1
 
-	## Decor prop entries (single-region static crops, all 1 frame)
-	## (controller iteration: table_red/table_blue removed; rug_tan/table_brown added)
 	counts["rug_tan/idle"] = 1
 	counts["table_brown/idle"] = 1
 	counts["chest/idle"] = 1
-	## Admurin open-lid chest, single-region static (inn_chest
-	## visual_states "opened" swap).
 	counts["chest_open/idle"] = 1
 	counts["plant_pot/idle"] = 1
 	counts["bar_counter/idle"] = 1
@@ -137,33 +104,20 @@ func _build_expected_counts() -> Dictionary:
 	counts["crate/idle"] = 1
 	counts["stool/idle"] = 1
 	counts["mushroom/idle"] = 1
-	## Sconce: Bonfire_01-Sheet.png strip, 128px / 32px frame = 4 frames
 	counts["sconce/idle"] = 4
 
-	## 8 code-drawn field-skill icons (single-frame)
 	for icon_id: String in ["icon_basic_cleaning", "icon_light", "icon_basic_cooking", "icon_observe", "icon_soothe_clientele", "icon_unerring_aim", "icon_sweep_the_tables", "icon_servers_prescience"]:
 		counts[icon_id + "/idle"] = 1
 
-	## [Diplomat] kit: 2 code-drawn skill icons (single-frame)
-	## -- charming_smile (field) + calming_touch (combat).
 	for icon_id: String in ["icon_charming_smile", "icon_calming_touch"]:
 		counts[icon_id + "/idle"] = 1
 
-	## [Stealth] (`sneak`) code-drawn boot glyph
-	## (single-frame), same policy as every icon above.
 	counts["icon_sneak/idle"] = 1
 	counts["icon_invisibility/idle"] = 1
 
-	## GH#94 icon drain: 6 code-drawn skill icons (single-frame), same
-	## policy as every icon above -- power_shot/keen_eye/quick_nock/
-	## piercing_shot ([Archer] kit), spellbound_strike ([Spellsword] L16),
-	## sudden_strike ([Sneak Attack], Rogue L7).
 	for icon_id: String in ["icon_power_shot", "icon_keen_eye", "icon_quick_nock", "icon_piercing_shot", "icon_spellbound_strike", "icon_sudden_strike"]:
 		counts[icon_id + "/idle"] = 1
 
-	## Library/sewer/dummy statics (1-frame regions);
-	## royal_soldier single-facing battler idle 256/64 = 4;
-	## a_hunter directional idle 256/64 = 4, walk maps the Run sheets 384/64 = 6.
 	counts["library_desk/idle"] = 1
 	counts["library_shelf/idle"] = 1
 	counts["sewer_grate/idle"] = 1
@@ -172,41 +126,25 @@ func _build_expected_counts() -> Dictionary:
 	counts["a_hunter/idle"] = 4
 	counts["a_hunter/walk"] = 6
 
-	## wilovan: combat alias of pc_gnoll_m's full template set (see the
-	## sprite's own _comment -- swap a bespoke rig THERE, counts move with it).
 	for anim_name in [["idle", 4], ["walk", 6], ["slice", 3], ["cast", 6], ["hit", 6], ["death", 7]]:
 		counts["wilovan/%s" % anim_name[0]] = int(anim_name[1])
 
-	## Relc: DIRECTIONAL + animated
-	## (PixelLab v2 create-character-pro -> animate-character; 124x124 frames,
-	## down/side/up sheets). idle=breathing-idle(4), walk=walking(6),
-	## slice=lead-jab(3) -- the spear thrust reads cleanly.
 	counts["relc/idle"] = 4
 	counts["relc/walk"] = 6
 	counts["relc/slice"] = 3
 
-	## Pisces: DIRECTIONAL + animated
-	## (hooded white-robe necromancer; 108x108 frames, down/side/up).
-	## idle=breathing-idle(4), walk=walking(6).
 	counts["pisces/idle"] = 4
 	counts["pisces/walk"] = 6
 
-	## Olesm (sky-blue Drake clerk w/ rolled map)
-	## + Zevara (light-blue Drake Watch officer, armor) are now DIRECTIONAL +
-	## animated (112x112 frames, down/side/up). idle(4) + walk(6).
 	counts["olesm/idle"] = 4
 	counts["olesm/walk"] = 6
 	counts["zevara/idle"] = 4
 	counts["zevara/walk"] = 6
 
-	## Klbkch (Antinium Senior Guardsman, ant-headed insectoid; 92x92 frames,
-	## down/side/up). idle=breathing-idle(4), walk=walking(6).
 	counts["klbkch/idle"] = 4
 	counts["klbkch/walk"] = 6
 	counts["klbkch/slice"] = 3
 
-	## The Horns of Hammerad (8d A2; pro rigs, jab_attack slices for the
-	## two who field as delve allies).
 	counts["ceria/idle"] = 4
 	counts["ceria/walk"] = 6
 	counts["yvlon/idle"] = 4
@@ -216,36 +154,25 @@ func _build_expected_counts() -> Dictionary:
 	counts["ksmvr/walk"] = 6
 	counts["ksmvr/slice"] = 3
 
-	## Eloise the [Tea Witch] (#63; 148x148).
 	counts["eloise/idle"] = 4
 	counts["eloise/walk"] = 6
 
-	## Grimalkin ([Sinew Magus], Pallass 8e Phase A) + the tier-clerk rig
-	## (132x132 / 108x108 frames, down/side/up). idle=breathing-idle(4),
-	## walk=walking(6). Neither fields in combat v1 -- idle+walk only.
 	counts["grimalkin/idle"] = 4
 	counts["grimalkin/walk"] = 6
 	counts["tier_clerk/idle"] = 4
 	counts["tier_clerk/walk"] = 6
 
-	## The vault guardian construct (8d C3 boss; 220x220).
 	counts["vault_construct/idle"] = 4
 	counts["vault_construct/walk"] = 6
 	counts["vault_construct/slice"] = 3
 
-	## Antinium Worker (ambient extra rig, idle-only by design; 116x116).
 	counts["antinium_worker/idle"] = 4
 
-	## The two Raskghar (scout + awakened boss) are DIRECTIONAL +
-	## animated via the same F2/upgrade PixelLab v2 mannequin templates (124x124
-	## frames, down/side/up). idle=breathing-idle(4), walk=walking(6),
-	## slice=lead-jab(3) -- the reaching claw swipe reads.
 	for raskghar_id: String in ["raskghar_scout", "raskghar_awakened"]:
 		counts["%s/idle" % raskghar_id] = 4
 		counts["%s/walk" % raskghar_id] = 6
 		counts["%s/slice" % raskghar_id] = 3
 
-	## Dressing sprites (single-region statics; grill is a 4-frame strip)
 	for e3_static: String in [
 		"hearth", "counter_left", "counter_mid", "counter_right",
 		"shelf_bottles", "window_blue", "food_bread", "food_ham",
@@ -259,11 +186,9 @@ func _build_expected_counts() -> Dictionary:
 	counts["grill/idle"] = 4  ## Grill_01-Sheet 256px / 64px frames
 	counts["campfire/idle"] = 4  ## Bonfire strip, 128/32
 
-	## Hotbar icons: single 16x16 crops, 1 frame each.
 	for icon_id: String in ["icon_attack", "icon_dash", "icon_power_strike", "icon_flame_bolt", "icon_flame_jet", "icon_frost_bolt"]:
 		counts["%s/idle" % icon_id] = 1
 
-	## Class-kit icons (placeholder glyphs, single 16x16 frames).
 	for icon_id: String in [
 		"icon_second_wind", "icon_piercing_strikes", "icon_quick_slash",
 		"icon_flash_cut", "icon_devastating_slash", "icon_triple_thrust",
@@ -272,49 +197,17 @@ func _build_expected_counts() -> Dictionary:
 		"icon_keener_edge",
 	]:
 		counts["%s/idle" % icon_id] = 1
-	## [Light] prop (Furniture.png lantern crop, single frame).
 	counts["unlit_lantern/idle"] = 1
-	## Art-wiring task (2026-07-07): inn_sign is now a bespoke PixelLab
-	## signpost (text-free plank; the sign's wording lives in toast/observe
-	## copy only), single 64x64 sheet, 1 frame. Previously a Furniture.png
-	## hanging-plank crop (44x21) -- see VISUAL-LOG, now closed.
 	counts["inn_sign/idle"] = 1
-	## The floodplains inn facade is one static 120x73 frame.
 	counts["wandering_inn_facade/idle"] = 1
-	## Art-wiring task (2026-07-07): THE REQUEST BOARD's bespoke corkboard art
-	## (guild_board), replacing the inn_sign-crop reuse VISUAL-LOG flagged as
-	## reading small/dense. Single 64x64 PixelLab sheet, 1 frame.
 	counts["request_board/idle"] = 1
-	## Art-wiring task (2026-07-07): bench prop (Runner's Guild resting-runner
-	## walk-on), replacing the `stool` stand-in VISUAL-LOG flagged (no bench
-	## sprite existed in any in-hand pack). Single 64x64 PixelLab sheet, 1 frame.
 	counts["bench/idle"] = 1
 
-	## The ruin pedestal, single-region
-	## static (1 frame), same convention as chest/sewer_grate/boulder.
-	## (pantry_door_glow retired 2026-07-09: the pantry door's flicker/
-	## awakened visual_states use anchor_waystone now.)
 	counts["pedestal/idle"] = 1
-	## Playtest hotfix #6: THE portal-anchor sprite (owned PixelLab art),
-	## replacing `boulder` at every anchor-stone-per-region site. Single
-	## 64x80 static, 1 frame.
 	counts["anchor_waystone/idle"] = 1
-	## Forest-trail-entrance door affordance (owned PixelLab art) -- the
-	## riverfarm_hollow_path/hollow_village_path door pair. Single 64x64
-	## static, 1 frame.
 	counts["trail_gap/idle"] = 1
-	## Interior-staircase door affordance (owned PixelLab art) -- floor-change
-	## doors (first use: the inn upstairs door). Single 64x64 static, 1 frame.
 	counts["stairs_up/idle"] = 1
 
-	## Art-wiring task (2026-07-07): Lyonette's canon-correct bright-red-hair
-	## sprite (replacing the citizen_f pink-tint stand-in, VISUAL-LOG closed) +
-	## three inn-cast-variety NPC sprites (human_laborer, gnoll_traveler,
-	## drake_patron), all PixelLab v2 create-character-pro/animate-character
-	## directional sets (down/side/up, side sheet faces right/east, registry
-	## mirrors west) -- idle=breathing-idle(4), walk=walking(6), same template
-	## family as relc/pisces/olesm/zevara/pc_*/raskghar_*. lyonette/human_laborer
-	## 104x104; gnoll_traveler 108x108; drake_patron 124x124.
 	counts["lyonette/idle"] = 4
 	counts["lyonette/walk"] = 6
 	counts["human_laborer/idle"] = 4
@@ -324,76 +217,43 @@ func _build_expected_counts() -> Dictionary:
 	counts["drake_patron/idle"] = 4
 	counts["drake_patron/walk"] = 6
 
-	## Enemy sprites.
-	## Goblin sheets are 1536x1024, 256x256 frames: 6 columns per facing row.
 	for goblin_id: String in ["goblin_base", "goblin_female", "goblin_sword"]:
 		counts["%s/idle" % goblin_id] = 6
 		counts["%s/walk" % goblin_id] = 6
-	## Bat_Fur sheets are 96px-high strips: idle/hit=4, move=8, death=6.
 	counts["bat/idle"] = 4
 	counts["bat/move"] = 8
 	counts["bat/hit"] = 4
 	counts["bat/death"] = 6
 
-	## The Garden of Sanctuary. `garden_door_inner` is an
-	## owned single-frame PixelLab static (34x48, the `door`-prop
-	## convention); `garden_fountain_basin`/`garden_fountain_statue` are
-	## single-region crops of the LICENSED Garden Pixel Crawler pack (both
-	## FORBIDDEN/bundle:true/placeholder-fallback -- this test's own
-	## `is_fallback_sheet` relax-to-`>=1` branch covers them in this public
-	## checkout; the `== expected` pin below only bites once the private
-	## bundle lands the real PNGs).
 	counts["garden_door_inner/idle"] = 1
 	counts["garden_fountain_basin/idle"] = 1
 	counts["garden_fountain_statue/idle"] = 1
 
-	## The memorial hill roster -- all 5 owned, single-frame
-	## PixelLab statics (stone-ify ramp recolor, never LICENSED/never a
-	## fallback-relaxed case).
 	counts["memorial_plinth/idle"] = 1
 	counts["memorial_statue_human/idle"] = 1
 	counts["memorial_statue_gnoll/idle"] = 1
 	counts["memorial_statue_drake/idle"] = 1
 	counts["memorial_statue_goblin/idle"] = 1
 
-	## 8b R1 (issue #10) -- the owned PixelLab riverfarm village set + the
-	## witch's two-form idles, all single-frame statics (never fallback-
-	## relaxed, owned art).
 	for owned_static: String in ["cottage_thatch_a", "cottage_thatch_b", "riverfarm_longhouse",
 			"riverfarm_windmill", "riverfarm_well", "riverfarm_haystack", "riverfarm_scarecrow",
 			"riverfarm_earthwork", "riverfarm_fence_ew", "riverfarm_fence_ns", "riverfarm_dock_pier",
 			"riverfarm_rowboat", "witch_cottage", "riverfarm_witch_elder", "riverfarm_witch_young"]:
 		counts["%s/idle" % owned_static] = 1
 
-	## Licensed picks (Free Pack Farm.png/Vegetation.png, Fairy Forest
-	## Props.png/Tree.png) -- single-frame region crops, fallback-relaxed in a
-	## public checkout via the SAME is_fallback_sheet branch the garden picks
-	## above use.
 	for licensed_static: String in ["crop_row_orange", "crop_row_green", "crop_row_dark_green",
 			"tree_autumn_orange", "tree_autumn_red", "hollow_glow_stone", "hollow_mushroom_cluster",
 			"hollow_canopy_tree", "hollow_small_tree", "hollow_bent_tree"]:
 		counts["%s/idle" % licensed_static] = 1
 
-	## river_wolf_idle -- Admurin Canine_Gray_Idle.png, 192x32 sheet @ 48x32
-	## frames = 4 frames. TRAP: the sheet holds FOUR 48px wolves; the old
-	## 32x32/6-frame pin matched a frame_size that dismembered every wolf
-	## (shipped v0.4.0 bug) -- a green count here proves slicing arithmetic,
-	## not figure integrity; only a windowed read proves the wolf is whole.
 	counts["river_wolf_idle/idle"] = 4
 
-	## rock_crab -- Admurin Enemy_Galore_I/Crab/Crab_Idle.png, 256x64 sheet
-	## @ 64x64 frames = 4 frames (issue #24).
 	counts["rock_crab/idle"] = 4
 
-	## Riverfarm combat roster -- owned, single-frame PixelLab statics
-	## (briar_collector/briar_collector_deep/river_wolf), same shape as the
-	## training_dummy/memorial-hill entries above.
 	counts["briar_collector/idle"] = 1
 	counts["briar_collector_deep/idle"] = 1
 	counts["river_wolf/idle"] = 1
 
-	## Issue #97 (bestiary expansion) -- owned, single-frame PixelLab statics,
-	## same shape as briar_collector/river_wolf above.
 	counts["corusdeer/idle"] = 1
 	counts["razorbeak/idle"] = 1
 	counts["mothbear/idle"] = 1
@@ -401,36 +261,18 @@ func _build_expected_counts() -> Dictionary:
 	counts["forge_golem/idle"] = 1
 	counts["watchgolem/idle"] = 1
 
-	## Invrisil 8c Task C2 -- hired_blade, DIRECTIONAL + animated (v2
-	## create-character-with-8-directions + animate-character template,
-	## 148x148 native frame). idle=breathing-idle(4), walk=walking(6), same
-	## template family as human_laborer/lyonette/gnoll_traveler/drake_patron.
 	counts["hired_blade/idle"] = 4
 	counts["hired_blade/walk"] = 6
 
-	## Invrisil 8c Task C1 -- the four owned PixelLab boulevard-signature
-	## props (docs/archive/design/invrisil-art/handoff.md's staged fragment,
-	## committed verbatim this task), all single-frame statics, never
-	## fallback-relaxed (owned art, not a licensed manifest entry).
 	for invrisil_owned_static: String in ["plaza_fountain", "street_lamp", "coin_shop_sign", "guild_banner"]:
 		counts["%s/idle" % invrisil_owned_static] = 1
 
-	## 8d Phase B -- dungeon dressing (licensed Cemetery/Castle/Cave region
-	## crops, fallback-relaxed in a public checkout via is_fallback_sheet like
-	## every other licensed pick above) + the two integrated trap-tell props
-	## (owned PixelLab art, single 32x32 statics, never fallback-relaxed).
 	counts["dungeon_statue/idle"] = 1
 	counts["dungeon_rubble/idle"] = 1
 	counts["pressure_plate/idle"] = 1
 	counts["snare_coil/idle"] = 1
 	counts["illusory_floor_tell/idle"] = 1
 
-	## 8e Phase A/B (issue #16) -- Pallass landmark props, all owned PixelLab
-	## single-frame statics (never fallback-relaxed, owned art). great_lift
-	## 64x96, crystal_lamp 32x64, steam_vent 32x48, price_board 48x48,
-	## forge_station 48x64, market_stall_pallass 64x48, tier_wall 128x48 --
-	## idle-only (no walk anim), same convention as street_lamp/plaza_fountain.
-	## anchor_waystone_slate is the base waystone's slate PIL recolor (64x80).
 	for pallass_static: String in ["great_lift", "crystal_lamp", "steam_vent",
 			"price_board", "forge_station", "market_stall_pallass", "tier_wall",
 			"anchor_waystone_slate"]:
@@ -486,9 +328,6 @@ func _assert_biome_tiles_build() -> void:
 		var floor_atlas := Vector2i(int(floor_coord[0]), int(floor_coord[1]))
 		assert(source.has_tile(floor_atlas), "biome %s floor tile missing at %s" % [biome_id, floor_atlas])
 		var blocked_sheet := String(biome.get("blocked_sheet", biome["sheet"]))
-		# blocked cells may come from a sheet with a different native grid than
-		# the floor (M5: street floor is a whole-image 540px tile, blocked is
-		# 16px Wall_Tiles) — validate against blocked_tile_px, not tile_px.
 		var blocked_tile_px: int = int(biome.get("blocked_tile_px", tile_px))
 		var blocked_tile_set: TileSet = WISpriteRegistry.tile_set_for(blocked_sheet, blocked_tile_px)
 		var blocked_source := blocked_tile_set.get_source(0) as TileSetAtlasSource

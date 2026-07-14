@@ -1,5 +1,4 @@
 {
-	"_comment": "Issue #97: corusdeer's own confirm conversation -- the crab_nest informed-consent shape, applied to the stray Corusdeer. [Strike first.] fires start_combat (self-reference, legal only on an ending option). [Back away.] plainly ends, no combat, the encounter stays live and re-interactable. Same dormant-re-interact trap as crab_nest (respawns:true, no dormancy check on interact -- the next sleep re-arms it).",
 	"start": "confront",
 	"nodes": {
 		"confront": {

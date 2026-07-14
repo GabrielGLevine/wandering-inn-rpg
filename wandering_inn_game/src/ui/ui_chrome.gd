@@ -1,6 +1,5 @@
 class_name UIChrome
 extends RefCounted
-## Shared Tiny Swords UI chrome helpers for code-built HUD/menu surfaces.
 
 ## Fallback-art contract (UI chrome half). These were `const
 ## preload(...)` -- but preload is COMPILE-TIME, so a public checkout missing
@@ -38,8 +37,6 @@ static func chrome_texture(path: String) -> Texture2D:
 	return _chrome_fallback_texture()
 
 
-## 192x192 (large enough that PARCHMENT_REGION / BANNER_H_REGION crops stay
-## in-bounds) flat muted panel with a 1px border. Shared, generated once.
 static func _chrome_fallback_texture() -> Texture2D:
 	if _chrome_placeholder_tex != null:
 		return _chrome_placeholder_tex
@@ -57,8 +54,6 @@ static func _chrome_fallback_texture() -> Texture2D:
 	return _chrome_placeholder_tex
 
 
-## The project Theme (SHIP-OK file, but references bundled chrome textures);
-## a fresh empty Theme when absent/unloadable so `apply_theme` never nulls out.
 static func _chrome_theme() -> Theme:
 	if ResourceLoader.exists(THEME_PATH):
 		var theme: Theme = ResourceLoader.load(THEME_PATH)
@@ -67,8 +62,6 @@ static func _chrome_theme() -> Theme:
 	return Theme.new()
 
 
-## One `[fallback_art]` line per unique missing chrome path per run -- a plain
-## print (never push_warning) so the grep discipline is not tripped.
 static func _log_missing_chrome(path: String) -> void:
 	if _missing_chrome_logged.has(path):
 		return
@@ -80,14 +73,8 @@ const STRIP_PATCH_MARGIN := 20
 const RIBBON_PATCH_MARGIN_X := 36
 const RIBBON_PATCH_MARGIN_Y := 16
 
-## Art-bbox regions for the floating-art chrome textures (measured via PIL).
 const PARCHMENT_REGION := Rect2(36, 31, 120, 131)
 const BANNER_H_REGION := Rect2(33, 47, 126, 123)
-## The blue button pills ALSO float in their 192x192 canvas -- the
-## UNPRESSED art occupies rows 0..183 / cols 7..184 (8 empty canvas rows at
-## the BOTTOM), the PRESSED art rows 4..183 / cols 5..186 (4 empty top + 8
-## empty bottom). Measured via PIL alpha scan 2026-07-07; every bbox edge
-## row is solid alpha-255 pill border, so the crop loses zero visible art.
 ## Without the crop, PATCH_MARGIN's 24px corner bands rendered those empty
 ## rows 1:1 into the control rect (~8px dead space at a 44px row's bottom),
 ## so a rect-centered label sat ~4px LOW against the VISIBLE pill band on
@@ -168,10 +155,6 @@ static func make_horizontal_patch(texture: Texture2D, margin_x: int, margin_y: i
 	return patch
 
 
-## Texture-appropriate patch dispatch: the blue ribbon gets its asymmetric
-## margins via make_horizontal_patch, the horizontal banner strip its
-## narrower STRIP_PATCH_MARGIN, and every other chrome texture the default
-## PATCH_MARGIN. Prefer this over hand-picking margins per call site.
 static func make_texture_patch(texture: Texture2D) -> NinePatchRect:
 	if _is_same_art(texture, BLUE_RIBBON):
 		return make_horizontal_patch(texture, RIBBON_PATCH_MARGIN_X, RIBBON_PATCH_MARGIN_Y)
@@ -180,7 +163,6 @@ static func make_texture_patch(texture: Texture2D) -> NinePatchRect:
 	return make_patch(texture, PATCH_MARGIN)
 
 
-## Chrome panel wrapper with an explicit symmetric margin (see make_patch).
 static func make_chrome_panel(texture: Texture2D = PARCHMENT_PANEL, margin: int = PATCH_MARGIN) -> Control:
 	var panel := Control.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -188,8 +170,6 @@ static func make_chrome_panel(texture: Texture2D = PARCHMENT_PANEL, margin: int 
 	return panel
 
 
-## Chrome panel wrapper with the texture-appropriate margins of
-## make_texture_patch — the default choice when styling a new panel.
 static func make_texture_panel(texture: Texture2D = PARCHMENT_PANEL) -> Control:
 	var panel := Control.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -197,25 +177,10 @@ static func make_texture_panel(texture: Texture2D = PARCHMENT_PANEL) -> Control:
 	return panel
 
 
-## Thin Label constructor. Per-context styling (font sizes/colors/outlines)
-## lives in wi_ui_theme.tres as Theme type variations ("Header"/"Title"/
-## "Menu"/"Small"), not here — pass the variation name and the theme resolves it.
 static func make_label(text: String = "", type_variation: String = "") -> Label:
 	var label := Label.new()
 	label.text = text
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# Vertical centering: defaults to
-	# VERTICAL_ALIGNMENT_CENTER -- Label's own engine default is TOP, which
-	# reads as bottom-heavy clipping/crowding whenever a label sits inside a
-	# taller fixed-height chrome rect (the title screen's New Game/Continue
-	# rows were the playtest-reported exemplar). Sites that already set
-	# CENTER explicitly (title_screen.gd's rows/title, the toast label,
-	# inventory's ribbon title) are unaffected; this makes it the shared
-	# default so a site that forgot to set it (message_layer.gd's
-	# dialogue_line bark + hint strip, before this fix) can't silently
-	# regress back to TOP. A caller with a genuine reason to top-align (none
-	# exist today) can still override `label.vertical_alignment` after
-	# construction.
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	if type_variation != "":
 		label.theme_type_variation = type_variation
@@ -235,20 +200,10 @@ static func make_rich_label(type_variation: String = "") -> RichTextLabel:
 	return label
 
 
-## Compares chrome textures by resource_path (a String), NOT instance
-## identity: duplicated or re-preloaded texture resources for the same file
-## are different Object instances, and identity comparison would silently
-## miss them (skipping e.g. the art-bbox region crop below).
 static func _is_same_art(texture: Texture2D, reference: Texture2D) -> bool:
 	return texture != null and texture.resource_path == reference.resource_path
 
 
-## Auto-region lookup for the floating-art chrome textures. Tiny Swords
-## banner art floats inside a larger transparent canvas — 9-slicing the full
-## canvas stretches empty margins and collapses the visible panel, so these
-## textures always get their measured art bbox unless the caller overrides
-## via make_patch's explicit `region`. Returns a zero-size Rect2 for
-## textures that should 9-slice whole.
 static func _auto_region(texture: Texture2D) -> Rect2:
 	if _is_same_art(texture, PARCHMENT_PANEL):
 		return PARCHMENT_REGION
@@ -261,13 +216,6 @@ static func _auto_region(texture: Texture2D) -> Rect2:
 	return Rect2()
 
 
-## Swap a NinePatchRect's texture AND re-derive
-## its art-bbox region together. The title/creation menus swap between
-## BLUE_BUTTON and BLUE_BUTTON_PRESSED on cursor move by assigning
-## `.texture` directly -- but those two textures have DIFFERENT measured
-## bboxes (see BLUE_BUTTON_REGION's doc comment), so a bare texture swap
-## would leave the OTHER texture's region in place (rendering 4px of the
-## pressed art's empty top canvas, or cutting 4px off the unpressed pill).
 ## Every texture swap on a chrome patch must route through here.
 static func set_patch_texture(patch: NinePatchRect, texture: Texture2D) -> void:
 	patch.texture = texture

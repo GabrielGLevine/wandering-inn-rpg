@@ -1,5 +1,4 @@
 {
- "_comment": "Grimalkin at the Permit Office exam floor, pallass_market (his forge post below is the grimalkin_station dressing prop). forge_tier_permit's exam beat: 8g fitness read banking grimalkin_examination_passed. Voice: [Sinew Magus] measured register -- contempt priced in numbers, respect likewise. DELIBERATE: no race text_variants here (the examiner measures, the city profiles -- the clerk and stallkeeper carry the profiling instead).",
  "start": "hub",
  "nodes": {
   "hub": {
@@ -7,7 +6,6 @@
    "text": "Stand up straight when you address me. I measure everything that comes through this office, and most of it is found wanting. State your business.",
    "options": [
     {
-     "_comment": "Bureaucratic-chain beat 2 entry, gated on forge_permit_filed (Stage 1 of THIS quest, filed at the forge-tier clerk) -- sanctioned {gold, accomplishment} compound. Fee spent HERE (not at the exam node) so the buy-contract's requires/effects pairing stays on one option.",
      "text": "I'm here for the forge-tier fitness read. (8 gold)",
      "requires": {
       "gold": 8,
@@ -31,15 +29,13 @@
      "text": "Just passing through.",
      "end": true
     }
-   ],
-   "_comment": "D-PHASE NOTE: Grimalkin deliberately carries NO race text_variants — the examiner measures, the city profiles; the contrast is the register (the clerk and the stallkeeper carry the city's profiling instead)."
+   ]
   },
   "exam": {
    "speaker": "Grimalkin",
    "text": "Grip, wind, and whether you quit before I do — three measures. You cleared all three. Barely, on the second. Numbers don't lie, and neither do I: you'll survive the forge tier. The file will say 'adequate.' From me, that is not an insult.",
    "options": [
     {
-     "_comment": "Beat 2 real completion -- banks grimalkin_examination_passed. The 8g fee already spent at the hub option above, so this closing option carries no further cost.",
      "text": "Understood.",
      "effects": [
       {

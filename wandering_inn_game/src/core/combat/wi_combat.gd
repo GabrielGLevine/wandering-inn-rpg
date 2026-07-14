@@ -1,11 +1,5 @@
 class_name WICombat
 extends RefCounted
-## Pure tactical combat simulation for one encounter.
-##
-## PURITY RULE: no autoload, Node, or scene-tree references. Dependencies are
-## injected (arena/combatant/skill configs, event-sink Callable, RNG seed).
-## All randomness flows through `rng`; initiative is precomputed then sorted —
-## never roll inside a comparator.
 
 const MAX_AP := 4
 const MOVE_COST := 1
@@ -15,19 +9,6 @@ const ROUND_CAP := 30
 const MOVE_POOL := 3
 const DASH_COST := 1
 const DASH_GAIN := 3
-## Issue #90 status multipliers: `weakened` shrinks the HOLDER's own
-## outgoing damage, `guarded` shrinks the HOLDER's own incoming damage.
-## Compose multiplicatively -- with the skill's own `mult` (folded into the
-## dice sub-formula already, upstream of these) and with EACH OTHER (a
-## weakened attacker hitting a guarded defender applies both). ORDER IS
-## LOAD-BEARING, not cosmetic: `_apply_status_damage_mods` int-truncates
-## and re-floors at 1 BETWEEN the two multipliers, which is NOT
-## commutative for unequal mults (e.g. 10 dmg at x0.5 then x0.75 -> 3, but
-## x0.75 then x0.5 -> 3 vs 10*0.375=3.75 -- the intermediate rounding
-## decides). Equal at today's 0.75/0.75 by luck of the values; the pinned
-## order (attacker-side weakened FIRST, defender-side guarded SECOND) is
-## what keeps damage identical if either const ever diverges. Unit-pinned
-## in test_combat_sim's compose case.
 const WEAKENED_MULT := 0.75
 const GUARDED_MULT := 0.75
 
@@ -43,51 +24,10 @@ var skills: Dictionary = {}
 var rng := RandomNumberGenerator.new()
 var arena_config: Dictionary = {}
 var arena_id := ""
-## Per-fight deed tally, actor id -> {counter: count} (M6 §2.1 REV 2).
-## Counters: melee_hit on landed melee hits (ripostes included — the deed is
-## the defender's); sword_skill_used/spear_skill_used from the skills.json
-## `weapon` tag and spell_cast + ice_cast/fire_cast from its `element` tag,
-## both tallied at the spend site (refused actions never reach it).
-## WIGame.resolve_combat banks the PC's tally into accomplishments on
-## victory; the tally itself emits nothing and consumes no rng.
 var action_tally: Dictionary = {}
-## Per-fight SET of skill ids actually cast, actor id -> {skill_id: true}
-## Recorded at the SAME spend site as action_tally
-## (spend_skill_costs, below) — a refused cast never reaches it, same
-## convention — but this is a bare presence set, never gated by any
-## `trivial` flag: that gate lives entirely on WIGame's `_bank_action_tally`
-## (the ACCOMPLISHMENT-counter bank), a separate concern from "has this skill
-## ever been cast" for the journal's first-use reveal, which
-## `WIGame.resolve_combat` merges in unconditionally.
 var used_skills_tally: Dictionary = {}
-## `Vector2i` cell -> `{"kind":
-## "icy_floor", "expires_after_round": int, "applies": Dictionary}`. NOT
-## save-persisted (combat state never is, per data/skills.json/wi_combat.gd
-## convention -- a combat is always mid-encounter, never resumed across a
-## save load). Populated only by WISkillEffects.resolve_active's icy_floor
-## arm; purged by `_advance_turn`'s round-rollover branch
-## (`_purge_expired_terrain`). Every existing fight leaves this empty for
-## its whole duration -- the two consumers (`_apply_terrain_status`'s call
-## sites in `move_active`/`_start_turn`, and the purge above) are no-ops on
-## an empty dict, which is the zero-behavior-change proof for every
-## pre-existing combat-data payload.
 var terrain: Dictionary = {}
 
-## Issue #82's WINDUP SIM SPEC: actor_id -> `{"skill_id": String, "cells":
-## Array[Vector2i]}` for a combatant that DECLARED a `windup_rounds`-carrying
-## skill (WISkillEffects.declare_windup) and hasn't resolved it yet. `cells`
-## is frozen at declaration (the blast/line derivation, verbatim) -- whoever
-## stands there at resolution takes the hit, not whoever was there at cast
-## time [D: the counterplay IS moving]. Consumed and erased by
-## `_resolve_windup`, called from `_start_turn` at the START of the SAME
-## caster's next turn. DOWNED-CLEARS IS FREE: `_advance_turn` never calls
-## `_start_turn` for a dead combatant (its `if combatants[get_active()][ALIVE]`
-## guard), so a caster downed before its next turn simply never resolves --
-## no posthumous damage, by construction, not a special-cased check. NOT
-## save-persisted (same convention as `terrain` above -- combat state is
-## never serialized at all, verified: `WISave.serialize` has no `combat`
-## field anywhere; a mid-fight save is structurally impossible, `combat_
-## abandon`'s Abandon-to-last-autosave path is the proof).
 var windups: Dictionary = {}
 
 var _event_sink: Callable
@@ -111,20 +51,6 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 		var spawns: Array = arena_cfg["player_spawns"] if side == "player" else arena_cfg["enemy_spawns"]
 		var spawn: Array = spawns[spawn_i[side]]
 		spawn_i[side] += 1
-		# Same-catalog-id roster collapse fix: a roster listing the
-		# same combatant id twice (e.g. shield_spiders' ["shield_spider",
-		# "shield_spider"]) used to key `combatants` by the plain id, so the
-		# second entry silently overwrote the first -- the roster fielded one
-		# fewer combatant than it listed. Every cfg now gets a UNIQUE runtime
-		# id (first occurrence keeps the bare id; each further collision gets
-		# "_2", "_3", ... -- re-probed against `combatants` so it can never
-		# collide with a genuinely distinct id that happens to already carry
-		# a numeric suffix). Display name is untouched (`DISPLAY_NAME` below
-		# still reads straight off `cfg`) -- players see "Shield Spider"
-		# twice, the suffix is internal bookkeeping only. `TEMPLATE_ID` keeps
-		# the ORIGINAL catalog id so presentation can still resolve the
-		# static combatants.json record (sprite, combat_scale) by the id that
-		# actually exists there -- see board_renderer.gd's two read sites.
 		var base_id := String(cfg[WIKeys.ID])
 		var runtime_id := base_id
 		var suffix := 2
@@ -142,28 +68,9 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 			WIKeys.AI: String(cfg.get(WIKeys.AI, "")),
 			WIKeys.SKILLS: [],
 			"hit_bonus": 0,
-			# M7 §2 combat build injection: armor's hp_mod folds into max_hp
-			# here at build time (WIGame._build_player_combatant for the PC's
-			# gear; start_combat's ally_hp_penalty arm for a pre-damaged
-			# ally). damage_mod/damage_reduction ride along on the combatant
-			# dict for the two runtime sites that use them (_resolve_hit's
-			# melee damage, _deduct_hp's incoming-damage floor). FLOOR AT 1:
-			# hp_mod can now be NEGATIVE (ally_hp_penalty, first shipped by
-			# the 8d C4 plates beat at -18 vs Ksmvr's 35) -- a penalty bigger
-			# than the base pool must spawn a combatant at 1 HP, never
-			# dead-or-negative (a dead-at-build combatant would corrupt turn
-			# order and the _check_end scan, neither of which expects a
-			# corpse at round 1).
 			WIKeys.MAX_HP: maxi(20 + int(cfg[WIKeys.STATS]["con"]) + int(cfg.get(WIKeys.HP_MOD, 0)), 1),
 			WIKeys.DAMAGE_MOD: int(cfg.get(WIKeys.DAMAGE_MOD, 0)),
 			WIKeys.DAMAGE_REDUCTION: int(cfg.get(WIKeys.DAMAGE_REDUCTION, 0)),
-			# GH#70 range+LoS seam: defaults to 1 (melee) for every combatant
-			# cfg that carries no WEAPON_RANGE key -- every enemy/ally template
-			# in data/combatants.json and every pre-GH#70 weapon item, so this
-			# is a no-op for all pre-existing content (byte-identical proof).
-			# Only wi_game.gd's `_build_player_combatant` ever writes a value
-			# other than the default (from the equipped weapon's items.json
-			# `range` field), so a ranged weapon is PC-only today.
 			WIKeys.WEAPON_RANGE: int(cfg.get(WIKeys.WEAPON_RANGE, 1)),
 			WIKeys.AP: 0,
 			WIKeys.MOVE_POOL: 0,
@@ -174,8 +81,6 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 			c[WIKeys.SKILLS].append(String(sk))
 		_apply_passives(c)
 		c[WIKeys.HP] = c[WIKeys.MAX_HP]
-		# MP pool exists only for casters: any known skill carrying an mp_cost.
-		# Non-casters get max_mp 0 (no MP bar player-side).
 		c[WIKeys.MAX_MP] = 0
 		for sk: String in c[WIKeys.SKILLS]:
 			if (skills.get(sk, {}) as Dictionary).has(WIKeys.MP_COST):
@@ -186,14 +91,7 @@ func _init(arena_cfg: Dictionary, combatant_cfgs: Array, skills_cfg: Dictionary,
 	_roll_initiative()
 
 
-## Kicks off the fight: emits combat_started and starts round 1 / first turn.
-## Separated from _init so the owner can finish wiring (e.g. assigning this
-## instance somewhere listeners can reach) before any event fires.
 func begin() -> void:
-	# `arena` is additive (every QA pin uses payload_contains subset match):
-	# it keys per-arena music variants in data/audio.json (first-match-wins,
-	# specific-before-generic ordering there) and any future arena-keyed
-	# presentation.
 	_emit(WIEvents.COMBAT_STARTED, {"order": turn_order.duplicate(), "arena": arena_id})
 	_start_round()
 	_start_turn()
@@ -236,21 +134,6 @@ func chebyshev(a_id: String, b_id: String) -> int:
 	return maxi(absi(d.x), absi(d.y))
 
 
-## GH#70: the ONE range+LoS seam `attack()` and skill_effects.gd's
-## `damage_mult` resolver both route through -- "`attacker_id`'s weapon can
-## reach `target_id`". `weapon_range` defaults to 1 (melee) for any
-## combatant without a build-time override (see WEAPON_RANGE's own doc
-## comment). MELEE CASE (weapon_range <= 1) is special-cased to the bare
-## `is_adjacent` check -- the OLD gate, with NO has_los test -- rather than
-## folding it into the general `chebyshev <= range and has_los` formula
-## below: has_los's corner-cut rule (see that function's doc comment) can
-## refuse a DIAGONALLY-adjacent pair when both off-diagonal corner cells are
-## walled, which the old adjacency-only gate never checked. Folding melee
-## into the general formula would silently tighten every existing melee
-## matchup near a wall corner -- exactly the "harness diff non-empty on
-## pre-existing cells" STOP condition this seam must never trigger. The
-## byte-identical proof (sim_combat_batch.gd before/after) holds by
-## CONSTRUCTION here, not by luck of the shipped arena data.
 func in_weapon_range(attacker_id: String, target_id: String) -> bool:
 	var weapon_range := int(combatants[attacker_id].get(WIKeys.WEAPON_RANGE, 1))
 	if weapon_range <= 1:
@@ -258,20 +141,6 @@ func in_weapon_range(attacker_id: String, target_id: String) -> bool:
 	return chebyshev(attacker_id, target_id) <= weapon_range and has_los(attacker_id, target_id)
 
 
-## Supercover cell walk from a's cell to b's cell. Blocked (wall) cells refuse
-## LoS; other combatants never block LoS [D per spec]. The endpoints
-## themselves are never treated as obstructing (a combatant always has LoS
-## out of/into its own occupied cell).
-##
-## SYMMETRY GUARANTEE: `_supercover` enumerates every cell the ideal
-## center-to-center segment crosses, which is a pure geometric property of
-## the segment — the same set of cells regardless of which endpoint is
-## "from" and which is "to" (see `_supercover`'s doc comment for the corner
-## rule that makes this true even on diagonally-adjacent wall pairs). A
-## single-raster Bresenham walk instead commits to one arbitrary path per
-## direction and can therefore disagree with itself when reversed; this is
-## the asymmetry bug this construction guards against: has_los((0,0),(3,6)) vs the reverse
-## disagreeing on the blocked set {(5,3),(6,4),(3,5),(8,2)}.
 func has_los(a_id: String, b_id: String) -> bool:
 	var from: Vector2i = combatants[a_id][WIKeys.CELL]
 	var to: Vector2i = combatants[b_id][WIKeys.CELL]
@@ -283,31 +152,8 @@ func has_los(a_id: String, b_id: String) -> bool:
 	return true
 
 
-## Supercover line: every cell the ideal segment from `from` to `to` crosses,
-## inclusive of both endpoints. Deterministic, no rng — pure integer geometry.
-##
-## Algorithm: with nx=|dx|, ny=|dy| grid-line crossings remaining to make in
-## x and y respectively, the i-th (1-indexed) x-crossing occurs at parametric
-## t=(2i-1)/(2*nx) along the segment and the j-th y-crossing at
-## t=(2j-1)/(2*ny). Comparing two such fractions cross-multiplied,
-## (2i-1)*ny vs (2j-1)*nx, is exact integer arithmetic — no floats, no
-## rounding, so the result cannot depend on direction of travel. When the two
-## are exactly equal the segment passes through a grid CORNER: per the
-## adjudicated corner rule, BOTH cells diagonally adjacent to that corner
-## (the two "off-diagonal" cells, not just the forward diagonal cell) are
-## included — this is what restores symmetry on diagonally-touching wall
-## pairs, since without it a corner-grazing line could be said to pass
-## through either of two different single cells depending on which way you
-## look at it.
-##
-## LOOP BOUND (provable): each iteration retires at least one of the nx+ny
-## required crossings (a corner tie retires both x and y at once), so the
-## loop runs at most nx+ny times — i.e. at most |dx|+|dy| iterations, well
-## under the 2*(|dx|+|dy|)+4 ceiling asserted below. Exceeding that ceiling
-## is a geometry bug, not a valid outcome, hence the loud assert instead of a
-## silent break (this replaces an earlier, discarded supercover attempt that
-## walked without a bound and hung the test suite).
 func _supercover(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
+	# Integer supercover and tie handling must stay direction-symmetric.
 	var cells: Array[Vector2i] = [from]
 	var dx := to.x - from.x
 	var dy := to.y - from.y
@@ -330,8 +176,6 @@ func _supercover(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
 			var lhs := (2 * i + 1) * ny
 			var rhs := (2 * j + 1) * nx
 			if lhs == rhs:
-				# Exact corner crossing: include both off-diagonal cells, then
-				# step into the diagonal cell itself.
 				cells.append(Vector2i(x + sign_x, y))
 				cells.append(Vector2i(x, y + sign_y))
 				x += sign_x
@@ -352,11 +196,6 @@ func _supercover(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
 	return cells
 
 
-## Cardinal-only line enumeration: walks `length` cells from `from` in
-## `toward_dir` (must be a unit cardinal direction), clipped at grid bounds.
-## Stops at (and includes) the first blocked cell — walls stop fire — but
-## does NOT stop for occupants; every cell in the returned array gets hit
-## regardless of who stands there [D: friendly fire is real, per spec].
 func line_cells(from: Vector2i, toward_dir: Vector2i, length: int) -> Array[Vector2i]:
 	var cells: Array[Vector2i] = []
 	var cur := from
@@ -384,12 +223,6 @@ func alive_enemies_of(id: String) -> Array:
 	return out
 
 
-## The mirror of `alive_enemies_of`: every OTHER living combatant on `id`'s
-## own side (`id` itself excluded), sorted the SAME way (hp asc then id) for
-## deterministic selection. Pure derived read over `combatants` -- no new
-## stored state, so this carries zero risk to the byte-identity guarantee
-## every existing fight relies on. First consumer: combat_ai.gd's
-## guard/coward profiles (issue #83 gap-analysis).
 func alive_allies_of(id: String) -> Array:
 	var side := String(combatants[id][WIKeys.SIDE])
 	var out: Array = []
@@ -422,10 +255,6 @@ func move_active(dir: Vector2i) -> bool:
 		return false
 	var c: Dictionary = combatants[get_active()]
 	if int(c[WIKeys.MOVE_POOL]) < MOVE_COST:
-		# Rooted-refusal legibility (GH#90 M4): a rooted holder's refused
-		# step names WHY (the pool is 0 BECAUSE of the root) -- without this
-		# the player only gets the generic pool-empty bump. AI never
-		# reaches it (its own pool check precedes any move_active call).
 		if _is_rooted(get_active()):
 			_emit_rooted_refusal(get_active())
 		return false
@@ -439,25 +268,14 @@ func move_active(dir: Vector2i) -> bool:
 	return true
 
 
-## True iff `id` currently holds "rooted" (issue #90: move_pool reads 0
-## while active -- enforced at `_start_turn`'s final pool assignment --
-## and Dash refuses outright here, since dash() itself never checks
-## move_pool and would otherwise let a rooted holder pump the pool up mid-
-## turn and immediately move on the SAME turn, defeating the lockdown).
 func _is_rooted(id: String) -> bool:
 	return (combatants[id]["statuses"] as Dictionary).has("rooted")
 
 
-## The `no_los` refusal-emit precedent applied to rooted (GH#90 M4):
-## combat_hud's existing ACTION_REFUSED arm renders "X hesitates --
-## rooted." from this, no new presentation code. An AI dash attempt while
-## rooted (`_should_dash` doesn't check the status) emits honestly
-## mid-turn, riding ACTION_REFUSED's existing AI_PLAYBACK_TYPES entry.
 func _emit_rooted_refusal(id: String) -> void:
 	_emit(WIEvents.ACTION_REFUSED, {"actor": id, "reason": "rooted"})
 
 
-## Spends 1 AP for +DASH_GAIN move pool. Repeatable while AP lasts.
 func dash() -> bool:
 	if finished:
 		return false
@@ -477,6 +295,7 @@ func dash() -> bool:
 
 
 func attack(target_id: String) -> bool:
+	# Spend and emit AP before resolving hit events; playback depends on this order.
 	if finished:
 		return false
 	if not bool(combatants[get_active()][WIKeys.ALIVE]):
@@ -506,30 +325,17 @@ func use_skill(skill_id: String, target_id: String) -> bool:
 	var skill: Dictionary = skills.get(skill_id, {})
 	if not (skill.get(WIKeys.CONTEXTS, []) as Array).has("combat"):
 		return false
-	# Class-foundation pass R1 (2026-07-12), [Sudden Strike]'s ONCE-per-fight
-	# gate: reuses the EXISTING `used_skills_tally` per-actor set (see
-	# WIKeys.ONCE_PER_FIGHT's own doc comment) -- a repeat cast this fight is
-	# refused before any spend, same discipline as the MP/AP gates below.
 	if bool(skill.get(WIKeys.ONCE_PER_FIGHT, false)) and (used_skills_tally.get(actor_id, {}) as Dictionary).has(skill_id):
 		return false
-	# Both gates run BEFORE any spend: a refused cast costs neither MP nor AP.
 	if int(a.get(WIKeys.MP, 0)) < int(skill.get(WIKeys.MP_COST, 0)):
 		return false
 	if int(a[WIKeys.AP]) < effective_ap_cost(a, skill):
 		return false
-	# Issue #82's WINDUP SIM SPEC: a `windup_rounds`-carrying skill never
-	# reaches WISkillEffects.resolve_active's normal instant-resolve dispatch
-	# -- it DECLARES instead (see `declare_windup`'s own doc comment). Checked
-	# here, after the shared AP/MP affordability gates above (identical spend
-	# discipline to every other skill) but before the resolve_active call, so
-	# a refused declare still costs nothing.
 	if int((skill.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.WINDUP_ROUNDS, 0)) > 0:
 		return WISkillEffects.declare_windup(self, actor_id, target_id, skill)
 	return WISkillEffects.resolve_active(self, actor_id, target_id, skill)
 
 
-## The AP a cast will actually cost `c`: quick_cast discounts the first
-## successful spell (a skill carrying an mp_cost) each turn by 1 (min 0).
 func effective_ap_cost(c: Dictionary, skill: Dictionary) -> int:
 	var cost := int(skill.get(WIKeys.AP_COST, 0))
 	if _quick_cast_applies(c, skill):
@@ -542,9 +348,6 @@ func _quick_cast_applies(c: Dictionary, skill: Dictionary) -> bool:
 			and not _quick_cast_spent.get(String(c[WIKeys.ID]), false)
 
 
-## Charges a successful cast's AP + MP. The single spend site for skill
-## resolvers — refusal paths must return before reaching this. Consumes the
-## quick_cast first-spell-of-the-turn discount when it applied.
 func spend_skill_costs(c: Dictionary, skill: Dictionary) -> void:
 	_tally_skill_use(String(c[WIKeys.ID]), skill)
 	_mark_skill_used(String(c[WIKeys.ID]), String(skill.get(WIKeys.ID, "")))
@@ -559,15 +362,11 @@ func spend_skill_costs(c: Dictionary, skill: Dictionary) -> void:
 		_emit(WIEvents.MP_CHANGED, {"id": String(c[WIKeys.ID]), "mp": c[WIKeys.MP]})
 
 
-## Applies damage directly (used by hit resolution and tests).
 func apply_damage(target_id: String, amount: int, source_id: String, melee: bool) -> void:
 	_deduct_hp(target_id, amount)
 	_post_damage(target_id, source_id)
 
 
-## Deducts HP and returns the new value. The single source of truth for HP
-## math — mana_shield absorption happens here, inside the damage application,
-## so it always precedes the down-check regardless of the damage source.
 func _deduct_hp(target_id: String, amount: int) -> int:
 	var t: Dictionary = combatants[target_id]
 	if not t[WIKeys.ALIVE]:
@@ -578,13 +377,6 @@ func _deduct_hp(target_id: String, amount: int) -> int:
 	return int(t[WIKeys.HP])
 
 
-## Armor's flat damage_reduction, applied BEFORE mana_shield so the
-## shield only ever absorbs what actually got past armor. A landed hit
-## always deals >=1 regardless of how much reduction stacks against it (the
-## floor only engages for a positive incoming amount -- _resolve_hit never
-## calls this with a non-positive amount today, but a future 0/negative-
-## amount caller stays unfloored rather than being pushed up to 1 out of
-## nowhere).
 func _apply_damage_reduction(t: Dictionary, amount: int) -> int:
 	var reduction := int(t.get(WIKeys.DAMAGE_REDUCTION, 0))
 	if reduction <= 0 or amount <= 0:
@@ -592,9 +384,6 @@ func _apply_damage_reduction(t: Dictionary, amount: int) -> int:
 	return maxi(1, amount - reduction)
 
 
-## Mana Shield reaction: while the holder knows it and mp > 0, incoming damage
-## drains MP 1:1 before touching HP. Partial absorbs split (the shield takes
-## what MP remains; the rest lands on HP). Returns the unabsorbed remainder.
 func _absorb_with_mana_shield(t: Dictionary, amount: int) -> int:
 	if amount <= 0 or not (t[WIKeys.SKILLS] as Array).has("mana_shield"):
 		return amount
@@ -607,7 +396,6 @@ func _absorb_with_mana_shield(t: Dictionary, amount: int) -> int:
 	return amount - absorbed
 
 
-## Post-damage bookkeeping: down/kill/end checks. Emits combatant_downed.
 func _post_damage(target_id: String, source_id: String) -> void:
 	var t: Dictionary = combatants[target_id]
 	if t[WIKeys.ALIVE] and int(t[WIKeys.HP]) == 0:
@@ -630,34 +418,13 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 	if hit:
 		var stat: int = int(a[WIKeys.STATS]["str"]) if melee else int(a[WIKeys.STATS]["int"])
 		var base_damage := int((stat / 2 + rng.randi_range(1, int(a[WIKeys.WEAPON_DIE]))) * mult)
-		# The weapon's flat damage_mod adds to melee damage only
-		# (basic Attack AND weapon-family skills like power_strike/
-		# piercing_strikes, since both route through this same melee=true
-		# call) -- never to a ranged spell_damage cast (melee=false, int-
-		# based). Defaults to 0 for every combatant without build-time
-		# injection, so this is byte-identical to the pre-M7 formula
-		# whenever damage_mod is 0 (rusty_sword's provisional value).
 		if melee:
 			base_damage += int(a.get(WIKeys.DAMAGE_MOD, 0))
 		damage = maxi(1, base_damage)
 		damage = _apply_status_damage_mods(a, t, damage)
 		target_hp = _deduct_hp(target_id, damage)
-		# `melee` here means STR-physics (bows use it for damage math), so
-		# gate the PROGRESSION tally on actual weapon reach too -- a bow hit
-		# must feed ranged_hit ([Archer]) and never melee_hit ([Warrior]):
-		# doing [X] levels [X] (review I-1; the two counters are mutually
-		# exclusive per hit).
 		if melee and int(a.get(WIKeys.WEAPON_RANGE, 1)) <= 1:
 			_tally(attacker_id, "melee_hit")
-		# GH#70 [Archer] earn: `ranged_hit` tallies on every landed hit from
-		# a combatant whose weapon_range > 1 (a bow), UNCONDITIONAL on the
-		# `melee` flag above -- that flag is really "physical vs magical
-		# damage math" (see the comment just above), not spatial adjacency,
-		# so it stays true for a bow's basic Attack AND its damage_mult
-		# skills (Power Shot/Quick Nock) alike, while a line_damage skill
-		# (Piercing Shot) passes melee=false and still reaches this tally
-		# since it's a separate, unconditional check. No-op for every
-		# pre-existing combatant (weapon_range defaults to 1) -- byte-identical.
 		if int(a.get(WIKeys.WEAPON_RANGE, 1)) > 1:
 			_tally(attacker_id, "ranged_hit")
 	_emit(WIEvents.ATTACK_RESOLVED, {
@@ -666,13 +433,6 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 	})
 	if not hit:
 		return
-	# [Invisibility]'s break-on-damage rule: dealing damage (any attack or
-	# damaging skill -- every one of them routes through this single
-	# `_resolve_hit` choke point, melee or spell or line alike) clears the
-	# ATTACKER's own untargetable status. Keyed on the flag, not this
-	# combatant's held skills, so it fires identically for a riposte
-	# counter-attack (the recursive `_resolve_hit` call below, attacker_id
-	# swapped to the riposter) as for a normal turn action.
 	_break_untargetable_statuses(attacker_id)
 	_post_damage(target_id, attacker_id)
 	if finished:
@@ -686,14 +446,6 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 		_resolve_hit(target_id, attacker_id, riposte_mult, true, false)
 
 
-## Issue #90: applies weakened(attacker)/guarded(defender) as POST-multipliers
-## on an already-fully-computed landed hit -- run AFTER the maxi(1, ...) floor
-## above, BEFORE `_deduct_hp` (armor's flat reduction / mana_shield's MP-drain
-## still act on the ALREADY-shrunk number: these two statuses shrink the BLOW
-## itself, the target's own defenses reduce what actually gets through it).
-## Re-floored at 1 after EACH multiplier -- neither status can zero a landed
-## hit. Bypassed entirely by `_tick_burning_statuses` (a DoT tick has no
-## attacker/defender pair to read either status off of).
 func _apply_status_damage_mods(attacker: Dictionary, defender: Dictionary, amount: int) -> int:
 	if (attacker["statuses"] as Dictionary).has("weakened"):
 		amount = maxi(1, int(amount * WEAKENED_MULT))
@@ -702,13 +454,6 @@ func _apply_status_damage_mods(attacker: Dictionary, defender: Dictionary, amoun
 	return amount
 
 
-## Clears any status on `id` carrying `untargetable: true` (today only
-## invisibility's `invisible` entry) and emits STATUS_EXPIRED per cleared
-## entry -- the break-on-damage half of the untargetable contract (the
-## natural-expiry half lives in `_purge_expired_statuses` below). DATA-DRIVEN:
-## reads the flag off whatever is in `statuses`, never checks a skill id or
-## the status name "invisible" specifically, so any future status reusing
-## this flag breaks on damage for free.
 func _break_untargetable_statuses(id: String) -> void:
 	var statuses: Dictionary = combatants[id]["statuses"]
 	for status_id: String in statuses.keys():
@@ -735,28 +480,6 @@ func end_turn() -> void:
 	_advance_turn()
 
 
-## Issue #90 [burning]: EOT tick, fired once per ROUND at the SAME
-## round-rollover site `_purge_expired_terrain`/`_purge_expired_statuses`
-## already use, BEFORE the statuses purge -- TICK THEN PURGE, pinned: a
-## status whose `expires_after_round` matches the round just entered still
-## gets its tick here before `_purge_expired_statuses` erases it a few
-## lines later; purging first would silently skip that final tick (a
-## status that expires the round it's applied without ever ticking is the
-## bug class this ordering exists to avoid). Deals `tick_damage` (read off
-## the status entry itself, the `pool_penalty`/slowed idiom -- data-driven,
-## not a WICombat const) to every ALIVE holder (sorted ids, deterministic
-## event order), routed through `_deduct_hp` (armor reduction/mana_shield
-## absorb apply exactly like any other hit) then the SAME down-check/
-## `_check_end` chain `_post_damage` uses -- MINUS its "auto re-advance if
-## active" branch, deliberately: this runs from INSIDE `_advance_turn`'s
-## own round-rollover branch, whose enclosing while-loop already re-scans
-## for the next living combatant once this returns, so a second
-## `_advance_turn()` call here would double-advance/desync `active_index`
-## (the SAME class of bug `_start_turn`'s windup guard comment calls out).
-## No riposte, no kill-credit (a DoT tick has no attacker id) -- `_on_kill`
-## is never called. Bypasses `_resolve_hit` entirely, so weakened/guarded
-## (which describe an attacker/defender PAIR) never touch a burning tick
-## either way -- a deliberate scope limit, not an oversight.
 func _tick_burning_statuses() -> void:
 	var ids := combatants.keys()
 	ids.sort()
@@ -808,22 +531,6 @@ func _start_round() -> void:
 
 func _start_turn() -> void:
 	var c: Dictionary = combatants[get_active()]
-	# Issue #82's WINDUP SIM SPEC: resolution happens FIRST, before this
-	# turn's own AP/pool are granted -- "the slam lands, THEN your turn
-	# properly begins". `_resolve_windup` routes every hit through
-	# `_resolve_hit`, which can down combatants and end the fight via the SAME
-	# `_post_damage`/`_check_end` chain every other damage source uses -- the
-	# `finished` guard stops this frame from granting AP/emitting TURN_STARTED
-	# into a fight that just ended mid-resolution (a PC-death instant defeat,
-	# or the last opposer falling). The `not alive` guard is DEFENSIVE, not a
-	# live path today: the caster is EXCLUDED from its own resolution by id
-	# (`_resolve_windup`'s F1 ruling, see its doc comment) and ripostes are
-	# disabled there, so nothing in the current windup shape can kill the
-	# active combatant during its own turn start -- but a future effect that
-	# can would hit `_post_damage`'s "active combatant just went down"
-	# recursive `_advance_turn()`, and continuing THIS frame past that point
-	# would double-advance/desync `active_index`; the guard keeps that class
-	# of bug impossible rather than merely unlikely.
 	_resolve_windup(c)
 	if finished or not bool(c[WIKeys.ALIVE]):
 		return
@@ -832,11 +539,6 @@ func _start_turn() -> void:
 	_quick_cast_spent.erase(c[WIKeys.ID])
 	var pool := MOVE_POOL
 	var statuses: Dictionary = c["statuses"]
-	# A combatant STARTING its turn already standing on icy_floor gets
-	# the penalty THIS turn, through the SAME consume-block below (applied
-	# here -> immediately consumed a few lines down) -- applied before the
-	# `slowed` check so this turn's TURN_STARTED move_pool reflects the
-	# reduced pool, not a stale one that only kicks in next turn.
 	_apply_terrain_status(c)
 	if statuses.has("slowed"):
 		var penalty := int((statuses["slowed"] as Dictionary).get("pool_penalty", 0))
@@ -844,47 +546,12 @@ func _start_turn() -> void:
 		statuses.erase("slowed")
 		_emit(WIEvents.STATUS_EXPIRED, {"id": c[WIKeys.ID], "status": "slowed"})
 	pool += _move_pool_bonus_total(c)
-	# Issue #90 rooted: move_pool READS 0 while active -- checked LAST so it
-	# overrides slowed's penalty and any passive bonus unconditionally (a
-	# root is an absolute lock, not a further reduction on top of a smaller
-	# pool). Multi-round persistent (expires_after_round/
-	# _purge_expired_statuses, unlike slowed's one-shot consume-and-erase
-	# above), so every `_start_turn` while still rooted re-zeroes it.
 	if statuses.has("rooted"):
 		pool = 0
 	c[WIKeys.MOVE_POOL] = pool
 	_emit(WIEvents.TURN_STARTED, {"id": c[WIKeys.ID], "ap": MAX_AP, "move_pool": pool})
 
 
-## Issue #82's WINDUP SIM SPEC: resolves `c`'s pending windup (if any) against
-## the FROZEN cells `declare_windup` stashed -- whoever occupies them NOW,
-## never recomputed from the original target. No-op when `c` has no pending
-## windup (every combatant, every turn, until `slam` declares one -- the
-## zero-behavior-change guarantee for every existing fight). Emits the SAME
-## resolution shape an instant blast_damage cast would (SKILL_RESOLVED with
-## `cells`/`hit_ids`, then one ATTACK_RESOLVED per hit via `_resolve_hit`) so
-## presentation's existing SKILL_RESOLVED flash/feed handling needs no windup-
-## specific case for the IMPACT itself (only the DECLARE moment,
-## WINDUP_DECLARED, is new to presentation). melee=true (STR-based, matching
-## the caster's own basic-Attack/power_strike math) -- deliberately NOT
-## blast_damage's own `_resolve_blast_damage` resolver, which always passes
-## melee=false (INT-based, correct for its one shipped grant, the MAGE spell
-## flame_pillar, but wrong for a construct's physical slam).
-##
-## THE CASTER IS EXCLUDED, by actor id, never by cell (controller ruling,
-## review finding F1): a range-1 windup declared while adjacent puts the
-## caster's OWN cell inside its radius-1 blast with geometric certainty, and
-## the melee AI never repositions after declaring -- caster-inclusion made
-## EVERY resolution a guaranteed self-hit (62/62 measured across the harness)
-## whose feed line read "Guardian Construct strikes Guardian Construct for
-## N!". DELIBERATE ASYMMETRY vs blast_damage's instant resolver: a player-cast
-## blast keeps caster-own-cell friendly fire (standing in your own blast is a
-## CHOSEN, card-warned risk taken at cast time); an AI windup's self-hit is
-## neither chosen nor avoidable -- a tax, not a choice. Everyone ELSE in the
-## frozen cells is still hit regardless of side -- the ally-side friendly
-## fire that makes move-out counterplay honest is untouched. Excluding by id
-## (not by "skip the caster's cell") means a DIFFERENT combatant standing on
-## the caster's old cell at resolution still gets hit correctly.
 func _resolve_windup(c: Dictionary) -> void:
 	var actor_id := String(c[WIKeys.ID])
 	if not windups.has(actor_id):
@@ -892,10 +559,6 @@ func _resolve_windup(c: Dictionary) -> void:
 	var w: Dictionary = windups[actor_id]
 	windups.erase(actor_id)
 	var skill_id := String(w["skill_id"])
-	# Issue #90: read once, up front -- `_apply_status_from_effect` needs the
-	# skill's own effect dict (for its `applies` rider, e.g. slam's rooted).
-	# Absent (empty dict) for a windup skill with no rider -- every windup
-	# holder before slam's rider shipped, no-op, byte-identical.
 	var effect: Dictionary = (skills.get(skill_id, {}) as Dictionary).get(WIKeys.EFFECT, {})
 	var cells: Array = w["cells"]
 	var hit_ids: Array = []
@@ -913,10 +576,6 @@ func _resolve_windup(c: Dictionary) -> void:
 	_emit(WIEvents.SKILL_RESOLVED, {
 		"actor": actor_id, "skill": skill_id, "cells": cells_payload, "hit_ids": hit_ids,
 	})
-	# The caster can no longer die mid-resolution (it is excluded from
-	# hit_ids and allow_riposte is false), so the only mid-loop exit needed
-	# is `finished` -- a hit downing the PC (instant defeat) or the last
-	# living opposer.
 	for id: String in hit_ids:
 		if not bool(combatants[id][WIKeys.ALIVE]):
 			continue  # an earlier hit in this same resolution may have already downed them
@@ -924,32 +583,10 @@ func _resolve_windup(c: Dictionary) -> void:
 		_resolve_hit(actor_id, id, 1.0, true, false)
 		if finished:
 			return
-		# Issue #90: apply the windup skill's own `applies` rider (slam's
-		# rooted) only on a hit that actually landed damage -- mirrors
-		# spell_damage's own conditional gate in skill_effects.gd, applied
-		# here since `_resolve_windup` bypasses that resolver entirely (its
-		# own bespoke multi-hit loop, not `_resolve_blast_damage`).
 		if int(combatants.get(id, {}).get(WIKeys.HP, hp_before)) < hp_before:
 			WISkillEffects._apply_status_from_effect(self, id, effect)
 
 
-## The two PRE-EXISTING 0-cost move_pool_bonus skills
-## (quick_movement, battlefield_awareness) are genuine PASSIVES -- a holder
-## gets +amount move_pool at the START of every turn, unconditionally: no
-## cast, no cost, no refusal path. This is deliberately separate from
-## [Stealth]'s ACTIVE cast (ap_cost 1, gated in skill_effects.gd's
-## resolve_active on ap_cost > 0), which this function never touches.
-## Applied AFTER the slowed penalty above -- same "per-turn pool math lives
-## here" site the penalty already established -- so a slowed holder of one
-## of these still gets its passive bonus on top of the reduced base (a
-## flat add, same as dash() stacking on top of whatever pool state already
-## exists; there is no design reason the passive would selectively skip a
-## slowed turn). Issue #60 item 3: also emits PASSIVE_APPLIED{id, skill} for
-## every contributing skill -- the ONLY site this bonus is granted, so this
-## is the ONLY place that can mark it "used" for the journal's first-use
-## reveal (a passive never goes through use_skill/resolve_active). Data-
-## driven off `effect.type` (the SAME check already gating the total below),
-## never a skill-id special case.
 func _move_pool_bonus_total(c: Dictionary) -> int:
 	var total := 0
 	for sk: String in (c[WIKeys.SKILLS] as Array):
@@ -963,17 +600,6 @@ func _move_pool_bonus_total(c: Dictionary) -> int:
 	return total
 
 
-## Applies the terrain entry (if
-## any) registered at `c`'s CURRENT cell onto `c` -- the STANDING-terrain
-## counterpart of `WISkillEffects._apply_status_from_effect` (that one fires
-## on a HIT; this one fires on OCCUPYING a terrain cell). No-op when
-## `terrain` holds no entry for the cell -- every existing fight never
-## populates `terrain` at all, so this is a guaranteed no-op there (the
-## "zero behavior change for every pre-existing fight" proof). Two call
-## sites, per the design: `move_active` (stepping onto a terrain cell mid-
-## turn) and `_start_turn` (starting a turn already standing on one, applied
-## before the `slowed` consume-block so the SAME machinery handles both —
-## applied then immediately consumed the same turn, both events firing).
 func _apply_terrain_status(c: Dictionary) -> void:
 	var cell: Vector2i = c[WIKeys.CELL]
 	if not terrain.has(cell):
@@ -985,16 +611,6 @@ func _apply_terrain_status(c: Dictionary) -> void:
 		_emit(WIEvents.STATUS_APPLIED, {"id": String(c[WIKeys.ID]), "status": status_id})
 
 
-## Called from `_advance_turn`'s round-rollover branch, after
-## `round_number` has already advanced and ROUND_STARTED has already
-## emitted. Removes every terrain cell whose `expires_after_round` has
-## passed (a cell cast at round N with `duration_rounds` D carries
-## `expires_after_round = N+D-1`, so it survives the rollover check through
-## round N+D-1 and is purged the next time round_number moves past it --
-## "icy through end of round N+duration-1"). Batches every purged cell into
-## ONE terrain_expired emit PER KIND (today only "icy_floor" ever exists in
-## `terrain`, so this is always at most one emit per rollover) rather than
-## one per cell, mirroring TERRAIN_ADDED's batched-cells-per-cast shape.
 func _purge_expired_terrain() -> void:
 	if terrain.is_empty():
 		return
@@ -1016,17 +632,6 @@ func _purge_expired_terrain() -> void:
 		_emit(WIEvents.TERRAIN_EXPIRED, {"kind": kind, "cells": cells_payload})
 
 
-## The per-COMBATANT counterpart of `_purge_expired_terrain` above, called
-## from the SAME round-rollover site: removes any status entry carrying an
-## `expires_after_round` that has passed. This is a GENERIC, opt-in mechanism
-## -- only a status entry that itself stamps `expires_after_round` (today,
-## invisibility's `invisible`, set by WISkillEffects._resolve_invisibility)
-## is ever touched here. Every pre-existing per-unit status (`slowed`, from
-## frost_bolt/icy_floor's hit-applied `applies` dict) carries NO such key, so
-## this purge is a guaranteed no-op for every fight that never casts
-## invisibility -- `slowed` keeps expiring exactly as before, via
-## `_start_turn`'s own dedicated consume-block, untouched by this function.
-## Iterates combatant ids in sorted order for deterministic event ordering.
 func _purge_expired_statuses() -> void:
 	var ids := combatants.keys()
 	ids.sort()
@@ -1039,23 +644,14 @@ func _purge_expired_statuses() -> void:
 				_emit(WIEvents.STATUS_EXPIRED, {"id": id, "status": status_id})
 
 
-## Deterministic cell ordering (x then y) shared by every terrain payload
-## that must sort for determinism (TERRAIN_ADDED's cells, TERRAIN_EXPIRED's
-## cells, snapshot()'s terrain lists) -- one canonical comparator so the
-## sort order can never drift arm-to-arm.
 static func _cell_less_than(a: Vector2i, b: Vector2i) -> bool:
 	if a.x != b.x:
 		return a.x < b.x
 	return a.y < b.y
 
 
-## PC death is an immediate defeat, regardless of living allies (post-D4
-## playtest directive 7, user-confirmed): the team-wipe rule below still
-## governs every other combatant, but "pc" specifically ends the fight the
-## instant it goes down. Checked BEFORE the team-wipe scan so a PC death that
-## happens to coincide with the last enemy dying (e.g. a friendly-fire line
-## skill) resolves as DEFEAT, never a simultaneous victory.
 func _check_end() -> void:
+	# PC death is immediate defeat even while another player-side combatant lives.
 	if combatants.has("pc") and not bool(combatants["pc"][WIKeys.ALIVE]):
 		_finish(false, false)
 		return
@@ -1093,10 +689,6 @@ func snapshot() -> Dictionary:
 			"move_pool": c[WIKeys.MOVE_POOL],
 			"alive": c[WIKeys.ALIVE], "side": c[WIKeys.SIDE],
 			"skills": (c[WIKeys.SKILLS] as Array).duplicate(),
-			# GH#70: exposed the same way max_mp was when MP shipped -- lets QA
-			# assert the range+LoS seam directly (`archer_earn_loop`) instead of
-			# only inferring it from attack_resolved's absence of a distance
-			# field. Defaults to 1 for every pre-GH#70 combatant.
 			"weapon_range": int(c.get(WIKeys.WEAPON_RANGE, 1)),
 		}
 	return {
@@ -1107,9 +699,6 @@ func snapshot() -> Dictionary:
 	}
 
 
-## `{kind: [[x,y],...] sorted}` -- empty dict when `terrain` is empty
-## (every pre-existing fight). QA asserts through this exact shape
-## (`assert_state combat.terrain.icy_floor`).
 func _terrain_snapshot() -> Dictionary:
 	var out := {}
 	for cell: Vector2i in terrain:
@@ -1127,16 +716,12 @@ func _terrain_snapshot() -> Dictionary:
 	return out
 
 
-## Increments one deed counter for one actor in the per-fight tally.
 func _tally(actor_id: String, counter: String) -> void:
 	var counters: Dictionary = action_tally.get(actor_id, {})
 	counters[counter] = int(counters.get(counter, 0)) + 1
 	action_tally[actor_id] = counters
 
 
-## Tallies a successful skill spend from its skills.json tags: a `weapon` tag
-## counts <weapon>_skill_used; an `element` tag counts spell_cast plus
-## <element>_cast. Untagged skills tally nothing here.
 func _tally_skill_use(actor_id: String, skill: Dictionary) -> void:
 	if skill.has(WIKeys.WEAPON):
 		_tally(actor_id, "%s_skill_used" % String(skill[WIKeys.WEAPON]))
@@ -1145,10 +730,6 @@ func _tally_skill_use(actor_id: String, skill: Dictionary) -> void:
 		_tally(actor_id, "%s_cast" % String(skill["element"]))
 
 
-## Records `skill_id` into `used_skills_tally` for `actor_id` (the
-## per-fight half — see that var's own doc comment). A no-op for an
-## empty id (skill dicts always carry one from data/skills.json in real
-## play; the guard is pure hygiene against a hand-built test dict).
 func _mark_skill_used(actor_id: String, skill_id: String) -> void:
 	if skill_id == "":
 		return

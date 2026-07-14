@@ -1,5 +1,4 @@
 {
-	"_comment": "Issue #97: market_watchgolems' own confirm conversation -- the crab_nest informed-consent shape, Pallass's second combat encounter (a matched guard pair, ai:guard). Speaker follows the FIELD name 'Stone Golems' (controller naming ruling -- attested species name, no invented compound; combat display_name is the singular 'Stone Golem', A/B-suffixed by the turn bar). [Strike first.] fires start_combat (self-reference, legal only on an ending option). [Back away.] plainly ends -- no combat, the encounter stays live and re-interactable.",
 	"start": "confront",
 	"nodes": {
 		"confront": {

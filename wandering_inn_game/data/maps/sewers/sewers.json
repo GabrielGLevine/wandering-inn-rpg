@@ -1,12 +1,12 @@
 {
- "_comment": "The Liscor sewers (~20x14, cave biome). Entered from the street `sewer_grate` prop once `heard_about_cisterns` is banked (C3 banks it from Olesm) -- see the door_when seam on that prop + wi_game.gd's prop-interact branch. Water channels are walls.segments on the free_pack Water_tiles sheet, so world.gd's `_build_water_shimmer` paints the shimmer overlay automatically (sheet-match) AND they block movement (segment_cells joins the sim blocked set). Left (x0-2) and right (x17-19) walkways cross the two channels. Dark mood pin lives in data/moods.json; lights glow at dusk/night (light_energy_by_phase day=0.0), while the always-on pond_glints/dust ambience carries the day-phase atmosphere.",
+ "_comment": "Water channels are walls.segments on the free_pack Water_tiles sheet, so world.gd's `_build_water_shimmer` paints the shimmer overlay automatically (sheet-match) AND they block movement (segment_cells joins the sim blocked set).",
  "biome": "cave",
  "grid": {
   "width": 20,
   "height": 14
  },
  "blocked": [],
- "_comment_freezable": "The channel-A/B cells at column x=3 the frost skill can turn to walkable ice, making a vertical SHORTCUT down the left side from the top band straight through both channels to the mid/lower bands (otherwise you must go around via the y11 row). Both are already blocked water (they sit under the channel walls.segments), so unfrozen they are byte-identical to today -- no route changes for any script that never casts frost here. Frozen ice thaws at the next sleep. sewers_walkthrough demos freezing (3,5).",
+ "_comment_freezable": "Freezing the two x=3 channel cells opens a vertical shortcut through blocked water; sleep thaws them.",
  "freezable": [
   [
    3,
@@ -42,7 +42,6 @@
   "tile_px": 16,
   "segments": [
    {
-    "_comment": "Water channel A (upper). Water_tiles sheet -> auto shimmer overlay + blocking.",
     "from": [
      3,
      5
@@ -59,7 +58,6 @@
     "tile_px": 16
    },
    {
-    "_comment": "Water channel B (lower).",
     "from": [
      3,
      9
@@ -140,7 +138,6 @@
  ],
  "entities": [
   {
-   "_comment": "The way back up. Returns to the street beside the sewer_grate (15,11); the grate is the sole street<->sewers link, so exit lands at the grate regardless.",
    "id": "sewer_exit",
    "kind": "door",
    "cell": [
@@ -166,7 +163,7 @@
    }
   },
   {
-   "_comment": "A collapsed pile of rotten timber and tar-soaked rope blocking the dead-end side-nook WEST of the ladder (x0-1, off every canonical route -- cisterns/deep_descent only tread the x2 column and the y11 row, never x0-1, so this prop changes no other script's pathing or entity assertions). `burnable: true` is the ONLY tag the fire field seam keys on; facing it and casting [Firefly] removes it permanently (removed_entities, saved) and clears the nook. NOT a quest prop -- burning it costs nothing but the passage. Sprite `crate` is a debris stand-in (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
+   "_comment": "`burnable: true` is the ONLY tag the fire field seam keys on",
    "id": "sewer_debris",
    "kind": "prop",
    "cell": [
@@ -248,7 +245,6 @@
    "toast": "Ropes of banded silk choke the side passage, strong as wire. Wrapped in it, drained pale: a rat, a boot, something that used to be a Watchman's lantern."
   },
   {
-   "_comment": "The sewers' easy trash fight -- the sewers_walkthrough clears it (autoplay). Interact-only (no trigger_radius) so QA controls when it starts.",
    "id": "sewer_vermin",
    "kind": "encounter",
    "cell": [
@@ -273,7 +269,7 @@
    ]
   },
   {
-   "_comment": "The Shield Spider nest -- Quest 1 'Something in the Cisterns' FIGHT path (C3 wires the quest; on_victory banks cleared_the_nest for C3 to read). Interact-only (no trigger_radius) so C3's SKILL path can [Appraise Foe] the nest without triggering combat. Phosphor_pendant loot rides the sewers-phosphor prop fiction. This encounter carried NO loot table before G2 (confirmed by grep), so the new table is purely additive -- no prior loot draw exists at any pinned seed for this entity to disturb. Loot RNG is isolated (hash(run_seed, encounter_id), M7), so this can never shift the main event stream or any OTHER encounter's draw. Chance 0.3 is a G2 pick (the staging doc names the source but not a chance value) -- mid-range between the shipped 0.25/0.5 precedents. Issue #69: Klbkch fields here (the cisterns quest's FIGHT path), NOT Relc -- this is Klbkch's own alternation slot alongside crate_scavengers (Relc keeps the tutorial/road/inn fights + the descent). Was `allies: []` before this lane (no ally ever fielded here despite sim_combat_batch.gd's pre-existing `shield_spiders_w2_relc` harness cell, which was always a measured-only hypothetical, never wired to this entity) -- no swap needed, this is a net-new gate, and that pre-existing relc cell is now stale documentation of an unwired hypothetical, kept for the record. `ally_requires: {chatted_with_klbkch: 1}` is banked ONLY by talking to Klbkch at the gate (#51's talk_pool). Balance: sim_combat_batch.gd ENCOUNTER_CELLS `shield_spiders_w2_klbkch` (measured-only, same rationale as the `_w2_solo`/`_w1_solo` siblings -- cisterns_fight's own pinned fixture rng_state is the real content proof, not a win-rate contract).",
+   "_comment": "Interact-only (no trigger_radius) so C3's SKILL path can [Appraise Foe] the nest without triggering combat.",
    "id": "shield_spiders",
    "kind": "encounter",
    "cell": [
@@ -311,7 +307,7 @@
    ]
   },
   {
-   "_comment": "Quest 1 SKILL path: the walkway ledge overlooking the Shield Spider nest. Mirrors the crate quest's cellar_door [Light] shape -- `requires_skill: observe` + `on_skill_use` banks `scouted_the_nest` deterministically (single accomplishment, zero rng). Both interact (E, facing it -> interact()'s prop branch use_skill('observe', id) fallback) and the field [Appraise Foe] hotbar (use_skill_field -> the requires_skill==observe && on_skill_use branch) route through the SAME use_skill seam, so the bank + toast are identical either way; the generic observe-string path never fires for this prop (the requires_skill+on_skill_use branch is checked first). `locked_toast` gates gracefully when [Appraise Foe] is unknown (no skill-name leak). Placed at (17,10) on the right walkway, one cell east of the open nest floor -- reachable WITHOUT interacting the interact-only shield_spiders at (15,10), so scouting never trips the fight. Sprite `boulder` is a stand-in (a broken brick lip) consistent with the drainage_marker; VISUAL-LOG flag.",
+   "_comment": "reachable WITHOUT interacting the interact-only shield_spiders at (15,10), so scouting never trips the fight.",
    "id": "nest_ledge",
    "kind": "prop",
    "cell": [
@@ -329,7 +325,7 @@
    "locked_toast": "The ledge overlooks the nest: a perfect vantage, if you had the eye to read one. You don't, quite. Not yet."
   },
   {
-   "_comment": "The descent seam, gated on Act III's tremor beat. A `door_when` prop on the SAME idiom as the street sewer_grate: its gate is `heard_the_deep_tremor` -- Zevara's post-Act-II summons is its SOLE producer (documented in CLAUDE.md). Until banked, door_when is UNMET and interact falls through to on_interact_accomplishment + toast (found_the_fissure) -- pre-gate behavior is byte-identical, so sewers_walkthrough/cisterns_* stay green. Once banked, the same interact emits open_toast and descends to deep_tunnels (2,2). Placed at (8,12), the untouched bottom-middle band -- no sewers/cisterns route asserts or treads a bottom-band cell (all sewers-map cells they visit are top-band y2, the nest right-side y10, and (2,7)). Sprite `boulder` is a rubble stand-in for a collapsed fissure (VISUAL-LOG flag, drainage_marker/nest_ledge precedent).",
+   "_comment": "The descent seam, gated on Act III's tremor beat.",
    "id": "deep_fissure",
    "kind": "prop",
    "cell": [
@@ -354,7 +350,6 @@
    }
   },
   {
-   "_comment": "Issue #81 lore-note collectible thread: found-note item (kind:parcel, data/items.json), container shape (contains). Placed at (9,1), the upper room above the y5 water-channel wall segment -- confirmed off every sewers-touching canonical's actual walked-cell set (sewers_walkthrough/cisterns_fight/cisterns_scout together only tread (15,9)/(15,11)/(2,2)/(1,2)/(3,4)/(3,5)/(5,2)/(6,2)/(16,10)/(18,10) in this map; cisterns_talk never physically enters sewers; deep_descent's fixture starts already adjacent to deep_fissure at (8,11) and never walks elsewhere). No gate -- an always-findable secondary discovery, like phosphor_moss/drainage_marker.",
    "id": "note_sewer_surveyor",
    "kind": "prop",
    "cell": [
@@ -375,7 +370,7 @@
    "on_open_accomplishment": "found_sewer_surveyor_note"
   },
   {
-   "_comment": "Issue #81 'The Missing Recruit' mini-quest (data/quests.json, the_missing_recruit): the beat-1 discovery, a `present_when`-gated NPC (STRUCTURAL absence, not merely visual -- entity_present's own doc comment in wi_game.gd) so a player can never stumble on Pell before Dresk's barracks conversation has actually opened the quest. Gate: `missing_recruit_started` (Dresk's dresk_recruit.json 'ask' option, banked on the BARRACKS map) -- a DIFFERENT map than this entity's own (sewers), satisfying present_when's same-map-producer constraint. Placed at (11,3), the SAME upper room as note_sewer_surveyor above, off every sewers canonical's walked-cell set (see that entity's own comment) -- none of them bank missing_recruit_started, so Pell stays structurally absent in every pre-#81 sewers script, and their `ui_entities_rendered` sprite counts are untouched by this addition (unlike note_sewer_surveyor, which IS always-present and therefore DOES bump the raw entity count -- no pre-#81 sewers script asserts that count today, so nothing needed updating). No talk_pool (met once, present_when already keeps a random early explorer from ever reaching this node pre-quest) -- a bare `conversation` routes every interact straight to recruit_pell.json.",
+   "_comment": "present_when makes Pell structurally absent—not cosmetically hidden—until missing_recruit_started is banked on the barracks map; prevents pre-quest discovery and render-count drift.",
    "id": "recruit_pell",
    "kind": "npc",
    "cell": [
@@ -404,7 +399,7 @@
    ]
   },
   {
-   "_comment": "R6 (#95) trap placement 1/2: sewer_vermin nest approach snag. Shape = requires_skill disarm (dart_slit_a precedent) -- E-interact always shows the tell (skill_hint_toast/locked_toast) regardless of disarm ability. Cell (7,3) verified off every sewers canonical's real walked-cell set: sewers_walkthrough treads (1-6,2)+(3,3-5); missing_recruit_loop treads row y4 x2-9 + col x9 y2-4 + (10,3); cisterns_scout/cisterns_fight tread col x2 y2-11 + row y11; deep_descent only touches (8,11) -- re-run all five after this edit, zero re-pin needed. requires_skill=observe LIVE (disarm_trap PARKED pending Rogue L5 -- docs/design/class-foundation-staging/trap-disarm-swap.json). Avoidable: single-cell prop on open floor (sewers has no `blocked` list, only wall segments + entity occupancy), adjacent cells (6,3)/(8,3)/(7,4) all clear -- trap_canonical proves the walk-around. Disarm banks shared `trap_disarmed` (Rogue axis feeder, produced-but-unconsumed today, verified legal) + 1g salvage.",
+   "_comment": "R6 (#95) trap placement 1/2: sewer_vermin nest approach snag.",
    "id": "sewer_nest_snag",
    "kind": "prop",
    "cell": [
@@ -423,7 +418,7 @@
    }
   },
   {
-   "_comment": "R6 (#95) trap placement 2/2: shield_spiders/nest_ledge approach snag, south flank away from the y11 walkway cisterns_scout/cisterns_fight both walk edge to edge. Cell (13,12) verified off every sewers canonical's walked-cell set (same trace as sewer_nest_snag above) -- y12 is untouched except (18,12), no entity sits at (13,12). requires_skill=observe LIVE (disarm_trap PARKED, same staging doc). Avoidable: single-cell prop, (12,12)/(14,12)/(13,11) all clear. Disarm banks shared trap_disarmed + 1g.",
+   "_comment": "R6 (#95) trap placement 2/2: shield_spiders/nest_ledge approach snag, south flank away from the y11 walkway cisterns_scout/cisterns_fight both walk edge to edge.",
    "id": "sewer_drain_snare",
    "kind": "prop",
    "cell": [

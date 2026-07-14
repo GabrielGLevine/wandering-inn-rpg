@@ -1,53 +1,12 @@
 class_name WICombatBoardRenderer
 extends Node
-## The board/sprite region, extracted from combat_screen.gd -- arena tiles/skirt/walls (via `WITileBoardBuilder`),
-## blocked-cell cover props, arena decor, combatant visuals (sprite or
-## ColorRect chip + HP/MP bars), world-space name/stat labels, and every
-## tween/anim/flash that animates a combatant's holder. `extends Node` (not
-## Node2D) deliberately: this helper owns/manages a Node2D board
-## (`_board`, living inside the world SubViewport -- see `build()`) but needs
-## tree membership itself for `create_tween()`/`get_tree()` (`combat_screen.gd`
-## adds one instance as its own child in `_ready()`); it draws nothing of its
-## own.
-##
-## Constructed once by `combat_screen.gd` and reused across encounters (like
-## the screen's own `_hotbar`); `build()` re-resolves `_board` from
-## `World.combat_board_root()` fresh every call rather than trusting a cached
-## reference, same reasoning as the pre-D2 `_build_board()` had (the World
-## node itself is torn down/recreated on `game_reset`/`game_loaded`).
-##
-## Sim reads inside every moved function route through the `WICombatView`
-## passed to `build()` (task mandate) -- see `combat_view.gd`'s doc comment
-## for the two accessor methods added here (`visual_for`, `has_sprite`, plus
-## a few small others) that exist purely to let `combat_screen.gd` keep its
-## own remaining (not-yet-moved) code working against this renderer's
-## now-private node bookkeeping without reaching into it directly.
 
 const CELL := 16
 const PLAYER_COLOR := Color(0.25, 0.45, 0.9)
 const ENEMY_COLOR := Color(0.75, 0.25, 0.2)
 const MP_COLOR := Color(0.25, 0.4, 0.85)
-## HP bars were one green regardless of side -- with combat name tags
-## retired (R3), the turn strip was the only friend/foe cue, worst in a
-## multi-combatant fight (playtest evidence: arc_flow's dd_06 boss fight,
-## 4 combatants, all-green bars). Side-keyed per `make_combatant_visual`'s
-## `c["side"]` (already the ally/enemy source of truth used for the chip
-## fallback above) -- stats stay hidden, this is presentation-only. Enemy
-## hue is a red-ORANGE, not pure red: red/green is the confusable pair for
-## the common (deuteranopia/protanopia) colorblind types, and orange's
-## extra luminance/blue-channel separation from green survives that
-## confusion where a pure red wouldn't. `_legibility_boost` (GH#28
-## dark-arenas) still self-modulates both colors up to the same brightness
-## floor, so the hue split holds in dark arenas too, not just bright ones.
 const ALLY_HP_COLOR := Color(0.2, 0.8, 0.2)
 const ENEMY_HP_COLOR := Color(0.95, 0.45, 0.05)
-## Persistent frost tint for icy_floor
-## overlays -- combat_screen.gd's FROST_FLASH RGB (0.5, 0.8, 1.0) at a lower
-## persistent alpha (0.35 vs the transient cast-flash's 0.55, since this rect
-## sits on the board every round rather than pulsing once). board_renderer.gd
-## doesn't reference combat_screen.gd's consts (the screen stays the VFX-
-## dispatch owner; this file owns rendering primitives), so the RGB is
-## restated here verbatim -- keep in sync if FROST_FLASH ever changes.
 const ICY_FLOOR_COLOR := Color(0.5, 0.8, 1.0, 0.35)
 ## Issue #82's WINDUP SIM SPEC / [Dangersense] payoff: the frozen-cell overlay
 ## for a declared windup, rendered ONLY for a [Dangersense] holder
@@ -96,13 +55,6 @@ const AIM_RING_THICKNESS := 2.0
 const DAMAGE_NUMBER_RISE_PX := 10.0
 const DAMAGE_NUMBER_SECONDS := 0.6
 const MISS_COLOR := Color(0.85, 0.85, 0.85, 0.95)
-## Attack connection (item 3). `LUNGE_PIXELS` is deliberately bigger than
-## `BUMP_PIXELS` (3px, a "your move was refused" nudge) -- this is a
-## deliberate strike, not a blocked-move bump, so it reads distinctly.
-## `PROJECTILE_DEFAULT_COLOR` is the neutral tint for a plain ranged Attack
-## (a bow -- no element to tint by); an active skill cast passes its OWN
-## element color in instead (the exact FROST_FLASH/FLAME_FLASH combat_screen.
-## gd already computes for cast-flash cells).
 const LUNGE_PIXELS := 5.0
 const LUNGE_TWEEN_SECONDS := 0.07
 const PROJECTILE_SECONDS := 0.12
@@ -117,27 +69,16 @@ const PROJECTILE_DEFAULT_COLOR := Color(0.92, 0.92, 0.85, 0.9)
 ## redundant.
 const STATUS_PIP_COLORS := {
 	"slowed": Color(0.55, 0.85, 1.0, 0.95),
-	# Issue #90: distinct hues per status, no dispatch code needed (see this
-	# const's own doc comment above) -- weakened (dulled violet, a
-	# strength-sapped read), guarded (warm gold, a wardlike read), rooted
-	# (dark umber, an earth/binding read), burning (hot orange).
 	"weakened": Color(0.75, 0.55, 0.85, 0.95),
 	"guarded": Color(0.85, 0.75, 0.35, 0.95),
 	"rooted": Color(0.55, 0.4, 0.25, 0.95),
 	"burning": Color(1.0, 0.45, 0.2, 0.95),
 }
 const STATUS_PIP_SIZE := Vector2(4.0, 4.0)
-## Turn clarity (item 5a): a small chevron floating just above the CURRENT
-## turn's combatant's cell (a fixed cell-relative offset, not sprite-height-
-## aware -- same simplification the HP/MP bars already accept). Moved on
-## every TURN_STARTED via the ONE function both the live and paced-AI-
-## playback paths funnel through (`combat_screen.gd._apply_turn_started`).
 const ACTIVE_MARKER_COLOR := Color(1.0, 0.95, 0.3, 1.0)
 const ACTIVE_MARKER_TIP_Y := -6.0
 const ACTIVE_MARKER_BASE_Y := -12.0
 const ACTIVE_MARKER_HALF_WIDTH := 4.0
-## Combat-feel tuning (presentation-only, all QA-collapsed via
-## `_juice_enabled` -> `_presentation_delay`, zero under TestDriver/headless).
 const HIT_FLASH_COLOR := Color(2.4, 2.4, 2.4, 1.0)  # white-hot pulse on the struck sprite
 const HIT_FLASH_SECONDS := 0.12
 const SHAKE_SECONDS := 0.12
@@ -149,20 +90,6 @@ const SPARKS_TTL := 0.7  # frees the one-shot GPUParticles2D safely past its 0.4
 ## sprites.json entries only, per biome id (`data/biomes.json`/`arenas.json`
 ## `biome` tag). Pool order matters only in that it's stable input to
 ## `_blocked_prop_index` — do not reorder without re-screenshotting.
-## `mushroom_purple_l`/`_m` are excluded on purpose -- both are decor-scale
-## (native frame up to 64x88, `render_scale` only 0.5) meant for the
-## OUTSIDE-the-grid cave_mouth decor band; tried inside the playable grid as
-## single-cell cover they rendered 2-3x a cell's footprint, floating over
-## neighboring cells and the turn-order strip (windowed screenshot,
-## qa_output/level_up_loop/02_second_fight.png, first attempt). `mushroom`
-## (plain, unscaled 16x16) is ALSO excluded -- its `region` crop
-## (data/sprites.json [32,32,16,16] on cave/Props.png) lands on a flat
-## solid-purple patch of the sheet, not a recognizable mushroom silhouette;
-## at single-cell scale it read as a plain purple square -- the exact "flat
-## recolored tile" problem this fix exists to remove, just purple instead of
-## brown. Only `boulder` (~16x20 effective, a real rock silhouette) and
-## `mushroom_purple_s` (~15x18, a real small-mushroom silhouette) read as
-## physical single-cell objects; verified by windowed screenshot.
 const BLOCKED_PROPS_BY_BIOME := {
 	"street": ["crate", "barrel"],
 	"cave": ["boulder", "mushroom_purple_s"],
@@ -172,47 +99,11 @@ const BLOCKED_PROPS_BY_BIOME := {
 	## entry documents the scale constraint); `bush_green` is already
 	## cell-sized. Both are real silhouettes, not flat recolored tiles.
 	"witch_hollow": ["hollow_bent_tree", "bush_green"],
-	## riverfarm_village (village_edge_night): without a pool its 2 blocked
-	## cells fell to the flat blocked tile, which the deep-blue night grade
-	## crushed to bare black squares (windowed 03_night_wolf_arena read).
-	## Field-edge register: a rock and a bush, both single-cell-verified.
 	"riverfarm_village": ["boulder", "bush_green"],
-	## `inn` biome (inn_cellar/merchant_warehouse, 10 blocked cells
-	## combined): every blocked cell falls to this pool rather than the flat
-	## recolored tile ("props-over-tiles" is the defect this mechanism
-	## exists to kill). Reuses `crate`/`barrel` (the SAME already
-	## single-cell-verified sprites the `street` pool uses) rather than
-	## sourcing new art -- crates and barrels are, if anything, a MORE
-	## natural fit for a cellar/warehouse than a street.
 	"inn": ["crate", "barrel"],
 }
 
-## GH #28 DARK-ARENAS legibility fix. combat_board_root() is a bare Node2D
-## living inside the world SubViewport with no CanvasLayer of its own (see
-## atmosphere.gd's B1 EMPIRICAL FINDING doc comment) -- WIAtmosphere's single
-## CanvasModulate grades the ENTIRE default canvas of that viewport, so it
-## darkens combatant sprites/chips/HP-bars right along with the arena tiles.
-## That's CORRECT for the tiles (the dark mood pin, e.g. sewers/deep_tunnels,
-## is right per docs/VISUAL-LOG.md), but it also crushes small enemy/PC
-## sprites toward the same near-black floor as the background -- the "small
-## dark sprites hard to pick out" defect. Fixed with a uniform self_modulate
-## brightness floor (`_legibility_boost`, computed once per build() from the
-## resolved arena mood color via `_resolved_mood_rgb`/`_legibility_modulate`
-## below) applied to every combatant's sprite/chip + HP/MP bars -- `self_
-## modulate` deliberately, not `modulate`: flash_chip/impact_flash already
-## own `.modulate` for hit-flash tweens (both tween back to Color.WHITE), so
-## self_modulate composes independently on top without touching that code.
-## Never touches moods.json or atmosphere.gd's own apply()/apply_arena() --
-## this is a read-only presentation-side compensation, not a grading change.
 const MOODS_PATH := "res://data/moods.json"
-## Target average brightness combatant art should read at, regardless of how
-## dark the arena's own mood grade is. Bright arenas (avg already >= this)
-## get boost 1.0 -- byte-identical rendering to before this fix. 0.6 was
-## tried first (windowed sewers_walkthrough before/after) and read as only a
-## marginal, hard-to-notice nudge at natural viewing scale -- raised to 0.85
-## (near-full compensation for the sewers/cave_mouth pin, ~0.36 avg) so
-## combatant art reads close to its true un-graded color, a real pop against
-## the still-dark board/tiles rather than a subtle shift.
 const LEGIBILITY_TARGET := 0.85
 ## Clamp on the computed boost so the very darkest pins (deep_tunnels/
 ## deep_warren, avg ~0.25) don't get blown out toward flat white.
@@ -220,10 +111,6 @@ const LEGIBILITY_MAX_BOOST := 3.0
 
 static var _moods_cache: Dictionary = {}
 
-## The arena board itself -- a Node2D living in `World.combat_board_
-## root()` (inside the SubViewport). Re-resolved (not just cached) at the top
-## of every `build()` — see that function's doc comment for why a cached
-## reference can't be trusted.
 var _board: Node2D
 var _squares: Dictionary = {}
 var _hp_bars: Dictionary = {}
@@ -234,12 +121,7 @@ var _mp_bars: Dictionary = {}
 ## `_kill_combat_tween`.
 var _combat_tweens: Dictionary = {}
 var _combat_anim_tokens: Dictionary = {}
-## The single active screenshake tween on `_board.position` (killed
-## + restarted so overlapping heavy hits never stack an ever-growing offset).
 var _shake_tween: Tween
-## The WIMain host, stashed from `build()`'s `main_ref` param so `clear()` and
-## the labels helpers below can resolve `World`/`WIWorldLabels` without the
-## caller having to pass it again on every call.
 var _main_ref: Node
 ## Persistent per-cell overlays,
 ## kind -> {Vector2i: ColorRect}. Unlike `flash_cells` (a transient tween
@@ -249,25 +131,12 @@ var _main_ref: Node
 ## comment for the z-order contract that keeps them under combatant
 ## visuals).
 var _terrain_overlays: Dictionary = {}
-## Issue #75 item 1: transient aim-preview paint nodes (range tint, AOE tint,
-## ring), rebuilt wholesale by every `render_aim_preview()` call -- see that
-## function's doc comment. `_last_aim_preview_key` dedupes the additive
-## ui_aim_preview_rendered confirmation so an unchanged preview doesn't spam
-## the bus every `_refresh()`.
 var _aim_preview_nodes: Array = []
 var _last_aim_preview_key := ""
-## Issue #75 item 4: id -> {status_id: ColorRect}, mirrors `_hp_bars`'/
-## `_mp_bars`' per-combatant tracking-dict shape.
 var _status_pips: Dictionary = {}
-## Issue #75 item 5a: the single active-unit marker (only one combatant's
-## turn is ever active at a time) and the id it currently marks.
 var _active_marker: Node2D
 var _active_marker_id := ""
 
-## GH #28 DARK-ARENAS: this build()'s combatant-legibility self_modulate
-## floor (see the const block above) -- (1,1,1,1) identity for any arena
-## whose resolved mood already clears LEGIBILITY_TARGET (every bright arena,
-## unchanged from pre-fix rendering).
 var _legibility_boost: Color = Color(1.0, 1.0, 1.0, 1.0)
 
 
@@ -280,13 +149,6 @@ var _legibility_boost: Color = Color(1.0, 1.0, 1.0, 1.0)
 ## data/arenas.json's `decor` entries -- so draw order vs. combatants doesn't
 ## matter for readability, but decor is added last to match the field's
 ## "dressing renders over the floor stack" convention).
-##
-## Resolves `_board` fresh from `World.combat_board_root()` every call
-## rather than trusting a cached reference -- the World node itself gets
-## torn down and recreated on `game_reset`/`game_loaded` (Main.swap_to_world,
-## e.g. the defeat-reload path), which would leave a cached `_board` pointing
-## at a freed node. Also centers the camera on the arena and makes the board
-## visible -- `clear()` is the inverse (hide + restore field camera).
 func build(view: WICombatView, main_ref: Node) -> void:
 	_main_ref = main_ref
 	var world := _world_node()
@@ -308,14 +170,7 @@ func build(view: WICombatView, main_ref: Node) -> void:
 	_mp_bars.clear()
 	_combat_anim_tokens.clear()
 	_combat_tweens.clear()
-	# The wholesale queue_free loop above already frees every previous
-	# encounter's terrain overlay nodes (they're `_board` children); this just
-	# drops the now-stale tracking dict so a fresh combat starts with none.
 	_terrain_overlays.clear()
-	# Same reasoning for issue #75's new per-encounter trackers: the wholesale
-	# free above already frees the aim-preview/status-pip/active-marker nodes
-	# (children of `_board` or of a combatant holder under it) -- this just
-	# drops the now-stale references/dedup key so a fresh combat starts clean.
 	_aim_preview_nodes.clear()
 	_last_aim_preview_key = ""
 	_status_pips.clear()
@@ -351,9 +206,6 @@ func build(view: WICombatView, main_ref: Node) -> void:
 	_rebuild_combat_labels()
 
 
-## Inverse of `build()`'s show + enter_combat_camera + label publish. Guarded
-## by is_instance_valid since a defeat may already have torn the whole World
-## down via Game.reset()/load_slot before this runs on some paths.
 func clear() -> void:
 	_stop_shake()
 	if _board != null and is_instance_valid(_board):
@@ -362,8 +214,6 @@ func clear() -> void:
 	if world != null:
 		world.exit_combat_camera()
 	_clear_combat_labels()
-	# Drop the tracking dict defensively (see build()'s matching
-	# comment) -- the next build() frees the actual overlay nodes wholesale.
 	_terrain_overlays.clear()
 	_aim_preview_nodes.clear()
 	_last_aim_preview_key = ""
@@ -372,13 +222,6 @@ func clear() -> void:
 	_active_marker_id = ""
 
 
-## Playtest fix (props-over-tiles): renders `combat.blocked` cells as biome-
-## appropriate prop sprites via the same `_make_decor_visual` pathway as arena
-## decor -- so anchors/render_scale apply identically -- instead of a flat
-## recolored tile. Falls back to the old flat blocked-tile rendering for any
-## biome not listed in `BLOCKED_PROPS_BY_BIOME` (defensive: a future biome
-## added without a prop pool degrades to the pre-fix look rather than
-## silently rendering nothing on top of the floor).
 func _build_arena_blocked_cover(biome_id: String, biome: Dictionary, floor_tile_px: int, blocked: Dictionary) -> void:
 	var pool: Array = BLOCKED_PROPS_BY_BIOME.get(biome_id, [])
 	if pool.is_empty():
@@ -393,17 +236,10 @@ func _build_arena_blocked_cover(biome_id: String, biome: Dictionary, floor_tile_
 			_build_arena_blocked_fallback_tile(biome, floor_tile_px, [cell])
 
 
-## Old flat-tile blocked rendering, kept as the fallback path for any
-## biome without a defined prop pool (or a pool entry missing from the
-## registry, which should never happen for the two shipped biomes).
 func _build_arena_blocked_fallback_tile(biome: Dictionary, floor_tile_px: int, blocked: Array) -> void:
 	if blocked.is_empty():
 		return
 	var blocked_sheet := String(biome.get("blocked_sheet", biome["sheet"]))
-	# blocked_tile_px: the blocked sheet's own grid, which can differ from the
-	# floor sheet's (e.g. street floor is a whole-image 540px dirt tile while
-	# blocked cells come from the 16px Wall_Tiles) — using the floor's tile_px
-	# here made blocked coords land out of atlas bounds = silent no-op walls.
 	var blocked_tile_px := int(biome.get("blocked_tile_px", floor_tile_px))
 	var blocked_layer := WITileBoardBuilder.make_tile_layer(_board, blocked_sheet, blocked_tile_px, WISpriteRegistry)
 	var blocked_coord := Vector2i(int(biome["blocked"][0]), int(biome["blocked"][1]))
@@ -412,16 +248,6 @@ func _build_arena_blocked_fallback_tile(biome: Dictionary, floor_tile_px: int, b
 	_board.add_child(blocked_layer)
 
 
-## Deterministic [0, count) index for the cover prop shown at `cell` -- same
-## cell always shows the same prop (stable across replays/reloads at the same
-## arena), no seed dependency (blocked cells are arena-fixed layout, not a
-## per-run scatter). Mirrors world.gd's `_scatter_hash` hashing shape --
-## NOTE: hashing a Vector3i (not Vector2i) is load-bearing here, verified by
-## hand: hashing `Vector2i(cell.x*P1, cell.y*P2)` directly for this arena's
-## small blocked-cell coordinate ranges produced a near-constant low bit
-## (every `goblin_ambush` blocked cell collapsed to the same pool index --
-## every cover prop rendered as the same sprite); the 3-word hash spreads
-## the same inputs across the full pool.
 static func _blocked_prop_index(cell: Vector2i, count: int) -> int:
 	if count <= 1:
 		return 0
@@ -446,11 +272,6 @@ func _build_arena_decor(decor_list: Array) -> void:
 		_board.add_child(_make_decor_visual(cell, sprite_id, entry.get("tint", [])))
 
 
-## Unlabeled decor visual, positioned like a combatant square (cell * CELL,
-## board-local since `_board` itself is centered on screen by the camera)
-## but without any HP/MP/name chrome -- arena counterpart of
-## world.gd's decor branch inside `_make_entity_visual`. `tint` is the decor
-## entry's optional [r,g,b] multiplier (same shape as the field path).
 func _make_decor_visual(cell: Vector2i, sprite_id: String, tint: Variant = []) -> Node2D:
 	var holder := Node2D.new()
 	holder.position = Vector2(cell) * CELL
@@ -488,45 +309,18 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 	# terrain overlay added later at z_index 0 can never render on top of a
 	# combatant, regardless of tree add order.
 	holder.z_index = COMBATANT_Z
-	# Same-id roster fix: a dedup-suffixed runtime id (e.g.
 	# "shield_spider_2") does not exist in the static combatants.json catalog
 	# -- any lookup that needs the catalog record (sprite, combat_scale) must
 	# use TEMPLATE_ID (the pre-suffix id), never `id` itself. Falls back to
 	# `id` when TEMPLATE_ID is absent (hand-built dicts in older tests).
 	var template_id := String(c.get(WIKeys.TEMPLATE_ID, id))
 	var sprite_id := _combatant_sprite_id(id, template_id)
-	# Labels stack above the cell; the sprite branch below moves this up
-	# further once the sprite's actual (possibly overhanging) top edge is
-	# known, same convention as world.gd's field entities.
 	var label_top := -18.0
 	if sprite_id != "" and WISpriteRegistry.has_sprite(sprite_id):
 		var spr := AnimatedSprite2D.new()
 		spr.sprite_frames = WISpriteRegistry.frames_for(sprite_id)
 		spr.centered = false
-		# Initial facing: the unflipped sheet row faces right
-		# (see _flip_toward's convention -- flip_h true means "facing left").
-		# Player-side combatants spawn at low-x and face the enemy side (right,
-		# unflipped); enemy-side combatants spawn at high-x and face the player
-		# side (left, flipped) until the first attack/hit event re-derives flip
-		# from actual cell positions.
 		spr.flip_h = (String(c["side"]) != "player")
-		# Issue #62 addendum (finding 11): a NON-directional sprite (e.g.
-		# `training_dummy`, ruin_guardian's combat sprite) registers its sole
-		# animation as the bare "idle" (WISpriteRegistry._facings(false) ->
-		# facing "" -> full_name = anim_name unsuffixed, no "_side"/"_down").
-		# Neither literal check above ever matched it, so `anim` stayed ""
-		# and BOTH `spr.play` and the feet-anchor block below (`if anim !=
-		# ""`) were skipped outright -- the sprite kept Node2D's default
-		# (0,0) position (holder-origin/top-left) instead of being
-		# feet-anchored bottom-center, then never even played its idle
-		# frame. `_make_decor_visual` already carries the equivalent
-		# "idle"-literal fallback (this file, `_make_decor_visual`'s own
-		# `anim` line) -- this mirrors it. The resulting top-left offset is
-		# small for a modest render_scale (river_wolf/briar_collector*) but
-		# large for `ruin_guardian`, whose `combat_scale: 1.15` REPLACES (not
-		# multiplies) training_dummy's own 0.5 scale -- at 1.15x a 64px
-		# frame, the un-anchored sprite renders visibly down-and-right of its
-		# own cell, reading as "the hitbox sits up-left of the sprite".
 		var anim := ""
 		if spr.sprite_frames.has_animation("idle_side"):
 			anim = "idle_side"
@@ -540,22 +334,11 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 		var scale_value := 1.0
 		if catalog_entry.has("render_scale"):
 			scale_value = float(catalog_entry["render_scale"])
-		# Combat-specific scale override (combatants.json `combat_scale`): a
-		# sprite sized canon-tall on the FIELD (Relc's bespoke full-frame Drake
-		# spearmaster renders ~2.8 cells at his field render_scale) overhangs
-		# multiple cells in the tight tactical grid and covers neighbours'
-		# HP/MP bars + sprites. A per-combatant combat_scale contains him
-		# (feet-anchored, so the trimmed height comes off the TOP into empty
-		# air) WITHOUT touching the field render_scale. Only combatants that
-		# declare it are affected; everyone else keeps the sprite catalog scale.
 		var combat_scale: Variant = WIDataRegistry.combatant_config(template_id).get("combat_scale")
 		if combat_scale != null:
 			scale_value = float(combat_scale)
 		if scale_value != 1.0:
 			spr.scale = Vector2(scale_value, scale_value)
-		# Anchor feet/base to the cell's bottom-center, matching
-		# world.gd's field entities so a shared combatant sprite looks
-		# consistent between field and combat.
 		if anim != "":
 			var frame_tex := spr.sprite_frames.get_frame_texture(anim, 0)
 			var frame_size := frame_tex.get_size() if frame_tex != null else Vector2(CELL, CELL)
@@ -565,11 +348,6 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 				CELL - anchor.y * frame_size.y * spr.scale.y
 			)
 			label_top = spr.position.y - 18.0
-		# GH #28 DARK-ARENAS: self_modulate (not modulate -- flash_chip/
-		# impact_flash already own `.modulate` for hit-flash tweens and both
-		# tween back to Color.WHITE) so the legibility floor composes
-		# independently underneath any juice effect. Identity in every bright
-		# arena; see `_legibility_modulate`'s doc comment.
 		spr.self_modulate = _legibility_boost
 		holder.add_child(spr)
 	else:
@@ -580,9 +358,6 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 		rect.self_modulate = _legibility_boost
 		holder.add_child(rect)
 	holder.set_meta("label_offset", Vector2(CELL * 0.5, maxf(label_top - 12.0, 0.0)))
-	# HP/MP bars are 1-2px-tall in-viewport pixel bars hugging the cell's
-	# bottom edge -- numerals move to a native-res
-	# overlay in R5; this bar is the part that stays in-viewport permanently.
 	var bar := ColorRect.new()
 	bar.color = ALLY_HP_COLOR if String(c["side"]) == "player" else ENEMY_HP_COLOR
 	bar.position = Vector2(1, CELL - 3)
@@ -590,8 +365,6 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 	bar.self_modulate = _legibility_boost
 	holder.add_child(bar)
 	_hp_bars[id] = bar
-	# MP bar sits directly above the HP bar, only for combatants with a
-	# pool (max_mp > 0 — non-casters get no bar at all, not an empty one).
 	if int(c.get("max_mp", 0)) > 0:
 		var mp_bar := ColorRect.new()
 		mp_bar.color = MP_COLOR
@@ -610,10 +383,6 @@ func _biome_for_combat(view: WICombatView) -> Dictionary:
 	return biomes[biome_id]
 
 
-## GH #28 DARK-ARENAS: the CURRENTLY-EFFECTIVE mood color for this combat's
-## arena, mirroring atmosphere.gd's own arena-vs-map fallback (an
-## `arena_moods` pin if this arena has one, e.g. sewers_nest/deep_warren/
-## cave_mouth; otherwise the field map's own mood at the same phase, e.g.
 ## goblin_ambush/training_yard/chieftains_raid inheriting whatever the
 ## overworld is currently showing) -- read directly from moods.json (own
 ## tiny cache, same load-once idiom as atmosphere.gd's `_moods_data`)
@@ -652,13 +421,6 @@ func _legibility_modulate(view: WICombatView) -> Color:
 
 
 func _combatant_sprite_id(id: String, template_id: String) -> String:
-	# Variant-key indirection (presentation-only): the PC's combat chip
-	# uses the sim's chosen race/gender sprite variant ("pc_<race>_<gender>"),
-	# degrading to the combatants.json default ("body_a") when that variant art
-	# is not registered. Every other combatant reads its static sprite unchanged
-	# -- keyed off template_id, not id, since a same-catalog-id
-	# roster's second+ combatant carries a dedup-suffixed id that does not
-	# exist in the static catalog.
 	if id == "pc":
 		var key := Game.sim.pc_sprite_variant()
 		if WISpriteRegistry.has_sprite(key):
@@ -701,7 +463,6 @@ func _world_labels() -> WIWorldLabels:
 	return _main_ref.world_labels() as WIWorldLabels
 
 
-## The World node living inside the SubViewport (`Main.world_root()`).
 ## Board content (`build()`) and camera centering (`enter_combat_camera`/
 ## `exit_combat_camera`) both go through it. Main may exist before World does
 ## (early in boot) or World may have just been torn down and not yet recreated
@@ -757,8 +518,6 @@ func bump(id: String, dir: Vector2i) -> void:
 	_combat_tweens[id] = tw
 
 
-## Shared by both `move_visual` and `bump` -- one active
-## positional tween per holder id, regardless of which of the two started it.
 func _kill_combat_tween(id: String) -> void:
 	var existing := _combat_tweens.get(id, null) as Tween
 	if existing != null and existing.is_valid():
@@ -785,10 +544,6 @@ func _sprite_for(id: String) -> AnimatedSprite2D:
 	return null
 
 
-## Bridges combat_screen.gd's `_play_event_visual` (which still lives in the
-## screen -- it's shared between the live and paced-AI-playback render paths,
-## neither of which is this task's move list) past the fact that `_sprite_for`
-## itself is now private to this renderer.
 func has_sprite(id: String) -> bool:
 	return _sprite_for(id) != null
 
@@ -814,11 +569,6 @@ func set_visible(id: String, value: bool) -> void:
 		visual.visible = value
 
 
-## Whole-visual translucency (the combat twin of the field's sneak_visual
-## alpha) -- applied to the HOLDER's modulate, deliberately not the sprite's:
-## hit-flash tweens own `spr.modulate` (they tween back to opaque WHITE and
-## would silently erase a sprite-level alpha) and the legibility boost owns
-## `spr.self_modulate`; the holder layer composes above both untouched.
 func set_combatant_alpha(id: String, alpha: float) -> void:
 	var visual := visual_for(id)
 	if visual != null:
@@ -835,8 +585,6 @@ func play_anim(id: String, prefix: String, flip_h: Variant = null) -> void:
 	if not spr.sprite_frames.has_animation(anim):
 		anim = prefix if spr.sprite_frames.has_animation(prefix) else "idle_side"
 	if prefix == "death" and not anim.begins_with("death"):
-		# No death animation on this sheet (e.g. goblins) -- resolving to an
-		# idle* fallback would loop forever on a "downed" combatant.
 		# Fade instead, reusing the fade_chip tween
 		# pattern; death_visible was already set by mark_death_visible
 		# before this call, so the sprite stays visible per the T9/T10
@@ -897,7 +645,6 @@ func mark_death_visible(id: String) -> void:
 		visual.set_meta("death_visible", true)
 
 
-## Cheap cast readability: tween a translucent colored rect over each cell.
 func flash_cells(cells: Array, color: Color) -> void:
 	if _reduce_motion():
 		return
@@ -921,10 +668,6 @@ func flash_cells(cells: Array, color: Color) -> void:
 ## it under every combatant regardless of add order); it renders over the
 ## floor/decor simply because it's added to `_board` AFTER `build()`'s floor
 ## construction (both at z_index 0, so tree order alone settles floor vs.
-## overlay). Re-adding at an already-registered cell (a re-cast) frees the
-## stale rect first (`combat.terrain`'s own flat-refresh idiom mirrored
-## here, so the visual never doubles up). No-op before `build()` has run
-## (`_board == null`).
 func add_terrain(kind: String, cells: Array) -> void:
 	if _board == null:
 		return
@@ -953,10 +696,6 @@ func add_terrain(kind: String, cells: Array) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_TERRAIN_RENDERED, {"kind": kind, "cells": cells_payload})
 
 
-## Inverse of `add_terrain` -- frees and untracks the overlay at each given
-## cell for `kind`. No UI confirmation event on expiry (only the add side
-## rides the ui_*_rendered idiom, by design); the domain-level
-## TERRAIN_EXPIRED is the QA-visible signal for this half.
 func expire_terrain(kind: String, cells: Array) -> void:
 	var by_kind: Dictionary = _terrain_overlays.get(kind, {})
 	if by_kind.is_empty():
@@ -1000,9 +739,6 @@ func render_aim_preview(state: Dictionary) -> void:
 	_emit_aim_preview_event(kind, primary_cells)
 
 
-## Clears the aim-preview paint -- called whenever targeting is NOT active
-## (combat_screen.gd's `_refresh()`), and defensively from `build()`/`clear()`
-## at encounter boundaries (see those functions' own doc comments).
 func clear_aim_preview() -> void:
 	_clear_aim_preview_nodes()
 	_last_aim_preview_key = ""
@@ -1026,9 +762,6 @@ func _add_aim_tint(cell: Vector2i, color: Color) -> ColorRect:
 	return rect
 
 
-## Hollow border (4 thin ColorRects forming a square outline) rather than a
-## filled square -- reads as a RING distinct from the filled AOE/range tints
-## painted underneath it.
 func _add_aim_ring(cell: Vector2i) -> Node2D:
 	var holder := Node2D.new()
 	holder.name = "AimRing"
@@ -1051,10 +784,6 @@ func _add_aim_ring(cell: Vector2i) -> Node2D:
 	return holder
 
 
-## Additive QA confirmation (issue #75 item 1) -- deduped so an unchanged
-## preview (e.g. a `_refresh()` triggered by something unrelated while still
-## aiming the same candidate) doesn't spam the bus; a genuinely new kind or
-## cell set always fires.
 func _emit_aim_preview_event(kind: String, cells: Array) -> void:
 	var cells_payload: Array = []
 	for cell: Vector2i in cells:
@@ -1066,10 +795,6 @@ func _emit_aim_preview_event(kind: String, cells: Array) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_AIM_PREVIEW_RENDERED, {"kind": kind, "cells": cells_payload})
 
 
-## Floating damage numeral at the struck cell (issue #75 item 2) -- brief
-## rise-fade, juice-gated (no-op headless/TestDriver -- byte-identical event
-## stream). `side` picks the SAME ALLY_HP_COLOR/ENEMY_HP_COLOR hue the struck
-## combatant's own HP bar already uses for "who got hit".
 func spawn_damage_number(cell_xy: Array, amount: int, side: String) -> void:
 	if not _juice_enabled() or _board == null or cell_xy.size() < 2:
 		return
@@ -1077,9 +802,6 @@ func spawn_damage_number(cell_xy: Array, amount: int, side: String) -> void:
 	_spawn_floating_text(cell_xy, str(amount), color)
 
 
-## Distinct miss feedback at the target cell (issue #75 item 2) -- same
-## floating-text primitive as the damage numeral, neutral grey so a miss
-## never reads as "0 damage dealt".
 func spawn_miss_indicator(cell_xy: Array) -> void:
 	if not _juice_enabled() or _board == null or cell_xy.size() < 2:
 		return
@@ -1088,11 +810,6 @@ func spawn_miss_indicator(cell_xy: Array) -> void:
 
 func _spawn_floating_text(cell_xy: Array, text: String, color: Color) -> void:
 	var label := UIChrome.make_label(text, "Small")
-	# `_board` lives inside the world SubViewport, outside any themed Control
-	# ancestor (the HUD's own theme lives on combat_screen.gd's separate
-	# CanvasLayer `_root`) -- set the theme directly on this instance so the
-	# numeral still renders in the game's real font/size instead of falling
-	# back to the engine default.
 	label.theme = UIChrome.THEME
 	label.modulate = color
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1110,11 +827,6 @@ func _spawn_floating_text(cell_xy: Array, text: String, color: Color) -> void:
 	tw.tween_callback(label.queue_free)
 
 
-## Melee "attack connection" (issue #75 item 3) -- the SAME bump-tween
-## primitive `bump()` uses for blocked-move feedback, pointed at the TARGET's
-## cell instead of an input direction: a brief lunge toward it then back.
-## Juice-gated -- headless/QA never observes the holder's position move even
-## transiently.
 func micro_lunge(id: String, target_cell: Array) -> void:
 	if not _juice_enabled() or target_cell.size() < 2:
 		return
@@ -1135,13 +847,6 @@ func micro_lunge(id: String, target_cell: Array) -> void:
 	_combat_tweens[id] = tw
 
 
-## Ranged/spell "attack connection" (issue #75 item 3) -- a fast streak
-## (fade in, hold, fade out over one short tween) from the attacker's cell
-## center to the target's, tinted by `color` (the caster's element --
-## FROST_FLASH/FLAME_FLASH, passed in by combat_screen.gd) or, when `color`
-## is transparent (a plain non-elemental ranged Attack -- a bow, no skill
-## cast), the neutral PROJECTILE_DEFAULT_COLOR resolved HERE so callers never
-## need this file's own const. Juice-gated.
 func spawn_projectile(from_cell: Array, to_cell: Array, color: Color) -> void:
 	if not _juice_enabled() or _board == null or from_cell.size() < 2 or to_cell.size() < 2:
 		return
@@ -1163,11 +868,6 @@ func spawn_projectile(from_cell: Array, to_cell: Array, color: Color) -> void:
 	tw.tween_callback(streak.queue_free)
 
 
-## Per-status pip over a combatant's holder (issue #75 item 4) -- DATA-DRIVEN
-## off `STATUS_PIP_COLORS`: an unlisted status_id (including "invisible",
-## which already has its own alpha tell) is a silent no-op, so a future
-## status entry added to that map gets a pip for free with zero new dispatch
-## code at the call site.
 func set_status_pip(id: String, status_id: String, active: bool) -> void:
 	if not STATUS_PIP_COLORS.has(status_id):
 		return
@@ -1195,12 +895,6 @@ func set_status_pip(id: String, status_id: String, active: bool) -> void:
 	_status_pips[id] = pips
 
 
-## Persistent active-unit marker (issue #75 item 5a) -- a small chevron just
-## above the CURRENT turn's combatant's cell, moved on every TURN_STARTED via
-## the ONE function both the live and paced-AI-playback paths funnel through
-## (combat_screen.gd's `_apply_turn_started`). Fixed cell-relative offset,
-## not sprite-height-aware -- the same simplification the HP/MP bars already
-## accept (see their own `position` literals).
 func set_active_marker(id: String) -> void:
 	if _active_marker != null and is_instance_valid(_active_marker):
 		_active_marker.queue_free()
@@ -1221,9 +915,6 @@ func set_active_marker(id: String) -> void:
 	_active_marker = marker
 
 
-## Defensive teardown -- not on the encounter's hot path (build()/clear()
-## already reset the tracking var, see those functions' own doc comments),
-## kept for symmetry with `clear_aim_preview()`.
 func clear_active_marker() -> void:
 	if _active_marker != null and is_instance_valid(_active_marker):
 		_active_marker.queue_free()
@@ -1231,9 +922,6 @@ func clear_active_marker() -> void:
 	_active_marker_id = ""
 
 
-## Issue #77: the ONE shared reduce-motion gate for every screen-shake/flash
-## juice call site in this file (shake_board/impact_flash/flash_chip/
-## flash_cells) -- never a per-site copy of `WISettings.reduce_motion()`.
 ## board_renderer.gd already references autoloads directly (ObservableBus/
 ## Game/TestDriver -- unlike combat_hud.gd/targeting_controller.gd's
 ## autoload-free contract), so a bare `WISettings` reference here is
@@ -1242,24 +930,12 @@ func _reduce_motion() -> bool:
 	return WISettings.reduce_motion()
 
 
-## Juice gate: true only in real play (windowed non-QA / native) AND when the
-## player hasn't asked to reduce motion. Reuses `_presentation_delay`'s exact
-## TestDriver/headless collapse so every combat-feel effect is a strict no-op
-## under QA -- byte-identical event streams, no board offset left
-## mid-screenshot, no wasted particle nodes headless. Same discipline as the
-## paced-playback / cast-flash precedents.
 func _juice_enabled() -> bool:
 	if _reduce_motion():
 		return false
 	return _presentation_delay(1.0) > 0.0
 
 
-## White modulate pulse on the STRUCK combatant's sprite (cast-flash
-## precedent). Pulses the AnimatedSprite2D child only -- the holder's own
-## modulate is reserved for death fade / actor highlight, so a struck-then-
-## downed combatant never gets two tweens fighting over the same property.
-## Chip-only combatants keep their existing `flash_chip` pulse; this is additive
-## on top of the "hit" frame animation for sprite combatants.
 func impact_flash(id: String) -> void:
 	if not _juice_enabled():
 		return
@@ -1293,8 +969,6 @@ func shake_board(intensity: float) -> void:
 	_shake_tween = tw
 
 
-## Kills any live shake tween and snaps the board root back to origin -- called
-## on build()/clear() (encounter boundaries) and before starting a fresh shake.
 func _stop_shake() -> void:
 	if _shake_tween != null and _shake_tween.is_valid():
 		_shake_tween.kill()
@@ -1303,12 +977,6 @@ func _stop_shake() -> void:
 		_board.position = Vector2.ZERO
 
 
-## One-shot `hit_sparks` WIAmbience burst (<=8 particles, wasm-safe)
-## at a struck combatant's cell. `cell_xy` is the enqueue-time-captured
-## `_ui.target_cell` ([x,y] or []) -- never a live combat read, so paced AI
-## playback sparks land on the historical cell of the beat, not wherever the sim
-## has since moved. Self-frees past its lifetime; QA-collapsed (no particle node
-## spawned headless).
 func spawn_hit_sparks(cell_xy: Array) -> void:
 	if not _juice_enabled() or _board == null or cell_xy.size() < 2:
 		return
@@ -1323,11 +991,6 @@ func spawn_hit_sparks(cell_xy: Array) -> void:
 	get_tree().create_timer(SPARKS_TTL).timeout.connect(sparks.queue_free)
 
 
-## Applies an hp/max_hp/mp/max_mp dict to one combatant's bars/labels. Shared
-## by the live per-combatant refresh (combat_screen.gd's `_refresh_combatants`,
-## fed the view's current `stats(id)`) and paced AI playback
-## (`_apply_captured_stats`, fed the enqueue-time snapshot `_capture_event_ui`
-## recorded for that beat) so both paths format the HP/MP readout identically.
 func apply_stats(id: String, stats: Dictionary) -> void:
 	if stats.is_empty():
 		return

@@ -6,7 +6,6 @@
    "text": "A [Necromancer], yes — and before your hand drifts to that sword, no, nothing in this square has been raised. I merely occupy the cheapest air the Guild permits. Pisces Jealnv. You reek of a body that has never once held mana. Curious. You want something.",
    "text_variants": [
     {
-     "_comment": "Phase line: controller-approved final (voice pass 2026-07-12).",
      "requires": {
       "phase": [
        "dusk",
@@ -32,7 +31,6 @@
      "text": "Back again. Either you are braver than the Watch or you have reconsidered your ignorance. Which is it?"
     },
     {
-     "_comment": "Issue #89 (gap-2), the text_variants marker-node pattern: sensed_something_deeper (trapped_halls.json's seal_kept_door, its BASE on_interact_accomplishment -- the pre-victory read, distinct from the same prop's GATED variant that banks seal_kept_found after vault_construct_downed) was a genuine sequence-break-only orphan: a player who walks past that door before finishing the delve banks this and nothing else. Appended LAST (highest priority) so it always surfaces when true, even over met_pisces/learned_magic_from_pisces. Accepted minor staleness: once heard_pisces_second_door later fires (the fuller report, its own hub option), this greeting keeps reading as the premonition rather than reverting -- a narrow edge case, flavor-only, never load-bearing.",
      "requires": {
       "accomplishment": {
        "sensed_something_deeper": 1
@@ -70,7 +68,6 @@
      "end": true
     },
     {
-     "_comment": "stage-2 hub topic, lifted verbatim from docs/archive/staging/social-2-staging/pisces_stages.json (staging_note/_flag stripped). CANON tread-light: father a [Fencer] is staged (mild); the sold-rapier line is an OBLIQUE Wistram-era nod. HARD RAILS (absolute, per the companion doc): no expulsion cause, no deaths, no Az'kerash, no Ceria specifics. Appended AFTER 'Never mind.' (array end) so it can never shift an earlier option's visible index.",
      "text": "You hold yourself like a swordsman, not a scholar.",
      "requires": {
       "accomplishment": {
@@ -81,7 +78,6 @@
      "goto": "pisces_fence"
     },
     {
-     "_comment": "(spec §1 beat 2, the 3-path mage-consult opener) Requires door_chain_started (Erin's flicker beat, erin_errand.json), hide_when door_understood (the shared convergence counter -- 3-path identity rule) so it stops offering once ANY leg resolves. Appended at array END (index-safety convention, matches pisces_fence above).",
      "text": "Something's come through our pantry door. Will you look at it?",
      "requires": {
       "accomplishment": {
@@ -96,7 +92,6 @@
      "goto": "door_consult"
     },
     {
-     "_comment": "The SKILL leg's REPORT step (cisterns_scout/wrong_order precedent -- [Observe]-ing pantry_door_runes in the inn alone only banks the intermediate read_the_door_runes; reporting the finding here banks the shared door_understood + pedestal_unsealed). The player's own line restates Pisces's TALK-leg verdict verbatim (consult_talk_done below) -- deliberate identity-rule parity, both legs arrive at the SAME understanding.",
      "text": "I read the wardwork myself: a spatial anchor, something that remembers being elsewhere.",
      "requires": {
       "accomplishment": {
@@ -119,7 +114,6 @@
      "goto": "consult_skill_report"
     },
     {
-     "_comment": "Sequence-break rescue + recap: the ruin pointer used to live ONLY inside the three consult responses -- a player who cleared rift_vermin_leak BEFORE consulting (its on_victory banks door_understood, hiding both consult options) never heard where the anchor stone is and stalled. Gated on the understanding existing, retired once the stone is recovered; APPENDED LAST so existing visible-option numbering (QA scripts press numbers) is untouched.",
      "text": "About the pantry door — I understand what it is now. Where does that leave me?",
      "requires": {
       "accomplishment": {
@@ -135,7 +129,6 @@
      "goto": "door_recap"
     },
     {
-     "_comment": "The post-recovery pointer (the second sequence-gap a real playthrough hit): once the stone + catalyst are both in hand every other door option has retired, and the awakening's sleep-study window is OPAQUE by design -- this is the one line allowed to say 'rest' without counting anything. Appended LAST (numbering safety); retires at door_awakened.",
      "text": "I have the stone and Krshia's catalyst. Now what?",
      "requires": {
       "accomplishment": {
@@ -151,7 +144,6 @@
      "goto": "door_attune"
     },
     {
-     "_comment": "8d D1 (issue #14): the Pisces bridge beat -- gated on `seal_kept_found` (the dungeon's own FIND beat, trapped_halls), hide_when a one-shot flavor counter so it doesn't repeat forever once heard. Contraction-free per Pisces's own voice contract (character-profiles.md), HELD verbatim in the bound line below. Appended LAST for the same numbering-safety convention every option above uses.",
      "text": "I found a second door down in that dungeon. Same runes as our pantry door.",
      "requires": {
       "accomplishment": {
@@ -231,7 +223,6 @@
   "consult_talk_argue": {
    "speaker": "Pisces",
    "text": "...A glance. Hm. If it truly reads as spatial and not necrotic, I could examine it without touching a thing. Fine, for the intellectual insult of not knowing, not for you.",
-   "_comment": "sweep-caught re-pricing: this TALK-leg close was a free ungated persuade resolving the door_that_goes_elsewhere quest fork (banks persuaded_someone + door_understood + pedestal_unsealed) -- same rule as the four named quests. Split skill-gated free vs a paid alternate (Pisces is mercenary/vain, not bribe-averse like Zevara, so a flat consultation fee reads honest); both converge on the SAME consult_talk_done (Pisces reacting to what he found, not to how he was won over, so it fits either branch). GH#64: re-gated from class (Diplomat) to [Charming Smile] -- winning the vain, skeptical mage over fits the charm register.",
    "options": [
     {
      "text": "Then it's settled. [Charming Smile]",
@@ -276,7 +267,6 @@
    ]
   },
   "consult_talk_done": {
-   "_comment": "(spec §3 Pisces TALK key, quoted verbatim)",
    "speaker": "Pisces",
    "text": "A spatial anchor. Crude. Fascinating. Whoever built your inn, adventurer, built it on something that remembers being elsewhere.",
    "options": [

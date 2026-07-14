@@ -1,5 +1,4 @@
 {
- "_comment": "The free SOCIAL persuade beat (user-ratified): a non-quest street moment that banks persuaded_someone with NO class gate -- the deliberate second producer alongside goblin_parley's Warrior-intimidate, so [Diplomat]'s entry counter is never a single missable point of failure. CONSTRAINT: this is the carve-out side of the fork-pricing rule -- quest-FORK resolutions gate on [Diplomat]; ordinary social persuasion like this stays free BY DESIGN (it is how a player discovers the class). One-shot: the persuade option retires on its own counter; the greet text calms via text_variant on the same counter.",
  "start": "greet",
  "nodes": {
   "greet": {

@@ -1,6 +1,4 @@
 extends CanvasLayer
-## Character creation at New Game (sprite picker / name).
-##
 ## Flow: title NEW GAME -> this screen -> Game.reset({pc_name,pc_race,pc_gender})
 ## -> the GDI cold open -> inn. Two steps, native-res title-family UI:
 ##   PICK -> a 2x3 grid of the six PC sprite variants (pc_human_m/f,
@@ -10,44 +8,6 @@ extends CanvasLayer
 ##           TOGETHER (one visual pick, not a two-step race-then-gender text
 ##           menu; the sim payload keys are unchanged, this is a
 ##           presentation-only recomposition).
-##   NAME   -> a text field (default placeholder "Traveler"; type to edit,
-##             Enter confirms; empty -> "Traveler")
-## Esc backs up one step; Esc on the first step returns to the title. Confirming
-## the name fires Game.reset(creation), whose GAME_RESET drives WIMain into the
-## world + the GDI opener (race-neutral).
-##
-## QA: this screen is spawned ONLY when it is actually wanted -- real play, or a
-## QA script that opts in via top-level `creation_ui: true`. Every OTHER New Game
-## (the default TestDriver path) never spawns it: title_screen calls Game.reset()
-## straight through, byte-identical to before this feature (see
-## title_screen.gd::_confirm). So no auto-skip branch is needed here -- if this
-## screen is on screen, it is meant to be driven.
-##
-## Text entry is captured by THIS node's _unhandled_input (not the LineEdit's own
-## editing), so it is deterministic and headless-safe (a LineEdit's GUI-focus
-## input path is fragile under the headless server); the LineEdit is the display
-## surface only (placeholder + text), driven from `_name`. The char_creation QA
-## script types via TestDriver's `type_text` step, which injects unicode key
-## events that land here exactly like a real keystroke.
-##
-## Issue #106 (mobile web v1): `_name_edit` is now `editable = true` so a real
-## TAP on it can gain focus and (with the export preset's
-## `html/experimental_virtual_keyboard` flag on) summon the OS virtual
-## keyboard -- Godot only shows that keyboard for a FOCUSED, EDITABLE
-## LineEdit (verified against engine source: `show_virtual_keyboard()` fires
-## from `NOTIFICATION_FOCUS_ENTER` and from a mouse click handler gated on
-## `editable`), so `editable=false` would have made the export flag a no-op.
-## This does NOT disturb the `_unhandled_input` path above: nothing in this
-## file ever calls `grab_focus()`, so the field stays unfocused (and
-## `_unhandled_input` keeps seeing every keystroke exactly as before) unless
-## a real player explicitly clicks/taps it -- true for every existing QA
-## script (`type_text` never clicks the field) and every keyboard-only
-## desktop session. ONLY a real click/tap routes typing through the LineEdit's
-## own native edit pipeline instead; `_on_name_edit_text_changed`/
-## `_on_name_edit_text_submitted` keep `_name` (the single source of truth
-## `_begin_game` reads) in lockstep with that path, applying the SAME
-## `_is_name_char` charset filter `_handle_name_input` already enforced
-## per-keystroke.
 
 enum Step { PICK, NAME }
 
@@ -55,8 +15,6 @@ const NATIVE_SIZE := Vector2(1280.0, 720.0)
 const BACKDROP_COLOR := Color(0.08, 0.06, 0.05)
 const HINT_COLOR := Color(0.72, 0.68, 0.58)
 const NAME_MAX := 16
-## Issue #106: the NAME step's tappable Begin control -- see `_build_ui`'s
-## doc comment for the #85 gap this closes.
 const BEGIN_BUTTON_SIZE := Vector2(200.0, 48.0)
 
 ## The six PC sprite variants, in GridContainer fill order (row-major: top
@@ -85,9 +43,6 @@ const GRID_ROWS := 2
 const CARD_SIZE := Vector2(300.0, 236.0)
 const CARD_GAP := Vector2(18.0, 14.0)
 const GRID_SIZE := Vector2(936.0, 486.0)  # GRID_COLS*CARD_SIZE.x + gaps, GRID_ROWS*CARD_SIZE.y + gap
-## Uniform on-screen portrait height regardless of source frame size (human
-## 104px/drake 124px/gnoll 108px square frames all catalog at different native
-## sizes) -- keeps every card's silhouette the same scale for a fair compare.
 const PORTRAIT_HEIGHT := 200.0
 const PORTRAIT_CENTER_Y := 118.0  # CARD_SIZE.y * 0.5 -- centered, no label row below it any more
 
@@ -118,12 +73,6 @@ func _ready() -> void:
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
-## Re-render the current step on a device swap so the hint strip's glyphs
-## (composed through WIInputHints in `_render_step`) can't go stale
-## mid-screen -- e.g. a player who picked up the pad on the NAME step.
-## Re-emits UI_CHAR_CREATION_RENDERED (a `_render_step` side effect), which
-## is QA-invisible: the harness only injects keys, so the device never
-## changes during a canonical run.
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.INPUT_DEVICE_CHANGED:
 		_render_step()
@@ -141,16 +90,11 @@ func _build_ui() -> void:
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(backdrop)
 
-	# Same ember drift the title screen uses (WIAmbience "embers" preset), so the
-	# creation screen reads as one continuous first-impression beat with it.
 	var embers := WIAmbience.make("embers", Rect2(Vector2.ZERO, NATIVE_SIZE))
 	embers.emitting = true
 	embers.visible = true
 	_root.add_child(embers)
 
-	# Prompt ribbon (the title screen's BLUE_RIBBON idiom / asymmetric patch).
-	# Shrunk + raised from the original 92-tall/y120-212 (playtest hotfix #3):
-	# reclaims room below for the larger picker grid.
 	var prompt_panel := UIChrome.make_texture_panel(UIChrome.BLUE_RIBBON)
 	prompt_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	prompt_panel.custom_minimum_size = Vector2(640.0, 76.0)
@@ -168,14 +112,9 @@ func _build_ui() -> void:
 
 	_build_picker_grid()
 
-	# Name field (used on the NAME step only; a LineEdit as the display surface).
 	_name_edit = LineEdit.new()
 	UIChrome.apply_theme(_name_edit)
 	_name_edit.placeholder_text = "Traveler"
-	# Issue #106: editable=true so a real tap can focus it (see the file doc
-	# comment for why the virtual keyboard requires this and why it's safe --
-	# nothing here ever calls grab_focus(), so `_unhandled_input` still sees
-	# every keystroke unless a player actually clicks/taps the field).
 	_name_edit.editable = true
 	_name_edit.max_length = NAME_MAX
 	_name_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -190,13 +129,6 @@ func _build_ui() -> void:
 	_name_edit.focus_entered.connect(_on_name_edit_focus_entered)
 	_root.add_child(_name_edit)
 
-	# Issue #106 (the #85-documented gap): a tappable Begin control -- the
-	# NAME step previously had NO clickable confirm, only Enter (see
-	# `_render_step`'s old doc comment, now superseded below). Positioned
-	# under the name field; visibility toggles with the field itself in
-	# `_render_step`. Calls the EXACT SAME `_confirm()` Enter calls -- a tap
-	# and a keypress commit the identical `UI_CHAR_CREATION_CONFIRMED` +
-	# `Game.reset(creation)` sequence.
 	_begin_button = UIChrome.make_chrome_panel(UIChrome.BLUE_BUTTON, UIChrome.PATCH_MARGIN)
 	_begin_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	_begin_button.set_anchors_preset(Control.PRESET_CENTER)
@@ -211,8 +143,6 @@ func _build_ui() -> void:
 	_begin_button.add_child(begin_label)
 	_root.add_child(_begin_button)
 
-	# Hint strip under the content. Lowered from the original y-90/-54
-	# (playtest hotfix #3): reclaims room above for the larger picker grid.
 	_hint_label = UIChrome.make_label("", "Small")
 	_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_hint_label.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
@@ -231,10 +161,6 @@ func _build_picker_grid() -> void:
 	_grid_anchor.set_anchors_preset(Control.PRESET_CENTER)
 	_grid_anchor.custom_minimum_size = GRID_SIZE
 	_grid_anchor.size = GRID_SIZE
-	# top/bottom widened to fit the taller GRID_SIZE (playtest hotfix #3) --
-	# 10px clear of the shrunk prompt ribbon above (bottom edge y180) and the
-	# lowered hint strip below (top edge y686) at every screen height this
-	# NATIVE_SIZE-scaled layout renders at.
 	UIChrome.set_offsets(_grid_anchor, -GRID_SIZE.x * 0.5, -170.0, GRID_SIZE.x * 0.5, 316.0)
 	_grid_anchor.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_grid_anchor)
@@ -273,11 +199,6 @@ func _build_picker_grid() -> void:
 		_cards.append(card)
 
 
-## Issue #106: the NAME step now has a clickable confirm control
-## (`_begin_button`, toggled alongside `_name_edit` below) -- `_name_edit`
-## itself stays a non-editable display surface (typing is captured by
-## `_unhandled_input`, not GUI focus -- see the file doc comment); the button
-## calls the SAME `_confirm()` Enter does.
 func _render_step() -> void:
 	_prompt_label.text = String(STEP_PROMPT[_step])
 	var is_name := _step == Step.NAME
@@ -285,22 +206,7 @@ func _render_step() -> void:
 	_begin_button.visible = is_name
 	_grid_anchor.visible = not is_name
 	if is_name:
-		# `_name` (the source of truth for typing/backspace/`_begin_game`'s
-		# fallback) stays untouched at "" -- only the DISPLAYED text gets the
-		# everyman default ("Traveler", the same fallback `_begin_game`
-		# already substitutes for an empty name) so a pad-only player -- who
-		# cannot type at all, no on-screen keyboard in v1 -- sees a real name
-		# already in the field and can confidently press confirm having
-		# accepted the default. Keyboard typing is unaffected: the first
-		# keystroke sets `_name` and overwrites this text wholesale
-		# (`_handle_name_input` always does `_name_edit.text = _name`, never
-		# appends to the displayed string), so nothing needs to be cleared
-		# first.
 		_name_edit.text = _name if not _name.is_empty() else "Traveler"
-		# Composed through WIInputHints so a pad-only player sees A/B instead
-		# of Enter/Esc; kb-mode glyphs are byte-identical to the old
-		# hardcoded strings (WIInputHints.label's own doc comment), so no QA
-		# re-pin is needed here.
 		_hint_label.text = "Type a name  •  %s to begin  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
 	else:
 		for i in PC_OPTIONS.size():
@@ -309,17 +215,11 @@ func _render_step() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_CHAR_CREATION_RENDERED, {"step": _step_name()})
 
 
-## The selection cue is the card's OWN chrome texture (BLUE_BUTTON_PRESSED
-## vs BLUE_BUTTON below) -- no text label. CONSTRAINT: never add a
-## race/gender text row back here (see PC_OPTIONS's doc comment).
 func _refresh_card(i: int) -> void:
 	var selected := i == _cursor
 	var card := _cards[i]
 	for child: Node in card.get_children():
 		if child is NinePatchRect:
-			# Swap through set_patch_texture so the measured art-bbox region
-			# follows the texture (the two button arts have different bboxes
-			# -- see UIChrome's BLUE_BUTTON_REGION doc comment).
 			UIChrome.set_patch_texture(child as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if selected else UIChrome.BLUE_BUTTON)
 
 
@@ -329,14 +229,6 @@ func _step_name() -> String:
 		_: return "name"
 
 
-## Hover moves `_cursor` (the same field `_refresh_card`'s texture swap
-## reads -- one selection state, not a second highlight); a left-click sets
-## `_cursor` then calls `_confirm()`, the exact function Enter calls on the
-## PICK step -- picking a card by mouse is the SAME race+gender commit plus
-## step advance a keyboard arrow-to-card-then-Enter would produce, just
-## without the intermediate per-step hover renders. No-op off the PICK step
-## (the grid is hidden on NAME, but a stale motion event could still land
-## here before Godot re-picks the topmost Control).
 func _on_grid_gui_input(event: InputEvent) -> void:
 	if _step != Step.PICK:
 		return
@@ -357,9 +249,6 @@ func _on_grid_gui_input(event: InputEvent) -> void:
 		_confirm()
 
 
-## Read-only rect accessor (the pause_menu.gd/title_screen.gd `row_rect`
-## idiom), for QA's `click_char_creation_card` step. Empty Rect2 off the PICK
-## step or the index out of range.
 func card_rect(i: int) -> Rect2:
 	if _step != Step.PICK or i < 0 or i >= _cards.size():
 		return Rect2()
@@ -378,10 +267,6 @@ func begin_button_rect() -> Rect2:
 	return Rect2(_begin_button.global_position, _begin_button.size)
 
 
-## A tap anywhere on the Begin control commits the name, byte-identical to
-## an Enter press on the NAME step (`_confirm()` is the SAME function both
-## call). No hover/highlight state to track (unlike the picker cards) --
-## this is a single always-or-never-visible button, not a cycled list.
 func _on_begin_button_gui_input(event: InputEvent) -> void:
 	if _step != Step.NAME:
 		return
@@ -418,8 +303,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _handle_name_input(event: InputEvent) -> void:
-	# Enter / Esc first (they are also key events, so check the actions before the
-	# raw-character path below swallows the keystroke).
 	if event.is_action_pressed("confirm"):
 		_confirm()
 		get_viewport().set_input_as_handled()
@@ -446,14 +329,6 @@ func _handle_name_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-## Issue #106: fires only when a real click/tap gave `_name_edit` native GUI
-## focus (see the file doc comment) -- keeps `_name` (the single source of
-## truth `_begin_game` reads) in lockstep with the LineEdit's own edit
-## pipeline, applying the SAME `_is_name_char` charset filter the keyboard
-## path enforces per-keystroke. Reassigning `.text` here does NOT re-trigger
-## this signal (Godot only emits `text_changed` from interactive edits, never
-## from the `text` property setter) -- and even if it somehow did, filtering
-## already-filtered text is idempotent, so there is no loop risk either way.
 func _on_name_edit_text_changed(new_text: String) -> void:
 	var filtered := ""
 	for i in new_text.length():
@@ -466,35 +341,15 @@ func _on_name_edit_text_changed(new_text: String) -> void:
 		_name_edit.caret_column = filtered.length()
 
 
-## Issue #106: fires when a real tap/click gives the field native focus. The
-## displayed text at that moment may still be the cosmetic "Traveler"
-## default (`_render_step`'s doc comment) with `_name` genuinely empty --
-## without this, a mobile player tapping in to type would land mid-word in
-## "Traveler" (native LineEdit editing operates on whatever text is already
-## there) instead of a clean field, unlike the keyboard path (`_handle_name_
-## input` always overwrites `_name_edit.text` wholesale from `_name`, never
-## appending). Clearing ONLY when `_name` is still empty preserves the
-## opposite intent (a pad-only player who never types sees "Traveler"
-## sitting ready to confirm) -- a player who already typed something and
-## re-focuses (e.g. tap away, tap back) keeps their in-progress text.
 func _on_name_edit_focus_entered() -> void:
 	if _name.is_empty() and _name_edit.text != "":
 		_name_edit.text = ""
 
 
-## Issue #106: LineEdit's own Enter-submits signal, fired only while it holds
-## native focus -- a focused, editable LineEdit consumes/accepts the Enter
-## keypress itself (`ui_text_submit`) before this screen's own
-## `_unhandled_input`/`_handle_name_input` ever sees it, so this is the ONLY
-## way Enter reaches `_confirm()` while the field is focused. Byte-identical
-## destination as every other confirm path (Enter via `_unhandled_input`, a
-## tap on `_begin_button`).
 func _on_name_edit_text_submitted(_new_text: String) -> void:
 	_confirm()
 
 
-## Sensible name charset: letters, digits, space, hyphen, apostrophe. Filters out
-## control chars / punctuation that would read oddly on a turn strip.
 func _is_name_char(ch: String) -> bool:
 	if ch == "" or ch.unicode_at(0) < 0x20:
 		return false
@@ -534,9 +389,6 @@ func _confirm() -> void:
 func _back() -> void:
 	match _step:
 		Step.PICK:
-			# Esc on the first step returns to the title (WIMain owns the swap).
-			# Deferred so this input handler finishes before the swap frees this
-			# screen out of the tree (else get_viewport() would be null on return).
 			if _main() != null:
 				_main().swap_to_title.call_deferred()
 		Step.NAME:
@@ -545,8 +397,6 @@ func _back() -> void:
 			_render_step()
 
 
-## Index of the PC_OPTIONS entry matching the current pc_race/pc_gender, so
-## backing out of NAME re-highlights the card the player actually picked.
 func _option_index() -> int:
 	for i in PC_OPTIONS.size():
 		var opt: Dictionary = PC_OPTIONS[i]
@@ -561,8 +411,6 @@ func _begin_game() -> void:
 		final_name = "Traveler"
 	var creation := {"pc_name": final_name, "pc_race": _race, "pc_gender": _gender}
 	ObservableBus.emit_domain_event(WIEvents.UI_CHAR_CREATION_CONFIRMED, creation)
-	# GAME_RESET drives WIMain into the world + the GDI opener (race-neutral); this
-	# screen is torn down with the other UI layers on that swap.
 	Game.reset(creation)
 
 

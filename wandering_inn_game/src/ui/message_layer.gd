@@ -1,14 +1,5 @@
 extends CanvasLayer
-## Renders toasts and dialogue lines from ObservableBus domain events, and
-## confirms actual rendering back onto the bus (ui_toast_rendered /
-## ui_dialogue_rendered) so QA scripts can assert "the player saw this".
-##
-## GOTCHA (shipped a dead quest chain in v2): CanvasLayer has NO `modulate`
-## property. Fade/tint the child Control panels, never `self`.
 
-## Issue #62 Lane U item 6 (playtest: toasts vanish too fast): +50% over the
-## original 2.5s. Real-play only -- collapsed under both QA hold floors
-## below exactly as before, so no canonical timing changed.
 const TOAST_SECONDS := 3.75
 ## Toast hold under WINDOWED QA (TestDriver active, real DisplayServer) -- a
 ## 0.4s FLOOR, not zero: toast legibility in windowed screenshots is
@@ -36,84 +27,18 @@ const QA_TOAST_HOLD_SECONDS := 0.4
 ## `from_start` on the class-toast render wait makes that script robust to
 ## EITHER emission order regardless.
 const QA_TOAST_HOLD_HEADLESS_SECONDS := 0.05
-## Issue #87 (toast rhythm): while another toast is still queued behind the
-## one currently showing, cap ITS hold at ~1.6s (well under TOAST_SECONDS)
-## instead of the full read-hold -- a multi-toast beat (a dual-class level-up,
-## several loot pickups) used to make the player wait through a full 3.75s
-## hold on EVERY toast but the last, piling up real wall-clock for a single
-## action. The LAST toast in the queue still gets the full TOAST_SECONDS hold
-## (nothing left behind it to rush for). Applied in `_show()` via `minf`
-## against whatever hold `_hold_seconds` already computed, so it only ever
-## SHORTENS a hold, never lengthens one. Already dwarfed by both QA hold
-## floors above (0.4s windowed / 0.05s headless) whenever `collapse_under_qa`
-## applies, so this is a real-play-only change -- no QA/canonical timing is
-## affected by it.
 const TOAST_QUEUE_HOLD_CAP_SECONDS := 1.6
-## Base real-seconds hold for a 1-line bark. Scales UP per extra wrapped
-## line via DIALOGUE_SECONDS_PER_EXTRA_LINE (see `_dialogue_hold_seconds`):
-## a bark using the panel's full DIALOGUE_LINE_CAPACITY (2 lines) has more
-## text to read than a short one, and a fixed hold reads as "gone before I
-## could read it" on the longer text. CONSTRAINT: this const is a FLOOR --
-## the computed hold is never below it, so a short bark's pace never drops.
 const DIALOGUE_SECONDS := 3.0
-## Extra real-seconds granted per wrapped line beyond the first (see
-## `_dialogue_hold_seconds`) -- a rough reading-speed increment, not a
-## measured pixel/font quantity like the *_FOLD_DANGER_PX consts elsewhere in
-## this file. Picked to be generous without stacking into an absurdly long
-## hold at the 2-line ceiling `_fit_dialogue_line` already caps every bark
-## at (DIALOGUE_LINE_CAPACITY).
 const DIALOGUE_SECONDS_PER_EXTRA_LINE := 1.2
-## Dialogue panel interior text box width -- 700 panel minus the
-## MarginContainer's 22px left+right margins (see `_dialogue_panel`/
-## `dialogue_margin` below). A long one-liner wraps past this panel's fixed
-## height and its 2nd line got half-cut under the panel chrome; binding
-## design rule: never widen the panel -- truncate with an ellipsis instead
-## (_fit_dialogue_line).
 const DIALOGUE_TEXT_WIDTH := 656.0
-## The panel used to fit only ONE wrapped line (32px content height minus
-## the margins gave `_line_capacity` exactly 1 at this label's real font
-## metrics), so a real bark that wraps to 2 lines -- e.g. Lyonette's
-## talk_pool line ("Yes, I work here. No, I did not always. That is the
-## whole story, and you may have it for the price of a nod.") -- truncated
-## mid-sentence well before its punchline. Extends the same "reserve real
-## pixels measured off the font metrics" treatment `_reserve_status_label_
-## height` (inventory.gd) and `_toast_panel_height_for` (this file) already
-## use elsewhere: capacity is a budget in WRAPPED LINES (2), not a guessed
-## pixel height. `_dialogue_text_height`/`_resize_dialogue_panel` (computed
-## once in `_ready()`, from `_dialogue_label`'s real resolved font) derive
-## the actual content height and grow `_dialogue_panel` upward (BOTTOM
-## offset held fixed) to fit it -- this const now only names the
-## WRAPPED-LINE budget, not a pixel height.
 const DIALOGUE_LINE_CAPACITY := 2
 
-## Toast panel offsets (BOTTOM_RIGHT anchor). The panel is a fixed-WIDTH
-## 448 always fully on-screen; the real defect this fixed was that the
-## conversation panel (dialogue_panel.gd, 720x232 CENTER_BOTTOM =>
-## x[280,1000] y[470,684]) is a later sibling CanvasLayer at the same
-## layer, so it draws OVER the toast's left half (x[808,1000]) and hides
-## the "Got: " prefix. Fix: while a conversation is open, RAISE the toast
-## to the upper-right (bottom at y456, a 14px gap above the conversation
-## panel's y470 top) so it clears the panel entirely and reads in full;
-## drop back to the resting bottom-right spot when the conversation ends.
-## LEFT/RIGHT/BOTTOM stay fixed in both states; TOP is DERIVED from
-## `_toast_panel_height` (see below) instead of a fixed constant, since the
-## panel's height itself can grow.
 const TOAST_LEFT := -472.0
 const TOAST_RIGHT := -24.0
 const TOAST_BOTTOM_DEFAULT := -34.0
 const TOAST_BOTTOM_RAISED := -264.0
 const TOAST_PANEL_BASE_SIZE := Vector2(448.0, 96.0)
-## Toast label interior text box width -- 448 panel minus the toast
-## MarginContainer's 18px left+right content margins (see `_ready()`).
 const TOAST_TEXT_WIDTH := 412.0
-## The toast panel never got the wrapped-line budget the feed/dialogue/
-## readout panels did, so a long lore/effect toast wrapping to 3+ lines had
-## its bottom line sliced by the PARCHMENT_STRIP art's decorative fold.
-## Measured (pixel scan at the panel's horizontal CENTER, where centered
-## toast text actually sits): clean parchment through y658 and fold
-## interference from y659 on, while the panel's true bottom border sits at
-## y686 -- the curled ENDS near the panel corners stay clean all the way
-## down, so the fold only eats into the center column where text renders.
 ## Danger zone = 686-658 = 28px, measured from the panel's OWN bottom edge
 ## (a 9-slice-art property, independent of the MarginContainer's content
 ## margins). Unlike the feed (top-aligned text, single measured deficit),
@@ -126,42 +51,11 @@ const TOAST_TEXT_WIDTH := 412.0
 ## at the BASE 96px panel height -- but Banner_Horizontal's fold art starts
 ## 29px above the texture region's bottom while STRIP_PATCH_MARGIN is only
 ## 20, so 9 source px of fold live in the 9-patch's STRETCHED CENTER band.
-## A grown panel stretches the fold with it (~41px at a 6-line toast),
-## blowing past any fixed budget. Fix: STRIP_FOLD_PATCH_BOTTOM below pins
-## the whole fold inside the unstretched bottom patch, making the fold a
-## true constant; DANGER_PX is 30 to cover the full unstretched fold
-## (29px source, rendered 1:1) with 1px slack.
 const TOAST_FOLD_DANGER_PX := 30.0
-## Bottom patch margin for the two grow-able PARCHMENT_STRIP panels (toast +
-## dialogue bark): >= the fold art's full 29px source depth, so no fold
-## pixel ever lands in the 9-patch's stretched center no matter how tall
-## the panel grows. Left/right/top keep STRIP_PATCH_MARGIN.
 const STRIP_FOLD_PATCH_BOTTOM := 32
 
-## The toast panel's own CanvasLayer, above every other UI surface in the
-## project. FULL LAYER MAP (traced across every `extends CanvasLayer`
-## script in `src/`): this file's OWN outer CanvasLayer (dialogue_line bark
-## panel + the hint strip, below), `dialogue_panel.gd` (conversation
-## choices), `combat_screen.gd`, `consolidation_prompt.gd`, `char_creation.
-## gd`, `title_screen.gd`, `field_hotbar.gd`, `pause_menu.gd` -- ALL the
-## untouched default layer 1. `journal.gd`/`inventory.gd` are layer 10 (must
-## paint over `WIWorldLabels`, spawned lazily by world.gd AFTER
-## `Main._spawn_ui_layers` -- see their own file doc comments). `sleep_veil.
-## gd` is layer 30, above literally everything (must win even over a live
-## consolidation modal).
-## Fixes a real bug where the toast panel sat at this file's outer layer-1
-## CanvasLayer, so it drew BENEATH the layer-10 modals -- a toast firing
-## while inventory/journal was open had its opening words hidden under the
-## modal's own parchment border (inventory's `_status_label` echo was the
-## pre-existing workaround for exactly this gap -- it stays, belt-and-
-## braces, but the root cause is fixed here too). Toasts are transient,
-## top-priority player feedback -- drawing OVER an open modal is correct
-## UX, never the reverse. Fix: ONLY the toast panel (never `_dialogue_
-## panel`/`_hint_panel` -- neither one ever competes with a layer-10 modal
-## in real play) moves to its own child CanvasLayer at layer 12: above
-## every layer-10 modal, below the layer-30 sleep veil (which must still
-## win over a mid-display toast). `ui_toast_rendered` timing/payload are
-## UNCHANGED -- this is a pure draw-order fix, QA-safe by construction.
+## Toasts use layer 12: above journal/inventory modals (10), below the sleep
+## veil (30). This ordering keeps feedback visible without piercing sleep.
 const TOAST_CANVAS_LAYER := 12
 
 var _toast_layer: CanvasLayer
@@ -169,9 +63,6 @@ var _toast_panel: Control
 var _toast_label: Label
 var _dialogue_panel: Control
 var _dialogue_label: Label
-## The real content-height budget for `DIALOGUE_LINE_CAPACITY` wrapped
-## lines, derived once in `_ready()` from `_dialogue_label`'s resolved font
-## metrics (see `DIALOGUE_LINE_CAPACITY`'s doc comment).
 var _dialogue_text_height := 0.0
 var _hint_panel: Control
 var _hint_label: Label
@@ -194,50 +85,10 @@ var _toast_draining := false
 ## remaining queued toast, in order, right after.
 var _toast_skip_requested := false
 
-## A one-time "Press I — your pack." toast on the FIRST ITEM_GAINED, so a
-## player can discover the inventory key exists. Presentation-side only --
-## never persisted to save data. `_first_pickup_hint_pending` (plain
-## instance var: it's set and consumed within one synchronous
-## ITEM_GAINED->TOAST emission pair, so a respawn can't interleave it)
-## bridges ITEM_GAINED -> the very next TOAST (pickup()'s "Got: <item>"
-## toast, WIGame emits it unconditionally right after ITEM_GAINED, same
-## synchronous call) so the hint enqueues AFTER the pickup toast, never
-## before it.
-##
-## THE TRIGGER SURFACE: `_first_pickup_hint_shown` is a `static var` --
-## statics live on the SCRIPT resource (preloaded once for the whole
-## process by main.gd's MESSAGE_LAYER_SCRIPT const), not on the instance --
-## so the shown-flag survives every MessageLayer teardown/respawn (main.gd's
-## `_clear_ui_layers`/`_spawn_ui_layers` swap on every GAME_RESET/
-## GAME_LOADED, plus `swap_to_title`). Net behavior:
-##   - GAME_LOADED (defeat-reload, pause-menu Load, title Continue): flag
-##     PERSISTS -- a player who died and reloaded in the same sitting does
-##     NOT see the hint again (an instance var would be wiped by the
-##     defeat-reload respawn, re-showing the hint mid-sitting).
-##   - GAME_RESET (title New Game; combat defeat with no autosave yet): flag
-##     RE-ARMS via `_reset_first_pickup_hint` -- a fresh run deserves the
-##     hint. That reset callback is connected SCRIPT-BOUND (not instance-
-##     bound) exactly once per process in `_ready()` (`_hint_reset_hooked`
-##     guard): pause menu "Quit to Title" calls Main.swap_to_title() (frees
-##     every UI layer, NO reset event), then title "New Game" fires
-##     GAME_RESET while NO MessageLayer instance exists yet (the title
-##     screen has none; main.gd only spawns UI layers in the deferred
-##     swap_to_world that FOLLOWS the event), so an instance-bound listener
-##     would miss that re-arm and a fresh New-Game run would silently lose
-##     its hint. A Callable bound to the script resource itself stays
-##     connected across every instance teardown.
-##   - Fresh process boot: statics initialize false -- first run always hints.
-## The hint text composes through `WIInputHints.label()` (a const can't call
-## an autoload method); kb-mode output is byte-identical to the old literal
-## ("Press I — your pack.").
 func _first_pickup_hint_text() -> String:
 	return "Press %s — your pack." % WIInputHints.label("inventory")
 
 
-## The field hint strip's text, composed through WIInputHints so it
-## re-renders correctly on a device swap (`_on_domain_event`'s
-## INPUT_DEVICE_CHANGED arm calls this again). kb-mode output is
-## byte-identical to the old hardcoded literal.
 func _hint_text() -> String:
 	return "%s — menu (save/load)   %s — journal   %s — inventory" % [
 		WIInputHints.label("cancel"), WIInputHints.label("journal"), WIInputHints.label("inventory"),
@@ -245,18 +96,13 @@ func _hint_text() -> String:
 
 
 var _first_pickup_hint_pending := false
+## Static lifetime is intentional: UI destruction must not replay the hint.
+## The script-level hook catches GAME_RESET even before an instance exists.
 static var _first_pickup_hint_shown := false
 static var _hint_reset_hooked := false
 
-## True while a conversation panel is open (DIALOGUE_STARTED..DIALOGUE_ENDED) --
-## gates the toast's raised position so it never sits behind the conversation.
 var _conversation_open := false
 
-## Current toast panel height (grows from TOAST_PANEL_BASE_SIZE.y -- see
-## `_toast_panel_height`). Tracked separately from the panel's own `.size` so
-## `_apply_toast_position` (called on conversation open/close, independent of
-## any in-flight toast) can re-derive TOP from whatever height the last-shown
-## toast needed, rather than snapping back to the base size mid-display.
 var _toast_panel_height := TOAST_PANEL_BASE_SIZE.y
 
 
@@ -265,13 +111,6 @@ static func _reset_first_pickup_hint(type: String, _payload: Dictionary) -> void
 		_first_pickup_hint_shown = false
 
 
-## Issue #77: settings_panel.gd's "Replay Hints" action calls this directly
-## (via `WISettings.replay_hints()`'s dynamic `load(...).call("reset_hints")`
-## -- see that file's doc comment) to re-arm this hint mid-sitting, the same
-## effect `_reset_first_pickup_hint` already has on GAME_RESET, just without
-## resetting the whole game. Static, script-bound (see `_first_pickup_hint_
-## shown`'s own doc comment for why the flag itself is static) -- callable
-## with zero live MessageLayer instance in the tree.
 static func reset_hints() -> void:
 	_first_pickup_hint_shown = false
 
@@ -303,15 +142,9 @@ func _ready() -> void:
 	# STOP (mouse-filter audit, issue #57): overrides `make_chrome_panel`'s own
 	# IGNORE default -- a click on the toast strip while it is showing must
 	# not leak through to a world click-to-walk/interact underneath it.
-	# `.hide()`/`.show()` below already gate this Control's own visibility.
 	_toast_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	(_toast_panel.get_child(0) as NinePatchRect).patch_margin_bottom = STRIP_FOLD_PATCH_BOTTOM
 	_toast_panel.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	# 448 wide x 96 tall base size (fits up to ~2 wrapped lines cleanly).
-	# A 3+-line toast grows the panel taller per-display
-	# (`_resize_toast_panel`/`_toast_panel_height`) instead of clipping at
-	# this fixed height -- always grows UPWARD (top offset), so it never
-	# reaches into the centre hotbar.
 	_toast_panel.custom_minimum_size = TOAST_PANEL_BASE_SIZE
 	_toast_panel.size = TOAST_PANEL_BASE_SIZE
 	_apply_toast_position()
@@ -328,9 +161,6 @@ func _ready() -> void:
 	toast_root.add_child(_toast_panel)
 
 	_dialogue_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
-	# STOP (mouse-filter audit, issue #57): see `_toast_panel`'s identical fix
-	# just above -- this is the field NPC-bark strip (distinct from the real
-	# conversation UI in dialogue_panel.gd, which has its own audited `_root`).
 	_dialogue_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	(_dialogue_panel.get_child(0) as NinePatchRect).patch_margin_bottom = STRIP_FOLD_PATCH_BOTTOM
 	_dialogue_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
@@ -353,10 +183,6 @@ func _ready() -> void:
 
 	_hint_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_hint_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	# Widened to fit the added "I — inventory" hint without the Label
-	# overflowing the parchment strip (the wrapped-line rule still applies --
-	# this is a width bump for a single-line footer, not a panel that needs
-	# to grow to fit multi-line content).
 	_hint_panel.custom_minimum_size = Vector2(400, 28)
 	_hint_panel.size = Vector2(400, 28)
 	UIChrome.set_offsets(_hint_panel, 8.0, -36.0, 408.0, -8.0)
@@ -383,13 +209,11 @@ func _ready() -> void:
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	match type:
 		WIEvents.INPUT_DEVICE_CHANGED:
-			# Re-render the hint strip's glyphs on a device swap. Re-emits
-			# UI_HINT_RENDERED (the same confirmation the initial build fires)
-			# so QA could assert the swap if a future script wanted to; none
-			# does today (manual-pass-only).
 			_hint_label.text = _hint_text()
 			ObservableBus.emit_domain_event(WIEvents.UI_HINT_RENDERED, {"text": _hint_label.text})
 		WIEvents.ITEM_GAINED:
+			# pickup() emits ITEM_GAINED then TOAST synchronously; arm first so
+			# the hint queues immediately after the pickup's own toast.
 			if not _first_pickup_hint_shown:
 				_first_pickup_hint_pending = true
 		WIEvents.TOAST:
@@ -399,10 +223,6 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_first_pickup_hint_shown = true
 				_queue_toast(_first_pickup_hint_text())
 		WIEvents.INTERACT_NOTHING:
-			# An empty interact used to be completely SILENT -- during the M6
-			# playtest the user pressed interact near (but not exactly facing)
-			# the tiny inn door and got nothing, reading it as "the door is
-			# broken". Any explicit player action needs visible feedback.
 			_queue_toast("Nothing there.")
 		WIEvents.DIALOGUE_LINE:
 			# An empty speaker (ambient/narration lines, e.g. the Invrisil
@@ -413,13 +233,6 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			var speaker := String(payload["speaker"])
 			var text := "%s: %s" % [speaker, String(payload["text"])] if speaker != "" else String(payload["text"])
 			var fitted := _fit_dialogue_line(text)
-			# The bus confirmation carries the FULL semantic line (QA asserts
-			# exact text on `ui_dialogue_rendered`, e.g. gate_district_walkthrough's
-			# Watch Guard beat) -- only the on-screen Label is shortened to
-			# what the fixed-height panel can actually show. Hold scales with
-			# `fitted`'s own wrapped-line count (see `_dialogue_hold_seconds`);
-			# `true` (collapse_under_qa) so the longer 2-line hold can't add real
-			# wall-clock to a scripted run -- see `_hold_seconds`'s doc comment.
 			_show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
 		WIEvents.COMBAT_STARTED:
 			_hint_panel.hide()
@@ -439,100 +252,23 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_clear_dialogue_line()
 			_clear_toast()
 		WIEvents.PLAYER_MOVED:
-			# Issue #62 Lane U item 6: a successful move is a deliberate
-			# player action -- "I've read it, moving on" -- so it ends the
-			# CURRENTLY showing toast's hold early. Fires on every real step
-			# (tap, held-repeat, diagonal, click-to-walk) since they all route
-			# through `Game.sim.move_player`, which only emits this on
-			# success (a blocked/refused step emits PLAYER_BLOCKED instead,
-			# never this) -- covers every move call site in world.gd with no
-			# presentation-layer wiring needed. See interact's own dismiss
-			# call sites in world.gd for the other half of this fix.
 			dismiss_current_toast_early()
 
 
-## Unconditionally hides the `dialogue_line` bark panel (`_dialogue_panel`/
-## `_dialogue_label` -- ambient NPC one-liners from `social.gd`'s talk-pool
-## rotation and `wi_game.gd`'s narrative lines, NOT `dialogue_panel.gd`'s
-## separate conversation-choice UI). ROOT CAUSE: `_show()`'s own 3s
-## auto-hide is a coroutine awaiting `tree.create_timer(DIALOGUE_SECONDS)`;
-## the teardown-race guard (`if not is_inside_tree(): return`, see that
-## guard's doc comment above `_show`) can resume from that await into a
-## moment where the coroutine bails WITHOUT ever reaching its own `panel.
-## hide()` -- e.g. a map/world rebuild or a combat scene swap mid-hold --
-## so a bark shown once could linger, increasingly clipped by every later
-## panel drawn over it, through the rest of the run. Fix: an unconditional,
-## synchronous clear on the three events a stale bark could plausibly
-## survive into -- DIALOGUE_STARTED (a real conversation about to own the
-## screen), COMBAT_STARTED (the combat HUD about to own it), MAP_CHANGED (a
-## fresh scene, no bark from the old one belongs on it) -- independent of
-## whether the in-flight `_show()` coroutine ever completes its own
-## hold/hide. None of the three previously cleared it (COMBAT_STARTED only
-## hid the hint strip, DIALOGUE_STARTED only repositioned the toast,
-## MAP_CHANGED had no message_layer handler at all). Safe for QA waits:
-## every script waits on `ui_dialogue_rendered` (the bark's own render
-## confirmation, fired at display start) before advancing to whatever next
-## triggers one of these three events -- that confirmation already fired by
-## the time this clear can run, and this clear itself emits nothing, so no
-## wait is starved. The hold-TIMER behavior (3.0s real, uncollapsed under
-## QA -- see DIALOGUE_SECONDS) is otherwise unchanged; this is an
-## independent, belt-and-braces clear, not a replacement for it.
 func _clear_dialogue_line() -> void:
 	_dialogue_panel.hide()
 
 
-## The toast-panel sibling of `_clear_dialogue_line()` above -- SAME three
-## call sites (DIALOGUE_STARTED, COMBAT_STARTED, MAP_CHANGED), same
-## rationale: a toast belongs to the beat that fired it, and a fresh
-## dialogue-class panel/combat HUD/map has no business inheriting a
-## leftover toast from whatever came before it. ROOT CAUSE: a toast (e.g.
-## "You sleep soundly.") still mid-hold (the windowed `QA_TOAST_HOLD_
-## SECONDS` 0.4s legibility floor, or the real `TOAST_SECONDS` in human
-## play) when the very next script beat teleports across the map and opens
-## an unrelated panel -- `_apply_toast_position()` already raises it clear
-## of the WIDE center-bottom conversation panel, but the toast is still ON
-## SCREEN, reading as unrelated clutter next to a brand-new, unrelated
-## panel. Unlike the bark panel (single-slot, no queue), the toast panel
-## batches (`_toast_queue`/`_drain_toasts`) -- hiding only the panel and
-## leaving the queue intact would let the NEXT queued toast pop back up
-## mid-conversation/mid-combat/on-the-new-map, reproducing the same bug one
-## toast later. So this clears BOTH: the visible panel now, and any
-## as-yet-undrained backlog (dropped, not deferred) -- any toast still
-## queued at the exact instant one of these three events fires belongs to
-## whatever action just got superseded, same as the dialogue bark. Safe for
-## QA waits: by design, no script's `interact()` action fires a
-## TOAST/INTERACT_NOTHING queue-append in the SAME synchronous call as a
-## DIALOGUE_STARTED/COMBAT_STARTED/MAP_CHANGED emission (interact()
-## dispatches to exactly one outcome branch per entity kind -- a
-## toast-branch prop and a dialogue-branch NPC/door are mutually exclusive
-## on a single interact), and every script that asserts `ui_toast_rendered`
-## waits on it BEFORE whatever later beat triggers one of these three
-## events, never after -- so no in-flight wait is starved by the drop. A
-## toast fired WHILE a conversation is already open (e.g. a mid-dialogue
-## gold/item reward) is unaffected: this only runs once, at the moment
-## DIALOGUE_STARTED/COMBAT_STARTED/MAP_CHANGED itself fires, not as a
-## continuous suppression for the rest of that state.
 func _clear_toast() -> void:
 	_toast_panel.hide()
 	_toast_queue.clear()
 
 
-## Positions the toast panel: raised upper-right while a conversation is
-## open (so the wide center-bottom conversation panel can't occlude it),
-## resting bottom-right otherwise. See TOAST_LEFT/TOAST_BOTTOM_*'s doc
-## comment for the raise rationale. TOP is derived from
-## `_toast_panel_height` (never a fixed constant) so a grown panel still
-## raises/rests correctly -- growth always reads upward from whichever
-## BOTTOM applies.
 func _apply_toast_position() -> void:
 	var bottom := TOAST_BOTTOM_RAISED if _conversation_open else TOAST_BOTTOM_DEFAULT
 	UIChrome.set_offsets(_toast_panel, TOAST_LEFT, bottom - _toast_panel_height, TOAST_RIGHT, bottom)
 
 
-## Computes the toast panel height needed to clear the fold for a `lines`-
-## wrapped-line block (see TOAST_FOLD_DANGER_PX's doc comment for the
-## measurement and the x2 rationale), floored at TOAST_PANEL_BASE_SIZE.y so a
-## short 1-2 line toast is pixel-identical to before this fix.
 func _toast_panel_height_for(lines: int) -> float:
 	var font := _toast_label.get_theme_font("font")
 	var font_size := _toast_label.get_theme_font_size("font_size")
@@ -542,10 +278,6 @@ func _toast_panel_height_for(lines: int) -> float:
 	return maxf(TOAST_PANEL_BASE_SIZE.y, text_block + 2.0 * TOAST_FOLD_DANGER_PX)
 
 
-## Grows (never shrinks below the base size) the toast panel to fit `text`'s
-## own wrapped-line count, then repositions it (height feeds directly into
-## `_apply_toast_position`'s TOP derivation). Called once per toast, right
-## before it's shown -- see `_show`.
 func _resize_toast_panel(text: String) -> void:
 	var lines := _wrapped_line_count(_toast_label, text, TOAST_TEXT_WIDTH)
 	_toast_panel_height = _toast_panel_height_for(lines)
@@ -554,15 +286,6 @@ func _resize_toast_panel(text: String) -> void:
 	_apply_toast_position()
 
 
-## Sizes `_dialogue_panel` ONCE (at `_ready()` time, not per-message like
-## the toast panel above -- the bark budget is a FIXED 2-line cap, not a
-## per-text grow) to fit `DIALOGUE_LINE_CAPACITY` wrapped lines of
-## `_dialogue_label`'s real font metrics, then repositions the panel so its
-## BOTTOM edge stays exactly where it always was (-164.0, same as the
-## pre-fix hardcoded offset) -- the panel grows UPWARD only, identical to
-## how the toast panel grows (see `_apply_toast_position`'s doc comment),
-## so nothing below it (the hint strip, the field hotbar) is encroached on.
-##
 ## FOLD FIX (2026-07-08 hotfix wave): the old exact-fit `text_height + 24.0`
 ## (12+12 margin, no slack) put a real 2nd-line bark flush against the
 ## panel's bottom margin -- exactly where the PARCHMENT_STRIP art's
@@ -586,8 +309,6 @@ func _resize_dialogue_panel() -> void:
 	var line_spacing := float(_dialogue_label.get_theme_constant("line_spacing"))
 	var pitch := font.get_height(font_size) + line_spacing
 	_dialogue_text_height = DIALOGUE_LINE_CAPACITY * pitch - line_spacing
-	# 12 + 12 = the dialogue_margin's own top+bottom content margins (see
-	# `_ready()`'s `UIChrome.add_margins(dialogue_margin, 22, 12, 22, 12)`).
 	var panel_height := maxf(_dialogue_text_height + 24.0, _dialogue_text_height + 2.0 * TOAST_FOLD_DANGER_PX)
 	_dialogue_panel.custom_minimum_size = Vector2(700.0, panel_height)
 	_dialogue_panel.size = Vector2(700.0, panel_height)
@@ -595,23 +316,12 @@ func _resize_dialogue_panel() -> void:
 	UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
 
 
-## Appends to the toast queue and (if no drain is already in flight) starts
-## one. Safe to call re-entrantly -- see `_toast_queue`'s doc comment above.
 func _queue_toast(text: String) -> void:
 	_toast_queue.append(text)
 	if not _toast_draining:
 		_drain_toasts()
 
 
-## Issue #62 Lane U item 6: ends the CURRENTLY showing toast's remaining
-## hold early -- called on a successful move (`PLAYER_MOVED`, see
-## `_on_domain_event`) or an interact press (world.gd's own call sites,
-## fired BEFORE `Game.sim.interact()` runs so the press itself, not its
-## outcome, is what counts as "read"). No-op if no toast is currently
-## visible (a request landing between toasts, or while only the dialogue
-## bark/hint strip are on screen, has nothing to shorten). Never touches
-## `_toast_queue` -- see that var's own doc comment for why this can never
-## drop or reorder a pending toast.
 func dismiss_current_toast_early() -> void:
 	if _toast_panel.visible:
 		_toast_skip_requested = true
@@ -629,35 +339,10 @@ func _drain_toasts() -> void:
 	_toast_draining = false
 
 
-## Issue #87 (toast rhythm): true for the router's own two success toasts
-## ("Earned N gold."/"Paid N gold.", `economy.gd`'s `earn`/`spend`) -- the
-## exact strings `_fold_gold_toast` below folds into whatever action toast
-## queued immediately before them in the SAME synchronous beat. Deliberately
-## excludes the refusal toast ("Not enough gold.") -- that one never follows
-## an action toast in the same beat (a shop option is `requires`-gated on
-## affordability, so the refusal is effectively unreachable through normal
-## play, but even if it fired it reads correctly standing alone).
 func _is_gold_toast(text: String) -> bool:
 	return text.begins_with("Earned ") or text.begins_with("Paid ")
 
 
-## Folds every gold-router toast ALREADY sitting at the front of `_toast_queue`
-## into `text` (space-joined), consuming each one it merges. Called from
-## `_show()` right after its first `await tree.process_frame` -- by
-## construction, a toast fired in the SAME synchronous action as the one
-## currently displaying has already been appended to `_toast_queue` by the
-## time that first frame boundary resolves (no real frame elapses between the
-## two emits; see `_show()`'s own call site comment). That same-beat guarantee
-## holds strictly only for the FIRST toast of a drain: a toast shown after a
-## hold during which new toasts arrived can fold a gold toast from a later
-## beat at the queue front (gold is still never lost -- it renders inside the
-## merged panel; the merge is just cross-beat in that narrow case). This is
-## what turns the old "chore (~2s) + 2 stacked ~3.75s toasts" drift (e.g.
-## dirty_table's clean-then-wage pair, serving_tray's carry-then-wage pair)
-## into a single toast for a single action -- presentation ONLY: the sim
-## still emits both `TOAST` bus events, `gold_changed`, and every other event
-## completely unchanged; only how many separate PANELS render, and what each
-## one says, changes.
 func _fold_gold_toast(text: String) -> String:
 	var merged := text
 	while not _toast_queue.is_empty() and _is_gold_toast(_toast_queue[0]):
@@ -665,21 +350,6 @@ func _fold_gold_toast(text: String) -> String:
 	return merged
 
 
-## Collapses a presentation hold under QA (same TestDriver.active()/headless
-## detection as combat_screen.gd's `_beat_delay`/`_presentation_delay` and
-## world.gd's `_presentation_delay`) so a queue of several toasts drains
-## fast instead of piling up 2.5s of real wall-clock per toast and stalling
-## a QA script. HEADLESS collapses to a near-zero, frame-bounded hold
-## (screenshots are skipped -- see QA_TOAST_HOLD_HEADLESS_SECONDS);
-## WINDOWED QA keeps the 0.4s floor so a toast a script just waited on is
-## still on screen when the (windowed-only) screenshot fires (see
-## QA_TOAST_HOLD_SECONDS). Gated per-call via `_show`'s `collapse_under_qa`
-## flag -- the toast queue and the dialogue bark both pass it: the bark's
-## hold scales with its wrapped-line count (see
-## DIALOGUE_SECONDS_PER_EXTRA_LINE) so it can exceed DIALOGUE_SECONDS for a
-## 2-line bark, and, same as the toast case, no script ever waits on a
-## bark's DISAPPEARANCE (only on `ui_dialogue_rendered`, fired well before
-## this hold even starts) -- so collapsing it costs a scripted run nothing.
 func _hold_seconds(seconds: float) -> float:
 	if DisplayServer.get_name() == "headless":
 		return minf(seconds, QA_TOAST_HOLD_HEADLESS_SECONDS)
@@ -688,30 +358,7 @@ func _hold_seconds(seconds: float) -> float:
 	return seconds
 
 
-## Teardown-race guard. `await get_tree().process_frame`/`await get_tree().
-## create_timer(...).timeout` can resume AFTER this node has left the tree
-## (a world/combat swap or GAME_RESET freeing MessageLayer mid-toast) --
-## `get_tree()` returns null once outside the tree, so a naive resume
-## crashes with "Invalid access to property or key 'process_frame'/
-## 'create_timer' on a base object of type 'null instance'" (hit once, not
-## reproducible). Fix: capture the tree ref BEFORE each await (never call
-## `get_tree()` again after resuming without re-checking), and after EVERY
-## await bail early if `not is_inside_tree()` -- before touching
-## `get_tree()` again or doing any further UI access
-## (`ObservableBus.emit_domain_event`, `panel.hide()`). Guards only: the
-## live (still-in-tree) path's timing/behavior is unchanged.
-## `interruptible` (issue #62 Lane U item 6): when true, the hold-wait below
-## polls per-frame instead of a single `create_timer` await, so
-## `dismiss_current_toast_early()` can cut it short mid-hold -- ONLY the
-## toast queue passes this (`_drain_toasts`); the dialogue bark keeps the
-## plain single-timer wait, unaffected. Frame-polling still respects
-## `_hold_seconds`' QA collapse (that collapse happens BEFORE this branch,
-## on `hold` itself), so a headless/windowed-QA run is already down to 1-2
-## frames of poll either way -- this adds no new QA-timing dependency.
 func _show(panel: Control, label: Label, text: String, seconds: float, rendered_event: String, display_text: String = "", collapse_under_qa: bool = false, interruptible: bool = false) -> void:
-	# Only the toast panel grows -- feed/dialogue/readout already have their
-	# own fixed-panel wrapped-line budgets, so this is scoped to
-	# `panel == _toast_panel` only.
 	if panel == _toast_panel:
 		_resize_toast_panel(text)
 	label.text = display_text if display_text != "" else text
@@ -722,11 +369,6 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 	await tree.process_frame
 	if not is_inside_tree():
 		return
-	# Issue #87 (toast rhythm): fold any gold-router toast that arrived in the
-	# SAME synchronous beat as this one -- toast-panel only (`panel ==
-	# _toast_panel`; the dialogue bark never earns gold, so it never folds).
-	# See `_fold_gold_toast`'s own doc comment for why this exact point (right
-	# after the first frame-boundary await) is the correct, race-free check.
 	if panel == _toast_panel:
 		var folded := _fold_gold_toast(text)
 		if folded != text:
@@ -735,10 +377,6 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 			_resize_toast_panel(text)
 	ObservableBus.emit_domain_event(rendered_event, {"text": text})
 	var hold := _hold_seconds(seconds) if collapse_under_qa else seconds
-	# Issue #87 (toast rhythm): while more toasts are still queued behind this
-	# one (post-fold -- a folded gold toast is no longer "still queued"), cap
-	# the hold so the pile drains without a full read-hold on every toast but
-	# the last. See TOAST_QUEUE_HOLD_CAP_SECONDS' own doc comment.
 	if panel == _toast_panel and not _toast_queue.is_empty():
 		hold = minf(hold, TOAST_QUEUE_HOLD_CAP_SECONDS)
 	if hold > 0.0:
@@ -763,9 +401,6 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 	panel.hide()
 
 
-## Wrapped-line count for `text` at `width` using `label`'s resolved theme
-## font/size -- the same TextServer word-wrap layout Label uses under the
-## hood (`Font.get_multiline_string_size`), not a guessed character count.
 func _wrapped_line_count(label: Label, text: String, width: float) -> int:
 	if text == "":
 		return 0
@@ -778,14 +413,6 @@ func _wrapped_line_count(label: Label, text: String, width: float) -> int:
 	return max(int(round(size.y / line_height)), 1)
 
 
-## How many wrapped lines `label` actually fits at `height`, from real font
-## metrics (never a hardcoded guess -- font/theme changes stay self-correcting).
-## Uses the FULL line pitch (font height + the theme's `line_spacing`
-## constant) -- `Font.get_multiline_string_size` (used by
-## `_wrapped_line_count`) reports pure font-height*lines with no spacing, but
-## the real rendered Label adds `line_spacing` between every line (see
-## combat_screen.gd's `_line_capacity`, same fix, for the measured regression
-## that motivated this).
 func _line_capacity(label: Label, height: float) -> int:
 	var font := label.get_theme_font("font")
 	var font_size := label.get_theme_font_size("font_size")
@@ -797,23 +424,12 @@ func _line_capacity(label: Label, height: float) -> int:
 	return max(int((height + line_spacing) / pitch), 1)
 
 
-## The real-seconds hold for `display_text` (the ALREADY-FITTED, at-most-
-## DIALOGUE_LINE_CAPACITY-lines string `_fit_dialogue_line` returns) --
-## DIALOGUE_SECONDS for a 1-line bark, longer per extra wrapped line so a
-## bark filling the panel's full 2-line ceiling holds long enough to read.
-## CONSTRAINT: call with the FITTED text, not the raw one, so the hold
-## always matches what's actually on screen -- a bark that would have
-## wrapped to 4 lines but got ellipsis-truncated to 2 by
-## `_fit_dialogue_line` earns the 2-line hold, not a 4-line one.
 func _dialogue_hold_seconds(display_text: String) -> float:
 	var lines := _wrapped_line_count(_dialogue_label, display_text, DIALOGUE_TEXT_WIDTH)
 	var extra_lines := maxi(lines - 1, 0)
 	return DIALOGUE_SECONDS + float(extra_lines) * DIALOGUE_SECONDS_PER_EXTRA_LINE
 
 
-## Cuts whole words (design rule: cut words, never widen the UI) and
-## appends an ellipsis until `text` fits the dialogue panel's real wrapped-
-## line capacity. Returns `text` unchanged if it already fits.
 func _fit_dialogue_line(text: String) -> String:
 	var capacity := _line_capacity(_dialogue_label, _dialogue_text_height)
 	if _wrapped_line_count(_dialogue_label, text, DIALOGUE_TEXT_WIDTH) <= capacity:

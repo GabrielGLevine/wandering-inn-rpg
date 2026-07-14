@@ -1,74 +1,21 @@
 extends SceneTree
-## Fixture coherence validator (issue #48, playtest directive item 9): a
-## playtest state must be a story position a real playthrough could
-## actually reach -- not merely internally consistent enough to boot. Loads
-## every playtest-facing fixture through the REAL WISave.apply() path (never
-## hand-reads the JSON) so it sees exactly what a title-screen Continue load
-## sees, then asserts STORY-POSITION invariants over the resulting WIGame.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_fixture_coherence.gd
-##
-## SCOPING NOTE (read before extending): two tiers of rigor.
-##   GATE_FIXTURES (the door-chain septet + near_garden + near_riverfarm +
-##   garden_unlocked -- the fixtures with ledger-derived positions) get the
-##   FULL invariant set: exact documented gold floors, the act-III
-##   equipment-tier check, and (where the fixture's own canonical resolves a
-##   fight) the tuning-band check. Every OTHER checked fixture gets the
-##   GENERAL invariants only (identity, monotone chains, tutorial cleanup,
-##   position plausibility, rng_state non-degeneracy, equipped-weapon-in-
-##   inventory). Extending full rigor repo-wide is real future work -- see
-##   docs/design/fixture-position-ledger.md's own closing note for the known
-##   gold-floor gaps deliberately left open pending their own re-verification
-##   passes.
 
 const FIXTURES_DIR := "res://qa/fixtures"
 
-## Mirrors src/ui/title_screen.gd's exclusion list (that script cannot be
-## preloaded here -- it pulls the whole autoload graph in via bare global
-## identifiers like WIEvents/WIDataRegistry, unresolvable under --script
-## mode per CLAUDE.md's own documented gotcha). KEEP IN SYNC with
-## title_screen.gd's own doc comment on PLAYTEST_FIXTURE_ORDER the same way
-## qa/ci_sweep.sh's CANON array tracks qa/manifest.json.
 const SKIP := {
 	"v1_format": "pre-v2 save format, deliberately REJECTED by WISave.apply (test_save.gd's own migration-rejection proof) -- not a loadable story position at all",
 	"v2_format": "pre-v3 migration INPUT (consumed by _migrated(), never applied verbatim) -- not itself a playtest destination",
 	"dp2_fixwave_absolute_start": "a deliberately MID-ANOMALY soft-lock repro (found_spider_silk banked before its posting was ever accepted), explicitly 'NOT registered in qa/manifest.json' per its own _comment -- its incoherence IS its subject",
 }
 
-## The full-rigor set: the door-chain septet + the two Garden-access
-## fixtures, each with a ledger-derived position (docs/design/
-## fixture-position-ledger.md is the authoring source for these).
+# Intentionally narrow: only late-gate fixtures receive rigorous gear/story
+# posture checks; broadening this list changes the validator's contract.
 const GATE_FIXTURES := [
 	"door_chain_talk_start", "door_chain_scout_start", "door_chain_fight_start",
 	"door_awakening_start", "portal_menu_start", "near_garden", "near_riverfarm",
 	"garden_unlocked",
 ]
 
-## Fixtures whose OWN canonical resolves a fight to completion FROM this
-## exact loaded state (not merely "carries combat classes") -- the only
-## ones the combat-readiness invariant's numeric band applies to. Every
-## other checked fixture either never fights, or fights via a documented
-## alternate leg that bypasses combat entirely (see each fixture's own
-## _comment). Value = the EXACT total held class levels of the harness
-## build the fixture's fights were tuned/measured at, enforced in BOTH
-## directions -- an under-leveled PC can lose a tuned-winnable fight, an
-## over-leveled one silently invalidates the measured band the other way:
-##   door_chain_fight_start / door_chain_sequence_break_start /
-##   riverfarm_fight_start / near_invrisil_fight:
-##     `warrior5_mage5` (10 total levels, split-efficiency ~0.78 --
-##     sim_combat_batch.gd's tuned band for rift_vermin_leak/ruin_guardian,
-##     the briar/wolf cells, and (near_invrisil_fight) the
-##     `hired_blades_w10_wilovan` ally-fielded cell). door_chain_sequence_break_start
-##     resolves the SAME two fights (rift_vermin_leak, ruin_guardian) at the
-##     SAME rng_state as door_chain_fight_start, just in the opposite order
-##     relative to the Pisces consult -- same build, same band.
-##   near_invrisil: warrior2 (the alley_footpads gated 0.75-0.98 cell was
-##     measured at "warrior2 SOLO specifically" per combatants.json + the
-##     fixture's own _comment -- the same lock that exempts it from the
-##     post_game-backbone check, now enforced instead of prose-only).
-##   delve_fight_start: `t4_spellsword11_party` (11 total levels) -- the
-##     SAME T4 reference build sim_combat_batch.gd's PARTY_CELLS/DUNGEON_CELLS
-##     tune the vault fight and the trapped_halls_snare skirmish against;
-##     this canonical resolves BOTH from this one state.
 const COMBAT_BAND_FIXTURES := {
 	"door_chain_fight_start": 10,
 	"door_chain_sequence_break_start": 10,
@@ -78,16 +25,6 @@ const COMBAT_BAND_FIXTURES := {
 	"delve_fight_start": 11,
 }
 
-## Region-entry gates, DERIVED from data/skeleton_scene.json's own
-## door_when/on_enter_accomplishment records and data/portals.json's
-## requires_accomplishment column (grepped by hand at authoring time --
-## see docs/design/fixture-position-ledger.md for the derivation trace).
-## A fixture standing on map M must hold EVERY accomplishment listed here
-## for M (empty/absent = no gate, e.g. inn/floodplains/inn_upstairs, which
-## are either the two start maps or gated by nothing but reaching their own
-## already-checked neighbor). The portal-gated regions additionally require
-## `door_awakened` (the portal MENU's own gate, prerequisite to reaching any
-## anchor destination at all) alongside their region-specific `_attuned` flag.
 const MAP_REQUIRES := {
 	"street": ["reached_liscor"],
 	"guild": ["reached_liscor"],
@@ -104,47 +41,17 @@ const MAP_REQUIRES := {
 	"invrisil_boulevard": ["door_awakened", "invrisil_attuned"],
 	"mercantile_alleys": ["door_awakened", "invrisil_attuned"],
 	"brothers_parlor": ["door_awakened", "invrisil_attuned"],
-	# 8e Phase B/C (issue #16): pallass_market is the `pallass` portal row's
-	# own destination (data/portals.json), gated door_awakened +
-	# pallass_attuned like every other anchor-stone region above --
-	# MISSING here until the debt sweep's Drake-line coverage fixture
-	# (near_pallass_drake) put a fixture ON this map for the first time
-	# (near_pallass itself starts at the guild, before the chain, so this
-	# gap was never exercised). pallass_forge sits one further gate past
-	# it -- the Grand Lift (`grand_lift_market`/`grand_lift_forge`,
-	# door_when on `elevator_pass_stamped`, produced only at the market
-	# tier's own Permit Office) -- so it carries the market tier's own two
-	# reqs PLUS the stamp.
 	"pallass_market": ["door_awakened", "pallass_attuned"],
 	"pallass_forge": ["door_awakened", "pallass_attuned", "elevator_pass_stamped"],
 }
 
-## Any of these present ⇒ the tutorial (spar -> sleep -> class_gained ->
-## gift) has definitely already happened, per the real onboarding sequence
-## (relc_tutorial/tutorial_flow's own shipped order: given_spear_by_relc
-## fires only AFTER the class-granting sleep). classes == {} at that point
-## is exactly the "Riverfarm with zero classes" bug class the user's
-## directive named.
 const POST_TUTORIAL_FLAGS := ["given_spear_by_relc", "reached_liscor", "post_game", "door_chain_started"]
 
-## The full Act-II/III backbone `post_game` structurally implies (it is the
-## Act III beat's own `seal_holds` condition, data/acts.json) -- every one of
-## these must already be banked wherever `post_game` is. Documented in full
-## in docs/design/fixture-position-ledger.md's "post_game backbone" section.
 const POST_GAME_BACKBONE := [
 	"reached_liscor", "reached_two_classes", "met_relc", "sparred_with_relc", "given_spear_by_relc",
 	"watch_runner_pointed", "heard_the_deep_tremor", "heard_olesm_briefing", "cleared_the_warren", "raskghar_sealed",
 ]
 
-## near_invrisil's own _comment LOCKS `classes: {warrior: 2}` to the
-## alley_footpads roster's gated 0.75-0.98 win-rate baseline, "measured at
-## warrior2 SOLO specifically" -- enriching it to the full post_game
-## backbone (reached_two_classes needs a SECOND class) would shift that
-## already-tuned sneak-negative fight's win rate off the measured band.
-## CONSTRAINT: closing this exemption requires a combat-tuning pass
-## (re-measure the alley_footpads band at the enriched build), never a
-## bare fixture-data edit; the COMBAT_BAND_FIXTURES exact-match check below
-## enforces the same lock from the other direction.
 const POST_GAME_BACKBONE_EXEMPT := {
 	"near_invrisil": "classes locked to the alley_footpads combat-tuning baseline; see const's own doc comment",
 }
@@ -182,9 +89,6 @@ func _init() -> void:
 		_check_rng_state(name, data as Dictionary)
 
 	if _errors.is_empty():
-		# CONTRACT: every suite's success line must start with "PASS" — CI's
-		# unit gate greps ^PASS and fails the job without it (bit v0.4.0's
-		# first tag: 50/50 green here, job red there).
 		print("PASS: fixture coherence — %d/%d fixtures are reachable story positions" % [_checked, _checked])
 	else:
 		print("test_fixture_coherence: %d failures across %d fixtures:" % [_errors.size(), _checked])
@@ -210,10 +114,6 @@ func _load_json(path: String) -> Dictionary:
 	return parsed
 
 
-## Real catalogs (not test_save.gd's minimal stand-ins) so `known_skills()`/
-## `act_summary()`/`_quests_completed_count()` all resolve for real --
-## this validator is asking "is this a real reachable position", which
-## needs the real class/quest/act data, not a hand-built stub.
 func _combat_config() -> Dictionary:
 	return {
 		"combatants": _load_json("res://data/combatants.json"),
@@ -226,11 +126,6 @@ func _combat_config() -> Dictionary:
 	}
 
 
-## Every qa/fixtures/*.json basename minus SKIP, sorted -- this IS "every
-## fixture named in PLAYTEST_FIXTURE_ORDER (+ near_riverfarm and any
-## playtest-facing fixture)" (the title screen's raw-dirlist fallback
-## surfaces every file here regardless of curation, so checking the whole
-## directory minus the documented skip list is equivalent and driftproof).
 func _fixture_names() -> Array[String]:
 	var out: Array[String] = []
 	var dir := DirAccess.open(FIXTURES_DIR)
@@ -245,12 +140,6 @@ func _fixture_names() -> Array[String]:
 	return out
 
 
-## identity: pc_name/pc_race/pc_gender/pc_sprite present + consistent.
-## Always true by construction (WIGame's own tolerant sanitizers + the
-## pc_sprite_variant() derivation can never disagree with pc_race/pc_gender)
-## -- kept as a real regression guard, not a no-op: a future sanitizer bug
-## that let pc_race/pc_gender drift from PC_RACES/PC_GENDERS would show up
-## here as a sprite key that doesn't match "pc_<race>_<gender>".
 func _check_identity(name: String, game: WIGame) -> void:
 	if game.pc_name.strip_edges() == "":
 		_fail(name, "pc_name is blank")
@@ -263,18 +152,6 @@ func _check_identity(name: String, game: WIGame) -> void:
 		_fail(name, "pc_sprite_variant() %s does not match race/gender %s" % [game.pc_sprite_variant(), expect_sprite])
 
 
-## any post-tutorial accomplishment ⇒ classes non-empty AND the tutorial's
-## own map entities are in the state a real playthrough leaves them in.
-## `relc_spar` is `persistent: true` (wi_game.gd's remove_entity is never
-## called on it by design -- Relc's spar re-offers forever) -- so the ONLY
-## correct state for it, at ANY story position, is "not in removed_entities".
-## (Issue #62 finding 8: `goblin_encounter_1` used to share this same
-## never-removed shape via `respawns: true`; it is now a one-shot like any
-## other ambush and CAN legitimately appear in removed_entities post-victory,
-## so it dropped out of this check.) This also catches the
-## user's literal "Riverfarm with zero classes" example: door_awakening/
-## portal_menu/near_riverfarm's ORIGINAL fixtures carried post_game/
-## door_chain_started with classes == {} and no tutorial banked at all.
 func _check_post_tutorial(name: String, game: WIGame, data: Dictionary) -> void:
 	var accs: Dictionary = game.accomplishments
 	var past_tutorial := false
@@ -294,13 +171,6 @@ func _check_post_tutorial(name: String, game: WIGame, data: Dictionary) -> void:
 		_fail(name, "post-tutorial accomplishment present but met_relc absent -- the tutorial that grants classes cannot have run without it")
 
 
-## Monotone chains: a downstream flag can never be banked without its
-## upstream producers already banked (door_that_goes_elsewhere's own
-## quest-beat structure, data/quests.json's own _comment) -- and any
-## region's `_attuned` flag implies the portal network was already
-## awakened (`door_awakened`, the shared beat-4 flag every anchor gates
-## behind, per data/portals.json's own top _comment). garden_door_unlocked
-## implies its exact K-of-4 earn gate (`_garden_earn_met`, wi_game.gd).
 func _check_monotone_chains(name: String, game: WIGame) -> void:
 	var accs: Dictionary = game.accomplishments
 	if int(accs.get("door_awakened", 0)) >= 1:
@@ -312,25 +182,13 @@ func _check_monotone_chains(name: String, game: WIGame) -> void:
 	for acc_id: String in accs:
 		if acc_id.ends_with("_attuned") and int(accs[acc_id]) >= 1 and int(accs.get("door_awakened", 0)) < 1:
 			_fail(name, "%s banked without door_awakened -- no anchor destination is reachable before the portal network wakes" % acc_id)
-	# invrisil_attuned banks ONLY from Eloise's stone purchase
-	# (riverfarm_witch.json's blight_lifted-gated 'shop' node), which grants
-	# invrisil_attunement_stone on the same option -- the stone is unsellable
-	# and has no removal path, so both travel with the flag forever.
 	if int(accs.get("invrisil_attuned", 0)) >= 1:
 		if int(accs.get("blight_lifted", 0)) < 1:
 			_fail(name, "invrisil_attuned banked without blight_lifted -- Eloise's stone (the only producer) sells from a shop node gated on it")
 		if not game.inventory.has("invrisil_attunement_stone"):
 			_fail(name, "invrisil_attuned banked without invrisil_attunement_stone in inventory -- the purchase grants both on one option and the stone is never removable")
-	# blight_lifted's three producers (the mediation dialogue, the true
-	# knot, the deep briar fight) all live on witch_hollow, reachable only
-	# through riverfarm_village's portal gate -- the flag implies the
-	# region's attunement.
 	if int(accs.get("blight_lifted", 0)) >= 1 and int(accs.get("riverfarm_attuned", 0)) < 1:
 		_fail(name, "blight_lifted banked without riverfarm_attuned -- every producer lives on the riverfarm-gated witch_hollow map")
-	# 'What the Seal Kept' chain head (8d): the report requires the find,
-	# the find requires the downed construct. Below vault_construct_downed
-	# the chain forks (halls_cleared has three route-dependent producers),
-	# so a full linear arm would over-constrain -- head only.
 	if int(accs.get("seal_kept_reported", 0)) >= 1 and int(accs.get("seal_kept_found", 0)) < 1:
 		_fail(name, "seal_kept_reported banked without seal_kept_found -- Olesm's report option is gated on the find beat")
 	if int(accs.get("seal_kept_found", 0)) >= 1 and int(accs.get("vault_construct_downed", 0)) < 1:
@@ -355,8 +213,6 @@ func _check_monotone_chains(name: String, game: WIGame) -> void:
 			_fail(name, "post_game banked with fewer than 3 completed quests")
 
 
-## position plausibility: current_map's implied position ⇒ the
-## accomplishments that gate reaching it (MAP_REQUIRES, derived from data).
 func _check_position_plausibility(name: String, game: WIGame) -> void:
 	var reqs: Array = MAP_REQUIRES.get(game.current_map, [])
 	for req: String in reqs:
@@ -364,16 +220,6 @@ func _check_position_plausibility(name: String, game: WIGame) -> void:
 			_fail(name, "standing on '%s' without %s -- that map is unreachable without it" % [game.current_map, req])
 
 
-## economy: gold >= the documented floor for the position tier. SCOPED TO
-## GATE_FIXTURES ONLY (see the file header's two-tier note): the general
-## rule ("a position past Act II with gold==0 is incoherent") also holds
-## for near_act3/climax_surface_start/climax_sealed_start/
-## deep_descent_start/near_ruin (all gold==0 at an Act-III-or-later
-## position), but each of those is the fixture for a LONG whole-arc
-## canonical (arc_flow/climax_chain/climax_seal/deep_descent) whose gold
-## change needs its own dedicated re-verification pass -- see the ledger's
-## "known gaps" section. Until that pass lands, only GATE_FIXTURES carry
-## the ledger's exact derived floors (docs/design/fixture-position-ledger.md).
 func _check_economy(name: String, game: WIGame) -> void:
 	if not GATE_FIXTURES.has(name):
 		return
@@ -385,12 +231,6 @@ func _check_economy(name: String, game: WIGame) -> void:
 		_fail(name, "gold %d below documented floor %d for this position tier" % [game.gold, floor_g])
 
 
-## The ledger's exact per-fixture floors (docs/design/fixture-position-ledger.md):
-## 40g honest Act III/post_game income pre-catalyst-spend (Tier A -- must
-## clear Krshia's 35g resonant_catalyst with headroom); 5g after that
-## mandatory purchase (Tier B). near_garden/garden_unlocked reach Act III
-## via a cheaper leg set (no warren bounty, no door-chain spend) -- their
-## floor is 15g per the ledger's Tier-3 math.
 func _gate_gold_floor(name: String, game: WIGame) -> int:
 	if name == "near_garden" or name == "garden_unlocked":
 		return 15
@@ -399,8 +239,6 @@ func _gate_gold_floor(name: String, game: WIGame) -> int:
 	return 40
 
 
-## combat readiness: only the fixtures COMBAT_BAND_FIXTURES names (see that
-## const's own doc comment for the exact-match, both-directions rationale).
 func _check_combat_band(name: String, game: WIGame) -> void:
 	if not COMBAT_BAND_FIXTURES.has(name):
 		return
@@ -412,10 +250,6 @@ func _check_combat_band(name: String, game: WIGame) -> void:
 		_fail(name, "total class levels %d != the %d-level tuned build its own canonical's fights were measured at (band invalid in either direction)" % [total, need])
 
 
-## equipment: equipped weapon (if any) must exist in inventory (the
-## `equip()` invariant every load-bearing save already maintains); act-III+
-## GATE_FIXTURES carry better than rusty_sword (documented per-fixture in
-## the ledger) unless the position's story says otherwise.
 func _check_equipment(name: String, game: WIGame) -> void:
 	var weapon := String(game.equipped.get("weapon", ""))
 	if weapon != "" and not game.inventory.has(weapon):
@@ -424,19 +258,10 @@ func _check_equipment(name: String, game: WIGame) -> void:
 		_fail(name, "act-III+ gate fixture still carries the starter rusty_sword -- upgrade or document the story reason (ledger)")
 
 
-## rng_state: string form (guaranteed by JSON's own dict shape --
-## WISave.apply already rejected anything else above) and non-degenerate.
-## TRAP: WISave restores `.state` directly, never `.seed` -- a properly
-## derived `.state` (RandomNumberGenerator.seed = N, then read `.state`,
-## tests/_derive_rng_state.gd) is a full-range signed 64-bit value, while a
-## hand-typed small int (the literal seed number, or "12345") collapses the
-## first randi() draw to the same degenerate output regardless of which
-## small int was picked. This threshold is comfortably below every real
-## derived state in the repo (smallest magnitude seen: ~2.9e16) and
-## comfortably above any plausible hand-typed seed literal.
 const RNG_STATE_MIN_MAGNITUDE := 1_000_000
 
-
+# RNG.state is internal generator state, not a seed. Small literals are a
+# hand-authored-fixture trap; derive them with _derive_rng_state.gd.
 func _check_rng_state(name: String, data: Dictionary) -> void:
 	var raw := String((data.get("state", {}) as Dictionary).get("rng_state", ""))
 	if not raw.is_valid_int():

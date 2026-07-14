@@ -1,5 +1,4 @@
 {
- "_comment": "The forge-PERMIT clerk at the Permit Office window beside the Grand Lift, pallass_market (entity forge_permit_clerk) -- 'forge-tier clerk' names the CLEARANCE, not the seat. forge_tier_permit's file (5g) and stamp (3g) beats; the stamp banks elevator_pass_stamped, THE producer the lift's door_when waits on. TRAP: the office ruling exists because the exam/stamp must live PRE-lift -- never relocate this clerk or the examiner behind the gate they unlock.",
  "start": "hub",
  "nodes": {
   "hub": {
@@ -7,7 +6,6 @@
    "text": "State your business and your sponsor, or stand aside for the next in line.",
    "options": [
     {
-     "_comment": "Quest-start (forge_tier_permit) -- HIDDEN until pallass_entry_stamped (Papers for Pallass Stage 3, real arrival in Pallass) so this chain can't even be asked about before the player has actually stepped through. forge_tier_permit_asked is a non-beat signpost (heard_about_cisterns precedent) -- beat 1's own producer is permit_intro's 'File it.' option below, kept separate per the quest-start-is-never-a-beat convention.",
      "text": "I need clearance for the forge tier.",
      "requires": {
       "accomplishment": {
@@ -30,7 +28,6 @@
      "goto": "permit_intro"
     },
     {
-     "_comment": "Standing recap while waiting on Grimalkin's own beat (issue #74 precedent) -- non-banking, goto only.",
      "text": "Any word from the exam floor?",
      "requires": {
       "accomplishment": {
@@ -45,7 +42,6 @@
      "goto": "permit_status"
     },
     {
-     "_comment": "Beat 3 entry, gated on Grimalkin's own examiner beat (grimalkin_examination_passed, data/dialogue/pallass_grimalkin.json).",
      "text": "The exam's done. About that stamp.",
      "requires": {
       "accomplishment": {
@@ -60,7 +56,6 @@
      "goto": "collect_stamp"
     },
     {
-     "_comment": "Issue #92 R5: the forge tier's own commission stock -- gated on pallass_entry_stamped (the SAME accomplishment the hub's very first option above requires), NOT ungated: qa/scripts/pallass_peek.json's zero-progress boot relies on EVERY quest-chain option being accomplishment-hidden so 'Not now.' is the hub's single visible row (confirm-row-0 = exit) -- an ungated gold-only option would show up as a SECOND visible row there and break that contract. Posted price, no exceptions -- NO haggle:true flag anywhere in this file, the SAME civic no-discount register permit_intro's own line states outright. A next_fight-shaped buff (WIItems.resolve_use's field-only shape), a genuine repeatable sink now that use_item makes a bought consumable actually consumed (R1).",
      "text": "A vial of tempering oil, if you're headed to the floor. (12 gold)",
      "requires": {
       "gold": 12,
@@ -99,7 +94,6 @@
    "text": "Five gold, filed same-day, no exceptions and no discounts -- that's the posted price. Grimalkin reads your fitness after, at the exam floor on the far end of this office; I only handle paper.",
    "options": [
     {
-     "_comment": "Beat 1 real completion -- banks forge_permit_filed. Plain gold gate, posted-prices register (no haggling, docs/design/city-identity-bible.md).",
      "text": "File it. (5 gold)",
      "requires": {
       "gold": 5
@@ -145,7 +139,6 @@
    "text": "Grimalkin's mark is on the file. Three gold for the stamp itself -- posted price, same as the filing.",
    "options": [
     {
-     "_comment": "Beat 3 real completion -- banks elevator_pass_stamped, THE producer B's elevator door pair's door_when gate waits on (controller ruling 1).",
      "text": "Collect the stamped pass. (3 gold)",
      "requires": {
       "gold": 3

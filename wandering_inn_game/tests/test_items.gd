@@ -1,36 +1,14 @@
 extends SceneTree
-## Validates data/items.json (items data + events + validation).
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_items.gd
 
 const VALID_KINDS: Dictionary = {
 	"weapon": true,
 	"armor": true,
 	"accessory": true,
 	"tool": true,
-	# A Runner's Guild delivery parcel -- inert carried flavor
-	# (no price, no combat fields, resonance 0). Not equippable: WIGame.equip
-	# only accepts weapon/armor/accessory, and inventory.gd's confirm shows
-	# its neutral "isn't something you can equip" toast for this kind exactly
-	# as for tools. Granted by accept_delivery, removed by remove_item on the
-	# arrival handoff or a sleep-fail return.
 	"parcel": true,
-	# The dish-fetch seam (issue #59): hot_meal, granted by
-	# stew_pot's basic_cooking use (WIGame.use_skill's new `item` grant on
-	# on_skill_use) and consumed by the hungry patron's Serve dialogue
-	# option (the new `remove_item` effect arm). Same inert-carried shape as
-	# parcel: no price (items.json's own _comment on hot_meal explains the
-	# structural-non-sellability call), no combat fields, and no weapon/
-	# armor/accessory kind means WIGame.equip() structurally refuses it with
-	# zero new code.
 	"meal": true,
 }
 
-## Tier is now tied to resonance, not a mundane-only schema
-## hook -- an item with resonance >= 1 is "enchanted" (the card's rarity
-## vocabulary), everything else stays "mundane". Retiring the hard-pinned
-## "mundane always" check from M7 in favor of this rule (G1/G2 call, per
-## the staging doc's §D open question -- resonance stays the single source
-## of truth for the arithmetic; tier is just its display bucket).
 const VALID_TIERS: Dictionary = {
 	"mundane": true,
 	"enchanted": true,
@@ -39,18 +17,12 @@ const VALID_TIERS: Dictionary = {
 const VALID_WEAPON_FAMILIES: Dictionary = {
 	"sword": true,
 	"spear": true,
-	# GH#70 [Archer]: the ranged weapon family (training_bow/hunting_bow).
 	"bow": true,
 	"none": true,
 }
 
 const NUMERIC_FIELDS: Array[String] = ["damage_mod", "hp_mod", "damage_reduction"]
 
-## Issue #92 R1: the ONLY use_effect shapes WIItems.resolve_use recognizes --
-## see that file's own doc comment. An item carrying any other key here would
-## silently no-op forever (resolve_use returns {"ok": false} for anything
-## unrecognized), so this validator catches the typo/drift at data-review
-## time instead of at "why doesn't this potion do anything" playtest time.
 const VALID_USE_EFFECT_KEYS: Dictionary = {
 	"heal": true,
 	"next_fight": true,
@@ -79,10 +51,6 @@ func _init() -> void:
 	if not items_config["items"] is Array:
 		_fail("items.json items must be an array")
 
-	# Issue #92 R3: loaded UP FRONT (not after the items loop, as the
-	# weapon-tag cross-reference below still does) so the abilities
-	# validator can check every ability id against real skills.json entries
-	# in the SAME pass as everything else.
 	var skills_config_early: Dictionary = _load("res://data/skills.json")
 	if not skills_config_early.has("skills"):
 		_fail("skills.json missing skills")
@@ -111,9 +79,6 @@ func _init() -> void:
 		if not VALID_WEAPON_FAMILIES.has(weapon_family):
 			_fail("unknown weapon_family: %s for %s" % [weapon_family, id])
 
-		# weapons must carry a real family (never "none"); every other kind
-		# (armor/accessory/tool) is always "none" -- same rule for all
-		# non-weapon kinds.
 		if kind == "weapon" and weapon_family == "none":
 			_fail("weapon %s must have a real weapon_family, not none" % id)
 		if kind != "weapon" and weapon_family != "none":
@@ -122,11 +87,6 @@ func _init() -> void:
 		if weapon_family != "none":
 			weapon_families_present[weapon_family] = true
 
-		# Issue #92 R1: use_effect (a consumable's payload) and an equippable
-		# kind are mutually exclusive -- "Equipped items are never
-		# consumable" (the pinned design's own validator arm). An item with
-		# no use_effect field at all (every pre-#92 item) is untouched by
-		# this block.
 		if entry.has("use_effect"):
 			if not entry["use_effect"] is Dictionary:
 				_fail("item %s use_effect must be a Dictionary" % id)
@@ -156,13 +116,6 @@ func _init() -> void:
 
 		if not entry["abilities"] is Array:
 			_fail("item %s abilities must be an array" % id)
-		# Issue #92 R3: abilities is no longer an inert-always-empty schema
-		# hook -- a non-empty grant is legal ONLY on an accessory (the
-		# combat-only relic-grant shape WICombatBuild.fold_abilities folds at
-		# start_combat), and every listed id must be a real skills.json entry
-		# (typo/drift tripwire -- an unknown id would silently no-op forever
-		# inside fold_abilities' plain string-append, never erroring at
-		# runtime).
 		if not (entry["abilities"] as Array).is_empty():
 			if kind != "accessory":
 				_fail("item %s abilities non-empty but kind is %s (abilities are accessory-only, issue #92 R3): got %s" % [id, kind, JSON.stringify(entry["abilities"])])
@@ -178,9 +131,6 @@ func _init() -> void:
 		if String(entry["lore"]).is_empty():
 			_fail("item %s has empty lore" % id)
 
-		# Resonance is the single source of truth for the
-		# capacity arithmetic (WIGame._equipped_resonance_total sums it across
-		# all 5 equipped slots); tier above is only its display bucket.
 		var resonance_value: Variant = entry["resonance"]
 		if typeof(resonance_value) != TYPE_INT and typeof(resonance_value) != TYPE_FLOAT:
 			_fail("item %s resonance must be numeric" % id)
@@ -195,12 +145,6 @@ func _init() -> void:
 		if not expect_enchanted and tier != "mundane":
 			_fail("item %s has resonance 0 but tier %s (resonance 0 must be tier mundane)" % [id, tier])
 
-	# Cross-reference: every weapon tag actually used by a skill (skills.json's
-	# "weapon" field seam -- see wi_combat.gd's sword_skill_used/
-	# spear_skill_used doc comment) must have at least one items.json entry of
-	# that weapon_family, or an equipped weapon could never field that skill.
-	# Reuses the SAME skills_config_early load from up top (issue #92 R3) --
-	# no need to re-read the file a second time.
 	var skills_config: Dictionary = skills_config_early
 
 	var weapon_tags_used: Dictionary = {}
@@ -209,9 +153,6 @@ func _init() -> void:
 		if skill.has("weapon"):
 			var tag: String = String(skill["weapon"])
 			weapon_tags_used[tag] = true
-			# Escalation check (plan self-review risk (a)): a spell (mp_cost
-			# skill) carrying a weapon tag would break mage kit-intersection
-			# in E2 -- spells must be untagged/always-fieldable.
 			if skill.has("mp_cost"):
 				spells_with_weapon_tag.append(String(skill.get("id", "?")))
 

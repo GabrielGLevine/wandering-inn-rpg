@@ -61,7 +61,7 @@
      4
     ]
    ],
-   "_comment_dressing": "Same passthrough contract as skeleton_scene.json maps -- combat_screen.gd renders these, WICombat never reads them (arena_config.duplicate(true) just carries the extra keys inertly). Decor cells are deliberately OUTSIDE the 12x8 playable grid (x<0 or x>=12) so dressing never competes with tactical readability, per design doc sec.4's binding rule.",
+   "_comment_dressing": "Decor cells are deliberately OUTSIDE the 12x8 playable grid (x<0 or x>=12) so dressing never competes with tactical readability, per design doc sec.4's binding rule.",
    "floor_layers": [
     {
      "_pick": "cobble variation reusing the street biome's verified floor-tile neighborhood.",
@@ -187,7 +187,7 @@
      ]
     }
    ],
-   "_comment_dressing_frame": "The on-grid blocked cells already render crate/barrel via BLOCKED_PROPS_BY_BIOME (board_renderer.gd); this adds an OFF-GRID tree/bush frame. CONSTRAINT: all positions x<0 or x>=12/y<0 so nothing competes with tactical readability -- the same binding rule the existing crate/barrel entries respect. Mirrors witch_hollow's own precedent shape (8 relative cell positions: 4 big canopy-equivalent trees at the left/right corners, 2 smaller trees along the top edge, 2 bushes at the left/right mid-edges). Sprite ids (tree_big/tree_round/bush_green) are the SAME ones the floodplains FIELD map uses as decor -- field-to-arena continuity, so the ambush clearing reads as the same grassy floodplains the player was just walking, framed rather than floating in a void."
+   "_comment_dressing_frame": "Mirrors witch_hollow's own precedent shape (8 relative cell positions: 4 big canopy-equivalent trees at the left/right corners, 2 smaller trees along the top edge, 2 bushes at the left/right mid-edges)."
   },
   {
    "id": "cave_mouth",
@@ -391,7 +391,7 @@
      4
     ]
    ],
-   "_comment_dressing": "Roadside practice ground: open grass, dressing outside the 12x8 grid per the standing rule. Enemy spawns are Chebyshev 5 from the player spawn ON PURPOSE: 3 free steps exhaust the pool short of contact (beat 3), Dash covers the rest with AP to spare for one attack -- the full teaching arc fits in turn 1.",
+   "_comment_dressing": "Enemy spawns are Chebyshev 5 from the player spawn ON PURPOSE: 3 free steps exhaust the pool short of contact (beat 3), Dash covers the rest with AP to spare for one attack -- the full teaching arc fits in turn 1.",
    "floor_layers": [
     {
      "_pick": "trampled practice-ground patch, whole-image tile",
@@ -520,6 +520,7 @@
    ]
   },
   {
+   "_comment": "Tutorial clone only: shared goblin_ambush stays beat-free. road_clear is one tutor entry because matching fires ready[0] once per event. Classless fallback requires met_relc; solo fallback equals help_content Classes & Levels verbatim.",
    "id": "goblin_ambush_tutorial",
    "biome": "street",
    "grid": {
@@ -580,7 +581,7 @@
      4
     ]
    ],
-   "_comment_dressing": "Same passthrough contract as skeleton_scene.json maps -- combat_screen.gd renders these, WICombat never reads them (arena_config.duplicate(true) just carries the extra keys inertly). Decor cells are deliberately OUTSIDE the 12x8 playable grid (x<0 or x>=12) so dressing never competes with tactical readability, per design doc sec.4's binding rule.",
+   "_comment_dressing": "Decor cells are deliberately OUTSIDE the 12x8 playable grid (x<0 or x>=12) so dressing never competes with tactical readability, per design doc sec.4's binding rule.",
    "floor_layers": [
     {
      "_pick": "cobble variation reusing the street biome's verified floor-tile neighborhood.",
@@ -706,10 +707,8 @@
      ]
     }
    ],
-   "_comment": "Layout-identical clone of goblin_ambush carrying its own tutor beats (arenas own tutor_lines, and goblin_ambush is shared with goblin_encounter_2, which must stay beat-free). goblin_encounter_1 points here. TRAP: `road_clear`'s `line` carries TWO sentences appended into one entry, not two separate tutor_lines entries -- no shipped QA script pins its exact text (every reference is `payload_contains: {beat: \"road_clear\"}`), but `combat_hud.gd`'s `match_tutor_line` fires at most ONE tutor entry per incoming event (`ready[0]`), so a second entry on the SAME combat_finished/victory trigger could never fire; appending to the existing line is the only way to land a second beat here. The feed panel auto-grows for tutor lines (`_grow_feed_panel_for_tutor`, capped/evicts oldest -- see CLAUDE.md's wrapped-line-budget gotcha) and this fires as the LAST beat of the fight, so evicting older combat-log lines here is harmless.",
    "tutor_lines": [
     {
-     "_comment": "requires_any_class (combat_hud.gd's `_tutor_line_text`): this line's whole point is 'go check your new skill slots', which is only TRUE once a sleep has actually granted a class -- the ambush's proximity trigger is reachable cold-start too (walk straight past Relc to the road, never spar/sleep), where the PC has zero classes and a bare 2-slot Attack/Dash bar with no slot 3 to check. `fallback_line` keeps Relc's same opening (voice-consistent) but points the player at the ACTUAL prerequisite (sleep at the inn) instead of a false past-tense claim. Issue #88 (gap-2): `requires_ally`+`solo_fallback_line` split the fallback a SECOND way -- `ally_requires{met_relc:1}` (this entity's own field, floodplains.json) means a classless player who never talked to Relc reaches this ambush with Relc structurally NOT in the fight (sim_combat_batch.gd's new `classless_solo` cell measures exactly this matchup) -- `fallback_line`'s \"Stay behind me\" is then a false claim about an ally who isn't there. `solo_fallback_line` drops the Relc voice entirely (no ally present to speak) for an unattributed system/journal-voiced line instead -- reuses data/help_content.json's \"Classes & Levels\" body VERBATIM (test_content.gd's `_validate_tutor_line_help_consistency` is the drift tripwire; the two copies must never diverge).",
      "id": "real_ones",
      "on": {
       "event": "combat_started"
@@ -748,14 +747,13 @@
        "victory": true
       }
      },
-     "_comment": "Issue #34 ruling (restore-if-fits): restores the seed copy's middle clause (docs/superpowers/specs/2026-07-07-no-killing-goblins-seed.md, staged line 3) the original trim cut for panel budget -- 'The road's the road. Teeth are teeth out here.' between 'Her inn, her rule.' and 'But under her roof? Don't.', converted to Relc's zero-dash convention (period, not the seed's raw em-dash -- matches every other Relc line's emdash-reduction-pass treatment). Measured against BOTH this line's real render surface (FEED corpus, combat_hud.gd's feed panel, 248px width -- 6 wrapped lines, well under the ~8-line grown-to-max capacity) and the stricter AMBIENT-BARK budget (656px, 2-line ellipsis cap -- also fits at 2 lines) via tests/test_copy_fit.gd's own font-metric method. No canonical QA script pins this line's exact text (every reference is payload_contains:{beat:\"road_clear\"}), so no re-pin needed -- confirmed by repo-wide grep.",
      "line": "Relc: Road's clear. Liscor's through the gate. Tell the Watch that Relc let you pass. See the sign? Her inn, her rule. The road's the road. Teeth are teeth out here. But under her roof? Don't."
     }
    ],
-   "_comment_dressing_frame": "The on-grid blocked cells already render crate/barrel via BLOCKED_PROPS_BY_BIOME (board_renderer.gd); this adds an OFF-GRID tree/bush frame. CONSTRAINT: all positions x<0 or x>=12/y<0 so nothing competes with tactical readability -- the same binding rule the existing crate/barrel entries respect. Mirrors witch_hollow's own precedent shape (8 relative cell positions: 4 big canopy-equivalent trees at the left/right corners, 2 smaller trees along the top edge, 2 bushes at the left/right mid-edges). Sprite ids (tree_big/tree_round/bush_green) are the SAME ones the floodplains FIELD map uses as decor -- field-to-arena continuity, so the ambush clearing reads as the same grassy floodplains the player was just walking, framed rather than floating in a void."
+   "_comment_dressing_frame": "Mirrors witch_hollow's own precedent shape (8 relative cell positions: 4 big canopy-equivalent trees at the left/right corners, 2 smaller trees along the top edge, 2 bushes at the left/right mid-edges)."
   },
   {
-   "_comment": "The Liscor sewers combat arena (12x8 per the M1 arena contract test_combat_data enforces). Cave biome. Interior `blocked` cells are a broken-pillar / rubble scatter acting as tactical cover -- kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability). Both sewers encounters (shield_spiders nest + sewer_vermin) use this arena.",
+   "_comment": "The Liscor sewers combat arena (12x8 per the M1 arena contract test_combat_data enforces).",
    "id": "sewers_nest",
    "biome": "cave",
    "grid": {
@@ -820,7 +818,7 @@
      4
     ]
    ],
-   "_comment_dressing": "Decor sits just outside the 12x8 grid, same standing rule as goblin_ambush/cave_mouth. the (12,4) mushroom swapped boulder -- it sits in the margin directly flanking enemy_spawns (9-10,3-4), and mushroom_purple_s's inherently high-saturation purple (baked into the cave Props.png crop, not a tint -- board_renderer.gd's _make_decor_visual applies no tint/self_modulate to arena decor, unlike the boosted combatant path) out-competed the bat/rat enemies standing right beside it. boulder (already used at (-2,5)/(12,1) in this same list) is a muted grey rock with no such competing hue. The (-1,3) mushroom_purple_m stays -- it flanks player_spawns (1-2,3-4), not the enemies, so it isn't part of this complaint.",
+   "_comment_dressing": "boulder (already used at (-2,5)/(12,1) in this same list) is a muted grey rock with no such competing hue.",
    "floor_layers": [
     {
      "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood (same picks as cave_mouth).",
@@ -873,7 +871,7 @@
    ]
   },
   {
-   "_comment": "The deep warren -- the Awakened Raskghar's boss arena (12x8 per the M1 arena contract test_combat_data enforces; cave biome, darkest pin lives in data/moods.json arena_moods.deep_warren). Interior `blocked` cells are twin broken pillars (x3/x8) + a central rubble block (x6) that make the fight about POSITIONING: they break the boss's range-2 maul line-of-sight and give the player + Relc lanes to corner the kiting boss against, rather than an open trade. All six blocked cells are kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). Balance band is gated in sim_combat_batch.gd's BOSS_CELLS.",
+   "_comment": "The deep warren -- the Awakened Raskghar's boss arena (12x8 per the M1 arena contract test_combat_data enforces; cave biome, darkest pin lives in data/moods.json arena_moods.deep_warren).",
    "id": "deep_warren",
    "biome": "cave",
    "grid": {
@@ -1002,7 +1000,7 @@
    ]
   },
   {
-   "_comment": "The inn's cellar -- `rift_vermin_leak`'s arena (this arena id is not part of the door-chain's locked interface; only the encounter id/on_victory accomplishments and the `ruin_court` arena id below are locked). `inn` biome (12x8 per the M1 arena contract test_combat_data enforces). Interior `blocked` cells are stacked crates/barrels cellar clutter, kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). floor_layers reuses the INN map's own already-verified 'kitchen zone: grey cobble swatch' variant picks (data/skeleton_scene.json maps.inn.floor_layers) rather than guessing new coordinates -- a stone-floor read fits a cellar better than the hall planks anyway.",
+   "_comment": "The inn's cellar -- `rift_vermin_leak`'s arena (this arena id is not part of the door-chain's locked interface; only the encounter id/on_victory accomplishments and the `ruin_court` arena id below are locked).",
    "id": "inn_cellar",
    "biome": "inn",
    "grid": {
@@ -1104,7 +1102,7 @@
    ]
   },
   {
-   "_comment": "`ruin_court` -- a LOCKED arena id (door-chain interface contract), `ruin_guardian`'s pedestal-guard arena in `ruin_surface`, guarding `anchor_stone_pedestal`. `cave` biome (12x8 per the M1 arena contract) -- no dedicated 'ruin' biome exists in data/biomes.json, so this reuses the closest existing stone-ruin-plausible biome; a future ruin-biome art pass can retarget this arena's `biome` string alone without touching any balance-relevant field. Interior `blocked` cells are twin broken pillars + a rubble line flanking the pedestal, the same positioning-arena idiom as deep_warren (break the guardian's reach, give the player+Relc lanes to corner it), kept clear of every spawn (test_combat_data asserts reachability). floor_layers reuses the cave biome's already-verified floor-tile neighborhood (same picks as cave_mouth/sewers_nest/deep_warren).",
+   "_comment": "`ruin_court` -- a LOCKED arena id (door-chain interface contract), `ruin_guardian`'s pedestal-guard arena in `ruin_surface`, guarding `anchor_stone_pedestal`.",
    "id": "ruin_court",
    "biome": "cave",
    "grid": {
@@ -1208,7 +1206,7 @@
    ]
   },
   {
-   "_comment": "The witch's hollow -- shared arena for both `briar_collectors` and `briar_collectors_deep` (same clearing, escalated roster on the second wave). Blocked cells are the bent-tree ring (a forest clearing, not a walled room) -- kept off every spawn column/row so the reachability BFS in test_combat_data.gd holds; they render as hollow_bent_tree/bush_green props via board_renderer.gd's BLOCKED_PROPS_BY_BIOME (single-cell-scale picks only -- see hollow_bent_tree's own sprites.json constraint). floor_layers uses ONLY the biome's two already-verified Fairy Forest coords ([2,2] flat underwood + [9,9] textured grass -- data/biomes.json witch_hollow's own picks, no new guesses); decor sits OUTSIDE the 12x8 grid (the goblin_ambush/cave_mouth rule) in the map's own bent-tree register: canopy trees looming on both flanks, small trees behind the top edge. Windowed-verified via riverfarm_fight's 01 screenshot.",
+   "_comment": "Windowed-verified via riverfarm_fight's 01 screenshot.",
    "id": "witch_hollow",
    "biome": "witch_hollow",
    "grid": {
@@ -1353,7 +1351,7 @@
    ]
   },
   {
-   "_comment": "Village edge at night -- `river_wolf_pack`'s arena, reached only through the map's own night-phase encounter gate (unreachable at day by design; the day-negative canonical proof is lane alpha's). biome `riverfarm_village` reuses the village's own staged floor family (docs/archive/design/riverfarm-art/handoff.md) rather than a bespoke night biome -- the dark read comes from atmosphere.gd's phase mood grade, not a different tileset. Sparse blocked cells (an open field, not a forest) -- an ambush wants sightlines, not cover. TRAP for whoever wires moods.json: confirm riverfarm_village's night grade against atmosphere.gd's arena-brightness floor (the cave_mouth precedent) before shipping -- a fight this dark could read as HP-bar-illegible even though nothing here structurally requires an `arena_moods` override. floor_layers/decor empty for the same not-yet-verified-biome reason as witch_hollow. SURROUND FORMATION (issue #56, the flagship ambush conversion): PC spawns center-ish at (6,3) with the `riverfarm_hunter` ally (when fielded) adjacent west at (5,3) -- NOT in the ring. The 3-wolf roster (river_wolf_a/b/c, consumed in that array order) rings the PC at N (6,1), E (9,3), S (7,6) -- deliberately NOT clustered on one side, the whole point of a night pack closing in from multiple directions. `player_spawns`/`enemy_spawns` keep the design-for-4 sizing test_combat_data.gd requires (>=4 player spawns); indices 2-3 of each array are unused fallback cells (no encounter here fields a 3rd/4th player-side or 4th enemy combatant today) placed near the same cluster so they stay trivially reachable. Reachability re-verified: only 2 blocked cells in an open 12x8 field, single connected component, BFS-proven by test_combat_data.gd.",
+   "_comment": "Night arena uses the riverfarm_village mood grade and must remain above the arena-brightness floor so sprites and HP bars stay legible.",
    "id": "village_edge_night",
    "biome": "riverfarm_village",
    "grid": {
@@ -1410,7 +1408,7 @@
    "decor": []
   },
   {
-   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `alley_footpads_a`/`alley_footpads_b`'s SHARED arena (lane alpha's two encounter entities both resolve here, same witch_hollow/briar_collectors shared-arena-for-two-waves convention). `street` biome (the same cobble/cool-grey read the boulevard/alleys share per docs/archive/design/invrisil-art/direction.md -- this lane does not touch biomes.json/the wang tileset; street is the honest in-hand fit). Interior `blocked` cells are the spec's 'stacked crates' alley clutter (sec.1: 'bent routes, stacked crates'), kept clear of every player/enemy spawn (test_combat_data asserts spawn reachability + connectivity). floor_layers reuses goblin_ambush's own already-verified street cobble variant picks -- no new coordinate guessing. SURROUND FORMATION (issue #56): both footpad placements field `allies: []` (never an ally, see skeleton_scene.json's own comment on alley_footpads_a/b), so only `player_spawns[0]` is ever consumed -- placed center-ish at (5,4). The 2-combatant roster (footpad_lookout/footpad_bruiser, array order) pincers N (5,1) and S (5,6) instead of the old single-side line -- a failed [Stealth] jump should read as flanked, not as a corridor fight. Kept at the design-for-4 sizing test_combat_data.gd requires; the unused player_spawns[1-3]/enemy_spawns[2-3] fallback cells sit near the same cluster, clear of every `blocked` cell.",
+   "_comment": "Kept at the design-for-4 sizing test_combat_data.gd requires; the unused player_spawns[1-3]/enemy_spawns[2-3] fallback cells sit near the same cluster, clear of every `blocked` cell.",
    "id": "mercantile_alley",
    "biome": "street",
    "grid": {
@@ -1521,7 +1519,7 @@
    ]
   },
   {
-   "_comment": "Invrisil 8c Task C2 (issues #12/#13) -- `hired_blades`, the LOCKED arena id per the plan interface. The merchant-prince's counting-house warehouse (quest FIGHT path, the human-enemy roster debut per spec sec.3). `inn` biome (the same indoor-wood reuse inn_cellar already established for an interior combat arena -- this lane does not need a bespoke warehouse tileset). Interior `blocked` cells are stacked storage crates/barrels (a working warehouse's own goods, cover for the 3-roster fight, kept clear of every player/enemy spawn -- test_combat_data asserts spawn reachability + connectivity).",
+   "_comment": "The merchant-prince's counting-house warehouse (quest FIGHT path, the human-enemy roster debut per spec sec.3).",
    "id": "merchant_warehouse",
    "biome": "inn",
    "grid": {
@@ -1630,7 +1628,7 @@
    ]
   },
   {
-   "_comment": "8d C3 (issue #14/#82): the vault -- the Guardian Construct's boss arena (12x8 per the M1 arena contract test_combat_data enforces; biome `dungeon`, the SAME Cemetery/Castle/Cave dressing family dungeon_approach/trapped_halls already shipped; old-dark grade lives in data/moods.json arena_moods.vault). player_spawns is >= 4 DELIBERATELY -- the C2 review's SPAWN-CEILING TRAP: WICombat._init indexes `spawns[spawn_i[side]]` with no bounds guard, and the 4-ally Horns party (pc+ceria+yvlon+ksmvr, sim_combat_batch.gd's PARTY_CELLS) consumes exactly 4 player-side spawns -- fewer than 4 here would index-overflow the build. Interior `blocked` cells are a symmetric flanking pillar pair (x5/x7), lighter than deep_warren/ruin_court's own positioning-arena layout (this is a wider chamber, not a warren) -- kept clear of every spawn (test_combat_data asserts spawn reachability + connectivity). DATA-ONLY this lane: no skeleton_scene encounter entity references this arena id yet (the field-side placement ships DORMANT, `vault_boss_slot` in trapped_halls -- see that entity's own _comment); sim_combat_batch.gd's PARTY_CELLS is the only current consumer, GATED to the T4 party win-rate/median-rounds band this lane tuned.",
+   "_comment": "Vault requires at least 4 player spawns. WICombat indexes spawn arrays without a bounds guard; the PC plus three Horns consumes indices 0-3 and fewer entries crashes.",
    "id": "vault",
    "biome": "dungeon",
    "grid": {
@@ -1764,7 +1762,7 @@
    ]
   },
   {
-   "_comment": "8d C1 (issue #14): the FIGHT route's snare skirmish -- promoted `snare_nest_slot` (trapped_halls) fights here, a side chamber off the trap gauntlet (NOT the vault -- distinct arena, distinct enemies, per the one-arena-per-encounter convention every other fight in this repo follows). 12x8 per the M1 arena contract; dungeon biome, old-dark grade (data/moods.json arena_moods.trapped_halls_snare). Interior `blocked` is a single flanking pillar pair, lighter than vault's own layout (a smaller room, not a boss chamber) -- kept clear of every spawn. player_spawns is 4 (the design-for-4 M1 floor every arena carries, test_combat_data's own generic assert) though this fight fields the PC solo -- no ally_requires on the encounter, matching a plain skirmish, not the party fight.",
+   "_comment": "12x8 per the M1 arena contract; dungeon biome, old-dark grade (data/moods.json arena_moods.trapped_halls_snare).",
    "id": "trapped_halls_snare",
    "biome": "dungeon",
    "grid": {
@@ -1866,7 +1864,7 @@
    ]
   },
   {
-   "_comment": "Issue #24 (HR-II forward-ref): the Rock Crab's own arena, floodplains biome (SAME biome as training_yard, which already carries a verified `boulder` decor pick at (12,6) -- reused here, just more of them, to sell 'boulder-strewn hillside' rather than a single lone rock). Interior `blocked` cells are boulders-as-cover (the mimicry's own tactical read: the crab isn't the only rock on this field), same count/style as goblin_ambush's 4 scattered obstacles. 12x8 per the M1 arena contract.",
+   "_comment": "Interior `blocked` cells are boulders-as-cover (the mimicry's own tactical read: the crab isn't the only rock on this field), same count/style as goblin_ambush's 4 scattered obstacles.",
    "id": "boulder_flats",
    "biome": "floodplains",
    "grid": {
@@ -1979,7 +1977,7 @@
    ]
   },
   {
-   "_comment": "Issue #97: Kingslayer Spider's den (T4 dungeon_approach solo encounter). `dungeon` biome (the SAME Cemetery dressing family dungeon_approach/trapped_halls/vault already ship); floor_layers reuses vault's own already-verified floor-tile variant picks (zero new coordinate guessing). Interior `blocked` cells are a loose rubble ring (an ambush den, not a clean chamber), kept clear of every spawn (test_combat_data asserts spawn reachability + connectivity). 12x8 per the M1 arena contract.",
+   "_comment": "12x8 per the M1 arena contract.",
    "id": "spider_den",
    "biome": "dungeon",
    "grid": {
@@ -2101,7 +2099,7 @@
    ]
   },
   {
-   "_comment": "Issue #97: the Pallass Forge's own arena (`forge_calibration_golem`, T4/T5 solo encounter -- Pallass's FIRST combat arena). `pallass_forge` biome -- NO explicit floor_layers override: biomes.json's own pallass_forge entry already paints the base floor/blocked/skirt across every cell (the SAME 'base full-grid default' pallass_market's own biome comment documents), so this arena inherits the real Forge-tier floor honestly without guessing a new tile coordinate. Interior `blocked` cells are a symmetric anvil/forge-station pair, kept clear of every spawn. 12x8 per the M1 arena contract.",
+   "_comment": "12x8 per the M1 arena contract.",
    "id": "forge_hall",
    "biome": "pallass_forge",
    "grid": {
@@ -2181,7 +2179,7 @@
    ]
   },
   {
-   "_comment": "Issue #97: the Pallass Market's own arena (`market_watchgolems`, T4/T5 pair encounter -- Pallass's second combat arena). `pallass_market` biome -- NO explicit floor_layers override, same base-default reasoning as forge_hall's own comment. Interior `blocked` cells are stacked-stall clutter, kept clear of every spawn. 12x8 per the M1 arena contract.",
+   "_comment": "12x8 per the M1 arena contract.",
    "id": "market_watch",
    "biome": "pallass_market",
    "grid": {

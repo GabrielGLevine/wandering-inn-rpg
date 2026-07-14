@@ -71,7 +71,6 @@
 			"lore": "Turned out by the dozen for the yard behind the Watch barracks, where recruits learn which end matters. The oak usually outlasts the recruit's pride."
 		},
 		{
-			"_comment": "GH#70 [Archer]: the T1 weapon of the sword/spear/bow trio -- damage_mod 0, matches rusty_sword/chipped_spear/solid_oak_spear's own T1 curve exactly, but PURCHASABLE (unlike those three, fixture/loot-only starter gear) at the peddler's stall (peddler_stall.json), 8g -- the cheapest weapon in the shop, well under gnollish_hunting_knife's 15g. `range: 4` is the new field this task introduces (absent/1 on every other weapon = melee; see wi_combat.gd's WEAPON_RANGE doc comment).",
 			"id": "training_bow",
 			"name": "Training Bow",
 			"kind": "weapon",
@@ -88,7 +87,7 @@
 			"lore": "The peddler's cart carries three or four of these most days, strung and restrung by hands that never quite trust the wood. Nobody buys one to hunt with. Everybody buys one to learn with."
 		},
 		{
-			"_comment": "GH#70 [Archer]: the T2 upgrade -- damage_mod 1, the gnollish_hunting_knife curve (mundane tier, +1 damage_mod, priced a notch above the T1 weapon) applied to the bow family. Sold at Krshia's stall (krshia_crate.json's 'shop' node, alongside the hunting knife), 18g.",
+			"_comment": "GH#70 [Archer]: the T2 upgrade -- damage_mod 1, the gnollish_hunting_knife curve (mundane tier, +1 damage_mod, priced a notch above the T1 weapon) applied to the bow family.",
 			"id": "hunting_bow",
 			"name": "Hunting Bow",
 			"kind": "weapon",
@@ -131,7 +130,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"price": 20,
-			"_comment_price": "Previously unpriced (no live acquisition path -- fixture/harness-only). Sold at the new street `peddler_stall` (surplus gear, one mini-buy per the market-depth task). Priced against the existing mundane-armor band: leather_jerkin (dr0/+4hp) is 24g, wool_lined_cloak (+3hp) is 18g -- this item trades hp_mod for a full damage_reduction point (a stat the balance harness treats as meaningfully strong, e.g. the dr-2 stack cell), so 20g sits between them rather than under-pricing a defensive stat nothing else in the shop band grants alone.",
+			"_comment_price": "Previously unpriced (no live acquisition path -- fixture/harness-only).",
 			"description": "Quilted padding stamped with the Liscor Watch's seal. Standard issue for anyone patrolling the walls.",
 			"lore": "Signed out against a deposit, and Watch Captain Zevara knows exactly how many never came back. The padding is older than some of the guards inside it; the budget for replacements has died in council three years running."
 		},
@@ -226,7 +225,6 @@
 			"lore": "The silver fang is the Silverfang mark, and the stall caps a good trophy in it for a hunter who asks. Krshia will tell you whose kill this was if you ask, and the story runs longer than the cord."
 		},
 		{
-			"_comment": "Issue #89 (gap-2): this record shipped complete (hp_mod/resonance/tier) with no vendor -- an orphaned item. Priced here (20g, between hedge_ward_charm's 9g/hp_mod2 and witch_wardstone_bead's 16g/hp_mod2 -- this carries hp_mod3, the highest of that hp-only tier) and wired as Wilovan's fence stock (invrisil_wilovan.json's 'fence' node): its own lore ('somebody paid them for it, neither name made it back up to the street') is a near-literal match for a fenced good of murky provenance.",
 			"id": "phosphor_pendant",
 			"name": "Phosphor Pendant",
 			"kind": "accessory",
@@ -257,7 +255,6 @@
 			"lore": "Shed scales with stone in them turn up in the southern hills, and enchanters pay well for the rare one that takes a binding. Drakes find wearing another Drake's scale distasteful; the stall keeps this one under the counter."
 		},
 		{
-			"_comment": "Resonance lowered 3 -> 2 (mod values kept) -- at the time, resonance_capacity never grew anywhere in this codebase (fixed default 2, wi_game.gd), so a quest-awarded accessory with resonance 3 was structurally unequippable the moment it was granted; capping it at the budget it's actually awarded into was the honest minimal fix, not inventing a capacity-growth mechanic that milestone didn't have. It still spends the WHOLE budget alone (a deliberate Act-III-capstone trade-off, not a bug). Issue #92 R3: first real `abilities` grant -- [Invisibility] folds into the wearer's combat kit at start_combat (WICombatBuild.fold_abilities), combat-only, never player_skills/persistence; the MP pool this costs (3 MP) composes for free (WICombat._init grants max_mp off ANY mp_cost-carrying skill in the assembled kit, invisibility included -- no separate caster-flag plumbing needed). Issue #92 R4 later ships the res-3 tradeoff item (anchor_sliver) once resonance_capacity can reach 3 -- see that item's own _comment; this amulet's own resonance stays 2, untouched.",
 			"id": "moon_bone_amulet",
 			"name": "Moon-Bone Amulet",
 			"kind": "accessory",
@@ -286,7 +283,7 @@
 			"lore": "Zevara signs maybe ten of these a year, and she remembers every one. Losing it is a worse conversation than never having earned it."
 		},
 		{
-			"_comment": "Invrisil 8c Task C3 (issue #13) -- `brothers_marker`, the plan's locked shape 5 vendor/perk gate token (docs/archive/staging/dialogue-drafts/invrisil/brothers_lieutenant.json's wiring notes: 'Wood and tin, and worth rather more than its materials'). Granted alongside the accomplishment of the same id (data/dialogue/invrisil_wilovan.json's report option) -- the item is the physical/flavor half, the accomplishment is the gate-checkable half (this game's `requires` gate vocabulary is skill/class/accomplishment/gold only, no item-presence gate, so future fence/vendor content must key off the accomplishment, not this item's inventory presence). watch_token precedent shape verbatim (mundane accessory, zero stat fields).",
+			"_comment": "watch_token precedent shape verbatim (mundane accessory, zero stat fields).",
 			"id": "brothers_marker",
 			"name": "Brother's Marker",
 			"kind": "accessory",
@@ -331,7 +328,6 @@
 			"lore": "Drakes fish the pond in fair weather and swear off it every winter, when the water starts moving wrong. The line-sellers do their best business in spring, replacing gear that was 'lost.'"
 		},
 		{
-			"_comment": "Issue #59 (the dish-item seam): the hungry patron's Serve option now requires actually FETCHING this from the kitchen (stew_pot's basic_cooking use grants it, wi_game.gd's use_skill) rather than a bare once_per_waking gold-grant. kind:\"meal\" is the SECOND inert-carried-flavor kind (parcel precedent below) -- no weapon/armor/accessory kind means WIGame.equip() structurally refuses it with zero new code. STRUCTURAL SELLABILITY CALL (WIShop's sellable_items() convention): deliberately NO `price` field at all, same as every parcel -- a plate of stew carried fresh from the kitchen isn't a trade good Krshia would buy back (parcels' own rationale: 'never sold -- no sell surface exists for this kind of carried good'), and omitting the field (rather than authoring `price: 0`) matches the parcel precedent's own structural-exclusion shape instead of a priced-but-worthless item that would need the separate `unsellable` flag (resonant_catalyst's carve-out, reserved for an item that DOES carry a price for its 'Worth N gold' flavor line). Granted by WIGame.use_skill's on_skill_use `item` grant (pickup()), consumed by the patron's Serve dialogue option via the new `remove_item` effect arm -- never stacked, matching every other item in this catalog (cooking again while already holding one is a silent no-op, exactly correct: you don't need two dishes in hand at once).",
 			"id": "hot_meal",
 			"name": "Hot Meal",
 			"kind": "meal",
@@ -346,7 +342,7 @@
 			"lore": "The stew pot doesn't care who it's for -- Watch, patron, or the cook themselves. It only cares that it's stirred."
 		},
 		{
-			"_comment": "GH#68 (Invrisil quest-stage rework, TALK path Stage 2 favor beat): Cups' trust-arc carry item, the #59 item-gate/remove_item seam's second consumer OUTSIDE the delivery board (patron_serving.json's hot_meal precedent, reused for a quest-internal favor rather than a paid Runner's Guild job). kind:\"parcel\" reused verbatim from the delivery precedent below -- inert carried flavor, no price (never sold), no weapon/armor/accessory kind so equip() structurally refuses it. Granted by invrisil_fixer.json's cups_favor node (a plain dialogue `item` effect, not accept_delivery -- this favor never touches THE DELIVERY BOARD/Vess's counter at all), removed by invrisil_wilovan.json's hub option via `remove_item` on handoff. Never stacked.",
+			"_comment": "kind:\"parcel\" reused verbatim from the delivery precedent below -- inert carried flavor, no price (never sold), no weapon/armor/accessory kind so equip() structurally refuses it.",
 			"id": "cups_debt_chit",
 			"name": "A Debt Chit, Long Overdue",
 			"kind": "parcel",
@@ -361,7 +357,7 @@
 			"lore": "Every fixer owes somebody for the corner they work. Cups' somebody wears a hat."
 		},
 		{
-			"_comment": "5 parcel items, one per LIVE delivery (docs/archive/staging/board-staging/runner-deliveries.json's 6th entry, delivery_hermit_antlers, is a FORWARD-REF -- kept out of data/deliveries.json until HR-II places its destination, so no parcel item ships for it either). kind:\"parcel\" is INERT carried flavor per the staging doc's own note: no price (never sold -- no sell surface exists in this game), no combat fields, and no weapon/armor/accessory kind means WIGame.equip() structurally refuses it (falls to inventory.gd's generic 'not equippable' toast) with zero new code. Granted by WIGame.accept_delivery via the existing pickup() seam and removed by the new remove_item() seam (on handoff or a sleep-fail return) -- never stacked, matching every other item in this catalog.",
+			"_comment": "Granted by WIGame.accept_delivery via the existing pickup() seam and removed by the new remove_item() seam (on handoff or a sleep-fail return) -- never stacked, matching every other item in this catalog.",
 			"id": "parcel_plains_wool",
 			"name": "Plains-Wool Bolt",
 			"kind": "parcel",
@@ -432,7 +428,6 @@
 			"lore": "Runner's Guild delivery parcel (delivery_inn_hamper) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
-			"_comment": "5 more parcel items, issue #72's generated delivery-pool growth (docs/archive/staging/board-staging/generated-candidates.json) -- same inert-carried kind:\"parcel\" shape as the 5 above, one per new LIVE delivery in data/deliveries.json.",
 			"id": "parcel_gambeson_bundle",
 			"name": "Bundled Gambesons",
 			"kind": "parcel",
@@ -517,7 +512,7 @@
 			"lore": "Warmage Thresk built more than doors, in the end. This one remembers being elsewhere, the same crude trick that woke somewhere it shouldn't have, once, in an inn far from here. Carried, never worn or sold -- it feels like it's waiting to be given back to something."
 		},
 		{
-			"_comment_unsellable": "Krshia sell mechanic: the only item in this catalog that needs the explicit flag -- it carries a `price` (so it WOULD otherwise leak into WIGame.sellable_items()'s priced-item filter) but its own lore line above already says 'never sold onward'. anchor_stone/brothers_marker/every parcel need no flag (no `price` field at all -- sellable_items() excludes them structurally, same as every other unpriced loot/quest item).",
+			"_comment_unsellable": "Krshia sell mechanic: the only item in this catalog that needs the explicit flag -- it carries a `price` (so it WOULD otherwise leak into WIGame.sellable_items()'s priced-item filter) but its own lore line above already says 'never sold onward'.",
 			"id": "resonant_catalyst",
 			"name": "Resonant Catalyst",
 			"kind": "tool",
@@ -534,7 +529,6 @@
 			"lore": "A Silverfang trade-route find, sold to the rare customer who asks the right way and pays the whole price without haggling. Krshia doesn't know what it's for. She knows it's worth what she charges for it. Carried, never worn or sold onward."
 		},
 		{
-			"_comment": "8b R3 (issue #11) witch-cottage vendor stock, unlocked at blight_lifted (riverfarm_witch.json's 'shop' node). Herb-craft consumables, generic-plausible (not deep TWI canon) per the peddler_stall/Krshia-charms precedent of original mundane/enchanted stock -- prices 4-20g, inside the shipped accessory envelope (hp_mod/resonance match copper_luck_band/hedge_ward_charm's own bounds, no combat mods beyond it).",
 			"id": "dried_yarrow_bundle",
 			"name": "Dried Yarrow Bundle",
 			"kind": "tool",
@@ -595,7 +589,6 @@
 			"lore": "She swears it's nothing special, the same way she swears the tea is just tea. It's warm to the touch a full week after you buy it, which is either coincidence or the second lie."
 		},
 		{
-			"_comment": "Class-foundation pass R5 (2026-07-12): the [Bargain] price_mod's own real, dynamic-priced buy option (riverfarm_witch.json's 'shop' node, appended after the existing 5 options -- see that file's own _comment for why it's a NEW option rather than a retrofit of the existing baked-in-price ones, which qa/scripts/riverfarm_talk.json exact-array pins). Same herb-craft-mundane register/price band as dried_yarrow_bundle/hollow_herb_sachet.",
 			"id": "warding_salt_pinch",
 			"name": "Pinch of Warding Salt",
 			"kind": "tool",
@@ -611,7 +604,7 @@
 			"lore": "Thrown across a threshold, it settles whatever's inclined to cross it uninvited. Not much good against anything that was already invited in."
 		},
 		{
-			"_comment": "Issue #92 R1/R2/R5: the FIRST real use_effect-carrying item (a combat-only heal draught, WIItems.resolve_use's 'heal' arm -- see that file's own doc comment). R2 landed it inert-but-purchasable-eventually (a QA fixture granted it directly, no shop wiring yet); R5 wires it into riverfarm_witch.json's 'shop' node (appended after the existing options, per that file's own _comment) -- Eloise's real repeatable sink now that use_item makes a bought consumable genuinely consumed. kind:\"tool\" (not equippable -- use_effect and an equip slot are mutually exclusive, tests/test_items.gd's own new validator arm). Heal amount (8) matches second_wind's own self-heal skill for a consistent 'a solid partial heal' feel across the two surfaces. Priced in the witch's own herb-craft band (dried_yarrow_bundle 4g .. witch_wardstone_bead 16g).",
+			"_comment": "Heal amount (8) matches second_wind's own self-heal skill for a consistent 'a solid partial heal' feel across the two surfaces.",
 			"id": "mending_draught",
 			"name": "Mending Draught",
 			"kind": "tool",
@@ -628,7 +621,7 @@
 			"lore": "The witch keeps a shelf of these behind the tea things -- not magic, she says, just knowing which roots do what. Drink it mid-fight and the wound closes slower than a real healer's work, but it closes."
 		},
 		{
-			"_comment": "Issue #92 R5: the forge tier's own commission stock -- a posted-price consumable (NO haggle:true flag anywhere in this file, matching the civic no-discount register the file's own header comment already cites: docs/design/city-identity-bible.md's 'prices are POSTED... no haggling'), Pallass's own repeatable sink now that use_item makes a bought consumable genuinely consumed (R1). A next_fight-shaped buff (field-only, WIItems.resolve_use's other sanctioned shape) rather than a heal -- a forge-tempered edge is a pre-fight preparation, not a battlefield medical draught, so it never competes with mending_draught's combat-hotbar slot; it banks WIGame.pending_meal and folds into the VERY NEXT start_combat build the same way well_fed's own +2 hp_mod does. kind:\"tool\" (not equippable). Priced above mending_draught's 10g (a permanent-fight-prep edge reads as worth slightly more than a single heal) but well under the T2 weapons (15-18g).",
+			"_comment": "Priced above mending_draught's 10g (a permanent-fight-prep edge reads as worth slightly more than a single heal) but well under the T2 weapons (15-18g).",
 			"id": "tempering_oil",
 			"name": "Tempering Oil",
 			"kind": "tool",
@@ -645,7 +638,6 @@
 			"lore": "Forge-tier stock, sold to anyone bound for the floor below -- work an edge with it the night before and the steel bites truer the first time it matters. One coat, one fight; the tier doesn't sell the recipe, only the flask."
 		},
 		{
-			"_comment": "Post-Riverfarm attunement purchase (riverfarm_witch.json's 'shop' node, gated on blight_lifted): banks invrisil_attuned alongside the item grant -- dialogue effects compose as separate {gold},{item},{accomplishment} dicts on one option, the resonant_catalyst/bought_catalyst precedent (krshia_crate.json), no new effect machinery. unsellable:true for the same reason as resonant_catalyst: it carries a real price (so sellable_items() would otherwise catalog it) but the lore below already says it's a keepsake -- the 'bought, not found' shape, unlike the found-only anchor_stone (which has no price field at all).",
 			"id": "invrisil_attunement_stone",
 			"name": "Invrisil Attunement Stone",
 			"kind": "tool",
@@ -662,7 +654,6 @@
 			"lore": "Eloise's own stock, sold to those bound for the city rather than the hearth. It doesn't point the way so much as remember it. Carried, never worn or sold onward."
 		},
 		{
-			"_comment": "8e Phase C 'Papers for Pallass' Stage 2 (controller ruling 2, the GH#65 late-attuning precedent): invrisil_attunement_stone's exact buy-contract shape -- gated on pallass_sponsored (Stage 1, Selys's sponsorship fee) at Krshia's stall (data/dialogue/krshia_crate.json's 'charms' node), banking pallass_attuned alongside the item grant. unsellable:true for the same reason as invrisil_attunement_stone: a real price but the lore below calls it a keepsake.",
 			"id": "pallass_attunement_stone",
 			"name": "Pallass Attunement Stone",
 			"kind": "tool",
@@ -679,7 +670,6 @@
 			"lore": "Krshia's own stock, sold to those bound for the machine city rather than the hearth. It doesn't point the way so much as remember it. Carried, never worn or sold onward."
 		},
 		{
-			"_comment": "8d C1 (issue #14) 'What the Seal Kept', the SKILL route's real cost: consumed via a dialogue-side `remove_item` on the dart_slit_a disarm (trapped_halls), the hungry-patron hot_meal precedent (issue #59) applied to a field prop's `on_skill_use` instead of a conversation option -- same remove_item() seam, same possession-gate shape (a plain requires:{item:...} leg). Stocked at the peddler's stall pre-quest (peddler_stall.json) for 3g, the cheapest priced tool in the catalog on purpose (a coin cost, not a wall).",
 			"id": "trap_kit",
 			"name": "Trap Kit",
 			"kind": "tool",
@@ -695,7 +685,7 @@
 			"lore": "Every peddler within a day of Liscor stocks these now -- the Watch started recommending them after the gallery reopened, and word travels fast when word means coin."
 		},
 		{
-			"_comment": "Issue #81 (exploration & optional content), 'Renn's Old Warhammer' mini-quest: the carry-back-to-owner item, granted by the renns_gear_stash container prop (data/skeleton_scene.json, guild) and removed via renn_hammer.json's turn-in dialogue option (`remove_item`). kind:\"parcel\" reused verbatim (cups_debt_chit precedent): inert carried flavor, no price (never sold), no weapon_family so equip() structurally refuses it -- it is Renn's hammer, never the player's to wield.",
+			"_comment": "kind:\"parcel\" reused verbatim (cups_debt_chit precedent): inert carried flavor, no price (never sold), no weapon_family so equip() structurally refuses it -- it is Renn's hammer, never the player's to wield.",
 			"id": "renns_warhammer",
 			"name": "Renn's Old Warhammer, Backup",
 			"kind": "parcel",
@@ -710,7 +700,6 @@
 			"lore": "Renn's backup, left leaning against the Guild's back wall on his last kit haul. Carried, never worn or sold; returned to him on handoff."
 		},
 		{
-			"_comment": "Issue #81 lore-note collectible thread: found-note items reuse the SAME inert kind:\"parcel\" shape as the delivery/quest carry-items above (never equipped, never sold, no price field) -- the ONE difference is they are never removed once found (no remove_item call site references a note_ id), so they accumulate permanently in `inventory` for src/ui/journal.gd's new Lore section to list (filtered by the `note_` id prefix, the bounty_/delivery_/parcel_ prefix convention this file already uses). Barracks find (spare_kit_crate's sibling prop, note_watch_veteran). Wiki grounding: the Liscor-Antinium war and the peace that followed it are Volume 1-2 background (Klbkch's own presence as a Watch Senior Guardsman is this game's existing proof of that peace, see docs/design/character-profiles.md) -- this note only echoes ALREADY-shipped, already-cited canon obliquely, introduces no new named character or fact.",
 			"id": "note_watch_veteran",
 			"name": "A Watch Veteran's Letter, Unfinished",
 			"kind": "parcel",
@@ -725,7 +714,7 @@
 			"lore": "\"...tell them the peace held, that's the whole of it some days. The Hive doesn't forget the war any easier than we do, and neither side started the remembering first. Strange to stand watch beside one of them now and mean it when I say I trust him.\" It stops there, unsigned."
 		},
 		{
-			"_comment": "Issue #81 lore-note collectible thread: sewers find (note_sewer_surveyor prop). Wiki grounding: general, non-spoiler Liscor civic background only (an aged Drake-built drainage system, a Council that keeps records) -- consistent with what this repo already establishes via the shipped drainage_marker prop ('An old Drake drainage marker... a map of channels two centuries dead') and Jeiss Sielmark's 'Liscor Councilmember' citation in character-profiles.md. No new canon claim, no named character.",
+			"_comment": "No new canon claim, no named character.",
 			"id": "note_sewer_surveyor",
 			"name": "A Sewer Surveyor's Page, Water-Stained",
 			"kind": "parcel",
@@ -740,7 +729,6 @@
 			"lore": "\"Third cistern holds. Fourth won't, not another winter — the old stonework predates the Council records, which tells you something about who built it and didn't write it down. Recommend the grate crew stop calling it 'the crack' and start calling it a schedule.\" No follow-up was ever filed."
 		},
 		{
-			"_comment": "Issue #81 lore-note collectible thread: barracks find (note_old_dread prop, relocated from an original guild placement -- see that entity's own skeleton_scene.json comment for the scene_dynamism re-derivation). Wiki grounding: echoes this repo's OWN already-shipped Raskghar arc (wiki.wanderinginn.com/Raskghar, Volume 5 -- cited in character-profiles.md's Raskghar entry, and acts.json's Act III beat 'the_stirring': 'Something is moving in the dark beneath the city') diegetically, from a resident's superstition rather than omniscient narration. Introduces no new fact past what the game already ships.",
 			"id": "note_old_dread",
 			"name": "A Ward-Charm Instruction, Copied Twice",
 			"kind": "parcel",
@@ -755,7 +743,7 @@
 			"lore": "\"Salt at the sill. Don't dig where the ground sounds hollow. If the dogs won't go, you don't go.\" A later hand added a line underneath, in different ink: \"They found something under the city once. They can find it again.\""
 		},
 		{
-			"_comment": "Issue #92 (economy depth): boss-unique drop, THE VAULT (vault_boss_slot, data/maps/dungeon/trapped_halls.json, one-time -- no `respawns` key), via `WIEconomy.roll_loot` (isolated hash(run_seed,encounter_id) rng, never the live combat stream). Existing accessory shape verbatim (moon_bone_amulet's own dr+hp+resonance-2 curve, no new fields); no `price` (loot-only, no established vendor worth -- the moon_bone_amulet/watch_token precedent for a one-of-a-kind find).",
+			"_comment": "Existing accessory shape verbatim (moon_bone_amulet's own dr+hp+resonance-2 curve, no new fields); no `price` (loot-only, no established vendor worth -- the moon_bone_amulet/watch_token precedent for a one-of-a-kind find).",
 			"id": "construct_core_shard",
 			"name": "Construct Core Shard",
 			"kind": "accessory",
@@ -770,7 +758,7 @@
 			"lore": "Warmage Thresk's vault work outlived the war it was built for, and so, it turns out, did the thing built to guard it. Whatever kept it standing three centuries in the dark keeps standing a while longer in a pocket."
 		},
 		{
-			"_comment": "Issue #92: boss-unique drop, the trapped-halls snare fight (snare_nest_slot, same map, one-time -- no `respawns` key). Existing accessory shape, hedge_ward_charm's own hp+resonance-1 curve (mid-tier, matches the fight's mid-delve placement between the mundane starter loot and the Vault's own capstone drop above).",
+			"_comment": "Existing accessory shape, hedge_ward_charm's own hp+resonance-1 curve (mid-tier, matches the fight's mid-delve placement between the mundane starter loot and the Vault's own capstone drop above).",
 			"id": "warded_coil_charm",
 			"name": "Warded Coil Charm",
 			"kind": "accessory",
@@ -785,7 +773,7 @@
 			"lore": "The wards down here were never meant to be worn -- somebody unwound one anyway and found the working held. It still expects a trespasser. It will have to make do with you."
 		},
 		{
-			"_comment": "Issue #92: boss-unique drop, kingslayer_den (data/maps/dungeon/dungeon_approach.json, `respawns:true` apex-predator cull -- chance-gated in the map's own loot table, unlike the two guaranteed one-time drops above, matching the crude_blade/chipped_spear repeatable-farm precedent). Existing accessory shape, hunters_fang_talisman's own dmg+resonance-1 curve widened by +1 hp_mod (apex-tier differentiation from that mundane-region trophy).",
+			"_comment": "Existing accessory shape, hunters_fang_talisman's own dmg+resonance-1 curve widened by +1 hp_mod (apex-tier differentiation from that mundane-region trophy).",
 			"id": "kingslayer_fang",
 			"name": "Kingslayer Fang",
 			"kind": "accessory",
@@ -800,7 +788,7 @@
 			"lore": "Whatever nests south of the gallery has fangs enough to spare one and never notice. Krshia would call this Silverfang-caliber trophy work, if Krshia had ever seen the thing it came from."
 		},
 		{
-			"_comment": "Issue #92 R4: the res-3 tradeoff item, reachable the moment resonance_capacity can hit 3 (wi_game.gd's sleep() growth hook, gated on door_awakened) -- resonance 3 is the validator's own hard ceiling (tests/test_items.gd), the SAME 'spends the WHOLE budget alone' shape moon_bone_amulet established at capacity 2, one tier up: wear this alone, or spread the new third point across smaller charms instead -- a real choice, not a strict upgrade. Granted alongside anchor_stone itself (data/maps/ruin/ruin_surface.json's anchor_stone_pedestal `contains` list -- a stone that size doesn't come free of its cradle without shedding a piece), so it's carried well before the capacity to wear it exists (the SAME 'earned early, usable later' shape watch_token/brothers_marker already establish for a gate-token accessory) -- door_awakening.json's own canonical proves the refusal-then-acceptance arc end to end. No `price` (loot-only, no established vendor worth -- the moon_bone_amulet/construct_core_shard precedent).",
+			"_comment": "No `price` (loot-only, no established vendor worth -- the moon_bone_amulet/construct_core_shard precedent).",
 			"id": "anchor_sliver",
 			"name": "Anchor Sliver",
 			"kind": "accessory",

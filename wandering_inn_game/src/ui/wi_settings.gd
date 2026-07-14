@@ -1,8 +1,4 @@
 extends Node
-## Presentation-side settings router: fullscreen, text scale, reduce-motion,
-## and the tutorial-hint replay action (issue #77). Register as autoload
-## `WISettings`.
-##
 ## AUTOLOAD-FREE BY DESIGN: this file references no other autoload
 ## (ObservableBus/Game/WIAudio/WIInputHints) as a bare identifier -- only
 ## engine singletons/classes (ConfigFile, DisplayServer) and `UIChrome` (a
@@ -14,21 +10,9 @@ extends Node
 ## exercise the real class directly. Audio (Master/Music/SFX volume) stays
 ## entirely owned by `WIAudio` (src/audio/wi_audio.gd) -- this file never
 ## touches AudioServer.
-##
-## PERSISTENCE: `user://settings.cfg` via ConfigFile -- the SAME physical
-## file WIAudio's own `SETTINGS_PATH` targets (a duplicated literal
-## constant, not a cross-autoload reference, precisely so this file stays
-## standalone-loadable -- see the file doc comment above). Different
-## ConfigFile sections ("video"/"accessibility" here, "audio" there); see
-## `_persist`'s doc comment for why every write reloads from disk first.
-## Config-file idiom, NOT save data: never read/written by WISave, never
-## touched by New Game / defeat-reload / a save's own load_slot -- settings
-## survive all three by simply never being wired to them.
 
 const SETTINGS_PATH := "user://settings.cfg"
 
-## Text-scale steps: index -> multiplier / display label. 3-step UI ladder
-## (issue #77 spec): 100% (default) / 115% / 130%.
 const TEXT_SCALE_STEPS: Array[float] = [1.0, 1.15, 1.30]
 const TEXT_SCALE_LABELS: Array[String] = ["100%", "115%", "130%"]
 
@@ -46,11 +30,6 @@ const COMBAT_SPEED_LABELS: Array[String] = ["Normal", "Fast", "Instant"]
 ## Base (100%) font sizes -- MUST mirror assets/ui/chrome/wi_ui_theme.tres
 ## exactly (tests/test_settings.gd drift-tripwires these against the real
 ## .tres, same discipline test_copy_fit.gd's own mirrored consts use).
-## `default_font_size` is the Theme-wide fallback (covers Button, and
-## RichTextLabel/CombatReadout, which carry no explicit font_sizes override
-## of their own); `BASE_TYPE_FONT_SIZES` are the type-variation overrides
-## test_copy_fit.gd's corpus renders through (bare "Label" plus every named
-## variation).
 const BASE_DEFAULT_FONT_SIZE := 14
 const BASE_TYPE_FONT_SIZES := {
 	"Label": 14, "Header": 18, "Title": 36, "Menu": 18, "Small": 12, "Lore": 12,
@@ -69,10 +48,6 @@ func _ready() -> void:
 	_apply_fullscreen()
 
 
-## Loaded once at boot, before title (autoloads' `_ready()` runs before
-## Main's, which is what spawns the title screen -- see main.gd). Idempotent:
-## safe to call again (e.g. from a future settings-reset action) since it
-## always re-derives from whatever is currently on disk.
 func _load_settings() -> void:
 	_settings.load(SETTINGS_PATH)
 	_fullscreen = bool(_settings.get_value("video", "fullscreen", false))
@@ -81,19 +56,12 @@ func _load_settings() -> void:
 	_combat_speed_step = clampi(int(_settings.get_value("combat", "speed_step", 0)), 0, COMBAT_SPEED_STEPS.size() - 1)
 
 
-## Read-modify-write: `wi_audio.gd`'s own ConfigFile targets this SAME
-## physical file under a different section ("audio") via a SEPARATE
-## ConfigFile object -- reloading from disk immediately before mutating
-## picks up whatever it last wrote, so this save can never clobber it (and
-## `wi_audio.gd`'s own `set_bus_volume` does the identical reload before its
-## own save, for the same reason in the other direction).
 func _persist(section: String, key: String, value: Variant) -> void:
 	_settings.load(SETTINGS_PATH)
 	_settings.set_value(section, key, value)
 	_settings.save(SETTINGS_PATH)
 
 
-# --- Fullscreen --------------------------------------------------------------
 
 func is_fullscreen() -> bool:
 	return _fullscreen
@@ -109,15 +77,10 @@ func toggle_fullscreen() -> void:
 	set_fullscreen(not _fullscreen)
 
 
-## Godot's headless DisplayServer accepts `window_set_mode` as a harmless
-## no-op (probed empirically: no error/warning, mode just doesn't visibly
-## change) -- safe to call unconditionally, so headless QA never needs a
-## guard here; the REAL windowed apply is what a human playtest verifies.
 func _apply_fullscreen() -> void:
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if _fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
 
 
-# --- Text scale ---------------------------------------------------------------
 
 func text_scale_step() -> int:
 	return _text_scale_step
@@ -137,10 +100,6 @@ func cycle_text_scale() -> void:
 	set_text_scale_step(wrapi(_text_scale_step + 1, 0, TEXT_SCALE_STEPS.size()))
 
 
-## Pure: the scaled `default_font_size` for `step`, always derived from
-## BASE_DEFAULT_FONT_SIZE (never the theme's current, possibly-already-scaled
-## value) so repeated scale-up/scale-down cycles can never drift via rounding
-## -- 100% always restores the EXACT base int test_copy_fit.gd pins.
 static func scaled_default_font_size(step: int) -> int:
 	var mult: float = TEXT_SCALE_STEPS[clampi(step, 0, TEXT_SCALE_STEPS.size() - 1)]
 	return int(round(float(BASE_DEFAULT_FONT_SIZE) * mult))
@@ -187,7 +146,6 @@ func _apply_text_scale() -> void:
 		UIChrome.THEME.set_font_size("font_size", type_name, int(sizes[type_name]))
 
 
-# --- Reduce motion -------------------------------------------------------------
 
 func reduce_motion() -> bool:
 	return _reduce_motion
@@ -202,7 +160,6 @@ func toggle_reduce_motion() -> void:
 	set_reduce_motion(not _reduce_motion)
 
 
-# --- Combat speed (issue #87) ---------------------------------------------------
 
 func combat_speed_step() -> int:
 	return _combat_speed_step
@@ -221,28 +178,11 @@ func cycle_combat_speed() -> void:
 	set_combat_speed_step(wrapi(_combat_speed_step + 1, 0, COMBAT_SPEED_STEPS.size()))
 
 
-## Pure: `base` (an AI-beat-pacing seconds const) scaled by `step`'s multiplier
-## -- same always-derive-from-the-input-const discipline as `scaled_default_
-## font_size`, so `combat_playback.gd`'s `beat_delay()` (via its `_screen`
-## wrapper) never drifts from combat_screen.gd's own `AI_BEAT_SECONDS`.
 static func beat_seconds_for_step(step: int, base: float) -> float:
 	return base * COMBAT_SPEED_STEPS[clampi(step, 0, COMBAT_SPEED_STEPS.size() - 1)]
 
 
-# --- Tutorial hints (replay) ---------------------------------------------------
 
-## Re-arms the two process-lifetime one-shot hints (message_layer.gd's first-
-## pickup toast, combat_screen.gd's first-combat-kit feed line) by calling
-## each file's own `reset_hints()` static function through a dynamic
-## `load()` (never a `preload`/compile-time reference -- both target files
-## reference ObservableBus/Game as bare autoload identifiers, which would
-## fail to COMPILE this file under bare `--script` mode; `load()` is a
-## runtime call, so it only ever resolves during a REAL game boot, keeping
-## this file itself autoload-reference-free -- see the file doc comment).
-## NOT accomplishment-gated: both hints are pure presentation static vars,
-## already re-armed on GAME_RESET by their own existing precedent (see each
-## file's doc comment) -- this reuses the SAME flag, so a replay can never
-## touch (or be entangled with) any progression counter.
 func replay_hints() -> void:
 	load("res://src/ui/message_layer.gd").call("reset_hints")
 	load("res://src/combat/combat_screen.gd").call("reset_hints")

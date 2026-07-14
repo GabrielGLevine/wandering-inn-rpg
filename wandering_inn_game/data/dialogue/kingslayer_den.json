@@ -1,5 +1,4 @@
 {
-	"_comment": "Issue #97: kingslayer_den's own confirm conversation -- the crab_nest informed-consent shape, weighted heavier (a genuine apex predator, MEASURED-only in the harness, not a comfortable-band cull). [Strike first.] fires start_combat (self-reference, legal only on an ending option). [Back away.] plainly ends, no combat, the encounter stays live and re-interactable.",
 	"start": "confront",
 	"nodes": {
 		"confront": {

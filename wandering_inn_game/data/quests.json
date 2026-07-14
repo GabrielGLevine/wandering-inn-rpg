@@ -7,7 +7,6 @@
 				{ "id": "deliver", "description": "Deliver Erin's package to Selys at the Adventurer's Guild.", "complete_when": { "package_delivered": 1 } },
 				{ "id": "decide", "description": "Decide what to do with Selys's reward, there at the Guild.", "complete_when": { "errand_decided": 1 } }
 			],
-			"_resolution_paths_comment": "Issue #79 (journal history): the reward-choice fork on selys_delivery.json's 'delivered'/'delivered_smooth' options -- kept_reward/gave_reward are the fork's own two mutually-exclusive producers, always exactly one banked once errand_decided completes the quest, so no fallback entry is needed.",
 			"resolution_paths": [
 				{ "accomplishment": "kept_reward", "text": "You kept the coin as your own courier's fee." },
 				{ "accomplishment": "gave_reward", "text": "You sent the reward back to Erin." }
@@ -20,7 +19,6 @@
 				{ "id": "find", "description": "Find out what happened to Krshia's missing crate near the south-square sewers.", "complete_when": { "found_the_crate": 1 } },
 				{ "id": "report", "description": "Tell Krshia what became of her crate.", "complete_when": { "crate_returned": 1 } }
 			],
-			"_resolution_paths_comment": "Issue #79: the three paths each bank their OWN producer alongside the shared found_the_crate convergence counter (crate_fight/crate_talk/crate_light QA canonicals) -- checked in FIGHT/WATCH/SKILL order (arbitrary since only one is ever set per real playthrough).",
 			"resolution_paths": [
 				{ "accomplishment": "recovered_crate_force", "text": "You cleared the scavengers by force." },
 				{ "accomplishment": "recovered_crate_watch", "text": "You sent the Watch after them." },
@@ -28,14 +26,13 @@
 			]
 		},
 		{
-			"_comment": "Quest 1, three-path parity (crate precedent). Beat 1 `resolve` is the SHARED convergence counter `resolved_the_cisterns`, banked by ANY path: FIGHT (shield_spiders on_victory), TALK (Zevara sweep option), or SKILL (banked at Olesm's intel-report, since [Appraise Foe] alone only banks scouted_the_nest). Beat 2 `report` (`cisterns_reported`) is Olesm's completion, banked at report time on all three paths (the SKILL report banks resolve+report together, firing both beats at once -- crate guile precedent). heard_about_cisterns (the grate-gate + quest-start) is NOT a beat; it only opens the door.",
+			"_comment": "heard_about_cisterns (the grate-gate + quest-start) is NOT a beat; it only opens the door.",
 			"id": "cisterns",
 			"title": "Something in the Cisterns",
 			"beats": [
 				{ "id": "resolve", "description": "Settle whatever has nested in the cisterns beneath the market -- however you see fit.", "complete_when": { "resolved_the_cisterns": 1 } },
 				{ "id": "report", "description": "Report the outcome to Olesm at the Guild.", "complete_when": { "cisterns_reported": 1 } }
 			],
-			"_resolution_paths_comment": "Issue #79: the three paths' own producers (cisterns_fight/cisterns_talk/cisterns_scout canonicals), checked in FIGHT/TALK/SKILL order.",
 			"resolution_paths": [
 				{ "accomplishment": "cleared_the_nest", "text": "You cleared the nest yourself." },
 				{ "accomplishment": "watch_swept_cisterns", "text": "You sent the Watch to sweep it." },
@@ -43,14 +40,13 @@
 			]
 		},
 		{
-			"_comment": "Quest 2 'The Wrong Order' (Lyonette, social). Three-path parity mirroring the cisterns two-beat shape. Beat 1 `resolve` is the SHARED convergence counter `resolved_wrong_order`, banked by ANY path: FIGHT-adjacent (supplier_scavengers on_victory), TALK (Krshia smooth-over option), or SKILL (banked at Lyonette's report, since cooking alone only banks stretched_the_order -- cisterns_scout precedent). Beat 2 `report` (`wrong_order_reported`) is Lyonette's gratitude beat, banked at report time on all three paths (the SKILL report banks resolve+report together, firing both beats at once). heard_wrong_order (the quest-start) is NOT a beat; it only opens the give-beat and starts the quest.",
+			"_comment": "Quest 2 'The Wrong Order' (Lyonette, social).",
 			"id": "wrong_order",
 			"title": "The Wrong Order",
 			"beats": [
 				{ "id": "resolve", "description": "Set Lyonette's botched supply order right -- strong-arm, sweet-talk, or stretch it in the kitchen.", "complete_when": { "resolved_wrong_order": 1 } },
 				{ "id": "report", "description": "Tell Lyonette it's handled, before Erin hears of it.", "complete_when": { "wrong_order_reported": 1 } }
 			],
-			"_resolution_paths_comment": "Issue #79: the three paths' own producers (wrong_order_fight/wrong_order_talk/wrong_order_loop canonicals), checked in FIGHT/TALK/SKILL order.",
 			"resolution_paths": [
 				{ "accomplishment": "strongarmed_the_supplier", "text": "You strong-armed the supplier." },
 				{ "accomplishment": "smoothed_with_krshia", "text": "You smoothed it over with Krshia." },
@@ -58,14 +54,12 @@
 			]
 		},
 		{
-			"_comment": "(spec §5 RATIFIED earn-shape) Beat 1 'the flicker' (door_chain_started, Erin's post-epilogue line, erin_errand.json) starts the quest but is NOT itself a beat (heard_about_cisterns/heard_wrong_order precedent -- it only opens the mage-consult gate). Beat 'consult' is the SHARED convergence counter door_understood, banked by ANY of Pisces's 3-path mage consult (FIGHT: clear rift_vermin_leak in the inn; TALK: persuade Pisces to examine it himself; SKILL: read the doorframe's wardwork with [Observe] and report back -- pisces_magic.json). Beat 'recover' requires BOTH recovered_anchor_stone (the ruin run's anchor_stone_pedestal, gated open via the internal pedestal_unsealed convergence counter -- cleared_ruin_guardian OR either of the TALK/SKILL door_understood legs) AND bought_catalyst (Krshia's resonant_catalyst, 35g, her charms buy node) -- spec §5.3's 'ruin + Krshia ONLY' attunement components, both order-independent (either can be earned first). D4 consumes this chain's completion to start the study-sleeps counter toward the awakening beat; door_that_goes_elsewhere has no further beats here by design (awakening/the portal menu are D4's own sim surface, not a quest beat).",
 			"id": "door_that_goes_elsewhere",
 			"title": "The Door That Goes Elsewhere",
 			"beats": [
 				{ "id": "consult", "description": "Find out what's happening with the pantry door -- fight it, talk to Pisces, or read the wardwork yourself.", "complete_when": { "door_understood": 1 } },
 				{ "id": "recover", "description": "Recover the anchor stone from the ruin east past the gate road, on the floodplains, and buy Krshia's catalyst to attune it.", "complete_when": { "recovered_anchor_stone": 1, "bought_catalyst": 1 } }
 			],
-			"_resolution_paths_comment": "Issue #79: FIGHT (cleared_the_leak, rift_vermin_leak's own on_victory) and SKILL (read_the_door_runes, pantry_door_runes' [Observe]) each bank a distinct intermediate producer -- but the TALK leg (pisces_magic.json's consult_talk_done) banks door_understood directly with no distinct producer of its own (only the shared persuaded_someone flag, which isn't path-exclusive -- a player could have persuaded someone ELSE first in a different quest), so it falls to the fallback entry (empty accomplishment, always matches once neither of the first two fired).",
 			"resolution_paths": [
 				{ "accomplishment": "cleared_the_leak", "text": "You fought the rift vermin in the cellar." },
 				{ "accomplishment": "read_the_door_runes", "text": "You read the wardwork yourself." },
@@ -73,7 +67,7 @@
 			]
 		},
 		{
-			"_comment": "8b R3 (issue #11) 'The Price of a Favor' (Riverfarm). Three-path parity mirroring the cisterns/wrong_order two-beat shape. Beat 1 `resolve` is the SHARED convergence counter `blight_lifted`, banked by ANY path: FIGHT (briar_collectors_deep on_victory -- clearing the escalated wave is the collecting craft's real source), TALK (the witch's own hub, a [Diplomat]-gated mediation banking a renegotiated year of hearth-tending), or SKILL (the hollow_true_knot prop -- the gauntlet's own [Observe] finish IS the resolution, no separate report needed, unlike cisterns_scout/wrong_order's single-action precedent). Beat 2 `report` (`price_of_a_favor_reported`) is the headman's closing beat, identical on all three paths. heard_price_of_a_favor (the quest-start, riverfarm_headman.json) is NOT a beat; it only opens the report option and starts the quest. blight_lifted ALSO drives the village visual_states brighten, the witch's vendor unlock, and the charmed villager's echo retirement -- none of those are quest beats, all three read the SAME raw accomplishment counter this beat completes on.",
+			"_comment": "Three-path parity mirroring the cisterns/wrong_order two-beat shape.",
 			"id": "price_of_a_favor",
 			"title": "The Price of a Favor",
 			"beats": [
@@ -81,7 +75,6 @@
 				{ "id": "report", "description": "Tell the headman it's done.", "complete_when": { "price_of_a_favor_reported": 1 } }
 			],
 			"region": "Riverfarm",
-			"_resolution_paths_comment": "Issue #79: FIGHT (drove_off_collectors, briar_collectors_deep's own on_victory) and TALK (mediated_the_debt, riverfarm_witch.json) each bank a distinct producer -- the SKILL leg (hollow_true_knot's [Observe]) banks blight_lifted directly with no producer of its own (the gauntlet's own completion IS the resolution, riverfarm_skill's own canonical), so it falls to the fallback entry.",
 			"resolution_paths": [
 				{ "accomplishment": "drove_off_collectors", "text": "You drove off the collectors by force." },
 				{ "accomplishment": "mediated_the_debt", "text": "You brokered fair terms with the witch." },
@@ -89,7 +82,7 @@
 			]
 		},
 		{
-			"_comment": "Invrisil 8c Task C3 (issue #13) 'A Gentleman's Disagreement'. Three-path parity mirroring the cisterns/wrong_order/price_of_a_favor two-beat shape. Beat 1 `resolve` is the SHARED convergence counter `merchant_fate_decided`, banked by EITHER of the mutually-exclusive fork endings in data/dialogue/invrisil_merchant_prince.json's `cornered` node (`merchant_exposed` XOR `merchant_extorted` -- the plan's locked shape 5 fork contract) once Coyle is cornered via ANY of the 3 paths: STEALTH (`lifted_true_ledger`, the counting_house_ledger prop's [Appraise Foe] beat), TALK (`secured_testimony`, already shipped by C1's invrisil_fixer.json testimony chain), or FIGHT (`forced_confession`, the `hired_blades` encounter's on_victory). Beat 2 `report` (`brothers_job_done`) is Wilovan's closing beat at the parlor (data/dialogue/invrisil_wilovan.json hub->marker), identical on all 3 paths/both forks -- it ALSO banks the shared `brothers_marker` (vendor/perk gate, shape 5) and fires the safe-passage reward (`remove_entity` on both alley footpads) there, since that is the genuine 'quest complete' moment regardless of which fork or path got you there. `took_brothers_job` (the give-beat, Wilovan's commission node) is NOT a beat; it only opens the accusation door and starts the quest. GH#68 (issue #68, quest-stage depth standard) REWORK: prepended a NEW beat 0 `scout` (SHARED, `coyle_operation_found` -- the new invrisil_boulevard `coyle_operation_lookout` prop) so the quest genuinely walks 3 real stages per path (scout -> the now-gated per-path evidence beat -> resolve/report, unchanged) instead of resolving off a single ungated evidence beat. Per-path Stage 2 gates (SKILL: counting_house_watch's `assessed_guard_pattern` in front of the ledger's real effect; TALK: 2 rumor purchases + the cups_favor carry banking `returned_cups_debt` in front of `balk`'s real options; FIGHT: the coyle_runner_trail/warehouse_approach tailing pair banking `warehouse_located` in front of Wilovan's `fists_door` come-along) are DELIBERATELY NOT separate quest beats -- props can only bank ONE accomplishment per on_skill_use/on_interact_accomplishment call (no multi-bank, no OR-shape shared counter reachable from a prop without new sim code), so a second 'evidence' beat would need either new prop machinery or repurposing an existing per-path id (both ruled out by the additive-gates-only constraint). `resolve`'s existing `merchant_fate_decided` already only fires AFTER a path's now-gated evidence beat, so the gate is real and mechanically enforced even though the journal doesn't carry it as its own beat row -- disclosed simplification, flagged for controller review. `beat_index` walks in order (WIQuests.beat_index, first-unmet-wins) -- every shipped canonical (invrisil_walkthrough live, the 3 disagreement fixtures pre-banked) now walks `scout` before `resolve` so the emitted `quest_beat_completed` payloads shift by ONE FROM their pre-rework numbering (old beat:1/beat:2 -> beat:2/beat:3); all 3 disagreement scripts' waits were re-pinned accordingly.",
+			"_comment": "Three-path parity mirroring the cisterns/wrong_order/price_of_a_favor two-beat shape.",
 			"id": "a_gentlemans_disagreement",
 			"title": "A Gentleman's Disagreement",
 			"beats": [
@@ -98,14 +91,14 @@
 				{ "id": "report", "description": "Tell Wilovan it's done.", "complete_when": { "brothers_job_done": 1 } }
 			],
 			"region": "Invrisil",
-			"_resolution_paths_comment": "Issue #79: the FORK ending (invrisil_merchant_prince.json's 'cornered' node, EXPOSE vs EXTORT) is the meaningful once-only choice for this quest -- merchant_exposed/merchant_extorted are mutually exclusive by construction, so no fallback entry is needed. The 3 info-gathering methods (STEALTH/TALK/FIGHT) feed the SAME resolve beat regardless of which fork is chosen, so they aren't separately surfaced here.",
+			"_resolution_paths_comment": "The 3 info-gathering methods (STEALTH/TALK/FIGHT) feed the SAME resolve beat regardless of which fork is chosen, so they aren't separately surfaced here.",
 			"resolution_paths": [
 				{ "accomplishment": "merchant_exposed", "text": "You exposed Coyle publicly." },
 				{ "accomplishment": "merchant_extorted", "text": "You extorted Coyle for gold." }
 			]
 		},
 		{
-			"_comment": "8d C1 (issue #14) 'What the Seal Kept' -- the Liscor dungeon (dungeon_approach/trapped_halls, gated behind the reopened M-ARC gallery). FOUR real stages, not the cisterns/wrong_order two-beat shape: this is a genuine dungeon, not a posting. Beat 'delve' (`horns_party_formed`) is Ceria's own recruit-conversation at dungeon_approach, the ally_requires gate for the vault fight -- the option that starts this quest at Olesm's desk (`horns_delve_started`, olesm_intro.json) is NOT itself a beat (heard_about_cisterns precedent), it only opens the gallery door (B3's door_when) and banks the stipend's ADVANCE half. Beat 'halls' (`halls_cleared`) is the SHARED three-pillar convergence counter in trapped_halls: FIGHT (the promoted snare_nest_slot encounter's on_victory), SKILL (dart_slit_a's on_skill_use, trap_kit consumed), TALK (Ksmvr's plates-guidance option, `ksmvr_plates.json` -- ALSO banks `guided_ksmvr_through_plates`, the real cost `ally_hp_penalty` reads at the vault fight). Beat 'vault' (`seal_kept_found`) folds the boss victory (`vault_construct_downed`, `ally_requires: horns_party_formed`) and the FIND beat (the deeper rune-door prop, `contains_when`-shaped gate on the SAME victory counter) into one journal row -- finding the door is impossible without the victory, so a separate row would never show independently. Beat 'report' (`seal_kept_reported`) is Olesm's own closing beat, same map as the giver (no travel-signposting requirement per issue #74's own same-map exemption). heard_of_the_gallery_survey (the guild_board rumor) is NOT a beat, flavor-only signpost.",
+			"_comment": "FOUR real stages, not the cisterns/wrong_order two-beat shape: this is a genuine dungeon, not a posting.",
 			"id": "what_the_seal_kept",
 			"title": "What the Seal Kept",
 			"beats": [
@@ -115,14 +108,12 @@
 				{ "id": "report", "description": "Tell Olesm what you found sealed behind the door.", "complete_when": { "seal_kept_reported": 1 } }
 			],
 			"region": "Liscor",
-			"_resolution_paths_comment": "Issue #79: only the TALK leg (guided_ksmvr_through_plates, ksmvr_plates.json) banks a distinct producer of its own -- both FIGHT (the promoted snare's on_victory) and SKILL (dart_slit_a's disarm) bank halls_cleared directly with no separate id (the old flavor-only disarmed_dart_line id was retired, see skeleton_scene.json's own trap-class comment), so they share the fallback entry -- a real, disclosed narrowing (can't distinguish FIGHT from SKILL after the fact from existing data alone).",
 			"resolution_paths": [
 				{ "accomplishment": "guided_ksmvr_through_plates", "text": "You guided Ksmvr through the pressure plates." },
 				{ "accomplishment": "", "text": "You cleared the trapped halls yourself." }
 			]
 		},
 		{
-			"_comment": "Issue #81 (exploration & optional content gap-analysis), first of two OPTIONAL mini-quests built to the 2-beat quest-stage floor (GH#68's own ruling: 'the quest-stage standard's floor for optional content can be 2'). POSTING-SEEDED: the hook is a guild_board `board_rumors` entry (`rumor_missing_recruit`, data/skeleton_scene.json) -- the SAME signpost idiom rumor_riverfarm/rumor_invrisil/rumor_dungeon_survey already use, banking a flavor-only `heard_about_missing_recruit` that is NOT itself a beat (heard_about_cisterns precedent) and only opens Dresk's own new `dresk_recruit` conversation option at the barracks. Beat 'search' (`found_missing_recruit`) is a REAL travel beat -- produced only on the sewers map (recruit_pell's own dialogue effect), a different map than the giver (barracks), so its description names the sewers landmark per `_validate_travel_beat_place_naming`. Beat 'report' (`recruit_reported_safe`) is Dresk's own closing beat, same map as the giver (no landmark needed). Single-path by design (no FIGHT/TALK/SKILL fork) -- an optional side-quest, not a main-quest beat; its real cost is the travel + the sewers' own existing danger (heard_about_cisterns gate, sewer_vermin encounter en route), not a Skill/gold toll.",
 			"id": "the_missing_recruit",
 			"title": "The Missing Recruit",
 			"beats": [
@@ -131,7 +122,6 @@
 			]
 		},
 		{
-			"_comment": "Issue #81, second OPTIONAL mini-quest, the 2-beat floor's same-map shape (contrast the_missing_recruit's cross-map one): both beats resolve on the SAME map as the giver (guild), the 'a gate opening / information re-gating a hub' state-change SKILL.md's stage definition sanctions instead of travel -- Renn's own explanation (the 'ask' option) is what makes the gear-stash prop's location legible, and holding the recovered item is what opens his turn-in option (a real gate, not a formality). POSTING-SEEDED: guild_board's `rumor_lost_hammer` board_rumors entry banks the flavor-only `heard_about_lost_hammer` hook (NOT a beat), pointing at Renn by name -- the SAME board that seeds the_missing_recruit, per THE REQUEST BOARD's own established convention of carrying several live rumors at once. Beat 'search' (`found_the_warhammer`) is banked by renns_gear_stash's `on_open_accomplishment` (a container prop, guild). Beat 'report' (`returned_the_warhammer`) is Renn's own turn-in option, gated on carrying the item (`requires: {item: renns_warhammer}`, the sixth sanctioned single-key gate).",
 			"id": "renns_warhammer",
 			"title": "Renn's Old Warhammer",
 			"beats": [
@@ -140,7 +130,6 @@
 			]
 		},
 		{
-			"_comment": "8e Phase C 'Papers for Pallass' (issue #16, controller ruling 2: arrival is a quest, never casual entry). Three REAL stages. 'sponsor' (Selys files the sponsorship at the Guild, data/dialogue/selys_delivery.json's new pallass_sponsor node, HIDDEN until invrisil_attuned -- a light chronological gate matching the region-tier ordering -- 10g filing fee) banks pallass_sponsored. LIVE path only: the plan's own alternate (a completed-postings record gate) is PARKED, not implemented -- no aggregate 'completed postings' counter exists anywhere in the sim today (only per-id completed_bounty_<id>/completed_delivery_<id> counters, WIGame.turn_in_bounty/turn_in_delivery), and inventing one would be a SECOND new-sim addition beyond the plan's ONE sanctioned addition (the race-variant key) -- flagged for controller ruling, see docs/archive/staging/pallass-staging/phase-c-forward-references.json. 'attune' (Krshia's attunement-stone purchase at her market stall, data/dialogue/krshia_crate.json's 'charms' node, gated on pallass_sponsored, 18g -- the GH#65 late-attuning precedent, invrisil_attunement_stone's own buy-contract shape verbatim) banks pallass_attuned, which also gates the new Pallass row in data/portals.json. 'arrive' (the market-tier clerk's stamp, data/dialogue/pallass_market_clerk.json -- DORMANT, no entity wired yet; Phase B's own parallel worktree lane owns pallass_market's actual map/entity placement, forward-referenced here per the 8dC3/8dC1 dormant-content precedent, see HANDOFF.md) banks pallass_entry_stamped, 2g fee.",
 			"id": "papers_for_pallass",
 			"title": "Papers for Pallass",
 			"region": "Pallass",
@@ -151,7 +140,6 @@
 			]
 		},
 		{
-			"_comment": "8e Phase C, the bureaucratic chain (controller ruling 6: Grimalkin's examiner-beat role). Three stages, all DORMANT (no entities wired -- data/dialogue/pallass_forge_clerk.json and pallass_grimalkin.json, both forward-referenced for Phase B's map lane; the 8dC3-style dormant-content split, disclosed here and in docs/archive/staging/pallass-staging/phase-c-forward-references.json). 'apply' (pallass_forge_clerk.json's permit_intro node, HIDDEN until pallass_entry_stamped so this chain can't even be asked about before real arrival in Pallass, 5g filing fee) banks forge_permit_filed. 'examined' (pallass_grimalkin.json, gated on forge_permit_filed, 8g fitness-read fee -- PLACEHOLDER copy, D-phase replaces before merge, structure/gates real) banks grimalkin_examination_passed. 'stamped' (pallass_forge_clerk.json's collect_stamp node, 3g stamp fee) banks elevator_pass_stamped -- THE producer B's elevator door pair's door_when gate waits on (controller ruling 1: 'the elevator is a door pair whose door_when requires elevator_pass_stamped'). Every stage prices a real posted fee (Pallass's own no-haggling register, docs/design/city-identity-bible.md) -- 5g/8g/3g, no discounts, no haggling.",
 			"id": "forge_tier_permit",
 			"title": "Clearance for the Forge Tier",
 			"region": "Pallass",

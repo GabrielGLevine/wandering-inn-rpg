@@ -1,6 +1,4 @@
 extends SceneTree
-## Pure dialogue-graph tests.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_dialogue.gd
 
 var _events: Array = []
 
@@ -127,10 +125,6 @@ func test_node_text_variants_last_match_wins() -> void:
 	assert(String(_events[0]["payload"]["text"]) == "last variant", "last matching text_variant wins")
 
 
-## The `gold: +/-N` effect verb applied through a REAL
-## dialogue_choose (not a direct earn/spend call) -- the earn beat, then a shop
-## buy that spends AND grants a sibling item in one option, proving the verb
-## lives beside item/accomplishment in the applier.
 func test_gold_effect_verb_applies_through_dialogue_choose() -> void:
 	_events.clear()
 	var graph := {"start": "hub", "nodes": {
@@ -146,7 +140,6 @@ func test_gold_effect_verb_applies_through_dialogue_choose() -> void:
 	game.start_dialogue("test_conv", "krshia")
 	game.dialogue_choose(0)  # earn 10 via the gold verb, advance to shop
 	assert(game.gold == 10, "gold effect verb earns through dialogue_choose")
-	# ctx rebuilt after the earn -> the requires:{gold:6} buy now reads affordable.
 	var opts: Array = game.dialogue.current_options()
 	assert(not bool(opts[0]["locked"]), "buy option unlocked once affordable (ctx refreshed mid-conversation)")
 	game.dialogue_choose(0)  # spend 6 AND grant the sibling item
@@ -154,9 +147,6 @@ func test_gold_effect_verb_applies_through_dialogue_choose() -> void:
 	assert(game.inventory.has("leather_jerkin"), "sibling item effect still grants alongside the gold spend")
 
 
-## The well_fed effect verb (Erin's meal perk), the dialogue-side
-## twin of the gold effect verb test above -- applied through the real
-## WIGame.dialogue_choose effect router, not set directly on the field.
 func test_well_fed_effect_verb_applies_through_dialogue_choose() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Erin", "text": "t", "options": [
 		{"text": "eat", "effects": [{"well_fed": true}], "end": true},
@@ -168,9 +158,6 @@ func test_well_fed_effect_verb_applies_through_dialogue_choose() -> void:
 	assert(game.well_fed, "well_fed effect verb applies through dialogue_choose")
 
 
-## An unaffordable buy stays VISIBLE-locked (greyed), never
-## hidden -- window-shopping is content (spec §3). Uses the SHIPPED M4 greying
-## mechanism, now reading the numeric gold ctx key.
 func test_gold_affordability_greys_when_broke() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Krshia", "text": "t", "options": [
 		{"text": "buy", "requires": {"gold": 50}, "effects": [{"gold": -50}], "end": true},
@@ -184,10 +171,6 @@ func test_gold_affordability_greys_when_broke() -> void:
 	assert(String(opts[0]["requirement"]) == "costs 50 gold", "greyed buy shows its cost requirement text")
 
 
-## The ONE sanctioned compound gate
-## ({gold, accomplishment}) unit-covered at the pure-walker level: the
-## accomplishment leg HIDES until met; once met, the gold leg greys-visible;
-## with both met the option unlocks. Mirrors the single-key tests above.
 func test_compound_gold_accomplishment_gate() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Krshia", "text": "t", "options": [
 		{"text": "discount buy", "requires": {"gold": 10, "accomplishment": {"stage3": 1}}, "effects": [{"gold": -10}], "end": true},
@@ -211,14 +194,6 @@ func test_compound_gold_accomplishment_gate() -> void:
 	assert(not bool(opts[0]["locked"]), "both legs met -> unlocked")
 
 
-## [Bargain]'s price_mod contract at the pure-walker level (class-foundation
-## R5 + the review wave's two rulings, 2026-07-12): (1) haggling is OPT-IN --
-## only a `haggle: true` node ever discounts, the default is the authored
-## price everywhere; (2) THE BINDING DISPLAY RULE -- the rendered price and
-## the charged price are the same number, whether the price was baked into
-## the authored text (rewritten in-place) or absent (appended live); (3) a
-## non-purchase gold gate (requires.gold with no matching spend effect --
-## Olesm's wager shape) is never decorated and never discounted.
 func test_bargain_price_mod_haggle_optin_display_equals_charge() -> void:
 	var mk_nodes := func(haggle: bool) -> Dictionary:
 		var node := {"speaker": "Eloise", "text": "t", "options": [
@@ -231,8 +206,6 @@ func test_bargain_price_mod_haggle_optin_display_equals_charge() -> void:
 		return {"start": "shop", "nodes": {"shop": node}}
 	var rich_ctx := {"skills": ["bargain"], "classes": {}, "accomplishments": {}, "names": {}, "gold": 100}
 
-	# (1)+(2): [Bargain] holder ON the haggle node -- baked price REWRITTEN
-	# (4 -> 3), bare price APPENDED discounted (7 -> 6), wager untouched.
 	var d := WIDialogue.new(mk_nodes.call(true), rich_ctx.duplicate(true), Callable())
 	d.begin()
 	var rows: Array = d.current_options()
@@ -242,8 +215,6 @@ func test_bargain_price_mod_haggle_optin_display_equals_charge() -> void:
 	var chosen: Dictionary = d.choose(0)
 	assert(int((chosen["effects"] as Array)[0]["gold"]) == -3, "the CHARGE equals the rendered price -- the binding display==charge rule")
 
-	# (2) gate side: gold exactly 3 affords the discounted yarrow on the
-	# haggle node (gate reads the same _priced_gold the display showed).
 	var broke_ctx := {"skills": ["bargain"], "classes": {}, "accomplishments": {}, "names": {}, "gold": 3}
 	var d2 := WIDialogue.new(mk_nodes.call(true), broke_ctx, Callable())
 	d2.begin()
@@ -251,8 +222,6 @@ func test_bargain_price_mod_haggle_optin_display_equals_charge() -> void:
 	assert(bool(d2.current_options()[1]["locked"]), "salt (discounted 6) still locked at 3 gold")
 	assert(String(d2.current_options()[1]["requirement"]) == "costs 6 gold", "locked requirement text names the SAME discounted figure the display would")
 
-	# (1) inversion: the SAME buyer on a DEFAULT node (no haggle flag) --
-	# authored price everywhere, byte-identical text, full charge.
 	var d3 := WIDialogue.new(mk_nodes.call(false), rich_ctx.duplicate(true), Callable())
 	d3.begin()
 	rows = d3.current_options()
@@ -260,17 +229,12 @@ func test_bargain_price_mod_haggle_optin_display_equals_charge() -> void:
 	assert(String(rows[1]["text"]) == "That pinch of warding salt. (7 gold)", "default node: appended price is the authored base")
 	assert(int((d3.choose(0)["effects"] as Array)[0]["gold"]) == -4, "default node charges the authored price")
 
-	# No [Bargain]: haggle node changes nothing either.
 	var plain_ctx := {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "gold": 100}
 	var d4 := WIDialogue.new(mk_nodes.call(true), plain_ctx, Callable())
 	d4.begin()
 	assert(String(d4.current_options()[0]["text"]) == "The yarrow bundle. (4 gold)", "haggle node without [Bargain]: authored price, untouched")
 
 
-## The once_per_waking gate at the pure-walker level, mirroring
-## test_accomplishment_requires_hides_until_met above -- HIDDEN (vanishing),
-## not greyed, keyed off the ctx's `entity_first_use` dict rather than
-## `accomplishments`.
 func test_once_per_waking_requires_hides_until_used() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "meal", "requires": {"once_per_waking": "meal:erin"}, "end": true},
@@ -285,34 +249,17 @@ func test_once_per_waking_requires_hides_until_used() -> void:
 	assert(String(d2.current_options()[0]["text"]) == "always", "only the unused/ungated option shows")
 
 
-## once_per_waking is REQUIRES-ONLY.
-## A hide_when carrying it is malformed content (test_content.gd rejects it
-## at validation time); this covers the runtime belt-and-suspenders half
-## (WIDialogue._meets_hide_when): the key is refused and IGNORED -- the
-## option stays visible in BOTH bank states (never the inverted hide a naive
-## shared-_meets evaluation would produce), and a hide_when combining it with
-## a real key still honors the real key alone. NOTE: this test deliberately
-## exercises the refusal, so each _meets_hide_when hit prints its push_error
-## line -- expected output, same precedent as test_audio_data's negative
-## cases (grep discipline watches SCRIPT ERROR|Parse Error|WARNING, and
-## push_error is none of those).
 func test_once_per_waking_refused_in_hide_when() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "follow_up", "hide_when": {"once_per_waking": "meal:erin"}, "end": true},
 		{"text": "always", "end": true},
 	]}}}
-	# Unused this waking: a naive shared _meets would call the hide_when MET
-	# ("not yet used" == true) and HIDE the option -- the inverted landmine.
-	# The refusal ignores the key: option visible.
 	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {}}, Callable())
 	d.begin()
 	assert(d.current_options().size() == 2, "hide_when once_per_waking refused: option visible while UNUSED (no inverted hide)")
-	# Used this waking: still visible -- the key is ignored entirely, not
-	# re-interpreted with some other polarity.
 	var d2b := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {"meal:erin": true}}, Callable())
 	d2b.begin()
 	assert(d2b.current_options().size() == 2, "hide_when once_per_waking refused: option visible while USED too (key ignored entirely)")
-	# Combined with a real hide_when key: the real key alone decides.
 	var combo := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "retired", "hide_when": {"accomplishment": {"done": 1}, "once_per_waking": "meal:erin"}, "end": true},
 		{"text": "always", "end": true},
@@ -322,14 +269,6 @@ func test_once_per_waking_refused_in_hide_when() -> void:
 	assert(d3.current_options().size() == 1, "combined hide_when: the REAL key (accomplishment, met) still hides -- only once_per_waking is stripped")
 
 
-## The full per-waking dialogue gate lifecycle through the REAL
-## WIGame path (start_dialogue/dialogue_choose/sleep), the issue's named
-## unmet -> used -> gone-this-waking -> back-after-sleep sequence. Uses the
-## SAME synthetic-graph harness as the gold-effect tests above (a real
-## WIGame, not a bare WIDialogue) because bank_first_use is applied by
-## WIGame.dialogue_choose's effect router, and "back after sleep" requires
-## WIGame.sleep() to clear entity_first_use -- neither is reachable at the
-## pure-walker level test_once_per_waking_requires_hides_until_used covers.
 func test_once_per_waking_gate_lifecycle_through_bank_first_use() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Erin", "text": "t", "options": [
 		{"text": "meal", "requires": {"once_per_waking": "meal:erin"}, "effects": [{"bank_first_use": "meal:erin"}], "end": true},
@@ -354,11 +293,6 @@ func test_once_per_waking_gate_lifecycle_through_bank_first_use() -> void:
 	assert(opts.size() == 2, "after sleep: the option is back")
 
 
-## The SECOND sanctioned compound gate ({accomplishment,
-## once_per_waking}) at the real-WIGame level, mirroring
-## test_compound_gold_accomplishment_gate above. Unlike the gold compound,
-## once_per_waking is itself a vanishing gate -- once BOTH legs are met, using
-## the option hides it again (no greyed "come back later" state to preserve).
 func test_compound_accomplishment_once_per_waking_gate() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Erin", "text": "t", "options": [
 		{"text": "meal", "requires": {"accomplishment": {"stage3": 1}, "once_per_waking": "meal:erin"}, "effects": [{"bank_first_use": "meal:erin"}], "end": true},
@@ -384,16 +318,6 @@ func test_compound_accomplishment_once_per_waking_gate() -> void:
 	assert(opts.size() == 2, "after sleep, with the accomplishment still held: the option is back")
 
 
-## The FOURTH sanctioned compound gate ({once_per_waking, item},
-## issue #59's dish-fetch seam) at the real-WIGame level -- item's own
-## twin of test_compound_accomplishment_once_per_waking_gate above, with
-## `item` standing in for `accomplishment`. The KEY difference from that
-## test: `item` is NOT progress-gated (unlike `accomplishment`), so the
-## option stays VISIBLE (greyed) rather than fully hidden while the dish is
-## unheld -- only the once_per_waking leg controls hide-until-met visibility.
-## The interplay this proves that the accomplishment compound cannot: a
-## FRESH item grant (cooking a second dish) after the option has already
-## retired this waking does NOT bring it back -- only sleep does.
 func test_compound_once_per_waking_item_gate() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Patron", "text": "t", "options": [
 		{"text": "serve", "requires": {"once_per_waking": "serve:test_patron", "item": "dish"}, "effects": [{"bank_first_use": "serve:test_patron"}, {"accomplishment": "served"}, {"remove_item": "dish"}], "end": true},
@@ -415,9 +339,6 @@ func test_compound_once_per_waking_item_gate() -> void:
 	opts = game.dialogue.current_options()
 	assert(opts.size() == 1, "served this waking: once_per_waking leg HIDES the option (empty-handed too, both reasons)")
 	game.dialogue_choose(0)  # leave (only visible option)
-	# The interplay this test exists for: cook a SECOND dish the SAME
-	# waking. A naive item-only gate would unlock the option again -- the
-	# once_per_waking leg must still retire it.
 	game.pickup("dish", "test")
 	game.start_dialogue("test_conv", "patron")
 	opts = game.dialogue.current_options()
@@ -430,14 +351,6 @@ func test_compound_once_per_waking_item_gate() -> void:
 	assert(not bool(opts[0]["locked"]), "the leftover dish from the second cook is still held -- fully unlocked, not just visible")
 
 
-## The SIXTH sanctioned gate type -- possession, not progress.
-## Mirrors gold's VISIBLE-LOCKED precedent (test_gold_affordability_greys_
-## when_broke above), not accomplishment's hide-until-met: an option gated on
-## an unheld item stays visible, greyed, and names the missing item -- never
-## vanishes. `_ctx["items"]` here is the read-only item CATALOG (name lookup
-## for the requirement text); `_ctx["inventory"]` is the actually-HELD ids the
-## gate itself checks -- deliberately distinct keys (see dialogue.gd's _meets
-## doc comment).
 func test_item_requires_stays_visible_locked() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "give bowl", "requires": {"item": "stew_bowl"}, "end": true},
@@ -456,11 +369,6 @@ func test_item_requires_stays_visible_locked() -> void:
 	assert(not d2.choose(0).is_empty(), "choose() resolves once the item gate is met")
 
 
-## An item id absent from the catalog (or an empty catalog
-## entirely -- a minimal test ctx that never supplies "items") still gates
-## correctly and falls back to the raw id for its requirement text, matching
-## every other name-lookup gate's tolerant-default precedent (skill/class
-## above read from `names` the same way).
 func test_item_requires_falls_back_to_raw_id_when_uncatalogued() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "give bowl", "requires": {"item": "stew_bowl"}, "end": true},
@@ -471,10 +379,6 @@ func test_item_requires_falls_back_to_raw_id_when_uncatalogued() -> void:
 	assert(String(d.current_options()[0]["requirement"]) == "requires stew_bowl", "uncatalogued item falls back to raw id in requirement text")
 
 
-## The full real-WIGame path: `inventory` rides the dialogue ctx
-## (WIGame._build_dialogue_ctx), so a real `pickup()` -- not a synthetic
-## ctx dict -- unlocks the option, and ctx refresh mid-conversation (the same
-## mechanism the gold-effect test above exercises) re-gates it live.
 func test_item_requires_unlocks_after_real_pickup() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Krshia", "text": "t", "options": [
 		{"text": "hand over the marker", "requires": {"item": "brothers_marker"}, "end": true},
@@ -489,11 +393,6 @@ func test_item_requires_unlocks_after_real_pickup() -> void:
 	assert(not bool(game.dialogue.current_options()[0]["locked"]), "real pickup() unlocks the item gate")
 
 
-## Unrecognized requires keys are unaffected by adding `item`:
-## a requires dict carrying ONLY a key _meets doesn't recognize still fails
-## closed (`recognized` stays false -> locked), and (since it is not one of
-## the four progress-gated keys) the option stays VISIBLE rather than
-## vanishing -- the same fail-safe contract every prior gate type preserved.
 func test_unrecognized_requires_key_stays_visible_and_locked() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "mystery", "requires": {"nonsense_key": true}, "end": true},
@@ -506,11 +405,6 @@ func test_unrecognized_requires_key_stays_visible_and_locked() -> void:
 	assert(d.choose(0).is_empty(), "locked-via-unrecognized-key choose still refused")
 
 
-## 8e Phase C (issue #16): the race-variant key. text_variants gated on
-## requires:{race:"<id>"} render differently per pc_race in ctx, proven BOTH
-## ways -- a met race shows its OWN variant, the OTHER race's variant never
-## leaks, and an untargeted race (gnoll) falls back to base text (ruling 3's
-## "the gnoll case falls back to base" shape).
 func test_race_requires_gates_text_variants_both_ways() -> void:
 	_events.clear()
 	var graph := {"start": "hub", "nodes": {"hub": {
@@ -537,10 +431,6 @@ func test_race_requires_gates_text_variants_both_ways() -> void:
 	assert(String(_events[0]["payload"]["text"]) == "base text", "an untargeted race (gnoll) falls back to base text -- neither variant matches")
 
 
-## The same key on an OPTION's requires (unshipped in content today, but the
-## mechanism must behave like every other visible-locked single-key gate --
-## skill/class/item's own precedent): visible, locked when unmet, choosable
-## once met -- never hidden (race is cosmetic, not progress).
 func test_race_requires_on_option_stays_visible_locked() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "drakes only", "requires": {"race": "drake"}, "end": true},
@@ -558,14 +448,6 @@ func test_race_requires_on_option_stays_visible_locked() -> void:
 	assert(not d2.choose(0).is_empty(), "met race gate choosable")
 
 
-## Issue #80 (world reactivity wave): the phase-variant key, the race key's
-## own exact twin. text_variants gated on requires:{phase:["<id>",...]} render
-## differently per ctx phase, proven BOTH ways -- a met phase shows its OWN
-## variant, the OTHER phase's variant never leaks, and an untargeted phase
-## (day, when only dusk/night are authored) falls back to base text. Value
-## shape is an ARRAY (encounter_when/visual_states' own convention), not a
-## bare string like race -- also proves a variant naming BOTH dusk and night
-## renders for either.
 func test_phase_requires_gates_text_variants_both_ways() -> void:
 	_events.clear()
 	var graph := {"start": "hub", "nodes": {"hub": {
@@ -592,9 +474,6 @@ func test_phase_requires_gates_text_variants_both_ways() -> void:
 	assert(String(_events[0]["payload"]["text"]) == "night-only variant", "at night the LATER-authored night-only variant wins over the earlier dusk-or-night variant (last match wins)")
 
 
-## The same key on an OPTION's requires: visible, locked when unmet,
-## choosable once met -- never hidden (phase is derived state, not progress,
-## same as race/skill/class's own precedent).
 func test_phase_requires_on_option_stays_visible_locked() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "night only", "requires": {"phase": ["night"]}, "end": true},
@@ -626,14 +505,6 @@ func _find_entity(scene: Dictionary, map_id: String, id: String) -> Dictionary:
 	return {}
 
 
-## The talk_pool_stages GROWTH seam (generalizes
-## the one-shot talk_pool_post -- Lyonette's shipped
-## talk_pool_post migrated to a one-entry talk_pool_stages array, RENAME not
-## rewrite). Before the gate (resolved_wrong_order) is banked, Lyonette's
-## rotating small-talk draws from her BASE talk_pool; after it, the same
-## first-talk-of-waking path draws from the GROWN stage-2 pool (a
-## replacement, not a merge). Drives the real WIGame interact path against
-## the shipped Lyonette entity.
 func test_talk_pool_post_grows_pool_after_gate() -> void:
 	_events.clear()
 	var game := _make_game_with_dialogue({})
@@ -641,14 +512,12 @@ func test_talk_pool_post_grows_pool_after_gate() -> void:
 	var lyo := _find_entity(scene, "inn", "lyonette")
 	var base_pool: Array = lyo["talk_pool"]
 	var post_lines: Array = ((lyo["talk_pool_stages"] as Array)[0] as Dictionary)["lines"]
-	# Gate UNMET: first talk of the waking plays a BASE pool line.
 	game.player_cell = Vector2i(8, 5)
 	game.player_facing = Vector2i(1, 0)
 	game.interact()
 	var before := _last_line_text()
 	assert(base_pool.has(before), "pre-resolution talk draws from the BASE talk_pool")
 	assert(not post_lines.has(before), "pre-resolution talk is NOT a grown line")
-	# Bank the gate + sleep to re-arm the pool (sleep clears social_talked).
 	game.record_accomplishment("resolved_wrong_order")
 	game.sleep()
 	_events.clear()
@@ -698,9 +567,6 @@ func _init() -> void:
 	assert(d.current_id == "hub", "refusal does not advance")
 	assert(d.choose(99).is_empty(), "out-of-range refused")
 
-	# Visible index 4 is the "Spent option." -- with accomplishments: {} its
-	# hide_when is not met, so it stays visible and choosing it by its
-	# VISIBLE index resolves back to the correct authored option (goto "chat").
 	var r_spent := d.choose(4)
 	assert(r_spent["ended"] == false, "spent option chosen while still visible")
 	d.advance(String(r_spent["next"]))
@@ -719,7 +585,6 @@ func _init() -> void:
 	assert(d.finished and _count("dialogue_ended") == 1, "ended emits and finishes")
 	assert(d.choose(0).is_empty(), "finished dialogue refuses input")
 
-	# Loop-back navigation
 	var d2 := WIDialogue.new(GRAPH, ctx, _sink)
 	d2.begin()
 	var d2_chat := d2.choose(0)
@@ -729,9 +594,6 @@ func _init() -> void:
 	d2.advance(String(d2_hub["next"]))
 	assert(d2.current_id == "hub", "hub loop-back works")
 
-	# hide_when: with the accomplishment met, "Spent option." is omitted entirely
-	# from the visible list, and the unmet accomplishment-gated option is also
-	# hidden. VISIBLE indices must still map back to the correct authored option.
 	var ctx_spent := {
 		"skills": ["basic_cleaning"], "classes": {"warrior": 1},
 		"accomplishments": {"used_it": 1}, "names": {"basic_cleaning": "[Basic Cleaning]", "warrior": "Warrior"},

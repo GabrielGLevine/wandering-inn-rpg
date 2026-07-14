@@ -4,7 +4,6 @@
 	},
 	"consolidations": [
 		{
-			"_comment": "Class-foundation pass R3 (issue #96, 2026-07-12): the retune docs/design/evolution-reachability.md considered and REJECTED-pending-a-prerequisite (its own 'The fix considered and REJECTED' section) -- min_parent_level 6->10, min_combined_level 13->21, the EXACT values that page pinned for a future pass. [Spellsword] now arrives only after BOTH parents' own evolution.at_level (10) can independently resolve, inverting the old race (mixed play used to reach the consolidation offer at ~waking 21 while mage's own Replacement took ~waking 39 -- see that doc's 'smoking gun' section) -- re-verified this task via tools/evolution_reachability.gd, table re-run in that same doc. The T3/T4 coupled rework this floor bump requires (spellsword's own SPARSE TABLE floor moves 9->14, tests/sim_combat_batch.gd's T3 reference build + docs/design/region-tiers.md) landed together in this same commit -- see spellsword's own _comment below and sim_combat_batch.gd's t3_warrior10 BUILD row.",
 			"id": "spellsword",
 			"target": "spellsword",
 			"parent_lines": [
@@ -15,7 +14,7 @@
 			"min_combined_level": 21
 		},
 		{
-			"_comment": "Class-foundation pass R4 (2026-07-12): [Innkeeper] (helper + diplomat) -- the game's own heart. SAME gate shape as [Spellsword] (min_parent_level 10, min_combined_level 21, the R3-pinned values) -- new consolidations follow the SAME requires_any-parent-counter contract, not a bespoke gate. parent_lines follow the ⟦I7⟧ lineage convention (base id first, then evolution targets in canon order) exactly like spellsword's own warrior/mage lines.",
+			"_comment": "SAME gate shape as [Spellsword] (min_parent_level 10, min_combined_level 21, the R3-pinned values) -- new consolidations follow the SAME requires_any-parent-counter contract, not a bespoke gate.",
 			"id": "innkeeper",
 			"target": "innkeeper",
 			"parent_lines": [
@@ -26,7 +25,7 @@
 			"min_combined_level": 21
 		},
 		{
-			"_comment": "Class-foundation pass R4 (2026-07-12): [Ranger] (warrior + archer) -- wilderness canon. SAME gate shape as [Spellsword]/[Innkeeper] (min_parent_level 10, min_combined_level 21).",
+			"_comment": "SAME gate shape as [Spellsword]/[Innkeeper] (min_parent_level 10, min_combined_level 21).",
 			"id": "ranger",
 			"target": "ranger",
 			"parent_lines": [
@@ -39,7 +38,6 @@
 	],
 	"classes": [
 		{
-			"_comment": "Grant-ladder shape: L1 is the starter trio (frost_bolt/quick_cast/light), L2 the first gated grant wave (won_combat:3 -> flame_jet/mana_shield), and [Invisibility] sits at L5 -- a canon Tier-4 second-wave utility verb (see the skill's own `_comment`), so it belongs neither in the L1 starter slot nor L2's combat-power wave; L5 (spell_cast:13, the ladder's midpoint before the L10 evolution branch) keeps it reachable well before evolution without perturbing either. CONSTRAINT: [Invisibility] now carries a real combat read (a self-cast untargetable status) -- MEASURED balance-neutral, not exempt-by-field-only-status: `sim_combat_batch.gd` ran byte-identical before/after wiring it, because `WICombatAI` never selects an `invisibility`-type effect (only ever picks line_damage/spell_damage, see combat_ai.gd's own doc comment) and the harness's PC autoplay is melee-profile (never casts any spell). If AI ever gains a caster profile that could self-cast utility skills, or the PC's autoplay profile changes, re-run `sim_combat_batch.gd` and re-justify the rung. CLASS-FOUNDATION PASS R2 (issue #96's own diagnosis, 2026-07-12): L2 also grants NEW `flame_dart` -- see that skill's own _comment in skills.json for the full design trace (the earn-surface content gap #96 reported, closed structurally). combat_ai.gd's `_act_ranged` picks the FIRST affordable `spell_damage`-type skill in `c[WIKeys.SKILLS]` iteration order (a real order-bias, and part of why 'caster' AI already leans ice -- frost_bolt is an L1 grant, so it is ALWAYS scanned before any L2 grant regardless of where flame_dart sits within L2's own list) -- appending flame_dart after flame_jet/mana_shield means the 'caster' AI profile's spell_id pick is UNCHANGED for every existing build (frost_bolt still wins the greedy first-match whenever both are affordable), verified byte-identical via a full sim_combat_batch.gd diff. This is a REAL PLAYER-facing option (a human player picks whichever hotbar slot they want), just AI-invisible under the current 'caster' calibration profile -- the same category as icy_floor/blast_damage/invisibility (WICombatAI never selects those types at all; flame_dart differs only in that its TYPE is selectable, but it loses the greedy tie-break to frost_bolt every time it matters).",
 			"id": "mage",
 			"display_name": "Mage",
 			"stat_growth": { "int": 1 },
@@ -94,7 +92,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Swordsman] is Replacement-only (never gained_by) -- warrior's evolution carries the PARENT's HELD level directly into classes[swordsman] (check_evolutions/_resolve_evolutions -> `classes[new_id] = level`, wi_game.gd), never through check_level_ups counting up from level 1. Floor = warrior's own evolution.at_level (10) -- the walk can never arrive below it (check_evolutions skips any held < at_level). Levels 1-9 intentionally absent -- padding below the derived floor is now a content ERROR (test_content.gd's _validate_class_level_tables). Entries 10-12 stay CONTIGUOUS to the class's own max (12, matching warrior's own max -- an off_interval evolution can still fire as late as warrior 12, so 12 must stay covered too).",
+			"_comment": "Floor = warrior's own evolution.at_level (10) -- the walk can never arrive below it (check_evolutions skips any held < at_level).",
 			"id": "swordsman",
 			"display_name": "Swordsman",
 			"stat_growth": { "str": 1, "dex": 1 },
@@ -119,7 +117,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Ice Mage] is Replacement-only (never gained_by) -- mage's evolution carries the PARENT's HELD level directly into classes[ice_mage] (check_evolutions/_resolve_evolutions -> `classes[new_id] = level`, wi_game.gd), never through check_level_ups counting up from level 1. Floor = mage's own evolution.at_level (10) -- the walk can never arrive below it. Levels 1-9 intentionally absent (padding below the derived floor is now a content ERROR, test_content.gd's _validate_class_level_tables); entries 10-12 stay CONTIGUOUS to the class's own max (12, matching mage's own max -- an off_interval evolution can still fire as late as mage 12, so 12 must stay covered too).",
+			"_comment": "Floor = mage's own evolution.at_level (10) -- the walk can never arrive below it.",
 			"id": "ice_mage",
 			"display_name": "Ice Mage",
 			"stat_growth": { "int": 1 },
@@ -132,7 +130,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Fire Mage] is Replacement-only (never gained_by), the fire-dominant twin of [Ice Mage] above -- same floor derivation (mage's evolution.at_level == 10) and same reasoning applies verbatim. GH#71: L11's `fire_cast:30` rung already existed with an empty grants list (padding within the existing 10-12 sparse-table window, not a new floor/ceiling) -- [Flame Pillar] (the first blast_damage grant) lands there, a full level after the L10 evolution kit, matching the mage line's own second-wave-utility precedent ([Invisibility] at mage L5, a midpoint rung, not the L1/L2 opening waves). BALANCE NEUTRALITY: AI never selects blast_damage (combat_ai.gd only ever picks line_damage/spell_damage) and PC autoplay is melee-profile (never casts any spell, see CLAUDE.md Gotchas) -- `sim_combat_batch.gd` BUILDS never assign `fire_mage` directly (only bare `mage`) either, so this grant is structurally unreachable by the harness; batch run byte-identical before/after, verified per-task (the invisibility precedent).",
+			"_comment": "SPARSE TABLE (GH#54): [Fire Mage] is Replacement-only (never gained_by), the fire-dominant twin of [Ice Mage] above -- same floor derivation (mage's evolution.at_level == 10) and same reasoning applies verbatim.",
 			"id": "fire_mage",
 			"display_name": "Fire Mage",
 			"stat_growth": { "int": 1 },
@@ -145,7 +143,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Spellsword] is consolidation-only (never gained_by) -- accept_consolidation sets classes[spellsword] directly to the MERGED level (wi_game.gd's `classes[target] = level`), never through check_level_ups counting up from level 1. CLASS-FOUNDATION PASS R3 (issue #96, 2026-07-12) EXECUTES the retune evolution-reachability.md's own '#96 NOTE' pinned-but-rejected (that doc's 'The fix considered and REJECTED' section) -- FLOOR RE-DERIVED at the new consolidations[0] thresholds (min_parent_level 10, min_combined_level 21): `s_min = max(min_combined_level, 2*min_parent_level) = max(21, 20) = 21`; for a fixed sum the most-balanced split minimizes the merge -- `level_a = 21/2 = 10` (integer division), `level_b = 11`; merged = `max(ceil(2*21/3), max(10,11)) = max(14, 11) = 14`. Floor = 14 (test_content.gd's `_validate_class_level_tables` re-derives this exact formula from the SAME consolidations data, never hardcoded). Levels 1-13 are now all sub-floor -- TRAP RE-AVOIDED (the SAME migration this table's history already required once): `keener_edge` (the old level-9 entry) is migrated onto the NEW floor entry (14) below, never dropped. GH#61 TOP-END is UNCHANGED by this floor move (it derives from the OTHER end -- both parent lines' own table maxes, still 12/12 -- independent of min_parent_level/min_combined_level): merged ceiling = max(ceil(2*24/3),12) = 16, so the table still needs to reach 16, unchanged. THE COUPLED T3/T4 REWORK this floor bump requires (per evolution-reachability.md's own prerequisite) landed together in this same commit: tests/sim_combat_batch.gd's T3 gating authority moved from the now-unreachable `t3_spellsword9` to a new `t3_warrior10` build (briar_collectors_t3_warrior10_hunter/briar_collectors_deep_t3_warrior10_hunter/hired_blades_t3_warrior10_wilovan re-derived GATED at that build, the SAME bands the old spellsword9-gated cells held), docs/design/region-tiers.md updated to match, and tools/evolution_reachability.gd re-run (docs/design/evolution-reachability.md's table) proving the race actually inverted: [[Ice Mage]/[Fire Mage]/[Swordsman]/[Spearmaster] now resolve well before the consolidation offer under mono play, and the offer itself only fires at combined >= 21 (both parents past their own at_level=10). L16's [Spellbound Strike] stays an INVENTED name, flagged as such (wiki confirms [Spellsword] itself as attested canon -- Pisces's 'dubiously qualified' [Swordsman]/[Mage] hybrids, List_of_Classes/S names Edward/Requiel as holders -- but no clean canon Skill name/effect survived wiki verification for the capstone itself). Rides the EXISTING damage_mult type, no weapon gate (every consolidated spellsword fields it regardless of parent weapon line), costs both AP and MP (the class's only damage_mult skill that does). Iconless, degrades gracefully (flame_pillar's own precedent).",
+			"_comment": "Floor = 14 (test_content.gd's `_validate_class_level_tables` re-derives this exact formula from the SAME consolidations data, never hardcoded).",
 			"id": "spellsword",
 			"display_name": "Spellsword",
 			"stat_growth": { "str": 1, "int": 1 },
@@ -157,7 +155,7 @@
 			]
 		},
 		{
-			"_comment": "Issue #96 reachability audit: `evolution` gained `balanced_grants` (previously absent, unlike mage's own `[ice_shard, flare_burst]` sibling below) -- a Helper who genuinely splits Serve/Deliver play (dominance never resolves, e.g. a 75/75 split, share 0.50 < dominance_share 0.6) used to sit in PERMANENT Waiting forever with no consolation grant at all (mage's parallel case at least gets Generalist). One representative field skill per target (soothe_clientele from [Barmaid]'s own L10 kit, sweep_the_tables from [Server]'s), matching mage's exact one-skill-per-target convention. Both are `field:true`/exploration-only (no `ap_cost`/`effect` combat shape) and Helper never appears in any GATED sim_combat_batch.gd cell at evolution-eligible levels (`warrior2_helper2` is MEASURED-only at helper:2, well below `at_level`) -- zero combat-balance surface, purely additive.",
+			"_comment": "a 75/75 split, share 0.50 < dominance_share 0.6) used to sit in PERMANENT Waiting forever with no consolation grant at all (mage's parallel case at least gets Generalist).",
 			"id": "helper",
 			"display_name": "Helper",
 			"stat_growth": { "con": 1 },
@@ -183,7 +181,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54): [Barmaid] is Replacement-only (never gained_by) -- helper's evolution carries the PARENT's HELD level directly into classes[barmaid] (check_evolutions/_resolve_evolutions -> `classes[new_id] = level`, wi_game.gd), never through check_level_ups counting up from level 1. Floor = helper's own evolution.at_level (10) -- the walk can never arrive below it. Levels 1-9 intentionally absent (padding below the derived floor is now a content ERROR, test_content.gd's _validate_class_level_tables); entries 10-12 stay CONTIGUOUS to the class's own max (12).",
+			"_comment": "Floor = helper's own evolution.at_level (10) -- the walk can never arrive below it.",
 			"id": "barmaid",
 			"display_name": "Barmaid",
 			"stat_growth": { "con": 1, "dex": 1 },
@@ -207,7 +205,7 @@
 			]
 		},
 		{
-			"_comment": "Class-foundation pass R4 (2026-07-12): [Innkeeper] -- SPARSE TABLE (GH#54 convention), consolidation-only (never gained_by), the SAME shape as [Spellsword]. Floor derivation at the SAME thresholds (min_parent_level 10, min_combined_level 21): s_min=max(21,20)=21; level_a=10,level_b=11; merged=max(ceil(2*21/3),max(10,11))=max(14,11)=14. Floor=14. TOP-END: helper line ceiling = max(helper:10, barmaid:12, server:12) = 12; diplomat line ceiling = max(diplomat:10, emissary:10) = 10 (both post-R1 tables); merged_ceiling = max(ceil(2*22/3), max(12,10)) = max(15,12) = 15 -- table must reach 15, entries 14-15 below. CANON-VERDICT 2026-07-12: [Innkeeper] STRONGLY ATTESTED -- Erin Solstice's own starting class ('obtained the [Innkeeper] class after cleaning up an abandoned inn', wiki), exactly matching this pass's own framing ('the game's own heart'). `aspiration` [Magical Innkeeper] is also wiki-attested (Innkeeper's own real evolution chain: '[Innkeeper] can evolve into [Magical Innkeeper]'). `inherits` folds BOTH parents' full kits automatically (the spellsword precedent) -- L14's own grants list carries only the ONE new skill, `perfect_hospitality`. requires_any thresholds continue each parent's own curve (served_customer from helper's line, heard_gossip from diplomat's line -- hand-authored headroom past their own L10/L12 ceilings, the spellsword L9-16 precedent's own disclosed non-formulaic convention). stat_growth picks ONE representative stat per parent line (con from helper, int from diplomat), mirroring spellsword's own str-from-warrior/int-from-mage pick.",
+			"_comment": "`inherits` folds BOTH parents' full kits automatically (the spellsword precedent) -- L14's own grants list carries only the ONE new skill, `perfect_hospitality`.",
 			"id": "innkeeper",
 			"display_name": "Innkeeper",
 			"stat_growth": { "con": 1, "int": 1 },
@@ -219,7 +217,7 @@
 			]
 		},
 		{
-			"_comment": "Class-foundation pass R1 (#93/#95/#96, 2026-07-12): the stagnant trio's ladder -- Tactician was a dead-end (no evolution block, no grants past L1) despite `observed_things` already climbing to L12. `aspiration` (flavor-only, no mechanism) is REMOVED here because [Strategist] is now a REAL evolution target below, not a distant aspiration -- its own further aspiration ([Grandmaster Strategist], wiki-attested) moved onto the new `strategist` entry instead. L3 reuses the ALREADY-SHIPPED `dangersense` (warrior L5's own grant -- multiple classes granting the same skill id is precedented, e.g. `quick_movement` on both warrior L3 and helper L5): canon-fit (a Tactician who reads the field reads danger too), zero new content. L5/L7 are the two NEW grants (`directed_strike`/`flanking_step`, both WIEffectText-expressible -- see skills.json). Evolution: SINGLE-AXIS Replacement (`targets` carries exactly one key, `observed_things` -- the class's OWN leveling counter), deliberately NOT a multi-key fork: two keys mapping to the SAME target class would make `dominance_share`'s tie/under-60%-share math a spurious block (both keys resolve to the identical outcome regardless of split), the exact reachability-trap class this whole pass exists to close (#96). Mirrors archer/sharpshooter's own 'single-path Replacement, not a fork' precedent (see that class's own `_comment`) -- `min_uses` (12) clears trivially since `observed_things`'s own L10 threshold (55) is already far past it.",
+			"_comment": "Mirrors archer/sharpshooter's own 'single-path Replacement, not a fork' precedent (see that class's own `_comment`) -- `min_uses` (12) clears trivially since `observed_things`'s own L10 threshold (55) is already far past it.",
 			"id": "tactician",
 			"display_name": "Tactician",
 			"stat_growth": { "int": 1 },
@@ -246,7 +244,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54 convention). [Strategist] is Replacement-only (never gained_by) -- tactician's evolution carries the PARENT's HELD level directly in. Floor = tactician's own evolution.at_level (10); tactician's OWN table stops at 12, so entries 10-12 stay contiguous to that max (the warrior/mage precedent, not archer's stop-at-floor shape, since tactician keeps leveling past 10 while 'Waiting'). CANON-VERDICT 2026-07-12: [Strategist] ATTESTED (wiki List_of_Classes/S + the Olesm Swifttail page -- Olesm Swifttail himself IS a [Strategist], and Tactician->Strategist is his own attested arc, matching this class's existing gained_by flavor `chess_with_olesm`). The wiki's own canon numbers (Level 30 [Tactician], or Level 20 + a military rank) are NOT reused verbatim -- same invented-but-canon-grounded mechanical threshold this game already applies to swordsman/spearmaster/sharpshooter's own evolution levels, disclosed here rather than silently mismatched. `read_the_field`'s design trace (L10 grant): the plan's first option (\"reuse the observe effect shape at wider radius\") was REJECTED -- `observe`/[Appraise Foe] has no radius/effect field at all (a single faced-cell field dispatch, see field_skills.gd), so a radius widening would mean inventing a new field-skill scan mechanism, real new sim ground outside this pass's `reuse existing effect types` discipline. The plan's fallback (\"a second dangersense-family passive\") was ALSO rejected -- `dangersense` is a confirmed opaque no-card effect type (effect_text.gd's own doc comment), and this pass's binding COMMIT-1 rule requires every NEW skill's effect to be WIEffectText-expressible (visible currency). Picked instead: `hit_bonus` (basic_swordwork's own effect type, already expressible as \"+N to hit\") -- a strategist who has read the whole board guides every strike true, a clean capstone reading distinct from L5's single-target damage_mult and L7's move_pool_bonus. Name `[Read the Field]`: wiki-checked, no exact or close match found (Skills Effect index, letter R) -- CANON-VERDICT: ORIGINAL, canon-plausible flag (mirrors [Battlefield Awareness]'s own unflagged precedent, the class's L1 grant already in this exact idiom). `aspiration` [Grandmaster Strategist] is wiki-attested (same Strategist search result: \"[Strategist] can further advance to [Grandmaster Strategist]\") -- the flavor-only further-aspiration slot vacated by tactician's own aspiration field above.",
+			"_comment": "[Strategist] is Replacement-only (never gained_by) -- tactician's evolution carries the PARENT's HELD level directly in.",
 			"id": "strategist",
 			"display_name": "Strategist",
 			"stat_growth": { "int": 2 },
@@ -259,7 +257,6 @@
 			]
 		},
 		{
-			"_comment": "Class-foundation pass R1 (2026-07-12): Diplomat's ladder, extended L7-L10 to give the class an evolution (previously a hard 6-level dead end). L3/L5/L7 continue the existing requires_any heard_gossip/befriended_moments curve (hand-authored headroom past L6, same disclosed-not-formulaic convention spellsword's own L9-16 table uses) with three NEW grants: `measured_words` (field-only, no combat effect -- the social pillar's own USE surface is future persuade-fork gates, not a mechanical effect); `soothing_presence` (combat heal, `ally_target: true` -- see skills.json/skill_effects.gd for the widened-but-byte-identical-for-second_wind heal resolver); `open_doors` (field-only passive flavor + a future vendor-perk hook, `charming_smile` stays the L1 dialogue-gate skill, untouched per the dialogue-gate coupling trap). Evolution: SINGLE-AXIS Replacement on `heard_gossip` alone (tactician's own precedent above -- a 2-key fork onto the SAME single target class would spuriously block on dominance_share for no reason, since both keys would resolve identically).",
 			"id": "diplomat",
 			"display_name": "Diplomat",
 			"stat_growth": { "int": 1 },
@@ -284,7 +281,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54 convention). [Emissary] is Replacement-only (never gained_by) -- diplomat's evolution carries the PARENT's HELD level directly in. Floor = diplomat's own evolution.at_level (10); diplomat's OWN table now stops at 10 (mirrors archer/sharpshooter's stop-at-floor shape, not warrior/mage's past-floor padding), so this table's single entry is already contiguous to its own max by construction -- no L11/12 to author. CANON-VERDICT 2026-07-12: [Emissary] ATTESTED (wiki List_of_Classes/E -- holder Xorespe). The wiki does not itself attest a Diplomat-to-Emissary EVOLUTION LINK (only the bare class name) -- that specific lineage is this game's own mechanical design choice, the same invented-but-canon-grounded linkage sharpshooter's own `_comment` already discloses for archer->sharpshooter. Deliberately grants NOTHING new at floor level 10 (the sharpshooter precedent: the diplomat kit -- charming_smile/calming_touch/measured_words/soothing_presence/open_doors -- is already complete per the controller spec's kit list; the evolution's payoff is the class identity itself).",
+			"_comment": "[Emissary] is Replacement-only (never gained_by) -- diplomat's evolution carries the PARENT's HELD level directly in.",
 			"id": "emissary",
 			"display_name": "Emissary",
 			"stat_growth": { "int": 2 },
@@ -294,7 +291,7 @@
 			]
 		},
 		{
-			"_comment": "[Rogue] -- CANON-VERDICT 2026-07-07 ATTESTED (List_of_Classes/R: base class, holders Foliana/Quietstab; variants [Rogue Leader]/[Rogue Mage]/[Rogue Marksman]/[Ravager Rogue]). USER RULING 4: stealth's home. EARN TRACE (action-driven model, no invented counter for the gate): gained_by is `recovered_crate_watch` (the Missing-Crate WATCH path's own accomplishment -- pointing the Watch sergeant at the scavengers via a classless persuade option, `data/dialogue/watch_crate.json`). Two other existing 'guile' counters were traced and REJECTED for the GATE: `recovered_crate_guile` requires already holding [Light] (a Mage L1 grant) to study `cellar_door` first -- coupling Rogue's earn to Mage is the wrong dependency for an independent action-driven class, unlike every other earned class (warrior/mage/diplomat/helper/tactician all gate on ONE classless action); `scouted_the_nest` requires already holding [Appraise Foe] (a Tactician grant) for the same reason. `recovered_crate_watch` needs only the classless `asked_about_crate` accomplishment -- reachable by any PC, no prerequisite class or skill. CIRCULARITY TRAP (a) AVOIDED: the obvious 'sneak past N dangers' counter was NOT used as the gate because it requires the `sneak` skill's `sneaking` flag to already be true (`_check_trigger_radius` only skips -- and could only bank a counter -- while `sneaking`), and NO class grants `sneak` before Rogue does; gating Rogue's own grant on it would be circular. That counter (`sneaked_past_danger`, added this task as the sanctioned small field-seam touch in `wi_game.gd`'s `_check_trigger_radius`, entity_first_use-deduped per waking, the [Appraise Foe]/[Friendly Face] precedent) is used ONLY for LEVEL-UP past L1, where circularity does not apply (the PC already holds `sneak` by then). ONBOARDING INTEGRITY (b) TRACED: `recovered_crate_watch` is street-quest content (Krshia's Missing Crate, `data/dialogue/watch_crate.json`) reachable only on the `street` map; `street` is reachable only via `floodplains`' `liscor_gate` door (skeleton_scene.json map graph: inn<->floodplains<->street, no direct inn->street door), and `liscor_gate` sits at (31,25), 2 cells from `goblin_encounter_1` (30,23, trigger_radius 2 Chebyshev) -- structurally impossible to reach the gate without first passing through the mandatory ambush's trigger zone. Since class grants resolve only at `sleep()` (never mid-waking), and `recovered_crate_watch` cannot be banked before the street is reached, [Rogue] cannot be granted before `goblin_encounter_1` has already fired for every fresh player -- onboarding integrity holds by map topology, not merely by convention. `sneak`'s grant level is L1 (the same convention every other earned class uses for its signature grant -- mage/warrior/diplomat/tactician all grant at L1), which is POST-onboarding for exactly the reason above. stat_growth dex:1 is the first earned class to grow dex alone (finesse/agility fits the archetype; stats stay hidden from the player regardless). FIXTURE-FIRST canonical: `rogue_earn_loop` (fixture `near_rogue`) proves earn(fixture-preloaded) -> sleep -> class_gained -> [Stealth] fielded end-to-end.",
+			"_comment": "`recovered_crate_watch` needs only the classless `asked_about_crate` accomplishment -- reachable by any PC, no prerequisite class or skill.",
 			"id": "rogue",
 			"display_name": "Rogue",
 			"stat_growth": { "dex": 1 },
@@ -319,7 +316,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54 convention). [Infiltrator] is Replacement-only (never gained_by) -- rogue's evolution carries the PARENT's HELD level directly in. Floor = rogue's own evolution.at_level (10); rogue's OWN table now stops at 10 (archer/sharpshooter's stop-at-floor shape), so this table's single entry is already contiguous to its own max. CANON-VERDICT 2026-07-12: [Infiltrator] ATTESTED (wiki's Crime in Innworld page -- grouped with [Informant]/[Saboteur]/[Spy]/[Spymaster] as a covert/undercover-operations class). Evolution axis is SINGLE-KEY on `sneaked_past_danger` (rogue's own core leveling counter, the class's L1 signature grant), deliberately NOT `trap_disarmed` (the new R6 counter banked by future trap placements, Lane B) -- `trap_disarmed` is genuinely rogue-flavored content (produced only via the `disarm_trap` skill this pass grants), but wiring it into a SECOND targets key pointing at the same `infiltrator` target would reproduce the exact 2-keys-1-target dominance-share trap this pass's own tactician/diplomat `_comment`s call out (a lopsided-but-substantial split across two keys resolving to the identical class could spuriously read as 'waiting' even past min_uses). `trap_disarmed` also cannot structurally exist yet in a fresh Lane-A-only worktree (R6's placements are Lane B's parallel-lane job) -- keying evolution on it would be a reachability regression until the lanes reconcile, the opposite of this pass's whole purpose. Deliberately grants NOTHING new at floor level 10 (the sharpshooter/emissary precedent -- kit is already complete: sneak/find_trap/disarm_trap/sudden_strike).",
+			"_comment": "Floor = rogue's own evolution.at_level (10); rogue's OWN table now stops at 10 (archer/sharpshooter's stop-at-floor shape), so this table's single entry is already contiguous to its own max.",
 			"id": "infiltrator",
 			"display_name": "Infiltrator",
 			"stat_growth": { "dex": 2 },
@@ -329,7 +326,7 @@
 			]
 		},
 		{
-			"_comment": "GH#70 [Archer]. CANON-VERDICT: ATTESTED, wiki List_of_Classes/A ('[Archer]', holders incl. Badarrow). EARN: `ranged_hit` (WICombat's new per-fight tally, banked on every landed hit from a weapon_range>1 combatant -- see wi_combat.gd's own doc comment) produced by (a) a bow's basic Attack in a real fight and (b) the barracks-yard archery-butt prop (`archery_butt`, skeleton_scene.json street map) via its `on_interact_accomplishment`, gated on carrying ANY bow (`requires_weapon_family: 'bow'`, wi_game.gd's new small parallel to the #59 dialogue item-gate for bare props). gained_by threshold (3) is deliberately LOW -- reachable at the practice butt alone, no kill required, matching the classless-start onboarding parity every other earned class already gives (spar-only for warrior, one conversation for mage/rogue/diplomat/tactician). L3+ thresholds reuse warrior's own melee_hit curve (6/12/18/25/32/40/48/57) verbatim -- same 'physical hit count' shape, no new pacing formula. stat_growth dex:1 -- finesse archetype, matches rogue's own dex-only growth (stats never shown to the player regardless). Evolution's `targets` dict carries exactly ONE counter (`bow_skill_used`, tallied for free by wi_combat.gd's existing `_tally_skill_use` off every archer skill's `weapon: bow` tag -- no new tally code) so dominance is met trivially once `min_uses` (12, matching warrior/mage's own bar) clears -- a single-path Replacement, not a fork. Deliberately NO aim-buff/hit-bonus status skill in this kit (would be a new STATUS-applies shape = new sim ground) -- parked per the controller spec.",
+			"_comment": "L3+ thresholds reuse warrior's own melee_hit curve (6/12/18/25/32/40/48/57) verbatim -- same 'physical hit count' shape, no new pacing formula.",
 			"id": "archer",
 			"display_name": "Archer",
 			"stat_growth": { "dex": 1 },
@@ -354,7 +351,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54 convention, applied to GH#70's new evolution). [Sharpshooter] is Replacement-only (never gained_by) -- archer's evolution carries the PARENT's HELD level directly into classes[sharpshooter] (check_evolutions/_resolve_evolutions), never counting up from level 1. Floor = archer's own evolution.at_level (10); archer's OWN table stops at 10 too (unlike warrior/mage, which keep leveling to 12 while 'Waiting' for dominance), so floor == archer's max, EXCEPT this class-foundation pass (R1, 2026-07-12) extends the table to 12 to fit L12's new grant (rule (b)'s contiguity requirement forces 11 to exist too, even though it grants nothing). CANON-VERDICT: ATTESTED, wiki List_of_Classes/S -- '[Sharpshooter], Variant of [Sniper]?'. The wiki does not itself attest an Archer-to-Sharpshooter EVOLUTION LINK (only the bare class name + a tentative Sniper-variant reading) -- that specific lineage is this game's own mechanical design choice, the same kind of invented-but-canon-grounded linkage swordsman/spearmaster's own Warrior ancestry already is. BUG FIX (R1, found while wiring this ruling): this entry SHIPPED WITHOUT an `inherits: \"archer\"` key -- every other Replacement-only evolution target (swordsman/spearmaster->warrior, ice_mage/fire_mage->mage, barmaid/server->helper, strategist/emissary/infiltrator->their own parents above) carries one; sharpshooter alone did not, so `WIProgression.granted_skills({\"sharpshooter\": 10}, catalog)` empirically returned `[]` (verified before this fix) -- a player evolving to [Sharpshooter] lost the ENTIRE archer kit (Power Shot/Quick Nock/Piercing Shot/Keen Eye) and gained nothing. Added `inherits` below; the class's own aspiration/kit-list prose (\"the archer kit is already complete\") was written as if this worked, so this was a data-typo, not a design decision. R1's own two new grants (`called_shot` L10, `piercing_volley` L12) now compose correctly ON TOP of the restored inherited kit.",
+			"_comment": "[Sharpshooter] is Replacement-only (never gained_by) -- archer's evolution carries the PARENT's HELD level directly into classes[sharpshooter] (check_evolutions/_resolve_evolutions), never counting up from level 1.",
 			"id": "sharpshooter",
 			"display_name": "Sharpshooter",
 			"stat_growth": { "dex": 2 },
@@ -370,7 +367,7 @@
 			]
 		},
 		{
-			"_comment": "Class-foundation pass R4 (2026-07-12): [Ranger] (warrior + archer) -- SPARSE TABLE (GH#54 convention), consolidation-only, the SAME shape as [Spellsword]/[Innkeeper]. Floor=14 (identical derivation, same thresholds -- see spellsword's own _comment for the walked formula). TOP-END: warrior line ceiling = max(warrior:12, swordsman:12, spearmaster:12) = 12; archer line ceiling = max(archer:10, sharpshooter:12) = 12 (post-R1 table); merged_ceiling = max(ceil(2*24/3), max(12,12)) = max(16,12) = 16 -- table must reach 16, entries 14-16 below. CANON-VERDICT 2026-07-12 (citations CORRECTED in the review wave -- the earlier draft cited Foliana/Quietstab, who do NOT hold [Ranger]): [Ranger] ATTESTED, real holders Marian, Zara Walker, Neerie, Tally, and Zavarial. Better still, the [Archer]->[Ranger] LINK ITSELF is canon-attested via Zavarial (an [Archer] who became a [Ranger]), so this consolidation's archer-line parentage is genuine canon, not an invented lineage. What remains this game's own mechanical construction (disclosed, same convention as tactician->strategist's threshold numbers) is the WARRIOR line's inclusion -- shaping it as a warrior+archer CONSOLIDATION rather than a straight archer evolution, for the wilderness melee-and-bow fighter fantasy. `aspiration` [Ranger of the Woods] is also wiki-attested (a real specialized Ranger variant). `dangersense` is re-listed in L14's grants for completeness/documentation even though it is STRUCTURALLY ALREADY GUARANTEED by this point -- every real Ranger's warrior-line parent has already passed level 5 (warrior's own dangersense grant) by the time min_parent_level (10) is met, so `granted_skills`' existing id-dedup (`out.has()`) makes this a guaranteed no-op in practice, matching the plan's own 'if unowned' framing without needing a new conditional-grant mechanism. `steady_draw` is the one genuinely NEW grant -- see its own skills.json _comment for why it reads `hit_bonus`, not `damage_mult` (the plan's literal framing has no PASSIVE shape in this sim's effect catalog; damage_mult is active-cast-only). requires_any thresholds continue melee_hit (warrior's own curve, IDENTICAL to spellsword's L14-16 values -- literally the same counter/source) and ranged_hit (archer's own curve, hand-continued past its L10 ceiling of 57). stat_growth picks ONE representative stat per parent line (str from warrior, dex from archer).",
+			"_comment": "Floor=14 (identical derivation, same thresholds -- see spellsword's own _comment for the walked formula).",
 			"id": "ranger",
 			"display_name": "Ranger",
 			"stat_growth": { "str": 1, "dex": 1 },
@@ -383,7 +380,7 @@
 			]
 		},
 		{
-			"_comment": "Class-foundation pass R5 (issue #98, 2026-07-12): [Trader], an EARNED class (not consolidation-only) -- gained_by `deliberate_commerce` (a NEW accomplishment counter, threshold 5: deliberate, not incidental commerce). Banked by THREE sanctioned sources, none an invented mechanic: a real sale (WIGame.sell_item -- the ALREADY-SHIPPED Krshia buyback mechanism this pass GENERALIZED to any vendor, see shop.gd's own doc comment), a completed Runner's Guild delivery turn-in (WIGame.turn_in_delivery), and a genuine shop purchase >=5 gold (WIGame._apply_gold_effect, scoped to spends so a 1-2g rumor buy never counts). test_content.gd hardcodes deliberate_commerce as a produced accomplishment (same class as observed_things/befriended_moments -- a structural sim-code producer, not a scannable data literal). Level curve continues the SAME counter past the gained_by floor (the archer/ranged_hit precedent) rather than inventing a second one. stat_growth `cha` -- the FIRST class to grow charisma (every prior class picked str/dex/con/int only; cha/wis are already live fields on every combatant's `stats` block, `derived_stat_bonuses`/`apply_stat_bonuses` are stat-key-generic, so this needed zero new sim code, just an unused-until-now data choice; stats stay hidden from the player regardless). Evolution: SINGLE-AXIS Replacement on `deliberate_commerce` itself (the tactician/diplomat/rogue precedent -- a lone target class, so a second key would only risk the 2-keys-1-target dominance-share trap for no benefit). Table stops at its own floor (10, the archer/sharpshooter 'not a fork' shape) -- [Merchant] is the sole payoff.",
+			"_comment": "Evolution: SINGLE-AXIS Replacement on `deliberate_commerce` itself (the tactician/diplomat/rogue precedent -- a lone target class, so a second key would only risk the 2-keys-1-target dominance-share trap for no benefit).",
 			"id": "trader",
 			"display_name": "Trader",
 			"stat_growth": { "cha": 1 },
@@ -408,7 +405,7 @@
 			]
 		},
 		{
-			"_comment": "SPARSE TABLE (GH#54 convention). [Merchant] is Replacement-only (never gained_by) -- trader's evolution carries the PARENT's HELD level directly in. Floor = trader's own evolution.at_level (10); trader's OWN table stops at 10 too (archer/sharpshooter's stop-at-floor shape), so this table's single entry is already contiguous to its own max. CANON-VERDICT 2026-07-12: [Merchant] FAMILY-ATTESTED -- the wiki does not itself show a bare '[Merchant]' class page, but Ysara Byres ('the Silver Trader') holds '[Armored Merchant]' at level 34, an '[Adjective] [Merchant]' variant that structurally implies the base [Merchant] class family is real canon (the SAME '[Ranger of the Woods]'/'[Grandmaster Strategist]' variant-implies-base reasoning this pass already applies elsewhere) -- matches this pass's own framing ('Krshia canon': Krshia herself is a merchant/stallkeeper by trade). Grants `bulk_terms` at the floor -- see that skill's own _comment for the `trade_bonus` seam it rides (an ALREADY-BUILT, never-before-used hook: `_trade_bonus()`'s own doc comment names this EXACT example, 'a future entry ({\"trade_bonus\": 0.1})').",
+			"_comment": "Floor = trader's own evolution.at_level (10); trader's OWN table stops at 10 too (archer/sharpshooter's stop-at-floor shape), so this table's single entry is already contiguous to its own max.",
 			"id": "merchant",
 			"display_name": "Merchant",
 			"stat_growth": { "cha": 2 },

@@ -1,16 +1,10 @@
 extends SceneTree
-## Pure quest-derivation tests.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_quests.gd
 
 const CATALOG := {"quests": [{"id": "the_errand", "title": "The Errand", "beats": [
 	{"id": "deliver", "description": "Deliver the package.", "complete_when": {"package_delivered": 1}},
 	{"id": "decide", "description": "Decide about the reward.", "complete_when": {"errand_decided": 1}},
 ]}]}
 
-## Issue #74: the optional "region" field, one quest carrying it and one
-## without -- proves evaluate() threads a present region through and defaults
-## a missing one to "" (never null/missing-key, so wi_game.gd's
-## quest_summary() can read it unconditionally).
 const REGION_CATALOG := {"quests": [
 	{"id": "far_quest", "title": "Far Quest", "region": "Riverfarm", "beats": [
 		{"id": "only", "description": "Do the thing.", "complete_when": {"did_the_thing": 1}},

@@ -1,10 +1,4 @@
 extends SceneTree
-## Throwaway dev probe (audio-silence diagnosis 2026-07-13): loads a real
-## music ogg, plays it on a plain AudioStreamPlayer, polls the Master bus
-## peak. Run WITHOUT --headless so a real audio device/driver exists:
-##   /usr/local/bin/godot --path wandering_inn_game --script res://tests/_audio_peak_probe.gd
-## PEAK > -200 db => sound reaches Master natively. -inf/-200 => game/engine
-## side silence even natively.
 
 var _frames := 0
 var _player: AudioStreamPlayer

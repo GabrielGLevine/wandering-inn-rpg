@@ -1,5 +1,4 @@
 {
-	"_comment": "The village hunter's come-along beat (issue #10/#11 FIX-FIRST): the ONE beat that puts an ally at Riverfarm's fights at all -- [Ask him to come with you.] banks `hunter_will_come`, which satisfies `river_wolf_pack`/`briar_collectors`/`briar_collectors_deep`'s `ally_requires` so `riverfarm_hunter` fields (skeleton_scene.json). Declining leaves every fight solo -- the honest, harder cell (sim_combat_batch.gd's own `_solo` siblings), the player's real choice, same shape as `relc_descent`'s veto branch. hub keeps the always-ungated exit ('Just passing through.') per the softlock guard; the ask option `hide_when`s itself once accepted (asking twice reads as forgetting the answer) and the greeting swaps via `text_variants` to confirm he's still coming.",
 	"start": "hub",
 	"nodes": {
 		"hub": {
@@ -7,7 +6,7 @@
 			"text": "Hollow's not safe alone. Hasn't been for weeks.",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "hunter_will_come": 1 } }, "text": "Still headed that way? Say when. I'm not doing anything the fields need me for today." },
-				{ "_comment": "Issue #89 (gap-2), the text_variants marker-node pattern: survived_wolf_night (river_wolf_pack's on_victory, riverfarm_village.json) previously had zero consumers. Appended LAST (highest priority) so it wins over the plain hunter_will_come line once the night fight is behind them both.", "requires": { "accomplishment": { "survived_wolf_night": 1 } }, "text": "Didn't figure we'd both still be standing after that. Hollow's not the only thing that gets ugly once the sun's down out here, and now you've seen it firsthand." }
+				{ "requires": { "accomplishment": { "survived_wolf_night": 1 } }, "text": "Didn't figure we'd both still be standing after that. Hollow's not the only thing that gets ugly once the sun's down out here, and now you've seen it firsthand." }
 			],
 			"options": [
 				{ "text": "[Ask him to come with you.]", "hide_when": { "accomplishment": { "hunter_will_come": 1 } }, "goto": "agreed" },

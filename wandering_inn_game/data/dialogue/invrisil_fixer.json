@@ -1,5 +1,4 @@
 {
-	"_comment": "Invrisil 8c Task C1 (issue #12). Lifted from docs/archive/staging/dialogue-drafts/invrisil/fixer.json (dialogue-drafts lane, 2026-07-06) verbatim -- the street fixer 'Cups': rumor-by-the-cup vending (5 one-gold rumors seeding city texture + quest-path hints) + the TALK-path testimony chain. Spec: docs/superpowers/specs/2026-07-06-invrisil-design.md sec.2/sec.4 ('sells rumors by the CUP -- tea-house pricing bit'). Voice contract: character-profiles-staging.md 'The street fixer' (sells rumors by the cup, trade cant, genuinely likes gossip beyond its price). Speaker 'Cups' = ORIGINAL street-name+flag. SAFE TO WIRE NOW (unlike Wilovan/Coyle's full quest graphs): every effect here is gold/accomplishment only -- no `quest`/`start_combat`/`remove_entity` effect, so nothing forward-references an entity or quests.json row Task C3 hasn't landed yet. The testimony chain (balk/agreed_persuaded/agreed_paid/arranged) requires `took_brothers_job`/`fixer_will_testify`, both absent==0 today -- naturally hidden until C3's quest banks them, a forward reference (same convention as C2's Wilovan combatant record). Rumor buys: gold-gated (grey visible when broke, D1/D2 precedent) + hide_when heard_rumor_* (each sells once). Softlock audit (from the draft, re-verified against this exact file): hub has many hidden/gold-locked options + an ungated 'Just the tea today.' exit; balk keeps an ungated 'Fair. Forget I asked.' back-out; no start_combat anywhere.",
 	"start": "hub",
 	"nodes": {
 		"hub": {
@@ -15,7 +14,7 @@
 				{ "text": "Who in this city hates Coyle enough to say so? (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_hellam": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_hellam" }, { "accomplishment": "bought_rumor_from_cups" } ], "goto": "rumor_hellam" },
 				{ "text": "The men in the hats. (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_hats": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_hats" }, { "accomplishment": "bought_rumor_from_cups" } ], "goto": "rumor_hats" },
 				{ "text": "Anything strange brewing? (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_door": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_door" }, { "accomplishment": "bought_rumor_from_cups" } ], "goto": "rumor_door" },
-				{ "_comment": "GH#68 (quest-stage rework): the trust-arc trigger -- 2 real purchases (bought_rumor_from_cups threshold) plus Stage 1 scouting (coyle_operation_found), hidden until met, then hidden again once the favor is offered (cups_favor_requested) so it never re-offers.", "text": "Two cups deep. What's the real price, Cups?", "requires": { "accomplishment": { "coyle_operation_found": 1, "bought_rumor_from_cups": 2 } }, "hide_when": { "accomplishment": { "cups_favor_requested": 1 } }, "goto": "cups_favor" },
+				{ "text": "Two cups deep. What's the real price, Cups?", "requires": { "accomplishment": { "coyle_operation_found": 1, "bought_rumor_from_cups": 2 } }, "hide_when": { "accomplishment": { "cups_favor_requested": 1 } }, "goto": "cups_favor" },
 				{ "text": "I need more than rumor. Coyle hired that theft — will you swear to it?", "requires": { "accomplishment": { "took_brothers_job": 1 } }, "hide_when": { "accomplishment": { "fixer_will_testify": 1 } }, "goto": "balk" },
 				{ "text": "Pour for three. Set it up with Hellam.", "requires": { "accomplishment": { "fixer_will_testify": 1 } }, "hide_when": { "accomplishment": { "secured_testimony": 1 } }, "effects": [ { "accomplishment": "secured_testimony" } ], "goto": "arranged" },
 				{ "text": "Just the tea today.", "goto": "just_tea" }
@@ -62,20 +61,18 @@
 			]
 		},
 		"balk": {
-			"_comment": "GH#68 (quest-stage rework): the trust-arc gate. Base text (default, returned_cups_debt unmet) is the NEW diegetic hold -- Cups won't risk her face until the favor's settled; the text_variant restores the ORIGINAL 'different water' speech once the favor is done. Both real options below extend their requires with the same accomplishment leg (sanctioned compounds: {accomplishment, class} for the Diplomat branch, {gold, accomplishment} for the paid branch -- test_content.gd's own two pre-existing sanctioned shapes, just with returned_cups_debt standing in), so a player who rushes here still sees ONLY the ungated 'Fair. Forget I asked.' exit until the trust arc is actually walked.",
 			"speaker": "Cups",
 			"text": "Not for cups of tea, friend. You want my FACE on this, you've got to be worth the risk first — and 'worth it' isn't free, is it, given what a hat can turn into round here.",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "returned_cups_debt": 1 } }, "text": "Swearing's different water, friend. A rumor's a bird — nobody knows whose window it flew from. Testimony has my FACE on it, and Coyle prices faces. Some of them stop being worn." }
 			],
 			"options": [
-				{ "_comment": "GH#64: skill-gated (was class-gated Diplomat) -- [Charming Smile] fits the social intent (turning a wary contact friendly) better than the bare class. The 10-gold branch below is the existing non-Diplomat alternate (already omits persuaded_someone). GH#68 adds the returned_cups_debt leg (sanctioned {accomplishment, skill} compound) -- hidden until the favor's done, same as the pay branch below.", "text": "Stand with the Brothers, and every hat tips your way. [Charming Smile]", "requires": { "accomplishment": { "returned_cups_debt": 1 }, "skill": "charming_smile" }, "effects": [ { "accomplishment": "fixer_will_testify" }, { "accomplishment": "persuaded_someone" } ], "goto": "agreed_persuaded" },
+				{ "text": "Stand with the Brothers, and every hat tips your way. [Charming Smile]", "requires": { "accomplishment": { "returned_cups_debt": 1 }, "skill": "charming_smile" }, "effects": [ { "accomplishment": "fixer_will_testify" }, { "accomplishment": "persuaded_someone" } ], "goto": "agreed_persuaded" },
 				{ "text": "Ten gold says the water's fine. (10 gold)", "requires": { "gold": 10, "accomplishment": { "returned_cups_debt": 1 } }, "effects": [ { "gold": -10 }, { "accomplishment": "fixer_will_testify" } ], "goto": "agreed_paid" },
 				{ "text": "Fair. Forget I asked.", "goto": "hub" }
 			]
 		},
 		"cups_favor": {
-			"_comment": "GH#68 (quest-stage rework, TALK path Stage 2): the favor beat itself -- grants the carry item (#59 item-gate/remove_item seam), returned at invrisil_wilovan.json's hub. Single ungated option (the arranged/just_tea precedent) satisfies the softlock guard trivially.",
 			"speaker": "Cups",
 			"text": "Here's the third thing, then, since you keep buying the first two. I owe the Brothers a debt I've been quietly not paying — a chit, is all, but it's got Wilovan's own mark on it and I'd rather it went back through a friendly hand than a collecting one. Carry it to the parlor, quiet as you came by it, and we'll talk about faces.",
 			"options": [

@@ -41,7 +41,7 @@
    "cooldown_ms": 100
   },
   {
-   "_comment": "Issue #76: deterministic round-robin, not RNG on the sim stream -- `variants` is a presentation-side counter (WIAudio._variant_index, per id) that advances one entry every play, wrapping. `stream` stays variants[0], a drift tripwire test_audio_data.gd enforces (never a stale duplicate of the round-robin's real first pick).",
+   "_comment": "`stream` stays variants[0], a drift tripwire test_audio_data.gd enforces (never a stale duplicate of the round-robin's real first pick).",
    "id": "footstep",
    "event": "player_moved",
    "stream": "res://assets/audio/sfx/footstep.wav",
@@ -77,7 +77,7 @@
    "cooldown_ms": 40
   },
   {
-   "_comment": "Issue #76: Super Dialogue Audio Pack v1 wordless barks (Dillon Becker, CC BY 4.0 -- credited in ATTRIBUTION.md), scoping-comment v1 ruling (WORDLESS SETS ONLY). PC-only this wave -- Erin/goblin-shout barks deferred, no reachable payload hook exists today (Erin is never a combat `id`; a goblin-vs-other-enemy distinction isn't in any emitted payload). Voice bus (BUS_NAMES' 4th, previously unused) so a bark is never touched by the Music-bus duck or the SFX slider alone. Round-robin variants like footstep, so three hits in a row don't repeat identically; cooldown keeps it from overlapping a flurry.",
+   "_comment": "Voice bus (BUS_NAMES' 4th, previously unused) so a bark is never touched by the Music-bus duck or the SFX slider alone.",
    "id": "pc_hurt",
    "event": "attack_resolved",
    "payload": {
@@ -161,7 +161,7 @@
    "cooldown_ms": 80
   },
   {
-   "_comment_skill_coverage": "Issue #76: the remaining skill_resolved families (~80% of combat skills fired silently). Reuses the 4 existing curated skill_cast_* timbres by EFFECT FAMILY, not by literal element name -- e.g. calming_touch/second_wind (non-elemental support magic) and spellbound_strike/keener_edge (Spellsword's magic-infused strikes) route to arcane; the archer/spearmaster/swordsman/warrior weapon kits and the two boss brute skills (raskghar_maul, slam) route to physical. No new asset per row -- same 4 files skill_cast_physical/fire/frost/arcane already ship.",
+   "_comment_skill_coverage": "Skill sounds reuse four curated timbres by effect family, not literal element name.",
    "id": "skill_cast_fire_scythe",
    "event": "skill_resolved",
    "payload": { "skill": "flame_scythe" },
@@ -351,7 +351,7 @@
    "cooldown_ms": 80
   },
   {
-   "_comment": "Issue #76: the windup mechanism's audio HALF (GH#82's own sim half is windup_declared) -- a distinct telegraph tell, separate from the resolve-impact sound above, curated from Minifantasy's orc charging loop (assets/LICENSES/minifantasy-dungeon-sfx-verdict.md, SHIP-OK user-attested). No payload filter: every windup-capable skill shares one tell (only `slam` grants windup today).",
+   "_comment": "No payload filter: every windup-capable skill shares one tell (only `slam` grants windup today).",
    "id": "skill_windup_tell",
    "event": "windup_declared",
    "stream": "res://assets/audio/sfx/windup_declare.wav",
@@ -360,7 +360,6 @@
    "cooldown_ms": 200
   },
   {
-   "_comment": "Issue #76: field skills (exploration context) resolved 100% silently -- one generic activation swish covers every field-tagged skill use (no per-skill payload filter; skills.json's field:true roster is large and thematically mixed enough that a single neutral cue reads better than mismatched element sounds).",
    "id": "field_skill_used",
    "event": "skill_used",
    "stream": "res://assets/audio/sfx/field_skill_used.wav",
@@ -431,7 +430,6 @@
    "cooldown_ms": 150
   },
   {
-   "_comment": "Issue #76: start/beat/complete now three distinct chimes (previously all three shared quest_chime.wav) -- beat/complete curated from unused Minifantasy container-open variants (assets/LICENSES/minifantasy-dungeon-sfx-verdict.md, SHIP-OK user-attested), a slightly bigger/more resolved-sounding open for complete than beat.",
    "id": "quest_chime_beat",
    "event": "quest_beat_completed",
    "stream": "res://assets/audio/sfx/quest_chime_beat.wav",
@@ -459,7 +457,6 @@
    "cooldown_ms": 150
   },
   {
-   "_comment": "Issue #76: real Minifantasy door open/close sound (assets/LICENSES/minifantasy-dungeon-sfx-verdict.md, SHIP-OK user-attested), replacing the A1 procedural placeholder that shipped at this same id/path since M1 -- previously unmined per the asset-catalog sec.4 gap list.",
    "id": "door_transition",
    "event": "map_changed",
    "stream": "res://assets/audio/sfx/door_transition.wav",
@@ -512,7 +509,6 @@
    "loop": true
   },
   {
-   "_comment": "Issue #62 findings 2/3/29: REVERTED to definitely_our_town.ogg (the pre-51bb992 track, still committed) per user preference -- one inn, one theme, the same stream music_inn_upstairs uses below. randommind_old_tower_inn.ogg (also user-cleared, a good track on its own) re-homes to music_guild rather than being dropped.",
    "id": "music_inn",
    "kind": "field",
    "context": "inn",
@@ -617,7 +613,7 @@
    "loop": true
   },
   {
-   "_comment": "Issue #76: the vault construct boss fight (data/skeleton_scene.json's `vault_boss_slot`, arena `vault`) gets its own escalation over the generic music_combat fallback -- the FIRST-MATCH-WINS arena-keyed seam above already exists (music_combat_deep_warren etc.), this just adds a boss-tier row using the SAME `combat_started`/`{arena}` hook, no sim change. Decisive Battle 1 picked over Battle 2 (both in-hand per the scoping comment) as the more escalated/named-boss-tier track, reserving Battle 2 for a future second-tier miniboss. Curated (re-encode, trim to the pack's own LOOPSTART+LOOPLENGTH end -- see tools/sync_assets.py's issue #76 comment) from xDeviruchi (assets/LICENSES/xdeviruchi-16-bit-fantasy-adventure-2025-verdict.md, SHIP-OK-WITH-ATTRIBUTION user-attested); MUST precede music_combat below (first-match-wins).",
+   "_comment": "Vault boss music must precede the generic combat row because audio routing is first-match-wins.",
    "id": "music_combat_vault",
    "kind": "combat",
    "context": "combat",
@@ -655,7 +651,7 @@
    "return_to_field": true
   },
   {
-   "_comment": "Issue #76 signature stinger: xDeviruchi 'Never Give Up' (0:08, a genuine one-shot jingle, not a loop -- see tools/sync_assets.py's issue #76 comment) fires the instant a fight is lost, same event WIAudio's SFX 'defeat' id already listens to. Mirrors music_victory's own sting shape exactly (kind/loop/return_to_field) -- swaps to the sting player fully rather than layering, so it structurally can't fight whatever field/combat bed was playing.",
+   "_comment": "Mirrors music_victory's own sting shape exactly (kind/loop/return_to_field) -- swaps to the sting player fully rather than layering, so it structurally can't fight whatever field/combat bed was playing.",
    "id": "music_defeat",
    "kind": "sting",
    "context": "defeat",
@@ -670,7 +666,6 @@
    "return_to_field": true
   },
   {
-   "_comment": "Issue #76 signature stinger: xDeviruchi 'Peaceful Night' (0:11, one-shot jingle) on the sleep beat. Hooked to ui_sleep_veil_rendered (src/ui/sleep_veil.gd's own doc comment: 'a precise, sim-change-free sleep signal ... fires effectively synchronously right after the sleep beat', already the established automated-coverage proof for the veil, real headless per its own QA/HEADLESS COLLAPSE note) rather than the bare phase_changed sim event, so this can never misfire off a load/boot phase reset that isn't a real sleep.",
    "id": "music_sleep_beat",
    "kind": "sting",
    "context": "sleep",
@@ -760,7 +755,6 @@
    "loop": true
   },
   {
-   "_comment": "Issue #62 finding 2: SAME stream as music_inn (definitely_our_town.ogg) -- one inn, one theme; the upstairs private quarters isn't a separate place, unlike the Garden (which keeps its own junkala_time_stands_still.ogg above).",
    "id": "music_inn_upstairs",
    "kind": "field",
    "context": "inn_upstairs",
@@ -787,7 +781,6 @@
    "loop": true
   },
   {
-   "_comment": "Issue #62 finding 9: junkala_innocence.ogg (calm) read wrong for an active guarded ruin -- swapped for a TENSE track. junkala_army_approaching.ogg is already `music_combat_ruin_court`'s own arena variant below (the ruin_guardian fight THIS map leads to) -- reusing it here too would double-book the same track across field-and-fight, muddying the identity of walking-in vs the fight itself, so this picks junkala_preparing_battle.ogg instead (the OTHER tense Junkala track, already proven elsewhere as a combat variant but not on this map's own fight).",
    "id": "music_ruin_surface",
    "kind": "field",
    "context": "ruin_surface",
@@ -801,7 +794,6 @@
    "loop": true
   },
   {
-   "_comment": "Issue #62 finding 2/3: inherits randommind_old_tower_inn.ogg, vacated by music_inn's revert to definitely_our_town.ogg above. Picked over runners_guild as the 'tavern-adjacent interior' -- Selys (the Guild's own desk) is practically an inn regular in the social loop, the closer of the two to the inn's own orbit; runners_guild keeps its existing junkala_summer_memories.ogg untouched.",
    "id": "music_guild",
    "kind": "field",
    "context": "guild",
@@ -841,10 +833,10 @@
    "loop": true
   }
  ],
- "_comment_music_order": "TRAP (wi_audio._dispatch_music_event is FIRST-MATCH-WINS then returns): arena-keyed combat variants MUST precede the generic music_combat entry, or they never play. Field entries match map_changed payload {map}; sync-on-load matches kind=field + context==current_map. Sewers/deep_tunnels/cave maps are deliberately TRACKLESS -- silence is the dark-map mood; [Light] and the fights carry the audio there. All junkala_* tracks are CC0 (assets/LICENSES/junkala-cc0-music-verdict.md) and authored as seamless loops.",
+ "_comment_music_order": "TRAP (wi_audio._dispatch_music_event is FIRST-MATCH-WINS then returns): arena-keyed combat variants MUST precede the generic music_combat entry, or they never play.",
  "ambience": [
   {
-   "_comment": "Issue #76 remainder: per-map loop beds for the 5 highest-dwell maps, CC0-sourced (assets/LICENSES/ambience-beds-cc0-verdict.md) so committed to the PUBLIC tree, no bundle dance. Rows mirror the field-music shape; WIAudio's ambience layer (own Ambience layout bus -> Master, own crossfade pair) plays them UNDER the field track and fades the bed out on entering any map with no row here. Sewers/trapped_halls stay music-TRACKLESS per _comment_music_order -- the bed is atmosphere, not a track, and preserves that mood while un-deadening the map.",
+   "_comment": "Rows mirror the field-music shape; WIAudio's ambience layer (own Ambience layout bus -> Master, own crossfade pair) plays them UNDER the field track and fades the bed out on entering any map with no row here.",
    "id": "ambience_inn",
    "kind": "ambience",
    "context": "inn",

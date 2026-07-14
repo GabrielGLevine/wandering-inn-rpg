@@ -1,5 +1,5 @@
 {
- "_comment": "The Runner's Guild (10x8), reached via runners_guild_door on the street (20,17). Reuses the 'inn' biome (every interior in this game differentiates via moods.json's grade + dressing, not new tile assets). Counter dressed via the Guild's OWN counter_left/counter_right precedent (Selys's exact convention -- Vess stands in the gap, no separate desk entity needed since she IS the counter-person, unlike Zevara's own desk, which needed its own prop because Zevara herself stays elsewhere). THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one. Vess (npc, conversation vess_counter) owns accept/turn-in, mirroring Selys's desk. The resting runner walk-on rests near a real `bench` prop (previously a `stool` stand-in, VISUAL-LOG'd; the delivery board itself stays on the `inn_sign` art -- no bespoke delivery-board asset exists yet).",
+ "_comment": "THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one.",
  "biome": "inn",
  "grid": {
   "width": 10,
@@ -91,7 +91,6 @@
     ]
    },
    {
-    "_comment": "South wall, gapped at x=5 for runners_guild_exit.",
     "from": [
      1,
      7
@@ -171,7 +170,7 @@
    ]
   },
   {
-   "_comment": "Vess, the Street Runner clerk -- profile in docs/design/character-profiles.md. Stands in the counter's own gap cell (5,2), between counter_left (4,2) and counter_right (6,2) -- the exact Selys/guild counter precedent (an NPC standing in a counter's pass-through, no separate desk entity). talk_pool fires her 'First approach' bark (board-copy.md sec.3) before the real conversation graph (vess_counter.json) on the first talk of a waking.",
+   "_comment": "talk_pool fires her 'First approach' bark (board-copy.md sec.3) before the real conversation graph (vess_counter.json) on the first talk of a waking.",
    "id": "vess",
    "kind": "npc",
    "cell": [
@@ -199,7 +198,7 @@
    ]
   },
   {
-   "_comment": "THE DELIVERY BOARD -- browse-only (WIGame._interact_delivery_board), the delivery-loop's twin of THE REQUEST BOARD (guild_board), same header/second_visit/footer shape, distinct delivery_board:true flag so interact()'s prop dispatch routes to the right board. Copy composed in staging register (board-copy.md sec.3 has no second-visit line; this one is ORIGINAL) sec.3.",
+   "_comment": "browse-only (WIGame._interact_delivery_board), the delivery-loop's twin of THE REQUEST BOARD (guild_board), same header/second_visit/footer shape, distinct delivery_board:true flag so interact()'s prop dispatch routes to the right board.",
    "id": "runner_board",
    "kind": "prop",
    "cell": [
@@ -220,7 +219,7 @@
    "observe": "Couriers are made, not hired. Start with the market run. — the counter"
   },
   {
-   "_comment": "The resting runner walk-on (board-copy.md's proposal), title-only per THE PEDDLER precedent (an unnamed, purely ambient flavor NPC) -- staged in docs/design/character-profiles-staging.md, not promoted to the shipped file (matching Yelra/Renn/Ilvo, which also stayed staging-only; Vess is the one NAMED, mechanically-load-bearing NPC this task ships to the shipped profiles). talk_pool-only, no conversation graph, inert-adjacent. Rests near a `stool` (no bench sprite in the catalog -- disclosed, VISUAL-LOG'd) by the door. Issue #80 (world reactivity wave, item 3 -- FLAVOR presence only, taste-gate 2026-07-12): present_when{phase:[day,dusk]} -- an on-call runner waiting between jobs, off-shift at night; Vess (the counter clerk, mechanically load-bearing) stays put, only the flavor extra steps away.",
+   "_comment": "talk_pool-only, no conversation graph, inert-adjacent.",
    "id": "resting_runner",
    "kind": "npc",
    "cell": [

@@ -1,6 +1,4 @@
 extends SceneTree
-## Pure combat-sim tests: rules, ordering, and determinism.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_combat_sim.gd
 
 var _events: Array = []
 
@@ -38,9 +36,6 @@ func _make(seed_v: int, sink: Callable) -> WICombat:
 	return combat
 
 
-## Like _make, but lets a test pre-seed a combatant's build-time config (e.g.
-## giving pc a spell BEFORE construction) — needed for max_mp, which is only
-## computed once at _init from the combatant's starting skill list.
 func _make_custom(seed_v: int, sink: Callable, cfg_overrides: Dictionary) -> WICombat:
 	var arena: Dictionary = _load("res://data/arenas.json")["arenas"][0]
 	var cfgs := _cfgs(["pc", "relc", "goblin_raider", "goblin_shaman"])
@@ -58,14 +53,12 @@ func _init() -> void:
 	WITestWatchdog.arm(self)
 	var combat := _make(42, _sink)
 
-	# Setup: four combatants at spawn cells, initiative precomputed, round 1 started
 	assert(combat.turn_order.size() == 4, "all four in initiative order")
 	assert(combat.combatants["pc"][WIKeys.CELL] == Vector2i(2, 3), "pc at first player spawn")
 	assert(combat.combatants["goblin_raider"][WIKeys.CELL] == Vector2i(9, 3), "raider at first enemy spawn")
 	assert(_count("combat_started") == 1 and _count("round_started") == 1 and _count("turn_started") == 1, "start events")
 	assert(combat.combatants[combat.get_active()][WIKeys.AP] == WICombat.MAX_AP, "active has full AP")
 
-	# Movement: costs 1 pool (free of AP), respects bounds/blocked/occupied
 	var active: String = combat.get_active()
 	var before: Vector2i = combat.combatants[active][WIKeys.CELL]
 	assert(combat.move_active(Vector2i.RIGHT) or combat.move_active(Vector2i.LEFT) or combat.move_active(Vector2i.UP) or combat.move_active(Vector2i.DOWN), "some direction is open")
@@ -73,7 +66,6 @@ func _init() -> void:
 	assert(combat.combatants[active][WIKeys.AP] == WICombat.MAX_AP, "move does not touch AP")
 	assert(combat.combatants[active][WIKeys.CELL] != before, "cell changed")
 
-	# Turn/round advance
 	combat.end_turn()
 	assert(_count("turn_ended") == 1 and _count("turn_started") == 2, "turn advanced")
 	combat.end_turn()
@@ -82,7 +74,6 @@ func _init() -> void:
 	assert(_count("round_started") == 2, "wrapping order starts round 2")
 	assert(combat.round_number == 2, "round counter")
 
-	# Attack validation: non-adjacent attack refused, no AP spent
 	var atk: String = combat.get_active()
 	var foes: Array = combat.alive_enemies_of(atk)
 	assert(not foes.is_empty(), "has living enemies")
@@ -90,7 +81,6 @@ func _init() -> void:
 		assert(not combat.attack(String(foes[0])), "non-adjacent attack refused")
 		assert(combat.combatants[atk][WIKeys.AP] == WICombat.MAX_AP, "refused attack costs nothing")
 
-	# Determinism: same seed + same scripted intents → identical event streams
 	var stream_a: Array = []
 	var stream_b: Array = []
 	for stream: Array in [stream_a, stream_b]:
@@ -106,7 +96,6 @@ func _init() -> void:
 	assert(stream_a.size() > 10, "scripted run produced events")
 	assert(stream_a == stream_b, "same seed + same intents = identical event stream")
 
-	# Forced kill path: down a combatant directly, victory fires when enemies gone
 	var c2 := _make(7, _sink)
 	_events.clear()
 	c2.apply_damage("goblin_raider", 999, "pc", true)
@@ -116,35 +105,24 @@ func _init() -> void:
 	assert(c2.finished and c2.outcome["victory"] == true, "all enemies down = victory")
 	assert(_count("combat_finished") == 1, "combat_finished emitted")
 
-	# Round cap: draw counts as non-victory
 	var c3 := _make(7, _sink)
 	_events.clear()
 	while not c3.finished:
 		c3.end_turn()
 	assert(c3.outcome["draw"] == true and c3.outcome["victory"] == false, "round cap = draw, non-victory")
 
-	# --- skill effects and reactions ---
 	var c4 := _make(11, _sink)
 	_events.clear()
-	# Teleport pc adjacent to raider for controlled melee tests
 	c4.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
 	c4.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
-	# Force pc active regardless of initiative
 	c4.active_index = c4.turn_order.find("pc")
 	c4._start_turn()
 	c4.combatants["pc"][WIKeys.SKILLS] = ["power_strike", "counter_strike", "battle_momentum"]
 
-	# power_strike: costs 3 AP, resolves as melee hit
 	assert(c4.use_skill("power_strike", "goblin_raider"), "power strike usable adjacent with 4 AP")
 	assert(c4.combatants["pc"][WIKeys.AP] == 1, "power strike cost 3 AP")
 	assert(_count("skill_resolved") == 1 and _count("attack_resolved") >= 1, "skill resolved into a hit roll")
 
-	# piercing_strikes: a reported "only works
-	# horizontally adjacent" bug. is_adjacent()/damage_mult's gate both read
-	# maxi(absi(dx), absi(dy)) <= 1 -- axis-symmetric by construction, no
-	# horizontal-only filter anywhere in src/core/combat/*. Positive proof:
-	# a VERTICAL-adjacency (dx==0, dy==1) cast succeeds identically to the
-	# horizontal case above.
 	var c4v := _make(11, _sink)
 	_events.clear()
 	c4v.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
@@ -157,7 +135,6 @@ func _init() -> void:
 	assert(c4v.combatants["pc"][WIKeys.AP] == 2, "piercing_strikes cost 2 AP")
 	assert(_count("skill_resolved") == 1 and _count("attack_resolved") >= 1, "vertical cast resolved into a hit roll")
 
-	# spell_damage: range-checked, refused out of range, never riposted
 	var c5 := _make(11, _sink)
 	_events.clear()
 	c5.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(9, 3)
@@ -170,7 +147,6 @@ func _init() -> void:
 	assert(c5.use_skill("flame_bolt", "pc"), "flame bolt in range")
 	assert(_count("reaction_triggered") == 0, "spells never trigger riposte")
 
-	# riposte: melee hit on counter_strike holder answers at 0.8, no chains
 	var c6 := _make(3, _sink)
 	_events.clear()
 	c6.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
@@ -191,7 +167,6 @@ func _init() -> void:
 	else:
 		assert(_count("reaction_triggered") == 0, "no riposte on a miss")
 
-	# battle_momentum: +1 AP on kill, once per turn
 	var c7 := _make(5, _sink)
 	_events.clear()
 	c7.combatants["pc"][WIKeys.SKILLS] = ["battle_momentum"]
@@ -208,7 +183,6 @@ func _init() -> void:
 	assert(c7.finished, "second kill ended combat")
 	assert(_count("reaction_triggered") == 1, "momentum capped once per turn")
 
-	# --- Fix: dead active combatant cannot act; turn auto-advances ---
 	var c8 := _make(13, _sink)
 	_events.clear()
 	var victim: String = c8.get_active()
@@ -222,16 +196,12 @@ func _init() -> void:
 	if not c8.finished:
 		assert(c8.get_active() != victim, "turn auto-advanced off the dead active")
 		assert(_count("turn_ended") >= 1, "turn_ended emitted for the dead active")
-	# Intent guard: manually rewind active_index to the dead combatant and try to act
 	var idx: int = c8.turn_order.find(victim)
 	if idx != -1 and not c8.finished:
 		c8.active_index = idx
 		assert(not c8.move_active(Vector2i.RIGHT), "dead active cannot move")
 		assert(not c8.attack(killer), "dead active cannot attack")
 
-	# --- movement economy — move pool + Dash; status framework ---
-	# Locked-design numbers (M3 plan): everything below asserts RELATIVE to the
-	# constants, so pin the constants themselves here or a silent retune passes.
 	assert(WICombat.MOVE_POOL == 3, "locked design: 3 free move steps per turn")
 	assert(WICombat.DASH_GAIN == 3, "locked design: Dash grants +3 steps")
 	assert(WICombat.DASH_COST == 1, "locked design: Dash costs 1 AP")
@@ -240,7 +210,6 @@ func _init() -> void:
 	var mover: String = c9.get_active()
 	assert(int(c9.combatants[mover][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL, "pool starts at MOVE_POOL on turn start")
 	var mover_ap_before: int = int(c9.combatants[mover][WIKeys.AP])
-	# Consume the 3-cell free pool with steps in whichever directions stay on the board.
 	var pool_dirs: Array[Vector2i] = [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]
 	var steps_taken := 0
 	for i in 3:
@@ -251,7 +220,6 @@ func _init() -> void:
 	assert(steps_taken == 3, "three free pool steps succeeded")
 	assert(int(c9.combatants[mover][WIKeys.MOVE_POOL]) == 0, "pool exhausted after 3 steps")
 	assert(int(c9.combatants[mover][WIKeys.AP]) == mover_ap_before, "AP untouched by pool-funded movement")
-	# 4th step refused at pool 0, AP still untouched
 	var any_fourth := false
 	for dir: Vector2i in pool_dirs:
 		if c9.move_active(dir):
@@ -259,7 +227,6 @@ func _init() -> void:
 	assert(not any_fourth, "step refused once pool is 0")
 	assert(int(c9.combatants[mover][WIKeys.AP]) == mover_ap_before, "refused step costs nothing")
 
-	# Dash: 1 AP -> +3 pool, repeatable
 	var ap_pre_dash: int = int(c9.combatants[mover][WIKeys.AP])
 	assert(c9.dash(), "dash succeeds with AP available")
 	assert(int(c9.combatants[mover][WIKeys.MOVE_POOL]) == WICombat.DASH_GAIN, "dash grants +3 pool")
@@ -271,7 +238,6 @@ func _init() -> void:
 			found_dash_payload = true
 	assert(found_dash_payload, "dashed payload carries id + move_pool")
 	assert(_count("ap_changed") >= 1, "dash also emits ap_changed")
-	# Now 3 more steps possible thanks to the dash
 	var post_dash_steps := 0
 	for i in 3:
 		for dir: Vector2i in pool_dirs:
@@ -281,18 +247,15 @@ func _init() -> void:
 	assert(post_dash_steps == 3, "dash enabled 3 more steps")
 	assert(int(c9.combatants[mover][WIKeys.MOVE_POOL]) == 0, "pool exhausted again")
 
-	# Repeated dash while AP lasts
 	var ap_before_second_dash: int = int(c9.combatants[mover][WIKeys.AP])
 	if ap_before_second_dash >= WICombat.DASH_COST:
 		assert(c9.dash(), "dash is repeatable while AP lasts")
 		assert(int(c9.combatants[mover][WIKeys.MOVE_POOL]) == WICombat.DASH_GAIN, "second dash also grants +3 pool")
 
-	# Drain AP to 0, then dash refused
 	c9.combatants[mover][WIKeys.AP] = 0
 	assert(not c9.dash(), "dash refused at 0 AP")
 	assert(int(c9.combatants[mover][WIKeys.MOVE_POOL]) == WICombat.DASH_GAIN, "pool unchanged by refused dash")
 
-	# Attack still costs 2 AP and is unaffected by move pool
 	var c10 := _make(11, _sink)
 	_events.clear()
 	c10.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
@@ -305,7 +268,6 @@ func _init() -> void:
 	assert(int(c10.combatants["pc"][WIKeys.AP]) == pc_ap_before_atk - WICombat.ATTACK_COST, "attack still costs 2 AP")
 	assert(int(c10.combatants["pc"][WIKeys.MOVE_POOL]) == pc_pool_before_atk, "attack does not touch move pool")
 
-	# turn_started payload + snapshot combatants carry move_pool
 	var c11 := _make(11, _sink)
 	_events.clear()
 	c11.end_turn()
@@ -319,7 +281,6 @@ func _init() -> void:
 	assert((snap["combatants"][snap_active] as Dictionary).has(WIKeys.MOVE_POOL), "snapshot combatants carry move_pool")
 	assert(int(snap["combatants"][snap_active][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL, "snapshot move_pool matches turn start")
 
-	# Determinism holds with a dash inserted into the scripted intent stream
 	var stream_c: Array = []
 	var stream_d: Array = []
 	for stream: Array in [stream_c, stream_d]:
@@ -338,13 +299,11 @@ func _init() -> void:
 	assert(stream_c.size() > 10, "scripted run with dash produced events")
 	assert(stream_c == stream_d, "same seed + same intents incl. dash = identical event stream")
 
-	# Statuses framework: slowed reduces next turn's pool and expires after applying
 	var c12 := _make(11, _sink)
 	_events.clear()
 	var slowed_id: String = c12.get_active()
 	c12.combatants[slowed_id]["statuses"]["slowed"] = {"pool_penalty": 2}
 	c12.end_turn()
-	# Cycle back to slowed_id's next turn
 	var guard := 0
 	while c12.get_active() != slowed_id and guard < 8:
 		c12.end_turn()
@@ -359,7 +318,6 @@ func _init() -> void:
 			expired_payload = e["payload"]
 	assert(expired_payload.get(WIKeys.ID, "") == slowed_id and expired_payload.get("status", "") == "slowed", "status_expired payload carries id + status")
 
-	# Slowed pool floor: penalty >= MOVE_POOL still leaves a minimum of 1
 	var c13 := _make(11, _sink)
 	_events.clear()
 	var floor_id: String = c13.get_active()
@@ -372,26 +330,19 @@ func _init() -> void:
 	assert(c13.get_active() == floor_id, "cycled back to the floor-test combatant's turn")
 	assert(int(c13.combatants[floor_id][WIKeys.MOVE_POOL]) == 1, "slowed pool floors at 1, never 0 or negative")
 
-	# --- line-of-sight ---
-	# Arena fixture: goblin_ambush blocks (5,3),(6,4),(3,5),(8,2).
 	var c14 := _make(11, _sink)
 	_events.clear()
-	# Wall between: pc(4,3) <-> raider(6,3), blocked cell (5,3) sits between them.
 	c14.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)
 	c14.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)
 	assert(not c14.has_los("pc", "goblin_raider"), "wall between blocks LoS")
-	# Adjacent gap: pc(4,3) <-> shaman(4,4), no wall between, and they're adjacent.
 	c14.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(4, 4)
 	assert(c14.has_los("pc", "goblin_shaman"), "clear adjacent gap has LoS")
-	# Symmetry: LoS is the same walked backwards.
 	assert(c14.has_los("goblin_shaman", "pc") == c14.has_los("pc", "goblin_shaman"), "LoS is symmetric")
-	# Entities do not block LoS: put shaman directly between pc and raider on a clear row.
 	c14.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
 	c14.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(4, 1)
 	c14.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(2, 1)
 	assert(c14.has_los("pc", "goblin_raider"), "occupants do not block LoS, only walls")
 
-	# Ranged spell refused without LoS; melee exempt (adjacency check happens separately).
 	var c15 := _make(11, _sink)
 	_events.clear()
 	c15.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)
@@ -406,11 +357,9 @@ func _init() -> void:
 			refusal_payload = e["payload"]
 	assert(refusal_payload.get("reason", "") == "no_los", "no_los action_refused emitted")
 	assert(refusal_payload.get("actor", "") == "goblin_shaman" and refusal_payload.get("target", "") == "pc", "refusal payload carries actor+target")
-	# Move the shaman off the wall row: now in range and in LoS, spell lands.
 	c15.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(4, 1)
 	c15.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
 	assert(c15.use_skill("flame_bolt", "pc"), "spell allowed with clear LoS")
-	# Melee attack is exempt from LoS gating (adjacency across a corner is still allowed).
 	var c16 := _make(11, _sink)
 	_events.clear()
 	c16.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)
@@ -419,19 +368,11 @@ func _init() -> void:
 	c16._start_turn()
 	assert(c16.attack("goblin_raider"), "melee attack is exempt from LoS gating")
 
-	# --- has_los supercover symmetry ---
-	# A single Bresenham raster picks one arbitrary path per direction and can
-	# disagree on diagonally-adjacent wall pairs; the supercover walk enumerates
-	# every cell the ideal segment crosses (a direction-independent geometric
-	# fact), so the answer must be identical whichever endpoint you start from.
 	var c22 := _make(11, _sink)
-	# Exact reproduced asymmetry pair on the goblin_ambush blocked set
-	# {(5,3),(6,4),(3,5),(8,2)}.
 	c22.combatants["pc"][WIKeys.CELL] = Vector2i(0, 0)
 	c22.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(3, 6)
 	assert(c22.has_los("pc", "goblin_raider") == c22.has_los("goblin_raider", "pc"), "has_los symmetric on the reproduced asymmetry pair")
 
-	# Property sweep: 8 fixed probe cells, every ordered pair symmetric.
 	var probe_cells: Array[Vector2i] = [
 		Vector2i(0, 0), Vector2i(11, 7), Vector2i(0, 7), Vector2i(11, 0),
 		Vector2i(4, 4), Vector2i(7, 1), Vector2i(2, 6), Vector2i(9, 5),
@@ -446,43 +387,31 @@ func _init() -> void:
 			var back := c22.has_los("goblin_raider", "pc")
 			assert(fwd == back, "has_los symmetric for probe pair %s <-> %s" % [pa, pb])
 
-	# Sanity: clear corridor has LoS.
 	c22.combatants["pc"][WIKeys.CELL] = Vector2i(0, 0)
 	c22.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(0, 2)
 	assert(c22.has_los("pc", "goblin_raider"), "clear corridor has LoS")
-	# Sanity: wall directly between blocks.
 	c22.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)
 	c22.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)
 	assert(not c22.has_los("pc", "goblin_raider"), "wall directly between blocks LoS")
-	# Sanity: adjacent cells always have LoS (no room for an intermediate cell).
 	c22.combatants["pc"][WIKeys.CELL] = Vector2i(5, 5)
 	c22.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 5)
 	assert(c22.has_los("pc", "goblin_raider"), "adjacent cells always have LoS")
-	# Sanity: diagonal wall pair (5,3)/(6,4) blocks LoS in BOTH directions across
-	# the other diagonal of that same 2x2 block (corner rule).
 	c22.combatants["pc"][WIKeys.CELL] = Vector2i(5, 4)
 	c22.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)
 	assert(not c22.has_los("pc", "goblin_raider"), "diagonal wall pair blocks LoS forward")
 	assert(not c22.has_los("goblin_raider", "pc"), "diagonal wall pair blocks LoS backward")
 
-	# --- line_cells enumeration ---
 	var c17 := _make(11, _sink)
-	# Clear line, length 4, rightward from (0,0): all 4 cells in bounds and unblocked.
 	var cells_clear: Array[Vector2i] = c17.line_cells(Vector2i(0, 0), Vector2i.RIGHT, 4)
 	assert(cells_clear == [Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0)], "clear line enumerates length cells in direction")
-	# Bounds clip: rightward from (10,0) in a 12-wide grid only has room for 1 cell (11,0).
 	var cells_bound: Array[Vector2i] = c17.line_cells(Vector2i(10, 0), Vector2i.RIGHT, 4)
 	assert(cells_bound == [Vector2i(11, 0)], "line clips at grid bounds")
-	# Wall clip: rightward from (3,3) hits blocked (5,3); the line stops there (wall blocks fire)
-	# and does not continue past it, even though occupants would not have stopped it.
 	var cells_wall: Array[Vector2i] = c17.line_cells(Vector2i(3, 3), Vector2i.RIGHT, 4)
 	assert(cells_wall == [Vector2i(4, 3), Vector2i(5, 3)], "line stops at first blocked cell (inclusive)")
-	# Occupants do not clip the line: put an ally in the path, the line still walks through.
 	c17.combatants["relc"][WIKeys.CELL] = Vector2i(1, 0)
 	var cells_occupant: Array[Vector2i] = c17.line_cells(Vector2i(0, 0), Vector2i.RIGHT, 4)
 	assert(cells_occupant == [Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0)], "occupants do not clip the line")
 
-	# --- Flame Jet line_damage — friendly fire, cells + hit_ids on skill_resolved ---
 	var c18 := _make(11, _sink)
 	_events.clear()
 	c18.combatants["pc"][WIKeys.CELL] = Vector2i(0, 0)
@@ -505,7 +434,6 @@ func _init() -> void:
 	var jet_hit_ids: Array = jet_payload.get("hit_ids", [])
 	assert(jet_hit_ids.has("relc") and jet_hit_ids.has("goblin_raider"), "hit_ids includes both the ally and the enemy in the line")
 	assert(not jet_hit_ids.has("goblin_shaman"), "combatant outside the line is not hit")
-	# Both victims actually took an attack_resolved roll (melee=false, no riposte possible from a line).
 	var jet_targets_seen: Array = []
 	for e: Dictionary in _events:
 		if e["type"] == "attack_resolved":
@@ -516,7 +444,6 @@ func _init() -> void:
 	assert(int(c18.combatants["relc"][WIKeys.HP]) <= relc_hp_before, "ally in the line can take real damage (friendly fire)")
 	assert(int(c18.combatants["goblin_raider"][WIKeys.HP]) <= raider_hp_before, "enemy in the line can take real damage")
 
-	# Non-cardinal / bad direction tokens are refused outright.
 	var c19 := _make(11, _sink)
 	_events.clear()
 	c19.combatants["pc"][WIKeys.SKILLS] = ["flame_jet"]
@@ -525,7 +452,6 @@ func _init() -> void:
 	assert(not c19.use_skill("flame_jet", "diagonal"), "non-cardinal direction token refused")
 	assert(_count("skill_resolved") == 0, "refused line does not resolve")
 
-	# --- line_damage refused when its first cell is a wall ---
 	var c23 := _make(11, _sink)
 	_events.clear()
 	c23.combatants["pc"][WIKeys.CELL] = Vector2i(4, 3)  # (5,3) is blocked, directly to the right
@@ -543,7 +469,6 @@ func _init() -> void:
 	assert(jet_refusal.get("reason", "") == "no_los", "wall-blocked line emits no_los action_refused")
 	assert(int(c23.combatants["pc"][WIKeys.AP]) == pc_ap_before_jet, "refused line-cast costs no AP")
 
-	# --- frost_bolt applies slowed on hit ---
 	var c20 := _make(2, _sink)
 	_events.clear()
 	c20.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
@@ -576,7 +501,6 @@ func _init() -> void:
 			if e["type"] == "status_applied":
 				applied_payload = e["payload"]
 		assert(applied_payload.get(WIKeys.ID, "") == "goblin_raider" and applied_payload.get("status", "") == "slowed", "status_applied emitted for the victim")
-		# Advance to the raider's next turn: pool should be reduced by the penalty, then status expires.
 		var target_id := "goblin_raider"
 		var g := 0
 		while cx.get_active() != target_id and g < 8:
@@ -588,13 +512,8 @@ func _init() -> void:
 		break
 	assert(found_slowed_seed, "found at least one seed where frost bolt hit, to verify slowed application")
 
-	# --- AI never selects a line whose cells include an ally ---
 	var c21 := _make(11, _sink)
 	_events.clear()
-	# Force a fixture: shaman (ranged AI) knows flame_jet; placing an ally goblin_raider
-	# directly between the shaman and TWO enemies means the only multi-hit line also
-	# hits an ally (two enemies so the T4 >=2-enemy line gate is satisfied — ally-safety
-	# is the check actually refusing here).
 	c21.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
 	c21.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(1, 0)  # ally, in the only sensible line
 	c21.combatants["pc"][WIKeys.CELL] = Vector2i(3, 0)
@@ -607,13 +526,9 @@ func _init() -> void:
 	WICombatAI.take_turn(c21)
 	assert(_count("skill_resolved") == 0, "line-capable AI refuses to cast a line that would hit its own ally")
 
-	# --- second slow on an already-slowed victim is a flat refresh ---
 	var c24 := _make(11, _sink)
 	_events.clear()
 	var refresh_id: String = c24.get_active()
-	# Simulate two independent slow applications landing on the same victim before
-	# their next turn (e.g. two frost bolts) -- the applies-write site is a flat
-	# key assignment (never appends/stacks), so this must collapse to one entry.
 	c24.combatants[refresh_id]["statuses"]["slowed"] = {"pool_penalty": 2}
 	c24.combatants[refresh_id]["statuses"]["slowed"] = {"pool_penalty": 2}
 	assert((c24.combatants[refresh_id]["statuses"] as Dictionary).size() == 1, "two slow applications collapse to a single status entry")
@@ -627,7 +542,6 @@ func _init() -> void:
 	assert(not (c24.combatants[refresh_id]["statuses"] as Dictionary).has("slowed"), "slowed expired exactly once")
 	assert(_count("status_expired") == 1, "exactly one status_expired despite two applications")
 
-	# --- MP pool build ---
 	var c25 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt", "quick_cast"]}})
 	assert(int(c25.combatants["pc"][WIKeys.MAX_MP]) == 8 + int(8 / 2), "max_mp = 8 + int(INT/2) for a combatant with a spell")
 	assert(int(c25.combatants["pc"][WIKeys.MP]) == int(c25.combatants["pc"][WIKeys.MAX_MP]), "mp starts at max_mp")
@@ -636,7 +550,6 @@ func _init() -> void:
 	var snap25 := c25.snapshot()
 	assert((snap25["combatants"]["pc"] as Dictionary).has(WIKeys.MP) and (snap25["combatants"]["pc"] as Dictionary).has(WIKeys.MAX_MP), "snapshot combatants carry mp/max_mp")
 
-	# --- spell refused on insufficient MP; refusal costs nothing ---
 	var c26 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt"]}})
 	_events.clear()
 	c26.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
@@ -652,7 +565,6 @@ func _init() -> void:
 	c26.combatants["pc"][WIKeys.MP] = 2
 	assert(c26.use_skill("frost_bolt", "goblin_raider"), "spell succeeds once MP is sufficient")
 
-	# --- Quick Cast discounts exactly the first spell each turn ---
 	var c27 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt", "flame_jet", "quick_cast"]}})
 	_events.clear()
 	c27.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
@@ -676,7 +588,6 @@ func _init() -> void:
 	assert(c27.use_skill("frost_bolt", "goblin_raider"), "spell succeeds on the new turn")
 	assert(int(c27.combatants["pc"][WIKeys.AP]) == ap1, "quick_cast's discount resets each turn (_start_turn)")
 
-	# --- Mana Shield absorbs damage into MP before HP ---
 	var c28 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt", "mana_shield"]}})
 	_events.clear()
 	var mp28: int = int(c28.combatants["pc"][WIKeys.MP])
@@ -692,7 +603,6 @@ func _init() -> void:
 			shield_payload = e["payload"]
 	assert(shield_payload.get(WIKeys.ID, "") == "pc" and int(shield_payload.get("absorbed", -1)) == 4, "reaction payload carries id + absorbed amount")
 
-	# Partial absorb: damage exceeds remaining MP, splits between MP and HP.
 	_events.clear()
 	c28.combatants["pc"][WIKeys.MP] = 4
 	var hp_before_partial: int = int(c28.combatants["pc"][WIKeys.HP])
@@ -705,14 +615,12 @@ func _init() -> void:
 			partial_payload = e["payload"]
 	assert(int(partial_payload.get("absorbed", -1)) == 4, "partial absorb payload reports only the MP actually spent")
 
-	# Inert at 0 MP: full damage goes to HP, no reaction fires.
 	_events.clear()
 	var hp_before_inert: int = int(c28.combatants["pc"][WIKeys.HP])
 	c28.apply_damage("pc", 5, "goblin_raider", true)
 	assert(int(c28.combatants["pc"][WIKeys.HP]) == hp_before_inert - 5, "shield inert at 0 MP: full damage to HP")
 	assert(_count("reaction_triggered") == 0, "no reaction fires once MP is empty")
 
-	# --- regression — riposte still never triggers on spell hits ---
 	var c29 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt"]}})
 	_events.clear()
 	c29.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(1, 1)
@@ -723,7 +631,6 @@ func _init() -> void:
 	assert(c29.use_skill("frost_bolt", "goblin_raider"), "spell cast succeeds against a counter_strike holder")
 	assert(_count("reaction_triggered") == 0, "spells never trigger riposte, even against a counter_strike holder with MP wired in")
 
-	# --- determinism holds through a spell-heavy scripted stream ---
 	var stream_e: Array = []
 	var stream_f: Array = []
 	for stream: Array in [stream_e, stream_f]:
@@ -743,16 +650,11 @@ func _init() -> void:
 	assert(stream_e.size() > 5, "spell-heavy scripted run produced events")
 	assert(stream_e == stream_f, "same seed + same spell-heavy intents = identical event stream")
 
-	# --- AI skips spells it cannot afford (MP) ---
 	var c30 := _make(11, _sink)
 	_events.clear()
 	c30.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(1, 1)
 	c30.combatants["pc"][WIKeys.CELL] = Vector2i(3, 1)
 	c30.combatants["goblin_shaman"][WIKeys.SKILLS] = ["frost_bolt"]
-	# GH#90: goblin_shaman's REAL catalog kit now also carries icy_floor
-	# (mp_cost 4), so build-time max_mp is no longer 0 -- force it explicitly
-	# here so this fixture's "cannot afford" gate stays genuine regardless of
-	# what the shipped catalog's own kit happens to carry.
 	c30.combatants["goblin_shaman"][WIKeys.MP] = 0
 	c30.combatants["goblin_shaman"][WIKeys.MAX_MP] = 0
 	assert(int(c30.combatants["goblin_shaman"][WIKeys.MP]) == 0, "fixture: shaman has no MP")
@@ -762,7 +664,6 @@ func _init() -> void:
 	assert(_count("skill_resolved") == 0, "AI never casts a spell it cannot pay MP for")
 	assert(_count("mp_changed") == 0, "no MP was spent by the skipped cast")
 
-	# --- AI prefers flame_jet when >=2 enemies share an ally-free line ---
 	var c31 := _make(11, _sink)
 	_events.clear()
 	c31.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
@@ -780,8 +681,6 @@ func _init() -> void:
 			first_skill31 = String(e["payload"]["skill"])
 	assert(first_skill31 == "flame_jet", "AI opens with flame_jet when two enemies share an ally-free line")
 
-	# Single enemy in the line: the multi-hit gate fails, AI falls through to the
-	# single-target spell instead of burning 4 MP on one victim.
 	var c32 := _make(11, _sink)
 	_events.clear()
 	c32.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
@@ -799,11 +698,6 @@ func _init() -> void:
 			first_skill32 = String(e["payload"]["skill"])
 	assert(first_skill32 == "frost_bolt", "AI prefers the single-target spell when only one enemy is in the line")
 
-	# --- "inert" AI profile (training dummies) ---
-	# The dummies never act at all (no block mechanics exist, so standing
-	# still is correct design, not AI weakness -- onboarding-rev spec §2).
-	# Force the dummy adjacent to pc so a REAL melee profile would clearly
-	# attack; inert must still refuse to do anything at all.
 	var c53 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "training_dummy_a"]), _load("res://data/skills.json"), _sink, 5)
 	c53.begin()
 	c53.combatants["pc"][WIKeys.CELL] = Vector2i(3, 3)
@@ -821,9 +715,6 @@ func _init() -> void:
 	assert(_count("turn_ended") == 1, "inert dummy's turn ends immediately -- exactly one turn_ended, no action attempted first")
 	assert(c53.get_active() != "training_dummy_a", "turn advanced off the inert dummy")
 
-	# Across a full autoplay fight (same idiom as qa/test_driver.gd's shipped
-	# combat_autoplay step: WICombatAI.take_turn(combat) called every turn
-	# regardless of side), a dummy must never once appear as an attacker.
 	var c54 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "training_dummy_a", "training_dummy_b"]), _load("res://data/skills.json"), _sink, 5)
 	c54.begin()
 	_events.clear()
@@ -839,11 +730,6 @@ func _init() -> void:
 			dummy_attacked = true
 	assert(not dummy_attacked, "no attack_resolved ever names a dummy as attacker across the full autoplay fight")
 
-	# --- per-fight action tally (spec §2.1 REV 2) ---
-	# Counters accumulate per actor as actions resolve; skill counters come
-	# from skills.json weapon/element tags. hit_bonus ±1000 forces guaranteed
-	# hits/misses (hit_chance = BASE_HIT + hit_bonus - dex/4), so no seed
-	# search is needed and the fight's rng consumption is unchanged.
 	var c33 := _make(11, _sink)
 	assert(c33.action_tally.is_empty(), "tally starts empty")
 	c33.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
@@ -858,7 +744,6 @@ func _init() -> void:
 	assert(int((c33.action_tally.get("pc", {}) as Dictionary).get("melee_hit", 0)) == 2, "tally accumulates per hit")
 	assert(not c33.action_tally.has("goblin_raider"), "the victim tallies nothing")
 
-	# A guaranteed miss tallies no melee_hit: hits count, swings do not.
 	var c34 := _make(11, _sink)
 	c34.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
 	c34.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
@@ -868,9 +753,6 @@ func _init() -> void:
 	assert(c34.attack("goblin_raider"), "the attack action itself still resolves")
 	assert(int((c34.action_tally.get("pc", {}) as Dictionary).get("melee_hit", 0)) == 0, "missed swing tallies nothing")
 
-	# power_strike is sword-tagged in skills.json: casting tallies
-	# sword_skill_used, and its guaranteed hit also tallies melee_hit
-	# (a sword-skill hit IS a melee hit).
 	var c35 := _make(11, _sink)
 	c35.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
 	c35.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
@@ -885,8 +767,6 @@ func _init() -> void:
 	assert(int(t35.get("melee_hit", 0)) == 1, "sword-skill hit also tallies melee_hit")
 	assert(int(t35.get("spell_cast", 0)) == 0, "a melee skill is not a spell cast")
 
-	# A missed power_strike still counts the USE (the deed is swinging the
-	# skill) but no melee_hit.
 	var c36 := _make(11, _sink)
 	c36.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
 	c36.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
@@ -899,8 +779,6 @@ func _init() -> void:
 	assert(int(t36.get("sword_skill_used", 0)) == 1, "use tallied on a miss")
 	assert(int(t36.get("melee_hit", 0)) == 0, "no melee_hit on a miss")
 
-	# Spell casts tally spell_cast + the element counter from the skills.json
-	# element tag, hit or miss; never melee_hit.
 	var c37 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt", "flame_jet"]}})
 	c37.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
 	c37.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(3, 1)
@@ -919,7 +797,6 @@ func _init() -> void:
 	assert(int(t37.get("fire_cast", 0)) == 1, "fire element tallied for flame_jet")
 	assert(int(t37.get("ice_cast", 0)) == 1, "ice counter untouched by the fire cast")
 
-	# Enemy casts tally under the enemy's own id (per-actor tally).
 	var c38 := _make(11, _sink)
 	c38.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(1, 1)
 	c38.combatants["pc"][WIKeys.CELL] = Vector2i(3, 1)
@@ -930,8 +807,6 @@ func _init() -> void:
 	assert(int(t38.get("spell_cast", 0)) == 1, "enemy spell_cast tallied under the shaman")
 	assert(int(t38.get("fire_cast", 0)) == 1, "flame_bolt carries the fire tag")
 
-	# Refused casts tally nothing (out of range, then insufficient MP): the
-	# tally hook sits at the spend site, which refusal paths never reach.
 	var c39 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt"]}})
 	c39.combatants["pc"][WIKeys.CELL] = Vector2i(1, 1)
 	c39.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 1)
@@ -943,8 +818,6 @@ func _init() -> void:
 	assert(not c39.use_skill("frost_bolt", "goblin_raider"), "MP-starved cast refused")
 	assert(c39.action_tally.is_empty(), "refused casts tally nothing")
 
-	# Riposte hits are the defender's deed: a landed counter_strike answer
-	# tallies melee_hit for the riposting defender.
 	var c40 := _make(11, _sink)
 	c40.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
 	c40.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
@@ -957,9 +830,6 @@ func _init() -> void:
 	assert(c40.attack("goblin_raider"), "attack into the riposte holder lands")
 	assert(int((c40.action_tally.get("goblin_raider", {}) as Dictionary).get("melee_hit", 0)) == 1, "landed riposte tallies melee_hit for the defender")
 
-	# --- Hotfix WAVE A2 (playtest directive 7, user-confirmed): PC death is an
-	# immediate defeat, even with a living ally. Team-wipe still governs every
-	# other combatant (relc dying alone does not end the fight, tested below).
 	var c41 := _make(11, _sink)
 	_events.clear()
 	assert(bool(c41.combatants["relc"][WIKeys.ALIVE]), "fixture: relc starts alive")
@@ -985,9 +855,6 @@ func _init() -> void:
 			finished_payload = e["payload"]
 	assert(finished_payload.get("victory", true) == false, "combat_finished payload carries victory:false, same shape as any other defeat")
 
-	# Ally actions cease: a fresh turn never starts for relc after the pc's
-	# death ends the fight -- take_turn is a no-op once finished, and no
-	# turn_started for relc exists anywhere in the stream.
 	var turns_before := _count("turn_started")
 	WICombatAI.take_turn(c41)
 	assert(_count("turn_started") == turns_before, "no further turns start once the fight is over")
@@ -995,9 +862,6 @@ func _init() -> void:
 		if e["type"] == "turn_started":
 			assert(e["payload"][WIKeys.ID] != "relc", "relc's turn never started after the pc's death ended the fight")
 
-	# Team-wipe still governs every other combatant: relc alone dying (pc and
-	# both enemies alive) must NOT end the fight -- only the pc's specific
-	# death is special-cased.
 	var c42 := _make(11, _sink)
 	_events.clear()
 	c42.apply_damage("relc", 999, "goblin_raider", true)
@@ -1005,25 +869,14 @@ func _init() -> void:
 	assert(bool(c42.combatants["pc"][WIKeys.ALIVE]), "pc is still alive")
 	assert(not c42.finished, "relc's death alone does not end the fight -- only the pc's does")
 
-	# --- build-time equipment injection (damage_mod/hp_mod/
-	# damage_reduction) -- WIGame._build_player_combatant is the only real
-	# caller that ever sets these; here we exercise wi_combat.gd's own
-	# handling of the fields directly, via _make_custom's cfg override.
-	# hp_mod folds into max_hp at build time.
 	var c43 := _make_custom(11, _sink, {"pc": {WIKeys.HP_MOD: 4}})
 	var c43_base := _make(11, _sink)
 	assert(int(c43.combatants["pc"][WIKeys.MAX_HP]) == int(c43_base.combatants["pc"][WIKeys.MAX_HP]) + 4, "hp_mod adds flat to max_hp at build time")
 	assert(int(c43.combatants["pc"][WIKeys.HP]) == int(c43.combatants["pc"][WIKeys.MAX_HP]), "starting hp is the boosted max_hp")
 
-	# A combatant with no damage_mod/damage_reduction/hp_mod override defaults
-	# to 0 for all three -- byte-identical to the pre-M7 shape.
 	assert(int(c43_base.combatants["pc"].get(WIKeys.DAMAGE_MOD, -1)) == 0, "damage_mod defaults to 0")
 	assert(int(c43_base.combatants["pc"].get(WIKeys.DAMAGE_REDUCTION, -1)) == 0, "damage_reduction defaults to 0")
 
-	# damage_mod adds flat to MELEE damage (both basic Attack and a
-	# damage_mult skill, since both route through _resolve_hit's melee=true
-	# branch) -- proven by comparing two otherwise-identical forced hits at
-	# the same seed, one with a damage_mod override.
 	var c44 := _make(9, _sink)
 	c44.combatants["pc"][WIKeys.CELL] = (c44.combatants["goblin_raider"][WIKeys.CELL] as Vector2i) + Vector2i.RIGHT
 	c44.combatants["pc"]["hit_bonus"] = 1000
@@ -1047,8 +900,6 @@ func _init() -> void:
 			dmg45 = int(e["payload"]["damage"])
 	assert(dmg45 == dmg44 + 3, "damage_mod +3 adds exactly 3 to an otherwise-identical basic Attack (same seed/roll)")
 
-	# damage_mod also rides a damage_mult skill (power_strike), since it
-	# shares the same melee=true _resolve_hit call.
 	var c46 := _make_custom(9, _sink, {"pc": {WIKeys.DAMAGE_MOD: 3, WIKeys.SKILLS: ["power_strike"]}})
 	c46.combatants["pc"][WIKeys.CELL] = (c46.combatants["goblin_raider"][WIKeys.CELL] as Vector2i) + Vector2i.RIGHT
 	c46.combatants["pc"]["hit_bonus"] = 1000
@@ -1073,7 +924,6 @@ func _init() -> void:
 			dmg46 = int(e["payload"]["damage"])
 	assert(dmg46 == dmg47 + 3, "damage_mod also adds to a damage_mult skill's landed hit (power_strike)")
 
-	# damage_mod must NOT add to ranged spell_damage (int-based, melee=false).
 	var c48 := _make_custom(9, _sink, {"pc": {WIKeys.DAMAGE_MOD: 3, WIKeys.SKILLS: ["frost_bolt"]}})
 	c48.combatants["pc"][WIKeys.MP] = 10
 	c48.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(1, 1)
@@ -1100,25 +950,16 @@ func _init() -> void:
 			dmg48 = int(e["payload"]["damage"])
 	assert(dmg48 == dmg49, "damage_mod does NOT add to a ranged spell_damage cast (melee=false, int-based)")
 
-	# damage_reduction applies in _deduct_hp, floored at >=1 for a positive
-	# incoming amount, and BEFORE mana_shield -- proven via apply_damage
-	# (bypasses hit-chance rng entirely, isolating the reduction/floor/order
-	# math itself).
 	var c50 := _make_custom(11, _sink, {"pc": {WIKeys.DAMAGE_REDUCTION: 3}})
 	var hp50 := int(c50.combatants["pc"][WIKeys.HP])
 	c50.apply_damage("pc", 10, "goblin_raider", true)
 	assert(int(c50.combatants["pc"][WIKeys.HP]) == hp50 - 7, "damage_reduction subtracts flatly from incoming damage (10 - 3 = 7)")
 
-	# Floor: reduction >= incoming damage still deals exactly 1, never 0.
 	var c51 := _make_custom(11, _sink, {"pc": {WIKeys.DAMAGE_REDUCTION: 5}})
 	var hp51 := int(c51.combatants["pc"][WIKeys.HP])
 	c51.apply_damage("pc", 2, "goblin_raider", true)
 	assert(int(c51.combatants["pc"][WIKeys.HP]) == hp51 - 1, "damage_reduction floors at 1 damage, never 0, for a positive incoming hit")
 
-	# Ordering: reduction applies BEFORE mana_shield, so the shield only ever
-	# absorbs what got past armor -- a holder with reduction 3 and ample MP
-	# takes the reduction off first, then the shield absorbs the remainder
-	# from MP, never touching HP for a hit the shield can fully cover.
 	var c52 := _make_custom(11, _sink, {"pc": {WIKeys.DAMAGE_REDUCTION: 3, WIKeys.SKILLS: ["frost_bolt", "mana_shield"]}})
 	_events.clear()
 	var mp52 := int(c52.combatants["pc"][WIKeys.MP])
@@ -1132,12 +973,6 @@ func _init() -> void:
 			reduce_then_shield_payload = e["payload"]
 	assert(int(reduce_then_shield_payload.get("absorbed", -1)) == 7, "mana_shield's own reaction payload also reports the post-reduction amount")
 
-	# --- the sneak combat read ---
-	# [Stealth] in combat: 1 AP for +2 move_pool, a genuine self-buff -- no
-	# enemy, no adjacency, no LoS. `use_skill("sneak", "pc")` mirrors exactly
-	# how the real UI resolves it now (targeting_controller.gd's self-target
-	# reuse always resolves target_id to the actor -- see that file's `enter()`
-	# doc comment), so this is not a synthetic bypass of the real dispatch.
 	var c57 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["sneak"]}})
 	c57.active_index = c57.turn_order.find("pc")
 	c57._start_turn()
@@ -1154,10 +989,6 @@ func _init() -> void:
 		if e["type"] == "skill_resolved":
 			sneak_resolved_payload = e["payload"]
 	assert(sneak_resolved_payload.get("actor", "") == "pc" and sneak_resolved_payload.get("target", "") == "pc", "skill_resolved reports the actor as its own target (no other target exists)")
-	# The spent pool is real currency afterward -- move_active can spend it via
-	# the SAME MOVE_COST path dash()'s grant already uses (no separate ledger).
-	# Try all 4 directions per step (the pool-exhaustion test's own idiom
-	# above) rather than assuming a hardcoded direction stays on the board.
 	var sneak_pool_dirs: Array[Vector2i] = [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.UP, Vector2i.DOWN]
 	var moved_after_sneak := 0
 	for i in (pool57_before + 2):
@@ -1167,7 +998,6 @@ func _init() -> void:
 				break
 	assert(moved_after_sneak == pool57_before + 2, "every pool cell sneak granted is actually spendable via move_active")
 
-	# Repeatable while AP lasts, same convention as dash().
 	var c58 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["sneak"]}})
 	c58.active_index = c58.turn_order.find("pc")
 	c58._start_turn()
@@ -1176,8 +1006,6 @@ func _init() -> void:
 	assert(c58.use_skill("sneak", "pc"), "first sneak this turn succeeds")
 	assert(c58.use_skill("sneak", "pc"), "sneak is repeatable while AP lasts, same as dash")
 	assert(int(c58.combatants["pc"][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL + 4, "two casts stack (+2 each)")
-	# Refused at 0 AP, and a refused cast spends nothing (same contract as
-	# frost_bolt's MP-refusal test above and dash's AP-refusal test).
 	c58.combatants["pc"][WIKeys.AP] = 0
 	var pool58_before_refusal := int(c58.combatants["pc"][WIKeys.MOVE_POOL])
 	_events.clear()
@@ -1185,12 +1013,6 @@ func _init() -> void:
 	assert(int(c58.combatants["pc"][WIKeys.MOVE_POOL]) == pool58_before_refusal, "refused sneak spends no pool")
 	assert(_count("skill_resolved") == 0, "refused sneak never resolves")
 
-	# The two PRE-EXISTING 0-cost move_pool_bonus skills (quick_movement,
-	# battlefield_awareness) are UNCHANGED by this wiring -- they still refuse
-	# via any target, self or enemy, exactly as test_sim_core.gd's g18 block
-	# already pins (this is the OTHER half of that same drift-seam contract,
-	# re-pinned here at the combat-sim level too since this file is where the
-	# actual resolver dispatch lives).
 	var c59 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["quick_movement"]}})
 	c59.active_index = c59.turn_order.find("pc")
 	c59._start_turn()
@@ -1198,10 +1020,6 @@ func _init() -> void:
 	assert(not c59.use_skill("quick_movement", "pc"), "the pre-existing 0-cost move_pool_bonus skill still refuses self-target")
 	assert(int(c59.combatants["pc"][WIKeys.MOVE_POOL]) == pool59_before, "quick_movement grants nothing as an ACTIVE cast -- still no resolve_active consumer")
 
-	# --- quick_movement/battlefield_awareness are real
-	# TURN-START PASSIVES now (wi_combat.gd's `_move_pool_bonus_total`,
-	# applied inside `_start_turn`) -- c59 above proves the ACTIVE-cast path
-	# is untouched; this proves the PASSIVE path is real. ---
 	var c60 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["quick_movement"]}})
 	c60.active_index = c60.turn_order.find("pc")
 	_events.clear()
@@ -1212,30 +1030,20 @@ func _init() -> void:
 		if e["type"] == "turn_started":
 			turn_started_payload = e["payload"]
 	assert(int(turn_started_payload.get("move_pool", -1)) == WICombat.MOVE_POOL + 1, "turn_started reports the post-passive pool, not the bare base")
-	# Stacks with a second 0-cost move_pool_bonus holder (battlefield_awareness).
 	var c61 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["quick_movement", "battlefield_awareness"]}})
 	c61.active_index = c61.turn_order.find("pc")
 	c61._start_turn()
 	assert(int(c61.combatants["pc"][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL + 2, "two 0-cost move_pool_bonus skills stack (+1 each)")
-	# Applied AFTER the slowed penalty -- a slowed holder still gets the
-	# passive bonus on top of the reduced base (wi_combat.gd's `_start_turn`
-	# doc comment).
 	var c62 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["quick_movement"]}})
 	c62.active_index = c62.turn_order.find("pc")
 	c62.combatants["pc"]["statuses"]["slowed"] = {"pool_penalty": 2}
 	c62._start_turn()
 	assert(int(c62.combatants["pc"][WIKeys.MOVE_POOL]) == maxi(1, WICombat.MOVE_POOL - 2) + 1, "quick_movement's passive still applies on top of a slowed turn")
-	# [Stealth]'s ACTIVE cast (ap_cost 1) is a totally separate mechanism --
-	# holding it must never ALSO grant a turn-start passive (the ap_cost>0
-	# gate lives entirely in skill_effects.gd's resolve_active, never in
-	# `_move_pool_bonus_total`, which explicitly skips any ap_cost>0 skill).
 	var c63 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["sneak"]}})
 	c63.active_index = c63.turn_order.find("pc")
 	c63._start_turn()
 	assert(int(c63.combatants["pc"][WIKeys.MOVE_POOL]) == WICombat.MOVE_POOL, "[Stealth]'s ACTIVE move_pool_bonus grants no turn-start passive")
 
-	# --- second_wind's self-heal resolver (the
-	# ghost-skill escalation's other fix; `_resolve_heal` in skill_effects.gd) ---
 	var c64 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["second_wind"]}})
 	c64.active_index = c64.turn_order.find("pc")
 	c64._start_turn()
@@ -1255,7 +1063,6 @@ func _init() -> void:
 	assert(heal_payload.get("actor", "") == "pc" and heal_payload.get("target", "") == "pc", "skill_resolved reports the actor as its own target, same convention as sneak")
 	assert(int(heal_payload.get("healed", -1)) == 8, "skill_resolved reports the actual amount healed")
 
-	# Capped at max_hp: healing above the ceiling only restores the missing amount.
 	var c65 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["second_wind"]}})
 	c65.active_index = c65.turn_order.find("pc")
 	c65._start_turn()
@@ -1270,9 +1077,6 @@ func _init() -> void:
 			heal_payload_capped = e["payload"]
 	assert(int(heal_payload_capped.get("healed", -1)) == 3, "the reported healed amount is the CAPPED delta (3), not the raw effect.amount (8)")
 
-	# SELF-ONLY tonight: a living ally (same side, NOT the actor) still refuses
-	# -- the type-keyed same-side gate lets it PAST the enemy check, but
-	# `_resolve_heal`'s own target_id == actor_id gate stops it there.
 	var c66 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["second_wind"]}})
 	c66.active_index = c66.turn_order.find("pc")
 	c66._start_turn()
@@ -1281,15 +1085,8 @@ func _init() -> void:
 	assert(not c66.use_skill("second_wind", "relc"), "second_wind refuses an ally target -- SELF-ONLY tonight (ally-targeting is a follow-up)")
 	assert(int(c66.combatants["pc"][WIKeys.AP]) == ap66_before, "refused ally-target heal spends nothing")
 	assert(_count("skill_resolved") == 0, "refused ally-target heal never resolves")
-	# An enemy target refuses too -- heal requires the SAME side (the
-	# type-keyed exemption inverted from every other active effect's
-	# different-side requirement), so a DIFFERENT side never even reaches
-	# `_resolve_heal`'s self-only gate.
 	assert(not c66.use_skill("second_wind", "goblin_raider"), "second_wind refuses an enemy target (fails the type-keyed same-side gate)")
 
-	# --- [Ice Floor]: area terrain effect. Gates BEFORE spend, mirroring
-	# spell_damage exactly (range then LoS -- a refused cast costs neither AP
-	# nor MP). Arena fixture: goblin_ambush blocks (5,3),(6,4),(3,5),(8,2). ---
 	var c67 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["icy_floor"]}})
 	_events.clear()
 	c67.active_index = c67.turn_order.find("pc")
@@ -1317,9 +1114,6 @@ func _init() -> void:
 	assert(int(c68.combatants["pc"][WIKeys.AP]) == ap68_before and int(c68.combatants["pc"][WIKeys.MP]) == mp68_before, "refused no-LoS cast spends neither AP nor MP")
 	assert(_count("skill_resolved") == 0 and _count("terrain_added") == 0, "refused no-LoS cast never resolves or registers terrain")
 
-	# Successful cast: area = Chebyshev radius around the TARGET's cell,
-	# clipped to bounds, walls excluded; occupants of every side get slowed
-	# (friendly fire); terrain registers exactly through snapshot().
 	var c69 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["icy_floor"]}})
 	_events.clear()
 	c69.combatants["pc"][WIKeys.CELL] = Vector2i(2, 4)
@@ -1333,7 +1127,6 @@ func _init() -> void:
 	assert(c69.use_skill("icy_floor", "goblin_raider"), "icy_floor cast succeeds in range with clear LoS")
 	assert(int(c69.combatants["pc"][WIKeys.AP]) == ap69_before - 2, "icy_floor costs exactly 2 AP")
 	assert(int(c69.combatants["pc"][WIKeys.MP]) == mp69_before - 4, "icy_floor costs exactly 4 MP")
-	# Radius-1 blast around (5,4): (4..6, 3..5) minus blocked (5,3) and (6,4).
 	var expected_cells69 := [[4, 3], [4, 4], [4, 5], [5, 4], [5, 5], [6, 3], [6, 5]]
 	var resolved69: Dictionary = {}
 	var terrain_added69: Dictionary = {}
@@ -1355,9 +1148,6 @@ func _init() -> void:
 	assert((c69.combatants["relc"]["statuses"] as Dictionary).has("slowed"), "an ALLY standing in the blast is slowed too -- friendly fire is real")
 	assert(not (c69.combatants["goblin_shaman"]["statuses"] as Dictionary).has("slowed"), "a combatant outside the blast is untouched (control)")
 
-	# Persistence: icy through the cast round (1) and the next (2, since
-	# expires_after_round = round_number(1) + duration_rounds(2) - 1 = 2),
-	# purged the next time round_number advances past it (round 3).
 	assert(c69.round_number == 1, "cast happened in round 1")
 	var members69 := c69.turn_order.size()
 	for i in members69:
@@ -1377,10 +1167,6 @@ func _init() -> void:
 	assert(expired69.get("kind", "") == "icy_floor" and (expired69.get("cells", []) as Array) == expected_cells69, "terrain_expired reports kind + the exact sorted cell list purged")
 	assert((c69.snapshot()["terrain"] as Dictionary).is_empty(), "snapshot().terrain is an empty dict once everything has expired")
 
-	# Turn-start on ice: a combatant STARTING its turn already standing on an
-	# icy cell gets the penalty THIS turn via the SAME _start_turn
-	# consume-block the slowed status already uses (applied then immediately
-	# consumed -- both events fire the same turn).
 	var c70 := _make(11, _sink)
 	_events.clear()
 	var ice_cell70: Vector2i = c70.combatants["pc"][WIKeys.CELL]
@@ -1397,9 +1183,6 @@ func _init() -> void:
 			expired70 = true
 	assert(applied70 and expired70, "status_applied then status_expired both fire the same turn (applied then immediately consumed)")
 
-	# Move onto ice: stepping onto a terrain cell mid-turn applies the status
-	# immediately, but the pool penalty only bites at the combatant's NEXT
-	# turn start (this turn's pool is untouched by the step).
 	var c71 := _make(11, _sink)
 	_events.clear()
 	var start_cell71: Vector2i = c71.combatants["pc"][WIKeys.CELL]
@@ -1417,8 +1200,6 @@ func _init() -> void:
 	assert(c71.get_active() == "pc", "cycled back to pc's own turn")
 	assert(int(c71.combatants["pc"][WIKeys.MOVE_POOL]) == maxi(1, WICombat.MOVE_POOL - 2), "the NEXT turn's move_pool reflects the ice penalty from stepping on it last turn")
 
-	# Flat refresh: re-casting the same area registers no duplicate cells and
-	# re-applying the status yields exactly one entry, never a stack.
 	var c72 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["icy_floor"]}})
 	_events.clear()
 	c72.combatants["pc"][WIKeys.CELL] = Vector2i(2, 4)
@@ -1439,10 +1220,6 @@ func _init() -> void:
 	assert(raider_statuses72b.has("slowed") and raider_statuses72b.size() == 1, "re-application still yields exactly one status entry, never a stack")
 	assert(int((c72.terrain[Vector2i(3, 4)] as Dictionary).get("expires_after_round", -1)) == c72.round_number + 1, "re-casting refreshes expiry to the NEW cast's value, not stacking onto the old one")
 
-	# Empty-terrain no-op: a fight that never casts icy_floor emits zero
-	# terrain events at all -- the "zero behavior change for every
-	# pre-existing combat-data payload" proof (also exercises the purge's
-	# own early-return across several round rollovers).
 	var c73 := _make(11, _sink)
 	_events.clear()
 	var guard73 := 0
@@ -1453,10 +1230,6 @@ func _init() -> void:
 	assert(_count("terrain_added") == 0 and _count("terrain_expired") == 0, "zero terrain events fire in a fight that never casts icy_floor")
 	assert((c73.snapshot()["terrain"] as Dictionary).is_empty(), "snapshot terrain key is an empty dict when unused")
 
-	# --- [Flame Pillar] blast_damage (GH#71): instant AoE damage, no
-	# terrain/status writes. Gates BEFORE spend, mirroring icy_floor/
-	# spell_damage exactly (range then LoS). Same goblin_ambush arena blocks
-	# as icy_floor's own tests: (5,3),(6,4),(3,5),(8,2). ---
 	var c90 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["flame_pillar"]}})
 	_events.clear()
 	c90.active_index = c90.turn_order.find("pc")
@@ -1484,12 +1257,6 @@ func _init() -> void:
 	assert(int(c91.combatants["pc"][WIKeys.AP]) == ap75_before and int(c91.combatants["pc"][WIKeys.MP]) == mp75_before, "refused no-LoS cast spends neither AP nor MP")
 	assert(_count("skill_resolved") == 0, "refused no-LoS cast never resolves")
 
-	# Successful cast: an enemy adjacent to a SECOND enemy AND an ally all
-	# land in the same blast (friendly fire real, three-way); the wall cell
-	# (5,3) sits inside the candidate square and is excluded exactly like
-	# icy_floor's own wall exclusion; the actor (pc) stands OUTSIDE the
-	# blast this time and is untouched (the "combatant outside the blast"
-	# control, mirroring icy_floor's goblin_shaman control in c69 above).
 	var c92 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["flame_pillar"]}})
 	_events.clear()
 	c92.combatants["pc"][WIKeys.CELL] = Vector2i(2, 4)
@@ -1507,7 +1274,6 @@ func _init() -> void:
 	assert(c92.use_skill("flame_pillar", "goblin_raider"), "flame_pillar cast succeeds in range with clear LoS")
 	assert(int(c92.combatants["pc"][WIKeys.AP]) == ap76_before - 3, "flame_pillar costs exactly 3 AP")
 	assert(int(c92.combatants["pc"][WIKeys.MP]) == mp76_before - 5, "flame_pillar costs exactly 5 MP")
-	# Radius-1 blast around (4,3): (3..5, 2..4) minus blocked (5,3).
 	var expected_cells76 := [[3, 2], [3, 3], [3, 4], [4, 2], [4, 3], [4, 4], [5, 2], [5, 4]]
 	var resolved76: Dictionary = {}
 	for e: Dictionary in _events:
@@ -1518,10 +1284,6 @@ func _init() -> void:
 	var hit_ids76: Array = resolved76.get("hit_ids", [])
 	assert(hit_ids76.has("relc") and hit_ids76.has("goblin_raider") and hit_ids76.has("goblin_shaman"), "hit_ids includes the ally, the cast target, and the second enemy -- friendly fire is real")
 	assert(not hit_ids76.has("pc"), "the actor standing outside the blast is not in hit_ids")
-	# Each victim actually took an attack_resolved roll (melee=false, no
-	# riposte possible from a blast) -- the deterministic proof, since an
-	# individual hit-chance roll can still miss (mirrors flame_jet's c18
-	# test above, which asserts HP `<=` before for the same reason).
 	var blast_targets_seen76: Array = []
 	for e: Dictionary in _events:
 		if e["type"] == "attack_resolved":
@@ -1540,8 +1302,6 @@ func _init() -> void:
 	assert(_count("status_applied") == 0, "flame_pillar never emits status_applied")
 	assert(_count("reaction_triggered") == 0, "blast hits never trigger riposte (mirrors line_damage's no-riposte contract)")
 
-	# Self-hit: the caster's OWN cell can land in the blast when adjacent to
-	# the target -- deliberate, same rule icy_floor documents for its terrain.
 	var c93 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["flame_pillar"]}})
 	_events.clear()
 	c93.combatants["pc"][WIKeys.CELL] = Vector2i(6, 3)
@@ -1565,12 +1325,6 @@ func _init() -> void:
 	assert(self_hit_seen77, "the caster gets a real attack_resolved roll against its own cell")
 	assert(int(c93.combatants["pc"][WIKeys.HP]) <= pc_hp77, "the caster can take real self-inflicted damage (a miss just leaves HP unchanged this roll)")
 
-	# A roster listing the same catalog id twice must field TWO
-	# distinct, independently-tracked combatants, never collapse to one via
-	# dict-key overwrite. shield_spiders' real shipped roster
-	# (["shield_spider", "shield_spider"]) reproduced directly via `_cfgs`
-	# (which appends one cfg dict PER occurrence in the requested id list,
-	# exactly like `WIGame.start_combat`'s enemy-roster loop).
 	var arena_sn: Dictionary = _load("res://data/arenas.json")["arenas"][0]
 	for a: Dictionary in _load("res://data/arenas.json")["arenas"]:
 		if String(a[WIKeys.ID]) == "sewers_nest":
@@ -1583,22 +1337,15 @@ func _init() -> void:
 	assert(String(c74.combatants["shield_spider"][WIKeys.DISPLAY_NAME]) == String(c74.combatants["shield_spider_2"][WIKeys.DISPLAY_NAME]), "both spiders show the SAME player-facing display name -- the suffix is internal bookkeeping only")
 	assert(String(c74.combatants["shield_spider"][WIKeys.TEMPLATE_ID]) == "shield_spider" and String(c74.combatants["shield_spider_2"][WIKeys.TEMPLATE_ID]) == "shield_spider", "both resolve back to the SAME static catalog id (template_id) for presentation lookups (sprite/combat_scale)")
 	assert((c74.combatants["shield_spider"][WIKeys.CELL] as Vector2i) != (c74.combatants["shield_spider_2"][WIKeys.CELL] as Vector2i), "the two spiders occupy distinct spawn cells -- real independent combatants, not aliases of one dict")
-	# Damaging one must never affect the other -- the strongest proof the
-	# pre-fix dict-overwrite aliasing is gone (before the fix there was
-	# structurally only ONE dict for both list entries to share).
 	c74.apply_damage("shield_spider", 5, "pc", true)
 	assert(int(c74.combatants["shield_spider"][WIKeys.HP]) == int(c74.combatants["shield_spider"][WIKeys.MAX_HP]) - 5, "damage lands on the targeted spider")
 	assert(int(c74.combatants["shield_spider_2"][WIKeys.HP]) == int(c74.combatants["shield_spider_2"][WIKeys.MAX_HP]), "the OTHER spider is untouched -- no aliasing between the two")
 
-	# Generalizes past a single duplicate pair: three occurrences of the same
-	# id (a hypothetical worse case than any shipped roster today) still get
-	# three distinct runtime ids via the same re-probed suffix loop.
 	var c75 := WICombat.new(arena_sn, _cfgs(["pc", "goblin_raider", "goblin_raider", "goblin_raider"]), _load("res://data/skills.json"), _sink, 1)
 	c75.begin()
 	assert(c75.combatants.size() == 4, "triple-duplicate roster fields all four combatants")
 	assert(c75.combatants.has("goblin_raider") and c75.combatants.has("goblin_raider_2") and c75.combatants.has("goblin_raider_3"), "third occurrence gets _3, not a collision with _2")
 
-	# --- [Invisibility]'s combat read: self-cast untargetable status ---
 	var c80 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["invisibility"]}})
 	c80.active_index = c80.turn_order.find("pc")
 	c80._start_turn()
@@ -1622,7 +1369,6 @@ func _init() -> void:
 	assert(resolved80.get("actor", "") == "pc" and resolved80.get("skill", "") == "invisibility" and resolved80.get("target", "") == "pc", "skill_resolved reports the actor as its own target, same convention as sneak/second_wind")
 	assert(applied80.get("id", "") == "pc" and applied80.get("status", "") == "invisible", "status_applied reports the caster + the invisible status id")
 
-	# --- AI target-selection exclusion + break-on-damage + re-targetable ---
 	var cfgs81 := _cfgs(["pc", "goblin_raider"])
 	for cfg: Dictionary in cfgs81:
 		if String(cfg[WIKeys.ID]) == "pc":
@@ -1650,8 +1396,6 @@ func _init() -> void:
 	assert(c81.combatants["goblin_raider"][WIKeys.CELL] == Vector2i(4, 3), "melee AI does not even move -- an invisible sole foe leaves it with no living enemy to path toward, exactly like the empty-foes case")
 	assert(_count("turn_ended") == 1, "the raider's turn ends immediately, exactly like the inert-profile/no-foe cases")
 
-	# Break on damage: pc attacks (guaranteed hit via hit_bonus 1000), clearing
-	# its own invisible status; the raider can then target pc again.
 	c81.end_turn()
 	var guard81b := 0
 	while c81.get_active() != "pc" and guard81b < 8:
@@ -1677,7 +1421,6 @@ func _init() -> void:
 	WICombatAI.take_turn(c81)
 	assert(_count("attack_resolved") >= 1, "once invisibility breaks, the melee AI can target pc again")
 
-	# --- Natural expiry: fades after duration_rounds if never broken ---
 	var cfgs82 := _cfgs(["pc", "training_dummy_a"])
 	for cfg: Dictionary in cfgs82:
 		if String(cfg[WIKeys.ID]) == "pc":
@@ -1713,12 +1456,6 @@ func _init() -> void:
 	assert(expired82.get("id", "") == "pc" and expired82.get("status", "") == "invisible", "status_expired reports the caster + invisible")
 	assert(_count("attack_resolved") == 0, "control: nothing ever attacked -- this expiry is purely round-based, not break-on-damage")
 
-	# --- Area effects don't respect invisibility: a line skill still HITS an
-	# invisible occupant standing in it. Only the AI's SELECTION heuristic
-	# skips COUNTING them toward the >=2-enemies-hit gate (combat_ai.gd's
-	# _act_line) -- the resolver itself (_resolve_line_damage) is untouched
-	# and hits every occupied cell unconditionally. Being HIT is also not
-	# DEALING damage, so this never breaks the invisible occupant's own status. ---
 	var c83 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["invisibility"]}, "goblin_shaman": {WIKeys.SKILLS: ["flame_jet"]}})
 	c83.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
 	c83.combatants["pc"][WIKeys.CELL] = Vector2i(1, 0)
@@ -1739,22 +1476,7 @@ func _init() -> void:
 	assert(int(c83.combatants["pc"][WIKeys.HP]) < hp83_before, "line damage still lands on the invisible occupant standing in the line")
 	assert((c83.combatants["pc"]["statuses"] as Dictionary).has("invisible"), "being HIT (not dealing damage) never breaks invisibility -- pc is still invisible after")
 
-	# --- Issue #82's WINDUP SIM SPEC: `slam` (vault_construct, data/skills.json)
-	# is the first `windup_rounds` skill. The blocks below prove the whole
-	# contract against the REAL shipped data (no synthetic stand-in skill):
-	# declare freezes cells + spends ALL 4 AP; move-out whiffs the target;
-	# standing-still eats the hit; downing the caster before its next turn
-	# means no posthumous resolution; the caster is EXCLUDED from its own
-	# resolution while a same-blast bystander is NOT (the F1 controller
-	# ruling -- see _resolve_windup's own doc comment for the deliberate
-	# asymmetry vs blast_damage). arenas[0] (goblin_ambush) reused for a
-	# plain open 12x8 grid -- the vault arena's own shape is C3's content
-	# deliverable, not needed to prove the MECHANISM. ---
 
-	# Block A: declare -> move-out -> whiff. The caster relocating same-turn
-	# also proves declare spends AP but never touches move_pool (the boss CAN
-	# reposition after declaring -- counterplay-relevant); with the pc moving
-	# out too, resolution finds every frozen cell empty: a total whiff.
 	var c84 := _cfgs(["pc", "vault_construct"])
 	var combat84 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], c84, _load("res://data/skills.json"), _sink, 5)
 	combat84.begin()
@@ -1775,7 +1497,6 @@ func _init() -> void:
 			declared84 = e["payload"]
 	assert(declared84.get("id", "") == "vault_construct" and declared84.get("skill", "") == "slam", "windup_declared reports caster + skill")
 	assert(_count("skill_resolved") == 0 and _count("attack_resolved") == 0, "a declare resolves NOTHING on cast -- no damage yet")
-	# The caster relocates same-turn (move_pool untouched by the AP spend).
 	assert(combat84.move_active(Vector2i.RIGHT) and combat84.move_active(Vector2i.RIGHT) and combat84.move_active(Vector2i.RIGHT), "caster steps 3 cells right, clear of its own frozen blast")
 	assert(combat84.combatants["vault_construct"][WIKeys.CELL] == Vector2i(5, 1), "caster now well outside the radius-1 box around (1,1)")
 	combat84.end_turn()
@@ -1796,8 +1517,6 @@ func _init() -> void:
 	assert(_count("attack_resolved") == 0, "a whiff resolves no hits at all")
 	assert(int(combat84.combatants["pc"][WIKeys.HP]) == hp84_before, "pc took no damage -- the counterplay (moving out) worked")
 
-	# Block B: declare -> stand -> hit. Neither occupant moves; the frozen
-	# cells still contain pc at resolution, so the windup lands for real.
 	var c85 := _cfgs(["pc", "vault_construct"])
 	var combat85 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], c85, _load("res://data/skills.json"), _sink, 5)
 	combat85.begin()
@@ -1820,11 +1539,6 @@ func _init() -> void:
 	assert(_count("attack_resolved") >= 1, "at least one real hit resolution fired")
 	assert(int(combat85.combatants["pc"][WIKeys.HP]) < hp85_before, "pc took real damage from the resolved slam")
 
-	# Block C: declare -> down-the-caster -> no posthumous resolution. A THIRD
-	# combatant (a second enemy) is required so downing vault_construct alone
-	# doesn't end the whole fight before the "next turn that never comes" can
-	# be proven. `apply_damage` is the same public HP-application entry point
-	# `_resolve_hit` itself calls internally.
 	var c86 := _cfgs(["pc", "vault_construct", "goblin_raider"])
 	var combat86 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], c86, _load("res://data/skills.json"), _sink, 5)
 	combat86.begin()
@@ -1844,23 +1558,9 @@ func _init() -> void:
 	while guard86 < 8 and _count("skill_resolved") == 0:
 		combat86.end_turn()
 		guard86 += 1
-	# A downed combatant's turn is skipped entirely by _advance_turn
-	# (`if combatants[get_active()][ALIVE]`) -- _start_turn, and therefore
-	# _resolve_windup, is never called for vault_construct again. Cycling
-	# several turns (more than one full round) must never produce the
-	# resolution event.
 	assert(_count("skill_resolved") == 0, "the downed caster's windup never resolves -- no posthumous damage")
 	assert(int(combat86.combatants["pc"][WIKeys.HP]) == hp86_before, "pc took no damage from a windup whose caster died first")
 
-	# Block D: the F1 caster-exclusion ruling. The caster stands INSIDE its
-	# own frozen radius-1 blast (adjacent declare, never moves) alongside a
-	# bystander ally (relc, also inside the blast): at resolution the caster
-	# takes ZERO damage and is absent from hit_ids, while BOTH the target (pc)
-	# and the bystander (relc) are hit -- ally-side friendly fire stays real,
-	# only the caster's self-tax is removed. pc's HP is inflated so the pc hit
-	# (sorted first in hit_ids) can never end the fight by instant defeat
-	# before relc's own hit lands; hit_bonus 1000 makes both hits land
-	# deterministically at any seed (the c83 idiom above).
 	var c87 := _cfgs(["pc", "relc", "vault_construct"])
 	var combat87 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], c87, _load("res://data/skills.json"), _sink, 5)
 	combat87.begin()
@@ -1878,15 +1578,10 @@ func _init() -> void:
 	var frozen87: Array = combat87.windups["vault_construct"]["cells"]
 	assert(Vector2i(2, 1) in frozen87, "fixture: the caster's OWN cell is inside its frozen blast (adjacent declare, radius 1)")
 	assert(Vector2i(2, 2) in frozen87, "fixture: the bystander ally's cell is inside the frozen blast too")
-	# HP snapshots BEFORE the turn cycling: nothing in the loop below deals
-	# damage except the resolution itself (pc/relc "act" via bare end_turn),
-	# so pre-loop reads are the honest pre-resolution values.
 	var construct87_hp_before := int(combat87.combatants["vault_construct"][WIKeys.HP])
 	var pc87_hp_before := int(combat87.combatants["pc"][WIKeys.HP])
 	var relc87_hp_before := int(combat87.combatants["relc"][WIKeys.HP])
 	_events.clear()
-	# Cycle bare end_turns (pc and relc stand their ground) until the wrap
-	# back to the caster fires the resolution from its own _start_turn.
 	var guard87 := 0
 	while _count("skill_resolved") == 0 and guard87 < 8:
 		combat87.end_turn()
@@ -1903,11 +1598,6 @@ func _init() -> void:
 	assert(int(combat87.combatants["pc"][WIKeys.HP]) < pc87_hp_before, "pc took real damage")
 	assert(int(combat87.combatants["relc"][WIKeys.HP]) < relc87_hp_before, "the bystander ally took real damage")
 
-	# hp_mod build-time fold (8d C4 ally_hp_penalty): a NEGATIVE hp_mod
-	# reduces max_hp at build, and the maxi(...,1) floor guarantees a
-	# penalty bigger than the whole base pool spawns a 1-HP combatant,
-	# never a dead-or-negative one (turn order and _check_end both assume
-	# no corpse exists at round 1).
 	var c_pen := _make_custom(5, _sink, {"relc": {WIKeys.HP_MOD: -18}})
 	var relc_base_hp := 20 + int(_cfgs(["relc"])[0][WIKeys.STATS]["con"])
 	assert(int(c_pen.combatants["relc"][WIKeys.MAX_HP]) == relc_base_hp - 18, "negative hp_mod folds into max_hp at build")
@@ -1916,15 +1606,7 @@ func _init() -> void:
 	assert(int(c_floor.combatants["relc"][WIKeys.MAX_HP]) == 1, "over-large negative hp_mod floors max_hp at 1, never dead-at-build")
 	assert(bool(c_floor.combatants["relc"][WIKeys.ALIVE]), "the floored combatant is alive at round 1")
 
-	# --- Issue #83 gap-analysis: three new AI profiles composed from existing
-	# verbs (attack/move_active/dash/use_skill) -- no new effect types, no new
-	# WICombat state (alive_allies_of is a pure derived read, same shape as
-	# the pre-existing alive_enemies_of). ---
 
-	# "skirmisher": attacks with its full AP budget (2 attacks @ 2 AP = 4 AP,
-	# identical target-priority to melee), THEN spends leftover move_pool
-	# retreating instead of standing in melee range once it can no longer
-	# afford another swing.
 	var c100 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 5)
 	c100.begin()
 	c100.combatants["goblin_raider"][WIKeys.AI] = "skirmisher"
@@ -1948,12 +1630,6 @@ func _init() -> void:
 	assert(first_attack100 < first_move100, "attack-then-retreat ordering holds within the same turn")
 	assert(c100.chebyshev("goblin_raider", "pc") > 1, "retreated clear of adjacency")
 
-	# Not yet adjacent, full AP, and TOO FAR to close the gap this turn even
-	# with a dash (opposite grid corners, cheby 11 -- pool 3 + one lookahead
-	# dash's +3 can't reach adjacency, so the dash lookahead correctly
-	# refuses rather than burning AP on a futile partial dash): approaches
-	# exactly like melee, never retreats while it still has offensive
-	# capacity this turn, never attacks since it can't reach.
 	var c101 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 5)
 	c101.begin()
 	c101.combatants["goblin_raider"][WIKeys.AI] = "skirmisher"
@@ -1969,9 +1645,6 @@ func _init() -> void:
 	assert(int(c101.combatants["goblin_raider"][WIKeys.AP]) == WICombat.MAX_AP, "approach spends move_pool only, never AP -- mirrors melee's own approach; the dash lookahead correctly refuses a futile partial dash at this distance")
 	assert(c101.chebyshev("goblin_raider", "pc") < start_dist101, "closed real distance toward pc")
 
-	# "guard": prioritizes standing beside its lowest-HP living ally over
-	# chasing the enemy -- picks the ward by HP NEED, not raw proximity (the
-	# shaman starts closer than the spider, but the spider is hurt worse).
 	var c102 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider", "goblin_shaman", "cave_spider"]), _load("res://data/skills.json"), _sink, 5)
 	c102.begin()
 	c102.combatants["goblin_raider"][WIKeys.AI] = "guard"
@@ -1990,8 +1663,6 @@ func _init() -> void:
 	assert(c102.chebyshev("goblin_raider", "cave_spider") < 4, "closed distance toward the critically-hurt ally")
 	assert(c102.chebyshev("goblin_raider", "cave_spider") < c102.chebyshev("goblin_raider", "goblin_shaman"), "ends up nearer the WOUNDED ward than the untouched ally, despite starting farther from it -- HP need overrides raw proximity")
 
-	# Adjacent to a foe: guard fights exactly like melee, protecting whoever
-	# it's actually standing next to, even with a wounded ally elsewhere.
 	var c103 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider", "goblin_shaman"]), _load("res://data/skills.json"), _sink, 5)
 	c103.begin()
 	c103.combatants["goblin_raider"][WIKeys.AI] = "guard"
@@ -2005,7 +1676,6 @@ func _init() -> void:
 	WICombatAI.take_turn(c103)
 	assert(_count("attack_resolved") >= 1, "guard fights whatever is adjacent to it right now, exactly like melee")
 
-	# No living ally at all: degrades to melee's own goal (chase the enemy).
 	var c104 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 5)
 	c104.begin()
 	c104.combatants["goblin_raider"][WIKeys.AI] = "guard"
@@ -2018,7 +1688,6 @@ func _init() -> void:
 	assert(_count("combatant_moved") > 0, "solo guard (no living ally) still approaches the enemy like melee")
 	assert(c104.chebyshev("goblin_raider", "pc") < 5, "closed distance toward pc, degrading to melee's own approach goal")
 
-	# "coward": at/above the flee threshold, fights exactly like melee.
 	var c105 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 5)
 	c105.begin()
 	c105.combatants["goblin_raider"][WIKeys.AI] = "coward"
@@ -2030,8 +1699,6 @@ func _init() -> void:
 	WICombatAI.take_turn(c105)
 	assert(_count("attack_resolved") >= 1, "coward at full HP fights exactly like melee -- fear only kicks in below the threshold")
 
-	# Below the flee threshold: never attacks, even while adjacent to a valid
-	# target -- retreats from the nearest foe instead.
 	var c106 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 5)
 	c106.begin()
 	c106.combatants["goblin_raider"][WIKeys.AI] = "coward"
@@ -2047,8 +1714,6 @@ func _init() -> void:
 	assert(_count("combatant_moved") > 0, "flees instead")
 	assert(c106.chebyshev("goblin_raider", "pc") > 1, "retreated out of adjacency")
 
-	# Cornered (no retreat step increases distance from the nearest foe):
-	# rallies toward its nearest living ally instead of freezing in place.
 	var c107 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider", "goblin_shaman"]), _load("res://data/skills.json"), _sink, 5)
 	c107.begin()
 	c107.combatants["goblin_raider"][WIKeys.AI] = "coward"
@@ -2064,8 +1729,6 @@ func _init() -> void:
 	assert(_count("combatant_moved") > 0, "cornered coward (no retreat step improves distance) rallies toward its living ally instead of freezing")
 	assert(c107.chebyshev("goblin_raider", "goblin_shaman") < maxi(absi(0 - 3), absi(0 - 0)), "closed distance toward the rally ally")
 
-	# --- determinism holds through a full autoplay fight mixing all three new
-	# profiles at once (skirmisher/guard/coward together on one roster) ---
 	var stream_k: Array = []
 	var stream_l: Array = []
 	for stream: Array in [stream_k, stream_l]:
@@ -2090,9 +1753,6 @@ func _init() -> void:
 	assert(stream_k.size() > 10, "mixed-new-profile autoplay run produced events")
 	assert(stream_k == stream_l, "same seed + same new-profile mix = identical event stream")
 
-	# --- Class-foundation pass R1 (2026-07-12): [Soothing Presence]'s
-	# ally-targeted heal (`effect.ally_target: true` widening of
-	# `_resolve_heal` -- see that function's own doc comment). ---
 	var c108 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["soothing_presence"]}})
 	c108.active_index = c108.turn_order.find("pc")
 	c108._start_turn()
@@ -2114,8 +1774,6 @@ func _init() -> void:
 	assert(heal_payload108.get("actor", "") == "pc" and heal_payload108.get("target", "") == "relc", "skill_resolved reports the ALLY as the target, unlike second_wind's self-only report")
 	assert(int(heal_payload108.get("healed", -1)) == 6, "skill_resolved reports the actual amount healed")
 
-	# Self-cast still works (target_id == actor_id) -- ally_target widens the
-	# gate, it doesn't remove the self option.
 	var c109 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["soothing_presence"]}})
 	c109.active_index = c109.turn_order.find("pc")
 	c109._start_turn()
@@ -2125,9 +1783,6 @@ func _init() -> void:
 	assert(c109.use_skill("soothing_presence", "pc"), "soothing_presence still resolves as a self-cast")
 	assert(int(pc109[WIKeys.HP]) == int(pc109[WIKeys.MAX_HP]) - 10 + 6, "self-cast heals the caster")
 
-	# An enemy target still refuses (heal's type-keyed same-side gate is
-	# UNCHANGED by ally_target -- it only widens WHICH same-side target is
-	# valid, never crosses to the enemy side).
 	var c110 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["soothing_presence"]}})
 	c110.active_index = c110.turn_order.find("pc")
 	c110._start_turn()
@@ -2137,9 +1792,6 @@ func _init() -> void:
 	assert(int(c110.combatants["pc"][WIKeys.AP]) == ap110_before, "refused enemy-target heal spends nothing")
 	assert(_count("skill_resolved") == 0, "refused enemy-target heal never resolves")
 
-	# --- [Sneak Attack] (`sudden_strike`): ONCE per fight
-	# (WIKeys.ONCE_PER_FIGHT, WICombat.use_skill's own gate over the
-	# pre-existing used_skills_tally set). ---
 	var c111 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["sudden_strike"]}})
 	c111.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)  # teleport adjacent, the c4 precedent (damage_mult needs in_weapon_range)
 	c111.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
@@ -2158,9 +1810,6 @@ func _init() -> void:
 	assert(int(pc111[WIKeys.AP]) == ap111_after_first, "the refused repeat cast spends neither AP nor MP -- checked before any spend, same discipline as every other refusal gate")
 	assert(_count("skill_resolved") == 0, "the refused repeat cast never resolves")
 
-	# A FRESH fight (new WICombat instance -- used_skills_tally resets by
-	# construction, the exact per-fight scope journal_skills' own doc
-	# comment describes) allows sudden_strike again.
 	var c112 := _make_custom(12, _sink, {"pc": {WIKeys.SKILLS: ["sudden_strike"]}})
 	c112.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
 	c112.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
@@ -2169,11 +1818,6 @@ func _init() -> void:
 	_events.clear()
 	assert(c112.use_skill("sudden_strike", "goblin_raider"), "sudden_strike resolves again in a NEW fight -- the once-per-fight gate is per-WICombat-instance, not persistent")
 
-	# --- Issue #90: weakened/guarded compose multiplicatively on landed
-	# damage. Same seed + same scripted intent across four fights isolates
-	# the multiplier: the underlying hit/damage-die rolls are byte-identical
-	# (nothing here consumes rng differently), only `_apply_status_damage_
-	# mods` changes the reported number. ---
 	var c119a := _make(11, _sink)
 	c119a.combatants["pc"][WIKeys.CELL] = Vector2i(3, 3)
 	c119a.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(4, 3)
@@ -2237,10 +1881,6 @@ func _init() -> void:
 		"weakened and guarded compose MULTIPLICATIVELY on the same hit -- pinned order: attacker-side (weakened) first, defender-side (guarded) second"
 	)
 
-	# --- Issue #90 rooted: move_pool reads 0 the instant _start_turn runs on
-	# a rooted holder, and Dash refuses outright (not merely inert against a
-	# 0 pool -- without this, dashing would top the REAL stored pool up and
-	# let a rooted holder move on the SAME turn). ---
 	var c120 := _make(11, _sink)
 	c120.active_index = c120.turn_order.find("pc")
 	(c120.combatants["pc"]["statuses"] as Dictionary)["rooted"] = {"duration_rounds": 1}
@@ -2248,9 +1888,6 @@ func _init() -> void:
 	assert(int(c120.combatants["pc"][WIKeys.MOVE_POOL]) == 0, "move_pool reads 0 the moment _start_turn runs on a rooted holder")
 	_events.clear()
 	assert(not c120.move_active(Vector2i.RIGHT), "movement refuses at 0 pool")
-	# GH#90 M4 rooted-refusal legibility: both refused verbs name WHY on the
-	# bus (the no_los refusal-emit precedent) -- combat_hud's existing
-	# ACTION_REFUSED arm renders "X hesitates -- rooted." from these.
 	assert(_count("action_refused") == 1, "a rooted holder's refused move emits ACTION_REFUSED")
 	var ap120_before := int(c120.combatants["pc"][WIKeys.AP])
 	assert(not c120.dash(), "Dash refuses outright while rooted")
@@ -2261,20 +1898,12 @@ func _init() -> void:
 	assert(int(c120.combatants["pc"][WIKeys.AP]) == ap120_before, "the refused dash spends no AP")
 	assert(int(c120.combatants["pc"][WIKeys.MOVE_POOL]) == 0, "the refused dash grants no pool either")
 
-	# `_apply_status_from_effect` stamps expires_after_round from a status's
-	# own duration_rounds (N+D-1, the icy_floor/invisibility idiom
-	# generalized) -- rooted rides the SAME mechanism weakened/guarded/
-	# burning do.
 	var c120b := _make(11, _sink)
 	c120b.round_number = 5
 	WISkillEffects._apply_status_from_effect(c120b, "pc", {"applies": {"rooted": {"duration_rounds": 1}}})
 	var rooted_entry120b: Dictionary = (c120b.combatants["pc"]["statuses"] as Dictionary)["rooted"]
 	assert(int(rooted_entry120b.get("expires_after_round", -1)) == 5, "duration_rounds:1 applied at round 5 stamps expires_after_round=5 (N+D-1)")
 
-	# --- Issue #90 burning: EOT tick fires BEFORE the round-rollover purge --
-	# a 1-round duration still gets its tick before being purged, the exact
-	# bug class ("expires the round it's applied without ever ticking") the
-	# tick-then-purge ordering exists to avoid. ---
 	var c121 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 11)
 	c121.begin()
 	WISkillEffects._apply_status_from_effect(c121, "goblin_raider", {"applies": {"burning": {"tick_damage": 5, "duration_rounds": 1}}})
@@ -2303,17 +1932,12 @@ func _init() -> void:
 	assert(tick_index121 < expire_index121, "TICK fires before PURGE in the SAME rollover -- purging first would silently skip this final tick")
 	assert(not (c121.combatants["goblin_raider"]["statuses"] as Dictionary).has("burning"), "burning is gone from the raider's statuses after the rollover")
 
-	# Refresh, not stack: a second application overwrites the entry in place.
 	var c122 := _make(11, _sink)
 	WISkillEffects._apply_status_from_effect(c122, "goblin_raider", {"applies": {"burning": {"tick_damage": 2, "duration_rounds": 3}}})
 	WISkillEffects._apply_status_from_effect(c122, "goblin_raider", {"applies": {"burning": {"tick_damage": 7, "duration_rounds": 3}}})
 	var statuses122: Dictionary = c122.combatants["goblin_raider"]["statuses"]
 	assert(int((statuses122["burning"] as Dictionary).get("tick_damage", -1)) == 7, "re-application REFRESHES (overwrites) the entry -- the second cast's tick_damage wins, never summed with the first")
 
-	# A burning tick that downs the PC is an instant DEFEAT, the SAME rule
-	# every other damage source obeys -- and fires combat_finished exactly
-	# once (no double-advance/desync from the tick's own down-check, the
-	# class of bug `_tick_burning_statuses`'s doc comment guards against).
 	var c123 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 11)
 	c123.begin()
 	c123.combatants["pc"][WIKeys.HP] = 3
@@ -2327,9 +1951,6 @@ func _init() -> void:
 	assert(not bool(c123.outcome.get("victory", true)), "PC downed by a burning tick is a DEFEAT, the same instant-defeat rule as any other damage source")
 	assert(_count("combat_finished") == 1, "combat_finished fires exactly once -- no double-advance/desync from the tick's own down-check")
 
-	# --- Issue #90 area_skill arm: prefers icy_floor (blast) when >=2
-	# living enemies cluster with zero allies caught -- goblin_shaman's REAL
-	# shipped kit now carries both icy_floor and flame_bolt. ---
 	var c113 := _make(11, _sink)
 	_events.clear()
 	c113.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
@@ -2339,10 +1960,6 @@ func _init() -> void:
 	c113.active_index = c113.turn_order.find("goblin_shaman")
 	c113._start_turn()
 	WICombatAI.take_turn(c113)
-	# Not pinned to exactly 1: the shaman has AP/MP for a SECOND icy_floor
-	# cast this same turn (4 AP/13 MP vs 2 AP/4 MP per cast), and take_turn's
-	# multi-action loop keeps acting while it still can -- >=1 is the actual
-	# behavior; the FIRST-skill check right below is what proves priority.
 	assert(_count("terrain_added") >= 1, "AI casts icy_floor when its blast catches >=2 living enemies with zero allies caught")
 	var first_skill113 := ""
 	for e: Dictionary in _events:
@@ -2350,8 +1967,6 @@ func _init() -> void:
 			first_skill113 = String(e["payload"]["skill"])
 	assert(first_skill113 == "icy_floor", "area_skill wins priority over the single-target spell (flame_bolt) when it qualifies")
 
-	# Single enemy in range: the multi-hit gate fails, AI falls through to
-	# the single-target spell instead of burning MP on one victim.
 	var c114 := _make(11, _sink)
 	_events.clear()
 	c114.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
@@ -2368,11 +1983,6 @@ func _init() -> void:
 			first_skill114 = String(e["payload"]["skill"])
 	assert(first_skill114 == "flame_bolt", "AI falls through to the single-target spell when the area gate fails")
 
-	# Ally-safety: two enemies would be hit, but so would the shaman's own
-	# ally -- refuses the area cast entirely (mirrors _act_line's own gate).
-	# Placed so BOTH candidate centers (pc or relc, adjacent to each other)
-	# would otherwise pass the >=2 gate, but the shaman's own ally sits in
-	# the geometric overlap of both blasts -- no safe center exists.
 	var c115 := _make(11, _sink)
 	_events.clear()
 	c115.combatants["goblin_shaman"][WIKeys.CELL] = Vector2i(0, 0)
@@ -2384,10 +1994,6 @@ func _init() -> void:
 	WICombatAI.take_turn(c115)
 	assert(_count("terrain_added") == 0, "AI refuses icy_floor when its own ally would be caught in the blast, off every candidate center")
 
-	# Regression tooth: an invisible occupant never counts toward the
-	# area_skill's multi-hit gate, and no action this turn ever targets it
-	# -- mirrors the melee-AI/line-skill exclusion contract already proven
-	# above (c81), extended to the NEW area arm.
 	var cfgs116 := _cfgs(["pc", "relc", "goblin_raider", "goblin_shaman"])
 	for cfg: Dictionary in cfgs116:
 		if String(cfg[WIKeys.ID]) == "pc":
@@ -2417,8 +2023,6 @@ func _init() -> void:
 			any_targeted_pc116 = true
 	assert(not any_targeted_pc116, "no action this turn ever targets the invisible pc -- neither the area cast nor its single-target fallback")
 
-	# --- Issue #90 support_skill arm: a guard-profile holder casts its
-	# heal-type skill on its hurt ally, ahead of the melee branch. ---
 	var c117 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "ruin_ward_b", "ruin_guardian"]), _load("res://data/skills.json"), _sink, 11)
 	c117.begin()
 	assert(String(c117.combatants["ruin_ward_b"][WIKeys.AI]) == "guard", "fixture: ruin_ward_b carries the guard AI profile")
@@ -2435,9 +2039,6 @@ func _init() -> void:
 	WICombatAI.take_turn(c117)
 	var support_skill_used117 := ""
 	var total_healed117 := 0
-	# The ward can afford more than one cast this same turn (4 AP / 2 AP each)
-	# -- take_turn's multi-action loop keeps casting while HP is still
-	# missing and AP remains, so sum every heal this turn, don't pin count.
 	for e: Dictionary in _events:
 		if e["type"] == "skill_resolved" and String(e["payload"].get("skill", "")) == "guarding_ward":
 			support_skill_used117 = "guarding_ward"
@@ -2446,8 +2047,6 @@ func _init() -> void:
 	assert(total_healed117 > 0, "a real heal amount was reported")
 	assert(int(guardian117[WIKeys.HP]) == guardian_hp117_before + total_healed117, "the ward's HP actually increased by the total reported heal amount across every cast this turn")
 
-	# A ward already at full HP is never cast on -- the support_skill arm is
-	# opportunistic, not a wasted-AP reflex.
 	var c118 := WICombat.new(_load("res://data/arenas.json")["arenas"][0], _cfgs(["pc", "ruin_ward_b", "ruin_guardian"]), _load("res://data/skills.json"), _sink, 11)
 	c118.begin()
 	c118.combatants["pc"][WIKeys.CELL] = Vector2i(0, 0)
@@ -2463,10 +2062,6 @@ func _init() -> void:
 			used_support118 = true
 	assert(not used_support118, "guard never casts its support skill on a ward already at full HP")
 
-	# --- Issue #92 R1: WIItems.resolve_use -- the item-use resolver arms.
-	# Hand-built item dicts throughout (no shipped catalog item carries
-	# use_effect yet -- R5's vendor wave is what wires real ones), proving
-	# the resolver's own context/shape gates independent of any content. ---
 	var c119 := _make(5, _sink)
 	c119.active_index = c119.turn_order.find("pc")
 	c119._start_turn()
@@ -2480,10 +2075,6 @@ func _init() -> void:
 	assert(int(pc119[WIKeys.HP]) == int(pc119[WIKeys.MAX_HP]) - 2, "hp actually increased by the healed amount")
 	assert(int(pc119[WIKeys.AP]) == ap119_before - 1, "combat item-use spends exactly 1 AP, flat -- independent of any per-item field (items carry none)")
 
-	# Healing at/above full HP still resolves (matches second_wind's own
-	# no-waste-guard precedent, WISkillEffects._resolve_heal) but clamps the
-	# reported healed amount to 0 -- and still spends the AP (a wasted use is
-	# still a use).
 	pc119[WIKeys.HP] = int(pc119[WIKeys.MAX_HP])
 	var ap119_before_b := int(pc119[WIKeys.AP])
 	var result119b := WIItems.resolve_use(draught119, c119)
@@ -2491,17 +2082,12 @@ func _init() -> void:
 	assert(int(result119b.get("healed", -1)) == 0, "healed clamps to 0 at full HP")
 	assert(int(pc119[WIKeys.AP]) == ap119_before_b - 1, "AP is still spent even on a 0-heal use")
 
-	# Refused with insufficient AP -- costs nothing (no HP change, no AP change).
 	pc119[WIKeys.AP] = 0
 	var hp119_before_refusal := int(pc119[WIKeys.HP])
 	var result119c := WIItems.resolve_use(draught119, c119)
 	assert(not bool(result119c.get("ok", true)), "a heal-shaped item refuses with 0 AP")
 	assert(int(pc119[WIKeys.HP]) == hp119_before_refusal, "a refused use costs nothing -- hp untouched")
 
-	# Context mismatches: heal never resolves in the field (combat == null,
-	# no standalone field HP to heal -- see well_fed's own doc comment);
-	# next_fight never resolves mid-combat (there's no "next fight" from
-	# inside the current one).
 	assert(not bool(WIItems.resolve_use(draught119, null).get("ok", true)), "a heal-shaped item refuses outside combat")
 	var meal119 := {"id": "test_meal", "use_effect": {"next_fight": {"damage_mod": 1}}}
 	assert(not bool(WIItems.resolve_use(meal119, c119).get("ok", true)), "a next_fight-shaped item refuses mid-combat")
@@ -2509,8 +2095,6 @@ func _init() -> void:
 	assert(bool(meal_result119.get("ok", false)), "a next_fight-shaped item resolves in the field")
 	assert(int((meal_result119.get("pending_meal", {}) as Dictionary).get("damage_mod", 0)) == 1, "the next_fight buff dict rides back verbatim")
 
-	# An item with no recognized use_effect key at all never resolves in
-	# either context.
 	assert(not bool(WIItems.resolve_use({"id": "test_inert", "use_effect": {}}, c119).get("ok", true)), "an item with no recognized use_effect key never resolves in combat")
 	assert(not bool(WIItems.resolve_use({"id": "test_inert", "use_effect": {}}, null).get("ok", true)), "an item with no recognized use_effect key never resolves in the field")
 

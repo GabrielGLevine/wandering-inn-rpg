@@ -1,16 +1,9 @@
 class_name WIWorld
 extends Node2D
-## Presentation layer for the walking skeleton. Renders the sim's grid and
-## entities as sprites where available, forwards input intents to the sim,
-## and repositions the player on bus events.
-##
 ## Field name tags ("You"/"Erin"/etc.) are RETIRED -- every interactable must
 ## read from its sprite alone now (see `_resolve_entity_render`/
 ## `_refresh_entity_visual` for the `visual_states` seam that replaces the
 ## "state changed" affordance a label used to carry).
-##
-## All UI/visuals are built in code — no hand-authored scenes (repo principle:
-## content is data + code).
 
 ## The world SubViewport is 320x180 logical px, so the grid cell must match
 ## the tile sheets' true native size (16px -- see data/biomes.json).
@@ -22,65 +15,20 @@ const MOVE_TWEEN_SECONDS := 0.12
 const BUMP_PIXELS := 3.0
 const BUMP_TWEEN_SECONDS := 0.06
 
-## Soft radial white gradient (generated via a small PIL script, not sourced
-## from any asset pack), used as
-## the `texture` for every PointLight2D spawned from entity/decor `light`
-## data. `LIGHT_TEXTURE_PX` is its native size -- `texture_scale` is derived
-## from a light's data-authored `radius` against this so the same 64px
-## texture can express any anchor's glow size.
 const LIGHT_TEXTURE := preload("res://assets/fx/light_radial.png")
 const LIGHT_TEXTURE_PX := 64.0
-## Spec §5 budget: ≤8 lights/map. Asserted (not push_error'd -- see
-## atmosphere.gd's `apply()` doc comment for why this codebase fails loud on
-## malformed/over-budget content data instead of warning) once per
-## `_rebuild_field` pass, after every decor/entity light has been counted.
 const LIGHT_BUDGET := 8
 
-## [Light] glow on the PC: the conjured arcane orb the PC
-## carries while `Game.sim.light_active`. A warm-white, campfire-CLASS radius,
-## STEADY (no flicker -- it reads as arcane, not fire) PointLight2D attached to
-## the player visual. Deliberately NOT registered with `_atmosphere` (never
-## routed through `_spawn_light`/`register_light`), so the phase multiplier
-## never touches it: it stays lit at day too (day's 0.0 multiplier would make a
-## registered light invisible). Diegetically constant -- it is magic. Excluded
-## from LIGHT_BUDGET for the same reason (it is not map content).
 const PC_LIGHT_COLOR := Color(1.0, 0.95, 0.8)
 const PC_LIGHT_RADIUS := 32.0
 const PC_LIGHT_ENERGY := 1.0
 
-## The sneak seam: the PC sprite's alpha while
-## `Game.sim.sneaking` -- the SAME
-## tint machinery (`modulate`) `_make_entity_visual`'s tint arg already uses,
-## just touching alpha only (RGB untouched, so a future PC tint variant would
-## still compose correctly -- no shipped variant carries one today). The
-## DEFAULT/fallback alpha for any `sneaks: true` skill with no `sneak_visual`
-## data of its own (every one today except [Invisibility], issue #22) --
-## see `_reconcile_sneak_visual`.
 const SNEAK_ALPHA := 0.6
 
-## Ambience presets (fireflies/dust_motes/leaves/
-## pond_glints/embers -- see ambience.gd) spawned from map `ambience` data.
-## Spec §5 budget: ≤6 emitters/map, asserted the same way as LIGHT_BUDGET.
 const AMBIENCE_BUDGET := 6
-## Shared (not per-sprite) ShaderMaterial for every decor/scatter entry
-## tagged `sway: true` -- one instance, created once in `_ready()`; per-sprite
-## phase variance comes from the shader itself reading each sprite's own
-## world position (MODEL_MATRIX), not a per-instance uniform, so sharing one
-## material across every swaying sprite is both correct and free (see
-## foliage_sway.gdshader's doc comment).
 const SWAY_SHADER := preload("res://src/world/shaders/foliage_sway.gdshader")
-## The floodplains pond's wall-segment sheet (data/maps/floodplains'
-## `walls.segments`, cap-only water entries) -- `_build_water_shimmer`
-## matches segments by this sheet path to re-derive which cells need the
-## shimmer overlay (see water_shimmer.gdshader's doc comment for why an
-## overlay, not a material on the original layer).
 const WATER_SHEET := "res://assets/tiles/free_pack/Water_tiles.png"
 const WATER_SHIMMER_SHADER := preload("res://src/world/shaders/water_shimmer.gdshader")
-## The frost-cast ice overlay reuses the water sheet's
-## still-water cap tile (same [1,7] pick the shimmer overlay paints) tinted a
-## pale, frosted blue and drawn ON TOP of the shimmer layer, so a frozen channel
-## cell reads as grey-white ice over the water it replaced. Cool, near-white,
-## slightly translucent so a hint of the water below still shows.
 ## TRAP: do not swap this to (1,7) -- PIL alpha-scan confirms it is a
 ## completely flat solid-fill tile (every pixel in the 16x16 region is the
 ## identical (62,146,209), zero variance); a frost tint over it still reads
@@ -92,9 +40,6 @@ const WATER_SHIMMER_SHADER := preload("res://src/world/shaders/water_shimmer.gds
 const ICE_CAP_COORD := Vector2i(1, 5)
 const ICE_TINT := Color(0.74, 0.86, 1.0, 0.92)
 const VIGNETTE_SHADER := preload("res://src/world/shaders/vignette.gdshader")
-## VIEW_SIZE is declared further down this file; the vignette ColorRect is
-## sized/positioned from it in `_ready()`, both declared as consts in this
-## same class so no ordering issue exists between them.
 
 ## Must match src/world/main.gd's WORLD_VIEWPORT_SIZE
 ## (kept in sync by hand -- both are 320x180
@@ -103,10 +48,6 @@ const VIGNETTE_SHADER := preload("res://src/world/shaders/vignette.gdshader")
 ## clamped-follow (content > view -- not exercised by any current map/arena,
 ## but built for future maps that may need it).
 const VIEW_SIZE := Vector2(320.0, 180.0)
-## Skirt fill extends this many cells past the grid edge on every side --
-## comfortably more than VIEW_SIZE/CELL (20x11.25) on both axes so the
-## camera can never show a grey void regardless of where within the map it
-## ends up centered/clamped.
 const SKIRT_MARGIN_CELLS := 20
 
 var _field_root: Node2D
@@ -119,19 +60,7 @@ var _camera: Camera2D
 var _player_visual: Node2D
 var _player_sprite: AnimatedSprite2D
 var _player_anim_token := 0
-## The PC-following [Light] glow node (a child of
-## `_player_visual`, so it tweens with the PC for free). Null when unlit.
-## Freed with its holder on every `_rebuild_field` (see the null-out there);
-## re-attached from `Game.sim.light_active` by `_reconcile_pc_light`.
 var _pc_light: PointLight2D
-## The "have" half of `_reconcile_sneak_visual`'s
-## want/have guard -- unlike `_pc_light`'s node-presence check, translucency
-## has no child node to test `is_instance_valid` against, so this bool tracks
-## whether the CURRENT `_player_sprite` is actually tinted. Reset to false on
-## every `_rebuild_field` (alongside `_pc_light = null` below) because that
-## function always builds a FRESH, untinted `_player_sprite` -- without the
-## reset, a sneaking PC crossing a door (which KEEPS `sneaking` true) would
-## read want==have as already-satisfied and skip re-tinting the new sprite.
 var _sneak_tinted := false
 ## The id of the LAST `sneaks: true`-tagged skill whose
 ## deliberate toggle press turned `sneaking` ON -- presentation-only memory,
@@ -149,63 +78,24 @@ var _sneak_tinted := false
 ## skill's identity must persist too -- same reasoning as `_sneak_tinted`'s
 ## reset, just not the RESET itself).
 var _sneak_active_skill := ""
-## The frost-cast ice overlay TileMapLayer for the current
-## map (null when no cell is frozen). Rebuilt from `Game.sim.frozen_cells` on
-## every `_rebuild_field` (so ice survives a map re-entry / load while frozen)
-## and appended to live by the TERRAIN_CHANGED{to:"ice"} handler. Freed with its
-## siblings on rebuild -- the reference is nulled there like `_pc_light`.
 var _ice_overlay: TileMapLayer
 ## One slot, not two -- a move and a bump landing on the player in quick
 ## succession must kill whichever tween is already
 ## running before starting the other, or both fight over `.position` for up
 ## to ~0.12s. See `_kill_player_tween`.
 var _player_tween: Tween
-## Mirrors `_player_tween`'s one-slot-not-two
-## idiom, just for `_camera.position` instead of the player sprite's. See
-## `_pan_camera_to_player`'s doc comment for why this exists as a SEPARATE
-## tween from `_player_tween` rather than one tween driving both properties.
 var _camera_tween: Tween
 var _entity_visuals: Dictionary = {}
 var _journal: Node
 var _pause_menu: Node
 var _inventory: Node
-## The overworld field-skill hotbar. Injected at spawn (like
-## the panel refs above) so `_unhandled_input`'s number-key routing can ask it
-## which field skill occupies a pressed slot -- the hotbar owns the slot list,
-## keeping the key->skill mapping single-sourced with what the bar renders.
 var _field_hotbar: Node
-## The field hotbar's pad-cursor index,
-## mirroring combat's `_bar_index` idiom (combat_screen.gd) -- `-1` = nothing
-## highlighted (direct-fire resting state), `>= 0` = a slot the player
-## is hovering via `slot_prev`/`slot_next`, activated by `confirm`. Owned
-## here (not on `_field_hotbar`) for the same "screen owns selection, hotbar
-## only renders" split combat's `_bar_index` already follows.
 var _field_slot_index := -1
-## Click-to-walk (issue #57): the remaining ABSOLUTE cells still to step
-## through, cell 0 == the NEXT step (excludes the player's current cell).
-## Empty == no path in flight. Populated by `handle_world_click`'s ground/
-## approach-cell branches; consumed one cell per `_advance_click_path` call
-## via a REAL `Game.sim.move_player` (never a teleport -- trigger radii/
-## actions_since_sleep/sneak checks all fire per step, same as a held key).
-## Cleared (not recomputed -- v1) by: any keyboard/pad press
-## (`_unhandled_input`'s top-of-function check), `_movement_gated()` becoming
-## true mid-path (combat/dialogue/pause/journal/inventory), a step the sim
-## refuses (something moved into the way), and a map rebuild.
+## Absolute remaining cells, not directions: each step calls move_player so
+## triggers/costs stay live. Keyboard/pad input, modals, refusal, and rebuilds
+## clear the path; click-walking must never become a teleport or stale replay.
 var _click_path: Array = []
-## The WIMain host, injected downward at spawn.
-## world.gd no longer calls `world_labels()` itself (field labels
-## retired) -- kept for architectural symmetry with the other injected UI
-## refs and as the typed route to Main should a future field-side native-res
-## overlay need it again.
 var _main: WIMain
-## The combat board (arena tiles/skirt, combatant holders, cast
-## flashes) lives here -- a sibling of `_field_root` inside this SubViewport-
-## hosted world -- instead of a native-res CanvasLayer, so Camera2D and the
-## SubViewportContainer's 4x upscale both apply to it and `world_to_screen`
-## anchoring is correct for combat labels too. Lazily created by
-## `combat_board_root()` the first time combat_screen needs it (combat_screen
-## may ask before this World node even exists yet during Main's boot
-## sequence -- see combat_screen.gd's `_world_node()`).
 var _combat_board_root: Node2D
 ## Mood grade layer, a CanvasModulate child of this World
 ## node (the world viewport's root). Must be added, and connect to the bus,
@@ -218,25 +108,9 @@ var _atmosphere: WIAtmosphere
 ## pass, reset at the top of each pass -- backs the LIGHT_BUDGET assert and
 ## the `ui_lights_rendered` payload.
 var _light_count := 0
-## Count of ambience emitters spawned this `_rebuild_field`
-## pass -- backs AMBIENCE_BUDGET and `ui_ambience_rendered`.
 var _ambience_count := 0
-## The one shared sway ShaderMaterial (see SWAY_SHADER's
-## doc comment) -- created once in `_ready()`, assigned as `.material` on
-## every AnimatedSprite2D whose decor/scatter record carries `sway: true`.
 var _sway_material: ShaderMaterial
-## The sneak-visual shimmer material -- created once in
-## `_ready()`, assigned as `_player_sprite.material` only while sneaking AND
-## the active sneak skill's `sneak_visual.shimmer` is true (a skill with no
-## `sneak_visual` stays plain-translucent, material null). REUSES
-## WATER_SHIMMER_SHADER wholesale (the same uv-wobble the floodplains pond
-## overlay already runs) rather than a dedicated shader file -- a
-## data-driven skin on the existing sneak-visual hook, not new machinery.
 var _sneak_shimmer_material: ShaderMaterial
-## The fullrect vignette ColorRect -- created once in
-## `_ready()` as a child of `_camera` (see the ColorRect's own doc comment
-## for why it's parented there) and handed to `_atmosphere.vignette_node` so
-## atmosphere.gd can drive its shader `strength` from moods.json.
 var _vignette: ColorRect
 
 
@@ -289,9 +163,6 @@ func inject_ui_refs(journal: Node, pause_menu: Node, inventory: Node, main: WIMa
 	# opening the pause menu first (it sits later in Main's child order).
 	if _pause_menu != null:
 		_pause_menu.world_ref = self
-	# Issue #57: a hotbar SLOT CLICK routes through the exact same
-	# `_activate_field_slot` helper the number-key branch below calls -- one
-	# dispatch, click or key.
 	if _field_hotbar != null:
 		_field_hotbar.slot_activate_requested.connect(_activate_field_slot)
 
@@ -309,34 +180,15 @@ func _wire_ui_refs() -> void:
 	_inventory.pause_menu_ref = _pause_menu
 
 
-## Input arbitration (repo-wide precedence: combat > dialogue > pause >
-## journal > inventory > world): world only handles movement/interact once
-## combat, dialogue, the pause menu, the journal, and the inventory
-## have all declined the input. Shared with `_on_move_tween_finished` (FIELD
-## HELD-KEY MOVEMENT) below -- the held-repeat
-## re-checks this SAME gate on every step, not just the first press, since a
-## panel/dialogue/combat can open in the tens of ms between one step's tween
-## finishing and the next.
 func _movement_gated() -> bool:
 	if Game.sim.combat != null or Game.sim.dialogue != null:
 		return true
-	# A pending consolidation offer is modal: the prompt owns the keyboard until
-	# answered (spec §2.5 REV 2 -- the sleep beat is deferred on it).
 	if not Game.sim.pending_consolidation.is_empty():
 		return true
 	if (_pause_menu != null and bool(_pause_menu.get("open"))) \
 			or (_journal != null and bool(_journal.get("open"))) \
 			or (_inventory != null and bool(_inventory.get("open"))):
 		return true
-	# The GDI
-	# cold-open/epilogue veil is modal too. sleep_veil.gd's own
-	# `_unhandled_input` treats confirm/cancel as "advance the line" while
-	# either runs -- and on pad, `interact` shares button A with `confirm`, so
-	# without this gate a pad player advancing the opener text would ALSO fire
-	# world `interact()`s at whatever the PC faces under the black. Never true
-	# under QA (the veil collapses to an instant coverage emit before ever
-	# setting its running flags -- see sleep_veil.gd's `modal_active()` doc
-	# comment), so no canonical's input timing changes.
 	if _main != null and _main.veil_modal_active():
 		return true
 	return false
@@ -360,18 +212,6 @@ func _movement_gated() -> bool:
 ## exactly as this comment describes. `move_left`/`move_right` share no
 ## button with anything pad-side, so no analogous trap applies to them.
 func _unhandled_input(event: InputEvent) -> void:
-	# CLICK-PATH CANCEL (issue #57): "keyboard wins" -- ANY fresh keyboard/pad
-	# press cancels an in-flight click-to-walk path outright, checked BEFORE
-	# `_movement_gated()` so a press that opens the pause menu/journal/
-	# inventory (Esc/J/I, none of which this function otherwise matches)
-	# still clears the path, not just a move/interact/hotbar key. Does not
-	# consume the event -- whatever the press would otherwise do still
-	# happens via the branches below (a movement key both cancels AND moves
-	# in the same keystroke, which is the intended "keyboard wins" feel).
-	# Echoes (OS key-repeat) and mouse events are excluded -- a held key's
-	# repeat firing every frame would be a harmless no-op here anyway (the
-	# path is already empty by the second repeat), and mouse clicks are
-	# routed through `handle_world_click` below, never through this function.
 	if not _click_path.is_empty() and event.is_pressed() and not event.is_echo() \
 			and not (event is InputEventMouseButton or event is InputEventMouseMotion):
 		_click_path.clear()
@@ -392,35 +232,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		_disarm_field_slot()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("cancel") and _field_slot_index >= 0:
-		# B/Esc disarms an armed slot selection
-		# without firing anything -- the mirror of combat's cancel-back-to-
-		# resting idiom. Gated on an armed index, so an unarmed cancel still
-		# falls through to whoever owns Esc next (the pause menu).
 		_disarm_field_slot()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("interact"):
-		# Issue #62 Lane U item 6: the press ITSELF counts as "I've read it"
-		# -- fired before the sim call so it reads as an ack of whatever
-		# toast was already up, independent of what this interact resolves
-		# to (a fresh toast the resolve fires enqueues normally, and drains
-		# next -- see `dismiss_current_toast_early`'s own doc comment).
 		_notify_action_taken()
 		Game.sim.interact()
 		get_viewport().set_input_as_handled()
 	elif InputMap.has_action("hotbar_prime") and event.is_action_pressed("hotbar_prime") and _field_slot_index >= 0:
-		# Tab TOGGLES OFF an already-primed bar -- the keyboard mirror of
-		# cancel's disarm, so a player can back out of slot-select without
-		# reaching for Esc (which the pause menu also wants).
 		_disarm_field_slot()
 		get_viewport().set_input_as_handled()
 	elif InputMap.has_action("hotbar_prime") and event.is_action_pressed("hotbar_prime") and _field_hotbar != null and _field_hotbar.slot_count() > 0:
-		# Tab PRIMES from resting (-1) straight to slot 0 -- the keyboard
-		# entry point into the same pad-cursor seam `[`/`]`/LB/RB already
-		# arm (S1, `_move_field_slot_cursor`'s -1->0 landing). Pure UI: no
-		# `Game.sim` call here, only the highlight render -- activation is a
-		# separate confirm/number-key press (see those branches). Empty bar
-		# (classless cold start) fails this guard and falls all the way
-		# through unhandled, per design -- Tab is inert with nothing to prime.
 		_field_slot_index = 0
 		_field_hotbar.set_selected(0)
 		get_viewport().set_input_as_handled()
@@ -460,14 +281,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		_move_field_slot_cursor(1)
 		get_viewport().set_input_as_handled()
 	else:
-		# field-skill hotbar direct-fire. Reuses combat's
-		# `hotbar_1..9` input actions; the pressed number maps through the field
-		# hotbar's own slot list (single source of truth) to a KNOWN field skill,
-		# then fires P1's `use_skill_field`. Gated by `_movement_gated()` above
-		# exactly like movement/interact, so a number key is inert while any
-		# panel/dialogue is open or during combat (combat_screen owns its own
-		# hotbar there). A number with no field skill in that slot is left
-		# unhandled (harmless), never swallowed.
 		var slot := _field_hotbar_slot_pressed(event)
 		if slot > 0 and _field_hotbar != null:
 			# `_activate_field_slot` is the ONE dispatch (issue #57): a slot
@@ -482,21 +295,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 
 
-## Combines the axis the just-pressed
-## `primary` cardinal belongs to with whichever action on the OTHER axis is
-## ALSO currently held, producing a diagonal Vector2i when both are down.
-## `Input.is_action_pressed` (continuous held-state, not the discrete press
-## event) is deliberately what this polls -- it's true for a real second key
-## still held down AND for a pad stick pushed diagonally (move_up/move_right
-## etc. are each bound to one analog axis half per #18's input work, so a
-## diagonal stick push already satisfies two of these independently; no new
-## pad-specific code needed). A single cardinal press with nothing else held
-## returns `primary` unchanged -- byte-identical to the pre-#40 direct call.
-## QA scripts inject one action at a time, press-then-release synchronously
-## with no frame gap (`test_driver.gd`'s `_inject_action`), so by the time a
-## second injected action's press event reaches this check the first is
-## already released and `is_action_pressed` reads false -- every existing
-## canonical's single-dir moves stay pure cardinals, unaffected by this.
 func _combined_move_dir(primary: Vector2i) -> Vector2i:
 	var dx := primary.x
 	var dy := primary.y
@@ -513,11 +311,6 @@ func _combined_move_dir(primary: Vector2i) -> Vector2i:
 	return Vector2i(dx, dy)
 
 
-## Controller support (S1): moves the field hotbar's pad cursor by `delta`
-## slots, wrapping (mirrors combat's `_move_bar_cursor`). A first press from
-## the resting `-1` state lands on slot 0. No-ops when the bar is empty
-## (classless cold start -- `_field_hotbar.slot_count() == 0`) or the hotbar
-## ref hasn't been injected yet.
 func _move_field_slot_cursor(delta: int) -> void:
 	if _field_hotbar == null:
 		return
@@ -542,14 +335,6 @@ func _disarm_field_slot() -> void:
 		_field_hotbar.set_selected(-1)
 
 
-## Issue #62 Lane U item 6: notifies MessageLayer that the player just took
-## a deliberate action (an interact press -- move's own trigger is the
-## PLAYER_MOVED bus event message_layer.gd listens to directly, no wiring
-## needed here), which ends the currently showing toast's hold early. Both
-## `_unhandled_input`'s keyboard/pad interact branch and
-## `handle_world_click`'s adjacent-click-interact branch call this. Null-
-## guarded: `_main`/`message_layer()` can be unset in a bare-node test
-## context that never ran `inject_ui_refs`.
 func _notify_action_taken() -> void:
 	if _main == null:
 		return
@@ -558,26 +343,9 @@ func _notify_action_taken() -> void:
 		ml.dismiss_current_toast_early()
 
 
-## THE one field-hotbar activation dispatch (issue #57): fires slot `n`
-## (1-based) exactly as its number key would -- disarms a Tab-primed cursor
-## first (one-shot consistency, matching the number-key branch's own
-## comment), then calls `use_skill_field` if a real skill occupies the slot.
-## Two callers: the number-key branch in `_unhandled_input` above, and
-## `_field_hotbar.slot_activate_requested` (a rendered slot's mouse click,
-## connected in `inject_ui_refs`) -- click or key, there is only ever this
-## one call site into `Game.sim.use_skill_field`.
 func _activate_field_slot(slot: int) -> void:
 	if slot <= 0 or _field_hotbar == null:
 		return
-	# `_movement_gated()` (mouse-audit finding, issue #57): the number-key
-	# caller can never reach this function while gated at all (`_unhandled_input`
-	# returns before its else-branch) -- but a hotbar SLOT CLICK arrives via a
-	# separate GUI-input dispatch chain that bypasses that early return
-	# entirely, and the field hotbar does NOT hide for pause/journal/
-	# inventory/the sleep veil (only for combat/dialogue -- see
-	# `_apply_visibility`'s own gates in field_hotbar.gd), so a rendered,
-	# still-clickable bar sitting behind an open panel could otherwise still
-	# fire a skill. This check is what actually closes that gap.
 	if _movement_gated():
 		return
 	if _field_slot_index >= 0:
@@ -587,17 +355,10 @@ func _activate_field_slot(slot: int) -> void:
 		Game.sim.use_skill_field(skill_id)
 
 
-## Duck-typed accessor (issue #58) -- see pause_menu.gd's `world_ref` doc
-## comment. Public (not `_`-prefixed) since it is called cross-file via
-## `Node.call()`, unlike every other `_field_slot_index` reader/writer here,
-## which all stay private/same-file.
 func field_slot_armed() -> bool:
 	return _field_slot_index >= 0
 
 
-## Which `hotbar_N` action (1..9) this event pressed, or -1 for none -- the same
-## action set combat_screen.gd's `_numbered_slot_pressed` reads (guarded by
-## `InputMap.has_action` so a stripped input map degrades to inert, not error).
 func _field_hotbar_slot_pressed(event: InputEvent) -> int:
 	for n in range(1, 10):
 		var action := "hotbar_%d" % n
@@ -607,26 +368,16 @@ func _field_hotbar_slot_pressed(event: InputEvent) -> int:
 
 
 func _rebuild_field() -> void:
-	# A map change cancels any in-flight click path (issue #57) -- the old
-	# map's cells are meaningless on the new one, and "cancel is fine v1"
-	# (no cross-map recompute) per the plan.
 	_click_path.clear()
 	for child: Node in _field_root.get_children():
 		child.queue_free()
 	_entity_visuals.clear()
 	_player_sprite = null
-	# The PC glow is a child of the old _player_visual, which
-	# the queue_free() above will free -- drop our dangling reference so
-	# _reconcile_pc_light re-attaches a fresh node to the NEW holder below if
-	# Game.sim.light_active is still set (map change / load while lit).
 	_pc_light = null
 	# See `_sneak_tinted`'s own doc comment -- the fresh
 	# `_player_sprite` built below is always untinted, so the tracker must
 	# forget the old sprite's state too.
 	_sneak_tinted = false
-	# The ice overlay is a child of _field_root (freed by the
-	# loop above) -- drop the dangling reference so _build_ice_overlay re-derives a
-	# fresh layer from Game.sim.frozen_cells for the new/reloaded map.
 	_ice_overlay = null
 	# Drop every light registered for the OLD map before
 	# any new one is spawned below -- the old map's holders (and their light
@@ -635,8 +386,6 @@ func _rebuild_field() -> void:
 	# on is_instance_valid() to catch up on its own.
 	_atmosphere.clear_lights()
 	_light_count = 0
-	# Same lifecycle as clear_lights() -- drop every
-	# registered ambience emitter for the OLD map before any new one spawns.
 	_atmosphere.clear_emitters()
 	_ambience_count = 0
 	_build_floor()
@@ -656,9 +405,6 @@ func _rebuild_field() -> void:
 	var render_counts := {"sprites": 0, "fallbacks": 0}
 	_count_visual(_build_entities(), render_counts)
 	var player_cfg: Dictionary = WIDataRegistry.scene_config()["player"]
-	# Variant-key indirection (presentation-only): the PC visual uses
-	# the sim's chosen race/gender sprite variant ("pc_<race>_<gender>"), falling
-	# back to the data default ("body_a") when that variant art is not registered.
 	var pc_sprite := _pc_variant_sprite(String(player_cfg.get("sprite", "")))
 	_player_visual = _make_entity_visual(
 		Game.sim.player_cell,
@@ -669,13 +415,7 @@ func _rebuild_field() -> void:
 	_player_sprite = _first_sprite_child(_player_visual)
 	_play_player_anim("idle")
 	_count_visual(_player_visual, render_counts)
-	# Re-attach the PC [Light] glow if the sim says it is lit
-	# (a map change or a load restored `light_active`). Done here, after the new
-	# _player_visual exists, so the glow survives every rebuild.
 	_reconcile_pc_light()
-	# Same reasoning as the light re-attach just above --
-	# a map change (door crossing, which KEEPS `sneaking` per the plan) or a
-	# load restored a fresh `_player_sprite` with no memory of the old alpha.
 	_reconcile_sneak_visual()
 	render_counts["pc_sprite"] = pc_sprite
 	ObservableBus.emit_domain_event(WIEvents.UI_ENTITIES_RENDERED, render_counts)
@@ -711,10 +451,6 @@ func _build_floor() -> void:
 	var segment_covered := WITileBoardBuilder.build_walls(_field_root, map_cfg.get("walls", {}), grid_size, biome, WISpriteRegistry)
 
 	var blocked_sheet := String(biome.get("blocked_sheet", biome["sheet"]))
-	# blocked_tile_px: the blocked sheet's own grid, which can differ from the
-	# floor sheet's (e.g. street floor is a whole-image 540px dirt tile while
-	# blocked cells come from the 16px Wall_Tiles) — using the floor's tile_px
-	# here made blocked coords land out of atlas bounds = silent no-op walls.
 	var blocked_tile_px := int(biome.get("blocked_tile_px", tile_px))
 	var blocked_layer := WITileBoardBuilder.make_tile_layer(_field_root, blocked_sheet, blocked_tile_px, WISpriteRegistry)
 	var blocked_coord := Vector2i(int(biome["blocked"][0]), int(biome["blocked"][1]))
@@ -727,9 +463,6 @@ func _build_floor() -> void:
 	for c: Array in (map_cfg.get("cover_skip", []) as Array):
 		cover_skip[Vector2i(int(c[0]), int(c[1]))] = true
 	for cell: Vector2i in Game.sim.blocked_cells.keys():
-		# Cells covered by a walls segment already carry that segment's wall
-		# art; painting the generic blocked tile here would overdraw it (this
-		# layer is added after the walls layers).
 		if segment_covered.has(cell) or cover_skip.has(cell):
 			continue
 		blocked_layer.set_cell(cell, 0, blocked_coord)
@@ -741,17 +474,6 @@ func _build_floor() -> void:
 	})
 
 
-## Overlay TileMapLayer for the pond's water tiles (see
-## water_shimmer.gdshader's doc comment for why this is an overlay rather
-## than a material on the layer `WITileBoardBuilder.build_walls` (called by
-## `_build_floor` above) already painted). Re-derives the exact same cells
-## from the SAME source data (`walls.segments` matched by `sheet ==
-## WATER_SHEET`) via the same public `WIGame.segment_cells` helper
-## `build_walls` itself uses, then paints an identical cap-only tile at those
-## cells into a fresh TileMapLayer added right after (so it draws on top of,
-## and fully covers) the flat one underneath. A no-op (frees the unused
-## layer) on any map with no water segments -- today that's every map except
-## floodplains.
 func _build_water_shimmer() -> void:
 	var walls_cfg: Dictionary = _current_map_cfg().get("walls", {})
 	var segments: Array = walls_cfg.get("segments", [])
@@ -772,11 +494,6 @@ func _build_water_shimmer() -> void:
 			var mat := ShaderMaterial.new()
 			mat.shader = WATER_SHIMMER_SHADER
 			overlay.material = mat
-		# CONSTRAINT: default cap matches ICE_CAP_COORD's own textured-tile
-		# pick (see that constant's doc comment) -- every shipped water
-		# segment sets its own "cap" explicitly today, so this fallback is
-		# defensive-only, kept in sync to avoid a future segment silently
-		# regressing to the flat fill.
 		var cap_raw: Array = seg.get("cap", [1, 5])
 		var coord := Vector2i(int(cap_raw[0]), int(cap_raw[1]))
 		for cell: Vector2i in cells:
@@ -790,13 +507,6 @@ func _build_water_shimmer() -> void:
 		overlay.queue_free()
 
 
-## Rebuild the frost-cast ice overlay for the current map
-## from the sim's authoritative `frozen_cells` set (the water-shimmer overlay
-## precedent -- a fresh TileMapLayer of the SAME water sheet's cap tile, tinted
-## frost, drawn on top of the shimmer so a frozen cell reads as ice). A no-op
-## (no layer created) when nothing on this map is frozen -- the common case, and
-## every map before the seam ever fires. Called after `_build_water_shimmer` on
-## every field rebuild so ice survives a map change / a load while frozen.
 func _build_ice_overlay() -> void:
 	var frozen: Array = Game.sim.frozen_cells_json().get(Game.sim.current_map, [])
 	for pair: Variant in frozen:
@@ -804,28 +514,15 @@ func _build_ice_overlay() -> void:
 			_paint_ice_cell(Vector2i(int(pair[0]), int(pair[1])))
 
 
-## Paint one frozen cell into the ice overlay, creating the
-## overlay TileMapLayer on first use (lazily, so an unfrozen map spawns nothing).
-## Shared by the rebuild path (`_build_ice_overlay`) and the live freeze handler
-## (TERRAIN_CHANGED{to:"ice"}), so a fresh freeze and a reload paint identically.
 func _paint_ice_cell(cell: Vector2i) -> void:
 	if _ice_overlay == null:
 		_ice_overlay = WITileBoardBuilder.make_tile_layer(_field_root, WATER_SHEET, 16, WISpriteRegistry)
 		_ice_overlay.modulate = ICE_TINT
-		# Above the shimmer overlay (added just before), below the Y-sorted
-		# entities/player, so the PC visual walks over the ice, not under it.
 		_ice_overlay.z_index = 1
 		_field_root.add_child(_ice_overlay)
 	_ice_overlay.set_cell(cell, 0, ICE_CAP_COORD)
 
 
-## A one-shot burn poof at a scorched (burned-away) cell,
-## reusing combat's `hit_sparks` WIAmbience preset (board_renderer.spawn_hit_sparks
-## precedent). Self-frees past its lifetime; QA/headless-collapsed (no particle
-## node spawned when presentation is disabled) exactly like every other juice.
-## Free any existing ice overlay and repaint it from the
-## sim's current `frozen_cells` -- used on PHASE_CHANGED (the sleep-thaw beat has
-## no field rebuild of its own). Frees to nothing when the set is empty (thaw).
 func _reconcile_ice_overlay() -> void:
 	if _ice_overlay != null:
 		_ice_overlay.queue_free()
@@ -863,14 +560,6 @@ func _build_decor(decor_list: Array) -> void:
 		_make_entity_visual(cell, sprite_id, entry.get("tint", []), PROP_COLOR, "", entry.get("light", {}), bool(entry.get("sway", false)))
 
 
-## Renders `scatter` entries: seeded
-## deterministic micro-detail clusters — same JSON in, same scene out, so QA
-## screenshots stay comparable. Each spec: {"pool": [sprite_ids], "density":
-## 0..1, "cluster": 0..1, "seed": int}. A cell hosts a scatter sprite when
-## its presence hash falls under density boosted (or damped) by its 4x4
-## block's cluster hash — detail clumps instead of uniform noise. Skips
-## blocked cells (incl. wall segments), entity cells, and the player cell.
-## Non-blocking, unlabeled, Y-sorted like decor.
 func _build_scatter(specs: Array) -> void:
 	if specs.is_empty():
 		return
@@ -910,12 +599,9 @@ func _build_scatter(specs: Array) -> void:
 				var pick: Variant = pool[int(_scatter_hash(seed_v, cell, 31) * pool.size()) % pool.size()]
 				var sprite_id := String(pick)
 				if WISpriteRegistry.has_sprite(sprite_id):
-					# tint applies per SPEC (whole pool), same trade-off as sway above.
 					_make_entity_visual(cell, sprite_id, spec.get("tint", []), PROP_COLOR, "", {}, sway)
 
 
-## Deterministic [0,1) hash for scatter decisions — stable per (seed, cell,
-## salt) so identical map JSON always renders identical scatter.
 static func _scatter_hash(seed_v: int, cell: Vector2i, salt: int) -> float:
 	var h := hash(Vector3i(cell.x * 73856093, cell.y * 19349663, seed_v * 83492791 + salt))
 	return float(h & 0xFFFFFF) / float(0x1000000)
@@ -929,30 +615,11 @@ func _biome_for_current_map() -> Dictionary:
 	return biomes[biome_id]
 
 
-## Raw current-map config from the composed map catalog (the same source
-## `_biome_for_current_map` reads its biome id from) -- used to read the
-## passthrough fields (`floor_layers`/`walls`/`decor`) that `WIGame`
-## never touches.
 func _current_map_cfg() -> Dictionary:
 	var maps: Dictionary = WIDataRegistry.scene_config()["maps"]
 	return maps[Game.sim.current_map]
 
 
-## Camera2D positioning: centers a map/arena smaller than the
-## 320x180 view; clamped-follow (never shows past the content edge) for a
-## map/arena larger than the view (street/floodplains/sewers/guild/
-## ruin_surface/garden_sanctuary all exceed it).
-## `_update_camera` itself is still an instant snap on purpose -- used by map
-## rebuild and combat enter/exit, where a hard cut is correct. The
-## PLAYER_MOVED-driven walk uses `_pan_camera_to_player` instead (see its doc
-## comment) precisely so a real cell-to-cell walk animates rather than snaps.
-## Kills any in-flight `_camera_tween` FIRST: a door/
-## combat-trigger event can land while the previous step's pan is still
-## finishing (e.g. interacting with a door moments after a walking step,
-## or a `_check_trigger_radius` ambush firing in the SAME `move_player` call
-## that also just started a pan) -- without this, the orphaned tween would
-## resume next frame and drag `_camera.position` away from the snap this
-## function just set, toward its now-stale field-walk target.
 func _update_camera() -> void:
 	_kill_camera_tween()
 	var grid_size := Game.sim.grid_size
@@ -970,29 +637,6 @@ static func _camera_axis(content: float, view: float, focus: float) -> float:
 	return clampf(focus, view * 0.5, content - view * 0.5)
 
 
-## `_update_camera()` above always SNAPS `_camera.position` to the
-## destination instantly -- fine for a map rebuild or a combat-camera swap
-## (an instant cut IS correct there), but the `PLAYER_MOVED` handler calls it
-## too, synchronously with `_move_player_visual` starting a ~120ms
-## CUBIC/EASE_OUT tween of the PLAYER SPRITE toward that same point. On any
-## map wider/taller than the 320x180 view (clamped-follow branch of
-## `_camera_axis`), that mismatch is visible: the camera hard-jumps a full
-## cell in a single frame, then sits still while only the small player
-## sprite eases into place. This variant re-derives the SAME `_camera_axis`
-## target (byte-identical math to `_update_camera`) but glides there over
-## the exact same duration/easing as `_move_player_visual`'s own tween
-## instead of snapping, so camera and sprite move in lockstep every frame --
-## both tweens are pure functions of elapsed-time-since-start with the same
-## trans/ease, so two independently-created Tweens started in the same call
-## stay in sync with no cross-wiring needed. Falls back to the instant
-## `_update_camera()` snap whenever `_presentation_delay` collapses to zero
-## (TestDriver-driven or headless), which is the SAME collapse
-## `_move_player_visual` already relies on -- a QA script or headless run
-## sees camera placement identical to a plain snap, every canonical
-## included. Only the `PLAYER_MOVED` handler calls this; map rebuild
-## (`_rebuild_field`) and combat enter/exit still use the instant
-## `_update_camera()` snap on purpose -- a fresh scene or mode swap should
-## never animate into place.
 func _pan_camera_to_player() -> void:
 	var duration := _presentation_delay(MOVE_TWEEN_SECONDS)
 	if duration <= 0.0:
@@ -1020,11 +664,6 @@ func _kill_camera_tween() -> void:
 		_camera_tween.kill()
 
 
-## The Node2D combat_screen.gd renders the arena
-## board into. A sibling of `_field_root`, not a child of it, so field
-## rebuild/clear logic (`_rebuild_field`) never touches combat content and
-## vice versa. Starts hidden; combat_screen owns showing/hiding it around
-## each encounter (see combat_screen.gd's `_build_board`/`_close_banner`).
 func combat_board_root() -> Node2D:
 	if _combat_board_root == null:
 		_combat_board_root = Node2D.new()
@@ -1034,15 +673,6 @@ func combat_board_root() -> Node2D:
 	return _combat_board_root
 
 
-## Centers the shared field Camera2D on a `grid_size` (CELL=16, same scale as
-## the field) combat arena -- same content<=view/clamped-follow split as
-## `_update_camera`, but "follows" the arena's own center since an arena has
-## no player-cell equivalent. Every current arena (largest: 12x8 = 192x128)
-## is smaller than the 320x180 view, so this always centers today; the
-## clamped-follow branch is future-proofing, same as `_update_camera`'s.
-## Kills any in-flight `_camera_tween` first, same hardening as
-## `_update_camera` -- a proximity ambush (`_check_trigger_radius`) can start
-## combat in the SAME `move_player` call that just began a field pan.
 func enter_combat_camera(grid_size: Vector2i) -> void:
 	_kill_camera_tween()
 	var content_size := Vector2(grid_size) * CELL
@@ -1052,10 +682,6 @@ func enter_combat_camera(grid_size: Vector2i) -> void:
 	)
 
 
-## Restores the field camera position once combat ends. Recomputed fresh from
-## the live player cell/grid rather than a cached pre-combat value -- the
-## field's own state never changes while combat owns the screen, so this is
-## exactly equivalent and reuses the one camera-placement formula.
 func exit_combat_camera() -> void:
 	_update_camera()
 
@@ -1063,21 +689,8 @@ func exit_combat_camera() -> void:
 func _build_entities() -> Array[Node2D]:
 	var visuals: Array[Node2D] = []
 	for ent: Dictionary in Game.sim.entities.values():
-		# `hide_sprite` (entity-level, render-only): a functional entity whose
-		# VISUAL is owned by something else (the inn facade paints its own
-		# entrance, so `floodplains_inn_door` draws nothing). Interact/door
-		# behavior is sim-side by cell and unaffected. Without this flag an
-		# empty sprite id falls through to the fallback COLOR CHIP — worse
-		# than the sprite it replaces.
 		if bool(ent.get("hide_sprite", false)):
 			continue
-		# `present_when`-gated entity (8d D2): structurally absent while its
-		# gate is unmet -- skipped before a visual is even built, so it never
-		# reaches `_entity_visuals` and never counts toward the
-		# UI_ENTITIES_RENDERED sprite/fallback totals below. Contrast
-		# `visual_states`' `hidden` state (still built, just `.visible =
-		# false`) -- that stays render-only on purpose; this is the seam that
-		# actually moves the count.
 		if not Game.sim.entity_present(ent):
 			continue
 		var color := NPC_COLOR if String(ent["kind"]) == "npc" else PROP_COLOR
@@ -1109,12 +722,6 @@ func _build_entities() -> Array[Node2D]:
 ## past threshold must render the post-state immediately, not the base dirty
 ## look) and by `_refresh_entity_visual`'s live re-render on the owning
 ## counter's change.
-## A state may also set `hidden: true` (render-only): the visual node stays
-## built but invisible -- sim-side interact/trigger behavior is unaffected.
-## First use: `river_wolf_pack`'s field marker, visible only while its
-## night-phase `encounter_when` gate can actually fire (a marker standing
-## in daylight next to its own "gone with the light" refusal toast read as
-## a bug in the v0.4.0 playtest).
 func _resolve_entity_render(ent: Dictionary) -> Dictionary:
 	var result := {
 		"sprite": String(ent.get("sprite", "")),
@@ -1139,26 +746,6 @@ func _resolve_entity_render(ent: Dictionary) -> Dictionary:
 	return result
 
 
-## Four `when` shapes:
-## `{"counter": id, "at": n}` -- true once `Game.sim.accomplishment_count(id)
-## >= n` (the dirty_table/unlit_lantern case, driven by ACCOMPLISHMENT_RECORDED
-## below); `{"container_opened": true}` -- true once `Game.sim.container_state`
-## marks `entity_id` emptied (the inn_chest case, driven by ITEM_GAINED's
-## `source` field below -- see that handler's doc comment for the deferral
-## this needs); `{"dormant": true}` -- true while this encounter id sits in
-## `Game.sim.dormant_encounters` (a `respawns: true` encounter
-## defeated this waking should read "cleared/resting", not identical to a live
-## one). Presentation-only: it merely READS the sim's existing
-## dormant set (set on victory, cleared at the sleep beat); driven by the
-## UI_COMBAT_HIDDEN refresh below (post-combat, no map change) and by the
-## MAP_CHANGED rebuild (re-arm shows on the next visit after sleep).
-## `{"phase": [<phase strings>]}` (8b R1, issue #10) -- true while
-## `Game.sim.phase()` is a member of the listed set; the SAME `when`-vocabulary
-## shape `_encounter_gate_met` (wi_game.gd) reads for `encounter_when` --
-## shared design, two consumers (locked shape 2/4). The witch's two-form read
-## (elder by day, young dusk/night) is this shape's first use: driven by the
-## PHASE_CHANGED refresh below, so the swap tracks atmosphere.gd's own phase
-## clock live, mid-waking, with no map reload needed.
 func _visual_state_active(when: Dictionary, entity_id: String) -> bool:
 	if when.has("counter"):
 		return Game.sim.accomplishment_count(String(when["counter"])) >= int(when.get("at", 1))
@@ -1171,21 +758,6 @@ func _visual_state_active(when: Dictionary, entity_id: String) -> bool:
 	return false
 
 
-## Re-renders ONE entity's visual in place (spec §8 pt.2: "re-render that prop
-## only", never a full `_rebuild_field()`). No-op for an entity without
-## `visual_states` (the overwhelming majority) or one not currently tracked
-## (e.g. a different map's prop while ACCOMPLISHMENT_RECORDED is global).
-## A `visual_states` transition
-## can add a `light` (the `unlit_lantern` case) -- before freeing the OLD
-## holder, unregister any `PointLight2D` child from `_atmosphere` AND
-## decrement `_light_count` to match (mirrors `_spawn_light`'s own
-## increment), so a light-bearing entity refreshed more than once can never
-## leak a stale array entry or drift `_light_count` away from the true live
-## count. The budget assert below is `_rebuild_field`'s own assert repeated
-## here -- that one only re-checks at the next full map rebuild (which
-## resets `_light_count` to 0 first, silently masking any drift that
-## happened via refreshes in between), so a refresh that pushes a map over
-## LIGHT_BUDGET needs its own immediate check.
 func _refresh_entity_visual(id: String) -> void:
 	if not Game.sim.entities.has(id):
 		return
@@ -1210,11 +782,6 @@ func _refresh_entity_visual(id: String) -> void:
 		"map %s exceeds the %d-light budget (%d) after a visual_states refresh -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
 
 
-## ACCOMPLISHMENT_RECORDED fires for every counter in the game (combat tallies
-## included), so this scans only entities already on the current map (via
-## `_entity_visuals`) and only re-renders one whose `visual_states` actually
-## watches the counter that just changed -- cheap (a handful of props per
-## map) and never touches an entity with no visual_states at all.
 func _refresh_entities_watching_counter(counter_name: String) -> void:
 	if counter_name == "":
 		return
@@ -1229,12 +796,6 @@ func _refresh_entities_watching_counter(counter_name: String) -> void:
 				break
 
 
-## PHASE_CHANGED fires on every phase crossing AND on the sleep beat
-## (which resets to "day") -- re-render any on-map entity whose
-## `visual_states` watch the `phase` shape (8b R1: the witch's elder/young
-## swap). Mirrors `_refresh_entities_watching_counter`'s scan shape exactly,
-## keyed on "phase" presence instead of a specific counter id (phase has no
-## id to match, just the shape itself).
 func _refresh_entities_watching_phase() -> void:
 	for id: String in _entity_visuals.keys():
 		var raw_ent: Variant = Game.sim.entities.get(id, null)
@@ -1246,21 +807,6 @@ func _refresh_entities_watching_phase() -> void:
 				break
 
 
-## GH#104 follow-up to #80: `_refresh_entities_watching_phase` above is
-## LOOK-only (re-renders sprite/tint on an already-built visual) -- a
-## `present_when` entity's EXISTENCE flip (hungry_patron/ilvo/resting_runner
-## today) needs its visual actually freed/built, which nothing did before
-## this, leaving the same-map ghost `entity_present`'s doc comment used to
-## disclose (sim always correct, render stale until the next MAP_CHANGED).
-## Diffs `Game.sim.entities` (current-map only -- `entities =
-## _maps[map_id]["entities"]` on load) against `_entity_visuals`'s live key
-## set: newly-absent frees the visual (with `_refresh_entity_visual`'s
-## light-unregister discipline -- see the free arm's own comment);
-## newly-present builds one via `_make_entity_visual`, same construction
-## (and `hide_sprite` guard) `_build_entities` uses. Only `present_when`
-## entities are ever candidates.
-## Re-emits `UI_ENTITIES_RENDERED` iff the count changed, so a same-map
-## PHASE_CHANGED (no MAP_CHANGED) still surfaces the new totals live.
 func _reconcile_entity_presence() -> void:
 	var changed := false
 	for id: String in Game.sim.entities.keys():
@@ -1281,13 +827,6 @@ func _reconcile_entity_presence() -> void:
 			_entity_visuals[id] = visual
 		else:
 			var old_visual := _entity_visuals[id] as Node2D
-			# _refresh_entity_visual's light discipline, mirrored: unregister
-			# any PointLight2D child from _atmosphere AND decrement
-			# _light_count BEFORE the free -- skipping it leaks one stale
-			# registry entry per flip cycle and ratchets _light_count toward
-			# the LIGHT_BUDGET assert (a failed assert HANGS headless).
-			# Latent today (no shipped present_when entity carries a light);
-			# wiring-tripwired by test_world_visuals.gd.
 			for child: Node in old_visual.get_children():
 				if child is PointLight2D:
 					_atmosphere.unregister_light(child as PointLight2D)
@@ -1322,9 +861,6 @@ func _refresh_entities_watching_dormant() -> void:
 				break
 
 
-## Resolve the PC's chosen race/gender sprite variant, degrading to
-## the data default when that variant art is not registered (so a partially
-## generated variant set, or the classic body_a base, still renders the PC).
 func _pc_variant_sprite(default_id: String) -> String:
 	var key := Game.sim.pc_sprite_variant()
 	return key if WISpriteRegistry.has_sprite(key) else default_id
@@ -1338,8 +874,6 @@ func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallb
 		var spr := AnimatedSprite2D.new()
 		spr.sprite_frames = WISpriteRegistry.frames_for(sprite_id)
 		spr.centered = false
-		# facing: map JSON can aim an NPC at its work
-		# station ("up"/"down"/"left"/"right"); left mirrors the side sheet.
 		var facing_anim := "idle_side" if facing in ["left", "right"] else "idle_%s" % facing
 		var anim := "idle_down" if spr.sprite_frames.has_animation("idle_down") else "idle"
 		if facing != "" and spr.sprite_frames.has_animation(facing_anim):
@@ -1355,14 +889,6 @@ func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallb
 		if catalog_entry.has("render_scale"):
 			var s := float(catalog_entry["render_scale"])
 			spr.scale = Vector2(s, s)
-		# `_entities_root.y_sort_enabled` sorts siblings by `holder.position.y`
-		# alone (the FEET-anchored cell row) -- correct for same-scale
-		# figures, but an oversized sprite's TOP can reach several rows above
-		# its own feet cell. A player standing one row north (the normal
-		# "facing the boss" approach distance) still sits BEHIND that
-		# overhang by row-only sort math, so the giant sprite draws over them
-		# and hides the PC entirely (playtest evidence: arc_flow's dd_04/
-		# dd_05 -- the Awakened Raskghar reveal + Relc-veto dialogue).
 		# `field_y_sort_bias_px` (sprites.json, opt-in, SIGNED -- negative pulls
 		# the key north, positive pushes it south; inn_roof's +20 is the first
 		# positive consumer) lets a
@@ -1379,9 +905,6 @@ func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallb
 		# WITHIN the y-sort comparison, hence the position trick.)
 		var y_sort_bias := float(catalog_entry.get("field_y_sort_bias_px", 0.0))
 		holder.position.y += y_sort_bias
-		# Anchor the sprite's feet/base to the cell's bottom-center:
-		# taller canvases (e.g. Body_A's 64px character canvas) correctly
-		# overhang the cell above instead of being top-left-aligned to it.
 		var frame_tex := spr.sprite_frames.get_frame_texture(anim, 0)
 		var frame_size := frame_tex.get_size() if frame_tex != null else Vector2(CELL, CELL)
 		var anchor := WISpriteRegistry.anchor_for(sprite_id)
@@ -1389,8 +912,6 @@ func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallb
 			CELL * 0.5 - anchor.x * frame_size.x * spr.scale.x,
 			CELL - anchor.y * frame_size.y * spr.scale.y - y_sort_bias
 		)
-		# Contact shadow: added before the sprite so it
-		# draws beneath; width tracks the rendered sprite footprint.
 		if bool(catalog_entry.get("shadow", false)):
 			var shadow := Sprite2D.new()
 			shadow.texture = WISpriteRegistry.shadow_texture()
@@ -1413,19 +934,8 @@ func _make_entity_visual(cell: Vector2i, sprite_id: String, tint: Variant, fallb
 	return holder
 
 
-## Spawns a PointLight2D from an entity/decor `light`
-## record (`{color:[r,g,b], energy:float, radius:int, flicker:bool}`) as a
-## child of the visual `holder` returned by `_make_entity_visual`, and
-## registers it with `_atmosphere` so phase crossings drive its energy (day
-## multiplier 0.0 makes it invisible without any per-anchor identity hack --
-## see atmosphere.gd's `light_multiplier`). Positioned at the cell's center
-## rather than the sprite's own anchor point -- a soft radial glow at the
-## radii this data uses (20-48px) reads the same either way, and centering
-## keeps this function independent of any given sprite's feet-anchor math.
 func _spawn_light(holder: Node2D, light: Dictionary) -> void:
 	var color_arr: Variant = light.get("color", [1.0, 1.0, 1.0])
-	# Same fail-loud idiom as atmosphere.gd's rgb bounds-check on apply() --
-	# malformed light data is an authoring bug, not a runtime possibility.
 	assert(color_arr is Array and (color_arr as Array).size() == 3,
 		"light entry needs a 3-component color: " + str(light))
 	var energy := float(light.get("energy", 1.0))
@@ -1441,13 +951,6 @@ func _spawn_light(holder: Node2D, light: Dictionary) -> void:
 	_light_count += 1
 
 
-## Brings the PC-following [Light] glow into agreement with
-## the sim's authoritative `light_active` flag. Attaches a fresh glow if lit and
-## missing; removes it if unlit and present; no-ops (and emits nothing) when the
-## visual already matches the flag -- so a re-cast while already lit, or a
-## dusk/night phase crossing, does not double the light or re-fire the event.
-## Called from three places: `_rebuild_field` (map change / load re-attach), the
-## SKILL_USED{light} hook (live cast), and the PHASE_CHANGED hook (sleep clear).
 func _reconcile_pc_light() -> void:
 	var want := Game.sim.light_active
 	var have := is_instance_valid(_pc_light)
@@ -1482,10 +985,6 @@ func _reconcile_sneak_visual() -> void:
 	var want := Game.sim.sneaking
 	if want == _sneak_tinted:
 		return
-	# The active sneak skill's own `sneak_visual` dict
-	# (optional per skill) overrides the plain SNEAK_ALPHA look. Read ONLY
-	# while turning ON (`want` true); turning off always resets to the
-	# fully-visible, no-shimmer look regardless of which skill was active.
 	var visual: Dictionary = Game.sim.skills.get(_sneak_active_skill, {}).get("sneak_visual", {}) if want else {}
 	var alpha: float = float(visual.get("alpha", SNEAK_ALPHA)) if want else 1.0
 	var shimmer: bool = want and bool(visual.get("shimmer", false))
@@ -1495,12 +994,6 @@ func _reconcile_sneak_visual() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_SNEAK_RENDERED, {"active": want, "alpha": alpha, "shimmer": shimmer})
 
 
-## Builds the PC glow PointLight2D as a child of
-## `_player_visual`, centered on the PC's cell (so it tweens with the PC for
-## free), reusing the same soft radial texture the map lights use. Steady (no
-## flicker), warm-white, campfire-class radius. NOT registered with
-## `_atmosphere` -- that is the whole point (see PC_LIGHT_* consts): the phase
-## multiplier never touches it, so it stays lit at day too.
 func _attach_pc_light() -> void:
 	if _player_visual == null:
 		return
@@ -1514,22 +1007,12 @@ func _attach_pc_light() -> void:
 	_pc_light = pl
 
 
-## Removes the PC glow node (sleep clear). No atmosphere
-## unregister needed -- the glow was never registered.
 func _detach_pc_light() -> void:
 	if is_instance_valid(_pc_light):
 		_pc_light.queue_free()
 	_pc_light = null
 
 
-## Reads the current map's `ambience` list (a
-## passthrough field, same idiom as `decor`/`scatter`) and spawns one
-## GPUParticles2D per entry via `WIAmbience.make`, registering each with
-## `_atmosphere` for phase gating. Added directly to `_field_root` (a sibling
-## of `_entities_root`, not a child of it) AFTER entities/decor/scatter are
-## built, so ambience always draws in front of the field's sprites -- fits
-## every preset here (drifting motes/glints/fireflies reading in front of
-## trees/the player is the intended look, not a bug).
 func _build_ambience() -> void:
 	for raw: Variant in _current_map_cfg().get("ambience", []):
 		if not (raw is Dictionary):
@@ -1548,10 +1031,6 @@ func _build_ambience() -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_AMBIENCE_RENDERED, {"map": Game.sim.current_map, "emitters": _ambience_count})
 
 
-## Resolves an `ambience` entry's `rect` field ("all" | [x,y,w,h] in CELL
-## units) into a world-pixel Rect2 -- the space `WIAmbience.make`'s emission
-## box needs (native res, same CELL scale as everything else world.gd
-## renders).
 func _resolve_ambience_rect(rect_spec: Variant) -> Rect2:
 	if rect_spec is String and rect_spec == "all":
 		return Rect2(Vector2.ZERO, Vector2(Game.sim.grid_size) * CELL)
@@ -1610,8 +1089,6 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_move_player_visual(Vector2(cell) * CELL)
 		_play_player_anim("walk")
 		_queue_player_idle()
-		# See `_pan_camera_to_player`'s doc comment for why this animates
-		# instead of calling the instant `_update_camera()` snap.
 		_pan_camera_to_player()
 	elif type == WIEvents.PLAYER_BLOCKED:
 		_bump_player_visual()
@@ -1626,32 +1103,14 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_field_root.visible = false
 	elif type == WIEvents.UI_COMBAT_HIDDEN:
 		_field_root.visible = true
-		# A just-defeated respawns:true encounter is now dormant
-		# -- swap it to its "resting/cleared" look (field re-shows without a rebuild).
 		_refresh_entities_watching_dormant()
 	elif type == WIEvents.ACCOMPLISHMENT_RECORDED:
-		# The dirty_table/unlit_lantern visual_states
-		# seam. accomplishments update synchronously before this fires (see
-		# WIGame.record_accomplishment), so no deferral needed here.
 		_refresh_entities_watching_counter(String(payload.get("id", "")))
 	elif type == WIEvents.ITEM_GAINED:
-		# The inn_chest/container visual_states case. `source` is
-		# the container's own entity id (WIGame._interact_container), but
-		# `container_state[id] = true` is only set AFTER every contained
-		# item's pickup() call (and its ITEM_GAINED emission) returns -- this
-		# event can fire before that flag flips. `call_deferred` re-checks
-		# `_refresh_entity_visual` on the next idle frame, by which point the
-		# whole synchronous interact() call (container_state included) has
-		# completed -- one frame's delay is imperceptible for a one-shot
-		# container-opened swap.
 		var source_id := String(payload.get("source", ""))
 		if source_id != "":
 			call_deferred("_refresh_entity_visual", source_id)
 	elif type == WIEvents.SKILL_USED:
-		# A live [Light] cast (prop OR ambient path both emit
-		# skill_used{skill:"light"}). Reconcile against Game.sim.light_active --
-		# the ambient cast set it true (attach the PC glow); the prop-targeted
-		# lantern/cellar cast leaves it false (no-op here, prop light unchanged).
 		var used_skill := String(payload.get("skill", ""))
 		if used_skill == "light":
 			_reconcile_pc_light()
@@ -1667,25 +1126,10 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		if Game.sim.sneaking and bool(Game.sim.skills.get(used_skill, {}).get("sneaks", false)):
 			_sneak_active_skill = used_skill
 	elif type == WIEvents.SNEAK_STARTED or type == WIEvents.SNEAK_ENDED:
-		# Every deliberate toggle and every automatic
-		# break fires one of these -- reconcile the PC's translucency to match.
 		_reconcile_sneak_visual()
 	elif type == WIEvents.PHASE_CHANGED:
-		# sleep() clears light_active and fires PHASE_CHANGED
-		# unconditionally -- reconcile detaches the PC glow on that beat. Harmless
-		# on a dusk/night crossing while lit (the flag is still true, reconcile is
-		# a no-op then), so this single hook covers the sleep-clear cleanly.
 		_reconcile_pc_light()
-		# sleep() ALSO silently clears `sneaking` (no
-		# SNEAK_ENDED event -- see that clear's own comment), so this is the
-		# only hook that catches a sneaking-into-sleep PC's opacity reset.
-		# Harmless no-op on a dusk/night crossing while not sneaking.
 		_reconcile_sneak_visual()
-		# sleep() thaws all ice (clears frozen_cells) and fires
-		# PHASE_CHANGED unconditionally, but PHASE_CHANGED does NOT rebuild the field
-		# -- so reconcile the ice overlay against the sim here too. On the sleep beat
-		# the set is empty, so this frees the lingering overlay; on a mid-waking
-		# dusk/night crossing (ice still frozen) it repaints the same cells (cheap).
 		_reconcile_ice_overlay()
 		# 8b R1 (issue #10): the witch's two-form visual_states swap tracks
 		# atmosphere.gd's own phase clock live -- this fires on every
@@ -1699,14 +1143,6 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# `entity_present`'s doc comment used to disclose).
 		_reconcile_entity_presence()
 	elif type == WIEvents.TERRAIN_CHANGED:
-		# A cell changed its traversable look. Only act on the
-		# CURRENT map (a stale cross-map event can't happen today -- both seams emit
-		# for the map the PC stands on -- but guard anyway). "ice" paints the frost
-		# overlay tile; "scorched" drops the burn poof (the burnable prop's own
-		# visual is already gone via ENTITY_REMOVED). sleep()'s thaw does NOT emit
-		# this -- the ice overlay clears on the PHASE_CHANGED-driven rebuild path
-		# instead (frozen_cells is empty by then, so _build_ice_overlay repaints
-		# nothing); no per-cell thaw event is needed.
 		if String(payload.get("map", "")) == Game.sim.current_map:
 			var tc_cell := Vector2i(int(payload["cell"][0]), int(payload["cell"][1]))
 			match String(payload.get("to", "")):
@@ -1719,13 +1155,6 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# `field_hotbar.gd`'s `_render()` re-derives the slot LIST on -- the
 		# pad cursor here must reset alongside it (a stale index could point
 		# past a shrunk list, or at a now-different skill on a same-size one).
-		# (The hotbar's own `_render()` already drew with -1, so the helper's
-		# `set_selected(-1)` is an idempotent no-op redraw here.)
-		# COMBAT_STARTED/DIALOGUE_STARTED: the bar HIDES in both, and an
-		# armed index that survives into them makes pause_menu's
-		# `field_slot_armed()` guard refuse to open while `_movement_gated()`
-		# keeps the cancel-disarm branch unreachable -- a full pause lockout
-		# for the whole fight/conversation (review finding on this commit).
 		_disarm_field_slot()
 
 
@@ -1738,26 +1167,12 @@ func _move_player_visual(target: Vector2) -> void:
 	_player_tween = create_tween()
 	_player_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	_player_tween.tween_property(_player_visual, "position", target, duration)
-	# FIELD HELD-KEY MOVEMENT: only the REAL
-	# tween branch above ever connects this -- the zero-duration branch just
-	# above (TestDriver/headless, per `_presentation_delay`) returns before
-	# reaching here, so no `finished` signal (hence no repeat) can ever fire
-	# for an injected/headless run. Combat is untouched: combat_screen.gd
-	# drives its own board and never calls this method.
 	_player_tween.finished.connect(_on_move_tween_finished)
 
 
 func _bump_player_visual() -> void:
 	if _player_visual == null:
 		return
-	# A blocked press already turned the PC sim-side
-	# (`Game.sim.player_facing` is set unconditionally in `move_player`,
-	# before the blocked check) -- update the sprite's facing/flip to match
-	# BEFORE the early-return below, so a zero-duration (headless/QA)
-	# presentation still turns the PC even though the nudge tween never
-	# plays. Idempotent on a held key against the same wall (same facing,
-	# same anim, `AnimatedSprite2D.play()` on an already-playing animation is
-	# a no-op) -- nothing new to spam.
 	_play_player_anim("idle")
 	var duration := _presentation_delay(BUMP_TWEEN_SECONDS)
 	if duration <= 0.0:
@@ -1771,9 +1186,6 @@ func _bump_player_visual() -> void:
 	_player_tween.tween_property(_player_visual, "position", home, duration)
 
 
-## Shared by both `_move_player_visual` and `_bump_player_visual` -- one
-## active positional tween per holder, regardless of which of the two
-## started it.
 func _kill_player_tween() -> void:
 	if _player_tween != null and _player_tween.is_valid():
 		_player_tween.kill()
@@ -1785,16 +1197,6 @@ func _presentation_delay(seconds: float) -> float:
 	return seconds
 
 
-## Polls (not event-based -- OS key-repeat/"echo" events are filtered out of
-## `is_action_pressed` by default, which is exactly why a held arrow currently
-## only steps once) whether any movement action is still down, for the
-## held-repeat check on move-tween completion. Resolves each axis
-## (horizontal/vertical) INDEPENDENTLY via `_held_axis` below, so holding two
-## orthogonal keys together (or a pad stick pushed diagonally) continues
-## stepping diagonally, not just cardinally -- the held-repeat counterpart of
-## `_combined_move_dir`'s press-time combination above. Returns Vector2i.ZERO
-## (not a valid direction any combination produces) as the "nothing held"
-## sentinel.
 func _held_move_direction() -> Vector2i:
 	var facing := Game.sim.player_facing
 	var dx := _held_axis("move_left", -1, "move_right", 1, facing.x)
@@ -1802,14 +1204,6 @@ func _held_move_direction() -> Vector2i:
 	return Vector2i(dx, dy)
 
 
-## Resolves one movement axis from its two opposing actions. Both held at once
-## (a genuine conflict, e.g. left+right together) prefers whichever matches
-## the player's CURRENT facing component -- continuing a straight-line hold
-## reads as one continuous walk rather than re-resolving priority every step
-## -- falling back
-## to the negative action winning ties as a stable deterministic default.
-## Either action alone resolves normally; neither held returns 0 (this axis
-## contributes nothing to the combined direction).
 func _held_axis(neg_action: String, neg_val: int, pos_action: String, pos_val: int, facing_component: int) -> int:
 	var neg_held := Input.is_action_pressed(neg_action)
 	var pos_held := Input.is_action_pressed(pos_action)
@@ -1836,12 +1230,6 @@ func _held_axis(neg_action: String, neg_val: int, pos_action: String, pos_val: i
 ## (`_movement_gated`) so a panel/dialogue/combat opening mid-hold stops the
 ## repeat immediately rather than only at the next fresh keypress.
 func _on_move_tween_finished() -> void:
-	# Click-to-walk (issue #57) PIGGYBACKS this exact seam: an in-flight
-	# click path takes priority over held-key repeat (mutually exclusive in
-	# practice -- a keyboard press cancels the path outright, see
-	# `_unhandled_input`'s top-of-function check -- but checked first
-	# regardless, for clarity). See `_advance_click_path`'s own doc comment
-	# for the headless-collapse counterpart of this same continuation.
 	if not _click_path.is_empty():
 		_advance_click_path()
 		return
@@ -1855,22 +1243,6 @@ func _on_move_tween_finished() -> void:
 	Game.sim.move_player(dir)
 
 
-## Mouse click into the field (issue #57), in WORLD/pixel space -- Main.gd's
-## `_gui_input` computes this via `screen_to_world` (the real transform
-## chain, not a hardcoded /4) before calling. Three outcomes:
-## - clicked cell hosts an entity AND the player is already CARDINAL-adjacent
-##   to it (issue #109 -- was any Chebyshev-1 neighbor, diagonals included) ->
-##   face it (facing DERIVED from the click direction, not from a move) +
-##   interact -- `interact()` itself is untouched (no skill ever auto-fires;
-##   explicit-hotbar doctrine).
-## - clicked cell hosts an entity but the player is NOT cardinal-adjacent
-##   (either genuinely distant, OR issue #109's diagonally-adjacent case) ->
-##   walk to its nearest open CARDINAL approach cell and STOP (never
-##   auto-interact on arrival -- no accidental skill-prop nudges). A second
-##   click, now cardinal-adjacent, is what actually interacts -- same as any
-##   distant-click approach, never a new auto-fire path.
-## - clicked cell is empty, unblocked ground -> click-to-walk there.
-## Anything else (off-grid, a blocked non-entity cell) is a silent no-op.
 func handle_world_click(world_pos: Vector2) -> void:
 	if _movement_gated():
 		return
@@ -1897,26 +1269,11 @@ static func _chebyshev(a: Vector2i, b: Vector2i) -> int:
 	return maxi(absi(a.x - b.x), absi(a.y - b.y))
 
 
-## True iff `b` is exactly one CARDINAL step from `a` -- the only relative
-## position `interact()` can ever resolve (`WIGame.interact()` targets
-## `player_cell + player_facing`, and `player_facing` is always one of the
-## four cardinal unit vectors; see `_facing_from_delta`, also cardinal-only).
-## A diagonal neighbor has Chebyshev distance 1 too but is NOT cardinal --
-## issue #109's whole bug was `handle_world_click` treating Chebyshev-1 as
-## "close enough to interact" when a diagonal Chebyshev-1 neighbor can never
-## actually resolve through `interact()`'s facing-offset lookup.
 static func _is_cardinal_adjacent(a: Vector2i, b: Vector2i) -> bool:
 	var delta := b - a
 	return (absi(delta.x) == 1 and delta.y == 0) or (absi(delta.y) == 1 and delta.x == 0)
 
 
-## Derives a single cardinal facing from an arbitrary click delta (dominant
-## axis; ties break horizontal, same convention as `WIGame._nearest_cardinal`
-## -- kept as a local copy rather than reaching into that sim-private helper,
-## since this is a genuinely new case it was never meant to cover: turning
-## to face WITHOUT moving). `Vector2i.ZERO` (clicking the player's own cell,
-## never reachable today -- the player's cell never hosts an `entities`
-## record) falls back to DOWN, matching the sprite's own idle default.
 static func _facing_from_delta(delta: Vector2i) -> Vector2i:
 	if delta == Vector2i.ZERO:
 		return Vector2i.DOWN
@@ -1925,11 +1282,6 @@ static func _facing_from_delta(delta: Vector2i) -> Vector2i:
 	return Vector2i.DOWN if delta.y > 0 else Vector2i.UP
 
 
-## Turns the PC to face `cell` (already known Chebyshev-1 adjacent by the
-## only caller) WITHOUT moving -- sets the sim's `player_facing` directly
-## (a public field every presentation read/bump already reads straight off
-## `Game.sim`, see `_bump_player_visual`) and refreshes the idle animation so
-## the turn is visible before `interact()` resolves against the new facing.
 func _face_cell(cell: Vector2i) -> void:
 	Game.sim.player_facing = _facing_from_delta(cell - Game.sim.player_cell)
 	_play_player_anim("idle")
@@ -1949,16 +1301,6 @@ func _occupied_cells() -> Dictionary:
 	return occ
 
 
-## PRESENTATION-SIDE pathfinder (issue #57 -- "the sim never learns about
-## paths"): a plain 4-directional BFS from `start` over `Game.sim.
-## is_cell_blocked` + `_occupied_cells()`, exactly the same two gates
-## `move_player` itself enforces one step at a time. Diagonal-free by design
-## (matches every existing keyboard-driven walk, and sidesteps `move_player`'s
-## own corner-cutting rule entirely -- a BFS-planned cardinal step is never a
-## diagonal). Returns the full `came_from` map for the whole reachable area
-## (cheap at this project's map sizes, <=~20x12), so a caller can test/
-## compare several candidate goals (the entity-approach-cell case) without
-## re-running BFS per candidate.
 func _bfs_from(start: Vector2i) -> Dictionary:
 	var occupied := _occupied_cells()
 	var grid_size := Game.sim.grid_size
@@ -1982,9 +1324,6 @@ func _bfs_from(start: Vector2i) -> Dictionary:
 	return came_from
 
 
-## Walks a `_bfs_from` result backward from `goal` to `start`, returning the
-## forward cell sequence (excluding `start`, including `goal`) -- the exact
-## shape `_begin_click_path`/`_advance_click_path` consume.
 static func _reconstruct_path(came_from: Dictionary, start: Vector2i, goal: Vector2i) -> Array:
 	var path: Array = []
 	var cur := goal
@@ -1995,10 +1334,6 @@ static func _reconstruct_path(came_from: Dictionary, start: Vector2i, goal: Vect
 	return path
 
 
-## Click-to-walk to an empty, unblocked ground cell (`handle_world_click`'s
-## third branch). No-op if unreachable (walled off / no path at all) --
-## silent, matching the codebase's existing "an out-of-range action just
-## doesn't happen" convention rather than a toast for an unreachable click.
 func _start_click_path(cell: Vector2i) -> void:
 	var came_from := _bfs_from(Game.sim.player_cell)
 	if not came_from.has(cell):
@@ -2038,9 +1373,6 @@ func _start_click_path_to_adjacent(entity_cell: Vector2i) -> void:
 	_begin_click_path(best_path)
 
 
-## Arms `_click_path` and takes the FIRST real step immediately (no need to
-## wait for a tween that may not even be running yet) -- every later step
-## rides `_advance_click_path`/`_on_move_tween_finished`'s continuation.
 func _begin_click_path(path: Array) -> void:
 	if path.is_empty():
 		return
@@ -2048,14 +1380,6 @@ func _begin_click_path(path: Array) -> void:
 	_advance_click_path()
 
 
-## Takes exactly ONE real step of the in-flight click path via a genuine
-## `Game.sim.move_player` call -- never a teleport, so every per-step sim
-## side effect (trigger radii, actions_since_sleep, sneak checks) fires the
-## same as a held key's repeat. Re-checks `_movement_gated()` both BEFORE
-## the step (a panel could have opened between the click and this call) and
-## AFTER it (a trigger_radius ambush or similar can open one AS A SIDE
-## EFFECT of the very step that just landed) -- either case cancels the rest
-## of the path outright, no recompute (v1: "cancel is fine").
 func _advance_click_path() -> void:
 	if _click_path.is_empty():
 		return
@@ -2067,8 +1391,6 @@ func _advance_click_path() -> void:
 	var moved := Game.sim.move_player(dir)
 	_click_path.remove_at(0)
 	if not moved:
-		# A step became blocked (something moved into the way since the path
-		# was planned) -- cancel, no recompute (v1).
 		_click_path.clear()
 		return
 	if _click_path.is_empty():
@@ -2076,25 +1398,9 @@ func _advance_click_path() -> void:
 	if _movement_gated():
 		_click_path.clear()
 		return
-	# Real presentation (windowed): `_move_player_visual`'s tween just
-	# connected its `finished` signal to `_on_move_tween_finished`, which
-	# checks `_click_path` FIRST (see that function) and continues from
-	# there -- piggybacking the existing held-key re-issue seam, per the
-	# plan. Headless/QA (`_presentation_delay` collapses to 0): that connect
-	# never happens at all (see `_move_player_visual`'s own doc comment), so
-	# continue via ONE REAL ENGINE FRAME instead of a `.finished` signal that
-	# will never fire. TRAP found empirically: a plain `call_deferred` here
-	# chains through Godot's deferred-call queue near-instantly (a whole
-	# multi-step path can drain across a single `await get_tree().
-	# process_frame` in the QA driver, since a deferred call made WHILE
-	# flushing the deferred queue can be re-flushed in the same pass) --
-	# indistinguishable from a teleport to any script that doesn't poll
-	# faster than the drain, and leaving no real window for a keyboard press
-	# to land mid-path. `await get_tree().process_frame` is a genuine engine
-	# frame boundary instead (input for frame N+1 dispatches BEFORE this
-	# resumes for frame N+1), so a keyboard press injected between steps
-	# reliably cancels before the NEXT step, not after the whole path drains.
+	# Windowed continuation comes from the movement tween's finished signal.
+	# With collapsed presentation delay no tween/signal exists, so await one
+	# real process frame; call_deferred can drain the whole path in one frame.
 	if _presentation_delay(MOVE_TWEEN_SECONDS) <= 0.0:
 		await get_tree().process_frame
 		_advance_click_path()
-

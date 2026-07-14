@@ -11,7 +11,6 @@
    2,
    2
   ],
-  "_comment_skirt": "grey-stone fill from Interior_Walls_01 [7,21] so the warm inn floor pops as a lit room against dark surround (controller screenshot-verified).",
   "skirt_sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
   "skirt_tile_px": 16,
   "skirt": [
@@ -32,7 +31,7 @@
    14,
    4
   ],
-  "_comment_skirt": "Dirt shoulder outside the cobble street, per design doc sec.3 ('dirt transition edges'). Whole-image single-tile pick from topdown_floor_tiles_12 (extracted this task) -- zero coordinate-guessing risk, but the tile's exact look is UNVERIFIED (never screenshotted).",
+  "_comment_skirt": "The skirt is the dirt shoulder outside the cobble street.",
   "skirt_sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
   "skirt_tile_px": 540,
   "skirt": [
@@ -52,7 +51,7 @@
    2,
    3
   ],
-  "_comment_skirt": "Reuses the already-verified 'blocked' rock/wall tile as the skirt fill so the cave_mouth arena reads as a rock band bordering the playable floor, per design doc sec.4.",
+  "_comment_skirt": "The skirt reuses the blocked rock tile as a border around the playable cave floor.",
   "skirt_sheet": "res://assets/tiles/cave/Tiles.png",
   "skirt_tile_px": 16,
   "skirt": [
@@ -82,7 +81,7 @@
   ]
  },
  "garden": {
-  "_comment": "(art handoff docs/archive/design/garden-art/handoff.md, staged biome fragment verbatim) Floor is the licensed Garden Pixel Crawler pack (assets_manifest.json already tracks assets/tiles/garden/Tiles.png as of 8a A1 -- FORBIDDEN/bundle:true/fallback:placeholder, so a public checkout renders the flat placeholder color and still boots/passes QA per the fallback-art contract). `blocked` reuses the SAME sheet's trimmed-hedge top-face tile (no blocked_sheet override) -- the Garden ships NO wall family; the hedge hem IS the enclosure (sanctuary = absence of architecture). `skirt` is the ONE owned PixelLab asset this biome needs: the impossible bright sky-mist beyond the hedge (assets/tiles/garden/sky_mist.png, committed this task, SHIP-OK/redistributable per assets/LICENSES/pixellab-ai-generated-verdict.md).",
+  "_comment": "`blocked` reuses the SAME sheet's trimmed-hedge top-face tile (no blocked_sheet override) -- the Garden ships NO wall family; the hedge hem IS the enclosure (sanctuary = absence of architecture).",
   "sheet": "res://assets/tiles/garden/Tiles.png",
   "tile_px": 16,
   "floor": [
@@ -101,7 +100,7 @@
   ]
  },
  "riverfarm_village": {
-  "_comment": "8b R1 (issue #10). Floodplains family ON PURPOSE (open-countryside continuity, per art handoff) -- the village identity comes from PROPS (thatch structures, wheat-field wang tiles, crop rows, river band), not a new floor. blocked_sheet reuses the SAME free_pack Wall_Tiles [14,4] pick already verified for street/floodplains (no new licensing).",
+  "_comment": "blocked_sheet reuses the SAME free_pack Wall_Tiles [14,4] pick already verified for street/floodplains (no new licensing).",
   "sheet": "res://assets/tiles/floor_tiles_12/grass_01.png",
   "tile_px": 540,
   "floor": [
@@ -122,7 +121,7 @@
   ]
  },
  "witch_hollow": {
-  "_comment": "8b R1 (issue #10). Floor = flat underwood green Fairy Forest Tiles.png [2,2] rgb(12,82,44). `blocked` picks the SAME sheet's textured-grass variant [9,9] as an understory fallback fill -- the REAL enclosure is hollow_canopy_tree PROPS ringed on those blocked cells (map's own decor list), not a wall tile family (a forest pocket, not a room; handoff's staged fragment note). Skirt reuses the floor tile (open woodland continues past every edge, floodplains precedent).",
+  "_comment": "Floor = flat underwood green Fairy Forest Tiles.png [2,2] rgb(12,82,44).",
   "sheet": "res://assets/tiles/fairy_forest/Tiles.png",
   "tile_px": 16,
   "floor": [
@@ -142,7 +141,6 @@
   ]
  },
  "invrisil_street": {
-  "_comment": "Invrisil 8c Task C1 (issue #12). OWNED PixelLab wang tileset (docs/archive/design/invrisil-art/direction.md + handoff.md's staged fragment, committed this task at assets/tiles/invrisil/tileset_marble_wang4x4.png -- MOCKUP-PROVEN pure tiles, see assets/LICENSES/pixellab-ai-generated-verdict.md). floor = wang id0 (cool grey-violet paving) at [0,0] -- CONTROLLER FIX 2026-07-08: the handoff doc's id->position table was WRONG (since corrected on main); the sheet is row-major by wang id, so pure paving (id0) = [0,0] and pure marble (id15) = [3,3]; the previously-quoted [2,1] is a diagonal TRANSITION tile that tiled as checkerboard noise in the windowed read; blocked reuses the ALREADY-PRESENT Free Pack Wall_Tiles.png cool blue-grey stone pick (picks.md sec.2, [8,2], MOCKUP-PROVEN) -- no NEW manifest entry needed for this lane (avoids the licensed-pick STOP; the two speculative NEW packs the art lane flagged, hideout/Tiles.png and sewer/Props.png, are NOT used here). Shared by both the boulevard and the alleys (direction.md: 'Alleys reuse the paving tile with the night mood card doing the darkening -- same stone, meaner hour') -- the mood-card values (moods.json) carry the distinct read, not a second biome.",
   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
   "tile_px": 16,
   "floor": [
@@ -163,7 +161,7 @@
   ]
  },
  "brothers_parlor": {
-  "_comment": "Invrisil 8c C1 FIX ITERATION 3 (controller windowed read: Wilovan still a silhouette on a near-black floor). The biggest lever per the controller's own ordering: the FLOOR pick. The scan-derived library Tiles.png (23,4) 'warm wood' candidate read near-black in-engine (picks.md's own windowed-check-required caveat proved right) -- replaced with the inn biome's OWN floor, Interior_Walls_01 [1,21] warm plank: already screenshot-verified as a warm LIT room read in the game's most-photographed map, zero new pick risk. Skirt likewise reuses the inn's verified [7,21] grey-stone surround ('the warm floor pops as a lit room against dark surround' -- the inn's own _comment_skirt rationale, which is exactly the hideout-interior read wanted here). Blocked keeps the warm Wall_Tiles [2,2] stone from iteration 1. TRACED, not assumed: atmosphere.gd's light_multiplier is GLOBAL-phase (meta.light_energy_by_phase day=0.0), so the card-table hero light contributes ZERO at day phase -- the canonical's parlor shot is day, which is why the light lever couldn't fix the 04 murk and the floor/tint/vignette levers had to.",
+  "_comment": "Skirt likewise reuses the inn's verified [7,21] grey-stone surround ('the warm floor pops as a lit room against dark surround' -- the inn's own _comment_skirt rationale, which is exactly the hideout-interior read wanted here).",
   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
   "tile_px": 16,
   "floor": [
@@ -184,7 +182,7 @@
   ]
  },
  "invrisil_alley": {
-  "_comment": "Invrisil 8c C1 FIX WAVE (controller windowed read: 'corridors float on flat void background'). The alleys previously shared invrisil_street verbatim -- correct for the FLOOR (direction.md: 'same stone, meaner hour') but the shared cool-slab blocked pick + paving skirt gave no wall mass, so the corridors read as floating. This biome keeps the SAME wang paving floor [0,0] and swaps blocked+skirt to picks.md sec.2's darker textured masonry variant (Wall_Tiles [8,17], #3c484a family, flagged there specifically as the 'darker alley-wall band' candidate) -- blocked cells now read as close brick walls and the beyond-grid skirt reads as MORE wall (enclosure), not void. Direction doc open-question 4's own fallback governs the rest of the card: crates + lantern pools (sconce decor lights, mercantile_alleys' own decor list) carry the 'lantern maze' read, no fence pick needed.",
+  "_comment": "Direction doc open-question 4's own fallback governs the rest of the card: crates + lantern pools (sconce decor lights, mercantile_alleys' own decor list) carry the 'lantern maze' read, no fence pick needed.",
   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
   "tile_px": 16,
   "floor": [
@@ -205,7 +203,7 @@
   ]
  },
  "dungeon": {
-  "_comment": "8d Phase B (dungeon_approach/trapped_halls). FAMILY PICK per the 8d A1 verdict: Pixel Crawler CEMETERY 0.4 (bleak grey-green worked stone -- ancient, not city-sewer/regal-castle/living-cave) supplies floor+walls; CASTLE 0.3 statue/bust + CAVE rubble dress on top via sprites.json entities (dungeon_statue/dungeon_rubble), not this biome. PIL numeric grid-scan picks (16px cells, no PNG ever browsed into context, per wi-art-and-sprites): floor variants (2,2)/(3,7) fully-opaque flat olive rgb~(60-63,57-60,24-25) std~17, (2,11) a genuinely darker worn variant rgb~(51,48,20) std~14 for real floor-wear texture (Floor.png content only occupies cols1-5/rows0-11 -- confirmed by full-grid scan, matches the prior 8a PIL pass). Wall/blocked+skirt fill: Walls.png cell (8,2), flat warm-grey stone rgb~(81,79,70) std4.8. Both sheets already assets_manifest.json-registered (FORBIDDEN/bundle:true/fallback:placeholder, orphaned from an earlier 8a ruin-candidate pass that ended up using the `cave` biome instead -- reused here for their first real consumer) so no new manifest rows needed.",
+  "_comment": "Wall/blocked+skirt fill: Walls.png cell (8,2), flat warm-grey stone rgb~(81,79,70) std4.8.",
   "sheet": "res://assets/tiles/cemetery/Floor.png",
   "tile_px": 16,
   "floor": [
@@ -225,7 +223,7 @@
   ]
  },
  "pallass_market": {
-  "_comment": "8e Phase B (issue #16): base full-grid default (world.gd's _build_floor paints this across EVERY cell before floor_layers overlays run) -- floor=[3,3] the atlas's all-upper slab (id15), blocked=[0,0] the all-lower void (id0). Both floor_layers overlays (the parapet-rim edge tile + the Castle-checker lift accent) and the wall-band segment (also using [0,0]) paint OVER this base, per skeleton_scene.json's own map _comment.",
+  "_comment": "Both floor_layers overlays (the parapet-rim edge tile + the Castle-checker lift accent) and the wall-band segment (also using [0,0]) paint OVER this base, per skeleton_scene.json's own map _comment.",
   "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
   "tile_px": 16,
   "floor": [
@@ -244,7 +242,7 @@
   ]
  },
  "pallass_forge": {
-  "_comment": "8e Phase B (issue #16): floor=[3,3] the brick_over_molten atlas's dark charcoal-navy brick (id15). BLOCKED + SKIRT come from the slate_over_void atlas's dark void cell [0,0] instead of this map's own atlas (controller windowed ruling: brick_over_molten's LOWER terrain is MOLTEN -- using it as the blocked/skirt default painted the void row, the lift bulk and the whole out-of-grid margin orange, ~40% of the frame, an amber-adjacent quarantine drift; the tier bands are the machine's dark slate mass on EVERY tier). Molten renders ONLY at the mid-floor seam via the map's own cover_skip + floor_layers pair (see skeleton_scene.json pallass_forge).",
+  "_comment": "Molten renders ONLY at the mid-floor seam via the map's own cover_skip + floor_layers pair (see skeleton_scene.json pallass_forge).",
   "sheet": "res://assets/tiles/pallass/tileset_brick_over_molten_atlas.png",
   "tile_px": 16,
   "floor": [

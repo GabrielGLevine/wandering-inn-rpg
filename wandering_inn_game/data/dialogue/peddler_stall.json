@@ -1,5 +1,4 @@
 {
-	"_comment": "The second new market stall's mini-buy surface. Rides krshia_crate.json's EXACT shop-option contract (requires:{gold:price} paired with effects:[{gold:-price},{item:id}], price named in the option's own text -- WIDialogue strips the generated 'Worth N gold' effect_line from a shop option by matching that literal prefix, so the price only ever appears once, authored here). Sells watch_issue_gambeson (20g -- previously fixture/harness-only, no live acquisition path) plus GH#70's training_bow (8g, index-2 append -- see that option's own comment for why it can't move earlier). The Peddler is a title, not a proper name (matches the existing gate_guard/watch_guard precedent for unnamed Watch-adjacent flavor NPCs) -- profile in docs/design/character-profiles-staging.md.",
 	"start": "hub",
 	"nodes": {
 		"hub": {
@@ -8,8 +7,8 @@
 			"options": [
 				{ "text": "That gambeson. Watch-issue? (20 gold)", "requires": { "gold": 20 }, "effects": [ { "gold": -20 }, { "item": "watch_issue_gambeson" } ], "goto": "bought" },
 				{ "text": "Just looking.", "end": true },
-				{ "_comment": "GH#70 [Archer]: the T1 bow's live purchase path. APPENDED at array end (index 2) so barracks_walkthrough.json's pinned 'confirm immediately -> index 0 gambeson' and its 'move down 1 -> index 1 in the bought node' both stay untouched -- inserting earlier would shift both.", "text": "That bow strung up back there. Practice grade. (8 gold)", "requires": { "gold": 8 }, "effects": [ { "gold": -8 }, { "item": "training_bow" } ], "goto": "bought" },
-				{ "_comment": "8d C1 (issue #14): the Watch started pointing adventurers here once the gallery reopened -- trap_kit is the trapped_halls SKILL route's real coin cost (dart_slit_a's disarm consumes it). APPENDED at array end (index 3) for the same index-safety reason as training_bow above.", "text": "One of those trap kits the Watch keeps mentioning. (3 gold)", "requires": { "gold": 3 }, "effects": [ { "gold": -3 }, { "item": "trap_kit" } ], "goto": "bought" }
+				{ "text": "That bow strung up back there. Practice grade. (8 gold)", "requires": { "gold": 8 }, "effects": [ { "gold": -8 }, { "item": "training_bow" } ], "goto": "bought" },
+				{ "text": "One of those trap kits the Watch keeps mentioning. (3 gold)", "requires": { "gold": 3 }, "effects": [ { "gold": -3 }, { "item": "trap_kit" } ], "goto": "bought" }
 			]
 		},
 		"bought": {

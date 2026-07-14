@@ -1,5 +1,5 @@
 {
- "_comment": "8b R1 (issue #10). ~24x16 timber-and-thatch village (art direction: 'harvest light'). biome riverfarm_village = floodplains floor family on purpose (open-countryside continuity); village identity comes from PROPS + the wheat/loam floor_layers bands below, not a new floor tile. Reachable ONLY via the portal contract (data/portals.json's new 'riverfarm' row, requires_accomplishment riverfarm_attuned, banked by the Guild-board rumor beat) -- no door chain from the inn (per wi-adding-a-scene's reachability rule, an anchor-stone region is its own explicit exception, same as the ruin's door_when gate before it, just one layer further: portal-gated rather than door_when-gated). The witch_hollow path (riverfarm_hollow_path) is the map's own second exit, a treeline gap not a literal door.",
+ "_comment": "Reachable ONLY via the portal contract (data/portals.json's new 'riverfarm' row, requires_accomplishment riverfarm_attuned, banked by the Guild-board rumor beat)",
  "biome": "riverfarm_village",
  "grid": {
   "width": 24,
@@ -435,7 +435,7 @@
    11
   ]
  ],
- "_comment_cover_skip": "Playtest hotfix #7b/7a: every blocked cell on this map is footprint for a building/fence/earthwork or the river -- none of them is bare dirt. The generic blocked-cell overlay tile (Wall_Tiles[14,4], a brown dirt/plank crop) painted a brown patch under every one of them, fighting the grass under buildings and hiding the river's own blue water tile entirely (world.gd's _build_floor paints floor_layers THEN the blocked overlay on top, per cell, unless listed in cover_skip -- the #37 mechanism). cover_skip == blocked verbatim: every cell here is already fully dressed by a real sprite or a real floor_layers tile, so skipping the generic overlay lets that real art show through instead.",
+ "_comment_cover_skip": "cover_skip mirrors blocked here because every blocked cell has building, fence, earthwork, or river art; sim blocking is unchanged.",
  "cover_skip": [
   [
    7,
@@ -984,7 +984,7 @@
    ]
   },
   {
-   "_comment": "Issue #62 finding 20: the longhouse facade (the big riverfarm_longhouse sheet, 7x4 cells) reads as a blank wall of thatch -- no visible door despite `longhouse_door` (11,7) being a real, working transition. Overlays the existing `door` sprite (the same small door prop used for hallway_door_a/b, Furniture.png, ~1x1.4 cells at render_scale 0.5) directly on the facade's own south-face row, the entity's real interact cell -- decor never blocks movement (matches the TRAP comment on this map's own interior, riverfarm_longhouse), so it's purely a readability overlay; bbox check: neighbors at this row are the open approach cell (11,8, south) and floor either side, no collision.",
+   "_comment": "bbox check: neighbors at this row are the open approach cell (11,8, south) and floor either side, no collision.",
    "sprite": "door",
    "cell": [
     11,
@@ -994,7 +994,6 @@
  ],
  "entities": [
   {
-   "_comment": "The north-edge earthworks -- the emperor's rising works hinted as DRESSING ONLY (Laken himself out of v1 scope, spec sec.1/handoff canon flags). Non-interactive; blocks its own 7x2 footprint.",
    "id": "riverfarm_earthworks",
    "kind": "prop",
    "cell": [
@@ -1008,7 +1007,6 @@
    "toast": "Just raised earth. Whatever it's for, nobody's finished it yet."
   },
   {
-   "_comment": "The longhouse is a REAL door now, not a toast prop -- same entity, same footprint cell, sprite/tint/visual_states untouched (the BRIGHTEN entry below still fires on blight_lifted whether the entity is read as prop or door; visual refresh is kind-agnostic). CONSTRAINT: cell (11,7) is the footprint's own south-face row (the blocked rampart at rows 6-7 spans cols 8-14; the sprite's anchor puts its visible door at x-center ~11, y near the bottom of the frame) -- approached from the open cell one row further south (11,8), facing up. to_cell (5,5) lands one row inside `riverfarm_longhouse`'s own south gap, facing away from the exit, matching the guild_door/guild_exit offset convention.",
    "id": "longhouse_door",
    "kind": "door",
    "cell": [
@@ -1106,7 +1104,7 @@
    ]
   },
   {
-   "_comment": "The tall silhouette that reads 'farming village' from anywhere on the map (art direction card, landmark read 1). Anchor.y is the base masonry, not frame bottom -- sails overhang above the blocked footprint.",
+   "_comment": "sails overhang above the blocked footprint.",
    "id": "riverfarm_windmill_prop",
    "kind": "prop",
    "cell": [
@@ -1281,7 +1279,6 @@
    "observe": "Low fence rail, bordering the tilled rows."
   },
   {
-   "_comment": "The headman -- quest-giver. R3 (issue #11) wires the real conversation graph (riverfarm_headman.json): gives price_of_a_favor, closes it on any path's blight_lifted. Voice per profiles-staging: suspicious-then-warmer, farm metaphors, swallows apologies halfway. Issue #62 finding 15: facing flipped up->down -- every canonical approaches him from the SOUTH (village_edge/(11,10), 'Teleport doesn't carry facing -- re-face up' toward him in riverfarm_fight/riverfarm_talk/riverfarm_skill), so `up` had him showing his back to the player he's talking to; `down` faces the approach. #63 canon pass: display_name/speaker renamed The Headman -> Former Headman (wiki-verified: Riverfarm answers to Emperor Laken Godart's Unseen Empire now; the placing line lives in riverfarm_headman.json's authority_topic node).",
    "id": "riverfarm_headman",
    "kind": "npc",
    "cell": [
@@ -1307,7 +1304,6 @@
    ]
   },
   {
-   "_comment": "The charmed villager -- the quest's pivot. talk_pool carries the ONE echo_of entry (locked shape 3): WISocial resolves it to riverfarm_witch's CURRENT pool line verbatim at pick time. R3 (issue #11) retires the tell via talk_pool_stages (the existing pool-stage machinery, social.gd's last-met-wins walk): once blight_lifted lands, the freed-villager stage's OWN plain-string lines fully replace the echo_of entry -- no more echo, ever, any path.",
    "id": "riverfarm_charmed_villager",
    "kind": "npc",
    "cell": [
@@ -1345,7 +1341,7 @@
    ]
   },
   {
-   "_comment": "The village's fourth NPC (issue #10/#11 FIX-FIRST): a local [Hunter] (canon-attested profession, wiki.wanderinginn.com/Riverfarm) who carries the come-along beat -- data/dialogue/riverfarm_hunter.json's `hub`->`agreed` ask banks `hunter_will_come`, which is the ONLY thing that fields `riverfarm_hunter` as an ally on river_wolf_pack/briar_collectors/briar_collectors_deep (their ally_requires). Placed at (13,10), open ground between the well (11,11) and the headman (11,9) -- clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby.",
+   "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby.",
    "id": "riverfarm_hunter",
    "kind": "npc",
    "cell": [
@@ -1371,7 +1367,7 @@
    ]
   },
   {
-   "_comment": "Riverfarm's OWN end of the anchor-stone-per-region idiom (portals.json's new 'riverfarm' row). Playtest hotfix #6: sprite swapped `boulder` -> `anchor_waystone` (a bespoke waystone-archway silhouette, not a rock), same tint precedent as street_anchor_stone. Gated on door_awakened (the SAME base network every anchor shares) -- reaching this cell at all already implies riverfarm_attuned (the ONLY way here is via another anchor's menu, itself door_awakened-gated), so the `light` below is unconditional (no visual_states gate needed) -- a stronger, steady glow every time this cell is ever seen.",
+   "_comment": "Gated on door_awakened (the SAME base network every anchor shares)",
    "id": "riverfarm_anchor_stone",
    "kind": "prop",
    "cell": [
@@ -1422,7 +1418,7 @@
    "observe": "A narrow break in the treeline, west of the fields. The light changes past the first few trees."
   },
   {
-   "_comment": "LOCKED interface (8b plan): encounter id river_wolf_pack, arena village_edge_night, on_victory survived_wolf_night (lane beta/R2). encounter_when is the phase-conditional spawn gate (spec sec.5) -- checked at interact() and _check_trigger_radius(), same sites door_when-class gates already run. trigger_radius 1 gives the NIGHT ambush read R2's harness rationale calls for; at day the gate refuses BEFORE start_combat runs (canonical-pinned NEGATIVE, riverfarm_walkthrough). The ally is `riverfarm_hunter` (a local, NOT Relc -- Riverfarm is a solo Door arrival with no fictional basis for the Liscor Watch to be present; see riverfarm_hunter's combatants.json _comment): sim_combat_batch.gd's river_wolf_pack_w10_hunter cell (0.82 measured win rate -- read 0.84 under the old relc id; measured-only, no gate, so the small drift from the ally id's alphabetical initiative-order shift is harmless) is the harness's own with-ally tuning intent -- solo measures 0.22, unfit for a real player leg. `ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's come-along ask, at the village.",
+   "_comment": "`ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's come-along ask, at the village.",
    "id": "river_wolf_pack",
    "kind": "encounter",
    "cell": [
@@ -1448,7 +1444,7 @@
    "gate_closed_toast": "Nothing there. Whatever you saw is gone with the light.",
    "visual_states": [
     {
-     "_comment": "Marker visible ONLY while the night encounter_when gate can fire -- a wolf standing in daylight beside its own 'gone with the light' toast contradicts the copy (v0.4.0 playtest). hidden is render-only; the cell's interact/observe/gate behavior is untouched at every phase.",
+     "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
      "when": {
       "phase": [
        "day",
@@ -1466,7 +1462,7 @@
    }
   },
   {
-   "_comment": "Issue #91 (hour-4 spine): `riverfarm_thicket_patch` -- Riverfarm's FIRST respawns:true renewable-cull slot (survey finding: the region had ZERO before this -- river_wolf_pack is the only recurring encounter and it's a night-phase-gated ambush, not an interact-choice cull). The crab_nest informed-consent shape (data/dialogue/riverfarm_thicket_patch.json) -- interact-only, no trigger_radius, no encounter_when gate (always available, matching corusdeer_range/razorbeak_nest's own unconditional shape). Roster: `thicket_remnant_a/b` (combatants.json, a toned-down briar_collector stat clone -- 'Eloise's own hedge-craft gone feral, a stray offshoot that broke free of the hollow', distinct id per the rift_vermin_a precedent since the full-strength briar_collector pair reads too hard solo and a single copy reads trivial). Placed at (17,13), the village's open south-east ground -- clear of every blocked cell and every other entity (riverfarm_hunter 13,10; riverfarm_well 11,11; riverfarm_cottage_b 18,9; riverfarm_dock 20,6; river_wolf_pack 2,14); Chebyshev distance to riverfarm_cottage_b is 4, to river_wolf_pack is 15 -- clear of every teleport/move cell riverfarm_walkthrough/riverfarm_fight/riverfarm_talk/riverfarm_skill/longhouse_walkthrough/social_loop/trader_earn_loop actually touch (grep-verified against all seven scripts' own move sequences).",
+   "_comment": "interact-only, no trigger_radius, no encounter_when gate (always available, matching corusdeer_range/razorbeak_nest's own unconditional shape).",
    "id": "riverfarm_thicket_patch",
    "kind": "encounter",
    "cell": [

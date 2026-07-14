@@ -1,21 +1,4 @@
 extends SceneTree
-## Issue #77 coverage: WISettings' pure text-scale math + persistence,
-## WIAudio's UI-bus-routing fix (a real AudioServer.get_bus_send probe,
-## not by ear), the two hint-replay reset_hints() static functions, and a
-## raw-source check that board_renderer.gd's reduce-motion gate covers
-## every shake/flash juice call site.
-## Run: /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_settings.gd
-##
-## `wi_audio.gd` and `wi_settings.gd` reach autoloads only via
-## `get_node_or_null("/root/...")` (a STRING lookup, not a bare identifier),
-## so both compile and instantiate cleanly under bare --script mode with NO
-## source patching -- confirmed empirically, unlike message_layer.gd/
-## combat_screen.gd (bare `ObservableBus`/`Game`/`TestDriver`/`WIInputHints`
-## identifiers throughout), which need the same patched-source stub
-## tests/test_input_hints.gd/tests/test_combat_visuals.gd already established.
-## `.free()` every bare Node instance before quit() -- an unfree'd instance
-## leaks ObjectDB and prints a WARNING at exit, tripping the project's grep
-## discipline (confirmed empirically).
 
 const MESSAGE_LAYER_PATH := "res://src/ui/message_layer.gd"
 const COMBAT_SCREEN_PATH := "res://src/combat/combat_screen.gd"
@@ -34,14 +17,6 @@ func _init() -> void:
 	quit(0)
 
 
-## Pure math: `scaled_default_font_size`/`scaled_type_font_sizes` at step 0
-## (must be the EXACT base ints -- what test_copy_fit.gd's own font-size==14
-## settle depends on staying true whenever this feature's autoload ever
-## does run) and step 2 (130%, the largest step -- every scaled size must be
-## STRICTLY LARGER than base, and step 0 called AGAIN afterward must still
-## be the exact original ints, proving no rounding drift accumulates across
-## repeated scale-up/scale-down cycles -- both always derive from the BASE
-## consts, never the theme's current value).
 func _check_text_scale_math() -> void:
 	var settings_script := load("res://src/ui/wi_settings.gd")
 	var expected_base := {"Label": 14, "Header": 18, "Title": 36, "Menu": 18, "Small": 12, "Lore": 12}
@@ -62,10 +37,6 @@ func _check_text_scale_math() -> void:
 		assert(int(base_types_again[key]) == int(expected_base[key]), "text scale step 0 type '%s', re-derived after step 2, drifted from base" % key)
 
 
-## Drift tripwire (test_copy_fit.gd's own discipline): the mirrored BASE
-## consts in wi_settings.gd must still match wi_ui_theme.tres's real values,
-## or this test (and the whole text-scale feature) silently scales from the
-## WRONG starting point.
 func _check_text_scale_drift_tripwire() -> void:
 	var theme_src := FileAccess.get_file_as_string("res://assets/ui/chrome/wi_ui_theme.tres")
 	assert(theme_src != "", "could not read wi_ui_theme.tres")
@@ -87,10 +58,6 @@ func _assert_theme_const(src: String, key: String, expected: int) -> void:
 	assert(found == expected, "DRIFT: wi_ui_theme.tres's `%s` is %d but wi_settings.gd's BASE consts mirror %d -- update the mirrored const" % [key, found, expected])
 
 
-## Persistence round trip via `user://settings.cfg` (the real ConfigFile
-## path -- --script mode's user:// resolves the same as any other run on
-## this machine, so this explicitly resets back to defaults at the end,
-## leaving no stray non-default file for a later real boot to inherit).
 func _check_settings_persistence() -> void:
 	var script := load("res://src/ui/wi_settings.gd")
 	var a = script.new()
@@ -105,8 +72,6 @@ func _check_settings_persistence() -> void:
 	assert(int(a.call("combat_speed_step")) == 2, "set_combat_speed_step(2) must read back 2")
 	a.free()
 
-	# A FRESH instance loading from disk must see the SAME persisted values --
-	# proves the ConfigFile file round-trip, not just the in-memory setter.
 	var b = script.new()
 	b.call("_load_settings")
 	assert(bool(b.call("is_fullscreen")) == true, "a fresh instance must load the persisted fullscreen=true")
@@ -114,7 +79,6 @@ func _check_settings_persistence() -> void:
 	assert(bool(b.call("reduce_motion")) == true, "a fresh instance must load the persisted reduce_motion=true")
 	assert(int(b.call("combat_speed_step")) == 2, "a fresh instance must load the persisted combat_speed_step=2")
 
-	# Reset to defaults -- idempotent across repeated test runs.
 	b.call("set_fullscreen", false)
 	b.call("set_text_scale_step", 0)
 	b.call("set_reduce_motion", false)
@@ -122,12 +86,6 @@ func _check_settings_persistence() -> void:
 	b.free()
 
 
-## Issue #87: `beat_seconds_for_step` is what `combat_playback.gd`'s
-## `beat_delay()` scales `combat_screen.gd`'s `AI_BEAT_SECONDS` (0.5) by --
-## Normal must be byte-identical to the pre-issue-#87 pacing (no silent
-## regression for the default), Fast strictly faster, Instant exactly zero
-## (the SAME zero-delay QA/headless already collapses to, so picking it opens
-## no new code path).
 func _check_combat_speed_math() -> void:
 	var settings_script := load("res://src/ui/wi_settings.gd")
 	var base := 0.5
@@ -136,9 +94,6 @@ func _check_combat_speed_math() -> void:
 	assert(is_equal_approx(float(settings_script.call("beat_seconds_for_step", 2, base)), 0.0), "combat speed step 2 (Instant) must zero AI_BEAT_SECONDS")
 
 
-## THE bus-routing bug fix, proven directly: a real `_setup_buses()` call
-## against the real AudioServer, then `AudioServer.get_bus_send` (Server-side
-## graph metadata, real headless -- no audio device needed) -- not by ear.
 func _check_audio_bus_routing() -> void:
 	var script := load("res://src/audio/wi_audio.gd")
 	var inst = script.new()
@@ -162,24 +117,10 @@ func _check_hint_reset_functions() -> void:
 	_check_static_flag_reset(COMBAT_SCREEN_PATH, "extends CanvasLayer", "_first_combat_hint_shown")
 
 
-## Compiles an autoload-stubbed copy of `path` (same technique as
-## tests/test_input_hints.gd/tests/test_combat_visuals.gd) and proves
-## `reset_hints()` clears `flag_name` -- the mechanism settings_panel.gd's
-## "Replay Hints" action drives via WISettings.replay_hints(). Inserted after
-## the TRUE first line only (`raw.substr`/`find("\n")`, never a
-## `String.replace` on "extends CanvasLayer") -- both files' own header
-## comments mention "extends CanvasLayer" too (message_layer.gd's FULL LAYER
-## MAP doc comment), and a naive whole-file replace would inject a SECOND
-## stub declaration there, colliding with the first ("Variable ... has the
-## same name as a previously declared variable") -- confirmed empirically.
 func _check_static_flag_reset(path: String, extends_line: String, flag_name: String) -> void:
 	var raw := FileAccess.get_file_as_string(path)
 	assert(raw.begins_with(extends_line), "%s: expected first line '%s'" % [path, extends_line])
 	var first_nl := raw.find("\n")
-	# WISettings joins the stub list (issue #87: combat_screen.gd's
-	# _current_beat_seconds() references it as a bare identifier) -- harmless
-	# unused var on message_layer.gd's own patched copy, which never
-	# references it.
 	var stub := "\n\nvar Game: Variant = null\nvar ObservableBus: Variant = null\nvar TestDriver: Variant = null\nvar WIInputHints: Variant = null\nvar WISettings: Variant = null"
 	var patched := raw.substr(0, first_nl) + stub + raw.substr(first_nl)
 	var script := GDScript.new()
@@ -192,14 +133,6 @@ func _check_static_flag_reset(path: String, extends_line: String, flag_name: Str
 	assert(bool(script.get(flag_name)) == false, "%s: reset_hints() must clear %s" % [path, flag_name])
 
 
-## board_renderer.gd references ObservableBus/Game/TestDriver directly (same
-## as combat_screen.gd), so it's raw-source-checked -- tests/test_combat_
-## visuals.gd's own established idiom for this exact file, not load()+
-## instantiate. Proves the ONE shared `_reduce_motion()` gate exists and
-## that every juice call site (shake_board/impact_flash/flash_chip/
-## flash_cells) routes through it -- shake_board/impact_flash via the
-## existing `_juice_enabled()` gate, flash_chip/flash_cells via a direct
-## early-return (they carried no gate at all before this issue).
 func _check_reduce_motion_gate_sites() -> void:
 	var src := FileAccess.get_file_as_string("res://src/combat/board_renderer.gd")
 	assert(src.find("func _reduce_motion() -> bool:") != -1, "board_renderer.gd must define the ONE shared _reduce_motion() gate")
