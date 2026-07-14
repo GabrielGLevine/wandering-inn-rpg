@@ -19,11 +19,89 @@ def run_status(env_extra, args=()):
                           capture_output=True, text=True, env=env)
 
 
+def write_fake_codex(bin_dir, response):
+    path = os.path.join(bin_dir, "codex")
+    with open(path, "w") as fh:
+        fh.write("""#!/usr/bin/python3
+import json
+import sys
+
+response = json.loads(%r)
+for line in sys.stdin:
+    message = json.loads(line)
+    if message.get("method") == "initialize":
+        print(json.dumps({"id": message["id"], "result": {
+            "codexHome": "/tmp/.codex", "platformFamily": "unix",
+            "platformOs": "test", "userAgent": "fake-codex"}}), flush=True)
+    elif message.get("method") == "account/rateLimits/read":
+        print(json.dumps({"id": message["id"], "result": response}), flush=True)
+        break
+""" % json.dumps(response))
+    os.chmod(path, 0o755)
+    return path
+
+
 class TestStatusCLI(unittest.TestCase):
-    def test_codex_never_reads_claude_usage(self):
+    def test_codex_reads_its_own_rate_limits_not_claude_usage(self):
+        with tempfile.TemporaryDirectory() as td:
+            bin_dir = os.path.join(td, "bin")
+            os.makedirs(bin_dir)
+            write_fake_codex(bin_dir, {"rateLimits": {
+                "limitId": "codex", "planType": "plus",
+                "primary": {"usedPercent": 72, "windowDurationMins": 300,
+                            "resetsAt": int(time.time()) + 3600},
+                "secondary": {"usedPercent": 10, "windowDurationMins": 10080,
+                              "resetsAt": int(time.time()) + 86400}}})
+            r = run_status({"CODEX_CI": "1", "USAGE_GUARD_FAKE": "session=99 week=99",
+                            "PATH": bin_dir + ":/usr/bin:/bin", "HOME": td})
+        self.assertEqual(r.returncode, 10)
+        self.assertTrue(r.stdout.startswith("CAUTION provider=codex"), r.stdout)
+        self.assertIn("session=72%", r.stdout)
+        self.assertIn("week=10%", r.stdout)
+
+    def test_codex_classifies_a_lone_seven_day_primary_as_weekly(self):
+        with tempfile.TemporaryDirectory() as td:
+            bin_dir = os.path.join(td, "bin")
+            os.makedirs(bin_dir)
+            write_fake_codex(bin_dir, {"rateLimits": {
+                "limitId": "codex", "planType": "plus",
+                "primary": {"usedPercent": 72, "windowDurationMins": 10080,
+                            "resetsAt": int(time.time()) + 86400},
+                "secondary": None}})
+            r = run_status({"CODEX_CI": "1", "PATH": bin_dir + ":/usr/bin:/bin",
+                            "HOME": td}, args=("--fresh",))
+        self.assertEqual(r.returncode, 10)
+        self.assertIn("session=N/A", r.stdout)
+        self.assertIn("week=72%", r.stdout)
+
+    def test_codex_fails_soft_when_cli_unavailable(self):
         r = run_status({"CODEX_CI": "1", "USAGE_GUARD_FAKE": "session=99 week=99"})
         self.assertEqual(r.returncode, 0)
         self.assertTrue(r.stdout.startswith("N/A provider=codex"), r.stdout)
+
+    def test_codex_fails_soft_on_malformed_fresh_cache(self):
+        with tempfile.TemporaryDirectory() as td:
+            cache = os.path.join(td, "cache.json")
+            with open(cache, "w") as fh:
+                json.dump({"ts": time.time(), "rateLimits": {
+                    "primary": {"usedPercent": "bad"}}}, fh)
+            r = run_status({"CODEX_CI": "1", "CODEX_USAGE_GUARD_CACHE": cache,
+                            "HOME": td})
+        self.assertEqual(r.returncode, 0)
+        self.assertTrue(r.stdout.startswith("N/A provider=codex"), r.stdout)
+
+    def test_codex_expired_stale_window_no_longer_drives_tier(self):
+        with tempfile.TemporaryDirectory() as td:
+            cache = os.path.join(td, "cache.json")
+            with open(cache, "w") as fh:
+                json.dump({"ts": time.time() - 600, "rateLimits": {
+                    "primary": {"usedPercent": 99, "windowDurationMins": 300,
+                                "resetsAt": int(time.time()) - 1}}}, fh)
+            r = run_status({"CODEX_CI": "1", "CODEX_USAGE_GUARD_CACHE": cache,
+                            "HOME": td})
+        self.assertEqual(r.returncode, 0)
+        self.assertTrue(r.stdout.startswith("OK provider=codex"), r.stdout)
+        self.assertIn("session=0%", r.stdout)
 
     def test_fake_winddown_exit_20(self):
         r = run_status({"USAGE_GUARD_FAKE": "session=90 week=10"})

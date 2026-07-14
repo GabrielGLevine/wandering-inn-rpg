@@ -5,17 +5,20 @@ description: Use before dispatching any lane/workflow/agent wave, at session sta
 
 # Usage Guard — provider-scoped graceful wind-down
 
-**Claude sessions:** check `scripts/usage_status.sh` (`--fresh` forces a re-query; plain
-call reuses a ≤5-min-old sample). One line out:
-`TIER session=..% reset~..m week=..% fable=..% rate=..%/hr eta=exh~..m | hint`
-For Codex, the command prints `N/A provider=codex` and exits 0; Claude
-telemetry must never constrain Codex. Exit codes for Claude: 0 OK/UNKNOWN, 10 CAUTION, 20 WINDDOWN, 30 QUIESCE.
+**Every provider:** check `scripts/usage_status.sh` (`--fresh` forces a
+provider-local query; plain call reuses a ≤5-min-old provider cache). Output is
+provider-labeled: Claude includes session/week/model usage; Codex includes the
+available app-server windows (for example `session=N/A week=17%`).
+Claude queries `claude -p /usage`; Codex queries the local app-server's
+`account/rateLimits/read` method. Either fails soft to UNKNOWN/N/A and never
+uses the other provider's telemetry. Exit codes: 0 OK/UNKNOWN/N/A, 10 CAUTION,
+20 WINDDOWN, 30 QUIESCE.
 A PostToolUse hook injects a `USAGE-GUARD escalated/de-escalated to ...`
 notice whenever the tier CHANGES mid-flight — treat that notice as this
 skill firing and act on the new tier immediately.
 
 ## When to check explicitly (mandatory)
-- Claude session start (wi-start-here read order); Codex records N/A.
+- Session start (wi-start-here read order).
 - BEFORE dispatching any lane, workflow, or agent wave.
 - At merge points and milestone boundaries.
 

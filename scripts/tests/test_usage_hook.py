@@ -3,6 +3,7 @@ import json
 import os
 import subprocess
 import tempfile
+import time
 import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -19,6 +20,23 @@ def run_hook(home, env_extra, stdin_json=None):
 
 
 class TestHook(unittest.TestCase):
+    def test_codex_notifies_once_from_provider_cache(self):
+        with tempfile.TemporaryDirectory() as home:
+            cache = os.path.join(home, "codex-cache.json")
+            with open(cache, "w") as fh:
+                json.dump({"ts": time.time(), "rateLimits": {
+                    "primary": {"usedPercent": 90, "resetsAt": int(time.time()) + 3600},
+                    "secondary": {"usedPercent": 10}}}, fh)
+            env = {"CODEX_CI": "1", "CODEX_USAGE_GUARD_CACHE": cache}
+            first = run_hook(home, env)
+            self.assertEqual(first.returncode, 0)
+            self.assertNotEqual(first.stdout.strip(), "", "Codex tier change was not surfaced")
+            out = json.loads(first.stdout)
+            self.assertIn("WINDDOWN", out["systemMessage"])
+            self.assertIn("provider=codex", out["systemMessage"])
+            second = run_hook(home, env)
+            self.assertEqual(second.stdout.strip(), "")
+
     def test_notifies_once_on_escalation(self):
         with tempfile.TemporaryDirectory() as home:
             env = {"USAGE_GUARD_FAKE": "session=90 week=10"}

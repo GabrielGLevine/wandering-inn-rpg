@@ -65,10 +65,11 @@ parked pieces.
    world.gd/main.gd, now uncontested).
 3. **#76 remainder** — footstep floor-families + ambience ducking
    (_tween_music_bus_to parameterized over both buses).
-4. **#110 agent portability — COMPLETE locally:** `.agents/skills/` is
-   canonical; Claude adapters/mirror, CI drift check, provider-scoped usage,
-   neutral roles/handoffs, and truthful AI disclosure are verified. Closing
-   commit is the clean provider-switch boundary. No gameplay surfaces touched.
+4. **#110 agent portability — FOLLOW-UP COMPLETE:** Codex provider usage reads
+   app-server rate limits (never `codex exec /usage`), classifies windows by
+   duration, caches/fails soft, and emits tier transitions through a tracked,
+   trusted, Git-root-safe hook. Concurrency/deadline/malformed/expired-window
+   regressions are pinned; independent review approved. No gameplay touched.
 5. #102/#103 context economy; #19 Steam secrets (USER).
 
 ## 👀 TASTE QUEUE (new this wave, user review)

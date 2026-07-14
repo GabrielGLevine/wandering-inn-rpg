@@ -65,9 +65,9 @@ The session has a fixed usage budget. Default the top model to orchestration
 burning fast → throttle top-model work, delegate more; budget to spare near
 session end → upshift to higher-tier models and spend it. Same-file work is
 still single-implementer: never run two agents on one file concurrently.
-**Provider-scoped capacity:** Claude controllers run `scripts/usage_status.sh`
-before dispatch and at merge points. Codex receives `N/A` and follows its own
-verified provider capacity. Never transfer one provider's quota tier to another.
+**Provider-scoped capacity:** controllers run `scripts/usage_status.sh` before
+dispatch and at merge points. It queries the active provider only (Claude CLI
+or Codex app-server). Never transfer one provider's quota tier to another.
 All providers still avoid new work when their own capacity is constrained and
 keep the shared no-overlapping-writers and integration discipline.
 **Controller shell discipline: never `cd` into a lane worktree.** Build

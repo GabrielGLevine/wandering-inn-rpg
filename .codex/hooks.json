@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/usage_hook.sh\"",
+            "timeout": 3,
+            "statusMessage": "Checking provider usage capacity"
+          }
+        ]
+      }
+    ]
+  }
+}

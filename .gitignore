@@ -11,8 +11,9 @@
 qa_output/
 *.translation
 
-# Local Codex session state
-.codex/
+# Local Codex session state; project hook definition is portable/tracked.
+.codex/*
+!.codex/hooks.json
 potential_assets/
 
 # Python bytecode cache
@@ -378,7 +379,6 @@ docs/*_api_key.txt
 
 # Session-local scratch (unified-repo transition 2026-07-07)
 .superpowers/
-.codex/
 
 # Generated session docs (never commit; see docs/README.md)
 /MORNING_SUMMARY*.md

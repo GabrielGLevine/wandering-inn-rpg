@@ -23,8 +23,8 @@ name) is a frozen read-only archive.
    — each issue body is a dispatch-grade brief (goal/sources/scope/danger
    list/verification/exit). `docs/ROADMAP.md` is a pointer + history. `docs/HANDOVER-FABLE-TO-OPUS.md` §1/§8
    — operating model + hard-won lessons.
-5. Provider capacity check: Claude sessions run `scripts/usage_status.sh`;
-   Codex sessions receive `N/A` and use their provider-native capacity signal.
+5. Run `scripts/usage_status.sh`; it queries and caches the active provider's
+   own capacity (Claude CLI or Codex app-server), failing soft when unavailable.
    All providers keep the shared lane and integration discipline.
 
 ## Project identity (non-negotiable)
