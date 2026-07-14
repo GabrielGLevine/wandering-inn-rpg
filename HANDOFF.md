@@ -1,5 +1,14 @@
 # Wandering Inn RPG Handoff
 
+## Active work — #113 VISUAL-LOG drain
+
+- **Issue / branch / base:** #113 on `main`, base `2a1e3b5`.
+- **Owned surfaces:** `docs/VISUAL-LOG.md`, bounded sprite/icon assets and catalog consumers, affected region map JSON, focused world/combat presentation seams, affected QA/tests, and this handoff section.
+- **State:** Wave 0 evidence audit complete; all 20 open entries have explicit reproduce/mixed/promote dispositions. Godot 4.7 and the complete 175-path private overlay are present.
+- **Dirty/conflict state:** clean at start; no other writer or conflicting user edits detected.
+- **Verification so far:** approved design `eb15f30`; implementation plans `2a1e3b5`; 16 real windowed canonical/probe runs PASS with retained screenshots/events/results; every cited frame personally read; temporary capture hooks removed cleanly.
+- **Operator need / next action:** commit the audit, then execute Wave 1's test-first PixelLab generation and bounded sprite/catalog integration.
+
 ## Current release
 
 **v0.7.0 shipped 2026-07-13:** #92 and #109 closed; the composed 112-script

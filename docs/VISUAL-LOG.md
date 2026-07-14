@@ -16,6 +16,37 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### GH#113 evidence audit (2026-07-14)
+
+All 20 open entries were rerun in real Godot 4.7 windowed sessions against
+the complete 175/175 private-asset overlay. Every canonical/probe passed; the
+judgments below are visual reads, not test inference. Durable screenshots,
+events, and result files live in the gitignored
+`wandering_inn_game/qa_output/visual_log_2026-07-14/before/` ledger.
+
+| Open entry | Audit disposition |
+|---|---|
+| Skill icons | Reproduced by data audit: 12 player-visible and 3 enemy-only hotbar skills are iconless. Generate/integrate in this drain. |
+| Rock Crab | Reproduced: it disappears on the field and becomes an oversized warm blurred shape in combat. Replace in this drain. |
+| Dungeon trap tells | Reproduced: dart slit reads as a circular grate; illusory floor as a red debris stain. Replace in this drain. |
+| Witch/cottage overlap | Reproduced: Eloise overlaps the facade and blocks its sole clear south approach. Restage in this drain. |
+| Relc descent cameo | Reproduced: dialogue comes from off-field. Add the conditional cameo in this drain. |
+| Picker | Reproduced as human paging friction: choices appear only on the final page. Promote; nine canonical consumers make it larger than this drain. |
+| Upstairs zoning | Reproduced: hallway/rooms have no readable threshold or ownership cue. Restage in this drain. |
+| Sewer arena silhouettes | Reproduced: purple decor competes with and outweighs the tiny live enemies. Tune in this drain. |
+| Delivery board | Reproduced: an outdoor signpost and grass base sit on an indoor floor. Replace in this drain. |
+| Small-prop occlusion | Reproduced at the bread stall and Lyonette's door. Add a per-entity render override and fix both in this drain. |
+| Guild notice wall | Reproduced as a bookcase; the surrounding cluster is otherwise acceptable. Replace in this drain. |
+| Sparse arenas | Mixed: deep warren/training/cellar pass; ruin court and the crab arena remain sparse. Dress only those two in this drain. |
+| Field readout | Readable today, but the requested collapse/hold interaction state is absent. Promote as UI interaction work. |
+| Deep-tunnel props | Reproduced: fissure/hearth/gnaw/warren stand-ins do not communicate their authored meanings. Replace in this drain. |
+| Sewer nest ledge | Reproduced: it reads as another isolated boulder. Replace in this drain. |
+| Shield Spider | Reproduced: field and combat both show tiny bat specks. Replace in this drain. |
+| Field blocked cells | Reproduced in code and frames: fields render flat blocked tiles while combat deterministically chooses biome props. Promote as a repo-wide rendering migration. |
+| Garden diagonal QA | Reproduced as a coverage gap only; the garden itself reads clean. Add one internal diagonal leg in this drain. |
+| Slow-expiry copy | Reproduced exactly: “shakes it off” appears while the combatant still stands on active ice. Fix copy in this drain. |
+| Ruin route | Reproduced: the canonical route shows generic cave floor and misses the ruin architecture. Restage in this drain. |
+
 - [ ] SKILL ICONS — class-foundation pass (#93/#95/#96, R1, 2026-07-12) added
   11 new player-facing skills (`directed_strike`/[Chosen Blow],
   `flanking_step`, `read_the_field`, `measured_words`, `soothing_presence`,
