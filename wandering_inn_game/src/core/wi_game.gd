@@ -247,6 +247,20 @@ var light_active := false
 ## folds this flag into `hp_mod` (+2) at the NEXT combat build, the same
 ## build-injection seam armor's hp_mod already rides.
 var well_fed := false
+## Issue #92 R1: a cooked meal's `next_fight` buff dict (e.g.
+## `{"damage_mod": 1}`), banked by `use_item` (the field entry point --
+## meals are field-only, see WIItems.resolve_use's own doc comment) and
+## folded into `_build_player_combatant`'s build at the VERY NEXT
+## `start_combat` -- the SAME equipment-mods merge point `well_fed`'s own
+## +2 hp_mod rides, generalized from one hardcoded key/bonus to any of
+## damage_mod/hp_mod/damage_reduction. UNLIKE `well_fed` (which persists
+## until `sleep()`), this is ONE-SHOT: `_build_player_combatant` clears it
+## back to {} the instant it reads it, so exactly one fight ever sees a
+## given meal's bonus, matching "consumed at next start_combat" literally.
+## Additive-optional save field (default {}, see save.gd), NO version bump
+## -- combat state itself is never save-serialized, so a pending meal banked
+## mid-waking survives a save/load exactly like `well_fed` does.
+var pending_meal: Dictionary = {}
 ## The set of freezable water cells
 ## the PC has frost-cast into walkable ice this waking, keyed by map id ->
 ## Dictionary of Vector2i -> true. A freezable cell (declared per-map in
@@ -2691,15 +2705,22 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
 		accessories.append(item(String(equipped.get(slot_name, ""))))
 	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
-	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
+	# Issue #92 R1: pending_meal's next_fight buff folds in HERE, at the
+	# SAME equipment-mods merge point well_fed's own +2 hp_mod rides just
+	# below -- then is cleared IMMEDIATELY (snapshotted to a local first),
+	# one-shot unlike well_fed's persist-until-sleep lifecycle. See
+	# pending_meal's own doc comment for why this is the one and only read.
+	var meal_bonus: Dictionary = pending_meal
+	pending_meal = {}
+	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD] + int(meal_bonus.get(WIKeys.DAMAGE_MOD, 0))
 	# Field HP does not exist as a standalone
 	# concept (HP is per-combat only, see this file's `well_fed` doc comment),
 	# so the staged "small HP restore" rides this SAME build-injection seam
 	# armor/accessories use just above -- +2 folded into hp_mod while the
 	# flag is true, summed alongside the equipment contribution, no new
 	# combat field, no change to wi_combat.gd's read side.
-	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD] + (2 if well_fed else 0)
-	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION]
+	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD] + (2 if well_fed else 0) + int(meal_bonus.get(WIKeys.HP_MOD, 0))
+	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION] + int(meal_bonus.get(WIKeys.DAMAGE_REDUCTION, 0))
 	return pc
 
 
@@ -2761,6 +2782,62 @@ func remove_item(item_id: String, source_id: String) -> bool:
 			return false
 	inventory.erase(item_id)
 	_emit(WIEvents.ITEM_LOST, {"item": item_id, "source": source_id})
+	return true
+
+
+## Issue #92 R1: the FIELD entry point for a consumable's use_effect -- a
+## cooked meal's `next_fight` buff (the only field-resolvable shape;
+## WIItems.resolve_use refuses `heal` outside combat -- there is no
+## standalone field HP to heal, see `well_fed`'s own doc comment). Field-
+## only (mirrors `equip()`'s own combat-active guard) -- refuses outright
+## mid-fight, though that's never actually reachable: inventory.gd (the
+## only call site) can't even open while `combat != null`.
+## CONSUMPTION = `inventory.erase(id)` (items never stack, `pickup()` no-ops
+## on a duplicate -- the load-bearing rule that makes a vendor restock a
+## REAL repeatable sink): bought -> carried (one) -> used -> gone ->
+## repurchasable. Emits ITEM_USED + a TOAST on success (R1's mandated
+## visible card); a false return means nothing happened, no partial state.
+func use_item(item_id: String) -> bool:
+	if combat != null:
+		return false
+	if not inventory.has(item_id):
+		return false
+	var rec := item(item_id)
+	if rec.is_empty():
+		return false
+	var result := WIItems.resolve_use(rec, null)
+	if not bool(result.get("ok", false)):
+		return false
+	pending_meal = (result.get("pending_meal", {}) as Dictionary).duplicate(true)
+	inventory.erase(item_id)
+	_emit(WIEvents.ITEM_USED, {"item": item_id})
+	_emit(WIEvents.TOAST, {"text": "Used: %s." % String(rec.get("name", item_id))})
+	return true
+
+
+## Issue #92 R1: the COMBAT entry point for a consumable's use_effect -- the
+## hotbar's `{"use_item": item_id}` action dispatches here at the EXACT same
+## AP-spend point `use_skill` occupies (combat_screen.gd's
+## `_activate_bar_slot`'s "item" case), never a second verb surface. Only a
+## `use_effect.heal` shape resolves in combat (WIItems.resolve_use's own
+## context gate refuses `next_fight` here) -- draughts, not meals, are the
+## mid-fight consumable. Same CONSUMPTION/emission contract as `use_item`
+## above (erase + ITEM_USED + TOAST on success only).
+func combat_use_item(item_id: String) -> bool:
+	if combat == null:
+		return false
+	if not inventory.has(item_id):
+		return false
+	var rec := item(item_id)
+	if rec.is_empty():
+		return false
+	var result := WIItems.resolve_use(rec, combat)
+	if not bool(result.get("ok", false)):
+		return false
+	inventory.erase(item_id)
+	var healed := int(result.get("healed", 0))
+	_emit(WIEvents.ITEM_USED, {"item": item_id, "healed": healed})
+	_emit(WIEvents.TOAST, {"text": "Used: %s. Healed %d HP." % [String(rec.get("name", item_id)), healed]})
 	return true
 
 

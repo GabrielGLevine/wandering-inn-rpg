@@ -46,6 +46,16 @@ const VALID_WEAPON_FAMILIES: Dictionary = {
 
 const NUMERIC_FIELDS: Array[String] = ["damage_mod", "hp_mod", "damage_reduction"]
 
+## Issue #92 R1: the ONLY use_effect shapes WIItems.resolve_use recognizes --
+## see that file's own doc comment. An item carrying any other key here would
+## silently no-op forever (resolve_use returns {"ok": false} for anything
+## unrecognized), so this validator catches the typo/drift at data-review
+## time instead of at "why doesn't this potion do anything" playtest time.
+const VALID_USE_EFFECT_KEYS: Dictionary = {
+	"heal": true,
+	"next_fight": true,
+}
+
 
 func _load(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
@@ -100,6 +110,23 @@ func _init() -> void:
 
 		if weapon_family != "none":
 			weapon_families_present[weapon_family] = true
+
+		# Issue #92 R1: use_effect (a consumable's payload) and an equippable
+		# kind are mutually exclusive -- "Equipped items are never
+		# consumable" (the pinned design's own validator arm). An item with
+		# no use_effect field at all (every pre-#92 item) is untouched by
+		# this block.
+		if entry.has("use_effect"):
+			if not entry["use_effect"] is Dictionary:
+				_fail("item %s use_effect must be a Dictionary" % id)
+			if kind == "weapon" or kind == "armor" or kind == "accessory":
+				_fail("item %s carries use_effect but is equippable (kind %s) -- use_effect and an equip slot are mutually exclusive" % [id, kind])
+			var use_effect: Dictionary = entry["use_effect"]
+			if use_effect.is_empty():
+				_fail("item %s use_effect must not be empty" % id)
+			for ue_key: String in use_effect:
+				if not VALID_USE_EFFECT_KEYS.has(ue_key):
+					_fail("item %s use_effect has unknown key: %s" % [id, ue_key])
 
 		for field: String in NUMERIC_FIELDS:
 			if not entry.has(field):

@@ -92,6 +92,28 @@ static func item_effect_lines(item: Dictionary) -> Array[String]:
 	# Resonance is a live gear stat; formatted here so the card carries it.
 	if item.has(WIKeys.RESONANCE) and int(item[WIKeys.RESONANCE]) > 0:
 		lines.append("Resonance %d" % int(item[WIKeys.RESONANCE]))
+	# Issue #92 R1: a consumable's use_effect, generated from the SAME
+	# field WIItems.resolve_use dispatches on (drift rule) -- never a
+	# hand-written twin. "heal" (a draught, combat-only) and "next_fight"
+	# (a meal, field-only -- the buff dict reuses the SAME damage_mod/
+	# hp_mod/damage_reduction vocabulary the equip-mod lines above already
+	# read) are the only two sanctioned shapes (see tests/test_items.gd's
+	# VALID_USE_EFFECT_KEYS). Single-use is real (consumption =
+	# inventory.erase, items never stack), so the line says so.
+	var use_effect: Dictionary = item.get(WIKeys.USE_EFFECT, {})
+	if use_effect.has("heal"):
+		lines.append("Heals %d HP (single use)" % int(use_effect["heal"]))
+	if use_effect.has("next_fight"):
+		var nf: Dictionary = use_effect["next_fight"]
+		var nf_bits: Array[String] = []
+		if int(nf.get(WIKeys.DAMAGE_MOD, 0)) > 0:
+			nf_bits.append("+%d damage" % int(nf[WIKeys.DAMAGE_MOD]))
+		if int(nf.get(WIKeys.HP_MOD, 0)) > 0:
+			nf_bits.append("+%d HP" % int(nf[WIKeys.HP_MOD]))
+		if int(nf.get(WIKeys.DAMAGE_REDUCTION, 0)) > 0:
+			nf_bits.append("reduces hits by %d" % int(nf[WIKeys.DAMAGE_REDUCTION]))
+		if not nf_bits.is_empty():
+			lines.append("Next fight: %s (single use)" % ", ".join(nf_bits))
 	if item.has(WIKeys.PRICE) and int(item[WIKeys.PRICE]) > 0:
 		lines.append(PRICE_LINE_PREFIX + "%d gold" % int(item[WIKeys.PRICE]))
 	return lines

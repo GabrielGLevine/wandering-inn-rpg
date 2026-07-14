@@ -127,6 +127,13 @@ const PRICE := "price"
 const RESONANCE := "resonance"
 const HP_MOD := "hp_mod"
 const LORE := "lore"
+## Issue #92 R1: an item's consumable-use payload, e.g. `{"heal": 8}` or
+## `{"next_fight": {"damage_mod": 1}}` -- see WIItems.resolve_use's own doc
+## comment for the full sanctioned-shape list. Absent on every pre-#92 item
+## (every existing item is either equippable or plain-carried flavor) --
+## mutually exclusive with an equippable `kind` (weapon/armor/accessory),
+## enforced by tests/test_items.gd.
+const USE_EFFECT := "use_effect"
 
 # --- Entity record ---
 # ID shared with combatant record above.

@@ -117,6 +117,14 @@ const LOOT_DROPPED := &"loot_dropped"
 ## ITEM_GAINED -- `source` is free-form provenance (a delivery id on a
 ## handoff or a sleep-fail return), never branched on here.
 const ITEM_LOST := &"item_lost"
+## Issue #92 R1: emitted by `WIGame.use_item` (field) / `WIGame.
+## combat_use_item` (combat) on every SUCCESSFUL consumable use, right before
+## the item is erased from `inventory` -- the one bus signal both routes
+## share (see WIItems.resolve_use's doc comment for the shape split).
+## Payload `{item: String}` for a field use (a meal), `{item: String,
+## healed: int}` for a combat use (a draught, the REAL clamped HP delta) --
+## always paired with a TOAST (R1's mandated visible card).
+const ITEM_USED := &"item_used"
 ## Emitted by `WIGame.earn_gold`/`spend_gold` on every
 ## successful gold change (a refused spend at insufficient gold emits NOTHING
 ## here -- only the refusal TOAST). Payload `{delta:int, total:int,

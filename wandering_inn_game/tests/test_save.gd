@@ -61,6 +61,10 @@ func _init() -> void:
 	# well_fed round-trips the SAME additive-optional way (default
 	# false) so a load restores Erin's meal perk mid-waking.
 	original.well_fed = true
+	# pending_meal (issue #92 R1) round-trips the SAME additive-optional way
+	# (default {}) so a load restores a cooked meal banked but not yet
+	# consumed by a fight.
+	original.pending_meal = {"damage_mod": 1}
 	# `sneaking` is DELIBERATELY excluded from the
 	# round-trip (see save.gd's own comment + wi_game.gd's doc comment on the
 	# field) -- set it true here specifically so the assertion below proves
@@ -110,6 +114,8 @@ func _init() -> void:
 	assert(restored.light_active == true, "light_active round-trips as true")
 	assert(restored.well_fed == original.well_fed, "well_fed restored")
 	assert(restored.well_fed == true, "well_fed round-trips as true")
+	assert(restored.pending_meal == original.pending_meal, "pending_meal restored")
+	assert(restored.pending_meal == {"damage_mod": 1}, "pending_meal round-trips verbatim")
 	# A customized loadout round-trips verbatim (order
 	# preserved), and an ABSENT key (any save written before this task)
 	# restores AUTO (empty), never a crash.
@@ -145,6 +151,16 @@ func _init() -> void:
 	var bad_well_fed: Dictionary = (data["state"] as Dictionary).duplicate(true)
 	bad_well_fed["well_fed"] = "not_a_bool"
 	assert(not WISave.apply(_new_game(), {"version": WISave.VERSION, "state": bad_well_fed}), "non-bool well_fed rejected")
+	# Additive-optional default: a save with no pending_meal key restores {}.
+	var no_pending_meal: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	no_pending_meal.erase("pending_meal")
+	var pending_meal_target := _new_game()
+	assert(WISave.apply(pending_meal_target, {"version": WISave.VERSION, "state": no_pending_meal}), "save without pending_meal still applies")
+	assert(pending_meal_target.pending_meal.is_empty(), "absent pending_meal defaults to {}")
+	# A present-but-wrong-typed pending_meal is rejected (mirrors the frozen_cells guard).
+	var bad_pending_meal: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	bad_pending_meal["pending_meal"] = "not_a_dict"
+	assert(not WISave.apply(_new_game(), {"version": WISave.VERSION, "state": bad_pending_meal}), "non-Dictionary pending_meal rejected")
 	# Cosmetic identity restores.
 	assert(restored.pc_name == "Sella", "pc_name restored")
 	assert(restored.pc_race == "drake", "pc_race restored")

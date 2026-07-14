@@ -1624,6 +1624,7 @@ func _init() -> void:
 	e4.transition("street", Vector2i(4, 3))
 	assert(e4.start_combat("goblin_encounter_2"), "baseline (no armor) combat starts")
 	var base_max_hp := int(e4.combat.combatants["pc"][WIKeys.MAX_HP])
+	var base_damage_mod := int(e4.combat.combatants["pc"][WIKeys.DAMAGE_MOD])
 
 	var e4b := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	e4b.transition("street", Vector2i(4, 3))
@@ -1668,6 +1669,72 @@ func _init() -> void:
 	assert(wf6b.equip("leather_jerkin"), "equip the jerkin alongside well_fed")
 	assert(wf6b.start_combat("goblin_encounter_2"), "well_fed + armored combat starts")
 	assert(int(wf6b.combat.combatants["pc"][WIKeys.MAX_HP]) == base_max_hp + 4 + 2, "well_fed's +2 SUMS with leather_jerkin's +4 hp_mod, not overrides it")
+
+	# --- Issue #92 R1: WIGame.use_item (field, next_fight) / combat_use_item
+	# (combat, heal) -- the two sim entry points, converging on
+	# WIItems.resolve_use. A synthetic items-catalog copy (test_draught/
+	# test_meal) since no shipped item carries use_effect yet (R5's vendor
+	# wave wires real ones onto this SAME mechanism). ---
+	var cc_use: Dictionary = combat_config.duplicate(true)
+	var use_items: Array = (_load_json("res://data/items.json")["items"] as Array).duplicate(true)
+	use_items.append({"id": "test_draught", "name": "Test Draught", "kind": "tool", "weapon_family": "none", "damage_mod": 0, "hp_mod": 0, "damage_reduction": 0, "resonance": 0, "tier": "mundane", "abilities": [], "description": "d", "lore": "l", "use_effect": {"heal": 8}})
+	use_items.append({"id": "test_meal", "name": "Test Meal", "kind": "tool", "weapon_family": "none", "damage_mod": 0, "hp_mod": 0, "damage_reduction": 0, "resonance": 0, "tier": "mundane", "abilities": [], "description": "d", "lore": "l", "use_effect": {"next_fight": {"damage_mod": 1}}})
+	cc_use["items"] = {"items": use_items}
+
+	# use_item (field): a meal cooks pending_meal, erases from inventory,
+	# emits ITEM_USED + a TOAST -- the visible card R1 mandates.
+	var iu1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_use)
+	iu1.transition("street", Vector2i(4, 3))
+	iu1.pickup("test_meal", "test")
+	_events.clear()
+	assert(iu1.use_item("test_meal"), "use_item resolves a next_fight-shaped item in the field")
+	assert(not iu1.inventory.has("test_meal"), "consumption = inventory.erase -- the meal is gone")
+	assert(_count("item_used") == 1, "item_used emitted on a successful field use")
+	assert(_count("toast") >= 1, "a visible toast card accompanies the use")
+	assert(int(iu1.pending_meal.get("damage_mod", 0)) == 1, "the next_fight buff banked onto pending_meal")
+
+	# pending_meal folds into the PC's kit at the VERY NEXT start_combat
+	# build -- the SAME equipment-mods merge point well_fed's own +2 hp_mod
+	# rides (wf6 above) -- and is cleared immediately after (one-shot,
+	# unlike well_fed which persists until sleep).
+	iu1.transition("street", Vector2i(4, 3))
+	assert(iu1.start_combat("goblin_encounter_2"), "combat starts with a pending meal banked")
+	assert(int(iu1.combat.combatants["pc"][WIKeys.DAMAGE_MOD]) == base_damage_mod + 1, "the meal's +1 damage_mod rode this fight's build")
+	assert(iu1.pending_meal.is_empty(), "pending_meal is cleared the instant it's read -- one-shot")
+	iu1.combat = null
+	iu1.transition("street", Vector2i(4, 3))
+	assert(iu1.start_combat("goblin_encounter_2"), "a second combat starts with no meal pending")
+	assert(int(iu1.combat.combatants["pc"][WIKeys.DAMAGE_MOD]) == base_damage_mod, "the SECOND fight's build carries no meal bonus -- it was truly one-shot, not re-applied")
+
+	# use_item refuses a heal-shaped item in the field (no standalone field
+	# HP to heal, see well_fed's own doc comment) -- refused, so nothing is
+	# consumed.
+	var iu2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_use)
+	iu2.transition("street", Vector2i(4, 3))
+	iu2.pickup("test_draught", "test")
+	assert(not iu2.use_item("test_draught"), "use_item refuses a heal-shaped item in the field")
+	assert(iu2.inventory.has("test_draught"), "a refused use consumes nothing")
+
+	# combat_use_item (combat): a draught heals, erases, emits ITEM_USED +
+	# TOAST -- refuses outright outside combat.
+	var iu3 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_use)
+	iu3.transition("street", Vector2i(4, 3))
+	iu3.pickup("test_draught", "test")
+	assert(not iu3.combat_use_item("test_draught"), "combat_use_item refuses outside combat")
+	assert(iu3.start_combat("goblin_encounter_2"), "combat starts for the combat_use_item proof")
+	iu3.combat.active_index = iu3.combat.turn_order.find("pc")
+	iu3.combat._start_turn()
+	iu3.combat.combatants["pc"][WIKeys.HP] = int(iu3.combat.combatants["pc"][WIKeys.MAX_HP]) - 10
+	_events.clear()
+	assert(iu3.combat_use_item("test_draught"), "combat_use_item resolves the heal-shaped item mid-fight")
+	assert(not iu3.inventory.has("test_draught"), "consumption = inventory.erase -- the draught is gone")
+	assert(_count("item_used") == 1, "item_used emitted on a successful combat use")
+	assert(int(iu3.combat.combatants["pc"][WIKeys.HP]) == int(iu3.combat.combatants["pc"][WIKeys.MAX_HP]) - 2, "hp actually increased by the healed amount")
+
+	# Items never stack (pickup() no-ops on a duplicate, spec's own load-
+	# bearing rule) -- repurchasing after a use is a genuinely fresh pickup,
+	# proving the repeatable-sink shape R1's whole design leans on.
+	assert(iu3.pickup("test_draught", "test"), "a fresh pickup after consumption succeeds -- nothing left to no-op against")
 
 	# --- Dialogue effect {"item": id}: pickup with source = conversation id ---
 	var item_graph := {
