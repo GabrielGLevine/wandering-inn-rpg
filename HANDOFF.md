@@ -4,10 +4,10 @@
 
 - **Issue / branch / base:** #113 on `main`, base `2a1e3b5`.
 - **Owned surfaces:** `docs/VISUAL-LOG.md`, bounded sprite/icon assets and catalog consumers, affected region map JSON, focused world/combat presentation seams, affected QA/tests, and this handoff section.
-- **State:** Wave 0 evidence audit complete; all 20 open entries have explicit reproduce/mixed/promote dispositions. Godot 4.7 and the complete 175-path private overlay are present.
-- **Dirty/conflict state:** clean at start; no other writer or conflicting user edits detected.
-- **Verification so far:** approved design `eb15f30`; implementation plans `2a1e3b5`; 16 real windowed canonical/probe runs PASS with retained screenshots/events/results; every cited frame personally read; temporary capture hooks removed cleanly.
-- **Operator need / next action:** commit the audit, then execute Wave 1's test-first PixelLab generation and bounded sprite/catalog integration.
+- **State:** Wave 0 audit committed (`c0d1a61`). Wave 1 has generated and integrated 12 skill icons, 9 bespoke field props, Rock Crab replacement art, and a dedicated directional Shield Spider; all eight art-log families are closed pending the wave commit.
+- **Dirty/conflict state:** Wave 1 changes are deliberate on `main`; no other writer or conflicting user edits detected. PixelLab candidates and durable before/after evidence remain gitignored.
+- **Verification so far:** approved design `eb15f30`; plans `2a1e3b5`; audit `c0d1a61`; 23 real windowed canonical/probe/gallery runs PASS across Waves 0-1 with personally judged frames. The icon gallery caught undersized crops, which were corrected and reread. Focused sprite/combat tests, `load_gate`, and canonical `crab_cull_loop`/`cisterns_fight` are green; temporary QA capture hooks are removed.
+- **Operator need / next action:** finish Wave 1 gates and commit, then execute Wave 2's bounded map staging and per-entity render override.
 
 ## Current release
 

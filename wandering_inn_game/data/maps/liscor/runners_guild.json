@@ -206,12 +206,7 @@
     3
    ],
    "display_name": "The Delivery Board",
-   "sprite": "inn_sign",
-   "tint": [
-    0.65,
-    0.72,
-    0.8
-   ],
+   "sprite": "delivery_board",
    "facing": "left",
    "delivery_board": true,
    "toast": "THE DELIVERY BOARD. Legs and ledgers. Gold by distance, paid on the mark, same-waking terms. Slips at the counter.",

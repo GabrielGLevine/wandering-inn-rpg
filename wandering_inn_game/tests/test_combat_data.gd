@@ -2,22 +2,16 @@ extends SceneTree
 
 
 const KNOWN_ICONLESS_SKILLS := {
-	"appraise_goods": true,
-	"called_shot": true,
-	"directed_strike": true,
-	"disarm_trap": true,
-	"find_trap": true,
-	"flame_dart": true,
-	"flame_pillar": true,
 	"guarding_ward": true,
-	"measured_words": true,
-	"open_doors": true,
-	"perfect_hospitality": true,
-	"piercing_volley": true,
 	"raskghar_maul": true,
 	"slam": true,
-	"soothing_presence": true,
 }
+
+const VISUAL_LOG_ICON_SKILLS := [
+	"appraise_goods", "called_shot", "directed_strike", "disarm_trap",
+	"find_trap", "flame_dart", "flame_pillar", "measured_words",
+	"open_doors", "perfect_hospitality", "piercing_volley", "soothing_presence",
+]
 
 
 func _load(path: String) -> Dictionary:
@@ -46,6 +40,7 @@ func _reachable_from(start: Vector2i, w: int, h: int, blocked: Dictionary) -> Di
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var skills := _load("res://data/skills.json")
+	var sprites := _load("res://data/sprites.json")
 	var combatants := _load("res://data/combatants.json")
 	var classes := _load("res://data/classes.json")
 	var arenas := _load("res://data/arenas.json")
@@ -63,6 +58,10 @@ func _init() -> void:
 		if hotbar_visible and not s.has("icon"):
 			iconless_seen[sid] = true
 			assert(KNOWN_ICONLESS_SKILLS.has(sid), "skill %s is hotbar-visible (field/ap_cost) but ships with no icon -- add icon_%s or track it in KNOWN_ICONLESS_SKILLS" % [sid, sid])
+		if VISUAL_LOG_ICON_SKILLS.has(sid):
+			var expected_icon := "icon_" + sid
+			assert(String(s.get("icon", "")) == expected_icon, "skill %s must use %s" % [sid, expected_icon])
+			assert(sprites.has(expected_icon), "skill %s icon is absent from sprites.json" % sid)
 	for known_sid: String in KNOWN_ICONLESS_SKILLS:
 		assert(iconless_seen.has(known_sid), "KNOWN_ICONLESS_SKILLS lists %s but it now carries an icon -- shrink the allowlist" % known_sid)
 

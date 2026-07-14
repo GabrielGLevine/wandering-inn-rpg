@@ -1209,7 +1209,151 @@
    }
   }
  },
- "hearth": {
+ "icon_appraise_goods": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_appraise_goods.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_called_shot": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_called_shot.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_directed_strike": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_directed_strike.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_disarm_trap": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_disarm_trap.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_find_trap": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_find_trap.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_flame_dart": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_flame_dart.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_flame_pillar": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_flame_pillar.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_measured_words": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_measured_words.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_open_doors": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_open_doors.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_perfect_hospitality": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_perfect_hospitality.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_piercing_volley": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_piercing_volley.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_soothing_presence": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_soothing_presence.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+"hearth": {
   "render_scale": 0.5,
   "animations": {
    "idle": {
@@ -3333,16 +3477,16 @@
   }
  },
  "rock_crab": {
-  "_comment": "render_scale 2.57 targets ~36px on-screen FIELD presence (bigger than the ~30px human standard -- canon calls the shell 'two persons stacked tall', so it should read unmistakably large on the map, short of arena-sprawl).",
+  "_comment": "PixelLab v1, 2026-07-14: cool-grey boulder-mimic winner 0, four-frame static hold. 0.55 targets ~35px without the prior combat sprawl.",
   "anchor": [
-   0.469,
-   0.75
+   0.5,
+   1.0
   ],
-  "render_scale": 2.57,
+  "render_scale": 0.55,
   "shadow": true,
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/admurin/Crab_Idle.png",
+    "sheet": "res://assets/sprites/rock_crab/Idle-Sheet.png",
     "frame_size": [
      64,
      64
@@ -3812,22 +3956,134 @@
   }
  },
  "illusory_floor_tell": {
-  "_comment": "Substituted with a same-PACK crop so the palette is guaranteed to match: Cemetery Props.png bbox (96,64,31,16), PIL connected-component scan, a low floor-hugging debris/crack cluster rgb~(53,38,27), fill 0.65.",
   "render_scale": 0.5,
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/cemetery/Props.png",
-    "region": [
-     96,
-     64,
-     31,
-     16
-    ],
+    "sheet": "res://assets/sprites/illusory_floor_tell/Idle-Sheet.png",
     "frame_size": [
-     31,
-     16
+     48,
+     48
     ],
     "fps": 1
+   }
+  }
+ },
+ "dart_slit_tell": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dart_slit_tell/Idle-Sheet.png",
+    "frame_size": [48, 48],
+    "fps": 1
+   }
+  }
+ },
+ "delivery_board": {
+  "render_scale": 0.5,
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/delivery_board/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "guild_notice_wall": {
+  "render_scale": 0.45,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/guild_notice_wall/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "deep_fissure": {
+  "render_scale": 0.55,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/deep_fissure/Idle-Sheet.png",
+    "frame_size": [64, 48],
+    "fps": 1
+   }
+  }
+ },
+ "cold_hearth": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/cold_hearth/Idle-Sheet.png",
+    "frame_size": [48, 40],
+    "fps": 1
+   }
+  }
+ },
+ "gnaw_pile": {
+  "render_scale": 0.55,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/gnaw_pile/Idle-Sheet.png",
+    "frame_size": [48, 40],
+    "fps": 1
+   }
+  }
+ },
+ "warren_mouth": {
+  "render_scale": 0.45,
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/warren_mouth/Idle-Sheet.png",
+    "frame_size": [96, 64],
+    "fps": 1
+   }
+  }
+ },
+ "nest_ledge": {
+  "render_scale": 0.5,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/nest_ledge/Idle-Sheet.png",
+    "frame_size": [64, 40],
+    "fps": 1
+   }
+  }
+ },
+ "shield_spider": {
+    "_comment": "PixelLab v2 char f1d71d73: directional base; south/east/north idle(4), lunge(3), hit(6), death(7), with side mirrored west. Alpha contact ends near row 48/136.",
+  "directional": true,
+  "anchor": [0.5, 0.353],
+  "render_scale": 0.3,
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/shield_spider/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/shield_spider/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/shield_spider/Idle_Up-Sheet.png",
+    "frame_size": [136, 136],
+    "fps": 6
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/shield_spider/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/shield_spider/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/shield_spider/Slice_Up-Sheet.png",
+    "frame_size": [136, 136],
+    "fps": 8
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/shield_spider/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/shield_spider/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/shield_spider/Hit_Up-Sheet.png",
+    "frame_size": [136, 136],
+    "fps": 10
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/shield_spider/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/shield_spider/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/shield_spider/Death_Up-Sheet.png",
+    "frame_size": [136, 136],
+    "fps": 8
    }
   }
  },

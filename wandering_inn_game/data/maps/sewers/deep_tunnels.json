@@ -122,20 +122,10 @@
     4
    ],
    "display_name": "Cold Hearth",
-   "sprite": "boulder",
+   "sprite": "cold_hearth",
    "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Something sat here in the dark and knew how to keep a fire — or learned how, the way they say these things learn, when the moon is full and their minds come clear.",
    "on_interact_accomplishment": "found_cold_hearth",
-   "toast": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark, and left gnawed bones banked around the edge, cracked for their marrow.",
-   "light": {
-    "color": [
-     0.9,
-     0.45,
-     0.25
-    ],
-    "energy": 0.3,
-    "radius": 12,
-    "flicker": true
-   }
+   "toast": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark, and left gnawed bones banked around the edge, cracked for their marrow."
   },
   {
    "id": "gnaw_pile",
@@ -145,7 +135,7 @@
     6
    ],
    "display_name": "Gnawed Bones",
-   "sprite": "boulder",
+   "sprite": "gnaw_pile",
    "observe": "A midden of cracked bones, marrow sucked clean. Gnoll, most of them. A few too large to name. They have been sorted, almost stacked, as though something down here counts its meals and keeps the score.",
    "on_interact_accomplishment": "found_gnaw_pile",
    "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered. And that is worse than if they had been."
@@ -180,7 +170,7 @@
     5
    ],
    "display_name": "Warren Mouth",
-   "sprite": "boulder",
+   "sprite": "warren_mouth",
    "observe": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den, and where the big one waits, breathing slow in the black.",
    "on_interact_accomplishment": "reached_the_warren",
    "variants": [

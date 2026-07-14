@@ -47,7 +47,7 @@ events, and result files live in the gitignored
 | Slow-expiry copy | Reproduced exactly: “shakes it off” appears while the combatant still stands on active ice. Fix copy in this drain. |
 | Ruin route | Reproduced: the canonical route shows generic cave floor and misses the ruin architecture. Restage in this drain. |
 
-- [ ] SKILL ICONS — class-foundation pass (#93/#95/#96, R1, 2026-07-12) added
+- [x] SKILL ICONS — class-foundation pass (#93/#95/#96, R1, 2026-07-12) added
   11 new player-facing skills (`directed_strike`/[Chosen Blow],
   `flanking_step`, `read_the_field`, `measured_words`, `soothing_presence`,
   `open_doors`, `find_trap`, `disarm_trap`, `sudden_strike`/[Sneak Attack],
@@ -81,8 +81,13 @@ events, and result files live in the gitignored
   that pinned set shipping with no icon now fails the unit suite LOUD (no
   more silent growth), and an entry inside it that gains an icon also
   fails (forcing the allowlist to shrink, never rot). Still needs the real
-  commissioning pass for the rest.
-- [ ] SPRITE/FLOODPLAINS — `rock_crab` (issue #24) ships a BAKED recolor of
+  commissioning pass for the rest. **FIXED GH#113 Wave 1 (2026-07-14):**
+  commissioned and integrated PixelLab icons for all 12 remaining
+  player-visible hotbar skills; the allowlist now contains only the three
+  enemy-only skills. A real Godot windowed gallery exposed undersized source
+  crops; the production icons were alpha-cropped and refit to a 14 px live
+  area, then accepted in a second native-scale read.
+- [x] SPRITE/FLOODPLAINS — `rock_crab` (issue #24) ships a BAKED recolor of
   the Admurin crab (`assets/props/admurin/Crab_Idle.png`, multiply
   ~[1.05, 3.0, 2.6] against the source's red-brown shell) targeting the
   `boulder` prop's grey-stone palette (rgb ~(115,104,93)/(63,53,44) sampled
@@ -97,8 +102,11 @@ events, and result files live in the gitignored
   tweak. First seen: issue #24 review wave, 2026-07-12. Fix: controller
   windowed read of floodplains (21,16) beside the (24,19) boulder; re-bake
   the multiply factors toward the sampled greys if the warm cast breaks
-  the read.
-- [ ] DUNGEON/TRAP TELLS — `dart_slit_a` (`trapped_halls`) reuses the
+  the read. **FIXED GH#113 Wave 1 (2026-07-14):** replaced by a cool-grey
+  PixelLab boulder-crab with visible pink legs; windowed field and combat
+  reads now match the boulder family without disappearing or overfilling the
+  combat slot.
+- [x] DUNGEON/TRAP TELLS — `dart_slit_a` (`trapped_halls`) reuses the
   registered `sewer_grate` sprite (tinted cool-dark) as a placeholder —
   the A3 pixellab `dart_slit.png` candidate drifted purple against the
   Cemetery family's olive-warm-grey palette and was never integrated.
@@ -112,6 +120,9 @@ events, and result files live in the gitignored
   missing. First seen: 8d Phase B (issue #14), 2026-07-11. Fix: regen
   both candidates against the real Cemetery floor family (dark
   blue-grey brick, olive cast) via PixelLab, controller art pass.
+  **FIXED GH#113 Wave 1 (2026-07-14):** generated and wired a masonry slit
+  and cracked-floor seam; `delve_skill` windowed reads distinguish both
+  mechanisms from the old grate/debris stand-ins.
 - [x] INN/EXTERIOR — CLOSED, windowed-verified, no commit needed (GH#94,
   2026-07-13) — the facade's dusk/night WINDOW GLOW was mechanism-verified
   (phase-gated light, 2-of-8 budget, the lantern precedent) but never
@@ -188,7 +199,7 @@ events, and result files live in the gitignored
   pass (2026-07-08) rather than fixed standalone here — see #30's section
   of the polish report.
 
-- [ ] SPRITE — **THE DELIVERY BOARD (`runner_board`, M-DEPTH DP5, Runner's
+- [x] SPRITE — **THE DELIVERY BOARD (`runner_board`, M-DEPTH DP5, Runner's
   Guild interior) still rides the `inn_sign` art + a cool blue-grey tint
   [0.65,0.72,0.8]** — the art-wiring task (2026-07-07) gave `guild_board`
   ("THE REQUEST BOARD") bespoke `request_board` art (item closed below),
@@ -213,6 +224,9 @@ events, and result files live in the gitignored
   was considered but the tuft is baked into the post's own base texture,
   not a separable region — cropping it out would also cut the post,
   leaving a floating plank. Left open for the next art-gen pass.
+  **FIXED GH#113 Wave 1 (2026-07-14):** `runner_board` now uses a bespoke
+  paper-and-route board with no outdoor post or grass; accepted in the
+  windowed `delivery_loop` interior and browse frames.
 - [ ] SPRITE — **a THIRD reproduction of the player-occludes-small-prop
   finding below (`bed`/`lyonette_door`), this time on a market-stall PROP**:
   M-DEPTH DP4's `bread_stall` (street, food_basket sprite, render_scale
@@ -266,7 +280,7 @@ events, and result files live in the gitignored
   documentation-run screenshot catching a real, expected presentation
   timing artifact (a script driving actions faster than a human would).
   No player-facing behavior to fix.
-- [ ] SPRITE — **`guild_notice_wall` (Adventurer's Guild interior) reuses
+- [x] SPRITE — **`guild_notice_wall` (Adventurer's Guild interior) reuses
   `library_shelf`** (reads as a wardrobe/bookshelf, not a wall of papers)
   and sits close enough to `guild_board` + the Renn/Ilvo walk-on pair that
   the cluster reads a little dense at a glance (Renn/Ilvo also share a
@@ -280,7 +294,9 @@ events, and result files live in the gitignored
   both `library_shelf` and the already-used `request_board` (reusing
   `request_board` here too would make the notice wall and the guild
   board look identical, trading one mismatch for another) — nothing
-  else catalogued fits. Needs new art, left open.
+  else catalogued fits. Needs new art, left open. **FIXED GH#113 Wave 1
+  (2026-07-14):** replaced by a distinct wall of pinned and curled papers;
+  the surrounding cluster remained readable in the canonical windowed run.
 
 - [x] MAP/STREET — FIXED (issue #29, this pass, 2026-07-08, uncommitted)
   — the gate district read worst of all maps (grey brick floor-vs-wall
@@ -402,7 +418,7 @@ events, and result files live in the gitignored
   duplicate. Windowed-verified:
   `.superpowers/sdd/fp-handoff/l5-shots/shop_price_dedup_03_shop_all_greyed_broke.png`
   shows every option reading its price exactly once.
-- [ ] FIELD/DEEP_TUNNELS — the four M-ARC A2 flavor/threshold props
+- [x] FIELD/DEEP_TUNNELS — the four M-ARC A2 flavor/threshold props
   (`deep_fissure` sewers `(8,12)`, `cold_hearth`/`gnaw_pile`/`warren_mouth`
   in deep_tunnels) all use the `boulder` sprite as a stand-in (a collapsed
   fissure, a fire-pit, a bone midden, a gallery mouth). Reads acceptably as
@@ -414,15 +430,21 @@ events, and result files live in the gitignored
   COMBATANTS themselves are real bespoke PixelLab sprites (not stand-ins).
   **#31 drain (2026-07-08): reviewed, left open — needs new art (no
   image-gen access in this lane), already correctly flagged low-priority.**
+  **FIXED GH#113 Wave 1 (2026-07-14):** fissure, dead hearth, gnaw pile,
+  and warren mouth now have separate PixelLab silhouettes. The warm hearth
+  light was removed because it contradicted the new cold/dead prop; all four
+  passed the windowed `deep_descent` read.
 
-- [ ] FIELD/SEWERS — `nest_ledge` (Content Wave C3 Q1 SKILL-path [Observe]
+- [x] FIELD/SEWERS — `nest_ledge` (Content Wave C3 Q1 SKILL-path [Observe]
   prop, sewers `(17,10)`) uses the `boulder` sprite as a stand-in for "a
   broken brick overlook lip" — consistent with the sewers' `drainage_marker`
   (also `boulder`), reads acceptably in the dark cave grade, but a bespoke
   ledge/broken-wall sprite (Track B / PixelLab) would read better. First-seen
   2026-07-06 (C3, uncommitted). Off the combat spine; low priority. **#31
   drain (2026-07-08): reviewed alongside issue #30's sewers dressing pass
-  — decor-only, still needs new art, left open.**
+  — decor-only, still needs new art, left open.** **FIXED GH#113 Wave 1
+  (2026-07-14):** replaced by a broad broken-brick ledge that reads as
+  horizontal sewer architecture rather than another boulder.
 
 - [x] FIELD — dormant (respawns:true) encounters look identical to live
   ones after defeat — a "resting/cleared" visual state would stop them
@@ -440,7 +462,7 @@ events, and result files live in the gitignored
   goblin_encounter_1 reads clearly dimmed/cleared while the adjacent live
   goblin_encounter_2 stays vivid (`.superpowers/sdd/fp-handoff/b2-shots/
   b2_dormant_00_live.png` vs `b2_dormant_01_resting.png`).
-- [ ] COMBATANT/SPRITE — the new `shield_spider` (Content Wave C1, Liscor
+- [x] COMBATANT/SPRITE — the new `shield_spider` (Content Wave C1, Liscor
   sewers) uses the `bat` sheet as a STAND-IN — there is no arachnid sprite
   in-tree — so a Shield Spider currently renders as a bat, and shares that
   sheet with `sewer_vermin` ("Sewer Bat", which IS sprite-honest). Needs a
@@ -451,7 +473,11 @@ events, and result files live in the gitignored
   **#31 drain (2026-07-08): still open, needs new art, no image-gen access
   in this lane — also DEDUPES the near-identical "SPRITE — shield_spider
   ships on the bat sprite" entry further down this log (same defect,
-  logged twice); that duplicate is removed, tracked here only.**
+  logged twice); that duplicate is removed, tracked here only.** **FIXED
+  GH#113 Wave 1 (2026-07-14):** a dedicated black-and-silver, eight-legged
+  PixelLab character now supplies directional idle/attack/hit/death sheets.
+  Two windowed scale reads rejected 0.24 and accepted 0.30 in field and
+  combat; it no longer shares the Sewer Bat silhouette.
 - [x] CONTENT/SPRITE — Content Wave C2 characters **Olesm** + **Zevara**
   shipped WITH real PixelLab pixflux Drake sprites (2026-07-06, uncommitted):
   `olesm` = a slim sky-blue Drake holding a rolled map (guild frontage);

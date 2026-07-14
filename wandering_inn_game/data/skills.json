@@ -252,6 +252,7 @@
 		{
 			"_comment": "Instant damage only -- no terrain write, no status write, no expiry seam (contrast icy_floor, which glazes+slows for `duration_rounds`).",
 			"id": "flame_pillar",
+			"icon": "icon_flame_pillar",
 			"display_name": "[Flame Pillar]",
 			"contexts": ["combat"],
 			"ap_cost": 3,
@@ -488,6 +489,7 @@
 		{
 			"_comment": "Id `directed_strike` is PINNED (Lane B builds against it) and unchanged -- only display_name substitutes, the same id-stable/display-swap convention sneak->[Stealth]/observe->[Appraise Foe] already established.",
 			"id": "directed_strike",
+			"icon": "icon_directed_strike",
 			"display_name": "[Chosen Blow]",
 			"contexts": ["combat"],
 			"ap_cost": 2,
@@ -514,6 +516,7 @@
 		{
 			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match.",
 			"id": "measured_words",
+			"icon": "icon_measured_words",
 			"display_name": "[Measured Words]",
 			"contexts": ["exploration"],
 			"field": true,
@@ -523,6 +526,7 @@
 		{
 			"_comment": "Costs MP unlike second_wind (a genuine resource tax distinguishing the two self/ally heals) and heals less (6 vs second_wind's 8) since it can reach a second body.",
 			"id": "soothing_presence",
+			"icon": "icon_soothing_presence",
 			"display_name": "[Soothing Presence]",
 			"contexts": ["combat"],
 			"ap_cost": 2,
@@ -541,6 +545,7 @@
 		},
 		{
 			"id": "open_doors",
+			"icon": "icon_open_doors",
 			"display_name": "[Open Doors]",
 			"contexts": ["exploration"],
 			"field": true,
@@ -550,6 +555,7 @@
 		{
 			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect index), no match for a bare trap-sense Skill.",
 			"id": "find_trap",
+			"icon": "icon_find_trap",
 			"display_name": "[Find Trap]",
 			"contexts": ["exploration"],
 			"field": true,
@@ -559,6 +565,7 @@
 		{
 			"_comment": "Field-only, same requires_skill+on_skill_use seam, no new sim code.",
 			"id": "disarm_trap",
+			"icon": "icon_disarm_trap",
 			"display_name": "[Disarm Trap]",
 			"contexts": ["exploration"],
 			"field": true,
@@ -579,6 +586,7 @@
 		{
 			"_comment": "Id PINNED.",
 			"id": "called_shot",
+			"icon": "icon_called_shot",
 			"display_name": "[Called Shot]",
 			"contexts": ["combat"],
 			"ap_cost": 3,
@@ -589,6 +597,7 @@
 		{
 			"_comment": "Id PINNED.",
 			"id": "piercing_volley",
+			"icon": "icon_piercing_volley",
 			"display_name": "[Piercing Volley]",
 			"contexts": ["combat"],
 			"ap_cost": 4,
@@ -599,6 +608,7 @@
 		{
 			"_comment": "flame_jet stays untouched (still the only line-shaped fire skill); this is the practical EARLY single-target active fire lacked entirely.",
 			"id": "flame_dart",
+			"icon": "icon_flame_dart",
 			"display_name": "[Flame Dart]",
 			"contexts": ["combat"],
 			"ap_cost": 2,
@@ -610,6 +620,7 @@
 		{
 			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect/P), no match for a bare hospitality-themed Skill.",
 			"id": "perfect_hospitality",
+			"icon": "icon_perfect_hospitality",
 			"display_name": "[Perfect Hospitality]",
 			"contexts": ["exploration"],
 			"field": true,
@@ -636,6 +647,7 @@
 		{
 			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match.",
 			"id": "appraise_goods",
+			"icon": "icon_appraise_goods",
 			"display_name": "[Appraise Goods]",
 			"contexts": ["exploration"],
 			"field": true,

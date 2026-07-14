@@ -173,12 +173,7 @@
     5
    ],
    "display_name": "A Dart Slit",
-   "sprite": "sewer_grate",
-   "tint": [
-    0.55,
-    0.53,
-    0.58
-   ],
+   "sprite": "dart_slit_tell",
    "requires_skill": "observe",
    "skill_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. This wants a careful, deliberate touch, not a shove.",
    "locked_toast": "A narrow slit runs along the wall at knee height. Whatever is loaded behind it, you have no idea how to disable it.",

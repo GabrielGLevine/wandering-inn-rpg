@@ -29,11 +29,35 @@ func _init() -> void:
 				else:
 					assert(actual == expected, "%s animation %s: expected %d frames, got %d" % [sprite_id, full_name, expected, actual])
 				_assert_expected_region(sprite_id, full_name, frames.get_frame_texture(full_name, 0))
+	_assert_visual_log_assets_are_real(catalog)
 	assert(not WISpriteRegistry.has_sprite("missing_sprite"), "registry should reject unknown sprite ids")
 	_assert_biome_tiles_build()
 	_assert_missing_sheet_fallback()
 	print("PASS: sprite registry catalog builds SpriteFrames")
 	quit(0)
+
+
+func _assert_visual_log_assets_are_real(catalog: Dictionary) -> void:
+	var required_ids := [
+		"icon_appraise_goods", "icon_called_shot", "icon_directed_strike",
+		"icon_disarm_trap", "icon_find_trap", "icon_flame_dart",
+		"icon_flame_pillar", "icon_measured_words", "icon_open_doors",
+		"icon_perfect_hospitality", "icon_piercing_volley", "icon_soothing_presence",
+		"rock_crab", "dart_slit_tell", "illusory_floor_tell", "delivery_board",
+		"guild_notice_wall", "deep_fissure", "cold_hearth", "gnaw_pile",
+		"warren_mouth", "nest_ledge", "shield_spider",
+	]
+	for sprite_id: String in required_ids:
+		assert(catalog.has(sprite_id), "VISUAL-LOG asset missing catalog id: " + sprite_id)
+		var entry: Dictionary = catalog[sprite_id]
+		for anim: Dictionary in entry["animations"].values():
+			for key: String in anim:
+				if not key.begins_with("sheet"):
+					continue
+				var path := String(anim[key])
+				assert(path.begins_with("res://assets/"), "%s uses non-asset sheet: %s" % [sprite_id, path])
+				assert(FileAccess.file_exists(path), "%s sheet does not exist: %s" % [sprite_id, path])
+				assert(not WISpriteRegistry.is_fallback_sheet(path), "%s still uses fallback sheet: %s" % [sprite_id, path])
 
 
 func _assert_missing_sheet_fallback() -> void:
@@ -117,6 +141,26 @@ func _build_expected_counts() -> Dictionary:
 
 	for icon_id: String in ["icon_power_shot", "icon_keen_eye", "icon_quick_nock", "icon_piercing_shot", "icon_spellbound_strike", "icon_sudden_strike"]:
 		counts[icon_id + "/idle"] = 1
+
+	for icon_id: String in [
+		"icon_appraise_goods", "icon_called_shot", "icon_directed_strike",
+		"icon_disarm_trap", "icon_find_trap", "icon_flame_dart",
+		"icon_flame_pillar", "icon_measured_words", "icon_open_doors",
+		"icon_perfect_hospitality", "icon_piercing_volley", "icon_soothing_presence",
+	]:
+		counts[icon_id + "/idle"] = 1
+
+	for visual_log_prop: String in [
+		"dart_slit_tell", "illusory_floor_tell", "delivery_board",
+		"guild_notice_wall", "deep_fissure", "cold_hearth", "gnaw_pile",
+		"warren_mouth", "nest_ledge",
+	]:
+		counts[visual_log_prop + "/idle"] = 1
+
+	counts["shield_spider/idle"] = 4
+	counts["shield_spider/slice"] = 3
+	counts["shield_spider/hit"] = 6
+	counts["shield_spider/death"] = 7
 
 	counts["library_desk/idle"] = 1
 	counts["library_shelf/idle"] = 1

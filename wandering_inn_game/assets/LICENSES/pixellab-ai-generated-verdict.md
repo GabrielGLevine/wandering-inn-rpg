@@ -8,6 +8,42 @@ user and are redistributable (usable in commercial and open-source
 projects). No third-party pack license attaches to these — they are
 original generations, not pack extracts.
 
+## VISUAL-LOG drain #113 (2026-07-14)
+
+The complete candidate/job record is parked in the gitignored
+`potential_assets/pixellab_2026-07-14_visual_log/` directory. Static art used
+v1 `/generate-image-pixflux`, transparent source canvases, and the shared
+“top-down RPG sprite, hard black outline, restrained 16-bit pixel art” kernel.
+At most six candidates were generated per subject. Winners were selected at
+native and gameplay scale; rejected outputs lost the requested semantic read
+(doors instead of slits, open holes instead of subtle seams, active fires
+instead of cold ash, and generic rock piles instead of bones).
+
+| Shipped path(s) | Prompt contract | Winner / transform |
+|---|---|---|
+| `assets/ui/icons/icon_{appraise_goods,called_shot,directed_strike,disarm_trap,find_trap,flame_dart,flame_pillar,measured_words,open_doors,perfect_hospitality,piercing_volley,soothing_presence}.png` | One dominant skill-specific silhouette, no text/frame/background | Candidate indices `1,0,2,3,1,0,0,1,0,1,0,1`; alpha-cropped, nearest-neighbor fit to a 14px live area on 16px canvas |
+| `assets/sprites/dart_slit_tell/Idle-Sheet.png` | Narrow Cemetery-family masonry weapon slit, never a grate/door | Candidate 2, 48×48 |
+| `assets/sprites/illusory_floor_tell/Idle-Sheet.png` | Closed olive stone floor with a subtle irregular seam | Candidate 3, 48×48 |
+| `assets/sprites/delivery_board/Idle-Sheet.png` | Indoor route board with slips/strings, no grass | Candidate 1, 64×64 |
+| `assets/sprites/guild_notice_wall/Idle-Sheet.png` | Overlapping pinned papers, not a shelf/formal request board | Candidate 1, 64×64 |
+| `assets/sprites/deep_fissure/Idle-Sheet.png` | Long jagged ground crack with depth, not a square chasm/portal | Candidate 2, 64×48 |
+| `assets/sprites/cold_hearth/Idle-Sheet.png` | Empty grey-stone ash ring with no fire/glow/ember | Candidate 4, 48×40; earlier fire-bearing candidates rejected |
+| `assets/sprites/gnaw_pile/Idle-Sheet.png` | Explicit pale ribs/femurs/skull midden, no rocks | Candidate 2, 48×40 |
+| `assets/sprites/warren_mouth/Idle-Sheet.png` | Wide clawed cave threshold and dark tunnel maw | Candidate 0, 96×64 |
+| `assets/sprites/nest_ledge/Idle-Sheet.png` | Broken horizontal sewer-brick overlook lip | Candidate 1, 64×40 |
+| `assets/sprites/rock_crab/Idle-Sheet.png` | Cool-grey boulder shell with legs/eyes only on close read | Candidate 0, repeated into the retained four-frame 64px idle strip; no recolor |
+
+`shield_spider` used the v2 directional character pipeline: character
+`f1d71d73-7a8e-438a-9588-33c857e86e4a`, `create-character-pro`
+(`mannequin`, low top-down, transparent, 96px request), prompted as a true
+eight-legged black/silver arachnid with a broad banded shield carapace and
+explicitly no bat/humanoid features. `animate-character` generated
+south/east/north `breathing-idle` (4), `lead-jab` (3), `taking-punch` (6),
+and `falling-back-death` (7); east mirrors west and diagonals remain parked.
+Exports are 136px frames. Alpha measurement put the contact plane at about
+row 48, producing anchor `[0.5,0.353]`. These outputs remain user-owned and
+redistributable under the repository's established PixelLab policy.
+
 ## Shipped assets from this source (Track B1 + B3, 2026-07-06)
 
 | Path | Subject | Prompt gist |

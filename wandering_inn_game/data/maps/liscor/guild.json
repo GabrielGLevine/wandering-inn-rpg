@@ -321,12 +321,7 @@
     5
    ],
    "display_name": "Notice Wall",
-   "sprite": "library_shelf",
-   "tint": [
-    0.6,
-    0.5,
-    0.35
-   ],
+   "sprite": "guild_notice_wall",
    "facing": "right",
    "on_interact_accomplishment": "read_guild_notices",
    "toast": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time.",

@@ -157,7 +157,7 @@
    "id": "rock_crab",
    "display_name": "Rock Crab",
    "sprite": "rock_crab",
-   "combat_scale": 3.57,
+   "combat_scale": 0.55,
    "side": "enemy",
    "stats": {
     "str": 14,
@@ -207,10 +207,11 @@
    "skills": []
   },
   {
-   "_comment": "SPRITE STAND-IN: uses `bat` (the only dark cave-creature sheet in-tree) -- flagged in docs/VISUAL-LOG.md for a real arachnid sprite (Track B / PixelLab).",
+   "_comment": "Broad shield-like carapace, eight-leg silhouette, and dedicated directional combat animations distinguish it from Sewer Bats.",
    "id": "shield_spider",
    "display_name": "Shield Spider",
-   "sprite": "bat",
+   "sprite": "shield_spider",
+   "combat_scale": 0.3,
    "side": "enemy",
    "stats": {
     "str": 9,

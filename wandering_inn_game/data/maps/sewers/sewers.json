@@ -277,12 +277,7 @@
     10
    ],
    "display_name": "Shield Spider Nest",
-   "sprite": "bat",
-   "tint": [
-    0.4,
-    0.44,
-    0.52
-   ],
+   "sprite": "shield_spider",
    "observe": "Two of them, banded carapaces catching the moss-light, waiting where the silk is thickest. Their legs test the air toward you. Behind them the tunnel drops away, and more eyes catch the light down there than you want to count.",
    "arena": "sewers_nest",
    "enemies": [
@@ -315,7 +310,7 @@
     10
    ],
    "display_name": "Overlook Ledge",
-   "sprite": "boulder",
+   "sprite": "nest_ledge",
    "requires_skill": "observe",
    "skill_hint_toast": "A perfect vantage over the nest, for a trained eye.",
    "on_skill_use": {
@@ -333,7 +328,7 @@
     12
    ],
    "display_name": "Collapsed Fissure",
-   "sprite": "boulder",
+   "sprite": "deep_fissure",
    "observe": "The floor gave way here, not long ago: a raw crack breathing air colder and older than the sewers ever hold. The claw-scores on its lip all point one way: down. Something climbed up through this, and means to again.",
    "on_interact_accomplishment": "found_the_fissure",
    "toast": "A fresh fissure splits the sewer floor, exhaling a dry, breathing cold from far below. Deep gouges rake the stone lip. Something big has been using this as a door.",
