@@ -798,6 +798,21 @@
 			"abilities": [],
 			"description": "A single fang, longer than a hand, drawn from the dark the gallery's silk led back to. The point is still sharp enough to matter.",
 			"lore": "Whatever nests south of the gallery has fangs enough to spare one and never notice. Krshia would call this Silverfang-caliber trophy work, if Krshia had ever seen the thing it came from."
+		},
+		{
+			"_comment": "Issue #92 R4: the res-3 tradeoff item, reachable the moment resonance_capacity can hit 3 (wi_game.gd's sleep() growth hook, gated on door_awakened) -- resonance 3 is the validator's own hard ceiling (tests/test_items.gd), the SAME 'spends the WHOLE budget alone' shape moon_bone_amulet established at capacity 2, one tier up: wear this alone, or spread the new third point across smaller charms instead -- a real choice, not a strict upgrade. Granted alongside anchor_stone itself (data/maps/ruin/ruin_surface.json's anchor_stone_pedestal `contains` list -- a stone that size doesn't come free of its cradle without shedding a piece), so it's carried well before the capacity to wear it exists (the SAME 'earned early, usable later' shape watch_token/brothers_marker already establish for a gate-token accessory) -- door_awakening.json's own canonical proves the refusal-then-acceptance arc end to end. No `price` (loot-only, no established vendor worth -- the moon_bone_amulet/construct_core_shard precedent).",
+			"id": "anchor_sliver",
+			"name": "Anchor Sliver",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 4,
+			"damage_reduction": 1,
+			"resonance": 3,
+			"tier": "enchanted",
+			"abilities": [],
+			"description": "A sliver worked loose from the anchor stone once it finally settled, warm as the whole and small enough to wear.",
+			"lore": "Warmage Thresk's stonework doesn't split so much as it agrees to share the load. What's left fits a chain, a wrist, a coat lining -- wherever you decide it belongs, it decides too."
 		}
 	]
 }

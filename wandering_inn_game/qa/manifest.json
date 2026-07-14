@@ -2008,6 +2008,7 @@
     "dialogue": [],
     "systems": [
      "dialogue",
+     "economy",
      "exploration",
      "night_phase",
      "portals"

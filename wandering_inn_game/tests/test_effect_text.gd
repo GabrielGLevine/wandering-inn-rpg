@@ -128,6 +128,10 @@ const EXPECTED_ITEMS := {
 	"construct_core_shard": ["+3 HP", "Reduces every hit taken by 1", "Resonance 2"],
 	"warded_coil_charm": ["+2 HP", "Resonance 1"],
 	"kingslayer_fang": ["+1 damage on melee hits", "+1 HP", "Resonance 1"],
+	# Issue #92 R4: the res-3 tradeoff item -- resonance 3 joins the +4 HP/
+	# dr+1 mod lines exactly like any other accessory card (no abilities, no
+	# price -- loot-only, moon_bone_amulet/construct_core_shard precedent).
+	"anchor_sliver": ["+4 HP", "Reduces every hit taken by 1", "Resonance 3"],
 }
 
 const EXPECTED_SKILLS := {

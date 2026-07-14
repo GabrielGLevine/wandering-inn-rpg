@@ -107,9 +107,11 @@ var equipped: Dictionary = {WIKeys.WEAPON: "", "armor": "", "accessory_1": "", "
 ## whatever `item()` reports). Every item currently in the catalog is uncatalogued for
 ## `resonance` and counts 0 (`item(id).get(WIKeys.RESONANCE, 0)`), so this budget
 ## is inert until an item ships with a real nonzero
-## value. Default 2. Capacity GROWTH is a later beat -- this field exists and
-## round-trips (additive-optional save field, tolerant default 2, NO version
-## bump) but nothing currently mutates it.
+## value. Default 2. Issue #92 R4: capacity GROWTH has landed -- `sleep()`'s
+## own resonance-growth hook (mirroring `door_study_sleeps`' shape, gated on
+## `door_awakened`) bumps this 2->3 exactly once, still the SAME additive-
+## optional save field (tolerant default 2, NO version bump -- this field
+## already round-tripped an arbitrary int before R4 ever mutated it live).
 var resonance_capacity: int = 2
 ## Container entity id -> true once its `contains` list has been emptied by
 ## an interact. Additive save field (v5).
@@ -3455,6 +3457,47 @@ func sleep() -> void:
 		record_accomplishment("second_door_study_sleeps")
 		if accomplishment_count("second_door_study_sleeps") >= 2:
 			record_accomplishment("dungeon_attuned")
+			anything_happened = true
+
+	# Issue #92 R4 (resonance growth): a THIRD mirror of door_study_sleeps'
+	# own shape (opaque per-sleep counter -> one-time bank at a fixed count),
+	# alongside second_door_study_sleeps just above -- but gated on
+	# door_awakened ALREADY being banked, not on the three beat-3 counters
+	# directly. This is deliberate, not incidental: door_awakening.json's own
+	# canonical exact-pins the awakening sleep's own veil line count at
+	# `lines:1` (door_awakened's single GDI line, asserted end to end) --
+	# gating this hook on the SAME three counters door_study_sleeps reads
+	# would let it ALSO complete on that exact sleep (both hooks would start
+	# counting from the same trigger and share the same N), adding a second
+	# line and breaking that pin. Gating on door_awakened>=1 means this
+	# hook's FIRST possible increment IS the awakening sleep itself
+	# (harmless -- it only takes this hook's FIRST of N=2 counts; one
+	# further sleep still stands between that and the bank), so its own
+	# reveal can only ever land on a LATER, separate sleep -- the exact same
+	# "AFTER, not alongside" shape
+	# second_door_study_sleeps already established for its own reason
+	# (a genuinely later mini-arc) two paragraphs up. A SHORTER mirror (N=2,
+	# matching second_door_study_sleeps' own precedent for a lighter-weight
+	# secondary payoff, not a second full awakening ceremony) banks
+	# `resonance_grown` once and bumps `resonance_capacity` 2->3 -- the
+	# res-3 tradeoff item (anchor_sliver, already carried since the ruin
+	# recovery beat -- see its own items.json _comment) becomes legally
+	# equippable from this sleep on. OPAQUE-UNTIL-SLEEP: banks silently, no
+	# toast, no progress text; sleep_veil.gd's own catch on `resonance_grown`
+	# supplies the single reveal line (the veil's sixth cameo). `resonance_
+	# grown` is its own independent one-time flag, NOT derived from door_
+	# study_sleeps'/second_door_study_sleeps' own counts -- an OLD save that
+	# already had door_awakened banked before this feature shipped still
+	# earns the growth over its own next 2 qualifying sleeps, no special
+	# migration (resonance_capacity is already a plain additive-optional
+	# save field with NO version bump, round-tripping an arbitrary int since
+	# before this hook ever mutated it live -- see that field's own doc
+	# comment).
+	if accomplishment_count("door_awakened") >= 1 and accomplishment_count("resonance_grown") < 1:
+		record_accomplishment("catalyst_attunement_sleeps")
+		if accomplishment_count("catalyst_attunement_sleeps") >= 2:
+			record_accomplishment("resonance_grown")
+			resonance_capacity += 1
 			anything_happened = true
 
 	# The Garden earn condition (spec §5: "act >= III AND K-of-N inn accomplishments";
