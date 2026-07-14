@@ -79,6 +79,17 @@ func _init() -> void:
 	if not items_config["items"] is Array:
 		_fail("items.json items must be an array")
 
+	# Issue #92 R3: loaded UP FRONT (not after the items loop, as the
+	# weapon-tag cross-reference below still does) so the abilities
+	# validator can check every ability id against real skills.json entries
+	# in the SAME pass as everything else.
+	var skills_config_early: Dictionary = _load("res://data/skills.json")
+	if not skills_config_early.has("skills"):
+		_fail("skills.json missing skills")
+	var known_skill_ids: Dictionary = {}
+	for sk: Dictionary in skills_config_early["skills"]:
+		known_skill_ids[String(sk["id"])] = true
+
 	var ids: Dictionary = {}
 	var weapon_families_present: Dictionary = {}
 
@@ -145,8 +156,20 @@ func _init() -> void:
 
 		if not entry["abilities"] is Array:
 			_fail("item %s abilities must be an array" % id)
+		# Issue #92 R3: abilities is no longer an inert-always-empty schema
+		# hook -- a non-empty grant is legal ONLY on an accessory (the
+		# combat-only relic-grant shape WICombatBuild.fold_abilities folds at
+		# start_combat), and every listed id must be a real skills.json entry
+		# (typo/drift tripwire -- an unknown id would silently no-op forever
+		# inside fold_abilities' plain string-append, never erroring at
+		# runtime).
 		if not (entry["abilities"] as Array).is_empty():
-			_fail("item %s abilities must be empty (INERT schema hook in M7): got %s" % [id, JSON.stringify(entry["abilities"])])
+			if kind != "accessory":
+				_fail("item %s abilities non-empty but kind is %s (abilities are accessory-only, issue #92 R3): got %s" % [id, kind, JSON.stringify(entry["abilities"])])
+			for raw_ability: Variant in (entry["abilities"] as Array):
+				var ability_id := String(raw_ability)
+				if not known_skill_ids.has(ability_id):
+					_fail("item %s abilities lists unknown skill id: %s" % [id, ability_id])
 
 		if String(entry["name"]).is_empty():
 			_fail("item %s has empty name" % id)
@@ -176,9 +199,9 @@ func _init() -> void:
 	# "weapon" field seam -- see wi_combat.gd's sword_skill_used/
 	# spear_skill_used doc comment) must have at least one items.json entry of
 	# that weapon_family, or an equipped weapon could never field that skill.
-	var skills_config: Dictionary = _load("res://data/skills.json")
-	if not skills_config.has("skills"):
-		_fail("skills.json missing skills")
+	# Reuses the SAME skills_config_early load from up top (issue #92 R3) --
+	# no need to re-read the file a second time.
+	var skills_config: Dictionary = skills_config_early
 
 	var weapon_tags_used: Dictionary = {}
 	var spells_with_weapon_tag: Array[String] = []

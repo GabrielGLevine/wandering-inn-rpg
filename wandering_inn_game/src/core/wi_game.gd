@@ -2704,6 +2704,12 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	var accessories: Array = []
 	for slot_name: String in ["accessory_1", "accessory_2", "accessory_3"]:
 		accessories.append(item(String(equipped.get(slot_name, ""))))
+	# Issue #92 R3: folds every equipped accessory's `abilities` grant onto
+	# the already weapon-gated kit -- AFTER weapon_gated_kit (an ability
+	# grant is never itself weapon-gate-filtered), BEFORE the mods merge
+	# just below (WICombatBuild.fold_abilities's own doc comment has the
+	# full combat-only/no-persistence-leak rationale).
+	pc[WIKeys.SKILLS] = WICombatBuild.fold_abilities(pc[WIKeys.SKILLS] as Array, accessories)
 	var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
 	# Issue #92 R1: pending_meal's next_fight buff folds in HERE, at the
 	# SAME equipment-mods merge point well_fed's own +2 hp_mod rides just

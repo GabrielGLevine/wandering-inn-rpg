@@ -1736,6 +1736,39 @@ func _init() -> void:
 	# proving the repeatable-sink shape R1's whole design leans on.
 	assert(iu3.pickup("test_draught", "test"), "a fresh pickup after consumption succeeds -- nothing left to no-op against")
 
+	# --- Issue #92 R3: relic abilities fold into the combat kit ONLY, never
+	# player_skills/known_skills()/persistence -- WICombatBuild.fold_abilities,
+	# the SAME equipment-mods merge point well_fed/pending_meal ride (wf6/iu1
+	# above). A synthetic accessory (test_relic) since moon_bone_amulet's own
+	# real grant is exercised live by sim_combat_batch.gd's moon_bone_solo cell. ---
+	var cc_ability: Dictionary = combat_config.duplicate(true)
+	var ability_items: Array = (_load_json("res://data/items.json")["items"] as Array).duplicate(true)
+	ability_items.append({"id": "test_relic", "name": "Test Relic", "kind": "accessory", "weapon_family": "none", "damage_mod": 0, "hp_mod": 0, "damage_reduction": 0, "resonance": 0, "tier": "mundane", "abilities": ["invisibility"], "description": "d", "lore": "l"})
+	cc_ability["items"] = {"items": ability_items}
+
+	var ab1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_ability)
+	ab1.transition("street", Vector2i(4, 3))
+	ab1.pickup("test_relic", "test")
+	assert(ab1.equip("test_relic"), "equip the synthetic relic")
+	assert(not ab1.known_skills().has("invisibility"), "abilities never leak into known_skills() before combat")
+	assert(ab1.start_combat("goblin_encounter_2"), "combat starts with the relic equipped")
+	assert((ab1.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("invisibility"), "the relic's ability folds into the PC's combat kit at start_combat")
+	assert(not ab1.known_skills().has("invisibility"), "abilities still absent from known_skills() -- combat-only, not a real class/skill grant")
+	assert(not ab1.player_skills.has("invisibility"), "abilities never touch player_skills -- no persistence leak")
+	assert(int(ab1.combat.combatants["pc"][WIKeys.MAX_MP]) > 0, "the granted invisibility's mp_cost composes max_mp for free (WICombat._init's any-mp_cost-skill scan)")
+
+	# Save round-trip: nothing new to save (no new field was added at all) --
+	# combat state (and therefore any in-fight ability fold) is never
+	# save-serialized in the first place, and player_skills/equipped
+	# round-trip exactly as they would without abilities existing at all.
+	var ab_save_data: Dictionary = WISave.serialize(ab1)
+	assert(not (ab_save_data["state"] as Dictionary).has("combat"), "combat state is never save-serialized -- an in-fight ability fold has nothing to leak into")
+	assert(not ((ab_save_data["state"] as Dictionary)["player_skills"] as Array).has("invisibility"), "the saved player_skills carries no ability leak")
+	var ab_restored := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_ability)
+	assert(WISave.apply(ab_restored, ab_save_data), "the relic-equipped save round-trips")
+	assert(ab_restored.equipped.get("accessory_1", "") == "test_relic", "the relic itself round-trips as plain equipped state (unaffected by R3)")
+	assert(not ab_restored.known_skills().has("invisibility"), "a freshly-loaded game still shows no ability leak in known_skills()")
+
 	# --- Dialogue effect {"item": id}: pickup with source = conversation id ---
 	var item_graph := {
 		"start": "n1",

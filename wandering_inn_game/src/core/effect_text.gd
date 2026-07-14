@@ -48,8 +48,10 @@ const _STATUS_VERB := {
 
 ## Concrete effect lines for an inventory/shop item card, top to bottom:
 ## combat mods (damage, range, weapon-kit family if any), HP/reduction,
-## resonance if present, then the gold value. A plain item with no mods and
-## no price yields an empty array — its card is name + description only.
+## resonance if present, a relic's `abilities` combat grant if any (issue
+## #92 R3), a consumable's `use_effect` if any (issue #92 R1), then the gold
+## value. A plain item with no mods and no price yields an empty array — its
+## card is name + description only.
 ##
 ## GH#70: `range` (items.json, absent/1 = melee) is now part of the
 ## VISIBLE-CURRENCY set alongside dice/AP -- a weapon with `range > 1` (a bow)
@@ -57,7 +59,14 @@ const _STATUS_VERB := {
 ## hits" instead of "melee hits" so the card never claims a bow lands melee
 ## damage. Every pre-GH#70 item omits `range` (defaults 0, not > 1), so this
 ## is byte-identical for every shipped weapon but the two new bows.
-static func item_effect_lines(item: Dictionary) -> Array[String]:
+##
+## `skills_catalog` (issue #92 R3) resolves an `abilities` id's display name --
+## same catalog-injection idiom as `status_line`/`_caster_weapon_die` (pass the
+## array under skills.json's "skills" key for drift-tripwire testing; the
+## default empty loads the shipped file). Every pre-#92 item has no
+## `abilities` key or an empty one, so this is byte-identical for every item
+## that predates R3.
+static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> Array[String]:
 	var lines: Array[String] = []
 	var damage_mod := int(item.get(WIKeys.DAMAGE_MOD, 0))
 	var weapon_range := int(item.get(WIKeys.RANGE, 0))
@@ -92,6 +101,15 @@ static func item_effect_lines(item: Dictionary) -> Array[String]:
 	# Resonance is a live gear stat; formatted here so the card carries it.
 	if item.has(WIKeys.RESONANCE) and int(item[WIKeys.RESONANCE]) > 0:
 		lines.append("Resonance %d" % int(item[WIKeys.RESONANCE]))
+	# Issue #92 R3: a relic accessory's abilities grant, generated from
+	# the SAME field WICombatBuild.fold_abilities folds into the wearer's
+	# kit at start_combat (drift rule) -- never a hand-written twin. Every
+	# pre-R3 item has no `abilities` key or an empty one, so this line is
+	# absent for all of them.
+	for raw_ability: Variant in (item.get(WIKeys.ABILITIES, []) as Array):
+		var ability_display := _skill_display_name(String(raw_ability), skills_catalog)
+		if ability_display != "":
+			lines.append("Grants %s in combat" % ability_display)
 	# Issue #92 R1: a consumable's use_effect, generated from the SAME
 	# field WIItems.resolve_use dispatches on (drift rule) -- never a
 	# hand-written twin. "heal" (a draught, combat-only) and "next_fight"
@@ -406,6 +424,22 @@ static func _load_skills() -> Array:
 	if parsed is Dictionary and (parsed as Dictionary).has(WIKeys.SKILLS):
 		return (parsed as Dictionary)[WIKeys.SKILLS]
 	return []
+
+
+## Issue #92 R3: resolves a skill id to its `display_name` (already
+## bracket-formatted, e.g. "[Invisibility]") from the skills catalog --
+## same derive-from-where-it's-defined idiom as `_caster_weapon_die`. Falls
+## back to the shipped file when no catalog is injected, and to "" for an
+## unknown id (a card simply omits the line rather than emitting a raw id --
+## the abilities validator in tests/test_items.gd is the real typo tripwire).
+static func _skill_display_name(skill_id: String, skills_catalog: Array = []) -> String:
+	var catalog := skills_catalog
+	if catalog.is_empty():
+		catalog = _load_skills()
+	for skill: Dictionary in catalog:
+		if String(skill.get(WIKeys.ID, "")) == skill_id:
+			return String(skill.get(WIKeys.DISPLAY_NAME, ""))
+	return ""
 
 
 ## The literal die a spell_damage cast actually rolls, per wi_combat.gd's

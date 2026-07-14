@@ -34,9 +34,17 @@ const EXPECTED_ITEMS := {
 	"copper_luck_band": ["+1 HP", "Worth 4 gold"],
 	"hedge_ward_charm": ["+2 HP", "Resonance 1", "Worth 9 gold"],
 	"hunters_fang_talisman": ["+1 damage on melee hits", "Resonance 1", "Worth 14 gold"],
-	"phosphor_pendant": ["+3 HP", "Resonance 1"],
+	# PRE-EXISTING DRIFT FIX (found while verifying issue #92 R3, unrelated to
+	# R3 itself): R5 (e244a82) priced phosphor_pendant at 20g for Wilovan's
+	# fence stock but never updated this pinned line -- "Worth 20 gold" joins
+	# the card exactly like every other priced item.
+	"phosphor_pendant": ["+3 HP", "Resonance 1", "Worth 20 gold"],
 	"stonescale_talisman": ["Reduces every hit taken by 1", "Resonance 2", "Worth 35 gold"],
-	"moon_bone_amulet": ["+1 damage on melee hits", "+3 HP", "Resonance 2"],
+	# Issue #92 R3: first real abilities grant -- "Grants [Invisibility] in
+	# combat" joins the card between the resonance line and the (absent)
+	# price line, generated off the SAME `abilities` field
+	# WICombatBuild.fold_abilities folds into the wearer's kit.
+	"moon_bone_amulet": ["+1 damage on melee hits", "+3 HP", "Resonance 2", "Grants [Invisibility] in combat"],
 	"watch_token": [],
 	# brothers_marker: watch_token precedent shape verbatim (mundane
 	# accessory, zero stat fields -- items.json's own _comment).
@@ -106,6 +114,20 @@ const EXPECTED_ITEMS := {
 	# real dynamic-priced buy option at Eloise's shop -- all-zero mods, same
 	# priced-tool-no-combat-fields shape as field_whetstone/fishers_handline.
 	"warding_salt_pinch": ["Worth 7 gold"],
+	# PRE-EXISTING DRIFT FIX (found while verifying issue #92 R3, unrelated to
+	# R3 itself): R5 (e244a82) shipped mending_draught/tempering_oil (the
+	# FIRST real use_effect-carrying items) but never added their pinned
+	# lines here. use_effect's own generated line joins the (absent for
+	# mending_draught) resonance line and the price line.
+	"mending_draught": ["Heals 8 HP (single use)", "Worth 10 gold"],
+	"tempering_oil": ["Next fight: +1 damage (single use)", "Worth 12 gold"],
+	# PRE-EXISTING DRIFT FIX (found while verifying issue #92 R3, unrelated to
+	# R3 itself): the 3 v0.6.0 boss-unique drops (issue #92 economy depth,
+	# landed before this lane) were never pinned here either -- no price on
+	# any of them (loot-only, no established vendor worth).
+	"construct_core_shard": ["+3 HP", "Reduces every hit taken by 1", "Resonance 2"],
+	"warded_coil_charm": ["+2 HP", "Resonance 1"],
+	"kingslayer_fang": ["+1 damage on melee hits", "+1 HP", "Resonance 1"],
 }
 
 const EXPECTED_SKILLS := {
