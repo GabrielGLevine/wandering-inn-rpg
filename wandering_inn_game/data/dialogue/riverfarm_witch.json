@@ -246,6 +246,22 @@
      "goto": "bought"
     },
     {
+     "_comment": "Issue #92 R5: the witch's own repeatable combat consumable -- mending_draught (WIItems.resolve_use's 'heal' arm, R1) is now a REAL sink (bought -> carried -> used -> gone -> repurchasable, since items never stack, R1's own load-bearing rule). Baked-in price text (the ORIGINAL 4-option style: yarrow/sleeproot/sachet/wardstone_bead above), not the dynamic haggle-text convention warding_salt_pinch demos just above -- dialogue.gd's `_priced_text` still rewrites this baked '(N gold)' in place for a [Bargain] holder exactly like those original four (this node's own `haggle: true` applies uniformly, not per-option). Appended AFTER every existing option per this file's own precedent (see warding_salt_pinch's identical placement note) -- qa/scripts/riverfarm_talk.json's exact-array pin re-derived in the same commit.",
+     "text": "That dark red draught, for the road. (10 gold)",
+     "requires": {
+      "gold": 10
+     },
+     "effects": [
+      {
+       "gold": -10
+      },
+      {
+       "item": "mending_draught"
+      }
+     ],
+     "goto": "bought"
+    },
+    {
      "text": "Nothing today.",
      "goto": "hub"
     }

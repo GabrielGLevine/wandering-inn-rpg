@@ -611,7 +611,7 @@
 			"lore": "Thrown across a threshold, it settles whatever's inclined to cross it uninvited. Not much good against anything that was already invited in."
 		},
 		{
-			"_comment": "Issue #92 R1/R2: the FIRST real use_effect-carrying item (a combat-only heal draught, WIItems.resolve_use's 'heal' arm -- see that file's own doc comment). Not yet wired into any shop node (R5's job); lands here inert-but-purchasable-eventually so R2's hotbar-surfacing QA canonical has a real catalog item to exercise (a QA fixture grants it directly). kind:\"tool\" (not equippable -- use_effect and an equip slot are mutually exclusive, tests/test_items.gd's own new validator arm). Heal amount (8) matches second_wind's own self-heal skill for a consistent 'a solid partial heal' feel across the two surfaces. Priced in the witch's own herb-craft band (dried_yarrow_bundle 4g .. witch_wardstone_bead 16g) -- a genuine repeatable AP-for-HP trade once R5 wires her to sell it, not a one-off freebie.",
+			"_comment": "Issue #92 R1/R2/R5: the FIRST real use_effect-carrying item (a combat-only heal draught, WIItems.resolve_use's 'heal' arm -- see that file's own doc comment). R2 landed it inert-but-purchasable-eventually (a QA fixture granted it directly, no shop wiring yet); R5 wires it into riverfarm_witch.json's 'shop' node (appended after the existing options, per that file's own _comment) -- Eloise's real repeatable sink now that use_item makes a bought consumable genuinely consumed. kind:\"tool\" (not equippable -- use_effect and an equip slot are mutually exclusive, tests/test_items.gd's own new validator arm). Heal amount (8) matches second_wind's own self-heal skill for a consistent 'a solid partial heal' feel across the two surfaces. Priced in the witch's own herb-craft band (dried_yarrow_bundle 4g .. witch_wardstone_bead 16g).",
 			"id": "mending_draught",
 			"name": "Mending Draught",
 			"kind": "tool",
@@ -626,6 +626,23 @@
 			"use_effect": { "heal": 8 },
 			"description": "A corked vial of something dark red, thick as syrup, that smells faintly of yarrow and copper.",
 			"lore": "The witch keeps a shelf of these behind the tea things -- not magic, she says, just knowing which roots do what. Drink it mid-fight and the wound closes slower than a real healer's work, but it closes."
+		},
+		{
+			"_comment": "Issue #92 R5: the forge tier's own commission stock -- a posted-price consumable (NO haggle:true flag anywhere in this file, matching the civic no-discount register the file's own header comment already cites: docs/design/city-identity-bible.md's 'prices are POSTED... no haggling'), Pallass's own repeatable sink now that use_item makes a bought consumable genuinely consumed (R1). A next_fight-shaped buff (field-only, WIItems.resolve_use's other sanctioned shape) rather than a heal -- a forge-tempered edge is a pre-fight preparation, not a battlefield medical draught, so it never competes with mending_draught's combat-hotbar slot; it banks WIGame.pending_meal and folds into the VERY NEXT start_combat build the same way well_fed's own +2 hp_mod does. kind:\"tool\" (not equippable). Priced above mending_draught's 10g (a permanent-fight-prep edge reads as worth slightly more than a single heal) but well under the T2 weapons (15-18g).",
+			"id": "tempering_oil",
+			"name": "Tempering Oil",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 12,
+			"use_effect": { "next_fight": { "damage_mod": 1 } },
+			"description": "A small stoppered flask of dark oil, faintly warm, smelling of quenched iron.",
+			"lore": "Forge-tier stock, sold to anyone bound for the floor below -- work an edge with it the night before and the steel bites truer the first time it matters. One coat, one fight; the tier doesn't sell the recipe, only the flask."
 		},
 		{
 			"_comment": "Post-Riverfarm attunement purchase (riverfarm_witch.json's 'shop' node, gated on blight_lifted): banks invrisil_attuned alongside the item grant -- dialogue effects compose as separate {gold},{item},{accomplishment} dicts on one option, the resonant_catalyst/bought_catalyst precedent (krshia_crate.json), no new effect machinery. unsellable:true for the same reason as resonant_catalyst: it carries a real price (so sellable_items() would otherwise catalog it) but the lore below already says it's a keepsake -- the 'bought, not found' shape, unlike the found-only anchor_stone (which has no price field at all).",

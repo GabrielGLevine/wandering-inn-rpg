@@ -60,7 +60,36 @@
      "goto": "collect_stamp"
     },
     {
+     "_comment": "Issue #92 R5: the forge tier's own commission stock -- gated on pallass_entry_stamped (the SAME accomplishment the hub's very first option above requires), NOT ungated: qa/scripts/pallass_peek.json's zero-progress boot relies on EVERY quest-chain option being accomplishment-hidden so 'Not now.' is the hub's single visible row (confirm-row-0 = exit) -- an ungated gold-only option would show up as a SECOND visible row there and break that contract. Posted price, no exceptions -- NO haggle:true flag anywhere in this file, the SAME civic no-discount register permit_intro's own line states outright. A next_fight-shaped buff (WIItems.resolve_use's field-only shape), a genuine repeatable sink now that use_item makes a bought consumable actually consumed (R1).",
+     "text": "A vial of tempering oil, if you're headed to the floor. (12 gold)",
+     "requires": {
+      "gold": 12,
+      "accomplishment": {
+       "pallass_entry_stamped": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -12
+      },
+      {
+       "item": "tempering_oil"
+      }
+     ],
+     "goto": "tempering_sold"
+    },
+    {
      "text": "Not now.",
+     "end": true
+    }
+   ]
+  },
+  "tempering_sold": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "Posted price, paid in full. Work it into the edge the night before -- I don't sell instructions, only the flask.",
+   "options": [
+    {
+     "text": "Understood.",
      "end": true
     }
    ]
