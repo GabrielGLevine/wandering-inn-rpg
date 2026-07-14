@@ -121,6 +121,18 @@
  "_comment_decor": "Visible generic doors must be entities, not decor, so interaction returns a locked response instead of Nothing there.",
  "decor": [
   {
+   "sprite": "rug_tan",
+   "cell": [
+    6,
+    2
+   ],
+   "tint": [
+    0.72,
+    0.46,
+    0.5
+   ]
+  },
+  {
    "sprite": "window_blue",
    "cell": [
     10,
@@ -220,6 +232,7 @@
    ],
    "display_name": "Lyonette's Door",
    "sprite": "door",
+   "field_y_sort_bias_px": 20.0,
    "locked_toast": "Locked. Lyonette keeps exactly one door in this inn that isn't anyone's business but hers.",
    "observe": "Lyonette's door, shut the way she shuts most things: completely, and without discussion. Whatever the room looks like behind it, you'll have to imagine it; she's not one to leave doors, or herself, half open."
   }

@@ -841,9 +841,9 @@
    ],
    "decor": [
     {
-     "sprite": "mushroom_purple_m",
-     "cell": [
-      -1,
+      "sprite": "boulder",
+      "cell": [
+        -1,
       3
      ]
     },
@@ -963,16 +963,16 @@
    ],
    "decor": [
     {
-     "sprite": "boulder",
-     "cell": [
-      -1,
+      "sprite": "dungeon_statue",
+      "cell": [
+        -1,
       2
      ]
     },
     {
-     "sprite": "boulder",
-     "cell": [
-      12,
+      "sprite": "dungeon_rubble",
+      "cell": [
+        12,
       5
      ]
     },

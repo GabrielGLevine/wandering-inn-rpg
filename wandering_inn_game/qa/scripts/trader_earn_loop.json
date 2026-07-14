@@ -45,7 +45,7 @@
   {"action": "assert_state", "path": "classes.trader", "equals": 1},
   {"action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5},
 
-  {"_comment": "== (3) THE BARGAIN-DISCOUNTED BUY: Eloise (witch_hollow, 3,9 -- riverfarm_talk.json's own exact approach cell). First talk this waking (fresh since the sleep just cleared entity_first_use) absorbs the rotating pool line first -- a SECOND interact opens the real graph (the SAME two-interact idiom every canonical uses post-sleep). Hub post-blight_lifted: 0 blight-really-about, 1 what-have-you-got (shop), 2 the NEW sell option, 3 Just tea. Take 1. ==", "action": "teleport", "map": "witch_hollow", "cell": [3, 9]},
+  {"_comment": "== (3) THE BARGAIN-DISCOUNTED BUY: Eloise (witch_hollow, 5,9 -- riverfarm_talk.json's own exact approach cell). First talk this waking (fresh since the sleep just cleared entity_first_use) absorbs the rotating pool line first -- a SECOND interact opens the real graph (the SAME two-interact idiom every canonical uses post-sleep). Hub post-blight_lifted: 0 blight-really-about, 1 what-have-you-got (shop), 2 the NEW sell option, 3 Just tea. Take 1. ==", "action": "teleport", "map": "witch_hollow", "cell": [5, 9]},
   {"action": "move", "direction": "up", "steps": 1},
   {"action": "press", "name": "interact"},
   {"action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Eloise"}, "timeout_sec": 5},

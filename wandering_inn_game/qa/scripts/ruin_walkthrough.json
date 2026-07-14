@@ -24,7 +24,7 @@
 
   { "_comment": "Ruin atmosphere: the cold-daylight mood pin + map render fire from the map-change rebuild (atmosphere_check idiom).", "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "ruin_surface", "phase": "day" } },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "ruin_surface" } },
-  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 4, "fallbacks": 0 } },
+  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 5, "fallbacks": 0 } },
   { "action": "screenshot", "name": "00_ruin_landing" },
 
   { "_comment": "== WALK THE BOUNDS, leg 1: top edge east, (2,2) -> (17,2). Row y=2 is clear of every blocked/entity cell.", "action": "move", "direction": "right", "steps": 15 },
@@ -38,7 +38,10 @@
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_pedestal_locked" },
 
-  { "_comment": "== leg 3: back across mid, (17,5) -> (2,5). Row y=5 is clear.", "action": "move", "direction": "left", "steps": 15 },
+  { "_comment": "== leg 3: back across mid, (17,5) -> (10,5), frame the statue/rubble pair, then continue to (2,5). Row y=5 remains clear.", "action": "move", "direction": "left", "steps": 7 },
+  { "action": "assert_state", "path": "player_cell", "equals": [10, 5] },
+  { "action": "screenshot", "name": "01b_ruin_architecture_on_route" },
+  { "action": "move", "direction": "left", "steps": 8 },
   { "action": "assert_state", "path": "player_cell", "equals": [2, 5] },
 
   { "_comment": "== leg 4: south to the bottom edge, (2,5) -> (2,13). Column x=2 is clear below the ruin_exit door at (2,1).", "action": "move", "direction": "down", "steps": 8 },
