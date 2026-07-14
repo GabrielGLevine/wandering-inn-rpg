@@ -29,8 +29,11 @@ name) is a frozen read-only archive.
 ## Project identity (non-negotiable)
 - **QA-first:** every player-visible feature ships with a bus event, a
   `ui_*_rendered` confirmation, and a QA-script assertion. Humans gate FEEL.
-- **Stats hidden:** raw STR/DEX/CON/INT/WIS/CHA never appear in any
-  player-facing text. HP/MP/AP/damage numbers are allowed.
+- **Stat grammar (default, not a hard ban — softened 2026-07-13):** raw
+  STR/DEX/CON/INT/WIS/CHA stay out of player-facing text by default;
+  HP/MP/AP/damage numbers are the visible currency. Enforced by
+  test_effect_text's tripwires — don't restate it in briefs; clarity
+  exceptions allowed (update the tripwire in the same commit).
 - **Opaque-until-sleep:** never render progress-toward text (no "3/12 uses",
   no percentages, no merged-level numbers in prompts). Results only.
 - **Canon from the wiki** (`wiki.wanderinginn.com` mirror), never invented.

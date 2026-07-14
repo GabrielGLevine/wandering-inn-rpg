@@ -87,8 +87,9 @@ justifies a resolver — don't build it ad-hoc.
 
 ## PRODUCT LOCKS (checked every time)
 Opaque-until-sleep (no "3/12", no %, no merged-level in prompts — results
-only); stats hidden (STR/DEX/etc. never shown; HP/MP/AP/damage fine); canon
-names from the wiki.
+only); stat grammar default (STR/DEX/etc. out of player text by default,
+HP/MP/AP/damage fine — tripwire-enforced, clarity exceptions allowed);
+canon names from the wiki.
 
 ## Example
 Adding a level-10 evolution skill: add to `skills.json` (with `icon` if

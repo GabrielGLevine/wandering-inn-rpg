@@ -90,7 +90,7 @@ Skipping the anchor measurement on a sheet with under-figure padding
 (reproduces the Body_A bug); trusting text-guessed atlas coordinates
 without a screenshot; mixing style families in one layer; recoloring a
 tile instead of using a real prop sprite; browsing raw PNGs into context;
-forgetting the STR/DEX-hidden and canon-name rules apply to any new
+forgetting the stat-grammar default and canon-name rules apply to any new
 player-facing label (tooltips, hover text).
 
 ## Cross-references

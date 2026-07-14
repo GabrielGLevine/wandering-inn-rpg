@@ -8,7 +8,7 @@ Fresh Godot 4.7 project, QA-first: every feature must be agent-verifiable, no hu
 `docs/superpowers/specs/2026-07-01-wandering-inn-v4-agent-qa-foundation-design.md`
 for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skills] usable outside combat).
 
-**Product constraints (repo-wide, non-negotiable):** HP readouts + damage numbers player-visible (playtest decision, M2); raw STR/DEX/etc. stay forbidden. Lore canon from Wandering Inn Wiki, never invented.
+**Product constraints (repo-wide):** HP readouts + damage numbers player-visible (playtest decision, M2); raw attribute scores (STR/DEX/etc.) stay out of player-facing text by default — a convention enforced by `test_effect_text`'s tripwires, not a hard ban (softened 2026-07-13: clarity tradeoffs allowed, update the tripwire in the same commit). Lore canon from Wandering Inn Wiki, never invented.
 
 ## Commands
 
