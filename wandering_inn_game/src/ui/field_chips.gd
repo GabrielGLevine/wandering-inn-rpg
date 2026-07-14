@@ -55,6 +55,10 @@ const CHIP_TOP_OFFSET := 10.0
 ## post-construction cross-wiring idiom `_spawn_ui_layers` already uses for
 ## journal_ref/pause_menu_ref/inventory_ref between those three files).
 var pause_menu_ref: Node = null
+## Main-scene ref for `veil_modal_active()` -- defense-in-depth so chip
+## visibility never relies on the veil's own higher-CanvasLayer ColorRect
+## swallowing taps (the implicit cross-file layer-ordering invariant).
+var main_ref: Node = null
 var journal_ref: Node = null
 var inventory_ref: Node = null
 
@@ -168,7 +172,8 @@ func _apply_visibility() -> void:
 	# -- no exceptions, hides the whole layer (matches field_hotbar.gd's
 	# blanket combat/dialogue hide).
 	var hard_blocked := Game.sim.combat != null or Game.sim.dialogue != null \
-			or not Game.sim.pending_consolidation.is_empty()
+			or not Game.sim.pending_consolidation.is_empty() \
+			or (main_ref != null and bool(main_ref.veil_modal_active()))
 	visible = not hard_blocked
 	if hard_blocked:
 		return

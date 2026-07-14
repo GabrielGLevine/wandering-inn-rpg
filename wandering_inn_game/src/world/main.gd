@@ -336,6 +336,7 @@ func _spawn_ui_layers() -> void:
 	_field_chips.pause_menu_ref = _pause_menu
 	_field_chips.journal_ref = _journal
 	_field_chips.inventory_ref = _inventory
+	_field_chips.main_ref = self
 	add_child(_field_chips)
 	# The GDI sleep veil (fade-to-black + centered night
 	# announcements). Layer 30, above every other UI so the darkness covers the
