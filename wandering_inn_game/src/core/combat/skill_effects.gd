@@ -13,6 +13,9 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 	var effect_type := String(effect.get(WIKeys.TYPE, ""))
 	if effect_type == "line_damage":
 		return _resolve_line_damage(combat, actor_id, a, target_id, skill, effect)
+	# TRAP: AP_COST>0 gate is load-bearing — generalizing to every move_pool_bonus
+	# skill turns the two turn-start passives into a free repeatable pool exploit
+	# (0 AP, no re-press gate). Passives fall through and refuse; test_sim_core g18 pins.
 	if effect_type == "move_pool_bonus" and int(skill.get(WIKeys.AP_COST, 0)) > 0:
 		return _resolve_move_pool_bonus(combat, actor_id, a, skill, effect)
 	if effect_type == "invisibility":
@@ -184,6 +187,10 @@ static func _resolve_blast_damage(combat: WICombat, actor_id: String, a: Diction
 	return true
 
 
+## WALL-SHAPE CONTRACT (icy_floor + blast_damage share this): flat Chebyshev
+## radius clip, NOT shadow-casting — blocked cells excluded, cells BEYOND a wall
+## get no occlusion check. Indistinguishable at shipped radius 1; any radius>1
+## skill must decide occlusion or the two area effects drift silently.
 static func _radius_area(combat: WICombat, center: Vector2i, radius: int) -> Array[Vector2i]:
 	var cells: Array[Vector2i] = []
 	for dx in range(-radius, radius + 1):

@@ -1,5 +1,9 @@
 class_name WICombatBuild
 extends RefCounted
+## Shared combatant-build math for wi_game.gd's _build_player_combatant AND
+## tests/sim_combat_batch.gd. TRAP: hand-copying between the two = harness
+## silently measures a different game than shipped — keep shared here.
+## Deliberately NOT wi_combat.gd (fight-resolution CONSUMER, not builder).
 
 
 static func weapon_gated_kit(kit: Array, weapon_family: String, skills_by_id: Dictionary) -> Array:

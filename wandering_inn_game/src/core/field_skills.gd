@@ -24,6 +24,12 @@ func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, t
 	_set_light_active = set_light_active_cb
 
 
+## CONTRACT (plan P1): faced entity with requires_skill==skill_id + on_skill_use
+## routes via use_skill(skill_id, prop_id) — SAME seam interact() uses; emitted
+## event stream BYTE-IDENTICAL to interact-with-requires_skill. Fallthrough:
+## no qualifying entity -> skill's field_ambient toast; none authored -> refusal
+## idiom. Unknown-skill and non-field guards are the CALLER's job
+## (wi_game.use_skill_field) — never re-guard here.
 func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vector2i, current_map: String, frozen_cells: Dictionary, entity_first_use: Dictionary, is_freezable: bool) -> Dictionary:
 	# Required-skill props route through WIGame.use_skill so field and generic interaction share one effect seam.
 	if not known:

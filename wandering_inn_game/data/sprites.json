@@ -3268,7 +3268,7 @@
   }
  },
  "crop_row_orange": {
-  "_comment": "Licensed pick, Free Pack Farm.png.",
+  "_comment": "Licensed pick, Free Pack Farm.png. TRAP: x0-64 columns = icon-labelled seed sacks (renders as jerry-cans; shipped v0.4.0 bug). Real planted rows x32-176, 32px bands: y16 carrots, y80 leafy, y176 dark herbs; cut regions at inter-plant gap columns.",
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Farm.png",

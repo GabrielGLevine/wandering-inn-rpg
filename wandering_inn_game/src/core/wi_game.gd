@@ -599,6 +599,14 @@ func _door_gate_met(door_when: Dictionary) -> bool:
 	return _accomplishment_gate_met(door_when.get("requires", {}))
 
 
+## present_when = STRUCTURAL absence: is_cell_blocked/entity_at/_build_entities
+## all skip the entity. NOT visual_states `hidden` (render-only — still blocks,
+## still entity_at, still counts in ui_entities_rendered).
+## CONSTRAINT: a `requires`-gated producer must bank on a DIFFERENT map than the
+## entity lives on — sim reads are live but visuals build on MAP_CHANGED, so a
+## same-map bank leaves a sim-present INVISIBLE entity until re-entry. GH#104's
+## PHASE_CHANGED reconciler closes only the phase-shape same-map case; no
+## reconciler runs on ACCOMPLISHMENT_RECORDED.
 func entity_present(ent: Dictionary) -> bool:
 	if not ent.has("present_when"):
 		return true
@@ -1611,6 +1619,10 @@ func sleep() -> void:
 				"to": int(classes[class_id]),
 				"names": names,
 				"hp_delta": int(after_bonuses.get("con", 0)) - int(before_bonuses.get("con", 0)),
+				# TRAP: floor(bonus/2) equals combat's floor((base+bonus)/2) delta ONLY
+				# because PC base str/int are EVEN (combatants.json pc: str 12, int 8);
+				# odd base drifts this toast +-1 vs real delta — re-derive both clauses
+				# if a base stat edit lands.
 				"dmg_delta": int(after_bonuses.get("str", 0)) / 2 - int(before_bonuses.get("str", 0)) / 2,
 				"mp_delta": int(after_bonuses.get("int", 0)) / 2 - int(before_bonuses.get("int", 0)) / 2,
 			}
