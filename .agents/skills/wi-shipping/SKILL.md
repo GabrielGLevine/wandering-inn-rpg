@@ -47,6 +47,13 @@ order, BEFORE the sprite/data commit that references it.
    permanent API at this moment; `tests/test_shipped_ids.gd` only
    protects what's in the list. Skipping this step = new ids ship
    unfrozen and a later rename escapes the validator silently.
+   TRAP (caught at the v0.8.0 cut): the generator's data scan CANNOT
+   see code-banked ids — a new bare `record_accomplishment("literal")`
+   call site needs the literal added to STRUCTURAL_LITERALS in BOTH
+   generate_shipped_ids.py and tests/test_shipped_ids.gd, or the regen
+   silently ships it unfrozen (#118's `victories` did exactly this).
+   Pre-tag check: grep new record_accomplishment literals since the
+   last tag against the STRUCTURAL_LITERALS list.
 1. If protected assets changed: `scripts/make_asset_bundle.sh` →
    `gh release create bundle-vN ... -R GabrielGLevine/wandering-inn-rpg-assets`.
 2. `git tag v0.x.y && git push origin v0.x.y` (same repo now).
