@@ -342,12 +342,14 @@
    "timeout_sec": 5
   },
   {
-   "action": "assert_event_logged",
+   "_comment": "Exactly two matching renders must exist here: the deep-tunnels rebuild, then the same-map cameo reconcile after reached_the_warren.",
+   "action": "assert_event_count",
    "type": "ui_entities_rendered",
    "payload_contains": {
     "sprites": 8,
     "fallbacks": 0
-   }
+   },
+   "count": 2
   },
   {
    "action": "screenshot",

@@ -227,13 +227,6 @@
    ]
   },
   {
-   "sprite": "bush_green",
-   "cell": [
-    5,
-    8
-   ]
-  },
-  {
    "sprite": "crop_row_dark_green",
    "cell": [
     3,

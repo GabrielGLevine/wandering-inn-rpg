@@ -1,6 +1,33 @@
 extends SceneTree
 
 
+func _occurrence_count(source: String, needle: String) -> int:
+	return source.split(needle).size() - 1
+
+
+func _y_sort_contract_holds(source: String) -> bool:
+	var make_body := source.get_slice("func _make_entity_visual", 1).get_slice("\nfunc ", 0)
+	if make_body.find("field_y_sort_bias_override is float or field_y_sort_bias_override is int") == -1:
+		return false
+	if make_body.find("else float(catalog_entry.get(\"field_y_sort_bias_px\", 0.0))") == -1:
+		return false
+	if make_body.find("holder.position.y += y_sort_bias") == -1:
+		return false
+	if make_body.find("CELL - anchor.y * frame_size.y * spr.scale.y - y_sort_bias") == -1:
+		return false
+	if make_body.find("shadow.position = Vector2(CELL * 0.5, CELL - 2.0 - y_sort_bias)") == -1:
+		return false
+	var override_read := "ent.get(\"field_y_sort_bias_px\", null)"
+	if _occurrence_count(source, override_read) != 3:
+		return false
+	for function_name: String in ["_build_entities", "_refresh_entity_visual", "_reconcile_entity_presence"]:
+		var function_body := source.get_slice("func %s" % function_name, 1).get_slice("\nfunc ", 0)
+		if function_body.find(override_read) == -1:
+			return false
+	var rebuild_body := source.get_slice("func _rebuild_field", 1).get_slice("\nfunc ", 0)
+	return rebuild_body.find(override_read) == -1
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var source := FileAccess.get_file_as_string("res://src/world/world.gd")
@@ -17,15 +44,23 @@ func _init() -> void:
 	assert(body.find("hide_sprite") != -1,
 		"_reconcile_entity_presence must skip hide_sprite entities (matches _build_entities' guard)")
 
-	var make_body := source.get_slice("func _make_entity_visual", 1).get_slice("\nfunc ", 0)
-	assert(make_body.find("field_y_sort_bias_override") != -1,
-		"_make_entity_visual must accept a per-entity field Y-sort bias override")
-	assert(make_body.find("field_y_sort_bias_override is float or field_y_sort_bias_override is int") != -1,
-		"entity sort override must accept only numeric values and otherwise fall back to the sprite catalog")
-	for function_name: String in ["_build_entities", "_refresh_entity_visual", "_reconcile_entity_presence"]:
-		var function_body := source.get_slice("func %s" % function_name, 1).get_slice("\nfunc ", 0)
-		assert(function_body.find("ent.get(\"field_y_sort_bias_px\", null)") != -1,
-			"%s must pass the per-entity field Y-sort bias override" % function_name)
+	assert(_y_sort_contract_holds(source),
+		"entity Y-sort overrides need numeric catalog fallback, holder bias, zero-shift sprite/shadow cancellation, and entity-only plumbing")
+	for deleted_clause: String in [
+		"else float(catalog_entry.get(\"field_y_sort_bias_px\", 0.0))",
+		"holder.position.y += y_sort_bias",
+		"CELL - anchor.y * frame_size.y * spr.scale.y - y_sort_bias",
+		"shadow.position = Vector2(CELL * 0.5, CELL - 2.0 - y_sort_bias)",
+		"ent.get(\"field_y_sort_bias_px\", null)",
+	]:
+		assert(not _y_sort_contract_holds(source.replace(deleted_clause, "")),
+			"Y-sort contract must reject deletion of: %s" % deleted_clause)
+	var broadened_scope := source.replace(
+		"\t\tPLAYER_COLOR\n\t)",
+		"\t\tPLAYER_COLOR,\n\t\tent.get(\"field_y_sort_bias_px\", null)\n\t)"
+	)
+	assert(broadened_scope != source and not _y_sort_contract_holds(broadened_scope),
+		"entity-scoped sort overrides must not leak into the player visual build")
 	var accomplishment_branch := source.get_slice("elif type == WIEvents.ACCOMPLISHMENT_RECORDED:", 1).get_slice("\nelif ", 0)
 	assert(accomplishment_branch.find("_reconcile_entity_presence()") != -1,
 		"accomplishment changes must reconcile same-map present_when entities")

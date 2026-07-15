@@ -51,6 +51,100 @@ func _entity_by_id(records: Array, id: String) -> Dictionary:
 	return {}
 
 
+func _incoming_door_landings(scene_config: Dictionary, target_map: String) -> Array:
+	var out: Array = []
+	for map_cfg: Dictionary in (scene_config["maps"] as Dictionary).values():
+		for entity: Dictionary in map_cfg.get("entities", []):
+			var transitions: Array = []
+			if String(entity.get("kind", "")) == "door":
+				transitions.append(entity)
+			var door_when: Variant = entity.get("door_when", null)
+			if door_when is Dictionary:
+				transitions.append(door_when)
+			for transition: Dictionary in transitions:
+				if String(transition.get("to_map", "")) != target_map:
+					continue
+				var landing := _int_cell(transition.get("to_cell", []))
+				if not landing.is_empty() and not out.has(landing):
+					out.append(landing)
+	return out
+
+
+func _direction_cell(direction: String) -> Array:
+	match direction:
+		"up":
+			return [0, -1]
+		"down":
+			return [0, 1]
+		"left":
+			return [-1, 0]
+		"right":
+			return [1, 0]
+	return []
+
+
+func _map_static_blockers(map_cfg: Dictionary, excluded_entity_id: String = "") -> Array:
+	var out: Array = []
+	for raw: Variant in map_cfg.get("blocked", []):
+		var cell := _int_cell(raw)
+		if not cell.is_empty() and not out.has(cell):
+			out.append(cell)
+	for raw_segment: Variant in (map_cfg.get("walls", {}) as Dictionary).get("segments", []):
+		if not raw_segment is Dictionary:
+			continue
+		for segment_cell: Vector2i in WIGame.segment_cells(raw_segment as Dictionary):
+			var cell := [segment_cell.x, segment_cell.y]
+			if not out.has(cell):
+				out.append(cell)
+	for entity: Dictionary in map_cfg.get("entities", []):
+		if String(entity.get("id", "")) == excluded_entity_id:
+			continue
+		var cell := _int_cell(entity.get("cell", []))
+		if not cell.is_empty() and not out.has(cell):
+			out.append(cell)
+	return out
+
+
+func _canonical_route_cells(path: String, map_id: String, map_cfg: Dictionary) -> Array:
+	var route: Array = []
+	var current: Array = []
+	var facing: Array = []
+	var active := false
+	var blockers := _map_static_blockers(map_cfg)
+	for step: Dictionary in _load_json(path).get("steps", []):
+		var action := String(step.get("action", ""))
+		if action == "assert_state" and String(step.get("path", "")) == "current_map":
+			if String(step.get("equals", "")) == map_id:
+				active = true
+			else:
+				active = false
+			continue
+		if not active:
+			continue
+		if action == "wait_for_event" and String(step.get("type", "")) == "map_changed":
+			if String((step.get("payload_contains", {}) as Dictionary).get("map", "")) != map_id:
+				break
+		if action == "assert_state" and String(step.get("path", "")) == "player_cell":
+			current = _int_cell(step.get("equals", []))
+			if not current.is_empty() and not route.has(current):
+				route.append(current.duplicate())
+			continue
+		if action == "move" and not current.is_empty():
+			facing = _direction_cell(String(step.get("direction", "")))
+			for _i: int in int(step.get("steps", 1)):
+				var next := [int(current[0]) + int(facing[0]), int(current[1]) + int(facing[1])]
+				if blockers.has(next):
+					continue
+				current = next
+				if not route.has(current):
+					route.append(current.duplicate())
+		elif action == "press" and String(step.get("name", "")) == "interact" and not current.is_empty() and not facing.is_empty():
+			var target := [int(current[0]) + int(facing[0]), int(current[1]) + int(facing[1])]
+			if not route.has(target):
+				route.append(target)
+	return route
+
+
 func _toast_texts() -> Array:
 	var out: Array = []
 	for e: Dictionary in _events:
@@ -79,15 +173,29 @@ func _init() -> void:
 	var witch := _entity_by_id(witch_map["entities"], "riverfarm_witch")
 	assert(_int_cell(witch.get("cell", [])) == [5, 8] and String(witch.get("facing", "")) == "down",
 		"Eloise must stand two cells clear of the cottage and face the approach")
+	assert(not (witch_map["decor"] as Array).any(func(d: Dictionary) -> bool: return _int_cell(d.get("cell", [])) == _int_cell(witch.get("cell", []))),
+		"Eloise's cell must be decor-free")
 	for neighbor: Array in [[4, 8], [6, 8], [5, 7], [5, 9]]:
 		assert(not (witch_map["blocked"] as Array).any(func(b: Variant) -> bool: return _int_cell(b) == neighbor),
 			"Eloise needs four statically open cardinal neighbors: %s" % [neighbor])
 
 	var deep_map: Dictionary = scene_config["maps"]["deep_tunnels"]
 	var cameo := _entity_by_id(deep_map["entities"], "relc_descent_cameo")
+	var cameo_cell := _int_cell(cameo.get("cell", []))
 	var boss := _entity_by_id(deep_map["entities"], "awakened_boss")
-	assert(_int_cell(cameo.get("cell", [])) == [13, 5] and String(cameo.get("sprite", "")) == "relc",
-		"Relc's descent cameo must occupy the planned warren-mouth cell")
+	var warren_mouth := _entity_by_id(deep_map["entities"], "warren_mouth")
+	var warren_cell := _int_cell(warren_mouth.get("cell", []))
+	assert(String(cameo.get("sprite", "")) == "relc" and maxi(absi(int(cameo_cell[0]) - int(warren_cell[0])), absi(int(cameo_cell[1]) - int(warren_cell[1]))) == 1,
+		"Relc's descent cameo must remain visible beside the warren mouth")
+	var deep_landings := _incoming_door_landings(scene_config, "deep_tunnels")
+	assert(not deep_landings.is_empty(), "deep_tunnels needs at least one graph-derived incoming door landing")
+	assert(not deep_landings.has(cameo_cell), "Relc's descent cameo must not occupy an incoming door landing")
+	var deep_route := _canonical_route_cells("res://qa/scripts/deep_descent.json", "deep_tunnels", deep_map)
+	assert(not deep_route.is_empty() and not deep_route.has(cameo_cell),
+		"Relc's descent cameo must not block the canonical descent route")
+	var deep_blockers := _map_static_blockers(deep_map, "relc_descent_cameo")
+	assert(not deep_blockers.has(cameo_cell) and not (deep_map["decor"] as Array).any(func(d: Dictionary) -> bool: return _int_cell(d.get("cell", [])) == cameo_cell),
+		"Relc's descent cameo needs an otherwise unoccupied cell")
 	assert(cameo.get("present_when", {}).get("requires", {}).get("reached_the_warren", 0) == 1,
 		"Relc's cameo must be gated by reaching the warren")
 	assert(cameo.get("conversation", null) == null and cameo.get("arena", null) == null,
@@ -115,9 +223,19 @@ func _init() -> void:
 		"the canonical ruin route needs a solid interactive statue at [14,4]")
 	assert((ruin_map["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "dungeon_rubble" and _int_cell(d.get("cell", [])) == [10, 4]),
 		"the canonical ruin route needs low rubble at [10,4]")
-	for forbidden: Array in [[2, 2], [17, 6], [17, 8], [14, 5], [10, 5]]:
-		assert(_int_cell(statue.get("cell", [])) != forbidden and [10, 4] != forbidden,
-			"new ruin staging must avoid door landings, encounters, and route cells")
+	var ruin_forbidden := _incoming_door_landings(scene_config, "ruin_surface")
+	var ruin_encounters: Array = []
+	for entity: Dictionary in ruin_map["entities"]:
+		if String(entity.get("kind", "")) == "encounter":
+			ruin_encounters.append(_int_cell(entity.get("cell", [])))
+	for cell: Array in ruin_encounters + _canonical_route_cells("res://qa/scripts/ruin_walkthrough.json", "ruin_surface", ruin_map):
+		if not ruin_forbidden.has(cell):
+			ruin_forbidden.append(cell)
+	assert(not ruin_forbidden.is_empty() and not ruin_encounters.is_empty(),
+		"ruin forbidden cells must derive from live doors, encounters, and canonical route data")
+	for staging_cell: Array in [_int_cell(statue.get("cell", [])), [10, 4]]:
+		assert(not ruin_forbidden.has(staging_cell),
+			"new ruin staging must avoid graph-derived door landings, encounters, and route cells")
 
 	assert(game.grid_size == Vector2i(16, 10), "grid size from config")
 	assert(game.player_cell == Vector2i(2, 3), "player start cell from config")
