@@ -2,46 +2,37 @@
 
 ## Current release
 
-**v0.7.0 shipped 2026-07-13:** #92 and #109 closed; the composed 112-script
-gate, release workflow, itch deploy, and Pages deploy were green. Detailed
-wave notes live in this file's git history; #87 retains only its open
-remainder below.
+**v0.7.0 shipped 2026-07-13.** Detailed wave notes live in git history and,
+from 2026-07-15 on, in issue-close PR bodies (`gh pr list --state merged`) —
+the PR workflow (AGENTS.md, wi-running-the-machine) makes each PR the durable
+per-issue record; this file stays current-state only.
 
-**#91 Chronicle complete (unreleased):** a completed run now appends exact
-results-only facts to the journal, captures them in `settings.cfg`, and renders
-the latest record on the title screen. `chronicle_loop` proves the full live
-Continue → journal → title → New Game survival route without changing the
-five selectable title rows. Headless integration gates and the final 100%/130%
-visual reads are green; the card, caption, and post-New-Game frame all fit.
+**Unreleased on main (v0.8.0 candidates, all PR-gated + audited):** #91/#118
+Chronicle with correct all-encounter victory counts (PR #120), #115
+collapsible field readout (PR #121), #119 verification hardening — falsifiable
+transition gate, fixture class-requirement validator, 37 fixtures repaired,
+screenshot tween-drain (PR #122), #114 scannable pickers (PR #124), plus the
+#102 comment-restoration and wi-delegating-to-codex conventions.
 
-**#87 field presentation complete (unreleased):** map changes now fade the
-old field to black, rebuild the destination under full cover, and reveal it
-over a second 0.125-second half. Input is gated for the full transition;
-ordinary headless QA remains synchronous. `map_transition_fade` proves the
-live inn-door crossing and its opt-in paced visual frames. The user stopped
-the issue chain here: do not begin #114 or cut a release until directed.
-
-**#103 documentation rot complete:** current/history authority is mapped in
-`docs/DOC-MAP.md`; shipped staging is archived; all plans say DONE/ACTIVE;
-QA notes are a CI-checked manifest-derived inventory. No gameplay changed.
-
-**#102 complete:** comment economy is CI-enforced at 20% GDScript / 15% data;
-the repository is at 9.2% / 7.5%. Executable GDScript and non-annotation JSON
-semantics are unchanged; unit, balance, and all 112 QA scripts passed.
+**Chain gate LIFTED (user directive 2026-07-15):** "proceed through suggested
+release sequence and push next release" — the former stop before #114 is
+satisfied and the release cut is authorized.
 
 ## 📋 QUEUE (value order)
 
-1. **#114 picker scanability/input parity** — redesign bounty/delivery
-   paging across the full board canonical family; human and QA modes differ.
-2. **#115 field-readout collapse/expand** — accessible keyboard/gamepad/
-   mouse behavior, persistence, and icon fallback in `field_hotbar.gd`.
-3. **#116 biome-aware blocked-cell props** — large multi-region migration;
-   collision honesty, deterministic selection, and rendering-cost gates.
-4. **#76 remainder** — footstep floor-families + ambience ducking
-   (_tween_music_bus_to parameterized over both buses).
-5. **#111 safe project rename:** keep `config/name="Wandering Inn RPG v4"`
-   until native + web save migration is deliberately designed and tested.
-6. **#19 Steam:** user-secret provisioning remains user-gated.
+1. **#76 remainder** — footstep floor-families + dialogue ducking; Codex
+   implementing on `issue/76-audio-remainder` (controller gates per
+   wi-delegating-to-codex).
+2. **#116 biome-aware blocked-cell props** — dispatch after #76 frees the
+   checkout; large multi-region visual migration, windowed reads per region.
+3. **Release cut v0.8.0** — wi-shipping: shipped_ids regen (RELEASE bump,
+   freeze `victories` + new ids) → assets-repo Latest-badge check → tag →
+   `gh run watch`.
+4. **#111 safe project rename:** HOLD — keep `config/name="Wandering Inn RPG
+   v4"` until save migration is deliberately designed and tested.
+5. **#19 Steam:** HOLD — user-secret provisioning + #20 ruling.
+6. **#123 canonical redesigns** (social_loop/garden_walkthrough/
+   class_evolution_loop pre-hold the class their script earns) — post-release.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 
@@ -52,9 +43,6 @@ semantics are unchanged; unit, balance, and all 112 QA scripts passed.
   straight line (can cut a corner visually, windowed-only); enemy
   turns flow tighter with TURN_ENDED's breath removed. Both deliberate;
   flip if playtest reads wrong.
-- **witch_cottage_prop (witch_hollow 3,7):** RESOLVED #117 — the south
-  approach `[3,8]` is open and reachable; keyboard + mouse live paths are
-  pinned by `witch_cottage_reachability`.
 - **boulevard_duel_ring 0.92 win-rate** sits near the 0.95 GATED
   ceiling and reuses hired_blade_knife_a/b (shared with the warehouse
   quest, no inheritance) — any future retune of those thugs re-gates
