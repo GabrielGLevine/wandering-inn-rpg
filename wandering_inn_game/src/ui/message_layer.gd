@@ -233,7 +233,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			var speaker := String(payload["speaker"])
 			var text := "%s: %s" % [speaker, String(payload["text"])] if speaker != "" else String(payload["text"])
 			var fitted := _fit_dialogue_line(text)
-			_show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
+			_show_dialogue_line(text, fitted)
 		WIEvents.COMBAT_STARTED:
 			_hint_panel.hide()
 			_clear_dialogue_line()
@@ -257,6 +257,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 
 func _clear_dialogue_line() -> void:
 	_dialogue_panel.hide()
+
+
+func _show_dialogue_line(text: String, fitted: String) -> void:
+	await _show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
+	# CONTRACT: audio releases standalone-line duck on the renderer's actual close.
+	ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_LINE_HIDDEN, {})
 
 
 func _clear_toast() -> void:

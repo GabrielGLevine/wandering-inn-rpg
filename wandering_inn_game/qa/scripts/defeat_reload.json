@@ -7,6 +7,17 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "Distinct non-default bases prove ducking is settings-relative, not absolute -6/0.",
+   "action": "set_audio_bus_volume",
+   "bus": "Music",
+   "value_0_to_10": 8.0
+  },
+  {
+   "action": "set_audio_bus_volume",
+   "bus": "Ambience",
+   "value_0_to_10": 6.0
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 12
@@ -84,6 +95,17 @@
    "timeout_sec": 10
   },
   {
+   "_comment": "Voice-bark sidechain: pc_death transiently ducks both beds.",
+   "action": "assert_audio_bus_volume_db",
+   "bus": "Music",
+   "expected_db": -7.9382
+  },
+  {
+   "action": "assert_audio_bus_volume_db",
+   "bus": "Ambience",
+   "expected_db": -10.436975
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
@@ -157,6 +179,33 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "Standalone dialogue-bark sidechain uses the same two buses.",
+   "action": "assert_audio_bus_volume_db",
+   "bus": "Music",
+   "expected_db": -7.9382
+  },
+  {
+   "action": "assert_audio_bus_volume_db",
+   "bus": "Ambience",
+   "expected_db": -10.436975
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_line_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Natural bark close restores both settings-derived bases before any conversation edge.",
+   "action": "assert_audio_bus_volume_db",
+   "bus": "Music",
+   "expected_db": -1.9382
+  },
+  {
+   "action": "assert_audio_bus_volume_db",
+   "bus": "Ambience",
+   "expected_db": -4.436975
+  },
+  {
    "action": "press",
    "name": "interact"
   },
@@ -174,14 +223,19 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Issue #76 ducking proof: dialogue_started sidechains the Music bus by WIAudio.MUSIC_DUCK_DB (-6dB) relative to the untouched default slider (0dB, no settings.cfg in this isolated QA run) -- wait_frames lets the MUSIC_DUCK_FADE_SEC (0.2s) tween settle before the raw-dB read (assert_audio_bus_volume_db, distinct from assert_audio_bus_volume's slider-formula variant).",
+   "_comment": "Conversation duck: each distinct non-default base drops exactly 6dB.",
    "action": "wait_frames",
    "frames": 30
   },
   {
    "action": "assert_audio_bus_volume_db",
    "bus": "Music",
-   "expected_db": -6.0
+   "expected_db": -7.9382
+  },
+  {
+   "action": "assert_audio_bus_volume_db",
+   "bus": "Ambience",
+   "expected_db": -10.436975
   },
   {
    "action": "press",
@@ -210,14 +264,19 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Issue #76 ducking proof (release half): dialogue_ended restores the Music bus to the SAME pre-duck base (re-derived from get_bus_volume, never from whatever the bus happened to read -- see _tween_music_bus_to's doc comment), not just 'louder than ducked'.",
+   "_comment": "Release proof: dialogue_ended restores both buses to their exact settings-derived bases.",
    "action": "wait_frames",
    "frames": 30
   },
   {
    "action": "assert_audio_bus_volume_db",
    "bus": "Music",
-   "expected_db": 0.0
+   "expected_db": -1.9382
+  },
+  {
+   "action": "assert_audio_bus_volume_db",
+   "bus": "Ambience",
+   "expected_db": -4.436975
   },
   {
    "action": "wait_for_event",

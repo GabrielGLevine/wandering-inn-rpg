@@ -14,10 +14,7 @@ const MUSIC_SILENCE_DB := -80.0
 ## with `return_to_field: true` resumes whichever of these last played.
 const FIELD_MUSIC_KIND := "field"
 
-## Issue #76 ducking. Sidechains the MUSIC BUS (not a per-player volume_db --
-## works uniformly regardless of which of the two crossfade players is
-## currently active, combat/field/sting alike) down while dialogue is on
-## screen, so a conversation plays over a lowered bed instead of fighting it.
+## Dialogue sidechains Music + Ambience buses, independent of active players.
 ## Real headless: AudioServer bus volume_db is a Server-side float, the same
 ## "cheap op, zero ObjectDB risk" class as _setup_buses/_load_settings above
 ## (contrast _setup_music_players, which stays gated because IT creates
@@ -25,6 +22,13 @@ const FIELD_MUSIC_KIND := "field"
 ## a real AudioServer.get_bus_volume_db read in headless QA.
 const MUSIC_DUCK_DB := -6.0
 const MUSIC_DUCK_FADE_SEC := 0.2
+const DUCKED_BUSES: Array[String] = ["Music", "Ambience"]
+const DIALOGUE_BARK_DUCK_SEC := 4.2
+const VOICE_BARK_DUCK_SEC := 2.0
+const QA_BARK_DUCK_SEC := 0.5
+const DEFAULT_FOOTSTEP_FAMILY := "stone"
+const TRANSIENT_DIALOGUE_BARK := "dialogue_bark"
+const TRANSIENT_VOICE_BARK := "voice_bark"
 
 var _entries: Array[Dictionary] = []
 var _last_played_ms: Dictionary = {}
@@ -41,11 +45,10 @@ var _variant_index: Dictionary = {}
 ## Ducking re-entrancy depth: nested duck requests (e.g. dialogue opening
 ## twice in the same beat, defensively) share ONE duck -- only the request
 ## that brings the depth back to 0 actually restores the bus.
-## TRAP: this only moves via matched DIALOGUE_STARTED/DIALOGUE_ENDED pairs
-## (`_duck_music`/`_unduck_music`) -- a code path that opens a dialogue and
-## then tears down the world WITHOUT ever firing the matching
-## DIALOGUE_ENDED would leave this stuck positive forever, parking the Music
-## bus at MUSIC_DUCK_DB with no dialogue left alive to release it. Not
+## TRAP: conversations use matched start/end edges; dialogue/Voice barks add
+## timer-matched edges. A code path that opens a dialogue then omits
+## DIALOGUE_ENDED would leave this stuck positive forever, parking both bed
+## buses at MUSIC_DUCK_DB with no dialogue left alive to release them. Not
 ## reachable via any current UI path (dialogue swallows the pause key, so a
 ## mid-conversation GAME_LOADED/GAME_RESET can't fire today), but
 ## `_reset_duck()` (called from `_on_domain_event` on GAME_RESET/
@@ -53,7 +56,9 @@ var _variant_index: Dictionary = {}
 ## bypasses WIDialogue's own end sequence -- keep it wired if this field's
 ## write sites ever grow a new one.
 var _duck_depth := 0
-var _duck_tween: Tween
+var _duck_tweens: Dictionary = {}
+var _transient_ducks: Dictionary = {}
+var _next_transient_duck_id := 0
 
 var _music_entries: Array[Dictionary] = []
 var _music_players: Array[AudioStreamPlayer] = []
@@ -178,18 +183,19 @@ func get_bus_volume(bus: String) -> float:
 	return 10.0
 
 
-## Issue #76: raises the duck depth and (on the 0->1 edge) tweens the Music
-## bus down by MUSIC_DUCK_DB. A second/nested duck request while one is
+## Raises duck depth and (on 0->1) tweens both bed buses by MUSIC_DUCK_DB.
+## A second/nested duck request while one is
 ## already active just adds to the depth -- it does NOT stack the tween
 ## (would over-duck to -12dB); see `_unduck_music`'s matching edge.
 func _duck_music() -> void:
 	_duck_depth += 1
 	if _duck_depth > 1:
 		return
-	_tween_music_bus_to(MUSIC_DUCK_DB)
+	for bus: String in DUCKED_BUSES:
+		_tween_music_bus_to(bus, MUSIC_DUCK_DB)
 
 
-## Drops the duck depth and (on the 1->0 edge) restores the Music bus. A
+## Drops duck depth and (on 1->0) restores both bed buses. A
 ## release while depth is already 0 (e.g. a stray DIALOGUE_ENDED with no
 ## matching start) is a safe no-op, not an underflow.
 func _unduck_music() -> void:
@@ -198,7 +204,37 @@ func _unduck_music() -> void:
 	_duck_depth -= 1
 	if _duck_depth > 0:
 		return
-	_tween_music_bus_to(0.0)
+	for bus: String in DUCKED_BUSES:
+		_tween_music_bus_to(bus, 0.0)
+
+
+func _duck_transient(seconds: float, kind: String) -> void:
+	_duck_music()
+	_next_transient_duck_id += 1
+	var transient_id := _next_transient_duck_id
+	_transient_ducks[transient_id] = kind
+	var tree := get_tree()
+	if tree == null:
+		_release_transient_duck(transient_id)
+		return
+	var hold := QA_BARK_DUCK_SEC if _is_headless() else seconds
+	# CONTRACT: every transient depth increment owns exactly one timer release.
+	tree.create_timer(hold).timeout.connect(_release_transient_duck.bind(transient_id), CONNECT_ONE_SHOT)
+
+
+func _release_transient_duck(transient_id: int) -> void:
+	if not _transient_ducks.erase(transient_id):
+		return
+	_unduck_music()
+
+
+func _clear_transient_ducks(kind: String = "") -> void:
+	var matching: Array[int] = []
+	for transient_id: int in _transient_ducks:
+		if kind.is_empty() or String(_transient_ducks[transient_id]) == kind:
+			matching.append(transient_id)
+	for transient_id: int in matching:
+		_release_transient_duck(transient_id)
 
 
 ## Debt-sweep fix (#76 review's minor): `_duck_depth` only ever moves via
@@ -207,7 +243,7 @@ func _unduck_music() -> void:
 ## DIALOGUE_ENDED (a defeat mid-conversation reaching a code path that never
 ## closes the dialogue cleanly, or a future walker/skip mechanism that
 ## bypasses WIDialogue's own end path) would leave the depth counter stuck
-## positive forever, with the Music bus parked at MUSIC_DUCK_DB and no live
+## positive forever, with both bed buses parked at MUSIC_DUCK_DB and no live
 ## dialogue left to ever release it. GAME_RESET (fresh world, title New
 ## Game) and GAME_LOADED (Continue/pause-Load/defeat-reload) both land on a
 ## world that starts with no dialogue open by construction -- zero the depth
@@ -217,19 +253,19 @@ func _unduck_music() -> void:
 ## common case -- byte-identical for every existing canonical, none of which
 ## reaches this fix's own trigger condition today.
 func _reset_duck() -> void:
+	_transient_ducks.clear()
 	if _duck_depth == 0:
 		return
 	_duck_depth = 0
-	_tween_music_bus_to(0.0)
+	for bus: String in DUCKED_BUSES:
+		_tween_music_bus_to(bus, 0.0)
 
 
-## Tweens the "Music" bus's volume_db to `offset_db` relative to the user's
-## OWN slider setting (`get_bus_volume`, the settings.cfg source of truth) --
+## Tweens one bed bus to `offset_db` relative to its settings source of truth.
 ## NEVER relative to whatever the bus currently reads, so repeated duck/
 ## unduck cycles can't drift: the un-ducked target is always re-derived from
-## the same base a fresh `set_bus_volume` call would produce. Kills any
-## in-flight duck tween first (same double-trigger guard as
-## `_crossfade_to_music`) so a rapid duck-then-unduck (or vice versa) always
+## the same base a fresh `set_bus_volume` call would produce. Kills that
+## bus's in-flight duck tween first, so a rapid edge always
 ## resolves to whichever call happened last, not a race between two tweens
 ## animating the same bus.
 ## Headless: sets the target dB DIRECTLY, no Tween -- headless frame deltas
@@ -239,25 +275,28 @@ func _reset_duck() -> void:
 ## happens to wait, not a timing bug this file should paper over with a
 ## longer fixed wait. The FINAL value is what QA asserts either way
 ## (assert_audio_bus_volume_db) -- only the client-side smoothing is skipped.
-func _tween_music_bus_to(offset_db: float) -> void:
-	var index := AudioServer.get_bus_index("Music")
+func _tween_music_bus_to(bus: String, offset_db: float) -> void:
+	var index := AudioServer.get_bus_index(bus)
 	if index == -1:
 		return
-	if _duck_tween != null and _duck_tween.is_valid():
-		_duck_tween.kill()
-	var linear := clampf(get_bus_volume("Music"), 0.0, 10.0) / 10.0
+	var prior: Tween = _duck_tweens.get(bus)
+	if prior != null and prior.is_valid():
+		prior.kill()
+	var linear := clampf(get_bus_volume(bus), 0.0, 10.0) / 10.0
 	var base_db := linear_to_db(maxf(linear, 0.0001))
 	var target_db := base_db + offset_db
 	if _is_headless():
-		_set_music_bus_db(target_db)
+		_set_music_bus_db(target_db, bus)
 		return
 	var start_db := AudioServer.get_bus_volume_db(index)
-	_duck_tween = create_tween()
-	_duck_tween.tween_method(_set_music_bus_db, start_db, target_db, MUSIC_DUCK_FADE_SEC)
+	var tween := create_tween()
+	# CONTRACT: each bus owns its tween; rapid edges kill only that bus's writer.
+	tween.tween_method(_set_music_bus_db.bind(bus), start_db, target_db, MUSIC_DUCK_FADE_SEC)
+	_duck_tweens[bus] = tween
 
 
-func _set_music_bus_db(db: float) -> void:
-	var index := AudioServer.get_bus_index("Music")
+func _set_music_bus_db(db: float, bus: String) -> void:
+	var index := AudioServer.get_bus_index(bus)
 	if index != -1:
 		AudioServer.set_bus_volume_db(index, db)
 
@@ -345,17 +384,46 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:
 		_reset_duck()
 	elif type == WIEvents.DIALOGUE_STARTED:
+		# Message layer clears standalone bark on conversation open; release its timer edge first.
+		_clear_transient_ducks(TRANSIENT_DIALOGUE_BARK)
 		_duck_music()
 	elif type == WIEvents.DIALOGUE_ENDED:
 		_unduck_music()
+	elif type == WIEvents.DIALOGUE_LINE:
+		_duck_transient(DIALOGUE_BARK_DUCK_SEC, TRANSIENT_DIALOGUE_BARK)
+	elif type == WIEvents.COMBAT_STARTED or type == WIEvents.MAP_CHANGED:
+		# Message layer clears standalone bark on both edges; cancel its duck too.
+		_clear_transient_ducks(TRANSIENT_DIALOGUE_BARK)
+	elif type == WIEvents.UI_DIALOGUE_LINE_HIDDEN:
+		_clear_transient_ducks(TRANSIENT_DIALOGUE_BARK)
+	var match_payload := _audio_match_payload(type, payload)
 	for entry: Dictionary in _entries:
 		if String(entry.get("event", "")) != type:
 			continue
-		if not _payload_matches(payload, entry.get("payload", {})):
+		if not _payload_matches(match_payload, entry.get("payload", {})):
 			continue
 		_play_entry(entry)
 	_dispatch_music_event(type, payload)
 	_dispatch_ambience_event(type, payload)
+
+
+func _audio_match_payload(type: String, payload: Dictionary) -> Dictionary:
+	if type != WIEvents.PLAYER_MOVED:
+		return payload
+	var enriched := payload.duplicate()
+	enriched["floor_family"] = _current_floor_family()
+	return enriched
+
+
+func _current_floor_family() -> String:
+	var game := get_node_or_null("/root/Game")
+	if game == null or not ("sim" in game) or game.sim == null:
+		return DEFAULT_FOOTSTEP_FAMILY
+	var maps: Dictionary = WIDataRegistry.scene_config().get("maps", {})
+	var map_cfg: Dictionary = maps.get(String(game.sim.current_map), {})
+	var biome_cfg: Dictionary = WIDataRegistry.biomes().get(String(map_cfg.get("biome", "")), {})
+	# TRAP: fallback preserves movement SFX; test_audio_data rejects missing authored families.
+	return String(biome_cfg.get("footstep_family", DEFAULT_FOOTSTEP_FAMILY))
 
 
 func _payload_matches(payload: Dictionary, expected_variant: Variant) -> bool:
@@ -389,11 +457,16 @@ func _play_entry(entry: Dictionary) -> void:
 	## Falls back to plain `stream` when absent (every pre-#76 entry).
 	var stream_path := String(entry.get("stream", ""))
 	var variants: Variant = entry.get("variants", null)
+	var variant_idx := 0
 	if variants is Array and not (variants as Array).is_empty():
 		var variant_list: Array = variants
-		var idx := int(_variant_index.get(id, 0)) % variant_list.size()
-		stream_path = String(variant_list[idx])
-		_variant_index[id] = (idx + 1) % variant_list.size()
+		variant_idx = int(_variant_index.get(id, 0)) % variant_list.size()
+		stream_path = String(variant_list[variant_idx])
+		_variant_index[id] = (variant_idx + 1) % variant_list.size()
+	var pitch_scale := float(entry.get("pitch_scale", 1.0))
+	var pitch_variants: Variant = entry.get("pitch_variants", null)
+	if pitch_variants is Array and not (pitch_variants as Array).is_empty():
+		pitch_scale = float((pitch_variants as Array)[variant_idx % (pitch_variants as Array).size()])
 	if stream_path.is_empty():
 		push_warning("WIAudio: bad/missing stream for id '%s': %s" % [id, stream_path])
 		return
@@ -404,6 +477,8 @@ func _play_entry(entry: Dictionary) -> void:
 	if not BUS_NAMES.has(bus):
 		push_warning("WIAudio: unknown bus '%s' for id '%s'" % [bus, id])
 		return
+	if bus == "Voice":
+		_duck_transient(VOICE_BARK_DUCK_SEC, TRANSIENT_VOICE_BARK)
 
 	## Headless: `audio_played` means "mapping validated + would have played",
 	## NOT "sound rendered" — no AudioServer/stream/player work happens below
@@ -425,6 +500,8 @@ func _play_entry(entry: Dictionary) -> void:
 	var player := _player_for(stream.get_length())
 	player.stream = stream
 	player.bus = bus
+	# Pooled players retain pitch; every play must overwrite it, including non-footsteps.
+	player.pitch_scale = pitch_scale
 	player.volume_db = float(entry.get("volume_db", 0.0))
 	player.play()
 	_emit_audio_played(id, bus)

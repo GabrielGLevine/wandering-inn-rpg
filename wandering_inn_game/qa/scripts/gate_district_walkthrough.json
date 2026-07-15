@@ -469,6 +469,15 @@
    "steps": 1
   },
   {
+   "_comment": "Biome-driven footstep proof: street -> stone.",
+   "action": "assert_event_logged",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "footstep_stone",
+    "bus": "SFX"
+   }
+  },
+  {
    "action": "press",
    "name": "interact"
   },
