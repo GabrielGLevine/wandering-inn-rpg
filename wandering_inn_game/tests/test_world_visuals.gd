@@ -99,7 +99,48 @@ func _title_chronicle_contract_holds(source: String) -> bool:
 	]:
 		if card.find(clause) == -1:
 			return false
+	for compact_clause: String in [
+		"UIChrome.add_margins(margin, 18, 10, 18, 10)",
+		"stack.add_theme_constant_override(\"separation\", 0)",
+		"UIChrome.make_label(_chronicle_identity_line(facts), \"Small\")",
+		"UIChrome.make_label(String(facts.get(\"ending\", \"\")), \"Small\")",
+		"%d quests  •  %d victories  •  %d sleeps",
+	]:
+		if card.find(compact_clause) == -1:
+			return false
+	if card.find("var result_line") != -1:
+		return false
 	return true
+
+
+func _title_continue_caption_contract_holds(source: String) -> bool:
+	var caption := _function_body(source, "_refresh_continue_caption")
+	var build := _function_body(source, "_build_ui")
+	for menu_clause: String in [
+		"UIChrome.set_offsets(menu_anchor, -160.0, 34.0, 160.0, 204.0)",
+		"_menu_root.add_theme_constant_override(\"separation\", 8)",
+		"row_panel.custom_minimum_size = Vector2(300.0, 44.0)",
+	]:
+		if build.find(menu_clause) == -1:
+			return false
+	for clause: String in [
+		"_continue_caption_label.set_anchors_preset(Control.PRESET_CENTER)",
+		"UIChrome.set_offsets(_continue_caption_label, -160.0, 294.0, 160.0, 328.0)",
+		"_continue_caption_label.add_theme_color_override(\"font_color\", GESTURE_COLOR)",
+		"_root.add_child(_continue_caption_label)",
+	]:
+		if caption.find(clause) == -1:
+			return false
+	var menu_top_offset := 34.0
+	var row_height := 44.0
+	var row_separation := 8.0
+	var menu_bottom_offset := menu_top_offset + 5.0 * row_height + 4.0 * row_separation
+	var caption_top_offset := 294.0
+	var chronicle_right := 444.0
+	var caption_left := 640.0 - 160.0
+	return caption.find("_menu_root.get_parent()") == -1 \
+		and caption_top_offset > menu_bottom_offset \
+		and caption_left > chronicle_right
 
 
 func _init() -> void:
@@ -151,6 +192,8 @@ func _init() -> void:
 		"journal must append current-run Chronicle facts as its final section and emit the full journal payload")
 	assert(_title_chronicle_contract_holds(title_source),
 		"title must preserve ROWS and show a read-only 420x150 bottom-left Chronicle card after the gesture gate")
+	assert(_title_continue_caption_contract_holds(title_source),
+		"Continue caption must be rooted below the menu, not laid across its selectable rows")
 
 	print("PASS: world.gd presentation wiring contracts hold")
 	quit(0)

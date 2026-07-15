@@ -321,27 +321,33 @@ func _show_chronicle_card() -> void:
 
 	var margin := MarginContainer.new()
 	UIChrome.full_rect(margin)
-	UIChrome.add_margins(margin, 26, 16, 26, 14)
+	UIChrome.add_margins(margin, 18, 10, 18, 10)
 	_chronicle_root.add_child(margin)
 	var stack := VBoxContainer.new()
-	stack.add_theme_constant_override("separation", 2)
+	stack.add_theme_constant_override("separation", 0)
 	margin.add_child(stack)
 
 	var heading := UIChrome.make_label("Chronicle", "Header")
 	stack.add_child(heading)
-	stack.add_child(UIChrome.make_label("%s — %s" % [String(facts.get("name", "Traveler")), String(facts.get("race", ""))], "Small"))
-	var class_parts: Array[String] = []
-	for raw_class: Variant in facts.get("classes", []):
-		var class_facts := raw_class as Dictionary
-		class_parts.append("%s Lv%d" % [String(class_facts.get("name", "")), int(class_facts.get("level", 0))])
-	stack.add_child(UIChrome.make_label(" • ".join(class_parts) if not class_parts.is_empty() else "No class levels recorded", "Small"))
-	var result_line := UIChrome.make_label("%s  •  %d quests  •  %d victories  •  %d sleeps" % [String(facts.get("ending", "")), int(facts.get("quests_completed", 0)), int(facts.get("victories", 0)), int(facts.get("sleeps", 0))], "Small")
-	result_line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	stack.add_child(result_line)
+	var identity_line := UIChrome.make_label(_chronicle_identity_line(facts), "Small")
+	identity_line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	stack.add_child(identity_line)
+	var ending_line := UIChrome.make_label(String(facts.get("ending", "")), "Small")
+	ending_line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	stack.add_child(ending_line)
+	stack.add_child(UIChrome.make_label("%d quests  •  %d victories  •  %d sleeps" % [int(facts.get("quests_completed", 0)), int(facts.get("victories", 0)), int(facts.get("sleeps", 0))], "Small"))
 	ObservableBus.emit_domain_event(WIEvents.UI_CHRONICLE_RENDERED, {
 		"surface": "title",
 		"facts": facts,
 	})
+
+
+func _chronicle_identity_line(facts: Dictionary) -> String:
+	var parts: Array[String] = [String(facts.get("name", "Traveler")), String(facts.get("race", ""))]
+	for raw_class: Variant in facts.get("classes", []):
+		var class_facts := raw_class as Dictionary
+		parts.append("%s Lv%d" % [String(class_facts.get("name", "")), int(class_facts.get("level", 0))])
+	return " • ".join(parts)
 
 
 func _reopen_after_settings() -> void:
@@ -598,9 +604,10 @@ func _refresh_continue_caption() -> void:
 	if _continue_caption_label == null:
 		_continue_caption_label = UIChrome.make_label("", "Small")
 		_continue_caption_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		_continue_caption_label.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-		UIChrome.set_offsets(_continue_caption_label, -300.0, -92.0, 300.0, -68.0)
-		(_menu_root.get_parent() as Control).add_child(_continue_caption_label)
+		_continue_caption_label.set_anchors_preset(Control.PRESET_CENTER)
+		UIChrome.set_offsets(_continue_caption_label, -160.0, 294.0, 160.0, 328.0)
+		_continue_caption_label.add_theme_color_override("font_color", GESTURE_COLOR)
+		_root.add_child(_continue_caption_label)
 	if not _continue_enabled:
 		_continue_caption_label.hide()
 		return
