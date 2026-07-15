@@ -180,15 +180,17 @@ func _check_field_readout_persistence() -> void:
 		config.erase_section("field_hud")
 	assert(config.save(SETTINGS_PATH) == OK, "field-readout setup must preserve other settings")
 
-	var missing = script.new()
-	missing.call("_load_settings")
+	# TRAP (#118/#119 merge lesson): every instance goes through
+	# _settings_instance — a bare script.new() reads AND WRITES the real
+	# user://settings.cfg (the exact stomping #118 outlawed), and passes or
+	# fails depending on what the developer's own cfg happens to contain.
+	var missing = _settings_instance(script)
 	assert(bool(missing.call("field_readout_expanded")), "missing field-readout key must expose names/mechanics")
 	assert(not bool(missing.call("has_field_readout_choice")), "missing field-readout key is not an explicit player choice")
 	missing.call("set_field_readout_expanded", false)
 	missing.free()
 
-	var persisted = script.new()
-	persisted.call("_load_settings")
+	var persisted = _settings_instance(script)
 	assert(not bool(persisted.call("field_readout_expanded")), "collapsed field readout must round-trip through settings.cfg")
 	assert(bool(persisted.call("has_field_readout_choice")), "a persisted bool is an explicit player choice")
 	persisted.free()
@@ -196,8 +198,7 @@ func _check_field_readout_persistence() -> void:
 	config.load(SETTINGS_PATH)
 	config.set_value("field_hud", "readout_expanded", "corrupt")
 	assert(config.save(SETTINGS_PATH) == OK, "field-readout corrupt-key setup must save")
-	var corrupt = script.new()
-	corrupt.call("_load_settings")
+	var corrupt = _settings_instance(script)
 	assert(bool(corrupt.call("field_readout_expanded")), "wrong-typed field-readout key must fall back expanded")
 	assert(not bool(corrupt.call("has_field_readout_choice")), "wrong-typed field-readout key must not become a player choice")
 	corrupt.free()
