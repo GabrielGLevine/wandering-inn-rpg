@@ -49,6 +49,7 @@ const VIGNETTE_SHADER := preload("res://src/world/shaders/vignette.gdshader")
 ## but built for future maps that may need it).
 const VIEW_SIZE := Vector2(320.0, 180.0)
 const SKIRT_MARGIN_CELLS := 20
+const FIELD_BLOCKED_PROP_BUDGET := 200
 
 var _field_root: Node2D
 ## Y-sort-enabled holder for entity/player/decor visuals only (floor tile
@@ -86,6 +87,7 @@ var _ice_overlay: TileMapLayer
 var _player_tween: Tween
 var _camera_tween: Tween
 var _entity_visuals: Dictionary = {}
+var _field_blocked_prop_plan: Dictionary = {}
 var _journal: Node
 var _pause_menu: Node
 var _inventory: Node
@@ -381,6 +383,7 @@ func _rebuild_field() -> void:
 	# forget the old sprite's state too.
 	_sneak_tinted = false
 	_ice_overlay = null
+	_field_blocked_prop_plan.clear()
 	# Drop every light registered for the OLD map before
 	# any new one is spawned below -- the old map's holders (and their light
 	# children) are only queue_free()d above, not freed synchronously, so
@@ -396,6 +399,7 @@ func _rebuild_field() -> void:
 	_entities_root = Node2D.new()
 	_entities_root.y_sort_enabled = true
 	_field_root.add_child(_entities_root)
+	_build_field_blocked_props()
 	# TRAP (load-bearing ORDER): decor builds BEFORE entities so a door
 	# entity sharing a cell with a facade decor tile draws OVER it -- equal
 	# y-sort keys tie-break by tree order in Godot 4 (later sibling on
@@ -441,15 +445,9 @@ func _map_transition_stale_cover() -> bool:
 	return _main != null and _main.map_transition_stale_cover()
 
 
-## Floor stack z-order (back to front): skirt -> base floor (every grid
-## cell) -> floor_layers (position-hashed variants / rug patches, drawn OVER
-## the base floor) -> blocked layer (drawn LAST among floor-ish layers, in
-## its own always-separate TileMapLayer (added AFTER the wall band, though they
-## never spatially overlap: walls paint only the y<0 margin) so a pick can never
-## visually cover a wall/obstacle tile -- cells it doesn't touch stay
-## transparent, letting the layers below show through) -> wall band (drawn
-## in the skirt margin above row 0, never touches a playable cell) ->
-## entities_root (decor + npcs/props/player, Y-sorted).
+## Floor stack: skirt -> base -> overlays -> walls -> fallback blocked tiles ->
+## Y-sorted biome props/decor/entities. Segment and cover_skip cells own their
+## art; generic covers must never double-draw them.
 func _build_floor() -> void:
 	var biome: Dictionary = _biome_for_current_map()
 	var map_cfg: Dictionary = _current_map_cfg()
@@ -465,28 +463,66 @@ func _build_floor() -> void:
 	WITileBoardBuilder.build_floor_layers(_field_root, map_cfg.get("floor_layers", []), grid_size, biome, WISpriteRegistry)
 	var segment_covered := WITileBoardBuilder.build_walls(_field_root, map_cfg.get("walls", {}), grid_size, biome, WISpriteRegistry)
 
-	var blocked_sheet := String(biome.get("blocked_sheet", biome["sheet"]))
-	var blocked_tile_px := int(biome.get("blocked_tile_px", tile_px))
-	var blocked_layer := WITileBoardBuilder.make_tile_layer(_field_root, blocked_sheet, blocked_tile_px, WISpriteRegistry)
-	var blocked_coord := Vector2i(int(biome["blocked"][0]), int(biome["blocked"][1]))
-	# `cover_skip` (map-level, render-only): blocked cells a large PROP sprite
-	# visually covers (e.g. the inn facade's footprint). Sim blocking is
-	# untouched — this only suppresses the generic cover tile, which would
-	# otherwise show through the sprite's transparent regions. Cells listed
-	# here MUST be under a sprite that owns the visual, or they render bare.
 	var cover_skip := {}
 	for c: Array in (map_cfg.get("cover_skip", []) as Array):
 		cover_skip[Vector2i(int(c[0]), int(c[1]))] = true
-	for cell: Vector2i in Game.sim.blocked_cells.keys():
-		if segment_covered.has(cell) or cover_skip.has(cell):
-			continue
-		blocked_layer.set_cell(cell, 0, blocked_coord)
-	_field_root.add_child(blocked_layer)
+	var authored_covered := WITileBoardBuilder.field_authored_cover_cells(map_cfg)
+	var pool: Array = biome.get("blocked_props", [])
+	var render_plan := WITileBoardBuilder.field_blocked_render_plan(
+		Game.sim.current_map, Game.sim.blocked_cells, segment_covered, cover_skip, authored_covered, pool
+	)
+	var prop_plan: Dictionary = render_plan["props"]
+	var fallback_cells: Array = render_plan["fallback"]
+	for raw_cell: Variant in prop_plan.keys():
+		var cell := raw_cell as Vector2i
+		if not WISpriteRegistry.has_sprite(String(prop_plan[cell])):
+			prop_plan.erase(cell)
+			fallback_cells.append(cell)
+	var cover_skip_errors := WITileBoardBuilder.cover_skip_errors(
+		Game.sim.blocked_cells, segment_covered, cover_skip, authored_covered, prop_plan
+	)
+	assert(cover_skip_errors.is_empty(),
+		"map %s invalid cover_skip: %s" % [Game.sim.current_map, "; ".join(cover_skip_errors)])
+	assert(prop_plan.size() <= FIELD_BLOCKED_PROP_BUDGET,
+		"map %s exceeds the %d blocked-prop budget (%d)" % [Game.sim.current_map, FIELD_BLOCKED_PROP_BUDGET, prop_plan.size()])
+	_field_blocked_prop_plan = prop_plan
+	if not fallback_cells.is_empty():
+		var blocked_sheet := String(biome.get("blocked_sheet", biome["sheet"]))
+		var blocked_tile_px := int(biome.get("blocked_tile_px", tile_px))
+		var blocked_layer := WITileBoardBuilder.make_tile_layer(_field_root, blocked_sheet, blocked_tile_px, WISpriteRegistry)
+		var blocked_coord := Vector2i(int(biome["blocked"][0]), int(biome["blocked"][1]))
+		for cell: Vector2i in fallback_cells:
+			blocked_layer.set_cell(cell, 0, blocked_coord)
+		_field_root.add_child(blocked_layer)
 	ObservableBus.emit_domain_event(WIEvents.UI_MAP_RENDERED, {
 		"map": Game.sim.current_map,
 		"floor_cells": grid_size.x * grid_size.y,
 		"blocked_cells": Game.sim.blocked_cells.size(),
 	})
+
+
+func _build_field_blocked_props() -> void:
+	for cell: Vector2i in _field_blocked_prop_plan:
+		var sprite_id := String(_field_blocked_prop_plan[cell])
+		var frames: SpriteFrames = WISpriteRegistry.frames_for(sprite_id)
+		var animation := &"idle_down" if frames.has_animation(&"idle_down") else &"idle"
+		var frame_texture := frames.get_frame_texture(animation, 0)
+		assert(frame_texture != null, "blocked prop %s needs a frame" % sprite_id)
+		var spr := Sprite2D.new()
+		spr.name = "BlockedProp_%d_%d" % [cell.x, cell.y]
+		spr.texture = frame_texture
+		spr.centered = false
+		spr.position = Vector2(cell) * CELL
+		var catalog_entry: Dictionary = WISpriteRegistry.entry_for(sprite_id)
+		var scale_value := float(catalog_entry.get("render_scale", 1.0))
+		spr.scale = Vector2(scale_value, scale_value)
+		var frame_size := frame_texture.get_size()
+		var anchor := WISpriteRegistry.anchor_for(sprite_id)
+		spr.offset = Vector2(
+			CELL * 0.5 / scale_value - anchor.x * frame_size.x,
+			CELL / scale_value - anchor.y * frame_size.y
+		)
+		_entities_root.add_child(spr)
 
 
 func _build_water_shimmer() -> void:
