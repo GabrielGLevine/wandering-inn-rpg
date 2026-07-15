@@ -102,6 +102,7 @@ const UI_HINT_RENDERED := &"ui_hint_rendered"
 const UI_JOURNAL_SHOWN := &"ui_journal_shown"
 const UI_JOURNAL_HIDDEN := &"ui_journal_hidden"
 const UI_JOURNAL_LOADOUT_RENDERED := &"ui_journal_loadout_rendered"
+const UI_CHRONICLE_RENDERED := &"ui_chronicle_rendered"
 # Opening inventory drives open audio; selection renders must not replay it.
 const UI_INVENTORY_SHOWN := &"ui_inventory_shown"
 const UI_INVENTORY_SELECTION_RENDERED := &"ui_inventory_selection_rendered"

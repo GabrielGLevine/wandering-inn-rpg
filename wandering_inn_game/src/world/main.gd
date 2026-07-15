@@ -109,9 +109,15 @@ func pause_open() -> bool:
 
 
 func swap_to_title() -> void:
+	_record_current_chronicle()
 	_clear_world_viewport()
 	_clear_ui_layers()
 	_spawn_title()
+
+
+func _record_current_chronicle() -> void:
+	if Game.sim != null and Game.sim.accomplishment_count("post_game") > 0:
+		WISettings.record_chronicle(Game.sim.chronicle_facts())
 
 
 func swap_to_char_creation() -> void:
@@ -277,3 +283,5 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIDataRegistry.reset()
 		var is_defeat := String(payload.get("reason", "")) == "defeat"
 		swap_to_world.bind(type == WIEvents.GAME_RESET, is_defeat).call_deferred()
+	elif type == WIEvents.ACCOMPLISHMENT_RECORDED and String(payload.get("id", "")) == "post_game":
+		_record_current_chronicle()

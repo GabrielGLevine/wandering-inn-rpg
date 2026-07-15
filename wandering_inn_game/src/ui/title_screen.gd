@@ -48,6 +48,7 @@ var _gesture_label: Label
 var _notice_label: Label
 var _continue_caption_label: Label
 var _menu_root: VBoxContainer
+var _chronicle_root: Control
 var _row_labels: Array[Label] = []
 ## Parallel to `_row_labels` (same index order) -- the chrome panel Control
 ## per row (issue #84's click/hover target: the WHOLE pill, not just its
@@ -300,6 +301,47 @@ func _enter_menu() -> void:
 	# a hardcoded literal, so this payload always reflects what THIS binary
 	# actually rendered, on whatever platform/build it's running as.
 	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_RENDERED, {"continue_enabled": _continue_enabled, "selectable_rows": _selectable_row_count()})
+	_show_chronicle_card()
+
+
+func _show_chronicle_card() -> void:
+	var facts: Dictionary = WISettings.latest_chronicle()
+	if facts.is_empty():
+		return
+	_chronicle_root = Control.new()
+	_chronicle_root.name = "ChronicleCard"
+	UIChrome.apply_theme(_chronicle_root)
+	_chronicle_root.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	_chronicle_root.custom_minimum_size = Vector2(420.0, 150.0)
+	_chronicle_root.size = Vector2(420.0, 150.0)
+	UIChrome.set_offsets(_chronicle_root, 24.0, -174.0, 444.0, -24.0)
+	_chronicle_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(_chronicle_root)
+	_chronicle_root.add_child(UIChrome.make_patch(UIChrome.PARCHMENT_PANEL))
+
+	var margin := MarginContainer.new()
+	UIChrome.full_rect(margin)
+	UIChrome.add_margins(margin, 26, 16, 26, 14)
+	_chronicle_root.add_child(margin)
+	var stack := VBoxContainer.new()
+	stack.add_theme_constant_override("separation", 2)
+	margin.add_child(stack)
+
+	var heading := UIChrome.make_label("Chronicle", "Header")
+	stack.add_child(heading)
+	stack.add_child(UIChrome.make_label("%s — %s" % [String(facts.get("name", "Traveler")), String(facts.get("race", ""))], "Small"))
+	var class_parts: Array[String] = []
+	for raw_class: Variant in facts.get("classes", []):
+		var class_facts := raw_class as Dictionary
+		class_parts.append("%s Lv%d" % [String(class_facts.get("name", "")), int(class_facts.get("level", 0))])
+	stack.add_child(UIChrome.make_label(" • ".join(class_parts) if not class_parts.is_empty() else "No class levels recorded", "Small"))
+	var result_line := UIChrome.make_label("%s  •  %d quests  •  %d victories  •  %d sleeps" % [String(facts.get("ending", "")), int(facts.get("quests_completed", 0)), int(facts.get("victories", 0)), int(facts.get("sleeps", 0))], "Small")
+	result_line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	stack.add_child(result_line)
+	ObservableBus.emit_domain_event(WIEvents.UI_CHRONICLE_RENDERED, {
+		"surface": "title",
+		"facts": facts,
+	})
 
 
 func _reopen_after_settings() -> void:

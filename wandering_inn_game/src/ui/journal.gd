@@ -97,6 +97,7 @@ var _open_bounty_pool: Array = []
 var _open_delivery_pool: Array = []
 var _open_class_levels: Dictionary = {}
 var _open_class_aspirations: Dictionary = {}
+var _open_chronicle_facts: Dictionary = {}
 
 
 func _ready() -> void:
@@ -217,6 +218,9 @@ func _open() -> void:
 	var classes_catalog := _load_json_pool("res://data/classes.json", "classes")
 	var class_levels := _class_levels_by_heading(classes_catalog)
 	var class_aspirations := _class_aspirations_by_heading(classes_catalog)
+	var chronicle_facts: Dictionary = {}
+	if Game.sim.accomplishment_count("post_game") > 0:
+		chronicle_facts = Game.sim.chronicle_facts()
 	_open_act = act
 	_open_quest_lines = quest_lines
 	_open_completed_quest_lines = completed_quest_lines
@@ -227,9 +231,10 @@ func _open() -> void:
 	_open_delivery_pool = delivery_pool
 	_open_class_levels = class_levels
 	_open_class_aspirations = class_aspirations
+	_open_chronicle_facts = chronicle_facts
 	_flat_skill_ids = _flatten_skill_ids(skill_groups)
 	_cursor_index = 0 if not _flat_skill_ids.is_empty() else -1
-	var built := _build_body_text(act, quest_lines, completed_quest_lines, skill_groups, seen_statuses, combatants_catalog, _cursor_index, bounty_pool, delivery_pool, class_levels, class_aspirations)
+	var built := _build_body_text(act, quest_lines, completed_quest_lines, skill_groups, seen_statuses, combatants_catalog, _cursor_index, bounty_pool, delivery_pool, class_levels, class_aspirations, chronicle_facts)
 	_body_label.text = String(built["text"])
 	_root.show()
 	var vbar := _body_label.get_v_scroll_bar()
@@ -292,6 +297,11 @@ func _open() -> void:
 		"delivery_detail": String(delivery.get("detail", "")),
 		"found_notes": _found_note_ids(),
 	})
+	if not chronicle_facts.is_empty():
+		ObservableBus.emit_domain_event(WIEvents.UI_CHRONICLE_RENDERED, {
+			"surface": "journal",
+			"facts": chronicle_facts,
+		})
 
 
 func _close() -> void:
@@ -396,12 +406,12 @@ func click_skill_row(flat_i: int) -> void:
 ## scroll-to-cursor-line/scroll-hint follow-up -- see
 ## `_on_skill_row_hover_started`'s doc comment for why hover must NOT scroll.
 func _rebuild_body_no_scroll() -> void:
-	var built := _build_body_text(_open_act, _open_quest_lines, _open_completed_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels, _open_class_aspirations)
+	var built := _build_body_text(_open_act, _open_quest_lines, _open_completed_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels, _open_class_aspirations, _open_chronicle_facts)
 	_body_label.text = String(built["text"])
 
 
 func _rebuild_body_follow_cursor() -> void:
-	var built := _build_body_text(_open_act, _open_quest_lines, _open_completed_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels, _open_class_aspirations)
+	var built := _build_body_text(_open_act, _open_quest_lines, _open_completed_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels, _open_class_aspirations, _open_chronicle_facts)
 	_body_label.text = String(built["text"])
 	var cursor_line := int(built["cursor_line"])
 	if cursor_line >= 0:
@@ -431,7 +441,7 @@ func _update_scroll_hint() -> void:
 ## cursor row landed on (-1 if `cursor_index` didn't match any row), so the
 ## caller can `scroll_to_line` it into view without a second, drift-prone
 ## line-counting pass.
-func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines: Array, skill_groups: Array, seen_statuses: Array, combatants_catalog: Array = [], cursor_index: int = -1, bounty_pool: Array = [], delivery_pool: Array = [], class_levels: Dictionary = {}, class_aspirations: Dictionary = {}) -> Dictionary:
+func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines: Array, skill_groups: Array, seen_statuses: Array, combatants_catalog: Array = [], cursor_index: int = -1, bounty_pool: Array = [], delivery_pool: Array = [], class_levels: Dictionary = {}, class_aspirations: Dictionary = {}, chronicle_facts: Dictionary = {}) -> Dictionary:
 	var parts: Array = []
 	var cursor_line := -1
 	if not act.is_empty():
@@ -501,6 +511,17 @@ func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines
 				parts.append(UIChrome.bb_escape("%s — %s" % [note_name, note_lore]))
 			else:
 				parts.append(UIChrome.bb_escape(note_name))
+	if not chronicle_facts.is_empty():
+		parts.append("")
+		parts.append("[b]Chronicle[/b]")
+		parts.append(UIChrome.bb_escape("%s — %s" % [String(chronicle_facts.get("name", "Traveler")), String(chronicle_facts.get("race", ""))]))
+		var chronicle_classes: Array[String] = []
+		for raw_class: Variant in chronicle_facts.get("classes", []):
+			var class_facts := raw_class as Dictionary
+			chronicle_classes.append("%s Lv%d" % [String(class_facts.get("name", "")), int(class_facts.get("level", 0))])
+		parts.append(UIChrome.bb_escape("Classes: %s" % (", ".join(chronicle_classes) if not chronicle_classes.is_empty() else "—")))
+		parts.append(UIChrome.bb_escape("Quests completed: %d  •  Victories: %d  •  Sleeps: %d" % [int(chronicle_facts.get("quests_completed", 0)), int(chronicle_facts.get("victories", 0)), int(chronicle_facts.get("sleeps", 0))]))
+		parts.append(UIChrome.bb_escape(String(chronicle_facts.get("ending", ""))))
 	return {"text": "\n".join(parts), "cursor_line": cursor_line}
 
 
