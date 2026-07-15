@@ -40,6 +40,7 @@ const KNOWN_EVENTS: Dictionary = {
 	"skill_used": true,
 	"toast": true,
 	"ui_dialogue_shown": true,
+	"ui_dialogue_line_hidden": true,
 	"ui_pause_hidden": true,
 	"ui_pause_shown": true,
 	"ui_sleep_veil_rendered": true,
@@ -55,7 +56,9 @@ const REQUIRED_IDS: Array[String] = [
 	"dialogue_open",
 	"dialogue_choice",
 	"toast",
-	"footstep",
+	"footstep_wood",
+	"footstep_stone",
+	"footstep_earth",
 	"attack_hit",
 	"attack_miss",
 	"skill_cast_physical",
@@ -80,6 +83,12 @@ const REQUIRED_IDS: Array[String] = [
 	"pc_hurt",
 	"pc_death",
 ]
+
+const VALID_FOOTSTEP_FAMILIES: Dictionary = {
+	"wood": true,
+	"stone": true,
+	"earth": true,
+}
 
 const VALID_MUSIC_KINDS: Dictionary = {
 	"title": true,
@@ -145,8 +154,15 @@ func _init() -> void:
 		_fail("audio.json missing events")
 	if not config["events"] is Array:
 		_fail("audio.json events must be an array")
+	var biomes := _load("res://data/biomes.json")
+	for biome_id: String in biomes:
+		var biome: Dictionary = biomes[biome_id]
+		var family := String(biome.get("footstep_family", ""))
+		if not VALID_FOOTSTEP_FAMILIES.has(family):
+			_fail("biome %s has invalid/missing footstep_family: %s" % [biome_id, family])
 
 	var ids := {}
+	var footstep_families := {}
 	for entry: Dictionary in config["events"]:
 		for key: String in ["id", "event", "stream", "bus"]:
 			if not entry.has(key):
@@ -164,12 +180,22 @@ func _init() -> void:
 			_fail("unknown audio event type: %s for %s" % [event_type, id])
 		if not VALID_BUSES.has(bus):
 			_fail("invalid audio bus: %s for %s" % [bus, id])
+		if id in ["pc_hurt", "pc_death"] and bus != "Voice":
+			_fail("combat bark must ride Voice bus: " + id)
 		if not stream.begins_with("res://assets/audio/"):
 			_fail("audio stream outside assets/audio: %s" % stream)
 		if not (stream.ends_with(".wav") or stream.ends_with(".ogg")):
 			_fail("audio stream must be WAV or OGG: %s" % stream)
 		if not _stream_ok(stream):
 			_fail("missing audio stream for %s: %s" % [id, stream])
+		if event_type == "player_moved":
+			var payload: Dictionary = entry.get("payload", {})
+			var family := String(payload.get("floor_family", ""))
+			if not VALID_FOOTSTEP_FAMILIES.has(family):
+				_fail("movement audio %s has invalid/missing floor_family: %s" % [id, family])
+			if id != "footstep_" + family:
+				_fail("movement audio id/family drift: %s vs %s" % [id, family])
+			footstep_families[family] = true
 
 		if entry.has("variants"):
 			var variants_variant: Variant = entry["variants"]
@@ -188,6 +214,16 @@ func _init() -> void:
 					_fail("audio variant stream must be WAV or OGG: %s" % variant_path)
 				if not _stream_ok(variant_path):
 					_fail("missing audio variant stream for %s: %s" % [id, variant_path])
+		if entry.has("pitch_variants"):
+			if not entry["pitch_variants"] is Array:
+				_fail("pitch_variants must be an array for %s" % id)
+			var pitch_variants: Array = entry["pitch_variants"]
+			var stream_variants: Array = entry.get("variants", [])
+			if pitch_variants.size() != stream_variants.size():
+				_fail("pitch_variants/variants size drift for %s" % id)
+			for pitch: Variant in pitch_variants:
+				if float(pitch) < 0.5 or float(pitch) > 2.0:
+					_fail("pitch variant out of range for %s: %s" % [id, pitch])
 
 		var cooldown := int(entry.get("cooldown_ms", 0))
 		if cooldown < 0:
@@ -199,6 +235,30 @@ func _init() -> void:
 	for required_id: String in REQUIRED_IDS:
 		if not ids.has(required_id):
 			_fail("missing required audio id: " + required_id)
+	for family: String in VALID_FOOTSTEP_FAMILIES:
+		if not footstep_families.has(family):
+			_fail("missing movement audio for footstep family: " + family)
+	var audio_source := FileAccess.get_file_as_string("res://src/audio/wi_audio.gd")
+	# CONTRACT: presentation round-robin may read current_map, never gameplay RNG state.
+	for forbidden: String in ["game.sim._rng", "Game.sim._rng", "game.sim.rng", "Game.sim.rng"]:
+		if audio_source.contains(forbidden):
+			_fail("WIAudio must not consume gameplay RNG: " + forbidden)
+	var play_start := audio_source.find("func _play_entry")
+	var play_end := audio_source.find("func _player_for", play_start)
+	var play_source := audio_source.substr(play_start, play_end - play_start)
+	if play_source.contains("rand") or not play_source.contains("_variant_index[id] = (variant_idx + 1)"):
+		_fail("WIAudio variants must use the deterministic round-robin cursor")
+	for required_source: String in [
+		"get_bus_volume(bus)",
+		"base_db + offset_db",
+		"player.pitch_scale = pitch_scale",
+		"_duck_transient(DIALOGUE_BARK_DUCK_SEC, TRANSIENT_DIALOGUE_BARK)",
+		"if bus == \"Voice\":",
+		"type == WIEvents.COMBAT_STARTED or type == WIEvents.MAP_CHANGED",
+		"type == WIEvents.UI_DIALOGUE_LINE_HIDDEN"
+	]:
+		if not audio_source.contains(required_source):
+			_fail("WIAudio contract source missing: " + required_source)
 
 	if not config.has("music"):
 		_fail("audio.json missing music")

@@ -399,6 +399,12 @@ func _execute(step: Dictionary) -> void:
 				var expected_send := String(step["sends_to"])
 				if got_send != expected_send:
 					_fail("assert_audio_bus_send: bus %s sends to %s, expected %s" % [send_bus_name, got_send, expected_send])
+		"set_audio_bus_volume":
+			var audio := get_node_or_null("/root/WIAudio")
+			if audio == null:
+				_fail("set_audio_bus_volume: WIAudio autoload missing")
+			else:
+				audio.set_bus_volume(String(step["bus"]), float(step["value_0_to_10"]))
 		"assert_audio_bus_volume":
 			var vol_bus_name := String(step["bus"])
 			var vol_idx := AudioServer.get_bus_index(vol_bus_name)

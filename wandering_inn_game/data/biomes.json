@@ -1,5 +1,6 @@
 {
  "inn": {
+  "footstep_family": "wood",
   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
   "tile_px": 16,
   "floor": [
@@ -20,6 +21,7 @@
   "_comment_floor": "Warm plank swatch from Interior_Walls_01 bottom-left (tavern hall floor); variants via floor_layers."
  },
  "street": {
+  "footstep_family": "stone",
   "sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
   "tile_px": 540,
   "floor": [
@@ -41,6 +43,7 @@
   "blocked_tile_px": 16
  },
  "cave": {
+  "footstep_family": "stone",
   "sheet": "res://assets/tiles/cave/Tiles.png",
   "tile_px": 16,
   "floor": [
@@ -60,6 +63,7 @@
   ]
  },
  "floodplains": {
+  "footstep_family": "earth",
   "sheet": "res://assets/tiles/floor_tiles_12/grass_01.png",
   "tile_px": 540,
   "floor": [
@@ -81,6 +85,7 @@
   ]
  },
  "garden": {
+  "footstep_family": "earth",
   "_comment": "`blocked` reuses the SAME sheet's trimmed-hedge top-face tile (no blocked_sheet override) -- the Garden ships NO wall family; the hedge hem IS the enclosure (sanctuary = absence of architecture).",
   "sheet": "res://assets/tiles/garden/Tiles.png",
   "tile_px": 16,
@@ -100,6 +105,7 @@
   ]
  },
  "riverfarm_village": {
+  "footstep_family": "earth",
   "_comment": "blocked_sheet reuses the SAME free_pack Wall_Tiles [14,4] pick already verified for street/floodplains (no new licensing).",
   "sheet": "res://assets/tiles/floor_tiles_12/grass_01.png",
   "tile_px": 540,
@@ -121,6 +127,7 @@
   ]
  },
  "witch_hollow": {
+  "footstep_family": "earth",
   "_comment": "Floor = flat underwood green Fairy Forest Tiles.png [2,2] rgb(12,82,44).",
   "sheet": "res://assets/tiles/fairy_forest/Tiles.png",
   "tile_px": 16,
@@ -141,6 +148,7 @@
   ]
  },
  "invrisil_street": {
+  "footstep_family": "stone",
   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
   "tile_px": 16,
   "floor": [
@@ -161,6 +169,7 @@
   ]
  },
  "brothers_parlor": {
+  "footstep_family": "wood",
   "_comment": "Skirt likewise reuses the inn's verified [7,21] grey-stone surround ('the warm floor pops as a lit room against dark surround' -- the inn's own _comment_skirt rationale, which is exactly the hideout-interior read wanted here).",
   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
   "tile_px": 16,
@@ -182,6 +191,7 @@
   ]
  },
  "invrisil_alley": {
+  "footstep_family": "stone",
   "_comment": "Direction doc open-question 4's own fallback governs the rest of the card: crates + lantern pools (sconce decor lights, mercantile_alleys' own decor list) carry the 'lantern maze' read, no fence pick needed.",
   "sheet": "res://assets/tiles/invrisil/tileset_marble_wang4x4.png",
   "tile_px": 16,
@@ -203,6 +213,7 @@
   ]
  },
  "dungeon": {
+  "footstep_family": "stone",
   "_comment": "Wall/blocked+skirt fill: Walls.png cell (8,2), flat warm-grey stone rgb~(81,79,70) std4.8.",
   "sheet": "res://assets/tiles/cemetery/Floor.png",
   "tile_px": 16,
@@ -223,6 +234,7 @@
   ]
  },
  "pallass_market": {
+  "footstep_family": "stone",
   "_comment": "Both floor_layers overlays (the parapet-rim edge tile + the Castle-checker lift accent) and the wall-band segment (also using [0,0]) paint OVER this base, per skeleton_scene.json's own map _comment.",
   "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
   "tile_px": 16,
@@ -242,6 +254,7 @@
   ]
  },
  "pallass_forge": {
+  "footstep_family": "stone",
   "_comment": "Molten renders ONLY at the mid-floor seam via the map's own cover_skip + floor_layers pair (see skeleton_scene.json pallass_forge).",
   "sheet": "res://assets/tiles/pallass/tileset_brick_over_molten_atlas.png",
   "tile_px": 16,

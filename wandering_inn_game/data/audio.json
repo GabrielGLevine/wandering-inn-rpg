@@ -41,17 +41,49 @@
    "cooldown_ms": 100
   },
   {
-   "_comment": "`stream` stays variants[0], a drift tripwire test_audio_data.gd enforces (never a stale duplicate of the round-robin's real first pick).",
-   "id": "footstep",
+   "_comment": "CONTRACT: family comes from biomes.json; stream/variants/pitch_variants share one round-robin index.",
+   "id": "footstep_wood",
    "event": "player_moved",
+   "payload": { "floor_family": "wood" },
    "stream": "res://assets/audio/sfx/footstep.wav",
    "variants": [
     "res://assets/audio/sfx/footstep.wav",
-    "res://assets/audio/sfx/footstep_2.wav",
-    "res://assets/audio/sfx/footstep_3.wav"
+    "res://assets/audio/sfx/footstep.wav",
+    "res://assets/audio/sfx/footstep.wav"
    ],
+   "pitch_variants": [0.94, 1.0, 1.06],
    "bus": "SFX",
    "volume_db": -24.0,
+   "cooldown_ms": 120
+  },
+  {
+   "id": "footstep_stone",
+   "event": "player_moved",
+   "payload": { "floor_family": "stone" },
+   "stream": "res://assets/audio/sfx/footstep.wav",
+   "variants": [
+    "res://assets/audio/sfx/footstep.wav",
+    "res://assets/audio/sfx/footstep.wav",
+    "res://assets/audio/sfx/footstep.wav"
+   ],
+   "pitch_variants": [1.1, 1.16, 1.22],
+   "bus": "SFX",
+   "volume_db": -23.0,
+   "cooldown_ms": 120
+  },
+  {
+   "id": "footstep_earth",
+   "event": "player_moved",
+   "payload": { "floor_family": "earth" },
+   "stream": "res://assets/audio/sfx/footstep.wav",
+   "variants": [
+    "res://assets/audio/sfx/footstep.wav",
+    "res://assets/audio/sfx/footstep.wav",
+    "res://assets/audio/sfx/footstep.wav"
+   ],
+   "pitch_variants": [0.78, 0.84, 0.9],
+   "bus": "SFX",
+   "volume_db": -26.0,
    "cooldown_ms": 120
   },
   {
