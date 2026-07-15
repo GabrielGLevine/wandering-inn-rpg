@@ -3297,7 +3297,8 @@
    ],
    "surfaces": {
     "maps": [
-     "inn"
+     "inn",
+     "street"
     ],
     "fixtures": [
      "near_riverfarm"
@@ -3305,8 +3306,12 @@
     "skills": [
      "basic_cleaning"
     ],
-    "dialogue": [],
+    "dialogue": [
+     "zevara_intro"
+    ],
     "systems": [
+     "dialogue",
+     "economy",
      "exploration",
      "save"
     ]
