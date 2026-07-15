@@ -42,10 +42,9 @@ semantics are unchanged; unit, balance, and all 112 QA scripts passed.
   straight line (can cut a corner visually, windowed-only); enemy
   turns flow tighter with TURN_ENDED's breath removed. Both deliberate;
   flip if playtest reads wrong.
-- **witch_cottage_prop (witch_hollow 3,7):** zero free cardinal
-  neighbors — its observe-accomplishment is unreachable by mouse AND
-  keyboard (pre-existing, surfaced by the #109 review). Content fix
-  = move a blocker or re-cell the prop.
+- **witch_cottage_prop (witch_hollow 3,7):** RESOLVED #117 — the south
+  approach `[3,8]` is open and reachable; keyboard + mouse live paths are
+  pinned by `witch_cottage_reachability`.
 - **boulevard_duel_ring 0.92 win-rate** sits near the 0.95 GATED
   ceiling and reuses hired_blade_knife_a/b (shared with the warehouse
   quest, no inheritance) — any future retune of those thugs re-gates

@@ -3213,6 +3213,32 @@
    }
   },
   {
+   "script": "witch_cottage_reachability",
+   "seed": 9,
+   "fixture": "near_riverfarm",
+   "note": "Issue #117: the witch cottage's single cardinal approach is reachable from the real hollow landing; distant mouse click walks to it, second click interacts, and keyboard bump+interact produces the same accomplishment and rendered toast",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "near_riverfarm"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "input"
+    ]
+   }
+  },
+  {
    "script": "field_chips_loop",
    "seed": 9,
    "fixture": "near_tactician",
