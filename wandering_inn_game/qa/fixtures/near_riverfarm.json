@@ -1,5 +1,5 @@
 {
- "_comment": "riverfarm_walkthrough's start (FIXTURE-FIRST). CONSTRAINT: post_game + door_awakened structurally imply the FULL Act II/III backbone AND a classed, tutorial-complete PC (test_fixture_coherence.gd enforces both), so this fixture carries the near_act3/climax_sealed_start Act III-complete shape (warrior5+mage5, matching door_chain_fight_start's own tuned build -- same PC across the whole door-chain arc) PLUS the full door-awakening chain (door_awakened already banked, standing at the SAME free cell (13,6) facing the awakened pantry_door at (14,6), against the east wall) PLUS read_the_board/riverfarm_attuned -- the Guild-board rumor has already been read, so the portal menu offers Riverfarm as a real destination the moment this canonical opens it. gold 5 (position ledger's Tier-B honest Act III income (docs/design/fixture-position-ledger.md): the 40g floor minus the 35g resonant_catalyst already spent). Equipped `relcs_spare_spear` instead of the starter rusty_sword. times_slept 12 (cosmetic). riverfarm_walkthrough itself exercises zero combat (the canonical routes around the two hollow briar placements and the wolf pack, per its own no-violence sim-guard) -- the held warrior5+mage5 build changes nothing about that. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "riverfarm_walkthrough's start (FIXTURE-FIRST). CONTRACT: post_game + door_awakened imply the full Act II/III backbone and tutorial-complete warrior5+mage5 PC; gained_by and level counters remain satisfiable. Four victories = won_combat x3 + cleared_the_warren x1. Door-awakening chain is complete at the inn pantry door; read_the_board/riverfarm_attuned opens Riverfarm. gold 5 = 40g floor - 35g catalyst; relcs_spare_spear equipped. TRAP: rng_state is derived seed-9 state, never a hand-typed seed; this fixture resolves no combat.",
  "version": 5,
  "state": {
   "current_map": "inn",
@@ -18,6 +18,7 @@
   "accomplishments": {
    "met_relc": 1,
    "sparred_with_relc": 1,
+   "learned_magic_from_pisces": 1,
    "given_spear_by_relc": 1,
    "reached_liscor": 1,
    "package_delivered": 1,
@@ -31,6 +32,10 @@
    "heard_the_deep_tremor": 1,
    "heard_olesm_briefing": 1,
    "cleared_the_warren": 1,
+   "won_combat": 3,
+   "melee_hit": 18,
+   "spell_cast": 13,
+   "victories": 4,
    "raskghar_sealed": 1,
    "post_game": 1,
    "door_chain_started": 1,

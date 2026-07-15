@@ -1,5 +1,5 @@
 {
- "_comment": "climax_seal's POST-victory surface state. Act II complete + reached_liscor (so WIActs sits at Act II) with cleared_the_warren banked but raskghar_sealed NOT yet -- the seal dialogue banks it live, advancing the journal to Act III. Standing on the street (2,7 facing UP toward Zevara at 2,6). Pre-banks watch_runner_pointed/heard_the_deep_tremor/heard_olesm_briefing so Zevara's summons + Olesm's briefing options are hidden (already done) and only the seal/resolution options show. rng_state 9 (no combat in the path). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "climax_seal's post-victory surface state. Act II complete at Zevara with cleared_the_warren banked, raskghar_sealed unbanked. CONTRACT: class gained_by/level counters remain satisfiable; two victories = won_combat x1 + cleared_the_warren x1. Prior summons/briefing flags keep the live seal option indexed. TRAP: rng_state is derived seed-9 state, never a hand-typed seed; this fixture resolves no combat.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -24,6 +24,11 @@
    "resolved_the_cisterns": 1,
    "cisterns_reported": 1,
    "met_relc": 1,
+   "sparred_with_relc": 1,
+   "persuaded_someone": 1,
+   "heard_gossip": 3,
+   "won_combat": 1,
+   "victories": 2,
    "watch_runner_pointed": 1,
    "heard_the_deep_tremor": 1,
    "heard_olesm_briefing": 1,

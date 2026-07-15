@@ -2525,13 +2525,14 @@ func _check_chronicle_facts(scene_config: Dictionary, skill_config: Dictionary) 
 			{WIKeys.ID: "unfinished", "beats": [{"description": "Pending", "complete_when": {"beat_pending": 1}}]},
 			{WIKeys.ID: "done_b", "beats": [{"description": "Done B", "complete_when": {"beat_b": 1}}]},
 		]},
+		"acts": _load_json("res://data/acts.json"),
 	}
 	var chronicle := WIGame.new(scene_config, skill_config, func(_type: String, _payload: Dictionary) -> void: pass, 91, chronicle_config, {}, {
 		"pc_name": "  Sella  ", "pc_race": "drake",
 	})
 	chronicle.classes = {"helper": 2, "mage": 4}
 	chronicle.started_quests.assign(["done_a", "unfinished", "done_b", "missing_quest"])
-	chronicle.accomplishments = {"beat_a": 1, "beat_b": 1, "won_combat": 7}
+	chronicle.accomplishments = {"beat_a": 1, "beat_b": 1, "victories": 7}
 	chronicle.times_slept = 5
 
 	var facts: Dictionary = chronicle.chronicle_facts()
