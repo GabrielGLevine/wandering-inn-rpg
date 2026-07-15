@@ -49,6 +49,19 @@ this cursor — they scan the WHOLE run, so be specific with `payload_contains`
 after any phase change (combat → sleep). `{"from_start": true}` opts one wait
 out.
 
+For a repeated event with the same payload, a cumulative
+`assert_event_logged` is not proof that a later action emitted it. Use ordered
+`wait_for_event` steps or compare the event count before and after the action.
+
+## Coordinate arrays cross a JSON type boundary
+JSON coordinates parse as Arrays of floats, while code-authored map cells are
+often Arrays of ints. GDScript Array equality is element-type strict, so
+`[5.0, 8.0] == [5, 8]` is false even though the cells are numerically the
+same. Normalize coordinates through `int()`/`Vector2i` before equality,
+membership, route, or blocker checks. `assert_state.equals` already provides
+loose numeric comparison; this trap applies to GDScript tests/helpers that
+read QA JSON directly.
+
 ## Props have TWO interaction shapes
 `on_interact_accomplishment` (plain interact) — OR `requires_skill` +
 `on_skill_use` (lantern-style): interact routes through `use_skill`, emitting
@@ -122,5 +135,7 @@ player-visible feature.
 - Asserting only the domain event, skipping the `ui_*_rendered` half.
 - Adding a script without a seed-table row in `AGENTS.md`.
 - Authoring a fixture without ever loading it in a run.
+- Comparing JSON-parsed coordinate Arrays directly with int cell Arrays.
+- Using a cumulative event assertion to prove a repeated post-action emission.
 
 Verify per `wi-verifying-changes` before claiming a script is good.

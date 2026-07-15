@@ -1,16 +1,5 @@
 # Wandering Inn RPG Handoff
 
-## Active work — #113 VISUAL-LOG drain
-
-- **Issue / branch / base:** #113 on `main`, base `2a1e3b5`.
-- **Owned surfaces:** `docs/VISUAL-LOG.md`, bounded sprite/icon assets and catalog consumers, affected region map JSON, focused world/combat presentation seams, affected QA/tests, and this handoff section.
-- **State:** Wave 0 audit committed (`c0d1a61`). Wave 1 has generated and integrated 12 skill icons, 9 bespoke field props, Rock Crab replacement art, and a dedicated directional Shield Spider; all eight art-log families are closed pending the wave commit.
-- **State (2026-07-14):** Wave 2 LANDED on main (merge of `wip/113-wave2-codex`; repairs in `1b712cf` — Codex hit its usage limit mid-wave and its seam failed its own new tests; the interrupt-parked WIP is `4e9eaba`). Fully gated: load_gate, 24/24 units zero-warning, 5 touched canonicals seed 9, balance harness 104 cells, full 112-script sweep (riverfarm_walkthrough re-run green after its fix). `git cherry` empty — `wip/113-wave2-codex` safe to delete.
-- **Verification so far (Waves 0-1):** approved design `eb15f30`; plans `2a1e3b5`; audit `c0d1a61`; 23 real windowed canonical/probe/gallery runs PASS with personally judged frames. Focused sprite/combat tests, `load_gate`, canonical `crab_cull_loop`/`cisterns_fight` green; temporary QA capture hooks removed.
-- **Lessons for the next lane (also on #113):** (1) Godot Array equality is element-STRICT — `[5.0, 8.0] == [5, 8]` is false even though `5.0 == 5` is true; JSON-parsed cells are float arrays, so test asserts must int-cast (see `test_sim_core._int_cell`) or they fail/pass vacuously. Fold into wi-writing-qa-scripts (Fable-only edit; deferred at 92% fable band). (2) Moving an NPC's cell: grep ALL QA scripts for the old approach cell — Codex updated 2 of 3. (3) Reconcile-path `ui_entities_rendered` fires BEFORE the toast scripts wait on — use `assert_event_logged`, not `wait_for_event`.
-- **Wave 2 outstanding (next session):** windowed before/after reads for every Wave 2 surface (none captured — usage QUIESCE cut them; judge frames personally), tick the corresponding VISUAL-LOG entries with that evidence, reviewer subagent pass on `82887b1..HEAD` (queued, not skipped), then Wave 3 per the plan doc.
-- **Operator need / next action:** check `scripts/usage_status.sh` first, then: windowed evidence pass → VISUAL-LOG ticks → reviewer dispatch → #113 Wave 3.
-
 ## Current release
 
 **v0.7.0 shipped 2026-07-13:** #92 and #109 closed; the composed 112-script
@@ -32,11 +21,17 @@ semantics are unchanged; unit, balance, and all 112 QA scripts passed.
    save.gd; journal end-page + title card; prove title_flow pins first).
 2. **#87 map-transition fade** (~0.25s black wrap on MAP_CHANGED —
    world.gd/main.gd, now uncontested).
-3. **#76 remainder** — footstep floor-families + ambience ducking
+3. **#114 picker scanability/input parity** — redesign bounty/delivery
+   paging across the full board canonical family; human and QA modes differ.
+4. **#115 field-readout collapse/expand** — accessible keyboard/gamepad/
+   mouse behavior, persistence, and icon fallback in `field_hotbar.gd`.
+5. **#116 biome-aware blocked-cell props** — large multi-region migration;
+   collision honesty, deterministic selection, and rendering-cost gates.
+6. **#76 remainder** — footstep floor-families + ambience ducking
    (_tween_music_bus_to parameterized over both buses).
-4. **#111 safe project rename:** keep `config/name="Wandering Inn RPG v4"`
+7. **#111 safe project rename:** keep `config/name="Wandering Inn RPG v4"`
    until native + web save migration is deliberately designed and tested.
-5. **#19 Steam:** user-secret provisioning remains user-gated.
+8. **#19 Steam:** user-secret provisioning remains user-gated.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 

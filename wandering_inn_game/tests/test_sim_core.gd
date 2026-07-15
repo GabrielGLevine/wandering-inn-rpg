@@ -105,12 +105,12 @@ func _map_static_blockers(map_cfg: Dictionary, excluded_entity_id: String = "") 
 	return out
 
 
-func _canonical_route_cells(path: String, map_id: String, map_cfg: Dictionary) -> Array:
+func _canonical_route_cells(path: String, map_id: String, map_cfg: Dictionary, excluded_entity_id: String = "") -> Array:
 	var route: Array = []
 	var current: Array = []
 	var facing: Array = []
 	var active := false
-	var blockers := _map_static_blockers(map_cfg)
+	var blockers := _map_static_blockers(map_cfg, excluded_entity_id)
 	for step: Dictionary in _load_json(path).get("steps", []):
 		var action := String(step.get("action", ""))
 		if action == "assert_state" and String(step.get("path", "")) == "current_map":
@@ -190,7 +190,7 @@ func _init() -> void:
 	var deep_landings := _incoming_door_landings(scene_config, "deep_tunnels")
 	assert(not deep_landings.is_empty(), "deep_tunnels needs at least one graph-derived incoming door landing")
 	assert(not deep_landings.has(cameo_cell), "Relc's descent cameo must not occupy an incoming door landing")
-	var deep_route := _canonical_route_cells("res://qa/scripts/deep_descent.json", "deep_tunnels", deep_map)
+	var deep_route := _canonical_route_cells("res://qa/scripts/deep_descent.json", "deep_tunnels", deep_map, "relc_descent_cameo")
 	assert(not deep_route.is_empty() and not deep_route.has(cameo_cell),
 		"Relc's descent cameo must not block the canonical descent route")
 	var deep_blockers := _map_static_blockers(deep_map, "relc_descent_cameo")
@@ -228,7 +228,7 @@ func _init() -> void:
 	for entity: Dictionary in ruin_map["entities"]:
 		if String(entity.get("kind", "")) == "encounter":
 			ruin_encounters.append(_int_cell(entity.get("cell", [])))
-	for cell: Array in ruin_encounters + _canonical_route_cells("res://qa/scripts/ruin_walkthrough.json", "ruin_surface", ruin_map):
+	for cell: Array in ruin_encounters + _canonical_route_cells("res://qa/scripts/ruin_walkthrough.json", "ruin_surface", ruin_map, "ruin_route_statue"):
 		if not ruin_forbidden.has(cell):
 			ruin_forbidden.append(cell)
 	assert(not ruin_forbidden.is_empty() and not ruin_encounters.is_empty(),

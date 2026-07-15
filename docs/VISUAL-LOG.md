@@ -135,7 +135,7 @@ events, and result files live in the gitignored
   (visually identical between the two, matching the light's own
   energy-multiplier design). No fix needed — the mechanism was already
   correct, just never looked at.
-- [ ] SPRITE/RIVERFARM — the witch's cell (3,8) sits close enough under
+- [x] SPRITE/RIVERFARM — the witch's cell (3,8) sits close enough under
   witch_cottage_prop's (3,7) sprite that her figure visually overlaps the
   cottage wall/window rather than reading as clearly standing in front of
   it (riverfarm_walkthrough/05_witch_elder_day.png,
@@ -148,8 +148,14 @@ events, and result files live in the gitignored
   the cottage's sort key) changes what a windowed screenshot needs to
   confirm — left for a pass that can look at the result, consistent with
   the bed-family item's y-sort-bias caution above.
+  **FIXED GH#113 Wave 2 + review fix `385d12a` (2026-07-14):** Eloise moved
+  to `[5,8]`, all canonical approaches moved with her, and the same-cell
+  bush was removed after independent review. Graph/data tests require four
+  open neighbors and a decor-free cell. Fresh elder/young windowed frames
+  under `.superpowers/sdd/visual-log-113-after-wave2-fix/riverfarm_walkthrough/`
+  show both forms separated from the cottage and readable at day/night.
 
-- [ ] FIELD/ARC — Relc's descent-veto conversation (arc_flow dd_05) plays
+- [x] FIELD/ARC — Relc's descent-veto conversation (arc_flow dd_05) plays
   with NO Relc sprite anywhere on the field — he speaks from nowhere at the
   warren mouth, then exists in the fight roster. A walk-on cameo (guild
   DP1 idiom) at the warren mouth would ground the beat. Disclosed 2026-07-08
@@ -159,7 +165,14 @@ events, and result files live in the gitignored
   a presentation-only fix, and outside a headless-only lane's ability to
   windowed-confirm a new cameo reads right. Left for a content-touching
   pass with real windowed verification.
-- [ ] UI/PICKER — the board/delivery picker paginates from the TOP,
+  **FIXED GH#113 Wave 2 + review fix `385d12a` (2026-07-14):** a
+  `present_when` Relc cameo now reconciles beside the warren mouth after
+  `reached_the_warren`. Review caught and removed a reverse-door landing
+  collision; tests now derive all incoming landings and the canonical route
+  from live data. Fresh landing/cameo frames under
+  `.superpowers/sdd/visual-log-113-after-wave2-fix/deep_descent/` show the
+  arrival clear and Relc visibly grounding the later veto.
+- [x] UI/PICKER — the board/delivery picker paginates from the TOP,
   losing the header question + 2 of 3 postings' flavor (board_loop +
   delivery_loop shots). Board-centric milestone — severity with opus.
   **GH#94 re-adjudication (2026-07-13): root cause is a QA-CAPTURE
@@ -185,7 +198,11 @@ events, and result files live in the gitignored
   `dungeon_kingslayer_loop`, `pallass_watchgolem_loop`) — too large a
   surface for a no-new-art mechanical pass; left open, re-scoped, for a
   windowed-tune/content pass that can taste-judge the redesign.
-- [ ] MAP/UPSTAIRS — Lyonette's locked door reads as the same
+  **PROMOTED by GH#113 (2026-07-14):** issue #114 carries the current
+  human-vs-QA paging diagnosis, affected canonical set, input-parity risks,
+  explicit non-goals, and measurable scanability/overflow acceptance gates:
+  https://github.com/GabrielGLevine/wandering-inn-rpg/issues/114
+- [x] MAP/UPSTAIRS — Lyonette's locked door reads as the same
   private-room zone as the PC's own bed (zone ambiguity; a rug/color
   cue would separate "yours" from "hers"). **#31 drain (2026-07-08)
   re-adjudication: still open.** A rug/color cue is a new decor pick that
@@ -193,11 +210,19 @@ events, and result files live in the gitignored
   rather than adding more clutter — a headless-only lane can place a
   sprite but can't judge the result, so left for a pass that can look at
   it.
-- [ ] ARENA/SEWERS — decorative cave props resemble the live Sewer Bat
+  **FIXED GH#113 Wave 2 (2026-07-14):** a distinct rug now zones Lyonette's
+  locked door away from the player's bed. The canonical windowed frame under
+  `.superpowers/sdd/visual-log-113-after-wave2/upstairs_walkthrough/` reads as
+  two separate private-room areas without route obstruction.
+- [x] ARENA/SEWERS — decorative cave props resemble the live Sewer Bat
   enemy silhouette in the dark arena (target-legibility compounding the
   standing dark-arena item, GH issue #28). Folded into issue #30's arena
   pass (2026-07-08) rather than fixed standalone here — see #30's section
   of the polish report.
+  **FIXED GH#113 Wave 2 (2026-07-14):** the bat-like purple mushroom was
+  replaced by a boulder in `sewers_nest`. The preserved combat-board frame
+  under `.superpowers/sdd/visual-log-113-after-wave2/combat_boards/` shows
+  the dedicated Shield Spiders distinct from every decorative silhouette.
 
 - [x] SPRITE — **THE DELIVERY BOARD (`runner_board`, M-DEPTH DP5, Runner's
   Guild interior) still rides the `inn_sign` art + a cool blue-grey tint
@@ -227,7 +252,7 @@ events, and result files live in the gitignored
   **FIXED GH#113 Wave 1 (2026-07-14):** `runner_board` now uses a bespoke
   paper-and-route board with no outdoor post or grass; accepted in the
   windowed `delivery_loop` interior and browse frames.
-- [ ] SPRITE — **a THIRD reproduction of the player-occludes-small-prop
+- [x] SPRITE — **a THIRD reproduction of the player-occludes-small-prop
   finding below (`bed`/`lyonette_door`), this time on a market-stall PROP**:
   M-DEPTH DP4's `bread_stall` (street, food_basket sprite, render_scale
   0.75) is fully hidden behind the player's own head/torso when approached
@@ -255,6 +280,12 @@ events, and result files live in the gitignored
   problem, worse (`door`, 29 other consumers). Needs a per-entity override
   the current schema doesn't have, or a bigger crop/anchor tweak scoped to
   just these two entities.
+  **FIXED GH#113 Wave 2 (2026-07-14):** entities now accept an optional
+  `field_y_sort_bias_px` override without changing shared sprite entries;
+  the holder sort key shifts while sprite and shadow pixels cancel the
+  offset. `bread_stall` and `lyonette_door` use the scoped override. Accepted
+  windowed frames live under `.superpowers/sdd/visual-log-113-after-wave2/barracks_walkthrough/`
+  and `.superpowers/sdd/visual-log-113-after-wave2/upstairs_walkthrough/`.
 - [x] UI/TOAST — **stale toast still on-screen at screenshot time, 2
   shots in a row** (`barracks_walkthrough`'s `06_zevaras_desk.png` and
   `07_the_cell.png` both show the EARLIER "Autosaved. (Esc — save/load
@@ -358,7 +389,7 @@ events, and result files live in the gitignored
   `06_deep_warren_boss_AFTER.png` (the darkest pin — Relc/Raskghar/boss all
   clearly legible against the still-dark board). Bright control:
   `combat_move_input_BRIGHT_AFTER.png` (goblin_ambush, day) unaffected.
-- [ ] COMBAT/ARENAS — arenas read sparse (empty dirt + scattered buckets)
+- [x] COMBAT/ARENAS — arenas read sparse (empty dirt + scattered buckets)
   vs the strong field maps; floodplains ambush arena especially.
   Evocative-dressing pass candidate. **Issue #30 (2026-07-08): the named
   worst offender (`goblin_ambush`/`goblin_ambush_tutorial`, the floodplains
@@ -382,7 +413,13 @@ events, and result files live in the gitignored
   unaffected (decor is presentation-only, never read by `WICombat`).
   Windowed re-confirmation still wanted — controller shot list in the
   polish report.
-- [ ] UI/FIELD-READOUT — (supersedes the K2 drop-row note) permanent
+  **CLOSED GH#113 Wave 2 (2026-07-14):** the already-dressed floodplains,
+  cave, sewers, and deep-warren boards were re-read windowed and accepted;
+  `ruin_court` gained an off-grid statue/rubble architectural frame. Combat
+  board evidence is preserved under
+  `.superpowers/sdd/visual-log-113-after-wave2/combat_boards/`; further
+  density is taste-level redesign, not an unchecked defect.
+- [x] UI/FIELD-READOUT — (supersedes the K2 drop-row note) permanent
   legend furniture grows with progression; playtest recommends collapse
   to icons-only after first waking, expand on hold. K2b owns. **#31
   drain (2026-07-08) re-adjudication: still open.** K2b (commit
@@ -392,6 +429,11 @@ events, and result files live in the gitignored
   change (collapse/expand on hold) needs windowed confirmation of the
   collapsed state actually reading clearly at icon-only size; left open
   for a pass that can look at it.
+  **PROMOTED by GH#113 (2026-07-14):** issue #115 corrects the current owner
+  to `field_hotbar.gd` (field labels were retired; `world_labels.gd` is now a
+  combat-stats regression boundary) and specifies discoverable keyboard,
+  gamepad, mouse, accessibility, persistence, and icon-fallback acceptance:
+  https://github.com/GabrielGLevine/wandering-inn-rpg/issues/115
 
 - [x] UI/SHOP — Krshia's greyed buy options read a doubled price: the
   authored option copy already carries "(5 gold)" and the affordability
@@ -494,7 +536,7 @@ events, and result files live in the gitignored
   pipeline; windowed field reads at
   `.superpowers/sdd/fp-handoff/upgrade-shots/` (`03_olesm_pisces_field.png`,
   `02_zevara_field.png`, `zoom_olesm_pisces.png`, `zoom_zevara.png`).
-- [ ] FIELD/TILES — world maps render BLOCKED cells as flat tiles while
+- [x] FIELD/TILES — world maps render BLOCKED cells as flat tiles while
   arenas render them as biome prop sprites (M6.5 structure map,
   2026-07-04) — props-over-tiles is a repo-wide mandate; field blocked
   cells that visually read solid should get the arena treatment. Content
@@ -508,6 +550,11 @@ events, and result files live in the gitignored
   review across multiple maps before shipping, not a blind data edit.
   Recommend promoting to its own issue if it's still wanted; not
   promoted here since it's pre-existing design debt, not a new finding.
+  **PROMOTED by GH#113 (2026-07-14):** issue #116 traces field `cover_skip`
+  and the combat biome-prop precedent, then gates collision honesty,
+  deterministic selection, migration, multi-biome windowed evidence, and
+  rendering cost:
+  https://github.com/GabrielGLevine/wandering-inn-rpg/issues/116
 - [x] PROP — `stew_pot` reuses the `grill` sprite at same scale directly
   beside the kitchen's existing grill/hearth decor — reads as "more
   kitchen equipment", not a distinct interactive prop — slice T2
@@ -667,7 +714,7 @@ events, and result files live in the gitignored
   flat fill, swapped to a textured one).** "shimmer overlay exists" in
   this item's own text was the tell — the mechanism was never missing,
   it had nothing to shimmer.
-- [ ] GARDEN/UI — GF rotation frictions (2026-07-08, gf-rotation-report),
+- [x] GARDEN/UI — GF rotation frictions (2026-07-08, gf-rotation-report),
   part (c) only (parts (a)/(b) resolved — see below): QA coverage note —
   no diagonal move leg exists INSIDE `garden_sanctuary` to re-check G1's
   Y-sort quirk near edges; a future `garden_walkthrough` revision should
@@ -679,6 +726,11 @@ events, and result files live in the gitignored
   `title_screen.gd`'s `_first_sentence`, now cuts at the last word
   boundary within budget instead of a raw char index; `playtest_boot`
   re-verified green.
+  **FIXED GH#113 Wave 3 (commit `24ba03a`, 2026-07-14):**
+  `garden_walkthrough` now moves diagonally `[7,10]`→`[9,9]`, captures
+  `00b_garden_diagonal_y_sort`, and returns to the original route cell.
+  Windowed evidence under `.superpowers/sdd/visual-log-113-after-wave3/garden_walkthrough/` shows honest fountain/statue clearance, stable camera
+  centering, and correct Y-sort.
 - [x] SEWERS — small text-like artifact renders above the two encounter
   mounds in the same shot (mangled glyphs) — labels were removed
   repo-wide, so WHAT renders there? CF review hint; windowed zoom needed.
@@ -691,7 +743,7 @@ events, and result files live in the gitignored
   (checked — field name tags were removed repo-wide in R3, grepped clean),
   so there is no separate label-removal regression to chase. Same root
   cause, already verified not currently present in the shipped crop.
-- [ ] COMBAT/TEXT — terrain-sourced slow expiry reuses the generic
+- [x] COMBAT/TEXT — terrain-sourced slow expiry reuses the generic
   STATUS_EXPIRED feed line "shakes it off", which reads odd while the
   combatant is STILL standing on [Ice Floor] ice (slowed again next
   turn) — GH#21 controller windowed read 2026-07-07,
@@ -701,6 +753,12 @@ events, and result files live in the gitignored
   A copy/design call (does the status system distinguish
   terrain-sourced expiry from every other kind of expiry?) rather than a
   presentation bug — left for a design pass, not attempted blind.
+  **FIXED GH#113 Wave 3 (commit `24ba03a`, 2026-07-14):** terrain-applied
+  status records and apply/expire events now retain `source_kind`; only
+  `slowed` from `icy_floor` renders “is still gripped by the ice,” while
+  generic expiry keeps “shakes it off.” Exact unit/event pins and the
+  windowed `02_ice_reapplication_copy` frame verify the distinction under
+  `.superpowers/sdd/visual-log-113-after-wave3/ice_floor_loop/`.
 - [x] SPRITE — FIXED (commit `2472e27`, "v0.4.1 fix wave", relocated from
   Open — GH#94 re-adjudication, 2026-07-13) — `pantry_door`'s AWAKENED
   state read as barely-distinguishable from default/flicker at gameplay
@@ -715,7 +773,7 @@ events, and result files live in the gitignored
   open (`v041-evidence/inn_waystone.png`). This closure was simply never
   synced back to the original DF-wave entry — same drift class the
   toast/hotbar/inventory mis-citation entries below were caught by.
-- [ ] MAP/RUIN — `ruin_surface`'s canonical route (`ruin_walkthrough`)
+- [x] MAP/RUIN — `ruin_surface`'s canonical route (`ruin_walkthrough`)
   never crosses the map's one dressed area (the fallen-rubble-column/
   broken-lintel `walls.segments` at x6-11,y8-11, deliberately "the
   untouched middle of the room" per that map's own D3 _comment) — so every
@@ -737,6 +795,12 @@ events, and result files live in the gitignored
   flagging for a future content pass. **#31 drain (2026-07-08): reviewed,
   left open unchanged — no new information changes the prior deferral;
   still a route/content decision, not a presentation fix.**
+  **FIXED GH#113 Wave 2 + review fix `385d12a` (2026-07-14):** a solid
+  ruin statue at `[14,4]` and low rubble at `[10,4]` bring architecture to
+  the walked edge without blocking it. Tests derive door landings,
+  encounters, and the actual canonical route before accepting those cells;
+  the windowed route frame is under
+  `.superpowers/sdd/visual-log-113-after-wave2/ruin_walkthrough/`.
 
 ## Fixed
 
