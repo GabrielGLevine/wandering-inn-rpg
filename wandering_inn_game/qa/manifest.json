@@ -983,7 +983,7 @@
    "script": "field_skills_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); K2b loadout assign/unassign + remapped-slot proof",
+   "note": "field-skill hotbar loop (Basic Cleaning -> Observe); loadout remap; #115 expanded onboarding -> first-waking auto-collapse, keyboard toggle, settings persistence",
    "tiers": [
     "full"
    ],
@@ -1002,7 +1002,8 @@
     "dialogue": [],
     "systems": [
      "exploration",
-     "input"
+     "input",
+     "settings"
     ]
    }
   },
@@ -1010,7 +1011,7 @@
    "script": "hotbar_tab_loop",
    "seed": 9,
    "fixture": "near_tactician",
-   "note": "Issue #58: Tab-primed field-hotbar select -- prime/re-prime, wrap-in-place move_right with player_cell unchanged (arrows captured while primed), Esc disarm, confirm fires the number-key-equivalent stream",
+   "note": "Tab-primed field-hotbar select; #115 mouse/touch Details collapse/expand parity; confirm fires the number-key-equivalent stream",
    "tiers": [
     "full"
    ],
@@ -1029,7 +1030,8 @@
     ],
     "systems": [
      "dialogue",
-     "exploration"
+     "exploration",
+     "input"
     ]
    }
   },
