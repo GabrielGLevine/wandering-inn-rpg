@@ -4,6 +4,7 @@
 > `wi-art-and-sprites`, `wi-verifying-changes`,
 > `godot-prompter:scene-organization`, and `godot-prompter:godot-testing`.
 > **Parent:** `2026-07-14-visual-log-drain-master.md`
+> Status: **DONE**
 
 **Goal:** Resolve the bounded overlap, presence, zoning, occlusion, arena, and
 ruin-route defects without broadening the repo-wide rendering architecture.

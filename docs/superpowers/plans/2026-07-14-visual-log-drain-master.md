@@ -3,7 +3,7 @@
 > **Work item:** GitHub #113
 > **Design:** `docs/superpowers/specs/2026-07-14-visual-log-drain-design.md`
 > **Execution skill:** Use `wi-running-the-machine` for every wave and `wi-verifying-changes` before every completion claim.
-> **Status:** READY after user selects an execution mode.
+> Status: **DONE**
 
 **Goal:** Resolve all twenty unchecked `docs/VISUAL-LOG.md` entries with
 windowed evidence, bounded fixes, or one of the three approved promoted issues,

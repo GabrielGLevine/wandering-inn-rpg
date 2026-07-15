@@ -228,7 +228,7 @@ func _init() -> void:
 	for entity: Dictionary in ruin_map["entities"]:
 		if String(entity.get("kind", "")) == "encounter":
 			ruin_encounters.append(_int_cell(entity.get("cell", [])))
-	for cell: Array in ruin_encounters + _canonical_route_cells("res://qa/scripts/ruin_walkthrough.json", "ruin_surface", ruin_map, "ruin_route_statue"):
+	for cell: Array in ruin_encounters + _canonical_route_cells("res://qa/scripts/ruin_walkthrough.json", "ruin_surface", ruin_map, "ruin_court_statue"):
 		if not ruin_forbidden.has(cell):
 			ruin_forbidden.append(cell)
 	assert(not ruin_forbidden.is_empty() and not ruin_encounters.is_empty(),

@@ -4,6 +4,7 @@
 > `wi-verifying-changes`, `godot-prompter:godot-testing`, and
 > `godot-prompter:godot-ui`.
 > **Parent:** `2026-07-14-visual-log-drain-master.md`
+> Status: **DONE**
 
 **Goal:** Fix the terrain-expiry sentence, add the Garden diagonal regression,
 promote the three broad redesigns with evidence, and close #113 only after the

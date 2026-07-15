@@ -1,5 +1,6 @@
 # VISUAL-LOG Wave 1: Generated Art Implementation Plan
 
+> Status: **DONE**
 > **Required skills:** `wi-running-the-machine`, `wi-art-and-sprites`,
 > `wi-verifying-changes`, `godot-prompter:assets-pipeline`, and
 > `godot-prompter:godot-testing`. Follow the repository PixelLab pipeline;

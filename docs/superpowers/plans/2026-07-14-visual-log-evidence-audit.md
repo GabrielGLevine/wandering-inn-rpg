@@ -4,6 +4,7 @@
 > `wi-verifying-changes`; use `wi-writing-qa-scripts` only for the temporary
 > probes described below.
 > **Parent:** `2026-07-14-visual-log-drain-master.md`
+> Status: **DONE**
 
 **Goal:** Freeze current full-resolution evidence for every open surface,
 classify every item as reproduced/already-fixed/non-reproducible, and make only
