@@ -2,36 +2,25 @@
 
 ## Current release
 
-**v0.7.0 shipped 2026-07-13.** Detailed wave notes live in git history and,
-from 2026-07-15 on, in issue-close PR bodies (`gh pr list --state merged`) —
-the PR workflow (AGENTS.md, wi-running-the-machine) makes each PR the durable
-per-issue record; this file stays current-state only.
-
-**Unreleased on main (v0.8.0 candidates, all PR-gated + audited):** #91/#118
-Chronicle with correct all-encounter victory counts (PR #120), #115
-collapsible field readout (PR #121), #119 verification hardening — falsifiable
-transition gate, fixture class-requirement validator, 37 fixtures repaired,
-screenshot tween-drain (PR #122), #114 scannable pickers (PR #124), plus the
-#102 comment-restoration and wi-delegating-to-codex conventions.
-
-**Chain gate LIFTED (user directive 2026-07-15):** "proceed through suggested
-release sequence and push next release" — the former stop before #114 is
-satisfied and the release cut is authorized.
+**v0.8.0 shipped 2026-07-15** (run 29451275728 green: full QA on real
+assets, itch html5 deploy, Windows+Linux desktop exports). Contents: #91/#118
+Chronicle all-encounter victories (PR #120), #115 collapsible field readout
+(PR #121), #119 verification hardening (PR #122), #114 scannable pickers
+(PR #124), #76 footstep families + dialogue ducking (PR #125), #116
+biome-aware blocked-cell props (PR #126), #102 comment restoration,
+wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
+0.8.0 (`victories` joined STRUCTURAL_LITERALS — see wi-shipping's new trap
+note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
+merged`), not here.
 
 ## 📋 QUEUE (value order)
 
-1. **#76 remainder** — footstep floor-families + dialogue ducking; Codex
-   implementing on `issue/76-audio-remainder` (controller gates per
-   wi-delegating-to-codex).
-2. **#116 biome-aware blocked-cell props** — dispatch after #76 frees the
-   checkout; large multi-region visual migration, windowed reads per region.
-3. **Release cut v0.8.0** — wi-shipping: shipped_ids regen (RELEASE bump,
-   freeze `victories` + new ids) → assets-repo Latest-badge check → tag →
-   `gh run watch`.
-4. **#111 safe project rename:** HOLD — keep `config/name="Wandering Inn RPG
+1. **Human playtest of v0.8.0** — ear-gated audio pass (footstep families
+   inn→street→sewers, music dip under dialogue) + taste queue below.
+2. **#111 safe project rename:** HOLD — keep `config/name="Wandering Inn RPG
    v4"` until save migration is deliberately designed and tested.
-5. **#19 Steam:** HOLD — user-secret provisioning + #20 ruling.
-6. **#123 canonical redesigns** (social_loop/garden_walkthrough/
+3. **#19 Steam:** HOLD — user-secret provisioning + #20 ruling.
+4. **#123 canonical redesigns** (social_loop/garden_walkthrough/
    class_evolution_loop pre-hold the class their script earns) — post-release.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
