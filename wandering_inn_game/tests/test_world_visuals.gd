@@ -143,6 +143,87 @@ func _title_continue_caption_contract_holds(source: String) -> bool:
 		and caption_left > chronicle_right
 
 
+func _main_map_transition_contract_holds(source: String) -> bool:
+	if source.find("const MAP_TRANSITION_HALF_SECONDS := 0.125") == -1:
+		return false
+	var ready := _function_body(source, "_ready")
+	if ready.find("_ensure_map_transition_overlay()") == -1 \
+			or ready.find("_ensure_map_transition_overlay()") > ready.find("swap_to_title()"):
+		return false
+	var ensure := _function_body(source, "_ensure_map_transition_overlay")
+	for clause: String in [
+		"CanvasLayer.new()",
+		"_map_transition_layer.layer = 100",
+		"ColorRect.new()",
+		"_map_transition_overlay.color = Color.BLACK",
+		"Control.PRESET_FULL_RECT",
+		"Control.MOUSE_FILTER_STOP",
+		"_map_transition_overlay.visible = false",
+	]:
+		if ensure.find(clause) == -1:
+			return false
+	var clear := _function_body(source, "_clear_ui_layers")
+	if clear.find("child != _map_transition_layer") == -1:
+		return false
+	var transition := _function_body(source, "transition_map")
+	for clause: String in [
+		"rebuild: Callable",
+		"if _map_transition_active",
+		"_map_transition_active = true",
+		"_map_transition_overlay.visible = true",
+		"_transition_delay(MAP_TRANSITION_HALF_SECONDS)",
+		"await _fade_map_transition(1.0, half_seconds)",
+		"rebuild.call()",
+		"await _fade_map_transition(0.0, half_seconds)",
+		"_map_transition_overlay.visible = false",
+		"_map_transition_active = false",
+	]:
+		if transition.find(clause) == -1:
+			return false
+	var covered := transition.find("await _fade_map_transition(1.0, half_seconds)")
+	var rebuilt := transition.find("rebuild.call()")
+	var revealed := transition.find("await _fade_map_transition(0.0, half_seconds)")
+	if not (covered < rebuilt and rebuilt < revealed):
+		return false
+	if transition.find("ObservableBus.emit_domain_event") != -1:
+		return false
+	var delay := _function_body(source, "_transition_delay")
+	for clause: String in [
+		"DisplayServer.get_name() == \"headless\"",
+		"TestDriver != null and TestDriver.active()",
+		"_map_transition_visual_requested()",
+	]:
+		if delay.find(clause) == -1:
+			return false
+	var visual_opt_in := _function_body(source, "_map_transition_visual_requested")
+	if visual_opt_in.find("QAPaths.user_args().get(\"map-transition-visual\", \"\") == \"1\"") == -1:
+		return false
+	var input := _function_body(source, "_input")
+	if input.find("_map_transition_active") == -1 \
+			or input.find("get_viewport().set_input_as_handled()") == -1:
+		return false
+	var gui_input := _function_body(source, "_gui_input")
+	return gui_input.find("if _map_transition_active") != -1 \
+		and gui_input.find("if _map_transition_active") < gui_input.find("InputEventMouseButton")
+
+
+func _world_map_transition_contract_holds(source: String) -> bool:
+	var ready := _function_body(source, "_ready")
+	if ready.find("_rebuild_field()") == -1 or ready.find("transition_map") != -1:
+		return false
+	var event_handler := _function_body(source, "_on_domain_event")
+	var map_branch := event_handler.get_slice("elif type == WIEvents.MAP_CHANGED:", 1).get_slice("\nelif ", 0)
+	if map_branch.find("_main.transition_map(_rebuild_field)") == -1 \
+			or map_branch.find("\n\t\t_rebuild_field()") != -1:
+		return false
+	var gate := _function_body(source, "_movement_gated")
+	if gate.find("_main.map_transition_active()") == -1:
+		return false
+	var held_or_click := _function_body(source, "_on_move_tween_finished")
+	return held_or_click.find("if _movement_gated()") != -1 \
+		and held_or_click.find("if _movement_gated()") < held_or_click.find("_advance_click_path()")
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var source := FileAccess.get_file_as_string("res://src/world/world.gd")
@@ -194,6 +275,10 @@ func _init() -> void:
 		"title must preserve ROWS and show a read-only 420x150 bottom-left Chronicle card after the gesture gate")
 	assert(_title_continue_caption_contract_holds(title_source),
 		"Continue caption must be rooted below the menu, not laid across its selectable rows")
+	assert(_main_map_transition_contract_holds(main_source),
+		"Main must own the persistent two-half map-transition veil, collapse ordinary QA, and consume transition input")
+	assert(_world_map_transition_contract_holds(source),
+		"World must keep initial build synchronous, delegate only MAP_CHANGED, and share the transition movement gate")
 
 	print("PASS: world.gd presentation wiring contracts hold")
 	quit(0)

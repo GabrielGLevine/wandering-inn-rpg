@@ -191,6 +191,8 @@ func _movement_gated() -> bool:
 		return true
 	if _main != null and _main.veil_modal_active():
 		return true
+	if _main != null and _main.map_transition_active():
+		return true
 	return false
 
 
@@ -1108,7 +1110,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 	elif type == WIEvents.PLAYER_BLOCKED:
 		_bump_player_visual()
 	elif type == WIEvents.MAP_CHANGED:
-		_rebuild_field()
+		_main.transition_map(_rebuild_field)
 	elif type == WIEvents.ENTITY_REMOVED:
 		var visual: Node2D = _entity_visuals.get(String(payload["id"]))
 		if visual != null:
@@ -1246,12 +1248,13 @@ func _held_axis(neg_action: String, neg_val: int, pos_action: String, pos_val: i
 ## (`_movement_gated`) so a panel/dialogue/combat opening mid-hold stops the
 ## repeat immediately rather than only at the next fresh keypress.
 func _on_move_tween_finished() -> void:
+	if _movement_gated():
+		_click_path.clear()
+		return
 	if not _click_path.is_empty():
 		_advance_click_path()
 		return
 	if TestDriver != null and TestDriver.active():
-		return
-	if _movement_gated():
 		return
 	var dir := _held_move_direction()
 	if dir == Vector2i.ZERO:

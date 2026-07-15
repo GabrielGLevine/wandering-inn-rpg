@@ -7,6 +7,7 @@ extends Control
 
 const WORLD_VIEWPORT_SIZE := Vector2(320.0, 180.0)
 const WORLD_SCALE := 4.0
+const MAP_TRANSITION_HALF_SECONDS := 0.125
 const MESSAGE_LAYER_SCRIPT := preload("res://src/ui/message_layer.gd")
 const COMBAT_SCREEN_SCRIPT := preload("res://src/combat/combat_screen.gd")
 const DIALOGUE_PANEL_SCRIPT := preload("res://src/ui/dialogue_panel.gd")
@@ -35,11 +36,16 @@ var _title_screen: Node
 var _sleep_veil: Node
 var _settings_panel: Node
 var _combat_screen: Node
+var _map_transition_layer: CanvasLayer
+var _map_transition_overlay: ColorRect
+var _map_transition_tween: Tween
+var _map_transition_active := false
 
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_ensure_viewport_nodes()
+	_ensure_map_transition_overlay()
 	get_viewport().size_changed.connect(_layout_viewport_container)
 	_layout_viewport_container()
 	ObservableBus.domain_event.connect(_on_domain_event)
@@ -87,6 +93,9 @@ func screen_to_world(screen_pos: Vector2) -> Vector2:
 
 
 func _gui_input(event: InputEvent) -> void:
+	if _map_transition_active:
+		accept_event()
+		return
 	if not (event is InputEventMouseButton):
 		return
 	var mb := event as InputEventMouseButton
@@ -100,12 +109,21 @@ func _gui_input(event: InputEvent) -> void:
 	accept_event()
 
 
+func _input(_event: InputEvent) -> void:
+	if _map_transition_active:
+		get_viewport().set_input_as_handled()
+
+
 func veil_modal_active() -> bool:
 	return _sleep_veil != null and _sleep_veil.modal_active()
 
 
 func pause_open() -> bool:
 	return _pause_menu != null and bool(_pause_menu.get("open"))
+
+
+func map_transition_active() -> bool:
+	return _map_transition_active
 
 
 func swap_to_title() -> void:
@@ -158,6 +176,57 @@ func _ensure_viewport_nodes() -> void:
 		_container.add_child(_sub_viewport)
 
 
+func _ensure_map_transition_overlay() -> void:
+	_map_transition_layer = CanvasLayer.new()
+	_map_transition_layer.name = "MapTransitionLayer"
+	_map_transition_layer.layer = 100
+	add_child(_map_transition_layer)
+	_map_transition_overlay = ColorRect.new()
+	_map_transition_overlay.name = "MapTransitionOverlay"
+	_map_transition_overlay.color = Color.BLACK
+	_map_transition_overlay.modulate.a = 0.0
+	_map_transition_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_map_transition_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	_map_transition_overlay.visible = false
+	_map_transition_layer.add_child(_map_transition_overlay)
+
+
+func transition_map(rebuild: Callable) -> void:
+	if _map_transition_active:
+		return
+	_map_transition_active = true
+	_map_transition_overlay.visible = true
+	var half_seconds := _transition_delay(MAP_TRANSITION_HALF_SECONDS)
+	await _fade_map_transition(1.0, half_seconds)
+	rebuild.call()
+	await _fade_map_transition(0.0, half_seconds)
+	_map_transition_overlay.visible = false
+	_map_transition_active = false
+
+
+func _fade_map_transition(target_alpha: float, seconds: float) -> void:
+	if seconds <= 0.0:
+		_map_transition_overlay.modulate.a = target_alpha
+		return
+	_map_transition_tween = create_tween()
+	_map_transition_tween.set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	_map_transition_tween.tween_property(_map_transition_overlay, "modulate:a", target_alpha, seconds)
+	await _map_transition_tween.finished
+
+
+func _transition_delay(seconds: float) -> float:
+	if DisplayServer.get_name() == "headless":
+		return 0.0
+	if TestDriver != null and TestDriver.active() \
+			and not _map_transition_visual_requested():
+		return 0.0
+	return seconds
+
+
+func _map_transition_visual_requested() -> bool:
+	return QAPaths.user_args().get("map-transition-visual", "") == "1"
+
+
 func _layout_viewport_container() -> void:
 	var scaled_size := WORLD_VIEWPORT_SIZE * WORLD_SCALE
 	_container.size = WORLD_VIEWPORT_SIZE
@@ -174,7 +243,7 @@ func _clear_world_viewport() -> void:
 
 func _clear_ui_layers() -> void:
 	for child: Node in get_children():
-		if child != _container:
+		if child != _container and child != _map_transition_layer:
 			remove_child(child)
 			child.queue_free()
 	_journal = null
