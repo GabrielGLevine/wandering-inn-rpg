@@ -1,6 +1,6 @@
 # Map Transition Fade Design
 
-> Status: **ACTIVE**
+> Status: **DONE**
 
 ## Goal
 

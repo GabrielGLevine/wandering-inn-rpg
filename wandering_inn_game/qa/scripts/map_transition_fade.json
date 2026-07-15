@@ -13,8 +13,10 @@
   {"action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": {"map": "floodplains"}, "timeout_sec": 5},
   {"action": "wait_frames", "frames": 1},
   {"action": "screenshot", "name": "02_floodplains_mid_reveal"},
+  {"action": "press", "name": "move_right", "when_user_args": {"map-transition-visual": "1"}},
   {"action": "assert_state", "path": "current_map", "equals": "floodplains"},
   {"action": "assert_state", "path": "player_cell", "equals": [7, 6]},
+  {"action": "assert_event_absent", "type": "player_moved", "payload_contains": {"cell": [8, 6]}},
   {"action": "wait_frames", "frames": 10},
   {"action": "screenshot", "name": "03_floodplains_revealed"},
   {"action": "wait_frames", "frames": 10}

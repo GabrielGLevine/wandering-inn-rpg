@@ -304,6 +304,7 @@ func _init() -> void:
 	var atmosphere_source := FileAccess.get_file_as_string("res://src/world/atmosphere.gd")
 	var journal_source := FileAccess.get_file_as_string("res://src/ui/journal.gd")
 	var title_source := FileAccess.get_file_as_string("res://src/ui/title_screen.gd")
+	var driver_source := FileAccess.get_file_as_string("res://qa/test_driver.gd")
 	assert(events_source.find("const UI_CHRONICLE_RENDERED := &\"ui_chronicle_rendered\"") != -1,
 		"Chronicle needs its dedicated stable render-confirmation event")
 	assert(_chronicle_capture_contract_holds(main_source),
@@ -323,6 +324,9 @@ func _init() -> void:
 		"World must defer destination mood/entity presentation until the covered MAP_CHANGED rebuild")
 	assert(_atmosphere_map_transition_contract_holds(atmosphere_source),
 		"Atmosphere must not apply destination mood to still-visible source geometry")
+	assert(driver_source.find("step.get(\"when_user_args\", {})") != -1 \
+		and driver_source.find("QAPaths.user_args().get(arg_name, \"\")") != -1,
+		"paced visual canonicals need an opt-in live-input assertion without changing headless streams")
 
 	print("PASS: world.gd presentation wiring contracts hold")
 	quit(0)

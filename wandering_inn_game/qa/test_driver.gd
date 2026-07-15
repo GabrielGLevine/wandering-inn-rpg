@@ -128,6 +128,10 @@ func _skip_title() -> void:
 
 
 func _execute(step: Dictionary) -> void:
+	var required_args: Dictionary = step.get("when_user_args", {})
+	for arg_name: String in required_args:
+		if QAPaths.user_args().get(arg_name, "") != String(required_args[arg_name]):
+			return
 	match String(step["action"]):
 		"wait_frames":
 			for i in int(step.get("frames", 1)):

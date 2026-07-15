@@ -1,6 +1,6 @@
 # Map Transition Fade Implementation Plan
 
-> Status: **ACTIVE**
+> Status: **DONE**
 >
 > **For agentic workers:** REQUIRED SUB-SKILL: Use
 > `superpowers:test-driven-development` and the repository WI verification
@@ -46,5 +46,5 @@ gate.
   and post-reveal screenshots; register and derive surfaces.
 - [x] Prove headless collapse plus unchanged crossing scripts.
 - [x] Run it windowed with `--map-transition-visual=1`; read both frames.
-- [ ] Mark #87/spec/plan complete, run the issue gate and whole-issue review,
+- [x] Mark #87/spec/plan complete, run the issue gate and whole-issue review,
   and commit `Closes #87` with DCO and actual tool attribution.

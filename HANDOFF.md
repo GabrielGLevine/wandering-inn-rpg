@@ -14,6 +14,13 @@ Continue → journal → title → New Game survival route without changing the
 five selectable title rows. Headless integration gates and the final 100%/130%
 visual reads are green; the card, caption, and post-New-Game frame all fit.
 
+**#87 field presentation complete (unreleased):** map changes now fade the
+old field to black, rebuild the destination under full cover, and reveal it
+over a second 0.125-second half. Input is gated for the full transition;
+ordinary headless QA remains synchronous. `map_transition_fade` proves the
+live inn-door crossing and its opt-in paced visual frames. The user stopped
+the issue chain here: do not begin #114 or cut a release until directed.
+
 **#103 documentation rot complete:** current/history authority is mapped in
 `docs/DOC-MAP.md`; shipped staging is archived; all plans say DONE/ACTIVE;
 QA notes are a CI-checked manifest-derived inventory. No gameplay changed.
@@ -24,19 +31,17 @@ semantics are unchanged; unit, balance, and all 112 QA scripts passed.
 
 ## 📋 QUEUE (value order)
 
-1. **#87 map-transition fade** (~0.25s black wrap on MAP_CHANGED —
-   world.gd/main.gd, now uncontested).
-2. **#114 picker scanability/input parity** — redesign bounty/delivery
+1. **#114 picker scanability/input parity** — redesign bounty/delivery
    paging across the full board canonical family; human and QA modes differ.
-3. **#115 field-readout collapse/expand** — accessible keyboard/gamepad/
+2. **#115 field-readout collapse/expand** — accessible keyboard/gamepad/
    mouse behavior, persistence, and icon fallback in `field_hotbar.gd`.
-4. **#116 biome-aware blocked-cell props** — large multi-region migration;
+3. **#116 biome-aware blocked-cell props** — large multi-region migration;
    collision honesty, deterministic selection, and rendering-cost gates.
-5. **#76 remainder** — footstep floor-families + ambience ducking
+4. **#76 remainder** — footstep floor-families + ambience ducking
    (_tween_music_bus_to parameterized over both buses).
-6. **#111 safe project rename:** keep `config/name="Wandering Inn RPG v4"`
+5. **#111 safe project rename:** keep `config/name="Wandering Inn RPG v4"`
    until native + web save migration is deliberately designed and tested.
-7. **#19 Steam:** user-secret provisioning remains user-gated.
+6. **#19 Steam:** user-secret provisioning remains user-gated.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 

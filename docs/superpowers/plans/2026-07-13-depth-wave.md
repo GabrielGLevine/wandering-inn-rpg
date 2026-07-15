@@ -1,6 +1,6 @@
 # Depth wave (#87 + #91 + #92 + #76) — plan (2026-07-13)
 
-> Status: **ACTIVE** — #76, #87, and #91 still have open remainder.
+> Status: **ACTIVE** — only #76 still has open remainder.
 
 Issues carry scope (gap-2 briefs, repo-verified). This doc pins lane
 ownership + the two seams.
