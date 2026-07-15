@@ -627,7 +627,11 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 		WIEvents.STATUS_EXPIRED:
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
-			line = "%s shakes it off." % _display_name(combat, view, String(payload["id"]))
+			var expired_name := _display_name(combat, view, String(payload["id"]))
+			if String(payload.get("status", "")) == "slowed" and String(payload.get("source_kind", "")) == "icy_floor":
+				line = "%s is still gripped by the ice." % expired_name
+			else:
+				line = "%s shakes it off." % expired_name
 		WIEvents.STATUS_TICKED:
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""

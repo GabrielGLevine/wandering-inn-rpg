@@ -541,10 +541,15 @@ func _start_turn() -> void:
 	var statuses: Dictionary = c["statuses"]
 	_apply_terrain_status(c)
 	if statuses.has("slowed"):
-		var penalty := int((statuses["slowed"] as Dictionary).get("pool_penalty", 0))
+		var slowed: Dictionary = statuses["slowed"]
+		var penalty := int(slowed.get("pool_penalty", 0))
 		pool = maxi(1, MOVE_POOL - penalty)
 		statuses.erase("slowed")
-		_emit(WIEvents.STATUS_EXPIRED, {"id": c[WIKeys.ID], "status": "slowed"})
+		_emit(WIEvents.STATUS_EXPIRED, {
+			"id": c[WIKeys.ID],
+			"status": "slowed",
+			"source_kind": String(slowed.get("source_kind", "")),
+		})
 	pool += _move_pool_bonus_total(c)
 	if statuses.has("rooted"):
 		pool = 0
@@ -607,8 +612,15 @@ func _apply_terrain_status(c: Dictionary) -> void:
 	var entry: Dictionary = terrain[cell]
 	var applies: Dictionary = entry.get(WIKeys.APPLIES, {})
 	for status_id: String in applies:
-		(c["statuses"] as Dictionary)[status_id] = (applies[status_id] as Dictionary).duplicate(true)
-		_emit(WIEvents.STATUS_APPLIED, {"id": String(c[WIKeys.ID]), "status": status_id})
+		var status_data := (applies[status_id] as Dictionary).duplicate(true)
+		var source_kind := String(entry.get("kind", ""))
+		status_data["source_kind"] = source_kind
+		(c["statuses"] as Dictionary)[status_id] = status_data
+		_emit(WIEvents.STATUS_APPLIED, {
+			"id": String(c[WIKeys.ID]),
+			"status": status_id,
+			"source_kind": source_kind,
+		})
 
 
 func _purge_expired_terrain() -> void:

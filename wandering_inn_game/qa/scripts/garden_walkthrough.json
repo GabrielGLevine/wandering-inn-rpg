@@ -266,6 +266,36 @@
    ]
   },
   {
+   "action": "move_diag",
+   "a": "move_right",
+   "b": "move_up"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    9
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "00b_garden_diagonal_y_sort"
+  },
+  {
+   "action": "move_diag",
+   "a": "move_left",
+   "b": "move_down"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    10
+   ]
+  },
+  {
    "action": "screenshot",
    "name": "02_garden_day_bright_identity"
   },

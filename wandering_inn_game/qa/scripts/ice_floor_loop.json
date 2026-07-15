@@ -57,9 +57,12 @@
   { "action": "assert_state", "path": "combat.combatants.pc.move_pool", "equals": 2 },
 
   { "_comment": "End turn 1 standing on the ice -- the two inert dummies auto-end theirs, then pc's own turn 2 (round 2) begins already on (6,3): the standing-slow proof, live.", "action": "press", "name": "end_turn" },
+  { "action": "wait_for_event", "type": "status_applied", "payload_contains": { "id": "pc", "status": "slowed", "source_kind": "icy_floor" }, "timeout_sec": 10 },
+  { "action": "wait_for_event", "type": "status_expired", "payload_contains": { "id": "pc", "status": "slowed", "source_kind": "icy_floor" }, "timeout_sec": 10 },
   { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc", "move_pool": 1 }, "timeout_sec": 10 },
   { "action": "assert_state", "path": "combat.round", "equals": 2 },
   { "action": "screenshot", "name": "01_standing_slow" },
+  { "action": "screenshot", "name": "02_ice_reapplication_copy" },
 
   { "_comment": "End turn 2 without moving (still on (6,3)) -- the round 2->3 rollover purges icy_floor (expires_after_round 2 < round 3), firing terrain_expired once, then pc's turn 3 starts off the now-plain cell with a full, unslowed pool.", "action": "press", "name": "end_turn" },
   { "action": "wait_for_event", "type": "terrain_expired", "payload_contains": { "kind": "icy_floor", "cells": [[6, 2], [6, 3], [6, 4], [7, 2], [7, 3], [7, 4], [8, 2], [8, 3], [8, 4]] }, "timeout_sec": 10 },

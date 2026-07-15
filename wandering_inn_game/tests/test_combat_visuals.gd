@@ -245,6 +245,14 @@ func _init() -> void:
 		"attacker": "goblin_raider", "target": "goblin_raider_2", "hit": true, "damage": 3,
 	}, sel_combat, null)
 	assert(undeduped_line == "Goblin Raider strikes Goblin Raider for 3!", "a null view (API-safety fallback) must render the raw undeduped display_name, matching the pre-#75 behavior")
+	var ice_slow_expired_line: String = dedup_hud.feed_line_for_event(WIEvents.STATUS_EXPIRED, {
+		"id": "pc", "status": "slowed", "source_kind": "icy_floor",
+	}, sel_combat, sel_view)
+	assert(ice_slow_expired_line == "Traveler is still gripped by the ice.", "icy_floor slow expiry must explain the immediate reapplication")
+	var generic_slow_expired_line: String = dedup_hud.feed_line_for_event(WIEvents.STATUS_EXPIRED, {
+		"id": "pc", "status": "slowed",
+	}, sel_combat, sel_view)
+	assert(generic_slow_expired_line == "Traveler shakes it off.", "generic slow expiry keeps the existing fallback copy")
 	var hud_logic: RefCounted = hud_script.new(null, null, null)
 	hud_logic.reset_tutor_lines({"tutor_lines": [{"id": "t1", "on": {"event": "combat_started"}, "line": "Begin!"}]})
 	var matched: Dictionary = hud_logic.match_tutor_line("combat_started", {})

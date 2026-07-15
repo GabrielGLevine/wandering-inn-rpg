@@ -1174,14 +1174,33 @@ func _init() -> void:
 	c70.active_index = c70.turn_order.find("pc")
 	c70._start_turn()
 	assert(int(c70.combatants["pc"][WIKeys.MOVE_POOL]) == maxi(1, WICombat.MOVE_POOL - 2), "turn-start already standing on ice applies THIS turn's pool penalty")
-	var applied70 := false
-	var expired70 := false
-	for e: Dictionary in _events:
+	var applied70: Dictionary = {}
+	var expired70: Dictionary = {}
+	var applied_index70 := -1
+	var expired_index70 := -1
+	for event_index: int in _events.size():
+		var e: Dictionary = _events[event_index]
 		if e["type"] == "status_applied" and e["payload"].get("id", "") == "pc" and e["payload"].get("status", "") == "slowed":
-			applied70 = true
+			applied70 = e["payload"]
+			applied_index70 = event_index
 		if e["type"] == "status_expired" and e["payload"].get("id", "") == "pc" and e["payload"].get("status", "") == "slowed":
-			expired70 = true
-	assert(applied70 and expired70, "status_applied then status_expired both fire the same turn (applied then immediately consumed)")
+			expired70 = e["payload"]
+			expired_index70 = event_index
+	assert(applied70 == {"id": "pc", "status": "slowed", "source_kind": "icy_floor"}, "terrain status_applied identifies icy_floor as its source")
+	assert(expired70 == {"id": "pc", "status": "slowed", "source_kind": "icy_floor"}, "terrain status_expired preserves icy_floor as its source")
+	assert(applied_index70 >= 0 and applied_index70 < expired_index70, "status_applied fires before status_expired when standing ice reapplies and immediately consumes slowed")
+
+	var generic70 := _make(11, _sink)
+	_events.clear()
+	generic70.active_index = generic70.turn_order.find("pc")
+	(generic70.combatants["pc"]["statuses"] as Dictionary)["slowed"] = {"pool_penalty": 2}
+	generic70._start_turn()
+	var generic_expired70: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "status_expired" and e["payload"].get("id", "") == "pc" and e["payload"].get("status", "") == "slowed":
+			generic_expired70 = e["payload"]
+	assert(not generic_expired70.is_empty(), "generic slowed emits status_expired")
+	assert(String(generic_expired70.get("source_kind", "")) == "", "generic slowed expiry carries no terrain source")
 
 	var c71 := _make(11, _sink)
 	_events.clear()
