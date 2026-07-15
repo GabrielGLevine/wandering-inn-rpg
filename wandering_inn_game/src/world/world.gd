@@ -429,8 +429,16 @@ func _rebuild_field() -> void:
 
 
 func _rebuild_field_after_transition() -> void:
+	# TRAP (ORDER): mood BEFORE rebuild — _rebuild_field emits ui_map_rendered,
+	# and scripts pin ui_mood_applied preceding it; swapping paints one frame of
+	# the new field under the old map's grade. atmosphere.gd must never re-add
+	# its own MAP_CHANGED listener (this call IS the map-crossing mood apply).
 	_atmosphere.apply_map(Game.sim.current_map, _atmosphere.phase_now())
 	_rebuild_field()
+
+
+func _map_transition_stale_cover() -> bool:
+	return _main != null and _main.map_transition_stale_cover()
 
 
 ## Floor stack z-order (back to front): skirt -> base floor (every grid
@@ -1115,8 +1123,13 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 	elif type == WIEvents.PLAYER_BLOCKED:
 		_bump_player_visual()
 	elif type == WIEvents.MAP_CHANGED:
-		_main.transition_map(_rebuild_field_after_transition)
+		if _main != null:
+			_main.transition_map(_rebuild_field_after_transition)
+		else:
+			_rebuild_field_after_transition()
 	elif type == WIEvents.ENTITY_REMOVED:
+		if _map_transition_stale_cover():
+			return
 		var visual: Node2D = _entity_visuals.get(String(payload["id"]))
 		if visual != null:
 			visual.queue_free()
@@ -1127,11 +1140,19 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_field_root.visible = true
 		_refresh_entities_watching_dormant()
 	elif type == WIEvents.ACCOMPLISHMENT_RECORDED:
-		if _main != null and _main.map_transition_active():
+		# CONTRACT (#119, stale-cover guard — stated once here, shared by the
+		# ENTITY_REMOVED/ITEM_GAINED/PHASE_CHANGED arms): while the transition
+		# cover hides a STALE field (pre-rebuild), skipping is drop-free — the
+		# imminent rebuild reconstructs every visual from live sim. Post-rebuild
+		# events reconcile normally against the new field. Guarding the WHOLE
+		# transition (the old shape) silently dropped post-rebuild refreshes.
+		if _map_transition_stale_cover():
 			return
 		_refresh_entities_watching_counter(String(payload.get("id", "")))
 		_reconcile_entity_presence()
 	elif type == WIEvents.ITEM_GAINED:
+		if _map_transition_stale_cover():
+			return
 		var source_id := String(payload.get("source", ""))
 		if source_id != "":
 			call_deferred("_refresh_entity_visual", source_id)
@@ -1153,6 +1174,8 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 	elif type == WIEvents.SNEAK_STARTED or type == WIEvents.SNEAK_ENDED:
 		_reconcile_sneak_visual()
 	elif type == WIEvents.PHASE_CHANGED:
+		if _map_transition_stale_cover():
+			return
 		_reconcile_pc_light()
 		_reconcile_sneak_visual()
 		_reconcile_ice_overlay()

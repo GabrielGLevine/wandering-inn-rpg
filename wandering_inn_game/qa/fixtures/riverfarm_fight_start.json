@@ -25,7 +25,11 @@
    "bought_catalyst": 1,
    "door_study_sleeps": 3,
    "door_awakened": 1,
-   "riverfarm_attuned": 1
+   "riverfarm_attuned": 1,
+   "won_combat": 3,
+   "melee_hit": 18,
+   "learned_magic_from_pisces": 1,
+   "spell_cast": 13
   },
   "player_skills": [
    "basic_cleaning"

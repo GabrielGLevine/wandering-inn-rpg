@@ -3,9 +3,17 @@
  "version": 5,
  "state": {
   "current_map": "inn",
-  "player_cell": [13, 6],
-  "player_facing": [1, 0],
-  "classes": {"warrior": 2},
+  "player_cell": [
+   13,
+   6
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 2
+  },
   "accomplishments": {
    "met_relc": 1,
    "sparred_with_relc": 1,
@@ -20,18 +28,29 @@
    "read_the_board": 1,
    "riverfarm_attuned": 1,
    "blight_lifted": 1,
-   "invrisil_attuned": 1
+   "invrisil_attuned": 1,
+   "won_combat": 1
   },
   "gold": 1,
-  "player_skills": ["basic_cleaning", "sneak", "observe"],
+  "player_skills": [
+   "basic_cleaning",
+   "sneak",
+   "observe"
+  ],
   "removed_entities": [],
   "dormant_encounters": [],
   "generalist_classes": [],
   "started_quests": [],
   "pending_consolidation": {},
   "used_skills": [],
-  "inventory": ["rusty_sword", "invrisil_attunement_stone"],
-  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "inventory": [
+   "rusty_sword",
+   "invrisil_attunement_stone"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
   "container_state": {},
   "actions_since_sleep": 0,
   "rng_state": "-6393592048753323481"

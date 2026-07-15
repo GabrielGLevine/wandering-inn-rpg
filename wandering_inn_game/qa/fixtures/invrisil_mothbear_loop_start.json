@@ -20,7 +20,8 @@
    "sparred_with_relc": 1,
    "given_spear_by_relc": 1,
    "visited_guild": 1,
-   "won_combat": 1
+   "won_combat": 1,
+   "melee_hit": 57
   },
   "player_skills": [
    "basic_cleaning"

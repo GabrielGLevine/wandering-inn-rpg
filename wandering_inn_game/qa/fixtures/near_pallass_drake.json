@@ -4,9 +4,17 @@
  "state": {
   "pc_race": "drake",
   "current_map": "pallass_market",
-  "player_cell": [4, 7],
-  "player_facing": [0, -1],
-  "classes": {"warrior": 2},
+  "player_cell": [
+   4,
+   7
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2
+  },
   "accomplishments": {
    "reached_liscor": 1,
    "met_relc": 1,
@@ -24,18 +32,29 @@
    "invrisil_attuned": 1,
    "pallass_sponsorship_asked": 1,
    "pallass_sponsored": 1,
-   "pallass_attuned": 1
+   "pallass_attuned": 1,
+   "won_combat": 1
   },
   "gold": 32,
-  "player_skills": ["basic_cleaning"],
+  "player_skills": [
+   "basic_cleaning"
+  ],
   "removed_entities": [],
   "dormant_encounters": [],
   "generalist_classes": [],
   "started_quests": [],
   "pending_consolidation": {},
   "used_skills": [],
-  "inventory": ["rusty_sword", "relcs_spare_spear", "invrisil_attunement_stone", "pallass_attunement_stone"],
-  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear",
+   "invrisil_attunement_stone",
+   "pallass_attunement_stone"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
   "container_state": {},
   "actions_since_sleep": 0,
   "rng_state": "-6393592048753323481"

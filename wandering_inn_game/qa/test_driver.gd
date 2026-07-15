@@ -605,6 +605,16 @@ func _screenshot(name: String) -> void:
 		_events_seen.append({"type": "screenshot_skipped_headless", "payload": {"name": name}})
 		return
 	await get_tree().create_timer(SCREENSHOT_SETTLE_SECONDS).timeout
+	# CONTRACT (#119): after the base settle, drain live tweens (bounded 3s)
+	# + two clean frames — a completion signal, not a machine-speed guess.
+	# Kills the pinned wait_frames-before-evidence class (#91 whack-a-mole);
+	# scripts should not stack extra sleeps in front of screenshots.
+	var tween_deadline_ms := Time.get_ticks_msec() + 3000
+	while not get_tree().get_processed_tweens().is_empty() \
+			and Time.get_ticks_msec() < tween_deadline_ms:
+		await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("window.__WI_QA_SHOT__ = %s" % JSON.stringify(name), true)
 		var deadline := Time.get_ticks_msec() + 10000

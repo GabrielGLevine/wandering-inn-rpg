@@ -20,7 +20,9 @@
    "sparred_with_relc": 1,
    "given_spear_by_relc": 1,
    "reached_liscor": 1,
-   "heard_wrong_order": 1
+   "heard_wrong_order": 1,
+   "persuaded_someone": 1,
+   "heard_gossip": 3
   },
   "player_skills": [
    "basic_cleaning"
