@@ -1,7 +1,7 @@
 # VISUAL-LOG Drain Design
 
-**Date:** 2026-07-14  
-**Status:** User-approved  
+**Date:** 2026-07-14
+**Status:** User-approved
 **Work item:** [GitHub issue #113](https://github.com/GabrielGLevine/wandering-inn-rpg/issues/113)
 
 ## Purpose
@@ -213,4 +213,3 @@ only by its established result/artifact rule.
   semantically wrong animation/icon/sound, or placeholder-grade art on the
   changed surfaces.
 - `HANDOFF.md` contains only live follow-ups, taste calls, and commands.
-
