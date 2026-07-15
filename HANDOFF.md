@@ -4,8 +4,15 @@
 
 **v0.7.0 shipped 2026-07-13:** #92 and #109 closed; the composed 112-script
 gate, release workflow, itch deploy, and Pages deploy were green. Detailed
-wave notes live in this file's git history; #87 and #91 retain only the open
-remainders below.
+wave notes live in this file's git history; #87 retains only its open
+remainder below.
+
+**#91 Chronicle complete (unreleased):** a completed run now appends exact
+results-only facts to the journal, captures them in `settings.cfg`, and renders
+the latest record on the title screen. `chronicle_loop` proves the full live
+Continue → journal → title → New Game survival route without changing the
+five selectable title rows. Headless integration gates are green; the release
+controller owns the final 100%/130% screenshot reads before shipping.
 
 **#103 documentation rot complete:** current/history authority is mapped in
 `docs/DOC-MAP.md`; shipped staging is archived; all plans say DONE/ACTIVE;
@@ -17,21 +24,19 @@ semantics are unchanged; unit, balance, and all 112 QA scripts passed.
 
 ## 📋 QUEUE (value order)
 
-1. **#91 Chronicle** (results-only run card via settings.cfg — NEVER
-   save.gd; journal end-page + title card; prove title_flow pins first).
-2. **#87 map-transition fade** (~0.25s black wrap on MAP_CHANGED —
+1. **#87 map-transition fade** (~0.25s black wrap on MAP_CHANGED —
    world.gd/main.gd, now uncontested).
-3. **#114 picker scanability/input parity** — redesign bounty/delivery
+2. **#114 picker scanability/input parity** — redesign bounty/delivery
    paging across the full board canonical family; human and QA modes differ.
-4. **#115 field-readout collapse/expand** — accessible keyboard/gamepad/
+3. **#115 field-readout collapse/expand** — accessible keyboard/gamepad/
    mouse behavior, persistence, and icon fallback in `field_hotbar.gd`.
-5. **#116 biome-aware blocked-cell props** — large multi-region migration;
+4. **#116 biome-aware blocked-cell props** — large multi-region migration;
    collision honesty, deterministic selection, and rendering-cost gates.
-6. **#76 remainder** — footstep floor-families + ambience ducking
+5. **#76 remainder** — footstep floor-families + ambience ducking
    (_tween_music_bus_to parameterized over both buses).
-7. **#111 safe project rename:** keep `config/name="Wandering Inn RPG v4"`
+6. **#111 safe project rename:** keep `config/name="Wandering Inn RPG v4"`
    until native + web save migration is deliberately designed and tested.
-8. **#19 Steam:** user-secret provisioning remains user-gated.
+7. **#19 Steam:** user-secret provisioning remains user-gated.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 

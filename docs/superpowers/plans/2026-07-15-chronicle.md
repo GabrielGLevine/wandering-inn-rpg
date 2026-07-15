@@ -1,6 +1,6 @@
 # Chronicle Implementation Plan
 
-> Status: **ACTIVE**
+> Status: **DONE**
 >
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -93,4 +93,3 @@
 - [ ] Update HANDOFF to mark #91 complete and remove it from the queue.
 - [ ] Run the full issue gate and independent review, fix Important/Critical
   findings, re-gate, and commit `Closes #91`.
-

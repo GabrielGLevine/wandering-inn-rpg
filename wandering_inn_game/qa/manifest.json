@@ -3264,6 +3264,31 @@
      "settings"
     ]
    }
+  },
+  {
+   "script": "chronicle_loop",
+   "seed": 9,
+   "fixture": "near_riverfarm",
+   "note": "Issue #91 Chronicle: completed-run journal facts -> settings.cfg capture -> title card, then New Game before autosave proves the same results-only record survives with five selectable title rows",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "near_riverfarm"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "save"
+    ]
+   }
   }
  ]
 }

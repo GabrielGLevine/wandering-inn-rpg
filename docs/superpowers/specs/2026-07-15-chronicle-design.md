@@ -1,6 +1,6 @@
 # Chronicle Design
 
-> Status: **ACTIVE**
+> Status: **DONE**
 
 ## Goal
 
@@ -72,4 +72,3 @@ card is read-only and `MOUSE_FILTER_IGNORE`.
 - Windowed reads cover journal and title at 100% and 130% text scale.
 - `title_flow`, `journal_history`, `arc_flow`, `settings_loop`, load gate, smoke,
   and the full composed sweep remain green.
-
