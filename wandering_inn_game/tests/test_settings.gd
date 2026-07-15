@@ -2,6 +2,7 @@ extends SceneTree
 
 const MESSAGE_LAYER_PATH := "res://src/ui/message_layer.gd"
 const COMBAT_SCREEN_PATH := "res://src/combat/combat_screen.gd"
+const SETTINGS_PATH := "user://settings.cfg"
 
 
 func _init() -> void:
@@ -19,6 +20,7 @@ func _init() -> void:
 
 
 func _check_chronicle_persistence() -> void:
+	_clear_chronicle_section()
 	var script := load("res://src/ui/wi_settings.gd")
 	var empty = script.new()
 	empty.call("_load_settings")
@@ -35,6 +37,17 @@ func _check_chronicle_persistence() -> void:
 	writer.call("_load_settings")
 	writer.record_chronicle(original)
 	original["classes"][0]["level"] = 99
+	var buffered_settings: ConfigFile = writer.get("_settings")
+	var buffered: Dictionary = buffered_settings.get_value("chronicle", "latest")
+	assert(buffered["classes"][0]["level"] == 4,
+		"record_chronicle must deep-copy nested input before retaining it")
+	var persisted := ConfigFile.new()
+	assert(persisted.load(SETTINGS_PATH) == OK,
+		"record_chronicle must write user://settings.cfg")
+	assert(persisted.has_section_key("chronicle", "latest"),
+		"record_chronicle must write [chronicle] latest")
+	assert(persisted.get_value("chronicle", "latest") == {"schema": 1, "name": "Sella", "classes": [{"name": "Mage", "level": 4}]},
+		"[chronicle] latest must contain the recorded facts")
 	writer.free()
 
 	var reader = script.new()
@@ -46,6 +59,17 @@ func _check_chronicle_persistence() -> void:
 	assert(reader.latest_chronicle()["classes"][0]["level"] == 4,
 		"latest_chronicle must isolate nested caller mutations with a deep copy")
 	reader.free()
+	_clear_chronicle_section()
+
+
+func _clear_chronicle_section() -> void:
+	var config := ConfigFile.new()
+	config.load(SETTINGS_PATH)
+	if not config.has_section("chronicle"):
+		return
+	config.erase_section("chronicle")
+	assert(config.save(SETTINGS_PATH) == OK,
+		"Chronicle test cleanup must preserve all non-Chronicle settings")
 
 
 func _check_text_scale_math() -> void:
