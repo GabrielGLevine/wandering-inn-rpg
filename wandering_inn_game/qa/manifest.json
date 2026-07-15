@@ -1736,7 +1736,8 @@
      "economy",
      "exploration",
      "night_phase",
-     "save"
+     "save",
+     "settings"
     ]
    }
   },
@@ -1818,6 +1819,7 @@
      "dialogue",
      "economy",
      "exploration",
+     "input",
      "night_phase"
     ]
    }
