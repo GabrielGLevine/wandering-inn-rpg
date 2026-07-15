@@ -428,6 +428,11 @@ func _rebuild_field() -> void:
 	_update_camera()
 
 
+func _rebuild_field_after_transition() -> void:
+	_atmosphere.apply_map(Game.sim.current_map, _atmosphere.phase_now())
+	_rebuild_field()
+
+
 ## Floor stack z-order (back to front): skirt -> base floor (every grid
 ## cell) -> floor_layers (position-hashed variants / rug patches, drawn OVER
 ## the base floor) -> blocked layer (drawn LAST among floor-ish layers, in
@@ -1110,7 +1115,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 	elif type == WIEvents.PLAYER_BLOCKED:
 		_bump_player_visual()
 	elif type == WIEvents.MAP_CHANGED:
-		_main.transition_map(_rebuild_field)
+		_main.transition_map(_rebuild_field_after_transition)
 	elif type == WIEvents.ENTITY_REMOVED:
 		var visual: Node2D = _entity_visuals.get(String(payload["id"]))
 		if visual != null:
@@ -1122,6 +1127,8 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_field_root.visible = true
 		_refresh_entities_watching_dormant()
 	elif type == WIEvents.ACCOMPLISHMENT_RECORDED:
+		if _main != null and _main.map_transition_active():
+			return
 		_refresh_entities_watching_counter(String(payload.get("id", "")))
 		_reconcile_entity_presence()
 	elif type == WIEvents.ITEM_GAINED:

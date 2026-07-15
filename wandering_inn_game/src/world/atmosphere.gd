@@ -24,11 +24,7 @@ func _ready() -> void:
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.WORLD_READY:
-		_in_arena_override = false
-		apply(Game.sim.current_map, phase_now())
-	elif type == WIEvents.MAP_CHANGED:
-		_in_arena_override = false
-		apply(String(payload.get("map", Game.sim.current_map)), phase_now())
+		apply_map(Game.sim.current_map, phase_now())
 	elif type == WIEvents.PHASE_CHANGED:
 		# Arena mood is stateful: phase changes reapply the active override.
 		var phase := String(payload.get("phase", phase_now()))
@@ -52,6 +48,11 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 
 func phase_now() -> String:
 	return Game.sim.phase()
+
+
+func apply_map(map_id: String, phase: String) -> void:
+	_in_arena_override = false
+	apply(map_id, phase)
 
 
 func apply(map_id: String, phase: String) -> void:

@@ -187,6 +187,14 @@ func _main_map_transition_contract_holds(source: String) -> bool:
 		return false
 	if transition.find("ObservableBus.emit_domain_event") != -1:
 		return false
+	var fade := _function_body(source, "_fade_map_transition")
+	for clause: String in [
+		"create_tween()",
+		"tween_property(_map_transition_overlay, \"modulate:a\", target_alpha, seconds)",
+		"await _map_transition_tween.finished",
+	]:
+		if fade.find(clause) == -1:
+			return false
 	var delay := _function_body(source, "_transition_delay")
 	for clause: String in [
 		"DisplayServer.get_name() == \"headless\"",
@@ -213,8 +221,18 @@ func _world_map_transition_contract_holds(source: String) -> bool:
 		return false
 	var event_handler := _function_body(source, "_on_domain_event")
 	var map_branch := event_handler.get_slice("elif type == WIEvents.MAP_CHANGED:", 1).get_slice("\nelif ", 0)
-	if map_branch.find("_main.transition_map(_rebuild_field)") == -1 \
+	if map_branch.find("_main.transition_map(_rebuild_field_after_transition)") == -1 \
 			or map_branch.find("\n\t\t_rebuild_field()") != -1:
+		return false
+	var covered_rebuild := _function_body(source, "_rebuild_field_after_transition")
+	var mood_apply := covered_rebuild.find("_atmosphere.apply_map(Game.sim.current_map, _atmosphere.phase_now())")
+	var rebuild := covered_rebuild.find("_rebuild_field()")
+	if mood_apply == -1 or rebuild == -1 or mood_apply > rebuild:
+		return false
+	var accomplishment_branch := event_handler.get_slice("elif type == WIEvents.ACCOMPLISHMENT_RECORDED:", 1).get_slice("\nelif ", 0)
+	var transition_guard := accomplishment_branch.find("_main.map_transition_active()")
+	var reconcile := accomplishment_branch.find("_reconcile_entity_presence()")
+	if transition_guard == -1 or reconcile == -1 or transition_guard > reconcile:
 		return false
 	var gate := _function_body(source, "_movement_gated")
 	if gate.find("_main.map_transition_active()") == -1:
@@ -222,6 +240,11 @@ func _world_map_transition_contract_holds(source: String) -> bool:
 	var held_or_click := _function_body(source, "_on_move_tween_finished")
 	return held_or_click.find("if _movement_gated()") != -1 \
 		and held_or_click.find("if _movement_gated()") < held_or_click.find("_advance_click_path()")
+
+
+func _atmosphere_map_transition_contract_holds(source: String) -> bool:
+	var event_handler := _function_body(source, "_on_domain_event")
+	return event_handler.find("WIEvents.MAP_CHANGED") == -1
 
 
 func _init() -> void:
@@ -263,6 +286,7 @@ func _init() -> void:
 
 	var events_source := FileAccess.get_file_as_string("res://src/core/wi_events.gd")
 	var main_source := FileAccess.get_file_as_string("res://src/world/main.gd")
+	var atmosphere_source := FileAccess.get_file_as_string("res://src/world/atmosphere.gd")
 	var journal_source := FileAccess.get_file_as_string("res://src/ui/journal.gd")
 	var title_source := FileAccess.get_file_as_string("res://src/ui/title_screen.gd")
 	assert(events_source.find("const UI_CHRONICLE_RENDERED := &\"ui_chronicle_rendered\"") != -1,
@@ -277,8 +301,13 @@ func _init() -> void:
 		"Continue caption must be rooted below the menu, not laid across its selectable rows")
 	assert(_main_map_transition_contract_holds(main_source),
 		"Main must own the persistent two-half map-transition veil, collapse ordinary QA, and consume transition input")
+	assert(not _main_map_transition_contract_holds(main_source.replace(
+		"tween_property(_map_transition_overlay, \"modulate:a\", target_alpha, seconds)", "")),
+		"map-transition contract must fail if the real alpha tween is removed")
 	assert(_world_map_transition_contract_holds(source),
-		"World must keep initial build synchronous, delegate only MAP_CHANGED, and share the transition movement gate")
+		"World must defer destination mood/entity presentation until the covered MAP_CHANGED rebuild")
+	assert(_atmosphere_map_transition_contract_holds(atmosphere_source),
+		"Atmosphere must not apply destination mood to still-visible source geometry")
 
 	print("PASS: world.gd presentation wiring contracts hold")
 	quit(0)
