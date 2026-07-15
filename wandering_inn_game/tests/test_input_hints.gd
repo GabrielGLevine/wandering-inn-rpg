@@ -7,6 +7,7 @@ func _init() -> void:
 
 	_check_labels(instance)
 	_check_classification(instance)
+	_check_field_readout_action()
 	instance.free()
 
 	print("PASS: WIInputHints label table + device classification hold")
@@ -30,12 +31,12 @@ func _check_labels(instance: Node) -> void:
 	var kb_expected := {
 		"move": "Arrows", "interact": "E", "confirm": "Enter", "cancel": "Esc",
 		"cycle": "Tab", "journal": "J", "inventory": "I", "end_turn": "E",
-		"hotbar": "number keys",
+		"hotbar": "number keys", "field_readout": "H",
 	}
 	var pad_expected := {
 		"move": "stick", "interact": "A", "confirm": "A", "cancel": "B",
 		"cycle": "LT", "journal": "Y", "inventory": "X", "end_turn": "Start",
-		"hotbar": "LB/RB + A",
+		"hotbar": "LB/RB + A", "field_readout": "L3",
 	}
 	instance.set("_device", "kb")
 	for action: String in kb_expected:
@@ -83,3 +84,16 @@ func _check_classification(instance: Node) -> void:
 	var motion_under := InputEventJoypadMotion.new()
 	motion_under.axis_value = 0.2
 	assert(instance._classify(motion_under) == "", "stick drift under the deadzone must not reclassify the device")
+
+
+func _check_field_readout_action() -> void:
+	assert(InputMap.has_action("field_readout"), "field readout toggle must use Input Map")
+	var has_h := false
+	var has_l3 := false
+	for event: InputEvent in InputMap.action_get_events("field_readout"):
+		if event is InputEventKey and (event as InputEventKey).physical_keycode == KEY_H:
+			has_h = true
+		elif event is InputEventJoypadButton and (event as InputEventJoypadButton).button_index == JOY_BUTTON_LEFT_STICK:
+			has_l3 = true
+	assert(has_h, "field readout toggle needs keyboard H parity")
+	assert(has_l3, "field readout toggle needs gamepad L3 parity")

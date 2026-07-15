@@ -14,7 +14,7 @@
   { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
 
-  { "_comment": "== PHASE A: hotbar renders 1 innate slot; field dispatch (parity) + ambient fallback ==. readout_lines carries the new cost/effect summary row -- basic_cleaning is exploration-only (no `effect` key) so WIEffectText.skill_effect_lines([]) degrades it to 'Name — description', proven exactly here (structural, no OCR).", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "readout_lines": ["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease."] } },
+  { "_comment": "Fresh settings start expanded: names + mechanics render before first sleep.", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "expanded": true, "slot_numbers": ["1"], "fallback_labels": ["BC"], "readout_lines": ["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease."] } },
   { "action": "screenshot", "name": "00_hotbar_boot_1slot" },
 
   { "_comment": "Face dirty_table (5,4): right3 -> (5,3), down1 blocks on the table & faces it.", "action": "move", "direction": "right", "steps": 3 },
@@ -42,6 +42,14 @@
   { "action": "assert_state", "path": "classes.tactician", "equals": 1 },
   { "action": "assert_state", "path": "classes.helper", "equals": 1 },
   { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3 }, "timeout_sec": 5 },
+  { "_comment": "First waking auto-collapses only after the expanded onboarding read and sleep reveal.", "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "expanded": false, "reason": "first_waking" }, "timeout_sec": 5 },
+  { "_comment": "Keyboard toggle reopens and recloses details without touching dispatch/order.", "action": "press", "name": "field_readout" },
+  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3, "expanded": true, "reason": "player" }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "02a_hotbar_details_reopened" },
+  { "action": "press", "name": "field_readout" },
+  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3, "expanded": false, "reason": "player" }, "timeout_sec": 5 },
+  { "action": "assert_settings_file_exists" },
+  { "action": "assert_settings_value", "path": "field_readout_expanded", "equals": false },
   { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Tactician] class gained! — [Appraise Foe], [Battlefield Awareness]" } },
   { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Helper] class gained! — [Basic Cooking]" } },
 

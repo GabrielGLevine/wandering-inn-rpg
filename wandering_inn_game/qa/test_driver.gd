@@ -12,6 +12,7 @@ const ACTION_KEYS := {
 	"cancel": KEY_ESCAPE,
 	"cycle": KEY_TAB,
 	"hotbar_prime": KEY_TAB,
+	"field_readout": KEY_H,
 	"journal": KEY_J,
 	"inventory": KEY_I,
 	"hotbar_1": KEY_1,
@@ -191,6 +192,18 @@ func _execute(step: Dictionary) -> void:
 					_fail("click_slot: slot %d has no rendered rect" % slot_n)
 				else:
 					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_field_readout":
+			var field_hotbar := get_tree().root.find_child("FieldHotbar", true, false)
+			if field_hotbar == null:
+				_fail("click_field_readout: FieldHotbar node not found")
+			else:
+				var toggle_rect: Rect2 = field_hotbar.call("toggle_rect")
+				if toggle_rect.size == Vector2.ZERO:
+					_fail("click_field_readout: toggle has no rendered rect")
+				else:
+					_inject_mouse_click(toggle_rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
 		"click_pause_row":
@@ -419,6 +432,8 @@ func _execute(step: Dictionary) -> void:
 					settings_got = WISettings.text_scale_step()
 				"combat_speed_step":
 					settings_got = WISettings.combat_speed_step()
+				"field_readout_expanded":
+					settings_got = WISettings.field_readout_expanded()
 				_:
 					_fail("assert_settings_value: unknown path " + settings_path)
 					settings_got = null

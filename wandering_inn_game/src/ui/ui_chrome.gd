@@ -170,6 +170,22 @@ static func make_chrome_panel(texture: Texture2D = PARCHMENT_PANEL, margin: int 
 	return panel
 
 
+static func make_chrome_panel_container(texture: Texture2D = PARCHMENT_PANEL, margin: int = PATCH_MARGIN) -> PanelContainer:
+	var style := StyleBoxTexture.new()
+	style.texture = texture
+	style.region_rect = _auto_region(texture)
+	style.texture_margin_left = margin
+	style.texture_margin_top = margin
+	style.texture_margin_right = margin
+	style.texture_margin_bottom = margin
+	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+		style.set_content_margin(side, margin)
+	var panel := PanelContainer.new()
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_theme_stylebox_override("panel", style)
+	return panel
+
+
 static func make_texture_panel(texture: Texture2D = PARCHMENT_PANEL) -> Control:
 	var panel := Control.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
