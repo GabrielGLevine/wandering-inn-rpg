@@ -12,16 +12,24 @@ description: Use when executing any Wandering Inn RPG task end-to-end — implem
    the issue body is the dispatch brief; the spec/plan it links is the
    design authority; execution briefs may correct stale plan text — briefs
    win). Work not on the board yet gets an issue FIRST (the issue-body
-   format lives in any existing issue); close the issue in the landing
-   commit's message (`Closes #n`) or via gh at the close.
-2. **Implement** on `main`. Content = data (`data/*.json`); behavior = sim
+   format lives in any existing issue); the issue closes via its PR's
+   `Closes #n` line at squash-merge.
+2. **Implement** on branch `issue/<n>-<slug>` (PR workflow, user directive
+   2026-07-15). Content = data (`data/*.json`); behavior = sim
    (`src/core/**`, PURE: no autoload/Node refs); presentation only renders.
+   Worktree lanes merge into the issue branch, never straight to main.
 3. **Verify green** — wi-verifying-changes. No claim without evidence.
 4. **Review** — dispatch a reviewer subagent on the diff/commit (below).
 5. **Fix wave** — apply Critical/Important findings, re-verify, re-review the
    fixes. Log Minors to the ledger for the milestone's final review.
-6. **Commit** with a message explaining WHY; **ledger one entry** (what, how
-   verified, lessons, what's next); keep HANDOFF live mid-session.
+6. **Open the PR** with `.github/PULL_REQUEST_TEMPLATE/issue-close.md`
+   filled — choices made (with rejected alternatives), validation evidence
+   (commands + results, not claims), player-visible proof, new agent
+   context (traps/contracts added), deferrals. The PR body is the durable
+   per-issue record: future sessions read `gh pr view`, not commit
+   archaeology. Squash-merge after CI is green. **Ledger one entry**; keep
+   HANDOFF current-state only (RUNNING/QUEUE — per-issue narrative lives
+   in the PR). Non-issue housekeeping still commits direct to main.
 
 ## Dispatching reviewers (they earn their cost only with method hints)
 Prompt must include: the commit/range, "read wandering_inn_game/AGENTS.md
