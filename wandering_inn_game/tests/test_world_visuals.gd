@@ -245,7 +245,9 @@ func _world_map_transition_contract_holds(source: String) -> bool:
 	if mood_apply == -1 or rebuild == -1 or mood_apply > rebuild:
 		return false
 	var accomplishment_branch := event_handler.get_slice("elif type == WIEvents.ACCOMPLISHMENT_RECORDED:", 1).get_slice("\nelif ", 0)
-	var transition_guard := accomplishment_branch.find("_main.map_transition_active()")
+	# #119: the guard narrowed from whole-transition to the stale-cover window
+	# (pre-rebuild only) — post-rebuild events must reconcile, not drop.
+	var transition_guard := accomplishment_branch.find("_map_transition_stale_cover()")
 	var reconcile := accomplishment_branch.find("_reconcile_entity_presence()")
 	if transition_guard == -1 or reconcile == -1 or transition_guard > reconcile:
 		return false

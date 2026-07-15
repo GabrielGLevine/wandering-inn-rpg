@@ -96,12 +96,19 @@ func _map_static_blockers(map_cfg: Dictionary, excluded_entity_id: String = "") 
 			var cell := [segment_cell.x, segment_cell.y]
 			if not out.has(cell):
 				out.append(cell)
+	# TRAP (#119): a silent non-matching exclusion shipped an inert mutation
+	# guard once (#113, typo'd id) — an exclusion that resolves to no entity
+	# on the map is a test bug, never a pass.
+	var excluded_found := excluded_entity_id == ""
 	for entity: Dictionary in map_cfg.get("entities", []):
 		if String(entity.get("id", "")) == excluded_entity_id:
+			excluded_found = true
 			continue
 		var cell := _int_cell(entity.get("cell", []))
 		if not cell.is_empty() and not out.has(cell):
 			out.append(cell)
+	assert(excluded_found,
+		"excluded_entity_id '%s' matches no entity on the map -- inert exclusion (typo?)" % excluded_entity_id)
 	return out
 
 

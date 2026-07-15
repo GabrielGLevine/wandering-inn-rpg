@@ -29,7 +29,10 @@
    "resolved_wrong_order": 1,
    "cleaned_the_inn": 1,
    "garden_door_unlocked": 1,
-   "chess_with_olesm": 1
+   "chess_with_olesm": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 18
   },
   "player_skills": [
    "basic_cleaning"

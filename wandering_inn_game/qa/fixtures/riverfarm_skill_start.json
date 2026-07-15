@@ -28,7 +28,9 @@
    "door_awakened": 1,
    "riverfarm_attuned": 1,
    "hunter_will_come": 1,
-   "chess_with_olesm": 1
+   "chess_with_olesm": 1,
+   "cleaned_the_inn": 1,
+   "learned_magic_from_pisces": 1
   },
   "player_skills": [],
   "removed_entities": [],

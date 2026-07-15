@@ -15,7 +15,9 @@
    "mage": 5
   },
   "accomplishments": {
-   "learned_magic_from_pisces": 1
+   "learned_magic_from_pisces": 1,
+   "won_combat": 3,
+   "spell_cast": 13
   },
   "player_skills": [
    "basic_cleaning"

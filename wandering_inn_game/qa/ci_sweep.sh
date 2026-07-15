@@ -86,7 +86,13 @@ for i, entry in enumerate(scripts):
 		sys.exit(1)
 	seed = entry["seed"]
 	seed_str = "none" if seed is None else str(seed)
-	out.append(f"{name}:{seed_str}")
+	# Optional per-script user args (#119): space-joined third field, forwarded
+	# to run_qa.sh verbatim. Args must be --key=value tokens without spaces.
+	args = entry.get("args", [])
+	if not isinstance(args, list) or any(" " in str(a) for a in args):
+		print(f"ci_sweep: FATAL — {name} 'args' must be a list of space-free tokens", file=sys.stderr)
+		sys.exit(1)
+	out.append(f"{name}:{seed_str}:{' '.join(str(a) for a in args)}")
 
 print("\n".join(out))
 PY
@@ -325,10 +331,14 @@ FAILED_NAMES=()
 # Runs are fully isolated already (per-PID user:// HOMEs in run_qa.sh,
 # per-script qa_output dirs), so parallel launches cannot collide.
 run_one() {
-	local NAME="$1" SEED="$2"
+	local NAME="$1" SEED="$2" SCRIPT_ARGS="${3:-}"
 	local LOG="$LOGDIR/$NAME.log"
 	local ARGS=("$NAME" "headless")
 	if [ "$SEED" != "none" ]; then ARGS+=("--seed=$SEED"); fi
+	if [ -n "$SCRIPT_ARGS" ]; then
+		# shellcheck disable=SC2206 — tokens are validated space-free at parse
+		ARGS+=($SCRIPT_ARGS)
+	fi
 	perl -e 'alarm shift; exec @ARGV' "$PER_SCRIPT_TIMEOUT" \
 		bash "$RUN_QA" "${ARGS[@]}" >"$LOG" 2>&1
 	echo $? >"$LOGDIR/$NAME.rc"
@@ -345,21 +355,25 @@ JOBS="${WI_SWEEP_JOBS:-1}"
 LAUNCHED=()
 for pair in "${RUNLIST[@]}"; do
 	NAME="${pair%%:*}"
-	SEED="${pair#*:}"
+	rest="${pair#*:}"
+	SEED="${rest%%:*}"
+	# Optional third field (#119): space-joined per-script user args.
+	SCRIPT_ARGS=""
+	case "$rest" in *:*) SCRIPT_ARGS="${rest#*:}" ;; esac
 	if [ ! -f "$SCRIPTS_DIR/$NAME.json" ]; then
 		echo "FAIL  $NAME — no such QA script ($SCRIPTS_DIR/$NAME.json)"
 		FAILURES=$((FAILURES + 1)); FAILED_NAMES+=("$NAME(missing)")
 		continue
 	fi
-	echo "==> $NAME (seed=$SEED, timeout=${PER_SCRIPT_TIMEOUT}s, jobs=$JOBS)"
+	echo "==> $NAME (seed=$SEED, timeout=${PER_SCRIPT_TIMEOUT}s, jobs=$JOBS${SCRIPT_ARGS:+, args=$SCRIPT_ARGS})"
 	if [ "$JOBS" -gt 1 ]; then
 		# macOS ships bash 3.2: `wait -n` is unsupported there (it errors and
 		# the loop busy-spins). Sleep-poll instead — throttle behavior is
 		# identical, just coarser-grained.
 		while [ "$(jobs -rp | wc -l)" -ge "$JOBS" ]; do sleep 0.2; done
-		run_one "$NAME" "$SEED" &
+		run_one "$NAME" "$SEED" "$SCRIPT_ARGS" &
 	else
-		run_one "$NAME" "$SEED"
+		run_one "$NAME" "$SEED" "$SCRIPT_ARGS"
 	fi
 	LAUNCHED+=("$pair")
 done
@@ -368,7 +382,6 @@ wait
 # Phase 2: aggregate (serial; reads logs + rc files only).
 for pair in "${LAUNCHED[@]}"; do
 	NAME="${pair%%:*}"
-	SEED="${pair#*:}"
 	LOG="$LOGDIR/$NAME.log"
 	RC="$(cat "$LOGDIR/$NAME.rc" 2>/dev/null || echo 99)"
 

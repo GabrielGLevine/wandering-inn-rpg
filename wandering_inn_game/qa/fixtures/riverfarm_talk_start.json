@@ -25,7 +25,9 @@
    "door_study_sleeps": 3,
    "door_awakened": 1,
    "riverfarm_attuned": 1,
-   "hunter_will_come": 1
+   "hunter_will_come": 1,
+   "persuaded_someone": 1,
+   "heard_gossip": 3
   },
   "player_skills": [],
   "removed_entities": [],

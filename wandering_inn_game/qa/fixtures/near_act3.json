@@ -23,7 +23,12 @@
    "crate_returned": 1,
    "resolved_the_cisterns": 1,
    "cisterns_reported": 1,
-   "met_relc": 1
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 18,
+   "persuaded_someone": 1,
+   "heard_gossip": 3
   },
   "player_skills": [
    "basic_cleaning"

@@ -24,7 +24,8 @@
    "heard_the_sewers": 1,
    "heard_about_cisterns": 1,
    "chess_with_olesm": 1,
-   "recovered_crate_watch": 1
+   "recovered_crate_watch": 1,
+   "sneaked_past_danger": 10
   },
   "player_skills": [
    "basic_cleaning"
