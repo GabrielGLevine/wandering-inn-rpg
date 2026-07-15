@@ -26,6 +26,14 @@ const ACTION_KEYS := {
 	"hotbar_9": KEY_9,
 	"end_turn": KEY_E,
 }
+const ACTION_JOYPAD_BUTTONS := {
+	"move_up": JOY_BUTTON_DPAD_UP,
+	"move_down": JOY_BUTTON_DPAD_DOWN,
+	"move_left": JOY_BUTTON_DPAD_LEFT,
+	"move_right": JOY_BUTTON_DPAD_RIGHT,
+	"confirm": JOY_BUTTON_A,
+	"cancel": JOY_BUTTON_B,
+}
 const SCREENSHOT_SETTLE_SECONDS := 0.15
 const CELL := 16
 
@@ -138,7 +146,10 @@ func _execute(step: Dictionary) -> void:
 			for i in int(step.get("frames", 1)):
 				await get_tree().process_frame
 		"press":
-			_inject_action(String(step["name"]))
+			if String(step.get("device", "keyboard")) == "gamepad":
+				_inject_gamepad_action(String(step["name"]))
+			else:
+				_inject_action(String(step["name"]))
 			await get_tree().process_frame
 			await get_tree().process_frame
 		"press_field_skill":
@@ -434,6 +445,10 @@ func _execute(step: Dictionary) -> void:
 					settings_got = null
 			if settings_got != null and not _loosely_equal(settings_got, step["equals"]):
 				_fail("assert_settings_value: %s expected %s, got %s" % [settings_path, str(step["equals"]), str(settings_got)])
+		"set_text_scale_step":
+			WISettings.set_text_scale_step(int(step["step"]))
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"assert_world_to_screen_camera_aware":
 			_assert_world_to_screen_camera_aware()
 		"assert_world_labels_in_view":
@@ -484,6 +499,21 @@ func _inject_action(action_name: String) -> void:
 	var release := InputEventKey.new()
 	release.physical_keycode = key
 	release.keycode = key
+	release.pressed = false
+	Input.parse_input_event(release)
+
+
+func _inject_gamepad_action(action_name: String) -> void:
+	if not ACTION_JOYPAD_BUTTONS.has(action_name):
+		_fail("no gamepad mapping for action: " + action_name)
+		return
+	var button: JoyButton = ACTION_JOYPAD_BUTTONS[action_name]
+	var press := InputEventJoypadButton.new()
+	press.button_index = button
+	press.pressed = true
+	Input.parse_input_event(press)
+	var release := InputEventJoypadButton.new()
+	release.button_index = button
 	release.pressed = false
 	Input.parse_input_event(release)
 
@@ -611,6 +641,16 @@ func _screenshot(name: String) -> void:
 		_events_seen.append({"type": "screenshot_skipped_headless", "payload": {"name": name}})
 		return
 	await get_tree().create_timer(SCREENSHOT_SETTLE_SECONDS).timeout
+	# CONTRACT (#119): after the base settle, drain live tweens (bounded 3s)
+	# + two clean frames — a completion signal, not a machine-speed guess.
+	# Kills the pinned wait_frames-before-evidence class (#91 whack-a-mole);
+	# scripts should not stack extra sleeps in front of screenshots.
+	var tween_deadline_ms := Time.get_ticks_msec() + 3000
+	while not get_tree().get_processed_tweens().is_empty() \
+			and Time.get_ticks_msec() < tween_deadline_ms:
+		await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("window.__WI_QA_SHOT__ = %s" % JSON.stringify(name), true)
 		var deadline := Time.get_ticks_msec() + 10000

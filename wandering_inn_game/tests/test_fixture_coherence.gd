@@ -86,6 +86,7 @@ func _init() -> void:
 		_check_economy(name, game)
 		_check_combat_band(name, game)
 		_check_equipment(name, game)
+		_check_class_requirements(name, game, combat_config["classes"] as Dictionary)
 		_check_rng_state(name, data as Dictionary)
 
 	if _errors.is_empty():
@@ -248,6 +249,54 @@ func _check_combat_band(name: String, game: WIGame) -> void:
 	var need := int(COMBAT_BAND_FIXTURES[name])
 	if total != need:
 		_fail(name, "total class levels %d != the %d-level tuned build its own canonical's fights were measured at (band invalid in either direction)" % [total, need])
+
+
+# #119 item 7 (the #91 hole): a fixture holding a class/level whose gained_by
+# or per-level `requires` counters aren't met is an impossible story position —
+# chronicle_loop's fixture carried warrior:5 with zero victory counters for
+# weeks because nothing enforced this. Consolidation targets are exempt
+# (SPARSE TABLE: their level is a MERGED sum, per-level requires don't apply).
+#
+# GRANDFATHERED (#122): these three canonicals DELIBERATELY pre-hold a class
+# while their script earns that class's own gained_by counters live — the
+# combination is story-impossible and needs a flow redesign, not a counter
+# fill (filling hides the scripts' one-time earn options; dropping the class
+# changes their sleep/hotbar beats). Enforced for every other fixture and all
+# new ones. Remove an entry ONLY with its canonical's redesign.
+const CLASS_REQUIREMENTS_EXEMPT := ["social_loop_start", "near_garden", "near_evolution"]
+
+
+func _check_class_requirements(name: String, game: WIGame, classes_cfg: Dictionary) -> void:
+	if CLASS_REQUIREMENTS_EXEMPT.has(name):
+		return
+	var consolidation_targets := {}
+	for row: Dictionary in classes_cfg.get("consolidations", []):
+		consolidation_targets[String(row.get("target", ""))] = true
+	var by_id := {}
+	for row: Dictionary in classes_cfg.get("classes", []):
+		by_id[String(row.get("id", ""))] = row
+	for class_id: String in game.classes:
+		if consolidation_targets.has(String(class_id)):
+			continue
+		var row: Dictionary = by_id.get(String(class_id), {})
+		if row.is_empty():
+			_fail(name, "held class '%s' has no classes.json row" % class_id)
+			continue
+		var held_level := int(game.classes[class_id])
+		var gained: Dictionary = (row.get("gained_by", {}) as Dictionary).get("accomplishment", {})
+		for acc_id: String in gained:
+			if int(game.accomplishments.get(acc_id, 0)) < int(gained[acc_id]):
+				_fail(name, "class '%s' held but gained_by %s>=%d unmet (have %d)" % [
+					class_id, acc_id, int(gained[acc_id]), int(game.accomplishments.get(acc_id, 0))])
+		for lvl_row: Dictionary in row.get("levels", []):
+			if int(lvl_row.get("level", 0)) > held_level:
+				continue
+			var requires: Dictionary = lvl_row.get("requires", {})
+			for counter: String in requires:
+				if int(game.accomplishments.get(counter, 0)) < int(requires[counter]):
+					_fail(name, "class '%s' L%d held but L%d requires %s>=%d unmet (have %d)" % [
+						class_id, held_level, int(lvl_row.get("level", 0)), counter,
+						int(requires[counter]), int(game.accomplishments.get(counter, 0))])
 
 
 func _check_equipment(name: String, game: WIGame) -> void:

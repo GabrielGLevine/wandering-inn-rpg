@@ -42,7 +42,9 @@
    "read_the_board": 1,
    "riverfarm_attuned": 1,
    "blight_lifted": 1,
-   "invrisil_attuned": 1
+   "invrisil_attuned": 1,
+   "won_combat": 1,
+   "melee_hit": 57
   },
   "player_skills": [
    "basic_cleaning"

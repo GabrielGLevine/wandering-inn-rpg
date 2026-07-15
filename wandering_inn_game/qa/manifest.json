@@ -45,7 +45,10 @@
   {
    "script": "map_transition_fade",
    "seed": 9,
-   "note": "#87 live inn-door crossing; headless collapse + opt-in paced transition frames",
+   "note": "#87 live inn-door crossing; #119: sweep passes the visual flag so the mid-transition movement gate is pressed for real (10-frame deterministic headless hold), never vacuous",
+   "args": [
+    "--map-transition-visual=1"
+   ],
    "tiers": [
     "full"
    ],
@@ -1733,7 +1736,8 @@
      "economy",
      "exploration",
      "night_phase",
-     "save"
+     "save",
+     "settings"
     ]
    }
   },
@@ -1815,6 +1819,7 @@
      "dialogue",
      "economy",
      "exploration",
+     "input",
      "night_phase"
     ]
    }

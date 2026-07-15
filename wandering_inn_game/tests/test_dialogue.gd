@@ -269,6 +269,35 @@ func test_once_per_waking_refused_in_hide_when() -> void:
 	assert(d3.current_options().size() == 1, "combined hide_when: the REAL key (accomplishment, met) still hides -- only once_per_waking is stripped")
 
 
+func test_picker_presenter_derives_scanable_rows_without_mutating_payload() -> void:
+	const PRESENTER_PATH := "res://src/ui/picker_presenter.gd"
+	assert(FileAccess.file_exists(PRESENTER_PATH), "picker presenter must exist")
+	var presenter_script: Script = load(PRESENTER_PATH)
+	var body := "Which one looks worth doing?\n\n1. Cull two rock crabs near the east hills.\n\n2. Carry a watch report to the northern gate."
+	var options := [
+		{"text": "Take: Rock Crab Cull, East Hills. (5 gold)", "locked": false, "requirement": ""},
+		{"text": "Take: Northern Gate Watch. (3 gold)", "locked": false, "requirement": ""},
+		{"text": "Never mind.", "locked": false, "requirement": ""},
+	]
+	var payload: Dictionary = presenter_script.call("derive", body, options)
+	assert(String(payload["prompt"]) == "Which one looks worth doing?", "picker prompt stays the authored first line")
+	var rows: Array = payload["rows"]
+	assert(rows.size() == 3, "every selectable option becomes one visible card")
+	assert(rows[0] == {
+		"title": "Rock Crab Cull, East Hills",
+		"reward": "5 gold",
+		"detail": "Cull two rock crabs near the east hills.",
+		"locked": false,
+		"requirement": "",
+		"cancel": false,
+	}, "posting card separates title, reward, and target copy")
+	assert(rows[1]["detail"] == "Carry a watch report to the northern gate.", "row order remains payload order")
+	assert(rows[2]["cancel"] and rows[2]["title"] == "Never mind.", "final cancel option stays selectable and ordered")
+	assert(body.contains("1. Cull two rock crabs"), "source body remains byte-identical after derivation")
+	assert(options[0]["text"] == "Take: Rock Crab Cull, East Hills. (5 gold)", "source options remain byte-identical after derivation")
+	assert(not presenter_script.call("is_picker_payload", "That one? Fine. Logged.", [{"text": "Continue."}]), "same-conversation confirmation node is ordinary dialogue, not a one-row picker")
+
+
 func test_once_per_waking_gate_lifecycle_through_bank_first_use() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "Erin", "text": "t", "options": [
 		{"text": "meal", "requires": {"once_per_waking": "meal:erin"}, "effects": [{"bank_first_use": "meal:erin"}], "end": true},
@@ -624,6 +653,7 @@ func _init() -> void:
 	test_bargain_price_mod_haggle_optin_display_equals_charge()
 	test_once_per_waking_requires_hides_until_used()
 	test_once_per_waking_refused_in_hide_when()
+	test_picker_presenter_derives_scanable_rows_without_mutating_payload()
 	test_once_per_waking_gate_lifecycle_through_bank_first_use()
 	test_compound_accomplishment_once_per_waking_gate()
 	test_compound_once_per_waking_item_gate()

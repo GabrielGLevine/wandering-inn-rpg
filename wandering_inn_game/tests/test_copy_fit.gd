@@ -21,6 +21,14 @@ const PANEL_SIZE_Y := 232.0
 const PAGE_CHAR_BUDGET := 200
 const SENTENCE_BOUNDARY_WINDOW_FRACTION := 0.2
 const DIALOGUE_PANEL_TEXT_WIDTH := PANEL_SIZE_X - 56.0  # `_ready()`'s 28+28 margin
+const PICKER_MAX_HEIGHT := 684.0
+const PICKER_TITLE_TEXT_WIDTH := 520.0
+const PICKER_DETAIL_TEXT_WIDTH := DIALOGUE_PANEL_TEXT_WIDTH - 20.0
+const PICKER_FONT_SIZES := [
+	{"default": 14, "menu": 18, "small": 12},
+	{"default": 16, "menu": 21, "small": 14},
+	{"default": 18, "menu": 23, "small": 16},
+]
 
 const HELP_PANEL_WIDTH := 620.0
 const HELP_TEXT_WIDTH := HELP_PANEL_WIDTH - 52.0
@@ -53,6 +61,7 @@ func _init() -> void:
 	_check_dialogue_graphs()
 	_check_bounty_delivery_copy()
 	_check_bounty_delivery_titles()
+	_check_picker_layouts()
 	_check_board_rumors()
 	_check_help_content()
 
@@ -78,6 +87,7 @@ func _check_drift_tripwires() -> void:
 	_assert_const_matches("res://src/combat/combat_hud.gd", "FEED_FOLD_DANGER_PX", str(FEED_FOLD_DANGER_PX))
 	_assert_const_matches("res://src/ui/dialogue_panel.gd", "PAGE_CHAR_BUDGET", str(PAGE_CHAR_BUDGET))
 	_assert_const_matches("res://src/ui/dialogue_panel.gd", "SENTENCE_BOUNDARY_WINDOW_FRACTION", str(SENTENCE_BOUNDARY_WINDOW_FRACTION))
+	_assert_const_matches("res://src/ui/dialogue_panel.gd", "PICKER_MAX_HEIGHT", str(PICKER_MAX_HEIGHT))
 	var src := FileAccess.get_file_as_string("res://src/ui/dialogue_panel.gd")
 	assert(src.contains("Vector2(720.0, 232.0)"), "dialogue_panel.gd's PANEL_SIZE literal drifted from the mirrored PANEL_SIZE_X/Y (720.0, 232.0) -- update this test's mirrored consts")
 	var settings_src := FileAccess.get_file_as_string("res://src/ui/settings_panel.gd")
@@ -246,6 +256,68 @@ func _check_bounty_delivery_titles() -> void:
 		var dwidth := _single_line_width(drendered)
 		if dwidth > DIALOGUE_PANEL_TEXT_WIDTH:
 			_fail("DIALOGUE-PANEL/option", "data/deliveries.json[deliveries.%s]" % did, drendered, "single-line width %.0fpx > %.0fpx panel width (no autowrap on option rows)" % [dwidth, DIALOGUE_PANEL_TEXT_WIDTH])
+
+
+func _check_picker_layouts() -> void:
+	var bounty_pool: Array = _load_json("res://data/bounties.json").get("bounties", [])
+	var delivery_pool: Array = _load_json("res://data/deliveries.json").get("deliveries", [])
+	_check_picker_pool("bounty", bounty_pool, Callable(WIBounties, "build_picker_graph"))
+	_check_picker_pool("delivery", delivery_pool, Callable(WIBounties, "build_delivery_picker_graph"))
+
+
+func _check_picker_pool(kind: String, pool: Array, graph_builder: Callable) -> void:
+	for start in pool.size():
+		var slate: Array = []
+		for offset in mini(3, pool.size()):
+			slate.append(pool[(start + offset) % pool.size()])
+		var graph: Dictionary = graph_builder.call(slate)
+		var node: Dictionary = graph["nodes"]["hub"]
+		var dialogue := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}}, Callable())
+		dialogue.begin()
+		var derived := WIPickerPresenter.derive(String(node["text"]), dialogue.current_options())
+		var rows: Array = derived["rows"]
+		if rows.size() != slate.size() + 1:
+			_fail("PICKER", "%s slate start %d" % [kind, start], str(rows), "row count %d != slate+cancel %d" % [rows.size(), slate.size() + 1])
+			continue
+		for i in slate.size():
+			var row: Dictionary = rows[i]
+			if String(row["title"]).is_empty() or String(row["reward"]).is_empty() or String(row["detail"]).is_empty():
+				_fail("PICKER", "%s slate start %d row %d" % [kind, start, i], str(row), "title/reward/detail hierarchy incomplete")
+		if not bool((rows[-1] as Dictionary).get("cancel", false)):
+			_fail("PICKER", "%s slate start %d" % [kind, start], str(rows[-1]), "final selectable row is not cancel")
+		for scale_step in PICKER_FONT_SIZES.size():
+			var needed := _picker_required_height(String(derived["prompt"]), rows, PICKER_FONT_SIZES[scale_step])
+			_measured_count += rows.size()
+			if needed > PICKER_MAX_HEIGHT:
+				_fail("PICKER", "%s slate start %d scale %d" % [kind, start, scale_step], str(rows), "complete card list needs %.0fpx > %.0fpx viewport budget" % [needed, PICKER_MAX_HEIGHT])
+
+
+func _picker_required_height(prompt: String, rows: Array, sizes: Dictionary) -> float:
+	const CONTENT_MARGINS := 52.0
+	const RIBBON_HEIGHT := 42.0
+	const STACK_SEPARATIONS := 12.0
+	const CARD_MARGINS_Y := 10.0
+	const CARD_INNER_SEPARATION := 2.0
+	const CARD_SEPARATIONS := 6.0
+	var height := CONTENT_MARGINS + RIBBON_HEIGHT + STACK_SEPARATIONS
+	height += maxf(24.0, _text_block_height(prompt, DIALOGUE_PANEL_TEXT_WIDTH, int(sizes["default"])))
+	height += CARD_SEPARATIONS * max(rows.size() - 1, 0)
+	for row: Dictionary in rows:
+		var title_height := _text_block_height(String(row["title"]), PICKER_TITLE_TEXT_WIDTH, int(sizes["menu"]))
+		var reward_height := _text_block_height(String(row["reward"]), PICKER_DETAIL_TEXT_WIDTH, int(sizes["menu"]))
+		height += CARD_MARGINS_Y + maxf(title_height, reward_height)
+		if not String(row["detail"]).is_empty():
+			height += CARD_INNER_SEPARATION + _text_block_height(String(row["detail"]), PICKER_DETAIL_TEXT_WIDTH, int(sizes["small"]))
+	return height
+
+
+func _text_block_height(text: String, width: float, font_size: int) -> float:
+	if text.is_empty():
+		return 0.0
+	var measured: Vector2 = _font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)
+	var line_height: float = _font.get_height(font_size)
+	var lines: int = max(int(round(measured.y / line_height)), 1) if line_height > 0.0 else 1
+	return float(lines) * line_height + float(max(lines - 1, 0)) * _line_spacing
 
 
 func _check_board_rumors() -> void:

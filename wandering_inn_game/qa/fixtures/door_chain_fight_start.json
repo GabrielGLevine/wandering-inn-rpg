@@ -32,7 +32,11 @@
    "heard_olesm_briefing": 1,
    "cleared_the_warren": 1,
    "raskghar_sealed": 1,
-   "post_game": 1
+   "post_game": 1,
+   "won_combat": 3,
+   "melee_hit": 18,
+   "learned_magic_from_pisces": 1,
+   "spell_cast": 13
   },
   "player_skills": [
    "basic_cleaning"

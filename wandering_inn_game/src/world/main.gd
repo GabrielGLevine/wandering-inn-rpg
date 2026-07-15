@@ -41,6 +41,11 @@ var _map_transition_layer: CanvasLayer
 var _map_transition_overlay: ColorRect
 var _map_transition_tween: Tween
 var _map_transition_active := false
+# TRAP (#119): a MAP_CHANGED landing mid-fade must never be dropped — the
+# latest rebuild is queued here and drained under the same cover; dropping it
+# strands the render on the old map with no reconciler to catch up.
+var _map_transition_pending_rebuild := Callable()
+var _map_transition_rebuilt := false
 
 
 func _ready() -> void:
@@ -194,18 +199,38 @@ func _ensure_map_transition_overlay() -> void:
 
 func transition_map(rebuild: Callable) -> void:
 	if _map_transition_active:
+		_map_transition_pending_rebuild = rebuild
 		return
 	_map_transition_active = true
+	_map_transition_rebuilt = false
 	_map_transition_overlay.visible = true
 	var half_seconds := _transition_delay(MAP_TRANSITION_HALF_SECONDS)
 	await _fade_map_transition(1.0, half_seconds)
 	rebuild.call()
+	# CONTRACT: _map_transition_rebuilt flips here — world.gd's stale-cover
+	# guard skips event reconciles ONLY pre-rebuild (the rebuild itself heals
+	# them from live sim); post-rebuild events reconcile against the new field.
+	_map_transition_rebuilt = true
+	_drain_pending_rebuild()
 	if half_seconds > 0.0:
 		await RenderingServer.frame_post_draw
-		await _hold_map_transition_midpoint()
+	await _hold_map_transition_midpoint()
+	_drain_pending_rebuild()
 	await _fade_map_transition(0.0, half_seconds)
+	_drain_pending_rebuild()
 	_map_transition_overlay.visible = false
 	_map_transition_active = false
+
+
+func _drain_pending_rebuild() -> void:
+	while _map_transition_pending_rebuild.is_valid():
+		var pending := _map_transition_pending_rebuild
+		_map_transition_pending_rebuild = Callable()
+		pending.call()
+
+
+func map_transition_stale_cover() -> bool:
+	return _map_transition_active and not _map_transition_rebuilt
 
 
 func _fade_map_transition(target_alpha: float, seconds: float) -> void:
@@ -231,8 +256,17 @@ func _map_transition_visual_requested() -> bool:
 	return QAPaths.user_args().get("map-transition-visual", "") == "1"
 
 
+# CONTRACT (#119): with --map-transition-visual=1 the midpoint holds in BOTH
+# modes — wall-clock windowed (frame capture), 10 deterministic process frames
+# headless — so the mid-transition input gate is exercised by the CI sweep
+# (manifest args row), not only in manual windowed runs. Mutation-proven:
+# deleting both input gates turns map_transition_fade red.
 func _hold_map_transition_midpoint() -> void:
 	if not _map_transition_visual_requested():
+		return
+	if DisplayServer.get_name() == "headless":
+		for _i in 10:
+			await get_tree().process_frame
 		return
 	_map_transition_overlay.modulate.a = 0.5
 	await get_tree().create_timer(MAP_TRANSITION_VISUAL_HOLD_SECONDS).timeout
@@ -253,6 +287,8 @@ func _clear_world_viewport() -> void:
 
 
 func _clear_ui_layers() -> void:
+	# TRAP: _map_transition_layer must survive every UI clear — freeing it
+	# mid-fade orphans the cover and the awaiting transition_map coroutine.
 	for child: Node in get_children():
 		if child != _container and child != _map_transition_layer:
 			remove_child(child)

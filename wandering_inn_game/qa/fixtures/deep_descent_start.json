@@ -22,7 +22,9 @@
    "heard_the_sewers": 1,
    "heard_about_cisterns": 1,
    "resolved_the_cisterns": 1,
-   "heard_the_deep_tremor": 1
+   "heard_the_deep_tremor": 1,
+   "won_combat": 1,
+   "melee_hit": 18
   },
   "player_skills": [
    "basic_cleaning",
