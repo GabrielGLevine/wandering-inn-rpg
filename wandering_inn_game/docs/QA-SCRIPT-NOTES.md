@@ -51,8 +51,8 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `journal_skills` | 9 | full | `—` | journal skills-by-class panel; pre/post-first-use reveal |
 | `inventory_loop` | 9 | full | `—` | THE inventory/equipment loop; weapon-gated kit proof |
 | `atmosphere_check` | 9 | smoke, full | `—` | mood-grade/phase-clock proof; day->dusk->night->day cycle; issue #80: Erin's phase-gated line at dusk + hungry_patron's present_when day<->night flip (sim- and render-side) |
-| `field_skills_loop` | 9 | full | `near_tactician` | field-skill hotbar loop (Basic Cleaning -> Observe); K2b loadout assign/unassign + remapped-slot proof |
-| `hotbar_tab_loop` | 9 | full | `near_tactician` | Issue #58: Tab-primed field-hotbar select -- prime/re-prime, wrap-in-place move_right with player_cell unchanged (arrows captured while primed), Esc disarm, confirm fires the number-key-equivalent stream |
+| `field_skills_loop` | 9 | full | `near_tactician` | field-skill hotbar loop (Basic Cleaning -> Observe); loadout remap; #115 expanded onboarding -> first-waking auto-collapse, keyboard toggle, settings persistence |
+| `hotbar_tab_loop` | 9 | full | `near_tactician` | Tab-primed field-hotbar select; #115 mouse/touch Details collapse/expand parity; confirm fires the number-key-equivalent stream |
 | `mouse_loop` | 9 | smoke, full | `near_tactician` | Issue #57/#84: mouse support -- distant prop click walks to nearest approach cell and stops without interacting, hotbar slot CLICK fires the number-key-equivalent stream and disarms a Tab-primed cursor, adjacent click faces+interacts in one click, click-to-walk on open ground (exact per-step count), keyboard press mid-path cancels, a title-row click reaches Continue, a pause-row click Resumes, dialogue-option clicks pin the exact keyboard-equivalent dialogue_choice payload |
 | `social_loop` | 9 | full | `post_tutorial_street` | Social Pillar v1 proof; rotating talk pools -> [Diplomat] |
 | `sewers_walkthrough` | 9 | full | `near_sewers` | Liscor sewers proof; grate-gate seam + vermin fight |

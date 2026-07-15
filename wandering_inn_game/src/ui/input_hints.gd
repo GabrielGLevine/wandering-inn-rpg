@@ -16,12 +16,12 @@ const LABELS := {
 	"kb": {
 		"move": "Arrows", "interact": "E", "confirm": "Enter", "cancel": "Esc",
 		"cycle": "Tab", "journal": "J", "inventory": "I", "end_turn": "E",
-		"hotbar": "number keys",
+		"hotbar": "number keys", "field_readout": "H",
 	},
 	"pad": {
 		"move": "stick", "interact": "A", "confirm": "A", "cancel": "B",
 		"cycle": "LT", "journal": "Y", "inventory": "X", "end_turn": "Start",
-		"hotbar": "LB/RB + A",
+		"hotbar": "LB/RB + A", "field_readout": "L3",
 	},
 }
 ## Motion axis-value deadzone for pad classification -- matches every pad

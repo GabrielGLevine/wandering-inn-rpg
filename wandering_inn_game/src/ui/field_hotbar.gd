@@ -18,8 +18,21 @@ signal slot_activate_requested(slot: int)
 const SELECTION_LABEL_GAP := 4.0
 const SELECTION_LABEL_PADDING_X := 10.0
 const SELECTION_LABEL_PADDING_Y := 4.0
+const TOGGLE_SIZE := Vector2(144.0, 52.0)
+const TOGGLE_GAP := 8.0
+const READOUT_MAX_WIDTH := 720.0
+const READOUT_SCROLLBAR_RESERVE := 14.0
+const CONTROLS_BOTTOM_MARGIN := 10.0
+const READOUT_GAP := 8.0
+const READOUT_SELECTION_CLEARANCE := 34.0
 
 var _hotbar: WIHotbar
+var _root: Control
+var _readout_panel: PanelContainer
+var _readout_scroll: ScrollContainer
+var _readout_label: Label
+var _toggle: Control
+var _toggle_label: Label
 var _selection_label: Label
 ## Parchment-strip chrome panel drawn directly behind `_selection_label`
 ## (added to the tree BEFORE it, so it draws underneath -- Control siblings
@@ -29,30 +42,73 @@ var _selection_label: Label
 var _selection_label_backing: Control
 var _field_skills: Array = []
 var _last_slots: Array = []
+var _readout_lines: Array = []
+var _slot_numbers: Array = []
+var _fallback_labels: Array = []
+var _expanded := true
 var _combat_hidden := false
 var _dialogue_open := false
+var _panel_open := false
 
 
 func _ready() -> void:
-	var root := Control.new()
-	UIChrome.apply_theme(root)
-	root.set_anchors_preset(Control.PRESET_FULL_RECT)
-	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(root)
+	_root = Control.new()
+	UIChrome.apply_theme(_root)
+	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_root)
 	_hotbar = HOTBAR_SCRIPT.new()
 	_hotbar.name = "FieldHotbarBar"
-	root.add_child(_hotbar)
+	_root.add_child(_hotbar)
+	_build_readout()
+	_build_toggle()
 	_selection_label_backing = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_selection_label_backing.name = "SelectionLabelBacking"
 	_selection_label_backing.visible = false
-	root.add_child(_selection_label_backing)
+	_root.add_child(_selection_label_backing)
 	_selection_label = UIChrome.make_label("")
 	_selection_label.name = "SelectionLabel"
 	_selection_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_selection_label.visible = false
-	root.add_child(_selection_label)
+	_root.add_child(_selection_label)
 	_hotbar.slot_clicked.connect(func(index: int) -> void: slot_activate_requested.emit(index + 1))
 	ObservableBus.domain_event.connect(_on_domain_event)
+	WIInputHints.device_changed.connect(_on_device_changed)
+	get_viewport().size_changed.connect(_layout_controls)
+	_expanded = WISettings.field_readout_expanded()
+
+
+func _build_readout() -> void:
+	_readout_panel = UIChrome.make_chrome_panel_container(UIChrome.PARCHMENT_PANEL, UIChrome.PATCH_MARGIN)
+	_readout_panel.name = "FieldReadout"
+	_readout_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_root.add_child(_readout_panel)
+	_readout_scroll = ScrollContainer.new()
+	_readout_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_readout_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	_readout_scroll.clip_contents = true
+	_readout_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_readout_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_readout_panel.add_child(_readout_scroll)
+	_readout_label = UIChrome.make_label("", "Small")
+	_readout_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	_readout_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_readout_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_readout_scroll.add_child(_readout_label)
+
+
+func _build_toggle() -> void:
+	_toggle = UIChrome.make_texture_panel(UIChrome.BLUE_BUTTON)
+	_toggle.name = "FieldReadoutToggle"
+	_toggle.custom_minimum_size = TOGGLE_SIZE
+	_toggle.size = TOGGLE_SIZE
+	_toggle.mouse_filter = Control.MOUSE_FILTER_STOP
+	_toggle.gui_input.connect(_on_toggle_gui_input)
+	_root.add_child(_toggle)
+	_toggle_label = UIChrome.make_label("", "Small")
+	_toggle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_toggle_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_toggle.add_child(_toggle_label)
 
 
 func hotbar_node() -> WIHotbar:
@@ -72,7 +128,35 @@ func slot_count() -> int:
 
 func set_selected(index: int) -> void:
 	_hotbar.render(_last_slots, index)
+	_layout_controls()
 	_update_selection_label(index)
+
+
+func toggle_rect() -> Rect2:
+	if not visible or _toggle == null or not _toggle.visible:
+		return Rect2()
+	return Rect2(_toggle.global_position, _toggle.size)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if visible and event.is_action_pressed("field_readout"):
+		_set_expanded(not _expanded, true, "player")
+		get_viewport().set_input_as_handled()
+
+
+func _on_toggle_gui_input(event: InputEvent) -> void:
+	# CONTRACT: Godot's default touch->mouse emulation shares this click path.
+	if not (event is InputEventMouseButton):
+		return
+	var click := event as InputEventMouseButton
+	if click.button_index == MOUSE_BUTTON_LEFT and click.pressed:
+		_set_expanded(not _expanded, true, "player")
+		_toggle.accept_event()
+
+
+func _on_device_changed(_device: String) -> void:
+	_update_toggle_label()
+	_emit_rendered("device")
 
 
 ## Shows/positions/hides the floating skill-name label for the given
@@ -116,9 +200,9 @@ func _position_selection_label(index: int) -> void:
 	var padding := Vector2(SELECTION_LABEL_PADDING_X, SELECTION_LABEL_PADDING_Y)
 	var backing_size := label_size + padding * 2.0
 	var slot_center_x := rect.position.x + rect.size.x * 0.5
-	var viewport_width := get_viewport().get_visible_rect().size.x
-	var backing_x := clampf(slot_center_x - backing_size.x * 0.5, 0.0, maxf(0.0, viewport_width - backing_size.x))
-	var backing_top := rect.position.y - backing_size.y - SELECTION_LABEL_GAP
+	var safe := _current_safe_rect()
+	var backing_x := clampf(slot_center_x - backing_size.x * 0.5, safe.position.x, maxf(safe.position.x, safe.end.x - backing_size.x))
+	var backing_top := maxf(safe.position.y, rect.position.y - backing_size.y - SELECTION_LABEL_GAP)
 	_selection_label_backing.custom_minimum_size = backing_size
 	_selection_label_backing.size = backing_size
 	_selection_label_backing.position = Vector2(backing_x, backing_top)
@@ -130,8 +214,15 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 		WIEvents.WORLD_READY:
 			_combat_hidden = false
 			_dialogue_open = false
+			_panel_open = false
+			_expanded = WISettings.field_readout_expanded()
+			var reason := "world_ready"
+			if not WISettings.has_field_readout_choice() and Game.sim.times_slept > 0:
+				WISettings.set_field_readout_expanded(false)
+				_expanded = false
+				reason = "prior_waking"
 			_apply_visibility()
-			_render()
+			_render(reason)
 		WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED:
 			_render()
 		WIEvents.COMBAT_STARTED:
@@ -146,32 +237,155 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 		WIEvents.DIALOGUE_ENDED:
 			_dialogue_open = false
 			_apply_visibility()
+		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_INVENTORY_SHOWN:
+			_panel_open = true
+			_apply_visibility()
+		WIEvents.UI_PAUSE_HIDDEN, WIEvents.UI_JOURNAL_HIDDEN, WIEvents.UI_INVENTORY_HIDDEN:
+			_panel_open = false
+			_apply_visibility()
+		WIEvents.UI_SLEEP_VEIL_FINISHED:
+			if not WISettings.has_field_readout_choice() and Game.sim.times_slept >= 1:
+				_set_expanded(false, true, "first_waking")
+		WIEvents.UI_SETTINGS_RENDERED:
+			_layout_controls()
 
 
 func _apply_visibility() -> void:
-	visible = not (_combat_hidden or _dialogue_open)
+	visible = not (_combat_hidden or _dialogue_open or _panel_open)
 
 
-func _render() -> void:
+func _render(reason: String = "skills") -> void:
 	_field_skills = _collect_field_skills()
 	var slots: Array = []
-	var readout_lines: Array = []
+	_readout_lines = []
+	_slot_numbers = []
+	_fallback_labels = []
 	var number := 1
 	var combatants_catalog := _load_combatants_catalog()
 	for id: String in _field_skills:
 		var sk: Dictionary = Game.sim.skills.get(id, {})
+		var display := String(sk.get("display_name", id))
+		var fallback := WIFieldHotbarLayout.fallback_label(display, id)
 		slots.append({
 			"type": "skill",
 			"id": id,
-			"label": String(sk.get("display_name", id)),
+			"label": display,
+			"fallback_label": fallback,
 			"icon": String(sk.get("icon", "")),
 			"key_hint": str(number),
 		})
-		readout_lines.append("%d  %s" % [number, _readout_line(sk, id, combatants_catalog)])
+		_slot_numbers.append(str(number))
+		_fallback_labels.append(fallback)
+		_readout_lines.append("%d  %s" % [number, _readout_line(sk, id, combatants_catalog)])
 		number += 1
 	_last_slots = slots
 	_hotbar.render(slots, -1)
-	ObservableBus.emit_domain_event(WIEvents.UI_FIELD_HOTBAR_RENDERED, {"slots": _field_skills.size(), "readout_lines": readout_lines})
+	_update_readout()
+	_update_toggle_label()
+	_layout_controls()
+	_emit_rendered(reason)
+
+
+func _set_expanded(value: bool, persist: bool, reason: String) -> void:
+	if persist:
+		WISettings.set_field_readout_expanded(value)
+	_expanded = value
+	_update_readout()
+	_update_toggle_label()
+	_layout_controls()
+	_emit_rendered(reason)
+
+
+func _update_readout() -> void:
+	if _readout_panel == null:
+		return
+	_readout_label.text = "\n".join(_readout_lines)
+	_readout_panel.visible = _expanded and not _readout_lines.is_empty()
+
+
+func _update_toggle_label() -> void:
+	if _toggle == null:
+		return
+	_toggle.visible = not _last_slots.is_empty()
+	var verb := "Hide" if _expanded else "Show"
+	_toggle_label.text = "%s details [%s]" % [verb, WIInputHints.label("field_readout")]
+
+
+## CONTRACT: payload mirrors visible mode, order, numbering, and fallbacks.
+func _emit_rendered(reason: String) -> void:
+	if _hotbar == null:
+		return
+	ObservableBus.emit_domain_event(WIEvents.UI_FIELD_HOTBAR_RENDERED, {
+		"slots": _field_skills.size(),
+		"expanded": _expanded,
+		"reason": reason,
+		"toggle_label": _toggle_label.text if _toggle_label != null else "",
+		"slot_numbers": _slot_numbers.duplicate(),
+		"fallback_labels": _fallback_labels.duplicate(),
+		"readout_lines": _readout_lines.duplicate(),
+	})
+
+
+func _layout_controls() -> void:
+	if _hotbar == null or _root == null:
+		return
+	var viewport := get_viewport()
+	# TRAP: swapped-out layers can receive bus events before queued deletion.
+	if viewport == null:
+		return
+	var viewport_size := viewport.get_visible_rect().size
+	var safe := _current_safe_rect()
+	var group_width := _hotbar.size.x
+	if _toggle.visible:
+		group_width += TOGGLE_GAP + TOGGLE_SIZE.x
+	var group_left := safe.position.x + (safe.size.x - group_width) * 0.5
+	var hotbar_center := group_left + _hotbar.size.x * 0.5
+	var center_shift := hotbar_center - viewport_size.x * 0.5
+	var safe_bottom := maxf(0.0, viewport_size.y - safe.end.y)
+	_hotbar.offset_left = -_hotbar.size.x * 0.5 + center_shift
+	_hotbar.offset_right = _hotbar.size.x * 0.5 + center_shift
+	_hotbar.offset_top = -_hotbar.size.y - CONTROLS_BOTTOM_MARGIN - safe_bottom
+	_hotbar.offset_bottom = -CONTROLS_BOTTOM_MARGIN - safe_bottom
+	if _toggle.visible:
+		_toggle.position = Vector2(group_left + _hotbar.size.x + TOGGLE_GAP, safe.end.y - CONTROLS_BOTTOM_MARGIN - TOGGLE_SIZE.y)
+	var style := _readout_panel.get_theme_stylebox("panel")
+	var frame_size := WIFieldHotbarLayout.style_frame_size(style)
+	var panel_width := minf(READOUT_MAX_WIDTH, maxf(1.0, safe.size.x - WIFieldHotbarLayout.OUTER_MARGIN * 2.0))
+	var text_width := panel_width - frame_size.x - READOUT_SCROLLBAR_RESERVE
+	var content_height := _readout_content_height(text_width)
+	var desired_height := content_height + frame_size.y
+	var reserved_bottom := maxf(_hotbar.size.y, TOGGLE_SIZE.y) + CONTROLS_BOTTOM_MARGIN + READOUT_GAP + READOUT_SELECTION_CLEARANCE
+	var rect := WIFieldHotbarLayout.readout_rect(safe, READOUT_MAX_WIDTH, desired_height, reserved_bottom)
+	_readout_panel.position = rect.position
+	_readout_panel.size = rect.size
+	_readout_panel.custom_minimum_size = rect.size
+	var content_rect := WIFieldHotbarLayout.style_content_rect(Rect2(Vector2.ZERO, rect.size), style)
+	_readout_label.custom_minimum_size = Vector2(maxf(1.0, content_rect.size.x - READOUT_SCROLLBAR_RESERVE), content_height)
+	_readout_label.size = _readout_label.custom_minimum_size
+
+
+func _current_safe_rect() -> Rect2:
+	var viewport := get_viewport()
+	if viewport == null:
+		return Rect2()
+	return WIFieldHotbarLayout.viewport_safe_rect(
+		viewport.get_visible_rect().size,
+		DisplayServer.get_display_safe_area(),
+		DisplayServer.screen_get_size(),
+	)
+
+
+func _readout_content_height(width: float) -> float:
+	if _readout_lines.is_empty() or width <= 0.0:
+		return 1.0
+	var text := "\n".join(_readout_lines)
+	var font := _readout_label.get_theme_font("font")
+	var font_size := _readout_label.get_theme_font_size("font_size")
+	var measured := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)
+	var line_height := font.get_height(font_size)
+	var line_spacing := float(_readout_label.get_theme_constant("line_spacing"))
+	var lines := maxi(1, int(round(measured.y / maxf(line_height, 1.0))))
+	return measured.y + float(maxi(0, lines - 1)) * line_spacing
 
 
 func _readout_line(sk: Dictionary, id: String, combatants_catalog: Array = []) -> String:

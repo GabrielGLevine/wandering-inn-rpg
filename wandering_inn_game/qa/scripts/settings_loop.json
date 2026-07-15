@@ -134,7 +134,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== Help reference (MOUSE path, issue #107): row 9 = 'Help...' (index 8, appended before 'Back' -- the SAME slot 'Controls...'/'Replay Hints' occupy, 'Back' stays the fixed last row). Pins the rendered event's section count + the 'Saving' section's exact line.",
+   "_comment": "Mouse opens Help; payload pins section count + field-readout copy.",
    "action": "click_settings_row",
    "row": 9
   },
@@ -143,7 +143,7 @@
    "type": "ui_help_rendered",
    "payload_contains": {
     "sections": 6,
-    "sample": "Saving — Save and Load live in the pause menu — three manual slots, plus an autosave after fights, level-ups, and doors."
+    "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Details control to show or hide that readout."
    },
    "timeout_sec": 5
   },
@@ -277,7 +277,7 @@
    "action": "wait_for_event",
    "type": "ui_controls_rendered",
    "payload_contains": {
-    "rows": 9
+    "rows": 10
    },
    "timeout_sec": 5
   },
@@ -327,7 +327,7 @@
    "type": "ui_help_rendered",
    "payload_contains": {
     "sections": 6,
-    "sample": "Saving — Save and Load live in the pause menu — three manual slots, plus an autosave after fights, level-ups, and doors."
+    "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Details control to show or hide that readout."
    },
    "timeout_sec": 5
   },
