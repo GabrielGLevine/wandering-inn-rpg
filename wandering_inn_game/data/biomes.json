@@ -12,6 +12,10 @@
    2,
    2
   ],
+  "blocked_props": [
+   "crate",
+   "barrel"
+  ],
   "skirt_sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
   "skirt_tile_px": 16,
   "skirt": [
@@ -32,6 +36,10 @@
   "blocked": [
    14,
    4
+  ],
+  "blocked_props": [
+   "crate",
+   "barrel"
   ],
   "_comment_skirt": "The skirt is the dirt shoulder outside the cobble street.",
   "skirt_sheet": "res://assets/tiles/floor_tiles_12/dirt_01.png",
@@ -54,6 +62,10 @@
    2,
    3
   ],
+  "blocked_props": [
+   "boulder",
+   "mushroom_purple_s"
+  ],
   "_comment_skirt": "The skirt reuses the blocked rock tile as a border around the playable cave floor.",
   "skirt_sheet": "res://assets/tiles/cave/Tiles.png",
   "skirt_tile_px": 16,
@@ -74,6 +86,10 @@
   "blocked": [
    14,
    4
+  ],
+  "blocked_props": [
+   "boulder",
+   "bush_green"
   ],
   "blocked_tile_px": 16,
   "_comment_skirt": "Open grassland continues past every edge (world environment; camera clamp-follows).",

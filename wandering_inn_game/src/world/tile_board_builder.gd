@@ -3,6 +3,76 @@ class_name WITileBoardBuilder
 const CELL := 16
 
 
+## CONTRACT: map id + cell only; field cover never consumes gameplay RNG.
+static func field_blocked_prop_index(map_id: String, cell: Vector2i, count: int) -> int:
+	if count <= 1:
+		return 0
+	var h := hash(Vector3i(cell.x * 73856093, cell.y * 19349663, map_id.hash()))
+	return int(h & 0x7FFFFFFF) % count
+
+
+static func field_blocked_render_plan(
+	map_id: String,
+	blocked: Dictionary,
+	segment_covered: Dictionary,
+	cover_skip: Dictionary,
+	authored_covered: Dictionary,
+	pool: Array,
+) -> Dictionary:
+	var props := {}
+	var fallback: Array[Vector2i] = []
+	for cell: Vector2i in blocked:
+		if segment_covered.has(cell) or cover_skip.has(cell) or authored_covered.has(cell):
+			continue
+		if pool.is_empty():
+			fallback.append(cell)
+		else:
+			props[cell] = String(pool[field_blocked_prop_index(map_id, cell, pool.size())])
+	return {"props": props, "fallback": fallback}
+
+
+static func field_authored_cover_cells(map_cfg: Dictionary) -> Dictionary:
+	var covered := {}
+	for key: String in ["decor", "entities"]:
+		for raw_entry: Variant in map_cfg.get(key, []):
+			if not (raw_entry is Dictionary):
+				continue
+			var entry := raw_entry as Dictionary
+			var cell: Array = entry.get("cell", [])
+			if cell.size() < 2 or String(entry.get("sprite", "")).is_empty():
+				continue
+			if key == "entities" and bool(entry.get("hide_sprite", false)):
+				continue
+			covered[Vector2i(int(cell[0]), int(cell[1]))] = true
+	return covered
+
+
+## TRAP: cover_skip suppresses both fallback tiles and props; stale entries must fail loud.
+static func cover_skip_errors(
+	blocked: Dictionary,
+	segment_covered: Dictionary,
+	cover_skip: Dictionary,
+	authored_covered: Dictionary,
+	prop_cells: Dictionary,
+) -> PackedStringArray:
+	var errors := PackedStringArray()
+	for cell: Vector2i in cover_skip:
+		if not blocked.has(cell):
+			errors.append("cover_skip %s is not blocked" % cell)
+		elif segment_covered.has(cell):
+			errors.append("cover_skip %s is obsolete: wall segment already covers it" % cell)
+		if prop_cells.has(cell):
+			errors.append("cover_skip %s also receives biome prop %s" % [cell, prop_cells[cell]])
+	for cell: Vector2i in prop_cells:
+		if not blocked.has(cell):
+			errors.append("biome prop %s is not blocked" % cell)
+		elif segment_covered.has(cell):
+			errors.append("biome prop %s overlaps a wall segment" % cell)
+		elif authored_covered.has(cell):
+			errors.append("biome prop %s overlaps authored field art" % cell)
+	return errors
+
+
 ## Resolves a `cells` spec ("all" | {"rect":[x,y,w,h]} | {"list":[[x,y],...]})
 ## into the concrete cell list it addresses. Rect/list cells may fall outside
 ## `grid` on purpose (arena skirt dressing sits outside the playable grid by

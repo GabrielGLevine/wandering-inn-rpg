@@ -32,6 +32,165 @@ func _function_body(source: String, function_name: String) -> String:
 	return source.get_slice("func %s" % function_name, 1).get_slice("\nfunc ", 0)
 
 
+func _blocked_prop_pool_contract_holds() -> bool:
+	var biomes: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/biomes.json"))
+	var sprites: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/sprites.json"))
+	if not (biomes is Dictionary) or not (sprites is Dictionary):
+		return false
+	for biome_id: String in ["inn", "street", "cave", "floodplains"]:
+		var biome: Dictionary = biomes.get(biome_id, {})
+		var pool: Array = biome.get("blocked_props", [])
+		if pool.size() < 2:
+			return false
+		for sprite_id: Variant in pool:
+			if not (sprites as Dictionary).has(String(sprite_id)):
+				return false
+	return true
+
+
+func _map_blocked_sets(map_cfg: Dictionary) -> Dictionary:
+	var blocked := {}
+	var segment_covered := {}
+	for raw_cell: Variant in map_cfg.get("blocked", []):
+		var cell := Vector2i(int(raw_cell[0]), int(raw_cell[1]))
+		blocked[cell] = true
+	for raw_segment: Variant in map_cfg.get("walls", {}).get("segments", []):
+		for cell: Vector2i in WIGame.segment_cells(raw_segment as Dictionary):
+			blocked[cell] = true
+			segment_covered[cell] = true
+	for raw_cell: Variant in map_cfg.get("freezable", []):
+		blocked[Vector2i(int(raw_cell[0]), int(raw_cell[1]))] = true
+	return {"blocked": blocked, "segment_covered": segment_covered}
+
+
+func _authored_cover_cells(map_cfg: Dictionary) -> Dictionary:
+	return WITileBoardBuilder.field_authored_cover_cells(map_cfg)
+
+
+func _blocked_prop_planning_contract_holds() -> bool:
+	var blocked := {
+		Vector2i(1, 1): true,
+		Vector2i(2, 2): true,
+		Vector2i(3, 3): true,
+		Vector2i(4, 4): true,
+	}
+	var segment_covered := {Vector2i(3, 3): true}
+	var cover_skip := {Vector2i(4, 4): true}
+	var authored_covered := {Vector2i(2, 2): true}
+	var pool := ["crate", "barrel"]
+	var plan := WITileBoardBuilder.field_blocked_render_plan(
+		"inn", blocked, segment_covered, cover_skip, authored_covered, pool
+	)
+	if plan.get("fallback", []).size() != 0 or plan.get("props", {}).size() != 1:
+		return false
+	for cell: Vector2i in (plan.get("props", {}) as Dictionary):
+		if not blocked.has(cell) or segment_covered.has(cell) or cover_skip.has(cell) or authored_covered.has(cell):
+			return false
+	var fallback := WITileBoardBuilder.field_blocked_render_plan(
+		"unknown_map", blocked, segment_covered, cover_skip, authored_covered, []
+	)
+	if fallback.get("props", {}).size() != 0 or fallback.get("fallback", []).size() != 1:
+		return false
+	var inn_sequence: Array[int] = []
+	var street_sequence: Array[int] = []
+	for x in 16:
+		var cell := Vector2i(x, x % 5)
+		var first := WITileBoardBuilder.field_blocked_prop_index("inn", cell, 2)
+		if first != WITileBoardBuilder.field_blocked_prop_index("inn", cell, 2):
+			return false
+		inn_sequence.append(first)
+		street_sequence.append(WITileBoardBuilder.field_blocked_prop_index("street", cell, 2))
+	if inn_sequence == street_sequence:
+		return false
+	if not WITileBoardBuilder.cover_skip_errors(blocked, segment_covered, cover_skip, authored_covered, plan["props"]).is_empty():
+		return false
+	if WITileBoardBuilder.cover_skip_errors(
+		blocked, segment_covered, {Vector2i(9, 9): true}, authored_covered, {}
+	).is_empty():
+		return false
+	if WITileBoardBuilder.cover_skip_errors(
+		blocked, segment_covered, cover_skip, authored_covered, {Vector2i(4, 4): "crate"}
+	).is_empty():
+		return false
+	if WITileBoardBuilder.cover_skip_errors(
+		blocked, segment_covered, cover_skip, authored_covered, {Vector2i(2, 2): "crate"}
+	).is_empty():
+		return false
+	return true
+
+
+func _shipped_blocked_prop_contract_holds() -> bool:
+	var biomes: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/biomes.json"))
+	for map_id: String in WISceneCatalog.compose()["maps"]:
+		var map_cfg: Dictionary = WISceneCatalog.compose()["maps"][map_id]
+		var sets := _map_blocked_sets(map_cfg)
+		var authored_covered := _authored_cover_cells(map_cfg)
+		var cover_skip := {}
+		for raw_cell: Variant in map_cfg.get("cover_skip", []):
+			cover_skip[Vector2i(int(raw_cell[0]), int(raw_cell[1]))] = true
+		var pool: Array = biomes.get(String(map_cfg.get("biome", "")), {}).get("blocked_props", [])
+		var plan := WITileBoardBuilder.field_blocked_render_plan(
+			map_id, sets["blocked"], sets["segment_covered"], cover_skip, authored_covered, pool
+		)
+		if not WITileBoardBuilder.cover_skip_errors(
+			sets["blocked"], sets["segment_covered"], cover_skip, authored_covered, plan.get("props", {})
+		).is_empty():
+			return false
+		for cell: Vector2i in (plan.get("props", {}) as Dictionary):
+			if authored_covered.has(cell):
+				return false
+		var expected := (sets["blocked"] as Dictionary).size()
+		for cell: Vector2i in (sets["segment_covered"] as Dictionary):
+			if (sets["blocked"] as Dictionary).has(cell):
+				expected -= 1
+		for cell: Vector2i in cover_skip:
+			if not (sets["segment_covered"] as Dictionary).has(cell):
+				expected -= 1
+		for cell: Vector2i in authored_covered:
+			if (sets["blocked"] as Dictionary).has(cell) \
+				and not (sets["segment_covered"] as Dictionary).has(cell) \
+				and not cover_skip.has(cell):
+				expected -= 1
+		if plan.get("props", {}).size() + plan.get("fallback", []).size() != expected:
+			return false
+		if not pool.is_empty() and (not plan.get("fallback", []).is_empty() or plan.get("props", {}).size() > 200):
+			return false
+	return true
+
+
+func _field_blocked_render_wiring_holds(source: String) -> bool:
+	if source.find("const FIELD_BLOCKED_PROP_BUDGET := 200") == -1:
+		return false
+	var floor_body := _function_body(source, "_build_floor")
+	for clause: String in [
+		"biome.get(\"blocked_props\", [])",
+		"WITileBoardBuilder.field_blocked_render_plan",
+		"WITileBoardBuilder.field_authored_cover_cells",
+		"WITileBoardBuilder.cover_skip_errors",
+		"FIELD_BLOCKED_PROP_BUDGET",
+	]:
+		if floor_body.find(clause) == -1:
+			return false
+	var render_body := _function_body(source, "_build_field_blocked_props")
+	for clause: String in [
+		"Sprite2D.new()",
+		"get_frame_texture",
+		"spr.position = Vector2(cell) * CELL",
+		"WISpriteRegistry.anchor_for(sprite_id)",
+		"spr.offset = Vector2(",
+		"_entities_root.add_child",
+	]:
+		if render_body.find(clause) == -1:
+			return false
+	if render_body.find("AnimatedSprite2D.new()") != -1:
+		return false
+	var rebuild_body := _function_body(source, "_rebuild_field")
+	var root_created := rebuild_body.find("_entities_root = Node2D.new()")
+	var props_built := rebuild_body.find("_build_field_blocked_props()")
+	var decor_built := rebuild_body.find("_build_decor(")
+	return root_created != -1 and props_built > root_created and decor_built > props_built
+
+
 func _chronicle_capture_contract_holds(source: String) -> bool:
 	var capture := _function_body(source, "_record_current_chronicle")
 	if capture.is_empty():
@@ -267,7 +426,19 @@ func _atmosphere_map_transition_contract_holds(source: String) -> bool:
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var source := FileAccess.get_file_as_string("res://src/world/world.gd")
+	var builder_source := FileAccess.get_file_as_string("res://src/world/tile_board_builder.gd")
 	assert(not source.is_empty(), "world.gd must exist")
+	assert(_blocked_prop_pool_contract_holds(),
+		"inn, street, cave, and floodplains need sprite-registry-backed blocked_props pools")
+	for helper: String in ["field_blocked_prop_index", "field_blocked_render_plan", "cover_skip_errors"]:
+		assert(builder_source.find("static func %s" % helper) != -1,
+			"tile board builder must expose the %s field-cover contract" % helper)
+	assert(_blocked_prop_planning_contract_holds(),
+		"field blocked cover must select deterministically, fall back, and reject stale/conflicting cover_skip")
+	assert(_shipped_blocked_prop_contract_holds(),
+		"every shipped blocked cell needs exactly one honest render path within the 200-prop budget")
+	assert(_field_blocked_render_wiring_holds(source),
+		"world must render budgeted static blocked props in the Y-sorted field layer")
 
 	var body := source.get_slice("func _reconcile_entity_presence", 1).get_slice("\nfunc ", 0)
 	assert(not body.is_empty(), "world.gd must define _reconcile_entity_presence (the GH#104 PHASE_CHANGED presence reconciler)")
