@@ -11,8 +11,8 @@ remainder below.
 results-only facts to the journal, captures them in `settings.cfg`, and renders
 the latest record on the title screen. `chronicle_loop` proves the full live
 Continue → journal → title → New Game survival route without changing the
-five selectable title rows. Headless integration gates are green; the release
-controller owns the final 100%/130% screenshot reads before shipping.
+five selectable title rows. Headless integration gates and the final 100%/130%
+visual reads are green; the card, caption, and post-New-Game frame all fit.
 
 **#103 documentation rot complete:** current/history authority is mapped in
 `docs/DOC-MAP.md`; shipped staging is archived; all plans say DONE/ACTIVE;
