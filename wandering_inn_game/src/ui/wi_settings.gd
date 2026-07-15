@@ -40,6 +40,8 @@ var _fullscreen := false
 var _text_scale_step := 0
 var _reduce_motion := false
 var _combat_speed_step := 0
+var _field_readout_expanded := true
+var _field_readout_choice := false
 
 
 func _ready() -> void:
@@ -54,6 +56,10 @@ func _load_settings() -> void:
 	_text_scale_step = clampi(int(_settings.get_value("accessibility", "text_scale_step", 0)), 0, TEXT_SCALE_STEPS.size() - 1)
 	_reduce_motion = bool(_settings.get_value("accessibility", "reduce_motion", false))
 	_combat_speed_step = clampi(int(_settings.get_value("combat", "speed_step", 0)), 0, COMBAT_SPEED_STEPS.size() - 1)
+	var field_value: Variant = _settings.get_value("field_hud", "readout_expanded") \
+			if _settings.has_section_key("field_hud", "readout_expanded") else null
+	_field_readout_choice = field_value is bool
+	_field_readout_expanded = bool(field_value) if _field_readout_choice else true
 
 
 func _persist(section: String, key: String, value: Variant) -> void:
@@ -173,6 +179,20 @@ func set_reduce_motion(value: bool) -> void:
 
 func toggle_reduce_motion() -> void:
 	set_reduce_motion(not _reduce_motion)
+
+
+func field_readout_expanded() -> bool:
+	return _field_readout_expanded
+
+
+func has_field_readout_choice() -> bool:
+	return _field_readout_choice
+
+
+func set_field_readout_expanded(value: bool) -> void:
+	_field_readout_expanded = value
+	_field_readout_choice = true
+	_persist("field_hud", "readout_expanded", value)
 
 
 

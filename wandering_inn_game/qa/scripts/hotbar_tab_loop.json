@@ -63,6 +63,25 @@
    }
   },
   {
+   "_comment": "Mouse/touch control collapses through the same state seam.",
+   "action": "click_field_readout"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {"expanded": false, "reason": "player"},
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_field_readout"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {"expanded": true, "reason": "player"},
+   "timeout_sec": 5
+  },
+  {
    "_comment": "Face dirty_table (5,4): right3 -> (5,3), down1 blocks on the table & faces it -- same route field_skills_loop's number-key press uses, so the confirm-fired stream at the end of this script is directly comparable.",
    "action": "move",
    "direction": "right",

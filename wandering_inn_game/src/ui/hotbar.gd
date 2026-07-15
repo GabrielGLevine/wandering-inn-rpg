@@ -127,7 +127,7 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		root.add_child(tex_rect)
 	else:
 		var text_label := UIChrome.make_label("", "Small")
-		text_label.text = String(slot.get("label", ""))
+		text_label.text = String(slot.get("fallback_label", slot.get("label", "")))
 		text_label.set_anchors_preset(Control.PRESET_FULL_RECT)
 		text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		text_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER

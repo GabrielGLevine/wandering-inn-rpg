@@ -25,6 +25,7 @@ const MOUSE_LABELS := {
 	"interact": "Click adjacent target",
 	"confirm": "Click a row / option",
 	"hotbar": "Click a hotbar slot",
+	"field_readout": "Click Details",
 }
 
 enum State { ROWS, CONTROLS, HELP }
@@ -345,14 +346,12 @@ func _exit_controls() -> void:
 	_refresh()
 
 
-## Payload's `sample` pins the "Saving" section's exact rendered line --
-## short, purely mechanical, least likely to churn under the issue's own
-## planned voice-pass -- QA's one-section-string pin per the task brief.
+## Payload sample pins field-readout help copy; Controls owns live glyphs.
 func _enter_help() -> void:
 	_state = State.HELP
 	_root.hide()
 	_help_root.show()
-	var sample := _help_line_by_heading("Saving")
+	var sample := _help_line_by_heading("Skills & the Hotbar")
 	ObservableBus.emit_domain_event(WIEvents.UI_HELP_RENDERED, {"sections": _help_sections.size(), "sample": sample})
 
 

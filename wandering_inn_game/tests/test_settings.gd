@@ -11,6 +11,8 @@ func _init() -> void:
 	_check_text_scale_drift_tripwire()
 	_check_chronicle_persistence()
 	_check_settings_persistence()
+	_check_field_readout_persistence()
+	_check_field_hotbar_layout()
 	_check_combat_speed_math()
 	_check_audio_bus_routing()
 	_check_hint_reset_functions()
@@ -139,6 +141,91 @@ func _check_settings_persistence() -> void:
 	b.call("set_reduce_motion", false)
 	b.call("set_combat_speed_step", 0)
 	b.free()
+
+
+func _check_field_readout_persistence() -> void:
+	var source := FileAccess.get_file_as_string("res://src/ui/wi_settings.gd")
+	assert(source.find("func field_readout_expanded() -> bool:") != -1,
+		"WISettings must own the persisted field-readout preference")
+	var script := load("res://src/ui/wi_settings.gd")
+	var config := ConfigFile.new()
+	config.load(SETTINGS_PATH)
+	if config.has_section("field_hud"):
+		config.erase_section("field_hud")
+	assert(config.save(SETTINGS_PATH) == OK, "field-readout setup must preserve other settings")
+
+	var missing = script.new()
+	missing.call("_load_settings")
+	assert(bool(missing.call("field_readout_expanded")), "missing field-readout key must expose names/mechanics")
+	assert(not bool(missing.call("has_field_readout_choice")), "missing field-readout key is not an explicit player choice")
+	missing.call("set_field_readout_expanded", false)
+	missing.free()
+
+	var persisted = script.new()
+	persisted.call("_load_settings")
+	assert(not bool(persisted.call("field_readout_expanded")), "collapsed field readout must round-trip through settings.cfg")
+	assert(bool(persisted.call("has_field_readout_choice")), "a persisted bool is an explicit player choice")
+	persisted.free()
+
+	config.load(SETTINGS_PATH)
+	config.set_value("field_hud", "readout_expanded", "corrupt")
+	assert(config.save(SETTINGS_PATH) == OK, "field-readout corrupt-key setup must save")
+	var corrupt = script.new()
+	corrupt.call("_load_settings")
+	assert(bool(corrupt.call("field_readout_expanded")), "wrong-typed field-readout key must fall back expanded")
+	assert(not bool(corrupt.call("has_field_readout_choice")), "wrong-typed field-readout key must not become a player choice")
+	corrupt.free()
+
+	config.load(SETTINGS_PATH)
+	config.erase_section("field_hud")
+	assert(config.save(SETTINGS_PATH) == OK, "field-readout cleanup must preserve other settings")
+
+
+func _check_field_hotbar_layout() -> void:
+	const LAYOUT_PATH := "res://src/ui/field_hotbar_layout.gd"
+	assert(FileAccess.file_exists(LAYOUT_PATH), "field hotbar needs a pure safe-area layout seam")
+	var hotbar_source := FileAccess.get_file_as_string("res://src/ui/field_hotbar.gd")
+	assert(hotbar_source.contains("vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO"),
+		"overflowing field mechanics must remain available through scrolling")
+	var layout := load(LAYOUT_PATH)
+	assert(String(layout.call("fallback_label", "[Basic Cleaning]", "basic_cleaning")) == "BC",
+		"multi-word missing icons need a readable initials fallback")
+	assert(String(layout.call("fallback_label", "[Invisibility]", "invisibility")) == "INV",
+		"single-word missing icons need a readable three-letter fallback")
+	var mapped_safe: Rect2 = layout.call("viewport_safe_rect", Vector2(844, 390), Rect2i(18, 16, 808, 356), Vector2i(844, 390))
+	assert(mapped_safe == Rect2(18, 16, 808, 356), "display safe-area insets must map into viewport space")
+
+	assert(hotbar_source.contains("make_chrome_panel_container") and hotbar_source.contains("get_theme_stylebox(\"panel\")"),
+		"field readout content and sizing must derive from its panel StyleBox")
+	assert(hotbar_source.contains("_readout_scroll.clip_contents = true"),
+		"overflow rows must clip at the StyleBox-managed scroll viewport")
+	assert(not hotbar_source.contains("set_offsets(_readout_scroll"),
+		"field readout scroll clipping must not use a manual inset inside the ornament")
+	var chrome := load("res://src/ui/ui_chrome.gd")
+	var panel: PanelContainer = chrome.call("make_chrome_panel_container", chrome.get("PARCHMENT_PANEL"), chrome.get("PATCH_MARGIN"))
+	var style := panel.get_theme_stylebox("panel")
+	var frame_size: Vector2 = layout.call("style_frame_size", style)
+	assert(frame_size == Vector2(48, 48), "parchment content margins must match its 24px border ornament")
+	panel.free()
+
+	var viewports := [Vector2(1280, 720), Vector2(960, 540), Vector2(844, 390)]
+	for step in 3:
+		var font_size: int = int(load("res://src/ui/wi_settings.gd").call("scaled_default_font_size", step))
+		for viewport: Vector2 in viewports:
+			var safe := Rect2(Vector2(18, 16), viewport - Vector2(36, 34))
+			for row_count in range(1, 10):
+				var rows_height := float(row_count * (font_size + 4))
+				var desired_height := rows_height + frame_size.y
+				var rect: Rect2 = layout.call("readout_rect", safe, 720.0, desired_height, 104.0)
+				var content_rect: Rect2 = layout.call("style_content_rect", rect, style)
+				var rows_rect := Rect2(content_rect.position, Vector2(content_rect.size.x, rows_height))
+				var visible_rows := rows_rect.intersection(content_rect)
+				assert(safe.encloses(rect), "field readout must stay inside viewport/safe-area at text step %d, %s" % [step, str(viewport)])
+				assert(content_rect.encloses(visible_rows), "row clipping must stay inside StyleBox content at %d rows, text step %d, %s" % [row_count, step, str(viewport)])
+				if is_equal_approx(rect.size.y, desired_height):
+					assert(content_rect.encloses(rows_rect), "all rows must clear both border ornaments at %d rows, text step %d, %s" % [row_count, step, str(viewport)])
+				else:
+					assert(is_equal_approx(visible_rows.end.y, content_rect.end.y), "overflow must clip cleanly at the content bottom at %d rows, text step %d, %s" % [row_count, step, str(viewport)])
 
 
 func _check_combat_speed_math() -> void:
