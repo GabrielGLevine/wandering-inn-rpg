@@ -8,6 +8,7 @@ func _init() -> void:
 	WITestWatchdog.arm(self)
 	_check_text_scale_math()
 	_check_text_scale_drift_tripwire()
+	_check_chronicle_persistence()
 	_check_settings_persistence()
 	_check_combat_speed_math()
 	_check_audio_bus_routing()
@@ -15,6 +16,36 @@ func _init() -> void:
 	_check_reduce_motion_gate_sites()
 	print("PASS: settings + accessibility surface (WISettings/WIAudio/hint-replay/reduce-motion) holds")
 	quit(0)
+
+
+func _check_chronicle_persistence() -> void:
+	var script := load("res://src/ui/wi_settings.gd")
+	var empty = script.new()
+	empty.call("_load_settings")
+	assert((empty.latest_chronicle() as Dictionary).is_empty(),
+		"latest_chronicle must return an empty dictionary before any run is recorded")
+	empty.free()
+
+	var original := {
+		"schema": 1,
+		"name": "Sella",
+		"classes": [{"name": "Mage", "level": 4}],
+	}
+	var writer = script.new()
+	writer.call("_load_settings")
+	writer.record_chronicle(original)
+	original["classes"][0]["level"] = 99
+	writer.free()
+
+	var reader = script.new()
+	reader.call("_load_settings")
+	var loaded: Dictionary = reader.latest_chronicle()
+	assert(loaded == {"schema": 1, "name": "Sella", "classes": [{"name": "Mage", "level": 4}]},
+		"a fresh settings instance must round-trip the recorded Chronicle")
+	loaded["classes"][0]["level"] = 12
+	assert(reader.latest_chronicle()["classes"][0]["level"] == 4,
+		"latest_chronicle must isolate nested caller mutations with a deep copy")
+	reader.free()
 
 
 func _check_text_scale_math() -> void:

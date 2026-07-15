@@ -168,6 +168,7 @@ func _init() -> void:
 	var scene_config := WISceneCatalog.compose()
 	var skill_config := _load_json("res://data/skills.json")
 	var game := WIGame.new(scene_config, skill_config, _sink, 12345)
+	_check_chronicle_facts(scene_config, skill_config)
 
 	var witch_map: Dictionary = scene_config["maps"]["witch_hollow"]
 	var witch := _entity_by_id(witch_map["entities"], "riverfarm_witch")
@@ -2510,3 +2511,42 @@ func _init() -> void:
 
 	print("PASS: sim core behaves correctly")
 	quit(0)
+
+
+func _check_chronicle_facts(scene_config: Dictionary, skill_config: Dictionary) -> void:
+	var chronicle_config := {
+		"classes": {"classes": [
+			{WIKeys.ID: "mage", WIKeys.DISPLAY_NAME: "Mage"},
+			{WIKeys.ID: "warrior", WIKeys.DISPLAY_NAME: "Warrior"},
+			{WIKeys.ID: "helper", WIKeys.DISPLAY_NAME: "Helper"},
+		]},
+		"quests": {"quests": [
+			{WIKeys.ID: "done_a", "beats": [{"description": "Done A", "complete_when": {"beat_a": 1}}]},
+			{WIKeys.ID: "unfinished", "beats": [{"description": "Pending", "complete_when": {"beat_pending": 1}}]},
+			{WIKeys.ID: "done_b", "beats": [{"description": "Done B", "complete_when": {"beat_b": 1}}]},
+		]},
+	}
+	var chronicle := WIGame.new(scene_config, skill_config, func(_type: String, _payload: Dictionary) -> void: pass, 91, chronicle_config, {}, {
+		"pc_name": "  Sella  ", "pc_race": "drake",
+	})
+	chronicle.classes = {"helper": 2, "mage": 4}
+	chronicle.started_quests.assign(["done_a", "unfinished", "done_b", "missing_quest"])
+	chronicle.accomplishments = {"beat_a": 1, "beat_b": 1, "won_combat": 7}
+	chronicle.times_slept = 5
+
+	var facts: Dictionary = chronicle.chronicle_facts()
+	var keys: Array = facts.keys()
+	keys.sort()
+	assert(keys == ["classes", "ending", "name", "quests_completed", "race", "schema", "sleeps", "victories"],
+		"Chronicle schema must contain only the ratified result-fact fields")
+	assert(int(facts["schema"]) == 1, "Chronicle schema version must be 1")
+	assert(facts["name"] == "Sella" and facts["race"] == "Drake",
+		"Chronicle identity must use sanitized name and title-cased race")
+	assert(facts["classes"] == [{"name": "Mage", "level": 4}, {"name": "Helper", "level": 2}],
+		"Chronicle classes must use display names and class-catalog order")
+	assert(int(facts["quests_completed"]) == 2,
+		"Chronicle counts completed authored quests only")
+	assert(int(facts["victories"]) == 7 and int(facts["sleeps"]) == 5,
+		"Chronicle reports achieved combat victories and sleeps")
+	assert(facts["ending"] == "The seal holds. Liscor counts you among its own.",
+		"Chronicle ending must remain exact")

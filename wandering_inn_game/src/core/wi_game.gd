@@ -1144,6 +1144,31 @@ func _quests_completed_count() -> int:
 	return n
 
 
+func chronicle_facts() -> Dictionary:
+	var held_classes: Array[Dictionary] = []
+	var class_catalog: Dictionary = _combat_config.get("classes", {})
+	for cls: Dictionary in class_catalog.get("classes", []):
+		var id := String(cls[WIKeys.ID])
+		if not classes.has(id):
+			continue
+		var row: Dictionary = {
+			"name": String(cls[WIKeys.DISPLAY_NAME]),
+			"level": int(classes[id]),
+		}
+		held_classes.append(row)
+	var facts: Dictionary = {
+		"schema": 1,
+		"name": _sanitize_pc_name(pc_name),
+		"race": _sanitize_pc_race(pc_race).capitalize(),
+		"classes": held_classes,
+		"quests_completed": _quests_completed_count(),
+		"victories": accomplishment_count("won_combat"),
+		"sleeps": times_slept,
+		"ending": "The seal holds. Liscor counts you among its own.",
+	}
+	return facts
+
+
 func act_summary() -> Dictionary:
 	var catalog: Dictionary = _combat_config.get("acts", {})
 	if catalog.is_empty():

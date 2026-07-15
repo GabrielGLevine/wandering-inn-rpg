@@ -62,6 +62,21 @@ func _persist(section: String, key: String, value: Variant) -> void:
 	_settings.save(SETTINGS_PATH)
 
 
+func record_chronicle(facts: Dictionary) -> void:
+	var stored: Dictionary = facts.duplicate(true)
+	_persist("chronicle", "latest", stored)
+
+
+func latest_chronicle() -> Dictionary:
+	_settings.load(SETTINGS_PATH)
+	if not _settings.has_section_key("chronicle", "latest"):
+		return {}
+	var stored: Variant = _settings.get_value("chronicle", "latest")
+	if not stored is Dictionary:
+		return {}
+	return (stored as Dictionary).duplicate(true)
+
+
 
 func is_fullscreen() -> bool:
 	return _fullscreen
