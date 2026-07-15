@@ -36,6 +36,8 @@ const BASE_TYPE_FONT_SIZES := {
 }
 
 var _settings := ConfigFile.new()
+# CONTRACT: tests override before first load; production stays on SETTINGS_PATH.
+var _settings_path: String = SETTINGS_PATH
 var _fullscreen := false
 var _text_scale_step := 0
 var _reduce_motion := false
@@ -49,7 +51,7 @@ func _ready() -> void:
 
 
 func _load_settings() -> void:
-	_settings.load(SETTINGS_PATH)
+	_settings.load(_settings_path)
 	_fullscreen = bool(_settings.get_value("video", "fullscreen", false))
 	_text_scale_step = clampi(int(_settings.get_value("accessibility", "text_scale_step", 0)), 0, TEXT_SCALE_STEPS.size() - 1)
 	_reduce_motion = bool(_settings.get_value("accessibility", "reduce_motion", false))
@@ -57,9 +59,9 @@ func _load_settings() -> void:
 
 
 func _persist(section: String, key: String, value: Variant) -> void:
-	_settings.load(SETTINGS_PATH)
+	_settings.load(_settings_path)
 	_settings.set_value(section, key, value)
-	_settings.save(SETTINGS_PATH)
+	_settings.save(_settings_path)
 
 
 func record_chronicle(facts: Dictionary) -> void:
@@ -68,13 +70,35 @@ func record_chronicle(facts: Dictionary) -> void:
 
 
 func latest_chronicle() -> Dictionary:
-	_settings.load(SETTINGS_PATH)
+	_settings.load(_settings_path)
 	if not _settings.has_section_key("chronicle", "latest"):
 		return {}
 	var stored: Variant = _settings.get_value("chronicle", "latest")
 	if not stored is Dictionary:
 		return {}
+	if not _valid_chronicle_shape(stored as Dictionary):
+		return {}
 	return (stored as Dictionary).duplicate(true)
+
+
+static func _valid_chronicle_shape(stored: Dictionary) -> bool:
+	# CONTRACT: title iterates classes and casts each row; reject the whole corrupt record here.
+	var classes_value: Variant = stored.get("classes")
+	if not classes_value is Array:
+		return false
+	for raw_class: Variant in classes_value:
+		if not raw_class is Dictionary:
+			return false
+		var class_facts := raw_class as Dictionary
+		if not class_facts.get("name") is String or typeof(class_facts.get("level")) != TYPE_INT:
+			return false
+	for key: String in ["name", "race", "ending"]:
+		if not stored.get(key) is String:
+			return false
+	for key: String in ["schema", "quests_completed", "victories", "sleeps"]:
+		if typeof(stored.get(key)) != TYPE_INT:
+			return false
+	return true
 
 
 

@@ -2,11 +2,12 @@ extends SceneTree
 
 const MESSAGE_LAYER_PATH := "res://src/ui/message_layer.gd"
 const COMBAT_SCREEN_PATH := "res://src/combat/combat_screen.gd"
-const SETTINGS_PATH := "user://settings.cfg"
+const SETTINGS_PATH := "user://test_settings_issue_118.cfg"
 
 
 func _init() -> void:
 	WITestWatchdog.arm(self)
+	_reset_test_settings_file()
 	_check_text_scale_math()
 	_check_text_scale_drift_tripwire()
 	_check_chronicle_persistence()
@@ -15,15 +16,14 @@ func _init() -> void:
 	_check_audio_bus_routing()
 	_check_hint_reset_functions()
 	_check_reduce_motion_gate_sites()
+	_reset_test_settings_file()
 	print("PASS: settings + accessibility surface (WISettings/WIAudio/hint-replay/reduce-motion) holds")
 	quit(0)
 
 
 func _check_chronicle_persistence() -> void:
-	_clear_chronicle_section()
 	var script := load("res://src/ui/wi_settings.gd")
-	var empty = script.new()
-	empty.call("_load_settings")
+	var empty = _settings_instance(script)
 	assert((empty.latest_chronicle() as Dictionary).is_empty(),
 		"latest_chronicle must return an empty dictionary before any run is recorded")
 	empty.free()
@@ -31,10 +31,15 @@ func _check_chronicle_persistence() -> void:
 	var original := {
 		"schema": 1,
 		"name": "Sella",
+		"race": "Human",
 		"classes": [{"name": "Mage", "level": 4}],
+		"quests_completed": 2,
+		"victories": 3,
+		"sleeps": 5,
+		"ending": "The seal holds.",
 	}
-	var writer = script.new()
-	writer.call("_load_settings")
+	var expected: Dictionary = original.duplicate(true)
+	var writer = _settings_instance(script)
 	writer.record_chronicle(original)
 	original["classes"][0]["level"] = 99
 	var buffered_settings: ConfigFile = writer.get("_settings")
@@ -43,22 +48,30 @@ func _check_chronicle_persistence() -> void:
 		"record_chronicle must deep-copy nested input before retaining it")
 	var persisted := ConfigFile.new()
 	assert(persisted.load(SETTINGS_PATH) == OK,
-		"record_chronicle must write user://settings.cfg")
+		"record_chronicle must write the isolated settings path")
 	assert(persisted.has_section_key("chronicle", "latest"),
 		"record_chronicle must write [chronicle] latest")
-	assert(persisted.get_value("chronicle", "latest") == {"schema": 1, "name": "Sella", "classes": [{"name": "Mage", "level": 4}]},
+	assert(persisted.get_value("chronicle", "latest") == expected,
 		"[chronicle] latest must contain the recorded facts")
 	writer.free()
 
-	var reader = script.new()
-	reader.call("_load_settings")
+	var reader = _settings_instance(script)
 	var loaded: Dictionary = reader.latest_chronicle()
-	assert(loaded == {"schema": 1, "name": "Sella", "classes": [{"name": "Mage", "level": 4}]},
+	assert(loaded == expected,
 		"a fresh settings instance must round-trip the recorded Chronicle")
 	loaded["classes"][0]["level"] = 12
 	assert(reader.latest_chronicle()["classes"][0]["level"] == 4,
 		"latest_chronicle must isolate nested caller mutations with a deep copy")
 	reader.free()
+
+	var corrupt := ConfigFile.new()
+	assert(corrupt.load(SETTINGS_PATH) == OK, "corrupt-shape setup must load isolated settings")
+	corrupt.set_value("chronicle", "latest", {"schema": 1, "classes": null})
+	assert(corrupt.save(SETTINGS_PATH) == OK, "corrupt-shape setup must save isolated settings")
+	var corrupt_reader = _settings_instance(script)
+	assert((corrupt_reader.latest_chronicle() as Dictionary).is_empty(),
+		"latest_chronicle must reject a corrupt nested shape before title rendering")
+	corrupt_reader.free()
 	_clear_chronicle_section()
 
 
@@ -70,6 +83,21 @@ func _clear_chronicle_section() -> void:
 	config.erase_section("chronicle")
 	assert(config.save(SETTINGS_PATH) == OK,
 		"Chronicle test cleanup must preserve all non-Chronicle settings")
+
+
+func _settings_instance(script: Script) -> Node:
+	var instance = script.new()
+	instance.set("_settings_path", SETTINGS_PATH)
+	assert(instance.get("_settings_path") == SETTINGS_PATH,
+		"settings tests require an injectable path before any load/write")
+	instance.call("_load_settings")
+	return instance
+
+
+func _reset_test_settings_file() -> void:
+	if FileAccess.file_exists(SETTINGS_PATH):
+		assert(DirAccess.remove_absolute(SETTINGS_PATH) == OK,
+			"settings test must clean only its isolated file")
 
 
 func _check_text_scale_math() -> void:
@@ -115,8 +143,7 @@ func _assert_theme_const(src: String, key: String, expected: int) -> void:
 
 func _check_settings_persistence() -> void:
 	var script := load("res://src/ui/wi_settings.gd")
-	var a = script.new()
-	a.call("_load_settings")
+	var a = _settings_instance(script)
 	a.call("set_fullscreen", true)
 	a.call("set_text_scale_step", 2)
 	a.call("set_reduce_motion", true)
@@ -127,8 +154,7 @@ func _check_settings_persistence() -> void:
 	assert(int(a.call("combat_speed_step")) == 2, "set_combat_speed_step(2) must read back 2")
 	a.free()
 
-	var b = script.new()
-	b.call("_load_settings")
+	var b = _settings_instance(script)
 	assert(bool(b.call("is_fullscreen")) == true, "a fresh instance must load the persisted fullscreen=true")
 	assert(int(b.call("text_scale_step")) == 2, "a fresh instance must load the persisted text_scale_step=2")
 	assert(bool(b.call("reduce_motion")) == true, "a fresh instance must load the persisted reduce_motion=true")

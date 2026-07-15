@@ -1170,11 +1170,20 @@ func chronicle_facts() -> Dictionary:
 		"race": _sanitize_pc_race(pc_race).capitalize(),
 		"classes": held_classes,
 		"quests_completed": _quests_completed_count(),
-		"victories": accomplishment_count("won_combat"),
+		"victories": accomplishment_count("victories"),
 		"sleeps": times_slept,
-		"ending": "The seal holds. Liscor counts you among its own.",
+		"ending": _act_beat_text("seal_holds"),
 	}
 	return facts
+
+
+func _act_beat_text(beat_id: String) -> String:
+	var catalog: Dictionary = _combat_config.get("acts", {})
+	for act: Dictionary in catalog.get("acts", []):
+		for beat: Dictionary in act.get("beats", []):
+			if String(beat.get(WIKeys.ID, "")) == beat_id:
+				return String(beat.get("text", ""))
+	return ""
 
 
 func act_summary() -> Dictionary:
@@ -1506,6 +1515,8 @@ func resolve_combat() -> void:
 		_mark_skill_used(skill_id)
 	var entity: Dictionary = find_entity(_pending_encounter)
 	if combat.outcome["victory"]:
+		# CONTRACT: bank once per won encounter, outside the multi-id on_victory loop.
+		record_accomplishment("victories")
 		var victories: Variant = entity.get("on_victory", "won_combat")
 		for vid: Variant in (victories if victories is Array else [victories]):
 			record_accomplishment(String(vid))
