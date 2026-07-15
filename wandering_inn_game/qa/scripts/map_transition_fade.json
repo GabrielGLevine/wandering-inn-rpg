@@ -1,0 +1,22 @@
+{
+ "_comment": "Issue #87 map-transition closeout. Walks the live inn door into the floodplains. Ordinary headless/TestDriver runs collapse the 0.25-second presentation while preserving the exact MAP_CHANGED/mood/map-render stream; windowed runs with --map-transition-visual=1 capture the source field, the partially revealed destination, and the fully revealed destination.",
+ "steps": [
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "assert_state", "path": "current_map", "equals": "inn"},
+  {"action": "assert_state", "path": "player_cell", "equals": [2, 3]},
+  {"action": "screenshot", "name": "01_inn_before_transition"},
+  {"action": "move", "direction": "right", "steps": 12},
+  {"action": "assert_state", "path": "player_cell", "equals": [14, 3]},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "floodplains", "cell": [7, 6]}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_mood_applied", "payload_contains": {"map": "floodplains", "phase": "day"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_map_rendered", "payload_contains": {"map": "floodplains"}, "timeout_sec": 5},
+  {"action": "wait_frames", "frames": 1},
+  {"action": "screenshot", "name": "02_floodplains_mid_reveal"},
+  {"action": "assert_state", "path": "current_map", "equals": "floodplains"},
+  {"action": "assert_state", "path": "player_cell", "equals": [7, 6]},
+  {"action": "wait_frames", "frames": 10},
+  {"action": "screenshot", "name": "03_floodplains_revealed"},
+  {"action": "wait_frames", "frames": 10}
+ ]
+}

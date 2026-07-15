@@ -43,6 +43,26 @@
    }
   },
   {
+   "script": "map_transition_fade",
+   "seed": 9,
+   "note": "#87 live inn-door crossing; headless collapse + opt-in paced transition frames",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn"
+    ],
+    "fixtures": [],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "night_phase"
+    ]
+   }
+  },
+  {
    "script": "dialogue_walkthrough",
    "seed": 9,
    "note": "Erin/Selys story path (meets Relc, then goblin_encounter_2)",

@@ -21,9 +21,10 @@ leaving simulation state, map-change events, and headless QA streams unchanged.
 4. Headless and ordinary TestDriver runs collapse both waits and call the
    rebuild synchronously. No new domain event is emitted, so existing QA event
    logs and assertions remain unchanged.
-5. A `--map-transition-visual` user argument opts a windowed TestDriver run
-   into real pacing for screenshot evidence only. It changes timing, never
-   state or event payloads.
+5. A `--map-transition-visual=1` user argument opts a windowed TestDriver run
+   into real pacing for screenshot evidence only. It holds the veil briefly at
+   50% after the destination's first complete render, making the midpoint proof
+   deterministic without changing state or event payloads.
 
 ## Visual and input contract
 
@@ -40,9 +41,9 @@ leaving simulation state, map-change events, and headless QA streams unchanged.
 - Source/unit contracts pin persistent-layer ownership, half-duration math,
   rebuild-at-black ordering, collapse rules, and input gating.
 - Existing crossing canonicals retain their exact headless behavior.
-- A focused `map_transition_fade` canonical crosses inn to street and captures
+- A focused `map_transition_fade` canonical crosses inn to the floodplains and captures
   a partially covered new-map frame plus a fully revealed frame when run
-  windowed with `--map-transition-visual`.
+  windowed with `--map-transition-visual=1`.
 - The final visual read checks full-screen cover, no old/new geometry mix,
   unchanged HUD placement after reveal, and no stuck black veil.
 

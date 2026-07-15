@@ -146,6 +146,8 @@ func _title_continue_caption_contract_holds(source: String) -> bool:
 func _main_map_transition_contract_holds(source: String) -> bool:
 	if source.find("const MAP_TRANSITION_HALF_SECONDS := 0.125") == -1:
 		return false
+	if source.find("const MAP_TRANSITION_VISUAL_HOLD_SECONDS := 0.25") == -1:
+		return false
 	var ready := _function_body(source, "_ready")
 	if ready.find("_ensure_map_transition_overlay()") == -1 \
 			or ready.find("_ensure_map_transition_overlay()") > ready.find("swap_to_title()"):
@@ -174,6 +176,9 @@ func _main_map_transition_contract_holds(source: String) -> bool:
 		"_transition_delay(MAP_TRANSITION_HALF_SECONDS)",
 		"await _fade_map_transition(1.0, half_seconds)",
 		"rebuild.call()",
+		"if half_seconds > 0.0:",
+		"await RenderingServer.frame_post_draw",
+		"await _hold_map_transition_midpoint()",
 		"await _fade_map_transition(0.0, half_seconds)",
 		"_map_transition_overlay.visible = false",
 		"_map_transition_active = false",
@@ -182,8 +187,10 @@ func _main_map_transition_contract_holds(source: String) -> bool:
 			return false
 	var covered := transition.find("await _fade_map_transition(1.0, half_seconds)")
 	var rebuilt := transition.find("rebuild.call()")
+	var settled := transition.find("await RenderingServer.frame_post_draw")
+	var held := transition.find("await _hold_map_transition_midpoint()")
 	var revealed := transition.find("await _fade_map_transition(0.0, half_seconds)")
-	if not (covered < rebuilt and rebuilt < revealed):
+	if not (covered < rebuilt and rebuilt < settled and settled < held and held < revealed):
 		return false
 	if transition.find("ObservableBus.emit_domain_event") != -1:
 		return false
@@ -206,6 +213,14 @@ func _main_map_transition_contract_holds(source: String) -> bool:
 	var visual_opt_in := _function_body(source, "_map_transition_visual_requested")
 	if visual_opt_in.find("QAPaths.user_args().get(\"map-transition-visual\", \"\") == \"1\"") == -1:
 		return false
+	var visual_hold := _function_body(source, "_hold_map_transition_midpoint")
+	for clause: String in [
+		"if not _map_transition_visual_requested()",
+		"_map_transition_overlay.modulate.a = 0.5",
+		"create_timer(MAP_TRANSITION_VISUAL_HOLD_SECONDS)",
+	]:
+		if visual_hold.find(clause) == -1:
+			return false
 	var input := _function_body(source, "_input")
 	if input.find("_map_transition_active") == -1 \
 			or input.find("get_viewport().set_input_as_handled()") == -1:

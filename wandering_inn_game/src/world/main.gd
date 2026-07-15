@@ -8,6 +8,7 @@ extends Control
 const WORLD_VIEWPORT_SIZE := Vector2(320.0, 180.0)
 const WORLD_SCALE := 4.0
 const MAP_TRANSITION_HALF_SECONDS := 0.125
+const MAP_TRANSITION_VISUAL_HOLD_SECONDS := 0.25
 const MESSAGE_LAYER_SCRIPT := preload("res://src/ui/message_layer.gd")
 const COMBAT_SCREEN_SCRIPT := preload("res://src/combat/combat_screen.gd")
 const DIALOGUE_PANEL_SCRIPT := preload("res://src/ui/dialogue_panel.gd")
@@ -199,6 +200,9 @@ func transition_map(rebuild: Callable) -> void:
 	var half_seconds := _transition_delay(MAP_TRANSITION_HALF_SECONDS)
 	await _fade_map_transition(1.0, half_seconds)
 	rebuild.call()
+	if half_seconds > 0.0:
+		await RenderingServer.frame_post_draw
+		await _hold_map_transition_midpoint()
 	await _fade_map_transition(0.0, half_seconds)
 	_map_transition_overlay.visible = false
 	_map_transition_active = false
@@ -225,6 +229,13 @@ func _transition_delay(seconds: float) -> float:
 
 func _map_transition_visual_requested() -> bool:
 	return QAPaths.user_args().get("map-transition-visual", "") == "1"
+
+
+func _hold_map_transition_midpoint() -> void:
+	if not _map_transition_visual_requested():
+		return
+	_map_transition_overlay.modulate.a = 0.5
+	await get_tree().create_timer(MAP_TRANSITION_VISUAL_HOLD_SECONDS).timeout
 
 
 func _layout_viewport_container() -> void:

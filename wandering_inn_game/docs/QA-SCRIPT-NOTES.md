@@ -17,6 +17,7 @@ Generating this complete inventory resolved the drift; CI now checks it.
 |---|---:|---|---|---|
 | `load_gate` | none | smoke, full | `—` | native-only resource compile/load gate |
 | `inn_walkthrough` | 9 | full | `—` | full inn journey, no screenshots in headless; issue #40's canonical diagonal leg (move_diag out-and-back, net zero) opens it |
+| `map_transition_fade` | 9 | full | `—` | #87 live inn-door crossing; headless collapse + opt-in paced transition frames |
 | `dialogue_walkthrough` | 9 | full | `—` | Erin/Selys story path (meets Relc, then goblin_encounter_2) |
 | `dialogue_hub_loop` | 9 | full | `—` | conversation hub loop-backs + hide_when sweep |
 | `quest_errand_fight` | 9 | full | `—` | errand path with a goblin fight |
