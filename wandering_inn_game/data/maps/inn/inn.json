@@ -836,7 +836,7 @@
    }
   },
   {
-   "_comment": "CONSTRAINT: the free approach cell is (3,7), facing down (same column as before, shifted onto the wall).",
+   "_comment": "CONSTRAINT: the free approach cell is (3,7), facing down (same column as before, shifted onto the wall). GH#128: the vine door must be EARNED -- base sprite stays garden_door_inner but the at:0 visual_state (always satisfied) hides it, and the at:1 entry un-hides + swaps observe once garden_door_unlocked banks (order-sensitive later-satisfied-wins, world.gd _resolve_entity_render; hidden is render-only per wi_game.gd entity_present doc -- the bare-wall interact/observe/toast still work). door_when already gates traversal on the same counter, so sight and passage flip together at the sleep beat. visual_states re-render live on the counter change (_refresh_entity_visual), so no same-map staleness.",
    "id": "garden_door",
    "kind": "prop",
    "cell": [
@@ -858,7 +858,24 @@
      10
     ],
     "open_toast": "The vines part like a curtain, and the light beyond doesn't flicker."
-   }
+   },
+   "visual_states": [
+    {
+     "when": {
+      "counter": "garden_door_unlocked",
+      "at": 0
+     },
+     "hidden": true
+    },
+    {
+     "when": {
+      "counter": "garden_door_unlocked",
+      "at": 1
+     },
+     "hidden": false,
+     "observe": "A door of living vines, woven shut and breathing faintly of green. It wasn't here before, and it doesn't pretend otherwise."
+    }
+   ]
   },
   {
    "_comment": "talk_pool + a static dialogue fallback (no conversation graph, the Renn/Ilvo/Yelra pool-presence idiom).",
