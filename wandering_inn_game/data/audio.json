@@ -768,7 +768,8 @@
    "payload": {
     "map": "brothers_parlor"
    },
-   "stream": "res://assets/audio/music/junkala_childhood_friends.ogg",
+   "_comment": "GH#133: was junkala_childhood_friends (wholesome-nostalgia cue on a gang den, playtest finding). definitely_our_town = territorial swagger; EAR-GATE rides the v0.8.0 human audio pass.",
+   "stream": "res://assets/audio/music/definitely_our_town.ogg",
    "bus": "Music",
    "volume_db": -8.0,
    "loop": true

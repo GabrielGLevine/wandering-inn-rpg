@@ -259,6 +259,38 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   hats-off tell shared with Wilovan). Supersedes the 2026-07-11
   do-not-reference note.
 
+## Ratici (wiki+primary-text verified 2026-07-16; #133 ship approval)
+- Canon (all ≤ mid-Vol-7, primary-text checked): Drake, notably SHORT —
+  the deliberate visual inverse of Wilovan's tall Gnoll bulk. Scale
+  color NOT ATTESTED (art choice free — flag as invented-within-gap).
+  Innocuous BROWN clothes (refuses noble dress, hates reading as
+  lower-class — both at once); FLOPPY CAP accommodating his neck-spines
+  (vs Wilovan's tall not-quite-top-hat). Hats-off tell attested from
+  first appearance ("Don't make us take off our hats...").
+- Class ceiling: [Gentleman Thief] (7.24, self-named). NEVER name
+  [Aerial Dodge] — Vol-8 Skill (8.45 O) sitting UNCITED on his wiki
+  page; verified absent from Vol-7 text. Shown-but-unnamed craft usable
+  as flavor: plucks spells/illusions out of the air, leans out of a
+  listening spell's path, reads a room's stash spots at a glance.
+- Voice: fast and rough-edged under a gentleman's varnish — dropped
+  g's ("Somethin'", "'Specially"), over-reaching fancy words used
+  slightly wrong, clipped telegraphic register when reporting facts;
+  semi-literate (reads slowly, a little self-conscious about Wilovan's
+  vocabulary). Opens the MENACE while Wilovan opens the COURTESY.
+  Never crude; the cap gets touched or adjusted where another man
+  would show temper.
+- Code (shared): courtesy to all (Miss/sir), debts cut both ways,
+  never harm or steal from children (7.24), "serendipitous" as the
+  Brotherhood codeword.
+- v1 sprite contract: SHORT Drake in browns + floppy cap beside tall
+  Wilovan; existing Drake NPC base + tint acceptable as flagged
+  placeholder, PixelLab bespoke pass queued in VISUAL-LOG.
+- DO-NOT-TOUCH (Vol 8+): Oteslia arc, casino job, Crimshaw's death,
+  Wilovan's class reveal, nursery-rhyme verse 2, Rickel,
+  Normen/Alcaz knighthood. Gray-zone (late Vol 7, past Book 17):
+  guarding-Erin reveal (7.52), "until the hats come off" phrasing
+  (7.56) — grandfathered TELL is fine, the full SAYING is not.
+
 ## Frazzled Drayman (profile added 2026-07-11; #17 audit find)
 - OUR INVENTION (no canon figure) — the [Diplomat] system's free-entry
   persuade NPC (street 19,14). Voice contract, capturing what the
