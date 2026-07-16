@@ -13,6 +13,30 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
+## 🏃 RUNNING
+
+- **Class & Skill expansion Waves A+B** — proposal APPROVED 2026-07-15;
+  rulings: A+B scope, witch ungated+flagged, [Flash Step] = necro L7 +
+  mage L11, necro evolution parked. Spec (design authority):
+  `docs/design/class-expansion-spec.md`. Issues WA/WB on the board.
+  [Eagle Eyes] AMBIGUOUS-lean-PASS flag: ACCEPTED (deference directive).
+
+## 🩹 PLAYTEST TRIAGE (2026-07-15, mid-session user report — all filed)
+
+- **#127 props y-sort over player** (inn stairs/rugs/bed) — milestone-scoped
+  visual class; VISUAL-LOG entry added.
+- **#128 garden door visible before earned** — content-gate fidelity;
+  data-only (`visual_states` swap); candidate early standalone PR.
+- **#129 inn music restarts across floors** — audio polish; fold ear-gate
+  into the queued v0.8.0 audio pass.
+- **#130 onboarding: direct player to bed for first class** — high-value;
+  standalone, rides the expansion arc's playtest gate.
+- **#133 Brothers' parlor underpopulated + wrong music** — 3 entities
+  total today; music = junkala_childhood_friends (wholesome cue on a gang
+  den). Mockup-informed population plan in the issue; Mister Sable draft
+  exists unwired; **needs user ruling on shipping Ratici** (standing
+  do-not-reference note at character-profiles.md:255).
+
 ## 📋 QUEUE (value order)
 
 1. **Human playtest of v0.8.0** — ear-gated audio pass (footstep families
@@ -22,6 +46,13 @@ merged`), not here.
 3. **#19 Steam:** HOLD — user-secret provisioning + #20 ruling.
 4. **#123 canonical redesigns** (social_loop/garden_walkthrough/
    class_evolution_loop pre-hold the class their script earns) — post-release.
+5. **Class/Skill expansion proposal — USER-GATED:**
+   `docs/design/class-skill-expansion-proposal.md` (2026-07-15). Four new
+   base classes ([Runner]→[Courier], [Hedge Witch]→[Witch], [Necromancer],
+   [Cook]→[Chef]) + [Scout] consolidation (rogue×archer) + mage L7
+   [Detect Magic]; three new overworld verbs (blink/ward/companion), all
+   wiki-verified vs the Book-17 bar (incl. [Flash Step] = Pisces' spell).
+   Five flagged decisions in §8 need rulings before any lane dispatches.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 

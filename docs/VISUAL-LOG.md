@@ -16,6 +16,32 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Windowed map-tour findings (2026-07-15)
+
+Source: full 10-region windowed walkthrough tour (seed 9, all scripts
+`QA_RESULT: PASS`); screenshots ephemeral under `wandering_inn_game/qa_output/`.
+
+- [ ] FIELD/DARK-MAPS — enemies/interactables on **field** (exploration, not
+  combat) dark-mood maps read near-invisible before the player casts [Light].
+  Distinct from the CLOSED COMBAT/DARK-ARENAS entry (GH#28 fixed combatant
+  chips/HP legibility on the combat board) and the sewers-arena-silhouette
+  entry (fixed) — this is the pre-combat FIELD render. Reproduced this tour:
+  `dungeon_peek/00_dungeon_approach_corner.png` (the field spider bottom-right
+  is barely separable from the floor at 4x zoom — a 1x player would miss it)
+  and `invrisil_walkthrough/07_alley_lantern_night.png` (shadowed NPCs
+  bottom-right sit below the lantern pool, nearly black). Sewers reads fine
+  once [Light] is cast (`sewers_walkthrough/04_ice_crossing.png`). Candidate:
+  a small ambient-brightness floor on field maps that carry live encounters or
+  interactables under the darkest mood pins, mirroring the combat-board
+  `_legibility_modulate` floor already shipped for the arena side. First-seen:
+  2026-07-15 windowed tour. Needs a windowed read of any fix (the dark IS the
+  intended mood on stealth/dungeon maps — a floor must not wash out the
+  atmosphere), so left for a pass that can look at the result.
+- NOTE: the tour also re-observed the permanent field-skill detail legend
+  growing with progression (expanded `[Basic Cleaning]…` panel on nearly every
+  map). NOT re-logged — this is the existing UI/FIELD-READOUT entry, already
+  PROMOTED to issue #115 (owner corrected to `field_hotbar.gd`).
+
 ### GH#113 evidence audit (2026-07-14)
 
 All 20 open entries were rerun in real Godot 4.7 windowed sessions against
@@ -1454,3 +1480,9 @@ events, and result files live in the gitignored
   Windowed-verified via a throwaway teleport+autoplay probe (deleted):
   the pair now fights on open grass among boulders, no dummies/pells
   anywhere in frame.
+
+## 2026-07-15 (user playtest report)
+- Props y-sort OVER the player sprite in the inn — named repros: stairs,
+  rugs, bed (rugs are floor decor and should never win the sort; stairs/
+  bed likely need `field_y_sort_bias_px` or a below-sort floor band).
+  Filed as GH#127; sweep other maps for the same class when fixing.

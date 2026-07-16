@@ -252,7 +252,12 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   apology-before-threat, "recover" never "steal", removes his hat
   plain-and-slow in respect. One dash per line (his `ways` node blew
   the budget — fix-lane item).
-- Partner Ratici exists in canon; NOT shipped — do not reference.
+- Partner Ratici: SHIP APPROVED (user ruling 2026-07-16, #133) —
+  grandfathered-safe by name (mid-Vol-7, spoiler-cutoff.md item 3); his
+  Vol 8+ arcs stay out. Profile needed before his lane (wiki-verify:
+  Drake, [Gentleman Thief] attribute 7.24 is the class-name ceiling;
+  hats-off tell shared with Wilovan). Supersedes the 2026-07-11
+  do-not-reference note.
 
 ## Frazzled Drayman (profile added 2026-07-11; #17 audit find)
 - OUR INVENTION (no canon figure) — the [Diplomat] system's free-entry
