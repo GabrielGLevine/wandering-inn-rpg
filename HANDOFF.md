@@ -13,20 +13,23 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-16)
+## 🏃 RUNNING (2026-07-16, post-merge)
 
-- **PR #135 OPEN (closes #131 Wave A)** — five class lines, 14 Skills,
-  15 props, dialogue chains; whole-branch review done, Importants fixed,
-  [ci-full] on head commit. NEXT: squash-merge when CI green, then
-  post-merge main-tree re-gate (import pass NOT needed — no new .gd).
-- **After #135 merges:** #128 finish (branch exists, WIP-committed:
-  unlocked-state re-probe, delete _probe_128_door.json, sweep, PR) →
-  WB #132 (engine verbs; spec §7) ∥ playtest wave #129/#130/#133
-  (Ratici SHIP-APPROVED, profile needed) → #127 y-sort LAST.
-- **USER ACKs pending:** [Eagle Eyes] drift flag (CHOICES); #134 Wave D
-  ruling (Alchemist/Druid ready, Priest fenced, Thief deferred).
-- **Spec-lens re-run DROPPED** (deference log): canon lens ran + fixed;
-  whole-branch diff review superseded the remaining four lenses.
+- **MERGED today: #135 (closes #131 Wave A — five class lines, 14
+  Skills, 15 props, teaching chains) and #136 (closes #128 garden door
+  hidden until earned).** Both CI-green, post-merge main re-gated.
+- **NEXT (value order): WB #132** (blink/ward/companion engine verbs,
+  spec §7; single implementer on src) ∥ **playtest wave** #129
+  (music continuity), #130 (bed onboarding), #133 (parlor population,
+  Ratici SHIP-APPROVED — profile needed first, wiki-verify
+  [Gentleman Thief] 7.24 ceiling); **#127 y-sort LAST** (world.gd
+  collides with WB).
+- **USER ACKs pending:** [Eagle Eyes] drift flag; #134 Wave D ruling
+  (Alchemist/Druid recommended, Priest fenced, Thief deferred).
+- Wave A retro notes: full unit sweep is now IN the controller gate
+  list (CI unit job caught the kettle/test_sim_core collision the
+  canonical sweep missed); leak-check CI job also runs the QA-notes
+  drift validator (render_qa_notes.py --write after adding scripts).
 
 ## 🩹 PLAYTEST TRIAGE (2026-07-15, mid-session user report — all filed)
 
