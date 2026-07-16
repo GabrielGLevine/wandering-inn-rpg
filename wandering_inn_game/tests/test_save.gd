@@ -305,7 +305,26 @@ func _init() -> void:
 	(bad_status_data["state"] as Dictionary)["seen_statuses"] = "slowed"
 	assert(not WISave.apply(_new_game(), bad_status_data), "wrong-typed seen_statuses rejected")
 
-	assert(WISave.VERSION == 5, "VERSION bumped to 5 for M7 weapons+equipment")
+	assert(WISave.VERSION == 6, "VERSION bumped to 6 for GH#130 slept backfill")
+
+	# GH#130 v5->v6 arm: a pre-#130 save with sleeps behind it gains slept=1
+	# exactly once; a never-slept v5 save gains nothing.
+	var v5_slept_game := _new_game()
+	v5_slept_game.record_accomplishment("cleaned_the_inn")
+	var v5_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(v5_slept_game)))
+	v5_data["version"] = 5
+	(v5_data["state"] as Dictionary)["times_slept"] = 7
+	((v5_data["state"] as Dictionary)["accomplishments"] as Dictionary).erase("slept")
+	var v5_loaded := _new_game()
+	assert(WISave.apply(v5_loaded, v5_data), "v5 save with sleeps applies")
+	assert(v5_loaded.accomplishment_count("slept") == 1, "v5->v6 backfills slept to exactly 1 (capped, not times_slept)")
+	var v5_fresh_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	v5_fresh_data["version"] = 5
+	(v5_fresh_data["state"] as Dictionary)["times_slept"] = 0
+	((v5_fresh_data["state"] as Dictionary)["accomplishments"] as Dictionary).erase("slept")
+	var v5_fresh_loaded := _new_game()
+	assert(WISave.apply(v5_fresh_loaded, v5_fresh_data), "never-slept v5 save applies")
+	assert(v5_fresh_loaded.accomplishment_count("slept") == 0, "never-slept v5 save gains no slept backfill")
 
 	var street_v3_original := _new_game()
 	street_v3_original.transition("street", Vector2i(0, 0))

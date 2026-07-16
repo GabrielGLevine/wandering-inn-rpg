@@ -1,0 +1,36 @@
+{
+ "_comment": "GH#130 fixture: fresh classless player standing below Erin at (7,3) facing up, tutorial chore banked (cleaned_the_inn 1 -> helper pending at first sleep), never slept. Reachable story position: boot -> clean the dirty table -> walk to Erin.",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   7,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {},
+  "accomplishments": {
+   "cleaned_the_inn": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {
+   "weapon": "",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 1,
+  "rng_state": "-6393592048753323481"
+ }
+}

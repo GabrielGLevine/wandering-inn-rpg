@@ -1594,6 +1594,9 @@ func sleep() -> void:
 			delivery_failed = true
 	actions_since_sleep = 0
 	times_slept += 1
+	# GH#130: the only unconditional sleep counter -- talk-pool/dialogue gates can
+	# now express "has slept" (times_slept is a plain var, invisible to gates).
+	record_accomplishment("slept")
 	_emit(WIEvents.PHASE_CHANGED, {"phase": phase()})
 	if _combat_config.is_empty():
 		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
