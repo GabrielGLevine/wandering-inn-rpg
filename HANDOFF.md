@@ -13,13 +13,41 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING
+## 🏃 RUNNING (state at 2026-07-16 QUIESCE, session reset ~4h)
 
-- **Class & Skill expansion Waves A+B** — proposal APPROVED 2026-07-15;
-  rulings: A+B scope, witch ungated+flagged, [Flash Step] = necro L7 +
-  mage L11, necro evolution parked. Spec (design authority):
-  `docs/design/class-expansion-spec.md`. Issues WA/WB on the board.
-  [Eagle Eyes] AMBIGUOUS-lean-PASS flag: ACCEPTED (deference directive).
+- **CODEX LANE LIVE: #131 Wave A mechanical slice** on branch
+  `issue/131-class-expansion-wave-a` (base = main @ spec commit).
+  Owned: classes/skills/items/sprites JSON + icons, wi_game.gd
+  completed_delivery one-liner, tests + sim rows, 5 QA loops. EXCLUDED
+  (controller-side, post-reset): dialogue chains, map props, voice copy.
+  Expected-red disclosed: test_content on witch_lessons +
+  studied_necromancy until L-DIALOGUE lands. Controller gates before any
+  merge (wi-delegating-to-codex guardrails 1-5 apply). DO NOT edit the
+  worktree while this runs.
+- **#128 garden door**: WIP-committed on `issue/128-garden-door-visual`
+  — hidden-flip verified both states (windowed). Remaining: re-probe
+  unlocked state on final patch, delete `_probe_128_door.json`, ci_sweep
+  --touching inn.json, reviewer pass, PR.
+- **Spec adversarial verify**: canon lens DONE + 7 fixes applied
+  (in the spec commit). 4 lenses (progression/balance/seams/locks)
+  pending — resume `Workflow({scriptPath: <session workflows dir>/
+  spec-adversarial-verify-*.js, resumeFromRunId: "wf_b1464094-3bd"})`
+  post-reset (canon returns cached); apply findings as a Wave-A fix
+  wave BEFORE merging Codex's branch.
+- **Wave D canon checks** (user ask: [Alchemist]/[Druid]/[Thief]/
+  [Priest]): agent killed at QUIESCE mid-research; re-dispatch
+  post-reset (partial: Octavia+Pawn pages captured; needs Leveling
+  Histories, Ratici, druid/thief sweeps). Priest = lore-sensitive
+  (dead gods), fail-until-proven.
+- **Class & Skill expansion rulings** (2026-07-15/16): A+B scope; witch
+  ungated+flagged; [Flash Step] = necro L7 + mage L11; necro evolution
+  parked; Ratici SHIP APPROVED; playtest issues execute after class
+  work or interleaved. [Eagle Eyes] drift-flag ACCEPT logged — **user
+  ACK still requested** (or say "swap it" for an ORIGINAL name).
+- **Sequencing after Wave A merges**: WB (#132 engine verbs) ∥ playtest
+  wave (#129 music-continuity, #130 bed onboarding, #133 parlor
+  population w/ Ratici + music swap [rec: definitely_our_town.ogg,
+  ear-gate]); #127 y-sort LAST (world.gd collides with WB).
 
 ## 🩹 PLAYTEST TRIAGE (2026-07-15, mid-session user report — all filed)
 
