@@ -59,6 +59,7 @@ func _init() -> void:
 		known_skill_ids[String(sk["id"])] = true
 
 	var ids: Dictionary = {}
+	var by_id: Dictionary = {}
 	var weapon_families_present: Dictionary = {}
 
 	for entry: Dictionary in items_config["items"]:
@@ -70,6 +71,7 @@ func _init() -> void:
 		if ids.has(id):
 			_fail("duplicate item id: " + id)
 		ids[id] = true
+		by_id[id] = entry
 
 		var kind: String = String(entry["kind"])
 		if not VALID_KINDS.has(kind):
@@ -163,5 +165,14 @@ func _init() -> void:
 		if not weapon_families_present.has(tag):
 			_fail("skills.json uses weapon tag %s but no items.json entry has that weapon_family" % tag)
 
-	print("PASS: items data is well-formed and cross-referenced against skill weapon tags")
+	var fine_meal: Dictionary = by_id.get("fine_meal", {})
+	var signature_meal: Dictionary = by_id.get("signature_meal", {})
+	var fine_next: Dictionary = (fine_meal.get("use_effect", {}) as Dictionary).get("next_fight", {})
+	var signature_next: Dictionary = (signature_meal.get("use_effect", {}) as Dictionary).get("next_fight", {})
+	if fine_next.size() != 1 or not fine_next.has("hp_mod") or int(fine_next["hp_mod"]) != 2:
+		_fail("fine_meal must bank exactly next_fight {hp_mod: 2}")
+	if signature_next.size() != 2 or not signature_next.has("hp_mod") or int(signature_next["hp_mod"]) != 2 or not signature_next.has("damage_mod") or int(signature_next["damage_mod"]) != 1:
+		_fail("signature_meal must bank exactly next_fight {hp_mod: 2, damage_mod: 1}")
+
+	print("PASS: items data is well-formed; fine_meal/signature_meal next_fight payloads are exact; skill weapon tags are cross-referenced")
 	quit(0)

@@ -38,6 +38,10 @@ func _init() -> void:
 	var necro_l3 := WIProgression.check_level_ups({"necromancer": 1}, {"won_combat": 3, "death_cast": 4}, catalog)
 	assert(necro_l3.size() == 2 and int(necro_l3[1]["level"]) == 3 and (necro_l3[1]["grants"] as Array) == ["deathbolt"], "necromancer walks to L3 and grants deathbolt")
 	assert(WIProgression.granted_skills({"necromancer": 3}, catalog).has("bone_dart"), "necromancer L3 retains bone_dart")
+	var dual_necro3 := WIProgression.granted_skills({"mage": 3, "necromancer": 3}, catalog)
+	assert(dual_necro3.has("frost_bolt") and dual_necro3.has("bone_dart") and dual_necro3.has("deathbolt"), "mage 3/necromancer 3 folds both class kits")
+	var dual_necro7 := WIProgression.granted_skills({"mage": 5, "necromancer": 7}, catalog)
+	assert(dual_necro7.has("frost_bolt") and dual_necro7.has("bone_dart") and dual_necro7.has("deathbolt"), "mage 5/necromancer 7 folds both class kits")
 	assert(WIProgression.granted_skills({"cook": 5}, catalog).has("perfect_recall"), "cook L5 grants perfect_recall")
 
 	assert(WIProgression.check_class_gains({}, {}, catalog).is_empty(), "classless + no accomplishments = no gain")

@@ -53,6 +53,8 @@ const EXPECTED_ITEMS := {
 	"warding_salt_pinch": ["Worth 7 gold"],
 	"mending_draught": ["Heals 8 HP (single use)", "Worth 10 gold"],
 	"remedy_draught": ["Heals 8 HP (single use)", "Worth 10 gold"],
+	"fine_meal": ["Next fight: +2 HP (single use)", "Worth 8 gold"],
+	"signature_meal": ["Next fight: +1 damage, +2 HP (single use)", "Worth 14 gold"],
 	"tempering_oil": ["Next fight: +1 damage (single use)", "Worth 12 gold"],
 	"construct_core_shard": ["+3 HP", "Reduces every hit taken by 1", "Resonance 2"],
 	"warded_coil_charm": ["+2 HP", "Resonance 1"],
