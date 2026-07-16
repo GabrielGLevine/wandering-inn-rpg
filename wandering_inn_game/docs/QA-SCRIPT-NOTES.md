@@ -37,6 +37,11 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `combat_touch_input` | 9 | full | `—` | Issue #106 (mobile web v1): combat touch event parity -- adjacent-cell tap = arrow-move equivalent (incl. diagonal/far/pool-empty no-ops), Dash armed then a tap on the confirm chip fires it (dashed{move_pool:3}, byte-identical to Enter), Attack targeting opened then a tap missing every candidate cancels (Esc-equivalent, AP unspent), reopened Attack + a tap on training_dummy_b (not the default candidate) re-points the aim then a confirm-chip tap fires ON DUMMY_B specifically |
 | `combat_abandon` | 9 | full | `post_tutorial` | pause opens mid-fight (HOTBAR resting mode), Abandon returns to last autosave; combat_resolved never fires |
 | `class_evolution_loop` | 9 | full | `near_evolution` | grind -> sleep -> class_evolved + evolved kit |
+| `cook_chef_loop` | 9 | full | `near_cook_chef` | Cook 10 threshold -> [Chef] evolution |
+| `runner_courier_loop` | 9 | full | `near_runner_courier` | delivery threshold -> [Courier] evolution |
+| `hedge_witch_loop` | 9 | full | `near_hedge_witch` | fixture-banked [Hedge Witch] gain -> [Witch] + combat kit |
+| `necromancer_loop` | 9 | full | `near_necromancer` | fixture-banked [Necromancer] gain + L3 combat kit |
+| `scout_consolidation_loop` | 9 | full | `near_scout_consolidation` | rogue/archer lines -> [Scout] floor + combat kit |
 | `consolidation_flow` | 9 | full | `near_consolidation` | offer/decline/re-offer/accept -> [Spellsword] |
 | `save_migration` | 1 | full | `v2_format` | v2->v3 migration + v1 pause-load rejection + stale-slot defeat-reload |
 | `consolidation_reload` | 9 | full | `pending_offer` | pause-load reconstructs the consolidation prompt mid-offer |
