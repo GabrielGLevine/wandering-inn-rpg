@@ -13,23 +13,29 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-16 late)
+## 🏃 RUNNING (2026-07-16 evening)
 
-- **MERGED today: #135 (Wave A), #136 (#128 garden door), #137 (#129
-  music continuity — ear-gate still rides the human audio pass).**
-- **Wave B #132 LIVE — USER-DISPATCHED Codex session
-  019f6ce0-a46a-7b61-b515-b87c50ac7912** running the committed
-  completion spec (docs/design/wave-b-completion-spec.md, branch
-  issue/132-wave-b-verbs @ 0cc5562 + salvage e9e5380). The main
-  checkout is OWNED by that run — no edits there. Controller monitors
-  via the session rollout file (~/.codex/sessions/2026/07/16/). On
-  completion: commit, alarm-wrapped full gates, windowed shots (blink
-  streak/ward charm/follower/reduced-motion), whole-branch review, PR.
-  History: first run wedged 4h in a gate (assert-hang family) and was
-  canceled; salvage committed; spec bakes in alarm-wrapping.
-- **Then:** #130 bed onboarding + #133 parlor (Ratici approved,
-  profile first) — controller voice work; #127 y-sort LAST.
-- **USER pending:** #134 Wave D ruling; [Eagle Eyes] drift-flag ACK.
+- **FIVE MERGES TODAY: #135 (Wave A classes), #136 (#128 garden door),
+  #137 (#129 music continuity), #138 (#133 parlor + Ratici + music),
+  #139 (#130 bed nudge + slept counter, save v6).** Post-merge gates
+  green on each. Playtest triage queue from 2026-07-15/16: only #127
+  (y-sort) remains, blocked behind Wave B (world.gd).
+- **Wave B #132 — user-dispatched Codex session 019f6ce0 still live**
+  on the main checkout (branch issue/132-wave-b-verbs): tree shows the
+  three QA loops + world.gd visuals landed; currently ~35min quiet =
+  likely its gate battery. On completion: controller commits, REBASES
+  onto post-merge main (expected conflicts: wi_game.gd sleep() vs the
+  new slept bank, AGENTS.md seed table, qa/manifest — all controller-
+  owned resolutions), full alarm-wrapped gates, windowed shots,
+  whole-branch review, PR. If rollout stays silent past ~55min, treat
+  as wedge and ask the user before canceling THEIR session.
+- **USER pending:** #134 Wave D ruling; [Eagle Eyes] drift-flag ACK;
+  ear-gates (parlor music swap + inn music continuity) ride the human
+  audio pass.
+- Notable process catch today: #133's first commit CLAIMED the music
+  swap; review json-equality caught the no-op edit (audio.json music
+  lives in the `music` array, not `events`). Fold into wi-* library
+  next session.
 
 ## 🩹 PLAYTEST TRIAGE (2026-07-15, mid-session user report — all filed)
 
