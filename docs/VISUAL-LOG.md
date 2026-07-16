@@ -1496,3 +1496,12 @@ events, and result files live in the gitignored
   `cellar_wardwork` (`dusty_scroll`), `lift_overlook`/`rooftop_line`
   (`riverfarm_fence_ew`), `anchor_socket` (`pedestal`), and
   `hilltop_cairn` (`boulder`) with purpose-drawn sprites in a later art pass.
+
+## 2026-07-16 (#133 parlor population)
+- ratici sprite = pc_drake_m + brown tint PLACEHOLDER — canon wants a
+  SHORT Drake with a floppy cap (neck-spines); bespoke PixelLab pass
+  queued (pair silhouette vs tall Wilovan is the read).
+- parlor_hat_stand sprite = crate PLACEHOLDER (no rack/hook stock
+  registered) — the hats-off tell deserves a real hat-stand sprite.
+- unnamed gentlemen ride human_laborer/gnoll_traveler/drake_patron
+  bases with tints; bowler/coat reads live in observe copy only.

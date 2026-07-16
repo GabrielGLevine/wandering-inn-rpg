@@ -218,6 +218,37 @@
     10,
     1
    ]
+  },
+  {
+   "id": "parlor_rug_east",
+   "sprite": "rug_green",
+   "cell": [
+    9,
+    5
+   ],
+   "tint": [
+    0.35,
+    0.3,
+    0.32
+   ]
+  },
+  {
+   "id": "parlor_sconce_e",
+   "sprite": "sconce",
+   "cell": [
+    7,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.72,
+     0.45
+    ],
+    "energy": 0.9,
+    "radius": 36,
+    "flicker": true
+   }
   }
  ],
  "entities": [
@@ -280,6 +311,250 @@
    "sprite": "bench",
    "sleep": true,
    "sleep_toast": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality."
+  },
+  {
+   "_comment": "GH#133 + Ratici SHIP APPROVAL (2026-07-16): the second Gentleman Caller. Voice/profile contract: docs/design/character-profiles.md Ratici section (fast, dropped g's, fancy-word overreach, menace opens polite; [Gentleman Thief] 7.24 is the class-name ceiling, [Aerial Dodge] is Vol-8 and BANNED). Sprite = pc_drake_m + brown tint PLACEHOLDER (short Drake + floppy cap need a bespoke pass, VISUAL-LOG).",
+   "id": "ratici",
+   "kind": "npc",
+   "cell": [
+    7,
+    3
+   ],
+   "display_name": "Ratici",
+   "sprite": "pc_drake_m",
+   "tint": [
+    0.72,
+    0.6,
+    0.45
+   ],
+   "facing": "down",
+   "observe": "A short Drake in careful browns, floppy cap settled down over the neck-spines. His eyes did your full inventory the moment you stepped in, and he's too polite to say what it came to.",
+   "friendly_line": "A person of discernment, Wilovan said. I withdraw one full half of my suspicions.",
+   "talk_pool": [
+    "Somethin' I can do for you? Ask quick — I talk faster'n I listen, as it were.",
+    "You'll pardon the hat stayin' on. Consider it a heretofore act of civic kindness.",
+    "Wilovan does the philosophizin'. I do the notin' of exits. You came in by the only one, incidentally.",
+    "We don't steal. We RECOVER. My associate's phrasin', that. Mine ran less charitable."
+   ],
+   "talk_pool_stages": [
+    {
+     "_comment": "Marker-holders get the warmer register (fence-tier trust, same gate as Wilovan's fence).",
+     "id": "ratici_marker",
+     "requires_accomplishment": {
+      "brothers_marker": 1
+     },
+     "lines": [
+      "Marker-holder. Sit where you like, then — the good stool's the one that doesn't wobble.",
+      "Word went round about the Coyle business. Tidy work. Rougher'n I'd have done it, or gentler. One of the two."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gentleman_bowler",
+   "kind": "npc",
+   "cell": [
+    10,
+    5
+   ],
+   "display_name": "A Gentleman in a Bowler",
+   "sprite": "human_laborer",
+   "tint": [
+    0.5,
+    0.48,
+    0.52
+   ],
+   "facing": "left",
+   "observe": "A broad man in a bowler hat, playing solitaire like the deck owes him money. Politely, though.",
+   "talk_pool": [
+    "Evenin'. The cards are friendly here. The stakes, somewhat less so.",
+    "House rule: hats stay on. You'll know the exception when you see it, and you'll want to be elsewhere for it."
+   ]
+  },
+  {
+   "id": "gentleman_tall",
+   "kind": "npc",
+   "cell": [
+    2,
+    5
+   ],
+   "display_name": "A Tall Gentleman",
+   "sprite": "gnoll_traveler",
+   "tint": [
+    0.8,
+    0.75,
+    0.7
+   ],
+   "facing": "right",
+   "observe": "A Gnoll with a folded coat over one arm, keeping polite company with the hat stand and the door.",
+   "talk_pool": [
+    "The cots? For gentlemen between engagements. Which is all of us, officially.",
+    "Mind the rug. A fellow scuffed it once. The apology took longer than the mending."
+   ]
+  },
+  {
+   "id": "gentleman_quiet",
+   "kind": "npc",
+   "cell": [
+    11,
+    7
+   ],
+   "display_name": "A Quiet Gentleman",
+   "sprite": "drake_patron",
+   "facing": "left",
+   "observe": "A Drake on a stool with his back to the wall, minding the shelf and the chest the way other men mind a fire.",
+   "talk_pool": [
+    "...",
+    "The shelf's spoken for, friend. Marker-holders and upward."
+   ]
+  },
+  {
+   "id": "parlor_counter_l",
+   "kind": "prop",
+   "cell": [
+    8,
+    1
+   ],
+   "display_name": "The Counter",
+   "sprite": "counter_left",
+   "observe": "A drink counter kept cleaner than the law would ever ask it to be."
+  },
+  {
+   "id": "parlor_counter_m",
+   "kind": "prop",
+   "cell": [
+    9,
+    1
+   ],
+   "display_name": "The Counter",
+   "sprite": "counter_mid",
+   "observe": "Rings from a hundred glasses, sanded out and earned back."
+  },
+  {
+   "id": "parlor_bottle_shelf",
+   "kind": "prop",
+   "cell": [
+    11,
+    1
+   ],
+   "display_name": "The Good Shelf",
+   "sprite": "shelf_bottles",
+   "observe": "Bottles arranged by loyalty rather than label. The top row is for after jobs that went well."
+  },
+  {
+   "id": "parlor_keg_a",
+   "kind": "prop",
+   "cell": [
+    12,
+    2
+   ],
+   "display_name": "A Keg",
+   "sprite": "barrel",
+   "observe": "A keg with a tapped face and an honest week's dents."
+  },
+  {
+   "id": "parlor_keg_b",
+   "kind": "prop",
+   "cell": [
+    12,
+    3
+   ],
+   "display_name": "A Keg",
+   "sprite": "barrel",
+   "observe": "Its brother. Slightly fuller, slightly further from the door."
+  },
+  {
+   "_comment": "Card table cluster: table_brown reuse (the existing (6,5) table is Wilovan's SITTING table; this one is the game). Stools flank.",
+   "id": "card_table",
+   "kind": "prop",
+   "cell": [
+    9,
+    4
+   ],
+   "display_name": "The Card Table",
+   "sprite": "table_brown",
+   "observe": "Coppers, a dog-eared deck, and chalk tallies in three different handwritings. The game never quite ends; it just changes players."
+  },
+  {
+   "id": "card_stool_a",
+   "kind": "prop",
+   "cell": [
+    8,
+    4
+   ],
+   "display_name": "A Stool",
+   "sprite": "stool",
+   "observe": "The wobbly one. Guests get it first."
+  },
+  {
+   "id": "card_stool_b",
+   "kind": "prop",
+   "cell": [
+    10,
+    4
+   ],
+   "display_name": "A Stool",
+   "sprite": "stool",
+   "observe": "The good stool. You'd have to earn it."
+  },
+  {
+   "_comment": "Fence-adjacent stash dressing: interact is gated DIEGETICALLY (locked line) on brothers_marker, mirroring Wilovan's fence gate — no mechanics beyond flavor + the existing fence node carrying actual stock.",
+   "id": "parlor_stash_chest",
+   "kind": "prop",
+   "cell": [
+    12,
+    7
+   ],
+   "display_name": "A Banded Chest",
+   "sprite": "chest",
+   "observe": "Banded oak, twice-locked, sitting where the quiet gentleman can count who looks at it.",
+   "on_interact_accomplishment": "eyed_the_stash",
+   "toast": "Locked twice over. The quiet gentleman clears his throat, courteously."
+  },
+  {
+   "id": "parlor_stash_shelf",
+   "kind": "prop",
+   "cell": [
+    9,
+    8
+   ],
+   "display_name": "The Long Shelf",
+   "sprite": "library_shelf",
+   "observe": "Ledgers with no titles and boxes with no labels. Everything here is filed under later."
+  },
+  {
+   "id": "parlor_cot_a",
+   "kind": "prop",
+   "cell": [
+    1,
+    1
+   ],
+   "display_name": "A Cot",
+   "sprite": "bed",
+   "observe": "Army-neat. Whoever sleeps here folds corners like it still matters."
+  },
+  {
+   "id": "parlor_cot_b",
+   "kind": "prop",
+   "cell": [
+    3,
+    1
+   ],
+   "display_name": "A Cot",
+   "sprite": "bed",
+   "observe": "Less neat. A paperback under the pillow, spine broken at the same chapter."
+  },
+  {
+   "_comment": "GH#133: THE load-bearing prop (the Brothers' hats-off tell, attested from their first appearance). Sprite = crate PLACEHOLDER, flagged loose-fit in VISUAL-LOG — wants a bespoke hat-stand sprite.",
+   "id": "parlor_hat_stand",
+   "kind": "prop",
+   "cell": [
+    1,
+    5
+   ],
+   "display_name": "The Hat Stand",
+   "sprite": "crate",
+   "observe": "Hats on pegs, every one accounted for. House rule says they stay on. Nobody explains the exceptions, and nobody asks twice."
   }
  ]
 }
