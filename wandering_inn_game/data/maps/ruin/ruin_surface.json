@@ -153,6 +153,23 @@
    "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea."
   },
   {
+   "id": "anchor_socket",
+   "kind": "prop",
+   "cell": [
+    18,
+    6
+   ],
+   "display_name": "Anchor-Stone Socket",
+   "sprite": "pedestal",
+   "requires_skill": "detect_magic",
+   "skill_hint_toast": "The socket's empty, but empty like a held breath.",
+   "locked_toast": "A carved socket in the ruin stone. Whatever sat here, someone carried it off.",
+   "on_skill_use": {
+    "accomplishment": "detected_wardwork",
+    "toast": "[Detect Magic] — The socket still remembers its stone: a slow pulse, counting toward a door that already left."
+   }
+  },
+  {
    "_comment": "CONTRACT: `door_chain_fight.json`'s teleport target must stay in sync at (16,8), the west-adjacent cell.",
    "id": "ruin_guardian",
    "kind": "encounter",
@@ -184,6 +201,17 @@
     "cleared_ruin_guardian",
     "pedestal_unsealed"
    ]
+  },
+  {
+   "id": "bone_pile_ruin",
+   "kind": "prop",
+   "cell": [
+    15,
+    10
+   ],
+   "display_name": "Old Bones",
+   "sprite": "gnaw_pile",
+   "observe": "Old bones, settled where they fell. They are not going anywhere. Probably."
   }
  ]
 }

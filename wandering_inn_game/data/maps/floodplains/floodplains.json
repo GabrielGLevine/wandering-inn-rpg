@@ -1303,6 +1303,23 @@
    ]
   },
   {
+   "id": "hilltop_cairn",
+   "kind": "prop",
+   "cell": [
+    3,
+    2
+   ],
+   "display_name": "Hilltop Cairn",
+   "sprite": "boulder",
+   "requires_skill": "eagle_eyes",
+   "skill_hint_toast": "From up here the floodplains pretend to be a map. Good eyes could read it.",
+   "locked_toast": "A cairn on a hill. The view is mostly weather.",
+   "on_skill_use": {
+    "accomplishment": "scouted_vantage",
+    "toast": "[Eagle Eyes] — The plains resolve: the gate road, the ruin east past it, and every fold of dead ground a warband could hide in. You'll walk this land differently now."
+   }
+  },
+  {
    "_comment": "LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the `ruin_surface` map below, the inside half).",
    "id": "ruin_door",
    "kind": "prop",

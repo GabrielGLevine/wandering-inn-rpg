@@ -1491,3 +1491,8 @@ events, and result files live in the gitignored
 - PixelLab drain: replace the nine code-drawn placeholder skill icons for
   `hedge_remedy`, `evil_eye`, `bone_dart`, `deathbolt`, `detect_magic`,
   `advanced_cooking`, `signature_dish`, `eagle_eyes`, and `marked_quarry`.
+- Prop-fit drain: replace the loose stock reads for `inn_witch_kettle`
+  (`cauldron`), `inn_copper_pan`/`pallass_stall_burner` (`grill`),
+  `cellar_wardwork` (`dusty_scroll`), `lift_overlook`/`rooftop_line`
+  (`riverfarm_fence_ew`), `anchor_socket` (`pedestal`), and
+  `hilltop_cairn` (`boulder`) with purpose-drawn sprites in a later art pass.

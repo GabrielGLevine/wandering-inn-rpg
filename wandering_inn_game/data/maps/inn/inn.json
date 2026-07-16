@@ -233,13 +233,6 @@
    }
   },
   {
-   "sprite": "counter_left",
-   "cell": [
-    5,
-    2
-   ]
-  },
-  {
    "sprite": "counter_mid",
    "cell": [
     6,
@@ -258,20 +251,6 @@
    "cell": [
     9,
     2
-   ]
-  },
-  {
-   "sprite": "sconce",
-   "cell": [
-    5,
-    1
-   ]
-  },
-  {
-   "sprite": "shelf_bottles",
-   "cell": [
-    6,
-    1
    ]
   },
   {
@@ -621,6 +600,60 @@
    "toast": "You carry the laden tray out to the tables."
   },
   {
+   "id": "inn_witch_kettle",
+   "kind": "prop",
+   "cell": [
+    2,
+    2
+   ],
+   "display_name": "Hearth-Side Kettle",
+   "sprite": "cauldron",
+   "requires_skill": "hedge_remedy",
+   "skill_hint_toast": "The kettle's on. The inn won't mind one more thing brewing, so long as it means well.",
+   "locked_toast": "A kettle, singing low. It's just a kettle, unless you know otherwise.",
+   "on_skill_use": {
+    "accomplishment": "witch_craft_used",
+    "item": "remedy_draught",
+    "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
+   }
+  },
+  {
+   "id": "inn_chef_counter",
+   "kind": "prop",
+   "cell": [
+    5,
+    1
+   ],
+   "display_name": "Chef's Counter",
+   "sprite": "counter_left",
+   "requires_skill": "advanced_cooking",
+   "skill_hint_toast": "Good stock, better knives, and nobody using either. A real cook could turn this counter into a meal worth naming.",
+   "locked_toast": "A working counter, scrubbed and stocked. The kitchen has standards, and they're looking at you.",
+   "on_skill_use": {
+    "accomplishment": "cooked_meal",
+    "item": "fine_meal",
+    "toast": "[Advanced Cooking] — Knife-work first, then the pan, then the part nobody can teach. The plate comes out arguing for seconds."
+   }
+  },
+  {
+   "id": "inn_copper_pan",
+   "kind": "prop",
+   "cell": [
+    5,
+    2
+   ],
+   "display_name": "The Good Copper Pan",
+   "sprite": "grill",
+   "requires_skill": "signature_dish",
+   "skill_hint_toast": "The good copper pan. It's been waiting for a dish that deserves it.",
+   "locked_toast": "The good copper pan, hung out of easy reach. Erin's rule, probably.",
+   "on_skill_use": {
+    "accomplishment": "cooked_meal",
+    "item": "signature_meal",
+    "toast": "[Signature Dish] — The pan remembers you now. What comes out of it isn't dinner, it's a reputation."
+   }
+  },
+  {
    "id": "stew_pot",
    "kind": "prop",
    "cell": [
@@ -783,6 +816,23 @@
     "toast": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
    },
    "locked_toast": "The doorframe's old wood is carved with something under the paint, faint and worn. Whatever it says isn't for an untrained eye."
+  },
+  {
+   "id": "cellar_wardwork",
+   "kind": "prop",
+   "cell": [
+    13,
+    5
+   ],
+   "display_name": "Old Wardwork",
+   "sprite": "dusty_scroll",
+   "requires_skill": "detect_magic",
+   "skill_hint_toast": "The old marks under the paint are almost gone. Almost.",
+   "locked_toast": "Scratches under the doorframe paint. Could be anything. Could be nothing.",
+   "on_skill_use": {
+    "accomplishment": "detected_wardwork",
+    "toast": "[Detect Magic] — The old wardwork wakes just enough to be read: someone bound this cellar's door long before it learned to go elsewhere."
+   }
   },
   {
    "_comment": "CONSTRAINT: the free approach cell is (3,7), facing down (same column as before, shifted onto the wall).",

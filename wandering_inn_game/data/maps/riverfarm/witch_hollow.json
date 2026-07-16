@@ -437,6 +437,24 @@
    "observe": "An iron pot set by the cottage door, empty and waiting. Someone means for it to be used."
   },
   {
+   "id": "eloise_cauldron",
+   "kind": "prop",
+   "cell": [
+    6,
+    8
+   ],
+   "display_name": "Eloise's Cauldron",
+   "sprite": "cauldron",
+   "requires_skill": "hedge_remedy",
+   "skill_hint_toast": "The cauldron's lit and the water's talking to itself. Hands that mean it could bring a remedy out of that.",
+   "locked_toast": "A witch's cauldron, warm and waiting. Whatever it wants from you, it isn't just stirring.",
+   "on_skill_use": {
+    "accomplishment": "witch_craft_used",
+    "item": "remedy_draught",
+    "toast": "[Hedge Remedy] — You stir like you're sorry for the sick, the way she said. What comes off the ladle is the color of meaning it."
+   }
+  },
+  {
    "_comment": "Light budget: witch_hollow carries 1 base light (witch_cottage_prop) before this, well under the 8/map cap.",
    "id": "hollow_threshold_candles",
    "kind": "prop",
@@ -496,6 +514,23 @@
     "toast": "[Observe] — The knot isn't wood at all, once you look right at it: a price, tied off and waiting to be paid. You pay it yourself, plainly, and the tension goes out of the air like a held breath let go."
    },
    "observe": "A snarl of root and briar at the center of the standing stones, tied in a knot that doesn't look like it grew that way."
+  },
+  {
+   "id": "leyline_stone",
+   "kind": "prop",
+   "cell": [
+    9,
+    9
+   ],
+   "display_name": "Leyline Stone",
+   "sprite": "hollow_glow_stone",
+   "requires_skill": "detect_magic",
+   "skill_hint_toast": "The stone sits where the ground feels heaviest. That's not an accident.",
+   "locked_toast": "A standing stone, older than the village and not saying anything about it.",
+   "on_skill_use": {
+    "accomplishment": "detected_wardwork",
+    "toast": "[Detect Magic] — Light runs under the turf in one long seam, straight through the stone and away west. The hollow is built on a current."
+   }
   },
   {
    "id": "riverfarm_witch",
