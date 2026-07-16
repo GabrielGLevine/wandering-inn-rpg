@@ -368,6 +368,72 @@
    ],
    "talk_pool_stages": [
     {
+     "id": "erin_bed_nudge_helper",
+     "requires_accomplishment": {
+      "cleaned_the_inn": 1
+     },
+     "lines": [
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+     ],
+     "_comment": "GH#130 bed-onboarding nudge: one stage per pre-first-sleep class-gain counter (talk pools AND-gate accomplishments only, so OR = sibling stages sharing the same line). Authored FIRST as a block so ANY later-satisfied stage overrides (array-order-last-match-wins, social.gd:20-22); the erin_bed_slept stage below retires the nudge after the first sleep (the `slept` counter ships with this issue, wi_game.gd sleep())."
+    },
+    {
+     "id": "erin_bed_nudge_warrior",
+     "requires_accomplishment": {
+      "sparred_with_relc": 1
+     },
+     "lines": [
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+     ]
+    },
+    {
+     "id": "erin_bed_nudge_mage",
+     "requires_accomplishment": {
+      "learned_magic_from_pisces": 1
+     },
+     "lines": [
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+     ]
+    },
+    {
+     "id": "erin_bed_nudge_tactician",
+     "requires_accomplishment": {
+      "chess_with_olesm": 1
+     },
+     "lines": [
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+     ]
+    },
+    {
+     "id": "erin_bed_nudge_rogue",
+     "requires_accomplishment": {
+      "recovered_crate_watch": 1
+     },
+     "lines": [
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+     ]
+    },
+    {
+     "id": "erin_bed_nudge_archer",
+     "requires_accomplishment": {
+      "ranged_hit": 3
+     },
+     "lines": [
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+     ]
+    },
+    {
+     "id": "erin_bed_slept",
+     "_comment": "Retires the nudge block the moment the player has slept once; itself superseded by erin_regular and later stages as their gates clear.",
+     "requires_accomplishment": {
+      "slept": 1
+     },
+     "lines": [
+      "Sleep good? You've got that just-leveled look about you. I'm basically never wrong about this.",
+      "Morning! Or... whatever time it is. The inn keeps its own clock, honestly."
+     ]
+    },
+    {
      "id": "erin_regular",
      "requires_accomplishment": {
       "errand_decided": 1,

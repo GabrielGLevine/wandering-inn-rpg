@@ -3450,6 +3450,31 @@
      "save"
     ]
    }
+  },
+  {
+   "script": "bed_nudge_loop",
+   "seed": 9,
+   "note": "GH#130 bed-onboarding nudge: fires on class progress, retires after first sleep (slept counter); proves classless->helper first-sleep beat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "pre_first_sleep"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ]
 }
