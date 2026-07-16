@@ -1,0 +1,25 @@
+{
+ "_comment": "Fixture-banked Necromancer gain while Pisces' producer is in the dialogue lane. The gain sleep walks to L3 from won_combat/death_cast, then a real fight proves Bone Dart and Deathbolt both reach pc.skills.",
+ "fixture_save": "near_necromancer",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "class_gained", "payload_contains": {"class": "necromancer"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Necromancer] class gained! — [Bone Dart], [Detect Magic]"}, "timeout_sec": 5},
+  {"action": "assert_state", "path": "classes.necromancer", "equals": 3},
+  {"action": "teleport", "map": "floodplains", "cell": [30, 20]},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
+  {"action": "assert_state", "path": "combat.combatants.pc.skills", "contains": "bone_dart"},
+  {"action": "assert_state", "path": "combat.combatants.pc.skills", "contains": "deathbolt"},
+  {"action": "combat_autoplay", "max_turns": 300},
+  {"action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": true}, "timeout_sec": 10}
+ ]
+}

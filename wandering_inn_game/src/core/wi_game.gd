@@ -325,6 +325,7 @@ func _check_delivery_arrival() -> void:
 	if dist > 1:
 		return
 	record_accomplishment("delivered_%s" % accepted_delivery_id)
+	record_accomplishment("completed_delivery")
 	remove_item(parcel_id, accepted_delivery_id)
 	_emit(WIEvents.TOAST, {"text": "Delivered: %s." % String(parcel.get("display_name", parcel_id))})
 

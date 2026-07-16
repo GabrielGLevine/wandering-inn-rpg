@@ -1,0 +1,24 @@
+{
+ "_comment": "Near-threshold Scout consolidation: evolved parent lines Infiltrator 10 + Sharpshooter 11 meet the shared 10/21 gate and derive floor 14. Both parents are evolution-only records, so the offer cannot be displaced by another evolution; Relc stabilizes the post-merge kit fight.",
+ "version": 5,
+ "state": {
+  "current_map": "inn_upstairs",
+  "player_cell": [9, 2],
+  "player_facing": [0, -1],
+  "classes": {"infiltrator": 10, "sharpshooter": 11},
+  "accomplishments": {"met_relc": 1, "ranged_hit": 68, "sneaked_past_danger": 36},
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 0,
+  "rng_state": "-1966449618399012673"
+ }
+}

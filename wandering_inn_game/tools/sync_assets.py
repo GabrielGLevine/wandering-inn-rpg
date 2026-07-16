@@ -1030,6 +1030,16 @@ PLACEHOLDER_ICONS: list[tuple[str, str, tuple[int, int, int], tuple[int, int, in
 	# trailing shadow streak, icon_sneak's exact muted slate palette (the
 	# stealth family).
 	("backstab", "assets/ui/icons/icon_sudden_strike.png", (95, 100, 120), (40, 40, 55)),
+	# Semantic placeholders; VISUAL-LOG owns the PixelLab replacements.
+	("mortar", "assets/ui/icons/icon_hedge_remedy.png", (118, 166, 105), (49, 82, 43)),
+	("evil_eye", "assets/ui/icons/icon_evil_eye.png", (181, 115, 196), (72, 34, 82)),
+	("bone_dart", "assets/ui/icons/icon_bone_dart.png", (224, 218, 188), (88, 78, 62)),
+	("deathbolt", "assets/ui/icons/icon_deathbolt.png", (104, 178, 111), (34, 62, 39)),
+	("magic_rune", "assets/ui/icons/icon_detect_magic.png", (111, 183, 232), (39, 75, 126)),
+	("chef_pot", "assets/ui/icons/icon_advanced_cooking.png", (203, 136, 73), (89, 48, 22)),
+	("covered_dish", "assets/ui/icons/icon_signature_dish.png", (226, 191, 104), (100, 68, 26)),
+	("eagle_eye", "assets/ui/icons/icon_eagle_eyes.png", (205, 225, 245), (60, 90, 130)),
+	("quarry_mark", "assets/ui/icons/icon_marked_quarry.png", (191, 77, 61), (83, 25, 19)),
 ]
 
 
@@ -1171,6 +1181,42 @@ def _draw_placeholder(shape: str, dst_rel: str, fill: tuple[int, int, int], outl
 	elif shape == "backstab":
 		draw.polygon([(3, 13), (11, 5), (13, 7), (5, 15)], fill=fill, outline=outline)
 		draw.polygon([(1, 15), (5, 11), (7, 13), (3, 15)], fill=outline, outline=outline)
+	elif shape == "mortar":
+		draw.polygon([(2, 8), (14, 8), (12, 14), (4, 14)], fill=fill, outline=outline)
+		draw.polygon([(5, 2), (7, 1), (12, 10), (10, 11)], fill=fill, outline=outline)
+	elif shape == "evil_eye":
+		draw.polygon([(1, 8), (8, 3), (15, 8), (8, 13)], fill=fill, outline=outline)
+		draw.ellipse([6, 5, 10, 11], fill=outline, outline=outline)
+		draw.line([(8, 0), (8, 2)], fill=fill)
+		draw.line([(2, 2), (4, 4)], fill=fill)
+		draw.line([(12, 4), (14, 2)], fill=fill)
+	elif shape == "bone_dart":
+		draw.polygon([(2, 12), (11, 3), (14, 2), (13, 5), (4, 14)], fill=fill, outline=outline)
+		draw.ellipse([0, 11, 4, 15], fill=fill, outline=outline)
+	elif shape == "deathbolt":
+		draw.polygon([(8, 0), (12, 5), (10, 7), (15, 9), (8, 15), (5, 10), (1, 8), (6, 5)], fill=fill, outline=outline)
+		draw.ellipse([6, 6, 10, 10], fill=outline, outline=outline)
+	elif shape == "magic_rune":
+		draw.ellipse([2, 2, 13, 13], fill=None, outline=fill, width=2)
+		draw.polygon([(8, 1), (10, 6), (15, 8), (10, 10), (8, 15), (6, 10), (1, 8), (6, 6)], fill=None, outline=outline)
+	elif shape == "chef_pot":
+		draw.rectangle([2, 7, 13, 9], fill=fill, outline=outline)
+		draw.polygon([(3, 9), (12, 9), (11, 14), (4, 14)], fill=fill, outline=outline)
+		draw.arc([3, 0, 7, 8], start=210, end=330, fill=outline, width=1)
+		draw.arc([8, 0, 12, 8], start=210, end=330, fill=outline, width=1)
+	elif shape == "covered_dish":
+		draw.arc([3, 3, 13, 13], start=180, end=360, fill=fill, width=3)
+		draw.rectangle([1, 11, 15, 13], fill=fill, outline=outline)
+		draw.ellipse([7, 3, 9, 5], fill=fill, outline=outline)
+	elif shape == "eagle_eye":
+		draw.polygon([(1, 8), (8, 4), (15, 8), (8, 12)], fill=fill, outline=outline)
+		draw.ellipse([6, 6, 10, 10], fill=outline, outline=outline)
+		draw.polygon([(1, 5), (5, 1), (6, 5)], fill=fill, outline=outline)
+		draw.polygon([(10, 5), (11, 1), (15, 5)], fill=fill, outline=outline)
+	elif shape == "quarry_mark":
+		draw.ellipse([2, 2, 13, 13], fill=None, outline=fill, width=2)
+		draw.ellipse([5, 5, 10, 10], fill=None, outline=outline, width=1)
+		draw.polygon([(8, 0), (10, 4), (9, 4), (9, 9), (7, 9), (7, 4), (6, 4)], fill=fill, outline=outline)
 	else:
 		raise ValueError(f"unknown placeholder shape: {shape}")
 	dst = PROJECT_ROOT / dst_rel

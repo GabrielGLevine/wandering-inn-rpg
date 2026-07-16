@@ -1,0 +1,25 @@
+{
+ "_comment": "Fixture-first Runner 10 evolution loop. One real delivery-arrival move crosses completed_delivery 35->36 through _check_delivery_arrival, then sleep emits class_evolved to Courier.",
+ "fixture_save": "near_runner_courier",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "assert_state", "path": "classes", "equals": {"runner": 10}},
+  {"action": "assert_state", "path": "accomplishments.completed_delivery", "equals": 35},
+  {"action": "move", "direction": "right", "steps": 1},
+  {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "completed_delivery"}, "timeout_sec": 5},
+  {"action": "assert_state", "path": "accomplishments.completed_delivery", "equals": 36},
+  {"action": "teleport", "map": "inn_upstairs", "cell": [9, 2]},
+  {"action": "move", "direction": "up", "steps": 1},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "class_evolved", "payload_contains": {"from": "runner", "to": "courier", "level": 10}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Runner] has become [Courier]!"}, "timeout_sec": 5},
+  {"action": "assert_state", "path": "classes", "equals": {"courier": 10}}
+ ]
+}

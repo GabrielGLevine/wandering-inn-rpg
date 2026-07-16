@@ -1,0 +1,24 @@
+{
+ "_comment": "Fixture-banked threshold: studied_necromancy has no producer until the dialogue lane. won_combat 3 + death_cast 4 let the gain sleep walk Necromancer to L3 and field Bone Dart + Deathbolt immediately; Warrior 2 + Relc stabilize the proof fight.",
+ "version": 5,
+ "state": {
+  "current_map": "inn_upstairs",
+  "player_cell": [9, 2],
+  "player_facing": [0, -1],
+  "classes": {"warrior": 2},
+  "accomplishments": {"studied_necromancy": 1, "won_combat": 3, "death_cast": 4, "met_relc": 1, "sparred_with_relc": 1},
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 0,
+  "rng_state": "-1966449618399012673"
+ }
+}

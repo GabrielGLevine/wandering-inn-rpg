@@ -1486,3 +1486,8 @@ events, and result files live in the gitignored
   rugs, bed (rugs are floor decor and should never win the sort; stairs/
   bed likely need `field_y_sort_bias_px` or a below-sort floor band).
   Filed as GH#127; sweep other maps for the same class when fixing.
+
+## 2026-07-16 (class expansion Wave A)
+- PixelLab drain: replace the nine code-drawn placeholder skill icons for
+  `hedge_remedy`, `evil_eye`, `bone_dart`, `deathbolt`, `detect_magic`,
+  `advanced_cooking`, `signature_dish`, `eagle_eyes`, and `marked_quarry`.

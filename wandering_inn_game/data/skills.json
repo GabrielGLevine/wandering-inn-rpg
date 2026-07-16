@@ -661,6 +661,143 @@
 			"contexts": ["exploration"],
 			"trade_bonus": 0.1,
 			"description": "Wholesale eyes on a retail world -- goods move through you in bulk, and the numbers favor the one who moves them."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- passive-identity shape matches bargain/lesser_stamina.",
+			"id": "runners_legs",
+			"display_name": "[Runner's Legs]",
+			"contexts": ["exploration"],
+			"description": "The road is long. Your legs have stopped caring."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED -- Fals, 7.00; passive-identity shape matches bargain/lesser_stamina.",
+			"id": "efficient_run",
+			"display_name": "[Efficient Run]",
+			"contexts": ["exploration"],
+			"description": "Every stride lands cleanly, wasting neither breath nor road."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki name carries an unresolved early-volume citation; battlefield_awareness's move_pool_bonus shape verbatim.",
+			"id": "enhanced_movement",
+			"display_name": "[Enhanced Movement]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "move_pool_bonus", "amount": 1 },
+			"description": "The opening between one step and the next becomes a road of its own."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL -- noun-phrase replacement for the rejected imperative [Brew Remedy].",
+			"id": "hedge_remedy",
+			"display_name": "[Hedge Remedy]",
+			"icon": "icon_hedge_remedy",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Hedge Remedy] — You stir an absent pot and sort imaginary roots. The working needs a real cauldron.",
+			"description": "Root, leaf, patience, and the exact moment the pot should leave the fire."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL -- hp_bonus reuses tough_body's passive combat shape; witch kit stays AP-only.",
+			"id": "witchs_warding",
+			"display_name": "[Witch's Warding]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "hp_bonus", "amount": 8 },
+			"description": "A quiet promise laid over skin and spirit: not this one, not yet."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL -- calming_touch's no-MP spell_damage shape, range 3, weakened rider; no element counter.",
+			"id": "evil_eye",
+			"display_name": "[Evil Eye]",
+			"icon": "icon_evil_eye",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"effect": { "type": "spell_damage", "range": 3, "applies": { "weakened": { "duration_rounds": 1 } } },
+			"description": "One hard look catches like a curse, and certainty drains from the target's limbs."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED -- Pisces' spell list; frost_bolt's costs and range without a rider.",
+			"id": "bone_dart",
+			"display_name": "[Bone Dart]",
+			"icon": "icon_bone_dart",
+			"contexts": ["combat"],
+			"ap_cost": 1,
+			"mp_cost": 2,
+			"element": "death",
+			"effect": { "type": "spell_damage", "range": 4 },
+			"description": "A splinter of white bone snaps into being and flies point-first."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED -- Pisces; spell_damage reuses shipped range and weakened-rider seams.",
+			"id": "deathbolt",
+			"display_name": "[Deathbolt]",
+			"icon": "icon_deathbolt",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"mp_cost": 4,
+			"element": "death",
+			"effect": { "type": "spell_damage", "range": 4, "applies": { "weakened": { "duration_rounds": 1 } } },
+			"description": "A black-green lance that leaves warmth and courage guttering behind it."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED -- Pisces and Ceria, 2.15; field_ambient shape matches other prop-cast utility skills.",
+			"id": "detect_magic",
+			"display_name": "[Detect Magic]",
+			"icon": "icon_detect_magic",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Detect Magic] — You open your senses. No nearby working answers.",
+			"description": "Magic leaves pressure, color, and intent behind. You have learned how to look."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED -- Erin, 2.17; field_ambient shape matches basic_cooking with a distinct icon.",
+			"id": "advanced_cooking",
+			"display_name": "[Advanced Cooking]",
+			"icon": "icon_advanced_cooking",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Advanced Cooking] — You compose a meal in your head. It needs a proper station and a hungry table.",
+			"description": "A kitchen becomes possibility: timing, balance, and the dish hidden inside the ingredients."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED -- Erin, 2.17; passive-identity shape limited to recipes and practiced arts.",
+			"id": "perfect_recall",
+			"display_name": "[Perfect Recall]",
+			"contexts": ["exploration"],
+			"description": "Every recipe and practiced motion waits exactly where you left it."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- field prop-cast shape matches advanced_cooking.",
+			"id": "signature_dish",
+			"display_name": "[Signature Dish]",
+			"icon": "icon_signature_dish",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Signature Dish] — The dish is already clear in your mind. Only the kitchen is missing.",
+			"description": "One dish bears your hand so completely that no other cook could make it the same."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED with AMBIGUOUS-lean-PASS flag -- accepted 2026-07-15 despite renumbering drift; steady_draw's hit_bonus amount reused.",
+			"id": "eagle_eyes",
+			"display_name": "[Eagle Eyes]",
+			"icon": "icon_eagle_eyes",
+			"contexts": ["exploration", "combat"],
+			"field": true,
+			"field_ambient": "[Eagle Eyes] — Distance sharpens, but there is no vantage here worth claiming.",
+			"ap_cost": 0,
+			"effect": { "type": "hit_bonus", "amount": 8 },
+			"description": "Distance gives up its secrets: tracks, motion, and the one detail that does not belong."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- sudden_strike's once-per-fight numbers with a bow gate.",
+			"id": "marked_quarry",
+			"display_name": "[Marked Quarry]",
+			"icon": "icon_marked_quarry",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"weapon": "bow",
+			"once_per_fight": true,
+			"effect": { "type": "damage_mult", "mult": 1.8 },
+			"description": "You choose the quarry before drawing. The arrow only completes the decision."
 		}
 	]
 }

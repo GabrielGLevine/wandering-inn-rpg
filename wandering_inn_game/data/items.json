@@ -801,6 +801,23 @@
 			"abilities": [],
 			"description": "A sliver worked loose from the anchor stone once it finally settled, warm as the whole and small enough to wear.",
 			"lore": "Warmage Thresk's stonework doesn't split so much as it agrees to share the load. What's left fits a chain, a wrist, a coat lining -- wherever you decide it belongs, it decides too."
+		},
+		{
+			"_comment": "Heal shape and 8-HP band mirror mending_draught verbatim; 10g placeholder price mirrors that precedent, with final pricing deferred to open issue #92.",
+			"id": "remedy_draught",
+			"name": "Remedy Draught",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 10,
+			"use_effect": { "heal": 8 },
+			"description": "A squat green-glass bottle, stoppered warm, smelling of mint, bitterroot, and woodsmoke.",
+			"lore": "A hedge remedy does not promise miracles. It promises that the bleeding slows, the swelling settles, and morning remains possible."
 		}
 	]
 }

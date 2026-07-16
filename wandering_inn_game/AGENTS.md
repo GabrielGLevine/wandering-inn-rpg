@@ -207,6 +207,11 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `combat_touch_input` | 9 | Issue #106 (mobile web v1): combat touch event parity -- adjacent-cell tap = arrow-move equivalent (incl. diagonal/far/pool-empty no-ops), Dash armed then a confirm-chip tap fires it (byte-identical to Enter), Attack targeting opened then a tap missing every candidate cancels (Esc-equivalent, AP unspent), reopened Attack + a tap on the non-default candidate (training_dummy_b) re-points the aim then a confirm-chip tap fires on it specifically |
 | `combat_abandon` | 9 (fixture `post_tutorial`) | pause opens mid-fight (HOTBAR resting mode), Abandon returns to last autosave; combat_resolved never fires |
 | `class_evolution_loop` | 9 (fixture `near_evolution`) | grind → sleep → `class_evolved` + evolved kit |
+| `cook_chef_loop` | 9 (fixture `near_cook_chef`) | Cook threshold → `class_evolved` to [Chef] |
+| `runner_courier_loop` | 9 (fixture `near_runner_courier`) | delivery threshold → `class_evolved` to [Courier] |
+| `hedge_witch_loop` | 9 (fixture `near_hedge_witch`) | fixture-banked [Hedge Witch] gain → [Witch] + combat kit |
+| `necromancer_loop` | 9 (fixture `near_necromancer`) | fixture-banked [Necromancer] gain + L3 combat kit |
+| `scout_consolidation_loop` | 9 (fixture `near_scout_consolidation`) | rogue/archer lines → [Scout] floor + combat kit |
 | `consolidation_flow` | 9 (fixture `near_consolidation`) | offer/decline/re-offer/accept → [Spellsword] |
 | `save_migration` | 1 | v2→v3 migration + v1 pause-load rejection + stale-slot defeat-reload |
 | `consolidation_reload` | 9 | pause-load reconstructs the consolidation prompt mid-offer |
