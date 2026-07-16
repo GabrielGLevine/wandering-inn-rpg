@@ -49,6 +49,9 @@ const ENCOUNTER_CELLS := [
 	{"name": "rock_crab_nest_t1_solo", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": true},
 	{"name": "goblin_night_patrol_t1_relc", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "warrior2", "solo": false},
 	{"name": "goblin_night_patrol_t1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "warrior2", "solo": true},
+	# Necromancer dual-class cells (#131): measured 0.57 / 0.72 at authoring (100 seeds).
+	# Builds are matrix:false (dual-class is the in-model shape; solo pure necro is unreachable
+	# -- class requires holding [Mage]); "solo" here on the CELL strips Relc, deliberate.
 	{"name": "mage3_necromancer3_goblin_ambush_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "mage3_necromancer3_caster", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "mage5_necromancer7_raskghar_scouts_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "mage5_necromancer7_caster", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
@@ -108,8 +111,8 @@ const BUILDS := [
 	{"name": "warrior2_mage2_caster", "classes": {"warrior": 2, "mage": 2}, WIKeys.AI: "caster", "gated": false},
 	{"name": "pure_warrior10", "classes": {"warrior": 10}, "gated": false},
 	{"name": "pure_mage10_caster", "classes": {"mage": 10}, WIKeys.AI: "caster", "gated": false},
-	{"name": "mage3_necromancer3_caster", "classes": {"mage": 3, "necromancer": 3}, WIKeys.AI: "caster", "solo": true, "matrix": false},
-	{"name": "mage5_necromancer7_caster", "classes": {"mage": 5, "necromancer": 7}, WIKeys.AI: "caster", "solo": true, "matrix": false},
+	{"name": "mage3_necromancer3_caster", "classes": {"mage": 3, "necromancer": 3}, WIKeys.AI: "caster", "matrix": false},
+	{"name": "mage5_necromancer7_caster", "classes": {"mage": 5, "necromancer": 7}, WIKeys.AI: "caster", "matrix": false},
 	{"name": "warrior5_mage5", "classes": {"warrior": 5, "mage": 5}, "gated": false},
 	{"name": "warrior5_mage5_caster", "classes": {"warrior": 5, "mage": 5}, WIKeys.AI: "caster", "gated": false},
 	{"name": "t3_spellsword9", "classes": {"spellsword": 9}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},

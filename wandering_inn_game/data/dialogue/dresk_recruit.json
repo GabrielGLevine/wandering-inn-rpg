@@ -1,108 +1,20 @@
 {
- "start": "hub",
- "nodes": {
-  "hub": {
-   "speaker": "Dresk",
-   "text": "Sergeant Ashgrave. If you're here to report something, the slate's on the wall. Write it plain.",
-   "text_variants": [
-    {
-     "requires": {
-      "accomplishment": {
-       "missing_recruit_started": 1
-      }
-     },
-     "text": "Still no word from Pell. Kit's counted twice over on account of it. Slate stays open till someone finds them."
-    },
-    {
-     "requires": {
-      "accomplishment": {
-       "recruit_reported_safe": 1
-      }
-     },
-     "text": "Pell's back on the roster, thanks to you. Kit's counted, slate's closed. Good day, officially, this time."
-    },
-    {
-     "requires": {
-      "accomplishment": {
-       "studied_necromancy": 1
-      }
-     },
-     "text": "Heard what you've been studying. Keep it out of my barracks and off my streets, and you and I stay civil."
-    }
-   ],
-   "options": [
-    {
-     "text": "Just checking in.",
-     "end": true
-    },
-    {
-     "text": "Heard a recruit's gone missing.",
-     "requires": {
-      "accomplishment": {
-       "heard_about_missing_recruit": 1
-      }
-     },
-     "hide_when": {
-      "accomplishment": {
-       "missing_recruit_started": 1
-      }
-     },
-     "effects": [
-      {
-       "accomplishment": "missing_recruit_started"
-      },
-      {
-       "quest": "the_missing_recruit"
-      }
-     ],
-     "goto": "explain"
-    },
-    {
-     "text": "I found Pell. Safe, just turned around.",
-     "requires": {
-      "accomplishment": {
-       "found_missing_recruit": 1
-      }
-     },
-     "hide_when": {
-      "accomplishment": {
-       "recruit_reported_safe": 1
-      }
-     },
-     "effects": [
-      {
-       "accomplishment": "recruit_reported_safe"
-      },
-      {
-       "gold": 4
-      },
-      {
-       "remove_entity": "recruit_pell"
-      }
-     ],
-     "goto": "thanks"
-    }
-   ]
-  },
-  "explain": {
-   "speaker": "Dresk",
-   "text": "Pell. Green, keen, checks every noise personally instead of logging it and moving on. Went to look at scratching in the drainage gallery two musters back. Hasn't reported since. Not panicking. Yet.",
-   "options": [
-    {
-     "text": "I'll take a look.",
-     "end": true
-    }
-   ]
-  },
-  "thanks": {
-   "speaker": "Dresk",
-   "text": "Turned around, not hurt. That's the good version of this story. Four gold, out of my own kit budget — the Guild doesn't pay for finding my own people. Pell owes you a drink they can't afford yet.",
-   "options": [
-    {
-     "text": "Glad it worked out.",
-     "end": true
-    }
-   ]
-  }
- }
+	"start": "hub",
+	"nodes": {
+		"hub": { "speaker": "Dresk", "text": "Sergeant Ashgrave. If you're here to report something, the slate's on the wall. Write it plain.", "text_variants": [
+				{ "_comment": "Authored FIRST deliberately: last-match-wins, so quest-status greetings (Pell etc.) override the standing cold line.", "requires": { "accomplishment": { "studied_necromancy": 1 } }, "text": "Heard what you've been studying. Keep it out of my barracks and off my streets, and you and I stay civil." },
+				{ "requires": { "accomplishment": { "missing_recruit_started": 1 } }, "text": "Still no word from Pell. Kit's counted twice over on account of it. Slate stays open till someone finds them." },
+				{ "requires": { "accomplishment": { "recruit_reported_safe": 1 } }, "text": "Pell's back on the roster, thanks to you. Kit's counted, slate's closed. Good day, officially, this time." }
+			], "options": [
+			{ "text": "Just checking in.", "end": true },
+			{ "text": "Heard a recruit's gone missing.", "requires": { "accomplishment": { "heard_about_missing_recruit": 1 } }, "hide_when": { "accomplishment": { "missing_recruit_started": 1 } }, "effects": [ { "accomplishment": "missing_recruit_started" }, { "quest": "the_missing_recruit" } ], "goto": "explain" },
+			{ "text": "I found Pell. Safe, just turned around.", "requires": { "accomplishment": { "found_missing_recruit": 1 } }, "hide_when": { "accomplishment": { "recruit_reported_safe": 1 } }, "effects": [ { "accomplishment": "recruit_reported_safe" }, { "gold": 4 }, { "remove_entity": "recruit_pell" } ], "goto": "thanks" }
+		] },
+		"explain": { "speaker": "Dresk", "text": "Pell. Green, keen, checks every noise personally instead of logging it and moving on. Went to look at scratching in the drainage gallery two musters back. Hasn't reported since. Not panicking. Yet.", "options": [
+			{ "text": "I'll take a look.", "end": true }
+		] },
+		"thanks": { "speaker": "Dresk", "text": "Turned around, not hurt. That's the good version of this story. Four gold, out of my own kit budget — the Guild doesn't pay for finding my own people. Pell owes you a drink they can't afford yet.", "options": [
+			{ "text": "Glad it worked out.", "end": true }
+		] }
+	}
 }

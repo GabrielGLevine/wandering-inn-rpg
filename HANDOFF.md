@@ -13,21 +13,7 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (state at 2026-07-16, second CAUTION wind-down)
-
-- **#131 Wave A nearly complete on `issue/131-class-expansion-wave-a`:**
-  Codex slices 1+2 landed+committed (classes/skills/items/icons/tests/
-  QA loops; meals on well_fed anchor; dual-class necro sim cells 0.57/
-  0.72 GATED). L-DIALOGUE landed+committed by controller (test_content
-  GREEN, both expected-reds closed). **CODEX SLICE 3 LIVE**: L-MAPS
-  props per scratchpad/l-maps-props.md (copy final, placement Codex's).
-  DO NOT edit worktree while it runs. After it lands: controller
-  commits, re-runs composed gates, resumes spec-verify lenses
-  (wf_b1464094-3bd, canon cached), reviewer pass, whole-branch review,
-  PR with issue-close template.
-- **Wave D verdicts landed → issue #134** (Alchemist ship-ready, Druid
-  strong, Priest fenced, Thief deferred). User ruling requested there.
-- (prior QUIESCE record follows; still-true items only)
+## 🏃 RUNNING (state at 2026-07-16 QUIESCE, session reset ~4h)
 
 - **CODEX LANE LIVE: #131 Wave A mechanical slice** on branch
   `issue/131-class-expansion-wave-a` (base = main @ spec commit).
