@@ -1,0 +1,24 @@
+{
+ "_comment": "Fixture-banked threshold: witch_lessons has no producer until the dialogue lane, and witch_craft_used 36 stages the same sleep's full Hedge Witch gain-to-Witch evolution. Relc makes the post-evolution kit-fielding fight stable; rng_state reuses post_tutorial's derived state.",
+ "version": 5,
+ "state": {
+  "current_map": "inn_upstairs",
+  "player_cell": [9, 2],
+  "player_facing": [0, -1],
+  "classes": {},
+  "accomplishments": {"witch_lessons": 1, "witch_craft_used": 36, "met_relc": 1},
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": {"weapon": "rusty_sword", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 0,
+  "rng_state": "-1966449618399012673"
+ }
+}

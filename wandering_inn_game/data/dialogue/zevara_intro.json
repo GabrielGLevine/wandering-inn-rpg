@@ -7,6 +7,15 @@
    "text_variants": [
     {
      "requires": {
+      "accomplishment": {
+       "studied_necromancy": 1
+      }
+     },
+     "text": "Word travels. You've been taking lessons from the Guild-square [Necromancer]. Not illegal. Noted, all the same — this city has burned for less.",
+     "_comment": "Authored FIRST deliberately: last-match-wins, so quest/closure greetings override the standing cold line."
+    },
+    {
+     "requires": {
       "phase": [
        "dusk",
        "night"

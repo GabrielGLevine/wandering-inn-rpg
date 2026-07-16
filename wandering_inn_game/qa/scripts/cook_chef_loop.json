@@ -1,0 +1,26 @@
+{
+ "_comment": "Fixture-first Cook evolution loop. One real hotbar use of the shipped stew_pot crosses cooked_meal 67->68, then the bed sleep levels Cook 9->10 and emits class_evolved to Chef.",
+ "fixture_save": "near_cook_chef",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "assert_state", "path": "classes", "equals": {"cook": 9}},
+  {"action": "assert_state", "path": "accomplishments.cooked_meal", "equals": 67},
+  {"action": "press", "name": "hotbar_2"},
+  {"action": "wait_for_event", "type": "skill_used", "payload_contains": {"skill": "basic_cooking", "target": "stew_pot"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "cooked_meal"}, "timeout_sec": 5},
+  {"action": "assert_state", "path": "accomplishments.cooked_meal", "equals": 68},
+  {"action": "teleport", "map": "inn_upstairs", "cell": [9, 2]},
+  {"action": "move", "direction": "up", "steps": 1},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "class_evolved", "payload_contains": {"from": "cook", "to": "chef", "level": 10}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Cook] has become [Chef]!"}, "timeout_sec": 5},
+  {"action": "assert_state", "path": "classes", "equals": {"chef": 10}}
+ ]
+}

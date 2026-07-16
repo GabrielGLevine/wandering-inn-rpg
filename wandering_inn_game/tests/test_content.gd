@@ -38,6 +38,7 @@ func _init() -> void:
 	produced_accomplishments["observed_things"] = true
 	produced_accomplishments["befriended_moments"] = true
 	produced_accomplishments["deliberate_commerce"] = true
+	produced_accomplishments["completed_delivery"] = true
 	_validate_conversations(scene, graphs)
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)

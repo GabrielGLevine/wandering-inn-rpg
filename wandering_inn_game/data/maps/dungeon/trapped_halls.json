@@ -221,6 +221,23 @@
    ]
   },
   {
+   "id": "warded_seam",
+   "kind": "prop",
+   "cell": [
+    15,
+    7
+   ],
+   "display_name": "A Warded Seam",
+   "sprite": "illusory_floor_tell",
+   "requires_skill": "detect_magic",
+   "skill_hint_toast": "Something under the stone hums off-key. Eyes that read mana could say what.",
+   "locked_toast": "The stone here looks like all the other stone. It is not.",
+   "on_skill_use": {
+    "accomplishment": "detected_wardwork",
+    "toast": "[Detect Magic] — The seam lights up like a badly kept secret: old wardwork, still holding, drawn tight around the floor ahead. Now you know exactly what not to trust."
+   }
+  },
+  {
    "id": "snare_nest_slot",
    "kind": "encounter",
    "cell": [
@@ -358,6 +375,17 @@
    "gate_closed_toast": "Rubble and old wardwork still choke this side passage. Whatever's back there can wait until the main halls are actually safe.",
    "observe": "A narrower passage breaks off from the gauntlet proper, half-choked with fallen stone. Small shapes move in the dark past the rubble -- more than one.",
    "on_victory": "gallery_vermin_culled"
+  },
+  {
+   "id": "bone_pile_halls",
+   "kind": "prop",
+   "cell": [
+    18,
+    11
+   ],
+   "display_name": "Old Bones",
+   "sprite": "gnaw_pile",
+   "observe": "Old bones, settled where they fell. They are not going anywhere. Probably."
   }
  ]
 }

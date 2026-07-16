@@ -352,6 +352,24 @@
    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
   },
   {
+   "id": "pallass_stall_burner",
+   "kind": "prop",
+   "cell": [
+    13,
+    6
+   ],
+   "display_name": "Food-Stall Burner",
+   "sprite": "grill",
+   "requires_skill": "advanced_cooking",
+   "skill_hint_toast": "The stallkeeper's burner is free between rushes. Pallass argues about everything except good food.",
+   "locked_toast": "A stall burner, hot and jealously watched. Renting it takes more than coin — it takes credentials.",
+   "on_skill_use": {
+    "accomplishment": "cooked_meal",
+    "item": "fine_meal",
+    "toast": "[Advanced Cooking] — You cook on a stranger's fire in a city of critics, and the critics go quiet."
+   }
+  },
+  {
    "id": "market_stall_c",
    "kind": "prop",
    "cell": [
@@ -469,6 +487,24 @@
      7
     ],
     "open_toast": "The brass gate rises with a well-oiled clank, counterweights turning smooth in their track. The lift carries you up, into noise and heat and orange light."
+   }
+  },
+  {
+   "id": "lift_overlook",
+   "kind": "prop",
+   "cell": [
+    23,
+    6
+   ],
+   "display_name": "Grand Lift Overlook",
+   "sprite": "riverfarm_fence_ew",
+   "requires_skill": "eagle_eyes",
+   "skill_hint_toast": "Nine tiers of city below, if your eyes are good enough to spend on it.",
+   "locked_toast": "The rail, the drop, the haze. Pallass keeps its details above your pay grade.",
+   "on_skill_use": {
+    "accomplishment": "scouted_vantage",
+    "gold": 1,
+    "toast": "[Eagle Eyes] — The haze gives up. Nine tiers resolve into stalls, patrol routes, and one dropped coin purse on a ledge two floors down that everyone else is too proud to see."
    }
   },
   {

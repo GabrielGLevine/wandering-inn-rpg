@@ -1,0 +1,24 @@
+{
+ "_comment": "Near-threshold Cook evolution: Cook 9, cooked_meal 67, adjacent to the shipped stew_pot. basic_cooking is an explicit fixture affordance so one real pot use crosses 68; the next sleep levels to 10 and evolves. rng_state reuses the derived seed-9 fixture state; no combat consumes it.",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [4, 2],
+  "player_facing": [0, -1],
+  "classes": {"cook": 9},
+  "accomplishments": {"cooked_meal": 67},
+  "player_skills": ["basic_cleaning", "basic_cooking"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {"weapon": "", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

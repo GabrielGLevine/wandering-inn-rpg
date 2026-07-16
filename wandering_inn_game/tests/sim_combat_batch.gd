@@ -49,6 +49,11 @@ const ENCOUNTER_CELLS := [
 	{"name": "rock_crab_nest_t1_solo", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": true},
 	{"name": "goblin_night_patrol_t1_relc", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "warrior2", "solo": false},
 	{"name": "goblin_night_patrol_t1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "warrior2", "solo": true},
+	# Necromancer dual-class cells (#131): measured 0.57 / 0.72 at authoring (100 seeds).
+	# Builds are matrix:false (dual-class is the in-model shape; solo pure necro is unreachable
+	# -- class requires holding [Mage]); "solo" here on the CELL strips Relc, deliberate.
+	{"name": "mage3_necromancer3_goblin_ambush_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "mage3_necromancer3_caster", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "mage5_necromancer7_raskghar_scouts_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "mage5_necromancer7_caster", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BOSS_CELLS := [
@@ -106,6 +111,8 @@ const BUILDS := [
 	{"name": "warrior2_mage2_caster", "classes": {"warrior": 2, "mage": 2}, WIKeys.AI: "caster", "gated": false},
 	{"name": "pure_warrior10", "classes": {"warrior": 10}, "gated": false},
 	{"name": "pure_mage10_caster", "classes": {"mage": 10}, WIKeys.AI: "caster", "gated": false},
+	{"name": "mage3_necromancer3_caster", "classes": {"mage": 3, "necromancer": 3}, WIKeys.AI: "caster", "matrix": false},
+	{"name": "mage5_necromancer7_caster", "classes": {"mage": 5, "necromancer": 7}, WIKeys.AI: "caster", "matrix": false},
 	{"name": "warrior5_mage5", "classes": {"warrior": 5, "mage": 5}, "gated": false},
 	{"name": "warrior5_mage5_caster", "classes": {"warrior": 5, "mage": 5}, WIKeys.AI: "caster", "gated": false},
 	{"name": "t3_spellsword9", "classes": {"spellsword": 9}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
@@ -150,6 +157,14 @@ func _find_by_name(list: Array, value: String) -> Dictionary:
 	return {}
 
 
+func _matrix_build_count() -> int:
+	var count := 0
+	for build: Dictionary in BUILDS:
+		if bool(build.get("matrix", true)):
+			count += 1
+	return count
+
+
 func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dictionary, skills_by_id: Dictionary, items_by_id: Dictionary) -> Dictionary:
 	var pc: Dictionary = pc_template.duplicate(true)
 	pc[WIKeys.AI] = String(build.get(WIKeys.AI, "melee"))
@@ -173,7 +188,7 @@ func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dict
 
 
 func _init() -> void:
-	var total_cells := COMPOSITIONS.size() * BUILDS.size() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size() + BESTIARY_CELLS.size()
+	var total_cells := COMPOSITIONS.size() * _matrix_build_count() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size() + BESTIARY_CELLS.size()
 	if OS.get_environment("WI_CELL_COUNT_ONLY") != "":
 		print("WI_CELL_COUNT: %d" % total_cells)
 		quit(0)
@@ -208,6 +223,7 @@ func _init() -> void:
 	for comp: Dictionary in COMPOSITIONS:
 		var arena: Dictionary = arenas_by_id[String(comp["arena"])]
 		for build: Dictionary in BUILDS:
+			if not bool(build.get("matrix", true)): continue
 			if not _cell_in_range(): continue
 			var wins := 0
 			var rounds: Array[int] = []

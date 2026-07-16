@@ -1,0 +1,28 @@
+{
+ "_comment": "Near-threshold Runner evolution: Runner 10, completed_delivery 35, carrying the accepted Krshia wool parcel one step outside its arrival radius. One real move exercises _check_delivery_arrival, banks 36, then sleep evolves Courier. rng_state is inert.",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [12, 3],
+  "player_facing": [1, 0],
+  "classes": {"runner": 10},
+  "accomplishments": {"completed_delivery": 35, "reached_liscor": 1, "met_relc": 1},
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["parcel_plains_wool"],
+  "equipped": {"weapon": "", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "gold": 0,
+  "accepted_delivery_id": "delivery_krshia_wool",
+  "accepted_delivery_baseline": {"delivered_delivery_krshia_wool": 0},
+  "delivery_failed": false,
+  "delivery_last_seen_times_slept": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

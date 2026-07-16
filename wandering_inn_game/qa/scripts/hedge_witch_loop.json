@@ -1,0 +1,26 @@
+{
+ "_comment": "Fixture-banked Witch proof while the dialogue/map producers are in sibling lanes: one sleep gains Hedge Witch, walks its rogue-shaped counter table to 10, and evolves to Witch. A real fight proves inherited evil_eye reaches pc.skills.",
+ "fixture_save": "near_hedge_witch",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "class_gained", "payload_contains": {"class": "hedge_witch"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "class_evolved", "payload_contains": {"from": "hedge_witch", "to": "witch", "level": 10}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Hedge Witch] class gained! — [Hedge Remedy]"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": {"text": "[Hedge Witch] has become [Witch]!"}, "timeout_sec": 5},
+  {"action": "assert_state", "path": "classes", "equals": {"witch": 10}},
+  {"action": "teleport", "map": "floodplains", "cell": [30, 20]},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
+  {"action": "assert_state", "path": "combat.combatants.pc.skills", "contains": "evil_eye"},
+  {"action": "combat_autoplay", "max_turns": 300},
+  {"action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": true}, "timeout_sec": 10}
+ ]
+}

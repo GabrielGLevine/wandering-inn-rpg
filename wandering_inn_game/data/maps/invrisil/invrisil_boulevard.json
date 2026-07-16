@@ -908,6 +908,23 @@
    "observe": "The Liscor stones were rougher. This one has been handled by people with better manners; it barely shows the wear."
   },
   {
+   "id": "rooftop_line",
+   "kind": "prop",
+   "cell": [
+    24,
+    3
+   ],
+   "display_name": "The Rooftop Line",
+   "sprite": "riverfarm_fence_ew",
+   "requires_skill": "eagle_eyes",
+   "skill_hint_toast": "The rooftops run straighter than the streets. Somebody up there knows it.",
+   "locked_toast": "Slate roofs and chimney smoke. The city keeps its second story to itself.",
+   "on_skill_use": {
+    "accomplishment": "scouted_vantage",
+    "toast": "[Eagle Eyes] — The rooftop line resolves into a second city: runners' shortcuts, a watcher over Coyle's block, and two gentlemen who are always politely elsewhere."
+   }
+  },
+  {
    "_comment": "Landing (1,7) on the alleys side sits inside that map's own west corridor, open + off every blocked/entity cell there.",
    "id": "boulevard_to_alleys",
    "kind": "door",

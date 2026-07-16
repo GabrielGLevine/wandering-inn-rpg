@@ -141,6 +141,17 @@
    "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered. And that is worse than if they had been."
   },
   {
+   "id": "bone_pile_tunnels",
+   "kind": "prop",
+   "cell": [
+    10,
+    6
+   ],
+   "display_name": "Old Bones",
+   "sprite": "gnaw_pile",
+   "observe": "Old bones, settled where they fell. They are not going anywhere. Probably."
+  },
+  {
    "_comment": "a Raskghar scout PAIR barring the way to the warren.",
    "id": "raskghar_scouts",
    "kind": "encounter",

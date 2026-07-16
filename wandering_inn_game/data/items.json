@@ -801,6 +801,57 @@
 			"abilities": [],
 			"description": "A sliver worked loose from the anchor stone once it finally settled, warm as the whole and small enough to wear.",
 			"lore": "Warmage Thresk's stonework doesn't split so much as it agrees to share the load. What's left fits a chain, a wrist, a coat lining -- wherever you decide it belongs, it decides too."
+		},
+		{
+			"_comment": "Heal shape and 8-HP band mirror mending_draught verbatim; 10g placeholder price mirrors that precedent, with final pricing deferred to open issue #92.",
+			"id": "remedy_draught",
+			"name": "Remedy Draught",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 10,
+			"use_effect": { "heal": 8 },
+			"description": "A squat green-glass bottle, stoppered warm, smelling of mint, bitterroot, and woodsmoke.",
+			"lore": "A hedge remedy does not promise miracles. It promises that the bleeding slows, the swelling settles, and morning remains possible."
+		},
+		{
+			"_comment": "The +2 HP next-fight payload anchors on the shipped well_fed combat-build bonus; 8g is a conservative placeholder price, with final pricing deferred to open issue #92.",
+			"id": "fine_meal",
+			"name": "Fine Meal",
+			"kind": "meal",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 8,
+			"use_effect": { "next_fight": { "hp_mod": 2 } },
+			"description": "A careful plate of browned vegetables, hot bread, and stew reduced until every spoonful holds together.",
+			"lore": "Good cooking is partly ingredients and mostly attention. This plate had enough of both to follow a traveler well past the table."
+		},
+		{
+			"_comment": "The +2 HP/+1 damage next-fight payload is the controller-ruled chef-tier step above well_fed; 14g is a conservative placeholder price, with final pricing deferred to open issue #92.",
+			"id": "signature_meal",
+			"name": "Signature Meal",
+			"kind": "meal",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 14,
+			"use_effect": { "next_fight": { "hp_mod": 2, "damage_mod": 1 } },
+			"description": "A cook's answer to an empty table: crisp edges, deep broth, and one unmistakable finishing touch.",
+			"lore": "A signature dish is remembered before anyone knows why. The second bite explains it; the empty plate settles the argument."
 		}
 	]
 }

@@ -589,6 +589,135 @@
    }
   },
   {
+   "script": "cook_chef_loop",
+   "seed": 9,
+   "fixture": "near_cook_chef",
+   "note": "Cook 10 threshold -> [Chef] evolution",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_cook_chef"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "runner_courier_loop",
+   "seed": 9,
+   "fixture": "near_runner_courier",
+   "note": "delivery threshold -> [Courier] evolution",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "street"
+    ],
+    "fixtures": [
+     "near_runner_courier"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "hedge_witch_loop",
+   "seed": 9,
+   "fixture": "near_hedge_witch",
+   "note": "fixture-banked [Hedge Witch] gain -> [Witch] + combat kit",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_hedge_witch"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "necromancer_loop",
+   "seed": 9,
+   "fixture": "near_necromancer",
+   "note": "fixture-banked [Necromancer] gain + L3 combat kit",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_necromancer"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "scout_consolidation_loop",
+   "seed": 9,
+   "fixture": "near_scout_consolidation",
+   "note": "rogue/archer lines -> [Scout] floor + combat kit",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_scout_consolidation"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "consolidation_flow",
    "seed": 9,
    "fixture": "near_consolidation",

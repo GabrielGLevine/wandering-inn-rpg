@@ -2,6 +2,7 @@
 	"start": "hub",
 	"nodes": {
 		"hub": { "speaker": "Dresk", "text": "Sergeant Ashgrave. If you're here to report something, the slate's on the wall. Write it plain.", "text_variants": [
+				{ "_comment": "Authored FIRST deliberately: last-match-wins, so quest-status greetings (Pell etc.) override the standing cold line.", "requires": { "accomplishment": { "studied_necromancy": 1 } }, "text": "Heard what you've been studying. Keep it out of my barracks and off my streets, and you and I stay civil." },
 				{ "requires": { "accomplishment": { "missing_recruit_started": 1 } }, "text": "Still no word from Pell. Kit's counted twice over on account of it. Slate stays open till someone finds them." },
 				{ "requires": { "accomplishment": { "recruit_reported_safe": 1 } }, "text": "Pell's back on the roster, thanks to you. Kit's counted, slate's closed. Good day, officially, this time." }
 			], "options": [
