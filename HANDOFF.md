@@ -13,23 +13,23 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-16, post-merge)
+## 🏃 RUNNING (2026-07-16 late)
 
-- **MERGED today: #135 (closes #131 Wave A — five class lines, 14
-  Skills, 15 props, teaching chains) and #136 (closes #128 garden door
-  hidden until earned).** Both CI-green, post-merge main re-gated.
-- **NEXT (value order): WB #132** (blink/ward/companion engine verbs,
-  spec §7; single implementer on src) ∥ **playtest wave** #129
-  (music continuity), #130 (bed onboarding), #133 (parlor population,
-  Ratici SHIP-APPROVED — profile needed first, wiki-verify
-  [Gentleman Thief] 7.24 ceiling); **#127 y-sort LAST** (world.gd
-  collides with WB).
-- **USER ACKs pending:** [Eagle Eyes] drift flag; #134 Wave D ruling
-  (Alchemist/Druid recommended, Priest fenced, Thief deferred).
-- Wave A retro notes: full unit sweep is now IN the controller gate
-  list (CI unit job caught the kettle/test_sim_core collision the
-  canonical sweep missed); leak-check CI job also runs the QA-notes
-  drift validator (render_qa_notes.py --write after adding scripts).
+- **MERGED today: #135 (Wave A), #136 (#128 garden door), #137 (#129
+  music continuity — ear-gate still rides the human audio pass).**
+- **Wave B #132 LIVE — USER-DISPATCHED Codex session
+  019f6ce0-a46a-7b61-b515-b87c50ac7912** running the committed
+  completion spec (docs/design/wave-b-completion-spec.md, branch
+  issue/132-wave-b-verbs @ 0cc5562 + salvage e9e5380). The main
+  checkout is OWNED by that run — no edits there. Controller monitors
+  via the session rollout file (~/.codex/sessions/2026/07/16/). On
+  completion: commit, alarm-wrapped full gates, windowed shots (blink
+  streak/ward charm/follower/reduced-motion), whole-branch review, PR.
+  History: first run wedged 4h in a gate (assert-hang family) and was
+  canceled; salvage committed; spec bakes in alarm-wrapping.
+- **Then:** #130 bed onboarding + #133 parlor (Ratici approved,
+  profile first) — controller voice work; #127 y-sort LAST.
+- **USER pending:** #134 Wave D ruling; [Eagle Eyes] drift-flag ACK.
 
 ## 🩹 PLAYTEST TRIAGE (2026-07-15, mid-session user report — all filed)
 
