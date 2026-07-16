@@ -37,6 +37,14 @@
       }
      },
      "text": "The one who went down the tunnels and climbed back out. The gallery's bricked and the streets are quiet. I've a report with your name on it that I'll deny writing. Rest. You've earned a boring week. Take it before the next one."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "studied_necromancy": 1
+      }
+     },
+     "text": "Word travels. You've been taking lessons from the Guild-square [Necromancer]. Not illegal. Noted, all the same — this city has burned for less."
     }
    ],
    "options": [

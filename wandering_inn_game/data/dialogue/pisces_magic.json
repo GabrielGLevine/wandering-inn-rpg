@@ -37,6 +37,14 @@
       }
      },
      "text": "You have the look of someone who felt something they cannot name. I get that look often, usually right before someone asks me to explain it for free. Go on, then. Tell me what you sensed."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "studied_necromancy": 1
+      }
+     },
+     "text": "My other pupil. Say it quietly — the Watch counts my acquaintances. How fares the honest art?"
     }
    ],
    "options": [
@@ -161,6 +169,42 @@
       }
      ],
      "goto": "second_door_bridge"
+    },
+    {
+     "text": "The other art. The one you actually practice. Teach me.",
+     "requires": {
+      "class": {
+       "mage": 1
+      },
+      "accomplishment": {
+       "learned_magic_from_pisces": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "asked_about_necromancy": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "asked_about_necromancy"
+      }
+     ],
+     "goto": "necro_deflect"
+    },
+    {
+     "text": "I meant what I asked. Teach me the dead art.",
+     "requires": {
+      "accomplishment": {
+       "asked_about_necromancy": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "studied_necromancy": 1
+      }
+     },
+     "goto": "necro_teach"
     }
    ]
   },
@@ -420,6 +464,47 @@
    "options": [
     {
      "text": "Sleep on it. Literally. Got it.",
+     "end": true
+    }
+   ]
+  },
+  "necro_deflect": {
+   "_comment": "Two-visit deflect->teach per spec §5; the deflect option banks asked_about_necromancy and hides itself, which reveals the second ask on the next hub entry.",
+   "speaker": "Pisces",
+   "text": "No. — You mistake me: not 'no, never.' No as a complete sentence, which is more courtesy than this city has ever extended to my discipline. Necromancy is not a flourish one appends to a hobbyist's repertoire. It is the study they exile you for. Ask me again when you have decided you mean it.",
+   "options": [
+    {
+     "text": "Fine.",
+     "end": true
+    }
+   ]
+  },
+  "necro_teach": {
+   "speaker": "Pisces",
+   "text": "...You are aware of what they call me in this square. You have heard the Watch's tone when my name comes up. And still you ask. Very well — sit. First principle: the dead do not mind. The living mind enormously, and you will learn to weather that, or you will quit. Bone answers a precise mind. Yours is nearly adequate.",
+   "options": [
+    {
+     "text": "Show me.",
+     "effects": [
+      {
+       "accomplishment": "studied_necromancy"
+      }
+     ],
+     "goto": "necro_taught"
+    },
+    {
+     "text": "On second thought—",
+     "end": true
+    }
+   ]
+  },
+  "necro_taught": {
+   "_comment": "'A fencer's trick first, a spell second' = the WB [Flash Step] teaching-beat callback (spec §5). 'Sleep will settle the argument' = diegetic bed signpost (#130 family).",
+   "speaker": "Pisces",
+   "text": "We begin with a dart of bone. Unglamorous, honest, and it has preserved my life more often than any duel. Your channels will fight the grammar of it; sleep will settle the argument. And — in time, if your footwork ever deserves it, I may show you the step that made me difficult to duel. A fencer's trick first, a spell second. When next we meet: fewer questions, better posture.",
+   "options": [
+    {
+     "text": "Understood.",
      "end": true
     }
    ]
