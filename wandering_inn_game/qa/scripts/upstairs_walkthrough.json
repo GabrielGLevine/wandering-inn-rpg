@@ -82,6 +82,15 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "#129 continuity proof: upstairs resolves to the already-playing inn stream, so no second music play event may fire.",
+   "action": "assert_event_absent",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "music_inn_upstairs",
+    "bus": "Music"
+   }
+  },
+  {
    "_comment": "Chronology mirrors guild_door: transition() fires map_changed synchronously, world.gd rebuilds the field (mood/map/entities) BEFORE wi_game.gd's interact() records on_enter_accomplishment -- visited_own_room asserted AFTER the render events.",
    "action": "wait_for_event",
    "type": "ui_mood_applied",

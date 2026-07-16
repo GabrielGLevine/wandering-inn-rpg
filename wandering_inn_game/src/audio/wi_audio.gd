@@ -64,6 +64,7 @@ var _music_entries: Array[Dictionary] = []
 var _music_players: Array[AudioStreamPlayer] = []
 var _active_music_index := 0
 var _current_music_id := ""
+var _current_music_stream_path := ""
 var _field_context_id := ""
 ## The live crossfade Tween, if any -- killed before scheduling a new one
 ## (see `_crossfade_to_music`'s doc comment for the double-trigger ordering
@@ -579,23 +580,42 @@ func _sync_field_music_to_current_map() -> void:
 
 func _play_music_entry(entry: Dictionary) -> void:
 	var id := String(entry.get("id", ""))
-	if id.is_empty() or id == _current_music_id:
+	if id.is_empty():
 		return
 	var stream_path := String(entry.get("stream", ""))
 	if stream_path.is_empty():
 		push_warning("WIAudio: bad/missing music stream for id '%s': %s" % [id, stream_path])
 		return
-	var missing := not ResourceLoader.exists(stream_path)
-	if missing:
-		_log_missing_stream(stream_path)
 	var bus := String(entry.get("bus", "Music"))
 	if not BUS_NAMES.has(bus):
 		push_warning("WIAudio: unknown music bus '%s' for id '%s'" % [bus, id])
 		return
 
-	if String(entry.get("kind", "")) == FIELD_MUSIC_KIND:
+	var kind := String(entry.get("kind", ""))
+	# TRAP (#129): compare resolved stream paths, never event ids; shared-track
+	# contexts must preserve the live player/tween/volume while updating context.
+	if stream_path == _current_music_stream_path:
+		# Review hardening (#129): the guard only holds while the shared track is
+		# actually LIVE -- a stopped/finished player (sting interruption) must fall
+		# through to a full restart, and the same-stream pair's differing
+		# volume_db still applies (inn -6 vs upstairs -8: retarget, don't skip).
+		var _same_live := _is_headless() or (_music_players.size() >= 2 and _music_players[_active_music_index].playing)
+		if _same_live:
+			if kind == FIELD_MUSIC_KIND:
+				_field_context_id = id
+			_current_music_id = id
+			if not _is_headless():
+				_music_players[_active_music_index].volume_db = float(entry.get("volume_db", -6.0))
+			return
+		_current_music_stream_path = ""
+
+	var missing := not ResourceLoader.exists(stream_path)
+	if missing:
+		_log_missing_stream(stream_path)
+	if kind == FIELD_MUSIC_KIND:
 		_field_context_id = id
 	_current_music_id = id
+	_current_music_stream_path = stream_path
 
 	## Headless: same "mapping validated + would have played" semantics as
 	## SFX (`_play_entry`) -- no AudioServer/stream/crossfade work happens
