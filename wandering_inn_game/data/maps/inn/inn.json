@@ -375,7 +375,7 @@
      "lines": [
       "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
      ],
-     "_comment": "GH#130 bed-onboarding nudge: one stage per pre-first-sleep class-gain counter (talk pools AND-gate accomplishments only, so OR = sibling stages sharing the same line). Authored FIRST as a block so ANY later-satisfied stage overrides (array-order-last-match-wins, social.gd:20-22); the erin_bed_slept stage below retires the nudge after the first sleep (the `slept` counter ships with this issue, wi_game.gd sleep())."
+     "_comment": "GH#130 bed-onboarding nudge: one stage per SINGLE-BEAT pre-first-sleep class-gain counter (multi-step routes -- diplomat gossip x3, trader commerce x5 -- deliberately un-nudged; review L3) (talk pools AND-gate accomplishments only, so OR = sibling stages sharing the same line). Authored FIRST as a block so ANY later-satisfied stage overrides (array-order-last-match-wins, social.gd:20-22); the erin_bed_slept stage below retires the nudge after the first sleep (the `slept` counter ships with this issue, wi_game.gd sleep())."
     },
     {
      "id": "erin_bed_nudge_warrior",

@@ -97,6 +97,7 @@ STRUCTURAL_LITERALS = [
     "read_the_delivery_board", "door_study_sleeps", "door_awakened",
     "watch_runner_pointed", "reached_two_classes", "garden_door_unlocked",
     "post_game", "victories", "melee_hit", "ranged_hit", "spell_cast",
+    "slept",
 ]
 
 

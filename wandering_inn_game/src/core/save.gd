@@ -1,7 +1,7 @@
 class_name WISave
 extends RefCounted
 
-const VERSION := 5
+const VERSION := 6
 
 
 const DEPRECATED_IDS := {
@@ -65,7 +65,7 @@ static func _migrated(data: Dictionary) -> Dictionary:
 	if not (data.get("state") is Dictionary):
 		return data
 	var version := int(data.get("version", -1))
-	if version != 2 and version != 3 and version != 4 and version != VERSION:
+	if version != 2 and version != 3 and version != 4 and version != 5 and version != VERSION:
 		return data
 	var out: Dictionary = data.duplicate(true)
 	var state: Dictionary = out["state"]
@@ -81,6 +81,16 @@ static func _migrated(data: Dictionary) -> Dictionary:
 		state["equipped"] = {WIKeys.WEAPON: "rusty_sword", "armor": ""}
 		state["container_state"] = {}
 		state["actions_since_sleep"] = 0
+		version = 5
+	if version == 5:
+		# GH#130: `slept` counter is new; pre-v6 saves banked sleeps only in the
+		# times_slept var. Backfill min(times_slept, 1) so the bed nudge never
+		# fires at a player twenty sleeps deep (review M1). The cap at 1 is
+		# deliberate -- nothing gates above 1 and inventing history is worse.
+		var acc: Dictionary = state.get("accomplishments", {})
+		if not acc.has("slept") and int(state.get("times_slept", 0)) > 0:
+			acc["slept"] = 1
+			state["accomplishments"] = acc
 		version = VERSION
 	out["version"] = version
 	var class_map: Dictionary = DEPRECATED_IDS["classes"]

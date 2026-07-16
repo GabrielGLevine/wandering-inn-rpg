@@ -3474,7 +3474,8 @@
      "dialogue",
      "exploration"
     ]
-   }
+   },
+   "fixture": "pre_first_sleep"
   }
  ]
 }
