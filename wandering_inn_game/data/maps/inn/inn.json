@@ -603,7 +603,7 @@
    "id": "inn_witch_kettle",
    "kind": "prop",
    "cell": [
-    2,
+    6,
     2
    ],
    "display_name": "Hearth-Side Kettle",
@@ -615,7 +615,8 @@
     "accomplishment": "witch_craft_used",
     "item": "remedy_draught",
     "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
-   }
+   },
+   "_comment": "GH#131 review-CI fix: moved off (2,2) -- test_sim_core walks it (open-cell move from the (2,3) start). (6,2) is a blocked kitchen-counter cell (the #116 dress-a-blocked-cell pattern); approach (6,3), facing up, which test_sim_core itself asserts open."
   },
   {
    "id": "inn_chef_counter",
