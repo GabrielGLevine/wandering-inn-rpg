@@ -72,7 +72,7 @@
 				{ "level": 8, "requires": { "spell_cast": 30 }, "grants": [] },
 				{ "level": 9, "requires": { "spell_cast": 37 }, "grants": [] },
 				{ "level": 10, "requires": { "spell_cast": 45 }, "grants": [] },
-				{ "level": 11, "requires": { "spell_cast": 54 }, "grants": [] },
+				{ "level": 11, "requires": { "spell_cast": 54 }, "grants": ["flash_step"] },
 				{ "level": 12, "requires": { "spell_cast": 64 }, "grants": [] }
 			]
 		},
@@ -441,7 +441,7 @@
 				{ "level": 2, "requires_any": { "completed_delivery": 2, "delivered_item": 3 }, "grants": [] },
 				{ "level": 3, "requires_any": { "completed_delivery": 4, "delivered_item": 6 }, "grants": ["efficient_run"] },
 				{ "level": 4, "requires_any": { "completed_delivery": 7, "delivered_item": 10 }, "grants": [] },
-				{ "level": 5, "requires_any": { "completed_delivery": 10, "delivered_item": 15 }, "grants": [] },
+				{ "level": 5, "requires_any": { "completed_delivery": 10, "delivered_item": 15 }, "grants": ["double_step"] },
 				{ "level": 6, "requires_any": { "completed_delivery": 14, "delivered_item": 21 }, "grants": [] },
 				{ "level": 7, "requires_any": { "completed_delivery": 18, "delivered_item": 28 }, "grants": [] },
 				{ "level": 8, "requires_any": { "completed_delivery": 23, "delivered_item": 36 }, "grants": [] },
@@ -477,7 +477,7 @@
 				{ "level": 2, "requires": { "witch_craft_used": 2 }, "grants": [] },
 				{ "level": 3, "requires": { "witch_craft_used": 4 }, "grants": ["witchs_warding"] },
 				{ "level": 4, "requires": { "witch_craft_used": 7 }, "grants": [] },
-				{ "level": 5, "requires": { "witch_craft_used": 10 }, "grants": [] },
+				{ "level": 5, "requires": { "witch_craft_used": 10 }, "grants": ["hearthward_charm"] },
 				{ "level": 6, "requires": { "witch_craft_used": 14 }, "grants": [] },
 				{ "level": 7, "requires": { "witch_craft_used": 18 }, "grants": ["evil_eye"] },
 				{ "level": 8, "requires": { "witch_craft_used": 23 }, "grants": [] },
@@ -492,7 +492,7 @@
 			"stat_growth": { "int": 1, "cha": 1 },
 			"inherits": "hedge_witch",
 			"levels": [
-				{ "level": 10, "requires": { "witch_craft_used": 36 }, "grants": [] },
+				{ "level": 10, "requires": { "witch_craft_used": 36 }, "grants": ["greater_hearthward"] },
 				{ "level": 11, "requires": { "witch_craft_used": 44 }, "grants": [] },
 				{ "level": 12, "requires": { "witch_craft_used": 53 }, "grants": [] }
 			]
@@ -509,9 +509,9 @@
 				{ "level": 2, "requires": { "won_combat": 3 }, "grants": [] },
 				{ "level": 3, "requires": { "death_cast": 4 }, "grants": ["deathbolt"] },
 				{ "level": 4, "requires": { "death_cast": 8 }, "grants": [] },
-				{ "level": 5, "requires": { "death_cast": 13 }, "grants": [] },
+				{ "level": 5, "requires": { "death_cast": 13 }, "grants": ["animate_dead"] },
 				{ "level": 6, "requires": { "death_cast": 18 }, "grants": [] },
-				{ "level": 7, "requires": { "death_cast": 24 }, "grants": [] },
+				{ "level": 7, "requires": { "death_cast": 24 }, "grants": ["flash_step"] },
 				{ "level": 8, "requires": { "death_cast": 30 }, "grants": [] },
 				{ "level": 9, "requires": { "death_cast": 37 }, "grants": [] },
 				{ "level": 10, "requires": { "death_cast": 45 }, "grants": [] },

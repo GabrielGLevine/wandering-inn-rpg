@@ -149,6 +149,10 @@ func _build_expected_counts() -> Dictionary:
 	]:
 		counts[icon_id + "/idle"] = 1
 
+	for icon_id: String in ["icon_double_step", "icon_flash_step", "icon_animate_dead", "icon_hearthward_charm", "icon_greater_hearthward"]:
+		counts[icon_id + "/idle"] = 1
+	counts["skeleton_ally/idle"] = 4
+
 	for icon_id: String in [
 		"icon_appraise_goods", "icon_called_shot", "icon_directed_strike",
 		"icon_disarm_trap", "icon_find_trap", "icon_flame_dart",

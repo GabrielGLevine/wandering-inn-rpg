@@ -61,6 +61,8 @@ var _camera: Camera2D
 var _player_visual: Node2D
 var _player_sprite: AnimatedSprite2D
 var _player_anim_token := 0
+var _companion_visual: Node2D
+var _ward_visuals: Array[Node2D] = []
 var _pc_light: PointLight2D
 var _sneak_tinted := false
 ## The id of the LAST `sneaks: true`-tagged skill whose
@@ -377,6 +379,8 @@ func _rebuild_field() -> void:
 		child.queue_free()
 	_entity_visuals.clear()
 	_player_sprite = null
+	_companion_visual = null
+	_ward_visuals.clear()
 	_pc_light = null
 	# See `_sneak_tinted`'s own doc comment -- the fresh
 	# `_player_sprite` built below is always untinted, so the tracker must
@@ -423,6 +427,8 @@ func _rebuild_field() -> void:
 	_count_visual(_player_visual, render_counts)
 	_reconcile_pc_light()
 	_reconcile_sneak_visual()
+	_reconcile_ward_visuals()
+	_reconcile_companion_visual()
 	render_counts["pc_sprite"] = pc_sprite
 	ObservableBus.emit_domain_event(WIEvents.UI_ENTITIES_RENDERED, render_counts)
 	assert(_light_count <= LIGHT_BUDGET,
@@ -1152,12 +1158,22 @@ func _queue_player_idle() -> void:
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.PLAYER_MOVED:
 		var cell := Vector2i(int(payload["cell"][0]), int(payload["cell"][1]))
+		_move_companion_visual(_player_visual.position)
 		_move_player_visual(Vector2(cell) * CELL)
 		_play_player_anim("walk")
 		_queue_player_idle()
 		_pan_camera_to_player()
 	elif type == WIEvents.PLAYER_BLOCKED:
 		_bump_player_visual()
+	elif type == WIEvents.PLAYER_TELEPORTED:
+		var from_cell := Vector2i(int(payload["from"][0]), int(payload["from"][1]))
+		var to_cell := Vector2i(int(payload["to"][0]), int(payload["to"][1]))
+		_move_companion_visual(Vector2(from_cell) * CELL)
+		_kill_player_tween()
+		_player_visual.position = Vector2(to_cell) * CELL
+		_render_blink_afterimage(from_cell, to_cell)
+		_play_player_anim("idle")
+		_pan_camera_to_player()
 	elif type == WIEvents.MAP_CHANGED:
 		if _main != null:
 			_main.transition_map(_rebuild_field_after_transition)
@@ -1209,12 +1225,18 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_sneak_active_skill = used_skill
 	elif type == WIEvents.SNEAK_STARTED or type == WIEvents.SNEAK_ENDED:
 		_reconcile_sneak_visual()
+	elif type == WIEvents.WARD_PLACED:
+		_reconcile_ward_visuals()
+	elif type == WIEvents.COMPANION_CHANGED:
+		_reconcile_companion_visual()
 	elif type == WIEvents.PHASE_CHANGED:
 		if _map_transition_stale_cover():
 			return
 		_reconcile_pc_light()
 		_reconcile_sneak_visual()
 		_reconcile_ice_overlay()
+		_reconcile_ward_visuals()
+		_reconcile_companion_visual()
 		# 8b R1 (issue #10): the witch's two-form visual_states swap tracks
 		# atmosphere.gd's own phase clock live -- this fires on every
 		# crossing AND the sleep-to-day reset, so the elder/young read is
@@ -1252,6 +1274,108 @@ func _move_player_visual(target: Vector2) -> void:
 	_player_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	_player_tween.tween_property(_player_visual, "position", target, duration)
 	_player_tween.finished.connect(_on_move_tween_finished)
+
+
+func _move_companion_visual(target: Vector2) -> void:
+	if _companion_visual == null or not is_instance_valid(_companion_visual):
+		return
+	var duration := _presentation_delay(MOVE_TWEEN_SECONDS)
+	if duration <= 0.0 or WISettings.reduce_motion():
+		_companion_visual.position = target
+		return
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(_companion_visual, "position", target, duration)
+
+
+func _render_blink_afterimage(from_cell: Vector2i, to_cell: Vector2i) -> void:
+	var reduced := WISettings.reduce_motion()
+	ObservableBus.emit_domain_event(WIEvents.UI_TELEPORT_RENDERED, {
+		"from": [from_cell.x, from_cell.y],
+		"to": [to_cell.x, to_cell.y],
+		"reduced_motion": reduced,
+	})
+	if reduced:
+		return
+	var streak := Line2D.new()
+	streak.width = 3.0
+	streak.default_color = Color(0.62, 0.82, 1.0, 0.72)
+	var from_pos := Vector2(from_cell) * CELL + Vector2(CELL, CELL) * 0.5
+	var to_pos := Vector2(to_cell) * CELL + Vector2(CELL, CELL) * 0.5
+	streak.position = from_pos
+	streak.points = PackedVector2Array([
+		Vector2.ZERO,
+		to_pos - from_pos,
+	])
+	_entities_root.add_child(streak)
+	var qa_visual_hold: bool = DisplayServer.get_name() != "headless" \
+		and TestDriver != null and TestDriver.active() \
+		and QAPaths.user_args().get("blink-visual", "") == "1"
+	if qa_visual_hold:
+		# Freeze opt-in evidence; screenshot settling outlives transient cleanup.
+		# Scene teardown owns this QA-only streak. Gameplay still fades below.
+		return
+	if _presentation_delay(0.18) <= 0.0:
+		streak.call_deferred("queue_free")
+		return
+	var tween := create_tween()
+	tween.tween_property(streak, "modulate:a", 0.0, _presentation_delay(0.18))
+	tween.finished.connect(streak.queue_free)
+
+
+func _reconcile_ward_visuals() -> void:
+	for visual: Node2D in _ward_visuals:
+		if is_instance_valid(visual):
+			visual.queue_free()
+	_ward_visuals.clear()
+	if _entities_root == null or Game.sim == null:
+		return
+	for encounter_id: String in Game.sim.warded_encounters:
+		var ward: Dictionary = Game.sim.warded_encounters[encounter_id]
+		if String(ward.get("map", "")) != Game.sim.current_map:
+			continue
+		var raw_cell: Array = ward.get("cell", [])
+		if raw_cell.size() != 2:
+			continue
+		var cell := Vector2i(int(raw_cell[0]), int(raw_cell[1]))
+		var holder := _make_entity_visual(
+			cell, "icon_hearthward_charm", [], Color(0.96, 0.65, 0.25, 0.9)
+		)
+		var ring := Line2D.new()
+		ring.width = 1.0
+		ring.default_color = Color(1.0, 0.78, 0.35, 0.34)
+		ring.closed = true
+		var ring_points := PackedVector2Array()
+		for point_index: int in 12:
+			var angle := TAU * float(point_index) / 12.0
+			ring_points.append(Vector2(8, 8) + Vector2(cos(angle), sin(angle)) * 7.0)
+		ring.points = ring_points
+		holder.add_child(ring)
+		_ward_visuals.append(holder)
+	ObservableBus.emit_domain_event(WIEvents.UI_WARD_RENDERED, {
+		"map": Game.sim.current_map,
+		"count": _ward_visuals.size(),
+	})
+
+
+func _reconcile_companion_visual() -> void:
+	if _companion_visual != null and is_instance_valid(_companion_visual):
+		_companion_visual.queue_free()
+	_companion_visual = null
+	if _entities_root == null or Game.sim == null or Game.sim.companion == "":
+		ObservableBus.emit_domain_event(WIEvents.UI_COMPANION_RENDERED, {"active": false})
+		return
+	var trail_cell: Vector2i = Game.sim.player_cell - Game.sim.player_facing
+	if trail_cell.x < 0 or trail_cell.y < 0 \
+			or trail_cell.x >= Game.sim.grid_size.x or trail_cell.y >= Game.sim.grid_size.y:
+		trail_cell = Game.sim.player_cell
+	_companion_visual = _make_entity_visual(
+		trail_cell, Game.sim.companion, [], Color(0.72, 0.76, 0.7)
+	)
+	ObservableBus.emit_domain_event(WIEvents.UI_COMPANION_RENDERED, {
+		"active": true,
+		"companion": Game.sim.companion,
+	})
 
 
 func _bump_player_visual() -> void:

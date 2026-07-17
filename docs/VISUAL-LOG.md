@@ -1505,3 +1505,8 @@ events, and result files live in the gitignored
   registered) — the hats-off tell deserves a real hat-stand sprite.
 - unnamed gentlemen ride human_laborer/gnoll_traveler/drake_patron
   bases with tints; bowler/coat reads live in observe copy only.
+
+## 2026-07-16 (class expansion Wave B)
+- PixelLab drain: replace the five code-drawn placeholder skill icons for
+  `double_step`, `flash_step`, `animate_dead`, `hearthward_charm`, and
+  `greater_hearthward`.

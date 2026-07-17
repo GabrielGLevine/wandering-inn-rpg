@@ -10,9 +10,12 @@ var _record_accomplishment: Callable
 var _remove_entity: Callable
 var _use_skill: Callable
 var _set_light_active: Callable
+var _blink: Callable
+var _ward: Callable
+var _animate: Callable
 
 
-func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, toggle_sneak_cb: Callable, mark_skill_used_cb: Callable, record_accomplishment_cb: Callable, remove_entity_cb: Callable, use_skill_cb: Callable, set_light_active_cb: Callable) -> void:
+func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, toggle_sneak_cb: Callable, mark_skill_used_cb: Callable, record_accomplishment_cb: Callable, remove_entity_cb: Callable, use_skill_cb: Callable, set_light_active_cb: Callable, blink_cb: Callable, ward_cb: Callable, animate_cb: Callable) -> void:
 	_event_sink = event_sink
 	_skills = skills
 	_break_sneak = break_sneak_cb
@@ -22,6 +25,9 @@ func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, t
 	_remove_entity = remove_entity_cb
 	_use_skill = use_skill_cb
 	_set_light_active = set_light_active_cb
+	_blink = blink_cb
+	_ward = ward_cb
+	_animate = animate_cb
 
 
 ## CONTRACT (plan P1): faced entity with requires_skill==skill_id + on_skill_use
@@ -42,6 +48,15 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 		return {}
 	if bool(_skills.get(skill_id, {}).get("sneaks", false)):
 		return _toggle_sneak.call(skill_id)
+	var skill: Dictionary = _skills.get(skill_id, {})
+	if bool(skill.get("blinks", false)):
+		return _blink.call(skill_id, skill)
+	if bool(skill.get("wards", false)):
+		_break_sneak.call()
+		return _ward.call(skill_id, skill, faced_cell)
+	if bool(skill.get("animates", false)):
+		_break_sneak.call()
+		return _animate.call(skill_id, skill, target)
 	if not target.is_empty() and String(target.get("requires_skill", "")) == skill_id and target.has("on_skill_use"):
 		_break_sneak.call()
 		return _use_skill.call(skill_id, String(target[WIKeys.ID]))

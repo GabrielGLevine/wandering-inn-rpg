@@ -54,6 +54,13 @@ const ENCOUNTER_CELLS := [
 	# -- class requires holding [Mage]); "solo" here on the CELL strips Relc, deliberate.
 	{"name": "mage3_necromancer3_goblin_ambush_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "mage3_necromancer3_caster", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "mage5_necromancer7_raskghar_scouts_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "mage5_necromancer7_caster", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# Wave-B companion cells (#132): these are the two shipped dual-necromancer
+	# builds with an active Raised Skeleton. Both are GATED at 0.55-0.95 wins
+	# and 3-12 median rounds. At authoring over 100 seeds they measured 0.62/4
+	# and 0.92/3 (win rate/median rounds), after selecting only the encounter
+	# composition; combatant stats remained fixed.
+	{"name": "mage3_necromancer3_goblin_ambush_with_skeleton", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider", "goblin_shaman"], "build": "mage3_necromancer3_caster", "ally": "skeleton_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "mage5_necromancer7_raskghar_scouts_with_skeleton", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "mage5_necromancer7_caster", "ally": "skeleton_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BOSS_CELLS := [

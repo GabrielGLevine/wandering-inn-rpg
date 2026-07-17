@@ -42,6 +42,12 @@ func _init() -> void:
 	assert(dual_necro3.has("frost_bolt") and dual_necro3.has("bone_dart") and dual_necro3.has("deathbolt"), "mage 3/necromancer 3 folds both class kits")
 	var dual_necro7 := WIProgression.granted_skills({"mage": 5, "necromancer": 7}, catalog)
 	assert(dual_necro7.has("frost_bolt") and dual_necro7.has("bone_dart") and dual_necro7.has("deathbolt"), "mage 5/necromancer 7 folds both class kits")
+	assert(WIProgression.granted_skills({"runner": 5}, catalog).has("double_step"), "runner L5 grants double_step")
+	assert(WIProgression.granted_skills({"necromancer": 5}, catalog).has("animate_dead"), "necromancer L5 grants animate_dead")
+	assert(WIProgression.granted_skills({"necromancer": 7}, catalog).has("flash_step"), "necromancer L7 grants flash_step")
+	assert(WIProgression.granted_skills({"mage": 11}, catalog).has("flash_step"), "mage L11 grants flash_step")
+	assert(WIProgression.granted_skills({"hedge_witch": 5}, catalog).has("hearthward_charm"), "hedge witch L5 grants hearthward_charm")
+	assert(WIProgression.granted_skills({"witch": 10}, catalog).has("greater_hearthward"), "witch L10 grants greater_hearthward")
 	assert(WIProgression.granted_skills({"cook": 5}, catalog).has("perfect_recall"), "cook L5 grants perfect_recall")
 
 	assert(WIProgression.check_class_gains({}, {}, catalog).is_empty(), "classless + no accomplishments = no gain")

@@ -1,0 +1,24 @@
+{
+ "_comment": "Issue #132 animate fixture: [Animate Dead] is a QA-fixture affordance facing the authored ruin bone pile; its exact Necromancer L5 grant is pinned in test_progression. An honestly-earned Warrior L2 and Relc field in the road fight so the fragile skeleton has a stable survival proof before the subsequent real sleep clears companion state.",
+ "version": 6,
+ "state": {
+  "current_map": "ruin_surface",
+  "player_cell": [14, 10],
+  "player_facing": [1, 0],
+  "classes": {"warrior": 2},
+  "accomplishments": {"door_chain_started": 1, "met_relc": 1, "sparred_with_relc": 1, "won_combat": 1},
+  "player_skills": ["animate_dead"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {"weapon": "", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": ["animate_dead"]
+ }
+}
