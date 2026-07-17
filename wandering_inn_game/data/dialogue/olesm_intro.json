@@ -583,9 +583,6 @@
        "accomplishment": "commended_by_olesm"
       },
       {
-       "accomplishment": "watch_runner_pointed"
-      },
-      {
        "gold": 6
       }
      ],
@@ -609,9 +606,6 @@
       },
       {
        "accomplishment": "commended_by_olesm"
-      },
-      {
-       "accomplishment": "watch_runner_pointed"
       },
       {
        "gold": 6
@@ -640,9 +634,6 @@
       },
       {
        "accomplishment": "commended_by_olesm"
-      },
-      {
-       "accomplishment": "watch_runner_pointed"
       },
       {
        "gold": 6
@@ -676,25 +667,25 @@
   },
   "cisterns_done": {
    "speaker": "Olesm",
-   "text": "Then it's over, and the city's quieter for it. That's real work, the kind nobody thanks you for, so let me be the exception. You've the Council's gratitude, and mine, which comes with more paperwork but rather more warmth. If you ever want a game, or a job that needs a clear head, you know where the board is. — Before you can leave, a Watch runner leans in at the door, breathless: the Captain wants a word. Zevara. At the gate.",
+   "text": "Then it's over, and the city's quieter for it. That's real work, the kind nobody thanks you for, so let me be the exception. You've the Council's gratitude, and mine, which comes with more paperwork but rather more warmth. If you ever want a game, or a job that needs a clear head, you know where the board is.",
    "options": [
     {
      "text": "Anytime, Olesm.",
      "end": true
     }
    ],
-   "_comment": "GH#152: the runner beat here is the PRODUCER of watch_runner_pointed (banked in the report options) -- the previously zero-producer gate on Zevara's summons, which dead-ended the whole Raskghar arc / Act III."
+   "_comment": "GH#152: the runner beat here is the PRODUCER of watch_runner_pointed (banked in the report options) -- the previously zero-producer gate on Zevara's summons, which dead-ended the whole Raskghar arc / Act III. GH#152-FOLLOWUP: the runner POINTER is code-banked at the sleep beat once Act II conditions hold (_maybe_fire_tremor_pointer, wi_game.gd -- STRUCTURAL_LITERALS means code-banked; both the #152 scout and controller missed this). Do NOT bank watch_runner_pointed here: dialogue banks bypassed the deliberate act pacing (shipped briefly in #153, reverted same day). Legibility of the pointer lives in the #148 lattice (Erin/Olesm/Krshia relay lines on watch_runner_pointed)."
   },
   "cisterns_intel": {
    "speaker": "Olesm",
-   "text": "...Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away. The whole shape of the problem on one page. Now the Watch goes in knowing the ground instead of bleeding to learn it. A map IS as good as a corpse, and I have never once gotten to say that to someone who agreed. Take the Council's thanks — and mine, doubled, because you did it the clever way. — Before you can leave, a Watch runner leans in at the door, breathless: the Captain wants a word. Zevara. At the gate.",
+   "text": "...Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away. The whole shape of the problem on one page. Now the Watch goes in knowing the ground instead of bleeding to learn it. A map IS as good as a corpse, and I have never once gotten to say that to someone who agreed. Take the Council's thanks — and mine, doubled, because you did it the clever way.",
    "options": [
     {
      "text": "Glad it's useful.",
      "end": true
     }
    ],
-   "_comment": "GH#152: the runner beat here is the PRODUCER of watch_runner_pointed (banked in the report options) -- the previously zero-producer gate on Zevara's summons, which dead-ended the whole Raskghar arc / Act III."
+   "_comment": "GH#152: the runner beat here is the PRODUCER of watch_runner_pointed (banked in the report options) -- the previously zero-producer gate on Zevara's summons, which dead-ended the whole Raskghar arc / Act III. GH#152-FOLLOWUP: the runner POINTER is code-banked at the sleep beat once Act II conditions hold (_maybe_fire_tremor_pointer, wi_game.gd -- STRUCTURAL_LITERALS means code-banked; both the #152 scout and controller missed this). Do NOT bank watch_runner_pointed here: dialogue banks bypassed the deliberate act pacing (shipped briefly in #153, reverted same day). Legibility of the pointer lives in the #148 lattice (Erin/Olesm/Krshia relay lines on watch_runner_pointed)."
   },
   "lism_errand": {
    "speaker": "Olesm",

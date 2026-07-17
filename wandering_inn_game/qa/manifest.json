@@ -3565,22 +3565,23 @@
    "script": "raskghar_entry_loop",
    "seed": 9,
    "fixture": "raskghar_entry_start",
-   "note": "GH#152: cisterns report -> Watch runner -> Zevara summons -> heard_the_deep_tremor, NO fixture hand-banks past the report (the arc's entry was a zero-producer dead end in v0.9.0)",
+   "note": "GH#152-followup: the REAL act-paced Act III entry (Act II conditions -> sleep fires the tremor pointer -> Zevara summons -> heard_the_deep_tremor), no chain hand-banks",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
+     "inn_upstairs",
      "street"
     ],
     "fixtures": [
      "raskghar_entry_start"
     ],
     "skills": [
-     "basic_cleaning"
+     "basic_cleaning",
+     "basic_cooking"
     ],
     "dialogue": [
-     "olesm_intro",
      "zevara_intro"
     ],
     "systems": [
