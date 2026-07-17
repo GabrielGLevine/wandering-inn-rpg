@@ -23,11 +23,8 @@ merged`), not here.
   dungeon grade lifted ~35% user-calibrated).
 - **Post-release fixes MERGED (#151 → closes #149 #150):** garden-door
   cell wall-dressed (phantom bump fixed); rift vermin fight gated on
-  door_chain_started. DESIGN DELTA FOR USER ACK: the leak stays
-  VISIBLE pre-quest as inert foreshadowing (own observe line) — the
-  unit validator forbids present_when on encounters and hiding would
-  recreate the invisible-block class; full absence = an engine change
-  (trigger-presence consult), say the word.
+  door_chain_started. Vermin visible-inert foreshadowing ACKED by user
+  2026-07-17 — shipped shape is final.
 - **#148 thread-legibility APPROVED (tiers 1+2 core, 3 on stuck
   points, 4 default-off toggle)** — NEXT MILESTONE HEADLINE; spec next
   session. #147 music sourcing filed (not a blocker).
