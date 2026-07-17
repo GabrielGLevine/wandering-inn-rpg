@@ -85,7 +85,7 @@ DATA = GAME_ROOT / "data"
 DIALOGUE_DIR = DATA / "dialogue"
 OUT_PATH = DATA / "shipped_ids.json"
 
-RELEASE = "0.8.0"
+RELEASE = "0.9.0"
 
 # ---------------------------------------------------------------------------
 # STRUCTURAL_LITERALS -- KEEP IN SYNC with tests/test_shipped_ids.gd's own
@@ -98,6 +98,8 @@ STRUCTURAL_LITERALS = [
     "watch_runner_pointed", "reached_two_classes", "garden_door_unlocked",
     "post_game", "victories", "melee_hit", "ranged_hit", "spell_cast",
     "slept",
+    "completed_delivery", "blinked_past_danger",
+    "warded_danger", "witch_craft_used",
 ]
 
 
