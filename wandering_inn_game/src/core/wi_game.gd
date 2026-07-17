@@ -489,11 +489,22 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	if target.is_empty() or not target.has("on_skill_use"):
 		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": target_id})
 		return {}
-	var req_item := String(target.get("requires_item", ""))
-	if req_item != "" and not inventory.has(req_item):
-		var item_hint := String(target.get("item_hint_toast", "Bare hands won't do it. Something in your pack might."))
-		_emit(WIEvents.TOAST, {"text": item_hint})
-		return {"item_hint": req_item}
+	# STRING | ARRAY CONTRACT (Wave D-1, #155): a bench prop's `requires_item` gate
+	# and its `on_skill_use.remove_item` consume both accept either a single id
+	# (String) or a list of ids (Array) -- mirrors the `on_victory`/`inherits`
+	# String|Array idiom already used in this file. The gate is ALL-OR-NOTHING:
+	# EVERY listed item must be in the pack, or the item-hint fires and NOTHING is
+	# consumed (the gate loop returns before any effect resolves). This is the
+	# component-consuming-recipe seam ([True Synthesis] eats solvent_phial +
+	# mineral_salts). It is a bench-craft-only path -- combat never routes through
+	# use_skill(), so the combat sim is untouched and sim_combat_batch.gd stays
+	# byte-identical.
+	var req_items: Array = _as_item_list(target.get("requires_item", ""))
+	for req_item: String in req_items:
+		if not inventory.has(req_item):
+			var item_hint := String(target.get("item_hint_toast", "Bare hands won't do it. Something in your pack might."))
+			_emit(WIEvents.TOAST, {"text": item_hint})
+			return {"item_hint": req_item}
 	var effect: Dictionary = _resolve_skill_use_effect(target["on_skill_use"])
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
@@ -504,8 +515,21 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	if effect.has("item"):
 		pickup(String(effect["item"]), target_id)
 	if effect.has("remove_item"):
-		remove_item(String(effect["remove_item"]), target_id)
+		for rem_item: String in _as_item_list(effect["remove_item"]):
+			remove_item(rem_item, target_id)
 	return effect
+
+
+func _as_item_list(raw: Variant) -> Array:
+	# String | Array -> Array[String], dropping the empty-string sentinel so a prop
+	# with no `requires_item`/`remove_item` yields an empty (no-op) list.
+	if raw is Array:
+		var out: Array = []
+		for entry: Variant in raw:
+			out.append(String(entry))
+		return out
+	var single := String(raw)
+	return [] if single == "" else [single]
 
 
 func use_skill_field(skill_id: String) -> Dictionary:

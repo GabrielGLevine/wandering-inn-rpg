@@ -151,6 +151,9 @@ func _build_expected_counts() -> Dictionary:
 
 	for icon_id: String in ["icon_double_step", "icon_flash_step", "icon_animate_dead", "icon_hearthward_charm", "icon_greater_hearthward"]:
 		counts[icon_id + "/idle"] = 1
+	## Wave D-1 (#155) alchemist kit -- placeholder 16x16 icons (PixelLab drain).
+	for icon_id: String in ["icon_low_grade_synthesis", "icon_cleansing_heat", "icon_magic_water_solvent", "icon_mineral_distillation", "icon_true_synthesis"]:
+		counts[icon_id + "/idle"] = 1
 	counts["skeleton_ally/idle"] = 4
 
 	## GH#145 bespoke rigs (PixelLab drain): ratici sheets are 416/104 idle,

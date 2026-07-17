@@ -23,6 +23,7 @@ const PLAYTEST_FIXTURE_ORDER: Array[String] = [
 	"door_chain_scout_start", "door_chain_fight_start", "door_awakening_start",
 	"portal_menu_start", "near_ruin", "near_garden", "garden_unlocked", "deep_descent_start",
 	"climax_surface_start", "climax_sealed_start", "near_act3",
+	"near_mixer",
 ]
 const PLAYTEST_PAGE_SIZE := 10
 const NEW_GAME_CONFIRM_ROWS := ["No", "Yes"]

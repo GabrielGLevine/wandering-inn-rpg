@@ -1470,6 +1470,71 @@
    }
   }
  },
+ "icon_low_grade_synthesis": {
+  "_comment": "PLACEHOLDER (Wave D-1 #155): crude 16x16 flask glyph. PixelLab pass is user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_low_grade_synthesis.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_cleansing_heat": {
+  "_comment": "PLACEHOLDER (Wave D-1 #155): crude 16x16 flame glyph. PixelLab pass user-gated.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_cleansing_heat.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_magic_water_solvent": {
+  "_comment": "PLACEHOLDER (Wave D-1 #155): crude 16x16 droplet glyph. PixelLab pass user-gated.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_magic_water_solvent.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_mineral_distillation": {
+  "_comment": "PLACEHOLDER (Wave D-1 #155): crude 16x16 crystals glyph. PixelLab pass user-gated.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_mineral_distillation.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_true_synthesis": {
+  "_comment": "PLACEHOLDER (Wave D-1 #155): crude 16x16 burst glyph. PixelLab pass user-gated.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_true_synthesis.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
 "hearth": {
   "render_scale": 0.5,
   "animations": {

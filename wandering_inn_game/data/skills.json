@@ -857,6 +857,54 @@
 			"wards": true,
 			"ward_sleeps": 2,
 			"description": "A stronger charm remembers its boundary after one night has passed."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (6.39, Octavia). [Mixer] L1 field bench-cast: consumes nothing v1 (basic_cooking precedent), yields a low-tier consumable + banks synthesized_draught. field_ambient shape matches basic_cooking.",
+			"id": "low_grade_synthesis",
+			"display_name": "[Low-Grade Synthesis]",
+			"icon": "icon_low_grade_synthesis",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Low-Grade Synthesis] — You measure out a working in your head. It wants a real bench and a burner you don't have here.",
+			"description": "The first thing any mixer learns: crude reagents over a low flame, and a result that mostly behaves."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (6.39). Pure passive identity (actives-become-passives directive) -- botched mixtures burn off clean; no bench, no hotbar slot. Icon carried for the journal panel only.",
+			"id": "cleansing_heat",
+			"display_name": "[Cleansing Heat]",
+			"icon": "icon_cleansing_heat",
+			"contexts": ["exploration"],
+			"description": "A botched mixture never festers. Heat takes the failure cleanly, and the bench is ready for the next attempt."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (6.39). [Mixer] L5 field bench-cast: yields solvent_phial (a component item) + banks synthesized_draught.",
+			"id": "magic_water_solvent",
+			"display_name": "[Magic-Water Solvent]",
+			"icon": "icon_magic_water_solvent",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Magic-Water Solvent] — You think through the dilution, drop by drop. Without magic-water and a clean phial, it stays a thought.",
+			"description": "Magic-water, drawn down and clarified until it will lift what plain water cannot. The base every finer working starts from."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (6.39). [Mixer] L7 field bench-cast: yields mineral_salts (a component item) + banks synthesized_draught.",
+			"id": "mineral_distillation",
+			"display_name": "[Mineral Distillation]",
+			"icon": "icon_mineral_distillation",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Mineral Distillation] — You picture the slow boil and the salts left behind. It needs a retort and a fire you don't have here.",
+			"description": "Boil a mineral wash down far enough and what remains is pure salts, the backbone of any potion worth the name."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible. [Alchemist] L10 field bench-cast: the first component-consuming recipe -- eats solvent_phial + mineral_salts (requires_item + remove_item String|Array seam, #155) and yields tonic_of_the_clear_eye + banks synthesized_draught.",
+			"id": "true_synthesis",
+			"display_name": "[True Synthesis]",
+			"icon": "icon_true_synthesis",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[True Synthesis] — You lay the whole working out in your mind, solvent into salts in the one order that holds. Only a proper bench will bear it.",
+			"description": "Where a mixer combines, an alchemist transforms. Solvent and salts, brought together in the right hand, become something neither one was."
 		}
 	]
 }

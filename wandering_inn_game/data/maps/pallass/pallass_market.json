@@ -527,6 +527,140 @@
    "respawns": true,
    "observe": "Two grey shapes stand either side of an unclaimed stall, carved plating catching the tier's flat light, neither one moving.",
    "on_victory": "watchgolems_culled"
+  },
+  {
+   "_comment": "Wave D-1 (#155): Xif (CANON-NATIVE, 6.09), the 'Cunning Crafts' stall. Gnoll base + tint PLACEHOLDER (shaggy tan, stained many colors, singed twice) pending a dedicated sprite -- VISUAL-LOG flagged. Shop is haggle-false (Pallass civic doctrine). His [Perfect Reduction]/[Poison Immunity] stay DIALOGUE COLOR, never player grants. Saliss = one banter name-drop max, never near identity.",
+   "id": "xif",
+   "kind": "npc",
+   "cell": [
+    5,
+    5
+   ],
+   "display_name": "Xif",
+   "sprite": "gnoll_traveler",
+   "tint": [
+    1.08,
+    0.98,
+    0.78
+   ],
+   "facing": "down",
+   "conversation": "xif",
+   "observe": "A City Gnoll in a stained apron, shaggy fur tan under the stains, eyebrows singed down to stubble. He is arguing cheerfully with himself about the price of something.",
+   "dialogue": [
+    {
+     "speaker": "Xif",
+     "text": "Cunning Crafts! Best components on the tier, or the second-best, depending who is asking and how much they are buying."
+    }
+   ]
+  },
+  {
+   "_comment": "Wave D-1 (#155): Octavia (RELOCATION-FLAGGED -- framed as a Celum day-tripper through the Door on a consignment day-trade, NOT residency; the papers system treats her as a non-citizen trader). Net-new NPC (no prior entity anywhere). SHE teaches [Mixer]: her chain banks the first synthesized_draught (gated on a buy + a warmth beat). 'Apprentice of Saliss' NEVER appears.",
+   "id": "octavia",
+   "kind": "npc",
+   "cell": [
+    6,
+    5
+   ],
+   "display_name": "Octavia",
+   "sprite": "citizen_f",
+   "facing": "down",
+   "conversation": "octavia",
+   "observe": "A young human woman behind a fold-out consignment stall, talking fast, pricing three things at once and watching your hands to see which one you will pick up.",
+   "dialogue": [
+    {
+     "speaker": "Octavia",
+     "text": "You look like someone who could use a potion. Everyone can use a potion. Especially mine, which are very reasonably priced and only occasionally on fire."
+    }
+   ]
+  },
+  {
+   "_comment": "Wave D-1 (#155): [Mixer] L1 bench (co-located station, inn-kitchen multi-prop precedent). Every alchemist bench cast banks synthesized_draught. Placeholder cauldron sprite pending a dedicated alchemy-bench (VISUAL-LOG).",
+   "id": "alchemy_bench_synthesis",
+   "kind": "prop",
+   "cell": [
+    5,
+    7
+   ],
+   "display_name": "Reagent Bench",
+   "sprite": "cauldron",
+   "requires_skill": "low_grade_synthesis",
+   "skill_hint_toast": "Xif's spare bench, scrubbed and stocked. A low flame and a steady hand would turn it into something.",
+   "locked_toast": "A working alchemist's bench, burners cold. You would not know where to start.",
+   "observe": "Cheap reagents racked by the burner, and a scorch-ring on the slate where a hundred crude workings went slightly wrong.",
+   "on_skill_use": {
+    "accomplishment": "synthesized_draught",
+    "item": "crude_draught",
+    "toast": "[Low-Grade Synthesis] — Crude reagents over a low flame, and a draught that mostly does what it should. It will pass."
+   }
+  },
+  {
+   "_comment": "Wave D-1 (#155): [Mixer] L5 bench. Yields solvent_phial + banks synthesized_draught.",
+   "id": "alchemy_bench_solvent",
+   "kind": "prop",
+   "cell": [
+    6,
+    7
+   ],
+   "display_name": "Solvent Still",
+   "sprite": "cauldron",
+   "requires_skill": "magic_water_solvent",
+   "skill_hint_toast": "A drip-still set for magic-water. Someone who knows the working could draw a clean solvent from it.",
+   "locked_toast": "A glass drip-still, coiled and cold. The magic-water in it means nothing to you yet.",
+   "observe": "A coil of glass tubing over a low pan, magic-water beading down it one clarified drop at a time.",
+   "on_skill_use": {
+    "accomplishment": "synthesized_draught",
+    "item": "solvent_phial",
+    "toast": "[Magic-Water Solvent] — The magic-water comes off the coil clear enough to bend the light. One phial, corked and ready."
+   }
+  },
+  {
+   "_comment": "Wave D-1 (#155): [Mixer] L7 bench. Yields mineral_salts + banks synthesized_draught.",
+   "id": "alchemy_bench_distillation",
+   "kind": "prop",
+   "cell": [
+    7,
+    7
+   ],
+   "display_name": "Distilling Retort",
+   "sprite": "cauldron",
+   "requires_skill": "mineral_distillation",
+   "skill_hint_toast": "A retort over a banked fire, a mineral wash already loaded. A distiller could boil it down to salts.",
+   "locked_toast": "A bulb of dark glass over cold coals, half full of something grey. Not your trade.",
+   "observe": "A distilling retort, its bulb crusted white at the neck where the salts climb as the wash boils away.",
+   "on_skill_use": {
+    "accomplishment": "synthesized_draught",
+    "item": "mineral_salts",
+    "toast": "[Mineral Distillation] — You boil the wash honest and slow. What is left is a spoonful of pale salts, the backbone of the next working."
+   }
+  },
+  {
+   "_comment": "Wave D-1 (#155): [Alchemist] L10 bench. First component-consuming recipe -- requires_item + remove_item as ARRAYS (String|Array seam, all-or-nothing): needs BOTH solvent_phial and mineral_salts, consumes both, yields tonic_of_the_clear_eye.",
+   "id": "alchemy_bench_true",
+   "kind": "prop",
+   "cell": [
+    8,
+    7
+   ],
+   "display_name": "Xif's Own Bench",
+   "sprite": "cauldron",
+   "requires_skill": "true_synthesis",
+   "requires_item": [
+    "solvent_phial",
+    "mineral_salts"
+   ],
+   "item_hint_toast": "The good bench wants both halves of the working in hand: a solvent phial and a measure of mineral salts. You are short at least one.",
+   "skill_hint_toast": "The finest bench on the tier, and it knows it. A true synthesis needs solvent and salts both, and a hand that can bring them together.",
+   "locked_toast": "The best bench Xif owns, kept for work you cannot do yet.",
+   "observe": "The bench Xif keeps for himself: clean glass, a steady blue burner, and room laid out for two reagents to become a third.",
+   "on_skill_use": {
+    "accomplishment": "synthesized_draught",
+    "item": "tonic_of_the_clear_eye",
+    "remove_item": [
+     "solvent_phial",
+     "mineral_salts"
+    ],
+    "toast": "[True Synthesis] — Solvent into salts, in the one order that holds. What settles in the vial is clearer than either half went in."
+   }
   }
  ]
 }
