@@ -2719,6 +2719,20 @@ func _init() -> void:
 	assert(g_synth_none.inventory.is_empty(), "none-present: nothing produced or consumed")
 	assert(_count("item_lost") == 0 and _count("skill_used") == 0, "none-present: nothing removed, skill never fired")
 
+	# GH#155 review M1: dup-output guard -- holding the recipe's output must
+	# refuse BEFORE consuming components (inventory never stacks; the old path
+	# ate both reagents behind a success toast).
+	var g_synth_dup := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_synth_dup.classes["alchemist"] = 10
+	g_synth_dup.entities["synth_test_bench"] = synth_bench.duplicate(true)
+	g_synth_dup.inventory.clear()
+	g_synth_dup.inventory.append_array(["tonic_of_the_clear_eye", "solvent_phial", "mineral_salts"])
+	_events.clear()
+	var r_dup: Dictionary = g_synth_dup.use_skill("true_synthesis", "synth_test_bench")
+	assert(String(r_dup.get("blocked_duplicate", "")) == "tonic_of_the_clear_eye", "dup-output: refusal names the held output")
+	assert(g_synth_dup.inventory.has("solvent_phial") and g_synth_dup.inventory.has("mineral_salts"), "dup-output: components NOT consumed")
+	assert(_count("item_lost") == 0 and _count("skill_used") == 0 and _count("accomplishment_recorded") == 0, "dup-output: no state changes at all")
+
 	print("PASS: sim core behaves correctly")
 	quit(0)
 

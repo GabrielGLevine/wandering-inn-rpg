@@ -498,7 +498,9 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	# component-consuming-recipe seam ([True Synthesis] eats solvent_phial +
 	# mineral_salts). It is a bench-craft-only path -- combat never routes through
 	# use_skill(), so the combat sim is untouched and sim_combat_batch.gd stays
-	# byte-identical.
+	# byte-identical. SCOPE: this String|Array contract covers the BENCH seam only;
+	# the dialogue-effect remove_item path (see _apply_dialogue_effects) remains
+	# String-only by design.
 	var req_items: Array = _as_item_list(target.get("requires_item", ""))
 	for req_item: String in req_items:
 		if not inventory.has(req_item):
@@ -506,6 +508,15 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 			_emit(WIEvents.TOAST, {"text": item_hint})
 			return {"item_hint": req_item}
 	var effect: Dictionary = _resolve_skill_use_effect(target["on_skill_use"])
+	# TRAP (#155 review M1): a CONSUMING recipe (both `item` and `remove_item`)
+	# must refuse BEFORE any state changes when the output can't be picked up
+	# (inventory never stacks, so a held duplicate blocks pickup) -- otherwise
+	# the components vanish behind a success toast. All-or-nothing covers the
+	# output slot, not just the ingredient gate. Produce-only props keep the
+	# shipped bank-even-on-dup behavior (the basic_cooking precedent).
+	if effect.has("item") and effect.has("remove_item") and inventory.has(String(effect["item"])):
+		_emit(WIEvents.TOAST, {"text": "Your pack already holds one of those. The bench keeps its patience, and you keep your reagents."})
+		return {"blocked_duplicate": String(effect["item"])}
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
 	record_accomplishment(String(effect["accomplishment"]))
