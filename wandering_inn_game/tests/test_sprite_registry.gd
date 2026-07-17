@@ -153,6 +153,12 @@ func _build_expected_counts() -> Dictionary:
 		counts[icon_id + "/idle"] = 1
 	counts["skeleton_ally/idle"] = 4
 
+	## GH#145 bespoke rigs (PixelLab drain): ratici sheets are 416/104 idle,
+	## 624/104 walk; hat_stand is a single-frame prop.
+	counts["ratici/idle"] = 4
+	counts["ratici/walk"] = 6
+	counts["hat_stand/idle"] = 1
+
 	for icon_id: String in [
 		"icon_appraise_goods", "icon_called_shot", "icon_directed_strike",
 		"icon_disarm_trap", "icon_find_trap", "icon_flame_dart",
