@@ -423,6 +423,42 @@ func _atmosphere_map_transition_contract_holds(source: String) -> bool:
 	return event_handler.find("WIEvents.MAP_CHANGED") == -1
 
 
+func _wave_b_field_visual_contract_holds(source: String) -> bool:
+	var handler := _function_body(source, "_on_domain_event")
+	for clause: String in [
+		"WIEvents.PLAYER_TELEPORTED",
+		"_render_blink_afterimage",
+		"WIEvents.WARD_PLACED",
+		"_reconcile_ward_visuals",
+		"WIEvents.COMPANION_CHANGED",
+		"_reconcile_companion_visual",
+	]:
+		if handler.find(clause) == -1:
+			return false
+	var blink := _function_body(source, "_render_blink_afterimage")
+	for clause: String in ["WISettings.reduce_motion()", "Line2D.new()", "UI_TELEPORT_RENDERED", '"blink-visual"', "streak.position =", "Vector2.ZERO"]:
+		if blink.find(clause) == -1:
+			return false
+	var qa_hold := blink.get_slice("if qa_visual_hold:", 1).get_slice("if reduced", 0)
+	if qa_hold.find("return") == -1 or qa_hold.find("create_timer") != -1:
+		return false
+	var ward := _function_body(source, "_reconcile_ward_visuals")
+	for clause: String in [
+		"_make_entity_visual(",
+		'"icon_hearthward_charm"',
+		"Line2D.new()",
+		"ring.closed = true",
+		"point_index: int in 12",
+	]:
+		if ward.find(clause) == -1:
+			return false
+	var rebuild := _function_body(source, "_rebuild_field")
+	return rebuild.find("_reconcile_ward_visuals()") != -1 \
+		and rebuild.find("_reconcile_companion_visual()") != -1 \
+		and source.find("WIEvents.UI_WARD_RENDERED") != -1 \
+		and source.find("WIEvents.UI_COMPANION_RENDERED") != -1
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var source := FileAccess.get_file_as_string("res://src/world/world.gd")
@@ -497,6 +533,8 @@ func _init() -> void:
 		"World must defer destination mood/entity presentation until the covered MAP_CHANGED rebuild")
 	assert(_atmosphere_map_transition_contract_holds(atmosphere_source),
 		"Atmosphere must not apply destination mood to still-visible source geometry")
+	assert(_wave_b_field_visual_contract_holds(source),
+		"Wave-B blink, ward, and companion state need event-driven field visuals and reduced-motion parity")
 	assert(driver_source.find("step.get(\"when_user_args\", {})") != -1 \
 		and driver_source.find("QAPaths.user_args().get(arg_name, \"\")") != -1,
 		"paced visual canonicals need an opt-in live-input assertion without changing headless streams")

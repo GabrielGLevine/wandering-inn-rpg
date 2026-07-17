@@ -1,0 +1,41 @@
+{
+ "_comment": "Issue #132's animate/companion loop. [Animate Dead] consumes the authored ruin bone pile and renders a follower; the road encounter proves skeleton_ally is present on the player roster; after the seeded victory, a real sleep clears the persisted companion and its visual.",
+ "fixture_save": "wave_b_animate_start",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "press", "name": "hotbar_1"},
+  {"action": "wait_for_event", "type": "companion_changed", "payload_contains": {"id": "skeleton_ally", "active": true}, "timeout_sec": 5},
+  {"action": "assert_event_logged", "type": "entity_removed", "payload_contains": {"id": "bone_pile_ruin"}},
+  {"action": "assert_event_logged", "type": "ui_companion_rendered", "payload_contains": {"active": true}},
+  {"action": "assert_state", "path": "companion", "equals": "skeleton_ally"},
+  {"action": "assert_state", "path": "removed_entities", "contains": "bone_pile_ruin"},
+  {"action": "screenshot", "name": "00_raised_follower"},
+
+  {"action": "teleport", "map": "floodplains", "cell": [30, 20]},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
+  {"action": "assert_state", "path": "combat.combatants.skeleton_ally.side", "equals": "player"},
+  {"action": "combat_autoplay", "max_turns": 300},
+  {"action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": true}, "timeout_sec": 10},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5},
+  {"action": "assert_state", "path": "companion", "equals": "skeleton_ally"},
+
+  {"action": "teleport", "map": "inn_upstairs", "cell": [9, 2]},
+  {"action": "move", "direction": "up", "steps": 1},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_sleep_veil_finished", "timeout_sec": 5},
+  {"action": "assert_state", "path": "companion", "equals": ""},
+  {"action": "assert_event_logged", "type": "companion_changed", "payload_contains": {"active": false, "reason": "sleep"}},
+  {"action": "assert_event_logged", "type": "ui_companion_rendered", "payload_contains": {"active": false}},
+  {"action": "screenshot", "name": "01_companion_cleared_after_sleep"}
+ ]
+}

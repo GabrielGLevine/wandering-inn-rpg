@@ -51,6 +51,8 @@ var pending_meal: Dictionary = {}
 var frozen_cells: Dictionary = {}
 var sneaking := false
 var hotbar_loadout: Array[String] = []
+var warded_encounters: Dictionary = {}
+var companion: String = ""
 var rng := RandomNumberGenerator.new()
 
 var _event_sink: Callable
@@ -73,7 +75,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_run_seed = rng_seed
 	_economy = WIEconomy.new(event_sink, pickup, _set_gold)
 	_social = WISocial.new(event_sink, accomplishment_count, record_accomplishment, find_entity)
-	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active)
+	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field)
 	rng.seed = rng_seed
 	for s: Dictionary in skill_config.get(WIKeys.SKILLS, []):
 		skills[String(s[WIKeys.ID])] = s
@@ -276,7 +278,7 @@ static func _nearest_cardinal(dir: Vector2i) -> Vector2i:
 	return dir
 
 
-func _check_trigger_radius() -> void:
+func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 	if combat != null or dialogue != null:
 		return
 	for ent: Dictionary in entities.values():
@@ -286,18 +288,21 @@ func _check_trigger_radius() -> void:
 			continue
 		if not _encounter_gate_met(ent):
 			continue
+		var ent_id := String(ent[WIKeys.ID])
+		if dormant_encounters.has(ent_id) or skipped_ids.has(ent_id) or warded_encounters.has(ent_id):
+			continue
 		var ent_cell: Vector2i = ent[WIKeys.CELL]
 		var dist := maxi(absi(player_cell.x - ent_cell.x), absi(player_cell.y - ent_cell.y))
 		if dist > int(ent["trigger_radius"]):
 			continue
 		if sneaking:
 			# Credit one danger per entity when its live phase/range gate is met.
-			var danger_key := "danger:%s" % String(ent[WIKeys.ID])
+			var danger_key := "danger:%s" % ent_id
 			if not entity_first_use.has(danger_key):
 				entity_first_use[danger_key] = true
 				record_accomplishment("sneaked_past_danger")
 			continue
-		start_combat(String(ent[WIKeys.ID]))
+		start_combat(ent_id)
 		return
 
 
@@ -513,6 +518,141 @@ func use_skill_field(skill_id: String) -> Dictionary:
 	var faced_cell := player_cell + player_facing
 	var is_freezable := _is_freezable(faced_cell)
 	return _field_skills.dispatch(skill_id, known, target, faced_cell, current_map, frozen_cells, entity_first_use, is_freezable)
+
+
+## Cardinal-only clear-line scan. Freezable cells are water leverage: blink
+## may cross them but never land on them. Every other blocked cell is a wall
+## and stops the ray; map edges stop it too. This wall-vs-water distinction
+## is load-bearing overlap with [Snap Freeze].
+func _blink_field(skill_id: String, skill: Dictionary) -> Dictionary:
+	var start := player_cell
+	var crossed: Array[Vector2i] = []
+	var landing: Variant = null
+	for step: int in range(1, maxi(0, int(skill.get("blink_range", 0))) + 1):
+		var cell := start + player_facing * step
+		if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y:
+			break
+		if _is_freezable(cell):
+			crossed.append(cell)
+			continue
+		if is_cell_blocked(cell):
+			break
+		crossed.append(cell)
+		landing = cell
+	if landing == null:
+		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
+		_emit(WIEvents.TOAST, {"text": "No clear landing lies ahead."})
+		return {}
+	var destination := landing as Vector2i
+	player_cell = destination
+	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
+	_mark_skill_used(skill_id)
+	_emit(WIEvents.PLAYER_TELEPORTED, {
+		"skill": skill_id,
+		"from": [start.x, start.y],
+		"to": [destination.x, destination.y],
+		"cell": [destination.x, destination.y],
+	})
+	var bypassed := _blink_bypassed_encounters(start, crossed, destination)
+	_check_trigger_radius(bypassed)
+	_check_delivery_arrival()
+	return {"teleported": [destination.x, destination.y]}
+
+
+func _blink_bypassed_encounters(start: Vector2i, crossed: Array[Vector2i], destination: Vector2i) -> Array[String]:
+	var bypassed: Array[String] = []
+	for ent: Dictionary in entities.values():
+		if String(ent.get(WIKeys.KIND, "")) != "encounter" or not ent.has("trigger_radius"):
+			continue
+		var ent_id := String(ent[WIKeys.ID])
+		if dormant_encounters.has(ent_id) or warded_encounters.has(ent_id) or not _encounter_gate_met(ent):
+			continue
+		var ent_cell: Vector2i = ent[WIKeys.CELL]
+		var radius := int(ent["trigger_radius"])
+		if _cell_in_radius(destination, ent_cell, radius):
+			continue
+		var touched := _cell_in_radius(start, ent_cell, radius)
+		if not touched:
+			for cell: Vector2i in crossed:
+				if _cell_in_radius(cell, ent_cell, radius):
+					touched = true
+					break
+		if not touched:
+			continue
+		bypassed.append(ent_id)
+		var danger_key := "danger:%s" % ent_id
+		if not entity_first_use.has(danger_key):
+			entity_first_use[danger_key] = true
+			record_accomplishment("blinked_past_danger")
+	return bypassed
+
+
+static func _cell_in_radius(cell: Vector2i, center: Vector2i, radius: int) -> bool:
+	return maxi(absi(cell.x - center.x), absi(cell.y - center.y)) <= radius
+
+
+func _ward_field(skill_id: String, skill: Dictionary, faced_cell: Vector2i) -> Dictionary:
+	var candidates: Array[Dictionary] = []
+	for ent: Dictionary in entities.values():
+		if String(ent.get(WIKeys.KIND, "")) != "encounter" or not ent.has("trigger_radius"):
+			continue
+		var ent_id := String(ent[WIKeys.ID])
+		if dormant_encounters.has(ent_id) or warded_encounters.has(ent_id) or not _encounter_gate_met(ent):
+			continue
+		var ent_cell: Vector2i = ent[WIKeys.CELL]
+		if not _cell_in_radius(faced_cell, ent_cell, int(ent["trigger_radius"])):
+			continue
+		candidates.append({"id": ent_id, "distance": maxi(absi(faced_cell.x - ent_cell.x), absi(faced_cell.y - ent_cell.y))})
+	if candidates.is_empty():
+		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
+		_emit(WIEvents.TOAST, {"text": "No hidden danger answers the charm."})
+		return {}
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return int(a["distance"]) < int(b["distance"]) \
+			or (int(a["distance"]) == int(b["distance"]) and String(a["id"]) < String(b["id"]))
+	)
+	var encounter_id := String(candidates[0]["id"])
+	var sleeps := maxi(1, int(skill.get("ward_sleeps", 1)))
+	warded_encounters[encounter_id] = {"sleeps": sleeps, "map": current_map, "cell": [faced_cell.x, faced_cell.y]}
+	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": encounter_id})
+	_mark_skill_used(skill_id)
+	var ward_key := "ward:%s" % encounter_id
+	if not entity_first_use.has(ward_key):
+		entity_first_use[ward_key] = true
+		record_accomplishment("warded_danger")
+		record_accomplishment("witch_craft_used")
+	_emit(WIEvents.WARD_PLACED, {"id": encounter_id, "map": current_map, "cell": [faced_cell.x, faced_cell.y], "sleeps": sleeps})
+	_emit(WIEvents.TOAST, {"text": "The charm settles. Whatever waits there cannot cross it."})
+	return {"warded": encounter_id}
+
+
+func _animate_field(skill_id: String, _skill: Dictionary, target: Dictionary) -> Dictionary:
+	if companion != "":
+		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
+		_emit(WIEvents.TOAST, {"text": "The dead already follow you."})
+		return {}
+	var target_id := String(target.get(WIKeys.ID, ""))
+	if target_id not in ["bone_pile_halls", "bone_pile_tunnels", "bone_pile_ruin"]:
+		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": target_id})
+		_emit(WIEvents.TOAST, {"text": "No bones here will answer."})
+		return {}
+	var target_cell: Vector2i = target[WIKeys.CELL]
+	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
+	_mark_skill_used(skill_id)
+	remove_entity(target_id)
+	_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [target_cell.x, target_cell.y], "to": "cleared"})
+	companion = "skeleton_ally"
+	_emit(WIEvents.COMPANION_CHANGED, {"id": companion, "active": true, "reason": "animated"})
+	_emit(WIEvents.TOAST, {"text": "The bones rise and fall into step behind you."})
+	return {"animated": target_id, "companion": companion}
+
+
+func _clear_companion(reason: String) -> void:
+	if companion == "":
+		return
+	var old_id := companion
+	companion = ""
+	_emit(WIEvents.COMPANION_CHANGED, {"id": old_id, "active": false, "reason": reason})
 
 
 func _resolve_observe_text(ent: Dictionary) -> String:
@@ -1279,12 +1419,14 @@ func start_combat(entity_id: String) -> bool:
 	for c: Dictionary in _combat_config["combatants"]["combatants"]:
 		by_id[String(c[WIKeys.ID])] = c
 	var cfgs: Array = [_build_player_combatant(by_id["pc"])]
-	var allies: Array = entity.get("allies", [])
+	var allies: Array = (entity.get("allies", []) as Array).duplicate()
 	var ally_req: Dictionary = entity.get("ally_requires", {})
 	for key: String in ally_req:
 		if accomplishment_count(key) < int(ally_req[key]):
 			allies = []
 			break
+	if companion != "" and by_id.has(companion) and not allies.has(companion):
+		allies.append(companion)
 	var hp_penalties: Dictionary = entity.get("ally_hp_penalty", {})
 	for ally: Variant in allies:
 		var ally_cfg: Dictionary = (by_id[String(ally)] as Dictionary).duplicate(true)
@@ -1576,6 +1718,14 @@ const _EVOLUTION_WAITING_TOASTS := {
 
 
 func sleep() -> void:
+	for encounter_id: String in warded_encounters.keys():
+		var ward: Dictionary = warded_encounters[encounter_id]
+		var remaining := int(ward.get("sleeps", 1)) - 1
+		if remaining <= 0:
+			warded_encounters.erase(encounter_id)
+		else:
+			ward["sleeps"] = remaining
+	_clear_companion("sleep")
 	dormant_encounters.clear()
 	social_talked.clear()
 	entity_first_use.clear()
@@ -1887,6 +2037,8 @@ func snapshot() -> Dictionary:
 		"phase": phase(),
 		"sneaking": sneaking,
 		"hotbar_loadout": hotbar_loadout.duplicate(),
+		"warded_encounters": warded_encounters.duplicate(true),
+		"companion": companion,
 		"gold": gold,
 		"times_slept": times_slept,
 		"accepted_bounty_id": accepted_bounty_id,
@@ -1923,6 +2075,8 @@ func _combat_event_relay(type: String, payload: Dictionary) -> void:
 		_tick_action()
 	if type == WIEvents.STATUS_APPLIED:
 		payload = _enrich_status_applied(payload)
+	if type == WIEvents.COMBATANT_DOWNED and String(payload.get(WIKeys.ID, "")) == companion:
+		_clear_companion("downed")
 	if (type == WIEvents.REACTION_TRIGGERED or type == WIEvents.PASSIVE_APPLIED) \
 			and String(payload.get(WIKeys.ID, "")) == "pc":
 		var reaction_skill := String(payload.get("skill", ""))

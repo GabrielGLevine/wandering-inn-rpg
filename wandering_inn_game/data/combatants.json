@@ -38,6 +38,24 @@
    ]
   },
   {
+   "_comment": "Temporary [Animate Dead] companion: deliberately fragile, plain-melee, and skillless; Wave-B gated cells own its measured combat envelope.",
+   "id": "skeleton_ally",
+   "display_name": "Raised Skeleton",
+   "sprite": "skeleton_ally",
+   "side": "player",
+   "stats": {
+    "str": 10,
+    "dex": 8,
+    "con": 6,
+    "int": 2,
+    "wis": 4,
+    "cha": 1
+   },
+   "weapon_die": 4,
+   "ai": "melee",
+   "skills": []
+  },
+  {
    "_comment": "Voice/canon precedent: the #51 gate NPC (data/skeleton_scene.json's `klbkch` entity, whose talk_pool is precise/courteous/dry, never jokey) -- twin shortswords.",
    "id": "klbkch",
    "display_name": "Klbkch",

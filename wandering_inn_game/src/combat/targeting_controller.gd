@@ -49,7 +49,7 @@ func enter(mode: int, skill_id: String = "") -> Dictionary:
 		var effect_type := String(skill_effect.get("type", ""))
 		_line_mode = effect_type == "line_damage"
 		# A self-targeted active
-		# move_pool_bonus cast (today only [Stealth]; MUST stay in lockstep with
+		# active move_pool_bonus casts; MUST stay in lockstep with
 		# skill_effects.gd's `resolve_active` -- same effect.type + ap_cost>0
 		# pair gates its self-buff resolver there) needs no enemy at all.
 		var heal_ally_target := effect_type == "heal" and bool(skill_effect.get("ally_target", false))

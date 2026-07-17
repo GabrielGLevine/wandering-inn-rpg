@@ -1,0 +1,24 @@
+{
+ "_comment": "Issue #132 blink coexistence fixture: the three field skills are QA-fixture affordances so their progression counters begin honestly at zero while one loop answers the same floodplains road ambush with [Sneak], [Hearthward Charm], then [Flash Step], separated by the real sleep re-arm. Exact class grants are pinned in test_progression. The curated field loadout makes those skills slots 1/2/3.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [30, 20],
+  "player_facing": [0, 1],
+  "classes": {},
+  "accomplishments": {},
+  "player_skills": ["sneak", "hearthward_charm", "flash_step"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {"weapon": "", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": ["sneak", "hearthward_charm", "flash_step"]
+ }
+}

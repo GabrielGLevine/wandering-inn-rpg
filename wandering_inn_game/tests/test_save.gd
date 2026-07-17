@@ -57,6 +57,10 @@ func _init() -> void:
 	original.pc_race = "drake"
 	original.pc_gender = "f"
 	original.hotbar_loadout.assign(["flame_bolt", "basic_cleaning"])
+	original.warded_encounters = {
+		"goblin_encounter_1": {"sleeps": 2, "map": "floodplains", "cell": [30, 21]},
+	}
+	original.companion = "skeleton_ally"
 
 	var data := WISave.serialize(original)
 	assert(data["version"] == WISave.VERSION, "save version matches the current constant")
@@ -95,6 +99,22 @@ func _init() -> void:
 	assert(restored.pending_meal == {"damage_mod": 1}, "pending_meal round-trips verbatim")
 	assert(restored.hotbar_loadout == original.hotbar_loadout, "hotbar_loadout restored")
 	assert(restored.hotbar_loadout == ["flame_bolt", "basic_cleaning"], "hotbar_loadout round-trips in order")
+	assert(restored.warded_encounters == original.warded_encounters, "warded encounter state round-trips")
+	assert(restored.companion == "skeleton_ally", "companion state round-trips")
+	var no_wave_b_state: Dictionary = (data["state"] as Dictionary).duplicate(true)
+	no_wave_b_state.erase("warded_encounters")
+	no_wave_b_state.erase("companion")
+	var no_wave_b_target := _new_game()
+	no_wave_b_target.warded_encounters = {"stale": {"sleeps": 9}}
+	no_wave_b_target.companion = "stale"
+	assert(WISave.apply(no_wave_b_target, {"version": WISave.VERSION, "state": no_wave_b_state}), "pre-Wave-B save without ward/companion fields still applies")
+	assert(no_wave_b_target.warded_encounters.is_empty() and no_wave_b_target.companion == "", "absent Wave-B fields restore safe empty defaults")
+	var bad_wards_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_wards_data["state"] as Dictionary)["warded_encounters"] = []
+	assert(not WISave.apply(_new_game(), bad_wards_data), "wrong-typed warded_encounters rejected")
+	var bad_companion_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_companion_data["state"] as Dictionary)["companion"] = 12
+	assert(not WISave.apply(_new_game(), bad_companion_data), "wrong-typed companion rejected")
 	var no_loadout: Dictionary = (data["state"] as Dictionary).duplicate(true)
 	no_loadout.erase("hotbar_loadout")
 	var loadout_target := _new_game()

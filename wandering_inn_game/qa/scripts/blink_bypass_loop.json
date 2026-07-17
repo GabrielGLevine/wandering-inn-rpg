@@ -1,0 +1,49 @@
+{
+ "_comment": "Issue #132's three-answer coexistence proof on the real floodplains road ambush. [Sneak] crosses inward and banks sneaked_past_danger; [Hearthward Charm] targets the same armed radius and banks warded_danger; a real sleep re-arms the danger, then [Flash Step] begins inside and lands outside to bank blinked_past_danger without combat. The three counters are asserted independently.",
+ "fixture_save": "wave_b_blink_start",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+
+  {"_comment": "Answer one: toggle Sneak, cross from distance 3 to distance 2, and leave combat absent.", "action": "press", "name": "hotbar_1"},
+  {"action": "wait_for_event", "type": "sneak_started", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "assert_state", "path": "accomplishments.sneaked_past_danger", "equals": 1},
+  {"action": "assert_event_absent", "type": "combat_started"},
+  {"action": "press", "name": "hotbar_1"},
+  {"action": "wait_for_event", "type": "sneak_ended", "timeout_sec": 5},
+
+  {"_comment": "Return outside without changing the down-facing ray. Answer two: the faced cell lies inside the same radius, so the charm wards that encounter.", "action": "teleport", "map": "floodplains", "cell": [30, 20]},
+  {"action": "press", "name": "hotbar_2"},
+  {"action": "wait_for_event", "type": "ward_placed", "payload_contains": {"id": "goblin_encounter_1"}, "timeout_sec": 5},
+  {"action": "assert_event_logged", "type": "ui_ward_rendered", "payload_contains": {"count": 1}},
+  {"action": "assert_state", "path": "accomplishments.warded_danger", "equals": 1},
+  {"_comment": "Cross into the armed radius under the placed ward; this is the ward answer's bypass, not merely a cast-and-counter check.", "action": "move", "direction": "down", "steps": 1},
+  {"action": "assert_state", "path": "player_cell", "equals": [30, 21]},
+  {"action": "assert_event_absent", "type": "combat_started"},
+
+  {"_comment": "A real bed sleep clears the one-sleep ward and entity-first-use dedup, making the same ambush armed again.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2]},
+  {"action": "move", "direction": "up", "steps": 1},
+  {"action": "press", "name": "interact"},
+  {"action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "ui_sleep_veil_finished", "timeout_sec": 5},
+  {"action": "assert_state", "path": "warded_encounters", "equals": {}},
+
+  {"_comment": "Answer three: start inside radius 2, face north, and cardinal-blink four clear cells to (30,17), outside. No intermediate trigger fires.", "action": "teleport", "map": "floodplains", "cell": [30, 21]},
+  {"action": "press", "name": "hotbar_3"},
+  {"action": "wait_for_event", "type": "player_teleported", "payload_contains": {"to": [30, 17]}, "timeout_sec": 5},
+  {"action": "screenshot", "name": "00_blink_streak"},
+  {"action": "assert_event_logged", "type": "ui_teleport_rendered", "payload_contains": {"to": [30, 17]}},
+  {"action": "assert_state", "path": "player_cell", "equals": [30, 17]},
+  {"action": "assert_state", "path": "accomplishments.sneaked_past_danger", "equals": 1},
+  {"action": "assert_state", "path": "accomplishments.warded_danger", "equals": 1},
+  {"action": "assert_state", "path": "accomplishments.blinked_past_danger", "equals": 1},
+  {"action": "assert_event_absent", "type": "combat_started"}
+ ]
+}

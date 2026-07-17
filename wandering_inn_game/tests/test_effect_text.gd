@@ -145,6 +145,11 @@ const EXPECTED_SKILLS := {
 	"signature_dish": [],
 	"eagle_eyes": ["+8 to hit"],
 	"marked_quarry": ["2 AP — ×1.8 damage. Once per fight."],
+	"double_step": ["1 AP — +2 move cells this turn"],
+	"flash_step": ["2 AP, 3 MP — +3 move cells this turn"],
+	"animate_dead": [],
+	"hearthward_charm": [],
+	"greater_hearthward": [],
 }
 
 

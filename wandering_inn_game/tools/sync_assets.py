@@ -98,6 +98,10 @@ MANIFEST: list[tuple[str, str]] = [
 		"assets/sprites/citizen_f/Walk_Up-Sheet.png",
 	),
 	(
+		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Entities/Mobs/Skeleton Crew/Skeleton - Base/Idle/Idle-Sheet.png",
+		"assets/sprites/skeleton_ally/Idle-Sheet.png",
+	),
+	(
 		"potential_assets/Pixel Crawler - Free Pack 2.1/Pixel Crawler - Free Pack/Environment/Tilesets/Floors_Tiles.png",
 		"assets/tiles/free_pack/Floors_Tiles.png",
 	),
@@ -1040,6 +1044,11 @@ PLACEHOLDER_ICONS: list[tuple[str, str, tuple[int, int, int], tuple[int, int, in
 	("covered_dish", "assets/ui/icons/icon_signature_dish.png", (226, 191, 104), (100, 68, 26)),
 	("eagle_eye", "assets/ui/icons/icon_eagle_eyes.png", (205, 225, 245), (60, 90, 130)),
 	("quarry_mark", "assets/ui/icons/icon_marked_quarry.png", (191, 77, 61), (83, 25, 19)),
+	("jet", "assets/ui/icons/icon_double_step.png", (224, 194, 94), (104, 70, 23)),
+	("burst", "assets/ui/icons/icon_flash_step.png", (162, 211, 255), (45, 83, 140)),
+	("bone_dart", "assets/ui/icons/icon_animate_dead.png", (220, 214, 184), (71, 91, 63)),
+	("magic_rune", "assets/ui/icons/icon_hearthward_charm.png", (210, 142, 102), (94, 44, 35)),
+	("magic_rune", "assets/ui/icons/icon_greater_hearthward.png", (235, 181, 111), (104, 55, 30)),
 ]
 
 

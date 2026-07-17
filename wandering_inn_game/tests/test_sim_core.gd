@@ -1726,6 +1726,110 @@ func _init() -> void:
 	assert(_count("sneak_ended") == 1, "sneak_ended fires once, from the [Stealth] press")
 	assert(_count("sneak_started") == 0, "no fresh sneak_started from the cross-skill press")
 
+	var wave_b_skills: Array = (_load_json("res://data/skills.json")[WIKeys.SKILLS] as Array).duplicate(true)
+	wave_b_skills.append({WIKeys.ID: "test_blink", WIKeys.DISPLAY_NAME: "[Test Blink]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "blinks": true, "blink_range": 3})
+	wave_b_skills.append({WIKeys.ID: "test_short_blink", WIKeys.DISPLAY_NAME: "[Test Short Blink]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "blinks": true, "blink_range": 2})
+	wave_b_skills.append({WIKeys.ID: "test_ward", WIKeys.DISPLAY_NAME: "[Test Ward]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "wards": true})
+	wave_b_skills.append({WIKeys.ID: "test_greater_ward", WIKeys.DISPLAY_NAME: "[Test Greater Ward]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "wards": true, "ward_sleeps": 2})
+	wave_b_skills.append({WIKeys.ID: "test_animate", WIKeys.DISPLAY_NAME: "[Test Animate]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "animates": true})
+	var wave_b_skill_config := {WIKeys.SKILLS: wave_b_skills}
+
+	var gBlinkWater := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gBlinkWater.player_skills.append("test_blink")
+	gBlinkWater.transition("sewers", Vector2i(3, 4))
+	gBlinkWater.player_facing = Vector2i.DOWN
+	_events.clear()
+	var water_blink := gBlinkWater.use_skill_field("test_blink")
+	assert(gBlinkWater.player_cell == Vector2i(3, 7), "blink scans through freezable water and lands on the farthest non-freezable open cell")
+	assert(water_blink.get("teleported", []) == [3, 7], "blink result reports the landing cell")
+	assert(_count("player_teleported") == 1, "blink emits one player_teleported event")
+	assert(_count("skill_used") == 1, "successful blink emits one exploration skill_used")
+
+	var gBlinkWall := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gBlinkWall.player_skills.append("test_short_blink")
+	gBlinkWall.transition("floodplains", Vector2i(19, 25))
+	gBlinkWall.player_facing = Vector2i.RIGHT
+	_events.clear()
+	assert(gBlinkWall.use_skill_field("test_short_blink").is_empty(), "blink refuses when a non-freezable wall blocks range 1")
+	assert(gBlinkWall.player_cell == Vector2i(19, 25), "refused blink does not move the player")
+	assert(_toast_texts() == ["No clear landing lies ahead."], "blocked blink uses the exact refusal toast")
+
+	var gBlinkPast := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gBlinkPast.player_skills.append("test_short_blink")
+	gBlinkPast.transition("floodplains", Vector2i(30, 21))
+	gBlinkPast.player_facing = Vector2i.UP
+	_events.clear()
+	gBlinkPast.use_skill_field("test_short_blink")
+	assert(gBlinkPast.player_cell == Vector2i(30, 19), "short blink crosses from inside the road ambush radius to outside")
+	assert(gBlinkPast.combat == null and _count("combat_started") == 0, "crossing outward banks bypass credit and does not fire the encounter")
+	assert(gBlinkPast.accomplishment_count("blinked_past_danger") == 1, "blink crossing banks blinked_past_danger once")
+	assert(gBlinkPast.entity_first_use.has("danger:goblin_encounter_1"), "blink crossing shares sneak's danger:<id> dedup seam")
+
+	var gBlinkInto := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gBlinkInto.player_skills.append("test_short_blink")
+	gBlinkInto.transition("floodplains", Vector2i(30, 19))
+	gBlinkInto.player_facing = Vector2i.DOWN
+	_events.clear()
+	gBlinkInto.use_skill_field("test_short_blink")
+	assert(gBlinkInto.player_cell == Vector2i(30, 21), "blink landing reaches the armed road ambush radius")
+	assert(gBlinkInto.combat != null and _count("combat_started") == 1, "landing inside a radius fires normally")
+
+	var gWard := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gWard.player_skills.append("test_ward")
+	gWard.transition("floodplains", Vector2i(30, 20))
+	gWard.player_facing = Vector2i.DOWN
+	_events.clear()
+	var ward_result := gWard.use_skill_field("test_ward")
+	assert(String(ward_result.get("warded", "")) == "goblin_encounter_1", "ward selects the armed radius containing the faced cell")
+	assert(gWard.warded_encounters.has("goblin_encounter_1"), "warded encounter state is retained on the sim")
+	assert(gWard.accomplishment_count("warded_danger") == 1 and gWard.accomplishment_count("witch_craft_used") == 1, "ward banks both counters")
+	assert(_count("ward_placed") == 1, "ward emits a placed-charm event")
+	_events.clear()
+	assert(gWard.move_player(Vector2i.DOWN), "warded player can step into the radius")
+	assert(gWard.combat == null and _count("combat_started") == 0, "warded trigger_radius encounter is suppressed")
+	gWard.sleep()
+	assert(not gWard.warded_encounters.has("goblin_encounter_1"), "one-sleep ward clears on sleep")
+
+	var gWardRefusal := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gWardRefusal.player_skills.append("test_ward")
+	gWardRefusal.transition("inn", Vector2i(2, 3))
+	gWardRefusal.player_facing = Vector2i.RIGHT
+	_events.clear()
+	assert(gWardRefusal.use_skill_field("test_ward").is_empty(), "ward refuses when no armed radius contains the faced cell")
+	assert(_toast_texts() == ["No hidden danger answers the charm."], "ward refusal uses the exact toast")
+
+	var gGreaterWard := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gGreaterWard.player_skills.append("test_greater_ward")
+	gGreaterWard.transition("floodplains", Vector2i(30, 20))
+	gGreaterWard.player_facing = Vector2i.DOWN
+	gGreaterWard.use_skill_field("test_greater_ward")
+	gGreaterWard.sleep()
+	assert(int((gGreaterWard.warded_encounters["goblin_encounter_1"] as Dictionary).get("sleeps", 0)) == 1, "greater ward decrements to one remaining sleep")
+	gGreaterWard.sleep()
+	assert(not gGreaterWard.warded_encounters.has("goblin_encounter_1"), "greater ward clears after its second sleep")
+
+	var gAnimate := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gAnimate.player_skills.append("test_animate")
+	gAnimate.transition("ruin_surface", Vector2i(14, 10))
+	gAnimate.player_facing = Vector2i.RIGHT
+	_events.clear()
+	var animate_result := gAnimate.use_skill_field("test_animate")
+	assert(String(animate_result.get("animated", "")) == "bone_pile_ruin", "animate targets the faced Wave-A bone pile")
+	assert(gAnimate.companion == "skeleton_ally", "animate sets the persisted skeleton companion id")
+	assert(gAnimate.removed_entities.has("bone_pile_ruin"), "animate consumes the bone-pile prop through remove_entity")
+	assert(_count("terrain_changed") == 1 and _count("companion_changed") == 1, "animate emits terrain-swap and companion events")
+	gAnimate.transition("floodplains", Vector2i(27, 18))
+	assert(gAnimate.start_combat("goblin_encounter_2"), "animated companion carries into the next fight")
+	assert(gAnimate.combat.combatants.has("skeleton_ally"), "start_combat appends skeleton_ally to the ally roster")
+	gAnimate.combat.combatants["skeleton_ally"][WIKeys.HP] = 0
+	gAnimate.combat._post_damage("skeleton_ally", "goblin_raider")
+	assert(gAnimate.companion == "", "companion downed in combat clears the field state immediately")
+
+	var gAnimateSleep := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gAnimateSleep.companion = "skeleton_ally"
+	gAnimateSleep.sleep()
+	assert(gAnimateSleep.companion == "", "sleep clears an active companion")
+
 	var gSneak := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gSneak.player_skills.append("sneak")
 	_events.clear()

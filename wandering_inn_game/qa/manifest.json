@@ -3476,6 +3476,90 @@
     ]
    },
    "fixture": "pre_first_sleep"
+  },
+  {
+   "script": "blink_bypass_loop",
+   "seed": 9,
+   "fixture": "wave_b_blink_start",
+   "note": "Issue #132: Sneak, ward, and cardinal blink answer the same road ambush and bank three distinct counters",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "wave_b_blink_start"
+    ],
+    "skills": [
+     "flash_step",
+     "hearthward_charm",
+     "sneak"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "ward_loop",
+   "seed": 9,
+   "fixture": "wave_b_ward_start",
+   "note": "Issue #132: Greater Hearthward suppresses the road ambush for two sleeps, then expires into a positive-control fight",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "wave_b_ward_start"
+    ],
+    "skills": [
+     "greater_hearthward"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "animate_companion_loop",
+   "seed": 9,
+   "fixture": "wave_b_animate_start",
+   "note": "Issue #132: animate a ruin bone pile, field skeleton_ally in combat, and clear the follower on sleep",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs",
+     "ruin_surface"
+    ],
+    "fixtures": [
+     "wave_b_animate_start"
+    ],
+    "skills": [
+     "animate_dead"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "night_phase"
+    ]
+   }
   }
  ]
 }
