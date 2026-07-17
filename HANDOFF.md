@@ -2,7 +2,7 @@
 
 ## Current release
 
-**v0.8.0 shipped 2026-07-15** (run 29451275728 green: full QA on real
+**v0.9.0 shipped 2026-07-17** (prior: v0.8.0 2026-07-15) (run 29451275728 green: full QA on real
 assets, itch html5 deploy, Windows+Linux desktop exports). Contents: #91/#118
 Chronicle all-encounter victories (PR #120), #115 collapsible field readout
 (PR #121), #119 verification hardening (PR #122), #114 scannable pickers
@@ -13,40 +13,28 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-17, release runway)
+## 🏃 RUNNING (2026-07-17 post-release)
 
-- **NINE closes merged 2026-07-16/17:** #131 (Wave A: Runner/Courier,
-  Hedge Witch/Witch, Necromancer, Cook/Chef, Scout, mage Detect Magic),
-  #132 (Wave B: blink/ward/companion verbs), #127 (y-sort), #128
-  (garden door), #129 (music continuity), #130 (bed nudge + slept
-  counter, save v6), #133 (parlor + Ratici + music), #145 (VISUAL-LOG
-  drain: 14 bespoke icons, Ratici rig, hat stand) + a main-CI hotfix
-  (registry frame counts — premature #146 merge shipped a 30-min red;
-  repaired; lessons below).
-- **Milestone rotation DONE** (13 windowed scripts eyeballed, all
-  PASS). Main CI fully green.
-- **v0.9.0 GATES — USER, in order:** (1) **[Eagle Eyes] ACK** (drift
-  flag; freeze makes the name permanent — 'keep' or 'swap'); (2)
-  **ear-gates**: parlor = definitely_our_town, inn music continuity;
-  (3) **eye-gates**: dungeon grade (pre-logged), blink streak faintness
-  (taste), windup overlay (old item). Then freeze cut
-  (scripts/generate_shipped_ids.py — ~60 new ids go permanent) +
-  wi-shipping deploy = v0.9.0.
-- **Post-release queue:** Wave D specs (#134 RULED: Alchemist issue +
-  Beast Tamer+Druid issue; research complete on-issue); Hedault #142
-  (cleared, rides #92); Priest #141 (lore-gated); #140 renderer
-  survey; #92 economy pass (remedy/meal/courier riders parked).
-- **PixelLab budget: 18 generations left this cycle** — none without
-  user sign-off (hat-stand bowler inpaint queued in MANIFEST).
-- **Process lessons (fold into wi-* skills):** (1) audio.json music
-  entries live in `music` not `events` — events-loop edits silently
-  no-op (bit #133 commit 1; review json-equality caught it); (2) never
-  chain merge after a checks-watch in one command — grep mismatch let
-  #146 merge pre-CI (30-min red); (3) a lane's test-PASS claim must
-  postdate its LAST edit; (4) codex-companion status misreports both
-  ways — verify by tree evidence/result; (5) fresh worktrees need
-  overlay copy AND --import before gates; (6) subagents parked on their
-  own background jobs are stalled — 'your wake isn't coming'.
+- **v0.9.0 SHIPPED** (release run green: real-asset full QA, itch html5
+  deploy, Windows+Linux exports). Freeze cut = 557 ids (the #118
+  victories trap recurred with FOUR Wave-A/B code-banked counters —
+  caught by wi-shipping step-0 grep pre-cut). All release gates
+  user-passed ([Eagle Eyes] KEPT w/ flag; audio iteration 2 accepted;
+  dungeon grade lifted ~35% user-calibrated).
+- **Post-release fixes MERGED (#151 → closes #149 #150):** garden-door
+  cell wall-dressed (phantom bump fixed); rift vermin fight gated on
+  door_chain_started. DESIGN DELTA FOR USER ACK: the leak stays
+  VISIBLE pre-quest as inert foreshadowing (own observe line) — the
+  unit validator forbids present_when on encounters and hiding would
+  recreate the invisible-block class; full absence = an engine change
+  (trigger-presence consult), say the word.
+- **#148 thread-legibility APPROVED (tiers 1+2 core, 3 on stuck
+  points, 4 default-off toggle)** — NEXT MILESTONE HEADLINE; spec next
+  session. #147 music sourcing filed (not a blocker).
+- **Post-release queue:** #148 spec+build; Wave D (two issues per
+  ruling: Alchemist; Beast Tamer+Druid — research on #134); Hedault
+  #142; Priest #141; #140 renderer survey; #92 economy pass.
+- PixelLab: 18 generations left this cycle (user gate).
 
 ## 📋 QUEUE (value order)
 
