@@ -30,10 +30,23 @@ mechanism cited below was verified against src this session.
    profile name — the barracks entity keeps id `duty_sergeant`/`dresk`
    ids untouched, display only). Audit his dialogue speaker labels to
    match. (Ids never change; display_name is free.)
-4. **Person+place audit:** every main-line beat description names BOTH
-   a person and a place. The cartography's audit list is the checklist;
-   rewrite only flagged beats (keep canon voice, no directions-beyond-
-   naming per the anti-trivialization rule).
+4. **Person+place audit** — the rule, precisely: every beat names its
+   PLACE, and names a PERSON where a person is the beat's contact
+   (fetch/act beats with no NPC contact are place-only by design — the
+   approved recover_stone copy is the template, not a violation).
+   THE CHECKLIST (from the cartography audit; rewrite exactly these):
+   - missing_crate/report: add place ("at her market stall on Market Street").
+   - cisterns/resolve: add person-of-reference ("the nest Olesm marked").
+   - wrong_order/resolve: name the three venues explicitly ("the supplier on Market Street, Krshia's stall, or the inn kitchen").
+   - wrong_order/report: add place ("in the inn common room").
+   - door chain/consult: name all three paths' anchors ("fight what leaks through in the cellar, ask Pisces by the Guild steps, or read the wardwork on the pantry door yourself").
+   - door chain/recover_stone: place-only is CORRECT (no person guards it in prose; the Guardian stays a surprise).
+   - price_of_a_favor/report: "Tell the headman, at the village longhouse-side square, it's done."
+   - a_gentlemans_disagreement/report: add place ("at the Brothers' parlor off the alleys").
+   - what_the_seal_kept/report: add place ("at the Guild" — the sibling phrasing).
+   - the_missing_recruit/report: fixed by the Dresk display rename (item 3).
+   - papers_for_pallass/arrive: "the stamp clerk on the market tier, just through the Door."
+   - forge_tier_permit/apply + /stamped: keep place-precise, person optional (the clerk is the door; acceptable as-is — rewrite ONLY if a natural clerk-naming reads better).
 
 ## Tier 2 — the rumor lattice (pure data, talk_pool_stages)
 
