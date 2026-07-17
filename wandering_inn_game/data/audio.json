@@ -755,7 +755,8 @@
    "payload": {
     "map": "mercantile_alleys"
    },
-   "stream": "res://assets/audio/music/junkala_bazaar.ogg",
+   "_comment": "GH#133 ear-gate iteration 2: the spooky alley must not share the boulevard's bustling bazaar cue -- silent_forest = hushed/eerie. Boulevard keeps bazaar.",
+   "stream": "res://assets/audio/music/silent_forest.ogg",
    "bus": "Music",
    "volume_db": -8.0,
    "loop": true
@@ -768,8 +769,8 @@
    "payload": {
     "map": "brothers_parlor"
    },
-   "_comment": "GH#133: was junkala_childhood_friends (wholesome-nostalgia cue on a gang den, playtest finding). definitely_our_town = territorial swagger; EAR-GATE rides the v0.8.0 human audio pass.",
-   "stream": "res://assets/audio/music/definitely_our_town.ogg",
+   "_comment": "GH#133 ear-gate iteration 2: definitely_our_town EARED as upbeat/cozy (title misled) -- peaceful_night = low-key nocturne for a courteous den. Iteration 1 was junkala_childhood_friends (wholesome, rejected).",
+   "stream": "res://assets/audio/music/peaceful_night.ogg",
    "bus": "Music",
    "volume_db": -8.0,
    "loop": true
