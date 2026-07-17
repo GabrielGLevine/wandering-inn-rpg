@@ -1491,6 +1491,8 @@ events, and result files live in the gitignored
 - PixelLab drain: replace the nine code-drawn placeholder skill icons for
   `hedge_remedy`, `evil_eye`, `bone_dart`, `deathbolt`, `detect_magic`,
   `advanced_cooking`, `signature_dish`, `eagle_eyes`, and `marked_quarry`.
+  - DRAINED 2026-07-16 (#145): picked PixelLab reductions now replace all
+    nine tracked placeholders.
 - Prop-fit drain: replace the loose stock reads for `inn_witch_kettle`
   (`cauldron`), `inn_copper_pan`/`pallass_stall_burner` (`grill`),
   `cellar_wardwork` (`dusty_scroll`), `lift_overlook`/`rooftop_line`
@@ -1501,8 +1503,10 @@ events, and result files live in the gitignored
 - ratici sprite = pc_drake_m + brown tint PLACEHOLDER — canon wants a
   SHORT Drake with a floppy cap (neck-spines); bespoke PixelLab pass
   queued (pair silhouette vs tall Wilovan is the read).
+  - DRAINED 2026-07-16 (#145): bespoke teal directional idle/walk rig wired.
 - parlor_hat_stand sprite = crate PLACEHOLDER (no rack/hook stock
   registered) — the hats-off tell deserves a real hat-stand sprite.
+  - DRAINED 2026-07-16 (#145): picked two-hat stand prop wired.
 - unnamed gentlemen ride human_laborer/gnoll_traveler/drake_patron
   bases with tints; bowler/coat reads live in observe copy only.
 
@@ -1510,3 +1514,5 @@ events, and result files live in the gitignored
 - PixelLab drain: replace the five code-drawn placeholder skill icons for
   `double_step`, `flash_step`, `animate_dead`, `hearthward_charm`, and
   `greater_hearthward`.
+  - DRAINED 2026-07-16 (#145): picked PixelLab reductions now replace all
+    five tracked placeholders.
